@@ -1,104 +1,114 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D732DFA3A;
-	Tue, 15 Apr 2025 18:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49107220694;
+	Tue, 15 Apr 2025 18:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744740207; cv=none; b=Q59BRGQ4J15Ol/9zXLPfRq74gXY2pMYzQzBZ4fWn/qaKTXX5cukvy/wVvUg1VBTedpgIoEe/Ic8FNJJJKViv36Gcm+7stBVrvuRy8+zKQldbIJ2oHtt8s4MTK0FsGrJqEwJSoFuUT3IyoZZ54m9d0fHbQxJAEwMfXoAXXnJHOII=
+	t=1744740302; cv=none; b=sOt/YgfLkhnlKmP2YS+SdKGAdUk4sQmf49fvKgsXEF8GYeAp5mVYzAaeQ2vMwbNBFAMFUYaq8MAF+7fVkZ4h3B2ekRtXEfgPzE1jRSdWrtDsEKVabsP39eh4toINV62gGAOfYuJdZMDrH9lqoUPInY4ItYQUu8oltP5F6Z+HNTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744740207; c=relaxed/simple;
-	bh=+eghJ4x+Ds+Ccq/zvXc4mswzGPnjEx99kC6uBVTT3Ak=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vFfB74uJo69E4YiW/f34Stdjklt5DsSropma0Zj4v5DYWZZ/7fukrHY7yTiqH+GTk9y2pLv9XoVo3nDucq7hUEgDKGHR8fi+uh9hziiHhCnnKZ/PyK6wMFL+7ta8J2qrnPNxGMBQ4r70+sditHTPUNWK42zxYUqTLiZQ+1TUGYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lyi/3x9+; arc=none smtp.client-ip=209.85.208.51
+	s=arc-20240116; t=1744740302; c=relaxed/simple;
+	bh=bSIH+zqpDkmwA6RNwqFHsidqqNTR1psChK3N90ojLYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L8pWRICgv9LD1BUwRItbMacNRhdrWXmagM5TSHd2u/CWmjNs2IeotQUAWgxQJiJQLbqjGRlI+qRiwf4fVDOYXbCvtnFqYs80qwPvjCqfiGctf+XGOVB4o/nOdQiFDrB/O7NMk2F4R5s9AqsRxfpS68GUhj6tswFtC6uS+P6el4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nLywB/q+; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lyi/3x9+"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so8634834a12.0;
-        Tue, 15 Apr 2025 11:03:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLywB/q+"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so40587095e9.0;
+        Tue, 15 Apr 2025 11:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744740204; x=1745345004; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744740299; x=1745345099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wb9qKhu2k1IpUvme0BwFktjGiMrYNfcDlPf0UXzXUVI=;
-        b=Lyi/3x9+j9R0dqkv+ukxDE+U7rh0dnEHaQ/rfvCcmZO+aIHhNqDks+jdNCl+dpCGft
-         DzP/1PDaxkgqK17fgV01ha7UgRUOnS3rotA1VEiHeYnpET82bYv7c7j2R0PG7RuuodYg
-         2w0a4QE2jiuBIsRU/R83FiVbusue0/rIa3fpD9H3sr2jZAvp5bZBQecd8SVyVykhHnN4
-         rXji/Pnvu95h3j1/AfP1uWeQ+eH4yGz6xP8vmD+opEqeNs3FHkg8cwRQxyyKAt3Itpv1
-         UZBrFgPDftGuon3k/nRdhNpWbSYTyCPA3Ebcdiu5mtbGglEAjylpHJ5QxEMn0/NIt85q
-         ceOw==
+        bh=RAA5GsUBd1AyUaSODfHnhDVrxDoRhK+SaJ6cRkLQ9hE=;
+        b=nLywB/q+OeO9uyblyqIsVITy4s1BDrGMNH7wU1xlJ4u0+IAqV96hwKU4Oyjn524+c2
+         jwvXOMkfZ4guryI97B1ggYVm9816gyZ4oKmZhD16UhvoH1GoH8aM5ZMVkCLEByytYZWD
+         lONzKkJAgHyJAl8Kr480CTHVdx5LYFAtGoePEmN0adGWOWS64fcxVD+4oQRGuvxYMutP
+         kNsMFzcVbNP59sZllw23B0/f5GyLCXKF9uq4Z8AkuusA7BTdn2iG3yvzM0aoimhIJTT3
+         V9It1T/RxlIQwSrwGB9BeLcQnYcD1q/MpvFsfI7QiYKFnNdonKhEJ8SuWMR/eIt7oBE5
+         3k1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744740204; x=1745345004;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744740299; x=1745345099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wb9qKhu2k1IpUvme0BwFktjGiMrYNfcDlPf0UXzXUVI=;
-        b=V/7x1mXeuSk69MZN9aqSfrLs7viTurRxdhhgPMWJMUmxtzy7OugnHOTCTGzfPu5LyO
-         TbUZBRd6uO0LdKKEObNHGuCWvD3w6DNlW/d/92avTnBz9c65IA9cbuAiQF2j4AiYkk/5
-         1k5azzCApp+cp6Mzvz75iAn9V4Bm9Umd7Ri328i93Rl6VhsF0vtSHay3Zcb4b+8MgHSK
-         HZILeLeXgqBaVvwHzw+Ur+ZRDsiwzOyIFvB9JiFThmKEELLGWGhIUEfZhcauRSiV4LDb
-         5z852aK/QvPLrI9Lko6LsoavkA8l1Et8Uti2fMvpYVNOAlWkbM5PHkbojPBqMtTZKibL
-         LOww==
-X-Forwarded-Encrypted: i=1; AJvYcCUifHg9nosAQPEp0/inHe41+OKHizmW98U1iTnluRLJSEKIZemV+4JFYnF5pcvMmyrOvTEHzMPdLYVzTA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtmE5Ty2qDVeufADs9E5CNJyCcU3B5C7CezHCGnbFJitzHDq+Q
-	ASfy9s7ZCTIusDNye/afxntTpBu1WnNR5Hx9kNqDnXT98VsCD5wzxbzp+tFjkiAqivG1KpCWN4I
-	D8lCBJUD16dHDUVcAeo838XHcGrE=
-X-Gm-Gg: ASbGncsimddXVbckJhyutBgrN04u9SOn9V9/nu1AJnUm8kTZsgTQ346Ywtwg4W/KYAf
-	eotkq/IDwMbsb4rUfyHV/HvNZCte1GiE4SR5zasA6YHr/7Z0i6uZHSaaFdZ/4i9ag8xlVNK6Y5Z
-	p/YY5joNAw+xof4HKhkXgyxw==
-X-Google-Smtp-Source: AGHT+IGyoaExq6lmduv0ioWZoFMPyQfOKlchXrfsCHKLALExxyE/uhXIbOVRgv4AlIM/ZVfNMa3oiOaBOBFwlsQ+6ko=
-X-Received: by 2002:a17:907:3ea6:b0:ac8:17a1:e42 with SMTP id
- a640c23a62f3a-acb38251b55mr1864866b.22.1744740204008; Tue, 15 Apr 2025
- 11:03:24 -0700 (PDT)
+        bh=RAA5GsUBd1AyUaSODfHnhDVrxDoRhK+SaJ6cRkLQ9hE=;
+        b=XJTFP3VkrTWoK/ffJ2pB5dS3PhdDOxrzGHpp0/Uva2Hd3G9QWfgNEx9Yitk/AG1JzR
+         c/DOuFjc6ecUAWkNYXUf1oEX9yc4BEUwksXhpxtz4Whbu7mKZ43cyCLI5PJPN4pBqQT/
+         JktSE31SsT3a4P7CnnKS4eXcLjZQTABV+Ep+gbiDI0CbOX//kc1d+wLZxMea40w9YZqr
+         boHrhy3mvWjGB3I45xeiO68VZOY6YcnUddHgg8272HWDKMCPnMDeOv/VzJg0NGif1hf/
+         wPFAi98yL6nqQpKa1mIVnTOKaPaWJ56fAqzzxiubYtN+KxkSQzfeYMr75CxxRle5khf4
+         ymgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq7ZXeKi87Y2HPc7KEhhK+7FnVgPo9GoNTbGspsVCpYO4a23XPqTVXKIEFC65i79NGz0lRuwHQNM1elwYF@vger.kernel.org, AJvYcCXTEkVMz6lDCmUdbhKeQufo7ZdIFz6c58aHats27AoZFmg6t+gx+SqGG47oP03yoT1Ca4VbEsepFipa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwN3f/CT3RHHs7qrP22PP2YYFY9b0A1/G16GH8FKqSBfLEhXrR/
+	cTloWL0Bm0dOeGJLI8FRTKFQhbUgTXwdqhiTk/ERJgmtCiXMWrxFRPmkpQ==
+X-Gm-Gg: ASbGncuJAga/Sj5bF9mrNiWf+vsMv2EZUjz63E3R5gPMUOOclKffm0Ky9/nnI1Cklu8
+	BW+80CApQ/nHcPuhRcNHiHJrjEBn3poXDxQWmZnM1KTsOcPQ247VedMDcl4pD8KmrUNnEw0WRRq
+	jYU4KIRB/FtPX3rFGrv6qbmBqBGNkVvSVUp7Hep0DPk7mk/Kwfui3jnbWkL/T3qeEnm1yqODCSk
+	PrMKrdQ9HTPy1vsIesQGZQJMn0IeFJPFva+RvvU7+VdZ1Of0aWiPg6ri51fL7kT5YbF60eXQkyU
+	fkOWxxMP1vNepyY+3gN5nn9LWIC9EEiO3nY1779O9IkZyyf+7wTKVZGo9yELDDvzQBY8XFanh3r
+	9rKg=
+X-Google-Smtp-Source: AGHT+IFc3g8QQ9k9lgukZ0sd7DIp2WxsNbtPZklAM2PLk9fBgcH1wwc0A6XRSO71CM8ag9ErKBZWTA==
+X-Received: by 2002:a05:600c:1f8d:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-4405a0064d6mr892895e9.12.1744740299439;
+        Tue, 15 Apr 2025 11:04:59 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2066d6e8sm225626635e9.23.2025.04.15.11.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:04:58 -0700 (PDT)
+Date: Tue, 15 Apr 2025 19:04:57 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Brahmajit Das <brahmajit.xyz@gmail.com>
+Cc: Robert Moore <robert.moore@intel.com>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] ACPI: Fix building with GCC 15
+Message-ID: <20250415190457.351e22a1@pumpkin>
+In-Reply-To: <20250414161644.30400-1-listout@listout.xyz>
+References: <20250414161644.30400-1-listout@listout.xyz>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
-In-Reply-To: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 15 Apr 2025 21:02:47 +0300
-X-Gm-Features: ATxdqUHo0j2G7HhInsD2Ea9yS3LAPGWvf8sSTVKbBAs4CuoCzvP5lAmVqkvszb0
-Message-ID: <CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad4000: Avoid potential double data word read
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, 
-	lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com, 
-	andy@kernel.org, marcelo.schmitt1@gmail.com, 
-	David Lechner <dlechner@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 3:21=E2=80=AFPM Marcelo Schmitt
-<marcelo.schmitt@analog.com> wrote:
->
-> Currently, SPI-Engine offload module always sends 32-bit data elements to
-> DMA engine. Appropriately, when set for SPI offloading, the IIO driver us=
-es
-> 32 storagebits for IIO ADC channel buffer elements. However, setting SPI
-> transfer length according to storagebits (32-bits in case of offload) can
-> lead to unnecessarily long transfers for ADCs that are 16-bit or less
-> precision. Adjust AD4000 single-shot read to run transfers of 2 bytes whe=
-n
-> that is enough to get all ADC data bits.
+On Mon, 14 Apr 2025 21:46:42 +0530
+Brahmajit Das <brahmajit.xyz@gmail.com> wrote:
 
+> Since the Linux kernel initializes many non-C-string char arrays with
+> literals. While it would be possible to convert initializers from:
+>    { "BOOP", ... }
+> to something like:
+>    { { 'B', 'O', 'O', 'P' }, ... }
+> that is annoying.
+> Making -Wunterminated-string-initialization stay silent about char
+> arrays marked with nonstring would be much better.
 ...
+> diff --git a/drivers/acpi/acpica/aclocal.h b/drivers/acpi/acpica/aclocal.h
+> index 6f4fe47c955b..d2cda1b35e59 100644
+> --- a/drivers/acpi/acpica/aclocal.h
+> +++ b/drivers/acpi/acpica/aclocal.h
+> @@ -293,7 +293,7 @@ acpi_status (*acpi_internal_method) (struct acpi_walk_state * walk_state);
+>   * expected_return_btypes - Allowed type(s) for the return value
+>   */
+>  struct acpi_name_info {
+> -	char name[ACPI_NAMESEG_SIZE];
+> +	char name[ACPI_NAMESEG_SIZE] __attribute__((nonstring));
 
->         xfers[1].rx_buf =3D &st->scan.data;
-> -       xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.storagebits);
-> +       xfers[1].len =3D chan->scan_type.realbits > 16 ? 4 : 2;
+Doesn't than generate an 'unknown attribute' error on older compilers?
 
-But wouldn't be logical to have
+Does:
+	typedef char char_nonstring __attribute__((nonstring));
+	char_nonstring name[4] = "abcd";
+work?
 
-       xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.realbits);
+If so the attribute could even be applied to 'u8'.
 
-?
-
---=20
-With Best Regards,
-Andy Shevchenko
+	David
