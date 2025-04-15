@@ -1,222 +1,234 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2077.outbound.protection.outlook.com [40.107.22.77])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D471F4ED;
-	Tue, 15 Apr 2025 07:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703904; cv=fail; b=Jr6FF2OhUsu5brLj3wxqcaIxMrsrBQkfiitUiL3nS5VMVEwSSenHJ3jtvw2YdplxNUWsH5cBDPtpT8wTS88R/XB85WlXbR21GLxh19G1i20fbc/ZHC8DlyBuW3pRH8AS/uCFQt4KznaEKIaZjE9q9XbEUnHI/Fse3do1OPdqW4A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703904; c=relaxed/simple;
-	bh=mwpdrCIZoS4TtedKIF30LKFTek7PD48CK03TAEpuPJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MBzlNdHVYXGTsXUPaqeR8fruGZxjOxtunPFQ6fsufzn0nx4rFPvG+UZVAjIcnvTbZa5uQOvciec6OGf26doU4PxQOiN0ipNLGuyvxedthjy4HbdpxzPdiQAF9EkGPzN2CATlv0VNR9phHo3jjmiXp/wFWclKgJFP9SnrVdu92Nk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=rHB15JSn; arc=fail smtp.client-ip=40.107.22.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2080C13CA9C
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744703957; cv=none; b=oKS+EFjJRMNmO8CCoNB/1LxGzeOvijYVeW+uPX+MiiCjefItmnYO/G02aoH4v4LuTB7e0kAnrVzs3Q9DBEDSl8r4amL5T72nV6Um+4SAYeBwBnSgiFiMKutnhgztoNY2TsvDGXFUiHMzw5uN2tZrK2ZdYOVBqYB1YsiprliLLp0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744703957; c=relaxed/simple;
+	bh=boHVewLcUVwk8OcxfGDlSqU3OdAm2WH67dN09KEWyfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdCThyj99X7PAphzgTQdKxyTHQqOIkfcGaWAkYqA9GeatZy+f/qjvLSw04Nl1uCUhC/1IZAJvS6ta4stm6OWaDAmwb8yA2YVyN95d2yNtdzjq/wD8/Jf58LD9RtjMqmZr9f1BxwGEYJpsAOGAGezTbMNmwDnEDtl0xrgiJzDkpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ldtaxlMm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="rHB15JSn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M+WS+POG2NNXKtXKjKKKX6aaHNJ+YKSbI7cLK/0/3bYtANZ63IZv4U+KZNNjT142eq6ytSMDzAy42Ah3J42dxktRNU/QRB46RWyycREfXlEBavYLmW9N4m9M2ABPGbM28OUZLh6MuPLSVZqIHGptWlf3w+dJ/FA69z0euphPkI6mYs10QH6baKVTTSX9A0kDAWIueBpDIg5/F7AsCk0p+FjHXX3l9fOOjbhCd/wLdhKGUyFZ9q3xKElVHzZ+Ti1kWf1WDwQcHhQ8luWo3HBcv73dtUl7dek96MNT/MUhoMGqdY2Ej43PegtebMOZBnMto7wZVo+1rNPIVTqU8SvQJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+ijQWC+Rxs2R5StYO1/Re8pE44TDLTKyv3nd/BXaltQ=;
- b=P8M6Uttf1kQ1magQdPnWM7FJGQf2hR79lDHkfRz/pvFbRTrT/R+iSqjCuwDa6PItgbNRy2ByO0zqKwUP04UnBMqkXTr15/6nlCykfcOFCeUAoDsBB7egvd/arIT5aZA+b1X8Bdt6mOv//g4yOWrTOxMxP9FqYuECMgEv21Am0yyW4vJbvUVLJojD8wyHaDNgBOj1Gx+d0WGVEwdT5yCdsiNkS87u1wJ6JKtcqxk2AI4IhGxJMQP8SB+S7VsQ4WEjYC20UifdtflN/qAntA2Z6+83mVukviavFhhFIwlFWIZPJWMGlJLh6pnXYJqewIsUcS1UGNfkp98AlLoxEy7yrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+ijQWC+Rxs2R5StYO1/Re8pE44TDLTKyv3nd/BXaltQ=;
- b=rHB15JSn4AIUL4HV7b5y0VNji8QfUwx52JtMqgaxKF2hemkxnsQVPM3dEJb36IdVm1ytqat0yu8RHnO8BDkmqg09Jh7/i22G5mAELILsUGez5msQip/3noouZziD7D6ZwT6k1EMX3ndnJKfekgD0CLqWXdE/U6mZNGFv6wwqnEZQTnoYZVyBpCcAyJSMlNBpbQC3gS5L0aUhuGo8CrI5KSC6BgNnRvgLX42z8wjQNR+GfoScSJ++BAzezizUohT4+cpJM+zHMQbhDVeUiRt/8SLr7otSCC0jjEULmIbC+hbBcGCzPYhHLS1CT9TUpPAbBkcPnsM+ei54yFoTyzSWfQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM9PR04MB8274.eurprd04.prod.outlook.com (2603:10a6:20b:3e8::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Tue, 15 Apr
- 2025 07:58:19 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 07:58:19 +0000
-Date: Tue, 15 Apr 2025 17:06:55 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Mike Tipton <quic_mdtipton@quicinc.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the
- CPUs
-Message-ID: <20250415090655.GA10243@nxa18884-linux>
-References: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SG2PR04CA0166.apcprd04.prod.outlook.com (2603:1096:4::28)
- To PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ldtaxlMm"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F15eLd018673
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:59:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=3j6KYH15ovUFvVsFYdqAOBYg
+	Ek3lkuLkExeea+uu8MY=; b=ldtaxlMmuvrnS+rQf+jJJoV4/wUoj6NOuyufXavw
+	AGIu3thOJ4Xd76Cw/yiLaFVl3Tvos8T1TOyYJZsc9yjkKLAAar82BQgDXaGPL4Tq
+	647HNVT07g2X2he33gbbzC+BiSjguRcY1kOG/NREpCD1UUHiEZ+TpJHmw48Qu3o6
+	DKeruNz0k4HFeM58R6TVU60DaldFmQKXNzW5hBwIXrbAA2ulqXVu3dXdTPsjXLzi
+	zo4I8zdppbwUCu7YmQPCKT19fDoKP28fKoQyVmH3iccnyUaX397C+ZxcBSjiZXzg
+	89bMjQKYFBjUvBhool7MoymzHVFeLpHbXrWsx5ip4l2/8A==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wf48k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:59:14 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c791987cf6so1045550185a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:59:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744703954; x=1745308754;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3j6KYH15ovUFvVsFYdqAOBYgEk3lkuLkExeea+uu8MY=;
+        b=Vc4t2td+zvncAbfTRsS7lWSsBsHcBS7ly/fZPZOftZJXDd6+mjCAuFavx2u3/eBWln
+         6bDHvig2GqCG2l6O7VTFwZTce/m6m3GnHLYYskiZIRVVq22Kk9DNgzUNnTdSJCnIY/kd
+         EtJQrYHqB//XZCaUl5GpVj3dhh9+Vx9Egyb57s7mBHMXdSFhqC65lhrci4MnKyFCPbf2
+         C5BEVyzmX0Fqg9nhOP3/1rNj5OqBTonFQV8Eai/sb2fYNup8Cz/e95y422fBNI5vwSgN
+         4Hu0nMASFYV68yWLMuaPOt6fi6yPFsZnIOsAkrh1qZ9mbjXT64Sq9Aecq5A1V6TC+dpD
+         pmfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtw1bykunfvzO+UZWnhgv+/jYsv+SrbOpU4dcz45a8lC3aCIBh0nEyJL5OV2YJVi8QqRqv6y8GjvxqK8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt7LO2oFbAPs81ExJ0XRMkHWfBfhttdQB7s2OYJz6Vh8CNdvgO
+	CM+6oMHRcC0cRq+muRGlP4jW8sHoPUuUxCztZLYsI1Q2TlSr2210VULjWBLiopCYSvsKLYtLwVC
+	jWlpkj9o6kVZiUvE70XmwbZl68mP+FPX7ofOZo4lwXAf6u1f1TjJ+vCOEUDewMwQ=
+X-Gm-Gg: ASbGncvpDt2nqNXOCBAsUkC6ZLbMmjrRtzAEG6PQ+J79JB+pHt4JhpeBVVWFehQ0aLC
+	VjrwPXxoPn/PeapBRJLP5X6QwABhAAMJ93m30GzrveGw5QfpDcQbWV4VJ3jbHXefi3SocnCu3FN
+	9l6VL4LEHm2APUJbgOdSZ49zg9qLj+4H04PoHlt3F8d7JEjxyAykfkSkl/ikwqk5BXH7O7LZFcQ
+	fMn7RrmXOk6qca5u3f0hv23pDf4ravvkonMIw3Agx3DZ7fqmA9donj1DBnvqatoUdo6EVx8qhAI
+	E1JyQ6Y7t/Hf5ErlQf8WuOYE7CKvo+HGBaHCOIY72OGBN2LsHs09fsL9KLSuNY5OkPtsQZtbSTg
+	=
+X-Received: by 2002:a05:620a:40c4:b0:7c5:61b2:b7c with SMTP id af79cd13be357-7c7af1da861mr2436449085a.47.1744703953916;
+        Tue, 15 Apr 2025 00:59:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDYCUC3+4LjUcrOqe6/dnikoIRTp3CVd6J05XP6LoZ+cCcbGdp7CeMDc15ptW70OCMcojZ6g==
+X-Received: by 2002:a05:620a:40c4:b0:7c5:61b2:b7c with SMTP id af79cd13be357-7c7af1da861mr2436447885a.47.1744703953585;
+        Tue, 15 Apr 2025 00:59:13 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d5201d9sm1356006e87.250.2025.04.15.00.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 00:59:12 -0700 (PDT)
+Date: Tue, 15 Apr 2025 10:59:10 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Caleb Connolly <caleb.connolly@linaro.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
+        quic_mrana@quicinc.com
+Subject: Re: [PATCH v2 2/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+Message-ID: <7atbwco3htsrfzfb5hd36t3tprqdgcxbtvggdww7pabibbs44i@zncb2tznzzvc>
+References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
+ <511f8414-bbb1-4069-a0a6-f7505190c1e0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM9PR04MB8274:EE_
-X-MS-Office365-Filtering-Correlation-Id: a23f85ff-7344-4e79-694a-08dd7bf348e2
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?pTPqnHZ74BSbjxos+mA/r6Gchoe33eEgMDT5C42RNILEY1dZX9s0wKBr14pI?=
- =?us-ascii?Q?eEv5zkBMtzIcB3r25iC8NhSGTf+SjFYdLlFNP230tvdIy1eyTt1zB0ecpDkS?=
- =?us-ascii?Q?aqmUT/ZihkbPOdRaLrjmZ79Pe8aKaxVhgjMhBOBTcJZnMFiumtwGmXPuyIrb?=
- =?us-ascii?Q?gy9EYjOrU9UPULWFzK8+hyV3k6o+iARzldRPafviFHtIezbU/MvD+N0kilUe?=
- =?us-ascii?Q?9cSWw7TE/i+UePIWWgbN0T10AeOzo3Zp5A+lD3T9nsqVMLMRsFyMboqVFFc6?=
- =?us-ascii?Q?caU4maxjn+Ns0sspS5n7EN8f03G6bGSdYSnNXC0HRNfENxHoZz7abdI6Br3h?=
- =?us-ascii?Q?uQ3APzwjTcalbbS6d4q0s0u10RrM1s+jIVT/X5s/CEiKpLcGlLggGBE+uGnf?=
- =?us-ascii?Q?KSD1tkNvH9fWl0WUAyUU4Clzzae8wNpVedCJ0Kb4aaHQwfWXsRtQPs+ZUyC1?=
- =?us-ascii?Q?goq9UTmYEB+WrJf7C//AGL5TxsD+i47Hw/Wrd1nwUO5wytY1kbONS4lTUm9W?=
- =?us-ascii?Q?bYZNOXNcL3P082OGj1+Xe70X9GZR5zfOW76wHT9HtfZniKBnlTYq8IAKov0M?=
- =?us-ascii?Q?CtnVNuv4S7cQVfj6awUHQ4P5Zq4WsyrgqpZ/dFl/0FoDYSSaEyOGurXgzv51?=
- =?us-ascii?Q?mjTNDLnrMEatQyy3kj9QQ7tA8PnY0tryLyuCVxePe4+YZ4Gk1J7cu7gQw1Ps?=
- =?us-ascii?Q?Yl1lPzzjuAzcQRuABuqlKSkuWhOGxrvl7q9ihkjxUkra8/WET03Qs73vOMom?=
- =?us-ascii?Q?U0w+YvILP8XfuB0qs23oGGdiapcjSpeda1/V33sMHu1FgAcC+JYDk+CdGdYL?=
- =?us-ascii?Q?5k3vd6Ua7I079uHkULlQfohGBmd37kMFMCI8liPyGgZOP9IkMA7rcsVrkt+e?=
- =?us-ascii?Q?5hjtKOebMUFJfywaqGKJ5ukrirS7otIPPt3Cv3+lQHxTR18/49whpTxciCeH?=
- =?us-ascii?Q?9gwSywwdUO/bpe3qrBk8hwRFpEFU68XNRsnnhzFr58WC8ITrVnoe1Xj+PgZ3?=
- =?us-ascii?Q?HMSKqho+nq1lkkpWG30e7Cx9pUrioz5f1E0X0oC59+bghQl+JIeDBZPxBf+Q?=
- =?us-ascii?Q?0E7scFFhLqX7SX/3+ZAEdSqjviXiKtuVecuqJUQKHY4H4vPvcT7TVM+ThjKZ?=
- =?us-ascii?Q?DAm369IaT6vVu4S/J5FFSTUpyUUTXJbZarP7DWZlff7UsBsbsrG+/RPakHav?=
- =?us-ascii?Q?3fGyZyNHBrfpLqRP42ILQnDkBRWBCCf3Lb4u1H4MvcS2YhodromKvEScnXSu?=
- =?us-ascii?Q?tRppOoNml0UNJy1yeBiEGWKyJLrUYR7tRpEJtGibelwIXmaHP7V1FvLEz9Kt?=
- =?us-ascii?Q?Jq1RYHX7q0uglVyLKTpLHXYkmbKpBT/hnRTUyV/uhAzditq4N7VimhRCsZhW?=
- =?us-ascii?Q?nmxAJ1HjOryCg5gaEaVZMzi8OP5EDID5SBPxfBHHGbqge6HfoFmO2UbAt1iK?=
- =?us-ascii?Q?ahMT2io7mA3y/Q1i56SHsbvk/m+JWXSoeI4L9W2avWtt6GXwYq1LWQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Mtglxv8p6Kj3vApMzF7YSu7vyyOhG/ryt2WLLoHHH3eEhTSNyLAINkfjtrEO?=
- =?us-ascii?Q?tqZzBMcjm3ThNn++SRscmiBK4IjrdWTzb4x+mK9Bs7ReRY/pT/ENC5GelzhX?=
- =?us-ascii?Q?JwGbhz2qbKUEWH5TX/WB9VVbMo0sTEb8IP6dP+/EpwdMimVupNFGOLSHIpWe?=
- =?us-ascii?Q?S3tI2BYJ1uuPNP7ZaU0+lDXfCRq0pgsc3iqPAnCjDYxYZ6P4WaUeGWzCbK52?=
- =?us-ascii?Q?RRVc+QW4W3AsLrkLpx+vLvbtfA45GevTLXPab3a4+8HaBSinw4owBkKAHIEd?=
- =?us-ascii?Q?TTdvip0aZBtVMrAx6JQi+H5O7vutEc5WEO7IB3SSpCpuTQi3PW4Ct37KKBFF?=
- =?us-ascii?Q?JUeMOpbO2cVT2oy7IAhlS4i4KfXIAR1HeKGTMWDADBGgekv5QwYubVUi09s+?=
- =?us-ascii?Q?+Tw41foRkX3V9zhDbgR5CjsfCneKd683xPID8sNkLyX2QNfmFSfiPDVQB9/m?=
- =?us-ascii?Q?JexACTatIljT6OCeZW96v7BgSxjoDR6Q35gMxv5SvFev/Phy9SHLi6132m8Q?=
- =?us-ascii?Q?YJDv8LtRdYx2f3mxcAI/SiWRGqtI2xdhim9lSHIplgOEvzO4QBwPYsWzxi5i?=
- =?us-ascii?Q?R4Yxfby5h0etRtWbTEYzK9aUMkyP8gfNME8JV7QgJofpFY6mHTdm7Ql9aP6i?=
- =?us-ascii?Q?v1ZWTtT5FDZwopC9WzRxTCnuLn4xsMnNCVijI6/IhiSJb315xk3OWMIFDniT?=
- =?us-ascii?Q?3eJox1fIioABTUvLb7jFR8fM1Z3TjrX/BB2CGHKQKd+RMb2s0OODOD2kcf/y?=
- =?us-ascii?Q?as0ZJe5U177FsbDyHkaarLFA5XDy4BTOq92d87vvG6Vp8qC0i/z2MaPJQbC5?=
- =?us-ascii?Q?PSqk9IGmKis/h5KKHjMgEfCWBEtKM/zV3aL4tiM5rW9mIkReruJeDxS/qmcE?=
- =?us-ascii?Q?A8jhs0mw5t09JFMR85K0GTMYxpZ4pTKAQ7CFPNanFypG9bn8IF3nq1EYbSZd?=
- =?us-ascii?Q?YA/eFccQUvv2hl4akxQCUVDdmjTQaPwm1EMlf22JTCDVTAzdnd/y8/fB+dHC?=
- =?us-ascii?Q?h7UjoWxSrJ087axWhFwCPD7B1rHQiYVQKNLa44LmI4w2dYdQQED5/S9OG5RR?=
- =?us-ascii?Q?7D1YH10FnpINHMurYgy8PjqAs0DsS+1JPQv9E1Aaq4hbMOCHAW/xz8QW+8pv?=
- =?us-ascii?Q?3lBIqJboEW2fXV8vl9c7suLhJTAJ1BR78utCrta0zAvr0DUJ+f+2PynZvvst?=
- =?us-ascii?Q?1NQL9QYNLbsljHimp/Ue8pBgwx02uQpGE6CKqYcqxUDEJfW4nUz95jvYgp3i?=
- =?us-ascii?Q?VNCPm5dCqSXmEQqdjLvbx9DVbwJSYFpNmf761WF5/vtVM3yCe44IlmLGtWsB?=
- =?us-ascii?Q?k/oPCI5t/XXIpm5nF+kJ38YfMU6pPDbn36ZrFSHC3MBpSIlUwnLDi0gidPCa?=
- =?us-ascii?Q?RivVZ6oeE/bjxB7XO2bbnMrBLQGY0B38/8QPxpPUi/8MA22DnHZf57sjv7zF?=
- =?us-ascii?Q?6Lcocz0R4ShQKd0IYwpMV6jWKlFLV+o0C5VYu/NNPkmJiN8QFj0WWLonIOpL?=
- =?us-ascii?Q?Ii45ROPE2pApJJByVek6pHrPmGkKR51h9V7FTU5jlElKtI+82Xsk2OsCL32u?=
- =?us-ascii?Q?3DZMDTswu+TiO+FMjglFc4glZy9CsgmQMyfD3tev?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a23f85ff-7344-4e79-694a-08dd7bf348e2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 07:58:19.0346
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kSCPr/G5oNFGrM6wDUGmETYmChRv1UsTy3jTCCnBrg5VyKEC3XuKO+4SonHT4ai7TL6VUrcEHBHNaTd5vOWmQg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8274
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <511f8414-bbb1-4069-a0a6-f7505190c1e0@linaro.org>
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fe11d2 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=Dek1A57C0JLo4Y6e2rEA:9 a=CjuIK1q_8ugA:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: qKtVeBBnVp_38rJjLa4EPwerlr0kptYd
+X-Proofpoint-GUID: qKtVeBBnVp_38rJjLa4EPwerlr0kptYd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150054
 
-On Fri, Apr 11, 2025 at 02:29:41PM -0700, Mike Tipton wrote:
->Currently, all SCMI devices with performance domains attempt to register
->a cpufreq driver, even if their performance domains aren't used to
->control the CPUs. The cpufreq framework only supports registering a
->single driver, so only the first device will succeed. And if that device
->isn't used for the CPUs, then cpufreq will scale the wrong domains.
->
->To avoid this, return early from scmi_cpufreq_probe() if the probing
->SCMI device isn't referenced by the CPU device phandles.
->
->This keeps the existing assumption that all CPUs are controlled by a
->single SCMI device.
->
->Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
->---
-> drivers/cpufreq/scmi-cpufreq.c | 29 +++++++++++++++++++++++++++++
-> 1 file changed, 29 insertions(+)
->
->diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
->index 944e899eb1be..7981a879974b 100644
->--- a/drivers/cpufreq/scmi-cpufreq.c
->+++ b/drivers/cpufreq/scmi-cpufreq.c
->@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
-> 	.set_boost	= cpufreq_boost_set_sw,
-> };
+On Mon, Apr 14, 2025 at 02:49:00PM +0200, Caleb Connolly wrote:
 > 
->+static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
->+{
->+	struct device_node *scmi_np = scmi_dev->of_node;
->+	struct device_node *np;
->+	struct device *cpu_dev;
->+	int cpu, idx;
->+
->+	for_each_possible_cpu(cpu) {
->+		cpu_dev = get_cpu_device(cpu);
->+		if (!cpu_dev)
->+			continue;
->+
->+		np = cpu_dev->of_node;
->+
->+		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
->+			return true;
->+
->+		idx = of_property_match_string(np, "power-domain-names", "perf");
->+
->+		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
->+			return true;
->+	}
->+
->+	return false;
->+}
->+
-> static int scmi_cpufreq_probe(struct scmi_device *sdev)
-> {
-> 	int ret;
->@@ -404,6 +430,9 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
-> 	if (!handle)
-> 		return -ENODEV;
 > 
->+	if (!scmi_dev_used_by_cpus(dev))
->+		return 0;
-
-Should 'return -ENOTSUPP' be used here?
-There is no need to mark the probe success.
-
-Regards,
-Peng
-
->+
-> 	scmi_cpufreq_driver.driver_data = sdev;
+> On 4/14/25 07:39, Krishna Chaitanya Chundru wrote:
+> > Move phy, perst, to root port from the controller node.
+> > 
+> > Rename perst-gpios to reset-gpios to align with the expected naming
+> > convention of pci-bus-common.yaml.
+> > 
+> > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > ---
+> >   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+> >   arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+> >   arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+> >   arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+> >   4 files changed, 14 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> > @@ -709,8 +709,11 @@ &mdss_edp_phy {
+> >   	status = "okay";
+> >   };
+> > +&pcie1_port0 {
+> > +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > +};
+> > +
+> >   &pcie1 {
+> > -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> >   	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+> >   	pinctrl-names = "default";
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> > index 2ba4ea60cb14736c9cfbf9f4a9048f20a4c921f2..ff11d85d015bdab6a90bd8a0eb9113a339866953 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+> > @@ -472,10 +472,13 @@ &pcie1 {
+> >   	pinctrl-names = "default";
+> >   	pinctrl-0 = <&pcie1_clkreq_n>, <&ssd_rst_l>, <&pe_wake_odl>;
+> > -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> >   	vddpe-3v3-supply = <&pp3300_ssd>;
+> >   };
+> > +&pcie1_port0 {
+> > +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > +};
+> > +
+> >   &pm8350c_pwm {
+> >   	status = "okay";
+> >   };
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> > index 7370aa0dbf0e3f9e7a3e38c3f00686e1d3dcbc9f..3209bb15dfec36299cabae07d34f3dc82db6de77 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+> > @@ -414,9 +414,12 @@ &lpass_va_macro {
+> >   	vdd-micb-supply = <&vreg_bob>;
+> >   };
+> > +&pcie1_port0 {
+> > +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> > +};
+> > +
+> >   &pcie1 {
+> >   	status = "okay";
+> > -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+> >   	vddpe-3v3-supply = <&nvme_3v3_regulator>;
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > index 0f2caf36910b65c398c9e03800a8ce0a8a1f8fc7..376fabf3b4eac34d75bb79ef902c9d83490c45f7 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> > @@ -2271,9 +2271,6 @@ pcie1: pcie@1c08000 {
+> >   			power-domains = <&gcc GCC_PCIE_1_GDSC>;
+> > -			phys = <&pcie1_phy>;
+> > -			phy-names = "pciephy";
 > 
-> 	perf_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PERF, &ph);
->-- 
->2.34.1
->
+> Isn't this a huge API breakage that will break using new DT with old
+> kernels? It will also break U-boot which uses upstream DT.
+> 
+> This is bad enough, but at least let's break it a clean break by changing
+> all platforms at once.
+
+Up to now as the kernel was the only and the main user, we allowed
+forward breakage (new DT breaks with the old kernel), only backwards
+compatibility was required (new kernels work with old DT).
+
+Maybe, as this breaks external projects, we should allow a grace period
+and list _both_ properties, dropping them after the LTS?
+
+> 
+> As I understand it, we seem to allow these breakages in DT for now (and this
+> patch landing will confirm that), but perhaps we could at least track them
+> somewhere or at acknowledge the breakage with a tag in the commit message
+> pointing to the relevant dt-bindings patch.
+> 
+> Breaks-dt: https://lore.kernel.org/linux-arm-msm/20250414-perst-v2-1-89247746d755@oss.qualcomm.com
+> 
+> Kind regards,
+> 
+> > -
+> >   			pinctrl-names = "default";
+> >   			pinctrl-0 = <&pcie1_clkreq_n>;
+> > @@ -2284,7 +2281,7 @@ pcie1: pcie@1c08000 {
+> >   			status = "disabled";
+> > -			pcie@0 {
+> > +			pcie1_port0: pcie@0 {
+> >   				device_type = "pci";
+> >   				reg = <0x0 0x0 0x0 0x0 0x0>;
+> >   				bus-range = <0x01 0xff>;
+> > @@ -2292,6 +2289,7 @@ pcie@0 {
+> >   				#address-cells = <3>;
+> >   				#size-cells = <2>;
+> >   				ranges;
+> > +				phys = <&pcie1_phy>;
+> >   			};
+> >   		};
+> > 
+> 
+> -- 
+> Caleb (they/them)
+> 
+
+-- 
+With best wishes
+Dmitry
