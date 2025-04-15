@@ -1,242 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06C019C553;
-	Tue, 15 Apr 2025 08:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD13A1DDC18;
+	Tue, 15 Apr 2025 08:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707079; cv=none; b=hJLTu0KpMIk9tvFvnchDRN9UhnupzvGGWjg9BCDFM/Uv88vzDgrgXw3OuS/iheGPU4FTT4Mg1P59e01gmPh9bRnGX0otEkuvmF/JFdQp+pmAt6U8AmePOiQ1dAu33xlu4eA/IQc9ZYT+/HBOg311kuHHqkgK+8wSWGLRzZGxB/U=
+	t=1744707115; cv=none; b=eD+4+NxsnHeOewkZsBiKd8LsCw3X6TI7U+Fb14faPvmxXBlfaMHRuc9hNsOPqXqq3EOfMe89+e3EcpiZDaG7FMAbwcHsvtYwo/3ROIF6azqx6nscACyNlUpwzh8cJDboMi+0HP2gBu45tSbbCCyvrlDhVPQ9EKmP7EGB9+fKYjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707079; c=relaxed/simple;
-	bh=uFoM1OSJ7bH0umyaxki2rqQUr8GppwAMJBfT2dE108A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SPMcA7muIlCClqWx94q6PoLBt94R+Y8ceQ/c1dEwbZBVr//6pWRhQ/V1lGa0nHsGMV4TDU4FkQXjLI4zY3K2n1aFcYudHkCvzXpV17yLM9mX+E288PNo/4W3oyRG2BS5MnlQ8YYKol9mYMrNrnjuGCA7sruImMW09DlTzvwwuV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RWvdqQhe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744707115; c=relaxed/simple;
+	bh=l6EgTfG/rNsxzj7YblsFEs3VRkJDgFjjSVvMIbcaSIM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ICCQUW5t4yzmDOIIo7TYAA/yNN4I+IG21qf2H14qvdSMoxbkz4niRqVdXPS6ub3z6LvJvNhWE11w3uXascMxQezaT74vxJ6/tHAXphQu19Zd2IBMI2SFrefJODsdrTIVEjg7L45XqlCC3bd9Ce9gKUaKLs7fhka1uN9sckVTbmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3C+0xkhw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+P38YhTz; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RWvdqQhe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15296C4CEDD;
-	Tue, 15 Apr 2025 08:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744707079;
-	bh=uFoM1OSJ7bH0umyaxki2rqQUr8GppwAMJBfT2dE108A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RWvdqQhe8W7dZtLCjCQsoj/YMEj6NR2gL78jVz2Mf3F8AedfX9T8eG3xYJ4dpFgvL
-	 mps+vZ0RHEQredlBvcl+TTdxduOs6UBoVv+blQZlmG5tdZMeT7sGgjp8fr91ZVC61a
-	 rq0NvA0ukevtQwUNw4ANAMUzku636E36i+pV0jICBFto+aGyWdsAWdIaM5gojolbbb
-	 xNx1eYL6OBHzc7jXhIOuAmZ7fG5/M2t8hsxHEK9ctt+3inPaN/iFBhhVj75aqxyvFj
-	 KjFE7SFMO4U9zKE7zSLm+S/dL4Hg7952EJBkjuelQaDOfrHksTPQOiu8cV6t46JAyj
-	 oKWfIkErYpMPw==
-Date: Tue, 15 Apr 2025 16:51:02 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, Jonathan Corbet
- <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell King
- <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-Message-ID: <20250415165102.44551ada@sal.lan>
-In-Reply-To: <20250415164014.575c0892@sal.lan>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
-	<871pu1193r.fsf@trenco.lwn.net>
-	<Z_zYXAJcTD-c3xTe@black.fi.intel.com>
-	<87mscibwm8.fsf@trenco.lwn.net>
-	<Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
-	<Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
-	<87v7r5sw3a.fsf@intel.com>
-	<Z_4WCDkAhfwF6WND@smile.fi.intel.com>
-	<Z_4Wjv0hmORIwC_Z@smile.fi.intel.com>
-	<20250415164014.575c0892@sal.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3C+0xkhw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+P38YhTz"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744707110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PH6MVwxzLv8eF6loMN8LTTQbGVnttpn8SLDX1xC+Qgo=;
+	b=3C+0xkhwu9H2ovaJRCfJTMtbdFS7iCD2T4FpT9OJGXFsPq/iLIkH0PqAZreWqL5FMOAb+N
+	oG3T6qoACEytO6vKHY4CMSDNryYfgXO38RkI+7Mt8gPaqoPK6k4sjsT8TEXCFOSTz4eKH+
+	hHNLebtwTopStnDrX+vkK/Qd7v7Cc5jfSGi9kYi2CVL1ZzON0/sZEbXh/C2Gl3ZUyUHfGt
+	nDZ6ed2xg7262wzHPTOZJ6MjfkEXQWJrYNS28LurtZv4w6kyA/lDr/QLTij1z2+MMWLzGk
+	kF6TEJX7x4UA0fJfxDCoiVAai7fQAxCPaVM85HHI3Ge2VOMyEPnRQQtkCifpag==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744707110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PH6MVwxzLv8eF6loMN8LTTQbGVnttpn8SLDX1xC+Qgo=;
+	b=+P38YhTzlVHayzy4c8rI89g2bBdDxGSgZljqDHmgDLArlQpeWoCpZmeBSOhdrBHmHBIRaZ
+	GZYS2M0YJwyVOHCQ==
+Date: Tue, 15 Apr 2025 10:51:47 +0200
+Subject: [PATCH v2] loop: properly send KOBJ_CHANGED uevent for disk device
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIACIe/mcC/32NywqDMBBFf0WybkoexpKu+h/FRTRjHZBEEg0W8
+ d8bddeFzOoM99y7kggBIZJnsZIACSN6l0HcCtL2xn2Aos1MBBOKSfagg/cjnSGBm+iZsNQYWWn
+ WlRKYJNkcA3S4HK3vOnOPcfLhe4wkvn+v+xKn+UArZYTUpVCvAd08Be9wuVvYJ06fX/htI3Tba
+ N5Uwv759bZtP8wS5cz6AAAA
+X-Change-ID: 20250307-loop-uevent-changed-aa3690f43e03
+To: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>, 
+ Alyssa Ross <hi@alyssa.is>, Christoph Hellwig <hch@lst.de>, 
+ Greg KH <greg@kroah.com>, Jan Kara <jack@suse.cz>
+Cc: John Ogness <john.ogness@linutronix.de>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744707109; l=2327;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=l6EgTfG/rNsxzj7YblsFEs3VRkJDgFjjSVvMIbcaSIM=;
+ b=f16o4dJg2nliQLGkEQn1igGREQ/SBPg0rQ+5p2AI7Bx/+OeMl6YOVVVsFs3xLBUycq/uUH9WA
+ YIUJ6Uobe/+AaKmVyFyCbbkVVnpvahZfF1NfVp2x4dyAGyKPZ7kfwtH
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Em Tue, 15 Apr 2025 16:40:34 +0800
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+The original commit message and the wording "uncork" in the code comment
+indicate that it is expected that the suppressed event instances are
+automatically sent after unsuppressing.
+This is not the case, instead they are discarded.
+In effect this means that no "changed" events are emitted on the device
+itself by default.
+While each discovered partition does trigger a changed event on the
+device, devices without partitions don't have any event emitted.
 
-> Em Tue, 15 Apr 2025 11:19:26 +0300
-> Andy Shevchenko <andriy.shevchenko@intel.com> escreveu:
->=20
-> > On Tue, Apr 15, 2025 at 11:17:12AM +0300, Andy Shevchenko wrote: =20
-> > > On Tue, Apr 15, 2025 at 10:49:29AM +0300, Jani Nikula wrote:   =20
-> > > > On Tue, 15 Apr 2025, Andy Shevchenko <andriy.shevchenko@intel.com> =
-wrote:   =20
-> > > > > On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote: =
-  =20
-> > > > >> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:=
-   =20
-> > > > >> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:   =20
-> > > > >> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wr=
-ote:   =20
-> > > > >> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> > > > >> > >>    =20
-> > > > >> > >> > This changeset contains the kernel-doc.py script to repla=
-ce the verable
-> > > > >> > >> > kernel-doc originally written in Perl. It replaces the fi=
-rst version and the
-> > > > >> > >> > second series I sent on the top of it.   =20
-> > > > >> > >>=20
-> > > > >> > >> OK, I've applied it, looked at the (minimal) changes in out=
-put, and
-> > > > >> > >> concluded that it's good - all this stuff is now in docs-ne=
-xt.  Many
-> > > > >> > >> thanks for doing this!
-> > > > >> > >>=20
-> > > > >> > >> I'm going to hold off on other documentation patches for a =
-day or two
-> > > > >> > >> just in case anything turns up.  But it looks awfully good.=
-   =20
-> > > > >> > >
-> > > > >> > > This started well, until it becomes a scripts/lib/kdoc.
-> > > > >> > > So, it makes the `make O=3D...` builds dirty *). Please make=
- sure this doesn't leave
-> > > > >> > > "disgusting turd" )as said by Linus) in the clean tree.
-> > > > >> > >
-> > > > >> > > *) it creates that __pycache__ disaster. And no, .gitignore =
-IS NOT a solution.   =20
-> > > > >> >=20
-> > > > >> > If nothing else, "make cleandocs" should clean it up, certainl=
-y.
-> > > > >> >=20
-> > > > >> > We can also tell CPython to not create that directory at all. =
- I'll run
-> > > > >> > some tests to see what the effect is on the documentation buil=
-d times;
-> > > > >> > I'm guessing it will not be huge...   =20
-> > > > >>=20
-> > > > >> I do not build documentation at all, it's just a regular code bu=
-ild that leaves
-> > > > >> tree dirty.
-> > > > >>=20
-> > > > >> $ python3 --version
-> > > > >> Python 3.13.2
-> > > > >>=20
-> > > > >> It's standard Debian testing distribution, no customisation in t=
-he code.
-> > > > >>=20
-> > > > >> To reproduce.
-> > > > >> 1) I have just done a new build to reduce the churn, so, running=
- make again does nothing;
-> > > > >> 2) The following snippet in shell shows the issue
-> > > > >>=20
-> > > > >> $ git clean -xdf
-> > > > >> $ git status --ignored
-> > > > >> On branch ...
-> > > > >> nothing to commit, working tree clean
-> > > > >>=20
-> > > > >> $ make LLVM=3D-19 O=3D.../out W=3D1 C=3D1 CF=3D-D__CHECK_ENDIAN_=
-_ -j64
-> > > > >> make[1]: Entering directory '...'
-> > > > >>   GEN     Makefile
-> > > > >>   DESCEND objtool
-> > > > >>   CALL    .../scripts/checksyscalls.sh
-> > > > >>   INSTALL libsubcmd_headers
-> > > > >> .pylintrc: warning: ignored by one of the .gitignore files
-> > > > >> Kernel: arch/x86/boot/bzImage is ready  (#23)
-> > > > >> make[1]: Leaving directory '...'
-> > > > >>=20
-> > > > >> $ touch drivers/gpio/gpiolib-acpi.c
-> > > > >>=20
-> > > > >> $ make LLVM=3D-19 O=3D.../out W=3D1 C=3D1 CF=3D-D__CHECK_ENDIAN_=
-_ -j64
-> > > > >> make[1]: Entering directory '...'
-> > > > >>   GEN     Makefile
-> > > > >>   DESCEND objtool
-> > > > >>   CALL    .../scripts/checksyscalls.sh
-> > > > >>   INSTALL libsubcmd_headers
-> > > > >> ...
-> > > > >>   OBJCOPY arch/x86/boot/setup.bin
-> > > > >>   BUILD   arch/x86/boot/bzImage
-> > > > >> Kernel: arch/x86/boot/bzImage is ready  (#24)
-> > > > >> make[1]: Leaving directory '...'
-> > > > >>=20
-> > > > >> $ git status --ignored
-> > > > >> On branch ...
-> > > > >> Untracked files:
-> > > > >>   (use "git add <file>..." to include in what will be committed)
-> > > > >> 	scripts/lib/kdoc/__pycache__/
-> > > > >>=20
-> > > > >> nothing added to commit but untracked files present (use "git ad=
-d" to track)   =20
-> > > > >
-> > > > > FWIW, I repeated this with removing the O=3D.../out folder comple=
-tely, so it's
-> > > > > fully clean build. Still the same issue.
-> > > > >
-> > > > > And it appears at the very beginning of the build. You don't need=
- to wait to
-> > > > > have the kernel to be built actually.   =20
-> > > >=20
-> > > > kernel-doc gets run on source files for W=3D1 builds. See Makefile.=
-build.   =20
-> > >=20
-> > > Thanks for the clarification, so we know that it runs and we know tha=
-t it has
-> > > an issue.   =20
-> >=20
-> > Ideal solution what would I expect is that the cache folder should resp=
-ect
-> > the given O=3D... argument, or disabled at all (but I don't think the l=
-atter
-> > is what we want as it may slow down the build). =20
->=20
-> From:
-> 	https://github.com/python/cpython/commit/b193fa996a746111252156f11fb14c1=
-2fd6267e6
-> and:
-> 	https://peps.python.org/pep-3147/
->=20
-> It sounds that Python 3.8 and above have a way to specify the cache
-> location, via PYTHONPYCACHEPREFIX env var, and via "-X pycache_prefix=3Dp=
-ath".
->=20
-> As the current minimal Python version is 3.9, we can safely use it.
->=20
-> So, maybe this would work:
->=20
-> 	make O=3D"../out" PYTHONPYCACHEPREFIX=3D"../out"
->=20
-> or a variant of it:
->=20
-> 	PYTHONPYCACHEPREFIX=3D"../out" make O=3D"../out"=20
->=20
-> If this works, we can adjust the building system to fill PYTHONPYCACHEPRE=
-FIX
-> env var when O=3D is used.
+This makes udev miss the device creation and prompted workarounds in
+userspace. See the linked util-linux/losetup bug.
 
-That's interesting... Sphinx is already called with PYTHONDONTWRITEBYTECODE.
-=46rom Documentation/Makefile:
+Explicitly emit the events and drop the confusingly worded comments.
 
-	quiet_cmd_sphinx =3D SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
-	      cmd_sphinx =3D $(MAKE) BUILDDIR=3D$(abspath $(BUILDDIR)) $(build)=3D=
-Documentation/userspace-api/media $2 && \
-	        PYTHONDONTWRITEBYTECODE=3D1 \
-	...
+Link: https://github.com/util-linux/util-linux/issues/2434
+Fixes: 498ef5c777d9 ("loop: suppress uevents while reconfiguring the device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Changes in v2:
+- Use correct Fixes tag
+- Rework commit message slightly
+- Rebase onto v6.15-rc1
+- Link to v1: https://lore.kernel.org/r/20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de
+---
+ drivers/block/loop.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-It seems that the issue happens only when W=3D1 is used and kernel-doc
-is called outside Sphinx.
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 674527d770dc669e982a2b441af1171559aa427c..09a725710a21171e0adf5888f929ccaf94e98992 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -667,8 +667,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
+ 
+ 	error = 0;
+ done:
+-	/* enable and uncork uevent now that we are done */
+ 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
++	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+ 	return error;
+ 
+ out_err:
+@@ -1129,8 +1129,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
+ 	if (partscan)
+ 		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
+ 
+-	/* enable and uncork uevent now that we are done */
+ 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
++	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
+ 
+ 	loop_global_unlock(lo, is_loop);
+ 	if (partscan)
 
-Anyway, IMHO, the best would be to change the above to:
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250307-loop-uevent-changed-aa3690f43e03
 
-	PYTHONPYCACHEPREFIX=3D$(abspath $(BUILDDIR))
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-And do the same for the other places where kernel-doc is called:
-
-	include/drm/Makefile:           $(srctree)/scripts/kernel-doc -none $(if $=
-(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-	scripts/Makefile.build:  cmd_checkdoc =3D $(srctree)/scripts/kernel-doc -n=
-one $(KDOCFLAGS) \
-	scripts/find-unused-docs.sh:    str=3D$(scripts/kernel-doc -export "$file"=
- 2>/dev/null)
-
-Comments?
-
-Regards,
-Mauro
