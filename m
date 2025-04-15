@@ -1,126 +1,147 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F2EA932;
-	Tue, 15 Apr 2025 13:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC31527B1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723999; cv=none; b=tUHxX8di39B2eACZHXb9bBU0DC48hrxnGixc/UjBhc5BRtXDoqwYF20O05LjSweuBZibakfF0LyPZGPETvNLBQ+iQBFaJPGDNIyKl6//qjrio6y6eBejRLBmJ121jEMRAPtVI27m3jbC5XpalhmUr1qplVsQJEf+FWmLCvKne18=
+	t=1744724007; cv=none; b=IvxJq+9Pz9X2YBLrECUep887XTGnwnuJtaODnbD0Mv82D7p/4LkwJlctbczDHHXAOSyBu93vtK4Tuelbp0XdQflbFjgtYfta653zKtdDLaIwZ9JfNhmXRvgv5jaK0OsfwL7fUtxJ9ZD6bSmkdU9EQ1ES7h3ITlrxLO8NyB4ouUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723999; c=relaxed/simple;
-	bh=IBF9J0ep9cjAC9XCYOJFD2EZwlaLg4Ku/1yVlWlYkPg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kYUEMYrR1otZ4sM0Hxlcsi7VXx0arjNBDPBlkMOo84k9pbu0CqqQWBJWhI5bUESuJbetgacbSiwpbSKwMNSRSjuO0zW1j6cm8QsICh1ef7Q9JeZ2DRWdr4Qiv0Or0EyRPd+tSFZfzCqm1+RGPrwAxer3EeWC/1cNGkdL+wvHryw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Riz0HDuv; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Aye+2S9O reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744724007; c=relaxed/simple;
+	bh=ek3xtokJGLel1uaqoh04AFgye1w5Sn7lMzo5cXs8j9I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMChCHbIVzWbh5tRSJs4aP0qZPHcErpRkCiNZambENhbU63ZQtnNmMZSCKa86f4eqjJDpOVydgVCszwAwZNAZxpyLMuEWrH/im/jgxUC2zJdxXci9f2MDmJmjjUdA3v+8yjGG/FEqUudmsJzOpp7HDLJYyU33/SPlBd0GFEWfdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rdVPHELa; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Riz0HDuv";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Aye+2S9O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rdVPHELa"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2255003f4c6so56978615ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744723996; x=1776259996;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=R2SZvhgWOcXu74APsWOF5IGVz2bjc0yiT34pBzEhPzg=;
-  b=Riz0HDuvtBiuXTfAo5GRjnCc+OHY7Lzkgq2SEF2jqi2RpsJnHLRHXGK6
-   gisPoH0WlX6YRO1LQ8EVxsMlRDw0dfPzT72iUlW2buoJY/ovrJ7eCexPq
-   2DBDFKfGSQZreqURqLUaTng6GD03lYw5xcIWR2eYQhHdKR95kcfVV8YA7
-   0nfuPbyEOjjx7JyMrEEFokyL/IW99bMWvoXap3rlextocqchIDkdLDzpP
-   aMcqngfnbd5PSP8hXza5kSPPmVrM4LbSyAWzUmV8oxZ1MnJFlSwq1hHMZ
-   TsPfdg2xmZiH5YNwhlaN1/+E3FWzRqqeNO+WhM7SwAg9Cq93pHIW2e/pB
-   g==;
-X-CSE-ConnectionGUID: FzvENSeBT/eNc8+aXFsG1Q==
-X-CSE-MsgGUID: iKjBA6smT3i4jVEC3eJDkQ==
-X-IronPort-AV: E=Sophos;i="6.15,213,1739833200"; 
-   d="scan'208";a="43543921"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 15 Apr 2025 15:33:12 +0200
-X-CheckPoint: {67FE6017-19-903EAEAC-E04C76C8}
-X-MAIL-CPID: 41A4BAF9440150BB2E011C50814F7D8B_5
-X-Control-Analysis: str=0001.0A006397.67FE6014.0029,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 072EA16352A;
-	Tue, 15 Apr 2025 15:33:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744723987;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=R2SZvhgWOcXu74APsWOF5IGVz2bjc0yiT34pBzEhPzg=;
-	b=Aye+2S9OSazLcxSrARooQIIqEveTec8F0AuUZg7N0qxWL4N3rFbkLV0m/aKsaWjujxk4KJ
-	iVbqYFijDFu5vULgJ3uzsKQI6FeOpEV+cWnb2ocKKBc5EYWUGOftgpoXCUhRPcaDbvOTQ8
-	QLsngYPwAJDruKTEh2ffEyatPXO17Cl4Swmi/H9PpurvFivHiuUAWLQ1YwVThexqDYj+EP
-	B+z3T+aXfrcaWgSvHxXSrsx/9yHiC8dit59WZCd04ziXxRkpJFSD0cyA5qDAfrAe5ATeFG
-	o5cx6e2F+E7h8wbwrElMBJo0vtNblnMYym0EF3LEpGkZefwH9FNGInu1HGsfsA==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: Markus Niebel <Markus.Niebel@tq-group.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux@ew.tq-group.com,
-	linux-renesas-soc@vger.kernel.org,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Subject: [PATCH 1/2] dt-bindings: arm: add TQMa8XxS boards
-Date: Tue, 15 Apr 2025 15:32:58 +0200
-Message-ID: <20250415133301.443511-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=linaro.org; s=google; t=1744724004; x=1745328804; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6kb+FJnw86VvRtE36N+d+X7ug1k6Yvpc1Ae1wFjKr7M=;
+        b=rdVPHELastes4u4eSCnFjKQw7B7P1s0RLzwNZABoObyN90lgUr5+TurKQ69r8n2uXn
+         MHfg47nAbXTfsR5LSyIwD1VE8xH+d3zDPpD2ftrh6x4rmzAt9GS5lYrfHTFI0GP+MSXs
+         iiz+QIzVLYV1dh3p7zlsUdG8PBly9+putZ3XLh5TuK+Hr4FwPcprVneTuvCB78am3MEU
+         14kclh2tkbfi05PNLtYeT9P8qihEI01jMm5iSyDogKOM6vjD3fv8PWcQcu6I2t3o4fPU
+         oPZ4CNqjtSUHj34t/d6mOxgOn6KLFXI5fgfno2DhBmqZ/wB2M2ykRhUB3oHaeJMZ09eY
+         GTPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744724004; x=1745328804;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6kb+FJnw86VvRtE36N+d+X7ug1k6Yvpc1Ae1wFjKr7M=;
+        b=rNP4XDh/ujKX5sff6ublVWv4O3iVUC2gx5oURUOIkW2Vedm4wPRwFdb7pbQj6nFvo3
+         oEJUsAb0ga2ZUncXiK34f82yZdtNL0ffFIJdpmAfMt9WLO3D0I5n2kUSXHLDwZd4cVfC
+         S7JzD0Nyn3XJpepPOKRRdM6TVhSMHSnWG/KX3q2JbVblDessTCmMne+sitFUSolO/Qag
+         DoA5cvVf2GGKRgGDuZKih5WKJdBUx/e2vzWposjrWylGj2ZO1mq/cJmQ8RkthR0i5XnS
+         oaiFr6tzLOoou+9dyyIU+tjVGbPGWW0/HqDFL5+fHX75sN8+OqbZDOHeY8jxoepbXSUy
+         8FMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqSrENg9jwj+GJLUBm7LoWOf2prXusQ3oXJKLoKXpJXKJ0aCX/SGYKQq5SwH+rX85dfa73ms1uWxhGtas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdT5Px4Cbc4hJA0ljv+VV4z9bFbWn0Xp7xkgWLreU2F+GfFevK
+	O/ySOEtWMSIJuXmfcPyPyB83Skp3/iAzH3X1XgE1V81lwv02NWTJLFVFj3TL8g==
+X-Gm-Gg: ASbGncsOzNrEA5MMAQzHHUC2EqsI49F62E3c89BD8mQlYhyCd7FAR9/CyzIaMxjgzmh
+	n7k4OYIxhCJeeQ/5Yy5P6/WpEYVTgIJSIVZE/NrTBPSQKjs8Um2N58JlKA5JpclmNwR84ZFB0/a
+	YH1RpeL676Elj2NN5MHajYHiZ8ElPRBc+Aifj0LlLuN0u6pGGGIgJvTnkA6sAja1BLXfLruqKZF
+	thsVLr+WgKlVRjJOtypdhxSnGQP3bHmP9wXkJOkjgUesjLOsTRLNV6Sw6I4pJSjj2CuF0hVFiKR
+	G2fsG52jDI+wYYZPIrfKcXf46VEiDFga8mCp+KzJ9YwZan5q+w==
+X-Google-Smtp-Source: AGHT+IH6VniJgzO2ge6ikLonScHc+/MusL7v3em7u0V8pMku3ZWCkwH976lsW0jgobFIzeciiAD5CQ==
+X-Received: by 2002:a17:902:f705:b0:220:e9ac:e746 with SMTP id d9443c01a7336-22bea4fdc7amr267687405ad.53.1744724004231;
+        Tue, 15 Apr 2025 06:33:24 -0700 (PDT)
+Received: from thinkpad ([120.60.71.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb6876sm117199985ad.181.2025.04.15.06.33.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 06:33:23 -0700 (PDT)
+Date: Tue, 15 Apr 2025 19:03:17 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <Z--cY5Uf6JyTYL9y@wunner.de>
 
-From: Markus Niebel <Markus.Niebel@tq-group.com>
+On Fri, Apr 04, 2025 at 10:46:27AM +0200, Lukas Wunner wrote:
+> On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > When the PCI error handling requires resetting the slot, reset it using the
+> > host bridge specific 'reset_slot' callback if available before calling the
+> > 'slot_reset' callback of the PCI drivers.
+> > 
+> > The 'reset_slot' callback is responsible for resetting the given slot
+> > referenced by the 'pci_dev' pointer in a platform specific way and bring it
+> > back to the working state if possible. If any error occurs during the slot
+> > reset operation, relevant errno should be returned.
+> [...]
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -234,11 +234,16 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >  	}
+> >  
+> >  	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> > -		/*
+> > -		 * TODO: Should call platform-specific
+> > -		 * functions to reset slot before calling
+> > -		 * drivers' slot_reset callbacks?
+> > -		 */
+> > +		if (host->reset_slot) {
+> > +			ret = host->reset_slot(host, bridge);
+> > +			if (ret) {
+> > +				pci_err(bridge, "failed to reset slot: %d\n",
+> > +					ret);
+> > +				status = PCI_ERS_RESULT_DISCONNECT;
+> > +				goto failed;
+> > +			}
+> > +		}
+> > +
+> 
+> This feels like something that should be plumbed into
+> pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
+> 
 
-TQMa8XxS is a SOM series featuring NXP i.MX8X SoC.
-They are called TQMa8XQPS and TQMa8XDPS respectively.
-MB-SMARC-2 is a carrier reference design.
+I did consider that, but didn't go for it since there was no platform reset code
+present in that function. But I will try to use it as I don't have a strong
+preference to do reset slot in pcie_do_recovery().
 
-Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+> Note that in the DPC case, pcie_do_recovery() doesn't issue a reset
+> itself.  The reset has already happened, it was automatically done
+> by the hardware and all the kernel needs to do is bring up the link
+> again.  Do you really need any special handling for that in the
+> host controller driver?
+> 
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index a6fd347de03fe..1c5fcd69e93e6 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -1333,6 +1333,22 @@ properties:
-               - const: tq,imx8qxp-tqma8xqp     # TQ-Systems GmbH TQMa8XQP SOM (with i.MX8QXP)
-               - const: fsl,imx8qxp
- 
-+      - description:
-+          TQMa8XxS is a series of SOM featuring NXP i.MX8X system-on-chip
-+          variants. It has the SMARC-2.0 form factor and is designed to be placed on
-+          different carrier boards. MB-SMARC-2 is a carrier reference design.
-+        oneOf:
-+          - items:
-+              - enum:
-+                  - tq,imx8qxp-tqma8xqps-mb-smarc-2 # TQ-Systems GmbH TQMa8QXPS SOM on MB-SMARC-2
-+              - const: tq,imx8qxp-tqma8xqps         # TQ-Systems GmbH TQMa8QXPS SOM
-+              - const: fsl,imx8qxp
-+          - items:
-+              - enum:
-+                  - tq,imx8dxp-tqma8xdps-mb-smarc-2 # TQ-Systems GmbH TQMa8XDPS SOM on MB-SMARC-2
-+              - const: tq,imx8dxp-tqma8xdps         # TQ-Systems GmbH TQMa8XDPS SOM
-+              - const: fsl,imx8dxp
-+
-       - description: i.MX8ULP based Boards
-         items:
-           - enum:
+I haven't tested DPC, so I'm not sure if reset slot is needed or not.
+
+> Only in the AER case do you want to issue a reset on the secondary bus
+> and if there's any platform-specific support needed for that, it needs
+> to go into pcibios_reset_secondary_bus().
+> 
+
+Ok. I'm trying out this right now and will see if it satisfies my requirement
+(for both AER fatal and Link Down recovery).
+
+- Mani
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
