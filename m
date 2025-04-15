@@ -1,189 +1,256 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C7C14831E
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A98B526296;
+	Tue, 15 Apr 2025 15:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731930; cv=none; b=GidE0oxyJuVLmsR1tPlMWNYOOdVSInQR0Kcn63++GO+4jHKDQ47I1qakDsnL4/UtLLL248sMfnivp3p+J1W71Fys4bpPY9HkdswnJi1G7M8Ca1WdKS6tGPJAj4NCeVLw3sLIqtPNAeMn1yR6K1ST1O9RRw+CScyHWDcwXB/DUbQ=
+	t=1744731939; cv=none; b=tMUtChBT3VbCvbWxbK876WYT24f1CR8FAoogie1UBVSPul3+Jy9FLpNfSfYv28cmR6LfNdaBRscbfjtd/Nfxag3cIo7eqqXTLTEyNpw3BpRhkkWTb8mfikcRrMVmizTXeho8CIcT368p3KJsT0dE4y5X0Z5OaDkWh09yXFgIIcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731930; c=relaxed/simple;
-	bh=m2fkGEVlnFm00Qqtt5fPt1VDtYCjKxwgcWjUSlP57Pw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SxQagvGw2zR+1Nix7O+xDA6FwdXQFPUVnQaZ6no/rPcbd67R3BBnhpfSR80nJtoFaf7+WLBPlcvPTfdKqsK0/O7NgTWQxYjmbDS+VY6FKJ+rdcBsFwCAxj9zz++9XjyzyDCIhC1JB2n4cXfLmia/pV5HbFYr/x27xCg6mrDM6aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kE40J6JA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BaxYHqh5; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kE40J6JA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BaxYHqh5; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744731939; c=relaxed/simple;
+	bh=o0Eg9TfT7BJvamHuPbuu03I8bpxbABShuJ3X8yYmfcI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SNKCabfjrPcgqDUMyAKlaaC2ojelHMm88g/lHrtzniC4LOXeyhSlGx7Y4A+erlxYBpHmZCcVyClhoI+x4+YAoJc2YxGUtF68qZr3whRXl7WLQSFq+hH4nI3ZrubQQ/AeKB5oiZEh970vv1qYln/ZFmchFbCYsJMhnAJz6LRUwpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BLgKTF0Q; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kE40J6JA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BaxYHqh5";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kE40J6JA";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BaxYHqh5"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3A85121160;
-	Tue, 15 Apr 2025 15:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744731927; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwQm7pdIvsfiQ1wOvubvUNZJmn1HQbe3h8/K+LEFo3o=;
-	b=kE40J6JAIiMkYm431w+zz2CE1kSs19tGjN6bU/mKmVI2bLA1F2UUI6Kn3Taxc7wqGXSH3H
-	rThFm+s+qVVW0H7fAp924U86BHBnnAqRYqVyS0cny0wIBm9ubWistL4Cl0M4iNxuBprwO5
-	85aReM7YEKd+EOOLatvWxyeuGCSDMTs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744731927;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwQm7pdIvsfiQ1wOvubvUNZJmn1HQbe3h8/K+LEFo3o=;
-	b=BaxYHqh5GNZSiZKxmQUm4b3c4pYlDe3pGoSnezBOaAoQ7nGLwYBuGVY7FL1dkvLvvsKpOR
-	ELlX6y/hc3uchsDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=kE40J6JA;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BaxYHqh5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744731927; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwQm7pdIvsfiQ1wOvubvUNZJmn1HQbe3h8/K+LEFo3o=;
-	b=kE40J6JAIiMkYm431w+zz2CE1kSs19tGjN6bU/mKmVI2bLA1F2UUI6Kn3Taxc7wqGXSH3H
-	rThFm+s+qVVW0H7fAp924U86BHBnnAqRYqVyS0cny0wIBm9ubWistL4Cl0M4iNxuBprwO5
-	85aReM7YEKd+EOOLatvWxyeuGCSDMTs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744731927;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fwQm7pdIvsfiQ1wOvubvUNZJmn1HQbe3h8/K+LEFo3o=;
-	b=BaxYHqh5GNZSiZKxmQUm4b3c4pYlDe3pGoSnezBOaAoQ7nGLwYBuGVY7FL1dkvLvvsKpOR
-	ELlX6y/hc3uchsDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C52A1139A1;
-	Tue, 15 Apr 2025 15:45:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AoLJLhZ//mcVVQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 15:45:26 +0000
-Date: Tue, 15 Apr 2025 17:45:26 +0200
-Message-ID: <87wmblxwbt.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: WangYuli <wangyuli@uniontech.com>
-Cc: Philipp Stanner <pstanner@redhat.com>,
-	akpm@linux-foundation.org,
-	guanwentao@uniontech.com,
-	linux-kernel@vger.kernel.org,
-	mingo@kernel.org,
-	niecheng1@uniontech.com,
-	tglx@linutronix.de,
-	zhanjun@uniontech.com,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	SOUND <linux-sound@vger.kernel.org>
-Subject: Re: [PATCH v2 5/5] ALSA: korg1212: snd_korg1212_prepare: Rename del_timer in comment
-In-Reply-To: <1F0B4039A1EC1361+e24aa199-17e5-4cb3-9218-52412a60924e@uniontech.com>
-References: <37A1CE32D2AEA134+20250414042251.61846-1-wangyuli@uniontech.com>
-	<590769506CF46967+20250414042629.63019-5-wangyuli@uniontech.com>
-	<70bb676764099754d10c4be2f095e0fb829f233a.camel@redhat.com>
-	<1F0B4039A1EC1361+e24aa199-17e5-4cb3-9218-52412a60924e@uniontech.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BLgKTF0Q"
+Received: from narnia (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A3E9A210C443;
+	Tue, 15 Apr 2025 08:45:27 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A3E9A210C443
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744731937;
+	bh=QuJyjod+PaXXHNfCMhPGMW9mLvFTWCWAv7e+voj8vdo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=BLgKTF0QYGwhBiUKzBI83CwLp6uOuqH/rY3yqMfbDQX4A4kaUL3UWtisXJDrRAnDR
+	 mOrfD3P30AUwXj+9OBwC3yLw9XRi0+CidxFNAOizuUezj6gsmGYe4ZnSuUO8GlsZjy
+	 mW0p4dYmbkkAV5SouL1VVFtRwgjmhvezJoV+fGAw=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+ <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
+ <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
+ =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
+ Desaulniers
+ <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
+ <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
+ Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
+ <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
+ <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
+ <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
+ <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
+ <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
+In-Reply-To: <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
+ <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
+ <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
+ <87semdjxcp.fsf@microsoft.com>
+ <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
+ <87friajmd5.fsf@microsoft.com>
+ <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
+Date: Tue, 15 Apr 2025 08:45:25 -0700
+Message-ID: <87a58hjune.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3A85121160
-X-Spam-Score: -3.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Apr 2025 13:10:39 +0200,
-WangYuli wrote:
-> 
-> Hi Philipp Stanner,
-> 
-> On 2025/4/14 16:34, Philipp Stanner wrote:
-> > Wouldn't it be better to just remove all that? Or at least document
-> > what it is good for?
-> 
-> This code comes from commit 4d6dcf60b9 ("ALSA update   - documentation
->   - control API - added multi-elements to reduce memory usage   -
-> improved preallocation of DMA buffers   - CS46xx driver - added
-> support for secondary codec   - HDSP driver - big update     -
-> firmware is loaded with hdsptool now   - pmac driver updates (fixed
-> oops and beep stuff)   - VIA82xx driver updated   - ymfpci driver
-> updated   - drivers updated to new PnP layer     - wavefront, ad1816a,
-> cs423x, es18xx, interwave, opl3sa2, cmi8330") in the history tree [1]
-> as part of a huge patch.
-> 
-> I couldn't find any useful information about this specific code within
-> that commit.
-> 
-> Since I'm uncertain if we truly don't need it (this code is marked
-> with "FIXME" above), I've kept this comment.
-> 
-> Furthermore, this driver has other sections of commented-out code as
-> well, so a more comprehensive cleanup of this driver might be a better
-> approach in the future.
-> 
-> If possible, I'd also be happy to contribute to that effort.
-> 
-> However, this commit isn't intended for that purpose.
-> 
-> Its sole aim is to clean up the comment that were missed by commit
-> 8fa7292fee5c ("treewide: Switch/rename to timer_delete_sync") and
-> should have been updated.
-> 
-> 
-> [1]. https://web.git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/?id=4d6dcf60b98000c204b309b529c10b2a3884789e
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-Yeah, the code is quite old and dirty, and this timer stuff can be
-omitted completely by introducing the proper sync_stop PCM ops.
-Let me rewrite the code instead.
+> On Mon, Apr 14, 2025 at 5:32=E2=80=AFPM Blaise Boscaccy
+> <bboscaccy@linux.microsoft.com> wrote:
+>>
+>> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+>>
+>> > On Sat, Apr 12, 2025 at 6:58=E2=80=AFAM Blaise Boscaccy
+>> > <bboscaccy@linux.microsoft.com> wrote:
+>> >>
+>> >> TAlexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+>> >>
+>> >> > On Fri, Apr 4, 2025 at 2:56=E2=80=AFPM Blaise Boscaccy
+>> >> > <bboscaccy@linux.microsoft.com> wrote:
+>> >> >> +
+>> >> >> +static int hornet_find_maps(struct bpf_prog *prog, struct hornet_=
+maps *maps)
+>> >> >> +{
+>> >> >> +       struct bpf_insn *insn =3D prog->insnsi;
+>> >> >> +       int insn_cnt =3D prog->len;
+>> >> >> +       int i;
+>> >> >> +       int err;
+>> >> >> +
+>> >> >> +       for (i =3D 0; i < insn_cnt; i++, insn++) {
+>> >> >> +               if (insn[0].code =3D=3D (BPF_LD | BPF_IMM | BPF_DW=
+)) {
+>> >> >> +                       switch (insn[0].src_reg) {
+>> >> >> +                       case BPF_PSEUDO_MAP_IDX_VALUE:
+>> >> >> +                       case BPF_PSEUDO_MAP_IDX:
+>> >> >> +                               err =3D add_used_map(maps, insn[0]=
+.imm);
+>> >> >> +                               if (err < 0)
+>> >> >> +                                       return err;
+>> >> >> +                               break;
+>> >> >> +                       default:
+>> >> >> +                               break;
+>> >> >> +                       }
+>> >> >> +               }
+>> >> >> +       }
+>> >> >
+>> >> > ...
+>> >> >
+>> >> >> +               if (!map->frozen) {
+>> >> >> +                       attr.map_fd =3D fd;
+>> >> >> +                       err =3D kern_sys_bpf(BPF_MAP_FREEZE, &attr=
+, sizeof(attr));
+>> >> >
+>> >> > Sorry for the delay. Still swamped after conferences and the merge =
+window.
+>> >> >
+>> >>
+>> >> No worries.
+>> >>
+>> >> > Above are serious layering violations.
+>> >> > LSMs should not be looking that deep into bpf instructions.
+>> >>
+>> >> These aren't BPF internals; this is data passed in from
+>> >> userspace. Inspecting userspace function inputs is definitely within =
+the
+>> >> purview of an LSM.
+>> >>
+>> >> Lskel signature verification doesn't actually need a full disassembly,
+>> >> but it does need all the maps used by the lskel. Due to API design
+>> >> choices, this unfortunately requires disassembling the program to see
+>> >> which array indexes are being used.
+>> >>
+>> >> > Calling into sys_bpf from LSM is plain nack.
+>> >> >
+>> >>
+>> >> kern_sys_bpf is an EXPORT_SYMBOL, which means that it should be calla=
+ble
+>> >> from a module.
+>> >
+>> > It's a leftover.
+>> > kern_sys_bpf() is not something that arbitrary kernel
+>> > modules should call.
+>> > It was added to work for cases where kernel modules
+>> > carry their own lskels.
+>> > That use case is gone, so EXPORT_SYMBOL will be removed.
+>> >
+>>
+>> I'm not following that at all. You recommended using module-based lskels
+>> to get around code signing requirements at lsfmmbpf and now you want to
+>> nuke that entire feature? And further, skel_internal will no longer be
+>> usable from within the kernel and bpf_preload is no longer going to be
+>> supported?
 
+The eBPF dev community has spent what, 4-5 years on this, with little to
+no progress. I have little faith that this is going to progress on your
+end in a timely manner or at all, and frankly we (and others) needed
+this yesterday. Hornet has zero impact on the bpf subsystem, yet you
+seem viscerally opposed to us doing this. Why are you trying to stop us
+from securing our cloud?
 
-thanks,
+>
+> It was exported to modules to run lskel-s from modules.
+> It's bpf internal api, but seeing how you want to abuse it
+> the feature has to go. Sadly.
+>
 
-Takashi
+Are we in preschool again? You don't like how others are playing with
+your toys so you want to take them away from everyone. Forever.=20
+
+>> >> Lskels without frozen maps are vulnerable to a TOCTOU
+>> >> attack from a sufficiently privileged user. Lskels currently pass
+>> >> unfrozen maps into the kernel, and there is nothing stopping someone
+>> >> from modifying them between BPF_PROG_LOAD and BPF_PROG_RUN.
+>> >>
+>> >> > The verification of module signatures is a job of the module loadin=
+g process.
+>> >> > The same thing should be done by the bpf system.
+>> >> > The signature needs to be passed into sys_bpf syscall
+>> >> > as a part of BPF_PROG_LOAD command.
+>> >> > It probably should be two new fields in union bpf_attr
+>> >> > (signature and length),
+>> >> > and the whole thing should be processed as part of the loading
+>> >> > with human readable error reported back through the verifier log
+>> >> > in case of signature mismatch, etc.
+>> >> >
+>> >>
+>> >> I don't necessarily disagree, but my main concern with this is that
+>> >> previous code signing patchsets seem to get gaslit or have the goalpo=
+sts
+>> >> moved until they die or are abandoned.
+>> >
+>> > Previous attempts to add signing failed because
+>> > 1. It's a difficult problem to solve
+>> > 2. people only cared about their own narrow use case and not
+>> > considering the needs of bpf ecosystem as a whole.
+>> >
+>> >> Are you saying that at this point, you would be amenable to an in-tree
+>> >> set of patches that enforce signature verification of lskels during
+>> >> BPF_PROG_LOAD that live in syscall.c,
+>> >
+>> > that's the only way to do it.
+>> >
+>>
+>> So the notion of forcing people into writing bpf-based gatekeeper progra=
+ms
+>> is being abandoned? e.g.
+>>
+>> https://lore.kernel.org/bpf/bqxgv2tqk3hp3q3lcdqsw27btmlwqfkhyg6kohsw7lwd=
+gbeol7@nkbxnrhpn7qr/#t
+>> https://lore.kernel.org/bpf/61aae2da8c7b0_68de0208dd@john.notmuch/
+>
+> Not abandoned.
+> bpf-based tuning of load conditions is still necessary.
+> The bpf_prog_load command will check the signature only.
+> It won't start rejecting progs that don't have a signature.
+> For that a one liner bpf-lsm or C-based lsm would be needed
+> to address your dont-trust-root use case.
+>
+
+Since this will require an LSM no matter what, there is zero reason for
+us not to proceed with Hornet. If or when you actually figure out how to
+sign an lskel and upstream updated LSM hooks, I can always rework Hornet
+to use that instead.
+
+>>
+>> >> without adding extra non-code
+>> >> signing requirements like attachment point verification, completely
+>> >> eBPF-based solutions, or rich eBPF-based program run-time policy
+>> >> enforcement?
+>> >
+>> > Those are secondary considerations that should also be discussed.
+>> > Not necessarily a blocker.
+>>
+>> Again, I'm confused here since you recently stated this whole thing
+>> was "questionable" without attachment point verification.
+>
+> Correct.
+> For fentry prog type the attachment point is checked during the load,
+> but for tracepoints it's not, and anyone who is claiming that
+> their system is secure because the tracepoint prog was signed
+> is simply clueless in how bpf works.
+
+No one is making that claim, although I do appreciate the lovely
+ad-hominem attack and absolutist standpoint. It's not like we invented
+code signing last week. All we are trying to do is make our cloud
+ever-so-slightly more secure and share the results with the community.
+
+The attack vectors I'm looking at are things like CVE-2021-33200. ACLs
+for attachment points do nothing to stop that whereas code signing is a
+possible countermeasure. This kind of thing is probably a non-issue with
+your private cloud, but it's a very real issue with publicly accessible
+ones.=20=20
