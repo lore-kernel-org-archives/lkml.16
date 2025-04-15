@@ -1,180 +1,238 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021094.outbound.protection.outlook.com [52.101.62.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E605325525E
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744755175; cv=none; b=Y48ETp9ntTYEZ0TdTZZk/J900VNeIAqWFt8g+8rl1UImn/pqLzxSq9gfYEB9L5a+rpcd6o4X+djGH8dgBtGJZ5mtn0MnbPe74m72U/iD5XDQ4brtbR0GhgZ14jidLgDdq/bE5UKJT7LBE3pHaIaCs5ILktjPjS+D4YR3EWj+y+U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744755175; c=relaxed/simple;
-	bh=OA6xI7hqO5jrJ8K575jApn7TkXssdd7vTrMbDXVITdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aB0OLKKbTciQSqm1lsH5CPqt1xY/yIH/6dyLTxvorsX06VaOHq2Qd8pihKuS8Plagk1B+VY6oP48ITWJ8GyntbpFGmsb0Nx8h0r0LRrF6ZYsHA6TRRf3Yzz+uGH3cPQEehkeG9QelwlVk4I7MK/4UlqBVr6dWZAJwgjBshMD52o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=Y9+kIl2p; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C026827466A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744755234; cv=fail; b=KWdsl/LxShg3R4qWDTa2azpBJoSc2Gp6T/Tg7BIzv+ylB33Rmx/J/H9NTcl2zGvUaPoooTtJ1ijFTTuY0GZIua6BIOQgqiEUNIg29/pd95ucrh6icmnv2r2ZLMKPDjr7Fz5P7Y+uouHwt7SRb5BbFvkjrGGTdQkuQYy6clEpcHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744755234; c=relaxed/simple;
+	bh=Dc6Zuoz5+gYO5TvqZEbDCgQmWUDHWrasnFEyyE6LPHc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=J5InIBjvyD7ebadZifa/LyYKzTXNDb8AT9MxASVwNzoTUcXmoTXD7umzOjt+O6Ef3THJrVBrskRvWM7cS2GSmRJpkppr78tBmk3SbcXBuIKTX5j+/05kpUeCPpxL6JNZt1cLxUZeBtf0tr5KfJhVf2oHGcs1owhRZ7nTfduREc0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=egOves/a; arc=fail smtp.client-ip=52.101.62.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Y9+kIl2p"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so29583895e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:12:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="egOves/a"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JjlHOdMkXsKPE4R1RXZobPgzpFuLWGXt2+mi3dCojFYpc0AWKnS/2j4tHNHcYc5ZKBF7n1w8sFX3EVU/xcuzdgELNonWf48h745FbN8LEG7PmkvhMgB+LXZcCSXvdbwlMZCjvlWRpPuv8z7J3WptAyiHVUQ/4y3XSjn9O9TsEH+OAJ535GZ297vdPE5q8+c2DkIONk0wXZOkI81YfBQvbtIdQn7+zkFQXyMQBBl1p0oUiq+7N8lZTKS44d3QsUHqXaTKbuKMm1Er1aRPO79LbpUxDnVqNBn08Gjs9UFPvrL+Kof7l4sukZ68eEunMVPnZ3UIw1/iiKoZXtNPpK26zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=w3Kk51MJv9d2vEj0wbXx8bw/OcoTGauLNOmP7VgG7Ow=;
+ b=WveAQEk3n4EOPcqy8xo4yjx9/IFfYzYQVbnYShNM2ff/HcvcY+liKW2kMKuhNxuUOWqz2/4tnEwqxceUwNZ2iPQZFg4LZVxJi7fWxzqOHCeU9gEw4S3+ab9H/hMb2aVujsHmtdp6u6yY3HA6bReaI1KN+9QmDVJUBi6suAVhSnqNx63xh9cW565RHduz95564/KN6aAt7dgMkDBckyILmo7Zp9dFAgBQvbBRy6PyT5O3gJSGNC8XeB472BoIslfDu0LSIkYDIomN3r7Kf5cyJgCmtYLqSPBumO1XPf1Qiiwlh7Lbit1XzvLWIVTHcZtEIC/LDSmAWcInFj2mniI1JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1744755172; x=1745359972; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Glra7fMFRLxrPIzQwxk8Qeb1or+7AFryoPxji38Wm8U=;
-        b=Y9+kIl2pTvTNtKptfWoXwbO4WfA4ZnV/MmkRAY8mNJgHO8wWh8fhkTL9ta5oNI3gAP
-         JyX5jtNeFFi6qnWvzUC+W+K1+LaizCj2/2MkD2dF68VRSF7rkthebLJTOYHaCXTwO9MH
-         HzjMHr03lDL5cNmXgTrIajzH7dzLPfRarVLOQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744755172; x=1745359972;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Glra7fMFRLxrPIzQwxk8Qeb1or+7AFryoPxji38Wm8U=;
-        b=dpX/EWfRrmmu3wKtFdluCpo/9bJnay939wT5MeQLeWiv/NwqwJ5n8IBd+3clHDlUad
-         BzJTvQgFqhDRRJ0dcfACWlRgNXZ6AHux1EPE6pHflaQnU60KPTsQe4X6sTIQJqvxZwdr
-         6cYPyAEKTlZOU5tUrvQIoGQyWiF5QukGmQY7pDY2ky29hIKK8/PcnOisyiOxqJYOJBFK
-         nF5ymYSW58tUuK73vJOMUntqi/vCjuwM3/IORs7PJuzkF5jXdJQfMZOst742alnN7DyF
-         rBAhJ9jf7moBT+ACLupBnqwRsPgAC8dFSs4aboqfoswDwGLEEGgp+hDDNnOsKGKfV9jM
-         g0DA==
-X-Gm-Message-State: AOJu0YylskqXvsRPqZF39uID7V0u1BsTlokSidFKLk4/ZG9fpxiSYM/O
-	Uef5lyx8vcTwd1OWlN5/IKI21hia4+Q+WVHeuJRlSfE62ZyNZiDAenNv625dwRA=
-X-Gm-Gg: ASbGncv1acZ013CGaAUawiPUgehBRtBOSxpJ5hre6+p5/+bbAouO5upIv2p0w5LY315
-	EnS5vjqMx+TALkV3eNRHKktRbsazLaNPvmSaW/RqqrWa9/pem7zrhKE7iTHuj2Ko3gsKxaSeSgv
-	IrJe6OtkvviI0abZcejSGOnxWso+D1qt2k4LT6+VbnASQn3qD1ImC8ejiwT2WDmsh9RkBxzj+DT
-	ON8NxDW1MdmsgWq/WasSN47F5pLD7/nj6YY+rq/5RTTEXaXS1fX/VKdgFUnVSdh5auJEuJZ13v/
-	2Xs+kt/rMe4qCgQqmAt4Vv2AQERknNR9q19qKcwlRrWelvSpMZK53PVIU1BP7CAzuwGcKy2W7Xi
-	mBUBmkg==
-X-Google-Smtp-Source: AGHT+IHMt3F9pL0n8daCGA27MStUQTKqmwZC5+FBFhrh37dgHkJZdg1MMLEuJ5Tc1qMw2mZGLdp7Bg==
-X-Received: by 2002:a05:600c:3ca0:b0:43d:fa58:8378 with SMTP id 5b1f17b1804b1-4405a0ec7cbmr5103475e9.33.1744755172019;
-        Tue, 15 Apr 2025 15:12:52 -0700 (PDT)
-Received: from [192.168.1.183] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4f2cfesm2246405e9.19.2025.04.15.15.12.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 15:12:50 -0700 (PDT)
-Message-ID: <e781cabc-90ee-48cf-9a09-116a8edace1e@citrix.com>
-Date: Tue, 15 Apr 2025 23:12:49 +0100
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=w3Kk51MJv9d2vEj0wbXx8bw/OcoTGauLNOmP7VgG7Ow=;
+ b=egOves/a8vPxzbq1Nx+bgmJq+rta0V6Qk92rW+mU0xQj35YO4JmcwNMSt6+bul2baK19KSv6JjnsanulztMJwglwewQl1Mi3q4xMDlD5ZsqUN0pyk3gxPbR+bDs4xaFrjtFUKKFjG8aaITMeszaglMEGqSwMMF0j/r7qn6vPnfI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
+ DM8PR01MB7144.prod.exchangelabs.com (2603:10b6:8:6::22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.27; Tue, 15 Apr 2025 22:13:47 +0000
+Received: from LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 22:13:46 +0000
+From: D Scott Phillips <scott@os.amperecomputing.com>
+To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, James Clark
+ <james.clark@linaro.org>, James Morse <james.morse@arm.com>, Joey Gouly
+ <joey.gouly@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Mark Brown
+ <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rob Herring
+ (Arm)" <robh@kernel.org>, Shameer Kolothum
+ <shameerali.kolothum.thodi@huawei.com>, Shiqi Liu <shiqiliu@hust.edu.cn>,
+ Will Deacon <will@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>,
+ kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, open list
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: errata: Work around AmpereOne's erratum
+ AC04_CPU_23
+In-Reply-To: <Z_6SKjdvje1Lpeo3@linux.dev>
+References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
+ <20250415154711.1698544-2-scott@os.amperecomputing.com>
+ <Z_6SKjdvje1Lpeo3@linux.dev>
+Date: Tue, 15 Apr 2025 15:13:43 -0700
+Message-ID: <864iypgjjc.fsf@scott-ph-mail.amperecomputing.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0008.namprd03.prod.outlook.com
+ (2603:10b6:a03:33a::13) To LV2PR01MB7792.prod.exchangelabs.com
+ (2603:10b6:408:14f::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 09/19] x86: Secure Launch kernel early boot stub
-To: Sean Christopherson <seanjc@google.com>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev,
- dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com
-References: <20250410204149.2576104-1-ross.philipson@oracle.com>
- <20250410204149.2576104-10-ross.philipson@oracle.com>
- <Z_mMaAykU0IVKsjU@google.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <Z_mMaAykU0IVKsjU@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|DM8PR01MB7144:EE_
+X-MS-Office365-Filtering-Correlation-Id: eebe1153-cb3a-45b2-dcc9-08dd7c6aca68
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|52116014|366016|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pVx3egfPDYhDC6qSnrXqB4YqXoNyXx/FITziLPcN0E9hQ7StrdUZBeN45UPD?=
+ =?us-ascii?Q?nIwAJQFqV+YL5dS438Skf+huii0nYlV1hbRfNdJGXWUz2+UseptKrN6vPU3b?=
+ =?us-ascii?Q?+7JkldD4s+82BxuA3g7ZijpBrQVgtdvC41sHLEKXv1KzXusAqBJ91IZVB47g?=
+ =?us-ascii?Q?TTX3iHWGlruqAMyHEpNezHAnmND3Zy8c1sDWG0gQjFQT6VBkVrahIb9X0f+Z?=
+ =?us-ascii?Q?x8wg/m0AgbJrtU0H1oOtHP0YX45fc9sPk93XO0H8AZcOmcZA2SWkBKLKfxqB?=
+ =?us-ascii?Q?Bd53hFaCfgeDHWGfhohs49OBMQ6TD3t3ONqGm1xwc9IIPGIDn7XYM2HPoX8/?=
+ =?us-ascii?Q?/c4RgJDkFr71EB+9uTl1/RGdLYaxEilEpyVQIVFHQ7OE4dMjtPxK54SKvMuU?=
+ =?us-ascii?Q?X014KMwRb7YkcyzQP4GxxicyUivT5XOzlKa8JxK78ybP/I7iKSBdqdDKweY1?=
+ =?us-ascii?Q?4kPwGRM2ZSG0vAQFarZBR2seIS70bnC95MgSx2bsbFp3LqMP+/PRwZ+OIhlY?=
+ =?us-ascii?Q?IW2zhuhLHMgPIDbw6Halloa6jgId1VwGt4oLV25vpH0jXhXqlrchV/ybr+MD?=
+ =?us-ascii?Q?wyqqvCFwqJ44sU/pqyTU+6oPVBxTbeeK3PGD1JS9EGoSkjS/xtvYLhyyy5ky?=
+ =?us-ascii?Q?T3yIrrc3zSFPL7QhjcSbyI5VnNwffpsB7EACKhaKlhEVdSTLq+clqJdQSP+9?=
+ =?us-ascii?Q?B6xA/Xs3w4PwN/cQfx+Dopwl/JViImAW9dN5f7Xc4iGyWTYDbAy8jLbHa1Hj?=
+ =?us-ascii?Q?Wqj7bQmBk44biBltF9sgQB3VaY2+sL8CsXUr4cGcohAMhhN0AGBgGqSvs4Lt?=
+ =?us-ascii?Q?2LPYxTbDhyrt+x6JEUZ49O6K5QZcAtFByuQMsQnMjLniOfji+5zjaNe/5RsL?=
+ =?us-ascii?Q?Khyq0ITtQZWJabjaHZu5QnzIbm/Lbx8ogcrRQGmz9dmGX3mQKZzrgutUMHgx?=
+ =?us-ascii?Q?AgPpjy4C/HwX2BJJtxmiU+/ujaCkrKn1wGW9/Yi7M+J9JbY1Izv9SPvwambs?=
+ =?us-ascii?Q?mHpoeYSxEY66Bag7Ol6nBt0n8Ub6mzje+hJMEyI/h67xdfS3eOI9f44fBSO9?=
+ =?us-ascii?Q?uXNe7EutfkoB+erii/oBNUu3WKyILuN0qwxbnH23szy6/AeHRF9bIdMfMwq1?=
+ =?us-ascii?Q?Vnplviy6WC6ubfvQuoVBLz8o6wdR8yoFIee77IoZTcVjwRhbAbWv9coxcU9U?=
+ =?us-ascii?Q?RH26zl3plVa2yDRYohxUHTYcqYLkfaf/p6h8BtOH8iqIdKRLgVJZRIUb4FUO?=
+ =?us-ascii?Q?Iwe+pBZmtiwPkQhlGf9Bpq+t10nSzjGCJvGEJw5LcrsncFaTXbqaLzkM4/Q0?=
+ =?us-ascii?Q?fZ3QCKccDD9FAybpWm4msoAYzhBUncU26DH0+RZggOUKk5E4JelLzCFAjNPj?=
+ =?us-ascii?Q?xufhythbw80ylBBG2FTFBObtUAHj9OOuIcrAqhM6MQUTM+k3alXMVRVuNLTE?=
+ =?us-ascii?Q?RrgPNBnjXAy6kyLTNDC6juJoQYYrMmAE0Hx6tEOySY4EnSNy0lF6IQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(52116014)(366016)(38350700014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Abzy5C05RAeBF2KLxZiXUua+j5xqTLkBad21+yB90UqO4wEN5znMHXZRx9Ik?=
+ =?us-ascii?Q?sOjDrn4VCpmKwAPEStm/+X6YMj9OH8BUeQUgUFUQa/60m4+L5qfzTJ+iD8+o?=
+ =?us-ascii?Q?JF8FbValWB+ziVNta3TgiejTJ4Bq9bVBoFnm4jpQZsC1DCUCu1lqv57UWqG5?=
+ =?us-ascii?Q?1bdQEvcIqbmaJQvtn38z5U1czOINNxcpVA4waZ1RjoEDlubzna7xb0v0DPqE?=
+ =?us-ascii?Q?dcaatdK7DtaNfOStcmphmo7QXEIFo+wbYv96untKe2qBZMmK4FquwzuWDvrm?=
+ =?us-ascii?Q?Sk56DdGWg6YEuqFm8SV8IgdHHlyfWL3l2ax0H/YtSRb2jCqdWptSHpqkCizT?=
+ =?us-ascii?Q?2TKMMA+7NJLiNHbv4ueJ7Iyzx6R//4yrrLIAI4pomNCMzWpUd9uKhlwfSbai?=
+ =?us-ascii?Q?ENQkWJ1dn1ELF8caMDfFk25/G3x9If5kFonc4Fh5+7XA8Ba7hl10T3hFlFPd?=
+ =?us-ascii?Q?bkvpnSklmLG6gUQsfq1mh0eoAMaU9VYja7Oxe85JlBq1An8Vkq7mFemzmbUn?=
+ =?us-ascii?Q?lmDGmRzXNJcGJrm8DK8e0hfBK6QNaBiTFQZes1mXCQQADf9cs8yat8Ev5JMj?=
+ =?us-ascii?Q?UaQKI6OGZtuHNJRClFm8tMFNZzwnkZpm3s0VvwVm0pb/2YvbIR621JfoAUoT?=
+ =?us-ascii?Q?3LFEBQxi+YARC0NypLI8xe3rH2qopwWUQ8m7D9wm1u5dpV2n7rf7XRy1JhGU?=
+ =?us-ascii?Q?8A6241/UZvFjdiHEzqRliByqOSjxsAANhfJbboJMjUrm7CcF6FjZT1kY48PB?=
+ =?us-ascii?Q?HY2dc+cOOb3Ktl7rYUK/IcgEDHuQxEK3mF81dCm5Wo9+gVxcueYDLYOA+mMN?=
+ =?us-ascii?Q?N9GnBlruU7agD739UFp2flDaBqWsqtTjx0MCfH1wVCoBXGAYpKXSw+B8qq6C?=
+ =?us-ascii?Q?KvCa7F2Au9hitUwfv++a2jIXO9mNw4kjaWMK9nfBPKIwhCSt3xZ8saEYa1wc?=
+ =?us-ascii?Q?OQL60doD4+A51bpeaiaSHhwxncF1oAUaEnlMeOBIBzBwJKEvnTXam7wENqwW?=
+ =?us-ascii?Q?VGWdqJuZLBBpTNQoYWNomOtbFE37Sd0RKCKAN5UXVt3Pi/UAE4EpzOwWrRib?=
+ =?us-ascii?Q?n+CN6NS8Mn7jfH53CoI2KpwV3t/XqyZFWA9SVSrlMv0eNefevVbK7zdSUnIT?=
+ =?us-ascii?Q?f14uSa8J1mWugmsF5Fo095GVI94560sW3qfh2M+b2pfFy+U/pFl1a+rWtJvv?=
+ =?us-ascii?Q?iAKAjEUD3sr/xeYreOO9P+vT3dk5tztnXPjljciR5igB4dpmUsqryeoniJhS?=
+ =?us-ascii?Q?eSXmxIVJA6gxVA8ibzQbPtMRmTbOM17uM5DkxWzlxS3V+ZIpPSMmepQ+fiTx?=
+ =?us-ascii?Q?zUPQQ12KakSE8gLHgyk9qx7hmb4g663bf/8Lj3LoLboZCegGiuFs+oRXNlq+?=
+ =?us-ascii?Q?aQqXvVw7H9sU7nfdOgV7Ml8B7mwh8KbKTlE4yUpzquxBF5BHKnoieyCws5Oe?=
+ =?us-ascii?Q?BaSga0PpZ/1eCo1aIKjA1Bctg0wWJsHfx7HdfAtDoyKaPPBvETutcumtHupv?=
+ =?us-ascii?Q?fZbYXBkf0M7k+XLiVsEWsyHGsOMQ1IV5Oe9kLxtuQgMEbBqMcz1OuVRt0pH4?=
+ =?us-ascii?Q?2HS8xKfPfPmbGzwJtMW68TWoceUK0oAzi3tEbGJot32a738KXFFvwAISG4/c?=
+ =?us-ascii?Q?B6Frmr+WTbwnsbu6SHojro4=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eebe1153-cb3a-45b2-dcc9-08dd7c6aca68
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 22:13:46.4600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XsNvfriM/ztDyuI2+cQnj4LNqLoOBZjk6+/jER0MU8t09e8fPUrkGyyTK8km4MzgxEGPxl7rBUTPGrZhhO9o8HyFGApq3NAuSKI0CKXzGRkIWgS5adUh7kTE0zRcXSvf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR01MB7144
 
-On 11/04/2025 10:40 pm, Sean Christopherson wrote:
-> On Thu, Apr 10, 2025, Ross Philipson wrote:
->> +	 * instruction can return for a number of reasons. Test to see if it returned
->> +	 * because the monitor was written to.
->> +	 */
->> +	monitor
+Oliver Upton <oliver.upton@linux.dev> writes:
+
+> Hi,
+>
+> On Tue, Apr 15, 2025 at 08:47:11AM -0700, D Scott Phillips wrote:
+>> Updates to HCR_EL2 can rarely corrupt simultaneous translations from
+>> either earlier translations (back to the previous dsb) or later
+>> translations (up to the next isb). Put a dsb before and isb after writes
+>> to HCR_EL2.
+>> 
+>> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
+>> ---
+>>  arch/arm64/Kconfig              | 13 +++++++++++++
+>>  arch/arm64/include/asm/sysreg.h |  7 +++++++
+>>  arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
+>>  arch/arm64/tools/cpucaps        |  1 +
+>>  4 files changed, 35 insertions(+)
+>> 
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index e5fd87446a3b8..2a2e1c8de6a16 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -481,6 +481,19 @@ config AMPERE_ERRATUM_AC03_CPU_38
+>>  
+>>  	  If unsure, say Y.
+>>  
+>> +config AMPERE_ERRATUM_AC04_CPU_23
+>> +        bool "AmpereOne: AC04_CPU_23:  Failure to synchronize writes to HCR_EL2 may corrupt address translations."
+>> +	default y
+>> +	help
+>> +	  This option adds an alternative code sequence to work around Ampere
+>> +	  errata AC04_CPU_23 on AmpereOne.
 >> +
->> +1:
->> +	mfence
->> +	mwait
->> +	movl	(%eax), %edx
-> Why load the value into EDX?  At a glance, the value is never consumed.
+>> +	  Updates to HCR_EL2 can rarely corrupt simultaneous translations from
+>> +	  either earlier translations (back to the previous dsb) or later
+>> +	  translations (up to the next isb).
+>> +
+>> +	  If unsure, say Y.
+>> +
+>>  config ARM64_WORKAROUND_CLEAN_CACHE
+>>  	bool
+>>  
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index e7781f7e7f7a7..253de5bc68834 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -1142,6 +1142,10 @@
+>>  	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC03_CPU_36) &&	\
+>>  	 __sysreg_is_hcr_el2(r) &&				\
+>>  	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC03_CPU_36))
+>> +#define __hcr_el2_ac04_cpu_23(r)				\
+>> +	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23) &&	\
+>> +	 __sysreg_is_hcr_el2(r) &&				\
+>> +	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC04_CPU_23))
+>>  
+>>  /*
+>>   * The "Z" constraint normally means a zero immediate, but when combined with
+>> @@ -1154,6 +1158,9 @@
+>>  		asm volatile("mrs %0, daif; msr daifset, #0xf;"	\
+>>  			     "msr hcr_el2, %x1; msr daif, %0"	\
+>>  		: "=&r"(__daif) : "rZ" (__val));		\
+>> +	} else if (__hcr_el2_ac04_cpu_23(r)) {			\
+>> +		asm volatile("dsb nsh; msr hcr_el2, %x0; isb"	\
+>> +			     : : "rZ" (__val));			\
 >
->> +	testl	%edx, %edx
->> +	jz	1b
-> This usage of MONITOR/MWAIT is flawed.  The monitor needs to be re-armed in each
-> loop, otherwise mwait will be a glorified nop.
->
-> More importantly, the exit condition needs to be checked before monitor,
+> At least from your erratum description it isn't clear to me that this
+> eliminates the problem and only narrows the window of opportunity.
+> Couldn't the implementation speculatively fetch translations with an
+> unsynchronized HCR up to the ISB? Do we know what translation regimes
+> are affected by the erratum?
 
-after monitor and before mwait.
+Hi Oliver, I got some clarification from the core folks. The issue
+affects the data side of the core only, not the instruction side.  I'll
+update my description to include that.
 
-But yes, the prior logic was definitely wonky.
+Speculation after the `msr hcr_el2` couldn't launch a problem
+translation when the `msr` is followed by an `isb` like this.
 
->  even on
-> the first iteration.  In the (probably extremely unlikely) scenario that the write
-> to wake the CPU arrives before MONITOR is executed, this CPU may get stuck waiting
-> indefinitely.
->
-> E.g. something like:
->
->
-> 1:
-> 	monitor
-> 	cmpl	(%eax), 0
 
-$0
+Marc Zyngier <maz@kernel.org> writes:
 
-Luckily, this will fail to assemble, rather than dereferencing 0.
+> On Tue, 15 Apr 2025 16:47:11 +0100,
+> If the write to HCR_EL2 can corrupt translations, what guarantees that
+> such write placed on a page boundary (therefore requiring another TLB
+> lookup to continue in sequence) will be able to get to the ISB?
 
-~Andrew
-
-> 	jnz	2f
-> 	mwait
-> 	jmp	1b
-> 2:
-
+Hi Marc, I understand now from the core team that an ISB on another page
+will be ok as the problem is on the data side only.
