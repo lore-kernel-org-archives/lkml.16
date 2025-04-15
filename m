@@ -1,177 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 458E728469B
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7D52951C7
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718809; cv=none; b=dDc+1SYFP/+6EmzOMCaSLSMP4lhLVtmDQfAsJES/QaEIAisgKilzpdrPaayAP0JmK7ygm1EVIt8flJVEeMPTWF5I4gcEifKytQ7U3dr/HQ7pDdjGm290Xhr6dHYwBrH45DtzMFNSj2doxIIodZXjRFYErQ29ujDtf9czR6ZhA8k=
+	t=1744718812; cv=none; b=LO/0IllTeU/FBBNpwSDr6qmcDKS4dMuGXb3eBpiAqQL4SIpDrzcZwUs3HkoYzSyK0r81Up8sAE6KDkeKnD916bkhPWWpWSnKGQxd0L71Bm0g3wexRCUzsRSiyuQkCgFQOvUXg3Hb8lT/84jmj2wQjw6k3FIjHL1qIBA3CE4yKa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718809; c=relaxed/simple;
-	bh=3zjVv3OxqpO942bA5m0yLQFRbhjeXO3ZrV6JHCAa4cw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iwYQYEDueFpBsmVqusqGwbHlIQY8noTaMcheGiUg9SvqtxbMvf6R3L+oilDam+rn2XCu8VaXoO2JM5L5iqYS/pXIQ6SlNABNxsDTQw6r/PJofY3VIOtT7lAWsaoxPPuBl7PHmRGUtCuig+LuWUSFftIxCtxKamGjQjPEZStndvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8133A15A1;
-	Tue, 15 Apr 2025 05:06:43 -0700 (PDT)
-Received: from [10.163.73.130] (unknown [10.163.73.130])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12D113F694;
-	Tue, 15 Apr 2025 05:06:40 -0700 (PDT)
-Message-ID: <140c6ab6-fbc4-4ae1-a804-726bfd5fdcb0@arm.com>
-Date: Tue, 15 Apr 2025 17:36:37 +0530
+	s=arc-20240116; t=1744718812; c=relaxed/simple;
+	bh=x4b1Ksyd2oZZ01nHbkKfVYXSxKoQwElChjUNG5hzlbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PKfDMwMx34ccQge7AgSdkG4vvC8i0BI20cs3u/4G796ytqnRMEBd4xgmz8KmZkoCXzNJPDKs3ZdVR+o1zj+KFlRcxWp3xu55IY3Kd8OdF5KWQL6lIlEX6/jXGfWeoBsyjzRkVv9ocTAKtMXde8P8rzI1yJI6hpmV5Hcp33RxHkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NPHTkUH7; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NPHTkUH7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744718811; x=1776254811;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x4b1Ksyd2oZZ01nHbkKfVYXSxKoQwElChjUNG5hzlbo=;
+  b=NPHTkUH7B62ERFK7YGBo2oS+gVtOeuvIbVMuD4gKh7J4J8nUS0NQbwMi
+   T6tIMNS740V+9g+r2vHW0BrNvuPH7sJrPUTaWz2j2t7CLIquzxaLAqODh
+   Es8VHMFuem2szn1pIEs2q3lZBwdPrPsiQ7Wb/8b4ZWf6skdoZQTsOilCY
+   E+Y64A5BROY5bvpyNFLdyGl/5McifuOIrkdUI9q2QiaacVjrF0os49ErL
+   BY2cYIRR40P+o573vZZiTB6+pljf2Sw37UepFtiIHpAyOQgJO+9Pxv4fU
+   T0I0ZCqzDFj11aYwPlUnCCalXZ+MaM6xLn2tUFg26yWG4USPVVaQuo6r9
+   g==;
+X-CSE-ConnectionGUID: gx3739JiQra+jQSGDDPoMw==
+X-CSE-MsgGUID: ZJIyLZsCSvSJ46In/vejYg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56883900"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="56883900"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:06:50 -0700
+X-CSE-ConnectionGUID: 3ZUTnRvyQc2AZuhJ32hn1w==
+X-CSE-MsgGUID: NkzuOuzgR1OaN+lXV9EWhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130632856"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:06:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4f3t-0000000CXNM-021J;
+	Tue, 15 Apr 2025 15:06:45 +0300
+Date: Tue, 15 Apr 2025 15:06:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Corey Minyard <corey@minyard.net>
+Cc: openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] ipmi: si: Cast to smaller integer type without
+ warning
+Message-ID: <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
+References: <20250415085156.446430-1-andriy.shevchenko@linux.intel.com>
+ <Z_5FV65cyIwiI9rs@mail.minyard.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mempolicy: Optimize queue_folios_pte_range by PTE
- batching
-To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250411081301.8533-1-dev.jain@arm.com>
- <09c77ab5-65fc-4bca-a7e5-2b11bba9330d@redhat.com>
- <9ed4c113-37eb-4e3d-98a1-f46f786aaea9@arm.com>
- <1d6d7842-1700-40d2-9d5b-e044fbc242de@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <1d6d7842-1700-40d2-9d5b-e044fbc242de@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_5FV65cyIwiI9rs@mail.minyard.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Tue, Apr 15, 2025 at 06:39:03AM -0500, Corey Minyard wrote:
+> On Tue, Apr 15, 2025 at 11:51:56AM +0300, Andy Shevchenko wrote:
+> > Debian clang version 19.1.7 is not happy when compiled with
+> > `make W=1` (note, CONFIG_WERROR=y is the default):
+> > 
+> > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+> >   268 |         io.si_type      = (enum si_type)device_get_match_data(&pdev->dev);
+> > 
+> > Fix this by intermediate cast to the uintptr_t, that makes compiler happy.
+> 
+> Unless things have changed recently, Linus prefers "unsigned long" per
+> https://patchwork.kernel.org/project/linux-hardening/patch/20220616143617.449094-1-Jason@zx2c4.com/#24899749
 
+I'm not sure I got your point. That discussion seems irrelevant to me.
+They are talking about pointer-as-an-integer cases. Here we already know
+that we are passing integer-as-a-pointer and this is the opposite
+conversion.
 
-On 15/04/25 5:29 pm, David Hildenbrand wrote:
-> On 15.04.25 13:47, Dev Jain wrote:
->>
->>
->> On 15/04/25 3:47 pm, David Hildenbrand wrote:
->>> On 11.04.25 10:13, Dev Jain wrote:
->>>> After the check for queue_folio_required(), the code only cares 
->>>> about the
->>>> folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
->>>> this
->>>> loop by skipping over a PTE batch mapping the same folio.
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>> Unfortunately I have only build tested this since my test 
->>>> environment is
->>>> broken.
->>>>
->>>>    mm/mempolicy.c | 12 +++++++++++-
->>>>    1 file changed, 11 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>>> index b28a1e6ae096..b019524da8a2 100644
->>>> --- a/mm/mempolicy.c
->>>> +++ b/mm/mempolicy.c
->>>> @@ -573,6 +573,9 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>> unsigned long addr,
->>>>        pte_t *pte, *mapped_pte;
->>>>        pte_t ptent;
->>>>        spinlock_t *ptl;
->>>> +    int max_nr;
->>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>> +    int nr = 1;
->>>
->>> Try sticking to reverse xmas tree, please. (not completely the case
->>> here, but fpb_flags can easily be moved all he way to the top)
->>
->> I thought that the initializations were to be kept at the bottom.
-> 
-> Not that I am aware of.
-> 
->> Asking for future patches, should I put all declarations in reverse-xmas
->> fashion (even those which I don't intend to touch w.r.t the patch
->> logic), or do I do that for only my additions?
-> 
-> We try to stay as close to reverse-xmas tree as possible. It's not 
-> always possible (e.g., dependent assignments), but fpb_flags in this 
-> case here can easily go all the way to the top.
+> And it would match what is in the match table.
 
-Sure.
+Match tables are tend to move to pointers, enum is usually goes to int.
 
-> 
-> ...
-> 
->>
->>>
->>>   >       ptl = pmd_trans_huge_lock(pmd, vma);>       if (ptl) {
->>>> @@ -586,7 +589,8 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>> unsigned long addr,
->>>>            walk->action = ACTION_AGAIN;
->>>>            return 0;
->>>>        }
->>>   > -    for (; addr != end; pte++, addr += PAGE_SIZE) {> +    for (;
->>> addr != end; pte += nr, addr += nr * PAGE_SIZE) {
->>>> +        nr = 1;
->>>>            ptent = ptep_get(pte);
->>>>            if (pte_none(ptent))
->>>>                continue;
->>>> @@ -607,6 +611,11 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>> unsigned long addr,
->>>>            if (!queue_folio_required(folio, qp))
->>>>                continue;
->>>>            if (folio_test_large(folio)) {
->>>> +            max_nr = (end - addr) >> PAGE_SHIFT;
->>>> +            if (max_nr != 1)
->>>> +                nr = folio_pte_batch(folio, addr, pte, ptent,
->>>> +                             max_nr, fpb_flags,
->>>> +                             NULL, NULL, NULL);
->>>
->>> We should probably do that immediately after we verified that
->>> vm_normal_folio() have us something reasonable.
->>
->> But shouldn't we keep the small folio case separate to avoid the
->> overhead of folio_pte_batch()?
-> 
-> Yes, just do something like
-> 
-> if (folio_test_large(folio) && end - addr > 1)
->      nr = folio_pte_batch(folio, addr, pte, ptent, end - addr,
->                   max_nr, fpb_flags, ...);
-> 
-> before the folio_test_reserved().
-> 
-> Then you'd also skip the all ptes if !queue_folio_required.
+> Is that change ok?
 
-Ah got you, thanks.
+If you don't like my change, please do yours and consider this as
+a bug report that needs to be addressed. I prefer more my solution
+as we do that in many places for the exact scenario.
 
-> 
->>
->>>
->>>>                /*
->>>>                 * A large folio can only be isolated from LRU once,
->>>>                 * but may be mapped by many PTEs (and Copy-On-Write may
->>>> @@ -633,6 +642,7 @@ static int queue_folios_pte_range(pmd_t *pmd,
->>>> unsigned long addr,
->>>>                qp->nr_failed++;
->>>>                if (strictly_unmovable(flags))
->>>>                    break;
->>>> +            qp->nr_failed += nr - 1;
->>>
->>> Can't we do qp->nr_failed += nr; above?
->>
->> I did not dive deep into the significance of nr_failed, but I did that
->> to keep the code, before and after the change, equivalent:
-> 
-> And I question exactly that.
-> 
-> If we hit strictly_unmovable(flags), we end up returning "-EIO" from
-> queue_folios_pte_range().
-> 
-> And staring at queue_pages_range(), we ignore nr_failed if 
-> walk_page_range() returned an error.
-> 
-> So looks like we can just add everything in one shot, independent of 
-> strictly_unmovable()?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Looks good to me this way. I'll change it, thanks.
-
-> 
 
