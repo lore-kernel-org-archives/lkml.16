@@ -1,152 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D5623D289;
-	Tue, 15 Apr 2025 22:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47EA623D289;
+	Tue, 15 Apr 2025 22:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744757917; cv=none; b=CH/sGrk6+1xzT8QNtQuDA+mIanjA1NfmjTZJRwERzFOsIC3+MvtC5yOax71W3bntSbo3RoZmI6ZpppAml4lTiuO4YUnuDow2rc5Q8+7bT9LvTQnQoqba3WAYzR25e+oX0aVSQnkbe1DttPTWg2vbIH4fVFkBsI7qVWRX4zJ1sgg=
+	t=1744757986; cv=none; b=hsIevV1NGvwMPu9VqQWBtBK0DYT6O48vvpoEoLAkN2we0bSUn+xR9rJXy+4FEHWkpRUVuHz/eAnqtdOMD0sXD32iqRdQxyalaoX4EyqGktQPL8f1+4Wigq3yn6X/HXc8yZYJv2nzn51k0WK/saLcGjIv/xsprPL5K+IYNz1OnQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744757917; c=relaxed/simple;
-	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ru6ICTNdKcjyLTDjGDEXQXEeI2qwwS0QE/EEn8V9e0UGz425bSjij09jRFd7Ua3jHc/DUUL8Jl9+boPpv5N4A6OvRmqg+uiA1KjFJW2IsZ6IUAec5ctm+P7DeiGn8YsqYKjCHRkjI6MThU0xp2q1G3ELDRyNspixyief6qn8i5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH5pwmgS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744757986; c=relaxed/simple;
+	bh=j0mWnElscAiMhtAEuXpEHA3AWW8EdQuUDMc3t5IMrRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JzAWPDGCl7Qa07BK/U6x8oLY8oMMldOGHZT4tT4g7DKrMqfYsJ9m4tu86mTMjDeRqk9EOgiX9Es5vEnfGDxBjh0l47grCl+XXlSZkNL2KZlFckhgi0hxMrFUkQBHDo3DdVRer/QzuS/fDr+F+1QNzgbb9Ht5Qgal2V60SuWQu4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fUc54zls; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH5pwmgS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAF8C4CEE7;
-	Tue, 15 Apr 2025 22:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744757916;
-	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hH5pwmgSxfq+VoEhSL5scVumpahKB/YEGsZoOCs8XkbGyk9d9UD7PCrluz8BVphAd
-	 DqX7lLZRDwRObVjVX9YkuOD6kXlt1g7GtNEbw6BC+WSzPXREvYHB8PU8x+1YoytRjt
-	 2NVERi74WurTWwdX5RcnlUUb1TeyD3kDMj+P5WVfCakbhRujk+2YSpvwVwT0FcNYvL
-	 kSrdkvMYiRZZwuzm9Ak+nmC3hTiTFI24M2V3qdso0Te+dQzL64mYqvQXU4MYWcieYS
-	 9AyYJFjACfDuW9zS6zQaxY9WGzhzY35vdqJ4NmL5EK/GcSnkoY51H2eX1h+5GMdpQX
-	 bNM7ROTxP7RgQ==
-Date: Wed, 16 Apr 2025 07:58:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Shuah
- Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Differentiate bash and dash in
- dynevent_limitations.tc
-Message-Id: <20250416075832.cd27bcb52b7e31d0f5717273@kernel.org>
-In-Reply-To: <20250414210900.4de5e8b9@gandalf.local.home>
-References: <20250414210900.4de5e8b9@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUc54zls"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d45503af24so55016705ab.2;
+        Tue, 15 Apr 2025 15:59:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744757984; x=1745362784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UKmbHtX7NVFtRAHnksifnvzo2HzNbVI/Nlz5WzatgyM=;
+        b=fUc54zlsBpggsPcad6eayEO+Z91Y0rLQtgFgFus3S77B4D3bCaQoi3aX9sK4twbWL2
+         RDlD8OVXi4+6aCTp74O811HYqcPvqfA4eN70AIphTZhrx28lDgwGemB3ExDBGvK8qYeo
+         /7GhaDzQl2+llZdoM2v/UMAlWs2BqB2emC0ANdNcaTuKqI7j69JIvS5nKLTFvcRhqJ0N
+         +GcaDHAVb+0VGKI5xDvK7+IUKvfCWWr12MwluJhom8obbuQRs4w1KuYdmkwGqk2HL5/H
+         +UcLF2wC8bbpHInWnZtQ62iKDVOBtfqRv89iatBtsOqKRy1ngPJNfQXaK3ZBxGfsjrRP
+         lp9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744757984; x=1745362784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UKmbHtX7NVFtRAHnksifnvzo2HzNbVI/Nlz5WzatgyM=;
+        b=SxeSfFjI4JTb28jYjknPfNhRSAfjpqbH8N3RDkJLzvb/hL3144RvDjihLsIiBZKdNJ
+         ewv5odOBuXhwtl+OqQNWX5wCedNbOGZ+op3BW6TIwHNZVNqrDcvYpHHGYgeYvSlzAyz1
+         ZzQYrTi6tYy7KyYh1lyGzRWoRL64Txv2wApilLmeaE56jE81HTfC1sNWSl+NnXqnTqCO
+         8Kd+q2veU1JtxIYKry2hrZrFFnbvIGB6HyLlhdMUWBdgc/iyFeZU22STZQ0GfQGHF7l4
+         pwkGGJOVFPCqqClaz2y0KUS+La4loDgLCR4gsnBt1m3qdSXEhllgQdvnA4A3RZAKEKR+
+         TOig==
+X-Forwarded-Encrypted: i=1; AJvYcCWetea5ElppPK0530tRdaEnLIlQCjfIkr0G8yUsu9UeTBoH0BEUZYmbzjjYu8IIj4UmzCobI3Lv+6W8@vger.kernel.org, AJvYcCWqNqDIyGZvWaj3dEZbbVagP6dhus93567ZZc+9ZCO5GHob0/NW9TqVgJd4i3JQ9NXl3QL+OQuBp/wASnlf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmWgqz8JKOjFzLrd/vH3jigYmFtCLmpBN9opcWrlQWb2aa+ZaD
+	YdU8MisggQfH9EvPHOnsoVielTRZLXRXdmP/smrOaci4iZ4JxO2Y
+X-Gm-Gg: ASbGnctkntkVIUiuNd2TaWbG1w7mvN/SnTCkHT7ot5HmOgtKU52WEZ5OioluGUlyv/i
+	Bjpar0eCJgrlj7D0K294CE6NyArS/7H+pt+kNQdtHoxyIBWRi2WZ9T7C7B4YJ6h6vPNFPQFei5u
+	cJRQ7vE7Uj/vcRPOt53lRX2J1kNuBYxYqvdjv91qKHgCBxa9w8/QlpO7AV4BlK30AtCkN14Gb2A
+	0C9uLXn31U34T+xAJvfxQgfl0t1l9stdXgCQg3kMt6Gukwk1wN3PiD1U97UBgokOWq6xEOd845P
+	0KXC4QjVFPWgPG5iIuHyfL5YQMI5h3rG0+3WCk6vQmlhIl53YylJ9sWvHtad6ReGBs8ZVOWFQ7W
+	3
+X-Google-Smtp-Source: AGHT+IGG23NkaC44hvHCoI5gZwhtT9feCVmXAKSsDqrMmnnVmSWVZHn4aR1QZTijBERnDX4hw+WvTA==
+X-Received: by 2002:a05:6e02:1fc6:b0:3ce:8ed9:ca94 with SMTP id e9e14a558f8ab-3d81256730amr12553735ab.14.1744757984259;
+        Tue, 15 Apr 2025 15:59:44 -0700 (PDT)
+Received: from hestia.. (24-220-158-153-dynamic.midco.net. [24.220.158.153])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505d175edsm3382356173.55.2025.04.15.15.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 15:59:43 -0700 (PDT)
+From: Robert Nelson <robertcnelson@gmail.com>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Cc: Robert Nelson <robertcnelson@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Andrew Davis <afd@ti.com>,
+	Andrei Aldea <a-aldea@ti.com>,
+	Jason Kridner <jkridner@beagleboard.org>,
+	Deepak Khatri <lorforlinux@beagleboard.org>,
+	Ayush Singh <ayush@beagleboard.org>
+Subject: [PATCH v3 1/2] dt-bindings: arm: ti: Add PocketBeagle2
+Date: Tue, 15 Apr 2025 17:59:39 -0500
+Message-ID: <20250415225940.3899486-1-robertcnelson@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Apr 2025 21:09:00 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+This board is based on ti,am625 family using the am6232 and am6254 variations.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> bash and dash evaluate variables differently.
-> dash will evaluate '\\' every time it is read whereas bash does not.
-> 
->   TEST_STRING="$TEST_STRING \\$i"
->   echo $TEST_STRING
-> 
-> With i=123
-> On bash, that will print "\123"
-> but on dash, that will print the escape sequence of \123 as the \ will be
-> interpreted again in the echo.
-> 
-> The dynevent_limitations.tc test created a very large list of arguments to
-> test the maximum number of arguments to pass to the dynamic events file.
-> It had a loop of:
-> 
->    TEST_STRING=$1
->    # Acceptable
->    for i in `seq 1 $MAX_ARGS`; do
->      TEST_STRING="$TEST_STRING \\$i"
->    done
->    echo "$TEST_STRING" >> dynamic_events
-> 
-> This worked fine on bash, but when run on dash it failed.
-> 
-> This was due to dash interpreting the "\\$i" twice. Once when it was
-> assigned to TEST_STRING and a second time with the echo $TEST_STRING.
-> 
-> bash does not process the backslash more than the first time.
-> 
-> To solve this, assign a double backslash to a variable "bs" and then echo
-> it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
-> "bs" accordingly, and use that to assign TEST_STRING.
-> 
-> Now this could possibly just check if "$BASH" is defined or not, but this
-> is testing if the issue exists and not just which shell is being used.
-> 
+https://www.beagleboard.org/boards/pocketbeagle-2
+https://openbeagle.org/pocketbeagle/pocketbeagle-2
 
-Thanks for fixing this issue!
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+CC: Nishanth Menon <nm@ti.com>
+CC: Vignesh Raghavendra <vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Andrew Davis <afd@ti.com>
+CC: Andrei Aldea <a-aldea@ti.com>
+CC: Jason Kridner <jkridner@beagleboard.org>
+CC: Deepak Khatri <lorforlinux@beagleboard.org>
+CC: Ayush Singh <ayush@beagleboard.org>
+---
+Changes since v2:
+ - Apply Reviewed-by from Dhruva Gole
+Changes since v1:
+ - Apply acked-by from Conor Dooley
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
-> Reported-by: Mark Brown <broonie@kernel.org>
-> Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> index 6b94b678741a..885631c02623 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-> @@ -7,11 +7,32 @@
->  MAX_ARGS=128
->  EXCEED_ARGS=$((MAX_ARGS + 1))
->  
-> +# bash and dash evaluate variables differently.
-> +# dash will evaluate '\\' every time it is read whereas bash does not.
-> +#
-> +#   TEST_STRING="$TEST_STRING \\$i"
-> +#   echo $TEST_STRING
-> +#
-> +# With i=123
-> +# On bash, that will print "\123"
-> +# but on dash, that will print the escape sequence of \123 as the \ will
-> +# be interpreted again in the echo.
-> +#
-> +# Set a variable "bs" to save a double backslash, then echo that
-> +# to "ts" to see if $ts changed or not. If it changed, it's dash,
-> +# if not, it's bash, and then bs can equal a single backslash.
-> +bs='\\'
-> +ts=`echo $bs`
-> +if [ "$ts" = '\\' ]; then
-> +  # this is bash
-> +  bs='\'
-> +fi
-> +
->  check_max_args() { # event_header
->    TEST_STRING=$1
->    # Acceptable
->    for i in `seq 1 $MAX_ARGS`; do
-> -    TEST_STRING="$TEST_STRING \\$i"
-> +    TEST_STRING="$TEST_STRING $bs$i"
->    done
->    echo "$TEST_STRING" >> dynamic_events
->    echo > dynamic_events
-> -- 
-> 2.47.2
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 18f155cd06c8..b7f6cd8d4b9e 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -46,6 +46,7 @@ properties:
+       - description: K3 AM625 SoC
+         items:
+           - enum:
++              - beagle,am62-pocketbeagle2
+               - beagle,am625-beagleplay
+               - ti,am625-sk
+               - ti,am62-lp-sk
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.47.2
+
