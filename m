@@ -1,276 +1,128 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2011.outbound.protection.outlook.com [40.92.46.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B00E20ADE6;
-	Tue, 15 Apr 2025 16:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733299; cv=fail; b=ZXv4rBt5WsM0FGxcNqO/ftaTLr4UNpb0G76ipHXXzK44pVixttwso7RjOKn/MpWmQMls7M8IYrDOedph8Yow7m4CX3s3e3FeKWpRkjwicSinO9jCHFkuqwjDjDKerO5j+WIg6bnikmcy8n3G23q3tilXptVRCALWxkbR1+l0Fcg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733299; c=relaxed/simple;
-	bh=oIiuv1X0SlXVKp5n9dL6E1iKdVOtJ2AEElmcag1thSM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=k8DGF6RLvf+EDoTRTA72iAO/sktnnHkCtpY/bKfr3qja19gnKJfZoCTgYlygAON8PJNCxwtO9eeIidTZEn3aPlL1ttw4+I5ALBNvPRiWzOjS0XJ8DfD3eFkH8OUptBt19GywQOiuvMRU/wsl305eamu0quHpKGuJBIFH3Ujnmtw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LfG2f08y; arc=fail smtp.client-ip=40.92.46.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136E5210F49;
+	Tue, 15 Apr 2025 16:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744733313; cv=none; b=hurlovsvGw545Q+7RuJtlPr2bqn98or00KWEAxEisOFzm3F7lqfZEnZnMDLQFXGXRiEA3jRRiiZZfXpfjqDNhUetBCdl5XdQ8vZFfNnuGa3FNbL0j0kSY2EFEgFfvowbgpaxIdQQzCHD2PfzGOOHKOvniZ2g7i4o9KPyfYdcb2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744733313; c=relaxed/simple;
+	bh=Epp6DWQBFHduWN1dTbfRFnc7iki98bhG5lprQjMcCx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHRC2VdkusJup3qE2t3y+40jIdqipybBMlEsQ26vIxt1ac1zaL7RQvMGdTEohRiYJnj0IYi3pAaQwwXhSGPSzEAbHWMIBHyGuYsNx+ePZhvMO1EqnIMANyK3pwcJT9hkUXDRyp8V8EEDDrhVWfNOkeB9Ie0xwGmrfI9UOo6iTWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APlfLJVr; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LfG2f08y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w3gfX8JEnBPxk2o2+WRAoS+trx0U7fivRShh9uEjiYt6dL4S6j3MXaSTxPqGX+ApuqgSysitFHquOAFkvX2w4yCHOPhKlQiwAUsjIy7juRzz/5V64DQQ3hXFK9fdC6JSLWsE+UDehgkS4Hc77ZlDf0pR0PHLXdbTutEXCsBnRNqIZTVYaOi9D9R3rrYtYe5TxV9BTvMDFWAXP+wfLYXNMilLArb90HllUxLqMH0GQ4JY2mCTdnQ6RFKUldK2/aym3oXdkOn2CLWDeBTxsZuX7HEAmw+DLW+bJpSi6xtfabiYCSkvh606oq9jsAbdNeShQYLOKRLt0GDH6VJnhK/DdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vjK0cWEVd73mcKmo4P53snGLw/JM7ANIV32gBED/Hpw=;
- b=bNL534SjYT2hTlzrvtydnYfQQ2zhjXDhVRkU8J4dxUyHUziyp2JZzIPugheejAmIEEXbqUtOrdbzklCV/c/H8E0ueHsZPPVBSpKVWpPuCmtGGMWDyQSIv5K/G6LJzp7uNHpWZXgtkoWqgyIkLk+Kv3Xu+HGfcaaiK7NP0sHEMqHKMa8SWqhBE2D6/jggCw0FRgS1JbizOzlOexd9JMNwS68Vpv1906pC8CbdU1MJwnU8n+I628W8bTHWKDH9VWeErWk0zAJ+bJbeRNgeTq6/cTa/Ap6jLwqAd+QO/sjLgWCeO1KE1xO2gdiMQUz9efi4NawPzL2WSrEtldj2szFuvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vjK0cWEVd73mcKmo4P53snGLw/JM7ANIV32gBED/Hpw=;
- b=LfG2f08yQJwQwwMbGACsMN8LBRP2TCM8K2zgIo1YFBwg8O5oJgjb7us8EPOF3Jdf1tUzAsIM0vBDcSEzBZDhdf/YAGwFzS4Fy5zRDKaAKvy2O0Ka3m7v8lh0v/O+ZxUk4gOnifsZC9oqJ+cXj8bl621ALHIpQryyjZuOtFBAQA488mpqajxHpOJ4Jgrm3NENesfjEynt4sPFPOxAILJMNbkCdvECfbbd+PFu7phq69BNSD/Y33kzRX1IHZaaSWJV+cYNSxI3YWAAFbRQowhEktnRGJQm6kudNE/ugrAmloccfiRwaFuh/nsAy0IIU3UFHmyk7VSuhyZJJb7+JFX8Vw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by PH7PR02MB9359.namprd02.prod.outlook.com (2603:10b6:510:273::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
- 2025 16:08:15 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%5]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
- 16:08:15 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Stephen Hemminger <stephen@networkplumber.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@kernel.org" <stable@kernel.org>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>
-Subject: RE: [PATCH v4 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-Thread-Topic: [PATCH v4 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-Thread-Index: AQHbqd8LFlOL2OBO1k6aNRsiIlqmsLOk6ZHw
-Date: Tue, 15 Apr 2025 16:08:15 +0000
-Message-ID:
- <SN6PR02MB4157D5A900435AD1663BC720D4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250410060847.82407-1-namjain@linux.microsoft.com>
-In-Reply-To: <20250410060847.82407-1-namjain@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|PH7PR02MB9359:EE_
-x-ms-office365-filtering-correlation-id: 682921aa-f10c-4101-f19a-08dd7c37ba95
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8060799006|15080799006|8062599003|19110799003|1602099012|10035399004|3412199025|4302099013|440099028|102099032|41001999003;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?GEgmI3kXnomkhwJChmd52gWgG5nDYfKra+sgkDFPW/vQd6WLKe12X5UnzMLF?=
- =?us-ascii?Q?LeW5FOK7tZYHIEViromRJ3S1uCqYo+TeRlGXeVQH15wCnzAbcGvy9j4EUPG4?=
- =?us-ascii?Q?mg42nAG+Eepp+VY2lZA8z6CbY65MEGkGRtbQawNv84TZLtPX+sVSjmqvPSz6?=
- =?us-ascii?Q?bRMV78nmWe4Y6+h0FKqn8ZcCxOoGJG/ONxhU4khh03HGxwCNxKe8ktXPdhQ4?=
- =?us-ascii?Q?JuJtRaWXqjKSVQfJRYe0UvXJNVAOAGFmbI+9iCeBsUMZ5OpxicHbAOthmpmb?=
- =?us-ascii?Q?vS09Pv4CzTQazG87rXv+yaXB5WHR68EYGJlZsv+C/BvpTU/kKIOCHCt+DOFt?=
- =?us-ascii?Q?lIizK8Uq0OELOsHUaS0KgVIJITTYH+ygUUFZBxNixO9L5UuDXq/67QMBuT5z?=
- =?us-ascii?Q?6CjaJKa0UWLBL2w6gZQ6IwWIQkmkregD78XpHsMRtmhHUZIxnmKLm0uP8WPq?=
- =?us-ascii?Q?sjRV4W3wS7kq/Sac7ofIeSDMFm65EQK1CWX4NJ8XhxTsduUQgDqMYcDUhveG?=
- =?us-ascii?Q?7L6GOcjNoXTN00y6WMZ5HGljtw6hH9mfROMfX5wgAe9RxDwvixvUnV2xBAj7?=
- =?us-ascii?Q?QWYponZq9seWkyR9EpID6EVtPYXmwpRog38mk0QBVD1PuzVrSBeDCF5ZWu6V?=
- =?us-ascii?Q?RRNFXSuZGL7xkmHIWK1eXg2RxlR8wcxUXAZ1UzYuVDoPPj7tPDPLM4+/L/Wj?=
- =?us-ascii?Q?Z7K14C7UhsItK5Yx7RGWQn592qDQByY4XrubFT+JHMT9WwHRtTwZ3BlU0TLH?=
- =?us-ascii?Q?Qn9QTsDt41LF6QjfPZq5zsa6m9/TF9MqJVn0iMCxRV+PlMFTZKIUw95/182O?=
- =?us-ascii?Q?vyXIj8e3/b2s86CeEcsxICN1+7NgLE4bg5QGVOtNSZPuIe1Wq6XQRRINKYGJ?=
- =?us-ascii?Q?4TU70USVE8E0Yox4Kr3tsmD8An09S779NrWrEPrl1WQj+ACccBZRDXu6NaDa?=
- =?us-ascii?Q?o7DYqvy4XuWBl+HdO9xe/fp8nzcuvKOGTJb400x7l6y2wiTjK8J/64lucmg+?=
- =?us-ascii?Q?Xr8kKgp/WEbca+umn+ZTS2jRkYhcL7WQVupqBPHTAUcBuGJza/1OdMSQ4br6?=
- =?us-ascii?Q?Aj1R+S1O5BQQH8ycDSWbBsXJwPscaFEbPUbIqPh1OrIyrEK5VubbrWJvTdyg?=
- =?us-ascii?Q?6Bw3Aol+2wlWNiq9h7r44n8FUAk0lInM70kYvepbJ5iy+5yb6h3FUOvwLmJ6?=
- =?us-ascii?Q?QN3YZVJNYdQwlSOgzq3ivPamFvBqNUof81QSWOzUjT3shInMjku5MRGAGR+k?=
- =?us-ascii?Q?7SDfu87Vn+fslh6MwshE3SmH0q+NpIffDQMB2X9tMCCpT5quKhaUASyB2s7P?=
- =?us-ascii?Q?90k=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?LdsofyySo22FiDTLcbBAr2okWpbN6In/oacyVsbmb3/ZNjsaXVFAA4dIGZJZ?=
- =?us-ascii?Q?WfUQsv8X+df43YzptNGIiuHx63Ox45ppPrqtnaOMrtt5E2BtY3/np4QBGF/Z?=
- =?us-ascii?Q?99y6ncpbaOPnzLL81MscdWrZEkSGKJH9gXTrGtAXtAALTc4lnC2YB0hSL3Mt?=
- =?us-ascii?Q?YI5o8VESMKxtiHvwdTXbGimxGBEBZO4NjovfeNexBboEP5yJWOhEt4luEGkR?=
- =?us-ascii?Q?oe63e5kVvdXFQ2sh6zISlCoRFxtcac3x41RyefQ/Sd7zo60bS/sNYk90L2Ci?=
- =?us-ascii?Q?8sSE9WXvxa2Zq+A+m4dLOYDDSxEknTiqDqDHKSpXVVwUHrrthPP51QB3ThQf?=
- =?us-ascii?Q?yqvR9yO3GcdBQPowsQXNvs+WIgzkJalG2JZ/T2yEcCXh0LrOFcWDd4Rd31V2?=
- =?us-ascii?Q?LMSeDGEnb+IompLl3LuNdqdiWvR6ecbedkmKLmdxQ35PRdMyNuOLnJyqiM7R?=
- =?us-ascii?Q?0N+/6pK0Jb68Z/SgcwzbcmXVOXGe4tAY9coMj8TYUo7IMcSAInTwbxEJFQ6h?=
- =?us-ascii?Q?57n4al5QmTA04jxHBdx+IN3uXIC1Hzym98oXn2Oh2H2nRwhZKXs/nEOLa7lK?=
- =?us-ascii?Q?RJ1mjKyvgVjLj9TfaXZTsP6aSKpSt3AANZt0MsFsXg/jQpmHpbJLhwdBb2GW?=
- =?us-ascii?Q?jemD9zk3M3Ma7wIeYsGUCtRRTgHmAkkYs7hgUy3jwS3aRzuK0fsgnjzyPXXW?=
- =?us-ascii?Q?fSH71xJJpmQCyVo8+3WCXjRXDwoE6NTeATTHsYM+C+/Zt+JMxZpTwJQ2FnvQ?=
- =?us-ascii?Q?qq5IaaNFGQvcWeCZw9g+0UsJCMki3nYrcwmOTt+1CSGnsZCHEJ49UwdyUpEe?=
- =?us-ascii?Q?D2V0w35MPZ6qJLNZgGCFiJG7BwTBFu3vIB5UKTBsblGGKPg1xF7evJwqwoxq?=
- =?us-ascii?Q?JsMrOduSZ8mA9d48qPJ5HFPRAXr9qhUK8P95HsPLqjUEvaPGHqz2XopDQlhQ?=
- =?us-ascii?Q?I027aoZsg5XraGDN56s5ceb8P/mS5+wutXO1GM9ZIC8ji/tQQY4CYDzFp+79?=
- =?us-ascii?Q?FPXmGW6v6SJ05Du1YAk2+RkQU9UvyppTmSusctbF6IjeDhh0OmDwFnkcOfNN?=
- =?us-ascii?Q?y4wvOZ3HWy0l8k2HGznmLnLWlXezguv8xufdWfaBd9dG8auH/thE+w7FubPK?=
- =?us-ascii?Q?1MQj4R/ddTVE6afIhU7y4a4auNznbgw9BwODDKTXntMvfa1jx1fWI8Hlt7pi?=
- =?us-ascii?Q?5aTOECCSA3qTfQy3UWj9AtRdqHMwUnyr0B6+osvqNSeVZA0SXqJCcBWXsjc?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APlfLJVr"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4126780b3a.2;
+        Tue, 15 Apr 2025 09:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744733311; x=1745338111; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o5KFN8rQwRDsAQ/Yg9O45rfWFUONIccvAncbkaEGxW0=;
+        b=APlfLJVrB2ROLfHQYbAgUIHs73+5xQ1lVroSuuRYbcVyqi6b6y9r3+OzmCPAiTvoPC
+         isD7FUv9LYRfuwq2SKZxzGbGjPt6sknEI/RHeSjQIRzydxNhl3oqwKBhFRC0kMbfGWa0
+         Dd8nhUtoKODPwjcFq+0Qx5C6mzPIw7b3B4AWoXOth/Rb/B30COgDjXAguUit8TpyWszd
+         Qi3HL5ar+ljXBvf97akHBHwubwGm+U8VPg090ceK5Bmdj2ojOtQxn2z6IJfQAaCIi4LI
+         as7GnLhmwXFXrOeuqTdg5UkrVjja+MS/grhEnKgHEl2/rMVjd440uOfxVCC+jnEG9SXh
+         K/ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744733311; x=1745338111;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o5KFN8rQwRDsAQ/Yg9O45rfWFUONIccvAncbkaEGxW0=;
+        b=xCugEiqIQZ+/+0RNshpeRZ9axmiktXLcfP7VxGuyWavdTd0XKx2eS8BT0QUNPADo3v
+         X8iCr/f/Cez+rQBapXpHEXKldVMrSs6okoz/0NmA6DAzwTFTn2U2rfD62js0GwhLXl09
+         uhpBqbBscAcdNUEGnZk/dyBBfE+84zgH+5WGcaK6RhxB3F8+3mm/V0bD1OQa4kvJtcn1
+         7wNeU8e7Tj5BajbkD+byyjg83X556yB+noDZqFrs6QbWCb5ofrZIi6DOwDe+un6POZdw
+         d90nGkshRReMji5NC+ewAGRF02cpLhrKFbiV1B25AKWDMuB+h6o2Z/gCGopcebQibEa0
+         G7ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHCSkv3HUnRAsRi460WJO2irZlxd91GrUeYiZG54XqsJRlVp6XFT3qps8x9SxaAu1940to30u+V9DLSAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqqNiCdS2aM/kV1iwAWAVw65OBf/3WdaszTKPaTOSL0cbOGTJZ
+	OtgYmyAR1U3yUPNCxhLq0uP45jiRIwIEWwfUN3+e9KVLWIqHjWxo
+X-Gm-Gg: ASbGncuDNJwA25cvppbWJAYVWRW7Kjy+7pBP336hCitfxVKhSBEjxU/99D8+YUxDluJ
+	qq4sgoYDmxI3G8V3uzZjdoImpSgzV/Izv1e3yqA6N9hlD6ysKJj+HTML/HkbHL9Dbm8tb7877MB
+	XvpXZwX7FSC8Yec+hqSKPESg9lsSRQ4RL0MI6mC0nSjnJjs+sSLNhNt7C91kak2uCOcxkslCzSf
+	ah6KatW1eYX362ajXtgaSZFnOqD+w91I82QTPwUehV5LIbtTmjrQ28LrlOq3W1EjBz81FLzS2WX
+	dsjmwbVoVWuM5KZFPxC8XXMRP1AyFr+emhaCTUJTODL8F1E=
+X-Google-Smtp-Source: AGHT+IH6y8NaDWBYMTdPKnRuy2ZV18VnXaLplADliZlMQ0z4zUxVD/TIhKxxpiEyVinXAg5jXp/ocA==
+X-Received: by 2002:a05:6a00:1785:b0:736:55ec:ea8b with SMTP id d2e1a72fcca58-73c1fb5ee47mr21490b3a.24.1744733311052;
+        Tue, 15 Apr 2025 09:08:31 -0700 (PDT)
+Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd2198be9sm8669243b3a.9.2025.04.15.09.08.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 09:08:30 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:09:40 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Siddharth Menon <simeddon@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, gregkh@linuxfoundation.org,
+	jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
+Subject: Re: [PATCH v7] iio: frequency: ad9832: Use FIELD_PREP macro to set
+ bit fields
+Message-ID: <Z_6ExCvQg8lH20z6@debian-BULLSEYE-live-builder-AMD64>
+References: <20250414191453.10222-1-simeddon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 682921aa-f10c-4101-f19a-08dd7c37ba95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2025 16:08:15.1370
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR02MB9359
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414191453.10222-1-simeddon@gmail.com>
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, April 9, 20=
-25 11:09 PM
->=20
-> Hi,
-> This patch series aims to address the sysfs creation issue for the ring
-> buffer by reorganizing the code. Additionally, it updates the ring sysfs
-> size to accurately reflect the actual ring buffer size, rather than a
-> fixed static value.
->=20
-> PFB change logs:
->=20
-> Changes since v3:
-> https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft=
-.com/
-> * Addressed Michael's comments regarding handling of return value of
-> sysfs_update_group in uio_hv_generic.
->=20
-> Changes since v2:
-> https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft=
-.com/
-> Addressed Greg's comments:
-> * Split the original patch into two.
-> * Updated the commit message to explain the problem scenario.
-> * Added comments for new APIs in the kerneldoc format.
-> * Highlighted potential race conditions and explained why sysfs should no=
-t be created in
-> the
->   driver probe.
->=20
-> * Made minor changes to how the sysfs_update_group return value is handle=
-d.
->=20
-> Changes since v1:
-> https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft=
-.com/
-> * Fixed race condition in setting channel->mmap_ring_buffer by
->   introducing a new variable for visibility of sysfs (addressed Greg's
->   comments)
-> * Used binary attribute fields instead of regular ones for initializing a=
-ttribute_group.
-> * Make size of ring sysfs dynamic based on actual ring buffer's size.
-> * Preferred to keep mmap function in uio_hv_generic to give more control =
-over ring's
->   mmap functionality, since this is specific to uio_hv_generic driver.
-> * Remove spurious warning during sysfs creation in uio_hv_generic probe.
-> * Added comments in a couple of places.
->=20
-> Changes since RFC patch:
-> https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft=
-.com/
-> * Different approach to solve the problem is proposed (credits to
->   Michael Kelley).
-> * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
->   drivers where rest of the sysfs attributes for a VMBus channel
->   are defined. (addressed Greg's comments)
-> * Used attribute groups instead of sysfs_create* functions, and bundled
->   ring attribute with other attributes for the channel sysfs.
->=20
-> Error logs:
->=20
-> [   35.574120] ------------[ cut here ]------------
-> [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_creat=
-e_bin_file+0x81/0x90
-> [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
-> [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
-> [   35.574197] Call Trace:
-> [   35.574199]  <TASK>
-> [   35.574200]  ? show_regs+0x69/0x80
-> [   35.574217]  ? __warn+0x8d/0x130
-> [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
-> [   35.574222]  ? report_bug+0x182/0x190
-> [   35.574225]  ? handle_bug+0x5b/0x90
-> [   35.574244]  ? exc_invalid_op+0x19/0x70
-> [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
-> [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
-> [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
-> [   35.574271]  vmbus_probe+0x3b/0x90
-> [   35.574275]  really_probe+0xf4/0x3b0
-> [   35.574279]  __driver_probe_device+0x8a/0x170
-> [   35.574282]  driver_probe_device+0x23/0xc0
-> [   35.574285]  __device_attach_driver+0xb5/0x140
-> [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
-> [   35.574291]  bus_for_each_drv+0x86/0xe0
-> [   35.574294]  __device_attach+0xc1/0x200
-> [   35.574297]  device_initial_probe+0x13/0x20
-> [   35.574315]  bus_probe_device+0x99/0xa0
-> [   35.574318]  device_add+0x647/0x870
-> [   35.574320]  ? hrtimer_init+0x28/0x70
-> [   35.574323]  device_register+0x1b/0x30
-> [   35.574326]  vmbus_device_register+0x83/0x130
-> [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
-> [   35.574331]  process_one_work+0x177/0x340
-> [   35.574348]  worker_thread+0x2b2/0x3c0
-> [   35.574350]  kthread+0xe3/0x1f0
-> [   35.574353]  ? __pfx_worker_thread+0x10/0x10
-> [   35.574356]  ? __pfx_kthread+0x10/0x10
->=20
-> Regards,
-> Naman
->=20
-> Naman Jain (2):
->   uio_hv_generic: Fix sysfs creation path for ring buffer
->   Drivers: hv: Make the sysfs node size for the ring buffer dynamic
->=20
->  drivers/hv/hyperv_vmbus.h    |   6 ++
->  drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
->  drivers/uio/uio_hv_generic.c |  39 +++++-------
->  include/linux/hyperv.h       |   6 ++
->  4 files changed, 147 insertions(+), 23 deletions(-)
->=20
+On 04/15, Siddharth Menon wrote:
+> Use bitfield and bitmask macros to clearly specify AD9832 SPI
+> command fields to make register write code more readable.
+> 
+> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> ---
+...
+>  v6->v7
+>  - fix st->ctrl_x alignment
+>  drivers/staging/iio/frequency/ad9832.c | 92 ++++++++++++++------------
+>  1 file changed, 48 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+...
+> -		st->data = cpu_to_be16((AD9832_CMD_SYNCSELSRC << CMD_SHIFT) |
+> -					st->ctrl_ss);
+> +		st->ctrl_ss &= ~AD9832_SELSRC;
+> +		st->ctrl_ss |= FIELD_PREP(AD9832_SELSRC, val ? 0 : 1);
+> +
+> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
+> +							st->ctrl_ss);
+Oof getting Linux code style compliant tabs and spaces correctly can be tricky.
+In sum, tabs should be size 8 and be actual tabs (not 8 blank characters).
+Also, when we need to align code at some column that doesn't match 8 sized tabs
+exactly, we start with tabs and go until the last tab that precedes the column
+we want to align to, then we use spaces to go from that last tab until the
+column we want to align to.
 
-I've tested this series with linux-next20250411. Did the basics of binding =
-the
-uio_hv_generic driver to the FCOPY device. The "ring" sysfs attribute shows=
- up
-correctly, and with the expected size of 32 KiB. Did the same with a synthe=
-tic
-networking device, and the "ring" attribute has the expected size of 4 MiB.=
- In both
-cases opened and mmap'ed the "ring" attribute, then read from the ring to
-verify accessibility.  Did not do any ring operations or create any subchan=
-nels.
+For this particular example, the opening parenthesis of FIELD_PREP is at column
+50, so to align st->ctrl_ss with the arguments of FIELD_PREP on the preceding
+line, we use 6 tabs and 2 spaces.
 
-Did some test hackery to create the conditions where hv_create_ring_sysfs()
-could fail because the subdirectory under "channels" had not yet been creat=
-ed.
-hv_uio_probe() correctly ignores the error. When the subdirectory under
-"channels" is created later in vmbus_device_register(), the "ring" attribut=
-e
-appears with the correct size.
+		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
+						  st->ctrl_ss);
 
-Just saw Greg KH's comment about running checkpatch.pl.  I did not see any
-errors from checkpatch.pl.  Maybe that comment should have been directed
-to a different patch?
+Setting tabs the right size depends on the code editor. For vim, the following
+settings should ensure the correct tab size.
+set tabstop=8
+set shiftwidth=8
+set softtabstop=0 
+set noexpandtab
 
-For the series:
+See Documentation/process/coding-style.rst for complete code style guidance.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
+Apply the same spacing to the other cases.
+
+Regards,
+Marcelo
