@@ -1,201 +1,294 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006DC2951B1
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56352951B1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719082; cv=none; b=N9OU7tQe1dyiUcELtDeBgAMQwlSNgDf8cPE3+ZBmI1O0Fm2SqH/fvB2qhvanaesPqmcxbhgXbs3OUXbQ+Q0fjK2sYH28uEqu079mgOT+hNRyR89m3PXNrEiIYaS/1M/urPijwBqqZ4LfPXS8Fh85rBo6H53J5P/pQuvK4vjJLHA=
+	t=1744719092; cv=none; b=vEgvGAdSnCk1FYn6Kz2h6vGAYQfd/5OgXx4nkawc7CCqmIrC1Q9LkgNf68ZtbyEtlhqagp1zrCyjTdGh6EnjEnczXA7PjzT3HDGS/1VmVrIm/j6kPiHuq7CkuPMfJsY2j5tYLjaQJJgk0AApEjd0JQpLf6eZS1Nc+thhsBxtjkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719082; c=relaxed/simple;
-	bh=npxmSflEeXX301XFSjqGTkkUcKvkacPYYcvrPCcyNqU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ILGG0uxJURam3x/ZlOPAvazx4kw/97cBFkn5TWLsNjYGOClMqR2ddN4xpAWZK052dIi+Rji5G+2qiFQbRB/5SN1OBZk0Pmy2/9e2EkaBnVf9rRP1suSY1GhE+sdcKym21zdlJKT7+qNH668wxsIEv5FtTwVGUPQW87EM7SKmUoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VT9rX9lH; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1744719092; c=relaxed/simple;
+	bh=b6PhLx95lFpM08ze2DR+lsstkd5GVBs/ItC2fFMITII=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZBJJrEGP8CpqZjORVxooIdJSU5zUfFCxiIIQvJ2XvyTz9htJpfaD63UO+9U9ywGnLaDpy4ui02e5K0gzvojhnwGKTSGqH+S3HTrWJs/st0YGalqnK1cGIfJyBHF/aH4nL3vVus7kZRvCsGjGWtKJLrJpxaDsDwwaN5r9mqpgPrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HtDwYh2R; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VT9rX9lH"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso41463875e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744719078; x=1745323878; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0cs6tEZrhI32qLDnd2XZ2OWDLqbjW7yrnTUhiyZvTeU=;
-        b=VT9rX9lHO0NQCrNy4qvBo/RLrHBysb/HQUADFJwP8sfNtdyzXOoAtr0VV5I2bJr1Ch
-         dYxZnpY5F+bJX2nvaajVgDUlD1WdO/fkdRUxC2LcbFB0ZyE9POWrseER5Q2kdG/hjg5i
-         QRB9iwGomUQO8ikNTTXJynBVuYxsfQ85yMKqob9d+pp72XtVTajvqukVtqSyU48zHHm0
-         gh/cTVAraWr5Ct0HnBSoOTngQ9Bj0sd13K2fecYoR/3dVIMIBe19/rJGsVNiVBzVGuqi
-         Zv7wUAV8F8uZ4G1i2p5VEUCQgYxFYs1234BvthFtjjLBWkreNtDzDPhmbk/amfPCOdad
-         TjgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744719078; x=1745323878;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0cs6tEZrhI32qLDnd2XZ2OWDLqbjW7yrnTUhiyZvTeU=;
-        b=BFmAuh0kM6cqcftx3m+Ii+k96gFi+G+nVUKDHdGosr80ur2z0MvHSUDN0EJaeveK0C
-         XF3574hIQG1kBhj5IGx5DgS+T6VKv/xMNwvhhVzhA8fkXJOmy+AWeemqrmzApsChOoHg
-         HorRf84McNIv0JlJqDV/anXAVAssvTfPZRSs327GkB74huUuqA/dluu3jIu743THDZlX
-         cdYQpiFXkubqHczP5IR1oj6FR1VpicxaA647EANFL74jFhBGlUR5RUK0g3hJxGTfCRyn
-         5CPkz7CrPOuHInOHIAH+EWw+I3KWj2WRBLS43SDm8PEoVOch2D0Z1Q0B6uQbxbx3Iqv9
-         +vXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWO2GdY3C6yNQnyUdda723T50eXQXP+EhjndsF/VIp5Vz8JWa2QLw4Jx+zEhj8l4xYM02NPO4d9Mbk0wmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi0VSNfPQlqZ7SpThZAibOUT6HS0hv1Wqss8HscB58q2JVTI9O
-	aDlhsbYXzrPQYSoLvoaLYU9eOBLFEBpttbyZU+SagqbFIPMEwveEIeoYghCKU13AstQl3ddrMNM
-	ticMAXhzwWzUo+g==
-X-Google-Smtp-Source: AGHT+IFc11qpJSN9kx0m1/6vKedUiT6jLGM7Ajcb3HQxOcVN/cw7nvtJL3Ae8R08b66w5B8KI4622dqhHAESa1k=
-X-Received: from wmbh17.prod.google.com ([2002:a05:600c:a111:b0:43d:1c11:4e5d])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3c82:b0:43c:ebc4:36a5 with SMTP id 5b1f17b1804b1-43f3a933b99mr135834825e9.7.1744719078418;
- Tue, 15 Apr 2025 05:11:18 -0700 (PDT)
-Date: Tue, 15 Apr 2025 12:11:16 +0000
-In-Reply-To: <20250414131934.28418-5-dakr@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HtDwYh2R"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2BEFD43188;
+	Tue, 15 Apr 2025 12:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744719088;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=wogwm+y8KhkdBC4XpbA9Fzej9m150UHJnI17oS5BjQ4=;
+	b=HtDwYh2RYPyjUHDMca3yANbCr4C2+Za2rW47z1CegRtyiuxFMB2SSVB/+u5tqhZwQ9FFO6
+	jEJ7eWyqQZZgnAHTjPli+LKTjuNyF2XjMEIwx+97HubD6PzS7Tq5nEJ4oPshs7MdDDX1Cu
+	UrgGG7HISrxbBQ0o+27/mi/nacxzZu+86Pcl4RjnJakVHvKT5GpIOvhZWKwp2ww/CZ46mt
+	9PgpDx0/N5maWgo+QBE1nKGNA9EoX5h1ZabVsMgJBYEBB2/hGsJ/gATXxXc47u3DQRjhYI
+	gtch8evZ/tss/ucps/mhpenNpGXzXrVbrd8532OKf6Fe37Z7cU4gAq1J0ummxw==
+Message-ID: <eb5c43d2-4a7d-43e2-873f-79980c1a48f4@bootlin.com>
+Date: Tue, 15 Apr 2025 14:11:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250414131934.28418-1-dakr@kernel.org> <20250414131934.28418-5-dakr@kernel.org>
-Message-ID: <Z_5M5Auqj2KK-rPz@google.com>
-Subject: Re: [PATCH v4 4/5] rust: auxiliary: add auxiliary registration
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com, 
-	ira.weiny@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu, 
-	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/16] drm/vkms: Allow to configure multiple CRTCs via
+ configfs
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250407081425.6420-1-jose.exposito89@gmail.com>
+ <20250407081425.6420-6-jose.exposito89@gmail.com>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
+ 5K81kIWbtQX91pD/wH5UapRF4kwMXTAqof8+m3XfYcEDVG31Kf8QkJTG/gLBi1UfJgGBahbY
+ hjP40kuUR/mr7M7bKoBP9Uh0uaEM+DuKl6bSXMSrJ6fOtEPOtnfBY0xVPmqIKfLFEkjh800v
+ jD1fdwWKtAIXf+cQtC9QWvcdzAmQIwmyFBmbg+ccqao1OIXTgu+qMAHfgKDjYctESvo+Szmb
+ DFBZudPbyTAlf2mVKpoHKMGy3ndPZ19RboKUP0wjrF+Snif6zRFisHK7D/mqpgUftoV4HjEH
+ bQO9bTJZXIoPJMSb+Lyds0m83/LYfjcWP8w889bNyD4Lzzzu+hWIu/OObJeGEQqY01etOLMh
+ deuSuCG9tFr0DY6l37d4VK4dqq4Snmm87IRCb3AHAEMJ5SsO8WmRYF8ReLIk0tJJPrALv8DD
+ lnLnwadBJ9H8djZMj24+GC6MJjN8dDNWctpBXgGZKuCM7Ggaex+RLHP/+14Vl+lSLdFiUb3U
+ ljBXuc9v5/9+D8fWlH03q+NCa1dVgUtsP2lpolOV3EE85q1HdMyt5K91oB0hLNFdTFYwn1bW
+ WJ2FaRhiC1yV4kn/z8g7fAp57VyIb6lQfS1Wwuj5/53XYjdipQARAQABzSlMb3VpcyBDaGF1
+ dmV0IDxsb3Vpcy5jaGF1dmV0QGJvb3RsaW4uY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
+ CwIEFgIDAQIeAQIXgBYhBItxBK6aJy1mk/Un8uwYg/VeC0ClBQJmlnw+BQkH8MsdAAoJEOwY
+ g/VeC0ClyhwP/Ra6H+5F2NEW6/IMVHeXmhuly8CcZ3kyoKeGNowghIcTBo59dFh0atGCvr+y
+ K9YD5Pyg9aX4Ropw1R1RVIMrWoUNZUKebRTu6iNHkE6tmURJaKLzR+9la+789jznQvbV+9gM
+ YTBppX4/0cWY58jiDiDV4aJ77JDo7aWNK4hz8mZsB+Y7ezMuS4jy2r4b7dZ+YL/T9/k3/emO
+ PkAuFkVhkNhytMEyOBsT7SjL4IUBeYWvOw9MIaXEl4qW/5HLGtMuNhS94NsviDXZquoOHOby
+ 2uuRAI0bLz1qcsnY90yyPlDJ0pMuJHbi0DBzPTIYkyuwoyplfWxnUPp1wfsjiy/B6mRKTbdE
+ a/K6jNzdVC1LLjTD4EjwnCE8IZBRWH1NVC1suOkw3Sr1FYcHFSYqNDrrzO+RKtR1JMrIe8/3
+ Xhe2/UNUhppsK3SaFaIsu98mVQY3bA/Xn9wYcuAAzRzhEHgrbp8LPzYdi6Qtlqpt4HcPV3Ya
+ H9BkCacgyLHcdeQbBXaup9JbF5oqbdtwev3waAmNfhWhrQeqQ0tkrpJ46l9slEGEdao5Dcct
+ QDRjmJz7Gx/rKJngQrbboOQz+rhiHPoJc/n75lgOqtHRePNEf9xmtteHYpiAXh/YNooXJvdA
+ tgR1jAsCsxuXZnW2DpVClm1WSHNfLSWona8cTkcoSTeYCrnXzsFNBGCG6KUBEADZhvm9TZ25
+ JZa7wbKMOpvSH36K8wl74FhuVuv7ykeFPKH2oC7zmP1oqs1IF1UXQQzNkCHsBpIZq+TSE74a
+ mG4sEhZP0irrG/w3JQ9Vbxds7PzlQzDarJ1WJvS2KZ4AVnwc/ucirNuxinAuAmmNBUNF8w6o
+ Y97sdgFuIZUP6h972Tby5bu7wmy1hWL3+2QV+LEKmRpr0D9jDtJrKfm25sLwoHIojdQtGv2g
+ JbQ9Oh9+k3QG9Kh6tiQoOrzgJ9pNjamYsnti9M2XHhlX489eXq/E6bWOBRa0UmD0tuQKNgK1
+ n8EDmFPW3L0vEnytAl4QyZEzPhO30GEcgtNkaJVQwiXtn4FMw4R5ncqXVvzR7rnEuXwyO9RF
+ tjqhwxsfRlORo6vMKqvDxFfgIkVnlc2KBa563qDNARB6caG6kRaLVcy0pGVlCiHLjl6ygP+G
+ GCNfoh/PADQz7gaobN2WZzXbsVS5LDb9w/TqskSRhkgXpxt6k2rqNgdfeyomlkQnruvkIIjs
+ Sk2X68nwHJlCjze3IgSngS2Gc0NC/DDoUBMblP6a2LJwuF/nvaW+QzPquy5KjKUO2UqIO9y+
+ movZqE777uayqmMeIy4cd/gg/yTBBcGvWVm0Dh7dE6G6WXJUhWIUtXCzxKMmkvSmZy+gt1rN
+ OyCd65HgUXPBf+hioCzGVFSoqQARAQABwsOyBBgBCAAmAhsuFiEEi3EErponLWaT9Sfy7BiD
+ 9V4LQKUFAmaWfGYFCQfwx0ECQAkQ7BiD9V4LQKXBdCAEGQEIAB0WIQRPj7g/vng8MQxQWQQg
+ rS7GWxAs4gUCYIbopQAKCRAgrS7GWxAs4gfGEACcA0XVNesbVIyvs5SJpJy+6csrH4yy233o
+ GclX2P7pcCls55wiV6ywCtRaXWFjztYmklQieaZ/zq+pUuUDtBZo95rUP20E56gYV2XFB18W
+ YeekTwH5d2d/j++60iHExWTB+sgMEv3CEGikUBj7iaMX2KtaB1k9K+3K6dx/s1KWxOClFkbJ
+ EV/tmeq7Ta8LiytQM9b4yY550tzC0pEEeFcLFXo1m5KcJauYnAqrlOVY48NFpFUd9oAZf/Pz
+ p3oEs+zn/8zK2PBrZZCD6AhrbotRy7irE5eimhxcsFm1+MG5ufnaQUWHrRYXVuFhvkSoqZ8j
+ GPgPEpFor4NjRyX/PMLglQ7S5snkvKcr3Lun44aybXEHq/1FTzW2kOh6kFHFFOPbMv1voJKM
+ IzrmDoDS+xANt/La7OwpCylCgF6t9oHHTTGfAfwtfYZbiepC66FDe/Jt/QLwkIXeIoeSS1O4
+ 6rJdGWG2kHthUM+uIbUbaRJW8AkJpzP1Mz7TieR/9jO4YPeUm9tGL5kP2yyNtzFilcoOeox1
+ NSFNAPz+zPcovVmxAaSDGcSzhQVJVlk8xPib8g4fnI8qJ3Gj7xyw8D9dzxhCR2DIFmZL84En
+ N7Rj+k4VIGY7M/cVvxL81jlbMGMERMmb96Cua9z1ROviGA1He2gbHOcp6qmLNu3nprleG8PL
+ ZRNdEAC0iZapoyiXlVCKLFIwUPnxUz5iarqIfQU8sa1VXYYd/AAAFI6Wv3zfNtGicjgHP8rN
+ CIegqm2Av1939XXGZJVI9f3hEoUn04rvxCgcDcUvn7I0WTZ4JB9G5qAGvQLXeXK6Byu77qTx
+ eC7PUIIEKN3X47e8xTSj2reVTlanDr8yeqZhxpKHaS0laF8RbD85geZtAK67qEByX2KC9DUo
+ eHBFuXpYMzGQnf2SG105ePI2f4h5iAfbTW9VWH989fx4f2hVlDwTe08/NhPdwq/Houov9f/+
+ uPpYEMlHCNwE8GRV7aEjd/dvu87PQPm4zFtC3jgQaUKCbYYlHmYYRlrLQenX3QSorrQNPbfz
+ uQkNLDVcjgD2fxBpemT7EhHYBz+ugsfbtdsH+4jVCo5WLb/HxE6o5zvSIkXknWh1DhFj/qe9
+ Zb9PGmfp8T8Ty+c/hjE5x6SrkRCX8qPXIvfSWLlb8M0lpcpFK+tB+kZlu5I3ycQDNLTk3qmf
+ PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
+ ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
+ qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
+In-Reply-To: <20250407081425.6420-6-jose.exposito89@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefgeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepm
+ hgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Mon, Apr 14, 2025 at 03:18:07PM +0200, Danilo Krummrich wrote:
-> Implement the `auxiliary::Registration` type, which provides an API to
-> create and register new auxiliary devices in the system.
+
+
+Le 07/04/2025 à 10:14, José Expósito a écrit :
+> From: Louis Chauvet <louis.chauvet@bootlin.com>
 > 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> Create a default subgroup at /config/vkms/crtcs to allow to create as
+> many CRTCs as required.
+
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Co-developed-by: José Expósito <jose.exposito89@gmail.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 > ---
->  rust/kernel/auxiliary.rs | 88 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 87 insertions(+), 1 deletion(-)
+>   Documentation/gpu/vkms.rst           |  6 ++
+>   drivers/gpu/drm/vkms/vkms_configfs.c | 85 ++++++++++++++++++++++++++++
+>   2 files changed, 91 insertions(+)
 > 
-> diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-> index 75423737032a..b40d663b42eb 100644
-> --- a/rust/kernel/auxiliary.rs
-> +++ b/rust/kernel/auxiliary.rs
-> @@ -5,7 +5,7 @@
->  //! C header: [`include/linux/auxiliary_bus.h`](srctree/include/linux/auxiliary_bus.h)
->  
->  use crate::{
-> -    bindings, device,
-> +    bindings, container_of, device,
->      device_id::RawDeviceId,
->      driver,
->      error::{to_result, Result},
-> @@ -230,6 +230,18 @@ pub fn parent(&self) -> Option<&device::Device> {
->      }
->  }
->  
-> +impl Device {
-> +    extern "C" fn release(dev: *mut bindings::device) {
-> +        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
-> +        // embedded in `struct auxiliary_device`.
-> +        let adev = unsafe { container_of!(dev, bindings::auxiliary_device, dev) }.cast_mut();
-
-FYI, Tamir's patch makes this cast_mut() unnecessary.
-
-> +        // SAFETY: `adev` points to the memory that has been allocated in `Registration::new`, via
-> +        // `KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)`.
-> +        let _ = unsafe { KBox::<Opaque<bindings::auxiliary_device>>::from_raw(adev.cast()) };
-> +    }
+> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> index a87e0925bebb..e0699603ef53 100644
+> --- a/Documentation/gpu/vkms.rst
+> +++ b/Documentation/gpu/vkms.rst
+> @@ -74,6 +74,7 @@ By default, the instance is disabled::
+>   And directories are created for each configurable item of the display pipeline::
+>   
+>     tree /config/vkms/my-vkms
+> +  ├── crtcs
+>     ├── enabled
+>     └── planes
+>   
+> @@ -89,6 +90,10 @@ Planes have 1 configurable attribute:
+>   - type: Plane type: 0 overlay, 1 primary, 2 cursor (same values as those
+>     exposed by the "type" property of a plane)
+>   
+> +Continue by creating one or more CRTCs::
+> +
+> +  sudo mkdir /config/vkms/my-vkms/crtcs/crtc0
+> +
+>   Once you are done configuring the VKMS instance, enable it::
+>   
+>     echo "1" | sudo tee /config/vkms/my-vkms/enabled
+> @@ -100,6 +105,7 @@ Finally, you can remove the VKMS instance disabling it::
+>   And removing the top level directory and its subdirectories::
+>   
+>     sudo rmdir /config/vkms/my-vkms/planes/*
+> +  sudo rmdir /config/vkms/my-vkms/crtcs/*
+>     sudo rmdir /config/vkms/my-vkms
+>   
+>   Testing With IGT
+> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
+> index 398755127759..62a82366791d 100644
+> --- a/drivers/gpu/drm/vkms/vkms_configfs.c
+> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
+> @@ -17,6 +17,7 @@ static bool is_configfs_registered;
+>    * @group: Top level configuration group that represents a VKMS device.
+>    * Initialized when a new directory is created under "/config/vkms/"
+>    * @planes_group: Default subgroup of @group at "/config/vkms/planes"
+> + * @crtcs_group: Default subgroup of @group at "/config/vkms/crtcs"
+>    * @lock: Lock used to project concurrent access to the configuration attributes
+>    * @config: Protected by @lock. Configuration of the VKMS device
+>    * @enabled: Protected by @lock. The device is created or destroyed when this
+> @@ -25,6 +26,7 @@ static bool is_configfs_registered;
+>   struct vkms_configfs_device {
+>   	struct config_group group;
+>   	struct config_group planes_group;
+> +	struct config_group crtcs_group;
+>   
+>   	struct mutex lock;
+>   	struct vkms_config *config;
+> @@ -45,6 +47,20 @@ struct vkms_configfs_plane {
+>   	struct vkms_config_plane *config;
+>   };
+>   
+> +/**
+> + * struct vkms_configfs_crtc - Configfs representation of a CRTC
+> + *
+> + * @group: Top level configuration group that represents a CRTC.
+> + * Initialized when a new directory is created under "/config/vkms/crtcs"
+> + * @dev: The vkms_configfs_device this CRTC belongs to
+> + * @config: Configuration of the VKMS CRTC
+> + */
+> +struct vkms_configfs_crtc {
+> +	struct config_group group;
+> +	struct vkms_configfs_device *dev;
+> +	struct vkms_config_crtc *config;
+> +};
+> +
+>   #define device_item_to_vkms_configfs_device(item) \
+>   	container_of(to_config_group((item)), struct vkms_configfs_device, \
+>   		     group)
+> @@ -55,6 +71,71 @@ struct vkms_configfs_plane {
+>   #define plane_item_to_vkms_configfs_plane(item) \
+>   	container_of(to_config_group((item)), struct vkms_configfs_plane, group)
+>   
+> +#define crtc_item_to_vkms_configfs_crtc(item) \
+> +	container_of(to_config_group((item)), struct vkms_configfs_crtc, group)
+> +
+> +static void crtc_release(struct config_item *item)
+> +{
+> +	struct vkms_configfs_crtc *crtc;
+> +	struct mutex *lock;
+> +
+> +	crtc = crtc_item_to_vkms_configfs_crtc(item);
+> +	lock = &crtc->dev->lock;
+> +
+> +	scoped_guard(mutex, lock) {
+> +		vkms_config_destroy_crtc(crtc->dev->config, crtc->config);
+> +		kfree(crtc);
+> +	}
 > +}
 > +
->  // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
->  // argument.
->  kernel::impl_device_context_deref!(unsafe { Device });
-> @@ -272,3 +284,77 @@ unsafe impl Send for Device {}
->  // SAFETY: `Device` can be shared among threads because all methods of `Device`
->  // (i.e. `Device<Normal>) are thread safe.
->  unsafe impl Sync for Device {}
+> +static struct configfs_item_operations crtc_item_operations = {
+> +	.release	= &crtc_release,
+> +};
 > +
-> +/// The registration of an auxiliary device.
-> +///
-> +/// This type represents the registration of a [`struct auxiliary_device`]. When an instance of this
-> +/// type is dropped, its respective auxiliary device will be unregistered from the system.
-> +///
-> +/// # Invariants
-> +///
-> +/// `self.0` always holds a valid pointer to an initialized and registered
-> +/// [`struct auxiliary_device`].
-> +pub struct Registration(NonNull<bindings::auxiliary_device>);
+> +static const struct config_item_type crtc_item_type = {
+> +	.ct_item_ops	= &crtc_item_operations,
+> +	.ct_owner	= THIS_MODULE,
+> +};
 > +
-> +impl Registration {
-> +    /// Create and register a new auxiliary device.
-> +    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: &CStr) -> Result<Self> {
-> +        let boxed = KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)?;
-> +        let adev = boxed.get();
+> +static struct config_group *make_crtc_group(struct config_group *group,
+> +					    const char *name)
+> +{
+> +	struct vkms_configfs_device *dev;
+> +	struct vkms_configfs_crtc *crtc;
 > +
-> +        // SAFETY: It's safe to set the fields of `struct auxiliary_device` on initialization.
-> +        unsafe {
-> +            (*adev).dev.parent = parent.as_raw();
-> +            (*adev).dev.release = Some(Device::release);
-> +            (*adev).name = name.as_char_ptr();
-> +            (*adev).id = id;
-> +        }
+> +	dev = child_group_to_vkms_configfs_device(group);
 > +
-> +        // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
-> +        // which has not been initialized yet.
-> +        unsafe { bindings::auxiliary_device_init(adev) };
+> +	scoped_guard(mutex, &dev->lock) {
+> +		if (dev->enabled)
+> +			return ERR_PTR(-EBUSY);
 > +
-> +        // Now that `adev` is initialized, leak the `Box`; the corresponding memory will be freed
-> +        // by `Device::release` when the last reference to the `struct auxiliary_device` is dropped.
-> +        let _ = KBox::into_raw(boxed);
+> +		crtc = kzalloc(sizeof(*crtc), GFP_KERNEL);
+> +		if (!crtc)
+> +			return ERR_PTR(-ENOMEM);
 > +
-> +        // SAFETY:
-> +        // - `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`, which has
-> +        //   been initialialized,
-> +        // - `modname.as_char_ptr()` is a NULL terminated string.
-> +        let ret = unsafe { bindings::__auxiliary_device_add(adev, modname.as_char_ptr()) };
-> +        if ret != 0 {
-> +            // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
-> +            // which has been initialialized.
-> +            unsafe { bindings::auxiliary_device_uninit(adev) };
-
-Does this error-path actually free the box?
-
-Alice
-
-> +            return Err(Error::from_errno(ret));
-> +        }
+> +		crtc->dev = dev;
 > +
-> +        // SAFETY: `adev` is guaranteed to be non-null, since the `KBox` was allocated successfully.
-> +        //
-> +        // INVARIANT: The device will remain registered until `auxiliary_device_delete()` is called,
-> +        // which happens in `Self::drop()`.
-> +        Ok(Self(unsafe { NonNull::new_unchecked(adev) }))
-> +    }
+> +		crtc->config = vkms_config_create_crtc(dev->config);
+> +		if (IS_ERR(crtc->config)) {
+> +			kfree(crtc);
+> +			return ERR_CAST(crtc->config);
+> +		}
+> +
+> +		config_group_init_type_name(&crtc->group, name, &crtc_item_type);
+> +	}
+> +
+> +	return &crtc->group;
 > +}
 > +
-> +impl Drop for Registration {
-> +    fn drop(&mut self) {
-> +        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
-> +        // `struct auxiliary_device`.
-> +        unsafe { bindings::auxiliary_device_delete(self.0.as_ptr()) };
+> +static struct configfs_group_operations crtcs_group_operations = {
+> +	.make_group	= &make_crtc_group,
+> +};
 > +
-> +        // This drops the reference we acquired through `auxiliary_device_init()`.
-> +        //
-> +        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
-> +        // `struct auxiliary_device`.
-> +        unsafe { bindings::auxiliary_device_uninit(self.0.as_ptr()) };
-> +    }
-> +}
+> +static const struct config_item_type crtc_group_type = {
+> +	.ct_group_ops	= &crtcs_group_operations,
+> +	.ct_owner	= THIS_MODULE,
+> +};
 > +
-> +// SAFETY: A `Registration` of a `struct auxiliary_device` can be released from any thread.
-> +unsafe impl Send for Registration {}
+>   static ssize_t plane_type_show(struct config_item *item, char *page)
+>   {
+>   	struct vkms_configfs_plane *plane;
+> @@ -262,6 +343,10 @@ static struct config_group *make_device_group(struct config_group *group,
+>   				    &plane_group_type);
+>   	configfs_add_default_group(&dev->planes_group, &dev->group);
+>   
+> +	config_group_init_type_name(&dev->crtcs_group, "crtcs",
+> +				    &crtc_group_type);
+> +	configfs_add_default_group(&dev->crtcs_group, &dev->group);
 > +
-> +// SAFETY: `Registration` does not expose any methods or fields that need synchronization.
-> +unsafe impl Sync for Registration {}
-> -- 
-> 2.49.0
-> 
+>   	return &dev->group;
+>   }
+>   
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
