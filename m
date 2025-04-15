@@ -1,208 +1,140 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster1-host3-snip4-8.eps.apple.com [57.103.64.111])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CB82951AA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF6D2951C5
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719136; cv=none; b=fDWiFK99xlRCjBUN5gpvwMz5qP697899Q5uVwL6gpFnSgtmMxYs390RbvHdeqQMcMkOAl3tCR2t6WqzWjQJTk74DwibRXJZ5b890r0n2nMnQO+681SqtbmpuZPjfCCBgBjrlqL1AIKN5iG3FVBQWOUFDkxg55QC0vK/OUjWirug=
+	t=1744719214; cv=none; b=jO719qAzmHsucMMuYAR1oemWOp5lekyDVFhX/zJCBAdc4WsXRC+rYQn8NP9cnYTh3kNtEdkP/An2hydIwMZRj30fN9+ayzaPO8wohhlixyvR0qT1bXb+zknvrFeJ+pZdid27UPdu5Z3JG9qdSzC3KgYchHVPgSE8j02jPqQTqV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719136; c=relaxed/simple;
-	bh=H7LTL9umZKyDsnfMDzZYM/E8okgqBQBFrUVan+djzmA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DNlGVzovV4iYGdF5bJNcBkw8JDsTJnHrJe7xWDKfRaKF9jgnOhwZZS3GvLE0p6SyNDc+eSjgGfO7uSZlDaEhEPdbvtQAXYFtJVK2Io5qpd51kYXU8J8G5jrerqeRSLA3jCFfh+wlh4UMo3+XZeC7beFS05YUcOkWELWXux7+nSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=rY4RX+8e; arc=none smtp.client-ip=57.103.64.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744719214; c=relaxed/simple;
+	bh=9P0sq5lPWcAoBaIYk95sPswAjVLzbQdvYtr0glNmM6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DxacxxUc9nZJMexpnp3u3HqOLPkdWdhEdotQ1zN3fkUSdZbQq8fuMBcSfrqFCkZ/s8tKbq6jpsKqb/MJ5XrAH21Vjt6broreeMvAGUUKVLZTYYmK5/Mx0qEIhlEXhuYJZpY6vjiEsrtcd+3py2wQxPh33PVYwkHT4OnrYajM3/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=he2ylS7W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="rY4RX+8e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=prbX2eDvC7yhKvTFBuMdrTVaSPa9eB/EAv2umF7suu0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=rY4RX+8e7g4QCLojUtasymv7m5M97ry3w3nFeup362SH0UJO7shq5Ch8lQJQ3aIbC
-	 nQ/nWn4/6PLvQ8WssIqwHmtM+WzNYPcw+JsiBZl0/bTxHcuXxAlmiyiZUjOvVraiNJ
-	 FF05PzQKA1KPNPXgJGVDCFXy/K+mPsWWcdCcxVm83UwlyIlqSfwAtuKFmNYql21bUX
-	 P89ogrilMe7uTwE0xgxw6dzarAR5uIegf7xZ6GMIVu6qe1bePx3lT0Cl8T4oSeS8fT
-	 Pq5jkf9iyPWF7HhaeQSHhM+1Z7a99o5bJO7nBwF/lVYTT3KfTqDSY6vGh/N8b+pYbC
-	 0Pt1IGiO1xT+w==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id B5E271800096;
-	Tue, 15 Apr 2025 12:12:08 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 15 Apr 2025 20:11:52 +0800
-Subject: [PATCH v3] fs/fs_parse: Remove unused and problematic
- validate_constant_table()
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="he2ylS7W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744719210;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dD2W5Gk6xEruvgXgKSmq+TLa2o05RV4NaRvMwK0HBHw=;
+	b=he2ylS7WJReo1Tb3BKr2gF5wMztGIQtI+Z2lcEfJW5OdgSgWCzKgjQE+DE0HfimsxKzIxf
+	QFbK14Fsgn8YsIPK50S61jruVol6siAVYgRhZrj/unHOOSB3ecnDXCKr8JMw7qPlHflMXZ
+	MS9L0vZnzEMpmSbt6/nN8K+7Qmc1jkE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-237-Al-Lw_ToPhy0FpojSTZAVw-1; Tue,
+ 15 Apr 2025 08:13:27 -0400
+X-MC-Unique: Al-Lw_ToPhy0FpojSTZAVw-1
+X-Mimecast-MFC-AGG-ID: Al-Lw_ToPhy0FpojSTZAVw_1744719206
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D78E119560BB;
+	Tue, 15 Apr 2025 12:13:25 +0000 (UTC)
+Received: from f39.redhat.com (unknown [10.44.32.35])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C6289180B486;
+	Tue, 15 Apr 2025 12:13:23 +0000 (UTC)
+From: Eder Zulian <ezulian@redhat.com>
+To: nathan.lynch@amd.com,
+	Basavaraj.Natikar@amd.com,
+	vkoul@kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Eder Zulian <ezulian@redhat.com>
+Subject: [PATCH v2] dmaengine: ptdma: Remove unused pointer dma_cmd_cache
+Date: Tue, 15 Apr 2025 14:13:12 +0200
+Message-ID: <20250415121312.870124-1-ezulian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-fix_fs-v3-1-0c378cc5ce35@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAAdN/mcC/2WMQQ7CIBBFr9LM2jFQqbWuvIdpDI6DnYWgoETTc
- HexW5fv/5c3Q+IonGDfzBA5S5LgK2xWDdBk/ZVRLpWhVW2njFbo5H1yCbes7NCT4W5wUOV75Po
- soeNYeZL0DPGzdLP+rX+JrFFhT9oQ0Y7P1h4eLyHxtKZwg7GU8gVHj39wngAAAA==
-X-Change-ID: 20250410-fix_fs-6e0a97c4e59f
-To: Jonathan Corbet <corbet@lwn.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: bl664JtNcEyBld6oDCHqRLPUmC_pp4Ln
-X-Proofpoint-GUID: bl664JtNcEyBld6oDCHqRLPUmC_pp4Ln
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 spamscore=0
- adultscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2411120000 definitions=main-2504150086
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+The pointer 'struct kmem_cache *dma_cmd_cache' was introduced in commit
+'b0b4a6b10577 ("dmaengine: ptdma: register PTDMA controller as a DMA
+resource")' but it was never used.
 
-Remove validate_constant_table() since:
+Changes since v1:
+- Remove the 'err_cache' label and return -ENOMEM directly instead of
+  assigning -ENOMEM to 'ret' and jumping to the label, since there
+  are no unmanaged allocations to unwind. Based on suggestion from
+  Nathan Lynch.
+- Fix checkpatch.pl error: ERROR: Please use git commit description style
+  'commit <12+ chars of sha1> ("<title line>")'
 
-- It has no caller.
-
-- It has below 3 bugs for good constant table array array[] which must
-  end with a empty entry, and take below invocation for explaination:
-  validate_constant_table(array, ARRAY_SIZE(array), ...)
-
-  - Always return wrong value due to the last empty entry.
-  - Imprecise error message for missorted case.
-  - Potential NULL pointer dereference since the last pr_err() may use
-    @tbl[i].name NULL pointer to print the last empty entry's name.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Signed-off-by: Eder Zulian <ezulian@redhat.com>
 ---
-Changes in v3:
-- Remove validate_constant_table() instead of fixing it
-- Link to v2: https://lore.kernel.org/r/20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com
+V1 -> V2: Addressed review comments and fix error detected by
+checkpatch.pl.
 
-Changes in v2:
-- Remove fixes tag for remaining patches
-- Add more comment for the NULL pointer dereference issue
-- Link to v1: https://lore.kernel.org/r/20250410-fix_fs-v1-3-7c14ccc8ebaa@quicinc.com
----
- Documentation/filesystems/mount_api.rst | 15 ----------
- fs/fs_parser.c                          | 49 ---------------------------------
- include/linux/fs_parser.h               |  5 ----
- 3 files changed, 69 deletions(-)
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c | 16 ++++------------
+ drivers/dma/amd/ptdma/ptdma.h           |  1 -
+ 2 files changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/filesystems/mount_api.rst b/Documentation/filesystems/mount_api.rst
-index d92c276f1575af11370dcd4a5d5d0ac97c4d7f4c..cf56086bbd6622a07bbb1e283a86fea40a98a8e6 100644
---- a/Documentation/filesystems/mount_api.rst
-+++ b/Documentation/filesystems/mount_api.rst
-@@ -753,21 +753,6 @@ process the parameters it is given.
-      If a match is found, the corresponding value is returned.  If a match
-      isn't found, the not_found value is returned instead.
- 
--   * ::
--
--       bool validate_constant_table(const struct constant_table *tbl,
--				    size_t tbl_size,
--				    int low, int high, int special);
--
--     Validate a constant table.  Checks that all the elements are appropriately
--     ordered, that there are no duplicates and that the values are between low
--     and high inclusive, though provision is made for one allowable special
--     value outside of that range.  If no special value is required, special
--     should just be set to lie inside the low-to-high range.
--
--     If all is good, true is returned.  If the table is invalid, errors are
--     logged to the kernel log buffer and false is returned.
--
-    * ::
- 
-        bool fs_validate_description(const char *name,
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index e635a81e17d965df78ffef27f6885cd70996c6dd..07a78a5064d05009148fa9780f3e031cd3a9b529 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -379,55 +379,6 @@ int fs_param_is_path(struct p_log *log, const struct fs_parameter_spec *p,
- EXPORT_SYMBOL(fs_param_is_path);
- 
- #ifdef CONFIG_VALIDATE_FS_PARSER
--/**
-- * validate_constant_table - Validate a constant table
-- * @tbl: The constant table to validate.
-- * @tbl_size: The size of the table.
-- * @low: The lowest permissible value.
-- * @high: The highest permissible value.
-- * @special: One special permissible value outside of the range.
-- */
--bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
--			     int low, int high, int special)
--{
--	size_t i;
--	bool good = true;
--
--	if (tbl_size == 0) {
--		pr_warn("VALIDATE C-TBL: Empty\n");
--		return true;
+diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+index 3a8014fb9cb4..aefb91c29bb5 100644
+--- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+@@ -583,18 +583,14 @@ int pt_dmaengine_register(struct pt_device *pt)
+ 	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+ 					 "%s-dmaengine-desc-cache",
+ 					 dev_name(pt->dev));
+-	if (!desc_cache_name) {
+-		ret = -ENOMEM;
+-		goto err_cache;
 -	}
--
--	for (i = 0; i < tbl_size; i++) {
--		if (!tbl[i].name) {
--			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
--			good = false;
--		} else if (i > 0 && tbl[i - 1].name) {
--			int c = strcmp(tbl[i-1].name, tbl[i].name);
--
--			if (c == 0) {
--				pr_err("VALIDATE C-TBL[%zu]: Duplicate %s\n",
--				       i, tbl[i].name);
--				good = false;
--			}
--			if (c > 0) {
--				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
--				       i, tbl[i-1].name, tbl[i].name);
--				good = false;
--			}
--		}
--
--		if (tbl[i].value != special &&
--		    (tbl[i].value < low || tbl[i].value > high)) {
--			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
--			       i, tbl[i].name, tbl[i].value, low, high);
--			good = false;
--		}
--	}
--
--	return good;
--}
--
- /**
-  * fs_validate_description - Validate a parameter description
-  * @name: The parameter name to search for.
-diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
-index 53e566efd5fd133d19e313e494b975612a227b77..8d1c2fdd382fb51aee3ccdcc49735d7441581c26 100644
---- a/include/linux/fs_parser.h
-+++ b/include/linux/fs_parser.h
-@@ -87,14 +87,9 @@ extern int lookup_constant(const struct constant_table tbl[], const char *name,
- extern const struct constant_table bool_names[];
++	if (!desc_cache_name)
++		return -ENOMEM;
  
- #ifdef CONFIG_VALIDATE_FS_PARSER
--extern bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
--				    int low, int high, int special);
- extern bool fs_validate_description(const char *name,
- 				    const struct fs_parameter_spec *desc);
- #else
--static inline bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
--					   int low, int high, int special)
--{ return true; }
- static inline bool fs_validate_description(const char *name,
- 					   const struct fs_parameter_spec *desc)
- { return true; }
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250410-fix_fs-6e0a97c4e59f
-
-Best regards,
+ 	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
+ 					       sizeof(struct pt_dma_desc), 0,
+ 					       SLAB_HWCACHE_ALIGN, NULL);
+-	if (!pt->dma_desc_cache) {
+-		ret = -ENOMEM;
+-		goto err_cache;
+-	}
++	if (!pt->dma_desc_cache)
++		return -ENOMEM;
+ 
+ 	dma_dev->dev = pt->dev;
+ 	dma_dev->src_addr_widths = DMA_SLAVE_BUSWIDTH_64_BYTES;
+@@ -648,9 +644,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+ err_reg:
+ 	kmem_cache_destroy(pt->dma_desc_cache);
+ 
+-err_cache:
+-	kmem_cache_destroy(pt->dma_cmd_cache);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pt_dmaengine_register);
+@@ -662,5 +655,4 @@ void pt_dmaengine_unregister(struct pt_device *pt)
+ 	dma_async_device_unregister(dma_dev);
+ 
+ 	kmem_cache_destroy(pt->dma_desc_cache);
+-	kmem_cache_destroy(pt->dma_cmd_cache);
+ }
+diff --git a/drivers/dma/amd/ptdma/ptdma.h b/drivers/dma/amd/ptdma/ptdma.h
+index 0a7939105e51..ef3f55632107 100644
+--- a/drivers/dma/amd/ptdma/ptdma.h
++++ b/drivers/dma/amd/ptdma/ptdma.h
+@@ -254,7 +254,6 @@ struct pt_device {
+ 	/* Support for the DMA Engine capabilities */
+ 	struct dma_device dma_dev;
+ 	struct pt_dma_chan *pt_dma_chan;
+-	struct kmem_cache *dma_cmd_cache;
+ 	struct kmem_cache *dma_desc_cache;
+ 
+ 	wait_queue_head_t lsb_queue;
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+2.49.0
 
