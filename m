@@ -1,195 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9828E292921;
-	Tue, 15 Apr 2025 12:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425BE28B4F1;
+	Tue, 15 Apr 2025 12:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721193; cv=none; b=VYWGeF2mUkhUU9RKOspj2UzTn7JrTYLLJREwXCs3O5CjurbicULbFjgm8QEeoRJn7VE+iZVfuuRHqMH/6gCn5Xsw625UK9aG2mbnhxVtxoLbR3q6zt2Oswccs9gBg10OXUlvldOAnXwQ+HzwuP1LC2zFNZS8+rPVDzG8AdIvekM=
+	t=1744721224; cv=none; b=LYUozLV6/mrODf5gP+l/F9Ji09VCzTorFUP67bvflWQpbqyFaQTRGP55bPx3TvuDRgNL2OK/XotGGBb7TK/cfJMXYPCdnzsVcOXDTmZhC/T8UB875MBhVd8NYLAkvUysuCD0XAYU2pWH+VlFZ9cMXwuuNyIlf6ce2GdT1ZWR4Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721193; c=relaxed/simple;
-	bh=+PPvXQGkXkgSiXGkMLXfpaE8M/+AqsEn0JPtAbELTQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ITMpNTbRlEPW91FqtuJJuexO9yqBgnFN7nXhGIxLI5MofFuJLvwpfwuBkqUMbVz9VKn8fbmhLXGjFJUhqmmsfe/X7EpwovB8XIzV9Rw8wipCuWwvh7uYrLfAsYEfUPODCHud2IxJwxinO8chhTltElvUlxCFhr6icSzQn7G8SNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrlkKnYT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744721224; c=relaxed/simple;
+	bh=5vRosKX5Osw72EvS+mxpqaBtV03BB8wYWXzLNWqTvNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VscrMf5Z9vcPJLfsdRX8xR3T/IfPYH68qe8JrHNLl0AC1DRdz7qs3ckQXEdliLVBfEm2CygvrlF8ROdjWzEtJQXaYNKzQHTo/TsmXv2FFMUic3UPqY/nYYvfnNA+ntejAJZmU26Tanc3ZMRkmzhc7sD1UlMIJCoS645ztW5ewQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Pb6tvvc7; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrlkKnYT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1255FC4AF09;
-	Tue, 15 Apr 2025 12:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744721193;
-	bh=+PPvXQGkXkgSiXGkMLXfpaE8M/+AqsEn0JPtAbELTQE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZrlkKnYTmF8borcg3mEJGryqlU2cghpQRB6TY7ucEN0RZinWxWrJDaGeybg9gfjov
-	 fRiS/x3J6sIu6zW3JiCmbeMHhxf1LW4jkDMY+6q7c/bz/DjSKH9KuByTNRWKK1w7cV
-	 ZwWmF9B5wVf5eAlGoLtbH1HCfvCEPn7x8IR+wsNhLlM6W3ih2fz7m8/AyzaflPIi8J
-	 WWIYOcDUvT5HqlvmXUMC/WhdBur6XNpQ7mVcrDIST6zN3C1lvxDPGJFJZIBOAkvb33
-	 BHgwSwEE26heeZ15HEoLD9oGGnvQDgCkW3BdDOxV4KCtZVM2GcoA/vTZgIGCuybT3v
-	 MQpGrfACT2w1w==
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso10255834a12.0;
-        Tue, 15 Apr 2025 05:46:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUA4P+ZN/HKiDvc28L0YeQICJ8sNCCVcoPk1CMGQ346zvOYGeS/VXYvmWma0CDtxQhz/fIYx0/qNsyT@vger.kernel.org, AJvYcCX1v6UBB6M2PttJlQ+GkldwpctX4P3zjgYdsZYugcWAG2LBQk0/wuGvJDKTDC+zfxBvrPcQVcJTbIf+3/YAFlQ=@vger.kernel.org, AJvYcCXPC6AoFE9fMKI4E8/kNmGyFVkewWGXT9XD1O6slTec7nroL2QhhGHq6jbRd8ViZMc9hU+Q0DiD7B2h54V6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGajS6oQAUmeQTl4TSp8cTTU45uGR0w5FNLIQY56D2J4Y4Vowp
-	/oCPvfhKXmpJFI9V7X1nMVsJEPEykt7Pqv5ekvRsq7a43Zsbrih9a6iNsVUUbaIpXgKG/Z9ictV
-	lGv2tvgY7VT98owbHaaprd866tw==
-X-Google-Smtp-Source: AGHT+IEwV9I04xQr2SBLjX/PImczcjqt7PwVOKeXiqIvpJe944fzS+0vFau10h18OQEDa7cAa5XMaWfcCIgr6RbdpYo=
-X-Received: by 2002:a05:6402:3506:b0:5f0:9eb3:8e71 with SMTP id
- 4fb4d7f45d1cf-5f37015b989mr15215855a12.27.1744721191419; Tue, 15 Apr 2025
- 05:46:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Pb6tvvc7"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 299544397E;
+	Tue, 15 Apr 2025 12:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744721219;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aOROKFQ2lacCi0F/sGRNvCq/N5utu9L8rxls16miSXo=;
+	b=Pb6tvvc76apWhHbdIEqp/Stcts3c7Sm/V+f6ZLnsfk6BojnBRT3ZEPHzce74zAiG4TniuH
+	cf13yoXltXjAjAuMf/nMIooDISY8kg3lLrKYXVpABFT8hWrAiNUXeGmlQPo2GSjvp7E7s8
+	nP0BG3XeaMRpAMTv3JjUC11g9nPwDyW+DWQc64GMv/oDLsNq9lvhQdPPKKwNDCLg9295KJ
+	f1opItPe2LX2cVUnrs1U6ILDCrw+XxVkwlNZM2aH6/vzMyahQXRf/rtH4SAlxny+yiheen
+	/F5b1OniD+8tDZbayxWleJlcC4r8MzWx8MlhSXxh6XKSMiey9Wo2XVxnEROBEw==
+Date: Tue, 15 Apr 2025 14:46:55 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Roger Quadros <rogerq@kernel.org>, Tero Kristo
+ <kristo@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux@ew.tq-group.com, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+Message-ID: <20250415144655.416c31ab@fedora.home>
+In-Reply-To: <a40072f780a531e5274ce7f2ed28d1319b12d872.camel@ew.tq-group.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	<16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	<20250415131548.0ae3b66f@fedora.home>
+	<a40072f780a531e5274ce7f2ed28d1319b12d872.camel@ew.tq-group.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326171411.590681-1-remo@buenzli.dev> <20250414152630.1691179-1-remo@buenzli.dev>
- <20250414152630.1691179-3-remo@buenzli.dev> <Z_1Jfs5DXD2vuzLj@cassiopeiae>
- <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev> <Z_4rVyUjK1dlnTsT@pollux> <D9760KMM0PSB.HONQ7MUG8OTN@buenzli.dev>
-In-Reply-To: <D9760KMM0PSB.HONQ7MUG8OTN@buenzli.dev>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 15 Apr 2025 07:46:19 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
-X-Gm-Features: ATxdqUG9P7iUtyNTDn0N2TNGX_7KFy-mnkt2txixBD2a833kXBUfKDMMmQxkdjI
-Message-ID: <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfgleelvddtffdvkeduieejudeuvedvveffheduhedvueduteehkeehiefgteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedviedprhgtphhtthhopehmrghtthhhihgrshdrshgthhhifhhfvghrsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvhesl
+ hhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Apr 15, 2025 at 6:11=E2=80=AFAM Remo Senekowitsch <remo@buenzli.dev=
-> wrote:
->
-> On Tue Apr 15, 2025 at 11:48 AM CEST, Danilo Krummrich wrote:
-> > On Tue, Apr 15, 2025 at 01:55:42AM +0200, Remo Senekowitsch wrote:
-> >> On Mon Apr 14, 2025 at 7:44 PM CEST, Danilo Krummrich wrote:
-> >> > On Mon, Apr 14, 2025 at 05:26:27PM +0200, Remo Senekowitsch wrote:
-> >> >> The device property API is a firmware agnostic API for reading
-> >> >> properties from firmware (DT/ACPI) devices nodes and swnodes.
-> >> >>
-> >> >> While the C API takes a pointer to a caller allocated variable/buff=
-er,
-> >> >> the rust API is designed to return a value and can be used in struc=
-t
-> >> >> initialization. Rust generics are also utilized to support differen=
-t
-> >> >> types of properties where appropriate.
-> >> >>
-> >> >> The PropertyGuard is a way to force users to specify whether a prop=
-erty
-> >> >> is supposed to be required or not. This allows us to move error
-> >> >> logging of missing required properties into core, preventing a lot =
-of
-> >> >> boilerplate in drivers.
-> >> >
-> >> > The patch adds a lot of thing, i.e.
-> >> >   * implement PropertyInt
-> >> >   * implement PropertyGuard
-> >> >   * extend FwNode by a lot of functions
-> >> >   * extend Device by some property functions
-> >> >
-> >> > I see that from v1 a lot of things have been squashed, likely becaus=
-e there are
-> >> > a few circular dependencies. Is there really no reasonable way to br=
-eak this
-> >> > down a bit?
-> >>
-> >> I was explicitly asked to do this in the previous thread[1].
-> >
-> > I'm well aware that you were asked to do so and that one reason was tha=
-t
-> > subsequent patches started deleting code that was added in previous one=
-s
-> > (hence my suspicion of circular dependencies and that splitting up thin=
-gs might
-> > not be super trivial).
-> >
-> >> I'm happy
-> >> to invest time into organizing files and commits exactly the way peopl=
-e
-> >> want, but squashing and splitting the same commits back and forth
-> >> between subsequent patch series is a waste of my time.
-> >
-> > I don't think you were asked to go back and forth, but whether you see =
-a
-> > reasonable way to break things down a bit, where "reasonable" means wit=
-hout
-> > deleting code that was just added.
->
-> I was asked to squash two specific commits. The first was making the
-> read method generic. That was the one that deleted much code. Totally
-> reasonable, and the generic stuff might be discarded anyway, so I won't
-> be moving stuff back and forth.
->
-> However, the second commit was the one introducing PropertyGuard. That
-> was a beautifully atomic commit, no circular dependencies in sight. If
-> this commit is to be split up, one of the smaller ones would without
-> doubt look exactly the same as the one before. I provided a link[1]
-> to the exact email telling me to squash that exact patch to avoid any
-> confusion.
+On Tue, 15 Apr 2025 13:21:25 +0200
+Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
 
-Adding PropertyGuard changes the API. I don't think it makes sense to
-review the API without it and then again with it.
+> On Tue, 2025-04-15 at 13:15 +0200, Maxime Chevallier wrote:
+> > On Tue, 15 Apr 2025 12:18:04 +0200
+> > Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
+> >   
+> > > Historially, the RGMII PHY modes specified in Device Trees have been  
+> >   ^^^^^^^^^^^
+> >   Historically  
+> > > used inconsistently, often referring to the usage of delays on the PHY
+> > > side rather than describing the board; many drivers still implement this
+> > > incorrectly.
+> > > 
+> > > Require a comment in Devices Trees using these modes (usually mentioning
+> > > that the delay is relalized on the PCB), so we can avoid adding more
+> > > incorrect uses (or will at least notice which drivers still need to be
+> > > fixed).
+> > > 
+> > > Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > > ---
+> > >  Documentation/dev-tools/checkpatch.rst |  9 +++++++++
+> > >  scripts/checkpatch.pl                  | 11 +++++++++++
+> > >  2 files changed, 20 insertions(+)
+> > > 
+> > > diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
+> > > index abb3ff6820766..8692d3bc155f1 100644
+> > > --- a/Documentation/dev-tools/checkpatch.rst
+> > > +++ b/Documentation/dev-tools/checkpatch.rst
+> > > @@ -513,6 +513,15 @@ Comments
+> > >  
+> > >      See: https://lore.kernel.org/lkml/20131006222342.GT19510@leaf/
+> > >  
+> > > +  **UNCOMMENTED_RGMII_MODE**
+> > > +    Historially, the RGMII PHY modes specified in Device Trees have been  
+> >        ^^^^^^^^^^^
+> >       	 Historically  
+> > > +    used inconsistently, often referring to the usage of delays on the PHY
+> > > +    side rather than describing the board.
+> > > +
+> > > +    PHY modes "rgmii", "rgmii-rxid" and "rgmii-txid" modes require the clock
+> > > +    signal to be delayed on the PCB; this unusual configuration should be
+> > > +    described in a comment. If they are not (meaning that the delay is realized
+> > > +    internally in the MAC or PHY), "rgmii-id" is the correct PHY mode.
+> > >  
+> > >  Commit message
+> > >  --------------
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index 784912f570e9d..57fcbd4b63ede 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -3735,6 +3735,17 @@ sub process {
+> > >  			}
+> > >  		}
+> > >  
+> > > +# Check for RGMII phy-mode with delay on PCB
+> > > +		if ($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*(phy-mode|phy-connection-type)\s*=\s*"/ &&
+> > > +		    !ctx_has_comment($first_line, $linenr)) {
+> > > +			my $prop = $1;
+> > > +			my $mode = get_quoted_string($line, $rawline);
+> > > +			if ($mode =~ /^"rgmii(?:|-rxid|-txid)"$/) {
+> > > +				CHK("UNCOMMENTED_RGMII_MODE",
+> > > +				    "$prop $mode without comment -- delays on the PCB should be described, otherwise use \"rgmii-id\"\n" . $herecurr);
+> > > +			}
+> > > +		}
+> > > +  
+> > 
+> > My Perl-fu isn't good enough for me to review this properly... I think
+> > though that Andrew mentioned something along the lines of 'Comment
+> > should include PCB somewhere', but I don't know if this is easily
+> > doable with checkpatch though.
+> > 
+> > Maxime  
+> 
+> I think it can be done using ctx_locate_comment instead of ctx_has_comment, but
+> I decided against it - requiring to have a comment at all should be sufficient
+> to make people think about the used mode, and a comment with a bad explanation
+> would hopefully be caught during review.
 
-It might be reasonable to split adding the fwnode bindings and then
-the Device version. But those are in separate files anyway, so it's
-not really making review easier.
+True, and having looked at other stuff in checkpatch, it looks like
+there's no other example of rules expecting a specific word in a
+comment.
 
-> >> Do reviewers not typically read the review comments of others as well?
-> >
-> > I think mostly they do, but maintainers and reviewers are rather busy p=
-eople.
-> > So, I don't think you can expect everyone to follow every thread, espec=
-ially
-> > when they get lengthy.
+So besides the typo above, I'm OK with this patch :)
 
-Please understand maintainers are reviewing 10s to 100s of patches a
-week. I don't necessarily remember my own comments from last week.
+Maxime
 
-> >> What can I do to avoid this situation and make progress instead of
-> >> running in circles?
-> >
-> > I suggest to investigate whether it can be split it up in a reasonable =
-way and
-> > subsequently answer the question.
->
-> The point is that I agree with you that the PropertyGuard patch can be
-> split out. And possibly more: I think a reasonable person could make a
-> separate commit for every `property_read_<type>` method. And I'm happy
-> to do that if it's the way to go.  But if I do that, send a v3 and then
-> someone else asks me to squash it again (because they didn't read this
-> exchange between you and me...) then I would've wasted my time.
-
-A commit per method really seems excessive to me. I prefer to look at
-the API as a whole, and to do that with separate patches only makes
-that harder.
-
-A reasonable split here is possibly splitting the fwnode and the
-Device versions of the API. In any case, I think we've discussed this
-enough and I don't care to discuss it more, so whatever reasonable
-split you come up with is fine with me.
-
-> > With your contribution you attempt to add a rather large portion of pre=
-tty core
-> > code. This isn't an easy task and quite some discussion is totally expe=
-cted;
-> > please don't get frustrated, the series goes pretty well. :)
->
-> I'm trying, but I can't say I have a good first impression of doing
-> code review over a mailing list. Doing open-heart surgery with a
-> pickfork and writing documents in Microsoft Word both seem like more
-> productive and enjoyable activities to me.
-
-Mailing lists are a good scapegoat, but you can have 2 reviewers with
-2 different opinions anywhere. That's just the nature of a large,
-distributed project with lots of reviewers.
-
-Rob
