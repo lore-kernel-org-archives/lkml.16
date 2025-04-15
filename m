@@ -1,175 +1,104 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE32A2820CA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:25:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7457527FD4F
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709142; cv=none; b=nXBw5joVud1gI4uJzA+d/OVWftpa0rf8yyJec3vUFzw2j4PnO2yjFe7qgS4Kwa2s0J+vavQcWLnU6bipTc0Gk8+fyTJLgtUWoqXlM3tZ2rXjf3mSbUTjvkoEL6A8KjdPRDTV5nL0ei0qS/vyr5qgfeON73SCdrPfvRnTvgZmUqc=
+	t=1744709166; cv=none; b=pW4YMiQ2n+0fTlTuF9vtBc18nuOfIqE1DjbOkNjbFdG6UIDC5ZYx3fJE9tWk1BiAOmUPH2I/iYKsGsF+j6LNhtpZkZgz/s4hQvk172ZXvte5LUbr0HRjzm+jhM5cBt9I5WZ5B5gsdv0/AJC8GnwOOborWwq3f03Qi5rQNW0rnG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709142; c=relaxed/simple;
-	bh=Js0OYHUDBggbN21MupHzDCzb95swyEh3y+c7AxltwS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CiuyRilLq76p1c5/NSv/icFyknvfHtZAULPZqV5MvGrweT1NoTsDYChMv6+A2Kwt9TvIK8It83xdCQWMtbk0PrxXkT1T9YlnzNts01rIhqSGuqTsBCXtOt1PGQTdwGUTSwO8FABypS2SOBxrRbcwyB+xPhRjsysNL6VDV63rCPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4cXf-0003Vx-Gq; Tue, 15 Apr 2025 11:25:19 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4cXe-000OZz-20;
-	Tue, 15 Apr 2025 11:25:18 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id B93643F9ADA;
-	Tue, 15 Apr 2025 09:03:05 +0000 (UTC)
-Date: Tue, 15 Apr 2025 11:03:05 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>, 
-	Maxime Ripard <mripard@kernel.org>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, NXP S32 Linux Team <s32@nxp.com>, 
-	imx@lists.linux.dev, Christophe Lizzi <clizzi@redhat.com>, 
-	Alberto Ruiz <aruizrui@redhat.com>, Enric Balletbo <eballetb@redhat.com>, 
-	Eric Chanudet <echanude@redhat.com>, Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>, 
-	Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
-Message-ID: <20250415-olive-bulldog-of-acumen-f8ada3-mkl@pengutronix.de>
-References: <20250414073646.1473157-1-ciprianmarian.costea@oss.nxp.com>
- <20250414-camouflaged-silver-dodo-d0c000-mkl@pengutronix.de>
- <e4bd8e47aeab761e409121ac9bc19408@kernel.org>
+	s=arc-20240116; t=1744709166; c=relaxed/simple;
+	bh=fVclga1UkUu0hcY/uvkolrpHb4FqJilGqPDl9WnSj40=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YOYj5jM/DYB8ZM1IiU0Fu7vomI9f6lKR9reA5ISc1RogzE22SAEmdD5/NNF3cmNUz/IUpTRKgEndvodI+sPTi0yM9XdifINk91LEKkig+PMCnvHwFgrSEV9Ul1MD3EnMNAiAAeuRjrJ4oZO904uw8i7M6XDs+ZJGF5uMdQP1mT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IOn1n8dh; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IOn1n8dh"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744709160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t8GWBbvNAyASsGHRjRlleeuP7nCk/V15qdS4Y4WVO48=;
+	b=IOn1n8dh8IjO6+zB1Tq4ua6g5Rc/EobI3F3VjW9p8vVrgEqn8xQA0Ng7wWQus07haFpvKl
+	I7WOOVnAngwNpRKkwFX7DtNLgtDw4LC8/eBzspERzumwoJVaEfqWO7qs2sUeexmgzm5PlZ
+	oQZoDIvwLbO/PCow5Qg99DTiTuDku2E=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Ye Liu <liuye@kylinos.cn>
+Subject: [PATCH] mm/rmap: Move anon_vma initialization to anon_vma_ctor()
+Date: Tue, 15 Apr 2025 17:25:48 +0800
+Message-Id: <20250415092548.271718-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ea3nv5gvbkpg3kof"
-Content-Disposition: inline
-In-Reply-To: <e4bd8e47aeab761e409121ac9bc19408@kernel.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+From: Ye Liu <liuye@kylinos.cn>
 
---ea3nv5gvbkpg3kof
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] can: flexcan: enable PER clock before obtaining its rate
-MIME-Version: 1.0
+Currently, some initialization of anon_vma is performed in
+anon_vma_alloc(). Move the initialization to anon_vma_ctor()
+so that all object setup is handled in one place.
 
-Hello Stephen,
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+---
+ mm/rmap.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
 
-thanks for your input.
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 67bb273dfb80..9802b1c27e4b 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -89,22 +89,7 @@ static struct kmem_cache *anon_vma_chain_cachep;
+ 
+ static inline struct anon_vma *anon_vma_alloc(void)
+ {
+-	struct anon_vma *anon_vma;
+-
+-	anon_vma = kmem_cache_alloc(anon_vma_cachep, GFP_KERNEL);
+-	if (anon_vma) {
+-		atomic_set(&anon_vma->refcount, 1);
+-		anon_vma->num_children = 0;
+-		anon_vma->num_active_vmas = 0;
+-		anon_vma->parent = anon_vma;
+-		/*
+-		 * Initialise the anon_vma root to point to itself. If called
+-		 * from fork, the root will be reset to the parents anon_vma.
+-		 */
+-		anon_vma->root = anon_vma;
+-	}
+-
+-	return anon_vma;
++	return kmem_cache_alloc(anon_vma_cachep, GFP_KERNEL);
+ }
+ 
+ static inline void anon_vma_free(struct anon_vma *anon_vma)
+@@ -453,8 +438,16 @@ static void anon_vma_ctor(void *data)
+ 	struct anon_vma *anon_vma = data;
+ 
+ 	init_rwsem(&anon_vma->rwsem);
+-	atomic_set(&anon_vma->refcount, 0);
++	atomic_set(&anon_vma->refcount, 1);
+ 	anon_vma->rb_root = RB_ROOT_CACHED;
++	anon_vma->num_children = 0;
++	anon_vma->num_active_vmas = 0;
++	anon_vma->parent = anon_vma;
++	/*
++	 * Initialise the anon_vma root to point to itself. If called
++	 * from fork, the root will be reset to the parents anon_vma.
++	 */
++	anon_vma->root = anon_vma;
+ }
+ 
+ void __init anon_vma_init(void)
+-- 
+2.25.1
 
-On 14.04.2025 17:27:10, Stephen Boyd wrote:
-> Quoting Marc Kleine-Budde (2025-04-14 02:55:34)
-> > On 14.04.2025 10:36:46, Ciprian Costea wrote:
-> > > From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
-> > >=20
-> > > The FlexCan driver assumes that the frequency of the 'per' clock can =
-be
-> > > obtained even on disabled clocks, which is not always true.
-> > >=20
-> > > According to 'clk_get_rate' documentation, it is only valid once the =
-clock
-> > > source has been enabled.
-> >=20
-> > In commit bde8870cd8c3 ("clk: Clarify clk_get_rate() expectations")
-> > Maxime Ripard changed the documentation of the of the function in clk.c
-> > to say it's allowed. However clk.h states "This is only valid once the
-> > clock source has been enabled.".
-> >=20
-> > I've added the common clock maintainers to Cc.
-> >=20
-> > Which documentation is correct? Is the clk.h correct for archs not using
-> > the common clock framework?
-> >=20
->=20
-> I don't know what arches not using the common clk framework (CCF) do so
-> I can't comment there.
-
-The driver is used on Freescale/NXP SoCs: m68k (coldfire), arm, arm64.
-Coldfire provides us directly with the fixed clock rate, so no clk_*()
-functions are used there.
-
-> If you want something to work on an architecture
-> that doesn't use the CCF then follow the header file, but in all
-> practical cases _some_ rate will be returned from clk_get_rate() and
-> we're not going to BUG_ON() or crash the system in the CCF
-> implementation for this case. Enabling the clk is good hygiene though,
-> so is it really a problem to enable it here?
-
-It's not a problem to enable the clock. If it would stay enabled, it
-means a higher power consumption (I cannot quantify how much), as the
-clock is only needed if the CAN interface is up. But we have more things
-to cleanup:
-
-For CAN controllers, information about the clock is more important than
-for e.g. serial interfaces, so it's exported to user space. During probe
-a CAN driver typically queries the clock rate with clk_get_rate()
-(without enabling the clock) and stores the rate in a structure.
-
-If the user space configures the bit rate of the CAN bus, the stored
-clock rate is used to calculate the bit timing parameters. During ifup
-the clocks are enabled and the previously calculated bit timing
-parameters are programmed into the hardware.
-
-In the early days of the stm32mp1 this has previously caused problems
-because the frequency of the CAN clock changed between the initial
-clk_get_rate() and the ifup.
-
-For SoCs with CAN interfaces, the system designer usually configures the
-CAN clock to a specific rate, so this problem does currently not occur.
-
-What are our options?
-- enable the clock before clk_get_rate(), disable it afterwards?
-  -> This might be a bit more "hygienic", but doesn't solve the clock
-     rate changes problem.
-
-- clk_notifier_register() and update the saved rate
-  -or-
-- give our framework a pointer to the clock, so that it can do the
-  query every time needed, instead of using the value from probe time
-
-- delay the calculation of the bit timing parameter until ifup, do a
-  clk_rate_exclusive_get(), re-calculate the bit timing parameters and
-  program them into the HW
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---ea3nv5gvbkpg3kof
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf+IMUACgkQDHRl3/mQ
-kZxK2Qf9HAn4ob3h6aUeP89LLoGXCIV0BwaTLfdq/FfE8cdPJFaNYPqKfAQR0hCX
-W09FS52Qo1YkODvj6fImAtavgZm6P3TCcJW8zORMyqI35BOVDYFz7oTkY1pUxx1N
-8dqrIzX3orDTum9tY6N/lfaqb87hiBeNB1r4cJljtVBr0B/yU8xdDRdDYriejITs
-WHbl5vkgTEIjuD6Tt26lf7Vm/8DPnsFok7+FCNlfwqGFaCsiiAxlKrmDhZbI1GVN
-x4gNJ4I3j6T/muZaIyyEPgMH6HJijXFDMfzwiOlSUsMMjYJ6C+HzrHJgOEFxBB3/
-1Fym0NSFmTKKNEqecO05pfEcccbDZg==
-=ABXE
------END PGP SIGNATURE-----
-
---ea3nv5gvbkpg3kof--
