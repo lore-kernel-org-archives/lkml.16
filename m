@@ -1,168 +1,109 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E287242922;
-	Tue, 15 Apr 2025 09:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A21DF994
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710474; cv=none; b=X3vH9/I0ZXaiTB91UgAuahsiweIIsn9YKYVBJlSnVoVwcERIapUOaS9ifmxpydMEiMDnTIJaaSv+kVLk0Ho24RcnjUn+btK5YTTrylNxtkcHDR3oEoEKGyvXzZspyU774su8vExs2sj4mDiZev7GOsfRxPySFKlGtN6vwWda8GU=
+	t=1744710480; cv=none; b=r40COYPMVYkuO6M224wlfBpF3u8dXjXMZeD7fBeYunccobpPpJuh+cJJ1lhXVT1xEbWpw8ALH53Z1uxjDyDzeKGkCJ6wyWiJaHEC/hJ4ditb30iAzPmza/2OeeE4f7pdBioELSVnbYgZEL9Ac3yg4kPnQM66Udx6wWJ54MyIxas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710474; c=relaxed/simple;
-	bh=jS/+2OJPyZ3oKIEjOakuHXM2rsqbRqWQE4x118sJ64g=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=H1I0ttI2HTlMTFLyYduF5oGqYOUSoS8fUG/XpR0CFiItR2stAR1AgObprEqlX2k7FYN1pxF7RX56UdaAhxwn+97GUZUGKq3hoT3d15coBGrb4JX6xU2A249YKRqkgBb1Siem24kuhwXSVUU2DwA6JT8dcmMNjhWZ4Y9kLdZjSEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
-X-CID-CACHE: Type:Local,Time:202504151727+08,HitQuantity:1
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:3b51f057-3b06-44d4-9b2a-22a6424bd06e,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:91d667a05389e8de83db14486b642671,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
-	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
-	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <liujiajia@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 992271736; Tue, 15 Apr 2025 17:47:41 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 6CBB3E000081;
-	Tue, 15 Apr 2025 17:47:40 +0800 (CST)
-X-ns-mid: postfix-67FE2B3B-868366657
-Received: from kylin.lan (unknown [172.25.120.81])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 1BD9EE000F3B;
-	Tue, 15 Apr 2025 17:47:37 +0800 (CST)
-From: Jiajia Liu <liujiajia@kylinos.cn>
-To: Jens Axboe <axboe@kernel.dk>,
-	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH] scsi: fix potential USB flash loss after reboot
-Date: Tue, 15 Apr 2025 17:47:37 +0800
-Message-Id: <20250415094737.1394310-1-liujiajia@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744710480; c=relaxed/simple;
+	bh=NHYgoMavZomgR155FPH8MIHUNwsEbiNGYwRCeljlovQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EabNq0niqHINfpdEh9ZdCeYQQTKx8ywQLLEkH2u0wMaWA4Pqd8hEZfGsfy6GpuS34h0k/XjQKLKJTGS+u4xaSDKb8w6tFaJ5/BNp2Z9vrqslqZTgb+xu2GWAGIIT0E3eWKxF5/d9YT/f78F3Vjg0tmA/4ewIp4FqqLoiYnRfEHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9QkKGZO; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9QkKGZO"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso819562766b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744710475; x=1745315275; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z9B0Bd1BUx68w7Mbxfm0Ifu9JvY4VuLu19QSTLgTNRs=;
+        b=B9QkKGZO+C2u1z0+gxW524kJgW8Mna6DZHh0p6bqGwvzjtkS5+ozy3Xr6P9MpPxr/F
+         6PEtIs0tUb8beieGgWvr5xPEPVGhsxrcnlvHs4WG11te5tbnTsnQ0lnHqgfeiYhnE+3y
+         rWxs4MouYtA40IN7g0eH/U0V82jcx0PmeiZPeQ+sX2oCCEwyrYHyMCsIelbY2lVxL8F9
+         DfCmOEANHRtFChXxitvg0gn2T2ad4Eaakh/lhlrbAjqc5quKj9fJdK+guapF9GV0zMue
+         LtsiWPS+xdry+m7lUV0uNGPutpMm5yoCVmqjez17mHeechF2ZYquXI0ubYl3A/CIeuQx
+         gPgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744710475; x=1745315275;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z9B0Bd1BUx68w7Mbxfm0Ifu9JvY4VuLu19QSTLgTNRs=;
+        b=OljJb5L1IRVjvdA1QWfFDHuRoVjALglaj7Z4wXsOOpbrTbJFH9fYSJDhJgrWQipRO1
+         i119MygrLNjjamItZ3YmTQhxW359kwGxkvxlf6r/oIgKp2adXVqoTnFQdkapPt7wYRpF
+         xTa64wlBp0hrVH35lsmGyOHFq49nMosqCJ8gnLrGU3iJ8tcOAZ/AMdqqH/NXmi1OWEwt
+         f304k/O//En7OZxwHSCkDvw9xBg1ogHqqGYz01h2dmYgRs5s8Y0LziX0eVsKb/FXku1r
+         9jz/om0xo6dnoEZP10yCPVr8ENv5C2RimyfdAJDoKSs1Tu4BX3N5rZ7oQ64dW3k1g6SH
+         v/Xg==
+X-Gm-Message-State: AOJu0Yx0mdCYFQpKTBWWTuQCFF92FsCazBQpYvXPdd9a+KsaLq9i0Dh1
+	Jld7eK2h+5A6+itqXog8EwSxMXODJz0juUvN75ntLP3rozjp+Qqb
+X-Gm-Gg: ASbGnct6ny/fcVl5wQe8dyWpXvlKFhv7VDd1B5YY3aTVs4B1IG8d8NQ63Fd0cbPRK2J
+	iilKGwNbRQ8Fn8yO3FNI/f17xzXXZ1FlgxpHRsXp68fs2wW3WnSf/rgcSY2HCTrjtlApnGnPeSD
+	ERkbMK+ZuDk6+z+9V2m6isQ67vkJ0uBdOlmFchzSHvXqV1b+CaJRVfjf53uPEwjTxmoduqEBsxN
+	dqnkts/chTgDxXk5OqOECwb3NxM0cyMV+Kbgb4UuXajM+q8ianweOiScI9f/vLTYOlheL7EpNwW
+	QFipkJ3d2nzz01XLNJYH73SuOjoN3Ybg4vELd7xcG8SGW/ZkOLs8pvvtklUuJm1nlPj59ph+y28
+	gXb0A
+X-Google-Smtp-Source: AGHT+IFi/pl1+kYD/76ekvd4gzjSl0YfqXxDau9kzWZIzbXn80QsA39CkXQWExTlmp9UQ9EcAAO6Eg==
+X-Received: by 2002:a17:907:1b05:b0:ac3:45c6:a1ec with SMTP id a640c23a62f3a-acad34bfaecmr1477673866b.25.1744710475082;
+        Tue, 15 Apr 2025 02:47:55 -0700 (PDT)
+Received: from [10.1.1.210] (89-139-41-229.bb.netvision.net.il. [89.139.41.229])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3d9csm1060597466b.25.2025.04.15.02.47.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 02:47:54 -0700 (PDT)
+Message-ID: <aedaf79b-7bd3-885c-2bcf-ab9c73f7cf86@outbound.gmail.com>
+Date: Tue, 15 Apr 2025 12:46:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] char: xillybus: Use to_delayed_work()
+Content-Language: en-US
+To: Chen Ni <nichen@iscas.ac.cn>, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250414074559.3954142-1-nichen@iscas.ac.cn>
+From: Eli Billauer <eli.billauer@gmail.com>
+In-Reply-To: <20250414074559.3954142-1-nichen@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If device shutdown is blocking for a few seconds after xhci_pci_shutdown,
-disk_check_events will get scheduled becase block.events_dfl_poll_msecs
-is set to 2000 by user space. usb-storage can get USB access error and
-then call usb_reset_device.
+Yes, I suppose this is the right way to do it.
 
-Some SanDisk USB flashes, 0781:5567 and 0781:5581, are lost after reboot.
+Thanks,
+    Eli
 
-This can be simulated by injecting mdelay(5000) at the end of
-i915_driver_shutdown. Add event block in sd_shutdown to prevent
-disk_check_events scheduled during the potential blocking.
+Acked-by: Eli Billauer <eli.billauer@gmail.com>
 
-[   27.324042][    T1] shutdown[1]: Rebooting.
-[   27.548410][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
-[   30.060554][  T225] usb 4-4: device not accepting address 2, error -10=
-8
-[   32.838110][    T1] ACPI: PM: Preparing to enter system sleep state S5
-[   32.851746][    T1] reboot: Restarting system
-[   32.856127][    T1] reboot: machine restart
-
-Before bd738d859e71 ("drm/i915: Prevent modesets during driver init/ shut=
-down"),
-plymouthd can commit modeset during i915 shutdown process, this brings
-ten seconds delay.
-
-[   36.519606][    T1] shutdown[1]: Rebooting.
-[   36.763427][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
-[   37.229513][ T7030] i915 0000:00:02.0: drm_WARN_ON(!intel_irqs_enabled=
-(dev_priv))
-...
-[   39.008748][ T4356] usb 4-4: device not accepting address 2, error -10=
-8
-[   43.116781][ T4356] usb usb4-port4: Cannot enable. Maybe the USB cable=
- is bad?
-[   47.196768][  T185] usb usb4-port4: Cannot enable. Maybe the USB cable=
- is bad?
-[   47.204511][  T185] usb 4-4: USB disconnect, device number 2
-[   48.438385][    T1] i915 0000:00:02.0: i915 raw-wakerefs=3D6 wakelocks=
-=3D6 on cleanup
-
-Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
----
- block/disk-events.c    | 1 +
- drivers/scsi/sd.c      | 4 ++++
- drivers/scsi/sd.h      | 1 +
- include/linux/blkdev.h | 1 +
- 4 files changed, 7 insertions(+)
-
-diff --git a/block/disk-events.c b/block/disk-events.c
-index 2f697224386a..2c998fb360a5 100644
---- a/block/disk-events.c
-+++ b/block/disk-events.c
-@@ -94,6 +94,7 @@ void disk_block_events(struct gendisk *disk)
-=20
- 	mutex_unlock(&ev->block_mutex);
- }
-+EXPORT_SYMBOL_GPL(disk_block_events);
-=20
- static void __disk_unblock_events(struct gendisk *disk, bool check_now)
- {
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 950d8c9fb884..86199991f2e3 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -4064,6 +4064,7 @@ static int sd_remove(struct device *dev)
-=20
- 	device_del(&sdkp->disk_dev);
- 	del_gendisk(sdkp->disk);
-+	sdkp->remove =3D 1;
- 	if (!sdkp->suspended)
- 		sd_shutdown(dev);
-=20
-@@ -4162,6 +4163,9 @@ static void sd_shutdown(struct device *dev)
- 	if (!sdkp)
- 		return;         /* this can happen */
-=20
-+	if (sdkp->device->removable && !sdkp->remove)
-+		disk_block_events(sdkp->disk);
-+
- 	if (pm_runtime_suspended(dev))
- 		return;
-=20
-diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
-index 36382eca941c..ff7004681267 100644
---- a/drivers/scsi/sd.h
-+++ b/drivers/scsi/sd.h
-@@ -156,6 +156,7 @@ struct scsi_disk {
- 	unsigned	ignore_medium_access_errors : 1;
- 	unsigned	rscs : 1; /* reduced stream control support */
- 	unsigned	use_atomic_write_boundary : 1;
-+	unsigned	remove : 1;
- };
- #define to_scsi_disk(obj) container_of(obj, struct scsi_disk, disk_dev)
-=20
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index e39c45bc0a97..7739713c5202 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -879,6 +879,7 @@ int __register_blkdev(unsigned int major, const char =
-*name,
- void unregister_blkdev(unsigned int major, const char *name);
-=20
- bool disk_check_media_change(struct gendisk *disk);
-+void disk_block_events(struct gendisk *disk);
- void set_capacity(struct gendisk *disk, sector_t size);
-=20
- #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
---=20
-2.25.1
+On 14/04/2025 10:45, Chen Ni wrote:
+> Use to_delayed_work() instead of open-coding it.
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>   drivers/char/xillybus/xillybus_core.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/char/xillybus/xillybus_core.c b/drivers/char/xillybus/xillybus_core.c
+> index 11b7c4749274..efb1ae834265 100644
+> --- a/drivers/char/xillybus/xillybus_core.c
+> +++ b/drivers/char/xillybus/xillybus_core.c
+> @@ -1184,8 +1184,7 @@ static int xillybus_flush(struct file *filp, fl_owner_t id)
+>   
+>   static void xillybus_autoflush(struct work_struct *work)
+>   {
+> -	struct delayed_work *workitem = container_of(
+> -		work, struct delayed_work, work);
+> +	struct delayed_work *workitem = to_delayed_work(work);
+>   	struct xilly_channel *channel = container_of(
+>   		workitem, struct xilly_channel, rd_workitem);
+>   	int rc;
 
