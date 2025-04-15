@@ -1,60 +1,237 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE7EEA9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AA8B2BAF8;
 	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728458; cv=none; b=ozTrwAP1lxFDyQJzNEXi0gqZLopHiTnRTjYEXF1EcmV2or1xBuyALeMBxJLXKtU6zMiXHOP+qKgBv1sae78A6fweka6vbfehQj8Ei2Wsk+3XXswQUr38uNOOT/olMl3DnBscJ7HuzveYN+PPasIBFKRzA/w/e3ud8PeTDXEB8W8=
+	t=1744728456; cv=none; b=MIOoyKF6INSIpjZY66cVFCNMSAQRwHz3D5LCohgxyIrUTaQNrM6rAArMfNahCNWpBElw/Zb2VXSPdd/mybwj24wusy/7rIq7AyfT080OSsp80D9pK7GRxP2ImD/ZEPmIy6q8R7IWmKf18Xvl8BZVioSwlnoxKJ/+YasQYXwICM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728458; c=relaxed/simple;
-	bh=yehWU6Cn1U0Ig31Ss4U++BRxjRmpPRpJ3DovWt/2v+w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=PWwWFzEk8vJHIfX42NSP3VAPSAJNo0RGUQfhKwyruiU7XS1zpREw2cspsys84dx8ojLs3/36IQoH5MTQ5hC08oXubLoNJUyZqDuBHTVJSTxAEukDsPsoBreiT+U7OE7MaO426AsRDLceAeptal/L39Ke5WrWPije6RDWL0/h93U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZcRp62VGNz9tRl;
-	Tue, 15 Apr 2025 16:47:26 +0200 (CEST)
+	s=arc-20240116; t=1744728456; c=relaxed/simple;
+	bh=LqB3B/3CmwyGt6HPrW41ZJQgvlYv2Gh1w1/YAFnXC6A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=vBblGD1NeuL186eH4piOnJONdvn+rMdzx7RyDn08hcQljF/wyFJ9S48Xra6EtpCgCvKbNzXrEvz+WTbP1PUED9NzUcxuyUYAz5jHpjBzl/j/ieDi0QJ6mG25WpWjLi6hmmjrO0zhsba0gfEnxWpx7CrAocqdAd0YC/Qa5OdOwf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbeF7mOo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbeF7mOo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EE93C4CEEC;
+	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744728455;
+	bh=LqB3B/3CmwyGt6HPrW41ZJQgvlYv2Gh1w1/YAFnXC6A=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=fbeF7mOoQZVmxO/GQebvCfZ7IUBpOaQGmh1Fnn0Asj8IPYsi9opPfgcUyw3Z877OS
+	 knD7mBBDZQV089J1ka/vo95rOTLHd4SXIt3Oavr4LiO2eq+hU77JZYzhzKonoA5bJl
+	 XXGs8E6VoM++QMFb9yIakfzkgPUrRHzCD6z0Ibl2KJ8InukDJeyASln5r6GvGx7/Vv
+	 Tel+RLEMKxNsNBNw0bSqSQMx1o8fKXFJDpaEUGTTHyRMm316O7pt4aGknj+vRNfR5s
+	 HArVVdlk3TzlAroAJYsf6SUru8J1Mo13oZ7eNjAHFQ684iccUEQfYB3Bf71ndq1weA
+	 zbIwMIY5DIBHw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B49C369BD;
+	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
+From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
+Date: Tue, 15 Apr 2025 16:47:32 +0200
+Subject: [PATCH v2 2/2] iio: imu: inv_icm42600: add wakeup functionality
+ for Wake-on-Motion
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 15 Apr 2025 16:47:21 +0200
-Message-Id: <D97AM4S7VLL2.260GHNH82O60I@buenzli.dev>
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Rob Herring" <robh@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250414152630.1691179-1-remo@buenzli.dev>
- <20250414152630.1691179-3-remo@buenzli.dev> <Z_1Jfs5DXD2vuzLj@cassiopeiae>
- <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev> <Z_4rVyUjK1dlnTsT@pollux>
- <D9760KMM0PSB.HONQ7MUG8OTN@buenzli.dev>
- <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250415-losd-3-inv-icm42600-add-wom-support-v2-2-de94dfb92b7e@tdk.com>
+References: <20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com>
+In-Reply-To: <20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com>
+To: Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728454; l=5749;
+ i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
+ bh=CuFRYaRZxPuw+fgDSMa7IYo+bKSh1dwxzccbZhiX9sA=;
+ b=vbuV00uOU5VTIzGu9D4r3pMAh4mKVxn8sBkrGlWTDOc5qrgJHSGLTivgyBPW++UvzimZdDFVi
+ BNoL2+3nGkKB9e0sKWYFKS+GCYCAYTnFFr/9S7F9qOsLuUGYZyIb8ec
+X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
+ pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
+X-Endpoint-Received: by B4 Relay for
+ jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
+X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+Reply-To: jean-baptiste.maneyrol@tdk.com
 
-On Tue Apr 15, 2025 at 2:46 PM CEST, Rob Herring wrote:
->
-> Adding PropertyGuard changes the API. I don't think it makes sense to
-> review the API without it and then again with it.
+From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
 
-We could add the PropertyGuard first and introduce the users later.
-Then they are in separate patches and the API doesn't change.
+When Wake-on-Motion is on, enable system wakeup and keep chip on for
+waking up system with interrupt.
+
+Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+---
+ drivers/iio/imu/inv_icm42600/inv_icm42600.h       |  2 +
+ drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c |  3 ++
+ drivers/iio/imu/inv_icm42600/inv_icm42600_core.c  | 65 +++++++++++++++++------
+ 3 files changed, 54 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+index f5adebe4640fc36c5dc9810b515369d4909ba834..768d773a9129c5d64f0af1959504889ffbc9c131 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
+@@ -151,6 +151,7 @@ struct inv_icm42600_apex {
+  *  @map:		regmap pointer.
+  *  @vdd_supply:	VDD voltage regulator for the chip.
+  *  @vddio_supply:	I/O voltage regulator for the chip.
++ *  @irq:		chip irq, required to enable/disable and set wakeup
+  *  @orientation:	sensor chip orientation relative to main hardware.
+  *  @conf:		chip sensors configurations.
+  *  @suspended:		suspended sensors configuration.
+@@ -168,6 +169,7 @@ struct inv_icm42600_state {
+ 	struct regmap *map;
+ 	struct regulator *vdd_supply;
+ 	struct regulator *vddio_supply;
++	int irq;
+ 	struct iio_mount_matrix orientation;
+ 	struct inv_icm42600_conf conf;
+ 	struct inv_icm42600_suspended suspended;
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+index 94515166c1fcdf6cc7ba4843334f51cb14696eba..2249f551f10f3211dadde2f6aa1dccd9b704f146 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c
+@@ -1162,6 +1162,9 @@ struct iio_dev *inv_icm42600_accel_init(struct inv_icm42600_state *st)
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
++	/* accel events are wakeup capable */
++	device_set_wakeup_capable(&indio_dev->dev, true);
++
+ 	return indio_dev;
+ }
+ 
+diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+index 9a2150ab9e874f17d7fda731cb131c3f688a75a3..14b64d14a6241ec60c23b64486a615a84513ae3c 100644
+--- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
++++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
+@@ -765,6 +765,7 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip,
+ 	mutex_init(&st->lock);
+ 	st->chip = chip;
+ 	st->map = regmap;
++	st->irq = irq;
+ 
+ 	ret = iio_read_mount_matrix(dev, &st->orientation);
+ 	if (ret) {
+@@ -843,6 +844,9 @@ EXPORT_SYMBOL_NS_GPL(inv_icm42600_core_probe, "IIO_ICM42600");
+ static int inv_icm42600_suspend(struct device *dev)
+ {
+ 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
++	struct device *accel_dev;
++	bool wakeup;
++	int accel_conf;
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+@@ -863,20 +867,33 @@ static int inv_icm42600_suspend(struct device *dev)
+ 			goto out_unlock;
+ 	}
+ 
+-	/* disable APEX features */
+-	if (st->apex.wom.enable) {
+-		ret = inv_icm42600_disable_wom(st);
+-		if (ret)
+-			goto out_unlock;
++	/* keep chip on and wake-up capable if APEX and wakeup on */
++	accel_dev = &st->indio_accel->dev;
++	wakeup = (st->apex.on && device_may_wakeup(accel_dev)) ? true : false;
++
++	if (!wakeup) {
++		/* disable APEX features and accel if wakeup disabled */
++		if (st->apex.wom.enable) {
++			ret = inv_icm42600_disable_wom(st);
++			if (ret)
++				goto out_unlock;
++		}
++		accel_conf = INV_ICM42600_SENSOR_MODE_OFF;
++	} else {
++		/* keep accel on and setup irq for wakeup */
++		accel_conf = st->conf.accel.mode;
++		enable_irq_wake(st->irq);
++		disable_irq(st->irq);
+ 	}
+ 
+ 	ret = inv_icm42600_set_pwr_mgmt0(st, INV_ICM42600_SENSOR_MODE_OFF,
+-					 INV_ICM42600_SENSOR_MODE_OFF, false,
+-					 NULL);
++					 accel_conf, false, NULL);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	regulator_disable(st->vddio_supply);
++	/* disable vddio regulator if chip is sleeping */
++	if (!wakeup)
++		regulator_disable(st->vddio_supply);
+ 
+ out_unlock:
+ 	mutex_unlock(&st->lock);
+@@ -892,13 +909,25 @@ static int inv_icm42600_resume(struct device *dev)
+ 	struct inv_icm42600_state *st = dev_get_drvdata(dev);
+ 	struct inv_icm42600_sensor_state *gyro_st = iio_priv(st->indio_gyro);
+ 	struct inv_icm42600_sensor_state *accel_st = iio_priv(st->indio_accel);
++	struct device *accel_dev;
++	bool wakeup;
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+ 
+-	ret = inv_icm42600_enable_regulator_vddio(st);
+-	if (ret)
+-		goto out_unlock;
++	/* check wakeup capability */
++	accel_dev = &st->indio_accel->dev;
++	wakeup = (st->apex.on && device_may_wakeup(accel_dev)) ? true : false;
++
++	/* restore vddio if cut off or irq state */
++	if (!wakeup) {
++		ret = inv_icm42600_enable_regulator_vddio(st);
++		if (ret)
++			goto out_unlock;
++	} else {
++		enable_irq(st->irq);
++		disable_irq_wake(st->irq);
++	}
+ 
+ 	pm_runtime_disable(dev);
+ 	pm_runtime_set_active(dev);
+@@ -911,11 +940,13 @@ static int inv_icm42600_resume(struct device *dev)
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	/* restore APEX features */
+-	if (st->apex.wom.enable) {
+-		ret = inv_icm42600_enable_wom(st);
+-		if (ret)
+-			goto out_unlock;
++	/* restore APEX features if disabled */
++	if (!wakeup) {
++		if (st->apex.wom.enable) {
++			ret = inv_icm42600_enable_wom(st);
++			if (ret)
++				goto out_unlock;
++		}
+ 	}
+ 
+ 	/* restore FIFO data streaming */
+@@ -924,6 +955,8 @@ static int inv_icm42600_resume(struct device *dev)
+ 		inv_sensors_timestamp_reset(&accel_st->ts);
+ 		ret = regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,
+ 				   INV_ICM42600_FIFO_CONFIG_STREAM);
++		if (ret)
++			goto out_unlock;
+ 	}
+ 
+ out_unlock:
+
+-- 
+2.49.0
+
+
