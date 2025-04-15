@@ -1,164 +1,220 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDD021ADCB
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69CD27FD4D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705607; cv=none; b=hUOI88RMiwWvhAwCtKiNYqVDWO84dIzTl1XXJvZRCuzf+Ob3TopiW++peVnAyd/sejCyIxUp8vA3OzUkyqaww1d9HCP0kXW/nokhJL8G4wn27f23j8VooC+MEnS0RMXLUXe94SUIrOe7DSeN1JjjjYYK8T/bD66QPUUxI0VhlqU=
+	t=1744705611; cv=none; b=IY1P88miWFw+Lkfy20wkfi+HTyikUAeh7LWLsMgvkOorUDrCUXaYAsi93B/dImVbSwo8ceUOI/mWi9HT69xtUqQyG1CPFnKFsI2pFlOiszYZIBzMei5AlpbVjUFreLlRPJuc5uZY1GuCEKKnk/rdnlOjLXwhxsctiK4GaZ6ugY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705607; c=relaxed/simple;
-	bh=cDcg9BMhFCM4ytbo+HXpr+kFavvOE1oCEsNfhSqEqd8=;
+	s=arc-20240116; t=1744705611; c=relaxed/simple;
+	bh=F4XRR+l6oUKWjLnl3vvDf69VXqT8lPr3clnribVmTIA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hS/K70uE24wdzSvjHqf1sgx/6c5UbO3P2nwpPok2GGNA8A34BMReXjDwIKCdE2SixaIJBwNly8XOiJzp/JLJrjk2N3WJ9rpbRBRn8bl65Hlf3fUNJBT1x1pyGpxGJ8D9st3Betylnk3pzrGBXHPD7621pP2zP4SkdUTfVK0bFvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JhvkZV1h; arc=none smtp.client-ip=209.85.219.45
+	 To:Cc:Content-Type; b=FzaFBCMVzX221axfy/ieEwdL/lO2yGzCSOQV4A+U/W9T5AsKnEH4z8uDGO4KNoZLyOn/2Q7oH3pFw4EHDfIpqrQZk1x9kfCkk4+dakiB8Fiso7e4IItPenMhHnA4Q/pNcInbaWgdHZDa9/nhtjrj1gcZ25rBrWpKCy403puXHd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mwarxmOl; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JhvkZV1h"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ecf99dd567so67543046d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:26:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mwarxmOl"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5e39d1e0eso514180585a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:26:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744705605; x=1745310405; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744705609; x=1745310409; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WrzjMh06zAYKl+z4SSTy9umDITlnUvqXL8gJgv/ISEs=;
-        b=JhvkZV1hrdUUcwLFr4T8uH/CZ+jEdY4WHsU2qV6vM3l0LBSzUVp9sq+ulpF13bAjVB
-         kl9B0BlM3iZPWuf3/PonAzGPAU+gUmVOiupPtPDCn9gdoT1zJ/3vzASvdtf0wZk5JaH/
-         TAgZdHe2HcouCBpwJOCfkMEo2wCkLIARVM//Iq+itJtlGuuA4KkR07KqWYkaVknYZJZa
-         ydqayG3wxQS5FlCGnfKDd6RMn8Rlk0V1ZxhzZh1WDu/pnmNscQbbqpYdn6adrhewr2/h
-         IsNkt6G9VqOGP1s5ntnVHzNSgG8yNE02p9ecBtI+Ne8AbHvae5/cBrzWHsxLj+VcdWa4
-         wXIg==
+        bh=rdF6KOEGzVEDlBL8vcm4y0yf5btWPh1pkbMLRJdH9z0=;
+        b=mwarxmOlGwaMxB/vw/Qlky9sB/2I9c2AXbUhmP6Glg1mtBoQailMCPp/wYD+6niF6N
+         lVCSdhJ2WB+z6HIOUvjjaPYSeEWq1UFIaaBGmte36ThOpOJauSjLoBl4Kpn5g5GH4qXt
+         qRzg606kV9ZyYB/8SsfPQ5RykF0GMPgUO3rrpFscZY0n3KSdVemjmE9F3YXjKwv7iXf6
+         e1qhLREJ1uQSzaY1ssXhgtlXzPnSmFJJJILlmMVLLHRDzYDy+wIZHDC7vAXTRbeCmzPp
+         pRVjcYgR6PcioV7nThxWE86ujLqkulC34vOWw1N1MEVaWwzb5EJriRtKAMgzFkUllcut
+         s6UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744705605; x=1745310405;
+        d=1e100.net; s=20230601; t=1744705609; x=1745310409;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WrzjMh06zAYKl+z4SSTy9umDITlnUvqXL8gJgv/ISEs=;
-        b=LFt9/7hOGlUSDK8sYuqdYHwh7QK+uZVY7YhhWQnBFAfS6qN42xdbX2sEzQN6iaR6u7
-         CWWiOHrQgIUCt50cE3uAeK28IbpLHNcY9gfrdos+OrUv/ZfJnGitViHjhDAAYvECXFZ3
-         nAgno1ZT+00HhQv0dvvvzCH+HIT94HgyrmRQBMKEfr7HW2pYRoPHlcpF4etUtqQsGMBd
-         IcqrGahaQqbhGsBsAI3Ytdw1FXeih9jf9uBDGNny6as3ExYZ5hopr1vfhYXSvo9kpuDc
-         00OotTlKqX9xTyjdwrOzsLkvO+PbTT6s7zD8CMa7NwqlwQOoXGRbbSvHzimJOf9q0/vd
-         WInw==
-X-Forwarded-Encrypted: i=1; AJvYcCVr4u8ypsjQ6MMTtV7nooqgAgabcLz+GGU5j1NBIxlzklhEzU16fhBXAz3r1kZ8AvtR4f9FnZ99/NIqKrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1LBwcORZq05uqPURKrbZ1fVAAcFM1Y81FBrSoBsV9iO3ffJkF
-	HVNWUeBnEFvJ7BghqQK5noIhtKoilhwAsw1Nkd08SC3jtDPb1IXk844pHH+ppRcA6hGHj5lEPnK
-	h6o8wwP8nVwUY4ND+etGhUjzHo0wKWV25V4KD
-X-Gm-Gg: ASbGnctxxvNQubYkRe0ejZLaa1wYqtzN2iOjYGIPUGI2atL0wJfuAQZ5yq1YvCDiYLO
-	V4MeREtEIIJjzj5kcsrpS+AtgRwSDNz/lRfstxAiNKH6ts4JXXoKYAojCsna5UsI9JJPz8hkY5F
-	l/eeHuEKRqfI6fphoBtytUvG8=
-X-Google-Smtp-Source: AGHT+IGyUvg0Xg67n9AJGe0enuLQqWHs6UNth8HvvFAW0sChxeMCdkfk5Sb0kgepq+R9c61fibX+NjS/8UHRLWHj3Yk=
-X-Received: by 2002:ad4:576c:0:b0:6e8:f905:aff0 with SMTP id
- 6a1803df08f44-6f23f13293emr217868226d6.35.1744705604638; Tue, 15 Apr 2025
- 01:26:44 -0700 (PDT)
+        bh=rdF6KOEGzVEDlBL8vcm4y0yf5btWPh1pkbMLRJdH9z0=;
+        b=SeJti91zV1Fh0B+pUv2DiNidvRlAVch/uBRg6IZgUTsCSeqrAbTZCnwHNvpq4VH2e/
+         BQR8fo3HLJ33m3gVwdTeIptX02SWE7Pl4FrWJ8xbfj2+IRHiGvySxNvTU9BzkL43Riga
+         0aRtjIRzifZAAg/OoHFmEi7krYmBcqb8Yx/m/TnbXjj5e6glJOrIKAVNjQxhgPs26rYq
+         wqWCBvyf5S4nC3W8+ysjf3aTK542f35KTA3ANCiIK5b2Kd5oIKuKrmEcvtM4m74nDHUr
+         U9Kid8kr7IkEaiBiih5W2R+SIjyVlIUyKK1TU89ZvJB790Yiv9BrULtFMu/2FM9cuSiO
+         KYVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLl6hkujlQTIi2usTYlNdkt/NmRPk/L548E8HXFGkvIW21wJxaq0SWglw0XM8SG4+3w8Ecs5LgQD+47zA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOvikoEKfK+EJGbrlbQEhKO0sG8AzkCqr21y2krNSeRL3H+cxS
+	b5wNPvFCJ5fdjrRIN5fKTED0fEjt8okifa+1RSWky5azycpE4GpHi4sejbafzb3tGYjZVxLQpcy
+	2aBTKQ6Pv1n9bg9nAVhHHQ4qpD6StgcPbl22G
+X-Gm-Gg: ASbGnct/uv/qpouJ0Pq3uLzNUqvMyjZ2QjG7d7/DWSmDlT/n1dKp9IV+5FKF9Q3XRKD
+	64Ym1vMHmgxK2xgULS3ioNRd3tKfoY0kxroaFIWx2js3BxHngyr8m1Qlpt4Kzv7xnn1cKn6q4G+
+	NPsrQPslpYX3nOdpJv+RypbnA=
+X-Google-Smtp-Source: AGHT+IGHXMBpnFEKgrvNYSfgOgdNAj2t5br74Ns0ujzf2JkqvYEzJ0GoquiLHiY6mEhVaNX7EwtItyJ7QehuXdNca9g=
+X-Received: by 2002:a05:620a:2887:b0:7c7:a5cb:2b65 with SMTP id
+ af79cd13be357-7c7af14e2f3mr1843775685a.26.1744705608510; Tue, 15 Apr 2025
+ 01:26:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de> <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
-In-Reply-To: <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
+References: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de> <20250415-kunit-mips-v3-2-4ec2461b5a7e@linutronix.de>
+In-Reply-To: <20250415-kunit-mips-v3-2-4ec2461b5a7e@linutronix.de>
 From: David Gow <davidgow@google.com>
-Date: Tue, 15 Apr 2025 16:26:30 +0800
-X-Gm-Features: ATxdqUHShNA4ncH0WdvjCIFdWJT6j9Qm-Ubzv0Zw8BR9PO7gR4hhrZVuQIibV-E
-Message-ID: <CABVgOSkd4v7EE2YSVVb9pezYdhZvY+6=8mbHex+CtFCp8FjGDw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] MIPS: Don't crash in stack_top() for tasks without
- ABI or vDSO
+Date: Tue, 15 Apr 2025 16:26:34 +0800
+X-Gm-Features: ATxdqUGMdfu8V5coif4GbIRv4cQyyOVSNJS0mYgKNE44UdIBfCOgwXQlLVBaG6A
+Message-ID: <CABVgOSn3DbDy1Vb7KGejb73ahf-JuTF_-u+nM7-F=0iGpSuebw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] kunit: qemu_configs: Add MIPS configurations
 To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
 	Rae Moar <rmoar@google.com>, Huacai Chen <chenhuacai@kernel.org>, linux-mips@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
 	kunit-dev@googlegroups.com
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000d436030632cced51"
+	boundary="00000000000010bb560632cceeb7"
 
---000000000000d436030632cced51
+--00000000000010bb560632cceeb7
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 15 Apr 2025 at 15:10, Thomas Wei=C3=9Fschuh
 <thomas.weissschuh@linutronix.de> wrote:
 >
-> Not all tasks have an ABI associated or vDSO mapped,
-> for example kthreads never do.
-> If such a task ever ends up calling stack_top(), it will derefence the
-> NULL ABI pointer and crash.
->
-> This can for example happen when using kunit:
->
->     mips_stack_top+0x28/0xc0
->     arch_pick_mmap_layout+0x190/0x220
->     kunit_vm_mmap_init+0xf8/0x138
->     __kunit_add_resource+0x40/0xa8
->     kunit_vm_mmap+0x88/0xd8
->     usercopy_test_init+0xb8/0x240
->     kunit_try_run_case+0x5c/0x1a8
->     kunit_generic_run_threadfn_adapter+0x28/0x50
->     kthread+0x118/0x240
->     ret_from_kernel_thread+0x14/0x1c
->
-> Only dereference the ABI point if it is set.
->
-> Also move the randomization adjustment into the same conditional.
+> Add basic support to run various MIPS variants via kunit_tool using the
+> virtualized malta platform.
 >
 > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
 
-This looks good to me -- we've hit what's effectively the same issue
-on other architectures with this test, with similar resolutions.
+Seems to work fine here. Thanks very much!
 
 Reviewed-by: David Gow <davidgow@google.com>
 
-I'm happy to have this (and the following path) go in via the KUnit
-tree, but if you'd rather have it go via MIPS, that's fine, too. (The
-qemu_configs won't generate any merge conflicts.)
-
+Cheers,
 -- David
 
->  arch/mips/kernel/process.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
+
+
+>  tools/testing/kunit/qemu_configs/mips.py     | 18 ++++++++++++++++++
+>  tools/testing/kunit/qemu_configs/mips64.py   | 19 +++++++++++++++++++
+>  tools/testing/kunit/qemu_configs/mips64el.py | 19 +++++++++++++++++++
+>  tools/testing/kunit/qemu_configs/mipsel.py   | 18 ++++++++++++++++++
+>  4 files changed, 74 insertions(+)
 >
-> diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-> index b630604c577f9ff3f2493b0f254363e499c8318c..02aa6a04a21da437909eeac4f=
-149155cc298f5b5 100644
-> --- a/arch/mips/kernel/process.c
-> +++ b/arch/mips/kernel/process.c
-> @@ -690,18 +690,20 @@ unsigned long mips_stack_top(void)
->         }
->
->         /* Space for the VDSO, data page & GIC user page */
-> -       top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
-> -       top -=3D PAGE_SIZE;
-> -       top -=3D mips_gic_present() ? PAGE_SIZE : 0;
-> +       if (current->thread.abi) {
-> +               top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
-> +               top -=3D PAGE_SIZE;
-> +               top -=3D mips_gic_present() ? PAGE_SIZE : 0;
+> diff --git a/tools/testing/kunit/qemu_configs/mips.py b/tools/testing/kun=
+it/qemu_configs/mips.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..8899ac157b30bd2ee847eacd5=
+b90fe6ad4e5fb04
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/mips.py
+> @@ -0,0 +1,18 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > +
-> +               /* Space to randomize the VDSO base */
-> +               if (current->flags & PF_RANDOMIZE)
-> +                       top -=3D VDSO_RANDOMIZE_SIZE;
-> +       }
->
->         /* Space for cache colour alignment */
->         if (cpu_has_dc_aliases)
->                 top -=3D shm_align_mask + 1;
->
-> -       /* Space to randomize the VDSO base */
-> -       if (current->flags & PF_RANDOMIZE)
-> -               top -=3D VDSO_RANDOMIZE_SIZE;
-> -
->         return top;
->  }
->
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH =3D QemuArchParams(linux_arch=3D'mips',
+> +                           kconfig=3D'''
+> +CONFIG_32BIT=3Dy
+> +CONFIG_CPU_BIG_ENDIAN=3Dy
+> +CONFIG_MIPS_MALTA=3Dy
+> +CONFIG_SERIAL_8250=3Dy
+> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+> +CONFIG_POWER_RESET=3Dy
+> +CONFIG_POWER_RESET_SYSCON=3Dy
+> +''',
+> +                           qemu_arch=3D'mips',
+> +                           kernel_path=3D'vmlinuz',
+> +                           kernel_command_line=3D'console=3DttyS0',
+> +                           extra_qemu_params=3D['-M', 'malta'])
+> diff --git a/tools/testing/kunit/qemu_configs/mips64.py b/tools/testing/k=
+unit/qemu_configs/mips64.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1478aed05b94da4914f34c6a8=
+affdcfe34eb88ea
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/mips64.py
+> @@ -0,0 +1,19 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH =3D QemuArchParams(linux_arch=3D'mips',
+> +                           kconfig=3D'''
+> +CONFIG_CPU_MIPS64_R2=3Dy
+> +CONFIG_64BIT=3Dy
+> +CONFIG_CPU_BIG_ENDIAN=3Dy
+> +CONFIG_MIPS_MALTA=3Dy
+> +CONFIG_SERIAL_8250=3Dy
+> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+> +CONFIG_POWER_RESET=3Dy
+> +CONFIG_POWER_RESET_SYSCON=3Dy
+> +''',
+> +                           qemu_arch=3D'mips64',
+> +                           kernel_path=3D'vmlinuz',
+> +                           kernel_command_line=3D'console=3DttyS0',
+> +                           extra_qemu_params=3D['-M', 'malta', '-cpu', '=
+5KEc'])
+> diff --git a/tools/testing/kunit/qemu_configs/mips64el.py b/tools/testing=
+/kunit/qemu_configs/mips64el.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..300c711d7a82500b2ebcb4cf1=
+467b6f72b5c17aa
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/mips64el.py
+> @@ -0,0 +1,19 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH =3D QemuArchParams(linux_arch=3D'mips',
+> +                           kconfig=3D'''
+> +CONFIG_CPU_MIPS64_R2=3Dy
+> +CONFIG_64BIT=3Dy
+> +CONFIG_CPU_LITTLE_ENDIAN=3Dy
+> +CONFIG_MIPS_MALTA=3Dy
+> +CONFIG_SERIAL_8250=3Dy
+> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+> +CONFIG_POWER_RESET=3Dy
+> +CONFIG_POWER_RESET_SYSCON=3Dy
+> +''',
+> +                           qemu_arch=3D'mips64el',
+> +                           kernel_path=3D'vmlinuz',
+> +                           kernel_command_line=3D'console=3DttyS0',
+> +                           extra_qemu_params=3D['-M', 'malta', '-cpu', '=
+5KEc'])
+> diff --git a/tools/testing/kunit/qemu_configs/mipsel.py b/tools/testing/k=
+unit/qemu_configs/mipsel.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..3d3543315b45776d0e77fb5c0=
+0c8c0a89eafdffd
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/mipsel.py
+> @@ -0,0 +1,18 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH =3D QemuArchParams(linux_arch=3D'mips',
+> +                           kconfig=3D'''
+> +CONFIG_32BIT=3Dy
+> +CONFIG_CPU_LITTLE_ENDIAN=3Dy
+> +CONFIG_MIPS_MALTA=3Dy
+> +CONFIG_SERIAL_8250=3Dy
+> +CONFIG_SERIAL_8250_CONSOLE=3Dy
+> +CONFIG_POWER_RESET=3Dy
+> +CONFIG_POWER_RESET_SYSCON=3Dy
+> +''',
+> +                           qemu_arch=3D'mipsel',
+> +                           kernel_path=3D'vmlinuz',
+> +                           kernel_command_line=3D'console=3DttyS0',
+> +                           extra_qemu_params=3D['-M', 'malta'])
 >
 > --
 > 2.49.0
 >
 
---000000000000d436030632cced51
+--00000000000010bb560632cceeb7
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -248,13 +304,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQghb+VzZWx81ICEkcx9VbFn/r17HxM
-Tr7MWoi9iLPSc6gwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NDE1MDgyNjQ1WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg+auRn3FUhKELrjooLIb5+LIemuir
+0pEY3vXExZ8sG/YwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDE1MDgyNjQ5WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAFy1GJHzWJZ2xO7qz2kbnRUHFS/JRcAr9jaUvAxWdqBIZj1s9y6mBV36mFongOyMt
-HsyL/VJR2pb570nVTD0hON7FvF3OUZMk+8ux2GVlEHTcq00fbiQerxYbl7g8TVlif7TyHTj6ey3Z
-HMub5/ZaHKCm9//Ot0D+1qsW28QNZqrrSQICFo30dIW+pC1u48DD/e2XgVeVuzeylmOtAAF60dii
-OzWhINQJi8y1ZSqET/zvMpWfsruV8pXw/+rMRmS9C70lbwdEuj164L+rUosD8utsxUGGfgcmK2nQ
-MjYa0E+CX218iBBrqFYMgPiboa1zwhz54ZatO1vurQCVBcElHg==
---000000000000d436030632cced51--
+AQEBBQAEggEAnznTiZ64MzLSUYlqXWHLJbasD0ewBqU/JfY95MFWojZncEBl0Yl/Z9qLrsqxRpvL
+N03uTn1PZTkMSW6Xe1GSMxc66odRm1PVzDSXpihQaSrBig5oRQdxrYRgUP6RIqrb5GwMa3ybjIYn
+M0X0H4nCVJIYWJQ7xZkQKj45J0O9y8QAKacIqf1wElKIdDR39Oj2GliWKCZ6dfqsmoDOR4miW4yH
+8Sscjj+U3oGR/VwNatTEBYIomzoE1ZsiJ7NKjanegMljsi+OPAh4HCuvsxFqmpKao9ViH71WrIbR
+gYpJfzGZc3UEOYykV/6v9tq+qFLJaGxdnFE3A1OYSvFlxC3WPA==
+--00000000000010bb560632cceeb7--
