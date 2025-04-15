@@ -1,50 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C142C29114D;
-	Tue, 15 Apr 2025 11:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 376E224338F
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716308; cv=none; b=QAgmtplA31mkoG9gJwFdIvY2FNtbf9QYBEDJwsuD7ty1N0SPRy2EnMtrxc6+0imItmecP6hZ4lAJ6US6e/4W1CcKyIFl65uP8HOkAJW3SRMA2PrmOyWO6gpsHgOgDK4+4qs984cdnIliA6fMUetyRiyc4VHYo5gpEhU9kTeWpp8=
+	t=1744716361; cv=none; b=nj7jwbRuwBpkRNpbGYrq9nYYVQ9ztGgmlWqNofe4QoGIFRrVoxhpsN+fAyZEkjRaTZYyFWN2tnWJNMmAUZkQiUV7zQStV6pOBtT6Li40jNndG7IwjWA76OCElrOxmPIZ/cAWlNzduF0B3gwh7IQcFMSe5+J8E5vMHTtGXulf6Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716308; c=relaxed/simple;
-	bh=/rUgmsxTiubpnU4tiKPz7mIn0s7yHkK53uNdziHqUc4=;
+	s=arc-20240116; t=1744716361; c=relaxed/simple;
+	bh=nNLrs53bMM1ismGWCbpRSe2X8AwoUfyh2J59CYjLmws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qO+IHBQDyx0x/sKMULHa1C8QMCUuNAHAY8d4xukt+BeSbDyLq+05OMxoTRxHOnZSJ+R4lLxpH2Cs9sRPyRdfqgoXVzXfxojx0Xh0L2gV20jqZBlsAGxboSdf0bLLdbM7ya+WvSEgcTw4YEInddxPX/+jI2UXNvCbY3/E94Th9jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMqnwWpq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMqnwWpq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BA3C4CEDD;
-	Tue, 15 Apr 2025 11:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744716308;
-	bh=/rUgmsxTiubpnU4tiKPz7mIn0s7yHkK53uNdziHqUc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YMqnwWpqfdOaBMsNlf1ZaebJov41jlK388dFvfzIzFz/20AX6RzLOasRgZVjD7ZNu
-	 EH727NMGzxie+MH7Jdys4e+9l9fNW2M2No+llatt/Y0Ecubz1mYzz1mYA/R3mW3QmI
-	 PXrb+BmXdgyF/PWSV7HVoYJ2Qc0mMn11zI8gctMwIOX9jOeOIFt4kMTtmRAlByxgTS
-	 cdqWktgcM3iry/lBRs4ddTMLQlX3td3MQshvJTl9kT7RQt5rPday5xUk/sgYLjAKmB
-	 nMz/p3bTSsWSPetNI2wlRFHnWQXxJP5B9suNCzmCrcCAYu1tRop/BJGaRnlpJRsG+f
-	 yj/afn9yCsZ+g==
-Date: Tue, 15 Apr 2025 13:25:03 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc: David Sterba <dsterba@suse.cz>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, 
-	now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>, Viro <viro@zeniv.linux.org.uk>, 
-	Bacik <josef@toxicpanda.com>, Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>, 
-	Johnson <jeff.johnson@oss.qualcomm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
-Message-ID: <20250415-deportation-lauftraining-17ff7ee0b6f5@brauner>
-References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
- <20250414-behielt-erholen-e0cd10a4f7af@brauner>
- <Z_0aBN-20w20-UiD@casper.infradead.org>
- <20250414162328.GD16750@twin.jikos.cz>
- <20250415-wohin-anfragen-90b2df73295b@brauner>
- <786f0a0e-8cea-4007-bbae-2225fcca95b4@wdc.com>
- <20250415-razzia-umverteilen-4e8864b62583@brauner>
- <8bd5e290-cfda-4735-a907-27611d1aac67@wdc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VdRqXVJKQCi4CsL0E50szF05m5vvfgRksNBks/WWZg32QzOmDZ+GReuC6Ed/n7TcFezxpVytQBFu7oEJzITi61N819AwuvZC/GhfMX9I1O3lKVGkWI4Pzumg5AGE1l1rH48u5wk26Gn7Qo9rn0vFGJJcf7SsNdrYPV7iG2YWpHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C804915A1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:56 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 295083F66E
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:58 -0700 (PDT)
+Date: Tue, 15 Apr 2025 12:25:46 +0100
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Steven Price <steven.price@arm.com>
+Cc: Karunika Choo <karunika.choo@arm.com>, dri-devel@lists.freedesktop.org,
+	nd@arm.com, Boris Brezillon <boris.brezillon@collabora.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] drm/panthor: Add 64-bit and poll register
+ accessors
+Message-ID: <Z_5COsTTuidPOa-a@e110455-lin.cambridge.arm.com>
+References: <20250411164805.2015088-1-karunika.choo@arm.com>
+ <20250411164805.2015088-2-karunika.choo@arm.com>
+ <5cc385f1-11f6-4abd-9df9-20ea089461b0@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,28 +42,466 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8bd5e290-cfda-4735-a907-27611d1aac67@wdc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5cc385f1-11f6-4abd-9df9-20ea089461b0@arm.com>
 
-On Tue, Apr 15, 2025 at 10:23:27AM +0000, Johannes Thumshirn wrote:
-> On 15.04.25 11:31, Christian Brauner wrote:
-> > On Tue, Apr 15, 2025 at 09:16:58AM +0000, Johannes Thumshirn wrote:
-> >> On 15.04.25 09:52, Christian Brauner wrote:
-> >>> Ok, I'm open to trying. I'm adding a deprecation message when initating
-> >>> a new hfs{plus} context logged to dmesg and then we can try and remove
-> >>> it by the end of the year.
-> >>>
-> >>>
-> >>
-> >> Just a word of caution though, (at least Intel) Macs have their EFI ESP
-> >> partition on HFS+ instead of FAT. I don't own an Apple Silicon Mac so I
-> >> can't check if it's there as well.
-> > 
-> > Yeah, someone mentioned that. Well, then we hopefully have someone
-> > stepping up to for maintainership.
-> > 
+On Mon, Apr 14, 2025 at 11:41:19AM +0100, Steven Price wrote:
+> Hi Karunika,
 > 
-> I hope you aren't considering me here :D. I'm lacking the time to 
-> volunteer as a Maintainer but I can offer to look into some fixes.
+> Minor process thing: There's generally no need to resend a series just
+> to add R-b tags - they'll get picked up when the series is merged.
+> 
+> On 11/04/2025 17:48, Karunika Choo wrote:
+> > This patch adds 64-bit register accessors to simplify register access in
+> > Panthor. It also adds 32-bit and 64-bit variants for read_poll_timeout.
+> > 
+> > This patch also updates Panthor to use the new 64-bit accessors and poll
+> > functions.
+> > 
+> > Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Karunika Choo <karunika.choo@arm.com>
 
-No no, I'm aware. I'm just saying that if this is really crucial this
-Mac use-case then we better find someone to take care of it properly.
+With the changes that Steven suggested:
+
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+
+Best regards,
+Liviu
+
+
+> > ---
+> >  drivers/gpu/drm/panthor/panthor_device.h |  71 ++++++++++++
+> >  drivers/gpu/drm/panthor/panthor_fw.c     |   9 +-
+> >  drivers/gpu/drm/panthor/panthor_gpu.c    | 142 ++++++-----------------
+> >  drivers/gpu/drm/panthor/panthor_mmu.c    |  34 ++----
+> >  drivers/gpu/drm/panthor/panthor_regs.h   |   6 -
+> >  5 files changed, 124 insertions(+), 138 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/panthor/panthor_device.h
+> > index da6574021664..40b935fcc1f4 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_device.h
+> > +++ b/drivers/gpu/drm/panthor/panthor_device.h
+> > @@ -428,4 +428,75 @@ static int panthor_request_ ## __name ## _irq(struct panthor_device *ptdev,			\
+> >  
+> >  extern struct workqueue_struct *panthor_cleanup_wq;
+> >  
+> > +static inline void gpu_write(struct panthor_device *ptdev, u32 reg, u32 data)
+> > +{
+> > +	writel(data, ptdev->iomem + reg);
+> > +}
+> > +
+> > +static inline u32 gpu_read(struct panthor_device *ptdev, u32 reg)
+> > +{
+> > +	return readl(ptdev->iomem + reg);
+> > +}
+> > +
+> > +static inline u32 gpu_read_relaxed(struct panthor_device *ptdev, u32 reg)
+> > +{
+> > +	return readl_relaxed(ptdev->iomem + reg);
+> > +}
+> > +
+> > +static inline void gpu_write64(struct panthor_device *ptdev, u32 reg, u64 data)
+> > +{
+> > +	gpu_write(ptdev, reg, lower_32_bits(data));
+> > +	gpu_write(ptdev, reg + 4, upper_32_bits(data));
+> > +}
+> > +
+> > +static inline u64 gpu_read64(struct panthor_device *ptdev, u32 reg)
+> > +{
+> > +	return (gpu_read(ptdev, reg) | ((u64)gpu_read(ptdev, reg + 4) << 32));
+> > +}
+> > +
+> > +static inline u64 gpu_read64_relaxed(struct panthor_device *ptdev, u32 reg)
+> > +{
+> > +	return (gpu_read_relaxed(ptdev, reg) |
+> > +		((u64)gpu_read_relaxed(ptdev, reg + 4) << 32));
+> > +}
+> > +
+> > +static inline u64 gpu_read64_counter(struct panthor_device *ptdev, u32 reg)
+> > +{
+> > +	u32 lo, hi1, hi2;
+> > +	do {
+> > +		hi1 = gpu_read(ptdev, reg + 4);
+> > +		lo = gpu_read(ptdev, reg);
+> > +		hi2 = gpu_read(ptdev, reg + 4);
+> > +	} while (hi1 != hi2);
+> > +	return lo | ((u64)hi2 << 32);
+> > +}
+> > +
+> > +#define gpu_read_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)	\
+> > +	read_poll_timeout(gpu_read, val, cond, delay_us, timeout_us, false,	\
+> > +			  dev, reg)
+> > +
+> > +#define gpu_read_poll_timeout_atomic(dev, reg, val, cond, delay_us,		\
+> > +				     timeout_us)				\
+> > +	read_poll_timeout_atomic(gpu_read, val, cond, delay_us, timeout_us,	\
+> > +				 false, dev, reg)
+> > +
+> > +#define gpu_read64_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)	\
+> > +	read_poll_timeout(gpu_read64, val, cond, delay_us, timeout_us, false,	\
+> > +			  dev, reg)
+> > +
+> > +#define gpu_read64_poll_timeout_atomic(dev, reg, val, cond, delay_us,		\
+> > +				       timeout_us)				\
+> > +	read_poll_timeout_atomic(gpu_read64, val, cond, delay_us, timeout_us,	\
+> > +				 false, dev, reg)
+> > +
+> > +#define gpu_read_relaxed_poll_timeout_atomic(dev, reg, val, cond, delay_us,	\
+> > +					     timeout_us)			\
+> > +	read_poll_timeout_atomic(gpu_read_relaxed, val, cond, delay_us,		\
+> > +				 timeout_us, false, dev, reg)
+> > +
+> > +#define gpu_read64_relaxed_poll_timeout(dev, reg, val, cond, delay_us,		\
+> > +					timeout_us)				\
+> > +	read_poll_timeout(gpu_read64_relaxed, val, cond, delay_us, timeout_us,	\
+> > +			  false, dev, reg)
+> > +
+> >  #endif
+> > diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+> > index 0f52766a3120..ecfbe0456f89 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_fw.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_fw.c
+> > @@ -1059,8 +1059,8 @@ static void panthor_fw_stop(struct panthor_device *ptdev)
+> >  	u32 status;
+> >  
+> >  	gpu_write(ptdev, MCU_CONTROL, MCU_CONTROL_DISABLE);
+> > -	if (readl_poll_timeout(ptdev->iomem + MCU_STATUS, status,
+> > -			       status == MCU_STATUS_DISABLED, 10, 100000))
+> > +	if (gpu_read_poll_timeout(ptdev, MCU_STATUS, status,
+> > +				  status == MCU_STATUS_DISABLED, 10, 100000))
+> >  		drm_err(&ptdev->base, "Failed to stop MCU");
+> >  }
+> >  
+> > @@ -1085,8 +1085,9 @@ void panthor_fw_pre_reset(struct panthor_device *ptdev, bool on_hang)
+> >  
+> >  		panthor_fw_update_reqs(glb_iface, req, GLB_HALT, GLB_HALT);
+> >  		gpu_write(ptdev, CSF_DOORBELL(CSF_GLB_DOORBELL_ID), 1);
+> > -		if (!readl_poll_timeout(ptdev->iomem + MCU_STATUS, status,
+> > -					status == MCU_STATUS_HALT, 10, 100000)) {
+> > +		if (!gpu_read_poll_timeout(ptdev, MCU_STATUS, status,
+> > +					   status == MCU_STATUS_HALT, 10,
+> > +					   100000)) {
+> >  			ptdev->reset.fast = true;
+> >  		} else {
+> >  			drm_warn(&ptdev->base, "Failed to cleanly suspend MCU");
+> > diff --git a/drivers/gpu/drm/panthor/panthor_gpu.c b/drivers/gpu/drm/panthor/panthor_gpu.c
+> > index 671049020afa..fd09f0928019 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_gpu.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_gpu.c
+> > @@ -108,14 +108,9 @@ static void panthor_gpu_init_info(struct panthor_device *ptdev)
+> >  
+> >  	ptdev->gpu_info.as_present = gpu_read(ptdev, GPU_AS_PRESENT);
+> >  
+> > -	ptdev->gpu_info.shader_present = gpu_read(ptdev, GPU_SHADER_PRESENT_LO);
+> > -	ptdev->gpu_info.shader_present |= (u64)gpu_read(ptdev, GPU_SHADER_PRESENT_HI) << 32;
+> > -
+> > -	ptdev->gpu_info.tiler_present = gpu_read(ptdev, GPU_TILER_PRESENT_LO);
+> > -	ptdev->gpu_info.tiler_present |= (u64)gpu_read(ptdev, GPU_TILER_PRESENT_HI) << 32;
+> > -
+> > -	ptdev->gpu_info.l2_present = gpu_read(ptdev, GPU_L2_PRESENT_LO);
+> > -	ptdev->gpu_info.l2_present |= (u64)gpu_read(ptdev, GPU_L2_PRESENT_HI) << 32;
+> > +	ptdev->gpu_info.shader_present = gpu_read64(ptdev, GPU_SHADER_PRESENT_LO);
+> > +	ptdev->gpu_info.tiler_present = gpu_read64(ptdev, GPU_TILER_PRESENT_LO);
+> > +	ptdev->gpu_info.l2_present = gpu_read64(ptdev, GPU_L2_PRESENT_LO);
+> >  
+> >  	arch_major = GPU_ARCH_MAJOR(ptdev->gpu_info.gpu_id);
+> >  	product_major = GPU_PROD_MAJOR(ptdev->gpu_info.gpu_id);
+> > @@ -152,8 +147,7 @@ static void panthor_gpu_irq_handler(struct panthor_device *ptdev, u32 status)
+> >  {
+> >  	if (status & GPU_IRQ_FAULT) {
+> >  		u32 fault_status = gpu_read(ptdev, GPU_FAULT_STATUS);
+> > -		u64 address = ((u64)gpu_read(ptdev, GPU_FAULT_ADDR_HI) << 32) |
+> > -			      gpu_read(ptdev, GPU_FAULT_ADDR_LO);
+> > +		u64 address = gpu_read64(ptdev, GPU_FAULT_ADDR_LO);
+> >  
+> >  		drm_warn(&ptdev->base, "GPU Fault 0x%08x (%s) at 0x%016llx\n",
+> >  			 fault_status, panthor_exception_name(ptdev, fault_status & 0xFF),
+> > @@ -244,45 +238,27 @@ int panthor_gpu_block_power_off(struct panthor_device *ptdev,
+> >  				u32 pwroff_reg, u32 pwrtrans_reg,
+> >  				u64 mask, u32 timeout_us)
+> >  {
+> > -	u32 val, i;
+> > +	u32 val;
+> >  	int ret;
+> >  
+> > -	for (i = 0; i < 2; i++) {
+> > -		u32 mask32 = mask >> (i * 32);
+> > -
+> > -		if (!mask32)
+> > -			continue;
+> > -
+> > -		ret = readl_relaxed_poll_timeout(ptdev->iomem + pwrtrans_reg + (i * 4),
+> > -						 val, !(mask32 & val),
+> > -						 100, timeout_us);
+> > -		if (ret) {
+> > -			drm_err(&ptdev->base, "timeout waiting on %s:%llx power transition",
+> > -				blk_name, mask);
+> > -			return ret;
+> > -		}
+> > +	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val, !val,
+> > +					      100, timeout_us);
+> 
+> You're ignoring "mask" here, so there's a change in behaviour. I think
+> you want:
+> 
+> ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val,
+> 				      !(mask & val),
+> 				      100, timeout_us);
+> 
+> (although I doubt it makes much difference in reality)
+> 
+> > +	if (ret) {
+> > +		drm_err(&ptdev->base,
+> > +			"timeout waiting on %s:%llx power transition", blk_name,
+> > +			mask);
+> > +		return ret;
+> >  	}
+> >  
+> > -	if (mask & GENMASK(31, 0))
+> > -		gpu_write(ptdev, pwroff_reg, mask);
+> > -
+> > -	if (mask >> 32)
+> > -		gpu_write(ptdev, pwroff_reg + 4, mask >> 32);
+> > -
+> > -	for (i = 0; i < 2; i++) {
+> > -		u32 mask32 = mask >> (i * 32);
+> > +	gpu_write64(ptdev, pwroff_reg, mask);
+> >  
+> > -		if (!mask32)
+> > -			continue;
+> > -
+> > -		ret = readl_relaxed_poll_timeout(ptdev->iomem + pwrtrans_reg + (i * 4),
+> > -						 val, !(mask32 & val),
+> > -						 100, timeout_us);
+> > -		if (ret) {
+> > -			drm_err(&ptdev->base, "timeout waiting on %s:%llx power transition",
+> > -				blk_name, mask);
+> > -			return ret;
+> > -		}
+> > +	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val, !val,
+> > +					      100, timeout_us);
+> 
+> Same here and two more below.
+> 
+> > +	if (ret) {
+> > +		drm_err(&ptdev->base,
+> > +			"timeout waiting on %s:%llx power transition", blk_name,
+> > +			mask);
+> > +		return ret;
+> >  	}
+> >  
+> >  	return 0;
+> > @@ -305,45 +281,26 @@ int panthor_gpu_block_power_on(struct panthor_device *ptdev,
+> >  			       u32 pwron_reg, u32 pwrtrans_reg,
+> >  			       u32 rdy_reg, u64 mask, u32 timeout_us)
+> >  {
+> > -	u32 val, i;
+> > +	u32 val;
+> >  	int ret;
+> >  
+> > -	for (i = 0; i < 2; i++) {
+> > -		u32 mask32 = mask >> (i * 32);
+> > -
+> > -		if (!mask32)
+> > -			continue;
+> > -
+> > -		ret = readl_relaxed_poll_timeout(ptdev->iomem + pwrtrans_reg + (i * 4),
+> > -						 val, !(mask32 & val),
+> > -						 100, timeout_us);
+> > -		if (ret) {
+> > -			drm_err(&ptdev->base, "timeout waiting on %s:%llx power transition",
+> > -				blk_name, mask);
+> > -			return ret;
+> > -		}
+> > +	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val, !val,
+> > +					      100, timeout_us);
+> > +	if (ret) {
+> > +		drm_err(&ptdev->base,
+> > +			"timeout waiting on %s:%llx power transition", blk_name,
+> > +			mask);
+> > +		return ret;
+> >  	}
+> >  
+> > -	if (mask & GENMASK(31, 0))
+> > -		gpu_write(ptdev, pwron_reg, mask);
+> > -
+> > -	if (mask >> 32)
+> > -		gpu_write(ptdev, pwron_reg + 4, mask >> 32);
+> > -
+> > -	for (i = 0; i < 2; i++) {
+> > -		u32 mask32 = mask >> (i * 32);
+> > +	gpu_write64(ptdev, pwron_reg, mask);
+> >  
+> > -		if (!mask32)
+> > -			continue;
+> > -
+> > -		ret = readl_relaxed_poll_timeout(ptdev->iomem + rdy_reg + (i * 4),
+> > -						 val, (mask32 & val) == mask32,
+> > -						 100, timeout_us);
+> > -		if (ret) {
+> > -			drm_err(&ptdev->base, "timeout waiting on %s:%llx readiness",
+> > -				blk_name, mask);
+> > -			return ret;
+> > -		}
+> > +	ret = gpu_read64_relaxed_poll_timeout(ptdev, pwrtrans_reg, val, !val,
+> > +					      100, timeout_us);
+> > +	if (ret) {
+> > +		drm_err(&ptdev->base, "timeout waiting on %s:%llx readiness",
+> > +			blk_name, mask);
+> > +		return ret;
+> >  	}
+> >  
+> >  	return 0;
+> > @@ -492,26 +449,6 @@ void panthor_gpu_resume(struct panthor_device *ptdev)
+> >  	panthor_gpu_l2_power_on(ptdev);
+> >  }
+> >  
+> > -/**
+> > - * panthor_gpu_read_64bit_counter() - Read a 64-bit counter at a given offset.
+> > - * @ptdev: Device.
+> > - * @reg: The offset of the register to read.
+> > - *
+> > - * Return: The counter value.
+> > - */
+> > -static u64
+> > -panthor_gpu_read_64bit_counter(struct panthor_device *ptdev, u32 reg)
+> > -{
+> > -	u32 hi, lo;
+> > -
+> > -	do {
+> > -		hi = gpu_read(ptdev, reg + 0x4);
+> > -		lo = gpu_read(ptdev, reg);
+> > -	} while (hi != gpu_read(ptdev, reg + 0x4));
+> > -
+> > -	return ((u64)hi << 32) | lo;
+> > -}
+> > -
+> >  /**
+> >   * panthor_gpu_read_timestamp() - Read the timestamp register.
+> >   * @ptdev: Device.
+> > @@ -520,7 +457,7 @@ panthor_gpu_read_64bit_counter(struct panthor_device *ptdev, u32 reg)
+> >   */
+> >  u64 panthor_gpu_read_timestamp(struct panthor_device *ptdev)
+> >  {
+> > -	return panthor_gpu_read_64bit_counter(ptdev, GPU_TIMESTAMP_LO);
+> > +	return gpu_read64_counter(ptdev, GPU_TIMESTAMP_LO);
+> >  }
+> >  
+> >  /**
+> > @@ -531,10 +468,5 @@ u64 panthor_gpu_read_timestamp(struct panthor_device *ptdev)
+> >   */
+> >  u64 panthor_gpu_read_timestamp_offset(struct panthor_device *ptdev)
+> >  {
+> > -	u32 hi, lo;
+> > -
+> > -	hi = gpu_read(ptdev, GPU_TIMESTAMP_OFFSET_HI);
+> > -	lo = gpu_read(ptdev, GPU_TIMESTAMP_OFFSET_LO);
+> > -
+> > -	return ((u64)hi << 32) | lo;
+> > +	return gpu_read64(ptdev, GPU_TIMESTAMP_OFFSET_LO);
+> >  }
+> 
+> We might as well drop this function and inline the gpu_read64() call.
+> 
+> Thanks,
+> Steve
+> 
+> > diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+> > index 12a02e28f50f..a0a79f19bdea 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_mmu.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+> > @@ -510,9 +510,9 @@ static int wait_ready(struct panthor_device *ptdev, u32 as_nr)
+> >  	/* Wait for the MMU status to indicate there is no active command, in
+> >  	 * case one is pending.
+> >  	 */
+> > -	ret = readl_relaxed_poll_timeout_atomic(ptdev->iomem + AS_STATUS(as_nr),
+> > -						val, !(val & AS_STATUS_AS_ACTIVE),
+> > -						10, 100000);
+> > +	ret = gpu_read_relaxed_poll_timeout_atomic(ptdev, AS_STATUS(as_nr), val,
+> > +						   !(val & AS_STATUS_AS_ACTIVE),
+> > +						   10, 100000);
+> >  
+> >  	if (ret) {
+> >  		panthor_device_schedule_reset(ptdev);
+> > @@ -564,8 +564,7 @@ static void lock_region(struct panthor_device *ptdev, u32 as_nr,
+> >  	region = region_width | region_start;
+> >  
+> >  	/* Lock the region that needs to be updated */
+> > -	gpu_write(ptdev, AS_LOCKADDR_LO(as_nr), lower_32_bits(region));
+> > -	gpu_write(ptdev, AS_LOCKADDR_HI(as_nr), upper_32_bits(region));
+> > +	gpu_write64(ptdev, AS_LOCKADDR_LO(as_nr), region);
+> >  	write_cmd(ptdev, as_nr, AS_COMMAND_LOCK);
+> >  }
+> >  
+> > @@ -615,14 +614,9 @@ static int panthor_mmu_as_enable(struct panthor_device *ptdev, u32 as_nr,
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	gpu_write(ptdev, AS_TRANSTAB_LO(as_nr), lower_32_bits(transtab));
+> > -	gpu_write(ptdev, AS_TRANSTAB_HI(as_nr), upper_32_bits(transtab));
+> > -
+> > -	gpu_write(ptdev, AS_MEMATTR_LO(as_nr), lower_32_bits(memattr));
+> > -	gpu_write(ptdev, AS_MEMATTR_HI(as_nr), upper_32_bits(memattr));
+> > -
+> > -	gpu_write(ptdev, AS_TRANSCFG_LO(as_nr), lower_32_bits(transcfg));
+> > -	gpu_write(ptdev, AS_TRANSCFG_HI(as_nr), upper_32_bits(transcfg));
+> > +	gpu_write64(ptdev, AS_TRANSTAB_LO(as_nr), transtab);
+> > +	gpu_write64(ptdev, AS_MEMATTR_LO(as_nr), memattr);
+> > +	gpu_write64(ptdev, AS_TRANSCFG_LO(as_nr), transcfg);
+> >  
+> >  	return write_cmd(ptdev, as_nr, AS_COMMAND_UPDATE);
+> >  }
+> > @@ -635,14 +629,9 @@ static int panthor_mmu_as_disable(struct panthor_device *ptdev, u32 as_nr)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	gpu_write(ptdev, AS_TRANSTAB_LO(as_nr), 0);
+> > -	gpu_write(ptdev, AS_TRANSTAB_HI(as_nr), 0);
+> > -
+> > -	gpu_write(ptdev, AS_MEMATTR_LO(as_nr), 0);
+> > -	gpu_write(ptdev, AS_MEMATTR_HI(as_nr), 0);
+> > -
+> > -	gpu_write(ptdev, AS_TRANSCFG_LO(as_nr), AS_TRANSCFG_ADRMODE_UNMAPPED);
+> > -	gpu_write(ptdev, AS_TRANSCFG_HI(as_nr), 0);
+> > +	gpu_write64(ptdev, AS_TRANSTAB_LO(as_nr), 0);
+> > +	gpu_write64(ptdev, AS_MEMATTR_LO(as_nr), 0);
+> > +	gpu_write64(ptdev, AS_TRANSCFG_LO(as_nr), AS_TRANSCFG_ADRMODE_UNMAPPED);
+> >  
+> >  	return write_cmd(ptdev, as_nr, AS_COMMAND_UPDATE);
+> >  }
+> > @@ -1680,8 +1669,7 @@ static void panthor_mmu_irq_handler(struct panthor_device *ptdev, u32 status)
+> >  		u32 source_id;
+> >  
+> >  		fault_status = gpu_read(ptdev, AS_FAULTSTATUS(as));
+> > -		addr = gpu_read(ptdev, AS_FAULTADDRESS_LO(as));
+> > -		addr |= (u64)gpu_read(ptdev, AS_FAULTADDRESS_HI(as)) << 32;
+> > +		addr = gpu_read64(ptdev, AS_FAULTADDRESS_LO(as));
+> >  
+> >  		/* decode the fault status */
+> >  		exception_type = fault_status & 0xFF;
+> > diff --git a/drivers/gpu/drm/panthor/panthor_regs.h b/drivers/gpu/drm/panthor/panthor_regs.h
+> > index a3ced0177535..6fd39a52f887 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_regs.h
+> > +++ b/drivers/gpu/drm/panthor/panthor_regs.h
+> > @@ -232,10 +232,4 @@
+> >  #define CSF_DOORBELL(i)					(0x80000 + ((i) * 0x10000))
+> >  #define CSF_GLB_DOORBELL_ID				0
+> >  
+> > -#define gpu_write(dev, reg, data) \
+> > -	writel(data, (dev)->iomem + (reg))
+> > -
+> > -#define gpu_read(dev, reg) \
+> > -	readl((dev)->iomem + (reg))
+> > -
+> >  #endif
+> 
+
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
