@@ -1,91 +1,70 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D0B19F11F;
-	Tue, 15 Apr 2025 16:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B95619F11F;
+	Tue, 15 Apr 2025 16:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744734560; cv=none; b=u1VRam7Zt8MrOLkEIN5l1teAE9e0uqgqoSZe80F9sYezzrLX4HF71Qgwyexm4XoYMhZsPyaPzurZ0dXbIm0+l5tuDnjRuCQLhUOEjhO4BZU/EgYaaZMXuXaDHwwVGkyrN+sSzIvTB/r2SzO1JWsFee/6R+giFvIpScsz3tVKKXg=
+	t=1744734572; cv=none; b=fADH3iGzmMEgmmoeb85I2GKOkUBMhlCi7s6eSB6uWa5trm1R4GdvHIZ/aSsCvKb6n9K9XmalJfKc86qQ3g7vIJDkZHW//toKH080Sm8G3iGx5NPu6HmFilJRdIeTHBsuuUHNqecvxWq+kksl8lKlAOSf372Y1yLEBeqSH8i9DDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744734560; c=relaxed/simple;
-	bh=qYTBtHM2zWSA7h6E/SoGd7meHiwUJZ8Z0pEB3y9DUbw=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=ZrTDqpHwoTS6WvYxSjiwJQh8q0Y8lYV/Pac6TPnMRpwjAZTRxzUxmOIoubpHgmRxgBj6bYxuRrxz/42uhNT7paRRlz2q4l7HjjM1RsUF9OEt13kI4ROwBWHqNk9Pl19/tu1mVO8bAnqzbrsQp5caXH/J1FAeH9u2QglDrPQXXJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id CE4651212FC;
-	Tue, 15 Apr 2025 16:11:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf08.hostedemail.com (Postfix) with ESMTPA id CDFE820025;
-	Tue, 15 Apr 2025 16:11:11 +0000 (UTC)
+	s=arc-20240116; t=1744734572; c=relaxed/simple;
+	bh=N0EmEElYpU/e4cDljzDCDa5v6XT89r7iNvCAZRNdzxU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUwzydBirpHeqHDFyxmBOaV2P81qiN4pk88WqTQjRcyeMxp+JiYTC6GDQfDJxUBShKWtXwTTt1auK0mdZUvFDfcFPjSs+ID4aMTfF6u/b9OawBDVYHPqhPYqHS7CS8PvFjf6Zpy7aMiVhwQlTr69Q8MQ4be/2TpFLWlqM9BR9vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RC3prLA1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RC3prLA1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 253D8C4CEEB;
+	Tue, 15 Apr 2025 16:29:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744734571;
+	bh=N0EmEElYpU/e4cDljzDCDa5v6XT89r7iNvCAZRNdzxU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RC3prLA1Icp60GmlzXhlHlvfG5Fymk6EJ53q7SPjTFO91Ik/XUglo8irNzn4yJ/I/
+	 jdbjLAGb3OX6NJ3t6I4aGZF/GSm+OVfQoDYhiSPzylt+c4whDAIUdWgyiS3IMFH+e2
+	 V4kOm1pEbTBp4H3I8QXuwJuMnpCZ0subL8hJGbYxE0ZlB0KGPPLdSSWUow3bPNXUME
+	 KQYATuYAbrjdbWCWGWZE9J7zEY3nz5U1JME3MfNExXDOQJYciTFxwV3J5a4sUxa6qu
+	 F5Vc7Ye0Bc7qTcs33nVHGWWo7Li4GoZ9hjEACJK+PhQMty8KU5G6q65Zui4BS9Gw8y
+	 ohZvlKC+/y9jQ==
+Date: Tue, 15 Apr 2025 09:29:29 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: stable@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-bluetooth@vger.kernel.org, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Manish Mandlik <mmandlik@google.com>, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Bluetooth: vhci: Avoid needless snprintf() calls
+Message-ID: <5b2vwh4a2gp25wovqx26rbeveo7q6nbwg7c5pnsbsddyg434yc@ug6zgdwg5xel>
+References: <20250415161518.work.889-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 15 Apr 2025 09:11:11 -0700
-From: Joe Perches <joe@perches.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Jonathan
- Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
- <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, Roger Quadros
- <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com, Andrew Lunn
- <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
- rgmii(|-rxid|-txid) PHY modes
-In-Reply-To: <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
-Message-ID: <f3acd53796a44576408a2a14aa5baaed@perches.com>
-X-Sender: joe@perches.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: jh3nqazk1jc3b5jt4mi3gt34yip7om1u
-X-Rspamd-Server: rspamout06
-X-Rspamd-Queue-Id: CDFE820025
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+5zct2ruo7E6hoPc/hJUfsW7XPRtFJmdg=
-X-HE-Tag: 1744733471-828432
-X-HE-Meta: U2FsdGVkX19tqmX0rgSBcUP9E/t3KWTRFktRBaWmUsQ4KGi9uYcqiGhovIVKP6pAI4rVekGl1QVJDA50D1+Lrtr9m/ZswlJxmFu8ADGYsLOSWJHP4VmV/ligfFokJ1G2C1VGar8DWuqzC5l6RupMwZjeQlU3t9oTvFZA88BL6AK9O5g9b+N5mFDLw/SNfqzOhfR0oYphVPMVzTQnzrgZ7ztXhxcgbg/RNsvX2AYTNFWIBIiUnkJznYkGtJioV5EJhg7adrhusTqKmPRPfoV34w==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415161518.work.889-kees@kernel.org>
 
-On 2025-04-15 03:18, Matthias Schiffer wrote:
-> Historially, the RGMII PHY modes specified in Device Trees have been
-> used inconsistently, often referring to the usage of delays on the PHY
-> side rather than describing the board; many drivers still implement 
-> this
-> incorrectly.
+On Tue, Apr 15, 2025 at 09:15:19AM -0700, Kees Cook wrote:
+> Avoid double-copying of string literals. Use a "const char *" for each
+> string instead of copying from .rodata into stack and then into the skb.
+> We can go directly from .rodata to the skb.
 > 
-> Require a comment in Devices Trees using these modes (usually 
-> mentioning
-> that the delay is relalized
-
-realized
-
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 784912f570e9d..57fcbd4b63ede 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -3735,6 +3735,17 @@ sub process {
->  			}
->  		}
+> This also works around a Clang bug (that has since been fixed[1]).
 > 
-> +# Check for RGMII phy-mode with delay on PCB
-> +		if ($realfile =~ /\.dtsi?$/ && $line =~ 
-> /^\+\s*(phy-mode|phy-connection-type)\s*=\s*"/ &&
-> +		    !ctx_has_comment($first_line, $linenr)) {
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202401250927.1poZERd6-lkp@intel.com/
+> Fixes: ab4e4380d4e1 ("Bluetooth: Add vhci devcoredump support")
+> Link: https://github.com/llvm/llvm-project/commit/ea2e66aa8b6e363b89df66dc44275a0d7ecd70ce [1]
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Not sure where $first_line comes from and unsure if this works on 
-patches rather than complete files.
+Thanks!
 
-Does it?
+Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
+
+-- 
+Josh
