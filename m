@@ -1,126 +1,91 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9165A927;
-	Tue, 15 Apr 2025 01:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9B72AF0A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744678871; cv=none; b=Lv/EciC7mUfyCPJbQFiT+tm5DFCKzxRwISmPlB1AYgpVhEYXVVOiKGa6H60KbpSEtkaBuolO+lxM28YcFVEnyfjjWI0h1NCWm8dliHHv9SfFzhJsqBgmHhWEOh+xiIwN6KQe07n823I6LA+EMj9lXqlEnYQeAZRCrOoNLMzJxak=
+	t=1744679027; cv=none; b=otGYbJ2wKPc2MuTr1W0OIFj8XndXZgXWcb4XYORmjaw/qZrHeo1Oyzor8eamVf0VbYCrL3hQUynJ2hry3j/uJBD+bx3FX7ZFhT6AFdUOph7SrPqR3EfWdYS0y46xqA9yBfduRPyUOxxDZWES2aCkUtTy3JOaE6H4CnLpKQEFd7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744678871; c=relaxed/simple;
-	bh=v4w5DfE/sYNT5ehoSrvg4/ugdIQziaDkEkahrOSBX+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fjzYw70uiuPN5H0v/1AWG5UKxAHDVomSLUn4CFtFYzOnzOtaoRES65KwBS+xzUOHiu/DZ63BnrHkacljkzqFL8t9mDApsQI6/ah10c1jWHvIJUhJt0b2JtARkbkCI2Nnlg2xyGp0xY6ry3DboI7w2OAL61272ibtq0A206lgBT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NsiQEVla; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744679027; c=relaxed/simple;
+	bh=pB0n3LdfP43WeFXriy07YW6KzlCi6N/LwuUGRkNfbLo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dkkEE/Qev2zDjuh/E2GnD+oh63Z0gioHnD1LrVdheR2a022FPpntswLHr6lmmxY6KhGKB3ya0KqIuOFCkmXexZgtP9P6+oW45ClvobvoiNGBLAK3N+RhorqKGHlU/plUXXb1GHCKf5VVtFMJ6tveiaSSXHK8ccq+51BxSoA3oUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ikx/jtPk; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NsiQEVla"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86c29c0acdfso1829632241.3;
-        Mon, 14 Apr 2025 18:01:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ikx/jtPk"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so4814552a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744678867; x=1745283667; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uy7YAJZKOai1D7ABZjjN+bQn5zDwS2Ij5HcVijKw7Bs=;
-        b=NsiQEVlarlggrztHhxjByXNwNK2nHTq/k1cvNk5bWSinxehFyY38lgw5iwJEV3JoJm
-         pEnSiSV/TtgH8ZfYeNuSSACmRiG+GJr/yugCdr/nLDc4tBsS65FLYfgwKKsjoeavTmYa
-         GaI0sDJ9yZMVrt6m6lqEG0TTT8W5kHmUPTAgrFD013hwfLBcbLs1PuEjWM7oXPAlACHu
-         7qKhOug4QO1bK6Dh8gHlM5Q688Rs73z7wdsC6RLaobOoTKFrM99E5cMDk497843l6+l+
-         8GapjYJXFXX4pCQKsDTSuqPAF3f/cW3QrJpO6PCMfI+++O4kIPqfOIUVwFuy0dvKtDTA
-         Sghg==
+        d=google.com; s=20230601; t=1744679026; x=1745283826; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YzbnsAfv5+9Y/Ffya+lNPAXS6cmkCNbPVuwmvW4EBG0=;
+        b=Ikx/jtPkblQ5yuLUsNJ5anPKo4hr6tcxbGkm3Zmlh+WdE+ZySfnlpJvpLIku1DytHr
+         RwaCt0fkZrl/1vC8V+aOzEVz5NtzN1H75z9Fvj2IUBAdRbyS/XwjflSusFJBKU8D9tf0
+         RGa6Ihrfr4yXFwBNVaYdwjut7tv1Db0lUawEBpwpF9QEnJziYpKx/OsKoJIysoclvls4
+         rHe7XWZyYxW5jyzF3Vb9iO4jLSHw+5WuOXicrScb1U5XihqZ3NZ0ZzFovDN6OLqwA+b8
+         +Kv8KI6HwrvRy5Dv383WjwEiDB2oYwXt9ScBntVm/gC+qY+V9Ykgghz1Xb3jxV0XCcZ7
+         mCAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744678867; x=1745283667;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uy7YAJZKOai1D7ABZjjN+bQn5zDwS2Ij5HcVijKw7Bs=;
-        b=QQ7yaYNBxfS6FpnN/WvMJaqloFyEFEX8ti6GffOQKg6JlPXc6mThbfCvbFhGlzfv99
-         H/6Fzize50VqkMKj+3ICYxe6wr5NavtYyg2AQQAbvuACEaLuGOk/gwA5F59k6ubkUs5t
-         fFdwe2joTWIZg8dOPq4lqmDUv9PjhiVJlMBa0GTme0tk4tMoXPHC/YdGSfqCDF7VTZ9k
-         w9CiimlK51651WZJ3zD5ZB4pfwIskIH1G+T3orajzStjemI6bUqKs972GC4hYuFW4xXC
-         yKB4XizLE+2E9gVVL6r5/XZClCALjfxFWSdrlvEsz6dMdvqheyoThSACAh0xST4nAefb
-         yc1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUOHHsEU8AgNwV3NcnrdQ/6uNoS7rdr5o0/uAIMJHLguNSoKo8E+WYnwLlWPE0c0S+/Q5wkCodNaqfb@vger.kernel.org, AJvYcCX0J0NAjNEboUl/pIhYIFNotK0aY7vcAlkgKrDrhZtpxgt3SyQXGIzfHOCmjExT7eyGTSd85pp9Hz9G1GEM@vger.kernel.org, AJvYcCXTaMZtcxuronaHt719o3xufSPJ8dnX9sv4zKWQPHGDSnIVnUHVDy4fR9pnsH0j5oIMBbTxbjnxJzie@vger.kernel.org
-X-Gm-Message-State: AOJu0YylD7DWC7QfK0iZoBp+HvUigm9Vqj1NG7MXSVa+u2yYafoJwzY6
-	QrZYSBFtzfQH1S5T4xt7FWMG1kmfq4LH8asocaltkuI3KsIGwlNW
-X-Gm-Gg: ASbGncuklF7ZDVjJPbyyvblZDCfENwcQEunyC0YjMDA5VO+ZvoDSg6gHo35VI5hcV4M
-	6sImfG57E7sdJFMngsbRyCsbT5CeyUhy4WEAIkrMesEvpfflKpU4lBlflsB2XIHax7pfZ0+0s0c
-	RKueAYWfCd52+NORxCP/4S2g3kOVGxnsQr9Lzemvwq37kpVq6etjUXDEg6OA8Cl4M+jCDmUXhzz
-	PJqNemPLWec7W5A5hd8nxxHo1lwTM779+VYE8WLKcWqYk/mfAKusIePvx/HnwSdZ5ovxXJ8gwsV
-	bLuhyGHUsyvBgen/
-X-Google-Smtp-Source: AGHT+IEg5WHo6qDq3mTM3+gnVU2hOs9hdPqiMDeyWKuT5X6RpeIxFCETbXntue45FyG12HX43MWGmQ==
-X-Received: by 2002:a05:6102:5489:b0:4c1:924e:1a2a with SMTP id ada2fe7eead31-4c9e504c3aemr10457091137.25.1744678866709;
-        Mon, 14 Apr 2025 18:01:06 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de970badsm92754026d6.26.2025.04.14.18.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 18:01:06 -0700 (PDT)
-Date: Tue, 15 Apr 2025 09:00:24 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Haylen Chu <heylenay@4d2.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, spacemit@lists.linux.dev, 
-	Inochi Amaoto <inochiama@outlook.com>, Chen Wang <unicornxdotw@foxmail.com>, 
-	Jisheng Zhang <jszhang@kernel.org>, Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, 
-	Inochi Amaoto <inochiama@gmail.com>
-Subject: Re: [PATCH v7 3/6] clk: spacemit: Add clock support for SpacemiT K1
- SoC
-Message-ID: <smgd2dymwnxkuvi4nevukt2fxcz3b5vuqt6wnuc2cf2bqaxisf@vtj7qnd5ws4t>
-References: <20250412074423.38517-2-heylenay@4d2.org>
- <20250412074423.38517-5-heylenay@4d2.org>
+        d=1e100.net; s=20230601; t=1744679026; x=1745283826;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YzbnsAfv5+9Y/Ffya+lNPAXS6cmkCNbPVuwmvW4EBG0=;
+        b=Uk/sGP+9y1krp4Fcwl+2bjxKxB18lHvIgPBw9DnELptGfUb4GHGyXlwV5kGYhR3bZm
+         Td3HTOu7ZE59xYMuqex08HO067FceCVSkMlEGcWB2ve62dX+M7t5o3UhTFzklOccRRrk
+         Rwt6X6vCKVoAk9F21JAbyCINFbf01fVlWsr3KW+c5uCG9ZedAp+InkkyS6qkBAfDSICt
+         k7cIxi4BSzz3GQIG39T5qdYem9lI+Td2fmiZ1wSjPcPAnNoFYeDZn7FHvQpFOLUEXLOq
+         ppiwZwBMa5eUn8XlhiWt2YglCa4KBw8E4ubsZeyAOFW7Sl3//k2HYbAPCpOY1CLl8rdz
+         YPKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVE/f4IU95dgBHIBojv4xvFrQ7FCvZISFQnPMKrUTwWmqYrXxbtc5U3BJHnQOETjPtSwHrrQMlTqymYVnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6FNwtgETd5XQoLw+UcPV0NN0iJ1i7pgilGeExGHyNnWHwkn28
+	vrET1KUGSgvmGuhfMlg6jzx/ZrP5ZVqrx/wEsnj6GSfweTJRIItEvWuEsBOmdpiYpedKXeiecvQ
+	YIA==
+X-Google-Smtp-Source: AGHT+IEdiPfi0RY+jZvT5ThALgaqd0aYUVddYIjm3GUKPqxvv7TDcAONTr/QwVKwhaZ9NmtAwwSxAyU9wQg=
+X-Received: from pjbqn4.prod.google.com ([2002:a17:90b:3d44:b0:2ff:6e58:8a03])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:582b:b0:308:5273:4dee
+ with SMTP id 98e67ed59e1d1-30852734e83mr689391a91.15.1744679025608; Mon, 14
+ Apr 2025 18:03:45 -0700 (PDT)
+Date: Mon, 14 Apr 2025 18:03:44 -0700
+In-Reply-To: <Z/0LJTnNCsQ3RIrR@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412074423.38517-5-heylenay@4d2.org>
+Mime-Version: 1.0
+References: <20250324140849.2099723-1-chao.gao@intel.com> <Z_g-UQoZ8fQhVD_2@google.com>
+ <Z/jWytoXdiGdCeXz@intel.com> <Z_lKE-GjP3WQrdkR@google.com> <Z/0LJTnNCsQ3RIrR@intel.com>
+Message-ID: <Z_0XCXwptNhtI_A_@google.com>
+Subject: Re: [PATCH] KVM: VMX: Flush shadow VMCS on emergency reboot
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Sat, Apr 12, 2025 at 07:44:21AM +0000, Haylen Chu wrote:
-> The clock tree of K1 SoC contains three main types of clock hardware
-> (PLL/DDN/MIX) and has control registers split into several multifunction
-> devices: APBS (PLLs), MPMU, APBC and APMU.
+On Mon, Apr 14, 2025, Chao Gao wrote:
+> A related topic is why KVM is flushing VMCSs. I haven't found any explicit
+> statement in the SDM indicating that the flush is necessary.
 > 
-> All register operations are done through regmap to ensure atomiciy
-> between concurrent operations of clock driver and reset,
-> power-domain driver that will be introduced in the future.
+> SDM chapter 26.11 mentions:
 > 
-> Signed-off-by: Haylen Chu <heylenay@4d2.org>
-> ---
->  drivers/clk/Kconfig               |    1 +
->  drivers/clk/Makefile              |    1 +
->  drivers/clk/spacemit/Kconfig      |   18 +
->  drivers/clk/spacemit/Makefile     |    5 +
->  drivers/clk/spacemit/ccu-k1.c     | 1154 +++++++++++++++++++++++++++++
->  drivers/clk/spacemit/ccu_common.h |   48 ++
->  drivers/clk/spacemit/ccu_ddn.c    |   83 +++
->  drivers/clk/spacemit/ccu_ddn.h    |   47 ++
->  drivers/clk/spacemit/ccu_mix.c    |  268 +++++++
->  drivers/clk/spacemit/ccu_mix.h    |  218 ++++++
->  drivers/clk/spacemit/ccu_pll.c    |  157 ++++
->  drivers/clk/spacemit/ccu_pll.h    |   86 +++
->  12 files changed, 2086 insertions(+)
->  create mode 100644 drivers/clk/spacemit/Kconfig
->  create mode 100644 drivers/clk/spacemit/Makefile
->  create mode 100644 drivers/clk/spacemit/ccu-k1.c
->  create mode 100644 drivers/clk/spacemit/ccu_common.h
->  create mode 100644 drivers/clk/spacemit/ccu_ddn.c
->  create mode 100644 drivers/clk/spacemit/ccu_ddn.h
->  create mode 100644 drivers/clk/spacemit/ccu_mix.c
->  create mode 100644 drivers/clk/spacemit/ccu_mix.h
->  create mode 100644 drivers/clk/spacemit/ccu_pll.c
->  create mode 100644 drivers/clk/spacemit/ccu_pll.h
+> If a logical processor leaves VMX operation, any VMCSs active on that logical
+> processor may be corrupted (see below). To prevent such corruption of a VMCS
+> that may be used either after a return to VMX operation or on another logical
+> processor, software should execute VMCLEAR for that VMCS before executing the
+> VMXOFF instruction or removing power from the processor (e.g., as part of a
+> transition to the S3 and S4 power states).
 > 
+> To me, the issue appears to be VMCS corruption after leaving VMX operation and
+> the flush is necessary only if you intend to use the VMCS after re-entering VMX
+> operation.
 
-If possible, split the patch into multiple one by the compatible
-so others can review easily. Otherwise, it is LGTM.
-
-Reviewed-by: Inochi Amaoto <inochiama@outlook.com>
+The problem is that if the CPU flushes a VMCS from the cache at a later time, for
+any reason, then the CPU will write back data to main memory.  The issue isn't
+reusing the VMCS, it's reusing the underlying memory.
