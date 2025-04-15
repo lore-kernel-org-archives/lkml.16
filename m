@@ -1,105 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEC32973AF;
-	Tue, 15 Apr 2025 12:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4E0297A77;
+	Tue, 15 Apr 2025 12:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719557; cv=none; b=pHstL1nGmTgNtb/9avasTxGLqVFCscBhXJ/tn3RccrTMUEHkud49O488Ii/tX/iCgfv56OE/HkH5AkiFTpStzukvMUR8BCCFNjZj5VluMisELCwZBiBg+MI+NH2kpZi9pfx8TQc27lOXW0KGjAE3T5ETf8u8oyAyJShO52ewEAk=
+	t=1744719559; cv=none; b=GZXDKTlVuIAoDvYOzKDZU4GZtHHSKgN7HttF94yPxL4vM2siwC+5XdbWKwIh/VEGquWDbHug9D0RWIvWTpNUkNLcOlx/YPmKrOh8+0lTf5DCAoutfx5K3DrGMOUCNE5xDeHhcYZq2qyot+I4agcvoAZ6VM9N0ND1Kzb7LWumEaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719557; c=relaxed/simple;
-	bh=ExuwwuQWLzkJuGGpl9n1F27u16tfXGWUJL91Td9VQ/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u1aGw+cJn7PsS7ord6teWOUOwoSmoOxXdCwoW5vQQALX2NTRIxA8DaSez7t+X7QkrK5A4RjB3+5NmXXwyFCG3HZbmR1D11MDgHH3PpA0763Prww6EiTLT6MkuwfHbbRCsPcg9mMqYP7qtKcuwdNcgAxhk/a+JqlfRo8hdDgfWjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAeoNV51; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744719559; c=relaxed/simple;
+	bh=hj51LJSrIDJ6v7LWBhVZb8UiMw0jv6RgoxBncZhvdQU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=doIZlQqKKxhBkFH62Fkm6K/qFlAmSeyjv+WQVjISKTl3Jxe7ndyNDeND0dDystiQg56LZyLUA4P6ehB0RqBDQuVkxmnqCOmFCRxEC8aUoC1yLeIzol4SFE9eCvPrQrBudANVXPqt+aRRONJXHz9Mumef9u+zpvOOZ66EfMYNDT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a2BqASOY; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAeoNV51"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71888C4CEDD;
-	Tue, 15 Apr 2025 12:19:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744719556;
-	bh=ExuwwuQWLzkJuGGpl9n1F27u16tfXGWUJL91Td9VQ/k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hAeoNV51pdhfYpi5SMPjAlS9s8O23JXovV8fv06NO08eoHRGlibgpic+MlVsAqeJc
-	 MMwpxy35qteiXy3naYT2DqF7eAFZjrrhmV0fDHSDmyq0EjB4OEiDZ721GIgiBxV+LE
-	 aIKwW+x+2Ns5RWixNq91VMPxsD3LRE0+5SVvmJsygLy1eCFyfX1tnX7xfOwKXCwm1K
-	 /r0ktlz++7z1VRTtNiX5fBbTBBwwtPw01tgUa7iZ/1Nlv/nkWXHmSmIQzCZ2mkfaJ8
-	 8pGc8XYasDthBwD0ohlAZjewKdGnW3t1nsZqPfH3pcysXEFP+vQed6MX2hwDbRdq1J
-	 c6t1lm/y+laBg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH v2 2/2] drm/nouveau: nouveau_fence: Standardize list iterations
-Date: Tue, 15 Apr 2025 14:19:01 +0200
-Message-ID: <20250415121900.55719-4-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250415121900.55719-2-phasta@kernel.org>
-References: <20250415121900.55719-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a2BqASOY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744719558; x=1776255558;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hj51LJSrIDJ6v7LWBhVZb8UiMw0jv6RgoxBncZhvdQU=;
+  b=a2BqASOY7ZNkyv6/6rdGAnRAgA/bTDiNp7/laYGkOMUK5JvYWsECih6k
+   wrP5XLqFdzaczTm8DdKT1VTkj2PfVXBELw/iJj0obUDkmQyak/beiW5JS
+   xroRfftWckCgMAcEqLe4o/1XNnLnwNoaST6l7W60towiiEuBGkk5zr1rm
+   7KT7gNCJ1YozcVt248RGumdaiDSgBIeOr6b15WmZk9WTNYrUoqV/i1C8m
+   phpD3chsKGeM08/q0fRcsHPrg7SbuyLkCmkY/eSmfkHtiZVcCF87TECeb
+   qV2SzJAMAqoDoxB2aO6VnPxWwHV/L2TdJaY30rBPDwxIoOvQ0kKJ26Oh3
+   A==;
+X-CSE-ConnectionGUID: iL54V8RDSPSBttPOxOu3wg==
+X-CSE-MsgGUID: Jlw7PrS8SxCpUUuz4YUG6A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57608717"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="57608717"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:19:17 -0700
+X-CSE-ConnectionGUID: CRCSHD/aTsq52Ni4gnPGLw==
+X-CSE-MsgGUID: T7Vi5/NkQ5qCdYo8/ipJHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129876283"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:19:15 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4fFv-0000000CXZp-28pY;
+	Tue, 15 Apr 2025 15:19:11 +0300
+Date: Tue, 15 Apr 2025 15:19:11 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: Luis Oliveira <lolivei@synopsys.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Hitting WARN_ON_ONCE in i2c-designware-common.c
+Message-ID: <Z_5Ov9j-tF8rABDZ@smile.fi.intel.com>
+References: <20c191d9-5f7a-4ec6-a663-dcc8d0b54c18@kernel.org>
+ <Z_5OYSxZS05LO7cE@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_5OYSxZS05LO7cE@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-nouveau_fence.c iterates over lists in a non-canonical way. Since the
-operations done are just basic for-each-loops, they should be written in
-the standard form.
+On Tue, Apr 15, 2025 at 03:17:37PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 15, 2025 at 02:03:26PM +0200, Jesper Dangaard Brouer wrote:
+> > Hi Maintainers,
+> > 
+> > I'm hitting a WARN_ON_ONCE in drivers/i2c/busses/i2c-designware-common.c
+> > when booting the kernel on our Gen12 hardware.
+> > 
+> > I'm using devel kernel net-next at commit 1a9239bb425 (merge tag
+> > 'net-next-6.15').
+> > 
+> > I assume you want this report.
+> > 
+> > Maybe it is not a critical error(?)
+> > ... looking the comment in the function:
+> 
+> Have you forgotten to compile in the drivers/acpi/acpi_apd.c?
 
-Use for_each_safe() instead of the custom loop iterations.
+Also that driver has the missing error check in acpi_apd_setup() for
+clk_register_clkdev().
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_fence.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 6ded8c2b6d3b..60d961b43488 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -84,11 +84,12 @@ void
- nouveau_fence_context_kill(struct nouveau_fence_chan *fctx, int error)
- {
- 	struct nouveau_fence *fence;
-+	struct list_head *pos, *tmp;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&fctx->lock, flags);
--	while (!list_empty(&fctx->pending)) {
--		fence = list_entry(fctx->pending.next, typeof(*fence), head);
-+	list_for_each_safe(pos, tmp, &fctx->pending) {
-+		fence = list_entry(pos, struct nouveau_fence, head);
- 
- 		if (error && !dma_fence_is_signaled_locked(&fence->base))
- 			dma_fence_set_error(&fence->base, error);
-@@ -131,11 +132,12 @@ static int
- nouveau_fence_update(struct nouveau_channel *chan, struct nouveau_fence_chan *fctx)
- {
- 	struct nouveau_fence *fence;
-+	struct list_head *pos, *tmp;
- 	int drop = 0;
- 	u32 seq = fctx->read(chan);
- 
--	while (!list_empty(&fctx->pending)) {
--		fence = list_entry(fctx->pending.next, typeof(*fence), head);
-+	list_for_each_safe(pos, tmp, &fctx->pending) {
-+		fence = list_entry(pos, struct nouveau_fence, head);
- 
- 		if ((int)(seq - fence->base.seqno) < 0)
- 			break;
 -- 
-2.48.1
+With Best Regards,
+Andy Shevchenko
+
 
