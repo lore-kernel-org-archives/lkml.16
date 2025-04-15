@@ -1,539 +1,359 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D885D22688B;
-	Tue, 15 Apr 2025 18:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71711F09AF
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741397; cv=none; b=p2801Y5qzxxdbFXSfOSlXtx0bR2enRPCKoHxmC5Ltx7sayvRZHvpsuOMUtqxN9oR6gH2fzVSKN6Kshn6yiQcnwMr1tw52Z7EDE18Sm999ngOEuafAbj8CfnKN4+77hVZ2UR3XTvTMwWiXWCprzw3qKkuVs90FebXS+J6bUMXCCI=
+	t=1744741485; cv=none; b=H/WGFXRj3fIDWp6E5AxwcA2+t8VeIF91o8Kwmywmniw7DT+2K9edTjnJpowJ9tXo3EJRCcY5wfDDwVXwfvXLkAvsA8PMT7PI/NK7e5qGjMEziRuMjcf3tkM3ty5VjdOAmnv1m51MaHjU1iUQe0vWXJQJx6euFrD29ywCWVyHh20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741397; c=relaxed/simple;
-	bh=LpBMKq9wfdVMdJ6wz89xHQFNDtmFGjsYf4722koXEJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G5L4+fuFuEIMb3mG8uUCdEWAFJrDzvqQPnsni0oL78+mtK13C9o6x4l9ZhLd24nAHdYir6OlUiyGLFbfwtmWD4DzfaXVdkllg5U0tM6JTYehZ+96pxCvefLFKnq8ZJQn0S6yDtJKOADVEEc/wi2lYXGZ1jKzZUL+sJ3/fNubMxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e2q7yjio; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744741485; c=relaxed/simple;
+	bh=/GFGDbNuXymklDWRO5AzwTj12PzmIH6SguJDQlMud4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vA/zFXKth1sdv50D7x9W2LlFSwOO86jg9Xdga2a+X9ErkSdDEWbiEv414dtXGJQepEz0sY0fCmA/jYEkXIENeODnmlLaArSizNs5CNQchyPbB/11iSIKgQNUg9foJDIkOquhD7dMxCpqIYk4upx/qVApILuxRDiUyJqdYRVN30Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PWcx0gwR; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e2q7yjio"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744741396; x=1776277396;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LpBMKq9wfdVMdJ6wz89xHQFNDtmFGjsYf4722koXEJ4=;
-  b=e2q7yjio2SOfNgap9sz/cR5WFAoM0JHTsEPNUWpjajyUJiejjWPlE50M
-   QubaNbXGuDB0Qh5ZKhtUXnSj6Ivt0QSI7DV71YnI7PCGkVmn9vw7siZsh
-   ACNoQOHICFni3gtqmMyJYYbKSoJQ6FKC0DENuzluVd2uHEacYLlyCivZC
-   tgzWK01YZ6QYXMDrAwe7EuWS/JSJOFH1GI5gL1VqOanBGnWvQ57oBzg7c
-   aJMWksDnN4uQT4pOgAMFbgngCs0QGOx7fgLTpSGOZeL/IcUMS98XrlpZc
-   +UhsDo8nQX75afuckq1kYU6BDhgPyvJNLXkSSIOKHQn1bfIp0rAUOMVjg
-   w==;
-X-CSE-ConnectionGUID: 8E5RrEk6S+uj0z/dt/8TYg==
-X-CSE-MsgGUID: VK0GZVXeRd2CC3SQDh14fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="45981339"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="45981339"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:23:15 -0700
-X-CSE-ConnectionGUID: yfjJUONhQA26ned7SSEfIg==
-X-CSE-MsgGUID: n/Yf9c6WTDaArsfnR5Ywkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130513325"
-Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
-  by fmviesa008.fm.intel.com with ESMTP; 15 Apr 2025 11:21:53 -0700
-From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-To: donald.hunter@gmail.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	vadim.fedorenko@linux.dev,
-	jiri@resnulli.us,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch,
-	saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	jonathan.lemon@gmail.com,
-	richardcochran@gmail.com,
-	aleksandr.loktionov@intel.com,
-	milena.olech@intel.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Subject: [PATCH net-next v2 4/4] ice: add phase offset monitor for all PPS dpll inputs
-Date: Tue, 15 Apr 2025 20:15:43 +0200
-Message-Id: <20250415181543.1072342-5-arkadiusz.kubalewski@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
-References: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PWcx0gwR"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-223f4c06e9fso55108295ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744741483; x=1745346283; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvsYDfCkdMlDli3tvTkkt2mwrny9x0nA/xkSFS51KcI=;
+        b=PWcx0gwRkORM+Dwcupjvg2bbcG5ZZtI8rjxhHPPS5gvxov51MAKgTGjjCH/7CYfKbe
+         dMQTnPeKNuGZbj14jfVsy0VmNSeJe5j2V+DOidTDtWwrrYTBKeJRQSVcEQXHyqes9J6x
+         ntDHt+eZKXXnsUKGzp1eWGXFJTue1otdT2eVM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744741483; x=1745346283;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UvsYDfCkdMlDli3tvTkkt2mwrny9x0nA/xkSFS51KcI=;
+        b=gJdvfKBbEgdEytskQRJAM9YQSUux9SJ0hfDiGXYWIbNt7jQUTByCRsruxnxF3Oah35
+         iYv9aDfi4yh4zeUKM7mCxO5w8LAw5xFvkdz2euApNH5YPnEzLxiBBnY6Xi2YM2qWpEZC
+         Pahx0KSd8F/246x6dWBnLq9pjHpoPmPeozY9TVBKn+UEOSh756Zh9s27ih4K7VljUNEJ
+         x1K+DeKvQvdTOiuB7dGnLwVPMfrzoKAI8rNfw3/wkSIyYG45YbjCZALM+9zrhq67mayt
+         6KRjox4aQkJMN+1hBdI/lxux2+NTPQ5KqzJZ4YIodxJm4XxBb2GvH3UWDOg9Kgts1Myl
+         aDnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNftwxqc7EtR48Rm01vBN55IZlapkxrm4hG3Xd+qz18kmfZMzAB2GEzcS2BUgKOh8t/ZyfZmXwcdwNm60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMKNNu472AOb6Nxl/CISiMwyDV4tYWqG9wIjtN98e56ixwBx3r
+	TkxjzMlne3YIvWcvnFC4GKVHoanGodVluBfmGDFJFKz+R9hi3KUu5hwpNY3pnA==
+X-Gm-Gg: ASbGncshtJkKS8PA7PVj1Ezu+R6AGGh/pFfvpa12khf2WBYEL2ExiglMVrrxmUb4kjD
+	zbYWES0SDLzCgBmKaThTmMSFLQI3L5EuHwRVPnhOdE+11sq/WXyvmFuF/zccIuJ5WwZ+RRiOVRq
+	Gg4Qet5FmDyBQF02IlbkUKvcMNY5CAlSZ6zNCUJvsiV/6TNX78jz0mFqBAuSwZRULKS6DS0oTRk
+	AMc42Kx8LLBDy+KUYzyh/S3/rYw4Tsh7gXrL/F2hUjeTBBRFq10K1gh/kk6J/6vamGn0UhaDNtR
+	/8YHN8njN249yUC3Jz26Mvf/mjQqSl1CgBYJG33hjeHsUcdC/8aAN16m2X/N42Yvj/k0waRwVr1
+	oGUk=
+X-Google-Smtp-Source: AGHT+IFcpP3CIx7mOPyRZjL3OJStL4sfRHU6gXM820Ln0i6PxGtwBiFjSgwEiXkmpCOf0Dy7arSllg==
+X-Received: by 2002:a17:903:1b6f:b0:216:271d:e06c with SMTP id d9443c01a7336-22c30cf9720mr6830375ad.4.1744741482761;
+        Tue, 15 Apr 2025 11:24:42 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:8cf6:d796:9e6e:f7e5])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22ac7b62895sm121021895ad.5.2025.04.15.11.24.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 11:24:41 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:24:39 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dmitry.baryshkov@linaro.org, Tsai Sung-Fu <danielsftsai@google.com>
+Subject: Re: [RFC] PCI: pwrctrl and link-up dependencies
+Message-ID: <Z_6kZ7x7gnoH-P7x@google.com>
+References: <Z_WAKDjIeOjlghVs@google.com>
+ <vfjh3xzfhwoppcaxlov5bcmkfngyf6no4zyrgexlcxpfajsw2t@o5nbfcep3auz>
+ <Z_2ZNuJsDr0lDjbo@google.com>
+ <4pwigzf7q6abyntt4opjv6lnvkdulyejr73efnud2cvltskgt2@tjs2k5tiwyvc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4pwigzf7q6abyntt4opjv6lnvkdulyejr73efnud2cvltskgt2@tjs2k5tiwyvc>
 
-Implement new admin command and helper function to handle/obtain CGU
-measurements for input pins, initialize PPS dpll capabilities using new
-command.
-Add callbacks to control dpll device feature:
-all-inputs-phase-offset-monitor.
-Allow enable/disable of all inputs monitoring for ice PPS dpll device.
-If feature is enabled provide users with measured phase offsets and
-notifications.
+Hi,
 
-Reviewed-by: Milena Olech <milena.olech@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
----
-v2:
-- adapt changes and align wiht new dpll_device_info struct
----
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
- drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
- drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
- drivers/net/ethernet/intel/ice/ice_dpll.c     | 179 +++++++++++++++++-
- drivers/net/ethernet/intel/ice/ice_dpll.h     |   6 +
- drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
- 6 files changed, 237 insertions(+), 1 deletion(-)
+On Tue, Apr 15, 2025 at 11:02:14AM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Apr 14, 2025 at 04:24:38PM -0700, Brian Norris wrote:
+> > On Mon, Apr 14, 2025 at 04:27:35PM +0530, Manivannan Sadhasivam wrote:
+> > > On Tue, Apr 08, 2025 at 12:59:36PM -0700, Brian Norris wrote:
+> > > > For link startup, pcie-designware-host.c currently
+> > > > (a) starts the link via platform-specific means (dw_pcie::ops::start_link()) and
+> > > > (b) waits for the link training to complete.
+> > > > 
+> > > > However, (b) will fail if the other end of the link is not powered up --
+> > > > e.g., if the appropriate pwrctrl driver has not yet loaded, or its
+> > > > device hasn't finished probing. Today, this can mean the designware
+> > > > driver will either fail to probe,
+> > > 
+> > > This is not correct.
+> > 
+> > That depends on the implementation of start_link(). But I suppose the
+> > intention is that start_link() only "starts" and doesn't care where
+> > things go from there. (IOW, my local start_link() implementation is
+> > probably wrong at the moment, as it performs some poll/retry steps too.)
+> > 
+> 
+> The callback is supposed to just start
+> the link and not wait for anything else.
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index bdee499f991a..181bc2c3b4ad 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -2272,6 +2272,22 @@ struct ice_aqc_get_pkg_info_resp {
- 	struct ice_aqc_get_pkg_info pkg_info[];
- };
- 
-+#define ICE_CGU_INPUT_PHASE_OFFSET_BYTES	6
-+
-+struct ice_cgu_input_measure {
-+	u8 phase_offset[ICE_CGU_INPUT_PHASE_OFFSET_BYTES];
-+	__le32 freq;
-+} __packed __aligned(sizeof(__le16));
-+
-+#define ICE_AQC_GET_CGU_IN_MEAS_DPLL_IDX_M	ICE_M(0xf, 0)
-+
-+/* Get CGU input measurements command response data structure (indirect 0x0C59) */
-+struct ice_aqc_get_cgu_input_measure {
-+	u8 dpll_idx_opt;
-+	u8 length;
-+	u8 rsvd[6];
-+};
-+
- #define ICE_AQC_GET_CGU_MAX_PHASE_ADJ	GENMASK(30, 0)
- 
- /* Get CGU abilities command response data structure (indirect 0x0C61) */
-@@ -2721,6 +2737,7 @@ struct ice_aq_desc {
- 		struct ice_aqc_add_get_update_free_vsi vsi_cmd;
- 		struct ice_aqc_add_update_free_vsi_resp add_update_free_vsi_res;
- 		struct ice_aqc_download_pkg download_pkg;
-+		struct ice_aqc_get_cgu_input_measure get_cgu_input_measure;
- 		struct ice_aqc_set_cgu_input_config set_cgu_input_config;
- 		struct ice_aqc_get_cgu_input_config get_cgu_input_config;
- 		struct ice_aqc_set_cgu_output_config set_cgu_output_config;
-@@ -2772,6 +2789,8 @@ enum ice_aq_err {
- 	ICE_AQ_RC_OK		= 0,  /* Success */
- 	ICE_AQ_RC_EPERM		= 1,  /* Operation not permitted */
- 	ICE_AQ_RC_ENOENT	= 2,  /* No such element */
-+	ICE_AQ_RC_ESRCH		= 3,  /* Bad opcode */
-+	ICE_AQ_RC_EAGAIN	= 8,  /* Try again */
- 	ICE_AQ_RC_ENOMEM	= 9,  /* Out of memory */
- 	ICE_AQ_RC_EBUSY		= 12, /* Device or resource busy */
- 	ICE_AQ_RC_EEXIST	= 13, /* Object already exists */
-@@ -2927,6 +2946,7 @@ enum ice_adminq_opc {
- 	ice_aqc_opc_get_pkg_info_list			= 0x0C43,
- 
- 	/* 1588/SyncE commands/events */
-+	ice_aqc_opc_get_cgu_input_measure		= 0x0C59,
- 	ice_aqc_opc_get_cgu_abilities			= 0x0C61,
- 	ice_aqc_opc_set_cgu_input_config		= 0x0C62,
- 	ice_aqc_opc_get_cgu_input_config		= 0x0C63,
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 4fedf0181c4e..48ff515d7c61 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -4970,6 +4970,32 @@ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
- 	return status;
- }
- 
-+/**
-+ * ice_aq_get_cgu_input_pin_measure - get input pin signal measurements
-+ * @hw: pointer to the HW struct
-+ * @dpll_idx: index of dpll to be measured
-+ * @meas: array to be filled with results
-+ * @meas_num: max number of results array can hold
-+ *
-+ * Get CGU measurements (0x0C59) of phase and frequency offsets for input
-+ * pins on given dpll.
-+ *
-+ * Return: 0 on success or negative value on failure.
-+ */
-+int ice_aq_get_cgu_input_pin_measure(struct ice_hw *hw, u8 dpll_idx,
-+				     struct ice_cgu_input_measure *meas,
-+				     u16 meas_num)
-+{
-+	struct ice_aqc_get_cgu_input_measure *cmd;
-+	struct ice_aq_desc desc;
-+
-+	ice_fill_dflt_direct_cmd_desc(&desc, ice_aqc_opc_get_cgu_input_measure);
-+	cmd = &desc.params.get_cgu_input_measure;
-+	cmd->dpll_idx_opt = dpll_idx & ICE_AQC_GET_CGU_IN_MEAS_DPLL_IDX_M;
-+
-+	return ice_aq_send_cmd(hw, &desc, meas, meas_num * sizeof(*meas), NULL);
-+}
-+
- /**
-  * ice_aq_get_cgu_abilities - get cgu abilities
-  * @hw: pointer to the HW struct
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
-index 64c530b39191..c70f56d897dc 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.h
-+++ b/drivers/net/ethernet/intel/ice/ice_common.h
-@@ -229,6 +229,9 @@ void ice_replay_post(struct ice_hw *hw);
- struct ice_q_ctx *
- ice_get_lan_q_ctx(struct ice_hw *hw, u16 vsi_handle, u8 tc, u16 q_handle);
- int ice_sbq_rw_reg(struct ice_hw *hw, struct ice_sbq_msg_input *in, u16 flag);
-+int ice_aq_get_cgu_input_pin_measure(struct ice_hw *hw, u8 dpll_idx,
-+				     struct ice_cgu_input_measure *meas,
-+				     u16 meas_num);
- int
- ice_aq_get_cgu_abilities(struct ice_hw *hw,
- 			 struct ice_aqc_get_cgu_abilities *abilities);
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.c b/drivers/net/ethernet/intel/ice/ice_dpll.c
-index 0f7440a889ac..b9363230f6ac 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.c
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.c
-@@ -11,6 +11,8 @@
- #define ICE_DPLL_RCLK_NUM_PER_PF		1
- #define ICE_DPLL_PIN_ESYNC_PULSE_HIGH_PERCENT	25
- #define ICE_DPLL_PIN_GEN_RCLK_FREQ		1953125
-+#define ICE_DPLL_INPUT_REF_NUM			10
-+#define ICE_DPLL_PHASE_OFFSET_PERIOD		2
- 
- /**
-  * enum ice_dpll_pin_type - enumerate ice pin types:
-@@ -587,6 +589,63 @@ static int ice_dpll_mode_get(const struct dpll_device *dpll, void *dpll_priv,
- 	return 0;
- }
- 
-+/**
-+ * ice_dpll_features_set - set dpll's features
-+ * @dpll: registered dpll pointer
-+ * @dpll_priv: private data pointer passed on dpll registration
-+ * @features: mask of features to be set
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Enable/disable features of dpll.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return: 0 - success
-+ */
-+static int ice_dpll_features_set(const struct dpll_device *dpll,
-+				 void *dpll_priv, u32 features,
-+				 struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll *d = dpll_priv;
-+	struct ice_pf *pf = d->pf;
-+
-+	mutex_lock(&pf->dplls.lock);
-+	if (features & DPLL_FEATURES_ALL_INPUTS_PHASE_OFFSET_MONITOR)
-+		d->phase_offset_monitor_period = ICE_DPLL_PHASE_OFFSET_PERIOD;
-+	else
-+		d->phase_offset_monitor_period = 0;
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return 0;
-+}
-+
-+/**
-+ * ice_dpll_features_get - get dpll's features
-+ * @dpll: registered dpll pointer
-+ * @dpll_priv: private data pointer passed on dpll registration
-+ * @features: on success holds currently enabled features of dpll
-+ * @extack: error reporting
-+ *
-+ * Dpll subsystem callback. Provides currently enabled features of dpll.
-+ *
-+ * Context: Acquires and releases pf->dplls.lock
-+ * Return: 0 - success
-+ */
-+static int ice_dpll_features_get(const struct dpll_device *dpll,
-+				 void *dpll_priv, u32 *features,
-+				 struct netlink_ext_ack *extack)
-+{
-+	struct ice_dpll *d = dpll_priv;
-+	struct ice_pf *pf = d->pf;
-+
-+	mutex_lock(&pf->dplls.lock);
-+	*features = 0;
-+	if (d->phase_offset_monitor_period)
-+		*features |= DPLL_FEATURES_ALL_INPUTS_PHASE_OFFSET_MONITOR;
-+	mutex_unlock(&pf->dplls.lock);
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_pin_state_set - set pin's state on dpll
-  * @pin: pointer to a pin
-@@ -1093,12 +1152,15 @@ ice_dpll_phase_offset_get(const struct dpll_pin *pin, void *pin_priv,
- 			  const struct dpll_device *dpll, void *dpll_priv,
- 			  s64 *phase_offset, struct netlink_ext_ack *extack)
- {
-+	struct ice_dpll_pin *p = pin_priv;
- 	struct ice_dpll *d = dpll_priv;
- 	struct ice_pf *pf = d->pf;
- 
- 	mutex_lock(&pf->dplls.lock);
- 	if (d->active_input == pin)
- 		*phase_offset = d->phase_offset * ICE_DPLL_PHASE_OFFSET_FACTOR;
-+	else if (d->phase_offset_monitor_period)
-+		*phase_offset = p->phase_offset * ICE_DPLL_PHASE_OFFSET_FACTOR;
- 	else
- 		*phase_offset = 0;
- 	mutex_unlock(&pf->dplls.lock);
-@@ -1457,6 +1519,8 @@ static const struct dpll_pin_ops ice_dpll_output_ops = {
- static const struct dpll_device_ops ice_dpll_ops = {
- 	.lock_status_get = ice_dpll_lock_status_get,
- 	.mode_get = ice_dpll_mode_get,
-+	.features_set = ice_dpll_features_set,
-+	.features_get = ice_dpll_features_get,
- };
- 
- /**
-@@ -1503,6 +1567,110 @@ static void ice_dpll_notify_changes(struct ice_dpll *d)
- 	}
- }
- 
-+/**
-+ * ice_dpll_is_pps_phase_monitor - check if dpll capable of phase offset monitor
-+ * @pf: pf private structure
-+ *
-+ * Check if firmware is capable of supporting admin command to provide
-+ * phase offset monitoring on all the input pins on PPS dpll.
-+ *
-+ * Returns:
-+ * * true - PPS dpll phase offset monitoring is supported
-+ * * false - PPS dpll phase offset monitoring is not supported
-+ */
-+static bool ice_dpll_is_pps_phase_monitor(struct ice_pf *pf)
-+{
-+	struct ice_cgu_input_measure meas[ICE_DPLL_INPUT_REF_NUM];
-+	int ret = ice_aq_get_cgu_input_pin_measure(&pf->hw, DPLL_TYPE_PPS, meas,
-+						   ARRAY_SIZE(meas));
-+
-+	if (ret && pf->hw.adminq.sq_last_status == ICE_AQ_RC_ESRCH)
-+		return false;
-+
-+	return true;
-+}
-+
-+/**
-+ * ice_dpll_pins_notify_mask - notify dpll subsystem about bulk pin changes
-+ * @pins: array of ice_dpll_pin pointers registered within dpll subsystem
-+ * @pin_num: number of pins
-+ * @phase_offset_ntf_mask: bitmask of pin indexes to notify
-+ *
-+ * Iterate over array of pins and call dpll subsystem pin notify if
-+ * corresponding pin index within bitmask is set.
-+ *
-+ * Context: Must be called while pf->dplls.lock is released.
-+ */
-+static void ice_dpll_pins_notify_mask(struct ice_dpll_pin *pins,
-+				      u8 pin_num,
-+				      u32 phase_offset_ntf_mask)
-+{
-+	int i = 0;
-+
-+	for (i = 0; i < pin_num; i++)
-+		if (phase_offset_ntf_mask & (1 << i))
-+			dpll_pin_change_ntf(pins[i].pin);
-+}
-+
-+/**
-+ * ice_dpll_pps_update_phase_offsets - update phase offset measurements
-+ * @pf: pf private structure
-+ * @phase_offset_pins_updated: returns mask of updated input pin indexes
-+ *
-+ * Read phase offset measurements for PPS dpll device and store values in
-+ * input pins array. On success phase_offset_pins_updated - fills bitmask of
-+ * updated input pin indexes, pins shall be notified.
-+ *
-+ * Context: Shall be called with pf->dplls.lock being locked.
-+ * Returns:
-+ * * 0 - success or no data available
-+ * * negative - AQ failure
-+ */
-+static int ice_dpll_pps_update_phase_offsets(struct ice_pf *pf,
-+					     u32 *phase_offset_pins_updated)
-+{
-+	struct ice_cgu_input_measure meas[ICE_DPLL_INPUT_REF_NUM];
-+	struct ice_dpll_pin *p;
-+	s64 phase_offset, tmp;
-+	int i, j, ret;
-+
-+	*phase_offset_pins_updated = 0;
-+	ret = ice_aq_get_cgu_input_pin_measure(&pf->hw, DPLL_TYPE_PPS, meas,
-+					       ARRAY_SIZE(meas));
-+	if (ret && pf->hw.adminq.sq_last_status == ICE_AQ_RC_EAGAIN) {
-+		return 0;
-+	} else if (ret) {
-+		dev_err(ice_pf_to_dev(pf),
-+			"failed to get input pin measurements dpll=%d, ret=%d %s\n",
-+			DPLL_TYPE_PPS, ret,
-+			ice_aq_str(pf->hw.adminq.sq_last_status));
-+		return ret;
-+	}
-+	for (i = 0; i < pf->dplls.num_inputs; i++) {
-+		p = &pf->dplls.inputs[i];
-+		phase_offset = 0;
-+		for (j = 0; j < ICE_CGU_INPUT_PHASE_OFFSET_BYTES; j++) {
-+			tmp = meas[i].phase_offset[j];
-+#ifdef __LITTLE_ENDIAN
-+			phase_offset += tmp << 8 * j;
-+#else
-+			phase_offset += tmp << 8 *
-+				(ICE_CGU_INPUT_PHASE_OFFSET_BYTES - 1 - j);
-+#endif
-+		}
-+		phase_offset = sign_extend64(phase_offset, 47);
-+		if (p->phase_offset != phase_offset) {
-+			dev_dbg(ice_pf_to_dev(pf),
-+				"phase offset changed for pin:%d old:%llx, new:%llx\n",
-+				p->idx, p->phase_offset, phase_offset);
-+			p->phase_offset = phase_offset;
-+			*phase_offset_pins_updated |= (1 << i);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ice_dpll_update_state - update dpll state
-  * @pf: pf private structure
-@@ -1589,14 +1757,19 @@ static void ice_dpll_periodic_work(struct kthread_work *work)
- 	struct ice_pf *pf = container_of(d, struct ice_pf, dplls);
- 	struct ice_dpll *de = &pf->dplls.eec;
- 	struct ice_dpll *dp = &pf->dplls.pps;
-+	u32 phase_offset_ntf = 0;
- 	int ret = 0;
- 
- 	if (ice_is_reset_in_progress(pf->state))
- 		goto resched;
- 	mutex_lock(&pf->dplls.lock);
-+	d->periodic_counter++;
- 	ret = ice_dpll_update_state(pf, de, false);
- 	if (!ret)
- 		ret = ice_dpll_update_state(pf, dp, false);
-+	if (!ret && dp->phase_offset_monitor_period &&
-+	    d->periodic_counter % dp->phase_offset_monitor_period == 0)
-+		ret = ice_dpll_pps_update_phase_offsets(pf, &phase_offset_ntf);
- 	if (ret) {
- 		d->cgu_state_acq_err_num++;
- 		/* stop rescheduling this worker */
-@@ -1611,6 +1784,9 @@ static void ice_dpll_periodic_work(struct kthread_work *work)
- 	mutex_unlock(&pf->dplls.lock);
- 	ice_dpll_notify_changes(de);
- 	ice_dpll_notify_changes(dp);
-+	if (phase_offset_ntf)
-+		ice_dpll_pins_notify_mask(d->inputs, d->num_inputs,
-+					  phase_offset_ntf);
- 
- resched:
- 	/* Run twice a second or reschedule if update failed */
-@@ -1986,7 +2162,6 @@ ice_dpll_deinit_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu)
-  * @pf: board private structure
-  * @d: dpll to be initialized
-  * @cgu: if cgu is present and controlled by this NIC
-- * @type: type of dpll being initialized
-  *
-  * Allocate dpll instance for this board in dpll subsystem, if cgu is controlled
-  * by this NIC, register dpll with the callback ops.
-@@ -2368,6 +2543,8 @@ static int ice_dpll_init_info(struct ice_pf *pf, bool cgu)
- 	dp->mode = DPLL_MODE_AUTOMATIC;
- 	dp->info.type = DPLL_TYPE_PPS;
- 	dp->info.ops = &ice_dpll_ops;
-+	dp->info.capabilities = !ice_dpll_is_pps_phase_monitor(pf) ? 0 :
-+				DPLL_FEATURES_ALL_INPUTS_PHASE_OFFSET_MONITOR;
- 
- 	dev_dbg(ice_pf_to_dev(pf),
- 		"%s - success, inputs:%u, outputs:%u rclk-parents:%u\n",
-diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.h b/drivers/net/ethernet/intel/ice/ice_dpll.h
-index 9db7463e293a..430f7fb95690 100644
---- a/drivers/net/ethernet/intel/ice/ice_dpll.h
-+++ b/drivers/net/ethernet/intel/ice/ice_dpll.h
-@@ -19,6 +19,7 @@
-  * @prop: pin properties
-  * @freq: current frequency of a pin
-  * @phase_adjust: current phase adjust value
-+ * @phase_offset: monitored phase offset value
-  */
- struct ice_dpll_pin {
- 	struct dpll_pin *pin;
-@@ -31,6 +32,7 @@ struct ice_dpll_pin {
- 	struct dpll_pin_properties prop;
- 	u32 freq;
- 	s32 phase_adjust;
-+	s64 phase_offset;
- 	u8 status;
- };
- 
-@@ -47,6 +49,7 @@ struct ice_dpll_pin {
-  * @input_prio: priorities of each input
-  * @dpll_state: current dpll sync state
-  * @prev_dpll_state: last dpll sync state
-+ * @phase_offset_monitor_period: period for phase offset monitor read frequency
-  * @active_input: pointer to active input pin
-  * @prev_input: pointer to previous active input pin
-  */
-@@ -64,6 +67,7 @@ struct ice_dpll {
- 	enum dpll_lock_status dpll_state;
- 	enum dpll_lock_status prev_dpll_state;
- 	enum dpll_mode mode;
-+	u32 phase_offset_monitor_period;
- 	struct dpll_pin *active_input;
- 	struct dpll_pin *prev_input;
- 	struct dpll_device_info info;
-@@ -81,6 +85,7 @@ struct ice_dpll {
-  * @num_inputs: number of input pins available on dpll
-  * @num_outputs: number of output pins available on dpll
-  * @cgu_state_acq_err_num: number of errors returned during periodic work
-+ * @periodic_counter: counter of periodic work executions
-  * @base_rclk_idx: idx of first pin used for clock revocery pins
-  * @clock_id: clock_id of dplls
-  * @input_phase_adj_max: max phase adjust value for an input pins
-@@ -98,6 +103,7 @@ struct ice_dplls {
- 	u8 num_inputs;
- 	u8 num_outputs;
- 	int cgu_state_acq_err_num;
-+	u32 periodic_counter;
- 	u8 base_rclk_idx;
- 	u64 clock_id;
- 	s32 input_phase_adj_max;
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 1fbe13ee93a8..9abc179e1bd3 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -7914,6 +7914,10 @@ const char *ice_aq_str(enum ice_aq_err aq_err)
- 		return "ICE_AQ_RC_EPERM";
- 	case ICE_AQ_RC_ENOENT:
- 		return "ICE_AQ_RC_ENOENT";
-+	case ICE_AQ_RC_ESRCH:
-+		return "ICE_AQ_RC_ESRCH";
-+	case ICE_AQ_RC_EAGAIN:
-+		return "ICE_AQ_RC_EAGAIN";
- 	case ICE_AQ_RC_ENOMEM:
- 		return "ICE_AQ_RC_ENOMEM";
- 	case ICE_AQ_RC_EBUSY:
--- 
-2.38.1
+Ack, thanks. I've learned something.
 
+> > > > or at least waste time for a condition
+> > > > that we can't achieve (link up), depending on the HW/driver
+> > > > implementation.
+> > > > 
+> > > 
+> > > Unfortunately we cannot avoid this waiting time as we don't know if a device is
+> > > attached to the bus or not. The 1s wait time predates my involvement with DWC
+> > > drivers.
+> > 
+> > I don't really love that answer. It means that any DWC-based platform
+> > that needs pwrctrl and doesn't set use_link_irq==true will waste 1
+> > second per PCIe controller. While it's hard to make guarantees about old
+> > and/or unloved drivers, I'd like to think I can do better on new ones.
+> > 
+> 
+> Even I'd like to avoid the 1s delay. But the problem is how would you know if
+> the device is attached to the bus or not. The delay is to account for the fact
+> that the link may take up to 1s to come up post starting LTSSM. So if we do not
+> wait for that period, there is a chance that we would report the false negative
+> status and also the enumeration would fail.
+
+I understand there are cases we won't know, if we don't have a
+hotplug/presence-detect wiring. But for cases we know, I think it's
+cop-out to say "we can't handle it." See below.
+
+> > Consider
+> > the lesser statement that was paired along with it: always wasting 1
+> > second per controller polling for something that will never happen. It
+> > feels backwards and wasteful.
+> > 
+> 
+> Again, I do get your point. But tell me how can a controller reliably detect
+> that there is a device attached to the bus. Only on your android setup, you for
+> sure know that the device won't be there during probe. So you are considering 1s
+> wait as a wast of time and it is fair. But what if the same controller is used
+> in another platform which is not android or the endpoint device is powered on
+> during probe itself without replying on userspace?
+
+This has nothing to do with Android.
+
+IMO, we have 3 main categories of setups that we should primarily care
+about:
+
+(1) hotplug is supported, and PRSNT1#/PRSNT2# are wired
+(2) hotplug is not supported, but a device is present and is already
+    powered.
+(3) hotplug is not supported, but a device is present. the device
+    requires external power (i.e., pwrctrl / "subdevice regulators" /
+    etc., should be involved)
+
+AFAICT, we don't have much of (1). But if we did, we should also be able
+to avoid initial delays, as we can reliably detect presence, and only
+wait for training when we know it should succeed. (Or even better,
+handle it async via an interrupt.)
+
+For (2), we're also OK. The initial polling delay is likely to be much
+less than 1 second.
+
+For (3) ... all non-pwrctrl drivers (pcie-brcmstb.c, pcie-tegra.c,
+pcie-tegra194.c, pcie-rockchip-host.c, ...) power things up before they
+configure ports, start LTSSM, and have any expectation of detecting a
+link. If a device is there, they again should commonly find it in much
+less than 1 second.
+
+However, when *using* pwrctrl, we have the ordering all wrong (IMO), and
+so we eat needless delay. We *will not* successfully bring the link up,
+and we *won't* find the device. This smells like a design problem, where
+we have failed to plumb the information we already have available.
+
+I think you're too worried about a case (4): that hotplug is not
+supported, and a device is not present.
+
+IMO, (4) should mostly be handled by simply disabling the unused
+controller in device tree, or living with the timeouts. If a platform
+doesn't support hotplug, then you can't expect optimal behavior for
+unplugged devices.
+
+I'm not complaining about (4). I'm complaining about (3) with pwrctrl.
+
+> > One of my key questions: if I don't have a link-up IRQ, how can I avoid
+> > this waste? pcie-brcmstb avoids that waste today (for the common case
+> > where there is, in fact, a device connected), and it would be a
+> > regression for it to start using pwrctrl tomorrow.
+> > 
+> 
+> Why are you tying pwrctrl with this designware driver behavior? Both are
+> unrelated. Even if you don't use pwrctrl and use controller driver to bring up
+> the device, the 1s delay would be applicable (if there is no device).
+
+We might be talking past each other. Per above, I think we can do better
+with (1)-(3). But you're bringing up (4). Problem (3) exists for all
+drivers, although it's more acute with DWC, and I happen to be using it.
+I also think it's indicative of larger design and ordering problems in
+pwrctrl.
+
+> pcie-brcmstb driver indeed wastes time. It is not 1s but just 100ms. But that
+> driver is for only one vendor. In the case of DWC, the driver has to work with
+> multiple vendors. But again, I do not know how this 1s delay came up. Maybe we
+> could try to reduce it to 500ms or so, but for that I need confirmation from
+> someone like Lorenzo who knows the history.
+> 
+> > (Side note: I also just noticed pcie-tegra194.c does the same.)
+> > 
+> > > > My guess is that (1) is the case, and specifically that the relevant folks are
+> > > > using the pcie-qcom.c, with its "global" IRQ used for link-up events.
+> > > > 
+> > > 
+> > > We only recently added support for 'Link Up' event through 'global_irq' in the
+> > > controller driver. And this was done to avoid waiting for link up during probe
+> > 
+> > You're kind of reinforcing my question: you don't like the waste, so
+> > you're adding link-up IRQ support -- is that really the only way?
+> > 
+> 
+> I don't know. But so far I haven't seen any other sensible way which is generic.
+> 
+> > (My initial thought: no, it's not. We know when pwrctrl has done its
+> > thing -- why should we bother polling for link state before that? But
+> > that's easier said than done, when pwrctrl is optional and highly
+> > abstracted away from the DWC driver...)
+> > 
+> 
+> Oh well... this is where you got it wrong. pwrctrl drivers are only probed
+> before enumeration because of the design (which is way after starting the link).
+> As of v6.15-rc1, before we try to enumerate any device, we check if there is any
+> device defined in DT which requires power supply. If so, we create a platform
+> device (or pwrctrl device) and let the pwrctrl driver to bind to it and power up
+> the device. In that case, we also do not proceed to scan the bus further and
+> skip the hierarchy. Because, the pwrctrl driver will rescan the bus once it has
+> finished powering up the device.
+
+It sounds like you're saying "it's the way that it is, because of the
+way that it is." I understand how it is currently structured, but I'm
+saying that I think pwrctrl is placed at the wrong place. It looks cute
+and clean, but it has the ordering wrong.
+
+IMO, we should allow pwrctrl to power things up earlier, so that
+controller drivers have a better chance of hitting the optimal cases
+(case (3) above) properly. (That's also how every pre-pwrctrl driver
+does things, and I think it's for good reason.)
+
+That would also resolve my PERST# and other timing questions, because
+the controller driver would better know when pwrctrl is finished, and so
+can better handle PERST# and any necessary delays.
+
+I agree this might be more difficult to do in a "generic" way (per your
+above language), depending on your definition of generic. But IMO, it's
+important to prioritize doing things correctly, even if it's slightly
+less cute.
+
+As an example less-cute way of doing pwrctrl: expose a wrapped version
+of pci_pwrctrl_create_device() such that drivers can call it earlier. If
+there is a pwrctrl device created, that means a driver should not yet
+wait for link-up -- it should defer that until the relevant pwrctrl is
+marked "ready". (There are likely other problems to solve in here too,
+but this is just an initial sketch. And to be clear, I suspect this
+doesn't fit your notion of "generic", because it requires each driver to
+adapt to it.)
+
+> > Regarding the controller design: frankly, I don't think my controller
+> > does anything all that revolutionary in this space [0]. All of my
+> > questions today can be asked (from what I can tell) of existing upstream
+> > controller drivers. I'm mostly trying to understand the expected driver
+> > design here, and that includes teasing apart what is "stuff done in
+> > 'old' drivers, but isn't recommended", and "what is currently
+> > unimplemented in new stuff" (like pwrctrl [1]), and where do my
+> > expectations fit in between that.
+> > 
+> > For instance, poking around a bit I come up with this question: when
+> > using pci/pwrctrl, how does one ensure timing requirements around, e.g.,
+> > power stability vs PERST# deassertion are met? When looking at a pwrctrl
+> > driver like drivers/pci/pwrctrl/slot.c, the process looks too simple:
+> > 
+> > (0) host bridge probably already started its LTSSM, deasserted PERST#
+> > (1) slot.c powers the slot
+> > (2) pci_pwrctrl_device_set_ready() -> rescan_work_func() rescans the bus
+> > 
+> > Notably, there's no enforced delay between (1) and (2).
+> > 
+> > Reading the PCIe CEM, it seems we're violating some specification bits,
+> > like:
+> > 
+> >   2.2. PERST# Signal
+> >   [...] On power-up, the de-assertion of PERST# is delayed 100 ms
+> >   (TPVPERL) from the power rails achieving specified operating limits.
+> >   [...]
+> > 
+> > There are references to this in various implementations (e.g.,
+> > tegra_pcie_enable_slot_regulators() and brcm_pcie_start_link() --
+> > although I suspect the latter is applying the wrong ordering).
+> > 
+> > Additionaly, CEM also seems to suggest we have PERST# ordering wrong. It
+> > should also come between (1) and (2), not at (0).
+> > 
+> 
+> You are absolutely right! Currently, we follow the timing requirement while
+> deasserting the PERST# in the controller drivers. But once we power on the slot,
+> we do not touch PERST# and it just happen to work.
+> 
+> We may need to introduce another callback that toggles PERST# so that we can use
+> it while powering up the device.
+> 
+> > And finally (for now), I don't understand how we have any guarantee that
+> > step (2) is useful. Even if we've already started the LTSSM in (0), we
+> > have no idea if the link is actually Active by the time we hit (2), and
+> > so rescanning may not actually discover the device. And if that scan
+> > fails ... then when do we trigger another pci_rescan_bus()? Only if the
+> > implementation has a "link-up" IRQ?
+> > 
+> 
+> As I said above, we do not enumerate the device if it has devicetree node with
+> supplies. So that's why we need (2). Otherwise, the device won't be enumerated
+> at all, unless userspace does the rescan (which defeats the purpose of pwrctrl).
+
+But you haven't addressed one of the concerns in my paragraph: how do we
+know the link is up by the time we hit the pwrctrl-initiated
+pci_rescan_bus()? We haven't gone back to ask the host bridge if it's up
+yet. We're just hoping we get lucky.
+
+IOW, the pwrctl sequence should be something like:
+
+ (1) power up the slot
+ (1)(a) delay, per spec
+ (1)(b) deassert PERST#
+ (1)(c) wait for link up
+ (2) rescan bus
+
+Currently, we skip all of (1)(a)-(c). We're probably lucky that (1)(b)'s
+ordering doesn't matter all the time, as long as we did it earlier. And
+we're lucky that there are natural delays in software such that lack of
+(1)(a) and (1)(c) aren't significant.
+
+> > Unless I'm misunderstanding, these concerns all suggest we need some
+> > host-bridge hook in between (1) and (2), and existing pwrctrl users are
+> > operating somewhat outside the specification, or are relying on
+> > something more subtle that I'm missing.
+> > 
+> 
+> Yes, feel free to submit patches for toggling PERST#. Or let me know otherwise,
+> I'll do it.
+
+Per the above, I think pwrctrl has multiple ordering design problems, so
+I haven't yet decided what kind of patch(es) I might submit. Feel free
+to CC me if you tackle it before I do though.
+
+Regards,
+Brian
