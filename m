@@ -1,136 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAAC21C9E9;
-	Tue, 15 Apr 2025 17:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E2119E819
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737591; cv=none; b=PvBvl8le7GDdyh8tm4zpeYxQBcaeJ61JIjktySiCRJdjQKMcaJ66J4tn75uPsHkLCNI+ZjnbaUbUxcFUPVc85WwjTkYOUwhKCSHS+NkPlaNTFml17gICH2lC168GSJdCJnNlxhrMgXXhgpLH3OFlcIw/5mPJ4wVjFyGiHJjyaWc=
+	t=1744737655; cv=none; b=stI9RKD5JhID9CYzfYAOUwKIcYZlVDaEYszUnP5Q2GoFEgLMJcJyP+9s7uBCIryvpisQhwqrGy6Uz+qkzt9BYPylnsD8PzW8WRlG8qylxpci/+7tXvUQQLAbgqccrZkDeJG7m3sO/K9HakCHVJlweGO+kiwELz2PLNdxd6Muvag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737591; c=relaxed/simple;
-	bh=uv4W3IqKCIYFhIRS6Tcr37NLaU3zwS0rWhXFN6Gl6dI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VjYshwnOvSd3kyZdD+vEDPvRADXJt89F964iyFChY2AtEIAXLmiU1E2i3pVS/GQAdo59g1pEViuweUQe3tV+a6gSRId4XJoPsmoxFU/yh+48FHhnQx4T2jxxbxVtFyPhFrWW6KPnGkOC/PSuyVmJNeKJcaVJuhv6HhuYBKeTcg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoU3BWUr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744737655; c=relaxed/simple;
+	bh=/IJKFtHh06K+r6fw9+YnmvZdUdj2qCNjcOk8l8INVIQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EegZYT4P5g1FRmSHYQSWfgO6fgV+bfGChQPUqjY5oeHEIvBhqUOyqVFjpX0u7IoHHELd5a04dcpnRwXldUcMZM0vxBfTk04IgtE+D703niwTKTlyyjsdSJAWgJJkbr9u0wSNVv2ZIEphOr7RqtZCk6IINkVWb4ex9B+XGmeOq2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wFiFHoyO; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoU3BWUr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33759C4CEEE;
-	Tue, 15 Apr 2025 17:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744737591;
-	bh=uv4W3IqKCIYFhIRS6Tcr37NLaU3zwS0rWhXFN6Gl6dI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NoU3BWUrj7f8tS49OExJLBpgfcFkooIpEOGMZJSBCtZiGhwMgaHB3R632n5Mfu9dv
-	 Xsk/0DYntgp+bMa/sYM4F8QTnXoY2K5QhxDgM5W/4t+uutRuHp5ExOm+WbSgJtc+oh
-	 hLq8Ou9IFjKUGcO5T/GO3s3qUNZ5fHceKMb20LDTd0DVbXgjhDNfKhMi2RrwodUA1Z
-	 96yTgnQF1Y4/Ngn9mbGkyH9NFebRZYRjZIch2d+4ny46R73RhRWVOdWw4i6TxAUrkO
-	 50lV+0z9QuDFOoXUyzxZiN3f42POGtob2DlXXvaXQ82P7BCGj1jrC1mMcYh/++zVO1
-	 uNqm5alrbtYSQ==
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72e965ddd79so1667554a34.0;
-        Tue, 15 Apr 2025 10:19:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWZRH6Y+bYtNkExKztGTqoYMpt0uSkp3/uOI2gF4d0ZezAkQCsW5KucVfeBs5y4YyXeHmYup8DdNWJzdLY=@vger.kernel.org, AJvYcCXUu+GAfXxx/ijFKlxzekswtqtxMlXy2PvknxBZfnTV5s2IDJr0vHRUttYIo+bQBratViplaDDnJfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9HZRZPhxj6td8IC+dpzog5Bi3d46VWjaK6hJH4aknLl5D8OUX
-	ArqpbyY/ZThKYePVS7Y9UpZNoD24FZ9u8/dgoEhhtEEvuTPLi1WHhrt/mnhcfMMetNszFq3dhW+
-	EfD4U/Tf08qWHgWs634Iax+Vhs4o=
-X-Google-Smtp-Source: AGHT+IHfadXt208Vc4RWZMjFXdA71akOqXcmngW9Brd10iN59d4xz1W7CVRGhjIKSY6HM2F7L42TVMNZDgaTEpj23zQ=
-X-Received: by 2002:a05:6830:4709:b0:72b:9e5f:54a0 with SMTP id
- 46e09a7af769-72ec1ccb5eamr82987a34.21.1744737590486; Tue, 15 Apr 2025
- 10:19:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wFiFHoyO"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso4240267b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744737653; x=1745342453; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZZKTzytUJ5gvm1rD+Ux7dnbHm6H7yF/Qpc+vR+tifvc=;
+        b=wFiFHoyONavQQMToHC1E4DwlCsuPNLvHmGUWEH+zVeVDAycz0PUwvCe3nAAi2PgUdZ
+         7bFqqzJLQwcsKtyOMZr2sVmLcmJxzpjO62HaO0dlttfHnelUwqCh3XmBIqszxgKxZdyf
+         XHu1hUsWjuZ1FO21xSBNi2ii88P9uKGqTwiyprQlYsA2IUG2vEo+ZS7VqOA0awC8l8yb
+         G4QmJyj6Y8WPP/i17EI/r6dsxAk3jjQQZlYOj+oRl6JpQd9ma3cOhVPLfokpplQFvBSt
+         qMpiV0wGFbkrl9Is0nMD9tDSzMXG9/OMbXJ2BCIOsEMJf5oHQCWf5j1+nRosJbDmLwPA
+         tUWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744737653; x=1745342453;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZZKTzytUJ5gvm1rD+Ux7dnbHm6H7yF/Qpc+vR+tifvc=;
+        b=hVmdIzJTKpmz81CZ5K2szr7Z9qwzZKsREdwZ3m0hYxkAjBS9IO1EowBsDB642XRVnH
+         UEyBLONZZ7ICJHdykxkjgAKhFztIMqISeHlmAMIcewMrCOJZX7lZWyQKrwLPZUNhnI3j
+         8lbW4JIQhrbs8M4z3Q08v85jzFwJDrKqnB9UumAz8fLxpzfJcUz2M5oPz5UwuBIJkDd5
+         kMbBML9v7JVcULX/W802q6uOS9w1w+kx68yCY9ngQHFUgulTGJkGhL7skxmG388JvFG4
+         8DK6UfijcquLR2k4MaP/vZkuxTxC323N09MgTGl4ZTlHfRlZuadbbLdxABQQ8//nxKU3
+         85Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ASz6vdHBJozNjoNc6OlqA1y7x0BLmnzRhGH1+CPW/XI747JsMgoT0NxEwAurZ20mknbCF2tsSsQ/9QU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywigt5YyTcn4mqEip+x7DkE8cvlTCDRNap9TjkvgONT9Ws6tUo0
+	K80Jk8T69lDuoHVjWR9YEgWNJ9xDsxXcHqxYUrBIWQM779Pje5Hk52R4lG5DINFtxJyACQg5hLX
+	ZYVrw5A==
+X-Google-Smtp-Source: AGHT+IEtqmOWyc2b0VefNP8+RxTxYVwyvsPccMVCWFhQFWDyZ1nHgtQ/5h+wSOOn5ob1foG8cOMdK2s8JDAm
+X-Received: from pfbga15.prod.google.com ([2002:a05:6a00:620f:b0:732:2279:bc82])
+ (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:9308:0:b0:736:34ca:dee2
+ with SMTP id d2e1a72fcca58-73c1f8c6b5emr422992b3a.4.1744737653056; Tue, 15
+ Apr 2025 10:20:53 -0700 (PDT)
+Date: Tue, 15 Apr 2025 10:19:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com> <tencent_AE7CE43CDAD6747AFF0E952C8D0908A98D0A@qq.com>
- <tencent_002D68A7E02F76C9D218B090D6085F0E8C06@qq.com>
-In-Reply-To: <tencent_002D68A7E02F76C9D218B090D6085F0E8C06@qq.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 15 Apr 2025 19:19:39 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0he_mxfxmkrMLc73jCvJxDGAeW_JZDmNZa25PtH2qMK_g@mail.gmail.com>
-X-Gm-Features: ATxdqUESNGKFdsr7aaNbqMDBrBBTtgUL3gnaiQhekaoP9vU1yoiAmbt0Ax3z7LE
-Message-ID: <CAJZ5v0he_mxfxmkrMLc73jCvJxDGAeW_JZDmNZa25PtH2qMK_g@mail.gmail.com>
-Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in em_compute_costs()
-To: Yaxiong Tian <iambestgod@qq.com>
-Cc: Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+Message-ID: <20250415171954.3970818-1-jyescas@google.com>
+Subject: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
+From: Juan Yescas <jyescas@google.com>
+To: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	linux-kernel@vger.kernel.org
+Cc: jyescas@google.com, baohua@kernel.org, dmitry.osipenko@collabora.com, 
+	jaewon31.kim@samsung.com, Guangming.Cao@mediatek.com, surenb@google.com, 
+	kaleshsingh@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 4:03=E2=80=AFAM Yaxiong Tian <iambestgod@qq.com> wr=
-ote:
->
->
->
-> =E5=9C=A8 2025/4/15 09:12, Yaxiong Tian =E5=86=99=E9=81=93:
-> >
-> >
-> > =E5=9C=A8 2025/4/14 16:08, Lukasz Luba =E5=86=99=E9=81=93:
-> >> Hi Yaxiong,
-> >>
-> >> On 4/11/25 02:28, Yaxiong Tian wrote:
-> >>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> >>>
-> >>> When the device is of a non-CPU type, table[i].performance won't be
-> >>> initialized in the previous em_init_performance(), resulting in divis=
-ion
-> >>> by zero when calculating costs in em_compute_costs().
-> >>>
-> >>> Since the 'cost' algorithm is only used for EAS energy efficiency
-> >>> calculations and is currently not utilized by other device drivers, w=
-e
-> >>> should add the _is_cpu_device(dev) check to prevent this
-> >>> division-by-zero
-> >>> issue.
-> >>>
-> >>> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove
-> >>> division")
-> >>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> >>> ---
-> >>>   kernel/power/energy_model.c | 2 +-
-> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.=
-c
-> >>> index d9b7e2b38c7a..d1fa7e8787b5 100644
-> >>> --- a/kernel/power/energy_model.c
-> >>> +++ b/kernel/power/energy_model.c
-> >>> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev,
-> >>> struct em_perf_state *table,
-> >>>                       cost, ret);
-> >>>                   return -EINVAL;
-> >>>               }
-> >>> -        } else {
-> >>> +        } else if (_is_cpu_device(dev)) {
-> >>>               /* increase resolution of 'cost' precision */
-> >>>               power_res =3D table[i].power * 10;
-> >>>               cost =3D power_res / table[i].performance;
-> >>
-> >>
-> >> As the test robot pointed out, please set the 'cost' to 0
-> >> where it's declared.
-> >>
-> >> The rest should be fine.
-> >>
-> >> Regards,
-> >> Lukasz
-> >
-> > Sorry, the V3 version with cost=3D0 still has issues.
-> >
-> > I noticed that if the cost is set to 0, the condition "if (table[i].cos=
-t
-> >   >=3D prev_cost)" in the following code will always evaluate to true. =
-This
-> >   will incorrectly set the flags to EM_PERF_STATE_INEFFICIENT.
-> >
-> > Should we change ">=3D" to ">"?
-> >
->
-> Sorry Again=EF=BC=8C Setting EM_PERF_STATE_INEFFICIENT in this case is co=
-rrect.
-> Earlier, I misunderstood the definition/usage of EM_PERF_STATE_INEFFICIEN=
-T.
+This change sets the allocation orders for the different page sizes
+(4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
+for large page sizes were calculated incorrectly, this caused system
+heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
 
-Well, EM_PERF_STATE_INEFFICIENT is only looked at in CPU energy
-models, so setting it in a non-CPU one is redundant.
+This change was tested on 4k/16k page size kernels.
+
+Signed-off-by: Juan Yescas <jyescas@google.com>
+---
+ drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+index 26d5dc89ea16..54674c02dcb4 100644
+--- a/drivers/dma-buf/heaps/system_heap.c
++++ b/drivers/dma-buf/heaps/system_heap.c
+@@ -50,8 +50,15 @@ static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
+  * to match with the sizes often found in IOMMUs. Using order 4 pages instead
+  * of order 0 pages can significantly improve the performance of many IOMMUs
+  * by reducing TLB pressure and time spent updating page tables.
++ *
++ * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The possible
++ * page sizes for ARM devices could be 4K, 16K and 64K.
+  */
+-static const unsigned int orders[] = {8, 4, 0};
++#define ORDER_1M (20 - PAGE_SHIFT)
++#define ORDER_64K (16 - PAGE_SHIFT)
++#define ORDER_FOR_PAGE_SIZE (0)
++static const unsigned int orders[] = {ORDER_1M, ORDER_64K, ORDER_FOR_PAGE_SIZE};
++
+ #define NUM_ORDERS ARRAY_SIZE(orders)
+ 
+ static struct sg_table *dup_sg_table(struct sg_table *table)
+-- 
+2.49.0.604.gff1f9ca942-goog
+
