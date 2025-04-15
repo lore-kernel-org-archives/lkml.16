@@ -1,25 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95403274FE6
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A065194C86
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703600; cv=none; b=gHcap6hImilTrd+kmvllUtXEVexc8dJr9dAw1gs2wtioN0MTiVxboDO/hbVQkGkn61nMi/Sp6sMfle95lQqm0cpXQNwBaGqHnWDydSCBjeLbpBBuePncTZqttYko7A4z0fCeK36xLjiyKzjiQAeu5aK2NaKJ7e0j4k4+jkkr45w=
+	t=1744703609; cv=none; b=rREVA+nHi0Of78xU+haZaariAf2+jnX7hcKTvxw+ujC1t2nC1JUcohUc8UakxkVlmibjtoYW3mBPCJwdkNQ9ntXNAzMDhDU0Xmphlzc+JQEs6HtBD2h48FGVKVjv7AGNoBnIbZUpo3oh43MqmJtxCoWO+Pj0DYsURLjdcrs4/W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703600; c=relaxed/simple;
-	bh=8i2hu7231wtzANo987HrMFI6xJZnDJIyM33YwlNFRek=;
+	s=arc-20240116; t=1744703609; c=relaxed/simple;
+	bh=4K3kFwS9hUyXM4FTt1c2JnYRLkatUVXzahiE1vTKZTk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ups5jDX11Inbi1EmoTwDOsiBj0QMdCwBxm1KyofAg3oPxK2cCt1kSwB5RSKk0xIvtHXR0l1kJIEnpbknDwCs8jXndpa9/KKueXpp0qBkaypQldNqEh8vu7JRJFYl42jdQjWn3hUI4w9lJzp6ZONuXL1LJE5AbIW0+zq2VLkCCgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7CED15A1;
-	Tue, 15 Apr 2025 00:53:14 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AA573F694;
-	Tue, 15 Apr 2025 00:53:15 -0700 (PDT)
-Message-ID: <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
-Date: Tue, 15 Apr 2025 08:53:13 +0100
+	 In-Reply-To:Content-Type; b=oYa7T28HcnvOsrttaPqcujO+hChs29CQF0QSWsmw+Kqs+Dx5GOuo/mtVgtpRrORNFksan9u/fGaWJZ5bf6+qJBW9mUjBMafJ+GObKhxGkg7/iApJigp5SAhfFQxmwIHN0vB9N8ZBfFk1TM1nNRoxlZKm5+ERvkM/mV5Jm6EruAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QUFMHhjH; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QUFMHhjH"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c2688619bso3372401f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744703605; x=1745308405; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ro9pHSpJkoRpN2e8zw9hSOtN+i7rv9c4imw6NOQfm94=;
+        b=QUFMHhjH8kRpbWunp5GKvYvqPL4+AfjeieEb1sorNHNHKaWoKKT4NUe7qkNULJ54j0
+         KOGYVZM7Tol4m9TA5JyvDHMiosNPygmHQgomJuI/gQSc1HLjEZCg4OsvA+CwZV/lei0M
+         u+0aoSNz6r8BVLGDw8nNDNM8aXUWcg6rVNxzk0yQ2WZ5h43k4XIc3suXmq0hvuDRFz6B
+         slsalKKsa4UzIsmxgTv/pd32EaXbtONJesqkD9w+GVWH0BvK8HtELsAINcgTtgkTgEf6
+         TPML1u2I4w+zgu0Ou6n7UU6IoyppWKi+z+HinQY7Vrr8OWIWGR5I7/fZ2h8bu+mwCd/k
+         FmWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744703605; x=1745308405;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ro9pHSpJkoRpN2e8zw9hSOtN+i7rv9c4imw6NOQfm94=;
+        b=vFECELQJEs4fZhCN1DMFXL1rsGqgLNPvAdmeiLbtJXnQwtCPj30bwLKKzWRtLYEmly
+         G+WfJIRi3fVhMPfjYAgEArwJGvjSuIHn2bXp9KalkK6b75mE22lVsySftCSi9pa8Plj+
+         QCRn+qEYMstXhAhhzdFcQ9aznyTMWB1xGrAY1P84gTOy7vETRcKBEZdKYqKxQI5taPcH
+         2JaTpedDna2dSoRM9/DH743tt2GKPMDW4FUJvIMjNTocmb8N3ZEz64JejswdPK3pI0F5
+         nYZqVP7Bdh05DDwzNs52CQupZs0xrnW8YwhhZ+li01E/PlfVDeP6mSyUlQ1D1dAljozr
+         m04g==
+X-Forwarded-Encrypted: i=1; AJvYcCWJgn+Up84Yp/DpGxPu3iZRWDvdv/ynylnJn5EyNsQ9bY2QdI0bEaZ4mj48uxyZaSPvr+dHQtstrb0TjmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxChbXoDWkd4hL+XreheONHdGS9nzliEfqtoqLhIei+yh4xBtWi
+	evyRc2n8gfcHW7KCegIJcrUyZs6KlxNAu1IvlniupOJOqjPrnL7cLIteC1EMJjk=
+X-Gm-Gg: ASbGncsqrns91OCBd8aC0tIzEFSp1BAb3m0qMnHKsQZ6xl0au6k15NVQZAIOuhoho9P
+	pKfB2FmYjOji8E9pQ40YNHivC20m9xo/UBPr5sZy+Se1IBTlUuoQdv2TizzvKRtmvwISHalpMx2
+	OrmS3whXkEGI/Qxp0hNDAb/XcW129NcbO++C/K2pHuw6HsqPDG7CQ0Kguap9a6X9D2SXgvUKt0d
+	ehwCCHdjEOkbDNF1F6gFR8u/itiA0gXguYzs0Bm5a3/LouDPaaoHFkQeNjv6Hsy7/yuaZNlXCKs
+	IqTHosZ6j2+1Ch4oqqeltzNBudkzzM7bYEqjJ9SFM0vDtwLDl2I2JFfUr7TAsY6Fn6exfIgGd3g
+	zmOKIntQ=
+X-Google-Smtp-Source: AGHT+IHwM+oeH60tYH2OAqa4ttZvCY3BIBINaIjjhkGQM9HX/tC100BQkh1JLZkmS7w4Ha9sT45VRQ==
+X-Received: by 2002:a05:6000:381:b0:394:d0c3:da5e with SMTP id ffacd0b85a97d-39eaaecdb15mr10666721f8f.47.1744703605584;
+        Tue, 15 Apr 2025 00:53:25 -0700 (PDT)
+Received: from ?IPV6:2001:a61:1347:dc01:8d18:6d08:b5ca:6f00? ([2001:a61:1347:dc01:8d18:6d08:b5ca:6f00])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf447914sm13317740f8f.97.2025.04.15.00.53.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 00:53:25 -0700 (PDT)
+Message-ID: <522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
+Date: Tue, 15 Apr 2025 09:53:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,153 +67,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
- <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
- <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
- <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
- <5d975762-7678-419f-8e2f-40547c079276@arm.com>
- <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
+ hcd_buffer_alloc()
+To: Petr Tesarik <ptesarik@suse.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250320154733.392410-1-ptesarik@suse.com>
+ <20250325134000.575794-1-ptesarik@suse.com>
+ <2025041110-starch-abroad-5311@gregkh> <20250414090216.596ebd11@mordecai>
+Content-Language: en-US
+From: Oliver Neukum <oneukum@suse.com>
+In-Reply-To: <20250414090216.596ebd11@mordecai>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 15/04/2025 07:27, Anshuman Khandual wrote:
-> 
-> 
-> On 4/14/25 18:01, Ryan Roberts wrote:
->> On 14/04/2025 13:28, Ard Biesheuvel wrote:
->>> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>
->>>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
->>>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>
->>>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
->>>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->>>>>>> as expected if those macro constants contain some 128 bit layout elements,
->>>>>>> required for D128 page tables. Fix this problem via first loading up these
->>>>>>> macro constants into a given memory location and then subsequently setting
->>>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>>>>>
->>>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
->>>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
->>>>>> would be good to spell this out.
->>>>>>
->>>>>>>
->>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>>> Cc: Will Deacon <will@kernel.org>
->>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>>> ---
->>>>>>> This patch applies on v6.15-rc1
->>>>>>>
->>>>>>>  arch/arm64/kernel/head.S         | 3 +++
->>>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
->>>>>>>  arch/arm64/mm/mmu.c              | 1 +
->>>>>>>  arch/arm64/mm/proc.S             | 5 +++--
->>>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->>>>>>> index 2ce73525de2c..4950d9cc638a 100644
->>>>>>> --- a/arch/arm64/kernel/head.S
->>>>>>> +++ b/arch/arm64/kernel/head.S
->>>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
->>>>>>>        * the TCR will have been set.
->>>>>>>        */
->>>>>>> +     adr_l   x0, pir_data
->>>>>>> +     bl      __pi_load_pir_data
->>>>>>
->>>>>> Using C code to pre-calculate the values into global variables that the assembly
->>>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
->>>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
->>>>>> asm-offsets.c:
->>>>>>
->>>>>> DEFINE(PIE_E0_ASM, PIE_E0);
->>>>>> DEFINE(PIE_E1_ASM, PIE_E1);
->>>>>>
->>>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
->>>>>> pre-calculated values that you can then use in proc.S?
->>>>>>
->>>>>
->>>>> There is another issue, which is that mov_q tries to be smart, and
->>>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
->>>>> directive evaluates the argument, which does not work with symbolic
->>>>> constants.
->>>>
->>>> I'm not quite understanding the detail here; what do you mean by "symbolic
->>>> constants"? asm-offsets.h will provide something like:
->>>>
->>>> #define PIE_E0_ASM 1234567890
->>>>
->>>> The current code is using a hash-define and that's working fine:
->>>>
->>>> mov_q   x0, PIE_E0
->>>>
->>>>
->>>> Won't the C preprocessor just substitute and everything will work out?
->>>>
->>>
->>> Yeah, you're right. I was experimenting with something like
->>>
->>> .set .Lpie_e0, PIE_E0_ASM
->>> mov_q xN, .Lpie_e0
->>>
->>> where this problem does exist, but we can just use PIE_E0_ASM directly
->>> and things should work as expected.
->>
->> Ahh great, sounds like this should be pretty simple then!
-> 
-> Following change works both on current and with D128 page tables.
-> 
-> --- a/arch/arm64/kernel/asm-offsets.c
-> +++ b/arch/arm64/kernel/asm-offsets.c
-> @@ -182,5 +182,7 @@ int main(void)
->  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->    DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
->  #endif
-> +  DEFINE(PIE_E0_ASM, PIE_E0);
-> +  DEFINE(PIE_E1_ASM, PIE_E1);
->    return 0;
->  }
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index 737c99d79833..f45494425d09 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -536,9 +536,9 @@ alternative_else_nop_endif
->  #define PTE_MAYBE_NG           0
->  #define PTE_MAYBE_SHARED       0
+On 14.04.25 09:02, Petr Tesarik wrote:
 
-I think at minimum, you can remove this PTE_MAYBE_* hack from proc.S. But as Ard
-says, you may need to add it to asm-offsets.c? I'm surprised asm-offsets.c even
-compiles without this hack since surely it doesn't have arm64_use_ng_mappings or
-is_realm_world() available?
+Hi,
+  
+> That's the point. AFAICS there are _no_ in-tree callers that would pass
+> GFP_DMA or GFP_DMA32 to hcd_buffer_alloc(), directly or indirectly. But
+> nobody should be tempted to add the flag, because I cannot imagine how
+> that would ever be the right thing to do.
 
-Thanks,
-Ryan
+You do not dream about putting USB onto PCMCIA over Thunderbolt?
 
->  
-> -       mov_q   x0, PIE_E0
-> +       mov_q   x0, PIE_E0_ASM
->         msr     REG_PIRE0_EL1, x0
-> -       mov_q   x0, PIE_E1
-> +       mov_q   x0, PIE_E1_ASM
->         msr     REG_PIR_EL1, x0
->  
->  #undef PTE_MAYBE_NG
-> 
+> I can change it back to mem_flags &= ~GFP_ZONEMASK to fix it silently;
+> I simply thought that driver authors may appreciate a warning that
+> they're trying to do something silly.
+
+People rarely appreciate warnings. I think we should limit them
+to cases where something goes wrong or something unexpected happens.
+
+> Whatever works for you, but please keep in mind that there seems to be
+> agreement among mm people that DMA and DMA32 zones should be removed
+> from the kernel eventually.
+
+Well, if somebody finds a legitimate use case for these flags, the mm
+people should deal with it. They are likelier to find a good solution than
+all driver writers being forced into finding individual solutions.
+
+	Regards
+		Oliver
 
