@@ -1,163 +1,204 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2067.outbound.protection.outlook.com [40.107.94.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ABE2BAF9
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744688674; cv=none; b=BOc3Sa5im9a2dUEMsJRe1a1U16EyXPVbUYRbRgHLPNaN4VyYLixYNOZn4zU7amjuzjGB6qz+eIYElZ+c3XVDEDjYPKtgnn2pby1M24XqBOqNcWbbeicNY4uI7h47R7wEFKYpazmOTqwtA/aq15Qww+akWg527k85dFar4Pa7XUs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744688674; c=relaxed/simple;
-	bh=6ndNnKQQzuRuXFdVjgZ6Syc7HRTz7CfS0JIUMBPTDEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kgeS//MI7K+v7oupfPGfjpySx9FZqqGitKq0V8lH7+kcqZXTEol5y69df6acGJspny+E7wKtaK5J4ugslXktcYc7WGjvzdzxp3WMNrMntTKbgFkpECCwCdwaS9DO4TkONPm9fCc39HlWIanyuTu3Aa3Q38hlE251Ino46tcfT+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BEjEJ7dq; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD6C2DFA28;
+	Tue, 15 Apr 2025 03:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744688761; cv=fail; b=Pv1J3zgvKx4OlnY48QozLKkBvXa5/zP7xdqidavWvNNplDtgyOGu4TyszFBHZjK/D30e5pbiUUaZCipDDC35geDNEXOIqQ1HcFlnAt0djuZ3RCpwqh0mMn/hzl0fqHqbZ+VJAjtNaahqRJHSCDrhwJ1GLTdTBtq2sIjh6zdgHgc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744688761; c=relaxed/simple;
+	bh=FFNHdrMAzIPi3060D4TGf2//qnE/p6Ee15VS3ha5/ec=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=aLwryShTrguh5sP1Enh0AVAuw9B1y/BlhL5vgntIKOzDqvJH2KxVfp1VvgAvyzchvmwWT3GMX21/6sj2kf3rxoMS1D0vEuJBJ3ixAYSdHoNd5phwum5+c4c2xFChQ8FIqFqW0QHE7b0JV2g382eY8Qx5JswiDg93V4zLkK3VZKA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4bvUiCox; arc=fail smtp.client-ip=40.107.94.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BEjEJ7dq"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c1138ae5so4970863b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 20:44:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744688672; x=1745293472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dKS5rOz7ang1NarqFeC0/+mWHGy1rD4OU6jItF9usOM=;
-        b=BEjEJ7dqPi6MWCVlyxcnmJ8MnBQaDZTXtaXY/4j6MKcdMIcHMrIXa6Sa2XLzBMsgZc
-         mBwt4Z7B1tFIg0L5TlHHwkOPmaJiXpdDcXaI4YP09wwd7Bkr1AIK3O7kPKL1IA0kZ96R
-         d3QCGN/K9HLXg/9dnR2Wq/Erz99FxZ+hiWzLpt7YeoU56njHLLlFIQFPuhToKNkJIShb
-         QitBfj7gCbZ83ZaKE6dArZKpBsBBN+I+PU31j2MXE+UfE8vTvRtNKU51mGRj7SB4dPRJ
-         A8AViwYXu9vb6X/Xs/5G6P3UYWxrTOACP8LOTsFqLuMR9w7hGZGMBZF9Ch7maXRwry9G
-         dphQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744688672; x=1745293472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dKS5rOz7ang1NarqFeC0/+mWHGy1rD4OU6jItF9usOM=;
-        b=EdSfCGNHpzjsgXk21AMYYuxbBF5uZwV8Mk547n7rpYhOxJk1Ebogma9GgGwJavhGWm
-         PSBT3NGRaV3lNbljbINrbi4aaDNi8bNsY56W02eunOWkHx/HGTRNrprpxBHEKhu505i6
-         2sNXYnIIIrg5sOpNQKfQiTfSlhU/XEWgym7SYRClHoIiqeNt6Fy0UuliRIfo71MFiB/2
-         LwM0SGVmRYEGVAgNRK2X7DwW6SCGzyqCHFx6gwtxu7v53YaSupcyq7Ndp+3+lh7dziF2
-         re7QkV520RbOPixRVwNzaY2i7Wz1qbTb5Uw4ximBQnvAjUAjeK5juMT0ErviYflYzu1U
-         ezHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLuh75vR8q93yMh10rdDWG70HgalkGOAqohuAlc0IF4XBH7Tzm6wyJ1bVoDNFDR908nuC2IV3LBviX74Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhhtH+4UC8/KY/ThZHgydg3tiexYVTnpAoB8Nlzq/gKX3gmaEI
-	9vx4GZw3jOk3aGSWyUlbJxsr1XqH6w8XpYJznpEOi23dpw3kL38q
-X-Gm-Gg: ASbGnctkLggs3p0HlFCIoz5PYL+HGLePqiD8rKpe7ipnbdv1EwygAM+xpSgtQPJmozm
-	qAVNwI+Jzmel+EOsIHTEV3w9+q9u7pqWLuPD8hMnwpx8K+f105Q0wZUy03wtcHPuFp9MIXLmvVT
-	X4+i3Zoh5FqzuDDvdFkRHA5gGffRENPYa2PcvMftB8AzAesVtrfGJq5OLS2OR6FQF+yXQRrD5aU
-	gTW8XAhcnxVzinIG7MGduFJrkef9l8KzcOyDqSeyrMq21P/OW/c0H92oc22hZX0zOsg1DBPp3/Y
-	upYB7/uLPv/TtSlRenYKdw0XZbbiCg3iso1JMqSBjf6fhxKfiIPkZBCA
-X-Google-Smtp-Source: AGHT+IELgDFpZK4Ui492FpDknFNSfWI7ntUjOT8mUFhKyXOlnebL66ShRj6FO+JKLl6EqL7lTjUypw==
-X-Received: by 2002:a05:6a21:a4ca:b0:1f5:790c:94a with SMTP id adf61e73a8af0-201797c3989mr20913723637.25.1744688672186;
-        Mon, 14 Apr 2025 20:44:32 -0700 (PDT)
-Received: from EBJ9932692.tcent.cn ([43.129.202.66])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a321edf6sm10010125a12.65.2025.04.14.20.44.27
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 20:44:31 -0700 (PDT)
-From: Lance Yang <ioworker0@gmail.com>
-To: akpm@linux-foundation.org
-Cc: amaindex@outlook.com,
-	anna.schumaker@oracle.com,
-	boqun.feng@gmail.com,
-	ioworker0@gmail.com,
-	joel.granados@kernel.org,
-	jstultz@google.com,
-	kent.overstreet@linux.dev,
-	leonylgao@tencent.com,
-	linux-kernel@vger.kernel.org,
-	longman@redhat.com,
-	mhiramat@kernel.org,
-	mingo@redhat.com,
-	mingzhe.yang@ly.com,
-	peterz@infradead.org,
-	rostedt@goodmis.org,
-	senozhatsky@chromium.org,
-	tfiga@chromium.org,
-	will@kernel.org
-Subject: Re: [PATCH v5 1/3] hung_task: replace blocker_mutex with encoded blocker
-Date: Tue, 15 Apr 2025 11:44:21 +0800
-Message-ID: <20250415034422.95089-1-ioworker0@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250414143637.a1ae89d6b46c13f195e9210e@linux-foundation.org>
-References: <20250414143637.a1ae89d6b46c13f195e9210e@linux-foundation.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4bvUiCox"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=drUGXLzihTaf1xzYNZgF/9R97oawA5bhAzuLQlP2xcvp0koMOnpFOv8ipm2adTn5BruDn0Mt1S2RSGdmKBmlEczIoKpkp88QvaO1sZ3VUPCFc2iRSHnwIv+Bisd+rd6t4C0kWeeuOKTz7dZhUyPaDNLkcpANiplkymQKL7O+Cq4OcSOK4ev61zZkqVq06fjY6DHrAuq28qz1Ml6kgM2cASWUx4rn7xHsjXG9eErKWE8Px7OWBj6UC5DEUJQXzxD5rp2BFaFdFCZg3PabCpqUiJK81rPkLTPhkAxQPbxswQG9nu7WunjY3Edjsgcmi+WGq+1X2bdtAMVEbLeG0ZCuWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MG7/75T/aayYej280xUgyvgvooWqvIVa7Q+2weM9fNg=;
+ b=pK+LTzOQ6/hV3UDwxoeuNyR8iq8Cuk5GR3HeC7q2yGWewi2+WBFe5xzJ4TCq6KAhxKvtg2T5+f7I0BnioueOECGZ3l7gQ4EqxZLWf1fhYzfq3o1wF+qRLVD6PM5d65Fi1FKd4htjT99A9+B+oLkALYJhoCO6ovjK4mi5RjXUs4kKEbIGwtFY4AS8lrBzWSCN1DK4V0LQOg8GamF9TuWcrRHEmlA8g0MRmQ0zc0Fk2Vqd3/U4wG5sJCBbX1YcU9GZmJ03YmdhrY58h91Fe+eYe7PAsetXFvMhhQJxlBKrKorkqU5hV785INyj+67+NDOvl2p0cYNUTFBMXrBaDSV3Qg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MG7/75T/aayYej280xUgyvgvooWqvIVa7Q+2weM9fNg=;
+ b=4bvUiCoxTJdC7sBKCB8y55nWbuw/3Tb6tkJNCoWspVPZ85ZaeYtzQvivWWpDOb6Vh1qofGThensVvzD6NlJpWL9AirTnuMWDizVOKlPc1ckaupWcrQchanhb91gXvn3gjzfxeDQdHmutTGd/U0gc5ZwrZBHrV7vnhpcKnUlu4Mc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
+ by MN2PR12MB4271.namprd12.prod.outlook.com (2603:10b6:208:1d7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Tue, 15 Apr
+ 2025 03:45:56 +0000
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::a3dc:7ea1:9cc7:ce0f]) by DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::a3dc:7ea1:9cc7:ce0f%4]) with mapi id 15.20.8632.017; Tue, 15 Apr 2025
+ 03:45:56 +0000
+Message-ID: <bb0ef9d2-a100-4dfb-8754-ec8fa33ef6ba@amd.com>
+Date: Tue, 15 Apr 2025 09:15:49 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: ptdma: Remove dead code from
+ pt_dmaengine_register()
+To: Eder Zulian <ezulian@redhat.com>, Basavaraj.Natikar@amd.com,
+ vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250411165451.240830-1-ezulian@redhat.com>
+Content-Language: en-US
+From: Basavaraj Natikar <bnatikar@amd.com>
+In-Reply-To: <20250411165451.240830-1-ezulian@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0036.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:26f::6) To DM4PR12MB5040.namprd12.prod.outlook.com
+ (2603:10b6:5:38b::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|MN2PR12MB4271:EE_
+X-MS-Office365-Filtering-Correlation-Id: 65785678-8418-426a-2832-08dd7bd006d9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3ZvaXE4amNIaC9TOXRib1pXTnJ2UHAxZ0RkWm9OYVlsTG5LMkdhR25FeXJZ?=
+ =?utf-8?B?eVNDRWZnbjZlQ2FlR0ZoaHRweXQ2TWsva3JiWjdVKzJHeWd1dDN6UlNjd1lL?=
+ =?utf-8?B?Vk5SZmlIOXMxSFY1bHlydFAvNE1oRXhab3dyamdXUmJybVlOdUQxMjVDR21R?=
+ =?utf-8?B?bldSbFowVGRlVjVsY00vbWdmSWp4U1ZiK3k2UDJDVXlaeDRSZ2V5NWwxVWZU?=
+ =?utf-8?B?a3lXeWgxN1RtT0xNdC9BUWlVaWs3WkZRbzFkZWxRNGJCMU93SnRnMnJXb2sw?=
+ =?utf-8?B?K3dZQXN2ZWJWeEN1Q29EdkFleC9YWFZwS1AyRGRoeHE1bkprRlNCU2RqeFc2?=
+ =?utf-8?B?MWowTGdtay92Ylc2STNBZUhXOTVUWlp0eUo1bUcrYjhTZS80YnJCRFdiWEFk?=
+ =?utf-8?B?YmpQMytvTHpOY2FYa2p3bjN4R05rSnErZkNFbk9ERzVsSmJnQ00yb3hNTEVF?=
+ =?utf-8?B?SDVRZWVuTGpYSVdDN0NhNHJUZmwxU3hQTDZEeU9OYWhKVTR1cmw0QmZGU3hr?=
+ =?utf-8?B?YUpNWUgyNXVyK1FzTzZieWRUT05ZTklKTGpEaDgwbnhWQm4wRWdKeEM2QlV0?=
+ =?utf-8?B?cnJQSHFzbFJERDZqc0JHT0xyUFphOGp2ZTFlak13Q0x3TnlTbzhrV0lua2Mw?=
+ =?utf-8?B?Z1BacDd0TnFTcXpTTXFpK09pZ3hVdjJIK1FNOGx1S3dsU2FPNVFkb1lqTWJD?=
+ =?utf-8?B?dlZYTlQ4ZUwzVCtXZ1A5Qkt0SU1UY002S29RbUxnRGV0YStMUWJPMUxyZWFJ?=
+ =?utf-8?B?bE5LeDFVcHJVZC8raUsvRjhEcmpJcU1mS01EVm9ZOEU4aWtSNzc3THJGZnN5?=
+ =?utf-8?B?bnRVTE04dzJzZnRMRTBuUTVBZUZMbFJxd0lIclIxREZ4ZHhaMkI1bGZrMUpy?=
+ =?utf-8?B?Nlp2eTVDcXorTFhIUjQ0WjZTUmlZMjIyOVpQbGtJTEFmN05CN2lBNTNEUlpp?=
+ =?utf-8?B?T3kzNVVPVGNaUERYWE8zaE1nUzV0WGtDcDk0dThuVEZkOTNPaktVTjVqQXRO?=
+ =?utf-8?B?L3YwR0VqYzl3RWV1dEhYeTBrVjVUaTNOTlNYa0YwbDJsWGdaSmp5TDJVeHZJ?=
+ =?utf-8?B?VWV6NGk1YVBFZlpWeHkvUUcrS1lFOGVQQzNCL3ZCRnV5Z0EvY3U1TG1GeFdF?=
+ =?utf-8?B?Ry9PVG1GVDBXTTRMQmxrcnNtV0ZZbGhLUHE5S2cxckltNmpRYzd0cXZpVG1q?=
+ =?utf-8?B?cjhpRThwZU5CMy9IdjNKMStqcWptN3NJWmFiejRDKzZQaHMzUHQ0c012VEdq?=
+ =?utf-8?B?dCthY1IrTzNLWGtWZThnVnk4aHM4UmtsTzhVR3N1SllWUm9tSjlIYnBJd0FG?=
+ =?utf-8?B?REZtNXF6NUl1d29DVUQ1aElQdXQ0Mll2L1ZlWEwwMkNqYUprb0NxQ3ljaEl3?=
+ =?utf-8?B?aTlvVjkwQWFTclkzOVNYUmQvc2gxNGFHLzk4QXNYbUQwU2ZDTUxOanR3cTE0?=
+ =?utf-8?B?TzFBcTlucVZJYUNPamtoN0szTW41TGNmbWp1ak0xdWpENGlCT3lRMnFacWhs?=
+ =?utf-8?B?WnFHK25hTFJRMXlsR3NGWkJqUE1NVFVXRCtxL2RMRGRIaU5NN04wZXRJZDRD?=
+ =?utf-8?B?T0xjaC9CL0s3UGwzU1plSmd2UFNhblZvdm5sSlBtWlVqczB2bE5RWlcwdTVR?=
+ =?utf-8?B?a2Q1OWViZnBxazAzTWV5TEI2bE1uZ3NueTNiZE9JQ3lVOWR6WEJzN3VlV1ZX?=
+ =?utf-8?B?WDlhdWJsRUNqZ2xKRThURkp2UW1CbEFWd28rcG4ycWJnVkpyaDl0SldJU3JU?=
+ =?utf-8?B?SXRhd1VMY1d3eUFYTVAzcHRiOFJoVjFKbmQ1VjExZjJJQ2pJNmRDOWFMcGwv?=
+ =?utf-8?B?K0lmRmNRVFJodjRib2thS3l4My84R3lhQ0JqK0VTZnhjRzc2YU1XZVZhdy9s?=
+ =?utf-8?B?MFhnM1U5SXBqSmN4dG9KQkp5RnJpQi9lRW9jYy85Qkk5NHRwblJ4VGJCQklv?=
+ =?utf-8?Q?dk3hgK9gEdA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZDB2YWthdm5JTEtZSk4vTHBXRGZFTGVzRlZHRDgzVzVIcDZ1alVHYXhvRCtw?=
+ =?utf-8?B?QnIxM1FXYWVSMU01RUMxanhHV1puUjZrbjRVc25KbC9vamdISFFDTTAxR0pW?=
+ =?utf-8?B?YnF1WWhOY000S2dacXpjMTFscXJlTDFQNThkQlNnME9RRnZadXVEQ1FkSE5r?=
+ =?utf-8?B?V2FpWkpWMmc0Z2hyUS9MS3FtRTU2WGVUTWdFZnNReW9uWGdMb3FzcjJoVXhj?=
+ =?utf-8?B?d2pUeWVFTXpFRy8rTlA5OXlvNVFTdkFxSk45aXNIY25UcTJPd3Ztc1lKWkwr?=
+ =?utf-8?B?ekdHSXJLZjN3Y2o3OHVRRkJPdmlMRW5HOUpEL3ZidGk5OTl6aEpBcXZ5b1dn?=
+ =?utf-8?B?MTNkTThBUWVPRGRndkk5Z1M3Q0J1UHBvKzBBQjROS2NmYldLcU9kRFhxTkxB?=
+ =?utf-8?B?OFRucDJSQVI1NVZJdHVuZlBhbmNPbnZSK1p2WlBsOVUybXU0ZFRUK3k1aUxO?=
+ =?utf-8?B?RVdHdXJaOTZ2dU1lMVhGM3NqaEhaNEs2ZTJoT0pLcldLdUZNZHBhaVJ6b3J4?=
+ =?utf-8?B?NFVJNkVRTk1YSG55RXphYlVrVjcvMCtWbHJzd05wbXZTYTl6SGs0eFFzNWc4?=
+ =?utf-8?B?akUzWFdsL3BpM0Vqd2oydjBMOUZFVWN0SmZNZ0tRNmJkTlNXazNhTmFRRENT?=
+ =?utf-8?B?cG9nakROVUxzQXo4RnNDZjFJSTRwNk1BWUYwYUVCWG5MTzk5NmU4alFmaVkw?=
+ =?utf-8?B?MFJNd0VzWHZNZHl2SWZFNFRqT3c0Zm5yY014NzN3c2x1YWZKVmE4QU91RzdY?=
+ =?utf-8?B?V29uMXlIV3liTFZFVUg4Z1pOdTR3NGNPbXpGVVljS1ZoTy9JTWFnWmVpUWgz?=
+ =?utf-8?B?MW41N0swNWR3YWJqLzBMYXlEdGhVWjB5cDJxWnJJRTFxL0MrbFRhSWR3UGJs?=
+ =?utf-8?B?Sm8rYkxZc2VGdUM1UUZiVEhrTXhvVWJCQkZJUmdlajcxUnZTOWxIcXRtcjEz?=
+ =?utf-8?B?VitQczlvcWlQV3JPM1Q4TWZiSkVGVXcyNmVZdG96RGs0dERzS29KM1pmU3ha?=
+ =?utf-8?B?ZzRWd3NMUy9lNFRYckFMdjV2akRBM2pSUlppbHE1QVR3alEwckRSdGhMQjFI?=
+ =?utf-8?B?bFpWT0RGTTNnMlAreXFQVVMwMGE2ZjFGQjJBZEpZQkw4S3EySHdIMWl3Y3FF?=
+ =?utf-8?B?Wk5kMnR1NFhZQU1WcitxeGdPbSs5MVJDTW4veGdRZTMxc01pYWsxZ3BrRElE?=
+ =?utf-8?B?TlRUQWgwQ3kwU1FLV2EzUU9IRzFGU1pnMmdTVVNSVVphUlo0TEwzeHhMQkth?=
+ =?utf-8?B?TUpFVHpPblVpZXAveXpnSGQ4TERYYm9ueUE0QUhScTlvR2VvVGJoYTJNWHBG?=
+ =?utf-8?B?aGl0L2p4WTRiSUZxanVERVlUeHVyZWNmbnFpUGp2dk9ncGFmYlZWZGVOTThs?=
+ =?utf-8?B?VGVxd09FWUMvRXRlemxOd3Nka2FBdnlkQ2RHK3BCd3JNS2d4b3FnZitVeENS?=
+ =?utf-8?B?RE5qQ1VUbWlxN0trMU9jUGE4eUZNd0FGaGxDME1wUWxEYlMwcU80S3pCZll4?=
+ =?utf-8?B?VlFEdFRVUDJQRkhudFFSd1ZtUUtuQm45VGZCSlNHVTdTRng4NU9RS1FXV3A5?=
+ =?utf-8?B?aktzVXJNR1ljUmk4SnRsZlh4dFFKMUM3VUJwNWNyUFRqUEFRYzFQbnlyZzQr?=
+ =?utf-8?B?SGZ1ZTgvaWx2aGNhWUR5RzZjaWRQSmFtVnhQTENwd1RaOTBBVzN5a3BnWmZB?=
+ =?utf-8?B?TjFhVEMvd1Jzc3ZuWDdVOWs2VGpaZlFuWXVYZFo1MHFDclduWnA1MDhJdHF0?=
+ =?utf-8?B?WkE5R0orckovbS8xY3B0Nkx6NU1sWE43OGxKTjhWRm1IT29lcFZraDk5TTBS?=
+ =?utf-8?B?dGtxVFA5NEptNWpSSWF3M0Y1emlOMHNJY2NNNGIyZTUwYStwSHVWMnRrQ1U4?=
+ =?utf-8?B?Q0g3M0l0dWh2MnVENlI5ZW5uMitXSHJUSm5XS1p0VEhtTWNERC9Md0VnVzBr?=
+ =?utf-8?B?aTh3QjY0cENBa3dQRU9CQlgrWTVEek9Hc1pVNzU3dDR4L3N6V04vMjEwWkZK?=
+ =?utf-8?B?a3ZBdGZNY3g5WGZGempiVks3MzBLMlFtZU1VOGp0ZUw5UTRtUDl3N3BueFVa?=
+ =?utf-8?B?ODFoMFFwZTV4aHo0bjh0ZnZQU01CNkNubUF6d0JtMThNUHBkZnhQclRLcmpE?=
+ =?utf-8?Q?5qEPVGkP9wxQTZBFNSe+HKM16?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 65785678-8418-426a-2832-08dd7bd006d9
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 03:45:55.8936
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C9x+LR9gT4PdziXtQ6MMKSPlsn4lKYvRCQ3iQCdGIJhsp0k+QLJtWUKMhM1KwkBP+M2sl/T8jhFgpY24RQkTFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4271
 
-Hi Andrew,
 
-On Tue, Apr 15, 2025 at 5:36 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+On 4/11/2025 10:24 PM, Eder Zulian wrote:
+> devm_kasprintf() is used to allocate and format a string and the
+> returned pointer is assigned to 'cmd_cache_name'. However, the variable
+> 'cmd_cache_name' is not effectively used.
 >
-> On Mon, 14 Apr 2025 22:59:43 +0800 Lance Yang <ioworker0@gmail.com> wrote:
+> Remove the dead code.
 >
-> > This patch replaces 'struct mutex *blocker_mutex' with 'unsigned long
-> > blocker', as only one blocker is active at a time.
-> >
-> > The blocker filed can store both the lock addrees and the lock type, with
-> > LSB used to encode the type as Masami suggested, making it easier to extend
-> > the feature to cover other types of locks.
-> >
-> > Also, once the lock type is determined, we can directly extract the address
-> > and cast it to a lock pointer ;)
-> >
-> > ...
-> >
-> >  static void debug_show_blocker(struct task_struct *task)
-> >  {
-> >       struct task_struct *g, *t;
-> > -     unsigned long owner;
-> > -     struct mutex *lock;
-> > +     unsigned long owner, blocker;
-> > 
-> >       RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
-> > 
-> > -     lock = READ_ONCE(task->blocker_mutex);
-> > -     if (!lock)
-> > +     blocker = READ_ONCE(task->blocker);
-> > +     if (!blocker ||
-> > +         hung_task_get_blocker_type(blocker) != BLOCKER_TYPE_MUTEX)
-> >               return;
-> > 
-> > -     owner = mutex_get_owner(lock);
-> > +     owner = mutex_get_owner(
-> > +             (struct mutex *)hung_task_blocker_to_lock(blocker));
+> Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> ---
+>   drivers/dma/amd/ptdma/ptdma-dmaengine.c | 7 -------
+>   1 file changed, 7 deletions(-)
 >
-> typecast is unneeded?
+> diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> index 715ac3ae067b..3a8014fb9cb4 100644
+> --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> @@ -565,7 +565,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+>   	struct ae4_device *ae4 = NULL;
+>   	struct pt_dma_chan *chan;
+>   	char *desc_cache_name;
+> -	char *cmd_cache_name;
+>   	int ret, i;
+>   
+>   	if (pt->ver == AE4_DMA_VERSION)
+> @@ -581,12 +580,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+>   	if (!pt->pt_dma_chan)
+>   		return -ENOMEM;
+>   
+> -	cmd_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+> -					"%s-dmaengine-cmd-cache",
+> -					dev_name(pt->dev));
+> -	if (!cmd_cache_name)
+> -		return -ENOMEM;
+> -
+>   	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+>   					 "%s-dmaengine-desc-cache",
+>   					 dev_name(pt->dev));
 
-Good catch! This typecast is redundant here. Since the #02[1] patch already
-covers this code section, could you please fold the following change into
-that patch?
+Looks good to me.
 
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index d2432df2b905..b30b9ab17694 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -111,12 +111,10 @@ static void debug_show_blocker(struct task_struct *task)
- 
- 	switch (blocker_type) {
- 	case BLOCKER_TYPE_MUTEX:
--		owner = mutex_get_owner(
--			(struct mutex *)hung_task_blocker_to_lock(blocker));
-+		owner = mutex_get_owner(hung_task_blocker_to_lock(blocker));
- 		break;
- 	case BLOCKER_TYPE_SEM:
--		owner = sem_last_holder(
--			(struct semaphore *)hung_task_blocker_to_lock(blocker));
-+		owner = sem_last_holder(hung_task_blocker_to_lock(blocker));
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
---
-
-[1] https://lore.kernel.org/all/20250414145945.84916-3-ioworker0@gmail.com
+Acked-by: Basavaraj Natikar<Basavaraj.Natikar@amd.com>
 
 Thanks,
-Lance
+--
+Basavaraj
+
