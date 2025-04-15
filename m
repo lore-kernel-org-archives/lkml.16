@@ -1,96 +1,243 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B5F1B0412;
-	Tue, 15 Apr 2025 02:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365DB1F4C84;
+	Tue, 15 Apr 2025 02:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744683519; cv=none; b=qrUsHlee/qs0HgBBS4b+5WFPyXoDtqOkcjh0FzaueMB7pq3LzHhk2Zn9BcYkC4Qo2/NZY5s/gPULFCD/OMyVnEoowrMCY3X5DSWXtE0lQCWHI4WsI6dNS3isZ3cskCUZPX1pApuHl6JEn6n9HizGdr6UnvDghaU4+mq36Z1SGFM=
+	t=1744684044; cv=none; b=H0TnJr2l/pRRwYS7ETEhlL/GjIgibUA2RTUPYhHiiq+MRPBnsDc7ilsw3/HYqSE23+fKb5I7g00Lu2qLlSeu6VNVxBtz4j52ZNQS9VXQP7BwfL9io/fFOLbDcVlLYR2bXL+RxGuCm6t7qVcuP2AFL3Eyc5LLkNYp8Y9iMjO+O7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744683519; c=relaxed/simple;
-	bh=nGVvF6nK59wes4T4bei2C9AddEL7aiF3cGhmMHQLGzQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OQ8LMuAOY6E6NrLbpx2znNaTdQdV2eSMRbFVeHc6Vux2QRdHshnAQpyqWbsGxmYa7uQKBB9p0t9ahYwXXwbr0FgdLAH4FFk+QllTebZxDhRODYCHdWBy56xM6NhjDS2LqhGVgX8qxhvi6tqKYVw+2X0DHeoDDO5GbadIIRNV7BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
-	by APP-01 (Coremail) with SMTP id qwCowAD3oQLqwf1n5O3rCA--.14844S2;
-	Tue, 15 Apr 2025 10:18:21 +0800 (CST)
-From: Ma Ke <make24@iscas.ac.cn>
-To: davem@davemloft.net,
-	andreas@gaisler.com,
-	sam@ravnborg.org,
-	dawei.li@shingroup.cn,
-	make24@iscas.ac.cn,
-	rob.gardner@oracle.com
-Cc: sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] sparc: fix error handling in scan_one_device()
-Date: Tue, 15 Apr 2025 10:18:12 +0800
-Message-Id: <20250415021812.3106169-1-make24@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744684044; c=relaxed/simple;
+	bh=MS6EysD23VjLdj+RMi75vnjwBap4RjF89j2Ujy/2KPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQvUQf3hFQMwnfk7lgahVZOwIwK+cLJKMbGYAhRvpOY1R5ZNjx8J2ub7r+psztd8yM6nnkjOrmDh8IbPP6a22HmCNmWk+5RynLLlu1Xn31B6Y93otmWGYKCew2yXJoQ7rRAUxQVMJhbF87BIZ07JeFlyD2CDfIvc4nErKwvzd4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i3xomCJH; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3xomCJH"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-301cda78d48so4617724a91.0;
+        Mon, 14 Apr 2025 19:27:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744684042; x=1745288842; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O15D89FO56XI8MNfU7wmkDFxB94F0rcKshm3G4RRbz4=;
+        b=i3xomCJHVwKEnkdV9Nznsw29Nto0rv282P6U0n1m6bDQW/ziT1QYj0wVAokmONRJM0
+         OlcByx9nnxISzOP/JCafKsp6IbH69TC3rUAAqSbAo0uDX/pgGK7QvckkKemI9mUvtZpp
+         ouobmKes+ppXb4gGxzyMUBn1zTFwhMk0xSqWBNBYN+ZZM1ZFiiY81X0WY2MigorRwB86
+         AfLO97wHd0f42n5eU//CgQmRYrGJdaUcxx+5lqHtYbSwnJXzx6XBNQr0gAeE+EvaFNkR
+         96XDXoCP/3hDw0AjAOT5u8fqyTO2XRo3sUrrfmIIIZO0yaqzoKi9toe1x78Ahs30yNDv
+         z8Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744684042; x=1745288842;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O15D89FO56XI8MNfU7wmkDFxB94F0rcKshm3G4RRbz4=;
+        b=wkUXaeBP9+vyYkO/81wggAfzVr4mTXpIVYSOzD6Pablu4bfRYHKpyWeJSpjCI88+xf
+         wo9ggYmb/sd3+H30s4fhfHS3oKWU0/mjSu6skkKUuU0AUtqlPdoWmp94+tR4sstUM29r
+         nC0/KmSH2f99qKWiAvg2yM/5qaqT4t33bG1boWLOsIkBef2hoAJ5RU4CAyRsfPQiOmZX
+         aaBDvjJhiHb2R1yIdG/gc818iAquju9E51mLDiPlp03kR+ijVwneiynRNkaR7MFSGIH/
+         CfSR1nk586b6DYNnu570vCb8EVPP76UmSHIMyF5g6tFjmvwxGZrDXA29FZtpeHIa5zUA
+         ro6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpWLicoO57QJ7M9ILqMfQdCA3D4gz25Dna5hd3Y0b7a9sOLnZ3fKBLruTRubXdUKRUhT51bLOIg+Oa@vger.kernel.org, AJvYcCWD/OUstxqSjVB0BC4TxAjEqBhnJ0JpIvJXsDd+Qil374Zw+cCRCM0NsLeA84dkQdjQkMi44us+iEF4@vger.kernel.org, AJvYcCWaFlYAK+2DXr35MllfbDto+F/YetJzcd/AB+BqgwZXUhZr6vBi5zTJXWL9VupOIlVm3XHGk8dQ+jzOLA==@vger.kernel.org, AJvYcCWif6gp8f5L6EwJNtzjMA728aLxkP4s55U554JfahTh4spMDI9DAE4p1Ao2e7Nbadq1N+MPOaVrpha495Kw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3jbQExfr/BctseLxdDsQZq8Tdarb5sSWvU3LZHVfX0o+neDNR
+	4xaZi9L7ESgQ3jMcvyECpKrvayMON/8FD9kX7Fyh6CzlNe9g/+0P3qrVlA==
+X-Gm-Gg: ASbGnct19fy9I9Acy/auJU1MbPcZP5WS2bOfrZ+Wsk0gF+vlQjHHQ4acWahRkNlUBDb
+	fZ8O84oVoh0XWHpAf0pUzsdDdJlhxMzlDaGZadzS1wf6K91n5YTYiH7LOom49sr290xF1GdXD2w
+	HKZPUi+z7bz/fMVqhzIJnCANDmQiYK8rMV9ojCZH9aChLrBMcWD1nk8kqd9xs5ad9S/QllB+1qc
+	y00tBFtb1h22z44KiNNHlrouY3xnhLypqBvWH+ZpmzF2spBRb0okPuDixSEpYlizn9f8Fai51rR
+	6OJdTefBTj1vD3wT7uxO/qLIMjuv/NGlAI2xdw/e
+X-Google-Smtp-Source: AGHT+IF7tZboihmKB5Di8tKXtKer9swCSXnzgwtsHGn1m6uNejSyJkaNFB9R/GjFVr14dMO2hAvkUw==
+X-Received: by 2002:a17:90b:254d:b0:2fa:137f:5c61 with SMTP id 98e67ed59e1d1-30823639ca2mr27484059a91.12.1744684042051;
+        Mon, 14 Apr 2025 19:27:22 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df2fb064sm11900542a91.32.2025.04.14.19.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 19:27:20 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id B51414209E44; Tue, 15 Apr 2025 09:27:16 +0700 (WIB)
+Date: Tue, 15 Apr 2025 09:27:16 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ante Knezic <ante.knezic@helmholz.de>, linux-leds@vger.kernel.org
+Cc: lee@kernel.org, pavel@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, corbet@lwn.net, knezic@helmholz.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/3] Documentation: leds: Add docs for Wurth Elektronik
+ WL-ICLED
+Message-ID: <Z_3EBMmtm5LbQGmE@archie.me>
+References: <cover.1744636666.git.knezic@helmholz.com>
+ <7f324a9a25ad1ac3a622aa1201cbd91ead80f8f9.1744636666.git.knezic@helmholz.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAD3oQLqwf1n5O3rCA--.14844S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WryrKw45JFyrCr15ZF1DWrg_yoW8Gr4xp3
-	s7Aas8JrWUur1vkws7XF18ZF1UCw4jy3Wruw45C3W0krn3WryrJ3yv9r4kK3W5trZrAF40
-	qrZrtw10yF4Uu3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
-	x2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20x
-	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
-	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
-	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
-	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
-X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6Nt9HQRoa9PzXHye"
+Content-Disposition: inline
+In-Reply-To: <7f324a9a25ad1ac3a622aa1201cbd91ead80f8f9.1744636666.git.knezic@helmholz.com>
 
-Once of_device_register() failed, we should call put_device() to
-decrement reference count for cleanup. Or it could cause memory leak.
-So fix this by calling put_device(), then the name can be freed in
-kobject_cleanup().
 
-Calling path: of_device_register() -> of_device_add() -> device_add().
-As comment of device_add() says, 'if device_add() succeeds, you should
-call device_del() when you want to get rid of it. If device_add() has
-not succeeded, use only put_device() to drop the reference count'.
+--6Nt9HQRoa9PzXHye
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Found by code review.
+On Mon, Apr 14, 2025 at 03:28:49PM +0200, Ante Knezic wrote:
+> +Description
+> +-----------
+> +The WL-ICLEDs are RGB LEDs with integrated controller that can be
+> +daisy-chained to a arbitrary number of units. The MCU communicates
+> +with the first LED in chain via SPI interface and can be single or
+> +two wire connection, depending on  the model.
+> +
+> +Single wire models like 1315050930002, 1313210530000, 1312020030000 and
+> +1312121320437 are controlled with specific signal pattern on the
+> +input line. The MCU is connected to input line only via SPI MOSI signal.
+> +For example WE-1312121320437 uses following signal pattern per one LED:
+> +
+> +|          RED            |          GREEN          |           BLUE    =
+      |
+> +| GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:1=
+2bits |
+> +
+> + where logical 1 is represented as:
+> + (V)^
+> +    |          T
+> +    |<-------1.2us------->
+> +    |
+> +    +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+
+> +    | <---0.9us----> |
+> +    |                |
+> +    +----------------+=3D=3D=3D|------> t
+> +
+> + and logical 0 is represented as:
+> + (V)^
+> +    |          T
+> +    |<-------1.2us------->
+> +    |
+> +    +=3D=3D=3D=3D=3D+
+> +    |0.3us|
+> +    |     |
+> +    +-----+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|------> t
 
-Cc: stable@vger.kernel.org
-Fixes: cf44bbc26cf1 ("[SPARC]: Beginnings of generic of_device framework.")
-Signed-off-by: Ma Ke <make24@iscas.ac.cn>
----
-Changes in v2:
-- retained kfree() manually due to the lack of a release callback function.
----
- arch/sparc/kernel/of_device_64.c | 1 +
- 1 file changed, 1 insertion(+)
+I get htmldocs indentation warnings from Sphinx:
 
-diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
-index f98c2901f335..f53092b07b9e 100644
---- a/arch/sparc/kernel/of_device_64.c
-+++ b/arch/sparc/kernel/of_device_64.c
-@@ -677,6 +677,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
- 
- 	if (of_device_register(op)) {
- 		printk("%pOF: Could not register of device.\n", dp);
-+		put_device(&op->dev);
- 		kfree(op);
- 		op = NULL;
- 	}
--- 
-2.25.1
+Documentation/leds/leds-wl-icled.rst:22: ERROR: Unexpected indentation. [do=
+cutils]
+Documentation/leds/leds-wl-icled.rst:23: WARNING: Line block ends without a=
+ blank line. [docutils]
+Documentation/leds/leds-wl-icled.rst:32: ERROR: Unexpected indentation. [do=
+cutils]
+Documentation/leds/leds-wl-icled.rst:33: WARNING: Line block ends without a=
+ blank line. [docutils]
+Documentation/leds/leds-wl-icled.rst:55: ERROR: Unexpected indentation. [do=
+cutils]
+Documentation/leds/leds-wl-icled.rst:23: ERROR: Undefined substitution refe=
+renced: "<-------1.2us-------> | +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D+ | <---0.9us----> | | | +----------------+=3D=3D=3D". [docutils]
+Documentation/leds/leds-wl-icled.rst:33: ERROR: Undefined substitution refe=
+renced: "<-------1.2us-------> | +=3D=3D=3D=3D=3D+ |0.3us". [docutils]
 
+I have to wrap the signal logics diagram in literal code block:
+
+---- >8 ----
+diff --git a/Documentation/leds/leds-wl-icled.rst b/Documentation/leds/leds=
+-wl-icled.rst
+index 0e55683e946894..78ee2df33df2f5 100644
+--- a/Documentation/leds/leds-wl-icled.rst
++++ b/Documentation/leds/leds-wl-icled.rst
+@@ -12,12 +12,13 @@ two wire connection, depending on  the model.
+ Single wire models like 1315050930002, 1313210530000, 1312020030000 and
+ 1312121320437 are controlled with specific signal pattern on the
+ input line. The MCU is connected to input line only via SPI MOSI signal.
+-For example WE-1312121320437 uses following signal pattern per one LED:
++For example WE-1312121320437 uses following signal pattern per one LED::
+=20
+-|          RED            |          GREEN          |           BLUE      =
+    |
+-| GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12b=
+its |
++  |          RED            |          GREEN          |           BLUE    =
+      |
++  | GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:12bits | GAIN:4bits | PWM:1=
+2bits |
++
++where logical 1 is represented as::
+=20
+- where logical 1 is represented as:
+  (V)^
+     |          T
+     |<-------1.2us------->
+@@ -27,7 +28,8 @@ For example WE-1312121320437 uses following signal patter=
+n per one LED:
+     |                |
+     +----------------+=3D=3D=3D|------> t
+=20
+- and logical 0 is represented as:
++and logical 0 is represented as::
++
+  (V)^
+     |          T
+     |<-------1.2us------->
+
+> +
+> +To generate the required pattern with exact timings SPI clock is selected
+> +so that it devides T in 8 equal parts such that a logical true symbol ca=
+n be
+> +represented as 1111 1100 and a logical false can be represented as 1100 =
+0000.
+> +Single wire LEDs require the MOSI line to be set to low at idle and this=
+ should
+> +be provided by the chip driver if possible or by external HW circuit.
+> +
+> +Models 1313210530000, 1312020030000 and 1315050930002 require a slightly
+> +different signaling scheme where each color of the LED is encoded in
+> +8 bits.
+> +
+> +Two wire LED types do not require specific encoding of the input line as
+> +both clock and data are provided to each LED.
+> +
+> +Additionally, models differ by available controls:
+> +- WE 1312121320437 provide PWM and GAIN control per each RGB element.
+> +  Both GAIN and PWM values are calculated by normalising particular
+> +  multi_intensity value to 4 and 12 bits.
+
+Separate the first bullet item from previous paragraph so that all three
+items are outputted as in bullet list.
+
+> +
+> +- WE 1315050930246 and 1311610030140 provide PWM control per each
+> +  RGB element and one global GAIN control.
+> +  Global GAIN value is calculated by normalising global led brightness
+> +  value to 5 bits while PWM values are set by particular
+> +  multi_intensity values.
+> +
+> +- WE 1315050930002, 1313210530000 and 1312020030000 provide only PWM
+> +  control per each RGB element.
+> +  PWM values are set by particular multi_intensity value.
+> +
+> +For more product information please see the link below:
+> +https://www.we-online.com/en/components/products/WL-ICLED
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--6Nt9HQRoa9PzXHye
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/3D/AAKCRD2uYlJVVFO
+o7zAAQC2UFTsZIvZVhLpQpC1QR38b/LY5qEIC77YBYCGZ4xgbQD/fZiX+Sa8EHF0
+hUjl6P1pxa0VMqnDgZwH73cmDk5NrAQ=
+=n4uO
+-----END PGP SIGNATURE-----
+
+--6Nt9HQRoa9PzXHye--
