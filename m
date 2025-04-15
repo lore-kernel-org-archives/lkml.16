@@ -1,175 +1,169 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B31B20B1E8;
-	Tue, 15 Apr 2025 14:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918CE1B0434;
+	Tue, 15 Apr 2025 14:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727776; cv=none; b=EejlqvPNVMcaNScY6XuLRavuLQ7S8razZH0s2ok99v9fFrOrpmahVihq48P0Kxx2r5AHYRUtTYSLGK+4Dm0TADMycMTCCaoO04RoMqXBNcyDVwsp790oxsmIWrR+IA2zL1dL10vsFdJEWE8qkoYaGFuzn+dHxgr2D9no/ceW9Es=
+	t=1744727795; cv=none; b=KJrOLT+UAzUG4AFop9VVzwtpajh3xBYec/I1mLZDl55rNTKISFTTZuX9vpHCnVD8I3LJUJjYicC96fhLd3K1wQPV7bq/8ZMGkiTQZCynvjqESFaINymsFjghx1ZR7nfoDVYo8sElvuLCZml6n9k1DzfAYdZeQbv79Kh8KamgoTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727776; c=relaxed/simple;
-	bh=fT4+CBacz9O3qeOVo3oxdrEc9GHq77Sp80z13yhIrl4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hc9CxTuZOzpi5gQ43BUzTQun0YtbH4i5M775UTwpCrFGG2lGtXhyQIfm4vaHdd0u/AxvSsU1wsuH8i7rp+50Q4tqcBlTiiFC/GD6nnYFHolvHVKNk9KpCOVn1ZlaMOIuLB2eE3FVTy/Yuqe4BkZPDd0zwXVQDtYtJAdPxVldVqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcRWT4dmjz6FGYC;
-	Tue, 15 Apr 2025 22:34:45 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id CAAF714050D;
-	Tue, 15 Apr 2025 22:36:03 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Apr
- 2025 16:36:03 +0200
-Date: Tue, 15 Apr 2025 15:36:01 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Li Ming <ming.li@zohomail.com>
-CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shiju.jose@huawei.com>, John Groves
-	<John@groves.net>
-Subject: Re: [PATCH v2 1/1] cxl/feature: Using Full Data Transfer only when
- offset is 0
-Message-ID: <20250415153601.00001824@huawei.com>
-In-Reply-To: <20250410024726.514170-1-ming.li@zohomail.com>
-References: <20250410024726.514170-1-ming.li@zohomail.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744727795; c=relaxed/simple;
+	bh=aHlMMNXSjyxlMjqZ/rdlSz/dzsA5T/GuKagUg8Lk6eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bNfQyP5uuusOpbzkf6EhbHLwJIT0oZcJshzvIothTlMZkz8ffGWLOVg0ZxeLthIrfJTMel60ALwuwVNZ4OBCNrj2k2fqS3ZaK5LNkzknx2TFB4qEDTuF4VO1vdCOFH8IP4xgAXQ+1Oo97nHtfpIXv3MXxPqNEHkmWyeLZZtGGIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4769aef457bso57353351cf.2;
+        Tue, 15 Apr 2025 07:36:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744727791; x=1745332591;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=huDhGcroBByKUT/YKOKaER+RIBVsc6M7N9wWj5wNpMY=;
+        b=rGVK7O1WsyrHkXvEXeDr6MzOyMkqA+1if992W6i0XjGNuknCySL4Uw5VLCPWmI/dh/
+         EfvFUHak4OGrGQG+gYpVrbTOxrJoFpNYCktf00V8ZHOooNtGwKhOmT2tuAPs1VGy6IpG
+         IyqoiOLnADilUB2SE5SbePTxStfQHfKqlYqHYSj28vONE40A8R/gbc2TWNW1XEmkuhhV
+         ixmaTeprlzR+a4NE6NLWSF7Y+2vYGC1Tuq4lPE+uEhRq7TyJau9n0CUVy0cy8G22QQU1
+         pAu/keo9IjvJsdlfMVeO7OCfeGiGsXG4oHqwKwX28DqNKGaL5o06jWlSFdAZ6WCia3yr
+         QHrw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4fY/NObjaTie/7FTzimjrQq2ZJhJVynns1ZO4kEFrNBNBaEh3tEadTWY71hyVd56oW5kOXAlqrPnY@vger.kernel.org, AJvYcCVE8tOUWHMUlVaN4PHJAZ3+LoP3bhjjpG6+mHg8DyqreRF/tVpH9ZVTPPolbC4XfOIQKjsqqJPknKuX@vger.kernel.org, AJvYcCVjNT5j7NMX19NSEt8Uu4Ld8LELT8RKtd5Y9dLERSGtPBwy+ZFRKc0H6PZJ08MrJQmXUqLMWWG90qpqM/fI5r2ivp0=@vger.kernel.org, AJvYcCX71GMu7N9DlUNagXy9kJuNlRBOqnPgJ+b8zhx3LqtuuL1Rn9U5U19DzO4fZSzrtO+A+kX5NcCdaf+wTMEG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpGP1KHZ+P0/p4EdT8t2vxC0Om+m/yjXMOOxlTvWbOieEDeKDN
+	NuwNN/aZbOi76csQPiaX1LdZLVR4T7c1M3HVsX88N9cLv4gT4SchQX5UpJkB
+X-Gm-Gg: ASbGncttlDtOjLB1eC8L/1FbUKciss0GzNZrD3qcWx8dVOhPo1aYxacMt07oNtAEDuO
+	k6KqqOWElMXXXLBF7k+ZkBsA0mtZlwaj0ZO61V/anDMdgpX9N/lkd+xd+d44oBoQhmEodgHig4Y
+	Vg8SSx/m42Xt0ePog8L2gWObu+1AwxbELgUJ6jyTqY6WhgiTo0HzPX+X05zRBFC3PVN1tVQb3kU
+	oXFA1Doc1Op4nMZ8mTduUdTal/hgSw6ZdoS7sOglaf8IxN/ZekM2znt0i48ENAb0W4XJEZtmheQ
+	FoldEtLpNSxs/EmLKAztOqeeTS8JHUlRvYZclAFS9gjCWH54xdz3pgfpxDnsEDPTcyqdft/MdHC
+	axSzQeGg=
+X-Google-Smtp-Source: AGHT+IFB1cyVMvD9hK7ztTc1/2ECSjke3TxoMmraJTl1yGTR1ZKCiOZbZFgHNT45lKNnpNWmyk1q3A==
+X-Received: by 2002:ac8:5a0a:0:b0:477:1ee2:1260 with SMTP id d75a77b69052e-4797751566cmr265453721cf.1.1744727790559;
+        Tue, 15 Apr 2025 07:36:30 -0700 (PDT)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com. [209.85.222.172])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb2c07fsm96365071cf.44.2025.04.15.07.36.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 07:36:30 -0700 (PDT)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c54a9d3fcaso602488585a.2;
+        Tue, 15 Apr 2025 07:36:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUteSfG44Q5fKMtztl0uNHEa9YuzYwfVVsvPMRx9brP2jSxzs7xUANRpPOMZJwRl06uCs7pPq8mm/qA@vger.kernel.org, AJvYcCWkZwaMGWsf83IzTI6RZadVAhl+Xob6dMxKhyIwOr5OuUAyEsvdL6PmDic3YghZdAG4vtCvt748LwGE9t3J@vger.kernel.org, AJvYcCWxKS3wp0mHatO8CYs9TdeLI/94DHG45KJthfFxC/Fqw5JUAQDaRWycJfKebciz4yIBG91lvoc/9nnS@vger.kernel.org, AJvYcCXAnaccRw0w/whghOuhuaJi0eZiNXYp42jPBZQuvLXeHyN1ODaDuYaAjlFLwI8VhgoSnIQsi3KJ1orF4Mf9sKeYdTY=@vger.kernel.org
+X-Received: by 2002:a05:620a:3182:b0:7c5:71b4:3cc5 with SMTP id
+ af79cd13be357-7c7af0f8807mr2508993485a.7.1744727789506; Tue, 15 Apr 2025
+ 07:36:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407165202.197570-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Apr 2025 16:36:16 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXuqYHAv+yyOJxC3kre1vaspuXmTMev0ZBixEiEo+4saQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEPYaCUkSrLLkZOcuAtFSrkSXIwre0mnY3ysaJvbSzgPLZSw9AoWeSSMXM
+Message-ID: <CAMuHMdXuqYHAv+yyOJxC3kre1vaspuXmTMev0ZBixEiEo+4saQ@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] clk: renesas: rzv2h-cpg: Ignore monitoring CLK_MON
+ bits for external clocks
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Apr 2025 10:47:26 +0800
-Li Ming <ming.li@zohomail.com> wrote:
+Hi Prabhakar,
 
-> Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
-> 
-> "If the Feature data is transferred in its entirely, the caller makes
+Thanks for your patch!
 
-entirety 
+On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Ignore CLK_MON bits when turning on/off module clocks that use an external
+> clock source.
+>
+> Introduce the `DEF_MOD_EXTERNAL()` macro for defining module clocks that
+> may have an external clock source. Update `rzv2h_cpg_register_mod_clk()`
+> to update mon_index.
 
-> one call to Set Feature with Action = Full Data Transfer. The Offset
-> field is not used and shall be ignored."
-> 
-> It implies if using Full Data Transfer, the received data will be
-> updated from offset 0 on device side.
-> 
-> Current driver implementation is if feature data size is less than mbox
-> payload - set feature header, driver will use Full Data Transfer even if
-> user provides an offset. Per above description, feature data will be
-> written from offset 0 rather than the offset value user provided, the
-> result will not be what user expects.
-> 
-> The changes is checking if the offset caller provides is equal to 0, if
-> yes, using Full Data Transfer, if not, using Initiate Data Transfer -
-> Finish Data Transfer.
-> 
-> After the changes, all Set Feature transfer scenarios are below:
-> 
-> 1. data size + header is less than mbox payload and offset is 0
-> 	Full Data Transfer
-> 
-> 2. data size + header is less than mbox payload and offset is not 0
+So I guess you implemented this because the external clock was not
+running, and you got into an infinite loop?
 
-Is it valid to call this function with a none zero offset? I'm not sure.
-In my possibly entirely incorrect mental model the offset should be
-an internal detail of how we get the features that we should not expose to
-userspace (oops).  The specification is confusing on this point so I think
-we should ask for a clarification.
+This looks rather fragile to me. How do you know when the clock
+is actually running, and thus usable?
 
-There is text that for example says
-"Once the _entire_ Feature data is fully transferred to the device (i.e.
- Action = Full Data Transfer or Action = Finish Data Transfer"), the
- device shall update the attribute(s) of the Feature."
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-What does 'entire Feature data mean here?'  The whole thing or just
-the bit from offset used in Initiate Data Transfer onwards?
-
-I'd read entire as meaning all of it so effectively the offset passed
-to this function should always be zero.
-
-I'll send a query and let you know the answer. Maybe I'm reading too
-much into that 'entire'.
-
-J
-
-
-
-> 	Initiate Data Transfer(with all feature data) - Finish Data Transfer(with no feature data)
-> 
-> 3. data size + header is greater than mbox payload with any value of offset
-> 	Initiate Data Transfer - Continue Data Transfer(s) - Finish Data Transfer
-> 
-> Fixes: 14d502cc2718 ("cxl/mbox: Add SET_FEATURE mailbox command")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
-> 
-> v2:
-> - Drop RFC tag. (Dave)
-> - Fix typo issue in changelog
-> ---
->  drivers/cxl/core/features.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..fcc624cefe89 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -259,6 +259,17 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  	return data_rcvd_size;
+> --- a/drivers/clk/renesas/rzv2h-cpg.c
+> +++ b/drivers/clk/renesas/rzv2h-cpg.c
+> @@ -569,6 +569,25 @@ static void rzv2h_mod_clock_mstop_disable(struct rzv2h_cpg_priv *priv,
+>         spin_unlock_irqrestore(&priv->rmw_lock, flags);
 >  }
->  
-> +static bool is_last_feat_transfer(struct cxl_mbox_set_feat_in *pi)
+>
+> +static bool rzv2h_mod_clock_is_external(struct rzv2h_cpg_priv *priv,
+> +                                       u16 ext_clk_offset,
+
+unsigned int
+
+> +                                       u8 ext_clk_bit,
+
+unsigned int
+
+> +                                       u8 ext_cond)
+
+bool
+
 > +{
-> +	switch (le32_to_cpu(pi->flags) & CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK) {
-> +	case CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER:
-> +	case CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
+> +       u32 value;
+> +
+> +       if (!ext_clk_offset)
+> +               return false;
+> +
+> +       value = readl(priv->base + ext_clk_offset) & BIT(ext_clk_bit);
+> +       value >>= ext_clk_bit;
+
+No need to shift:
+
+    return !!value == ext_cond;
+
+> +
+> +       if (value == ext_cond)
+> +               return true;
+> +
+> +       return false;
 > +}
 > +
->  /*
->   * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
->   * available in the mailbox for storing the actual feature data so that
-> @@ -294,14 +305,14 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
->  		return -ENOMEM;
->  
-> -	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
-> +	if (hdr_size + feat_data_size <= cxl_mbox->payload_size && !offset) {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
->  		data_in_size = feat_data_size;
->  	} else {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
-> -		data_in_size = cxl_mbox->payload_size - hdr_size;
-> +		data_in_size = min(feat_data_size, cxl_mbox->payload_size - hdr_size);
->  	}
->  
->  	do {
-> @@ -322,7 +333,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  		}
->  
->  		data_sent_size += data_in_size;
-> -		if (data_sent_size >= feat_data_size) {
-> +		if (data_sent_size >= feat_data_size &&
-> +		    is_last_feat_transfer(pi)) {
->  			if (return_code)
->  				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  			return 0;
+>  static int rzv2h_mod_clock_is_enabled(struct clk_hw *hw)
+>  {
+>         struct mod_clock *clock = to_mod_clock(hw);
+> @@ -691,6 +710,11 @@ rzv2h_cpg_register_mod_clk(const struct rzv2h_mod_clk *mod,
+>         clock->on_index = mod->on_index;
+>         clock->on_bit = mod->on_bit;
+>         clock->mon_index = mod->mon_index;
+> +       /* If clock is coming from external source ignore the monitor bit for it */
+> +       if (rzv2h_mod_clock_is_external(priv, mod->external_clk_offset,
+> +                                       mod->external_clk_bit,
+> +                                       mod->external_cond))
 
+Perhaps just pass "mod" instead of three of its members, to fully
+hide the logic inside the helper function?
+
+> +               clock->mon_index = -1;
+>         clock->mon_bit = mod->mon_bit;
+>         clock->no_pm = mod->no_pm;
+>         clock->priv = priv;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
