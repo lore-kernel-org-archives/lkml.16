@@ -1,136 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDBE23F296
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F1A23F296;
+	Tue, 15 Apr 2025 20:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744748286; cv=none; b=Zzij3Oz7TmaQu0WMQhDa/1w/1VZIuq+ansY6xvhdPITLFWO7BZe9AOsdDQnj89/SuHJeQJeDcj2rgZNl6PhraEaOJriIXyiKR03pkks4itIgBiXWXKZ3M+7We7D3YQRuXgYdk+FJFADLYCYvsrGqJyrMZVClSY/mV9ZbpGxXXpA=
+	t=1744748305; cv=none; b=G4ogX23xhWp7tAGXaONGUly8Z9LgNz3oJMANVCQtNurtQmEak4CnjwQ4xHhXISZE7DVUvP72qIGgl3XVjUO3T5onD2jV4T6DYE9wFxKgbG+GDzmDaZfBfD6XptUgVnYKTLWnFhikvshzBeaGhatkoMEOuc0rH4Vj1r6hJ1rVUto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744748286; c=relaxed/simple;
-	bh=FP1FoUwUzOb0EuId7zPJ6/XrjkXt/QC/ppUHzdxy544=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pQhH2HOBfI3WeiIEPR8UjMF5/unId1Vx8Ey9eznDYLksxsA3RYFUzYrxuSP3ggBKGwvThc8KctA9fmf/ZLm73ZaNqHiiqXbMbVBq4UKPx04iJ9l6kdz8UDhkPD4Ocm5/+BR+n45kon0sidw4sv2lHT0ELq8tOeIY2fj9WFVE1QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nf0e9o6y; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744748305; c=relaxed/simple;
+	bh=HUCgCm5eBLHBStR2O91yMADuZKW/BMOxTb52gGuSDa0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V7ctYfixT37IZ4B3KMrtiIghHH3mEkwriklorC3hA2XrH1aqr/00enyUq0m1dBOorVRRxmDuaPNkFkydUpNR3VxUJofSt1cSXa26iNl4eYUIIAhGApDt8SNIgF7Ul/AtNtxv6fxoEGmgRkdI4xFImT9IDGt9TViLoA4JvnoiOoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GLag4aO+; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nf0e9o6y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744748282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+zbNO9DdlGnJdtWrarPxZhGqIU9VsFB36g+B/ftd/RY=;
-	b=Nf0e9o6ymo0G1PrOH/hTQ4IXPyvO1rLFvIPm8YCh5kAtiF+Prbbvpy04tQN9kshoBOjzkK
-	CcisXj5RHKNaybLtBtZfpwJ9XpS9D/masoFcad9P+Wf3XP0Ezesp3nptQKIE+JCCXNeTQB
-	QU3edfXQpuyXk1VPIJZtKw0DkOCKUQA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-418-fsLLwmjLP6uXpvyTvsNQVg-1; Tue,
- 15 Apr 2025 16:18:00 -0400
-X-MC-Unique: fsLLwmjLP6uXpvyTvsNQVg-1
-X-Mimecast-MFC-AGG-ID: fsLLwmjLP6uXpvyTvsNQVg_1744748278
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25A2E1800361;
-	Tue, 15 Apr 2025 20:17:58 +0000 (UTC)
-Received: from chopper.redhat.com (unknown [10.22.88.101])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F26051955BC0;
-	Tue, 15 Apr 2025 20:17:53 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	linux-kernel@vger.kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3] rust: hrtimer: Add forward_now() to HrTimer and HrTimerCallbackContext
-Date: Tue, 15 Apr 2025 16:17:46 -0400
-Message-ID: <20250415201747.417825-1-lyude@redhat.com>
-In-Reply-To: <20250415195020.413478-8-lyude@redhat.com>
-References: <20250415195020.413478-8-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLag4aO+"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2264aefc45dso89559065ad.0;
+        Tue, 15 Apr 2025 13:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744748303; x=1745353103; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HUCgCm5eBLHBStR2O91yMADuZKW/BMOxTb52gGuSDa0=;
+        b=GLag4aO+oa2SaAmfyhtFFdHG//MwR4hGaDOemRYWlZu1fKKP9R4K5HvcbJD9e0mAlV
+         sDGM78Wpm2dJAMzbm8jtXkuFPGIeZmgxo48JMKXg6NULiMPV3932xhDnEXelmPiFtrA9
+         KoNGjS4U/s91wJIzFqU1Hhot69q7dBgXIm1WtkciCMRkEi3Bta5xzCPeyC17NhQXm4e3
+         8IrJ0dMr8l/A4oLlrPJljx7DUbQ5j06droaOEPLlyhMGeCCQCDUUKiNX2Q4lH5hQMBOZ
+         uMtP6Aht4336jg2Snbo+y/t8OAxdbd7ZzKx/ZcO+4UJ7YF0c2fHqfCRnBwMJ2d8b5P6D
+         pCgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744748303; x=1745353103;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HUCgCm5eBLHBStR2O91yMADuZKW/BMOxTb52gGuSDa0=;
+        b=QCSnurKDofQUMVE2yRjyFC7aPzfzvCnYaEl56gHJJFuYkj/jRGrB6KxLMo1Y3S/6qL
+         phmZRIqV6aGL9So9DVPUQ9MsvJe4qdsVhZGl+UoabYB+1OtYW/+g8wX0DBIK7m9Kogft
+         D3ByCtzcOcSkiBc0rffj0YjkCsG9yK5lkMcXOvC1+IDe2wVhu7lMT86Z03Mq0OLY8Vxw
+         Jh0FCfheUCXrOhIL6ybv4BLt1N74XIpXZopu1fNMygIuSFaYafpo1/UgwY+sR2NOqA6c
+         QhiqlpgXfTnV/Yxh0swLqd7/UotMuKTjIbFbk48+YxL0tSfUQ7rOmdG2tific/dtSVvM
+         GY4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXRzk3yObeG+cvytsI9XZUY/CPnM0UzLiSpWN0DX9kS9Evrmy5cdZ2EC50GuBq8aKHeVvlGjWr/dLpJQIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwohbvBrOpLjqmYlT+/MMn3/hbX9jyc4ObQgTwsmpxpjIC+BvYG
+	R8s62P+sld4ZpFsWg2WK9vTQE8inzWmU2inbm8P18Ry+dQfq8PHJ6eN1kzioB9A=
+X-Gm-Gg: ASbGnctWNGyqPaXfWqVJbQ2yKZ8u565X7N/PA5ZrhYhcUGyz1k+iNicpUsY+Yt/nWEs
+	FcezAO7a6wKoMP6YWu0ayQ4+tXqgaI8WmSUITzX1vuBuNmo2e1wtvkh2JQjYhX+I9+JhkquRXQq
+	zxnZ93xsf2uLbUNH6mN4EVagAFx0MKDcJAS+AqbZIIXka/vf9D8OCojQ721k+OAqYALMMavy+dl
+	shuQs2tmGYlF/VTLNDQbMtWdZEY8sCd51SWGiEOZKZeVQ3yvEnc2m58n9qwwdNxjGm98AYWc2QX
+	4kAiZk4NNB2HCpFfyYxbYdb22F9nt4ydJjVJvH5mVE+ykAQ21e0=
+X-Google-Smtp-Source: AGHT+IH/ytHBXGU5OM/n668fjd1qsrWG9AAAgNczpgx3aah4xfC2RHe6JCsWXKntuyYTDtniSeWVWA==
+X-Received: by 2002:a17:903:bd0:b0:224:192a:9154 with SMTP id d9443c01a7336-22c319f6538mr5544235ad.26.1744748303103;
+        Tue, 15 Apr 2025 13:18:23 -0700 (PDT)
+Received: from [192.168.68.119] ([49.207.215.199])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c5e8dsm9219018b3a.59.2025.04.15.13.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 13:18:22 -0700 (PDT)
+Message-ID: <672c16c5896fb2ce73c9fab62853230164b99629.camel@gmail.com>
+Subject: Re: [PATCH 5.15.y] jfs: define xtree root and page independently
+From: Aditya Dutt <duttaditya18@gmail.com>
+To: stable@vger.kernel.org
+Cc: Dave Kleikamp <dave.kleikamp@oracle.com>, Dave Kleikamp
+ <shaggy@kernel.org>,  linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev, 
+ jfs-discussion@lists.sourceforge.net, skhan@linuxfoundation.org, Manas
+ Ghandat <ghandatmanas@gmail.com>
+Date: Wed, 16 Apr 2025 01:48:18 +0530
+In-Reply-To: <20250415180939.397586-1-duttaditya18@gmail.com>
+References: <20250415180939.397586-1-duttaditya18@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Using the HrTimerClockBase::time() function, we can now add an equivalent
-to hrtimer_forward_now() to both HrTimer and HrTimerCallbackContext.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-
----
-V2:
-* Change from Ktime to Delta
-* Make sure that forward_now() takes a mutable reference to the timer
-  struct
-* Reword this to point out that we're adding forward_now() to both callback
-  context and mutable timer reference
-* Rename interval to duration
-V3:
-* Fix rust documentation for HrTimerCallbackContext (forgot to update both
-  forward_now() declarations)
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- rust/kernel/time/hrtimer.rs | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 4da1e72e016d1..ec7800ac20616 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -217,6 +217,14 @@ pub fn forward(&mut self, now: Instant, duration: Delta) -> u64 {
-         //   timer callback context - fulfilling the requirements of the C API.
-         unsafe { Self::raw_forward(self, now, duration) }
-     }
-+
-+    /// Forward the time expiry so it expires at `duration` after the current time.
-+    ///
-+    /// This is a variant of [`forward`](Self::forward) that uses a duration after the current time
-+    /// of the [`HrTimerClockBase`] for this [`HrTimerCallbackContext`].
-+    pub fn forward_now(&mut self, duration: Delta) -> u64 {
-+        self.forward(self.clock_base().time(), duration)
-+    }
- }
- 
- /// The timer base for a specific clock.
-@@ -612,6 +620,14 @@ pub fn forward(&mut self, now: Instant, duration: Delta) -> u64 {
-         // - By our type invariants, `self.0` always points to a valid `HrTimer<T>`
-         unsafe { HrTimer::<T>::raw_forward(self.0.as_ptr(), now, duration) }
-     }
-+
-+    /// Forward the timer expiry so it expires at `duration` after the current time.
-+    ///
-+    /// This is a variant of [`HrTimerCallbackContext::forward()`] that uses an interval after the
-+    /// current time of the [`HrTimerClockBase`] for this [`HrTimerCallbackContext`].
-+    pub fn forward_now(&mut self, duration: Delta) -> u64 {
-+        self.forward(self.clock_base().time(), duration)
-+    }
- }
- 
- /// Use to implement the [`HasHrTimer<T>`] trait.
--- 
-2.48.1
-
+syzbot checked the patch against 5.15.y and confirmed that the
+reproducer did not trigger any issues. check here:
+https://lore.kernel.org/lkml/67fea0bf.050a0220.186b78.0006.GAE@google.com/
