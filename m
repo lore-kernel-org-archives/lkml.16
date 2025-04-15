@@ -1,77 +1,237 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7F628466C
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964A728B514;
+	Tue, 15 Apr 2025 10:07:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711624; cv=none; b=NWUddq8dGnyKZDJEXtqic5jr6q0IAX2czQW9fsuI9DT25wnvDcBTO48G+Dzz1VOkq6BUrI26vmh7N1NCNkXrAWF6kxDcex0jj0EpO8syOYgOPqhMBeuyi8/8CT8rsM5YQOOEhzSUOKWBQcOW+XRYWfRWQ/s14pkHtSwrsDg7oiA=
+	t=1744711638; cv=none; b=iF60/46cANVgdAXut8r/BL/vYUuHmfgzcDlqn3RMoWTRCvWG9cPtfvU0CvbMCWVbTWZldVTtisE96g8GpA1tNvpXkxf3uRv6DJxubJiA4G+aMds+BPXIhEpRddHDXU+jP9/O2CWKbriiq5cRTqq9tXDm3c9v5kNdc1fO+kRCm6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711624; c=relaxed/simple;
-	bh=LemxrSgbISHecGwZDg8d1YDEy+VHGq0FxK3EasKvRmc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=EdUEsqF2oixwq6v4BLFWbyY0KJIQs58pCH/RWxo1XmwLwf4jzZgIQ+ZvjLy/3uR1WkJ4NqggQZypamXB3/udWtu4gh3HPtPvHVk9umcu0XDnDfo0/xuZomI1QjOx2sKn1GRsg3Ch3wiDNUmA3evLstUGCXFO9GDi+oO+9fhXAUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d6d6d82603so51820525ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744711622; x=1745316422;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ekxtkAYIfj9WYYWGRtuMIkrL5W+mUE1d81+QmoJC3I0=;
-        b=wUAw8PnI37H2A2IQPAPRAaBUJBqYT8unT0l+wOg3B9b9RgOZExr8bCOCrziFXBbOXi
-         hWUckD2hwt0VUF0KwgBjLPRocDOf9pcGyCYmvQVIArKLrQwM/GKbd7AZC0olp3+WkI4b
-         dM1qCfHPWmbdsbHB1hOojaF8LwUhR6aeTMTOfTnFa3U4epyismnslLW2yikY4hFaJuGT
-         bCUwsOx7wsYN8f6HOcPaAyXk2SPwlWHs34a2uHJakrQeJFKsLg0kr0GaZtf5QYf326rN
-         RY4VVQC3MfAYFJkJi7NUUaEMwpkgOphpV5JBdcOla11gTC1Tq8VPJ9tsMaRHAXZDOqK4
-         giKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPwLUFygdWw9+bFKwjcZ+EdEdlwcg2BwJaZxpLOFyxq8301kBYVAnhG/BJWN8+Li5qPywToDDVUH5W1KM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE5O1IRYysjYSfN0PCPlQCJSVZYaHL4wZ0Bkxmn3mT2Tj/niGp
-	VDjP+HhXsIDgcFkmfEnl5B+qW1kqHayw3ruJnj6aRNdYYLmGgpks+KxJnKaQ1nZoyax6K35g6+i
-	LhwfDezOgDgut6PrQ4/b/vtdVX0/oLGCA9F8dRCS3wWPNRaowW+Dr4BM=
-X-Google-Smtp-Source: AGHT+IF0T2CRgbXUbT4vmgmK1YTgZn8RZJgbSXksVxvQoT0lh3iTSFP4A3u0nMuYNkC3SkdO7G3r0lGa9db6H/6xjiyKgPaRyX8a
+	s=arc-20240116; t=1744711638; c=relaxed/simple;
+	bh=Xmw2n34HTb4CmV0vYYOlRSSM14jMZD0l23aArEVN+To=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqdhYFijEIWdBaqheT5009mhPuUOlXT/nrQsbTI5iTkgf6fZEsllNWyPKyVDZt7V6CiRs0JHMX+ghcFJnH2aNnFQY/+6LxwKuQq0Fjd6aX+3U5vNWu3ZmGGNZsUodXsMCobWgghv3PZXpIteFVFouLGTmXMOuT9lRMpjMUIk6vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cRFVk8FA; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cRFVk8FA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=AZx5onmI2NQY1J9fzQquw1HQjvetCCNAmNg5YhmLvG0=; b=cRFVk8FAvR3TLw0wem5NBg9fc5
+	0giSMILFqUVkLFz5GEowmWoN5gMmzmKHA29MvegxhIuFr/jeqQ1iOr4JjTzp6yyjzzhnWWTgvfayN
+	Nay/NK2b6A7sSlTjphAfUCubdyb37WVUYmjTOIPiBF9ZsWctlBAdMKm8oUTeNe8V9pQr+Mx2G+owS
+	ZF4D2tozr6XLUIhNTWbVyXhdcl8mGmleQOUqfszq6EDaWCfkrLQgozJcu2mDyqnd/N8dmKzmsfQMu
+	MFfnKdkpeSxMOZyg/2mQyqsLw0XkXFdzYlpAGoQiccbhiqIqrCLw49Ctr4Ywb1zT/KK0Ty0qX1NoG
+	OxEHQY8w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u4dC6-00000009qsv-24qo;
+	Tue, 15 Apr 2025 10:07:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id ADAD2300619; Tue, 15 Apr 2025 12:07:05 +0200 (CEST)
+Date: Tue, 15 Apr 2025 12:07:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Rik van Riel <riel@surriel.com>, Pat Cody <pat@patcody.io>,
+	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
+	patcody@meta.com, kernel-team@meta.com, stable@vger.kernel.org,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+Message-ID: <20250415100705.GL5600@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+ <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+ <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
+ <20250402180734.GX5880@noisy.programming.kicks-ass.net>
+ <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
+ <20250409152703.GL9833@noisy.programming.kicks-ass.net>
+ <20250411105134.1f316982@fangorn>
+ <20250414090823.GB5600@noisy.programming.kicks-ass.net>
+ <0049c6a0-8802-416c-9618-9d714c22af49@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1888:b0:3d3:fdb8:1792 with SMTP id
- e9e14a558f8ab-3d7ec265578mr137221655ab.14.1744711622446; Tue, 15 Apr 2025
- 03:07:02 -0700 (PDT)
-Date: Tue, 15 Apr 2025 03:07:02 -0700
-In-Reply-To: <679fb3a5.050a0220.163cdc.0030.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fe2fc6.050a0220.3483fc.004c.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs] general protection fault in bioset_exit (2)
-From: syzbot <syzbot+76f13f2acac84df26aae@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, gregkh@linuxfoundation.org, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0049c6a0-8802-416c-9618-9d714c22af49@meta.com>
 
-syzbot suspects this issue was fixed by commit:
+On Mon, Apr 14, 2025 at 11:38:15AM -0400, Chris Mason wrote:
+> 
+> 
+> On 4/14/25 5:08 AM, Peter Zijlstra wrote:
+> 
+> [ math and such ]
+> 
+> 
+> > The zero_vruntime patch I gave earlier should avoid this particular
+> > issue.
+> 
+> Here's a crash with the zero runtime patch. 
 
-commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-Author: Alan Huang <mmpgouride@gmail.com>
-Date:   Fri Mar 7 16:58:27 2025 +0000
+And indeed it doesn't have these massive (negative) avg_vruntime values.
 
-    bcachefs: Fix b->written overflow
+> I'm trying to reproduce
+> this outside of prod so we can crank up the iteration speed a bit.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c360cc580000
-start commit:   76544811c850 Merge tag 'drm-fixes-2025-02-28' of https://g..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8de9cc84d5960254
-dashboard link: https://syzkaller.appspot.com/bug?extid=76f13f2acac84df26aae
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159248b7980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13152a97980000
+Thanks.
 
-If the result looks correct, please mark the issue as fixed by replying with:
+Could you add which pick went boom for the next dump?
 
-#syz fix: bcachefs: Fix b->written overflow
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+I am however, slightly confused by this output format.
+
+It looks like it dumps the cfs_rq the first time it encounters it,
+either through curr or through the tree.
+
+So if I read this correct the root is something like:
+
+> nr_running = 2
+> zero_vruntime = 19194347104893960
+> avg_vruntime = 6044054790
+> avg_load = 2
+> curr = {
+>   cgroup urgent
+>   vruntime = 24498183812106172
+>   weight = 3561684 => 3478
+> }
+> tasks_timeline = [
+>   {
+>     cgroup optional
+>     vruntime = 19194350126921355
+>     weight = 1168 => 2
+>   },
+> ]
+
+group  19194347104893960
+curr   24498183812106172 3561684
+entity 19194350126921355 1168
+
+But if I run those numbers, I get avg_load == 1, seeing how 1168/1024 =
+1. But the thing says it should be 2.
+
+Similarly, my avg_vruntime is exactly half of what it says.
+
+avg_vruntime: 3022027395
+avg_load: 1
+
+(seeing how 19194350126921355-19194347104893960 = 3022027395)
+
+Anyway, with curr being significantly to the right of that, the 0-lag
+point is well right of where optional sits. So this pick should be fine,
+and result in 'optional' getting selected (curr is no longer eligible).
+
+All the urgent/* groups have nr_running == 0, so are not interesting,
+we'll not pick there.
+
+NOTE: I'm inferring curr is on_rq, because nr_running == 2 and the tree
+only has 1 entity in it. 
+
+NOTE: if we ignore curr, then optional sits at exactly the 0-lag point,
+with either sets of numbers and so should be eligible.
+
+
+This then leaves us the optional/* groups.
+
+>     cgroup optional
+>     rq = {
+>       nr_running = 2
+>       zero_vruntime = 440280059357029
+>       avg_vruntime = 476
+>       avg_load = 688
+>       tasks_timeline = [
+>         {
+>           cgroup optional/-610613050111295488
+>           vruntime = 440280059333960
+>           weight = 291271 => 284
+>         },
+>         {
+>           cgroup optional/-610609318858457088
+>           vruntime = 440280059373247
+>           weight = 413911 => 404
+>         },
+
+group 440280059357029
+entity 440280059333960 291271
+entity 440280059373247 413911
+
+Which gives:
+
+avg_vruntime: 476
+avg_load: 688
+
+And that matches.
+
+Next we have:
+
+>           cgroup optional/-610613050111295488
+>           rq = {
+>             nr_running = 5
+>             zero_vruntime = 65179829005
+>             avg_vruntime = 0
+>             avg_load = 75
+>             tasks_timeline = [
+>               {
+>                 task = 261672 (fc0)
+>                 vruntime = 65189926507
+>                 weight = 15360 => 15
+>               },
+>               {
+>                 task = 261332 (fc0)
+>                 vruntime = 65189480962
+>                 weight = 15360 => 15
+>               },
+>               {
+>                 task = 261329 (enc1:0:vp9_fbv)
+>                 vruntime = 65165843516
+>                 weight = 15360 => 15
+>               },
+>               {
+>                 task = 261334 (dec0:0:hevc_fbv)
+>                 vruntime = 65174065035
+>                 weight = 15360 => 15
+>               },
+>               {
+>                 task = 261868 (fc0)
+>                 vruntime = 65179829005
+>                 weight = 15360 => 15
+>               },
+>             ]
+>           }
+
+
+avg_vruntime: 0
+avg_load: 75
+
+This again matches, leaving the bottom 3 tasks eligible.
+
+And finally:
+
+>           cgroup optional/-610609318858457088
+>           rq = {
+>             nr_running = 1
+>             zero_vruntime = 22819875784
+>             avg_vruntime = 0
+>             avg_load = 15
+>             tasks_timeline = [
+>               {
+>                 task = 273291 (fc0)
+>                 vruntime = 22819875784
+>                 weight = 15360 => 15
+>               },
+>             ]
+>           }
+
+Rather boring indeed, but the numbers appear correct.
+
+
+So I'm not immediately seeing where it would go boom, but seeing how the
+root group is the one with dodgy numbers, I would suspect that -- but
+I'm not immediately seeing how... :-(
