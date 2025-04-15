@@ -1,107 +1,267 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393D1297A42
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C027D2820B0;
+	Tue, 15 Apr 2025 13:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723613; cv=none; b=BwLCuF5P1Um3jJiyrih/YGGbx5GMlKECyrGm5sMl0XNLcQ0KeNY0Bv5YN25HyMZIGZVNzO9GygGJ7B+fvfrVsESKPEiY8BzsyyGLW0Qz31H048JJ5cR5mw6pdc1GwOusCBEcG33kmB2DnNiJpHEWEjirIWqKw4QoAlh14MFKNos=
+	t=1744723653; cv=none; b=NQbukTZhS7f0sGJZkuHK3EvFQ5+U6Ks78YInOe7Yk/AlUyNBKGACX1KZaRj10emUeglpGpRfgk3bM6oO7C20wTlrBm30+pjGVgvw//NSVUamTM5p1dfuujD3KwiB03WZxJDyC/8FBMlRTJYO0oLEsvgFVraezkeAtiQrsz1RM4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723613; c=relaxed/simple;
-	bh=lVXdbLNZc5AGCI/m+WH0+vrOmz260sal1dEBRrG4Lac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RHknmL4kQYqLM8WclYrbLmKWKbWS1pQqQeUL5F7MM3n03W0VQ0rRGys425DcCttCA15ufu36StK7QzwekW6YxaeToO0oq8KJ1WV8lEcW3vVjvQjtgU1R3hC1MICJZ2b7u3qibb+Hh/TN5o4dfe0rgdvEw7hk83cj3+ESLvwXci4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x84K+9JZ; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744723653; c=relaxed/simple;
+	bh=xZRvVk5qzUx/BSBKzSNc1vMSD4GWcEGpcr1tfcGLHmU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Pg6j0VHqtShUvmiVF5VYUbDX50aaNt5IBdZjeWiEj/VZ6Ds3MwyJman9BF02+aKouCzmP5mt7dGa7nw0e6TudpfXRZBxPg/96NaHCQX73koc0DRgYYYQg36A43dJUXZDWv5mkI6LYg9qpTNe5KEr39AWODwIbEdsAvBwT09U5QI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=u08LAllH; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x84K+9JZ"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso51177371fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:26:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744723609; x=1745328409; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5mnIUnyte0JjCrqPlk/shKFeBEN1cfamo5EuUJhYbWQ=;
-        b=x84K+9JZ940rR+ZAqCTMQC8kYH8VKUBGulQTc5MaoMQlIdau5hMsOtxcMRkcJHv92g
-         NK3LDYhtkPF19j6EMZGqEfSGxpy45vJ3Qi2aoIe9JQCbsSo+sXlyEQ+A2Mbv/FKtq6qI
-         O+qdupf1eE5HPuYihO3dBl6uZGIO5bh4C3LW40sfjqVcGODvbl4ejOIFkvLv5G8GYLoV
-         fYg5HTpHue80XuMTsEpK0SOPOE6GnRJzZhj55NNj8G1cch7YiHF6fjAlMZVzS3sZbR8v
-         bhOeDLgODQHsLK2iIHMsO+c1dnh4e1zmK1zfqKYc9+jevR1+ps2FEFRlzSMbuFw87jiQ
-         K8hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744723609; x=1745328409;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5mnIUnyte0JjCrqPlk/shKFeBEN1cfamo5EuUJhYbWQ=;
-        b=mBtom2jfAOCkzjK/4JuVZkpK56iwJP/GZcuxm5+jJXyT8pXl90gS8E4pdpNs/p9Vkd
-         Sd4QNB6/kAirL+gX4I46SXbjy8w1W5yiP9/Cs2vfNxSpr8MpwrXcNZwyapXMNCb6b36k
-         t7k9QrFBNYxCwnYlaE5HDlhB0zkYbme19DVfPlm+/KOVnJCIQ+eAH1C7xjr54pC6K9Ug
-         yrKy0c9ZvtbgjFRTqkPqfd7tB0MijB6/LIudk5ZqYjrTPCi35uPAgQbmZXG7NlViu3I8
-         CjnyZpcfxhNd6oznoI0p1IJv6pMML9gH0AYVsAXRRZ97Grkk28YdwYcLMDpLM54Wl3iL
-         ZMiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmtLSTd2t65A9bkphXSMD8zddkI8nvmENXuA4O1euZ7OLGNQua5Pi0Z42vgr0oTaN/h9M6hb5dy4RTQaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy546X/6D54EPu/oHRyOHqxKlLwb3CgLHKQShTbI9iHr7YhUNm0
-	Y/mBC/rxIGSg38ART5i4oQnH9bChpjEWDmnN5yWttIRi63Qp/2393Urw5p2FZXZavvYgsWIW2Zy
-	eVw4MyZWkuFFlCzhQnz91J5hwRTM2ePp2RX+MNA==
-X-Gm-Gg: ASbGncvUt2MAusUa9JcRtAwPvKPwAYzLUbwnKol0h8xPtJvB0a+E9j7bdyUWy1Z6bTe
-	dRwiOH0QXUfZS70Vwpxs89I6iRMQTaLU5ELOg52HAxiBG1qtwnezYkY497vLzR0LIGW3tapehkT
-	IDR1S3b8u9WKRsI/DpFFIhhA==
-X-Google-Smtp-Source: AGHT+IGaqMdDORoDk0oIpmVA9qaXULvhBDGAq3POpJ1BzdO1XxYTT5N0Ria/f7LYgIqZ49z5yfw6KL+iKeZIN3qeueM=
-X-Received: by 2002:a2e:ad07:0:b0:30b:a187:44ad with SMTP id
- 38308e7fff4ca-31049a80842mr57070551fa.26.1744723609211; Tue, 15 Apr 2025
- 06:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="u08LAllH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1744723652; x=1776259652;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=xZRvVk5qzUx/BSBKzSNc1vMSD4GWcEGpcr1tfcGLHmU=;
+  b=u08LAllHVXZU5ZadnLBpf981BYcuQDuahIaVssLZ9hMbgXs8Jb8FVoZx
+   OL1fc9vkhRRasYgn7iaS/9AC51MY2T9VjE69dxVjzg0Wp9kzLe9JelZ/s
+   apGbWNcA+dysmjjXQNBCeCJ3klMUSzC1ka+Lcsbw2AWu5mlQDcGEgyR91
+   q+iQd60RfzxbUt6G3Z/IsLxvyNcEKiTdKb3iVbe4Dh0SloGYihlL9+OZ2
+   8nxoQMqGihVTIycWCvG3U/WeiVbco+X14TxD31GFaxsKnWfeEIP6yfd/2
+   2OQaQkfiQ5GfXyo0/2hLb0PumVxL7B142AFh4kFZ5I1Nsaz81C9YmS+TQ
+   w==;
+X-CSE-ConnectionGUID: FN4IPNwESQaGizKyN6d47Q==
+X-CSE-MsgGUID: V4DD7CvSTzCKsqBNaCUQUw==
+X-IronPort-AV: E=Sophos;i="6.15,213,1739862000"; 
+   d="scan'208";a="40495080"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Apr 2025 06:27:31 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 15 Apr 2025 06:27:01 -0700
+Received: from vduicu-Virtual-Machine.mshome.net (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 15 Apr 2025 06:26:59 -0700
+From: <victor.duicu@microchip.com>
+To: <jic23@kernel.org>
+CC: <andy@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
+	<victor.duicu@microchip.com>, <marius.cristea@microchip.com>,
+	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/2] dt-bindings: iio: temperature: add support for MCP998X
+Date: Tue, 15 Apr 2025 16:26:22 +0300
+Message-ID: <20250415132623.14913-2-victor.duicu@microchip.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250415132623.14913-1-victor.duicu@microchip.com>
+References: <20250415132623.14913-1-victor.duicu@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408-asoc-gpio-v1-0-c0db9d3fd6e9@nxp.com> <20250408-asoc-gpio-v1-2-c0db9d3fd6e9@nxp.com>
-In-Reply-To: <20250408-asoc-gpio-v1-2-c0db9d3fd6e9@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 15:26:38 +0200
-X-Gm-Features: ATxdqUFtZb5w1hNZ9E0eX8yQcoRtW5MfxsP225UqiyweepZUJaPgIck-w3NPl28
-Message-ID: <CACRpkda=LhY0XCdA+YW=1J=YSpBtB7rxViz-3OBzXhkdxmxWLA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] ASoC: codec: tlv320aic32x4: Convert to GPIO descriptors
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, Baojun Xu <baojun.xu@ti.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Peter Ujfalusi <peter.ujfalusi@gmail.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	patches@opensource.cirrus.com, Peng Fan <peng.fan@nxp.com>, 
-	Markus Niebel <Markus.Niebel@ew.tq-group.com>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Apr 8, 2025 at 3:41=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.com=
-> wrote:
+From: Victor Duicu <victor.duicu@microchip.com>
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
->  - Use devm_gpiod_get_optional to get GPIO descriptor, and set consumer
->    name.
->  - Use gpiod_set_value to configure output value.
->
-> reset pin is active low, so when request the gpio, set GPIOD_OUT_HIGH to
-> assert reset and later deassert reset with value set to 0.
->
-> While at here, reorder the included headers.
->
-> Checking the DTS that use the device, all are using GPIOD_ACTIVE_LOW
-> polarity for reset-gpios, so all should work as expected with this patch.
->
-> Cc: Markus Niebel <Markus.Niebel@ew.tq-group.com>
-> Cc: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+This is the devicetree schema for Microchip MCP998X/33 and
+MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
+---
+ .../iio/temperature/microchip,mcp9982.yaml    | 182 ++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
 
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+new file mode 100644
+index 000000000000..8cbf897d1278
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+@@ -0,0 +1,182 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
++
++maintainers:
++  - Victor Duicu <victor.duicu@microchip.com>
++
++description: |
++  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
++  automotive temperature monitor.
++  The datasheet can be found here:
++    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
++
++properties:
++  compatible:
++    enum:
++      - microchip,mcp9933
++      - microchip,mcp9933D
++      - microchip,mcp9982
++      - microchip,mcp9982D
++      - microchip,mcp9983
++      - microchip,mcp9983D
++      - microchip,mcp9984
++      - microchip,mcp9984D
++      - microchip,mcp9985
++      - microchip,mcp9985D
++
++  reg:
++    maxItems: 1
++    
++  interrupts:
++    maxItems: 2
++    
++  interrupt-names:
++    description: |
++      ALERT1 indicates a HIGH or LOW limit was exceeded.
++      ALERT2 indicates a THERM limit was exceeded.
++    items:
++      - const: ALERT1
++      - const: ALERT2
++    
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++  microchip,temp-hysteresis:
++    description: |
++      Value of temperature limit hysteresis.
++      Omit this tag to set the default value.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    
++  microchip,extended-temp-range:
++    description: |
++      Set the chip to work in the extended temperature range -64 degrees C to 191.875 degrees C.
++      Omit this tag to set the default range 0 degrees C to 127.875 degrees C
++    type: boolean
++    
++  microchip,beta-channel1:
++    description: |
++      The beta compensation factor for external channel 1 can be set
++      by the user, or can be set automatically by the chip.
++      If one wants to enable beta autodetection, omit this tag.
++      Please consult the documentation if one wants to set a specific beta.
++      If anti-parallel diode operation is enabled, the default value is set
++      and can't be changed.
++    type: boolean
++    
++  microchip,beta-channel2:
++    description: |
++      The beta compensation factor for external channel 2 can be set
++      by the user, or can be set automatically by the chip.
++      If one wants to enable beta autodetection, omit this tag.
++      Please consult the documentation if one wants to set a specific beta.
++      If anti-parallel diode operation is enabled, the default value is set
++      and can't be changed.
++    type: boolean
++    
++  microchip,apdd-state:
++    description: |
++      Enable anti-parallel diode mode operation.
++      Omit this tag to disable anti-parallel diode mode by default.
++    type: boolean
++    
++  microchip,recd12:
++    description: |
++      Enable resistance error correction for external channels 1 and 2.
++      Not all chips support resistance error correction on external
++      channels 1 and 2, please consult the documentation.
++      Omit this tag to disable REC for channels 1 and 2 by default.
++    type: boolean
++    
++  microchip,recd34:
++    description: |
++      Enable resistance error correction for external channels 3 and 4.
++      Not all chips support resistance error correction on external
++      channels 3 and 4, please consult the documentation.
++      Omit this tag to disable REC for channels 3 and 4 by default.
++    type: boolean
++    
++  label:
++    description: Unique name to identify which device this is.
++    
++  vdd-supply: true
++ 
++patternProperties:
++  "^channel@[1-4]+$":
++    description: |
++      Represents the external temperature channels to which a remote diode is
++      connected.
++    type: object
++
++    properties:
++      reg:
++        items:
++          minimum: 1
++          maximum: 4
++      
++      microchip,ideality-factor:
++        description: |
++          Each channel has an ideality factor.
++          Beta compensation and resistance error correction automatically correct
++          for most ideality error. So ideality factor does not need to be adjusted in general.
++          Omit this tag in order to set the default value.
++          Please consult the documentation if one wants to set a specific ideality value.
++        $ref: /schemas/types.yaml#/definitions/uint32
++      
++      label:
++        description: Unique name to identify which channel this is.
++    
++    required:
++      - reg
++    
++    unevaluatedProperties: false
++
++required:
++  - compatible
++  - reg
++  - vdd-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        
++        temperature-sensor@4c {
++            compatible = "microchip,mcp9985";
++            reg = <0x4c>;
++            
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            label = "temperature-sensor";
++            
++            microchip,temp-hysteresis = <10>;
++            microchip,extended-temp-range;
++            microchip,apdd-state;
++            microchip,recd12;
++            microchip,recd34;
++            vdd-supply = <&vdd>;
++            
++            channel@1{
++                reg = <0x1>;
++                label = "CPU Temperature";
++            };
++            
++            channel@2{
++                reg = <0x2>;
++                label = "GPU Temperature";
++            };
++        };
++    };
++
++...
+-- 
+2.45.2
+
