@@ -1,44 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A99120DF4;
-	Tue, 15 Apr 2025 17:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C9D20ADD8;
+	Tue, 15 Apr 2025 17:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738736; cv=none; b=QKYjlRI6Gj/rkAZt5ak+mj4mv0xTXYRke4b3OolLsTHet/Pk8gmUkV4neFKo/Dq1aEpWuC47dkJl6m9hsOrPiq1Yh/ltxGeu1qRZBuCQ2nbVQ7+9WARo2WGqCn259AuXXDU9LLTq0TROajnpUgkjQQae7AU7PbEZTxokbVOMDlE=
+	t=1744738785; cv=none; b=GOqcbK3Xw31OLek8qtJ11pHKHY6+85KxJvfEcMr404FjGOxoA+M2n9QzH+/VV+2GmlU339XVuc+o21Q2F0LVHlJV8g/q3dGJPBoJCCZ66sYJq1EGwRketQf0BdKO8T7zJVG0mZ6aFIrmiCA4mlHCLO+eARm4un0UWBIa8PAMQoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738736; c=relaxed/simple;
-	bh=yLY33CQdf7L6MMr+9Op0Qh6MZholl6UqzNTWJlzwb9k=;
+	s=arc-20240116; t=1744738785; c=relaxed/simple;
+	bh=1OgdAc+XMf9ceuv3aO00YGNV+dWHLwywXLVNSuFAj58=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PzvZ20sbJ3QXDtMB/mdhBF9dw5fWFtzMcs0kOQC7AsYKudKG6gFw4zEkftP7sjjYpK6rdxI4RQ5WzuXjPBPH8qkwEzYlcB8045EApfje2Kkp+CIFtQFrFo4998CEtgd/hX4yHx1SPycGHJtpHzqukrUhgGVxml3rEXfpa9ULq10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E45C4CEE9;
-	Tue, 15 Apr 2025 17:38:53 +0000 (UTC)
-Date: Tue, 15 Apr 2025 13:40:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
- <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
- <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250415134028.4ae1569e@gandalf.local.home>
-In-Reply-To: <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
-	<20250227185822.810321199@goodmis.org>
-	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
-	<20250410131745.04c126eb@gandalf.local.home>
-	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-	<20250411124552.36564a07@gandalf.local.home>
-	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
-	<20250411131254.3e6155ea@gandalf.local.home>
-	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	 MIME-Version:Content-Type; b=cE0bpfOwNErJ7MwnI5Xo8/8SCHuXos5Ao4S/aQhVz2rxLRXmRfvP2UzPYpn0np4DwDw4S0ilLpEU4eIf8Zcu6Cb/jUI5ndOUfE5NmyCw1RJoHblPjM71wOHSO4rYm/L4Vc6gPNWDNofAqp4pjSNkKvPz4IV7GFBWjRtscCOq0ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGQw7H/v; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGQw7H/v"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-391342fc1f6so5040235f8f.1;
+        Tue, 15 Apr 2025 10:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744738782; x=1745343582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c7WHnmwev1Rd+gE3kqETUhHFn9A0Fc9wyWPE7zQNdrY=;
+        b=jGQw7H/v1nhSzGt5Tg4EpGq4SQwp1UVtUVpPF9ajS/0ZhjOACdOk2QqaVTezfC9x3F
+         7efJgQ92tLxkGEUE6G6zKkDfW/VpScBFaRzachP/0Iev8xi0wLj4u3sK8Bp/jvJnsSOh
+         5llOFnGlM5EhyXCfOesdVgqdJ0KHDXV/Fn75/Bf0eqQgzOk7z0T+PDUtUPHD0sT1kaLc
+         P/1BosvNT2UQkaWJr5DmORkvUDvYWSEd0UCHsUjlMhHwPcrukY4hXxTGcflTDOBngPAt
+         7Up4e/ElJH0YKcGc0ply2WT43ZoJqv2KhH59DBq3Ntk1fC80agjT3PEde/WQWj3p3AwX
+         udcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744738782; x=1745343582;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c7WHnmwev1Rd+gE3kqETUhHFn9A0Fc9wyWPE7zQNdrY=;
+        b=nhtBBfCbu2pHc+EVk0RiQihp0rKfmmzJ1K6YEqPnDukykyVj2kyWLaw6WUNWfF+5vt
+         BnLWYBCsMAaI6dQRjtKq9Vf9yjJWkfqzmhPuhHl/sPQEfRsDI5CzQY/z8/KI6TKZNebE
+         v2am34eYWLoGgJn14OV55lg6CsyI5sIauolmGVuW11JpPtoH3B4BNfS27a9kvj8SYPrT
+         GwMp5QY5pgJYG2HYIaAZlJn9d1EwWGm3CyrPS5bcRBRWCTjiQKGPp3Y3yRAN85i7QVoL
+         ui+wcfjkzR3Rlf1xAAxPmZPvj75PigRIwVvYxtFae079wsfK4QMKiBVytti6fWrbH6cE
+         sXgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUin6B2/KcpHDgsXbmdR+EuriMA8IUayzQ8IovL1YCddC4R6J6Cc36iIcIRwwbw94X+s68mf46pomc1iAk=@vger.kernel.org, AJvYcCVTX0SpLeSSUKMXRPgLDjyPlo3h0bD2ujYJQjbV3U+PTAZK+tWX0bjyIC+9FaVA3wtmQqeu04hPQZCqtEha@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygt7ld1bsJKSHV4Eo5HRmPYi2LAINO+NRB9yquHwzi5ceqVJxW
+	DQjoaHaDtub4JXF7O4azr2YaOpBDydGMEL9SwOdmASe4JtKT8lty
+X-Gm-Gg: ASbGnctV68DP4XVwbXbIu/fgrljOV7LzbDqdEyGKXE4s9EyPBRcLz5Wy3FpvU28vZcy
+	GWYp5PHsjv99CDl0GELmWAj/pt4rSkhny7Brzu7iBCIM6/PLVBu9i3cJiPxhjS44JR6KMhhbU0E
+	E5rGpnMgD2ittFuPnftof4riKWOwEEQIEM/TNzk0i4psfmgACI5oAR9F2AqKYIDD6UOjujsNmn7
+	NdDG0qm2NXD/y8TlCKiWitPAt9efm4SNOuKTAimnl7BO//7IVC9K4o7cB9V89kxmZmjZ35RHhPb
+	eBhpi9cZ7IDnUHbLOdXIVlEtPq2P1hQ6mvC+u3dR/wL7fBvmOlenQHew9s0zhmGhLo2rprtV2lV
+	SlJQ=
+X-Google-Smtp-Source: AGHT+IHt+/APiwEUu2bWsXv0tc2W1Z5iXsXMlW8SN5vGt1RjeUjffpRFfxAaTi7RMpaV5OcRH5vvuA==
+X-Received: by 2002:a05:6000:18a8:b0:39e:cbe1:8d68 with SMTP id ffacd0b85a97d-39ee2729e8fmr291658f8f.6.1744738781637;
+        Tue, 15 Apr 2025 10:39:41 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979637sm15148655f8f.53.2025.04.15.10.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 10:39:41 -0700 (PDT)
+Date: Tue, 15 Apr 2025 18:39:34 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Rae Moar <rmoar@google.com>, Shuah
+ Khan <skhan@linuxfoundation.org>, Sergio =?UTF-8?B?R29uesOhbGV6?= Collado
+ <sergio.collado@gmail.com>, David Gow <davidgow@google.com>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Mostafa Saleh <smostafa@google.com>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
+Message-ID: <20250415183934.46f4ed6f@pumpkin>
+In-Reply-To: <20250412102218.560196c0@batman.local.home>
+References: <20250328112156.2614513-1-arnd@kernel.org>
+	<ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
+	<20250411065054.GM9833@noisy.programming.kicks-ass.net>
+	<0073e739-e3aa-4743-ad2d-29d7c969f454@app.fastmail.com>
+	<20250411105849.GA5600@noisy.programming.kicks-ass.net>
+	<20250412102218.560196c0@batman.local.home>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,23 +88,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 18:39:05 +0100
-Mark Brown <broonie@kernel.org> wrote:
+On Sat, 12 Apr 2025 10:22:18 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> The tail end of the log there is:
+...
+> I just hit this on my allyesconfig build:
 > 
-> # # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
-> # # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-> # # + echo p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-> # # ./ftracetest: 16: echo: echo: I/O error
+>   NM      .tmp_vmlinux1.syms
+>   KSYMS   .tmp_vmlinux1.kallsyms.S
+> Symbol __cfi_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
+> Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
+...
 > 
-> which smells a bit of a shell incompatibility issue.  I'll try to find
-> time to have a look.
+> I grepped for that symbol and it lives in: lib/tests/longest_symbol_kunit.o
 
-Mark, can you test this patch to see if it fixes this?:
+Looks like it is carefully counted to be 511 characters.
+And then the compiler adds __cfi_ making 517.
+I guess the test could be changed?
 
-(I need to update the "Closes:" tag to be this email and not the top of the thread)
+Is it possible to remove the __cfi_ symbols (to save kernel memory) and then
+use a single bit to indicate that the previous few bytes (the same number for
+all such symbols) belong to the following symbol?
+Then stack backtraces would say "foo-n" instead "__cfi_foo+n".
 
-  https://lore.kernel.org/all/20250414210900.4de5e8b9@gandalf.local.home/
-
--- Steve
+	David
