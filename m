@@ -1,39 +1,67 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2345A79B;
-	Tue, 15 Apr 2025 10:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 204F61F3BA6
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711666; cv=none; b=qzFob0SA8W0Of6x2+y3lFPBeapBRntGDtRKbpTnJLgCuNSC+ib/XANqc9ecqKSfIjq/aRIaVqrqqn1GtCDnYsed732HfOOID0KPsjzSOfJJiYwXU1BCgXS1CtT6krrA+2nTpuUkueb91rTvS5kvAMBSWYw76+0iRDWZnn/nhXns=
+	t=1744711716; cv=none; b=UJXR8rBAwF6suK7utY9IqtoTediwRhap7LLhE/fFyxKzKUdYkxO27ezi+Dx9YdukcDIfbOj/5qnKI6DRuXULB9TibQN/DsLiVS8MOp2iCM3Q3uWrrB+0/dQAWfXmFFc40HZ5HvTus+JPCFtfXyaIBO1bW/XtUsT0/En8z6s4Sx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711666; c=relaxed/simple;
-	bh=PRa/dH9p8ZidJruhQ+47fsS/a2MLpzOjHTQByEXXWUE=;
+	s=arc-20240116; t=1744711716; c=relaxed/simple;
+	bh=KEdtRdGZtT6WGUPOU6xf9d1QLcy7vJjdG/Icf85RA/s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ShHefO+roCTioS9ZmpDZxFn3xg9INKCVbq/OopcEi7Kl+2Dso6AdDxPfOvHADKeDWmTAAUOIsGMzMddpZBjML/kXTGrHI5St6+CjdrB+htsg8t83LIFl+cLsRkXojfb5IiM4K2qD/9XxJ9XNA5dUh17GUfW3AJIWc89yW3KhhSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=n0lbMLyC; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=kOGfsSbmmS9y/sRX2Sv8spa1l7esWR/ddCUVIx/7tCKRxR6wllLi1EACdw+EsykVWf6oe1j1dcOxVvGeAlMSZxt/iZmzVON05em6LtWG+KswxlVlDdlSxTDo/l3nZoTBfBQq9nl5ttK0HlHJTqiL3Le27M5M78FoINxIMBjWGg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rlQ0SNej; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="n0lbMLyC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=vlK0Dri62mGNQqlwhnFyUcr4Z53lx2/utirBchiSPQk=; b=n0lbMLyCyPBW5L12MKsE+9Fdau
-	zeTIKDPA3rcAVYyr1VM4FvZh1LCWGdGBIeyXjl3p7RFi9O9ip7bucIQqTKZXwZqct0JwCm0RkonPU
-	izOQl8Dy2rzDbx4NYaHlSIchvVPabaUy7+n3HkeIkseg5kiAFA/yB0dMJK7jHGVNDE2gvLa8rA1du
-	oRCYRnalyT8b1xjP7PcYf4gXMMX8dGZPC1JrtK8qLTvknUzxXjQqltjaEdH9+Yw31Y6o/YF4cn/FJ
-	fiPowjR21wyHFcWCPDIZ7HHHSJs7v8nzf6/thGntL4P9Mli6lgzfjbFtTeLpBWTtvoHZwyZLfm6Pr
-	yvjzt4YQ==;
-Received: from 27-53-107-160.adsl.fetnet.net ([27.53.107.160] helo=[192.168.220.43])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u4dCD-00GtGI-OH; Tue, 15 Apr 2025 12:07:14 +0200
-Message-ID: <83629774-981b-44cb-a106-d549f1a43db9@igalia.com>
-Date: Tue, 15 Apr 2025 18:07:05 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rlQ0SNej"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FA6RQb010512;
+	Tue, 15 Apr 2025 10:08:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=uoWB6o
+	ODF4vGA/wVyvPkkBdMQtGQswkOl7jpkuoQoV8=; b=rlQ0SNejghombZ7hr/2EB1
+	5LaIz6BqTBUUSaz4/aEyqZxeiDb9IrVigj3z7LtPLBIbAlh7Q7XPV5r0NXt2K99c
+	B5UJmP6U7wjdjaQUYEBqcryVm+5LUciujo8en4CHvoZ8pD23hflY/eQs/qAEqlDi
+	YRNZIcZ75YoT70c/lx0hyi4LbWoafG723SSm5lPNRIi5RW49Je11+SoJPzuUjy2T
+	30kzRyUQVABNMmmtjJcJdNFxNecqFiDM8mY8Fb1zXrQs8mCFMjcIOgD6gxXZtIf8
+	5nervMIzufyN8URUNIx2I+KkBVB2Je5nvR0lVaOxBnA0qa3V9CwZh6BtVyZnc5tw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4610tpdkx2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 10:08:25 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53FA8Oci000572;
+	Tue, 15 Apr 2025 10:08:24 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4610tpdkwy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 10:08:24 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53F7vLZ7016431;
+	Tue, 15 Apr 2025 10:08:23 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46057228sa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 10:08:23 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53FA8NGG30474888
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Apr 2025 10:08:23 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 40DE658063;
+	Tue, 15 Apr 2025 10:08:23 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6CE8A58056;
+	Tue, 15 Apr 2025 10:08:20 +0000 (GMT)
+Received: from [9.124.211.75] (unknown [9.124.211.75])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 15 Apr 2025 10:08:20 +0000 (GMT)
+Message-ID: <b6b9a879-2d4c-4dc4-9977-e6eb93246f6d@linux.ibm.com>
+Date: Tue, 15 Apr 2025 15:38:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,221 +69,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
- entry
-To: Zi Yan <ziy@nvidia.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, willy@infradead.org,
- linmiaohe@huawei.com, hughd@google.com, revest@google.com,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-References: <20250414072737.1698513-1-gavinguo@igalia.com>
- <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
+Subject: Re: [PATCH 2/2] base/node: Use
+ curr_node_memblock_intersect_memory_block to Get Memory Block NID if
+ CONFIG_DEFERRED_STRUCT_PAGE_INIT is Set
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>
+References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
+ <d10d1a9f11e9f8752c7ec5ff5bb262b3f6c6bb85.1744175097.git.donettom@linux.ibm.com>
+ <Z_d8T3QtnZVeH3HF@kernel.org>
+ <d982df07-e7d1-4d4f-a2c3-857901ccc0d0@linux.ibm.com>
+ <Z_j2Gv9n4DOj6LSs@kernel.org>
+ <736ca451-8adc-4c5c-b721-6b78eaeb4699@linux.ibm.com>
+ <Z_4q_1TEJgcvlUlr@kernel.org>
 Content-Language: en-US
-From: Gavin Guo <gavinguo@igalia.com>
-In-Reply-To: <A049A15F-1287-4943-8EE4-833CEEC4F988@nvidia.com>
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <Z_4q_1TEJgcvlUlr@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: aFtTDFmMEtXLwjWTGD_9v8Nyr9-p_8K9
+X-Proofpoint-ORIG-GUID: 1GzkTuX2PTA6XZcj_qHVajY6bhEsw-TJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 clxscore=1015 mlxlogscore=780 adultscore=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504150070
 
-Hi Zi-Yan,
 
-Thank you for the comment!
+On 4/15/25 3:16 PM, Mike Rapoport wrote:
+> On Fri, Apr 11, 2025 at 05:06:55PM +0530, Donet Tom wrote:
+>> On 4/11/25 4:29 PM, Mike Rapoport wrote:
+>>> It might make sense to use for_each_mem_range() as top level loop in
+>>> node_dev_init(), but that's a separate topic.
+>> Yes, this makes sense to me as well. So in your opinion, instead of adding
+>> a new memblock search function like I added , it's better to use
+>> |for_each_mem_range()| in|node_dev_init()|, which would work for all
+>> cases—regardless of whether|CONFIG_DEFERRED_STRUCT_PAGE_INIT| is set or
+>> not. Right?
+>   
+> Yes
 
-On 4/15/25 00:50, Zi Yan wrote:
-> On 14 Apr 2025, at 3:27, Gavin Guo wrote:
-> 
->> When migrating a THP, concurrent access to the PMD migration entry
->> during a deferred split scan can lead to a page fault, as illustrated
-> 
-> It is an access violation, right? Because pmd_folio(*pmd_migration_entry)
-> does not return a folio address. Page fault made this sounded like not
-> a big issue.
+Thank you so much. I will implement it.
 
-Right, pmd_folio(*pmd_migration_entry) is defined with the following
-macro:
-
-#define pmd_folio(pmd) page_folio(pmd_page(pmd))
-
-page_folio will eventually access compound_head:
-
-static __always_inline unsigned long _compound_head(const struct page *page)
-{
-         unsigned long head = READ_ONCE(page->compound_head);
-         ...
-}
-
-However, given the invalid access address starting with 0xffffea
-(ffffea60001db008) which is the base address of the struct page. It
-indicates that the page address calculated from pmd_page is invalid
-during the THP migration where the pmd migration entry has been set up
-in set_pmd_migration_entry, for example:
-
-do_mbind
-   migrate_pages
-     migrate_pages_sync
-       migration_pages_batch
-         migrate_folio_unmap
-           try_to_migrate
-             try_to_migrate_one
-               rmap_walk_anon
-                 set_pmd_migration_entry
-                   set_pmd_at
-
-> 
->> below. To prevent this page fault, it is necessary to check the PMD
->> migration entry and return early. In this context, there is no need to
->> use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
->> of the target folio. Since the PMD migration entry is locked, it cannot
->> be served as the target.
-> 
-> You mean split_huge_pmd_address() locks the PMD page table, so that
-> page migration cannot proceed, or the THP is locked by migration,
-> so that it cannot be split? The sentence is a little confusing to me.
-
-During the THP migration, the THP folio is locked (folio_trylock). When
-this THP folio is identified as partially-mapped and inserted into the
-deferred split queue, the system then scans the queue and attempts to
-split the folio when memory is under pressure or through the sysfs debug
-interface. Since the migrated folio remained locked, during the
-deferred_split_scan, the folio_trylock fails with the migrated folio. As
-a result, the folio passed to split_huge_pmd_locked ends up being
-unequal to the folio referenced by the pmd migration entry, indicating
-the pmd migration folio cannot be the target for splitting and needs to
-return.
-
-An alternative approach is similar to the following:
-
-+       swp_entry_t entry;
-+       struct folio *dst;
-         if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
-             is_pmd_migration_entry(*pmd)) {
--               if (folio && folio != pmd_folio(*pmd))
--                       return;
-+               if (folio) {
-+                       if (is_pmd_migration_entry(*pmd)) {
-+                               entry = pmd_to_swp_entry(*pmd);
-+                               dst = pfn_swap_entry_folio(entry);
-+                       } else
-+                               dst = pmd_folio(*pmd);
-+
-+                       if (folio != dst)
-+                               return
-+               }
-                 __split_huge_pmd_locked(vma, pmd, address, freeze);
-
-However, this extra effort to translate the pmd migration folio is
-unnecessary. Any ideas of exceptions?
-
-> 
->>
->> BUG: unable to handle page fault for address: ffffea60001db008
->> CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
->> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
->> RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
->> Call Trace:
->> <TASK>
->> try_to_migrate_one+0x28c/0x3730
->> rmap_walk_anon+0x4f6/0x770
->> unmap_folio+0x196/0x1f0
->> split_huge_page_to_list_to_order+0x9f6/0x1560
->> deferred_split_scan+0xac5/0x12a0
->> shrinker_debugfs_scan_write+0x376/0x470
->> full_proxy_write+0x15c/0x220
->> vfs_write+0x2fc/0xcb0
->> ksys_write+0x146/0x250
->> do_syscall_64+0x6a/0x120
->> entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> The bug is found by syzkaller on an internal kernel, then confirmed on
->> upstream.
->>
->> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
->> ---
->>   mm/huge_memory.c | 18 ++++++++++++++----
->>   1 file changed, 14 insertions(+), 4 deletions(-)
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 2a47682d1ab7..0cb9547dcff2 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
->>   void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
->>   			   pmd_t *pmd, bool freeze, struct folio *folio)
->>   {
->> +	bool pmd_migration = is_pmd_migration_entry(*pmd);
->> +
->>   	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
->>   	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
->>   	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
->> @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
->>   	 * require a folio to check the PMD against. Otherwise, there
->>   	 * is a risk of replacing the wrong folio.
->>   	 */
->> -	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
->> -	    is_pmd_migration_entry(*pmd)) {
->> -		if (folio && folio != pmd_folio(*pmd))
->> -			return;
->> +	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration) {
->> +		if (folio) {
->> +			/*
->> +			 * Do not apply pmd_folio() to a migration entry; and
->> +			 * folio lock guarantees that it must be of the wrong
->> +			 * folio anyway.
-> 
-> Why does the folio lock imply it is a wrong folio?
-
-As explained above.
-
-> 
->> +			 */
->> +			if (pmd_migration)
->> +				return;
->> +			if (folio != pmd_folio(*pmd))
->> +				return;
->> +		}
-> 
-> Why not just
-> 
-> if (folio && pmd_migration)
-> 	return;
-> 
-> if (pmd_trans_huge() …) {
-> 	…
-> }
-> ?
-
-Do you mean to implement as follows?
-
-if (folio && pmd_migration)
-         return;
-
-if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd)) {
-         if (folio && folio != pmd_folio(*pmd))
-                 return;
-}
-
-if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) || pmd_migration)
-         __split_huge_pmd_locked(vma, pmd, address, freeze);
-
-To match the current upstream logic, when folio is null, no matter the
-condition is either pmd_trans_huge, pmd_devmap, or pmd_migration, the
-__split_huge_pmd_locked must be always executed. Given that, the
-__split_huge_pmd_locked cannot be put inside if condition for trans_huge
-and devmap. Likewise, the __split_huge_pmd_locked cannot be called
-directly without wrapping the if condition checks. What happens if this
-is not a pmd entry? This will be invoked unconditionally.
-
-The original implementation consolidates all the logic into one large if
-statement with nested if condition check. However, it's more robust and
-clear. The second one simplifies the structure and can rule out the
-pmd_migration earlier and doesn't have the big if condition. However,
-it's trickier and needs extra care and maintenance.
-
-> 
-> Thanks.
-> 
-> Best Regards,
-> Yan, Zi
-
-Thanks!
