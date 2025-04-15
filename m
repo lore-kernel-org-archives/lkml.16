@@ -1,102 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7F2973A2
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B832066F7;
+	Tue, 15 Apr 2025 15:34:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731153; cv=none; b=ZPUTqdXmeIgf4WVp2gm2GOcdr+Ki0iEL6HxTP3NF7nBmvjN0hylIgGz4pABaylB/BItkux2MbXd7qRRCJXrjamOZWqHY/qaTDCFu0WGbjqAtM7yGAb2RudlBC0Xh5rKWIVNCYb+4d7dGvkrObZzQq3Bf4ZzSwVKlaPk2NObOEU8=
+	t=1744731257; cv=none; b=tb2A4WiT+KRkNDEGx+Yk/RZbhy7f+YTpNVTkgZXG4nsYx3Aav/gPvkNbZtyI6AQTwOfFYNMyDBQIv+4dDOnQjaqSlK6l1LUMEFXOdeM18CnpfKCnDYHBJtzs3DVj7n3PQmNdW62Oj5l+Am6MEUsnQsYm5OzYZQQtjqAA7HrS2tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731153; c=relaxed/simple;
-	bh=MryQRg4mxc7mp/DKCiZYhG+Yw7K8aefw+wH8sohSJco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/2sPrh1U6m4qtx9u+DPAuuTH4GBhCJQb8m0NtXPdRnKk+8eKQBCcTJG+qHmNmT1F1YppbKeSo4lI0Ce2i9Tblgj7xbMh2wqNUaOXdmR1Nr6dBqchIVTk4UmrCnGFab2l0P+lf69MnwphljPuzfVVdEO4MiZ+95RqLn+Yc1ubv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jF6bQkfg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744731257; c=relaxed/simple;
+	bh=cpqtdMgP4pXsa/EYlUpj/7STbyGdrcFn3fsprhqFbKM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qlO9V8S6lEb/JN2zSF0MQABYq8+WYqzLrP8HZe0nNA+bF/InDz07OaA4R1pSGklNmeT3cWg3BSL/NaxEMgF/dVIqRR7WS6vpXBx3CU8H2evw0uRBVim7S4ugnmTS2ZynvDf6XKEmExGrlqG41LfmypaSVg4ACNrvmJPZVGeqlFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Last2mY7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jF6bQkfg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C97C4CEEB;
-	Tue, 15 Apr 2025 15:32:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Last2mY7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF4AC4CEEC;
+	Tue, 15 Apr 2025 15:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744731153;
-	bh=MryQRg4mxc7mp/DKCiZYhG+Yw7K8aefw+wH8sohSJco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jF6bQkfgqleLrGlk0kRy0AxYfnJGnjSWGaE+DYpr52dDb3sVnLMVLDpupnxpmji4O
-	 smH5+FtxM+vs3kno1Za/uyOorrYrPOKIGR06MtU1BwROPqkGKm4zCXdCi086weeXEs
-	 JTYfxN0U9iekw5J1brE341Ctt7n/04ibpfLaQISsQQz+/slAfOVMb5rgWEIYU7Tr1K
-	 nhft+ao7Pym74AirWRfd3gyidrFZd5XkyHTeZR0G48uRHcLBu4gHBFNXzgWSLLa82A
-	 /1tDQbQzOba2sR3i+H+FwaLWAB0GJHkdmEopnzj9ErxGY+8O45/wtzxnu8F5/wDfYJ
-	 KXpCUQpwmpUEA==
-Date: Tue, 15 Apr 2025 08:32:29 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brendan Jackman <jackmanb@google.com>, 
-	Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
- vector controls
-Message-ID: <wuryibff35vau3vvo5gj3d6fzvfedlhcnlyc5zlwlzvfdr2dro@lkwwglmgac7c>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-18-david.kaplan@amd.com>
- <fkl2b3ymatulazt2xjegubqcejx5bgaraktztpkitodrbbsozw@xrskej3fg3jf>
- <LV3PR12MB92654563086027BB944A117594B32@LV3PR12MB9265.namprd12.prod.outlook.com>
- <mybnv24fbz5nsxmz2yihzctnbv7ab7sznyotupp6mbpzfdvy2e@r2oantiw4wmo>
- <LV3PR12MB9265B84234C24D42E7CB42EC94B22@LV3PR12MB9265.namprd12.prod.outlook.com>
+	s=k20201202; t=1744731256;
+	bh=cpqtdMgP4pXsa/EYlUpj/7STbyGdrcFn3fsprhqFbKM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=Last2mY7nOCCfKDpbUTfU2HNd42ZOhle2TyyuZnwCrtU+hM0tI5VFPEBV2ArdtUPv
+	 gs0qgGBN4T3I4C4mVt/955WwZiMuKIRBCzKX5E12koWMev3zu0CQ8fFIg8hlO0aVKk
+	 E0dNnvIOUkHLx8aqPoH557bWQ3O1orD18SHFIwXATQxl3WrAyWIXAwZ5beLZVIGect
+	 SLi7OunkCFMctAcHcNk1OE5eG7QU0Ni7OLUqbZw/wXXAsuaY32b7jnge8MWEQHWaea
+	 88XpzhgqKHT5Iw1nLh00MNRF34DRXORMqJPHzRbkS8xvZcjRHAF2tuBFnCfKle4PMC
+	 3687B/yfm2DdA==
+Date: Tue, 15 Apr 2025 10:34:14 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB9265B84234C24D42E7CB42EC94B22@LV3PR12MB9265.namprd12.prod.outlook.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: =?utf-8?q?=C5=81ukasz_Czechowski?= <lukasz.czechowski@thaumatec.com>, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org
+To: Quentin Schulz <foss+kernel@0leil.net>
+In-Reply-To: <20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de>
+References: <20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de>
+Message-Id: <174473125440.400068.8321160690827825721.robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: usb: usb-device: allow multiple
+ compatibles
 
-On Tue, Apr 15, 2025 at 02:59:32PM +0000, Kaplan, David wrote:
-> > > > > +BHI                   X                           X
-> > > > > +GDS                   X              X            X              X        (Note 1)
-> > > > > +L1TF                  X                           X                       (Note 2)
-> > > > > +MDS                   X              X            X              X        (Note 2)
-> > > > > +MMIO                  X              X            X              X        (Note 2)
-> > > > > +Meltdown              X
-> > > > > +Retbleed              X                           X                       (Note 3)
-> > > > > +RFDS                  X              X            X              X
-> > > > > +Spectre_v1            X
-> > > > > +Spectre_v2            X                           X
-> > > > > +Spectre_v2_user                      X                           X        (Note 1)
-> > > > > +SRBDS                 X              X            X              X
-> > > > > +SRSO                  X                           X
-> > > > > +SSB (Note 4)
-> > > >
-> > > > Any reason not to put the "Note 4" in the same column as the others?
-> > > >
-> > >
-> > > The other notes are about cross-thread mitigation specifically and those notes
-> > refer to the SMT aspects of those issues.
-> > >
-> > > Note 4 in this case is about the SSB vulnerability itself, explaining
-> > > that by default there is no mitigation for any case.  I was concerned
-> > > that including SSB but without any X's in any of the columns would be
-> > > confusing, so the note attempted to explain that there were no default
-> > > mitigations for SSB under any attack vector.
-> >
-> > Putting the note there makes it a lot harder to see it.  And I think the lack of X's is
-> > accurate, no?
-> >
+
+On Tue, 15 Apr 2025 16:34:27 +0200, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> It is, it's just rather unique compared to the other bugs.  I could
-> remove the note entirely, but I was concerned that might look odd
-> because it'd be the only bug that isn't mitigated under any of the
-> attack vectors.  And that's really just because the current default is
-> not to mitigate that one.
+> The dt-core typically allows multiple compatibles[1] but usb-device
+> currently forces a single compatible.
+> 
+> This is an issue when multiple devices with slightly different productID
+> all behave the same. This would require the driver to keep updating its
+> compatible matching table and the bindings to include this new productID
+> instead of doing what is usually done: have two compatibles, the
+> leftmost which matches exactly the HW device definition, and the
+> rightmost one as a fallback which is assumed to be 100% compatible with
+> the device at hand. If this assumption turns out to be wrong, it is easy
+> to work around this without having to modify the device tree by handling
+> the leftmost compatible in the driver.
+> 
+> [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/dt-core.yaml#L21-L25
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+> This came up while working on fixing USB on an RK3399 Puma which has an
+> onboard USB hub whose productID isn't in any driver compatible list
+> but which can be supported by a driver with a slightly different
+> productID matching another variant of the same IC, from the same
+> datasheet.
+> 
+> See https://lore.kernel.org/linux-rockchip/20250326-onboard_usb_dev-v1-0-a4b0a5d1b32c@thaumatec.com/
+> ---
+>  Documentation/devicetree/bindings/usb/usb-device.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
 
-I think the note is helpful, it attempts to explain why there are no
-X's.  I was just thinking that it seems more logical to put it in the
-same column as the others.  And that would also help make it more clear
-that yes, the X's are missing.  Which is indeed odd, but it's also the
-reality.
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- 
-Josh
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/usb/usb-device.yaml: properties:compatible:items: {'pattern': '^usb[0-9a-f]{1,4},[0-9a-f]{1,4}$'} is not of type 'array'
+	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
