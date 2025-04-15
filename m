@@ -1,64 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112E6FC5;
-	Tue, 15 Apr 2025 00:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CB51BC4E;
+	Tue, 15 Apr 2025 00:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744678220; cv=none; b=fRgrR7ewnwqvZ0RA45TgL9Kpz7iUjSuftFlGbXjIZtAVvibOcDavFjNiHJ25Q8omyLh5b17vU4gvcWL6m6AvpLp0MBVcFhush241T5CodvNNGjoxDzlpJGHIWfKU0rx/X1Cyjmh8I9GAFDq42XWdPe50yxE62+AuL/erZ1TqaRY=
+	t=1744678395; cv=none; b=AEIxvzZTA14E319U/6po69NzYfVRuFx6jFj5t+r4IGh0nYegwpLFGu3grBlQR3xUBc8YulaHpnMnpFacCnH4k5RsXMcrwS6qw0T7zinihBZQ13wZJz29rjS4Pc67v/qsaIpqfFiYBuYH4UVePG+uB8qX44kkk+xAx39NEvavJ9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744678220; c=relaxed/simple;
-	bh=fkIT4XOhmgQ9Dgwghj4eYY0BwPt0ZkTj4KhWD2vfeM4=;
-	h=Date:From:To:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FH5lvHYn76hO2au1SMrtf/vLQEXO4txTj7pWMwAlv644qE0zVlx6xOe7kocZrzHe70F8vnmVBr5Y2wR1zTp4qJbiOBrXMceE2+1eya0eOMWCK5RSXfAbiAgHTTkwswdGQ3VxnO0EX/cDMq+ld7gwxobgY5+cIBn0Xj8ZBwnrPXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jF8PKxXT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744678395; c=relaxed/simple;
+	bh=rpcRVsmZpP1OTfgBK0pVQa/BNowodj/ZTEugq8lgEHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PQiDQ8HeOH+PBKj+6job69ofammYPLpGR0n0AXXIamB8lJ4wADwYHRwSRmcISyFbnwzHArHqdwWSy9zwPW8deYUi0gWOy9xTWOvJqZKQDmWJuQH724FCXnY8v6nAr5LTV8e6AWHQaOntk/8hOj7bifjUs0sKLM64qmXcZgIc/W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n+Wyy6N6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jF8PKxXT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA5EC4CEE2;
-	Tue, 15 Apr 2025 00:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744678219;
-	bh=fkIT4XOhmgQ9Dgwghj4eYY0BwPt0ZkTj4KhWD2vfeM4=;
-	h=Date:From:To:Subject:In-Reply-To:References:From;
-	b=jF8PKxXTj/N1UV0q80okyrWrgOjARI0AeiQqrGWHe8a1efJ2U8u8oDRund6nyswIf
-	 FiZqBYIzxNPULTV6+3dfQqLqlPJBLwAXG8q+oiXyWLach1PkSSIStRLD770BPj873k
-	 ulnUYLbvRhACyOXIIkXo0ZO3uhIL6D6TSxa5jIbA=
-Date: Mon, 14 Apr 2025 17:50:17 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, corbet@lwn.net, shuah@kernel.org,
- david@redhat.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
- ryan.roberts@arm.com, willy@infradead.org, peterx@redhat.com,
- ioworker0@gmail.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- dev.jain@arm.com, mhocko@suse.com, rientjes@google.com, hannes@cmpxchg.org,
- zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org,
- jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de,
- catalin.marinas@arm.com, anshuman.khandual@arm.com, raquini@redhat.com,
- aarcange@redhat.com, kirill.shutemov@linux.intel.com,
- yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com,
- vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org
-Subject: Re: [PATCH v3 0/4] mm: introduce THP deferred setting
-Message-Id: <20250414175017.872f9cf6d475674b28922a92@linux-foundation.org>
-In-Reply-To: <20250414173735.b6df2f87c2e8dea610efa901@linux-foundation.org>
-References: <20250414222456.43212-1-npache@redhat.com>
-	<20250414173735.b6df2f87c2e8dea610efa901@linux-foundation.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n+Wyy6N6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDDBC4CEEA;
+	Tue, 15 Apr 2025 00:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744678394;
+	bh=rpcRVsmZpP1OTfgBK0pVQa/BNowodj/ZTEugq8lgEHk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=n+Wyy6N6IcDOdsdf//4vJ3ol8RWOp12oQ0G4XNvCV3m29Z1NziZjpmYtNGIf0DPvV
+	 S0OTCHeej+biO7N7WtGMkqwWR58/fapqmPuTPH3N+ehV7JTlV3tZxh0IlvFHOmh4Ys
+	 1CR+dmOOt9jK/0K4vHulpPH+cEkd0qIrAZAhidNS1UXV5gtX/RrBGLA939nw5GNs+z
+	 HFQS1RNNM/nvucPHUThM2tBk8h427ROKjepMQLWMyJtSNHRIYpdGq9l+zEvzqWYTnX
+	 Mu/sqH5SnOy0VhOcy40W57MktIAGWg+HnacS/hZE/4JbuVbt3r+c8p0yuQ1upyN0Eq
+	 J9fk2szY0WcSw==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so8779683a12.2;
+        Mon, 14 Apr 2025 17:53:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUEQBoOjy8SylhkDWdbD0ZEjyrtjsq6OFSrLSNXGTeMK4cpYCA9dOXRwAODuzNlLF2H2uBUZi8KCHVDfanB@vger.kernel.org, AJvYcCWsxlVzm93TLCJeyWcI7c601ZUBoliMKT4e5sqXDxLkO/t+dezhVOUoiDwKNLpfGBduJxJOW8UwqtKx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhEEfXmgxfNGXEjd50EKmDyFL0PvlVC2Rgvcveh4zTGLja6YHj
+	OPxcZEmby02UJ1Ml4eDQk1nxSZCP1jTjvoDDbSuyKWse8da7jgO5UKgajxhPm0osLDj1Z3JxuPI
+	mjZ5uMInQqNXHhQM6FEj5rNS25Q==
+X-Google-Smtp-Source: AGHT+IHmZnqswUI6HY4X7lhwWG4IXdrIAQ98ELXwpAIik5dZKiLq3R4+YKd0t7tRwsYVN1y86TzHYWW3TmgHsiWOsdY=
+X-Received: by 2002:a17:906:f585:b0:ac7:3912:5ea8 with SMTP id
+ a640c23a62f3a-acad371af0amr1293247866b.61.1744678392821; Mon, 14 Apr 2025
+ 17:53:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250414214135.1680076-1-robh@kernel.org> <174466977142.1877467.9140482106900041765.robh@kernel.org>
+In-Reply-To: <174466977142.1877467.9140482106900041765.robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 14 Apr 2025 19:53:01 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK40++GbHbsXc2M2Q=wDv86=41kQrp=VJ-1nfMQN6rXng@mail.gmail.com>
+X-Gm-Features: ATxdqUGgBWF_RyIbWCm1WwHPzqKVexIxZ_OM52tDjGnbjYrGcxtLD8az7H9x9DA
+Message-ID: <CAL_JsqK40++GbHbsXc2M2Q=wDv86=41kQrp=VJ-1nfMQN6rXng@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: PCI: Convert marvell,armada8k-pcie to schema
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, 
+	linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
+	Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 14 Apr 2025 17:37:35 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
+On Mon, Apr 14, 2025 at 5:29=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
+ wrote:
+>
+>
+> On Mon, 14 Apr 2025 16:41:33 -0500, Rob Herring (Arm) wrote:
+> > Convert the marvell,armada8k-pcie binding to DT schema. The binding
+> > uses different names for reg, clocks, and phys which have to be added
+> > to the common Synopsys DWC binding.
+> >
+> > The "marvell,reset-gpio" property was not documented. Mark it deprecate=
+d
+> > as the "reset-gpios" property can be used instead. The "msi-parent"
+> > property was also not documented.
+> >
+> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > ---
+> >  .../bindings/pci/marvell,armada8k-pcie.yaml   | 100 ++++++++++++++++++
+> >  .../devicetree/bindings/pci/pci-armada8k.txt  |  48 ---------
+> >  .../bindings/pci/snps,dw-pcie-common.yaml     |   3 +-
+> >  .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+> >  MAINTAINERS                                   |   2 +-
+> >  5 files changed, 106 insertions(+), 51 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/marvell,armad=
+a8k-pcie.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-armada8k.=
+txt
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/p=
+ci/marvell,armada8k-pcie.example.dtb: pcie@f2600000 (marvell,armada8k-pcie)=
+: interrupts: [[0], [32], [4]] is too long
+>         from schema $id: http://devicetree.org/schemas/pci/marvell,armada=
+8k-pcie.yaml#
 
-> This will need updating to latest kernels, please.
+This is a bug in dtschema which I've now fixed.
 
-There I go, applying patchsets in reverse time order again.
-
-"[PATCH v3 07/12] khugepaged: add mTHP support" has one reject against
-current mainline, and two against current mm.git.
+Rob
