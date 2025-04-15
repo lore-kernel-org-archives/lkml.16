@@ -1,165 +1,114 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109932949EB;
-	Tue, 15 Apr 2025 14:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78252186294
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727876; cv=none; b=re+2L6Vjbvk3hn9kZsbN33kPr8udp5PMuq3jAO/IgpjROzZcqUfEtIeBcNBft6xHWe0tMbsPyM+k4Jz7yH/FewMLUOazmY7qARAkr4IwXSdXvi+Qc18qAvMxSEmwVuBR1+EoI1zPG4tP5VXN1ZyuXgLsE3wzP/kn5ooNkqDJf5w=
+	t=1744727936; cv=none; b=tBNhM4tR5Iv2nvZJSFuKCzbOyZHTTLns/XRaazmDwmcKdaWUYF5QiPFnrmOb5ddl+8RD5KTe6QMdTSG+vq6n7qSO2vMRCee08sRz3O25/mX4UkYTfrQmme5absWcI8NjZiSxcFVsUxwSCy2odBtxFXIof+pUoTQA95K/lihC3HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727876; c=relaxed/simple;
-	bh=V/a25hNDB5z+WSFk0T0WLV9zb5V5Bm1HJTIXWRoF3Aw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJiYoi5CuHMyTbYkaP1tvnQdR16CCww5VvetHT+Lratx1tGYsG9j2RCLIzwmqx/Mi1hL1mFFfnkT0US4GxFu4IQwlgqlDFvNbayN2/p+9TTrGg6D3dj5dH21+azbmGghTNzwQ0O0P+1owp2EG+SX0bTp4IlKCAz1W9fTL0xENj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gs2ht0Z1; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744727936; c=relaxed/simple;
+	bh=kYi/G7DS8yucADl/KkyCY0+Cn23HSPgimqEVlmD5PT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AfOXWhRvke4gr3783DNFleKSWu9W+2B+a+PJ9rC25pTcUf4ZCW5RYy01RgXSuowrcHEK0FO7Z/4ueVhj9iE45e/tCQu4+ndlkiqG1hnfPRgFvEvvJ3rYd7yPQRUGMn9SxXAmaS2NKGW5kKuLXpirDwEWnXyrOi4ehxDyT3OgQAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hM4WdmUE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gs2ht0Z1"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6febf391132so53012517b3.1;
-        Tue, 15 Apr 2025 07:37:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744727874; x=1745332674; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwIcbrCFSkjJ99K0oqnE440Z8NS7MO6dY71VBSoxwu4=;
-        b=gs2ht0Z1D7HKJsnKwjsguX87p00wVQOXeIBr10Tsm8xLfiPrxeFc0cT1ckxP6LhtJo
-         vmEYzj08zyQXj/OxsbMQ7h0+OkL5iQJql8XWsiM7SWPHo5M2y9gPy3z6Gy89E2OJYnrw
-         sQ8BZR87KSPQDuAzcH2KcUTA9ZBSFQISvOtMZK+FyhFpyijw0QXBoC88zcoMf1M3npOX
-         wK6peapQiz5MvMPXSxnUkc2/BYpgTJvKETdoHmTweRHMbTB8LlhdKAED9iZdQPaHtQeT
-         g2/dimH8T47MZo2266BbaejYupjRf/UEcV4nPWTENCK8c4dDNEemNsGlda5pWEK879DE
-         u+rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744727874; x=1745332674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwIcbrCFSkjJ99K0oqnE440Z8NS7MO6dY71VBSoxwu4=;
-        b=KQWGS1rJPs5epi+z9zCYm0+Q+V59qr4IvWEBsoXKphgm5zyUX5eQfhankMnOHmomgT
-         7mF7JGff37aqiYhkOgPjB0oLEojSHj+A9spSrboSaPUWcy5lKR6bFnNWUoBS7phQ++Z9
-         R/zxwdAztyU31u82+0w6JF53SP0Q/OYd6fJHIgyEprqzpu3e0RKpKleqs6DeDoUweHaM
-         krlT42xTyRn3f3li+Iz9KpxY04dkAWZ/N7qYtIzl3sNFBMZK6b2X0EKKlc6FaZw+8/M8
-         loS1DZQSqeHmlenR6y4DkjMQFdhYF210QrcCuQuDmJyFDZZBD3NdMFwY/GNEjSo9Camq
-         m+rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNHRuhpGQ57friAEfCwbpLUAkG226iK+hf26/4QTX1BBkYxVi0dxWKlqjixFgiuks/iYajeCoMKqpZFIP2@vger.kernel.org, AJvYcCVDjydCm41IMlLScYB2/gqJHtfmZeMSDCg8462GSVpMJ/1rvUf80P8ghtA1X5liSI/dP6Y7BqXCRo9nor7QAde2@vger.kernel.org, AJvYcCWEYbtBq5/ltax2vkIgsDaqRASPicfKQoPo8+zKJ9iiSXsn3qnZi7U4VGH0aGjo5MoQBWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRxnK7NxXW9hUkg47sRNa1hWXXeiJMtPBQ1xmgU8IF5iBeGKHC
-	M2MnjZlMGEZP70pEWzSboy3mSuaXRp3+K4lpMyBllsTcT4qjgPSUfx54lM8NcbQnlbPlyKuYhN6
-	tONIKhuwSakO7Dy45MzrVaaX84TI=
-X-Gm-Gg: ASbGncvGQCGnNinLAXO9sA8Ztvvf6Xqw+v1tR+/hHNbsLN18opGmldSDrsSsBhFtK6Z
-	cDm0B2clpTFrMPQjUm1YmrE4M8XKNZ7H5bLeenrFp1kfqhDbTE6aCyMOnnpCJpZ6E9at+5GXlL7
-	572eYcwUEUiCvmdNFnvzsjsg==
-X-Google-Smtp-Source: AGHT+IHUMxvu/aOeLKk2k5l1s/fZpbZMV26GOgsy8sNTFTBpovDHd4DLx4JmGn+hEKfCP1n08IvUdhwvV3xwn980+GM=
-X-Received: by 2002:a05:690c:38b:b0:6ff:1fac:c502 with SMTP id
- 00721157ae682-705599819femr253641937b3.6.1744727873793; Tue, 15 Apr 2025
- 07:37:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hM4WdmUE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744727933;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yWIjLbUYw25/PQVcItxs9iUgezbC0x0pYB89p458ZAQ=;
+	b=hM4WdmUEJtu71CZ5wZtoN6DHyIhIx62ViLXrIACURqlRVMJCE+CHc4uLlnA/twnRKqdbzL
+	nPPVTnu3Cv8pd1tRqhhYy/0iVgQ6FDKd2wF8ORnpNkP3FGCLge+fp4qTZSp2pBrp7l5y81
+	4VsjjyQ5qEO9zfiIMoIHQIdVjKpGggA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-671-cl1ikxPrO7WSHGtsHXvuJQ-1; Tue,
+ 15 Apr 2025 10:38:50 -0400
+X-MC-Unique: cl1ikxPrO7WSHGtsHXvuJQ-1
+X-Mimecast-MFC-AGG-ID: cl1ikxPrO7WSHGtsHXvuJQ_1744727929
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A23DE19560B7;
+	Tue, 15 Apr 2025 14:38:48 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 193C019560AD;
+	Tue, 15 Apr 2025 14:38:46 +0000 (UTC)
+Date: Tue, 15 Apr 2025 22:38:38 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH] vmalloc: Use atomic_long_add_return_relaxed()
+Message-ID: <Z/5vbrTJPvQ2lA8R@MiWiFi-R3L-srv>
+References: <20250415112646.113091-1-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412170626.3638516-1-kafai.wan@hotmail.com>
- <20250412170626.3638516-2-kafai.wan@hotmail.com> <Z_zk2ZaG5fRRFQio@krava>
-In-Reply-To: <Z_zk2ZaG5fRRFQio@krava>
-From: Kafai Wan <mannkafai@gmail.com>
-Date: Tue, 15 Apr 2025 22:37:42 +0800
-X-Gm-Features: ATxdqUFfDAA6h_yahdP12xKT_OlDfjXjxWcEGnJt25PijmtECR6HpfsyjMNRKAw
-Message-ID: <CALqUS-76D5ywRC6EUnd2O=L5VLuQBaOJOgnJeOLZxJpArqomtQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: Allow access to const void pointer
- arguments in tracing programs
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, mykolal@fb.com, shuah@kernel.org, 
-	memxor@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kafai.wan@hotmail.com, leon.hwang@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415112646.113091-1-urezki@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Apr 14, 2025 at 6:35=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Sun, Apr 13, 2025 at 01:06:25AM +0800, KaFai Wan wrote:
-> > Adding support to access arguments with const void pointer arguments
-> > in tracing programs.
-> >
-> > Currently we allow tracing programs to access void pointers. If we try =
-to
-> > access argument which is pointer to const void like 2nd argument in kfr=
-ee,
-> > verifier will fail to load the program with;
-> >
-> > 0: R1=3Dctx() R10=3Dfp0
-> > ; asm volatile ("r2 =3D *(u64 *)(r1 + 8); ");
-> > 0: (79) r2 =3D *(u64 *)(r1 +8)
-> > func 'kfree' arg1 type UNKNOWN is not a struct
-> >
-> > Adding is_void_ptr to generic void  pointer check.
-> >
-> > Cc: Leon Hwang <leon.hwang@linux.dev>
-> > Signed-off-by: KaFai Wan <kafai.wan@hotmail.com>
-> > ---
-> >  kernel/bpf/btf.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> > index 16ba36f34dfa..e11d3afd0562 100644
-> > --- a/kernel/bpf/btf.c
-> > +++ b/kernel/bpf/btf.c
-> > @@ -6383,6 +6383,14 @@ struct btf *bpf_prog_get_target_btf(const struct=
- bpf_prog *prog)
-> >               return prog->aux->attach_btf;
-> >  }
-> >
-> > +static bool is_void_ptr(struct btf *btf, const struct btf_type *t)
-> > +{
-> > +     /* skip modifiers */
-> > +     t =3D btf_type_skip_modifiers(btf, t->type, NULL);
-> > +
-> > +     return t->type =3D=3D 0;
->
-> I think you can use btf_type_is_void in here
->
+On 04/15/25 at 01:26pm, Uladzislau Rezki (Sony) wrote:
+> Switch from the atomic_long_add_return() to its relaxed version.
+> 
+> We do not need a full memory barrier or any memory ordering during
+> increasing the "vmap_lazy_nr" variable. What we only need is to do it
+> atomically. This is what atomic_long_add_return_relaxed() guarantees.
+> 
+> AARCH64:
+> 
+> <snip>
+> Default:
+>     40ec:       d34cfe94        lsr     x20, x20, #12
+>     40f0:       14000044        b       4200 <free_vmap_area_noflush+0x19c>
+>     40f4:       94000000        bl      0 <__sanitizer_cov_trace_pc>
+>     40f8:       90000000        adrp    x0, 0 <__traceiter_alloc_vmap_area>
+>     40fc:       91000000        add     x0, x0, #0x0
+>     4100:       f8f40016        ldaddal x20, x22, [x0]
+>     4104:       8b160296        add     x22, x20, x22
+> 
+> Relaxed:
+>     40ec:       d34cfe94        lsr     x20, x20, #12
+>     40f0:       14000044        b       4200 <free_vmap_area_noflush+0x19c>
+>     40f4:       94000000        bl      0 <__sanitizer_cov_trace_pc>
+>     40f8:       90000000        adrp    x0, 0 <__traceiter_alloc_vmap_area>
+>     40fc:       91000000        add     x0, x0, #0x0
+>     4100:       f8340016        ldadd   x20, x22, [x0]
+>     4104:       8b160296        add     x22, x20, x22
+> <snip>
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> ---
+>  mm/vmalloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 7bb32f498d39..9d4027041a3f 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2370,7 +2370,7 @@ static void free_vmap_area_noflush(struct vmap_area *va)
+>  	if (WARN_ON_ONCE(!list_empty(&va->list)))
+>  		return;
+>  
+> -	nr_lazy = atomic_long_add_return(va_size(va) >> PAGE_SHIFT,
+> +	nr_lazy = atomic_long_add_return_relaxed(va_size(va) >> PAGE_SHIFT,
+>  					 &vmap_lazy_nr);
 
-Yes, I will use btf_type_is_void.
+LGTM,
 
-> > +}
-> > +
-> >  static bool is_int_ptr(struct btf *btf, const struct btf_type *t)
-> >  {
-> >       /* skip modifiers */
-> > @@ -6776,7 +6784,7 @@ bool btf_ctx_access(int off, int size, enum bpf_a=
-ccess_type type,
-> >               }
-> >       }
-> >
-> > -     if (t->type =3D=3D 0)
-> > +     if (is_void_ptr(btf, t))
->
-> lgtm,
->
-> nit, the is_void_ptr name suggest there's also ptr check in the helper fu=
-nction,
-> which is not the case. I understand it follows is_int_ptr name, but perha=
-ps we
-> could rename both helpers to is_void and is_int ... feel free to ignore ;=
--)
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-you are right, I will rename it. but I'm not sure if it's possible to merge
-these two functions into one like is_void_or_int, they both skip modifiers.
-
->
-> jirka
->
->
-> >               /* This is a pointer to void.
-> >                * It is the same as scalar from the verifier safety pov.
-> >                * No further pointer walking is allowed.
-> > --
-> > 2.43.0
-> >
-
-thanks,
-kafai
