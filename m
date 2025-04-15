@@ -1,37 +1,37 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981525A79B
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BFA5A79B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711456; cv=none; b=JjW7LTNbDC4/ydxoDZ38NvCtg28T0nbW0Rqnm7cSpcQWQDjacjpR4vpK3BLYZeib9ry4TJsV1f8gR0A/VIAkRdHXKgK0hHsXswxlJc8r6z43fKp4d4iz0WyD+wNrtnqcVNuJKbFHLrdJM6r6TBdD0Ot97b8nSjbE0XYqGjVQ818=
+	t=1744711500; cv=none; b=O6q+HBMBNYTMN+IHvwmYosOi5zJPxvJ+Dk2/Rl+YTbHxn90dNz/YF3TEFtzUmmSrx4PNQaqsoVRabbC+YOMevfGZ+OiG7Neb6rRwxDjMoHu0b8h1XkRj9B0uemJ0JuLGjXsh01+mID8IqAI8digyhcrMANn8HAOfoAj6YPO3a9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711456; c=relaxed/simple;
-	bh=kh1N17nm4G8BETgUWDrITqmokoBaOnbImWGcfkkh73c=;
+	s=arc-20240116; t=1744711500; c=relaxed/simple;
+	bh=NGhYsTjwsATZaQhVQYw5cUGs7iFJxoPhM5Obwi5oozM=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=gasLHCxFSQN4grjQQKY3LD5huxa8xknC+As+jm/efOzOpmzfKXDE7pfxiS2jTNY9CwZeR6c3J8fCpBpnF52nPXVlC63xW8MyOm+9hEfZcPL17e2yLyyujA0Wj38+q9Axvq4/Ke4R5Nxrj14IkI+DWKHXzTMWmpxNpSbDtLEuRrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H3Kf3fsg; arc=none smtp.client-ip=217.70.183.199
+	 In-Reply-To:Content-Type; b=gPx6pWq77owfZhoyKtS/UJRDqWmTm5o33PoQtDBV7WhNEzIhbDjgFJohaVP2kzOEf98TSD5lKjQ+RJUP7rmAG1bfswMHG3uQusVUYif6ioe0b/MkUrqg0vTiYfwwvZsOdOv0+LXkSVqPhG8l3yOVkMzhtb0ZZwzSZi0wKqhN/Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JG5IDBlF; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H3Kf3fsg"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C89543976;
-	Tue, 15 Apr 2025 10:04:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JG5IDBlF"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5F62A439F4;
+	Tue, 15 Apr 2025 10:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744711452;
+	t=1744711490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qRMj/vsNMapHzG2QjUA1gZ5fCL3N0onkPIcJxPeTsHk=;
-	b=H3Kf3fsg5HmuTUNQcwGBhAIAvnm/Swx5fxQANvdySDlOVQrnXLSrlFXIbGRS5VOLIk2Blc
-	SHu4AI7PUmD8TOGrlzY315oc3VMZV8TPelV2yeBOdcIhcZI3FNSovi48KpLC3CogBx32Q4
-	1tkAjtSpkJaNmXKr3XsoxePnYeWFEWsDoWVKJyHqzMWOaMSywF/+f1Pszipf+PU1mn/fXV
-	079/Y4V2mXtHTO+TFUpE+6glW4lLoSAPqYzDd2SbEwEl9yy3nKDq4gQsNnfTIYqflGy3o1
-	s3yAOHWZnN5e48POESUKqn+ZEmXbl3R6QOl3HU2cH/dKsNEiuBd9l55BUSHL0w==
-Message-ID: <428d9ffb-70bb-42f3-bf4e-416cfd90f88c@bootlin.com>
-Date: Tue, 15 Apr 2025 12:04:11 +0200
+	bh=I6CuYOy4GYD9zvxjmy1AmmC0UZSDHwFw2g2dzby+uok=;
+	b=JG5IDBlFGFtDc0RDyZMChwk3/RLnHofyEUA1XksZ29g7VSG8Kq60SRuIqLE/Bcsny//IVl
+	63JQk2tD3ZOvZbyja+4ZokJJZ5e5OaBqDLDcYd5q+w17PAOZLXIfBzgpCUYfLXnIRUhpxa
+	YqBE8g8YqP84aWlsVdMzqTsPWw2yp1F2NHcwXQcvK+uorUffIxhkWMB68jJKExhd/PKh7K
+	zNSezpK+sfOYvCdTdXnJFlKJN2XqOByQOvYTY67frWqOhL/02FAfOmlqirHF3YSN4nLnRW
+	SRJVVUw8quCzwAVfYqAn2jeMI5SVavKm23ueXTmUzyvP9UeXLt2l5Az9IDWimw==
+Message-ID: <948a48a8-10c4-4440-b905-a1db669a31ba@bootlin.com>
+Date: Tue, 15 Apr 2025 12:04:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,8 +40,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [PATCH v3 20/54] dyndbg: check DYNAMIC_DEBUG_CLASSMAP_DEFINE args
- at compile-time
+Subject: Re: [PATCH v3 21/54] dyndbg-test: change do_prints testpoint to
+ accept a loopct
 To: Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
  gregkh@linuxfoundation.org, ukaszb@chromium.org, linux-kernel@vger.kernel.org
 Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
@@ -49,7 +49,7 @@ Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
  daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com,
  jani.nikula@intel.com, ville.syrjala@linux.intel.com
 References: <20250402174156.1246171-1-jim.cromie@gmail.com>
- <20250402174156.1246171-21-jim.cromie@gmail.com>
+ <20250402174156.1246171-22-jim.cromie@gmail.com>
 Content-Language: en-US
 Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
  xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
@@ -105,7 +105,7 @@ Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
  PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
  ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
  qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
-In-Reply-To: <20250402174156.1246171-21-jim.cromie@gmail.com>
+In-Reply-To: <20250402174156.1246171-22-jim.cromie@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
@@ -117,90 +117,95 @@ X-GND-Sasl: louis.chauvet@bootlin.com
 
 
 Le 02/04/2025 à 19:41, Jim Cromie a écrit :
-> Add __DYNAMIC_DEBUG_CLASSMAP_CHECK to implement the following
-> arg-checks at compile-time:
+> echo 1000 > /sys/module/test_dynamic_debug/parameters/do_prints
 > 
-> 	0 <= _base < 63
-> 	class_names is not empty
-> 	class_names[0] is a string
-
-I don't see where this is checked, did I miss something?
-
-> 	(class_names.length + _base) < 63
+> This allows its use as a scriptable load generator, to generate
+> dynamic-prefix-emits for flag combinations vs undecorated messages.
+> This will make it easy to assess the cost of the prefixing.
 > 
-> These compile-time checks will prevent several misuses; 4 such
-> examples are added to test_dynamic_debug_submod.ko, and will fail
-> compilation if -DDD_MACRO_ARGCHECK is added to cflags.  This wouldn't
-> be a useful CONFIG_ item, since it breaks the build.
+> Reading the ./do_prints node also prints messages (once) to the-log.
+> 
+> NB: the count is clamped to 10000, chosen to be notice able, but not
+> annoying, and not enough to accidentally flood the logs.
 > 
 > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> ---
-> v3- $macro_name =~ s/DYNDBG/DYNAMIC_DEBUG/
-> 
-> prev-
-> - split static-asserts to __DYNDBG_CLASSMAP_CHECK
-> - move __DYNDBG_CLASSMAP_CHECK above kdoc for DYNDBG_CLASSMAP_DEFINE
->    silences kernel-doc warnings
-> ---
->   include/linux/dynamic_debug.h |  9 +++++++++
->   lib/test_dynamic_debug.c      | 11 +++++++++++
->   2 files changed, 20 insertions(+)
-> 
-> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-> index 9af825c84e70..4941ef2adb46 100644
-> --- a/include/linux/dynamic_debug.h
-> +++ b/include/linux/dynamic_debug.h
-> @@ -99,6 +99,14 @@ struct _ddebug_class_map {
->   	enum ddebug_class_map_type map_type;
->   };
->   
-> +#define __DYNAMIC_DEBUG_CLASSMAP_CHECK(_clnames, _base)			\
-> +	static_assert(((_base) >= 0 && (_base) < _DPRINTK_CLASS_DFLT),	\
-> +		      "_base must be in 0..62");			\
-> +	static_assert(ARRAY_SIZE(_clnames) > 0,				\
-> +		      "classnames array size must be > 0");		\
-> +	static_assert((ARRAY_SIZE(_clnames) + (_base)) < _DPRINTK_CLASS_DFLT, \
-> +		      "_base + classnames.length exceeds range")
-> +
->   /**
->    * DYNAMIC_DEBUG_CLASSMAP_DEFINE - define debug classes used by a module.
->    * @_var:   name of the classmap, exported for other modules coordinated use.
-> @@ -112,6 +120,7 @@ struct _ddebug_class_map {
->    */
->   #define DYNAMIC_DEBUG_CLASSMAP_DEFINE(_var, _mapty, _base, ...)		\
->   	static const char *_var##_classnames[] = { __VA_ARGS__ };	\
 
-Or maybe it was already enforced by this, but in this case the commit 
-message contains too much checks.
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-> +	__DYNAMIC_DEBUG_CLASSMAP_CHECK(_var##_classnames, (_base));	\
->   	extern struct _ddebug_class_map _var;				\
->   	struct _ddebug_class_map __aligned(8) __used			\
->   		__section("__dyndbg_class_maps") _var = {		\
+I think this could be in a separate series / merged independently to 
+reduce the size of this series.
+
+> ---
+>   lib/test_dynamic_debug.c | 37 ++++++++++++++++++++++++++-----------
+>   1 file changed, 26 insertions(+), 11 deletions(-)
+> 
 > diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
-> index e42916b08fd4..9f9e3fddd7e6 100644
+> index 9f9e3fddd7e6..4a3d2612ef60 100644
 > --- a/lib/test_dynamic_debug.c
 > +++ b/lib/test_dynamic_debug.c
-> @@ -146,8 +146,19 @@ DYNDBG_CLASSMAP_DEFINE(classid_range_conflict, 0, D2_CORE + 1, "D3_CORE");
->   DYNAMIC_DEBUG_CLASSMAP_USE(map_disjoint_bits);
->   DYNAMIC_DEBUG_CLASSMAP_USE(map_level_num);
+> @@ -29,18 +29,30 @@
 >   
-> +#if defined(DD_MACRO_ARGCHECK)
-> +/*
-> + * Exersize compile-time arg-checks in DYNDBG_CLASSMAP_DEFINE.
-> + * These will break compilation.
-> + */
-> +DYNDBG_CLASSMAP_DEFINE(fail_base_neg, 0, -1, "NEGATIVE_BASE_ARG");
-> +DYNDBG_CLASSMAP_DEFINE(fail_base_big, 0, 100, "TOOBIG_BASE_ARG");
-> +DYNDBG_CLASSMAP_DEFINE(fail_str_type, 0, 0, 1 /* not a string */);
-> +DYNDBG_CLASSMAP_DEFINE(fail_emptyclass, 0, 0 /* ,empty */);
->   #endif
+>   #include <linux/module.h>
 >   
-> +#endif /* TEST_DYNAMIC_DEBUG_SUBMOD */
+> -/* re-gen output by reading or writing sysfs node: do_prints */
+> -
+> -static void do_prints(void); /* device under test */
+> +/* re-trigger debug output by reading or writing sysfs node: do_prints */
+> +#define PRINT_CLAMP 10000
+> +static void do_prints(unsigned int); /* device under test */
+>   static int param_set_do_prints(const char *instr, const struct kernel_param *kp)
+>   {
+> -	do_prints();
+> +	int rc;
+> +	unsigned int ct;
 > +
->   /* stand-in for all pr_debug etc */
->   #define prdbg(SYM) __pr_debug_cls(SYM, #SYM " msg\n")
+> +	rc = kstrtouint(instr, 0, &ct);
+> +	if (rc) {
+> +		pr_err("expecting numeric input, using 1 instead\n");
+> +		ct = 1;
+> +	}
+> +	if (ct > PRINT_CLAMP) {
+> +		ct = PRINT_CLAMP;
+> +		pr_info("clamping print-count to %d\n", ct);
+> +	}
+> +	do_prints(ct);
+>   	return 0;
+>   }
+>   static int param_get_do_prints(char *buffer, const struct kernel_param *kp)
+>   {
+> -	do_prints();
+> -	return scnprintf(buffer, PAGE_SIZE, "did do_prints\n");
+> +	do_prints(1);
+> +	return scnprintf(buffer, PAGE_SIZE, "did 1 do_prints\n");
+>   }
+>   static const struct kernel_param_ops param_ops_do_prints = {
+>   	.set = param_set_do_prints,
+> @@ -191,17 +203,20 @@ static void do_levels(void)
+>   	prdbg(V7);
+>   }
 >   
+> -static void do_prints(void)
+> +static void do_prints(unsigned int ct)
+>   {
+> -	pr_debug("do_prints:\n");
+> -	do_cats();
+> -	do_levels();
+> +	/* maybe clamp this */
+> +	pr_debug("do-prints %d times:\n", ct);
+> +	for (; ct; ct--) {
+> +		do_cats();
+> +		do_levels();
+> +	}
+>   }
+>   
+>   static int __init test_dynamic_debug_init(void)
+>   {
+>   	pr_debug("init start\n");
+> -	do_prints();
+> +	do_prints(1);
+>   	pr_debug("init done\n");
+>   	return 0;
+>   }
 
 -- 
 Louis Chauvet, Bootlin
