@@ -1,256 +1,175 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC75321171C
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7ABB2750E4;
+	Tue, 15 Apr 2025 07:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744701435; cv=none; b=p/z5kTwLXUz5ZVsWtK1/IiccTbYbeArkYcaigOpTAEjHySShL0sXEVj3RHo1X0Pz1R7S2au/fP/Mb0QSYvc2twGfG1gyvNZpYKLISk+GOVv8xSMbp2ImMo+w55HexIvjuc4m9X3VyC/TWLW+OMGwCEoZSdgWkPF8Kj4ENDOfc7M=
+	t=1744701522; cv=none; b=irVXQotjqze9fopEws1pY1YEjr4hxynoNfyuB8xB20IIexOmHUt+u5+CowQ73PZ3JTjblngc7ACdHGEl4yOAFlvQAT8EhIgEZBSKNorM7YTxeee4wxeHaSjcKiFD/dYAErvxDD4RQwDk1+z2xL3mHQ9iD6zOWhtOkFV9P7+6rXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744701435; c=relaxed/simple;
-	bh=T8MD/T4X8uKn1XMHfC5HIhpX3DfNRuLJFkxyCHa8pVY=;
+	s=arc-20240116; t=1744701522; c=relaxed/simple;
+	bh=GJLkjskX7cizH/QJtftzLj5Lofz1xtnYk99Eo9Q8FaA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqblMJkEFXKsXzvyB8zOIrKzmz2I2RgScpet3jdN+2OEdARKUTPsbVx8kI4CwkzBgUm6NSU7k1ZbbiBPky+bGO6npk/1NStbC8rT2sVYTaDkcrJXVdUIIzEhbEB0PqfIl5w1VGCGV7kMecPCHASk1A6nGCq6DuRC5SXHqacEsBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jT+val2g; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=H87BrEXsC7wp+ZLkfov/Z023YWflSRl+cmcfDWzjy2cJcoxBStXhrMh7ITI+eO7Iy4qm6EbCuTdQL10VSlpDkjNIpPZLc73yH6FheqVAZf0iRdwBCGwew/LbU4C+Cc2HQalT60htID/TewQLfbl5dLn9jUBENPaGtCWC3EZ1NHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHotjH1M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jT+val2g"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af5085f7861so3284815a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:17:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744701433; x=1745306233; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jV6NGQFGLg4JdFHEjIqGuC71J4i1+oIq9oJnSeBlp3s=;
-        b=jT+val2gxqHuZqijp2WtGSeJq3Gj+IiIDX6Z8Mx6BgdgRXLNmKjtFW0Egq5BH7cisG
-         PoAuRcF8Dd2GB3Kvlb3/1OGE71n+o1RsbQ++cfzk+dAFhEXll6dpskRq71sz8schxlr5
-         STal9GzTkdD8TIps9qg6rTE9eSNC+aoOZJymHrKs2Rjraeq1ZuSRbiAmfMtDUBqO9wio
-         NNYRbRABf1SvYrvV59gngBi8mhxzwgqBjUpipzmafSCgSt9Mq4Nn2csJM82s6afq+V6Z
-         4wAVaALivhIxMbjv2ggvghmfwPirYhZKV8zX0AK/gqb3XZkQiDJKPQBYFiSL41qzoI/c
-         5mpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744701433; x=1745306233;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jV6NGQFGLg4JdFHEjIqGuC71J4i1+oIq9oJnSeBlp3s=;
-        b=nmCi6PW1UpOqzkH3YtUXBjROVEBvK4RZ9WkDpkETBaDqIng6ZDYEqtQY7cI4gJekPL
-         rMhiz/5rKYOjXID4aH0YO30VN5hzt5pl3UTsxGDbBFd0pm3rT5C9Smo/Z9MgRuks31pl
-         TUg9fNh2+xfSKH72j8mT7Q4uOocdK14cq/8RRioJgxRWkO9wDURluWx4dawuOVp/tda2
-         DDsSpeXXpxcTjzzqLcphaAAKsgbx8DP86JeWLbkdwKT1dFf/q78Kh9mnIcIFbVAuSNWP
-         gT6tXe53eclFbKR2HVqglkfHrTrpHhvMWyPxR0ftNNRJ6sNngCnPSNe+BW5x0TSbkQXx
-         O3jA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdPND8L5JWqnfmt6SY4DNXe+EyOfzuxf50Xm3ViXDEx+nK2Tjkb3TDHC+nZ2BQsyW8Vxj0fIk5tWvnRac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKRuM/0OiwEf+TexRqiZwWwVwoGElWlN4myJkbVn9onJ3ueh1A
-	2SRxqkAsc69qGEUEGAZBHM5javIg0ClHkpGSGCcTQf/IlT/CTa8S8eCWwVacLw==
-X-Gm-Gg: ASbGnctIZm17RrLL7bnNv8RNiogmuzDtiw0KVwW8DkPYX8mYvlswOsJZkg8L0dckewc
-	62P5bzJ/fTDZBr5EQxqcKu8GTaUvIQG27UTiITdOzGZ9NC4jZeiyvRUJYu4KDV7gnoVEYgry18X
-	J5m6o/NB2QGlX6MZlY0RoiX6dlTGTMb+k7bt+NtZ1kdZCsYMdyc6PFIHsHjgTg1Vsd41qG8qm7E
-	x38d/Cmxyw7wtdOfTQ1QhXuYn5ogDVHs4h31fj+D8EX+o/KLzXeR3rxCdHy/ZsJq66MTIJl10N2
-	B2TojB43mLeB+ZlZPQVb5ZPauaDbWYgJCZCttTdxEYw/UAQ1mA==
-X-Google-Smtp-Source: AGHT+IEsKIi1AC4jZA/ksxZU1y9WCKtKtWG0llGnvi3XAKZ2YzyptaNOJKPI/OvYlRGlImVjo9ZAgw==
-X-Received: by 2002:a17:902:f707:b0:224:2175:b0cd with SMTP id d9443c01a7336-22bea4c3baamr218535905ad.26.1744701432954;
-        Tue, 15 Apr 2025 00:17:12 -0700 (PDT)
-Received: from thinkpad ([120.60.71.35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b355sm110106255ad.87.2025.04.15.00.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 00:17:12 -0700 (PDT)
-Date: Tue, 15 Apr 2025 12:47:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <cm5esahjwyoi5hky344nk2vfawf26hzgvu2rkplabav6d2r3gt@y4ypf6mdaapx>
-References: <20250328030213.1650990-4-hongxing.zhu@nxp.com>
- <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
- <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
- <AS8PR04MB8676BB3EDFCF3E5A490AC0628CAE2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <4qrfkx3ckywcbk7qbjplal5j7v6sjs3zebeehe5dnrgjz2ej2t@krdwjb4xm2sx>
- <AS8PR04MB8676221C998474EF5A9B94288CB72@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <h7pja24zffl4t7653rjaamp6v2j5nmukbzq7rdajynemlyb6l6@3e37ggkparjg>
- <AS8PR04MB8676CFD0FA7BCBB06AC51B018CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHotjH1M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E91C4CEDD;
+	Tue, 15 Apr 2025 07:18:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744701522;
+	bh=GJLkjskX7cizH/QJtftzLj5Lofz1xtnYk99Eo9Q8FaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cHotjH1M9rXSxjx/XCV3LFBxK2vFPrs2wagedjdU+2yaquL+NG/bcny2MH4SWdu7b
+	 Ws9TKHfGoXvCeEA/cTpZSqoQ0aKVKFQRACSutWQgd3Vonx4F9M3eLynRv/fqxK0tgM
+	 H/21VBX6KjVBz/9K/fYOIdyxyWC1aoNEbci25/aknl3Yk5nkoW9yywK0rsa163kmZa
+	 sCQi/LVx/FEUFiRn0Sn+ubrScarG4Y4josiZ3ksy+gmk4UEvKcAPvZaPAuntGEXV/r
+	 hT2ZE+eoRhRL3enyVWrVlsUsslYsriiwZ+Jl6VQch2rJS0IRqvDclw1hRg7pH6F4iw
+	 xDqqDulhw45FQ==
+Date: Tue, 15 Apr 2025 10:18:33 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Arnd Bergmann <arnd@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Davide Ciminaghi <ciminaghi@gnudd.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [tip: x86/urgent] x86/e820: Discard high memory that can't be
+ addressed by 32-bit systems
+Message-ID: <Z_4ISTuGo8VmZt9X@kernel.org>
+References: <20250413080858.743221-1-rppt@kernel.org>
+ <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
+ <a641e123-be70-41ab-b0ce-6710d7fd0c2d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676CFD0FA7BCBB06AC51B018CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+In-Reply-To: <a641e123-be70-41ab-b0ce-6710d7fd0c2d@intel.com>
 
-On Mon, Apr 14, 2025 at 03:15:28AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2025年4月13日 23:39
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
-> > L23 ready
-> > 
-> > On Thu, Apr 10, 2025 at 02:45:51AM +0000, Hongxing Zhu wrote:
-> > > > -----Original Message-----
-> > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > Sent: 2025年4月10日 0:44
-> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > > kernel@pengutronix.de; festevam@gmail.com;
-> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
-> > > > not exit L23 ready
-> > > >
-> > > > On Tue, Apr 08, 2025 at 03:02:42AM +0000, Hongxing Zhu wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Hongxing Zhu
-> > > > > > Sent: 2025年4月3日 11:23
-> > > > > > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > > bhelgaas@google.com; shawnguo@kernel.org;
-> > > > > > s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > > > > > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > > > > linux-arm-kernel@lists.infradead.org;
-> > > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > > Subject: RE: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe
-> > > > > > may not exit
-> > > > > > L23 ready
-> > > > > >
-> > > > > > > -----Original Message-----
-> > > > > > > From: Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org>
-> > > > > > > Sent: 2025年4月2日 23:18
-> > > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > > > bhelgaas@google.com; shawnguo@kernel.org;
-> > > > > > > s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > > > > > > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > > > > > linux-arm-kernel@lists.infradead.org;
-> > > > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe
-> > > > > > > may not exit L23 ready
-> > > > > > >
-> > > > > > > On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
-> > > > > > > > > -----Original Message-----
-> > > > > > > > > From: Manivannan Sadhasivam
-> > > > > > > > > <manivannan.sadhasivam@linaro.org>
-> > > > > > > > > Sent: 2025年4月2日 15:08
-> > > > > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > > > > > bhelgaas@google.com; shawnguo@kernel.org;
-> > > > > > > > > s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > > > > > > > > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > > > > > > > linux-arm-kernel@lists.infradead.org;
-> > > > > > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95
-> > > > > > > > > PCIe may not exit L23 ready
-> > > > > > > > >
-> > > > > > > > > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
-> > > > > > > > > > ERR051624: The Controller Without Vaux Cannot Exit L23
-> > > > > > > > > > Ready Through Beacon or PERST# De-assertion
-> > > > > > > > >
-> > > > > > > > > Is it possible to share the link to the erratum?
-> > > > > > > > >
-> > > > > > > > Sorry, the erratum document isn't ready to be published yet.
-> > > > > > > > > >
-> > > > > > > > > > When the auxiliary power is not available, the
-> > > > > > > > > > controller cannot exit from
-> > > > > > > > > > L23 Ready with beacon or PERST# de-assertion when main
-> > > > > > > > > > power is not removed.
-> > > > > > > > > >
-> > > > > > > > >
-> > > > > > > > > I don't understand how the presence of Vaux affects the
-> > controller.
-> > > > > > > > > Same goes for PERST# deassertion. How does that relate to
-> > > > > > > > > Vaux? Is this erratum for a specific endpoint behavior?
-> > > > > > > > IMHO I don't know the exact details of the power supplies in
-> > > > > > > > this IP
-> > > > design.
-> > > > > > > > Refer to my guess , maybe the beacon detect or wake-up logic
-> > > > > > > > in designs is  relied on the status of SYS_AUX_PWR_DET
-> > > > > > > > signals in this
-> > > > case.
-> > > > > > >
-> > > > > > > Can you please try to get more details? I couldn't understand the
-> > errata.
-> > > > > > >
-> > > > > > Sure. Will contact designer and try to get more details.
-> > > > > Hi Mani:
-> > > > > Get some information from designs, the internal design logic is
-> > > > > relied on the  status of SYS_AUX_PWR_DET signal to handle the low
-> > power stuff.
-> > > > > So, the SYS_AUX_PWR_DET is required to be 1b'1 in the SW
-> > workaround.
-> > > > >
-> > > >
-> > > > Ok. So due to the errata, when the link enters L23 Ready state, it
-> > > > cannot transition to L3 when Vaux is not available. And the
-> > > > workaround requires setting SYS_AUX_PWR_DET bit?
-> > > >
-> > > Refer to the description of this errata, it just mentions the exist
-> > > from
-> > >  L23 Ready state.
-> > 
-> > Exiting from L23 Ready == entering L2/L3. And since you mentioned that Vaux
-> > is not available, it is definitely entering L3.
-> > 
-> > > Yes, the workaround requires setting SYS_AUX_PWR_DET bit to 1b'1.
-> > >
-> > > > IIUC, the issue here is that the controller is not able to detect
-> > > > the presence of Vaux in the L23 Ready state. So it relies on the
-> > > > SYS_AUX_PWR_DET bit. But even in that case, how would you support the
-> > endpoint *with* Vaux?
-> > > >
-> > > This errata is only applied for i.MX95 dual PCIe mode controller.
-> > > The Vaux is not present for i.MX95 PCIe EP mode either.
-> > >
-> > 
-> > First of all, does the controller really know whether Vaux is supplied to the
-> > endpoint or not? AFAIK, it is up to the board designers to route Vaux and only
-> > endpoint should care about it.
-> > 
-> > I still feel that this specific erratum is for fixing the issue with some endpoints
-> > where Vaux is not supplied and the link doesn't exit L23 Ready. Again, what
-> > would be the behavior if Vaux is supplied to the endpoint? You cannot just say
-> > that the controller doesn't support Vaux, which is not a valid statement IMO.
-> > 
-> Sorry, I miss-understand the question you posted in the previous reply.
-> I get the following answer from designers when the Vaux is supplied to the
->  remote endpoint. Hope it can get ride of your concerns.
-> Q:
-> How about the situations when remote partner has the Vaux present?
-> For example, i.MX95 PCIe used as RC, and a endpoint device with one Vaux
->  present is connected to i.MX95 PCIe RC.
+On Mon, Apr 14, 2025 at 07:19:02AM -0700, Dave Hansen wrote:
+> On 4/13/25 02:23, tip-bot2 for Mike Rapoport (Microsoft) wrote:
+> > +	/*
+> > +	 * 32-bit systems are limited to 4BG of memory even with HIGHMEM and
+> > +	 * to even less without it.
+> > +	 * Discard memory after max_pfn - the actual limit detected at runtime.
+> > +	 */
+> > +	if (IS_ENABLED(CONFIG_X86_32))
+> > +		memblock_remove(PFN_PHYS(max_pfn), -1);
 > 
-> A:
-> " As per my understanding it should work irrespective of vaux presence in remote partner."
+> Mike, thanks for the quick fix! I did verify that this gets my silly
+> test VM booting again.
+> 
+> The patch obviously _works_. But in the case I was hitting max_pfn was
+> set MAX_NONPAE_PFN. The unfortunate part about this hunk is that it's
+> far away from the related warning:
 
-Okay, thanks for the confirmation. Please include this information in commit
-message for documentation.
+Yeah, my first instinct was to put memblock_remove() in the same 'if',
+but there's no memblock there yet :)
+ 
+> >         if (max_pfn > MAX_NONPAE_PFN) {
+> >                 max_pfn = MAX_NONPAE_PFN;
+> >                 printk(KERN_WARNING MSG_HIGHMEM_TRIMMED);
+> >         }
+> 
+> and it's logically doing the same thing: truncating memory at
+> MAX_NONPAE_PFN.
+> 
+> How about we reuse 'MAX_NONPAE_PFN' like this:
+> 
+> 	if (IS_ENABLED(CONFIG_X86_32))
+> 		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
+> 
+> Would that make the connection more obvious?
 
-- Mani
+Yes, that's better. Here's the updated patch:
+
+From a235764221e4a849fa274a546ff2a3d9f15da2a9 Mon Sep 17 00:00:00 2001
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+Date: Sun, 13 Apr 2025 10:36:17 +0300
+Subject: [PATCH v2] x86/e820: discard high memory that can't be addressed by
+ 32-bit systems
+
+Dave Hansen reports the following crash on a 32-bit system with
+CONFIG_HIGHMEM=y and CONFIG_X86_PAE=y:
+
+  > 0xf75fe000 is the mem_map[] entry for the first page >4GB. It
+  > obviously wasn't allocated, thus the oops.
+
+  BUG: unable to handle page fault for address: f75fe000
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  *pdpt = 0000000002da2001 *pde = 000000000300c067 *pte = 0000000000000000
+  Oops: Oops: 0002 [#1] SMP NOPTI
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc1-00288-ge618ee89561b-dirty #311 PREEMPT(undef)
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+  EIP: __free_pages_core+0x3c/0x74
+  Code: c3 d3 e6 83 ec 10 89 44 24 08 89 74 24 04 c7 04 24 c6 32 3a c2 89 55 f4 e8 a9 11 45 fe 85 f6 8b 55 f4 74 19 89 d8 31 c9 66 90 <0f> ba 30 0d c7 40 1c 00 00 00 00 41 83 c0 28 39 ce 75 ed 8b
+
+  EAX: f75fe000 EBX: f75fe000 ECX: 00000000 EDX: 0000000a
+  ESI: 00000400 EDI: 00500000 EBP: c247becc ESP: c247beb4
+  DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210046
+  CR0: 80050033 CR2: f75fe000 CR3: 02da6000 CR4: 000000b0
+  Call Trace:
+   memblock_free_pages+0x11/0x2c
+   memblock_free_all+0x2ce/0x3a0
+   mm_core_init+0xf5/0x320
+   start_kernel+0x296/0x79c
+   ? set_init_arg+0x70/0x70
+   ? load_ucode_bsp+0x13c/0x1a8
+   i386_start_kernel+0xad/0xb0
+   startup_32_smp+0x151/0x154
+  Modules linked in:
+  CR2: 00000000f75fe000
+
+The mem_map[] is allocated up to the end of ZONE_HIGHMEM which is defined
+by max_pfn.
+
+Before 6faea3422e3b ("arch, mm: streamline HIGHMEM freeing") freeing of
+high memory was also clamped to the end of ZONE_HIGHMEM but after
+6faea3422e3b memblock_free_all() tries to free memory above the of
+ZONE_HIGHMEM as well and that causes access to mem_map[] entries beyond
+the end of the memory map.
+
+Discard the memory after MAX_NONPAE_PFN from memblock on 32-bit systems
+so that core MM would be aware only of actually usable memory.
+
+Reported-by: Dave Hansen <dave.hansen@intel.com>
+Tested-by: Arnd Bergmann <arnd@kernel.org>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ arch/x86/kernel/e820.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 57120f0749cc..5e6b1034e6f1 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1300,6 +1300,13 @@ void __init e820__memblock_setup(void)
+ 		memblock_add(entry->addr, entry->size);
+ 	}
+ 
++	/*
++	 * Discard memory above 4GB because 32-bit systems are limited to 4GB
++	 * of memory even with HIGHMEM.
++	 */
++	if (IS_ENABLED(CONFIG_X86_32))
++		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
++
+ 	/* Throw away partial pages: */
+ 	memblock_trim_memory(PAGE_SIZE);
+ 
+-- 
+2.47.2
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Sincerely yours,
+Mike.
