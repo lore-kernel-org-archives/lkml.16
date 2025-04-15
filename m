@@ -1,47 +1,49 @@
-Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D014228E5EE
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C261C8634
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:46:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710320; cv=none; b=fsh66/ikeR4lGUjwJZ/2+NLnYGyYHqb2H/rp6h9Cm+7XMjIfVYoaMfqAtUm2OM+DijjN2F8Q9nntwC92Geo9KUXGGV0BkwhxTrIUtL1+DyC3ZScXXcLSffdw14fakeLPbh/ESaRBrfjxvmgHHXx7DvL8FcVM/QgCmZj6pbDwJSQ=
+	t=1744710406; cv=none; b=LliPIzNDRHVwZjU+0nen+TrAlVlMFkBUxdQ5XhWIr8QP7UHoeV/cf27B3YqVBmKc/q+/EloUdNl7jRCxo6k/Hcwfe6/NwiRQprPBqSCgOIZlhvk5QsuqHGFnwybpmJp5+RrGmFIKXBr9B/1aM7NxDddtVHjjWhFY+LRcTcwg4js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710320; c=relaxed/simple;
-	bh=28UsXXE8f6JRjCoy1GJYsta2nK9fbaJ05h8GUvK8dSA=;
+	s=arc-20240116; t=1744710406; c=relaxed/simple;
+	bh=ubJuCgEktYeJEwKzyfDHYPMVDAymZjfYVt5jrt9RCgM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/FXXTfwpPk1iUTuYZ3hvz/WaA9g039X06Dlg5o/C/dTrfrrdlBbUkDsbQdwnDM3HYWlbubMmO1og6knWFYe3Vwtw7Wy8lYFFtRNzKkTx1bT6KuGmVjgJiiLEqZ3LZZAjGnwRzIukpcnzk1yvekfFeArTk14vfso+zoSx55e4dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CReVAz9Q; arc=none smtp.client-ip=84.16.66.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvPXyygWP6dVBT9RvHYZ8+3Zs+ucaX8RvTIMJMluAZHZUlmpy9LpsfbBoxQFpKnePfwQfojcb3FhvGrUQiza7HKl9Luv5HRx4P0YJwF4ogy2pXbwdCmM+CezR54hUan4VLeDDIal5/wCN63cQ89YPZliKkktsoqY1JwF5kkwS6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHOwiFK5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CReVAz9Q"
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZcJlS14QNzF0Y;
-	Tue, 15 Apr 2025 11:29:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1744709380;
-	bh=w122IkwKpIFchvBGmJYVkBlhuud7xib14rHOWPuOBeU=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHOwiFK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998E6C4CEDD;
+	Tue, 15 Apr 2025 09:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744710405;
+	bh=ubJuCgEktYeJEwKzyfDHYPMVDAymZjfYVt5jrt9RCgM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CReVAz9QmeMt6VWs6yrVjd11gGpMGlnPk5sxckRYh+Es6+AAi4jlw7z5eZ2M6EFjj
-	 aJz+crKM5FfCBX/J5BMBUehYfOeNwFWzcaa9LD9K4HluhHfG8df+K0LXj4ZkZrIlH4
-	 Qgxf5RcqPcllnq+RMaFeIcXEHrDWJAy8wWwyEfVk=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZcJlQ5hXSzJSG;
-	Tue, 15 Apr 2025 11:29:38 +0200 (CEST)
-Date: Tue, 15 Apr 2025 11:29:38 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Jon Kohler <jon@nutanix.com>, Sean Christopherson <seanjc@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alexander Grest <Alexander.Grest@microsoft.com>, 
-	Nicolas Saenz Julienne <nsaenz@amazon.es>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
-	Tao Su <tao1.su@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	Zhao Liu <zhao1.liu@intel.com>
-Subject: Re: [RFC PATCH 00/18] KVM: VMX: Introduce Intel Mode-Based Execute
- Control (MBEC)
-Message-ID: <20250415.AegioKi3ioda@digikod.net>
-References: <20250313203702.575156-1-jon@nutanix.com>
+	b=jHOwiFK58QsfAjPzjHIg+oH0ZYQngiVsdrzsdtT78pukFUHkW/mo0akv2YvuiYP/6
+	 uc4CZkIOOXIlI5UZUsys964/wx90L0lBq5uobZDXpzpa/1pHkXcG7zi9dkXTHGzj2f
+	 +iLZ6CqNDUYknfoXLrNpMuwu+3gdtkU89gLzw4xesdg7GugZGW6RSyyd8dKo+VoIsr
+	 qKHzpkdlC5ZOvtvjBDOc6C6ERot8KlhM7oChdWDBPUFcGWZv8rTm49vi/eI0IAPBGh
+	 eMssZ890SgtE8jJXTasxvlBbuGRR/xj+WyCb+aMGl9hGoGr6ZoGM5l1E3+Chmi6k+3
+	 e+GOR7GoeNFSA==
+Date: Tue, 15 Apr 2025 12:46:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH 2/2] base/node: Use
+ curr_node_memblock_intersect_memory_block to Get Memory Block NID if
+ CONFIG_DEFERRED_STRUCT_PAGE_INIT is Set
+Message-ID: <Z_4q_1TEJgcvlUlr@kernel.org>
+References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
+ <d10d1a9f11e9f8752c7ec5ff5bb262b3f6c6bb85.1744175097.git.donettom@linux.ibm.com>
+ <Z_d8T3QtnZVeH3HF@kernel.org>
+ <d982df07-e7d1-4d4f-a2c3-857901ccc0d0@linux.ibm.com>
+ <Z_j2Gv9n4DOj6LSs@kernel.org>
+ <736ca451-8adc-4c5c-b721-6b78eaeb4699@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,158 +53,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313203702.575156-1-jon@nutanix.com>
-X-Infomaniak-Routing: alpha
+In-Reply-To: <736ca451-8adc-4c5c-b721-6b78eaeb4699@linux.ibm.com>
 
-Hi,
+On Fri, Apr 11, 2025 at 05:06:55PM +0530, Donet Tom wrote:
+> On 4/11/25 4:29 PM, Mike Rapoport wrote:
+> >
+> > It might make sense to use for_each_mem_range() as top level loop in
+> > node_dev_init(), but that's a separate topic.
+> 
+> Yes, this makes sense to me as well. So in your opinion, instead of adding
+> a new memblock search function like I added , it's better to use
+> |for_each_mem_range()| in|node_dev_init()|, which would work for all
+> cases—regardless of whether|CONFIG_DEFERRED_STRUCT_PAGE_INIT| is set or
+> not. Right?
+ 
+Yes
 
-This series looks good, just some inlined questions.
-
-Sean, Paolo, what do you think?
-
-Jon, what is the status of the QEMU patches?
-
-Regards,
- Mickaël
-
-On Thu, Mar 13, 2025 at 01:36:39PM -0700, Jon Kohler wrote:
-> ## Summary
-> This series introduces support for Intel Mode-Based Execute Control
-> (MBEC) to KVM and nested VMX virtualization, aiming to significantly
-> reduce VMexits and improve performance for Windows guests running with
-> Hypervisor-Protected Code Integrity (HVCI).
-> 
-> ## What?
-> Intel MBEC is a hardware feature, introduced in the Kabylake
-> generation, that allows for more granular control over execution
-> permissions. MBEC enables the separation and tracking of execution
-> permissions for supervisor (kernel) and user-mode code. It is used as
-> an accelerator for Microsoft's Memory Integrity [1] (also known as
-> hypervisor-protected code integrity or HVCI).
-> 
-> ## Why?
-> The primary reason for this feature is performance.
-> 
-> Without hardware-level MBEC, enabling Windows HVCI runs a 'software
-> MBEC' known as Restricted User Mode, which imposes a runtime overhead
-> due to increased state transitions between the guest's L2 root
-> partition and the L2 secure partition for running kernel mode code
-> integrity operations.
-> 
-> In practice, this results in a significant number of exits. For
-> example, playing a YouTube video within the Edge Browser produces
-> roughly 1.2 million VMexits/second across an 8 vCPU Windows 11 guest.
-> 
-> Most of these exits are VMREAD/VMWRITE operations, which can be
-> emulated with Enlightened VMCS (eVMCS). However, even with eVMCS, this
-> configuration still produces around 200,000 VMexits/second.
-> 
-> With MBEC exposed to the L1 Windows Hypervisor, the same scenario
-> results in approximately 50,000 VMexits/second, a *24x* reduction from
-> the baseline.
-> 
-> Not a typo, 24x reduction in VMexits.
-> 
-> ## How?
-> This series implements core KVM support for exposing the MBEC bit in
-> secondary execution controls (bit 22) to L1 and L2, based on
-> configuration from user space and a module parameter
-> 'enable_pt_guest_exec_control'. The inspiration for this series
-> started with Mickaël's series for Heki [3], where we've extracted,
-> refactored, and extended the MBEC-specific use case to be
-> general-purpose.
-> 
-> MBEC, which appears in Linux /proc/cpuinfo as ept_mode_based_exec,
-> splits the EPT exec bit (bit 2 in PTE) into two bits. When secondary
-> execution control bit 22 is set, PTE bit 2 reflects supervisor mode
-> executable, and PTE bit 10 reflects user mode executable.
-> 
-> The semantics for EPT violation qualifications also change when MBEC
-> is enabled, with bit 5 reflecting supervisor/kernel mode execute
-> permissions and bit 6 reflecting user mode execute permissions.
-> This ultimately serves to expose this feature to the L1 hypervisor,
-> which consumes MBEC and informs the L2 partitions not to use the
-> software MBEC by removing bit 14 in 0x40000004 EAX [4].
-> 
-> ## Where?
-> Enablement spans both VMX code and MMU code to teach the shadow MMU
-> about the different execution modes, as well as user space VMM to pass
-> secondary execution control bit 22. A patch for QEMU enablement is
-> available [5].
-> 
-> ## Testing
-> Initial testing has been on done on 6.12-based code with:
->   Guests
->     - Windows 11 24H2 26100.2894
->     - Windows Server 2025 24H2 26100.2894
->     - Windows Server 2022 W1H2 20348.825
->   Processors:
->     - Intel Skylake 6154
->     - Intel Sapphire Rapids 6444Y
-> 
-> ## Acknowledgements
-> Special thanks to all contributors and reviewers who have provided
-> valuable feedback and support for this patch series.
-> 
-> [1] https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity
-> [2] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/nested-virtualization#enlightened-vmcs-intel
-> [3] https://patchwork.kernel.org/project/kvm/patch/20231113022326.24388-6-mic@digikod.net/
-> [4] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/feature-discovery#implementation-recommendations---0x40000004
-> [5] https://github.com/JonKohler/qemu/tree/mbec-rfc-v1
-> 
-> Cc: Alexander Grest <Alexander.Grest@microsoft.com>
-> Cc: Nicolas Saenz Julienne <nsaenz@amazon.es>
-> Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-> Cc: Mickaël Salaün <mic@digikod.net>
-> Cc: Tao Su <tao1.su@linux.intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Zhao Liu <zhao1.liu@intel.com>
-> 
-> Jon Kohler (11):
->   KVM: x86: Add module parameter for Intel MBEC
->   KVM: x86: Add pt_guest_exec_control to kvm_vcpu_arch
->   KVM: VMX: Wire up Intel MBEC enable/disable logic
->   KVM: x86/mmu: Remove SPTE_PERM_MASK
->   KVM: VMX: Extend EPT Violation protection bits
->   KVM: x86/mmu: Introduce shadow_ux_mask
->   KVM: x86/mmu: Adjust SPTE_MMIO_ALLOWED_MASK to understand MBEC
->   KVM: x86/mmu: Extend make_spte to understand MBEC
->   KVM: nVMX: Setup Intel MBEC in nested secondary controls
->   KVM: VMX: Allow MBEC with EVMCS
->   KVM: x86: Enable module parameter for MBEC
-> 
-> Mickaël Salaün (5):
->   KVM: VMX: add cpu_has_vmx_mbec helper
->   KVM: VMX: Define VMX_EPT_USER_EXECUTABLE_MASK
->   KVM: x86/mmu: Extend access bitfield in kvm_mmu_page_role
->   KVM: VMX: Enhance EPT violation handler for PROT_USER_EXEC
->   KVM: x86/mmu: Extend is_executable_pte to understand MBEC
-> 
-> Nikolay Borisov (1):
->   KVM: VMX: Remove EPT_VIOLATIONS_ACC_*_BIT defines
-> 
-> Sean Christopherson (1):
->   KVM: nVMX: Decouple EPT RWX bits from EPT Violation protection bits
-> 
->  arch/x86/include/asm/kvm_host.h | 13 +++++----
->  arch/x86/include/asm/vmx.h      | 45 ++++++++++++++++++++---------
->  arch/x86/kvm/mmu.h              |  3 +-
->  arch/x86/kvm/mmu/mmu.c          | 13 +++++----
->  arch/x86/kvm/mmu/mmutrace.h     | 23 ++++++++++-----
->  arch/x86/kvm/mmu/paging_tmpl.h  | 19 +++++++++---
->  arch/x86/kvm/mmu/spte.c         | 51 ++++++++++++++++++++++++++++-----
->  arch/x86/kvm/mmu/spte.h         | 36 +++++++++++++++--------
->  arch/x86/kvm/mmu/tdp_mmu.c      |  2 +-
->  arch/x86/kvm/vmx/capabilities.h |  6 ++++
->  arch/x86/kvm/vmx/hyperv.c       |  5 +++-
->  arch/x86/kvm/vmx/hyperv_evmcs.h |  1 +
->  arch/x86/kvm/vmx/nested.c       |  4 +++
->  arch/x86/kvm/vmx/vmx.c          | 21 ++++++++++++--
->  arch/x86/kvm/vmx/vmx.h          |  7 +++++
->  arch/x86/kvm/x86.c              |  4 +++
->  16 files changed, 192 insertions(+), 61 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
-> 
+-- 
+Sincerely yours,
+Mike.
