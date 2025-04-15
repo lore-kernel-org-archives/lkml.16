@@ -1,235 +1,144 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4055C28DF08;
-	Tue, 15 Apr 2025 12:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081CB28469B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718645; cv=none; b=HUBqgtNtTVwzRK354B4lql1CRgPihLz7dDXRrwFyhOqBxwkcn+9Pdvg/p5QT6yRYPnJrJO28MPtBt7EOXPKn7jv7+yFdLazJNz7AeW0eiV/WfAvn5H57VSc8V37z5IuQEpv6pFv2yNjkXZa8LOV3e3+HRv867eUAcAAG5uwEmkg=
+	t=1744718727; cv=none; b=FtvB/LehUXPzGbg10TGiXO0NHU+uPb9/2kxN1lSmH/mFhCkWgIlaIIwm6jS0UTpm8aWYbkgbojqp3ufMcIN2at+mu2TJdSJsK6p9Bd4M1UvAw9B0R/gtbnf30N8eQPaG2vkwGyDnqFd3002HUK/vROPuRs2FdCLQevh16woIRsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718645; c=relaxed/simple;
-	bh=loUPvVMNGiwJlE21jeP0tvM4KuSweofRWQ237qVAJkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dxCjV5mIz0kDXNfgKiG9roKYtRfg0PQbgtFZKpZZdogybSxlj+3gUKxURZuKzg1Wh8pm5x2H9Nco9xavMy7+rpUuBzJLJfV3DkKnZrSlJfHtzJC2C/YeEajzMHenmLcaAdncAyxat3ECo8kFrVBxOV+BNppTpmLnQqAF3tDUK8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4768f90bf36so49362731cf.0;
-        Tue, 15 Apr 2025 05:04:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744718641; x=1745323441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=44jbS69cKT35Gp4Aiz2OWrUPbtiSlX2R3KlB9msotSY=;
-        b=UmgrR8KowXoDl3bM/NysVfSPenzAL0XCEdhiszKSYMMD4gVQkhoV9iAHjCATf+t3c+
-         zaWa1MX6BJl6XZWkXY1Oe7hfQnj0Yy4P1V5sWHLkjiVKGA0E5KBHx1AYYM4FeAdkjytV
-         4xTEqibcgtcCECA7b524A7/eybVC/ankmZwSdd8rxUNtyLlq6QYQvhoUtlT95LUrJUuS
-         IZtQdWD/XcimRmZ73iks3gjvkxhcjtLYPqkrWoXEYa9a86iQuLnsZm1Usow007vvhROl
-         JEBaHvY2b1CHw73LZ1jQZozGU98Wf43FLFE9J+68PEV+T9JnmHR5soCgU3TaqtCd5/Lq
-         C4Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUYHy9XtE68IQjy50+ijE1epAy9vCRmx6E8fq6K4jJaYZJeEbTVR5ins7Y13BAzWGY9YSaXiAtaltvfUQ==@vger.kernel.org, AJvYcCVGlOGWQ199GwviH/Aw0OJQYOGm1rT4fCstLC8zXt48WVhw0NnWiyP/eGxxOjnAMYT9p6QlwCdyotdzLDeDygf3VxM=@vger.kernel.org, AJvYcCVQChwfLwrN8kJWaWuU7UbDS2jlMOc3yYP9AwyX0ATf/gRBH11XXRGp1RxBKZWVi2nqiFqVVTbaP9Mq@vger.kernel.org, AJvYcCW9GY+xYp1/D9zsRg8P08OQGTpaes0nspbM7cCd/WiXj00SUm1qJY/77gqntCRSOhO8ARfFKtp2PF3n@vger.kernel.org, AJvYcCX3F3Q5MyDNmUz+OZ8Cv4ojeaXd9EoeDyAAYf5S752NBGrw5CBxYp5Iqj/CflK1yBlDIpoiJKsdCqmRmpzo@vger.kernel.org, AJvYcCXGrm0BK5xB/cc/jO7laL2Jc+oFSuWfdK6BT/9GyvpQkQSOYvYcdHk1eMEaOpd2klmnibn4KLI2M+hMys8d@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkvWd0BP6FFDGqgc4ud0xoM/Et6dliRCUCbC7UgzBmmDBtxLlG
-	5vGxNCaFn82kjvDHLcv7WCDw7YrbLJOn1RRKMZPImBma2pDVB3X2Yf+pw037
-X-Gm-Gg: ASbGncvBUQCEdzk2I2ZXHNq1stwWJBxJbjpIqfNmgbM0CP3oeipCML1N1hKzp8GzzFo
-	8zMY0Bmewptao7WmmAR8FxFrlEN0eT20RMRgR26z47trPgBrs9lLV9utChS2oqYXvqpX1f/+8OY
-	0iOyZxo8i+XcFoA+QcL4ykqBmzp8lo2dlhj+whSo+ZTelDuicx3qvH2D5zxUcqfYKnuiWTwSkhi
-	PREUTbsaljyzSoVbY7iz6Nr8F+tlZTVVqsyhrUwVGRs/l5MFOvgaTP2Z8tpIvAjD96owTOUEOTr
-	2++XeaxAEdkl7NGhCrt/uNGHi5ntqJ8cQ0ulXzUgDDOBV3BftewuzU8Gexxxf9t8TH+njxKsWUh
-	AXCF+Tb8=
-X-Google-Smtp-Source: AGHT+IGaWlcXVHtddiVmvhbwkdxS/y1KAEPPoBrfx8AnRt5614HjJGYRDpBMfS0w8c3LE2TvY1vdcg==
-X-Received: by 2002:a05:622a:50d:b0:476:7ff5:cc27 with SMTP id d75a77b69052e-479775d637fmr201579011cf.51.1744718640802;
-        Tue, 15 Apr 2025 05:04:00 -0700 (PDT)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cce7sm92073521cf.59.2025.04.15.05.03.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 05:04:00 -0700 (PDT)
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5e39d1e0eso529805685a.1;
-        Tue, 15 Apr 2025 05:03:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVrUNgzJ3ZDmPbm+oCTmywK07fiIRP4ZjY8p9MAf/5FIoMpYsOqFBnxuf492qJKZLFgojijOybe6Nfoqy++@vger.kernel.org, AJvYcCVuZAsQTR0bZD5/4Qfv4NjEiEsVN8pRrcPGUiCRAT/o08VVOIVb2otGukl67bQfJ3CIxBKUbPIa9H6IAk/Uc4br8CM=@vger.kernel.org, AJvYcCWJiFrx0MSdIpPQSxyWQwixwUbhUIz2EZakrKzDbQQsiwIT4dEMT3QOJjnqkftpMv2Ak1Bq+lIvLDtbuqqs@vger.kernel.org, AJvYcCWuUmEdCnlpDyBU/2HbsjMQeYFweqQZT5ikT7GTctv+RXXYG2rAvaiHeIfA3dOZ7JGbVSKpsQQ396hqnQ==@vger.kernel.org, AJvYcCWzvUGXCVhLZR4J+YShUt0hakqSfFZkcbL7JwTVkyLcdJtrkhGvBAJXNMX9K2zU7WZZJPKd0EnZlZv+@vger.kernel.org, AJvYcCXzETkJOEdAYqj36Lg3ESSB6OXhGOR4kTf0kRl5rTe4TTCDf5QQZO0BDVQyk8JK0q+SmL+pFiXD8IC1@vger.kernel.org
-X-Received: by 2002:a05:620a:3944:b0:7c0:b523:e1b6 with SMTP id
- af79cd13be357-7c7af118d54mr2235481685a.11.1744718637820; Tue, 15 Apr 2025
- 05:03:57 -0700 (PDT)
+	s=arc-20240116; t=1744718727; c=relaxed/simple;
+	bh=WaEJ7Mm0YxxyYNYakbUNQEkV9dDxv5OXSxMVoq7gGLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WbkOFoFbb850KAFOit/W8/BMXUbT1Jv59ALctuMRJoPfJhVuPm4sFcLpIeuqw4xtQxIIzhLGRO0ZZ35kU7SXsPNlO3qy6GBv6Criq/ZV30IxzlPkeJ7UmDhQyX9vVsb5tK94SSlb1PJPOO8OkS7BYgkJp0qQVLHlIjPMqysq/aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IWwljR+F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cewaL1RJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IWwljR+F; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cewaL1RJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IWwljR+F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cewaL1RJ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IWwljR+F";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cewaL1RJ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1D15321162;
+	Tue, 15 Apr 2025 12:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744718724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
+	b=IWwljR+FdRRMMsl5HQ8hTIoG82tvyTjw+O33B87a2DVk4URPTZDlvxbF7+7yFQDeMo02is
+	0M/LcQe6ADqCZXAhA5yPQHdan3zSC/6FLwt9vNEYBcJUVhqhP5BgF7i/wQLHcI9u0rBKc+
+	mzNxl8tLJQcwoyg1e249tzxI+560wzI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744718724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
+	b=cewaL1RJ39hOmDG1DVqh5M0tSuB3iQfj/f3XcVZy5Qvtwe2Sp4Y/gJDXbizh15cLJ7H8tH
+	LS7Wg1V2X5/C9OAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=IWwljR+F;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cewaL1RJ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744718724; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
+	b=IWwljR+FdRRMMsl5HQ8hTIoG82tvyTjw+O33B87a2DVk4URPTZDlvxbF7+7yFQDeMo02is
+	0M/LcQe6ADqCZXAhA5yPQHdan3zSC/6FLwt9vNEYBcJUVhqhP5BgF7i/wQLHcI9u0rBKc+
+	mzNxl8tLJQcwoyg1e249tzxI+560wzI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744718724;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+mCgPHzml+cG+IHXOvQdsMqGvOHFy+l1cnwHKlceKlk=;
+	b=cewaL1RJ39hOmDG1DVqh5M0tSuB3iQfj/f3XcVZy5Qvtwe2Sp4Y/gJDXbizh15cLJ7H8tH
+	LS7Wg1V2X5/C9OAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A333139A1;
+	Tue, 15 Apr 2025 12:05:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EwKMAYRL/mfSCwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 15 Apr 2025 12:05:24 +0000
+Date: Tue, 15 Apr 2025 14:05:23 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
+	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, 
+	Mohamed Khalfella <mkhalfella@purestorage.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <97fd8c08-e5bb-4b4b-9ec0-0eea9af1da1d@flourine.local>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <7cb33ebe-2ff6-4c3a-82f0-c4ed547e8a25@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8useBh5m+MqGXQwQJhuemehm=bPidL6XydR-FOmVN9QNQ@mail.gmail.com>
- <CAMuHMdU+U8D8iQdks72=Kki2HL+bo8tw9gA1S4D3c4hOphLTuA@mail.gmail.com> <CA+V-a8tH9BLjy5aG1qkRJnUFO_4VARu6rW4fQzHoSxvaMgo1Xg@mail.gmail.com>
-In-Reply-To: <CA+V-a8tH9BLjy5aG1qkRJnUFO_4VARu6rW4fQzHoSxvaMgo1Xg@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 14:03:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVT0R_ypz7sLxLzYU+v-Cj94Pd4FaFJsdQq-c_Evx5neA@mail.gmail.com>
-X-Gm-Features: ATxdqUHZOQ_kXb78-Adsku78g9ckdafL4-bL26h3gggOf0fLadQBp1hSbjMhNWk
-Message-ID: <CAMuHMdVT0R_ypz7sLxLzYU+v-Cj94Pd4FaFJsdQq-c_Evx5neA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Add support for Renesas RZ/V2N SoC and EVK
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-serial@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cb33ebe-2ff6-4c3a-82f0-c4ed547e8a25@linux.ibm.com>
+X-Rspamd-Queue-Id: 1D15321162
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hi Prabhakar,
+On Tue, Apr 01, 2025 at 07:02:11PM +0530, Nilay Shroff wrote:
+ > -	kblockd_schedule_work(&ns->head->requeue_work);
+> > +	spin_lock_irqsave(&ctrl->lock, flags);
+> > +	list_add_tail(&req->queuelist, &ctrl->failover_list);
+> > +	spin_unlock_irqrestore(&ctrl->lock, flags);
+> > +
+> 
+> Why do we need to wait until error_recovery for scheduling failover?
 
-On Tue, 15 Apr 2025 at 11:28, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> On Mon, Apr 14, 2025 at 2:40=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Mon, 14 Apr 2025 at 13:19, Lad, Prabhakar <prabhakar.csengg@gmail.co=
-m> wrote:
-> > > On Mon, Apr 7, 2025 at 8:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gm=
-ail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > This patch series adds initial support for the Renesas RZ/V2N (R9A0=
-9G056)
-> > > > SoC and its evaluation board (EVK). The Renesas RZ/V2N is a vision =
-AI
-> > > > microprocessor (MPU) designed for power-efficient AI inference and
-> > > > real-time vision processing. It features Renesas' proprietary AI
-> > > > accelerator (DRP-AI3), delivering up to 15 TOPS AI performance, mak=
-ing
-> > > > it ideal for applications such as Driver Monitoring Systems (DMS),
-> > > > industrial monitoring cameras, and mobile robots.
-> > > >
-> > > > Key features of the RZ/V2N SoC:
-> > > >   Processing Power:
-> > > >     - Quad Arm Cortex-A55 cores at 1.8GHz for high-performance comp=
-uting
-> > > >     - Single Arm Cortex-M33 core at 200MHz for real-time processing
-> > > >     - 1.5MB on-chip SRAM for fast data access
-> > > >     - LPDDR4/LPDDR4X memory interface for high-speed RAM access
-> > > >
-> > > >   AI and Vision Processing:
-> > > >     - DRP-AI3 accelerator for low-power, high-efficiency AI inferen=
-ce
-> > > >     - Arm Mali-C55 ISP (optional) for image signal processing
-> > > >     - Dual MIPI CSI-2 camera interfaces for multi-camera support
-> > > >
-> > > >   High-Speed Interfaces:
-> > > >     - PCIe Gen3 (2-lane) 1ch for external device expansion
-> > > >     - USB 3.2 (Gen2) 1ch (Host-only) for high-speed data transfer
-> > > >     - USB 2.0 (Host/Function) 1ch for legacy connectivity
-> > > >     - Gigabit Ethernet (2 channels) for network communication
-> > > >
-> > > >   Industrial and Automotive Features:
-> > > >     - 6x CAN FD channels for automotive and industrial networking
-> > > >     - 24-channel ADC for sensor data acquisition
-> > > >
-> > > > LINK: https://tinyurl.com/renesas-rz-v2n-soc
-> > > >
-> > > > The series introduces:
-> > > > - Device tree bindings for various subsystems (SYS, SCIF, SDHI, CPG=
-, pinctrl).
-> > > > - RZ/V2N SoC identification support.
-> > > > - Clock and pinctrl driver updates for RZ/V2N.
-> > > > - Initial DTSI and device tree for the RZ/V2N SoC and EVK.
-> > > >
-> > > > These patches have been tested on the RZ/V2N EVK with v6.15-rc1 ker=
-nel,
-> > > > logs can be found here:
-> > > > https://gist.github.com/prabhakarlad/aa3da7558d007aab8a288550005565=
-d3
-> > > >
-> > > > @Geert, Ive rebased the patches on top of v6.15-rc1 + renesas-dts-f=
-or-v6.16
-> > > > + renesas-clk-for-v6.16 branches. Also these patches apply on top o=
-f the below
-> > > > series [1] and [2]. I had to sort the order in Makefile for patch [=
-3] to
-> > > > avoid conflicts.
-> > > > [1] https://lore.kernel.org/all/20250401090133.68146-1-prabhakar.ma=
-hadev-lad.rj@bp.renesas.com/
-> > > > [2] https://lore.kernel.org/all/20250403212919.1137670-1-thierry.bu=
-ltel.yh@bp.renesas.com/#t
-> > > > [3] https://lore.kernel.org/all/20250403212919.1137670-13-thierry.b=
-ultel.yh@bp.renesas.com/
-> > > >
-> > > > Note, dtbs_check will generate the below warnings this is due to mi=
-ssing
-> > > > ICU support as part of initial series. I will be sending a follow-u=
-p patch
-> > > > series to add ICU support which will fix these warnings.
-> > > > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@104=
-10000 (renesas,r9a09g056-pinctrl): 'interrupt-controller' is a required pro=
-perty
-> > > >         from schema $id: http://devicetree.org/schemas/pinctrl/rene=
-sas,rzg2l-pinctrl.yaml#
-> > > > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@104=
-10000 (renesas,r9a09g056-pinctrl): '#interrupt-cells' is a required propert=
-y
-> > > >         from schema $id: http://devicetree.org/schemas/pinctrl/rene=
-sas,rzg2l-pinctrl.yaml#
-> > > >
-> > > > v1->v2:
-> > > > - Added acks from Rob.
-> > > > - Squashed the RZ/V2N EVK and SoC variant documentation into a sing=
-le
-> > > >   commit.
-> > > > - Updated the commit messages.
-> > > > - Added RZV2N_Px, RZV2N_PORT_PINMUX, and RZV2N_GPIO macros in
-> > > >   SoC DTSI as we are re-using renesas,r9a09g057-pinctrl.h
-> > > >   in pictrl driver hence to keep the consistency with the
-> > > >   RZ/V2H(P) SoC these macros are added.
-> > > > - Dropped `renesas,r9a09g056-pinctrl.h` header file.
-> > > > - Followed DTS coding style guidelines
-> > > > - Dropped defconfig changes from the series.
-> > > > - Dropped SDHI dt-binding patch as its already applied to mmc -next=
- tree.
-> > > >
-> > > > Cheers,
-> > > > Prabhakar
-> > > >
-> > > > Lad Prabhakar (12):
-> > > >   dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants a=
-nd
-> > > >     EVK
-> > > >   soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
-> > > >   dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
-> > > >   soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
-> > > >   dt-bindings: serial: renesas: Document RZ/V2N SCIF
-> > > >   dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
-> > > >   clk: renesas: rzv2h-cpg: Sort compatible list based on SoC part n=
-umber
-> > > >   clk: renesas: rzv2h: Add support for RZ/V2N SoC
-> > > >   dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
-> > > >   pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
-> > > >   arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
-> > > >   arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
-> > > >
-> > > Would it be OK if I send version 3 containing only patches 4/12 and 1=
-0/12?
-> >
-> > For patch 4/12: yes, that is fine. Thx!
-> > For patch 10/12: I have already applied it.
-> >
-> For patch 10/12 ("pinctrl: renesas: rzg2l: Add support for RZ/V2N
-> SoC") will that be part of renesas-pinctrl-for-v6.16 branch (which is
-> yet to be pushed)?
+This is where the delay is added to the processing. The failed requests
+(timeout) are held back by the delay here and after the wait the are
+immediately fall over
 
-Sorry, my bad; I misread the patch number. I have not applied 10/12 yet.
+> Can't we schedule failover as soon as we get path error? Also can't
+> we avoid failover_list? 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Then we have exactly what we have now. An failed request is rescheduled
+to the next path immediately.
