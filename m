@@ -1,167 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1186817A2F8;
-	Tue, 15 Apr 2025 16:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35CC2144DB;
+	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744736398; cv=none; b=bqHGSOF108qOpZr5gb2nTwssxkMxG+2kGzfP6S2zUYEKucX4+mVrlkJN1bsADL70G72WSo0Es4UvrjNHCU2D918q+ToDojYwPRGqQvqar/7sBQQPZPSx4Rdv05Oh5CT2CyjsK//3Ubint/Wf63Tc+UZCnbW9VioEgiPdXAJNZfc=
+	t=1744736403; cv=none; b=rtwfXCUqnS0uk4r6m2P8i+f/OaQmelsb4uMAyaamm9VfUFu9Q81ssMVa48Q6YXeN0lTSlgA1HZ+VGaGrmMQOUBl6dXRl8Jn4kmUkup+CjQo1kNrYjvZdHGenKHuws1hJ3y0HEWB1zPfLx8/gaJA9ItXJER9PAT1jB4bVGJ213GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744736398; c=relaxed/simple;
-	bh=hekA5sSay81odGS8KN3L8RNR60gbS176RT1c1dPcp7I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jCopJU3Q3BdADJ0At3uwVCwqtrZoicTDFfKxJVWbf5fuZa/4ehuJ1czrvP38pjQ4e3nvsg+X7Y60q/XVEs9Wj3iOZ4zx5aXT1NuDqMd7uGWmXQpdSrGVhaR7Wzjli9wbyVfWmN/dDZsRQ68bBbDZZKKphrl9Eu0Zz2AciOgRrCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9Wo8wfB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744736403; c=relaxed/simple;
+	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W+cZInrMHxxNRqS7EdoO3CU+xQe3GkDAOx/yJJ0IJsMtHhGz5oR20nqQ6borrjWnkeMKhM28H5nO0gE69nAHR2wNwos2fEs5FH/PKooLTN2g7x43VlsSXCTeW1+kGOo1Fi+x9jaPN0RckhHJtM3JlDwQq30fofRr3zye/CHFzTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edUbzBjj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9Wo8wfB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B8FC4CEEB;
-	Tue, 15 Apr 2025 16:59:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edUbzBjj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E4BC4CEE9;
+	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744736397;
-	bh=hekA5sSay81odGS8KN3L8RNR60gbS176RT1c1dPcp7I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=s9Wo8wfBYJ0DcFr+hwgeEXeHlXshfgmcWQfz9BWyOlNThqLwT84S1/2RdoSKxkUaR
-	 21VBH2jp+zZbsEZSA1LOSf+vhaoZN2YyMNVbGehKvQ63qc284ZEdwOFP6q5wT4LF7i
-	 reSVl9A/h8XChJL91jtbJlyQZCiBVzENVTBuhhq+Vvcx9yexmLdm7wIT8/OOBmQcot
-	 9JHCBGVx3oYSwhpfOdxu4kK3lzPKAiJwzu4TJb6B8PZ6dlvw8WDPqNQgq993X7XxpI
-	 4HUGG181rux6DiLCvK8uDXdY7010RK5fRZzY5ou5+RQcoppLNm2VtzFdm+fVv7TAX6
-	 WdMU3hdgko98g==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2d09d495c6cso1643084fac.3;
-        Tue, 15 Apr 2025 09:59:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVIiN38DoWKJWwvemjbBk0gZLhJQrFgPhQuM7FPVjUU+2+zYF9kj9iVopsYE6lnN6qXRP5m/SOrOUe5FAI=@vger.kernel.org, AJvYcCWJEZfK4aloMXAFufPbDCqNtsk/apDB2ZE6AsE9WlB4aXNJOX9XieZ5c7LiRes0Jwkbf1pTQ05RZ4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6SQPt0kxf3Uc82q0wByZDigMVHVo36qNTs5fsvPaeIY0BIadb
-	qM0i7LDEdvCau6/nQ23NSAzPxzac/CroEhK6SUDLzaWpfvwmYCwcLK2UijOeervF3VRtxrUO4T8
-	tM6hkmG5wgi3Z079qfqLET5xnZvU=
-X-Google-Smtp-Source: AGHT+IE17orsWraUADshZs7Bkgwwk4B/+7ACOA+1ofXY2D3rl9/81je0pV9HLaeNN/L12cjY+uI7SQSxualbqcI6waI=
-X-Received: by 2002:a05:6870:889a:b0:2c1:b58c:bef with SMTP id
- 586e51a60fabf-2d0d5f68495mr10448320fac.38.1744736396846; Tue, 15 Apr 2025
- 09:59:56 -0700 (PDT)
+	s=k20201202; t=1744736403;
+	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=edUbzBjjOmodaXj6JfbuCpTgUp2PWa37c1CGYhXKWoY0uDuA5eSN6qrmxKwUZOtZE
+	 iC/8CHBAPcHyDLW6By/H2BS/HBP1apDreRO0gpTS9DJM7ksbPOOHAN9GOoZIxl1NWl
+	 vloz5ui324K8NL3oA5ZCbY/daYek0pmLRc0k06EmM1LbbiJNFuW90CZJmqpAR70tuG
+	 PYKLbUaQIS9x9wLJpsuKmbFpTT8WTN9W7XCOdqZCaLKEZWuEF1GYUr3YTNxlbD1wGN
+	 /gCkpoDEHp/I1Edrp1av53pb84/+h59ZyzDgZD5tGBr5YcD2bo/3FzEVCOwIuoADYK
+	 pqtWr5YahT1UA==
+Date: Tue, 15 Apr 2025 10:00:00 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Sergio Perez Gonzalez <sperezglz@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+	David Rientjes <rientjes@google.com>,
+	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	Thomas Huth <thuth@redhat.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
+Message-ID: <202504150956.9AFF9545@keescook>
+References: <20250410174428.work.488-kees@kernel.org>
+ <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411115438.594114-1-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20250411115438.594114-1-srinivas.pandruvada@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 15 Apr 2025 18:59:45 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iOZ+D9uR-Sd=shJXLsQ_myOhf8pJeB=E_rK7g_u6SyRA@mail.gmail.com>
-X-Gm-Features: ATxdqUFLV9P9YBzJA4t01WKTlAMR_-WdzZ78kRP1Rqhsw6btj4P2ltMFqF3jGA0
-Message-ID: <CAJZ5v0iOZ+D9uR-Sd=shJXLsQ_myOhf8pJeB=E_rK7g_u6SyRA@mail.gmail.com>
-Subject: Re: [PATCH] thermal: intel: int340x: Fix Panther Lake DLVR support
-To: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: rafael@kernel.org, daniel.lezcano@linaro.org, rui.zhang@intel.com, 
-	lukasz.luba@arm.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
 
-On Fri, Apr 11, 2025 at 1:54=E2=80=AFPM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> Panther lake uses same register offsets as Lunar Lake. But the
-> registers are still pointing to the default table.
->
-> Move the selection of register offsets table from the actual attribute
-> read/write callbacks to the proc_thermal_rfim_add(). This way it is clean
-> and in future such issues can be avoided.
->
-> Fixes: e50eeababa94 ("thermal: intel: int340x: Panther Lake DLVR support"=
-)
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> ---
->  .../int340x_thermal/processor_thermal_rfim.c  | 33 ++++++++++---------
->  1 file changed, 17 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim=
-.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-> index dad63f2d5f90..3a028b78d9af 100644
-> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-> @@ -166,15 +166,18 @@ static const struct mmio_reg adl_dvfs_mmio_regs[] =
-=3D {
->         { 0, 0x5A40, 1, 0x1, 0}, /* rfi_disable */
->  };
->
-> +static const struct mapping_table *dlvr_mapping;
-> +static const struct mmio_reg *dlvr_mmio_regs_table;
-> +
->  #define RFIM_SHOW(suffix, table)\
->  static ssize_t suffix##_show(struct device *dev,\
->                               struct device_attribute *attr,\
->                               char *buf)\
->  {\
-> -       const struct mapping_table *mapping =3D NULL;\
-> +       const struct mmio_reg *mmio_regs =3D dlvr_mmio_regs_table;\
-> +       const struct mapping_table *mapping =3D dlvr_mapping;\
->         struct proc_thermal_device *proc_priv;\
->         struct pci_dev *pdev =3D to_pci_dev(dev);\
-> -       const struct mmio_reg *mmio_regs;\
->         const char **match_strs;\
->         int ret, err;\
->         u32 reg_val;\
-> @@ -186,12 +189,6 @@ static ssize_t suffix##_show(struct device *dev,\
->                 mmio_regs =3D adl_dvfs_mmio_regs;\
->         } else if (table =3D=3D 2) { \
->                 match_strs =3D (const char **)dlvr_strings;\
-> -               if (pdev->device =3D=3D PCI_DEVICE_ID_INTEL_LNLM_THERMAL)=
- {\
-> -                       mmio_regs =3D lnl_dlvr_mmio_regs;\
-> -                       mapping =3D lnl_dlvr_mapping;\
-> -               } else {\
-> -                       mmio_regs =3D dlvr_mmio_regs;\
-> -               } \
->         } else {\
->                 match_strs =3D (const char **)fivr_strings;\
->                 mmio_regs =3D tgl_fivr_mmio_regs;\
-> @@ -214,12 +211,12 @@ static ssize_t suffix##_store(struct device *dev,\
->                                struct device_attribute *attr,\
->                                const char *buf, size_t count)\
->  {\
-> -       const struct mapping_table *mapping =3D NULL;\
-> +       const struct mmio_reg *mmio_regs =3D dlvr_mmio_regs_table;\
-> +       const struct mapping_table *mapping =3D dlvr_mapping;\
->         struct proc_thermal_device *proc_priv;\
->         struct pci_dev *pdev =3D to_pci_dev(dev);\
->         unsigned int input;\
->         const char **match_strs;\
-> -       const struct mmio_reg *mmio_regs;\
->         int ret, err;\
->         u32 reg_val;\
->         u32 mask;\
-> @@ -230,12 +227,6 @@ static ssize_t suffix##_store(struct device *dev,\
->                 mmio_regs =3D adl_dvfs_mmio_regs;\
->         } else if (table =3D=3D 2) { \
->                 match_strs =3D (const char **)dlvr_strings;\
-> -               if (pdev->device =3D=3D PCI_DEVICE_ID_INTEL_LNLM_THERMAL)=
- {\
-> -                       mmio_regs =3D lnl_dlvr_mmio_regs;\
-> -                       mapping =3D lnl_dlvr_mapping;\
-> -               } else {\
-> -                       mmio_regs =3D dlvr_mmio_regs;\
-> -               } \
->         } else {\
->                 match_strs =3D (const char **)fivr_strings;\
->                 mmio_regs =3D tgl_fivr_mmio_regs;\
-> @@ -448,6 +439,16 @@ int proc_thermal_rfim_add(struct pci_dev *pdev, stru=
-ct proc_thermal_device *proc
->         }
->
->         if (proc_priv->mmio_feature_mask & PROC_THERMAL_FEATURE_DLVR) {
-> +               switch (pdev->device) {
-> +               case PCI_DEVICE_ID_INTEL_LNLM_THERMAL:
-> +               case PCI_DEVICE_ID_INTEL_PTL_THERMAL:
-> +                       dlvr_mmio_regs_table =3D lnl_dlvr_mmio_regs;
-> +                       dlvr_mapping =3D lnl_dlvr_mapping;
-> +                       break;
-> +               default:
-> +                       dlvr_mmio_regs_table =3D dlvr_mmio_regs;
-> +                       break;
-> +               }
->                 ret =3D sysfs_create_group(&pdev->dev.kobj, &dlvr_attribu=
-te_group);
->                 if (ret)
->                         return ret;
-> --
+On Mon, Apr 14, 2025 at 02:31:42PM +0200, Petr Mladek wrote:
+> On Thu 2025-04-10 10:44:31, Kees Cook wrote:
+> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
+> > but do not want to be forced into having kernel addresses exposed due
+> > to the implicit "no_hash_pointers" boot param setting.[1]
+> > 
+> > Introduce the "hash_pointers" boot param, which defaults to "auto"
+> > (the current behavior), but also includes "always" (forcing on hashing
+> > even when "slab_debug=..." is defined), and "never". The existing
+> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
+> > 
+> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
+> 
+> The idea makes sense. But it seems that the patch did not handle
+> the "always" mode correctly, see below.
 
-Applied as 6.15-rc support, thanks!
+Actually, it was the "never" mode that was being ignored. Whoops! (The
+double negation language is a little odd.) I've fixed this for v2 with
+an explicit switch statement.
+
+> > -int __init no_hash_pointers_enable(char *str)
+> > +void __init hash_pointers_finalize(bool slub_debug)
+> >  {
+> > -	if (no_hash_pointers)
+> > -		return 0;
+> > +	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
+> > +		no_hash_pointers = true;
+> >  
+> > -	no_hash_pointers = true;
+> > +	if (!no_hash_pointers)
+> > +		return;
+> >  
+> >  	pr_warn("**********************************************************\n");
+> >  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
+> 
+> 
+> The mode/policy is generic but this function is ready to be called
+> only once. And we might actually want to call it twice, see below.
+
+I'd like to keep it a single call. I feel this simplifies the reporting
+logic, keeps the selection logic in one place, and allows us to
+trivially examine that it is safe to use with __init.
+
+Thanks for the review!
+
+-- 
+Kees Cook
