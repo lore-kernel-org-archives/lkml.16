@@ -1,166 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A109292915;
-	Tue, 15 Apr 2025 11:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA36C1DE2D6;
+	Tue, 15 Apr 2025 11:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718024; cv=none; b=sHBlH7UufRawP4NQR49kn5FpdI/OLgRYT52VcI8mVONhmbrsfDwtjiCb4xFM7q6bUHmyYL/RnBbql8nkU6OxSDaXJkMx4OWc4Bsfof5lILOKZONO2nzB9tk/1gFwC4NPFoa61UF18zbt06DqsXIHmMhyJVmXFkWQUaTwMpFLlG4=
+	t=1744718065; cv=none; b=u7MCFX05RljVapcTW943zpGzQTLrbYnIlAucaw3FMG8zrVZ2bysAsOlV9n16zmwTPODbEvklU8aNAB1Rlqq79v+RitHTUiju6BQi94a0lcObswomwVToD7XMTQo25Zq8Bkq4vJNZMMha5Xbg/GDTVDCHmJXWjkXynGRHjf//0o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718024; c=relaxed/simple;
-	bh=R5kGg1zx/kMXvSooMDzD+NGpVHcFbXL2ru+kAlccJJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pC/9FqMAMhrsZEzJCWg0bVSNd4k6av4T9qHIe9/bqxAM++PeM+5VyNXAur5FsRGUZ05BxkXpP3jjBGA1SjtURhkF4XoFo41Q2FN936qFtAZFeoltXYzpj4h0rGe3O91dRujeonS9sx/fGS4CG5JbzG3UUbOsOwt195Q2fvrsDHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N7kC90te; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N7kC90te"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744718023; x=1776254023;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=R5kGg1zx/kMXvSooMDzD+NGpVHcFbXL2ru+kAlccJJY=;
-  b=N7kC90teJUJQvtpSOtZlsHi6B2nhpWFw+V19Ya/xvF8FQWh/Ml2L0A1G
-   +JjDmxyYG0ENU5SkDJcK7S/r2o5yb4mRCR28orupMgJcgbvbf2igY34v9
-   xERb1fs8tntDXql1HyG6uHDcNEp4pIIFidNHQNCSGM2bXnsV7Jd1aVVAt
-   FeyLwRYSX+W+kkRlK1tFvt4b30ZKPXqhZBm8Qna5hHgx1VXmX78P/expB
-   3e4vg/HKWa9u4VUnUGD+KP9+CD4aBey38aJad4d8FTXuaMZxFlmYcfUsH
-   0zRoVfWy0qkeioAbDPHPX2jT6qFYpqSt1uVWhw3IMVK3C0iozxEsfZbpi
-   A==;
-X-CSE-ConnectionGUID: 3OaUvNH/Rpax6K1f9b9s7w==
-X-CSE-MsgGUID: HUfAzPF2TwShbnJJFkjO+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46235108"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46235108"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 04:52:38 -0700
-X-CSE-ConnectionGUID: cw4Kj0PmTwSYcWgWQssiaQ==
-X-CSE-MsgGUID: hSTnOcAfRuKAIuCJIffHRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130997575"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO eresheto-mobl3.ger.corp.intel.com) ([10.245.246.46])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 04:52:32 -0700
-From: Elena Reshetova <elena.reshetova@intel.com>
-To: dave.hansen@intel.com
-Cc: jarkko@kernel.org,
-	linux-sgx@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	asit.k.mallick@intel.com,
-	vincent.r.scarlata@intel.com,
-	chongc@google.com,
-	erdemaktas@google.com,
-	vannapurve@google.com,
-	dionnaglaze@google.com,
-	bondarn@google.com,
-	scott.raynor@intel.com,
-	Elena Reshetova <elena.reshetova@intel.com>
-Subject: [PATCH v3 1/2] x86/sgx: Use sgx_nr_used_pages for EPC page count instead of sgx_nr_free_pages
-Date: Tue, 15 Apr 2025 14:51:21 +0300
-Message-ID: <20250415115213.291449-2-elena.reshetova@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250415115213.291449-1-elena.reshetova@intel.com>
-References: <20250415115213.291449-1-elena.reshetova@intel.com>
+	s=arc-20240116; t=1744718065; c=relaxed/simple;
+	bh=OTc+9NY3S3zs1DGknl92cbvEABzMnDVf8FyPoEQYkUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jPeMEbVrBUBIf8ohpZgOgH76m8THC05gT458gqP9WlPvkMyjsbCPWoIhyzIEQOPYEsXkxx/IZZSrtC3Mn9fjH1uMxAA3WJIXCcYfIjkmxTd6YW6fKC939UafhNTZRWUbksnU+anQsFNk+92br8cJqhIc+K7rLPF1DPcRQJ6hLSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10907C4CEDD;
+	Tue, 15 Apr 2025 11:54:23 +0000 (UTC)
+Message-ID: <86fe5e61-a8e6-43cd-87b6-f9c611358fcb@linux-m68k.org>
+Date: Tue, 15 Apr 2025 21:54:21 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] m68k: coldfire: gpio: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
+Content-Language: en-US
+From: Greg Ungerer <gerg@linux-m68k.org>
+In-Reply-To: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-sgx_nr_free_pages is an atomic that is used to keep track of
-free EPC pages and detect whenever page reclaiming should start.
-Since successful execution of ENCLS[EUPDATESVN] requires empty
-EPC and preferably a fast lockless way of checking for this
-condition in all code paths where EPC is already used, change the
-reclaiming code to track the number of used pages via
-sgx_nr_used_pages instead of sgx_nr_free_pages.
-For this change to work in the page reclamation code, add a new
-variable, sgx_nr_total_pages, that will keep track of total
-number of EPC pages.
+Hi Bartosz,
 
-It would have been possible to implement ENCLS[EUPDATESVN] using
-existing sgx_nr_free_pages counter and a new sgx_nr_total_pages
-counter, but it won't be possible to avoid taking a lock *every time*
-a new EPC page is being allocated. The conversion of sgx_nr_free_pages
-into sgx_nr_used_pages allows avoiding the lock in all cases except
-when it is the first EPC page being allocated via a quick
-atomic_long_inc_not_zero check.
+On 7/4/25 17:20, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Note: The serialization for sgx_nr_total_pages is not needed because
-the variable is only updated during the initialization and there's no
-concurrent access.
+Thanks. Applied to m68knommu git tree for-next branch, with
+Linus Walleij's reviewed by.
 
-Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
----
- arch/x86/kernel/cpu/sgx/main.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+Regards
+Greg
 
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index 8ce352fc72ac..b61d3bad0446 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -32,7 +32,8 @@ static DEFINE_XARRAY(sgx_epc_address_space);
- static LIST_HEAD(sgx_active_page_list);
- static DEFINE_SPINLOCK(sgx_reclaimer_lock);
- 
--static atomic_long_t sgx_nr_free_pages = ATOMIC_LONG_INIT(0);
-+static atomic_long_t sgx_nr_used_pages = ATOMIC_LONG_INIT(0);
-+static unsigned long sgx_nr_total_pages;
- 
- /* Nodes with one or more EPC sections. */
- static nodemask_t sgx_numa_mask;
-@@ -378,8 +379,8 @@ static void sgx_reclaim_pages(void)
- 
- static bool sgx_should_reclaim(unsigned long watermark)
- {
--	return atomic_long_read(&sgx_nr_free_pages) < watermark &&
--	       !list_empty(&sgx_active_page_list);
-+	return (sgx_nr_total_pages - atomic_long_read(&sgx_nr_used_pages))
-+	       < watermark && !list_empty(&sgx_active_page_list);
- }
- 
- /*
-@@ -456,7 +457,7 @@ static struct sgx_epc_page *__sgx_alloc_epc_page_from_node(int nid)
- 	page->flags = 0;
- 
- 	spin_unlock(&node->lock);
--	atomic_long_dec(&sgx_nr_free_pages);
-+	atomic_long_inc(&sgx_nr_used_pages);
- 
- 	return page;
- }
-@@ -616,7 +617,7 @@ void sgx_free_epc_page(struct sgx_epc_page *page)
- 	page->flags = SGX_EPC_PAGE_IS_FREE;
- 
- 	spin_unlock(&node->lock);
--	atomic_long_inc(&sgx_nr_free_pages);
-+	atomic_long_dec(&sgx_nr_used_pages);
- }
- 
- static bool __init sgx_setup_epc_section(u64 phys_addr, u64 size,
-@@ -648,6 +649,8 @@ static bool __init sgx_setup_epc_section(u64 phys_addr, u64 size,
- 		list_add_tail(&section->pages[i].list, &sgx_dirty_page_list);
- 	}
- 
-+	sgx_nr_total_pages += nr_pages;
-+
- 	return true;
- }
- 
-@@ -848,6 +851,8 @@ static bool __init sgx_page_cache_init(void)
- 		return false;
- 	}
- 
-+	atomic_long_set(&sgx_nr_used_pages, sgx_nr_total_pages);
-+
- 	for_each_online_node(nid) {
- 		if (!node_isset(nid, sgx_numa_mask) &&
- 		    node_state(nid, N_MEMORY) && node_state(nid, N_CPU))
--- 
-2.45.2
+
+> ---
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> all m68k board-file level controllers.
+> ---
+>   arch/m68k/coldfire/gpio.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/m68k/coldfire/gpio.c b/arch/m68k/coldfire/gpio.c
+> index ca26de257871..30e5a4ed799d 100644
+> --- a/arch/m68k/coldfire/gpio.c
+> +++ b/arch/m68k/coldfire/gpio.c
+> @@ -123,10 +123,12 @@ static int mcfgpio_direction_output(struct gpio_chip *chip, unsigned offset,
+>   	return __mcfgpio_direction_output(offset, value);
+>   }
+>   
+> -static void mcfgpio_set_value(struct gpio_chip *chip, unsigned offset,
+> -			      int value)
+> +static int mcfgpio_set_value(struct gpio_chip *chip, unsigned int offset,
+> +			     int value)
+>   {
+>   	__mcfgpio_set_value(offset, value);
+> +
+> +	return 0;
+>   }
+>   
+>   static int mcfgpio_request(struct gpio_chip *chip, unsigned offset)
+> @@ -158,7 +160,7 @@ static struct gpio_chip mcfgpio_chip = {
+>   	.direction_input	= mcfgpio_direction_input,
+>   	.direction_output	= mcfgpio_direction_output,
+>   	.get			= mcfgpio_get_value,
+> -	.set			= mcfgpio_set_value,
+> +	.set_rv			= mcfgpio_set_value,
+>   	.to_irq			= mcfgpio_to_irq,
+>   	.base			= 0,
+>   	.ngpio			= MCFGPIO_PIN_MAX,
+> 
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250326-gpiochip-set-rv-m68k-789f77283f78
+> 
+> Best regards,
 
