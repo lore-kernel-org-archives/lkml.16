@@ -1,301 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482F128E5EE
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5525F27EC9A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744712739; cv=none; b=qwVX/m5VaDUieszLR4kRzHwM1nR1MXECsPY2FoQejY1ef/WYcCeFREJ+HzIlE1UUGtUhm9Ikrhic9SF9Te0GEEard8Bv737N7ALUjm7D7AKPHXsnRu/cw7Fg1jTwnWSSjtB2Gn6SATjN1pNYAb2we2KelP68gyguHM+2OLHAifg=
+	t=1744712798; cv=none; b=YrGpqejDZtY2sV0+CIl/eacXHI0TQ2RYVqoATh0UvuXrwqNmeIBzbUkMVS/2YYWmGC6R8l0nUCKzW21Veftg3gw0HktCIRWU2sIQUmTGFjaS6O6MF5fOcZL1jrUhYzq7bg9isiEvYHEMRSMekhZiQoNZi/xjFZGsH81tnKWNmIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744712739; c=relaxed/simple;
-	bh=ptXqHbgHmEUgzcj0KfxsRu45L6G9e4nOytIJeY9ps1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kscSKdcwtHpTbLCcGK+9gT/zGwUJKMNxWAmHdVrywOI3BxOoxvgfbH/+i8PgaJW5Y93cOftfr2heuoe5vtlwpsGfoJJxUG7dMZ+EQrRe0PTiRddG9Z0CWf83I05+aMT3TGix5EUI+fmfQtxRkDaaEU3jgE3GQR+/mnfKeGQsLDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=igjlik+C; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744712798; c=relaxed/simple;
+	bh=8Wk68rfSswMYXy4roNkEMzhagEBd/xVnpM63L5n14j8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=otypikW/lA8HC+GM8f7eMU8ulBoIQhQ+jq5i+O28z49dcrvPUuG+YugymbTR090wn7LbdEldZLixRAHrSVyVq368uQxPTs926s9COnr1em/PYTSmY8EsWMAufE1BmdPS16mDnA15Ro7LYCQJ10fX8GRbS07s0h8/ZEVdXfPxyHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lwPR7RV0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="igjlik+C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744712736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hhxu4PEoJN6tD2HkTMH28lQiJH5iXa7MS3MgOAglwDE=;
-	b=igjlik+CshCFdvyKFLqbWO6LKNc+o8BpToXfmwa8Z0Fyx9DZ82xqICBScEu6IjJxs/rxmA
-	F48omPcVGa7m7x6C4eeW0F9YpQyfPuMlhNCkEWi3+PpRQPKxNY3QtcVQTsQPJzBIiQArpU
-	kxGiCjp4x3/GZVNJ6f/0RtX3s3OUYEk=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-P6yWfUfeP9mImkYkZegOyg-1; Tue,
- 15 Apr 2025 06:25:32 -0400
-X-MC-Unique: P6yWfUfeP9mImkYkZegOyg-1
-X-Mimecast-MFC-AGG-ID: P6yWfUfeP9mImkYkZegOyg_1744712732
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAFB319560B3;
-	Tue, 15 Apr 2025 10:25:31 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.90])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 02BC31808867;
-	Tue, 15 Apr 2025 10:25:28 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v2 3/3] timers: Exclude isolated cpus from timer migation
-Date: Tue, 15 Apr 2025 12:25:04 +0200
-Message-ID: <20250415102500.100415-8-gmonaco@redhat.com>
-In-Reply-To: <20250415102500.100415-5-gmonaco@redhat.com>
-References: <20250415102500.100415-5-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lwPR7RV0"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tHd5013136
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:26:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=8KNMl+h+dY8TN+P2t92AbEQx
+	GBdTUq047ce2xAkYaWs=; b=lwPR7RV0H9w31lCgPQHCfO/3zAqgwzJ7FdTwzR3v
+	4Il6bqLaGqihXyXpEvf0aSrybbLT7DexWI63wE7NgP/Cb+59VY+9aJiqpEC+rVa7
+	Ho6k8xU5DS7m7jxOG1bQYMHlwi1wPtu/xKGK+EIWGiD7+EgvyS1AvyWaUGoY8Vzq
+	IBB/4qG2MZUckTGzJsmhMaUwNxTQGTGFivb0fahp1kWrM/jQreraGUAm0ndR4fdI
+	ITvf2Ij/H9Xsi/EYHs6FuXUCN4T3NMcH1u5LDXHL849C9kMWJl1sgYLJ98gDTAjh
+	5o5UlLrirTNLh9wHg2QtV+BWtPLUzEyEmE4ma87/gfNUgg==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6fnft-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:26:36 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5f876bfe0so858549285a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:26:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744712795; x=1745317595;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8KNMl+h+dY8TN+P2t92AbEQxGBdTUq047ce2xAkYaWs=;
+        b=g3VpZ35rB73XTvZwIapIhgWuWTKLCyDgCg2F8pTXEsIv1MXRntpygTvcFN0K2oj8TU
+         SKwHZ1j67gD4V8U1ImcIvYDVubfV9yUmZsIkwbl7o/XKl7cFgAK86AoBT3mRVkvkCgps
+         57vWbbrqP9t9V2Sth3Rzh0IySmbUH9gsQw3VIrjWEjnJTEjTPKVyho14+nqw6Q/yJNsH
+         GaUuen/R0mU+2PVFcmdOL9YmVipOBp4MdySu0zaaDbD12CJvESmzB1NTcGcKwjQRH46a
+         O90p9iX1Ecjcn513thZ2K8ZSCUzBO2maR3RWGMFE37Ixzy4vebK7Sm/fgRd2oHOkmuUA
+         so8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVC8fXnwgua3tFbrkCveqUglAvWliigNrw4ooMVQHl8fQ3inJyksAfNEi1NzisORHgGxjq68DEfqzi5gIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzyaPS6SDWjU1jPHtF1QyTJx6kYidD62qalx4bNAzDkyUBuj3W
+	JiYQr98+ZY7GYWDukoGXd+Mv0CNh4yb0UceOE2sevlap9r796XWPXin9jiqHOdFTlMyiLQV2LFQ
+	U+UF2q7i4PdeXuHObMw7xIsiZrGhpcp1yU6y+2Ty6NYhePtoLtwz0Au0l+O2CLvo=
+X-Gm-Gg: ASbGncuAOZL3lX5hLsG902A24mkSEYZkfX4cyysBqXN1yxwh38vEafzARDy85MDFiav
+	QV9VqKeHLa+60kFa5BHItXJiYcnLAnWMsf6YodA24l6+YeO6Y1FVXsykS7aABk7Lxnahw7YSmpe
+	VD9unAl25zZ6uJWAqlKvgQYKrlNpcwtsFpu8p7xTGvfBrBzBSTYXNdUECKAyWTVmL6juAcqKw5P
+	V2QSWJ0mBjjl30rZbO3LwCSHKUwi9nr5dMUf0LkG6g511vqiZ+zXMhskIaC7ULc/DYexoOGQWFa
+	JX4lmPh9+MMCZ8A7vzkiTXrZewqJkqRXFovEKNt1Gr7zNmMnM3cd0t2CzICusLC4EaHWWondqfY
+	=
+X-Received: by 2002:a05:620a:28d5:b0:7c0:a3bd:a78a with SMTP id af79cd13be357-7c7af1f3d4emr2124438185a.41.1744712795100;
+        Tue, 15 Apr 2025 03:26:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHPAUNy95g+BxEoF3m9T+D1BmAcO0ZWmAE4FI2u67ljC8uUUpC++8Ix1n9dNmZZNjqqGE/GOw==
+X-Received: by 2002:a05:620a:28d5:b0:7c0:a3bd:a78a with SMTP id af79cd13be357-7c7af1f3d4emr2124435285a.41.1744712794773;
+        Tue, 15 Apr 2025 03:26:34 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d123137sm1387306e87.40.2025.04.15.03.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 03:26:33 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:26:32 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, lumag@kernel.org,
+        quic_kriskura@quicinc.com, manivannan.sadhasivam@linaro.org,
+        konrad.dybcio@oss.qualcomm.com, quic_varada@quicinc.com,
+        quic_kbajaj@quicinc.com, johan+linaro@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] phy: qcom-qmp-usb: Fix an NULL vs IS_ERR() bug
+Message-ID: <x2hqk3yabe3ntp4b452tseyuuen76mtttievka7zgjajxxxobb@srrgiu7k6eyp>
+References: <20250414125050.2118619-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414125050.2118619-1-chenyuan0y@gmail.com>
+X-Proofpoint-ORIG-GUID: 99SiUAQOEh4S2SbarfX3Bx5_IiHm9rfS
+X-Proofpoint-GUID: 99SiUAQOEh4S2SbarfX3Bx5_IiHm9rfS
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67fe345c cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=vPHRA5kXY3h_Fp5QcTsA:9 a=CjuIK1q_8ugA:10
+ a=zgiPjhLxNE0A:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=901 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150073
 
-The timer migration mechanism allows active CPUs to pull timers from
-idle ones to improve the overall idle time. This is however undesired
-when CPU intensive workloads run on isolated cores, as the algorithm
-would move the timers from housekeeping to isolated cores, negatively
-affecting the isolation.
+On Mon, Apr 14, 2025 at 07:50:50AM -0500, Chenyuan Yang wrote:
+> The qmp_usb_iomap() helper function currently returns the raw result of
+> devm_ioremap() for non-exclusive mappings. Since devm_ioremap() may return
+> a NULL pointer and the caller only checks error pointers with IS_ERR(),
+> NULL could bypass the check and lead to an invalid dereference.
+> 
+> Fix the issue by checking if devm_ioremap() returns NULL. When it does,
+> qmp_usb_iomap() now returns an error pointer via IOMEM_ERR_PTR(-ENOMEM),
+> ensuring safe and consistent error handling.
+> 
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: a5d6b1ac56cb ("phy: qcom-qmp-usb: fix memleak on probe deferral")
+> CC: Johan Hovold <johan@kernel.org>
+> CC: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-usb.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
 
-This effect was noticed on a 128 cores machine running oslat on the
-isolated cores (1-31,33-63,65-95,97-127). The tool monopolises CPUs,
-and the CPU with lowest count in a timer migration hierarchy (here 1
-and 65) appears as always active and continuously pulls global timers,
-from the housekeeping CPUs. This ends up moving driver work (e.g.
-delayed work) to isolated CPUs and causes latency spikes:
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-before the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:     1203 10 3 4 ... 5 (us)
-
-after the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:      10 4 3 4 3 ... 5 (us)
-
-Exclude isolated cores from the timer migration algorithm, extend the
-concept of unavailable cores, currently used for offline ones, to
-isolated ones:
-* A core is unavailable if isolated or offline;
-* A core is available if isolated and offline;
-
-A core is considered unavailable as idle if:
-* is in the isolcpus list
-* is in the nohz_full list
-* is in an isolated cpuset
-
-Due to how the timer migration algorithm works, any CPU part of the
-hierarchy can have their global timers pulled by remote CPUs and have to
-pull remote timers, only skipping pulling remote timers would break the
-logic.
-For this reason, we prevents isolated CPUs from pulling remote global
-timers, but also the other way around: any global timer started on an
-isolated CPU will run there. This does not break the concept of
-isolation (global timers don't come from outside the CPU) and, if
-considered inappropriate, can usually be mitigated with other isolation
-techniques (e.g. IRQ pinning).
-
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- include/linux/timer.h         |  6 ++++++
- kernel/cgroup/cpuset.c        | 14 ++++++++------
- kernel/time/tick-internal.h   |  1 +
- kernel/time/timer.c           | 10 ++++++++++
- kernel/time/timer_migration.c | 24 +++++++++++++++++++++---
- 5 files changed, 46 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 10596d7c3a346..4722e075d9843 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -190,4 +190,10 @@ int timers_dead_cpu(unsigned int cpu);
- #define timers_dead_cpu		NULL
- #endif
- 
-+#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-+extern void tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask);
-+#else
-+static inline void tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask) { }
-+#endif
-+
- #endif
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 306b604300914..866b4b8188118 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -1323,7 +1323,7 @@ static bool partition_xcpus_del(int old_prs, struct cpuset *parent,
- 	return isolcpus_updated;
- }
- 
--static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
-+static void update_exclusion_cpumasks(bool isolcpus_updated)
- {
- 	int ret;
- 
-@@ -1334,6 +1334,8 @@ static void update_unbound_workqueue_cpumask(bool isolcpus_updated)
- 
- 	ret = workqueue_unbound_exclude_cpumask(isolated_cpus);
- 	WARN_ON_ONCE(ret < 0);
-+
-+	tmigr_isolated_exclude_cpumask(isolated_cpus);
- }
- 
- /**
-@@ -1454,7 +1456,7 @@ static int remote_partition_enable(struct cpuset *cs, int new_prs,
- 	list_add(&cs->remote_sibling, &remote_children);
- 	cpumask_copy(cs->effective_xcpus, tmp->new_cpus);
- 	spin_unlock_irq(&callback_lock);
--	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	update_exclusion_cpumasks(isolcpus_updated);
- 	cpuset_force_rebuild();
- 	cs->prs_err = 0;
- 
-@@ -1495,7 +1497,7 @@ static void remote_partition_disable(struct cpuset *cs, struct tmpmasks *tmp)
- 	compute_effective_exclusive_cpumask(cs, NULL, NULL);
- 	reset_partition_data(cs);
- 	spin_unlock_irq(&callback_lock);
--	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	update_exclusion_cpumasks(isolcpus_updated);
- 	cpuset_force_rebuild();
- 
- 	/*
-@@ -1563,7 +1565,7 @@ static void remote_cpus_update(struct cpuset *cs, struct cpumask *xcpus,
- 	if (xcpus)
- 		cpumask_copy(cs->exclusive_cpus, xcpus);
- 	spin_unlock_irq(&callback_lock);
--	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	update_exclusion_cpumasks(isolcpus_updated);
- 	if (adding || deleting)
- 		cpuset_force_rebuild();
- 
-@@ -1906,7 +1908,7 @@ static int update_parent_effective_cpumask(struct cpuset *cs, int cmd,
- 		WARN_ON_ONCE(parent->nr_subparts < 0);
- 	}
- 	spin_unlock_irq(&callback_lock);
--	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	update_exclusion_cpumasks(isolcpus_updated);
- 
- 	if ((old_prs != new_prs) && (cmd == partcmd_update))
- 		update_partition_exclusive_flag(cs, new_prs);
-@@ -2931,7 +2933,7 @@ static int update_prstate(struct cpuset *cs, int new_prs)
- 	else if (isolcpus_updated)
- 		isolated_cpus_update(old_prs, new_prs, cs->effective_xcpus);
- 	spin_unlock_irq(&callback_lock);
--	update_unbound_workqueue_cpumask(isolcpus_updated);
-+	update_exclusion_cpumasks(isolcpus_updated);
- 
- 	/* Force update if switching back to member & update effective_xcpus */
- 	update_cpumasks_hier(cs, &tmpmask, !new_prs);
-diff --git a/kernel/time/tick-internal.h b/kernel/time/tick-internal.h
-index faac36de35b9e..75580f7c69c64 100644
---- a/kernel/time/tick-internal.h
-+++ b/kernel/time/tick-internal.h
-@@ -167,6 +167,7 @@ extern void fetch_next_timer_interrupt_remote(unsigned long basej, u64 basem,
- extern void timer_lock_remote_bases(unsigned int cpu);
- extern void timer_unlock_remote_bases(unsigned int cpu);
- extern bool timer_base_is_idle(void);
-+extern bool timer_base_remote_is_idle(unsigned int cpu);
- extern void timer_expire_remote(unsigned int cpu);
- # endif
- #else /* CONFIG_NO_HZ_COMMON */
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4d915c0a263c3..f04960091eba9 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -2162,6 +2162,16 @@ bool timer_base_is_idle(void)
- 	return __this_cpu_read(timer_bases[BASE_LOCAL].is_idle);
- }
- 
-+/**
-+ * timer_base_remote_is_idle() - Return whether timer base is set idle for cpu
-+ *
-+ * Returns value of local timer base is_idle value for remote cpu.
-+ */
-+bool timer_base_remote_is_idle(unsigned int cpu)
-+{
-+	return per_cpu(timer_bases[BASE_LOCAL].is_idle, cpu);
-+}
-+
- static void __run_timer_base(struct timer_base *base);
- 
- /**
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index 1fae38fbac8c2..6fe6ca798e98d 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -10,6 +10,7 @@
- #include <linux/spinlock.h>
- #include <linux/timerqueue.h>
- #include <trace/events/ipi.h>
-+#include <linux/sched/isolation.h>
- 
- #include "timer_migration.h"
- #include "tick-internal.h"
-@@ -1445,7 +1446,7 @@ static long tmigr_trigger_active(void *unused)
- 
- static int tmigr_cpu_unavailable(unsigned int cpu)
- {
--	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
-+	struct tmigr_cpu *tmc = per_cpu_ptr(&tmigr_cpu, cpu);
- 	int migrator;
- 	u64 firstexp;
- 
-@@ -1472,15 +1473,18 @@ static int tmigr_cpu_unavailable(unsigned int cpu)
- 
- static int tmigr_cpu_available(unsigned int cpu)
- {
--	struct tmigr_cpu *tmc = this_cpu_ptr(&tmigr_cpu);
-+	struct tmigr_cpu *tmc = per_cpu_ptr(&tmigr_cpu, cpu);
- 
- 	/* Check whether CPU data was successfully initialized */
- 	if (WARN_ON_ONCE(!tmc->tmgroup))
- 		return -EINVAL;
- 
-+	/* Isolated CPUs don't participate in timer migration */
-+	if (cpu_is_isolated(cpu))
-+		return 0;
- 	raw_spin_lock_irq(&tmc->lock);
- 	trace_tmigr_cpu_available(tmc);
--	tmc->idle = timer_base_is_idle();
-+	tmc->idle = timer_base_remote_is_idle(cpu);
- 	if (!tmc->idle)
- 		__tmigr_cpu_activate(tmc);
- 	tmc->available = true;
-@@ -1489,6 +1493,20 @@ static int tmigr_cpu_available(unsigned int cpu)
- 	return 0;
- }
- 
-+void tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
-+{
-+	int cpu;
-+
-+	lockdep_assert_cpus_held();
-+
-+	for_each_cpu_and(cpu, exclude_cpumask, tmigr_available_cpumask)
-+		tmigr_cpu_unavailable(cpu);
-+
-+	for_each_cpu_andnot(cpu, cpu_online_mask, exclude_cpumask)
-+		if (!cpumask_test_cpu(cpu, tmigr_available_cpumask))
-+			tmigr_cpu_available(cpu);
-+}
-+
- static void tmigr_init_group(struct tmigr_group *group, unsigned int lvl,
- 			     int node)
- {
 -- 
-2.49.0
-
+With best wishes
+Dmitry
