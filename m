@@ -1,152 +1,205 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8290288C88;
-	Tue, 15 Apr 2025 11:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1AD29117B;
+	Tue, 15 Apr 2025 11:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716507; cv=none; b=UADVPHBMJzm7rP0Mw/vFBP95oXrRyeXTXm7JcHCRRfXLCP0ogx4Ldo7Ozq3Cl9/y1yySNtW3OrW5+YgYyotMutNK0m27nhMhbCphnCV2AecQtHck3h5Edp2hPoIowD0fWhrO33qECuRu+wM8cyeGRyMMVL+rgr6VtHjQ4iknDB0=
+	t=1744716542; cv=none; b=XtoRK7GrM6bgXXmrHOhyQSXrsXg5j6GF7QyoCPdtE+tlerPlzwl1WcJg6Ce0GX1+rSZCzCqsaa4xbIjS9ZOADGZuaB6aq9F7pTBGINuYJxcXLhkhH6G0FaayNPesJ88IEkT/MV/A334tyezNHzkCODRZAhTeF6vqMkmKaNUgA8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716507; c=relaxed/simple;
-	bh=zjo+6QiCbQI7Wkdf1JLfiryh8Y4sey5HoOLlYs3E73w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AWPrQo89HgTpZGhTLEfH0pml91vQJFFjGpGx3mJtCDy84GdLfRRgNn+FnJqtUjl7Kuglk56H6Z/M+WcJbL1QiPhkrzoynjO9Q2Fyv1fQ/OVpYF9KBYmsFdczKlLu9mJiGsaY7S1KYLpiX5rLNha3Oa1wwjj4rUNj/04cnQYd1qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iCTEsJ8o; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744716542; c=relaxed/simple;
+	bh=HkGK4vKcs2199YO0fGdWUg9GcSJPiCpZOIr/Szy0PUg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=J4+isDeu26WOYAI1iv0q5uNBl5s/7UfLewFK2/FKjeVvReJBVpnVSQZss0Fyy1g8LVSK8Hav+hIOPqheS30Mqn/I+A02Dz9SFAmVjEl5uw1xJqZ9gizOOda86ousChPCY87e0PfZTOT+f9DMNitVZ4kM4OtoGC7eP0NsppMtxbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=QzSY+1mk; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=pfGHhhh1 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCTEsJ8o"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2264aefc45dso79516315ad.0;
-        Tue, 15 Apr 2025 04:28:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="QzSY+1mk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="pfGHhhh1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744716505; x=1745321305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DztHw6xaBRM0pi7U2Teie2x2Tea4xhzgq5VCzCNtwYg=;
-        b=iCTEsJ8oOv/eKhsymlpSuqQUEfyLW35qZ8uyaSpJsBiAzKw4GtSoWxffe1cmgPP5+Q
-         0wU8zoFbeepqujZXQf5V58rQMVlo2DgxO2AFcM7YLbSoQa09E//0YsSMIKeczzcuVO4S
-         N5ljnGidehE55P3YOcXkUIVmvIdLWdsoma2QzGpFZBh3bUP0FqEKkiv2l8nJ9o6LOQ3q
-         ZltFyyP/ckbLqUiDYuqZHLqtanMijvDLTJth+VXDJtgi+2WoX7zBWjMATjvp+uy3whUY
-         e1SYx72nVI5IdgBPzgVnK9MMutqWxDzN+cMSgBJJolile9U2U4gy20Ocq2fx1CPaaOA9
-         hhcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744716505; x=1745321305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DztHw6xaBRM0pi7U2Teie2x2Tea4xhzgq5VCzCNtwYg=;
-        b=eLq0Yep2V6aasW+doCbQ6PwGLz/a+Wzxr0+MeS2GRjNidjkuUXxL67lpu1eOT5Mkr+
-         XefGz4sr81qLR9zCOSdwCDR9yq67MKmnHFssxDDeG3M3f6pJq2ARQpqMvGJ3KT+lLq33
-         q9OHWhs57SSkQ3lr5FSYIm/v7hPUdiyxNhOizEDWsL0VNqMCohsJ1BEWBYk/vrTCqe0j
-         IIMs9kEk0cEknuI0RQ8XQ9weleA8zUwN4Ubxft+DyIqoE14bURXAOoZsY3Ujmho9SmeX
-         fjPIK1UHq322j5p3V2Vsf5Am4JNMgZ0zGPxm45/HUXVDEWK7wD+LaA8xyIB4LDWSfRcE
-         hFRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF2k3OPlIhXxE7GZggGBykl/MBPY1vmupb+gRIRASAvifQCQ2bw3uDOkbW9vFZYwkA8auH7+BE962RULWOK9ZBz9Bq@vger.kernel.org, AJvYcCVT0+Y2opYweYzHyDdvjNAUkInIXFmE9FJoZqPMuI4JD88gbDCUOvXy9YzMNby8xQKTKH3p6SIcnvwlF+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc+ucnMLEchY79ctHyy2wkxsDSGtHyR71pDim3BLtSpbf2nfHs
-	Q4+YpAU8d8ToodIbpKgIBI2PNV8QjSFE0IBOW6ege1ouTofXFOu1
-X-Gm-Gg: ASbGnctR07CaHmqVFs2zA6Od3H7INvoV0xQ+8rwMF49ZJoDRYHpEIlBk9QpdvHjSp/T
-	8SrqOJUaSrbB1ezQXfSo/hBZDnA7cpXobdPwshecIoiDpzpISsMbbPDBqJG5oHOVLbPXCXjkZbC
-	Qssndyg9sJ7ul3Wt9M62yXCxX0GqgX7lhUmuXXNumlmIXFhD6jflZHFkeIhPl9jqgpitzw+hiBd
-	KPXNIsquQuvg6er4Z9bpGDfs+9flLrK7QYVapm3QUS7Xx0dwFGkxOFtlxd7iVt6K/dQ14JPy7UK
-	jl1FvLf1azQjZulDoA6qUSQVydgL0/nTF+r0FoFwdSwUTcF6wT+MfIl/
-X-Google-Smtp-Source: AGHT+IHY9Bs1VQ391f8Z/Js9FKuUCUYZYk8EDJjf4B4MK8pBuEjQk4Wn3P6pKuv58EC/ylCxOsXniw==
-X-Received: by 2002:a17:903:1c7:b0:220:e5be:29c7 with SMTP id d9443c01a7336-22bea4f180fmr244295615ad.39.1744716504736;
-        Tue, 15 Apr 2025 04:28:24 -0700 (PDT)
-Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f0fb7sm8444627b3a.109.2025.04.15.04.28.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 04:28:24 -0700 (PDT)
-From: Jin Guo <menglong8.dong@gmail.com>
-X-Google-Original-From: Jin Guo <guoj17@chinatelecom.cn>
-To: rostedt@goodmis.org
-Cc: mhiramat@kernel.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Jin Guo <guoj17@chinatelecom.cn>
-Subject: [PATCH] ftrace: make ftrace_location() more accurate
-Date: Tue, 15 Apr 2025 19:27:50 +0800
-Message-Id: <20250415112750.1477339-1-guoj17@chinatelecom.cn>
-X-Mailer: git-send-email 2.39.5
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744716539; x=1776252539;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=mYfOX7V+RukALTVJ8Qi0exktDRQwn3ad8TOZoUSa2Qs=;
+  b=QzSY+1mkLi0kFNWpIrh9ZQtkHDvaDnBA+IYAiY3ehV8wlc5CTFz2Q048
+   odYXdZTQZFHgNssT9hh1mNq35ZHNLKffkwWlyVDd7Ufqe1sU2iZaWNTel
+   RJTWwbYDYyhu7gtNoQZMWub6MjKBTcdevc6m5QvRF0yaCWZsv4RDfw9Wz
+   Aix0K4AaZ8Q5NWYDskRsuS7QhRktFTn0hWZ3ktJVqcBXohFpUkuuSuKUC
+   PThIERxSirTE969BBRfSTUVlpXNhKEziZxVyfCVR9RFsaQAyO2oiLp1vr
+   E1KIA0h1FCZIkCRFeLKf5eoj+WnmfrD7eDWqWugq8QjUYu2XjWr1MrRZD
+   A==;
+X-CSE-ConnectionGUID: vXCahAz8Qt2JyThBws63mw==
+X-CSE-MsgGUID: kYpqigZ5SqehRJK/H93HBA==
+X-IronPort-AV: E=Sophos;i="6.15,213,1739833200"; 
+   d="scan'208";a="43539741"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 15 Apr 2025 13:28:55 +0200
+X-CheckPoint: {67FE42F7-22-B1D34AC3-DEA5B19F}
+X-MAIL-CPID: 711BF174EC8067FD99CF9D8CB63779DE_4
+X-Control-Analysis: str=0001.0A006374.67FE42EA.007C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6DD8A165E7F;
+	Tue, 15 Apr 2025 13:28:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744716530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mYfOX7V+RukALTVJ8Qi0exktDRQwn3ad8TOZoUSa2Qs=;
+	b=pfGHhhh1oTEs/xBWDSj8LUf9ShgiCi7VgdPYiuGvNXG5xphp+EBH09XLaali19JDQZxCET
+	4gIOjjzMDHQZHiMpK8S9BpuJWqWsjhvdAWZcb/0ike2AGTJ/PmNLgtFwrmKyXuy4qNKdXw
+	CRaH+/VtIpzD467WnNG43Q4gg1o3XMr/Ph7tIhKWplLHCS2ZplnPpS7FtM2BIurUgzzD/K
+	wymqT2YbGckWBt3/5yJ3aVCix3azGs2ZprELQv61+z+kQH+0UehkQocQwbqDQ16aSKGXmf
+	oVwZgl2CKMo1G1thmHXVb83n2a+hYrj9+3exhFUU5QyhngmG84KjYwlPFyd1RQ==
+Message-ID: <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, Nishanth Menon
+ <nm@ti.com>,  Vignesh Raghavendra <vigneshr@ti.com>, Roger Quadros
+ <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Date: Tue, 15 Apr 2025 13:28:48 +0200
+In-Reply-To: <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-The function ftrace_location is used to lookup the ftrace location with an
-ip. However, the result that it returns can be wrong in some case.
+On Tue, 2025-04-15 at 16:06 +0530, Siddharth Vadapalli wrote:
+>=20
+> On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
+> > As discussed [1], the comments for the different rgmii(-*id) modes do n=
+ot
+> > accurately describe what these values mean.
+> >=20
+> > As the Device Tree is primarily supposed to describe the hardware and n=
+ot
+> > its configuration, the different modes need to distinguish board design=
+s
+>=20
+> If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
+> with CPSW Ethernet Switch), and, given that "phy-mode" is a property
+> added within the device-tree node of the MAC, I fail to understand how
+> the device-tree can continue "describing" hardware for different board
+> designs using the same SoC (unchanged MAC HW).
 
-Let's image that we have the following kallsyms:
+The setting is part of the MAC node, but it is always set in the board DTS,
+together with assigning a PHY to the MAC.
 
-  ffffffff812c35f0 T sys_ni_syscall
-  ffffffff812c38b0 W __pfx___x64_sys_io_pgetevents_time32
-  ffffffff812c38c0 W __x64_sys_io_pgetevents_time32
+> How do we handle situations where a given MAC supports various
+> "phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
+> descibe the HW? Even if we set aside the "rgmii" variants that this
+> series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
+> and "usxgmii/xfi" as well.
 
-And the symbol has corresponding ftrace location like this:
+This is not about PHY mode support of the MAC, but the mode to be used on a
+particular board. I would not expect a board to use multiple different
+interfaces with a single PHY (and if such cases exist, I consider them out =
+of
+scope for this patch series).
 
-  ffffffff812c35f4 sys_ni_syscall
-  ffffffff812c3624 __ftrace_invalid_address___52
-  ffffffff812c3654 __ftrace_invalid_address___100
-  ffffffff812c3684 __ftrace_invalid_address___148
-  ffffffff812c36b4 __ftrace_invalid_address___196
-  ffffffff812c36e4 __ftrace_invalid_address___244
-  ffffffff812c3714 __ftrace_invalid_address___292
-  ffffffff812c3744 __ftrace_invalid_address___340
-  ffffffff812c3774 __ftrace_invalid_address___388
-  ffffffff812c37a4 __ftrace_invalid_address___436
-  ffffffff812c37d4 __ftrace_invalid_address___484
-  ffffffff812c3804 __ftrace_invalid_address___532
-  ffffffff812c3834 __ftrace_invalid_address___580
-  ffffffff812c3864 __ftrace_invalid_address___628
-  ffffffff812c3894 __ftrace_invalid_address___676
-  ffffffff812c38c4 __x64_sys_io_pgetevents_time32
-  ffffffff812c38f4 __ia32_sys_io_pgetevents_time32
+>=20
+> > (if a delay is built into the PCB using different trace lengths); wheth=
+er
+> > a delay is added on the MAC or the PHY side when needed should not matt=
+er.
+> >=20
+> > Unfortunately, implementation in MAC drivers is somewhat inconsistent
+> > where a delay is fixed or configurable on the MAC side. As a first step
+> > towards sorting this out, improve the documentation.
+> >=20
+> > Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28=
+@lunn.ch/ [1]
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> > ---
+> >  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.=
+yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > index 45819b2358002..2ddc1ce2439a6 100644
+> > --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> > @@ -74,19 +74,21 @@ properties:
+> >        - rev-rmii
+> >        - moca
+> > =20
+> > -      # RX and TX delays are added by the MAC when required
+> > +      # RX and TX delays are part of the board design (through PCB tra=
+ces). MAC
+> > +      # and PHY must not add delays.
+> >        - rgmii
+> > =20
+> > -      # RGMII with internal RX and TX delays provided by the PHY,
+> > -      # the MAC should not add the RX or TX delays in this case
+> > +      # RGMII with internal RX and TX delays provided by the MAC or PH=
+Y. No
+> > +      # delays are included in the board design; this is the most comm=
+on case
+> > +      # in modern designs.
+> >        - rgmii-id
+> > =20
+> > -      # RGMII with internal RX delay provided by the PHY, the MAC
+> > -      # should not add an RX delay in this case
+> > +      # RGMII with internal RX delay provided by the MAC or PHY. TX de=
+lay is
+> > +      # part of the board design.
+> >        - rgmii-rxid
+> > =20
+> > -      # RGMII with internal TX delay provided by the PHY, the MAC
+> > -      # should not add an TX delay in this case
+> > +      # RGMII with internal TX delay provided by the MAC or PHY. RX de=
+lay is
+> > +      # part of the board design.
+>=20
+> Since all of the above is documented in "ethernet-controller.yaml" and
+> not "ethernet-phy.yaml", describing what the "MAC" should or shouldn't
+> do seems accurate, and modifying it to describe what the "PHY" should or
+> shouldn't do seems wrong.
 
-When we want to lookup the ftrace location for sys_ni_syscall, the ftrace
-location "ffffffff812c3894" can be returned, which is totally wrong.
+The settings describe the connection between MAC and PHY, thus their explan=
+ation
+must mention both to make sense. See the linked discussion with Andrew for
+details.
 
-The reason is that we get a wrong function size from
-kallsyms_lookup_size_offset(), because of the existing of weak functions.
-And when we lookup with ftrace_location_range(), it will return the first
-matched location between 0xffffffff812c35f0 and ffffffff812c38c0, as it
-searches by binary on a page.
+Best,
+Matthias
 
-When the macro "FTRACE_MCOUNT_MAX_OFFSET" exists, we can limit the lookup
-size no more than FTRACE_MCOUNT_MAX_OFFSET to avoid such error.
 
-The victim of this problem can be BPF_PROG_TYPE_TRACING. When we want to
-hook the function sys_ni_syscall with BPF_FENTRY, it will attach
-to __ftrace_invalid_address___676(0xffffffff812c3894) successfully
-instead, and the user totally can't aware it, which is dangerous.
 
-Signed-off-by: Jin Guo <guoj17@chinatelecom.cn>
----
- kernel/trace/ftrace.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+>=20
+> >        - rgmii-txid
+> >        - rtbi
+> >        - smii
+>=20
+> Regards,
+> Siddharth.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1a48aedb5255..8c9a4009c997 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1658,8 +1658,13 @@ unsigned long ftrace_location(unsigned long ip)
- 			return 0;
- 
- 		/* map sym+0 to __fentry__ */
--		if (!offset)
--			loc = ftrace_location_range(ip, ip + size - 1);
-+		if (!offset) {
-+			size -= 1;
-+#ifdef FTRACE_MCOUNT_MAX_OFFSET
-+			size = min(size, FTRACE_MCOUNT_MAX_OFFSET);
-+#endif
-+			loc = ftrace_location_range(ip, ip + size);
-+		}
- 	}
- 	return loc;
- }
--- 
-2.39.5
-
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
