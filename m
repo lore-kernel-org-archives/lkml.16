@@ -1,265 +1,213 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB701C6FF6;
-	Tue, 15 Apr 2025 10:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4193528A1CE;
+	Tue, 15 Apr 2025 10:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744711603; cv=none; b=a/ZFeXG3yzr1K0faoIm0HrKFxozMbq5yVh2NeWzkVEpMCsbXRWOxaauimiRiYweRakMSTSk/WWferBjC+dsOJZACK8c1OFG6+0gCqQyehw4s9shPMnwzaQLokQ49jdcPmNCvSFtUpL1XDfnRqd9tEDMgCTfSh10jf13G950wN3c=
+	t=1744711609; cv=none; b=H1kDQ+Ja1dLVgdKmCBIV39qNCvQgBBWezNUQJZ/tn77U1TdlArPwbLsi1NdIDUDXeRSExdYRucgQngsCzlFPOQ9HEnGj5oJyhhYXSXxglAYtso9aPokIg0mReY3qNM4FHos8ufEVf3oVGTmBm3LPsQ+M4wtchpLxL44O2fFxDLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744711603; c=relaxed/simple;
-	bh=CEmzCZqN10SSexLluQc91LaskaInMbu9/eAOHXGc3uo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=tMDCqsIqP5LIwNNCtlIrAqhp7YUMBRkImGYzflfzWQJJh1VScOyQzpBRhTt1dj7h3b3ZRK7Dabp2l410CX/JbHK+RlOwJf73WsGLIb5d52wgB7935ZFO5gFrFf+vivruY1/jBwonus6WTUlSvyuUFrPazW8f9ZwmN6cr+GtjAZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KCq2l9VB; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744711609; c=relaxed/simple;
+	bh=AcYgonVLWePGiHAxSjHPdf3Rwctz0JHoJhO6Z55gyjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RhN8o75mITgz8M56Zr0xVFnSNzCatZ9QinNttGFcQk8SDrtWfqdSVCpzOEPTa4f/AJHvEclbJ5wFiEufcwlpV7jMlg0NOPYNOa6aVi1k5YLg63PPg7mn+Pf6ngo6J8I53O8veIMwBbEUUsIcL/FZRtofIT+w/9goGwDRTdv8S48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nel4OjhK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KCq2l9VB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EA21F43981;
-	Tue, 15 Apr 2025 10:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744711598;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=gyefS2qsicS2WeYEx2KUc4cRIS7+s7AsX0vNGF7mzds=;
-	b=KCq2l9VBizQUOddDZPnf73tnZwzkwcNtQ4r1V5Z4SAlCrpGqEgU6k0a7K6ZqXSwJL48W+7
-	JBQHbhUVSNjzWmw0U2tGOUDBBbdv9hsI8+hW0C1S71wi+7nB087zWAFJiEYx2hYM3naTd0
-	Ob8HAk5eAK7wm/x1pLLtgEQMrPQ566Izl5DXqBjwqSHq6uSxAT4gTYKuqCIrCz8SsB6Vc4
-	ue1O9e0QVZFl22Qo+CO2McXtHa0mG1h6vVN0y5SFGT3WYTZ8uSnA4eyJ6mNz3UqxuIQe4q
-	zvAZgpm9TnLT4PrOyxbGqpKbzfk2E9SctAmlUfdX1tGuRXBXSYR6mbm9erWYxQ==
-Message-ID: <b21778f9-dd78-495a-80ad-979c6718072f@bootlin.com>
-Date: Tue, 15 Apr 2025 12:06:37 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nel4OjhK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BABCC4CEEC;
+	Tue, 15 Apr 2025 10:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744711608;
+	bh=AcYgonVLWePGiHAxSjHPdf3Rwctz0JHoJhO6Z55gyjw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nel4OjhKJ2V4eB0k235iwkT92Zff0JgyX2u+r1qGYzh+fAUOiclUFq29lVhtp9URX
+	 fdU8Sa5Ok8eyVRgvBIsk3tou351fS0cApWKH0+TfXKn8wvwxwVvDg2Rwg1J2GpE3I7
+	 bjaQChu6WDmIRmzBypMQdkAtLhWP832riIS18pkd+7B/I8R78GRkdTKAndfKGO1evA
+	 Sr/0vT8vDNu2njW4KLvuyrKjFfwShkMpXmVSd6quxTREjeAHG6ch6UrQEbnjeBnXDr
+	 AmBisEVtdEISTBC/0+d3JIxhyLrrYBVOSiZOhOEckG8WtCTePuXoPJqVLqAeAfZmiI
+	 WiwWBD8qRmqjA==
+Date: Tue, 15 Apr 2025 18:06:31 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, Jonathan Corbet
+ <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell King
+ <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+Message-ID: <20250415180631.180e9a9f@sal.lan>
+In-Reply-To: <Z_4sxCFvpqs7qmcN@smile.fi.intel.com>
+References: <871pu1193r.fsf@trenco.lwn.net>
+	<Z_zYXAJcTD-c3xTe@black.fi.intel.com>
+	<87mscibwm8.fsf@trenco.lwn.net>
+	<Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+	<Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
+	<87v7r5sw3a.fsf@intel.com>
+	<Z_4WCDkAhfwF6WND@smile.fi.intel.com>
+	<Z_4Wjv0hmORIwC_Z@smile.fi.intel.com>
+	<20250415164014.575c0892@sal.lan>
+	<Z_4sKaag1wZhME7B@smile.fi.intel.com>
+	<Z_4sxCFvpqs7qmcN@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [PATCH v3 29/54] docs/dyndbg: add classmap info to howto
-To: Jim Cromie <jim.cromie@gmail.com>, jbaron@akamai.com,
- gregkh@linuxfoundation.org, ukaszb@chromium.org, linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- intel-gvt-dev@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com,
- jani.nikula@intel.com, ville.syrjala@linux.intel.com,
- linux-doc@vger.kernel.org
-References: <20250402174156.1246171-1-jim.cromie@gmail.com>
- <20250402174156.1246171-30-jim.cromie@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
- 5K81kIWbtQX91pD/wH5UapRF4kwMXTAqof8+m3XfYcEDVG31Kf8QkJTG/gLBi1UfJgGBahbY
- hjP40kuUR/mr7M7bKoBP9Uh0uaEM+DuKl6bSXMSrJ6fOtEPOtnfBY0xVPmqIKfLFEkjh800v
- jD1fdwWKtAIXf+cQtC9QWvcdzAmQIwmyFBmbg+ccqao1OIXTgu+qMAHfgKDjYctESvo+Szmb
- DFBZudPbyTAlf2mVKpoHKMGy3ndPZ19RboKUP0wjrF+Snif6zRFisHK7D/mqpgUftoV4HjEH
- bQO9bTJZXIoPJMSb+Lyds0m83/LYfjcWP8w889bNyD4Lzzzu+hWIu/OObJeGEQqY01etOLMh
- deuSuCG9tFr0DY6l37d4VK4dqq4Snmm87IRCb3AHAEMJ5SsO8WmRYF8ReLIk0tJJPrALv8DD
- lnLnwadBJ9H8djZMj24+GC6MJjN8dDNWctpBXgGZKuCM7Ggaex+RLHP/+14Vl+lSLdFiUb3U
- ljBXuc9v5/9+D8fWlH03q+NCa1dVgUtsP2lpolOV3EE85q1HdMyt5K91oB0hLNFdTFYwn1bW
- WJ2FaRhiC1yV4kn/z8g7fAp57VyIb6lQfS1Wwuj5/53XYjdipQARAQABzSlMb3VpcyBDaGF1
- dmV0IDxsb3Vpcy5jaGF1dmV0QGJvb3RsaW4uY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
- CwIEFgIDAQIeAQIXgBYhBItxBK6aJy1mk/Un8uwYg/VeC0ClBQJmlnw+BQkH8MsdAAoJEOwY
- g/VeC0ClyhwP/Ra6H+5F2NEW6/IMVHeXmhuly8CcZ3kyoKeGNowghIcTBo59dFh0atGCvr+y
- K9YD5Pyg9aX4Ropw1R1RVIMrWoUNZUKebRTu6iNHkE6tmURJaKLzR+9la+789jznQvbV+9gM
- YTBppX4/0cWY58jiDiDV4aJ77JDo7aWNK4hz8mZsB+Y7ezMuS4jy2r4b7dZ+YL/T9/k3/emO
- PkAuFkVhkNhytMEyOBsT7SjL4IUBeYWvOw9MIaXEl4qW/5HLGtMuNhS94NsviDXZquoOHOby
- 2uuRAI0bLz1qcsnY90yyPlDJ0pMuJHbi0DBzPTIYkyuwoyplfWxnUPp1wfsjiy/B6mRKTbdE
- a/K6jNzdVC1LLjTD4EjwnCE8IZBRWH1NVC1suOkw3Sr1FYcHFSYqNDrrzO+RKtR1JMrIe8/3
- Xhe2/UNUhppsK3SaFaIsu98mVQY3bA/Xn9wYcuAAzRzhEHgrbp8LPzYdi6Qtlqpt4HcPV3Ya
- H9BkCacgyLHcdeQbBXaup9JbF5oqbdtwev3waAmNfhWhrQeqQ0tkrpJ46l9slEGEdao5Dcct
- QDRjmJz7Gx/rKJngQrbboOQz+rhiHPoJc/n75lgOqtHRePNEf9xmtteHYpiAXh/YNooXJvdA
- tgR1jAsCsxuXZnW2DpVClm1WSHNfLSWona8cTkcoSTeYCrnXzsFNBGCG6KUBEADZhvm9TZ25
- JZa7wbKMOpvSH36K8wl74FhuVuv7ykeFPKH2oC7zmP1oqs1IF1UXQQzNkCHsBpIZq+TSE74a
- mG4sEhZP0irrG/w3JQ9Vbxds7PzlQzDarJ1WJvS2KZ4AVnwc/ucirNuxinAuAmmNBUNF8w6o
- Y97sdgFuIZUP6h972Tby5bu7wmy1hWL3+2QV+LEKmRpr0D9jDtJrKfm25sLwoHIojdQtGv2g
- JbQ9Oh9+k3QG9Kh6tiQoOrzgJ9pNjamYsnti9M2XHhlX489eXq/E6bWOBRa0UmD0tuQKNgK1
- n8EDmFPW3L0vEnytAl4QyZEzPhO30GEcgtNkaJVQwiXtn4FMw4R5ncqXVvzR7rnEuXwyO9RF
- tjqhwxsfRlORo6vMKqvDxFfgIkVnlc2KBa563qDNARB6caG6kRaLVcy0pGVlCiHLjl6ygP+G
- GCNfoh/PADQz7gaobN2WZzXbsVS5LDb9w/TqskSRhkgXpxt6k2rqNgdfeyomlkQnruvkIIjs
- Sk2X68nwHJlCjze3IgSngS2Gc0NC/DDoUBMblP6a2LJwuF/nvaW+QzPquy5KjKUO2UqIO9y+
- movZqE777uayqmMeIy4cd/gg/yTBBcGvWVm0Dh7dE6G6WXJUhWIUtXCzxKMmkvSmZy+gt1rN
- OyCd65HgUXPBf+hioCzGVFSoqQARAQABwsOyBBgBCAAmAhsuFiEEi3EErponLWaT9Sfy7BiD
- 9V4LQKUFAmaWfGYFCQfwx0ECQAkQ7BiD9V4LQKXBdCAEGQEIAB0WIQRPj7g/vng8MQxQWQQg
- rS7GWxAs4gUCYIbopQAKCRAgrS7GWxAs4gfGEACcA0XVNesbVIyvs5SJpJy+6csrH4yy233o
- GclX2P7pcCls55wiV6ywCtRaXWFjztYmklQieaZ/zq+pUuUDtBZo95rUP20E56gYV2XFB18W
- YeekTwH5d2d/j++60iHExWTB+sgMEv3CEGikUBj7iaMX2KtaB1k9K+3K6dx/s1KWxOClFkbJ
- EV/tmeq7Ta8LiytQM9b4yY550tzC0pEEeFcLFXo1m5KcJauYnAqrlOVY48NFpFUd9oAZf/Pz
- p3oEs+zn/8zK2PBrZZCD6AhrbotRy7irE5eimhxcsFm1+MG5ufnaQUWHrRYXVuFhvkSoqZ8j
- GPgPEpFor4NjRyX/PMLglQ7S5snkvKcr3Lun44aybXEHq/1FTzW2kOh6kFHFFOPbMv1voJKM
- IzrmDoDS+xANt/La7OwpCylCgF6t9oHHTTGfAfwtfYZbiepC66FDe/Jt/QLwkIXeIoeSS1O4
- 6rJdGWG2kHthUM+uIbUbaRJW8AkJpzP1Mz7TieR/9jO4YPeUm9tGL5kP2yyNtzFilcoOeox1
- NSFNAPz+zPcovVmxAaSDGcSzhQVJVlk8xPib8g4fnI8qJ3Gj7xyw8D9dzxhCR2DIFmZL84En
- N7Rj+k4VIGY7M/cVvxL81jlbMGMERMmb96Cua9z1ROviGA1He2gbHOcp6qmLNu3nprleG8PL
- ZRNdEAC0iZapoyiXlVCKLFIwUPnxUz5iarqIfQU8sa1VXYYd/AAAFI6Wv3zfNtGicjgHP8rN
- CIegqm2Av1939XXGZJVI9f3hEoUn04rvxCgcDcUvn7I0WTZ4JB9G5qAGvQLXeXK6Byu77qTx
- eC7PUIIEKN3X47e8xTSj2reVTlanDr8yeqZhxpKHaS0laF8RbD85geZtAK67qEByX2KC9DUo
- eHBFuXpYMzGQnf2SG105ePI2f4h5iAfbTW9VWH989fx4f2hVlDwTe08/NhPdwq/Houov9f/+
- uPpYEMlHCNwE8GRV7aEjd/dvu87PQPm4zFtC3jgQaUKCbYYlHmYYRlrLQenX3QSorrQNPbfz
- uQkNLDVcjgD2fxBpemT7EhHYBz+ugsfbtdsH+4jVCo5WLb/HxE6o5zvSIkXknWh1DhFj/qe9
- Zb9PGmfp8T8Ty+c/hjE5x6SrkRCX8qPXIvfSWLlb8M0lpcpFK+tB+kZlu5I3ycQDNLTk3qmf
- PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
- ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
- qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
-In-Reply-To: <20250402174156.1246171-30-jim.cromie@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetfffhtdeigfehffduuedvkeefgfdvuddugfffteetffdvteffgfejvedugffgffenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepjhhimhdrtghrohhmihgvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehukhgrshiisgestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtoheplhhin
- hhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepihhnthgvlhdqghhvthdquggvvheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Em Tue, 15 Apr 2025 12:54:12 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> escreveu:
 
+> On Tue, Apr 15, 2025 at 12:51:38PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 15, 2025 at 04:40:34PM +0800, Mauro Carvalho Chehab wrote:  
+> > > Em Tue, 15 Apr 2025 11:19:26 +0300
+> > > Andy Shevchenko <andriy.shevchenko@intel.com> escreveu:  
+> > > > On Tue, Apr 15, 2025 at 11:17:12AM +0300, Andy Shevchenko wrote:  
+> > > > > On Tue, Apr 15, 2025 at 10:49:29AM +0300, Jani Nikula wrote:    
+> > > > > > On Tue, 15 Apr 2025, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:    
+> > > > > > > On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote:    
+> > > > > > >> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:    
+> > > > > > >> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:    
+> > > > > > >> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:    
+> > > > > > >> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> > > > > > >> > >>     
+> > > > > > >> > >> > This changeset contains the kernel-doc.py script to replace the verable
+> > > > > > >> > >> > kernel-doc originally written in Perl. It replaces the first version and the
+> > > > > > >> > >> > second series I sent on the top of it.    
+> > > > > > >> > >> 
+> > > > > > >> > >> OK, I've applied it, looked at the (minimal) changes in output, and
+> > > > > > >> > >> concluded that it's good - all this stuff is now in docs-next.  Many
+> > > > > > >> > >> thanks for doing this!
+> > > > > > >> > >> 
+> > > > > > >> > >> I'm going to hold off on other documentation patches for a day or two
+> > > > > > >> > >> just in case anything turns up.  But it looks awfully good.    
+> > > > > > >> > >
+> > > > > > >> > > This started well, until it becomes a scripts/lib/kdoc.
+> > > > > > >> > > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+> > > > > > >> > > "disgusting turd" )as said by Linus) in the clean tree.
+> > > > > > >> > >
+> > > > > > >> > > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.    
+> > > > > > >> > 
+> > > > > > >> > If nothing else, "make cleandocs" should clean it up, certainly.
+> > > > > > >> > 
+> > > > > > >> > We can also tell CPython to not create that directory at all.  I'll run
+> > > > > > >> > some tests to see what the effect is on the documentation build times;
+> > > > > > >> > I'm guessing it will not be huge...    
+> > > > > > >> 
+> > > > > > >> I do not build documentation at all, it's just a regular code build that leaves
+> > > > > > >> tree dirty.
+> > > > > > >> 
+> > > > > > >> $ python3 --version
+> > > > > > >> Python 3.13.2
+> > > > > > >> 
+> > > > > > >> It's standard Debian testing distribution, no customisation in the code.
+> > > > > > >> 
+> > > > > > >> To reproduce.
+> > > > > > >> 1) I have just done a new build to reduce the churn, so, running make again does nothing;
+> > > > > > >> 2) The following snippet in shell shows the issue
+> > > > > > >> 
+> > > > > > >> $ git clean -xdf
+> > > > > > >> $ git status --ignored
+> > > > > > >> On branch ...
+> > > > > > >> nothing to commit, working tree clean
+> > > > > > >> 
+> > > > > > >> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> > > > > > >> make[1]: Entering directory '...'
+> > > > > > >>   GEN     Makefile
+> > > > > > >>   DESCEND objtool
+> > > > > > >>   CALL    .../scripts/checksyscalls.sh
+> > > > > > >>   INSTALL libsubcmd_headers
+> > > > > > >> .pylintrc: warning: ignored by one of the .gitignore files
+> > > > > > >> Kernel: arch/x86/boot/bzImage is ready  (#23)
+> > > > > > >> make[1]: Leaving directory '...'
+> > > > > > >> 
+> > > > > > >> $ touch drivers/gpio/gpiolib-acpi.c
+> > > > > > >> 
+> > > > > > >> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> > > > > > >> make[1]: Entering directory '...'
+> > > > > > >>   GEN     Makefile
+> > > > > > >>   DESCEND objtool
+> > > > > > >>   CALL    .../scripts/checksyscalls.sh
+> > > > > > >>   INSTALL libsubcmd_headers
+> > > > > > >> ...
+> > > > > > >>   OBJCOPY arch/x86/boot/setup.bin
+> > > > > > >>   BUILD   arch/x86/boot/bzImage
+> > > > > > >> Kernel: arch/x86/boot/bzImage is ready  (#24)
+> > > > > > >> make[1]: Leaving directory '...'
+> > > > > > >> 
+> > > > > > >> $ git status --ignored
+> > > > > > >> On branch ...
+> > > > > > >> Untracked files:
+> > > > > > >>   (use "git add <file>..." to include in what will be committed)
+> > > > > > >> 	scripts/lib/kdoc/__pycache__/
+> > > > > > >> 
+> > > > > > >> nothing added to commit but untracked files present (use "git add" to track)    
+> > > > > > >
+> > > > > > > FWIW, I repeated this with removing the O=.../out folder completely, so it's
+> > > > > > > fully clean build. Still the same issue.
+> > > > > > >
+> > > > > > > And it appears at the very beginning of the build. You don't need to wait to
+> > > > > > > have the kernel to be built actually.    
+> > > > > > 
+> > > > > > kernel-doc gets run on source files for W=1 builds. See Makefile.build.    
+> > > > > 
+> > > > > Thanks for the clarification, so we know that it runs and we know that it has
+> > > > > an issue.    
+> > > > 
+> > > > Ideal solution what would I expect is that the cache folder should respect
+> > > > the given O=... argument, or disabled at all (but I don't think the latter
+> > > > is what we want as it may slow down the build).  
+> > > 
+> > > From:
+> > > 	https://github.com/python/cpython/commit/b193fa996a746111252156f11fb14c12fd6267e6
+> > > and:
+> > > 	https://peps.python.org/pep-3147/
+> > > 
+> > > It sounds that Python 3.8 and above have a way to specify the cache
+> > > location, via PYTHONPYCACHEPREFIX env var, and via "-X pycache_prefix=path".
+> > > 
+> > > As the current minimal Python version is 3.9, we can safely use it.
+> > > 
+> > > So, maybe this would work:
+> > > 
+> > > 	make O="../out" PYTHONPYCACHEPREFIX="../out"
+> > > 
+> > > or a variant of it:
+> > > 
+> > > 	PYTHONPYCACHEPREFIX="../out" make O="../out" 
+> > > 
+> > > If this works, we can adjust the building system to fill PYTHONPYCACHEPREFIX
+> > > env var when O= is used.  
+> > 
+> > It works,
 
-Le 02/04/2025 à 19:41, Jim Cromie a écrit :
-> Describe the 3 API macros providing dynamic_debug's classmaps
-> 
-> DYNDBG_CLASSMAP_DEFINE - create & export a classmap
-> DYNDBG_CLASSMAP_USE    - refer to exported map
-> DYNDBG_CLASSMAP_PARAM  - bind control param to the classmap
-> DYNDBG_CLASSMAP_PARAM_REF + use module's storage - __drm_debug
-> 
-> TBD: some of this might be over-specification, or just over-talked.
-> 
-> NB: The _DEFINE & _USE model makes the user dependent on the definer,
-> just like EXPORT_SYMBOL(__drm_debug) already does.
-> 
-> cc: linux-doc@vger.kernel.org
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> ---
-> v3- rework protection around PARAM
-> 
-> v0.5 adjustments per Randy Dunlap
-> v0.7 checkpatch fixes
-> v0.8 more
-> v0.9 rewords
-> 
-> fixup-howto
-> ---
->   .../admin-guide/dynamic-debug-howto.rst       | 93 +++++++++++++++++++
->   1 file changed, 93 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> index 1ceadf4f28f9..5eb4ae3b2f27 100644
-> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> @@ -394,3 +394,96 @@ just a shortcut for ``print_hex_dump(KERN_DEBUG)``.
->   For ``print_hex_dump_debug()``/``print_hex_dump_bytes()``, format string is
->   its ``prefix_str`` argument, if it is constant string; or ``hexdump``
->   in case ``prefix_str`` is built dynamically.
-> +
-> +Dynamic Debug classmaps
-> +=======================
-> +
-> +The "class" keyword selects prdbgs based on author supplied,
-> +domain-oriented names.  This complements the nested-scope keywords:
-> +module, file, function, line.
-> +
-> +The main difference from the others: classes must be named to be
-> +changed.  This protects them from generic overwrite:
-> +
-> +  # IOW this cannot undo any DRM.debug settings
-> +  :#> ddcmd -p
+Good!
 
-Can you also clarify this in the Controlling dynamic debug Behaviour? At 
-least something like "Some printk may not be affected by >control 
-because of classmaps, see Dynamic Debug classmaps for more information".
+> > the problem is that it should be automatically assigned to the
+> > respective folder, so when compiling kdoc, it should be actually
+> > 
+> > $O/scripts/lib/kdoc/__pycache__
+> > 
+> > and so on for _each_ of the python code.  
 
-Or maybe integrate this section just after/inside Controlling dynamic 
-debug Behaviour. So a user is not surprised if his command does not have 
-the expected effect.
+Yeah, agreed. We need to think on a more generic solution though,
+as we also may have scripts/lib/abi/__pycache__ if one runs
+get_abi.pl, and, in the future, we may have more. Not sure how
+hard/easy would be to do that, though.
 
-> +
-> +This protection is needed in order to honor the ABI, settings done
-> +there must be respected:
-> +
-> +  :#> echo 0x1ff > /sys/module/drm/parameters/debug
-> +
-> +So each class must be enabled individually (no wildcards):
-> +
-> +  :#> ddcmd class DRM_UT_CORE +p
-> +  :#> ddcmd class DRM_UT_KMS +p
-> +  # or more selectively
-> +  :#> ddcmd class DRM_UT_CORE module drm +p
-> +
-> +That makes direct >control wordy and annoying, but it is a secondary
-> +interface; it is not intended to replace the ABI, just slide in
-> +underneath and reimplement it.
-> +
-> +However, since the param is the ABI, if a classmap DEFINEr doesn't
-> +also add a _CLASSMAP_PARAM, there is no ABI, and no protection is
-> +needed.  In that case, class'd prdbgs would be enabled/disabled by
-> +legacy (class-less) queries.
+> So, the bottom line, can we just disable it for a quick fix and when a proper
+> solution comes, it will redo that?
 
-Very clear, thanks!
+Agreed, this sounds to be the best approach.
 
-> +
-> +Dynamic Debug Classmap API
-> +==========================
-> +
-> +DRM.debug is built upon:
-> +  ABI in /sys/module/drm/parameters/debug
-> +      the bits set all DRM_UT_* together
-> +  ~23 categorized api macros: drm_dbg_<T>()
-> +      all calling drm_{,dev}dbg(DRM_UT_*, ....)
-> +  ~5000 calls to the api macros across drivers/gpu/drm/*
-> +
-> +The const short ints are good for optimizing compilers; a primary
-> +classmaps design goal was to preserve those opporunities for
-> +optimization.  So basically .classid === category.
-> +
-> +Then we use the drm_categories DRM_UT_* enum for both the classnames
-> +(stringified enum symbols) and their numeric values.
-> +
-> +Its expected that future users will also use an enum-defined
-> +categorization scheme like DRM's, and dyndbg can be adapted under them
-> +similarly.
-> +
-> +DYNAMIC_DEBUG_CLASSMAP_DEFINE(var,type,_base,classnames) - this maps
-> +classnames (a list of strings) onto class-ids consecutively, starting
-> +at _base, it also maps the names onto CLASSMAP_PARAM bits 0..N.
-> +
-> +DYNAMIC_DEBUG_CLASSMAP_USE(var) - modules call this to refer to the
-> +var _DEFINEd elsewhere (and exported).
-> +
-> +Classmaps are opt-in: modules invoke _DEFINE or _USE to authorize
-> +dyndbg to update those classes.  "class FOO" queries are validated
-> +against the classes, this finds the classid to alter; classes are not
-> +directly selectable by their classid.
-> +
-> +There are 2 types of classmaps:
-> +
-> + DD_CLASS_TYPE_DISJOINT_BITS: classes are independent, like DRM.debug
-> + DD_CLASS_TYPE_LEVEL_NUM: classes are relative, ordered (V3 > V2)
-> +
-> +DYNAMIC_DEBUG_CLASSMAP_PARAM - modelled after module_param_cb, it
-> +refers to a DEFINEd classmap, and associates it to the param's
-> +data-store.  This state is then applied to DEFINEr and USEr modules
-> +when they're modprobed.
-> +
-> +The PARAM interface also enforces the DD_CLASS_TYPE_LEVEL_NUM relation
-> +amongst the contained classnames; all classes are independent in the
-> +control parser itself; there is no implied meaning in names like "V4".
-> +
-> +Modules or module-groups (drm & drivers) can define multiple
-> +classmaps, as long as they (all the classmaps) share the limited 0..62
-> +per-module-group _class_id range, without overlap.  If a module
-> +encounters a conflict between 2 classmaps its USEing, we can extend
-> +the _USE macro with an offset to allow avoiding the conflicting range.
-> +
-> +``#define DEBUG`` will enable all pr_debugs in scope, including any
-> +class'd ones.  This won't be reflected in the PARAM readback value,
-> +but the class'd pr_debug callsites can be forced off by toggling the
-> +classmap-kparam all-on then all-off.
+I'll try to craft a patch along the week to add
+PYTHONDONTWRITEBYTECODE=1 to the places where kernel-doc
+is called.
 
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Regards,
+Mauro
 
