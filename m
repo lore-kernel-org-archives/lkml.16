@@ -1,112 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA0AD176ADE;
-	Tue, 15 Apr 2025 13:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00B2154423
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724451; cv=none; b=n1JfP9ESrvQToGApZEQTrqJdMDN4agVHjaFLVUt7pNYu5ft1lNmovZa/0UG4/6rVBy40XD/5JRn9aUIarIhU7kkLdHXtIWJnwvbDrloZFMvUv/d0Xr4N8gbY9wK1mBK8cyx5HbIE3HInTjSYWR3s3/TRQ7kRXdy4J5YCcOirfhA=
+	t=1744724497; cv=none; b=KEeGfDRmE82SmiCO+9ZLaYY5SdUdU0uVc3OMqjzpyoFv56/hEVu4gU3/5QVkfwTVtMAexpeW+ZhUiiIk+CFna9ChFo009ZaaCp3WfHKu99iEWsS8y9wEC2R7emOKsT22vp/4sdbT/NdpPomYeyMT8AiZ7Cnf22tuD+7ZZdoTe2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724451; c=relaxed/simple;
-	bh=44KbcDQY4m4EebPQFhUrXy2B9r9zyd1SD5Pa89kigz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VFtrSg7JyZLD7QbR46ExuZRnm/xeWnB0bmWIFWoxnhnuO1JIU5YKI9PRJWNC0D1/tXYn2gNSDpa/n7RXtKhoRCdF8YcZD7oJ+Hd14K2Lh7sE12jxezrBOk4slvuOs/blp4oSI67J/EcJh+E9/RTHhohAjS7DjavmHpSdQesfrRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jkbIHr1E; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744724497; c=relaxed/simple;
+	bh=acK/K+ABXlORBiRjpy5LxXDMPi99CEA2jo4mdhVYH1U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i3pXDA2nz0KLO6f6UFgopJFOGuOEoTkYXJggaAVS4UbRcXUYaihJ+3vZhb/EIUsCC5yJdqo8Y6P9StBmRDAbB/MTCa8pclZxZmggXKW7WJFRuWJAHJBNh1BJj7gYaPyqDL1QQC3SmsQYP00qxI7OiZNadiLUGQZC/NSr30QQKFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xr5P2S2x; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jkbIHr1E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744724449; x=1776260449;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=44KbcDQY4m4EebPQFhUrXy2B9r9zyd1SD5Pa89kigz4=;
-  b=jkbIHr1E9NGQVcSu9EaauuDQ381uvha7UsCjyAOFUzmFZm/tH1MAn9G4
-   AhES8DYtzhLnPUHf6o+//Sqr3e4pCzY8PH3J4XDa3ZhUdbs1oZGO1E6nT
-   RaA+BQnmINe/LlfQPkZU0a36plOoA3lNaxw05WTx/OgUG3+RD/NSQZ8BK
-   eOaCPkhMiihQZW3m2Yh2r2EIM9tW3efO0gg4CnhOvDefxKksSyjakA8vD
-   dEmxEj8XM3K6q75nAp6kJC0ngWfmEyXAm0uHEVNOpwujY1VSyjpont6jI
-   psUYbcF5doOpRlSR5Lvetxr/oXtK7sinfzRiCwlq+T84vEL1SwoJTvYlB
-   Q==;
-X-CSE-ConnectionGUID: B2OKmQ/4R5aGwKVaCnUVzw==
-X-CSE-MsgGUID: C/zu0EUUSdq4wnpb9CiaJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56892439"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56892439"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 06:40:40 -0700
-X-CSE-ConnectionGUID: r7U1cCYyRWmTO9PRROwqIA==
-X-CSE-MsgGUID: fRojk1b0RfK2rCfMG1E8wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130151149"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa007.fm.intel.com with SMTP; 15 Apr 2025 06:40:37 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 15 Apr 2025 16:40:36 +0300
-Date: Tue, 15 Apr 2025 16:40:36 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Michael Grzeschik <m.grzeschik@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: Re: [PATCH] usb: typec: mux: fsa4480: add regulator support
-Message-ID: <Z_5h1G-jzA4glFsV@kuha.fi.intel.com>
-References: <20250404-ml-topic-typec-mux-fs4480-v1-1-475377ef22a3@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xr5P2S2x"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c30d9085aso3520256f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744724494; x=1745329294; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C4yB7kQlZUb6xayWQsrmLdqiBMKXxBZBkdVERCDut1w=;
+        b=Xr5P2S2xAmD4LKgmhA91Qlybm0kX124NX0sCHdQ+izLubUVYlrz4JQnt0XbYR6SyC/
+         pd+yq+cCCJ7jVcypNU/7qy547ydJYWwtO4l9XMTgycoJIKEmRup0hCULSh4oEI4p8uoy
+         cuJjFvSo1ZUxGHNqXzqc3VBdDC+AZX0SuhbZn+rdFqg/NJ0ngXS7Vuit3VgwrQoRkqtG
+         //C9YkXmvXwnJSDFDHrL4kBcxjHVb2GT2fKOvJ02gLhK0omvzZhcL22o57f7gW1s8JiM
+         5fR6UQ6urpRCkUkN//g5Xnb/e0Gz94n0sn0HcnxLcTq9eMHU27Xx+12BsaCNNe7ZgOEo
+         G1qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744724494; x=1745329294;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C4yB7kQlZUb6xayWQsrmLdqiBMKXxBZBkdVERCDut1w=;
+        b=P1c9evXQb65yqNs6gMbVsfzUH1rDHFuWIlM1O1SJu6oSPTOnPi4USlOC8RsWrxntLq
+         Wbej35njuEW9WZip0FoL4VxGfpZyKCljFWaU0kRjodZqKOCaV7oCvRC80YTpcRHlei2K
+         1WJAgQfbSaO4asJZciELnYPaZBQJ1LBz/fF2GE82Eltcg1DSRB2nvZPxSZDG5YyabLMg
+         WC+RnydSn37Fqpt33ahhz0any+QPimCNx3stXnmnSbxknUXfzB5/QDdnxmnK/qNKevBo
+         8agjkCqgjQQrRu0mBDOxrP7lW4OmOab68WYsnvfLifwCQSba8XFAv4JHqerC/4G9OLbR
+         aZCw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5m99MM1KA3xXuZc+R62vJzawKP1eZjGiKSAj/yC8J/+TAa7Cbz1ZnhJ2z8Ufib8ceIhP2uW0DokFdvxo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk8dWMjQMVagGW29nA3koJVM10xpfOjWvrQwp2kq0kUqZFtuGT
+	y237W2hBtSz6icH9GMa6ZpoDg28I2iFqd78FdAaqSTFG70tNPUIf8vBErcYPaSw=
+X-Gm-Gg: ASbGncuv6sEcNJZnXcRHIREUTn6wt5V1AGu58NkX+KbkfRDsvgyiZu1kEJnUMMmsI/P
+	78GJp9m8qGTcwN1ha6MDwhOVkzr3FoltZEQBqZNBrxV3bJgTOIgwPXGgPrkc5vHhnYSadKdW1lV
+	z1GVQBtuL8xsBCsKBY9JAbvlTgrR/uoS6LUt0WqxlPbBD+2CsbUqMKIeiDkgZOJUrSoq76Q1UMc
+	qeDgvtmxVBrQOke2zbLp1xJi4PTG/+9sFNPL6b8Oq0aOtCCAsmaOUSj2xemxswifKg35OVbQM98
+	G+YXP3cGyDxkW4FJ3Yd12msCXkyx5+xSqXGSr2M1Xbw=
+X-Google-Smtp-Source: AGHT+IGfWgdOUteKBd0Xg5+jg66EqrcGaih9n9NEZtkwhykKyItVqvzsTpM2lpnDn7APIwWUE1dwLw==
+X-Received: by 2002:a5d:584f:0:b0:39c:1257:c7a1 with SMTP id ffacd0b85a97d-39eaaecaeb2mr12782034f8f.57.1744724493943;
+        Tue, 15 Apr 2025 06:41:33 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963fccsm14162453f8f.3.2025.04.15.06.41.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 06:41:33 -0700 (PDT)
+Message-ID: <2e9f1ad4-d490-4c22-bcff-7d19b8a89721@linaro.org>
+Date: Tue, 15 Apr 2025 14:41:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404-ml-topic-typec-mux-fs4480-v1-1-475377ef22a3@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] coresight: catu: Introduce refcount and spinlock
+ for enabling/disabling
+To: Yabin Cui <yabinc@google.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@arm.com>,
+ Jie Gan <quic_jiegan@quicinc.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+References: <20250408195922.770377-1-yabinc@google.com>
+ <20250408195922.770377-2-yabinc@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250408195922.770377-2-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 04, 2025 at 01:02:20AM +0200, Michael Grzeschik wrote:
-> The fsa4480 vcc lane could be driven by some external regulator.
-> This patch is adding support to enable the regulator before probing.
+
+
+On 08/04/2025 8:59 pm, Yabin Cui wrote:
+> When tracing ETM data on multiple CPUs concurrently via the
+> perf interface, the CATU device is shared across different CPU
+> paths. This can lead to race conditions when multiple CPUs attempt
+> to enable or disable the CATU device simultaneously.
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
+> To address these race conditions, this patch introduces the
+> following changes:
+> 
+> 1. The enable and disable operations for the CATU device are not
+>     reentrant. Therefore, a spinlock is added to ensure that only
+>     one CPU can enable or disable a given CATU device at any point
+>     in time.
+> 
+> 2. A reference counter is used to manage the enable/disable state
+>     of the CATU device. The device is enabled when the first CPU
+>     requires it and is only disabled when the last CPU finishes
+>     using it. This ensures the device remains active as long as at
+>     least one CPU needs it.
+> 
+> Signed-off-by: Yabin Cui <yabinc@google.com>
 > ---
->  drivers/usb/typec/mux/fsa4480.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>   drivers/hwtracing/coresight/coresight-catu.c | 25 +++++++++++++-------
+>   drivers/hwtracing/coresight/coresight-catu.h |  1 +
+>   2 files changed, 18 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/usb/typec/mux/fsa4480.c b/drivers/usb/typec/mux/fsa4480.c
-> index f71dba8bf07c9..c54e42c7e6a16 100644
-> --- a/drivers/usb/typec/mux/fsa4480.c
-> +++ b/drivers/usb/typec/mux/fsa4480.c
-> @@ -12,6 +12,7 @@
->  #include <linux/regmap.h>
->  #include <linux/usb/typec_dp.h>
->  #include <linux/usb/typec_mux.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #define FSA4480_DEVICE_ID	0x00
->   #define FSA4480_DEVICE_ID_VENDOR_ID	GENMASK(7, 6)
-> @@ -273,6 +274,10 @@ static int fsa4480_probe(struct i2c_client *client)
->  	if (IS_ERR(fsa->regmap))
->  		return dev_err_probe(dev, PTR_ERR(fsa->regmap), "failed to initialize regmap\n");
->  
-> +	ret = devm_regulator_get_enable_optional(dev, "vcc");
-> +	if (ret && ret != -ENODEV)
-> +		return dev_err_probe(dev, ret, "Failed to get regulator\n");
-> +
->  	ret = regmap_read(fsa->regmap, FSA4480_DEVICE_ID, &val);
->  	if (ret)
->  		return dev_err_probe(dev, -ENODEV, "FSA4480 not found\n");
-> 
-> ---
-> base-commit: a1b5bd45d4ee58af4f56e49497b8c3db96d8f8a3
-> change-id: 20250404-ml-topic-typec-mux-fs4480-392407f94f84
-> 
-> Best regards,
-> -- 
-> Michael Grzeschik <m.grzeschik@pengutronix.de>
-> 
+> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+> index fa170c966bc3..30b78b2f8adb 100644
+> --- a/drivers/hwtracing/coresight/coresight-catu.c
+> +++ b/drivers/hwtracing/coresight/coresight-catu.c
+> @@ -458,12 +458,17 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, enum cs_mode cs_mode,
+>   static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
+>   		       void *data)
+>   {
+> -	int rc;
+> +	int rc = 0;
+>   	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
+>   
 
--- 
-heikki
+Very minor nit only because you need to resend anyway, but there should 
+be a newline between the variable definitions and the code. Not sure why 
+checkpatch doesn't warn here.
+
+> -	CS_UNLOCK(catu_drvdata->base);
+> -	rc = catu_enable_hw(catu_drvdata, mode, data);
+> -	CS_LOCK(catu_drvdata->base);
+> +	if (csdev->refcnt == 0) {
+> +		CS_UNLOCK(catu_drvdata->base);
+> +		rc = catu_enable_hw(catu_drvdata, mode, data);
+> +		CS_LOCK(catu_drvdata->base);
+> +	}
+> +	if (!rc)
+> +		csdev->refcnt++;
+>   	return rc;
+>   }
+>   
+> @@ -486,12 +491,15 @@ static int catu_disable_hw(struct catu_drvdata *drvdata)
+>   
+>   static int catu_disable(struct coresight_device *csdev, void *__unused)
+>   {
+> -	int rc;
+> +	int rc = 0;
+>   	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
+> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
+>   
+> -	CS_UNLOCK(catu_drvdata->base);
+> -	rc = catu_disable_hw(catu_drvdata);
+> -	CS_LOCK(catu_drvdata->base);
+> +	if (--csdev->refcnt == 0) {
+
+Hopefully this never underflows if disable is called again after a 
+failed enable. We could add a WARN_ON() but I think this is a general 
+case and not specific to these patches so is probably better to do later 
+as separate change.
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
