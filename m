@@ -1,307 +1,124 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966AA148FE6
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:18:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CE2163;
+	Tue, 15 Apr 2025 15:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730298; cv=none; b=upWHx/yVHe06EImKtdnpqPK7r9Y2EW2BW+b6GjblfwTNIXgoW9LSSLD/YTQrdQVYYKEnUOVJGC/Qd7ba60WPpbA3Ylp5OBIuPG4E2uBSkYFYZH5DhxzTwSrvsrpssk4+ez47s9icVfMIj9+lB/2WGsaGFDddRGwxshEXwSGu6ms=
+	t=1744730496; cv=none; b=ZKy/HdyVJtivhTiT2uRh66eJmnhQbIdmOZFiicJprujHbzP9EBjsGCAVpO8y+TV9oEeuFTvQgNNP5xFHkasQ+cQDm7QjOKTdSpH5IFK5rmfWWygHnorQlujrw6CBLUB7KaLFNNIGxy5LkiclrBwQ3TZZuQsbf3hQLyDM2SKy/OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730298; c=relaxed/simple;
-	bh=WsiZVen01hmKAjOZ2ChAxXZQMdWcpZsL5oQexIMtuPw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EvclCnHPshj7tBvn+3+hgkcYi3dNdb8BHgmuNe+pKmNDM1F2t3KTWCNYM+cQ7OpwJeA3myoILQs3sQpSIQC/+ghgU7IhyCmXrw3I6bZMkkXumpbko9sAKGrAaVgctGERU+ZKUEk/YnM+/VSdbEyXGb0bo6RWuTzDBIb8A8o4iEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QJKRvT8r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6N5Mqx5e; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QJKRvT8r; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6N5Mqx5e; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744730496; c=relaxed/simple;
+	bh=UZtsQn7eWW57ETxT89gwtGyP1+AHnX0eriLWRF49OWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LeUaCrEM+Kgj6W+e+KJn5vXs6E5nQn3ND4vppRTH4k6hKC/HWzoloyncUDcNtalaIutep1l26cSNCv9iHzsOwiXdhlhBDwaPHnWPDx0yZ24ZHHirp+XEQiQJpLcobq9fLGbuVLSdVDNXc8nV+YngWj9W3o0pDR5eVL3ZtYeeIxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nctSUJhW; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QJKRvT8r";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6N5Mqx5e";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QJKRvT8r";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6N5Mqx5e"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nctSUJhW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744730496; x=1776266496;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UZtsQn7eWW57ETxT89gwtGyP1+AHnX0eriLWRF49OWw=;
+  b=nctSUJhW9gQzjAWE+sACHByCxmdWjdLw1zhWHNKnLiCke8hH5lPM1t8s
+   4qcijOfB7yBwTAeQuKOKO61srUZtySoohI2bCjIuDFeBI6aNbG879ITKF
+   A1U1EYiqkcWsgK6YC/5yxjU/yg6s5U8B/6XptyrRghBzRhiKcfbrdYurd
+   VPTHW48gpJ+pg16GaVFpOd9VV9D3831o6cI2vJnpO3h7/9viuLz+PnBRt
+   HMptW6kAj2MArW06hh4Xds+Pzq9RjqCV+bT/D8i1LdOzfqCRB58EhSZGj
+   sTeN8AikjWf/bDE1pnq8Rrat/JG0S7/dDBYURXCLlxnPv5kZNV9xMiFYS
+   w==;
+X-CSE-ConnectionGUID: 6WpL6mgaR/6FWq/leAayaQ==
+X-CSE-MsgGUID: /DjFriP6RG+Hj1VcdZOXsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46135728"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46135728"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:21:34 -0700
+X-CSE-ConnectionGUID: lYmH6eNOSG+/FADvhYWDCw==
+X-CSE-MsgGUID: gQMoM/zhTamqy2CSVwzKPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130689111"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:21:34 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 918982111F;
-	Tue, 15 Apr 2025 15:18:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744730294; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zSn5W9sAZYptyp7oa+5YXTZR+pVW3FocpLWZdFK3Ecs=;
-	b=QJKRvT8rgtE1f36xdAaLQAej/rtjhc1DbET7dmW+wH8+O7Oc89e9kRVCPyXiapgAHOF8kT
-	McumyOKQtHUWI+a8ZAH8vNWc398/ahUYaNIY7KuvCAJWiXFqiYKAaj0z2FrI0Tl3BujCZ/
-	+3MjheThOk7BY2x1B8raJYx+PfI50ZY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744730294;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zSn5W9sAZYptyp7oa+5YXTZR+pVW3FocpLWZdFK3Ecs=;
-	b=6N5Mqx5eQ5Gyjh7U13V0h/100O3NnGEoibFJblgxqvuEp1KTXrtSnkDLwOLJ91dVrTSskG
-	OUmwdXkLQmpti4Cw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744730294; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zSn5W9sAZYptyp7oa+5YXTZR+pVW3FocpLWZdFK3Ecs=;
-	b=QJKRvT8rgtE1f36xdAaLQAej/rtjhc1DbET7dmW+wH8+O7Oc89e9kRVCPyXiapgAHOF8kT
-	McumyOKQtHUWI+a8ZAH8vNWc398/ahUYaNIY7KuvCAJWiXFqiYKAaj0z2FrI0Tl3BujCZ/
-	+3MjheThOk7BY2x1B8raJYx+PfI50ZY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744730294;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zSn5W9sAZYptyp7oa+5YXTZR+pVW3FocpLWZdFK3Ecs=;
-	b=6N5Mqx5eQ5Gyjh7U13V0h/100O3NnGEoibFJblgxqvuEp1KTXrtSnkDLwOLJ91dVrTSskG
-	OUmwdXkLQmpti4Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 475B5137A5;
-	Tue, 15 Apr 2025 15:18:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TPofELZ4/mdxTAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 15:18:14 +0000
-Date: Tue, 15 Apr 2025 17:18:13 +0200
-Message-ID: <87y0w1xxl6.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: <broonie@kernel.org>,
-	<andriy.shevchenko@linux.intel.com>,
-	<13564923607@139.com>,
-	<13916275206@139.com>,
-	<alsa-devel@alsa-project.org>,
-	<linux-kernel@vger.kernel.org>,
-	<baojun.xu@ti.com>,
-	<Baojun.Xu@fpt.com>,
-	<robinchen@ti.com>
-Subject: Re: [RESEND PATCH v2] ALSA: hda/tas2781: Create a common header for both spi and i2c tas2781 hda driver
-In-Reply-To: <20250415070913.679-1-shenghao-ding@ti.com>
-References: <20250415070913.679-1-shenghao-ding@ti.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by linux.intel.com (Postfix) with ESMTPS id 2ED2120B5736;
+	Tue, 15 Apr 2025 08:21:37 -0700 (PDT)
+Message-ID: <71ba0725-04f5-4142-8536-b5c17d2d5e00@linux.intel.com>
+Date: Tue, 15 Apr 2025 11:21:30 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[139.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,139.com,alsa-project.org,vger.kernel.org,ti.com,fpt.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 00/22] Arch-PEBS and PMU supports for Clearwater Forest
+ and Panther Lake
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Apr 2025 09:09:13 +0200,
-Shenghao Ding wrote:
+Hi Peter,
+
+On 2025-04-15 7:44 a.m., Dapeng Mi wrote:
+> Dapeng Mi (21):
+>   perf/x86/intel: Add PMU support for Clearwater Forest
 > 
-> Move the common macro definition of kcontrols into a common header.
-> 
-> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
-> 
-> ---
-> v2:
->  - Follow IWYU principle, add sound/asound.h into the header file.
-> v1:
->  - Revise the year of spi and i2c tas2781 hda drivers.
->  - Create a common header for both spi and i2c tas2781 hda driver to define
->    the common macros and declare the common functions.
+> Kan Liang (1):
+>   perf/x86/intel: Add Panther Lake support
 
-The code change itself looks fine, but do you need this change for
-what purpose?  Is it meant as a code cleanup?  You wrote what the
-patch does, but why it's needed isn't mentioned at all.
+Could you please take a look and pick up the above two patches if they
+look good to you?
 
+The two patches are generic support for the Panther Lake and Clearwater
+Forest. With them, at least the non-PEBS and topdown can work.
+The ARCH PEBS will be temporarily disabled until this big patch set is
+merged.
 
-thanks,
+ # dmesg | grep PMU
+[    0.095162] Performance Events: XSAVE Architectural LBR,  AnyThread
+deprecated, Pantherlake Hybrid events, 32-deep LBR, full-width counters,
+Intel PMU driver.
 
-Takashi
+ # perf stat -e
+"{slots,topdown-retiring,topdown-bad-spec,topdown-fe-bound,topdown-be-bound}"
+-a
+WARNING: events were regrouped to match PMUs
+^C
+ Performance counter stats for 'system wide':
 
-> ---
->  sound/pci/hda/tas2781_hda.h     | 44 +++++++++++++++++++++++++++++++++
->  sound/pci/hda/tas2781_hda_i2c.c | 29 ++--------------------
->  sound/pci/hda/tas2781_hda_spi.c | 35 ++------------------------
->  3 files changed, 48 insertions(+), 60 deletions(-)
->  create mode 100644 sound/pci/hda/tas2781_hda.h
-> 
-> diff --git a/sound/pci/hda/tas2781_hda.h b/sound/pci/hda/tas2781_hda.h
-> new file mode 100644
-> index 000000000000..fc741fac419a
-> --- /dev/null
-> +++ b/sound/pci/hda/tas2781_hda.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only
-> + *
-> + * HDA audio driver for Texas Instruments TAS2781 smart amp
-> + *
-> + * Copyright (C) 2025 Texas Instruments, Inc.
-> + */
-> +#ifndef __TAS2781_HDA_H__
-> +#define __TAS2781_HDA_H__
-> +
-> +#include <sound/asound.h>
-> +
-> +/*
-> + * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
-> + * Define two controls, one is Volume control callbacks, the other is
-> + * flag setting control callbacks.
-> + */
-> +
-> +/* Volume control callbacks for tas2781 */
-> +#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
-> +	xhandler_get, xhandler_put, tlv_array) { \
-> +	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname), \
-> +	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
-> +		SNDRV_CTL_ELEM_ACCESS_READWRITE, \
-> +	.tlv.p = (tlv_array), \
-> +	.info = snd_soc_info_volsw, \
-> +	.get = xhandler_get, .put = xhandler_put, \
-> +	.private_value = (unsigned long)&(struct soc_mixer_control) { \
-> +		.reg = xreg, .rreg = xreg, \
-> +		.shift = xshift, .rshift = xshift,\
-> +		.min = xmin, .max = xmax, .invert = xinvert, \
-> +	} \
-> +}
-> +
-> +/* Flag control callbacks for tas2781 */
-> +#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { \
-> +	.iface = SNDRV_CTL_ELEM_IFACE_CARD, \
-> +	.name = xname, \
-> +	.info = snd_ctl_boolean_mono_info, \
-> +	.get = xhandler_get, \
-> +	.put = xhandler_put, \
-> +	.private_value = xdata, \
-> +}
-> +
-> +#endif
-> diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
-> index 29dc4f500580..9d94ae5fcfe0 100644
-> --- a/sound/pci/hda/tas2781_hda_i2c.c
-> +++ b/sound/pci/hda/tas2781_hda_i2c.c
-> @@ -2,7 +2,7 @@
->  //
->  // TAS2781 HDA I2C driver
->  //
-> -// Copyright 2023 - 2024 Texas Instruments, Inc.
-> +// Copyright 2023 - 2025 Texas Instruments, Inc.
->  //
->  // Author: Shenghao Ding <shenghao-ding@ti.com>
->  // Current maintainer: Baojun Xu <baojun.xu@ti.com>
-> @@ -30,35 +30,10 @@
->  #include "hda_component.h"
->  #include "hda_jack.h"
->  #include "hda_generic.h"
-> +#include "tas2781_hda.h"
->  
->  #define TASDEVICE_SPEAKER_CALIBRATION_SIZE	20
->  
-> -/* No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
-> - * Define two controls, one is Volume control callbacks, the other is
-> - * flag setting control callbacks.
-> - */
-> -
-> -/* Volume control callbacks for tas2781 */
-> -#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
-> -	xhandler_get, xhandler_put, tlv_array) \
-> -{	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname),\
-> -	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
-> -		 SNDRV_CTL_ELEM_ACCESS_READWRITE,\
-> -	.tlv.p = (tlv_array), \
-> -	.info = snd_soc_info_volsw, \
-> -	.get = xhandler_get, .put = xhandler_put, \
-> -	.private_value = (unsigned long)&(struct soc_mixer_control) \
-> -		{.reg = xreg, .rreg = xreg, .shift = xshift, \
-> -		 .rshift = xshift, .min = xmin, .max = xmax, \
-> -		 .invert = xinvert} }
-> -
-> -/* Flag control callbacks for tas2781 */
-> -#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) \
-> -{	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = xname, \
-> -	.info = snd_ctl_boolean_mono_info, \
-> -	.get = xhandler_get, .put = xhandler_put, \
-> -	.private_value = xdata }
-> -
->  enum calib_data {
->  	R0_VAL = 0,
->  	INV_R0,
-> diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_spi.c
-> index 399f2e4c3b62..c6be2be1b53e 100644
-> --- a/sound/pci/hda/tas2781_hda_spi.c
-> +++ b/sound/pci/hda/tas2781_hda_spi.c
-> @@ -2,7 +2,7 @@
->  //
->  // TAS2781 HDA SPI driver
->  //
-> -// Copyright 2024 Texas Instruments, Inc.
-> +// Copyright 2024 - 2025 Texas Instruments, Inc.
->  //
->  // Author: Baojun Xu <baojun.xu@ti.com>
->  
-> @@ -38,38 +38,7 @@
->  #include "hda_component.h"
->  #include "hda_jack.h"
->  #include "hda_generic.h"
-> -
-> -/*
-> - * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
-> - * Define two controls, one is Volume control callbacks, the other is
-> - * flag setting control callbacks.
-> - */
-> -
-> -/* Volume control callbacks for tas2781 */
-> -#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
-> -	xhandler_get, xhandler_put, tlv_array) { \
-> -	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname), \
-> -	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
-> -		SNDRV_CTL_ELEM_ACCESS_READWRITE, \
-> -	.tlv.p = (tlv_array), \
-> -	.info = snd_soc_info_volsw, \
-> -	.get = xhandler_get, .put = xhandler_put, \
-> -	.private_value = (unsigned long)&(struct soc_mixer_control) { \
-> -		.reg = xreg, .rreg = xreg, \
-> -		.shift = xshift, .rshift = xshift,\
-> -		.min = xmin, .max = xmax, .invert = xinvert, \
-> -	} \
-> -}
-> -
-> -/* Flag control callbacks for tas2781 */
-> -#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { \
-> -	.iface = SNDRV_CTL_ELEM_IFACE_CARD, \
-> -	.name = xname, \
-> -	.info = snd_ctl_boolean_mono_info, \
-> -	.get = xhandler_get, \
-> -	.put = xhandler_put, \
-> -	.private_value = xdata, \
-> -}
-> +#include "tas2781_hda.h"
->  
->  struct tas2781_hda {
->  	struct tasdevice_priv *priv;
-> -- 
-> 2.34.1
-> 
+         2,212,401      cpu_atom/topdown-retiring/
+         8,121,982      cpu_atom/topdown-bad-spec/
+        42,119,870      cpu_atom/topdown-fe-bound/
+        27,667,678      cpu_atom/topdown-be-bound/
+       496,377,056      cpu_core/slots/
+         2,058,926      cpu_core/topdown-retiring/
+         6,008,255      cpu_core/topdown-bad-spec/
+       265,352,356      cpu_core/topdown-fe-bound/
+       222,957,516      cpu_core/topdown-be-bound/
+
+ # perf record -e cycles:p sleep 1
+Error:
+cpu_atom/cycles/pH: PMU Hardware doesn't support
+sampling/overflow-interrupts. Try 'perf stat'
+
+Thanks,
+Kan
