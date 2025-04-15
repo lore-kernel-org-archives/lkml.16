@@ -1,162 +1,116 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27FE1CEAA3;
-	Tue, 15 Apr 2025 10:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1150F28BA8D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713421; cv=none; b=XdBy9D4ahPnW4kAktUYee3b9SzSoXrgQaxN/Ru5799uyTAsJSWOr3G2V1sZWalcRICHetme0mQVw0QQiBO1xiEz5KJCqM9iDYILBAfMdlKqYDKBSrC9Iz1PSRktQQBDSJYOSFN+dGuX/m/ote7Zw09CzpGeAzVc27NSN+JY2zNk=
+	t=1744713424; cv=none; b=TAh9sNzo71QrZpI/dVeAdeugqNqKxhYGH/TElX/tDlyi2B3qtFwNEGTrdoeGD+HbRT1m6xA4Mu3mU8L/YhZ72NYdDjQ52xudiVxTSVhzxMD5V/nFeBBhI0iWG4fWs/DDq66SUivH3WZiCdwoTjeN/+42ldfZLlPn/zChHyxs8wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713421; c=relaxed/simple;
-	bh=wx4mo1LEKkoBZxLsIQ9KT/z2lr/0ddIEgTR9LY19wIY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPjRDmrTr7v35UqjJ9j3V8mK/e1zBA2jS1ITfS1fN2zg3+vlk5orN97KgRPfWXrSEs1r3GkNhnyYcu+G8rzwJPF2A57IbJ6zf+5ZOiU6huI/jz+KMQg/yRaTyaLY219oQjQYB9fKzHxGX7gVtw6Eo1FgC21N0ydfoLZx4qN0GJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ons7m0hO; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744713424; c=relaxed/simple;
+	bh=cQwcXftl576U3tWrMEUfsCJM2UPbQ3gsMoIHXZJwvy0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S3kZpIySMWvrSNPQlwkkeDNlI9j80xmFmnC6rxasWYFfbJbbY71tMLlENRXcfMwVsgcJzu8ebbE0RNA61olgJCsNMaXAhZTymN20UkJBIJSXh88a4zltbnzLq9dc5ZOrJemvw3xcD+5AgGaH2In+hPROsvrO6W/J6AbN1Cu7LB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dhDAC+iN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ons7m0hO"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FAaXB32330796
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 05:36:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744713394;
-	bh=CM1FfPxfT6qnGQR4NUV0eAkHxH46NNtG6XNVqSWakkc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=ons7m0hOXmjdWeM8ngfIhGEh25WQ/OKmnzeqD8KBWTVxgFA6gcDtM3AkeT+k5TfFa
-	 rm40vZh6RA3UuZ2YVaFCkPVmtG3G+0Aeb6e2N9jqQB5EoK8DKCXkgwIiVc9v5dzOeQ
-	 zpxFFM6SC3gQk4ObqM05Q5ERQP1VlvidXZnpqbv8=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FAaXrB008560
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 05:36:33 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
- Apr 2025 05:36:33 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 15 Apr 2025 05:36:33 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FAaWR6017032;
-	Tue, 15 Apr 2025 05:36:32 -0500
-Date: Tue, 15 Apr 2025 16:06:31 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Andy Whitcroft <apw@canonical.com>,
-        Dwaipayan Ray
-	<dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Joe
- Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dhDAC+iN"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tT4u032083
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:37:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7BfkcRCNci+bCQBNjVXlG/q2/sUT/p1vowXWuYhhnjE=; b=dhDAC+iN4dDN1pPs
+	ySFjbBTF/Q5yi5TmCxL+w92f4LkVxjzyTvYkDsCjfVsIzr2DUwG4VWtiteW9xp8n
+	jaFUEsOykFiGZ87UcR0pa5bAiDj+qj2odDdOIbZ6Pt2yzbVjD7i46V6Q/lTIBboX
+	pM5xdq5meYc7AxhWTC5oIrB5Yr0jHmTgMmLWUKZDn1e3RkB+MJ04uo3ks2gNvQap
+	27r/SBfT1xSab73h/pdfYASlFTokSLATa9C3w5cexQiEOc6nZj27ea6WpXdjoRKL
+	yIAtLsOh5eqNpF0HcfJ+2bjA4/Abvd07rkoVkRZC1LICHtuz92QrRfkXkPaYSkGU
+	xz30dA==
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs17qrw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:37:01 +0000 (GMT)
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4768b27fef3so8820461cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:37:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744713421; x=1745318221;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7BfkcRCNci+bCQBNjVXlG/q2/sUT/p1vowXWuYhhnjE=;
+        b=hAYwhNL7NpIcq6dmN+gvt5m6W4vqDx8euJg5Yn6/ec+nrYskzF6sebvUkxlkf9fZ7E
+         J404CJWD0/2AhaJSY6+VsCYRn43BXV4ujJQ9SisEeAXyYBGycrzsx7HBNdPP1mi18grR
+         /Qf5zCpA+gwT06reK7KkTy+Inw25suyHf2ya7VKGgfpGtm7QGqlw4gqCnI6cRLGiulAR
+         0Ea4NW8CvGkkxxh+PhaW4XMpp8BW32+Hho9GZ6y2okWmKnThr6NS8/NUjI07btOH64DK
+         Ew2okQW8s4aVe20jBorn1JC82+nm1uqQj6Qm2zQLTOSCTPjASCK3GK5fOFGuuoAtMZdv
+         6rnw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCIP9lLUOdT7xdatF+AWq2GXmdqbPpHH7npa3pNTGZqsDINkpmA2C6OiHvpMRS55DsjcLm0ntazhx2cPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygthaTWWpYeTjEQ++c9vHYEW3ie8aPOnDEDb0WGQhMFgUQHlUy
+	8wjZwop5rRA073rV8TNmdGzDphUDzSKYpMLR79C+apHW3t/VHWy4t7oG+BtHTN43vbc5Iec18dg
+	964Fj+FWHwBlttSYCqXjtMzDQBTCwuORjUvJQyPPI1avGDKh7S1vG9xVVoWyiA4U=
+X-Gm-Gg: ASbGncvmDAua3ECD31yDJ1n4Zbp9BDzwsA9B9yHxcOyyaUF+qyxM4DP7ICuTvr2B8ic
+	GnBTpEhYY5tK5whbGgD8yLiR0E9xaYrb+L16UtwBCrHtq2h9nNWRJ7aVPVCPvrtytjr7Fky6mlO
+	SYXiUrp5verKxBdW5kHmiiWW4s73f/8pNiSDVpY6ct5IuKsqyt490hBT93LFn8jynDkDdhAct9c
+	iJDGDmaU+WESfwIVHtvtAkB0bKhVfGPMosApbnZGCoavxxzQ1oBH3nKml3RLvYHIZSrShfXyGQY
+	Z/JQMXq4yWQdEIfJeygx1b+OYwCzYVWX6xECVzbDtQmkf8yNAH8FNdxw/gao2DOG52M=
+X-Received: by 2002:a05:622a:15ce:b0:472:1de1:bc59 with SMTP id d75a77b69052e-4797753959emr72955211cf.6.1744713420993;
+        Tue, 15 Apr 2025 03:37:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKwxupMVfqIVUO5Z4iuLkNhaFfvE6SNotTJNqNxY1p9H5z+PlsLYFGYCWleXD/sZ0GRI8U8g==
+X-Received: by 2002:a05:622a:15ce:b0:472:1de1:bc59 with SMTP id d75a77b69052e-4797753959emr72955081cf.6.1744713420688;
+        Tue, 15 Apr 2025 03:37:00 -0700 (PDT)
+Received: from [192.168.65.246] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee5500dsm6343674a12.4.2025.04.15.03.36.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 03:37:00 -0700 (PDT)
+Message-ID: <ac64dcbc-64a0-4ac0-8e25-14c9706c6d00@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 12:36:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/20] arm64: dts: qcom: sc7280: Use the header with DSI
+ phy clock IDs
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        cros-qcom-dts-watchers@chromium.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250415-drm-msm-dts-fixes-v1-0-90cd91bdd138@oss.qualcomm.com>
+ <20250415-drm-msm-dts-fixes-v1-1-90cd91bdd138@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250415-drm-msm-dts-fixes-v1-1-90cd91bdd138@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67fe36cd cx=c_pps a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=udklyl2LCIZAaJMMIwIA:9 a=QEXdDO2ut3YA:10
+ a=a_PwQJl-kcHnX1M80qC6:22
+X-Proofpoint-GUID: tbjuSx89h0fbtYjaQwUqDf0VsrnVWqBT
+X-Proofpoint-ORIG-GUID: tbjuSx89h0fbtYjaQwUqDf0VsrnVWqBT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=603 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150074
 
-On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
-> As discussed [1], the comments for the different rgmii(-*id) modes do not
-> accurately describe what these values mean.
+On 4/15/25 12:25 PM, Dmitry Baryshkov wrote:
+> Use the header with DSI phy clock IDs to make code more readable.
 > 
-> As the Device Tree is primarily supposed to describe the hardware and not
-> its configuration, the different modes need to distinguish board designs
-
-If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
-with CPSW Ethernet Switch), and, given that "phy-mode" is a property
-added within the device-tree node of the MAC, I fail to understand how
-the device-tree can continue "describing" hardware for different board
-designs using the same SoC (unchanged MAC HW).
-
-How do we handle situations where a given MAC supports various
-"phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
-descibe the HW? Even if we set aside the "rgmii" variants that this
-series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
-and "usxgmii/xfi" as well.
-
-> (if a delay is built into the PCB using different trace lengths); whether
-> a delay is added on the MAC or the PHY side when needed should not matter.
-> 
-> Unfortunately, implementation in MAC drivers is somewhat inconsistent
-> where a delay is fixed or configurable on the MAC side. As a first step
-> towards sorting this out, improve the documentation.
-> 
-> Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/ [1]
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> index 45819b2358002..2ddc1ce2439a6 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> @@ -74,19 +74,21 @@ properties:
->        - rev-rmii
->        - moca
->  
-> -      # RX and TX delays are added by the MAC when required
-> +      # RX and TX delays are part of the board design (through PCB traces). MAC
-> +      # and PHY must not add delays.
->        - rgmii
->  
-> -      # RGMII with internal RX and TX delays provided by the PHY,
-> -      # the MAC should not add the RX or TX delays in this case
-> +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
-> +      # delays are included in the board design; this is the most common case
-> +      # in modern designs.
->        - rgmii-id
->  
-> -      # RGMII with internal RX delay provided by the PHY, the MAC
-> -      # should not add an RX delay in this case
-> +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
-> +      # part of the board design.
->        - rgmii-rxid
->  
-> -      # RGMII with internal TX delay provided by the PHY, the MAC
-> -      # should not add an TX delay in this case
-> +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
-> +      # part of the board design.
 
-Since all of the above is documented in "ethernet-controller.yaml" and
-not "ethernet-phy.yaml", describing what the "MAC" should or shouldn't
-do seems accurate, and modifying it to describe what the "PHY" should or
-shouldn't do seems wrong.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
->        - rgmii-txid
->        - rtbi
->        - smii
-
-Regards,
-Siddharth.
+Konrad
