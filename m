@@ -1,140 +1,124 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD32BA927;
-	Tue, 15 Apr 2025 01:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DB733991
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679151; cv=none; b=VLupAkXgW9zYSrwcXkfJrdifJtfzDyQzxvFmmAz8mgtTXtfeEdKFCbjMmWcdu61JfhzQAloMm7Q2zvA/RhEPVq5OQpLF10KztmkMifAmQXnhdr4tsgB9psvedGDAH+L3tjmUp7biNj34Wup+A1S4Ir+Of9kOiTV2c8mk18n5qQs=
+	t=1744679152; cv=none; b=gEe10XJh7ZdzahwT4PD3CpkQQypeDbNm9NV0D6x8J/KsWneG6OzbVXiEpQe2r6L4/fcZQsomFNftqEIEgJLGpAD90vtK++xjVtPISoyekfXjx/GGKLekXN/PVkWYFV8kZI9SOmScGanrZU1UzKOkQulsOQHOOSPDDJ+Sx2quhaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679151; c=relaxed/simple;
-	bh=3NDf5j7eWrHrW440/AaqxeY/A1RC9zY1VXbHkDEQ154=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lDeBWECGfrO9iRBuP12L8hUShwtkcWq9sVdarVwy8ZnVMIG5cn73CW601LoTTRvDwTXRXioewRzbsJhjW8SODmIR+hVydbbiWeNX8GZ3eNgW1oHxYujcyzFJcFI6vabRFVHkWld1YtvqiqcukZ7g/mgvu2xqDwinYBCVvZ9+4r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F0oDJr007332;
-	Tue, 15 Apr 2025 01:05:23 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ydd1js6q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 15 Apr 2025 01:05:23 +0000 (GMT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 14 Apr 2025 18:05:22 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 14 Apr 2025 18:05:19 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <hch@infradead.org>
-CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
-        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
-        <ntfs3@lists.linux.dev>,
-        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Date: Tue, 15 Apr 2025 09:05:18 +0800
-Message-ID: <20250415010518.2008216-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_yiPk7AkwJo0c6n@infradead.org>
-References: <Z_yiPk7AkwJo0c6n@infradead.org>
+	s=arc-20240116; t=1744679152; c=relaxed/simple;
+	bh=kmQ6eBY4CNUxjNfOexNgsrdDcNzfRZcNC8pQ2YAlb2w=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bYgrYAaLQKPlYWV0w7mLWK8IpJBQaKxuV2VmLH1Lt83cdFOE4N9+LD0auPYuiEq2QbpUQv8ZmF2jktFbNeloCJ1+F0+TCAWDyAt7kCOa0d4q+Bk8V9RD6STUtCZVOMlRyTHeSznW3EG00s5vDCM4cD3n/JxhNbilUitYPYnCmv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QUJr4LSG; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QUJr4LSG"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22406ee0243so36828975ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 18:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744679150; x=1745283950; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tE1adoT0PMRc2ZI2MNLpe+tvwhjFP5aL0rCGtHCJJ4w=;
+        b=QUJr4LSGk10u+0oDlGbHHJyX4pZWGohqi7sxarvh7/EqZQIzgBMEDYMxQX0M9HnFwe
+         5eE017nQn01wJKEmjeTB6wlfZAoNhTgfoRzqZpG+a6ysfkjCR2DaO/O+lmDh+dPhoB5f
+         7SFxcGCTzOma89h5PgrDnMZyC1zPFBSqXXP60u+X0nDSjF5Frmfm+EJFQHk+JGWMPiHs
+         ACZSMgWP/Rpq7lXf/XOlBd4bAfGSOQZPsCQe/qTM711O/rEqAPudhhtTcMx2GYomI5bz
+         DK81VuZxklBthmHFQLC255ZXDnW9Mc3DQOySomCOGlKRhs+i4oh3HLk7GJIBVgZqCK2O
+         4tVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744679150; x=1745283950;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tE1adoT0PMRc2ZI2MNLpe+tvwhjFP5aL0rCGtHCJJ4w=;
+        b=oOwLTAqJ5DVKA953JCjEHCoJ/fIJhQfZj+Iss9dNCgzxXp20U/wBhuWCZVfmwHr1/E
+         NxYt46HGRN4oN+hIthdQ5Dkt5xBKv9AhxGr3aYp81edQx3ytpO9XpWxjjTpd4FXd2QiG
+         O5Vi0S2xkV8eiQKaPlN91NkkiNuVg+sgYCiyyYyZOAF0+drnfz2XWi7TQdTi7KPrJWj7
+         2APfBufCybyqC3OOzkkklU07EI0glXtaoImp/lug7+o9KfMGAvOirEm712qhm2mLq5Rs
+         Qy/ybwqnPzk4FVexw8TD+6t8S4TyNj1H7at7y1/vPT6cifd6wjLJdUSguERSLLt7Mc3w
+         29Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCWiSCkJLYZKQUx3JomYvhPqTE5c2TOq+RUz6MomMVmyil+oygHr45UgQsaZLi43RVHNMPmAFqMLSKWs0uk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaCnjqe3i1v8GHQ8oxgWJprEmUODM5VdZpBTAfTdx7UqPm5HDI
+	oTLQIBSuJiG/7V9aUX8ZKAR5+FyV3iSwkGaXo+Bm8eMi3VKWkELBdololhpRy2wGlnSrydqCTQV
+	aqQ==
+X-Google-Smtp-Source: AGHT+IFbFP3u+rs3c8JoY3Z9h6FkMSEmt0p/0gguW8s8qvS+PwTJMpqhnW2RNbzoz4XXWA0j7ScY9/Ze8c8=
+X-Received: from plrb10.prod.google.com ([2002:a17:902:a9ca:b0:223:f7e6:116d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cec4:b0:224:e33:889b
+ with SMTP id d9443c01a7336-22bea4ade03mr221654375ad.12.1744679150211; Mon, 14
+ Apr 2025 18:05:50 -0700 (PDT)
+Date: Mon, 14 Apr 2025 18:05:49 -0700
+In-Reply-To: <20250414081131.97374-2-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ty7NNuGZDoar7YOn9Kc2ENxMCfgW6Xuv
-X-Proofpoint-GUID: ty7NNuGZDoar7YOn9Kc2ENxMCfgW6Xuv
-X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=67fdb0d3 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=ntnxu_dxGi-Q_OBSk1sA:9
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_08,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0 clxscore=1011
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504150003
+Mime-Version: 1.0
+References: <20250414081131.97374-1-ubizjak@gmail.com> <20250414081131.97374-2-ubizjak@gmail.com>
+Message-ID: <Z_2w7XJ0LI65qo0i@google.com>
+Subject: Re: [PATCH 2/2] KVM: VMX: Use LEAVE in vmx_do_interrupt_irqoff()
+From: Sean Christopherson <seanjc@google.com>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Sun, 13 Apr 2025 22:50:54 -0700, Christoph Hellwig wrote:
-> On Fri, Apr 11, 2025 at 09:24:27AM +0800, Lizhi Xu wrote:
-> > The ntfs3 can use the page cache directly, so its address_space_operations
-> > need direct_IO.
+On Mon, Apr 14, 2025, Uros Bizjak wrote:
+> Micro-optimize vmx_do_interrupt_irqoff() by substituting
+> MOV %RBP,%RSP; POP %RBP instruction sequence with equivalent
+> LEAVE instruction. GCC compiler does this by default for
+> a generic tuning and for all modern processors:
+
+Out of curisoity, is LEAVE actually a performance win, or is the benefit essentially
+just the few code bytes saves?
+
+> DEF_TUNE (X86_TUNE_USE_LEAVE, "use_leave",
+> 	  m_386 | m_CORE_ALL | m_K6_GEODE | m_AMD_MULTIPLE | m_ZHAOXIN
+> 	  | m_TREMONT | m_CORE_HYBRID | m_CORE_ATOM | m_GENERIC)
 > 
-> I can't parse that sentence.  What are you trying to say with it?
-The comments [1] of generic_file_read_iter() clearly states "read_iter()
-for all filesystems that can use the page cache directly".
-
-In the calltrace of this example, it is clear that direct_IO is not set.
-In [3], it is also clear that the lack of direct_IO in ntfs_aops_cmpr
-caused this problem.
-
-In summary, direct_IO must be set in this issue.
-
-[1]
- * generic_file_read_iter - generic filesystem read routine
- * @iocb:	kernel I/O control block
- * @iter:	destination for the data read
- *
- * This is the "read_iter()" routine for all filesystems
- * that can use the page cache directly.
-
-[2]
-generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-{
-	size_t count = iov_iter_count(iter);
-	ssize_t retval = 0;
-
-	if (!count)
-		return 0; /* skip atime */
-
-	if (iocb->ki_flags & IOCB_DIRECT) {
-		struct file *file = iocb->ki_filp;
-		struct address_space *mapping = file->f_mapping;
-		struct inode *inode = mapping->host;
-
-		retval = kiocb_write_and_wait(iocb, count);
-		if (retval < 0)
-			return retval;
-		file_accessed(file);
-
-		retval = mapping->a_ops->direct_IO(iocb, iter); 
-[3]
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b432163ebd15a0fb74051949cb61456d6c55ccbd
-diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
-index 4d9d84cc3c6f55..9b6a3f8d2e7c5c 100644
---- a/fs/ntfs3/file.c
-+++ b/fs/ntfs3/file.c
-@@ -101,8 +101,26 @@ int ntfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
- 	/* Allowed to change compression for empty files and for directories only. */
- 	if (!is_dedup(ni) && !is_encrypted(ni) &&
- 	    (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))) {
--		/* Change compress state. */
--		int err = ni_set_compress(inode, flags & FS_COMPR_FL);
-+		int err = 0;
-+		struct address_space *mapping = inode->i_mapping;
-+
-+		/* write out all data and wait. */
-+		filemap_invalidate_lock(mapping);
-+		err = filemap_write_and_wait(mapping);
-+
-+		if (err >= 0) {
-+			/* Change compress state. */
-+			bool compr = flags & FS_COMPR_FL;
-+			err = ni_set_compress(inode, compr);
-+
-+			/* For files change a_ops too. */
-+			if (!err)
-+				mapping->a_ops = compr ? &ntfs_aops_cmpr :
-+							 &ntfs_aops;
-
-BR,
-Lizhi
+> The new code also saves a couple of bytes, from:
+> 
+>   27:	48 89 ec             	mov    %rbp,%rsp
+>   2a:	5d                   	pop    %rbp
+> 
+> to:
+> 
+>   27:	c9                   	leave
+> 
+> No functional change intended.
+> 
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> ---
+>  arch/x86/kvm/vmx/vmenter.S | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmenter.S b/arch/x86/kvm/vmx/vmenter.S
+> index f6986dee6f8c..0a6cf5bff2aa 100644
+> --- a/arch/x86/kvm/vmx/vmenter.S
+> +++ b/arch/x86/kvm/vmx/vmenter.S
+> @@ -59,8 +59,7 @@
+>  	 * without the explicit restore, thinks the stack is getting walloped.
+>  	 * Using an unwind hint is problematic due to x86-64's dynamic alignment.
+>  	 */
+> -	mov %_ASM_BP, %_ASM_SP
+> -	pop %_ASM_BP
+> +	leave
+>  	RET
+>  .endm
+>  
+> -- 
+> 2.49.0
+> 
