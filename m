@@ -1,54 +1,37 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656E71A3163;
-	Tue, 15 Apr 2025 13:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E2719F11E;
+	Tue, 15 Apr 2025 13:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724917; cv=none; b=bYe804QLD7t6TAj3L09gihnQpRifD1dyU6kuzK/ZMLp4UCqIW6Y0ylcQ+Q9nzmALSn1uW4G1Whn4N5p0GIeVAzslJkWspYE751jIG8V+4ZneW4CZr0lReAkeObycKKlxYVmZrXW+7m00DCfkYUPxcH2q9L7Ouc2QxA70GCjOu/M=
+	t=1744724931; cv=none; b=qnjBdbc6+7XdaWLB/aNi9VZ1cNhph52sEC9vKj9MSPImWZHrzrwc5+doC9Ch45I/i5WeVpCrvVTOcxnwk2Sp4MJtNtSLAatmUZ0etDKToQbbiZRq/mp88oDdLBk5t4ihnmL3q4iH440k5R8lA2O1I+h5MsouALS3so3QyOVjnhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724917; c=relaxed/simple;
-	bh=kgM1FwNjGq6qSmmgWtC2WdCn29M56dwgxDebCLwDY2g=;
+	s=arc-20240116; t=1744724931; c=relaxed/simple;
+	bh=f+I+70mvDeUxlvE287MehxIaRGNimM4VHnTJL/puwjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLbcdgOfNRR/3X5kiJQYGJPCH8GOjHrc3CM76acnWunsoR6itf8TqDwjbKIjuCllbYKzaWgZqVkWSknFQjk5nGqJdy5sIj/j8f3Lh4y66r5pJ7PELr4lY0vn9KiZNKLoW2R9piu9cwfH9DEeQqtzW9Whgr68zy8xzSzGt8roqBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YrO1vG1k; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YrO1vG1k"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V665uomEftWMnY02o1tbsGyNrT4RxPy6B9Au5unyhCw=; b=YrO1vG1kO9sfz1s/fGywwDww2S
-	i6eq7hqDFTv+oEjZ0QCQy9VcqV7PRL15903+yM/J/B1TVc5i9dtZHiNhB9dlqkt/1fql7sdxz2mE+
-	+C4FI4curBsBH81QKfXSxKhYHK/8Ly4DiFOFcwMbSdXaDK0OZTQop4PSrjR0OjGw70xv2p9OfJI0g
-	uyIFnaf+JwiihjVuk5FXBA+kQkpIfPCfpY9clZYmF8ITmYpHLYacaxdeRI68UepSiFOQdFAEgS02m
-	krPTQDJZq3WTcZHV7omdoMcCXABtzY6BlQh/sQBbPSn31/DbKv0L27odDfeKlcMj/tK6k6tkyPnF4
-	KkYbEyVw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u4geM-00000009tyv-14ML;
-	Tue, 15 Apr 2025 13:48:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id CF140300619; Tue, 15 Apr 2025 15:48:29 +0200 (CEST)
-Date: Tue, 15 Apr 2025 15:48:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v3 11/22] perf/x86/intel: Allocate arch-PEBS buffer and
- initialize PEBS_BASE MSR
-Message-ID: <20250415134829.GB4031@noisy.programming.kicks-ass.net>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-12-dapeng1.mi@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XpDk52w5FdVwkaajwH8yHpbQnVZAjILX+Ph6sDrLm34zLu1nzhh+J7DmOXdSBC0JCqlF8anrBh9Pmpa5rKGpegz/MeGMt5GkYX/r2xf2cJOurYMj56se00bHhymDqhQ4OkGgO25W3pAjX3oK2Gf5QYtXhgUBk1G3nYwi8C661x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6344015A1;
+	Tue, 15 Apr 2025 06:48:45 -0700 (PDT)
+Received: from gentoo-vm (unknown [10.57.44.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B2B13F59E;
+	Tue, 15 Apr 2025 06:48:44 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:48:38 +0000
+From: Kajetan Puchalski <kajetan.puchalski@arm.com>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, maz@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Fugang Duan <fugang.duan@cixtech.com>, 
+	Guomin Chen <Guomin.Chen@cixtech.com>, Gary Yang <gary.yang@cixtech.com>
+Subject: Re: [PATCH v6 09/10] arm64: dts: cix: add initial CIX P1(SKY1) dts
+ support
+Message-ID: <7cnhezft5jzvtdjx6m2vjmtaxgla33j4fynd6ef4c6b7dh5pvo@4cbxewawilqp>
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+ <20250415072724.3565533-10-peter.chen@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,20 +40,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415114428.341182-12-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415072724.3565533-10-peter.chen@cixtech.com>
+User-Agent: NeoMutt/20250109-134-7b7c50
 
-On Tue, Apr 15, 2025 at 11:44:17AM +0000, Dapeng Mi wrote:
+On Tue, Apr 15, 2025 at 03:27:23PM +0800, Peter Chen wrote:
+> CIX SKY1 SoC is high performance Armv9 SoC designed by Cixtech,
+> and Orion O6 is the motherboard launched by Radxa. See below for
+> detail:
+> https://docs.radxa.com/en/orion/o6/getting-started/introduction
+> In this commit, it adds sky1 base, mailbox, clock (scmi firmware baseed)
+> and uart, and the kernel could boot up to console.
 
-> +void fini_arch_pebs_buf_on_cpu(int cpu)
-> +{
-> +	if (!x86_pmu.arch_pebs)
-> +		return;
+The commit message style is supposed to be in imperative tone, i.e. "Add sky1 base".
+
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
+> Signed-off-by: Guomin Chen <Guomin.Chen@cixtech.com>
+> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> ---
+
+I've tested this on my own Orion O6 with 6.15-rc2, the UART does work and the kernel
+does boot up to the expected point. Feel free to add the tag if you'd like.
+
+Tested-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+
+> +++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> @@ -0,0 +1,39 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright 2025 Cix Technology Group Co., Ltd.
+> + *
+> + */
 > +
-> +	release_pebs_buffer(cpu);
-> +	wrmsr_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0, 0);
-> +}
-
-So first we free the pages, and then we tell the hardware to not write
-into them again.
-
-What could possibly go wrong :-)
+> +/dts-v1/;
+> +
+> +#include "sky1.dtsi"
+> +/ {
+> +	model = "Radxa Orion O6";
+> +	compatible = "radxa,orion-o6", "cix,sky1";
+> +
+> +	aliases {
+> +		serial2 = &uart2;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart2;
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			size = <0x0 0x28000000>;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
