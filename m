@@ -1,91 +1,220 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D9C24EA91;
-	Tue, 15 Apr 2025 19:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6B424C09A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744745519; cv=none; b=ADRcdhjZ1wj65LqYDOILMt+eFTUsOyD2KxDFPl1t7l3gfMFKnLwFJ+11UiOm2Z6QFwPeQCgK3sq1YjwcItVdYFAFmu39aJ9xcsowbzY9J+sXI15DHYG2KfW/nwXY0l+4Lqx68jiu5Zs4Wlqckmd8jVPg5QkcXA6CWuyQmDuykec=
+	t=1744745623; cv=none; b=Rfm61UQ/WOr91O9HC43QHW/HBj36xnH8gFOTTEtNRJc8xnZ8my0Kv9w1c/BqJyb43XMJdwLufBBtlb7ULRYfIjLVq+RehZ/1EpfaYkTDvmD1gDoEwdhzvMjA5DQzDx92IVNbnP258ARfo0RgYHj9TuGyv7wZmEeGzDCRfgw+6QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744745519; c=relaxed/simple;
-	bh=mOpxhN9Wa01RZ6UQSe37jwo9wf3A8jc/5M0C1mJiOO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nBTp+v52VtwjLJrlisWmaew/pquO5+HYruySUFdonsL0hQ9Hj70+AedSTwciInCo9Zl3gx2U4iwjRB/vSJCnatz6WvMDBlDEKHIUIeiLtzeKJfuh2tdtyJdZYYHkWUIZNNxzFbJpSapIeQpat4knFqN9z/6VSc/KvWxS3PcQUDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=JEjGCHIQ; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1744745623; c=relaxed/simple;
+	bh=TrhRHWH0raP2Nn0FOzui04ieWdZj/uglP4WosiraW04=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mxnUgYExlgBnsFA34rnFSJq7j2bl25/NOAGkhckcyyS1Yb9yXiQx+JqQ5v36zubzW+Q5A0mlaZ9MA6c/aufmCGvUMbvrzps2fiLZq4goQ5EZrW7fVwBY/1P6wMK2qvTze0BOSwugevENPH9tSpWhcDp9e1R1QwMuPbQV/38odgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S4i6QoMM; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="JEjGCHIQ"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af589091049so4129343a12.1;
-        Tue, 15 Apr 2025 12:31:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1744745514; x=1745350314; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mOpxhN9Wa01RZ6UQSe37jwo9wf3A8jc/5M0C1mJiOO8=;
-        b=JEjGCHIQ3cCYrtlcf2MaDN0rR7FFI/i+vgd0R00TYKm+wRFtuLKFijpJlXDwn4MuvF
-         SmfNTshp0AOXgMqFk86aa8evi8sfoew4fj63HK13sovj4DY2iIDdesbJ7VrJrKlD93JP
-         VqwpTWGpGR6dqJ2LRRZpgYsLte8CA7wLOQ5v0ofC7QRe4JVO8xm6yNgZWsRCo87/thr3
-         9tlXWnKmGM0Bmeys1V/JrQd2HqfpGgNs2qvx3ZSSXhcqHv3vJl4lW6pqDZDketXr4dAb
-         JX87bvEVRhxFiPmchVAvja7KNJnh4VAz6VQB5wH0SfCU97cVpN+X9y8oRdvNQFR4Bg5u
-         eJog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744745514; x=1745350314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mOpxhN9Wa01RZ6UQSe37jwo9wf3A8jc/5M0C1mJiOO8=;
-        b=dRf4EVzWg2zqnXd6Q7BOkQnXVFYs8s3VkjLI3dl218Qvqor1MqsvHnhePoDWpvFEbU
-         5TVf3gWAipokucNBGzSE+lDZdW70Kd8mqIlu40e+89B9nU9LqPhcOUMcifnRIfDVDFNf
-         A9t/iA6gO08lU5JW6IC9sKcRbMg3HI6HHxMY7pja/QIljMBjK09xIh/Y0O/8600HzaVg
-         u89zP/z8Esod0AJIbgj3wpJC1uc4F1zLZHLQaxWUSmU+WVeD0ZdFjs20T7vpJ3GMi+F+
-         BYfvqXz/qpxRB/+vaVKJeYvAvoBVwy0o3V64iBpjR3U8rN0s/osIKoZvlg7cv7f9nY29
-         cFXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxtZr65UzI4A9US3rBzNMyhvjqshZx0F8SO5HB7922yxCQ3MGHqCVtqkpQgqPGREl/Db9RShK2obgeczQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxuNzQ7Y/ME7hCLsZEvIfC+5ZHo1IoYqtzv8GQ450PpkJtYCXn
-	wZfTgGCgUS5QM+p7QkTRXaCj44PZEX/UXzal72mY/uclJkhB6nI4fXfYfROwXH313EmCJRTEK11
-	Epsjeo+ptajoggWYhF+9vddO7rZY=
-X-Gm-Gg: ASbGnctUSvjWMexoV6OjInjs24NZZY6Z7aPD/LBShMUiueUci6NCVybz8YVRPXf8wlE
-	gOBdvnRHYWTn5YtoTOfcATTaS3cPU5pYXBe3oqLNULv5LC3TziMltFNFqfgE/gOLeIRy27ea518
-	16dvSZSSYSyNikLiz9PrTMNWwUgkjDf7hKpB4=
-X-Google-Smtp-Source: AGHT+IFSop+cyYcIbwFQOxNrZBdMBOLnMx5E85d1sOcycf8gh99/SLu4lo2XjydoF6DzGmNnT8KuhA24YxfN7bY6v84=
-X-Received: by 2002:a17:90a:e18e:b0:2f9:c139:b61f with SMTP id
- 98e67ed59e1d1-3085eec064emr576057a91.14.1744745514215; Tue, 15 Apr 2025
- 12:31:54 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S4i6QoMM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744745618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pXgMEugDRctxHgg/jyxi4WM3BzvrQnLeq2uFf3Ak3YU=;
+	b=S4i6QoMMUeFWnZ04EHW1ZY3DfRCAAiE4mdP/V5SdxQCc/j6uJ1OhACwzmoe7uQRZPGGP1y
+	jgtc13XTCfFfiQL48LX2ldxo4ivw3PhU5qLwB7BeM7CHrmOJq8J9gRfBSPYPeGWgNzz6H1
+	BhysUV/tJ92TGFdj7W0rxDHXFv9UDCY=
+From: Sean Anderson <sean.anderson@linux.dev>
+To: netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: upstream@airoha.com,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Michal Simek <michal.simek@amd.com>,
+	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Robert Hancock <robert.hancock@calian.com>,
+	devicetree@vger.kernel.org
+Subject: [net-next PATCH v3 01/11] dt-bindings: net: Add Xilinx PCS
+Date: Tue, 15 Apr 2025 15:33:13 -0400
+Message-Id: <20250415193323.2794214-2-sean.anderson@linux.dev>
+In-Reply-To: <20250415193323.2794214-1-sean.anderson@linux.dev>
+References: <20250415193323.2794214-1-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com> <20250410154217.1849977-2-zhen.xin@nokia-sbell.com>
-In-Reply-To: <20250410154217.1849977-2-zhen.xin@nokia-sbell.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Tue, 15 Apr 2025 21:31:43 +0200
-X-Gm-Features: ATxdqUHsUS1PJ0mHDfMEuLyBL0wApJn76Px47ZMJ85f8VhKWInTsnkELleGEbKg
-Message-ID: <CAFBinCBhr7M6ixQx99T9yZxzr=cy=3E8wsaAe9dtv-RWaHVHSA@mail.gmail.com>
-Subject: Re: [PATCH -v2 1/2] wifi: rtw88: sdio: call rtw_sdio_indicate_tx_status
- unconditionally
-To: Zhen XIN <zhen.xin@nokia-sbell.com>
-Cc: linux-wireless@vger.kernel.org, pkshih@realtek.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 10, 2025 at 5:46=E2=80=AFPM Zhen XIN <zhen.xin@nokia-sbell.com>=
- wrote:
->
-> Rtw88-sdio do not work in AP mode due to the lack of tx status report for
-> management frames.
->
-> Make the invocation of rtw_sdio_indicate_tx_status unconditional and cove=
-r
-> all packet queues
->
-> Tested-on: rtl8723ds
->
-> Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO =
-based chipsets")
-> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Add a binding for the Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE
+IP. This device is a soft device typically used to adapt between GMII
+and SGMII or 1000BASE-X (possbilty in combination with a serdes).
+pcs-modes reflects the modes available with the as configured when the
+device is synthesized. Multiple modes may be specified if dynamic
+reconfiguration is supported.
+
+One PCS may contain "shared logic in core" which can be connected to
+other PCSs with "shared logic in example design." This primarily refers
+to clocking resources, allowing a reference clock to be shared by a bank
+of PCSs. To support this, if #clock-cells is defined then the PCS will
+register itself as a clock provider for other PCSs.
+
+Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+
+Changes in v3:
+- Add '>' modifier for paragraph to description
+- Edit description to reference clocks instead of resets
+
+Changes in v2:
+- Change base compatible to just xlnx,pcs
+- Drop #clock-cells description
+- Move #clock-cells after compatible
+- Remove second example
+- Rename pcs-modes to xlnx,pcs-modes
+- Reword commit message
+
+ .../devicetree/bindings/net/xilinx,pcs.yaml   | 114 ++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/xilinx,pcs.yaml b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+new file mode 100644
+index 000000000000..11bbae6936eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/xilinx,pcs.yaml
+@@ -0,0 +1,114 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/xilinx,pcs.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx 1G/2.5G Ethernet PCS/PMA or SGMII LogiCORE IP
++
++maintainers:
++  - Sean Anderson <sean.anderson@seco.com>
++
++description: >
++  This is a soft device which implements the PCS and (depending on
++  configuration) PMA layers of an IEEE Ethernet PHY. On the MAC side, it
++  implements GMII. It may have an attached SERDES (internal or external), or
++  may directly use LVDS IO resources. Depending on the configuration, it may
++  implement 1000BASE-X, SGMII, 2500BASE-X, or 2.5G SGMII.
++
++  This device has a notion of "shared logic" such as reset and clocking
++  resources which must be shared between multiple PCSs using the same I/O
++  banks. Each PCS can be configured to have the shared logic in the "core"
++  (instantiated internally and made available to other PCSs) or in the "example
++  design" (provided by another PCS). PCSs with shared logic in the core provide
++  a clock for other PCSs in the same bank.
++
++properties:
++  compatible:
++    items:
++      - const: xlnx,pcs-16.2
++      - const: xlnx,pcs
++
++  reg:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++
++  clocks:
++    items:
++      - description:
++          The reference clock for the PCS. Depending on your setup, this may be
++          the gtrefclk, refclk, clk125m signal, or clocks from another PCS.
++
++  clock-names:
++    const: refclk
++
++  done-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset-done output, if present.
++
++  interrupts:
++    items:
++      - description:
++          The an_interrupt autonegotiation-complete interrupt.
++
++  interrupt-names:
++    const: an
++
++  xlnx,pcs-modes:
++    description:
++      The interfaces that the PCS supports. Multiple interfaces may be
++      specified if dynamic reconfiguration is enabled.
++    oneOf:
++      - const: sgmii
++      - const: 1000base-x
++      - const: 2500base-x
++      - items:
++          - const: sgmii
++          - const: 1000base-x
++
++  reset-gpios:
++    maxItems: 1
++    description:
++      GPIO connected to the reset input.
++
++required:
++  - compatible
++  - reg
++  - xlnx,pcs-modes
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pcs0: ethernet-pcs@0 {
++            compatible = "xlnx,pcs-16.2", "xlnx,pcs";
++            reg = <0>;
++            #clock-cells = <0>;
++            clocks = <&si570>;
++            clock-names = "refclk";
++            interrupts-extended = <&gic GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "an";
++            reset-gpios = <&gpio 5 GPIO_ACTIVE_HIGH>;
++            done-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
++            xlnx,pcs-modes = "sgmii", "1000base-x";
++        };
++
++        pcs1: ethernet-pcs@1 {
++            compatible = "xlnx,pcs-16.2", "xlnx,pcs";
++            reg = <1>;
++            xlnx,pcs-modes = "sgmii";
++            clocks = <&pcs0>;
++            clock-names = "refclk";
++        };
++    };
+-- 
+2.35.1.1320.gc452695387.dirty
+
