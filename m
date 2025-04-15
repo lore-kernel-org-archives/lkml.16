@@ -1,163 +1,116 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1D428BA93;
-	Tue, 15 Apr 2025 14:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727219; cv=pass; b=K/88thkJ4sAmzmTvSWkQCh1ISERb22lRi26PnTlK/nS5jDLbxwDza9g4FM5DRJxqzPWXvCgxGw2htIMDQ3VPsE7r6x/Z6Kg4877lCjLW+FQYwOEhEnMBBjIqSsy7Nk9Q+BUXiMb9HBZvwf/sT9ABHu87q/vMSWwApBzoaPXyclA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727219; c=relaxed/simple;
-	bh=IudflqImdm+ZwbpvNjpoNoGi2CoQwHJjQFVz8r3/Sj8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mnbs0c8AEHGmOOWismvGN9KvizHa7jTEmxt+msof7c2imN2fF6jQMwFJQvo4jh0exeiJBc9glYGGLiZiz9J4zi4D4kRwxMkksS0p5bp8Gpf3Mc1aO0GpsZM0DC5D9ZRoI0lp4fx/GxdEmvlQzHQQYQeBnGH+MJcD4xdQ2/qo0iE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b=PZ36VKr/; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4DE289357
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744727238; cv=none; b=ngFWpwQwc9yPnFAY5oQSobfPaxaaynZUK3w1g1izSsI7G8ryPsRRHa392Hpf1UwAhLe05AfrQJBE7rwE1thjhfy1D7tBzLdCWFVivp36NYFYvKzyqThaiVyfyLu0C0imN+iEgYqmtXPMjq8G94iGutoxt3FLCRejknvHylC24aI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744727238; c=relaxed/simple;
+	bh=z63JfSsHpIErknyiCFjXZ6ek1chC5/7Pr7BECXZasXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sHgeYma5s9WxuRfeeqZD0HhlKfEhXUPeGoC4ighB11lKGnRccud71yLw/t7jp4g3H0Pi/uMt8BDRCsWzBf92lyuZkhyPTjooBNwheLxYodscJd9uZNidrnBqTbjBjX4sVhEc1BvY/VoRPWUtXx0s9PL5MhWjgsJ7cJ54j4qpPDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HoeS8n8O; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=kingxukai@zohomail.com header.b="PZ36VKr/"
-ARC-Seal: i=1; a=rsa-sha256; t=1744727170; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ML/45lXZs42EehsX2v4/xhy31k5chYIL1I61DDmvrR+eT8Q2vkiDTJMXAJ0kPlenepRfJSxuZwMLTZkQuw+boz0SsxuNBNKuFscALKjNTxV14089OhsthYU5Y5jxVIyKI/kRQVBEytcEBetWwPYMZoGf295swrrufGvs2dlsOkY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744727170; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=EPlebBCWRgSBAYpdwC7xAZIbyevkA4TQGmd5kkCqttQ=; 
-	b=c76ehCo4qHib/xIhLuKkuafsGf1H2nIX0Ac+K4+Q5NliVO6m7qlIDoow1Iq7UL6Ln3KE25vq+CNP+VrpxgN6CyR+tV1iyFWWxT3lL24dgqLRZEEPrIZRWE5XpF/iASeMw0bYDCV1dTrCsPC6IeYZRd0jklkSM8opsYfA+LcaZjM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=kingxukai@zohomail.com;
-	dmarc=pass header.from=<kingxukai@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744727170;
-	s=zm2022; d=zohomail.com; i=kingxukai@zohomail.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=EPlebBCWRgSBAYpdwC7xAZIbyevkA4TQGmd5kkCqttQ=;
-	b=PZ36VKr/6FrfcWiuBhLOaWaypMMcjfveFeSws1iiaG3j0pNH+T7zepjQYtLuG0XP
-	IunIi6IViWwsBSkjUw9n3mF+iqyELB9EDGPpM8Pne69ZVyI+7AAU6aWNAEsBUbA6lLO
-	b0SS2akl2L4BHr6edyUENrYVgPO+L2utwTKUp4xc=
-Received: by mx.zohomail.com with SMTPS id 1744727168155994.4408975901637;
-	Tue, 15 Apr 2025 07:26:08 -0700 (PDT)
-From: Xukai Wang <kingxukai@zohomail.com>
-Date: Tue, 15 Apr 2025 22:25:13 +0800
-Subject: [PATCH v6 3/3] riscv: dts: canaan: Add clock definition for K230
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HoeS8n8O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744727237; x=1776263237;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z63JfSsHpIErknyiCFjXZ6ek1chC5/7Pr7BECXZasXY=;
+  b=HoeS8n8OpaXqPmO9D8eNIkOveqBMBVjC9OiqWdsSuQsU297SmUizrw03
+   A9pvxUYBJC2RsiAHhnFqwNSChcsJZyvkFUHbf3kV+fCqXihen7aEUDfoG
+   7kdZ9mG35kJ/V+XpBcOXoxKcVOevaYrGEchDDwC80ZyGnWp0qAGB5X23K
+   ICuPSC/yovcXyMpKcp3MxYfPT1U+I8jtXdbI48HLXeWtiAYxilj/ynRkj
+   Gc/VwULb5WejK/WtMWNRDIXKxRMsGnb9aDgJAXk2fRDiwi+peh59zt+f3
+   WkRyeCgiAX1jy/JBjvLkZ5q1z60C1vQJvFZ6xatdBon3iRZQUzGkRJAw4
+   g==;
+X-CSE-ConnectionGUID: 4QnNUCc0QAOI2I2QXkAUBQ==
+X-CSE-MsgGUID: iPklUTxITDi7EMPA2quBJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="45473541"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45473541"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 07:27:16 -0700
+X-CSE-ConnectionGUID: sacFQhjARimp6JlLoAQRFw==
+X-CSE-MsgGUID: Ay/bqOuZSU2GocGP1WfIkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129909049"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 15 Apr 2025 07:27:12 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4hFk-000GHi-2X;
+	Tue, 15 Apr 2025 14:27:08 +0000
+Date: Tue, 15 Apr 2025 22:26:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Xin Ji <xji@analogixsemi.com>, Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: oe-kbuild-all@lists.linux.dev, bliang@analogixsemi.com,
+	qwen@analogixsemi.com, treapking@chromium.org,
+	Xin Ji <xji@analogixsemi.com>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] drm/bridge:anx7625: Enable DSC feature
+Message-ID: <202504152230.BCIdpiru-lkp@intel.com>
+References: <20250414100502.1604717-3-xji@analogixsemi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-b4-k230-clk-v6-3-7fd89f427250@zohomail.com>
-References: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
-In-Reply-To: <20250415-b4-k230-clk-v6-0-7fd89f427250@zohomail.com>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Xukai Wang <kingxukai@zohomail.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Samuel Holland <samuel.holland@sifive.com>, 
- Troy Mitchell <TroyMitchell988@gmail.com>
-X-Mailer: b4 0.14.2
-Feedback-ID: rr080112276280ef7c906a309989db09cc0000530d331676b406d85d4d23d5b0524e752c5822bf618f965ce5:zu0801122732c0758bb82e4d424ccfd56d0000b94ad08532ddcaf05e1de0ce69ee13526c34b2178a5076253f:rf0801122cbe35ff99dc05f2511c12cb8900003999233cd3c7ad6a05229b3d7aa9f65f1dfee119a7e933251ec33cf1406f:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414100502.1604717-3-xji@analogixsemi.com>
 
-This patch describes the clock controller integrated in K230 SoC
-and replace dummy clocks with the real ones for UARTs.
+Hi Xin,
 
-Co-developed-by: Troy Mitchell <TroyMitchell988@gmail.com>
-Signed-off-by: Troy Mitchell <TroyMitchell988@gmail.com>
-Signed-off-by: Xukai Wang <kingxukai@zohomail.com>
----
- arch/riscv/boot/dts/canaan/k230.dtsi | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts/canaan/k230.dtsi
-index 95c1a3d8fb1192e30113d96d3e96329545bc6ae7..e688633acbbf2cee36354220c557252111f56ff5 100644
---- a/arch/riscv/boot/dts/canaan/k230.dtsi
-+++ b/arch/riscv/boot/dts/canaan/k230.dtsi
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
-  */
- 
-+#include <dt-bindings/clock/canaan,k230-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- 
- /dts-v1/;
-@@ -58,10 +59,10 @@ l2_cache: l2-cache {
- 		};
- 	};
- 
--	apb_clk: apb-clk-clock {
-+	osc24m: clock-24m {
- 		compatible = "fixed-clock";
--		clock-frequency = <50000000>;
--		clock-output-names = "apb_clk";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "osc24m";
- 		#clock-cells = <0>;
- 	};
- 
-@@ -89,10 +90,18 @@ clint: timer@f04000000 {
- 			interrupts-extended = <&cpu0_intc 3>, <&cpu0_intc 7>;
- 		};
- 
-+		sysclk: clock-controller@91102000 {
-+			compatible = "canaan,k230-clk";
-+			reg = <0x0 0x91102000 0x0 0x1000>,
-+			      <0x0 0x91100000 0x0 0x1000>;
-+			clocks = <&osc24m>;
-+			#clock-cells = <1>;
-+		};
-+
- 		uart0: serial@91400000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x91400000 0x0 0x1000>;
--			clocks = <&apb_clk>;
-+			clocks = <&sysclk K230_LS_UART0>;
- 			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-@@ -102,7 +111,7 @@ uart0: serial@91400000 {
- 		uart1: serial@91401000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x91401000 0x0 0x1000>;
--			clocks = <&apb_clk>;
-+			clocks = <&sysclk K230_LS_UART1>;
- 			interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-@@ -112,7 +121,7 @@ uart1: serial@91401000 {
- 		uart2: serial@91402000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x91402000 0x0 0x1000>;
--			clocks = <&apb_clk>;
-+			clocks = <&sysclk K230_LS_UART2>;
- 			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-@@ -122,7 +131,7 @@ uart2: serial@91402000 {
- 		uart3: serial@91403000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x91403000 0x0 0x1000>;
--			clocks = <&apb_clk>;
-+			clocks = <&sysclk K230_LS_UART3>;
- 			interrupts = <19 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-@@ -132,7 +141,7 @@ uart3: serial@91403000 {
- 		uart4: serial@91404000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x0 0x91404000 0x0 0x1000>;
--			clocks = <&apb_clk>;
-+			clocks = <&sysclk K230_LS_UART4>;
- 			interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.15-rc2 next-20250415]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Xin-Ji/drm-mipi-dsi-Add-compression-supported-flag-in-drm_mipi_dsi/20250414-181005
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250414100502.1604717-3-xji%40analogixsemi.com
+patch subject: [PATCH v3 3/3] drm/bridge:anx7625: Enable DSC feature
+config: arm64-randconfig-002-20250415 (https://download.01.org/0day-ci/archive/20250415/202504152230.BCIdpiru-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504152230.BCIdpiru-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504152230.BCIdpiru-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   aarch64-linux-ld: Unexpected GOT/PLT entries detected!
+   aarch64-linux-ld: Unexpected run-time procedure linkages detected!
+   aarch64-linux-ld: drivers/gpu/drm/bridge/analogix/anx7625.o: in function `anx7625_bridge_mode_set':
+>> anx7625.c:(.text+0x28d4): undefined reference to `drm_dsc_set_rc_buf_thresh'
+>> aarch64-linux-ld: anx7625.c:(.text+0x28dc): undefined reference to `drm_dsc_set_const_params'
+>> aarch64-linux-ld: anx7625.c:(.text+0x28e4): undefined reference to `drm_dsc_initial_scale_value'
+>> aarch64-linux-ld: anx7625.c:(.text+0x2900): undefined reference to `drm_dsc_setup_rc_params'
+>> aarch64-linux-ld: anx7625.c:(.text+0x290c): undefined reference to `drm_dsc_compute_rc_parameters'
+>> aarch64-linux-ld: anx7625.c:(.text+0x2930): undefined reference to `drm_dsc_pps_payload_pack'
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
