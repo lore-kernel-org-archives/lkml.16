@@ -1,249 +1,370 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-007b0c01.pphosted.com (mx0a-007b0c01.pphosted.com [205.220.165.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4643719E7FA;
-	Tue, 15 Apr 2025 01:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744681109; cv=none; b=ghVtBe/DndQ39bckxOLOEZBVJrRXsecQHtK1Vxkp/al+kb5HQmYXgi3FziBz9bf9NP8LaxrIgOrHhuTPqJSffKmZ7ORbJIo0HKT7zoEF9hf4n5dUiWquGtUiZ+KBNvB9QpV6sVGK9f7bCdfJJw/dpcaS9CDpgpXnLEVCMe3E864=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744681109; c=relaxed/simple;
-	bh=D9/copwN8Vi93hcXVQLwm6TV1oCBKCuDxgsjassI+4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PRi+IMK8erC2fD5IW/wm7Rq9wDBY9vexJ2xqWzgt5ioyyryRi1owQRFcBJ5HGJtoeh6ilrNBrQj+r369N668pBqaiR5hYDhyBIezVgYx3bvURsBZXxebRSve7u60lgWEyysw4X9WT9/JzgzwDL8zTA368VOi5bXq7RTvjuVt1yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msD5sJlj; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294DBEEA9;
+	Tue, 15 Apr 2025 01:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744681172; cv=fail; b=OFT9bykcxs1M2+zrcbt8J+TLZ5JZzMvoYGOQYebLepYRC/B2oFlKQbS55UvE0ju5lJa9vFg6lf0uiZ62SHOIcViqSMSyPxWZHvpCMM5yqvsmOCGZr/V9DLbH8DfHtMMUnnKN9bolZq3TDSGyJPx9atCdZJCsZ53LvcaaOEAcv2w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744681172; c=relaxed/simple;
+	bh=Zki7NbayZwnu+/MiPZHEZXxq9/3KKtbm/RnKyT7IGJ8=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=bsu8LZYcPu93TQGLMtELbIGubkqdJKdAlkPZiLqd/NIbGSC/6JNNiYd6zVlycvdwVsXbZaGGfN+k7MXFWb/54zMd4VyOvAAkzVW5iqXP+ss6winaNrbC7pb/G5YFtK68ac/hw1hqhzYLXLKOT6YdZzppZkdgmnInRg1O/WMBs94=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=h4fsnBHi; arc=fail smtp.client-ip=205.220.165.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msD5sJlj"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so4290509f8f.1;
-        Mon, 14 Apr 2025 18:38:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744681105; x=1745285905; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hstID7d8ycIqCdy0S2HoM/NmlIdP9WL4OFhfgrftQOQ=;
-        b=msD5sJljC6I/EtHN9goTu0a7djeRR60OSMmISChLeHmJTw9Y0KJnL8AvVLHalqfarI
-         PKkGy2Ij9fCBteFprt4IEfWqMDZ4lQN2489qO9ZuGUVHCG4A2wkmCdMc0TQojZQ3VRvd
-         BEZc7W6BA3/peO+QG9ysnmYwY8cG+wc5GF9IPSCG6UP3j9MdVercRYLr1UtShV/EVKrE
-         IHaIWG6Ic3J/I6MqvQyQu5u5oxgoNOQh2yYaDI6kkfiYyvzRv4PYs+eWwWmkGLC00qvE
-         sS/ny6qOgQVzKVqnngjCHjtZ7+jK8dZ71TXU6rwhFJw3qxSv4WizCnArvI/AJA2CBvnY
-         e+uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744681105; x=1745285905;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hstID7d8ycIqCdy0S2HoM/NmlIdP9WL4OFhfgrftQOQ=;
-        b=CcfEqANc3tbTf0O2c+jpsFJv0yPAeopSm/clItGdyo8A9BYzqAVJDCJ9Yc7QorPmT7
-         0nh+2GybxBQc/W6fHuTJ3yazJinM4dbTm8n+x87MoeVoyb/hBS5xIM19qKH/02ChvHLj
-         Cuh5aDNZC29jknrwYHVNupnmqN7rhlaBTsQZHXbyF1zHgCtfpW42kEPeDxU3oNdD4MP7
-         OCNR3oXMovsSYD+6cgjG7IORcqiOi+Ngen1E5E6DM62bx3ma6cxX3658bU+z17wgJKTI
-         Guho1p0/sxCUz/absYke+ksnhO1kOMNSOuwXmE/DTwkY0LfoFGv9uKErMFCogIIZM2+V
-         PlYw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5AV1GI4Ha+rltlJgm9CX5//Up2x1MJvNNcYJQ6//lCCSURacegyg6QLw8FpnLbU21xUNKRhLQ4+X0@vger.kernel.org, AJvYcCUxEByZ9/VYp44U44XcxjIr2kMyW12uZVj7vOY491FMAk2rtDCfGH7Z3/7YTm4bWk+i2RtPvstErKC8/nWg@vger.kernel.org, AJvYcCV7E/Rvf0ttQnmtVIiA97ckfEW58Ehtg/jIWDstE0LrFzMo2nPQPAR7KepP8rM1KfLAjvQhI3B6gsko+YkU@vger.kernel.org, AJvYcCVLswzPF+nqt8yuJrX3DRc1Jr5qP+iunQPhr6F+P3gXuimi89eh3gorfztzzTK6PRUlDqo=@vger.kernel.org, AJvYcCVrpRMjxs5cSqz6owxfuN3Ke2I5zk7BzqZxwKR5m52ejECbqBPlukf/vDyUC/abv4h0Aq0kPxSONSw=@vger.kernel.org, AJvYcCW07wT5BBwKwYqQy3PhydDxgXwf8Wym78+GaKiyM+0bMlkqhKQv1pq0NA5hAdnqzoD6CcAzcUnoaQu6CV6mvTOv@vger.kernel.org, AJvYcCWJbNpMghIoHTDImjc1eDIw8LdaE3IJZek/MDNUBvuQiFCMAgyW6N7Mx4+i4azrajflI6hixx4Yp0N4K/k+@vger.kernel.org, AJvYcCXIOom3JmViMNY4HFNymzxGKCo0X+uB57m+daOgmkFqZPU1XNat680+mzEN2VVbjki+akn5QPvAcrzabFHx0w+9t07tIAY+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0goiS4OKwq3dtorXP3jIamJMVdB2nabBFilStG4elw3uzExq3
-	5TPsRbS+JNm39YZHMxy8y4MNO3/1O5YlLCpJHzOzz7j2+VHDIjbZCHfjSHn3Lblal8OhBbsb2LS
-	JLKToUgX7iMhg90yh3vosu63Cn2s=
-X-Gm-Gg: ASbGncuOL7upgNNj/NwoGGubh/LqkfEqRBZDOkGuBYnR4Yc9rBe9f2iwNAQDtohPtSq
-	Hg+Iwe28qY5Nr6AtSlYheItSXhJf/i3kbAlGpwTOs4rVCWnu9ZP7S86G2jH4h8o8YsedoBhfxKa
-	FK6S6bB8kadjlZMHOTlLSBtoKwpnv6NCKG63uZvg==
-X-Google-Smtp-Source: AGHT+IE13LNRwKepLhiR5HgiMZISHCOnuS/exoyNGmTnGn08SGCoosF3MkOhQ4I61FeJBNHAP0KCBKG0KSg/y+VQIDA=
-X-Received: by 2002:a5d:5c84:0:b0:391:2e7:67ff with SMTP id
- ffacd0b85a97d-39ea51f47e0mr10937877f8f.10.1744681105142; Mon, 14 Apr 2025
- 18:38:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="h4fsnBHi"
+Received: from pps.filterd (m0316040.ppops.net [127.0.0.1])
+	by mx0a-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EJTaAU014782;
+	Mon, 14 Apr 2025 20:39:03 -0500
+Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013078.outbound.protection.outlook.com [40.93.1.78])
+	by mx0a-007b0c01.pphosted.com (PPS) with ESMTPS id 460b13u8my-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 20:39:02 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RZvQ3F0Y1MwIYvFWIiUNjCtYBeHXxXRawSOW4QgEjvholi+xHvCnQJMe6PQexMptg/qK5Gn/qxfELV/UMEnO6lwHeDEAJVUqyaZAbervL7VQkJGbCWNrg07SbrefamuOFbBFz8e6zqw61Hb5ikc+f50XImgMB3IM7k8kWVKcEKfBijJc0TGNyol3GIN6e2HApZ0PRs1iPQLZ6OSCEXjLc4IeK4PUFSoAMckW4T7Ncb2WWVXbewwXqouhkRins4uKgOoFKTdnjiavqzD0+NSuUqdoLFyJXIvqbOBDdxfbL1MR44VpJT3hgFXPLanBa35JHXlZxkep69ROxDWPxf9eWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wWepKURXVfNYrrPFCpO9tyM2kltf6fJgiw5xIX+afbE=;
+ b=mZUIq1Tw3i/WUHN+xAswR/21i1m34Dvj5qp/r+YJWiPboSKEM01aWyqoCLEJW8WrXyH9Kvnl8vvSkpnu3xlNbxJq5BDQsYRqkkho8OmYKVKeWnoGnjBTD0xoIp4L3ay76V3JoIlmB+Q2cfaxG8GPmwuYdsg2j3Phg3pY01uBnEULrK0br5iWBVTbp2iAz7qsyB+WFGi+7hEcsHhj7L3JwtSsl0DSwG7xXXr6qD0+xD01/JqxRuJFCncYn+hdJ0zhnbVYnglQyqY9pONgkN/kbRBqt944IsiWPLrwqsq9MZlCcRpipN6o4t8Y5ex9FTGF4hNtKv5ggfq8WyjtEEatZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
+ dkim=pass header.d=cs.wisc.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wWepKURXVfNYrrPFCpO9tyM2kltf6fJgiw5xIX+afbE=;
+ b=h4fsnBHiGQ7l+PXYxlSCQYZygpuZTLT9OMpbG0NSwzdU5d4DUk9W1GtdhxOF1viyWEcFI3h4QbchkN/ZJfwIr/fWIRuGDdjOZ0IJukqyXvSfyWwyxULXmOyCyIvkrYeviiN0U0g+ai55j3nlF6AmkEm0r1n0+qUD6yvLNF9p47lKt9+1UGU8SYofq3/j0PdNL19JqAYOgPya3sbNnDaIyxGd8MWYY0GupPti2y3Za25bmV+b+2NSCO9Gugs0TvQW/E1wnVTCePV5/caJqmIPxTdGOcAGgIVp/RY4S83KncVPS5TlyeH8ueDQXX4H6qaXACJYH2U5DUXqN2L2/y44Ag==
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
+ by SA1PR06MB8420.namprd06.prod.outlook.com (2603:10b6:806:1cf::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Tue, 15 Apr
+ 2025 01:39:01 +0000
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 01:39:00 +0000
+Message-ID: <76ace3c5-2882-4b48-8aba-45480714cc71@cs.wisc.edu>
+Date: Mon, 14 Apr 2025 20:38:58 -0500
+User-Agent: Mozilla Thunderbird
+From: Junxuan Liao <ljx@cs.wisc.edu>
+Subject: [PATCH v3] x86/tracing: introduce enter/exit tracepoint pairs for
+ page faults
+To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1P223CA0044.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:208:5b6::17) To DS7PR06MB6808.namprd06.prod.outlook.com
+ (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com> <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
- <87semdjxcp.fsf@microsoft.com> <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
- <87friajmd5.fsf@microsoft.com>
-In-Reply-To: <87friajmd5.fsf@microsoft.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 14 Apr 2025 18:38:13 -0700
-X-Gm-Features: ATxdqUHye6neCty12upWdoIVJgMpLkd6THftJdEFKQdyUAliYMBWVcY1MoiFP1Q
-Message-ID: <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-To: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Jan Stancek <jstancek@redhat.com>, Neal Gompa <neal@gompa.dev>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	keyrings@vger.kernel.org, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>, 
-	LSM List <linux-security-module@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, 
-	Matteo Croce <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|SA1PR06MB8420:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdab5639-9004-44fa-f577-08dd7bbe4c18
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|41320700013|7416014|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dWI4MVlndzNNK2NnZ09McnNFSW5rWE04Y0RER1dmak1LSDcxRXY0ZEkxUEhm?=
+ =?utf-8?B?ZGhPOVd3WDdxMW16VE5KOFRWMnNBWml5QnF6V1hieTg0YmJpMi9zdWlHK3Zs?=
+ =?utf-8?B?WkkxMDE1UURsMFFOUkdZUXhSbkpwRVEreXNxV1dvcXVMWjZ3UWVZa29pNFIv?=
+ =?utf-8?B?d0dUaDVqNDRUdysxTHpOMUQrYjRvbDRVQS9iaDZuWjlZa1Z0cThUNWZUZmVz?=
+ =?utf-8?B?TGcySS93L2lXVDBWZFZlMzM4dnF6V0VQcnJTaE9HNzIrUk9FUHBoTnNnVENa?=
+ =?utf-8?B?MmkvbkpGM1RlK3RvSVpmZ2RVTFgvNWtETHE3cjMxMmQyM1U1RUJWOTFLYlBK?=
+ =?utf-8?B?Q3hOM0xGSUNWcVp1UVZMc2swL3cvYkh0WGkvS1I3UUJPWUl5L29makxBeDRx?=
+ =?utf-8?B?d0d4WXdzb0Zqa3M1UGpoS2p6NElzbVlYT3lnZElSTU9mMnJOeWNEdU9zc0RB?=
+ =?utf-8?B?Z2krVGpZck96WXpCWCtCRXUxNk1jL3pYRGp3ejEvUUZNN1E2aGxUTXV2UG5n?=
+ =?utf-8?B?WHpmNDdaREJjQkc0MFh5eG5CblIweXdSRkoxUDZVMXRRSXllWmFacTRFdFhZ?=
+ =?utf-8?B?U0RnY3BNNWE0OHBkeWxNTUhZdkpUZmVvK0VYN08ySmpaL0pqYkZqclRyVUFE?=
+ =?utf-8?B?aUF2QldSNU53SmhUcThQclB4K2NlVFg2ajFPM3duL1FlQktsZ0N0QjFDckFs?=
+ =?utf-8?B?OUtQTUxEVGFUYy9GOG9IRXJuMVZJNE0zamM2aXhYZW4veXgwb1FCM3U4N1dL?=
+ =?utf-8?B?dFRKNmpuM3ZsaWdMR2hDVUxEMGJaVXZSamlHWjlVTUUrQzUrOVpFaWMwYmxV?=
+ =?utf-8?B?bTRCbFEySExqdm5KRUVYTG9vazQxLzgwT29Lb0lvcW5DRFhPZW9KaS9NditR?=
+ =?utf-8?B?emRCd05SNTBndXp5ZmlIczF0VlZ1dXR2T2M4T0pzcjFvdWR4c1hKK2Z2SFly?=
+ =?utf-8?B?M2hkcVBWZThoNE9Mdm5JZngzZW5KNC94WlkzWDU5TFJqMXI3TEMrdVVZMGVz?=
+ =?utf-8?B?NTJFNWo2OWhYRnoxaTZQNEh1dzN1VWlDcldneEFiUTlTUUFRdm5aMEF0SFc4?=
+ =?utf-8?B?VmRpVHZjdEM1bGh5LzJwOVl6ZlVPbHFQSkUxRVp3SDlmL3BNSVBwbWNoT2Vl?=
+ =?utf-8?B?OUhYWmtFT3lBYjU4dVpYWWtsQVlUL0hIU1FYRUFvaXRRQ3RpTFdsVVd0Mng2?=
+ =?utf-8?B?ZUpwckNzeVVkdnhzc3l4dVR0REwwczAwNkVJTEIyRjFyR2xkRk9mWGc1dENR?=
+ =?utf-8?B?bDVEd0c2d0ZEUHNDcStKejI2eEg0bng0andwY3crZng0b1hpanhzSXpMT0hr?=
+ =?utf-8?B?WkIrS0RDaU50Qm5MNkVZM3hhTnlXYStTSEdlNndvZjNPNEN4Q3hDaXlqZjhB?=
+ =?utf-8?B?Y2tiM0o5Y3lYeHA1YSt0R1JXSUlsSHlLNmttVXZrSzFDMCt3V01HK2UxTVZk?=
+ =?utf-8?B?YmczdkkzUHg2NWlaa1dkMVlzTHNvN01wMFBaMTFoQVF2SWFTV3N2UEwyMjBP?=
+ =?utf-8?B?NUIvZHdGZlpxcDZZeUdRT3g5T3QwY1JoV1dneFpjV0pqK2pETFI1TUJ2SzY1?=
+ =?utf-8?B?SFh0RHRObTY5NXlscjF4OTVYaE1Pcy9PY29jYnpMc0JyMWJJK0YyZW1uZGcw?=
+ =?utf-8?B?VkMwTXlseDZibUhwM1VaN1RDY0YyRFVwTjFJVVNRWWdZZ1VmanBlczd4UTNU?=
+ =?utf-8?B?WW5RSVlCbmhscGthNC80Sk9yc1BwSDNvbDVkK1I0Rk53aGlIbnhCdE9pS1Bv?=
+ =?utf-8?B?dVJlTEFrUk5iMzNyMjZhUmNTVnNHcU0wVm1wUldGd2JOWWdnMmlSeDFTU2tp?=
+ =?utf-8?B?RWlCTDVVRStrM1ByR1pLK0oyUUhOZURoMkF2OEJsTFMzVk5VM2NSOTZlTTc4?=
+ =?utf-8?B?dytzZWlLQVEwa0NmaklLdUdCUGhYNHdybDQrWE1ycFdMOUhaQThUcDl5VE5L?=
+ =?utf-8?Q?S7oBeFqKzbk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?LzdIMlFFTEpBTXJlekkvajFEd0JjSm5IblRsWHI3ZEpYYWE1YnhaUVI5OTlS?=
+ =?utf-8?B?VXltWmFuZVJnNWJqRHY1aytZZEpHZU52N3RLQ25lbDJPRncrdHhLa2JrQW8z?=
+ =?utf-8?B?VkZpWW5LMU82NWNDVDMvZzAva005N2lvMjFLa2ZkVHdIcXFmd0hVMm5IdFNR?=
+ =?utf-8?B?NDNyWG4xYmJ6NWdzZUVVeDhSTzFkQUs5UTJKUUFpcDNmdUlRMUNQU2tHRUdM?=
+ =?utf-8?B?M1IzNGtJQ0ppajI5a1dGcWxDcEZGaXZHVkR0RUtFY29hbkZtWE5XektCdDZw?=
+ =?utf-8?B?SnlPR1lESjJ2MU5wcW1qUzYrVWNZdi85d1o5R3dZY1ZYRTlHdGpVMXl5RG4y?=
+ =?utf-8?B?SXBaNkRkcGw0MjFEV0duK2VndjFKY1N1d0Y3d0Z1NUM0RmtLSXkrd1BwSnBL?=
+ =?utf-8?B?ZC9qNThHMU1uRjZzazRmTTlXVzhDNERhNUhzUEZhZko3bkcwRlFKanNPY2sx?=
+ =?utf-8?B?aXJGRTdpS1JZVlFTTm45bC92YjFQaUs2UW1hVFlXK0IvUG9EdDhHeTM4bzVO?=
+ =?utf-8?B?eFRsLzMvVkZKSERaUHo0MmFGZklaZ2R0QkhTV2Fma05tdjJkU1pyYlROZ29n?=
+ =?utf-8?B?RnAyVk1GTEJhU3N6OURhRzZLdHpGclFxVy9aSzQxaGYyNzd1cmVweWtxM29I?=
+ =?utf-8?B?MmZuSlJpUVpobUJvTHZUQVNFZnVxWm9MN2Zhc2owcS9oamNQWDYydG14T2pv?=
+ =?utf-8?B?TG8zZjlMSTdrSm55VDY1VDFBdHRDV2E1WE41V2ZtZU5saXV2a0h5ME9qT21K?=
+ =?utf-8?B?emVHdXdWc2lJRzNhUGVXd0UvL2hXVXYrRmpnczQ0eXdkZHV6clFoRGZESUVL?=
+ =?utf-8?B?d29YSFJScXk2a0xlY3c5N29GaVVsVHRILzNuem5JTTUrRGwrS3JsZlBtMUJI?=
+ =?utf-8?B?YkgrNXc0dERNRjRQVlZOejhSMFlHLzhMYWZFZTF4REZKU01MVWI2eVZmY0JL?=
+ =?utf-8?B?K2NqQWVkdU5PZ2pybFlmZ2ZHZ3FiVWQvZ2RDVlo1dWJGMDFJSXJYcVNnVnMx?=
+ =?utf-8?B?MysrWDVIREZoY2haZzI0K3g3b1lpZ0hDR1JCakVrdjYvYmNvdkEyTXRVZ2Nq?=
+ =?utf-8?B?QUMyTlhzSDExTWY1WkdCTWplOHg4Wlpxb2pCM3U3WkZCcHRET21Eb0dSdHhx?=
+ =?utf-8?B?dHQvcldjc0pJTnVTeldGaWYwSkwwSWpoSUNoZytmMFRDSHFCeG9CaUNsajBp?=
+ =?utf-8?B?Sll0S0dTSVdXQm5rZVJVWWNwWmRKNG5RNHJGOERFVlpEeWVhdUQrVGorZmVl?=
+ =?utf-8?B?amRoTVQ4OWw5eWk2N2MrOXRmazF2QWpNdGYzSEkyb2FJNHVwK3JtTEdXVmVh?=
+ =?utf-8?B?K0xkNjFZRjdHdThNdnJwUEdob1lSSXQvV3dybGhwbXFFZW5uNEZ0WFdacnhr?=
+ =?utf-8?B?RjB2amJuRFZ2MGJmRW54QTEwemc2TmR1dG81N052MVF5elJUekxDMUtGMXJt?=
+ =?utf-8?B?RnZvS0x5WWZDWndVV2xrZ3JzS3hKalVCaENQTXFvbU5ZS3FucG05WHhaSE92?=
+ =?utf-8?B?QnBsNGVTQ0cwdU1tV2lObXFlb2o1aUJrbjRPZDVqcVJMSW4vS3JGK0lmV3R0?=
+ =?utf-8?B?MHJ2eFRJRFBoK1dmWERZckdoNGRHbzhjV3pMTWVDcUFHY2VWTXFTeWZSaU85?=
+ =?utf-8?B?RVRQaXZsQkhoc2FkU29ONnBjK1ZzWjRYNXdsTit4ZU5HaVNPUkY0UG91RkNo?=
+ =?utf-8?B?OEprcXhTbzVyN0hUUEY2d3NRUWxQOCtqMmtnMVh0TTNUVzRWdk9QanFlbjNq?=
+ =?utf-8?B?dDQrNTVwb1pwU2ZRazgzeWZsQnR5aWIrY3NXSXFCQmxSUHIxa0cyQ2E5aVBV?=
+ =?utf-8?B?bHJTdnJidENaaHFMOWNBQXBpdXRicng2UXk3bmpmRlU3ay9WMXdwZGNTai9F?=
+ =?utf-8?B?Mit1RlcvS2o1dzhPQmVQQXZGbTJCbG9jUkYvRnZ5YWRiMDQzQjBmSDl1R09E?=
+ =?utf-8?B?TVRkZ1NORUY3WFVpNHE3M2pET1NRYjllZTdlL2s3cEUyQ0M3ZnNaODJuR1FL?=
+ =?utf-8?B?NVk2N1p5Q0g0eTRoUllpL0xmcHRpTFpoT0hPcUhuenUzUVpiWlZSM2lHcHp2?=
+ =?utf-8?B?dUZnRFQ5dDNxKzRyUlFKK0tZVmVVMi9wZ1lFOTl6cXlCcGIrZmNJdlkxT1hH?=
+ =?utf-8?Q?uQYT+GLQ600iVI4tvHRwPByHI?=
+X-OriginatorOrg: cs.wisc.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdab5639-9004-44fa-f577-08dd7bbe4c18
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 01:39:00.8767
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oXT5B66KaiqrD41n/5K3Mb2VYHDNSfpi1M6WYk1sffsdpRj2zF1IVYZcb0hcIHQ7K3bJRM0VtHY4hCMWdGGXig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR06MB8420
+X-Proofpoint-ORIG-GUID: 2_5P-a37wzg9jcTAjPfgxR0UMHOaC6dL
+X-Authority-Analysis: v=2.4 cv=R4QDGcRX c=1 sm=1 tr=0 ts=67fdb8b6 cx=c_pps a=l9cCpZ6fIogKje1+qubiRw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=VwQbUJbxAAAA:8 a=x30EXVXcAAAA:8 a=Vjf5HUuonJV36XDs38UA:9 a=QEXdDO2ut3YA:10 a=yI8jHdU-MAB4nH2QTHtW:22
+X-Proofpoint-GUID: 2_5P-a37wzg9jcTAjPfgxR0UMHOaC6dL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1015 priorityscore=1501
+ phishscore=0 mlxlogscore=916 suspectscore=0 impostorscore=0 spamscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150007
 
-On Mon, Apr 14, 2025 at 5:32=E2=80=AFPM Blaise Boscaccy
-<bboscaccy@linux.microsoft.com> wrote:
->
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->
-> > On Sat, Apr 12, 2025 at 6:58=E2=80=AFAM Blaise Boscaccy
-> > <bboscaccy@linux.microsoft.com> wrote:
-> >>
-> >> TAlexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> >>
-> >> > On Fri, Apr 4, 2025 at 2:56=E2=80=AFPM Blaise Boscaccy
-> >> > <bboscaccy@linux.microsoft.com> wrote:
-> >> >> +
-> >> >> +static int hornet_find_maps(struct bpf_prog *prog, struct hornet_m=
-aps *maps)
-> >> >> +{
-> >> >> +       struct bpf_insn *insn =3D prog->insnsi;
-> >> >> +       int insn_cnt =3D prog->len;
-> >> >> +       int i;
-> >> >> +       int err;
-> >> >> +
-> >> >> +       for (i =3D 0; i < insn_cnt; i++, insn++) {
-> >> >> +               if (insn[0].code =3D=3D (BPF_LD | BPF_IMM | BPF_DW)=
-) {
-> >> >> +                       switch (insn[0].src_reg) {
-> >> >> +                       case BPF_PSEUDO_MAP_IDX_VALUE:
-> >> >> +                       case BPF_PSEUDO_MAP_IDX:
-> >> >> +                               err =3D add_used_map(maps, insn[0].=
-imm);
-> >> >> +                               if (err < 0)
-> >> >> +                                       return err;
-> >> >> +                               break;
-> >> >> +                       default:
-> >> >> +                               break;
-> >> >> +                       }
-> >> >> +               }
-> >> >> +       }
-> >> >
-> >> > ...
-> >> >
-> >> >> +               if (!map->frozen) {
-> >> >> +                       attr.map_fd =3D fd;
-> >> >> +                       err =3D kern_sys_bpf(BPF_MAP_FREEZE, &attr,=
- sizeof(attr));
-> >> >
-> >> > Sorry for the delay. Still swamped after conferences and the merge w=
-indow.
-> >> >
-> >>
-> >> No worries.
-> >>
-> >> > Above are serious layering violations.
-> >> > LSMs should not be looking that deep into bpf instructions.
-> >>
-> >> These aren't BPF internals; this is data passed in from
-> >> userspace. Inspecting userspace function inputs is definitely within t=
-he
-> >> purview of an LSM.
-> >>
-> >> Lskel signature verification doesn't actually need a full disassembly,
-> >> but it does need all the maps used by the lskel. Due to API design
-> >> choices, this unfortunately requires disassembling the program to see
-> >> which array indexes are being used.
-> >>
-> >> > Calling into sys_bpf from LSM is plain nack.
-> >> >
-> >>
-> >> kern_sys_bpf is an EXPORT_SYMBOL, which means that it should be callab=
-le
-> >> from a module.
-> >
-> > It's a leftover.
-> > kern_sys_bpf() is not something that arbitrary kernel
-> > modules should call.
-> > It was added to work for cases where kernel modules
-> > carry their own lskels.
-> > That use case is gone, so EXPORT_SYMBOL will be removed.
-> >
->
-> I'm not following that at all. You recommended using module-based lskels
-> to get around code signing requirements at lsfmmbpf and now you want to
-> nuke that entire feature? And further, skel_internal will no longer be
-> usable from within the kernel and bpf_preload is no longer going to be
-> supported?
+Merge page_fault_{user,kernel}, rename it page_fault_enter, and add
+page_fault_exit. This pair is useful for measuring page fault handling
+latencies.
 
-It was exported to modules to run lskel-s from modules.
-It's bpf internal api, but seeing how you want to abuse it
-the feature has to go. Sadly.
+Add a new field to the merged tracepoints to indicate whether the page
+fault happened in userspace. We no longer need the static key associated,
+since it was used just to avoid checking user_mode when the tracepoints
+were disabled.
 
-> >> Lskels without frozen maps are vulnerable to a TOCTOU
-> >> attack from a sufficiently privileged user. Lskels currently pass
-> >> unfrozen maps into the kernel, and there is nothing stopping someone
-> >> from modifying them between BPF_PROG_LOAD and BPF_PROG_RUN.
-> >>
-> >> > The verification of module signatures is a job of the module loading=
- process.
-> >> > The same thing should be done by the bpf system.
-> >> > The signature needs to be passed into sys_bpf syscall
-> >> > as a part of BPF_PROG_LOAD command.
-> >> > It probably should be two new fields in union bpf_attr
-> >> > (signature and length),
-> >> > and the whole thing should be processed as part of the loading
-> >> > with human readable error reported back through the verifier log
-> >> > in case of signature mismatch, etc.
-> >> >
-> >>
-> >> I don't necessarily disagree, but my main concern with this is that
-> >> previous code signing patchsets seem to get gaslit or have the goalpos=
-ts
-> >> moved until they die or are abandoned.
-> >
-> > Previous attempts to add signing failed because
-> > 1. It's a difficult problem to solve
-> > 2. people only cared about their own narrow use case and not
-> > considering the needs of bpf ecosystem as a whole.
-> >
-> >> Are you saying that at this point, you would be amenable to an in-tree
-> >> set of patches that enforce signature verification of lskels during
-> >> BPF_PROG_LOAD that live in syscall.c,
-> >
-> > that's the only way to do it.
-> >
->
-> So the notion of forcing people into writing bpf-based gatekeeper program=
-s
-> is being abandoned? e.g.
->
-> https://lore.kernel.org/bpf/bqxgv2tqk3hp3q3lcdqsw27btmlwqfkhyg6kohsw7lwdg=
-beol7@nkbxnrhpn7qr/#t
-> https://lore.kernel.org/bpf/61aae2da8c7b0_68de0208dd@john.notmuch/
+Signed-off-by: Junxuan Liao <ljx@cs.wisc.edu>
+Link: https://lore.kernel.org/9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu
+---
+v1 -> v2:
+Merge the user and kerenl tracepoints. Remove the static keys.
+v2 -> v3:
+Added back trace.o. Sorry that I accidentally deleted that in v2.
 
-Not abandoned.
-bpf-based tuning of load conditions is still necessary.
-The bpf_prog_load command will check the signature only.
-It won't start rejecting progs that don't have a signature.
-For that a one liner bpf-lsm or C-based lsm would be needed
-to address your dont-trust-root use case.
+ arch/x86/include/asm/trace/common.h      | 12 ------------
+ arch/x86/include/asm/trace/exceptions.h  | 15 +++++++--------
+ arch/x86/include/asm/trace/irq_vectors.h |  1 -
+ arch/x86/kernel/Makefile                 |  1 -
+ arch/x86/kernel/tracepoint.c             | 21 ---------------------
+ arch/x86/mm/fault.c                      | 16 ++--------------
+ 6 files changed, 9 insertions(+), 57 deletions(-)
+ delete mode 100644 arch/x86/include/asm/trace/common.h
+ delete mode 100644 arch/x86/kernel/tracepoint.c
 
->
-> >> without adding extra non-code
-> >> signing requirements like attachment point verification, completely
-> >> eBPF-based solutions, or rich eBPF-based program run-time policy
-> >> enforcement?
-> >
-> > Those are secondary considerations that should also be discussed.
-> > Not necessarily a blocker.
->
-> Again, I'm confused here since you recently stated this whole thing
-> was "questionable" without attachment point verification.
+diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/trace/common.h
+deleted file mode 100644
+index f0f9bcdb74d9..000000000000
+--- a/arch/x86/include/asm/trace/common.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-#ifndef _ASM_TRACE_COMMON_H
+-#define _ASM_TRACE_COMMON_H
+-
+-#ifdef CONFIG_TRACING
+-DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
+-#define trace_pagefault_enabled()			\
+-	static_branch_unlikely(&trace_pagefault_key)
+-#else
+-static inline bool trace_pagefault_enabled(void) { return false; }
+-#endif
+-
+-#endif
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm/trace/exceptions.h
+index 6b1e87194809..f98c9024cbe3 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/arch/x86/include/asm/trace/exceptions.h
+@@ -6,10 +6,6 @@
+ #define _TRACE_PAGE_FAULT_H
+ 
+ #include <linux/tracepoint.h>
+-#include <asm/trace/common.h>
+-
+-extern int trace_pagefault_reg(void);
+-extern void trace_pagefault_unreg(void);
+ 
+ DECLARE_EVENT_CLASS(x86_exceptions,
+ 
+@@ -21,17 +17,20 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 	TP_STRUCT__entry(
+ 		__field(		unsigned long, address	)
+ 		__field(		unsigned long, ip	)
++		__field(		bool         , user_mode)
+ 		__field(		unsigned long, error_code )
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->address = address;
+ 		__entry->ip = regs->ip;
++		__entry->user_mode = user_mode(regs);
+ 		__entry->error_code = error_code;
+ 	),
+ 
+-	TP_printk("address=%ps ip=%ps error_code=0x%lx",
++	TP_printk("address=%ps ip=%ps %s error_code=0x%lx",
+ 		  (void *)__entry->address, (void *)__entry->ip,
++		  __entry->user_mode ? "user" : "kernel",
+ 		  __entry->error_code) );
+ 
+ #define DEFINE_PAGE_FAULT_EVENT(name)				\
+@@ -39,10 +38,10 @@ DEFINE_EVENT_FN(x86_exceptions, name,				\
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
+ 		 unsigned long error_code),			\
+ 	TP_ARGS(address, regs, error_code),			\
+-	trace_pagefault_reg, trace_pagefault_unreg);
++	NULL, NULL)
+ 
+-DEFINE_PAGE_FAULT_EVENT(page_fault_user);
+-DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
++DEFINE_PAGE_FAULT_EVENT(page_fault_enter);
++DEFINE_PAGE_FAULT_EVENT(page_fault_exit);
+ 
+ #undef TRACE_INCLUDE_PATH
+ #undef TRACE_INCLUDE_FILE
+diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/asm/trace/irq_vectors.h
+index 88e7f0f3bf62..7408bebdfde0 100644
+--- a/arch/x86/include/asm/trace/irq_vectors.h
++++ b/arch/x86/include/asm/trace/irq_vectors.h
+@@ -6,7 +6,6 @@
+ #define _TRACE_IRQ_VECTORS_H
+ 
+ #include <linux/tracepoint.h>
+-#include <asm/trace/common.h>
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index b43eb7e384eb..e8e33ec684ba 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -139,7 +139,6 @@ obj-$(CONFIG_OF)			+= devicetree.o
+ obj-$(CONFIG_UPROBES)			+= uprobes.o
+ 
+ obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
+-obj-$(CONFIG_TRACING)			+= tracepoint.o
+ obj-$(CONFIG_SCHED_MC_PRIO)		+= itmt.o
+ obj-$(CONFIG_X86_UMIP)			+= umip.o
+ 
+diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
+deleted file mode 100644
+index 03ae1caaa878..000000000000
+--- a/arch/x86/kernel/tracepoint.c
++++ /dev/null
+@@ -1,21 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (C) 2013 Seiji Aguchi <seiji.aguchi@hds.com>
+- */
+-#include <linux/jump_label.h>
+-#include <linux/atomic.h>
+-
+-#include <asm/trace/exceptions.h>
+-
+-DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
+-
+-int trace_pagefault_reg(void)
+-{
+-	static_branch_inc(&trace_pagefault_key);
+-	return 0;
+-}
+-
+-void trace_pagefault_unreg(void)
+-{
+-	static_branch_dec(&trace_pagefault_key);
+-}
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294142c8..eda312707fde 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1451,24 +1451,10 @@ void do_user_addr_fault(struct pt_regs *regs,
+ }
+ NOKPROBE_SYMBOL(do_user_addr_fault);
+ 
+-static __always_inline void
+-trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
+-			 unsigned long address)
+-{
+-	if (!trace_pagefault_enabled())
+-		return;
+-
+-	if (user_mode(regs))
+-		trace_page_fault_user(address, regs, error_code);
+-	else
+-		trace_page_fault_kernel(address, regs, error_code);
+-}
+-
+ static __always_inline void
+ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 			      unsigned long address)
+ {
+-	trace_page_fault_entries(regs, error_code, address);
+ 
+ 	if (unlikely(kmmio_fault(regs, address)))
+ 		return;
+@@ -1535,7 +1521,9 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
+ 	state = irqentry_enter(regs);
+ 
+ 	instrumentation_begin();
++	trace_page_fault_enter(address, regs, error_code);
+ 	handle_page_fault(regs, error_code, address);
++	trace_page_fault_exit(address, regs, error_code);
+ 	instrumentation_end();
+ 
+ 	irqentry_exit(regs, state);
+-- 
+2.48.1
 
-Correct.
-For fentry prog type the attachment point is checked during the load,
-but for tracepoints it's not, and anyone who is claiming that
-their system is secure because the tracepoint prog was signed
-is simply clueless in how bpf works.
