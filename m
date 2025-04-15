@@ -1,70 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FE9535D8;
-	Tue, 15 Apr 2025 19:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744590; cv=none; b=rzdeG8Db8devIEXYOUTAMQBzXsJC0GXXxjqLjV1tP2MzrRMh8Qg5TK5wGwoZiZma74nD0oLGRswN20oXZLvra9LK/eiVJeAwG5JmTwMNVnAHH4L8mitLBPqu7vYilxN1N4iFd14gKJcsj7AjxsclL5HECeAuC2xMgRz3LAcg14g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FD62215F49
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744744590; cv=pass; b=fIRRMW4p0WJ0A1rE6f+tk4u+0yXjfAj0ifYMw1YQlreM6PuBoejnGdrip/PiSa/En0U6KS9CH7VfFdYRNUhdtt97pKrGWgW8USrnDBKF8HPZn7wJvMiu67qHquAQfsfCIBf9HLjH2mUxsj0LjTthxFjSQHnR39ad9ZFWfyurr60=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744744590; c=relaxed/simple;
-	bh=q7ozO8AZtsyES6546d6+JPlRvMPy6bWzEQ9v3E+B2Jg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dkXYiXD+jlkOFdbpMHVjdFI+7bjFb5GaAjaRPWYBDNgpYjl73RC589wxfk8T107jscMZL3kPHkiMkGOGD1ntJ40INuUOt6Jm7F+AQvYTdxIPd/E0GUKhvqThp7fMNifjyThVcKJsreRceiYPKDpHmWGMXRXsVscTObTZ1L7KRU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qxs4CJph; arc=none smtp.client-ip=10.30.226.201
+	bh=9KAqtDPme9N8FAaqoDPP5lpJhcn8UC/5jE9Kcq5ylvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ovmf4GV7oEVdFMx4x8AuSDka8x9LtF33HwHHKZeOGIYr2HQzyZVm35eIDUOh+g/D6DCkh6nb3qi0dl2E7QGa5ERbtirbsHO13VJd8qK4/BvdeI4g1UirIk26rxr6TSfQTcFsEvCdike1//RQsSzN+SQHYAtjrSG5bZ4RohTYgv0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=c3MPuJj7; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qxs4CJph"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E235BC4CEE7;
-	Tue, 15 Apr 2025 19:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744744589;
-	bh=q7ozO8AZtsyES6546d6+JPlRvMPy6bWzEQ9v3E+B2Jg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qxs4CJph4YyB1BLqyCZ8SCCCqAsp+7bXOKj2nJbUy1AXOzyuvfbcVDY4ZvgMZqeAz
-	 U2QN80CU47LSQTzPk7ofkvpDucTEUj5elTFPuoa19Huw9ghWfWwIEFDjNfVgkJUcBj
-	 DgSemh4ysSbCpzwEtkpUne7Llsos0P/boaFcAU6qjN/dofVQIKBZxq3d7s3ZENqnub
-	 0CCnNrQ1DXLuvuLwNgsVI82ic7QyH9bF9NTtwrtAzMBulGu8W0y6+sL+Lh9ILG16T3
-	 /jYT3WPsUgWd8XNb8CrTfsW8rRkfm7HeEwerxU3WujAR0O3b1JIryLiTI7xnWFZooC
-	 cW1mHxoRd/tqA==
-Date: Tue, 15 Apr 2025 14:16:27 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: krzk+dt@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, sboyd@kernel.org,
-	magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org,
-	conor+dt@kernel.org, geert+renesas@glider.be
-Subject: Re: [PATCH 6/7] dt-bindings: clock: rzg2l-cpg: Drop power domain IDs
-Message-ID: <174474458585.827869.1606862651418663689.robh@kernel.org>
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
- <20250410140628.4124896-7-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="c3MPuJj7"
+ARC-Seal: i=1; a=rsa-sha256; t=1744744569; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jIx/hQPlI9naOuEN2w9nWt+sDRe1p00O1CoGQjnuDL8Ny+FL2Em0Ds+ih8259Io+jN3TSxkz9EoTZNmWktFH1bjGVd/3hJ44UGqnwM6HA24DuJmxGte8rSIYN4k2CzesqZ5sIk/vBN5+b1268Gmr3y1kDOEQ/AH34HhhBh2B8H4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744744569; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=RB+6VwPlFco2XShowQzQ5YIEKg1jbjAFPOl51DJy2gg=; 
+	b=hiE2MLjNPOp97s0zKffOAUKTRfCwlSMpqEEaV/LRUFl9O97YZ+cHDsDuspmf12sEqZEhGVIFzBuyGJEfzqNjMYbzE1QBSOY+mHfSEMfHwygxIb0b4I59UM6fHS7z7ETio73jm/XWkkoOhuvwDXIE5O5QB+mXZzvPyGqeTxBWttY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744744569;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=RB+6VwPlFco2XShowQzQ5YIEKg1jbjAFPOl51DJy2gg=;
+	b=c3MPuJj7ZeFz7P8jLMHVsNc3WsaRIJoZgBl5ntl5j7jspr8jBVpFgcERMJ3Lb/1C
+	Iv7hIiDZf8I4RZ8s54gUzAoozLfs8uf+GGUrMBPmoVZxxJsWNbPSssw7CzIpQ+MagTI
+	e84Ax4swon1c9xCYJNaxOFdxBCz8GJDfW6lXciUQ=
+Received: by mx.zohomail.com with SMTPS id 1744744567531821.8147122118951;
+	Tue, 15 Apr 2025 12:16:07 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v8 0/4] Panthor BO tagging and GEMS debug display
+Date: Tue, 15 Apr 2025 20:15:34 +0100
+Message-ID: <20250415191539.55258-5-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250415191539.55258-1-adrian.larumbe@collabora.com>
+References: <20250415191539.55258-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410140628.4124896-7-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+This patch series is aimed at providing UM with detailed memory profiling
+information in debug builds. It is achieved through a device-wide list of
+DRM GEM objects, and also implementing the ability to label BO's from UM
+through a new IOCTL.
 
-On Thu, 10 Apr 2025 17:06:27 +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Since the configuration order between the individual MSTOP and CLKON bits
-> cannot be preserved with the power domain abstraction, drop the power
-> domain IDs. The corresponding code has also been removed. Currently, there
-> are no device tree users for these IDs.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->  include/dt-bindings/clock/r9a07g043-cpg.h | 53 -----------------
->  include/dt-bindings/clock/r9a07g044-cpg.h | 58 ------------------
->  include/dt-bindings/clock/r9a07g054-cpg.h | 58 ------------------
->  include/dt-bindings/clock/r9a08g045-cpg.h | 71 -----------------------
->  4 files changed, 240 deletions(-)
-> 
+The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
+To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
+To test this functionality from UM, please refer to this Mesa patch series:
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Discussion of previous revision of this patch series can be found at:
+https://lore.kernel.org/dri-devel/20250411150357.3308921-1-adrian.larumbe@collabora.com/
 
+Changelog:
+v8:
+ - Renamed NULL to NUL in comments describing NUL-terminated strings
+ - Removed 'size' parameter from labelling ioctl() as max length can be
+   handled by the kernel itself
+ - Made sure to use kfree_const() everywhere labels are freed
+ - Replaced maximum label size with numerical constant rather than page size
+ - Added some warnings and checks in kernel BO labelling function
+
+v7:
+ - Improved formating of DebugFS GEM's status and usage flags
+ - Deleted some spurious white spaces
+ - Renamed usage flags setting function
+
+v6:
+ - Replaced some mutex calls with scoped guards
+ - Documented data size limits in the label ioctl
+ - Simplified GEMS status flags treatment (Panthor doesn't use madvise)
+ - Fixed some array size and string bugs
+ - Improved the naming of GEM status and usage flags to reflect their meaning
+ - Improved the formatting of the output table
+
+v5:
+ - Kept case and naming of kernel BO's consistent
+ - Increased the driver minor after new ioctl
+ - Now adds BO to debugfs GEMs list at GEM object creation time
+ - No longer try to hide BO creator's name when it's a workqueue or modprobe
+ - Reworked the procedure for printing GEM state and kernel BO flags
+ - Turned kernel BO flags and GEM state flags into bit enums
+ - Wait until BO state is marked as initialied for debugfs display
+
+v4:
+ - Labelled all kernel BO's, not just heap chunks.
+ - Refactored DebugGFs GEMs list handling functions
+ - Added debugfs GEMS node mask to tell different kinds of BO's
+
+Adrián Larumbe (4):
+  drm/panthor: Introduce BO labeling
+  drm/panthor: Add driver IOCTL for setting BO labels
+  drm/panthor: Label all kernel BO's
+  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
+
+ drivers/gpu/drm/panthor/panthor_device.c |   5 +
+ drivers/gpu/drm/panthor/panthor_device.h |  11 ++
+ drivers/gpu/drm/panthor/panthor_drv.c    |  90 ++++++++-
+ drivers/gpu/drm/panthor/panthor_fw.c     |   8 +-
+ drivers/gpu/drm/panthor/panthor_gem.c    | 233 ++++++++++++++++++++++-
+ drivers/gpu/drm/panthor/panthor_gem.h    |  80 +++++++-
+ drivers/gpu/drm/panthor/panthor_heap.c   |   6 +-
+ drivers/gpu/drm/panthor/panthor_sched.c  |   9 +-
+ include/uapi/drm/panthor_drm.h           |  20 ++
+ 9 files changed, 451 insertions(+), 11 deletions(-)
+
+--
+2.48.1
