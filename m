@@ -1,213 +1,209 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A267187FFA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4933ADDDC;
+	Tue, 15 Apr 2025 17:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738110; cv=none; b=ezx6T5LVyEzyD262KcpfyZxaZwBtvy/T6HBKkz/gn0aBr4UAd/Z0aOjJD8t7coUdtE4kTnqneAFhoXgSNaTrA8K5osmcpGfICWjDA7XgOhBB9HAuKqw/Js65GQ+vKJeKpHKNMFPxMAaLavYJd+5NK3WJtxzLH43KIewn4+r8gXs=
+	t=1744738136; cv=none; b=YIucuDFIAjJja9n1Juwctr2HfR3hQGiKlD2fD9b28B+8z1C9Td7M7ImN2JuIDPXPqu6SVCav9r97ip87Cygk8syyqOUbPDnEMITThU5Ngh4JBghvxxgw6TxiA9/vmlyTBu05QAAeFsqmzp/F6tVg8CUTBej0HOCfal6r05PZqGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738110; c=relaxed/simple;
-	bh=AgXNR95/FkRg7nCY0Lj/aP24VMk2hSg+BqBqlDw7QZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F4vyX+z0Kk03hhJLw6W10uzSZ+zrMGlRM8QFV5CMLBbQFXoAE2cftbObr8oTkjEyzuIGPl05Oadc+8okVwQm3wns/utyPlBknBDNEScbXGJWU/apNq8SAUMr8FVWxbUoB7vl8SjHdxkjc1da4Zc2f972gUlfvNZuFfzOgEzKhZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E85C115A1;
-	Tue, 15 Apr 2025 10:28:16 -0700 (PDT)
-Received: from [10.57.86.225] (unknown [10.57.86.225])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5E83F59E;
-	Tue, 15 Apr 2025 10:28:16 -0700 (PDT)
-Message-ID: <19d2b1c6-ef45-49f5-b11b-a57adc522852@arm.com>
-Date: Tue, 15 Apr 2025 18:28:14 +0100
+	s=arc-20240116; t=1744738136; c=relaxed/simple;
+	bh=mEOz3O2WBIS6uD6OUFNzsZVjS3wbFaOZ1bsRQQQMqgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oyMIZkBFib1mEcmb1ZnzkDdR6GozWGUyHZAfFylhLNkqR8EN0HZU+PRoLVoT7X2hwld6Fx6gjXiQBnPn59P6Cwwkm1hZ5PmwIBOLRYPADGWvgmKA+m4GxWU9Tviznq5w/pjN/f/Mi3JHP2xXmm8kLcythB6h3tJzscfyvyV/KbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NmbL0pQW; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NmbL0pQW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744738134; x=1776274134;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mEOz3O2WBIS6uD6OUFNzsZVjS3wbFaOZ1bsRQQQMqgE=;
+  b=NmbL0pQWRLlslI/9rvMNoPnBwIesDjaeGltMGJYzbQ6UyCjZkMx6vuyj
+   KnmgOZ4zXPRLG1M+4r0xP8qLQdBmkBH9osLhf1nXl3DbuMDd+1JkOEt3O
+   33HJDeJ5mHo10fP8kpvJZ/oFOoIc/NeYh4XnNhZIO3gd4ToQgwGrH9jmk
+   ahD/X2eebdHd09AtXsBYs+2hQzIG6mgavP9qq6nmpeM2Nw+UKVnOvzhPQ
+   IwqliR692Ovl7DG38sFLv/xHqwkZ6NDl40llTHHhLxsJufqBCI1cwRsRx
+   AE14zBLJYKyqSCZSvHCc3UzaUKbmxhBUL9XTRWt4rjvwsG80Lj6JLe2oz
+   w==;
+X-CSE-ConnectionGUID: vf6cWw+jTieB8bDDxnRINg==
+X-CSE-MsgGUID: wMgce0rOSuCefffQgEiQwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46275576"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46275576"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 10:28:54 -0700
+X-CSE-ConnectionGUID: DK52L1QkRu6Ac8/cs2VS5w==
+X-CSE-MsgGUID: NCcMP3k9Rz6bis6wLogFrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130729626"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa010.fm.intel.com with ESMTP; 15 Apr 2025 10:28:49 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michal Kubiak <michal.kubiak@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH iwl-next 00/16] libeth: add libeth_xdp helper lib
+Date: Tue, 15 Apr 2025 19:28:09 +0200
+Message-ID: <20250415172825.3731091-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] arm64/mm: Batch barriers when updating kernel
- mappings
-Content-Language: en-GB
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>, Pasha Tatashin
- <pasha.tatashin@soleen.com>, Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>,
- Kevin Brodsky <kevin.brodsky@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250304150444.3788920-1-ryan.roberts@arm.com>
- <20250304150444.3788920-12-ryan.roberts@arm.com> <Z_1IC-_Fp-yGLRSc@arm.com>
- <aabc9fb1-4e74-409a-b25b-8e844e65c502@arm.com> <Z_46QUFXVI69zRZR@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <Z_46QUFXVI69zRZR@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15/04/2025 11:51, Catalin Marinas wrote:
-> On Mon, Apr 14, 2025 at 07:28:46PM +0100, Ryan Roberts wrote:
->> On 14/04/2025 18:38, Catalin Marinas wrote:
->>> On Tue, Mar 04, 2025 at 03:04:41PM +0000, Ryan Roberts wrote:
->>>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->>>> index 1898c3069c43..149df945c1ab 100644
->>>> --- a/arch/arm64/include/asm/pgtable.h
->>>> +++ b/arch/arm64/include/asm/pgtable.h
->>>> @@ -40,6 +40,55 @@
->>>>  #include <linux/sched.h>
->>>>  #include <linux/page_table_check.h>
->>>>  
->>>> +static inline void emit_pte_barriers(void)
->>>> +{
->>>> +	/*
->>>> +	 * These barriers are emitted under certain conditions after a pte entry
->>>> +	 * was modified (see e.g. __set_pte_complete()). The dsb makes the store
->>>> +	 * visible to the table walker. The isb ensures that any previous
->>>> +	 * speculative "invalid translation" marker that is in the CPU's
->>>> +	 * pipeline gets cleared, so that any access to that address after
->>>> +	 * setting the pte to valid won't cause a spurious fault. If the thread
->>>> +	 * gets preempted after storing to the pgtable but before emitting these
->>>> +	 * barriers, __switch_to() emits a dsb which ensure the walker gets to
->>>> +	 * see the store. There is no guarrantee of an isb being issued though.
->>>> +	 * This is safe because it will still get issued (albeit on a
->>>> +	 * potentially different CPU) when the thread starts running again,
->>>> +	 * before any access to the address.
->>>> +	 */
->>>> +	dsb(ishst);
->>>> +	isb();
->>>> +}
->>>> +
->>>> +static inline void queue_pte_barriers(void)
->>>> +{
->>>> +	if (test_thread_flag(TIF_LAZY_MMU))
->>>> +		set_thread_flag(TIF_LAZY_MMU_PENDING);
->>>
->>> As we can have lots of calls here, it might be slightly cheaper to test
->>> TIF_LAZY_MMU_PENDING and avoid setting it unnecessarily.
->>
->> Yes, good point.
->>
->>> I haven't checked - does the compiler generate multiple mrs from sp_el0
->>> for subsequent test_thread_flag()?
->>
->> It emits a single mrs but it loads from the pointer twice.
-> 
-> It's not that bad if only do the set_thread_flag() once.
-> 
->> I think v3 is the version we want?
->>
->>
->> void TEST_queue_pte_barriers_v1(void)
->> {
->> 	if (test_thread_flag(TIF_LAZY_MMU))
->> 		set_thread_flag(TIF_LAZY_MMU_PENDING);
->> 	else
->> 		emit_pte_barriers();
->> }
->>
->> void TEST_queue_pte_barriers_v2(void)
->> {
->> 	if (test_thread_flag(TIF_LAZY_MMU) &&
->> 	    !test_thread_flag(TIF_LAZY_MMU_PENDING))
->> 		set_thread_flag(TIF_LAZY_MMU_PENDING);
->> 	else
->> 		emit_pte_barriers();
->> }
->>
->> void TEST_queue_pte_barriers_v3(void)
->> {
->> 	unsigned long flags = read_thread_flags();
->>
->> 	if ((flags & (_TIF_LAZY_MMU | _TIF_LAZY_MMU_PENDING)) == _TIF_LAZY_MMU)
->> 		set_thread_flag(TIF_LAZY_MMU_PENDING);
->> 	else
->> 		emit_pte_barriers();
->> }
-> 
-> Doesn't v3 emit barriers once _TIF_LAZY_MMU_PENDING has been set? We
-> need something like:
-> 
-> 	if (flags & _TIF_LAZY_MMU) {
-> 		if (!(flags & _TIF_LAZY_MMU_PENDING))
-> 			set_thread_flag(TIF_LAZY_MMU_PENDING);
-> 	} else {
-> 		emit_pte_barriers();
-> 	}
+Time to add XDP helpers infra to libeth to greatly simplify adding
+XDP to idpf and iavf, as well as improve and extend XDP in ice and
+i40e. Any vendor is free to reuse helpers. If this happens, I'm fine
+with moving the folder of out intel/.
 
-Gah, yeah sorry, going to quickly. v2 is also logicially incorrect.
+The helpers greatly simplify building xdp_buff, running a prog,
+handling the verdict, implement XDP_TX, .ndo_xdp_xmit, XDP buffer
+completion. Same applies to XSk (with XSk xmit instead of
+.ndo_xdp_xmit, plus stuff like XSk wakeup).
+They are entirely generic with no HW definitions or assumptions.
+HW-specific stuff like parsing Rx desc / filling Tx desc is passed
+from the driver as inline callbacks.
 
-Fixed versions:
+For now, key assumptions that optimize performance / avoid code
+bloat, but might not fit every driver in driver/net/:
+ * netmem holding the buffers are always order-0;
+ * driver has separate XDP Tx queues, doesn't use stack queues for
+   that. For best efficiency, you may want to have nr_cpu_ids XDP
+   queues, but less (queue sharing) is also supported;
+ * XDP Tx queues are interrupt-less and use "lazy" cleaning only
+   when there are less than 1/4 free Tx descriptors of the queue
+   size;
+ * main target platforms are 64-bit, although 32-bit is also fully
+   supported, but the code might be not as optimized for them.
 
-void TEST_queue_pte_barriers_v2(void)
-{
-	if (test_thread_flag(TIF_LAZY_MMU)) {
-		if (!test_thread_flag(TIF_LAZY_MMU_PENDING))
-			set_thread_flag(TIF_LAZY_MMU_PENDING);
-	} else {
-		emit_pte_barriers();
-	}
-}
+Library code already supports multi-buffer for all kinds of Tx and
+both header split and no split for Rx and Tx. Frags can come from
+devmem/io_uring etc., direct `struct page *` is used only for header
+buffers for which it's always true.
+Drivers are free to pass their own Rx hints and XSK xmit hints ops.
 
-void TEST_queue_pte_barriers_v3(void)
-{
-	unsigned long flags = read_thread_flags();
+XDP_TX and ndo_xdp_xmit use onstack bulk for the frames to be sent
+and send them by batches of 16 buffers. This eats ~280 bytes on the
+stack, but gives good boosts and allow to greatly optimize the main
+sending function leaving it without any error/exception paths.
 
-	if (flags & BIT(TIF_LAZY_MMU)) {
-		if (!(flags & BIT(TIF_LAZY_MMU_PENDING)))
-			set_thread_flag(TIF_LAZY_MMU_PENDING);
-	} else {
-		emit_pte_barriers();
-	}
-}
+XSk xmit fills Tx descriptors in the loop unrolled by 8. This was
+proven to improve perf on ice and i40e. XDP_TX and ndo_xdp_xmit
+doesn't use unrolling as I wasn't able to get any improvements in
+those scenenarios from this, while +1 Kb for their sending functions
+for nothing doesn't sound reasonable.
 
-000000000000105c <TEST_queue_pte_barriers_v2>:
-    105c:	d5384100 	mrs	x0, sp_el0
-    1060:	f9400001 	ldr	x1, [x0]
-    1064:	37f80081 	tbnz	w1, #31, 1074 <TEST_queue_pte_barriers_v2+0x18>
-    1068:	d5033a9f 	dsb	ishst
-    106c:	d5033fdf 	isb
-    1070:	d65f03c0 	ret
-    1074:	f9400001 	ldr	x1, [x0]
-    1078:	b707ffc1 	tbnz	x1, #32, 1070 <TEST_queue_pte_barriers_v2+0x14>
-    107c:	14000004 	b	108c <TEST_queue_pte_barriers_v2+0x30>
-    1080:	d2c00021 	mov	x1, #0x100000000           	// #4294967296
-    1084:	f821301f 	stset	x1, [x0]
-    1088:	d65f03c0 	ret
-    108c:	f9800011 	prfm	pstl1strm, [x0]
-    1090:	c85f7c01 	ldxr	x1, [x0]
-    1094:	b2600021 	orr	x1, x1, #0x100000000
-    1098:	c8027c01 	stxr	w2, x1, [x0]
-    109c:	35ffffa2 	cbnz	w2, 1090 <TEST_queue_pte_barriers_v2+0x34>
-    10a0:	d65f03c0 	ret
+XSk wakeup, instead of traditionally used "SW interrupts" provided
+by NICs, uses IPI to schedule NAPI on the CPU corresponding to the
+given queue pair. It gives better control over CPU distribution and
+in general performs way better than "SW interrupts", plus allows us
+to not pass any HW-specific callbacks there.
 
-00000000000010a4 <TEST_queue_pte_barriers_v3>:
-    10a4:	d5384101 	mrs	x1, sp_el0
-    10a8:	f9400020 	ldr	x0, [x1]
-    10ac:	36f80060 	tbz	w0, #31, 10b8 <TEST_queue_pte_barriers_v3+0x14>
-    10b0:	b60000a0 	tbz	x0, #32, 10c4 <TEST_queue_pte_barriers_v3+0x20>
-    10b4:	d65f03c0 	ret
-    10b8:	d5033a9f 	dsb	ishst
-    10bc:	d5033fdf 	isb
-    10c0:	d65f03c0 	ret
-    10c4:	14000004 	b	10d4 <TEST_queue_pte_barriers_v3+0x30>
-    10c8:	d2c00020 	mov	x0, #0x100000000           	// #4294967296
-    10cc:	f820303f 	stset	x0, [x1]
-    10d0:	d65f03c0 	ret
-    10d4:	f9800031 	prfm	pstl1strm, [x1]
-    10d8:	c85f7c20 	ldxr	x0, [x1]
-    10dc:	b2600000 	orr	x0, x0, #0x100000000
-    10e0:	c8027c20 	stxr	w2, x0, [x1]
-    10e4:	35ffffa2 	cbnz	w2, 10d8 <TEST_queue_pte_barriers_v3+0x34>
-    10e8:	d65f03c0 	ret
+The code is built the way that all callbacks passed from drivers
+get inlined; in general, most of hotpath gets inlined. Everything
+slow/exception lands to .c files in the libeth folder, doesn't
+create copies in the drivers themselves and doesn't overloat
+hotpath.
+Sure, inlining means that hotpath will be compiled into every driver
+that uses the lib, but the core code is written in one place, so no
+copying of bugs happens. Fixed once -- works everywhere.
 
-So v3 is the way to go, I think; it's a single mrs and a single ldr.
+The last commit might look like sorta hack, but it gives really good
+boosts and decreases object code size, plus there are checks that
+all those wider accesses are fully safe, so I don't feel anything
+bad about it.
 
-I'll get this fixed up and posted early next week.
+An example of using libeth_xdp can be found either on my GitHub or
+on the mailing lists here ("XDP for idpf"). Macros for building
+driver XDP functions lead to that some implementations (XDP_TX,
+ndo_xdp_xmit etc.) consist of really only a few lines.
 
-Thanks,
-Ryan
+Alexander Lobakin (16):
+  libeth: convert to netmem
+  libeth: support native XDP and register memory model
+  libeth: xdp: add XDP_TX buffers sending
+  libeth: xdp: add .ndo_xdp_xmit() helpers
+  libeth: xdp: add XDPSQE completion helpers
+  libeth: xdp: add XDPSQ locking helpers
+  libeth: xdp: add XDPSQ cleanup timers
+  libeth: xdp: add helpers for preparing/processing &libeth_xdp_buff
+  libeth: xdp: add XDP prog run and verdict result handling
+  libeth: xdp: add templates for building driver-side callbacks
+  libeth: xdp: add RSS hash hint and XDP features setup helpers
+  libeth: xsk: add XSk XDP_TX sending helpers
+  libeth: xsk: add XSk xmit functions
+  libeth: xsk: add XSk Rx processing support
+  libeth: xsk: add XSkFQ refill and XSk wakeup helpers
+  libeth: xdp, xsk: access adjacent u32s as u64 where applicable
+
+ drivers/net/ethernet/intel/libeth/Kconfig     |   10 +-
+ drivers/net/ethernet/intel/libeth/Makefile    |    8 +-
+ include/net/libeth/types.h                    |  106 +-
+ drivers/net/ethernet/intel/libeth/priv.h      |   37 +
+ include/net/libeth/rx.h                       |   28 +-
+ include/net/libeth/tx.h                       |   36 +-
+ include/net/libeth/xdp.h                      | 1872 +++++++++++++++++
+ include/net/libeth/xsk.h                      |  685 ++++++
+ drivers/net/ethernet/intel/iavf/iavf_txrx.c   |   14 +-
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   |    2 +-
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   |   33 +-
+ drivers/net/ethernet/intel/libeth/rx.c        |   40 +-
+ drivers/net/ethernet/intel/libeth/tx.c        |   41 +
+ drivers/net/ethernet/intel/libeth/xdp.c       |  449 ++++
+ drivers/net/ethernet/intel/libeth/xsk.c       |  269 +++
+ 15 files changed, 3576 insertions(+), 54 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/libeth/priv.h
+ create mode 100644 include/net/libeth/xdp.h
+ create mode 100644 include/net/libeth/xsk.h
+ create mode 100644 drivers/net/ethernet/intel/libeth/tx.c
+ create mode 100644 drivers/net/ethernet/intel/libeth/xdp.c
+ create mode 100644 drivers/net/ethernet/intel/libeth/xsk.c
+
+---
+Was a part of "XDP for idpf" series, now submitted separately with
+proper splitting into atomic commits. I hope 16 patches out of 15
+maximum allowed is not a problem.
+
+All checkpatch warnings are false-positives unless someone disagrees.
+Checked with `--strict --codespell`, a well as building with W=12
+and sparse/smatch.
+W=12 is clean, sparse only warns about "context imbalance", but it's
+intended that libeth_xdp_tx_init_bulk() takes rcu_read_lock() and
+libeth_xdp_rx_finalize() does rcu_read_unlock(). This is how Eth
+drivers with enabled XDP do: lock before the NAPI polling loop,
+unlock after the loop is done and the pending XDP_TX and
+XDP_REDIRECT frames/maps are flushed (both functions are always
+required to be called when using libeth_xdp helpers on Rx).
+
+From "XDP for idpf" series, no changes except splitting and a couple
+of kdoc fixes. Also checked upstream Patchwork to make sure I didn't
+miss anything.
+
+Targeted for iwl-next properly as no code outside the Intel folder
+was changed.
+-- 
+2.49.0
 
