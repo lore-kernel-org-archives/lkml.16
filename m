@@ -1,214 +1,229 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2040.outbound.protection.outlook.com [40.107.223.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D35F21E086;
-	Tue, 15 Apr 2025 17:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744739323; cv=fail; b=lq/tzivkf+Bn8TKN7VS+/jR0YXzYTxQRD4nVpNLYUBXWPRo1y2ycHY81hGy5xab3gXVLevrg36+8gVCTrxDQ6NAEbQp69Cu3a64WVUb/jB6xvw+8yj3TC9GpbROkQkEF0W53C/vK60UONPrVKWwTzLm+2K5yzqheZLP3wHvLCWo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744739323; c=relaxed/simple;
-	bh=Kri7Whorci1wEmtrgNxALeKH8L1/4mn6Sc195HrjJYA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=q7p2AVZyobQtq8lolA0FqCaAB5M0CyoyF/3tyY+IYqOdOVQSf9VWjnxahA1w018IZ/jyT09nejH47/NFIoOCByXBw5zUdamjuzw3r2Mw+RyjlJC73Xk16edQkRvXgUh+tuWKFbN/qCbxEvSWZPy8peiByn0uaZ8ptiDl9CTZtlk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xRrJ59Tm; arc=fail smtp.client-ip=40.107.223.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD1E22155D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744739349; cv=none; b=Mjyxc10wGfrlsSO/CWgi88NlGVzBJxT0XSuVKVSIaAjUy386KnfhpuXq8WZg64DY57ie/nXyfibiqOa4rX2VFTtFddiyywaH/PyIwvMpq4dWDUT/hw7m8ZIiPr3kBK3gAnZJn9dwUO9+GM8nAy09nMwJDEasuq8nS6eQa6IvHPs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744739349; c=relaxed/simple;
+	bh=bc829BU+7UnsOMXcXdUDJgV0SPYS643+LEuOhfKGCrA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hcRekxmINXR1SCsMQokk+FB2oIGWal6eZoiaTQ8a5P1utaxbfmAaWPCzsr3E7symGhas9vjT81JWfm/8NplggFnEtqSjIOg1mdIYe0dLli+wo0BUTe9g+TmOakA2twDQ3SgqXokEcxJVMNTBBrckzBm0CJbJ6dTHAEhSbA8YbPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VITJuTRE; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xRrJ59Tm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qL7hu8xYfOz0wfJUtVHsvPHsdggMLdf+bhDkQ/xYbhPG2iYVWrXhGZCl+Jxv42FK0PLmeia0WmcGRWVDUai7EkUxTOfc+ETlUuya5zgynG1lP/IzeO3grmGQCDjd3mU8TK2N7Owf5ioyY8DLLFSs8szalnDZ/Z9RdI7HslPku0408zy5HapAeR/PhWJblDzHMhRcdBXciWtsFgHaoqNK7/1GwFv2rSPCJK8xQlS9to1BoSYJ9hrAjLq5icO1DmFnK0Z1O5dIV7fDfAI9SWRWcCVSTXotzyrCAQsNRXlcyT1EqhHO/Y6CJ44w0bOhODoDD9+LnyAI7JDUoru69tXRjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FYxnDUX0DWIp1yxd3JHuRucD4LyY0nPJasaUrM/F57Y=;
- b=kEYCarj5cQtp5SfmYqNZFqWOLnHN8EQ7Gy1BN0XoeNr5LRHr9sJkN8409ln3THMKAlaWVKT8Rf/7nuoZT0YW8Kagof+TJryBJrRfD4+yyA5b+gCvUTb1q9q8Z19QpJH2mEiF4cPJ7MfPwePmmBCdSUl1CcLDnpBg9oKyRSCGCDBdd9D56DR/21ZaYWQOQgGuvcm1JymtTDWV3Xum2FU/URRPbFkaOPF3u4EehfP5RY+8gqheGY7T2K16kelD5OZ782BKVuJnQ2QVwdMfYTu4SCdQrnosZCXosmJ3bOlM16AVM/WP9F0a/HSnpExg6gyZYqn+guaqhHQGsiidk5e4vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FYxnDUX0DWIp1yxd3JHuRucD4LyY0nPJasaUrM/F57Y=;
- b=xRrJ59TmQE6CBOe8eJdracxZXpBH+GkkXR0tse/A3jPEoEhaPyMIbwrt7AWZPxkRk0zdRwgx2zZxk1CUC6ILLs+AKJeklgIT3yAF8eebDrrnoVKVcDY6z4+aeDAyPqiv4Si4YywRFZCTCmZtxwuY023xdhZ7QSta/0GNFeT/Xu8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- BY5PR12MB4194.namprd12.prod.outlook.com (2603:10b6:a03:210::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.30; Tue, 15 Apr 2025 17:48:38 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 17:48:38 +0000
-Message-ID: <fcc15956-aad0-49ea-b947-eac1c88d0542@amd.com>
-Date: Tue, 15 Apr 2025 23:18:30 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/67] iommu/amd: WARN if KVM attempts to set vCPU
- affinity without posted intrrupts
-To: Sean Christopherson <seanjc@google.com>,
- Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Maxim Levitsky <mlevitsk@redhat.com>,
- Joao Martins <joao.m.martins@oracle.com>, David Matlack
- <dmatlack@google.com>, Naveen N Rao <naveen.rao@amd.com>
-References: <20250404193923.1413163-1-seanjc@google.com>
- <20250404193923.1413163-7-seanjc@google.com>
- <0895007e-95d9-410e-8b24-d17172b0b908@amd.com> <Z_ki0uZ9Rp3Fkrh1@google.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <Z_ki0uZ9Rp3Fkrh1@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0202.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e9::10) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VITJuTRE"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227c7e57da2so52588115ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:49:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744739347; x=1745344147; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uDPqhVA8+u75XljjuMIGCr92m49FaXVHk2Z7wule4kM=;
+        b=VITJuTRERhTy1IDuNk9YIeWzfY/dzVnkqtBNQfuWZ+bi2gZgMiBfUKXc13JN336T8i
+         2NDkysrw0j9S6bRzWfeDnJ3iJ391UnniHTkLSIYVDq6K/C7XsloaFMNJLnrFzzQuUwU7
+         RCZ0dHDhOQsflN2U0wPRhWofn5vM5GUD40ewFVCAbzcrMR5/XWXD3TKKQm3eq8VPiw5N
+         TgEuMXu++6IsjEpvCKc1qXVHWA3A/lk9s2pC1cGnZhaQINkDOiXF9yhKYo8Yw9pW7b1Z
+         AxO058kJJtXe2AzYrR0LMplieVLknmWVvSTXdeB23oplk79hJM4jY28IR+tsiNUcoWbi
+         EXzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744739347; x=1745344147;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uDPqhVA8+u75XljjuMIGCr92m49FaXVHk2Z7wule4kM=;
+        b=v+PT5y4JWaRBffkpYXjb4S02tWuZ/Wy/if59gffU+nIy5A9P6qnB5QWu3BwgDjxpcG
+         gUo7wK03J38ficj3lY3T9ekqSJNt4mbiFjSWg20cDVw5Q/wK87JiQtwtjRvKYyGPA+9a
+         Mui9MCj1OA9qqmAQ3C4y4RGGlZ0mc/hZvZz6o780UYun+RPxY0u8nIfQvI8KFw5bxqs/
+         LnFLM1ogTEv07AFqUfFf9xaEM3qcOeDrS8xBYkjdWsjPzsxPcZk3r+sVIyT/BqUXuh3d
+         x9SNZpcsAn4dfuW5iSO6lKH1JRdWIp7dISZwUAvemuBmGB1WkvUFs1cHmcIDb6pwZxNp
+         hHRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIvQsUEHV5LfTAhwKNtuuxQJ9DJ/OysKup3CrxdQODbD83cz1YjgpwNEsU1DlaRqYJZGwovLIMnl8g8VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnK4MsR0+KZDLGAu189yLqbfP+DOVyir00qo5AvwENE8VhZVS
+	S3K8QNjB51npWjwx6gO6rZQe7vq9UfACpTRTobZKMMQFDf7fdAT7
+X-Gm-Gg: ASbGncufMhvNSGoIqQxxioetk2BLZHQtHhsq284SriY8ZZAhTuDxgS7MOXNYRMw7vlB
+	O4eXhgVC4+6W2DEZp4+A+1P1nC9wLrNFK273i0YL8OV+LgJDO/ZUKL8I5WMBExKY7TROLeRywtX
+	bY8SJ3iXufDqEHLK1ril5rGus9TYCxO1V9f1WOuVNhYxZXontrb30XU4mUAtjZLjRBEXTJQ2xJ1
+	kc7/g6dJZUTha65Zvntov722qDDFJZdzB/1OZz/TlIL8/pg0rUYgPrimaAPASopmwxjADsIICtK
+	/Vku4+y7k2wy1rzBqfbfoDrRmTZPY1UK7orOAadG
+X-Google-Smtp-Source: AGHT+IEJIoZH0DUaaIdRdFmEsC3sTHcUdbPLZe57kZw9DBOVvGjBsLxOacOt/IQtRrrX5mEPosiGLg==
+X-Received: by 2002:a17:903:230a:b0:224:2175:b0cd with SMTP id d9443c01a7336-22c319fef18mr678565ad.26.1744739347423;
+        Tue, 15 Apr 2025 10:49:07 -0700 (PDT)
+Received: from pop-os.. ([49.207.215.199])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62973sm120846815ad.24.2025.04.15.10.49.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 10:49:07 -0700 (PDT)
+From: Aditya Dutt <duttaditya18@gmail.com>
+To: syzbot+b974bd41515f770c608b@syzkaller.appspotmail.com
+Cc: Aditya Dutt <duttaditya18@gmail.com>,
+	syzkaller-lts-bugs@googlegroups.com,
+	linux-kernel@vger.kernel.org
+Subject: Test if it's still reproducible
+Date: Tue, 15 Apr 2025 23:18:56 +0530
+Message-Id: <20250415174856.379736-1-duttaditya18@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|BY5PR12MB4194:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6634fa96-d17c-4e45-1bb1-08dd7c45c0af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|7416014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?aUFsOGRWREdWRTF2eW5HUldITk5KV1BWdzFJR2pYOU4yZzVtaUI1cTVlclh4?=
- =?utf-8?B?NTMrZmZGZUFvdzJCVkRKV3Q4a05qSWJTM1JFemJEMGQ1VHlNK2lRazFpU3Iv?=
- =?utf-8?B?U0J6SkJTUW9jRUp1OHVjbVk4eEtMY0RPN0t5d05rL0RXVUdtNDhMb0l0QVpR?=
- =?utf-8?B?UTQzcmM4cmd1WHVkN0hML3J5SU50aW11YnhmdVdtNG96NmlNNGhYNk9VNXdi?=
- =?utf-8?B?SE5YaHluWHBoSDROZTNqa0ZNS3ZRWXg1VnQ1SFY2Zk9IRWliaXpib1lheWFR?=
- =?utf-8?B?dGIrRGN0bVU4eUpLM1pvdXZzWXduODdHVkZWWjZwU04wOTloN0xGazM4cnlC?=
- =?utf-8?B?Rm9rNkQ4Z1J3eEYxMkdTY0xkdUtQNWZSWUlsbXZRRzlSUHIrV1VkYWRuTk1S?=
- =?utf-8?B?TGY2dGRRWkljZkdLaCtIbW1UWStBRFJ2VTJSczFoWHRiRTFBK3gzY2o3ODZK?=
- =?utf-8?B?ZnQzVEhhSUo0c0locU5weFMvU0c5SUQwaXlZOFhUWHhNUVFmQS9zNlRtalVT?=
- =?utf-8?B?SW04YWNKeCtrVCtMTC90WHZhd0NqZzJXMlphc2drWVpJY3NrVUVPS3k1TjM0?=
- =?utf-8?B?ZC9oZ0lUZGpvdWNydVFhY0FQRXRsd00wSkc4WGM3c2NROU1yQndXR3Nqbmxn?=
- =?utf-8?B?SzFaQzVMdDk0SnpLMTkxUjhQVWdWRUZ4aDU0MW4xaWx5ZFFxbm9Bb0t1Wlp0?=
- =?utf-8?B?QUQ3K3I3aHlEMXBLalByVkV6RFVUQ0Y3SHJ6NkxBN3p2TXJRWVZuUkRWd3Zu?=
- =?utf-8?B?ZytYVzJCK0pTK2tsUC90ZytrWU5laEpZNVJBQVRuTzNuV1dJMmUzRTZ5NWFK?=
- =?utf-8?B?UGJDMkFQMXRVT1VGbDJ3TXB3T2RKN0JQeWFpTzMyeXVzZFNRWXQydGhBS3ZU?=
- =?utf-8?B?djdRRExnSk1DNURycmNxWDRlQ3I3WWlDTTFqcDJPamxFU3dQYUdsUFBiajBQ?=
- =?utf-8?B?NlMvQk5nQjJOcGRwTDc3NDJtRXVRQmxaSFI0NzlWbU9CbEdPWFQ4ZHp4RGFM?=
- =?utf-8?B?N05iNnBRUER0MnJtNXdRSnJET2NDVTZQc3RleFFDOUF3R2xQakF4WERJZXVH?=
- =?utf-8?B?cG9IVjVnUHdodFhOR2FQbjZnOVFkQVo0UWpDbW41c0dYa2VLeFcvUmpxbzJE?=
- =?utf-8?B?czhXUWMrRS8xdHhyNG9tektYK28xVytpaitjakFTQWlNdDRHd25xaHVBRDhp?=
- =?utf-8?B?RHdPM0Q4eVJ1TnQ2WVlSVGpDbUx6d1ZEM2IzTmZiQVFnWWtiQTZvQXFRTE96?=
- =?utf-8?B?QzF6MHlDUk5reXUvczArSlBrbWdieEp2VkdVNktlU05ENkJvU3oycTlPOTh2?=
- =?utf-8?B?ZUhseUxtRGY1KzNwNjZFOXVKS1czOGgwbldnMWpQRGlvbHNnRHU0QSt1eHJh?=
- =?utf-8?B?QXJFUnFDVHJRL01xU1pIYzNjandVa0duTjg2b2lHcmswMnpvTmJLckJ4Y0xh?=
- =?utf-8?B?SVBxQ29LMkthMDJQQ1cwYkRwUjcvVWR3UU8vdCtvOFI0L0JjdkxNNHlaNzRn?=
- =?utf-8?B?blpiS1drcm1TZWEzOTRjTTR2YXI2dDR4YlZiZnRQRzFydWZ2VjZlNmtKVXh2?=
- =?utf-8?B?UVBOc2liQUhvWlpnZ1MxSDhDSHRabVVDZUJYTndVMjVvckM1Umo3TVJqTzFp?=
- =?utf-8?B?YkthM2Y3T29QOG4wc0tWMFZwb0tTeS8yT3d5bVVyZVVnQ21aY1ZUM1NLQVY0?=
- =?utf-8?B?anMzYm81VnBzaDhQdzZONndUS2YwSFY3cVFoalZQSzMxa0xMU0NQTHpPVENO?=
- =?utf-8?B?M3BwdWRmNGFnSDV1djJldVJmZnk1VlJrVStLODRETTNXb29hMU00UGtMMDkv?=
- =?utf-8?B?dFJZZjlmK1hSUXppQTVMVmRXMEVhN2gwdmgvU3hpTmNrcHBrMlFUTEtwQk9y?=
- =?utf-8?B?TDVpMUw1eElCR3VYZ3hWVy9aU0trQThoejZ2OFRvRjFoL1NyN1JIMUt2QWJ4?=
- =?utf-8?Q?7mmV36J+nMw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K3dYa2xic2RSYW1KTVd1RUpGUE5pRHVIN0szRFltY2ZSZHk2b051c3dCRjhk?=
- =?utf-8?B?VlordDlkdytGL1FEc3NYckEwOWxlOWJEZTBCYmlpSGx0UDg1WXVrVGVtWDgr?=
- =?utf-8?B?dHNHL0orZ05Bb2lpeDNDdU5SSGpFNTVldHBIanBCZytDMkdKa01vbmt5MStX?=
- =?utf-8?B?THQ4b3UvZ1VpNlFackpQNHhKL3hod1FBakFxYk1TVklvMnQ1OVl2dEVaWjdB?=
- =?utf-8?B?Wkg1Z3NpVXVTc2dIdERDL0pWRXhCYkl1Y0x4UEtnYnRXeVdoaEFSZDQvQVhk?=
- =?utf-8?B?QWU1TVBud3QvR0xkQXEyVCtTcjJMSjJUaUtsUzlzRWJUdHFndDZWR0xSTXJq?=
- =?utf-8?B?aTI5bnRWMnZJcXFMNzRuMDFlY3pKWldTZCt4THVQMU5TNlJNdkRkcERPZGxK?=
- =?utf-8?B?bGZLdDJRUUg0Ym5WUlQ2bTIwZGIrOFJkOFNkTGtBWm5kK05pTTUwSys2cTVx?=
- =?utf-8?B?bDhZd3o4QlNwK2dGOGNNbTlYZHJ4SFlnSE1LVVVPQjduWFdUbmdXdGU5TDZW?=
- =?utf-8?B?Qi9ETXZTbTRTQWkrMS9mVjBWOE9PU3phTGRCWDM4OTJaeHlySFFLcjJsK2RO?=
- =?utf-8?B?cWVUaEhRVEljdnlNTlBwWXhEM2hNbGJ6UzREbmc1MkpCQlBFSTNzVEJGaWkv?=
- =?utf-8?B?M3B2bUgrZUhSSGhGNzc1MSt1M3VmK2N3aXJyMDljVzBpVXJBUjlGaDNGOVpX?=
- =?utf-8?B?ZEFjTlRDMC9jVVFFb1VHVUtSM1Awc2djOUJRN0NLNGx1N1dLc1N2V2tHK0hX?=
- =?utf-8?B?VHhLZXhvSlJiWXY1NnV0NVdybjkvZmpQR3hNTEFPSUhNL1lLcGxrcy9zTGpB?=
- =?utf-8?B?NFJRbldQY0hlS1RENjFnaU9hUTRiajBsclFWNW5pK0dHVVlQazFtU25WcWhy?=
- =?utf-8?B?TEllWUpRNDlFby9QVzg1Yi90eVdvT3plUkhwbkVTQzJxT1JrVlpmdFZIK0NE?=
- =?utf-8?B?dU05TnZLWTVCb1k0Mk1WeFZuZlQwTFZxYU9veVZ4K3Z4L0lNb0p6Ky9BSFhS?=
- =?utf-8?B?QVRqY1dCU2dBcG1ERFUxaXZRN2t3blZjcmVTdWlKUW1PQkFwME1Md041T2lP?=
- =?utf-8?B?UUxrN05HUGJSaERQUUJyMlVPN25XMUhyZ0R0bFJwYnZtUGx3a0tnWFhVUEtS?=
- =?utf-8?B?aG10bFcvSkwza3Q0aUhTa0xrdXhXRHJWUlRDanU1OU8vRWtJRnh1M2hCZm9s?=
- =?utf-8?B?aU5hejZiZTlWNHhIeDFGSzJOMzExWlNWVGRuN1pNWmE3S2k5TE5SVjRMVkdu?=
- =?utf-8?B?ek5KbFBISVZMUCt2eUlFeDJtOUVrU1NCTExzRVYydlVMMDZzbWtRNUFZYTB3?=
- =?utf-8?B?bGN5d1J2ZVVoMmFJNWlFVllJSFc5K1VKYTlPSnBjcERKdXQybGtiSS9oZUZq?=
- =?utf-8?B?YzVwODRrRytNRkxjdlpQa001TEwzOVRWR05FSVQvd3NqRThOWVRSTDhteHJV?=
- =?utf-8?B?RWJUakdpN1d2VkdkZXdhQmNscEkxV3UrRnpJYVdoMTB0amVuTUU2cDdrb0ow?=
- =?utf-8?B?M3EzRFZScURYSlY4VUtJWkhFR2lnZHNyNnNaSjF1WE1jVTY4cmVjRkhZaVox?=
- =?utf-8?B?YnFXdFJrYXN5R0VVcFhOMkRMc2lKeFQzWFhLTFRpVU0zTXFnUzZDU0RVZC9C?=
- =?utf-8?B?cjVMMFVOS2NaaU1FMnV3bUxwcFBJWXdiQVR0RWl0NkkrMzh0c2hWdno2emxU?=
- =?utf-8?B?dUhFaE5NaW5IWk0yZ2dla1pQUjY1NGFEbHZPRWk0WUZNRmpKUVVjZ1FUN29J?=
- =?utf-8?B?ZmhNRSs5ZmdWelgyckxvSmRIQUVJMXF2M09SNXhjRkRMMWpldWU0K0FZQ2xK?=
- =?utf-8?B?TmhIZmNmcnVvaUkwQVRteVFmck10YjI0WDR3MjdudEtSTkNla0NSRjFnWDgx?=
- =?utf-8?B?UzI0eVc0NTJ2cEVEOFhRTzFxMnNwT0M2Y2J3QzFsdkZuUk05YlA4QnRUa01B?=
- =?utf-8?B?bXBYTTNxRy9QTUFHL3hQUmNLblRBWXVZQ3lqbXlpUU5mVE5zMEJZaXBTOEVi?=
- =?utf-8?B?QXlWVElROStYdHNaM0c3K3VoL3ZjaWFNMkxGM3VEZTN1RDN0SWE0UkcvUWVT?=
- =?utf-8?B?RWFlMzNnOTFteWo5NWgwc3JrRnN0TlVNZTRvSmtuSEhvQ0J6ZjJUd3V5dlNv?=
- =?utf-8?Q?X3IrbEiHTl1cnrLV5deSqSpZb?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6634fa96-d17c-4e45-1bb1-08dd7c45c0af
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 17:48:38.7612
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bQQThjP1BJ77znKWuTEY5Ug1ugYdlq2UeCOmrFS5DvJiHdzFRnGKforQ4y1SeSd/ctSVdvRFV762wes/NWzH4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4194
+Content-Transfer-Encoding: 8bit
 
-On 4/11/2025 7:40 PM, Sean Christopherson wrote:
-> On Fri, Apr 11, 2025, Sairaj Kodilkar wrote:
->> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
->>> WARN if KVM attempts to set vCPU affinity when posted interrupts aren't
->>> enabled, as KVM shouldn't try to enable posting when they're unsupported,
->>> and the IOMMU driver darn well should only advertise posting support when
->>> AMD_IOMMU_GUEST_IR_VAPIC() is true.
->>>
->>> Note, KVM consumes is_guest_mode only on success.
->>>
->>> Signed-off-by: Sean Christopherson <seanjc@google.com>
->>> ---
->>>   drivers/iommu/amd/iommu.c | 13 +++----------
->>>   1 file changed, 3 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
->>> index b3a01b7757ee..4f69a37cf143 100644
->>> --- a/drivers/iommu/amd/iommu.c
->>> +++ b/drivers/iommu/amd/iommu.c
->>> @@ -3852,19 +3852,12 @@ static int amd_ir_set_vcpu_affinity(struct irq_data *data, void *vcpu_info)
->>>   	if (!dev_data || !dev_data->use_vapic)
->>>   		return -EINVAL;
->>> +	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
->>> +		return -EINVAL;
->>> +
->>
->> Hi Sean,
->> 'dev_data->use_vapic' is always zero when AMD IOMMU uses legacy
->> interrupts i.e. when AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) is 0.
->> Hence you can remove this additional check.
-> 
-> Hmm, or move it above?  KVM should never call amd_ir_set_vcpu_affinity() if
-> IRQ posting is unsupported, and that would make this consistent with the end
-> behavior of amd_iommu_update_ga() and amd_iommu_{de,}activate_guest_mode().
-> 
-> 	if (WARN_ON_ONCE(!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir)))
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
 
-Note that this is global IOMMU level check while dev_data->use_vapic is per
-device. We set per device thing while attaching device to domain based on IOMMU
-domain type and IOMMU vapic support.
-
-How about add WARN_ON based on dev_data->use_vapic .. so that we can catch if
-something went wrong in IOMMU side as well?
-
--Vasant
-
-
-
-
+diff --git a/fs/jfs/jfs_dinode.h b/fs/jfs/jfs_dinode.h
+index 5fa9fd594115..e630810a48c6 100644
+--- a/fs/jfs/jfs_dinode.h
++++ b/fs/jfs/jfs_dinode.h
+@@ -96,7 +96,7 @@ struct dinode {
+ #define di_gengen	u._file._u1._imap._gengen
+ 
+ 			union {
+-				xtpage_t _xtroot;
++				xtroot_t _xtroot;
+ 				struct {
+ 					u8 unused[16];	/* 16: */
+ 					dxd_t _dxd;	/* 16: */
+diff --git a/fs/jfs/jfs_imap.c b/fs/jfs/jfs_imap.c
+index 937ca07b58b1..5a360cd54098 100644
+--- a/fs/jfs/jfs_imap.c
++++ b/fs/jfs/jfs_imap.c
+@@ -671,7 +671,7 @@ int diWrite(tid_t tid, struct inode *ip)
+ 		 * This is the special xtree inside the directory for storing
+ 		 * the directory table
+ 		 */
+-		xtpage_t *p, *xp;
++		xtroot_t *p, *xp;
+ 		xad_t *xad;
+ 
+ 		jfs_ip->xtlid = 0;
+@@ -685,7 +685,7 @@ int diWrite(tid_t tid, struct inode *ip)
+ 		 * copy xtree root from inode to dinode:
+ 		 */
+ 		p = &jfs_ip->i_xtroot;
+-		xp = (xtpage_t *) &dp->di_dirtable;
++		xp = (xtroot_t *) &dp->di_dirtable;
+ 		lv = ilinelock->lv;
+ 		for (n = 0; n < ilinelock->index; n++, lv++) {
+ 			memcpy(&xp->xad[lv->offset], &p->xad[lv->offset],
+@@ -714,7 +714,7 @@ int diWrite(tid_t tid, struct inode *ip)
+ 	 *	regular file: 16 byte (XAD slot) granularity
+ 	 */
+ 	if (type & tlckXTREE) {
+-		xtpage_t *p, *xp;
++		xtroot_t *p, *xp;
+ 		xad_t *xad;
+ 
+ 		/*
+diff --git a/fs/jfs/jfs_incore.h b/fs/jfs/jfs_incore.h
+index a466ec41cfbb..852f4c1f2946 100644
+--- a/fs/jfs/jfs_incore.h
++++ b/fs/jfs/jfs_incore.h
+@@ -66,7 +66,7 @@ struct jfs_inode_info {
+ 	lid_t	xtlid;		/* lid of xtree lock on directory */
+ 	union {
+ 		struct {
+-			xtpage_t _xtroot;	/* 288: xtree root */
++			xtroot_t _xtroot;	/* 288: xtree root */
+ 			struct inomap *_imap;	/* 4: inode map header	*/
+ 		} file;
+ 		struct {
+diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
+index dca8edd2378c..7d19324f5a83 100644
+--- a/fs/jfs/jfs_txnmgr.c
++++ b/fs/jfs/jfs_txnmgr.c
+@@ -778,7 +778,7 @@ struct tlock *txLock(tid_t tid, struct inode *ip, struct metapage * mp,
+ 			if (mp->xflag & COMMIT_PAGE)
+ 				p = (xtpage_t *) mp->data;
+ 			else
+-				p = &jfs_ip->i_xtroot;
++				p = (xtpage_t *) &jfs_ip->i_xtroot;
+ 			xtlck->lwm.offset =
+ 			    le16_to_cpu(p->header.nextindex);
+ 		}
+@@ -1708,7 +1708,7 @@ static void xtLog(struct jfs_log * log, struct tblock * tblk, struct lrd * lrd,
+ 
+ 	if (tlck->type & tlckBTROOT) {
+ 		lrd->log.redopage.type |= cpu_to_le16(LOG_BTROOT);
+-		p = &JFS_IP(ip)->i_xtroot;
++		p = (xtpage_t *) &JFS_IP(ip)->i_xtroot;
+ 		if (S_ISDIR(ip->i_mode))
+ 			lrd->log.redopage.type |=
+ 			    cpu_to_le16(LOG_DIR_XTREE);
+diff --git a/fs/jfs/jfs_xtree.c b/fs/jfs/jfs_xtree.c
+index 3148e9b35f3b..34db519933b4 100644
+--- a/fs/jfs/jfs_xtree.c
++++ b/fs/jfs/jfs_xtree.c
+@@ -1224,7 +1224,7 @@ xtSplitRoot(tid_t tid,
+ 	struct xtlock *xtlck;
+ 	int rc;
+ 
+-	sp = &JFS_IP(ip)->i_xtroot;
++	sp = (xtpage_t *) &JFS_IP(ip)->i_xtroot;
+ 
+ 	INCREMENT(xtStat.split);
+ 
+@@ -3059,7 +3059,7 @@ static int xtRelink(tid_t tid, struct inode *ip, xtpage_t * p)
+  */
+ void xtInitRoot(tid_t tid, struct inode *ip)
+ {
+-	xtpage_t *p;
++	xtroot_t *p;
+ 
+ 	/*
+ 	 * acquire a transaction lock on the root
+diff --git a/fs/jfs/jfs_xtree.h b/fs/jfs/jfs_xtree.h
+index 5f51be8596b3..dc9b5f8d6385 100644
+--- a/fs/jfs/jfs_xtree.h
++++ b/fs/jfs/jfs_xtree.h
+@@ -65,24 +65,33 @@ struct xadlist {
+ #define XTPAGEMAXSLOT	256
+ #define XTENTRYSTART	2
+ 
+-/*
+- *	xtree page:
+- */
+-typedef union {
+-	struct xtheader {
+-		__le64 next;	/* 8: */
+-		__le64 prev;	/* 8: */
++struct xtheader {
++	__le64 next;	/* 8: */
++	__le64 prev;	/* 8: */
+ 
+-		u8 flag;	/* 1: */
+-		u8 rsrvd1;	/* 1: */
+-		__le16 nextindex;	/* 2: next index = number of entries */
+-		__le16 maxentry;	/* 2: max number of entries */
+-		__le16 rsrvd2;	/* 2: */
++	u8 flag;	/* 1: */
++	u8 rsrvd1;	/* 1: */
++	__le16 nextindex;	/* 2: next index = number of entries */
++	__le16 maxentry;	/* 2: max number of entries */
++	__le16 rsrvd2;	/* 2: */
+ 
+-		pxd_t self;	/* 8: self */
+-	} header;		/* (32) */
++	pxd_t self;	/* 8: self */
++};
+ 
++/*
++ *	xtree root (in inode):
++ */
++typedef union {
++	struct xtheader header;
+ 	xad_t xad[XTROOTMAXSLOT];	/* 16 * maxentry: xad array */
++} xtroot_t;
++
++/*
++ *	xtree page:
++ */
++typedef union {
++	struct xtheader header;
++	xad_t xad[XTPAGEMAXSLOT];	/* 16 * maxentry: xad array */
+ } xtpage_t;
+ 
+ /*
