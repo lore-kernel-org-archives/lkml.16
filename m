@@ -1,89 +1,88 @@
-Received: from out.smtpout.orange.fr (out-69.smtpout.orange.fr [193.252.22.69])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2E4253357
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0945256C60
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744753121; cv=none; b=X/BS3bmAkXdMGdm9I/7tu1GHUU4LdQwNhnv14y8JLZbxD0zwkHVwLfF6/sDPFteq3Coe7aTid6r7aN2/Tz/H8RqIJI10qlRviVju6ZSh+TFIXmchcdqhROt07yCuyys3ViUwMl1nwnA9BiEsFw/V70d7pp/96sr6LzynTI+FOl4=
+	t=1744753234; cv=none; b=ggED2uxiF1K+wBjuBcQG+JESAkNuD3VGZixrQEeY2+TrFUgU+yTytIHwKmpEzbyjO6Gh4gp/KnNYdUCRtY+slNpR5CfM8v7Zwr4v2doC+6VhcYe3uc49KBUI6X3kSRwohBXn2j1pHbMZsPpl5yyuOvozyjaOoSM4K8zoMGy3YNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744753121; c=relaxed/simple;
-	bh=KEjpH6K4beiX4kzBU0PiyfFgLQaGcqKvhB3JcTndIyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qIJD5xhvNfvdY02/K7c1MU5neF+C2tLkGQ9ESPW6PWqaGUvjlUP9bjM4keyJZkL8OD8DtodFHsezjk5HdXIkLla0XV8TiUmc6Q+0zIezLFC2qEd6KYsgclMi3oZ+ww59TmPmWXWocueb8EsHKjqVrC0PN82sDn4vXn8XbSQ7dEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr; spf=pass smtp.mailfrom=orange.fr; dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b=epyyFUuW; arc=none smtp.client-ip=193.252.22.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=orange.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=orange.fr
+	s=arc-20240116; t=1744753234; c=relaxed/simple;
+	bh=54FlDJnOJb1JJqdwaNPZ3tcJ31o656EoQ4mYBYZWrWU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cez0tp8OZVJDBoGryaz3/FbGrqIYNmZVvD+JhsXSzQpptbLPTpTmfSPYdjdGOWtuH7irbEFtCcIDlNz2nW0FZfVEP5uAdswtoBEAXhdnjbWXR5pS/RIxQtFUSElpl72JHinondICBJYjO1gQMwNCIwTt8+bCd3mP070kFtYg9xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QWT8dXj5; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=orange.fr header.i=@orange.fr header.b="epyyFUuW"
-Received: from [10.40.167.8] ([130.166.192.226])
-	by smtp.orange.fr with ESMTPA
-	id 4nz7uPdybGpxt4nzBuC1v0; Tue, 15 Apr 2025 23:38:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=orange.fr;
-	s=t20230301; t=1744753111;
-	bh=MuU4j0+RDCwQ9LpPHIrzB3BCLtEN83h9y/gwzJFlLt8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=epyyFUuWnqbc3kUsyL4zmzv6mrYSy0hKziynd/50KVAbGX+iSw5WqDWJN7KqSbOYt
-	 O+DjjGJZsw+XTXK5lcE2AxD2J2UGNXXXO7cUcO00TBaLO/X+VZ4IeIvfp3Km+MMhVQ
-	 JB+sEdx17eRnOb9sf9ZldVbQwBQ8pVtRBmG99GT4AvBQn1EBQpB7mNwaAXfUa5kSg9
-	 q0D5aidwQUV1/tUjgMpuGsB0ITEtkTqwI4XFLNyYeeAlRi/ElB+INdF2GqKRP2eE4v
-	 wq/iv0zuUMUuMq0SS89e+2WnCNhSymH6YxwLtqO7vAhPHIFhPYgByEcS03H5EzgQpO
-	 OzZZHOUDz+sxQ==
-X-ME-Helo: [10.40.167.8]
-X-ME-Auth: cGF1bC5yZXRvdXJuZUBvcmFuZ2UuZnI=
-X-ME-Date: Tue, 15 Apr 2025 23:38:31 +0200
-X-ME-IP: 130.166.192.226
-Message-ID: <384d030e-e213-4fb3-83fb-cc0d5cb77cf0@orange.fr>
-Date: Tue, 15 Apr 2025 14:38:23 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QWT8dXj5"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54afb5fcebaso7622012e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744753231; x=1745358031; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=54FlDJnOJb1JJqdwaNPZ3tcJ31o656EoQ4mYBYZWrWU=;
+        b=QWT8dXj5b57DvkBXH6MZYJGXW4PuGgdqQhtW7bzeRXkB/OFOuX1nNaGmh1Thxbo19c
+         2M0z4/fx0pwgsYU33yDmEDnyJbEv7zS3eNDnQ2LYIiPpSpaztVW8yhn+e3qIGF/n6igL
+         jiwfEnfVpyIqbg09lMu5VGdHyoBqPkv8SEUx7B1wK8Zv7KNCc0GlUuMzAviCPL7kczg3
+         uJXCeXVDLr0UwmKoVqzXimrsO04AUTP5USZvUjWeGeDe16NxHLVpbWGuszswXgSYjTFg
+         Up7Ydy2asRO14fVvcIJ9UkVziCbd3uaTMNiaxAsFsosIZ1vQTSm32SMHduGaNvPWnST0
+         7UZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744753231; x=1745358031;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=54FlDJnOJb1JJqdwaNPZ3tcJ31o656EoQ4mYBYZWrWU=;
+        b=LBjJdulmWdOGg/IsFpqnlpRIN87ACNeSofXOlYUeoj4BeB/cs676W4jnHGKP9NSpL3
+         7eGDVCISseKPUE/sghwzwJGrgJBZoRZvsvGeB90ccXqgtJVRYnLxW7es05An33ZvPDEH
+         m2i4rVV4Ui9S3fUvkefGMIok6vDhYvRY4hOqJaHUqiVHUwRZDV1gGFZPXzS1mCC0KHTM
+         Yqq3/w+qkOPy/kaRKAtC+Wv7rAyCyfrcFlMabcc8XeGXbtljNveJbvw+YvebBuOxZ7eI
+         L3yQgeW7vVvB5yClLgSJSeEbwtYyrTZ7xtQS3VS2C00IzP6gZt4y7GS1DhPSSMU9wTl2
+         djcA==
+X-Forwarded-Encrypted: i=1; AJvYcCXz7ahku640VbxGe7IvG2e/Jj2pHZqHB3bH4dN2W1TFMHhZ09KVFRmAASUL649uTGYuJeg/DR5X+x0+RcQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJFuECenFNrVbRNrDtgyhXoB+TekpjZK6oVZE30SIGyqrr7wFM
+	LtyOnE0EmUdqlMuvLXHB++EIQpWXu+lsKhqmRFv9KyE8ARbBKivb4IoNhRyiANSJCCQ9puEvxL7
+	QPLg2iDmn6IOmkH3gkapplO630xZqaLlCUF8uqAha4RMh1h3q
+X-Gm-Gg: ASbGnctFEUYQcfETOqSIU4iMnh75z6eNt5n9oApxuII9ZZ9YQQZ+QiR8YfhuRLMYCq3
+	RFJBiL56v810ZIRc8T+KJHlUIMr5HIUZ3Dct+YDTQbvG0Q2H8zR+ddJvr8fONOEEZV7Q9hj6clY
+	3NTSL8sP61IN0SLw3v8iuPVuW5UswaqWbF
+X-Google-Smtp-Source: AGHT+IFO2L8W0ybEifIeQVLc8kNA1FEyPDssmRhBeFf/k+lAMRy7k5ifx2eCoSwPZM/jDIE33fWUWID/DeBhanitmvI=
+X-Received: by 2002:a05:6512:31c5:b0:540:2da2:f282 with SMTP id
+ 2adb3069b0e04-54d6053a05amr147368e87.42.1744753230792; Tue, 15 Apr 2025
+ 14:40:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/16] staging: gpib: fixes multiline comments style
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dpenkler@gmail.com, dan.carpenter@linaro.org,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <cover.1744438358.git.paul.retourne@orange.fr>
- <2025041546-outlet-timid-bca6@gregkh>
-Content-Language: en-US, fr
-From: Paul Retourne <paul.retourne@orange.fr>
-In-Reply-To: <2025041546-outlet-timid-bca6@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250408-gpio-compile-test-v1-0-140e108e9392@linaro.org>
+In-Reply-To: <20250408-gpio-compile-test-v1-0-140e108e9392@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Apr 2025 23:40:19 +0200
+X-Gm-Features: ATxdqUEVSGM8r-c3Poh961wOBwNSoBIrlb3kf4YpNrhpsuSGeWGlr-u-Otg_x6A
+Message-ID: <CACRpkdbtKqVyAaYFKhnd5B2hBfpc8UxeAGv5dYTmRjdXNxgabQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] gpio: extend build coverage with COMPILE_TEST=y
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/15/25 07:50, Greg KH wrote:
-> On Fri, Apr 11, 2025 at 11:21:52PM -0700, Paul Retourné wrote:
->> Fixes the style of multiline comments to comply with the linux kernel
->> coding style as requested in the gpib TODO file.
->>
->> Paul Retourné (16):
->>    staging: gpib: agilent_82357a: fixes multiline comments style
->>    staging: gpib: cb7210: fixes multiline comments style
->>    staging: gpib: common: fixes multiline comments style
->>    staging: gpib: eastwood: fixes multiline comments style
->>    staging: gpib: fmh_gpib: fixes multiline comments style
->>    staging: gpib: gpio: fixes multiline comments style
->>    staging: gpib: hp_82335: fixes multiline comments style
->>    staging: gpib: hp_82341: fixes multiline comments style
->>    staging: gpib: include: fixes multiline comments style
->>    staging: gpib: ines: fixes multiline comments style
->>    staging: gpib: lpvo_usb_gpib: fixes multiline comments style
->>    staging: gpib: nec7210: fixes multiline comments style
->>    staging: gpib: ni_usb: fixes multiline comments style
->>    staging: gpib: pc2: fixes multiline comments style
->>    staging: gpib: tms9914: fixes multiline comments style
->>    staging: gpib: tnt4882: fixes multiline comments style
-> One of these did not apply to my tree, can you rebase and resend the
-> remaining one?
+On Tue, Apr 8, 2025 at 2:59=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+
+> There are some drivers that aren't build with allmodconfig that don't
+> have any requirements on arch/ headers so make them depend on
+> COMPILE_TEST and extend the build coverage.
 >
-> thanks,
->
-> greg k-h
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Will do, thank you for looking at it,
+All good stuff:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Paul Retourné
-
+Yours,
+Linus Walleij
