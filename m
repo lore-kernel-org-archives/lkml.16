@@ -1,104 +1,83 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7457527FD4F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAE5288C88
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709166; cv=none; b=pW4YMiQ2n+0fTlTuF9vtBc18nuOfIqE1DjbOkNjbFdG6UIDC5ZYx3fJE9tWk1BiAOmUPH2I/iYKsGsF+j6LNhtpZkZgz/s4hQvk172ZXvte5LUbr0HRjzm+jhM5cBt9I5WZ5B5gsdv0/AJC8GnwOOborWwq3f03Qi5rQNW0rnG4=
+	t=1744709170; cv=none; b=EKycipfpjDzWQ2JNuvHnSmfB4W/2ymEJ8JfTOhN/vUrG4CUoq9JSfKqW2SZ8P5KGg0gnEjbgbdyQiccT7T1nUi+t0dCh+h5f+ITnGhKE8LRnBEK1EG8B/7Fi6oPrAhajKtB7Be23IHW9k3JGhtYu1vtDSbpOSzVm/HRHL7aNTsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709166; c=relaxed/simple;
-	bh=fVclga1UkUu0hcY/uvkolrpHb4FqJilGqPDl9WnSj40=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YOYj5jM/DYB8ZM1IiU0Fu7vomI9f6lKR9reA5ISc1RogzE22SAEmdD5/NNF3cmNUz/IUpTRKgEndvodI+sPTi0yM9XdifINk91LEKkig+PMCnvHwFgrSEV9Ul1MD3EnMNAiAAeuRjrJ4oZO904uw8i7M6XDs+ZJGF5uMdQP1mT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IOn1n8dh; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744709170; c=relaxed/simple;
+	bh=/u5Oni1B7nlk9985eSb6XttI0rp4egr161AKqYs7Iqw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hAmMz2a1T2U7Qt7SHYciV+HLKHwEa5GJpvg/TOmCc7XVfv+ttNsP0yguqe4VzHuiGye5MJf9UEzw6kZ/dzL7ck8rQcokjs7iGSavr56ANx3eBfVk5OoxE33yIuoobkMUpz+VfTx48QSLB1e0HEeyc50mI9EtIztXy+i6HrDObSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tPQxrmf+; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IOn1n8dh"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744709160;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=t8GWBbvNAyASsGHRjRlleeuP7nCk/V15qdS4Y4WVO48=;
-	b=IOn1n8dh8IjO6+zB1Tq4ua6g5Rc/EobI3F3VjW9p8vVrgEqn8xQA0Ng7wWQus07haFpvKl
-	I7WOOVnAngwNpRKkwFX7DtNLgtDw4LC8/eBzspERzumwoJVaEfqWO7qs2sUeexmgzm5PlZ
-	oQZoDIvwLbO/PCow5Qg99DTiTuDku2E=
-From: Ye Liu <ye.liu@linux.dev>
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Ye Liu <liuye@kylinos.cn>
-Subject: [PATCH] mm/rmap: Move anon_vma initialization to anon_vma_ctor()
-Date: Tue, 15 Apr 2025 17:25:48 +0800
-Message-Id: <20250415092548.271718-1-ye.liu@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tPQxrmf+"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d6c65dc52so41806015e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:26:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744709167; x=1745313967; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kFv4zzeDVFt2wFNfc+l1QeY2z3r5rZGCAIJcj5O71+o=;
+        b=tPQxrmf+ZVjSu+cK4pwn+KgCUy1sWtXdltEtqNlEeiEZZ/5y9oudAUSxVRonip62Jf
+         pExsTxKZb1kEjZxFy8cLKlP6praF11spaDZQ7blt9iceCL28gva8mudUKfERcmmDLfUJ
+         BxM3kPv1LXeS5sCSupjShcfzoC37UWRhlt4x2VYbP2B9jevDB/QqxhK3MMS/8dweu7E4
+         ivnnlyA3TkV1bx1x2+/auO/5w7VZgeh8ns/TJw7K1zZRmYgU8ogEJz+6BLzgoF6x28EY
+         XWSclsPKX97hX4tnuPxcuI3V/KFmOVqDw+Vlx5duTidtx4PZKbD4dIg+yyp0ntFmveFH
+         UcBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744709167; x=1745313967;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kFv4zzeDVFt2wFNfc+l1QeY2z3r5rZGCAIJcj5O71+o=;
+        b=KLMff7nmxPBRRo9l2bkHJxne0yfQjDuab2WSWujzZ3CypBSGJbAHONKF/U/mRYXu30
+         IT6dv1XGLGUaPVfAwmQikFfb7LhXTKUb2Ch7pZiPyK+VF+M8qkMg5sr4vYzJWOCIoAXX
+         CwLBY9VRzSCzdX8XptyZ9PxAikAD9Z6lix2BiirocRagsfEANLj6lCed+n7gExV1eYbH
+         KHHv8if5PtFok4XuVr5cGy4bEszh8iUjc5NF7mpOsW/c2/1NOiJ1cvI8WkSdIg7vuAYH
+         L03ly5Lttilf1z70oX92q9oZ+riMGG3tk/2TtvoNzMDQJRg87v3PNNW3k9OZX9sDbJ7O
+         U/EA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBVJJyPSnuSdqyPYQP0fq+Ee3GkUb9GPnO0xtk6pKEIZp0UsoDb9w5ATgh8h96oXioQB5meM9nLPw8WpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXCq0yxFyUWhWVtc40eEUrzCF/A/prh33DcZVDynHvFKSgPcuw
+	njLyhMtUu4wbhopDa3YSGYw2Qu1A5KOehBcctzosz7J7j0BMESrtzzM4vaayhZeqzn/Uww2Qwnb
+	yCD+CoxdcyQtP3w==
+X-Google-Smtp-Source: AGHT+IFeSEt4wIOY01EI6T4xsz1Ma5642UUs6D/RIhqS/zc7ZZbyi0t98TnaKTF3Edu8clmB7G4YeK1q3rLrMu0=
+X-Received: from wrxn4.prod.google.com ([2002:a5d:6b84:0:b0:397:c98b:1537])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:1887:b0:390:f9d0:5df with SMTP id ffacd0b85a97d-39eaaec7a7bmr11167075f8f.52.1744709167073;
+ Tue, 15 Apr 2025 02:26:07 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:26:05 +0000
+In-Reply-To: <20250414195928.129040-3-benno.lossin@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+References: <20250414195928.129040-1-benno.lossin@proton.me> <20250414195928.129040-3-benno.lossin@proton.me>
+Message-ID: <Z_4mLRn-piSzuuf6@google.com>
+Subject: Re: [PATCH 2/3] rust: pin-init: examples: conditionally enable `feature(lint_reasons)`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-From: Ye Liu <liuye@kylinos.cn>
+On Mon, Apr 14, 2025 at 08:00:20PM +0000, Benno Lossin wrote:
+> `lint_reasons` is unstable in Rust 1.80 and earlier, enable it
+> conditionally in the examples to allow compiling them with older
+> compilers.
+> 
+> Link: https://github.com/Rust-for-Linux/pin-init/pull/33/commits/ec494fe686b0a97d5b59b5be5a42d3858038ea6a
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
 
-Currently, some initialization of anon_vma is performed in
-anon_vma_alloc(). Move the initialization to anon_vma_ctor()
-so that all object setup is handled in one place.
+Why not just always use #![feature] together with -Astable_features like
+the kernel does?
 
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
----
- mm/rmap.c | 27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
-
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 67bb273dfb80..9802b1c27e4b 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -89,22 +89,7 @@ static struct kmem_cache *anon_vma_chain_cachep;
- 
- static inline struct anon_vma *anon_vma_alloc(void)
- {
--	struct anon_vma *anon_vma;
--
--	anon_vma = kmem_cache_alloc(anon_vma_cachep, GFP_KERNEL);
--	if (anon_vma) {
--		atomic_set(&anon_vma->refcount, 1);
--		anon_vma->num_children = 0;
--		anon_vma->num_active_vmas = 0;
--		anon_vma->parent = anon_vma;
--		/*
--		 * Initialise the anon_vma root to point to itself. If called
--		 * from fork, the root will be reset to the parents anon_vma.
--		 */
--		anon_vma->root = anon_vma;
--	}
--
--	return anon_vma;
-+	return kmem_cache_alloc(anon_vma_cachep, GFP_KERNEL);
- }
- 
- static inline void anon_vma_free(struct anon_vma *anon_vma)
-@@ -453,8 +438,16 @@ static void anon_vma_ctor(void *data)
- 	struct anon_vma *anon_vma = data;
- 
- 	init_rwsem(&anon_vma->rwsem);
--	atomic_set(&anon_vma->refcount, 0);
-+	atomic_set(&anon_vma->refcount, 1);
- 	anon_vma->rb_root = RB_ROOT_CACHED;
-+	anon_vma->num_children = 0;
-+	anon_vma->num_active_vmas = 0;
-+	anon_vma->parent = anon_vma;
-+	/*
-+	 * Initialise the anon_vma root to point to itself. If called
-+	 * from fork, the root will be reset to the parents anon_vma.
-+	 */
-+	anon_vma->root = anon_vma;
- }
- 
- void __init anon_vma_init(void)
--- 
-2.25.1
-
+Alice
