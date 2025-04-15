@@ -1,191 +1,379 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CD549659;
-	Tue, 15 Apr 2025 02:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982553209;
+	Tue, 15 Apr 2025 02:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685634; cv=none; b=UGKYEz4eEWdwpJAIhT5w4UD7dYAE3QpRitD5a8d5VD43410X2/QalBFngowUeGGIeiyDSntikHuTU2K/U6mQjpNRoYqtC+rhlryf8sq1Un8Jbp5J/hFe/Kio6+3VW8jo8vduT75Fq6ywuGzqdziF8cIShE5HavQxCLJSYvShus0=
+	t=1744685654; cv=none; b=NGwdfi69l5E1obWZMEvU8bwvjNit73RjQvE7zr/HaYwSvQLuzod3qrqnv5hkkBDVYqZ1l5ywQvptoQNRcG1qWHKsfiMx4Z8iQxVQKqxcWBn8XjXj4CX3WX3C8JoaCKwkpdVKV5/XhVIlWnV4/WI9n59LGblHmC59aFvCGNCFDb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685634; c=relaxed/simple;
-	bh=Akoo9jqkEcWSXg3tee0G2D4BiWk0o+iDka8f4zLXeJA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QyEJ5Ub4mt/c4aln+lzihj2zHV95DxWJhbdnHofUuX402oubOHyKgdu6XMJAS8GmLKGkIfuYwIlZnY4NdgWB/ikE5Yx/MND6k4CJqSz26l//r9qFg64sHqaPV92tdc7Fs3x2LRpmMsw56nPKdr1/mFxf0oWfUAIBexbGRb2DFZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dXeHb6PQ; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744685654; c=relaxed/simple;
+	bh=QHvpMCoyzx8Is3suCIFIYsQ8ahOL4Ymyr3fexcTqk3U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ieCAZpp2y3utOLtmaXIADeCZ5XBZk9FiunEnm4C/Q31B6YVv1ddDHDTjULiQB8yWbjjUmDydh28YjbVj141dEnMno6ycfFLq7/5dwcvcelNhHQjO6q6eceHuHo6+rPH8ai7KonHDs2kph7JnTKC1BEqTRiPASUiRBDY4oT+GNH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ub4XAogb; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dXeHb6PQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=NHKWS
-	zLsBAbsyzeKkgznnnIP2bOgjZf3BsRST3FJzLs=; b=dXeHb6PQiUhO6v42Dg937
-	J8Jc8v1qCS8Um9lRDAFraRCYmw9z1oFbrmA4rs9diQf29AH8FCDh2It52gLfGdXS
-	oGVewM4NsNeuiUCOZr7fPw33xoXLwNMKJrRNbEDTEQqjemZQQNhBq76a4/e9wgv3
-	s55fHy52adF1qmNJYIjSdc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAH8p8Iyv1nVOGLGQ--.29463S2;
-	Tue, 15 Apr 2025 10:52:58 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: olsajiri@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	hengqi.chen@gmail.com,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH v3 bpf-next 3/3] selftests/bpf: Add test for attaching kprobe with long event names
-Date: Tue, 15 Apr 2025 10:52:26 +0800
-Message-Id: <20250415025226.49891-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <Z_z161cpsaR2uQm3@krava>
-References: <Z_z161cpsaR2uQm3@krava>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ub4XAogb"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744685646;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JnXKXpCFLkpvKYaGY4cocvXQ+p6cGX1HWZGI67SObpY=;
+	b=ub4XAogbzymmMKs631kitcLFuc2AO3Zy65P3KbedkITNGKdL+bXCpHLWIFdPKYz9njBsGG
+	/sCCzJbYP5y97hmFCyRtWP0WZfhe+233LmASREX6KAwMC/Rg+0kIc5eNr2uRnrKJmDYBoP
+	TgCh9EqPIMj2CVAT7idiyqPQZLz2oI8=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAH8p8Iyv1nVOGLGQ--.29463S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Xw4fXr1xZrykXw4fXr1DWrg_yoW7CFW5pa
-	yDZr1YkFs5X3W7XFy7J3y5Zr4Fvrn3Zr17CF1DtF98ZF4kZw18XF1xtF4avwn5GrZav3W3
-	Zw40qr9xu34xXFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUDxhQUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThIweGf9xgaragAAsP
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
+Date: Tue, 15 Apr 2025 10:53:25 +0800
+Cc: hannes@cmpxchg.org,
+ mhocko@kernel.org,
+ roman.gushchin@linux.dev,
+ shakeel.butt@linux.dev,
+ akpm@linux-foundation.org,
+ david@fromorbit.com,
+ zhengqi.arch@bytedance.com,
+ yosry.ahmed@linux.dev,
+ nphamcs@gmail.com,
+ chengming.zhou@linux.dev,
+ linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org,
+ linux-mm@kvack.org,
+ hamzamahfooz@linux.microsoft.com,
+ apais@linux.microsoft.com,
+ yuzhao@google.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A6B3FA7C-857B-4588-9962-2FB91C8E0732@linux.dev>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
+To: Muchun Song <songmuchun@bytedance.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 14 Apr 2025 13:47:55 +0200, Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> On Mon, Apr 14, 2025 at 05:34:02PM +0800, Feng Yang wrote:
-> > From: Feng Yang <yangfeng@kylinos.cn>
-> > 
-> > This test verifies that attaching kprobe/kretprobe with long event names
-> > does not trigger EINVAL errors.
-> > 
-> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > ---
-> >  .../selftests/bpf/prog_tests/attach_probe.c   | 35 +++++++++++++++++++
-> >  .../selftests/bpf/test_kmods/bpf_testmod.c    |  5 +++
-> >  .../bpf/test_kmods/bpf_testmod_kfunc.h        |  2 ++
-> >  3 files changed, 42 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> > index 9b7f36f39c32..633b5eb4379b 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-> > @@ -168,6 +168,39 @@ static void test_attach_uprobe_long_event_name(void)
-> >  	test_attach_probe_manual__destroy(skel);
-> >  }
-> >  
-> > +/* attach kprobe/kretprobe long event name testings */
-> > +static void test_attach_kprobe_long_event_name(void)
-> > +{
-> > +	DECLARE_LIBBPF_OPTS(bpf_kprobe_opts, kprobe_opts);
-> > +	struct bpf_link *kprobe_link, *kretprobe_link;
-> > +	struct test_attach_probe_manual *skel;
-> > +
-> > +	skel = test_attach_probe_manual__open_and_load();
-> > +	if (!ASSERT_OK_PTR(skel, "skel_kprobe_manual_open_and_load"))
-> > +		return;
-> > +
-> > +	/* manual-attach kprobe/kretprobe */
-> > +	kprobe_opts.attach_mode = PROBE_ATTACH_MODE_LEGACY;
-> > +	kprobe_opts.retprobe = false;
-> > +	kprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kprobe,
-> > +						      "bpf_kfunc_looooooooooooooooooooooooooooooong_name",
-> > +						      &kprobe_opts);
-> > +	if (!ASSERT_OK_PTR(kprobe_link, "attach_kprobe_long_event_name"))
-> > +		goto cleanup;
-> > +	skel->links.handle_kprobe = kprobe_link;
-> > +
-> > +	kprobe_opts.retprobe = true;
-> > +	kretprobe_link = bpf_program__attach_kprobe_opts(skel->progs.handle_kretprobe,
-> > +							 "bpf_kfunc_looooooooooooooooooooooooooooooong_name",
-> > +							 &kprobe_opts);
-> > +	if (!ASSERT_OK_PTR(kretprobe_link, "attach_kretprobe_long_event_name"))
-> > +		goto cleanup;
-> > +	skel->links.handle_kretprobe = kretprobe_link;
-> > +
-> > +cleanup:
-> > +	test_attach_probe_manual__destroy(skel);
-> > +}
-> > +
-> >  static void test_attach_probe_auto(struct test_attach_probe *skel)
-> >  {
-> >  	struct bpf_link *uprobe_err_link;
-> > @@ -371,6 +404,8 @@ void test_attach_probe(void)
-> >  
-> >  	if (test__start_subtest("uprobe-long_name"))
-> >  		test_attach_uprobe_long_event_name();
-> > +	if (test__start_subtest("kprobe-long_name"))
-> > +		test_attach_kprobe_long_event_name();
-> >  
-> >  cleanup:
-> >  	test_attach_probe__destroy(skel);
-> > diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> > index f38eaf0d35ef..439f6c2b2456 100644
-> > --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> > +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-> > @@ -1053,6 +1053,10 @@ __bpf_kfunc int bpf_kfunc_st_ops_inc10(struct st_ops_args *args)
-> >  	return args->a;
-> >  }
-> >  
-> > +__bpf_kfunc void bpf_kfunc_looooooooooooooooooooooooooooooong_name(void)
-> > +{
-> > +}
-> 
-> does it need to be a kfunc? IIUC it just needs to be a normal kernel/module function
-> 
-> jirka
-> 
 
-Indeed, so is it okay if I make the following modifications:
+> On Apr 15, 2025, at 10:45, Muchun Song <songmuchun@bytedance.com> =
+wrote:
+>=20
+> This patchset is based on v6.15-rc2. It functions correctly only when
+> CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were =
+encountered
+> during rebasing onto the latest code. For more details and assistance, =
+refer
+> to the "Challenges" section. This is the reason for adding the RFC =
+tag.
 
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -134,6 +134,10 @@ bpf_testmod_test_arg_ptr_to_struct(struct bpf_testmod_struct_arg_1 *a) {
- 	return bpf_testmod_test_struct_arg_result;
- }
- 
-+noinline void bpf_testmod_looooooooooooooooooooooooooooooong_name(void)
-+{
-+}
-+
- __bpf_kfunc void
- bpf_testmod_test_mod_kfunc(int i)
+Sorry, I forgot to CC Yu Zhao. Now I've included him. I think he may
+offer useful value in this aspect.
 
+Muchun,
 Thanks.
 
-> > +
-> >  BTF_KFUNCS_START(bpf_testmod_check_kfunc_ids)
-> >  BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
-> >  BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
-> > @@ -1093,6 +1097,7 @@ BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_prologue, KF_TRUSTED_ARGS | KF_SLEEPABL
-> >  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_epilogue, KF_TRUSTED_ARGS | KF_SLEEPABLE)
-> >  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_test_pro_epilogue, KF_TRUSTED_ARGS | KF_SLEEPABLE)
-> >  BTF_ID_FLAGS(func, bpf_kfunc_st_ops_inc10, KF_TRUSTED_ARGS)
-> > +BTF_ID_FLAGS(func, bpf_kfunc_looooooooooooooooooooooooooooooong_name)
-> >  BTF_KFUNCS_END(bpf_testmod_check_kfunc_ids)
-> >  
-> >  static int bpf_testmod_ops_init(struct btf *btf)
-> > diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> > index b58817938deb..e5b833140418 100644
-> > --- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> > +++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod_kfunc.h
-> > @@ -159,4 +159,6 @@ void bpf_kfunc_trusted_task_test(struct task_struct *ptr) __ksym;
-> >  void bpf_kfunc_trusted_num_test(int *ptr) __ksym;
-> >  void bpf_kfunc_rcu_task_test(struct task_struct *ptr) __ksym;
-> >  
-> > +void bpf_kfunc_looooooooooooooooooooooooooooooong_name(void) __ksym;
-> > +
-> >  #endif /* _BPF_TESTMOD_KFUNC_H */
-> > -- 
-> > 2.43.0
-> > 
+>=20
+> ## Introduction
+>=20
+> This patchset is intended to transfer the LRU pages to the object =
+cgroup
+> without holding a reference to the original memory cgroup in order to
+> address the issue of the dying memory cgroup. A consensus has already =
+been
+> reached regarding this approach recently [1].
+>=20
+> ## Background
+>=20
+> The issue of a dying memory cgroup refers to a situation where a =
+memory
+> cgroup is no longer being used by users, but memory (the metadata
+> associated with memory cgroups) remains allocated to it. This =
+situation
+> may potentially result in memory leaks or inefficiencies in memory
+> reclamation and has persisted as an issue for several years. Any =
+memory
+> allocation that endures longer than the lifespan (from the users'
+> perspective) of a memory cgroup can lead to the issue of dying memory
+> cgroup. We have exerted greater efforts to tackle this problem by
+> introducing the infrastructure of object cgroup [2].
+>=20
+> Presently, numerous types of objects (slab objects, non-slab kernel
+> allocations, per-CPU objects) are charged to the object cgroup without
+> holding a reference to the original memory cgroup. The final =
+allocations
+> for LRU pages (anonymous pages and file pages) are charged at =
+allocation
+> time and continues to hold a reference to the original memory cgroup
+> until reclaimed.
+>=20
+> File pages are more complex than anonymous pages as they can be shared
+> among different memory cgroups and may persist beyond the lifespan of
+> the memory cgroup. The long-term pinning of file pages to memory =
+cgroups
+> is a widespread issue that causes recurring problems in practical
+> scenarios [3]. File pages remain unreclaimed for extended periods.
+> Additionally, they are accessed by successive instances (second, =
+third,
+> fourth, etc.) of the same job, which is restarted into a new cgroup =
+each
+> time. As a result, unreclaimable dying memory cgroups accumulate,
+> leading to memory wastage and significantly reducing the efficiency
+> of page reclamation.
+>=20
+> ## Fundamentals
+>=20
+> A folio will no longer pin its corresponding memory cgroup. It is =
+necessary
+> to ensure that the memory cgroup or the lruvec associated with the =
+memory
+> cgroup is not released when a user obtains a pointer to the memory =
+cgroup
+> or lruvec returned by folio_memcg() or folio_lruvec(). Users are =
+required
+> to hold the RCU read lock or acquire a reference to the memory cgroup
+> associated with the folio to prevent its release if they are not =
+concerned
+> about the binding stability between the folio and its corresponding =
+memory
+> cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
+> desire a stable binding between the folio and its corresponding memory
+> cgroup. An approach is needed to ensure the stability of the binding =
+while
+> the lruvec lock is held, and to detect the situation of holding the
+> incorrect lruvec lock when there is a race condition during memory =
+cgroup
+> reparenting. The following four steps are taken to achieve these =
+goals.
+>=20
+> 1. The first step  to be taken is to identify all users of both =
+functions
+>   (folio_memcg() and folio_lruvec()) who are not concerned about =
+binding
+>   stability and implement appropriate measures (such as holding a RCU =
+read
+>   lock or temporarily obtaining a reference to the memory cgroup for a
+>   brief period) to prevent the release of the memory cgroup.
+>=20
+> 2. Secondly, the following refactoring of folio_lruvec_lock() =
+demonstrates
+>   how to ensure the binding stability from the user's perspective of
+>   folio_lruvec().
+>=20
+>   struct lruvec *folio_lruvec_lock(struct folio *folio)
+>   {
+>           struct lruvec *lruvec;
+>=20
+>           rcu_read_lock();
+>   retry:
+>           lruvec =3D folio_lruvec(folio);
+>           spin_lock(&lruvec->lru_lock);
+>           if (unlikely(lruvec_memcg(lruvec) !=3D folio_memcg(folio))) =
+{
+>                   spin_unlock(&lruvec->lru_lock);
+>                   goto retry;
+>           }
+>=20
+>           return lruvec;
+>   }
+>=20
+>   =46rom the perspective of memory cgroup removal, the entire =
+reparenting
+>   process (altering the binding relationship between folio and its =
+memory
+>   cgroup and moving the LRU lists to its parental memory cgroup) =
+should be
+>   carried out under both the lruvec lock of the memory cgroup being =
+removed
+>   and the lruvec lock of its parent.
+>=20
+> 3. Thirdly, another lock that requires the same approach is the =
+split-queue
+>   lock of THP.
+>=20
+> 4. Finally, transfer the LRU pages to the object cgroup without =
+holding a
+>   reference to the original memory cgroup.
+>=20
+> ## Challenges
+>=20
+> In a non-MGLRU scenario, each lruvec of every memory cgroup comprises =
+four
+> LRU lists (i.e., two active lists for anonymous and file folios, and =
+two
+> inactive lists for anonymous and file folios). Due to the symmetry of =
+the
+> LRU lists, it is feasible to transfer the LRU lists from a memory =
+cgroup
+> to its parent memory cgroup during the reparenting process.
+>=20
+> In a MGLRU scenario, each lruvec of every memory cgroup comprises at =
+least
+> 2 (MIN_NR_GENS) generations and at most 4 (MAX_NR_GENS) generations.
+>=20
+> 1. The first question is how to move the LRU lists from a memory =
+cgroup to
+>   its parent memory cgroup during the reparenting process. This is due =
+to
+>   the fact that the quantity of LRU lists (aka generations) may differ
+>   between a child memory cgroup and its parent memory cgroup.
+>=20
+> 2. The second question is how to make the process of reparenting more
+>   efficient, since each folio charged to a memory cgroup stores its
+>   generation counter into its ->flags. And the generation counter may
+>   differ between a child memory cgroup and its parent memory cgroup =
+because
+>   the values of ->min_seq and ->max_seq are not identical. Should =
+those
+>   generation counters be updated correspondingly?
+>=20
+> I am uncertain about how to handle them appropriately as I am not an
+> expert at MGLRU. I would appreciate it if you could offer some =
+suggestions.
+> Moreover, if you are willing to directly provide your patches, I would =
+be
+> glad to incorporate them into this patchset.
+>=20
+> ## Compositions
+>=20
+> Patches 1-8 involve code refactoring and cleanup with the aim of
+> facilitating the transfer LRU folios to object cgroup infrastructures.
+>=20
+> Patches 9-10 aim to allocate the object cgroup for non-kmem scenarios,
+> enabling the ability that LRU folios could be charged to it and =
+aligning
+> the behavior of object-cgroup-related APIs with that of the memory =
+cgroup.
+>=20
+> Patches 11-19 aim to prevent memory cgroup returned by folio_memcg() =
+from
+> being released.
+>=20
+> Patches 20-23 aim to prevent lruvec returned by folio_lruvec() from =
+being
+> released.
+>=20
+> Patches 24-25 implement the core mechanism to guarantee binding =
+stability
+> between the folio and its corresponding memory cgroup while holding =
+lruvec
+> lock or split-queue lock of THP.
+>=20
+> Patches 26-27 are intended to transfer the LRU pages to the object =
+cgroup
+> without holding a reference to the original memory cgroup in order to
+> address the issue of the dying memory cgroup.
+>=20
+> Patch 28 aims to add VM_WARN_ON_ONCE_FOLIO to LRU maintenance helpers =
+to
+> ensure correct folio operations in the future.
+>=20
+> ## Effect
+>=20
+> Finally, it can be observed that the quantity of dying memory cgroups =
+will
+> not experience a significant increase if the following test script is
+> executed to reproduce the issue.
+>=20
+> ```bash
+> #!/bin/bash
+>=20
+> # Create a temporary file 'temp' filled with zero bytes
+> dd if=3D/dev/zero of=3Dtemp bs=3D4096 count=3D1
+>=20
+> # Display memory-cgroup info from /proc/cgroups
+> cat /proc/cgroups | grep memory
+>=20
+> for i in {0..2000}
+> do
+>    mkdir /sys/fs/cgroup/memory/test$i
+>    echo $$ > /sys/fs/cgroup/memory/test$i/cgroup.procs
+>=20
+>    # Append 'temp' file content to 'log'
+>    cat temp >> log
+>=20
+>    echo $$ > /sys/fs/cgroup/memory/cgroup.procs
+>=20
+>    # Potentially create a dying memory cgroup
+>    rmdir /sys/fs/cgroup/memory/test$i
+> done
+>=20
+> # Display memory-cgroup info after test
+> cat /proc/cgroups | grep memory
+>=20
+> rm -f temp log
+> ```
+>=20
+> ## References
+>=20
+> [1] https://lore.kernel.org/linux-mm/Z6OkXXYDorPrBvEQ@hm-sls2/
+> [2] https://lwn.net/Articles/895431/
+> [3] https://github.com/systemd/systemd/pull/36827
+>=20
+> Muchun Song (28):
+>  mm: memcontrol: remove dead code of checking parent memory cgroup
+>  mm: memcontrol: use folio_memcg_charged() to avoid potential rcu lock
+>    holding
+>  mm: workingset: use folio_lruvec() in workingset_refault()
+>  mm: rename unlock_page_lruvec_irq and its variants
+>  mm: thp: replace folio_memcg() with folio_memcg_charged()
+>  mm: thp: introduce folio_split_queue_lock and its variants
+>  mm: thp: use folio_batch to handle THP splitting in
+>    deferred_split_scan()
+>  mm: vmscan: refactor move_folios_to_lru()
+>  mm: memcontrol: allocate object cgroup for non-kmem case
+>  mm: memcontrol: return root object cgroup for root memory cgroup
+>  mm: memcontrol: prevent memory cgroup release in
+>    get_mem_cgroup_from_folio()
+>  buffer: prevent memory cgroup release in folio_alloc_buffers()
+>  writeback: prevent memory cgroup release in writeback module
+>  mm: memcontrol: prevent memory cgroup release in
+>    count_memcg_folio_events()
+>  mm: page_io: prevent memory cgroup release in page_io module
+>  mm: migrate: prevent memory cgroup release in folio_migrate_mapping()
+>  mm: mglru: prevent memory cgroup release in mglru
+>  mm: memcontrol: prevent memory cgroup release in
+>    mem_cgroup_swap_full()
+>  mm: workingset: prevent memory cgroup release in lru_gen_eviction()
+>  mm: workingset: prevent lruvec release in workingset_refault()
+>  mm: zswap: prevent lruvec release in zswap_folio_swapin()
+>  mm: swap: prevent lruvec release in swap module
+>  mm: workingset: prevent lruvec release in workingset_activation()
+>  mm: memcontrol: prepare for reparenting LRU pages for lruvec lock
+>  mm: thp: prepare for reparenting LRU pages for split queue lock
+>  mm: memcontrol: introduce memcg_reparent_ops
+>  mm: memcontrol: eliminate the problem of dying memory cgroup for LRU
+>    folios
+>  mm: lru: add VM_WARN_ON_ONCE_FOLIO to lru maintenance helpers
+>=20
+> fs/buffer.c                      |   4 +-
+> fs/fs-writeback.c                |  22 +-
+> include/linux/memcontrol.h       | 190 ++++++------
+> include/linux/mm_inline.h        |   6 +
+> include/trace/events/writeback.h |   3 +
+> mm/compaction.c                  |  43 ++-
+> mm/huge_memory.c                 | 218 +++++++++-----
+> mm/memcontrol-v1.c               |  15 +-
+> mm/memcontrol.c                  | 476 +++++++++++++++++++------------
+> mm/migrate.c                     |   2 +
+> mm/mlock.c                       |   2 +-
+> mm/page_io.c                     |   8 +-
+> mm/percpu.c                      |   2 +-
+> mm/shrinker.c                    |   6 +-
+> mm/swap.c                        |  22 +-
+> mm/vmscan.c                      |  73 ++---
+> mm/workingset.c                  |  26 +-
+> mm/zswap.c                       |   2 +
+> 18 files changed, 696 insertions(+), 424 deletions(-)
+>=20
+> --=20
+> 2.20.1
+>=20
 
