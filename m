@@ -1,189 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E44EA1C8634
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E287242922;
+	Tue, 15 Apr 2025 09:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710412; cv=none; b=oBS9CSHOlUOGq3Znyg/ZzV85RxtOXMps4ixNUu1V8SXP3DDlDyta2M8Oo3+UHBP+VXIQutSM1TO9zPajRSyqT4riPKa0861vPAK5bUzlCVwXP1lXkxP0UpZiqNCNE9ccwWViskAtZ0DdnLq8FLFYQJ1mIjorCHX1Iqworimv9Cw=
+	t=1744710474; cv=none; b=X3vH9/I0ZXaiTB91UgAuahsiweIIsn9YKYVBJlSnVoVwcERIapUOaS9ifmxpydMEiMDnTIJaaSv+kVLk0Ho24RcnjUn+btK5YTTrylNxtkcHDR3oEoEKGyvXzZspyU774su8vExs2sj4mDiZev7GOsfRxPySFKlGtN6vwWda8GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710412; c=relaxed/simple;
-	bh=rqh/DaUKRnw5gv/qg0/Wan5Kp7ybiw4Zrvl6VIv/tqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cAy83YQKaCNUUN3qOUWAwiYLktyV8AtQNIdqR6XFDhxCX/xVvHLVTdJVIfuam56PyjsGDwoqcjLasbs3Wi15gOvwJHd4Ba8zOSdU9EaBme9oTpsR/Lsf3LkPWw64e58f8WKlyDHjSEYeFsG4QEXGNeNEu+3nPwOzi+rBj/5zyjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 349521595;
-	Tue, 15 Apr 2025 02:46:47 -0700 (PDT)
-Received: from [10.163.49.226] (unknown [10.163.49.226])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07CD93F66E;
-	Tue, 15 Apr 2025 02:46:46 -0700 (PDT)
-Message-ID: <fb411be7-b8e8-493f-ae79-90adb8bb79fd@arm.com>
-Date: Tue, 15 Apr 2025 15:16:44 +0530
+	s=arc-20240116; t=1744710474; c=relaxed/simple;
+	bh=jS/+2OJPyZ3oKIEjOakuHXM2rsqbRqWQE4x118sJ64g=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=H1I0ttI2HTlMTFLyYduF5oGqYOUSoS8fUG/XpR0CFiItR2stAR1AgObprEqlX2k7FYN1pxF7RX56UdaAhxwn+97GUZUGKq3hoT3d15coBGrb4JX6xU2A249YKRqkgBb1Siem24kuhwXSVUU2DwA6JT8dcmMNjhWZ4Y9kLdZjSEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
+X-CID-CACHE: Type:Local,Time:202504151727+08,HitQuantity:1
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:3b51f057-3b06-44d4-9b2a-22a6424bd06e,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:91d667a05389e8de83db14486b642671,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:5,IP:nil,URL
+	:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SP
+	R:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: ac4c985219de11f0a216b1d71e6e1362-20250415
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <liujiajia@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 992271736; Tue, 15 Apr 2025 17:47:41 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 6CBB3E000081;
+	Tue, 15 Apr 2025 17:47:40 +0800 (CST)
+X-ns-mid: postfix-67FE2B3B-868366657
+Received: from kylin.lan (unknown [172.25.120.81])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 1BD9EE000F3B;
+	Tue, 15 Apr 2025 17:47:37 +0800 (CST)
+From: Jiajia Liu <liujiajia@kylinos.cn>
+To: Jens Axboe <axboe@kernel.dk>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org
+Subject: [PATCH] scsi: fix potential USB flash loss after reboot
+Date: Tue, 15 Apr 2025 17:47:37 +0800
+Message-Id: <20250415094737.1394310-1-liujiajia@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Ryan Roberts <ryan.roberts@arm.com>, Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
- <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
- <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
- <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
- <5d975762-7678-419f-8e2f-40547c079276@arm.com>
- <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
- <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
+If device shutdown is blocking for a few seconds after xhci_pci_shutdown,
+disk_check_events will get scheduled becase block.events_dfl_poll_msecs
+is set to 2000 by user space. usb-storage can get USB access error and
+then call usb_reset_device.
 
+Some SanDisk USB flashes, 0781:5567 and 0781:5581, are lost after reboot.
 
-On 4/15/25 13:23, Ryan Roberts wrote:
-> On 15/04/2025 07:27, Anshuman Khandual wrote:
->>
->>
->> On 4/14/25 18:01, Ryan Roberts wrote:
->>> On 14/04/2025 13:28, Ard Biesheuvel wrote:
->>>> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>
->>>>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
->>>>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>>
->>>>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
->>>>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->>>>>>>> as expected if those macro constants contain some 128 bit layout elements,
->>>>>>>> required for D128 page tables. Fix this problem via first loading up these
->>>>>>>> macro constants into a given memory location and then subsequently setting
->>>>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>>>>>>
->>>>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
->>>>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
->>>>>>> would be good to spell this out.
->>>>>>>
->>>>>>>>
->>>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>>>> Cc: Will Deacon <will@kernel.org>
->>>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>>>> ---
->>>>>>>> This patch applies on v6.15-rc1
->>>>>>>>
->>>>>>>>  arch/arm64/kernel/head.S         | 3 +++
->>>>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>>>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
->>>>>>>>  arch/arm64/mm/mmu.c              | 1 +
->>>>>>>>  arch/arm64/mm/proc.S             | 5 +++--
->>>>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->>>>>>>> index 2ce73525de2c..4950d9cc638a 100644
->>>>>>>> --- a/arch/arm64/kernel/head.S
->>>>>>>> +++ b/arch/arm64/kernel/head.S
->>>>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>>>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
->>>>>>>>        * the TCR will have been set.
->>>>>>>>        */
->>>>>>>> +     adr_l   x0, pir_data
->>>>>>>> +     bl      __pi_load_pir_data
->>>>>>>
->>>>>>> Using C code to pre-calculate the values into global variables that the assembly
->>>>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
->>>>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
->>>>>>> asm-offsets.c:
->>>>>>>
->>>>>>> DEFINE(PIE_E0_ASM, PIE_E0);
->>>>>>> DEFINE(PIE_E1_ASM, PIE_E1);
->>>>>>>
->>>>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
->>>>>>> pre-calculated values that you can then use in proc.S?
->>>>>>>
->>>>>>
->>>>>> There is another issue, which is that mov_q tries to be smart, and
->>>>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
->>>>>> directive evaluates the argument, which does not work with symbolic
->>>>>> constants.
->>>>>
->>>>> I'm not quite understanding the detail here; what do you mean by "symbolic
->>>>> constants"? asm-offsets.h will provide something like:
->>>>>
->>>>> #define PIE_E0_ASM 1234567890
->>>>>
->>>>> The current code is using a hash-define and that's working fine:
->>>>>
->>>>> mov_q   x0, PIE_E0
->>>>>
->>>>>
->>>>> Won't the C preprocessor just substitute and everything will work out?
->>>>>
->>>>
->>>> Yeah, you're right. I was experimenting with something like
->>>>
->>>> .set .Lpie_e0, PIE_E0_ASM
->>>> mov_q xN, .Lpie_e0
->>>>
->>>> where this problem does exist, but we can just use PIE_E0_ASM directly
->>>> and things should work as expected.
->>>
->>> Ahh great, sounds like this should be pretty simple then!
->>
->> Following change works both on current and with D128 page tables.
->>
->> --- a/arch/arm64/kernel/asm-offsets.c
->> +++ b/arch/arm64/kernel/asm-offsets.c
->> @@ -182,5 +182,7 @@ int main(void)
->>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->>    DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
->>  #endif
->> +  DEFINE(PIE_E0_ASM, PIE_E0);
->> +  DEFINE(PIE_E1_ASM, PIE_E1);
->>    return 0;
->>  }
->> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
->> index 737c99d79833..f45494425d09 100644
->> --- a/arch/arm64/mm/proc.S
->> +++ b/arch/arm64/mm/proc.S
->> @@ -536,9 +536,9 @@ alternative_else_nop_endif
->>  #define PTE_MAYBE_NG           0
->>  #define PTE_MAYBE_SHARED       0
-> 
-> I think at minimum, you can remove this PTE_MAYBE_* hack from proc.S. But as Ard
-> says, you may need to add it to asm-offsets.c? I'm surprised asm-offsets.c even
+This can be simulated by injecting mdelay(5000) at the end of
+i915_driver_shutdown. Add event block in sd_shutdown to prevent
+disk_check_events scheduled during the potential blocking.
 
-Moving PTE_MAYBE_* inside asm-offsets.c works as well in both cases
-but still wondering why this is even required ? What am I missing ?
+[   27.324042][    T1] shutdown[1]: Rebooting.
+[   27.548410][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
+[   30.060554][  T225] usb 4-4: device not accepting address 2, error -10=
+8
+[   32.838110][    T1] ACPI: PM: Preparing to enter system sleep state S5
+[   32.851746][    T1] reboot: Restarting system
+[   32.856127][    T1] reboot: machine restart
 
-> compiles without this hack since surely it doesn't have arm64_use_ng_mappings or
-> is_realm_world() available?
-Did not face any problem with defconfig for the mainline kernel and
-both these symbols were visible in the built code.
+Before bd738d859e71 ("drm/i915: Prevent modesets during driver init/ shut=
+down"),
+plymouthd can commit modeset during i915 shutdown process, this brings
+ten seconds delay.
 
-> 
-> Thanks,
-> Ryan
-> 
->>  
->> -       mov_q   x0, PIE_E0
->> +       mov_q   x0, PIE_E0_ASM
->>         msr     REG_PIRE0_EL1, x0
->> -       mov_q   x0, PIE_E1
->> +       mov_q   x0, PIE_E1_ASM
->>         msr     REG_PIR_EL1, x0
->>  
->>  #undef PTE_MAYBE_NG
->>
-> 
+[   36.519606][    T1] shutdown[1]: Rebooting.
+[   36.763427][    T1] sd 1:0:0:0: [sda] Synchronizing SCSI cache
+[   37.229513][ T7030] i915 0000:00:02.0: drm_WARN_ON(!intel_irqs_enabled=
+(dev_priv))
+...
+[   39.008748][ T4356] usb 4-4: device not accepting address 2, error -10=
+8
+[   43.116781][ T4356] usb usb4-port4: Cannot enable. Maybe the USB cable=
+ is bad?
+[   47.196768][  T185] usb usb4-port4: Cannot enable. Maybe the USB cable=
+ is bad?
+[   47.204511][  T185] usb 4-4: USB disconnect, device number 2
+[   48.438385][    T1] i915 0000:00:02.0: i915 raw-wakerefs=3D6 wakelocks=
+=3D6 on cleanup
+
+Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
+---
+ block/disk-events.c    | 1 +
+ drivers/scsi/sd.c      | 4 ++++
+ drivers/scsi/sd.h      | 1 +
+ include/linux/blkdev.h | 1 +
+ 4 files changed, 7 insertions(+)
+
+diff --git a/block/disk-events.c b/block/disk-events.c
+index 2f697224386a..2c998fb360a5 100644
+--- a/block/disk-events.c
++++ b/block/disk-events.c
+@@ -94,6 +94,7 @@ void disk_block_events(struct gendisk *disk)
+=20
+ 	mutex_unlock(&ev->block_mutex);
+ }
++EXPORT_SYMBOL_GPL(disk_block_events);
+=20
+ static void __disk_unblock_events(struct gendisk *disk, bool check_now)
+ {
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 950d8c9fb884..86199991f2e3 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -4064,6 +4064,7 @@ static int sd_remove(struct device *dev)
+=20
+ 	device_del(&sdkp->disk_dev);
+ 	del_gendisk(sdkp->disk);
++	sdkp->remove =3D 1;
+ 	if (!sdkp->suspended)
+ 		sd_shutdown(dev);
+=20
+@@ -4162,6 +4163,9 @@ static void sd_shutdown(struct device *dev)
+ 	if (!sdkp)
+ 		return;         /* this can happen */
+=20
++	if (sdkp->device->removable && !sdkp->remove)
++		disk_block_events(sdkp->disk);
++
+ 	if (pm_runtime_suspended(dev))
+ 		return;
+=20
+diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
+index 36382eca941c..ff7004681267 100644
+--- a/drivers/scsi/sd.h
++++ b/drivers/scsi/sd.h
+@@ -156,6 +156,7 @@ struct scsi_disk {
+ 	unsigned	ignore_medium_access_errors : 1;
+ 	unsigned	rscs : 1; /* reduced stream control support */
+ 	unsigned	use_atomic_write_boundary : 1;
++	unsigned	remove : 1;
+ };
+ #define to_scsi_disk(obj) container_of(obj, struct scsi_disk, disk_dev)
+=20
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index e39c45bc0a97..7739713c5202 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -879,6 +879,7 @@ int __register_blkdev(unsigned int major, const char =
+*name,
+ void unregister_blkdev(unsigned int major, const char *name);
+=20
+ bool disk_check_media_change(struct gendisk *disk);
++void disk_block_events(struct gendisk *disk);
+ void set_capacity(struct gendisk *disk, sector_t size);
+=20
+ #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
+--=20
+2.25.1
+
