@@ -1,226 +1,290 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022082.outbound.protection.outlook.com [40.93.195.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5594B8BE5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:17:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741038; cv=fail; b=iQu5/BzPAJnClHE3RBiqjhIXt12AeRNiZ2eniwcvddOlQBAXfxjgu7VHWMh8Q21YFvKimwyhi8cb8C9G/5+uAFKFDP9uVz25oC/RAQXgrrNYjLSr4C4uIieRb3vrGsR0kDXyVbZUmRID6TzLcrsqEXBpGDcbH5uM9v+NtA8a29s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741038; c=relaxed/simple;
-	bh=htVQCNcKR9qiu6aHJIDLwxxggRtspqN7v4rQajRhwL4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=q/WyYllcI6YreUh4jUqXSa2iY5v6fc5pXxkiPhcdeAcY7kUOsS6wc42ZsEkTHtZR3eDh7+nEhX7RhzYTk4y7hd/YTEMensqC205SR99OuVP0hM6ECYI04Ivt7mqbmBA1bYhJuFVdKt1ijB5qPvWSm9YCMtT1/4687dYapVCfgVc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=SwGlYC8j; arc=fail smtp.client-ip=40.93.195.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C1E20C02E;
+	Tue, 15 Apr 2025 18:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744741083; cv=none; b=JtbfaH1Apmtp5MfNTazcDR+OG+rERORiL+f7NMxZ3H9TNxoYdKjdbTfHI9GKIGovJHM7hhjd5jmJuhvRCAK2ZdEVLcdWD+Uq2TC9WUKEUuSrkwEkVCuhcIItIrQG3oTu/C7W+KevGX+abL5SMELYDpRsNYh0ammkvxCFpU6gXFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744741083; c=relaxed/simple;
+	bh=hBQWsWabfwGfXwS58TZeuoy5jyXcr/PgT5bDAAydwYg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhbbIbfn3ZUDvzjgkNKPfBo2/sNMI0rqOoNLwYtyidv/MfBIDuqbu8CSlKUXuHJ+i5eubDs1mZh7W7lHyWPpeZNvodPXs1rwUBPWl6ZGonXn/qNLrMJHXsvff4IJUDOc/OxRZGDkV/tDhM4DerJ0viiOM0GRGIBASywU+BJd6U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aSfwFKd6; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="SwGlYC8j"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kU8Wb+nhW8iRRj9lL6jCvBMIKnH7jT98+Fc1trtNG1yJhD8pPSgXaGcuLW2UZhfGFvEDLptZdZa/Tga9fzT5Y3V+g8hEvtvw38as5E8/9HrV9/L7HZZ6InzR4vcg2lqZQ3dpM7g9RkwL0uWzncL8mQFGinzgCAzjPLDp/ibUYgsDlvwCqa9vEPUQqeDtwXqLifAs/kIiUO43aFfEDIoiufnA2c1bQ9PnJuvRpM4skMfPlZsz6Lbvj+oqgs7xH0kTNk88dYP/9rb5PdypRNVklIVQvEvvVdlnZHhB7ELF7BbAJlDUOGWVBv1eoeaTY9CKYFRxIbdE9LhIzSqn4rJrwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HueGFHZKdk1stB4LBy+sHc6tDOz2N0G8J5QR17FEFQU=;
- b=uL8AX8C82QLAnmSKq+EDSIbNJqpVJmIGZYXQ/+SfBiaT8TBCjL82qZUZJoObGNxoKMBybclUiW+4tgetyi97967Gwob0ygBDvBkSwbNSCqZFqqQYTwRl8KQVrj3IVF3Vf62h5d8mVWzqJutqwOVRGJD1RpsLTF/8+HLSFAHifSFAsKHeRJIM6+DhpLNXic8oHaA6iVFUw0KHYtYavrdekXXWfvw09HyDP0K1tUlra5ZP6M+WZe6+nTvP6aUD1Thqrd3+BWoSTkaM2e/8eV/rdD/FabCREkhC/2OYay2pFax2Swam3btqrlt/zZ/2FWemHGyAw8cIJBvhsFRwWVeM/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSfwFKd6"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c592764e54so696534485a.3;
+        Tue, 15 Apr 2025 11:18:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HueGFHZKdk1stB4LBy+sHc6tDOz2N0G8J5QR17FEFQU=;
- b=SwGlYC8jyYY8+T0WBzU3VKzaJAgaNoTwVw05j1rdQazrXeUF3DHwqdgXYoi49X0ccvK4Nq+jbpYmszhHiX9W9rtXC7iYYqVv4J7l98XN2DYaBPaU1TkrM0iSIgMIsxYqgw3wgm8uzgPO0GUUMAEf7LBQmaOtdBsAUQ21TUUwBvw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
- SJ2PR01MB8104.prod.exchangelabs.com (2603:10b6:a03:4f2::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.27; Tue, 15 Apr 2025 18:17:11 +0000
-Received: from LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 18:17:11 +0000
-From: D Scott Phillips <scott@os.amperecomputing.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, James Clark
- <james.clark@linaro.org>, James Morse <james.morse@arm.com>, Joey Gouly
- <joey.gouly@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Marc Zyngier
- <maz@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, "Rob Herring (Arm)" <robh@kernel.org>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>, Shiqi Liu
- <shiqiliu@hust.edu.cn>, Will Deacon <will@kernel.org>, Yicong Yang
- <yangyicong@hisilicon.com>, kvmarm@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: errata: Work around AmpereOne's erratum
- AC03_CPU_36
-In-Reply-To: <Z_6hjKOJ6TvXYa87@linux.dev>
-References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
- <Z_6Te1TjMqyXChvQ@linux.dev>
- <86cyddgwn7.fsf@scott-ph-mail.amperecomputing.com>
- <Z_6hjKOJ6TvXYa87@linux.dev>
-Date: Tue, 15 Apr 2025 11:17:07 -0700
-Message-ID: <868qo1guho.fsf@scott-ph-mail.amperecomputing.com>
-Content-Type: text/plain
-X-ClientProxiedBy: CY8PR10CA0037.namprd10.prod.outlook.com
- (2603:10b6:930:4b::9) To LV2PR01MB7792.prod.exchangelabs.com
- (2603:10b6:408:14f::10)
+        d=gmail.com; s=20230601; t=1744741079; x=1745345879; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ExhlIGj+yTSPW/bDWyFi4TK2XTBBWSbc3TeamRQDEM0=;
+        b=aSfwFKd6meZM2jmxG2i72fr4E8UljvEpwQ/+OFPV3iBr1rhXJXBo+qjHkzyr1x15fu
+         QGmjATakcPvfU0mqpCZY4JPYhobeQh1REcmSvjHr59rxYRqZWUdDixIVkJoxj7du8R49
+         gvoRcd+bfazrjXroaUOEaz5l5K/p1U/gsfTzuSq4JM+2+3O6mxuU/fsnuv5Ii6mnFIFl
+         0eWhJosL8EOBMsJBiB8LlmqU4G0tdhAAnLEk8C7/USbqoYdyVY3PgY2C8QM/mnnpXc/h
+         c3hjEdoF0O1V5SaDnCp2mt4gYWOY3gbTUjR5mu0iDZ80erNr1K3IexZ7KgHa4YivzkXy
+         lvKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744741079; x=1745345879;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ExhlIGj+yTSPW/bDWyFi4TK2XTBBWSbc3TeamRQDEM0=;
+        b=TKQ2FQWAvPzj6Y2LWTshy39a6MUCMQTqYSMwxgSnQoJqusOQBV+n1p8H9RpuuyQ8uE
+         n6NF/hwAzbIOS9TNdwCcCUBWrxCV+oLQVwoQst91cS4fvYiRoWp+sm51EUHlyRW6685u
+         ro3wm2t3HYwS1VkSPQXQbQYzXcYZb79ecpJ/08FbiiDLAQmpZrzQQnbExtl8Be8WL+Tq
+         eU5bD9EWR4L74/4dbUQWCLs6B7QgD7LwieWY7RFOiy430IhkT0xROxXRjE2UURX5Lre3
+         v0uWOabRK1M/IoNuXTv8ItqXMEcUWMouakCc59Go1HKwosAvtbvFr0INEJBSn/84LDuG
+         nKjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUU7Lfd+LMJ9xqv3QyYXKZ8PkyYPoap69a4rYO97ZfEMYRqZ7XyDbtWwtxMlWOBDffNgtYRK6i0nkYz@vger.kernel.org, AJvYcCUqwJlSjqfmjV4XZv0g0V1Msbm8s/hk8vwOtEz4VC+iPyT6MDeXI8HM4LnYu3DK8EDOry2NT2SUWogn9d+Yv8Q=@vger.kernel.org, AJvYcCVDFz5p90dIj8ZVwhWUIQBzNxApNsCAlQac9deFeL+05m3mXMSp3GG6OSJBqUdDTPIYoBwr7XShXnj6@vger.kernel.org, AJvYcCVT5J/LmWXLaPq6/k7EDIxtB58P7vHVCGVxmlQ/WcNhp5Y8M9AYm5Z3ujHEcyfNEw6L7dDAlkZnCpbx9ITN@vger.kernel.org, AJvYcCVri6KjmZ/6IbRwSbCv1m+bXouvVK48kWnD/7gHggObEmJoN1QBEu3uq6AmjD28DjYfhTXNJvcvH8Nb9ps=@vger.kernel.org, AJvYcCW5BTW3GbwJ+lme+7pf8+2h3v0dRZeNyXlFc6NDL9wieEQWHBRBrmSQqH1Q8cqNRFJzUxesV5OznsD7EEgd@vger.kernel.org, AJvYcCWlnL+pxEN8R9+75UaWUwUHMn53g7f2dPD7iGaDNj4on5C3eN3HDm4VAHoaYABON+gHhzmajqfo@vger.kernel.org, AJvYcCXBTk1ilBiP40l0yXl5nIJZoA9EyVsVHIbATcSRKRy0wFYZqcsQdPcv8/TrgDiAf7nV1FIeDj+zDT2LmoyUKVdU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEbuhrYp1T0DGFDl2B4cOBqams4SuTaBiyrnYLQx6bDTF7TkL1
+	52EVDmlaM4qZvuE6wgKyivUYcQ5w1JdBLOcvoiHlVhjoQeYrLTRK
+X-Gm-Gg: ASbGnctOacj02QTN7KeQuisExaEHRyrbupB1lpW+LTfF9pfbU9aJHKbtBDRLdx/J23j
+	ilY8t/Shn1Ty7xZqpwvuqTcNyQ3SAOWHuasGOVXvyH7cS7dcNOb6nvrTUhpMrbS1N6GQ0g/GxUg
+	Nrs0A5K+90OzcSGXck+G534PrO5P5EIrtHc7XI3KcVXE5OW9qA4zO+gnZk6LKIxsprzovAT6Rjp
+	n3TC3cg48kBaAEX/f0lQbmAcbKdDJEjQVdFdc2O3EJsSoVKc3edMyI9/YAD5hHJeoC6Qkr+jwXR
+	wwib9tq+ys03V7zgES2EkoM58x4XbpDaoH+9rnSwvjb4f81sgkSmNnEj4ykogvg9+q9s2yAB+Xg
+	jD4yQVQSjFGoFLKl+zFakCwZBC9h5Uns=
+X-Google-Smtp-Source: AGHT+IFVhSC6OL+aHzP4UlljX/heiemumch2r3K6vBxStW09sbsikfEhG8+kvEM3mf7eRSQiqbICcQ==
+X-Received: by 2002:a05:620a:bcc:b0:7c5:3ca5:58fb with SMTP id af79cd13be357-7c91415d59emr74272085a.4.1744741079462;
+        Tue, 15 Apr 2025 11:17:59 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8951562sm936825785a.35.2025.04.15.11.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:17:58 -0700 (PDT)
+Message-ID: <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
+X-Google-Original-Message-ID: <Z_6i0yjysPAaySGW@winterfell.>
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D1ACA1200069;
+	Tue, 15 Apr 2025 14:17:57 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Tue, 15 Apr 2025 14:17:57 -0400
+X-ME-Sender: <xms:1aL-ZzOZ7kkx6oxN54FGRf3pqCp4eRIaxCOhh4pwFwYV8BSAoE68sA>
+    <xme:1aL-Z98oNZWbcy7I7imgoURM7wrGUlGwt87cF0JY67yzZVOJoKUl4idcScql3_NDK
+    8hqw7iHfzt-5ux_uw>
+X-ME-Received: <xmr:1aL-ZyQZT1Fnk6K32y51NUIZVCOSEkXr9XkKDLh3Xn-KlNM2K587N9isrYgX>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegudelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegoufhushhpvggtthffohhmrghinhculdegledmnecujfgu
+    rhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnuc
+    fhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthht
+    vghrnhepgfeiffdvheeiheeuudejgeeuffeiledvvdffvdduteehvdfhiedvffdukeevhf
+    ehnecuffhomhgrihhnpehgihhthhhusgdrihhopdhkvghrnhgvlhdrohhrghdpihgushdr
+    rghspdhgihhthhhusgdrtghomhdpphhtrhgprghspghpthhrrdhrshenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhht
+    phgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqd
+    gsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgs
+    pghrtghpthhtohepgeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtrghmih
+    hrugesghhmrghilhdrtghomhdprhgtphhtthhopehmrghsrghhihhrohihsehkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpth
+    htohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgih
+    nhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnh
+    gvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdp
+    rhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtth
+    hopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:1aL-Z3t4V1nrnDRpDe3waAoDcwL-GT2iKdz-e9M1OlfleZb4jENPyA>
+    <xmx:1aL-Z7eSJJgAc9FzMJTBxxOc2BlYKIs16ufbEqnCTVnUFBnVzUW3sg>
+    <xmx:1aL-Zz1-_Rbwhxszl-I2Fi4Fh-tnnCR2L9c2t2uyyWEL-p59Ujgbaw>
+    <xmx:1aL-Z38fM0JFsuSXIKsSdFYK73Z2nyEo2suHLtyJcymmhVEpWDmX0A>
+    <xmx:1aL-Z-9P1VFxFc4GoBFdNDkQp0zG9p8sGfilqgSN_7dnXPmKSilVoZy->
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Apr 2025 14:17:57 -0400 (EDT)
+Date: Tue, 15 Apr 2025 11:17:55 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
+References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
+ <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
+ <67fe9975.c80a0220.1b5785.66e7@mx.google.com>
+ <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|SJ2PR01MB8104:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e0bb1a4-f231-4389-8e85-08dd7c49bd73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|52116014|7416014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9EfIvYQGQAkDvUOjmKowLpDMTFz+/d57fLxZvSatu+xxfEUAVk6HHWBgWEad?=
- =?us-ascii?Q?EOchV/6Coo6yR83jPIduTndjNoz3OH7kogxXa0kpL+1Pt90hxr/g4DHzgJVX?=
- =?us-ascii?Q?BwnDxCuIzLzR0oj0eR+k5WtE5ucvfOC4EiOMt+5I7/RypeZOPb2hyIV6OEyc?=
- =?us-ascii?Q?XNlrWxvBg9igFyM2T1x1A8+L9mZPfGiQuWBlp5ORmzHPJiHBP+V6LogBX/qb?=
- =?us-ascii?Q?bRxLzTzz3QI9LMpKUoyDBkC7ZxHKSLNCwCcArAw67UfbbklsOu+bE1eLBR/K?=
- =?us-ascii?Q?k9m8/iymQ/yiZVBO3+2PDxNzJYVacoEqbPi155KmME8zwuTHI2OkdJJJ5Bsb?=
- =?us-ascii?Q?orfExBElHdEqh2eGs7bFV28HoDJULDDXxGW9JYdoDn2PQLCQhZD0e5bjvSaV?=
- =?us-ascii?Q?SFJxClWLjmPU5RYvimHjgyGe+Y5gpk/nMV/T/KD1AFo7GO9ll8gSuGGRwq5k?=
- =?us-ascii?Q?Py7OMkyLD5UJPDoDFCsEL0+8YPB5MG6zttPWuCtIJLd+2fDgWwyvW+CKHEby?=
- =?us-ascii?Q?bFURJC7R8963bTLZFcEFOu3mfp5nhmyjv0IGGPS6ugykpq2abN5FGcJGUbWI?=
- =?us-ascii?Q?zUwdY7ZwxZ07faunH+YYwjMezgt0z0s9apwDrdPZZp7nHopJDkp7fXeadVQJ?=
- =?us-ascii?Q?Dsd4JrUy9WgdusWum7ND59pt/Klq2+KW3qeD6P39KH3GQ38QrJjNFhib6h2t?=
- =?us-ascii?Q?vZemM/pRkPmk2oxdqGeKH5jyRln/r6I7Io7vrfzpNzr6o8pYU1r7NEL1Cg4A?=
- =?us-ascii?Q?MWLfHrQyp2+v8HJlPbscLp+GC0or3R2hvFnJPyP57HfRFwNROdrI600bj7IG?=
- =?us-ascii?Q?K+Hjp1VcivLQ3QpwVKGfLBZAhbHwYpjPjvLxyzmecP3SM7DNCRM87L+gEnYj?=
- =?us-ascii?Q?p82a1a1uHdMuKxvHmUtaICA2pujEu5n3jmM5Ao9eqTPezXhqhUubOQh4Q5vd?=
- =?us-ascii?Q?snaRUy9X88hvOFDxBldgKgesb/8YLP+KDRGWZJT0aRYp7IMLXR+EgUMGEkTW?=
- =?us-ascii?Q?KQf8eapAyY8qpXin2C/QKjyK9Rx/vxzc4rqdtfIghdmv/YbwDsdCrqqlTTYg?=
- =?us-ascii?Q?xRww0WRvIRr4nf6nytbQu92Y5Wnc2Ak54anhVKKdLgwYBkrJfCN0pl+smnrX?=
- =?us-ascii?Q?2z2dompk+M1ceWikHhuRlAgNA5/V0IdIzzLIlIsJt3tL2e8S+Qb5eayUYhI8?=
- =?us-ascii?Q?tkx6EqMPU8FGdic6simmV2mZli2H1KEz6jB4nMyKUGukr8bLAsxENAZbTePM?=
- =?us-ascii?Q?sEQjXlqlnQHf+ETJE6Hssu1jASMqyrvX8VbyTjMuq/Vi03Tll1qxXWzIXTap?=
- =?us-ascii?Q?knIdAu3NLqIKToazAecJJwcDwDhAe9j1DUd+iT2DBkcyq/vI/MmH+A/Uj6ta?=
- =?us-ascii?Q?kMSGj9noa8pikZjwdJAhR0wa5M6rF+gP9JlGIeXvGtWcszgJynctVZNDeQqT?=
- =?us-ascii?Q?odUwqmJK8pe06SYJVUsO2/Mvy0SZoOQFmLRCKKSUJ1n4I9hvMGLt6Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(52116014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hgYHdV0g4xxBZNfArb43K95DAHoEcRoo/TDmV/o4sq85KMiHLNMKex2F2O+s?=
- =?us-ascii?Q?nsmPMjk5TIkI29x/VhHc/9zTX+1G5QdQnSH8+Jmku/aFDbGOnCjExJjyxNk9?=
- =?us-ascii?Q?rZj4UD3YQTmVnpYIVFwyxh2p+Zq6cOqBth9hzD2G3tQIUppgX8IgyoYXjflt?=
- =?us-ascii?Q?7DomGBENXNE6SOa8ahxmMQxoOEIRzCDWvImPst8uRKitAC3B1w8IaPwfBQJq?=
- =?us-ascii?Q?h9XajqN9T0tGH0oS3aIEUvxzsRRFyP/kq067XWAFRr+63GppBQqJU6n8Kfp5?=
- =?us-ascii?Q?egbwT4fzqHeNsul8ty3QwlYVsPyqTbG8/suppXe66Yft/flk5nKLSYAeXeJy?=
- =?us-ascii?Q?JQO9ShogKVCpZ5aZ5gwKo47/u3aFrym3P/0fijJk+rdyWO+5noOo2qb8Yw5M?=
- =?us-ascii?Q?zYyF2jUFI5HIMCig9xZ4zoqTDGZA/Ja28jKB3O12eyUSxIBVmHvUZGbD+YLN?=
- =?us-ascii?Q?BxejRl+bg2naWKP7iYxMy9Wg5Icp+GI2PWRMrnS0fhKDm0xCyni1a58BhcA3?=
- =?us-ascii?Q?PJ3ft4YByDDQWQnu9o+ij9x0oHAd6as6NgYCD5kAC+3bIuxCGu1uA+Gk26je?=
- =?us-ascii?Q?+vLdJkOXXiq0PZMjAnPoiBUUk2Kl3o9djUHrcjcyv+hj/FwKV5JMNZ5lPX+I?=
- =?us-ascii?Q?Eo7NGHkcttW9dyvREjoPAQ0GrmoswquHcTyelzzHPuQeOrO/lCt54eMWNlly?=
- =?us-ascii?Q?ulQK4wAjNzLUjV+QSL4lKDqfmHMfFZGD78IzpMDAhUoiBRormTsfaIupCKg9?=
- =?us-ascii?Q?8jBOOAfZaJbW5YRryb4CJt/LoR5L+IOj7JvMBDCmeh1mawrb7/amOMtCKQEc?=
- =?us-ascii?Q?x5s8J6LwT6gZ/YhrClQNulAyfwEJC9LZCwZXXwg8XruEO4FqNk7pNXF5IZlw?=
- =?us-ascii?Q?btUPRS/LD2llGOsYY0c37w69nyZSECz7tFKArIYad+zuiNL7o13dNMt88D7/?=
- =?us-ascii?Q?c9Nefm4hIFjIUoO+IOGM3WgdW3uutofQAS0Fm2tf2kOU8zmQlKOhlUaWeuKD?=
- =?us-ascii?Q?ltlMQj1TSdENgqXETkw36cfcLE9O1LnB34SSN8Ku8cQShcf/WUIBrdBtY4Jh?=
- =?us-ascii?Q?w2SAmKcZX8sStveddZh4D3ZmpwY/wp4TvMeTeGx9NFwxpNJY6Jt7rbj2PMPK?=
- =?us-ascii?Q?Qj0Ejeni8aZCLt7L02PtujJY9XtfbVakBrgu0kOuqX995j8+PFYAHaBVM0by?=
- =?us-ascii?Q?TSzc1rvILxgxN9r1gpWKqsdZWck+QurpRl+TUydEcgF9omYM+rgQe/w78B9V?=
- =?us-ascii?Q?KVM8rk6PeugWXD5DJs1ARAAw8x4HvPkfVhMicY4KwxpPR5TpkKREGPKw8UY0?=
- =?us-ascii?Q?MFS7ipRQYZaqKpCfZCMwULfoC+O+P1X8Rm+Q9jIVrg4UjHqmVny/Z8hnFQwr?=
- =?us-ascii?Q?n7GjYpcjxphfUXEJEm1brCvsqwWDP+bEvSQvuDW4xYwxzIaEPlIlwr1w+vnW?=
- =?us-ascii?Q?Xh4ube+KaJC+ArBM9bLzzNP3oC6ISP9cy6sb9nZDgxzTuke2cbgsGxVmcGxH?=
- =?us-ascii?Q?rSm7Nueah0uRxzmWNl8vknWUZe0z+o+Df0e/XF5BP+q4mwyG73lANucTRYKr?=
- =?us-ascii?Q?1hbytd/tDwAB+NV2XPOrHragoid4r9CYZ3ahnWK427bDPObJdutwARNymkpI?=
- =?us-ascii?Q?37jvUwyUNxMzbmT8165DV4c=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e0bb1a4-f231-4389-8e85-08dd7c49bd73
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 18:17:11.1165
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QtqyRDF+Mfl6IJX0OoDDlRoyyMN/V1kVH/itlcclRQM4fz2ZZmaDfRxPidPHE9AyMp7182l6+MkIvTBmzPPTgTJ0tPk7V4pRB2VLgtBGCYYUZn4+kNMdO0Z6n6LllItQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR01MB8104
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com>
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+On Tue, Apr 15, 2025 at 01:58:41PM -0400, Tamir Duberstein wrote:
+> Hi Boqun, thanks for having a look!
+> 
+> On Tue, Apr 15, 2025 at 1:37 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > On Wed, Apr 09, 2025 at 10:47:23AM -0400, Tamir Duberstein wrote:
+> > > In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
+> > >
+> > > > Using `as` casts may result in silently changing mutability or type.
+> > >
+> > > While this doesn't eliminate unchecked `as` conversions, it makes such
+> > > conversions easier to scrutinize.  It also has the slight benefit of
+> > > removing a degree of freedom on which to bikeshed. Thus apply the
+> > > changes and enable the lint -- no functional change intended.
+> > >
+> > > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_ptr [1]
+> > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > > Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
+> > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > > ---
+> > >  Makefile                 |  1 +
+> > >  rust/bindings/lib.rs     |  1 +
+> > >  rust/kernel/device_id.rs |  3 ++-
+> > >  rust/kernel/fs/file.rs   |  3 ++-
+> > >  rust/kernel/str.rs       |  6 ++++--
+> > >  rust/kernel/uaccess.rs   | 10 ++++------
+> > >  rust/uapi/lib.rs         |  1 +
+> > >  7 files changed, 15 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index eb5a942241a2..2a16e02f26db 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -485,6 +485,7 @@ export rust_common_flags := --edition=2021 \
+> > >                           -Wclippy::no_mangle_with_rust_abi \
+> > >                           -Wclippy::ptr_as_ptr \
+> > >                           -Wclippy::ptr_cast_constness \
+> > > +                         -Wclippy::ref_as_ptr \
+> > >                           -Wclippy::undocumented_unsafe_blocks \
+> > >                           -Wclippy::unnecessary_safety_comment \
+> > >                           -Wclippy::unnecessary_safety_doc \
+> > > diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
+> > > index b105a0d899cc..2b69016070c6 100644
+> > > --- a/rust/bindings/lib.rs
+> > > +++ b/rust/bindings/lib.rs
+> > > @@ -27,6 +27,7 @@
+> > >  #[allow(dead_code)]
+> > >  #[allow(clippy::cast_lossless)]
+> > >  #[allow(clippy::ptr_as_ptr)]
+> > > +#[allow(clippy::ref_as_ptr)]
+> > >  #[allow(clippy::undocumented_unsafe_blocks)]
+> > >  mod bindings_raw {
+> > >      // Manual definition for blocklisted types.
+> > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+> > > index 4063f09d76d9..37cc03d1df4c 100644
+> > > --- a/rust/kernel/device_id.rs
+> > > +++ b/rust/kernel/device_id.rs
+> > > @@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
+> > >      fn as_ptr(&self) -> *const T::RawType {
+> > >          // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
+> > >          // to access the sentinel.
+> > > -        (self as *const Self).cast()
+> > > +        let this: *const Self = self;
+> >
+> > Hmm.. so this lint usually just requires to use a let statement instead
+> > of as expression when casting a reference to a pointer? Not 100%
+> > convinced this results into better code TBH..
+> 
+> The rationale is in the lint description and quoted in the commit
+> message: "Using `as` casts may result in silently changing mutability
+> or type.".
+> 
 
-> On Tue, Apr 15, 2025 at 10:30:36AM -0700, D Scott Phillips wrote:
->> Oliver Upton <oliver.upton@linux.dev> writes:
->> > On Tue, Apr 15, 2025 at 08:47:10AM -0700, D Scott Phillips wrote:
->> >> AC03_CPU_36 can cause asynchronous exceptions to be routed to the wrong
->> >> exception level if an async exception coincides with an update to the
->> >> controls for the target exception level in HCR_EL2. On affected
->> >> machines, always do writes to HCR_EL2 with async exceptions blocked.
->> >> 
->> >> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
->> >> ---
->> >>  arch/arm64/Kconfig              | 17 +++++++++++++++++
->> >>  arch/arm64/include/asm/sysreg.h | 18 ++++++++++++++++--
->> >>  arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
->> >>  arch/arm64/tools/cpucaps        |  1 +
->> >>  4 files changed, 48 insertions(+), 2 deletions(-)
->> >> 
->> >> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> >> index a182295e6f08b..e5fd87446a3b8 100644
->> >> --- a/arch/arm64/Kconfig
->> >> +++ b/arch/arm64/Kconfig
->> >> @@ -445,6 +445,23 @@ menu "Kernel Features"
->> >>  
->> >>  menu "ARM errata workarounds via the alternatives framework"
->> >>  
->> >> +config AMPERE_ERRATUM_AC03_CPU_36
->> >> +        bool "AmpereOne: AC03_CPU_36: CPU can take an invalid exception, if an asynchronous exception to EL2 occurs while EL2 software is changing the EL2 exception controls."
->> >> +	default y
->> >> +	help
->> >> +	  This option adds an alternative code sequence to work around Ampere
->> >> +	  errata AC03_CPU_36 on AmpereOne.
->> >> +
->> >> +	  If an async exception happens at the same time as an update to the
->> >> +	  controls for the target EL for async exceptions, an exception can be
->> >> +	  delivered to the wrong EL. For example, an EL may be routed from EL2
->> >> +	  to EL1.
->> >> +
->> >> +	  The workaround masks all asynchronous exception types when writing
->> >> +	  to HCR_EL2.
->> >> +
->> >> +	  If unsure, say Y.
->> >> +
->> >>  config AMPERE_ERRATUM_AC03_CPU_38
->> >>          bool "AmpereOne: AC03_CPU_38: Certain bits in the Virtualization Translation Control Register and Translation Control Registers do not follow RES0 semantics"
->> >>  	default y
->> >> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> >> index 2639d3633073d..e7781f7e7f7a7 100644
->> >> --- a/arch/arm64/include/asm/sysreg.h
->> >> +++ b/arch/arm64/include/asm/sysreg.h
->> >> @@ -1136,14 +1136,28 @@
->> >>  	__val;							\
->> >>  })
->> >>  
->> >> +#define __sysreg_is_hcr_el2(r)					\
->> >> +	(__builtin_strcmp("hcr_el2", __stringify(r)) == 0)
->> >
->> > This looks fragile. What about:
->> >
->> > 	write_sysreg(hcr, HCR_EL2);
->> >
->> > or:
->> >
->> > 	write_sysreg_s(hcr, SYS_HCR_EL2);
->> 
->> I had also thought about changing the users of write_sysreg(..hcr_el2)
->> to some new function write_hcr_el2() or something, but I guess that
->> would have the same fragility. Any suggestions on a better way? Trying
->> harder with the string stuff, or do something totally else?
->
-> I think the least bad approach would be to convert to HCR-specific
-> accessors. It's the most likely to encourage folks to respect the errata
-> mitigation + keeps the ugliness out of unrelated common helpers.
+Could you show me how you can silently change the mutability or type? A
+simple try like below doesn't compile:
 
-OK, will do
+	let x = &42;
+	let ptr = x as *mut i32; // <- error
+	let another_ptr = x as *const i64; // <- error
+
+also from the link document you shared, looks like the suggestion is to
+use core::ptr::from_{ref,mut}(), was this ever considered?
+
+> >
+> > > +        this.cast()
+> > >      }
+> > >
+> > >      fn id(&self, index: usize) -> &T::RawType {
+> > > diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+> > > index 791f493ada10..559a4bfa123f 100644
+> > > --- a/rust/kernel/fs/file.rs
+> > > +++ b/rust/kernel/fs/file.rs
+> > > @@ -359,12 +359,13 @@ impl core::ops::Deref for File {
+> > >      type Target = LocalFile;
+> > >      #[inline]
+> > >      fn deref(&self) -> &LocalFile {
+> > > +        let this: *const Self = self;
+> > >          // SAFETY: The caller provides a `&File`, and since it is a reference, it must point at a
+> > >          // valid file for the desired duration.
+> > >          //
+> > >          // By the type invariants, there are no `fdget_pos` calls that did not take the
+> > >          // `f_pos_lock` mutex.
+> > > -        unsafe { LocalFile::from_raw_file((self as *const Self).cast()) }
+> > > +        unsafe { LocalFile::from_raw_file(this.cast()) }
+> > >      }
+> > >  }
+> > >
+> > > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> > > index 40034f77fc2f..75b4a18c67c4 100644
+> > > --- a/rust/kernel/str.rs
+> > > +++ b/rust/kernel/str.rs
+> > > @@ -28,8 +28,9 @@ pub const fn is_empty(&self) -> bool {
+> > >      /// Creates a [`BStr`] from a `[u8]`.
+> > >      #[inline]
+> > >      pub const fn from_bytes(bytes: &[u8]) -> &Self {
+> > > +        let bytes: *const [u8] = bytes;
+> > >          // SAFETY: `BStr` is transparent to `[u8]`.
+> > > -        unsafe { &*(bytes as *const [u8] as *const BStr) }
+> > > +        unsafe { &*(bytes as *const BStr) }
+> >
+> >         unsafe { &*(bytes.cast::<BStr>()) }
+> >
+> > ? I'm curious why this dodged the other lint (ptr_as_ptr).
+> 
+> The reason it has to be written this way is that BStr is !Sized, and
+> `pointer::cast` has an implicit Sized bound.
+> 
+> Perhaps the lint is smart enough to avoid the suggestion in that case?
+> Seems like yes:
+> https://github.com/rust-lang/rust-clippy/blob/d3267e9230940757fde2fcb608605bf8dbfd85e1/clippy_lints/src/casts/ptr_as_ptr.rs#L36.
+> 
+
+Oh, I see, so fat pointers get their way from this check? Hmm... however
+fat pointers also suffer the same problem that ptr_as_ptr prevents,
+right? How should we avoid that?
+
+Regards,
+Boqun
