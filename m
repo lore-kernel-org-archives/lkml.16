@@ -1,128 +1,187 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2B5296D0D
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92402949F9;
+	Tue, 15 Apr 2025 13:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744722408; cv=none; b=s8hO4eb12YIUbnTnPB9F/5nzerHuOFEo1DLe9v76nCROFPKUa3Z/g0E9b+ROz5lBuelOqp1OJeuYzrw4XmhSLsA6bEQVxz53oJbHAVpbwjR7jssnxBpnvjCf9Kf+9kYDyB/oAcE+5VN9UkbbirOjkEpYY7E2JHQSrDqAUbwgULo=
+	t=1744722505; cv=none; b=qH6Uudy82Gn29vngm/MAyb6dDQH4f3jxu33QW4QNbDMv8hV9ZkbqzjQtM6J49cAInmL9qmtN+0lH2Yq71w3LWQdbBO3aXcLyWfEvnplPmwXZaK01DWMREsxofv6FxwKcFhorRx5F9886Aejjfcxhqm2xAvNt2OjE84NdSX3XA5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744722408; c=relaxed/simple;
-	bh=LRjzUk98Ay4rkH2g63a8V1YSrPWUfgx7kW6KTmPcAEg=;
+	s=arc-20240116; t=1744722505; c=relaxed/simple;
+	bh=LFHHOdKIEHi28QunVdPZ/PA6tBElS1oeV9WZk8dvqyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xh3W5+G1ldNUUO+f7d1R/7oCMRQDe1TVQ6h5Po+8U3ypfxza9kELbdb6o8R9MEPF9RYHSRueEIMiI9V9JKYMpd/OAHBQ2ulKDIujNRE92DKjlZwVpIv/p5xG2ITZQe1u7wM1LDLLfKEf2cDvW6GL8ddiXJdd9aQ9QOcF6ZxdG1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J2nHIshQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mIv99LA8wXECliyc76d7zqTvtEHbcwQ5sKscvwEABkR4OCTZchTxZjboryf2XzkoVErUQWGHwcAqCzOUWuW6KsjfoGZyVnodqlXfhBvOKIDY/0iC+uXlKi8i/yLhAdadzYin6BF7OC9jwMf1vUA9uuAprvSoxD5aSxr1cCw2rqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=g1vL/jWZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AIsj/ITX; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J2nHIshQ"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tGNU002198
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:06:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=I2yqSqYT+BQkq6vUzZFGc3Cc
-	/VnsQ5Jf54JehSpetyQ=; b=J2nHIshQR8meGGBMCwYgRHBSmviXNlhHcweEExP+
-	7kE2ACr3VXl2bCUVD1I/D33Dmk2dR2UXHMd3C4bcwOhgsEVO5m6WCHQiAEu7/gbo
-	Q+2XE32kgB2Y67nI3HwoIw7AlgfqdQLBCgKzT6GsXnrjR+nAb8oAVUCJ5Z/RsrMk
-	LW63lnLIOk76b9XrnKQ3MO3t+VgtKLRy8nLundyhThVbNw/M8JlXzkmtJt14olvo
-	1u0OV3JoZYGXdKFi/LL6fx4hG7W1xxrKwXsz58JtBhiC37vfx4jKw7e4bIqwLkHS
-	MOx3nyQxXOMIZmwg/syCVtxAVaAS9dWFnElLaN9sNAJUCA==
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vg8md-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:06:46 +0000 (GMT)
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5d6c997d2so52456095ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:06:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744722405; x=1745327205;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I2yqSqYT+BQkq6vUzZFGc3Cc/VnsQ5Jf54JehSpetyQ=;
-        b=WmM6X1Pi16WBE3UKEv04nFE1XhoByFr4jiX/T7ESE11eEnRVYjSas6r5LRHw6eeZ3v
-         doogwyPrXn3ajdBwv9LEDQZz7c6OIoqrkWW/2+iJxWgFkGSUuCuBBlqyalpH36JwG53G
-         QwwO/JpPs14mv7QJ6nlcTGIhS1j6a+ZfqfODF0EG3UM4slAHbatWEkwpXcJHoBBvhq7T
-         i11nyE3acupDNirh7uDAcDTnnxik8fJutsjoQCpoxV5A8V+nHbDFwJ/D8iPgSBYjXo3o
-         WiiFTkSFm0EoI6TyqWCKTKv79iFinbzO3UT23hQtFstM866q202LMdZ4qKNoXVzfDgGX
-         K0Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOfIFUWwObnQEU/chrY4x/ia2YMa4oLPHSgXnEgtnmTKFO9WnT8Fnbd3CdDOw1yJxSW7rW4UuW7etWR40=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/o0UQ3hwLmbyNCFPoUDqJIl++prIun6NqNAX3tDrFyaZFQvXe
-	slVq5o2IkE265l0LJHQsAfJXNkUQG9gA1Zowwx4r3socURRZe8eHqDQbOhB/w/ZJsFK2fvI1T3H
-	zheye4h4ChZ5Gwkb4Ernf9JyMe4JKfJoLBMTlLukl+iUVFNB6nIumrZ4lHXKzyvwtNWF+joslVj
-	tm
-X-Gm-Gg: ASbGnctCTeZh0Gzm6U08l+3pYq0is5gV1zfzBw7kAG4RE8YRZ4EJyBgNLnIk4ZHR6b+
-	6AVcVyuvIymupIgv8t8sBqdFqskfcHX6UtMQhSC7178sdovAJ2qq7TWeCnG9tSRDrCYppC82w8F
-	ieWOFMsuV0dSb+fnVytFVV3ZqcN6SAC9PX/q3T19YKNCep9IfldCNuJvPTRnorEn59YEmAxxyua
-	c3hOgVNxMyBK4ffJ/FwbOCoFxa1Gc7kHay24fgqTWwky9TfrmL/gpsaMm+BytRJ98QVqgz/q9Xy
-	R2qmrTcOo79Kh7zhNZWF1EWtc3ir2U83Avk6otYN74OX6Y2Djr3IPmt6C5nh0FpykgVTZfZCU1Q
-	=
-X-Received: by 2002:a05:6e02:3190:b0:3d4:3d63:e070 with SMTP id e9e14a558f8ab-3d7ec276433mr153251985ab.16.1744722404749;
-        Tue, 15 Apr 2025 06:06:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFyOdYuqVfRNyq0ocgQys9O5xZSGLeV0wJ4vgaj/T3BvgjrDcLaVrzlSZ7ZrvkI157Mweo9SQ==
-X-Received: by 2002:a05:6e02:3190:b0:3d4:3d63:e070 with SMTP id e9e14a558f8ab-3d7ec276433mr153251615ab.16.1744722404449;
-        Tue, 15 Apr 2025 06:06:44 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d12342esm1412252e87.50.2025.04.15.06.06.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 06:06:43 -0700 (PDT)
-Date: Tue, 15 Apr 2025 16:06:41 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Alexey Minnekhanov <alexeymin@postmarketos.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Caleb Connolly <caleb@connolly.tech>, Dang Huynh <danct12@riseup.net>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        phone-devel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sdm660-xiaomi-lavender: Add missing SD
- card detect GPIO
-Message-ID: <p5hl53fvmjdcufgigobobkqkjgm3xxigsxbot74qijejx7ftuy@cnpncgr2krnz>
-References: <20250415130101.1429281-1-alexeymin@postmarketos.org>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="g1vL/jWZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AIsj/ITX"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8197111403AB;
+	Tue, 15 Apr 2025 09:08:21 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 15 Apr 2025 09:08:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1744722501;
+	 x=1744808901; bh=xA9Xlxmq09ENSXnxA5kYNDInLOQ3lpFIKckJl2wyvaY=; b=
+	g1vL/jWZr3xkJdvosSFyNpaQEwlrs+73YlTa3DGoJ2K8qE590Lt91C94eIJMLP4n
+	mUVT2QcuGomlo3bJj+WQLpgj7WEVx32qa4KdeVg/K92WRUBVnP53Sfx/Yi2HXmIw
+	ik276X+c91Pr3B41mjTN5lS4QLuG5f0PtIm8d4vqte0MBWCKvDh+REjWPpDvtKoF
+	WOZNa6YPJ9YysE+Bu8ncET9aQCO0+ekCJn9hiBjkZkUhMoDrhOJNcC8dJ88UTq4x
+	hOtSNSf5+rK+l60VjoRS/IyWLkvvpdZsYTWwuN5GyMEaA8ThMidbI/WfgicsT/ai
+	vR9v/h8iRuEc4SjYxBQOjQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744722501; x=1744808901; bh=xA9Xlxmq09ENSXnxA5kYNDInLOQ3lpFIKck
+	Jl2wyvaY=; b=AIsj/ITXRvXP8HSHn5v7D5jPmeFus07tcwjNZBQe9WOR8Eydwrt
+	99gZsQ98cQPRaJribXXIorfYekWjutv1qkUsR6BFTjpTiCRVcgCJg/aqBlviH1a6
+	pliO51bpkBn+uGCTR7n6kNSBaYY+5gwUWO3nqNzLrKxO3SkmuRcxWu4uKhiNWapv
+	KSuabtdmi0R/bCnZAbLYLt7IHJIX2YVEg3Wzy5IQwhrifMertSCu53Y/1UGozSdV
+	tLHACvQB7lP0oRw6PWrj8bhDOQgL2EPjfirqNgUwhXSTHGtGJ9z7UWIiiCL/MDCe
+	nUqrd1q++ZWSzg6JGHGE+5s1+jO8ct2h/Hg==
+X-ME-Sender: <xms:RVr-Z2-TPWDoW7h1aJm1kaX8KOYgu_zF_AKnW949Oa_m86QTnWG3_Q>
+    <xme:RVr-Z2uc98BzCabdwRI6zn-I81OIKdBgoZxXUvX7OtNxz2Jp0ydNYYV_VTnejz7F_
+    sQjSuIn-6tofg>
+X-ME-Received: <xmr:RVr-Z8AT-pO4Y-BlwPRB88Yb9X6ziy9NkJhtPWoVdOcD2e9Wu7PpmNqepUsHnc5QSJv8iY16lp3Ot97cDJ2ZPwfAA4332Juptg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefheejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
+    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
+    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
+    ggftrfgrthhtvghrnhepieeluddvkeejueekhfffteegfeeiffefjeejvdeijedvgfejhe
+    etuddvkeffudeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhrtghpthht
+    oheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    vhhirhgvshhhrdhkuhhmrghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehsrhhinh
+    hivhgrshdrphgrnhgurhhuvhgruggrsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghp
+    thhtohepmhgrrhhiohdrlhhimhhonhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtth
+    hopehsuhguvggvphdrhhholhhlrgesrghrmhdrtghomh
+X-ME-Proxy: <xmx:RVr-Z-dUHKnSdf-w9rXPpVuPNkRVVpQJEE9PBrK8bL6P674zxAsDXA>
+    <xmx:RVr-Z7N0j0hzCIdyd9hMv5sUfen1276k32BuET95lKPOK6IejgL3Vw>
+    <xmx:RVr-Z4ke2BfIe0JpTytFypMnrqV1X4H-leQJURJnr0Yg_f0BzEd8rw>
+    <xmx:RVr-Z9unXbn7phtJyIj_NwqtMhc9b-CscMtKd30cLMZt0NH9IppzEw>
+    <xmx:RVr-Z2szoRQdYP3IO5AIgkOfuvltUKW3bn65M2OMWwaZZTLkQWaJGPap>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Apr 2025 09:08:19 -0400 (EDT)
+Date: Tue, 15 Apr 2025 15:08:17 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: stable@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v1 01/10] cpufreq: Reference count policy in
+ cpufreq_update_limits()
+Message-ID: <Z_5aQdqYJCFkcHLi@mail-itl>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
+ <1928789.tdWV9SEqCh@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="eMX8NdoxMYxrK7da"
 Content-Disposition: inline
-In-Reply-To: <20250415130101.1429281-1-alexeymin@postmarketos.org>
-X-Proofpoint-ORIG-GUID: H4q4DShmE9xkNRQvqhz9EVOqh5TWKY-Z
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fe59e6 cx=c_pps a=i7ujPs/ZFudY1OxzqguLDw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=Gbw9aFdXAAAA:8 a=EUspDBNiAAAA:8 a=TpWtbmxy4yRKwG7gqU8A:9 a=CjuIK1q_8ugA:10 a=zgiPjhLxNE0A:10
- a=Ti5FldxQo0BAkOmdeC3H:22 a=9vIz8raoGPyDa4jBFAYH:22
-X-Proofpoint-GUID: H4q4DShmE9xkNRQvqhz9EVOqh5TWKY-Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=641 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150093
-
-On Tue, Apr 15, 2025 at 04:01:01PM +0300, Alexey Minnekhanov wrote:
-> During initial porting these cd-gpios were missed. Having card detect is
-> beneficial because driver does not need to do polling every second and it
-> can just use IRQ. SD card detection in U-Boot is also fixed by this.
-> 
-> Fixes: cf85e9aee210 ("arm64: dts: qcom: sdm660-xiaomi-lavender: Add eMMC and SD")
-> 
-> Signed-off-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
-
-Please drop empty line between tags. With that fixed:
+In-Reply-To: <1928789.tdWV9SEqCh@rjwysocki.net>
 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+--eMX8NdoxMYxrK7da
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 15 Apr 2025 15:08:17 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: stable@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v1 01/10] cpufreq: Reference count policy in
+ cpufreq_update_limits()
 
+On Fri, Mar 28, 2025 at 09:39:08PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>=20
+> Since acpi_processor_notify() can be called before registering a cpufreq
+> driver or even in cases when a cpufreq driver is not registered at all,
+> cpufreq_update_limits() needs to check if a cpufreq driver is present
+> and prevent it from being unregistered.
+>=20
+> For this purpose, make it call cpufreq_cpu_get() to obtain a cpufreq
+> policy pointer for the given CPU and reference count the corresponding
+> policy object, if present.
+>=20
+> Fixes: 5a25e3f7cc53 ("cpufreq: intel_pstate: Driver-specific handling of =
+_PPC updates")
+> Closes: https://lore.kernel.org/linux-acpi/Z-ShAR59cTow0KcR@mail-itl
+> Reporetd-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab=
+=2Ecom>=20
+> Cc: All applicable <stable@vger.kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+It looks like this patch is missing in stable branches.
 
 > ---
->  arch/arm64/boot/dts/qcom/sdm660-xiaomi-lavender.dts | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/cpufreq/cpufreq.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -2781,6 +2781,12 @@
+>   */
+>  void cpufreq_update_limits(unsigned int cpu)
+>  {
+> +	struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> +
+> +	policy =3D cpufreq_cpu_get(cpu);
+> +	if (!policy)
+> +		return;
+> +
+>  	if (cpufreq_driver->update_limits)
+>  		cpufreq_driver->update_limits(cpu);
+>  	else
+>=20
+>=20
+>=20
 
--- 
-With best wishes
-Dmitry
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--eMX8NdoxMYxrK7da
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmf+WkEACgkQ24/THMrX
+1yz5hgf/S6i//LIDY5LglLWFfkwReDhT9lIsdeaE8WVCNsUbsduRvWJoSRduxa2f
+ZvLbGwAxs5KMdrp9/3iW/1g8lC/OP15/U+yEXnAl3aSt4Qp+xOmizbSSPe8pPU+R
+G738/u7TNhAekKTEG4+AFs+H6ezuBf2nflDvjmMO7jzk9MhfMeJV26maKWYTedEc
+NKVUTHWVMpfqMb/gS3HGCg7gHiX3uHcnkaiOJb4oejWQziq12IPxVwtsfjecbGRR
+T/NyBFVJcfuAGQa2n8H19oxAPQJqK/AQdSiXJh8hZ8qBRfHkQViTzWC4ocLu639B
+i3p9StmI2FwzJhmmutWgP0D1UxK1BQ==
+=BhXG
+-----END PGP SIGNATURE-----
+
+--eMX8NdoxMYxrK7da--
