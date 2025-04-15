@@ -1,98 +1,188 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail-m3296.qiye.163.com (mail-m3296.qiye.163.com [220.197.32.96])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA8F8460;
-	Tue, 15 Apr 2025 03:35:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF70212FAB;
+	Tue, 15 Apr 2025 03:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.96
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744688128; cv=none; b=F+9QGEAi04kZGN17gOxWxgnO3sfqWFeCfKBcwdJ0vDcZ8ifANoSo0l4HJ1bkyLQBOwJzxajFoZkhe4UIJ8eJAQ13Y83LRKsCPvl9DWgelVMoA6cUEzsRcxpNXs0zQn+VYIQ7cawSNvCBdasa9hO2Jan4QFlsuvzz4vXSGW3rxW4=
+	t=1744688332; cv=none; b=mwc9z/eedQdf555Y/fnldlDsp7KuV0PPgx8xlBvUnUDAQBw5oC/F8Td90kD8qmNx/6OxAcUC8PfiQDXzaEQ6F2ckddGjuIXr3/t+AtqOuMWTEBYu+Mef8onIwLhbrU0+rSAvDU8T5VUpbNb5TIp4R44SHGD/LyDw3PvCEqMhBrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744688128; c=relaxed/simple;
-	bh=rS1xIEqZiprr7MmvqMcRQf9Fqwve12yo2C37rcMBfdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=B9n5XPxk5qxzSGAw9j1YYk/Yc4/Ry8LbvBBOqA70fV2kDt9jEEjteFGopsu0lSkij1Wan3VTmiwiqeb823milBI5ywDjn5PEvSTXl0r3ifq79uR3V43LgEdiYCaalunLLqenqwa/Tu85rBFjBvo/iKbtFAd07Lp8Xa3U48zqldg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VxHEaHJn; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744688332; c=relaxed/simple;
+	bh=T/+3ypIzba5dTnF0UVr993kp7hY5HHFMl/pmmhXkREI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QclmcDfwcEM2Tyu5QqQ0n2B12xw6EJSpeIN5GRKdYM8vFXSvk1EhRPBGXBsl3C/gJq+5DzHr0jTOv2Cio+/DnsgDU4jRfyOa22tC7l3D2q9ngykKXOdU30q4sWISCWXhL/dGvDLITNROcf0a/GTIYqfvp1SdvY/6bXedx8+SH7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jwIkThgE; arc=none smtp.client-ip=220.197.32.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VxHEaHJn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744688120;
-	bh=8vi4vgdSRJfJO/CaqWhgLQTeETdRh/cQnZ9cDp6bWXw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VxHEaHJnvaA3pkBquYxWV9zzFBhUw9gII8gBQJEq/+z97MhAd8joDQMo00P1Q9bjP
-	 LNjrSCIbPRyC8bHV5jyvcgBe5N7e4g3L/PoYsNbDwtYu7hdzbwau6KMp6QyH4PqA0b
-	 Bhi0rDyIUHvyoluCFl6eWNo0mQsHpruampkenXZK9TSND08OJZYvWqC0iEOx6/XzqH
-	 Wc1eoiIWnfBDOeZbNd9iJgvfl73JnP0k9DZJgIYWeWq+ZwdmnBap2Blqi6PQnvUN8n
-	 aVvvu/X4atwgr9ZmOmM0TlzOgBGNF4sZS4cc+W/GjTOcGfQtblbykGdUWftYSijQTh
-	 O1H43jO5BAR+w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zc8tb6L9Gz4wy6;
-	Tue, 15 Apr 2025 13:35:19 +1000 (AEST)
-Date: Tue, 15 Apr 2025 13:35:18 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the tip tree
-Message-ID: <20250415133518.2c8d4325@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jwIkThgE"
+Received: from localhost.localdomain (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11e30c138;
+	Tue, 15 Apr 2025 11:23:18 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-pm@vger.kernel.org,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Peter Geis <pgwipeout@gmail.com>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v4 2/2] soc: rockchip: power-domain: add power domain support for rk3562
+Date: Tue, 15 Apr 2025 11:23:14 +0800
+Message-Id: <20250415032314.44997-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250415032314.44997-1-kever.yang@rock-chips.com>
+References: <20250415032314.44997-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LMS94S4B4M9ULS=xh1N7B68";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHUJJVk9JTkNDSx5ISk5DS1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a963779009103afkunm11e30c138
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NC46OSo6NjJDQxouETdPIxUq
+	Gg0aCTxVSlVKTE9PTUNMT0tKSk5MVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQU5NT0k3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=jwIkThgEmw8bMh2cJnQw7eNERc667wZ2ihwre1kJ5vztUODhE7tJSA0mriBmtXfJ7PXffqHNuyPXQ0o/IqjmHjDowVac6Nd+o8lo25TNHp3hqnL5Kx6H8wpO4sE3d8SbCxutvlK9CSytRBLgGlpHsiypWCpQTKE11C6I0RunkaE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=GsX/OZ9Y6342jW3iRyyPEkR8Rozlsp5w9FxvAaI8OGU=;
+	h=date:mime-version:subject:message-id:from;
 
---Sig_/LMS94S4B4M9ULS=xh1N7B68
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-Hi all,
+This driver is modified to support RK3562 SoC.
+Add support to ungate clk.
+Add support to shut down memory for rk3562.
 
-After merging the tip tree, today's linux-next build (native perf)
-failed like this:
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+---
 
-diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory
-In file included from util/amd-sample-raw.c:12:
-tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal error: asm/=
-msr-index.h: No such file or directory
-   10 | #include <asm/msr-index.h>
-      |          ^~~~~~~~~~~~~~~~~
-compilation terminated.
+Changes in v4:
+- rebase to v6.15-rc1
+- update patch author and Collect review tag
 
-Maybe caused by commit
+Changes in v3: None
+Changes in v2:
+- update the header after rename
 
-  3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/=
-amd/ibs.h>")
-or associated commits?
+ drivers/pmdomain/rockchip/pm-domains.c | 48 +++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
-This a native ppc build of perf.
+diff --git a/drivers/pmdomain/rockchip/pm-domains.c b/drivers/pmdomain/rockchip/pm-domains.c
+index 03bcf79a461f..4cce407bb1eb 100644
+--- a/drivers/pmdomain/rockchip/pm-domains.c
++++ b/drivers/pmdomain/rockchip/pm-domains.c
+@@ -2,7 +2,7 @@
+ /*
+  * Rockchip Generic power domain support.
+  *
+- * Copyright (c) 2015 ROCKCHIP, Co. Ltd.
++ * Copyright (c) 2015 Rockchip Electronics Co., Ltd.
+  */
+ 
+ #include <linux/arm-smccc.h>
+@@ -35,6 +35,7 @@
+ #include <dt-bindings/power/rk3366-power.h>
+ #include <dt-bindings/power/rk3368-power.h>
+ #include <dt-bindings/power/rk3399-power.h>
++#include <dt-bindings/power/rockchip,rk3562-power.h>
+ #include <dt-bindings/power/rk3568-power.h>
+ #include <dt-bindings/power/rockchip,rk3576-power.h>
+ #include <dt-bindings/power/rk3588-power.h>
+@@ -135,6 +136,20 @@ struct rockchip_pmu {
+ 	.active_wakeup = wakeup,			\
+ }
+ 
++#define DOMAIN_M_G_SD(_name, pwr, status, req, idle, ack, g_mask, mem, wakeup, keepon)	\
++{							\
++	.name = _name,					\
++	.pwr_w_mask = (pwr) << 16,			\
++	.pwr_mask = (pwr),				\
++	.status_mask = (status),			\
++	.req_w_mask = (req) << 16,			\
++	.req_mask = (req),				\
++	.idle_mask = (idle),				\
++	.ack_mask = (ack),				\
++	.clk_ungate_mask = (g_mask),			\
++	.active_wakeup = wakeup,			\
++}
++
+ #define DOMAIN_M_O_R(_name, p_offset, pwr, status, m_offset, m_status, r_status, r_offset, req, idle, ack, wakeup, regulator)	\
+ {							\
+ 	.name = _name,					\
+@@ -201,6 +216,9 @@ struct rockchip_pmu {
+ #define DOMAIN_RK3399(name, pwr, status, req, wakeup)		\
+ 	DOMAIN(name, pwr, status, req, req, req, wakeup)
+ 
++#define DOMAIN_RK3562(name, pwr, req, g_mask, mem, wakeup)		\
++	DOMAIN_M_G_SD(name, pwr, pwr, req, req, req, g_mask, mem, wakeup, false)
++
+ #define DOMAIN_RK3568(name, pwr, req, wakeup)		\
+ 	DOMAIN_M(name, pwr, pwr, req, req, req, wakeup)
+ 
+@@ -1197,6 +1215,18 @@ static const struct rockchip_domain_info rk3399_pm_domains[] = {
+ 	[RK3399_PD_SDIOAUDIO]	= DOMAIN_RK3399("sdioaudio", BIT(31), BIT(31), BIT(29), true),
+ };
+ 
++static const struct rockchip_domain_info rk3562_pm_domains[] = {
++					     /* name           pwr     req     g_mask  mem wakeup */
++	[RK3562_PD_GPU]		= DOMAIN_RK3562("gpu",         BIT(0), BIT(1), BIT(1), 0, false),
++	[RK3562_PD_NPU]		= DOMAIN_RK3562("npu",         BIT(1), BIT(2), BIT(2), 0, false),
++	[RK3562_PD_VDPU]	= DOMAIN_RK3562("vdpu",        BIT(2), BIT(6), BIT(6), 0, false),
++	[RK3562_PD_VEPU]	= DOMAIN_RK3562("vepu",        BIT(3), BIT(7), BIT(7) | BIT(3), 0, false),
++	[RK3562_PD_RGA]		= DOMAIN_RK3562("rga",         BIT(4), BIT(5), BIT(5) | BIT(4), 0, false),
++	[RK3562_PD_VI]		= DOMAIN_RK3562("vi",          BIT(5), BIT(3), BIT(3), 0, false),
++	[RK3562_PD_VO]		= DOMAIN_RK3562("vo",  BIT(6), BIT(4), BIT(4), 16, false),
++	[RK3562_PD_PHP]		= DOMAIN_RK3562("php",         BIT(7), BIT(8), BIT(8), 0, false),
++};
++
+ static const struct rockchip_domain_info rk3568_pm_domains[] = {
+ 	[RK3568_PD_NPU]		= DOMAIN_RK3568("npu",  BIT(1), BIT(2),  false),
+ 	[RK3568_PD_GPU]		= DOMAIN_RK3568("gpu",  BIT(0), BIT(1),  false),
+@@ -1398,6 +1428,18 @@ static const struct rockchip_pmu_info rk3399_pmu = {
+ 	.domain_info = rk3399_pm_domains,
+ };
+ 
++static const struct rockchip_pmu_info rk3562_pmu = {
++	.pwr_offset = 0x210,
++	.status_offset = 0x230,
++	.req_offset = 0x110,
++	.idle_offset = 0x128,
++	.ack_offset = 0x120,
++	.clk_ungate_offset = 0x140,
++
++	.num_domains = ARRAY_SIZE(rk3562_pm_domains),
++	.domain_info = rk3562_pm_domains,
++};
++
+ static const struct rockchip_pmu_info rk3568_pmu = {
+ 	.pwr_offset = 0xa0,
+ 	.status_offset = 0x98,
+@@ -1496,6 +1538,10 @@ static const struct of_device_id rockchip_pm_domain_dt_match[] = {
+ 		.compatible = "rockchip,rk3399-power-controller",
+ 		.data = (void *)&rk3399_pmu,
+ 	},
++	{
++		.compatible = "rockchip,rk3562-power-controller",
++		.data = (void *)&rk3562_pmu,
++	},
+ 	{
+ 		.compatible = "rockchip,rk3568-power-controller",
+ 		.data = (void *)&rk3568_pmu,
+-- 
+2.25.1
 
-I have used the tip tree from next-20250414 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LMS94S4B4M9ULS=xh1N7B68
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf90/YACgkQAVBC80lX
-0GwyCgf/YMYuultE1nuuBDMehCvq8yS7dPUAeIy8MfBADgHkeorGbID/voz/96kq
-4S/egEKPo8BB1EaZ493B65l8grUoYeXTT/cr56FqpPnZv+q2eCg3PPv/O8LyPNsC
-yaCxAH/PGth5nlLFSeZIWEonjULOmNFAvb5BZl+xSZANHrCy7mqiRV+M0iJe+oer
-W91cLWHjTcme522TGQqLSIGTDLRB31J9e3+xuJFVCPe/EVGoZ6GDa/vqpiPHiBeg
-KCXdFC2NzRCqllG+7XJu0u1dXgXZO66dNmCnUtQ6VxtN5ZCpLbCGDxcKOmIqHEpX
-Jbd7QzgnY5fTbFc5Qn7tT0+zXr724A==
-=JKd9
------END PGP SIGNATURE-----
-
---Sig_/LMS94S4B4M9ULS=xh1N7B68--
