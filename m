@@ -1,153 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ACA199FA4;
-	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74143199FA4
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729736; cv=none; b=ZCOUQrb+wL8YivW4y26Eb2IFz/J21txmmAqcGXkptfTrujwtQJI1GtMLRItTSne7n1yF2j3bIzcJbPB+MJqE8CcrQhRyOcL2JNsIvKtaVCrIhF2LProKXYd2x0L9KEnA0pubeTQEKApW969aLNGauRTgTg236bjb+cqoMUa1MXg=
+	t=1744729753; cv=none; b=HsAdKt6TojYnB+oEhwdUdtb3kZT0k86IpGlZfsQY/5IOsvEq8SWffc0Q3sjS4i20B542ZcBM6prRd23Tb32dqJZlZ+Gi7yfRZ0bt2EAxaBWmR0xFlTuIzO02GyJi2HP9IgxvW4lSduMcBpKsN7HmVCsD4ErRBhXgB7iW5/398fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729736; c=relaxed/simple;
-	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P65x3XRp9JSQ/PQkfE7IQ59tY7YsZPsvyzhctSLete+kWi4a6skS+qNQ96Tu2IEgEe5z60x60s8dAZC8okjyIZ1Hz2NbGlJ//oEV8F+uHF2ecURsioJVny2YcSkmd5+W9HgP9M2pGtctfPaRv4XyS2pP0LK0oHBJ+sMROyP8edg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRrGEh6D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744729753; c=relaxed/simple;
+	bh=1Dp4ykfJXr1A8wQl88tJK/wbSIcUXrNLVhrIh2+jAyw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=LvgNceX6NTL+scX1MVSpfvxQM4VhHy4FHCId1mvLmNXOvKEn2xrfaQaY2ory2ywvJqBns6ivumf7GklsEzC6hkqCqHJw+ymZBSdAm4c9PJgLFtAm3NnJUKCVMgpRv6MunchWxFyCRNwm73eS1csLo3B68q1BbUl++ino6WtwSBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=e30qjCRm; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRrGEh6D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0849BC4CEEB;
-	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744729736;
-	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DRrGEh6Dx4EKmnikulVWAAbjfm1F0kKtYZQ8q3BEwTpCDZA0B9+QzGhuCuBKrLymY
-	 HV/yOnn7C8aTzJXBXnUmq4iyL34gnw2vr2UacavgID0On6wW26QnN/9ByvcBn57ZSx
-	 QnN4owL31dMbGuRaEr6/1i403ibnllJv3xrmPCbvjfyvZDI/bqizPnEgFo+mPzwFKR
-	 yYedYK9YV9W+FdohnLbAlY5xySk9MVdddKDk/2RAQp4uMF/Tb9wTwG64yZi3phdI1g
-	 JA4V8NNuptOnMFG74HHX/Vi4QD6pEr86q0WMz/EgK09XUoUnOMLZ8KN8iWSMugGijC
-	 jwOTQfgTv9e/g==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4hu9-000000007Q0-1YOd;
-	Tue, 15 Apr 2025 17:08:53 +0200
-Date: Tue, 15 Apr 2025 17:08:53 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Stuart Yoder <stuyoder@gmail.com>,
-	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-	Nipun Gupta <nipun.gupta@amd.com>,
-	Nikhil Agarwal <nikhil.agarwal@amd.com>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Charan Teja Kalla <quic_charante@quicinc.com>
-Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
- path
-Message-ID: <Z_52heGno2Y5M6uF@hovoldconsulting.com>
-References: <cover.1740753261.git.robin.murphy@arm.com>
- <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
- <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
- <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="e30qjCRm"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-306b602d2ffso5929503a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1744729751; x=1745334551; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Rq73IbpUmNtbdh1FOL4RVMdkG0NHYMFilgFpf4Rdoc=;
+        b=e30qjCRmUJyVph9RqedjI8swIArouPu8Agv0ehfMJJfq28MRLzrz3qdk3WG0WfnWss
+         B75JqG/29Z9yjGGOPi2MUzce7LP1K+aWOyCXdmcpgniODMiWZ2dqIn6cwcyYX/+QmgTx
+         GF4Hz2bXXXM7YQIZ8QAX+23pmLp6pQYFs1JFUXDVhnDxsTNlIY2je1DghJ7Z4SloPwY9
+         K0nh3GRiZG/If6yplj+gd3mBpLtU552600U1vjSATnpuFpVVCDMqxo9Ds+wIYgoAi3qq
+         CRSFftR0Rz9ebECjRgMb5DxhfkjFVSvvG/gQpcCxiVkSSWPiCORVqqAMntBUHUiaUSTr
+         va7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744729751; x=1745334551;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Rq73IbpUmNtbdh1FOL4RVMdkG0NHYMFilgFpf4Rdoc=;
+        b=IzXfkNJY6Wy7/SvpZ1ZaiP0GQl05jk5Lf38qVqfHaTyRE4a3mzwo48v5+cNAG7ogEp
+         ArNGK2tYJj1iUBVt5IjKoIUwZabDlPRiLMHNVNLGgzGkqq4mMn+FPhJ74GzXgDXZVNxa
+         pyNO96evu6yz/R6R9Fa8YGLHGeRthcck4m0937c8I85i6b28rTJPfMnLzIu+vb+s0PNm
+         iIh/lIPw4NbS7rKoNSK9Z13i1hr7reRyogAQxM0BqKF7plbZIqFt55aLgmuxKpbk0EKz
+         GXrM/jscNfBTy2gMerNMtNBzGX7VAaocseDK0CAcvIbjx0ecX/Rkz7MBpTXsQOWJxfiP
+         wReg==
+X-Forwarded-Encrypted: i=1; AJvYcCUw1qkti75ZfjMjhVzhDzF9orZFNTi4VpYIGeGk3xqsl1ZtR3ZGM58Ee/42yG8fU4iKJ/RTCAuIWWCU1zs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7VFhYnDoV36yo2icG/7DdmpMcK2e+8UV8uUtxoKrOy8Mjrbzy
+	z9um+DhVz+mNoEu/eHpC2YzCZR+k5maJlro8s9aMqNt3j2S9x7N3WEz3pPjl6eY=
+X-Gm-Gg: ASbGncu2gkAMiMpQh2Brh4ulR3yVQjvyUmPwgQrYfR3Hsl7dyGJWIbgYKy7j44/5Hm5
+	r6nqge+DItj7KKGy8n7k42Cn66AP4GK36jcAbd79dzMrkVGihw1LUPhOCJZd4N6+SBBTkW2UOJd
+	yMgoXvW7UL1zmOmOdWfUmHYZnT9qJ+0xy6ypnExpp5J6gSiKkj/w/WN6FLKJkfSn+weYorQ4OXg
+	fF20tpo+O47zFK324Rk98yQqsVAHO+vUHQI1jkvr3odNKq/cyIlmrDSNf1gQonBZwtRJV7tFzI9
+	wPLlR9rQl8r4ykpdMjbRZs7JNy3TqWI5HpLAKJSr2P8=
+X-Google-Smtp-Source: AGHT+IFKXx8B3GB3eZVGQf50YCeku81UOza8x5Lsxk7p5cMtrXUHnRiBtRcjsGpqtgvr2s85lCgtXA==
+X-Received: by 2002:a17:90b:2f05:b0:303:703f:7f8 with SMTP id 98e67ed59e1d1-3082367fac1mr20946681a91.34.1744729750330;
+        Tue, 15 Apr 2025 08:09:10 -0700 (PDT)
+Received: from smtpclient.apple ([103.85.74.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3082a58c27csm8475039a91.20.2025.04.15.08.09.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Apr 2025 08:09:09 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.300.61.1.2\))
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+From: Jiewei Ke <jiewei@smartx.com>
+In-Reply-To: <424fe473-8472-42b8-99c7-8b0534771343@flourine.local>
+Date: Tue, 15 Apr 2025 23:08:55 +0800
+Cc: wagi@kernel.org,
+ hare@suse.de,
+ hch@lst.de,
+ jmeneghi@redhat.com,
+ kbusch@kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org,
+ mkhalfella@purestorage.com,
+ randyj@purestorage.com,
+ sagi@grimberg.me
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7A03047E-4267-42E7-A1BB-E0D86FC57986@smartx.com>
+References: <8F2489FD-1663-4A52-A50B-F15046AC2878@163.com>
+ <424fe473-8472-42b8-99c7-8b0534771343@flourine.local>
+To: Daniel Wagner <dwagner@suse.de>
+X-Mailer: Apple Mail (2.3774.300.61.1.2)
 
-On Mon, Apr 14, 2025 at 04:37:59PM +0100, Robin Murphy wrote:
-> On 2025-04-11 9:02 am, Johan Hovold wrote:
-> > On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
+Hi Daniel,
 
-> >> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
-> >>   		dev_iommu_free(dev);
-> >>   	mutex_unlock(&iommu_probe_device_lock);
-> >>   
-> >> -	if (!err && dev->bus)
-> >> +	/*
-> >> +	 * If we're not on the iommu_probe_device() path (as indicated by the
-> >> +	 * initial dev->iommu) then try to simulate it. This should no longer
-> >> +	 * happen unless of_dma_configure() is being misused outside bus code.
-> >> +	 */
-> > 
-> > This assumption does not hold as there is nothing preventing iommu
-> > driver probe from racing with a client driver probe.
-> 
-> Not sure I follow - *this* assumption is that if we arrived here with 
-> dev->iommu already allocated then __iommu_probe_device() is already in 
-> progress for this device, either in the current callchain or on another 
-> thread, and so we can (and should) skip calling into it again. There's 
-> no ambiguity about that.
+> 2025=E5=B9=B44=E6=9C=8815=E6=97=A5 20:34=EF=BC=8CDaniel Wagner =
+<dwagner@suse.de> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> Hi Jiewei,
+>=20
+> On Thu, Apr 10, 2025 at 11:44:13PM +0800, Jiewei Ke wrote:
+>> I just noticed that your patchset addresses a similar issue to the =
+one I =E2=80=99m
+>> trying to solve with my recently submitted patchset [1]. Compared to =
+your
+>> approach, mine differs in a few key aspects:
+>>=20
+>> 1. Only aborted requests are delayed for retry. In the current =
+implementation,
+>> nvmf_complete_timed_out_request and nvme_cancel_request set the =
+request status
+>> to NVME_SC_HOST_ABORTED_CMD. These requests are usually already sent =
+to the
+>> target, but may have timed out or been canceled before a response is =
+received.
+>> Since the target may still be processing them, the host needs to =
+delay retrying
+>> to ensure the target has completed or cleaned up the stale requests. =
+On the
+>> other hand, requests that are not aborted =E2=80=94 such as those =
+that never got
+>> submitted due to no usable path (e.g., from nvme_ns_head_submit_bio), =
+or those
+>> that already received an ANA error from the target =E2=80=94 do not =
+need
+>> delayed retry.
+>=20
+> If I understand you correctly, you are concerned about delaying all
+> commands even these which are not transmitted yet. If there are no
+> garantees on ordering it would be possible to failover these commands
+> immediately. Sure something which could be improved in my series.
 
-I was referring to the this "should no longer happen unless
-of_dma_configure() is being misused outside bus code" claim, which
-appears to be false given the splat below.
+Yes, your patchset delays all commands. In fact, some distinction needs =
+to be made:
+commands with path errors and those that haven't been sent yet can be =
+failed over
+immediately. You might consider applying the delay only to commands with =
+status
+NVME_SC_HOST_ABORTED_CMD.
 
-> >> +	if (!err && dev->bus && !dev_iommu_present)
-> >>   		err = iommu_probe_device(dev);
-> >>   
-> >>   	if (err && err != -EPROBE_DEFER)
-> > 
-> > I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
-> > is probed late due to a clock dependency and can end up probing in
-> > parallel with the GPU driver.
-> 
-> And what *should* happen is that the GPU driver probe waits for the 
-> IOMMU driver probe to finish. Do you have fw_devlink enabled?
+>> 2. The host explicitly disconnects and stops KeepAlive before delay =
+scheduling
+>> retrying requests. This aligns with Section 9.6 "Communication Loss =
+Handling"
+>> of the NVMe Base Specification 2.1. Once the host disconnects, the =
+target may
+>> take up to the KATO interval to detect the lost connection and begin =
+cleaning
+>> up any remaining requests. Retrying too early may still lead to data
+>> corruption issues.
+>=20
+> The host error handler is executed thus all communication is stopped.
+> This part hasn't changed. Not sure what you are referring too. The =
+only
+> thing which changes in this series is when we enqueue the failed
+> commands again.
 
-Yes, but you shouldn't rely on devlinks for correctness.
+In your patch as shown below, I think nvme_schedule_failover should be =
+called after
+nvme_rdma_teardown_admin_queue for two reasons:
 
-That said it does seem like something is not working as you think it is
-here, and indeed the iommu supplier link is not created until SMMUv2
-probe_device() (see arm_smmu_probe_device()).
+* nvme_rdma_teardown_io_queues will call nvme_cancel_tagset, and then =
+the inflight
+  commands will be added to the ctrl's request_list. So =
+nvme_schedule_failover should be
+  after nvme_rdma_teardown_io_queues to kick them.
 
-So client devices can start to be probed (bus dma_configure() is called)
-before their iommu is ready also with devlinks enabled (and I do see
-this happen on every boot).
+* This does not follow the rule of starting the delay timer(aka =
+nvme_schedule_failover)
+   after all communication is stopped.
 
-> > [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+> @@ -2153,6 +2154,7 @@ static const struct blk_mq_ops =
+nvme_rdma_admin_mq_ops =3D {
+> =20
+> static void nvme_rdma_shutdown_ctrl(struct nvme_rdma_ctrl *ctrl, bool =
+shutdown)
+> {
+> + nvme_schedule_failover(&ctrl->ctrl);
+> nvme_rdma_teardown_io_queues(ctrl, shutdown);
+> nvme_quiesce_admin_queue(&ctrl->ctrl);
+> nvme_disable_ctrl(&ctrl->ctrl, shutdown);
+> nvme_rdma_teardown_admin_queue(ctrl, shutdown);
 
-> > [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
-> > 
-> > [    3.992050] ------------[ cut here ]------------
-> > [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
-> > [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
-> > 
-> > [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
-> > [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
-> > 
-> > [    4.025943] Call trace:
-> > [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
-> > [    4.030453]  iommu_probe_device+0x38/0x7c
-> > [    4.030455]  of_iommu_configure+0x188/0x26c
-> > [    4.030457]  of_dma_configure_id+0xcc/0x300
-> > [    4.030460]  platform_dma_configure+0x74/0xac
-> > [    4.030462]  really_probe+0x74/0x38c
-> 
-> Indeed this is exactly what is *not* supposed to be happening - does 
-> this patch help at all?
-> 
-> https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
+>> @@ -2178,6 +2180,7 @@ static void nvme_rdma_shutdown_ctrl(struct =
+nvme_rdma_ctrl *ctrl, bool shutdown)
+>> nvme_quiesce_admin_queue(&ctrl->ctrl);
+>> nvme_disable_ctrl(&ctrl->ctrl, shutdown);
+>> nvme_rdma_teardown_admin_queue(ctrl, shutdown);
+>> + nvme_delay_kick_retry_lists(&ctrl->ctrl); <<< delay kick retry
+>> after teardown all queues
+>=20
+> Without the kick it hangs. The admin has explicitly removed the ctrl.
+>=20
+> As I already said, this is a RFC for the sake to figure out if this
+> approach is a good idea. We all agreed, we should first try to sort =
+this
+> out before introducing a new queue. There are many problems which it
+> will introduce, like the one from above 'why delaying not send
+> requests?', 'What happens when we have several short
+> disconnects/connects?', ...
+>=20
+> BTW, there is already a hack in disconnect/connect state transition.
+> Ideally we solve this in a more generic manner.
 
-I've only seen that splat once so far so I don't have a reliable
-reproducer.
+I agree that introducing a controller-level queue is necessary, these =
+commands pending
+retry should be uniformly delayed after the controller finishes =
+disconnecting.
 
-But AFAICS that patch won't help help here where we appear to have iommu
-probe racing with bus dma_configure() called from really_probe() for the
-client device.
+Regarding the issue of multiple connections and disconnections, in my =
+patchset I avoided
+using delayed_work, and instead used a synchronous msleep approach. This =
+prevents
+premature retries.
 
-Johan
+If we use delayed_work, the following issue may arise: during a =
+controller reset, suppose
+an inflight command (command 1) is canceled and added to the =
+controller=E2=80=99s request_list,
+then the connection is torn down and nvme_schedule_failover is called. =
+Command 1 will
+be scheduled to retry after 30 seconds. And then the reconnection =
+completes, but
+command 2 encounters an I/O timeout and is also added to the =
+request_list. At this point,
+the 30-second delay expires, and command 2 might be mistakenly retried =
+immediately.
+
+The current state machine cannot avoid this issue if using delayed_work.
+
+Thanks,
+Jiewei=
