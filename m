@@ -1,102 +1,136 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9015828E61D;
-	Tue, 15 Apr 2025 12:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722CA2973BA;
+	Tue, 15 Apr 2025 12:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721866; cv=none; b=fNvbsWM5DVlfHjyqaghmo/CDA+LWsxbGAMcMpoUO9J9lDPrT9B945vNciUO0zOP3Rr8FdLtHL1OsdUQIqMd8HbyLoYIqowljKcgNA84NMyT+8ZpvnyAmDr7Mb8/sSKEgo9o3bhByENJpmNce2m8/lsn1jhlXE+QObEl+DIYtswc=
+	t=1744721866; cv=none; b=p9RbXbl0G9pGD2sNue0nQtLY/DJGaUGNRt1k20UsYD7sr/arQ7RyZkHzbZ0PpLwMxE/22HpLbg4c2OD0w7TLRiZcDGqesPzbukADxftN/r1En0CRCvhEZUDBm/yXB4EpwRlAdd+6hL7uWC+f8BgxP6FRjjb17S8V1W4UcJcY3/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744721866; c=relaxed/simple;
-	bh=2EOO+sAkwFqCxra83O6A2BDPgugA7NN6ZkUL1xXLrbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iyy2K6Q48HZvngR1JjR12rQ5uh6kQf3Zw1Bf/FFKP5jXsjQDAjLMyZUjpypq5ePi4qr9mA6wcJ/9MIgKhGrUzJ5vEbLegvEu2sP96B7x+5m0i/o9fAVhFh+frvBA0CCHYBKz73tT4oMU9KB4GLAkt3MJ2Inn30YLXipJMfnU0lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=utNpLyac; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	bh=LFJwyTd6MnFShSXdxjp8wlhVfuya8ijcIKgjmhM9bmQ=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=h5G3f2u5JewcIYU/DMJhOKXFfKgihkvJ9q8Avksl+WuN619ZUsliFI33VvWTTdB2SOFHK86COMkpGyx4x3DQ5bdIuTalKd98mVAySPR1OuunsHU25MiDHF/z7ZhL3UKeR1Lp/GHjrgC3oPQc2m7ckzwAYL+5oIfM7Db1Kinegbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TWPZXhIB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gMKqPC0G; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="utNpLyac"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=/zg+4LuvKN2MfsYaYQDPTMDY3vRum1BuvjjkEVMSOMM=; b=utNpLyacBxVYcE4VG7k4ynrztr
-	ZBf69qa3y5t2IoS/iSjBwfypRhUnM3WBelKCWR4xODoRhm5+CZk6ukSO3TpymSQdE71yemvFAi49c
-	kmH2BrBhX4cgKRtWcDskgGDDpmfpX2xT/loN6Ucwmp+VuXQnUPSac8o1YhnyqNskJMBw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4fr1-009RZD-DL; Tue, 15 Apr 2025 14:57:31 +0200
-Date: Tue, 15 Apr 2025 14:57:31 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ivan Vecera <ivecera@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
-	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
- defs
-Message-ID: <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-8-ivecera@redhat.com>
- <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
- <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
- <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
- <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
- <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
- <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TWPZXhIB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gMKqPC0G"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 905C7138082E;
+	Tue, 15 Apr 2025 08:57:42 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Tue, 15 Apr 2025 08:57:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1744721862;
+	 x=1744808262; bh=B8S7VT2gS3fok2d/qA8u7a8APeUMe4HZUSTTc3nUw6Y=; b=
+	TWPZXhIBh8wmWu9rdDyrY9bNCSvE4Bwkzh+EcqV5pO4hl2PsZG0jv+iCShQ9ZLIM
+	/G8+3jPTBZi7Cb0AFDctEHPkeGPaTxy0AblYI9pzfnNkt9RtMf4bSgaGrWz6Grj5
+	SCFotlzO+WEDd8yl549Sy20Sc1Tc8qNqSI0o0xuvs3sLMILv6PNy1pCUAT/Hu/ZG
+	UHfmaKlG/o6bOXg+6RkFy+vRZbfdE8wM2ScRX7FVKtpSDcDWuCxY+VYw9XQNJgYa
+	9paYpDk/VIPgsjTqDtwRpzCoZpbhgQrf0JGoG6v1GzDqzv9Riuv/PNKha5iwgs+I
+	E5+jWWOJogX20i0pSWbF/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744721862; x=
+	1744808262; bh=B8S7VT2gS3fok2d/qA8u7a8APeUMe4HZUSTTc3nUw6Y=; b=g
+	MKqPC0G/Tkl5IbFu03/d6RuwKfziw1jaUgKWvcmKd9L44fufUt6jVPq2TyizhWWC
+	vJEl/S5zgSJUKfxMWoQyHuFfRI/zZ6eJUAvP1VDZUexrEie0eJBLKZVSYt90pYek
+	E7BOfLmfn5gjUCf8a3Hq+ZDVhqX3N2GJQPZG73VEqWavOsMk/5s+vuOfjoF7uxUK
+	X+EfXsvsKekuxT1MQN3UVCJmHG50ueKLyXDn19kIyTanZtHhfFH0epcNy4xdMA8a
+	Q8364S/WNFfR2vxcTpVciHAz8zL0l/0WIVfiTpaipY8Um8Xk//x+tBxFQo7JPQYa
+	e0GXg4eySZSf/ptnHRWRA==
+X-ME-Sender: <xms:xVf-Z1NNS0pn0p9cbCaLBXdutrNGto_a7g88DmCz6j9JmcNiM3W7ww>
+    <xme:xVf-Z3-aAtT-qB9mUC7t5832mntXOAMgqQqZ7g7kyk1tsZ8-qnzdhI8O91h_XdLwj
+    ifT00euLvvZSSfZpYs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrg
+    hilhdrtghomhdprhgtphhtthhopegrughrihgrnhdrhhhunhhtvghrsehinhhtvghlrdgt
+    ohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshh
+    grfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhlfhdrhhgrnhhsshho
+    nheslhhinhgrrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvg
+    hlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepihhmgieslhhi
+    shhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehsfedvsehngihprdgtohhmpdhrtg
+    hpthhtohephhgrihgsohdrtghhvghnsehngihprdgtohhm
+X-ME-Proxy: <xmx:xVf-Z0Q6XiJgne4OAMJJq3ehog6MuP1NxtSCubIFKfjbfEsdzNxlCw>
+    <xmx:xVf-ZxtTCz5mKaO6dHVJGfzsCY_dQJxoMY6L_FrziU6krO3Ri3WE8g>
+    <xmx:xVf-Z9dopNq9m7WPCjQuRIRsAEkjijdupk2iN0EVThipuU1A1mxLEQ>
+    <xmx:xVf-Z91pTGez8d5wkbB28IgbXPhN-cLxMe6HpTUxUVDYBf54eBJShw>
+    <xmx:xlf-ZzPyMxFalFCb0HMH_zLxyMXL-SMFMB9zamHYBxNuWZcr2TX73yYh>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BE53A2220074; Tue, 15 Apr 2025 08:57:41 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
+X-ThreadId: T4d63d28ce2d16200
+Date: Tue, 15 Apr 2025 14:57:21 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Luke Wang" <ziniu.wang_1@nxp.com>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Haibo Chen" <haibo.chen@nxp.com>, "Adrian Hunter" <adrian.hunter@intel.com>,
+ "Ulf Hansson" <ulf.hansson@linaro.org>, "Shawn Guo" <shawnguo@kernel.org>,
+ "Sascha Hauer" <s.hauer@pengutronix.de>
+Cc: "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+ "Fabio Estevam" <festevam@gmail.com>, "Josua Mayer" <josua@solid-run.com>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+ "NXP S32 Linux Team" <S32@nxp.com>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Message-Id: <3d544dbc-863d-4ac5-9839-aef3a36881d1@app.fastmail.com>
+In-Reply-To: 
+ <DU2PR04MB856729305860ED5C3C545771EDB22@DU2PR04MB8567.eurprd04.prod.outlook.com>
+References: <20250411085932.1902662-1-arnd@kernel.org>
+ <DU2PR04MB856729305860ED5C3C545771EDB22@DU2PR04MB8567.eurprd04.prod.outlook.com>
+Subject: Re: [EXT] [PATCH] [v2] mmc: esdhc-imx: convert to modern PM_OPS
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-> Hi Andrew,
-> the idea looks interesting but there are some caveats and disadvantages.
-> I thought about it but the idea with two regmaps (one for simple registers
-> and one for mailboxes) where the simple one uses implicit locking and
-> mailbox one has locking disabled with explicit locking requirement. There
-> are two main problems:
-> 
-> 1) Regmap cache has to be disabled as it cannot be shared between multiple
-> regmaps... so also page selector cannot be cached.
-> 
-> 2) You cannot mix access to mailbox registers and to simple registers. This
-> means that mailbox accesses have to be wrapped e.g. inside scoped_guard()
-> 
-> The first problem is really pain as I would like to extend later the driver
-> with proper caching (page selector for now).
-> The second one brings only confusions for a developer how to properly access
-> different types of registers.
-> 
-> I think the best approach would be to use just single regmap for all
-> registers with implicit locking enabled and have extra mailbox mutex to
-> protect mailbox registers and ensure atomic operations with them.
-> This will allow to use regmap cache and also intermixing mailbox and simple
-> registers' accesses won't be an issue.
+On Tue, Apr 15, 2025, at 05:15, Luke Wang wrote:
+> Hi Arnd,
+>
+> This patch has compilation issue because sdhci.c still uses #ifdef 
+> CONFIG_PM. Do you plan to send a new patch to fix? If not, I can send a 
+> patch to fix the compilation warning.
 
-As i said, it was just an idea, i had no idea if it was a good idea.
+Can you see if the change below is sufficient? I see I have that
+in my randconfig tree and I did not see any problems with my
+v2 patch and that. I probably added that one originally because
+of some other build failure but then never sent it.
 
-What is important is that the scope of the locking becomes clear,
-unlike what the first version had. So locking has to be pushed down to
-the lower levels so you lock a single register access, or you lock an
-mailbox access.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Also, you say this is an MFD partially because GPIOs could be added
-later. I assume that GPIO code would have the same locking issue,
-which suggests the locking should be in the MFD core, not the
-individual drivers stacked on top of it.
-
-	Andrew
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index cd0e35a80542..4ee2695b0202 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -874,12 +874,10 @@ irqreturn_t sdhci_thread_irq(int irq, void *dev_id);
+ void sdhci_adma_write_desc(struct sdhci_host *host, void **desc,
+                           dma_addr_t addr, int len, unsigned int cmd);
+ 
+-#ifdef CONFIG_PM
+ int sdhci_suspend_host(struct sdhci_host *host);
+ int sdhci_resume_host(struct sdhci_host *host);
+ int sdhci_runtime_suspend_host(struct sdhci_host *host);
+ int sdhci_runtime_resume_host(struct sdhci_host *host, int soft_reset);
+-#endif
+ 
+ void sdhci_cqe_enable(struct mmc_host *mmc);
+ void sdhci_cqe_disable(struct mmc_host *mmc, bool recovery);
