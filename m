@@ -1,32 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DF22750F2;
-	Tue, 15 Apr 2025 12:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718613; cv=none; b=hnsSDMrDsApcmcL+yoQFsiArHlucqFhDSQErtKHBfprBAbyHdU/zXrb63WtQLtyrXppISRjBSh5z7Sjj+4Ad/XSLomzubKUdp3R6T28aZAzecE9sw1zvkqtJJi8rN6D8al7viAHE0taTmkB4QNpnZ4+Wiahqak3spDtW60dkZp4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718613; c=relaxed/simple;
-	bh=hLHH1GH9RrzmD3Fhp2f/177HpgYsuGmU1wu62As+KKE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=oqMbqfgkhCp4njVBpOyZqYn43dYcnx8rnwvTskDRBtU4O+Dfi0w9jj3Hu+8HUzKyUq6QFU0ferxxxdX8ZO8EEA+5z7Ewv6mG0PTW6p4WmM6y8nHRKAGJU0oDNYh8i5rAxBDS0T1wYi3KSL5YFDlu3kCuCs0tf6WPnuHlZvY79Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1OIF979; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EC22750F2;
+	Tue, 15 Apr 2025 12:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744718627; cv=fail; b=qFOiOnwzelc6JkEz/CcT0lKBg9sW6mMo3gaQGu6JqD/tA8uaUbn5+jev/logOnwwrWfZ7J3sDcHceGVnYhJG7k2am+j6zToG9eo8kOvPUEPZT2eByzFwNwUK05EoBMrbWKobdTEw7k7g9teZg5QeOPd9rPf/dSMutaTnmidA+aw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744718627; c=relaxed/simple;
+	bh=JysCC1r1soSB0vxbkObYGHNXosCO/3psQfn3j0PtjIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FCg4+4idYU7IACX8PgQsqr304mMAR3W9zRkv6tRr23hD5pLd3gjDWJiQAUqVYD5Gpd/2o7B/nLs7rEN+DyTEj7z8hKzDogx26ETUcIGbKcuJhC/nn5wRlGEdSCflbMgwMaXcYStyGG13roIWHUTNU9WzfQzPQOLz0rfTtiLgXKw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=SCO38vgM; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=vOJEBDJC; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1OIF979"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE97C4CEDD;
-	Tue, 15 Apr 2025 12:03:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744718611;
-	bh=hLHH1GH9RrzmD3Fhp2f/177HpgYsuGmU1wu62As+KKE=;
-	h=Date:To:Cc:From:Subject:From;
-	b=d1OIF979gma51ugF1YMIEIctpbYCSpmrhd1Tkmdq1lXYZR4OS2aV6HldAMLaAYxyk
-	 9qHRygJMzz3pL4f5Ns60He+/xUpfdWyIZKy0/5kiKFEs6eA4wcHPYUoHqwLgGF7oPX
-	 M0YESr82P8itxX3OnE4oLLXp1oE1ww13XlomV2lbrLBZNz6IE1LaC9+ybodJJManDA
-	 dEF9r/iljGa+e//enkffDn4hyyRo8Jlax668inhjpV1Q1IjgCuJ7cvSGGokV9Z4r+P
-	 mgSshLDLgx0ncgHZPufAkTYWFfg/ke30kFZFLejK5scUtTp7GH/Wy38UyJMFd/Eebq
-	 lYd/oYM98nOww==
-Message-ID: <20c191d9-5f7a-4ec6-a663-dcc8d0b54c18@kernel.org>
-Date: Tue, 15 Apr 2025 14:03:26 +0200
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SCO38vgM";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="vOJEBDJC"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F6G2Pu030986;
+	Tue, 15 Apr 2025 07:03:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=; b=
+	SCO38vgMhoRTDMQfLjENxz+34S75nQkWOPgZiMnwljvp7+lbArnowNYErSg10WRh
+	xPq7F4biwNQJ86ekFj9r7v3dnko7c7BpihoF4Uqv1YWS9pNNboguMfo+f8giSoXz
+	2r9cY1gGbZL9w9CCEuoeTHOuhXZd3Zpyv2316FTJjUhGM1XYKB1jTLZozgHHJcRl
+	MtE1PTEPx2CLiD+MS0K16GVBQNMQJfjsCqJ1Uv+4CkqOane4qooyfCAmzF2D6QYy
+	aaNdGGYThd0x13EU+ejr0hV9oki7GnFh4U8dGGYCAiJ0A7KplArRtYnOp9/oK7D0
+	GfD0sWRcD3fFjOLKGbQegQ==
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4615wt11a4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 07:03:26 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fvwt/28vLRy8oR1uzJowmIMa+/waXujr0aUbVGFl21yyCrt3Wt/awD0lGKaBjDu8HJACN8KcC8CFKhubZqoSOz/LsCOg4a7ufWYBCO6u3vtbHDWGqNVqwkKeLaYS5Zwa+tn5fkA83BRtWBNpbzPexHyVajdDKjQtywQA6X1jB/TtS30rEYUeBxQvFeExSlwErriJ/MoB7oYGJRi30IhehwdF1NtZOBw2pGTksgtKrdBjQEtbpNI5bPmR6LVK4aD/2/9JFMGT37U36l1CglYCmNwUvUr98lj+PoPv1aEFeFEjPmIv8TTrAjF+x+3Z1IFP9CDaW2RrppcU0LYEvtfXrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=;
+ b=Dm5P2kmG34arDEA0NmvxaLZ65ceA57RPx2eHu9gW8342pmzySaPUCjEYnPPAK4LahqNXoXZgnYBRmk7BhOgNdsIOLQ1gB55mZpf5AVGkoVzjsQGcb9PAMLpf/Lb3v83mIyLnQRM4/2hTkZ1frT4bN69u13nipe1Q9h8LvaQ8i82kN7HmXpBklwM8rdQ5SU0QfOPMmteMLwaJvEUKnAdiIRR8s6APzsp5YOoqCUb4nmazUEAqzAfzd9/Xv/Iw4hOHUF9xq+prpYH6I6xl6gk2sBXpfL8hgkyeDQoA9Qo/AULbzze9WB86s67k7vE7Troz9ny/vDFBTHeVTd6iRStc5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
+ is 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
+ dmarc=temperror action=none header.from=opensource.cirrus.com; dkim=none
+ (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=;
+ b=vOJEBDJCoZrrBQQvw4eC14UMGGg+wNood6fzrqQ0UhK7vAJ+r1e6Sp/RTgZma39uDu25bCgTyAO00171lgGC6nhxP3jpv3UcfnYBAGAFbQ4Wf7bixClWBHWNFzNg78bXG80TnmcnspZLsjauzPzinEeiwAVwvjJvsOgv+6ruLEM=
+Received: from BN9PR03CA0781.namprd03.prod.outlook.com (2603:10b6:408:13f::6)
+ by PH0PR19MB5443.namprd19.prod.outlook.com (2603:10b6:510:fd::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 15 Apr
+ 2025 12:03:21 +0000
+Received: from BN3PEPF0000B370.namprd21.prod.outlook.com
+ (2603:10b6:408:13f:cafe::3c) by BN9PR03CA0781.outlook.office365.com
+ (2603:10b6:408:13f::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.35 via Frontend Transport; Tue,
+ 15 Apr 2025 12:03:20 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 84.19.233.75) smtp.mailfrom=cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=temperror action=none header.from=opensource.cirrus.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of cirrus.com: DNS Timeout)
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ BN3PEPF0000B370.mail.protection.outlook.com (10.167.243.167) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8678.4
+ via Frontend Transport; Tue, 15 Apr 2025 12:03:19 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 3C831406541;
+	Tue, 15 Apr 2025 12:03:18 +0000 (UTC)
+Received: from [198.90.208.23] (ediswws06.ad.cirrus.com [198.90.208.23])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 1D849820259;
+	Tue, 15 Apr 2025 12:03:18 +0000 (UTC)
+Message-ID: <c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
+Date: Tue, 15 Apr 2025 13:03:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,144 +84,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Luis Oliveira <lolivei@synopsys.com>,
- Jarkko Nikula <jarkko.nikula@linux.intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
- linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- kernel-team <kernel-team@cloudflare.com>
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-Subject: Hitting WARN_ON_ONCE in i2c-designware-common.c
+Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data
+ with __counted_by()
+To: Thorsten Blum <thorsten.blum@linux.dev>, Mark Brown <broonie@kernel.org>
+Cc: David Rhodes <david.rhodes@cirrus.com>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250415090354.92211-2-thorsten.blum@linux.dev>
+ <9a0595a3-00c0-4006-bd54-99b938ee95bd@sirena.org.uk>
+ <C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B370:EE_|PH0PR19MB5443:EE_
+X-MS-Office365-Filtering-Correlation-Id: d316ada9-15a3-42fb-8036-08dd7c15839f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|82310400026|61400799027;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WHN1ZmplUHVaS2Y5a09QbjNrWUxKS1VlbzNLVmNqTTJlTDk3UXpsd3h5ZGR0?=
+ =?utf-8?B?Y290b09FTXpJeitHZXJHL0E2QnFHaTRMV1BUdVVHWXNNcVJBMHRySm4rSUFE?=
+ =?utf-8?B?WXhNbDN6dk1XTTRqM0RBNi9QRkF2Nm1RNHhPOGl0RmpFTzdHV1N1bXFJbEVa?=
+ =?utf-8?B?Y29OWTVjV0pxaXhybjh4aVBiTXFZVFdEREZYdEM5MHQyK3UyTUQwcmYxY1V5?=
+ =?utf-8?B?VVBBZFpiaUFFTnZLazZCbGFPRUVKOEFjMmp1QnhzOWpUTXlnQnZmZVVFckVW?=
+ =?utf-8?B?QzJyWS9hZmcwaXNqb3QyZm1lRFBiRWM0UER4d05tOGZCQW5YUjI1OGZDakds?=
+ =?utf-8?B?aUFuV09xWjhDREpxdzVxUSs3QzBwS1JCRUdqNDhpV1gydm9RRi9mRUVDL2hs?=
+ =?utf-8?B?R0ZtUjZnQzFlakNsL0hsRG9wSlFtZlpmczZkOThTWTFaSjRUTU5aeE53Mmdm?=
+ =?utf-8?B?N2JKM3VEZUkyM1Q2Ukd1MXlIMTJhL0d0aTdQdTZvYmJwNG9ramxyZi9SMlRv?=
+ =?utf-8?B?bU81Z21tMEM3RnVYaGJNUS9YZjFIM2NIcWxoR1g0Q3liTm0rRzJSd2lWMzlY?=
+ =?utf-8?B?Z2pHeXR3ejFyc1N2Ylk1OEdtU1RjLzJKVVI2S3RJOURybUh1UDBKTDRuTy9L?=
+ =?utf-8?B?bUFaSm85SEpCNy82aVlqZXNLUkZ1WlI1amsxdG1XRW1CT2ZmZHNXcUFvdGRL?=
+ =?utf-8?B?ck1BT2EyYmFsdnFnd1lDU25GQSs5WVd3STZYUWxPTDlLRzBoa3RNUXRKVzN0?=
+ =?utf-8?B?eWwydmhOZzNwYmJtQ1MxbE1pVWdzc1lkQk9OMXl1K2FrYWhLbHBvbi8yc0Ur?=
+ =?utf-8?B?ZFgxQ0FGMkJlVHR0UDlLRkl2VFY0QWdabkZmTUdQSWZZQTFOOUtLNzlqQTh0?=
+ =?utf-8?B?eFJZMXgrQnN2aExMVVpVQzdaTW9IMVhjMGIyVjE2Ui9JblVDMlNxWU9GSUdt?=
+ =?utf-8?B?ZGxhZFFlcCt5YVdza3QrZ0tiTHNlbjRpWGNqZG5DbTBUOGlhdjRrd0JCcHhY?=
+ =?utf-8?B?bXBNeWFpaXdZN0NEbmRlNlFnUjBaNko5RVI4UVhFc3o1cFpLS0JwWCtpQjYy?=
+ =?utf-8?B?ZHI0U0VZd3UxaDdERkNUeVkrbHNZd0k5OTFQQitueHdrZnVCMmdWRGJuRWRX?=
+ =?utf-8?B?SmlsQXhQY2lkOVhPeUxIK0xNS2N5YU9mVGZPWWtYZ1JCWEhRWWVkUHZSeGxj?=
+ =?utf-8?B?bXV5Ymowc3hTd3NOT2xsNnRLVVU3SThmRnRnZGdvQUVJOUtidFQ4OG5UYSt4?=
+ =?utf-8?B?eW9NTnhlWWZCSW82VzhCL1RkaCt2VlVwNGNwaU5maHZWWitTVkx4MDdCcUJq?=
+ =?utf-8?B?Z0lCMWswc3ZoRGg0bUxVa3c1K0xyakFEQThBQWlVTncxNUpYVG9xUmhjOXd0?=
+ =?utf-8?B?WG1XLzhWYXFldDg1eFo1SlZva0NYUXFKbmFQTDJQVGI0Mlp1blFZekx0L1lC?=
+ =?utf-8?B?RkhHYUZoTVcrSERIUC9LYXE0QjU0Q2k4b2NOWS9aMzltTDQvWEhBbUFSREJF?=
+ =?utf-8?B?OHcxSmk1aVBEaTVIQi9rZmpRODN0QUlmWWYyOVprZktuaGUvTkpyVm5oWTZM?=
+ =?utf-8?B?VTI1TDRsbXJJZExnWVFXczJPUTRkbFloL1ZxT01KeTBtSGo1QkU3R00zbmpM?=
+ =?utf-8?B?U1BtS21rNGplWTZ6U3M0Yk9FT05xa3BWSXhxcjV3NU5RdnBSc2VIeEtSelVq?=
+ =?utf-8?B?bDdDWlZYMndpbFJzRVgvaDBVcGRqZDdxbHlpWnFuNFRqdXR5cXVycEN6ZkVv?=
+ =?utf-8?B?cDQ0K3lUd3RRWWY0bFdvTVMwL1k2NXVSQit0Y3puM0VNTGZUbXNXM1pIdFVL?=
+ =?utf-8?B?ZllMb2IwT3lOcGI3dEM4RHI1TitzRFdrMjlPWEFJVnRuSW1jTFMxb3duNUpH?=
+ =?utf-8?B?aE5TL2dSc2tIVlVGcVJRbVdXY2VIelNlM2dsdys5a25jT0xaTlgwY2ZYQmMx?=
+ =?utf-8?B?MGZTUmhId01GUllsa212THYzd2dRTGNOeFhJRXVndlJNRHBzV2JVNmo0Vkhk?=
+ =?utf-8?B?THN3d01pT3V3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(61400799027);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 12:03:19.8759
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d316ada9-15a3-42fb-8036-08dd7c15839f
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B370.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5443
+X-Proofpoint-GUID: eRkUwvRZTdMt1IeDfrrfteIcyw0M7gya
+X-Proofpoint-ORIG-GUID: eRkUwvRZTdMt1IeDfrrfteIcyw0M7gya
+X-Authority-Analysis: v=2.4 cv=OeuYDgTY c=1 sm=1 tr=0 ts=67fe4b0e cx=c_pps a=vIBLTX18KUGM0ea88UIWow==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10
+ a=RWc_ulEos4gA:10 a=jE4wCpEYmYNN9sJuJygA:9 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-Hi Maintainers,
+On 15/04/2025 12:51 pm, Thorsten Blum wrote:
+> On 15. Apr 2025, at 12:56, Mark Brown wrote:
+>> On Tue, Apr 15, 2025 at 11:03:55AM +0200, Thorsten Blum wrote:
+>>> Add the __counted_by() compiler attribute to the flexible array member
+>>> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
+>>> CONFIG_FORTIFY_SOURCE.
+>>
+>> As documented in submitting-patches.rst please send patches to the
+>> maintainers for the code you would like to change.  The normal kernel
+>> workflow is that people apply patches from their inboxes, if they aren't
+>> copied they are likely to not see the patch at all and it is much more
+>> difficult to apply patches.
+> 
+> I just use whatever scripts/get_maintainer.pl outputs. Maybe the
+> MAINTAINERS file should be updated?
+> 
+> Best,
+> Thorsten
+> 
 
-I'm hitting a WARN_ON_ONCE in drivers/i2c/busses/i2c-designware-common.c
-when booting the kernel on our Gen12 hardware.
+MAINTAINERS only lists Takashi and Jaroslav as maintainers of
+include/sound/*.
 
-I'm using devel kernel net-next at commit 1a9239bb425 (merge tag 
-'net-next-6.15').
+A separate section lists Mark as maintainer of a specific set of files
+within include/sound/
 
-I assume you want this report.
-
-Maybe it is not a critical error(?)
-... looking the comment in the function:
-
-  u32 i2c_dw_clk_rate(struct dw_i2c_dev *dev)
-  {
-	/*
-	 * Clock is not necessary if we got LCNT/HCNT values directly from
-	 * the platform code.
-	 */
-	if (WARN_ON_ONCE(!dev->get_clk_rate_khz))
-		return 0;
-	return dev->get_clk_rate_khz(dev);
-  }
-
---Jesper
-
-Boot error:
-
-[   10.062651] i2c_designware AMDI0010:00: Unknown Synopsys component 
-type: 0xffffffff
-[   10.073312] pps_core: LinuxPPS API ver. 1 registered
-[   10.073372] piix4_smbus 0000:00:14.0: SMBus Host Controller at 0xb00, 
-revision 0
-[   10.075433] i2c_designware AMDI0010:01: Unknown Synopsys component 
-type: 0xffffffff
-[   10.077727] ------------[ cut here ]------------
-[   10.077728] WARNING: CPU: 15 PID: 1402 at 
-drivers/i2c/busses/i2c-designware-common.c:575 i2c_dw_clk_rate+0x13/0x20 
-[i2c_designware_core]
-[   10.077733] Modules linked in: i2c_piix4(+) pps_core(+) i2c_smbus 
-i2c_designware_platform(+) i2c_designware_core iosf_mbi i2c_core
-[   10.077739] CPU: 15 UID: 0 PID: 1402 Comm: (udev-worker) Not tainted 
-6.14.0-net-next2+ #24 PREEMPT(full)
-[   10.077742] Hardware name: Lenovo HR355M-V3-G12/HR355M_V3_HPM, BIOS 
-HR355M_V3.G.026 10/13/2023
-[   10.077743] RIP: 0010:i2c_dw_clk_rate+0x13/0x20 [i2c_designware_core]
-[   10.077745] Code: 5e 73 6f df 0f 1f 00 90 90 90 90 90 90 90 90 90 90 
-90 90 90 90 90 90 0f 1f 44 00 00 48 8b 47 68 48 85 c0 74 05 ff e0 cc 66 
-90 <0f> 0b 31 c0 e9 2f 73 6f df 0f 1f 40 00 90 90 90 90 90 90 90 90 90
-[   10.077747] RSP: 0018:ffffc90021ee7ba0 EFLAGS: 00010246
-[   10.077749] RAX: 0000000000000000 RBX: ffff88a056c00028 RCX: 
-0000000000ffffae
-[   10.077750] RDX: ffffc90021ee7bac RSI: ffffc900082490f4 RDI: 
-ffff88a056c00028
-[   10.077751] RBP: 000000000000012c R08: ffffffff825eb647 R09: 
-0000000000000008
-[   10.077752] R10: ffffc90021ee79b8 R11: 0000000000000001 R12: 
-000000000000012c
-[   10.077753] R13: ffff889852a61410 R14: ffff88a0532e6428 R15: 
-ffff8881006db020
-[   10.077754] FS:  00007f4d0f3d28c0(0000) GS:ffff88a8ac065000(0000) 
-knlGS:0000000000000000
-[   10.077755] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   10.077756] CR2: 00007f4d0fc75028 CR3: 0000002056f98003 CR4: 
-0000000000770ef0
-[   10.077757] PKRU: 55555554
-[   10.077757] Call Trace:
-[   10.077759]  <TASK>
-[   10.077761]  ? __warn+0x85/0x150
-[   10.077765]  ? i2c_dw_clk_rate+0x13/0x20 [i2c_designware_core]
-[   10.077768]  ? report_bug+0x160/0x190
-[   10.077772]  ? i2c_dw_clk_rate+0x13/0x20 [i2c_designware_core]
-[   10.077777]  ? i2c_dw_clk_rate+0x15/0x20 [i2c_designware_core]
-[   10.077779]  ? handle_bug+0x10d/0x160
-[   10.077783]  ? exc_invalid_op+0x13/0x60
-[   10.077785]  ? asm_exc_invalid_op+0x16/0x20
-[   10.077789]  ? i2c_dw_clk_rate+0x13/0x20 [i2c_designware_core]
-[   10.077791]  i2c_dw_set_timings_master+0x91/0x3c0 [i2c_designware_core]
-[   10.077794]  i2c_dw_probe_master+0x5e/0x330 [i2c_designware_core]
-[   10.077796]  ? pm_runtime_enable+0x59/0xe0
-[   10.077800]  dw_i2c_plat_probe+0x305/0x380 [i2c_designware_platform]
-[   10.077803]  platform_probe+0x3d/0x90
-[   10.077807]  really_probe+0xc1/0x390
-[   10.077811]  ? __pfx___driver_attach+0x10/0x10
-[   10.077812]  __driver_probe_device+0x78/0x150
-[   10.077814]  driver_probe_device+0x1f/0x90
-[   10.077816]  __driver_attach+0xce/0x1c0
-[   10.077818]  bus_for_each_dev+0x60/0xa0
-[   10.077821]  bus_add_driver+0x10e/0x240
-[   10.077824]  driver_register+0x55/0x100
-[   10.077826]  ? __pfx_dw_i2c_init_driver+0x10/0x10 
-[i2c_designware_platform]
-[   10.077829]  do_one_initcall+0x40/0x210
-[   10.077831]  ? security_kernel_post_read_file+0x2f/0x70
-[   10.077836]  do_init_module+0x60/0x260
-[   10.077840]  init_module_from_file+0x75/0xa0
-[   10.077845]  idempotent_init_module+0xed/0x2c0
-[   10.077848]  __x64_sys_finit_module+0x5d/0xc0
-[   10.077851]  do_syscall_64+0x47/0x110
-[   10.077853]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   10.077855] RIP: 0033:0x7f4d0fae3799
-[   10.077857] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 
-48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 
-05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 37 06 0d 00 f7 d8 64 89 01 48
-[   10.077858] RSP: 002b:00007ffc1f421918 EFLAGS: 00000246 ORIG_RAX: 
-0000000000000139
-[   10.077860] RAX: ffffffffffffffda RBX: 00005606c614bcf0 RCX: 
-00007f4d0fae3799
-[   10.077861] RDX: 0000000000000000 RSI: 00007f4d0fc76efd RDI: 
-000000000000000d
-[   10.077862] RBP: 00007f4d0fc76efd R08: 0000000000000000 R09: 
-00005606c6129bd0
-[   10.077863] R10: 000000000000000d R11: 0000000000000246 R12: 
-0000000000020000
-[   10.077863] R13: 0000000000000000 R14: 00005606c614c1c0 R15: 
-00007ffc1f421b50
-[   10.077867]  </TASK>
-[   10.077867] ---[ end trace 0000000000000000 ]---
-[   10.078850] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 
-Rodolfo Giometti <giometti@linux.it>
-[   10.087132] workqueue: work_for_cpu_fn hogged CPU for >10000us 5 
-times, consider switching to WQ_UNBOUND
-[   10.099417] PTP clock support registered
-[   10.104491] piix4_smbus 0000:00:14.0: Using register 0x02 for SMBus 
-port selection
-[   10.711607] ice: Intel(R) Ethernet Connection E800 Series Linux Driver
-[   10.712839] piix4_smbus 0000:00:14.0: Auxiliary SMBus Host Controller 
-at 0xb20
+I guess any files we put in include/sound that are for an ASoC driver
+have to also be added to Mark's ASoC section of MAINTAINERS?
