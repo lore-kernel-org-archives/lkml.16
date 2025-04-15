@@ -1,81 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E933024EA92;
-	Tue, 15 Apr 2025 11:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FADF1CD213;
+	Tue, 15 Apr 2025 11:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716994; cv=none; b=pHUpTlOhsme4VY745g0sx+McIUAEzjakexSPzk/jsP0Zz6vTgtIjOUmyLKwjoP1eiv9MkB7X3Yowr7sKjYvti/6X8yr6lTCAP6sDpiAYBOUV4jcTAHvYcyrYMSlDJmlAaM/OZRK0lxdI8EZM4/A2UVznK5/dgejwlfh71BGoYb8=
+	t=1744717046; cv=none; b=LuxZMBhY9aV3Ft8EsewtxzdE6WjTSnGHvtSUeuGyPjPGEfIwS4QeWQoP/1rTxw2+yGdT/iFgzyhCLqBrqXvl4hSc4hZ8eWbvCGrhaVZ1b627fJBOpmAjUBajzTHJt3TRTnS3oazewvUJhLxJvSR2DssJJvM2rxeKpgK8RlEW4+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716994; c=relaxed/simple;
-	bh=zYw/vdaimYA3Upb8KBVp137mIE1oGE0jaozGlgSCVhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4IulDGE1HcPSKufmZGK3xgsSBICjtO3QRQ8c0dkqZKNzgyy5qiu8lNrjuxQ15uVh8c+s+p4ijQheF3f5oUU9+JAmdcyUoHEt+q2sM64j9AwQ7PmM6pFMfJ4srNE/YbCo03GcFfuZdaBJQpex0cvMbwVb0Dio/pw4WoZvXkZLDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E/tvx7Sa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744717046; c=relaxed/simple;
+	bh=LL2E+u91dO99wB41wuqyXT2j19QaB9gNRGI2R7/b5YQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iva4hA4xb3FwO/MbNAxksR2X5jvTg0Ou21xHSFVqc9qEkneHL0+Sn7vxTDLVySExXpckW0uICuevXkRa0JprvCqgxdO7eePDThAh+JMc3u1sh7AItOLu5p13Ktos/xbWTHdadh/C6JWtAiUG9xtDH117tx4fpb0COB9ZTZRubeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OIw6Wy9e; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E/tvx7Sa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392A5C4CEDD;
-	Tue, 15 Apr 2025 11:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744716993;
-	bh=zYw/vdaimYA3Upb8KBVp137mIE1oGE0jaozGlgSCVhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E/tvx7Saipwh/ViZ0+Uk1eu4Rwsjf+uyzf29ONH8NM7k0rsVEfEL+c1HRH+VQ0UGN
-	 vj6PT3VGxnmDFZ5xArv5HAchUrn2VH1v0Jf7a3hEYZk/kdQrk8hP0nCzaAbltw+n40
-	 5wCyjpDQGBCNrnV4ttsHbkrOzt4LuclzMX1H6xrsVreWRgJ/huXeXiSj8TV5rtLSc7
-	 2gKDsQhPc8VYFhshqdL5FdvVF9OB2Cdb04WkkUZnr0VQ4oVaWUXa+U23GHAtJ/UC4y
-	 /vgY++g7AnXdDczUf5cBzR5mbxffO41Uljh4rudIDmI8qNz8h5zlScIdfDu3PfXLKn
-	 Q2ZNF8vFDNvKg==
-Date: Tue, 15 Apr 2025 12:36:28 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Wesley Cheng <quic_wcheng@quicinc.com>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] ASoC: qcom: qdsp6: Set error code in
- q6usb_hw_params()
-Message-ID: <78caae4a-03d1-4992-9a06-1e2a9aef81ce@sirena.org.uk>
-References: <Z_442PWaMVoZcbbU@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OIw6Wy9e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744717042;
+	bh=LL2E+u91dO99wB41wuqyXT2j19QaB9gNRGI2R7/b5YQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OIw6Wy9e+R7VZf18fWQAN7uWonzzfJXvfUPULmxni+zAEvAbUSPu4wFgV1x8Jo/YN
+	 2KVmpk3L296/aMW+vmusHHvUCiqcInGNYexO+3bITYSFxCGwZR7Imge4ArE94dvKih
+	 25NKYIeh0R6M+wXAv/fdnZ3IcFn/W4FQBrtWVy2ri4bbm42RPIt8dN2c5ZzbmkGz5c
+	 U50PruUlqwudkueNNS1OZI+XqxqHoh5TMf0a1Sj/R7zopgf4NYYDKLD8zuk6DbJE9P
+	 O+Lku6ssL0tg6mpKFuBIENzpjYgrX9NIOS/zKOK3cLwMzfZu/Bpm1laYEZRQeLotaH
+	 tqtYa/LZCXtcg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9B9AD17E03B6;
+	Tue, 15 Apr 2025 13:37:21 +0200 (CEST)
+Message-ID: <c648c4f3-f20a-4255-93eb-69a80c695fa7@collabora.com>
+Date: Tue, 15 Apr 2025 13:37:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EtkMv+Yd9poVtEEu"
-Content-Disposition: inline
-In-Reply-To: <Z_442PWaMVoZcbbU@stanley.mountain>
-X-Cookie: 10.0 times 0.1 is hardly ever 1.0.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: mediatek: common-v1: Fix EINT breakage on older
+ controllers
+To: Chen-Yu Tsai <wenst@chromium.org>, Sean Wang <sean.wang@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Hao Chang <ot_chhao.chang@mediatek.com>,
+ Qingliang Li <qingliang.li@mediatek.com>
+References: <20250415112339.2385454-1-wenst@chromium.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250415112339.2385454-1-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Il 15/04/25 13:23, Chen-Yu Tsai ha scritto:
+> When EINT support for multiple addresses was introduced, the driver
+> library for the older generations (pinctrl-mtk-common) was not fixed
+> together. This resulted in invalid pointer accesses.
+> 
+> Fix up the filled in |struct mtk_eint| in pinctrl-mtk-common to match
+> what is now expected by the mtk-eint library.
+> 
+> Reported-by: "Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
+> Closes: https://lore.kernel.org/all/43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn/
+> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+> Cc: Hao Chang <ot_chhao.chang@mediatek.com>
+> Cc: Qingliang Li <qingliang.li@mediatek.com>
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
---EtkMv+Yd9poVtEEu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-On Tue, Apr 15, 2025 at 01:45:44PM +0300, Dan Carpenter wrote:
-> Propagate the error code if q6afe_port_get_from_id() fails.  Don't
-> return success.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---EtkMv+Yd9poVtEEu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf+RLsACgkQJNaLcl1U
-h9AXdgf+IwDP2ZCdt/nG4LuHCXIKTYeSCPzb7phKoetBsQzxgY060qKGTzb+hP2m
-B4b2qLp/anvUI4vm4PJItrJTZ0TI6jMcRR1KeLp+GAZajhpdvPgDChKSeR+OxPAT
-ksup73zUE8UcU/qCuBTod0S8ltsdFGuR92j2Vs+pU9j9wGkggpzUDMb4frP4TdzA
-st/81o2uODDR60IcxRXPEcnX042EG7ZYvi1d33HUL2qZ48BbFJ8iVaq4uhu4xTaK
-KLjhfojUmIjfQgZ9FGvHkvrH3sXYXAKfxNyCapNB6gMe7Lh+QrXNYg5SOicp0FFw
-AW28j3oUVgszTzdoOopsnO54fKDNew==
-=A9o9
------END PGP SIGNATURE-----
-
---EtkMv+Yd9poVtEEu--
