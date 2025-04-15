@@ -1,214 +1,309 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2051.outbound.protection.outlook.com [40.107.223.51])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0CA2BF3EB;
-	Tue, 15 Apr 2025 14:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728928; cv=fail; b=XdK0202RWgI+w61RNSG67jz676NCtBlF3khOf7+QU2dDFa89IOJfAW9l8CHtbhzZ0oKvU+YJpbu9lqgiMv0hFKGwSzNgALGz5rRJXncgQXZia3xf8qH9EVvBxHSImmhQpRT/8G7VgbHzZoAG25C6BGzKyJkgbdAgwOH9GCFQ7nw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728928; c=relaxed/simple;
-	bh=jEiAbxLNNaavVkpbE9OcX9nbZyfDajfiUisKs/v7bes=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=AM8i3rIV2GTIbgJL6U6d3sYDSyRq9C21+c2lcrfMk1h+cCasfBwk4Segn+aaVYb323VaKbJIoYdycspH9xgv0nNxLYGEWiYw0ar/wu3c9oPaqSd71jCleR2h/RgFtdapvfn47izWDTL88snTegmD8mmq4Z+019PO8MFn9ajIsCw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p/k1CC/5; arc=fail smtp.client-ip=40.107.223.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56EF2C256B;
+	Tue, 15 Apr 2025 14:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744728934; cv=none; b=K2nwE8LZ5bfUsntyF7SLP2L64m6Idcsi9AT6fC8Yl0P7S8Fjw+f4+DCltD8XYjPCrjv85cBUdKf7bjDEP/auDD0d96ULDtzf6EuTLGbEQ2D788GkGiJ6m4rX7LxZEaqYOz6gs0WexWmcQyhivvOelBGdbl06b9sFvEGXg0XIMHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744728934; c=relaxed/simple;
+	bh=N/IC2RBvp5Cv/RWrRjB+DN53auEXsM/vkfWnZQPwIRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bQWpFjmoFJ/cLZxAi1zW0K6XNSUv0EcqQ7Ci+gscYD6m7v0sXxGAUZQx5so9+eIThaNq4CiQcmwvr/ExHYsIewccRIRSLgTkn2hSUmxvAspL7IMxujtZV/Alp7r+AlYylaPVlY9DLhlZkmyknOIYwAHvnu4FbNu1CCBxDXyXq0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=J2XO0sWF; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p/k1CC/5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xOAZ8ZMG6X/EtEZOl7lY4HQLCaxt40MniZRxLwkHZtQ9h5ElRvhfJCCNr7n2vndDf4UY8mYd/DiwDGpMqFf/ycB+uxUnV9ODegpsgUueFf69AWsMyznDfm0N9ssksXWkRwrRijb0KVA2//Sse0sJeJW7LarC505/KOOCMtPxftKjBSKUGGkxUH0bzQ0ZZbhjcpHuBbO2/oBbiDkUMDSmEAdUBtBJdr8ld0OHR8WjQnpl8xIFapgt/wYghXAvnR9fbGe5dNwmvmQOQsByjxiGHf7+v6B/Zg3RlkKDt2rCwQu947lvtN+I6Ev8eQ/CnyKHfTLeSe6FBuj6mEWTS07img==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6JUy9/1esQvE+dsOXCusXiisL+ly9JTX3CKAaggYBTo=;
- b=lnnjxDJ6ftzgHnlMjHf4bZGwNSwFOJ9bFd9HsOO86R74wDAnRZA2ffb22avI8XRP1eiyqRA+vsND1jaQStP+V8gEYG7zUYN5LgePL1MeZsL45wESYbbm2spRIO1eABtaiCcmWEEfhR5gO8hse60TwdIYD3qUe4lzqrR58lqklE0yOmOf7fuXLH9rlYNj3Dkxus6uykVL+QkfoLPE+qehpGWkGMHJgVyzNQ544l91FRfYSbX8AhL/NwWsRSyOeavET1Q93oJPnGc+iOGJ93yokuwsXTzTD23YXsqrawB4tFTfId0efH9KJ9bpqY5LPHG0vr8SwDx8YkxY9Je9aD7LDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6JUy9/1esQvE+dsOXCusXiisL+ly9JTX3CKAaggYBTo=;
- b=p/k1CC/5kaBLyxR0HUUgTjmetdo1ksinV47WdNgj7X9E6ja2CbAdN+ljzjyB597Kvjyu6EgeTkXF0odR7Q0TzvGTIHKbpRvPOWf0RAQRMM0JUZHVRN/sanm51GCqIrKtdJN3H6bjdhrV7uZgrapUnznUZaQLWoromqJODZq6taE=
-Received: from CH0PR13CA0036.namprd13.prod.outlook.com (2603:10b6:610:b2::11)
- by PH7PR12MB8778.namprd12.prod.outlook.com (2603:10b6:510:26b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
- 2025 14:55:17 +0000
-Received: from CH2PEPF00000146.namprd02.prod.outlook.com
- (2603:10b6:610:b2:cafe::de) by CH0PR13CA0036.outlook.office365.com
- (2603:10b6:610:b2::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Tue,
- 15 Apr 2025 14:55:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH2PEPF00000146.mail.protection.outlook.com (10.167.244.103) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 14:55:16 +0000
-Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
- 2025 09:55:14 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-Date: Tue, 15 Apr 2025 14:55:03 +0000
-Subject: [PATCH v3 08/17] x86/mce: Define BSP-only SMCA init
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J2XO0sWF"
+Received: from ideasonboard.com (93-46-82-201.ip106.fastwebnet.it [93.46.82.201])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 46D8F594;
+	Tue, 15 Apr 2025 16:53:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744728807;
+	bh=N/IC2RBvp5Cv/RWrRjB+DN53auEXsM/vkfWnZQPwIRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J2XO0sWFNgeNxO5AuoQcrXc19l5CjIWRvKQc0i1x1k5L6BDZ7mgmJ4oRIrK/gFlWa
+	 kU/0EzFJpnzOLYNWZG+CMlOGPXwp0P8gi38ul8gN1NHJtMtlyC0Vud2KDlwX7LfHaO
+	 D5bDXUE/sEMtE2juKda2uX56XDWPMevk/fvybUAU=
+Date: Tue, 15 Apr 2025 16:55:26 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: keke.li@amlogic.com
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kieran.bingham@ideasonboard.com, 
+	laurent.pinchart@ideasonboard.com, dan.scally@ideasonboard.com, jacopo.mondi@ideasonboard.com
+Subject: Re: [PATCH v8 10/10] Documentation: media: add documentation file
+ c3-isp.rst
+Message-ID: <3bordqs2ygaaj6d7yqs2cgvhc46szwf53ojsaz4aikvqmxxx3v@s5af6wtpzfxn>
+References: <20250414-c3isp-v8-0-9f89e537494e@amlogic.com>
+ <20250414-c3isp-v8-10-9f89e537494e@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250415-wip-mca-updates-v3-8-8ffd9eb4aa56@amd.com>
-References: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
-In-Reply-To: <20250415-wip-mca-updates-v3-0-8ffd9eb4aa56@amd.com>
-To: <x86@kernel.org>, Tony Luck <tony.luck@intel.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<Smita.KoralahalliChannabasappa@amd.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-X-Mailer: b4 0.15-dev-9b767
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000146:EE_|PH7PR12MB8778:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7b318ed9-6a74-4782-bced-08dd7c2d88af
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OEJ4OE1LWndhditkYm5CeVNYMnJ3S09HV3NUbUFRWGFWOEx0a3F6dmhMbFAy?=
- =?utf-8?B?akZzQURycVdWcEh6YThZenYxNEdyVk1rYWVsejd0RUZaRXNSWnoxN28ySVRB?=
- =?utf-8?B?dVMycVNjL3JxVnN2bmhpWjBGZ0gzNGJaUFJ6aFdySThRTzVRMXJvbG4zYWFM?=
- =?utf-8?B?TEhZZGwrbHc3RnJzMkxhUWxmUlNXRURvWTdJNWYxWHlPWHdsZ09vMWlZUW4y?=
- =?utf-8?B?b2RJS3QyVUhTNUllQmQ4aFZEU3hEQjFaeXpVOG90RUhLWThHVXB3ZEVHZTJ1?=
- =?utf-8?B?dEQxZUkyZFlSLzFCK1V4WE1MSWpUNzJFTDVNeGx2V3ZsdnhMUm53dDlNc3pl?=
- =?utf-8?B?MmRiTzF1aFRBeWFVcG5yUVhwaElCMG5kc2dMQVpnaDVtbDRreDE4blQrSDUw?=
- =?utf-8?B?QUp4eVV0VzZudkFBTHVMaUpPTnRFRldpMTIrM0xORENWdnN6V21WT0pvNElU?=
- =?utf-8?B?ejU3dEFGbm52aXM5RTdpVkhUNXcyNDIvbzFKb0pBVGUwbzBYMitpTDIzRmNl?=
- =?utf-8?B?NzRCQndnQzdEQ3BzM2U5R0hZUGdQZk16b0ljaHZNVzRnU0VYcUlKM1piTjUr?=
- =?utf-8?B?d3RQZHZhcXBzc0M5QUloQWV4blNaSmhINW1MMUw1d3I5TXU1NHM3VCtYRURy?=
- =?utf-8?B?ek96N1hsRlRadHNPVG44UmhNaVpiWFU1Vys0V2hpK3ZETkErc1k3RDNrMVFq?=
- =?utf-8?B?ZmZ0RDNzZlRjUkdvQy9JQ2tjV0cxM0pYSjBicVJ0TTdBMUYvZk4zMXg5Y0hJ?=
- =?utf-8?B?R1AwaHVNWnNkZGZCektoQ2hxQWNQSkZaYmlMeEhrR253RjJKR2NmYnNzZlRI?=
- =?utf-8?B?czVSS2VScnQ2blpQYmdiUWZhK2d0YnppRy8rSUJrR3ZUSUxqbXpnZVNST3Vx?=
- =?utf-8?B?TFRUSmZoSVVFTndYeHo0WGlMMUxGWUtmcE0ray9MbUVRdVNEQmZCaGtZUnhj?=
- =?utf-8?B?RTBBb05BTFArdHNyT3pOOG5YSlZTSmdzL2loUldRSVczbEtnaWx6SVNOWTZL?=
- =?utf-8?B?Ykw1MkRHMnR4RWVySytNWEVQSVp0VXVmcW9CU2hTdmc0aWVTRmwwazRYU25C?=
- =?utf-8?B?cWxrSG5TQ01Hd2s5Y1crd0ZVYk53WmVqait2Ly9lYUkyMUltY3RKaGJ2SEdy?=
- =?utf-8?B?RFBqbGkxc3lzdHJrTmRiSnRvMmlMZkwzYTByN1JPK1VVdWdvN215VU4rZkxi?=
- =?utf-8?B?emZPY1JDQkljK2t1YnFGQWx4MWtlcythODViaWlQREphYXpDUjh0cXN6V1FJ?=
- =?utf-8?B?a0J2ZjJaaTU1bHZwQmtWT3JGdnFFcktkaExKcXU1bTVMV1N4OC9SR2EvYkln?=
- =?utf-8?B?YXdLbFkvNjFvQUt1UExHeDd0VXZaMW02dWg1cFpkeFVxVGUwd3JUaUdiUjFq?=
- =?utf-8?B?UzFMSEtYS2I0MmtlNGlnWWErTlBmdTdUcEV0ZVRpNzN0L05TbmJZdkZ6eWNY?=
- =?utf-8?B?d3RSSjNPa0YyWHFQejdxK3h0Z3FpVE1ta2V6Ny9yaWNHK2Jsb3dQdldEOCtH?=
- =?utf-8?B?N2V3MUVMV1J5YjFuWno2Z0NtcHN5TFV5YkJvdTVaZlg1ajB1amQzZFFkWEtG?=
- =?utf-8?B?SHFqaWF2L2ZMaFlJa1UrejNmVVNZaTQ0R1V1MzFBRk9XWGU2WTNXc25URTN2?=
- =?utf-8?B?a2IrUWxyL25halJtYXdYWm15bUtrOUxlYnpla3B6SlpXQmMyOHBKWUNtYVdi?=
- =?utf-8?B?K2dROG9ueGtOck5pSVB5bldybHFhN0ZEVWpIbFBJMVhqckJWdkNrcWhDdFFh?=
- =?utf-8?B?MDlxQWhSM2F4N2w1dDNudWw1QXp5NHYycVRLRTZXMy9BTkloQ3VDMFNuUnMy?=
- =?utf-8?B?ZGtrT3B4WVA5Tm5tOWZXY2VWRTdUUnR0K0hlSUw4L2VhS2xGdkxFL01jaDJj?=
- =?utf-8?B?NmsrbmthQ2xBZkc1V29vaTNmSUdDRXp5MWRqWGZUZjc3Y2dldVFYTS80U2Qy?=
- =?utf-8?B?aHZaazc4OG1NaWxqSkEzbUNPTTB1RVdhek9tcW8vOWFuK2NsNGxWT1JaMmFE?=
- =?utf-8?B?bVpwMmRQclppNEhHd2hiRXZyV1hrS3dGd2RrT0xjNEM1SWZpeExXbU94UGVv?=
- =?utf-8?Q?/h4/fH?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 14:55:16.4444
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b318ed9-6a74-4782-bced-08dd7c2d88af
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000146.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8778
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414-c3isp-v8-10-9f89e537494e@amlogic.com>
 
-Currently on AMD systems, MCA interrupt handler functions are set during
-CPU init. However, the functions only need to be set once for the whole
-system.
+Hi Keke
+   sorry, I missed this patch in my previous reviews.
 
-Assign the handlers only during BSP init. Do so only for SMCA systems to
-maintain the old behavior for legacy systems.
+I think you're already at v8 and there's no need to resend the whole
+series. I would like to send a pull request and see this series merged
+soon.
 
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
----
+I've run the series through CI (applying a few minors to patch titles
+to fix a few checkpatch warnings[1])
 
-Notes:
-    Link:
-    https://lore.kernel.org/r/20250213-wip-mca-updates-v2-8-3636547fe05f@amd.com
-    
-    v2->v3:
-    * No change.
-    
-    v1->v2:
-    * New in v2.
+I can apply the below suggestions with your ack, re-run the series
+through CI and send a pull request. Or, if you prefer to resend I'll
+wait for a new version.
 
- arch/x86/kernel/cpu/mce/amd.c      | 6 ++++++
- arch/x86/kernel/cpu/mce/core.c     | 3 +++
- arch/x86/kernel/cpu/mce/internal.h | 2 ++
- 3 files changed, 11 insertions(+)
+What do you prefer ?
 
-diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index 206973d7dbcc..0d84b171b851 100644
---- a/arch/x86/kernel/cpu/mce/amd.c
-+++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -687,6 +687,12 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 		deferred_error_interrupt_enable(c);
- }
- 
-+void mce_smca_cpu_init(void)
-+{
-+	mce_threshold_vector	  = amd_threshold_interrupt;
-+	deferred_error_int_vector = amd_deferred_error_interrupt;
-+}
-+
- /*
-  * DRAM ECC errors are reported in the Northbridge (bank 4) with
-  * Extended Error Code 8.
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index d0a29e22cab0..444d006366fd 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2243,6 +2243,9 @@ void cpu_mca_init(struct cpuinfo_x86 *c)
- 	mce_flags.succor	 = cpu_feature_enabled(X86_FEATURE_SUCCOR);
- 	mce_flags.smca		 = cpu_feature_enabled(X86_FEATURE_SMCA);
- 
-+	if (mce_flags.smca)
-+		mce_smca_cpu_init();
-+
- 	rdmsrl(MSR_IA32_MCG_CAP, cap);
- 
- 	/* Use accurate RIP reporting if available. */
-diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
-index 64ac25b95360..87b69935d57d 100644
---- a/arch/x86/kernel/cpu/mce/internal.h
-+++ b/arch/x86/kernel/cpu/mce/internal.h
-@@ -294,12 +294,14 @@ static __always_inline void smca_extract_err_addr(struct mce *m)
- 	m->addr &= GENMASK_ULL(55, lsb);
- }
- 
-+void mce_smca_cpu_init(void);
- #else
- static inline void mce_threshold_create_device(unsigned int cpu)	{ }
- static inline void mce_threshold_remove_device(unsigned int cpu)	{ }
- static inline bool amd_filter_mce(struct mce *m) { return false; }
- static inline bool amd_mce_usable_address(struct mce *m) { return false; }
- static inline void smca_extract_err_addr(struct mce *m) { }
-+static inline void mce_smca_cpu_init(void) {}
- #endif
- 
- #ifdef CONFIG_X86_ANCIENT_MCE
+See my comments below
 
--- 
-2.49.0
+On Mon, Apr 14, 2025 at 03:35:23PM +0800, Keke Li via B4 Relay wrote:
+> From: Keke Li <keke.li@amlogic.com>
+>
+> Add the file 'c3-isp.rst' that documents the c3-isp driver.
+>
+> Signed-off-by: Keke Li <keke.li@amlogic.com>
+> ---
+>  Documentation/admin-guide/media/c3-isp.dot      |  26 ++++++
+>  Documentation/admin-guide/media/c3-isp.rst      | 109 ++++++++++++++++++++++++
+>  Documentation/admin-guide/media/v4l-drivers.rst |   1 +
+>  MAINTAINERS                                     |   2 +
+>  4 files changed, 138 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/media/c3-isp.dot b/Documentation/admin-guide/media/c3-isp.dot
+> new file mode 100644
+> index 000000000000..42dc931ee84a
+> --- /dev/null
+> +++ b/Documentation/admin-guide/media/c3-isp.dot
+> @@ -0,0 +1,26 @@
+> +digraph board {
+> +	rankdir=TB
+> +	n00000001 [label="{{<port0> 0 | <port1> 1} | c3-isp-core\n/dev/v4l-subdev0 | {<port2> 2 | <port3> 3 | <port4> 4 | <port5> 5}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n00000001:port3 -> n00000008:port0
+> +	n00000001:port4 -> n0000000b:port0
+> +	n00000001:port5 -> n0000000e:port0
+> +	n00000001:port2 -> n00000027
+> +	n00000008 [label="{{<port0> 0} | c3-isp-resizer0\n/dev/v4l-subdev1 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n00000008:port1 -> n00000016 [style=bold]
+> +	n0000000b [label="{{<port0> 0} | c3-isp-resizer1\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n0000000b:port1 -> n0000001a [style=bold]
+> +	n0000000e [label="{{<port0> 0} | c3-isp-resizer2\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n0000000e:port1 -> n00000023 [style=bold]
+> +	n00000011 [label="{{<port0> 0} | c3-mipi-adapter\n/dev/v4l-subdev4 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n00000011:port1 -> n00000001:port0 [style=bold]
+> +	n00000016 [label="c3-isp-cap0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
+> +	n0000001a [label="c3-isp-cap1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+> +	n0000001e [label="{{<port0> 0} | c3-mipi-csi2\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n0000001e:port1 -> n00000011:port0 [style=bold]
+> +	n00000023 [label="c3-isp-cap2\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+> +	n00000027 [label="c3-isp-stats\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
+> +	n0000002b [label="c3-isp-params\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
+> +	n0000002b -> n00000001:port1
+> +	n0000003f [label="{{} | imx290 2-001a\n/dev/v4l-subdev6 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+> +	n0000003f:port0 -> n0000001e:port0 [style=bold]
+> +}
+> diff --git a/Documentation/admin-guide/media/c3-isp.rst b/Documentation/admin-guide/media/c3-isp.rst
+> new file mode 100644
+> index 000000000000..8adac4605a6a
+> --- /dev/null
+> +++ b/Documentation/admin-guide/media/c3-isp.rst
+> @@ -0,0 +1,109 @@
+> +.. SPDX-License-Identifier: (GPL-2.0-only OR MIT)
+> +
+> +.. include:: <isonum.txt>
+> +
+> +=================================================
+> +Amlogic C3 Image Signal Processing (C3ISP) driver
+> +=================================================
+> +
+> +Introduction
+> +============
+> +
+> +This file documents the Amlogic C3ISP driver located under
+> +drivers/media/platform/amlogic/c3/isp.
+> +
+> +The current version of the driver supports the C3ISP found on
+> +Amlogic C308L processor.
+> +
+> +The driver implements V4L2, Media controller and V4L2 subdev interfaces.
+> +Camera sensor using V4L2 subdev interface in the kernel is supported.
+> +
+> +The driver has been tested on AW419-C308L-Socket platform.
+> +
+> +Anlogic Camera hardware
 
+s/Anlogic/Amlogic
+
+> +=======================
+> +
+> +The Camera hardware found on C308L processors and supported by
+> +the driver consists of:
+> +
+> +- 1 MIPI-CSI2 module. It handle the Physical layer of the CSI2 receivers and
+> +  receive MIPI data.
+> +  A separate camera sensor can be connected to MIPI-CSi2 module.
+
+Do not break lines when not necessary
+
+s/CSi2/CSI-2
+
+> +- 1 MIPI-ADAPTER module. Organize MIPI data to meet ISP input requirements and
+> +  send MIPI data to ISP
+> +- 1 ISP (Image Signal Processing) module. Contain a pipeline of image processing
+> +  hardware blocks.
+> +  The ISP pipeline contains three scalers at the end.
+> +  The ISP also contains the DMA interface which writes the output data to memory.
+
+Ditto
+
+> +
+> +A high level functional view of the C3 ISP is presented below. The ISP
+> +takes input from the sensor.::
+> +
+> +                                                                   +---------+    +-------+
+> +                                                                   | Scaler  |--->| WRMIF |
+> +  +---------+    +------------+    +--------------+    +-------+   |---------+    +-------+
+> +  | Sensor  |--->| MIPI CSI-2 |--->| MIPI ADAPTER |--->|  ISP  |---|---------+    +-------+
+> +  +---------+    +------------+    +--------------+    +-------+   | Scaler  |--->| WRMIF |
+> +                                                                   +---------+    +-------+
+> +                                                                   |---------+    +-------+
+> +                                                                   | Scaler  |--->| WRMIF |
+> +                                                                   +---------+    +-------+
+> +
+> +Supported functionality
+> +=======================
+> +
+> +The current version of the driver supports:
+> +
+> +- Input from camera sensor via MIPI-CSI2;
+
+s/;/.
+
+> +
+> +- Pixel output interface of ISP
+> +
+> +  - Scaling support. Configuration of the scaler module
+> +    for downscalling with ratio up to 8x.
+
+To be honest I would drop this paragraph.
+
+> +
+> +Driver Architecture and Design
+> +==============================
+> +
+> +The driver implements the V4L2 subdev interface. With the goal to model the
+
+The driver also implements the V4L2 video capture interface and the
+Media Controller interface.
+
+To be honest, I would drop this first phrase.
+
+
+> +hardware links between the modules and to expose a clean, logical and usable
+> +interface, the driver is split into V4L2 sub-devices as follows:
+
+s/is split into/registers the following/
+s/as follows//
+
+> +
+> +- 1 c3-mipi-csi2 sub-device - mipi-csi2 is represented by a single sub-device.
+> +- 1 c3-mipi-adapter sub-device - mipi-adapter is represented by a single sub-devices.
+> +- 1 c3-isp-core sub-device - isp-core is represented by a single sub-devices.
+> +- 3 c3-isp-resizer sub-devices - isp-resizer is represented by a number of sub-devices
+> +  equal to the number of capture device.
+> +
+> +c3-isp-core sub-device is linked to 2 separate video device nodes and
+> +3 c3-isp-resizer sub-devices nodes.
+> +
+> +- 1 capture statistics video device node.
+> +- 1 output parameters video device node.
+> +- 3 c3-isp-resizer sub-device nodes.
+> +
+> +c3-isp-resizer sub-device is linked to capture video device node.
+> +
+> +- c3-isp-resizer0 is linked to c3-isp-cap0
+> +- c3-isp-resizer1 is linked to c3-isp-cap1
+> +- c3-isp-resizer2 is linked to c3-isp-cap2
+> +
+> +The media controller pipeline graph is as follows (with connected a
+> +IMX290 camera sensor):
+> +
+> +.. _isp_topology_graph:
+> +
+> +.. kernel-figure:: c3-isp.dot
+> +    :alt:   c3-isp.dot
+> +    :align: center
+> +
+> +    Media pipeline topology
+> +
+> +Implementation
+> +==============
+> +
+> +Runtime configuration of the hardware via 'c3-isp-params' video device node.
+> +Acquiring statistics of ISP hardware via 'c3-isp-stats' video device node.
+> +Acquiring output image of ISP hardware via 'c3-isp-cap[0, 2]' video device node.
+> +
+> +The output size of the scaler module in the ISP is configured with
+> +the pixel format of 'c3-isp-cap[0, 2]' video device node.
+
+The output size.. configured with the pixel format ?
+
+I would say:
+
+The final picture size and format is configured using the V4L2 video
+capture interface on the 'c3-isp-cap[0, 2]' video device nodes.
+
+I would also mention the ISP is supported in libcamera (or better, on
+its way to be supported by libcamera).
+
+I can send an update to this patch for your review. Is this ok ?
+
+I'll check with maintainers on how to then moved forward and collect
+this series.
+
+For reference, the branch where I applied minor fixups to pass
+media-ci style checks and with this last patch updated is available
+here
+https://gitlab.freedesktop.org/linux-media/users/jmondi/-/pipelines/1406119
+
+> diff --git a/Documentation/admin-guide/media/v4l-drivers.rst b/Documentation/admin-guide/media/v4l-drivers.rst
+> index e8761561b2fe..3bac5165b134 100644
+> --- a/Documentation/admin-guide/media/v4l-drivers.rst
+> +++ b/Documentation/admin-guide/media/v4l-drivers.rst
+> @@ -10,6 +10,7 @@ Video4Linux (V4L) driver-specific documentation
+>  	:maxdepth: 2
+>
+>  	bttv
+> +	c3-isp
+>  	cafe_ccic
+>  	cx88
+>  	fimc
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b2bf9c6cd194..4b06a798d30c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1259,6 +1259,8 @@ AMLOGIC ISP DRIVER
+>  M:	Keke Li <keke.li@amlogic.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/admin-guide/media/c3-isp.dot
+> +F:	Documentation/admin-guide/media/c3-isp.rst
+>  F:	Documentation/devicetree/bindings/media/amlogic,c3-isp.yaml
+>  F:	Documentation/userspace-api/media/v4l/metafmt-c3-isp.rst
+>  F:	drivers/media/platform/amlogic/c3/isp/
+>
+> --
+> 2.49.0
+>
+>
+>
