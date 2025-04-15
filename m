@@ -1,246 +1,229 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BECA27587B;
-	Tue, 15 Apr 2025 06:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDCF275847
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700096; cv=none; b=m2RjvlI8dGRjrOgq2qo7pCm4PrypSB4agLOVtnmAhuIC4If4CXWsEYf4iAQCDvi5TNV/upkQxiTDMsXA0azjG7tBiKPJ+XbGCI+HugtADAP/NnHjIHlnFDNrLvltDg8Lf2uM9R/yb2m2B5cth2xjt+vkOmlyJMWaRVKLUzWT+sk=
+	t=1744700143; cv=none; b=SY4N4BGz83+saQQdxrPrvvLYx4Zy2HMDUQoj70kb4lOJo97icjtPfLRmXUZOfR0p9EBA493TnQfaxlxy8xtRbwMRAkiXJOyYqP3QoXGHRfUDwK24XIS6phyalQsKVea7CdIjB3vFND45dzii/M+VXgyzOS8ALq1Sc8pZFP0PSww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744700096; c=relaxed/simple;
-	bh=otczYa1ghEak+qqgPZ6Ve17y269l2h98GsBiXGcj3Fs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VaXL9jVS3BRmY1AVquZoQSL2DDBdWL2fAMM+ddulork9JwVBHW/PXer3E8WPyfbGu9KE2LbiwlLdC0BBG3S7npCceiwMiNcRi0l3NVCxyh3fdA4diO3zUNPtYsKBPJ5mOuPUD+nLYTK694lcyZRvn117SU6y7bwM2CtszQFtoOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OijRX4xz; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744700143; c=relaxed/simple;
+	bh=mH1iHo0oVHEl3wNf7M0lyymD0sny8Au9BwF+SaQ+0yY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lwgfJFHkSvWLUvzsdD3USOmbjiQ3W+IQXvVPIWhW5D5dfbVfPp5g1kr3d/T9fepbeY3fp5EAfIZrf4CbnQgf1Q0XEqmBhPELyUwkSpHhO5BWx/DRwugq3z5kbT5TsSSDZjM7D271QTnGy7oHoVXyYoMJRmrFvKpssmQRtLKAQoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PpWK9UBj; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OijRX4xz"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so44082721fa.2;
-        Mon, 14 Apr 2025 23:54:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PpWK9UBj"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso799930766b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:55:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744700092; x=1745304892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=suse.com; s=google; t=1744700139; x=1745304939; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2THuqnnjpaeGK3L+ZcHQ6pVri6WkM/B5U621pyeSAeA=;
-        b=OijRX4xzE1s3qQWGiR3kuncCF6vJvzW7KkGukIdcVDx0wHgj8RkEZEHmud3gc0pPr0
-         Sbmpi1ZJ69SuZELQvXWBO7W2nICHXOEv5kTOXEO4G9oN2IxEyR9EmA3VZxy0Kc1dAEu5
-         NV/83kr+1CmkU1jRJNhl2633zA6sVlkKNF/8iwogYICCKS2rUOj072ZKFJrHT8ITn+fB
-         9sKGYs+JBVAXZ1RSuA/3y6hVB+9cWYOQdAnqglsIgcZeDYzKvvrCd+SXGyVHF722WePd
-         Muul9ZLADoaOnE+UZkeH/cu92mSaZunmYCWallgGUaGmFDLudifU6ktqJmlrqUvJhed/
-         poGQ==
+        bh=mH1iHo0oVHEl3wNf7M0lyymD0sny8Au9BwF+SaQ+0yY=;
+        b=PpWK9UBjhYQjwAwxGI+p1ic+8S30wBXR0t/5TOWrIO6d3GLZuphBHsB3ArrI2IMabQ
+         0+645ouCW5+SJn13BPCGtxIuWHUPkXfItW/0b6tQ1yLFo6g8sz/HAzgdvnkSR6d9RPCH
+         Th3AUGb++lLLMH3r+rS6clYJ3q6NlRMhGqVGulIyHbTcfFXyBCu8+aFqGqWTHKG884X9
+         4gYa9rdGgOYKWxWILvWMpf5ztMn86ZOCga8Mj2bmcPN8lZY44w/ZSlWxla8t9b+6fYv2
+         lsn1240v2LQ4SEjIcJVzubYabbun8BGAt6nHwPlWWrCAFZcygiug3wsAvloU5eZSM7Pd
+         FXvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744700092; x=1745304892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2THuqnnjpaeGK3L+ZcHQ6pVri6WkM/B5U621pyeSAeA=;
-        b=QsA+cm1HkAQFpzyPNsMF0movAnACDa7JKORPvJy0k3hE0ywsdtgPi7Wj2aLAdsSfP6
-         VLxZgMuoUjocM9eDbHwRZJ9wdFEqnLOfYSPYC2VZRaXADzRaLwdrRnJPs5CwV/E+riSr
-         Wk4pDqeh0z4Z6m+On1bWGU55hfH/PkQJbvrS2xH9WwDz27Dic4au2N4TLB63Bihhqpu+
-         ydTNNpA6k/GLLljPKKNajrdRYMPzhTpJugWm/Te0FCRhg5uD8OkCY+EZsircfj8KfTdg
-         aL1cOvtwMcq4+sV2P2r7OZadj3r5bI6xIYtQSupSy6Vq5/fYYULZEsc/6EJ//+Z0AeaR
-         qk9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVqIEJ5wfHSYAr/plNxz5NjSr/m06hXFXaazwjoiUPeqv1fDOkuv/+2ZSdUicJwjWnPHWljUbbReLbWumTXub+InHKBeQ==@vger.kernel.org, AJvYcCWoApVrhm0+UNgk9uYBq3L9cVOQ4hPi+Ppy3vMOgvC26krHCPIs19gTNICt78eEmCA6qke2cI1iYCGKQjQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyAP+LpQEw+66TrpxeyENDwWPobDKgk8G5WhOi+N3tsli9YDxX
-	NejCFSIKkk6FtAgCCDrtXE2dB0DiqDi7JfsJvAVZj9A3hmfwsAavjMYK8CKgY6ZH3uqTRKEYcKD
-	5ICRvIHKMjJTbvD+cqGY+Xx+FAgM=
-X-Gm-Gg: ASbGncu8y06UG22TAzejHC/SYhQUSV9MVVpmmYpe69tqgmX6ODMPQh2AOhjEBcmfyNA
-	TdRnd8mPoTGvAMnXbkgInxaKm5GGIQGmLkiJhNESNL13WwBcOEOD4d4CQAXKlb27ueuOBEMFnYh
-	4UH+1z/rCzOolcP84n/zmzJQ==
-X-Google-Smtp-Source: AGHT+IFAbvuR21DIztnhuL0l3222BeT4W2KZCRfgDNpf5QWXiSJQymbLDiT8gigzr/0cN+mDSfsulSKa5POqR3x76nI=
-X-Received: by 2002:a05:651c:1515:b0:307:9555:dc5e with SMTP id
- 38308e7fff4ca-310499d1599mr52119541fa.3.1744700091727; Mon, 14 Apr 2025
- 23:54:51 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744700139; x=1745304939;
+        h=in-reply-to:autocrypt:from:content-language:references:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mH1iHo0oVHEl3wNf7M0lyymD0sny8Au9BwF+SaQ+0yY=;
+        b=X9DoCqK2NgBq3UQ+CMi25v4g97VjD6yA52EwTgafg8hgntYxHFLwQw6sTB5jABim65
+         OCAIUHILHNcrcjbyH6VlI6+iLYsP7BRokrxhGV2+oKCU5yiwG4ev0Sp8z/5dgjUFJ7xu
+         tDYwAqGBDuOgxbrDVhUkVGZfONaWdy/sTBlWJuwlfrk14hgHQosAQP4nXUbtKcQb2MDq
+         klj4vadCM7NH0Py9Dp+tA7ap8LPOdnf6hY89hboMJhIdUHiGA1wMxpMWZ0HM63gDDIXX
+         G9Xvp2F0KH3nxcOtLoozU5OyBGuIgM5fVgswVN+F3g4cYEElbMWUVA8MbiXEOxk+X8dt
+         e5VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2FCK1se3EO/u/QdUMKpJW5Q79quGer2ulMiLxkZxf7ltVpAwOyE+UZjUPeJyX85Ce2n3urHdQlmrLVsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXHdBE+wQeyhxf8xfpfoniuImapKwVtOccE/AjJu6vzmwLIy18
+	2yDC4iyqXLlHU8w5aM6jvXgRp/ys0xg/PyIY7j1wY33DHlQba6K4Dehsbd/Uzbk=
+X-Gm-Gg: ASbGncvkP1EovyV07QtarC+qE8bXqOLG3I99DSRVURPa4bYEZNzVcgp3azifazdE5Uv
+	ULeumt9iCCVUFP0qLR7TQgN8L4oQHHYdkon1MgcVVuNJMtlNotrUbwRUE/GsUK+/74wWXka8hvF
+	EGnRvRM6BTKjmtNue9inRd402app8psJlyqOXC5vMdUC16w9X8UF4zJuJcS79hxGoCvIy/MAlPL
+	mKKcAe0OAINE0jIFRFCivpqXPq/N3cpaPisgpUqrrT2ursKF6e3YqRMKWttSTKTEbZKWrPF4ETQ
+	CfBhqmIvjCAE45exG9wHbEJUFzRwJAhCb1nmPl2Ed5tBKn+FxKJvnV6y80UzMceOJSvps8yA/Ak
+	ue47oDx4dkXf7r0NNJVOJt3DRwNMr+COC7la5ORMn5mJ0Iwe90K8LxCURf+bN/Az6NA==
+X-Google-Smtp-Source: AGHT+IHfwJashPa+nqtOMRp7LD73ka/YQaxjrS0ijQc96PctD+DEkKhFe9nYhZU4EUJUkHAUKH06Sw==
+X-Received: by 2002:a17:907:60d4:b0:ac8:16fb:a291 with SMTP id a640c23a62f3a-acad34869edmr1535103466b.18.1744700139191;
+        Mon, 14 Apr 2025 23:55:39 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1999d96sm1025891866b.0.2025.04.14.23.55.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Apr 2025 23:55:38 -0700 (PDT)
+Message-ID: <49dc22ee-ad72-4c01-bab9-37f405e947d6@suse.com>
+Date: Tue, 15 Apr 2025 08:55:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414092132.40369-1-shouyeliu@gmail.com> <1feb5888-5ec8-67aa-9775-e1bea6b8b9fe@linux.intel.com>
- <f673452d7afc4419120f2cdb32e5033c35f22229.camel@linux.intel.com>
-In-Reply-To: <f673452d7afc4419120f2cdb32e5033c35f22229.camel@linux.intel.com>
-From: liu shouye <shouyeliu@gmail.com>
-Date: Tue, 15 Apr 2025 14:54:40 +0800
-X-Gm-Features: ATxdqUGj1yNhUoVoGrEdPQ1vFpN9Q44lqcabNjqRD9KtUy2IYKuMJLVrh98hNJw
-Message-ID: <CAAscG3W+QpD8xqo3qB_u2ViuUA6-_VsBT3GExU-DakDZJwtN8Q@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86/intel-uncore-freq: fix inconsistent state on
- init failure
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-	Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-6.15-rc2/drivers/xen/balloon.c:346: Possible int/long mixup
+To: David Binderman <dcb314@hotmail.com>,
+ "sstabellini@kernel.org" <sstabellini@kernel.org>,
+ "oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <AS8PR02MB1021776B93FEF6D425C7223389CB32@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <AS8PR02MB1021776B93FEF6D425C7223389CB32@AS8PR02MB10217.eurprd02.prod.outlook.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------wY5A2zixIF1bIvSO7tvogJP6"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------wY5A2zixIF1bIvSO7tvogJP6
+Content-Type: multipart/mixed; boundary="------------L80Zs1i0UKD0f1eNCgIODbzW";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: David Binderman <dcb314@hotmail.com>,
+ "sstabellini@kernel.org" <sstabellini@kernel.org>,
+ "oleksandr_tyshchenko@epam.com" <oleksandr_tyshchenko@epam.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <49dc22ee-ad72-4c01-bab9-37f405e947d6@suse.com>
+Subject: Re: linux-6.15-rc2/drivers/xen/balloon.c:346: Possible int/long mixup
+References: <AS8PR02MB1021776B93FEF6D425C7223389CB32@AS8PR02MB10217.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB1021776B93FEF6D425C7223389CB32@AS8PR02MB10217.eurprd02.prod.outlook.com>
+
+--------------L80Zs1i0UKD0f1eNCgIODbzW
+Content-Type: multipart/mixed; boundary="------------rNOgDUQkUSyo2kvvHmbYIPcQ"
+
+--------------rNOgDUQkUSyo2kvvHmbYIPcQ
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMTQuMDQuMjUgMTk6NTcsIERhdmlkIEJpbmRlcm1hbiB3cm90ZToNCj4gSGVsbG8gdGhl
+cmUsDQo+IA0KPiBTdGF0aWMgYW5hbHlzZXIgY3BwY2hlY2sgc2F5czoNCj4gDQo+IGxpbnV4
+LTYuMTUtcmMyL2RyaXZlcnMveGVuL2JhbGxvb24uYzozNDY6MjQ6IHN0eWxlOiBpbnQgcmVz
+dWx0IGlzIGFzc2lnbmVkIHRvIGxvbmcgdmFyaWFibGUuIElmIHRoZSB2YXJpYWJsZSBpcyBs
+b25nIHRvIGF2b2lkIGxvc3Mgb2YgaW5mb3JtYXRpb24sIHRoZW4geW91IGhhdmUgbG9zcyBv
+ZiBpbmZvcm1hdGlvbi4gW3RydW5jTG9uZ0Nhc3RBc3NpZ25tZW50XQ0KPiANCj4gU291cmNl
+IGNvZGUgaXMNCj4gDQo+ICAgICAgdW5zaWduZWQgbG9uZyBpLCBzaXplID0gKDEgPDwgb3Jk
+ZXIpOw0KPiANCj4gTWF5YmUgYmV0dGVyIGNvZGU6DQo+IA0KPiAgICAgIHVuc2lnbmVkIGxv
+bmcgaSwgc2l6ZSA9ICgxVUwgPDwgb3JkZXIpOw0KPiANCg0KV2hpbGUgSSBhZ3JlZSB0aGlz
+IHdvdWxkIGJlIGJldHRlciwgdGhlcmUgaXMgbm8gcmVhbCBmYWlsdXJlIHBvc3NpYmxlDQpo
+ZXJlLiBGb3IgdGhpcyB0byBjYXVzZSBwcm9ibGVtcyB5b3UnZCBuZWVkIHRvIGhvdHBsdWcg
+MTZUQiBvZiBtZW1vcnkNCmluIG9uZSBzaW5nbGUgYmxvY2suDQoNCk5ldmVydGhlbGVzcyB0
+aGFua3MgZm9yIHRoZSBub3RpY2UuDQoNCg0KSnVlcmdlbg0K
+--------------rNOgDUQkUSyo2kvvHmbYIPcQ
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-srinivas pandruvada <srinivas.pandruvada@linux.intel.com> =E4=BA=8E2025=E5=
-=B9=B44=E6=9C=8815=E6=97=A5=E5=91=A8=E4=BA=8C 00:08=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> On Mon, 2025-04-14 at 13:41 +0300, Ilpo J=C3=A4rvinen wrote:
-> > On Mon, 14 Apr 2025, shouyeliu wrote:
-> >
-> > > When uncore_event_cpu_online() fails to initialize a control CPU
-> > > (e.g.,
-> > > due to memory allocation failure or uncore_freq_add_entry()
-> > > errors),
-> > > the code leaves stale entries in uncore_cpu_mask after that online
-> > > CPU
-> > > will not try to call uncore_freq_add_entry, resulting in no sys
-> > > interface.
-> >
-> > Please add () after any name that refers to a C function (you're not
-> > even
-> > being consistent here as you had it in some cases but not here).
-ok,I will modify it in the next version
-> >
-> > Please try to split the very long sentence a bit and make it more
-> > obvious
-> > what causes what as the current wording is a bit vague, did you mean:
-> > uncore_event_cpu_online() will not call uncore_freq_add_entry() for
-> > another CPU that is being onlined or something along those lines?
-> >
-> > Will this change work/matter? Documentation/core-api/cpu_hotplug.rst
-> > says
-> > about cpuhp_setup_state():
-> >
-> > "If a callback fails for CPU N then the teardown callback for CPU
-> >  0 .. N-1 is invoked to rollback the operation. The state setup
-> > fails,
-> >  the callbacks for the state are not installed and in case of dynamic
-> >  allocation the allocated state is freed."
-> >
->
-> Yes, cpuhp_setup_state() will fail and which will result in clean up.
-> So any fail of any fail uncore_event_cpu_online() will result in no sys
-> entries.
->
-> I think here the intention is to keep sys entries, which will not
-> happen with this patch.
->
-> For confirmation on 6.14 kernel, I forced failure on CPU 10:
->
-> [595799.696873] intel_uncore_init
-> [595799.700102] uncore_event_cpu_online cpu:0
-> [595799.704240] uncore_event_cpu_online cpu:1
-> [595799.708360] uncore_event_cpu_online cpu:2
-> [595799.712505] uncore_event_cpu_online cpu:3
-> [595799.716633] uncore_event_cpu_online cpu:4
-> [595799.720755] uncore_event_cpu_online cpu:5
-> [595799.724953] uncore_event_cpu_online cpu:6
-> [595799.729158] uncore_event_cpu_online cpu:7
-> [595799.733409] uncore_event_cpu_online cpu:8
-> [595799.737674] uncore_event_cpu_online cpu:9
-> [595799.741954] uncore_event_cpu_online cpu:10
-> [595799.746134] Force CPU 10 to fail online
-> [595799.750182] uncore_event_cpu_offline cpu:0
-> [595799.754508] uncore_event_cpu_offline cpu:1
-> [595799.758834] uncore_event_cpu_offline cpu:2
-> [595799.763238] uncore_event_cpu_offline cpu:3
-> [595799.767558] uncore_event_cpu_offline cpu:4
-> [595799.771832] uncore_event_cpu_offline cpu:5
-> [595799.776178] uncore_event_cpu_offline cpu:6
-> [595799.780506] uncore_event_cpu_offline cpu:7
-> [595799.784862] uncore_event_cpu_offline cpu:8
-> [595799.789247] uncore_event_cpu_offline cpu:9
-> [595799.793540] intel_uncore_init cpuhp_setup_state failed
-> [595799.798776] intel_uncore_init failed
->
->
-> Thanks,
-> Srinivas
-Registering the CPU hot-plug callback function during booting can be
-handled correctly. I think the problem occurs during runtime.
-The original code may have problems when the CPU hot-plug modifies the
-management CPU during runtime:
-Assume that the CPUs of package 1 are 8-15, and the uncore driver has
-been registered at boot time;
-1. Offline all CPU No.8-15
-2. Try online CPU No. 8, the code executes cpumask_set_cpu()
-successfully, but fails in the uncore_freq_add_entry() process. At
-this time, the mark of CPU No. 8 is added to uncore_cpu_mask, but no
-sys interface is generated,cpu No.8 online fails;
-3. Try online CPU No. 8 again, cpumask_any_and() judges success, and
-the CPU No.8 online is successful at this time;
-4. Assume that the attempt to online CPU No. 9-15 is successful at
-this time, but there is no sys interface =E2=80=94=E2=80=94=E2=80=94=E2=80=
-=94unexpected behavior 1.
-5. Offline CPU No. 9-15, and offline No.8, will eventually call
-uncore_freq_remove_die_entry()=E2=80=94=E2=80=94=E2=80=94=E2=80=94unexpecte=
-d behavior 2 is generated,
-which may cause a crash.
->
->
->
-> > >
-> >
-> > Fixes tag?
-> >
-> > > Signed-off-by: shouyeliu <shouyeliu@gmail.com>
-> >
-> > The correct format for tags is documented in
-> > Documentation/process/5.Posting.rst:
-> >
-> > tag: Full Name <email address>
-ok,I will modify it in the next version
-> >
-> > > ---
-> > >  .../x86/intel/uncore-frequency/uncore-frequency.c    | 12
-> > > ++++++++----
-> > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > index 40bbf8e45fa4..1de0a4a9d6cd 100644
-> > > --- a/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-
-> > > frequency.c
-> > > @@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned
-> > > int cpu)
-> > >  {
-> > >     struct uncore_data *data;
-> > >     int target;
-> > > +   int ret;
-> > >
-> > >     /* Check if there is an online cpu in the package for
-> > > uncore MSR */
-> > >     target =3D cpumask_any_and(&uncore_cpu_mask,
-> > > topology_die_cpumask(cpu));
-> > >     if (target < nr_cpu_ids)
-> > >             return 0;
-> > >
-> > > -   /* Use this CPU on this die as a control CPU */
-> > > -   cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > > -
-> > >     data =3D uncore_get_instance(cpu);
-> > >     if (!data)
-> > >             return 0;
-> > > @@ -163,7 +161,13 @@ static int uncore_event_cpu_online(unsigned
-> > > int cpu)
-> > >     data->die_id =3D topology_die_id(cpu);
-> > >     data->domain_id =3D UNCORE_DOMAIN_ID_INVALID;
-> > >
-> > > -   return uncore_freq_add_entry(data, cpu);
-> > > +   ret =3D uncore_freq_add_entry(data, cpu);
-> > > +   if (!ret) {
-> > > +           /* Use this CPU on this die as a control CPU */
-> > > +           cpumask_set_cpu(cpu, &uncore_cpu_mask);
-> > > +   }
-> > > +
-> > > +   return ret;
-> >
-> > Please reverse to logic such that you return early on error, which is
-> > the
-> > usual error handling pattern.
-ok,I will modify it in the next version
-> >
-> > >  }
-> > >
-> > >  static int uncore_event_cpu_offline(unsigned int cpu)
-> > >
-> >
->
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------rNOgDUQkUSyo2kvvHmbYIPcQ--
+
+--------------L80Zs1i0UKD0f1eNCgIODbzW--
+
+--------------wY5A2zixIF1bIvSO7tvogJP6
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmf+AuoFAwAAAAAACgkQsN6d1ii/Ey/n
+kQf/ZtJmR+LeWcIyGU04l61IaqpD67A1ASh+lM+EKBzUAzhmQ1zp2W3s3OPlg/altaQuRys/XNX9
+J7R0fhFKlHT8ihOiIIF4uIcaqICAKKiivrxH6yFyWnn1dPyPiz1Xe4C/GmFjagfj/xcCVkymIwgx
+6gL51sENPyqbLNzK+sOHDgZOBXfqAaiAl+B1RYtu1HXh9tk8YWbEXkAXXye15VHkYG9urOkZY4f6
+oanrsUNR3844AB1SJQ73cKRzv+v/EVXsgqPRTmdII4Ei6jMs2HCiHPKhko1v12yxz1r44JiTjJ4v
+eOhfStPjwByvrCJ3+QPg9G/d0fsEXkpc82MZ5sUR+g==
+=KJKF
+-----END PGP SIGNATURE-----
+
+--------------wY5A2zixIF1bIvSO7tvogJP6--
