@@ -1,139 +1,87 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8809E27A13C;
-	Tue, 15 Apr 2025 09:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67821A3031;
+	Tue, 15 Apr 2025 09:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708952; cv=none; b=bhZjlTtBeqbRdJZAwXzZQBz7UmfidyVRt50Q91QHPJ6KZ144m6IKA2EpuSuPGgjzGsNth/AFignpt6IH5Kn3xonkqzdYzSyCRjOh5RrI+n7AJaetMW9J0EABewVHz1RqKeCc639+q0v3ycoO6jGFtD1Tl1iQj8jULDfbKLwslmg=
+	t=1744708994; cv=none; b=QTbHxIQg2U5yidvb7XBVDlXVbA32uTyUm/MyrZ24M68kZLcrmwC8b+/C/nBQqKiZGAySVQxFp0+6I6xVaIzDW7xmJO1VcFwkts4jNVyGKwpONm/34N0gPs9yvGondJgWJdWvlTmm4eMiasKMLpQLCAinrtJAWKj7DBYTodi6INM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708952; c=relaxed/simple;
-	bh=BuSc5ocwNLWkjNXjYVYwubVleg1xVZY4XwdbG34uspw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ML0wjdjj12DIfijGN9FxcMjtkn6dHQCStF6U5mMHx0r3O/vtuTPg+QV5VwXKFBVBF+3v9rjCWXdLAChg3JrcgzsL46bv3D6WDandHaP+JHIEGcyL5LKCC/T/7Wu0q5xjFygIh0E25tJiG9NPTz3u+w0g2MDOIB3fsFH2KoaTh24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HZutqT9w; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744708994; c=relaxed/simple;
+	bh=3Eb4GAGwL/ZChCY5P5NR9ncafKBzFvPc72SuCpY6pwQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iP2wzz5i2VKFdknq6dZDyjCGdUEj5YrEIIwXIun4iDr35C+H8X0QtKvuJF45MqwnquRF/W3L7SrDU9DuawaimBmQtqnrxKlE1boqJMKFI71F67x1Li3TgIRkwUo8/6tVulY5Mo7yOeYMytCrgXAZP1IYI7ITc5Gstdg1NuUNJk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jln5hEwH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G3BlMPrD; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZutqT9w"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-acacb8743a7so787833466b.1;
-        Tue, 15 Apr 2025 02:22:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744708949; x=1745313749; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFSHB8vDEA/gB5kXiVxaJXNQ4JrOxv0Kn7v+YHZA1Cc=;
-        b=HZutqT9wLgY/O5SQzaIhLDRNob/+Mt+DRVWxb+whbysBqwlKQ9yi73oAN38ZM7cPVz
-         C4p1QfA/1u+LXg7jXdPKses+zbSfwOXiZuGivvx0SWzD9w6JCqe5UuCGpmDCMmpkWWXi
-         k339Ov0OvIj05zIinc+uVgFeUzUuYjqz9BL4IOdtkZJHZZU6KnMxY9MHVBFtz2IY/aHQ
-         g6GuV8S4bPj/Ajv+8ib1D0PRvd0OT6ARLimWpkt5K2vrpAc98U8e+Fx6YL6D9e+KyClH
-         Nb+DH95xdUrue5aR9muh7CPq8A+yT9vJOaZ2qcH/JaOl1f6vZZ9GBRRgMHDG/uMdsv/O
-         6ofg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744708949; x=1745313749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sFSHB8vDEA/gB5kXiVxaJXNQ4JrOxv0Kn7v+YHZA1Cc=;
-        b=ResbBhaW1dE02kTP6K9RgQvTBuOAFCFwvoIv75rB7bQH9MtHkwO24N8oKysSeuAdeB
-         vPWEsnh6DZpS2suoeFDrlN6ChI2xZQXhh2VbaP2+mUzchPl9RuPwZuaGP422qpiYUrBN
-         /UmwkVu8rzZhpOprUcGS9DC+vG8rijKQ4QMwcRSPsLL+bSJJ6N3SdQEfQMT7jtBAZ1K6
-         pYBiiIkfI8aM3Y0cKDXRjz0wJQv1l1vcBDSfJ6mGZS+NCLwVw+7O3GhW6L/aJ+hllVmG
-         MIa39rGeX6P+y4lXiwdfEINLS28cCMHm7vzWUPhQlKXbwRB+OxF48m+96xoT2yo4diXY
-         EMcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhhJTxVEYe5qild2PvH3N9c/ZDWlXSA8ok+nW2Aq0emX2zprsAo+IAiJyNjyWxvaHbss3jgnBh@vger.kernel.org, AJvYcCUx66ZHJvgClSHpIBFdKu460A8WvmduVRKsOHwFHeVZqHzmZwgfxx1WsOiqojSKX03W/YtFWwaA18JuZZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1aA1wtQ+a4rWQc6wM9DT2psTHD4wXBPtJbCV6DsX0gUr4orw9
-	d5snGWaKbWURI6TP6Ua74H7uN6maicUTtaY9hD4T9yrgIHgIxqq/vaU5b9ZiQwOozacileOeCMP
-	uiXqlVRtqvsi9nUTbuqv3QKU0eGA=
-X-Gm-Gg: ASbGncvXuCujAQStCt1gC1FADzvT6Wb8fJmYddW1wGSEqpV3JfD4awGRD6LT07AMR0n
-	umh05ItZi5AGzjYCkWEUglqGcuv6WJDCDW3ZNN/3Nh6Zx3TrAj78Ic0/14Md9F/3Kt6cHhiHoyT
-	PdBAq6tPa1oFDPfQ5JKm1T
-X-Google-Smtp-Source: AGHT+IFoISNvEyOTAV6L95npDwn8IeABBA5AjS5VPrPDQDz6OGMnodI/Oqsr3Iy2uQkFakSwtVhAcFofvLFjycgBZSY=
-X-Received: by 2002:a17:907:8688:b0:abf:48df:bf07 with SMTP id
- a640c23a62f3a-acb166c9e62mr249010966b.15.1744708948501; Tue, 15 Apr 2025
- 02:22:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jln5hEwH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G3BlMPrD"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744708990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QRBrM/80v+smOzTTO0xgZrENn61/dOM7SxrtDW9E54s=;
+	b=Jln5hEwHz6K8G+tq0se/Nak6yPmXzB6FKARx0ueK3U62bgbJYP6RP2dPayT5q+i7fCnR1V
+	tsVeJmHoUKyXPOEXAj5+k7JTolVluOskK5lSi1LCP3slsMOVNwUUqy/JqJFtjqHO2Vlp1f
+	0acHnL4touxfLeL6ygP+zyPEZ9epu6s+DdaKLlieCxgNroPYxIeHmpY6uxWvGJ2lTOtWS/
+	zE0GfwHe98GbwGEYU03xX/zDBc99Lm2CzyTZ+SYzxxiMyL+jCjx+d3nH0IO0xdU+d+V6t9
+	MnTFVk0ONWhfx9/tTlRvMcFW03FGAcJSbv5O2mRHImiCsow1YBFWyUrNCOQCJA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744708990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QRBrM/80v+smOzTTO0xgZrENn61/dOM7SxrtDW9E54s=;
+	b=G3BlMPrDHxiE/0PGTtvzntJxZOyr7zKPGHHgQa+FR41jSCM1zBlUTNcQM2F+vxQpfMX1xM
+	E4dTi+hmNoVtpODQ==
+Subject: [PATCH 0/2] kunit: qemu_configs: Add PowerPC 32-bit BE and 64-bit
+ LE
+Date: Tue, 15 Apr 2025 11:23:04 +0200
+Message-Id: <20250415-kunit-ppc-v1-0-f5a170264147@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415064638.130453-1-maimon.sagi@gmail.com> <Z/4D3/PW9FkxQSdo@mev-dev.igk.intel.com>
-In-Reply-To: <Z/4D3/PW9FkxQSdo@mev-dev.igk.intel.com>
-From: Sagi Maimon <maimon.sagi@gmail.com>
-Date: Tue, 15 Apr 2025 12:22:01 +0300
-X-Gm-Features: ATxdqUHJvZLEqBP_crtdHMliwArlrmpga35FVWZtSPIGUFh9R4_ZqmlfEyxnoMo
-Message-ID: <CAMuE1bH9zPA4Bzk7ZictvbWi6v5uTsE_zUVKkTCeuspDT0D7tw@mail.gmail.com>
-Subject: Re: [PATCH v2] ptp: ocp: fix NULL deref in __handle_s for irig/dcf
-To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev, 
-	richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHgl/mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMD3ezSvMwS3YKCZF1jcxOTVGNzQ0NDozQloPqCotS0zAqwWdGxtbU
+ AyVsJrFsAAAA=
+X-Change-ID: 20250220-kunit-ppc-3744e371112f
+To: Brendan Higgins <brendan.higgins@linux.dev>, 
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744708989; l=722;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=3Eb4GAGwL/ZChCY5P5NR9ncafKBzFvPc72SuCpY6pwQ=;
+ b=Psm4BU5jOdHPYjD1YogOp8Iz+vpBLQ2J+N416u/DksxCicWeL/H+KmYI2agafKIB3bDGp4P9x
+ bvEReXJkUnvClEeVs15+bQFPYnxhEaqVF+SDbhOpXUcIZARLd9ERoco
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Tue, Apr 15, 2025 at 10:00=E2=80=AFAM Michal Swiatkowski
-<michal.swiatkowski@linux.intel.com> wrote:
->
-> On Tue, Apr 15, 2025 at 09:46:38AM +0300, Sagi Maimon wrote:
-> > SMA store/get operations via sysfs can call __handle_signal_outputs
-> > or __handle_signal_inputs while irig and dcf pointers remain
-> > uninitialized. This leads to a NULL pointer dereference in
-> > __handle_s. Add NULL checks for irig and dcf to prevent crashes.
-> >
-> > Fixes: b286f4e87e32 ("serial: core: Move tty and serdev to be children =
-of serial core port device")
-> > Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-> > Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
-> > ---
-> > Addressed comments from Paolo Abeni:
-> >  - https://www.spinics.net/lists/netdev/msg1082406.html
-> > Changes since v1:
-> >  - Expanded commit message to clarify the NULL dereference scenario.
-> > ---
-> >  drivers/ptp/ptp_ocp.c | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> > index 7945c6be1f7c..4e4a6f465b01 100644
-> > --- a/drivers/ptp/ptp_ocp.c
-> > +++ b/drivers/ptp/ptp_ocp.c
-> > @@ -2434,15 +2434,19 @@ ptp_ocp_dcf_in(struct ptp_ocp *bp, bool enable)
-> >  static void
-> >  __handle_signal_outputs(struct ptp_ocp *bp, u32 val)
-> >  {
-> > -     ptp_ocp_irig_out(bp, val & 0x00100010);
-> > -     ptp_ocp_dcf_out(bp, val & 0x00200020);
-> > +     if (bp->irig_out)
-> > +             ptp_ocp_irig_out(bp, val & 0x00100010);
-> > +     if (bp->dcf_out)
-> > +             ptp_ocp_dcf_out(bp, val & 0x00200020);
-> >  }
-> >
-> >  static void
-> >  __handle_signal_inputs(struct ptp_ocp *bp, u32 val)
-> >  {
-> > -     ptp_ocp_irig_in(bp, val & 0x00100010);
-> > -     ptp_ocp_dcf_in(bp, val & 0x00200020);
-> > +     if (bp->irig_out)
-> Why not irig_in? Can we asssume that "in" isn't NULL if "out" isn't?
->
-Ss part of ocp_resource initiation, irig_in and irig_out initiated separate=
-ly
-(one can be initiated and the other not ) so we can't assume that
-> > +             ptp_ocp_irig_in(bp, val & 0x00100010);
-> > +     if (bp->dcf_out)
-> The same here.
->
-> > +             ptp_ocp_dcf_in(bp, val & 0x00200020);
->
-> Just my opinion, I will move these checks into ptp_ocp_...() functions
-> as bp is passed to a function not bp->sth.
->
-> >  }
-> >
-> >  static u32
-> > --
-> > 2.47.0
+Add basic configs to run kunit tests on some more PowerPC variants.
+
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Thomas Weißschuh (2):
+      kunit: qemu_configs: powerpc: Explicitly enable CONFIG_CPU_BIG_ENDIAN=y
+      kunit: qemu_configs: Add PowerPC 32-bit BE and 64-bit LE
+
+ tools/testing/kunit/qemu_configs/powerpc.py   |  1 +
+ tools/testing/kunit/qemu_configs/powerpc32.py | 17 +++++++++++++++++
+ tools/testing/kunit/qemu_configs/powerpcle.py | 14 ++++++++++++++
+ 3 files changed, 32 insertions(+)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250220-kunit-ppc-3744e371112f
+
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+
