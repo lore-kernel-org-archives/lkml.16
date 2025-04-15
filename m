@@ -1,174 +1,158 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1201E28A1E0
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51872853EB
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709986; cv=none; b=og6pkpeH+1dIrcSPSXezv00j3mhey1bs92t52VUE7NRTIrUT+Z/lLgAsTb+pT2MJBXfbvUJBH/64FVcR0FrisU2ZxWonhjfpaYFdZya8F2Y8bJ8OfCB9fNO1HJW9CkzXXP+UbjAI0tBj7yZ0tqUN67fXpAbLBG3iOY6rH4R00YA=
+	t=1744709988; cv=none; b=sNcOG8vGOg7zWpy6/EOjMbVD8WaY7x2RSALklek487I7hhj2VBI/zuBWr/NKDOQ4I3SvSl2Jfluz+ezPqr60OgYAPB0qQn7Hwxzxb7L4f/9NBjHQff3/CrlVeyhAbvabZE2YzMIdcmJuobLYhrqiyDOdpuVOzk6/qwdMXxQGEHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709986; c=relaxed/simple;
-	bh=+eLU52m0ORdIdJCapPT1WBaFvqjvCeD37wwm9qhfv7c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BLTw3LqtHMIY9SEQc7BUwNK6enrMF3HJWj9WOe4ROtO+yOhq5NZ70wrOD5VQ+WC5N7Yw11O5Xu7Chi8PS4LH+Iq+JxUxBhIDX7raFhqC8bhoylL8g9QKgEWV5nZe1bX7IRIIUK86BXA0MY581V7QV8qXpAEhIeIJBnrBQPu7yYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=q+RQZ2aP; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1744709988; c=relaxed/simple;
+	bh=WwCvGbKN1UfpAvbEF24uDaZkMcpdSei4ppmMTFjiumY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fl2v/oDms8b1sE54fYL31nzSUc3JTYJSzSR3AP2EoA4y2hXQMWZ2fTJkjKsL9EjzN7hwoK3AIKDiEw7KzX0ZdlD5dzGzSBWm5xX+JLy5p5ffj14GPpp3ZaRG64QaAYxFFyfbu5/+II0p9jP0VumJxg0jNeaX+sD/3QrztLYkPYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Crry7EYQ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="q+RQZ2aP"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47688ae873fso53311471cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1744709983; x=1745314783; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rp5QhzXK0d3ipbL7De1Z7Dt2PtgQVBDiovxjTMuv9UE=;
-        b=q+RQZ2aP6N7OS7xlRi3J4F+VzBhsXV1hxTB2Lt0jwKXqahoAg5W64SgCncWenV+sB0
-         CjwTXNgC1EV4On/xfAdMdzxEMG5V1g0lzEuvZsGNpf1EKHT7KcUXUdsuhfJa0wnwglgq
-         yq6U5qftICTN+V0xK1cRhgv2yxrmGUZtw7dW0=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Crry7EYQ"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tH9P002235
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	boXGEJ9vm7laFVs45kpF+i7DaEsEXFuWOHSJOklGi48=; b=Crry7EYQoQ7jclKC
+	t2LkwXKWi3UGPmFyK4i1sqV1VOjGoUvZR9vAP0XeSwg8+YsbGEnENEbXIQRzeEV5
+	BMh9agY8PrayU9Uty3JzPLhIj7uokz0VvnQKnaOhxWj8mVMFkh1Iv321fTU4QF5s
+	4Il9Pf/tIFhmokJKlKT8DbTW0jLbGkb2/5GGH8+RTBfnuLWmlkALWogr79m0h4x9
+	wrPjuNzXSHfBXb6PDKc0qCqFmGlPz05aWQMCeobtH+OBbTDKFttO5zoNgnUWAmcB
+	uFWyEZ+MWQ+cgVahOmCINpKvW/+oQS3bAWvAhTnwjRwcSR2Kmyd/g13CbXAT+a7w
+	ML39aA==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vfmbg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:44 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e91ee078aaso92050726d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:39:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744709983; x=1745314783;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rp5QhzXK0d3ipbL7De1Z7Dt2PtgQVBDiovxjTMuv9UE=;
-        b=jEdzXvdN6NhXQuDCZrRPVQletqw9yn8ljvDYk+zpumIJXY7TNGKFX9rkMxP7/DofQ6
-         zdsqTTuHID4/UeQnoRZpoTGFXf5PAfd/AZYZy2zIc/r1lzTbOxODgCK5cnEF9EJWCBAP
-         TpWdqtxJo6ZR0l2MJu/epx6mGupZ5zLvMc827LjEEy/0muq/g8CjeHTGT/6X1ogvmiEl
-         lWyh8SNE7SuG45WME9cwfZ3rKBow/d4NlLN4Ee4kaD45yDisFDLLXwh6M/q6+CoqsiOb
-         +PbS5lQuRyXB2Izld5shDyvcYRCBsXcCamp2FkNoHnd0Q2F2H/1sSTal/yIHac2ir6BT
-         E7Ow==
-X-Forwarded-Encrypted: i=1; AJvYcCVTGrtabO1zmzolpbLyIDEoEgh4+sxhK3XzN0EWoYtNFZDf8S6YeeaOgl6f91yFHxfIDlqZv/LPtY7QasI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC/SuP6pkpqHU77f9mdeg6qrpVmQMhx2X8cycT+AJrQF7jUTku
-	hB/XeB1JGUNxGSIUdXlDkTFSbTCAxoZr36B+XcfzswwC2aY7D2hE7Aj5gtp2jNL4sFAv9lN0pt5
-	kmFeh4Hrzrg0gngeRvp19oS3OYxP/gGvNb3leDg==
-X-Gm-Gg: ASbGnctnAe/SJWdE9bZuX6ACF+hqZufAag4g0QR3IuOAPiQYf/wUkoqmOg0f9KT36m3
-	knr5m49NTZdto/6ZQsfVgey1j2/RIlxOZyX6uNFT41LZ5J5rYhzlZf+OdwCzVQg6/3kdDfiJYbe
-	aIErqYMbdtUQa01OcT6d14
-X-Google-Smtp-Source: AGHT+IHAloQRbW9NojhcvEEtRbgJNH88Mbd8WiXMbNgiI5cPN7g+71vwOchhjGPft+4cYmSg7Sbt+jh1WcjqLl8RB54=
-X-Received: by 2002:a05:622a:28d:b0:476:ac03:3c2a with SMTP id
- d75a77b69052e-479775e9723mr251931571cf.43.1744709982849; Tue, 15 Apr 2025
- 02:39:42 -0700 (PDT)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=boXGEJ9vm7laFVs45kpF+i7DaEsEXFuWOHSJOklGi48=;
+        b=FiKLG5ijOls6uKDcqYuD1BK7okVc1J9h9nMKH0xxkSIGaptxE1uE/UsGS0hBiobOaa
+         FJx8x17AfyI0dSOA/WVHMtK4LJtEznDv7UeZJF4d22Ar2tH6f8uh9g7pzXInIqfrEyc5
+         XZijrFAHJW+g0176rpzoUqK0mkCilNL9tSqBP3a+ryfe4ZH59PjZ++Htk6W8/jRl/dGP
+         HvZbIUK6EBD/a28HXaNWQQLaRN5TpYBfQ5k+6Az9IQAdYrjLkaO7gAxg+zkYP+KUaJif
+         XxYV35rWHzXTqi6rW3xMl2mqaBiRqoFNJ2XK0xrupx/CVGYzbAYHBsHQgk4+moA89GS2
+         i1Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUL4z/SABFtdLACLKuE7SAM6/+KiTRc8qqMs7uOY/sa99zbKUAT+kfxlhvHzt9QlDvEKWj3jTd541kucNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFU3Fs5lHz7fmK9uuqJg65hPmppwwD9LnTI4B0XxmAHiU0sgj4
+	igCdqe6wDEZSrP9tvYz19JUvcWt+gYpDRVGTIfFC8XjkiuQR4R8OHwvuBFQ0iAX/prJCut2RNMn
+	YrsODrBo7wnU5pq+wNY95LUCtYR6f4bxFxFNuVa5KjpIhTfqpH9F7YPFQ9RXyiMQ=
+X-Gm-Gg: ASbGncvZD1NVV3wY/kamGgJqbcZ3CAk+eKHJ2h1bnrSApxqMlEMMcTMwQxtvXO3jYkU
+	AJ8VBl7VWPcOKquDPP4XQkI4mLYnqqLPN4A/mYcWen4XpIMh17suFir0G6uHw4+RIeraYGXCpjr
+	zHbC31ImIL2R36zYJ9AiFTS83cDcWCgfcvgiaFysIUk7xi1Lexk8N2ztrb1uAob11l/0KLcuuV/
+	gFOTUnfv3QzvSmtuesUNoerTiILkYyzsq+LoHXQALnXFV69qMFexGz40llz+fFqvjopywr2YuPv
+	u1iT7zhIY2fWVX+XL4SqeqDXrD/rTmTspcIdjPBERtb6UYrvKGcMTrPBHNHmGaE7Dm7SnhDSSUy
+	7iez+HYSz9eMgP1kutdIPZ6KG
+X-Received: by 2002:a05:6214:cc6:b0:6e4:4011:9df7 with SMTP id 6a1803df08f44-6f230d1a647mr271627266d6.16.1744709983527;
+        Tue, 15 Apr 2025 02:39:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgv+l2YW7FLqgyNzvGDxI7BnqBldiXe67Jqf8Q0JmqBPbVtUaiY4utPWnf5VS4nhStjkZWOg==
+X-Received: by 2002:a05:6214:cc6:b0:6e4:4011:9df7 with SMTP id 6a1803df08f44-6f230d1a647mr271626936d6.16.1744709983180;
+        Tue, 15 Apr 2025 02:39:43 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cbc60sm20141901fa.24.2025.04.15.02.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 02:39:42 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 12:39:32 +0300
+Subject: [PATCH v3 04/10] dt-bindings: display/msm: qcom,sc7280-dpu:
+ describe SAR2130P
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250203-fuse-sysfs-v2-1-b94d199435a7@kernel.org>
-In-Reply-To: <20250203-fuse-sysfs-v2-1-b94d199435a7@kernel.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 15 Apr 2025 11:39:31 +0200
-X-Gm-Features: ATxdqUFhPFymDj11-t61NAng2LH1InHt-a0YDOQdAb8tGbHo3D0mz7v0DZE-BT0
-Message-ID: <CAJfpegtLjFVRLxeUUGjT1V0iQ8+pwsFn0t2n2yOVfqSjn_7bPg@mail.gmail.com>
-Subject: Re: [PATCH v2] fuse: add a new "connections" file to show longest
- waiting reqeust
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Joanne Koong <joannelkoong@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250415-sar2130p-display-v3-4-62314b1c9023@oss.qualcomm.com>
+References: <20250415-sar2130p-display-v3-0-62314b1c9023@oss.qualcomm.com>
+In-Reply-To: <20250415-sar2130p-display-v3-0-62314b1c9023@oss.qualcomm.com>
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Krishna Manikandan <quic_mkrishn@quicinc.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=934;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=IJ0quqH+dI7r+sJavUIADWzzAqD1L2X/CIVzw9kCDtE=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBn/ilWDCo+pRdd0GrlabWfVcz8v6zf4ozWEeLZA
+ /Fu3nJWwiGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ/4pVgAKCRCLPIo+Aiko
+ 1ZCmB/9c4hLwLkqR989lkSnfX7RFd+RyXe2921PtOP8h3L7D9zPDDrRiPBsEIoM2IWDEgcRu29V
+ TOK54ArIZFVtHuBzxHBrMKjeGTaEit0RHjeaueqX/uUaeFVZY3ZekNjO95YrhwBjDam3HZh5c3P
+ KM6XNV83M1FHTLgDV4JtQyPebgUeMio3Rkb431dyZ450VyePsBt408lhO6oM08G1dvxgHIZ2kNH
+ sGaQTCgD/TxOiRxM1flWQ2L1ost0uIylgYTY93Tavz3lOMs7y5XPP72eGnK6y80sGhBIcEll8cb
+ FXyLoKPZm5mLpXx4et9YY0hagzeFfwiWKhu7H5nZHb7ecY2x
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-ORIG-GUID: VaS9zd-Zsh42bxJWn8cT2iL8XiZc2sht
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fe2960 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=P0d4iQPpJQof_2lRNe4A:9 a=QEXdDO2ut3YA:10
+ a=pJ04lnu7RYOZP9TFuWaZ:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: VaS9zd-Zsh42bxJWn8cT2iL8XiZc2sht
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=914 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150065
 
-On Mon, 3 Feb 2025 at 20:57, Jeff Layton <jlayton@kernel.org> wrote:
->
-> Add a new file to the "connections" directory that shows how long (in
-> seconds) the oldest fuse_req in the processing hash or pending queue has
-> been waiting.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> This is based on top of Joanne's timeout patches, as it requires the
-> "create_time" field in fuse_req.  We have some internal detection of
-> hung fuse server processes that relies on seeing elevated values in the
-> "waiting" sysfs file. The problem with that method is that it can't
-> detect when highly serialized workloads on a FUSE mount are hung. This
-> adds another metric that we can use to detect this situation.
-> ---
-> Changes in v2:
-> - use list_first_entry_or_null() when checking hash lists
-> - take fiq->lock when checking pending list
-> - ensure that if there are no waiting reqs, that the output will be 0
-> - use time_before() to compare jiffies values
-> - no need to hold fc->lock when walking pending queue
-> - Link to v1: https://lore.kernel.org/r/20250203-fuse-sysfs-v1-1-36faa01f2338@kernel.org
-> ---
->  fs/fuse/control.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  fs/fuse/fuse_i.h  |  2 +-
->  2 files changed, 59 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-> index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..b27f2120499826040af77d7662d2dad0e9f37ee6 100644
-> --- a/fs/fuse/control.c
-> +++ b/fs/fuse/control.c
-> @@ -180,6 +180,57 @@ static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
->         return ret;
->  }
->
-> +/* Show how long (in s) the oldest request has been waiting */
-> +static ssize_t fuse_conn_oldest_read(struct file *file, char __user *buf,
-> +                                     size_t len, loff_t *ppos)
-> +{
-> +       char tmp[32];
-> +       size_t size;
-> +       unsigned long now = jiffies;
-> +       unsigned long oldest = now;
-> +
-> +       if (!*ppos) {
-> +               struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
-> +               struct fuse_iqueue *fiq = &fc->iq;
-> +               struct fuse_dev *fud;
-> +               struct fuse_req *req;
-> +
-> +               if (!fc)
-> +                       return 0;
-> +
-> +               spin_lock(&fc->lock);
-> +               list_for_each_entry(fud, &fc->devices, entry) {
-> +                       struct fuse_pqueue *fpq = &fud->pq;
-> +                       int i;
-> +
-> +                       spin_lock(&fpq->lock);
-> +                       for (i = 0; i < FUSE_PQ_HASH_SIZE; i++) {
-> +                               /*
-> +                                * Only check the first request in the queue. The
-> +                                * assumption is that the one at the head of the list
-> +                                * will always be the oldest.
-> +                                */
-> +                               req = list_first_entry_or_null(&fpq->processing[i],
-> +                                                              struct fuse_req, list);
-> +                               if (req && time_before(req->create_time, oldest))
-> +                                       oldest = req->create_time;
+From: Dmitry Baryshkov <lumag@kernel.org>
 
-Couldn't this be merged with the timeout expiry code?  I.e. implement
-get_oldest_req_time() helper, the result of which could be compared
-against req_timeout.
+Describe DPU controller present on Qualcomm SAR2130P platform.
 
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +                       }
-> +                       spin_unlock(&fpq->lock);
-> +               }
-> +               spin_unlock(&fc->lock);
-> +
-> +               spin_lock(&fiq->lock);
-> +               req = list_first_entry_or_null(&fiq->pending, struct fuse_req, list);
-> +               if (req && time_before(req->create_time, oldest))
-> +                       oldest = req->create_time;
-> +               spin_unlock(&fiq->lock);
-> +
-> +               fuse_conn_put(fc);
-> +       }
-> +       size = sprintf(tmp, "%ld\n", (now - oldest)/HZ);
+diff --git a/Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml b/Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml
+index 6902795b4e2c249c2b543c1c5350f739a30553f2..df9ec15ad6c3ca1f77bebaab19ffa3adb985733d 100644
+--- a/Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml
++++ b/Documentation/devicetree/bindings/display/msm/qcom,sc7280-dpu.yaml
+@@ -17,6 +17,7 @@ $ref: /schemas/display/msm/dpu-common.yaml#
+ properties:
+   compatible:
+     enum:
++      - qcom,sar2130p-dpu
+       - qcom,sc7280-dpu
+       - qcom,sc8280xp-dpu
+       - qcom,sm8350-dpu
 
-now - oldest will always be zero if *ppos != 0.  It would be much more
-logical to return an error for *ppos != 0, then to return success with
-a nonsense value.
+-- 
+2.39.5
 
-use_conn_limit_write() already does so, and existing read callbacks
-could be changed to do the same with a very slight risk of a
-regression.  But for a new one, I don't think there's any worries.
-
-Thanks,
-Miklos
-
-
-Thanks,
-Miklos
