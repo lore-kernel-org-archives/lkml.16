@@ -1,116 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8131F4629
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8962951D9
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719844; cv=none; b=cYKpt83eCtRdLJdgN592UuvlH1XKStikz5fuwBwlcb64lYh/NIyxAbwi1mSoRq5J4q4j6B9XGO5D2UXjfCKjbIxj8KQr7LcYopbeDozwSr1/uU1Is0UXeUdELzH/lYn9USDI7icCesL61bqDCDQNrZJGVjNUHGvdmIsXhnO/B3k=
+	t=1744719855; cv=none; b=RLOT68c0h+j1VA/9CAsZ0lFze2UjY2C+Qjal87gDKUuU105DwUA0ZCkFiBpQcmYB5j4Fkmx/8gsbU3Zy5ZtG6DyrT8zPDbUbtuJx5If5lqljE5OJfFB0EIxkYVNKDmhTof6eeN4erN0VyXAVQdV+4/IkeQ1Q+GaCu3gWQP7jS18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719844; c=relaxed/simple;
-	bh=b/pzgfnIhjNBJcq/S8/1l0RsJNTfD6XOM3mOkmG1ntk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=avVQIxbq+ZL7RJ6fS2WjZhqDeK0RTw8MKGLUtJ/c3TurrrwXT6AlCcF0zoi9G8PZ2BjvVNG2wKhZhe3AZuDr8cMFoWmDtFtb3Uv2kE5bXJW7ZNDkboQMHO7mfflp3uQufXSTgJoNI5xwfxDY3jqpD1tJuqKcQMsQmmUJhxFihGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ThisYkbb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744719855; c=relaxed/simple;
+	bh=4SRa8Mpoc9AwwHskSZQvVKUeGLUFj+WzI76fQ2MhZAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RbByF7hrgSbGHTF10YXC3hn1UNr1paL3NLVOTtproPgLJdB6i2AwbXMfSrCRkMwR/L9cGurkapXq7rZ67PiUcvPtf9jOK5Av5HtYW/klZnJ48FQaCjLBAcA2F1I5OLot+ngWYviPzCVPIjUiwJUt3ZAGeVzVTXNGrFKj7kBmbJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gKHCSGrn; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThisYkbb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744719841;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gKHCSGrn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 259504390D;
+	Tue, 15 Apr 2025 12:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744719850;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wkzv6EQZzHxHc8eCWYu69gq70uV4laVRsXuWVaOH3yI=;
-	b=ThisYkbb4+GrHXvDmY03cyxiMEat+ylzC6qZDNIIpSJU241gKwBZmvuSbIcRnKI7jp1EIr
-	ZIoHpshp/MGcWn/q6qs8YopqaOgP7mvbKdAYdtsjHoFPzKbZpYYHxg6J+yJBNu31xn0Rz4
-	nc836tXucXMsxp3MSwxGd9UDTVCwt+Y=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-66-kUD4lY17PE66YQGqoFajoQ-1; Tue,
- 15 Apr 2025 08:23:57 -0400
-X-MC-Unique: kUD4lY17PE66YQGqoFajoQ-1
-X-Mimecast-MFC-AGG-ID: kUD4lY17PE66YQGqoFajoQ_1744719836
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88C1919560BB;
-	Tue, 15 Apr 2025 12:23:56 +0000 (UTC)
-Received: from f39 (unknown [10.44.32.35])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A3C180886A;
-	Tue, 15 Apr 2025 12:23:54 +0000 (UTC)
-Date: Tue, 15 Apr 2025 14:23:51 +0200
-From: Eder Zulian <ezulian@redhat.com>
-To: Nathan Lynch <nathan.lynch@amd.com>
-Cc: Basavaraj.Natikar@amd.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ptdma: Remove unused pointer dma_cmd_cache
-Message-ID: <Z_5P1563zcU3xpek@f39>
-References: <20250409114019.42026-1-ezulian@redhat.com>
- <87v7r673kv.fsf@AUSNATLYNCH.amd.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JKWTr4r9wCjFtSd2B2VCTIscAppmbhHanfOeEHW9Nxk=;
+	b=gKHCSGrntzEnocHamgulbss+eDVBlcp1a3Cd9uoUObdti6gxJ54zwICUVNABhz/sCgv7wn
+	ofb3SiYrPZYPoQXzPaWJpbbwTp8XJfMTZDWyuGvy09Ycnow5JQFk6ZvXwQcIcMnn2zVh71
+	cn7nH28ZPf6U9Iu0s6Nb/nnlMGFORUlr4KAB1lmvWf6bfZ37UTIHAxxxVaCIz0MrpLT46Y
+	DyWrBw3mX20TjNpOsSDQGrt7/ECOyTZybFUkr/fNsLXHCazO4FHpORNSZuX+5Wlx4mWj86
+	6AnSM0lE29kFL/UyylKgs/UsVQhIi2c0WQueLTGIarNpbfECJSjE/jn47u5Aeg==
+Message-ID: <5ea615d0-8bd7-44eb-9fdb-146b8bbc736f@bootlin.com>
+Date: Tue, 15 Apr 2025 14:24:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v7r673kv.fsf@AUSNATLYNCH.amd.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/16] drm/vkms: Allow to attach planes and CRTCs via
+ configfs
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250407081425.6420-1-jose.exposito89@gmail.com>
+ <20250407081425.6420-8-jose.exposito89@gmail.com>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ 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
+In-Reply-To: <20250407081425.6420-8-jose.exposito89@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefgeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepm
+ hgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Hello Nathan,
 
-On Mon, Apr 14, 2025 at 05:58:40PM -0500, Nathan Lynch wrote:
-> Eder Zulian <ezulian@redhat.com> writes:
-> > The pointer 'struct kmem_cache *dma_cmd_cache' was introduced in commit
-> > b0b4a6b10577 ("dmaengine: ptdma: register PTDMA controller as a DMA
-> > resource") but it was never used.
-> >
-> > Signed-off-by: Eder Zulian <ezulian@redhat.com>
-> > ---
-> >  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ---
-> >  drivers/dma/amd/ptdma/ptdma.h           | 1 -
-> >  2 files changed, 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > index 715ac3ae067b..3f7f6da05142 100644
-> > --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
-> > @@ -656,8 +656,6 @@ int pt_dmaengine_register(struct pt_device *pt)
-> >  	kmem_cache_destroy(pt->dma_desc_cache);
-> >  
-> >  err_cache:
-> > -	kmem_cache_destroy(pt->dma_cmd_cache);
-> > -
-> 
-> I think you could remove the 'err_cache' label and convert the users of it
-> to return -ENOMEM directly, since there aren't any unmanaged allocations
-> to unwind:
-> 
-> 	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
-> 					 "%s-dmaengine-desc-cache",
-> 					 dev_name(pt->dev));
-> 	if (!desc_cache_name) {
-> 		ret = -ENOMEM;
-> 		goto err_cache;
-> 	}
-> 
-> 	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
-> 					       sizeof(struct pt_dma_desc), 0,
-> 					       SLAB_HWCACHE_ALIGN, NULL);
-> 	if (!pt->dma_desc_cache) {
-> 		ret = -ENOMEM;
-> 		goto err_cache;
-> 	}
-> 
-> Otherwise LGTM.
-> 
-Thank you for your review and suggestion. Please find a link to the v2.
 
-https://lore.kernel.org/dmaengine/20250415121312.870124-1-ezulian@redhat.com/
+Le 07/04/2025 à 10:14, José Expósito a écrit :
+> From: Louis Chauvet <louis.chauvet@bootlin.com>
+> 
+> Create a default subgroup at /config/vkms/planes/plane/possible_crtcs
+> that will contain symbolic links to the possible CRTCs for the plane.
 
-Eder
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Co-developed-by: José Expósito <jose.exposito89@gmail.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> ---
+>   Documentation/gpu/vkms.rst           |  9 +++++
+>   drivers/gpu/drm/vkms/vkms_configfs.c | 58 ++++++++++++++++++++++++++++
+>   2 files changed, 67 insertions(+)
+> 
+> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> index abe7a0f5a4ab..13b96837a266 100644
+> --- a/Documentation/gpu/vkms.rst
+> +++ b/Documentation/gpu/vkms.rst
+> @@ -98,6 +98,14 @@ CRTCs have 1 configurable attribute:
+>   
+>   - writeback: Enable or disable writeback connector support by writing 1 or 0
+>   
+> +To finish the configuration, link the different pipeline items::
+> +
+> +  sudo ln -s /config/vkms/my-vkms/crtcs/crtc0 /config/vkms/my-vkms/planes/plane0/possible_crtcs
+> +
+> +Since at least one primary plane is required, make sure to set the right type::
+> +
+> +  echo "1" | sudo tee /config/vkms/my-vkms/planes/plane0/type
+> +
+>   Once you are done configuring the VKMS instance, enable it::
+>   
+>     echo "1" | sudo tee /config/vkms/my-vkms/enabled
+> @@ -108,6 +116,7 @@ Finally, you can remove the VKMS instance disabling it::
+>   
+>   And removing the top level directory and its subdirectories::
+>   
+> +  sudo rm /config/vkms/my-vkms/planes/*/possible_crtcs/*
+>     sudo rmdir /config/vkms/my-vkms/planes/*
+>     sudo rmdir /config/vkms/my-vkms/crtcs/*
+>     sudo rmdir /config/vkms/my-vkms
+> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
+> index e9f445043268..2cf97c2b6203 100644
+> --- a/drivers/gpu/drm/vkms/vkms_configfs.c
+> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
+> @@ -38,11 +38,13 @@ struct vkms_configfs_device {
+>    *
+>    * @group: Top level configuration group that represents a plane.
+>    * Initialized when a new directory is created under "/config/vkms/planes"
+> + * @possible_crtcs_group: Default subgroup of @group at "plane/possible_crtcs"
+>    * @dev: The vkms_configfs_device this plane belongs to
+>    * @config: Configuration of the VKMS plane
+>    */
+>   struct vkms_configfs_plane {
+>   	struct config_group group;
+> +	struct config_group possible_crtcs_group;
+>   	struct vkms_configfs_device *dev;
+>   	struct vkms_config_plane *config;
+>   };
+> @@ -71,6 +73,10 @@ struct vkms_configfs_crtc {
+>   #define plane_item_to_vkms_configfs_plane(item) \
+>   	container_of(to_config_group((item)), struct vkms_configfs_plane, group)
+>   
+> +#define plane_possible_crtcs_item_to_vkms_configfs_plane(item) \
+> +	container_of(to_config_group((item)), struct vkms_configfs_plane, \
+> +		     possible_crtcs_group)
+> +
+>   #define crtc_item_to_vkms_configfs_crtc(item) \
+>   	container_of(to_config_group((item)), struct vkms_configfs_crtc, group)
+>   
+> @@ -178,6 +184,52 @@ static const struct config_item_type crtc_group_type = {
+>   	.ct_owner	= THIS_MODULE,
+>   };
+>   
+> +static int plane_possible_crtcs_allow_link(struct config_item *src,
+> +					   struct config_item *target)
+> +{
+> +	struct vkms_configfs_plane *plane;
+> +	struct vkms_configfs_crtc *crtc;
+> +	int ret;
+> +
+> +	if (target->ci_type != &crtc_item_type)
+> +		return -EINVAL;
+> +
+> +	plane = plane_possible_crtcs_item_to_vkms_configfs_plane(src);
+> +	crtc = crtc_item_to_vkms_configfs_crtc(target);
+> +
+> +	scoped_guard(mutex, &plane->dev->lock) {
+> +		if (plane->dev->enabled)
+> +			return -EBUSY;
+> +
+> +		ret = vkms_config_plane_attach_crtc(plane->config, crtc->config);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void plane_possible_crtcs_drop_link(struct config_item *src,
+> +					   struct config_item *target)
+> +{
+> +	struct vkms_configfs_plane *plane;
+> +	struct vkms_configfs_crtc *crtc;
+> +
+> +	plane = plane_possible_crtcs_item_to_vkms_configfs_plane(src);
+> +	crtc = crtc_item_to_vkms_configfs_crtc(target);
+> +
+> +	scoped_guard(mutex, &plane->dev->lock)
+> +		vkms_config_plane_detach_crtc(plane->config, crtc->config);
+> +}
+> +
+> +static struct configfs_item_operations plane_possible_crtcs_item_operations = {
+> +	.allow_link	= plane_possible_crtcs_allow_link,
+> +	.drop_link	= plane_possible_crtcs_drop_link,
+> +};
+> +
+> +static const struct config_item_type plane_possible_crtcs_group_type = {
+> +	.ct_item_ops	= &plane_possible_crtcs_item_operations,
+> +	.ct_owner	= THIS_MODULE,
+> +};
+> +
+>   static ssize_t plane_type_show(struct config_item *item, char *page)
+>   {
+>   	struct vkms_configfs_plane *plane;
+> @@ -272,6 +324,12 @@ static struct config_group *make_plane_group(struct config_group *group,
+>   		}
+>   
+>   		config_group_init_type_name(&plane->group, name, &plane_item_type);
+> +
+> +		config_group_init_type_name(&plane->possible_crtcs_group,
+> +					    "possible_crtcs",
+> +					    &plane_possible_crtcs_group_type);
+> +		configfs_add_default_group(&plane->possible_crtcs_group,
+> +					   &plane->group);
+>   	}
+>   
+>   	return &plane->group;
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
