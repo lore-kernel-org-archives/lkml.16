@@ -1,135 +1,118 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8C1275860;
-	Tue, 15 Apr 2025 08:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C2B14B945;
+	Tue, 15 Apr 2025 08:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706325; cv=none; b=ngmOc3b/jjMXOzVTIIOAt5NIw4ZxZovES9pCydiELybA4EmtZ5dzhW/JieNZok05RJF5R+Q9UU0PWG43Pu6z87wjpI5w+QYtTgCyphs1t6JY4UBGJpdD+oDM12YvGcHE9jOV4BjScZyQtk7MlRnk5fddyH+JcG6gc6kKXQtO2N8=
+	t=1744706375; cv=none; b=D8thAjspFwod8D4Ijj6j0zSnXJ7bCQCEXOMHvjWHAtHWglGuyo8Uparyisr4b5RZbsjzyWfZH5QyPT8zHEv06WlSToqs4j3Mn3hB6/wl8LwIXzcRXyCg3jVp540roTPrZgqFGxSnVfdbzzA9aEHBsp6nbsaCUWKMKyGx4QK8p0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706325; c=relaxed/simple;
-	bh=p6lNgLXXnJnkgPksuJwkrwC1kmRezIDpASiMPRBkp9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OKSMH6ohCtGXvgVmkQDDYT4f0gmPtZQ0eqS4lw5sQuSthLCEF0y8r59K4oXsiPwYGihFdHQ36aoHOJjFoslARMnoPpNgTuySp8/gjkOIeX35RMN9i/WnQuM/Yojv8VkLG4uOzsRm7wG6JUV4tVYmUcEZWzwpMoPw02H7xED9hUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PZz81hLK; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744706375; c=relaxed/simple;
+	bh=Cg3yvqoZIoD+GprwCSrZxrK2e1wAxx07KHVAJD1JB8o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=aiCbE4n/DkGlT6QHtBTvIZ/sbYWTRuavUAmtwUBK4rra3x/TYViIIChKYMGECfj+C1zL0BRM8xCIFPL7pHsxmQu8unkEHfYRSlYTv6gQKrSB71oGdM5+59+1ZRSZ1WYKDTT3U4IbnMGu+AaYCKgTU3Cpqrxylji8HbFaq4hhkwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RVQNY4kc; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PZz81hLK"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30db3f3c907so52839511fa.1;
-        Tue, 15 Apr 2025 01:38:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744706321; x=1745311121; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HBq0ZDqkg4pbNccP0Ihn/78nmmrSJRBewKH8ih2acX8=;
-        b=PZz81hLKMvkPESsdTLp3A0oAfZRt2V/yHH3yBK5mp2kvzuzsVlqRhNX52Yg7U9jtHR
-         8QO7s1C/i2ytizL5n3bgpdkwLn30KQxkqhqxG/pdHJ/JOj9+UFzac7lnkGkfSwQ/eNfO
-         Dv7JWBnQfQErX1TUqzoi2UZXYGQJF1neniGEsSgT05ZMw0eF/uJvLecSUarZSeo/vuko
-         siCU74IRYqeDfiXhe9ve7VOfKmsjGFYLCSzdF37rY/23m3D5ABHOEgYBdMKdW5qFho6m
-         WFazU3+73ljuSg5QfzjKXyXQLhWhWr7Ld4RaD+14Cfbda+P0t2S8M71/5+rknl9t65QR
-         XGRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744706321; x=1745311121;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HBq0ZDqkg4pbNccP0Ihn/78nmmrSJRBewKH8ih2acX8=;
-        b=GkWNg5rLmwB/s9ms9inq14bVrp1hEmKpcUq2kuMa6TxI0WLBrP1BNUCdjOYKB0zpa9
-         aE/WhYhSdag2hDwKYvncWtj2aIkbQe7GMOiVdWFef3LE3vQY8gPVQTAFqRfWi+Ve6LGf
-         l7X5pio9PyZNlnotIOQQVCWf3kyIMppqxtGKyO2wUNdKLXcs/nH79A6LJRQNSJ/VRfOb
-         /XSieq5c4XtfRxmD2fjGCyWy9ocEuCp4lPzIr020LI+8SpZNOQkhMAVZ6mtxXjDB8/n0
-         O+7fSSjYR6c68zPTc4s1PiqMhXGQgW6rC9sDaYFHC36nK/a/5klzVV1h5f7GdAJi177Z
-         BDVA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1jFHuu5pK/pawyPMmYQDgCBwwU08zXJmhdd9IiydkS4WB65rK+ApgqrSJvZme2qR81IQJ0lubt3MX01I=@vger.kernel.org, AJvYcCUYoT6gOr9eFUcOCnuvPAFWTsJ6kk+2fStDlWD/j9RbIwL/+H/YDWd7j3lPtKeaqADUJAeZADkJiR9S@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqW9UsYWSm2LgWF3ymC9jz0Wq0cX6yJ4Qxgrpk6/I0y22xMEYU
-	bhszFx9Kf33hPDhy8cznbstH1iC5UlBtGnHVqGdfl4ZQhXryRXx8
-X-Gm-Gg: ASbGncsCG2rtez/zb3/0jdpMy+n94KXqRhT0WR4vmdVQqWKjns8EFr+cOZn2tHca4SN
-	cBRQ+kbCiQ/qoUN+NGRYIkzpLEJsX90QB6dhN47QDiUbCMQRD0qRBQCAyP/0Wuyy13D9R8XEQMV
-	X6if+BnTqkNYsjt/1jc2lgA+n2wJn2HDpj4UpW24wlLF4U/+ZAG6wLGgXXKFW75IvO9hvDCoOhI
-	qujISIwCCqH0Qrizu/DtSEVn8lNdJFPIIjaWWKQyjf/bE0f12uvRUEi5hpxudEd9zePIrceYGkh
-	++pmdw+wIJsA+dghX54f1HSptXzZIye/fodTXNawgjZnltUDcaYoocQ6/g==
-X-Google-Smtp-Source: AGHT+IGqoLFL5p4zyXwCtJN828QtlDhgXwvIW4fjwGHCI9exDHrzY3rVpFJFkjYyuqYJwDHh8P5lbQ==
-X-Received: by 2002:a2e:a815:0:b0:30b:f469:47ef with SMTP id 38308e7fff4ca-31049a1cdc9mr42087631fa.23.1744706321126;
-        Tue, 15 Apr 2025 01:38:41 -0700 (PDT)
-Received: from foxbook (adtk197.neoplus.adsl.tpnet.pl. [79.185.222.197])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465d4fabsm19136471fa.70.2025.04.15.01.38.39
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 15 Apr 2025 01:38:40 -0700 (PDT)
-Date: Tue, 15 Apr 2025 10:38:36 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman
- <mathias.nyman@linux.intel.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Paul Menzel <pmenzel@molgen.mpg.de>,
- linux-usb@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC RFT] usb: hcd: Add a usb_device argument to
- hc_driver.endpoint_reset()
-Message-ID: <20250415103836.0f748d63@foxbook>
-In-Reply-To: <657969a0-08c1-431a-b459-089c6d316a0f@rowland.harvard.edu>
-References: <20250406002311.2a76fc64@foxbook>
-	<ade0d77a-651a-4b03-bf21-00369fdc22f8@rowland.harvard.edu>
-	<20250406095008.0dbfd586@foxbook>
-	<20250406175032.12b7d284@foxbook>
-	<14197657-0a0f-45a8-ac36-dd37b16a1565@rowland.harvard.edu>
-	<20250407074905.2d236fb9@foxbook>
-	<3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
-	<20250408121817.6ae8defd@foxbook>
-	<357368ff-0c49-4f22-a03d-fd9560c22dae@linux.intel.com>
-	<20250409121819.64db23a0@foxbook>
-	<657969a0-08c1-431a-b459-089c6d316a0f@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RVQNY4kc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AC9D7433E9;
+	Tue, 15 Apr 2025 08:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744706371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=24vPUfPYax1C1P1L8fUdP9ksbIxlx8xCMGm2OvO+Z7g=;
+	b=RVQNY4kcg0F8odxf9KbMwCIhaeUvsidN65aAfXldlnfEc1NZVfDm0X1jdlV82CSTGkWP7Y
+	QnuKCLpa5RPL50dFBXuZD6fxpWfThnKBPBWjm+7O7sMC9w/f8HSgg8Upth6BMJPIAfK+bF
+	DQNvET7NFYW6g0DTd3k8BX0p/qe0666dZWwjsyKWw7hm8cLCI+J9jwBfCRU765ykeseBcv
+	L5mfUy0a8mJ5TP6+4d4P7t0adLldPfxR5Jh9VLaAGJuwRzcBZXHF5gAfn7Abmb4JbKu3+R
+	dbRrINyAaepHf4Y+zkrnZ3Hp56V/uk4VccLzFXz9JyaCGun/SVnAWljMw8IZ6w==
+Message-ID: <91ede632-f339-4bcb-908f-49ed0fcadbd0@bootlin.com>
+Date: Tue, 15 Apr 2025 10:39:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 6/6] pinctrl: Add pin controller driver for AAEON
+ UP boards
+From: Thomas Richard <thomas.richard@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw
+References: <20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com>
+ <20250317-aaeon-up-board-pinctrl-support-v2-6-36126e30aa62@bootlin.com>
+ <Z9htMdC_E-QFDiRD@smile.fi.intel.com>
+ <243d0ab5-8354-496c-8c58-0a85adf1a4e4@bootlin.com>
+Content-Language: en-US
+In-Reply-To: <243d0ab5-8354-496c-8c58-0a85adf1a4e4@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeftddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefueevudelhedtkeelvefgueeiudeviedtgfffueefteelfffhveduleefteeghfenucffohhmrghinheprggrvghonhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdpr
+ hgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeffrghnihgvlhgvvehlvghrihesrggrvghonhdrvghu
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Wed, 9 Apr 2025 10:13:50 -0400, Alan Stern wrote:
-> The core does not explicitly flush endpoints before resetting a
-> device. However, it does notify the class drivers' pre_reset
-> callback, which is supposed to unlink all the URBs used by that
-> driver.  If a driver doesn't have a pre_reset callback, the core
-> unbinds it from the device (which will unlink all its URBs).  _If_
-> everything is working properly, there shouldn't be any outstanding
-> URBs when the reset takes place.
+On 4/9/25 16:02, Thomas Richard wrote:
+> On 3/17/25 19:42, Andy Shevchenko wrote:
+>>> +	board_id = (enum upboard_board_id)dmi_id->driver_data;
+>>> +
+>>> +	switch (board_id) {
+>>> +	case BOARD_UP_APL01:
+>>> +		pctrl->maps = upboard_pinctrl_mapping_up_apl01;
+>>> +		pctrl->nmaps = ARRAY_SIZE(upboard_pinctrl_mapping_up_apl01);
+>>> +		break;
+>>
+>> Hmm... This is strange. Seems it has only Apollo Lake in the name while
+>> the above states that there is UP board support (which is Cherry Trail based).
+> 
+> There is pinctrl code for UP and UP Squared. But I only added mapping
+> for UP Squared board because it was the easiest board to add (all needed
+> pinctrl groups and functions are already defined in the Intel pinctrl
+> driver).
+> I wanted to focus on the driver itself and the forwarder library, and
+> send later an other series to add UP board support (with the
+> corresponding functions/groups in the Intel pinctrl driver).
+> 
+> So yes UP board pinctrl part is unused for now, but everything is ready
+> to add support for UP board in the future.
+> 
+> Otherwise I can remove UP part if you prefer.
 
-Thank you for clarification. This doesn't look too bad and I currently
-have no concrete cases of the mechanism failing to work.
- 
-> Either way, though, the core doesn't invoke the HCD's endpoint_reset
-> or endpoint_disable callback before the reset.  If you think the core
-> needs to do more, or needs to issue the callbacks in a different
-> order, let me know.
+Hi Andy,
 
-The problem is a matter of mismatched expectations: the core treats
-endpoint_disable() as temporary, because "classic" HCDs free their
-ep->hcpriv and recreate it quietly on the next URBs submission. And
-their endpoint_reset() during this time simply does nothing.
+I just realized that my wording was incorrect, so let me clarify.
 
-But xhci considers it more permanent, like the last thing before
-drop_endpoint(). It too clears ep->hcpriv, but here hcpriv is not
-the endpoint state, it's usb_device pointer saved by add_endpoint()
-and required for operation. The driver drops it and it's screwed.
+The UP Board [1] (based on Cherry Trail) is not supported at all (its
+FPGA is not supported by the MFD driver), and there is no plan to
+support it.
 
-Moving all usb_disable_interface() calls before their corresponding
-usb_hcd_alloc_bandwidth() would meet xhci expectations, but IDK if
-it would work in general. As far as I see in usb_set_interface() for
-example, the control request is only done after successful bandwidth
-allocation and the interface swap only after a successful request.
+The "up" code (for example upboard_up_pinctrl_data) is for most boards
+of the UP family (UP 7000, UPXi12, UP Squared Pro 7000 ...) but not the
+UP Board [1]. Indeed for now there is no pinctrl mapping for these boards.
 
-My patch addresses the problem from xhci side, by adapting to core
-expectations. As far as I see, only xhci_endpoint_reset() is broken
-by this add_endpoint() -> endpoint_disable() sequence, so I fix it
-by removing the dependence on ep->hcpriv. Alternatively, we could
-stop clearing ep->hcpriv, but I'm not sure if it's reliable. No HCD
-depends on ep->hcpriv being preserved after endpoint_disable().
+The "up2" code is for the UP Squared board which uses a different FPGA.
 
-I will do a v2 because Mathias expressed interest in this patch for
-cleanup's sake alone, but the kernel test robot found build issues.
+As I explained I only added pinctrl mapping for the UP Squared board, as
+it was the easiest one (no need to add groups/functions in Intel pinctrl
+driver). But the plan is to add support for other boards (UP 7000,
+IPXi12 ...) later.
 
-Regards,
-Michal
+Regarding the name of the pinctrl mapping for UP Squared board, it is
+indeed a bit confusing, I will rename it.
+
+[1]
+https://www.aaeon.com/en/product/detail/up-board-computer-board-for-professional-makers
+
+Best Regards,
+
+Thomas
