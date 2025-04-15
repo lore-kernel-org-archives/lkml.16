@@ -1,43 +1,42 @@
-Received: from mail-m49236.qiye.163.com (mail-m49236.qiye.163.com [45.254.49.236])
+Received: from mail-m49243.qiye.163.com (mail-m49243.qiye.163.com [45.254.49.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D64E274663;
-	Tue, 15 Apr 2025 05:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382FD2749C5;
+	Tue, 15 Apr 2025 05:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744695272; cv=none; b=cRJaWdzXTvmW7Kr6boFp6QZ0aBxHuYlvAvgnMXrgnbakxSM9a+6yjyYmqB93AceOPDVOLim7fJJ4TIhsswg+Cn62lU+DzuS6uaOrUKYqZ3SsxatAj+fi8XecnPtY2dh7QhP0qSVVlqCh3exTSegYYhttu3GGfvwg+ujaohpMExQ=
+	t=1744695273; cv=none; b=svP8XQar+KRmPQDEgx7KoH2pBqbvOWe77GQrAbX264WkuvjMQB63OAGkalSJRuI/DNWNBov8jr3zV+YGjAWG7pt8IadDKdJjgTA9FMlKgT46KV0JrBjwD7laHGR+1Ztkac8287ApYrjIEI0UJVJRKhrCZPrdJpYHMaBMgiKZDlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744695272; c=relaxed/simple;
-	bh=3NQOnCQ1l5tkOsd0f8fnNB7pmsNbABrDB4nuWss80eQ=;
+	s=arc-20240116; t=1744695273; c=relaxed/simple;
+	bh=Tpy/QNYDQyd6q+3c43Vk2WO1/yY4QEEbDrFMjFDmF3s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J7u6eKgbG0DBPkALDpUf/gDXQ6dvoVsLDRnsLHaYUfLcg3MHGN9+2q2SEL1dA9QcJFDtnhPVrH/u7GLYKTuntIVk/741SRwbhPUoGwfzdvDq/EJ0z0rb6zb4gbpBn21+IiM+GIsXMzB141CDGwP8cV+ab+ZvCCEdg+sybMiKb+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jhxPUgo9; arc=none smtp.client-ip=45.254.49.236
+	 MIME-Version; b=XY5Gl/WLls1iRRZ7drzTkX+CYFHyXIy8XVMO6k/h7OxUaWzXzewS0hZHNnEUxqcvBy9GilDnuiPxKEPL5C6ox/rw60ZqSTRfnz6lA8uygU1My40m2NpS3K6jBrJCr+PeX7IKz17su1trLqxI8e2dOpGjBPTrKyMuogQWPo86ky4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=e47aDxT1; arc=none smtp.client-ip=45.254.49.243
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jhxPUgo9"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="e47aDxT1"
 Received: from localhost.localdomain (unknown [103.29.142.67])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 11e6d9674;
-	Tue, 15 Apr 2025 13:19:08 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11e6d9683;
+	Tue, 15 Apr 2025 13:19:11 +0800 (GMT+08:00)
 From: Kever Yang <kever.yang@rock-chips.com>
 To: heiko@sntech.de
 Cc: linux-rockchip@lists.infradead.org,
 	Kever Yang <kever.yang@rock-chips.com>,
-	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	devicetree@vger.kernel.org,
 	Conor Dooley <conor+dt@kernel.org>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Yao Zi <ziyao@disroot.org>,
+	Rob Herring <robh@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jimmy Hon <honyuenkwun@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Subject: [PATCH v4 4/7] dt-bindings: soc: rockchip: Add rk3562 syscon compatibles
-Date: Tue, 15 Apr 2025 13:18:52 +0800
-Message-Id: <20250415051855.59740-5-kever.yang@rock-chips.com>
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 5/7] dt-bindings: arm: rockchip: Add rk3562 evb2 board
+Date: Tue, 15 Apr 2025 13:18:53 +0800
+Message-Id: <20250415051855.59740-6-kever.yang@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250415051855.59740-1-kever.yang@rock-chips.com>
 References: <20250415051855.59740-1-kever.yang@rock-chips.com>
@@ -49,59 +48,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGBpCVksYSxlJSk5JSUlMQlYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxOVUpLS1
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTkxLVh1DH09KGh5IHUNKGlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
 	VKQktLWQY+
-X-HM-Tid: 0a9637e30c5b03afkunm11e6d9674
+X-HM-Tid: 0a9637e315c703afkunm11e6d9683
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PhA6Hyo6EDJPQxovCgwUCiIu
-	DUMKCgFVSlVKTE9PTUJPSE5KS09NVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlOTUI3Bg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6CCo*ETJKLBodCgEyCikP
+	OD0KCiFVSlVKTE9PTUJPSE5ISk1MVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlLQkM3Bg++
 DKIM-Signature:a=rsa-sha256;
-	b=jhxPUgo9Pa7/KfoOhXGWoh/uIXnW6w7QCxcIC1XLDGxHqexVAUsd46MUd4YUZmYYk6HV534I+owdAuznWqF6Sknku+BdqKqiTe1w3bYQL8oy9iihBw8emECbqAHMO7q50aXihmJ58SOHce9XMWkRvceSfeFCksIaUhxhJtA56DA=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=++Sz5n1hontH0goNn0EnD9AxxcYqzo7gOqQkURmwZVk=;
+	b=e47aDxT1kloBlZcWK7cuK59wY4peg4CzWT3p5fjlif+O1fsBWOExcG/FXNePp3XhUMC+EYFLkHGgukA9R7tl7zoAr+36KyP56vXzCq/Luot8I7zQXcgOzLNiFUhr/xSDEXhkVCPx2xaC+KKBKCg0OYfNJZwOdrZ704CoGj6fpwg=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=5Rcl544JYRQBkKjgzj1ImfOm26zzkXaJKROFu1KH30o=;
 	h=date:mime-version:subject:message-id:from;
 
-Add all syscon compatibles for rk3562.
+Add device tree documentation for rk3562-evb2-v10.
 
 Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
 
-Changes in v4:
-- Collect ack tag
+Changes in v4: None
+Changes in v3:
+- Collect the Acked-by tag
 
-Changes in v3: None
-Changes in v2: None
+Changes in v2:
+- Update in sort order
 
- Documentation/devicetree/bindings/soc/rockchip/grf.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-index 2f61c1b95fea..8cbf5b6772dd 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.yaml
-@@ -18,6 +18,12 @@ properties:
-               - rockchip,rk3528-ioc-grf
-               - rockchip,rk3528-vo-grf
-               - rockchip,rk3528-vpu-grf
-+              - rockchip,rk3562-ioc-grf
-+              - rockchip,rk3562-peri-grf
-+              - rockchip,rk3562-pipephy-grf
-+              - rockchip,rk3562-pmu-grf
-+              - rockchip,rk3562-sys-grf
-+              - rockchip,rk3562-usbphy-grf
-               - rockchip,rk3566-pipe-grf
-               - rockchip,rk3568-pcie3-phy-grf
-               - rockchip,rk3568-pipe-grf
-@@ -82,6 +88,7 @@ properties:
-               - rockchip,rk3368-pmugrf
-               - rockchip,rk3399-grf
-               - rockchip,rk3399-pmugrf
-+              - rockchip,rk3562-pmu-grf
-               - rockchip,rk3568-grf
-               - rockchip,rk3568-pmugrf
-               - rockchip,rk3576-ioc-grf
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 650fb833d96e..ee9f8fb93664 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -1057,6 +1057,11 @@ properties:
+           - const: rockchip,rk3399-sapphire-excavator
+           - const: rockchip,rk3399
+ 
++      - description: Rockchip RK3562 Evaluation board 2
++        items:
++          - const: rockchip,rk3562-evb2-v10
++          - const: rockchip,rk3562
++
+       - description: Rockchip RK3566 BOX Evaluation Demo board
+         items:
+           - const: rockchip,rk3566-box-demo
 -- 
 2.25.1
 
