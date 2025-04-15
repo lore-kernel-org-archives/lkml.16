@@ -1,124 +1,89 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B54296D12;
-	Tue, 15 Apr 2025 12:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9576F2973B4;
+	Tue, 15 Apr 2025 12:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719717; cv=none; b=TKSPig+7ajbEfNlihADgp5jJoitQDpRos2zZbJLtMt3EVGESzUSScMH5AQFnyiZcKt4KVuTA/iyRheEt6eUslJ3IGfhTtnZrYJMyYdWb3DS1yQzGyoE+6a5uDrr2jMZMfwUpyKBxP+KAL6acz3YaMFvtG2YTwo1U1daDDqJ7918=
+	t=1744719746; cv=none; b=CwyCUocmadJxj7q6CyxeyV+PkCp3tz7hjSz535v9tfOr1seXjzI+kwv0USoL3kKhq1TwlJFBZseI2WV1WIvM5g6mNLdbF0UxsnQII0hvfRgzKXCX0ASrCshxR/iOa/TJWBfngyv2q3yqLTlqsxkihnSmInwpP8ZFzjHTsiBP864=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719717; c=relaxed/simple;
-	bh=IELIMLjBjaGBaSjoaaPlcfY2mtZY+fdV73O+G80GU4I=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=j/vI919acNYmcUOB+AQO6i8bWdHJmnAvxjwE+WL7HlBVdqguQamMCgV99MG6kRKyPMqVE/aqVBdRi/6uYwXKYcORKP9bcqHw0S/JFRgm2i9E0S4dkDfpeN5OYIZ0p7SNyF5IPOXFAVxmcDL94+vNm9/FXYThZJKRgTyQ7pjB/eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=fail smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=xROH9WJJ; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=analog.com
+	s=arc-20240116; t=1744719746; c=relaxed/simple;
+	bh=P69d4t3uTzEaL8pixI08c4ueZR4A84sPyfjBKO4liU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ezag/NCgauku05Sk7YM2AW4gz3ozdcwTAiba2vcYN87TBlnpuS8M3GmWRqkOhNvujzmeOQ7YQL2xH6AQdx+FlU/hk0Kf9l+Ww8cn8+kXg0LPXyFCSGWPe7AhWW8kLDvXcsDfRwmQBqcpt9StrY1Llp4G32ISmJXnf6/2S5auoT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=qWSdu+Gr; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="xROH9WJJ"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FBXnUu007590;
-	Tue, 15 Apr 2025 08:21:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=pVJOZFhDVjnDo6D1R6xX4H51lpe
-	3Ag2BzfnILzseXcg=; b=xROH9WJJYCBKVVXqSxvsP22Jxcv0F2bTEWpjoHCnlZh
-	tRslK62sgy7SxvkAp12NUZUc7o4dLfZcl0TK6uLwNUvfCbnQFpNxN0RSMD3h6iJ0
-	1lM9rUBuIEwpXibV5B//y6pBH4sUq6knwYrFe5+UJT4Hiv4MLDN6qvQCwIWmII9D
-	WZQfkycspkttEQoe3Pnow1VwJpHKW00p7TlP+E589+Qwa4YBt5dMGsU7D7Gi7/m1
-	Z5wXTBIGRle8dMErVeishw3UHMdX55Gxcgm3K4HlrhpNVAhXPBmab//GFN0BKYH/
-	FmZD0YBwabfxLM2E7gYJ8xQdk8fdcLlgn2+JvKWkBhA==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 45yn37es15-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Apr 2025 08:21:32 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 53FCLVLY003466
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 08:21:31 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 15 Apr 2025 08:21:31 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 15 Apr 2025 08:21:31 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 15 Apr 2025 08:21:31 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 53FCLG4e013198;
-	Tue, 15 Apr 2025 08:21:18 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <nuno.sa@analog.com>, <andy@kernel.org>, <marcelo.schmitt@analog.com>,
-        <marcelo.schmitt1@gmail.com>, David Lechner <dlechner@baylibre.com>
-Subject: [PATCH] iio: adc: ad4000: Avoid potential double data word read
-Date: Tue, 15 Apr 2025 09:21:10 -0300
-Message-ID: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qWSdu+Gr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=y8lpbTPAkY0NkhqZrI9H7LIS4Glm8nL74Un5yAiDLec=; b=qWSdu+Grn0OHVEsBLXaUgdSsH5
+	Zcz/jdVJAHgF6SdZ+fyR55ehTFeFWOXvn+mbxRTvpWmJ5zV24QDixY9I+v6x67Z1S3wG4y2XBwmSJ
+	oz/BiFL2pi+cd+2vpQ9eoYj8OvEgmpPNks4tHnm5H+EIjdeE8oikuedEPwt+bIOfLpm8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4fIm-009Qup-6J; Tue, 15 Apr 2025 14:22:08 +0200
+Date: Tue, 15 Apr 2025 14:22:08 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Huacai Chen <chenhuacai@loongson.cn>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	loongarch@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biao Dong <dongbiao@loongson.cn>,
+	Baoqi Zhang <zhangbaoqi@loongson.cn>
+Subject: Re: [PATCH net-next 1/3] net: stmmac: dwmac-loongson: Move queue
+ number init to common function
+Message-ID: <62da41f9-2891-4c63-94b4-83230cd7ddae@lunn.ch>
+References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+ <20250415071128.3774235-2-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Authority-Analysis: v=2.4 cv=FogF/3rq c=1 sm=1 tr=0 ts=67fe4f4c cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=XR8D0OoHHMoA:10 a=IpJZQVW2AAAA:8 a=gAnH3GRIAAAA:8 a=XKF0PoAx1WVWLetZYlMA:9 a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: IuknmNQqfNYk8iVCtX9hxO0Zb92r1m5T
-X-Proofpoint-ORIG-GUID: IuknmNQqfNYk8iVCtX9hxO0Zb92r1m5T
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150087
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415071128.3774235-2-chenhuacai@loongson.cn>
 
-Currently, SPI-Engine offload module always sends 32-bit data elements to
-DMA engine. Appropriately, when set for SPI offloading, the IIO driver uses
-32 storagebits for IIO ADC channel buffer elements. However, setting SPI
-transfer length according to storagebits (32-bits in case of offload) can
-lead to unnecessarily long transfers for ADCs that are 16-bit or less
-precision. Adjust AD4000 single-shot read to run transfers of 2 bytes when
-that is enough to get all ADC data bits.
+On Tue, Apr 15, 2025 at 03:11:26PM +0800, Huacai Chen wrote:
+> Currently, the tx and rx queue number initialization is duplicated in
+> loongson_gmac_data() and loongson_gnet_data(), so move it to the common
+> function loongson_default_data().
+> 
+> This is a preparation for later patches.
+> 
+> Tested-by: Biao Dong <dongbiao@loongson.cn>
+> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 39 +++++--------------
+>  1 file changed, 9 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index 1a93787056a7..f5fdef56da2c 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -83,6 +83,9 @@ struct stmmac_pci_info {
+>  static void loongson_default_data(struct pci_dev *pdev,
+>  				  struct plat_stmmacenet_data *plat)
+>  {
+> +	int i;
+> +	struct loongson_data *ld = plat->bsp_priv;
 
-Fixes: d0dba3df842f ("iio: adc: ad4000: Add support for SPI offload")
-Suggested-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Reverse Christmas tree please. Longest first, shortest last.
+
+    Andrew
+
 ---
-After enough sleep and some time not looking at this driver I finally realize
-the potential issue David was talking about. Although I didn't see any clearly
-wrong reading when testing it last week, I'm adding the fixes tag since it's
-probably easier to drop the tag than to go fetch the commit log.
-Also adding a suggested-by tag.
-
-Thanks,
-Marcelo
-
- drivers/iio/adc/ad4000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
-index e69a9d2a3e8c..5813db28510d 100644
---- a/drivers/iio/adc/ad4000.c
-+++ b/drivers/iio/adc/ad4000.c
-@@ -941,7 +941,7 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
- 	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
- 
- 	xfers[1].rx_buf = &st->scan.data;
--	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-+	xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
- 
- 	/*
- 	 * If the device is set up for SPI offloading, IIO channel scan_type is
-
-base-commit: 1c2409fe38d5c19015d69851d15ba543d1911932
--- 
-2.47.2
+pw-bot: cr
 
