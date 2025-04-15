@@ -1,153 +1,201 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF06A2951B8
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006DC2951B1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719072; cv=none; b=rO2zGrgmStVTfiSTAfb2fDRJyiTyugGl5fQUkvgE7eYcM6V5vlUnL50tVWeGwXpYHQRPEKfkUCUdzygFQi8fIE6PfKMfBz/tTncCM9xPzzI1xyzFpWwdPU1LQrIHGWG9WDxSg4UGoqwlXSYR2ob0LWU2093V6Io+z7uQqw6KUNA=
+	t=1744719082; cv=none; b=N9OU7tQe1dyiUcELtDeBgAMQwlSNgDf8cPE3+ZBmI1O0Fm2SqH/fvB2qhvanaesPqmcxbhgXbs3OUXbQ+Q0fjK2sYH28uEqu079mgOT+hNRyR89m3PXNrEiIYaS/1M/urPijwBqqZ4LfPXS8Fh85rBo6H53J5P/pQuvK4vjJLHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719072; c=relaxed/simple;
-	bh=35HJAzaAMGt2PK2lXt0xepylkj5WH0C9Yal36V+5Y88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLjCpzKKYhfswB/O8QrbMy0zJbBH8YW9aA41k7o+uPVo8Z1i8kqVvYP+M+AnQIGpeAUvi1L4d5iYB9aT6Uj0l63hjvsExEruB4CSRixWaX/UvTv9Xak16RmG+s5xsT51rC0rVqO6lIDzByK4e3orjdJEN79q0dBnA0jnNTdIgbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RYH8oy06; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=prodVsa7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RmPe0ZZg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=um/suesF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744719082; c=relaxed/simple;
+	bh=npxmSflEeXX301XFSjqGTkkUcKvkacPYYcvrPCcyNqU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ILGG0uxJURam3x/ZlOPAvazx4kw/97cBFkn5TWLsNjYGOClMqR2ddN4xpAWZK052dIi+Rji5G+2qiFQbRB/5SN1OBZk0Pmy2/9e2EkaBnVf9rRP1suSY1GhE+sdcKym21zdlJKT7+qNH668wxsIEv5FtTwVGUPQW87EM7SKmUoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VT9rX9lH; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RYH8oy06";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="prodVsa7";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RmPe0ZZg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="um/suesF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D1B8E21163;
-	Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744719069; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
-	b=RYH8oy06pRRtPL11b40J3tCg2lAOhcPC8qbL/clK1umHdtpVscA1NhWo2iZ4kmUrVONpbH
-	Phvc8H2d2gpd1IH2PF5PozH/0Z7yqYfdQenL+zgo8xl1FzaHF59aSZXxt2VGJfqFra4t4J
-	3C8W8SzrSYAy3Ii3aqIy6j+tsoWiOls=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744719069;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
-	b=prodVsa7lpYY0FZN7EGzeIXSze2KGQYIleIhf71l7lVdb3KBm6UTLFSX0USegGP16pacPU
-	OHvLyPqvrrT878AQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RmPe0ZZg;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="um/suesF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744719068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
-	b=RmPe0ZZggSVGUtKtPwJVX7l4ZyZ6qtTIhOQz81ek74WhmKJMXHJ9GC16Ex72gOKlU0Ns4Q
-	+pd572qh62JgjArINgjva4PoHPCb1OKem3eUo/DhhFyag4esmjxkR4ChqTecXuCKf3zRc/
-	COG82onKXdV4CNuXFh37+COtHIuOX8Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744719068;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IRVEo33WU77flzosDHSOR9hPx+/5k67YPG/wMgnuAdk=;
-	b=um/suesFtoTECekRFCxmtUAikEU/YLnSXq77Y15juIJTKwHhb99eXj9RDoqdwujugMD1G3
-	FwxU//8YMpBhDpCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B81AD139A1;
-	Tue, 15 Apr 2025 12:11:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2PsILNxM/mefDQAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Tue, 15 Apr 2025 12:11:08 +0000
-Date: Tue, 15 Apr 2025 14:11:04 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Mohamed Khalfella <mkhalfella@purestorage.com>, 
-	Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, 
-	Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, 
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
-Message-ID: <4cd2cbb4-95ff-4f3b-b33b-9c066147d12b@flourine.local>
-References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
- <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
- <20250410085137.GE1868505-mkhalfella@purestorage.com>
- <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VT9rX9lH"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso41463875e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744719078; x=1745323878; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0cs6tEZrhI32qLDnd2XZ2OWDLqbjW7yrnTUhiyZvTeU=;
+        b=VT9rX9lHO0NQCrNy4qvBo/RLrHBysb/HQUADFJwP8sfNtdyzXOoAtr0VV5I2bJr1Ch
+         dYxZnpY5F+bJX2nvaajVgDUlD1WdO/fkdRUxC2LcbFB0ZyE9POWrseER5Q2kdG/hjg5i
+         QRB9iwGomUQO8ikNTTXJynBVuYxsfQ85yMKqob9d+pp72XtVTajvqukVtqSyU48zHHm0
+         gh/cTVAraWr5Ct0HnBSoOTngQ9Bj0sd13K2fecYoR/3dVIMIBe19/rJGsVNiVBzVGuqi
+         Zv7wUAV8F8uZ4G1i2p5VEUCQgYxFYs1234BvthFtjjLBWkreNtDzDPhmbk/amfPCOdad
+         TjgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744719078; x=1745323878;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0cs6tEZrhI32qLDnd2XZ2OWDLqbjW7yrnTUhiyZvTeU=;
+        b=BFmAuh0kM6cqcftx3m+Ii+k96gFi+G+nVUKDHdGosr80ur2z0MvHSUDN0EJaeveK0C
+         XF3574hIQG1kBhj5IGx5DgS+T6VKv/xMNwvhhVzhA8fkXJOmy+AWeemqrmzApsChOoHg
+         HorRf84McNIv0JlJqDV/anXAVAssvTfPZRSs327GkB74huUuqA/dluu3jIu743THDZlX
+         cdYQpiFXkubqHczP5IR1oj6FR1VpicxaA647EANFL74jFhBGlUR5RUK0g3hJxGTfCRyn
+         5CPkz7CrPOuHInOHIAH+EWw+I3KWj2WRBLS43SDm8PEoVOch2D0Z1Q0B6uQbxbx3Iqv9
+         +vXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWO2GdY3C6yNQnyUdda723T50eXQXP+EhjndsF/VIp5Vz8JWa2QLw4Jx+zEhj8l4xYM02NPO4d9Mbk0wmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi0VSNfPQlqZ7SpThZAibOUT6HS0hv1Wqss8HscB58q2JVTI9O
+	aDlhsbYXzrPQYSoLvoaLYU9eOBLFEBpttbyZU+SagqbFIPMEwveEIeoYghCKU13AstQl3ddrMNM
+	ticMAXhzwWzUo+g==
+X-Google-Smtp-Source: AGHT+IFc11qpJSN9kx0m1/6vKedUiT6jLGM7Ajcb3HQxOcVN/cw7nvtJL3Ae8R08b66w5B8KI4622dqhHAESa1k=
+X-Received: from wmbh17.prod.google.com ([2002:a05:600c:a111:b0:43d:1c11:4e5d])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3c82:b0:43c:ebc4:36a5 with SMTP id 5b1f17b1804b1-43f3a933b99mr135834825e9.7.1744719078418;
+ Tue, 15 Apr 2025 05:11:18 -0700 (PDT)
+Date: Tue, 15 Apr 2025 12:11:16 +0000
+In-Reply-To: <20250414131934.28418-5-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
-X-Rspamd-Queue-Id: D1B8E21163
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MISSING_XM_UA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Mime-Version: 1.0
+References: <20250414131934.28418-1-dakr@kernel.org> <20250414131934.28418-5-dakr@kernel.org>
+Message-ID: <Z_5M5Auqj2KK-rPz@google.com>
+Subject: Re: [PATCH v4 4/5] rust: auxiliary: add auxiliary registration
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com, 
+	ira.weiny@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu, 
+	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Apr 15, 2025 at 01:28:15AM +0300, Sagi Grimberg wrote:
-> > > +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
-> > > +{
-> > > +	unsigned long delay;
-> > > +
-> > > +	if (ctrl->cqt)
-> > > +		delay = msecs_to_jiffies(ctrl->cqt);
-> > > +	else
-> > > +		delay = ctrl->kato * HZ;
-> > I thought that delay = m * ctrl->kato + ctrl->cqt
-> > where m = ctrl->ctratt & NVME_CTRL_ATTR_TBKAS ? 3 : 2
-> > no?
+On Mon, Apr 14, 2025 at 03:18:07PM +0200, Danilo Krummrich wrote:
+> Implement the `auxiliary::Registration` type, which provides an API to
+> create and register new auxiliary devices in the system.
 > 
-> This was said before, but if we are going to always start waiting for kato
-> for failover purposes,
-> we first need a patch that prevent kato from being arbitrarily long.
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  rust/kernel/auxiliary.rs | 88 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 87 insertions(+), 1 deletion(-)
+> 
+> diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
+> index 75423737032a..b40d663b42eb 100644
+> --- a/rust/kernel/auxiliary.rs
+> +++ b/rust/kernel/auxiliary.rs
+> @@ -5,7 +5,7 @@
+>  //! C header: [`include/linux/auxiliary_bus.h`](srctree/include/linux/auxiliary_bus.h)
+>  
+>  use crate::{
+> -    bindings, device,
+> +    bindings, container_of, device,
+>      device_id::RawDeviceId,
+>      driver,
+>      error::{to_result, Result},
+> @@ -230,6 +230,18 @@ pub fn parent(&self) -> Option<&device::Device> {
+>      }
+>  }
+>  
+> +impl Device {
+> +    extern "C" fn release(dev: *mut bindings::device) {
+> +        // SAFETY: By the type invariant `self.0.as_raw` is a pointer to the `struct device`
+> +        // embedded in `struct auxiliary_device`.
+> +        let adev = unsafe { container_of!(dev, bindings::auxiliary_device, dev) }.cast_mut();
 
-That should be addressed with the cross controller reset (CCR). The KATO*n
-+ CQT is the upper limit for the target recovery. As soon we have CCR,
-the recovery delay is reduced to the time the CCR exchange takes.
+FYI, Tamir's patch makes this cast_mut() unnecessary.
 
-> Lets cap kato to something like 10 seconds (which is 2x the default which
-> apparently no one is touching).
+> +        // SAFETY: `adev` points to the memory that has been allocated in `Registration::new`, via
+> +        // `KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)`.
+> +        let _ = unsafe { KBox::<Opaque<bindings::auxiliary_device>>::from_raw(adev.cast()) };
+> +    }
+> +}
+> +
+>  // SAFETY: `Device` is a transparent wrapper of a type that doesn't depend on `Device`'s generic
+>  // argument.
+>  kernel::impl_device_context_deref!(unsafe { Device });
+> @@ -272,3 +284,77 @@ unsafe impl Send for Device {}
+>  // SAFETY: `Device` can be shared among threads because all methods of `Device`
+>  // (i.e. `Device<Normal>) are thread safe.
+>  unsafe impl Sync for Device {}
+> +
+> +/// The registration of an auxiliary device.
+> +///
+> +/// This type represents the registration of a [`struct auxiliary_device`]. When an instance of this
+> +/// type is dropped, its respective auxiliary device will be unregistered from the system.
+> +///
+> +/// # Invariants
+> +///
+> +/// `self.0` always holds a valid pointer to an initialized and registered
+> +/// [`struct auxiliary_device`].
+> +pub struct Registration(NonNull<bindings::auxiliary_device>);
+> +
+> +impl Registration {
+> +    /// Create and register a new auxiliary device.
+> +    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: &CStr) -> Result<Self> {
+> +        let boxed = KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)?;
+> +        let adev = boxed.get();
+> +
+> +        // SAFETY: It's safe to set the fields of `struct auxiliary_device` on initialization.
+> +        unsafe {
+> +            (*adev).dev.parent = parent.as_raw();
+> +            (*adev).dev.release = Some(Device::release);
+> +            (*adev).name = name.as_char_ptr();
+> +            (*adev).id = id;
+> +        }
+> +
+> +        // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> +        // which has not been initialized yet.
+> +        unsafe { bindings::auxiliary_device_init(adev) };
+> +
+> +        // Now that `adev` is initialized, leak the `Box`; the corresponding memory will be freed
+> +        // by `Device::release` when the last reference to the `struct auxiliary_device` is dropped.
+> +        let _ = KBox::into_raw(boxed);
+> +
+> +        // SAFETY:
+> +        // - `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`, which has
+> +        //   been initialialized,
+> +        // - `modname.as_char_ptr()` is a NULL terminated string.
+> +        let ret = unsafe { bindings::__auxiliary_device_add(adev, modname.as_char_ptr()) };
+> +        if ret != 0 {
+> +            // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> +            // which has been initialialized.
+> +            unsafe { bindings::auxiliary_device_uninit(adev) };
 
-If I understood the TP4129 the upper limit is now defined, so we don't
-have to define our own upper limit.
+Does this error-path actually free the box?
+
+Alice
+
+> +            return Err(Error::from_errno(ret));
+> +        }
+> +
+> +        // SAFETY: `adev` is guaranteed to be non-null, since the `KBox` was allocated successfully.
+> +        //
+> +        // INVARIANT: The device will remain registered until `auxiliary_device_delete()` is called,
+> +        // which happens in `Self::drop()`.
+> +        Ok(Self(unsafe { NonNull::new_unchecked(adev) }))
+> +    }
+> +}
+> +
+> +impl Drop for Registration {
+> +    fn drop(&mut self) {
+> +        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
+> +        // `struct auxiliary_device`.
+> +        unsafe { bindings::auxiliary_device_delete(self.0.as_ptr()) };
+> +
+> +        // This drops the reference we acquired through `auxiliary_device_init()`.
+> +        //
+> +        // SAFETY: By the type invariant of `Self`, `self.0.as_ptr()` is a valid registered
+> +        // `struct auxiliary_device`.
+> +        unsafe { bindings::auxiliary_device_uninit(self.0.as_ptr()) };
+> +    }
+> +}
+> +
+> +// SAFETY: A `Registration` of a `struct auxiliary_device` can be released from any thread.
+> +unsafe impl Send for Registration {}
+> +
+> +// SAFETY: `Registration` does not expose any methods or fields that need synchronization.
+> +unsafe impl Sync for Registration {}
+> -- 
+> 2.49.0
+> 
