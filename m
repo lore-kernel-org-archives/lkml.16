@@ -1,136 +1,159 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6A01DC9A8;
-	Tue, 15 Apr 2025 13:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF6C19F422;
+	Tue, 15 Apr 2025 13:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725264; cv=none; b=Fw3GFsMwhe0YvZgt16p4C/UcAyREW0fsIZT5jte7GQUOQ+WbXGRUrWbfjWMzSk6Jyx1+SKu3r0AUD6OyxG77At5hzKh4lkm5b77HrEI6F2h+7BYeV9rIAdnsXxVcFREUmgyMeDzQvAYI6OpG54Ok5fi1eS1gWuDBu5F5y4YqTmM=
+	t=1744725314; cv=none; b=IplZVKGSuJJzHpRFtGtANn1bORrJOVE2ciflgB3wysc6eJCPVILlvozBsImY/QSa0k1RkaFq7z3lh4SPRaUFcF47hsK/1gl0G+wFcoO75GTjMf5eN3Zr3mzs3N4S6rMmBt6jxKNic12Na9uwScWmX5ghzdnaJKv8S4OV3MidTFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725264; c=relaxed/simple;
-	bh=OrjfuIsLyMWBHpdPMqn3UuNzRJEMzPl4gvGx5zjyKQY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qygIf2V/0RNfV9qy7C5u7ZBmw7Kvgw0ncTGrqb7AYDcOxdlYd7qUWZEpsnS2sEthc6b0N2BjXO81/OHY6fYzK5z7EsPyVAoqqIkp7EviR0uDpkHBBOq9U0ZqooePfXP+GwTgkVt/s5op/ctSePOUQnsOCoX9nPAEbohpVWKVbjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ku3wig1A; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744725314; c=relaxed/simple;
+	bh=755NGgblQW9HkSMmzLZEBTgNnlFCcB7cI0M7GpYpsTQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a+SMf34SI7OzyQHYKjGTCual8MAyAzjtxQLrTYDwk52KTXZfWFqE83yAQJTC+D5QIzBpgOoH+NFKyhVe28y0ttKo1SS6YmLiIy5nb6Ig9OiTPtavbiLDooGj12qmmH77kNYf9VQwvGig3x+IGXC9plmhszDFvTJam/+LTW++chE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sth2R2Ly; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ku3wig1A"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47698757053so64454321cf.0;
-        Tue, 15 Apr 2025 06:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744725262; x=1745330062; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8u/AmDRTyguVPS15vuo1k2JAoSJfdZVWVLXGNvKqIt0=;
-        b=ku3wig1AiWHBNkRAJfejif03uN3tO2uDfduvHjk+/WRar3/mhNKf4tskEHF7PAmLec
-         Xns4szP/HFvKooK01lO/uOr+Xx+BIU6/qJY3gcKKn3yO7Bw0lqShoXMC0UCSczJWB5fg
-         eXAdTFkk+fiApgT5aqDBaw4HwHCl6FShBaRbsALMPVUYVay99fSmln/FwaRyHMPjZ7Cu
-         F76RtTo8WG1M5xEb90CxeD6RwPHPhK7Wl5MFKaFY6hDFM2SznAthmfjLMJSc3CuS94zK
-         uawmVZZ+HbxwTDWwq+jMqgJ3Bf3ZNR/GURPjwuKQH4NK9yn1lqAowYpQ3K9xTIM7CBYC
-         BRgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744725262; x=1745330062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8u/AmDRTyguVPS15vuo1k2JAoSJfdZVWVLXGNvKqIt0=;
-        b=Dh2XmOzOApTxXb2P9aIw+KlfrJXAyCvQ6YtGg530rQcDEi0nWd/ZGSLGF3kYxI9/IE
-         FztDlPIAxS7Qqnhu99dTLhBzd6BHWKFEG0GyBbJacWBwl/IVzJPN/olX9DKXQ4O2dRD0
-         C/8htqLo829vjhFOTig0b+GBwuhugUtcYAFCzyPTSHdRQZFYwPepm7x5fe97g6Eh3myX
-         7xwm1UNeonoCblvuzkR9x4CFGAMockMgWhddGx1PZ0gA2VjAP5HcPUI6JL4Vb4y54ofX
-         U/HL69fNQXRVozGi4pX1sGH+ziR9wkrafTQSou7dl+uc7bUEf45R9u/WHL92TGFcJ4Yw
-         OcZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiHS2s+crOKWiBTt8m20XWdaxkImHB98GQ8dV1RLb23pHe+mI22DfpKTD3WX4uXNOT6pMohd7B0kQ=@vger.kernel.org, AJvYcCVj+KD9KsaOPVErVNw2BB1ecS/GqbFddxaN+OgkyxbBk+uGNxfSpfd4avaLMQyaXbVeHS7HoePzLteKYijG@vger.kernel.org, AJvYcCXd9swfJtQcwlgjeo1uX8oMAQdabY5mv772EY5ENGc/V/KFl/UBRZkt4PnBw5YiKYHA+tHJ/hQd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxQyPcSh6V4+Jza6iJUVtrSuaFDaPEb/Ab6xfyKjU5m4Qf6A+R
-	nrsZkTVH5WAgLxBdEvY8jUEuS1smdXESKzvKgY4JW47tAh0KwLbOiTo9VFBDRylj9lq9GWI67q3
-	aLDUSpLsdQ6BIa+M02MNMraUPhAY=
-X-Gm-Gg: ASbGncuJSwTZHfpl7aUbODhJgZJLK23li3TCDlqGkGI0fxaejb1IkZGAQWm5tBbCgDt
-	nVo9rLgemngdrSjlOv3n7jrxjCfvTmCe2btY3f2ZA8uG6AkDA86b4ZlkKiQwavm3n2AkLU3/PUS
-	brFzPOSrVoCPcS8oqfKjDw2fwpl9M7cQPMnaOMY0ZtFO+ryUOj6sYxdClrIRfoGOk=
-X-Google-Smtp-Source: AGHT+IFncftquQsvM6bfh/Y2dgpRTHBlyTEX3Cse3b1bJHNcdPkrggiROQdsJEycAmbcnvsivaFxwRd0WVtvqZwZ3eU=
-X-Received: by 2002:ac8:5ac3:0:b0:478:e507:f6ec with SMTP id
- d75a77b69052e-47977562f45mr289779871cf.23.1744725261700; Tue, 15 Apr 2025
- 06:54:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sth2R2Ly"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744725312; x=1776261312;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=755NGgblQW9HkSMmzLZEBTgNnlFCcB7cI0M7GpYpsTQ=;
+  b=Sth2R2Lyivx2TL1+doXjCj4uW83pxPEGnxd7CUS6SB7cjFJ2XfQUGs5N
+   l9Ua2wZ1gWU1sMQMt6eCEnD0ZDRZTA5qeSjRwBG4v3bwCRK9dxyBvkpa6
+   z9wSiEcKG9oKDk45iigHmnNqDamTPi/eHWy2Wki02IwjlMXX0n44WbMH9
+   mUfENq/KWB8udiD82jL+KBZ0CLUKTCzWIiSHCmKv/v3ch6rQh0bU5g1uy
+   BgT2GrYxZLKsq1mzNnsYY8U1X59BBT0tW9yMd0cBum8khQxRr8OZSURbU
+   324lqfYkIOgyJMTc9asSbSvLs7z6M/hT4cuNFInwpeQkIHzASNBiX7qXL
+   g==;
+X-CSE-ConnectionGUID: BPryvVwPROqKAs35JpLsAQ==
+X-CSE-MsgGUID: ieyt3azQTXOxAGzs4utYHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46124380"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46124380"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 06:55:09 -0700
+X-CSE-ConnectionGUID: uxfaW6T8QYaTnAcbc4WFVQ==
+X-CSE-MsgGUID: FouCYPlFSgukV2pkoOZSUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="135308407"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 15 Apr 2025 06:55:07 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4gkj-000GFC-1S;
+	Tue, 15 Apr 2025 13:55:05 +0000
+Date: Tue, 15 Apr 2025 21:54:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Arthur Simchaev <arthur.simchaev@sandisk.com>
+Cc: oe-kbuild-all@lists.linux.dev, avri.altman@sandisk.com,
+	Avi.Shchislowski@sandisk.com, beanhuo@micron.com,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bvanassche@acm.org
+Subject: Re: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to
+ ufshcd_send_bsg_uic_cmd
+Message-ID: <202504152111.1Huykiqb-lkp@intel.com>
+References: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414154050.469482-1-gshahrouzi@gmail.com> <1fb5f1c5e61ce386cb431d48296e952bdd560a6c.camel@gmail.com>
-In-Reply-To: <1fb5f1c5e61ce386cb431d48296e952bdd560a6c.camel@gmail.com>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Tue, 15 Apr 2025 09:54:00 -0400
-X-Gm-Features: ATxdqUHDElwhcKQXFR5mLMfMHxqVt-H7NGE6w7tSv_4jShaz4NFmHUQo7t9FlX4
-Message-ID: <CAKUZ0zLiP_w-4xOXfBDdZbm+M8yVYvd+A=M73fnRT_kMyWwk7Q@mail.gmail.com>
-Subject: Re: [PATCH v3] iio: adc: Correct conditional logic for store mode
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414120257.247858-1-arthur.simchaev@sandisk.com>
 
-On Tue, Apr 15, 2025 at 5:13=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
-> wrote:
->
-> On Mon, 2025-04-14 at 11:40 -0400, Gabriel Shahrouzi wrote:
-> > The mode setting logic in ad7816_store_mode was reversed due to
-> > incorrect handling of the strcmp return value. strcmp returns 0 on
-> > match, so the `if (strcmp(buf, "full"))` block executed when the
-> > input was not "full".
-> >
-> > This resulted in "full" setting the mode to AD7816_PD (power-down) and
-> > other inputs setting it to AD7816_FULL.
-> >
-> > Fix this by checking it against 0 to correctly check for "full" and
-> > "power-down", mapping them to AD7816_FULL and AD7816_PD respectively.
-> >
-> > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices"=
-)
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
->
-> LGTM, do you happen to have this device? It would more interesting to mov=
-e this
-> driver out of staging :)
-Unfortunately, I do not have this device. However, I would still be
-interested in contributing if possible. I was looking over
-https://lore.kernel.org/all/20230716144024.30ded663@jic23-huawei/T/
-where the goal seemed to be to modernize it by replacing the sysfs
-interface with the iio channel. I also looked through the datasheet
-and it seemed to be missing some stuff like a channel that can be
-selected.
->
-> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
->
-> > Changes since v3:
-> >       - Tag stable@vger.kernel.org instead of an email CC
-> >       - Use the correct version for patch
-> > Changes since v2:
-> >       - Add fixes tag that references commit that introduced the bug.
-> >         - Replace sysfs_streq with strcmp.
-> > ---
-> >  drivers/staging/iio/adc/ad7816.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/iio/adc/ad7816.c
-> > b/drivers/staging/iio/adc/ad7816.c
-> > index 6c14d7bcdd675..081b17f498638 100644
-> > --- a/drivers/staging/iio/adc/ad7816.c
-> > +++ b/drivers/staging/iio/adc/ad7816.c
-> > @@ -136,7 +136,7 @@ static ssize_t ad7816_store_mode(struct device *dev=
-,
-> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> >       struct ad7816_chip_info *chip =3D iio_priv(indio_dev);
-> >
-> > -     if (strcmp(buf, "full")) {
-> > +     if (strcmp(buf, "full") =3D=3D 0) {
-> >               gpiod_set_value(chip->rdwr_pin, 1);
-> >               chip->mode =3D AD7816_FULL;
-> >       } else {
+Hi Arthur,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on jejb-scsi/for-next]
+[also build test ERROR on mkp-scsi/for-next linus/master v6.15-rc2 next-20250415]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Arthur-Simchaev/ufs-bsg-Add-hibern8-enter-exit-to-ufshcd_send_bsg_uic_cmd/20250414-200404
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git for-next
+patch link:    https://lore.kernel.org/r/20250414120257.247858-1-arthur.simchaev%40sandisk.com
+patch subject: [PATCH v2] ufs: bsg: Add hibern8 enter/exit to ufshcd_send_bsg_uic_cmd
+config: s390-randconfig-002-20250415 (https://download.01.org/0day-ci/archive/20250415/202504152111.1Huykiqb-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504152111.1Huykiqb-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504152111.1Huykiqb-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/ufs/core/ufshcd.c: In function 'ufshcd_send_bsg_uic_cmd':
+>> drivers/ufs/core/ufshcd.c:4360:9: error: too many arguments to function 'ufshcd_uic_hibern8_exit'
+      ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
+            ^~~~~~~~~~~~~~~~~~~~~~~
+   In file included from drivers/ufs/core/ufshcd-priv.h:7:0,
+                    from drivers/ufs/core/ufshcd.c:31:
+   include/ufs/ufshcd.h:1331:5: note: declared here
+    int ufshcd_uic_hibern8_exit(struct ufs_hba *hba);
+        ^~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/ufshcd_uic_hibern8_exit +4360 drivers/ufs/core/ufshcd.c
+
+  4331	
+  4332	/**
+  4333	 * ufshcd_send_bsg_uic_cmd - Send UIC commands requested via BSG layer and retrieve the result
+  4334	 * @hba: per adapter instance
+  4335	 * @uic_cmd: UIC command
+  4336	 *
+  4337	 * Return: 0 only if success.
+  4338	 */
+  4339	int ufshcd_send_bsg_uic_cmd(struct ufs_hba *hba, struct uic_command *uic_cmd)
+  4340	{
+  4341		int ret;
+  4342	
+  4343		if (hba->quirks & UFSHCD_QUIRK_BROKEN_UIC_CMD)
+  4344			return 0;
+  4345	
+  4346		ufshcd_hold(hba);
+  4347	
+  4348		if (uic_cmd->argument1 == UIC_ARG_MIB(PA_PWRMODE) &&
+  4349		    uic_cmd->command == UIC_CMD_DME_SET) {
+  4350			ret = ufshcd_uic_pwr_ctrl(hba, uic_cmd);
+  4351			goto out;
+  4352		}
+  4353	
+  4354		if (uic_cmd->command == UIC_CMD_DME_HIBER_ENTER) {
+  4355			ret = ufshcd_uic_hibern8_enter(hba);
+  4356			goto out;
+  4357		}
+  4358	
+  4359		if (uic_cmd->command == UIC_CMD_DME_HIBER_EXIT) {
+> 4360			ret = ufshcd_uic_hibern8_exit(hba, uic_cmd);
+  4361			goto out;
+  4362		}
+  4363	
+  4364		mutex_lock(&hba->uic_cmd_mutex);
+  4365		ufshcd_add_delay_before_dme_cmd(hba);
+  4366	
+  4367		ret = __ufshcd_send_uic_cmd(hba, uic_cmd);
+  4368		if (!ret)
+  4369			ret = ufshcd_wait_for_uic_cmd(hba, uic_cmd);
+  4370	
+  4371		mutex_unlock(&hba->uic_cmd_mutex);
+  4372	
+  4373	out:
+  4374		ufshcd_release(hba);
+  4375		return ret;
+  4376	}
+  4377	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
