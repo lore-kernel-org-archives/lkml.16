@@ -1,86 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0E824C67A;
-	Tue, 15 Apr 2025 07:52:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBDB24169D;
+	Tue, 15 Apr 2025 07:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703567; cv=none; b=Z+FGqcEPPcxGWH1vlDHw9pxmAf5t7Nzp5WzXbSTgCyeL3h8khyiPAm7pS7N6/n7gTggEOUa/ASJkqCwogN5Eep7JjW4yevKkZ/uiiX5wkG3ubm94DBbTvgV7ovT1Pyzwu0kpw2mn2GnBrEcrPPR8AD3+wQwl0GLg9yH2F5P0OWk=
+	t=1744703597; cv=none; b=svEQzrLm0Mp/dOZ+lbq5IMnx/5N6w1WQ3gNaRjaeSoEJCRFjZIYYBPU9k//ScR0DkrmSPiYZngJFfXjBtcJ8hddpm+nNuiDn5Jq38tlExrn2sZOcp5zfKV/0n+gIiELEskBZQN1q19z7Fkf9f2lvlvakNTeRhyaCvd+HQwIF4og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703567; c=relaxed/simple;
-	bh=F1+z5QDEOA6VH1pZErpvrrad7ZYMutqq0ODAhFb3cXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aa/i3kFugSCLZdjerlkKxMDtQx8MNH5wHdBvcyrls2+YtlYj6mZ8UuU6Yv/rfrixiiR7gVIOlYO+Nuh6n0+vyCo/0gaYuM8viw7jKID0itr9IpFYw5hdGf7PLuam3MBOK49vum8I69PCoP8BU3bw/2zIO4KWQ1FuG3T9rQ9qcmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3CdO1Oe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744703597; c=relaxed/simple;
+	bh=fj87Ge4+Z4L8TW3BbiLnnTXesT/+hsNjN1y3z7e+Mkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gbB/nKkRZ5OVUvI57qxsG0WPdpCAjCBBxYd3WPw0nUK5mRDcxP+gwGsCcxrAILk3rWpLxVeO8AkIYVKagXzoxFoqoewv/ZIpIehULCryyPYF7dv0mAEPCLOisMcVaHgcvjTQOFSIJBJiKTa0Dqc+3liXVyVrzH46mLIbs9A6m8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EK+yQOjB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3CdO1Oe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A908DC4CEE9;
-	Tue, 15 Apr 2025 07:52:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EK+yQOjB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF2ABC4CEDD;
+	Tue, 15 Apr 2025 07:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744703566;
-	bh=F1+z5QDEOA6VH1pZErpvrrad7ZYMutqq0ODAhFb3cXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m3CdO1OeyDYKhuD0nV5JR+nrAaBbxY5V0WnfqLLyG67QCBrDa6eiINNnQ5Bxi8nOS
-	 rcr6IDNjM04R14U3rP356s6GiTY/kfd/DLzrulyw5ZjBkR3z4TG+EgUzMcmIdXm3gn
-	 PUPxUiXGm1d7+LUcGiiN1ulOodFp5vsJ4RpkzH2/aHhimDWfEartUnQzNTVy+LXYEy
-	 hK/aNCvMYJoBuKuGZvbJK5WrdAnpe/vGVB1JJUBLWObYoACC6w/EYbX0kqXSZ3MmjC
-	 fIrCJq08lQImjtiJSNrBzkyv21VgEKfbRB+MaUtDwivBsrWTlG3PVQm2gusnmtv5c+
-	 RkLk+vl0niWSQ==
-Date: Tue, 15 Apr 2025 09:52:41 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: David Sterba <dsterba@suse.cz>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>, 
-	now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>, Viro <viro@zeniv.linux.org.uk>, 
-	Bacik <josef@toxicpanda.com>, Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>, 
-	Johnson <jeff.johnson@oss.qualcomm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
-Message-ID: <20250415-wohin-anfragen-90b2df73295b@brauner>
-References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
- <20250414-behielt-erholen-e0cd10a4f7af@brauner>
- <Z_0aBN-20w20-UiD@casper.infradead.org>
- <20250414162328.GD16750@twin.jikos.cz>
+	s=k20201202; t=1744703596;
+	bh=fj87Ge4+Z4L8TW3BbiLnnTXesT/+hsNjN1y3z7e+Mkg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EK+yQOjBOmd1XzZmqH7iP2Xe3e3aND27IbJfvw8ZYNElItdtNokMw7lNo74YbaFhG
+	 v6USctTyL8CB7JDBfT0RPEHH+1PckBdZw17dp9r8C4pC4ZPka3r1X0Z2G0sB2oiGoE
+	 gHt9hZeYXpEzRVDh1vM7r5WiUmiaActjbPERtoeAYE4s9JlRxMiBlXdQgNZmDi79c3
+	 2ypjm1SCHU04YgGiglJTNlDUgoOtCCIfkF5FvedMP/2oZR5FrBJ42yi2nNqJzQGd4g
+	 EBgG+o2tXr0xS9QNHMWVIPWtwnl64lKpVbChBtH8EKsk8aRNnL4KM2SIGdpOq5nkwo
+	 TW6lShjOzf8Dg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1u4b6X-000000004Eq-1Ib1;
+	Tue, 15 Apr 2025 09:53:13 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Vignesh R <vigneshr@ti.com>,
+	Andi Shyti <andi.shyti@kernel.org>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Jayesh Choudhary <j-choudhary@ti.com>
+Subject: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
+Date: Tue, 15 Apr 2025 09:52:30 +0200
+Message-ID: <20250415075230.16235-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250414162328.GD16750@twin.jikos.cz>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 06:23:28PM +0200, David Sterba wrote:
-> On Mon, Apr 14, 2025 at 03:21:56PM +0100, Matthew Wilcox wrote:
-> > On Mon, Apr 14, 2025 at 04:18:27PM +0200, Christian Brauner wrote:
-> > > On Mon, Apr 14, 2025 at 09:45:25PM +0800, now4yreal wrote:
-> > > > Dear Linux Security Maintainers,
-> > > > I would like to report a OOB-read vulnerability in the HFS+ file
-> > > > system, which I discovered using our in-house developed kernel fuzzer,
-> > > > Symsyz.
-> > > 
-> > > Bug reports from non-official syzbot instances are generally not
-> > > accepted.
-> > > 
-> > > hfs and hfsplus are orphaned filesystems since at least 2014. Bug
-> > > reports for such filesystems won't receive much attention from the core
-> > > maintainers.
-> > > 
-> > > I'm very very close to putting them on the chopping block as they're
-> > > slowly turning into pointless burdens.
-> > 
-> > I've tried asking some people who are long term Apple & Linux people,
-> > but haven't been able to find anyone interested in becoming maintainer.
-> > Let's drop both hfs & hfsplus.  Ten years of being unmaintained is
-> > long enough.
-> 
-> Agreed. If needed there are FUSE implementations to access .dmg files
-> with HFS/HFS+ or other standalone tools.
-> 
-> https://github.com/0x09/hfsfuse
-> https://github.com/darlinghq/darling-dmg
+Using of_property_read_bool() for non-boolean properties is deprecated
+and results in a warning during runtime since commit c141ecc3cecd ("of:
+Warn when of_property_read_bool() is used on non-boolean properties").
 
-Ok, I'm open to trying. I'm adding a deprecation message when initating
-a new hfs{plus} context logged to dmesg and then we can try and remove
-it by the end of the year.
+Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
+Cc: Jayesh Choudhary <j-choudhary@ti.com>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/i2c/busses/i2c-omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 16afb9ca19bb..876791d20ed5 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1454,7 +1454,7 @@ omap_i2c_probe(struct platform_device *pdev)
+ 				       (1000 * omap->speed / 8);
+ 	}
+ 
+-	if (of_property_read_bool(node, "mux-states")) {
++	if (of_property_present(node, "mux-states")) {
+ 		struct mux_state *mux_state;
+ 
+ 		mux_state = devm_mux_state_get(&pdev->dev, NULL);
+-- 
+2.49.0
+
