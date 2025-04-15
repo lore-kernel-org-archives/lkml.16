@@ -1,59 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A158427586F;
-	Tue, 15 Apr 2025 07:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66CD2DFA34;
+	Tue, 15 Apr 2025 07:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700411; cv=none; b=OcQP1WUchNYcBZ4GR/fgcKYkDByg3Hfm/oNFJVZe0NJTRtvO/ElJIs6PCdo+dZ4x8+rd64VvNr1wF4xQESb8YqY5mstw+4khFcHL87pAhB6Xz9lbKeT6qc4CJarm0N9K/FfFVTtOElhDO4BaCs5sm/muHz5W9Tu84BMdvWZcDJE=
+	t=1744700473; cv=none; b=byB5AGN24aa+PO1VFDc9pWKfepFzr9xj743ZNcomygD0hGv/CPM1Kl2UE41+V0LWE/nf8EpRUMbGMffsdmwj8UDo/+rB9rjK1dROWuP32dFMSeWO0xXTsP5IKtgDGKEyvNxOLE8paOoahh15ZpDzFh6XZKtDHGajdZc0F+jQhco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744700411; c=relaxed/simple;
-	bh=C2p/GvdSf/MpUlUE7MKNGjq3PmhkSh1z6bGrbPDYfFM=;
+	s=arc-20240116; t=1744700473; c=relaxed/simple;
+	bh=tP1nLNEOryZ2Rfki3LWUs8Eu0CqMBbLY8xZy7cXBm1M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qCnDM+sVO9/Xd8q/aA3aGaBxD0Vyw8sqtnp2dQ1+uOUM0TjpASkVj+R0IwnmvCP7MRyQb71NW2JJrGzGg2geJ7qKCTXupYUjRxSM1ypAXGYKEVFIu/Taox0ZRvnJ7Q0y4cjv5Qv7LpvwD3e16UOgCB0ND+LOeuWbI72IgLm1bgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dJp1aN7u; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qkf/lOSOyTBFmzjXZmz+U7xBq44JTFS37ib3JvAewk26CyZSDlUOfR3iAoM9WLvecfJCVNUOGjWWQulgzdVpOvi93tzJ/ZzyTklKRqHC7gVj9qq6Afx4gan7C6PfBWZSozwcxrcoKiqn+s2u2rfOhhkV/vup9OanmHlgE7QTE6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KM18OPyt; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dJp1aN7u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KM18OPyt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744700406; x=1776236406;
+  t=1744700471; x=1776236471;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=C2p/GvdSf/MpUlUE7MKNGjq3PmhkSh1z6bGrbPDYfFM=;
-  b=dJp1aN7u2jJvF9SS9fgjccMVDIGSaz1M1NWJsbOn7pU1+4c1pViUqY8O
-   /9wEqjyL3DqeIMkpmJwI5rCss5PsG2CKZjlR4cQdoAV4vqT17ByPz4cUg
-   ljmKRge/NzDP1aWlU6CeUWVRZOL1P/k6TAK5lc7DGGO1vTctCzbQfYTgE
-   yKgOXhXYBZD3uhJpm5op8B6TXH1aNV1EJmqUkMmrgezNdtqvMkPKgI6de
-   5HK82OcLtUlC+YZonKylxnY3NeExZSi/RH1fEOPC07LuJONhD8ktTtJoI
-   pdXKA2LWxG6BTmPrTmqjD2gxwV1CvaDVn4ilR+gcdxvQr/G+DmLJmEexU
+  bh=tP1nLNEOryZ2Rfki3LWUs8Eu0CqMBbLY8xZy7cXBm1M=;
+  b=KM18OPytoj12OMm8L7QAJ8kgYc8yLznReoS8MSs+G5sRmABv8xGrNTSk
+   KJnColaZQvQ5VUj4SuWFzyuNmu/8OX2FE/FD5JBrbJ7ILU/lGexHninDr
+   +AVoLVy/tbCmYA3Kgx6jdLNAccOZBZwtEgGwn3wmX0+c5KjPLDq2XCJ6I
+   o3A4zlRPK5+SVzEPxCCKIPkAZgGD7Jc+zxadfPWqBe0fV3o6auRJE+TQH
+   WS41PuXsSL9b/6/81StljZxqy+it8t/o+ZPnRdpa/1y+1GPB+jwWu5bFs
+   096jdz7qkGwpjLuXzpG/uaibaWHwPTxQOPxOApHFhJ2lQZQXxnCKwLKMm
    A==;
-X-CSE-ConnectionGUID: +4nLEZdmSwOIQKT/6+9rbw==
-X-CSE-MsgGUID: 0S0cvsHZQn+TYUv90xQwyA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57184134"
+X-CSE-ConnectionGUID: L8W0ygYzRlGp1Gf/wHN25A==
+X-CSE-MsgGUID: JIRDwf/oRBunTN4nGlb4lA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49845957"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="57184134"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:00:06 -0700
-X-CSE-ConnectionGUID: sIz9rrG7Sge0gB7h0E3a9A==
-X-CSE-MsgGUID: 5+P3nvfqTKq2uA116uid1w==
+   d="scan'208";a="49845957"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:01:10 -0700
+X-CSE-ConnectionGUID: pMPcLX8ESJ22RSF9di3EvQ==
+X-CSE-MsgGUID: MoBCwUo+Tl+cMeqTJnpNSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130571783"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:00:03 -0700
-Date: Tue, 15 Apr 2025 08:59:43 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
-	richardcochran@gmail.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v2] ptp: ocp: fix NULL deref in __handle_s for irig/dcf
-Message-ID: <Z/4D3/PW9FkxQSdo@mev-dev.igk.intel.com>
-References: <20250415064638.130453-1-maimon.sagi@gmail.com>
+   d="scan'208";a="129999895"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:01:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4aI4-0000000CT86-0em2;
+	Tue, 15 Apr 2025 10:01:04 +0300
+Date: Tue, 15 Apr 2025 10:01:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+Message-ID: <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+References: <cover.1744106241.git.mchehab+huawei@kernel.org>
+ <871pu1193r.fsf@trenco.lwn.net>
+ <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
+ <87mscibwm8.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,61 +70,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415064638.130453-1-maimon.sagi@gmail.com>
+In-Reply-To: <87mscibwm8.fsf@trenco.lwn.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 15, 2025 at 09:46:38AM +0300, Sagi Maimon wrote:
-> SMA store/get operations via sysfs can call __handle_signal_outputs
-> or __handle_signal_inputs while irig and dcf pointers remain
-> uninitialized. This leads to a NULL pointer dereference in
-> __handle_s. Add NULL checks for irig and dcf to prevent crashes.
+On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
+> Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+> > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
+> >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> >> 
+> >> > This changeset contains the kernel-doc.py script to replace the verable
+> >> > kernel-doc originally written in Perl. It replaces the first version and the
+> >> > second series I sent on the top of it.
+> >> 
+> >> OK, I've applied it, looked at the (minimal) changes in output, and
+> >> concluded that it's good - all this stuff is now in docs-next.  Many
+> >> thanks for doing this!
+> >> 
+> >> I'm going to hold off on other documentation patches for a day or two
+> >> just in case anything turns up.  But it looks awfully good.
+> >
+> > This started well, until it becomes a scripts/lib/kdoc.
+> > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+> > "disgusting turd" )as said by Linus) in the clean tree.
+> >
+> > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
 > 
-> Fixes: b286f4e87e32 ("serial: core: Move tty and serdev to be children of serial core port device")
-> Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
-> ---
-> Addressed comments from Paolo Abeni:
->  - https://www.spinics.net/lists/netdev/msg1082406.html
-> Changes since v1:
->  - Expanded commit message to clarify the NULL dereference scenario.
-> ---
->  drivers/ptp/ptp_ocp.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> If nothing else, "make cleandocs" should clean it up, certainly.
 > 
-> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> index 7945c6be1f7c..4e4a6f465b01 100644
-> --- a/drivers/ptp/ptp_ocp.c
-> +++ b/drivers/ptp/ptp_ocp.c
-> @@ -2434,15 +2434,19 @@ ptp_ocp_dcf_in(struct ptp_ocp *bp, bool enable)
->  static void
->  __handle_signal_outputs(struct ptp_ocp *bp, u32 val)
->  {
-> -	ptp_ocp_irig_out(bp, val & 0x00100010);
-> -	ptp_ocp_dcf_out(bp, val & 0x00200020);
-> +	if (bp->irig_out)
-> +		ptp_ocp_irig_out(bp, val & 0x00100010);
-> +	if (bp->dcf_out)
-> +		ptp_ocp_dcf_out(bp, val & 0x00200020);
->  }
->  
->  static void
->  __handle_signal_inputs(struct ptp_ocp *bp, u32 val)
->  {
-> -	ptp_ocp_irig_in(bp, val & 0x00100010);
-> -	ptp_ocp_dcf_in(bp, val & 0x00200020);
-> +	if (bp->irig_out)
-Why not irig_in? Can we asssume that "in" isn't NULL if "out" isn't?
+> We can also tell CPython to not create that directory at all.  I'll run
+> some tests to see what the effect is on the documentation build times;
+> I'm guessing it will not be huge...
 
-> +		ptp_ocp_irig_in(bp, val & 0x00100010);
-> +	if (bp->dcf_out)
-The same here.
+I do not build documentation at all, it's just a regular code build that leaves
+tree dirty.
 
-> +		ptp_ocp_dcf_in(bp, val & 0x00200020);
+$ python3 --version
+Python 3.13.2
 
-Just my opinion, I will move these checks into ptp_ocp_...() functions
-as bp is passed to a function not bp->sth.
+It's standard Debian testing distribution, no customisation in the code.
 
->  }
->  
->  static u32
-> -- 
-> 2.47.0
+To reproduce.
+1) I have just done a new build to reduce the churn, so, running make again does nothing;
+2) The following snippet in shell shows the issue
+
+$ git clean -xdf
+$ git status --ignored
+On branch ...
+nothing to commit, working tree clean
+
+$ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+make[1]: Entering directory '...'
+  GEN     Makefile
+  DESCEND objtool
+  CALL    .../scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+.pylintrc: warning: ignored by one of the .gitignore files
+Kernel: arch/x86/boot/bzImage is ready  (#23)
+make[1]: Leaving directory '...'
+
+$ touch drivers/gpio/gpiolib-acpi.c
+
+$ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+make[1]: Entering directory '...'
+  GEN     Makefile
+  DESCEND objtool
+  CALL    .../scripts/checksyscalls.sh
+  INSTALL libsubcmd_headers
+...
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#24)
+make[1]: Leaving directory '...'
+
+$ git status --ignored
+On branch ...
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	scripts/lib/kdoc/__pycache__/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+It's 100% reproducible on my side. I am happy to test any patches to fix this.
+It's really annoying "feature" for `make O=...` builds. Also note that
+theoretically the Git worktree may be located on read-only storage / media
+and this can induce subtle issues.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
