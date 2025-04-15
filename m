@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735F828F538;
-	Tue, 15 Apr 2025 08:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1AC2918FF;
+	Tue, 15 Apr 2025 08:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705462; cv=none; b=W0TTNz2bX9I5mJbxuUg4Y+kS0X9Lp0URd+uerkQbRxOYjZVQU5yyEc2JlZ5Q7Z6hjGcufQ8MrKo7+OnKZDOOKoqzrY5gsZhF7a/TKqaNHBnTC06tinYQcQ7ce9C7Burt4x+PTNxOlNVfc8xTspKIw3bSimQ/7Muzi/8SXf9jZhQ=
+	t=1744705468; cv=none; b=BPw/W2zONP9gVGDJlfvEhkNnumV8tHZ2ldzzIoVlneDuwCkNgoc+eh0HKr6OdQZ4qEudkTFGU0QCc2g7uX7I2GOZapTHiz47oVr9G8hfBcuwsLE6Tvrp1wZtdkrQT/f/8pY5wRUXxkz8irZViFIinVGLJLgY9AgVPGgW2rOnrWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705462; c=relaxed/simple;
-	bh=pKsfa88mosn9f8QHFusnwOz+UfKkd03V/+U8xSDrrKE=;
+	s=arc-20240116; t=1744705468; c=relaxed/simple;
+	bh=bPDc33zIJ9fQccDYYs4KtadWDnQKLZnBRafs/XcOk78=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=k2S4vdTmCgd237EkKXV4SNHbT8nRvNNfFUoJDVu9dbuf26ADaEUHlvsdsm1V4LbPgAp+oiJPfTKkWbYM9ftAEXEG+JOgjmmW01ZIhhcix5nb5AzndpqdLddeExD2FcfsK1AGEna32q8wFO5Y5kD20gEjd6untskXhIGSvW9Y6U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJ+y+La1; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=cN48o2KrmOlXNFZ4qpRUl6M/o+/jwPfgnax/hbDJAH9s8ooqyTKwN6Yx8WySdmrSCzruum4UagvSOM/n4FypuAN7VnvxkhARqSXxmPmamOKW0GBQXgBCdAgFLmHjQW/tDLFe8xwJ5JWQFz6pk7w8PypqcNgI7A0pe4n5F60Zs84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EIhmrbF+; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJ+y+La1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EIhmrbF+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744705461; x=1776241461;
+  t=1744705467; x=1776241467;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pKsfa88mosn9f8QHFusnwOz+UfKkd03V/+U8xSDrrKE=;
-  b=NJ+y+La1b7IzSQzws1i1fz/4JZOaIqork05dkqzSPwBJByIs4DwRJHDq
-   q/N0y4w6FuCUv728lAY2V8Cc6Ym0D2Sqt34sIE2YS5ujlVDfLZBIIOb9V
-   jROTDIWaJKy4dOdesx08thm8N/dhme2mwtyMrurmXKTzRe0UuyrqRd+GD
-   CG3OQ6X42MKsYmpgyuCLpeWzHOINVJiH72y6cOKI76JdU4eK6AyTZ3u4+
-   w1s26h6JDjjzWUdMjdDztTS5GRYZGIPU1BxKvlv56PVHiRSwivnFfeuhG
-   +KJf8jWMNL+VN3phEI8v1Q0uCO8MGS9q415cCS0Kd8REkaJV3ozWuSFCr
-   g==;
-X-CSE-ConnectionGUID: gzlI68AERBW9szAyj1UvuA==
-X-CSE-MsgGUID: xV0DeVlCRIui/GVjxF92eQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46116159"
+  bh=bPDc33zIJ9fQccDYYs4KtadWDnQKLZnBRafs/XcOk78=;
+  b=EIhmrbF+4knuoJqIllxf6B6p/GdeokPoX+bnwUZtYZidMWjPBZBukix0
+   wQe1/X+qmmXDaEVYvPbmkP3DreZpN/uxavc15TG3XPQwgPS4rxBpjy6/D
+   mjhe1pUPBwze55463FEFnerG7rwDvAn8drgp22xaapOgHyidERlyr96ZP
+   ngHHujImolY+vdYLsqaARZ6mypAPsr2ZEGvsop4IqBuxYC4bU+E2Lx6dt
+   DsN2bZd8gtnFfK5ogGdiU+02b8iZPiZyIzJdV3c+JNbELWX86wz2SmZZF
+   UCAt+U5FAaDlqClgam5vXVBnJo7DaSddQuoHL9ydjxJ3JpMYrrzehkPf3
+   Q==;
+X-CSE-ConnectionGUID: LVhKzDyaQNyFL1imNFdGVw==
+X-CSE-MsgGUID: lYCrvcOsT5qgW8ZwL+ke5Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46115872"
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46116159"
+   d="scan'208";a="46115872"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:24:19 -0700
-X-CSE-ConnectionGUID: bgDEVn2BSoqbL9vF3Z8yRg==
-X-CSE-MsgGUID: eFhq9IZ9QMiQ9oPaFOdyLA==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:23:24 -0700
+X-CSE-ConnectionGUID: V1IvFp3vRTCfTZjujdaLPw==
+X-CSE-MsgGUID: ml/YpkG2S7Ki/u5jzT6oLA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130055687"
+   d="scan'208";a="130055479"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by fmviesa007.fm.intel.com with ESMTP; 15 Apr 2025 01:24:14 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 15 Apr 2025 01:23:20 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 19/22] perf tools: Enhance arch__intr/user_reg_mask() helpers
-Date: Tue, 15 Apr 2025 11:44:25 +0000
-Message-Id: <20250415114428.341182-20-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 04/22] perf/x86/intel: Decouple BTS initialization from PEBS initialization
+Date: Tue, 15 Apr 2025 11:44:10 +0000
+Message-Id: <20250415114428.341182-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
 References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
@@ -72,387 +72,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Arch-PEBS supports to capture more higher-width vector registers, like
-YMM/ZMM registers, while the return value "uint64_t" of these 2 helpers
-is not enough to represent these new added registors. Thus enhance these
-two helpers by passing a "unsigned long" pointer, so these two helpers
-can return more bits via this pointer.
+Move x86_pmu.bts flag initialization into bts_init() from
+intel_ds_init() and rename intel_ds_init() to intel_pebs_init() since it
+fully initializes PEBS now after removing the x86_pmu.bts
+initialization.
 
-Currently only sample_intr_regs supports these new added vector
-registers, but change arch__user_reg_mask() for the sake of consistency
-as well.
+It's safe to move x86_pmu.bts into bts_init() since all x86_pmu.bts flag
+are called after bts_init() execution.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/arch/arm/util/perf_regs.c       |  8 ++++----
- tools/perf/arch/arm64/util/perf_regs.c     | 11 ++++++-----
- tools/perf/arch/csky/util/perf_regs.c      |  8 ++++----
- tools/perf/arch/loongarch/util/perf_regs.c |  8 ++++----
- tools/perf/arch/mips/util/perf_regs.c      |  8 ++++----
- tools/perf/arch/powerpc/util/perf_regs.c   | 17 +++++++++--------
- tools/perf/arch/riscv/util/perf_regs.c     |  8 ++++----
- tools/perf/arch/s390/util/perf_regs.c      |  8 ++++----
- tools/perf/arch/x86/util/perf_regs.c       | 13 +++++++------
- tools/perf/util/evsel.c                    |  6 ++++--
- tools/perf/util/parse-regs-options.c       |  6 +++---
- tools/perf/util/perf_regs.c                |  8 ++++----
- tools/perf/util/perf_regs.h                |  4 ++--
- 13 files changed, 59 insertions(+), 54 deletions(-)
+ arch/x86/events/intel/bts.c  | 6 +++++-
+ arch/x86/events/intel/core.c | 2 +-
+ arch/x86/events/intel/ds.c   | 5 ++---
+ arch/x86/events/perf_event.h | 2 +-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
-index f94a0210c7b7..14f18d518c96 100644
---- a/tools/perf/arch/arm/util/perf_regs.c
-+++ b/tools/perf/arch/arm/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
+diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+index 16bc89c8023b..9560f693fac0 100644
+--- a/arch/x86/events/intel/bts.c
++++ b/arch/x86/events/intel/bts.c
+@@ -599,7 +599,11 @@ static void bts_event_read(struct perf_event *event)
  
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
+ static __init int bts_init(void)
  {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-index 09308665e28a..9bcf4755290c 100644
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ b/tools/perf/arch/arm64/util/perf_regs.c
-@@ -140,12 +140,12 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 	return SDT_ARG_VALID;
- }
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
- 	struct perf_event_attr attr = {
- 		.type                   = PERF_TYPE_HARDWARE,
-@@ -170,10 +170,11 @@ uint64_t arch__user_reg_mask(void)
- 		fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
- 		if (fd != -1) {
- 			close(fd);
--			return attr.sample_regs_user;
-+			*(uint64_t *)mask = attr.sample_regs_user;
-+			return;
- 		}
- 	}
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
-index 6b1665f41180..56c84fc91aff 100644
---- a/tools/perf/arch/csky/util/perf_regs.c
-+++ b/tools/perf/arch/csky/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/loongarch/util/perf_regs.c b/tools/perf/arch/loongarch/util/perf_regs.c
-index f94a0210c7b7..14f18d518c96 100644
---- a/tools/perf/arch/loongarch/util/perf_regs.c
-+++ b/tools/perf/arch/loongarch/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
-index 6b1665f41180..56c84fc91aff 100644
---- a/tools/perf/arch/mips/util/perf_regs.c
-+++ b/tools/perf/arch/mips/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index bd36cfd420a2..e5d042305030 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -187,7 +187,7 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 	return SDT_ARG_VALID;
- }
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
- 	struct perf_event_attr attr = {
- 		.type                   = PERF_TYPE_HARDWARE,
-@@ -199,7 +199,7 @@ uint64_t arch__intr_reg_mask(void)
- 	};
- 	int fd;
- 	u32 version;
--	u64 extended_mask = 0, mask = PERF_REGS_MASK;
-+	u64 extended_mask = 0;
- 
- 	/*
- 	 * Get the PVR value to set the extended
-@@ -210,8 +210,10 @@ uint64_t arch__intr_reg_mask(void)
- 		extended_mask = PERF_REG_PMU_MASK_300;
- 	else if ((version == PVR_POWER10) || (version == PVR_POWER11))
- 		extended_mask = PERF_REG_PMU_MASK_31;
--	else
--		return mask;
-+	else {
-+		*(u64 *)mask = PERF_REGS_MASK;
-+		return;
-+	}
- 
- 	attr.sample_regs_intr = extended_mask;
- 	attr.sample_period = 1;
-@@ -224,14 +226,13 @@ uint64_t arch__intr_reg_mask(void)
- 	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
- 	if (fd != -1) {
- 		close(fd);
--		mask |= extended_mask;
-+		*(u64 *)mask = PERF_REGS_MASK | extended_mask;
- 	}
--	return mask;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
-index 6b1665f41180..56c84fc91aff 100644
---- a/tools/perf/arch/riscv/util/perf_regs.c
-+++ b/tools/perf/arch/riscv/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
-index 6b1665f41180..56c84fc91aff 100644
---- a/tools/perf/arch/s390/util/perf_regs.c
-+++ b/tools/perf/arch/s390/util/perf_regs.c
-@@ -6,14 +6,14 @@ static const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG_END
- };
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
- 
- const struct sample_reg *arch__sample_reg_masks(void)
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 9f492568f3b4..5b163f0a651a 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -283,7 +283,7 @@ const struct sample_reg *arch__sample_reg_masks(void)
- 	return sample_reg_masks;
- }
- 
--uint64_t arch__intr_reg_mask(void)
-+void arch__intr_reg_mask(unsigned long *mask)
- {
- 	struct perf_event_attr attr = {
- 		.type			= PERF_TYPE_HARDWARE,
-@@ -295,6 +295,9 @@ uint64_t arch__intr_reg_mask(void)
- 		.exclude_kernel		= 1,
- 	};
- 	int fd;
+-	if (!boot_cpu_has(X86_FEATURE_DTES64) || !x86_pmu.bts)
++	if (!boot_cpu_has(X86_FEATURE_DTES64))
++		return -ENODEV;
 +
-+	*(u64 *)mask = PERF_REGS_MASK;
-+
++	x86_pmu.bts = boot_cpu_has(X86_FEATURE_BTS);
++	if (!x86_pmu.bts)
+ 		return -ENODEV;
+ 
+ 	if (boot_cpu_has(X86_FEATURE_PTI)) {
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index c7937b872348..16049ba63135 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -6928,7 +6928,7 @@ __init int intel_pmu_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
+ 		intel_pmu_arch_lbr_init();
+ 
+-	intel_ds_init();
++	intel_pebs_init();
+ 
+ 	x86_add_quirk(intel_arch_events_quirk); /* Install first, so it runs last */
+ 
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index fcf9c5b26cab..d894cf3f631e 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2651,10 +2651,10 @@ static void intel_pmu_drain_pebs_icl(struct pt_regs *iregs, struct perf_sample_d
+ }
+ 
+ /*
+- * BTS, PEBS probe and setup
++ * PEBS probe and setup
+  */
+ 
+-void __init intel_ds_init(void)
++void __init intel_pebs_init(void)
+ {
  	/*
- 	 * In an unnamed union, init it here to build on older gcc versions
- 	 */
-@@ -320,13 +323,11 @@ uint64_t arch__intr_reg_mask(void)
- 	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
- 	if (fd != -1) {
- 		close(fd);
--		return (PERF_REG_EXTENDED_MASK | PERF_REGS_MASK);
-+		*(u64 *)mask = PERF_REG_EXTENDED_MASK | PERF_REGS_MASK;
- 	}
--
--	return PERF_REGS_MASK;
- }
+ 	 * No support for 32bit formats
+@@ -2662,7 +2662,6 @@ void __init intel_ds_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_DTES64))
+ 		return;
  
--uint64_t arch__user_reg_mask(void)
-+void arch__user_reg_mask(unsigned long *mask)
- {
--	return PERF_REGS_MASK;
-+	*(uint64_t *)mask = PERF_REGS_MASK;
- }
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 1974395492d7..6e71187d6a93 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1056,17 +1056,19 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
- 	if (param->record_mode == CALLCHAIN_DWARF) {
- 		if (!function) {
- 			const char *arch = perf_env__arch(evsel__env(evsel));
-+			uint64_t mask = 0;
+-	x86_pmu.bts  = boot_cpu_has(X86_FEATURE_BTS);
+ 	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
+ 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+ 	if (x86_pmu.version <= 4)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 46bbb503aca1..ac6743e392ad 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1673,7 +1673,7 @@ void intel_pmu_drain_pebs_buffer(void);
  
-+			arch__user_reg_mask((unsigned long *)&mask);
- 			evsel__set_sample_bit(evsel, REGS_USER);
- 			evsel__set_sample_bit(evsel, STACK_USER);
- 			if (opts->sample_user_regs &&
--			    DWARF_MINIMAL_REGS(arch) != arch__user_reg_mask()) {
-+			    DWARF_MINIMAL_REGS(arch) != mask) {
- 				attr->sample_regs_user |= DWARF_MINIMAL_REGS(arch);
- 				pr_warning("WARNING: The use of --call-graph=dwarf may require all the user registers, "
- 					   "specifying a subset with --user-regs may render DWARF unwinding unreliable, "
- 					   "so the minimal registers set (IP, SP) is explicitly forced.\n");
- 			} else {
--				attr->sample_regs_user |= arch__user_reg_mask();
-+				attr->sample_regs_user |= mask;
- 			}
- 			attr->sample_stack_user = param->dump_size;
- 			attr->exclude_callchain_user = 1;
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index cda1c620968e..3dcd8dc4f81b 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -16,7 +16,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	const struct sample_reg *r = NULL;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
--	uint64_t mask;
-+	uint64_t mask = 0;
+ void intel_pmu_store_pebs_lbrs(struct lbr_entry *lbr);
  
- 	if (unset)
- 		return 0;
-@@ -28,9 +28,9 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 		return -1;
+-void intel_ds_init(void);
++void intel_pebs_init(void);
  
- 	if (intr)
--		mask = arch__intr_reg_mask();
-+		arch__intr_reg_mask((unsigned long *)&mask);
- 	else
--		mask = arch__user_reg_mask();
-+		arch__user_reg_mask((unsigned long *)&mask);
- 
- 	/* str may be NULL in case no arg is passed to -I */
- 	if (str) {
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 44b90bbf2d07..7a96290fd1e6 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -11,14 +11,14 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
- 	return SDT_ARG_SKIP;
- }
- 
--uint64_t __weak arch__intr_reg_mask(void)
-+void __weak arch__intr_reg_mask(unsigned long *mask)
- {
--	return 0;
-+	*(uint64_t *)mask = 0;
- }
- 
--uint64_t __weak arch__user_reg_mask(void)
-+void __weak arch__user_reg_mask(unsigned long *mask)
- {
--	return 0;
-+	*(uint64_t *)mask = 0;
- }
- 
- static const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index f2d0736d65cc..316d280e5cd7 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -24,8 +24,8 @@ enum {
- };
- 
- int arch_sdt_arg_parse_op(char *old_op, char **new_op);
--uint64_t arch__intr_reg_mask(void);
--uint64_t arch__user_reg_mask(void);
-+void arch__intr_reg_mask(unsigned long *mask);
-+void arch__user_reg_mask(unsigned long *mask);
- const struct sample_reg *arch__sample_reg_masks(void);
- 
- const char *perf_reg_name(int id, const char *arch);
+ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
+ 				struct cpu_hw_events *cpuc,
 -- 
 2.40.1
 
