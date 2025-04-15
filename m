@@ -1,96 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABEA21171C;
-	Tue, 15 Apr 2025 06:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C140B23D2A2;
+	Tue, 15 Apr 2025 06:23:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698206; cv=none; b=E1jK+j22KUfxso3TJv2TAhLrYHUNqgENQbZSX7aDUKV5czqX8WY/AUjHRzop5ZvFYv+J6+HmxvG4aTR4NuIHOg58UDjQGPtgAiVqwNykbMq4N9458fg2IMXc1JJGVYXbEgn/FAjAlDZeKlg08f/58S73CLCCF0k8/u0uS6Eq2K8=
+	t=1744698236; cv=none; b=hhosgIAOhVbtAQXPFLToAcwkx9OecaVK985Vk3d5UnudbXGd9PdzfzwuGFBPnSSSdO6V84K2LRksGhR7m64pk4eW/9CCH4K+1Mt1uaTwLuMepeyk2cttWw4ybvZLUUmFw2GvOPAAlCcscJk1ir1qIa5EkmI235DU7jUfaU9LWdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698206; c=relaxed/simple;
-	bh=c7TaSe2LYpB4ZDOSpGdN1Qj/+Gj3ShV4vNKW7jjtFQE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rgD0o5g8ZUMaSu94KxRVFylq9xIgNtzHZHc3nqtBHH3/gBUkgPmN0rPWsx4Ycf7wnGlfcRZ50VEvxFoB0bAHR0zFxQM5LfaB6BRWbK9y9+jRuCF7Z77zsuOiFvv1I/9/hMokj886hJQmIaDsumY8HGJhiNZrvyBCprpObvkdW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RSgvb0VN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3U3DybJF; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744698236; c=relaxed/simple;
+	bh=E1sKRkbci1US+DMdi2tUPm4BVWPlTRs6RCIOV392Bh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gGH2b1U/ejQlyWc8a/AhnGeOmeLvBzeUZF0OUD6J+xdrsB3WJxrjpg2Kdv0bFTV7XykigCG12OeUaV7Hp41hQfaWBlN6vVgh5+CiuaB7jHR5DBrlsOq4Yq5rE9LMc6ncnAaHgR5hpGtnIGP4HRcNqD5suVlecHtsXz6CsRiQlaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imjuNOSK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RSgvb0VN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3U3DybJF"
-Date: Tue, 15 Apr 2025 08:23:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744698202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uKG4WTJy0TDLjBIU7XHiGKXcjUAjTuLwBXl8UqxVMWY=;
-	b=RSgvb0VNy18x+lLX69KHvLlHZ6JjmulAwQXxChoU1tZvG+yXGyucJVKtMOi+1bfiYQIX2b
-	0m8F5y5Pkc6dEzMpQTS9ITsKUhc+7f0g+xOg9Khmm1Q/A2Fjw6iC4aJ/GmFeTSEpfyYw8j
-	dt3oguYojAhZt7j8TUPyhAQkQsCooN1S5LqSiEkSLKEDwkGpYa7mpvBZytcAOSSxbi853M
-	4BHnpeoUYg3CtQSRJdbvj//dPgM9Q1RjzFns4aCQx/4G5ZcW6HWvm+MBichQ05fUy2RQQf
-	n8MQE+x6OfF9pLjWt7Ekf0OcHkIQkS4ycHJC+0pmnjMqEvtLYMZIUvpwIYgxpA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744698202;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uKG4WTJy0TDLjBIU7XHiGKXcjUAjTuLwBXl8UqxVMWY=;
-	b=3U3DybJFcMBeNJmKsj44yW6aAP0ytnABpExbl03ORaBForOgEXFBdX7BEElVlgqZ/3wFbl
-	BiB6N1smfm8kynDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
-	Aaron Lu <ziqianlu@bytedance.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Andreas Ziegler <ziegler.andreas@siemens.com>,
-	Felix Moessbauer <felix.moessbauer@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
- controller
-Message-ID: <20250415062320.bMvqQsQ4@linutronix.de>
-References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
- <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
- <c92290e0-f5db-49bd-ac51-d429133a224b@amd.com>
- <20250409121314.GA632990@bytedance>
- <3d13e35a-51bb-4057-8923-ebb280793351@siemens.com>
- <f2e2c74c-b15d-4185-a6ea-4a19eee02417@amd.com>
- <20250414150513.klU46xkw@linutronix.de>
- <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imjuNOSK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9587AC4CEDD;
+	Tue, 15 Apr 2025 06:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744698236;
+	bh=E1sKRkbci1US+DMdi2tUPm4BVWPlTRs6RCIOV392Bh8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=imjuNOSK+ePGCLJJwksDJKkhSBrGe8+YtLQJ3lZOCYhn4c6jKacm2L6+uj1I+9D4x
+	 Apru+E99dNZH2ywqi18Wc4UrVl3qYbzgDJZEY5NINiP2JGIuhmDv4mgDKvvd+op8lJ
+	 fllvSi3oiZ/afICuuAY9GSOCZntpa2f7SGi3I/6WW0xUTTRnxS0o++5THJ63Wcntxe
+	 Nfz5GHti/48aQ39HS6Y2VNiEkoy458H66uArbH9voB8PAuH0Z3zd7uhbu8Qji16rXM
+	 IZH2Tr5wT7oUR3i7HJxiZTzvNo8g/HrnCFlVeUUBEqECx80QszmV+PuJnCWLJg4l46
+	 VdP4Ftdf5rbLw==
+Message-ID: <075b347d-dac4-4b75-9c97-f2578bbfd279@kernel.org>
+Date: Tue, 15 Apr 2025 08:23:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] ARM: s3c/gpio: use new line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+ Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+ Gregory Clement <gregory.clement@bootlin.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
+ <20250407-gpiochip-set-rv-arm-v1-4-9e4a914c7fd4@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407-gpiochip-set-rv-arm-v1-4-9e4a914c7fd4@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-15 07:35:50 [+0200], Jan Kiszka wrote:
-> > On RT the read_lock() in the timer block, the write blocks, too. So
-> > every blocker on the lock is scheduled out until the reader is gone. On
-> > top of that, the reader gets RCU boosted with FIFO-1 by default to get
-> > out.
+On 07/04/2025 09:09, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> There is no boosting of the active readers on RT as there is no
-> information recorded about who is currently holding a read lock. This is
-> the whole point why rwlocks are hairy with RT, I thought.
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  arch/arm/mach-s3c/gpio-samsung.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+This was applied a week ago, but it is not in the next (next-20250414).
+Are you sure you feed linux-next with all your patches?
 
-Kind of, yes. PREEMPT_RT has by default RCU boosting enabled with
-SCHED_FIFO 1. If you acquire a readlock you start a RCU section. If you
-get stuck in a RCU section for too long then this boosting will take
-effect by making the task, within the RCU section, the owner of the
-boost-lock and the boosting task will try to acquire it. This is used to
-get SCHED_OTHER tasks out of the RCU section.
-But if a SCHED_FIFO task is on the CPU then this boosting will have to
-no effect because the scheduler will not switch to a task with lower
-priority.
-
-> Jan
-
-Sebastian
+Best regards,
+Krzysztof
