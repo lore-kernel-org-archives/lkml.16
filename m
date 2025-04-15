@@ -1,87 +1,134 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F7D204F73;
-	Tue, 15 Apr 2025 19:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDC22459DB;
+	Tue, 15 Apr 2025 19:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744502; cv=none; b=QQJ1+wO1gw+5rzvQobPAVNbUzSj44aFSuuHmyvVpdzSpKCmLVDCSpOfY5fDSQutFxsNmcuRZ5u20QKURlrWaYr4wg+IzIK5dCjDRBWA+72gZCkdEOX9xTgvsVBZii6Z7fkf6AI12S6tokCOdQ9GzkGumvC7s0pM08Qz/2G3fd0s=
+	t=1744744552; cv=none; b=HHZ2UTTnq/i0EiFWVVVj9t63pIDmv3szsBl3kldmVXq8P6pr1/2jAtUNS4w16zB6d/LsU1k6+F/L8MRAlybMkepgIdFYzQHLeekY1d7p1qp+2RM3gA4pZo2LSlMSusIW4mTJ9TO0CN49vg5q+AbCWQaphCYoOyGbtnejXM89xAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744502; c=relaxed/simple;
-	bh=z0xrkIkCd7ceRKWd4bCh9B7HSXmd44FG6cF+UxyLWp8=;
+	s=arc-20240116; t=1744744552; c=relaxed/simple;
+	bh=eKGcBCZiSyaXz8bCePdjpeSEK+/HAMbFNmEH2qJnTVM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GAEZZiX1jGK5bI7grUWTVlq6QErol33UVmyHWgQ69FYydBRIN+oKDBV4UKMnmfw1fE3NfopjdkZz5nAMLqJggpqmMoGFCZ4M8AyQDiLN+IZ4FnuDM/448tx7N2MHsyQlHcLci8bd0dzd1SKC54tN+2nJTP80q3tdXphK9PPQpfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHWKzUlV; arc=none smtp.client-ip=209.85.216.52
+	 To:Cc:Content-Type; b=ioQuJHAKzsz48TK7wwjgDR1eFEAfdX+9Fb4zzq80KtkX/mD6kccSI9Lb00kAMIMng+pL9NtiAS+XRWws1Vy1WQVWdmjIFm5BG0MNsCZYnVSKqGCWTFz/mFZ4pCcViERGwAKivw1/YZDg43rQG0ZnARvMJRdqRz2jAbzdKDB9r2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VSg1bQ21; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHWKzUlV"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so1034065a91.0;
-        Tue, 15 Apr 2025 12:15:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSg1bQ21"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-30363975406so1027187a91.0;
+        Tue, 15 Apr 2025 12:15:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744744500; x=1745349300; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744744549; x=1745349349; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ntkk2EuJ1XJRKx1RttSweaGGZM6MW37mEH+h/pvePak=;
-        b=BHWKzUlV1FeA6tUoEtyXkhWN0g7Exv4JNQ3T9aim110XuLjC0cEvuy49C4ZEW7J/In
-         eBrgwx+d5nPbjTdAK+0546zfEwoW9Q5XQE4RcQGO93CfT+gcpwMZBxfoxTZHUKei9JAJ
-         HE9mYh3TN1Ot1dC+nDWsBdhV/ed8crR4iczaxCIP398ZK400EHgK/7aTvSwEuexht9Ca
-         V8E+7IacVLiHb1Bajmpxkxn//luNPv/TFQdgLY6EXU4rp10MMRHfdYpVWxH5UWeUmaWk
-         /UKZuqZVdnwC2nU6z1YLU6uxNXyhl/aCjby7BTxMj/i9BZn16KbeqdEmz50oSMHQVIby
-         6Ogg==
+        bh=qbJK2C5+AfFNDsgY9EAbhSa8Mq5Om76GpM7Ore7Vos4=;
+        b=VSg1bQ21IgE2JaTBG+OKHLKdpKIMxenhoAM/elOBXCACEdf/9LP1erY7Au5oDO9fqA
+         eBx9L1LEIZzfSyJaHna1FP0V7J2PALd1eiwAk1foiKA/rm+awDyZzKnn679hWMHauwJZ
+         uiYGeBDiPA46M4p48ItJ22XyTfENW/fO3ORlKRgVC16uA2zG/SS66GttlN67gfwMMWVo
+         CAGh/zlcSllF8aAQVqCWWPuI9AWNRtGmqiR78sAuiAlVqe+wKGGqs8TxwpsjOhW3lMNn
+         ec4L0CmFzYwcky1RtKXyQuSPU6kUOvW+EoQsZv5jkYLhxylBPx45x+EmNBX/nzW7QkbU
+         DKdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744744500; x=1745349300;
+        d=1e100.net; s=20230601; t=1744744549; x=1745349349;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ntkk2EuJ1XJRKx1RttSweaGGZM6MW37mEH+h/pvePak=;
-        b=sW2gX0MX2UXSqfYknEXiTYGQX3CDi2esq1cRKwsjzNO8F2nW7b858gNi4rLQFtzFuH
-         0Rtz+s3rCnPoqZ1sld5zSP786jxh+8fttXgYr/gsALYNj02KK0GHIpE6cbCA7bAn+4lL
-         rfotgrIEw/aXiPQEy2bmb5rUq4vl7abdTeX0Aj3vyto9sMkFX69zrDNnYpJ/8pjFj0Qy
-         jisnYLwDY04s2zJaJk9N0heR1khYrR5VBHSqTCFdJ/i14uNQdbXZOiEV9voQ9Eg9Phh5
-         c2dwE1zZjEvm53VhqV0f10Dv+vnxWcpI9Jap6jDv/t1hRk9fvhTseCrSWiQVpYsmoVgh
-         YYKw==
-X-Forwarded-Encrypted: i=1; AJvYcCU14DNT1azAP/qTbuhea0UIfaTr2FOhQp0Kkk91dAGF2ijSr0iLMjC4MBpW/To7RnOaQlOlt08QvxPlPbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwytHnYxTCWhVXyHB4xApReBU2H517smuzbIRhBNyhxyCgkz14I
-	3fG7s/ZdhcxWjQ0hYAZvP0EjST+D1lTk8xStxiClS4bZeIFtTsvV7ZPWfCQv3jxjDkPdIM7ZcLV
-	RaVSNT0KhXR7jIhwcAkVedGGyJi8=
-X-Gm-Gg: ASbGncuYRzBE1JV2NELmR96A5PwoM/ZBH4XxqMxypeIr2nuEoi+wsaTCwu26TivsY4Z
-	EpnSSi9hhXI1UBq5iQHUsjurM4HmTa6P3r2iq/x8QR5VQPolhOEkRSbDfXHDfwBUrVr1tdxAyQA
-	WaWsGFHSWafx3CBd3IyaSKGA==
-X-Google-Smtp-Source: AGHT+IGc5DVYt2SE6BYaqtTqo6hk2/0tRd0JrYscIn68HrcFugnLC6Gj9XZ3iEbYFgiGu0SCjkXVZRFhjUt7k/6oerU=
-X-Received: by 2002:a17:90b:17c2:b0:306:e75e:dbc7 with SMTP id
- 98e67ed59e1d1-3085ed78171mr234636a91.0.1744744500072; Tue, 15 Apr 2025
- 12:15:00 -0700 (PDT)
+        bh=qbJK2C5+AfFNDsgY9EAbhSa8Mq5Om76GpM7Ore7Vos4=;
+        b=InloddaJ/Y6h1zgZVCmlbftbUR0TIE7pNPOzAYCLNygyNul7BFalMGOciRrNdPdmmI
+         ijMNMf+O69f0joiTHePs+IlJYXR6FDubv0mVLnnlzMLX83QSc1hYrnExEtU4SwN/0SnZ
+         5CL/rHlxQCEsd8wKvMYwH2DnyRTc2l5dI4etSsqOVG3lgE6zxQH7kRON/LNdKTVVwWlO
+         HqMVa+j9cnae0C6HEeVad2Wrae2MUnrsJcoumCWNbRcpiePWEJnItDY7jKkk4JrOVtbm
+         iM4tGPoQqrHKaE/z1qHueBpZBBM1EwuOrDm/di0n9Osb3miRlK8NPwRDg8knj4JOQaUa
+         Bk3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXVt02Hia/KXQAxE+zsOkmfRpS5PxnDkYLgHFUzgGjK4UscO8kM5jwEbzi/XXheJsNZakn9H+vOGqGw07M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwD/tlyfwNQDTJCVRgkewq8+V7piJkZu2YL1silIrZAGJ6JSNbt
+	0PRassLwUmfM0vASUZ+kaq4XSn8BSDW/gMJtAg1mUIaqVnuv5lQMkjFbAzsiLEX+e/VkzlBFaBX
+	dEnbWb9Tuhq3umJbPROnf5VbQXnE=
+X-Gm-Gg: ASbGncu7tFQIwyo8ifXxJXEY3zzVbfuS9A85w1CjgF7p/heytqQ9rkKahA2AUbA2WZS
+	y484+UHQZGvCFZMkclzMZLyseAtPfUPtbbXV5QkYvC6x2IFMRJRsLtDJcHfUbmOLvbc+9ZuXkGU
+	bO1BybhQstjn6HZFvnF4k2SA==
+X-Google-Smtp-Source: AGHT+IFuwOJh9/oDtUc4GGzilO/1X0RdNfS9Hfj1k598+hCPzZMGqERhaQEGeKiTPXn5X9Fr47Ba2Bs3FFRRY0RVqcs=
+X-Received: by 2002:a17:90b:4a0f:b0:2fe:b77a:2eba with SMTP id
+ 98e67ed59e1d1-3085ee961eemr198454a91.1.1744744549237; Tue, 15 Apr 2025
+ 12:15:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412005341.157150-1-fujita.tomonori@gmail.com>
-In-Reply-To: <20250412005341.157150-1-fujita.tomonori@gmail.com>
+References: <20250412000507.157000-1-fujita.tomonori@gmail.com>
+In-Reply-To: <20250412000507.157000-1-fujita.tomonori@gmail.com>
 From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 15 Apr 2025 21:14:47 +0200
-X-Gm-Features: ATxdqUHlXfvqgCSoo4-vySZAgrgL2xgqbfG1d1cB0y3EXvoKuokh17lk5we2yzg
-Message-ID: <CANiq72kKhkVRAmg26DNG=Q8-s_+zkz8jVe5MZa__9RPjRs7f6A@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: helpers: Remove volatile qualifier from io helpers
+Date: Tue, 15 Apr 2025 21:15:36 +0200
+X-Gm-Features: ATxdqUF45hkp-TzsttWupntsmJdeGyiSdWuWLL_yI55mB-xIxxoR5i5ttB-lo4A
+Message-ID: <CANiq72kKznot1wtHWknjeOBqbKyGvrBnDN5PRzxFh+bA4-qoJQ@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: helpers: Add dma_alloc_attrs() and dma_free_attrs()
 To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, richard@nod.at, anton.ivanov@cambridgegreys.com, 
-	johannes@sipsolutions.net, geert@linux-m68k.org, logang@deltatee.com, 
-	sbates@raithlin.com, dakr@kernel.org, dinguyen@kernel.org, arnd@arndb.de
+Cc: rust-for-linux@vger.kernel.org, abdiel.janulgue@gmail.com, dakr@kernel.org, 
+	daniel.almeida@collabora.com, robin.murphy@arm.com, a.hindborg@kernel.org, 
+	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	aliceryhl@google.com, tmgross@umich.edu, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 12, 2025 at 2:54=E2=80=AFAM FUJITA Tomonori
+On Sat, Apr 12, 2025 at 2:06=E2=80=AFAM FUJITA Tomonori
 <fujita.tomonori@gmail.com> wrote:
 >
-> Remove the `volatile` qualifier used with __iomem in helper functions
-> in io.c. These helper functions are just wrappers around the
-> corresponding accessors so they are unnecessary.
+> Add dma_alloc_attrs() and dma_free_attrs() helpers to fix a build
+> error when CONFIG_HAS_DMA is not enabled.
 >
-> This fixes the following UML build error with CONFIG_RUST enabled:
+> Note that when CONFIG_HAS_DMA is enabled, dma_alloc_attrs() and
+> dma_free_attrs() are included in both bindings_generated.rs and
+> bindings_helpers_generated.rs. The former takes precedence so behavior
+> remains unchanged in that case.
+>
+> This fixes the following build error on UML:
+>
+> error[E0425]: cannot find function `dma_alloc_attrs` in crate `bindings`
+>      --> rust/kernel/dma.rs:171:23
+>       |
+> 171   |               bindings::dma_alloc_attrs(
+>       |                         ^^^^^^^^^^^^^^^ help: a function with a s=
+imilar name exists: `dma_alloc_pages`
+>       |
+>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44568:=
+5
+>       |
+> 44568 | /     pub fn dma_alloc_pages(
+> 44569 | |         dev: *mut device,
+> 44570 | |         size: usize,
+> 44571 | |         dma_handle: *mut dma_addr_t,
+> 44572 | |         dir: dma_data_direction,
+> 44573 | |         gfp: gfp_t,
+> 44574 | |     ) -> *mut page;
+>       | |___________________- similarly named function `dma_alloc_pages` =
+defined here
+>
+> error[E0425]: cannot find function `dma_free_attrs` in crate `bindings`
+>      --> rust/kernel/dma.rs:293:23
+>       |
+> 293   |               bindings::dma_free_attrs(
+>       |                         ^^^^^^^^^^^^^^ help: a function with a si=
+milar name exists: `dma_free_pages`
+>       |
+>      ::: /home/fujita/build/um/rust/bindings/bindings_generated.rs:44577:=
+5
+>       |
+> 44577 | /     pub fn dma_free_pages(
+> 44578 | |         dev: *mut device,
+> 44579 | |         size: usize,
+> 44580 | |         page: *mut page,
+> 44581 | |         dma_handle: dma_addr_t,
+> 44582 | |         dir: dma_data_direction,
+> 44583 | |     );
+>       | |______- similarly named function `dma_free_pages` defined here
+>
+> Fixes: ad2907b4e308 ("rust: add dma coherent allocator abstraction")
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
 Applied to `rust-fixes` -- thanks everyone!
 
