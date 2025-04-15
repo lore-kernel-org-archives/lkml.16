@@ -1,96 +1,78 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35DC43146;
-	Tue, 15 Apr 2025 06:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627A619E7F9;
+	Tue, 15 Apr 2025 06:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698636; cv=none; b=Gz8VDw4cpTI+hq0d7FixyuG9pihd3y4qaiPoMcpelBPB1h2zqSG2vdU7Y7U6QgR/RnSy+evxXlFQiiH4V3FW4JvwF6GeXjJa+4Njxe3F+DVeXpZFO40nxwRRP8xILpwqtGgD3PjSgxhOwom0ctA4HeBDAWcBARmjW+7No8axZ80=
+	t=1744698659; cv=none; b=dHRafh9hXU/l4TsrDLhwv7UIFepMeIcUCnpWwZIz6QJp+iPSsJEihaUtL0oD26fCcaE1qG87P9I0EDNKaX80UV1NZlD1GZMKn2BPUsZJ6qGZtbNsdHmEX2QGPO5T2QIwOzIIPZ0fZdt7mUaptzK2Juk33CYXSUBWeQGQPXanL+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698636; c=relaxed/simple;
-	bh=3BcBpbU52NP44OabVVxGsBGaorecBMMhtISxrLe1kzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kbMhCj4ErBXaS5VszRy32Z9XM0E/v1gNQn1s/Kh4XFyvV0rvJlTpcV8Kg38yxmgFpmJ32n7Qg2tYNf8DaSViHqVskWjboS1FwMpjKgEvJE0OUlYBDnHFh+V8m7D4AhYms12pIAFBY7revX+IxrODcczSK0cJ7yO7hvZSxYx7n0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JA0xqlSD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744698659; c=relaxed/simple;
+	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sKnugQSsKU6C837dCK7y4EQfOL2p8VXXn6X2t3twKLIhZHhzKNGv6QeQoZaNG/QWKtgBB2+YiLOVDrXzNaDoiDBtKeejJh+bGtvvcEz8IQ5Ag/9x7/Iz+s7lo6wzUj9wcDOlXsd9iRtAgUvPIdoOviDDo1BNkK6zDaDLRi8D6C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J7xE2MdH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Heuai6nt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JA0xqlSD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744698630;
-	bh=LloOc28DKM3ntCG/+mzTEMz6FJJgHOQPbng/AEZj4WE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=JA0xqlSDnzUxBgir6xP/pm0zVbAPi9+oaYzRTT3hSdwSAcGTwMLWTlJKDEAkjjaxi
-	 6mzhhSXgbS/uyMLKtAR4GaNQAeR6unZPfZ/zKTijdAk9HUtYUWhIZlE9oL9azFTH7r
-	 01R0nDgHFO3LEAbV7UeLLA14nMA6bCOSiLESloxAjPlgcH4R2vQurx0tMCg4majFPr
-	 8YLPGjfBXcCOJ++EFY0JZYCMEVJauD4WujkD5kk/WXM+QzcHHKmdAT96VFv+LPVQ0N
-	 2K4m3ruDICJe1Wtcc0j+gExRpihxp1g665UjrIdFUAelXJuKWpmw0P9HqF99xMp28g
-	 vCVo9diNV3igA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZcDmk0X45z4xN0;
-	Tue, 15 Apr 2025 16:30:30 +1000 (AEST)
-Date: Tue, 15 Apr 2025 16:30:29 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, "
- =?UTF-8?B?TsOtY29sYXM=?= F. R. A. Prado" <nfraprado@collabora.com>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the mediatek tree
-Message-ID: <20250415163029.4714116b@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J7xE2MdH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Heuai6nt"
+Date: Tue, 15 Apr 2025 08:30:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744698656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
+	b=J7xE2MdHqfbP937+Ww4wixg/L9FtvnUCY3IgLnh+pagK1hPayeHnGws1e+3HRb2rxdtZ/h
+	xUvQB1b689ADiCmV0Apmyx3PO0Xplrczmf0iRBGZyX9ztfnUjQM94joAK2HkXmb0d0CEMn
+	E7Uhq8lkT3ksAOu/IBd3zRxelazvvr2rZ6782h3MmIaCOWb7afO0EwpbR+mZkWcUB8AuzW
+	m8HOBnj01+yq0pWY8LHJCxmddaw6JGraDdPwjIOMTyuPyiGbtT9mr4/LffoaDfFU4WuacG
+	TqUL4WCi22ZwMgfZiDHPnG0XKt1KZvZgibnFnbCP3fMfIkayyq412AjAOqBKQQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744698656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
+	b=Heuai6ntnKtatI5XsqHCHtmvLMSvI1cTyDEUJtoddyiOnXDRyKjhIzqhYBrtrHbCbVY/5p
+	DWUkNrIGZFQccwDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Waiman Long <llong@redhat.com>,
+	linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
+Message-ID: <20250415063054.jerbqGF8@linutronix.de>
+References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
+ <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz>
+ <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
+ <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
+ <CAGj-7pXRmG2D+5=yj-5uuciiNccWws6erBg_hSm9S6coEhN+3Q@mail.gmail.com>
+ <esdt7fygdyzxxlb7ql6qzwqydzokmfi4uxkfwvxiqedff5wnxl@n34muduktzou>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7=087METaHSg0rz9upp.geF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <esdt7fygdyzxxlb7ql6qzwqydzokmfi4uxkfwvxiqedff5wnxl@n34muduktzou>
 
---Sig_/7=087METaHSg0rz9upp.geF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2025-04-14 10:55:31 [-0700], Shakeel Butt wrote:
+> Vlastimil & Sebastian, if you don't have a strong opinion/push-back on
+> this patch then I will keep it as is. However I am planning to rework
+> the memcg stats (& vmstats) to see if I can use dedicated local_lock for
+> them and able to modify them in any context.
 
-Hi all,
+Please don't use local_irq_save().
 
-After merging the mediatek tree, today's linux-next build (arm64
-defconfig) failed like this:
-
-arch/arm64/boot/dts/mediatek/mt8188.dtsi:465.15-468.4: ERROR (phandle_refer=
-ences): /sound: Reference to non-existent node or label "accdet"
-
-  also defined at arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi:106=
-3.8-1094.3
-ERROR: Input tree has errors, aborting (use -f to force output)
-
-Caused by commit
-
-  691712b065d3 ("arm64: dts: mediatek: mt8390-genio-common: Add jack detect=
-ion with accdet")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/7=087METaHSg0rz9upp.geF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf9/QUACgkQAVBC80lX
-0Gyb6gf/R2IV/+ZF7lHs7AV5TEVCj97Wn4ln74Y7xM58rpfMjAYKp5OlSOV+g+Bl
-zsjsTBeOG7V7kpfiWc0Th6nL7izQkiQEC9e6q4f29fQgu+MqAbEUDUzXRnFXAaav
-L6Jn88SLcB3s+fgtCY7n6iUxrgdFV4hw0vGOP0bPFrmnZp3+ZKNsPjqCg1I9tAz6
-exL8JncBQV8F2lk4aMMZnN/qZGDYsojOHHfPxBXQygjklVBonYGRz4N7qVe/pzFh
-wNiMX8WNc/DhjyF0X4EEnTDAOjjoTcAMPSXnT4KOrqOtxMMUhCwioavQFiZ2v1x4
-zDYZsS+hhQIZKFubTc7hEqCbQGzxVQ==
-=qasp
------END PGP SIGNATURE-----
-
---Sig_/7=087METaHSg0rz9upp.geF--
+Sebastian
