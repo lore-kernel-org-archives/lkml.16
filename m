@@ -1,87 +1,111 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53AB12973D2
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4231C6FF5;
+	Tue, 15 Apr 2025 13:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723190; cv=none; b=SsSR8YR3MfVLa0Q2Km1jL7UBdtjAvOiyCkawjWWzWMqNjcZrqdhU7SGCbJK4IvFDe10dUndYvJKqwPWHIVyuGlEE9+qZYXllaNic2lyxBCc/4yjE2Ftc0oQLfi0pjEBHXDjlAm6A/XBd13EwLi2owP9EP6AE3e1w/n+0WniPjx0=
+	t=1744723247; cv=none; b=i4jDBQ9tq6RSv4PUUjj/7S3N+YDZ+aWET3oWPqQsa4MsAoVC87MVYaP5J7s+K1iy38w48+fJEdAub3Fsbenoi08iLTztzcuyKKGfmmpiPNkJSuOHtFiHUmbRD1u6gIcOiUgvioO6WyGJGTBPrY+9hINAnD8IvYPYYrUw0lA/gyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723190; c=relaxed/simple;
-	bh=jHpDjEbRR/e0hfSMox+5LrnIlZIkGZMycfuhgzIizrs=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EjrY6qKsx/p43GI2HgVqq3Xmglm77s0Y5WL4Az647TnBdo94j3lHO2XkKBEDzrH2stJjPsW4muzvRcgUAY3R4de/fp4kQVCFndtsGquvV9AUxCrdUOB3El1rGKpR+FGP0uLOzaYfnFZeB0GOxXfYQbbs7mJn7aEa8/xxz+7N1rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JOm+tc7l; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744723247; c=relaxed/simple;
+	bh=0COEkxB+APvNdF+miKKyOTbBKTDK5TdhHuMca6Jb0OQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ngV3YwHzmFhJskX6m0z24TkP20TkqlYZlCNuJSfPnPi7fqREk+XRRFjSZjzrlRjXeILbI7RSXWwGPPK64vEMn90kEGlD2QjX39oqr8N65vQ0UDJMvhxHDmL+XQyVHkevAmTekUh6+vl0RkyRpIVCIpXWHob2gZ5Mv9pm0rZz5yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xlH8rjaF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JOm+tc7l"
-Message-ID: <8f72b42e-c38d-45fd-b04d-c2b48a809d0c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744723187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZLSozCorBBEWbCogUwnoTzrWlqCaGFlvu0gweRfCrow=;
-	b=JOm+tc7lz9LZ6iM6+e0XfHi2diggzB6r/LJPLb2Vt1uEcdtUrE69EkRmCJ+YcRCLDgnK1p
-	kc7Pv9xnaosXzQdCamVpC6X4D9V2Pqk9tqVvrydTJqxWUv5SXOB7Zx2XlzHG1cfbLs5EiK
-	oxafoQuowdcOlbUBj+8PkuwJAqTs3Ag=
-Date: Tue, 15 Apr 2025 18:48:53 +0530
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xlH8rjaF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=zwXoAPOSd7TPYyFwNb3wZwJZIOBKCyO+D+dc+pl8JG0=; b=xlH8rjaFC+RAnQBZCoJmZEEd0E
+	D24kM63bpE+zT98wgG3mJZJIgEhEmxpiIVkYqIai0Gkuqv+z5hDasP9a7SmjGc5rNDr8V0jh5D81O
+	wPKei3YG3MRZttrcOKTXxzyYFNbcxuljK4qjvy2NaKNqo/yDE1FouImJPkQRFRM0Ff5E=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4gDE-009RsY-Ta; Tue, 15 Apr 2025 15:20:28 +0200
+Date: Tue, 15 Apr 2025 15:20:28 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>,
+	Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+Message-ID: <9d73f6ac-9fee-446b-b011-e664a7311eca@lunn.ch>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: Re: [PATCH v3 09/17] drm/bridge: cdns-dsi: Drop checks that shouldn't
- be in .mode_valid()
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jayesh Choudhary <j-choudhary@ti.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>
-References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
- <20250414-cdns-dsi-impro-v3-9-4e52551d4f07@ideasonboard.com>
-Content-Language: en-US
-In-Reply-To: <20250414-cdns-dsi-impro-v3-9-4e52551d4f07@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
 
+> +  **UNCOMMENTED_RGMII_MODE**
+> +    Historially, the RGMII PHY modes specified in Device Trees have been
+> +    used inconsistently, often referring to the usage of delays on the PHY
+> +    side rather than describing the board.
+> +
+> +    PHY modes "rgmii", "rgmii-rxid" and "rgmii-txid" modes require the clock
+> +    signal to be delayed on the PCB; this unusual configuration should be
+> +    described in a comment. If they are not (meaning that the delay is realized
+> +    internally in the MAC or PHY), "rgmii-id" is the correct PHY mode.
 
-On 14/04/25 16:41, Tomi Valkeinen wrote:
-> The docs say about mode_valid():
-> 
-> "it is not allowed to look at anything else but the passed-in mode, and
-> validate it against configuration-invariant hardware constraints"
-> 
-> We're doing a lot more than just looking at the mode. The main issue
-> here is that we're doing checks based on the pixel clock, before we know
-> what the pixel clock from the crtc actually is.
-> 
-> So, drop the cdns_dsi_check_conf() call from .mode_valid().
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
-> 
+It is unclear to me how much ctx_has_comment() will return. Maybe
+include an example here of how it should look. I'm assuming:
 
-Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+/* RGMII delays added via PCB traces */
+&enet2 {
+    phy-mode = "rgmii";
+    status = "okay";
 
---
-Regards
-Aradhya
+fails, but
 
+&enet2 {
+    /* RGMII delays added via PCB traces */
+    phy-mode = "rgmii";
+    status = "okay";
+
+passes?
+
+>  
+>  Commit message
+>  --------------
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 784912f570e9d..57fcbd4b63ede 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3735,6 +3735,17 @@ sub process {
+>  			}
+>  		}
+>  
+> +# Check for RGMII phy-mode with delay on PCB
+> +		if ($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*(phy-mode|phy-connection-type)\s*=\s*"/ &&
+
+I don't grok perl. Is this only looking a dtsi files? .dts files
+should also be checked.
+
+Thanks for working on this, it will be very useful.
+
+	Andrew
