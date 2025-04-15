@@ -1,180 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909CC275101
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D9F1B4248
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707613; cv=none; b=TM4Hx9AtmWCQcc7xSuuhGNHVwjyMSZr4Qw7mqv1huKrw23WS4DLkxWLnKTSendcN/bRAj+9iXdLWDEzfaml1J+4GKJckfs6mLZ4+qMCWd2lyzO+jpYyXmhRXLavuev/xCHJVFD49RLd26TQ6IBzdko3X7HVqErBnFZ18XZr3mJo=
+	t=1744707701; cv=none; b=pFDyaLDB/zQmY+s1TipXABYebEkwnRgCbd9U3SfR6X7X5wjYWyo9yPeuauMrGn4Ns2aik3oOfz8Tu9AzJO46XmknY4qiNv5eeAGz9vSJ1sJwMa3/2/UclSsWSI1GEi2jDeyBd23z3YMhzoCI1Uvc+uSmE/RX+KvxtROs6iI/9i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707613; c=relaxed/simple;
-	bh=xBWPCSVDb/jNFzNj7wFwHu6Gc3RMfVNi+DfW2HhL7rE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TAH0A431fB1mKVAHDqCdn/mk+EBZXLfah42mRcIxg//ZyTRQZFkhkrs2PAa1YoTR7/FfpMpNVaY1rGuH4jbHiAZN5QgHAf6t0Vvt9HhIUpo1+P10kvLoYE1UIm94A+zi4DZQ8cj4CowKXljW8FA0j+5OmKfz9phR0sE+WQtO8ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ye6yH+/Y; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744707701; c=relaxed/simple;
+	bh=fQ7T/qUhM3lDIvKK1VLf3X6MBV4DNYEWZWyZsblYqH8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i3NEf864Mov7+g5N5dHirWTfiEDw/cXrDBwn+0GhKzw67ar+BHTvodBoBsol1bIaspJ041ebTAmbHxFh+lZ9GIkU0IJRDbTw5CvUtFry7GycCXABjOVaLxibIijfQiaOPUVZfXggKUhzfy4+gRyZMm5ou8jTiMhmk4D31FYqBRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rKgWT49b; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ye6yH+/Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744707612; x=1776243612;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xBWPCSVDb/jNFzNj7wFwHu6Gc3RMfVNi+DfW2HhL7rE=;
-  b=Ye6yH+/YIHI36CGViID5bH5FXiK/foZAJ7REGqfa67j73mCi0t2bKIOi
-   IZFSqqZYkioJGfPjg41mNxtCtaWypoNRGUbXZXKrp5y+/p2vaOhv9z7uh
-   jYqUr3lq/GLvQz5o5FpidCW01OBjwbSPe3HixnKflJWXRSD/EgrSPaEdv
-   NToPWJRp7uDJXymGTw0WiQEofnM9dLHAMV1TM6CJy2ZlV8JesJZVsrR4i
-   wv86KubRWVhqSW3TSabk0haNg9qoX6RKvkA7bkFPa8C8DtfQ2AFFsZUGB
-   dn+Dak/kV8UZYm1cGzAmOK12MhgeTFkMjCqzUoaBQauUNsRcI8Fpaq2Zz
-   w==;
-X-CSE-ConnectionGUID: bDqyp6+DQPOYmrlaq9rViQ==
-X-CSE-MsgGUID: OTEhnD+8TWCNQxRDRE/CNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56843162"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56843162"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:59:02 -0700
-X-CSE-ConnectionGUID: 1DbjZ8d8TGi5A5RUX5ewfw==
-X-CSE-MsgGUID: 05h2elAbSgKOV2ofHA7y4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="134165879"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP; 15 Apr 2025 01:58:59 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 467BB17B; Tue, 15 Apr 2025 11:58:58 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] lockdep: Move hlock_equal() to the respective ifdeffery
-Date: Tue, 15 Apr 2025 11:58:56 +0300
-Message-ID: <20250415085857.495543-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rKgWT49b"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so43082225e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744707698; x=1745312498; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ATQ2WAeqp0anILpiDAuFRK6bq5Jh77B0cEqGlrXYkoY=;
+        b=rKgWT49bM4AyxpnOnD5JudJ4pidZxOQ1PLF1AfmqMXTzHEgkwMt3xe9Tj8rX5o2i+P
+         3/OmbWsjbHNmzuaDZrKQDc7XjRB8ko9EGf/ibgyR3Z7R6XrpGrnRLDfpHEg9vl07+o0l
+         JSkJ25skgVoUBGVTwJeJMhQEwWlgnLnamyU81D86AAIXfM1nlwMOoOdr3m2NM6p5mOzs
+         5WYO2a5+w2deGOsibBJxYRvGuss164TIKzyNKJVqgBUDSTxgifd/UpSXki8/DfXAGuOK
+         /ESPhX3uA+ub1yFot50p/GQkxiDWN2MKoHNMMKcStiY02p+mBTfRJQuuSvLJWZFT2lWa
+         L7sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744707698; x=1745312498;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ATQ2WAeqp0anILpiDAuFRK6bq5Jh77B0cEqGlrXYkoY=;
+        b=dLaAV2tgN/nxFzjDrID+mgbSDC6REYxGg4Nq7jm5JMbdpTtzvuXOT0WrcOiLs9yuUu
+         EW7UfFbM+aWGPWQ4E6ZxewsT8fjnEQqVL2nGIfz6vp62IOjV0+Q4bt7bT0aerMzp6twg
+         NvKxuPNvWBKkaz7+ALwVXKEh7i/lNfrxpq09ZPzlsRf4xO/+jQgrEsdOLKi9rZNdW7t/
+         MRONLIM5XKL35Vg6ia4JOqiOw2Ej2uGr0HWhNEVUm5jQ3cc+Hv8IBlEImYBvpnEAvCI+
+         jXDncyyWDGJ2WcerDdHR0vmh72VU+Exwut/HTPY6NRkuSSBODp9K0r296k6oNN/QbNFs
+         hMBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbmqO9++tkwgDNgw3tX78GmTTSBWkokqNKVNsogGJjsSY/zYW96GcEKQQGxZSvURea+dKwR3nt3xjt0q4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEYABgQ6j35uNR2vmJsmBO+55P7uOleI0KnS0YRW9IGpl7F8Ub
+	cPCpRgc8tO1tUhMAHxqRHYn+J8eZqWOLf/3m+DLAC8MEBcoZcFbAElRM6R2QWHYzfSZF6Wtuk+q
+	iMBzjPHKzpJPbqw==
+X-Google-Smtp-Source: AGHT+IFmFs/nlsx2QPkRnmhjLHp1bf+lNep9itSd3yUo4cUQIyVWVraBimHdDf8+ne/yfkGfhA9ATJZ9DuVeWog=
+X-Received: from wmbgz6.prod.google.com ([2002:a05:600c:8886:b0:43c:f517:ac4e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1389:b0:43c:f75a:eb54 with SMTP id 5b1f17b1804b1-43f3a93d3e0mr126794805e9.13.1744707698153;
+ Tue, 15 Apr 2025 02:01:38 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:01:35 +0000
+In-Reply-To: <Z_1QzTdV8mHJYdQ6@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com> <Z_1QzTdV8mHJYdQ6@cassiopeiae>
+Message-ID: <Z_4gb8ZAlbfhobgW@google.com>
+Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-When hlock_equal() is unused, it prevents kernel builds with clang,
-`make W=1` and CONFIG_WERROR=y, CONFIG_LOCKDEP=y and
-CONFIG_LOCKDEP_SMALL=n:
+On Mon, Apr 14, 2025 at 08:15:41PM +0200, Danilo Krummrich wrote:
+> On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
+> > 
+> > +/// An owned kernel work queue.
+> 
+> I'd suggest to document that dropping an OwnedQueue will wait for pending work.
+> 
+> Additionally, given that you're about to implement delayed work as well, we
+> should also mention that destroy_workqueue() currently does not cover waiting
+> for delayed work *before* it is scheduled and hence may cause WARN() splats or
+> even UAF bugs.
 
-  lockdep.c:2005:20: error: unused function 'hlock_equal' [-Werror,-Wunused-function]
+Ah, that's a problem :(
 
-Fix this by moving the function to the respective existing ifdeffery
-for its the only user.
+Can we make destroy_workqueue() wait for delayed items too? And/or have
+a variant of it that does so? I'm not sure what is best to do here...
 
-See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-inline functions for W=1 build").
-
-Fixes: 68e305678583 ("lockdep: Adjust check_redundant() for recursive read change")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/locking/lockdep.c | 70 ++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 35 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 58d78a33ac65..546e92827de4 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1976,41 +1976,6 @@ print_circular_bug_header(struct lock_list *entry, unsigned int depth,
- 	print_circular_bug_entry(entry, depth);
- }
- 
--/*
-- * We are about to add A -> B into the dependency graph, and in __bfs() a
-- * strong dependency path A -> .. -> B is found: hlock_class equals
-- * entry->class.
-- *
-- * If A -> .. -> B can replace A -> B in any __bfs() search (means the former
-- * is _stronger_ than or equal to the latter), we consider A -> B as redundant.
-- * For example if A -> .. -> B is -(EN)-> (i.e. A -(E*)-> .. -(*N)-> B), and A
-- * -> B is -(ER)-> or -(EN)->, then we don't need to add A -> B into the
-- * dependency graph, as any strong path ..-> A -> B ->.. we can get with
-- * having dependency A -> B, we could already get a equivalent path ..-> A ->
-- * .. -> B -> .. with A -> .. -> B. Therefore A -> B is redundant.
-- *
-- * We need to make sure both the start and the end of A -> .. -> B is not
-- * weaker than A -> B. For the start part, please see the comment in
-- * check_redundant(). For the end part, we need:
-- *
-- * Either
-- *
-- *     a) A -> B is -(*R)-> (everything is not weaker than that)
-- *
-- * or
-- *
-- *     b) A -> .. -> B is -(*N)-> (nothing is stronger than this)
-- *
-- */
--static inline bool hlock_equal(struct lock_list *entry, void *data)
--{
--	struct held_lock *hlock = (struct held_lock *)data;
--
--	return hlock_class(hlock) == entry->class && /* Found A -> .. -> B */
--	       (hlock->read == 2 ||  /* A -> B is -(*R)-> */
--		!entry->only_xr); /* A -> .. -> B is -(*N)-> */
--}
--
- /*
-  * We are about to add B -> A into the dependency graph, and in __bfs() a
-  * strong dependency path A -> .. -> B is found: hlock_class equals
-@@ -2915,6 +2880,41 @@ static inline bool usage_skip(struct lock_list *entry, void *mask)
- #endif /* CONFIG_TRACE_IRQFLAGS */
- 
- #ifdef CONFIG_LOCKDEP_SMALL
-+/*
-+ * We are about to add A -> B into the dependency graph, and in __bfs() a
-+ * strong dependency path A -> .. -> B is found: hlock_class equals
-+ * entry->class.
-+ *
-+ * If A -> .. -> B can replace A -> B in any __bfs() search (means the former
-+ * is _stronger_ than or equal to the latter), we consider A -> B as redundant.
-+ * For example if A -> .. -> B is -(EN)-> (i.e. A -(E*)-> .. -(*N)-> B), and A
-+ * -> B is -(ER)-> or -(EN)->, then we don't need to add A -> B into the
-+ * dependency graph, as any strong path ..-> A -> B ->.. we can get with
-+ * having dependency A -> B, we could already get a equivalent path ..-> A ->
-+ * .. -> B -> .. with A -> .. -> B. Therefore A -> B is redundant.
-+ *
-+ * We need to make sure both the start and the end of A -> .. -> B is not
-+ * weaker than A -> B. For the start part, please see the comment in
-+ * check_redundant(). For the end part, we need:
-+ *
-+ * Either
-+ *
-+ *     a) A -> B is -(*R)-> (everything is not weaker than that)
-+ *
-+ * or
-+ *
-+ *     b) A -> .. -> B is -(*N)-> (nothing is stronger than this)
-+ *
-+ */
-+static inline bool hlock_equal(struct lock_list *entry, void *data)
-+{
-+	struct held_lock *hlock = (struct held_lock *)data;
-+
-+	return hlock_class(hlock) == entry->class && /* Found A -> .. -> B */
-+	       (hlock->read == 2 ||  /* A -> B is -(*R)-> */
-+		!entry->only_xr); /* A -> .. -> B is -(*N)-> */
-+}
-+
- /*
-  * Check that the dependency graph starting at <src> can lead to
-  * <target> or not. If it can, <src> -> <target> dependency is already
--- 
-2.47.2
-
+Alice
