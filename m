@@ -1,143 +1,129 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEDA219A70
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77792DFA24
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744690984; cv=none; b=B+5X1yf2m47FQCy6ihH8WjL3pa9BlM1srF7PIb2IMnMpYdsOCoqRgiwdWIjOMd9uwwBlYT+2XpNekiZHdGKWFGwVOrxjssqkhYfi5N2o9X5cH/yb+Dpc6ssabpnQkDzsGuBEEa8A/z+G7CWxKS8Wxb7PnJWLUJ9CkgJJgKS4HvM=
+	t=1744691114; cv=none; b=K5p/3N7M05dSyoGVkzENElZMPWJPw3KpogtyXyvF09dTFpmhA2Xu56wnVnl2MjNQCazQxWpuHllNToX9LR2hgmtQB/PpydTQdStwL4YdHd0KCFwotn+AcMAW15qNXZUiIWsVjy72B2dnCuY3hINKckANVABs3xTs89dXDrVMhsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744690984; c=relaxed/simple;
-	bh=1qgyXPTe8cPcaxUv+bBjP4DpTNp5myZOf+LMbrL+u38=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B/SS97kkjc1oPwd5KNeuDFLPN6Lqmbpyr1gzdXL0WSn94kbfIK2MQ3ICNc9UULuwkQR0TCRYBkTgHU/v4r/hnhIKYx6Ue1eV3eubojjW4qSxq6mMO/nSKw4/fcydyhX61uhKMa/sH18gnOY6Dilpt0AKgHhiuYEZapOQCqYby1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VMFdCWK5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744691114; c=relaxed/simple;
+	bh=JsNXqqSwMw4cbXBnHCpVE3NAfyDEwYeigxTufXIfXRY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=eXcsrGOLi7uIf1s06WIxkb+LVz8yRc1yuk/6WKP7lFwX1rWCb6rNvc7Ut98PhjBaCGoTlIm3gKw58PYZv8UE4WcewT5sqhvYrTh2UKMBMG2qJaIryyVd1K9UYjIymfoxiqvAvXi3q/EeNy2PchgVeol5HrhwqwTv2wNYRR+izRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kS5SD9ZP; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VMFdCWK5"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F15X2X004798
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:23:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8T7lOJ76Xmdt352Zaj8TCw/f2lloVkkzYTw7CuNrRlY=; b=VMFdCWK5656p02xa
-	t8by6aDEFplIvgljBTnO5nxLyuwAEMINNKTOaX8ThHCilmI84FcY8vWtc4TeP1LZ
-	oyFiEw37e8Ips8UyQNommW4u9ZjXPqPhPh8vMhiEvhI51NX6TV+zrtULOKm70sPc
-	aq34TUJGKrQ74/RTqeGXFudPMcFNppOAVFryyX+tZJBmRDslczGWBdB5C7eXQehv
-	gmEPHN+3gyN7gycncZpyntKwcEAJBN5ctQtZqlTxW1M7JsqMHUIN3BZw9CCmkXFg
-	5KFf9ilDnM5K7cpPMweVetJjzEse9vLx/kKTCjk5x8cSC0UBpXHmMdmw6laA1ly6
-	S8HHkg==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhbppfb2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:23:02 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3032ea03448so4730750a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 21:23:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744690981; x=1745295781;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8T7lOJ76Xmdt352Zaj8TCw/f2lloVkkzYTw7CuNrRlY=;
-        b=KtReZ+Od08N45eNI83OW0zC2wU2UiJUe1h88oK9KU4hJyU5eNXBhDYwCmtwD932rVH
-         vyYjxH/1V/x1LumAWCkBCFUrZ4Ewser6I0U5DGjCaiJoaKIQ+Pu31H/BHTSq1YhpPCM2
-         GdVetLkAuAu1tI5XS1plCdJR72gXFfHgzycA53Wc+FEBzFaTYyGLfEnyfy/ylFcbIO2Z
-         h+xsi3HJERg51j8IL9DA0UZof2zi7i7KAhD5Zorb/7+KkiMFiqfJ7GIjARps2mTua74d
-         lmtBTnUejuaY2q2rUpfFl5yxKBXhUv2tvv1xlGoW9edpGQMjSOGuYFbGXNX6JR5IH4iF
-         9Sjg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5R6AxKkoXz08giZxg6iRXiohooK5B0ZGWUxNKXVpNDKUhNnhmHupt+BPAImAMKbrrr5I0ot5yT42zyk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaSU1exBZPaM+cqGzzlYDgufalQrbUqpTq4kMW9CBp1WDXkG8p
-	R4zfxQIinm4917bYfuZ9jrS/Ikw2JRG63iMIPAV7XinQ/9QF7hZGPdVg/kRt5POOqgDgVivZrEL
-	xFv8TIY2WVmysWKjfhUlu2RGUSZS7YFiw/3y2wsPmhqBaMHZZ+SSlf3mnd8EzeYA=
-X-Gm-Gg: ASbGncupgdAthxh+Otp/FZwvTxQBbAPuE9NxDQJbh0tfXjPzoQLw7yO8MNPcJZEPaxL
-	CFE+je5xJb98C3hn39drwcDavYabLIcMt2TmlBn2KjRHAUYa6q2AD0YHVu5y307KfjkvZRrHQjT
-	rIvUb912FgbH7sbZE60q8Cz+FDoT8KP592BcvpR320Y1JAZTEWowRlhYAvgJgCMPHK1p4stg4H6
-	IFecwbtk/FiML91eZ9iIpajqnc4OmeyKG8zboBjX6OkTi0EqMvFpO+c7qFRfVXgE332YhMiftRt
-	VmXXbqC/ztRgbM0fGJzLPDvRK1sEwyg6FmTpVq8i7+ldWxvvpY7b/Za/AM9R2uVf8Bbv/LIpIIH
-	1XFcJjmVjXaW/fdIxCzkM7YY7dg0MBGRBXo7CxvgDhgShbv0=
-X-Received: by 2002:a17:90b:254c:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-308235c7f7bmr26548448a91.0.1744690981279;
-        Mon, 14 Apr 2025 21:23:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3+lFYQm1Lb3iNLP+M6nJSx9YN29FsGYZdIHS1UCct9ZZj2wAMP0FIRD3AbVju5FMgqNuH1A==
-X-Received: by 2002:a17:90b:254c:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-308235c7f7bmr26548412a91.0.1744690980844;
-        Mon, 14 Apr 2025 21:23:00 -0700 (PDT)
-Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb5047sm107381865ad.170.2025.04.14.21.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 21:23:00 -0700 (PDT)
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Date: Tue, 15 Apr 2025 09:52:51 +0530
-Subject: [PATCH v3 2/2] phy: qcom-qusb2: reuse the IPQ6018 settings for
- IPQ5424
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kS5SD9ZP"
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250415042503epoutp01dd37a062bc39fd00817440fe87c8691a~2Y1Cjkc-B1759717597epoutp01V
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250415042503epoutp01dd37a062bc39fd00817440fe87c8691a~2Y1Cjkc-B1759717597epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744691103;
+	bh=hB3jACYTzSD2o23SD0z+VuvGY7L3pnS0a/THqiSfDrs=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=kS5SD9ZPgh0gkMMQUS2D/oN21G9Voy/pUJycx1omc0UxQI4rXoHO+oxCEjZfPsVJ0
+	 O9kwyuGHO3fuo51vRm94nTvthnjjOh4fGd2aOna9EcVLOBmR6dl+KhqehMmdOnZt6Q
+	 r2Cs17+VxehqSSCxgpp2sVr7qQlaTp0XkIBy8kow=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250415042502epcas1p4b472cff49569b89957918ec584980af9~2Y1B7QGBE0726507265epcas1p4s;
+	Tue, 15 Apr 2025 04:25:02 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4Zc9zy6Z5vz6B9mG; Tue, 15 Apr
+	2025 04:25:02 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c~2WXGUleHJ0256102561epcas1p4Y;
+	Tue, 15 Apr 2025 01:24:10 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250415012409epsmtrp2b806165f79420521fce5476f72ab69b6~2WXGTyBVw2483324833epsmtrp2d;
+	Tue, 15 Apr 2025 01:24:09 +0000 (GMT)
+X-AuditID: b6c32a52-41dfa70000004c16-c7-67fdb5399a4c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D8.1D.19478.935BDF76; Tue, 15 Apr 2025 10:24:09 +0900 (KST)
+Received: from parkseongsu-desktop.. (unknown [10.252.69.73]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250415012409epsmtip17aaa9ff006eec292d6118788f53b2b96~2WXGHOedu2759227592epsmtip18;
+	Tue, 15 Apr 2025 01:24:09 +0000 (GMT)
+From: Seongsu Park <sgsu.park@samsung.com>
+To: will@kernel.org, catalin.marinas@arm.com, yuzenghui@huawei.com,
+	suzuki.poulose@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev,
+	maz@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, sgsu.park@samsung.com, cpgs@samsung.com
+Subject: [PATCH] arm64: kvm: Replace ternary flags with str_on_off() helper
+Date: Tue, 15 Apr 2025 10:24:05 +0900
+Message-Id: <1891546521.01744691102904.JavaMail.epsvc@epcpadp1new>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSnK7l1r/pBv9vWFi8X9bDaPHykKbF
+	l+Y2JotXWw6zWGx6fI3V4vKuOWwWO+ecZLWY+vMNm8X7hi5Wi5m3bzNatNwxtbi5dAO7A4/H
+	mnlrGD1ajrxl9di0qpPNY2HDVGaPzUvqPV5snsno0bdlFaPH501yARxRXDYpqTmZZalF+nYJ
+	XBkbl3WzF9zjqFjV18bYwPiTrYuRk0NCwERi/o03jF2MXBxCAtsZJVa23GOBSEhKtL+7DGRz
+	ANnCEocPF4OEhQQ+MErsmRQOYrMJaEms/tfLDtIrIrCIUeLzpPlgDrNAP6PEsqftrCBVwgLe
+	Ep1PpzOBDGIRUJW4cCYRJMwrYC2xev87Johd8hL7D55lhogLSpyc+QTsBmagePPW2cwTGPlm
+	IUnNQpJawMi0ilE0taA4Nz03ucBQrzgxt7g0L10vOT93EyM4zLWCdjAuW/9X7xAjEwfjIUYJ
+	DmYlEV4u51/pQrwpiZVVqUX58UWlOanFhxilOViUxHmVczpThATSE0tSs1NTC1KLYLJMHJxS
+	DUzmJ2TTlj2dcvlSi41p8oa1yS2f5TcG3HB/5a1wUUj1O1OwwfGzR3on2UiXrrnmV7Du7pbs
+	5fdiJgWkcrRrOxob+8mlJbd5vOjrE289arslLq7h8PY1axfF/6vxOK3RtH3elZXH1rSu/jT7
+	4emydK2r/RZts2dbcNot2MP3xkHnybMJHfrTnOWSG1YXCm/QblCbI7w3JNAl4qpEw0z5AHfh
+	lH+6Z2fr/dl+7MPBGDfzj9+K9j42+KvV16h/yvL/LqX9j8Mevd2ceDXctFKcd0eO/Unu+V+P
+	LA0S1Ww8z8e+ZV9Z2e0l4juVzt2r7Lpopsa4+9Hdj+3yHg/qzb8k7km63a+zoa6wZv+3joUP
+	FPqUWIozEg21mIuKEwEp9ESC4gIAAA==
+X-CMS-MailID: 20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-revert_hs_phy_settings-v3-2-3a8f86211b59@oss.qualcomm.com>
-References: <20250415-revert_hs_phy_settings-v3-0-3a8f86211b59@oss.qualcomm.com>
-In-Reply-To: <20250415-revert_hs_phy_settings-v3-0-3a8f86211b59@oss.qualcomm.com>
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744690972; l=1205;
- i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
- h=from:subject:message-id; bh=1qgyXPTe8cPcaxUv+bBjP4DpTNp5myZOf+LMbrL+u38=;
- b=mMLhPWrhpGCi6Df6Y+VfgT63nzaugIMVz1NzPuE0G2fHWeA0F6tzZh+0KnkSvdclp7Wr3M8ag
- CYsmeVhWrm6CB5U5mWtfOe9gVhF79i+IxQpWswfcmlpYhWJcOFvo2lD
-X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
- pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
-X-Proofpoint-ORIG-GUID: yLqUkJTt4fqY045KyVMKwfSM3x4KooCU
-X-Proofpoint-GUID: yLqUkJTt4fqY045KyVMKwfSM3x4KooCU
-X-Authority-Analysis: v=2.4 cv=I+plRMgg c=1 sm=1 tr=0 ts=67fddf26 cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=45MnPZ1KAyxS56gpr9IA:9 a=QEXdDO2ut3YA:10
- a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150026
+CMS-TYPE: 101P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c
+References: <CGME20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c@epcas1p4.samsung.com>
 
-With the settings used in the commit 9c56a1de296e ("phy: qcom-qusb2: add
-QUSB2 support for IPQ5424"), compliance test cases especially
-eye-diagram (Host High-speed Signal Quality) tests are failing.
+Replace repetitive ternary expressions with the str_on_off() helper
+function. This change improves code readability and ensures consistency
+in tracepoint string formatting
 
-Reuse the IPQ6018 settings for IPQ5424 as mentioned in the Hardware
-Design Document which helps to meet all the complaince requirement test
-cases.
-
-Fixes: 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for IPQ5424")
-Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/kvm/trace_arm.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index 81b9e9349c3ebb4d303cb040b5c913336bb6b6d6..49c37c53b38e70db2a1591081a1a12db7092555d 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -929,6 +929,9 @@ static const struct phy_ops qusb2_phy_gen_ops = {
+diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
+index c18c1a95831e..9c60f6465c78 100644
+--- a/arch/arm64/kvm/trace_arm.h
++++ b/arch/arm64/kvm/trace_arm.h
+@@ -176,7 +176,7 @@ TRACE_EVENT(kvm_set_way_flush,
+ 	    ),
  
- static const struct of_device_id qusb2_phy_of_match_table[] = {
- 	{
-+		.compatible	= "qcom,ipq5424-qusb2-phy",
-+		.data		= &ipq6018_phy_cfg,
-+	}, {
- 		.compatible	= "qcom,ipq6018-qusb2-phy",
- 		.data		= &ipq6018_phy_cfg,
- 	}, {
-
+ 	    TP_printk("S/W flush at 0x%016lx (cache %s)",
+-		      __entry->vcpu_pc, __entry->cache ? "on" : "off")
++		      __entry->vcpu_pc, str_on_off(__entry->cache))
+ );
+ 
+ TRACE_EVENT(kvm_toggle_cache,
+@@ -196,8 +196,8 @@ TRACE_EVENT(kvm_toggle_cache,
+ 	    ),
+ 
+ 	    TP_printk("VM op at 0x%016lx (cache was %s, now %s)",
+-		      __entry->vcpu_pc, __entry->was ? "on" : "off",
+-		      __entry->now ? "on" : "off")
++		      __entry->vcpu_pc, str_on_off(__entry->was),
++		      str_on_off(__entry->now))
+ );
+ 
+ /*
 -- 
 2.34.1
+
 
