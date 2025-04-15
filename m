@@ -1,560 +1,183 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2076.outbound.protection.outlook.com [40.107.101.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989C323BCFA;
-	Tue, 15 Apr 2025 19:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744743969; cv=none; b=s7QpW/8Vl9t8XhCQynX4cj+DWeocRxS/k4M9Jo0ThWpO1NTN01wu9J3pTzs/HVi7J+s9KPLEh7Y4JimuY5vMFpdUFXAKOOT/66B4IRG4+ZK3miJe8DfT64QsvVCbh7J66A1/f8yWlAHCTKICXGwlDjr3xFoD/hrfa0ODORO5RLY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744743969; c=relaxed/simple;
-	bh=sIfmB072C5123j6+mKDJTl54rUZzETezRLzJsW8/BXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B3UdhfATfaOIxW47D3OzNq7Kf3otIkwxfFvvndxEOQfToGCgFO/EB617GqtF7dtwsek4GPnX8bn7ZDOa420uymxmY3WvRt73dpDqiogcGyxY7QIXjyjzRvDOHl1pVCN2p2eIYv4B1d9lthmPM5dd6dimpySt3SpPg5RjTNkQY9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxQyu0TL; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9A523BCFD
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 19:06:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744744000; cv=fail; b=g39tlXSU1w2Ct84F0arM2SIUnrX3l/f7Jk44lEUy5YAUJyky3ai0y21+IeRvkcqimhQo+W8d3yFgrV1w6QXwfvNPe4o3EYq6c4bobmC4GATuFDpX/Dwxn7JYtyIFUMOHlvn02+XtILqgwpKIIvZWWOfTHY1Gp4D8f+yZZ3+j5uI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744744000; c=relaxed/simple;
+	bh=YY+r14O5HCbVbgBXEYW2TifJRyp9Oorq/8PUaAyUJLM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tDCiC8gJOGoXCxpPR8razrsYpn5m6XtiLw81X4by/a6pegkBTV9Y/O4eGKEluylWQx9OSNNgREOdYChtKUQXu1T6wf6bfv9JJiutWYR3IErOdzkUbWdsNBzwbqDIVXqcj5PfQ9YJLX90RqN2GhaoDokfVRV6reAvjVT3A4NWAec=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ymqXw+RK; arc=fail smtp.client-ip=40.107.101.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxQyu0TL"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so10391078a12.0;
-        Tue, 15 Apr 2025 12:06:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744743966; x=1745348766; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u0KZTJThgYg1+MNCDs2xk85SBtEbNdZyLgg18iPamf8=;
-        b=jxQyu0TL0st5RpPEsa1I35S0Y5hl5wFQWHR+pIbNhbmeLvyhy9ox8dwY6+mDQinZuX
-         1HDN3WjRRnN5QUD1nNNfkHa/BpKeSc+X+XCOjESFTu0mcGEfRJAIDyN5JOmhjNKzPrZF
-         na1yqwBo+u3uAX0i8iaITS/6O+P0BzvC1wJBHUuKvdPy+7jA5Eu6HiYk/Gc5rAeuGhA9
-         09tuR5q6UwY/ecU6IPCselVP4RhebtbzIpk9Y3ryBH0xy7siLgFcRE6xy7FVS5BiK78Y
-         foahb44kSK9OxbpEu3CYDaW8FC5vdsIABr/VGoCXSKkYn3vGAZibpabElmwHuqXK3owf
-         9eaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744743966; x=1745348766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u0KZTJThgYg1+MNCDs2xk85SBtEbNdZyLgg18iPamf8=;
-        b=d1I1V7y/mXmMQCG9UNk7kJ1s4cg57ssZyWchArqCkKDmuplklwzlpkh4PjzyysG4TE
-         icIEDq09IPmVcGN3Z5WkiHUVI12t7bCGJ1iseYkaObnrIWDGZVd2eyqRR82JIm6Ua5kc
-         qL9XUzddH7MdBxn6Mik2ku9AxdOq3Imj4IYhgryv0hOnpkc2OFENcHwd0XE9edSmzRno
-         JDDWDRylOBgYsQL27oYiYL8LiA8G0/ZVGZJ3KvfW4Th/Mngv2rN2EQAjtDjdQuwzKVUv
-         0pdCYpH7/8jUMYV1jDcVR3CoKI2AU1cP5x+RUgJShyXhqMs8RQlYN63ROH26iM5gc+RK
-         l9Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCUtTNmDZEnwHjtOCFVpWOsG5us2CZ14Qa6o35z+Owm6Mag1NyDw9iaqdY5V/YGrArR/hAyQ1G8epblSkpH8@vger.kernel.org, AJvYcCV1V9WfQIYtXWQu6Xyzozm/qh9nO2YGljzGwFnkEIVSdgVrzYoQ2Ph3j6rk7luXvW4EFswJIxApcSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznIzOdqMElxhD22SgkvU3ki/TaQJemjgZ2e6ujy/5VJIgSCvwX
-	X6kS7yxNAM75ERlMNa6knSiO2q3jEx+iD8Q7j9qOe5a0lf0k3j/nY/PXGcPU1Y402QbqrCDyRIL
-	8LBUKOkHOnzBHKCHRVFxfyUCn2bU=
-X-Gm-Gg: ASbGnct72pEe48O+E8x12pwoXPHWbS6jxVlYOk/PtW1q6vm51yY9+xL8mGin0KedCtD
-	0yMTUsBqHIP/dNKeNkvrC7QZYAyQaRdlatWZ4UWP2HpOIKR2HPgjJZZ2sMfpEmAJSlhZbGAO5wS
-	LXFrfP34FWHbCF7nbRvYGsxSazNG/qATdc
-X-Google-Smtp-Source: AGHT+IGKniU4oKRv1UGrVx/vh2xs0P/nHU0RmWqbpWFkSY+GUpJmUiQXF+ZespHwTWUVDPCZI3h4xCUjhYXKM+SDADo=
-X-Received: by 2002:a17:907:3f23:b0:ac1:ecb5:7207 with SMTP id
- a640c23a62f3a-acb3830eb19mr16753666b.29.1744743965459; Tue, 15 Apr 2025
- 12:06:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ymqXw+RK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mVcgBpKHZWJY6r/kaleUSR+urZOYsjPZIRT1BqgL4Im2MPF931J822lyz0wacCpbnGmLVyQwEEwcZXn5SI/uaqdyCApG0RXc/Rpfmo3YtpjL7g5KkhQPjPf3RMyCnDAL882dHnHIDovaH0x+10mdYkMzLU6uqHV226aD5g867TnFNsruJr+Q7/mCfSnJ4nwb+GSoFB0U56+XJ3un2TqGZqrxz4UCaL4/T1KkA7d6ZP9w2z/tGoBDd39UbGbIm+N8PyOOf7R/lDm5fGeHwp3pPdgTw/MGivcpTzCHnMwaCAil52q/xrcyNAPHD7E+BgyF04zll7xaKepnAs8wGvdleg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4ZYQ13B8s109HLWBrZBnoh7KTJ9CoroVH3DAjJZv/oE=;
+ b=bTfjhv7BB5zayrVYS8NQB/yU1zTLlcj4a2fL76beLOTwzpGztTrr2g8C7fTDhxt4FewgIisaCdzCQ4pBo3h4jXFJV7wAvja7hlgwfZE0rYXZPSUOAvPKlbwy4EteRcDxBmOv3VHOEhoFIQUaeBlxyg4rjyvRzMO8E0hEIwtJTmnkXHataqbp49QYryQi53QVrcvpXC0Va4kYe/tiGGDDBivbswGUaBDgketHqbH9xjqpP9ktMeBIcOfN19IcX9MqxMHfA6EuLHXIcb8DTInK+5Rt3RW1BsYElVHqqAyvj3cj0B2I2gpMvNzYtyRjDz9uDHOex0VKcqtPzBpuoiRmbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4ZYQ13B8s109HLWBrZBnoh7KTJ9CoroVH3DAjJZv/oE=;
+ b=ymqXw+RKjP/H4ktBFQEoXefGwZX9OusYKRdBijiudqBaCbfofqPgFo4wpQF23g5ZdXc43L9Q7tOXmP3s8VAPQtW3As40AhxJJpm3lwjaYJtoNoKI1MZLUA8Mv/hmUPCZMnvhNl5uiztWYc3ra2U+CppBwhOf/UOLsn82gqt4ANY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8)
+ by IA1PR12MB6282.namprd12.prod.outlook.com (2603:10b6:208:3e6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
+ 2025 19:06:36 +0000
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870]) by CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 19:06:35 +0000
+Message-ID: <0b945575-f6ad-4aed-a3dc-7f609f4239c1@amd.com>
+Date: Wed, 16 Apr 2025 00:36:30 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] mm/vmalloc.c: code cleanup and improvements
+To: Baoquan He <bhe@redhat.com>, linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, urezki@gmail.com, linux-kernel@vger.kernel.org
+References: <20250415023952.27850-1-bhe@redhat.com>
+Content-Language: en-US
+From: Shivank Garg <shivankg@amd.com>
+In-Reply-To: <20250415023952.27850-1-bhe@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BMXPR01CA0074.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:54::14) To CH2PR12MB4262.namprd12.prod.outlook.com
+ (2603:10b6:610:af::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415132623.14913-1-victor.duicu@microchip.com> <20250415132623.14913-3-victor.duicu@microchip.com>
-In-Reply-To: <20250415132623.14913-3-victor.duicu@microchip.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 15 Apr 2025 22:05:29 +0300
-X-Gm-Features: ATxdqUE6os5mjgADI06Hqdu1mqFsIWu8L19pfCkC0qNtNH8fKnGiwHxEGG9ja-Q
-Message-ID: <CAHp75VdzVzNV1k8RqG6Rxsg06Oqu_p1o-4QFeT10xBjrFOEZHA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] iio: temperature: add support for MCP998X
-To: victor.duicu@microchip.com
-Cc: jic23@kernel.org, andy@kernel.org, dlechner@baylibre.com, 
-	nuno.sa@analog.com, marius.cristea@microchip.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4262:EE_|IA1PR12MB6282:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6ce3043-11ef-404f-27db-08dd7c50a45c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?amRmbFZIQ0JTYWxweFlDZzJkbjBXMVVtRG9ZZjV5MEllOWdiT3U0MVBLWWRW?=
+ =?utf-8?B?WlNuYlFhNFAweDBvNkQ1SzZCajk4aUVkUStLaUNMa24xMEVzSkl1d2dVdmNy?=
+ =?utf-8?B?UlNQajI2bDFhUmovdjViTC9MbGpaSWJzaFJmS1NSTWdFMWl5MGt0QW9BOWM2?=
+ =?utf-8?B?clloYXc1eEdTSmUzamM0NmRSYlhHSWlNYzI0bGVwRUV4VU1YYWppb2dQSERr?=
+ =?utf-8?B?Y1dXRDVXK0ZDbjhZdHM0N041Tm9TT2VkK25kbm5Zd2U0S0thVlFvL0hrZnlH?=
+ =?utf-8?B?M0NCMVYxYmVZdE1pbE44aG5JdXR6TjZZMUY4d3hJWlpCNnU2RExnSi85QWkw?=
+ =?utf-8?B?eldVVUFUcnVNZzEzVUdOY0NpL3kyZTYzRk5HMldIWFltUU1GN01RQkFKUDFL?=
+ =?utf-8?B?VFBNWFdyVmY5Rjdub3Z0TnBrQUY5TUsvUEJGLzJ6em9Tc1VMcXVZNUREZExM?=
+ =?utf-8?B?blo5SkpOTHBkSFl5WnplTVphUG5ONGQxZzRWRUt1ZFB3c2MrbzVTbkxkOGRN?=
+ =?utf-8?B?UnBQYXBWcmVPNThKc0gzdys2Nkwvc1VNZHlEL3E2SEVzem9IaGZWdWFTeHVp?=
+ =?utf-8?B?NFJQS0RhYWtMaXVYS2NOcXowbUMvWFQ1SmwzbnBSMDVVZzdRcE5xYXBDRWpx?=
+ =?utf-8?B?VTIrZzhkMFVjNFZmbWQ5Y2tiU2ZLZXhRbG14MWlJOXpkdWFJK3A5LzdyNWVv?=
+ =?utf-8?B?OC9iOWJ6cnZtU2pqZXhSSWxKS2tzSEZZcHl5Szh1UENHckFpY2dSbXB3bWl3?=
+ =?utf-8?B?Z1c3VXExOEphNGhmcnM1YVVxeldIV2NhdjhuVjZ4REJFYmJiSUdoa2pRUWVk?=
+ =?utf-8?B?MWV5V0U0VTdPOWNHMEdLQlc5bWpOYXZXcUhBbFMxMFJaT1BoaFY4WUcvNmhK?=
+ =?utf-8?B?d3JBSGt2YXpHWW8rM1UxNUh1UFUxNWVvSVBZZE4zL1FlZzNDaUYyK3laNXVF?=
+ =?utf-8?B?UUMvcDN6SG5Cbk1HQXZlSXZWQkp2WWo4Yk5RVXkxaTE2ZGRtOHJnZDBzZW5T?=
+ =?utf-8?B?RkRhY0Z6UytqclpSQnlWcjdTR0V4OEY2dEVGTGJhcEo5bXBrZXV6TW15WXlx?=
+ =?utf-8?B?RWl0dzBJYmU5ZUVWbnJzcGEwaGx4WXRmMFJab3NhV2RNbnBGaEgzQmc1aW82?=
+ =?utf-8?B?cU9kWnJ0b3hFclpPWkdwMVk2WjA5WVhpMjZWdEJnSHluUTM1K2pQVDFYR1NI?=
+ =?utf-8?B?WldjWURRazUzU0NtY2paNUtudnlPQ2R1L3NZQjJCMnRDRVhUa3UvallFZjlm?=
+ =?utf-8?B?dWtlamtCc2hLblFOQkcvbGl2U3FVR3hNcit5eTY5aFlOVStFZkMvN3VuUzI2?=
+ =?utf-8?B?bTVMQk1EajAzWmFaZW5acEtSTGFZcTBGaWpZVUVCNWtKM0xCcXRZQWdPOEFK?=
+ =?utf-8?B?ZVdkWjBTMmNaNmhJQTVWM0NML2p5TEdlOWNDTVpGTzhsa1RWdTJiODZxVUFM?=
+ =?utf-8?B?V1BYRlNncmtWeG5MMjE5RC9rUGpvYklpb1BmOW5ES3JRV0NIQklzTTRxeTdH?=
+ =?utf-8?B?OGQrZERmVmVpWDhtVEdXcHJUZFBpUllITzNvQ2ZVcDdoSGJGVXQ0UXVXdU03?=
+ =?utf-8?B?MFVDR2l5ZEc1UkpyYU5PRXVNWndIR3dvV1UwZnB1UEx3UFpFZ09qOVZLSmVL?=
+ =?utf-8?B?c25URXVRWStFM01rbEZPZXpjdmdJSHE4cVlkSVMyYU9TUTFKN0dtMStqby9O?=
+ =?utf-8?B?S3ZQbmxYU0xnZDBZTFNxdnVsb1dOaTZDM21Id0xLZ0I1RnJCcUtKSzRtUEVQ?=
+ =?utf-8?B?aTVFQllMQ0J0N0E5RTVZVnBjR01oRjh6dEZwaTVUbVhXNlNNVFkveHFJUXd2?=
+ =?utf-8?B?Wnd0bnpOT1VoMEtEOVptaE9MN3BYZDg3ODVtdHdZNUtDT3lwMFpsSnN4alc2?=
+ =?utf-8?B?czdLdFh3RjFlRGpXUFZlanUvc3dzN3lDREdPN1lyVHJiZGMxdVFhcjVyOG56?=
+ =?utf-8?Q?l7LVXxzvdnw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4262.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dks0Lzk2bExkQVhiTlgwdjNrLzQwb1NDamozbDMzdm15bzQwZTRZUEtWRCtR?=
+ =?utf-8?B?ZGR0V1dmaUdYV1NsUkJ3OFFJTU1HUWxUd2lXQzZUTFBjTU4yb0k4SUNSbTdp?=
+ =?utf-8?B?alFSbkkwZmlOR0JjdCtWa2doMVNSeTRTdTVnSjcxZkx1MWdaQ0FwZzI3VXZk?=
+ =?utf-8?B?MFhSTmpkVGI2cCtEQjJidGlTWlhkcWtDLzZNSEI2WFlocS9kcytFOEl0TVpu?=
+ =?utf-8?B?dFZmWDB0a3NQbWhEeU1mVlRYaTN2RFJiVWVRbDJVMXIvUDdpYVMzSjh1MXRi?=
+ =?utf-8?B?Zmh2dklpTHlrOE15clFaUjRkR3ZPUktvVEIzalZSV0lCZFRRemhCY0MwTTB5?=
+ =?utf-8?B?OVRQaUhZRFRrblYxSUt4K2l1VlNESGdpRlNtL2oramhsQklzUUNWdnpxdkJ2?=
+ =?utf-8?B?LzhqeStRTUd1TEsrRmdXTm5tVkNGcjkrVGJjUzJPYjFLTTZWTkJ1cS9HT1gr?=
+ =?utf-8?B?Zms0YUN5THUwa0FSa0pVQWZyclNrQmdycXZZeVBwT0ZXYmpqNXB4a1JOcEZN?=
+ =?utf-8?B?Q2VnYmVta3NXK2t2dlc1K1hvam5SSUNINDNNaU1nTWNqK0JFUnlQVzdiSUxw?=
+ =?utf-8?B?TUI0T2FJN1BCWE1Ta1dLclZxZ0VNTU5TaWdPc21jZEtmNjkvVloyNGtNWEZI?=
+ =?utf-8?B?Y0dOVXBaMGVwdE1tSU9TMjJDNTNYTW9uczlub2U2ZVphWjhlam9aSi9MTDRH?=
+ =?utf-8?B?blM1aHFHNmRWMUJkUWdrcjI3WkQ1Nm54SDVsRFdCdGNXUlpENEJBdDF3cDFr?=
+ =?utf-8?B?L0NOQ2pnc3JMUXgycThRMVVVQ3ZtTXY1SUhBVER0WUhhYUNudUJwU3NuTVUz?=
+ =?utf-8?B?SlREajdPRkNsdFpOK0Nhcm1CM0VxcEprdlJRUitCSmxZbE80YUZiY01JVkdp?=
+ =?utf-8?B?Q1Y1Rnh3NEhCQjFJNlJUZGJ6MlRhWVV0RFp1cUk3bW9vWm1JVDJBUUJCNFU4?=
+ =?utf-8?B?WXpteXRKSjhKRjRUMVQ4bHphdzV5Wk44SkdEUTE2WFhiU014T3JqRjY3YWdz?=
+ =?utf-8?B?T0hoeWt3bXMvbXU5M1UyQTA4dm9rTmhGWko3cU1KM2Z1QWN1N1Npa2tnbnZt?=
+ =?utf-8?B?b3hlbEpQcjRLS2orSVFpNW5zM2FSbDA5VzMyYzZQT25lTWp5dEd5VktWYTdv?=
+ =?utf-8?B?ZlRRTE8vZ3R4aTE4Y3BWckp6NGpJR3o2MVNPdGg2TFI5dHVUMXlQNXkxcmhL?=
+ =?utf-8?B?R2VqU1NRRllPSUlUVnFSaGtaaUxhVTAzSTR5aVhFeDVvcHBIOXZqaVpMbE9Q?=
+ =?utf-8?B?SEFYQXZYV1FBU2FmazJlRnU5eHFKTXBpOFlOcnhYUXZMMkJKdTVPMTZxaGhZ?=
+ =?utf-8?B?QzBTVmN3WGJxeUIxc1l2REFLaGhubnQyOXVFdFIvc1VnTHVBdXJuQ21iMUla?=
+ =?utf-8?B?NEhtblgxVE84ajc0WVorMG55eEV4Z3I0MXZaa1dlcnd4VU4rdnlIbERiRjRn?=
+ =?utf-8?B?TlF1a25WM0pPdHFnU1A5Vk9RTTJLazFZbS9uZk55OHF4TkZNZzYzdHA1UUky?=
+ =?utf-8?B?L0VZRytBdnlyV1hhOFE3TE5ha0szT1RuZkltcUxhMnc4TlNOc0lRZVJ1NjVC?=
+ =?utf-8?B?L3pVYkVpNExIaWJidFpCYlhsMXpuLzVSQUMyeXlZMDNCK1lsL1NGYVlKbFpP?=
+ =?utf-8?B?ZHNPUW1HQm93VlJNcVhKdk9uNjZFU05rRlU4MVVld2lFR2xBRjR0U1h2R2pO?=
+ =?utf-8?B?SVhQV01rNU9QZVV6bnA1QnlTUUNpelFqOGpJQk1oQmJSR1liODdhL3QvS3lO?=
+ =?utf-8?B?SS9iMFdhMEFQNzMyNDd6elE1VEVrSy9SakFRT2l3YllHT0tDK2ZQMnhaK0ZM?=
+ =?utf-8?B?Q1JvVHRpVFhZcHlFRGNWZWxPdlBXZDJDVWlFNmozamxYNFRNTmk1WEtaYWlW?=
+ =?utf-8?B?cUNubXc0L1ZwQ0NhQWRyczd5eEJEU2NBeFQxdVhjb280U1JoYWlBRTk0ZXZL?=
+ =?utf-8?B?UnNYWFR3SmJndFRublNBeGFYM0J4S2VsK2ZsTE0vem9BWFc4UFBSMVVVV2xn?=
+ =?utf-8?B?YzZZbFZudVBDSStqWmphWFh1NWRaN1JoMDJOdm9WOTB3Yy9sV0ZUaFpZREtZ?=
+ =?utf-8?B?QjhXc2xHZEh6TW1MTTNBcGUvUXVtWm5VMGF2T296NldUWlJVRFpQRXRRNUg3?=
+ =?utf-8?Q?IJ7Tsf6ee8gMFxqNi6FBuMW4Z?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6ce3043-11ef-404f-27db-08dd7c50a45c
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4262.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 19:06:35.7879
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z7kqqULyLoew+0KoYMcMljZ7PDPTJAZzk7MdtInBpb8MAQZ+A6n4Y2ujxW4b/J6Bbe0/wZeqSCDnw9ka3ltJnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6282
+
+On 4/15/2025 8:09 AM, Baoquan He wrote:
+> These were made from code inspection in mm/vmalloc.c.
+> 
+> Baoquan He (5):
+>   mm/vmalloc.c: change purge_ndoes as local static variable
+>   mm/vmalloc.c: find the vmap of vmap_nodes in reverse order
+>   mm/vmalloc.c: optimize code in decay_va_pool_node() a little bit
+>   mm/vmalloc: optimize function vm_unmap_aliases()
+>   mm/vmalloc.c: return explicit error value in alloc_vmap_area()
+> 
+>  mm/vmalloc.c | 68 +++++++++++++++++++++++++---------------------------
+>  1 file changed, 32 insertions(+), 36 deletions(-)
+> 
 
-On Tue, Apr 15, 2025 at 4:27=E2=80=AFPM <victor.duicu@microchip.com> wrote:
->
-> This is the driver for Microchip MCP998X/33 and MCP998XD/33D
-> Multichannel Automotive Monitor Family.
+I've tested this patch-series on my AMD EPYC ZEN 3 machine using
 
-...
+1. Using lib/test_vmalloc.c: modprobe test_vmalloc
+2. stress-ng: stress-ng --class memory,vm  --seq 0
 
-> +KernelVersion: 6.14
+I did not find any issues.
 
-This boat is already sailing, it should be v6.16 at bare minimum.
+Reviewed-by: Shivank Garg <shivankg@amd.com>
+Tested-by: Shivank Garg <shivankg@amd.com>
 
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               This attribute controls the number of samples for the
-> +               running average window applied to External Channel 1.
-> +               Using this method the temperature spikes are reduced.
-> +               X is the IIO index of the device.
+Thanks,
+Shivank
 
-...
-
-> +KernelVersion: 6.14
-
-Ditto.
-
-> +Contact:       linux-iio@vger.kernel.org
-> +Description:
-> +               Reading returns a list with the possible number of sample=
-s used
-> +               in the running average window. The window can be composed=
- of 1,
-> +               4 or 8 previous samples. X is the IIO index of the device=
-.
-
-...
-
-> +/*
-> + * IIO driver for MCP998X/33 and MCP998XD/33D Multichannel Automotive Te=
-mperature Monitor Family
-> + *
-> + * Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries
-> + *
-> + * Author: Victor Duicu <victor.duicu@microchip.com>
-> + *
-> + * Datasheet can be found here:
-> + * https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/Produ=
-ctDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-
-> + *
-
-Redundant blank line
-
-> + */
-
-...
-
-> +#include <linux/bitfield.h>
-
-+ bits.h
-+ err.h
-> +#include <linux/i2c.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/irq.h>
-> +#include <linux/limits.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +#include <linux/string.h>
-> +#include <linux/unaligned.h>
-> +#include <linux/units.h>
-
-Please, make sure you follow the IWYU principle.
-
-...
-
-> +#define MCP9982_INT_HIGH_BYTE_ADDR(index)      (2 * (index))
-> +#define MCP9982_INT_LOW_BYTE_ADDR(index)       (2 * (index) + 1)
-
-Why? Can't you use __be16 everywhere and bulk IO?
-
-...
-
-> +#define MCP9982_DEV_ATTR(name) (&iio_dev_attr_##name.dev_attr.attr)
-
-Useless macro that makes code harder to read.
-
-...
-
-> +#define MCP9982_CHAN(index, si, __address) ({ \
-> +       struct iio_chan_spec __chan =3D { \
-> +               .type =3D IIO_TEMP, \
-> +               .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW), \
-> +               .info_mask_shared_by_all_available =3D BIT(IIO_CHAN_INFO_=
-SAMP_FREQ), \
-> +               .info_mask_shared_by_all =3D BIT(IIO_CHAN_INFO_SAMP_FREQ)=
-, \
-> +               .channel =3D index, \
-> +               .address =3D __address, \
-> +               .scan_index =3D si, \
-> +               .scan_type =3D { \
-> +                       .sign =3D 'u', \
-> +                       .realbits =3D 8, \
-> +                       .storagebits =3D 8, \
-> +                       .endianness =3D IIO_CPU \
-> +               }, \
-> +               .indexed =3D 1, \
-> +       }; \
-> +       __chan; \
-
-Why in this form and not as a compound literal?
-
-> +})
-
-...
-
-> +/*
-> + * struct mcp9982_features - features of a mcp9982 instance
-> + * @phys_channels:     number of physical channels supported by the chip
-> + * @name:              chip's name
-> + */
-> +struct mcp9982_features {
-> +       u8              phys_channels;
-> +       const char      *name;
-
-Have you run `pahole`? Has it found a room to improve?
-
-> +};
-
-...
-
-> +/**
-> + * struct mcp9992_priv - information about chip parameters
-> + * @client:                    the i2c-client attached to the device
-> + * @regmap:                    device register map
-> + * @iio_info                   iio_info
-> + * @iio_chan                   specifications of channels
-> + * @num_channels               number of physical channels
-> + * @lock                       synchronize access to driver's state memb=
-ers
-> + * @running_avg                        number of samples in the running =
-average window
-> + * @hysteresis                 value of temperature hysteresis
-> + * @temp_range_code            coded value representing the set temperat=
-ure range
-> + * @labels                     labels of the channels
-> + * @chip_name                  name of the chip present
-> + * @beta_user_value            value given by the user for beta on chann=
-el 1 and 2
-> + * @apdd                       state of anti-parallel diode mode
-> + * @recd12                     state of REC on channels 1 and 2
-> + * @recd34                     state of REC on channels 3 and 4
-> + * @ideality_user_value                values given by user to ideality =
-factor for all channels
-> + */
-
-> +
-
-Redundant blank line.
-
-...
-
-> +struct mcp9982_priv {
-> +       struct i2c_client *client;
-
-For what do you need a client? Wouldn't struct device *dev suffice?
-And if so, can't it be retrieved from regmap when needed?
-
-> +       struct regmap *regmap;
-> +       struct iio_info iio_info;
-> +
-> +       struct iio_chan_spec *iio_chan;
-> +       u8 num_channels;
-> +
-> +       /*
-> +        * Synchronize access to private members, and ensure
-> +        * atomicity of consecutive regmap operations.
-> +        */
-> +       struct mutex lock;
-> +
-> +       int running_avg;
-> +       int hysteresis;
-> +       int temp_range_code;
-> +       char *labels[MCP9982_MAX_NUM_CHANNELS];
-> +       char *chip_name;
-> +       int beta_user_value[2];
-> +       int apdd;
-> +       int recd12;
-> +       int recd34;
-> +       int ideality_user_value[4];
-> +};
-
-...
-
-> +static int mcp9982_read_raw(struct iio_dev *indio_dev, struct iio_chan_s=
-pec const *chan,
-> +                           int *val, int *val2, long mask)
-> +{
-> +       struct mcp9982_priv *priv =3D iio_priv(indio_dev);
-> +       int ret, val3, HIGH_BYTE, LOW_BYTE;
-
-No way we name variables in the capital letters. And use __be16.
-
-> +
-> +       /* Write in ONESHOT register to take a new reading */
-> +       ret =3D regmap_write(priv->regmap, MCP9982_ONE_SHOT_ADDR, 1);
-> +       if (ret)
-> +               return ret;
-> +
-> +       guard(mutex)(&priv->lock);
-> +
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_RAW:
-> +               HIGH_BYTE =3D MCP9982_INT_HIGH_BYTE_ADDR(chan->channel);
-> +               LOW_BYTE =3D MCP9982_INT_LOW_BYTE_ADDR(chan->channel);
-> +
-> +               ret =3D regmap_read(priv->regmap, HIGH_BYTE, val);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               if (priv->temp_range_code)
-> +                       *val -=3D MCP9982_TEMP_OFFSET;
-> +
-> +               ret =3D regmap_read(priv->regmap, LOW_BYTE, val2);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               *val2 =3D mcp9982_fractional_values[*val2 >> 5];
-> +
-> +               return IIO_VAL_INT_PLUS_MICRO;
-> +       case IIO_CHAN_INFO_SAMP_FREQ:
-> +               ret =3D regmap_read(priv->regmap, MCP9982_CONV_ADDR, &val=
-3);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               *val =3D mcp9982_conv_rate[val3][0];
-> +               *val2 =3D mcp9982_conv_rate[val3][1];
-> +
-> +               return IIO_VAL_INT_PLUS_MICRO;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +}
-
-...
-
-> +       return sprintf(label, "%s\n", priv->labels[chan->channel]);
-
-+ sprintf.h
-
-...
-
-> +static int mcp9982_write_raw(struct iio_dev *indio_dev, struct iio_chan_=
-spec const *chan,
-> +                            int val, int val2, long mask)
-> +{
-> +       struct mcp9982_priv *priv =3D iio_priv(indio_dev);
-> +       struct device *dev =3D &priv->client->dev;
-> +       int i;
-
-Why signed?
-
-> +       int status =3D 0;
-
-Why not boolean?
-
-> +       guard(mutex)(&priv->lock);
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_SAMP_FREQ:
-> +               for (i =3D 0; i < ARRAY_SIZE(mcp9982_conv_rate); i++) {
-
-+ array_size.h
-
-> +                       if (val =3D=3D mcp9982_conv_rate[i][0] &&
-> +                           val2 =3D=3D mcp9982_conv_rate[i][1]){
-> +                               status =3D 1;
-> +                               break;
-> +                       }
-> +               }
-> +               if (!status)
-> +                       return dev_err_probe(dev, -EINVAL, "Sampling Freq=
-uency is invalid\n");
-> +
-> +               return regmap_write(priv->regmap, MCP9982_CONV_ADDR, i);
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +}
-
-...
-
-> +static ssize_t mcp9982_running_average_window_show(struct device *dev,
-> +                                                  struct device_attribut=
-e *attr, char *buf)
-> +{
-> +       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> +       struct mcp9982_priv *priv =3D iio_priv(indio_dev);
-> +
-> +       return sprintf(buf, "%u sample(s)\n", priv->running_avg);
-
-Please, read the documentation about this. s*printf() must not be used
-here (in ->show() callbacks). There are special APIs.
-
-...
-
-> +static ssize_t mcp9982_running_average_window_store(struct device *dev,
-> +                                                   struct device_attribu=
-te *attr,
-> +                                                   const char *buf, size=
-_t count)
-> +{
-> +       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> +       struct mcp9982_priv *priv =3D iio_priv(indio_dev);
-> +       int val, ret, reg_val;
-> +
-> +       if (kstrtouint(buf, 10, &val)) {
-
-Do not shadow the actuall error code.
-
-> +               dev_err(dev, "Value is not a number\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       switch (val) {
-> +       case 1:
-> +               reg_val =3D 0;
-> +               break;
-> +       case 4:
-> +               reg_val =3D 1;
-> +               break;
-> +       case 8:
-> +               reg_val =3D 3;
-> +               break;
-> +       default:
-> +               dev_err(dev, "Value is invalid\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       guard(mutex)(&priv->lock);
-> +
-> +       ret =3D regmap_write(priv->regmap, MCP9982_RUNNING_AVG_ADDR, reg_=
-val);
-
-How ret is being used?
-
-I think I have a d=C3=A9j=C3=A0 vu about this code... I think I commented t=
-his
-or something like this already and there seems to be no reaction...
-
-> +       priv->running_avg =3D val;
-> +
-> +       return count;
-> +}
-
-...
-
-> +static int mcp9982_prep_custom_attributes(struct mcp9982_priv *priv, str=
-uct iio_dev *indio_dev)
-> +{
-> +       struct attribute **mcp9982_custom_attr;
-> +       struct attribute_group *mcp9982_group;
-> +       struct device *dev =3D &priv->client->dev;
-> +
-> +       mcp9982_group =3D devm_kzalloc(dev, sizeof(*mcp9982_group), GFP_K=
-ERNEL);
-
-+ device/devres.h
-
-> +       if (!mcp9982_group)
-> +               return -ENOMEM;
-> +
-> +       mcp9982_custom_attr =3D devm_kzalloc(dev, MCP9982_NR_CUSTOM_ATTR =
-*
-> +                                          sizeof(*mcp9982_group) + 1, GF=
-P_KERNEL);
-
-No, use devm_kcalloc() and I'm not sure you have got the size correctly her=
-e.
-
-> +       if (!mcp9982_custom_attr)
-> +               return -ENOMEM;
-> +
-> +       mcp9982_custom_attr[0] =3D MCP9982_DEV_ATTR(running_average_windo=
-w);
-> +       mcp9982_custom_attr[1] =3D MCP9982_DEV_ATTR(running_average_windo=
-w_available);
-> +
-> +       mcp9982_group->attrs =3D mcp9982_custom_attr;
-> +       priv->iio_info.attrs =3D mcp9982_group;
-> +
-> +       return 0;
-> +}
-
-
-> +       if (device_property_present(dev, "microchip,beta-channel1")) {
-
-...
-
-> +                       return dev_err_probe(dev, -EINVAL, "Beta 1 value =
-is higher than max\n");
-
-+ dev_printk.h
-
-...
-
-> +       priv->iio_chan =3D devm_kzalloc(dev, priv->num_channels * sizeof(=
-*priv->iio_chan),
-> +                                     GFP_KERNEL);
-
-kcalloc()
-
-> +       if (!priv->iio_chan)
-> +               return -ENOMEM;
-
-...
-
-> +       device_for_each_child_node_scoped(dev, child) {
-> +               ret =3D fwnode_property_read_u32(child, "reg", &reg_nr);
-
-How is ret being used?
-
-> +               if (reg_nr >=3D mcp9982_chip_config[i].phys_channels)
-> +                       return dev_err_probe(dev, -EINVAL,
-> +                                    "The index of the channels does not =
-match the chip\n");
-> +
-> +               if (fwnode_property_present(child, "microchip,ideality-fa=
-ctor")) {
-> +                       ret =3D fwnode_property_read_u32(child, "microchi=
-p,ideality-factor",
-> +                                                      &priv->ideality_us=
-er_value[reg_nr - 1]);
-> +                       if (priv->ideality_user_value[reg_nr - 1] > MCP99=
-82_IDEALITY_MAX_VALUE)
-> +                               return dev_err_probe(dev, -EINVAL,
-> +                                    "The ideality value is higher than m=
-aximum\n");
-> +               } else {
-> +                       priv->ideality_user_value[reg_nr - 1] =3D MCP9982=
-_IDEALITY_FACTOR_DEFAULT;
-> +               }
-> +
-> +               ret =3D fwnode_property_read_string(child, "label",
-> +                                                 (const char **)&priv->l=
-abels[reg_nr]);
-
-Ditto.
-
-Why casting?
-
-> +               priv->iio_chan[iio_idx++] =3D MCP9982_CHAN(reg_nr, reg_nr=
-,
-> +                                                        MCP9982_INT_HIGH=
-_BYTE_ADDR(reg_nr));
-> +       }
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       i2c_set_clientdata(client, indio_dev);
-
-How is this being used?
-
-...
-
-> +static struct i2c_driver mcp9982_driver =3D {
-> +       .driver  =3D {
-> +               .name =3D "mcp9982",
-> +               .of_match_table =3D mcp9982_of_match,
-> +       },
-> +       .probe =3D mcp9982_probe,
-> +       .id_table =3D mcp9982_id,
-> +};
-
-> +
-
-Redundant blank line.
-
-> +module_i2c_driver(mcp9982_driver);
-
---=20
-With Best Regards,
-Andy Shevchenko
