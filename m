@@ -1,105 +1,122 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E463F2571B5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCDC21C18C;
+	Tue, 15 Apr 2025 21:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744753965; cv=none; b=K4QUZfG22FsgL/jGZfJC0VnqTF0Rs45aqSo+vZGt7mR1OcdQBFVIOgrVBSPt99PDrnoSXNbsCEUdvAjUuDA4Pioev3VWOY3ez4wkNnYCVnU+E+YB0xxTFWeshcAyOUwQBZGnIZJQLNRL9L/9A/2G4Yw87u9kMryKg6gbrinLGfg=
+	t=1744754093; cv=none; b=j9YHHoPketb76jBVJPxitQbOXKayXuv3nqlsLKxvVz7I4u3dh8PbxEdKuIf4Ey23Cz3HrYnfmrXRVYQyhnbSq1dnBJwCBEcobUQ5B1pWcZeUVlkMi8oWcScGiBV9YqMPYjNKNeO6qq3ai3y0nJ7sDzMtOaTnNDzSJlWG4aZn5O8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744753965; c=relaxed/simple;
-	bh=RB9DkFDjFYaAz0XoV8GvJIl9KPIPe0zT4OKarjuneSc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JzI1kn1BO66G6RQcpsyD8KZxuKKbwiwp0IHKJ94pcIveOiJxqsxVIYK/HZ7PP1bECrygemcweyZt4mBlCOkJxfYZ0jDhCRfY+l3iCYUeHkZH91lVnx+qQ3xTqEVBm/clFmfc/iyTQv/1VmVECeOLPwd3Zzycy9WLcFZ3+k75mDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GmRThp2T; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744754093; c=relaxed/simple;
+	bh=ZZbFtBetr1YtrRn001MQ+bU4WVmaLaWXdReIWobzDo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQqyR81+IQ4kXXWoQq2ELWFg1WAv5nJOCpf1S8ixSZLd41QYqcWDaS8lQRyz25FNMVd0uw+tapmvix+XeqD3R8+l+VV3LZFIBLVGYM/3s8gS9+2VltWkSnjEUv/GZC3C4YPCNUmAhgJW+TmkHUH+4AcCgnQt6iAn6ZZgNy5i6r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=buzp1Inj reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GmRThp2T"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso5997076a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744753963; x=1745358763; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sEakkyYbkL3hmGVUI0s4nR0ZmkUz+iNkcqjHnh41YfA=;
-        b=GmRThp2THo8Hz51D2fHGmhCEZIMSEk1bfZfkbcXROXrxi92YJepOQ9ACdmb6Pq0a4q
-         otPd6j61CQpK9CXUFZ23HVB2vmMCh/4eKp1w69LLw3eXjhwTm3H9wqwLHgc2FbIEfbfv
-         BMw01lFYZrqIEaTdopOZNnlspU0lj/HW5PCGO88A6u3JBiI8MzpYEHi1oJf0OjejWxgF
-         3maVlMVCLxNcvAmEWwo5+8QnC6JSEwNlA8Zx4RuUpfpS6t2gl9t5XoApdIePwmacWxpn
-         Sxgagi6B5mJtK+GRe/DlgLAJdv0CS00LFAM3ef9kNSAqRqxrXwibOik/sB3vhhzffJ7j
-         pzoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744753963; x=1745358763;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sEakkyYbkL3hmGVUI0s4nR0ZmkUz+iNkcqjHnh41YfA=;
-        b=qaeC2QgO1p0iPBzOIP/NuQ4a0t4hOzyRSqiDk9GDXvjhbbyWh2FbfrFFJARYzNTJdn
-         2sdZNkbu6OMyfViav4Jh9skMdouakXE/33jkd4fWl1dQijPTA2Ui2UE4yxfn2CIoS4ZT
-         sghR1rf3J3V6chV1mhosyqJnf1ClH0iC+1S5lp6wvTRqbAGAfFn5YKV6mIEMA3qypvsp
-         Dqt7cycrVjGFkiG5uXMc73n1PeRfl4J99+yJfSjtK3IBVXYmlf4dzB3eRyRFMAdPigw0
-         0smFqe5dOqpg+NpVJcN2w8SzILm9Wk4lM80wz7hTYqTExMvW/UmG7QPvJcvsxbnoKp9m
-         yzwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUk0JxbZS3fbdL8DNRaf9l4UdcEY9HZMcL+MLL6iIbFRFyzFrK7iCuKdLhl1W00DaM6fMd8FtXXBDcypQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvx9X+68oFnreuaBptED0qUgmkjxj42U2qXFWM6XzY/A5L+OY2
-	D4TtPYzZxRYJPmUGe+ynYaOBqgcsp/lndKOfR6HBgyC4vNWglNejRJpVMhCeiB1unM4zuvg2+nS
-	6iw==
-X-Google-Smtp-Source: AGHT+IE5X1SEViPqpTe89vzn6EtzphukY6AvSLniOTlThnRLrJgSHxS02dH03m+qXPZkT33RR5rviIXHEb8=
-X-Received: from pjbok14.prod.google.com ([2002:a17:90b:1d4e:b0:2ff:5df6:7e03])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:2ff:7b28:a519
- with SMTP id 98e67ed59e1d1-3085efefbb2mr1188859a91.30.1744753963182; Tue, 15
- Apr 2025 14:52:43 -0700 (PDT)
-Date: Tue, 15 Apr 2025 14:52:41 -0700
-In-Reply-To: <20250415200635.GA210309.vipinsh@google.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="buzp1Inj"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A84B840E015E;
+	Tue, 15 Apr 2025 21:54:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 1NibRQDG_KtU; Tue, 15 Apr 2025 21:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744754082; bh=SxhtpHPnd4nLcF0fPWUahX1phFdNE82RskD4BKP0aqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=buzp1InjGiXcOpDtp9/TylV7AqU1n40pgojsyZn8VFHg5fHCHt9CTQDoBzYjCU6IY
+	 lkjn+HmfusevzUt4ZM0gkuLNBZdijiHCtWcHktxvDpkFMisIoL9zpd1jgwVdsmfuaD
+	 3W4ay4/SK3JU5uizE4Ggr/gb+UmwOBD9DLJsM2R2mey924UswxB/k+H8SidqhG8R24
+	 jYSBnMcTrQHlKg6pxSZnNRE1aNKhlOvS9+nnsJNX91VYBv588s0zIscGHgf0omKNkH
+	 mDBbCd1ndbU3E9A0ATLDR8rpD3K3cx8Z3JztHbFfhnFbF7YTetQRzxrYkz2SCsDZNS
+	 UeIU3vYm+4G+RINmWyTlLAmjUGfcpgP45a8zhJcer7Q9+eWrKnp/focB9/R/gPz3yU
+	 uPjiguU1JLymYtriMlT38a4KcoDfMnAlma+trRPiDiIq42mokYQKkNrxgwSaHVq/DP
+	 krDFWOD5g7cAIVa7ERGYEl60Hsy6uzHYUXfLxdXoPOOLjIUa+lsMsDgzC3PKgBU/zh
+	 bTOEErfAhXqk/tY+wH7K5WNWZLcX8U5+LVsoxwjUjfRc+TbvhGJ2zt4P84iQYzSDzi
+	 TAoBjQO4OD8LoYJP2MQYmolw8PtOHpv+50sHZTKWpU5ymv1S4JhdkVBkMkT4/Es1G9
+	 k/Z5OHc5hwzZeWFnbRsNvcXs=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 91B2A40E0196;
+	Tue, 15 Apr 2025 21:54:34 +0000 (UTC)
+Date: Tue, 15 Apr 2025 23:54:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+	Ian Campbell <ijc@hellion.org.uk>,
+	Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+Subject: Re: [tip: x86/build] x86/boot: Add back some padding for the CRC-32
+ checksum
+Message-ID: <20250415215427.GLZ_7Vk6t9Vg-kgAhH@fat_crate.local>
+References: <20250312081204.521411-2-ardb+git@google.com>
+ <174178137443.14745.10057090473999621829.tip-bot2@tip-bot2>
+ <20250414135625.GDZ_0UCcIQ-fg8DKZL@fat_crate.local>
+ <CAMj1kXEWerW9A7t0njN7hM7Ms48+mE94p3CTv_LP9P-CotOtPg@mail.gmail.com>
+ <89CE5702-6C52-4E02-9A18-31E4161CA677@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401155714.838398-1-seanjc@google.com> <20250401155714.838398-4-seanjc@google.com>
- <20250415200635.GA210309.vipinsh@google.com>
-Message-ID: <Z_7VKWxfO7n3eG4p@google.com>
-Subject: Re: [PATCH v2 3/3] KVM: x86/mmu: Defer allocation of shadow MMU's
- hashed page list
-From: Sean Christopherson <seanjc@google.com>
-To: Vipin Sharma <vipinsh@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <89CE5702-6C52-4E02-9A18-31E4161CA677@zytor.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025, Vipin Sharma wrote:
-> On 2025-04-01 08:57:14, Sean Christopherson wrote:
-> > +static __ro_after_init HLIST_HEAD(empty_page_hash);
-> > +
-> > +static struct hlist_head *kvm_get_mmu_page_hash(struct kvm *kvm, gfn_t gfn)
-> > +{
-> > +	struct hlist_head *page_hash = READ_ONCE(kvm->arch.mmu_page_hash);
-> > +
-> > +	if (!page_hash)
-> > +		return &empty_page_hash;
-> > +
-> > +	return &page_hash[kvm_page_table_hashfn(gfn)];
-> > +}
-> > +
-> >  
-> > @@ -2357,6 +2368,7 @@ static struct kvm_mmu_page *__kvm_mmu_get_shadow_page(struct kvm *kvm,
-> >  	struct kvm_mmu_page *sp;
-> >  	bool created = false;
-> >  
-> > +	BUG_ON(!kvm->arch.mmu_page_hash);
-> >  	sp_list = &kvm->arch.mmu_page_hash[kvm_page_table_hashfn(gfn)];
-> 
-> Why do we need READ_ONCE() at kvm_get_mmu_page_hash() but not here?
+On Tue, Apr 15, 2025 at 10:00:11AM -0700, H. Peter Anvin wrote:
+> >This was done on hpa's request - maybe he has a duration in mind for
+> >this grace period?
+>=20
+> I would prefer to leave it indefinitely, because an all zero pattern is=
+ far easier to detect than what would look like a false checksum.
+>=20
+> So I remembered eventually who wanted it: it was a direct from flash bo=
+ot loader who wanted to detect a partial flash failure before invoking th=
+e kernel, so that it can redirect to a secondary kernel.
 
-We don't (need it in kvm_get_mmu_page_hash()).  I suspect past me was thinking
-it could be accessed without holding mmu_lock, but that's simply not true.  Unless
-I'm forgetting, something, I'll drop the READ_ONCE() and WRITE_ONCE() in
-kvm_mmu_alloc_page_hash(), and instead assert that mmu_lock is held for write.
+What is a "direct from flash boot loader"?
 
-> My understanding is that it is in kvm_get_mmu_page_hash() to avoid compiler
-> doing any read tear. If yes, then the same condition is valid here, isn't it?
+> That would obviously not be an UEFI environment, so the signing issue i=
+s not applicable.
+>=20
+> An all zero end field actually works for that purpose (although require=
+s a boot loader patch), because an unprogrammed flash sector contains FFF=
+FFFFF not 00000000.
+>=20
+> We have kept the bzImage format backwards compatible =E2=80=93 sometime=
+s at considerable effort =E2=80=93 and the cost of reasonably continuing =
+to do so is absolutely minimal. This is an incompatible change, so at lea=
+st it is appropriate to give unambiguous indication thereof.
+>=20
+> In other words: it ain't broken, don't try to fix it. It is all downsid=
+e, no upside.
 
-The intent wasn't to guard against a tear, but to instead ensure mmu_page_hash
-couldn't be re-read and end up with a NULL pointer deref, e.g. if KVM set
-mmu_page_hash and then nullfied it because some later step failed.  But if
-mmu_lock is held for write, that is simply impossible.
+Sure but look at what is there now:
+
+                /* Add 4 bytes of extra space for the obsolete CRC-32 che=
+cksum */
+                . =3D ALIGN(. + 4, 0x200);
+                _edata =3D . ;
+
+This basically screams at me: "delete me, delete me!" :-P
+
+So I would probably put the gist of what you say above as a comment there=
+ so
+that we have the rationale stated there, for future, trigger-happy
+generations.
+
+Thx.
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
