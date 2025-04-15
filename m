@@ -1,65 +1,72 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6453620DF4;
-	Tue, 15 Apr 2025 17:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B3021CFEF
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738912; cv=none; b=WPfAW1S/wEGrpwWKXcCz0mMtHp7QzWkg158YuqxngYNuEOKYWFiLWAa0GTt9316s4GCoa0nfTCrs45QNWFwnoH4RPbd4dA4AzKnam3n9jHZyDSwogplj9yZNvJ7BQ9QIOCwYVUKXYTRkj8SVLRsKHH9bOl41wXG8p3DN0OAc9uI=
+	t=1744738934; cv=none; b=UKNBbfxfnc9I0szX9REvWCn4O7XYIOPkhLy9mP2XDrS1OJK+MySwdV+Q3vSe2QV7uUFm3RmUXLtSBSqEfB6dswA80jDSNkhNB52L2jizFrqLBJi1sGyT8uTkJAXXgnL9a4H+joSidjZmqoqBC8Gw3R+T6nkLlnGYJ9TTU/UY+lM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738912; c=relaxed/simple;
-	bh=E/7aSL8EdbrgFdboJr2mns2xWXbQJ+JQ1Kb4Fy6iD5U=;
+	s=arc-20240116; t=1744738934; c=relaxed/simple;
+	bh=baUxTknSi+OT+xyxY4Iz1IFgEtLJEaH0TXENzKMge1U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ICNowYdpVUgwmTrIU8thrgfq23MEahpMQyDHO1klDxK5Dr+6BNYQHN4FuyhCtx9vo4OFnFn3NQacOAHlfrGp6qEviycBqTHFDdLuSkeSfffqOhF0P6zoY0pL35cWUd0bb2H2sJei7/M0mDW9rfGI8M7v37ySPmEsZWEC378+Nq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpUskMtm; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=dHK04/zvr+ldwua9ADaHpMOMd15QuvdpmKYx9tvefPv7t+Bce95ScE+1nQcSLcoc7hhGNzZ+DHLxznosu642JUYFoJYLGWORwBGkecqaqytA+b0FXIp4Dl5Q5tSGRAp6ZhAmQLGGyvfwk2ZkcSh/w1TCVopAiR5fMmvZ+jMHJYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Pq4YL8EA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpUskMtm"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e904f53151so50468036d6.3;
-        Tue, 15 Apr 2025 10:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744738910; x=1745343710; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MIbn2H/8wYXEOsjPRSdbZMnXsRSQ7mt9zFcJert8sIc=;
-        b=fpUskMtmfSc2geT6QeTClaBP2UDyElOV++9BAhTC5v/LhoHQaMXFx/4MHz+hWt02Js
-         aQ9tp7cJqLCqW/AIN4I48Y4tFrL2j2deMSYnAB7yWt8DHLOL5kk11BEj0iL5fLX5fag4
-         27yIi5yZeHM4RpJnPUKYX+nVos/GA7sqbZeL2mjA3XIqs+wf05igwHagwHCiPAEpH/Q+
-         WKbIevZiKrnInSou+Y1hxPZqzE4c4NQp1grkKyb2YkAcX5Ew+4swxbfBvt77bq8QrMOh
-         bBcqCIZU3s3fPgVIDD+sHBZQDKMR1K/aaIzAHXjW72U30suqHFkh3rWepY3kgS8nHoEc
-         Wo2w==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Pq4YL8EA"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tX3r002490
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:42:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+l2W10y/QDYItzPC6zPbHSlvs3nstb66aVexkh8d8Vs=; b=Pq4YL8EALfw2uEzt
+	wQAQe8an5esLGDdKqSLTxs2xVTmOL0VJ0cRtLDGAm5nNQk1g+zHjF96f4jOBZmJu
+	nTbTwRIfMst1yz8AC+6a3I7xmEt9ivvW6f+WHUUWfo17yYsbr6bJo9Qbsd1TadU3
+	qzpqB1GL/i7lTMn+xq5+SPIaj3RqZgOs0peXiHj43W0Yv8Via14igsEfLmXnsvis
+	vCyLXD+fsnSeD9X5vqc9br38I0/cBONKO9SjUoyQNn8HutozzuNrpIKUdssPWaUP
+	BD3cclKC2I9jVVloV+HsAzDdNdh/mgFQjkRSfOtbNM6tFl4pWbLGDmrviojF2OiS
+	pLITFQ==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vh2ws-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:42:10 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-73720b253fcso4429753b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:42:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744738910; x=1745343710;
+        d=1e100.net; s=20230601; t=1744738929; x=1745343729;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MIbn2H/8wYXEOsjPRSdbZMnXsRSQ7mt9zFcJert8sIc=;
-        b=OrQQQr37h3pgNXTzlS535mtECI7OX1iqaLOl/9HfcNys2m4n8PuLSm17zJ/NRay7u5
-         9gkHaTHanRl4gvvxQTofTlKNUfeVFFqh4IMjb6tmMOyimSUEMRbGdEqBHqe0zwG+Jgei
-         qYpieAIW42d43faBG+Tz9lT8sM+0EljHyqNP/Dxu4L3j5ksWMu8Xp7nGUtrdOdQkuw2s
-         3a3/GQImAc9OcKR8Evi0JmSqBDMA7ouXIyYdO5hoXmHYLn1EMEaEwja/JSQ6mbw8nnLW
-         /5feJbeEJf0FcIOeG3+Eq0DNjy4kveuo3MmFp4NI30PPO/9y2glcOcMsc85jbX4CSsZ1
-         f+HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVi29sFtD/Zr1mU0hdF6qYkF8SOL2gA/C9JhM1E2edbpDl8MW+xTtpYGYS9g8KGwSWvFIW4Mf9gtd7KiTE=@vger.kernel.org, AJvYcCXjbiJJvs36nIT/C3RE/Wkxw1M6gSOFHaoA+B1bjtb1DWukWX3c3OKEogL3C54mN1CHgRKibw0s@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaIIHHqdXG96pObTMmghHQweIQBNUCXdFzroYLqNtKci5Y/dDM
-	jBqmsRil55nGcr1iDUtqKV2YnW4Sq7rA8VnmXsLVGW9xnIkwcoU=
-X-Gm-Gg: ASbGncsuIApPPh8g6iyej0v6kSWoPDIzpTfAWBN0CjS5jX3Pxt3XcCPpTbevAlE4QZc
-	jSNkyxMaEkKNInKgRc0yzslJlU3CT5pGr8FHM/0dizDciBvbKMiapjO0Wwi/I7rJp+6V57tM/ls
-	UArFLnOhcvjZy0vUF32gbATdqOBZNY/fhfRcTidCjKRwNqsla3XeY/S9vIoPdiFPcYUHHHUlIz4
-	gNcjhFA3uPe0dfHPp05iY6lf5pf3TIRY4QOBSFrA4Ok9phEhwHNK8lW4KZDCNnQhUFGKJdXRqMW
-	EWdijuqpQBHDiLScwsIeJb5aojMpfuIP4h8dlb80cqxE+aD4NNJ4G9+gvFJyw244Un5PH3VDAth
-	/SCtN1K81BwMQVIqO
-X-Google-Smtp-Source: AGHT+IGOklpMYZqBoeR8Oc//exf3CssPvnMzNTGC0x09dxZsvQjngf0zg5icFhmnVNVVRUYJVRbjZA==
-X-Received: by 2002:a05:6214:21c4:b0:6eb:28e4:8516 with SMTP id 6a1803df08f44-6f2ad96c387mr6476146d6.33.1744738910188;
-        Tue, 15 Apr 2025 10:41:50 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:115c:1:c5e9:5591:e693:357f? ([2620:10d:c090:500::7:68bb])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea1064esm103605906d6.99.2025.04.15.10.41.48
+        bh=+l2W10y/QDYItzPC6zPbHSlvs3nstb66aVexkh8d8Vs=;
+        b=YTdEl18VqfzC4NG9K4hlnu6vRJdeWd/bk4049YgRuAo2YXtIe+VSZ0SvfAZsKcQkyj
+         5SiayhKqAqNn/ATxad+NBG04wKv0Sh+kXoCuqhmRBeyKYMDMtZTZIJgfxgwAGbxskFFw
+         XrJZlj2nru/2o+X3pr4P4YbQgx/Ct/jayIq7miZridFqeFpleWNZlA71PfCdmwEVNMSY
+         H1mxOFVu8GMkC+SX7zLiFQOx4jSJxZO60unhBHi2cpqMOzC4PeGLWvqS5T34iCIevpNh
+         lM7oNHSgTdknlAWWNlGoZqLlM34LYjdhq4/8fkaIWuPfoj65mdWDzFMuOT+KmzmEFn3y
+         G0Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUty1hy2jkzEibh/asMj6Ytz3DmV85XvpOCuznFHuzlvIhIWLBDNKSUtkjsVUroAzX4G59UcfS3miZM1Es=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKTYbKVTPloPK4kuCdk0am9z9oQcwje8MztiFGoeCr0l6fEhDi
+	M1g7mRsZIWQJdKe9rp8JNxQBQoJoulRZfMcEK4hx9jmsH+RlJQj56TEa1hUZFzs9NcuP4JIWAzE
+	Skm5M1p+tN+qf0VInG6xfZyEtQNzURMTTQsK1TFviKyvHQUXGk21Jt12rFx3T47s=
+X-Gm-Gg: ASbGncuqoWOTTPEIewdpS6M5yG3lpTMc+UwRNr6RBjl4LGwfnp5ZtaVZOLyqVAcRWlp
+	xTlqvN2j/2P8lhWzAEldYAXf0pkXa+IV1RRziBNS9cFNYc4Q8MuBgypSW4nHLYNFBElQSWfVg+I
+	AzqtlKOeJ6v9g+HtrCBHwXRdujnvxHYFq0U6d0InuSzf1rfirRpUqt8HkwgrETiBgRDT7USn48C
+	Y7QaDnyTKYupufpYa+3lFRsMEDj9hQ/9rYkMwXSdySbJpHAL88hZGwg2/EdvqAbgrtbNnFPckW1
+	hPUoyMk/5VRmDmK/Y6lurE8xC6vSrqzDzUK0Rnlq3wbMUiiETCm8wCO4gTmFLf7X7w0=
+X-Received: by 2002:a17:90b:5188:b0:2fe:80cb:ac05 with SMTP id 98e67ed59e1d1-3085ef076a0mr38633a91.9.1744738929393;
+        Tue, 15 Apr 2025 10:42:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHxjbyZltG3a17wFXsez/DYC3bIiRyst3wDQCr7ODZkdqhmIHOOPryE5s12rmU9eaY92ehfZQ==
+X-Received: by 2002:a17:90b:5188:b0:2fe:80cb:ac05 with SMTP id 98e67ed59e1d1-3085ef076a0mr38588a91.9.1744738929015;
+        Tue, 15 Apr 2025 10:42:09 -0700 (PDT)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f826sm13443504a91.29.2025.04.15.10.42.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 10:41:49 -0700 (PDT)
-Message-ID: <90466128-1e82-4572-8e24-67af36d85f20@gmail.com>
-Date: Tue, 15 Apr 2025 10:41:46 -0700
+        Tue, 15 Apr 2025 10:42:08 -0700 (PDT)
+Message-ID: <d25ca9c0-64cf-4edd-97f7-d82a71e32eb0@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 10:42:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,29 +74,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] net: ncsi: Fix GCPS 64-bit member variables
-To: Paul Fertser <fercerpav@gmail.com>
-Cc: sam@mendozajonas.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
- akozlov@meta.com, hkalavakunta@meta.com
-References: <20250410172247.1932-1-kalavakunta.hari.prasad@gmail.com>
- <Z/j7kdhvMTIt2jgt@home.paul.comp>
+Subject: Re: [PATCH ath-next v2 0/2] wifi: ath12k: handle scan vdev
+ consistently
+To: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>,
+        Jeff Johnson <jjohnson@kernel.org>
+Cc: ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+References: <20250411-fix_scan_vdev_handling-v2-0-b6740896c144@oss.qualcomm.com>
 Content-Language: en-US
-From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
-In-Reply-To: <Z/j7kdhvMTIt2jgt@home.paul.comp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+In-Reply-To: <20250411-fix_scan_vdev_handling-v2-0-b6740896c144@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: utsN58D52wzvMr3FN2RKAy57c5caai8-
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fe9a72 cx=c_pps a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=tjBKq9sULpQLctw1ybUA:9 a=QEXdDO2ut3YA:10 a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-GUID: utsN58D52wzvMr3FN2RKAy57c5caai8-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_07,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150124
 
-On 4/11/2025 4:22 AM, Paul Fertser wrote:
-
-> Thank you for working on this. I'll be looking forward to your next
-> patch where response validation is added.
+On 4/10/2025 8:16 PM, Aditya Kumar Singh wrote:
+> This series of patches addresses the handling of scan links in the ath12k
+> driver to improve consistency and functionality. The changes ensure that
+> link ID 15 is correctly used for scan operations across both ML and non-ML
+> interfaces. Additionally, the patches prevent scan failures by fetching
+> link_conf only when the link ID is valid and setting appropriate default
+> values for scan vdevs.
 > 
-> BTW, have you already discussed how exactly you plan to expose the
-> statistics to the userspace, is that something that should end up
-> visible via e.g. `ethtool -S eth0 --groups nc-si` ?
-Hello Paul, Thank you for taking the time to review and provide 
-feedback. I will thoroughly investigate the response validation gaps and 
-address them as soon as possible. Regarding your suggestion, I agree 
-that making statistics visible to userspace via ethtool is a good idea.
+> Currently, no issues have been observed; these changes are intended as a
+> cleanup and to ensure proper handling. For split-mac these changes are
+> pre-req change.
+> 
+> ---
+> Changes in v2:
+> - CCed linux-wireless list as well.
+> - No other changes.
+> 
+> ---
+> Aditya Kumar Singh (2):
+>       wifi: ath12k: handle scan link during vdev create
+>       wifi: ath12k: Use scan link ID 15 for all scan operations
+> 
+>  drivers/net/wireless/ath/ath12k/mac.c | 55 ++++++++++++++++-------------------
+>  1 file changed, 25 insertions(+), 30 deletions(-)
+> ---
+> base-commit: 1a7000fb8348e04ab486513d6ebd4b6074a94be2
+> change-id: 20250402-fix_scan_vdev_handling-ef5be452b949
+> 
+
+This now needs to be rebased...
+
+Applying: wifi: ath12k: handle scan link during vdev create
+Applying: wifi: ath12k: Use scan link ID 15 for all scan operations
+Using index info to reconstruct a base tree...
+M       drivers/net/wireless/ath/ath12k/mac.c
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/net/wireless/ath/ath12k/mac.c
+CONFLICT (content): Merge conflict in drivers/net/wireless/ath/ath12k/mac.c
+Recorded preimage for 'drivers/net/wireless/ath/ath12k/mac.c'
+error: Failed to merge in the changes.
+Patch failed at 0002 wifi: ath12k: Use scan link ID 15 for all scan operations
+
