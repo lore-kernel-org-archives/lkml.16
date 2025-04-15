@@ -1,78 +1,69 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968392820D0;
-	Tue, 15 Apr 2025 09:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FABA1DF994;
+	Tue, 15 Apr 2025 09:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710867; cv=none; b=soqajfzSsVtp0uYRp7iYhCqSUhlg66Qbze8VP08OLqjM04SYH0tJRQejy/DyM30zk9VIHRWWB9pEQRzLpKN1dmZ5WkjEVF09jA358vrUXEubM8c4Q0Rk3DD1sQcDOA/XwHlzugbMIcpsro5lbNcX9B2CWgc7/el4uKuVk+DP4bw=
+	t=1744710868; cv=none; b=cevHvIp0HtpLTc/4w2jebIFLDc8UcpFSeD0tET926DeVjQfWhvEuAapEYFAISDIBSM2aZVJLQY5eGKNkL+7r/4aSRVn7Y0HuGjsQ/Qs8QasZYY60S8n9xBLyHM64mR5VIG8NlvGJ704hRvV5TFjxCF0IhyOiwts6u9uptFV9DtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710867; c=relaxed/simple;
-	bh=lK37py1zOsfETjH0W+RywbZi9Hhk9oH0kO5ktf/YyEc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GlEEyPDArVq5uCAoTtwCNDGZ8euOBcyaEgilsO9lOqmv3w+yA5zNMLVPczzq5diVAckYeiMiKhmypwnhkENAdq3bfMzeSo+7Iz+p1RXpXKijjF6lUCOm/J8IrIGZvahPzIBpaBHn99CP/nkLVkuyRbiEyqZpn5P5F9ganCLjB88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8b3qWxF; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744710868; c=relaxed/simple;
+	bh=dDhpq++W6HJnwNqVj7EdN30IAMmLatmItOs2z+mp+NI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RK17YmfTHu9U6OvTx7TMD9EYvTKcuqxTzEzc5QafLbCgnFoSC51f0ttd4Kdxhvi5LjTMkhY5xVuK6XA/XIR2o3EexWA2hsgcg44cKyde1Sg3SZlmZZOJdlq1WiG5lK9k81YtmQWwzq6DUKJm1n1lzlu16MHNisqdTqRj67ezQaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CUH23bhf; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8b3qWxF"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736b350a22cso4467869b3a.1;
-        Tue, 15 Apr 2025 02:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744710865; x=1745315665; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nYpGhwmmgnLY8txDgIEQRH5jdUdNpNJ3RHDmtFvhBCk=;
-        b=m8b3qWxFJHpIekW8/0L/S6uaaoqhB1HwoZo+KtH3WIT0bsurI5UsKhGjNqr54VH/AD
-         pYoXrI1A5F6Zfu4W0J0TQGnH8i5KuUy7Y/lBq9cQQh08nnYW373AuqIPR53alvfQtGEw
-         PzSX832pQ26YKbekAW++zGsXcCA9q6r4b+3gF/EomJ8qhamC0/Z0ZaeQMnvrf/+xBeGx
-         G5oRdbabl2rHG6kbniS9ZKUJZyji1MBhCKgvqoYPQAItC3UxGCU/4q+cE6/ZQslfCFh6
-         SklmANm2FYTvlaYpR2JIXqfNFPszrDGtI+P+CmqsPJ0HE+rm5+BRsdPlXgDKf5i2O0h8
-         THKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744710865; x=1745315665;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nYpGhwmmgnLY8txDgIEQRH5jdUdNpNJ3RHDmtFvhBCk=;
-        b=BAyHCc6Ac7uTx0vPcowphD0wo0IegwEZKNWZ5wX4+RWdsyik71YLhjJhruodHmrzH+
-         EApLfE0gw03jWsyPDXkR4Ueo2LpwhXaJWoyGYB6jLCX/JnI7WmcBYQiltv1JuFt6BqKC
-         FfO6W3cmtI72m6PPL13f/tKUknSGmC7MEI0+/TMdmfEcZzfoYgDrrktGI54psFoVHE5u
-         QcSFabhyG9U+L+B3ma5ymTV9ox/3LfolGXl8Kq6BZ2uh7MmdksK9++gmE+m+5dHU2JEb
-         aw2sfVMIb/1QQTpd+2FesaVGWTp/qtdXvTe3yIgzZQoQ8DnTQP7EFCyzycxZ4lBXRd5K
-         ChDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1jtYjoQADk6k6jPJ9TO5RrIBzw5ahgQ6Nk1E7ZuSgIzrHcsIsCRyiaCl2zrP/QSHidBPB1Ak0S3YxKgPH@vger.kernel.org, AJvYcCU4opwbDLi1JYWTYnNTEEa5KNS5DPSDopL5gn3S/V8+akUh3zBHOcusRQTyAKuJRXSjG1fZ4lql1FaX@vger.kernel.org, AJvYcCXDW9sX6fwpg45ZtZOmgAPqVKQ66oVKVH6pmBn/qhX0Mb/IsbOtCyZ9XKIlfANt+y136IrJuj3/dH1rqw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYkb7FyX3s9DXJQuCRlRzGwRMGsCLDoUYSswH8sv3CrmUrto3m
-	IysB8YgdnLzguatdkQdDtX63u0ZwXWQmx3FIxSbUG1auwmuEYQue7pD3FA==
-X-Gm-Gg: ASbGnctBNITVCIw9gO75h+zrRSOFY8NuITVUhBEMCL7LRm9CBhpRHVBdo70iV/Jld6x
-	Ee32cwemDfVs+vVMIx7FDxIy4UVXOKmuglW+BKgTx7iutnZVipBq7bULTaxLfIi1ME4v6LRVchI
-	gMI+L5A7jj9l8o8ptkBlsttzvReWlyxiuJX8WVfSO1DjjZsDwPiX3kebAOFwFno2hMgZlJKTnxT
-	LMuA+rY/aK+ZlCnZiwQNVXY9rpcIBSgSQXToSkWQ4j5wsVYvGMDX880vBVmGKDKXKrg/DUpvdnI
-	1R3+Xl7EO9ijMS6UbQ20L4havxfK+ada5bx5HusCML0gVoYPmJo22OM=
-X-Google-Smtp-Source: AGHT+IFjNHbcTufXh8fFzrFcTeMoEjvYjAzqkO8JWy4aZMguP6+TutUuL10puZf3uD4t34dThiEozg==
-X-Received: by 2002:a05:6a00:4fc7:b0:737:9b:582a with SMTP id d2e1a72fcca58-73bd12b3127mr24417976b3a.24.1744710864577;
-        Tue, 15 Apr 2025 02:54:24 -0700 (PDT)
-Received: from localhost.localdomain ([116.106.96.242])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c335asm8335575b3a.50.2025.04.15.02.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 02:54:24 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: krzk+dt@kernel.org
-Cc: pavel@kernel.org,
-	lee@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Tue, 15 Apr 2025 16:53:58 +0700
-Message-Id: <20250415095358.8044-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2badc360-9bfa-400a-acca-ab82f8cc5a95@kernel.org>
-References: <2badc360-9bfa-400a-acca-ab82f8cc5a95@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CUH23bhf"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tKeG025188;
+	Tue, 15 Apr 2025 09:54:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	o/Lz5rwguUXqsk8HlVRhbhoMgd+g18cHL0dsMmrxrp0=; b=CUH23bhfvuUOg5P6
+	P1r1isgcDPq3auU7Fmi6I94ST9JYPToP3azfU3YjTRo6yOGlO0Fntaw+u7huUaZG
+	pEvFyL+no/RGrd8wEuLVLzNguslHUWmi8BLRsQ0FQo0HkJNFCU6mc2ir8n7XGOpd
+	SIGdtzgyq7rbjPSTXTNWZTPpx5SxPPQ5DDU24m27qzEGQL469BenR9WJJA5Tkqfx
+	TcszeZmB1zfd57zqNpl1MugBPd7GVSvV/iJklreFntmZnXiJvcq7wK2KRo4Oj1jB
+	H5FPcodIIbvRZkTcSNM8t4Jtl0RV9Op6LdWcZpPlq50rwVUl2nchtBp/k2xzVL0f
+	4Ak90Q==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf69qmag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:54:22 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53F9sLuZ013106
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:54:21 GMT
+Received: from 087e9057f447.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 15 Apr 2025 02:54:17 -0700
+From: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+To: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: Odelu Kukatla <quic_okukatla@quicinc.com>,
+        Jeff Johnson
+	<jeff.johnson@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Mike Tipton <mdtipton@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Raviteja
+ Laggyshetty" <quic_rlaggysh@quicinc.com>
+Subject: [PATCH V11 2/7] interconnect: core: Add dynamic id allocation support
+Date: Tue, 15 Apr 2025 09:53:38 +0000
+Message-ID: <20250415095343.32125-3-quic_rlaggysh@quicinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250415095343.32125-1-quic_rlaggysh@quicinc.com>
+References: <20250415095343.32125-1-quic_rlaggysh@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,67 +71,213 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: _jdqKAUnzW-FDz0eoy6wRnTvz6ySCvQt
+X-Authority-Analysis: v=2.4 cv=JNc7s9Kb c=1 sm=1 tr=0 ts=67fe2cce cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=U35lfTTpteBrRMSzLT0A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: _jdqKAUnzW-FDz0eoy6wRnTvz6ySCvQt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150069
 
-On Mon, 14 Apr 2025, Krzysztof Kozlowski wrote:
+The current interconnect framework relies on static IDs for node
+creation and registration, which limits topologies with multiple
+instances of the same interconnect provider. To address this,
+introduce icc_node_create_dyn() and icc_link_nodes() APIs to
+dynamically allocate IDs for interconnect nodes during creation
+and link. This change removes the dependency on static IDs,
+allowing multiple instances of the same hardware, such as EPSS L3.
 
-> On 14/04/2025 16:57, Nam Tran wrote:
-> > +
-> > +description: |
-> > +  The LP5812 is an I2C LED Driver that can support LED matrix 4x3.
-> > +  For more product information please see the link below:
-> > +  https://www.ti.com/product/LP5812#tech-docs
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ti,lp5812
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#address-cells":
-> > +    const: 1
-> > +
-> > +  "#size-cells":
-> > +    const: 0
-> 
-> No need for supply?
+Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
+---
+ drivers/interconnect/core.c           | 82 ++++++++++++++++++++++++++-
+ include/linux/interconnect-provider.h | 12 ++++
+ include/linux/interconnect.h          |  3 +
+ 3 files changed, 96 insertions(+), 1 deletion(-)
 
-Since the hardware uses an external power supply,
-we decide not to include the supply property in the binding.
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+index 9d5404a07e8a..1a41e59c77f8 100644
+--- a/drivers/interconnect/core.c
++++ b/drivers/interconnect/core.c
+@@ -20,6 +20,8 @@
+ 
+ #include "internal.h"
+ 
++#define ICC_DYN_ID_START 10000
++
+ #define CREATE_TRACE_POINTS
+ #include "trace.h"
+ 
+@@ -826,7 +828,12 @@ static struct icc_node *icc_node_create_nolock(int id)
+ 	if (!node)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	id = idr_alloc(&icc_idr, node, id, id + 1, GFP_KERNEL);
++	/* dynamic id allocation */
++	if (id == ICC_ALLOC_DYN_ID)
++		id = idr_alloc(&icc_idr, node, ICC_DYN_ID_START, 0, GFP_KERNEL);
++	else
++		id = idr_alloc(&icc_idr, node, id, id + 1, GFP_KERNEL);
++
+ 	if (id < 0) {
+ 		WARN(1, "%s: couldn't get idr\n", __func__);
+ 		kfree(node);
+@@ -838,6 +845,25 @@ static struct icc_node *icc_node_create_nolock(int id)
+ 	return node;
+ }
+ 
++/**
++ * icc_node_create_dyn() - create a node with dynamic id
++ *
++ * Return: icc_node pointer on success, or ERR_PTR() on error
++ */
++struct icc_node *icc_node_create_dyn(void)
++{
++	struct icc_node *node;
++
++	mutex_lock(&icc_lock);
++
++	node = icc_node_create_nolock(ICC_ALLOC_DYN_ID);
++
++	mutex_unlock(&icc_lock);
++
++	return node;
++}
++EXPORT_SYMBOL_GPL(icc_node_create_dyn);
++
+ /**
+  * icc_node_create() - create a node
+  * @id: node id
+@@ -884,6 +910,56 @@ void icc_node_destroy(int id)
+ }
+ EXPORT_SYMBOL_GPL(icc_node_destroy);
+ 
++/**
++ * icc_link_nodes() - create link between two nodes
++ * @src_node: source node
++ * @dst_node: destination node
++ *
++ * Create a link between two nodes. The nodes might belong to different
++ * interconnect providers and the @dst_node might not exist (if the
++ * provider driver has not probed yet). So just create the @dst_node
++ * and when the actual provider driver is probed, the rest of the node
++ * data is filled.
++ *
++ * Return: 0 on success, or an error code otherwise
++ */
++int icc_link_nodes(struct icc_node *src_node, struct icc_node **dst_node)
++{
++	struct icc_node **new;
++	int ret = 0;
++
++	if (!src_node->provider)
++		return -EINVAL;
++
++	mutex_lock(&icc_lock);
++
++	if (!*dst_node) {
++		*dst_node = icc_node_create_nolock(ICC_ALLOC_DYN_ID);
++
++		if (IS_ERR(*dst_node)) {
++			ret = PTR_ERR(*dst_node);
++			goto out;
++		}
++	}
++
++	new = krealloc(src_node->links,
++		       (src_node->num_links + 1) * sizeof(*src_node->links),
++		       GFP_KERNEL);
++	if (!new) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	src_node->links = new;
++	src_node->links[src_node->num_links++] = *dst_node;
++
++out:
++	mutex_unlock(&icc_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(icc_link_nodes);
++
+ /**
+  * icc_link_create() - create a link between two nodes
+  * @node: source node id
+@@ -962,6 +1038,10 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
+ 	node->avg_bw = node->init_avg;
+ 	node->peak_bw = node->init_peak;
+ 
++	if (node->id >= ICC_DYN_ID_START)
++		node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
++					    node->name, dev_name(provider->dev));
++
+ 	if (node->avg_bw || node->peak_bw) {
+ 		if (provider->pre_aggregate)
+ 			provider->pre_aggregate(node);
+diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+index f5aef8784692..55cfebc658e6 100644
+--- a/include/linux/interconnect-provider.h
++++ b/include/linux/interconnect-provider.h
+@@ -116,8 +116,10 @@ struct icc_node {
+ 
+ int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+ 		      u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
++struct icc_node *icc_node_create_dyn(void);
+ struct icc_node *icc_node_create(int id);
+ void icc_node_destroy(int id);
++int icc_link_nodes(struct icc_node *src_node, struct icc_node **dst_node);
+ int icc_link_create(struct icc_node *node, const int dst_id);
+ void icc_node_add(struct icc_node *node, struct icc_provider *provider);
+ void icc_node_del(struct icc_node *node);
+@@ -136,6 +138,11 @@ static inline int icc_std_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+ 	return -ENOTSUPP;
+ }
+ 
++static inline struct icc_node *icc_node_create_dyn(void)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline struct icc_node *icc_node_create(int id)
+ {
+ 	return ERR_PTR(-ENOTSUPP);
+@@ -145,6 +152,11 @@ static inline void icc_node_destroy(int id)
+ {
+ }
+ 
++static inline int icc_link_nodes(struct icc_node *src_node, struct icc_node **dst_node)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline int icc_link_create(struct icc_node *node, const int dst_id)
+ {
+ 	return -ENOTSUPP;
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index 97ac253df62c..e4b8808823ad 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -20,6 +20,9 @@
+ #define Mbps_to_icc(x)	((x) * 1000 / 8)
+ #define Gbps_to_icc(x)	((x) * 1000 * 1000 / 8)
+ 
++/* macro to indicate dynamic id allocation */
++#define ICC_ALLOC_DYN_ID	-1
++
+ struct icc_path;
+ struct device;
+ 
+-- 
+2.43.0
 
-> > +
-> > +patternProperties:
-> > +  "^led@[0-9a-b]$":
-> > +    type: object
-> > +    $ref: common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 0xb
-> > +
-> > +      chan-name:
-> > +        $ref: /schemas/types.yaml#/definitions/string
-> > +        description: LED channel name
-> 
-> My comment stay valid. I don't think LEDs have channels, datasheet also
-> has nothing about channels, so again - use existing properties. Or
-> better drop it - I don't see any point in the name. The reg already
-> defines it.
-
-The channel was named for the output channel to each LED, not the LED channels.
-They are not required properties because we can control entirely the LEDs of LP5812 through the indexes (regs property),
-but the person who wants to develop LP5812's matrix-related features can use the "channels" for easy mapping.
-
-> 
-> However after dropping this, your example has nodes with only reg -
-> what's the point of them? Why no properties from common.yaml are
-> applicable? If they are not applicable, then the entire subnode should
-> be dropped - you don't need them to describe the hardware.
-
-Actually, the "color" property can be applied, but the LP5812 is a matrix LED,
-so specifying a particular LED color is not necessary when developing LP5812 features.
-
-Best regards,
-Nam Tran
