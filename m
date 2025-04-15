@@ -1,155 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51C651C9B9B;
-	Tue, 15 Apr 2025 08:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303B61C9B9B;
+	Tue, 15 Apr 2025 08:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706855; cv=none; b=tbP71i9+yGLzeBSMdKtrmLxfk0UmlmePBaxgfLQw7DiRdC20gSBR0Kk57kwv3soHEauA0TCLyxc72lNmVrYl6i/jzAF12aCXHF9KzSySquRQfw1DWwBkSm19StO+uE4WJzulJT1o/hGerO0QqdaMYi9gULA3HWdA7V++lobfpqc=
+	t=1744706866; cv=none; b=QEBLC+FTxbTojpYB81xpZaJCwWwFdDLvzu1IJpxl0uaXNHHBW1aMWUQlJyzS9bGhiKkga8p6KQ1kJgtlLRHvwStiABV20syIS5KI7CvF6y49GQdMagZmeBYNyXmYd+PXbXbkB0tneTGCne41AAAsCsQHUOdz+xbse1atRnK4UMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706855; c=relaxed/simple;
-	bh=6aaXfc25NEvE47B9WK+pF4wB4Ka8W/SaAt16XdAIFWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=pFrM6lFkxHozEr4HbIsw7VO4UhJAlPHmFBRVOL50NjRiHZCpKeCKvHbFqEZNSeFg9WSSHR/UpFRh58f/PoupX1nGit1yYggm+S8ApqMgvMM2yMqGhu+byD3frg3SIiIVYTzfQiA+NXu4nAZEfJvVtB6ejLUK4yl1CciimK6Edlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AF55339;
-	Tue, 15 Apr 2025 01:47:31 -0700 (PDT)
-Received: from [10.57.68.100] (unknown [10.57.68.100])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0AF53F694;
-	Tue, 15 Apr 2025 01:47:29 -0700 (PDT)
-Message-ID: <0658a7d4-3048-4078-af14-574b87e4122a@arm.com>
-Date: Tue, 15 Apr 2025 09:47:27 +0100
+	s=arc-20240116; t=1744706866; c=relaxed/simple;
+	bh=rCkQaiV8UvXZZucXLcojjy+jRldKKp9rj/zIIx3mUcc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mupNxTb/uheSlxqIdQBeapF6DmyfUT0tUKBKxjAb7OrQvxn+dVi5omFypKM0hLix9KbBLJHJztcVLn98TOwhY1KRSClh5dBetMuWZh5B/a3i4QGN9TvKk4zxrQPaQX9TuSevO4lhRK+XIjOV87Bl1u9R/JJo/Su0jducOyFf5CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BID48Jc4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BID48Jc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4FDC4CEE9;
+	Tue, 15 Apr 2025 08:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744706865;
+	bh=rCkQaiV8UvXZZucXLcojjy+jRldKKp9rj/zIIx3mUcc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BID48Jc49LHTZ1e1fkby0OWl7Oe8Ldt8kVabt6gCDQjf5E29z7zKgiZztk20aCpdz
+	 Rbk1TO62AoAN5E6wLjKmsrtqACu37msR2CPFUoOq+eRZxtE6BHIIL/qYekhoCk0RzS
+	 C5kl1SjOZnoZOV5M21zGerkxFowbKwyFqDOyPUqCeRlqyGcymrEsOv3DUDYvygEMW9
+	 XE9YDa/8kPh2AeroewtYFWRyb3kpx76vwxtdYA5KkhrwgP7ux/P5IlrWzNhqfR5d++
+	 iDCZ0WdWfyYhjEGErGDlhMvpsLw6qnRU5xx+F4GO7ZkHyi21AXD9RWTHZEdjoqV1/j
+	 HIi0bo+kgwlgw==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so9210749a12.0;
+        Tue, 15 Apr 2025 01:47:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUVig85Qb6XZbUPaMAiHwWGjDt2aI87TouoDPBzc+VyMUw/Ob83q7+tx08jFwpoxhTsgmc3bbkR2QGgFIWRX7ib@vger.kernel.org, AJvYcCWb4TnH/7BQDcADyTjOfbe5bM9yFS9Pts+hU6crJP1eVcJz5Yp0GbG9QmO6awC6iQe5R+2n6cJwX9hojLQ=@vger.kernel.org, AJvYcCXpZso0GtWNPdMZadlJmg9H1dl6s4INxWkVEDmlO7Islk39f7ww1Q/+1nxPbaHmCy20UAoIoW/si7ns0w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmE5zcnUYx1ttKXNf8dUbdWKLobE8MKUivh5FnKTgisz/UhUu3
+	29dGyaxroSPNhbCffOg5uSK9xuNbe8B9sQffbKPe3U9QQrH+ZKZnzdErP/W2QVD66Rth3UYQ6Jp
+	HA1UnY/oQMxU3rT7m8KNT5NFXhxQ=
+X-Google-Smtp-Source: AGHT+IGGGp4mD43KUIHTnp6qprRyupvO+rjVcFQNkbhkl5DWOmFNSNrWDn0Ycc+UUCRvlHnlaxWm/lqhAeEBj4G3WcI=
+X-Received: by 2002:a17:906:dc94:b0:ac7:3a23:569c with SMTP id
+ a640c23a62f3a-acad34468e4mr1593829966b.1.1744706864187; Tue, 15 Apr 2025
+ 01:47:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/3] drivers/thermal/exynos: Refactor clk_sec
- initialization inside SOC-specific case
-To: Anand Moon <linux.amoon@gmail.com>
-References: <20250410063754.5483-1-linux.amoon@gmail.com>
- <20250410063754.5483-2-linux.amoon@gmail.com>
-Content-Language: en-US
-Cc: open list <linux-kernel@vger.kernel.org>,
- Justin Stitt <justinstitt@google.com>, Bill Wendling <morbo@google.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Krzysztof Kozlowski
- <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>,
- "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
- <llvm@lists.linux.dev>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
- <linux-arm-kernel@lists.infradead.org>, Nathan Chancellor
- <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20250410063754.5483-2-linux.amoon@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de> <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
+In-Reply-To: <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 15 Apr 2025 16:47:31 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5b8ePEkCyECax37BOiqu57ZVRt_FHt11ijbPgsty+r=A@mail.gmail.com>
+X-Gm-Features: ATxdqUFuEM48gRpDnFeEggn2BIbSPZXdcbVAh9Rsa0I8PR7GkoEkvAFVvvabfxk
+Message-ID: <CAAhV-H5b8ePEkCyECax37BOiqu57ZVRt_FHt11ijbPgsty+r=A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] MIPS: Don't crash in stack_top() for tasks without
+ ABI or vDSO
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi, Thomas,
 
-
-On 4/10/25 07:37, Anand Moon wrote:
-> Refactor the initialization of the clk_sec clock to be inside the
-> SOC_ARCH_EXYNOS5420_TRIMINFO case. It ensures that the clk_sec clock
-> is only initialized for the specified SOC and not for other SOCs,
-> thereby simplifying the code. The clk_sec clock is used by the TMU
-> for GPU on the Exynos 542x platform.
-> 
-> Removed redundant IS_ERR() checks for the clk_sec clock since error
-> handling is already managed internally by clk_unprepare() functions.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+On Tue, Apr 15, 2025 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> Not all tasks have an ABI associated or vDSO mapped,
+> for example kthreads never do.
+> If such a task ever ends up calling stack_top(), it will derefence the
+> NULL ABI pointer and crash.
+>
+> This can for example happen when using kunit:
+>
+>     mips_stack_top+0x28/0xc0
+>     arch_pick_mmap_layout+0x190/0x220
+>     kunit_vm_mmap_init+0xf8/0x138
+>     __kunit_add_resource+0x40/0xa8
+>     kunit_vm_mmap+0x88/0xd8
+>     usercopy_test_init+0xb8/0x240
+>     kunit_try_run_case+0x5c/0x1a8
+>     kunit_generic_run_threadfn_adapter+0x28/0x50
+>     kthread+0x118/0x240
+>     ret_from_kernel_thread+0x14/0x1c
+>
+> Only dereference the ABI point if it is set.
+>
+> Also move the randomization adjustment into the same conditional.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
-> v5: None
-> v4: Fix the aligment of code clk for clk_prepare in proper if/else block.
->      update the commit for clk_sec used.
->      checked to goto clean up all the clks are proper.
->      drop IS_ERR() check for clk_sec.
-> v3: improve the commit message.
-> ---
->   drivers/thermal/samsung/exynos_tmu.c | 37 ++++++++++++++--------------
->   1 file changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index 47a99b3c5395..3657920de000 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -1037,29 +1037,30 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->   		return ret;
->   
->   	data->clk = devm_clk_get(dev, "tmu_apbif");
-> -	if (IS_ERR(data->clk))
-> +	if (IS_ERR(data->clk)) {
->   		return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
-> -
-> -	data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> -	if (IS_ERR(data->clk_sec)) {
-> -		if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO)
-> -			return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> -					     "Failed to get triminfo clock\n");
->   	} else {
-> -		ret = clk_prepare(data->clk_sec);
-> +		ret = clk_prepare(data->clk);
->   		if (ret) {
->   			dev_err(dev, "Failed to get clock\n");
->   			return ret;
->   		}
->   	}
->   
-> -	ret = clk_prepare(data->clk);
-> -	if (ret) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		goto err_clk_sec;
-> -	}
-> -
->   	switch (data->soc) {
-> +	case SOC_ARCH_EXYNOS5420_TRIMINFO:
-> +		data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> +		if (IS_ERR(data->clk_sec)) {
-> +			ret = dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> +					    "Failed to get clk_sec clock\n");
-> +			goto err_clk;
-> +		}
-> +		ret = clk_prepare(data->clk_sec);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to prepare clk_sec clock\n");
-> +			goto err_clk_sec;
-> +		}
-> +		break;
->   	case SOC_ARCH_EXYNOS5433:
->   	case SOC_ARCH_EXYNOS7:
->   		data->sclk = devm_clk_get(dev, "tmu_sclk");
-> @@ -1112,11 +1113,10 @@ static int exynos_tmu_probe(struct platform_device *pdev)
->   
->   err_sclk:
->   	clk_disable_unprepare(data->sclk);
-> +err_clk_sec:
-> +	clk_unprepare(data->clk_sec);
->   err_clk:
->   	clk_unprepare(data->clk);
-> -err_clk_sec:
-> -	if (!IS_ERR(data->clk_sec))
-> -		clk_unprepare(data->clk_sec);
->   	return ret;
->   }
->   
-> @@ -1128,8 +1128,7 @@ static void exynos_tmu_remove(struct platform_device *pdev)
->   
->   	clk_disable_unprepare(data->sclk);
->   	clk_unprepare(data->clk);
-> -	if (!IS_ERR(data->clk_sec))
-> -		clk_unprepare(data->clk_sec);
-> +	clk_unprepare(data->clk_sec);
->   }
->   
->   #ifdef CONFIG_PM_SLEEP
+>  arch/mips/kernel/process.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+> index b630604c577f9ff3f2493b0f254363e499c8318c..02aa6a04a21da437909eeac4f=
+149155cc298f5b5 100644
+> --- a/arch/mips/kernel/process.c
+> +++ b/arch/mips/kernel/process.c
+> @@ -690,18 +690,20 @@ unsigned long mips_stack_top(void)
+>         }
+>
+>         /* Space for the VDSO, data page & GIC user page */
+> -       top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
+> -       top -=3D PAGE_SIZE;
+> -       top -=3D mips_gic_present() ? PAGE_SIZE : 0;
+> +       if (current->thread.abi) {
+> +               top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
+> +               top -=3D PAGE_SIZE;
+> +               top -=3D mips_gic_present() ? PAGE_SIZE : 0;
+I'm not sure, but maybe this line has nothing to do with VDSO.
 
-It looks good. I've missed the v4 where you addressed my comments.
+Huacai
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> +
+> +               /* Space to randomize the VDSO base */
+> +               if (current->flags & PF_RANDOMIZE)
+> +                       top -=3D VDSO_RANDOMIZE_SIZE;
+> +       }
+>
+>         /* Space for cache colour alignment */
+>         if (cpu_has_dc_aliases)
+>                 top -=3D shm_align_mask + 1;
+>
+> -       /* Space to randomize the VDSO base */
+> -       if (current->flags & PF_RANDOMIZE)
+> -               top -=3D VDSO_RANDOMIZE_SIZE;
+> -
+>         return top;
+>  }
+>
+>
+> --
+> 2.49.0
+>
