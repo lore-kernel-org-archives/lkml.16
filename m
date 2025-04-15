@@ -1,78 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627A619E7F9;
-	Tue, 15 Apr 2025 06:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5325D43146
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698659; cv=none; b=dHRafh9hXU/l4TsrDLhwv7UIFepMeIcUCnpWwZIz6QJp+iPSsJEihaUtL0oD26fCcaE1qG87P9I0EDNKaX80UV1NZlD1GZMKn2BPUsZJ6qGZtbNsdHmEX2QGPO5T2QIwOzIIPZ0fZdt7mUaptzK2Juk33CYXSUBWeQGQPXanL+A=
+	t=1744698981; cv=none; b=mBIuUFodGM27exvRijc3vFoZMTWfmV70ZABlD/9zPp3epMuTJIZhDzAhNrsa5Z48OSmliIin8TnnLxCFvfp9tikQkWhH2oQMbEtyB4j01XtgLYSMrGFfmR5NtLYG3zhgDwnaWQK91ixfdQPJsva+oFAf0MYaXogozs2a65EX2BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698659; c=relaxed/simple;
-	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
+	s=arc-20240116; t=1744698981; c=relaxed/simple;
+	bh=SywP8t9wqOOU/8ix1gqduSsYqPmyq/rtNdkMj6TjcXI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sKnugQSsKU6C837dCK7y4EQfOL2p8VXXn6X2t3twKLIhZHhzKNGv6QeQoZaNG/QWKtgBB2+YiLOVDrXzNaDoiDBtKeejJh+bGtvvcEz8IQ5Ag/9x7/Iz+s7lo6wzUj9wcDOlXsd9iRtAgUvPIdoOviDDo1BNkK6zDaDLRi8D6C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J7xE2MdH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Heuai6nt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=I27cbouC90A6xHe8nRNEr/wW9ox64FrAmoMnSFDv4oFtAan+B/KBrn84Fl3hvfLF8DDoMlXAgfU4mQJ8tjP929rfgQ2rQS4g44CsolR0DzqVr6pCnCOLCA075DE6xAmuf75JEvkQh33m05TfGb1IYOe99fp4Oky5X4EQcPopcsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k00gBR3r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J7xE2MdH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Heuai6nt"
-Date: Tue, 15 Apr 2025 08:30:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744698656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
-	b=J7xE2MdHqfbP937+Ww4wixg/L9FtvnUCY3IgLnh+pagK1hPayeHnGws1e+3HRb2rxdtZ/h
-	xUvQB1b689ADiCmV0Apmyx3PO0Xplrczmf0iRBGZyX9ztfnUjQM94joAK2HkXmb0d0CEMn
-	E7Uhq8lkT3ksAOu/IBd3zRxelazvvr2rZ6782h3MmIaCOWb7afO0EwpbR+mZkWcUB8AuzW
-	m8HOBnj01+yq0pWY8LHJCxmddaw6JGraDdPwjIOMTyuPyiGbtT9mr4/LffoaDfFU4WuacG
-	TqUL4WCi22ZwMgfZiDHPnG0XKt1KZvZgibnFnbCP3fMfIkayyq412AjAOqBKQQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744698656;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IE5DnVpdF1de3XX4dQ8FvyhXAn2YbDi95QhoG0JcATk=;
-	b=Heuai6ntnKtatI5XsqHCHtmvLMSvI1cTyDEUJtoddyiOnXDRyKjhIzqhYBrtrHbCbVY/5p
-	DWUkNrIGZFQccwDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Waiman Long <llong@redhat.com>,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH] memcg: decouple memcg_hotplug_cpu_dead from stock_lock
-Message-ID: <20250415063054.jerbqGF8@linutronix.de>
-References: <20250410210623.1016767-1-shakeel.butt@linux.dev>
- <0e9e2d5d-ec64-4ad4-a184-0c53832ff565@suse.cz>
- <CAGj-7pUxYUDdRGaiFon=V2EG+3Ex5s9i7VvWbDH5T0v-7SE-CQ@mail.gmail.com>
- <8cce9a28-3b02-4126-a150-532e92c0e7f8@suse.cz>
- <CAGj-7pXRmG2D+5=yj-5uuciiNccWws6erBg_hSm9S6coEhN+3Q@mail.gmail.com>
- <esdt7fygdyzxxlb7ql6qzwqydzokmfi4uxkfwvxiqedff5wnxl@n34muduktzou>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k00gBR3r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B8D5C4CEDD;
+	Tue, 15 Apr 2025 06:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744698976;
+	bh=SywP8t9wqOOU/8ix1gqduSsYqPmyq/rtNdkMj6TjcXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k00gBR3rr2VN5htvNnFsTKuaPzBEF3nmYk9+S8n8OaMZLoVgO7xH2lvyB2cJE2Pgt
+	 YkXCx92F1xTG71gOEbqOy54C4f1fKAOGVSM3D6VOxjjGJMM5W/U5uYlI/5Sar03ePq
+	 yDlKOFabvRYQk6MkxFzAW8R2YKbWlo+iI/dWGC0W571Ugmq4KSLQKxZZhT/NdyVY1A
+	 ISeCamnd8mY3dT1dZmwP8mxUAPjcil4UVFqgYCZfQbmaiusm58XTiweGxw8zPbuFaR
+	 cixDdH7qEcTv1MbGsDRKNXwr8Ebjw6Ng2IrUCwsYDXH65G8cJGPFs5iBkwIlalewKn
+	 S1eIrr6S9uq2A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4Zu1-0000000040P-1Y3Q;
+	Tue, 15 Apr 2025 08:36:13 +0200
+Date: Tue, 15 Apr 2025 08:36:13 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: greybus: Reformat code in
+ gb_operation_sync_timeout()
+Message-ID: <Z_3-XS2DHEbqkSdx@hovoldconsulting.com>
+References: <20250413104802.49360-2-thorsten.blum@linux.dev>
+ <Z_yztGweLAfJgwXh@hovoldconsulting.com>
+ <BF2CF4C6-5381-4266-9E49-9C81E9604007@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <esdt7fygdyzxxlb7ql6qzwqydzokmfi4uxkfwvxiqedff5wnxl@n34muduktzou>
+In-Reply-To: <BF2CF4C6-5381-4266-9E49-9C81E9604007@linux.dev>
 
-On 2025-04-14 10:55:31 [-0700], Shakeel Butt wrote:
-> Vlastimil & Sebastian, if you don't have a strong opinion/push-back on
-> this patch then I will keep it as is. However I am planning to rework
-> the memcg stats (& vmstats) to see if I can use dedicated local_lock for
-> them and able to modify them in any context.
+On Mon, Apr 14, 2025 at 05:00:41PM +0200, Thorsten Blum wrote:
+> On 14. Apr 2025, at 09:05, Johan Hovold wrote:
+> > This just makes the code *less* readable.
+> 
+> I guess you prefer the code with curly braces?
 
-Please don't use local_irq_save().
+Around multiline statements yes, but the proposed if-else here also
+obscures the logic for no good reason.
 
-Sebastian
+> What about the Linux kernel coding style [1]? Specifically "Do not
+> unnecessarily use braces where a single statement will do."
+> 
+> My patch just removes any unnecessary curly braces, resulting in less
+> lines of code and no line break in the memcpy() arguments.
+
+I really don't care, the code is more readable as it stands which is
+what matters.
+
+If you want to practise sending patches you can send all the "cleanups"
+you want for code in drivers/staging where churn like this may be
+accepted (and where the core greybus code no longer lives, contrary to
+what your Subject suggests).
+
+Johan
