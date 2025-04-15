@@ -1,137 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3391A178395
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE95F2DFA2A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727027; cv=none; b=Qxvejpdos4iMllwrf6o9gUAWLOIR4bd7yHXPfU4hAZ/tXSoJyparND9YikaIVfaSYNs+ggDV+JyVViPYk4Sbiisf2CXH2onCLNWjWfRkEeafhDHe8S8IRfpDvYvOjK/QvefeybAVHeGINoaqLpTWxmVr6eKJq2pS99lhdt5arwE=
+	t=1744727114; cv=none; b=P08zU5fM3NS35eT4XyvqMNLfm6J8jnlRH90983ZQB63moqHxJvDXu1Mwj+0kEArFX0K5zP9Qzt8tGkQ735KQREY05Zi0cYCGjDUlVN0WdtdqTYikj44PYNOTZKEs3Scmoweh8PQMT3V3s7AlJXN6bYKOrVch3AHNQ8QKsVvs2aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727027; c=relaxed/simple;
-	bh=aNmL0+H984WKGRSWMsb/StuKFDQU1an6R5Y3td+dyM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fD9tobvjvmaP3ee3nFJDVNvJO8Te5pLdGWote2YmvNLcGvUJDGim9BHCCtDy8IXPXKnBoFBlDkk9tifarJeKDQLijj9REnUM8k28vPk2zouuz9RMkD6PursLF3s0riHwlWwMH8gPUY/DYMLdgnC1rsz23JEMLAN8H3YIZ5AJ98I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSji8SUd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744727114; c=relaxed/simple;
+	bh=TX1inBWH3yiZd419UeHulF2D7bWnBwwL2AiJ0toiJTs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dYbZGAWTZC/JxiIsnPOGAGosr+zmR1QxA/1Z2pmOa/SlVfDYAMjO6hMvCl5F5va7td0oFKP3xTEj7dRTTi5i7EwipRC9SPtSUFcEhb/ywpGiGX6CoIhiJMlhKByNAIbL9fa8lvriH7WTbaL2WnKJcisVSXt4h1n7xZU7H4o0DGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ODBCg7vl; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSji8SUd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28F8C4CEDD;
-	Tue, 15 Apr 2025 14:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744727026;
-	bh=aNmL0+H984WKGRSWMsb/StuKFDQU1an6R5Y3td+dyM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GSji8SUddah2ECmiHhsDW1Z1tVfoNWfzNIZHgFUiVNVbvbTk9Q0Uayjc7cFFOEnQt
-	 VGMG6qo8IqXiBe4+0sM4ZrHOtLhJDsrsjR4i3PJXUc4SK0O3XGHm1AiI5dJ3KVIqcR
-	 L/14URvPdtJQGO48pz40qtb5a1EQIzJr7tb5q9wSW73vffvrDTB54ExE+tFGwUCLhZ
-	 PaL3e4cXLbrXTHychiMS+7/UeJHQgZMoOfaAa/JsBBRcpOElHdUWuY5IQqWEidCIMa
-	 EmdhJMJ+BCHekhbEUcIckjiTrfU9XcTgBMJanSRD57jKbkQCoruxZoEK1axd1ovLc8
-	 71i0fLMHP4g8g==
-Date: Tue, 15 Apr 2025 07:23:42 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	"Dmitry V. Levin" <ldv@strace.io>, Kees Cook <kees@kernel.org>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Avoid fortify warning in syscall_get_arguments()
-Message-ID: <20250415142342.GA995325@ax162>
-References: <20250409-riscv-avoid-fortify-warning-syscall_get_arguments-v1-1-7853436d4755@kernel.org>
- <4a0dc950-cda6-4bb4-a4e9-460bc56b5bb1@ghiti.fr>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ODBCg7vl"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85b5e49615aso520808839f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1744727111; x=1745331911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwxfWLKsKtEVH/Ebayy1y8ELH1yO/XRoAusiLVSBzp0=;
+        b=ODBCg7vlTERpXDFadQofbbXP8TBQq5TLFxk6HAzxhD87VZ63CP+aT/oNVQXe2wtpQh
+         CgRO5ZP2yUJ+Q45JZwrhzDXxc/R7WgGGlEg8YqhZa2PFNVvrWois0D3ESqT6fE1kLjgx
+         0TAIXnOSB++hPg9TOABlGWBzfVIQnVJCY2Y3M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744727111; x=1745331911;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZwxfWLKsKtEVH/Ebayy1y8ELH1yO/XRoAusiLVSBzp0=;
+        b=w+11/9h2gpylRcrwTOgzUhoeSVB5jO4X24vTiBpOXtMVU4iNdJ2PLTigCq0DbFiv8j
+         LiYu/F4Uk6eSNSWaPteSITRh0+CTlpe554TIIxBrPEuFuz1k92AfkPRXFaUkSDpvLrM7
+         YL7oKimsJFghFHV8BN5nA8JE9GliPna9C/6KEn9SCGOY6hAI0iktTFNaJnCKEJC4HQs5
+         fTAs2ISmot87A2EmTLpiHggVL/VD38S/u0+xPPNSb3lbEEglqLk7LXndH1aMPiO3LxZq
+         7Lpz/jCkTY+esiiDwS/5UUx9/phoT4Bz132iMF9NOp1mbTGZc+JYEQYdRTFe1SZwzkWQ
+         VwBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWfjRqsR9jFvdLowj39OnSOVdUlYZZYvdIVf3Jt7E0KueiZqywXNs6KdP9xlwCjAlH8t5YC5tlgGOxp3qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwEGeGpibhbPUW36EwXyTBoRdDa3COPQmWQSBH1KWV1OeXuL2V
+	lRNn+l2igNehY63AIOaSpCWFtTRQQyG13tsk57eYO+RtvVIMi7hqYUicohFGFOU=
+X-Gm-Gg: ASbGncsEKINtGC/gcxwENwhtgvMcaT2AlRJ8gcZpUPAb1lObjXGkY3Sx9RwVuH+a8dO
+	llEuGrMXsZlPGeHNxxItkrnSqM5R0AVwxhs3ZT28d1jk3qB2jlU6/KRdMLzGDRERQ6bajZteadY
+	sSwhyVX7KTrGAzxs42G+ZedDJV8Fc1Svu//YOSBeDGoFHcQvS4zlvfeaRaYZFouELRQDdFkD8zp
+	jFTTS16gGpisfAiNTYq3b4OmhJnKzU+DH0TLxEVpGluSTQuJAgcJXLKMQv4ehTyeUjBRBzUkjK1
+	8bXmDdXS7fYTw+vT1rWZ+8eV3ocID9+lLcJYct1ZnY3hNtqCNjc=
+X-Google-Smtp-Source: AGHT+IGldLbsquoOOC412l6V3jh2NG00rYgHrMmWTM8P6sdURVFqzoQ2xcYm7C/syt+zCw9/aHXfzA==
+X-Received: by 2002:a05:6602:3a0f:b0:85d:f316:fabc with SMTP id ca18e2360f4ac-8617cb528d6mr1867715639f.8.1744727110731;
+        Tue, 15 Apr 2025 07:25:10 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e2e755sm3159823173.112.2025.04.15.07.25.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 07:25:10 -0700 (PDT)
+Message-ID: <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+Date: Tue, 15 Apr 2025 08:25:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a0dc950-cda6-4bb4-a4e9-460bc56b5bb1@ghiti.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
+ kunit run
+To: Borislav Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
+ <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 07:54:04AM +0200, Alexandre Ghiti wrote:
-> Hi Nathan,
+On 4/14/25 17:00, Borislav Petkov wrote:
+> On Mon, Apr 14, 2025 at 04:28:44PM -0600, Shuah Khan wrote:
+>> Hi Tom,
+>>
+>> I have been seeing sev_es_trampoline_start undefined symbol referenced errors
+>> during the following kunit test runs.
+>>
+>> ./tools/testing/kunit/kunit.py run --arch x86_64
+>> ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
+>>
+>> The error is here:
+>>
+>> ERROR:root:ld:arch/x86/realmode/rm/realmode.lds:236: undefined symbol `sev_es_trampoline_start' referenced in expression
+>> make[6]: *** [../arch/x86/realmode/rm/Makefile:49: arch/x86/realmode/rm/realmode.elf] Error 1
+>> make[5]: *** [../arch/x86/realmode/Makefile:22: arch/x86/realmode/rm/realmode.bin] Error 2
+>> make[4]: *** [../scripts/Makefile.build:461: arch/x86/realmode] Error 2
+>>
+>
 > 
-> On 09/04/2025 23:24, Nathan Chancellor wrote:
-> > When building with CONFIG_FORTIFY_SOURCE=y and W=1, there is a warning
-> > because of the memcpy() in syscall_get_arguments():
-> > 
-> >    In file included from include/linux/string.h:392,
-> >                     from include/linux/bitmap.h:13,
-> >                     from include/linux/cpumask.h:12,
-> >                     from arch/riscv/include/asm/processor.h:55,
-> >                     from include/linux/sched.h:13,
-> >                     from kernel/ptrace.c:13:
-> >    In function 'fortify_memcpy_chk',
-> >        inlined from 'syscall_get_arguments.isra' at arch/riscv/include/asm/syscall.h:66:2:
-> >    include/linux/fortify-string.h:580:25: error: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> >      580 |                         __read_overflow2_field(q_size_field, size);
-> >          |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >    cc1: all warnings being treated as errors
-> > 
-> > The fortified memcpy() routine enforces that the source is not overread
-> > and the destination is not overwritten if the size of either field and
-> > the size of the copy are known at compile time. The memcpy() in
-> > syscall_get_arguments() intentionally overreads from a1 to a5 in
-> > 'struct pt_regs' but this is bigger than the size of a1.
-> > 
-> > Normally, this could be solved by wrapping a1 through a5 with
-> > struct_group() but there was already a struct_group() applied to these
-> > members in commit bba547810c66 ("riscv: tracing: Fix
-> > __write_overflow_field in ftrace_partial_regs()").
-> > 
-> > Just avoid memcpy() altogether and write the copying of args from regs
-> > manually, which clears up the warning at the expense of three extra
-> > lines of code.
-> > 
-> > Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> > ---
-> > I omitted a Fixes tag because I think this has always been an overread
-> > if I understand correctly but it is only the addition of the checks from
-> > commit f68f2ff91512 ("fortify: Detect struct member overflows in
-> > memcpy() at compile-time") that it becomes a noticeable issue.
-> > 
-> > This came out of a discussion from the addition of
-> > syscall_set_arguments(), where the same logic causes a more noticeable
-> > fortify warning because it happens without W=1, as it is an overwrite:
-> > https://lore.kernel.org/20250408213131.GA2872426@ax162/
-> > ---
-> >   arch/riscv/include/asm/syscall.h | 7 +++++--
-> >   1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-> > index 121fff429dce66b31fe79b691b8edd816c8019e9..eceabf59ae482aa1832b09371ddb3ba8cd65f91d 100644
-> > --- a/arch/riscv/include/asm/syscall.h
-> > +++ b/arch/riscv/include/asm/syscall.h
-> > @@ -62,8 +62,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
-> >   					 unsigned long *args)
-> >   {
-> >   	args[0] = regs->orig_a0;
-> > -	args++;
-> > -	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
-> > +	args[1] = regs->a1;
-> > +	args[2] = regs->a2;
-> > +	args[3] = regs->a3;
-> > +	args[4] = regs->a4;
-> > +	args[5] = regs->a5;
-> >   }
-> >   static inline int syscall_get_arch(struct task_struct *task)
-> > 
-> > ---
-> > base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> > change-id: 20250409-riscv-avoid-fortify-warning-syscall_get_arguments-19c0495d4ed7
-> > 
-> > Best regards,
+> The real problem looks like that pasyms.h thing which gets included at the end
+> of realmode.lds and which contains that symbol.
 > 
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> 
-> IIUC, Andrew took this patch, if that changes, please let me know and I'll
-> merge it through the riscv tree.
+> How exactly can this be reproduced? Exact steps please.
 
-Thanks, I had Andrew drop it so that it could go via the riscv tree so
-please pick it up when you can.
+Run these kunit tests - not out of tree. Tree has to be
+clean to run these tests. Otherwise you are prompted to
+run mrproper.
 
-https://lore.kernel.org/20250411211833.E3DD1C4CEE2@smtp.kernel.org/
+./tools/testing/kunit/kunit.py run --arch x86_64
+or
+./tools/testing/kunit/kunit.py run --alltests --arch x86_64
 
-Cheers,
-Nathan
+The tree I see this every single time I do my tree testing.
+
+thanks,
+-- Shuah
+
+
