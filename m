@@ -1,102 +1,139 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9A42DFA36;
-	Tue, 15 Apr 2025 23:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B6C2DFA36
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744760140; cv=none; b=o+pj/U3OfFyzBhUJM5pU8UnGA2SqU4q7s7doTbf0w6+x5LLMtf8zjy/BM5O0v3c41+qcfEOSEuPWvniY4HGjl7f3uOznvSBeQFTmc3k2vauYBsNOyPm8hj6FoTr1/no2jboiCj1SeB5NrJl23K4Rs1tn+4wRrV9qGfTlXLTq2VY=
+	t=1744760508; cv=none; b=cefzIqLdn1+kOs2MTxtt8SAF2D73pShBfTMMpLh7F8VGZ/Lh/ydeuoS4o+jcCAYhjnZO3z7FBjBwbexB6wIUX1GR9AlekqrdwpmuuDscsrrFK+rUk59z8OMHCNx+/slO1sFZHWCE8WJPj96isYfbnj52SOx3p3U82ZmwOnmgnsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744760140; c=relaxed/simple;
-	bh=VifUAGqXrpve7MyJF1/JPgmu1YmdA3mVV7mluhkV/pg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type; b=nd4HZXEUIFgC68TezSG9J9tsOIx729XVeIoGiy+nTAz2B9GYfKdt3iypGWDCKDpkO59TP6a5I/67Djxo415VPm1MARfgySTRdG/j6fu5UulFMukP3KMvuEVTZgUAFFcZ4uY5b8NWmKdQ/Cs+GoOUx6D606botcGtB8RW+jged+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtQf6y8+; arc=none smtp.client-ip=209.85.210.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744760508; c=relaxed/simple;
+	bh=8iOaybz4lh7CVjrLSWP1+6uN1uHn2rPfgrnJm+wuOgU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c1nk88IGzwj3YR/PeybFWzkDPrLENQ9u8arsdFqwNAsLOWBXPcgME5sxX9QpoSxytN0dNIQeiHZZSKwjEOWt5krvM9Zr2qwGQqR0hwEPbdLNjxmx7TQfogAXnjowNIrIXwjodC23CN9DUxrEZke1jZF8zH3J3o5u017jyWZxuR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NN2jNwkr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtQf6y8+"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-736c8cee603so331732b3a.1;
-        Tue, 15 Apr 2025 16:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744760138; x=1745364938; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k9ng36k6+89lBeYxXggLCEbUf1f1fC/eR9HgAYWHI7o=;
-        b=PtQf6y8+JmXGTGy4ylmW6CCg4CH2npD+yuAQCH6+QuGxNxsZGOGB2wmVCZKojCLd3c
-         yFxFrh6Buld8xOHNfDHJ6EDgrzRr14QQlglA5YmfC/X+Be7uGM5CuiW74yPRSbZyeqqT
-         vGNUJkwoAUQYpEoftPLdEsPBWWgn12EzBoC0axFxApOO9Gt38FSVRZ8AarC7yQ3xNiHO
-         FL3AH7hKbA1Z3C8i8lOklC1ylYctYwEibzEKyMB1uHo02f8fn+q4lQuz3zxlKY2BWfUo
-         6pH51hmJWb3a38dAqnD042FizY9vRHU8q58SkHKrs+6zpI2Mg5+vfBL9XFY6bQtQ47/O
-         SuqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744760138; x=1745364938;
-        h=content-transfer-encoding:mime-version:in-reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k9ng36k6+89lBeYxXggLCEbUf1f1fC/eR9HgAYWHI7o=;
-        b=EXEasI5Y2iN8Q2pxTovGbRj6CQ4hMQpgaQv+sWcOy4iHm2WSrbi3zth32Ag9pbCLv5
-         mUveCDC1Yqq3XNhnHA5Nmgu3mq1wMxwGANHv+BX+AqTLEuV8sHC4+cxTKPirEtLzxn2D
-         v+hG+P0fEtlokVSgKxvgeRcbbwboXlm44o1GbcTmiO4V39lHph5bWWvEXyh822kofc9I
-         S0mD+48QTmR+5ptB1Czaot68FVrHsmhNc4sWDo78w11JVcuw085VBINvCBN1NoRIAfiq
-         k7Wwn3EEYYD0e9yvc8r9l9I+N23/w1pL2/91SX3u6iMeCRNVm84SLya8Xp5VjgIDotWC
-         rcHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYebKGQUvsfDmjCsbIoUjzyjySy7VfDaiT5WgIMvFXL/2tz4Bjd1qS+nJtWh+e5PfU9SEaannqAs5iJHCQ@vger.kernel.org, AJvYcCWUdnKrNHAiuNZhlsXWHFC/MbIosEdJdbJJxeXGpJ/SCVzDPyxZds6AaikEtCayU14wUz7e0yu1qmtmKg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoONT96DDXJh6P8QLCshsy2xhp8jbYWHGqwZEGc2NIv8mBENSI
-	34KemPWFfdEha0XNYjPxWIpOtTMF0cunvKW75XxhSkwYWeY7AnPy
-X-Gm-Gg: ASbGncvRgYV1I0Nj0xUJM6lHNigScn1OgL/IoTBnfbsES2MXorV18q9QBvUSsrIyMVb
-	gwnikDg3vpfKDC3xbN/pFzwp3SlKbmr5XXAF6sj0SKX54gaRDr0n3ALclpeB4fnt0yNx7s+Y0ar
-	SIZ1On4jvNlCR/zet4KgKPL+TLwZtPuSrHNIaXssJGr7JFNNC++DAx5o73QuB5Ej+5Qwyj5wlqX
-	xwX2/oEQdm5krFRPCsfxOh0h469sujVkvMeyexo3ysOGOQKuQ2tPOzLym758SuL0Gd641quaYoE
-	9GVH3e+ImFMyHZRO0XnnV/A9BL661K+p+5TLRmm7QQ0iQqh3uYg=
-X-Google-Smtp-Source: AGHT+IGSUk93ONxqBp1dzfwfyCWEi1dgTVpzffVT+KxtevWfkF4sr+4niImOf3F3T9QKwwByVsyv+w==
-X-Received: by 2002:a17:902:ea04:b0:223:659d:ac66 with SMTP id d9443c01a7336-22c31b01559mr6906725ad.12.1744760138248;
-        Tue, 15 Apr 2025 16:35:38 -0700 (PDT)
-Received: from saltykitkat.localnet ([154.31.114.49])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fc831csm1010995ad.181.2025.04.15.16.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 16:35:37 -0700 (PDT)
-From: Sun YangKai <sunk67188@gmail.com>
-To: quwenruo.btrfs@gmx.com
-Cc: clm@fb.com, dsterba@suse.com, frank.li@vivo.com, josef@toxicpanda.com,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- sunk67188@gmail.com
-Subject: Re: [PATCH] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
-Date: Tue, 15 Apr 2025 23:46:15 +0800
-Message-ID: <9442545.CDJkKcVGEf@saltykitkat>
-In-Reply-To: <2e158208-4914-4bfb-984a-0d35e8b93225@gmx.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NN2jNwkr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744760505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cvgzNHXZT50bJulk6uZmAkTyNeKXSSJ3KJw3yi6lkN4=;
+	b=NN2jNwkr476WyzGtSKmiUve3T0pwjrgPo32E8DPfqqlMyP9JDRaHGc1JpVIm2TWSNhTFbj
+	YxyOX8gFX7IVFwHNjSw9ZBjQJDm9TXymum622x5nkTbVwgtjicH6+nGNJdFmLf0OrgzGN4
+	PtDHOC9hDMD933UIBvHSUQIJVAHagNA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-BGEJE8S6ON2Vm8eN0hLumg-1; Tue,
+ 15 Apr 2025 19:41:39 -0400
+X-MC-Unique: BGEJE8S6ON2Vm8eN0hLumg-1
+X-Mimecast-MFC-AGG-ID: BGEJE8S6ON2Vm8eN0hLumg_1744760499
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D410F19560B8;
+	Tue, 15 Apr 2025 23:41:38 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.38])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2DA2180B489;
+	Tue, 15 Apr 2025 23:41:37 +0000 (UTC)
+Date: Wed, 16 Apr 2025 07:41:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm/vmalloc.c: find the vmap of vmap_nodes in reverse
+ order
+Message-ID: <Z/7urXUwO0sY3RQw@MiWiFi-R3L-srv>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-3-bhe@redhat.com>
+ <Z_56cxJLgnfYK9yY@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_56cxJLgnfYK9yY@pc636>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-> >> History please.
+On 04/15/25 at 05:25pm, Uladzislau Rezki wrote:
+> On Tue, Apr 15, 2025 at 10:39:49AM +0800, Baoquan He wrote:
+> > When finding VA in vn->busy, if VA spans several zones and the passed
+> > addr is not the same as va->va_start, we should scan the vn in reverse
+> > odrdr because the starting address of VA must be smaller than the passed
+> > addr if it really resides in the VA.
 > > 
-> > Did you mean change commit msg to below?
+> > E.g on a system nr_vmap_nodes=100,
 > > 
-> > 	Commit b28b1f0ce44c ("btrfs: delayed-ref: Introduce better documented
-> > 	delayed ref structures") introduce BTRFS_REF_LAST but never use it, So
-> > 	let's remove it.
+> >      <----va---->
+> >  -|-----|-----|-----|-----|-----|-----|-----|-----|-----|-
+> >     ...   n-1   n    n+1   n+2   ...   100     0     1
+> > 
+> > VA resides in node 'n' whereas it spans 'n', 'n+1' and 'n+2'. If passed
+> > addr is within 'n+2', we should try nodes backwards on 'n+1' and 'n',
+> > then succeed very soon.
+> > 
+> > Meanwhile we still need loop around because VA could spans node from 'n'
+> > to node 100, node 0, node 1.
+> > 
+> > Anyway, changing to find in reverse order can improve efficiency on
+> > many CPUs system.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  mm/vmalloc.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index aca1905d3397..488d69b56765 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -2436,7 +2436,7 @@ struct vmap_area *find_vmap_area(unsigned long addr)
+> >  
+> >  		if (va)
+> >  			return va;
+> > -	} while ((i = (i + 1) % nr_vmap_nodes) != j);
+> > +	} while ((i = (i + nr_vmap_nodes - 1) % nr_vmap_nodes) != j);
+> >  
+> >  	return NULL;
+> >  }
+> > @@ -2462,7 +2462,7 @@ static struct vmap_area *find_unlink_vmap_area(unsigned long addr)
+> >  
+> >  		if (va)
+> >  			return va;
+> > -	} while ((i = (i + 1) % nr_vmap_nodes) != j);
+> > +	} while ((i = (i + nr_vmap_nodes - 1) % nr_vmap_nodes) != j);
+> >  
+> >  	return NULL;
+> >  }
+> > -- 
+> > 2.41.0
+> > 
+> It depends. Consider a below situation:
 > 
-> It's the common practice to leave a last entry for sanity checks.
+>              addr
+>               |
+>         VA    V
+>   <------------>
+> <---|---|---|---|---|---|---|--->
+>   0   1   2   3   0   1   2   3
 > 
-> But since it's not utilized for anything, I'm fine to remove it.
-We can also add comments for all this kind of codes,
-so that further readers will understand this common practice better.
-> 
-> >> The _LAST or _NR suffix can be utilized to do sanity checks, and this is
-> >> not part of the on-disk format.> > 
-> > IIRC, delayed ref belongs to the extent tree memory kv cache.
-> > 
-> >> And if this exposed by some automatic tools, please also mention it.
-> > 
-> > I'm just looking at this code.
-> > 
-> > Thx,
-> > Yangtao
+> basically it matters how big VA and how many nodes it spans. But i
+> agree that an assumption to reverse back is more convinced in most
+> cases.
 
+Agree, on small system with few CPUs and big VA case, the advantage is
+not apparent.
+
+> 
+> Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+
+Thanks.
 
