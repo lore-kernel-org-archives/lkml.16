@@ -1,144 +1,103 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1C72405F2;
-	Tue, 15 Apr 2025 07:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79289245014
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744702729; cv=none; b=l/m+N7hZ2TymF9BIVkvxpJHGwFaV3UrPDEKpYnZumyTMasqv7pvLE7cIHsmn+ycl+kWrqV25yCod6RGyWMu3hyLOKek3KsiRBJ61W5kFZp2OQuVQsJs5hQCELvfuuVcQCUGR3wvIK6thJ6sR5TKgvpF6AmN062AERnXRCerLv1Q=
+	t=1744702750; cv=none; b=sNXnhmzCXagk0+0G7YOrFc2fB4jSc7o5SsJRs2PiOylveXnlLRDeVktWQVp8rZgV94CELYgnNWQCkWHT2UKZDdC7Sqlf/r0Vsiay/b7agM/CQSicyJ48mPZA//fQo3cNjIDs+ricGYZT9cAbjrFwcbmZr9tTrsZBYa/wfnUqU2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744702729; c=relaxed/simple;
-	bh=jEhRmyM7xjK7MwkhrtbB2WCd9TBaFxjOFcI9QJeE3qQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uXkhXqTwMJ3RJB89Zagfs+H+onbF6DC2OXT1VvdhZiObGImDEFOFHhSrAIZtt3Jb8KswB0OynkZY7zfNg6u4KQrnzx6Se123QmWhDgfe0slS+BH2xrNBpEpsdAF7bTlZxyQmBEwdUDJnGSDSlCIbK7JdYpAoVdqNMoLLdEQfer8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lHFVEcDj; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744702750; c=relaxed/simple;
+	bh=coA5grQd3y/jbhzcHeYZ+ZELLUFIBztOc/cGelyrWGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnetZlTh2p/cqzlucmsiybmHRNni2exRLVMYuTBnxweK0Ue4V6GVeofKURLkV72IGnCTyFGkfRymp2dWOYx7lTfkWlI6DxVBOSBcXqT0z7fDybjhFYBSRJZWgC0iPQpk8Rh3PVHcbOI6yYZSMyNHZagJZ1o0JMZT6emA3XNnRp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g1FxBRCg; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHFVEcDj"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-afc857702d1so4593382a12.3;
-        Tue, 15 Apr 2025 00:38:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1FxBRCg"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2260c91576aso43866295ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:39:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744702727; x=1745307527; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mvzVunjooJkOd76fbmWLggolhiDrqhzGzGsPDBPnwNY=;
-        b=lHFVEcDjZR1YV4awp/XyHMNNsXiHjlQIQulgVO2g1LYONEDQCbfo/TemfBScX6VtY9
-         1PLajpq5vcF06rcJSVqD2nB1CAPebpzkgbjAPXIFXnEM8+yCM60VsDJSiHB1Cu9WHIas
-         Sgl7ngEPlj++2B9xn6EGcUOimGGm86Ye7ksJa7cI6p/JTIOySr16eJOtnoiSVgZA4FXm
-         ZR3aRPdW9P7H72YZyG+fMddoNMIX3VvxuDGuyJFqwpC19GMc9TROFaSLKerH4dUllUbq
-         LwVJYcsSL+D2XpTFR2jH5bpjSj2nO/YHXYumxqpKQ3yLo74jT2gfhtYUF1Z1yKgRX2cd
-         joTA==
+        d=linaro.org; s=google; t=1744702747; x=1745307547; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KMVqxq4kdB7NkpAdRlpNvoRHAP7rIXsRI0v6UU1I0eg=;
+        b=g1FxBRCgqIYkEZToU/fBsZXyjiTvjFtxCa6X/SsPMF5Zu82At0HSbXMZVdOxyIgcFM
+         rYVhtlS3js4PCzWYRVTRcPc5nWvpSd3Ncz8q6pTyVgSyQF16MXJkkaNdBod4FR0Xo6Q5
+         s+Z4/zkIe1G+jDuK5gi/YzKVPxBvBT6+fhrpc3Um+S2Is/U+fMyq/MixfPSLkThCSRu1
+         JRo81pfPYGA0Tg/nf9Uoy4YMbsmEHSvDchfrbPRVOyRmfWLoqz8ENPBjKgXbLrR/XxdX
+         B5frW+poLxDox+NXgg+EzwFFHiGFEeKPSpxPyrs3Na5/wJyujCoVU8WCSLDLclaEk0eB
+         Eb5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744702727; x=1745307527;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mvzVunjooJkOd76fbmWLggolhiDrqhzGzGsPDBPnwNY=;
-        b=h7gM78vmGLmTPy/XE+ZQ9Gdfc6hSeD9ZPNu9BpLd5raX74L+F19HeQJmC2gvLjT+mt
-         RwFAxEOjwyJ34/nOJ/1XjzKdnvk6dQYnJ2MRsnP+G5zTM4/NTU4cv48OwsINTnY9xXDa
-         RxFarDqGDPmkMLwZAvTNiGyROGc3dDwS6qlaNc32+dSy/wlSGvysvdzOpluylPaxwec6
-         nPcvdMREszoH90xPGqUsdTvzHjYjV6UV+xA2X6oOnV+oswNWyxmM9p+lDPOkHOKCMPfo
-         CerqwmDv46IcYX7g/qkT+xfo3285PdmY0TuBdJtyCKa15wuaOYwx6dC2/Y8mjBtcfpye
-         AZCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWg/I6cpEPzt4GUYE7XfxnTS9sir//3FuwJKstdmDqGAFhSvqeUa/Fi0mSzqMpbw3+1I6zCFDDCr8yLG7Vh@vger.kernel.org, AJvYcCXZf7F3/+WJl71rmcBjo7tUfPfjo0CHDmrT+jW69F3PxLHbf/43G0pC0bjn0ikb9/HB+zbJSW9J+1ZC@vger.kernel.org, AJvYcCXer2pDcqVPhKP1Be73YidYjKVhEjZVF0GtHRlWVRcpjSTAWuWiJIUbXs53TK/7lmdl8dBuvL3rmtt6nxPBiMq+ew==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw25pglqucyx8M5/IZC33wHarRAaZVkkxV3jbUjpJc9bfU36k/+
-	MekFq6UqlVJLiZ4CWNtbTMG0x5BM6tMgtjc4CsGxkbh2XnCHRiDWx+cdx52cp7XNu+FsPmD6DPo
-	13GuH7qh9g2vQM/0Umu1IIO33jDVDnNVprp77OQ==
-X-Gm-Gg: ASbGncvVIR2sIMy/QwVIB4mzSxnixy4+Ty26DZWx1mA2i+1e2Ds80tfKkWNSxtIz1dD
-	qyY2uE9MNwoemhtWrzfRXICI4Z2kRhiGb2OWnH3ddkwO6L8jp/eUeV7UrSXjMJs1eH3dcqQTiNm
-	9zK/WEdlatCcpyypVIIw==
-X-Google-Smtp-Source: AGHT+IEaQw1fMF+aLm6pFlRnZGVkYepFCANlU8kbPs9GBkc7bc76oOvq8qIgGhVqNudolyAIqZhr3iUCEwZKISUsLJM=
-X-Received: by 2002:a17:90b:524f:b0:2ee:d024:e4fc with SMTP id
- 98e67ed59e1d1-3082367f7b5mr25807985a91.33.1744702727316; Tue, 15 Apr 2025
- 00:38:47 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744702747; x=1745307547;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KMVqxq4kdB7NkpAdRlpNvoRHAP7rIXsRI0v6UU1I0eg=;
+        b=TGD1d2JHLTE3I6kkGJsoG38G4b1Mw7ftURwPcMfOMwgwQYozeQ51vqoRw65R2FUXJx
+         yCfi+f4u0jIYUZ65lMA42BSLJ6oO/Fydj5EJqqUBW3nrdcfIpOZNMZMjSnOPRUWjMZiS
+         xD/ZCpl0TaIzQKWEZ7gcn/o1UVb1nxB9sZLDL20C8C4uVYHPV/AHwnyHQbmlIpXJzbbb
+         ARXjxdxvb3wJLJVGe8ysxWLwBOVzI9Q0MCo7Nrz+rp6Us2T+CZFZn55pjxoAgCJmqnn7
+         NBblm8vwSq7ZRvzQnjKjZ1ZO+LkpYNyGKKbLJUa+OvcS8C/nGsTRR7q6WP0XrD6HkLiO
+         qmlw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7Dh8mXyhheiRu+uWrQ1HVLu3LdDOh9GSwsDrs3V22+PqAm5UEhQIDgtWA57ms2Vbf8NA6eeXE1FCp1eg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAqNqkTTCOgyoe5h5IPfqbK4turrRVEBLhUO2YLnfP/v9mh+Vw
+	xViDN41WYF2oXFmIhGvgPKqrpCSrpvG6GPgGaRCpraAPe60HqpNCyd/x6B8XGQ==
+X-Gm-Gg: ASbGncu+kdP1FFdSYp/zQrBc5gnkpziq7jWd6f8wQZ2U0ApitsI04PdFWXpXBO9Y+yG
+	N2updUiNK/5VEMv2FTeWJftS4b3y8t9ADS6pLe27Jf2DbJFPP8Pcgo8YqlnIbficAv37qnSK5R2
+	7RISmcVc3jT0Vom1XidYEKAtHOsq5losEc/9p76tDB6iDLM4si6Rnx+CyttSWsNwhOc2YfNq7Xh
+	NqAWhshjHnPFy5gmUOTl60BQ1rE0doGJ/YW8VyI+VCKho9tnv1HNR0iDFoBQe1W3ioBF4GnjBkP
+	N/+GlnQHgfseCJ9rTm6PSFZmQanLyHD5NB8VIr313m4fvRGqhA==
+X-Google-Smtp-Source: AGHT+IEHpiLa1qxpwWSUDM89uSChUDBqXG6QHK/dkH6ohvACOVduUY35hpQk6VZSxSq6hdZmbeAjVA==
+X-Received: by 2002:a17:902:c952:b0:224:912:153 with SMTP id d9443c01a7336-22bea49590cmr237075775ad.5.1744702746719;
+        Tue, 15 Apr 2025 00:39:06 -0700 (PDT)
+Received: from thinkpad ([120.60.71.35])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b18esm111163075ad.82.2025.04.15.00.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 00:39:06 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:09:00 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com, quic_vbadigan@quicinc.com, 
+	quic_ramkri@quicinc.com, quic_vpernami@quicinc.com
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
+Message-ID: <tb6kkyfgpemzacfwbg45otgcrg5ltj323y6ufjy3bw3rgri7uf@vrmmtueyg7su>
+References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320121004.2542314-1-daniel.baluta@nxp.com>
-In-Reply-To: <20250320121004.2542314-1-daniel.baluta@nxp.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 15 Apr 2025 10:40:32 +0300
-X-Gm-Features: ATxdqUHIjcegsRqkaCNjdC-btbkENgkxvRanbyOKxKHVbD_D9EvsKEww42I_CYM
-Message-ID: <CAEnQRZBFoZuiFJtzs0wCjrHJro3c=fWshRogNBnfGmkeyh-LtA@mail.gmail.com>
-Subject: Re: [PATCH v7 0/5] Configure imx8mp dsp node for rproc usage
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: shawnguo@kernel.org, robh@kernel.org, s.hauer@pengutronix.de, 
-	kernel@pengutronix.de, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	festevam@gmail.com, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	frank.li@nxp.com, aisheng.dong@nxp.com, laurentiu.mihalcea@nxp.com, 
-	shengjiu.wang@nxp.com, iuliana.prodan@nxp.com, a.fatoum@pengutronix.de, 
-	mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
 
-Hi Shawn,
+On Tue, Apr 01, 2025 at 04:51:37PM +0530, Krishna Chaitanya Chundru wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> PCIe host controller drivers are supposed to properly remove the
+> endpoint drivers and release the resources during host shutdown/reboot
+> to avoid issues like smmu errors, NOC errors, etc.
+> 
+> So, stop and remove the root bus and its associated devices and release
+> its resources during system shutdown to ensure a clean shutdown/reboot.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
 
-Gentle ping.
+While reposting a patch, you should include what has changed in-between in the
+changelog. Even if there are no changes, you should mention that and express
+your intent to get this patch merged.
 
+- Mani
 
-On Thu, Mar 20, 2025 at 2:08=E2=80=AFPM Daniel Baluta <daniel.baluta@nxp.co=
-m> wrote:
->
-> DSP found in i.MX8MP SOC can be used by multiple frameworks in order to
-> enable various applications:
->         - rproc/rpmsg framework, used to load for example Zephyr samples
->         - Sound Open Firmware, used to enable various audio processing
->           pipelines.
->
-> Current dsp node was configured with SOF in mind but it doesn't work
-> well with imx8mp-evk dts. SOF controls audio IPs from firmware side
-> while imx8mp-evk.dts preffers to control audio IPs from Linux side.
->
-> So, configure 'dsp' node to be used with rproc scenario and later will
-> add a separate dts or an overlay to configure the node for SOF.
->
-> This patch series configures and enables dsp node to be used with rproc.
->
-> Changes since v6:
->         - addressed Alexander Stein comments
->         - enable mu2 separately in patch 5/5
->         - put "status" always as the last in node definition
->
-> Changes since v5:
->        - do not enable mu2 node by default
->        - fix dt_bindings errors
->
-> Changes since v4:
-> (https://lore.kernel.org/linux-arm-kernel/Z6zGLn3B6SVXhTV1@lizhi-Precisio=
-n-Tower-5810/T/)=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=
-=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=
-=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=
-=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=
-=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=
-=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=
-=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=
-=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7=C2=B7
->        - after comments received on v4, we implemented the run/stall
->          bits using reset controller API (changes merged ->
-> https://patchwork.kernel.org/project/linux-arm-kernel/cover/2025031108581=
-2.1296243-1-daniel.baluta@nxp.com/)
->         - drop patches related to DSP run/stall/reset via syscon
->        - picked up patch related to using run_stall via reset
->          controller API.
->
->
-> Daniel Baluta (5):
->   arm64: dts: imx8mp: Use resets property
->   arm64: dts: imx8mp: Add mu2 root clock
->   arm64: dts: imx8mp: Configure dsp node for rproc usage
->   arm64: dts: imx8mp: Add DSP clocks
->   arm64: dts: Enable DSP node for remoteproc usage
->
->  arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 14 +++++++++++++
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi    | 22 +++++++++++++-------
->  2 files changed, 29 insertions(+), 7 deletions(-)
->
-> --
-> 2.43.0
->
+-- 
+மணிவண்ணன் சதாசிவம்
