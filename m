@@ -1,129 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD13A1DDC18;
-	Tue, 15 Apr 2025 08:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C019C553;
+	Tue, 15 Apr 2025 08:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707115; cv=none; b=eD+4+NxsnHeOewkZsBiKd8LsCw3X6TI7U+Fb14faPvmxXBlfaMHRuc9hNsOPqXqq3EOfMe89+e3EcpiZDaG7FMAbwcHsvtYwo/3ROIF6azqx6nscACyNlUpwzh8cJDboMi+0HP2gBu45tSbbCCyvrlDhVPQ9EKmP7EGB9+fKYjk=
+	t=1744707122; cv=none; b=DdDaZfxynAS2NH4EKcUBq8ae/YOgBxpPnn9rpk/M6PAnO3yQNili8OJnFGMFhjDiGS8glR0zV0tHqkrihvs2N1hnN5iCeJ8ycL9OmOqtjv3yr7FuwLju/S95qAxoghHltlL9dC8KLc9IQ+bnaP6m5OEeSehRbsbmqzzZwMpOizU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707115; c=relaxed/simple;
-	bh=l6EgTfG/rNsxzj7YblsFEs3VRkJDgFjjSVvMIbcaSIM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ICCQUW5t4yzmDOIIo7TYAA/yNN4I+IG21qf2H14qvdSMoxbkz4niRqVdXPS6ub3z6LvJvNhWE11w3uXascMxQezaT74vxJ6/tHAXphQu19Zd2IBMI2SFrefJODsdrTIVEjg7L45XqlCC3bd9Ce9gKUaKLs7fhka1uN9sckVTbmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3C+0xkhw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+P38YhTz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744707122; c=relaxed/simple;
+	bh=DMSoHXLkRPYfZdXGZF2+WnJjbFgm59GYryWdRoxZldM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DSnPqPsaVJa2DUaqsJBEtHKRJXuJ44ecv9U7cSTKd5aBDJ08OGUA5GFcWk6b4I13Li5SSnrVuiR1mK5VoZEWBLaPSPxENEFx0b1PUg+OkVlOpHXe/F3ZgrlxyiBrriZoHhKmHqsfHuKwCg7xqoXPCnufAO3pDCehJgZ2m4buBC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HAE6lzNr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3C+0xkhw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+P38YhTz"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744707110;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HAE6lzNr"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 12FC1432FA;
+	Tue, 15 Apr 2025 08:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744707118;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=PH6MVwxzLv8eF6loMN8LTTQbGVnttpn8SLDX1xC+Qgo=;
-	b=3C+0xkhwu9H2ovaJRCfJTMtbdFS7iCD2T4FpT9OJGXFsPq/iLIkH0PqAZreWqL5FMOAb+N
-	oG3T6qoACEytO6vKHY4CMSDNryYfgXO38RkI+7Mt8gPaqoPK6k4sjsT8TEXCFOSTz4eKH+
-	hHNLebtwTopStnDrX+vkK/Qd7v7Cc5jfSGi9kYi2CVL1ZzON0/sZEbXh/C2Gl3ZUyUHfGt
-	nDZ6ed2xg7262wzHPTOZJ6MjfkEXQWJrYNS28LurtZv4w6kyA/lDr/QLTij1z2+MMWLzGk
-	kF6TEJX7x4UA0fJfxDCoiVAai7fQAxCPaVM85HHI3Ge2VOMyEPnRQQtkCifpag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744707110;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PH6MVwxzLv8eF6loMN8LTTQbGVnttpn8SLDX1xC+Qgo=;
-	b=+P38YhTzlVHayzy4c8rI89g2bBdDxGSgZljqDHmgDLArlQpeWoCpZmeBSOhdrBHmHBIRaZ
-	GZYS2M0YJwyVOHCQ==
-Date: Tue, 15 Apr 2025 10:51:47 +0200
-Subject: [PATCH v2] loop: properly send KOBJ_CHANGED uevent for disk device
+	bh=MGYvJw1tk9fm0IQ4Zu9nT7Kcgjv9uRN9qTZRQbhprcc=;
+	b=HAE6lzNr8wGu9Az7+Dmz7BE8RL/GmcuRbaN3hvYjO73rZDVYsRH9Jwhtx12acFFmOItLZ4
+	2h4iIUznMHOThBjgulzzZxsctlp3rT3tLbLruxGFecNCd4EnOTcX4OnUPBxGmjzQNG1awm
+	UaNcF7eKrsBXghaw/VDcraIq5iG9Z3LA/jn0hXJ7FLC2uSXzRpky28Iu/r9i2xK1lHgkXd
+	fc9ZA9X4s3TWtwN3grad43fAWHBPz6VwbAjh3jYvC1Fz0+dbUqTXsr8WElnoFzEzbgVyIP
+	DRy0yvObgdeO1nsz24Y7YmVxruYrtx3YMAd36exKBio9K3US8cneMzBCag54tQ==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
+Subject: [PATCH net-next v6 0/2] net: ethtool: Introduce ethnl dump helpers
+Date: Tue, 15 Apr 2025 10:51:52 +0200
+Message-ID: <20250415085155.132963-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIACIe/mcC/32NywqDMBBFf0WybkoexpKu+h/FRTRjHZBEEg0W8
- d8bddeFzOoM99y7kggBIZJnsZIACSN6l0HcCtL2xn2Aos1MBBOKSfagg/cjnSGBm+iZsNQYWWn
- WlRKYJNkcA3S4HK3vOnOPcfLhe4wkvn+v+xKn+UArZYTUpVCvAd08Be9wuVvYJ06fX/htI3Tba
- N5Uwv759bZtP8wS5cz6AAAA
-X-Change-ID: 20250307-loop-uevent-changed-aa3690f43e03
-To: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>, 
- Alyssa Ross <hi@alyssa.is>, Christoph Hellwig <hch@lst.de>, 
- Greg KH <greg@kroah.com>, Jan Kara <jack@suse.cz>
-Cc: John Ogness <john.ogness@linutronix.de>, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744707109; l=2327;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=l6EgTfG/rNsxzj7YblsFEs3VRkJDgFjjSVvMIbcaSIM=;
- b=f16o4dJg2nliQLGkEQn1igGREQ/SBPg0rQ+5p2AI7Bx/+OeMl6YOVVVsFs3xLBUycq/uUH9WA
- YIUJ6Uobe/+AaKmVyFyCbbkVVnpvahZfF1NfVp2x4dyAGyKPZ7kfwtH
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeftdegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefhleeihefgffeiffdtffeivdehfeetheekudekgfetffetveffueeujeeitdevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvl
+ hdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The original commit message and the wording "uncork" in the code comment
-indicate that it is expected that the suppressed event instances are
-automatically sent after unsuppressing.
-This is not the case, instead they are discarded.
-In effect this means that no "changed" events are emitted on the device
-itself by default.
-While each discovered partition does trigger a changed event on the
-device, devices without partitions don't have any event emitted.
+Hi everyone,
 
-This makes udev miss the device creation and prompted workarounds in
-userspace. See the linked util-linux/losetup bug.
+This is V6 for per-phy DUMP helpers, that includes even more
+simplification, as this now boils down to 2 patches :
+ - The first one introduce per-phy ->start(), ->dumpit() and ->done()
+   helpers and uses them for plca and pse-pd
+ - The second patch converts the net/ethtool/phy.c code, to avoid
+   open-coding the DUMP operation.
 
-Explicitly emit the events and drop the confusingly worded comments.
+Thanks,
 
-Link: https://github.com/util-linux/util-linux/issues/2434
-Fixes: 498ef5c777d9 ("loop: suppress uevents while reconfiguring the device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
-Changes in v2:
-- Use correct Fixes tag
-- Rework commit message slightly
-- Rebase onto v6.15-rc1
-- Link to v1: https://lore.kernel.org/r/20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de
----
- drivers/block/loop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Maxime
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index 674527d770dc669e982a2b441af1171559aa427c..09a725710a21171e0adf5888f929ccaf94e98992 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -667,8 +667,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
- 
- 	error = 0;
- done:
--	/* enable and uncork uevent now that we are done */
- 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-+	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
- 	return error;
- 
- out_err:
-@@ -1129,8 +1129,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
- 	if (partscan)
- 		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
- 
--	/* enable and uncork uevent now that we are done */
- 	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-+	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
- 
- 	loop_global_unlock(lo, is_loop);
- 	if (partscan)
+Changes in V6:
+ - Squash pse and plca patches into the first one, to avoid unused
+   functions (Jakub)
 
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250307-loop-uevent-changed-aa3690f43e03
+Changes in V5:
+ - Move to a less generic approach, focusing only on the PHY case.
 
-Best regards,
+Changes in V4:
+ - Don't grab rcu_read_lock when we already have a refcounter netdev on
+   the filtered dump path (Paolo)
+ - Move the dump_all stuff in a dedicated helper (Paolo)
+ - Added patch 1 to set the dev in ctx->req_info
+
+Changes in V3:
+ - Fixed some typos and xmas tree issues
+ - Added a missing check for EOPNOTSUPP in patch 1
+ - Added missing kdoc
+ - Added missing comments in phy_reply_size
+
+Changes in V2:
+ - Rebased on the netdev_lock work by Stanislav and the fixes from Eric
+ - Fixed a bissectability issue
+ - Fixed kdoc for the new ethnl ops and fields
+
+V1: https://lore.kernel.org/netdev/20250305141938.319282-1-maxime.chevallier@bootlin.com/
+V2: https://lore.kernel.org/netdev/20250308155440.267782-1-maxime.chevallier@bootlin.com/
+V3: https://lore.kernel.org/netdev/20250313182647.250007-1-maxime.chevallier@bootlin.com/
+V4: https://lore.kernel.org/netdev/20250324104012.367366-1-maxime.chevallier@bootlin.com/
+V5: https://lore.kernel.org/netdev/20250410123350.174105-1-maxime.chevallier@bootlin.com/
+
+Maxime Chevallier (2):
+  net: ethtool: Introduce per-PHY DUMP operations
+  net: ethtool: phy: Convert the PHY_GET command to generic phy dump
+
+ net/ethtool/netlink.c | 189 +++++++++++++++++++++--
+ net/ethtool/netlink.h |   4 -
+ net/ethtool/phy.c     | 342 ++++++++++++------------------------------
+ 3 files changed, 272 insertions(+), 263 deletions(-)
+
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.49.0
 
