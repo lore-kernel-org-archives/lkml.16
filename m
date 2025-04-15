@@ -1,148 +1,333 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900842951DD;
-	Tue, 15 Apr 2025 11:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AABD2951DD;
+	Tue, 15 Apr 2025 11:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716424; cv=none; b=tKj1MGICgPONBItZKRTs8y1McgSxS/CPRBHZqzgBTylbz4YxUMjz/h92JSdEX2XHBxN4gwAxqNqWScskcKLou9hmGvob3yLNr2ZdcDcz1ik4rQWoKDKtZMvLffd246x1wSBBe9BFs9ojdyRiPqzueMMivBLPrmJ2t8yh7e9TNeA=
+	t=1744716432; cv=none; b=EeAvhMjjzy1t8hZz1KR9TdnNawzfm+GiHvBEDMZYwwgYZksoMMlkRCrvKUC2AfsAMVqRnW95pfpWPVeknQuHOHMSn9XiZ/uhOz/xlg8UJ7YdnXB/sxvTcyJSsmhRD6ciRwvWujOjF0eTK+huVU4mdl4+EdGqqe/PF63Exgieml4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716424; c=relaxed/simple;
-	bh=FaCD1PkoKrxS9v1U5rFWElyeE6LW8xfKfPTFbahvHaY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bxEkr8sefGcr+BAK8BVLeZQJ5ezUTGbFg/UPGEEt9Nx7yZPwMNyShB4HjC+HrIELtAPahlj3FcwoRPm7kZcmBSV2l1uDUtxeNR+lvIWkOcjQggsI1lpKii9FIryWJcCjOm8Ro22K4Smw4iiQYYCk/NsOYzJ01BwTzWgc9ULvEwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mLrpNKzV; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744716432; c=relaxed/simple;
+	bh=7TJQx3IMV/A2ryyGm2UIlixLZbwBnwx5FIYesxZj4FQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nwnlOnIVdxF65vb8Ww7dOG32srDOChljxHm275kfVu8r7Lq6qxUamTiwW6zBgHaaBz4FFCouxZ9P6aSEqavB205nntkArfH69+Jcbf4FHjAXCcZ9XVxJyIuZNrPx7ClzsSZJOsTjY3WlboG97E7bdUVZwNtpih7jqvKk0XRHiy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OsfjWfjw; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLrpNKzV"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-399749152b4so3049802f8f.3;
-        Tue, 15 Apr 2025 04:27:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744716421; x=1745321221; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5iNvyUJ84OrchQt/uudTnU275/tZN5oX4rI5S/XVpaE=;
-        b=mLrpNKzVGLP9uvOkWH5kFsk1EOvIvB1O9AUR/qQ40X+fYa6qJhblhcyLwnQlxOjltz
-         ZwOn4ffPpYhSFIDm/Ljwr8NpfjS2Jl7UXblm0QqNC8NCFRz3V727D1D1OcOIVG+zgbGR
-         p+0lcDzHNd8PMuTwZU1a10gnp87jrTD9QL+9tqh47w9bkHouAlhCuBLV1Kzp/xiRj39Z
-         6BbMwL2GD/tKQi9WmFmzbjtqthZ84X5hciktmA8urYX+141GduJqdbuN7PGYCSoLpdbo
-         r+wGbn3QMmGMsBi88sIpEfjbIAaNYr5j9zR3hUhTy7ZuqQMbyxSrdVO33oy3bZX+X1oY
-         n/4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744716421; x=1745321221;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5iNvyUJ84OrchQt/uudTnU275/tZN5oX4rI5S/XVpaE=;
-        b=Vyei5mR7TyMBO+A7iSowU09RtUZdyEsR/adZnZWxBUU+GwqDGK9Z6UQEwwHjusyM+k
-         1sYzlqol1D7cZjj8BByF0tJgmxeSo5HzTk69yPK1GE41DniCCkLo4NAsshBK2W0dKMXM
-         /egvzE/TtJEzfdYsb8X6DB/qa5G7PVUHXRqiftBHDQG82Kv7l0jn3AiP34q8xl131ArN
-         ztNuIhTsV9Ze1Al9l/SpXthi4UPSdFejbq+ebCwHdUXhbEtu//PeotQnxJPhdhZK3NvU
-         7rsgOFyZHt6JGVpbBMQzjptTWxaLiqRs+jGbnRwuDu4204rK6iXwhN2e/A12f1Kneez5
-         wRGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUb4ZWsXy/e1mR25LiCaiLZq2YqSI0Oa5rvzhdTWKkXPgOdN7J5lxZESmG2qe3f7dICnwhYwpX@vger.kernel.org, AJvYcCVByzcNXt+LicCRqZB13g4gNhh8c+HjrOiw3ied5BQOFkHPytJ64NrwPTDf+K1cvbFo7Hc9KoBVJxxv84Q=@vger.kernel.org, AJvYcCXFSsax7knxxLAfm25ArkBs7il90gJxcd1uB/MQzxJSB4lKiufm3Syy3Yg54esDMvphM9rKA3qiqrfJHg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeRGz799KePKRf5ovnFpoJ/YXU/mnOBcK3Gm+1WaFKnawcPSpr
-	UaMYd6BXaL2dBhLMf6nKx4vf4ppfJxxrybbaFdshTVFvFAyA5zMi
-X-Gm-Gg: ASbGncte0srJ8tn0fiR6jIN6ap+qlUQEA58FeRtGjVLSYIyfTiv2RofGQlBgvKN5Iju
-	c/olKjYLkLalLgorQ0Q6XfCjoG2q5zT/MNOrtqljpkPYb97XJTbKBE3xrog8JBKibdI/HYo1RnL
-	OK2DkEtcfx4Tnce8CG0ubfZOHMmJlb7Fq5UcoGxuXmOcSFmRYk84I5chdN5fujmaerxySRYJvSB
-	iUWlxDWzIdIxq0aJ84G2/a49upaG8s1aZF1i2BACgbxRaMg1ZYdAHLEeYPPzdAYjE2izzuNMDNW
-	F+UppQ+o7EGtmKjCzZwuwVLrN9yv7A0ptmFdKGp3UskOSYyy7sH+jif6R7YZOw==
-X-Google-Smtp-Source: AGHT+IGMq12De2oewFtOUPkn4B9s8mMPlc1IAgczwnQeYBI/+GnxWt2tkhjormePlZdXHT1UTfHavw==
-X-Received: by 2002:a05:6000:40dd:b0:391:13ef:1b1b with SMTP id ffacd0b85a97d-39eaaea8457mr11165434f8f.30.1744716420525;
-        Tue, 15 Apr 2025 04:27:00 -0700 (PDT)
-Received: from [172.27.58.151] ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979615sm14294303f8f.54.2025.04.15.04.26.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 04:27:00 -0700 (PDT)
-Message-ID: <c909292b-68ae-4396-8494-aaa555604168@gmail.com>
-Date: Tue, 15 Apr 2025 14:26:57 +0300
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OsfjWfjw"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tE4V025107;
+	Tue, 15 Apr 2025 11:27:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lykgQOfeGEqHOp25JYV315tz/jO/anVTc0jDSSawRS0=; b=OsfjWfjwhHFTZjKk
+	U0ZLeQ9UujEDafN2O5mm9FMvmZWmDz9SQK9oa8JSB5619FVrji06pxXpfp+X6R3X
+	2Jyf8kR16XDrYMY2T0h6qeMmLXau/KYOHaXaJvJb/RpStt18HiKCbZhMI8+mqGo2
+	Q4DQVyGkRFLxkdK2RoJ0PUXAM51uE5CVWU2hx2bLmsWXvmSE4Ain9zVcJ435e2SY
+	XinwbZzF6JLA+FYg2X7V2DrtWU4QpyemFDzjiv46C9eXIB7lyJZtwxgGhXXD8zDj
+	0QtGM60aQaut47Acf14o9dyhGeA6QK9tU2FMdVc1cvbKzZVS77P0+yKJp4lrqgO4
+	/w9Zhw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wfuq8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 11:27:01 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53FBR0Bv012854
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 11:27:00 GMT
+Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 15 Apr
+ 2025 04:26:56 -0700
+Message-ID: <69b2e66c-e9c7-37b5-e395-f7e2fd639261@quicinc.com>
+Date: Tue, 15 Apr 2025 16:56:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/1] net/mlx5: Fix null-ptr-deref in
- mlx5_create_{inner_,}ttc_table()
-To: Henry Martin <bsdhenrymartin@gmail.com>, saeedm@nvidia.com,
- leon@kernel.org, tariqt@nvidia.com, netdev@vger.kernel.org
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, amirtz@nvidia.com, ayal@nvidia.com,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tariq Toukan <tariqt@nvidia.com>
-References: <20250411131431.46537-1-bsdhenrymartin@gmail.com>
- <20250411131431.46537-2-bsdhenrymartin@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH RFC v5 0/8] media: qcom: iris: re-organize catalog & add
+ support for SM8650
 Content-Language: en-US
-From: Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20250411131431.46537-2-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: <neil.armstrong@linaro.org>, Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel
+	<p.zabel@pengutronix.de>
+CC: <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
+ <2740b178-34cc-4b95-a8da-7e6862cabc92@linaro.org>
+ <96953447-cff5-98d4-053e-8cc31778849c@quicinc.com>
+ <eb469388-d2f9-447a-aa80-41795991a4ad@linaro.org>
+ <5b50ad93-0885-d908-fd13-3a597966115c@quicinc.com>
+ <0c4fcd81-8e1f-4b4b-a345-c08caeb599c8@linaro.org>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <0c4fcd81-8e1f-4b4b-a345-c08caeb599c8@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fe4286 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=hxa3wIg7PJYNgx_Mp2kA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: KB5EytKCQ8cAn1lpttkY8-i1v5tmzbka
+X-Proofpoint-GUID: KB5EytKCQ8cAn1lpttkY8-i1v5tmzbka
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150080
 
 
-
-On 11/04/2025 16:14, Henry Martin wrote:
-> Add NULL check for mlx5_get_flow_namespace() returns in
-> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
-> NULL pointer dereference.
+On 4/15/2025 1:54 PM, neil.armstrong@linaro.org wrote:
+> Hi,
 > 
-> Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-> ---
-> V3 -> V4: Fix potential memory leak.
-> V2 -> V3: No functional changes, just gathering the patches in a series.
-> V1 -> V2: Add a empty line after the return statement.
+> On 14/04/2025 21:48, Vikash Garodia wrote:
+>>
+>> On 4/14/2025 5:39 PM, neil.armstrong@linaro.org wrote:
+>>> Hi,
+>>>
+>>> On 14/04/2025 12:54, Vikash Garodia wrote:
+>>>> Hi Neil,
+>>>>
+>>>> On 4/14/2025 1:05 PM, Neil Armstrong wrote:
+>>>>> Hi Vikash, Dikshita,
+>>>>>
+>>>>> On 10/04/2025 18:29, Neil Armstrong wrote:
+>>>>>> Re-organize the platform support core into a gen1 catalog C file
+>>>>>> declaring common platform structure and include platform headers
+>>>>>> containing platform specific entries and iris_platform_data
+>>>>>> structure.
+>>>>>>
+>>>>>> The goal is to share most of the structure while having
+>>>>>> clear and separate per-SoC catalog files.
+>>>>>>
+>>>>>> The organization is based on the curent drm/msm dpu1 catalog
+>>>>>> entries.
+>>>>>
+>>>>> Any feedback on this patchset ?
+>>>> Myself and Dikshita went through the approach you are bringing here, let me
+>>>> update some context here:
+>>>> - sm8550, sm8650, sm8775p, qcs8300 are all irisv3, while qcs8300 is the scaled
+>>>> down variant i.e have 2 PIPE vs others having 4. Similarly there are other
+>>>> irisv3 having 1 pipe as well.
+>>>> - With above variations, firmware and instance caps would change for the
+>>>> variant
+>>>> SOCs.
+>>>> - Above these, few(less) bindings/connections specific delta would be there,
+>>>> like there is reset delta in sm8550 and sm8650.
+>>>>
+>>>> Given above, xxx_gen1.c and xxx_gen2.c can have all binding specific tables and
+>>>> SOC platform data, i.e sm8650_data (for sm8650). On top of this, individual SOC
+>>>> specific .c file can have any delta, from xxx_gen1/2.c) like reset table or
+>>>> preset register table, etc and export these delta structs in xxx_gen1.c or
+>>>> xxx_gen2.c.
+>>>>
+>>>> Going with above approach, sm8650.c would have only one reset table for now.
+>>>> Later if any delta is identified, the same can be added in it. All other common
+>>>> structs, can reside in xxx_gen2.c for now.
+>>>
+>>> Thanks for reviewing, but...
+>>> Sorry I don't understand what you and Dmitry are asking me...
+>>>
+>>> If I try really hard, you would like to have:
+>>>
+>>> iris_catalog_sm8550.c
+>>> - iris_set_sm8550_preset_registers
+>>> - sm8550_icc_table
+>>> - sm8550_clk_reset_table
+>>> - sm8550_bw_table_dec
+>>> - sm8550_pmdomain_table
+>>> - sm8550_opp_pd_table
+>>> - sm8550_clk_table
+>> Move or rename existing 8550.c as xxx_gen2.c. This is with the existing
+>> assumption that everything under 8550.c is common for all gen2 to come in future.
+>>>
+>>> iris_catalog_sm8650.c
+>>> - sm8650_clk_reset_table
+>>> - sm8650_controller_reset_table
+>> yes, since reset is the only delta.
+>>>
+>>> iris_catalog_gen2.c
+>>> - iris_hfi_gen2_command_ops_init
+>>> - iris_hfi_gen2_response_ops_init
+>>> ...
+>>> - sm8550_dec_op_int_buf_tbl
+>>>
+>>> and:
+>>> - struct iris_platform_data sm8550_data
+>>> - struct iris_platform_data sm8650_data
+>> all this goes to xxx_gen2.c as well.
 > 
->   drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
+> Yeah so this is exactly my current approach, except it use .h files
+> for each SoC for simplicity.
 > 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> index eb3bd9c7f66e..077fe908bf86 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-> @@ -651,10 +651,16 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
->   			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, inner_l4_type);
->   		break;
->   	default:
-> +		kvfree(ttc);
+>>
+>>> using data from iris_catalog_sm8550.c & iris_catalog_sm8550.c
+>>>
+>>> So this is basically what I _already_ propose except
+>>> you move data in separate .c files for no reasons,
+>>> please explain why you absolutely want distinct .c
+>>> files per SoC. We are no more in the 1990's and we camn
+>>> defintely have big .c files.
+>> Its not about the size of file alone, it is easy to understand later what would
+>> be the delta in the SOCs and what would common. For ex, just navigating through
+>> sm8650.c, anyone can comment that reset is the delta.
+> 
+> What's the problem with the current approach with .h file for each SoC ?
+> 
+>>>
+>>> And we still have a big issue, how to get the:
+>>> - ARRAY_SIZE(sm8550_clk_reset_table)
+>>> - ARRAY_SIZE(sm8550_bw_table_dec)
+>>> - ARRAY_SIZE(sm8550_pmdomain_table)
+>>> ...
+>>>
+>>> since they are declared in a separate .c file and you
+>>> need a compile-time const value to fill all the _size
+>>> attribute in iris_platform_data.
+>> I have not tries this, but isn't extern-ing the soc structs (in your case reset
+>> tables) into xxx_gen2.c enough here ? Also i think the tables you are pointing
+>> here, lies in the xxx_gen2.c only, so i am sure above ones would not be an issue
+>> at all. The only delta struct is reset table, lets see if extern helps.
+> 
+> No it doesn't, because I wrote C for the last 25 years, and I tried it already,
+> I also tried to export a const int with the table size, and it also doesn't work.
+Got it, i tried too, it didn't work.
+> 
+> The 3 only ways are:
+> 1) add defines with sizes for each table
+This leaves manual update everytime.
 
-Unrelated change.
-Not described in patch subject or commit message.
-Please introduce in a separate patch.
+> 2) add a NULL entry at the end of each table, and update all code using those
+> tables
+Does not sound right to update the code, just to get the size.
 
->   		return ERR_PTR(-EINVAL);
->   	}
->   
->   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
-> +	if (!ns) {
-> +		kvfree(ttc);
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	}
-> +
->   	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
->   			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
->   
-> @@ -724,10 +730,16 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
->   			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, outer_l4_type);
->   		break;
->   	default:
-> +		kvfree(ttc);
+> 3) declare in the same scope, which is my current proposalThe proposal in the RFC is about moving the common structs to 8550.h, rather, it
+can be kept in xxx_gen2.c.
+8550.h can have the delta part (i.e reset tables) and can be included in
+xxx_gen2.c. sm8650_data can reside in xxx_gen2.c, soc headers just brings the
+delta structs which can be overridden from common in xxx_gen2.c
+I am good with the header approach which contains the delta over and above
+xxx_gen2.c.
 
-Same.
-
->   		return ERR_PTR(-EINVAL);
->   	}
->   
->   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
-> +	if (!ns){
-> +		kvfree(ttc);
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	}
-> +
->   	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
->   			       &ttc_groups[TTC_GROUPS_DEFAULT];
->   
-
+Regards,
+Vikash
+> Neil
+> 
+>>
+>> Regards,
+>> Vikash
+>>>
+>>> So I recall my goal, I just want to add sm8650 support,
+>>> and I'm not the owner of this driver, and I'm really happy
+>>> to help, but giving me random ideas to solve your problem
+>>> doesn't help us at all going forward.
+>>>
+>>> Neil
+>>>
+>>>>
+>>>> Regards,
+>>>> Vikash
+>>>>>
+>>>>> Thanks,
+>>>>> Neil
+>>>>>
+>>>>>>
+>>>>>> Add support for the IRIS accelerator for the SM8650
+>>>>>> platform, which uses the iris33 hardware.
+>>>>>>
+>>>>>> The vpu33 requires a different reset & poweroff sequence
+>>>>>> in order to properly get out of runtime suspend.
+>>>>>>
+>>>>>> Follow-up of [1]:
+>>>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org/
+>>>>>>
+>>>>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>>>>> ---
+>>>>>> Changes in v4:
+>>>>>> - Reorganized into catalog, rebased sm8650 support on top
+>>>>>> - Link to v4:
+>>>>>> https://lore.kernel.org/all/20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org
+>>>>>>
+>>>>>> Changes in v4:
+>>>>>> - collected tags
+>>>>>> - un-split power_off in vpu3x
+>>>>>> - removed useless function defines
+>>>>>> - added back vpu3x disappeared rename commit
+>>>>>> - Link to v3:
+>>>>>> https://lore.kernel.org/r/20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org
+>>>>>>
+>>>>>> Changes in v3:
+>>>>>> - Collected review tags
+>>>>>> - Removed bulky reset_controller ops
+>>>>>> - Removed iris_vpu_power_off_controller split
+>>>>>> - Link to v2:
+>>>>>> https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
+>>>>>>
+>>>>>> Changes in v2:
+>>>>>> - Collected bindings review
+>>>>>> - Reworked rest handling by adding a secondary optional table to be used by
+>>>>>> controller poweroff
+>>>>>> - Reworked power_off_controller to be reused and extended by vpu33 support
+>>>>>> - Removed useless and unneeded vpu33 init
+>>>>>> - Moved vpu33 into vpu3x files to reuse code from vpu3
+>>>>>> - Moved sm8650 data table into sm8550
+>>>>>> - Link to v1:
+>>>>>> https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
+>>>>>>
+>>>>>> ---
+>>>>>> Neil Armstrong (8):
+>>>>>>          media: qcom: iris: move sm8250 to gen1 catalog
+>>>>>>          media: qcom: iris: move sm8550 to gen2 catalog
+>>>>>>          dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS
+>>>>>> accelerator
+>>>>>>          media: platform: qcom/iris: add power_off_controller to vpu_ops
+>>>>>>          media: platform: qcom/iris: introduce optional controller_rst_tbl
+>>>>>>          media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
+>>>>>>          media: platform: qcom/iris: add support for vpu33
+>>>>>>          media: platform: qcom/iris: add sm8650 support
+>>>>>>
+>>>>>>     .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
+>>>>>>     drivers/media/platform/qcom/iris/Makefile          |   6 +-
+>>>>>>     .../media/platform/qcom/iris/iris_catalog_gen1.c   |  83 +++++++
+>>>>>>     ...{iris_platform_sm8550.c => iris_catalog_gen2.c} |  85 +------
+>>>>>>     ...ris_platform_sm8250.c => iris_catalog_sm8250.h} |  80 +-----
+>>>>>>     .../media/platform/qcom/iris/iris_catalog_sm8550.h |  91 +++++++
+>>>>>>     .../media/platform/qcom/iris/iris_catalog_sm8650.h |  68 +++++
+>>>>>>     drivers/media/platform/qcom/iris/iris_core.h       |   1 +
+>>>>>>     .../platform/qcom/iris/iris_platform_common.h      |   3 +
+>>>>>>     drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
+>>>>>>     drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
+>>>>>>     drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
+>>>>>>     drivers/media/platform/qcom/iris/iris_vpu3x.c      | 275
+>>>>>> +++++++++++++++++++++
+>>>>>>     drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
+>>>>>>     drivers/media/platform/qcom/iris/iris_vpu_common.h |   3 +
+>>>>>>     15 files changed, 598 insertions(+), 300 deletions(-)
+>>>>>> ---
+>>>>>> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+>>>>>> change-id: 20250410-topic-sm8x50-upstream-iris-catalog-3e2e4a033d6f
+>>>>>>
+>>>>>> Best regards,
+>>>>>
+>>>
+> 
