@@ -1,128 +1,99 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136E5210F49;
-	Tue, 15 Apr 2025 16:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFE6E571;
+	Tue, 15 Apr 2025 16:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733313; cv=none; b=hurlovsvGw545Q+7RuJtlPr2bqn98or00KWEAxEisOFzm3F7lqfZEnZnMDLQFXGXRiEA3jRRiiZZfXpfjqDNhUetBCdl5XdQ8vZFfNnuGa3FNbL0j0kSY2EFEgFfvowbgpaxIdQQzCHD2PfzGOOHKOvniZ2g7i4o9KPyfYdcb2Q=
+	t=1744733377; cv=none; b=Nf5XXLIJEquZRN+g1AlKa/CGJXi+8SAoLCChlbYxhbueoezmaZ5tbrmnFR/ga8YdoC5w15Q0mb73wCLY5SWlqgKid2GmK/zq5z1nAS8JP/+Ka5SLq3VpiahkybmhUGENzGTv+SxI8Ix6q3JPXREhH7yOmsQhaAsxOg37BvcbpTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733313; c=relaxed/simple;
-	bh=Epp6DWQBFHduWN1dTbfRFnc7iki98bhG5lprQjMcCx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UHRC2VdkusJup3qE2t3y+40jIdqipybBMlEsQ26vIxt1ac1zaL7RQvMGdTEohRiYJnj0IYi3pAaQwwXhSGPSzEAbHWMIBHyGuYsNx+ePZhvMO1EqnIMANyK3pwcJT9hkUXDRyp8V8EEDDrhVWfNOkeB9Ie0xwGmrfI9UOo6iTWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APlfLJVr; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744733377; c=relaxed/simple;
+	bh=W1vlDCxe+5Rfzi02fWdsezjZcXCn18F45MSqcelkLpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N/VY4QmGTI1ybIit4asg+t61Depo3zG36Pl1+wdsbsBKjrnJHIzfmztS8KiZ5nNacVXaKdZZccL48DyNDz/WIqSrm4yte7gFCkbCKpiVbY5VvvCX136nR7uQJlULWnNV3s9D4Tqgl9vbRDrtnUaoe45EbEIRPSM7zXFoEQM+6W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bYbX0qI6; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APlfLJVr"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so4126780b3a.2;
-        Tue, 15 Apr 2025 09:08:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744733311; x=1745338111; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o5KFN8rQwRDsAQ/Yg9O45rfWFUONIccvAncbkaEGxW0=;
-        b=APlfLJVrB2ROLfHQYbAgUIHs73+5xQ1lVroSuuRYbcVyqi6b6y9r3+OzmCPAiTvoPC
-         isD7FUv9LYRfuwq2SKZxzGbGjPt6sknEI/RHeSjQIRzydxNhl3oqwKBhFRC0kMbfGWa0
-         Dd8nhUtoKODPwjcFq+0Qx5C6mzPIw7b3B4AWoXOth/Rb/B30COgDjXAguUit8TpyWszd
-         Qi3HL5ar+ljXBvf97akHBHwubwGm+U8VPg090ceK5Bmdj2ojOtQxn2z6IJfQAaCIi4LI
-         as7GnLhmwXFXrOeuqTdg5UkrVjja+MS/grhEnKgHEl2/rMVjd440uOfxVCC+jnEG9SXh
-         K/ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744733311; x=1745338111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o5KFN8rQwRDsAQ/Yg9O45rfWFUONIccvAncbkaEGxW0=;
-        b=xCugEiqIQZ+/+0RNshpeRZ9axmiktXLcfP7VxGuyWavdTd0XKx2eS8BT0QUNPADo3v
-         X8iCr/f/Cez+rQBapXpHEXKldVMrSs6okoz/0NmA6DAzwTFTn2U2rfD62js0GwhLXl09
-         uhpBqbBscAcdNUEGnZk/dyBBfE+84zgH+5WGcaK6RhxB3F8+3mm/V0bD1OQa4kvJtcn1
-         7wNeU8e7Tj5BajbkD+byyjg83X556yB+noDZqFrs6QbWCb5ofrZIi6DOwDe+un6POZdw
-         d90nGkshRReMji5NC+ewAGRF02cpLhrKFbiV1B25AKWDMuB+h6o2Z/gCGopcebQibEa0
-         G7ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHCSkv3HUnRAsRi460WJO2irZlxd91GrUeYiZG54XqsJRlVp6XFT3qps8x9SxaAu1940to30u+V9DLSAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqqNiCdS2aM/kV1iwAWAVw65OBf/3WdaszTKPaTOSL0cbOGTJZ
-	OtgYmyAR1U3yUPNCxhLq0uP45jiRIwIEWwfUN3+e9KVLWIqHjWxo
-X-Gm-Gg: ASbGncuDNJwA25cvppbWJAYVWRW7Kjy+7pBP336hCitfxVKhSBEjxU/99D8+YUxDluJ
-	qq4sgoYDmxI3G8V3uzZjdoImpSgzV/Izv1e3yqA6N9hlD6ysKJj+HTML/HkbHL9Dbm8tb7877MB
-	XvpXZwX7FSC8Yec+hqSKPESg9lsSRQ4RL0MI6mC0nSjnJjs+sSLNhNt7C91kak2uCOcxkslCzSf
-	ah6KatW1eYX362ajXtgaSZFnOqD+w91I82QTPwUehV5LIbtTmjrQ28LrlOq3W1EjBz81FLzS2WX
-	dsjmwbVoVWuM5KZFPxC8XXMRP1AyFr+emhaCTUJTODL8F1E=
-X-Google-Smtp-Source: AGHT+IH6y8NaDWBYMTdPKnRuy2ZV18VnXaLplADliZlMQ0z4zUxVD/TIhKxxpiEyVinXAg5jXp/ocA==
-X-Received: by 2002:a05:6a00:1785:b0:736:55ec:ea8b with SMTP id d2e1a72fcca58-73c1fb5ee47mr21490b3a.24.1744733311052;
-        Tue, 15 Apr 2025 09:08:31 -0700 (PDT)
-Received: from localhost ([2804:30c:92d:f600:d5e4:543:c403:4767])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd2198be9sm8669243b3a.9.2025.04.15.09.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 09:08:30 -0700 (PDT)
-Date: Tue, 15 Apr 2025 13:09:40 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Siddharth Menon <simeddon@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev, gregkh@linuxfoundation.org,
-	jic23@kernel.org, Michael.Hennerich@analog.com, lars@metafoo.de
-Subject: Re: [PATCH v7] iio: frequency: ad9832: Use FIELD_PREP macro to set
- bit fields
-Message-ID: <Z_6ExCvQg8lH20z6@debian-BULLSEYE-live-builder-AMD64>
-References: <20250414191453.10222-1-simeddon@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bYbX0qI6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744733375; x=1776269375;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=W1vlDCxe+5Rfzi02fWdsezjZcXCn18F45MSqcelkLpw=;
+  b=bYbX0qI6MJrBX24pB3GiZaxB+4gbrBk4HVO6sXL2XMUshpFJgBcewi7u
+   XOZI9Xj/vm1Nh9Nx6CGVej19YJ4OK0U/dMsrHWDYyLUYiuwnNWyuoJLdu
+   qMsZnWJWsbPfg+ril4IwwrpHqCG6awyGJvPcEKmzeOBcS4csQ6XgOa0b9
+   htOKZvlUz8gWb46fzPtkSR+K13sCy4Nyr1YL/s7q5Ro90QeBZLqSmy6wu
+   0CO7i+S5mpvFXv38XwJBhczalqwkQlOu7yS3HmUXKJJFLCapXWEFzxE7e
+   fw4LablgibDDTo3z03qBOg6D/9+8QZxYM1fNV8uBEU3+wiR049wtwM4hb
+   g==;
+X-CSE-ConnectionGUID: BNmd3TAeRqizbDBOPg8BVw==
+X-CSE-MsgGUID: JgrEdUNFTmyYmw6zXZORKA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57636930"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="57636930"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 09:09:34 -0700
+X-CSE-ConnectionGUID: CoHLab+qQs+nMA9NoYodhA==
+X-CSE-MsgGUID: S5GL+c0nTQi/Qnnr7x/VPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130710105"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 09:09:34 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 3D58B20B5736;
+	Tue, 15 Apr 2025 09:09:31 -0700 (PDT)
+Message-ID: <7dae1dbe-02fb-4294-90b8-0c4b2aa7d70a@linux.intel.com>
+Date: Tue, 15 Apr 2025 12:09:29 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414191453.10222-1-simeddon@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 10/22] perf/x86/intel: Process arch-PEBS records or
+ record fragments
+To: Peter Zijlstra <peterz@infradead.org>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-11-dapeng1.mi@linux.intel.com>
+ <20250415135700.GD4031@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250415135700.GD4031@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 04/15, Siddharth Menon wrote:
-> Use bitfield and bitmask macros to clearly specify AD9832 SPI
-> command fields to make register write code more readable.
+
+
+On 2025-04-15 9:57 a.m., Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 11:44:16AM +0000, Dapeng Mi wrote:
+>> A significant difference with adaptive PEBS is that arch-PEBS record
+>> supports fragments which means an arch-PEBS record could be split into
+>> several independent fragments which have its own arch-PEBS header in
+>> each fragment.
 > 
-> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
-> ---
-...
->  v6->v7
->  - fix st->ctrl_x alignment
->  drivers/staging/iio/frequency/ad9832.c | 92 ++++++++++++++------------
->  1 file changed, 48 insertions(+), 44 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-...
-> -		st->data = cpu_to_be16((AD9832_CMD_SYNCSELSRC << CMD_SHIFT) |
-> -					st->ctrl_ss);
-> +		st->ctrl_ss &= ~AD9832_SELSRC;
-> +		st->ctrl_ss |= FIELD_PREP(AD9832_SELSRC, val ? 0 : 1);
-> +
-> +		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
-> +							st->ctrl_ss);
-Oof getting Linux code style compliant tabs and spaces correctly can be tricky.
-In sum, tabs should be size 8 and be actual tabs (not 8 blank characters).
-Also, when we need to align code at some column that doesn't match 8 sized tabs
-exactly, we start with tabs and go until the last tab that precedes the column
-we want to align to, then we use spaces to go from that last tab until the
-column we want to align to.
+> With the constraint that all fragments for a single event are
+> contiguous, right?
 
-For this particular example, the opening parenthesis of FIELD_PREP is at column
-50, so to align st->ctrl_ss with the arguments of FIELD_PREP on the preceding
-line, we use 6 tabs and 2 spaces.
+Yes. If a record is split into n fragments, the first n-1 fragments will
+have the CONTINUED bit set and the last fragment will have its CONTINUED
+bit cleared. They are contiguous.
 
-		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SYNCSELSRC) |
-						  st->ctrl_ss);
+Thanks,
+Kan
 
-Setting tabs the right size depends on the code editor. For vim, the following
-settings should ensure the correct tab size.
-set tabstop=8
-set shiftwidth=8
-set softtabstop=0 
-set noexpandtab
-
-See Documentation/process/coding-style.rst for complete code style guidance.
-
-Apply the same spacing to the other cases.
-
-Regards,
-Marcelo
