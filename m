@@ -1,91 +1,91 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host1-snip4-5.eps.apple.com [57.103.64.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2FD2957DF
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86391F3FE3
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720507; cv=none; b=c1qL+euCt92wWP5H4HDTceUNCmIMdAo7Lkzqyv5p7UcqzC9hIw/byl8JRt0ObNAIaR7sq3eDdQ/xcloNQu5gIBdkpPvLKr3vr1nvzN6W0SEAEEpctVIjd4pI+unTPatEYgvHejf3obHPjIIJP3sGb2agTQHOOp6ooTAtUb1j8OU=
+	t=1744720508; cv=none; b=UwBqrPh+oDuGNiMcFBk5B6D97nd6l+z+DSLbLCNZtON9MsWKbh6d6qpRHHregKuk3UWIn117QBI9i0CYcWEhFeyMWppF7M/IPxpNPyGIEcy8YcBeixKMMAdGjjNcLA8UseULiJnx8wZ4DIqjnlWLaJdTlGlRPa6hmqBOXGjzdeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720507; c=relaxed/simple;
-	bh=2bbXyacdzPk+p8lyYhXlZXFDt5Cp5S5tHs7kevP8R2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJ4WDG51Sy9/SuaXCAOEjDO5vpfeT7w+YDo/gq9enNnpV5ImOrGUWrJtDkUwBChsrCYljjTRIsBbFxYWoK15bm5kfbrKEXMWe7QCwFmCVxpVRZVLUcOmKP9pwhrf++Pz8jc5mF0DgXvQEMKpm5qgCALgL/5Pyuo7FM9GPoesPGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dQ7qGav9; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744720508; c=relaxed/simple;
+	bh=G/M1tHMiyflA1BIJylR3XZVvTrp1OCa6G+q+3ZYF/KE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qqBSyTjbTWK5CRgn+fMD6CSfiA6Zd+8wD9baFatIXiHlK5f2taM15pqS6fX/GBnPAm8Vr3FLqNj0+c5pmXjUbsTe/ieJtF4tSyvGTgrpKILc+mBW1WmfKN93+lsttL8AbgC9iS/4za7VkBH+pdQDJNhNiaWxf/paIr+dHvmomXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=gPGaRBlg; arc=none smtp.client-ip=57.103.64.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQ7qGav9"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736aaeed234so4351696b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744720505; x=1745325305; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cjJuU9Lc3xslp690vxv/4ft6FfULL/9oC8TX+DX3eQw=;
-        b=dQ7qGav92ohH8JB0es1QaSK+ZOUnju2a6TjtXiU3/UW9qYhFQtgfclcmOEfNTCKXQA
-         NN87UcduiQPeOOsUx4urFxnwdQlrUmHqodeWu5KCeAich6ie/0KrR5NPRC4s1WdmBsJh
-         wS7BhRawZy9PIzy55XoDIZIJR455gSSEIegp+W5fMdDVQNTJ+AIcXrRhbTGACmqJzvTd
-         aVBsDNerfv1TOJ5zSgbT99P2e/2IFIxRMrSeQ+PhuX4BkhDDOti54m3b5aMSWRTIFAkM
-         b+dlU34Qpg+YJ3g4kv1E7GePWIGF+mRcUVReT751i3CnqveM42KMSKbAkDY6JmpdFGS1
-         rEug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744720505; x=1745325305;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cjJuU9Lc3xslp690vxv/4ft6FfULL/9oC8TX+DX3eQw=;
-        b=qTcHkFawkLTvXhbLakz3jxRcLaDB3BDIF0F0EOckvx4ZWGz8QhBEPWBNeOpDZt/R6Z
-         W/RWjU2mcAYxlDopF0hdwZewBaJF/TFV2rQtznuK20iq9SH7DSjCYMQixssT3XtDq17J
-         S0LcsCYZBnepOerzDk44JvN66yMEApGif2ti0U42ca67MnI2YFSB4kA1C0S9CWTiu9eI
-         Zbel35KjP4p4RoPZZRsYm0aFXqYZ8M+1iXSowPlNslpgzmmmvUvg3JdxZ51oeyNoJXDq
-         y0voziAhGYxejhPrHLA+Zx94/5imaIFYHQwhu7JXGfROE6YU7AjlrcBfGyqCAaK+7xmJ
-         y2Rw==
-X-Gm-Message-State: AOJu0YwNxEf8ezXtf2WiKGHeUj6UEkC6E097/w48SjDHLEP9H3EXs81v
-	v1t9s9+flHlCckb1czYHMNxAqB1bcXnFDAIx9y1i6kVd/Y6dxK46
-X-Gm-Gg: ASbGnct3dtnJvAQG1WN+7FAMngdMOcdhZt6YmALpjMq03McP3sxDsNUqSjou5qzaT1C
-	6eWQw9cMqopwsSHsTRzghnUcGtrtKphzcVNkFyGWXdqBp+L2Pxl0vdlZSlaLwWs47w9WhAYpykW
-	mB22GfqfazwvLiwXxLPRF53Dyc3T/HTuuqF28NJzz0aFtOwrdIKG4MXmEOK+cNjwmgluJZM79SP
-	FrDqrjrxsHDKJxuQ3OvXEJKxD2puP+TpU81OuNiko9d6KH1UJngW7rQwduvTeuaA5L6QJWfLOrU
-	UKeGVYs9MnoQj2pSGuiHhY5YzqS52minuuLyNAFxLUkTV1QWsb0=
-X-Google-Smtp-Source: AGHT+IHyyUBCwSPhooS9BQfOHuxBYn0PWQz551UcysGaeWq7htXJoZ/v3MVq0hslhiaMoWw4IjM8+A==
-X-Received: by 2002:a05:6a00:21c3:b0:736:4e0a:7e82 with SMTP id d2e1a72fcca58-73bd11e2d4dmr22471437b3a.10.1744720504732;
-        Tue, 15 Apr 2025 05:35:04 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f0f72sm8347960b3a.89.2025.04.15.05.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 05:35:04 -0700 (PDT)
-Date: Tue, 15 Apr 2025 08:35:02 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v1 0/2] bitmap-str: A couple of cleanups
-Message-ID: <Z_5SdhGGyg5MtEZU@yury>
-References: <20250415083156.303914-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="gPGaRBlg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=As/+adlLHJw9d2MVZPc0TJBJ1JrIgfvJpyt5YhiILdk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=gPGaRBlgIGtmpNBrvNT04nlqnZf1ioTVCqG2P/ZAHF1rgjrkenlxt2GizRM0mxp8I
+	 8ylFmllh/44V+fTJgEnQ74bvjSq4An2Ou+MflRUmF1HiM1YlPbC+/lxqzxYF0Joe5F
+	 KZgNg+DiPh0NknoJZxFxC24sN6P3ULlBCVNT7AQ43eWMdOBofPUlpvEtEwuK65lBPu
+	 Jx3bGmd37N2AZAkkvPDLqEcfdpoCvatwBAbtl9JOG/TcIVBl8HJWsRhNlSCs9AOj9i
+	 k0Vn9GWpRHesQbXEXVNLcBjILjiwLbQYR0r2iBw2Nj8orrYhfzotoAZgVZnE6McqZP
+	 kyC+W3jEIa2uA==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id C05561800413;
+	Tue, 15 Apr 2025 12:35:01 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Tue, 15 Apr 2025 20:34:27 +0800
+Subject: [PATCH v2 3/3] configfs: Correct error value returned by API
+ config_item_set_name()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415083156.303914-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250415-fix_configfs-v2-3-fcd527dd1824@quicinc.com>
+References: <20250415-fix_configfs-v2-0-fcd527dd1824@quicinc.com>
+In-Reply-To: <20250415-fix_configfs-v2-0-fcd527dd1824@quicinc.com>
+To: Joel Becker <jlbec@evilplan.org>, 
+ Pantelis Antoniou <pantelis.antoniou@konsulko.com>, 
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: 7Lc8Zxtxo7UzqSnos6E459TYESyTzkUd
+X-Proofpoint-GUID: 7Lc8Zxtxo7UzqSnos6E459TYESyTzkUd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 spamscore=0
+ clxscore=1015 bulkscore=0 suspectscore=0 phishscore=0 mlxlogscore=999
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504150089
 
-On Tue, Apr 15, 2025 at 11:31:18AM +0300, Andy Shevchenko wrote:
-> A couple of simple cleanups to the bitmap-str.h.
-> 
-> Andy Shevchenko (2):
->   bitmap-str: Get rid of extern
->   bitmap-str: Add missing header(s)
-> 
->  include/linux/bitmap-str.h | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Hi Andy,
+kvasprintf() failure is often caused by memory allocation which has error
+code -ENOMEM, but config_item_set_name() returns -EFAULT for the failure.
 
-Can you please resend with non-empty commit message?
+Fix by returning -ENOMEM instead of -EFAULT for the failure.
 
-Thanks,
-Yury
+Reviewed-by: Joel Becker <jlbec@evilplan.org>
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ fs/configfs/item.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/configfs/item.c b/fs/configfs/item.c
+index 254170a82aa337d95cbfbdf1a2db1023db3a2907..c378b5cbf87d28387a509c3cabb93eccfb520c9c 100644
+--- a/fs/configfs/item.c
++++ b/fs/configfs/item.c
+@@ -66,7 +66,7 @@ int config_item_set_name(struct config_item *item, const char *fmt, ...)
+ 		name = kvasprintf(GFP_KERNEL, fmt, args);
+ 		va_end(args);
+ 		if (!name)
+-			return -EFAULT;
++			return -ENOMEM;
+ 	}
+ 
+ 	/* Free the old name, if necessary. */
+
+-- 
+2.34.1
+
