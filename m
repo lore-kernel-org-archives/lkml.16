@@ -1,89 +1,109 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA25123F410
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE318274640;
+	Tue, 15 Apr 2025 08:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704192; cv=none; b=LZ37vGlVB9TVCkYbfGDleixKycDAYOnXXEnxRedu5Ovl7Dzq3J/42UJge/l0fnA0Gwr5Y6FMA2oYyd75/dro8jktu+1t2ZJNErzeTL6bAfxP0r9ZPBZZTzXls5cRaxZzSne8+/qA1xd00/KPGg9vC3ebjLnBby9U0ocQOGETU+4=
+	t=1744704216; cv=none; b=Y7GiQPoR/KPVXuVXIdPnQ6UDwvSO5WH5GCdhGqZj7DOmuazSSPIQL8+Oww5MlikwPhKGX2zgatndJtlisVq3dUGEKMv3kXHiYT9hOTQBnBVCn62QHQ0DzdDapL+qIR5hLOFJyQfoa40Yo5d0yCp40onYtF2kRE8eDAkmbtNpbRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704192; c=relaxed/simple;
-	bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NelSX+Ji93z5NqSIWiqb3tijEundmEz0E9bhJfxZXKbC+lwLQJOVOtACbIy7JZCPrf56G3wcxK7Zr+Cv8bAnIQ5MbefUqhdBl/5Z1ynXLeZoTAlj1X66VMqOsDyEh2ASj8MYjEYoTE/Eo+Suy4PNICh/TuheEwfVjzWuh4of4KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WOuuhxXS; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744704216; c=relaxed/simple;
+	bh=ttOQPAQ/Uc62DAVNnKwV0MrGQwvtrfTUwUz94ORRQxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hifGE0eUwoS3jQPekBKaHVHYog9pbW3cXC0mFYXUrHih7MMFcT2f9qmGXfeFyB3AsQ8oY4h2iryhy9eo+L1GqbR+n0lFwq5CkiNkhY87QPsM8sdiKCzkneYzcm4FG85sKcrGBmlg7b+WA1J8k5y71ebvcNjLMBw9SNm+vwp8lSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Skp41ukG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOuuhxXS"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bfe0d2b6dso53810691fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744704189; x=1745308989; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
-        b=WOuuhxXSM+lfvvdenpheaDc29I8yIZJfYlbZyIp/fTjHaC9Jkxrz8JNGD1CfUvsSWk
-         i1MbPL8s6XszMsqVhiMtiDD/ULvbeVY2cqB4qbC69H9QrXLBhFx6/ysOMhn5dDUZBk4Y
-         p51kXoCZYEflXvWL+ZlFgsdBTH1/FhbX/fFG7Dcvx1C2O+eQr3YbJIv0heUUBU2q5bPD
-         bU7NFvYSy3yt12vG3bxPBSQOglByRYbSD3Q/YDE8vy6j7ot+tszb2PwD3jRKaQNX6Jvs
-         sSh7GFP2m0FNg0VqbJpgx8X2jgDR3QHUPgLhEwnpcwD17BqthCzkv6zP+29ShL4Hs70t
-         EZoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744704189; x=1745308989;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+V55qGdz3nFmdjae2o/u6EmBjC6s05SCXJObXnBOuI0=;
-        b=Iwbexw8nIADHRpbc3DJ367oipF9GSg5P7OgSRoxnJQLx/p4mEpv7wBfH7trQpNYqyo
-         nIjwz5/xXAIcPhznnjFDya/c6MuXRPs4fc6U+HO/9yIaxoMD0zzPtwuS1ZGmXNnywRGb
-         gGmEzYMap1FhGe0Wb5fwOfnl4sFdrrP6o46Ir3XngshP8zSVCJEJA1FI+wxX2ngX/ssI
-         ls9EL4yo7vKeHvuWoW6uPL8OSnKihKDsmqJK3flQcMlJtvDBJhpsLlAoTCfz2cexRbx6
-         F8gNKiig7FlUDJU7Can4Qioxh0U5fY6D51ULLsbXUgGq4ZzRsbM2lftaZ+bb/J8Y5+GI
-         SzXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXQoUUNZfEHaFKK7cmCYaev3TeEPfQWaNNTBZASB+hPJHJNim1BucySl4tdEZ0Pzy+ucjZhqH0gc8YzTHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX5SPuygrkag1cnZPZyvsZsFK1DSwjhriJFrVPBIeWurDV9iML
-	pgEBgJ1PHQccewBThImpWoJFtHEeBLhihx9Q6nqjmxgHg8yzFmGr/6Yw+P4Uy5GcEv2NLYHAzYq
-	NGW1zZzza0mWRCV9dQjEaPpdub1xSbbVRa3bo+WjhTgGYc/TrVr0=
-X-Gm-Gg: ASbGncv4lnJ593GDXoV/roAiFVJM0AjvIlVq9vwNdmP/OTgsT9+PHqpcOaGWoQNMiQy
-	lS0UMqMCHQUcgQW+rgpJKb72UWs8mIHq4OtRCUc5vCCy0YRMaW9GJ/xQR4jcf2b+I51Kr2bAsL4
-	IQ69CKP+X7hWcUd3QT5zvBhUejaN1H4Gxi
-X-Google-Smtp-Source: AGHT+IF8B7muO3z+eK2QnDzSM9ONUyOn1pOPX9ugb37B1zPs9RhHVBq4wiGGWi/LmGwDob0ku420OA7XLCJpPobaI30=
-X-Received: by 2002:a05:651c:210d:b0:309:20b4:b6d5 with SMTP id
- 38308e7fff4ca-31049a7e5bfmr59334191fa.28.1744704188733; Tue, 15 Apr 2025
- 01:03:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Skp41ukG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38771C4CEE9;
+	Tue, 15 Apr 2025 08:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744704216;
+	bh=ttOQPAQ/Uc62DAVNnKwV0MrGQwvtrfTUwUz94ORRQxY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Skp41ukGS21uqruwNSsKX5SSSHZPte6khx3xyyCjscAlcdmn+/Wk0CA+LklWoTErQ
+	 B1xPpV1tROha86foWNGJVywgxryZnCU1u3BDhva/u0fEONjaZb1jbB8NY5AcieJ3g/
+	 C2PYSg/9gHAsy3A3hTuxUQYw5Tb86naqGlhB2iip7iTvkosRhMKKBzaS1FW/hsCFpz
+	 GNfXGY725uaML0Yh01ofwAmulff9MvvnrI4GFOqag3scCXwInvwcghgxWGnAyGEOee
+	 3VN6ifaS1VbgkUB0XHIkN90DK+WQtilKCBoaGb7KhrqifadpQkTBytTv4gy1zoCQQR
+	 YSgLFP9w2kJuA==
+Message-ID: <2ab6de54-ca06-407c-a95f-d86c7b8fd7e0@kernel.org>
+Date: Tue, 15 Apr 2025 10:03:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402122058.1517393-1-andriy.shevchenko@linux.intel.com> <20250402122058.1517393-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250402122058.1517393-2-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 10:02:57 +0200
-X-Gm-Features: ATxdqUG8QfFP3eJEKd-SVmIh30MEixKKcvWkROjudjJnuccbbmELYQ8FlwuP_As
-Message-ID: <CACRpkdbrRWVOkwU932qehOK8QOZvWAuo1hsnAtV3u5uJeT-Gdg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: of: Fix the choice for Ingenic NAND quirk
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] dt-bindings: display: Add Sitronix ST7571 LCD
+ Controller
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250415-st7571-v4-0-8b5c9be8bae7@gmail.com>
+ <20250415-st7571-v4-1-8b5c9be8bae7@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250415-st7571-v4-1-8b5c9be8bae7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 2, 2025 at 2:21=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On 15/04/2025 07:58, Marcus Folkesson wrote:
+> Sitronix ST7571 is a dot matrix LCD controller supporting
+> both 4bit grayscale and monochrome LCDs.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
 
-> The Ingenic NAND quirk has been added under CONFIG_LCD_HX8357 ifdeffery
-> which sounds quite wrong. Fix the choice for Ingenic NAND quirk
-> by wrapping it into own ifdeffery related to the respective driver.
->
-> Fixes: 3a7fd473bd5d ("mtd: rawnand: ingenic: move the GPIO quirk to gpiol=
-ib-of.c")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
