@@ -1,90 +1,117 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C548D2957C7;
-	Tue, 15 Apr 2025 13:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2982989A9;
+	Tue, 15 Apr 2025 13:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744722752; cv=none; b=YpK3u1OUXm2XGrCjajPPpW2pvVYFwbgiOuTqonUtYdYwAVZB9SyWoj/snaoEr2Oiuh59FNg+dp9IwG7qtiWZRSAX+dTT4N2yrt6KUHs3OXA1d4hVZm6S1zcdvirVsFTv+I6gwleZ6Wt7R53Ka1Vob76lk4KsdHzIzMqCCYviK1M=
+	t=1744722754; cv=none; b=ls2SMS4AZ5FRvH3KZMppTPbVngDbjlvubfjsa32/yC0oWVgVLua6yKl871siyPu0SD8aYCRHPoWTXoyz8MrT+U1l/tWZsEAxy65cwTUgCL5pYXZLoaWlhSHCp9iYwCbzJyN12K1Z7ZDGSkKokRThr3z1mij5zBwLGYKiXghPHBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744722752; c=relaxed/simple;
-	bh=BeHlrz5CIQlk/1kDDh2XFjvzQ+Ov07K+rokHvYu2Nj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qlPRqLKcMRdQJSzv7K+ZOsZXq4m1jCL2XvVGd06vAC6tJJqqem3SaipeALns9EBPeXCZrK8I0dPxRDgxj2P0vFXb0JaQJb48QdYZVp3YJeHP8l89NtW3p7kUG7pnwKgkQqdVaPsvmLHvWNl++udiVOFvdGJJ1r/7/BIa/SDpYCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=SyhUf/n/; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744722754; c=relaxed/simple;
+	bh=NvOGweny3//9PpU6g+4X9hkULpzaTPAuQjLSl6LDn5A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jvzbt/4PMIzjcIPzhfDL8I9acb8Pa5G/9pC/4A9BIDa7ylbhaezef2SQYyrfM2fikPeB0V08orSjnzQQucqIu77xXQkasc703e96b8j0N5jpZ5Z+RehVtIrHbZxaNy264Duv9dfh3F7m3PCDMqqML9Wpp0Er6povp0ZX8OlQ12E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k958yCx9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SyhUf/n/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=S+9AKP7zQ1+iMRVWZx18hsEz57eDtfhGlOAA50AWGAU=; b=SyhUf/n/OF9SyPoLA1ckdHwam6
-	5WaQP2y7KmbnQjEBT4QA5bWMeKLM0hBfi+nzMnWSov05efBfqdCcy/VRO6BApbaoyKMQMrYHrMukf
-	u2rgHQFqsw7Z4wPUihGUMayHx1i3aLoJpiB/JQqoLl+5qtmG8EmXQOUJ4v2Gs1SJgLaA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4g5B-009RlD-7A; Tue, 15 Apr 2025 15:12:09 +0200
-Date: Tue, 15 Apr 2025 15:12:09 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andy Whitcroft <apw@canonical.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-	Joe Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
- rgmii(|-rxid|-txid) PHY modes
-Message-ID: <a0904f35-8f26-4278-9090-9bbeef905ef7@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <20250415131548.0ae3b66f@fedora.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k958yCx9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C1DC4AF09;
+	Tue, 15 Apr 2025 13:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744722753;
+	bh=NvOGweny3//9PpU6g+4X9hkULpzaTPAuQjLSl6LDn5A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=k958yCx9+v4kckx+SPonwhjsq1VKNVbGDW+tScgS2FgQouS3NJzLirzUNCltrBREA
+	 LVmAUxTl4FPx0Bh3XuL+z7P+9lOR577/LmjB8C/qdVXL2PCfl+6oVbUl8CWi8HaYtd
+	 iE6VidSp28AHtkqIn1t+BzXxE7PaWhUuQbfyWsF9jPTBASsgPqsa/ZnP56bZxUQGyu
+	 AgpTG+rRAOXkyL0NH9E+WMF3NlMIbX27qpLx+7WtjnhGE3h69EpsgHetBe5J1hkufI
+	 h37ty6ipxig0gmdDN0UUDyCpHyb5JR6N6tVFGdeXlUIYdR2iGzAvWwRtjt27iu4mjJ
+	 YNgz3vdA9idtg==
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c769da02b0so3763862fac.3;
+        Tue, 15 Apr 2025 06:12:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU8Wx3GLYpm+M82l64cktXB3NfYYvMBLB6cfrgvddx2GJ4rCSF0Xd7GNXZxY/eAKLHPkcnfjOTv3Rc=@vger.kernel.org, AJvYcCWQ/FG2PxOOgZsAbeAVTqgVXXGMHXjDxwp+N3mDjful5ghAuij2Rhi/LWEZ+nO3lj+ah0FWwooDIhP6wWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkjLRWJjBN5C5QZ5d9wN9cD41phJwc93I+l1uaxwYi2P4s4K6G
+	g7lvA1i+2MJ3XxcQ/0w5BzI+CYewCqcxIbTV13cmzmyawhjrEAcbiKhXNrgUxs+Pxk4RMJkxB94
+	JRG9B/jDyHeJRFsr0cBGrv3DIcUA=
+X-Google-Smtp-Source: AGHT+IHQz7afKClIl9JufIHbfXY8ywdQ1OxG3dTUq+Tinrq+8ujCnjZuoRlAVf6U7oolhBUM7P3nNKRRbGwANWnXCgI=
+X-Received: by 2002:a05:6870:289b:b0:2bc:66cc:1507 with SMTP id
+ 586e51a60fabf-2d0d5cf7285mr9975832fac.12.1744722752838; Tue, 15 Apr 2025
+ 06:12:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415131548.0ae3b66f@fedora.home>
+References: <4651448.LvFx2qVVIh@rjwysocki.net> <1928789.tdWV9SEqCh@rjwysocki.net>
+ <Z_5aQdqYJCFkcHLi@mail-itl>
+In-Reply-To: <Z_5aQdqYJCFkcHLi@mail-itl>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 15 Apr 2025 15:12:20 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hoSoa+DpN3jYSgQ1T8aWxcT806hJJOOwY5c8cRs3T1Fw@mail.gmail.com>
+X-Gm-Features: ATxdqUHc-dIqFVvUeKybIaMPNzyJQH1Kh_mq1jQvhviOH-6zO6Sh8oW5sWNMXnQ
+Message-ID: <CAJZ5v0hoSoa+DpN3jYSgQ1T8aWxcT806hJJOOwY5c8cRs3T1Fw@mail.gmail.com>
+Subject: Re: [PATCH v1 01/10] cpufreq: Reference count policy in cpufreq_update_limits()
+To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Cc: stable@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> My Perl-fu isn't good enough for me to review this properly... I think
-> though that Andrew mentioned something along the lines of 'Comment
-> should include PCB somewhere', but I don't know if this is easily
-> doable with checkpatch though.
+On Tue, Apr 15, 2025 at 3:08=E2=80=AFPM Marek Marczykowski-G=C3=B3recki
+<marmarek@invisiblethingslab.com> wrote:
+>
+> On Fri, Mar 28, 2025 at 09:39:08PM +0100, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Since acpi_processor_notify() can be called before registering a cpufre=
+q
+> > driver or even in cases when a cpufreq driver is not registered at all,
+> > cpufreq_update_limits() needs to check if a cpufreq driver is present
+> > and prevent it from being unregistered.
+> >
+> > For this purpose, make it call cpufreq_cpu_get() to obtain a cpufreq
+> > policy pointer for the given CPU and reference count the corresponding
+> > policy object, if present.
+> >
+> > Fixes: 5a25e3f7cc53 ("cpufreq: intel_pstate: Driver-specific handling o=
+f _PPC updates")
+> > Closes: https://lore.kernel.org/linux-acpi/Z-ShAR59cTow0KcR@mail-itl
+> > Reporetd-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingsl=
+ab.com>
+> > Cc: All applicable <stable@vger.kernel.org>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> It looks like this patch is missing in stable branches.
 
-Maybe make it into a patchset, and change a few DTS files to match the
-condition. e.g.
+It may have not been picked up by the "stable" maintainers yet.
 
-arm/boot/dts/nxp/ls/ls1021a-tsn.dts:/* RGMII delays added via PCB traces */
-arm/boot/dts/nxp/ls/ls1021a-tsn.dts-&enet2 {
-arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    phy-mode = "rgmii";
-arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    status = "okay";
-
-This example is not great, but...
-arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         phy-mode = "rgmii";
-arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi:                         /* 2ns RX delay is implemented on PCB */
-arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         tx-internal-delay-ps = <2000>;
-arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         rx-internal-delay-ps = <0>;
-
-There is one more i know of somewhere which i cannot find at the
-moment which uses rgmii-rxid or rgmii-txid, an has a comment about
-delay.
-
-	Andrew
+> > ---
+> >  drivers/cpufreq/cpufreq.c |    6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -2781,6 +2781,12 @@
+> >   */
+> >  void cpufreq_update_limits(unsigned int cpu)
+> >  {
+> > +     struct cpufreq_policy *policy __free(put_cpufreq_policy);
+> > +
+> > +     policy =3D cpufreq_cpu_get(cpu);
+> > +     if (!policy)
+> > +             return;
+> > +
+> >       if (cpufreq_driver->update_limits)
+> >               cpufreq_driver->update_limits(cpu);
+> >       else
+> >
+> >
+> >
+>
+> --
+> Best Regards,
+> Marek Marczykowski-G=C3=B3recki
+> Invisible Things Lab
