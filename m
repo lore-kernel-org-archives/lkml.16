@@ -1,141 +1,307 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F464C74;
-	Tue, 15 Apr 2025 09:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7143E27FD50;
+	Tue, 15 Apr 2025 09:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710770; cv=none; b=CNcPiUJ+WeOwEuPcwCXxq4Jf2g+Qqkazs60q0txgDdlc5kByng25hQScupyAxk1wKVWNyUGBSQzCv0ud7G+BY3iove8GmxipwbmBbGpHT3YLze/hYGw75lnlQkFG6NsJ7Ztv2AN3kiv5h4sN1C1Ck4nxK51XdhNMIVeahMBQ85w=
+	t=1744710799; cv=none; b=ff1j8KvSwqecQo1tCiAeJ3ZZHK520Ok7VQs9UODopxCrEo1WWQhfpSJi1PR/EdnPEDMQxFAhGdNMMtJU4q151xEQSqXfYINNsTb0Kuclq897Cwkf9fpFB/Nh1xRChOWLerai/GG0SIsyPUp5YhyssfFeYbufa/yDYQyZ6bQK8gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710770; c=relaxed/simple;
-	bh=flvzDfsqbS3vR0XK7ckJ2rQ8OFXa7GhkGw8Wjc8yplM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=oe9b/aVJ+l5VPv3IZqnd467XbKcZ9aDHW+Hw11jv0aILPZjwVlHzxnyRbY38MQGoyZBMG9YYCOw/mx4WeNH2FbE1IcGwF00LLFrEgXvE8VcGJ1bxF2BJbr8IhghipLwg/UyXsvx+JfIkgbBeGtcuZUubedb6pIukbJhyDilXl9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=bLhOgagt; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1744710799; c=relaxed/simple;
+	bh=GBqrW1cGkXPJI63EZko5TaBTiLL36RjqzQEXIH0CkPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eoTO38h7hCl0yvg1Jp5tn9PBuwTQtbVH4xTYL0RujLVG20qdzwRzM7hC3RRm8Y0UzW/ArRAtvmFOXog3DW1q7Tus0ZUDWYs2zqqJ9ohxrY2na4iTsShrY945Nu2KGEy2kB0iJ0w8QoDrZTOKWkOanPBumv67oDVFvLMs4/mfLoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MLiGagr9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="bLhOgagt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1744710739; x=1745315539; i=frank-w@public-files.de;
-	bh=Q+JckBEpsrRgqh5xztZTHuIFUl86FPQgA/jK6oZPRJI=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=bLhOgagtIW/xrGe5Nq/eT10+fZL8R9146+562WV+19hEvp0m7LLIPpLGoQOaaZHO
-	 0exsQBy34S+clURVRsFvn72m0tvnPd3HWlwkv2sNYgJ9MKSDYaP45u+oRCzNA8YXI
-	 nHHCj5z9JdXGda+7Fhjgf4V7dWD6pwzccFQ6DXScBl1gBV66l5U25iBbohq7/wopV
-	 kq8h3eSBqOiQfGPwTTdpn1DFUI6+1QbKv4DY12M5RRM2Q+HWKypRGIltIliw8T7xp
-	 1rlbboCruan5kxl3GsRUMzk3IROhb+9XbMM1XPB3/5RnMSQi/WAy81AQPlsc5frQQ
-	 pnEc9YdM80A9d08pQQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [127.0.0.1] ([217.61.148.30]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3Rs-1tjEjN2Nri-00WfPz; Tue, 15
- Apr 2025 11:52:19 +0200
-Date: Tue, 15 Apr 2025 11:52:19 +0200
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <linux@fw-web.de>, Chunfeng Yun <chunfeng.yun@mediatek.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-CC: Daniel Golle <daniel@makrotopia.org>, Sam Shih <sam.shih@mediatek.com>,
- MandyJH Liu <mandyjh.liu@mediatek.com>, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_3/5=5D_dt-bindings=3A_power=3A_Add_binding?=
- =?US-ASCII?Q?_for_MediaTek_MT7988_topmisc_power_controller?=
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <700af1ab-f43e-4583-8f0e-27e5d4424338@collabora.com>
-References: <20250413085806.8544-1-linux@fw-web.de> <20250413085806.8544-4-linux@fw-web.de> <700af1ab-f43e-4583-8f0e-27e5d4424338@collabora.com>
-Message-ID: <2EA2BDB0-E1C9-49BC-98FC-5048905AA036@public-files.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MLiGagr9"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tCuO025061;
+	Tue, 15 Apr 2025 09:52:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	u7ktH7RchoLSd4+j3e7VfuxneDgbBb4+i1jD70cLUZM=; b=MLiGagr9Wg60UcUh
+	QLlqWWMS0Cf4qO+23XARBWk2ZMiqmkzdxOiudf3cELMTTtsOq56gH1144kAwruWR
+	osHCjzR71VvAFr21J2X3vqaEbXH2LS4Xmic9M1DYCj2eWRM0M14+a7q9dvHWh6Fw
+	dPlWMzf9WKphAm83PzR5NtTYZ4fmNlPSilA8DuqpGlT4sLKyOqg0bkJcjscYJHOz
+	bWaFpaC79HuBKXxjeFzdg3rwBR0YvH/2IQGwq7ZolIAvFVOd0to+q9M8jt9mPM2X
+	t+u/D8nZpDlW5DfeRN+d0Bk8ok/zMOQo/gSI9PlwhCb9T9nmthOWteID1S2ltRW2
+	09Qylg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wfju0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:52:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53F9qoRG019542
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:52:50 GMT
+Received: from [10.206.97.61] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 15 Apr
+ 2025 02:52:43 -0700
+Message-ID: <e291fe72-bec0-48b9-9384-7d1d9469a8e7@quicinc.com>
+Date: Tue, 15 Apr 2025 15:22:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MDFMwq9Ryka5EQJIRTUvtko9P8AePKbzPUmE9xDrQQAss83aXKG
- STQ21SuCC3A5uykYtRZaAicAhA1RltYfOdeAToH7BRl+YKP3qTUx0a6e4kSZJLqAI9f3JhH
- mmHa9PT41UQI4sFR00UU7pvbVse2JVC0ngcXy0evqylC+5T+BVSCrJSZaPfuYBNICBOCFvc
- 9JesmxM19WSuIqrNJAuig==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VK/pb+WoYXA=;bPDdGMYPFqQHNaVWNdlgFR7Fp8y
- rWQIkRE4B0iktDbhYZVOJ/v+gBRvcvY/3aV9Wha4vYf2j0y/nv6MBybsVgCLw/KbEmhUFN+EC
- miXg2SbKxGRQYeQoiJJmcq3Jgt51pe5Iqdix7p3Dw59AJhcYlwGpMkzomNa3nrXNWJDOgfOeW
- V01cIc1eZbqLgU3mCtfzWvVTCdb0Vdb9WvctQ2b7NlkoFBRNZf/EKpMZ0iPSyM0sxfx+Tzjcr
- KxUi06ed7sJBrAg3JGFYyfPFnNGBbjqaaSEhaawnu2xaF9ED0bXwS9gEcvBKH1v1Fz6JHQKn8
- BQzFd8lPgYKYP++r4ZPip1MJhfP5z6Il6IfZgmkaCkFosHYHDE8nikNQFCRnpl1gJ4hGGNf6Q
- 8gQYev9dAz+1G0a2YviaQAaGVAVXj2iqUXX/nCtvTUKB+dO6LHGEB6VSGV/4La3anEZWfFFMs
- fN7yana8+8OUlMDV+WmGHlDZHvXB4F5B/Z6NwMjJ9hxWm9W94O8U+UxpR+w8nJO7k4ngJc3/g
- 1+0IHh54E7Z56ZWhWaOlDvT44ur47m4t9pkjRffWkmNbnKejJu3SzoZ7fBTVkquCPdtkXK3Po
- ds4Y2phhrjfoonw741eFyci8ZxTo4RnVXouL6WDf8lPAHo1w1tr1tsJwkx0iDHjRzkEVZ4VHB
- B859Os0XrOCUTHnWupGSNKMhUoYBO2sxBXTv8cWCZFNaJbw2PbVSIEzSCvVPdhllmAXIRa1y2
- SSoJfBx9zFiLHbSxYK0bh2U0MqcogQ3+HM8sfvX5Nt3ltmviqw/x8+bTaRayOc72BdMGIwgA+
- KSFEvM6mtwtmv4AR/WVQx87VcEkk4BbuUOge/fxXMx5MIAAzUJYmu0/TjHzqchOmdYwsKbs1/
- SkeXC01UCbo8//5K4kdSnF7Y1i29xHLT1m/XzjXjcV7XtVzt2Qgs/BoAs35wVJ+VxKBpZM4YR
- MCenaYaG+lCQ/lFcN0T0Yvq5NM+Q9BLN1xSgcJeY2Jy83rs3bWA/LdgvXcVifRlrIqCWyB0b1
- OVA2v2pstzt2XYbGbjyfr7M0qcIf44KofgGOZFhf1gpOEemS6ocydFx3zoCk1bAPzowZ8gpgi
- t6eIUjG9sn8zBDoy/hWN9XdI3/4ULnfoXWZk9kBh9Xvini4EtbEcc0elP3kJokaVoKomC0t/y
- xwX72h+Pl50fFFvyu5sgKINi4DL6LmF3XBALJ+7xN/aUD3FcIa0EilzBLOQME3cCtZhgK1SjV
- W3+ALpBPt4DJ7o3eIBmrvOApT3W7qR5P/2dse8rSNipSBhYExhPlf5QyNpY6vAiPCCH59KkNk
- a3c3KYko2/Ln0PVgJf14fKP/85eO6Cs1mkFc1mq8fxxUs64kKZOkNNkXSfYGJfo5TKJHrqXHq
- 1+EwjzhS91yh/KUqfzxpURFlVfsKa/dOiWxElJF0RIaQON+l4o4bxXXtzm5prRmXLCheCmEKL
- //Dmaufb4GZf9Zbp0NzkLsYdERI/JEmzLGHHvJ08LpZAQEaj2O+seThgZ6keyZBvTytMRSS6O
- jjmEHWUwYJ9+s2qCwJc=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robdclark@gmail.com>, <dmitry.baryshkov@linaro.org>,
+        <sean@poorly.run>, <marijn.suijten@somainline.org>,
+        <andersson@kernel.org>, <robh@kernel.org>, <robh+dt@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <quic_abhinavk@quicinc.com>,
+        <quic_rajeevny@quicinc.com>, <quic_vproddut@quicinc.com>,
+        <quic_jesszhan@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+ <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+ <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+ <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
+ <7b876428-6f54-4c40-a234-57443eb97ecb@oss.qualcomm.com>
+ <a2b44f41-bb54-4d88-bba0-f5b86b8186b5@quicinc.com>
+ <ebfbc145-eb8f-4354-b6b6-ad7ecec5856b@oss.qualcomm.com>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <ebfbc145-eb8f-4354-b6b6-ad7ecec5856b@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fe2c73 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=-Qs8Zf1C4SQ5IM_3ssQA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 4eRD5Ev1FvMZWzWep9voiF4hm-LYudRw
+X-Proofpoint-GUID: 4eRD5Ev1FvMZWzWep9voiF4hm-LYudRw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150069
 
-Hi Angelo,
+On 4/15/2025 3:00 PM, Dmitry Baryshkov wrote:
+> On 14/04/2025 16:54, Ayushi Makhija wrote:
+>> On 4/14/2025 3:37 PM, Dmitry Baryshkov wrote:
+>>> On 14/04/2025 12:56, Ayushi Makhija wrote:
+>>>> Hi Dmitry,
+>>>>
+>>>> On 4/11/2025 1:31 AM, Dmitry Baryshkov wrote:
+>>>>> On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
+>>>>>> Hi Dmirity/Konard
+>>>>>>
+>>>>>> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+>>>>>>> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>>>>>>>> Add anx7625 DSI to DP bridge device nodes.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>>>>>>>> ---
+>>>>>>>>    arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>>>>>>>    1 file changed, 207 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>>> index 175f8b1e3b2d..8e784ccf4138 100644
+>>>>>>>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>>> @@ -28,6 +28,13 @@ chosen {
+>>>>>>>>            stdout-path = "serial0:115200n8";
+>>>>>>>>        };
+>>>>>>>>    +    vph_pwr: vph-pwr-regulator {
+>>>>>>>> +        compatible = "regulator-fixed";
+>>>>>>>> +        regulator-name = "vph_pwr";
+>>>>>>>> +        regulator-always-on;
+>>>>>>>> +        regulator-boot-on;
+>>>>>>>> +    };
+>>>>>>>> +
+>>>>>>>>        vreg_conn_1p8: vreg_conn_1p8 {
+>>>>>>>>            compatible = "regulator-fixed";
+>>>>>>>>            regulator-name = "vreg_conn_1p8";
+>>>>>>>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>>>>>>>                };
+>>>>>>>>            };
+>>>>>>>>        };
+>>>>>>>> +
+>>>>>>>> +    dp-dsi0-connector {
+>>>>>>>> +        compatible = "dp-connector";
+>>>>>>>> +        label = "DSI0";
+>>>>>>>> +        type = "full-size";
+>>>>>>>> +
+>>>>>>>> +        port {
+>>>>>>>> +            dp_dsi0_connector_in: endpoint {
+>>>>>>>> +                remote-endpoint = <&dsi2dp_bridge0_out>;
+>>>>>>>> +            };
+>>>>>>>> +        };
+>>>>>>>> +    };
+>>>>>>>> +
+>>>>>>>> +    dp-dsi1-connector {
+>>>>>>>> +        compatible = "dp-connector";
+>>>>>>>> +        label = "DSI1";
+>>>>>>>> +        type = "full-size";
+>>>>>>>> +
+>>>>>>>> +        port {
+>>>>>>>> +            dp_dsi1_connector_in: endpoint {
+>>>>>>>> +                remote-endpoint = <&dsi2dp_bridge1_out>;
+>>>>>>>> +            };
+>>>>>>>> +        };
+>>>>>>>> +    };
+>>>>>>>>    };
+>>>>>>>>      &apps_rsc {
+>>>>>>>> @@ -517,9 +548,135 @@ &i2c11 {
+>>>>>>>>      &i2c18 {
+>>>>>>>>        clock-frequency = <400000>;
+>>>>>>>> -    pinctrl-0 = <&qup_i2c18_default>;
+>>>>>>>> +    pinctrl-0 = <&qup_i2c18_default>,
+>>>>>>>> +            <&io_expander_intr_active>,
+>>>>>>>> +            <&io_expander_reset_active>;
+>>>>>>>
+>>>>>>> These pinctrl entries should go to the IO expander itself.
+>>>>>>>
+>>>>>>>>        pinctrl-names = "default";
+>>>>>>>> +
+>>>>>>>>        status = "okay";
+>>>>>>>> +
+>>>>>>>> +    io_expander: gpio@74 {
+>>>>>>>> +        compatible = "ti,tca9539";
+>>>>>>>> +        reg = <0x74>;
+>>>>>>>> +        interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>>>>>> +        gpio-controller;
+>>>>>>>> +        #gpio-cells = <2>;
+>>>>>>>> +        interrupt-controller;
+>>>>>>>> +        #interrupt-cells = <2>;
+>>>>>>>> +
+>>>>>>>> +        gpio2-hog {
+>>>>>>>
+>>>>>>> This needs a huuge explanation in the commit message. Otherwise I'd say
+>>>>>>> these pins should likely be used by the corresponding anx bridges.
+>>>>>>
+>>>>>> Thanks, for the review.
+>>>>>>
+>>>>>> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+>>>>>> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+>>>>>> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+>>>>>> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
+>>>>>
+>>>>> Please make sure that there are pinctrl entries for all pins.
+>>>>>
+>>>>
+>>>> Thanks, for the review.
+>>>>
+>>>> While declaring the pinctrl entries inside the io_expander node, I am getting below error while checking the DTBS check against DT-binding.
+>>>>
+>>>> Error : /local/mnt/workspace/amakhija/linux_next_11042025/linux/arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: gpio@74: 'dsi0-int-pin-state', 'dsi1-int-pin-state' do not match any of the regexes:
+>>>>           '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+' from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
+>>>
+>>> TCA9539 is a GPIO controller rather than a pinctrl device, so it doesn't use pinctrl functions. You don't need to describe properties of the pins that it provides. However, it can use some pins on its own (like reset-gpios). In such a case corresponding pin should have a pinctrl configuration under its pinctrl device.
+>>>
+>>
+>> Hi Dmitry,
+>>
+>> Thanks, for the review.
+>>
+>>   ______________                  _____________________                       ___________________
+>> |              |                |                     |                     |                   |
+>> |       GPIO 98|---ioexp_intr-->|              GPIO 0 |------Reset--------->|RESET_N            |
+>> |       GPIO 97|<--ioexp_reset--|              GPIO 1 |----power-enable---->|POWER_EN           |
+>> |              |                |                     |                     |                   |
+>> |    SOC       |                |  tca9539            |                     |    anx7625 bridge |
+>> |  LeMans      |                |  io_expander        |                     |                   |
+>> |              |                |              GPIO 2 |<----DSI0_INT_1P8_N--|ALERT_N/INTP       |
+>> |______________|                |_____________________|                     |___________________|
+>>
+>>
+>> Based on the above connection diagram, I have already configured the reset(gpio0), power-enable(gpio1) and interrupt (ALERT_N/INTP) (gpio2) for first instance of anx7625 bridge. Similarly I have configured the reset(gpio8), power-enable(gpio9) and interrupt (gpio10) for the second instance of the anx7625 bridge.
+>>
+>> bridge@58 {
+>>               compatible = "analogix,anx7625";
+>>               reg = <0x58>;
+>>               interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
+>>               enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
+>>               reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
+>>
+>>
+>> I think above configuration should be fine, we don't need any pinctrl for io expander's gpios going to anx7625 bridge.
+>>
+>> Other two RESET (gpio97) and INTR (gpio98) gpios, which is connecting SOC to io expander (tca9539), I have already declared them under tlmm node.
+>>
+>> io_expander_intr_active: io-expander-intr-active-state {
+>>          pins = "gpio98";
+>>          function = "gpio";
+>>          drive-strength = <2>;
+>>          bias-disable;
+>> };
+>>
+>> io_expander_reset_active: io-expander-reset-active-state {
+>>          pins = "gpio97";
+>>          function = "gpio";
+>>          drive-strength = <2>;
+>>          bias-disable;
+>>          output-high;
+> 
+> Yes, this this was I was looking for, thank you.
+> 
+Hi Dmitry,
 
-Am 14=2E April 2025 12:25:23 MESZ schrieb AngeloGioacchino Del Regno <ange=
-logioacchino=2Edelregno@collabora=2Ecom>:
->Il 13/04/25 10:58, Frank Wunderlich ha scritto:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> Topmisc is a systemcontroller used for xs-phy and ethernet on  mt7988=
-=2E
->> Add binding for it=2E
->
->That's the wrong binding=2E=2E=2E check mfd/syscon=2Eyaml :-)
->
->P=2ES=2E: Is there any reset controller in topmisc? Any clock?
->      If yes, syscon=2Eyaml is also wrong, and you need a driver for that=
-=2E
->      Remember: If it turns out *later* that this has clk/resets and the
->      bindings are already set for just a syscon, it's gonna be way harde=
-r!
->
->Cheers,
->Angelo
+Thanks for the clarification.
 
-Ok based on the power-domain-cells property i guessed powercontroller is t=
-he right place=2E
+Thanks,
+Ayushi
+>> };
+>>
+>> Thanks,
+>> Ayushi
+>>
+>>>>
+>>>>           io_expander: gpio@74 {
+>>>>                   compatible = "ti,tca9539";
+>>>>                   reg = <0x74>;
+>>>>                   interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>>                   gpio-controller;
+>>>>                   #gpio-cells = <2>;
+>>>>                   interrupt-controller;
+>>>>                   #interrupt-cells = <2>;
+>>>>
+>>>>                   pinctrl-0 = <&io_expander_intr_active>,
+>>>>                               <&io_expander_reset_active>;
+>>>>                   pinctrl-names = "default";
+>>>>
+>>>>                   dsi0_int_pin: dsi0-int-pin-state {
+>>>>                           pins = "gpio2";
+>>>>                           input-enable;
+>>>>                           bias-disable;
+>>>>                   };
+>>>>
+>>>>                   dsi1_int_pin: dsi1-int-pin-state {
+>>>>                           pins = "gpio10";
+>>>>                           input-enable;
+>>>>                           bias-disable;
+>>>>                   };
+>>>>
+>>>>           };
+>>>>
+>>>> I couldn't find any devicetree example of tca9539 which is using pinctrl. The gpio-pca95xx.yaml DT binding does not match with any regex of the patterns properties.
+>>>>
+>>>> Thanks,
+>>>> Ayushi
+>>>
+>>>
+>>
+> 
+> 
 
-But based on your suggestion i tried moving compatible to syscon binding a=
-nd made dtbs_check here=2E
-
-I can confirm dropping the unexpected properties reported by syscon bindin=
-g (power-domain-cells,clock-cells,adress-cells and size-cells) are not need=
-ed for function (xsphy and ethernet)=2E
-
-For verifying that there are really no clocks/resets in topmisc (have not =
-found it in public available register documents) i asked mtk (waiting for a=
-nswer)=2E
-
-Also got it working without the syscon compatible by changing ethernet dri=
-ver too (after this change xsphy was also working)=2E
-
-Eth:
-https://github=2Ecom/frank-w/BPI-Router-Linux/commit/d866e648717800b6f6395=
-ad36c38f9effcf0498d
-Xsphy:
-<https://github=2Ecom/frank-w/BPI-Router-Linux/commit/0121a94df99700487704=
-ca056b210b13db07e90c>
-
-regards Frank
