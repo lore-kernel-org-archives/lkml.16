@@ -1,146 +1,89 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614A207A3A
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B017148FE6
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730160; cv=none; b=RnJpBvmWQqVoUSsOxzUz2tf/CyYcTYFEfR8SWR2/LMneDcLoxeRIIKM1SMpKrB7XvGVw5HT7c4e8kVJAFpGu1B0gtIewYHO2jXdbo1YMDZSb1HSe/FAtF/OjIzG5HrlnsPjIN2VfofpKY3Ees7d+o7USG8z5498097gyPSTYzfA=
+	t=1744730210; cv=none; b=fWJxL2xFBdljx4qg5QKi86vhBkBp0htITv49VsvORUsVm+73Zf4fscK6jbDUiNZbbuFBYERyNj0Vu1YQ2aq5BB2wHpDCUNX2zEsbTHkxZqf6UhmPGj92zxwUQ3mYXwtavNlivBinU2fOB0jQ4F2vX+O6kRzD2Zo6jx6yzFoYuCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730160; c=relaxed/simple;
-	bh=s451NwJTdK9pKu+ndL7Arl2MesG2pCDms37nQ7IyPMA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cGDOYkseV3g6D98xnN77wQxVro7vkMDGeDOJ0iXRpjQwAUtML1Ur831AJzNXQMv1oo+fBG3ZdFdxwKQKa+PSfebcSjbeiblUmVYJHnAIyaf7Ldr4dOhPz/K+7iJLFPicxzFMEtUuVcTxapNpoi64HQVDN0ruBHxLmyyzhS1PGrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cls2Kaxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O7zQZ8p/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cls2Kaxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O7zQZ8p/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744730210; c=relaxed/simple;
+	bh=7LSQEwmVoiHPmM17BefBKFp45q9gGv/SEiq9lDzA8CU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RJuHfUqbZar5TzJxpsuLik54T//BszmKz38klw2IrLwktCdOi0OG8HHRR6wPAdPmtjsaKUrC8Rqwd5D+Zs8fHEShxB+bqlTvX/7QGQSIbRj8X3urvTwbmW64yWXTTHLCU0vLxURdsnGWpSoLgZnjMajP6eQJDcMMd1lBtCUZveA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AGz5+YWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cls2Kaxj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O7zQZ8p/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cls2Kaxj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O7zQZ8p/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7D5A71F395;
-	Tue, 15 Apr 2025 15:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744730156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
-	b=cls2KaxjXnU67suCAjpeG/NmTADtraNnlbMluUiJDMCsq8t1iOQhAxpFosXmfrmQqk9Cl4
-	WGGiw7J2u9Qix2S1CcijMxmF1mIGtG2+uHoNUFFZFTkKGKq1tS45vnnZw097eqt7+pMQ6j
-	pbuZ5JtABI/J/V5OIIxAKBkAft7q7Cw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744730156;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
-	b=O7zQZ8p/no6lg9RtpMWtBkFkel7KvtrT+eB29HZUXJbTDFTt3qAUGu7XlnBEVPN9jvXqe2
-	2mIqaYGoIDMb4hCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cls2Kaxj;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="O7zQZ8p/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744730156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
-	b=cls2KaxjXnU67suCAjpeG/NmTADtraNnlbMluUiJDMCsq8t1iOQhAxpFosXmfrmQqk9Cl4
-	WGGiw7J2u9Qix2S1CcijMxmF1mIGtG2+uHoNUFFZFTkKGKq1tS45vnnZw097eqt7+pMQ6j
-	pbuZ5JtABI/J/V5OIIxAKBkAft7q7Cw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744730156;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
-	b=O7zQZ8p/no6lg9RtpMWtBkFkel7KvtrT+eB29HZUXJbTDFTt3qAUGu7XlnBEVPN9jvXqe2
-	2mIqaYGoIDMb4hCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 52D64137A5;
-	Tue, 15 Apr 2025 15:15:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 7omwEix4/mfESwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 15:15:56 +0000
-Date: Tue, 15 Apr 2025 17:15:55 +0200
-Message-ID: <87zfghxxp0.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH] ALSA: hda/cirrus_scodec_test: Modernize creation of dummy devices
-In-Reply-To: <20250415105414.471039-1-rf@opensource.cirrus.com>
-References: <20250415105414.471039-1-rf@opensource.cirrus.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AGz5+YWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A14C4CEEB;
+	Tue, 15 Apr 2025 15:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744730209;
+	bh=7LSQEwmVoiHPmM17BefBKFp45q9gGv/SEiq9lDzA8CU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AGz5+YWToJQatsQAbyr1/ITxIkhQCVxdihMzelw89ef7JAXNODuXMX93q3/uZbgv8
+	 TZtldK5/eATugiIzSIctHrSb9AVwyiQeyyyPilooYP6Jq0HeydgAKXQTtNRQC/Xiqk
+	 rqSGaRPnKJYxIPS4J/qSUDQtBvyzIJtOZj3G6Ylw=
+Date: Tue, 15 Apr 2025 17:16:46 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+Cc: alexjlzheng@tencent.com, linux-kernel@vger.kernel.org, tj@kernel.org
+Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to
+ per-fs lock
+Message-ID: <2025041506-punk-conflict-ffa3@gregkh>
+References: <2025041318-unnatural-caucasian-48d2@gregkh>
+ <20250414032054.72526-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 7D5A71F395
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.51
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414032054.72526-1-alexjlzheng@tencent.com>
 
-On Tue, 15 Apr 2025 12:54:14 +0200,
-Richard Fitzgerald wrote:
+On Mon, Apr 14, 2025 at 11:20:54AM +0800, Jinliang Zheng wrote:
+> > On Sat, Apr 12, 2025 at 07:50:54PM +0800, alexjlzheng@gmail.com wrote:
+> > > On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
+> > > > On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
+> > > > > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > > > > 
+> > > > > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
+> > > > > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
+> > > > > 
+> > > > > This patch switches the global kernfs_idr_lock to per-fs lock, which
+> > > > > put the spinlock into kernfs_root.
+> > > > > 
+> > > > > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> > > > > ---
+> > > > >  fs/kernfs/dir.c             | 14 +++++++-------
+> > > > >  fs/kernfs/kernfs-internal.h |  1 +
+> > > > >  2 files changed, 8 insertions(+), 7 deletions(-)
+> > > > 
+> > > > What kind of testing / benchmark did you do for this series that shows
+> > > > that this works, AND that this actually is measureable?  What workload
+> > > > are you doing that causes these changes to be needed?
+> > > 
+> > > Thank you for your reply. :)
+> > > 
+> > > We are trying to implement a kernfs-based filesystem that will have
+> > > multiple instances running at the same time, i.e., multiple kernfs_roots.
+> > 
+> > I don't think that kernfs is meant for that very well, what is that
+> > filesystem going to be for?
 > 
-> Replace the old direct use of platform_device APIs with newer KUnit APIs
-> and the faux bus.
+> Thank you for your reply. :)
 > 
-> The dummy codec driver device doesn't need to be a platform device.
-> It can be a faux bus device.
-> 
-> The dummy GPIO driver still must be a platform_device so that a
-> software_node can be added to it before it probes. But use the new
-> KUnit-managed APIs to create the platform_device and platform_driver.
-> These will cleanup automatically when a test completes or fails.
-> 
-> Also use KUnit resource cleanup to destroy the faux bus driver and the GPIO
-> software node instead of doing this "manually" in test exit() functions.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+> Similar to cgroupfs and sysfs, it is used to export the status and configurations
+> of some kernel variables in hierarchical modes of the kernel. The only difference
+> is that it may have many instances, that is, many kernfs_roots.
 
-Thanks, applied now to for-next branch.
+Let's see that filesystem first please before determining more, as you
+would be adding a new user/kernel api that we all need to argue about :)
 
+Anyway, for the 2 patches that Tejun agrees with here, can you resend
+just them?
 
-Takashi
+thanks,
+
+greg k-h
