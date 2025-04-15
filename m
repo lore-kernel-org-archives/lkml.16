@@ -1,137 +1,170 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7BC274FEF;
-	Tue, 15 Apr 2025 07:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D008E1E5B70;
+	Tue, 15 Apr 2025 07:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700598; cv=none; b=CPgmahjAEAN0EM1uWJ2CkR8CvbQ37Rea3Fz+H8EexIFSow9UJCyje76HKIyDH4nIRbLNS+xYMqhLbyD2bI8EbYkWMiEpaXrQpMs+1jqxz8nGpPcPSefAYLbS4niqRQK3IBdwl1jkhQTMtmxjdWDiyy+KlWd+LUfL4+Mk3xYQFak=
+	t=1744700635; cv=none; b=AuBMLwlHGVEqvjBzPWz6v9lgPdep4gVaEwJQfK8zMPqyDprxOlGvEkcOWdSv2qXH7AtKFZ2qEp0nEFAfjz8BrhomO7CgjhOzAFbSv7glTLCHWeVhmnlc80qnQbaanFbEJ9ykkbc91X+iYiYkiItdtr625aznUJ5s9uTOKLfKTOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744700598; c=relaxed/simple;
-	bh=ri2/FdDgnHYoSagqsehG8IUT30nY6l8hvJEpmZx8KfY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Qnip2wN++X/GFBpTp8+iZvlxSgoukHFiQiiH3Cxv/H1BW+iDiQDSoeygm3RW4oUaNLIfdQVKAYoTccs0wR7kbX1RRZJ7zUmYlJcfIIeM6Fk566UCgMUf6gOAszhA04xC2IA1kGL3+SkBaYhuYUIW+4DDsnQj6RuiLyKPjzJ0Zz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QbTgfbdE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YbYqichZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744700635; c=relaxed/simple;
+	bh=ISHme36ClXIZls+3gW0ZDvgDcWa18XrAFOfHqyp+34c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afVj7nMKqCmNPnROwqdbxEynNGwAbciNKpWsRD/fJk1rglj7yS6TmT/Ubx/09J9TbF1e2pEd1IzK4yvsbXOsnHzAS0/mnW439hpit2b9WGrMIC8nJcBvqTvySoIf0RgfqClhQUCO6elygTWheptvi/UALUB91glIkgCv6uCAbyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KjuL2bnE; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QbTgfbdE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YbYqichZ"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744700594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YoDhzFmNYm+a5jDtp+aEomb9UL1SFg+w2sGeqO7jwLM=;
-	b=QbTgfbdEHY2v3qi20vMYsefZXpA+hsVgUVcO9peK0iQkwYDZ266HqJ0ExJ+oZVW1cxT47e
-	0DWurKnEvYxfQwxi7qCYQUmHE6rO3WVtBOzKdRA0pPUi3tuAYyoBrTseuNg1Q4qjodpBZS
-	GKxDtj3GR5mNEDFa7tJodmUKgFwQzJG7ktfA4ARMljpfkY+zr7/BUeb3W7+AtIn474AA3o
-	yTvxNG8rZfQ8Up/NfA4rYezgEPMYR1lKdGlNgg6Z9j7/0K6aJ0YyEV9vSafc+0JL0XYJId
-	k+izY0XVH0tiqUp5dFaXUrw6rtc7NXsufnJl6ksrnKxAOFNSMKJc8NLYKcRkdw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744700594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YoDhzFmNYm+a5jDtp+aEomb9UL1SFg+w2sGeqO7jwLM=;
-	b=YbYqichZtkXHuf3bMh9q6U0pkx2t1tbU2puY9IOA0ZNHPOLSgZ1zjYF6R8DV0RcDW8ry10
-	SePfLdFy7IRmOGBQ==
-Date: Tue, 15 Apr 2025 09:03:06 +0200
-Subject: [PATCH v2] kunit: tool: Implement listing of available
- architectures
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KjuL2bnE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744700634; x=1776236634;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ISHme36ClXIZls+3gW0ZDvgDcWa18XrAFOfHqyp+34c=;
+  b=KjuL2bnEV6ve+0IjYnUVAgRoQUpX9oe3AIm9C+Pirg2NMwfH8QxYWIlg
+   wl0TCF6/mLaMYFag8aPf0gAHW1l9Kp96kaIL8YJeyUvqUz/0mK5Di8tIX
+   gFlE7/Vddp3VwSM5K6K/Kz5zSMYMT22XzQvrzHKEQDFVjtlJiWQ9KYc3S
+   6PTIPFxd6BfqE6snrqFg6maHK0iz2e0L0k9lx+twibGUESM+0Ddl2UC8+
+   o84ptihqYmeHegI89a66ywoe0l1moq25U8W1xXxwg/GZXr895ZheITqEx
+   bqB4/DZIJF66DTgOo7/OKCtwiROL+6Bmj/owRCcwJkvjfiOxeZcsJ0qoZ
+   A==;
+X-CSE-ConnectionGUID: /jKFhcu1R9qBNiNGO3ytUg==
+X-CSE-MsgGUID: Kk7EVFatSaCFRATopBUcTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56854783"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="56854783"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:03:53 -0700
+X-CSE-ConnectionGUID: zwdmO1Y1QXGDlEV2QT4Sjw==
+X-CSE-MsgGUID: MiXPFpmxRKu7CnxoYAq6DA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="161002059"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:03:51 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4aKi-0000000CTBW-0UUp;
+	Tue, 15 Apr 2025 10:03:48 +0300
+Date: Tue, 15 Apr 2025 10:03:47 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+Message-ID: <Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
+References: <cover.1744106241.git.mchehab+huawei@kernel.org>
+ <871pu1193r.fsf@trenco.lwn.net>
+ <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
+ <87mscibwm8.fsf@trenco.lwn.net>
+ <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-kunit-list-v2-1-aa452cd317ae@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAKkE/mcC/22Myw7CIBBFf6WZtRhmUnyt/A/TRYXRTmyoAUpqG
- v5d7NrlubnnrBA5CEe4NCsEzhJl8hVo14Adev9kJa4ykCajibR6zV6SGiUmZQz1J+usRmSowjv
- wQ5YtdusqD/U0hc/Wzvhb/2YyKlStvp+dObR4ZL6O4ucUJi/L3jF0pZQvGrou4agAAAA=
-X-Change-ID: 20250220-kunit-list-552a8cdc011e
-To: Brendan Higgins <brendan.higgins@linux.dev>, 
- David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
- linux-kernel@vger.kernel.org, workflows@vger.kernel.org, 
- linux-doc@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744700591; l=2723;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=ri2/FdDgnHYoSagqsehG8IUT30nY6l8hvJEpmZx8KfY=;
- b=vfbaiAZA5LG0KdWUDgQag41kfti5zhIx1N5RO2S94wepjh72RCXZrSdOW0pgUGhP/204HShf/
- tZVDYETOfmCBg1Rxt8E63aEZ8ITh8E7tO3iMrquyhclw5iub8zKdrdI
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-To implement custom scripting around kunit.py it is useful to get a list of
-available architectures. While it is possible to manually inspect
-tools/testing/kunit/qemu_configs/, this is annoying to implement and
-introduces a dependency on a kunit.py implementation detail.
+On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
+> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
+> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> > >> 
+> > >> > This changeset contains the kernel-doc.py script to replace the verable
+> > >> > kernel-doc originally written in Perl. It replaces the first version and the
+> > >> > second series I sent on the top of it.
+> > >> 
+> > >> OK, I've applied it, looked at the (minimal) changes in output, and
+> > >> concluded that it's good - all this stuff is now in docs-next.  Many
+> > >> thanks for doing this!
+> > >> 
+> > >> I'm going to hold off on other documentation patches for a day or two
+> > >> just in case anything turns up.  But it looks awfully good.
+> > >
+> > > This started well, until it becomes a scripts/lib/kdoc.
+> > > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+> > > "disgusting turd" )as said by Linus) in the clean tree.
+> > >
+> > > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
+> > 
+> > If nothing else, "make cleandocs" should clean it up, certainly.
+> > 
+> > We can also tell CPython to not create that directory at all.  I'll run
+> > some tests to see what the effect is on the documentation build times;
+> > I'm guessing it will not be huge...
+> 
+> I do not build documentation at all, it's just a regular code build that leaves
+> tree dirty.
+> 
+> $ python3 --version
+> Python 3.13.2
+> 
+> It's standard Debian testing distribution, no customisation in the code.
+> 
+> To reproduce.
+> 1) I have just done a new build to reduce the churn, so, running make again does nothing;
+> 2) The following snippet in shell shows the issue
+> 
+> $ git clean -xdf
+> $ git status --ignored
+> On branch ...
+> nothing to commit, working tree clean
+> 
+> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> make[1]: Entering directory '...'
+>   GEN     Makefile
+>   DESCEND objtool
+>   CALL    .../scripts/checksyscalls.sh
+>   INSTALL libsubcmd_headers
+> .pylintrc: warning: ignored by one of the .gitignore files
+> Kernel: arch/x86/boot/bzImage is ready  (#23)
+> make[1]: Leaving directory '...'
+> 
+> $ touch drivers/gpio/gpiolib-acpi.c
+> 
+> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> make[1]: Entering directory '...'
+>   GEN     Makefile
+>   DESCEND objtool
+>   CALL    .../scripts/checksyscalls.sh
+>   INSTALL libsubcmd_headers
+> ...
+>   OBJCOPY arch/x86/boot/setup.bin
+>   BUILD   arch/x86/boot/bzImage
+> Kernel: arch/x86/boot/bzImage is ready  (#24)
+> make[1]: Leaving directory '...'
+> 
+> $ git status --ignored
+> On branch ...
+> Untracked files:
+>   (use "git add <file>..." to include in what will be committed)
+> 	scripts/lib/kdoc/__pycache__/
+> 
+> nothing added to commit but untracked files present (use "git add" to track)
 
-Introduce 'kunit.py run --arch help' which lists all known architectures
-in an easy to parse list. This is equivalent on how QEMU implements
-listing of possible argument values.
+FWIW, I repeated this with removing the O=.../out folder completely, so it's
+fully clean build. Still the same issue.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Rae Moar <rmoar@google.com>
----
-Changes in v2:
-- Pick up review from Rae
-- Link to v1: https://lore.kernel.org/r/20250220-kunit-list-v1-1-40b9d56417ee@linutronix.de
----
- Documentation/dev-tools/kunit/run_wrapper.rst | 2 ++
- tools/testing/kunit/kunit_kernel.py           | 8 ++++++++
- 2 files changed, 10 insertions(+)
+And it appears at the very beginning of the build. You don't need to wait to
+have the kernel to be built actually.
 
-diff --git a/Documentation/dev-tools/kunit/run_wrapper.rst b/Documentation/dev-tools/kunit/run_wrapper.rst
-index 19ddf5e07013314c608b570e297a8ff79a8efe7f..6697c71ee8ca020b8ac7e91b46e29ab082d9dea0 100644
---- a/Documentation/dev-tools/kunit/run_wrapper.rst
-+++ b/Documentation/dev-tools/kunit/run_wrapper.rst
-@@ -182,6 +182,8 @@ via UML. To run tests on qemu, by default it requires two flags:
-   is ignored), the tests will run via UML. Non-UML architectures,
-   for example: i386, x86_64, arm and so on; run on qemu.
- 
-+  ``--arch help`` lists all valid ``--arch`` values.
-+
- - ``--cross_compile``: Specifies the Kbuild toolchain. It passes the
-   same argument as passed to the ``CROSS_COMPILE`` variable used by
-   Kbuild. As a reminder, this will be the prefix for the toolchain
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index d3f39bc1ceec7eab23925ff1b852e996a715f3d5..260d8d9aa1db4ac3c04fa755fb738dd834b976db 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -14,6 +14,7 @@ import os
- import shlex
- import shutil
- import signal
-+import sys
- import threading
- from typing import Iterator, List, Optional, Tuple
- from types import FrameType
-@@ -201,6 +202,13 @@ def _default_qemu_config_path(arch: str) -> str:
- 		return config_path
- 
- 	options = [f[:-3] for f in os.listdir(QEMU_CONFIGS_DIR) if f.endswith('.py')]
-+
-+	if arch == 'help':
-+		print('um')
-+		for option in options:
-+			print(option)
-+		sys.exit()
-+
- 	raise ConfigError(arch + ' is not a valid arch, options are ' + str(sorted(options)))
- 
- def _get_qemu_ops(config_path: str,
+> It's 100% reproducible on my side. I am happy to test any patches to fix this.
+> It's really annoying "feature" for `make O=...` builds. Also note that
+> theoretically the Git worktree may be located on read-only storage / media
+> and this can induce subtle issues.
 
----
-base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-change-id: 20250220-kunit-list-552a8cdc011e
-
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+With Best Regards,
+Andy Shevchenko
+
 
