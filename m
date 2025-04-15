@@ -1,103 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB97288C96;
-	Tue, 15 Apr 2025 10:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DF828B514;
+	Tue, 15 Apr 2025 10:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744712339; cv=none; b=A4exmcYAoO1xXz1Je0J7/F8JfEPkRrsRT8U1gSm2dmFq+/pkxkqoY79ausLbD8rqyrI38r1/35KGimKCYcJ9IUfbfVxHyj/Wq8Fp0P8heCrU0/GZrBSq13x6u94nXLCSFG7eDZTHYgi7cP5axvGslaiS9ZxmJlrG4frqEHdUo30=
+	t=1744712344; cv=none; b=K2d4MQWq8resyhCwaevXRWmFxnTuso6dDO+8Q33v+LkU98B7iRmHDkHG7JWjrzi51S29n5E0psVbhd2UDRiZ7/eMwbRg0q5+EpqY3DlK6mnM7DQ0YV64jeswr+4Su26WSFJxExa6/mnySEIFBjcQwMhLHqJuCMOE/eWBYdEaN5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744712339; c=relaxed/simple;
-	bh=8k9HyLOQVX2DKJes33OnB1ZdwzaKh2WQzdSqAfqGrUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooVvomOvwrmcTXy3cvshcuMnwaNnxOjuCUxC7e/tiHzxmGWTAU9cwjCREatOwV4f7gOm8+Xez3zw15kpsempBmqpJB8Tu0ldaqE7q27ebkadOOk7N8NsGStUOcMuybCBMn/XJiztfRRHTMgGhnLyv7RE9SQg7yBu+fNiAkZJVUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0674C4CEDD;
-	Tue, 15 Apr 2025 10:18:57 +0000 (UTC)
-Date: Tue, 15 Apr 2025 12:18:55 +0200
-From: Greg KH <greg@kroah.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>,
-	Alyssa Ross <hi@alyssa.is>, Christoph Hellwig <hch@lst.de>,
-	Jan Kara <jack@suse.cz>, John Ogness <john.ogness@linutronix.de>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] loop: properly send KOBJ_CHANGED uevent for disk
- device
-Message-ID: <2025041548-preplan-reaffirm-510a@gregkh>
-References: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
+	s=arc-20240116; t=1744712344; c=relaxed/simple;
+	bh=hycr9RrMa/7Y9VWU/Z/GmIOCv9QKk4RftFGy1qVEEyk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VBjiehzsJo8YKPvYSuH6nvbhwRHIG9xCygZWa2iYqZTZvc9xajwFwhSj8ILayVbpvgnIkuMULlRF9yl8jaJ3nR+JrGvMSBwvBYxLORT5/YnZkUEQ86zXNHIwuqT1y5uPtxeNVtf+N8q16eifXz9Hunz3/UFw+5/fQU8J/PWKR5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=RGnqFyEt; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=FxbIXQ3H reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="RGnqFyEt";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="FxbIXQ3H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744712339; x=1776248339;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Nb1CaeSyZdwCqAexjrlTSruwnwqmG4LLxlXJojt81rk=;
+  b=RGnqFyEtnaz9tRKmro35jkfV3ilPA5+75dOFN5xRBZBfLHCxevOghUlh
+   Xqgq4OiqksOXfGRXYvXJsrBndlQNKzfZn9pGpblZpcQUUXMje3OYcg+e8
+   lsnYT3jVwLGcXKKwvkm0OLXjuf1b4IZ+I/lmk4Ire3DfoXo7qgTZYhrqu
+   AS1LyikkSTJTulNbk5tn7WaSalf5UEP1YJ5g7t7Ttn42IhSi5YLfY8cBD
+   eLcyp2wRKw6FiPgeYpZfOtswxy9u7lav378GqcSCeNzgm5YTqji6ALOBh
+   yOh/vSUvHK5WARNMMSwLLPZguNvxOaeyViIIRyy2RxX8qH5bFUC2wTIxv
+   g==;
+X-CSE-ConnectionGUID: qHslwqOKQDS3n+C1PL8nQQ==
+X-CSE-MsgGUID: z5CBpqFHQfidSCZ9bnHD7g==
+X-IronPort-AV: E=Sophos;i="6.15,213,1739833200"; 
+   d="scan'208";a="43537779"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 15 Apr 2025 12:18:55 +0200
+X-CheckPoint: {67FE3290-2D-903EAEAC-E04C76C8}
+X-MAIL-CPID: 776D1808CE1E037E8E14824437E2A7F7_5
+X-Control-Analysis: str=0001.0A006378.67FE328F.0080,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E105F161113;
+	Tue, 15 Apr 2025 12:18:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744712331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Nb1CaeSyZdwCqAexjrlTSruwnwqmG4LLxlXJojt81rk=;
+	b=FxbIXQ3HA+sGY8beUPvzMhSf8rVMxH9ihaDwISw58nDj4onHiPYDmzZR3r5FmvyQ0+ryhE
+	SPTAUFh5jUFCYhlaUWM0uUeM2ttx8wXnwRF7SAZI50AGPebD5uP+rZ44+XCcghjbAg+3ba
+	v/VucSP2xJw4k/hFi8G33/22jbmMOP0XsrRWeID36OjgICE1rfJHeyT6bnivXqmE6aAnmj
+	3UggLZoPYk5wHtd9qwIhlbjpv462wNqOLuiXrDRUmMQ2RVE0imOhqc5FRo0BX7se8qW2f8
+	IpNo1YCmCWf3g6pjX3ie/lkmJrK59/Ogx8BbITKc/rNhU/FXHqimWAH8vt5Riw==
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Whitcroft <apw@canonical.com>
+Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Joe Perches <joe@perches.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tero Kristo <kristo@kernel.org>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux@ew.tq-group.com,
+	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH net-next 0/4] RGMII mode clarification + am65-cpsw fix
+Date: Tue, 15 Apr 2025 12:18:00 +0200
+Message-ID: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Apr 15, 2025 at 10:51:47AM +0200, Thomas Wei�schuh wrote:
-> The original commit message and the wording "uncork" in the code comment
-> indicate that it is expected that the suppressed event instances are
-> automatically sent after unsuppressing.
-> This is not the case, instead they are discarded.
-> In effect this means that no "changed" events are emitted on the device
-> itself by default.
-> While each discovered partition does trigger a changed event on the
-> device, devices without partitions don't have any event emitted.
-> 
-> This makes udev miss the device creation and prompted workarounds in
-> userspace. See the linked util-linux/losetup bug.
-> 
-> Explicitly emit the events and drop the confusingly worded comments.
-> 
-> Link: https://github.com/util-linux/util-linux/issues/2434
-> Fixes: 498ef5c777d9 ("loop: suppress uevents while reconfiguring the device")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Wei�schuh <thomas.weissschuh@linutronix.de>
-> ---
-> Changes in v2:
-> - Use correct Fixes tag
-> - Rework commit message slightly
-> - Rebase onto v6.15-rc1
-> - Link to v1: https://lore.kernel.org/r/20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de
-> ---
->  drivers/block/loop.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 674527d770dc669e982a2b441af1171559aa427c..09a725710a21171e0adf5888f929ccaf94e98992 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -667,8 +667,8 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
->  
->  	error = 0;
->  done:
-> -	/* enable and uncork uevent now that we are done */
->  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-> +	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
->  	return error;
->  
->  out_err:
-> @@ -1129,8 +1129,8 @@ static int loop_configure(struct loop_device *lo, blk_mode_t mode,
->  	if (partscan)
->  		clear_bit(GD_SUPPRESS_PART_SCAN, &lo->lo_disk->state);
->  
-> -	/* enable and uncork uevent now that we are done */
->  	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
-> +	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
->  
->  	loop_global_unlock(lo, is_loop);
->  	if (partscan)
-> 
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250307-loop-uevent-changed-aa3690f43e03
-> 
-> Best regards,
-> -- 
-> Thomas Wei�schuh <thomas.weissschuh@linutronix.de>
-> 
+As discussed [1], the comments for the different rgmii(-*id) modes do not
+accurately describe what these values mean. Update the binding
+documentation and fix up the mode to account for the fixed TX delay on
+the AM65 CPSW Ethernet controllers, similar to the way the icssg-prueth
+does it. For backwards compatibility, the "impossible" modes that claim
+to have a delay on the PCB are still accepted, but trigger a warning
+message.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+As Andrew suggested, I have also added a checkpatch check that requires
+a comment for any RGMII mode that is not "rgmii-id".
+
+No Device Trees are updated to avoid the warning for now, to give other
+projects syncing the Linux Device Trees some time to fix their drivers
+as well. I intend to submit an equivalent change for U-Boot's
+am65-cpsw-nuss driver as soon as the changes are accepted for Linux.
+
+[1] https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/
+
+Submitting for net-next for now - I don't know it would make sense to
+backport some of these changes to stable.
+
+Note: I have also added the maintainers for the TI K3 SoC families to cc
+in addition to the get_maintainers.pl output, to loop in some more of
+the relevant people at TI. Should MAINTAINERS be extended to include
+some of you for the am65-cpsw* files? At the moment, only the netdev
+maintainers are reported for drivers/net/ethernet/ti/am65-cpsw-nuss.c
+(except for "authored" lines etc.)
+
+Matthias Schiffer (4):
+  dt-bindings: net: ethernet-controller: update descriptions of RGMII
+    modes
+  dt-bindings: net: ti: k3-am654-cpsw-nuss: update phy-mode in example
+  net: ethernet: ti: am65-cpsw: fixup PHY mode for fixed RGMII TX delay
+  checkpatch: check for comment explaining rgmii(|-rxid|-txid) PHY modes
+
+ Documentation/dev-tools/checkpatch.rst        |  9 +++++++
+ .../bindings/net/ethernet-controller.yaml     | 16 ++++++-----
+ .../bindings/net/ti,k3-am654-cpsw-nuss.yaml   |  2 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      | 27 +++++++++++++++++--
+ scripts/checkpatch.pl                         | 11 ++++++++
+ 5 files changed, 55 insertions(+), 10 deletions(-)
+
+-- 
+TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht München, HRB 105018
+Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+https://www.tq-group.com/
+
