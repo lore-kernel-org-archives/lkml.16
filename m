@@ -1,294 +1,113 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56352951B1
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E23294A1D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719092; cv=none; b=vEgvGAdSnCk1FYn6Kz2h6vGAYQfd/5OgXx4nkawc7CCqmIrC1Q9LkgNf68ZtbyEtlhqagp1zrCyjTdGh6EnjEnczXA7PjzT3HDGS/1VmVrIm/j6kPiHuq7CkuPMfJsY2j5tYLjaQJJgk0AApEjd0JQpLf6eZS1Nc+thhsBxtjkA=
+	t=1744719123; cv=none; b=muYoRgDJrucZniIwQzUd2nFAw+HtnLsEkdo6XuS1QRKEMiIXceWHHKoG7Dgi2ndaToOpuGNh7Jq+MsHrTN9qVadfe+O52krVt1g2SJk/92LA0uT69X881L69Uyr06BbUVzqvaKby937xf6cb6KEts+Y/N1p7+r+VCyOpn2/R8XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719092; c=relaxed/simple;
-	bh=b6PhLx95lFpM08ze2DR+lsstkd5GVBs/ItC2fFMITII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZBJJrEGP8CpqZjORVxooIdJSU5zUfFCxiIIQvJ2XvyTz9htJpfaD63UO+9U9ywGnLaDpy4ui02e5K0gzvojhnwGKTSGqH+S3HTrWJs/st0YGalqnK1cGIfJyBHF/aH4nL3vVus7kZRvCsGjGWtKJLrJpxaDsDwwaN5r9mqpgPrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HtDwYh2R; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744719123; c=relaxed/simple;
+	bh=0hYUve0xkE/hQHXWHLhI5xgSlQ8xtJMN237cyCHu2cw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7+HH6r9fqv1uulBh69fe3NkF0Jti1hvx1Ved7AbfQKVUe+Z0EBunzkeuXKJL8mML3SAKGTkz5Dnk6cTa3SiEswAZSDFc37+FcDB9xzrKk+u1DXRx98nH7FotG81P5SVb6BJwq3m8GIQG19gGL0cIVAH8aOzJy+cUVc899iTNmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a56sdakV; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HtDwYh2R"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2BEFD43188;
-	Tue, 15 Apr 2025 12:11:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744719088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wogwm+y8KhkdBC4XpbA9Fzej9m150UHJnI17oS5BjQ4=;
-	b=HtDwYh2RYPyjUHDMca3yANbCr4C2+Za2rW47z1CegRtyiuxFMB2SSVB/+u5tqhZwQ9FFO6
-	jEJ7eWyqQZZgnAHTjPli+LKTjuNyF2XjMEIwx+97HubD6PzS7Tq5nEJ4oPshs7MdDDX1Cu
-	UrgGG7HISrxbBQ0o+27/mi/nacxzZu+86Pcl4RjnJakVHvKT5GpIOvhZWKwp2ww/CZ46mt
-	9PgpDx0/N5maWgo+QBE1nKGNA9EoX5h1ZabVsMgJBYEBB2/hGsJ/gATXxXc47u3DQRjhYI
-	gtch8evZ/tss/ucps/mhpenNpGXzXrVbrd8532OKf6Fe37Z7cU4gAq1J0ummxw==
-Message-ID: <eb5c43d2-4a7d-43e2-873f-79980c1a48f4@bootlin.com>
-Date: Tue, 15 Apr 2025 14:11:24 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a56sdakV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744719122; x=1776255122;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0hYUve0xkE/hQHXWHLhI5xgSlQ8xtJMN237cyCHu2cw=;
+  b=a56sdakVQ4i43fWkQ9/41W4VrTFVi9C6ZtweZbBFLSx3NfZkiJGKIVJu
+   brxa19368ltHxNAroikQpkj+OVOAf8gKpDVEymQ7/Fr1+pL5vD+BRz05G
+   5L3r7rmQ0ggLzGKSXWexKVP3rOUkXevHkkHnYzgZ1j3q8rbEd/Fa/B1w5
+   45wUZTqjP6c4zsY/Av87iYvsXejq16rw1203uYIsxmKzov4tBGtHgAh17
+   2kk9yna9WGQRXSYtB41TjHsY+bOIwPDtfA2jzFj1W77wRiqnc+k6+6nHJ
+   GNot1lhjgGAR4Zpb8ae1IH0BX4ouxgBz0+8koPQjnpkZGdv8tsbYRwJye
+   w==;
+X-CSE-ConnectionGUID: 2aWsOd8ATJGyghdebbdECA==
+X-CSE-MsgGUID: 2AM3B8nuTE6d+u/VL6SmvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45458678"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45458678"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:12:01 -0700
+X-CSE-ConnectionGUID: si6E1ClKTem4PZIaad4ZSA==
+X-CSE-MsgGUID: u+ZNaiIjTsSSyRqFj1oGwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="131001182"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:11:59 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4f8u-0000000CXRT-1mVG;
+	Tue, 15 Apr 2025 15:11:56 +0300
+Date: Tue, 15 Apr 2025 15:11:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Corey Minyard <corey@minyard.net>
+Cc: openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] ipmi: si: Cast to smaller integer type without
+ warning
+Message-ID: <Z_5NDNeDztC1-6vx@smile.fi.intel.com>
+References: <20250415085156.446430-1-andriy.shevchenko@linux.intel.com>
+ <Z_5FV65cyIwiI9rs@mail.minyard.net>
+ <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/16] drm/vkms: Allow to configure multiple CRTCs via
- configfs
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250407081425.6420-1-jose.exposito89@gmail.com>
- <20250407081425.6420-6-jose.exposito89@gmail.com>
-Content-Language: en-US
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250407081425.6420-6-jose.exposito89@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefgeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekieevtdefgedtkeehteehtddttdefhffhgeejleejjeeluddvhfdugedvkeehveenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmohhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepm
- hgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-Le 07/04/2025 à 10:14, José Expósito a écrit :
-> From: Louis Chauvet <louis.chauvet@bootlin.com>
+On Tue, Apr 15, 2025 at 03:06:45PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 15, 2025 at 06:39:03AM -0500, Corey Minyard wrote:
+> > On Tue, Apr 15, 2025 at 11:51:56AM +0300, Andy Shevchenko wrote:
+> > > Debian clang version 19.1.7 is not happy when compiled with
+> > > `make W=1` (note, CONFIG_WERROR=y is the default):
+> > > 
+> > > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+> > >   268 |         io.si_type      = (enum si_type)device_get_match_data(&pdev->dev);
+> > > 
+> > > Fix this by intermediate cast to the uintptr_t, that makes compiler happy.
+> > 
+> > Unless things have changed recently, Linus prefers "unsigned long" per
+> > https://patchwork.kernel.org/project/linux-hardening/patch/20220616143617.449094-1-Jason@zx2c4.com/#24899749
 > 
-> Create a default subgroup at /config/vkms/crtcs to allow to create as
-> many CRTCs as required.
-
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
-
-> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
-> Co-developed-by: José Expósito <jose.exposito89@gmail.com>
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> ---
->   Documentation/gpu/vkms.rst           |  6 ++
->   drivers/gpu/drm/vkms/vkms_configfs.c | 85 ++++++++++++++++++++++++++++
->   2 files changed, 91 insertions(+)
+> I'm not sure I got your point. That discussion seems irrelevant to me.
+> They are talking about pointer-as-an-integer cases. Here we already know
+> that we are passing integer-as-a-pointer and this is the opposite
+> conversion.
 > 
-> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-> index a87e0925bebb..e0699603ef53 100644
-> --- a/Documentation/gpu/vkms.rst
-> +++ b/Documentation/gpu/vkms.rst
-> @@ -74,6 +74,7 @@ By default, the instance is disabled::
->   And directories are created for each configurable item of the display pipeline::
->   
->     tree /config/vkms/my-vkms
-> +  ├── crtcs
->     ├── enabled
->     └── planes
->   
-> @@ -89,6 +90,10 @@ Planes have 1 configurable attribute:
->   - type: Plane type: 0 overlay, 1 primary, 2 cursor (same values as those
->     exposed by the "type" property of a plane)
->   
-> +Continue by creating one or more CRTCs::
-> +
-> +  sudo mkdir /config/vkms/my-vkms/crtcs/crtc0
-> +
->   Once you are done configuring the VKMS instance, enable it::
->   
->     echo "1" | sudo tee /config/vkms/my-vkms/enabled
-> @@ -100,6 +105,7 @@ Finally, you can remove the VKMS instance disabling it::
->   And removing the top level directory and its subdirectories::
->   
->     sudo rmdir /config/vkms/my-vkms/planes/*
-> +  sudo rmdir /config/vkms/my-vkms/crtcs/*
->     sudo rmdir /config/vkms/my-vkms
->   
->   Testing With IGT
-> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-> index 398755127759..62a82366791d 100644
-> --- a/drivers/gpu/drm/vkms/vkms_configfs.c
-> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-> @@ -17,6 +17,7 @@ static bool is_configfs_registered;
->    * @group: Top level configuration group that represents a VKMS device.
->    * Initialized when a new directory is created under "/config/vkms/"
->    * @planes_group: Default subgroup of @group at "/config/vkms/planes"
-> + * @crtcs_group: Default subgroup of @group at "/config/vkms/crtcs"
->    * @lock: Lock used to project concurrent access to the configuration attributes
->    * @config: Protected by @lock. Configuration of the VKMS device
->    * @enabled: Protected by @lock. The device is created or destroyed when this
-> @@ -25,6 +26,7 @@ static bool is_configfs_registered;
->   struct vkms_configfs_device {
->   	struct config_group group;
->   	struct config_group planes_group;
-> +	struct config_group crtcs_group;
->   
->   	struct mutex lock;
->   	struct vkms_config *config;
-> @@ -45,6 +47,20 @@ struct vkms_configfs_plane {
->   	struct vkms_config_plane *config;
->   };
->   
-> +/**
-> + * struct vkms_configfs_crtc - Configfs representation of a CRTC
-> + *
-> + * @group: Top level configuration group that represents a CRTC.
-> + * Initialized when a new directory is created under "/config/vkms/crtcs"
-> + * @dev: The vkms_configfs_device this CRTC belongs to
-> + * @config: Configuration of the VKMS CRTC
-> + */
-> +struct vkms_configfs_crtc {
-> +	struct config_group group;
-> +	struct vkms_configfs_device *dev;
-> +	struct vkms_config_crtc *config;
-> +};
-> +
->   #define device_item_to_vkms_configfs_device(item) \
->   	container_of(to_config_group((item)), struct vkms_configfs_device, \
->   		     group)
-> @@ -55,6 +71,71 @@ struct vkms_configfs_plane {
->   #define plane_item_to_vkms_configfs_plane(item) \
->   	container_of(to_config_group((item)), struct vkms_configfs_plane, group)
->   
-> +#define crtc_item_to_vkms_configfs_crtc(item) \
-> +	container_of(to_config_group((item)), struct vkms_configfs_crtc, group)
-> +
-> +static void crtc_release(struct config_item *item)
-> +{
-> +	struct vkms_configfs_crtc *crtc;
-> +	struct mutex *lock;
-> +
-> +	crtc = crtc_item_to_vkms_configfs_crtc(item);
-> +	lock = &crtc->dev->lock;
-> +
-> +	scoped_guard(mutex, lock) {
-> +		vkms_config_destroy_crtc(crtc->dev->config, crtc->config);
-> +		kfree(crtc);
-> +	}
-> +}
-> +
-> +static struct configfs_item_operations crtc_item_operations = {
-> +	.release	= &crtc_release,
-> +};
-> +
-> +static const struct config_item_type crtc_item_type = {
-> +	.ct_item_ops	= &crtc_item_operations,
-> +	.ct_owner	= THIS_MODULE,
-> +};
-> +
-> +static struct config_group *make_crtc_group(struct config_group *group,
-> +					    const char *name)
-> +{
-> +	struct vkms_configfs_device *dev;
-> +	struct vkms_configfs_crtc *crtc;
-> +
-> +	dev = child_group_to_vkms_configfs_device(group);
-> +
-> +	scoped_guard(mutex, &dev->lock) {
-> +		if (dev->enabled)
-> +			return ERR_PTR(-EBUSY);
-> +
-> +		crtc = kzalloc(sizeof(*crtc), GFP_KERNEL);
-> +		if (!crtc)
-> +			return ERR_PTR(-ENOMEM);
-> +
-> +		crtc->dev = dev;
-> +
-> +		crtc->config = vkms_config_create_crtc(dev->config);
-> +		if (IS_ERR(crtc->config)) {
-> +			kfree(crtc);
-> +			return ERR_CAST(crtc->config);
-> +		}
-> +
-> +		config_group_init_type_name(&crtc->group, name, &crtc_item_type);
-> +	}
-> +
-> +	return &crtc->group;
-> +}
-> +
-> +static struct configfs_group_operations crtcs_group_operations = {
-> +	.make_group	= &make_crtc_group,
-> +};
-> +
-> +static const struct config_item_type crtc_group_type = {
-> +	.ct_group_ops	= &crtcs_group_operations,
-> +	.ct_owner	= THIS_MODULE,
-> +};
-> +
->   static ssize_t plane_type_show(struct config_item *item, char *page)
->   {
->   	struct vkms_configfs_plane *plane;
-> @@ -262,6 +343,10 @@ static struct config_group *make_device_group(struct config_group *group,
->   				    &plane_group_type);
->   	configfs_add_default_group(&dev->planes_group, &dev->group);
->   
-> +	config_group_init_type_name(&dev->crtcs_group, "crtcs",
-> +				    &crtc_group_type);
-> +	configfs_add_default_group(&dev->crtcs_group, &dev->group);
-> +
->   	return &dev->group;
->   }
->   
+> > And it would match what is in the match table.
+> 
+> Match tables are tend to move to pointers, enum is usually goes to int.
+> 
+> > Is that change ok?
+> 
+> If you don't like my change, please do yours and consider this as
+> a bug report that needs to be addressed. I prefer more my solution
+> as we do that in many places for the exact scenario.
+
+Note, the proper solution to the cases like this is to move to info-like
+structure and actually operate with the pointers instead of enums, longs, etc.
+
+That's what's slowly moving on in IIO subsystem, for instance.
 
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+With Best Regards,
+Andy Shevchenko
+
 
