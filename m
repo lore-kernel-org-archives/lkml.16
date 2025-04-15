@@ -1,136 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115C25394D;
-	Tue, 15 Apr 2025 20:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227AE243387
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744748162; cv=none; b=s0Y/irGgJ/N4VnXa1Vt/xAj8tJpKjCelc7jKd9VSo8ljxjkikCe+Qu+BvsvqGdkllbLAjmTF2pSokO2Bbx6xYuH2O+4RHa+AD17bIKKwwESp0NP4sMVvjIEniMevMleufViKe337Vxw+J9jytqeq8jNUR3Lx02Ks1485ZwxxMgI=
+	t=1744748224; cv=none; b=hbj5b7g5sLBHd37dhPLlRiOpxrXJ6ri+k9FflECVsUXPzazVqzCeLTFuLICWNserf696p3aXMKHg8R086l4pvc3I1zo5JrORA6hRc8AZNVc9oGMG+QkPtayQf/lAmvAqtmeiHyBc3jAKLqHH75yl5swSjjxseJnisK3iRlGrm0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744748162; c=relaxed/simple;
-	bh=onoj2sY2pyRxx4KUIk19sDKIQq9HSXI7b26/f+g5/H8=;
+	s=arc-20240116; t=1744748224; c=relaxed/simple;
+	bh=Aoh6we8ZAkk3RvfV9IuYePjpW6SHUl1r7VIbhUuvXEY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4rjzPvrgBRYAv6iOYHfIdCGcQMr+O3XtNIbZMi3cBlM4SjaJG/jVqz8xCDEmlxxD2pAQ3SdKpWHSs5GPu73myc6NTl94uHVVjv3wDEFqTi5ujj8HSLy+3kjcUO/60NRwG7S8FA8VVe51nBjbiTu0nndrHYAo/Mb9ONzMwIrjps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sR/opIAZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+GQb/HHVGMtTOw7bDu+svBBRmDtsd4AxLdB95ycoz0rl68QJWhc7cSIwTYXolOUZIqe3idNWUGd3kFV9/qECB1cAIDysY++tzq6Wyg4XYd0BlNuVCZA5R2JUp3EnoKcDkZ742zbCGcQLBuK6ug9GMAPfAwTLZ7RBzYbdpwTf94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ZsVSG5ei; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sR/opIAZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC866C4CEEF;
-	Tue, 15 Apr 2025 20:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744748161;
-	bh=onoj2sY2pyRxx4KUIk19sDKIQq9HSXI7b26/f+g5/H8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sR/opIAZgI/JM4gAz42+NTOAd9pYk557QzcLMeVNiNsHRZj/cM1mgaTUM1DYhHN9q
-	 B/GjrV7+ImrPxGFTnWSLz9mpniB8tlKb3nzqVsn8x2FjY1ya7qid9viXvtcrSpytru
-	 y5JbFPur9TUmBlgLIqiugRNhEjdSnuj4t0ls6qJihhAk+NCJjQwWGJqIeIqK2E2VqH
-	 xYxF5olNRHXaR4WgW6IFl76b6WsHM1+4X3TCh5QqBWIaD7mITcUtnSZNqFwbkOUeCG
-	 oqaPut7Mh0Jlfw8Q3I/FfgATvp9I082ATAmmAtb1jknPY4UyxZ6wZ1E78WK5gbC8Jg
-	 aVxNO8fssfV1A==
-Date: Tue, 15 Apr 2025 21:15:52 +0100
-From: Simon Horman <horms@kernel.org>
-To: Parvathi Pudi <parvathi@couthit.com>
-Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	tony@atomide.com, richardcochran@gmail.com, glaroque@baylibre.com,
-	schnelle@linux.ibm.com, m-karicheri2@ti.com, s.hauer@pengutronix.de,
-	rdunlap@infradead.org, diogo.ivo@siemens.com, basharath@couthit.com,
-	jacob.e.keller@intel.com, m-malladi@ti.com,
-	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	pratheesh@ti.com, prajith@ti.com, vigneshr@ti.com, praneeth@ti.com,
-	srk@ti.com, rogerq@ti.com, krishna@couthit.com, pmohan@couthit.com,
-	mohan@couthit.com
-Subject: Re: [PATCH net-next v5 11/11] net: ti: prueth: Adds PTP OC Support
- for AM335x and AM437x
-Message-ID: <20250415201552.GJ395307@horms.kernel.org>
-References: <20250414113458.1913823-1-parvathi@couthit.com>
- <20250414140751.1916719-12-parvathi@couthit.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ZsVSG5ei"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=Aoh6
+	we8ZAkk3RvfV9IuYePjpW6SHUl1r7VIbhUuvXEY=; b=ZsVSG5eiqn5UiuIqspot
+	SWOHyxuBIpQP+VN3BdXmLYKsEBFDn3Yvrlw8ciSXcGLEiDpNw9omUDnAfaNEmLNs
+	9vMJL5/FadqL1PgJctyh/YZPcJYsfJHkQR2kAtU5fjfvOf3yhluZrNu0WZ7zAryQ
+	3lSBUFCMHENAiUyru+/i2mkT9LdMu+WzxzSDjXzSNyJ5+M839BJ0x4urEY2+LiEw
+	naDXuDOhGJL0yfgHyWzJLXTUcD2XN/aL1xsCwabCNRvueO27OGL15uuimt6Msckk
+	TyWNbwQx/ErTI9AuB/QsDKucBB+cpGae2HSHPSpvKjvvqzfCGuGJyixSR30Yo9R2
+	OA==
+Received: (qmail 434349 invoked from network); 15 Apr 2025 22:17:00 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 15 Apr 2025 22:17:00 +0200
+X-UD-Smtp-Session: l3s3148p1@uJHd2dYy5pcujnsq
+Date: Tue, 15 Apr 2025 22:16:59 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v1 1/1] i2c: atr: Remove (explicitly) unused header
+Message-ID: <Z_6-u9o4_v2l13Tg@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>
+References: <20250331071646.3987361-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p8/w+R2ikgAeb3U9"
+Content-Disposition: inline
+In-Reply-To: <20250331071646.3987361-1-andriy.shevchenko@linux.intel.com>
+
+
+--p8/w+R2ikgAeb3U9
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414140751.1916719-12-parvathi@couthit.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 07:37:51PM +0530, Parvathi Pudi wrote:
-> From: Roger Quadros <rogerq@ti.com>
-> 
-> PRU-ICSS IEP module, which is capable of timestamping RX and
-> TX packets at HW level, is used for time synchronization by PTP4L.
-> 
-> This change includes interaction between firmware/driver and user
-> application (ptp4l) with required packet timestamps.
-> 
-> RX SOF timestamp comes along with packet and firmware will rise
-> interrupt with TX SOF timestamp after pushing the packet on to the wire.
-> 
-> IEP driver available in upstream linux as part of ICSSG assumes 64-bit
-> timestamp value from firmware.
-> 
-> Enhanced the IEP driver to support the legacy 32-bit timestamp
-> conversion to 64-bit timestamp by using 2 fields as below:
-> - 32-bit HW timestamp from SOF event in ns
-> - Seconds value maintained in driver.
-> 
-> Currently ordinary clock (OC) configuration has been validated with
-> Linux ptp4l.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+On Mon, Mar 31, 2025 at 10:16:46AM +0300, Andy Shevchenko wrote:
+> The fwnode.h is not supposed to be used by the drivers as it
+> has the definitions for the core parts for different device
+> property provider implementations. Drop it.
+>=20
+> Note, that fwnode API for drivers is provided in property.h
+> which is included here.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-...
+Applied to for-current, thanks!
 
-> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h b/drivers/net/ethernet/ti/icssg/icss_iep.h
-> index 0bdca0155abd..437153350197 100644
-> --- a/drivers/net/ethernet/ti/icssg/icss_iep.h
-> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
-> @@ -47,6 +47,11 @@ enum {
->  	ICSS_IEP_MAX_REGS,
->  };
->  
-> +enum iep_revision {
-> +	IEP_REV_V1_0 = 0,
-> +	IEP_REV_V2_1
-> +};
-> +
->  /**
->   * struct icss_iep_plat_data - Plat data to handle SoC variants
->   * @config: Regmap configuration data
-> @@ -57,11 +62,13 @@ struct icss_iep_plat_data {
->  	const struct regmap_config *config;
->  	u32 reg_offs[ICSS_IEP_MAX_REGS];
->  	u32 flags;
-> +	enum iep_revision iep_rev;
->  };
 
-Please add iep_rev to the Kernel doc for struct icss_iep_plat_data.
+--p8/w+R2ikgAeb3U9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Flagged by ./scripts/kernel-doc -none
+-----BEGIN PGP SIGNATURE-----
 
-...
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf+vrsACgkQFA3kzBSg
+KbYH2w/9FvUVt6QDu7+/6wmC2YYMpiF40l9EEWRn9dMJzABR4xjAez8kFaxn2dpN
+BcEpJ7gOmhMJpiL0stPtzeLU+y8M9Gogs8vTU1TtaqO7NvqVSx2XZ6QJAJZH+q4R
+Oky09nTygkcOwORS/AVrVjwOBnowPCky/g2h4HdIJMdJQ3z3wWDU6SCWimXwc/Ah
+bIEFwwjzngqBBbkNJ/MtKJssUnQJMlmgxcEprQbnxf2ml6bohsDhIEOp+BD1b9Md
+4vjyLJnmU+pY/ZoLSaNFcNiInagTuaK2jUHzUPeIC8F+ccoKA88LMkkfqo3JCftK
+vLovbcYUJCtfti3IivxlZAa8vilbSOn0RQu78e2+HWzjEsI3RSg5yCCHQTrK4GFB
+wEqBwtQxIAKQfWIw0ldR/4jhh4B6lPX0FXmLnXDNCCpPvnfcXFaU+QZXVx6WRFtZ
+7SYrRely1051BxtD2s6rXwygQujdHxzWhKn689Q7piMhSsp1UvgD3WuLw29GvFRm
+E3+5HbspG67uzkq1cH5wpn7DY1zzk7Vw3V/GiHSn8CZnyjdcpN09Lpsr4gUQZ9XU
+SLRglexZl/qjQGC8Tq4aTmrVj1OXi0kTdJJ+BiWjuEa2G6EO1E9AVoy+eugz0uFq
+Zo0TcNdOkbqpF6k+UjqznpKZpjj+uquCZrstmvn5BnoEyE3N2/A=
+=eZMz
+-----END PGP SIGNATURE-----
 
-> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
-
-...
-
-> @@ -337,6 +343,7 @@ enum pruss_device {
->  struct prueth_private_data {
->  	enum pruss_device driver_data;
->  	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
-> +	enum fw_revision fw_rev;
->  	bool support_lre;
->  	bool support_switch;
->  };
-
-And, likewise, please add fw_rev to the Kernel doc for struct
-prueth_private_data.
-
-...
+--p8/w+R2ikgAeb3U9--
