@@ -1,91 +1,73 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18F6284686
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCF72DFA23
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:32:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705940; cv=none; b=IzbRjEz+EvQT8oxqWfG7sngVWC14WcdcabFYj3LNoPkj4y5Yw2yaREu8iNbuRDuZrWA5k/qO1DAG4dQ6bsqpFhk2HHqdhOtdpFjRG+JGInziUZe1RS+O8LQZp+GsfM9wBFvEhSvp9eP7NhLHkTgAOUO9RvKZshQupmMf441Cpdk=
+	t=1744705973; cv=none; b=ndL6b6f8/bhed87osi/ij0NYSq6udckT/TS+SAXPYd9EZ96ZYY/1Y3tM6IujbpNffAzf7ZV5qAjrCl/o7LWX0+VpWfrpXoE3Bt0nJqRa8CUO27X0veouvW4bFIQKyMp2Ow+Sb4sFRuYsAJIDgidCRhUjbJN0qd9qwFrqxpZO21U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705940; c=relaxed/simple;
-	bh=EEtamelvEL5oMF5dTsmr5bTfdDwuT/yXwBSnoDyJAdQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=edc6fGBMCOVxagCojqWKOBcNCP547aOw6yAOf6o0ioRLInCH/SlRzjopdVQyeUReADvUm1Uq1QQbJlZL2AQv21lBDbHz1uuK4P5LKe0LAhIPNBMbhsjnfnr/k7Q2C0pOjVs508HS7xvzyyzm6DpxfEmfa6TnFJemoybPXUAB4Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eD8rVFwk; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eD8rVFwk"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30de488cf81so51392011fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744705937; x=1745310737; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EEtamelvEL5oMF5dTsmr5bTfdDwuT/yXwBSnoDyJAdQ=;
-        b=eD8rVFwkIXGmI25mJFx/SrWwz9Ddu21oSCHJcKaOEm0LsDxzLnVZB3eYiEc2CEWFdh
-         jQbcz90VXTm1tKSRUd5in43hkIyjcOR2U1HI4Rl+F4ebNUCXhxj7trNe79qZ267G+zgK
-         7mZ3FUrPf0w8cK4azUYZef0YjM1bDAlI3XMu7TpTD4j4nK5O0OlV1CkLyR/aGBlti4Fx
-         //1RvB3Jl1gKtDCP05wVuSR9sy0dLSRKK/tvDw1xHv61sI3/dq+BsGw/MQpHbS+ekkoN
-         DBSf0f4wlLmdicH6ec5NbIGLYB3u+viKHyc+n5OF0/aV+2qblRDLrHdL4m/Ey8ZkLV+3
-         Wkjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744705937; x=1745310737;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EEtamelvEL5oMF5dTsmr5bTfdDwuT/yXwBSnoDyJAdQ=;
-        b=E7Pr23116Fw1DwyCH6yBnhm83IDZOnnDLdcYoAdWp+hCU8Tcs4rm2UaZlaGj5WED5a
-         E7+4qEiRiOW+lzjK9+rVLmU+BX+DdravzHEbJrYAp6nvuX5wgw0x4q042dgXo+Xt6Z6u
-         ZpBHT5P3EbQKRgq8p46tvNgg8Oq/wwasQQh53cRdpJ55w4MSxY8SF9VDAij8ehOFbKKt
-         kym0chjlrO7mIbL5ND0tuJf5jxiQU/wQD+hBWN8qHGrT4PeewQihT5ESQW336BNBiYOY
-         nyJDSifUtWHpKWBpop1lkKGHqo6Dpq/Zn07FqA54Xdd+jd2LElkAYBrogX8j6mzWnLP4
-         fXCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr/QXYp0F2m+K6gtRss3pw+ftfxAd1Ozso16P3bSDCPzzrkxWsN1fXG9HubZszZh/sSzvi66+YpQPYmOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3NiRz6s3F9Hmn/+TXHXjs5UKr/B13AF7NC0iDg7mJGBCiLXLf
-	fTyu9/W9URYINu0SlSkCjxR/fAE/Zrmu4eJBr1yqL28UR8PnnR4ic6OO2bBwmKzD9VuLrO8sFcG
-	dYWjiXcF49tx2X+FyzSf06N3+GJpbmH9k7OiBXQ==
-X-Gm-Gg: ASbGncvEfMj16soDFbmyTHQQRi50cvocV64ufcEVDqnlXP+eDFEbaYZ6xsFN300zTgq
-	xunV58CgBCRhJ7CtA9dvm7/BxoEyT0scIdDrouwUO2LF2Ht7esEl6gcVrTmC2XI7ZKifRCNZm4d
-	J7tFImutjB0K1IVNaItD2jyZmEW8c45Xlt
-X-Google-Smtp-Source: AGHT+IFqHgt85FAtKpysh1GWDt1MaHgR9+EQKoY32RVv1qV7EcZCQfTfkiR5qV5ET1fUQSQ/nZPTWz01QIwFY80tssg=
-X-Received: by 2002:a05:651c:2228:b0:30b:aabf:fc4 with SMTP id
- 38308e7fff4ca-31049a2302fmr45655041fa.21.1744705936671; Tue, 15 Apr 2025
- 01:32:16 -0700 (PDT)
+	s=arc-20240116; t=1744705973; c=relaxed/simple;
+	bh=UMxtwlRz0GAwu6surQiT21cmWeAzM++nsmAFg830Qg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bC2ASmQMuT/GoCLUMHZWZkI9sAI/AxgLWCNjdp4uLW9LU9n2mLVeneNAT57VCD8JDE+BWf3SqzXeXbQ4w0lPcJ696i2e+QJ9LgKATO2rgXcC3xHuuuVoJ7o9mcyut97w+LSKhES5nqZT7+VlLhcW447IfJuK+jpGroEQ5cmBZnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99D03339;
+	Tue, 15 Apr 2025 01:32:49 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 694AE3F694;
+	Tue, 15 Apr 2025 01:32:50 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:32:47 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "lihuisong (C)" <lihuisong@huawei.com>
+Cc: <xuwei5@huawei.com>, <linux-kernel@vger.kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] soc: hisilicon: kunpeng_hccs: Simplify PCC shared memory
+ region handling
+Message-ID: <20250415-cream-jackrabbit-of-psychology-57f038@sudeepholla>
+References: <20250411112539.1149863-1-sudeep.holla@arm.com>
+ <0e34d68f-c5fb-4fdb-90bf-2ce005c7cf66@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-m68k-v1-1-7fdc9132b6e8@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 10:32:05 +0200
-X-Gm-Features: ATxdqUENeFi82570dVSVXEp-45cJFXwjP5cf6PqktWQkh-wVvXZ5PyE19YzMtfA
-Message-ID: <CACRpkdZRdyFJaKLnBVHUWor_MhJ-HBoEP=NMYm1are6em4v81A@mail.gmail.com>
-Subject: Re: [PATCH] m68k: coldfire: gpio: use new line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Ungerer <gerg@linux-m68k.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e34d68f-c5fb-4fdb-90bf-2ce005c7cf66@huawei.com>
 
-On Mon, Apr 7, 2025 at 9:20=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Tue, Apr 15, 2025 at 02:26:40PM +0800, lihuisong (C) wrote:
+> +Wei who is Hisilicon SoC maintainer.
+> 
+> 在 2025/4/11 19:25, Sudeep Holla 写道:
+> > The PCC driver now handles mapping and unmapping of shared memory
+> > areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> > this Kunpeng HCCS driver did handling of those mappings like several
+> > other PCC mailbox client drivers.
+> > 
+> > There were redundant operations, leading to unnecessary code. Maintaining
+> > the consistency across these driver was harder due to scattered handling
+> > of shmem.
+> > 
+> > Just use the mapped shmem and remove all redundant operations from this
+> > driver.
+> > 
+> > Cc: Huisong Li <lihuisong@huawei.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Huisong Li <lihuisong@huawei.com>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thanks and sorry for dropping it assuming you will pick it up.
+The maintainers file just list you.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Wei,
 
-Yours,
-Linus Walleij
+Let me know if you want me to repost or if you can pick it from [1]
+
+-- 
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/all/20250411112539.1149863-1-sudeep.holla@arm.com/
