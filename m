@@ -1,90 +1,91 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9047628469B;
-	Tue, 15 Apr 2025 12:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F1F28469B;
+	Tue, 15 Apr 2025 12:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719396; cv=none; b=uWnDbbF2pKBrBArPZFohStH9ilQ/fxicw54AFRATVwtvmEPcPNERIokbcsW/5k+o5uSr7KblrUUJ68xfJ0OAVbe0grqD6Cffr85HKjPyUNErvAzT79hjJhMMA7dxfHAxNjpW8BXBXRZHXLf7oVcR5MmZBj7unIOjLBr3qv3mCOw=
+	t=1744719414; cv=none; b=coCtgb4Z7Y1QFQ2SuPRBS2yktPjiq5xHe8sUZ8SeGf89ap3WwpAYhqpW9126ftZBG2Ge1JdoX7SS7hYf0iPRbebBV5GdWRXcOD2Cpo8sMHbiyPDl+uXbSgVmrrtsRngNJ+jUvYEHIz7hmv480hnEHj16WlyyFAdPo+HkxKu/U3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719396; c=relaxed/simple;
-	bh=Jalx0jktLdqJ0meoKTF6WfsBEnJQ1W/zMyKteV/2hQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KMrta1jM5czRbux7MlPFqqHEv5KA4tbLaXE3A+S1trw2t19W0kBNm+osouszP05UXoecG0CQVXmF1WG+e8Yvad3GgaA+0W84F6JhKZUxOnOclFAqac5gCYVq/uSOpVDT3F2R7RfoEOdwkiXP6feex+mVFUNjF0YbrXKX1IEPhbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.68.238])
-	by gateway (Coremail) with SMTP id _____8AxCGoZTv5n+wa+AA--.53053S3;
-	Tue, 15 Apr 2025 20:16:25 +0800 (CST)
-Received: from [127.0.0.1] (unknown [223.64.68.238])
-	by front1 (Coremail) with SMTP id qMiowMAxTsUVTv5nuiqDAA--.38838S2;
-	Tue, 15 Apr 2025 20:16:24 +0800 (CST)
-Message-ID: <5bf96932-330c-483c-9a09-e84b73cd14ca@loongson.cn>
-Date: Tue, 15 Apr 2025 20:16:20 +0800
+	s=arc-20240116; t=1744719414; c=relaxed/simple;
+	bh=DO+hGIhUqjaFZs0MO2REFIuPzswmairinYPi2NAv6Is=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c7ks6WCP/UyChwWSqoaJzQnf4djJcwNlfM0F6F/z/QQHJAgDFgEjmDnOb4gSE6+MXfmYchjLsxXbEqeeMxk+kPhA0gcHZX1SqzNrGRmXdB7ov0BFTWygm8Twp78Jo7Uw9R1qTVQmzueGH9ouriYqjER2ufS2SZzI4jxaSxgxTPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VsPSyAST; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VsPSyAST"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744719413; x=1776255413;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DO+hGIhUqjaFZs0MO2REFIuPzswmairinYPi2NAv6Is=;
+  b=VsPSyASTl6QnU5QZE8/CDYaKKIMQsLci5n562YyJ23y6o5x+dIaKOpa7
+   c15++W9FTbxzG3YjjKpD0NSBbNfzdgnxd5HAZeaAF2317J9VL3hKGNK3y
+   x9HG8yRAjHKkqybaRMuDcPYXQCtLvi+aMLiMq+/0UznWNM1nDRpED4mq4
+   1PPsUHJy95HnFnitGKsSa7p2cVYv4iQtwytIdny7hr1SVeq5WbdgwjjwA
+   cTogr+IA/jPWQSAaT4jC+hMeGhumjfB40nkpfYLLBPxjIimgpA/fRgzLL
+   JXsBne4/lDjW9sgbObbKq99+CBY4bX/i8cM17N9kO9mm6hYd1LmZFtVKa
+   Q==;
+X-CSE-ConnectionGUID: N0AfAZLHQySKhptOH1OAVA==
+X-CSE-MsgGUID: Kww5XlcSRdC0j3+MeMF63g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46388492"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46388492"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:16:52 -0700
+X-CSE-ConnectionGUID: lWsnU8KbQFeb5bXK7nr3kQ==
+X-CSE-MsgGUID: cXkil7H0SFqTq1tl+y4hcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="135290315"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:16:47 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id EABCC11F7E7;
+	Tue, 15 Apr 2025 15:16:44 +0300 (EEST)
+Date: Tue, 15 Apr 2025 12:16:44 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bryan O'Donoghue <bod@kernel.org>, Hans de Goede <hansg@kernel.org>,
+	Jingjing Xiong <jingjing.xiong@intel.com>,
+	Hao Yao <hao.yao@intel.com>, Jim Lai <jim.lai@intel.com>,
+	You-Sheng Yang <vicamo.yang@canonical.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] media: i2c: ov02e10: add OV02E10 image sensor
+ driver
+Message-ID: <Z_5OLCUQEAYVBgHn@kekkonen.localdomain>
+References: <20250407-b4-media-comitters-next-25-03-13-ov02e10-v4-0-211e3e6fae90@linaro.org>
+ <20250407-b4-media-comitters-next-25-03-13-ov02e10-v4-2-211e3e6fae90@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] pwm: loongson: Fix an error code in probe()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Huacai Chen <chenhuacai@kernel.org>, Juxin Gao <gaojuxin@loongson.cn>,
- linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-References: <6965a480-745c-426f-b17b-e96af532578f@stanley.mountain>
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <6965a480-745c-426f-b17b-e96af532578f@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMAxTsUVTv5nuiqDAA--.38838S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xr17uryfKFW8XFW5trWUAwc_yoWDKFb_uw
-	1I9rnrGr1DAr1qk34avFWfAFW2vFWUZw109wsrtw4Iqa4vg3Z5tFyrXrs2gFnrXr4fAF98
-	X39rJryIk34rAosvyTuYvTs0mTUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbz8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_
-	Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	WUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcDDGUUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407-b4-media-comitters-next-25-03-13-ov02e10-v4-2-211e3e6fae90@linaro.org>
 
-Hi Dan:
+Hi Bryan,
 
-Sorry for my late reply and thanks for fixing my cheap mistake.
+On Mon, Apr 07, 2025 at 10:13:08AM +0100, Bryan O'Donoghue wrote:
+> From: Jingjing Xiong <jingjing.xiong@intel.com>
+> 
+> Add in the ov02e10 driver from the Intel IPU6 repository.
 
-On 2025/4/9 19:00, Dan Carpenter wrote:
-> There is a copy and paste bug so we accidentally returned
-> PTR_ERR(ddata->clk) instead of "ret".
->
-> Fixes: 322fc380cea1 ("pwm: Add Loongson PWM controller support")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-Reviewed-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
->   drivers/pwm/pwm-loongson.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> index 412c67739ef9..e31afb11ddd7 100644
-> --- a/drivers/pwm/pwm-loongson.c
-> +++ b/drivers/pwm/pwm-loongson.c
-> @@ -211,7 +211,7 @@ static int pwm_loongson_probe(struct platform_device *pdev)
->   	if (ddata->clk) {
->   		ret = devm_clk_rate_exclusive_get(dev, ddata->clk);
->   		if (ret)
-> -			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-> +			return dev_err_probe(dev, ret,
->   					     "Failed to get exclusive rate\n");
->   
->   		ddata->clk_rate = clk_get_rate(ddata->clk);
-Thanks.
-Binbin
+This commit message is just too much for adding a driver. I've just dropped
+what's below.
 
+-- 
+Sakari Ailus
