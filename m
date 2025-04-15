@@ -1,96 +1,92 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE7F2561C7
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:48:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16FC241682;
+	Tue, 15 Apr 2025 21:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744753736; cv=none; b=FSVFTg7N3QOUXQurzx+UH0nFqrNx9QjnsSKOowKfnO3vCAwG2FMdE1rwhdRMwo9IVbtk8zGgGTix4kFfU8GxHl6DjMQg+85Pg7MPQA0mnofMGEN66oXlrauYQkODD86ZTTCV6mPVDnWkNo9Sk8T3NTy4RCwcfVTZaWTvKTJUHpc=
+	t=1744753803; cv=none; b=V/ysiMSPY+UhxQXlOlpzw4FJfJBjGuQVv8pLiHUZwd1YUZxaZ3wt9ZPn2zVdi+0qTct+my9vp3iBNPQMToQPzQ6vlUagM9llir2ZkmwpL2WhFJXKonT5HeMSMeNGzKH2/KFeDuuwh7xpPspb9s/m6A2PdQyUUSb2+R8kaQgxhj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744753736; c=relaxed/simple;
-	bh=w/GU520f/3jBAe24+ir+D2COnHV2dCfaPkORIPMWF9U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kJwjAIEfrbPKHxpcO8lW7/wqT/ehFjnj6dfhk3hW+2kbBoOkhptE6iTngW3B2Xfngfau1THBOHBTOLh4gkFCRuLNqOCUst2RRH9e0RwtP15sE54Hpw759STZmnOUycGG5F6USuCsVBWj2OX1/P914SLIaNjb7poIY3L6xo7mgTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yZgY2IwG; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744753803; c=relaxed/simple;
+	bh=rnLKnKJ37AYMItioe33j29TXhHxMtqTKAClrMafDmBQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=jXyVKPjuV4oZ6gLWywcVhelgWrm9/aTNOQuW6Ezt88McbauvVDrLq/9M9NKK45whrpSUyocg02kwoPS1aeXCZlyxi9dRPPSpvYzT7rKSFJoFDlCIPiZ1G8boyVIu+Bj9exCnvvmM2nu7c2yPHVfqUo4W/NOocNaDuiKUzdyVlao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvITnljo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZgY2IwG"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54d42884842so1510921e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744753732; x=1745358532; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w/GU520f/3jBAe24+ir+D2COnHV2dCfaPkORIPMWF9U=;
-        b=yZgY2IwGwDD6Xd1zIz8g/u09tiEAOCez4tZ5CdZUFsZJjjDLSgO5Gxo8lpp7B7EjST
-         sq+4GG9ENMkoVBfyvICDzcFB6u+d0kZX6icRosvU9fu+0QKsOhoPRf5zzr/ikZnSohk9
-         7b0AOHl6uX8I7uk917QviuwUTS0SrROnsqgE0vWzXDUM/zxCq+TXy9mcd/o6Ah58E2ep
-         NcbRs4OoOtbeI1TVl9B2EIy+YxU2nUps9M5XMYRXBzTO+kUi7zGfRBej6koYTaynmGKk
-         iKIqonx1bF5L55gUPvLfXkLnHK9igRQL57+aGP1jrzNeKMoIYkjDmM1C+qASqqWYqMkx
-         q4vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744753732; x=1745358532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w/GU520f/3jBAe24+ir+D2COnHV2dCfaPkORIPMWF9U=;
-        b=RkGEYLTQSBK/JTNlxZAhfURnSyl8nSW/LiFnNghNFIZm4k57Sfbukg+g/Y50yW6flF
-         Rm7Z3c2GuEHtlCanykSFrOH6y/AUpIGb/H+SsuSYfjsABrpnvF5KeYHPnXXAfS+rkAue
-         cvsrmKZxlF9oagMDNS3WamcnEUoghRoN4MwsziyQs5OTuXqSaD64/H00BHgQ74AAESRQ
-         2qGwi92ghVWgur3vVcdp/iqX5AbbQZHJh0is2Gn9uRQsfm9/d660TsWlz8uNbb3RQaN4
-         0eDHWpd1iiHQzyWRmUbe/fRPzCDoHgPh7Pb993MGb48ii6JWCuPgWLVK/agk+RU60+I3
-         FNwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWiYOa56d2kB7JL3BkqsDoNHBOz/pAr8aqmYEbF9LNK38AKnccGNLf/Eh6euHr8Xcahq/Up11+1o6zYOwU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFo/6WKyGoyoSgUsO9i6AC15u7zhebzRt//j6Z3eU/or/xmx86
-	MeFjComwupWfmFoSQlxC+EZRtbCMt3jfkzf0W+A6G4LUoGiXhcaZv+xlFVGuBFQ9xCOX0qe6CmD
-	hLAa8SmoJEqt7QF0dhTWCxueufX17ykdjRBT+Ug==
-X-Gm-Gg: ASbGncs7A4J+XavzuMxRun+bXJcohj5d+3YlaWgnzoBbsi8hd4xk4q67Lm9DE/QuegL
-	LfV0l/WmLmz/Z6TAosCvvy8AgUEkbnhOGzdW6EEqpwHaR5QfTt23a52wReYFxcggQ6extKE5gCg
-	ErgunD6Gok+Hpenynkq2fPzA==
-X-Google-Smtp-Source: AGHT+IFSu+OKLB2VNur9Dle83J6HMvG4kflsWZSu9S8S6IR4G67eFIhSB0oS7wnO/q/UzPPA34KfjLwXTtDj9Vzih0s=
-X-Received: by 2002:a05:6512:1328:b0:54b:f04:59e8 with SMTP id
- 2adb3069b0e04-54d60517c07mr145437e87.23.1744753732331; Tue, 15 Apr 2025
- 14:48:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvITnljo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA908C4CEE7;
+	Tue, 15 Apr 2025 21:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744753803;
+	bh=rnLKnKJ37AYMItioe33j29TXhHxMtqTKAClrMafDmBQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=UvITnljohZpowWJlrOoTmM6KT0ZIoHOoQh7bgFcSPx15gRUJUY/xcR1vRb/bQStoY
+	 GHaBLgXzKTQmYFzNZlun4+FRnnFZMVfFlSZusa/Sq0F6WVZ45KfSt3FzIjB+xRcn8m
+	 qhSx+6myJaIofyUgF38iRF6I0cZtJbdKvAp1YlFm7ReCOgnC49Dz59pGmIc58PjNGg
+	 PQXj8+/Is2c+JDZNYVT7PRHDU86jC5vA8W9xSymUQnD3mZ9v1WNpe7mJUxJznEAcOL
+	 pRzjmGj28e2x+voxrCQ5Ldt5CTh99IDW5MwMwHxtfjH2D+ir8chyGuNnAcQxw2q+FO
+	 h9lemMnnHtONg==
+From: Mark Brown <broonie@kernel.org>
+To: robh@kernel.org, krzk+dt@kernel.org, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <20250410094212.1155529-1-rf@opensource.cirrus.com>
+References: <20250410094212.1155529-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH v2 0/2] ASoC: Add codec driver for Cirrus Logic CS48L32
+ DSP
+Message-Id: <174475380165.1274591.2603826977531435653.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 22:50:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 23:48:40 +0200
-X-Gm-Features: ATxdqUHvlNdtzl3Q_1xgpiYLVxVG4W9MxWXBnWdrebvCbvJB7NiLnFtisrLsjeo
-Message-ID: <CACRpkdZGmHqS=Ln=YF26aCLcuJOB-Zx3AUA8sSyf+Z_LJiC2Uw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] pinctrl: convert GPIO chips to using new value setters
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Xianwei Zhao <xianwei.zhao@amlogic.com>, Patrick Rudolph <patrick.rudolph@9elements.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, Apr 8, 2025 at 9:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Thu, 10 Apr 2025 10:42:10 +0100, Richard Fitzgerald wrote:
+> The CS48L32 is a high-performance low-power audio DSP with analog and
+> PDM digital inputs and support for low-power always-on voice-trigger
+> functionality.
+> 
+> This series adds the devicetree bindings and the ASoC codec driver.
+> 
+> Changes since V1:
+> - Remove bogus use of 'i' local variable in dev_dbg() statement in
+>   cs48l32_init_inputs()
+> 
+> [...]
 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> the first part of pinctrl GPIO controllers.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Applied to
 
-All patches applied for next!
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Yours,
-Linus Walleij
+Thanks!
+
+[1/2] ASoC: dt-bindings: Add Cirrus Logic CS48L32 audio DSP
+      commit: ac03495d7359285a007ec4fdc08d3843bb5d6b7e
+[2/2] ASoC: cs48l32: Add driver for Cirrus Logic CS48L32 audio DSP
+      commit: e2bcbf99d045f6ae3826e39d1ed25978de17cbfe
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
