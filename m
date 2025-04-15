@@ -1,189 +1,153 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011060.outbound.protection.outlook.com [40.107.130.60])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F13D41A8F;
-	Tue, 15 Apr 2025 18:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744742849; cv=fail; b=OIQGbjmU7xoz3pcuXT1jAplSOApHwE9YSC22cN7aaXIEj5wqbzDCZzBoIC5oHz/JfuZLzQmSWI8kLkQIJVsvZ7lnSLyLaCKXO/zwn+d8ORfgjhpYiYuSthOssf3ZwVXRHqm6+rZjqprE11Ob/sUEFTu2CdXHmULnxNRiWHGAO1w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744742849; c=relaxed/simple;
-	bh=FT+sF+Cgsh1wYj3owyEmCRrdpKeDrEPB7IYZBF9R1+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kZnkwbZ0z0A0NGrgUA1hfF5Pj84g6tonaQLQJAZ7sP6ttRdHjZHtdwIsO6tjY39tochIJBuZ4WGZOLF2SL51hSiGL6TQ1E6AVSqK4CJ4W8zwrbN2TLuOhpbnGS+fUw7hbCyWmNG7gD95p+BCLhJbkEnkTeOQHbYEiodqIIIF2Vo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=cMt8q66o; arc=fail smtp.client-ip=40.107.130.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69872DFA5C;
+	Tue, 15 Apr 2025 18:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744742877; cv=none; b=sDn/Dz8/qBXh9zhs3T9JaJsYEMPl6ZgTJ1OGaLw+PjLzxXP+gjJERluhmCEBsctLod3v6JAJsURXxVe32i0LrF1bUk3VD+/7sP/uw+1V34C4f1NR4k2opoa5pc71gs1Jph6bHACv43hoJqx8b9rtMNKTZEHwNWqa9kpsWcSxlJE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744742877; c=relaxed/simple;
+	bh=YRPucbupLv7L5SQpYXNvK++dZcGdDzry0G1tMgy83bY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TF9VGRAyNHElrAb7mNeEgKcp8AvRi65Gurnz3eNIRcrwJyjYE4ip2v1+v4OGxBvnxP7YskKSQZM+eHZsDf14HhZvQoU2N7z2PoVkY+y8stUeed5/nfpz8lsUYVHQWGxuoA/JapagxB8jiC1NL5furx+EQR0MibeekOseK1hjQBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zukc0bSq; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="cMt8q66o"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=k+AxAsLz8VRnw0x8Wrl5Jop1p69fc5ZTBSO2t2fUVdZgoVDKnHWn8BQ0f05MzakTA1DTKmZsUpSXAPV0Q323rX7MfEjYCN0jz7LTa7K5Y8G2aaZPA/nyaWu15xDSPwU8aq7ZOkwiQ3RcP3IG+OzCrVaRoPLlDUw+Q5Xlwb4gQo5/441jaWYXkLtPEgsLoRQ0Cz1glSsJMJeTuRsz/mrsp5fEcSDBH/KyGwSsMMOafam8LVbhy7tKd5v3vxPDL0OH7F94LzEmQhwzHNDpVofHWmPyy+JTG0Qsze7BjVlVtYr8K4+7XaHyrAbjjkisnu3iJe6Z30ushz5l8XZbqLHnog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rz4y4PT1esE9BG1tDlB4trCc3ToGvAOm8U6mABkvG2c=;
- b=pXRnwzjjG94ME+G576xXiYpsi6eMNHhUYQssEul6hVqwz2qr9W82rR0pPEpeRMpzaKbJkr6BsYAx6FCUPTA/5gH/f4w3aaCTyGjqqLPMxMD86fZBC0FlhYCIsJQj7a0dwXArnpbCI+acNd69bL6G1TbP58lZborTs6O8zwpdeha9iUnCt5g1KCfcDsP3hqrOGcSZXDonPozA68pD0In3JMy2HbNOzb1FigKIMT5u0kLaeBoR/OcwwTLEfhrJJg0CurmJ9ECe2a9C/Shb1rzD63VFmYb0ZDaJyxPXCidmN/79RKmC4IXCgtWd6hOgneXcdNvo7TwxmLAq+Li1yh7+3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rz4y4PT1esE9BG1tDlB4trCc3ToGvAOm8U6mABkvG2c=;
- b=cMt8q66oTBCa8FVoqu1nGhY3rlsR4czfI7DW26BTCI0GUJnQ+Yv9mK7MWB2dShjt6hk7nVqQX+6uzL0V/RtcwYD0231U9BaWZkQ2gMOX4pjIDQomruiOOwuV7JFKmqovPJMYEEFjlkXDainuyp70QuhilnBbn3uOemNK3VSeNEgQuUwvo7LOXjIUWVXnucgGq01/lf+pO7XkzqquJyVvuJiirhqOiRa4McGzx+RHw48ijnzCKxD+sF6zxS/vBhE/5m3bzWW98h84BEGifkwHY9kQ6PXThFB1rhhRsoP8eE1OewfZGtUzMLw0J5z2LeoRXu5H3CLlHedpj2ROSELleA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA2PR04MB10447.eurprd04.prod.outlook.com (2603:10a6:102:413::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Tue, 15 Apr
- 2025 18:47:25 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
- 18:47:25 +0000
-Date: Tue, 15 Apr 2025 14:47:17 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-Subject: Re: [PATCH v2 12/15] arm64: dts: freescale: imx93-phyboard-segin:
- Add USB support
-Message-ID: <Z/6ptclaeXI2yr9r@lizhi-Precision-Tower-5810>
-References: <20250415043311.3385835-1-primoz.fiser@norik.com>
- <20250415043311.3385835-13-primoz.fiser@norik.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415043311.3385835-13-primoz.fiser@norik.com>
-X-ClientProxiedBy: PH8PR05CA0003.namprd05.prod.outlook.com
- (2603:10b6:510:2cc::24) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zukc0bSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744742876; x=1776278876;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=YRPucbupLv7L5SQpYXNvK++dZcGdDzry0G1tMgy83bY=;
+  b=Zukc0bSqf5jwjzqiRe837zmYmH0SVZ6HV3LphOcGTlR7v8DpOi2xAnW9
+   ID7Pnl95gtgbJ79kpPjU7Sp/OmvhlgycdMxTC7MUX49BRiJ75CE/huQ5V
+   /t7epEyuvIXWZQnJKkFEMFjovpusUs5GRzkwToJw4tF6hN/b5G40jYzgN
+   cXhJ9oyK9YM6n7Cf5W5tsmZZE2khCyqaWbS/JcCgQlC645RgpdOCKhel7
+   Vyit0oj2Fo7R9tuVCF550FMunB6YzCZytJkVksSx0dp/DVSb4/rr2KINZ
+   uXu9l6uLNWplFvqz0S4HyiITGUuep589NMMtmnk0hGt4gwuLSS3byZaZu
+   A==;
+X-CSE-ConnectionGUID: V/4b/0T8R8mlrKyGzaceTg==
+X-CSE-MsgGUID: E9mLeemkRieIJVIisTsjWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50068837"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="50068837"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:47:55 -0700
+X-CSE-ConnectionGUID: 6fKp7qaMQ16foLRw6GfU6Q==
+X-CSE-MsgGUID: 8kiuUIteQvqhDtaAUM8dHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="161162047"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 11:47:55 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 380A320B5736;
+	Tue, 15 Apr 2025 11:47:53 -0700 (PDT)
+Message-ID: <7666eeaf-930c-4c4b-bcb8-9767feff10f6@linux.intel.com>
+Date: Tue, 15 Apr 2025 14:47:51 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA2PR04MB10447:EE_
-X-MS-Office365-Filtering-Correlation-Id: 877db493-b826-4e18-8f4f-08dd7c4df67c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?L4cUbj3jpGimzITj77GzukKZWGoQ/DGRfVUXRHcbAnGz+8QWX6jF6YNf//IS?=
- =?us-ascii?Q?6NfCI91QHWTqW/EQ3D9h/ixMBPsDHCOqVcTnzDpdET4Zwbdx2hBr9Xb74RFy?=
- =?us-ascii?Q?eN/GQH3OwDMpZSOgdAvEfcw782p9Ng2VOZE5rK3W7u2dZEWR22xKDsmdnpzU?=
- =?us-ascii?Q?XM0fXPrsbtpuj4vZRKJMVD0QysHbaMIqHnPzlXWQMC/i8L0H7chxvertcxTQ?=
- =?us-ascii?Q?iHemR09mDvBjE6VGGRQDJjdf2H7sbV/S8oqfRF3Yc9QfOY/USm6JCNXCTz4c?=
- =?us-ascii?Q?sgn/8CtoidxRb+R5Zyq2uIlFEQXLmBx9Z8bJyl+a3AiwMbGQO8K2yTqd7L8+?=
- =?us-ascii?Q?MaXySSxHS2TyHsXwJwTZqfgcv22TCuBV9SdCK6poQ/AjWfmAtR0LAEIPAlM2?=
- =?us-ascii?Q?IRXVnqV7iT4qoWOzvqj4LoJQ0LPOu+D8qRTLmLMgeXYN4piZc88nrRQY4yEZ?=
- =?us-ascii?Q?d7152NeaNXsFZWgc+ID8setvVflrMRmbsaXgC/Mgp0hBLaQ7cBYuKgxX/P4Z?=
- =?us-ascii?Q?Z2YlRO3Mk1tTU0Fx2Ury4n9rJ8IJ8gxf6uhj3+SoKgggLdzMuzlBPz5Wr7r7?=
- =?us-ascii?Q?141yGEALwpr9KM8C8M+cfCnSI47KdFdIUnO6ymbdFLBt8tsFlShfrEDv4eeS?=
- =?us-ascii?Q?oKc2ZiyrDR2+2fiSQxRt623bT/H0+crd35oG+5uU8FjCjCd6T1E5RrYXV5ij?=
- =?us-ascii?Q?WU5xmTzbpyQT0dKKsTn8F02eaGmFT89wySP8KqE50oK/cfdOfn92sWXqTPYD?=
- =?us-ascii?Q?CRevVuNMJ8ZCJ17DEyLMQ4Gla66ldlFT1NBHRFaBM5pZRtauOtL2BnxRg5gI?=
- =?us-ascii?Q?7YSIMKh+Odk4OGvnsnHwXI4b/xcmmBsNHJlzYoU4Zy54HEDpVnfYZ/HPmQiI?=
- =?us-ascii?Q?NMC+9fQQJoJLMubB4aZdbn6jn/j4jstV65deI+riSGaiYIIJclBDCF6ZaD7e?=
- =?us-ascii?Q?l4S/l65zVqmSFfiHdIdnC17sDMelNdbhFMyHCgjD7Wu601JPPYFqVqRGZQrP?=
- =?us-ascii?Q?m9C9w1q2D2qOSavB+SnXHxPlt8ckVlLXH9m3GaKn27ud7CFZnuoEPtbX0AqO?=
- =?us-ascii?Q?jtRRGkW1x4rpLA9HWWr/ekFZSTRA4kMBzlXl2x0AtVjRXLGTz8DKqQ8yPL59?=
- =?us-ascii?Q?C+PgXdHn7xthfCVxfDrCgdl26IEOzxTt3QVSWDjm0Vc/46NtdXgKZ1KGXzPu?=
- =?us-ascii?Q?oetwxc8zLMMpmcgyYxA7E2pgdq/4VZQ1A8pIz+R2HWuL1q+TgGMrcVngr48I?=
- =?us-ascii?Q?5nYj3Ils4aAXopRoIy85Yiwq1wEf9UTpYw/QHu92sdgFmwPJRGreJ4sWSZ6v?=
- =?us-ascii?Q?kpgqXAbV7U40GTq8Q01j78HWkneg/qmZ9hGIG54pMOnbg6Gw0t7camnDEUmJ?=
- =?us-ascii?Q?V6zR8ocUyG6ivB+gwOaTEPMPtln/B4krgQ+M8i5Im+lK0aT5TULrkPpUHgz3?=
- =?us-ascii?Q?SPWIKZoUwDQhIYMRK7h9NTmVBR8Q5/1nWDQBLSmruhNHqF7/gHo29A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jqEQxL3VgGmWYM+HKjzgNzYUsg+aAlV+WrXRcunXAXhe6dtXeZ3M60VzpRAt?=
- =?us-ascii?Q?XttM48xwOFAGC/+k1/4JtQe56PbHr4shVOmGd+L1wDydgjgC6/jrYc+mkmQZ?=
- =?us-ascii?Q?9yesFB96ebM3pCFn7xjD8zH8qWmM6ty9+Pw23wAePGuWGzDywq+kAHXTqeKr?=
- =?us-ascii?Q?IGc3G3wqfUDN2mz3T+oncl7Cg3n2YFrmbGPUsJTIQzKDOyBAtd+DKooMxfW/?=
- =?us-ascii?Q?pxIXV9321v/u6/Ov0F2wlo1anLiq59eLaMPEgT8QE9R04UIe5AivgIK8GuuF?=
- =?us-ascii?Q?qGOEAOpxL+9GUaC1mR/xQYdGYy0VwA5Y3LYa2NTpbxW4/Fdvm8tJx8kDAM8+?=
- =?us-ascii?Q?56Eufji1xmlzn4sxTd9osHwFUtdbgIg0rpNcRvyJis4XKcr6WvBZW4Ywo6f4?=
- =?us-ascii?Q?ihgl0HybWrl+r+u33VubQf+V6yNrqOuO/TH+GsEpnv/nDOqKzzj0SvITyNqX?=
- =?us-ascii?Q?/L9X2KNMCFzXS9n/AaMH6krvzh3ACW2mcXYuX2FDlhyDwAzzhK+6vZxni6EO?=
- =?us-ascii?Q?s2OWWAMJXWt/CZjQkBsgVbcs19kiyo+ZuoLDsss6PfY8O8QzOgnubeOxCoFU?=
- =?us-ascii?Q?InVGe4Lztr0gGJV7xclI0iAMmOo87DOd2RkIoUU5qfuqQhjtusruBu93lAvf?=
- =?us-ascii?Q?mRDuogBgTu1Hhr6y7D5Yn6UcP70Tck/Qy0+u0xiIsvf1UXJuk9eeTWx98G17?=
- =?us-ascii?Q?UYMeeCh6ZmmtelRecnPk2dTkAwBIzSOAraGRkwiJkHR8HAOQBqPUIqbSamxw?=
- =?us-ascii?Q?jfwoz6C/VAuvEwtprYpOTRGRbQ+8CkSKC7ixVtEJyBWQr3l16/xooRt/Ptij?=
- =?us-ascii?Q?bRSG+wR0/TFfO/7A0Fidp7imb30vSizf+gXXJC3zGd5rnve6KFxjzpySK7aT?=
- =?us-ascii?Q?wuvx/6bbEzaIWKtJBzD9N3FIc0fHy2fl8/diif8bn5JcPZ1EZ68pnQDxh6b2?=
- =?us-ascii?Q?GWgH5GOgAoHOD9jEVr3NRzYWcqWVe9Fs8r7zJz8dC1MWGwBhXqePIb3LXOt7?=
- =?us-ascii?Q?jJ2PO6aWivHBOKZwk+lktY62/26DYh2WPy5c2QBguU1qvHgE4tuyOJXgjcB/?=
- =?us-ascii?Q?u/QOpfcfxznCtRmcJx3p/gkOXkC/STTunuAwg6xmtowN+9XTWob2ajcqKfHu?=
- =?us-ascii?Q?Yt1urOcXtyBDoUUOY+O/D3ivCpuAXhT0manysqrbHOkZpe5jFI0Q7n5Q7IM3?=
- =?us-ascii?Q?VBsjlg89VPJPp0GCny+xdBRJookXbcCI6GwLcl/+V6YRX2mPmm2Nv3lH4pYD?=
- =?us-ascii?Q?6mFquR0JeYT1Q1y4G9c/5VMpqqKN+HkYFqzlIgD6adZvyFzpeIJKmywUmJ89?=
- =?us-ascii?Q?w90RLm1LfjkgMavXgBs5fHTMyTxzqScJEoMYz+I/ibZsVKBz5buLhb5cJADE?=
- =?us-ascii?Q?GjGBAD1ntJ/OrQQvAwcu8OzHt76bfMKS5pk5Td1ma5NNPmr+TS/yxH4OkPsM?=
- =?us-ascii?Q?fWjPi3993uI3dOEbGjg2yvR4BD6wKyqxtOdfSGPUU3DTMhkyjSNWIMXhbpVN?=
- =?us-ascii?Q?dulMutxqkOZH574g4qREPPqMAATnG1/JMXAysYOuJb6unO9lWytCubyGTqjB?=
- =?us-ascii?Q?eoKefQxsdWJB7eqYdlI=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 877db493-b826-4e18-8f4f-08dd7c4df67c
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 18:47:25.0590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4GYr/+ZFd6vIRhEDsqgXSaxRyINE6OXUZatR7RdQDJACCgHRrOaafkTFHoBChyPpkbHptJuGM5n/B0Lp+VzdoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10447
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/intel: Don't clear perf metrics overflow bit
+ unconditionally
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415104135.318169-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250415104135.318169-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 06:33:08AM +0200, Primoz Fiser wrote:
-> Add support for both USB controllers. Set first controller in OTG mode
-> (USB micro-AB connector X8) and the second one in host mode (USB type A
-> connector X7) by default.
->
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+
+
+On 2025-04-15 6:41 a.m., Dapeng Mi wrote:
+> The below code would always unconditionally clear other status bits like
+> perf metrics overflow bit once PEBS buffer overflows.
+> 
+>         status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+> 
+> This is incorrect. Perf metrics overflow bit should be cleared only when
+> fixed counter 3 in PEBS counter group. Otherwise perf metrics overflow
+> could be missed to handle.
+> 
+> Closes: https://lore.kernel.org/all/20250225110012.GK31462@noisy.programming.kicks-ass.net/
+> Fixes: 7b2c05a15d29 ("perf/x86/intel: Generic support for hardware TopDown metrics")
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+For the two patches,
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
 > ---
-
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-
-> Changes in v2:
-> - reword commit message
->
->  .../boot/dts/freescale/imx93-phyboard-segin.dts     | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> index be9c0a436734..e4f959f665b2 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> @@ -80,6 +80,19 @@ &lpuart1 {
->  	status = "okay";
->  };
->
-> +/* USB  */
-> +&usbotg1 {
-> +	disable-over-current;
-> +	dr_mode = "otg";
-> +	status = "okay";
-> +};
+>  arch/x86/events/intel/core.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 0ceaa1b07019..c6f69ce3b2b3 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3140,7 +3140,6 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+>  	int bit;
+>  	int handled = 0;
+> -	u64 intel_ctrl = hybrid(cpuc->pmu, intel_ctrl);
+>  
+>  	inc_irq_stat(apic_perf_irqs);
+>  
+> @@ -3184,7 +3183,6 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		handled++;
+>  		x86_pmu_handle_guest_pebs(regs, &data);
+>  		static_call(x86_pmu_drain_pebs)(regs, &data);
+> -		status &= intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+>  
+>  		/*
+>  		 * PMI throttle may be triggered, which stops the PEBS event.
+> @@ -3195,6 +3193,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		 */
+>  		if (pebs_enabled != cpuc->pebs_enabled)
+>  			wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
 > +
-> +&usbotg2 {
-> +	disable-over-current;
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
+> +		/*
+> +		 * Above PEBS handler (PEBS counters snapshotting) has updated fixed
+> +		 * counter 3 and perf metrics counts if they are in counter group,
+> +		 * unnecessary to update again.
+> +		 */
+> +		if (cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS] &&
+> +		    is_pebs_counter_event_group(cpuc->events[INTEL_PMC_IDX_FIXED_SLOTS]))
+> +			status &= ~GLOBAL_STATUS_PERF_METRICS_OVF_BIT;
+>  	}
+>  
+>  	/*
+> @@ -3214,6 +3221,8 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+>  		static_call(intel_pmu_update_topdown_event)(NULL, NULL);
+>  	}
+>  
+> +	status &= hybrid(cpuc->pmu, intel_ctrl);
 > +
->  /* SD-Card */
->  &usdhc2 {
->  	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> --
-> 2.34.1
->
+>  	/*
+>  	 * Checkpointed counters can lead to 'spurious' PMIs because the
+>  	 * rollback caused by the PMI will have cleared the overflow status
+> 
+> base-commit: 5c3627b6f0595f1ec27e6f5df903bd072e9b9136
+
