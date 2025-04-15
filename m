@@ -1,108 +1,206 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CE4275101
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CA31EDA24
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707921; cv=none; b=uIYVO4sRdPYC7iihmI32DlVloDz+e9fAFGbmcV+2XS74pXVEjs7nMEu2bof6Tsr7GRIDSLfdzSVs4RDsAAL08ZcyUl8gUJM5K6iWcopcheNOt16KjcbP5oG8ESBIZIyJeqSLEBY7sozLD44FS/Gmf9FSOXcP+C8XSxLMzO2v98c=
+	t=1744707930; cv=none; b=vCFt04gEKzPN2YIm9v4UppUKFTqAXBvJ7oqqSj9xkfGiSQKkKG47NVUBBnsIexuBtYLeaECu/cmgf90WyBFA1CoOMYbllnlTkLIF+97W2ts2jnP1ScIBhWSes3TFTQiQxL9eptH77JO31oMSFx6/Rvle7h3FQKuZloHGpnOGheQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707921; c=relaxed/simple;
-	bh=h2DEK8fnN2Gh/YmAl5zHBzGdGpaDN5Or8Mju5hKUKd8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XTP92Bd2fQJrFgvvYMAoJDqutdK1LNfoCdLxSBNK1brgHu+joB75qEDwUMMXSpRD7ggiC6qF9DdH81JCYyyD8vK3zVzvy5SjsFIDmXqEyY23cnC7ubY8FuUtLkgk/1y6xmjDIqQZ/aU8TKiolHS3do0ginuQaMOZpVnZztolfZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gGkt+i89; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1744707930; c=relaxed/simple;
+	bh=akoyEmg5FFAps9x3hqllg39y+pIZnWVgc6aRE+0dVJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XrgkpAeCrZ4j0eQxSxFp8tScGnfnrJrVeBwFMBrk5/8d5e2epqp8XwRbvYuiQjt14YloghtJapX90v5PupV2oUuKGtDayBuFmC8Wua2vT3f4/QN0ZihmOz2B2xrQ04XvUID/LBnpss3DERvlKWiGVrxmfVI1fPoXUCMWann8ARI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rCb+dbdq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rMTgtWCS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rCb+dbdq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rMTgtWCS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gGkt+i89"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39979ad285bso3134203f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744707918; x=1745312718; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=559hWc8vvPPLU6Zg7XW7jcJSKjSV/Q+pFH2bIUlCWes=;
-        b=gGkt+i89tLVsYLELj7dd+/fm6VkN/cfF5ZSFHN1rt6Yd9q/EtybUku9ex2k4loEohB
-         bNhl+eqaZLs8k7uruuk9mIFe31zT5Xd0sxSwUhx6Eld1euBmQM9UXd4KoJLI42vw5liq
-         QEdIPA4+eYZV/vbKVLLFg1iAAycm0W3lvcciUmE77Sq8NkY0VdsHowi20IVuYq6YrlRP
-         /4jpj4o7OfDsJBAuvU7ySzYlPxTsJyYuZyisPGPjOJ8y4oJk/k3di3BSlTNN7Psjj2Sp
-         pipGXAZgJ/1lxSR5DjlWYCe/VQPnfGFfy7S7L+7P+6maODIRRhb0Oba8F+tmz7otS7nG
-         DrcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744707918; x=1745312718;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=559hWc8vvPPLU6Zg7XW7jcJSKjSV/Q+pFH2bIUlCWes=;
-        b=CW++OXlPZS85f6pb0x8ugMtoz3Y6TxRj4HWGVP2u1svySisqlMzzfWKwdvLn7chGG4
-         bTfqWhKsPc4HySdrE2jrb6v+ZoKTKrjzhi2Vl6bg816WJ/CCVVdMRJgxQ9umcUTktycL
-         KQpVciudn0iyufPNvTu5ABP0rJrXL5hvjak9GLVW6hAmY0qZyvTIjTSCTk33qg1Mp88M
-         JPG02kmV8Lks4mmVfcAAzTVFsinhvMenx7wyf/3pjV+sd6sVisMtpi45glnl/sKArAcI
-         Q3lZXqAWTmnlLMhEjPqaFdtuFT+XOIX6DkWHZjFPbKK7qvdG2t0X2SF/afqJAOuTpiw6
-         hovg==
-X-Forwarded-Encrypted: i=1; AJvYcCURmU0KHc36sZhWdSijftAXXQc4GoDcd+3x1N+7TB/g0NQwgUwF4E8qZm7Ijd2TJXl3lFaqOFSxOqvU4Es=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv45kp1TnLVwICvidh3kgx1BTQQrBzCnX0Pg/nxa50KAJyKXJd
-	msfy4+YS3LbGJUz4mR4PNTZ0F2DHHAinJNnx0zPGl+Qb1blFhtYzH+kgDlBg6XjDpiJiXNYCmgR
-	BK5zug0g7ZLCaVQ==
-X-Google-Smtp-Source: AGHT+IGaGphQUOfUzKJDXEiqvP3cldS/F/M+YoDjFINgZTcUVSnk0ewAEd4RsQKkgrKbPZ+Kg1iebePbw3cBLIs=
-X-Received: from wmbev15.prod.google.com ([2002:a05:600c:800f:b0:43d:7e5:30f0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1843:b0:391:3d12:9afa with SMTP id ffacd0b85a97d-39ea5201eddmr13259999f8f.21.1744707918651;
- Tue, 15 Apr 2025 02:05:18 -0700 (PDT)
-Date: Tue, 15 Apr 2025 09:05:16 +0000
-In-Reply-To: <Z_1EnkPiBKakGYtM@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rCb+dbdq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rMTgtWCS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rCb+dbdq";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rMTgtWCS"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D584021162;
+	Tue, 15 Apr 2025 09:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744707925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gt8X9OwuX4DE3dmRd6541p+mCcrnU8QiPB3p9GbZKFg=;
+	b=rCb+dbdq7YVfmZ+K7cSqijtOv4piofNRPNccHTjNTOxFA8mksU3+EdYR85sxmAqYjmWglx
+	JJ7hCgiJ30rQ9GLKycfnMOlOzdpxa7SKP3/UdKnTb3mzS6QDpWHN+//o/VYnvV934xxfmW
+	hsiFoAGsXTRW5rbADkSmT7Wa3eaLDi4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744707925;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gt8X9OwuX4DE3dmRd6541p+mCcrnU8QiPB3p9GbZKFg=;
+	b=rMTgtWCSK5cTrOWfZj2MD94hDSUOuTqRkb+/iJDjbn5RS5v40Z6HYebeXtFq79BrfR1rZd
+	XcGo62e+hMjdD8DQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744707925; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gt8X9OwuX4DE3dmRd6541p+mCcrnU8QiPB3p9GbZKFg=;
+	b=rCb+dbdq7YVfmZ+K7cSqijtOv4piofNRPNccHTjNTOxFA8mksU3+EdYR85sxmAqYjmWglx
+	JJ7hCgiJ30rQ9GLKycfnMOlOzdpxa7SKP3/UdKnTb3mzS6QDpWHN+//o/VYnvV934xxfmW
+	hsiFoAGsXTRW5rbADkSmT7Wa3eaLDi4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744707925;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gt8X9OwuX4DE3dmRd6541p+mCcrnU8QiPB3p9GbZKFg=;
+	b=rMTgtWCSK5cTrOWfZj2MD94hDSUOuTqRkb+/iJDjbn5RS5v40Z6HYebeXtFq79BrfR1rZd
+	XcGo62e+hMjdD8DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CAEAA137A5;
+	Tue, 15 Apr 2025 09:05:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0zuCMVUh/meTUAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 15 Apr 2025 09:05:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 3178DA0947; Tue, 15 Apr 2025 11:05:25 +0200 (CEST)
+Date: Tue, 15 Apr 2025 11:05:25 +0200
+From: Jan Kara <jack@suse.cz>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: hch@infradead.org, almaz.alexandrovich@paragon-software.com, 
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
+	syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Message-ID: <q5zbucxhdxsso7r3ydtnsz7jjkohc2zevz5swfbzwjizceqicp@32vssyaakhqo>
+References: <Z_yiPk7AkwJo0c6n@infradead.org>
+ <20250415010518.2008216-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com> <Z_1EnkPiBKakGYtM@slm.duckdns.org>
-Message-ID: <Z_4hTBFdodhXkArL@google.com>
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415010518.2008216-1-lizhi.xu@windriver.com>
+X-Spam-Score: -2.30
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[e36cc3297bd3afd25e19];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Apr 14, 2025 at 07:23:42AM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
-> > Creating workqueues is needed by various GPU drivers. Not only does it
-> > give you better control over execution, it also allows devices to ensure
-> > that all tasks have exited before the device is unbound (or similar) by
-> > running the workqueue destructor.
+On Tue 15-04-25 09:05:18, Lizhi Xu wrote:
+> On Sun, 13 Apr 2025 22:50:54 -0700, Christoph Hellwig wrote:
+> > On Fri, Apr 11, 2025 at 09:24:27AM +0800, Lizhi Xu wrote:
+> > > The ntfs3 can use the page cache directly, so its address_space_operations
+> > > need direct_IO.
 > > 
-> > This patch is being developed in parallel with the new Owned type [1].
-> > The OwnedQueue struct becomes redundant once [1] lands; at that point it
-> > can be replaced with Owned<Queue>, and constructors can be moved to the
-> > Queue type.
-> > 
-> > A wrapper type WqFlags is provided for workqueue flags. Since we only
-> > provide the | operator for this wrapper type, this makes it impossible
-> > to pass internal workqueue flags to the workqueue constructor. It has
-> > the consequence that we need a separate constant for the no-flags case,
-> > as the constructor does not accept a literal 0. I named this constant
-> > "BOUND" to signify the opposite of UNBOUND.
+> > I can't parse that sentence.  What are you trying to say with it?
+> The comments [1] of generic_file_read_iter() clearly states "read_iter()
+> for all filesystems that can use the page cache directly".
 > 
-> Maybe name it NONE or DUMMY? Doesn't affect this patch but [UN]BOUND are a
-> bit confusing and as a part of the effort to reduce unnecessary usage of
-> cpu-bound workqueues, there's a plan to flip the default and use PERCPU for
-> the cpu-bound workqueues.
+> In the calltrace of this example, it is clear that direct_IO is not set.
+> In [3], it is also clear that the lack of direct_IO in ntfs_aops_cmpr
+> caused this problem.
+> 
+> In summary, direct_IO must be set in this issue.
 
-Happy with whatever you think is best, but what about naming the
-constant PERCPU, then? In fact, by adjusting how I declare the flags in
-Rust, it is possible to *force* the user to include exactly one of
-PERCPU, UNBOUND, or BH in the flags argument.
+I agree that you need to set .direct_IO in ntfs_aops_cmpr but since
+compressed files do not *support* direct IO (at least I don't see any such
+support in ntfs_direct_IO()) you either need to also handle these files in
+ntfs_direct_IO() or you need to set special direct IO handler that will
+just return 0 and thus fall back to buffered IO. So I don't think your
+patch is correct as is.
 
-Of course, also happy to continue with NONE and adjust it when you flip
-the default value.
+									Honza
 
-Alice
+> [1]
+>  * generic_file_read_iter - generic filesystem read routine
+>  * @iocb:	kernel I/O control block
+>  * @iter:	destination for the data read
+>  *
+>  * This is the "read_iter()" routine for all filesystems
+>  * that can use the page cache directly.
+> 
+> [2]
+> generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+> {
+> 	size_t count = iov_iter_count(iter);
+> 	ssize_t retval = 0;
+> 
+> 	if (!count)
+> 		return 0; /* skip atime */
+> 
+> 	if (iocb->ki_flags & IOCB_DIRECT) {
+> 		struct file *file = iocb->ki_filp;
+> 		struct address_space *mapping = file->f_mapping;
+> 		struct inode *inode = mapping->host;
+> 
+> 		retval = kiocb_write_and_wait(iocb, count);
+> 		if (retval < 0)
+> 			return retval;
+> 		file_accessed(file);
+> 
+> 		retval = mapping->a_ops->direct_IO(iocb, iter); 
+> [3]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=b432163ebd15a0fb74051949cb61456d6c55ccbd
+> diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
+> index 4d9d84cc3c6f55..9b6a3f8d2e7c5c 100644
+> --- a/fs/ntfs3/file.c
+> +++ b/fs/ntfs3/file.c
+> @@ -101,8 +101,26 @@ int ntfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	/* Allowed to change compression for empty files and for directories only. */
+>  	if (!is_dedup(ni) && !is_encrypted(ni) &&
+>  	    (S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode))) {
+> -		/* Change compress state. */
+> -		int err = ni_set_compress(inode, flags & FS_COMPR_FL);
+> +		int err = 0;
+> +		struct address_space *mapping = inode->i_mapping;
+> +
+> +		/* write out all data and wait. */
+> +		filemap_invalidate_lock(mapping);
+> +		err = filemap_write_and_wait(mapping);
+> +
+> +		if (err >= 0) {
+> +			/* Change compress state. */
+> +			bool compr = flags & FS_COMPR_FL;
+> +			err = ni_set_compress(inode, compr);
+> +
+> +			/* For files change a_ops too. */
+> +			if (!err)
+> +				mapping->a_ops = compr ? &ntfs_aops_cmpr :
+> +							 &ntfs_aops;
+> 
+> BR,
+> Lizhi
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
