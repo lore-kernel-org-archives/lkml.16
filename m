@@ -1,179 +1,117 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706FB3A1BA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C21F0E47;
+	Tue, 15 Apr 2025 07:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744701663; cv=none; b=j22wzwR4KEyh6b//Q65r2tbzxQLteGiOEfADTMiOUM6ChdjxysLcJMlYjpso00JjsudAoHK7K1uzR86sI7meZNBW1olq5sShfhH6jYMgRPiBHRWpRzERVtpc/ZVA8duWbl2D+/XJFCT9V+2B+KHiett46TRNBuANtdhWY6Znqf4=
+	t=1744701692; cv=none; b=MTcpS29UDVXrr6x33cn+7o1/oEKFj/a+9mdWhpQCjgavuMn4XW/HBiF5pDavNA0wGSuJ7p+7QDzSw8xUYAG1dUYn8PYwBLPiBhOTr5j7AsUuQ/wBlHFaj42UduIzw2VQ8j53JnIjZu6GCAF6Kfei0kLELMPgtWZxa/xonZmNCQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744701663; c=relaxed/simple;
-	bh=GEfBOA45QlWfcWHD5yzJuDstvply4eSmwqKjrGpmXUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iE3CoHvQP80sDWnRMB8Q4Yp1Fv71DSU64DefzfhYU0lu4pEB5F7efqUcimIe/mh0+hhwBKzKFLARgVnUx89ILYzYtP6UYZWFEqzYbDagyJz+jgqUr0vtNAEDPohPKWufmmBK8Ys4coyByHeRRjYU/ReDkSx8GR2D5c0PpVBhQAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qrlNFjZ9; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744701692; c=relaxed/simple;
+	bh=ppCh1rXKzyooyLzB8X2IQ2Oju9H3qJQ74QV/enWha4E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b0LUwBFnxlFsD4lPsEPw7NK//Zaft5cMNtBloAyf3+fFSv+FsPTvGMLrpMsas2cDNvKPGQBdfdXjTdHVyM801uVEvGvJXHkWNcIDEzy0nZIpMhIfd3mKLG+rcgz6OxwdJCm8YKqeBswYt+kt3+94MeYMzaKQPsydQrRVQtR/0qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuEtssGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qrlNFjZ9"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223fd89d036so62568645ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744701660; x=1745306460; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XCNk9Rod1k+bgkwurUtIjlivzVvS2RJvCje5WjdRCTk=;
-        b=qrlNFjZ9sCrJXI5cTQdCR+/laEgXYSV2r1Oauzx4cOKoNxLJMdG2zoZQRY3WMjlDQ3
-         g4b9Br9o2of0QLOj/83VooUXEWSw4C1Bd19kf27waStgRxki4DAS68TJ7qEGpZqbPEBz
-         GHloJdpnRVFRhjIkYQyoE+A2zLatJqk4bdrd1i2Z93bosZyc6Cu9RhcsenaW70Zo//oV
-         dh9ovl+BxInOQwagNk5bQ5ORACw01eAplZAJ+wIE8ybIGlakUIQTaa37sTwEu3BP49vC
-         7mASa1tSyi+mGGRRSVTqriPEJcBX3xJSbYlxthqY2FmVAxb1RdHBdli37bP2NeeGAZDx
-         PxkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744701660; x=1745306460;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCNk9Rod1k+bgkwurUtIjlivzVvS2RJvCje5WjdRCTk=;
-        b=uGFDgAV9U/7WmWyQMzo93dbY7tVabXKnS6wUQOLlQ580jNvYO/LmOnUEgq13po+CVQ
-         wmoT3kMbJODN31PQ2/7XMQi7yWS2hLR2fpgURDU0I6KGLStO3XQWbXmkjfFnAlmssOI0
-         FJePyBVqHv1h9Tfcz+/e1apFSTVIRhzIVUm/gcCoIaXd9Oy7IzFQzfdfyL+y6EE3Vyes
-         9XvIGY7vPyBXEfmQjbLv+qVf/LXyBaqZAdT3rl+owVBwvDoX0JcKTGr0Srph1QU4COWP
-         Ndv5FBZrD0vPsgNSNdrmkQciQKTFb32sowFgeE9i+HPvwQsltO5dW4quzU/rJ+TLkbf1
-         4snA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNF7a/4kHlRja4QEPqfApbEgM3dVz+h3adXxnPW38ze5l/hCjWg4T+8pcct6x2pp3BKmEWjSi8dbKkxeQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8uhTIg2NCG5yviTxbB2z1v7fqLKL+4zqwOMjlAlcxSqnQWfp/
-	lQV9+P4G0ITKke917wQLHHS4XyJC1cehxl1eLZHClZTxGMtIIfHAudPHWYeOZA==
-X-Gm-Gg: ASbGnctNcm9nnobBgr2MD05f2JrUDpC89SIXNQmEZROx9nEs2w4McqtTrPvaAP8YeN+
-	n/0/IisqyfH5GoBZk1D/PTR92lbFuVh+ebrN8nT8v1VWXg+46uIDvO5/0EDpgX6wnGBw9n59C5E
-	Y45naGwi+n7Ep5WAg1Av8S9NA128Odvjqn3vpWmOY/QFcuPzx6gKfX62W+GM2LZewv7ZQ2dhn9G
-	U1yFAkjISJSLiyPr5BVxj9Giflj6kbirTf7suF+NSTn08heisoXE92EIPS2cJkRY6xrbVykzEEz
-	Do3LIFP42bRSVQGDmUSChXesLwQcT952Kvrxi3BFbZkDyGnuHrcLKQCBZ58O
-X-Google-Smtp-Source: AGHT+IHwx8NytA4HfmHYqY+ucueZxWfnA77QXqfaKsQqKRz4c9hbWsTrqA2PwtFUSZmcoIQDMTuTwQ==
-X-Received: by 2002:a17:903:1b6f:b0:224:c47:cb7 with SMTP id d9443c01a7336-22bea3f02aemr222574665ad.0.1744701659806;
-        Tue, 15 Apr 2025 00:20:59 -0700 (PDT)
-Received: from thinkpad ([120.60.71.35])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cddfaesm111157005ad.257.2025.04.15.00.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 00:20:59 -0700 (PDT)
-Date: Tue, 15 Apr 2025 12:50:53 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
- PCIe
-Message-ID: <3wmkjmutepc2s2ookc3ces4eyxe6morhhwxzlpup4mkkoy5ocx@py6h36upgl75>
-References: <20250408025930.1863551-1-hongxing.zhu@nxp.com>
- <20250408025930.1863551-7-hongxing.zhu@nxp.com>
- <uqrhqkmtp4yudmt4ys635vg3gh5sibhevu7gjtbbbizuheuk45@lhxywqhtbpak>
- <AS8PR04MB867619A464E923655EDEF4878CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuEtssGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94DDDC4CEE9;
+	Tue, 15 Apr 2025 07:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744701691;
+	bh=ppCh1rXKzyooyLzB8X2IQ2Oju9H3qJQ74QV/enWha4E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=uuEtssGhD3d79YbN1rycbVffJyVi1oCudolVNpDRqTH2EoaHV+W4jC0ApwH/N8cmP
+	 1pyR/yBu94ec4p4W3AVE56vhOdEdeBf2/Qxae0Ar7kriY13Bl3qwtaAmLgBQWbtCf6
+	 5G3rQT6Bc7fIRuZSQ7gba9bnaLBnbycriCXOHCf/hLSdxcIYCgfC2PFb/SpGJc6jkK
+	 yYR9rmaE6AtHXBRAU2IpyweaefZs8oHQZBZmTSFIvnN7grYrHvmIurVBnASRaWUy2+
+	 ekcfm7NeJGuueJuqxC7xftkO8uBAuctu99UAlMdrENm3sWGvBu+ChMshO3CB4hvHL0
+	 Rhn9Rkx4zV6LQ==
+Message-ID: <b64511fa-a8e3-450e-aa4c-f47181314f76@kernel.org>
+Date: Tue, 15 Apr 2025 09:21:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB867619A464E923655EDEF4878CB32@AS8PR04MB8676.eurprd04.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] Add support for Sitronix ST7571 LCD controller
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmrmann@suse.de>
+References: <20250415-st7571-v4-0-8b5c9be8bae7@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250415-st7571-v4-0-8b5c9be8bae7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 03:16:46AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Sent: 2025年4月13日 23:33
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v5 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
-> > PCIe
-> > 
-> > On Tue, Apr 08, 2025 at 10:59:29AM +0800, Richard Zhu wrote:
-> > > Add PLL clock lock check for i.MX95 PCIe.
-> > >
-> > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > ---
-> > >  drivers/pci/controller/dwc/pci-imx6.c | 28
-> > > +++++++++++++++++++++++++--
-> > >  1 file changed, 26 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > index 7dcc9d88740d..c1d128ec255d 100644
-> > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > @@ -45,6 +45,9 @@
-> > >  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> > >  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> > >
-> > > +#define IMX95_PCIE_PHY_MPLLA_CTRL		0x10
-> > > +#define IMX95_PCIE_PHY_MPLL_STATE		BIT(30)
-> > > +
-> > >  #define IMX95_PCIE_SS_RW_REG_0			0xf0
-> > >  #define IMX95_PCIE_REF_CLKEN			BIT(23)
-> > >  #define IMX95_PCIE_PHY_CR_PARA_SEL		BIT(9)
-> > > @@ -479,6 +482,23 @@ static void
-> > imx7d_pcie_wait_for_phy_pll_lock(struct imx_pcie *imx_pcie)
-> > >  		dev_err(dev, "PCIe PLL lock timeout\n");  }
-> > >
-> > > +static int imx95_pcie_wait_for_phy_pll_lock(struct imx_pcie
-> > > +*imx_pcie) {
-> > > +	u32 val;
-> > > +	struct device *dev = imx_pcie->pci->dev;
-> > > +
-> > > +	if (regmap_read_poll_timeout(imx_pcie->iomuxc_gpr,
-> > > +				     IMX95_PCIE_PHY_MPLLA_CTRL, val,
-> > > +				     val & IMX95_PCIE_PHY_MPLL_STATE,
-> > > +				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
-> > > +				     PHY_PLL_LOCK_WAIT_TIMEOUT)) {
-> > > +		dev_err(dev, "PCIe PLL lock timeout\n");
-> > > +		return -ETIMEDOUT;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int imx_setup_phy_mpll(struct imx_pcie *imx_pcie)  {
-> > >  	unsigned long phy_rate = 0;
-> > > @@ -824,6 +844,8 @@ static int imx95_pcie_core_reset(struct imx_pcie
-> > *imx_pcie, bool assert)
-> > >  		regmap_read_bypassed(imx_pcie->iomuxc_gpr,
-> > IMX95_PCIE_RST_CTRL,
-> > >  				     &val);
-> > >  		udelay(10);
-> > > +	} else {
-> > > +		return imx95_pcie_wait_for_phy_pll_lock(imx_pcie);
-> > 
-> > Is this PLL lock related to COLD_RESET? It doesn't look like it. If unrelated, it
-> > should be called wherever required. imx95_pcie_core_reset() is supposed to
-> > only assert/deassert the COLD_RESET.
-> > 
-> > If related, please explain how.
-> Thanks for your kindly review.
-> To make sure the HW state is correct to continue the sequential initializations.
-> The PLL lock or not check would be kicked off after the COLD_RESET is
->  de-asserted for i.MX95 PCIe.
-> So, the PLL lock check is added at the end of de-assertion in
->  imx95_pcie_core_reset() function.
+On 15/04/2025 07:58, Marcus Folkesson wrote:
+> This series add support for the ST7571 LCD Controller.
+> It is a 4 gray scale dot matrix LCD controller that supports several
+> interfaces such as SPI, I2C and a 8bit parallell port.
+> The controlelr supports both monochrome and grayscale displays.
 > 
+> This driver only supports the I2C interface, but all common parts could
+> easily be put into a common file to be used with other interfaces.
+> I only have I2C to test with.
+> 
+> The device is a little defiant, it tends to NAK some commands, but all
+> commands takes effect, hence the I2C_M_IGNORE_NAK flag.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> ---
+> Changes in v4:
+> - (dt-binding) Add sitronix,grayscale property
+Mention that this is the reason of dropping Review.
 
-But imx95_pcie_core_reset() is not doing anything for deassert other than
-waiting for PLL lock. Hence my question.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
