@@ -1,197 +1,136 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B58253940
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5115C25394D;
+	Tue, 15 Apr 2025 20:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744748153; cv=none; b=VsT2N7b6CcnNCf+tDHPOB2R5RLYFV/5sYjiixdGHEdEf36G88X0B1XmiOvc+wRt3FKOeirnLVgbQrpe9P23wH5dwxW7OU1zVOAfh07ns8xO2nLoqUB1WeO9TRekHYli9usY5hmf6k8O9Tr1OlT5Otre7uzlcxxybSJuUfHaxSB0=
+	t=1744748162; cv=none; b=s0Y/irGgJ/N4VnXa1Vt/xAj8tJpKjCelc7jKd9VSo8ljxjkikCe+Qu+BvsvqGdkllbLAjmTF2pSokO2Bbx6xYuH2O+4RHa+AD17bIKKwwESp0NP4sMVvjIEniMevMleufViKe337Vxw+J9jytqeq8jNUR3Lx02Ks1485ZwxxMgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744748153; c=relaxed/simple;
-	bh=8WM1JkoLUxcVQ1aEB+/iZlVvhjVi2Nc58ygow9AMiNo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ic4vFX3E9oe+hTK5/4/C0okVgIR2qNG6UM0CpFGOFk4esgvPBL1NhmPsf/+XcVm0z0MWCY3Xn2VzqD2EpD95BCuxLXHPEw+sVfSmE0TswB44ctqFlnpAEx72Y6R4oAwvFhrzRj0HngszCuFxIwDUbCXkkiOV8HlReatewGkIOMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bc8e1jVl; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744748162; c=relaxed/simple;
+	bh=onoj2sY2pyRxx4KUIk19sDKIQq9HSXI7b26/f+g5/H8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4rjzPvrgBRYAv6iOYHfIdCGcQMr+O3XtNIbZMi3cBlM4SjaJG/jVqz8xCDEmlxxD2pAQ3SdKpWHSs5GPu73myc6NTl94uHVVjv3wDEFqTi5ujj8HSLy+3kjcUO/60NRwG7S8FA8VVe51nBjbiTu0nndrHYAo/Mb9ONzMwIrjps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sR/opIAZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bc8e1jVl"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ef9b8b4f13so53680667b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744748150; x=1745352950; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RuI60MEO0RHxwbmndWEztZeXe9SV7ztYqn+5hRpJvc8=;
-        b=bc8e1jVl9lba6PqEijk6yW5d1IMJscH41imyLJet+dsNpfq8n0UraBD2v2ErCrNDe/
-         5AYKkEF44JjwpOHBVvwlDpapN2//oCbuvZnIXYcZSQdgmv+3TB4kFF3yLk5eWPeozbRD
-         pAf+LdOkfyH79JP/FRNvCGH+g0WWQsZKYvdl/QZc/DHvqolKoYE4dpRi2wZSDUU5u7Sb
-         tQsjA4kD9WpPtTnTN7mME15F3E86zwnIM7WAum0cKNRtwdvAwfVrZ2c0mf9gqA4eyhmY
-         YJB9amgWAj2w69yr1FkJ23ddOz7zJUvIu49/N2oH7+q/tU1t0pMoIJ5ygUH53hylDKF4
-         Hefg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744748150; x=1745352950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RuI60MEO0RHxwbmndWEztZeXe9SV7ztYqn+5hRpJvc8=;
-        b=bcT4E9jSNdauNpdM8XVeCNefs8olPQE2tANiu2kup68hIBHTzIG/P8fWV+aoswxMuY
-         1qhVLSm4AbqiJcJOaKpcnHVWyVKxeIPHG6Cd5+e2QA6zfiIfbKLAwof6h5PsGKgG7NTn
-         LSS14/EdGXeer2pEM37IhTIzdYaCxJKNHdGk+2Z3oAY7wuD7qqI07MssyF+cerNZXkwm
-         PeDT1C+zAV6wjERwgL+mxHGy+3dKsLlXDIjak8orGO3gab6FuMyf5dNbbBhZVus42HEI
-         MZ0g3TvLNFlmjiP9NcxX4r6F6m5N3TCgncHa+sdT/vrwZhZnnFjLra40rtIbey5T4LDv
-         XSyA==
-X-Forwarded-Encrypted: i=1; AJvYcCU1AKgqj03e1pSVdribi/X56vgvWqlnUKH6w5y8s+R1v/MyiGMMb5Yd0rie2sUtFktFUI5DgKxYTudorDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYUqO73plNu9FTN/29p0a4qgCpqVk2aiCKM9GrkfnogtLqH26u
-	HMtXagoFBVjs0ViV754qlY9wsTYzG/pby//B29vnZrWLs1BhEf8F/vnajM1+9MBBJtyKPVOeka+
-	V2rH3JckBbBgxlKfo8WOostcshiw=
-X-Gm-Gg: ASbGncurj5slK1emf0Uu96OZRujY29lK1nVaubv8EYyfS0mIGFBw4dA1Thbe1oLSUtD
-	OyYLWSLmyR04bsELHy/m3E6gk+k9OQ576HwmGktTJVerU0TDQCUDFuN1UE4IvOD6kNfhyj0CFgz
-	KifmrRCoT3oZwaf34aCJdi
-X-Google-Smtp-Source: AGHT+IE76oJwMupqx5P+4+nsCpN0Rf38R9V2tja8XN9qhSobyPEx1h6yavJRqYltdgAXIrNpHLFenkcJYLNoUsf7KMQ=
-X-Received: by 2002:a05:690c:6e09:b0:703:b278:db2d with SMTP id
- 00721157ae682-706aceb9c37mr12720987b3.12.1744748150648; Tue, 15 Apr 2025
- 13:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sR/opIAZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC866C4CEEF;
+	Tue, 15 Apr 2025 20:15:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744748161;
+	bh=onoj2sY2pyRxx4KUIk19sDKIQq9HSXI7b26/f+g5/H8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sR/opIAZgI/JM4gAz42+NTOAd9pYk557QzcLMeVNiNsHRZj/cM1mgaTUM1DYhHN9q
+	 B/GjrV7+ImrPxGFTnWSLz9mpniB8tlKb3nzqVsn8x2FjY1ya7qid9viXvtcrSpytru
+	 y5JbFPur9TUmBlgLIqiugRNhEjdSnuj4t0ls6qJihhAk+NCJjQwWGJqIeIqK2E2VqH
+	 xYxF5olNRHXaR4WgW6IFl76b6WsHM1+4X3TCh5QqBWIaD7mITcUtnSZNqFwbkOUeCG
+	 oqaPut7Mh0Jlfw8Q3I/FfgATvp9I082ATAmmAtb1jknPY4UyxZ6wZ1E78WK5gbC8Jg
+	 aVxNO8fssfV1A==
+Date: Tue, 15 Apr 2025 21:15:52 +0100
+From: Simon Horman <horms@kernel.org>
+To: Parvathi Pudi <parvathi@couthit.com>
+Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+	tony@atomide.com, richardcochran@gmail.com, glaroque@baylibre.com,
+	schnelle@linux.ibm.com, m-karicheri2@ti.com, s.hauer@pengutronix.de,
+	rdunlap@infradead.org, diogo.ivo@siemens.com, basharath@couthit.com,
+	jacob.e.keller@intel.com, m-malladi@ti.com,
+	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	pratheesh@ti.com, prajith@ti.com, vigneshr@ti.com, praneeth@ti.com,
+	srk@ti.com, rogerq@ti.com, krishna@couthit.com, pmohan@couthit.com,
+	mohan@couthit.com
+Subject: Re: [PATCH net-next v5 11/11] net: ti: prueth: Adds PTP OC Support
+ for AM335x and AM437x
+Message-ID: <20250415201552.GJ395307@horms.kernel.org>
+References: <20250414113458.1913823-1-parvathi@couthit.com>
+ <20250414140751.1916719-12-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402174156.1246171-1-jim.cromie@gmail.com>
- <20250402174156.1246171-22-jim.cromie@gmail.com> <948a48a8-10c4-4440-b905-a1db669a31ba@bootlin.com>
-In-Reply-To: <948a48a8-10c4-4440-b905-a1db669a31ba@bootlin.com>
-From: jim.cromie@gmail.com
-Date: Tue, 15 Apr 2025 14:15:24 -0600
-X-Gm-Features: ATxdqUFuT29QvT9OQ8Dzq1ooQJWL8v5JATc8uBnNix4CnQIMzi9vLxbfc1eDONM
-Message-ID: <CAJfuBxx4kNb6ikVSAOX8bgnaALq8M1qp5UUdfXXey4yqvaU3Gw@mail.gmail.com>
-Subject: Re: [PATCH v3 21/54] dyndbg-test: change do_prints testpoint to
- accept a loopct
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch, 
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
-	ville.syrjala@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414140751.1916719-12-parvathi@couthit.com>
 
-On Tue, Apr 15, 2025 at 4:04=E2=80=AFAM Louis Chauvet <louis.chauvet@bootli=
-n.com> wrote:
->
->
->
-> Le 02/04/2025 =C3=A0 19:41, Jim Cromie a =C3=A9crit :
-> > echo 1000 > /sys/module/test_dynamic_debug/parameters/do_prints
-> >
-> > This allows its use as a scriptable load generator, to generate
-> > dynamic-prefix-emits for flag combinations vs undecorated messages.
-> > This will make it easy to assess the cost of the prefixing.
-> >
-> > Reading the ./do_prints node also prints messages (once) to the-log.
-> >
-> > NB: the count is clamped to 10000, chosen to be notice able, but not
-> > annoying, and not enough to accidentally flood the logs.
-> >
-> > Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
->
-> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
->
-> I think this could be in a separate series / merged independently to
-> reduce the size of this series.
+On Mon, Apr 14, 2025 at 07:37:51PM +0530, Parvathi Pudi wrote:
+> From: Roger Quadros <rogerq@ti.com>
+> 
+> PRU-ICSS IEP module, which is capable of timestamping RX and
+> TX packets at HW level, is used for time synchronization by PTP4L.
+> 
+> This change includes interaction between firmware/driver and user
+> application (ptp4l) with required packet timestamps.
+> 
+> RX SOF timestamp comes along with packet and firmware will rise
+> interrupt with TX SOF timestamp after pushing the packet on to the wire.
+> 
+> IEP driver available in upstream linux as part of ICSSG assumes 64-bit
+> timestamp value from firmware.
+> 
+> Enhanced the IEP driver to support the legacy 32-bit timestamp
+> conversion to 64-bit timestamp by using 2 fields as below:
+> - 32-bit HW timestamp from SOF event in ns
+> - Seconds value maintained in driver.
+> 
+> Currently ordinary clock (OC) configuration has been validated with
+> Linux ptp4l.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
 
-I have no strong opinions here.
-I included it to acknowledge that this patchset is mainly for performance,
-ie to replace LOTS of bit-tests, (some of which are tested at framerate).
-So it follows that I should be able to demonstrate the savings somehow.
+...
 
-I havent done so yet, I was hoping that the benefits are obvious
-enough not require proof.
+> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h b/drivers/net/ethernet/ti/icssg/icss_iep.h
+> index 0bdca0155abd..437153350197 100644
+> --- a/drivers/net/ethernet/ti/icssg/icss_iep.h
+> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
+> @@ -47,6 +47,11 @@ enum {
+>  	ICSS_IEP_MAX_REGS,
+>  };
+>  
+> +enum iep_revision {
+> +	IEP_REV_V1_0 = 0,
+> +	IEP_REV_V2_1
+> +};
+> +
+>  /**
+>   * struct icss_iep_plat_data - Plat data to handle SoC variants
+>   * @config: Regmap configuration data
+> @@ -57,11 +62,13 @@ struct icss_iep_plat_data {
+>  	const struct regmap_config *config;
+>  	u32 reg_offs[ICSS_IEP_MAX_REGS];
+>  	u32 flags;
+> +	enum iep_revision iep_rev;
+>  };
 
+Please add iep_rev to the Kernel doc for struct icss_iep_plat_data.
 
+Flagged by ./scripts/kernel-doc -none
 
+...
 
->
-> > ---
-> >   lib/test_dynamic_debug.c | 37 ++++++++++++++++++++++++++-----------
-> >   1 file changed, 26 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
-> > index 9f9e3fddd7e6..4a3d2612ef60 100644
-> > --- a/lib/test_dynamic_debug.c
-> > +++ b/lib/test_dynamic_debug.c
-> > @@ -29,18 +29,30 @@
-> >
-> >   #include <linux/module.h>
-> >
-> > -/* re-gen output by reading or writing sysfs node: do_prints */
-> > -
-> > -static void do_prints(void); /* device under test */
-> > +/* re-trigger debug output by reading or writing sysfs node: do_prints=
- */
-> > +#define PRINT_CLAMP 10000
-> > +static void do_prints(unsigned int); /* device under test */
-> >   static int param_set_do_prints(const char *instr, const struct kernel=
-_param *kp)
-> >   {
-> > -     do_prints();
-> > +     int rc;
-> > +     unsigned int ct;
-> > +
-> > +     rc =3D kstrtouint(instr, 0, &ct);
-> > +     if (rc) {
-> > +             pr_err("expecting numeric input, using 1 instead\n");
-> > +             ct =3D 1;
-> > +     }
-> > +     if (ct > PRINT_CLAMP) {
-> > +             ct =3D PRINT_CLAMP;
-> > +             pr_info("clamping print-count to %d\n", ct);
-> > +     }
-> > +     do_prints(ct);
-> >       return 0;
-> >   }
-> >   static int param_get_do_prints(char *buffer, const struct kernel_para=
-m *kp)
-> >   {
-> > -     do_prints();
-> > -     return scnprintf(buffer, PAGE_SIZE, "did do_prints\n");
-> > +     do_prints(1);
-> > +     return scnprintf(buffer, PAGE_SIZE, "did 1 do_prints\n");
-> >   }
-> >   static const struct kernel_param_ops param_ops_do_prints =3D {
-> >       .set =3D param_set_do_prints,
-> > @@ -191,17 +203,20 @@ static void do_levels(void)
-> >       prdbg(V7);
-> >   }
-> >
-> > -static void do_prints(void)
-> > +static void do_prints(unsigned int ct)
-> >   {
-> > -     pr_debug("do_prints:\n");
-> > -     do_cats();
-> > -     do_levels();
-> > +     /* maybe clamp this */
-> > +     pr_debug("do-prints %d times:\n", ct);
-> > +     for (; ct; ct--) {
-> > +             do_cats();
-> > +             do_levels();
-> > +     }
-> >   }
-> >
-> >   static int __init test_dynamic_debug_init(void)
-> >   {
-> >       pr_debug("init start\n");
-> > -     do_prints();
-> > +     do_prints(1);
-> >       pr_debug("init done\n");
-> >       return 0;
-> >   }
->
-> --
-> Louis Chauvet, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
->
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+
+...
+
+> @@ -337,6 +343,7 @@ enum pruss_device {
+>  struct prueth_private_data {
+>  	enum pruss_device driver_data;
+>  	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
+> +	enum fw_revision fw_rev;
+>  	bool support_lre;
+>  	bool support_switch;
+>  };
+
+And, likewise, please add fw_rev to the Kernel doc for struct
+prueth_private_data.
+
+...
