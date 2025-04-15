@@ -1,98 +1,80 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF30250C19
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1455227BAA;
+	Tue, 15 Apr 2025 20:05:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744747381; cv=none; b=A9mo94DTb3jJCfKVHMcnIMKOtqtYO6y3c8hUh0ltZc8xFu4uUl9Q+k6i7wI/9mLss5TylucSKYnr3UOAsuCt6VYQI7MwtCwHRdjw34c8VP9sFY5g0GNv4/rjNZCTsdrrXP8hTWEg6nEaoL2xOk+IQNBlGNf8Qn8LhdcnNgOv6RA=
+	t=1744747560; cv=none; b=oGmHeMq/LiueOMFmGRrGLnQ13cKwdJ77w/T/uFN3mTAGYDwxDgZllQ4Ui9OUDyVXMQxgUDvATU3O2t1XYusIth2uOydAxexwJtOJMkdoaLGiXQZOXuDJm7RVNN9wJCEQYygzksDvU9fWv3wgg8fudZ+taWa2VLV6xNYHEsiI01s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744747381; c=relaxed/simple;
-	bh=qD6//Kkj0pnETTvFRMsrBqIawzEcabzuCL4BTMFPipU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FIL0q7WSjWBDVx15MIyiPpZV2DOH3YYUIW5qAGdiJcAXOd+8M/dVJBTI6GOhTMI3Eh4y/1izyIa443ks/iMzWJFFLvdhwtUKnn11zw0iLtYcyR+NdHvn6tj7BKU/FL6gDkLPuOLGt24TEL1d7Qes5bJ4WsF4OZhTLsOrVpaDk/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qlIy1+dC; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744747560; c=relaxed/simple;
+	bh=cDVB313I6ctAp9aPCnjZWpGOuAJObbuleUvYXF/aSBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X05I9R0bNunGXvD4cE5Yr+5B4Hx+RAOd3fE48+JeWphYKihlD8IPPHD9SGsZw6UtJLv3n5Z2BXZOvXrL7u4T+IijXTLLaDPiDSH/EnghjJjabAjeaAQ2B8uj4TYIRGHuDH5n8x0q+0kBM85+Xefd9FjJu+ITTWMbNJ8wmbsRNU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YxXSNTpc; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qlIy1+dC"
-Message-ID: <54b3a531-d550-4600-8bd2-1058c8b15023@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744747367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2yO9mrs7WLL0hWNf5rYjcWqI2uD7ZfNQPJN+bLfcwuE=;
-	b=qlIy1+dCxu3lXy6dwaD2R7wAOvElaftWfQo7NuvZDBgsP/7dWFAITY+tO4QXoMm/FM6Rl2
-	cRhM0ZdDcIEcvsnARCbzZAB8NljdRAxWQldvZfzS9mTkSmcbQ7M80CXMp5YXlcarbJq4P2
-	cruvo8XfGZQTkYLQ1a20FlN1WnM+9FY=
-Date: Tue, 15 Apr 2025 16:02:41 -0400
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YxXSNTpc"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CE17240E0200;
+	Tue, 15 Apr 2025 20:05:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id mk4w7mzXCncv; Tue, 15 Apr 2025 20:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744747550; bh=4bM3ezGutVm5YLRMBhVeBIqHC2Z19IfnWaXa4ro9pD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YxXSNTpczFCu4Z4ByThX7i5fQrqI2ZTC4kIRQQ0AZ8vZC7LS8Ti7FZYN9o45orxW+
+	 OSS9py1IC4ND7VmhIyUDgCRytyB8oArJJzKab91+hCmbCDned2AWzlE6FVvh8g90eb
+	 l38JLT2fYwSDeL1Fw4buYauPm3RMWn6K5uBVySmzqj6jZT9p8T5iRYIK05O8Yz9Gzy
+	 EKijTryf7UNsAh7iFnDfXDw+8LpJc04H2G11NSe8or5jkEQFAx+VfGgkzasnnK/rUZ
+	 cAE7B634Wh34NeZe9k9XezaEVq1MxYYlWUmbWBSrIQyXa/ritcfOleeB134jNSLzIM
+	 V9UM3FoiDqRJj6/fnFOfJTVOmRpDLuG1MiGlEsyDovVKu74Ds++Jmf/1CcyXevB4Up
+	 ZaA/74gTyBVgFdWFRaGoTGwfUIwE5Lu1X4EK/RV0xgjNHdXU9rTiFa6mHoIFl7ymA+
+	 X9AAuUa+c7fbz1VnthwHlaOc6B7/wUqTSnr95aIkFS+RRRk7L9V5V0S6/OIuwnqhYA
+	 L/WFj97kiMLbHEcS3q8+xOOV6IdWIfGXSxaeNTN6RMiZkv/r8TiPlDfBHzTy7iJXPt
+	 x2iaZrt5QGWbT2tPqSfxvqW93BH9YP3/9pv/XV/XYmLQuItyRIewvAIuRxOFW9uqK4
+	 IkuQ0WiJNx1N3gVDkxzNihhg=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDCBC40E0196;
+	Tue, 15 Apr 2025 20:05:36 +0000 (UTC)
+Date: Tue, 15 Apr 2025 22:05:29 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, peterz@infradead.org,
+	jpoimboe@kernel.org, pawan.kumar.gupta@linux.intel.com,
+	rafael@kernel.org, lenb@kernel.org
+Subject: Re: [PATCH v1 2/3] x86/cpufeatures: Shorten
+ X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT to X86_FEATURE_CLEAR_BHB_LOV
+Message-ID: <20250415200529.GKZ_68Cb_jaUblKmTS@fat_crate.local>
+References: <20250415175410.2944032-1-xin@zytor.com>
+ <20250415175410.2944032-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [net-next PATCH v3 03/11] net: pcs: Add subsystem
-To: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>
-Cc: upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
- linux-kernel@vger.kernel.org, Kory Maincent <kory.maincent@bootlin.com>,
- Heiner Kallweit <hkallweit1@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-References: <20250415193323.2794214-1-sean.anderson@linux.dev>
- <20250415193323.2794214-4-sean.anderson@linux.dev>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250415193323.2794214-4-sean.anderson@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415175410.2944032-3-xin@zytor.com>
 
-On 4/15/25 15:33, Sean Anderson wrote:
-> +#else /* CONFIG_PCS */
-> +static inline void pcs_put(struct device *dev, struct phylink_pcs *handle)
-> +{
-> +}
-> +
-> +static inline struct phylink_pcs *pcs_get(struct device *dev, const char *id)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline struct phylink_pcs *pcs_get_optional(struct device *dev,
-> +						   const char *id)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct phylink_pcs
-> +*pcs_get_by_fwnode(struct device *dev, struct fwnode_handle *fwnode,
-> +		   const char *id)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline struct phylink_pcs
-> +*pcs_get_by_fwnode_optional(struct device *dev, struct fwnode_handle *fwnode,
-> +			    const char *id)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct phylink_pcs *pcs_get_by_dev(struct device *dev,
-> +						 const struct device *pcs_dev)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +#endif
-> +
-> +#endif /* PCS_H */
+On Tue, Apr 15, 2025 at 10:54:09AM -0700, Xin Li (Intel) wrote:
+> Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT to X86_FEATURE_CLEAR_BHB_LOV
 
-These should be wrapped with ERR_PTR. Will fix for v4.
+Yeah _LOV is too cryptic. I've called the flag X86_FEATURE_CLEAR_BHB_VMEXIT.
 
---Sean
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
