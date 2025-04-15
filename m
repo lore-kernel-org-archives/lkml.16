@@ -1,129 +1,151 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77792DFA24
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441AE2DFA24;
+	Tue, 15 Apr 2025 04:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744691114; cv=none; b=K5p/3N7M05dSyoGVkzENElZMPWJPw3KpogtyXyvF09dTFpmhA2Xu56wnVnl2MjNQCazQxWpuHllNToX9LR2hgmtQB/PpydTQdStwL4YdHd0KCFwotn+AcMAW15qNXZUiIWsVjy72B2dnCuY3hINKckANVABs3xTs89dXDrVMhsk=
+	t=1744691307; cv=none; b=tJXQ3iA5KM+bIcNBjyNPN4LZDViVThu0MxrAMoQcCTQvewdtb4oZOHE9LEwXQjd0L4VGejczxrk0a6k7hZIyIq6GAD1fALoav01GwmnhwDdPrIKZzCjsCX2WbCUMGWtoCYwlDZR9kVO4+f8JwhdbMC0yXbKUFKyI2BONx87fIy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744691114; c=relaxed/simple;
-	bh=JsNXqqSwMw4cbXBnHCpVE3NAfyDEwYeigxTufXIfXRY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=eXcsrGOLi7uIf1s06WIxkb+LVz8yRc1yuk/6WKP7lFwX1rWCb6rNvc7Ut98PhjBaCGoTlIm3gKw58PYZv8UE4WcewT5sqhvYrTh2UKMBMG2qJaIryyVd1K9UYjIymfoxiqvAvXi3q/EeNy2PchgVeol5HrhwqwTv2wNYRR+izRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kS5SD9ZP; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744691307; c=relaxed/simple;
+	bh=BLI3YfnWAHJOUhbBY3e6np91yu0rO7qc94WPcdthOJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvdZSvLSpkEsmh2ur5fdj36q4Sk15ek0VKfVl6XyKRRTb0IXV2ePX/Uw503VjEdhBgRx4O8+pLLMSyHffx2czHTyi6EWfP2Z7zTIm80gH3vg0ZqtJnhJQbg1BH1RN9EoPxyHMejG/PktVjJaFI2QtT1rcXoHn1/5DOu95cznIXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=RfztJYjC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RRnISE4n; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kS5SD9ZP"
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250415042503epoutp01dd37a062bc39fd00817440fe87c8691a~2Y1Cjkc-B1759717597epoutp01V
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:25:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250415042503epoutp01dd37a062bc39fd00817440fe87c8691a~2Y1Cjkc-B1759717597epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744691103;
-	bh=hB3jACYTzSD2o23SD0z+VuvGY7L3pnS0a/THqiSfDrs=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=kS5SD9ZPgh0gkMMQUS2D/oN21G9Voy/pUJycx1omc0UxQI4rXoHO+oxCEjZfPsVJ0
-	 O9kwyuGHO3fuo51vRm94nTvthnjjOh4fGd2aOna9EcVLOBmR6dl+KhqehMmdOnZt6Q
-	 r2Cs17+VxehqSSCxgpp2sVr7qQlaTp0XkIBy8kow=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250415042502epcas1p4b472cff49569b89957918ec584980af9~2Y1B7QGBE0726507265epcas1p4s;
-	Tue, 15 Apr 2025 04:25:02 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4Zc9zy6Z5vz6B9mG; Tue, 15 Apr
-	2025 04:25:02 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c~2WXGUleHJ0256102561epcas1p4Y;
-	Tue, 15 Apr 2025 01:24:10 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250415012409epsmtrp2b806165f79420521fce5476f72ab69b6~2WXGTyBVw2483324833epsmtrp2d;
-	Tue, 15 Apr 2025 01:24:09 +0000 (GMT)
-X-AuditID: b6c32a52-41dfa70000004c16-c7-67fdb5399a4c
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D8.1D.19478.935BDF76; Tue, 15 Apr 2025 10:24:09 +0900 (KST)
-Received: from parkseongsu-desktop.. (unknown [10.252.69.73]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250415012409epsmtip17aaa9ff006eec292d6118788f53b2b96~2WXGHOedu2759227592epsmtip18;
-	Tue, 15 Apr 2025 01:24:09 +0000 (GMT)
-From: Seongsu Park <sgsu.park@samsung.com>
-To: will@kernel.org, catalin.marinas@arm.com, yuzenghui@huawei.com,
-	suzuki.poulose@arm.com, joey.gouly@arm.com, oliver.upton@linux.dev,
-	maz@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, sgsu.park@samsung.com, cpgs@samsung.com
-Subject: [PATCH] arm64: kvm: Replace ternary flags with str_on_off() helper
-Date: Tue, 15 Apr 2025 10:24:05 +0900
-Message-Id: <1891546521.01744691102904.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="RfztJYjC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RRnISE4n"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 30E721140331;
+	Tue, 15 Apr 2025 00:28:24 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Tue, 15 Apr 2025 00:28:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1744691304; x=1744777704; bh=TraBLcZP/W
+	kRwFzc/HDxXsASf124ua7scK+cLVWMvrA=; b=RfztJYjCu3eKdbZEmUyz4yB3Nj
+	xMBVNRb8Fjv05nWTyvyVUPAQdl5aZkPPMoF0zncJXJ6ZWfibN5JfGI8NntpKwBh2
+	2zk4lcdWFJuDmhPQbq/2dRc8qbpVCFdKt3athIndIzBAExD6j11BFnsLHqXLm8aT
+	cLEBao6qwHPToEN/O+IDGPPGChcYYsedNWkAyGHINYwSPHLTw2G/2uNFLTxfqOjv
+	lN7TLi8oEQGcNQQGAHI4TXtvcwYxc8sUuV1Q9LEGGgPcoPwxnbNXI/zaUTO0dKgS
+	xwZAhQXosWucFqqdslLSruIzNXvzhD3Oflg6A19QJpf0d3edKOU6hDzbmSug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744691304; x=1744777704; bh=TraBLcZP/WkRwFzc/HDxXsASf124ua7scK+
+	cLVWMvrA=; b=RRnISE4n4nAxaiKc30R5JARuB7bFDco+guWvSx3zpALqmVM8Z8y
+	zng4ogSMCa54Z9FiMsl9nXRvgnEGMwZsDVSh8b0BmhWtq52lIBNvSwnr7yrFpdw0
+	llDK5SdxLe7bryhyeMSouQ0y30JxI+hJaDoWmgexEXCo6yzcZilPc5oRBVgOPziP
+	lEJOdMtStRpuUtFadUiCINjoTuJRX/gMnh6lMMM+Oa5TvI8Wz3cf8+iZHRDSctXx
+	GYftxcbzW9IZPFhyi7AX0dog4E2PdImf0tdTSzyylDo8gi9BsvFdKv3dBZMGeg4e
+	cv+vVBIkARgcxnqjN2x6Z021NI6cbEJqQyA==
+X-ME-Sender: <xms:Z-D9Z_lmfbutonPx8xQ0CALldOt-ek1kR-Kt6WZK3eLmmPjrpxtc2A>
+    <xme:Z-D9Zy2qaqJ5mK1FbHsB6TiowKzG9U16bEhZZvDfxyAb_0OCXrisn4liQXmzRVw6Q
+    eLraM3mYPz6tviYbA>
+X-ME-Received: <xmr:Z-D9Z1o7K9v9MBVS2cpBpIAzvVH8tN8NZy1tjEgHZdRNMW1Hw1KgbCAFpNWTImQYyc7W9Ktw56IJW2pUZszc7jVaYwAkwgnW5kSI9DyZgsJJMA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvddvhedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdljedtmdenucfjughrpeffhffvvefu
+    kfhfgggtuggjsehttdfstddttddvnecuhfhrohhmpeffrghnihgvlhcuighuuceougiguh
+    esugiguhhuuhdrgiihiieqnecuggftrfgrthhtvghrnhepvdefkeetuddufeeigedtheef
+    ffekuedukeehudffudfffffggeeitdetgfdvhfdvnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihiidpnhgspghr
+    tghpthhtohepudehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehsthhfohhmih
+    gthhgvvhesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghl
+    rdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepug
+    grnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtohepjhhohhhnrdhfrghs
+    thgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrhhtihhnrdhlrghuse
+    hlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdp
+    rhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghh
+    honhhgrdhsohhngheslhhinhhugidruggvvh
+X-ME-Proxy: <xmx:Z-D9Z3mNljDIj_X3GO9RTIscU3PPsSwk_k3ehrGxuhihun8ytdANQw>
+    <xmx:Z-D9Z922BIle5eSB5V7364xPS1sa8bVETOPKbUWH_K1m4mFEyGT4LQ>
+    <xmx:Z-D9Z2sG702wjCpfEi_koYAhvrSEdm87OXsfAM8e02k_MnWAcDqEkA>
+    <xmx:Z-D9ZxVvyxXO4swyWo1qKtGIVtRLHAgZ5eiI3J1kmF-6whd2RqCRlw>
+    <xmx:aOD9Z93h1EKqDKIEL5SG6M5Is8otipT5-G5PIZw62bHDk4DWs6v5z7js>
+Feedback-ID: i6a694271:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Apr 2025 00:28:21 -0400 (EDT)
+Date: Mon, 14 Apr 2025 22:28:20 -0600
+From: Daniel Xu <dxu@dxuuu.xyz>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	john.fastabend@gmail.com, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, 
+	jolsa@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC bpf-next 10/13] bpf: verifier: Add indirection to
+ kallsyms_lookup_name()
+Message-ID: <qesoniwddyi2qrjxavxlfvmy5lq6fmenrp5zvz347dnknuf7yb@wi3agqebvgqm>
+References: <cover.1744169424.git.dxu@dxuuu.xyz>
+ <7540678e9a46c13f680f2aacab28bb88446583f5.1744169424.git.dxu@dxuuu.xyz>
+ <Z_aDSipnuvNAhHbE@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsWy7bCSnK7l1r/pBv9vWFi8X9bDaPHykKbF
-	l+Y2JotXWw6zWGx6fI3V4vKuOWwWO+ecZLWY+vMNm8X7hi5Wi5m3bzNatNwxtbi5dAO7A4/H
-	mnlrGD1ajrxl9di0qpPNY2HDVGaPzUvqPV5snsno0bdlFaPH501yARxRXDYpqTmZZalF+nYJ
-	XBkbl3WzF9zjqFjV18bYwPiTrYuRk0NCwERi/o03jF2MXBxCAtsZJVa23GOBSEhKtL+7DGRz
-	ANnCEocPF4OEhQQ+MErsmRQOYrMJaEms/tfLDtIrIrCIUeLzpPlgDrNAP6PEsqftrCBVwgLe
-	Ep1PpzOBDGIRUJW4cCYRJMwrYC2xev87Johd8hL7D55lhogLSpyc+QTsBmagePPW2cwTGPlm
-	IUnNQpJawMi0ilE0taA4Nz03ucBQrzgxt7g0L10vOT93EyM4zLWCdjAuW/9X7xAjEwfjIUYJ
-	DmYlEV4u51/pQrwpiZVVqUX58UWlOanFhxilOViUxHmVczpThATSE0tSs1NTC1KLYLJMHJxS
-	DUzmJ2TTlj2dcvlSi41p8oa1yS2f5TcG3HB/5a1wUUj1O1OwwfGzR3on2UiXrrnmV7Du7pbs
-	5fdiJgWkcrRrOxob+8mlJbd5vOjrE289arslLq7h8PY1axfF/6vxOK3RtH3elZXH1rSu/jT7
-	4emydK2r/RZts2dbcNot2MP3xkHnybMJHfrTnOWSG1YXCm/QblCbI7w3JNAl4qpEw0z5AHfh
-	lH+6Z2fr/dl+7MPBGDfzj9+K9j42+KvV16h/yvL/LqX9j8Mevd2ceDXctFKcd0eO/Unu+V+P
-	LA0S1Ww8z8e+ZV9Z2e0l4juVzt2r7Lpopsa4+9Hdj+3yHg/qzb8k7km63a+zoa6wZv+3joUP
-	FPqUWIozEg21mIuKEwEp9ESC4gIAAA==
-X-CMS-MailID: 20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c
-References: <CGME20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c@epcas1p4.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_aDSipnuvNAhHbE@mini-arch>
 
-Replace repetitive ternary expressions with the str_on_off() helper
-function. This change improves code readability and ensures consistency
-in tracepoint string formatting
+On Wed, Apr 09, 2025 at 07:25:14AM -0700, Stanislav Fomichev wrote:
+> On 04/08, Daniel Xu wrote:
+> > kallsyms_lookup_name() cannot be exported from the kernel for policy
+> > reasons, so add this layer of indirection to allow the verifier to still
+> > do kfunc and global variable relocations.
+> > 
+> > Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> > ---
+> >  include/linux/bpf.h   |  2 ++
+> >  kernel/bpf/core.c     | 14 ++++++++++++++
+> >  kernel/bpf/verifier.c | 13 +++++--------
+> >  3 files changed, 21 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 44133727820d..a5806a7b31d3 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -2797,6 +2797,8 @@ static inline int kfunc_desc_cmp_by_id_off(const void *a, const void *b)
+> >  }
+> >  const struct bpf_kfunc_desc *
+> >  find_kfunc_desc(const struct bpf_prog *prog, u32 func_id, u16 offset);
+> > +unsigned long bpf_lookup_type_addr(struct btf *btf, const struct btf_type *func,
+> > +				   const char **name);
+> >  int bpf_get_kfunc_addr(const struct bpf_prog *prog, u32 func_id,
+> >  		       u16 btf_fd_idx, u8 **func_addr);
+> >  
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index e892e469061e..13301a668fe0 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -1639,6 +1639,20 @@ find_kfunc_desc(const struct bpf_prog *prog, u32 func_id, u16 offset)
+> >  }
+> >  EXPORT_SYMBOL_GPL(find_kfunc_desc);
+> >  
+> > +unsigned long bpf_lookup_type_addr(struct btf *btf, const struct btf_type *t,
+> > +				   const char **name)
+> > +{
+> > +	unsigned long addr;
+> > +
+> > +	*name = btf_name_by_offset(btf, t->name_off);
+> > +	addr = kallsyms_lookup_name(*name);
+> > +	if (!addr)
+> > +		return -ENOENT;
+> > +
+> > +	return addr;
+> > +}
+> > +EXPORT_SYMBOL_GPL(bpf_lookup_type_addr);
+> 
+> Let's namespecify all these new exports? EXPORT_SYMBOL_NS_GPL
 
-Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
----
- arch/arm64/kvm/trace_arm.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Ah didn't know about this. Makes sense - will do.
 
-diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
-index c18c1a95831e..9c60f6465c78 100644
---- a/arch/arm64/kvm/trace_arm.h
-+++ b/arch/arm64/kvm/trace_arm.h
-@@ -176,7 +176,7 @@ TRACE_EVENT(kvm_set_way_flush,
- 	    ),
- 
- 	    TP_printk("S/W flush at 0x%016lx (cache %s)",
--		      __entry->vcpu_pc, __entry->cache ? "on" : "off")
-+		      __entry->vcpu_pc, str_on_off(__entry->cache))
- );
- 
- TRACE_EVENT(kvm_toggle_cache,
-@@ -196,8 +196,8 @@ TRACE_EVENT(kvm_toggle_cache,
- 	    ),
- 
- 	    TP_printk("VM op at 0x%016lx (cache was %s, now %s)",
--		      __entry->vcpu_pc, __entry->was ? "on" : "off",
--		      __entry->now ? "on" : "off")
-+		      __entry->vcpu_pc, str_on_off(__entry->was),
-+		      str_on_off(__entry->now))
- );
- 
- /*
--- 
-2.34.1
-
-
+Thanks,
+Daniel
