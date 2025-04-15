@@ -1,60 +1,81 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D18292924;
-	Tue, 15 Apr 2025 11:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02372957CD
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715953; cv=none; b=tr36aIh//7cYRqrj/nAwMplNYoCAP04INUEtT/uuUj+aWJdrSFV14Mp2PwlnRgyY3Ey+9aahFZgJz+8JRUnR0rN3KumCNGdeVWKEG+6sw/zLQyvK0XeAiEah2h3wctLyy3o4tjyo7hanJ+fZFseBW8GYriJApKWBWWgEfzRR+Eo=
+	t=1744715955; cv=none; b=TLDJBf65PJQSj7Qon6ibNgm1zRYKPdBW+tLpNMWQ5auYwZVwOdEgvqXPPeeZBz3MS9yIlLCBClin7XR60l4dZPqO0ybXpO27840P4nYMoSHsC2rq8E5LjAuMiQK7aKdLkiofSLxTLIIiIH1E65XxwtcvyhVOjT4xufp1DnNm2zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715953; c=relaxed/simple;
-	bh=jB0zI0wZxdJSi8IYU3aUTL4xGXDRqOJumsyVtTazrIY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pot8YEuF6SICmzsKdXSHdeb6GF4Ujm7HYQoVtrHu+ozT0BnUYATGQF/IiJjg4OyCCiMThNDYwrFeLM6zgtSKq+nw3BnT3Jw9A7nvDoSHO5hRXFHSc5GRAigzk3sd5yoazP+wxny4MrX3y8ecQUvlSyz+171om07s4nQ2Rak0fTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=OHo9dHaY; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744715955; c=relaxed/simple;
+	bh=o88/OolMElgWSR8SJDk87YXyFNQ8PpMtws8gwn/nr0I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E0izeprd0IdykXGbCd4ftX/+yciMq4rxqBduVx85XZBryvKH/65Ep2zhfv0ZkXFtACDNjl9wILsQJ2HHHmvu9cfU7azCUk8xhclzSWtyZtWa03BG5ygZ4TNBxN3Hr/5dQfCX8nGiKK+gGP17HBLxtlv7JhDL6ns/UQDTMSkRb8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LGVWtH98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=febXkoSZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LGVWtH98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=febXkoSZ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="OHo9dHaY"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F7O3eS023839;
-	Tue, 15 Apr 2025 13:18:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	Ycbk3aBv/tZumbR5nof0LL/gD7Wh9590ItptaqKs1NI=; b=OHo9dHaYqyCIjqUW
-	vX1S2j16YP0Fe0JZFkKwzmSjesv/GBjvJ834Smbjpaeq2iwvX7f8ESvfpLtQuWQM
-	N5VKyQYgVdrx01qgYBqjbdcrrvK1jftcNEKf6PGSLO9k8BrLWgp9JkatNaVgFM3p
-	aUgcBs+VwiK3IS7F8rQco2n7/8VrEibHOq9mBBcvialD0N1cyXfxmuWzsVTYouzg
-	mrtFk4lmR7D7drzc1fr3pl3zYBJdqxjxl37mU+ypUsjuv6j03YiNpWtq4Q5hnOie
-	eRtBuAYQOJLD/liddON/NVVLdelXrtgXP/10HM2M6H+SxflTYAvk/qfEOvq4Q1GJ
-	35DiVw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45ydkmd6cb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Apr 2025 13:18:42 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 63FEC40051;
-	Tue, 15 Apr 2025 13:17:49 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B2D1A9C98ED;
-	Tue, 15 Apr 2025 13:17:13 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
- 2025 13:17:13 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>
-CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <maz@kernel.org>, Christian Bruel <christian.bruel@foss.st.com>
-Subject: [PATCH v2 4/6] arm64: dts: st: Use 128kB size for aliased GIC400 register access on stm32mp21 SoCs
-Date: Tue, 15 Apr 2025 13:16:52 +0200
-Message-ID: <20250415111654.2103767-5-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415111654.2103767-1-christian.bruel@foss.st.com>
-References: <20250415111654.2103767-1-christian.bruel@foss.st.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LGVWtH98";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="febXkoSZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LGVWtH98";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="febXkoSZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DDE931F385;
+	Tue, 15 Apr 2025 11:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744715951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
+	b=LGVWtH989xPiwP8zqKoBX3bYue6AZmt3bqCzdRB/dSU3pIlIKYnSQZK63L/CuPgDjgOVpv
+	gUK58QjZqRjUuWcS2+OTfVBiL0wih43w//6Cue30f7FlFaUqWGhWx4QnDLK3hyAkGdq0sw
+	XW7QXiouBwzSTFrzwilRea+XcOfb5Do=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744715951;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
+	b=febXkoSZ+3CTR0yy0FFWj5hJ/EHVkLUE/YQXJwalZx72TGin1+mlpqdE/38g3THbEmMPdX
+	nOv8yqgAsJwbL3BA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LGVWtH98;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=febXkoSZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744715951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
+	b=LGVWtH989xPiwP8zqKoBX3bYue6AZmt3bqCzdRB/dSU3pIlIKYnSQZK63L/CuPgDjgOVpv
+	gUK58QjZqRjUuWcS2+OTfVBiL0wih43w//6Cue30f7FlFaUqWGhWx4QnDLK3hyAkGdq0sw
+	XW7QXiouBwzSTFrzwilRea+XcOfb5Do=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744715951;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
+	b=febXkoSZ+3CTR0yy0FFWj5hJ/EHVkLUE/YQXJwalZx72TGin1+mlpqdE/38g3THbEmMPdX
+	nOv8yqgAsJwbL3BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FCAE137A5;
+	Tue, 15 Apr 2025 11:19:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vVx2HK9A/mdvegAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 15 Apr 2025 11:19:11 +0000
+From: Oscar Salvador <osalvador@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	David Hildenbrand <david@redhat.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH] mm, hugetlb: Increment the number of pages to be reset on HVO
+Date: Tue, 15 Apr 2025 13:18:59 +0200
+Message-ID: <20250415111859.376302-1-osalvador@suse.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,43 +83,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Rspamd-Queue-Id: DDE931F385
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_FIVE(0.00)[6];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Adjust the size of 8kB GIC regions to 128kB so that each 4kB is mapped
-16 times over a 64kB region.
-The offset is then adjusted in the irq-gic driver.
+commit 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
+shifted hugetlb specific stuff, and now mapping overlaps _hugetlb_cgroup field.
 
-see commit 12e14066f4835 ("irqchip/GIC: Add workaround for aliased GIC400")
+Upon restoring the vmemmap for HVO, only the first two tail pages are reset, and
+this causes the check in free_tail_page_prepare() to fail as it finds
+an unexpected mapping value in some tails.
 
-Fixes: 7a57b1bb1afbf ("arm64: dts: st: introduce stm32mp21 SoCs family")
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Suggested-by: Marc Zyngier <maz@kernel.org>
+Increment the number of pages to be reset to 4 (head + 3 tail pages)
+
+Fixes: 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
+Suggested-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
 ---
- arch/arm64/boot/dts/st/stm32mp211.dtsi | 6 +++---
+ mm/hugetlb_vmemmap.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp211.dtsi b/arch/arm64/boot/dts/st/stm32mp211.dtsi
-index 52a8209471b8..bf888d60cd4f 100644
---- a/arch/arm64/boot/dts/st/stm32mp211.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp211.dtsi
-@@ -118,9 +118,9 @@ syscfg: syscon@44230000 {
- 		intc: interrupt-controller@4ac10000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x4ac10000 0x0 0x1000>,
--			      <0x4ac20000 0x0 0x2000>,
--			      <0x4ac40000 0x0 0x2000>,
--			      <0x4ac60000 0x0 0x2000>;
-+			      <0x4ac20000 0x0 0x20000>,
-+			      <0x4ac40000 0x0 0x20000>,
-+			      <0x4ac60000 0x0 0x20000>;
- 			      #interrupt-cells = <3>;
- 			      interrupt-controller;
- 		};
+diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
+index 9a99dfa3c495..27245e86df25 100644
+--- a/mm/hugetlb_vmemmap.c
++++ b/mm/hugetlb_vmemmap.c
+@@ -238,11 +238,11 @@ static void vmemmap_remap_pte(pte_t *pte, unsigned long addr,
+  * struct page, the special metadata (e.g. page->flags or page->mapping)
+  * cannot copy to the tail struct page structs. The invalid value will be
+  * checked in the free_tail_page_prepare(). In order to avoid the message
+- * of "corrupted mapping in tail page". We need to reset at least 3 (one
+- * head struct page struct and two tail struct page structs) struct page
++ * of "corrupted mapping in tail page". We need to reset at least 4 (one
++ * head struct page struct and three tail struct page structs) struct page
+  * structs.
+  */
+-#define NR_RESET_STRUCT_PAGE		3
++#define NR_RESET_STRUCT_PAGE		4
+ 
+ static inline void reset_struct_pages(struct page *start)
+ {
 -- 
-2.34.1
+2.49.0
 
