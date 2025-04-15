@@ -1,81 +1,123 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FD274642;
-	Tue, 15 Apr 2025 06:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFF18A6A9;
+	Tue, 15 Apr 2025 06:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744697712; cv=none; b=GdFv9G1aVCG9ZMC/HEwvPHuGrE9kfUk0UMNv8A4QarfrEZHhoYF6+bcBfWe1C8cbfcAECJyDCBY8U132VxPHxzPf5M8h3kHeMEo3yjnN7qd2Md4079f19tX7SGB1d6HDZyYLHnLJp92iLG+UssgH7yISkFFBpg9rSydNgkII11s=
+	t=1744697826; cv=none; b=fgaa2/Klw/lCmsGz7OpFww28p0qv+swBN7aFKunnHpihqXuy0MB2FmM2aF1AJRVMj1fvdIfCTZ549mr94mNhTtMNIkXH/n2gGDLxyL2uVk6XBkrG+J2kMV7eFPZsRL5fe+qhDMqJlVoAwSnhzG+K4JpLTseWGzc+N7bclq3EyZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744697712; c=relaxed/simple;
-	bh=Jj+9El0gv9RJRnKdz5Z6J1EoU0iho4atfdClLS8c21Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iQguCoT0RX56tIyivAoNKmif4lCZ2vyeXB8kroKfv+rQYqcPyRnKom3PgEH3gbFlXMglqVCi6BUxnEZqmdFRnfe5ghQRMIYUuF6CsQyzOaxNNoEOSK4OYNUbumSLXIAaVGGqjkAkNT80Q8CYHWUzYMMFn8eC2IsNfSB7xg+N2LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VRn/5uPt; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744697826; c=relaxed/simple;
+	bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t1mF/jjRZl4oE5f84XyzKRJmEeMDn/msJckZEt2O2M6LcjQBXOHmheoPfnYHA82vWeH9t47HbQ2J25HDR3gJ6s6ew+gcUpRY13wa6jUA/hLfnKe+hvyhtYdlLqINiFvAtw3koIv02i/8EYZYPsmesR3ZO0vDcCJ6PjaFBglUPiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JybAhIuL; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VRn/5uPt"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744697705; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=+2LZ3sbql60OCXVn+A8aGl6V+b4sdyQtm8MhWSm6Pv8=;
-	b=VRn/5uPtZZRO+nAIim3MOiE2c6fI6LxqKx5+d+/nT8bdwM/eHVY2HgHQs3miQA6bDOvNUVoe/YQKFSpD9beg8RLoWIIgji0FE9Zhzfrpsl/XIarvT2drm5kvkFIrZ5OS6Hq2x61As5IMFZeAym4WuykK5igXxMWdL5bbDILmjik=
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WX3bW8J_1744697699 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 15 Apr 2025 14:15:05 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: ast@kernel.org
-Cc: daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] selftest/bpf/benchs: Remove duplicate sys/types.h header
-Date: Tue, 15 Apr 2025 14:14:59 +0800
-Message-Id: <20250415061459.11644-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.32.0.3.g01195cf9f
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JybAhIuL"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bf1d48843so43868861fa.2;
+        Mon, 14 Apr 2025 23:17:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744697823; x=1745302623; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
+        b=JybAhIuLcEGUS4Ty9Rg3zZ+S+MgUpuMfuFzJFEDvtxlRrFlxhWUVs6rIc/DG4yjv0C
+         nHOuKEEhfV80dsp9AZWmGRqFiOnqqU8ZXONN7MpMciKeo3J8AJAGONN6+LzflFMxncce
+         Ybh6yRdTl6H+lLz++2mzE/QIP5QCBgCQC+8nLlP//8MM0czl4Nq2PpFQ+lasewZZCI8Z
+         BJNiLYkOkYrTzeHFqrKoUKxxADa0xz0HYaI7UtYQ1pAQEu32UNTXDcyNH+9ngWOF+xmf
+         LoAqMkVBs/Nmqu84yNSpjzVzHMM9r+kRst7CwCC7LL/JmwwJVRV2CVXNQcuJLbfp2rOB
+         lQYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744697823; x=1745302623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
+        b=bRVRakNTGaNYPHnc0v767gR8j6uoS5fiYuOOjsyi0IxN8BLwIobjUH742lBr6eBIuG
+         F+PMhRspbkTsIfGGzAMju8dweHOMh+wtvQ7ffYMJKdhJe3t6jhkvxCehN7i5Q4N9K2uU
+         A5MuZN7FGZi456mrwN4eylJQiS2dWuhMsMftHWhMzdogoELFqs2YgJGtHQjJwewH6Aru
+         uYaj8e9f7i04V1/FwbrqqYMNon6xoWKwScn0reyewsypor0PjuoAa0Cp4AiWNWx+f5ZT
+         u6ghvxwj0LjA/HbKbJSBqcLkxAy9ftOSpFhodyre4BJyI/fWvzVDcL8oL5VR0JtKob7n
+         pZgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUE3SnAA7x02sLxd5AVqZGx5VLrahoE4rRM9A1FwrgmG4G5fGK8FXQrN0IKoIXLJ5x7RGcgFxP+uzKBh8o=@vger.kernel.org, AJvYcCUJbzOI1AjZ9ZTXc1WXNd2X6WbLZDmEbTUti6/P2MHVQaPYqy9/FT/5kN5/hFMtvbyfK/O+Z5NmSBcuXkDM75sC9rY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPmsCywwiPeAPpaKQdhFvnu6qWVif6HMN78OKlRtOCyKdGlZUm
+	6E72kulpvz6/FFSPai/9jj3l5OleU6OkAqcC1Hkl8qOaTprcIb18QcrJI5HQbmrZnvlXS8VQFQC
+	nj1z7KrH8EXzd1jUGGxH6RhIGha4=
+X-Gm-Gg: ASbGncs8tnruU0e8fsTmUkq0RScyKmWPNytXf4O7Tqlrid5+pXYdCk0dF0w5TJmg7vi
+	pUk3B3ad9aj/bX4S2IuBRvX+n1oPkozNLVRY/XgLbQ+MyfFhDVp3P9Qpyu2pPpJo7XXl0qnfOrX
+	WtGu0CNmdyC2m4dHnqERBWmw==
+X-Google-Smtp-Source: AGHT+IFDRgfCx4zdnCFN4jix8GVMsmPDba+WEwhclFcXgG1NE9K+WIxonDPVN3Cv91Mfe1j688Kq9/qIp5YU91jbxqE=
+X-Received: by 2002:a05:651c:220a:b0:30b:edd8:886 with SMTP id
+ 38308e7fff4ca-310499f5dacmr46680681fa.9.1744697822644; Mon, 14 Apr 2025
+ 23:17:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
+ <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
+ <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com>
+ <Z_t7_brzSoboOsen@gmail.com> <CAFULd4ZBbAG4ndn+rzjjqF+pmtGa3UbyDOWfEXww0XhExJByVA@mail.gmail.com>
+ <Z_wI0uNoG2G2TQMC@gmail.com> <CAFULd4b2afcu5PnxhqwwepwWMSA7mvYNyPnMtkCjjT84VG8VXA@mail.gmail.com>
+ <Z_wOYOrVJJkUUUF9@gmail.com> <20250414182057.fe2fc32273ca1520c9b5dd4d@linux-foundation.org>
+In-Reply-To: <20250414182057.fe2fc32273ca1520c9b5dd4d@linux-foundation.org>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Tue, 15 Apr 2025 08:16:51 +0200
+X-Gm-Features: ATxdqUH6F8RrUNX5r2VRC6HS0yoSNbzfnBSgkjnh9sqT5xjH4_eBMJ2syY3oV-k
+Message-ID: <CAFULd4YOGgH39+Fge=N3M0jKzchg36005ZYss_qPD_0qzQ2scg@mail.gmail.com>
+Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
+ __typeof_unqual__() when __GENKSYMS__ is defined
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, 
+	linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-./tools/testing/selftests/bpf/benchs/bench_sockmap.c: sys/types.h is included more than once.
+On Tue, Apr 15, 2025 at 3:20=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Sun, 13 Apr 2025 21:20:00 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> > > > > If this commit is removed, [...]
+> > > >
+> > > > I did not remove commit ac053946f5c4, it's already upstream. Nor
+> > > > did I advocate for it to be reverted - I'd like it to be fixed. So
+> > > > you are barking up the wrong tree.
+> > >
+> > > If the intention is to pass my proposed workaround via Andrew's tree,
+> > > then I'm happy to bark up the wrong tree, but from the referred
+> > > message trail, I didn't get the clear decision about the patch, and
+> > > neither am sure which patch "brown paper bag bug" refers to.
+> >
+> > It's up to akpm (he merged your original patch that regressed), but I
+> > think scripts/genksyms/ should be fixed instead of worked around -
+> > which is why I zapped the workaround.
+>
+> I'm OK with the original workaround - super simple and fixes the issue.
+> I don't know if Borislav intends to upstream this, so I'll grab a copy
+> also.
+>
+> Nobody has commented on Uros's more recent alteration to genksyms
+> (https://lkml.kernel.org/r/CAFULd4aLMF_2AbUAvpYw+o1qo6U-Ya_+Ewy-wW17g-r-M=
+BF9_g@mail.gmail.com)?
+>
+> Uros, please persist with that approach and hopefully we'll have a
+> patch which removes the temporary workaround.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=20436
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
----
- tools/testing/selftests/bpf/benchs/bench_sockmap.c | 1 -
- 1 file changed, 1 deletion(-)
+The genksyms patch was posted as formal patch submission at [1] and
+was accepted to -tip tree. The genksyms patch obsoletes compiler.h
+patch [2], so there is no need for compiler.h change anymore.
 
-diff --git a/tools/testing/selftests/bpf/benchs/bench_sockmap.c b/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-index 54f4e7c03cd2..8ebf563a67a2 100644
---- a/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_sockmap.c
-@@ -3,7 +3,6 @@
- #include <error.h>
- #include <sys/types.h>
- #include <sys/socket.h>
--#include <sys/types.h>
- #include <netinet/in.h>
- #include <sys/sendfile.h>
- #include <arpa/inet.h>
--- 
-2.32.0.3.g01195cf9f
+[1] https://lore.kernel.org/lkml/20250413220749.270704-1-ubizjak@gmail.com/
+[2] https://lore.kernel.org/all/CAFULd4aLMF_2AbUAvpYw+o1qo6U-Ya_+Ewy-wW17g-=
+r-MBF9_g@mail.gmail.com/
 
+Thanks,
+Uros.
