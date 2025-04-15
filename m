@@ -1,161 +1,102 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAEA02BE0E3;
-	Tue, 15 Apr 2025 15:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87A7F2973A2
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731130; cv=none; b=FQuVMBbaGbKPQWhyDhERdhoTubBgAK/QFJCQpeyJS/G9G0XlJtvB5gtjN1bjU5ijU2K/wdLPuW7j211mHSdAHiaFhESQn5CBlhGu28KhcjuGfBfQmiInXSh7UvR+0oOW12a6wjleHicda7UySOlEd4u+353WffKEbwYMm36lbjg=
+	t=1744731153; cv=none; b=ZPUTqdXmeIgf4WVp2gm2GOcdr+Ki0iEL6HxTP3NF7nBmvjN0hylIgGz4pABaylB/BItkux2MbXd7qRRCJXrjamOZWqHY/qaTDCFu0WGbjqAtM7yGAb2RudlBC0Xh5rKWIVNCYb+4d7dGvkrObZzQq3Bf4ZzSwVKlaPk2NObOEU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731130; c=relaxed/simple;
-	bh=gxhvWVX3Zj86stirawTqBVBj3XfzXj9UoNgw5dseHGY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WeApSJkGiRoV7pVUu6G1Nv2qeZurtdsTuwz8oSBGoVvCvZm5rb4VsK/kwhNFkKCoDwPIv1PorOkJ/aFisAfJwMPqiWRvy0jSidvZONZPTD4TRSn/ePY2a+xI30wjw5CtC2+X+FP1GyhuH32C+swyL2tTEIBqP9JOdqTLpslVaKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fDSRq0xx; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744731153; c=relaxed/simple;
+	bh=MryQRg4mxc7mp/DKCiZYhG+Yw7K8aefw+wH8sohSJco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A/2sPrh1U6m4qtx9u+DPAuuTH4GBhCJQb8m0NtXPdRnKk+8eKQBCcTJG+qHmNmT1F1YppbKeSo4lI0Ce2i9Tblgj7xbMh2wqNUaOXdmR1Nr6dBqchIVTk4UmrCnGFab2l0P+lf69MnwphljPuzfVVdEO4MiZ+95RqLn+Yc1ubv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jF6bQkfg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fDSRq0xx"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FFVmC82394451
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 10:31:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744731108;
-	bh=6hIuj4zkeDKIgdNnFtL2t0Ld2CGaXw/cfH70lhT1NzU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=fDSRq0xxbtt1rna3JCkb7UFBlNrJ+8ygSHex+9p09GbLRzanhsLw30QteMluR4gRd
-	 nsZ3e0WgdkjGVItqLlaKAy/yUQyMOdvYvzOtu2C7aODAniaAUJ9FrGnCrnLkZey+9Z
-	 6ENZOcwzqfFQPGoLikLp/Szui1Dn5QP2iE+xXNkE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FFVm65109508
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 10:31:48 -0500
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
- Apr 2025 10:31:48 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 15 Apr 2025 10:31:48 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FFVla0109804;
-	Tue, 15 Apr 2025 10:31:48 -0500
-From: Judith Mendez <jm@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Prasad <b-padhi@ti.com>, Andrew Davis <afd@ti.com>,
-        Markus Schneider-Pargmann
-	<msp@baylibre.com>,
-        Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-Subject: [PATCH v7 08/11] arm64: dts: ti: k3-am62x-sk-common: Enable IPC with remote processors
-Date: Tue, 15 Apr 2025 10:31:44 -0500
-Message-ID: <20250415153147.1844076-9-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415153147.1844076-1-jm@ti.com>
-References: <20250415153147.1844076-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jF6bQkfg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C97C4CEEB;
+	Tue, 15 Apr 2025 15:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744731153;
+	bh=MryQRg4mxc7mp/DKCiZYhG+Yw7K8aefw+wH8sohSJco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jF6bQkfgqleLrGlk0kRy0AxYfnJGnjSWGaE+DYpr52dDb3sVnLMVLDpupnxpmji4O
+	 smH5+FtxM+vs3kno1Za/uyOorrYrPOKIGR06MtU1BwROPqkGKm4zCXdCi086weeXEs
+	 JTYfxN0U9iekw5J1brE341Ctt7n/04ibpfLaQISsQQz+/slAfOVMb5rgWEIYU7Tr1K
+	 nhft+ao7Pym74AirWRfd3gyidrFZd5XkyHTeZR0G48uRHcLBu4gHBFNXzgWSLLa82A
+	 /1tDQbQzOba2sR3i+H+FwaLWAB0GJHkdmEopnzj9ErxGY+8O45/wtzxnu8F5/wDfYJ
+	 KXpCUQpwmpUEA==
+Date: Tue, 15 Apr 2025 08:32:29 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brendan Jackman <jackmanb@google.com>, 
+	Derek Manwaring <derekmn@amazon.com>
+Subject: Re: [PATCH v4 17/36] Documentation/x86: Document the new attack
+ vector controls
+Message-ID: <wuryibff35vau3vvo5gj3d6fzvfedlhcnlyc5zlwlzvfdr2dro@lkwwglmgac7c>
+References: <20250310164023.779191-1-david.kaplan@amd.com>
+ <20250310164023.779191-18-david.kaplan@amd.com>
+ <fkl2b3ymatulazt2xjegubqcejx5bgaraktztpkitodrbbsozw@xrskej3fg3jf>
+ <LV3PR12MB92654563086027BB944A117594B32@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <mybnv24fbz5nsxmz2yihzctnbv7ab7sznyotupp6mbpzfdvy2e@r2oantiw4wmo>
+ <LV3PR12MB9265B84234C24D42E7CB42EC94B22@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB9265B84234C24D42E7CB42EC94B22@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-From: Hari Nagalla <hnagalla@ti.com>
+On Tue, Apr 15, 2025 at 02:59:32PM +0000, Kaplan, David wrote:
+> > > > > +BHI                   X                           X
+> > > > > +GDS                   X              X            X              X        (Note 1)
+> > > > > +L1TF                  X                           X                       (Note 2)
+> > > > > +MDS                   X              X            X              X        (Note 2)
+> > > > > +MMIO                  X              X            X              X        (Note 2)
+> > > > > +Meltdown              X
+> > > > > +Retbleed              X                           X                       (Note 3)
+> > > > > +RFDS                  X              X            X              X
+> > > > > +Spectre_v1            X
+> > > > > +Spectre_v2            X                           X
+> > > > > +Spectre_v2_user                      X                           X        (Note 1)
+> > > > > +SRBDS                 X              X            X              X
+> > > > > +SRSO                  X                           X
+> > > > > +SSB (Note 4)
+> > > >
+> > > > Any reason not to put the "Note 4" in the same column as the others?
+> > > >
+> > >
+> > > The other notes are about cross-thread mitigation specifically and those notes
+> > refer to the SMT aspects of those issues.
+> > >
+> > > Note 4 in this case is about the SSB vulnerability itself, explaining
+> > > that by default there is no mitigation for any case.  I was concerned
+> > > that including SSB but without any X's in any of the columns would be
+> > > confusing, so the note attempted to explain that there were no default
+> > > mitigations for SSB under any attack vector.
+> >
+> > Putting the note there makes it a lot harder to see it.  And I think the lack of X's is
+> > accurate, no?
+> >
+> 
+> It is, it's just rather unique compared to the other bugs.  I could
+> remove the note entirely, but I was concerned that might look odd
+> because it'd be the only bug that isn't mitigated under any of the
+> attack vectors.  And that's really just because the current default is
+> not to mitigate that one.
 
-For each remote proc, reserve memory for IPC and bind the mailbox
-assignments. Two memory regions are reserved for each remote processor.
-The first region of 1MB of memory is used for Vring shared buffers
-and the second region is used as external memory to the remote processor
-for the resource table and for tracebuffer allocations.
+I think the note is helpful, it attempts to explain why there are no
+X's.  I was just thinking that it seems more logical to put it in the
+same column as the others.  And that would also help make it more clear
+that yes, the X's are missing.  Which is indeed odd, but it's also the
+reality.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
----
- .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi | 34 ++++++++++++++++---
- 1 file changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-index d52cb2a5a589a..364b2ba6af958 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-@@ -70,6 +70,18 @@ mcu_m4fss_memory_region: m4f-memory@9cc00000 {
- 			no-map;
- 		};
- 
-+		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9da00000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9da00000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_memory_region: r5f-memory@9db00000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9db00000 0x00 0xc00000>;
-+			no-map;
-+		};
-+
- 		secure_tfa_ddr: tfa@9e780000 {
- 			reg = <0x00 0x9e780000 0x00 0x80000>;
- 			alignment = <0x1000>;
-@@ -82,11 +94,6 @@ secure_ddr: optee@9e800000 {
- 			no-map;
- 		};
- 
--		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
--			compatible = "shared-dma-pool";
--			reg = <0x00 0x9db00000 0x00 0xc00000>;
--			no-map;
--		};
- 	};
- 
- 	leds {
-@@ -476,10 +483,17 @@ cpsw3g_phy0: ethernet-phy@0 {
- };
- 
- &mailbox0_cluster0 {
-+	status = "okay";
-+
- 	mbox_m4_0: mbox-m4-0 {
- 		ti,mbox-rx = <0 0 0>;
- 		ti,mbox-tx = <1 0 0>;
- 	};
-+
-+	mbox_r5_0: mbox-r5-0 {
-+		ti,mbox-rx = <2 0 0>;
-+		ti,mbox-tx = <3 0 0>;
-+	};
- };
- 
- &mcu_m4fss {
-@@ -489,6 +503,16 @@ &mcu_m4fss {
- 	status = "okay";
- };
- 
-+&wkup_r5fss0 {
-+	status = "okay";
-+};
-+
-+&wkup_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-+	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-+			<&wkup_r5fss0_core0_memory_region>;
-+};
-+
- &usbss0 {
- 	bootph-all;
- 	status = "okay";
 -- 
-2.49.0
-
+Josh
