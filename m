@@ -1,90 +1,107 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D9F1B4248
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C91B4248
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707701; cv=none; b=pFDyaLDB/zQmY+s1TipXABYebEkwnRgCbd9U3SfR6X7X5wjYWyo9yPeuauMrGn4Ns2aik3oOfz8Tu9AzJO46XmknY4qiNv5eeAGz9vSJ1sJwMa3/2/UclSsWSI1GEi2jDeyBd23z3YMhzoCI1Uvc+uSmE/RX+KvxtROs6iI/9i8=
+	t=1744707742; cv=none; b=t9jtd4n12NNv8zM1yj78Ug2ruZS98uV+VMMoJg1AYvLlAuHuO+yZBuIneK3QhqYqcBIxjLIkY4J2kmF73cOwUU5rP4L1X7get26XIXHKbKOGGNE12IlFy8c+3ME8cLR3JSd34MEkXrIWjwhCqlT4gyyJdx0Nf7ohnbBt4gjCIFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707701; c=relaxed/simple;
-	bh=fQ7T/qUhM3lDIvKK1VLf3X6MBV4DNYEWZWyZsblYqH8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=i3NEf864Mov7+g5N5dHirWTfiEDw/cXrDBwn+0GhKzw67ar+BHTvodBoBsol1bIaspJ041ebTAmbHxFh+lZ9GIkU0IJRDbTw5CvUtFry7GycCXABjOVaLxibIijfQiaOPUVZfXggKUhzfy4+gRyZMm5ou8jTiMhmk4D31FYqBRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rKgWT49b; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1744707742; c=relaxed/simple;
+	bh=1mr1OG1oFrmxCKxLaRg8P0aZeIjpmCBFGRrJZ4EUQVo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=jG3D+V+Qsa12qDhA2xMUrcgREAIK1Ku5Ia/YHCMAO12ShdXmjwVkaDZ/GnlrMrKXRNzVH/gXn5hQn/1Lv2Kpbzpxw51u2RTZ1rK3pMqNlviaxXraXrbapObGj+6LfO9QOunshYc5VV8+NxxLg7mgJe4/BQCQBC5zXTir1VAeWPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=i4+Z8M34; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rKgWT49b"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so43082225e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744707698; x=1745312498; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ATQ2WAeqp0anILpiDAuFRK6bq5Jh77B0cEqGlrXYkoY=;
-        b=rKgWT49bM4AyxpnOnD5JudJ4pidZxOQ1PLF1AfmqMXTzHEgkwMt3xe9Tj8rX5o2i+P
-         3/OmbWsjbHNmzuaDZrKQDc7XjRB8ko9EGf/ibgyR3Z7R6XrpGrnRLDfpHEg9vl07+o0l
-         JSkJ25skgVoUBGVTwJeJMhQEwWlgnLnamyU81D86AAIXfM1nlwMOoOdr3m2NM6p5mOzs
-         5WYO2a5+w2deGOsibBJxYRvGuss164TIKzyNKJVqgBUDSTxgifd/UpSXki8/DfXAGuOK
-         /ESPhX3uA+ub1yFot50p/GQkxiDWN2MKoHNMMKcStiY02p+mBTfRJQuuSvLJWZFT2lWa
-         L7sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744707698; x=1745312498;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ATQ2WAeqp0anILpiDAuFRK6bq5Jh77B0cEqGlrXYkoY=;
-        b=dLaAV2tgN/nxFzjDrID+mgbSDC6REYxGg4Nq7jm5JMbdpTtzvuXOT0WrcOiLs9yuUu
-         EW7UfFbM+aWGPWQ4E6ZxewsT8fjnEQqVL2nGIfz6vp62IOjV0+Q4bt7bT0aerMzp6twg
-         NvKxuPNvWBKkaz7+ALwVXKEh7i/lNfrxpq09ZPzlsRf4xO/+jQgrEsdOLKi9rZNdW7t/
-         MRONLIM5XKL35Vg6ia4JOqiOw2Ej2uGr0HWhNEVUm5jQ3cc+Hv8IBlEImYBvpnEAvCI+
-         jXDncyyWDGJ2WcerDdHR0vmh72VU+Exwut/HTPY6NRkuSSBODp9K0r296k6oNN/QbNFs
-         hMBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbmqO9++tkwgDNgw3tX78GmTTSBWkokqNKVNsogGJjsSY/zYW96GcEKQQGxZSvURea+dKwR3nt3xjt0q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEYABgQ6j35uNR2vmJsmBO+55P7uOleI0KnS0YRW9IGpl7F8Ub
-	cPCpRgc8tO1tUhMAHxqRHYn+J8eZqWOLf/3m+DLAC8MEBcoZcFbAElRM6R2QWHYzfSZF6Wtuk+q
-	iMBzjPHKzpJPbqw==
-X-Google-Smtp-Source: AGHT+IFmFs/nlsx2QPkRnmhjLHp1bf+lNep9itSd3yUo4cUQIyVWVraBimHdDf8+ne/yfkGfhA9ATJZ9DuVeWog=
-X-Received: from wmbgz6.prod.google.com ([2002:a05:600c:8886:b0:43c:f517:ac4e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1389:b0:43c:f75a:eb54 with SMTP id 5b1f17b1804b1-43f3a93d3e0mr126794805e9.13.1744707698153;
- Tue, 15 Apr 2025 02:01:38 -0700 (PDT)
-Date: Tue, 15 Apr 2025 09:01:35 +0000
-In-Reply-To: <Z_1QzTdV8mHJYdQ6@cassiopeiae>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="i4+Z8M34"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744707719; x=1745312519; i=markus.elfring@web.de;
+	bh=1mr1OG1oFrmxCKxLaRg8P0aZeIjpmCBFGRrJZ4EUQVo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=i4+Z8M34gvBp+cG/jJetMRCF74J+MtGgBx/mehrSYuJJVaW94uKNA6ewUg/E9IVh
+	 GDdbCKdH3G/YBVRE3TsNLTyPhGErGq3C4kQS74xY6NmYhDZicK9WZ4ekmgiR/EJqc
+	 yS1uaDoDCJwZriTlLIZ2v3TSrYRqyDMBy4dWtf7BZzxFx6JVFMOGh1GLOvSX0zrmm
+	 DgoMgCsVecyxzzdHwYsK2LGzChcK4CJBgZcQluZPamQI0oD/9EXTpftOsEYts8t0T
+	 2uN7WhpO1M4GIGgun/UTYFraEQxzU8RQvUQFGoRkW74c97wkL6GORgWDJ4yC3MnCo
+	 T8v6SSu+a7Wr8RJBTQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.24]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MG9DE-1to6zT22Lk-006HlA; Tue, 15
+ Apr 2025 11:01:59 +0200
+Message-ID: <e667ee00-12cf-4bd4-9c97-2dad4f2f1f02@web.de>
+Date: Tue, 15 Apr 2025 11:01:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com> <Z_1QzTdV8mHJYdQ6@cassiopeiae>
-Message-ID: <Z_4gb8ZAlbfhobgW@google.com>
-Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
-From: Alice Ryhl <aliceryhl@google.com>
-To: Danilo Krummrich <dakr@kernel.org>, Tejun Heo <tj@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+To: xavier_qy@163.com, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Barry Song <21cnbao@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ Gavin Shan <gshan@redhat.com>, Lance Yang <ioworker0@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Will Deacon <will@kernel.org>, Zi Yan <ziy@nvidia.com>
+References: <20250415082205.2249918-2-xavier_qy@163.com>
+Subject: Re: [mm/contpte v3] mm/contpte: Optimize loop to reduce redundant
+ operations
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250415082205.2249918-2-xavier_qy@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LJgOMD6FLVAODD0F3B3mIIMTWD8GkOxcEBBdb9b59akGTDGNBGm
+ jZsmTkV4Osdi2P776szcbfhHWpgXgS9a7xppOgU3lKIHQKtfO3vLv9J6SRisiWaHQH0YFgy
+ DQyzGTXcI4W5MiUEbxqETgv4dBA2wOOwZ04HAsJiyZqvUUkCsdXuoMjL655n113YKFh0W2T
+ lOG49yqcvx8LStXsTrdoA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aukuR7+DYGA=;3n4nKZetm2ZBk7c5pkctImDLSzK
+ uQYSftoWfLOInjQWDTvziN2xFDNZpz9NeeV8N7+sO0H23onprxPGoGN0d8/KPAagBfTlBa1lK
+ 15OJyb/gccH3sIcKHIvTK6IKymPqyFoLn/lIP9sUFfLnlGUnRkXndZ5dBPmp/YMhOvwaH3UsR
+ dEQOWAg3v3Zsgf/poXJ29Asufq3h4o5+qiSMcyW258FL9q2MRL3ybcLJ1TcBB4HUcY/+ebw+g
+ rIQ3LWcS1dLiqocS3nTNC/5lnNZN6xg/+FN9vt6EZF+qe9Gg7G6jUgrlSEFR37SpAMiv0mFWa
+ gq2A4KdA//Yw4gsXWgDFGFE+c1Op83olX4pPeSW/B0z3ecHmYYgEjE7uBNG5RKbw/AWHlHy0K
+ xaxQRKnmm5P5sPQI2xi1f8RsMuEcUv1NDGVjGvoVrN7bD7g0NJX910ek+q+K2Kch3wbjkEkiP
+ 9CzH0i/I24JMVT6Eeoju69ads0VVAXZYnM0DG5aHQhmkUq7g7S7FTL/sqx+UcenUZKnTHI3Mw
+ TqkoZ2hmeGUD+jgR3HXYDyymViwTU5tO1yV48KzDl05znishD1GJZbrU9N7ykjOKrbTpgiVKV
+ ZOD3DGrCzVO0Bd+m+4OJ52iVprR8+5SAwTXtp5v/8jIKSiDUGSZ8MvHppzn5D4fteQ++q0oI9
+ ol675b8txM128L/h9h60ZWTE/EW+QQZFt4N7QqUvTHrq1ivKsVkESqHo5pT8IPfW17sT8vbXr
+ 0Ms/U4qAAs4n0OwQKgCS5IrNYdZ35JKR6Qt06HnEPxyoBO5jgFbBXDzP/zeqkOFzHZHkM/rd2
+ kz6TmDALf47eCFe0UXa7wh2se9uxPpSwX7u5RoasJzbK78aTjOqR6jYA/KIYD6CZQkana58qt
+ kDvYlm2qocJpXA0xkxW1pIC3aPS5z5TY8nnPonxUMZmHbYuP9OIcRB4VOkIB+92BASDCoOF6s
+ qBHY3o90RA3GEaHyM7+lj070zMP1kMYMgIRRcyhRQR3unAYMgpUQFkhwc3MvTWObQeaRd5k3l
+ jTyIhXRhCDfDKsOPu5QlhU3uRj4QcKyq0zA6pyocIWWxZfwntEIVrUHdBnRW2OVcY1tL0eRQW
+ 2CE3mHo51gOPuuDRtR7U3+FmkwKdAqiI4/o2yESq7XVfm1tOp6hx03X7nuLQKfl6dAgUDMf9z
+ PzXo6FXe72jhE6YiUyZ4euVUsMwgW9qcoR989iXGGQ93lA52UNVOX3jw6rn/mzJh0A84ffstQ
+ wPSZguPlaRrch5iEOd+fRD+aBpIHo03Jh6KQMegxOTS/iha4UmrSzKGfqk37plAlPjBsrG8wn
+ ythLgU+6GOdLBYBhPiJzIWShohIXXaGvDEANepydd3O534q37fxfSqYbssBVXfGRCt5kdYSMK
+ h+n+GWCOpjOxMUT1IQRMRt0beWOUhEdjN4ratkMq/3nTEFCzhiaXRDK2KOvkh8CHcKrfPARw8
+ +8EVXwiFrVnAlvsfD35DSSOJAnxiw5g9+ZJMbpOvJZOvhLXPdO5O3f7dzAyN6a6/qpx0ehA==
 
-On Mon, Apr 14, 2025 at 08:15:41PM +0200, Danilo Krummrich wrote:
-> On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
-> > 
-> > +/// An owned kernel work queue.
-> 
-> I'd suggest to document that dropping an OwnedQueue will wait for pending work.
-> 
-> Additionally, given that you're about to implement delayed work as well, we
-> should also mention that destroy_workqueue() currently does not cover waiting
-> for delayed work *before* it is scheduled and hence may cause WARN() splats or
-> even UAF bugs.
+> This commit optimizes the contpte_ptep_get function by =E2=80=A6
 
-Ah, that's a problem :(
+> Signed-off-by: Xavier <xavier_qy@163.com>
 
-Can we make destroy_workqueue() wait for delayed items too? And/or have
-a variant of it that does so? I'm not sure what is best to do here...
+I guess that a complete personal name would be more desirable according to
+the Developer's Certificate of Origin.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc2#n436
 
-Alice
+
+Should an other key word be specified for the prefix in the subject?
+
+
+See also:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc2#n94
+
+Regards,
+Markus
