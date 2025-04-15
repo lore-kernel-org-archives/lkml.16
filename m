@@ -1,35 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05DB29E057;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2589329E062;
 	Tue, 15 Apr 2025 15:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731609; cv=none; b=N5OsRde4Bk6uf5kUMB+sqpvMuHx7R5Xc/Hrch6tjsP5ZZZV2dsYEji/NIkVwGLNBiJLxvjkliUQwFoLPrih4ZNKyKH6m1M3PkGFaEWL7jMAcIPSU/CbqojorACg8GFeaYAq+KiiWzQNh1dtsVGE+u566AtfhRF+bWXKXhtbm8/c=
+	t=1744731617; cv=none; b=HkQd7GEU6MpDpsTz7CjTb7V3BzaZBKo3aG51ELv83voRl2M2yuZZvJrRBcLwF6WjcyoxcLf7laq73L9U3zxN3BskYDHDQcTT8EGyvKBHYsh2m79WHeSt1tUPjgSfuDFnXugVmO3qY76vWbcuo/DsmGxySbODuVDrlZtpNoU+cTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731609; c=relaxed/simple;
-	bh=5mg9Z64bCpKpIIpcC0BqYxuIjrycrX/0DIFqvmluXnU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tZpBp8L1fcfPzvDRKTu38oFlgDf5Cj0AoqfrHATm2+vgjtNxCbBVSuWYkYS6Uf1HbhMGF1ZpJdUhFjZAF7uc8fCZKtIwZvCVcdKbdpOkBObH5VBuq43OEd9b2S+8B5biq5fS+I0tTlQyyVQNDI3ipYqg7Jf5AWaIQFhvuCXvCZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kZ2dJAHZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744731617; c=relaxed/simple;
+	bh=RIMQprOaMirEBmq4bYXyJwMPbqjDbfmXocX7YVUUhR8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cbhOvs9OUUNNJKwb5DrsNfNjhH+arMTaW/dcxrPAbGJyJnAX/J9XToUuJ2oCyRRVaT79o1uLiYj8g+MHDYCTpunfxFN0vAKo6sJEzHmpIwHFXa7PgciaJG6BvQcnC8bEtHxilWRmcuH3kiLedsziCPKPikG+lJ3udGI8cNJhsHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=jbEOTKdB; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kZ2dJAHZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F97C4CEEF;
-	Tue, 15 Apr 2025 15:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744731608;
-	bh=5mg9Z64bCpKpIIpcC0BqYxuIjrycrX/0DIFqvmluXnU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kZ2dJAHZEFCx8JMm7l4tFUV+YKv7SYsmpEgLVianYG7XCfZGSVybMljiUMtKq/qP9
-	 UzWeofPEE+wF52cQuDDd4wMw+O6QKc9DIDC3kaI1sGcfzcgn7NkwFGNfX4EAmFvHa5
-	 DPrAbNobWzyzjbkwGWk+jmof6TWvWuMDqZcRhUOl5mlfXfK+aoPuFxa+r3hgpaJSu0
-	 /P0bb+7iGulQLKM7lpOSyNmEoU2/3AGTefuXv4sG/F1OuPXVBZv544pHVUWnvMTVN/
-	 VBXbQyd9aEn6RYhKH3i2db8HsFOPK5DlmFpJOrbGQTZro4pYZUmGDjRymABol96mHp
-	 98tSV78UUzMyg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CD33822D55;
-	Tue, 15 Apr 2025 15:40:47 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="jbEOTKdB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744731593;
+	bh=8Qch/x4RnWWISFX7nV0atXYll7WBRrT6V0RcYu2bHFI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=jbEOTKdB9RQTtTD3piVPBuD/+XDC28HcRI64VDn0KNsbfV69TeMKpeA0FcG5C0juS
+	 lkgx2ZbLzi05mKT7VznkE4dnNks197AwxOnOktxq7DIS/tPRZ/N6PiZTcRGQ3+Tumk
+	 I5M7OypIyVJRLtPMBugXgzEQGCit85WfaE8UBi6g=
+X-QQ-mid: zesmtpip4t1744731550tba7ca3b8
+X-QQ-Originating-IP: DIdrXajWP1mMaGitCCLmZtEqYHzin5MEP0I+17gZ9tk=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 15 Apr 2025 23:39:07 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7574434672748888084
+EX-QQ-RecipientCnt: 20
+From: WangYuli <wangyuli@uniontech.com>
+To: corbet@lwn.net,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: akpm@linux-foundation.org,
+	jeffxu@chromium.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	kees@kernel.org,
+	wangyuli@uniontech.com,
+	hca@linux.ibm.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	xry111@xry111.site,
+	tglx@linutronix.de,
+	thomas.weissschuh@linutronix.de,
+	Jason@zx2c4.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com
+Subject: [PATCH v2] mseal sysmap: enable LoongArch
+Date: Tue, 15 Apr 2025 23:39:03 +0800
+Message-ID: <648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,48 +63,97 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/5] qed deadcoding
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174473164624.2680773.10700489026700314444.git-patchwork-notify@kernel.org>
-Date: Tue, 15 Apr 2025 15:40:46 +0000
-References: <20250414005247.341243-1-linux@treblig.org>
-In-Reply-To: <20250414005247.341243-1-linux@treblig.org>
-To: Dr. David Alan Gilbert <linux@treblig.org>
-Cc: manishc@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OHE6ytWwrzSc0hMbO10H3Xx6MW8ZeVXmNvphD48xNC7/Igpj0Qlme5Q7
+	OIXT4EaHXGu7ogJu85azphhxJgI98J8F9VxdXi+42FkgL/q4PzI8K5EFQBp7Xf4/43HrBKW
+	yGiySLAXCAkiivl1MGFoHHpquVdC0Ye7cb/rrpjXKWYsPHMPJSmUHkd59lFmpcLkT+62Mlp
+	vu4O6g5MWfRE8AQ8tQSndG1IyWeygCUDcii7t/7yRU7dIqA1OZmVsdm/VQmo+LaEyD1H5zO
+	fv9rl8XX1j2ScIy7FPi6JWJXojmh/Kvu7IVX25QI3v+5EibiuzbIZ20gauvTUzc5iVYTSCf
+	4gszXx36q+OCCYTnqgPVu7WBisoYaf8fu7K9PDGELMmGXLjfJe3ukr7GizOQkpZ+potPM5f
+	O5H4512TmiNqhYxSQqUptx6iH4FEjpf9kMAh/wYVRtADqjXUigOtVFsrGmllUz63BJ5zlBG
+	htGV2Xq9+yAa6LwVl9x41kleUevrkqa/wvndq9pioCrmbTYq2Yd0cr6RhYvxbAjH9NCsmE5
+	vlTEtWcLYlWQYSacwl59ct7MdZ2Uj14PdCYHbsDir+LuBjXpZPFxqD/fVa1AvZliUecCeHB
+	LzSxZg6K6KkivMepmfOU0UAkdVTIhYQU5+kyYmNc07A3009Ts8UPwTkoA/i4Sz46edaHtiA
+	e4YpEUcFyIhqeDkIt8+XOi0iGNnU+OX4zPUH8dzQNMrD34+p/nJX9fzqr53jO/RlKP80+M0
+	N/fb9vTNF+zDbwHkx08+zp1++5r5DvopKotM17hna7ZAkFagzDEXJvWLDyyiKkvjrYlFBGi
+	2dsmMGFOQ+neTqpk+S4KsMMIJaOU0x9HRF54Xt1nnWhl3Rw128wxQfA6mXA2GLaPCXosLDM
+	sdewN3iTFsV25z5BAGYPsN+yiKCZHHaUJWNC+7x4dwH07dUXARFKzn/xY7nwBi4B0ugCKb+
+	1rOQbQKYtg2tu7ot++FUnshZ7gTyA+KQ9RcG8GgC2bGug1GfnUevXQ65NWXRxMHwFd4XfTE
+	Sn6CEy2uqD3I/b1w3iNcnvUdyjyS5h2cE8vpo2kTbwnDV0+Lw+apKPvTzoyvQRbzr/jp7uS
+	A==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-Hello:
+Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on LoongArch,
+covering the vdso.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Link: https://lore.kernel.org/all/25bad37f-273e-4626-999c-e1890be96182@lucifer.local/
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+---
+Changelog:
+ *v1->v2: Modify mseal_sys_mappings/arch-support.txt.
+---
+ .../features/core/mseal_sys_mappings/arch-support.txt         | 2 +-
+ Documentation/userspace-api/mseal.rst                         | 2 +-
+ arch/loongarch/Kconfig                                        | 1 +
+ arch/loongarch/kernel/vdso.c                                  | 4 +++-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
 
-On Mon, 14 Apr 2025 01:52:42 +0100 you wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> Hi,
->   This is a set of deadcode removals for the qed ethernet
-> device.  I've tried to avoid removing anything that
-> are trivial firmware wrappers.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,1/5] qed: Remove unused qed_memset_*ctx functions
-    https://git.kernel.org/netdev/net-next/c/e056d3d70388
-  - [net-next,2/5] qed: Remove unused qed_calc_*_ctx_validation functions
-    https://git.kernel.org/netdev/net-next/c/fa381e21a907
-  - [net-next,3/5] qed: Remove unused qed_ptt_invalidate
-    https://git.kernel.org/netdev/net-next/c/3c18acefaf9f
-  - [net-next,4/5] qed: Remove unused qed_print_mcp_trace_*
-    https://git.kernel.org/netdev/net-next/c/058fa8736570
-  - [net-next,5/5] qed: Remove unused qed_db_recovery_dp
-    https://git.kernel.org/netdev/net-next/c/915359abc68c
-
-You are awesome, thank you!
+diff --git a/Documentation/features/core/mseal_sys_mappings/arch-support.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+index c6cab9760d57..a3c24233eb9b 100644
+--- a/Documentation/features/core/mseal_sys_mappings/arch-support.txt
++++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+@@ -12,7 +12,7 @@
+     |       arm64: |  ok  |
+     |        csky: |  N/A |
+     |     hexagon: |  N/A |
+-    |   loongarch: | TODO |
++    |   loongarch: |  ok  |
+     |        m68k: |  N/A |
+     |  microblaze: |  N/A |
+     |        mips: | TODO |
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
+index 1dabfc29be0d..ef733f69003d 100644
+--- a/Documentation/userspace-api/mseal.rst
++++ b/Documentation/userspace-api/mseal.rst
+@@ -144,7 +144,7 @@ Use cases
+   architecture.
+ 
+   The following architectures currently support this feature: x86-64, arm64,
+-  and s390.
++  loongarch and s390.
+ 
+   WARNING: This feature breaks programs which rely on relocating
+   or unmapping system mappings. Known broken software at the time
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 067c0b994648..54ed5b59a690 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -69,6 +69,7 @@ config LOONGARCH
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+ 	select ARCH_SUPPORTS_LTO_CLANG
+ 	select ARCH_SUPPORTS_LTO_CLANG_THIN
++	select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+ 	select ARCH_SUPPORTS_NUMA_BALANCING
+ 	select ARCH_SUPPORTS_RT
+ 	select ARCH_USE_BUILTIN_BSWAP
+diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
+index 10cf1608c7b3..7b888d9085a0 100644
+--- a/arch/loongarch/kernel/vdso.c
++++ b/arch/loongarch/kernel/vdso.c
+@@ -105,7 +105,9 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 
+ 	vdso_addr = data_addr + VVAR_SIZE;
+ 	vma = _install_special_mapping(mm, vdso_addr, info->size,
+-				       VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC,
++				       VM_READ | VM_EXEC |
++				       VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC |
++				       VM_SEALED_SYSMAP,
+ 				       &info->code_mapping);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.49.0
 
