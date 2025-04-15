@@ -1,407 +1,249 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4895B21D5B1;
-	Tue, 15 Apr 2025 17:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3236A2206BF
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738328; cv=none; b=jATKQlj1l56y9NtcpE1S0ryJRbREDTL3Kk+69o/oGxVSq34YgjVrjt+BMQ/zlIbppgNoMRpKjhJsdUxuEDMRE1IOGqAvczIOLJJX5L6y8mpwT2S0OHLW+DVTFKBDZW52oSCgBBwSIkklhwuVlIV7JTx9yy6Z05txPgroRTkqH+k=
+	t=1744738374; cv=none; b=jJqKhC/tmL2Lalm7QJZcT434UJPUIL8iFmdA9WA6LjfVbF2cBkMbOgH3CiUUcqO///uA07us4IBlfZrT9qFbEaVRvd4ZpLT30Jm8RSYEyZdZ34Xi6bHpMdWXsP5aXK0gBZexq71AutbxskQSW69LreOm/ccaM/2y89Z0NqL/nZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738328; c=relaxed/simple;
-	bh=TcdDi4JssqzFrA5WEswEqn/d4UAMFN9FdFx1E6HlpvA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ePox1LC8/EYVTFflso/PB2ijVUgmllEWuTr6oYiXCKrQL2m8zw1u7aPfVPn0ENjMfAk0Tx/CJsrW37IJci3pwN+TCZGJBBNfdtvfRXHP67DoeeKWKOOvzYKsBQAuKNtK5Y8NeHHj14ZG2Q3tqXrzygOYy5SGN5riUj3YVUwRXMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TL7nqzkC; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744738374; c=relaxed/simple;
+	bh=2Otzs3DwCwNGfCJA4CnepeDGywULcmmWDqhlD3dwvUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXeQpx6Kh37OagxYp40a4HfFyluazO2ExuLNcYmR68geSJRpUvO4g6DpMmQJdkb4vbdhwNJhrWWIIUfjKJTWx0lqvOSkzdrsTZHBEDLkjJbUqW1pJG5xwrH1hH9Y8DljbQGXdLjt/JQTUvApOszOt4cR5G8WYDMJxA2bIgAAq5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VCkcVwf5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=w/30uPAb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CCFgElI/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/pvoamBT; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TL7nqzkC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744738326; x=1776274326;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=TcdDi4JssqzFrA5WEswEqn/d4UAMFN9FdFx1E6HlpvA=;
-  b=TL7nqzkCv96hYhiBSByQQxSktMwGC7nHef8A9bWeNeICO4vZze3pNmDz
-   5hhpdx6/3qHQYB4xpOf5HPtZRKI0w4VbClC+A4w5gQHtRfsIuHNN3r8f0
-   XYxmGD+1q6sixCGrbfxIzxRGc9rktWZvn60WcVOpW0+f8cOz1tjCBjL17
-   a4OrSX9k+2NtNuZwqUWCYdzf//FfyOnGTkwL+kcjC8aSt5BRTxK43TE2E
-   U/LNl4qptIvCElYsoTXpLvaneThgQvfKvdAHYIqiu8guXEMY61pOvSl8W
-   I2G3R5xWG2RTwraLhfvAgretyEfmO3D+Fhf6sgzFcWQr8c7OzQnXKRts1
-   w==;
-X-CSE-ConnectionGUID: P+aNTClOTdm4W1pJD0UrUQ==
-X-CSE-MsgGUID: Ab+3jL3OTnu8ucVDjMtJsA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46349449"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46349449"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 10:32:05 -0700
-X-CSE-ConnectionGUID: Izul22wzTrq7I7hZKELFXQ==
-X-CSE-MsgGUID: hirzGeTgTRGqagxLTbaF3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="161221604"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 10:32:03 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Apr 2025 20:32:01 +0300 (EEST)
-To: Werner Sembach <wse@tuxedocomputers.com>
-cc: Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org, 
-    linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v6 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-In-Reply-To: <52b7051e-cc41-4983-aee9-a9a9fc4a404d@tuxedocomputers.com>
-Message-ID: <7d083fb7-74e9-37b6-0fa4-4f97d55ef619@linux.intel.com>
-References: <20250403212934.561943-1-wse@tuxedocomputers.com> <20250403212934.561943-2-wse@tuxedocomputers.com> <9251783a-de2e-b923-2e05-ee30761846bc@linux.intel.com> <52b7051e-cc41-4983-aee9-a9a9fc4a404d@tuxedocomputers.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VCkcVwf5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="w/30uPAb";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CCFgElI/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/pvoamBT"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1FF1F1F749;
+	Tue, 15 Apr 2025 17:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744738369; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hus6ehOq6AF8o2QBOcdvDpNm19O1W9nkhOR+Of5UL7s=;
+	b=VCkcVwf5SYH9z0rvR6rGNqHOyAoS61oaJrsJLmCFU1zz97C0gtUE2tBDHiUsvFjE5Ml4dj
+	GIyOhFFh5Y+chUTd9Iq7sqWzx7weaVyMUBP64dYArdb4ZgqP6BoN1hsK23CamMo6fNcYnX
+	2j4kQqSFPCUSNkniAUbko4FQZfJOs60=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744738369;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hus6ehOq6AF8o2QBOcdvDpNm19O1W9nkhOR+Of5UL7s=;
+	b=w/30uPAbO5TK1OOmdsP6ud+mtoGQXKVa76r0TjuzsrogpIpRXOOqqG0cbrK/RB1wmWv/Wf
+	98nbNtVCDyS0gOCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744738368; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hus6ehOq6AF8o2QBOcdvDpNm19O1W9nkhOR+Of5UL7s=;
+	b=CCFgElI/KhgtgycgZze9Bc9Kn+Q4cKUBRnbgd4YpY2qXmOZSNDuTLT0FAUFd32suoYYVqQ
+	Y2tJONN2mqY8Ki2bI91Pq9sVxyvHOQfV+FiJTfXut+AYuYglKmY3r0qVz776bz2sv06ot/
+	bwvxMzS1ZozDJY8KfZ4MU4ely74Nl4g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744738368;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hus6ehOq6AF8o2QBOcdvDpNm19O1W9nkhOR+Of5UL7s=;
+	b=/pvoamBTd53lR1nXQIMIhJ4aqr6nyJPx0RR2lm2QjoMI7MeUal2tO9ymhiUse1TEJsbke2
+	OaE7Z/iZNtMkdmBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 13050137A5;
+	Tue, 15 Apr 2025 17:32:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EvKdBECY/mftdAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 15 Apr 2025 17:32:48 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id BFEECA0947; Tue, 15 Apr 2025 19:32:47 +0200 (CEST)
+Date: Tue, 15 Apr 2025 19:32:47 +0200
+From: Jan Kara <jack@suse.cz>
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Tao Ma <boyu.mt@taobao.com>, Jan Kara <jack@suse.com>, 
+	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-dev@igalia.com, syzbot+fe2a25dae02a207717a0@syzkaller.appspotmail.com, 
+	stable@vger.kernel.org
+Subject: Re: [PATCH] ext4: inline: fix len overflow in
+ ext4_prepare_inline_data
+Message-ID: <ddz2qz3vxsjlkgzdt2fxxss2yes77iglwiers7bjwf6xm3yqw5@ozr2jqs27utn>
+References: <20250415-ext4-prepare-inline-overflow-v1-1-f4c13d900967@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-443296695-1744738321=:942"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415-ext4-prepare-inline-overflow-v1-1-f4c13d900967@igalia.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[fe2a25dae02a207717a0];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[syzkaller.appspot.com:url,suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:helo,igalia.com:email]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue 15-04-25 11:53:04, Thadeu Lima de Souza Cascardo wrote:
+> When running the following code on an ext4 filesystem with inline_data
+> feature enabled, it will lead to the bug below.
+> 
+>         fd = open("file1", O_RDWR | O_CREAT | O_TRUNC, 0666);
+>         ftruncate(fd, 30);
+>         pwrite(fd, "a", 1, (1UL << 40) + 5UL);
+> 
+> That happens because write_begin will succeed as when
+> ext4_generic_write_inline_data calls ext4_prepare_inline_data, pos + len
+> will be truncated, leading to ext4_prepare_inline_data parameter to be 6
+> instead of 0x10000000006.
+> 
+> Then, later when write_end is called, we hit:
+> 
+>         BUG_ON(pos + len > EXT4_I(inode)->i_inline_size);
+> 
+> at ext4_write_inline_data.
+> 
+> Fix it by using a loff_t type for the len parameter in
+> ext4_prepare_inline_data instead of an unsigned int.
+> 
+> [   44.545164] ------------[ cut here ]------------
+> [   44.545530] kernel BUG at fs/ext4/inline.c:240!
+> [   44.545834] Oops: invalid opcode: 0000 [#1] SMP NOPTI
+> [   44.546172] CPU: 3 UID: 0 PID: 343 Comm: test Not tainted 6.15.0-rc2-00003-g9080916f4863 #45 PREEMPT(full)  112853fcebfdb93254270a7959841d2c6aa2c8bb
+> [   44.546523] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   44.546523] RIP: 0010:ext4_write_inline_data+0xfe/0x100
+> [   44.546523] Code: 3c 0e 48 83 c7 48 48 89 de 5b 41 5c 41 5d 41 5e 41 5f 5d e9 e4 fa 43 01 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc 0f 0b <0f> 0b 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53 48 83 ec 20 49
+> [   44.546523] RSP: 0018:ffffb342008b79a8 EFLAGS: 00010216
+> [   44.546523] RAX: 0000000000000001 RBX: ffff9329c579c000 RCX: 0000010000000006
+> [   44.546523] RDX: 000000000000003c RSI: ffffb342008b79f0 RDI: ffff9329c158e738
+> [   44.546523] RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+> [   44.546523] R10: 00007ffffffff000 R11: ffffffff9bd0d910 R12: 0000006210000000
+> [   44.546523] R13: fffffc7e4015e700 R14: 0000010000000005 R15: ffff9329c158e738
+> [   44.546523] FS:  00007f4299934740(0000) GS:ffff932a60179000(0000) knlGS:0000000000000000
+> [   44.546523] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   44.546523] CR2: 00007f4299a1ec90 CR3: 0000000002886002 CR4: 0000000000770eb0
+> [   44.546523] PKRU: 55555554
+> [   44.546523] Call Trace:
+> [   44.546523]  <TASK>
+> [   44.546523]  ext4_write_inline_data_end+0x126/0x2d0
+> [   44.546523]  generic_perform_write+0x17e/0x270
+> [   44.546523]  ext4_buffered_write_iter+0xc8/0x170
+> [   44.546523]  vfs_write+0x2be/0x3e0
+> [   44.546523]  __x64_sys_pwrite64+0x6d/0xc0
+> [   44.546523]  do_syscall_64+0x6a/0xf0
+> [   44.546523]  ? __wake_up+0x89/0xb0
+> [   44.546523]  ? xas_find+0x72/0x1c0
+> [   44.546523]  ? next_uptodate_folio+0x317/0x330
+> [   44.546523]  ? set_pte_range+0x1a6/0x270
+> [   44.546523]  ? filemap_map_pages+0x6ee/0x840
+> [   44.546523]  ? ext4_setattr+0x2fa/0x750
+> [   44.546523]  ? do_pte_missing+0x128/0xf70
+> [   44.546523]  ? security_inode_post_setattr+0x3e/0xd0
+> [   44.546523]  ? ___pte_offset_map+0x19/0x100
+> [   44.546523]  ? handle_mm_fault+0x721/0xa10
+> [   44.546523]  ? do_user_addr_fault+0x197/0x730
+> [   44.546523]  ? do_syscall_64+0x76/0xf0
+> [   44.546523]  ? arch_exit_to_user_mode_prepare+0x1e/0x60
+> [   44.546523]  ? irqentry_exit_to_user_mode+0x79/0x90
+> [   44.546523]  entry_SYSCALL_64_after_hwframe+0x55/0x5d
+> [   44.546523] RIP: 0033:0x7f42999c6687
+> [   44.546523] Code: 48 89 fa 4c 89 df e8 58 b3 00 00 8b 93 08 03 00 00 59 5e 48 83 f8 fc 74 1a 5b c3 0f 1f 84 00 00 00 00 00 48 8b 44 24 10 0f 05 <5b> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 de e8 23 ff ff ff
+> [   44.546523] RSP: 002b:00007ffeae4a7930 EFLAGS: 00000202 ORIG_RAX: 0000000000000012
+> [   44.546523] RAX: ffffffffffffffda RBX: 00007f4299934740 RCX: 00007f42999c6687
+> [   44.546523] RDX: 0000000000000001 RSI: 000055ea6149200f RDI: 0000000000000003
+> [   44.546523] RBP: 00007ffeae4a79a0 R08: 0000000000000000 R09: 0000000000000000
+> [   44.546523] R10: 0000010000000005 R11: 0000000000000202 R12: 0000000000000000
+> [   44.546523] R13: 00007ffeae4a7ac8 R14: 00007f4299b86000 R15: 000055ea61493dd8
+> [   44.546523]  </TASK>
+> [   44.546523] Modules linked in:
+> [   44.568501] ---[ end trace 0000000000000000 ]---
+> [   44.568889] RIP: 0010:ext4_write_inline_data+0xfe/0x100
+> [   44.569328] Code: 3c 0e 48 83 c7 48 48 89 de 5b 41 5c 41 5d 41 5e 41 5f 5d e9 e4 fa 43 01 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc 0f 0b <0f> 0b 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53 48 83 ec 20 49
+> [   44.570931] RSP: 0018:ffffb342008b79a8 EFLAGS: 00010216
+> [   44.571356] RAX: 0000000000000001 RBX: ffff9329c579c000 RCX: 0000010000000006
+> [   44.571959] RDX: 000000000000003c RSI: ffffb342008b79f0 RDI: ffff9329c158e738
+> [   44.572571] RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
+> [   44.573148] R10: 00007ffffffff000 R11: ffffffff9bd0d910 R12: 0000006210000000
+> [   44.573748] R13: fffffc7e4015e700 R14: 0000010000000005 R15: ffff9329c158e738
+> [   44.574335] FS:  00007f4299934740(0000) GS:ffff932a60179000(0000) knlGS:0000000000000000
+> [   44.575027] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   44.575520] CR2: 00007f4299a1ec90 CR3: 0000000002886002 CR4: 0000000000770eb0
+> [   44.576112] PKRU: 55555554
+> [   44.576338] Kernel panic - not syncing: Fatal exception
+> [   44.576517] Kernel Offset: 0x1a600000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> 
+> Reported-by: syzbot+fe2a25dae02a207717a0@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=fe2a25dae02a207717a0
+> Fixes: f19d5870cbf7 ("ext4: add normal write support for inline data")
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+> Cc: stable@vger.kernel.org
 
---8323328-443296695-1744738321=:942
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Looks good. Feel free to add:
 
-On Tue, 15 Apr 2025, Werner Sembach wrote:
-> Am 11.04.25 um 15:48 schrieb Ilpo J=C3=A4rvinen:
-> > On Thu, 3 Apr 2025, Werner Sembach wrote:
-> >=20
-> > > The TUXEDO Sirius 16 Gen1 and TUXEDO Sirius 16 Gen2 devices have a pe=
-r-key
-> > > controllable RGB keyboard backlight. The firmware API for it is
-> > > implemented
-> > > via WMI.
-> > >=20
-> > > To make the backlight userspace configurable this driver emulates a
-> > > LampArray HID device and translates the input from hidraw to the
-> > > corresponding WMI calls. This is a new approach as the leds subsystem
-> > > lacks
-> > > a suitable UAPI for per-key keyboard backlights, and like this no new=
- UAPI
-> > > needs to be established.
-> > >=20
-> > > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-> > > ---
-> > >   MAINTAINERS                                 |   6 +
-> > >   drivers/platform/x86/Kconfig                |   2 +
-> > >   drivers/platform/x86/Makefile               |   3 +
-> > >   drivers/platform/x86/tuxedo/Kconfig         |   8 +
-> > >   drivers/platform/x86/tuxedo/Makefile        |   8 +
-> > >   drivers/platform/x86/tuxedo/nb04/Kconfig    |  15 +
-> > >   drivers/platform/x86/tuxedo/nb04/Makefile   |  10 +
-> > >   drivers/platform/x86/tuxedo/nb04/wmi_ab.c   | 847 +++++++++++++++++=
-+++
-> > >   drivers/platform/x86/tuxedo/nb04/wmi_util.c |  95 +++
-> > >   drivers/platform/x86/tuxedo/nb04/wmi_util.h | 109 +++
-> > >   10 files changed, 1103 insertions(+)
-> > >   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
-> > >   create mode 100644 drivers/platform/x86/tuxedo/Makefile
-> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
-> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/Makefile
-> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab.c
-> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.c
-> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.h
-> > >=20
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > index 00e94bec401e1..c1f7460c246ad 100644
+Reviewed-by: Jan Kara <jack@suse.cz>
 
+								Honza
 
-> > > +struct tux_driver_data_t {
-> > > +=09struct hid_device *hdev;
-> > > +};
-> > > +
-> > > +struct tux_hdev_driver_data_t {
-> > > +=09u8 keyboard_type;
-> > > +=09u8 lamp_count;
-> > > +=09u8 next_lamp_id;
-> > > +=09union tux_wmi_xx_496in_80out_in_t next_kbl_set_multiple_keys_in;
-> > > +};
-> > > +
-> > > +static int tux_ll_start(struct hid_device *hdev)
-> > > +{
-> > > +=09struct wmi_device *wdev =3D to_wmi_device(hdev->dev.parent);
-> > > +=09struct tux_hdev_driver_data_t *driver_data;
-> > > +=09union tux_wmi_xx_8in_80out_out_t out;
-> > > +=09union tux_wmi_xx_8in_80out_in_t in;
-> > > +=09int ret;
-> > > +
-> > > +=09driver_data =3D devm_kzalloc(&hdev->dev, sizeof(*driver_data),
-> > > GFP_KERNEL);
-> > > +=09if (!driver_data)
-> > > +=09=09return -ENOMEM;
-> > > +
-> > > +=09in.get_device_status_in.device_type =3D
-> > > WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_KEYBOARD;
-> > > +=09ret =3D tux_wmi_xx_8in_80out(wdev, WMI_AB_GET_DEVICE_STATUS, &in,=
- &out);
-> > > +=09if (ret)
-> > > +=09=09return ret;
-> > > +
-> > > +=09driver_data->keyboard_type =3D
-> > > out.get_device_status_out.keyboard_physical_layout;
-> > > +=09if (driver_data->keyboard_type =3D=3D
-> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
-> > > +=09=09driver_data->lamp_count =3D sizeof(sirius_16_ansii_kbl_mapping=
-);
-> > > +=09else if (driver_data->keyboard_type =3D=3D
-> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
-> > > +=09=09driver_data->lamp_count =3D sizeof(sirius_16_iso_kbl_mapping);
-> > > +=09else
-> > > +=09=09return -EINVAL;
-> > > +=09driver_data->next_lamp_id =3D 0;
-> > > +
-> > > +=09dev_set_drvdata(&hdev->dev, driver_data);
-> > > +
-> > > +=09return ret;
-> > > +}
-> > > +
-> > > +static void tux_ll_stop(struct hid_device __always_unused *hdev)
-> > > +{
-> > > +}
-> > > +
-> > > +static int tux_ll_open(struct hid_device __always_unused *hdev)
-> > > +{
-> > > +=09return 0;
-> > > +}
-> > > +
-> > > +static void tux_ll_close(struct hid_device __always_unused *hdev)
-> > > +{
-> > > +}
-> > > +
-> > > +static int tux_ll_parse(struct hid_device *hdev)
-> > > +{
-> > > +=09return hid_parse_report(hdev, tux_report_descriptor,
-> > > +=09=09=09=09sizeof(tux_report_descriptor));
-> > > +}
-> > > +
-> > > +struct __packed lamp_array_attributes_report_t {
-> > > +=09const u8 report_id;
-> > > +=09u16 lamp_count;
-> > > +=09u32 bounding_box_width_in_micrometers;
-> > > +=09u32 bounding_box_height_in_micrometers;
-> > > +=09u32 bounding_box_depth_in_micrometers;
-> > > +=09u32 lamp_array_kind;
-> > > +=09u32 min_update_interval_in_microseconds;
-> > > +};
-> > > +
-> > > +static int handle_lamp_array_attributes_report(struct hid_device *hd=
-ev,
-> > > +=09=09=09=09=09       struct
-> > > lamp_array_attributes_report_t *rep)
-> > > +{
-> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
-> > > dev_get_drvdata(&hdev->dev);
-> > > +
-> > > +=09rep->lamp_count =3D driver_data->lamp_count;
-> > > +=09rep->bounding_box_width_in_micrometers =3D 368000;
-> > > +=09rep->bounding_box_height_in_micrometers =3D 266000;
-> > > +=09rep->bounding_box_depth_in_micrometers =3D 30000;
-> > > +=09/*
-> > > +=09 * LampArrayKindKeyboard, see "26.2.1 LampArrayKind Values" of
-> > > +=09 * "HID Usage Tables v1.5"
-> > > +=09 */
-> > > +=09rep->lamp_array_kind =3D 1;
-> > > +=09// Some guessed value for interval microseconds
-> > > +=09rep->min_update_interval_in_microseconds =3D 500;
-> > > +
-> > > +=09return sizeof(*rep);
-> > > +}
-> > > +
-> > > +struct __packed lamp_attributes_request_report_t {
-> > > +=09const u8 report_id;
-> > > +=09u16 lamp_id;
-> > > +};
-> > > +
-> > > +static int handle_lamp_attributes_request_report(struct hid_device *=
-hdev,
-> > > +=09=09=09=09=09=09 struct
-> > > lamp_attributes_request_report_t *rep)
-> > > +{
-> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
-> > > dev_get_drvdata(&hdev->dev);
-> > > +
-> > > +=09if (rep->lamp_id < driver_data->lamp_count)
-> > > +=09=09driver_data->next_lamp_id =3D rep->lamp_id;
-> > > +=09else
-> > > +=09=09driver_data->next_lamp_id =3D 0;
-> > > +
-> > > +=09return sizeof(*rep);
-> > > +}
-> > > +
-> > > +struct __packed lamp_attributes_response_report_t {
-> > > +=09const u8 report_id;
-> > > +=09u16 lamp_id;
-> > > +=09u32 position_x_in_micrometers;
-> > > +=09u32 position_y_in_micrometers;
-> > > +=09u32 position_z_in_micrometers;
-> > > +=09u32 update_latency_in_microseconds;
-> > > +=09u32 lamp_purpose;
-> > > +=09u8 red_level_count;
-> > > +=09u8 green_level_count;
-> > > +=09u8 blue_level_count;
-> > > +=09u8 intensity_level_count;
-> > > +=09u8 is_programmable;
-> > > +=09u8 input_binding;
-> > > +};
-> > > +
-> > > +static int handle_lamp_attributes_response_report(struct hid_device
-> > > *hdev,
-> > > +=09=09=09=09=09=09  struct
-> > > lamp_attributes_response_report_t *rep)
-> > > +{
-> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
-> > > dev_get_drvdata(&hdev->dev);
-> > > +=09u16 lamp_id =3D driver_data->next_lamp_id;
-> > > +
-> > Don't leave empty lines into the variable declaration block.
-> ack, an oversight
-> >=20
-> > > +=09const u32 *kbl_mapping_pos_x, *kbl_mapping_pos_y, *kbl_mapping_po=
-s_z;
-> > > +=09const u8 *kbl_mapping;
-> > > +
-> > > +=09rep->lamp_id =3D lamp_id;
-> > > +=09// Some guessed value for latency microseconds
-> > > +=09rep->update_latency_in_microseconds =3D 100;
-> > > +=09/*
-> > > +=09 * LampPurposeControl, see "26.3.1 LampPurposes Flags" of
-> > > +=09 * "HID Usage Tables v1.5"
-> > > +=09 */
-> > > +=09rep->lamp_purpose =3D 1;
-> > > +=09rep->red_level_count =3D 0xff;
-> > > +=09rep->green_level_count =3D 0xff;
-> > > +=09rep->blue_level_count =3D 0xff;
-> > > +=09rep->intensity_level_count =3D 0xff;
-> > > +=09rep->is_programmable =3D 1;
-> > > +
-> > > +=09if (driver_data->keyboard_type =3D=3D
-> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII) {
-> > > +=09=09kbl_mapping =3D &sirius_16_ansii_kbl_mapping[0];
-> > > +=09=09kbl_mapping_pos_x =3D &sirius_16_ansii_kbl_mapping_pos_x[0];
-> > > +=09=09kbl_mapping_pos_y =3D &sirius_16_ansii_kbl_mapping_pos_y[0];
-> > > +=09=09kbl_mapping_pos_z =3D &sirius_16_ansii_kbl_mapping_pos_z[0];
-> > > +=09} else if (driver_data->keyboard_type =3D=3D
-> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO) {
-> > > +=09=09kbl_mapping =3D &sirius_16_iso_kbl_mapping[0];
-> > > +=09=09kbl_mapping_pos_x =3D &sirius_16_iso_kbl_mapping_pos_x[0];
-> > > +=09=09kbl_mapping_pos_y =3D &sirius_16_iso_kbl_mapping_pos_y[0];
-> > > +=09=09kbl_mapping_pos_z =3D &sirius_16_iso_kbl_mapping_pos_z[0];
-> > Could these components be put inside another struct so you don't need 3
-> > variables to store them?
->=20
-> Reworked that a little bit, is now stored in struct tux_hdev_driver_data_=
-t
->=20
-> struct tux_hdev_driver_data_t {
-> =C2=A0=C2=A0=C2=A0 u8 lamp_count;
-> =C2=A0=C2=A0=C2=A0 const u8 *kbl_map;
-> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_x;
-> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_y;
-> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_z;
-> =C2=A0=C2=A0=C2=A0 u8 next_lamp_id;
-> =C2=A0=C2=A0=C2=A0 union tux_wmi_xx_496in_80out_in_t next_kbl_set_multipl=
-e_keys_in;
-> };
->=20
-> initialized only once during ll_start
->=20
-> or should go another level and do a nested struct?
-
-I'd prefer the pos ones to be nested as they seem strongly related. It=20
-also makes it possible to store it into temporary pointer variable if
-that's beneficial somewhere to make the code more readable.
-
-> > > +=09=09for (unsigned int j =3D 0; j <
-> > > lamp_multi_update_report.lamp_count; ++j) {
-> > > +=09=09=09lamp_multi_update_report.lamp_id[j] =3D i + j;
-> > > +=09=09=09lamp_multi_update_report.update_channels[j].red =3D
-> > > +=09=09=09=09rep->red_update_channel;
-> > > +=09=09=09lamp_multi_update_report.update_channels[j].green =3D
-> > > +=09=09=09=09rep->green_update_channel;
-> > > +=09=09=09lamp_multi_update_report.update_channels[j].blue =3D
-> > > +=09=09=09=09rep->blue_update_channel;
-> > > +=09=09=09lamp_multi_update_report.update_channels[j].intensity
-> > > =3D
-> > > +=09=09=09=09rep->intensity_update_channel;
-> > > +=09=09}
-> > > +
-> > > +=09=09ret =3D handle_lamp_multi_update_report(hdev,
-> > > &lamp_multi_update_report);
-> > > +=09=09if (ret < 0)
-> > > +=09=09=09return ret;
-> > > +=09=09else if (ret !=3D sizeof(struct lamp_multi_update_report_t))
-> > Unnecessary "else".
->=20
-> practically handle_lamp_multi_update_report can only return <0 or the cor=
-rect
-> size the was i implemented it, but theoretically other values would be wr=
-ong
-> and this code would document that if in the future other values are possi=
-ble
->=20
-> I know a somewhat philosophical train of thought. If you want i can just
-> delete the else and optionally replace it with a comment about the return
-> value.
-
-I think you misunderstood why, I didn't mean remove the whole else if=20
-thing.
-
-There's return statement in the if block so else is not required, you can=
-=20
-do the same without explicit "else":
-
-=09=09if (ret < 0)
-=09=09=09return ret;
-=09=09if (ret !=3D sizeof(...))
-=09=09=09...
-
-> > Take sizeof directly from the related struct variable.
-> ack
-> >=20
-> > > +=09=09=09return -EIO;
-> > > +=09}
-> > > +
-> > > +=09return sizeof(*rep);
-> > > +}
-
-
-> > > +{
-> > > +=09/*
-> > > +=09 * The keyboards firmware doesn't have any built in controls and =
-the
-> > > +=09 * built in effects are not implemented so this is a NOOP.
-> > > +=09 * According to the HID Documentation (HID Usage Tables v1.5) thi=
-s
-> > > +=09 * function is optional and can be removed from the HID Report
-> > > +=09 * Descriptor, but it should first be confirmed that userspace
-> > > respects
-> > > +=09 * this possibility too. The Microsoft MacroPad reference
-> > > implementation
-> > > +=09 * (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
-> > > +=09 * already deviates from the spec at another point, see
-> > > +=09 * handle_lamp_*_update_report.
-> > > +=09 */
-> > > +
-> > > +=09return sizeof(*rep);
-> > > +}
-> > > +
-> > > +static int tux_ll_raw_request(struct hid_device *hdev, unsigned char
-> > > reportnum,
-> > > +=09=09=09      __u8 *buf, size_t len, unsigned char rtype,
-> > For in-kernel usage, always use non-__ variants, so u8.
-> copied that over from the definition in hid.h, but can change it ofc
-
-Yes, use u8.
-
-
---=20
- i.
-
---8323328-443296695-1744738321=:942--
+> ---
+>  fs/ext4/inline.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/inline.c b/fs/ext4/inline.c
+> index 2c9b762925c72f2ff5a402b02500370bc1eb0eb1..e5e6bf0d338b965a885fb99581f9ed5e51c5257c 100644
+> --- a/fs/ext4/inline.c
+> +++ b/fs/ext4/inline.c
+> @@ -397,7 +397,7 @@ static int ext4_update_inline_data(handle_t *handle, struct inode *inode,
+>  }
+>  
+>  static int ext4_prepare_inline_data(handle_t *handle, struct inode *inode,
+> -				    unsigned int len)
+> +				    loff_t len)
+>  {
+>  	int ret, size, no_expand;
+>  	struct ext4_inode_info *ei = EXT4_I(inode);
+> 
+> ---
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+> change-id: 20250415-ext4-prepare-inline-overflow-8db0e747cb16
+> 
+> Best regards,
+> -- 
+> Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
