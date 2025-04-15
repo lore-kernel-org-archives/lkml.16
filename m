@@ -1,92 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD1528E3F;
-	Tue, 15 Apr 2025 20:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7AD250BEC
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744747946; cv=none; b=l5zq+oLWyJkPxZyJPfhO6OYBsxvo2rzZb+b0ReSva5hzLiWpE36bY32SZlhaYIsqhZayWoFPBbbWTfay9qHomh7HiAIYwzOI3GUrjN+mbYgKa7k7zE94/QIBz83mS569k+1qkw6SkBPAp8XTlwuYWCDtAUKBpNKEbFeI/ksMUaI=
+	t=1744748089; cv=none; b=uM5kHaljTElS3QY8syShAL+NYpYQeASedkfbiiOn5wvqNhLWwz4SwcdTS2bP3drsyv4mPd5ERAPzufZ4sNRS6dJetXZ4CmYvjkxDQjWTg41OfXdg4q6Vrju+xGqJwf7260IJd1nDQ2qrhLvxe2npJmWkpKCph5rwcOlQCUSkFpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744747946; c=relaxed/simple;
-	bh=CRMG8Zo6ps4IacifJ4+/Vz/sac8EDxbZzPUiT/AZtfI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hNZO4PZsZrscYtrzGzvyjWB1/TU+aw1/PDPZIYzLipAZ7V6kLCKaPeJESqdG+Vygct7kM7CccavgCNL58yoN/6WCtBdaX5Xw1LMcEt96B+hIVWoc/XaaFIVLkNi33Tf277tdcGNOW7XDdgP5myWKJb8FX0cTYFZz8yJ5VyGKED8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsSnOwDI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744748089; c=relaxed/simple;
+	bh=QrX5BfBQF2U/SMXR4SwmyIo877XUcxmuZpNerm61EBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dMrV1KShqbchISSHr8Xf2On5cn5PMNDwx2j+qDbx+OonIIFBK0tnOGeRzHx8BWMIt8QGHXPjz18D/21KUzMpe+uMh5RxrxH266dPdF6vk4vLDg2k0wbDgdabyMEVE2uWZurF+RzR1ufCVALC1q78NpsXgj9puvRkTNr7QM7qhyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jNIsvbHw; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsSnOwDI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A88C4CEE7;
-	Tue, 15 Apr 2025 20:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744747946;
-	bh=CRMG8Zo6ps4IacifJ4+/Vz/sac8EDxbZzPUiT/AZtfI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=nsSnOwDIglcMO65HoUItvURy0yMGsR+RO4D1XCsFYzJOCxsYxxgxqcqYEwTAxGTBJ
-	 gTreP+lqa1LCvBssGXg2Wyo1uJ/AELu0llj4hosvjuYvs9Rmny/cfuA7aYw+Etb9/5
-	 rA1/JdGAe5BVvJyGh/9S8RcCAHn2JnEjvJ7LLmUvaoIjyeiqxZlqFw4v5HfZsFXUhS
-	 br1YY8xeyKeeyadZdfX5okG8aYmeLZNtjSCn71cMKqZjvvXeyWYrDLf+outvqDSpxV
-	 5Pw0JeecFPkVW+kuoTLumD0J6Ya81dgmTQPPYFGaJpYBSRYecvcpAUqYDjquy0htQg
-	 q2H+UJOAjPSDg==
-From: Mark Brown <broonie@kernel.org>
-To: Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Sowjanya Komatineni <skomatineni@nvidia.com>, 
- Laxman Dewangan <ldewangan@nvidia.com>, Breno Leitao <leitao@debian.org>
-Cc: linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, rmikey@meta.com, kernel-team@meta.com
-In-Reply-To: <20250401-tegra-v2-0-126c293ec047@debian.org>
-References: <20250401-tegra-v2-0-126c293ec047@debian.org>
-Subject: Re: [PATCH v2 0/2] spi: tegra210-quad: Improve messages on
- pathological case
-Message-Id: <174474794125.1085405.1696078775184536618.b4-ty@kernel.org>
-Date: Tue, 15 Apr 2025 21:12:21 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jNIsvbHw"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54298ec925bso5173558e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744748086; x=1745352886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QrX5BfBQF2U/SMXR4SwmyIo877XUcxmuZpNerm61EBw=;
+        b=jNIsvbHwjuNecxt9sfUqWRrXZHZVY9H/TmkKKOfrPtKT/W+PrmYegcQ7QFbd2llSBq
+         Di0EVYgI3dGgYP9khNeK8KA/qFyAQcb+FBfBzfU0Qqgnq/16vxmxueNFdhMJr2Jr917e
+         Bn7wpcFltZaezumbPf/kkjDd0I6brq/+EVGM2/uV2LEwAuFm0cwjt0oEhXsibQeQLWez
+         CiOYTi2xlJ34y33YaEHQHynSnT18/bSvYaLoNMwHPJjNR9nkjChmaUoRpe1ZHZuW2a45
+         p2ONqVarokSbYodd4b2DliuwCUoZ579F0uJcT5USqlx5lX2T5kVQztD1UPzRwQi9mTS5
+         d5bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744748086; x=1745352886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QrX5BfBQF2U/SMXR4SwmyIo877XUcxmuZpNerm61EBw=;
+        b=SK9S2eP9lFA6qPyLA5atxSF3Of0vOU+0mYbEUcTDbWJRMVf+xgFl4IsWVyKy+BweY1
+         xpZVl0DtKxK8Cwpsmu//7oXcBSENGVOlEIP9ZR6+x7OkxOKYtPgbsQfsEydNYCZb6xqm
+         fCTX191/fGjsfDlt5mazik+UzhobSSxQlbOsPG7lrwxx6+Z5UQ2zN9TMVmAz6j+SOaeS
+         uSr6jOv0gZLOKYP7iCNO7ZYsrOnpqwWkNH8tNhFx8+3gYe7ti7xCub5fbGqv8pVEWbSN
+         6+ErCwqOtKUY3eN9CKmWNMXdDIZ2JPZqz+Nu9wDATwxUrTZlxfuX1LQ5CblfXFI3kOrJ
+         cf+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUW8lr7Yt4+Mw5XALrjW5AqMxBX7RfySBOnL2pgaA1hbnZESVoOWy5poUK1AqEBn6st/8E3o0ymNt9YCzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDim89WlrAC5hpve0Sv0nf5wS/Yds6Zpy5y69PbLsPz46qijO+
+	76XLbS65IwpcaYc79s9UWbaK481sd7/cSj1EjRYRE+KZ3TT/foCNVMcp/gU8p7M2FK0xjcwt7Oe
+	G3FFq2C78eZKf18xxHWcCNLMd5nfPl2p2zz4=
+X-Gm-Gg: ASbGnctRkzNNdsxz1vIgkerbIu+m3vg+qhoh8ITZh/zENQw3GNnl2WRQPRNvCg4s6ce
+	gfcOsiDG0iA4H4MMv9HRDeGbD3x22wqqYZ7cxzlLzaslzUiqo1CHZHRdvK8FXngEXOl1dvS+gl7
+	Tp1AG8LqjfIx2Oq4HYBCQCyW25fQdEBDKhNFQUg3LLG49Dxni5wzo=
+X-Google-Smtp-Source: AGHT+IFmjn22DVWrD3J6egNzsPL6Ng3PyVECAR9T97KHvP2G77xLiJ5TWGIYssFAbUDv+TSvWv030sUAs71yMgQvDH8=
+X-Received: by 2002:a05:6512:3e17:b0:549:733b:6afc with SMTP id
+ 2adb3069b0e04-54d604ccf4cmr100825e87.12.1744748085535; Tue, 15 Apr 2025
+ 13:14:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+References: <20250415171954.3970818-1-jyescas@google.com>
+In-Reply-To: <20250415171954.3970818-1-jyescas@google.com>
+From: John Stultz <jstultz@google.com>
+Date: Tue, 15 Apr 2025 13:14:32 -0700
+X-Gm-Features: ATxdqUG4dYOEgBpq3vBJFjWe22Y7nhXg-DziqAyeOFw0AhrMx6YFrW0nd6Oh9O8
+Message-ID: <CANDhNCpK86yKWTUkXV5oK6n7gTmeNDn-NsDppBjObXPEMwD44g@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
+To: Juan Yescas <jyescas@google.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	"T.J. Mercier" <tjmercier@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
+	baohua@kernel.org, dmitry.osipenko@collabora.com, jaewon31.kim@samsung.com, 
+	Guangming.Cao@mediatek.com, surenb@google.com, kaleshsingh@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 01 Apr 2025 06:47:48 -0700, Breno Leitao wrote:
-> I maintain several hosts with tegra210-quad controllers, some of which
-> experience data transmission failures. Debugging these issues has been
-> challenging due to excessive log messages from the driver.
-> 
-> Since these devices do not have a way to reset[1], then we want to avoid
-> warning and printing a bunch of messages, otherwise the host will
-> overflow the serial. Fix it by:
-> 
-> [...]
+On Tue, Apr 15, 2025 at 10:20=E2=80=AFAM Juan Yescas <jyescas@google.com> w=
+rote:
+>
+> This change sets the allocation orders for the different page sizes
+> (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
+> for large page sizes were calculated incorrectly, this caused system
+> heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
+>
+> This change was tested on 4k/16k page size kernels.
+>
+> Signed-off-by: Juan Yescas <jyescas@google.com>
 
-Applied to
+Seems reasonable to me.
+Acked-by: John Stultz <jstultz@google.com>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/2] spi: tegra210-quad: use WARN_ON_ONCE instead of WARN_ON for timeouts
-      commit: 41c721fc093938745d116c3a21326a0ee03bb491
-[2/2] spi: tegra210-quad: add rate limiting and simplify timeout error message
-      commit: 21f4314e66ed8d40b2ee24185d1a06a07a512eb1
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+thanks
+-john
