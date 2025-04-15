@@ -1,82 +1,43 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7304D205AB8
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D6D2DFA3B;
+	Tue, 15 Apr 2025 05:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744696040; cv=none; b=YfoZTyy4bWUzC/kR38Us2unHDWAixgifjBnQ01ACfLH4rGTVCh1Nc9JsMfwnZF+R4hxh7Qo4l83cRXvRrKJ+OxJcy+DLDRU4hwNSJsjEGIVWbGQz9rScmBYshPgxVdp07+ix6pzmdXdNc2u7MWbFRm+JmTQrWrjM7C+VsbPxCr0=
+	t=1744696300; cv=none; b=QXewIDYgo/BSZ4OiibWx6cnh1mqmxinnABTJSU2V5/RApBhE6x7ArU+QA5aJ+aDulH1A+O45M1l21ExAKMEX7E8PrUHv1JeTbojhO9vzQRbwlH7PiytAYtlIgpuKvASB5x51LTb071v3ZiHn2YMmzHKQ54+Co/DL/1s0FrHaVh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744696040; c=relaxed/simple;
-	bh=H9Bcya8I6v9xPGtKD76r4DW4ffUowuK7+mQUR2YsV60=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sC2m2LLR3q0G+s+/BDChNPnbzzsHwhMBay4B44vGvWaNjqdYwgQ21mAgJZ81d2hg2iNI5rvWmEAQDIyIoiTOOhUIkaRopndLUXqx2c25Pog6BcFy79FbLv94yryFXrmOb6hmV539PyKaS8VGwhLA4C4xLVRQSMyQpzl/cxg69AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KYsGpmaM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wMTYom4A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KYsGpmaM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wMTYom4A; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KYsGpmaM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wMTYom4A";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KYsGpmaM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wMTYom4A"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4DA931F38A;
-	Tue, 15 Apr 2025 05:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744696036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
-	b=KYsGpmaMNkYQZsnqC9EgB1TaCK+6Fs7+dx9WZeomoltuPfereu2PriOYYBvVcLRicNjBKJ
-	/JH3xKbRUlURIAHyFZnXAZYF2hNZ5kV8O4rF9+w66apPJAOWtqazmCSqiNXtEbNmiFTt0H
-	aD2KPlkGu2Tn6XYfh8qjOOd3ZoHf47o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744696036;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
-	b=wMTYom4AnX077uvX3q64GYuD5atZcOXWMh8igLbRr/7omMTB5hFdxHQyWhJuuOs19bvC6f
-	pDzrTlcTfq7UnNCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744696036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
-	b=KYsGpmaMNkYQZsnqC9EgB1TaCK+6Fs7+dx9WZeomoltuPfereu2PriOYYBvVcLRicNjBKJ
-	/JH3xKbRUlURIAHyFZnXAZYF2hNZ5kV8O4rF9+w66apPJAOWtqazmCSqiNXtEbNmiFTt0H
-	aD2KPlkGu2Tn6XYfh8qjOOd3ZoHf47o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744696036;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=Jk6Zy4/AUwBU7wb2nBxfNQOQXPbgWFB6fRcPP6ab5vU=;
-	b=wMTYom4AnX077uvX3q64GYuD5atZcOXWMh8igLbRr/7omMTB5hFdxHQyWhJuuOs19bvC6f
-	pDzrTlcTfq7UnNCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C7E6113927;
-	Tue, 15 Apr 2025 05:47:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kc+5LePy/We2EwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 15 Apr 2025 05:47:15 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH] mm, hugetlb: Reset mapping to TAIL_MAPPING before restoring vmemmap
-Date: Tue, 15 Apr 2025 07:47:05 +0200
-Message-ID: <20250415054705.370412-1-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744696300; c=relaxed/simple;
+	bh=AJ999c1D441C8UFFblcx+0Neha6Iw51QzretZKKKXIM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MR9WhoCBiNz2PhcE6zhAt0tBMFJHj3a/4yLhicZTe0CHqHg19GMABJnldhHAgP2nnQZSY0wPEt4iPCT4ICjGJwgq5a/eGm7O+iGGI3kFv5W2sUPAC1UC7xbv+fCKnyUuoLwThASYbQZ0XuDvy4BM1hGacYsSrKwOreSxTjijAkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F3RuFo029893;
+	Mon, 14 Apr 2025 22:51:28 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ykf3jrfv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 14 Apr 2025 22:51:28 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 14 Apr 2025 22:51:27 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 14 Apr 2025 22:51:24 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
+        <terrelln@fb.com>, <linux-btrfs@vger.kernel.org>, <wqu@suse.com>,
+        <boris@bur.io>
+Subject: [PATCH 6.6.y] btrfs: fix qgroup reserve leaks in cow_file_range
+Date: Tue, 15 Apr 2025 13:51:23 +0800
+Message-ID: <20250415055123.3683832-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,94 +45,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: quG9Gffnetfmx-6X2hzqefuMn5H3DPvw
+X-Authority-Analysis: v=2.4 cv=Wd0Ma1hX c=1 sm=1 tr=0 ts=67fdf3e0 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=iox4zFpeAAAA:8 a=t7CeM3EgAAAA:8 a=oSb3yfUiBPKWAvThIHwA:9 a=WzC6qhA0u3u7Ye7llzcV:22
+ a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: quG9Gffnetfmx-6X2hzqefuMn5H3DPvw
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1011
+ impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
+ mlxlogscore=775 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504150038
 
-commit 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
-shifted hugetlb specific stuff, and now mapping overlaps _hugetlb_cgroup field.
+From: Boris Burkov <boris@bur.io>
 
-_hugetlb_cgroup is set to NULL when preparing the hugetlb page in
-init_new_hugetlb_folio().
-For a better picture, this is page->mapping before and after the comming
-for the first three tail pages:
+[ Upstream commit 30479f31d44d47ed00ae0c7453d9b253537005b2 ]
 
-before:
-page: fffff51a44358040  0000000000000000
-page: fffff51a44358080  0000000000000000
-page: fffff51a443580c0  dead000000000400
+In the buffered write path, the dirty page owns the qgroup reserve until
+it creates an ordered_extent.
 
-after:
-page: fffff1f0042b0040  0000000000000000
-page: fffff1f0042b0080  fffff1f0042b0090
-page: fffff1f0042b00c0  0000000000000000
+Therefore, any errors that occur before the ordered_extent is created
+must free that reservation, or else the space is leaked. The fstest
+generic/475 exercises various IO error paths, and is able to trigger
+errors in cow_file_range where we fail to get to allocating the ordered
+extent. Note that because we *do* clear delalloc, we are likely to
+remove the inode from the delalloc list, so the inodes/pages to not have
+invalidate/launder called on them in the commit abort path.
 
-Tail#2 has fffff1f0042b0090 because of the _deferred_list initialization,
-which was also shifted, but that is not a problem.
+This results in failures at the unmount stage of the test that look like:
 
-For HVO, upon restoring that gets copied in some tail pages (reset_struct_pages)
-and so those tail pages will not have TAIL_MAPPING set and the check
-in free_tail_page_prepare() will fail:
+  BTRFS: error (device dm-8 state EA) in cleanup_transaction:2018: errno=-5 IO failure
+  BTRFS: error (device dm-8 state EA) in btrfs_replace_file_extents:2416: errno=-5 IO failure
+  BTRFS warning (device dm-8 state EA): qgroup 0/5 has unreleased space, type 0 rsv 28672
+  ------------[ cut here ]------------
+  WARNING: CPU: 3 PID: 22588 at fs/btrfs/disk-io.c:4333 close_ctree+0x222/0x4d0 [btrfs]
+  Modules linked in: btrfs blake2b_generic libcrc32c xor zstd_compress raid6_pq
+  CPU: 3 PID: 22588 Comm: umount Kdump: loaded Tainted: G W          6.10.0-rc7-gab56fde445b8 #21
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+  RIP: 0010:close_ctree+0x222/0x4d0 [btrfs]
+  RSP: 0018:ffffb4465283be00 EFLAGS: 00010202
+  RAX: 0000000000000001 RBX: ffffa1a1818e1000 RCX: 0000000000000001
+  RDX: 0000000000000000 RSI: ffffb4465283bbe0 RDI: ffffa1a19374fcb8
+  RBP: ffffa1a1818e13c0 R08: 0000000100028b16 R09: 0000000000000000
+  R10: 0000000000000003 R11: 0000000000000003 R12: ffffa1a18ad7972c
+  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  FS:  00007f9168312b80(0000) GS:ffffa1a4afcc0000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f91683c9140 CR3: 000000010acaa000 CR4: 00000000000006f0
+  Call Trace:
+   <TASK>
+   ? close_ctree+0x222/0x4d0 [btrfs]
+   ? __warn.cold+0x8e/0xea
+   ? close_ctree+0x222/0x4d0 [btrfs]
+   ? report_bug+0xff/0x140
+   ? handle_bug+0x3b/0x70
+   ? exc_invalid_op+0x17/0x70
+   ? asm_exc_invalid_op+0x1a/0x20
+   ? close_ctree+0x222/0x4d0 [btrfs]
+   generic_shutdown_super+0x70/0x160
+   kill_anon_super+0x11/0x40
+   btrfs_kill_super+0x11/0x20 [btrfs]
+   deactivate_locked_super+0x2e/0xa0
+   cleanup_mnt+0xb5/0x150
+   task_work_run+0x57/0x80
+   syscall_exit_to_user_mode+0x121/0x130
+   do_syscall_64+0xab/0x1a0
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7f916847a887
+  ---[ end trace 0000000000000000 ]---
+  BTRFS error (device dm-8 state EA): qgroup reserved space leaked
 
- kernel: BUG: Bad page state in process kworker/0:3  pfn:10ac40
- kernel: page does not match folio
- kernel: page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x10ac40
- kernel: flags: 0x17ffffc0000000(node=0|zone=2|lastcpupid=0x1fffff)
- kernel: raw: 0017ffffc0000000 fffff1f0042b0000 0000000000000000 0000000000000000
- kernel: raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
- kernel: page dumped because: corrupted mapping in tail page
+Cases 2 and 3 in the out_reserve path both pertain to this type of leak
+and must free the reserved qgroup data. Because it is already an error
+path, I opted not to handle the possible errors in
+btrfs_free_qgroup_data.
 
-Reset _hugetlb_cgroup to TAIL_MAPPING before restoring so tail pages have the
-right value.
-
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
+Signed-off-by: David Sterba <dsterba@suse.com>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
-Hi guys,
-
-Although I can no longer reproduce the issue with this patch, I'm not entirely
-sure this is the right way to fix the problem, so I'm open to
-suggestions.
+Verified the build test
 ---
- mm/hugetlb_vmemmap.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/inode.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 9a99dfa3c495..3d763182c834 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -498,6 +498,12 @@ static int __hugetlb_vmemmap_restore_folio(const struct hstate *h,
-  */
- int hugetlb_vmemmap_restore_folio(const struct hstate *h, struct folio *folio)
- {
-+	/*
-+	 * Before restoring vmemmap, make sure to reset mapping to TAIL_MAPPING,
-+	 * so tail pages that were reset will have the right thing after being
-+	 * restored, and the checks in free_tail_page_prepare() will pass.
-+	 */
-+	set_hugetlb_cgroup(folio, TAIL_MAPPING);
- 	return __hugetlb_vmemmap_restore_folio(h, folio, VMEMMAP_SYNCHRONIZE_RCU);
- }
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index cedffa567a75..fc127182067b 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1546,6 +1546,7 @@ static noinline int cow_file_range(struct btrfs_inode *inode,
+ 					     locked_page,
+ 					     clear_bits,
+ 					     page_ops);
++		btrfs_qgroup_free_data(inode, NULL, start, cur_alloc_size, NULL);
+ 		start += cur_alloc_size;
+ 	}
  
+@@ -1559,6 +1560,7 @@ static noinline int cow_file_range(struct btrfs_inode *inode,
+ 		clear_bits |= EXTENT_CLEAR_DATA_RESV;
+ 		extent_clear_unlock_delalloc(inode, start, end, locked_page,
+ 					     clear_bits, page_ops);
++		btrfs_qgroup_free_data(inode, NULL, start, cur_alloc_size, NULL);
+ 	}
+ 	return ret;
+ }
+@@ -2222,13 +2224,15 @@ static noinline int run_delalloc_nocow(struct btrfs_inode *inode,
+ 	 */
+ 	if (cow_start != (u64)-1)
+ 		cur_offset = cow_start;
+-	if (cur_offset < end)
++	if (cur_offset < end) {
+ 		extent_clear_unlock_delalloc(inode, cur_offset, end,
+ 					     locked_page, EXTENT_LOCKED |
+ 					     EXTENT_DELALLOC | EXTENT_DEFRAG |
+ 					     EXTENT_DO_ACCOUNTING, PAGE_UNLOCK |
+ 					     PAGE_START_WRITEBACK |
+ 					     PAGE_END_WRITEBACK);
++		btrfs_qgroup_free_data(inode, NULL, cur_offset, end - cur_offset + 1, NULL);
++	}
+ 	btrfs_free_path(path);
+ 	return ret;
+ }
 -- 
-2.49.0
+2.34.1
 
