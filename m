@@ -1,84 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0695923D289
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFEE2C2AA5
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744757772; cv=none; b=UyKMe9cZV33Ez6/1oolXywgwLeag7tw/QOVS6kp+6ixV+EZH5xPCdMcJAX1stdO78Cci0bgseJaGRcloQ7/qfDAkxrtyquW4yc+Xx0R9v26/cPgyK//P6gSqD24LM79Mxw2TOCTOgrF4YZwQY5uVAKq0k7PCVPzqgZCcOq/RaYM=
+	t=1744757789; cv=none; b=jnrtsX0bpBQkOWE221aF10wjtZA2ZTlVQczkrzV1iYMLTSgxuyPf7bRz3jFRhP6jagOfyubJk4Bkv43aOObEUn167GcOryt0GkqApBCqmmDWcNDICaPRo+xOqe+GLb8VS95CKxHPB1Cxb9yE6pN0k2KwFEWacIdsFQ/Rb99dmew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744757772; c=relaxed/simple;
-	bh=w5i2IRFUkGLsQ19deGxJE5v1fCHoAGpp7uciDOfDVEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lXA0tomniXNL1CZ0ccO/crSOqZ4vwA1/q3AbshVe59oMUJxHBMXrsYvCsOdGLdTcYKQ3rN4ityWA8pYWBle0nEOotbRR5iAYvW5qfrUoRhk3enBMloilug/hxSiKmwGdCVvLKMfeXFcQVUtyQnODLZMNOpNwMaoiS/bzrUO49r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRCF+mY3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744757789; c=relaxed/simple;
+	bh=Dtp0Ew2WwF87zrlIvt5mmaxscC1Uwtx809PYwDWVHcY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LB0uJWNAOznh+vrVUVAu7yyciMFDHE1wP9kI/qUJRkrtDMi3720sti5UKirqM1fosTmEpwOQQBSFnrvNhGve5oljA67goowKlaOVopWdkAUgz/2uTBAW+hFcAan2aIQNE4HcdZVjMtbZqLRUyMMKW1A/0sUc7ZQj6EQHwu1SFcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Ib376paP; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRCF+mY3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744757764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=imz0uv/7rUHpG5Wek2+5ECUg21ZObIxgPfHBxFulP7I=;
-	b=HRCF+mY3UmjU+oykoARqe2HrUDJ1hl1EIM0L84EJvShdMnMTUbRHhIYwLJOQRO/FvAOYTE
-	5nfGLJg/jcbhJWNzuIVTT/jRuSE2Y4grmqsSQrJWzADV+Llbhr3li7rdVphFtaIU0jFbCf
-	Cy/VLBMHhFZFGc4Z+YCD+OwFw7y4gVo=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-100-e5qYF_mWO66aDl3gjCpCaw-1; Tue,
- 15 Apr 2025 18:56:03 -0400
-X-MC-Unique: e5qYF_mWO66aDl3gjCpCaw-1
-X-Mimecast-MFC-AGG-ID: e5qYF_mWO66aDl3gjCpCaw_1744757762
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4F6119560AB;
-	Tue, 15 Apr 2025 22:56:01 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.38])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A49F01955BC0;
-	Tue, 15 Apr 2025 22:56:00 +0000 (UTC)
-Date: Wed, 16 Apr 2025 06:55:51 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] mm/vmalloc.c: code cleanup and improvements
-Message-ID: <Z/7j9yKX6yJ/Axd9@MiWiFi-R3L-srv>
-References: <20250415023952.27850-1-bhe@redhat.com>
- <Z_57RKPhHm24kMRu@pc636>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Ib376paP"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3577516f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744757786; x=1745362586; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3If7k3RyO/I6fUflyAfIyqgexoXUQ5iUnIIFxgXyydo=;
+        b=Ib376paPEoN4uLNZWghMaZ7yJTG1qyz6GuUGWrc7XggxFh+CSCd9oxnSAozuP9WPta
+         rBw5XP/qwHNTIe9N2Hdar8UsElM2eSoKY7bF68eKbmX2XQoJB+FnHHuB98Vg7IdfXUf5
+         p6e6BQ7/mnEOKPmhgG210bPEmIqioHFUxNzT5mFv4oCylJtkxyeaJx/kQAUHwXmgaXYh
+         zDrD9FvKjZGS/+k4ULwjVAyJcOPZBywi52/kSqKPQ2e/HDo+3Oppt5kiIU674XViCLcs
+         s3i00MjcoV4FUCe/W/7bqjEL6zFSieUPU7LY4JquG4fMJvtuUFzkkPdg/VCcpBY36L8k
+         s9Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744757786; x=1745362586;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3If7k3RyO/I6fUflyAfIyqgexoXUQ5iUnIIFxgXyydo=;
+        b=iuSlhhjBdBqV2e1aIrcgWqtOToYyQQfY81m7iwJXzL8hD/1H6HhFCBqoC34cRyIzFN
+         zUgKqZ4b8MiTE0mOo+7nFbW1R+4t4p9jknC4BeKjWhmtpoI+PWninw9TUCtg1HeoGbBM
+         0z09eP8KVoniXvTKKYly15lUIg9qpVhq8ZdeHfw++7zmbVwtLagN0mKURpVnRrwjryOC
+         ntcKY15/a1nBp5Jx1RrrB4uF8afHDm/9N2coqg+hvcRPnsB8T1XI7iwFelFxUTCV9ujb
+         faSBwfWDssey6zKHjxUdkSz7zvitpXUxefmn63VlU5iPwxpTt2gn1aDCSKXraVdIEqCP
+         0AQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVWYF/bOTiv6XvOityj1zh+H7qYHS1YC8RyMfen1onvJtcZ3jwWGC0UrXVHP6d50dcy9I1bSMwBfz+o/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7Pzz3WUFQsn3iePWeC12Pj7C3fs1zC3A5zFQZuTRetLhtfLum
+	mSP6ZxYRpi2eX6J16fNbinRYlSGEtAKgcSJHk/oeImW5Hmma1jJ03FZdpYCvnNJKd+Y4YY7Ej4s
+	OFeCdRh30RAT33imHpp2DPLg3m8JLDVTGZWzV2w==
+X-Gm-Gg: ASbGnctwryXgyBN+r6ZKLrm2NrVcXfS05pqlOcxWogsVWCQADncd0quJdd03Isb7+Ig
+	TbTwI4BnNYT/8Q/LO4lZSP9ybQ8f4L1efrCArJvBBWwLedEFzdizn7/EsNdqXdgP5036waXO2mr
+	1C0d5KzGiutICoPvMPZbdRH7c=
+X-Google-Smtp-Source: AGHT+IFcNDsrcNCH8Q24yY3mTpK4pth7d9TvsL/u1zESgnK/ipjfg+Ehr9cGOY5H3d0S1WGllQ5zEyr+jMS27JqPzKk=
+X-Received: by 2002:a5d:5985:0:b0:391:3988:1c97 with SMTP id
+ ffacd0b85a97d-39ee2735d90mr864563f8f.17.1744757785711; Tue, 15 Apr 2025
+ 15:56:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_57RKPhHm24kMRu@pc636>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org> <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com> <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
+In-Reply-To: <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
+From: Randy Jennings <randyj@purestorage.com>
+Date: Tue, 15 Apr 2025 15:56:13 -0700
+X-Gm-Features: ATxdqUGuHiF5Y1y-MoFercqMi-QmRef-lccw-wWNHKmkyEwcQpl5D1wFsIX8bvU
+Message-ID: <CAPpK+O3QXTEe0BV5M+P644Xs-0rFvxg8w2MR51kwG7_7374Emw@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Mohamed Khalfella <mkhalfella@purestorage.com>, Daniel Wagner <wagi@kernel.org>, 
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, 
+	Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/15/25 at 05:29pm, Uladzislau Rezki wrote:
-> On Tue, Apr 15, 2025 at 10:39:47AM +0800, Baoquan He wrote:
-> > These were made from code inspection in mm/vmalloc.c.
-> > 
-> > Baoquan He (5):
-> >   mm/vmalloc.c: change purge_ndoes as local static variable
-> >   mm/vmalloc.c: find the vmap of vmap_nodes in reverse order
-> >   mm/vmalloc.c: optimize code in decay_va_pool_node() a little bit
-> >   mm/vmalloc: optimize function vm_unmap_aliases()
-> >   mm/vmalloc.c: return explicit error value in alloc_vmap_area()
-> > 
-> >  mm/vmalloc.c | 68 +++++++++++++++++++++++++---------------------------
-> >  1 file changed, 32 insertions(+), 36 deletions(-)
-> > 
-> > -- 
-> > 2.41.0
-> > 
-> I have review some patches, the rest i will check tomorrow!
+On Tue, Apr 15, 2025 at 5:17=E2=80=AFAM Daniel Wagner <dwagner@suse.de> wro=
+te:
+> On Thu, Apr 10, 2025 at 01:51:37AM -0700, Mohamed Khalfella wrote:
+> > > +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
+> > > +   if (ctrl->cqt)
+> > > +           delay =3D msecs_to_jiffies(ctrl->cqt);
+> > > +   else
+> > > +           delay =3D ctrl->kato * HZ;
+> >
+> > I thought that delay =3D m * ctrl->kato + ctrl->cqt
+> > where m =3D ctrl->ctratt & NVME_CTRL_ATTR_TBKAS ? 3 : 2
+> > no?
+>
+> The failover schedule delay is the additional amount of time we have to
+> wait for the target to cleanup (CQT). If the CTQ is not valid I thought
+> the spec said to wait for a KATO. Possible I got that wrong.
+This is correct (according to the spec, if CQT is 0, wait for KATO
+instead of 0).  I would treat that as a suggestion, though.
 
-Thanks a lot for your quick and careful reviewing.
+> The factor 3 or 2 is relavant for the timeout value for the KATO command
+> we schedule. The failover schedule timeout is ontop of the command
+> timeout value.
+3 or 2 is not related to the timeout value of the KATO command.  The
+timeout value of the KATO command is whatever the host wants it to be
+(with some values being more productive than others).  The target is
+supposed to respond to the KATO command as soon as the target receives
+it (roughly).  The host timeout value should account for network
+delays and getting-around-to-it delays on the target.
 
+2*/3*KATO is from when the host has detected a loss of communication
+to when the host knows (given some assumptions) that the target has
+detected a loss of communication.  A command timeout on the host is a
+fine time for the host to decide that it has lost communication with
+the target, but there are other events.  At the time the host has
+detected a loss of communication, it needs to tear down the
+association (which includes stopping KATO & starting disconnect on
+_all_ the connections in the association).  CQT does not start until
+the host knows that the target has detected a loss of communication.
+So, Mohamed's delay is correct.
+
+> > - What about requests that do not go through nvme_failover_req(), like
+> >   passthrough requests, do we not want to hold these requests until it
+> >   is safe for them to be retried?
+>
+> Pasthrough commands should fail immediately. Userland is in charge here,
+> not the kernel. At least this what should happen here.
+This is not correct according to the spec, and, I believe, not a good
+implementation choice.  The driver (in the spec) is instructed _not_
+to return an error for any request until it knows (given some
+assumptions) that the target is no longer processing the request (or
+that processing does not matter; as in the case of a READ).
+
+Sincerely,
+Randy Jennings
