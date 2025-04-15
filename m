@@ -1,236 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3623D289
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D5623D289;
+	Tue, 15 Apr 2025 22:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744757845; cv=none; b=OWjG0vLErm4h37Vnq7g1MY259wKtzlCM4Y8aoE4wmO/583FBC94TqfF2K6uzkCqAglrfTRF3g/mqFrQKgvCUZjGZoW3b/xqtNeyqZH+BFo8SnInDOFmKLChPldbmJdb7V/VUGqhmgTh/lVMGbWvPO7kN+lDtuForfT5nNo/EaAo=
+	t=1744757917; cv=none; b=CH/sGrk6+1xzT8QNtQuDA+mIanjA1NfmjTZJRwERzFOsIC3+MvtC5yOax71W3bntSbo3RoZmI6ZpppAml4lTiuO4YUnuDow2rc5Q8+7bT9LvTQnQoqba3WAYzR25e+oX0aVSQnkbe1DttPTWg2vbIH4fVFkBsI7qVWRX4zJ1sgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744757845; c=relaxed/simple;
-	bh=+mV9cH5j1SzYTzZ654jfm9qlKvxVb37/xmpcjxjIbmQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZF0bFgQMX6mRvxBgkh13Lgb5nceAL/IeQxkKCPGA9cVpmVMwEJ3m6t4Arq/HlbQP6ANtzOP4MrrPeknJsZf3YMOdh+H8pe7dpi5WTS9ayw0j7w2l9C/mveSaQ4sOV761SWzRQL8VzBbk7dC7qlS9pyeL05DubiK/jNw5CjP14lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TrH3v79S; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744757917; c=relaxed/simple;
+	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ru6ICTNdKcjyLTDjGDEXQXEeI2qwwS0QE/EEn8V9e0UGz425bSjij09jRFd7Ua3jHc/DUUL8Jl9+boPpv5N4A6OvRmqg+uiA1KjFJW2IsZ6IUAec5ctm+P7DeiGn8YsqYKjCHRkjI6MThU0xp2q1G3ELDRyNspixyief6qn8i5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH5pwmgS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TrH3v79S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744757842;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+OglgYexYugZXu41vChufYewPyQeurTO6N3dEewyRFY=;
-	b=TrH3v79SIiZtAojUYTPW7WuSBP8xLg8Qz2v2ZQMn7La/1+8pysAl/7YU/paNC0W8331VMj
-	hNufnTEf8OXzsOTkzzokyvTEqW/dVBjrAklhlqIE6pZ2iNshSERacaIovBR4driTzuVwiU
-	1RDFGH0dW30m5+YBTZZtUdS1TqjmZ+g=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-424-NLlprDFjNEmzY8c1-goEyQ-1; Tue,
- 15 Apr 2025 18:57:19 -0400
-X-MC-Unique: NLlprDFjNEmzY8c1-goEyQ-1
-X-Mimecast-MFC-AGG-ID: NLlprDFjNEmzY8c1-goEyQ_1744757838
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D08EB19560BC;
-	Tue, 15 Apr 2025 22:57:17 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.38])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81937180B491;
-	Tue, 15 Apr 2025 22:57:16 +0000 (UTC)
-Date: Wed, 16 Apr 2025 06:57:07 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Shivank Garg <shivankg@amd.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] mm/vmalloc.c: return explicit error value in
- alloc_vmap_area()
-Message-ID: <Z/7kQ6Ajmd4uHnD5@MiWiFi-R3L-srv>
-References: <20250415023952.27850-1-bhe@redhat.com>
- <20250415023952.27850-6-bhe@redhat.com>
- <134bd404-d741-40ec-a661-f897da5ca9ca@amd.com>
- <Z/5Yv+iFmFPuFqvn@fedora>
- <1841f2e1-d677-4bb7-b449-78322e52f212@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH5pwmgS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAF8C4CEE7;
+	Tue, 15 Apr 2025 22:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744757916;
+	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hH5pwmgSxfq+VoEhSL5scVumpahKB/YEGsZoOCs8XkbGyk9d9UD7PCrluz8BVphAd
+	 DqX7lLZRDwRObVjVX9YkuOD6kXlt1g7GtNEbw6BC+WSzPXREvYHB8PU8x+1YoytRjt
+	 2NVERi74WurTWwdX5RcnlUUb1TeyD3kDMj+P5WVfCakbhRujk+2YSpvwVwT0FcNYvL
+	 kSrdkvMYiRZZwuzm9Ak+nmC3hTiTFI24M2V3qdso0Te+dQzL64mYqvQXU4MYWcieYS
+	 9AyYJFjACfDuW9zS6zQaxY9WGzhzY35vdqJ4NmL5EK/GcSnkoY51H2eX1h+5GMdpQX
+	 bNM7ROTxP7RgQ==
+Date: Wed, 16 Apr 2025 07:58:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Differentiate bash and dash in
+ dynevent_limitations.tc
+Message-Id: <20250416075832.cd27bcb52b7e31d0f5717273@kernel.org>
+In-Reply-To: <20250414210900.4de5e8b9@gandalf.local.home>
+References: <20250414210900.4de5e8b9@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1841f2e1-d677-4bb7-b449-78322e52f212@amd.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 04/16/25 at 12:30am, Shivank Garg wrote:
-> 
-> 
-> On 4/15/2025 6:31 PM, Baoquan He wrote:
-> > On 04/15/25 at 12:52pm, Shivank Garg wrote:
-> >> On 4/15/2025 8:09 AM, Baoquan He wrote:
-> >>> In codes of alloc_vmap_area(), it returns the upper bound 'vend' to
-> >>> indicate if the allocation is successful or failed. That is not very clear.
-> >>>
-> >>> Here change to return explicit error values and check them to judge if
-> >>> allocation is successful.
-> >>>
-> >>> IS_ERR_VALUE already uses unlikely() internally
-> >>>
-> >>> Signed-off-by: Baoquan He <bhe@redhat.com>
-> >>> ---
-> >>>  mm/vmalloc.c | 34 +++++++++++++++++-----------------
-> >>>  1 file changed, 17 insertions(+), 17 deletions(-)
-> >>>
-> >>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> >>> index 3f38a232663b..5b21cd09b2b4 100644
-> >>> --- a/mm/vmalloc.c
-> >>> +++ b/mm/vmalloc.c
-> >>> @@ -1715,7 +1715,7 @@ va_clip(struct rb_root *root, struct list_head *head,
-> >>>  			 */
-> >>>  			lva = kmem_cache_alloc(vmap_area_cachep, GFP_NOWAIT);
-> >>>  			if (!lva)
-> >>> -				return -1;
-> >>> +				return -ENOMEM;
-> >>>  		}
-> >>>  
-> >>>  		/*
-> >>> @@ -1729,7 +1729,7 @@ va_clip(struct rb_root *root, struct list_head *head,
-> >>>  		 */
-> >>>  		va->va_start = nva_start_addr + size;
-> >>>  	} else {
-> >>> -		return -1;
-> >>> +		return -EINVAL;
-> >>>  	}
-> > 
-> > Thanks for reviewing.
-> > 
-> >>
-> >> Braces around return -EINVAL seem unnecessary.
-> >> They can be dropped.
-> > 
-> > This complys with the codeing style required in 3) Placing Braces and
-> > Spaces of Documentation/process/coding-style.rst because other branches
-> > are multiple statements.
-> > 
-> >>
-> >>>  
-> >>>  	if (type != FL_FIT_TYPE) {
-> >>> @@ -1758,19 +1758,19 @@ va_alloc(struct vmap_area *va,
-> >>>  
-> >>>  	/* Check the "vend" restriction. */
-> >>>  	if (nva_start_addr + size > vend)
-> >>> -		return vend;
-> >>> +		return -ERANGE;
-> >>>  
-> >>>  	/* Update the free vmap_area. */
-> >>>  	ret = va_clip(root, head, va, nva_start_addr, size);
-> >>> -	if (WARN_ON_ONCE(ret))
-> >>> -		return vend;
-> >>> +	if (ret)
-> >>> +		return ret;
-> >>
-> >> Is it safe to remove the warning, or was it critical for debugging?
-> > 
-> > This comes from a reported concern because va_clip() could be failed by 
-> > NOTHING_FIT or kmem_cache_alloc failure. The warning here could cause
-> > confusion misleading people to think vmap area management is failed.
-> > 
-> >>
-> >>>  
-> >>>  	return nva_start_addr;
-> >>>  }
-> >>>  
-> >>>  /*
-> >>>   * Returns a start address of the newly allocated area, if success.
-> >>> - * Otherwise a vend is returned that indicates failure.
-> >>> + * Otherwise an error value is returned that indicates failure.
-> >>>   */
-> >>>  static __always_inline unsigned long
-> >>>  __alloc_vmap_area(struct rb_root *root, struct list_head *head,
-> >>> @@ -1795,14 +1795,13 @@ __alloc_vmap_area(struct rb_root *root, struct list_head *head,
-> >>>  
-> >>>  	va = find_vmap_lowest_match(root, size, align, vstart, adjust_search_size);
-> >>>  	if (unlikely(!va))
-> >>> -		return vend;
-> >>> +		return -ENOENT;
-> >>>  
-> >>>  	nva_start_addr = va_alloc(va, root, head, size, align, vstart, vend);
-> >>> -	if (nva_start_addr == vend)
-> >>> -		return vend;
-> >>>  
-> >>>  #if DEBUG_AUGMENT_LOWEST_MATCH_CHECK
-> >>> -	find_vmap_lowest_match_check(root, head, size, align);
-> >>> +	if (!IS_ERR_VALUE(nva_start_addr))
-> >>> +		find_vmap_lowest_match_check(root, head, size, align);
-> >>>  #endif
-> >>>  
-> >>>  	return nva_start_addr;
-> >>> @@ -1932,7 +1931,7 @@ node_alloc(unsigned long size, unsigned long align,
-> >>>  	struct vmap_area *va;
-> >>>  
-> >>>  	*vn_id = 0;
-> >>> -	*addr = vend;
-> >>> +	*addr = -EINVAL;
-> >>>  
-> >>>  	/*
-> >>>  	 * Fallback to a global heap if not vmalloc or there
-> >>> @@ -2012,20 +2011,20 @@ static struct vmap_area *alloc_vmap_area(unsigned long size,
-> >>>  	}
-> >>>  
-> >>>  retry:
-> >>> -	if (addr == vend) {
-> >>> +	if (IS_ERR_VALUE(addr)) {
-> >>>  		preload_this_cpu_lock(&free_vmap_area_lock, gfp_mask, node);
-> >>>  		addr = __alloc_vmap_area(&free_vmap_area_root, &free_vmap_area_list,
-> >>>  			size, align, vstart, vend);
-> >>>  		spin_unlock(&free_vmap_area_lock);
-> >>>  	}
-> >>>  
-> >>> -	trace_alloc_vmap_area(addr, size, align, vstart, vend, addr == vend);
-> >>> +	trace_alloc_vmap_area(addr, size, align, vstart, vend, IS_ERR_VALUE(addr));
-> >>>  
-> >>>  	/*
-> >>> -	 * If an allocation fails, the "vend" address is
-> >>> +	 * If an allocation fails, the error value is
-> >>>  	 * returned. Therefore trigger the overflow path.
-> >>>  	 */
-> >>> -	if (unlikely(addr == vend))
-> >>> +	if (IS_ERR_VALUE(addr))
-> >>>  		goto overflow;
-> >>>  
-> >>>  	va->va_start = addr;
-> >>> @@ -4753,9 +4752,10 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-> >>>  
-> >>>  		ret = va_clip(&free_vmap_area_root,
-> >>>  			&free_vmap_area_list, va, start, size);
-> >>> -		if (WARN_ON_ONCE(unlikely(ret)))
-> >>> -			/* It is a BUG(), but trigger recovery instead. */
-> >>> +		if ((unlikely(ret))) {
-> >> 		    ^^		   ^^
-> >> The extra parentheses are redundant and can be removed for clarity.
-> > 
-> > You are right, I will remove it. Thanks.
-> > 
-> 
-> Please feel free to add following in next version.
-> 
-> Reviewed-by: Shivank Garg <shivankg@amd.com>
-> Tested-by: Shivank Garg <shivankg@amd.com>
+On Mon, 14 Apr 2025 21:09:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks a lot for your careful reviewing and testing.
-
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> >>
-> >>> +			WARN_ONCE(1, "%s error: errno (%d)\n", __func__, ret);
-> >>>  			goto recovery;
-> >>> +		}
-> >>>  
-> >>>  		/* Allocated area. */
-> >>>  		va = vas[area];
-> >>
-> > 
+> bash and dash evaluate variables differently.
+> dash will evaluate '\\' every time it is read whereas bash does not.
+> 
+>   TEST_STRING="$TEST_STRING \\$i"
+>   echo $TEST_STRING
+> 
+> With i=123
+> On bash, that will print "\123"
+> but on dash, that will print the escape sequence of \123 as the \ will be
+> interpreted again in the echo.
+> 
+> The dynevent_limitations.tc test created a very large list of arguments to
+> test the maximum number of arguments to pass to the dynamic events file.
+> It had a loop of:
+> 
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+>      TEST_STRING="$TEST_STRING \\$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+> 
+> This worked fine on bash, but when run on dash it failed.
+> 
+> This was due to dash interpreting the "\\$i" twice. Once when it was
+> assigned to TEST_STRING and a second time with the echo $TEST_STRING.
+> 
+> bash does not process the backslash more than the first time.
+> 
+> To solve this, assign a double backslash to a variable "bs" and then echo
+> it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
+> "bs" accordingly, and use that to assign TEST_STRING.
+> 
+> Now this could possibly just check if "$BASH" is defined or not, but this
+> is testing if the issue exists and not just which shell is being used.
 > 
 
+Thanks for fixing this issue!
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you!
+
+> Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> index 6b94b678741a..885631c02623 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> @@ -7,11 +7,32 @@
+>  MAX_ARGS=128
+>  EXCEED_ARGS=$((MAX_ARGS + 1))
+>  
+> +# bash and dash evaluate variables differently.
+> +# dash will evaluate '\\' every time it is read whereas bash does not.
+> +#
+> +#   TEST_STRING="$TEST_STRING \\$i"
+> +#   echo $TEST_STRING
+> +#
+> +# With i=123
+> +# On bash, that will print "\123"
+> +# but on dash, that will print the escape sequence of \123 as the \ will
+> +# be interpreted again in the echo.
+> +#
+> +# Set a variable "bs" to save a double backslash, then echo that
+> +# to "ts" to see if $ts changed or not. If it changed, it's dash,
+> +# if not, it's bash, and then bs can equal a single backslash.
+> +bs='\\'
+> +ts=`echo $bs`
+> +if [ "$ts" = '\\' ]; then
+> +  # this is bash
+> +  bs='\'
+> +fi
+> +
+>  check_max_args() { # event_header
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+> -    TEST_STRING="$TEST_STRING \\$i"
+> +    TEST_STRING="$TEST_STRING $bs$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+>    echo > dynamic_events
+> -- 
+> 2.47.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
