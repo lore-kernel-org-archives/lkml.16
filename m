@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E24254848;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DA2251790;
 	Tue, 15 Apr 2025 20:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744748804; cv=none; b=b2WpGQ/Wf8zx2bNLZc5yvJ4jz0cneAKRMTXZHhBQo+E2zHPEo/+DPIPZeMzWc4OpDiBMRNY1p+AC6kduJHYT2XwthYms0rLmIJHeoB0yeFdguOZmffUHmMlM1vwVVyaHp5zkiWpCwxX/exuaBwp8PDygSTfFYRqxQiEKA/X463A=
+	t=1744748804; cv=none; b=cIja7BdiKIybrKSG4cT54xqyMq41dvRS6OkYy+q3X6dmnRb55GGkDyxtAAV8/fSgUMWMSPqvwvicyMda9wpe2k190Q6838RhCaKluDgO7g+qKWZ+fjw8bGWM7ZnjTfv94eNelbkI3SF2EQYFQyYtRta1UajFptvcN7kSGkJp92c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744748804; c=relaxed/simple;
-	bh=SZ05gaZMA5JVkKHPiFvRvLzr0lgvzW0VYZRquAxG1K0=;
+	bh=3zSv6tt/8UWvGb3NyynfypH3Nubv1KM3HCgDQjGpZpM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SnybA9tqxONqT6Y8dTa5U5cR4sxSQw/Jwn4fVvd2aspF//fCAOEbDVtkqZwMMmJ9kj14Pp0CzVVYEJI24Ay8UCYYTdJOZR2QxExuWtx014Odl/zN6efv/pyb5V6kLWn80Uz/H5anVkQxtUJ4iiof3yvpVCYBdYnopxp2k6hk4Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A2yFx5d1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HqueY0KA; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=M+tjXkU5ZIQ3HOucZ17wG+nvSmdgLa5jlkVF7RCxXJiWqBNwKr9widVMpSnmeQLb/joUhYIok+QknlSHNjNcL18hv3eWKs7PmsxH7gFChF/y49b6pYWcpyFFA541u8qvWd5h1xCdl5zEj6s9oijdbqueMIEemyxfjYQdAva5O8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yxAn/d20; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0nvV4T/W; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A2yFx5d1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HqueY0KA"
-Date: Tue, 15 Apr 2025 20:26:28 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yxAn/d20";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0nvV4T/W"
+Date: Tue, 15 Apr 2025 20:26:34 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744748794;
+	s=2020; t=1744748795;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CQbZBn1ckwYSGZifm3PodLOTGWlBhRy/B2yw5rHj+O0=;
-	b=A2yFx5d1DaS9/W2jcvKEvyrhajgC/rMPcsoBtyb1/PzGdRojFTsJyiZRGGtMxE2ROMOUUC
-	e+/W6fZmaN5Z+z+z1MGfSZTxOP6ykijHcVA0KclV9XVk9ECdMZ6Tr+3eQxZcwT5d5MRhCQ
-	DbKus+t0k13uXVg8x5BCytW6VS9qV2elAtOvixj3mJtNgK455Rn+SUspIFzIT/CBo5rDyp
-	cEmQGFbyQD/ybQmXWMYWSpyO/nlEN8B5GzcARBQnFyEFKakYl9ekdq58aLcBF+9qZs2425
-	N5Oj6ySzrOSRY4pvaQhTaSobCInQIR0u4ZtBHlgqmDn7oYW2DqvxTMIOZXboJA==
+	bh=RBRjhv9ePgPQmnVnwWtoD5ZqcJe8IVtsg6FHj+Sup2s=;
+	b=yxAn/d208OtgaB0PHHg2vq9m4cgTf47NLp5PBzIxA8DmuTd6CVRjPROOqD3EqKk2F0Hl+Y
+	6liRGvih3YvydZup8j4l/PwyUqnZd6MMQa0SRoLZxXc3gTrbBxRo+bKOWzZUguoxUTtHI5
+	AHPpJ5JWC+SDekF6bv4EJxM0t7uHrTHrOAFVlk13FGN24LiN0xJv4ZckLJtyyoPC7HMPMa
+	H7X0wnGo0pvjuaBib30Mg399COyEX5cVTeaKTLvHf2NsBxCOJ+1Ht3ROn9y30kIf9eqDB2
+	DXzJ8lcGRRr4Gk1E1iibjwXs8JN+1lS4zXrHLIAze6BWOMXbA7RIzmwMxcFKEQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744748794;
+	s=2020e; t=1744748795;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CQbZBn1ckwYSGZifm3PodLOTGWlBhRy/B2yw5rHj+O0=;
-	b=HqueY0KAkIQiq2j2a51vlg76Qi8eO5oUuA++mVJ1u3fomOd3LpvDkB97BxQPmc6MFXCq6p
-	O9qoKRHRQgg9vADQ==
+	bh=RBRjhv9ePgPQmnVnwWtoD5ZqcJe8IVtsg6FHj+Sup2s=;
+	b=0nvV4T/WFYBVo1PuPiazke1SzD+hTBGFEHtFQsI6+kYw3e8l3tkpjv+0uo6ofsNFD1Bnnz
+	KbEAP6c2mzmYMJAQ==
 From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/cpu] x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES
+ [tip: x86/cpu] x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT
 Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, "Xin Li (Intel)" <xin@zytor.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250415175410.2944032-4-xin@zytor.com>
-References: <20250415175410.2944032-4-xin@zytor.com>
+In-Reply-To: <20250415175410.2944032-3-xin@zytor.com>
+References: <20250415175410.2944032-3-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174474878899.31282.14609854394955863221.tip-bot2@tip-bot2>
+Message-ID: <174474879408.31282.1332107078743444126.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,94 +67,99 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     3aba0b40cacdfba4a604dd09315fa6cdbeb0ed90
-Gitweb:        https://git.kernel.org/tip/3aba0b40cacdfba4a604dd09315fa6cdbeb0ed90
+Commit-ID:     13327fada7ff0ae858e28b9515cd7d6ccb5fccc7
+Gitweb:        https://git.kernel.org/tip/13327fada7ff0ae858e28b9515cd7d6ccb5fccc7
 Author:        Xin Li (Intel) <xin@zytor.com>
-AuthorDate:    Tue, 15 Apr 2025 10:54:10 -07:00
+AuthorDate:    Tue, 15 Apr 2025 10:54:09 -07:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 15 Apr 2025 22:09:20 +02:00
+CommitterDate: Tue, 15 Apr 2025 22:09:16 +02:00
 
-x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES
+x86/cpufeatures: Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT
 
-Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES to X86_FEATURE_AMD_HTR_CORES
-to make the last column aligned consistently in the whole file.
+Shorten X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT to
+X86_FEATURE_CLEAR_BHB_VMEXIT to make the last column aligned
+consistently in the whole file.
+
+There's no need to explain in the name what the mitigation does.
 
 No functional changes.
 
 Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250415175410.2944032-4-xin@zytor.com
+Link: https://lore.kernel.org/20250415175410.2944032-3-xin@zytor.com
 ---
  arch/x86/include/asm/cpufeatures.h       | 2 +-
- arch/x86/kernel/acpi/cppc.c              | 2 +-
- arch/x86/kernel/cpu/scattered.c          | 2 +-
- arch/x86/kernel/cpu/topology_amd.c       | 2 +-
+ arch/x86/include/asm/nospec-branch.h     | 2 +-
+ arch/x86/kernel/cpu/bugs.c               | 6 +++---
  tools/arch/x86/include/asm/cpufeatures.h | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index bd27a1d..bc81b9d 100644
+index 60b4a4c..bd27a1d 100644
 --- a/arch/x86/include/asm/cpufeatures.h
 +++ b/arch/x86/include/asm/cpufeatures.h
-@@ -478,7 +478,7 @@
+@@ -476,7 +476,7 @@
+ #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history at syscall entry using SW loop */
+ #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control available */
  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
+-#define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch history at vmexit using SW loop */
++#define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
  #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
--#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
-+#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
  #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index 8a5cc8e..707ee52 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -327,7 +327,7 @@
+ .endm
  
-diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
-index 77bfb84..62ca714 100644
---- a/arch/x86/kernel/acpi/cppc.c
-+++ b/arch/x86/kernel/acpi/cppc.c
-@@ -272,7 +272,7 @@ int amd_get_boost_ratio_numerator(unsigned int cpu, u64 *numerator)
+ .macro CLEAR_BRANCH_HISTORY_VMEXIT
+-	ALTERNATIVE "", "call clear_bhb_loop", X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT
++	ALTERNATIVE "", "call clear_bhb_loop", X86_FEATURE_CLEAR_BHB_VMEXIT
+ .endm
+ #else
+ #define CLEAR_BRANCH_HISTORY
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index a91a1ca..3228f5d 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1701,13 +1701,13 @@ static void __init bhi_select_mitigation(void)
+ 
+ 	if (bhi_mitigation == BHI_MITIGATION_VMEXIT_ONLY) {
+ 		pr_info("Spectre BHI mitigation: SW BHB clearing on VM exit only\n");
+-		setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
++		setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_VMEXIT);
+ 		return;
  	}
  
- 	/* detect if running on heterogeneous design */
--	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES)) {
-+	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES)) {
- 		switch (core_type) {
- 		case TOPO_CPU_TYPE_UNKNOWN:
- 			pr_warn("Undefined core type found for cpu %d\n", cpu);
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 16f3ca3..c75c57b 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -53,7 +53,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_PERFMON_V2,		CPUID_EAX,  0, 0x80000022, 0 },
- 	{ X86_FEATURE_AMD_LBR_V2,		CPUID_EAX,  1, 0x80000022, 0 },
- 	{ X86_FEATURE_AMD_LBR_PMC_FREEZE,	CPUID_EAX,  2, 0x80000022, 0 },
--	{ X86_FEATURE_AMD_HETEROGENEOUS_CORES,	CPUID_EAX, 30, 0x80000026, 0 },
-+	{ X86_FEATURE_AMD_HTR_CORES,		CPUID_EAX, 30, 0x80000026, 0 },
- 	{ 0, 0, 0, 0, 0 }
- };
+ 	pr_info("Spectre BHI mitigation: SW BHB clearing on syscall and VM exit\n");
+ 	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP);
+-	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
++	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_VMEXIT);
+ }
  
-diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
-index 03b3c9c..eb799e2 100644
---- a/arch/x86/kernel/cpu/topology_amd.c
-+++ b/arch/x86/kernel/cpu/topology_amd.c
-@@ -182,7 +182,7 @@ static void parse_topology_amd(struct topo_scan *tscan)
- 	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
- 		has_topoext = cpu_parse_topology_ext(tscan);
+ static void __init spectre_v2_select_mitigation(void)
+@@ -2891,7 +2891,7 @@ static const char *spectre_bhi_state(void)
+ 		 !boot_cpu_has(X86_FEATURE_RETPOLINE_LFENCE) &&
+ 		 rrsba_disabled)
+ 		return "; BHI: Retpoline";
+-	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT))
++	else if (boot_cpu_has(X86_FEATURE_CLEAR_BHB_VMEXIT))
+ 		return "; BHI: Vulnerable, KVM: SW loop";
  
--	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES))
-+	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
- 		tscan->c->topo.cpu_type = cpuid_ebx(0x80000026);
- 
- 	if (!has_topoext && !parse_8000_0008(tscan))
+ 	return "; BHI: Vulnerable";
 diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index e10c3f4..fdbc92a 100644
+index 2e219be..e10c3f4 100644
 --- a/tools/arch/x86/include/asm/cpufeatures.h
 +++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -468,7 +468,7 @@
+@@ -466,7 +466,7 @@
+ #define X86_FEATURE_CLEAR_BHB_LOOP	(21*32+ 1) /* Clear branch history at syscall entry using SW loop */
+ #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* BHI_DIS_S HW control available */
  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
+-#define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* Clear branch history at vmexit using SW loop */
++#define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
  #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
--#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
-+#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
  #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
- #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
- 
