@@ -1,170 +1,92 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108771EA6F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD979DF59
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744754826; cv=none; b=uTrIem9D/Ov2NhWL80wVNj1nIGOGuuRcBg7j9ZdAjBKtJizUManMFam8YKQZp597mHz6hWTfUlZl9jIUkWYxSSofWgK8visBN95sflJ8GRYf1SOdHbNdn9VuaRnHbc45fouyGXAJPbRpvNgSlUvYQw7ZSTvXGk0uaiBVeksFhl0=
+	t=1744754902; cv=none; b=iVFU/aPCGID9gHFd8Pfqjsc59Ww7CXnDD4ACe1UiH2/jPBxmwJKf03NKVmJJAvjs1/dec8GJc0FObOfKy9lXXRDKW3PyNE3xPwxJqm8Vt9BwELe6VfJXTeA8GnHm5AlzEdnTp0JvYNmwdHYXaNZYGAayXZWwc6R19QmIml86Ixg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744754826; c=relaxed/simple;
-	bh=kL9VGDkvpQr1zYUWJsPtGOLBKMYThDkkMOywfyWHTzo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Af/MTTUl0zN3TAVI54D0Qh2MdR/ZSiJVi2U8b84lGEOMhnBV9Hk+XvTG28E0kFFCbLHNDHssydvnJ6ZTt185mRE4xbal4XTeYDbFND9PVJSSWIdIhqqhdlQ45xvYKNXvQ8qoJT1XIEeorvEAMEvgRFU+ivIu/rgzPHQORaKEFg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d6e10f8747so58082075ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:07:02 -0700 (PDT)
+	s=arc-20240116; t=1744754902; c=relaxed/simple;
+	bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t25ck4LuVaDggtgTx0lPlOC+odrYXEWyxZWu5umdwHKl3V0zSV4fKv2872CLnhU7XZUbMcBY18dpPPLQe1fpCV8YBgVDkYpNnirCGdWYQPBCt1tH4TtjTGIEKbUocPwbLZPXGSMaM0BtQLm+kjHMdKFDmASGnTlMNXxBqLEO4gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xSYrZxu0; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xSYrZxu0"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so53670501fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744754898; x=1745359698; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
+        b=xSYrZxu0DoyRTV0mZiTPDGQ9TRl2xvLyKNHhTlqtvj6QdpTobdhvzHJj3/wmq8+D6N
+         hSHsEfWLt3jEsgKx36ct4D7FePEn47DWjdA2Hfjyfg50ynz5rVro47BAJFH9JTENaIRk
+         D1oPjAZ56+XsVhEXDvIS2Xs0VoQztfX+orIBKBn0wUpjbA+XT7vtAst4vbfR799cPHa8
+         UXebE2Rr1TY2VALPC29IaKqUnp8tuSxmhLihpwGUJN7J+5MqGLS8o4q5LqfQedZ1ar1U
+         thl8u1t0SXgy1zbx4GCmofhos5O7IWw5ZxM5pLSyYN/6HBJOQA0m6aqRdFGvlk0lEcWC
+         PoHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744754822; x=1745359622;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yDf58XDHmqtv5dlJHeZuOlpCr06VfE29Urc6uWgfJtg=;
-        b=mxh+KMq2FH1gpARtDWACn2oLS9heD1XVnJ+52AhROUyH31viOZndY7N4WSGectAxtu
-         o9DICuqxtvxpuzFRNPJwotGAV8GzBK0nOACfTzBBaUNHdneLK3FXZnoEITXuJpMuYCOx
-         TpPn3Gq2pOzH+i6DpEfxKPKLMIIiZoRbBcKY/tEjbQbbI96FNspqQvLRyM9CSuWix7jc
-         imjJeWzwwBeHkhsc3fO73kk0hswevpjYe/SyMmYsoOJ4Nt8SbVx0GTu3y4+dTmxvqMEl
-         o8oeMUdm8h88WnR5ZZHcbVzMeT1mjy+qqgGh75pbip5EKqwEJHaz01TQZ3NplLT4CQFG
-         JkHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaWb4qCO3rMPoBRAigeZ4GjGKVQ/5HNj2jrjYr50B0Hc9FsvFTLGV8OvV2NjKIhpmjyu87w+/rU+aB6Oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb2KxxlBUJOd8AeYZA8EBdahkJvStneEjpDJrVnXyDAxZlYEVc
-	T151KQdl+X//raQ5AEGt0JJ9UDFEQ3Dd0BH10aSab/PTHR6k0EbAknraRFOcDgufqRFBoBNwuOm
-	tLDzNAiEPfZ/c/0ZgnYpGNnwnc523051Y0YTinFnXeqcvK6v9j/LlrxE=
-X-Google-Smtp-Source: AGHT+IF33MlQi6q8VLJpn2mQHScuY6OVhRvsfgZfrPeNZOZTSiboFK7cco4G9ng2ybMd6fPkByFvjrzfiHDDTeKSLaPwA9396hTm
+        d=1e100.net; s=20230601; t=1744754898; x=1745359698;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
+        b=UMVYedTYFsNiLgyT8jRBx6ddjmcirAVVgv7iiqjJDmmDJu+aZ16YGQNK7dh8jCv1Rj
+         58xpmUw0CPT1od2tpFDU2RVu1uAztc4A+/Fnh7+ZJxL4XVAYlYf3DqCiyQ69/8/yrU/W
+         DPt9OGD4rUNbGmq7i1T8Tc7zdtK9h61/3RDuP4TiyF1sJUMxJ8D1ymeKsFHI2eLJt6bh
+         DpmXU5fp28Z2S7wobi4SmLxCeBETz01ont5E+7ZisTv7P+6nCuISxXnj71iOKOhfDn6s
+         0Tnz1OIkT37Kd6EU/4jwmb4fkMkScyLZyM7ZO6N4VEH0DJCgVJnhuayVa008tXRCH8n3
+         RtGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNerSF5WihWhHM52PHyYKGURQ/JNvdj7MHe8Uk0aNBeFqoVYo4l1iBcxkPLUX5KFpJLapY1u6xLSx3Ed0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVhqBQNi6lx8j8gabLJQ/fFARtHLU4Nj4T8KuGJnG+mGIeiND8
+	kMkaLiq9nCDxTgCkEkyv1r8B5rC9DlHfgVOE1Hk5z3kyR8xynjTAol0nkO+5rNN0/T9GnSizEel
+	JuUiwDJ5IbFgOrYco+KZBjtqlCswOEyJnWzPF/Q==
+X-Gm-Gg: ASbGncuiWfSMssiAZOkccYE9QTYrX58KVzkOxxKXfGYI/0FNGrx2VaAD2F7ZeY8c9cP
+	gDvzSEt/6uOdKd5b3C2eeQlUiokjS0Xo/G78KF2YVD2fh8foLwWiEld7224gKaoIIcexjQptPaX
+	CR5SiEUWeF1P6DCtfPx6fj9AYnA3RPD7O1
+X-Google-Smtp-Source: AGHT+IHME6WhXalxlSPMh3DrzpLBS3m4KTrSQRda1Fkzzwg9vWhHTJqmuOgiRLVa0dHhEZ5Zf/JplgqHpAebpbRY5D4=
+X-Received: by 2002:a05:651c:1470:b0:30d:e104:b593 with SMTP id
+ 38308e7fff4ca-3107c36e105mr1677811fa.39.1744754897789; Tue, 15 Apr 2025
+ 15:08:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1746:b0:3d6:d162:be02 with SMTP id
- e9e14a558f8ab-3d812592679mr14177415ab.21.1744754821977; Tue, 15 Apr 2025
- 15:07:01 -0700 (PDT)
-Date: Tue, 15 Apr 2025 15:07:01 -0700
-In-Reply-To: <20250415174725.369628-1-duttaditya18@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fed885.050a0220.d2ea7.0000.GAE@google.com>
-Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in add_missing_indices
-From: syzbot <syzbot+b974bd41515f770c608b@syzkaller.appspotmail.com>
-To: duttaditya18@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, syzkaller-lts-bugs@googlegroups.com
+References: <20250410023652.8266-1-hanchunchao@inspur.com>
+In-Reply-To: <20250410023652.8266-1-hanchunchao@inspur.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 00:08:06 +0200
+X-Gm-Features: ATxdqUFR6vsrzijVD_Qjdt1doHFGMo0fgRLa54xDdj1l3AD5b73FKPjghdKzqJ0
+Message-ID: <CACRpkdYhsoermgqTiLqUZHUL8c06meg89F_gei1CatH6hJ_nkg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Remove the repeated word "the" in Kconfig.
+To: Charles Han <hanchunchao@inspur.com>
+Cc: linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org, 
+	arnd@arndb.de, iuyuntao12@huawei.com, ruanjinjie@huawei.com, 
+	ebiggers@google.com, david@redhat.com, masahiroy@kernel.org, 
+	dave@vasilevsky.ca, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi Charles,
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in add_missing_indices
+On Thu, Apr 10, 2025 at 4:37=E2=80=AFAM Charles Han <hanchunchao@inspur.com=
+> wrote:
 
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-================================================================================
-UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:2946:28
-index -128 is out of range for type 'struct dtslot[128]'
-CPU: 1 PID: 5111 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
- dump_stack+0x1c/0x58 lib/dump_stack.c:113
- ubsan_epilogue lib/ubsan.c:151 [inline]
- __ubsan_handle_out_of_bounds+0x108/0x15c lib/ubsan.c:282
- add_missing_indices+0x6d0/0xaac fs/jfs/jfs_dtree.c:2946
- jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
- iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
- __do_sys_getdents64 fs/readdir.c:369 [inline]
- __se_sys_getdents64 fs/readdir.c:354 [inline]
- __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
- __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
- el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
- do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
- el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
- el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
- el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
-================================================================================
-==================================================================
-BUG: KASAN: slab-out-of-bounds in diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
-Read of size 32 at addr ffffff80e1ab4130 by task syz.0.16/5111
+> Fix "The the" typo in the description.
+>
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
 
-CPU: 1 PID: 5111 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
- print_address_description+0x7c/0x3f0 mm/kasan/report.c:248
- __kasan_report mm/kasan/report.c:434 [inline]
- kasan_report+0x174/0x1e4 mm/kasan/report.c:451
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x274/0x2b4 mm/kasan/generic.c:189
- memcpy+0x90/0xe8 mm/kasan/shadow.c:65
- diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
- txCommit+0x748/0x5548 fs/jfs/jfs_txnmgr.c:1255
- add_missing_indices+0x74c/0xaac fs/jfs/jfs_dtree.c:2960
- jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
- iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
- __do_sys_getdents64 fs/readdir.c:369 [inline]
- __se_sys_getdents64 fs/readdir.c:354 [inline]
- __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
- __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
- el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
- do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
- el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
- el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
- el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+Please put this patch into Russell's patch tracker so it's easy for
+him to apply it.
+https://www.armlinux.org.uk/developer/patches/
 
-Allocated by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffffff80e1ab40c0
- which belongs to the cache jfs_ip of size 2240
-The buggy address is located 112 bytes inside of
- 2240-byte region [ffffff80e1ab40c0, ffffff80e1ab4980)
-The buggy address belongs to the page:
-page:000000008771d7e4 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x121ab0
-head:000000008771d7e4 order:3 compound_mapcount:0 compound_pincount:0
-memcg:ffffff80c76f5501
-flags: 0x5ffc00000010200(slab|head|node=0|zone=2|lastcpupid=0x7ff)
-raw: 05ffc00000010200 0000000000000000 dead000000000122 ffffff80c6707680
-raw: 0000000000000000 00000000800d000d 00000001ffffffff ffffff80c76f5501
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffffff80e1ab4000: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
- ffffff80e1ab4080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffffff80e1ab4100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                     ^
- ffffff80e1ab4180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffffff80e1ab4200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-ERROR: (device loop0): jfs_readdir: JFS:Dtree error: ino = 2, bn=0, index = 0
-
-ERROR: (device loop0): remounting filesystem as read-only
-JFS: Invalid stbl[1] = -128 for inode 2, block = 0
-
-
-Tested on:
-
-commit:         f7347f40 Linux 5.15.180
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
-console output: https://syzkaller.appspot.com/x/log.txt?x=132e08cc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e433a356d25f60cb
-dashboard link: https://syzkaller.appspot.com/bug?extid=b974bd41515f770c608b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12762470580000
-
+Yours,
+Linus Walleij
