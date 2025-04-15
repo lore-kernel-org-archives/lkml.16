@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8593161310;
-	Tue, 15 Apr 2025 22:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB6B255259;
+	Tue, 15 Apr 2025 22:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744756499; cv=none; b=icVeHKPsVeHJuPmjD3FCs2AFBzuIsH5NyS+bBgkGDYIYbTpVL/eoFZtDLBi+u10MXxGtYxt2j3W/07lSKIW7zNd9Jr0toMMR1f93BkCeT4nwLe/hdSEZaPvWgqttlUb14LYT2HSxhlNBTlPmrwW6I6xWUyzmiWgUm4ZMevUErOU=
+	t=1744756559; cv=none; b=q6zCOdOHD4Nc9SIPqnPwyuv0uS9oNklvRY5ovqM6ABzEgRJjibh+GgIE3SrHta60psbd35YaKmF4ybNtIGkfGPzzV737cLUD4EJwylhKjkv5KVar9HXBbO8q/Wm09mFPZ783yE6CffewNTUn0LAiLKVCYUfKetma3s6JfCwAQCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744756499; c=relaxed/simple;
-	bh=VmIV3RHtlFUmpEdd8thZJkxy2MBdLnxOH3eQWaoWXyU=;
+	s=arc-20240116; t=1744756559; c=relaxed/simple;
+	bh=h+8aBUuwLi/fRk8qAOrFLH8Sai8/fXwxK8UFNl4wO2Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVsbKRZOCMTzzVnvzE4ew+J13JHBQYrsXFEVO7Hy2rLua7gKbAdeTLSlZmvzvC2t79quuV1X9zDlL265/fM0KeYrkXv2dLB30ZhDM9fQJApcCGbl4m4QazEqmlYPc78cUDyLXnIN3MTlJ4z0aIpyyAHIjHas0rsUMhtTmeGcYos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d4wyp2S0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tHjCCL3wpnbITpiXU9AuZ9I5czz8PZ8qq6057T1du47dbNhCkRw26b91l08wyST4exor20Pam+7hut7JfllQh1CHi2ZRQMZ9picXwfwAprV612Q71UYyjQxfO3S0tqKfgSl88uz/JdzT/S6SZC6VB6gftx/AkVG+SbgGjgjsHPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWnTlOV8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d4wyp2S0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565EEC4CEE7;
-	Tue, 15 Apr 2025 22:34:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWnTlOV8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DADB4C4CEE7;
+	Tue, 15 Apr 2025 22:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744756499;
-	bh=VmIV3RHtlFUmpEdd8thZJkxy2MBdLnxOH3eQWaoWXyU=;
+	s=k20201202; t=1744756559;
+	bh=h+8aBUuwLi/fRk8qAOrFLH8Sai8/fXwxK8UFNl4wO2Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d4wyp2S0/kMUxc+JX6/EpU/KSp7L7Em3MZfV40Tq9mKsGhbi26e59x9GuRaeIy3nP
-	 pUlezhzTICb6Rw/AloJADQd/s9wIMkX3WLnuVv3+3zzhPFGS29mSJHHffPF+Zospfu
-	 oP+YdKakT2uqx6T7wVgecA3JubIKVC6gQz3HSO1DyVb2fWvvse10NgGYIp3YbCWfIQ
-	 e63n0gfeMpaZBBkA9vo6sE2EKiNmYk8slCFRbLq6sWPsEYp1TfoRlnb0OkOzmMTO/l
-	 kOR4fR05Xcj66HxecqMmA1Ax5SojZFaCHhODMxZMK7rxzW3+uvUdQl1pEmVZ0pV3De
-	 tCWWRUuLVvfWA==
-Date: Tue, 15 Apr 2025 15:34:54 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 0/2] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250415223454.GA1852104@ax162>
-References: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
+	b=lWnTlOV8bCu0YyZfXx51DvZLH5q7CKtpRPqb405mdbHI5i92D9/Q1Kxdhm4Ltp0rD
+	 8xkz+RJollv/AATpEHl3NIC0Ul0Gp7hyMvYQw/iwV8Z+m2QqhRGPYqY7fPFx2yLR/c
+	 WtD6MHpPVgvpog4hnrcb1HNOxq3Cxz47LfbO5tdGFnT+RxQZBXAgLwjM9IJyHMOMTJ
+	 lPDHx52afhyqbVJDLfLSD7j/7eWyTa4c35POPqc/898WQBgQdigxozhm7/xIPwaMFF
+	 AW5Adxs6qCAT9kj3fMrPzzg7VJBsTrp3VQ+H/CZkBzuIAcFSsCYlR0//Vteauh0kmB
+	 gGLjezxgRu5AA==
+Date: Tue, 15 Apr 2025 17:35:57 -0500
+From: Rob Herring <robh@kernel.org>
+To: David Heidelberg <david@ixit.cz>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Pavel Machek <pavel@ucw.cz>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] media: dt-bindings: Convert Analog Devices ad5820 to
+ DT schema
+Message-ID: <20250415223557.GA940473-robh@kernel.org>
+References: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,41 +47,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411-work-pidfs-enoent-v2-0-60b2d3bb545f@kernel.org>
+In-Reply-To: <20250414-b4-ad5820-dt-yaml-v3-1-39bbb5db7b2b@ixit.cz>
 
-Hi Christian,
-
-On Fri, Apr 11, 2025 at 03:22:43PM +0200, Christian Brauner wrote:
-> In a prior patch series we tried to cleanly differentiate between:
+On Mon, Apr 14, 2025 at 06:04:01PM +0200, David Heidelberg wrote:
+> Convert the Analog Devices ad5820 to DT schema format.
 > 
-> (1) The task has already been reaped.
-> (2) The caller requested a pidfd for a thread-group leader but the pid
-> actually references a struct pid that isn't used as a thread-group
-> leader.
+> Added the io-channel-cells property, because it's already used by the
+
+You mean #io-channel-cells?
+
+> Nokia N900 device-tree and defines ad5820 as having only single output.
 > 
-> as this was causing issues for non-threaded workloads.
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> ---
+> Changes in v3:
+> - Removed documentation of io-channel-cells property. Now it's 1:1 to
+>   the original binding. The reference to it from the Nokia N900 dts
+>   was removed in the -next.
+
+Added or removed? I'm confused.
+
+> - Link to v2: https://lore.kernel.org/r/20250314-b4-ad5820-dt-yaml-v2-1-287958c3c07c@ixit.cz
 > 
-> But there's cases where the current simple logic is wrong. Specifically,
-> if the pid was a leader pid and the check races with __unhash_process().
-> Stabilize this by using the pidfd waitqueue lock.
+> Changes in v2:
+> - added MAINTAINERS entry for the binding
+> - documented why io-channel-cells got added into the binding.
+> - dropped io-channel-cells in required properties.
+> - adjusted example indentation to 4 spaces.
+> - Link to v1: https://lore.kernel.org/r/20250209203940.159088-1-david@ixit.cz
+> ---
+>  .../devicetree/bindings/media/i2c/ad5820.txt       | 28 ----------
+>  .../devicetree/bindings/media/i2c/adi,ad5820.yaml  | 59 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  3 files changed, 60 insertions(+), 28 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> deleted file mode 100644
+> index 5764cbedf9b73387ad1bfa9acf99c643f959b84a..0000000000000000000000000000000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -* Analog Devices AD5820 autofocus coil
+> -
+> -Required Properties:
+> -
+> -  - compatible: Must contain one of:
+> -		- "adi,ad5820"
+> -		- "adi,ad5821"
+> -		- "adi,ad5823"
+> -
+> -  - reg: I2C slave address
+> -
+> -  - VANA-supply: supply of voltage for VANA pin
+> -
+> -Optional properties:
+> -
+> -   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is
+> -active low, a high level on the pin enables the device.
+> -
+> -Example:
+> -
+> -       ad5820: coil@c {
+> -               compatible = "adi,ad5820";
+> -               reg = <0x0c>;
+> -
+> -               VANA-supply = <&vaux4>;
+> -               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+> -       };
+> -
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..93349e7daf262fc8939f984fbe93cf064a0cbaf8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/adi,ad5820.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD5820 autofocus coil
+> +
+> +maintainers:
+> +  - Pavel Machek <pavel@ucw.cz>
+> +
+> +description:
+> +  The AD5820 is a current sink driver designed for precise control of
+> +  voice coil motors (VCMs) in camera autofocus systems.
+> +
+> +allOf:
+> +  - $ref: /schemas/iio/iio.yaml#
 
-After the recent work in vfs-6.16.pidfs (I tested at
-a9d7de0f68b79e5e481967fc605698915a37ac13), I am seeing issues with using
-'machinectl shell' to connect to a systemd-nspawn container on one of my
-machines running Fedora 41 (the container is using Rawhide).
+You have the ref, so #io-channel-cells is allowed, but you need to say 
+what the value for it should be for *this* binding. IOW, you still need 
+to list it explicitly.
 
-  $ machinectl shell -q nathan@$DEV_IMG $SHELL -l
-  Failed to get shell PTY: Connection timed out
-
-My initial bisect attempt landed on the merge of the first series
-(1e940fff9437), which does not make much sense because 4fc3f73c16d was
-allegedly good in my test, but I did not investigate that too hard since
-I have lost enough time on this as it is heh. It never reproduces at
-6.15-rc1 and it consistently reproduces at a9d7de0f68b so I figured I
-would report it here since you mention this series is a fix for the
-first one. If there is any other information I can provide or patches I
-can test (either as fixes or for debugging), I am more than happy to do
-so.
-
-Cheers,
-Nathan
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad5820
+> +      - adi,ad5821
+> +      - adi,ad5823
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  enable-gpios:
+> +    maxItems: 1
+> +    description:
+> +      GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is active low,
+> +      a high level on the pin enables the device.
+> +
+> +  VANA-supply:
+> +    description: supply of voltage for VANA pin
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - VANA-supply
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        coil@c {
+> +            compatible = "adi,ad5820";
+> +            reg = <0x0c>;
+> +
+> +            enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+> +            VANA-supply = <&vaux4>;
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index af3537005de35dfd0ded11bdc2b9c63e10c70e93..366ed4905fc9b32862a4fd665cf5f4e09fafc989 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17274,6 +17274,7 @@ M:	Pavel Machek <pavel@kernel.org>
+>  M:	Sakari Ailus <sakari.ailus@iki.fi>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/i2c/adi,ad5820.yaml
+>  F:	drivers/media/i2c/ad5820.c
+>  F:	drivers/media/i2c/et8ek8
+>  
+> 
+> ---
+> base-commit: b425262c07a6a643ebeed91046e161e20b944164
+> change-id: 20250314-b4-ad5820-dt-yaml-3220bf2f1e40
+> 
+> Best regards,
+> -- 
+> David Heidelberg <david@ixit.cz>
+> 
