@@ -1,62 +1,62 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244ED296D0D;
-	Tue, 15 Apr 2025 12:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412FE297A74;
+	Tue, 15 Apr 2025 12:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721812; cv=none; b=J3j1SaD+kMs9qI6aD/zah1CsxMGn62MOiu6FKc4aZ9gqmn07ioGIaWksqFUIZIodaL6iCue2d/QCNInWrdtBGsyfmuRd4Q69sk8rAIGZQuLXR5oa6UTdfQAl75frh7R3uTNqqaZZ62eRTo7O4oLP76qqiH7S+NBdcfHfl3dQ6Rg=
+	t=1744721817; cv=none; b=n3TTsCK9RLxIghsjW3ZTJVe8TfzFIOo9Ra56bgQvx9JNEBkrbaNQfg1aeYE5KjyWYlBVQk1eh5e+j5b+UPylgxmAJwbAEyAHEI8mZtFCosW462wCZDYqg1XRfFnEXl0kL2SzMwHe2BvN2YJ899vrIw7iM5Z90J/AtMJirh5bf7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721812; c=relaxed/simple;
-	bh=JV6/Zd7jmLkMX3zv5Il0vw94EGousU0d+tw5mlhV1i0=;
+	s=arc-20240116; t=1744721817; c=relaxed/simple;
+	bh=W0j6iaGLICzY08UwsMabAQsvmG4ifO69JE8mK7U9m5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Jfbqhm7SxymlTzMj3vxMT+RbkDNqxmBLYwcaVPndj5BOtIKfkH4A85dKhRSASYGf7k4gaDFyQRu/pI+27AKcd/WIp8+rKXpvljGizSqrP6aOkkYseGbyk5SSU2jnVj0dDUBkqwT+xcuVwCJvF1ZZAYs7Gqo7dn2IM1DCSt3/1Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ECMx26vD; arc=none smtp.client-ip=209.85.221.49
+	 MIME-Version; b=oRqcROfUWIa3rURMBw8DLtxqKtUbWW+DiRPIU2TjEkqTZbgxD3Ln87RrcUVdp1KIbVrSRDphtEg1t/K9SvlkuQM63WT4EoITNEyGnDjVr5hm3WG2MNCm5syZ+nBBH85yHhCwaGOzPmmxz4m9XpTQmbl3gmktAHzsdI28ZD/RBkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q2PSR8AF; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECMx26vD"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5193161f8f.2;
-        Tue, 15 Apr 2025 05:56:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2PSR8AF"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so26428585e9.1;
+        Tue, 15 Apr 2025 05:56:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744721809; x=1745326609; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744721813; x=1745326613; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dxtx+wYgnayT5+SYG5cHUYe65nSDdAbTREq4fQgE5Vg=;
-        b=ECMx26vDotUnt6pX1xc1Vc8G5u+r0ARgcRvfjvzbiBo7PoyG0amKyOPw/UfpvKi+Xm
-         h24i82pShPE4yNnS07DTX9WoUloYGRtP7Y9iVfkW5G4jpkN122ykTm2iw6mQcyoGyllP
-         89UoIVWeVNlJxt7Nx/MHin2Ixjx++SQZBReurHuOY2w5v6DJqOidNya6brRSR+FFhAeg
-         3ngO4owk635i5LxArwY2GO5e3TNa46OCXB2XHUVJKRITVXxZXp3ecDwwrLgqeDynEFNT
-         1MYADT5Na6u2MGxyIFdx1WvcZZOGITlPLMimXDhKMLySKnL40kgXWq01v8HI8/4U0STm
-         MPCQ==
+        bh=TBtNXmS8qjturrEwGtpAmFAuM6DgmNGXr8LZo+XU2no=;
+        b=Q2PSR8AFHwDbfuJi54hhPfA2qhF41DZjEGFsFQSXLH3+tm92OIUx/m9Ldn0yBK4+I/
+         kQluRTXZjSdiqYlBA9BXx7+lGA0Hl9qTgSw6CsOLdKKCPyIhiQBDnffXU8tODivuhMVf
+         fAr3kCuCBTd2s+yHdz7cDUZR0X+oRdpgsD7+7aIg9J80GfYqMM7KNIxTtavNXGHe5mFo
+         Rg9MVvWBYn3u0azK42fKgN5VWY3agz5aGC9VBnOHUxUpVgGwimj+K7/73u/cP8VUgfxw
+         aXoR0uHROCmua5I/rQojN30tLDeO7m+Gdrsxx+dyMdbY1m0JI4TbWq2TWXsIEwj61tSA
+         oesw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744721809; x=1745326609;
+        d=1e100.net; s=20230601; t=1744721813; x=1745326613;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dxtx+wYgnayT5+SYG5cHUYe65nSDdAbTREq4fQgE5Vg=;
-        b=QT4Ki9wmVip6TqvyI2BfArtb64KaRAAUbDCMM2kE3gVbHkRLuBy/3lxHMr/cMfwWP4
-         OlOO8GdwoJ6hQ8suzNE3RLiXtpE+W/dSYb+aYWTm9sGC0QL1FewUm3irkaCBSmh4Ty4u
-         kVUfz7pmZoM6sxRHP5Dg7Oj0QT0XN19vUVw7JLGYDJNGSK0BCInouhUXernqcPHjzzg7
-         ArCjnmnXfQOeSTVqqs1m2SFJVncY/sDBMOtp0GmaJJyYPZNyh0mvyZJoKtxjqpYLwyPp
-         mZKgAPdseD0uVDPLnpJc0/gqkPT1kzKYOvdce8arSL4SHX88ecwJx+/xBYFVW8Rw/+wM
-         lIyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHAfVvGvbQFhBoFN+6b+w7Pl63Dd0i4q08hkjScuJIKNA/VzumNQbDo3HGws3a6fVWNT+yj1SUsaYAEL5z@vger.kernel.org, AJvYcCUXt/m9KSwCjck5ph40W8FjP91+b6qgAmSba7TMAqVdA7SX5Gvp0niZXPvP8jP1Y3S/wMgR42JhXTGh@vger.kernel.org, AJvYcCXWDtTkDpYOTYWYXS3fuNR2FXir3ww4B8bNUpse/qSPYT1sftpnF5mhQ7RmHd1pwMuvZkZR6SmrZoEwi5aSkXar++8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1jfNOKqm9xj0zR6Jsylo9dN8GOzQ7Wwh8jT8atJpjqqsCb8in
-	PRJqBWWX7Q+5Ns57v5amoOrQX5esIK1nWgqTVYo1Snmm3KZciBMW
-X-Gm-Gg: ASbGncstz1/sR9NEzgoQFlaq0XtM8kdtfTb92PfEIYUGo0Il9cKgplmGHLoTnRTdt2R
-	8kCJC3KgEh7tQYJKQCVDOjacyLGTyF8n9pRekzraf6nJ3NUTkK7Xc+YQAOj+cXR2fyqCyb68XS8
-	9RnNfEbZcYMHMNqaH2QGkVQykhxXk0sQ9vvgvSL5u+lS8u2A18YnR4SvTCX4PqHr0VbgNkbgWyb
-	JH4f5PP3T4PlK1PvbzQMZaw6uT+9qppUUAcaINSPpVJC4dykOXHuWT9QsXIjoz5DhgzFHT/EKmJ
-	MW2GAXbFG0X3s11AO75P9IKV4iOhtHMMpKSwkUeAnCV7LKps6sS0CVaUnyJbnm0l
-X-Google-Smtp-Source: AGHT+IHh1oHEy/id+2kXHtxdu/j3+e8kGj1u5Gw07xALuQpAX70pVHKbVNleZqFSuazAXcZb5wjYGw==
-X-Received: by 2002:a5d:5f87:0:b0:39c:266c:12a5 with SMTP id ffacd0b85a97d-39ea5201e7fmr11010905f8f.13.1744721809254;
-        Tue, 15 Apr 2025 05:56:49 -0700 (PDT)
+        bh=TBtNXmS8qjturrEwGtpAmFAuM6DgmNGXr8LZo+XU2no=;
+        b=KFhFtsk4f47AdWguAJcPpJ+H3VRbwp8hj/r3ketaAmE7KDhpw+kvhMJphj4kyn3nps
+         5ZNQ4wHhroyt44w+6D5dB2S8iSUA7yb8sb41J4XPoSew8OJDyHKUNFaRafTMxXxumvHN
+         7CzBImIUR7r5DLqkLuwtnbqb3Em2r1RevitLEieElc3UTQ1p9jlxDoe4KbhSZgf3Ps7y
+         iOiHtJJvkS+tfYMQ40YzggGQsrlfQFN4bhrckeV3XmnFOyjHDLNvsY2iA8wGlD1CGIYj
+         GVcaFBKMWPmg4oa6PsT43tnpAYLY2r6jAr9W8UAdylYycEukpItx+1QlhIm9diCiPnph
+         U+/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUr8knR0wI+AQXtPQ32zasTTxnc3ET7vFyEirUgDvkIe4kbTBLhwHlUlwLOyEmD/jEZeYfhx+MKS552D/4sBeceCkY=@vger.kernel.org, AJvYcCVvHsnuqevn5LchQyXUOTxixWKGZoFpelqiP7mBkIE4Vrqnmv7Hb1BzAmdCcorUlPU4Wm40pcSgbbi9@vger.kernel.org, AJvYcCWH+mpiuctLvyBUW8V9+pp3+BmUyurowO+CQk187X7ULyAQ3pCyDgMn92RXilk2JbEpv9lYvwFbg2Dh/1h5@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHDhGJwXfEQcfL53UnJach7lIdUJHetkXERsMOYJRNoLQ9yKBs
+	VKvKYNZokFFQGX0LFCEnzzCTeYSiuM7vb7P8HlBG6b1ctgfYaed+
+X-Gm-Gg: ASbGncurFgGJMwL3SxuCWLYw9tnvjgXUFufRarBmF/9HfMBsd0BIoEIW/oiox2WCqKm
+	vpBZjLEywGLeOui4fZNMNGrqlF6RkNzCRr1esfcVh8TZfiF/iNgWl8CDgIFmdRlIRi2+XYM5gSW
+	1EkfUU7nVvEV+BXL/7HtoLhSFZ+leEyhVqpAvf0WI9SNo9jtmg962Hknd8j1v1U6+FQx+QmNZ8r
+	Ju1fa0S7Xn7kcEYHZEdEDnUAMi4lgUb/y/hnaTnw/9IgsXpRM0OcAa6LxAlDfSOXnsJl4B6i4hg
+	CnyZB0aktQPKK1snh2dvHLKJ21MxqPMxGiuaFTLzS27IIqzEs+QPh/+gSB4O97rV
+X-Google-Smtp-Source: AGHT+IE0KqK5XyLGhc+pfdESGQ0FrYBws4qU9UQxP3mB+l7Lk+YFfa+Xsv3uUzwSyeT2UvIbstj7vg==
+X-Received: by 2002:a05:600c:4704:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f3a9af837mr171329065e9.30.1744721813467;
+        Tue, 15 Apr 2025 05:56:53 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:1883:aa4:a265:bc12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm13922334f8f.25.2025.04.15.05.56.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm13922334f8f.25.2025.04.15.05.56.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 05:56:48 -0700 (PDT)
+        Tue, 15 Apr 2025 05:56:52 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
@@ -86,9 +86,9 @@ Cc: netdev@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH net-next v6 1/4] dt-bindings: net: dwmac: Increase 'maxItems' for 'interrupts' and 'interrupt-names'
-Date: Tue, 15 Apr 2025 13:56:39 +0100
-Message-ID: <20250415125642.241427-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH net-next v6 4/4] MAINTAINERS: Add entry for Renesas RZ/V2H(P) DWMAC GBETH glue layer driver
+Date: Tue, 15 Apr 2025 13:56:42 +0100
+Message-ID: <20250415125642.241427-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -102,60 +102,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Increase the `maxItems` value for the `interrupts` and `interrupt-names`
-properties to 11 to support additional per-channel Tx/Rx completion
-interrupts on the Renesas RZ/V2H(P) SoC, which features the
-`snps,dwmac-5.20` IP.
-
-Refactor the `interrupt-names` property by replacing repeated `enum`
-entries with a `oneOf` list. Add support for per-channel receive and
-transmit completion interrupts using regex patterns.
+Add a new MAINTAINERS entry for the Renesas RZ/V2H(P) DWMAC GBETH
+glue layer driver.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../devicetree/bindings/net/snps,dwmac.yaml   | 24 ++++++++++++-------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index 78b3030dc56d..4d4fcaeca8a8 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -114,19 +114,25 @@ properties:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1248443035f4..f5141da4d509 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20606,6 +20606,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/usb/renesas,rzn1-usbf.yaml
+ F:	drivers/usb/gadget/udc/renesas_usbf.c
  
-   interrupts:
-     minItems: 1
--    items:
--      - description: Combined signal for various interrupt events
--      - description: The interrupt to manage the remote wake-up packet detection
--      - description: The interrupt that occurs when Rx exits the LPI state
--      - description: The interrupt that occurs when HW safety error triggered
-+    maxItems: 11
- 
-   interrupt-names:
-     minItems: 1
-+    maxItems: 11
-     items:
--      - const: macirq
--      - enum: [eth_wake_irq, eth_lpi, sfty]
--      - enum: [eth_wake_irq, eth_lpi, sfty]
--      - enum: [eth_wake_irq, eth_lpi, sfty]
-+      oneOf:
-+        - description: Combined signal for various interrupt events
-+          const: macirq
-+        - description: The interrupt to manage the remote wake-up packet detection
-+          const: eth_wake_irq
-+        - description: The interrupt that occurs when Rx exits the LPI state
-+          const: eth_lpi
-+        - description: The interrupt that occurs when HW safety error triggered
-+          const: sfty
-+        - description: Per channel receive completion interrupt
-+          pattern: '^rx-queue-[0-3]$'
-+        - description: Per channel transmit completion interrupt
-+          pattern: '^tx-queue-[0-3]$'
- 
-   clocks:
-     minItems: 1
++RENESAS RZ/V2H(P) DWMAC GBETH GLUE LAYER DRIVER
++M:	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++L:	netdev@vger.kernel.org
++L:	linux-renesas-soc@vger.kernel.org
++S:	Supported
++F:	Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
++F:	drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
++
+ RENESAS RZ/V2M I2C DRIVER
+ M:	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+ L:	linux-i2c@vger.kernel.org
 -- 
 2.49.0
 
