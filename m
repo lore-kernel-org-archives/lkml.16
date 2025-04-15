@@ -1,105 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB16F2DFA37;
-	Tue, 15 Apr 2025 15:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4252DFA29;
+	Tue, 15 Apr 2025 15:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730083; cv=none; b=aj/MiXUZySsTtFaMW+VKU3mK2WSDpXjZBEK9Q/bOS0HEWSut7QnN5eV8LjpYTBYbm0F5fM52AVSSKerHqNvgVveML7jI318I3M3+bVejzdLnMaX+WNvxlOFzuqFcS3YCX0MvHrPsaM7o5RKq1zSYQJORwdwUTzoFQMU9rT8e+H8=
+	t=1744730147; cv=none; b=NJ9/Q1KdzieSZPkzvAKtdrov9+eYX7wYbuzNfHDCSfLa2opSY4OEuWklWNVGJIxPXyFV//n28Ut7bodYFNX8Gdfza7jk+HUzJCngsSZ5+Iu9OkEg558XX6ZtgKpVOXi+oxRlQqivYLVr5n9ty/lDc7KHLGGQwtjRtIPNM67EC5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730083; c=relaxed/simple;
-	bh=NNkg4KBG1XF1rTXXMic0/x6nqkOh+W1QMwlkngBnbt4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BmH4Cewb1XJFmDw1YDzB6BIScR0O4rKeQWUH6NCOMgj+tNCdFWOhbfhxij+qY1eBBHE7jRvMNGEsiqisXbp5MxUo4pkANUqQTPGE9WSoumGcGpKpMXp3Mt4dcP6TRiJ8z1fSFNL67MdQuVtyMjp6KBGbTGWSMxbzuedS2fPyroI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=W/pMlr3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744730147; c=relaxed/simple;
+	bh=NpC2l7gMdFN7S4l3VmerC2J4g0BTa/HJrMGkyw2j7sI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fU/nMX0fheIj9W6s2F7jGGHSJoUC+x51XMYVzso50l/3xvMvcIUteeZieSrHd5B0UogYPcXOuQ008e8MVuT+89zqpj0q4vGSL9iC/Y8k6YIv8rtILjyXFqLLbWzRt5L4u/GGEMlyvf0P62/r2Vbyy89S0DtCK6y3z5TTthBs1Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4rJ7ACQ; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="W/pMlr3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BADF4C4CEEB;
-	Tue, 15 Apr 2025 15:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744730081;
-	bh=NNkg4KBG1XF1rTXXMic0/x6nqkOh+W1QMwlkngBnbt4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W/pMlr3UVFCYWBcvpZLOuCoJgy02g1s9zvI/HbBU0IB5Ekwz/NQIU4hYUtuS7/kGp
-	 gQPoFcHfZNCkuUntHqGxew5OAMaa9ofiCoclWpcBNC9IhsaNt1Ch6dIe9a1idXXebt
-	 8X55QOY5Pi2zPWt2+UtyT/8B724qof+ccML8BPh0=
-Date: Tue, 15 Apr 2025 17:14:38 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <2025041531-dubiously-duchess-276a@gregkh>
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
- <2025041557-masculine-abrasive-c372@gregkh>
- <20250415165505.0c05bc61@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4rJ7ACQ"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff73032ac0so853483a91.3;
+        Tue, 15 Apr 2025 08:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744730145; x=1745334945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2468/LM85vMjkRChHfRHxsgSwhSOwl5E/WHDOoeYPTo=;
+        b=I4rJ7ACQRWtq461SpCWcqQqN1phdRbpDOnPPBPCC9T8vnMHhxMgIRf/4NCbOj+rWg5
+         gNhZO8VUcNUlJ2LTXMVnUd+mrnCQV9lkHq6dDL3Sl05VnjeV2rhXoDPXlPhlZg58PSuv
+         T5c7TbFxX3/dFeGNSKTkI5KHs3VkIG27AcDR6TkzVc7IqugXXbYQrZ9TIwNH+Mf+eNAX
+         iYOPuGEHwklZsYw9bPrSW7iqSfKUsjMpPmRXzrs4zcZtpu/mlGwIbvMYPQse6xWOFUfV
+         hqDooNkh5xqVS7zhGLOuEqV86+zUmUtHDd2634ANM6dgf4AZ/cBSIvGFG+KchH07q/iu
+         0Sww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744730145; x=1745334945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2468/LM85vMjkRChHfRHxsgSwhSOwl5E/WHDOoeYPTo=;
+        b=Z7T6VvQMnCAEZnTcQ2TNNpDXPZFQhJL0paSysMTUSqIBBpZKChdZZ7GGfSMZQa8utR
+         TMOK2PeF9Ju9qNbP73I0F3P8thGTXY+9fwnkGMsxziX0Kx6Mkc4Q1oyubG+lUFzU8R+P
+         5HzrG9lJHfiUhD99YSSx1ddX3lp5C0Hv5V7SKofd6oGGe+yk243onyilBtuhokBN3hww
+         THsQA4Woy5iwsg+FeLJeFynVq+2OwuOAaG2Tv8nnD7u1H2jgDdp+CGAopuAEIljhyFp6
+         mU3lSOXTAawmXv4/QoKMvA5w70qrz57KLUfjZidRbxGips1mOUk5xvjiGR9sUfnrWweL
+         ECDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyawamcJragxUANC8DtQiaGjsIatE/1x8oGuPh1npz+tPhFLPCgJFNjiOgT2wSIV2PaY6QAefjeQ5r9mg=@vger.kernel.org, AJvYcCXBMqx7gi5WHRG8mclMDyWyZCn+TJV1n1Q8o0Fdj/XAwZXELO7UNPRUUYg/L+SOaIXdtjO1yicK32FgsWEOki4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKyETdLwrH12XHp3rdrjlLNvXVzyiZBgvisLFUqAtN3OMAv6a5
+	s85cs66eipeEYgTKY3AdnABqJDR8aS6+10tkoNmpHncqT82GFkC9t3SP5B1J8lGfv7Lar/ZsFqi
+	j9iXjE4G1TZ6B/dqGYO7E/HWE1AZ4ybrk
+X-Gm-Gg: ASbGncvrgzvjPJVIMrDjfp/0sW6ABbJ5pGoTT4fy2vJvfO7eHDRiR/4LXOJ2OWlEIg/
+	sUPY+WoGJWV/V6YXJRlqBnj2lta18VLW0ldpgIFqabYbAA6cy8KTTlsfNUpFkRjlS3lo3n6jXd4
+	TTB3W4O8xl+TTWTdrEd8JWZA==
+X-Google-Smtp-Source: AGHT+IEFtNfPYrRt8OtnFJdTJOSjdTNl3ZwiRUfdzkcjE16zsauWc+s5qcKhNOFduPWtd+QgjELZmANl1IldidZvAgM=
+X-Received: by 2002:a17:90b:1651:b0:2ff:5540:bb48 with SMTP id
+ 98e67ed59e1d1-308237e291fmr9552418a91.8.1744730145258; Tue, 15 Apr 2025
+ 08:15:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415165505.0c05bc61@bootlin.com>
+References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
+ <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
+ <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
+ <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
+ <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
+In-Reply-To: <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 15 Apr 2025 17:15:31 +0200
+X-Gm-Features: ATxdqUHa6UdR98KTWL2iHc9V1olrDQLq-UwRQIcblSixMFPevJPtLVIQDFs4VWU
+Message-ID: <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Matthew Maurer <mmaurer@google.com>, 
+	Ramon de C Valle <rcvalle@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 04:55:05PM +0200, Herve Codina wrote:
-> Hi Greg,
-> 
-> On Tue, 15 Apr 2025 16:06:43 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> > > The RaspberryPi RP1 is a PCI multi function device containing
-> > > peripherals ranging from Ethernet to USB controller, I2C, SPI
-> > > and others.  
-> > 
-> > So shouldn't this be using the auxbus code?  That's designed to "split
-> > up" PCI devices such that you can share them this way.
-> > 
-> > Or did that get rejected somewhere previously?
-> > 
-> 
-> It doesn't use auxbus probably for the exact same reason that the
-> one given for the LAN966x PCI device driver [0] and [1].
-> 
-> Avoid all boiler plate needed with auxbus whereas drivers already exist
-> as platform drivers. Internal devices are handled by those platform drivers.
-> Those devi just need to be described as platform devices and device-tree is
-> fully relevant for that description.
-> 
-> [0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh0XJaBsB9fuX5nBCQ@mail.gmail.com/
-> [1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
+On Thu, Apr 10, 2025 at 4:00=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> I submitted a PR that I believe should fix it:
+> https://github.com/rust-lang/rust/pull/139632
 
-I really hate creating platform devices below a PCI device, so I'll keep
-complaining about this every time people try to do it.
+This landed, scheduled for Rust 1.88 (2025-06-26) if all goes well.
 
-thanks,
+Peter: are you OK with landing a patch like this? Well, modified to
+look like this now that we know the version:
 
-greg k-h
+    depends on FINEIBT
+    depends on !RUST || RUSTC_VERSION >=3D 108800
+
+(assuming we confirm the nightly build works properly)
+
+Thanks!
+
+Cheers,
+Miguel
