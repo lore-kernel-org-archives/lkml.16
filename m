@@ -1,103 +1,113 @@
-Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA63E279913;
-	Tue, 15 Apr 2025 08:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E528A1C3;
+	Tue, 15 Apr 2025 08:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705657; cv=none; b=gQWTcmgTblkuQafyMgzptFkZ5AAfb54GFNDAXWVpHoT+ChKK7Hao04ghsP/wWPW8anTTUWPdQjE+/SZZ0GAq8eLLiOhYsONSgMWLqw2K/1Meex9FJKt9MYOQ2PSzCdGIV65C4sbnMK/VKy6x0I6Vm3/UG7OW+uYOCkgbFDDTtQw=
+	t=1744705660; cv=none; b=uhGqyJ3gKv0OhEq+azKqovJkGD0eRKJ81pN6ilcMuOs1JbDNFthzgMJs7Y1xoF0sB5MBuubnZ+cV0DvlHwDU8YXvj61e5NBQ6/MOuX1ubal34yxA8XEKG/oJBFpKZu8JwKI6+em61AHUe1AdtXzWOWUrWJXFE2KmQ6KWe2LcfD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705657; c=relaxed/simple;
-	bh=/YTIOL4HC+RV4Q8BA5tWZBttbOx9E192dFHIl2r7BUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FthaYytlWdWouZl73pDnRtrWhQCCylC1Ie6ReC7fTRbWSt6sK3SDW2O91jBnc04muxYrJRbII37/jjKqQ6f95XeNWPm6H5iGgbSR1QFqLSTRIH0sZ/hNe9trf+kGoKuynPSrYN+Kw/HXrEgGyXPz56UdCIE2m0QQqDrfNLpH89s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=kWlRrhmT; arc=none smtp.client-ip=95.143.211.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
+	s=arc-20240116; t=1744705660; c=relaxed/simple;
+	bh=/NWQer13qfQtTS0IPMGbnftEkMcL2u4+nq/Oeev8wi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2FtpTNqrf2qNe6vYD1ifY16slJv20q4VLrwZyb6zdhQ8Sf/zycqDNLv7C9iRU9uGOGAazkbP6rTR9+u+m61OrJHALdylmccFRl92o2K52FER8U9u61l4xVklDtBxjHJSKeu/gJPJlGWS268YG2hlo1rBrQXl98obLEoe+/qaz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3U2rZCA; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="kWlRrhmT"
-From: Denis Arefev <arefev@swemel.ru>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
-	t=1744705643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qcj60WxuwxsCiblOzqs/zQo+ybf28ZZc3VeFKLoGV8o=;
-	b=kWlRrhmTdidWZqcxNP17QkSx6dOBMXurK0Wq0U61FzTR9abGfMfKTQlAyaHn7JWKKZ4Kkb
-	fOdAo9wn9+vRrve0W9vpGZ7kymDoKWnD1bVzfjFnKq04wqCvT9GiE5qR2IFVnO1qotzkKq
-	afZLevazB7GVQlPCW/6zF3oM0GszP9c=
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Liu Shixin <liushixin2@huawei.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org,
-	syzbot+365005005522b70a36f2@syzkaller.appspotmail.com
-Subject: [PATCH] media: vivid: Change the siize of the composing
-Date: Tue, 15 Apr 2025 11:27:21 +0300
-Message-ID: <20250415082722.18022-1-arefev@swemel.ru>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3U2rZCA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744705659; x=1776241659;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/NWQer13qfQtTS0IPMGbnftEkMcL2u4+nq/Oeev8wi0=;
+  b=a3U2rZCARQVjrpZuRLpKnGGoK0EogJN4Rl2Bs0ifXJGJlXfGd8C+URFa
+   ibRBGomjzlQelZDt4Dyg8cfvnyogzDm2/AZ74NimLWcKP4WgXlKwK0GcH
+   6i3APbuWdnRJIPtP4QkJ0JwjGh33u2WAprFJ6PmwoTN8o6DX3Hcj9o7lP
+   YnPZVM2qH/5QyEeVmwhQ7f0Mvbbv0kCbea8VAiLV6p+WFUGLYUPzFvV6j
+   5kUq3SUMG/2qQDCFKGMdZC5FvVPLMGELYj/wYfT1RZrmwyHlWCKEzfXik
+   h06Xlg8pf7FotgFCxVmmJD7YnpMwaonvwu0wDClGLK7Dy5hnw95rtaEx5
+   A==;
+X-CSE-ConnectionGUID: tHaVRnPaRlKIeVA+SX4+KA==
+X-CSE-MsgGUID: 9RCRcqzHTL63RxL8gsfq0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45914696"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45914696"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:26:32 -0700
+X-CSE-ConnectionGUID: qrpIY++ySUCX/8SUuS4vUA==
+X-CSE-MsgGUID: xgVmuuT2QAu6SMtEtu38Ew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130374897"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:26:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4bcd-0000000CUHm-0iFL;
+	Tue, 15 Apr 2025 11:26:23 +0300
+Date: Tue, 15 Apr 2025 11:26:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yu-Hsian Yang <j2anfernee@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
+	tgamblin@baylibre.com, alisadariana@gmail.com,
+	antoniu.miclaus@analog.com, eblanc@baylibre.com,
+	jstephan@baylibre.com, matteomartelli3@gmail.com,
+	angelogioacchino.delregno@collabora.com, herve.codina@bootlin.com,
+	marcelo.schmitt@analog.com, chanh@os.amperecomputing.com,
+	KWLIU@nuvoton.com, yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <Z_4YLq_uR_6uroNd@smile.fi.intel.com>
+References: <20250409012351.2543450-1-j2anfernee@gmail.com>
+ <20250409012351.2543450-3-j2anfernee@gmail.com>
+ <Z_aeEuIk9brES6dM@smile.fi.intel.com>
+ <CA+4VgcKG2EEsicysds0zu7y1xDhg88m3heGUBaQZ7-MVWanCaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+4VgcKG2EEsicysds0zu7y1xDhg88m3heGUBaQZ7-MVWanCaw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-syzkaller found a bug:
+On Mon, Apr 14, 2025 at 09:40:35PM +0800, Yu-Hsian Yang wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> 於 2025年4月10日 週四 上午12:19寫道：
+> > On Wed, Apr 09, 2025 at 09:23:51AM +0800, Eason Yang wrote:
 
-BUG: KASAN: vmalloc-out-of-bounds in tpg_fill_plane_pattern drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2608 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in tpg_fill_plane_buffer+0x1a9c/0x5af0 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2705
-Write of size 1440 at addr ffffc9000d0ffda0 by task vivid-000-vid-c/5304
+...
 
-CPU: 0 UID: 0 PID: 5304 Comm: vivid-000-vid-c Not tainted 6.14.0-rc2-syzkaller-00039-g09fbf3d50205 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+> > Here and elsewhere why ' < 0' is used? Do you expect positive return values
+> > from those?
+> 
+> In regmap_read function, A value of zero will be returned on success,
+> a negative errno will be returned in error cases.
+> We don't have a positive return case.
 
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:378 [inline]
- print_report+0x169/0x550 mm/kasan/report.c:489
- kasan_report+0x143/0x180 mm/kasan/report.c:602
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
- tpg_fill_plane_pattern drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2608 [inline]
- tpg_fill_plane_buffer+0x1a9c/0x5af0 drivers/media/common/v4l2-tpg/v4l2-tpg-core.c:2705
- vivid_fillbuff drivers/media/test-drivers/vivid/vivid-kthread-cap.c:470 [inline]
- vivid_thread_vid_cap_tick+0xf8e/0x60d0 drivers/media/test-drivers/vivid/vivid-kthread-cap.c:629
- vivid_thread_vid_cap+0x8aa/0xf30 drivers/media/test-drivers/vivid/vivid-kthread-cap.c:767
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+So, can we remove ' < 0' parts where they are not required, please?
 
-The composition size cannot be larger than the size of fmt_cap_rect.
-So execute v4l2_rect_map_inside() even if has_compose_cap == 0.
+...
 
-Fixes: 94a7ad928346 ("media: vivid: fix compose size exceed boundary")
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+365005005522b70a36f2@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?id=8ed8e8cc30cbe0d86c9a25bd1d6a5775129b8ea3
-Signed-off-by: Denis Arefev <arefev@swemel.ru>
----
- drivers/media/test-drivers/vivid/vivid-vid-cap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +     chip->client = client;
+> >
+> > How exactly is _client_ used elsewhere? Shouldn't it be just a struct device
+> > pointer?
+> 
+> Yes, it is just a struct device pointer.
+> In nct7201_init_chip(chip), we would use the chip->client->dev as
+> dev_err_probe() parameter
 
-diff --git a/drivers/media/test-drivers/vivid/vivid-vid-cap.c b/drivers/media/test-drivers/vivid/vivid-vid-cap.c
-index b166d90177c6..df5d1c2a42ef 100644
---- a/drivers/media/test-drivers/vivid/vivid-vid-cap.c
-+++ b/drivers/media/test-drivers/vivid/vivid-vid-cap.c
-@@ -946,8 +946,8 @@ int vivid_vid_cap_s_selection(struct file *file, void *fh, struct v4l2_selection
- 			if (dev->has_compose_cap) {
- 				v4l2_rect_set_min_size(compose, &min_rect);
- 				v4l2_rect_set_max_size(compose, &max_rect);
--				v4l2_rect_map_inside(compose, &fmt);
- 			}
-+			v4l2_rect_map_inside(compose, &fmt);
- 			dev->fmt_cap_rect = fmt;
- 			tpg_s_buf_height(&dev->tpg, fmt.height);
- 		} else if (dev->has_compose_cap) {
+Just save there struct device *dev and use chip->dev instead.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
