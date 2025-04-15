@@ -1,132 +1,122 @@
-Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F065D1F3B9E
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F5933DF;
+	Tue, 15 Apr 2025 14:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744726472; cv=none; b=lxPuA6s9yWET6p82c0/z7HslkL3qk2QRyqlFKR2cbIXrb1cOJGMsQapKMHiOYREQr0Pbq9G9JfW4npV6ZUj6vGcXJtHV94x/Un1LHpxDdnBQrBwl/u2+hqZYU5z+VgunAEXAS0+fgwhnfPzhLxIASbLHOl76JESb6sFPbmzM7yg=
+	t=1744726569; cv=none; b=JT/Dd1eX/HkQgz5Ou+5eRKeVtOzk4c3tJsTU1alo0+71s8VQySJRqT/g0OhxePS/1gQyk8I3ccKxOAUsSK57YP5Amy6Evg9SBITKRq3AXHYos+C0R3q66bpA/8+0rKFp2hjvIEq2qMyOyxd0fgzdBbFzglmnJoHVWWNj7dArs/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744726472; c=relaxed/simple;
-	bh=FBb33nzebKGaKlCOGhqoHMaf199Bj9iqcD/ZSGNhEyk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=TEpMcGBt54/sjPCtbWDoefgijTARKxD1aJBmB9tvajZC+kDh9n3ZRe56idgYC/5ebBFN/sWOonJFqS1eG8R5MqW0a/AjyXumZMP8mf7T4i5veP4tnnwnBXBPzL3A+frnIU0kjBIEYoak8o6qSQNZH554sJMXLHlVjC+T38wdv38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-85db4460f5dso1049751139f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:14:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744726470; x=1745331270;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jVaI4aNOg3QGg9vdZU/iLIEZ2MJB4ZDSuhHpGVZGFyA=;
-        b=vfNx+W9tgv42aENoiPvjbkzub5try7P6ZnkAgMqTOEAnhTQirOQnBTCk8SehP9OIu9
-         abRkBVmlvTuGIC1r19iNQSyU2eCGZTqsvAEXqXw7hibb7S6E+hzQ7W8jBO/pA3/2iXiL
-         hmQIFyKRRadARrLPralmCPc2XHekl9vkQQFnJ5JzCSZmDnBPhgiazDwm9wKB5S0U/ZvZ
-         yj2raQQIsod2Aj32u+yFHxj5sLqapPyBHl6kLXPkz1GcwOihccA83VsMnLShQp6Ie+J1
-         Mhv0a+/RQldCNQSr04GVWEw/X4LFeGHvmSBDtlDta4X6tIzbQHEzZUs2GC385e1Hjrb6
-         C4kw==
-X-Forwarded-Encrypted: i=1; AJvYcCUzQz57kfMJW/3qhBUzDbmGmL4UvNIOPE/1FNj2FdSfjcq4jNXn8CkShNdfVlP+KMY3hXLcFOIvZ5CAJaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWIBs4FmDS/MMzcd2IOmDknqhoQ10aB8lFwLJmXfm+KIrRlaGG
-	cv768cxqTIPFEd3YpWY7o1mV13kCj7QRVJSUAR6Enq4wJOvo8SQmNR/GbKvk8ZBKsOitind5PEO
-	Ng1FmAColhsPSaklDX/EfRwTryjuxPeIvPaMHq8seuVkWh84pcLOR1JU=
-X-Google-Smtp-Source: AGHT+IGNoWb8mjiEUbic2srKgNWVuuv5apmaiBpWsnnm0lLUReDXk70fxo8jFgHUzEpC2WEyYXBg/8BKwHWSNx0sGfbKJe2kdmCH
+	s=arc-20240116; t=1744726569; c=relaxed/simple;
+	bh=YajqJaU+cdevNobpRRwoU0DM5ACvTlKj0Vk4kI7vuaA=;
+	h=Message-ID:From:Date:Subject:MIME-Version:Content-Type:To:Cc; b=ao7haT0xjqHV5GL4Nm0BvdbJHbHztV+i9C8DMbQTd8MjEs5YJ3xeMn3A5VHhNhVO982VQy8zeaxFssl8ysaSRSGKOFBjXI+igWyqQTV/EGc8altUqRljwXLo0E0bV+9hW3UJRQMswnTZUkJtGRbuGpg+JaTBrkjVrdbenmTYavc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=YBOd96xh; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="YBOd96xh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744726255; bh=rBJo6st9z2yzfDHSl0qbQgIY7HkO12X5NQA4RWLYm1k=;
+	h=From:Date:Subject:To:Cc;
+	b=YBOd96xhqcLZgifby9dpZDOtoqCg3n8YVpgJyubx9zsqTNEka53N/Zjd4HKZwJdBQ
+	 ZT3IFIK8Ofm4pErd9uVCyR2wXsTBMRqerUGUhW2WurIzHbLV3RtctZJdYVeoN+T9aq
+	 oDVCNeH91Zu3oUqNNhTLEOJLyL9g6jtkP9q35WqA=
+Received: from [127.0.1.1] ([112.48.46.45])
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id 2B59F4B2; Tue, 15 Apr 2025 22:10:53 +0800
+X-QQ-mid: xmsmtpt1744726253tc7gykvuz
+Message-ID: <tencent_FFC8E7A5A76050982D28F811C81F936D9205@qq.com>
+X-QQ-XMAILINFO: MqG4KXyEKpQynimtTjnsfWKU/iNyybHLWdjy5ge0jzsMhX/7Zzy40x5wTiOhtT
+	 kTbYc11mO6zcZj8MSuG7IG4HX7f8gJVDt8ndZWXXJBuGf3HdbLsROiEgoTdfQZ9yyZIXZ+OzjZot
+	 u4dNjWPrhODE2SmuowqgdLEXNX/Agv6UreQamdxIm9u0C7JHOL2qDMFN+NRRaY93lTENoRCXyaQ0
+	 o9BX39TKYMGRg9ehkbyyyK/LZBfLZut/SgNJvJT18MlwNbKc0PmzTXf+diOwQJZe7JSWAqCaOcZ3
+	 466VunPqAtCWHb5MzC4DoFgfKHLR2aRrNqXDeVTKb7Q7eAuaO0YUCmOXwZ3wh1hO9+DM5atZDfHR
+	 mcHslDEadDVzCoT7QgrpUq5gE1MgWyUx1QNukmKBghKH27gbGRj2jYCI4fUMsiqo6D/aylwZZ0TH
+	 Z1wkE7wg1RRi2qBDm2VFnYjO7Q9bUm8LpBXkqB5TKXWVgks38rA4DG+jzuScJBdtPiKoxugD1+Ip
+	 +xk41bCQWzEPh2tRm0VymZ3Piq06vRujXbFyacIZm/ELrr0Popj6KezrwlWUA+pDi3bZfkB6mGSQ
+	 B42EbFz0JXcra4bTnQO+68NAkEY8WWCHvxFlNl2ePPf4FhAHVRXGLBYBb3zfSxs0NwUGvQcwEGNF
+	 FRUQiEANupNMyjGxz+vWRULdAqLYowuvXlBsFWFmqH1CRAHI7UJnhs6eNaIlcWVdovZQVCjXydJk
+	 9VgQdNeTbF+C/viHmz1Y7z+FelOBaXr2/s/lZ0ERoDnkzEnV2LssDnCMkvubDNf3DlY+5oRkY0ak
+	 n5g1anG/de6tvbfLRdThLkJm0lhLJvUA0yWej/yMdHzwGufJi4Qg7EE6+hhsXSdhFOJu8MoF92T7
+	 1cgPIyoxSQVA5vshVc2o03RRuG7OFKphiPtyGtRNPzXF/nefbzjC5Atnny7AGcrD/4fEwVgjJT/+
+	 XQdBjf4RH47a3BV+b6bXv6hqTts3MKiV1ciPSX49eEsjpgOF1h8DA2iLtn7xNZcWWLKZwpvkrdSz
+	 lrMjOryS8TC4TG4oGV2Bl8mxXyqGb10u7bO9+EhkLZ44kYBdXJosEOUVeYEUGo2C05JNw35g==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Liya Huang <1425075683@qq.com>
+Date: Tue, 15 Apr 2025 22:10:40 +0800
+Subject: [PATCH] of: reserved-mem: Warn for missing initfn in
+ __reservedmem_of_table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c26a:0:b0:3d4:2306:a875 with SMTP id
- e9e14a558f8ab-3d7ec1f661fmr172171455ab.8.1744726470017; Tue, 15 Apr 2025
- 07:14:30 -0700 (PDT)
-Date: Tue, 15 Apr 2025 07:14:29 -0700
-In-Reply-To: <67ec7e14.050a0220.31979b.0031.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fe69c5.050a0220.186b78.0002.GAE@google.com>
-Subject: Re: [syzbot] [f2fs?] kernel BUG in f2fs_write_end_io
-From: syzbot <syzbot+803dd716c4310d16ff3a@syzkaller.appspotmail.com>
-To: chao@kernel.org, jaegeuk@kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-OQ-MSGID: <20250415-__reserved_mem_init_node-v1-1-2e48f58311b3@qq.com>
+X-B4-Tracking: v=1; b=H4sIAN9o/mcC/x3M0QpAMBSH8VfRubZCm/Aq0ontj3NhtElK3t1y+
+ V38vocigiBSlz0UcEmU3aco84zsOvoFSlxqqorKFLo0ijkgmQuON2wsXk72u4Oqm9ZOaJ3RVlP
+ iR8As97/uh/f9AJ+lNpRqAAAA
+X-Change-ID: 20250415-__reserved_mem_init_node-689cbe9d54c4
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Liya Huang <1425075683@qq.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744726254; l=1774;
+ i=1425075683@qq.com; s=20250415; h=from:subject:message-id;
+ bh=YajqJaU+cdevNobpRRwoU0DM5ACvTlKj0Vk4kI7vuaA=;
+ b=9o2Fq5RQqe5zg02Foh10Qq5KYRisrT4mOL8ynZbzn5qaLFSMWjEk30XBTyUxSye8bd5lvg0u4
+ t2SFHQgPmF8AaDTn+A4/OOUFHnfN9MhiwSkdI5as6tV5bmqcrrk4JI0
+X-Developer-Key: i=1425075683@qq.com; a=ed25519;
+ pk=nSnzeGGcMXBimuyIWYIZpZRN8DboZqwr67IqWALwrGs=
 
-syzbot has found a reproducer for the following issue on:
+For the data in __reservedmem_of_table, its function pointer initfn might
+be NULL. However, __reserved_mem_init_node() only considers non-NULL cases
+and ignores NULL function pointers.
 
-HEAD commit:    834a4a689699 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10051a3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a972ee73c2fcf8ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=803dd716c4310d16ff3a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145a2fe4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13382470580000
+Therefore, a check for the possibility of initfn being NULL has been added
+here, along with skipping the initfn() and issuing a warning.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-834a4a68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4454365a3050/vmlinux-834a4a68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2d99dbd9f6f4/bzImage-834a4a68.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/89819a66cafe/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=13420b98580000)
+To: Rob Herring <robh@kernel.org>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Liya Huang <1425075683@qq.com>
+---
+For the data in __reservedmem_of_table, its function pointer initfn might 
+be NULL. However, __reserved_mem_init_node() only considers non-NULL cases
+and ignores NULL function pointers.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+803dd716c4310d16ff3a@syzkaller.appspotmail.com
+Therefore, a check for the possibility of initfn being NULL has been added
+here, along with skipping the initfn() and issuing a warning.
+---
+ drivers/of/of_reserved_mem.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-------------[ cut here ]------------
-kernel BUG at fs/f2fs/data.c:358!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 1033 Comm: kworker/u4:5 Not tainted 6.15.0-rc2-syzkaller-00037-g834a4a689699 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: loop0 loop_rootcg_workfn
-RIP: 0010:f2fs_write_end_io+0x77a/0x790 fs/f2fs/data.c:357
-Code: e8 fb d8 f0 fd e9 a2 fa ff ff 89 d9 80 e1 07 38 c1 0f 8c fe fa ff ff 48 89 df e8 81 d8 f0 fd e9 f1 fa ff ff e8 d7 9e 86 fd 90 <0f> 0b e8 9f 0a f4 07 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00
-RSP: 0000:ffffc90002597320 EFLAGS: 00010093
-RAX: ffffffff843cb659 RBX: 0000000000000000 RCX: ffff888035d74880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000000a
-RBP: ffffc90002597430 R08: ffffffff843cb306 R09: 1ffffd4000219d7d
-R10: dffffc0000000000 R11: fffff94000219d7e R12: 0000000000000001
-R13: dffffc0000000000 R14: 000000000000000a R15: ffffea00010cebc0
-FS:  0000000000000000(0000) GS:ffff88808c593000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7f3f420000 CR3: 00000000430fc000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- blk_update_request+0x5e5/0x1160 block/blk-mq.c:983
- blk_mq_end_request+0x3e/0x70 block/blk-mq.c:1145
- blk_flush_complete_seq+0x6bd/0xcf0 block/blk-flush.c:191
- flush_end_io+0xab4/0xdc0 block/blk-flush.c:250
- __blk_mq_end_request+0x492/0x5d0 block/blk-mq.c:1135
- loop_handle_cmd drivers/block/loop.c:1960 [inline]
- loop_process_work+0x1bdf/0x21d0 drivers/block/loop.c:1978
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd50 kernel/workqueue.c:3400
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:f2fs_write_end_io+0x77a/0x790 fs/f2fs/data.c:357
-Code: e8 fb d8 f0 fd e9 a2 fa ff ff 89 d9 80 e1 07 38 c1 0f 8c fe fa ff ff 48 89 df e8 81 d8 f0 fd e9 f1 fa ff ff e8 d7 9e 86 fd 90 <0f> 0b e8 9f 0a f4 07 66 66 66 66 66 66 2e 0f 1f 84 00 00 00 00 00
-RSP: 0000:ffffc90002597320 EFLAGS: 00010093
-RAX: ffffffff843cb659 RBX: 0000000000000000 RCX: ffff888035d74880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000000a
-RBP: ffffc90002597430 R08: ffffffff843cb306 R09: 1ffffd4000219d7d
-R10: dffffc0000000000 R11: fffff94000219d7e R12: 0000000000000001
-R13: dffffc0000000000 R14: 000000000000000a R15: ffffea00010cebc0
-FS:  0000000000000000(0000) GS:ffff88808c593000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7f3f420000 CR3: 00000000430fc000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index ee2e31522d7ef69d816127a9003c423d5fb4023d..0a7cc599c0ca68001b2395759310f3585f247db9 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -496,6 +496,11 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+ 		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+ 			continue;
+ 
++		if (!initfn) {
++			pr_warn("no init function for %s\n", rmem->name);
++			continue;
++		}
++
+ 		ret = initfn(rmem);
+ 		if (ret == 0) {
+ 			pr_info("initialized node %s, compatible id %s\n",
 
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+change-id: 20250415-__reserved_mem_init_node-689cbe9d54c4
+
+Best regards,
+-- 
+Liya Huang <1425075683@qq.com>
+
