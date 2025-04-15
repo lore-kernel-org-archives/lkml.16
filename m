@@ -1,108 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B832066F7;
-	Tue, 15 Apr 2025 15:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BEF1F09AF;
+	Tue, 15 Apr 2025 15:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731257; cv=none; b=tb2A4WiT+KRkNDEGx+Yk/RZbhy7f+YTpNVTkgZXG4nsYx3Aav/gPvkNbZtyI6AQTwOfFYNMyDBQIv+4dDOnQjaqSlK6l1LUMEFXOdeM18CnpfKCnDYHBJtzs3DVj7n3PQmNdW62Oj5l+Am6MEUsnQsYm5OzYZQQtjqAA7HrS2tw=
+	t=1744731365; cv=none; b=apaSVX4tuoSehWoRREHHdOtikrwemhFy/s52gamMELEnM11C02rhf976ZpyXbWpcR2IWHj9z7qV3927bDORU82KIvRowPy4WcgWr6Nvx7E069X9uD5DovZhyph8bSqLfIuMGIkA5tsZxtEoXm3hTQEzAUaeabYXiA9YlkppRMdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731257; c=relaxed/simple;
-	bh=cpqtdMgP4pXsa/EYlUpj/7STbyGdrcFn3fsprhqFbKM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=qlO9V8S6lEb/JN2zSF0MQABYq8+WYqzLrP8HZe0nNA+bF/InDz07OaA4R1pSGklNmeT3cWg3BSL/NaxEMgF/dVIqRR7WS6vpXBx3CU8H2evw0uRBVim7S4ugnmTS2ZynvDf6XKEmExGrlqG41LfmypaSVg4ACNrvmJPZVGeqlFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Last2mY7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744731365; c=relaxed/simple;
+	bh=W/qEKmgYzhiwPl5j8TnuD6Qnqwc+H0JuT1WT0usuDCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tw+HsHeW5rfUOkkSwNHXfjjRnZ/IXhJaJ470D3VfDYdT9fS+t8MdNNA38ialnAzmgJ2yz/9vN528nTA13Mxcx8jTkw3xGA2X3t/WbmWwQxTEE8YqAnbKmORBoshNQkRLog4Vmy6wEonVg2zAq5ftlypqlFZlWaCpWCH3a4d4e6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=V8O48bD1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Last2mY7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFF4AC4CEEC;
-	Tue, 15 Apr 2025 15:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744731256;
-	bh=cpqtdMgP4pXsa/EYlUpj/7STbyGdrcFn3fsprhqFbKM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=Last2mY7nOCCfKDpbUTfU2HNd42ZOhle2TyyuZnwCrtU+hM0tI5VFPEBV2ArdtUPv
-	 gs0qgGBN4T3I4C4mVt/955WwZiMuKIRBCzKX5E12koWMev3zu0CQ8fFIg8hlO0aVKk
-	 E0dNnvIOUkHLx8aqPoH557bWQ3O1orD18SHFIwXATQxl3WrAyWIXAwZ5beLZVIGect
-	 SLi7OunkCFMctAcHcNk1OE5eG7QU0Ni7OLUqbZw/wXXAsuaY32b7jnge8MWEQHWaea
-	 88XpzhgqKHT5Iw1nLh00MNRF34DRXORMqJPHzRbkS8xvZcjRHAF2tuBFnCfKle4PMC
-	 3687B/yfm2DdA==
-Date: Tue, 15 Apr 2025 10:34:14 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V8O48bD1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=Y5WRKY0PJcWuc/36tZ7KYhFDUz9cW/oiKnyGh3ryV/Q=; b=V8O48bD1Yfzj7zB/z/ntXm/eoW
+	v/gPxeiGNeMQl0++zd5F2Z6yWu64burgeyCuO4vYpoVLnUOzQGlXbkBwl+P22QcFzIWXbD2Wq+vKa
+	z+vDh/OozEfMzGeBJktFI7+jLhxtuZk13kR+y2FdKs26WW6SNro13Lesvuq3cCeXY5Ca+JZAxphfh
+	OvveyOmjOki8vxVNw85a21+EsTFWgix1bkVwOzGARma1KHIPrcK9B8kYvuEfvMnw9vrKkjRHGdpOQ
+	w8vMla1+npAsADURYifIPOl0k2AjW4efrUFv0WMHGiSUqcoIEG9pc0c268PF+O7mI3+YENRMoYtn7
+	MPmeJ7sg==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4iKK-00000008kMv-3wcJ;
+	Tue, 15 Apr 2025 15:35:57 +0000
+Message-ID: <bf2ed5d6-0e15-4e18-898e-317f9885099d@infradead.org>
+Date: Tue, 15 Apr 2025 08:35:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?utf-8?q?=C5=81ukasz_Czechowski?= <lukasz.czechowski@thaumatec.com>, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Quentin Schulz <quentin.schulz@cherry.de>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org
-To: Quentin Schulz <foss+kernel@0leil.net>
-In-Reply-To: <20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de>
-References: <20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de>
-Message-Id: <174473125440.400068.8321160690827825721.robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: usb: usb-device: allow multiple
- compatibles
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/14] xfs: allow sysadmins to specify a maximum atomic
+ write limit at mount time
+To: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
+ djwong@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+ cem@kernel.org
+Cc: linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+ linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ojaswin@linux.ibm.com, ritesh.list@gmail.com, martin.petersen@oracle.com,
+ linux-ext4@vger.kernel.org, linux-block@vger.kernel.org,
+ catherine.hoang@oracle.com, linux-api@vger.kernel.org
+References: <20250415121425.4146847-1-john.g.garry@oracle.com>
+ <20250415121425.4146847-15-john.g.garry@oracle.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250415121425.4146847-15-john.g.garry@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 15 Apr 2025 16:34:27 +0200, Quentin Schulz wrote:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
-> 
-> The dt-core typically allows multiple compatibles[1] but usb-device
-> currently forces a single compatible.
-> 
-> This is an issue when multiple devices with slightly different productID
-> all behave the same. This would require the driver to keep updating its
-> compatible matching table and the bindings to include this new productID
-> instead of doing what is usually done: have two compatibles, the
-> leftmost which matches exactly the HW device definition, and the
-> rightmost one as a fallback which is assumed to be 100% compatible with
-> the device at hand. If this assumption turns out to be wrong, it is easy
-> to work around this without having to modify the device tree by handling
-> the leftmost compatible in the driver.
-> 
-> [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/dt-core.yaml#L21-L25
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
-> ---
-> This came up while working on fixing USB on an RK3399 Puma which has an
-> onboard USB hub whose productID isn't in any driver compatible list
-> but which can be supported by a driver with a slightly different
-> productID matching another variant of the same IC, from the same
-> datasheet.
-> 
-> See https://lore.kernel.org/linux-rockchip/20250326-onboard_usb_dev-v1-0-a4b0a5d1b32c@thaumatec.com/
-> ---
->  Documentation/devicetree/bindings/usb/usb-device.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On 4/15/25 5:14 AM, John Garry wrote:
+> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+> index b67772cf36d6..715019ec4f24 100644
+> --- a/Documentation/admin-guide/xfs.rst
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -143,6 +143,14 @@ When mounting an XFS filesystem, the following options are accepted.
+>  	optional, and the log section can be separate from the data
+>  	section or contained within it.
+>  
+> +  max_atomic_write=value
+> +	Set the maximum size of an atomic write.  The size may be
+> +	specified in bytes, in kilobytes with a "k" suffix, in megabytes
+> +	with a "m" suffix, or in gigabytes with a "g" suffix.
+> +
+> +	The default value is to set the maximum io completion size
 
-yamllint warnings/errors:
+Preferably                                      I/O or IO
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/usb/usb-device.yaml: properties:compatible:items: {'pattern': '^usb[0-9a-f]{1,4},[0-9a-f]{1,4}$'} is not of type 'array'
-	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
+> +	to allow each CPU to handle one at a time.
+> +
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+~Randy
 
