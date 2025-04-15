@@ -1,115 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD491624CE
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC971C5F30;
+	Tue, 15 Apr 2025 09:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708153; cv=none; b=LMMq2Cip+0YQXOIqB9SZITrIi849fNAEDHrTAoTWGv0RtV9asP1zX37N9Bs9gEv20HzG8f3xQTom/EXtxOLTbpVfZ5jQ48Wtrh27+bPiZZujokaAJZnuGcl7yLS3AotSMh9r2V78vzsLaWqRu4CrH1g7LJGHvCez9ehDcqveUUU=
+	t=1744708195; cv=none; b=gyrT/DaCuRqXDej2shN+6JT56Git5Fym4KgFKAqJdMr40hYz1kIhbFBkMgIMOStURr77KH0HVh4taPHg2sHFOlCU2oNNRj7CUFG2MTwppXgZ31plS+RVRjOVVWLyRo2Ero7Bat3AECNqwoyfuelSRT9NkcqyprU/cyg2aItXeNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708153; c=relaxed/simple;
-	bh=oMGn+Uvpm63tpBWdMLqAzsaYy5MGQUBVh3XFJ4N+pY4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rGoMGxpp5r5zU5sAmmudSFrMpJFQcmxd99IIHZvBr+C7uqo2G8pVjxM8bo7iXK+0Tf4oi/0pMlpRzUe/znsSGJAp5pyuKjYfsYevQp/10quyXrdZEdMD5tybEdrLtiGYzL90VrBU/9WKZpeP+XBdIVKr/pnJkR2alfxXdRrcdsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7mNn46J; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744708195; c=relaxed/simple;
+	bh=QU0TDnCmOlC5at4GqseuNIx4V0NQRoTnucsnlynPrd4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pZVOdnCYS8AYIYpXIOBmYuo5jytoIkWNvGn/Cn/JeE6x4Sp5Z3NmunRw0L19Q4uwOlAbTnS+oGhteIYLUlkBFfEbWi1KBW76pUDVCLFqKPG0HUKUig33p3tTWRtnezR1q/f9IM4wZPuAQKRIheAbgbPi+AA7Eb0z0YXPD6hLNcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGKynCSL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7mNn46J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744708152; x=1776244152;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=oMGn+Uvpm63tpBWdMLqAzsaYy5MGQUBVh3XFJ4N+pY4=;
-  b=A7mNn46JOiz3E2uPfIa6QaaF41QmaSSbVgFtT69ypj3b3oWhHgqU/I03
-   Tm8rCcVym5DKYkwaZu8wJ7M6gxaJnm5y1uiLSzESzzf9c09ejGYfyValA
-   x4PPWqP+1fyYYzuPuPj51oD3Vrlhe6u6xedxQpD8yIkDJyGC7U1flUyDg
-   +yZVfZio/gIKY0CYKFjv0ukYb+smpkqOZD7uPKn+8Pu4TpTXdyTwcSSci
-   0wRCNjg3S7cB1zJ5UcY7nlo4FpugSsWlHJUX7UKkW83gFE2dz0zJekOZk
-   scSqqZnaDHBhaWsT5DNa9PydZE8KrfuHvin3RdC3aYXU5s1BUUA/r8IKj
-   Q==;
-X-CSE-ConnectionGUID: 4zResP5dQ1qQdyQ+tzlxIw==
-X-CSE-MsgGUID: eZ1SjwOBRiqhF8BENXQZHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46370514"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46370514"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 02:08:04 -0700
-X-CSE-ConnectionGUID: PWdu4CxjQrGoEVn4JNCM2Q==
-X-CSE-MsgGUID: Ko5iN2FuRuy0a2/a9weotQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130595799"
-Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.35])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 02:08:00 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Alan Previn
- <alan.previn.teres.alexis@intel.com>, Daniele Ceraolo Spurio
- <daniele.ceraolospurio@intel.com>
-Subject: Re: [RFC PATCH 4/7] drm/i915/pxp: fix undefined reference to
- `intel_pxp_gsccs_is_ready_for_sessions'
-In-Reply-To: <CAC1kPDMuAmfoJfL4wjrBEcK+rpgbWk7kYEWJjvps=2UJ6-_WHw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
- <20250411105459.90782-1-chenlinxuan@uniontech.com>
- <8921351F23CD8948+20250411105459.90782-4-chenlinxuan@uniontech.com>
- <87sem9svmn.fsf@intel.com>
- <CAC1kPDMuAmfoJfL4wjrBEcK+rpgbWk7kYEWJjvps=2UJ6-_WHw@mail.gmail.com>
-Date: Tue, 15 Apr 2025 12:07:56 +0300
-Message-ID: <87mschssgj.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGKynCSL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49863C4CEDD;
+	Tue, 15 Apr 2025 09:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744708195;
+	bh=QU0TDnCmOlC5at4GqseuNIx4V0NQRoTnucsnlynPrd4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=VGKynCSL+JOplh35QC6l9uJ9gP/F4OXbsJ+sHvpKT5bSGhOyD/1PkQcfib47Lp3QX
+	 +c4Glv9MbLc+WYYznoYQP6jCS5tvn79tYisMDac962cQRKhTjhhuJASJZWWw8BzE4d
+	 oH7DGxbyH64qqW7rCNUi3ndP/dlHI3u4opc6jvVfW71E5ATqIE7rnw53nQz2WDRE40
+	 zwqCQ79qiW35HC17RrPbtWr9sUyh7t/Htb/9KtoN0+DFlFclPilpLjCe+BEuES5y49
+	 /5Mrt5s66oYJwPx5vSKkI1M9cgpCug0/PN/09hhFvjKVRRudZ22R9wYgxFET6FjiRA
+	 Zvw2J5ilXUuWQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D7D3822D55;
+	Tue, 15 Apr 2025 09:10:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: mdio: Add RTL9300 MDIO driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174470823327.2548774.7369464602426912158.git-patchwork-notify@kernel.org>
+Date: Tue, 15 Apr 2025 09:10:33 +0000
+References: <20250409231554.3943115-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <20250409231554.3943115-1-chris.packham@alliedtelesis.co.nz>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ sander@svanheule.net, markus.stockhausen@gmx.de,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
-On Tue, 15 Apr 2025, Chen Linxuan <chenlinxuan@uniontech.com> wrote:
-> Jani Nikula <jani.nikula@linux.intel.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=
-=8815=E6=97=A5=E5=91=A8=E4=BA=8C 15:59=E5=86=99=E9=81=93=EF=BC=9A
->>
->> On Fri, 11 Apr 2025, Chen Linxuan <chenlinxuan@uniontech.com> wrote:
->> > On x86_64 with gcc version 13.3.0, I compile kernel with:
->> >
->> >   make defconfig
->> >   ./scripts/kconfig/merge_config.sh .config <(
->> >     echo CONFIG_COMPILE_TEST=3Dy
->> >   )
->> >   make KCFLAGS=3D"-fno-inline-functions -fno-inline-small-functions -f=
-no-inline-functions-called-once"
->>
->> The change looks good, but I'm guessing the real explanation is that you
->> have CONFIG_DRM_I915_PXP=3Dn and that appears to be broken.
->>
->> Fixes: 99afb7cc8c44 ("drm/i915/pxp: Add ARB session creation and cleanup=
-")
->> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
->>
->> But how do you want this merged?
->>
->
-> As patch 5 has been merged into rdma-next, I think it's OK to merge
-> this single patch into your tree.
+Hello:
 
-Thanks. I amended the commit message a little, and resent this to
-intel-gfx [1], and will merge it via drm-intel-next.
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-BR,
-Jani.
+On Thu, 10 Apr 2025 11:15:54 +1200 you wrote:
+> Add a driver for the MDIO controller on the RTL9300 family of Ethernet
+> switches with integrated SoC. There are 4 physical SMI interfaces on the
+> RTL9300 however access is done using the switch ports. The driver takes
+> the MDIO bus hierarchy from the DTS and uses this to configure the
+> switch ports so they are associated with the correct PHY. This mapping
+> is also used when dealing with software requests from phylib.
+> 
+> [...]
 
+Here is the summary with links:
+  - [net-next] net: mdio: Add RTL9300 MDIO driver
+    https://git.kernel.org/netdev/net-next/c/24e31e474769
 
-
-[1] https://lore.kernel.org/r/20250415090616.2649889-1-jani.nikula@intel.com
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-
---=20
-Jani Nikula, Intel
