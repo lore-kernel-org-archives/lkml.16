@@ -1,81 +1,105 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888B01E502
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D9E1E502;
+	Tue, 15 Apr 2025 12:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720278; cv=none; b=AG1p6DZHw+KwRdhKp7gb0f8YmqyEoqqtnzlbkPGixZTQN8aCvTIweoMszTbX9nFpmXyMieH/ofchaBgnB59+g4Bhvyeoozk1oNEVIk7wkuQelGx/7MWbnOcr7kLf+JJtDMWCPMGtXzucq0ShV+FtPye+JOwSfUuHW8Os1VKVM24=
+	t=1744720307; cv=none; b=FY+f2qdnJ69MNArK6P2H34sqAKrkZUdcNoSz9agKJkztlWYsY4fh1xk6+g0JE9/3rUOkXHqdbJJZoT/8LMrwA9ScNZRym0uXbobAI8a/GErZcoVnCu1qP/sRTE5bShLyjeA/n0f+gRdWhll2CeOC7tnYZb4NewswLPt6Uhhhkr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720278; c=relaxed/simple;
-	bh=ifkq3IFKI+30qUjmUbiVsTQNNhFdD7SNZ3D1YHHaKqI=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=iHYE/z9GZr+TB3lH+SZoTeSo6clkGTcAkdwrrfIdR+iEJ8Th6qmMdg0CFkL8c9+jVgDzTdDEV2jLC7sAftuZoqlCTIMIkVTu92jnnNyULsP7zcAy1C6wffRo2m+7yDn/5GyoDfZpnaT4m7igLw2Dya74mqlBjrnnslhW9hB8/3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so1175496339f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:31:16 -0700 (PDT)
+	s=arc-20240116; t=1744720307; c=relaxed/simple;
+	bh=Lw74pAzVLKPoaqF11ZOaG9DHhoeS3AYYjjVB/kBrcIw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=d/Ex38K+Qi7JjWF/RuNw+Swh4hFyz3gREceIBzzvPmzRu9Cbww8biHzqrfHkwz9cw7ACh8uNzuaSMftd98caARSECbX3N/E3w+6vjT4ZRAwoCPtr239LmF0TfDYOsJAKZtmzwPcff1of4/VjDiK/MBumEMl/gQrbz1VO0wWZMzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c0987bc4fso1781691a34.0;
+        Tue, 15 Apr 2025 05:31:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744720275; x=1745325075;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WF7/XGVW4fHNYhHKbvnD4qTXFrjTjvW795/lGmkO1lo=;
-        b=HrFkF/EM8Ag8enjiTVTyzQK4Ci2r2Cgzop3IqH0Lgkn36iwDJCqdLt2B87pI7tsULY
-         wfQy8W+tGyoOFxwfCzAbhqYrRfl0k+1NpEvQJA37MLZYDcAYlYjHa3OYtay0TIL9yVFL
-         qjOSpDYWeD6ub10zoAf06krFEQYfMe6QVlXYRBCXZ44hPvqn/JiZL0yOE1agNYDBvCXV
-         0sOamFxQASeL7i9ACac2a2gExULPR1XdYG9wOm4NMvFhCKtLlFnhg2T6keYK0S96v3HW
-         hYggo/CLl83UcUGsfyyy66yATDFlTRIbCaCreBKgNRQuLhtJkPfrGfmcWtmSv8VGLWfq
-         2SXA==
-X-Gm-Message-State: AOJu0YygwbiO1lD877tWbCxMHlJRqTb9U+bmP4gOM8vfP2BuvMDbsbfF
-	gSx4Fb7dNi05gUPhfUHmBJguOrKv7BO46aSMixrtKoSd1DBRuDilvfOz3T8UoOjbNd9NhAq3U4M
-	0Z+VFrziOmZQRHuy1aUvP2P+fiB50dKstokItn/b1yqxgqAIymZkt5AM=
-X-Google-Smtp-Source: AGHT+IHlDKFHVprsNBZ2vmT/ublOTcj73sYtCmFH+gaor+jhJSQhjhkG0LbIMNlcM4I1pMWomKmS5FRAALr3M5xo6FB0EhVcUOcL
+        d=1e100.net; s=20230601; t=1744720304; x=1745325104;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zW83EkYg3eMPJbNtKuATnCvWzFnvh6LQpuQabw0Tmlo=;
+        b=mrQlam1pGS6RTKAkpBdzykSSXyEbGyD6wpbpT7fg5b/ZHEw54vOP9fnO2vEEnFv3Xn
+         wqGJg61A+QnLzvRB3tuGdfqe1TH+dbt0TLPkUwb8TXiWzHOyR7rRxU46GBLBorfJBF9h
+         g++k+RKsN1iOVGpl9FHPEfBWumtMfmqtTdETXjYokZMS1ZgnqaClG2mEekOy9DkgK0aL
+         LLaFYLU4agJz2yt3PGyhyRFOM6PFvClrt2auOiu/Qo3MfHmrFCN342C4N1csa7JQOk3q
+         IskpX/M6gZFKpe/TG+D33B1E1i00ygio0+5yBhjfFG3jCU7hOufoWK9TOJnM9EmaoFZl
+         g0AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6zR1M/5j+qyHg3KQgewv4cqBmUarAKMPxHy12APkE7/MSBd5jAIGTFQGlSBj27Kj5ADZvZrL1ZDJRsJK2ZE5JDvQ=@vger.kernel.org, AJvYcCXN5lB/IEK/XJod5ePc/8DwuRoDQOXS+J828/SgtDJQ/yRGbJWu/NrlCfDCZNdPAQ1wcroCPNQFPZf6mTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHv8aj6Y6oyfVsixfTvfBM0wyue//zRMDeld+lUukfji1e1G22
+	2CIm0i6WeIM+GvkYiRaituqJnTRrXkQF21AfW3kVyVXuybWeU1JIVkvf1wns
+X-Gm-Gg: ASbGncvO0cXGDRBHrUvv2AnJjEBq5okCu/3lMFlpDpnHz9KuCRjaBTLQeO47ukXOez2
+	h3DcGz0wPOiYkpBIM+StNpzA7sFFWfURGmw4X656jz1WhWIBQjsNwMjaWluruf4vCH/1PkcbMrR
+	RKNp5o0io7tSELOHjShVcTU1QnxWOADKoiWtb23gNDDfcoKRHjHThXCBoHYKORKbt3663Qk7gYW
+	kooxWtl1SXp6nPiPg6chMPT8CTaejtICVOugjSvlr4oRa6N3NHMuX7frhu7MzP0vR79mAWOe6NT
+	bMlwpR4JjFyInX9bguH4i8K6ucVeq+z+irP8SkC8A+KEihsAO9ra+jibTLmdBgQpBpKq0o77bfb
+	94b0=
+X-Google-Smtp-Source: AGHT+IE3SesyPzNt0VCXBtgPuZUh+i7Wx7j+xzOqFkpNmhQv0P8/wDFR+sHnrnmUt/rKHCN9HBYzQA==
+X-Received: by 2002:a05:6830:61c7:b0:72a:1d2a:4acf with SMTP id 46e09a7af769-72e863c285emr10068239a34.17.1744720303961;
+        Tue, 15 Apr 2025 05:31:43 -0700 (PDT)
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d901f6sm2389165a34.40.2025.04.15.05.31.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 05:31:43 -0700 (PDT)
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72c3b863b8eso3365371a34.2;
+        Tue, 15 Apr 2025 05:31:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXbylY2hDB/0dlcpbRF5aNydrmNI+vkS2Y/kgIah4z0ey2Hsb6UytgRfuqwHjx3mg4aZKW2y0kRRK/r62JFe0avH9I=@vger.kernel.org, AJvYcCXgoRs5CIbdfHFeVROHoG39KcbJqvbT906QOOIrSgXgiJGsd89DeXvGBD94HXp5pyIYuSpumW/ns/6YQ9E=@vger.kernel.org
+X-Received: by 2002:a05:6102:f12:b0:4c4:e414:b4e4 with SMTP id
+ ada2fe7eead31-4c9e4f1a4c3mr12641595137.11.1744720291873; Tue, 15 Apr 2025
+ 05:31:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1888:b0:3d4:244b:db20 with SMTP id
- e9e14a558f8ab-3d7ec265c11mr150025525ab.16.1744720275565; Tue, 15 Apr 2025
- 05:31:15 -0700 (PDT)
-Date: Tue, 15 Apr 2025 05:31:15 -0700
-In-Reply-To: <67b1f949.050a0220.173698.000c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fe5193.050a0220.186b78.0001.GAE@google.com>
-Subject: Re: [syzbot] Re: [syzbot] [bcachefs?] possible deadlock in
- get_partial_node (2)
-From: syzbot <syzbot+725322cc4ff5c53abfac@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250305002112.5289-1-fabrizio.castro.jz@renesas.com> <20250305002112.5289-4-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250305002112.5289-4-fabrizio.castro.jz@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Apr 2025 14:31:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWViRDDv3Uz_0oSndj-4J+OPiX2e+5e_68mH177gpE-pw@mail.gmail.com>
+X-Gm-Features: ATxdqUGJq0o2Dq3kG_8ISuI8Ui_RfZ2Afp86wCTTskaUkUp6pyqCo8UjpCfcQR8
+Message-ID: <CAMuHMdWViRDDv3Uz_0oSndj-4J+OPiX2e+5e_68mH177gpE-pw@mail.gmail.com>
+Subject: Re: [PATCH v5 3/6] irqchip/renesas-rzv2h: Add rzv2h_icu_register_dma_req()
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+On Wed, 5 Mar 2025 at 01:21, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> On the Renesas RZ/V2H(P) family of SoCs, DMAC IPs are connected
+> to the Interrupt Control Unit (ICU).
+> For DMA transfers, a request number must be registered with the
+> ICU, which means that the DMAC driver has to be able to instruct
+> the ICU driver with the registration of such id.
+>
+> Export rzv2h_icu_register_dma_req() so that the DMAC driver can
+> register the DMAC request number.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> ---
+> v4->v5:
+> * Dropped the registration of ACK No.
+> * Removed some #define in the driver and in the header file.
+> * Renamed the exported function to rzv2h_icu_register_dma_req.
+> * Rebased on top of the latest ICU related changes from Biju.
+> * Reworked changelog and title.
+> * Dropped Thomas' Reviewed-by tag as too much has changed since v4.
 
-***
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Subject: Re: [syzbot] [bcachefs?] possible deadlock in get_partial_node (2)
-Author: kent.overstreet@linux.dev
+Gr{oetje,eeting}s,
 
-On Mon, Apr 14, 2025 at 12:22:01PM -0700, syzbot wrote:
-> syzbot suspects this issue was fixed by commit:
-> 
-> commit 3a04334d6282d08fbdd6201e374db17d31927ba3
-> Author: Alan Huang <mmpgouride@gmail.com>
-> Date:   Fri Mar 7 16:58:27 2025 +0000
-> 
->     bcachefs: Fix b->written overflow
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e4ea3f980000
-> start commit:   b7c90e3e717a Merge tag 'x86-urgent-2025-03-08' of git://gi..
-> git tree:       upstream
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=523d3ff8e053340a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=725322cc4ff5c53abfac
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=137c1fa0580000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e0fa54580000
-> 
-> If the result looks correct, please mark the issue as fixed by replying with:
-> 
-#syz fix: bcachefs: Fix b->written overflow
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
