@@ -1,213 +1,84 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8011EDA22
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A18B1A0BF1
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:48:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744732097; cv=none; b=jnQFsolOBYjrPHi/eTjTtMHGqjK6o9NQWO5660588bT86sPyW2MnNu4/DcwREy500Ca5P6mOZ/moGqBosRc9wgh3YIUWr3V8l9+V1WWCF4eDHHdmo+92gAF1qOljUpdQmpukFNvIxb8NtHMWXYuXKT0HoR+kK9OowsyZ8cBiOcE=
+	t=1744732105; cv=none; b=JoEM0vySFybz8Bq1fLINQZCTGm+FnPTYsqLQ/+CpUlOsXAAKGqskjgZNikUZVBILJRPhjw3A66t7j/75IX2x7pS4wS5Imojntyt1uNJ+pjJGGFaAHUZnRexFZP9mguP07fsD2Mvg0FkYz+XHA5kFndK1716EmIV1QAte3dK06IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744732097; c=relaxed/simple;
-	bh=oisAqz6mD7APj+bres+VHGZiOig/KEtsskine2qhSA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mRwzSP8aBJKOVJJsP0fIju3xMMx3Di1zJlTgZSzMawe8Iaxa0ql7ha0B8m/JsD45s/xv1pdqfhxTQeJg0Vz0TG/vyFe84Tq19AVoUMbW/Y7uuLZIvNBXgjEJdcNcj9goTqIxIDQcRtIWvQcVBsQoCbMTl3S6OOUCdpNaXzxNOww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=en8oRMBR; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1744732105; c=relaxed/simple;
+	bh=5W7pWoWLfonhFSWc7gAHNON6DGMHOUmvbZpPK68AvRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gKSrIXwxfOOuzoDZSERFuVXISs/6autrQxf1u9wzKk+YdQYyh543wj6MnX/RECP/N6PJujzUJ9+CrNRLwBLwDvrU0PU6RLYWouYRnahobHmLIuHvkcut20EPiOfLIyN7+9mHJTuBj7aISMF6fQW4lAMxRsCyTqIQcPhvYgtmGaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DNYCC25D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="en8oRMBR"
-Received: from [10.6.0.9] (host-88-217-226-44.customer.m-online.net [88.217.226.44])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 42CB82FC0080;
-	Tue, 15 Apr 2025 17:48:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1744732085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=maGoJBK5xCAyYyKJeZaWSsoxxkvu0jZ9O2cBTcEsb88=;
-	b=en8oRMBR5Norg8huOJbddYOeOsQ78jf6SWdZjDrLdktIoGHZ9plPPZNZUoU/MOLpAb7ILk
-	PzO19URATtR+p8zuHqaauVZK5zZob/RuplNAdHQo82bUZYi7EXBk/eyzCkjvpfpTQDdBH2
-	0bxlec7KsiKt7w6f6q83fOE3p0xQ+Po=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <6e4f4d23-3c5a-448f-bc0b-cf6a6e9f3d2e@tuxedocomputers.com>
-Date: Tue, 15 Apr 2025 17:48:03 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DNYCC25D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5426C4CEEB;
+	Tue, 15 Apr 2025 15:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744732104;
+	bh=5W7pWoWLfonhFSWc7gAHNON6DGMHOUmvbZpPK68AvRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DNYCC25DA/L824m7BTmPCyBNa5sCehJ0OhhTCOrwWivutgeHYMgJa/7HOTBz9FGvJ
+	 /s6CfVA8jERV3MDGNLAfHhjhsKiR95W97cvjqydu6utjykBRwH/ybskvetkGlrBQ14
+	 pZjqAjQwsQKwh50po+SO3qeen/RhJ0eXaG3uNjN71sqdBaBUxUD0YriC4RZ4Q8mSOv
+	 681lQS+bkd1QOs15ktWuuty/FB1YH4Z3xdZKPy46RdI3FFz4WhJeiws4C03QQYiRYS
+	 aNlNXROs7E1153QbIgmAJfqiEDhFvfT+TT5Y65YfT+eGTP4qteHCyDudEqzlRVMBdS
+	 HmeZ2JDSgC1Hw==
+Date: Tue, 15 Apr 2025 16:48:20 +0100
+From: Lee Jones <lee@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Karel Balej <balejk@matfyz.cz>, Chanwoo Choi <cw00.choi@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/8] mfd: max8925: Fix wakeup source leaks on device
+ unbind
+Message-ID: <20250415154820.GX372032@google.com>
+References: <20250406-mfd-device-wakekup-leak-v1-0-318e14bdba0a@linaro.org>
+ <20250406-mfd-device-wakekup-leak-v1-6-318e14bdba0a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] drm/i915/display: Add quirk to force backlight type
- on some TUXEDO devices
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: jani.nikula@linux.intel.com, rodrigo.vivi@intel.com,
- joonas.lahtinen@linux.intel.com, tursulin@ursulin.net, airlied@gmail.com,
- simona@ffwll.ch, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250411171756.142777-1-wse@tuxedocomputers.com>
- <20250411171756.142777-2-wse@tuxedocomputers.com>
- <Z_llydAABYIueYA6@intel.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <Z_llydAABYIueYA6@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250406-mfd-device-wakekup-leak-v1-6-318e14bdba0a@linaro.org>
 
-Hi,
+On Sun, 06 Apr 2025, Krzysztof Kozlowski wrote:
 
-Am 11.04.25 um 20:56 schrieb Ville Syrjälä:
-> On Fri, Apr 11, 2025 at 05:55:08PM +0200, Werner Sembach wrote:
->> The display backlight on TUXEDO DX1708 and InsanityBook 15 v1 with panels
->> AUO 12701 and AUO 12701 must be forced to INTEL_DP_AUX_BACKLIGHT_ON to be
->> able to control the brightness.
->>
->> This could already be archived via a module parameter, but this patch adds
->> a quirk to apply this by default on the mentioned device + panel
->> combinations.
-> Why aren't you fixing the VBT to be correct in the first place?
+> Device can be unbound, so driver must also release memory for the wakeup
+> source.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  drivers/mfd/max8925-i2c.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/mfd/max8925-i2c.c b/drivers/mfd/max8925-i2c.c
+> index 556aea7ec0a0473edc9291cae0c82fe9b4ecb346..ab19ff0c786732be53e58a0162d2658650d88f47 100644
+> --- a/drivers/mfd/max8925-i2c.c
+> +++ b/drivers/mfd/max8925-i2c.c
+> @@ -201,6 +201,7 @@ static void max8925_remove(struct i2c_client *client)
+>  	struct max8925_chip *chip = i2c_get_clientdata(client);
+>  
+>  	max8925_device_exit(chip);
+> +	device_init_wakeup(&client->dev, false);
 
-I don't have access to the firmware source code and these are quite old devices 
-so I also can't request a fix from the ODM. Besides: it can be quite hard to 
-explain to the ODM what exactly the problem is if it doesn't also affect Windows.
+Why not devm_* instead?
 
-Best regards,
+>  	i2c_unregister_device(chip->adc);
+>  	i2c_unregister_device(chip->rtc);
+>  }
+> 
+> -- 
+> 2.45.2
+> 
 
-Werner Sembach
-
->
->> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->> Cc: stable@vger.kernel.org
->> ---
->>   .../drm/i915/display/intel_dp_aux_backlight.c | 14 ++++++-
->>   drivers/gpu/drm/i915/display/intel_quirks.c   | 42 +++++++++++++++++++
->>   drivers/gpu/drm/i915/display/intel_quirks.h   |  1 +
->>   3 files changed, 56 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> index c846ef4acf5b2..0cac04c98a3e3 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> @@ -34,12 +34,14 @@
->>    * for some reason.
->>    */
->>   
->> +#include <drm/drm_edid.h>
->>   #include "i915_utils.h"
->>   #include "intel_backlight.h"
->>   #include "intel_display_core.h"
->>   #include "intel_display_types.h"
->>   #include "intel_dp.h"
->>   #include "intel_dp_aux_backlight.h"
->> +#include "intel_quirks.h"
->>   
->>   /*
->>    * DP AUX registers for Intel's proprietary HDR backlight interface. We define
->> @@ -607,11 +609,21 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>   	struct drm_device *dev = connector->base.dev;
->>   	struct intel_panel *panel = &connector->panel;
->>   	bool try_intel_interface = false, try_vesa_interface = false;
->> +	int enable_dpcd_backlight;
->> +	u32 pnl_id;
->>   
->>   	/* Check the VBT and user's module parameters to figure out which
->>   	 * interfaces to probe
->>   	 */
->> -	switch (display->params.enable_dpcd_backlight) {
->> +	enable_dpcd_backlight = display->params.enable_dpcd_backlight;
->> +	if (enable_dpcd_backlight == INTEL_DP_AUX_BACKLIGHT_AUTO &&
->> +	    intel_has_quirk(display, QUIRK_AUO_12701_21229_ENABLE_DPCD_BACKLIGHT)) {
->> +		pnl_id = drm_edid_get_panel_id(panel->fixed_edid);
->> +		if (pnl_id == drm_edid_encode_panel_id('A', 'U', 'O', 0x319d) ||
->> +		    pnl_id == drm_edid_encode_panel_id('A', 'U', 'O', 0x52ed))
->> +			enable_dpcd_backlight = INTEL_DP_AUX_BACKLIGHT_ON;
->> +	}
->> +	switch (enable_dpcd_backlight) {
->>   	case INTEL_DP_AUX_BACKLIGHT_OFF:
->>   		return -ENODEV;
->>   	case INTEL_DP_AUX_BACKLIGHT_AUTO:
->> diff --git a/drivers/gpu/drm/i915/display/intel_quirks.c b/drivers/gpu/drm/i915/display/intel_quirks.c
->> index 8b30e9fd936e7..6f724e5712664 100644
->> --- a/drivers/gpu/drm/i915/display/intel_quirks.c
->> +++ b/drivers/gpu/drm/i915/display/intel_quirks.c
->> @@ -78,6 +78,12 @@ static void quirk_fw_sync_len(struct intel_dp *intel_dp)
->>   	drm_info(display->drm, "Applying Fast Wake sync pulse count quirk\n");
->>   }
->>   
->> +static void quirk_auo_12701_21229_enable_dpcd_backlight(struct intel_display *display)
->> +{
->> +	intel_set_quirk(display, QUIRK_AUO_12701_21229_ENABLE_DPCD_BACKLIGHT);
->> +	drm_info(display->drm, "Applying Display AUO Model 12701 and 21229 Enable DPCD Backlight quirk\n");
->> +}
->> +
->>   struct intel_quirk {
->>   	int device;
->>   	int subsystem_vendor;
->> @@ -118,6 +124,12 @@ static int intel_dmi_no_pps_backlight(const struct dmi_system_id *id)
->>   	return 1;
->>   }
->>   
->> +static int intel_dmi_auo_12701_21229_enable_dpcd_backlight(const struct dmi_system_id *id)
->> +{
->> +	DRM_INFO("Display AUO model 12701 and 21229 DPCD backlight control on %s\n", id->ident);
->> +	return 1;
->> +}
->> +
->>   static const struct intel_dmi_quirk intel_dmi_quirks[] = {
->>   	{
->>   		.dmi_id_list = &(const struct dmi_system_id[]) {
->> @@ -164,6 +176,36 @@ static const struct intel_dmi_quirk intel_dmi_quirks[] = {
->>   		},
->>   		.hook = quirk_no_pps_backlight_power_hook,
->>   	},
->> +	{
->> +		.dmi_id_list = &(const struct dmi_system_id[]) {
->> +			{
->> +				.callback = intel_dmi_auo_12701_21229_enable_dpcd_backlight,
->> +				.ident = "TUXEDO DX1708",
->> +				.matches = {DMI_MATCH(DMI_BOARD_NAME, "N8xEJEK"),
->> +				},
->> +			},
->> +			{
->> +				.callback = intel_dmi_auo_12701_21229_enable_dpcd_backlight,
->> +				.ident = "TUXEDO InsanityBook 15 v1",
->> +				.matches = {DMI_MATCH(DMI_BOARD_NAME, "P95_HP"),
->> +				},
->> +			},
->> +			{
->> +				.callback = intel_dmi_auo_12701_21229_enable_dpcd_backlight,
->> +				.ident = "TUXEDO InsanityBook 15 v1",
->> +				.matches = {DMI_MATCH(DMI_BOARD_NAME, "P95_HR"),
->> +				},
->> +			},
->> +			{
->> +				.callback = intel_dmi_auo_12701_21229_enable_dpcd_backlight,
->> +				.ident = "TUXEDO InsanityBook 15 v1",
->> +				.matches = {DMI_MATCH(DMI_BOARD_NAME, "P95_HP,HR,HQ"),
->> +				},
->> +			},
->> +			{ }
->> +		},
->> +		.hook = quirk_auo_12701_21229_enable_dpcd_backlight,
->> +	},
->>   };
->>   
->>   static struct intel_quirk intel_quirks[] = {
->> diff --git a/drivers/gpu/drm/i915/display/intel_quirks.h b/drivers/gpu/drm/i915/display/intel_quirks.h
->> index cafdebda75354..38bdbd65d7efb 100644
->> --- a/drivers/gpu/drm/i915/display/intel_quirks.h
->> +++ b/drivers/gpu/drm/i915/display/intel_quirks.h
->> @@ -20,6 +20,7 @@ enum intel_quirk_id {
->>   	QUIRK_LVDS_SSC_DISABLE,
->>   	QUIRK_NO_PPS_BACKLIGHT_POWER_HOOK,
->>   	QUIRK_FW_SYNC_LEN,
->> +	QUIRK_AUO_12701_21229_ENABLE_DPCD_BACKLIGHT,
->>   };
->>   
->>   void intel_init_quirks(struct intel_display *display);
->> -- 
->> 2.43.0
+-- 
+Lee Jones [李琼斯]
