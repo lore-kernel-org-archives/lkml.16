@@ -1,163 +1,238 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4119719CD17
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571A919CD17;
+	Tue, 15 Apr 2025 18:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744740302; cv=none; b=ZDn2VGMgPc1YVjoLm/lCzYINNHvdjJjJHQcvNv/tDIdhpO9cAZoCKM3C7rLy8y8itEYyhJ0UpmhdplVdkp4r7ZBtapkPjApgdZlJEg2enFBlHIqAWR80nTG3hSP/Q+kdsHNnMjdLmXHP+QyqOi9Wl7hkyfWmV1MS2cysSJRAS3Q=
+	t=1744740473; cv=none; b=DgvdhssEFDG3QLyNQqiIDHZq2FPrcaCP4obbS1Kro5rS62r/CV7Ecme7bHJ0hkSukTimZgTb7GkUJvmtj/HU4r0EzPSxRKumPDlIB0WDn3qB463rjIuTJuR7HvansUOgtmuZM8f+k7DakH+RV3Rj+fzkmgIhQAphSL3kywq8S2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744740302; c=relaxed/simple;
-	bh=E1rWl2YoYmsGcXl8Vm+E/bjBaHOcGMh8w3W/dKHDJJU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=icrqFKuQof2Lld0dY+o3kmjAPkut+LTmgs5WZ4UR/dTJ7C79ZQcH//2zneeUl/cticmWDecNI2TU1Ly5IfcSV7o0irrKLqXqi7UV1JJSaXUu5jksvva7ik1Mp+i8Ia81fB+GX7hKM46HFDxRM4ZW1KTVu6VB7jUNVIXzgM/jdso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=jhjgINil; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1744740473; c=relaxed/simple;
+	bh=E12Dv2lpYWaPvD1bJV2GxBmQo52NBjNVBWLixN31wCM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TZeCSgP9lkQwOy0bXPNdesoSHK7aXA5vrUPS+BzabDaOnM02T07/P0oEDQcI0k6y+AubRWRnllOXGQYoV4PcddGygH2o0Y9qHY6TK+DzU3PvXUY8WdYEp8L8wHf7kxCr7DXdPpmIhXPJ5JgUu70SJn/D36A9ZT4cG1GkBd9DJVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ln5wy08H; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="jhjgINil"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id BD2EEA033A;
-	Tue, 15 Apr 2025 20:04:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=sPS8nj2wBTS7IxcXsWDBnWC5IdTmxtmClDTDfzz4lXs=; b=
-	jhjgINil9atXgMLsXfj/xug9qfrTEqP4k8IuuvkmvwH6R03Hc8XLh0p1BAIMjQ/l
-	Ey2x2bH8GAkvakXDj7Q69lNuYI04D+V1HB36pmzyFY6MMHVcllJkiw+ppwBzpA2A
-	JmOuWYgSj99eIk7n26pE8KUDR+Jhz2qbw4/K2NFf2r7nErYLlARbx3A5A0n+Akh6
-	mFrcDGuCf3VZqfDUaYR5h62zl00Ef49r/JuMSy7n46LDXj4rU+mu0exwwoyPSFlz
-	oqEMc78RE8N7e4QrGZ7Qsm/JOSmXT5mb6F0F1EXT3ET+g33lM+YuDXZX/eLiHjDT
-	D5+MBOW+gh9Y2DylR9biM+dIZNyGtjZ2cc9Z1ZlDgYtMUUbFsIoqYYmOp0wWM4mw
-	TlDj92NF63S+anebINtZUpexrGB9O8clFfqQws8viNtbgspdfok1OdXifYXoPn9e
-	Zg5xwf7W5rPWKoY2VVgHu1or7cU20RcK887/TI80nlX9nFW2gtPxWVcUUy3GimDc
-	BcmHOcxSpG2yesN49mfWLq90YgrHZu2FOglM1ItPS1HcAljgUG2VwQGSrBSTq3MA
-	NpAUWvhrGNDDcZJZAaNitflvdRwJ6b694dyEpgFLskzPsRjQuYGTNQUDZHk+vaFF
-	t5l8oFJ97Wpfo7c3aZidUBqRgigbOVKEbWDMGapnK9w=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Cs=C3=B3k=C3=A1s=2C=20Bence?= <csokas.bence@prolan.hu>,
-	=?UTF-8?q?Szentendrei=2C=20Tam=C3=A1s?= <szentendrei.tamas@prolan.hu>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>, Pratyush Yadav <pratyush@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH] spi-nor: Verify written data in paranoid mode
-Date: Tue, 15 Apr 2025 20:04:32 +0200
-Message-ID: <20250415180434.513405-1-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ln5wy08H"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-224171d6826so82970295ad.3;
+        Tue, 15 Apr 2025 11:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744740470; x=1745345270; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xvDGS2NFZu3dmg8r6i71jHs8hnBaXJGkkCFNiMhz6fw=;
+        b=Ln5wy08HUE910xh6soNbi0ue434h3niivEj0LJ9rm5QJrUM68DzlIaNkopdbqdURme
+         eYxUXBBxtwI3pcmj57nBCmZM3FPnFCk5BYgUsqXRzAhh6ypoMaiir5j0SehzZGSl2ke9
+         5MUZSl5g80OplG9KU0I8h6qgvVYq/xXBrddPgntWiNgzArCegmvp6Uc6ewCxzZdb9sn6
+         z3SbrXaG0xYkMYd+ImmyQ0pkx0lRORZlARDmfob3CCHK/HR89YRk1/4MrNKTKdt2DvKf
+         q2kggr2g7l8MrDOuV6tsoCNfRsbkz8gb/rNhJp2dn5dQeFjTQzC8BJHAaI8wtUdn0p3R
+         0HxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744740470; x=1745345270;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xvDGS2NFZu3dmg8r6i71jHs8hnBaXJGkkCFNiMhz6fw=;
+        b=U3WBWSrML+fJIxRm6wnHh8YD7fNDiYLb78/QUhW3kEHuDt9Z+NrgoiTp48aKbTOKWs
+         j9iihoZOYyg1hEpKqOzthQ9PLNhCJ3lpEZL3o2R4szEAVSzsTaar5XS/1w1rD62aoM1k
+         aPivnqvbeNnF6yhBR8KY2h2c8owgbeQ/LJCfkH5rSMjMH0Mru02dRLhFd3/FNfgIVdRb
+         MSMn2/sg+QIcN380Czg2WgJhSdZVc4+vVExUaE92P/RKHEBCi/J372Ra8c+Ah8fN8ljM
+         VHO+7yR5Ol3THA95GAH84JKh23v3o9FRXzVWPmwCN0WtM7T3PpchXW4hALZmtD17EZZh
+         eeFg==
+X-Forwarded-Encrypted: i=1; AJvYcCU34ocYWTIURn26H9jMev2d6WEJj+3nsDx+jV4A0nLYYhx6cZ2jxwXWn4H1u1QPoVeuCoLlUHNqo7IK2hIx@vger.kernel.org, AJvYcCUiIksMKYKwsQe38oIvPW6XLFKImwU22zZbj9Li4g8k0MiYtzBFFpFJOrCsEvA/j4AC/GcKNhOvwBoCssHn@vger.kernel.org, AJvYcCV75xawSujTw/SGoR9Mg7j01nuV2P2TzguGx42dysut+4/9+Tr8XM/VhzBa0Z7vIW27x02VR3+c1cHu@vger.kernel.org, AJvYcCVZ49RTzotQtqmWIdkqvRU7uvTr5Ct2cu6+bPSUuZOGKnV7EQ6CSpmdUT4fE0qr1ulGqeXaABUvqTmX@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKWTLd6oU+43+HchvGRqHzty9+FnE530hxEtDusefNIEHTf5dP
+	MRy8foaJKXdymTsQMEFY60bX9qLnZTDF3ODtuzu+Ll0B/EApSngD
+X-Gm-Gg: ASbGncswVZRt6dY+7/MxCFhI+B6CNBHsF220v3O6eDYBw5tG8lxXczY9JBPXfT76Bm7
+	23A9vDuLbUyFkTKclbKRA6Uo8K3XkQ/DeO4+ky9l0Yy+pTTEZzTZHdyoPJifX+ISJk1yZwHIMsm
+	2b0zGUc/wQvhdsMer1+OSZZhcQgE8Vpn/HgMBAUftl2sG++1tG6PPGF9HZqKCJ33tQHoyy2ucvy
+	ri/5FWhl5uTQBZvSGQ0gpEgjLNsh8vJxSEZigH0opgiStamA9mCnq1i/a/GYyashbYcJ8dKHYNz
+	Sc4Fe4NgroboQMOs4bzSDMGi4OhuxDjY3hrkYh0HE6EFQkRNZUDD5bx+4O9ampafHktJMPCwO3o
+	0iC2Tvup/riTZ69+0IdE=
+X-Google-Smtp-Source: AGHT+IG+TokD7i8vItk+7QmWwNiAFv1lxx9jEciK+l5SQy/NyBGc0DV4Ti8nxJG7cYXtOTbqVh66ow==
+X-Received: by 2002:a17:902:eb8a:b0:224:de2:7fd6 with SMTP id d9443c01a7336-22c319f641bmr2212275ad.25.1744740470302;
+        Tue, 15 Apr 2025 11:07:50 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb52c2sm120168425ad.194.2025.04.15.11.07.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:07:49 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	arnd@arndb.de
+Cc: x86@kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arch@vger.kernel.org
+Subject: [PATCH v3 0/7] hyperv: Introduce new way to manage hypercall args
+Date: Tue, 15 Apr 2025 11:07:21 -0700
+Message-Id: <20250415180728.1789-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1744740288;VERSION=7989;MC=1442698083;ID=77153;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853647662
 
-From: Csókás, Bence <csokas.bence@prolan.hu>
+From: Michael Kelley <mhklinux@outlook.com>
 
-Add MTD_SPI_NOR_PARANOID config option for verifying all written data to
-prevent silent bit errors to be undetected, at the cost of halving SPI
-bandwidth.
+This patch set introduces a new way to manage the use of the per-cpu
+memory that is usually the input and output arguments to Hyper-V
+hypercalls. Current code allocates the "hyperv_pcpu_input_arg", and in
+some configurations, the "hyperv_pcpu_output_arg". Each is a 4 KiB
+page of memory allocated per-vCPU. A hypercall call site disables
+interrupts, then uses this memory to set up the input parameters for
+the hypercall, read the output results after hypercall execution, and
+re-enable interrupts. The open coding of these steps has led to
+inconsistencies, and in some cases, violation of the generic
+requirements for the hypercall input and output as described in the
+Hyper-V Top Level Functional Spec (TLFS)[1]. This patch set introduces
+a new family of inline functions to replace the open coding. The new
+functions encapsulate key aspects of the use of per-vCPU memory for
+hypercall input and output, and ensure that the TLFS requirements are
+met (max size of 1 page each for input and output, no overlap of input
+and output, aligned to 8 bytes, etc.).
 
-Co-developed-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
-Signed-off-by: Szentendrei, Tamás <szentendrei.tamas@prolan.hu>
-Signed-off-by: Csókás, Bence <csokas.bence@prolan.hu>
----
- drivers/mtd/spi-nor/Kconfig | 10 ++++++++++
- drivers/mtd/spi-nor/core.c  | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+With this change, hypercall call sites no longer directly access
+"hyperv_pcpu_input_arg" and "hyperv_pcpu_output_arg". Instead, one of
+a family of new functions provides the per-cpu memory that a hypercall
+call site uses to set up hypercall input and output areas.
+Conceptually, there is no longer a difference between the "per-vCPU
+input page" and "per-vCPU output page". Only a single per-vCPU page is
+allocated, and it is used to provide both hypercall input and output.
+All current hypercalls can fit their input and output within that single
+page, though the new code allows easy changing to two pages should a
+future hypercall require a full page for each of the input and output.
 
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 24cd25de2b8b..425ea9a22424 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -68,6 +68,16 @@ config MTD_SPI_NOR_SWP_KEEP
- 
- endchoice
- 
-+config MTD_SPI_NOR_PARANOID
-+	bool "Read back written data (paranoid mode)"
-+	help
-+	  This option makes the SPI NOR core read back all data on a write
-+	  and report an error if it doesn't match the written data. This can
-+	  safeguard against silent bit errors resulting from a faulty Flash,
-+	  controller oddities, bus noise etc.
-+
-+	  If you are unsure, select 'n'.
-+
- source "drivers/mtd/spi-nor/controllers/Kconfig"
- 
- endif # MTD_SPI_NOR
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index ac4b960101cc..ca05a6ec8afe 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -2063,6 +2063,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	size_t *retlen, const u_char *buf)
- {
- 	struct spi_nor *nor = mtd_to_spi_nor(mtd);
-+	u_char *verify_buf = NULL;
- 	size_t i;
- 	ssize_t ret;
- 	u32 page_size = nor->params->page_size;
-@@ -2073,6 +2074,14 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 	if (ret)
- 		return ret;
- 
-+#if IS_ENABLED(CONFIG_MTD_SPI_NOR_PARANOID)
-+	verify_buf = devm_kmalloc(nor->dev, page_size, GFP_KERNEL);
-+	if (!verify_buf) {
-+		ret = -ENOMEM;
-+		goto write_err;
-+	}
-+#endif
-+
- 	for (i = 0; i < len; ) {
- 		ssize_t written;
- 		loff_t addr = to + i;
-@@ -2099,11 +2108,35 @@ static int spi_nor_write(struct mtd_info *mtd, loff_t to, size_t len,
- 		ret = spi_nor_wait_till_ready(nor);
- 		if (ret)
- 			goto write_err;
-+
-+#if IS_ENABLED(CONFIG_MTD_SPI_NOR_PARANOID)
-+		/* read back to make sure it's correct */
-+		ret = spi_nor_read_data(nor, addr, written, verify_buf);
-+		if (ret < 0)
-+			goto write_err;
-+		if (ret != written) {
-+			/* We shouldn't see short reads */
-+			dev_err(nor->dev, "Verify failed, written %zd but only read %zd",
-+				written, ret);
-+			ret = -EIO;
-+			goto write_err;
-+		}
-+
-+		if (memcmp(verify_buf, buf + i, written)) {
-+			dev_err(nor->dev, "Verify failed, compare mismatch!");
-+			ret = -EIO;
-+			goto write_err;
-+		}
-+#endif
-+
-+		ret = 0;
-+
- 		*retlen += written;
- 		i += written;
- 	}
- 
- write_err:
-+	devm_kfree(nor->dev, verify_buf);
- 	spi_nor_unlock_and_unprep_pe(nor, to, len);
- 
- 	return ret;
+The new functions always zero the fixed-size portion of the hypercall
+input area (but not any array portion -- see below) so that
+uninitialized memory isn't inadvertently passed to the hypercall.
+Current open-coded hypercall call sites are inconsistent on this point,
+and use of the new functions addresses that inconsistency. The output
+area is not zero'ed by the new code as it is Hyper-V's responsibility
+to provide legal output.
 
-base-commit: 834a4a689699090a406d1662b03affa8b155d025
+When the input or output (or both) contain an array, the new code
+calculates and returns how many array entries fit within the per-cpu
+memory page, which is effectively the "batch size" for the hypercall
+processing multiple entries. This batch size can then be used in the
+hypercall control word to specify the repetition count. This
+calculation of the batch size replaces current open coding of the
+batch size, which is prone to errors. Note that the array portion of
+the input area is *not* zero'ed. The arrays are almost always 64-bit
+GPAs or something similar, and zero'ing that much memory seems
+wasteful at runtime when it will all be overwritten. The hypercall
+call site is responsible for ensuring that no part of the array is
+left uninitialized (just as with current code).
+
+The new family of functions is realized as a single inline function
+that handles the most complex case, which is a hypercall with input
+and output, both of which contain arrays. Simpler cases are mapped to
+this most complex case with #define wrappers that provide zero or NULL
+for some arguments. Several of the arguments to this new function
+must be compile-time constants generated by "sizeof()" expressions.
+As such, most of the code in the new function is evaluated by the
+compiler, with the result that the runtime code paths are no longer
+than with the current open coding. An exception is the new code
+generated to zero the fixed-size portion of the input area in cases
+where it was not previously done.
+
+Use of the new function typically (but not always) saves a few lines
+of code at each hypercall call site. This is traded off against the
+lines of code added for the new functions. With code currently
+upstream, the net is an add of about 20 lines of code and comments.
+
+A couple hypercall call sites have requirements that are not 100%
+handled by the new function. These still require some manual open-
+coded adjustment or open-coded batch size calculations -- see the
+individual patches in this series. Suggestions on how to do better
+are welcome.
+
+The patches in the series do the following:
+
+Patch 1: Introduce the new family of functions for assigning hypercall
+         input and output arguments.
+
+Patch 2 to 6: Change existing hypercall call sites to use one of the new
+         functions. In some cases, tweaks to the hypercall argument data
+         structures are necessary, but these tweaks are making the data
+         structures more consistent with the overall pattern. These
+         5 patches are independent of each other, and can go in any
+         order. The breakup into 5 patches is for ease of review.
+
+Patch 7: Update the name of the variable used to hold the per-vCPU memory
+         used for hypercall arguments. Remove code for managing the
+	 per-vCPU output page.
+
+Patch 6 is new in v3 of the patch set. It updates the new hypercall
+call sites added as part of the mshv code in the 6.15-rc1 kernel.
+
+The new code compiles and runs successfully on x86 and arm64. However,
+basic smoke tests cover only a limited number of hypercall call sites
+that have been modified. I don't have the hardware or Hyper-V
+configurations needed to test running in the Hyper-V root partition
+or running in a VTL other than VTL 0. The related hypercall call sites
+still need to be tested to make sure I didn't break anything. Hopefully
+someone with the necessary configurations and Hyper-V versions can
+help with that testing.
+
+For gcc 9.4.0, I've looked at the generated code for a couple of
+hypercall call sites on both x86 and arm64 to ensure that it boils
+down to the equivalent of the current open coding. I have not looked
+at the generated code for later gcc versions or for Clang/LLVM, but
+there's no reason to expect something worse as the code isn't doing
+anything tricky.
+
+This patch set is built against linux-next20250411.
+
+[1] https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/tlfs/tlfs
+
+Michael Kelley (7):
+  Drivers: hv: Introduce hv_hvcall_*() functions for hypercall arguments
+  x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 1
+  x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 2
+  Drivers: hv: Use hv_hvcall_*() to set up hypercall arguments
+  PCI: hv: Use hv_hvcall_*() to set up hypercall arguments
+  Drivers: hv: Use hv_hvcall_*() to set up hypercall arguments for mshv
+    code
+  Drivers: hv: Replace hyperv_pcpu_input/output_arg with hyperv_pcpu_arg
+
+ arch/x86/hyperv/hv_apic.c           |  10 +--
+ arch/x86/hyperv/hv_init.c           |  12 ++-
+ arch/x86/hyperv/hv_vtl.c            |   9 +--
+ arch/x86/hyperv/irqdomain.c         |  17 ++--
+ arch/x86/hyperv/ivm.c               |  18 ++---
+ arch/x86/hyperv/mmu.c               |  19 ++---
+ arch/x86/hyperv/nested.c            |  14 ++--
+ drivers/hv/hv.c                     |   6 +-
+ drivers/hv/hv_balloon.c             |   8 +-
+ drivers/hv/hv_common.c              |  57 ++++---------
+ drivers/hv/hv_proc.c                |  23 +++---
+ drivers/hv/mshv_common.c            |  31 +++----
+ drivers/hv/mshv_root_hv_call.c      | 121 +++++++++++-----------------
+ drivers/hv/mshv_root_main.c         |   5 +-
+ drivers/pci/controller/pci-hyperv.c |  18 ++---
+ include/asm-generic/mshyperv.h      | 106 +++++++++++++++++++++++-
+ include/hyperv/hvgdk_mini.h         |   4 +-
+ 17 files changed, 250 insertions(+), 228 deletions(-)
+
 -- 
-2.49.0
-
+2.25.1
 
