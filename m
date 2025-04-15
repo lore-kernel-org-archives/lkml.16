@@ -1,85 +1,99 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE4F222565;
-	Tue, 15 Apr 2025 18:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DBE2206BE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741701; cv=none; b=f/e7aaVZe9ekfAQyoLMWiZbZxBE8nZYodMqlPqOUblHERFNz5POyH3RBKmsR9VDGg+8GBrEkP/zVIeSAYXHmQWofpjbY8MosWqANRUTKxlcba994yP9untTpnlW+aHP/fxS6iUKIQ96hoYIs3yQRJcAPB23WP+gp+GxB1Q09CMA=
+	t=1744741712; cv=none; b=cvkhV3yWbMqk8ivTrHmBhK/G2FiRvzHY96pnd93bw9c8/mp11erm6FsLjJe+B9c5h8Kl0P2HkIqlvIQ7yFsV3Ghg7AdAFN/DjP8YAYZTKQnaMYnlhPRsm7wz0uw3Z65UmN9yDJCnMvd2lgKpRLbVtMxImfQaMhbudn+v1fxcQsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741701; c=relaxed/simple;
-	bh=KBUcfOPfTWKlv1r0T05CNzWz2hKo8/DBtVqmvyTw5cU=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=tacFThewCqJt+gTBZoiA+7dNy/Ae8RoD2dd2ewL/LERmsY5hnFQ9nYs0Y3BjVK4sNvOVx5aakWUYZkn3miFm1dG4Cj1lBgJK72XnnvgPLvjjqd/d+YBIr03MM1kcTm4jKzeXw4+vtRHrGhcPGeMj3bmES+9bkrWgKUC9vDkRiZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=Vmm8yYma; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
+	s=arc-20240116; t=1744741712; c=relaxed/simple;
+	bh=VYVRxEJYwQanV5hu/0wE4LxftLRrNmP9Ls8weWaXeFc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G20GggBN7m618tl3mynaDFjC192a3Y3Q9+SzKTH+ZXpMCxhJveYEl3cUERxrVnL9Cmx8GD63L0KuqhZQ9Vzn44thnUDCX/KFWaH9emLyPpiOLQ+/L2K3trNfiYpqisepEqJxiKd75FeuMQ8IUvrkO8rZwEAgBuwCGDGhZYWfu3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DagAUnSy; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="Vmm8yYma"
-Message-ID: <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1744741698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SQXRd0G+3P1w/z1AT2Nr8p00ZghYti5DoxzAHJ9JJCI=;
-	b=Vmm8yYmaY47rhsPNq32DNzSBuzYfYEzbi8LXZAXCGUdlLurpoOMqKbvxraJCCmWgi2SAYj
-	Y1Io5fZv8eoiIBKDIBBSMt3jm+zVVqHMYz+94GwCeffAcvQoks4U6ZCGnf5Isckgs/Goyp
-	REO7ni9vd5bdUsVPXMWyCizcSZFVcSulPf7MgaKcfXOzsjIGunKEMKOy+gJwlIyoMVj2io
-	9Nc4eAGnijmz6jrp/gXs7SGHWfsuFrE9PM1cNcEMKWLcYS0pfBkvJm514I1gdrwSr8nlih
-	LgfjNdJBEf2uzEYpaTtTPb4CqEEiL7gh/dNVmacqqinoLptfteLJQYxDK1B7hQ==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Nicolas Baranger <nicolas.baranger@3xo.fr>
-Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
- <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
- <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
- <brauner@kernel.org>
-Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when
- files are on CIFS share
-In-Reply-To: <5087f9cb3dc1487423de34725352f57c@3xo.fr>
-References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
- <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
- <48685a06c2608b182df3b7a767520c1d@3xo.fr>
- <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
- <5087f9cb3dc1487423de34725352f57c@3xo.fr>
-Date: Tue, 15 Apr 2025 15:28:14 -0300
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DagAUnSy"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-72c16e658f4so2394087a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1744741709; x=1745346509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8E2f6IqoC+LGUu9GjsxD/Ma9iEhqvPoS9PHmT2Quf0=;
+        b=DagAUnSy0622wInsObfKsioH26qCtkX6dw/apkNUt3MDKYUjgAzzVv7ZOEEab+U7Ux
+         La69hKI4ugvw7OEJvwRGBo1mcG3rhjM13wU39RFUk9egtrFV0Wtxd/rUSbd4JR4kk9Ps
+         Cr2J+fw2iT5EF41gvbc6jOpUhjs54q0GWpilg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744741709; x=1745346509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W8E2f6IqoC+LGUu9GjsxD/Ma9iEhqvPoS9PHmT2Quf0=;
+        b=J1MckKoTBHiwNGS5ThMiMS/08O5frA5Fm8oGYkw93HOYzF6owyd7ghl3VMjDwjXAwn
+         MFxfCJvVwHCYoed05AEOf7/U6Mwb5CvSG0NUFE13xHwkEU1kSmPv3WbSyEk61C/q9aX7
+         alUAlqAKXoDmdDonwF2/fgPKkqaHLCVgCgrXS7uanRs6YlsY9qMRg9jlarwhDQzOq3rq
+         Fs4LnRVr2UIYAhkZfLw6BFjZZLnrJW5FogcRDoKG7sanXjN5xoe8MiGXaRWFjlKV8bLD
+         kJCkn8HVoB3XVycwIQ/uZgMwu7FZEfN8ky4Q0xfsjSx8rwPNpbvxgO/LbbmMdG/MTt3X
+         zOjA==
+X-Forwarded-Encrypted: i=1; AJvYcCW44X0R2Q6iBLlR5mW+eAn9ugSD9ksNo/csakEmJGPUvPYHuvyUl6Vp1JrzyeAgjNIwtqreQEMzePzTsvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjqPxN8MRUZiTpsQPwQ7fxWi/IwZTRxm0JDrq744/c1GhWMfqL
+	XOW8ytvuyt1XQueMBUWfm30icpHAxZjTpopoL+b7u2N2xVzggkRcW51jvjwgStAooY3My3tpDSk
+	=
+X-Gm-Gg: ASbGnctkNKeUGqt8rakhXkVmj/bohVy/I+jYl2FXToqXGDA6NpxPHnD75LdXHn22En1
+	Ihs136c1OWgb+pnEltNORGbpQg7r9/jpi5KpiMuhMOdERH5imSnewqhM9eWe86UqQ7j87gP4jY2
+	KvvlhGcwmeiDMbbclAC4JOTsMhtMhJwXK2a2E7rflcrzl3xsWFraE9zKoL0athPrNJJB8zvzdlF
+	rU703rPBx9yTINGz7gg6dILrtXlSDQhu+rJEMaP3/f3cQlUTwR/8K+7PXiSz6CP0uWOs6120q3f
+	Bw/4oblM4Ki30L87Aaz6/NJbIXUIf4cP/QVv1+ZzjlOyDUzv5f/ZMw+cfPU2UnZcbh9IJ4u6dsd
+	j0FPMv4i0V46TrA+K1g==
+X-Google-Smtp-Source: AGHT+IGj9+A7XEnOCRDoc1Nsz+q9pnXNAgyZsgfv09iVYMTWY/OZaZt8llUPjyM6TfNLbLe6ILVjLQ==
+X-Received: by 2002:a05:6808:17a0:b0:3f8:d2f8:d735 with SMTP id 5614622812f47-400acb75e90mr361591b6e.33.1744741709423;
+        Tue, 15 Apr 2025 11:28:29 -0700 (PDT)
+Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-400763baf5esm2434177b6e.47.2025.04.15.11.28.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:28:29 -0700 (PDT)
+From: justin.chen@broadcom.com
+To: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: florian.fainelli@broadcom.com,
+	conor+dt@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	jassisinghbrar@gmail.com,
+	bcm-kernel-feedback-list@broadcom.com,
+	Justin Chen <justin.chen@broadcom.com>
+Subject: [PATCH v4 0/2] mailbox: Add support for bcm74110
+Date: Tue, 15 Apr 2025 11:28:24 -0700
+Message-Id: <20250415182826.3905917-1-justin.chen@broadcom.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi Nicolas,
+From: Justin Chen <justin.chen@broadcom.com>
 
-Sorry for the delay as I've got busy with some downstream work.
+The bcm74110 mailbox driver is used to communicate with
+a co-processor for various power management and firmware
+related tasks.
 
-Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+Justin Chen (2):
+  dt-bindings: mailbox: Add support for bcm74110
+  mailbox: Add support for bcm74110
 
->> I'll look into it as soon as I recover from my illness.
-> Hope you're doing better
+ .../bindings/mailbox/brcm,bcm74110-mbox.yaml  |  64 ++
+ drivers/mailbox/Kconfig                       |  10 +
+ drivers/mailbox/Makefile                      |   2 +
+ drivers/mailbox/bcm74110-mailbox.c            | 655 ++++++++++++++++++
+ 4 files changed, 731 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,bcm74110-mbox.yaml
+ create mode 100644 drivers/mailbox/bcm74110-mailbox.c
 
-I'm fully recovered now, thanks :-)
+-- 
+2.34.1
 
-> I had to rollback to linux 6.13.8 to be able to use the SMB share and 
-> here is what I constat
-> (don't know if it's a normal behavior but if yes, SMB seems to be a very 
-> very unefficient protocol)
->
-> I think the issue can be buffer related:
-> On Linux 6.13.8 the copy and cat of the 5 bytes 'toto' file containing 
-> only ascii string 'toto' is working fine but here is what I capture with 
-> tcpdump during transfert of toto file:
-> https://xba.soartist.net/t6.pcap
-> 131 tcp packets to transfer a 5 byte file...
-> Isn't there a problem ?
-> Openning the pcap file with wireshark show a lot of lines:
-> 25	0.005576	10.0.10.100	10.0.10.25	SMB2	1071	Read Response, Error: 
-> STATUS_END_OF_FILE
-> It seems that those lines appears after the 5 bytes 'toto' file had been 
-> transferred, and it continue until the last ACK recieved
-
-Thanks for the trace.  I was finally able to reproduce your issue and
-will provide you with a fix soon.
