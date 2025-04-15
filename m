@@ -1,131 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5728F15666D;
-	Tue, 15 Apr 2025 13:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930761537A7;
+	Tue, 15 Apr 2025 13:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724608; cv=none; b=mM+0gENJZLWxOju+LPSQsFTBC5O4k67hu9FIHBQgAiICN8bUxjci0DBQhMf4Jk0W5I5VUXIIWvXxBb1obtC8HrGajSF9KFTK1cjYMTM+BUu5GxuQ/UQ+QeHn4ZIeWpWuqai3B2B0aeJZeUAMek6IGb+AEUmWTPVZ3eBr/XTFSEA=
+	t=1744724660; cv=none; b=FhU2fk881Lg7QHOUXF9CNuIxpF6uiQu15fl0LBHHG3MWlmalU1sXI6EUzccCRNJLymiwbIp9/E7Wh+lIe1fv6eAgGR2faVSlNGDdT7fHlhU4znYAyOhfysvuhiVv3EpuK00gWh+hCVEccT9ZpwnQHGkpcdwjuDAIGE713pcRNvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724608; c=relaxed/simple;
-	bh=IxWkArW0k2U67F6F9RHjTgtE9suHMDOBlSeq3YOrG44=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mzG9KJW4Z4xPCdVHIZDFS5T5iqblhKHf4H6+0rjFfGS8L7CX/UEen/2oK2hAmxAmerSn4yqk2P/EuoJ9+dKS7VksBpdy7Q7owgWtxfeEfpNk+OeG+NQTBer2C3HEBsspawBOdUMnMqM1l5BxJgQ2zjereSp6y0asg5IU7jBzGTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S7TJoq4O; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744724660; c=relaxed/simple;
+	bh=GsSFwxZ4oHuFSNl6lAHCTcoSiHZsa1Y2n1lp4Zh92g4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cgw2vqDA3lR/M1u/dIioXP1spBqKVk8YE7xOot7PhPp0Jsqo64ZbstDvyZJLD19ZDbioex94F45vmiBtdcsfXXvPkeBBSEScZ4OY4B8xdNVP+bvFYYCl623e5VwGUQ2+EydAeUk7emsFwTwTE1J7Uwv1tWeeo3kqz69Hayjm3CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jf/WD21T; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S7TJoq4O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744724603; x=1776260603;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IxWkArW0k2U67F6F9RHjTgtE9suHMDOBlSeq3YOrG44=;
-  b=S7TJoq4OIqN/PdsHgd/5jpkCv87NHXNlp+hB692gXzDbqwPZX0bFp/Kx
-   XbcS/zrQGULH8APS39OpRZriBRbWy5+maJFauyO3nPVUvo+Nuq6gaMcK4
-   ZomJH377Tv7Shd/NX4nwf4Pcaa0qTIwhO0oyE2u6pbxLU6EtzfWMUU81O
-   EzytkVsoKhrf1p+g0vvnTgF8bcDKaJ3jZWafL8rfIUFHcLb4hFkHP2/0q
-   oML32YRqsEZVD8IVp2tUf/S57Lms/dAmoDHNWjAhIRfHyB3beXnw5AQKA
-   YiQavI61YO5+G+7HucfSqucqaZhWp11dCYVASWlDLxVtMS+9NnbQoVF41
-   g==;
-X-CSE-ConnectionGUID: av/2kEzBRZe662hsJU3QmA==
-X-CSE-MsgGUID: Qp9b4TqxS9q+s30r8mozAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56869510"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56869510"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 06:43:22 -0700
-X-CSE-ConnectionGUID: Q/dFA589ScmIDLjzPOyWbg==
-X-CSE-MsgGUID: bKJ6CkQGSYGkv1pEIGbucg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130096768"
-Received: from bkammerd-mobl.amr.corp.intel.com (HELO [10.124.222.124]) ([10.124.222.124])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 06:43:22 -0700
-Message-ID: <c811f662-79fd-4db1-b4e1-74a869d9a4f1@intel.com>
-Date: Tue, 15 Apr 2025 06:43:20 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jf/WD21T"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so3932942b3a.2;
+        Tue, 15 Apr 2025 06:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744724658; x=1745329458; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OTORsZPlrk/AMuWxuyI7eh//pFCRSnfTepFY96Ssd0A=;
+        b=Jf/WD21TmUkhttJugs8077tZdbocyNEkpDOnYzh1rR1n8driI29PyI8G8m+UoCVHag
+         FntRGtBWx83/jBY5w9vxhHx0KwHVH0y4qkEvnNH3jpKjpZKCYNMLYSJcky6KyqYmoltW
+         OQ0M5AyCF67JiAVliZffXmi3jxUoFr7uk1DqRBrXh6QmUDpxmmRAmDOfHzOZU3YqZ2og
+         ZXrUUdriXsr0e3XCpGGnChsFN0dE4/yo6tWqecjI3lDS4geneHpc0db2F0wnm9rVIJvp
+         EyjdB1FpQFDDmg+CPhLzzKT2BHj3PfrbHR6aZ42YPAC7U1PnEed3pdc3Uv9OkDr451dS
+         OGlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744724658; x=1745329458;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OTORsZPlrk/AMuWxuyI7eh//pFCRSnfTepFY96Ssd0A=;
+        b=qvFodidwvNIFyEk1ejwWO+zeNFCBrCIigQzk7XMY6cBfnHO1tDFLkVTYfp63K++n4K
+         NdzCQpBTLwzjuWUlRHcMyli/kwtry6NBmniniT/fCRKrqhKaGxcB3hdQYzTUegoPLlOY
+         p+1Bag6j4u3iqU70KoKwYFNpqAS5vAepLb/0WFCP99gQZW7fj50gA4KmhgOhhA/n7FRL
+         WXh1wqb06lwWVi+3rxRn0qkR+efEB1osWeKEbMNFjBeGvFCCf/PBGmoGEUmz4ouyCfkI
+         CsBe27THC4yDHGTqoe+ICWBr38pBH6qspq85XLtTGsH2kbxEzzMiiK0VCe1BSDd3c7GJ
+         LIFw==
+X-Forwarded-Encrypted: i=1; AJvYcCUBSPz+VrZlKVqPIZcjzOV8xIFsNEtuqVNvmTFFELoq1B9tCfscJWxjqsrlq9kXum/CFZ5lw24PDG3Wvac=@vger.kernel.org, AJvYcCXd6WyxICSLmchUofduPzdbN+Zrjb6BcYGUICAlxv0jkZ7du5q7tPIotbXHx7hYZfM+wvlbOiPJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVFs+KNs52EbrCFWYowWrvrASQ56n/WoHGPyJ1l+EvzeOurTSP
+	tqfECIe4xW5FgFqLQdMrcL2IGZCf+f6gouPeqjJ3JWfHj8CBT/52
+X-Gm-Gg: ASbGncsfdOYZtkVX66XWX0vrU4PWNqVP+pix8BSY/qN2z9b2IliUpQ0cX0ksY/s1Umv
+	OAWfod22EmHfFJF1i8ZZ7P66fJ4FR8stus9iG8w4z7u/mFRy9tBCL6snXVv1BlTXvmPuyV5z6jg
+	hxhwSyRQs+z8lmQJUlDqFTK21BAhGrnP0ksOSNie3XFFjETnTbPVEjU9x2f7sIGKqPDKgraKQQJ
+	ivoQIEGyl2sx2LzR24oCvGTMsQW5atBCOFlPG4vLGBPbOaAyuxag0/Q28u8wCU6aI284yzpaN+h
+	JWRSa9VfBoFAGi116DcvfWq5ssCBe6SfGw==
+X-Google-Smtp-Source: AGHT+IFViVyAaP+ggZIbpa3bg1tjZy3LOGm1xo9ytu+UHIK/9ZwrptKd7ilpthfCZVlFvyurrwMotA==
+X-Received: by 2002:a05:6a00:240b:b0:736:a694:1a0c with SMTP id d2e1a72fcca58-73bd12bef8dmr22407785b3a.21.1744724657616;
+        Tue, 15 Apr 2025 06:44:17 -0700 (PDT)
+Received: from nsys ([103.158.43.24])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b06161333a8sm6217828a12.7.2025.04.15.06.44.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 06:44:16 -0700 (PDT)
+Date: Tue, 15 Apr 2025 19:14:11 +0530
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: 990492108@qq.com, netdev@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Bharat Bhushan <bbhushan2@marvell.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Geethasowjanya Akula <gakula@marvell.com>, 
+	Hariprasad Kelam <hkelam@marvell.com>, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>, Sunil Goutham <sgoutham@marvell.com>
+Subject: Re: [Patch next] octeontx2-pf: fix potential double free in
+ rvu_rep_create()
+Message-ID: <457o27qvjkgxlread7gvqsf6sz3g2tponkxtmehva6f2msi6xb@giaxsk5o57oe>
+References: <tzi64aergg2ibm622mk54mavjs6vbpdpfeazdbqoyuufa5ispj@wbygyurrsto5>
+ <777db8bb-89d2-46ac-b7b9-0b5f418cc716@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: x86/urgent] x86/e820: Discard high memory that can't be
- addressed by 32-bit systems
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
- Arnd Bergmann <arnd@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Davide Ciminaghi <ciminaghi@gnudd.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, x86@kernel.org
-References: <20250413080858.743221-1-rppt@kernel.org>
- <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
- <a641e123-be70-41ab-b0ce-6710d7fd0c2d@intel.com>
- <Z_4ISTuGo8VmZt9X@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <Z_4ISTuGo8VmZt9X@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <777db8bb-89d2-46ac-b7b9-0b5f418cc716@web.de>
 
-On 4/15/25 00:18, Mike Rapoport wrote:
->> How about we reuse 'MAX_NONPAE_PFN' like this:
->>
->> 	if (IS_ENABLED(CONFIG_X86_32))
->> 		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
->>
->> Would that make the connection more obvious?
-> Yes, that's better. Here's the updated patch:
+On Tue, Apr 15, 2025 at 09:32:07AM +0200, Markus Elfring wrote:
+> Would you ever become interested to avoid a duplicate free_netdev(ndev) call
+> by using an additional label instead?
+> 
+> See also:
+> [PATCH net v2 1/2] octeontx2-pf: fix netdev memory leak in rvu_rep_create()
+> https://lore.kernel.org/netdev/8d54b21b-7ca9-4126-ba13-bbd333d6ba0c@web.de/
 
-Looks, great. Thanks for the update and the quick turnaround on the
-first one after the bug report!
+As Dan also pointed out (https://lore.kernel.org/netdev/116fc5cb-cc46-4e0f-9990-499ae7ef90ee@stanley.mountain/),
+the best practice is to undo the current iteration inside the loop
+and then cleanup the previous iterations after the goto label.
 
-Tested-by: Dave Hansen <dave.hansen@intel.com>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
+I think the idea is that it makes it easier to review. We look at the
+loop and can tell that when it jumps to the error label, the current
+iteration is cleaned up. And when we look at the error label, we can see
+that it cleans up all previous iterations.
+
+Whereas, if we had additional goto labels, we would have to go back and
+forth between the loop and the goto labels, to tell if cleanup is
+performed correctly.
+
+Regards,
+Nihaal
