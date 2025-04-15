@@ -1,193 +1,151 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C61D268C79
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAC727F74F;
+	Tue, 15 Apr 2025 16:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744735366; cv=none; b=dAO8wT6rhS6tr1cL9lNoIzXE7fzl6P1M/sYiI3qKWjsMe9NkwFwY8trn4cx4ko2iPDM6Qld05yFefTaKQ/R0LxmjjLo2FBW61Qv6ipwGpjJGWnnsY/UBfTBtFgAM8cTNpNe7aYPSDVit6lSYY6R2z3NOX/POmJbsG6WPKfpkQnA=
+	t=1744735389; cv=none; b=eoGP1Fipnb61m2YkaKSgL3fN8R3dT4pOx7U8gFQVB9eIeZMtFpWhkaVzkUiHRiS7rx8Runijd2DYSb9MZG36EOyFe92FTYkAGaNdDX7LSpnZpPOzEky7n6VKqFCxS7qwp1kLKaUsRDEkjlHzowD4P/rkoV90LHnxBEdKoC/aoTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744735366; c=relaxed/simple;
-	bh=7guA22Z/jVIhTId3TiU3XjIQwgyWBjZKeRgCg5KS4MA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aDLuoqw3MPF9PVl5wg83RT5jyDxMCUHpG5U1NECy32z4yptXy2vn1OXCN06tG+KO1UAkTsXR/sgHJbEWcmqlxDGJXCgPPhuAfPYR8F+JGJtw7itAFgCdIBkoh6BRFFnsjkmctQLR2DHOsbfq7IOUP7wnCC4KZHP5Ag9BeCCa60I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sFtX3Hjl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iMqvCkzi; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sFtX3Hjl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=iMqvCkzi; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744735389; c=relaxed/simple;
+	bh=u95dBuLRjhdfXitfe59a5c3chs1JKSGBptgj8nnq0po=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KzR0z9Dk2blKYUZ7dYn5vM0zfbLXGJaUubC+o2K2w5rWwWN5hT3DkgukHwPL7MZWZ3cWG7wtv3o/EjzxgPYnydQYRCu+shzrxmgjzC9kOe+mWeUkIMmZOQ8mmquDzQRBU0oxMEOzHfC3GZSgQu2AIYSmeV6o0X/F8peiRT7l/co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SSTRW9ox; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sFtX3Hjl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iMqvCkzi";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sFtX3Hjl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="iMqvCkzi"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C02BB1F461;
-	Tue, 15 Apr 2025 16:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744735362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uYXbDnEVw6T3gFBR1xGBJ2FVAU/2FayUDTj0+2zKHis=;
-	b=sFtX3Hjlx1wOA1FTuoTIpaVVg+kPH1ZDX/PiG2f5KPK2R0WOWf3i0d+6ZGvERhAUFyTauW
-	sKpMtvqWfTWyQoC+C+tqyH8Sbl8yD5IgoJ+9mb8C6KOHW0nFnlgBn4o2Skrrlv1A3h25H9
-	5cxWdGxrV/h58/r7z7+ZDLGoYMXuG/Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744735362;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uYXbDnEVw6T3gFBR1xGBJ2FVAU/2FayUDTj0+2zKHis=;
-	b=iMqvCkziOv6yRDVxHSqu2D65vGD1SOJL+/mbf57m7xxMKydTRf63ng8sVgHtnhD6xbMf+W
-	avZl3LJdSRIvoQCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744735362; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uYXbDnEVw6T3gFBR1xGBJ2FVAU/2FayUDTj0+2zKHis=;
-	b=sFtX3Hjlx1wOA1FTuoTIpaVVg+kPH1ZDX/PiG2f5KPK2R0WOWf3i0d+6ZGvERhAUFyTauW
-	sKpMtvqWfTWyQoC+C+tqyH8Sbl8yD5IgoJ+9mb8C6KOHW0nFnlgBn4o2Skrrlv1A3h25H9
-	5cxWdGxrV/h58/r7z7+ZDLGoYMXuG/Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744735362;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uYXbDnEVw6T3gFBR1xGBJ2FVAU/2FayUDTj0+2zKHis=;
-	b=iMqvCkziOv6yRDVxHSqu2D65vGD1SOJL+/mbf57m7xxMKydTRf63ng8sVgHtnhD6xbMf+W
-	avZl3LJdSRIvoQCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B1BBF137A5;
-	Tue, 15 Apr 2025 16:42:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yqxZK4KM/mdeZgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 15 Apr 2025 16:42:42 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3A5D5A0947; Tue, 15 Apr 2025 18:42:42 +0200 (CEST)
-Date: Tue, 15 Apr 2025 18:42:42 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Jens Axboe <axboe@kernel.dk>, Martijn Coenen <maco@android.com>, 
-	Alyssa Ross <hi@alyssa.is>, Christoph Hellwig <hch@lst.de>, Greg KH <greg@kroah.com>, 
-	Jan Kara <jack@suse.cz>, John Ogness <john.ogness@linutronix.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] loop: LOOP_SET_FD: send uevents for partitions
-Message-ID: <2wzcj4odajfsvubribqetasj26pp5u3wnusnowwwjiwy4lj5p5@vpa7vwwseyq2>
-References: <20250415-loop-uevent-changed-v3-1-60ff69ac6088@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SSTRW9ox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 695F5C4CEEC;
+	Tue, 15 Apr 2025 16:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744735388;
+	bh=u95dBuLRjhdfXitfe59a5c3chs1JKSGBptgj8nnq0po=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SSTRW9oxwi6t6BeOmnz5XKCkgql93kGJJvL3lgjDd3s7AgKf9v2H8X/sQVy78qbRF
+	 XlUR/AMhJniKi3dPiKEHsx+DBL1hXeuZrsgvmfb+1nSolGXDHnXjmG+BjElH0lWVm2
+	 7KlwCKos259oJJXMaimUODj95ATn1ZH2mqJt18dKTc9p9Wb0s+MKiR7kuEtPVvQWqp
+	 E6qvGRZWHtj4qppb2jANy0p3WACo/EV2JsN9c6EUWUvtHRPGuo8vKjgQQ8ibY84S0H
+	 ICBokVM6NJhYXK3dHZe5Wcf3CxdTdjphQV5VLTU1Py8nNdtXxehYGJWar/Z4kpO9rq
+	 Xdnj5akXzs0og==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c873231e7bso3626078fac.3;
+        Tue, 15 Apr 2025 09:43:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUhj9UVIyOpJjn467GNrISWfU4/VwOLZL7ZrhhDMsCIBnud3VrkbjSqTwK8Hr6inVKtLIbJaf4spLvF@vger.kernel.org, AJvYcCX/widAhGrfBDr4s8lqBIIJuvm+Yxs/fQVxQbYKD6hmu5sKquEWnLGVPG7EEn0FKwe1dWz7zlJQSbs=@vger.kernel.org, AJvYcCXHFM8/kgT7q7EXk4oDoDxn3QX+U3nbQi2gOu134AIddCe1HvKoQ80MUbhUNm95nDF4c/IxM4kcz8yz1SXe@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoECVRoJqILw+03jYGmqhHkvuKacSK30axfaswddz3l/EUvkXx
+	5xCyibW+oqCkqGVMDcH5Lf1/8K/pDqlhKQ1BKTl9LZdPgFfsHbYtRqMe9jt/EP1kxKj6W+V/5v9
+	Pvag1ei2CXwA55l9xFJ/lhSUEOYU=
+X-Google-Smtp-Source: AGHT+IGyns0wKcIA6JT3DidO5LCfWPBQ89zz6U8ulYdw6epDaXaSmmPM+mVRcjXZP13jUV0tTep4Qgkj6OohB9PkpUw=
+X-Received: by 2002:a05:6871:3743:b0:29e:27b6:bea5 with SMTP id
+ 586e51a60fabf-2d0d5f2462dmr9973324fac.25.1744735387716; Tue, 15 Apr 2025
+ 09:43:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250415-loop-uevent-changed-v3-1-60ff69ac6088@linutronix.de>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
+ <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com> <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+In-Reply-To: <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 15 Apr 2025 18:42:56 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+X-Gm-Features: ATxdqUFwFy97e7VWF90uH5loEGafOroniuxmOCaFHFC3QunM9DSgMFJWfDaMgSM
+Message-ID: <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed flag
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 15-04-25 16:55:06, Thomas Weiﬂschuh wrote:
-> Remove the suppression of the uevents before scanning for partitions.
-> The partitions inherit their suppression settings from their parent device,
-> which lead to the uevents being dropped.
-> 
-> This is similar to the same changes for LOOP_CONFIGURE done in
-> commit bb430b694226 ("loop: LOOP_CONFIGURE: send uevents for partitions").
-> 
-> Fixes: 498ef5c777d9 ("loop: suppress uevents while reconfiguring the device")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+On Mon, Apr 14, 2025 at 8:53=E2=80=AFPM Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+> Introduce a new dev_pm_info flag - platform_resources_managed, to
+> indicate whether platform PM resources such as clocks or resets are
+> managed externally (e.g. by a generic power domain driver) instead of
+> directly by the consumer device driver.
 
-Looks good. Feel free to add:
+I think that this is genpd-specific and so I don't think it belongs in
+struct dev_pm_info.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+There is dev->power.subsys_data->domain_data, why not use it for this?
 
-								Honza
+Also, it should be documented way more comprehensively IMV.
 
+Who is supposed to set it and when?  What does it mean when it is set?
+
+> This flag enables device drivers to cooperate with SoC-specific PM
+> domains by conditionally skipping management of clocks and resets when
+> the platform owns them.
+>
+> This idea was discussed on the mailing list [1].
+>
+> [1] - https://lore.kernel.org/all/CAPDyKFq=3DBF5f2i_Sr1cmVqtVAMgr=3D0Fqsk=
+sL7RHZLKn++y0uwg@mail.gmail.com/
+>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
-> Changes in v3:
-> - Rebase onto block/block-6.15
-> - Drop already applied patch "loop: properly send KOBJ_CHANGED uevent for disk device"
-> - Add patch to fix partition uevents for LOOP_SET_FD
-> - Link to v2: https://lore.kernel.org/r/20250415-loop-uevent-changed-v2-1-0c4e6a923b2a@linutronix.de
-> 
-> Changes in v2:
-> - Use correct Fixes tag
-> - Rework commit message slightly
-> - Rebase onto v6.15-rc1
-> - Link to v1: https://lore.kernel.org/r/20250317-loop-uevent-changed-v1-1-cb29cb91b62d@linutronix.de
-> ---
->  drivers/block/loop.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 3be7f00e7fc740da2745ffbccfcebe53eef2ddaa..e9ec7a45f3f2d1dd2a82b3506f3740089a20ae05 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -662,12 +662,12 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
->  	 * dependency.
->  	 */
->  	fput(old_file);
-> +	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
->  	if (partscan)
->  		loop_reread_partitions(lo);
->  
->  	error = 0;
->  done:
-> -	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
->  	kobject_uevent(&disk_to_dev(lo->lo_disk)->kobj, KOBJ_CHANGE);
->  	return error;
->  
-> @@ -675,6 +675,7 @@ static int loop_change_fd(struct loop_device *lo, struct block_device *bdev,
->  	loop_global_unlock(lo, is_loop);
->  out_putf:
->  	fput(file);
-> +	dev_set_uevent_suppress(disk_to_dev(lo->lo_disk), 0);
->  	goto done;
+>  include/linux/device.h | 11 +++++++++++
+>  include/linux/pm.h     |  1 +
+>  2 files changed, 12 insertions(+)
+>
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 79e49fe494b7c4c70d902886db63c4cfe5b4de4f..3e7a36dd874cfb6b98e2451c7=
+a876989aa9f1913 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -881,6 +881,17 @@ static inline bool device_async_suspend_enabled(stru=
+ct device *dev)
+>         return !!dev->power.async_suspend;
 >  }
->  
-> 
-> ---
-> base-commit: 7ed2a771b5fb3edee9c4608181235c30b40bb042
-> change-id: 20250307-loop-uevent-changed-aa3690f43e03
-> 
-> Best regards,
-> -- 
-> Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+> +static inline bool device_platform_resources_pm_managed(struct device *d=
+ev)
+
+Could this function name be shorter?
+
+> +{
+> +       return dev->power.platform_resources_managed;
+> +}
+> +
+> +static inline void device_platform_resources_set_pm_managed(struct devic=
+e *dev,
+> +                                                           bool val)
+
+Ditto?
+
+> +{
+> +       dev->power.platform_resources_managed =3D val;
+> +}
+> +
+>  static inline bool device_pm_not_required(struct device *dev)
+>  {
+>         return dev->power.no_pm;
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index f0bd8fbae4f2c09c63d780bb2528693acf2d2da1..cd6cb59686e4a5e9eaa2701d1=
+e44af2abbfd88d1 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -670,6 +670,7 @@ struct dev_pm_info {
+>         bool                    no_pm:1;
+>         bool                    early_init:1;   /* Owned by the PM core *=
+/
+>         bool                    direct_complete:1;      /* Owned by the P=
+M core */
+> +       bool                    platform_resources_managed:1;
+>         u32                     driver_flags;
+>         spinlock_t              lock;
+>  #ifdef CONFIG_PM_SLEEP
+>
+> --
+> 2.34.1
+>
+>
