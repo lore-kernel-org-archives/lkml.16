@@ -1,66 +1,66 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A384178395
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487D61DDA32
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725202; cv=none; b=H0N3v7BXzuA0QgVDMbdX0Hmc2QYbzwsIHYCpTrD/1ihf9Yh0BMJjg8BjptpGSNT5pYbcCHVtVEOgsgwVj3ntN0M8yTJKStGzyxuewd/UH+4yaQNDjGhUcCU/3E+Dab0N51zMGMEClAtXMxQdDIXkraLSyaMPUPtE4L8G5mn4quA=
+	t=1744725207; cv=none; b=FwwNDFlnbv2nqww3zAc/Ug9VhwOc8sLtx0RNIMojcVKmxdBw4nS5izmDfRnpkbzmyGJp9zeXEDoBfH8bcCyjpBCz/bLgW26CffIOC6gY1k0H8XhKv6SyAEPIs8ghXTG9rlc54jsj2XiZQHRo7rZXnJMTxjvVN1dJyxr1nDS8UCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725202; c=relaxed/simple;
-	bh=7rT0DnZ40BX0chd62YZIMarCtZkIZTK+AlWOSsnMwGU=;
+	s=arc-20240116; t=1744725207; c=relaxed/simple;
+	bh=2KwIlvvGECXFrETJCT6z2gk+hxmBfBaHfHMjOZSbJew=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QzJLy7Pa9xrMYwiq7roAeqMgHiHID8PrmvEjPGSG6f7qwBHdaZSiXiH1z9VJAUPnzcaSosCbKA9TonMND/fSdK3pQxuG1opQYH18IHWdUIGsEZSS27m/fI0BWRCZPJ/uJLevFLyUeoeNO8u4NBhYnIWftinzUcvkZ0HT/gPjx7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y7IMz9/t; arc=none smtp.client-ip=209.85.218.49
+	 In-Reply-To:To:Cc; b=SMgiDj2XsLwl6E286TK0HEEd2Uy+Uklg+urssxhLeEUJOpXEszujqqR2tzDqPfhubd6LCRyM0a7rGG0TqozxhE9fixapsQrdWz2nkNsRvmqg+oKBlrWA3DklenyDAbQBazKxrk1uM1zJRV/wLn09rsk0O/It4F8SB0ImnN/JZxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ow4Iftyv; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7IMz9/t"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so982416066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:53:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ow4Iftyv"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-acacb8743a7so835991166b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744725199; x=1745329999; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744725203; x=1745330003; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=S6tYxjgZnNiRfOX1HagPvU4+OfIiUTK0uIOiDBKkMjM=;
-        b=y7IMz9/tz7QC4qUgfMWO0TWDSiNTNhL4gduoy/OHKLrBiVNzu1OyGP8P5FD7i68Rjw
-         sb/M9r33+hrgykmJDPuMYKCrlXShESp5+TAwbG34Yboym2ZIqvaU7gI+F2ipF9YQ5Hii
-         bgk4DDr6iAKRyYiB+shAy1QC0vqN2JmOJ+2c2Y/ZzluCdMrf9xu+OjfD9JAJUSZzIj4V
-         lVZY3x/Pz/koSA6M4wKlq1PJSf94vb/Rf2gEyKuJPZsIHgzCVkSCE++m3SvmaZTgom+x
-         asDo4fdIq9NTdjxRnO5LOHlbYtRto1Du1eMLPDNf++GZl4UB983ga22yiBqlPi0dOdb6
-         jAQA==
+        bh=IzromOuf9zzJyEBnUnC0UIApSp7seWmK6Swkwn2TE30=;
+        b=ow4IftyvpsLLhLr7EM9k4WQnLD38TPJD0GMXoSHK6tEddkfqBDwasXqc6AcA9DY/aE
+         sXuplFWIQTB6wA0Tbe+ApnedhZ9exwiKI0vG25lMDi7PWkHUzF3eGaAs3DfAGK8cIZ3n
+         mwuCzDyerdEXCBpMuz8oOX96UyuJxMSWgRhoLvkHgPl5Xbqei7xe1zQufImgGQV06WRX
+         A6cByR6fPOeb94Z02/R7bXPL3o5X+yqgebCQEWyuz9eTA50xLm8Z/4gzMWwbmeS6lp0L
+         PbjuzsmOi+gn8czrdGoZLU94jc+hU1jaAYpqyM17E1i8X6k4K007dMv3zqwUyZHu81j1
+         tdWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744725199; x=1745329999;
+        d=1e100.net; s=20230601; t=1744725203; x=1745330003;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S6tYxjgZnNiRfOX1HagPvU4+OfIiUTK0uIOiDBKkMjM=;
-        b=cfxTLLlmoLkoYi2YkKY0UxqPNtsh+WDti0pkp+VDrmcxocKasfop+EM/kQKTNeC4ow
-         gPPfv1F47lnyuyt3qtPUUK1Uye1b+ugs+05YXpjwI1axkA068fjxibe1Q4T5OpfDaZkQ
-         RTudMQu6U18y9tpOTFe9cgqqnTPm5SiNBN2iqlHavV0HQkRp5hdVKhFQeJgV/tDdmbIA
-         fv5tRTCad/JeqIWUWgS4GXUTFOUUXMsHhImD0s8vc1qdnb95NJ2PIJfRuuIo9cMOm84u
-         t3JXuMY9WtHEGnaWtDfhDDicQKGpRBTV07pa83d4/g9Mn10Y0g3uiHJD8O7a1fiaTvR5
-         ULwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXG37bz4E4AqxAu3xgH82Gg1OWIdtvE6LqjkugEhhc3mUr9zpjc8WbKA931JnCi0TOjqZd+op/F1bg23rU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEyBNSDZGzmg7rhuRg0N0ItTYsz+H+Lsydm3NGt8wMFOiD9q8J
-	QO9aPgdM4H2PkkUVlj8Hjtb3hKuFZTUpQ1AZlBB40OUxLk1n3XHzLfkJeTRiykM=
-X-Gm-Gg: ASbGncuIoxF8+zhWsYLNCmXbj1GZjs2Y3YWInmihicPAZNR4uUOhpUADBrRMMyPjpDI
-	f1KSy3k7YCth86TPXqMf0oGC2tTCRqMjv7m8sZV+AiDO8qrkqi9xSJPSH9Jt75RdeC5PdSsgjE5
-	U+FVYBJhjdmpmomxYIIsUPlBvpxSN366cvqRdNI9YYor0q6QUic8vanRQrtjanZEqghhHSu5Igd
-	mjXeYS0nBVlCu6Wv8k97KBIS8z3PQluHxXUOl69GAUrU7gymxCo2tblYPEFoC1sI9JjM5Z01m5P
-	5B0UBOY4YVNn4fwX2UIarhxyuI9cFtM873Gh9M85lErSvlt0AJvu3nc=
-X-Google-Smtp-Source: AGHT+IFj4BGzQDL0tZmOUj1gbsZcM1OSfHV0iPjzyd8vrIYlrHFKk2z6XvkElZnyILkNERPUmwhmrw==
-X-Received: by 2002:a17:907:940a:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-acad36a6206mr1463236066b.43.1744725198568;
-        Tue, 15 Apr 2025 06:53:18 -0700 (PDT)
+        bh=IzromOuf9zzJyEBnUnC0UIApSp7seWmK6Swkwn2TE30=;
+        b=EOniKK0XgXY6t8KK2HxEjxMbcW2sGDwZzDpwOwNNCq+KFgtx6wZzroBBCSEBwtHFv5
+         qN0/VmFvY02jeyDq09DR7H8kQrrCi3YilytI9tKV4DfQoJHKr/PIkuH/zL6WSyAi5jP4
+         i0YwSRhx5u3dCueRCadETtvHgJq8XSdMpqZXasnGrgtPPnL0WnqnHgQB+jlHdKTwPkzC
+         9uCETlGP/Jqsh5pGfN/7PfgSOur7jFuQMajLFIDgOv8+9HYk0FJggGEUsH8G0V61kLaq
+         w9/tWPYO876ZJJDS/zI8S1keWZYfKL1kcuhBTMHm1zRq7kkkumwYwT/cLMD3B6rFCOf0
+         XbbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWOk4OQoQQMdIHemGieu2zowTaWHEKjBaN7bGXYtDvBt2webJLxuHEXuMp0jK3kn/EfrvxTfk0nfGrq08=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+z4oueiukQvqCdHs24ro2pT7hwo/sGxmXm/+efivPcb+bvHKc
+	UtFSJOhiWrNNYWu3+MXfkbQ+ASuVMEkYgDixq4o7jwtCT4dZlthlflfn9WPIbPs=
+X-Gm-Gg: ASbGncsqc3es9ut67AjqoZH+PcAZogCDfbC0X9fnDsN7MNUHXx+lJmswMGKBm5wWF8i
+	2/qUbbuwLdiGleH96kDtG++uiVm4K0/byvHHL1Za0DyQbUUXIRwTc0aJ8K2BknsOhtjbYC+6q1S
+	d3PQkWyzRnI+iDYd7M13LLG5F5ugC5s3ZQc7Z12gW2RUdS9CMNjAsr1TST/6r4KtnrZisKs5zMn
+	1D3DCkufv2AEtE+f3fJOJrGGbPeH0QGHtkmXQt1830J6v6DfOWU17nwFHEZJ4J5ZePImLRXbQ6z
+	St2Go40WptZykW5wr97HA5NjpVCvGdy8xLItVrts7MXKoPn0rp85VIQ=
+X-Google-Smtp-Source: AGHT+IFwlxOkxM+FSTXk89qNtD3AqxVqNDqmG63ewdt7FIeooDU3A2bPFLmNB60nWDT25K0clFz4aQ==
+X-Received: by 2002:a17:907:d15:b0:aca:d48c:916 with SMTP id a640c23a62f3a-acb166d6d5fmr282910266b.9.1744725203245;
+        Tue, 15 Apr 2025 06:53:23 -0700 (PDT)
 Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:7b18:2529:5ce1:343d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acadcc21a44sm681379166b.177.2025.04.15.06.53.17
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acadcc21a44sm681379166b.177.2025.04.15.06.53.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 06:53:18 -0700 (PDT)
+        Tue, 15 Apr 2025 06:53:22 -0700 (PDT)
 From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Tue, 15 Apr 2025 15:52:44 +0200
-Subject: [PATCH 1/8] arm64: dts: qcom: msm8916/39: Move UART pinctrl to
- board files
+Date: Tue, 15 Apr 2025 15:52:49 +0200
+Subject: [PATCH 6/8] arm64: dts: qcom: apq8016-schneider-hmibsc: Move UART
+ pinctrl to board
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-msm8916-console-pinctrl-v1-1-a1d33ea994b9@linaro.org>
+Message-Id: <20250415-msm8916-console-pinctrl-v1-6-a1d33ea994b9@linaro.org>
 References: <20250415-msm8916-console-pinctrl-v1-0-a1d33ea994b9@linaro.org>
 In-Reply-To: <20250415-msm8916-console-pinctrl-v1-0-a1d33ea994b9@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -80,484 +80,72 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Sam Day <me@samcday.com>, Casey Connolly <caleb.connolly@linaro.org>
 X-Mailer: b4 0.14.2
 
-In preparation of adding a new console UART specific pinctrl template, move
-the pinctrl reference to the board DT part. This forces people porting new
-boards to consider what exactly they need for their board.
+Prepare for removing the generic UART pinctrl templates from msm8916.dtsi
+by copying the definition for the 4 pin UART1 and 2 pin UART2 instance into
+apq8016-schneider-hmibsc.dts. Having it defined separately in the board DT
+file makes it clear that the set of pins/pull etc are specific to the board
+and UART use case.
 
-No functional change for the boards upstream.
+No functional change.
 
 Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 ---
-The ordering of the pinctrl before/after the "status" property matches the
-existing style of the files.
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dts                     | 6 ++++++
- arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts        | 6 ++++++
- arch/arm64/boot/dts/qcom/apq8039-t2.dts                      | 6 ++++++
- arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts             | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts         | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts               | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts           | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts               | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts                  | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts                 | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts         | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts         | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi        | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-mtp.dts                     | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi   | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-samsung-gt5-common.dtsi     | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-samsung-j5-common.dtsi      | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dts       | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi                    | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi       | 3 +++
- arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dts        | 3 +++
- arch/arm64/boot/dts/qcom/msm8916.dtsi                        | 6 ------
- arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts             | 3 +++
- arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts         | 3 +++
- arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts              | 3 +++
- arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtsi       | 3 +++
- arch/arm64/boot/dts/qcom/msm8939.dtsi                        | 6 ------
- 28 files changed, 87 insertions(+), 12 deletions(-)
+ .../boot/dts/qcom/apq8016-schneider-hmibsc.dts     | 35 +++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
-index aba08424aa38439952f959f79a9ded2201de1f7c..6175b1b9d7c6e82ef8ed3b6198b4b8cef81514d8 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dts
-@@ -222,11 +222,17 @@ &blsp_spi5 {
- &blsp_uart1 {
- 	status = "okay";
- 	label = "LS-UART0";
-+	pinctrl-0 = <&blsp_uart1_default>;
-+	pinctrl-1 = <&blsp_uart1_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &blsp_uart2 {
- 	status = "okay";
- 	label = "LS-UART1";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &camss {
 diff --git a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-index 75c6137e5a11dd5c738681d676dfc9b014efb34c..7a03893530c7b89705f5544491c14edd7120acdc 100644
+index 7a03893530c7b89705f5544491c14edd7120acdc..ce75046ffdac48a206d14499bc711f8f4a777fe5 100644
 --- a/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
 +++ b/arch/arm64/boot/dts/qcom/apq8016-schneider-hmibsc.dts
-@@ -190,11 +190,17 @@ tpm@0 {
+@@ -373,6 +373,37 @@ adv7533_switch_suspend: adv7533-switch-suspend-state {
+ 		bias-disable;
+ 	};
+ 
++	blsp_uart1_default: blsp-uart1-default-state {
++		/* TX, RX, CTS_N, RTS_N */
++		pins = "gpio0", "gpio1", "gpio2", "gpio3";
++		function = "blsp_uart1";
++		drive-strength = <16>;
++		bias-disable;
++		bootph-all;
++	};
++
++	blsp_uart1_sleep: blsp-uart1-sleep-state {
++		pins = "gpio0", "gpio1", "gpio2", "gpio3";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	blsp_uart2_default: blsp-uart2-default-state {
++		/* TX, RX */
++		pins = "gpio4", "gpio5";
++		function = "blsp_uart2";
++		drive-strength = <16>;
++		bias-disable;
++	};
++
++	blsp_uart2_sleep: blsp-uart2-sleep-state {
++		pins = "gpio4", "gpio5";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
+ 	msm_key_volp_n_default: msm-key-volp-n-default-state {
+ 		pins = "gpio107";
+ 		function = "gpio";
+@@ -469,10 +500,6 @@ &blsp_i2c6_default {
+ 	drive-strength = <16>;
  };
  
- &blsp_uart1 {
-+	pinctrl-0 = <&blsp_uart1_default>;
-+	pinctrl-1 = <&blsp_uart1_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	label = "UART0";
- 	status = "okay";
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	label = "UART1";
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/apq8039-t2.dts b/arch/arm64/boot/dts/qcom/apq8039-t2.dts
-index 4f82bb668616f942d65f59a6f418cf38f404df32..f656eca59ee23a6d19450b4d3fee7a661b002709 100644
---- a/arch/arm64/boot/dts/qcom/apq8039-t2.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8039-t2.dts
-@@ -116,6 +116,9 @@ &blsp_i2c5 {
- };
- 
- &blsp_uart1 {
-+	pinctrl-0 = <&blsp_uart1_default>;
-+	pinctrl-1 = <&blsp_uart1_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-@@ -128,6 +131,9 @@ &blsp_uart1_sleep {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts b/arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts
-index b4ce14a79370bc16b7d8fe144e56f4bb27e01534..9b82468ace3edfe8d808492b83e7753d3314e7af 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-acer-a1-724.dts
-@@ -133,6 +133,9 @@ touchscreen@38 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts b/arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts
-index 3459145516a12ae8e054e24b3ed9b73f9d79905a..1c2f8e8f9b263b024cc7c239447e7158262b0c1c 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dts
-@@ -214,6 +214,9 @@ led@1 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &mpss_mem {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts b/arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts
-index 77618c7374dfe29cf5660e0834aa2b0fa6f3d67c..f7a9ee0dba09eef83e9b4149856cdefa0ae3fd4b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dts
-@@ -130,6 +130,9 @@ touchscreen@38 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &mpss_mem {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts b/arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts
-index f7be7e3718209b9ca96afb13ea1aca05e1388225..e5ca1ca0d9976a0d36af5359e705ca7b2070122b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-gplus-fl8005a.dts
-@@ -131,6 +131,9 @@ touchscreen@38 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts b/arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts
-index bf7fc89dd106f670e7cda270c7284a6a3d7d052d..f75e60b5d1b3b40673cb0639a3f8d0056d037a02 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dts
-@@ -214,6 +214,9 @@ nfc@28 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &lpass {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts b/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts
-index a823a1c4020894edf845130e72803b48dbd24ac8..7c49b4cb27cb5a9914b38865596eb27541f390fd 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-lg-c50.dts
-@@ -59,6 +59,9 @@ reg_sd_vmmc: regulator-sdcard-vmmc {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts b/arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts
-index 07345e694f6f46bbf71ed3c551b2a80d5f352d2c..6e55d37f588c9b829bb594ff156cda6cb8b6caf2 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-lg-m216.dts
-@@ -112,6 +112,9 @@ touchscreen@34 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-index 7f0c2c1b8a94b2c4d79e5e0b2b7188f4e2b2d281..4576178cc9b0936a7356b9852fc003fe949ed903 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-@@ -254,6 +254,9 @@ rmi4-f12@12 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &pm8916_bms {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts
-index 2cc54eaf72027a213f9d779c57fa22386bda934a..e0dacdf552452a36cbdb041b37d68eb4d661e6c8 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dts
-@@ -178,6 +178,9 @@ imu@68 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &mpss_mem {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
-index 6a27d0ecd2ad23b462191a5a328a49a76ab13b42..48134e5ff524fd5708db7b9c3a567ec3f751868c 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
-@@ -69,6 +69,9 @@ rmi4-f11@11 {
- };
- 
- &blsp_uart1 {
-+	pinctrl-0 = <&blsp_uart1_default>;
-+	pinctrl-1 = <&blsp_uart1_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-index c11a845e91bb5029e89905ec7dee3b07646dd4cb..c115142df364e99a4f566775d4d1679e6a8920e2 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-mtp.dts
-@@ -23,5 +23,8 @@ chosen {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index e6355e5e2177df9e3beba6b2d96a15fb069ce57a..58a548d220a485e9a92c012c1529e3fe838d6c9f 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -302,6 +302,9 @@ charger: charger {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &gpu {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-index 7a7e99b015d9bf9686d2b41f7efb76a093c1730d..4290ae7782d659eb0d2594825717ffaf4c84076b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-fortuna-common.dtsi
-@@ -304,6 +304,9 @@ charger: charger {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-gt5-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-gt5-common.dtsi
-index fbd2caf405d5f686a40a59ff7e0bfc78f164e03c..30e34574999c52f7ea99c9bd7af41101e5d4d4d0 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-gt5-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-gt5-common.dtsi
-@@ -116,6 +116,9 @@ fuelgauge@36 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-j5-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-j5-common.dtsi
-index 5ca2ada266f495e4584a5143a8cce6f1f1c4ad78..d4af7856f5f3a70160774d1637e39e19d163725d 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-j5-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-j5-common.dtsi
-@@ -135,6 +135,9 @@ touchscreen: touchscreen@50 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &mpss_mem {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dts
-index caad1dead2e03c30dd6eb09b457439a9b0446126..45c3b3387b52030a6475ae0da2a2c89ea98ca6c1 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dts
-@@ -319,6 +319,9 @@ rt5033_charger: charger {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &gpu {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi b/arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi
-index c77ed04bb6c36dbc0cb7c0b09f50d1f18aafa4c9..2bfe56da8f6c624ed97d8a5750d12c59c039c874 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-ufi.dtsi
-@@ -72,6 +72,9 @@ &bam_dmux_dma {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi b/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi
-index 1a7c347dc3f08409f7db3b246c04687c666bba32..f5caac42bbad106f86448c217aa1472a32fbeaa6 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt865x8.dtsi
-@@ -93,6 +93,9 @@ touchscreen@38 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dts b/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dts
-index 510b3b3c4e3c4223c64bcfa563e0e080d033d7b7..10d0974334abf0e501ec97e2de487f40c1507f82 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dts
-@@ -169,6 +169,9 @@ led@2 {
- 
- &blsp_uart2 {
- 	status = "okay";
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- };
- 
- &mpss_mem {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index c89f9e92e832eae8f630555e9e7f5817d6731d4d..733c17d0495617e683d362d7b7aae59078f2a0b0 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -2159,9 +2159,6 @@ blsp_uart1: serial@78af000 {
- 			clock-names = "core", "iface";
- 			dmas = <&blsp_dma 0>, <&blsp_dma 1>;
- 			dma-names = "tx", "rx";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp_uart1_default>;
--			pinctrl-1 = <&blsp_uart1_sleep>;
- 			status = "disabled";
- 		};
- 
-@@ -2173,9 +2170,6 @@ blsp_uart2: serial@78b0000 {
- 			clock-names = "core", "iface";
- 			dmas = <&blsp_dma 2>, <&blsp_dma 3>;
- 			dma-names = "tx", "rx";
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&blsp_uart2_default>;
--			pinctrl-1 = <&blsp_uart2_sleep>;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts b/arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts
-index 3cec51891aed95968f7b5cb099ae2107691635fb..9f647027d082864ccaa240f7118f20a8d19f6a4a 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8939-huawei-kiwi.dts
-@@ -126,6 +126,9 @@ touchscreen@1c {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-index b845da4fa23e612f04cf8a8f15b8892e396a8c41..f59647b5b7dfdd7bf630f9d180bb56a10a3ea0a3 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8939-longcheer-l9100.dts
-@@ -243,6 +243,9 @@ touchscreen@4a {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts b/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-index ceba6e73b2112687d16ee595003c80ea1a93143a..3d9cbe7fdad8808968190d7a744bab29eeb0e827 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8939-samsung-a7.dts
-@@ -373,6 +373,9 @@ charger: charger {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtsi b/arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtsi
-index 800e0747a2f79f6ef9a7d86d56c1a2006207b1c7..cbefe34327ba7b04ea57032c68dd69642e6d1685 100644
---- a/arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8939-wingtech-wt82918.dtsi
-@@ -126,6 +126,9 @@ touchscreen: touchscreen@38 {
- };
- 
- &blsp_uart2 {
-+	pinctrl-0 = <&blsp_uart2_default>;
-+	pinctrl-1 = <&blsp_uart2_sleep>;
-+	pinctrl-names = "default", "sleep";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8939.dtsi b/arch/arm64/boot/dts/qcom/msm8939.dtsi
-index ca478db63be4578b92d85e178548c5e16b29bf03..67ff2ffc6e455fa5ad8a664a161873507cab6391 100644
---- a/arch/arm64/boot/dts/qcom/msm8939.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8939.dtsi
-@@ -1770,9 +1770,6 @@ blsp_uart1: serial@78af000 {
- 			clock-names = "core", "iface";
- 			dmas = <&blsp_dma 0>, <&blsp_dma 1>;
- 			dma-names = "tx", "rx";
--			pinctrl-0 = <&blsp_uart1_default>;
--			pinctrl-1 = <&blsp_uart1_sleep>;
--			pinctrl-names = "default", "sleep";
- 			status = "disabled";
- 		};
- 
-@@ -1784,9 +1781,6 @@ blsp_uart2: serial@78b0000 {
- 			clock-names = "core", "iface";
- 			dmas = <&blsp_dma 2>, <&blsp_dma 3>;
- 			dma-names = "tx", "rx";
--			pinctrl-0 = <&blsp_uart2_default>;
--			pinctrl-1 = <&blsp_uart2_sleep>;
--			pinctrl-names = "default", "sleep";
- 			status = "disabled";
- 		};
- 
+-&blsp_uart1_default {
+-	bootph-all;
+-};
+-
+ /* Enable CoreSight */
+ &cti0 { status = "okay"; };
+ &cti1 { status = "okay"; };
 
 -- 
 2.47.2
