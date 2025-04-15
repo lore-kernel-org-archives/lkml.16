@@ -1,180 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06D52DFA36;
-	Tue, 15 Apr 2025 16:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E518EAC7;
+	Tue, 15 Apr 2025 16:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744734361; cv=none; b=R091C1l2OTz2KrLqT89VZQppkS2SBieby48rQBRFo8J226erB/HQj2NaxgRJeN9ZHABgxzA1lLM9K97EQ63NDFDVvUDqqglwuXLXsE6zRCecqyTKO+MRvvXMmwDjo85J9/ucKUIhl3ZveqU3SnKP2f+1BA5RyiBa0gsZULDVKa8=
+	t=1744734518; cv=none; b=dg9G66X1U6jrbaBEwwJCgVbFKiOu84yXqrgEUWRHh4rFgj6Klvqk/iVbO3zSJk7AkuWNGO0MVJjXszs0JR4YtLsAtcuXhX4Pj31yMukzLUWtZEl0tKk8l98wHxpJDOThumzM2mPO2SdQfeePV/ZVxUEhuz87HhHlYn818S+ta4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744734361; c=relaxed/simple;
-	bh=DD4GUf8VvuzvbL4+3b0xOhTk0IxS3V/vcDCvRItAwGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZqnJDj8O9/wXWW1+0HPN51hk69pgzw9PbPMIzvNvuyiDp7p3Q7lLBjXFPWrsJSXkLq24Jw9S4S8UvgSRrPl5Fx44coRfn0jTVrST1Zyr5hB7T25l6mBYfA4/dT6WT4u4ZUAw4+PEuG5bPBTU+zcZi5Aq4wdoJw37p/ftte4H1x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hv804O+v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744734518; c=relaxed/simple;
+	bh=16k+D1kzWNJPkhaotffNzTSM5A9nH61MwSAOOqgRjo0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kc5D7o3lNjhiXCFE9mS4aoCsNkAJdeqf8MSETtFUGgBzQcAEgXBonVYc4GOAUe0Ugd7nHAGGOzAhIAiLXyXwj512jXu6wgSMKYpU8DNzU9lMZVIgXwIkXyRd9VVZYQLsmUGLGLaHRnIEHD4epuKCtaes/ybu2FC+JcwqcdfD7Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvcWM2h8; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hv804O+v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF53C4CEEC;
-	Tue, 15 Apr 2025 16:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744734361;
-	bh=DD4GUf8VvuzvbL4+3b0xOhTk0IxS3V/vcDCvRItAwGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hv804O+v/qiVhc2TUYzuGSw9wdClIFlnMVPF76N6L2bveIc7ZSZx2yuF+7OS5M/oF
-	 8ehv5h7iefLWywO3rgvdBQNWZgryH314YYhFY7AcF6A9jJICJgje+zM12BxApVRNTp
-	 GbKuFNziP1DlwYwA8PMhybcoNtsG4UKugQsBnTc/RHJc+YV1ZBB5ZkLPg+YmRuLBzl
-	 Y3BAlpDHTGlGalzLjdtlwYCtkCvn8Ol9LyvLndTRiQRbBlOavCnVPA+XWfsaYeWh1W
-	 QO3X/zc10jJ6KdaW6wX97eOTovIWx7UX7ihnjquYT/74XjP4nnI2H0ZWwr2mOUHPdq
-	 ZuimZKS9cxkIA==
-Date: Tue, 15 Apr 2025 09:26:00 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v7 13/14] xfs: update atomic write limits
-Message-ID: <20250415162600.GQ25675@frogsfrogsfrogs>
-References: <20250415121425.4146847-1-john.g.garry@oracle.com>
- <20250415121425.4146847-14-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvcWM2h8"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff6ce72844so1034887a91.2;
+        Tue, 15 Apr 2025 09:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744734515; x=1745339315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GhGX2Gld5nEWaX//R4Z1bBeTvGhalt1zlNsb95NKu50=;
+        b=JvcWM2h8RY5v6XpIxNWYbvYVjhqT4kjxpQX6cuNTK7Nfuqhzp2thrHZ7QxvC5PULHZ
+         SQJJ2jLgqMkNjnBxYdeZX6vt/SSmsWSCB6SVvr4w+tDWQG7k6CIiLoZfwXnkOSgGuIZf
+         vRSCX+W8J+yOUU6NekAuE0vL79pVXs0XHA1hy6GNUksai98HhVG8Cmc3FOWQoom2WqAn
+         CNV6xsV3vRzm5EEt2YDQRwZ71OkkEJebK/RtNmAfjnlZO/2s5zcaT3cgO62oxl63pibj
+         s19r/2lXuHMPTX5k+/E2KRW2qXbweuwp3bzKwcfOHibaU1t8lRID7qboz86cKiRgbMlO
+         RNuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744734515; x=1745339315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GhGX2Gld5nEWaX//R4Z1bBeTvGhalt1zlNsb95NKu50=;
+        b=BUA1MHPE8IYd+Rp+3IrZT96Iutv6gG8LMK4cWt1WS/Y//2n6QXuKbwAobxxf9XVC74
+         M/47IzTCXWr2P7nWRIVJ+qAw6VQrSAbkNyeccRv70craU/OP9zz0uaDGa+7aLB4+8MZ/
+         eQK6J3VxBU5h0scjzxPIY5q9eJd8dmD+J56KfLQNqEqk39GXg2hCFBdUa9UkC73b0ucv
+         h89jQlJGHmZ2Z5LDYGYvbK9Gi8vK/PASSdHPd304vP0JF7bYe6Pt8LEpS2GRa1DNw1YE
+         zh7bDua4IsrZ8jDBxL50glPQeJZxKj2YxOSb96XkJ+6MVdmcxledQe5blfiGUD4bx50x
+         W3ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWc3ytzlpy5MfDpq1wph3ZvluR/GfymGa651iMoKwa1gHVmDtOxjQhQVvggHp99N637ViimkeEmYxZ6rAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIOZqQ7B0dopohRCKp6ky+jJN3JASWoW3LUrWoDXEOTaF3GxnB
+	Re+LNbRk2GJfPbyyZrX9EpRW538MSd4WtgTSw6JRZ0Mo2f3927aKJyhPGf47OiMZy+/E6fx2W6X
+	5z6WGVv045muruNfsOZ1bmbjuW14=
+X-Gm-Gg: ASbGncsYFk07IFAFR7Da9UPjrkvHBWl4tpQS+t7KmsgemZofKbePHm0bVFYYJdgtOQp
+	FR31/aq4XeozyfGYrwJvJrwk1wRBW3QURSNFlpELOx41wL10HoWRDojx/Z2W9DarSuouqE/xpjC
+	jSGQbZJHKBIXIFXiw83Z0RadKlVlsF6TaB
+X-Google-Smtp-Source: AGHT+IH7DuWw2+Ji1/JVUUE6uHhtXC92IfxsebFP/13Uv3c8VTSL84EUu6WlHqcTmwxo8LeGFx2QSi+jDgjGVV/VHOE=
+X-Received: by 2002:a17:90b:384b:b0:306:b6ae:4d7a with SMTP id
+ 98e67ed59e1d1-3084e75753emr2484613a91.3.1744734515441; Tue, 15 Apr 2025
+ 09:28:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415121425.4146847-14-john.g.garry@oracle.com>
+References: <20250412005341.157150-1-fujita.tomonori@gmail.com>
+In-Reply-To: <20250412005341.157150-1-fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 15 Apr 2025 18:28:23 +0200
+X-Gm-Features: ATxdqUE4hmSdsGSuyUlL13WPDkdl-YxIKEIGL8veqbyYbS6fb8zNgY_VAJuTw28
+Message-ID: <CANiq72=Grg+T-c0+TxcyubHj4kvHPQKiVm3AZp5DgeUVXsitEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: helpers: Remove volatile qualifier from io helpers
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-um@lists.infradead.org, richard@nod.at, anton.ivanov@cambridgegreys.com, 
+	johannes@sipsolutions.net, geert@linux-m68k.org, logang@deltatee.com, 
+	sbates@raithlin.com, dakr@kernel.org, dinguyen@kernel.org, arnd@arndb.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 12:14:24PM +0000, John Garry wrote:
-> Update the limits returned from xfs_get_atomic_write_{min, max, max_opt)().
-> 
-> No reflink support always means no CoW-based atomic writes.
-> 
-> For updating xfs_get_atomic_write_min(), we support blocksize only and that
-> depends on HW or reflink support.
-> 
-> For updating xfs_get_atomic_write_max(), for no reflink, we are limited to
-> blocksize but only if HW support. Otherwise we are limited to combined
-> limit in mp->m_atomic_write_unit_max.
-> 
-> For updating xfs_get_atomic_write_max_opt(), ultimately we are limited by
-> the bdev atomic write limit. If xfs_get_atomic_write_max() does not report
->  > 1x blocksize, then just continue to report 0 as before.
-> 
-> Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-> [djwong: update comments in the helper functions]
+On Sat, Apr 12, 2025 at 2:54=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> Remove the `volatile` qualifier used with __iomem in helper functions
+> in io.c. These helper functions are just wrappers around the
+> corresponding accessors so they are unnecessary.
+>
+> This fixes the following UML build error with CONFIG_RUST enabled:
+>
+> In file included from /home/fujita/git/linux-rust/rust/helpers/helpers.c:=
+19:
+> /home/fujita/git/linux-rust/rust/helpers/io.c:12:10: error: passing 'vola=
+tile void *' to parameter of type 'void *' discards qualifiers [-Werror,-Wi=
+ncompatible-pointer-types-discards-qualifiers]
+>    12 |         iounmap(addr);
+>       |                 ^~~~
+> /home/fujita/git/linux-rust/arch/um/include/asm/io.h:19:42: note: passing=
+ argument to parameter 'addr' here
+>    19 | static inline void iounmap(void __iomem *addr)
+>       |                                          ^
+> 1 error generated.
+>
+> Fixes: ce30d94e6855 ("rust: add `io::{Io, IoRaw}` base types")
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-Same here, there should be a
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+I don't particularly like having different signatures than the other
+side (since we could e.g. eventually have a check that they match
+etc.), but given v1 it seems they could also be eventually gone from
+the C side anyway.
 
-after this comment.
+Cc: stable, I assume, too?
 
---D
+Thanks!
 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/xfs/xfs_file.c |  2 +-
->  fs/xfs/xfs_iops.c | 53 +++++++++++++++++++++++++++++++++++++++++------
->  2 files changed, 48 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 81a377f65aa3..d1ddbc4a98c3 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -1557,7 +1557,7 @@ xfs_file_open(
->  	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
->  		return -EIO;
->  	file->f_mode |= FMODE_NOWAIT | FMODE_CAN_ODIRECT;
-> -	if (xfs_inode_can_hw_atomicwrite(XFS_I(inode)))
-> +	if (xfs_get_atomic_write_min(XFS_I(inode)))
->  		file->f_mode |= FMODE_CAN_ATOMIC_WRITE;
->  	return generic_file_open(inode, file);
->  }
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 3b5aa39dbfe9..183524d06bc3 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -605,27 +605,68 @@ unsigned int
->  xfs_get_atomic_write_min(
->  	struct xfs_inode	*ip)
->  {
-> -	if (!xfs_inode_can_hw_atomicwrite(ip))
-> -		return 0;
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +
-> +	/*
-> +	 * If we can complete an atomic write via atomic out of place writes,
-> +	 * then advertise a minimum size of one fsblock.  Without this
-> +	 * mechanism, we can only guarantee atomic writes up to a single LBA.
-> +	 *
-> +	 * If out of place writes are not available, we can guarantee an atomic
-> +	 * write of exactly one single fsblock if the bdev will make that
-> +	 * guarantee for us.
-> +	 */
-> +	if (xfs_inode_can_hw_atomicwrite(ip) || xfs_has_reflink(mp))
-> +		return mp->m_sb.sb_blocksize;
->  
-> -	return ip->i_mount->m_sb.sb_blocksize;
-> +	return 0;
->  }
->  
->  unsigned int
->  xfs_get_atomic_write_max(
->  	struct xfs_inode	*ip)
->  {
-> -	if (!xfs_inode_can_hw_atomicwrite(ip))
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +
-> +	/*
-> +	 * If out of place writes are not available, we can guarantee an atomic
-> +	 * write of exactly one single fsblock if the bdev will make that
-> +	 * guarantee for us.
-> +	 */
-> +	if (!xfs_has_reflink(mp)) {
-> +		if (xfs_inode_can_hw_atomicwrite(ip))
-> +			return mp->m_sb.sb_blocksize;
->  		return 0;
-> +	}
->  
-> -	return ip->i_mount->m_sb.sb_blocksize;
-> +	/*
-> +	 * If we can complete an atomic write via atomic out of place writes,
-> +	 * then advertise a maximum size of whatever we can complete through
-> +	 * that means.  Hardware support is reported via max_opt, not here.
-> +	 */
-> +	if (XFS_IS_REALTIME_INODE(ip))
-> +		return XFS_FSB_TO_B(mp, mp->m_groups[XG_TYPE_RTG].awu_max);
-> +	return XFS_FSB_TO_B(mp, mp->m_groups[XG_TYPE_AG].awu_max);
->  }
->  
->  unsigned int
->  xfs_get_atomic_write_max_opt(
->  	struct xfs_inode	*ip)
->  {
-> -	return 0;
-> +	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
-> +	unsigned int		awu_max = xfs_get_atomic_write_max(ip);
-> +
-> +	/* if the max is 1x block, then just keep behaviour that opt is 0 */
-> +	if (awu_max <= ip->i_mount->m_sb.sb_blocksize)
-> +		return 0;
-> +
-> +	/*
-> +	 * Advertise the maximum size of an atomic write that we can tell the
-> +	 * block device to perform for us.  In general the bdev limit will be
-> +	 * less than our out of place write limit, but we don't want to exceed
-> +	 * the awu_max.
-> +	 */
-> +	return min(awu_max, target->bt_bdev_awu_max);
->  }
->  
->  static void
-> -- 
-> 2.31.1
-> 
-> 
+Cheers,
+Miguel
