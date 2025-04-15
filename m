@@ -1,57 +1,62 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB1328B51D
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715129; cv=none; b=ZkGJ6VR6pPybwzcDaugaMSgpOo5ZBEpQyJx6e0oDuIdfaVovMYqL+DpsHiOrVgt1ueBabzCcYuPfyMY2V8MM7i0C9GAyAlHB0RCg9GpN4YWgDTixSinyteT7fDXbOFf03vfF59kTTEN56MdXuA6N0aT9BQl7U2KSgGysRFqwpcY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715129; c=relaxed/simple;
-	bh=vMO8bv3nyf0PgqSsbSg1AULWccl+KRG6FZHAuNWt9F8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=JUrNCejFqsLpSpV2BWsBKDEdcTz3lvqv3DYAC/fbvQ/ulmKpF02yHIvLcq4YpbMVdcUXhqxh41zFZCPJjB7+xXmWWxbJJC9yhHkL1smfiGtwQ4dY0SY0ZeJG3/txo1pcRpw6ffS0fuQCGx4T4g0Bpc/SIq119JUIPzcAS591Krk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uY6cyIVa; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56082D529;
+	Tue, 15 Apr 2025 11:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744715201; cv=fail; b=qfb+GLXZkn/IGoDI5y9lHK+7xS9jyzgpjpFjqtqPuN7a1iAZvPu8jGHcpdbRY0AWLUrj/MRL3XeDAdUQHAlthOinC8u7TUa1qG7IyHrdp1iiUJhyP0CcKQce1J1iHCnJwjtLuoWBEzD4UQAwNW0O0e0sYYK5FwQqLL2ZRy0W3C8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744715201; c=relaxed/simple;
+	bh=Y9seB1OymfzDwqJVZ8IG7fKGj9B1dvvCQo0cALg8VyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CkfvV/Q6ySzMmQ1Jb8cFgJaYzSKLiVo4GSP/6EnOfrvK3wkPU5CbOtqh/6e2A+wQN9LpTRkoQ8J/KIqsGrTsWc6N1QTNii733EaOrcIsxfupW/dP+MjBrHJFgtCtjK6vlFRI3tYOba0jBfL46xNN+yBn8Q4BFHUM1Z4wGnKaoQs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YE//WqTU; arc=fail smtp.client-ip=40.107.244.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uY6cyIVa"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250415110520euoutp01de06fb0edc87fd34c3e74f8885d550a1~2eShkYEOh2345023450euoutp01T
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:05:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250415110520euoutp01de06fb0edc87fd34c3e74f8885d550a1~2eShkYEOh2345023450euoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744715120;
-	bh=aLn/AEFMpttKdygzkWg+Y5Dq2mkLBesLmZHzH94VPGc=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=uY6cyIVadW/vgbiERrhcIxL0GHwfXF31yDhVUYAvyQjf4f0ZBze5MMNdVXABC54Il
-	 BgM0uPxBSRO+OSBgN5TEnYa4T50QSJSPnv73eBtPsk04igBUThWdJlCnOme7XmITU7
-	 CJ30e5WDBNWA3tM2NKhLvd93N+yqw4bmhFPiSWYM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250415110519eucas1p13d350463a1db089b07e6f07975d75457~2eShF3vr-1800318003eucas1p1M;
-	Tue, 15 Apr 2025 11:05:19 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 21.CB.20409.F6D3EF76; Tue, 15
-	Apr 2025 12:05:19 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250415110519eucas1p282dfd609fa94c8d7dc2f8c5582124fe7~2eSgnW5bQ0518205182eucas1p2E;
-	Tue, 15 Apr 2025 11:05:19 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250415110518eusmtrp225a31cef6c14e09144833c668f90dac0~2eSgmFd9S2890028900eusmtrp2h;
-	Tue, 15 Apr 2025 11:05:18 +0000 (GMT)
-X-AuditID: cbfec7f4-c39fa70000004fb9-b9-67fe3d6fce8c
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 46.17.19920.E6D3EF76; Tue, 15
-	Apr 2025 12:05:18 +0100 (BST)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250415110517eusmtip2fcfb3b74759928d6aab8b3af31fed6a3~2eSfcbQPF1773317733eusmtip2w;
-	Tue, 15 Apr 2025 11:05:17 +0000 (GMT)
-Message-ID: <a3142259-1c72-45b9-b148-5e5e6bef87f9@samsung.com>
-Date: Tue, 15 Apr 2025 13:05:17 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YE//WqTU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=syCzjxfGivgF19OXiHuiBGOY7MXx2LaNFZWH7BeDeIO0s8qv5YLEDVXoUsBy+87XcSWhfHaerOl2fEpwKvEfFPNNy17sWhxFdjlbBbu1X9d1ThfIkURhKnnjDJxQawYGzGBN1cXKc3FurmoHKyhoV0SAxbkabxyt7KlWfvYX9gVt1HHMrt5Jo9VHP1z3LYelGdysOQsc7ITeguHv+0NHR8nNd3rLdes6jYQVxsBm/6BKF2riMzWFW1fcMkx4bccDmcXwO9RuTQVadPPY9UVNrKfHcXqIhNAv8un7X7SVESsIapnSephlwBJwlQs2FIIOuZFxUu6RxUysLAa2SqoIWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1w5T8vXx9NM9HNwUfIMSniPLpzcI3d1PYM/NcXsELuc=;
+ b=LrpYFBsJVtZ0Fanb3HDPzSWNfhPSWw0Y4XtAhMJTdF7pbNZZXGjkd+Dcx5Z5pglj1neJQITCF57BnlwTEKYODas0AYY0ctkdcpSo6UVue/hP0zUKCbrhd3D2eyyNu7+aBfmJALiydaiHCg+GAHQvD0oA9PG+2raMryECp1It581FxYkzxEmG/GvywEXRXNrLWaG8WhORqEmmcdihY6Jh8Otq7cT4e7a/oICuBxeZvEWuZXDlueesJmmNfoigRQlM+7uAYoEB/tn6nQ8NdAUDngiTpM3W3QhhqAfaR79LDB6j1D5sB6i2S6rExq4Dgd8en8b7Ec77QHj44t3dXKmg7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1w5T8vXx9NM9HNwUfIMSniPLpzcI3d1PYM/NcXsELuc=;
+ b=YE//WqTULEYAMKEJ1nmkpZfaeiYwm5h6jHfmxar/EFYNZkOdwZD9PWjD5OjCPJQzSoHXG1GQFZLWejGtl6VRBd3HrEzvesDyeimkF3ku4E7/MyS1zM3f/oaU+A1VbxVPnvzGS8mTvOLttQZnCVWsQsdH1L4WSZz54adGeo6OZpo=
+Received: from BL6PEPF00013E0D.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1001:0:11) by IA1PR12MB8358.namprd12.prod.outlook.com
+ (2603:10b6:208:3fa::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Tue, 15 Apr
+ 2025 11:06:35 +0000
+Received: from BL6PEPF0001AB4D.namprd04.prod.outlook.com
+ (2a01:111:f403:f903::4) by BL6PEPF00013E0D.outlook.office365.com
+ (2603:1036:903:4::4) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.26 via Frontend Transport; Tue,
+ 15 Apr 2025 11:06:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB4D.mail.protection.outlook.com (10.167.242.71) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 11:06:35 +0000
+Received: from [10.85.32.54] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
+ 2025 06:06:31 -0500
+Message-ID: <d345b636-792f-4762-8c6c-2a7252294068@amd.com>
+Date: Tue, 15 Apr 2025 16:36:29 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,169 +64,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] drm/imagination: Skip clocks if platform PM
- manages resources
-To: Matt Coster <Matt.Coster@imgtec.com>, Maxime Ripard <mripard@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich
-	<dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, Drew Fustini
-	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Philipp
-	Zabel <p.zabel@pengutronix.de>, Frank Binns <Frank.Binns@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
-	<tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 11/67] KVM: SVM: Delete IRTE link from previous vCPU
+ irrespective of new routing
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+	<pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, David Woodhouse
+	<dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>
+CC: <kvm@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Joao
+ Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+References: <20250404193923.1413163-1-seanjc@google.com>
+ <20250404193923.1413163-12-seanjc@google.com>
 Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <1226d261-247a-4a7c-a414-7db4a24fab9e@imgtec.com>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxTVxzNfe/xXlsseRYnV2G6NXMLMlDApTcKZl3MfIYt0USzRVhYM58t
-	jFLTWrc5jEUqX9JRl8GkOEDGxIDdEtoiJVZmRSorKwY/mIavoeVLGCDI2IZ0tA83/jvnd889
-	53duLg8XlZHreWmZR1l1pixDTAqIxra/PNGqxEX51vIRiG51V2PossODoSelUySqbPUEob4u
-	K4buPpsk0Y/e2xQacWQTaNTUR6I7zedJNGNoBahxRk8ic2svhS5M2whU09QMUG7BxSDU23eL
-	QPmTOhx9N1uCI9/VJgqV/9FCIev42SDkMn+A9C3fEG9DxjFXRTB2Uy/FFNk7ANNQV0AyPfev
-	kkxF+z6m/4wLYyw1Jxm9uQ1jip9vZSav3SOZr6x1gLG4v2RmGjbsDTkoSDjEZqQdY9Vbdn4s
-	UNwe9GJHciI+d7oZHRhdWwj4PEhvg48W/sQLgYAnoi8B+GDOSHJkFsCuAiPFkRkAx30l4MWV
-	0dxHy6paAIftFwiOTABYfLMG86uE9E5YPKsP8mOC3gTLr+fh3Hw1bC97TPjxS/RG2P/wHOXH
-	oXQyNJvPBTRr6PfgQP8g5jfF6XsUHPH6AtE4HQYfPq4MBJB0HByorQwE8JfC6utdGKfZCHNs
-	5YFGkC4RQOMZ3VICb4nsghU5kVyFUDjmslIcjoA+O+cJaRUcsD3FOZwF7UWuZbwD9nj+Jv02
-	OB0Jf2rewo2l8J8HUzjnHgJ/m1jNbRACv278dnkshPm5Ik79OiwpMvwX6rnUiBmB2LTiUUwr
-	OppWdDH9n1sFiDoQxmo1SjmrictkP4vRyJQabaY85hOVsgEs/V73omu2CdSOTcc4AcYDTgB5
-	uHiN0CNZlIuEh2RfHGfVqlS1NoPVOEE4jxCHCatbTstFtFx2lP2UZY+w6henGI+/XocFJ0VG
-	O7M6ReEuKqkwqk2sWzfklTtTwgddJ/Lu8FNCpYezsr5XTwpf80jm4EScPSr/d4fkF6H1h7OG
-	7F8lb1lTO7xlJ4NF18MXDCrK5pPOG1Aqybe4z79yyjfx6oHazYrEjlVD2fWV65Lw0hsZ764F
-	80V7lFdu7nk2ZaGHxm9clC0+feN4T3vy5X1m0TXYGf3+R0N1yfGbWu+e2LZr1c+6aS27vdCR
-	3j12umy38YDCfcqnaP/Q2lHK16ftjY/OdrwTvBDV25Kg7ZZapMPKiq5OZ/7+xKoE/nZJyv34
-	w+nzZGzI7mNPDs4/3297ebg4Qm6MHWCrI64kWvLS1Rve3MEXExqFLHYzrtbI/gXYpfatLAQA
-	AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsVy+t/xe7p5tv/SDc6dNrE4cX0Rk8WaveeY
-	LF5P+8BmMf/IOVaLe5e2MFlc+fqezWLd0wvsFi/2NrJYvJx1j83i8q45bBafe48wWmz73MJm
-	sfbIXXaLhR+3slgs2bGL0aKtcxmrxd17J1gsOt43MFvM/TKV2eL/nh3sFrPf7We32PJmIqvF
-	8bXhFi37p7A4SHjs/baAxWPnrLvsHj07zzB6bFrVyeZx59oeNo95JwM97ncfZ/LYvKTeo2Xt
-	MSaP/r8GHu/3XWXz6NuyitFj8+lqj8+b5AL4ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws
-	9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyLjx6ylTQLFNx6LRHA+NLsS5GTg4JAROJl22P2boY
-	uTiEBJYySjxY84kdIiEjca37JQuELSzx51oXVNFrRonGW3eYQRK8AnYS/V9aWEFsFgFVidkH
-	26HighInZz4BaxYVkJe4f2sG2FBhgWiJtWtngNWICPhIPLj/iAlkKLPAbXaJmx+msUBs2Msk
-	sXtuL1g3s4C4xK0n85lAbDYBI4kHy+eDbeME2rx69XGgOAdQjbrE+nlCEOXyEs1bZzNPYBSa
-	heSOWUgmzULomIWkYwEjyypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAZLPt2M/NOxjnvfqo
-	d4iRiYPxEKMEB7OSCO8583/pQrwpiZVVqUX58UWlOanFhxhNgWExkVlKNDkfmO7ySuINzQxM
-	DU3MLA1MLc2MlcR53S6fTxMSSE8sSc1OTS1ILYLpY+LglGpg2n0mbPpWl+LNEfO5Zh0S+PW+
-	/9ENuwrhs9vkpezVz0Zcvmu8U3j1mo/l0hJPQmdOcuYrcPope7iues3L5m+LWesKDPZO0O5r
-	5wt9tezaW63G+dfaFaM/nqpNbWCxuZr18azF3YQ7XDMdtHV0D/7Tkz09UWf+JiaGY5u37dm1
-	gG/dvLJfhTFbLrLH2x9Yti66O6b8WnNA6NoWn5Ut4k1b5jFkrteeKmC6bl7bHHu18AMf9sh7
-	KohsjGALXOBZuCNR161gZ8x0X/Nl3q+7H7q3X2zpUI43qXX2ucQxzatd2d1uqbTAtFVac/hf
-	ld0od1hvvnL+f26bNzxSh37dP53BJMC4v4RJ4+belvpjPs2blFiKMxINtZiLihMBJxWbGL8D
-	AAA=
-X-CMS-MailID: 20250415110519eucas1p282dfd609fa94c8d7dc2f8c5582124fe7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250414185317eucas1p139284a38dc4418ac90bd081c2825142a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250414185317eucas1p139284a38dc4418ac90bd081c2825142a
-References: <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
-	<CGME20250414185317eucas1p139284a38dc4418ac90bd081c2825142a@eucas1p1.samsung.com>
-	<20250414-apr_14_for_sending-v2-4-70c5af2af96c@samsung.com>
-	<20250415-poetic-magenta-cicada-9d1ee7@houat>
-	<1226d261-247a-4a7c-a414-7db4a24fab9e@imgtec.com>
+From: Sairaj Kodilkar <sarunkod@amd.com>
+In-Reply-To: <20250404193923.1413163-12-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4D:EE_|IA1PR12MB8358:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84e99587-d2d7-49bb-3e60-08dd7c0d9624
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bndaYVBzbXpZWDJjcnd1T0g1UU1kRXJYbFEzK0NRb2lvRE54dmxkQi9KRlY3?=
+ =?utf-8?B?eTNwWUJnTHRzTWdsWEwvMmRpclY5cHY4aFd3bEpLV09BTUZiYzVQaHRnV1l4?=
+ =?utf-8?B?Y2Q1aFpjdHRTUENMalZ5SERJVUJPeFFaSEZKemk2cXRpWlJ5N3d5SXpyZ21z?=
+ =?utf-8?B?Tmp1UkVaZCtpQi85TC9Fa3lSbThwY0NPUUZRVStWdENKNHVhRG9qczhlQmNm?=
+ =?utf-8?B?bzZJV2FRblRXajBSVVl6ZHZBeE1kY1EwMzIzeWErNUpMVDNvcWRGK0haUGY3?=
+ =?utf-8?B?WVowMzUydGpoaXBvRlN0eUMzN00rcWNtbk0zMHZyTi9FWHJHSkgyU2NHVS9m?=
+ =?utf-8?B?b09mcmN5L29jTXRnK0MycUl3WlI1b3Y5K2IxTkdHRysyenZSV3RqdHhGZmJ5?=
+ =?utf-8?B?VkV5ZlJCVGNZVEpnU2RiKzVTRkxaWjN1NmxOZXo3b3kvenlkTVJLVmNtbjlE?=
+ =?utf-8?B?RW05TEdneEg0QlFuWFlaTm5rZUhFVExxaHhIYjBERUVGdjJhMWc2a3BnMDRO?=
+ =?utf-8?B?dThxTE9UK0JabHQxNzM0QjM0by9adnNKUEJZdWh6dmdpNE1WWUk4ZDdGQnRh?=
+ =?utf-8?B?Ni9TSWpIWTZjZ1JtYjZzcDhxQU41eFh2c1loNW43MFFqUmNPNTM2QXVZc1po?=
+ =?utf-8?B?RGFNZkthRmVqaGg2NzFReUkwT1Fub0poVzh5K01OSVY5Wjhyem5oR25CdVBp?=
+ =?utf-8?B?clhIRVN0bFoxOWR1VVZtbW1zSDh6dzJldDdiOHZHYTc0WHl5alA3a1ZFdUU0?=
+ =?utf-8?B?RHptelZEQVdNOUhvckFOTmhsdm1wTWVqdUk0S0ZIQ2lUdjVpS0lzSCt3c0FW?=
+ =?utf-8?B?VG5kelFrNWdGUk96Ny94OS85WWY3c0ZwUzd6RjR0R1dZZkpOVlBRQTd1TWpB?=
+ =?utf-8?B?R2ErcU0wRmpMaFVQaEN5VVZjWkVaS1BWWVZPZEFjUFVac21qMjk4dXlVbjdR?=
+ =?utf-8?B?RzJ1R1lucldCSjdnbFF6ZGNxVWhiRVlEbGpRNWRVOVJjU2ExdXFOb0dIMUcr?=
+ =?utf-8?B?UFNhazgrSmt1alRzYzFqcitIUWJZakN5RXlzbWROR1BYQk0wcXlDUy83OEtG?=
+ =?utf-8?B?dCtiMlJaVkdmMW9PQ0pTUDQ2Sno0Q2t2ZFFRa0dNQktjLzV0R0x5QWViYk9P?=
+ =?utf-8?B?cGthakVnK0pMMis2Q09tRDVCc25rSWVNSXNienpMVUxnWWFhUlBnbjlZYW9w?=
+ =?utf-8?B?ZlZwRW91UGtKQ0p6Y2Q1eXR4OTJ5N1FGOXZyRkJaKzdMVHdQYkczeXJEZXIx?=
+ =?utf-8?B?Q2EybGYzaFBGOHhHZnJjM1RiQzRjVHdZUVNkVVBTMzNkN2hjQmVZVjk0L2k5?=
+ =?utf-8?B?VEF2SXJac05Td25JU29HYkpheU9zUFU1T0doZVg2VmxyOEhlczFidk9YbVlz?=
+ =?utf-8?B?cjZvYTFod2l5dnBPVDFkT0xtWkNLYTNMTUZ1MGY1VkpQMHZMUzlSM05sMWpq?=
+ =?utf-8?B?YmRlWDkvME8vaXpySUFtMFZGbmpHeEZZcmxXckNZZXUxM1BGR1VHSERnYXB4?=
+ =?utf-8?B?Ri9Vb3EvWVhqMDRIM3V4T05wK3VXN3ZVYTZYcUY1ZXJScFlVRFZubllybFVG?=
+ =?utf-8?B?T1JUeFRhNHZoenlwbUdHSWw2V3lkbDJnWVdJejMwMVZtZkYxSkV5elF4TmxE?=
+ =?utf-8?B?d0lkdmpQVXdtbEhlUXYxQ0pYWEEyMjZxelBRemhtbEd2KzdTWFdwYlNYVDBn?=
+ =?utf-8?B?R09WOThMcjNwdlZqM25RaEJUaUVMWUFCaVFZakEwNVRiMkpvWW0yRzRkUThY?=
+ =?utf-8?B?a1F0N3EvTHhnVk9FZ0ZQV25paEdpVVNDREc4Y2lLL0d4OFNrSEc1RldpemlK?=
+ =?utf-8?B?dUlETzBTRWR5cmIzN2IvV0VUcGk4U20ycndoQitVYk9Id1EwZFkwYnFmY3NL?=
+ =?utf-8?B?RGxray80TTdFL0ZHeERrQU1pdERDbU9rVkNGSWMyeThEZGYvajIyM0NvZEdT?=
+ =?utf-8?B?QitoVUdEQnBrYWtTdlk4UGYzdUxnNTl4YmdUNkhpM3lqY2dycERlVDBMNVJk?=
+ =?utf-8?B?QTRqMWJtWWUyUXZFaFljODNvZW94K2RZUXV6S1dBdHQ2b3l4b0tWWDhGblZI?=
+ =?utf-8?Q?tLSCDj?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 11:06:35.1542
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84e99587-d2d7-49bb-3e60-08dd7c0d9624
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4D.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8358
 
-
-
-On 4/15/25 11:15, Matt Coster wrote:
-> On 15/04/2025 09:55, Maxime Ripard wrote:
->> On Mon, Apr 14, 2025 at 08:52:58PM +0200, Michal Wilczynski wrote:
->>> Update the Imagination PVR driver to skip clock management during
->>> initialization if the platform PM has indicated that it manages platform
->>> resources.
->>>
->>> This is necessary for platforms like the T-HEAD TH1520, where the GPU's
->>> clocks and resets are managed via a PM domain, and should not be
->>> manipulated directly by the GPU driver.
->>>
->>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->>> ---
->>>  drivers/gpu/drm/imagination/pvr_device.c | 14 ++++++++++----
->>>  1 file changed, 10 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
->>> index 1704c0268589bdeb65fa6535f9ec63182b0a3e94..f40468b99cf14da418aeecde086f009695ff877c 100644
->>> --- a/drivers/gpu/drm/imagination/pvr_device.c
->>> +++ b/drivers/gpu/drm/imagination/pvr_device.c
->>> @@ -504,10 +504,16 @@ pvr_device_init(struct pvr_device *pvr_dev)
->>>  	if (err)
->>>  		return err;
->>>  
->>> -	/* Enable and initialize clocks required for the device to operate. */
->>> -	err = pvr_device_clk_init(pvr_dev);
->>> -	if (err)
->>> -		return err;
->>> +	/*
->>> +	 * Only initialize clocks if they are not managed by the platform's
->>> +	 * PM domain.
->>> +	 */
->>> +	if (!device_platform_resources_pm_managed(dev)) {
->>> +		/* Enable and initialize clocks required for the device to operate. */
->>> +		err = pvr_device_clk_init(pvr_dev);
->>> +		if (err)
->>> +			return err;
->>> +	}
->>
->> So, how does that work for devfreq? I can understand the rationale for
->> resets and the sys clock, but the core clock at least should really be
->> handled by the driver.
-
-Hi Maxime, Matt,
-
-Thanks for the feedback.
-
-This commit is trying to prevent the pvr RUNTIME_PM_OPS from controlling the
-clocks or resets, as there is a custom start/stop sequence needed for
-the TH1520 SoC coded in patch 3 of this series.
-
-static const struct dev_pm_ops pvr_pm_ops = {
-	RUNTIME_PM_OPS(pvr_power_device_suspend, pvr_power_device_resume, pvr_power_device_idle)
-};
-
-So, if the core clock needs to be used for other purposes like devfreq,
-we could move the device_platform_resources_pm_managed() check to the
-pvr_power_* functions instead. This would prevent the clocks and resets
-from being managed in runtime PM in the consumer driver, while still
-allowing the GPU driver to access and control clocks like the core clock
-as needed for other purposes.
-
-That way, clocks could be safely shared between the PM domain driver and the
-device driver, with generic PM driver controlling the start/stop
-sequence for reset and clocks. We would probably need to find a
-better name for the flag then, to more clearly reflect that it's about
-delegating clock/reset PM runtime control, rather than full resource
-ownership.
-
+On 4/5/2025 1:08 AM, Sean Christopherson wrote:
+> Delete the IRTE link from the previous vCPU irrespective of the new
+> routing state.  This is a glorified nop (only the ordering changes), as
+> both the "posting" and "remapped" mode paths pre-delete the link.
 > 
-> I agree, this feels a bit "all or nothing" to me. There's only one clock
-> on this platform that has issues, we can still control the other two
-> just fine.
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/avic.c | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> I thought fixed clocks were the standard mechanism for exposing
-> non-controllable clocks to device drivers?
+> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+> index 02b6f0007436..e9ded2488a0b 100644
+> --- a/arch/x86/kvm/svm/avic.c
+> +++ b/arch/x86/kvm/svm/avic.c
+> @@ -870,6 +870,12 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+>   	if (!kvm_arch_has_assigned_device(kvm) || !kvm_arch_has_irq_bypass())
+>   		return 0;
+>   
+> +	/*
+> +	 * If the IRQ was affined to a different vCPU, remove the IRTE metadata
+> +	 * from the *previous* vCPU's list.
+> +	 */
+> +	svm_ir_list_del(irqfd);
+> +
+>   	pr_debug("SVM: %s: host_irq=%#x, guest_irq=%#x, set=%#x\n",
+>   		 __func__, host_irq, guest_irq, set);
+>   
+> @@ -892,8 +898,6 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+>   
+>   		WARN_ON_ONCE(new && memcmp(e, new, sizeof(*new)));
+>   
+> -		svm_ir_list_del(irqfd);
+> -
+>   		/**
+>   		 * Here, we setup with legacy mode in the following cases:
+>   		 * 1. When cannot target interrupt to a specific vcpu.
 
-That's correct — and it's not really about the MEM clock at this point.
-The main goal is to ensure the custom power-up sequence for the TH1520
-SoC is followed. That sequence is implemented in
-th1520_gpu_domain_start() in patch 3 of this series.
+Hi sean,
+Why not combine patch 10 and patch 11 ? Is there a reason to separate
+the changes ?
 
-Regards,
-Michał
-
-> 
-> Cheers,
-> Matt
-> 
->>
->> Maxime
-> 
-> 
+Regards
+Sairaj Kodilkar
