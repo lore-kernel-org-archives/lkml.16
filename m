@@ -1,49 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D6C2DFA32;
-	Tue, 15 Apr 2025 02:52:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BFB1B0412;
+	Tue, 15 Apr 2025 02:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685566; cv=none; b=slxgV/GjqqtOnKNzk7SvdP+2ske4ml6xZNGIQcjFNlUJPaw5+QlntyeVrVsUZiBIhH5dBFLCjBPmz1aNpffY3/50qCFmEXhJiel6y6PJj5Kc7+KGEcMsjUwGYxpX3+1aNtsoYwQmQlDBheV9t9IcOVmJts/I8O4e4fcoWkbimUw=
+	t=1744685571; cv=none; b=q9a79mnJvkXSiwBZTQzLNXEpwp2ZcsDHw7pRIF0Sw/TA+L7fPa/QfTqsrDa3vaCcpogDMSzrhgoNrQtUpoL0I3BK9c50Dp0xsGfgAwYDalwWw01SMEOVIdtl2jJk0MuvtYAIfcU6L6/iHSVml+1KHm6lWMUoKsKa5OQJF1vmQ2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685566; c=relaxed/simple;
-	bh=IGxreNlwpqQm5syFJ8pj7BbF6kEXtKAd/PNKLjIuTvU=;
+	s=arc-20240116; t=1744685571; c=relaxed/simple;
+	bh=S7Tbw1ancnS17xgUm3xXxIxS9F8JptfwmG5wu66abzI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sl4rOw+mt2BxyAK5P5Sd6EEeh+/ht6K5aJtD3/GzaanGN303pU+cJ7ahbyExWoo+AdrasopvwsPkoaWF+dP915mIkyUjZNFGglEKScU83G86yGE8UuDrKXXjngE70nrmhQXk6kPIlvvrrNe0WRJXo0XZTWnbuLvGOfVXjG9DCDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=anizWvRZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=okMMXCT+FpDgkFzG4te7v4ajjlk7YLouav/7YrnEgqmUNuln18a5eAhbfpq75KDVlYKr5jpLovznHD5bGcCUOf9dF4K3Zf8teGb/SGil8vIKruMEHNbXN/uvTbn+Mk27oTWbvoZIW8aDyehLoBXYC0CAlW71AGtx3trlzWRL6iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/FGjbrP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="anizWvRZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CCE0C4CEED;
-	Tue, 15 Apr 2025 02:52:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/FGjbrP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD8BC4CEF0;
+	Tue, 15 Apr 2025 02:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744685565;
-	bh=IGxreNlwpqQm5syFJ8pj7BbF6kEXtKAd/PNKLjIuTvU=;
+	s=k20201202; t=1744685570;
+	bh=S7Tbw1ancnS17xgUm3xXxIxS9F8JptfwmG5wu66abzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=anizWvRZYfmt1Bm+YMw3o69qlGNd7ikTjSrCPDfDDjXFX8r1Em34EaA2rWaIaUbba
-	 KP6m+GhaBtf1gQN18oXsVnhBlLNMNonJTNSA/PIZhCvCHG2DHLGnLgl44Vw7K7/iWk
-	 Lze/6VRbgJGRaY97jBLVo1+Sg03L0yP2s35dDczt76NRZV/zyw40tVoPDArGEoiJWb
-	 nguIIIfC3CucCHfZ2m5sEOVbo1ZOh4g1gL26Pg7FkU+c3V0xmKLCPwIOlXhHwRyToz
-	 MelztK/oN3r/r+u8/NuLL0VF5gElZI3XQdveWsSISbHnOb/zYMYgwkl2F1Pefn+QDs
-	 0gn54hV6vYuLg==
+	b=J/FGjbrP7Ps3XNUKwsWzzHkZY95xSQCDX8olOmOvxlT1iR8OfpXsqVRk2+I8BhfvM
+	 jNKv/vl+F5DfRRUqSLuijvoU9lChcs+FYUWw5x5OB+/i6kjOMgcgpmQkbYb5L71jyZ
+	 zQjmeo69gXP6+BKQ7Oq6R1gyNQzC4Z+oxPciHVYcYnYiPQ2sX1/mzJ2zjyqHZ35T7U
+	 EAJwKKed5e8zZcYJyGBEdRcd7hP+xq60hv5l0SlXbh6uO7hp+IP45/wSfpNiUNUNNv
+	 hMREt00OicERarFeGV8p4FADAYRtbGx7z4sB8NJH0edzPYWnPRx13Sexa78HuowgtJ
+	 M1HqL+QTLN+qA==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Conor Dooley <conor@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Andy Gross <agross@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	zhouyanjie@wanyeetech.com,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
 	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	Luca Weiss <luca.weiss@fairphone.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio routes
-Date: Mon, 14 Apr 2025 21:52:38 -0500
-Message-ID: <174468553410.331095.18181920532616083271.b4-ty@kernel.org>
+	imx@lists.linux.dev,
+	linux-rockchip@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	Andre Przywara <andre.przywara@arm.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: (subset) [PATCH v2 00/17] Arm cpu schema clean-ups
+Date: Mon, 14 Apr 2025 21:52:40 -0500
+Message-ID: <174468553423.331095.11490981905578175154.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
-References: <20250411-cleanup-mm-routes-v1-1-ba98f653aa69@fairphone.com>
+In-Reply-To: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
+References: <20250410-dt-cpu-schema-v2-0-63d7dc9ddd0a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,20 +97,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 11 Apr 2025 10:33:29 +0200, Luca Weiss wrote:
-> Since commit 6fd8d2d275f7 ("ASoC: qcom: qdsp6: Move frontend AIFs to
-> q6asm-dai") from over 4 years ago the audio routes beween MM_DL* +
-> MultiMedia* Playback and MultiMedia* Capture + MM_UL* are not necessary
-> anymore and can be removed from the dts files. It also helps to stop
-> anyone copying these into new dts files.
+On Thu, 10 Apr 2025 10:47:21 -0500, Rob Herring (Arm) wrote:
+> The Arm cpu.yaml schema fails to restrict allowed properties in 'cpu'
+> nodes. The result, not surprisely, is a number of additional properties
+> and errors in .dts files. This series resolves those issues.
 > 
+> There's still more properties in arm32 DTS files which I have not
+> documented. Mostly yet more supply names and "fsl,soc-operating-points".
+> What's a few more warnings on the 10000s of warnings...
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: qcom: Remove unnecessary MM_[UD]L audio routes
-      commit: e8acfc1bbcda6978d952d0c18b0b5cebd6dcc3cf
+[07/17] arm: dts: qcom: sdx55/sdx65: Fix CPU power-domain-names
+        commit: ae33b874fc81bfb60bdda5a350c0635f98e6d747
 
 Best regards,
 -- 
