@@ -1,92 +1,94 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B42186294
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1183F186E20;
+	Tue, 15 Apr 2025 14:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727978; cv=none; b=o+QeAgawmpr5Y131Ck2qNQPh09VGuQ7mu1B8NJ0CDJacFgkrvRMIjmpP5GKIQzUyQE3D29hZdDCPYtxB6IvqOFjmi69bg3QYbHbhfvvk752P2xdnwzuUO+1rnKtXTxPOIENS+ZcDjYiUimZUfqFJiMMiaaFpr9dCqwq6jDbmQJ0=
+	t=1744727986; cv=none; b=nSNTqKJt4f9OB7Jx6PpPVc2d5xhud1eUNX4HRaNf4BbOIgFcxiJPQgL61CzW7ynR5tZ5h+Z1BnbMF7nPHZQvYKXUyMc8tWLnyNnb4nhyOo0VeKBgM9wjiQ+pte5yrcnz4fc3FJ/ApCtDH0baNaXjxrEb0QpVLbt/bd0sB+9mx/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727978; c=relaxed/simple;
-	bh=4Qo7/jYjUQTUB3RkM/YYt62qbjbgAkpEpQ1sQPCKRJw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xxg5SK59vuQU2B7hGaaB1MN/haP4mEKYKdmXTbjKFgA3GzubsPKkCuLuB1KUEWAmZvq49/uY4iVUoxuZBV+4VBqZBLhbYHu08lHkOWKT549RMaJ949lPPFJ5eRYfCJeD1QSep40REhRHLJzpipVgkTjZX0GMxr2rHYHRN/fdWBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=A40o0yAE; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1744727986; c=relaxed/simple;
+	bh=ozuDpvd1BZMVE00xvQrMW1pPsmt2NtjEfCI6CBnhgro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUb9uNuc9PGAt0jXHlH0PhtJxLIqNUyutEBba0kp2S+2excMYn8Se2tq8sqEyhCxkQzwccPZ23dGDvzKC8fOCfqMk/ucPQ2NDy0b5wmS6ou6l6Y01LWG1PvQ3XotjawcOQRpqO2UwP/bXGtbT3Uzh4fdWi4ULIvuOT1VtYfWwUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sp3+5g+i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="A40o0yAE"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af50aa04e07so505943a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744727975; x=1745332775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4Qo7/jYjUQTUB3RkM/YYt62qbjbgAkpEpQ1sQPCKRJw=;
-        b=A40o0yAEtsQTMg8wkuRvGjIHvPb6zUxauOnI10Whz0IEdV0K2PRSCcfOTyGmgzGxS4
-         NXyhTo0Nzofl1HMxFRoyih/0KZDO1lrclwDzAo6yvnf9TqxLy7UKZoaqeSYwH6mh59su
-         863cmsyl2DqI+KNs2WakNMI5rFRQ677phwu+SrdDLhzUTb/q8jY5kUTUbCEe0GN1shq/
-         L0bEcpZiJbEnifzahg/beypU+rKOk1Vpghm3fMBmSr7dreteY6xaqHpcbwM1hjRe9cLV
-         Q3U/csezVAmC3IYMik3tqcCw85Lu5CzwoAO/KgKIbU3QWFwUtmeT4Q2JSRXe7J05Zn7N
-         Zebg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744727975; x=1745332775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4Qo7/jYjUQTUB3RkM/YYt62qbjbgAkpEpQ1sQPCKRJw=;
-        b=m74vh0ufKCheauAA7oMo3KXXDI6EgI0GAkIPIRFX5qX13Aw1qVeKETP1jI5hiQW5W0
-         x0D9Gz52lmY7EkLB3wlccKXFvgi7Dk9SEcQVnWj8qebZGC2o+adx+S+XjrHw3+Zm/8Ka
-         dAO4FXBcPsKlp2o+wHCy51SJQ1a6lQzxR6ITVZc2uLXm+i47irHvpF5cqHvCpWBpn27M
-         pJ0Y2BjMDh4TqpOXlA7qNNIty2a1OikCOeXJdMln/goWI1CvHQAnYMOlw/blWI0jljpv
-         4MSbDSl0AAkXJVmbKqAaKsNQNQa9BHEMF/7AeP54Co1YojUgUowg1bIWGgCZGVIbdlB+
-         AWeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVasxN7XjEyNw4o/q+drUY1rYlz6BUbDCNWojijuikj+QGt0kegRCx9fOOBBCN1U1h3rtPeyECYzKCfUGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx24M+2USKsru4IJfnVwN3lcCfeV3fFsKGh9lc3JdG5FalRslqT
-	C2OW5vMeiovvyTO8twwcGrpWD5yTaqieCalP0GVt8ySsMPAINvIdi9sTNo+j+CTtycdsx/jFP/+
-	f2CdW++nMb9odkDYpx4j/tINq34YZQzSIjYi7mQ==
-X-Gm-Gg: ASbGncusURJg8V9lGt7fOqJAgWamm1SynBtA4F2dSYEy/R3PgS7u31JPcZst7MAVL3y
-	tzwU0xND0AzziA8ZFVzNgqjXVzjKlO+l6JuEpeLs1oO/Z1yoQO9qStWE7SIpYVy4dZPKnsyYz4L
-	BPHRgKVdtlBFCWu9GAQe1Ej0jh4MftJ4A=
-X-Google-Smtp-Source: AGHT+IEZoFL7sOJJPnQMtyVfw1ECc8U3oRsk84i0RjIRWr7Q/XBZMJwA4kqwVjp/zN/LS1cp4wcTev7INFBTPH3wUeI=
-X-Received: by 2002:a17:90a:d886:b0:308:2a7b:547b with SMTP id
- 98e67ed59e1d1-3082a7b5563mr8462884a91.1.1744727974742; Tue, 15 Apr 2025
- 07:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sp3+5g+i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB43BC4CEDD;
+	Tue, 15 Apr 2025 14:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744727985;
+	bh=ozuDpvd1BZMVE00xvQrMW1pPsmt2NtjEfCI6CBnhgro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sp3+5g+i3mff9jfnM42NTBXMcSXDYrCCXMrGeVWe/CeWEbN/8altQBqr7xLvbvwI3
+	 8evngvMvgGS/tAqHXxgabuor3E3AtqbORoEXxmy51Jsa00KFvqPkR97Q4U5wyjIoJ2
+	 nkzks5dUbZoDWJ6VUD4ksD941WIJPEF+qwbuWlY5RN+MLnQa1tgrWQrLywxya55CgF
+	 QFXQCMzOgN6nznyv34Zw0hNUO1QN8YdB7yJj0BlU/2EDdR+xG+X99577eWRqJmHIab
+	 zviWj/9FErIvQAUFKFWtuqyxBfpAqDGK1JeCj9diwDE+afhCMps8G/h8Pd2I/lOibL
+	 1ZoPKzsUtDBCw==
+Date: Tue, 15 Apr 2025 07:39:41 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com, 
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	pawan.kumar.gupta@linux.intel.com, seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org, 
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+Subject: Re: [PATCH 3/6] x86/kvm/emulate: Avoid RET for fastops
+Message-ID: <zgsycf7arbsadpphod643qljqqsk5rbmidrhhrnm2j7qie4gu2@g7pzud43yj4q>
+References: <20250414111140.586315004@infradead.org>
+ <20250414113754.172767741@infradead.org>
+ <7vfbchsyhlsvdl4hszdtmapdghw32nrj2qd652f3pjzg3yb6vn@po3bsa54b6ta>
+ <20250415074421.GI5600@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415003551.22949-1-kevinpaul468@gmail.com>
-In-Reply-To: <20250415003551.22949-1-kevinpaul468@gmail.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Tue, 15 Apr 2025 07:39:22 -0700
-X-Gm-Features: ATxdqUG0GG5wFLRB1204WyA_VVJCOTVIXgifzHeujaVr1tmHeWxIG-001PIfu5M
-Message-ID: <CADUfDZqcniNgTUC0v0R450LrL=oMW+-6fh8cgaOXe1K=V1t3+g@mail.gmail.com>
-Subject: Re: [PATCH] nvme: Removing deprecated strncpy()
-To: Kevin Paul Reddy Janagari <kevinpaul468@gmail.com>
-Cc: hch@lst.de, sagi@grimberg.me, kch@nvidia.com, 
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415074421.GI5600@noisy.programming.kicks-ass.net>
 
-On Mon, Apr 14, 2025 at 5:37=E2=80=AFPM Kevin Paul Reddy Janagari
-<kevinpaul468@gmail.com> wrote:
->
-> This patch suggests the replacement of strncpy with strscpy
-> as per Documentation/process/deprecated.
-> The strncpy() fails to guarantee NULL termination,
-> The function adds zero pads which isn't really convenient for short strin=
-gs
-> as it may cause performance issues.
->
-> strscpy() is a preferred replacement because
-> it overcomes the limitations of strncpy mentioned above.
+On Tue, Apr 15, 2025 at 09:44:21AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 14, 2025 at 03:36:50PM -0700, Josh Poimboeuf wrote:
+> > On Mon, Apr 14, 2025 at 01:11:43PM +0200, Peter Zijlstra wrote:
+> > > Since there is only a single fastop() function, convert the FASTOP
+> > > stuff from CALL_NOSPEC+RET to JMP_NOSPEC+JMP, avoiding the return
+> > > thunks and all that jazz.
+> > > 
+> > > Specifically FASTOPs rely on the return thunk to preserve EFLAGS,
+> > > which not all of them can trivially do (call depth tracing suffers
+> > > here).
+> > > 
+> > > Objtool strenuously complains about things, therefore fix up the
+> > > various problems:
+> > > 
+> > >  - indirect call without a .rodata, fails to determine JUMP_TABLE,
+> > >    add an annotation for this.
+> > >  - fastop functions fall through, create an exception for this case
+> > >  - unreachable instruction after fastop_return, save/restore
+> > 
+> > I think this breaks unwinding.  Each of the individual fastops inherits
+> > fastop()'s stack but the ORC doesn't reflect that.
+> 
+> I'm not sure I understand. There is only the one location, and we
+> simply save/restore the state around the one 'call'.
 
-This patch was posted to the mailing list earlier:
-https://lists.infradead.org/pipermail/linux-nvme/2025-April/055004.html
+The problem isn't fastop() but rather the tiny functions it "calls".
+Each of those is marked STT_FUNC so it gets its own ORC data saying the
+return address is at RSP+8.
 
-Best,
-Caleb
+Changing from CALL_NOSPEC+RET to JMP_NOSPEC+JMP means the return address
+isn't pushed before the branch.  Thus they become part of fastop()
+rather than separate functions.  RSP+8 is only correct if it happens to
+have not pushed anything to the stack before the indirect JMP.
+
+The addresses aren't stored in an .rodata jump table so objtool doesn't
+know the control flow.  Even if we made them non-FUNC, objtool wouldn't
+be able to transfer the stack state.
+
+-- 
+Josh
