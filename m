@@ -1,121 +1,128 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677881DFD96;
-	Tue, 15 Apr 2025 11:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1023728DEE0
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717236; cv=none; b=MdNb7tDwv/r78j+OfHK1kDACJ97cHfroJwP8LA4IZ166Ik+7cSJYz+6inlkKhjJZ6R/9z92wsCWKobLlXcZCRIVDtquPIbaQ2Y1cDt5J3Fh4UxHn5UIp0ihFGm5ArmFz0+1gHZrZG2Ynu07aBJ3Ed3w3HEBpiy+eiGs3y4OpWwA=
+	t=1744717258; cv=none; b=r89/t/TrpMUm8Moi4gi9TRv4RUbhoW2janncLTqXGjP+aqFh3rbCxSo3rlmp1woJFDhVQNDZuGgJdo9oSyc1BEZbdOH0/dxdcd/rnU56Zurp5UZ+mDA2mSN7uf9FfoY2vhITbHk0xGw7BwltXSIWbvo51PYLkIVk63xpEFxywQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717236; c=relaxed/simple;
-	bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CrfhVHDx3/l7ozKfBgaDv6aoN9EsyQ4Ile6XCcmSnADPIoQOQ2nqQw84sHMmuybInrqFyDy2nR4LIFdLWSfUu/jeVNDmmpwPPO6rGBCJE7t7H9t+E7lXYjhHCUC4XFyblC2uRRPsR4IZfOs3leuYglumbLMQRLZioogukI4rCcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=B0eR0mUn; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1744717258; c=relaxed/simple;
+	bh=ZJ7OpKdka1F7ZBFYQVrdJ8oxYihNjUeS07C9hmUDydA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uYiA9PMZwLZRhe15O+ICfBY+CioXxiIV6de7AV1RKtf7gt8ymMItNmwlpu/UtsJbICkSrpxEc+YSH32OGtoNBRWjoPLx2FH8j7pwdYN5oLu6lfYeNyCI9fg4NkBtCb5wG3xK7SPSX1R7JtWVnTJpUcKqAsFIRdJcKbCyoicr3qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kc3Jsi0K; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="B0eR0mUn"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 3F9D12142D;
-	Tue, 15 Apr 2025 11:34:44 +0000 (UTC)
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [151.80.165.199])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id AA34B2005F;
-	Tue, 15 Apr 2025 11:34:35 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 39FE73E886;
-	Tue, 15 Apr 2025 11:34:28 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 9FE7C40009;
-	Tue, 15 Apr 2025 11:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1744716867; bh=crUzhLZR6kohcn8ctKDzFw/yNkNnOwRO4xA4Ob5DDd0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B0eR0mUn2B/U7VU0hYTXDvhfRcvzrd4/36BaXkysrHdIZVCxbCsA12ZShTGhWBs0J
-	 I/Ld0LOoH0iCHs5+PEW6wgbq/G8PUMkENw7CMlAeAnqcmMyDMKNfsgAJBtJOvjwZzu
-	 /NZ9YPS5IHzo0+sgtxy1HyKUMzuBXOUyjys+jpq0=
-Received: from [50.50.1.183] (unknown [58.246.137.130])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id F34364082E;
-	Tue, 15 Apr 2025 11:34:21 +0000 (UTC)
-Message-ID: <d82b174f-60a7-41e1-8987-c56155c60630@aosc.io>
-Date: Tue, 15 Apr 2025 19:34:17 +0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kc3Jsi0K"
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so2108877241.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744717256; x=1745322056; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/5wyWC2vD7HP03u0+k9/k2OZ1y4kWaoLC9/4tNgnhE0=;
+        b=Kc3Jsi0KY160f4uj0Ayy+TunoD8RNWiDrQx7ttcx31mqGQssgTu6jmqcf3zV1MWFz8
+         BjJJSWg+ane+n/TKKX6bnrpaE8y56DaNb7kkdlnwM1y7izNeAWvpHXFSPoHtcFD2dLp4
+         z3sRybuMfP3aqK2BpeDBpAZMdEB0czvgfuvpkqdvbqVap5uJCYHa5W3WkTbdFdzuVfjs
+         XtoYq+ZiN+vkSyrGGCZDo9O5/vFkZMtL1yL/X+txQ5j/LLyZgisBO2BR+fJB1m8Ze9Sm
+         z8bGxqJy7il7DKapMYdtzdmu+BqMVS/OZYrT+pulhgo73NrATMSHoxZ+9NpXeEMRAqsK
+         k//w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744717256; x=1745322056;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/5wyWC2vD7HP03u0+k9/k2OZ1y4kWaoLC9/4tNgnhE0=;
+        b=P2BKbdqQh/EPVosf6SdTxJ+3A/iL01v87k5DhdjsXTWcAmdDiCU8mkL8LHpXmegbCq
+         44lArFklBagymhN9bl9MlVVWBU1715fKX3S0ed2ChY0sqzKmTn/ygo8K0cLX1Q43v6mT
+         2VDlb5SOF2PtUwXAmCSb7OEenD2wxQ1aKisEiopxEJMcdySHVJcSZnBPsJSgD/rfGHuo
+         c+bbj1ExroTUUdXDL6eggm5syf31ywdzpAnLihlQaQOuPUTx/GhiCGohFnJoglQKWD9W
+         js2mOCygVQxifoDRCbMhZ4/AOCw8rgmgaPzM/sOzcAt9L0LEhSx+uYamR9tsB+nkX1Ti
+         c1oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzi49c/SnbB5+mqpdMKOsgKWEFy+ZjhfLYxx4ZlWBgbzIlbR9pcdbsGAwj3SRwOxozNm+oYL/IFSG3gEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2IaJokVXGBuOaRKRiz4NnLTXL47DFowejYoxq/QfJLD8U+6hS
+	qVyizRhsfDYToMfEUbb1cin2op12/PSMQc2S1W3v37i92A0x4X+HOJL6OXV+RqU0L9dvssG1j68
+	7rOB44qEFnSKsHBTHrJD7O4J6oVZOR6ggo81SnQ==
+X-Gm-Gg: ASbGncvOORn2AHRSwENfZJl3YqL4yIgo8N0e9qXo/oLMLQC2OCFRsUI/hqOHuffJ5Vm
+	KNbFoSD3lw7kvWAnK5bpjNKmZ2SIs2zaAotOKDz/TYL5zVjQU5AcixT/oLhMBleCWt8aqTm5EVd
+	m8uiPkyt6L3pJswE8AeqTjsi75R1Rrs2CFOYcJ7qUaqczIcaACV6FwFEo=
+X-Google-Smtp-Source: AGHT+IE+NNVE88iDUwAaQ7r8ENal9D9/Spnw5Z3aSwELhPsIBbz/10RGMoWuKFkC1AOSsqEBVzUhDU6ew73aGrw3MS8=
+X-Received: by 2002:a05:6102:dce:b0:4bb:eb4a:f9ef with SMTP id
+ ada2fe7eead31-4c9e4eb963emr10663742137.4.1744717255872; Tue, 15 Apr 2025
+ 04:40:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/3] net: stmmac: dwmac-loongson: Add
- Loongson-2K3000 support
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Yanteng Si <si.yanteng@linux.dev>,
- Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>,
- Mingcong Bai <jeffbai@aosc.io>
-References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
-Content-Language: en-US
-From: Henry Chen <chenx97@aosc.io>
-In-Reply-To: <20250415071128.3774235-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9FE7C40009
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Spamd-Result: default: False [1.40 / 10.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[netdev];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[chenx97.aosc.io:server fail,chenhuacai.loongson.cn:server fail,dongbiao.loongson.cn:server fail,zhangbaoqi.loongson.cn:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[linux.dev,gmail.com,lists.linux.dev,vger.kernel.org,loongson.cn,aosc.io];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
+ <20250407183716.796891-1-ojeda@kernel.org>
+In-Reply-To: <20250407183716.796891-1-ojeda@kernel.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 15 Apr 2025 17:10:44 +0530
+X-Gm-Features: ATxdqUHRgjnjW4n6eMFjqJplHcq4SMBMewSYmPqnuxbGTAXBMTStlZNMQ3l7DSk
+Message-ID: <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
+Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
+To: Miguel Ojeda <ojeda@kernel.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
+	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
+	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org, 
+	torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/15/25 15:11, Huacai Chen wrote:
-> This series add stmmac driver support for Loongson-2K3000/Loongson-3B6000M,
-> which introduces a new CORE ID (0x12) and a new PCI device ID (0x7a23). The
-> new core reduces channel numbers from 8 to 4, but checksum is supported for
-> all channels.
-> 
-> Huacai Chen (3):
->    net: stmmac: dwmac-loongson: Move queue number init to common function
->    net: stmmac: dwmac-loongson: Add new multi-chan IP core support
->    net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
-> 
-> Tested-by: Biao Dong <dongbiao@loongson.cn>
-> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> ---
->   .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   | 105 ++++++++++-----------
->   1 file changed, 49 insertions(+), 56 deletions(-)
-> ---
-> 2.27.0
-> 
-> 
+Hey Christian, Miguel,
 
-I have tested This patch series on my Loongson-3A5000-HV-7A2000-1w-V0.1-
-EVB. The onboard STMMAC ethernet works as expected.
+On Tue, 8 Apr 2025 at 00:07, Miguel Ojeda <ojeda@kernel.org> wrote:
+>
+> On Mon, 07 Apr 2025 22:58:02 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > Regressions on arm build with config rustgcc-lkftconfig-kselftest on the
+> > Linux mainline and next failed with CONFIG_RUST=y enabled.
+>
+> > Bad: next-20250327
+> > Good: next-20250326
+>
+> > Unable to generate bindings: clang diagnosed error: error: unknown
+> > argument: '-mno-fdpic'
+>
+> I assume this is the arm support, i.e. commit ccb8ce526807 ("ARM: 9441/1:
+> rust: Enable Rust support for ARMv7").
+>
+> Clang does not seem to support `-mno-fdpic`, thus you probably need to add it to
+> `bindgen_skip_c_flags` in `rust/Makefile` so that it gets skipped when the C
+> compiler is GCC.
+>
+> If you do so, please double-check if the flag could potentially alter the ABI in
+> a way that `bindgen` would generate the wrong bindings.
 
-Tested-by: Henry Chen <chenx97@aosc.io>
+I tested this idea and it works but I don't know enough about
+rust to double-check if the flag could potentially alter the
+ABI in a way that `bindgen` would generate the wrong bindings.
 
-      Henry
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..f207ba0ed466 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387
+-mpreferred-stack-boundary=% \
+  -fzero-call-used-regs=% -fno-stack-clash-protection \
+  -fno-inline-functions-called-once -fsanitize=bounds-strict \
+  -fstrict-flex-arrays=% -fmin-function-alignment=% \
+- -fzero-init-padding-bits=% \
++ -fzero-init-padding-bits=% -mno-fdpic \
+  --param=% --param asan-%
+
+ # Derived from `scripts/Makefile.clang`.
+
+- Naresh
+
+>
+> I hope that helps!
+>
+> Cheers,
+> Miguel
