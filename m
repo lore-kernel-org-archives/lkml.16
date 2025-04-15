@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617D42222C0;
-	Tue, 15 Apr 2025 21:22:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6189023370C;
+	Tue, 15 Apr 2025 21:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744752166; cv=none; b=Ug4+Tth2U9ZLEnv0DqBWYmxX5BccN4gCIR/F92v8X9MJzSXqkeouLgbFj+eyxy3LfWeVeekmnxqPay5ymlhbaKXp40ZVNtoB39YdA2i4zGkdGt2Gd6eXI+ycXQNKV8asy9ymdIEo2FKJiJ7ZwQjjk4mKCWy+7iG9Z0r8MIyA2SA=
+	t=1744752166; cv=none; b=DgZikzC+P0HJBpSqvEhO4WbgoUZR+hg+37CfZ75otNGETHmdunrSBESd8zIBkY1cXxc/fhwvyj4AJOfqrptG+LMbSa2mZ8rI4mr36sBzViUnbniNY2erVCOu9wAko4jwXeWIwxJg7jqU6UR6Hb0oQ27Gfzm+583sRb6zxDvJ6ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744752166; c=relaxed/simple;
-	bh=HDBzMj/s7TpTXyZ9rZ6zAXTnsR16S93ivhMIIMVpW5o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OmDZ3jNsNmSBE1eQJkteE/kTYkd5Sctu0Cs3Y+qOSFZRQ+FMCRcQ5jh4RSB9unmrKSOkFBWfe0y9BiCEbqM3odipzkb3Jh0o6bAF+vMfg/tBjlS2tzvNrb+70A1XV/DMpFAXU4LDg3xAZ17GRVFBwAxPaCtNqYn4Du5z28VQGXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=my1jscAs; arc=none smtp.client-ip=10.30.226.201
+	bh=7zVUtljGidorOLsS4uAD2nmE4ANyfK0eCdDp8g5uebQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z30pkwjWt2lvZHZfL6BHerEwBKdGI4yqtZoFBoAT3a7rnRArYnxJUjjYxa6NOO/5pAGDHRlEOC/ubvlwN14kuf/5Ss+cs9cSvPYI99ZeRo7idJwnt2ltgSGQuroUQcLjnHD+gsX0Ku/4c63Qi9WMHzzteAHqKFgwdNW59QmYXyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FwKwS4Py; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="my1jscAs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 929D4C4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FwKwS4Py"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9F3ABC4CEE7;
 	Tue, 15 Apr 2025 21:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744752165;
-	bh=HDBzMj/s7TpTXyZ9rZ6zAXTnsR16S93ivhMIIMVpW5o=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=my1jscAs+B4CgyJ8Pbwg1DZ7xtwjK6uWzYyFXROttZJeVDXEgowO32AhUInWp4zMu
-	 Pyy1R0m+SLMY0fpER/Dim77cG2qGWAur7uuXAWiWxgfsThYcgKLJSkAvCnu4hEWcZr
-	 LALa2ARi8wLmLdpZjiwUtnBPLGPXn9CUP5SfmbSl4nCq7GnOcfVFSeT/MoMdc1tkx3
-	 YCcM4h9IazbexPUsF57+UCHfSeUuWuxLUkQ/58yG5bh57MVpvdq/Sj2em6BNCt4tsm
-	 mEfjBaq15XFq8gyvFuqceOqdaRu/xmV28l/wQyRPmEgKhGP/a6IHTJ248zWWKDyUBU
-	 RgJrtS+eLSZrg==
+	bh=7zVUtljGidorOLsS4uAD2nmE4ANyfK0eCdDp8g5uebQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=FwKwS4PyPVBz+If0leU/yq4hg2VIgpFOb5WJLAnTzxQY8TWLH3k3KnFbu7KLKbIZ7
+	 yMRY6fcTXiN+yFRsbvQmmLWUj23b3y32jTpYC98Q/gLRCkvIJ3bkowYzcp3QpQ/OGX
+	 ReKJujbB5ugnElDpKAQ2N0vbQ4emqtjmEK5gT+hCM79ljaiMBynUfHEm+/1ttnQcYZ
+	 5FwOAjzJQcQmym4CuCCWVQPCVAlcC8bCrchdXriJjD9eGpNDhy8aNQhYrwned6Ok8H
+	 j7LOhLzqaGlAUSkQZ+VVlfbwW9YPzgZn5MNIq/riUzXmukm6J1r1yO/3fnEg3etobV
+	 cpxZ2oV2udEIQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF1C369BD;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BF8C369C1;
 	Tue, 15 Apr 2025 21:22:45 +0000 (UTC)
 From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Tue, 15 Apr 2025 23:22:15 +0200
-Subject: [PATCH 1/4] media: i2c: imx214: Reorder imx214_parse_fwnode call
+Subject: [PATCH 0/4] media: i2c: imx214: Add support for more clock
+ frequencies
+Date: Tue, 15 Apr 2025 23:22:14 +0200
+Message-Id: <20250415-imx214_ccs_pll-v1-0-d3d7748e5fbd@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250415-imx214_ccs_pll-v1-1-d3d7748e5fbd@apitzsch.eu>
-References: <20250415-imx214_ccs_pll-v1-0-d3d7748e5fbd@apitzsch.eu>
-In-Reply-To: <20250415-imx214_ccs_pll-v1-0-d3d7748e5fbd@apitzsch.eu>
+X-B4-Tracking: v=1; b=H4sIAAbO/mcC/x3MSwqAIBRG4a3EHSeoWVBbiQjRv7pgDxRCiPaeN
+ PwG5zyUEBmJhuqhiJsTn0eBqitymz1WCPbFpKVupZGd4D1rZWbn0nyFIGAsvESPttFUoiti4fw
+ Px+l9Pw8JVeRgAAAA
+X-Change-ID: 20250406-imx214_ccs_pll-e4aed0e9e532
 To: Ricardo Ribalda <ribalda@kernel.org>, 
  Sakari Ailus <sakari.ailus@linux.intel.com>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>
@@ -50,11 +52,11 @@ Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
  linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
  =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744752164; l=1151;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744752164; l=1042;
  i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=mYScQGSBmt7ANaONRAmtNzPKkGFk15FtLy4xohsYDec=;
- b=HIyKs/6MSur1qnrgR98oCZTFdgktBF47RxIhxaaNU+3ZURDA1oOqTRxMQHaafcKR7mIc1/s9Y
- RYjInND1TVTDCAbV/aZVQlekT+HSxAN5KR+O0Z68K0HSDoddWkYN+wh
+ bh=7zVUtljGidorOLsS4uAD2nmE4ANyfK0eCdDp8g5uebQ=;
+ b=jSZ1gTTw4HzCRtRKEtmcDRQuWRaTCEle2bfWQZPN7igj2mH2SxaRIwrdEIS+LddecuwT57f59
+ rIruLG1rcd0Br+V8X8DIPOIdO+HgJItymEf8qZd5PFaH7PX0vIv6mA3
 X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
  pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
 X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
@@ -62,46 +64,31 @@ X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
 X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
 Reply-To: git@apitzsch.eu
 
-From: André Apitzsch <git@apitzsch.eu>
+The imx214 driver currently supports only a 24 MHz external clock. But
+there are devices, like Qualcomm-MSM8916-based phones, which cannot
+provide this frequency. To make the sensor usable by those devices, add
+support for additional clock frequencies.
 
-Reorder imx214_parse_fwnode call to reduce goto paths in upcoming
-patches.
-
-No functional change intended.
+This series supersedes
+https://lore.kernel.org/linux-media/20250308-imx214_clk_freq-v1-0-467a4c083c35@apitzsch.eu/
 
 Signed-off-by: André Apitzsch <git@apitzsch.eu>
 ---
- drivers/media/i2c/imx214.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+André Apitzsch (4):
+      media: i2c: imx214: Reorder imx214_parse_fwnode call
+      media: i2c: imx214: Prepare for variable clock frequency
+      media: i2c: imx214: Make use of CCS PLL calculator
+      media: i2c: imx214: Read clock frequency from device tree
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index dd7bc45523d8b5fcb3ec95728a6d32c4fddede72..0199195dcb7d12dc2ff253fe3eb77ddbcd0812a9 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -1261,10 +1261,6 @@ static int imx214_probe(struct i2c_client *client)
- 	struct imx214 *imx214;
- 	int ret;
- 
--	ret = imx214_parse_fwnode(dev);
--	if (ret)
--		return ret;
--
- 	imx214 = devm_kzalloc(dev, sizeof(*imx214), GFP_KERNEL);
- 	if (!imx214)
- 		return -ENOMEM;
-@@ -1295,6 +1291,10 @@ static int imx214_probe(struct i2c_client *client)
- 		return dev_err_probe(dev, PTR_ERR(imx214->regmap),
- 				     "failed to initialize CCI\n");
- 
-+	ret = imx214_parse_fwnode(dev);
-+	if (ret)
-+		return ret;
-+
- 	v4l2_i2c_subdev_init(&imx214->sd, client, &imx214_subdev_ops);
- 	imx214->sd.internal_ops = &imx214_internal_ops;
- 
+ drivers/media/i2c/Kconfig  |   1 +
+ drivers/media/i2c/imx214.c | 262 +++++++++++++++++++++++++++++++++++----------
+ 2 files changed, 205 insertions(+), 58 deletions(-)
+---
+base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
+change-id: 20250406-imx214_ccs_pll-e4aed0e9e532
 
+Best regards,
 -- 
-2.49.0
+André Apitzsch <git@apitzsch.eu>
 
 
