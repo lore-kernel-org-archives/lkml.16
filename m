@@ -1,111 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F97D2309B6;
-	Tue, 15 Apr 2025 08:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CD62367A7
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704627; cv=none; b=oiGsVX8JRMouV75Kg7M0pq8bZn99VYiaxmYnYViZopI+Xby3kkdH1KAtRBcRZOvgdDE7PeIIr06lIdPEX1SYtQmONq6KoYQrouoY6GocJAECFhrPTAVCLRzpzwy1vm4nf5hUjr8G32prm3ixavnY9RTMe4y3jZ04dy2pxxO6YI4=
+	t=1744704770; cv=none; b=RhmJz+L6s1iUBZdMq3lqBTKjf3x/roxIdVpmit+mXaM5DLBb3BATvboBWcGk/s4f8XYr3B1U9lfX1+RubIDSoVDHUvLYsQeDWpvLKxf4pfRxFFv9rq6AqMkWXohZ6ahhFCD/hA1GyasVewvrM4WjcfVPslfEZe/xI3mmChZLL1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704627; c=relaxed/simple;
-	bh=zDIPSWHHd2CBUilACS5l+ZTN79OAHuDpka07FpjaGKQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3MXdFuS13onPoAK4MxnaibCRdXp3xbQ7h+DcK+PjYPLeGmfVqGHiIIWRnSRMDE6+0lE/oeT5+G8k6a2jS8YLgDs441QxzLIgn6kSs3RL88p1LSpakABspFmUi76OnlSo0tfABKZYwfqNA4eHaadoFn4SLW6rE2FFkU3mkDVlTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CF39gLfm; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CF39gLfm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744704626; x=1776240626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zDIPSWHHd2CBUilACS5l+ZTN79OAHuDpka07FpjaGKQ=;
-  b=CF39gLfmysltDfXmlooynp2e/LWoTk9DAhhcSJkUBFGrauEfqpXEjOrA
-   B61NBvcYobqTp9tMshbVd5R+l2Fo6lmkoj6Wuuxl7e1MAqBx1RiLLOYQB
-   ijyYmW+BvHCYHJ/mqghyhov4fvAnhIWXXPjefy+gYGjFSIIgqEJoU/BAZ
-   24r2NE/ud/wuse9hVr5sfFeWBBhExFN7G5+4B9cWoEcOFsCf0JY+kp8Ni
-   7dYUIugufotvM6uw0KgCLH7vxsaOEH6o6Mc0TIKnk9j3uEjdcNihCj/DN
-   aeZMhw4t/TGeFfE88ZssZCcacDVlUJqNJ++ZbSEZOzgoAgi86WSFp0TKO
-   A==;
-X-CSE-ConnectionGUID: 5wCmYrxMSv6T6IlBZD8oPQ==
-X-CSE-MsgGUID: wEFXOojnRJKHZ4yC0TaYRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="49853088"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="49853088"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:09:17 -0700
-X-CSE-ConnectionGUID: fii+49GORGWCqr0JQOhU5w==
-X-CSE-MsgGUID: PlttizJ2RoW9iLE+2lcA6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="167219741"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 15 Apr 2025 01:09:15 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4bM0-000FOg-05;
-	Tue, 15 Apr 2025 08:09:12 +0000
-Date: Tue, 15 Apr 2025 16:08:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dzmitry Sankouski <dsankouski@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dzmitry Sankouski <dsankouski@gmail.com>
-Subject: Re: [PATCH v4] hwmon: (max77705) add initial support
-Message-ID: <202504151506.IwAzrT7r-lkp@intel.com>
-References: <20250412-initial-support-for-max77705-sensors-v4-1-2e4cf268a3d0@gmail.com>
+	s=arc-20240116; t=1744704770; c=relaxed/simple;
+	bh=oMQ66CbHQJJBtHLgDZmcsDHGaqtdPcskr+CKZx1O8+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ft6EK3OydLNxkCtaUFug+ASivZ/FTsnn2YuD2EXjWE6fLwY/U26eDTcFmX8FmaeOEPQyQbTum+vRohczf38NxbcByafjUxGZprxixx3c1Bvjam6b892lXpsstf/vm79ncwaaKtAi2fz2N5ePw+9K0zjsu9tPunG3oaiiBgxiVk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAAnYgr1FP5nL84SCQ--.28067S2;
+	Tue, 15 Apr 2025 16:12:37 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: vkoul@kernel.org,
+	kishon@kernel.org,
+	heiko@sntech.de
+Cc: linux-phy@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] phy: rockchip: samsung-hdptx: Remove unneeded semicolon
+Date: Tue, 15 Apr 2025 16:12:00 +0800
+Message-Id: <20250415081200.349939-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412-initial-support-for-max77705-sensors-v4-1-2e4cf268a3d0@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAAnYgr1FP5nL84SCQ--.28067S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw4DWw1xKF1UAwb_yoW3AFb_C3
+	4xWw47Xw1kJF95Kw1DJ3yxu34qyw1UWw1ruaySvFy5Aa1DXw1Fqa4fZr43Ja4UZrsruFWx
+	G34qvFyfCry3tjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	Jw0_GFylc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUjWSotUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Hi Dzmitry,
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[auto build test WARNING on a4cda136f021ad44b8b52286aafd613030a6db5f]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Dzmitry-Sankouski/hwmon-max77705-add-initial-support/20250414-123556
-base:   a4cda136f021ad44b8b52286aafd613030a6db5f
-patch link:    https://lore.kernel.org/r/20250412-initial-support-for-max77705-sensors-v4-1-2e4cf268a3d0%40gmail.com
-patch subject: [PATCH v4] hwmon: (max77705) add initial support
-config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20250415/202504151506.IwAzrT7r-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504151506.IwAzrT7r-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504151506.IwAzrT7r-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/hwmon/max77705-hwmon.c:59:41: warning: 'max77705_hwmon_readable_table' defined but not used [-Wunused-const-variable=]
-      59 | static const struct regmap_access_table max77705_hwmon_readable_table = {
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/max77705_hwmon_readable_table +59 drivers/hwmon/max77705-hwmon.c
-
-    58	
-  > 59	static const struct regmap_access_table max77705_hwmon_readable_table = {
-    60		.yes_ranges = max77705_hwmon_readable_ranges,
-    61		.n_yes_ranges = ARRAY_SIZE(max77705_hwmon_readable_ranges),
-    62	};
-    63	
-
+diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+index fc289ed8d915..bb49d69a6f17 100644
+--- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
++++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+@@ -1507,7 +1507,7 @@ static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
+ 		break;
+ 	default:
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
