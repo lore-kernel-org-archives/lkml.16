@@ -1,85 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7721FDE0E
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E014C21930B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737146; cv=none; b=U8IcLer8RUKNLHmZ0PrK6ueAWAw1FgmfF8+ymqiMjQ1fVhugdzh5D0LwpErlrdjA4pzcKDMQ/exqpCpkOTFSX1CS+5JsMx+Ko+2APN5AqkvMzmemZ45+F6+rLgQz5FWhqvo3TWMn5fT37AY97Efyu0IC1Do7Vr2y352eiOBc12o=
+	t=1744737157; cv=none; b=UXdOMeWThFE9jQYcpzzoCk5JXnMnfRn5GgmVbwEjji2VsLibege4aEQPNo8GbHAufTlOnzamf/VZz/fL6GcuHrhM9C2Fv9J/tLRlAyzY351ukURBhVz2yzFAfVvVyAOPGwheaTQHyK4Qbul2eLzK8F3kAabbtocFflZHcZ8S+hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737146; c=relaxed/simple;
-	bh=JzuekTe3Sb1rluDkYZ00MVFULECL7CPEavs6F/bavks=;
+	s=arc-20240116; t=1744737157; c=relaxed/simple;
+	bh=KsUegg4duEWHcNjxusZVDWGq165UXAWPP+T6hRPHNFw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/OIwE5iJ2XfEOohlYx/yjNOg8FhbqCx8dJXiQQPQ7UYuPsCVnBZnI6SARwEaK4aqJRGYMXane9wn+vzqx2yXpAj0b2twEGe3fZZsJe78Nzd/x02rM3qtAarMLfIl3N9CgOdPd3YC5nTinNUrWoQx0E9R3lgXi2nU6kP+6OQxLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgLKvi1S; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hpuXXGzb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=jjcVcKFA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=1rqBm99c; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fut2FJUSBgIB5nNeL06LvSteSzoOq0qZZlWVAi68CVEug6UB9wD9Pez95lgkleC7hBfgmTOJW8cO97FoXsk3KGANAo04pBeGh2Ps+3J9YsId+lQ58irqC34I95RXkrBFpL4crdF2eRyeRjF9gChQiMExuz9dRqh8E69ujSMmAzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YJA0Hd69; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgLKvi1S";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hpuXXGzb";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="jjcVcKFA";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="1rqBm99c"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DF4FA2118F;
-	Tue, 15 Apr 2025 17:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744737143;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YJA0Hd69"
+Date: Tue, 15 Apr 2025 10:12:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744737152;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
-	b=dgLKvi1SkNlLdVwopX3y7hWIralVgcL4gNyAAPzUvrxessieNZS/qtG//ZKSS79j2/0o4L
-	CF/CCjN8sIQDRTUfA8EXw4bBcr/M4U/5YujvZAFbk8m63hj5Z18KYjYM7jPmpUBTvEJtX8
-	UYbJFg2tTOBs1k9OEzjp7Hx/D3MlklY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744737143;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
-	b=hpuXXGzbL/8NwtL0jDm8fI1/wluiDn0kVqjCUmRp3OY8+N72nfSV8gH6ko3cLkPNZdni+k
-	RoIRxKtVRkbZYlCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744737142;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
-	b=jjcVcKFADbPOjvzQ6FxlLY1RcD4GCah+8NUGq17wsPeZxJUcwjgVBB3s89if20tG7THuUU
-	5f9hdkWOz8gI+2Ehmkob0WzGRg8hRC03l2F9US2UG2wwl/G+9SQdjFcQvjC6euQGCsDSNO
-	Ttc2YiL+ZBYDHK8dVO9GrUxUMxixC0k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744737142;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=csSGlNnq7HLtkGdQXgJDmSjkSlCwYpNK3NKJn4DL1Ek=;
-	b=1rqBm99cYNglJjYJYKrtQ1CqbxjFmUIfwnsvOnYpeoAekvyjn9aQhqjqy9g1et7CIcaZ/s
-	ejDGHg8QsVL32IAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C3E0F137A5;
-	Tue, 15 Apr 2025 17:12:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZeyYL3aT/mf4bgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 15 Apr 2025 17:12:22 +0000
-Date: Tue, 15 Apr 2025 19:12:17 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] btrfs: reuse exit helper in btrfs_bioset_init()
-Message-ID: <20250415171217.GJ16750@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250415035340.851288-1-frank.li@vivo.com>
+	bh=UZlxHE/PMbbkteqFpAZs5FG6AXCNdqDMrVPzocoft9A=;
+	b=YJA0Hd6969e9muOdARDfAIzNX7YV3lzqLiQMrcIJ8oQO07vov55VixBq+G81cQHzPMegxs
+	ZNg3GYzIgyjlqElFtCeT4NvRCuQLlou5VjBsntXSdZNvroYfj67Z2D+68kazZahR19ZZxG
+	TGhqLOI/EM0wX2e4tL9beWLl4ZEDSdw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: D Scott Phillips <scott@os.amperecomputing.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	James Morse <james.morse@arm.com>, Joey Gouly <joey.gouly@arm.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Shiqi Liu <shiqiliu@hust.edu.cn>, Will Deacon <will@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] arm64: errata: Work around AmpereOne's erratum
+ AC03_CPU_36
+Message-ID: <Z_6Te1TjMqyXChvQ@linux.dev>
+References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,44 +53,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415035340.851288-1-frank.li@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-0.997];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <20250415154711.1698544-1-scott@os.amperecomputing.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 14, 2025 at 09:53:40PM -0600, Yangtao Li wrote:
-> Use btrfs_bioset_exit() instead, which is the preferred patttern in btrfs.
+On Tue, Apr 15, 2025 at 08:47:10AM -0700, D Scott Phillips wrote:
+> AC03_CPU_36 can cause asynchronous exceptions to be routed to the wrong
+> exception level if an async exception coincides with an update to the
+> controls for the target exception level in HCR_EL2. On affected
+> machines, always do writes to HCR_EL2 with async exceptions blocked.
 > 
-> Suggested-by: David Sterba <dsterba@suse.com>
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
 > ---
-> v3:
-> -add Suggested-by
+>  arch/arm64/Kconfig              | 17 +++++++++++++++++
+>  arch/arm64/include/asm/sysreg.h | 18 ++++++++++++++++--
+>  arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
+>  arch/arm64/tools/cpucaps        |  1 +
+>  4 files changed, 48 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index a182295e6f08b..e5fd87446a3b8 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -445,6 +445,23 @@ menu "Kernel Features"
+>  
+>  menu "ARM errata workarounds via the alternatives framework"
+>  
+> +config AMPERE_ERRATUM_AC03_CPU_36
+> +        bool "AmpereOne: AC03_CPU_36: CPU can take an invalid exception, if an asynchronous exception to EL2 occurs while EL2 software is changing the EL2 exception controls."
+> +	default y
+> +	help
+> +	  This option adds an alternative code sequence to work around Ampere
+> +	  errata AC03_CPU_36 on AmpereOne.
+> +
+> +	  If an async exception happens at the same time as an update to the
+> +	  controls for the target EL for async exceptions, an exception can be
+> +	  delivered to the wrong EL. For example, an EL may be routed from EL2
+> +	  to EL1.
+> +
+> +	  The workaround masks all asynchronous exception types when writing
+> +	  to HCR_EL2.
+> +
+> +	  If unsure, say Y.
+> +
+>  config AMPERE_ERRATUM_AC03_CPU_38
+>          bool "AmpereOne: AC03_CPU_38: Certain bits in the Virtualization Translation Control Register and Translation Control Registers do not follow RES0 semantics"
+>  	default y
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 2639d3633073d..e7781f7e7f7a7 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -1136,14 +1136,28 @@
+>  	__val;							\
+>  })
+>  
+> +#define __sysreg_is_hcr_el2(r)					\
+> +	(__builtin_strcmp("hcr_el2", __stringify(r)) == 0)
 
-Adding tags is not a reason for resend, you can reply to the patch if
-there's something trivial missing. If there are functional changes it
-makes sense to resend.
+This looks fragile. What about:
 
-Added to for-next, thanks.
+	write_sysreg(hcr, HCR_EL2);
+
+or:
+
+	write_sysreg_s(hcr, SYS_HCR_EL2);
+
+
+Thanks,
+Oliver
