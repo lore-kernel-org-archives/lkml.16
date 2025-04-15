@@ -1,41 +1,65 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBD12580FB
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603A12222C0
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744751715; cv=none; b=eH2RrrwiVBJuM/BTKPtNaXPAOBF5BNEGv5xYA33GeAdaM4R5yE+3BKtp6QtgugVTuf0l6IiRp0FL8bWb9EZidpJv6DLEFbf69oS+FoRB6/6wJc4tUYOtI++Bdjxy0Q8PxYcGHDjfVP/jfEw7V/vmZJ2dQ3vTeBh3O78poMvWDEY=
+	t=1744752158; cv=none; b=mGi9rMNHL1jcBrwY2P33FJmeegTOMSYVyIW2F1F94KP8ofabFnGWg4dBGoZh6YQOP+6/pWNzwOLEESQIkNqL01by42XrG4hRYNxUL9WNJuLoRAB+/DSTYIFpKym2CZ/GSGmeoXCHQw8lCDq4tlHeMrLlLaxyY7d0oBj0SzDNrTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744751715; c=relaxed/simple;
-	bh=zMVcXFHYVJjFBimj6JogfsbaQ2BSuIvcWzg7Gx1Wrdg=;
+	s=arc-20240116; t=1744752158; c=relaxed/simple;
+	bh=sezKOxqdZwL0UPA9Nc1wZMu3XrcscN+StmeGN/bzCgE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OdA/ST/+oIQfqwaP+MBa9AcjKEkHav5bmbGHDlTT40wndvLqre/nxy6RabRdYR8crLavNfjiMlelTrs/tPns0suuJzApYpcZv9sLJ3qUSjyiOys7mTkt2QColSZM6QhmmnhHTuF/Zkjcu6d37569iagRo00o1s7NdqVxw9G04hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=cQFHyKQ+; arc=none smtp.client-ip=121.127.44.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	 In-Reply-To:Content-Type; b=LGXSsSeo0/1Nrf9KPeY4f5wN/V/AcHqi/jNVPu2+QF0BCE2oc3xa0R3V/bwsXN5d2FvbF3nvkmbRtVhfCI1FZo3oXBRqtpn43edHvmCPaS8wfpq8wR3Kj64y7ness0h5E/sHKJMZ5jLZBEV1tTbaXzgpJPncT9ggp1bP8rL8TTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3D93o1mW; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="cQFHyKQ+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1744751706;
- bh=IAeshu1rPRVwkbSbcg36lO4ijxbO9PeaGLWgVnDeV5c=;
- b=cQFHyKQ+LshwTyALuunpYkfRaTfFArzM2nDhdZfWrkMmKE6syAmKAhOBWEfWwKI2cHU4VNBMe
- 5w8xIWxXwSRzYerlTtjyj1czPS8nXElE0y6P3lc6qfJ7/tKk79ZJ58AN8zoZuCu/cFGP0OgIutM
- VADQk3V7pgQUUqhxgogmiABW51eE3ucJeu7RqK6pIuyGC6SpeD9gNF86HIJMYWADAf8Qi1Far4J
- blHIx1MpgETwmXltn033UN8/Rgt7plUjXGFQxEcMyo9/Gf1SzOvWyVxcXxuPugpKWhaj33DleFS
- aWpUaFFz0JvrT3dlYqAuGTiLyBDTt/W1zkzMNTJWFBaA==
-X-Forward-Email-ID: 67fecc56f405d8e4e0433b24
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.73
-X-Forward-Email-Version: 1.0.2
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <7e5ac4a8-6188-447b-8041-89ea00ca1576@kwiboo.se>
-Date: Tue, 15 Apr 2025 23:14:58 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3D93o1mW"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2d071fcd89bso1753694fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744752155; x=1745356955; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1lZucg4YTWzLc3CaeiVcocOFzBfkAYF6dSNq9mdvqrs=;
+        b=3D93o1mWLYHF2VT6GtJXPWSMViPK5hOF2xJWfJU9zvJmiFJQEtCYdP8thD9+b0JTtD
+         POmPlgi7+1/ODmgPv7LcDvr7qpkHzYRcMuhBSnDyuPyHS5kiL/igXrq7T3zqmhSGDqsv
+         dF0thHsW/dYoK1Ymnz6ldRPhfMrs+PVskqMD8WDNJ4gJWG4FaeOG1O+hyGxA9bvO0Z44
+         nZXnyX/Un80+wJsuwlfiM/e97YzHuARshYZfN6eg5NBCwERghUokihMAVPz/KHxnh4sb
+         hm206ARnaoPgIi5QZmZLMJXqHG4Mgusksx9BGyibQWQmmQaa0Dz3iAsjGDrLqdzL8NM/
+         QK7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744752155; x=1745356955;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1lZucg4YTWzLc3CaeiVcocOFzBfkAYF6dSNq9mdvqrs=;
+        b=dMS2GSb3SrFT9aqsaw672Q7jwx3wiU4K8HO7jTx5fQvUSKEPJdY+SiJcGmJ2/SA/yf
+         DNLaG/9HZhLb5sTwoic9/qvhqf63jrS0T89O1qXbLUW4lhdpSaYRX0vuUU9DxY0u/j5a
+         JYHlwwrPOqgPxvbndKSBbLdmYDr/kyl8LYOBcahPgSazgdktI525K9B/U8HkO3zrsNYb
+         o0243By6eqB/JxTBjh5AvyTaH35qEsM+wjFspLV+YObrmPGs9xhGgUrLeyK0Mni4IU3M
+         4W+B5/tADSpGcSkCYt7HJTOu/nGuBpfP/9uyDt3Mgh3A7LIXNrHY6T5dZAKqE4yZD9VK
+         jujw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX89YrwgTlgQCPBbl1E7QQvk4+6EQLyEgiXudiC4+KObXgL6SiPXuq2Jy73NN/EUM0rYkQIcDK8X5qxn0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJ5AZuoT2mDiVTwcgCEeEr0N3Mq7pWocBdsdY9QLp1VF3YozAg
+	NrzVc/2XXNvTkKw6Y/uEXoWWZymUlOfbxvDixXL3zQF1jDvEqBjVOH3eONKnifs=
+X-Gm-Gg: ASbGncuS3d3w5bezuewuJUaoQ5je1K+NF1LN+BP8CDQARoJuRXd30D2OE4MZMJHElTu
+	JnGpBqH3okjU6fnPWPjtywJLWDWGGnGUgU8A6Qn8AxCM/TTUHsnCWpR0e/sCEHK+IX7AmT+5KuL
+	0xFZFtzOnMdNS0sB2kKv2rr3IjMYaXFAVhdh+yzVDfBBBmApfvzDq0iQkGstYkJrtdJnZ3Wm0tN
+	Bqa7+9uGlQHYSaVDP56e1u0hBlvp0GQHsRhD422X+hWO0FCjMEUhQ6ojd75z2kqU8AgF1uLQBaP
+	+1C93zzZMykPGc9kk0VQY1fKCZDZdfxemVRGctY6BOq+GULeg1Bk/KCE1gzdv4wwZhhDEic5IEf
+	v/Vi7WsfV8mSL9Q/vsA==
+X-Google-Smtp-Source: AGHT+IFDG8Sk/beG6HmPnDcmjdM56e4d71cRvdogswXByTIOWxtYfPY6H8ZVH3v0VrqRfJawQavcTQ==
+X-Received: by 2002:a05:6870:ed86:b0:29e:3bea:7e67 with SMTP id 586e51a60fabf-2d4c3e2d482mr539150fac.38.1744752155259;
+        Tue, 15 Apr 2025 14:22:35 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:87d2:86ee:7312:f611? ([2600:8803:e7e4:1d00:87d2:86ee:7312:f611])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4d7e2sm2573855a34.45.2025.04.15.14.22.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 14:22:34 -0700 (PDT)
+Message-ID: <22858e4f-db8e-4c97-8551-a1934a9f2fe7@baylibre.com>
+Date: Tue, 15 Apr 2025 16:22:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,255 +67,57 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] thermal: rockchip: Add support for rk3562 SoC
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, heiko@sntech.de,
- linux-rockchip@lists.infradead.org, Shaohan Yao
- <shaohan.yao@rock-chips.com>, linux-pm@vger.kernel.org,
- Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
- Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-References: <20250415033940.47914-1-kever.yang@rock-chips.com>
- <20250415033940.47914-2-kever.yang@rock-chips.com>
+Subject: Re: [PATCH] iio: adc: ad4000: Avoid potential double data word read
+To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+ nuno.sa@analog.com, andy@kernel.org, marcelo.schmitt1@gmail.com
+References: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
+ <CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
 Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250415033940.47914-2-kever.yang@rock-chips.com>
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Kever,
-
-On 2025-04-15 05:39, Kever Yang wrote:
-> From: Shaohan Yao <shaohan.yao@rock-chips.com>
+On 4/15/25 1:02 PM, Andy Shevchenko wrote:
+> On Tue, Apr 15, 2025 at 3:21 PM Marcelo Schmitt
+> <marcelo.schmitt@analog.com> wrote:
+>>
+>> Currently, SPI-Engine offload module always sends 32-bit data elements to
+>> DMA engine. Appropriately, when set for SPI offloading, the IIO driver uses
+>> 32 storagebits for IIO ADC channel buffer elements. However, setting SPI
+>> transfer length according to storagebits (32-bits in case of offload) can
+>> lead to unnecessarily long transfers for ADCs that are 16-bit or less
+>> precision. Adjust AD4000 single-shot read to run transfers of 2 bytes when
+>> that is enough to get all ADC data bits.
 > 
-> There is one Temperature Sensor with channel 0 on rk3562 SoC.
-> This driver adds the mapping table as-is from the TRM so that we can
-> always sync to the TRM once there have any change in the future.
+> ...
 > 
-> Signed-off-by: Shaohan Yao <shaohan.yao@rock-chips.com>
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-> ---
+>>         xfers[1].rx_buf = &st->scan.data;
+>> -       xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
+>> +       xfers[1].len = chan->scan_type.realbits > 16 ? 4 : 2;
 > 
-> Changes in v2:
-> - Update the commit message
+> But wouldn't be logical to have
 > 
->  drivers/thermal/rockchip_thermal.c | 112 ++++++++++++++++++++++++++++-
->  1 file changed, 111 insertions(+), 1 deletion(-)
+>        xfers[1].len = BITS_TO_BYTES(chan->scan_type.realbits);
 > 
-> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-> index a8ad85feb68f..3278472b06f9 100644
-> --- a/drivers/thermal/rockchip_thermal.c
-> +++ b/drivers/thermal/rockchip_thermal.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /*
-> - * Copyright (c) 2014-2016, Fuzhou Rockchip Electronics Co., Ltd
-> + * Copyright (c) 2014-2021, Fuzhou Rockchip Electronics Co., Ltd.
-> + * Copyright (c) 2021-2024, Rockchip Electronics Co., Ltd.
->   * Caesar Wang <wxt@rock-chips.com>
->   */
->  
-> @@ -185,6 +186,8 @@ struct rockchip_thermal_data {
->  #define TSADCV2_AUTO_PERIOD_HT			0x6c
->  #define TSADCV3_AUTO_PERIOD			0x154
->  #define TSADCV3_AUTO_PERIOD_HT			0x158
-> +#define TSADCV9_Q_MAX				0x210
-> +#define TSADCV9_FLOW_CON			0x218
->  
->  #define TSADCV2_AUTO_EN				BIT(0)
->  #define TSADCV2_AUTO_EN_MASK			BIT(16)
-> @@ -195,6 +198,7 @@ struct rockchip_thermal_data {
->  #define TSADCV2_AUTO_TSHUT_POLARITY_MASK	BIT(24)
->  
->  #define TSADCV3_AUTO_Q_SEL_EN			BIT(1)
-> +#define TSADCV3_AUTO_Q_SEL_EN_MASK		BIT(17)
->  
->  #define TSADCV2_INT_SRC_EN(chn)			BIT(chn)
->  #define TSADCV2_INT_SRC_EN_MASK(chn)		BIT(16 + (chn))
-> @@ -220,6 +224,12 @@ struct rockchip_thermal_data {
->  #define TSADCV5_AUTO_PERIOD_HT_TIME		1622 /* 2.5ms */
->  #define TSADCV6_AUTO_PERIOD_TIME		5000 /* 2.5ms */
->  #define TSADCV6_AUTO_PERIOD_HT_TIME		5000 /* 2.5ms */
-> +#define TSADCV7_AUTO_PERIOD_TIME		3000 /* 2.5ms */
-> +#define TSADCV7_AUTO_PERIOD_HT_TIME		3000 /* 2.5ms */
-> +#define TSADCV12_AUTO_PERIOD_TIME		3000 /* 2.5ms */
-> +#define TSADCV12_AUTO_PERIOD_HT_TIME		3000 /* 2.5ms */
-> +#define TSADCV3_Q_MAX_VAL			0x7ff /* 11bit 2047 */
-> +#define TSADCV12_Q_MAX_VAL			0xfff /* 12bit 4095 */
->  
->  #define TSADCV2_USER_INTER_PD_SOC		0x340 /* 13 clocks */
->  #define TSADCV5_USER_INTER_PD_SOC		0xfc0 /* 97us, at least 90us */
-> @@ -230,6 +240,8 @@ struct rockchip_thermal_data {
->  
->  #define PX30_GRF_SOC_CON2			0x0408
->  
-> +#define RK3562_GRF_TSADC_CON			0x0580
-> +
->  #define RK3568_GRF_TSADC_CON			0x0600
->  #define RK3568_GRF_TSADC_ANA_REG0		(0x10001 << 0)
->  #define RK3568_GRF_TSADC_ANA_REG1		(0x10001 << 1)
-> @@ -498,6 +510,45 @@ static const struct tsadc_table rk3399_code_table[] = {
->  	{TSADCV3_DATA_MASK, 125000},
->  };
->  
-> +static const struct tsadc_table rk3562_code_table[] = {
-> +	{0, -40000},
-> +	{1419, -40000},
-> +	{1428, -35000},
-> +	{1436, -30000},
-> +	{1445, -25000},
-> +	{1453, -20000},
-> +	{1462, -15000},
-> +	{1470, -10000},
-> +	{1479, -5000},
-> +	{1487, 0},
-> +	{1496, 5000},
-> +	{1504, 10000},
-> +	{1512, 15000},
-> +	{1521, 20000},
-> +	{1529, 25000},
-> +	{1538, 30000},
-> +	{1546, 35000},
-> +	{1555, 40000},
-> +	{1563, 45000},
-> +	{1572, 50000},
-> +	{1580, 55000},
-> +	{1589, 60000},
-> +	{1598, 65000},
-> +	{1606, 70000},
-> +	{1615, 75000},
-> +	{1623, 80000},
-> +	{1632, 85000},
-> +	{1640, 90000},
-> +	{1648, 95000},
-> +	{1657, 100000},
-> +	{1666, 105000},
-> +	{1674, 110000},
-> +	{1682, 115000},
-> +	{1691, 120000},
-> +	{1699, 125000},
-> +	{TSADCV2_DATA_MASK, 125000},
-> +};
-> +
->  static const struct tsadc_table rk3568_code_table[] = {
->  	{0, -40000},
->  	{1584, -40000},
-> @@ -835,6 +886,37 @@ static void rk_tsadcv8_initialize(struct regmap *grf, void __iomem *regs,
->  			       regs + TSADCV2_AUTO_CON);
->  }
->  
-> +static void rk_tsadcv12_initialize(struct regmap *grf, void __iomem *regs,
-> +				   enum tshut_polarity tshut_polarity)
-> +{
-> +	writel_relaxed(TSADCV12_AUTO_PERIOD_TIME, regs + TSADCV3_AUTO_PERIOD);
-> +	writel_relaxed(TSADCV12_AUTO_PERIOD_HT_TIME,
-> +		       regs + TSADCV3_AUTO_PERIOD_HT);
-> +	writel_relaxed(TSADCV2_HIGHT_INT_DEBOUNCE_COUNT,
-> +		       regs + TSADCV3_HIGHT_INT_DEBOUNCE);
-> +	writel_relaxed(TSADCV2_HIGHT_TSHUT_DEBOUNCE_COUNT,
-> +		       regs + TSADCV3_HIGHT_TSHUT_DEBOUNCE);
-> +	writel_relaxed(TSADCV12_Q_MAX_VAL, regs + TSADCV9_Q_MAX);
-> +	writel_relaxed(TSADCV3_AUTO_Q_SEL_EN | TSADCV3_AUTO_Q_SEL_EN_MASK,
-> +		       regs + TSADCV2_AUTO_CON);
-> +	if (tshut_polarity == TSHUT_HIGH_ACTIVE)
-> +		writel_relaxed(TSADCV2_AUTO_TSHUT_POLARITY_HIGH |
-> +			       TSADCV2_AUTO_TSHUT_POLARITY_MASK,
-> +			       regs + TSADCV2_AUTO_CON);
-> +	else
-> +		writel_relaxed(TSADCV2_AUTO_TSHUT_POLARITY_MASK,
-> +			       regs + TSADCV2_AUTO_CON);
-> +
-> +	if (!IS_ERR(grf)) {
-> +		regmap_write(grf, RK3562_GRF_TSADC_CON, RK3568_GRF_TSADC_TSEN);
-> +		udelay(15);
-> +		regmap_write(grf, RK3562_GRF_TSADC_CON, RK3568_GRF_TSADC_ANA_REG0);
-> +		regmap_write(grf, RK3562_GRF_TSADC_CON, RK3568_GRF_TSADC_ANA_REG1);
-> +		regmap_write(grf, RK3562_GRF_TSADC_CON, RK3568_GRF_TSADC_ANA_REG2);
-> +		usleep_range(100, 200);
-> +	}
-> +}
-> +
->  static void rk_tsadcv2_irq_ack(void __iomem *regs)
->  {
->  	u32 val;
-> @@ -1259,6 +1341,30 @@ static const struct rockchip_tsadc_chip rk3399_tsadc_data = {
->  	},
->  };
->  
-> +static const struct rockchip_tsadc_chip rk3562_tsadc_data = {
-> +	.chn_offset = 0,
-> +	.chn_num = 1, /* one channels for tsadc */
-> +
-> +	.tshut_mode = TSHUT_MODE_GPIO, /* default TSHUT via GPIO give PMIC */
-> +	.tshut_polarity = TSHUT_LOW_ACTIVE, /* default TSHUT LOW ACTIVE */
+> ?
+> 
 
-Vendor kernel seem to set following in DT for RK3562:
+No, SPI expects 1, 2 or 4 bytes, never 3. If realbits is 18, we
+need len = 4.
 
-  rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
-  rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
+It would have to be:
 
-Why not adjust the default tshut_mode to match what is default used in
-DT for this SoC i.e. TSHUT_MODE_CRU?
+	xfers[1].len = roundup_pow_of_two(BITS_TO_BYTES(chan->scan_type.realbits));
 
-> +	.tshut_temp = 95000,
+But that gets too long for 1 line, so I prefer what Marcelo wrote.
 
-Similar here, for all/most SoCs the default in the driver is 95 deg and
-then SoC DTs override and set a higher default, e.g.:
+Maybe an idea for another day:
 
-  rockchip,hw-tshut-temp = <120000>;
+#define SPI_LEN_FOR_BITS(bits) roundup_pow_of_two(BITS_TO_BYTES(bits))
 
-Is there any specific reason for this? Or just how it has ended up for
-all SoCs?
-
-I have a few pending patches for adding tsadc support for RK3528 [1]
-that was waiting on the updated RK3562 OTP series, and for RK3528 I
-changed to use CRU as default tshut_mode but kept the 95 deg default in
-driver.
-
-[1] https://github.com/Kwiboo/linux-rockchip/commits/next-20250319-rk3528/
-
-> +
-> +	.initialize = rk_tsadcv12_initialize,
-> +	.irq_ack = rk_tsadcv4_irq_ack,
-> +	.control = rk_tsadcv4_control,
-> +	.get_temp = rk_tsadcv4_get_temp,
-> +	.set_alarm_temp = rk_tsadcv3_alarm_temp,
-> +	.set_tshut_temp = rk_tsadcv3_tshut_temp,
-> +	.set_tshut_mode = rk_tsadcv3_tshut_mode,
-
-I suggest you rebase this on top of Nicolas Frattaroli's RK3576 tsadc
-series [2] and add support for RK3562 trim values in next version.
-
-This rk_tsadcv3_tshut_mode is e.g. renamed to match the v4 name used by
-the vendor kernel.
-
-[2] https://lore.kernel.org/all/20250317-rk3576-tsadc-upstream-v4-0-c5029ce55d74@collabora.com/
-
-Regards,
-Jonas
-
-> +
-> +	.table = {
-> +		.id = rk3562_code_table,
-> +		.length = ARRAY_SIZE(rk3562_code_table),
-> +		.data_mask = TSADCV2_DATA_MASK,
-> +		.mode = ADC_INCREMENT,
-> +	},
-> +};
-> +
->  static const struct rockchip_tsadc_chip rk3568_tsadc_data = {
->  	/* cpu, gpu */
->  	.chn_offset = 0,
-> @@ -1338,6 +1444,10 @@ static const struct of_device_id of_rockchip_thermal_match[] = {
->  		.compatible = "rockchip,rk3399-tsadc",
->  		.data = (void *)&rk3399_tsadc_data,
->  	},
-> +	{
-> +		.compatible = "rockchip,rk3562-tsadc",
-> +		.data = (void *)&rk3562_tsadc_data,
-> +	},
->  	{
->  		.compatible = "rockchip,rk3568-tsadc",
->  		.data = (void *)&rk3568_tsadc_data,
-
+There are a couple of places in spi/ that could use this and several
+iio drivers.
