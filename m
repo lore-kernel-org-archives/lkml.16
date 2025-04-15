@@ -1,113 +1,75 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F1F21B9D8;
-	Tue, 15 Apr 2025 17:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EEB1BC2A;
+	Tue, 15 Apr 2025 17:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737740; cv=none; b=RpGxojyQFuoJqjkZqxHC2xA8XaTZEHzW/YvNJM17Gs/2xRibL83Q41WmoWEwY2EcQxRPF+wOqu6m0blkr59wo9EsSrD7tjQZDU3pxXlrniNUI+naCG8ovascjhVBbeJzMbllBOuYTlBk6sRuUy/TLZ3U1mVETV/ljwSmi5SXbPo=
+	t=1744737806; cv=none; b=lPQdWptz4Z+yEsREq8+9ntOotFRG+kSVXQZ/Gv30yIJTVIsrBX23wOcftEn/dvjKMyJS8G+tW072f67y8ftPaVxpEHvsnytp2SZ9zamxPtJij+FAg9NQWpE7U/PUiZn39bh60VRo+S8dhPHyV3ZHBrFmpY/IC3g3qpyVNRvKXcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737740; c=relaxed/simple;
-	bh=VyZNJRydtqRP4tIJFtKk5xpXTG5rj7MnfC8y7oF8ZiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pFtAOz8vjznjVaL9oVWbZav4oU4U60HCAUcwVHOHrANw96Qlrz+tDcKZNABIoMnpBGLmjW/BTFP7lpFAWP7XbEdg28Y6mhRL7Eqg9xLo3CSe+VCR3hSA8ywFKThGwYLjPUVIf8zMczdCwAoxqdptYxLduwYR3aAj9D2yW9J5CR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2pxtO5L; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744737806; c=relaxed/simple;
+	bh=yaZo5HTwWyPwFa+BmejUuYfJejNARyfDGIEj1j58WyQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=RFsSiZqeRV82fRjhlT4cn9IFsxukKgigWXUTg22y2T3L5lA1XdzA9169H4swi2Ep2oXPrHBDEOvVLNqvtd3ouDJa3dQKkH96P7X7Jg/ntxZdD1eKQeBQPha0qPYxawUpBc5ScPdCWdBTm00uXU8hd12f7TpDvFTd6Y2IsJA71hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IS5MinAf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2pxtO5L"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227914acd20so54703585ad.1;
-        Tue, 15 Apr 2025 10:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744737738; x=1745342538; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FwKXjChYz6Is/rS9aNK0pEeqdCKV3joL7n7XCoKDlvE=;
-        b=a2pxtO5LdRb5todPF/Xchy4m9qLC9a4LL6QHrj08iHIdDtLHK7Hab60aVW1h6yZIja
-         ZDsGlPrtC8Ti8h1fE3ErzbR0Qncn+UutDLpfoLF5ePUQXKa/6HuO9wo8qFouQLgpVYEx
-         KXSnEHyCTjVh+40P8POQdcDcvsfbksQ42qvS4NhCh9GA4lwtJGargpByZq37SqwMTAcB
-         nSXGnCVm6tCYkxnNsVS0faewloapDSkBrul+boF/WyDOYW5BSe8brtCZSFq7UitffWtM
-         vxaU/A5v2S4x39rllRLtH/dDWvkdOlxKwDf3RpjdKFXIJ5EPWG5TtkRkFJkIfypucQ8F
-         OlHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744737738; x=1745342538;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FwKXjChYz6Is/rS9aNK0pEeqdCKV3joL7n7XCoKDlvE=;
-        b=nkxZObNA6vKkGJ0N7BJv2bH4Vm50AEGQTBaxi8SYRT15j3tsf1tie3N/X3BN7nmYR3
-         dt2KHwZYs+7S/D03duOerb6c+KFm6uhfdJ7u5qWUx/qkOoX68rbJR1Ryf6IXX6NT3WXT
-         AvcgZbX2MK7qoL3U24+IGSdSQxArZhtxI4ygos363AMW/VYAK8nz+RCqLOnLRX1CcejG
-         dumD4SPAdOWMGqFnJAk+EA5gXYl8IjOhj/Ct9ZWfIvvfZUla2p7dafJzrM0qf0yPDINB
-         IR5zTVqkHhcm94SqwxW+HC7++FqlP/r3hZvDz3URgjWIGpwsIH0RW07htDQPtzSiHCWj
-         6HPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyLzKu1Kq7nYsm3CAza/1hQeo9J6GczB+meyZOC5Ji8dcejkBH9pGRxnnhxR9CqHRiVecMQfN+J4yeYno=@vger.kernel.org, AJvYcCXHulnq5eNRkFWEQcLSpKtdaTZf5mAFWTi8Ge9P7BthbrOB8f2VtbpX+qD18WnNRiU8mNUWeS820KUK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCAjqt/ClJUB6vDr+RqH5rU3lKR5Zf+0vsEaLPx1HxL9icVIpJ
-	TIwSZjF3ThT5uPktHqAseUkmWRONp+uNe2t21CHkf7Zo3oJ1MfstZyzih5jT
-X-Gm-Gg: ASbGncuX2U5FSmDUwiiCex6Pco6m29oy+gQUrj+nUEq41Y699b8Dm9sUGM20aLkC6Vg
-	3+GFKi+tBZgPzCimuQoL9y0txmmXjXWghPok9SxKqFPsajJRt/qwFGTsSqSWZeFgZVbYkuxP4Y3
-	oag/vTVjT6S5dmM13FM+69rIBRwZVY8eu9BqZOqtBd0Kz+6ft+Rll2Te7LbVhSws2raF8dyol+U
-	gxlgQJeVj3/KRJs8Yuvw+I4oa4WRjI0zknr0fnGpT/ST3ceTc0sOyAwBkWuvXzver8nEgKViRkn
-	XTACSxFKxVGGEm277eNFfyqzkoXeK5lPIEUE5GI=
-X-Google-Smtp-Source: AGHT+IFVOpubUVLLQVtvo7qirvjW9oD1wrN9HqH+MmwM72PBdc70iqYfMbJISwhSYp/zGkEAR1mu2Q==
-X-Received: by 2002:a17:903:1b2f:b0:21f:5063:d3ca with SMTP id d9443c01a7336-22c24a142a9mr64747355ad.16.1744737737795;
-        Tue, 15 Apr 2025 10:22:17 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm120493215ad.217.2025.04.15.10.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 10:22:17 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: typec: ucsi: huawei_gaokun: add error checking
-Date: Wed, 16 Apr 2025 01:20:05 +0800
-Message-ID: <20250415172006.126740-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IS5MinAf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366B6C4CEE9;
+	Tue, 15 Apr 2025 17:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744737805;
+	bh=yaZo5HTwWyPwFa+BmejUuYfJejNARyfDGIEj1j58WyQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=IS5MinAf55aSLnW94s8yMqwZ1wZjb521aXAF1ekUfDYry3IX5VX8gSXuSAiiJzWLZ
+	 +lxUetawsjegnCh1PFnhfCbmZxZcW86EdjKAUzBWN/jxJdh8dQk0IkXxWbRSmY3Xr8
+	 PbAubgmf+qZnoHBKABjkci4vN+Cgyv6MUeDaCZMvnbzIzYfLUpnLQtj+08//3JuaiE
+	 8zRaBsaLsKM0RFen2PV3YTKtRwMBRo+rAMQ3YzTHXmVUFDM/kp+t85cPWCd8DgusQm
+	 v267OefCwJny+m1JiLmF8nOfbM+aobn1DqdZ30F2jg2pz2AQQlLBNViH3xdnEnUAtG
+	 kNVuNeoJfAMkQ==
+From: Lee Jones <lee@kernel.org>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+ claudiu.beznea@tuxon.dev, lee@kernel.org, sre@kernel.org, 
+ p.zabel@pengutronix.de, Ryan.Wanner@microchip.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-rtc@vger.kernel.org
+In-Reply-To: <cover.1744666011.git.Ryan.Wanner@microchip.com>
+References: <cover.1744666011.git.Ryan.Wanner@microchip.com>
+Subject: Re: (subset) [PATCH v5 00/11] Enable Power Modes Support for
+ SAMA7D65 SoC
+Message-Id: <174473780295.3016428.18003689351078217968.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 18:23:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-'cci' may be uninitialized, adding error checking to fix it.
+On Mon, 14 Apr 2025 14:41:17 -0700, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+> 
+> This patch set adds support for low power modes for the SAMA7D65 SoC and
+> the required components and changes for low power modes.
+> 
+> The series includes changes in the asm code to account for the addtional
+> clocks that are in this SoC.
+> 
+> [...]
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/Z_44zoTyLLdXNkKT@stanley.mountain
-Fixes: 00327d7f2c8c ("usb: typec: ucsi: add Huawei Matebook E Go ucsi driver")
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c b/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
-index 344aa7aeaf..7b5222081b 100644
---- a/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
-+++ b/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
-@@ -359,6 +359,7 @@ static int gaokun_ucsi_notify(struct notifier_block *nb,
- 			      unsigned long action, void *data)
- {
- 	u32 cci;
-+	int ret;
- 	struct gaokun_ucsi *uec = container_of(nb, struct gaokun_ucsi, nb);
- 
- 	switch (action) {
-@@ -368,7 +369,10 @@ static int gaokun_ucsi_notify(struct notifier_block *nb,
- 		return NOTIFY_OK;
- 
- 	case EC_EVENT_UCSI:
--		gaokun_ucsi_read_cci(uec->ucsi, &cci);
-+		ret = gaokun_ucsi_read_cci(uec->ucsi, &cci);
-+		if (ret)
-+			return NOTIFY_DONE;
-+
- 		ucsi_notify_common(uec->ucsi, cci);
- 		if (UCSI_CCI_CONNECTOR(cci))
- 			gaokun_ucsi_handle_no_usb_event(uec, UCSI_CCI_CONNECTOR(cci) - 1);
--- 
-2.49.0
+[06/11] dt-bindings: mfd: atmel: Add microchip,sama7d65-gpbr
+        commit: cf616eb55ba84118d0f8274a3e78dd526ef235a4
+[07/11] dt-bindings: mfd: syscon: atmel,sama5d2-secumod: convert to yaml
+        commit: da4151479628b170074dadcdcdbb1c042643bd3b
+[08/11] dt-bindings: mfd: syscon: add microchip,sama7d65-secumod
+        commit: d0eceba4d13341a1d2d52a1ffc31b6987174dfd0
+
+--
+Lee Jones [李琼斯]
 
