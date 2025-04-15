@@ -1,138 +1,217 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F00EEAC7;
-	Tue, 15 Apr 2025 14:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8E8198823;
+	Tue, 15 Apr 2025 14:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727520; cv=none; b=BPHH5HEro553qFafnmtJ/Dq1rvtX5vemKYFDypdBUdBEFR+b8bG1Vdzx+fr/MxL74OjUsQ38i0FGJnCgZR6r6DANvH4BDN1EPu+TLITb2FKDmNJm4u8i2V4jbJnbO5jWRouA/BwajNEOkm6ef9Eje9GymVVpN3Ye6Fs9xn2RmA4=
+	t=1744727659; cv=none; b=jD8P1BIHMg8mNo0QhDduvWpNeAlvf2CD689MvkZCg/4UTqhUfmWj6FO+D44hc8UG8fYm1VC0Bdv3UPW6iDSKBZ+ZP+YV3odYfZ4Afyn6BbCbe4xIXQhhZExUSU4uxvOIiF/TGpD7UisQwd7lF2Hav7ryWWFcO/Ba3PvTm1ECWVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727520; c=relaxed/simple;
-	bh=fXqIeq7CWJvldc7w3rHaixxKTTIDuRehE+ejMsOrktw=;
+	s=arc-20240116; t=1744727659; c=relaxed/simple;
+	bh=0ho7LkAw5exAV2fASQLJiJ6zKiogLTEOEBo9ma+MBz0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WtNmiWXTshZEdVvIDbWDmhITQO0FY0PYF0YyPe0ectpcMU4f/RoQS5qNh2nuJ5ORspdJq181LdMAB7HgG8dPpzcRn+TUTpQKC150nQymw4d4NSRnw8aWQfumDyO4zC5IlrIrX1evOolMakDw7gDF3JrL4TKtyO4VjjceJ7R5acM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nIMxjNui; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=SSYpXwI3tQgB7R7fD3WXooOgPrS+UNA9ktwwwXvG3OZi6DUY61p8Try5nA/bJ2bAmILYLe/H8MEZ6YrU1aak8aIBdUmpoSc4mxcpL10l+HKCPKnDQ1v9ycBmvNakEO/cZseXM3Vcg0GqD6z/pVZij5uJ8eCiugDZelVmzIm2gvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nIMxjNui"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6febf391132so52929397b3.1;
-        Tue, 15 Apr 2025 07:31:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744727517; x=1745332317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A/2ovr2vmJ79vIM11cUqi82N76Xi+yiNnmI/LMBgOek=;
-        b=nIMxjNuifwHzHwocWw9JxAnCzV4HVChYI7dxCgrlAkH9THGC+NV9s0ZrF/fpz1tltx
-         207yFyIv3V28CdB/3J9bkgI+l3PVTs3UHGNCR3gEp/AhHpTENbSlzGRUelWbl9gNrAT0
-         /524oSUiBQ7JFZa7rT0f/WeBhQQo8m3zRohcnuYjv4P1VwmFRto4ueEhSMRZtRuTl0sF
-         lAa9dyDJ6YOGPSxQ/TLBAhc3gs5bTJWmXQW0I4UUFhYQDvYWWUBTh66Rz7Ex2B/JmMFE
-         KgQ29ooUNAKeuKlqTHa1kktRin+fSEa1ot+MCVEkyehLq3dJKsvKTQxujTviz4CFWHNS
-         JjRg==
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so60239936d6.1;
+        Tue, 15 Apr 2025 07:34:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744727517; x=1745332317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A/2ovr2vmJ79vIM11cUqi82N76Xi+yiNnmI/LMBgOek=;
-        b=vVDH85K5Jav8LnnfdJyyDjNOiqMuMym2AQgbf1ytea//A3fQFL6/HSD2F3yoENtZhp
-         eTmc7wCRN3QDBrDgcswV5Ii6uSkcPk83hBczNvSTG8TP9TwPjcsyjRFQa8f4ATt5Vqmv
-         Vf8E5a+HDsTzePE/2o70bk6p0ycOebqMHMufnv7bO9PyheGX7J8VHdKb4KbKAZXtE2Kr
-         Qvl/aPTpDPn+xyH8qBkq6UJYDmgEQGgYVEMyXKxkZ+VZCvN7Vx14u8KkSRLb4Ad0sIHy
-         o0PV7SC7B4IlhuReggILdHk+WKRa63xIEsRfZFYJBG0PmqgCdE8jccYeR562Wc705Q0s
-         isdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtR7GXtimvwzmHQOwPlE7BFKAMHbu0VksrxYrqVwVxMYm+6NOSud1e57Dn8sZh1IHLG5Bguiw38mEo+4rwvxvm@vger.kernel.org, AJvYcCW3in2jiv6OXdTm+oZu5pwbqX++4LrQ+H+aG1eWEMCwyVMyV5P2ZGgY3COqFgciNQGxcsM=@vger.kernel.org, AJvYcCXHiyK+IIMMK5/E9Sc8Hsh43bEC+tjuw5IPZy9NJgKijEgZuu74X6QjVUh8OJEon2q90k5Si/lWvbYSrciV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGFcJQjuATrwjXv2PWhgpy63d22Oh/BzTIq1hTAJ9GESjQfH2t
-	krHTQoe7odKLTDWHbTV9Rx8BK+ss1/88YJ1hH58JSa+tYbDkwbeMhKMpjAG3W87n2TGPHYjlX17
-	pnPPJ/YECN4aT9jtz00yAkizctEi5Behqr48=
-X-Gm-Gg: ASbGncu9jUK+xsWxCWboYZspk9Hq4Hyu/yCS7D1FZQSGi++NqIaiLvXyKNr3t4LvgE8
-	WCvCojrGiBKA9VU9h+CaHVXtCJYJ/bT2Lkw4LXzShr+xWAHFhayA1FVFiEZNCXwhWThtWhqlAkP
-	BIni2ZjZQpBjCU6cqjtS9o5Q==
-X-Google-Smtp-Source: AGHT+IGvJDqMVgrVxDOvG3hjCsnkDf6UkRZzee7PLxZfputosSJ55+NmkW5312xI/va5Ra1iOrkRjcWYH6TwsLGnfok=
-X-Received: by 2002:a05:690c:6208:b0:6fb:4c11:61cf with SMTP id
- 00721157ae682-705599e7e97mr272049757b3.19.1744727517386; Tue, 15 Apr 2025
- 07:31:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744727656; x=1745332456;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YFPVcEEiobdT+1OcIUxsmQr7Ur44l0CAmSvwXzoKSWk=;
+        b=onAd4Msko/Sv+53q+pXwuF8T2QGlHuxK0imhPN7HO42HhnocBhngFMIDhZDToNXgWt
+         wFzE3n8AwTFdJKwpRDMJT6UD7zNPIvwxgXZB0IDZyV/zVKpHOAEWaXFNSibpAtpEePOp
+         WXhlKIfojV1af0MPTWJqHoQ+X50qmYdJTxZzFf0HkgtYTNktZ0T3h1RaW72I97hPbFy7
+         5KXvQFE2kZhLSX+2SN2AJLiDs9cItimibnNnE7cX4JNbSa4ynniBSBnBms3ancZNBt3O
+         dBiKlhEkoc2xDR42umuZaPh/B42B4atWrZtQLnkXo8Cn4r5wEaAgFW8yq+K+gsrDMY4L
+         pSSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUH1rvTMm2ZK6guDHc2p4dcSmwHenepNfP7qAJRQ85/ftwuLQR7PnUmnQrYmPFKe7QRWLuYH9nXw/c0@vger.kernel.org, AJvYcCUVv5/naxHzjMF2tHbNbIZTUUs2UzxesT3KY/S9vwK5vffyr4QMigN+3YABIy6QwNnBqbUBE5Y1uU/uxEjrlmvFmdU=@vger.kernel.org, AJvYcCVGAv8FG1u8U//hffWQyv7nwIujFisxy+TEZNBhRLiP/ADX5M2jX6q9QPrRYBVXNy623XWViRUNn1p4@vger.kernel.org, AJvYcCXf+f+D4PZ6vmugdblvGUaklhMS5hywxAkoBLCgLwJ64fT0Q5kAhuai3e2iMU1vtbnbG8mSaCPZinG7KSyY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyykkGnCM+Aakm1SRrt+CaNYY7+JnymJjfrSgw7XcZ148INujz
+	BFXpreoWfje80xirzNXoVPcH4MD2TZ77htbvUGzbClMpGavoL7brmUKMmonQ
+X-Gm-Gg: ASbGnctDBcpObexMHeM4A8ToGwPzxvAFR88Nw7Tt40EpVTKaO3CBSTnjhxKa0VUN6ig
+	PV+PkvJnw21Y8J4wkV6bZeddye6RxYyl9gvJEn3Yze52c7q8r6xZ1pIAuEmqtaZt5ZR+DBMLidz
+	2zKHDQ7qSUhwbdeNJJLTdmwACTMdG7ikztQlMGofx9nKTIpUl/IUFvNkd2h8/A4cp0EOQEN2u5I
+	+qmpoOX1t6JyDsUUdtzONtVSvU83CHi+cM6yFLjsgf2HVE74uLQrGjrW6GhB4oEdw+aC96Qhxkx
+	9cftH7UQu5AxM6628/2XyIBoy1CEyU7xnwbNE0DM4xFK252wpFXSmcCau2yOCofI/HBLk4kIxfU
+	NmDL9dQo=
+X-Google-Smtp-Source: AGHT+IFPGH87UvKLPtcsS+0ChZc0vSXakJkusasnxnIuLcbUigE5VUVXp9gDO71AyOWRGLX6+TwZWQ==
+X-Received: by 2002:a05:6214:e89:b0:6ef:3de:5ff7 with SMTP id 6a1803df08f44-6f230dc788fmr217939096d6.15.1744727655677;
+        Tue, 15 Apr 2025 07:34:15 -0700 (PDT)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com. [209.85.222.173])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de980872sm102100126d6.56.2025.04.15.07.34.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 07:34:15 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c560c55bc1so568270385a.1;
+        Tue, 15 Apr 2025 07:34:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU3OTMaDhhFpIPhP4S0ods1zEArFIF4LePY/blP+bFS+IOaRqrxzUXmzYEsKPaOEFxDcGZNJyPz+5ES7i1qCE7ExCw=@vger.kernel.org, AJvYcCV8C86ZXpGPmFWkGuRxkkvaW17zlgCdW1mD2kSFQyJ2CvqKfvUvIFxkizkIhPRWdOxZX5t0C/6syKwg@vger.kernel.org, AJvYcCX62nzufXhVrrkubfzFeVoKkLoV2hRRnUAg0KNKlrXufbumjkFqGnduDfCi7tlsT/Pf59G/rsmAevup@vger.kernel.org, AJvYcCXSIXnnReMk9g46AWCG5I+dLB3CrZblX4dVvRhf386qyeb2x55DezdoAXzZFiDgwQE53mVxgtXQpdXm+EP+@vger.kernel.org
+X-Received: by 2002:a05:620a:47d4:b0:7c7:b4de:12f0 with SMTP id
+ af79cd13be357-7c7b4de12fbmr1765094085a.32.1744727655101; Tue, 15 Apr 2025
+ 07:34:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412170626.3638516-1-kafai.wan@hotmail.com>
- <20250412170626.3638516-3-kafai.wan@hotmail.com> <Z_zk4kg_qQviauLE@krava>
-In-Reply-To: <Z_zk4kg_qQviauLE@krava>
-From: Kafai Wan <mannkafai@gmail.com>
-Date: Tue, 15 Apr 2025 22:31:46 +0800
-X-Gm-Features: ATxdqUFbUqDSXKgTvAcCWrS0g742f5K2dBB0e491Buv-EJOksGp6DfV_mssUbaw
-Message-ID: <CALqUS-7Jh2MpBTjQ9GNfRZKjUqg1t3n-OT_GYQqH=0TmkXoc0A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] selftests/bpf: Add test to access const void
- pointer argument in tracing program
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, mykolal@fb.com, shuah@kernel.org, 
-	memxor@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kafai.wan@hotmail.com, leon.hwang@linux.dev
+References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407165202.197570-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Apr 2025 16:34:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVdw1fRitLhtnLVtndyMMTofPu86Jeo9Gi+jN9JBvp8gA@mail.gmail.com>
+X-Gm-Features: ATxdqUE8ACu1iJO5kseLLN5xUAKGwC10AYneSDKQpjFfffR_bcDoB9ebuNmS9yA
+Message-ID: <CAMuHMdVdw1fRitLhtnLVtndyMMTofPu86Jeo9Gi+jN9JBvp8gA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] clk: renesas: rzv2h-cpg: Add support for static
+ mux clocks
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 6:35=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
+On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> On Sun, Apr 13, 2025 at 01:06:26AM +0800, KaFai Wan wrote:
-> > Adding verifier test for accessing const void pointer argument in
-> > tracing programs.
-> >
-> > The test program loads 2nd argument of kfree tp_btf which is
-> > const void pointer and checks that verifier allows that.
-> >
-> > Signed-off-by: KaFai Wan <kafai.wan@hotmail.com>
-> > ---
-> >  .../selftests/bpf/progs/verifier_btf_ctx_access.c        | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.=
-c b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-> > index 28b939572cda..a6cec7f73dcd 100644
-> > --- a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-> > +++ b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-> > @@ -65,4 +65,13 @@ __naked void ctx_access_u32_pointer_reject_8(void)
-> >  "    ::: __clobber_all);
-> >  }
-> >
-> > +SEC("tp_btf/kfree")
-> > +__description("btf_ctx_access const void pointer accept")
-> > +int ctx_access_const_void_pointer_accept(void)
-> > +{
-> > +     /* load 2nd argument value (const void pointer) */
-> > +     asm volatile ("r2 =3D *(u64 *)(r1 + 8); ");
+> Add support for `CLK_TYPE_SMUX` to register static muxed clocks on the
+> Renesas RZ/V2H(P) SoC. Extend `cpg_core_clk` to include parent names,
+> mux flags, and a new `smuxed` struct. Update clock registration to
+> handle static mux clocks.
 >
-> I think we should follow formatting of other tests in the file,
-> a do smth like:
->
->         asm volatile ("                         \
->         r2 =3D *(u64 *)(r1 + 8); ");   /* load 2nd argument value (const =
-void pointer) */\
->         ...
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I will fix it. and I find out the kernel does not support test_run of tp_bt=
-f, I
-will change to fentry.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.16.
 
->
-> thanks,
-> jirka
->
->
-> > +     return 0;
-> > +}
-> > +
-> >  char _license[] SEC("license") =3D "GPL";
-> > --
-> > 2.43.0
-> >
 
-thanks,
-kafai
+> ---
+>  drivers/clk/renesas/rzv2h-cpg.c | 21 +++++++++++++++++++++
+>  drivers/clk/renesas/rzv2h-cpg.h | 32 ++++++++++++++++++++++++++++++++
+>  2 files changed, 53 insertions(+)
+>
+> diff --git a/drivers/clk/renesas/rzv2h-cpg.c b/drivers/clk/renesas/rzv2h-cpg.c
+> index b8bed0c1d918..4cda36d7f0a7 100644
+> --- a/drivers/clk/renesas/rzv2h-cpg.c
+> +++ b/drivers/clk/renesas/rzv2h-cpg.c
+> @@ -399,6 +399,24 @@ rzv2h_cpg_ddiv_clk_register(const struct cpg_core_clk *core,
+>         return div->hw.clk;
+>  }
+>
+> +static struct clk * __init
+> +rzv2h_cpg_mux_clk_register(const struct cpg_core_clk *core,
+> +                          struct rzv2h_cpg_priv *priv)
+> +{
+> +       struct smuxed mux = core->cfg.smux;
+> +       const struct clk_hw *clk_hw;
+> +
+> +       clk_hw = devm_clk_hw_register_mux(priv->dev, core->name,
+> +                                         core->parent_names, core->num_parents,
+> +                                         core->flag, priv->base + mux.offset,
+> +                                         mux.shift, mux.width,
+> +                                         core->mux_flags, &priv->rmw_lock);
+> +       if (IS_ERR(clk_hw))
+> +               return ERR_CAST(clk_hw);
+> +
+> +       return clk_hw->clk;
+> +}
+> +
+>  static struct clk
+>  *rzv2h_cpg_clk_src_twocell_get(struct of_phandle_args *clkspec,
+>                                void *data)
+> @@ -483,6 +501,9 @@ rzv2h_cpg_register_core_clk(const struct cpg_core_clk *core,
+>         case CLK_TYPE_DDIV:
+>                 clk = rzv2h_cpg_ddiv_clk_register(core, priv);
+>                 break;
+> +       case CLK_TYPE_SMUX:
+> +               clk = rzv2h_cpg_mux_clk_register(core, priv);
+> +               break;
+>         default:
+>                 goto fail;
+>         }
+> diff --git a/drivers/clk/renesas/rzv2h-cpg.h b/drivers/clk/renesas/rzv2h-cpg.h
+> index 59f72fbed133..03e602d70f69 100644
+> --- a/drivers/clk/renesas/rzv2h-cpg.h
+> +++ b/drivers/clk/renesas/rzv2h-cpg.h
+> @@ -53,6 +53,26 @@ struct ddiv {
+>                 .monbit = _monbit \
+>         })
+>
+> +/**
+> + * struct smuxed - Structure for static muxed clocks
+> + *
+> + * @offset: register offset
+> + * @shift: position of the divider field
+> + * @width: width of the divider field
+> + */
+> +struct smuxed {
+> +       unsigned int offset:11;
+> +       unsigned int shift:4;
+> +       unsigned int width:4;
+> +};
+> +
+> +#define SMUX_PACK(_offset, _shift, _width) \
+> +       ((struct smuxed){ \
+> +               .offset = (_offset), \
+> +               .shift = (_shift), \
+> +               .width = (_width), \
+> +       })
+> +
+>  #define CPG_CDDIV0             (0x400)
+>  #define CPG_CDDIV1             (0x404)
+>  #define CPG_CDDIV3             (0x40C)
+> @@ -96,8 +116,12 @@ struct cpg_core_clk {
+>                 unsigned int conf;
+>                 struct ddiv ddiv;
+>                 struct pll pll;
+> +               struct smuxed smux;
+>         } cfg;
+>         const struct clk_div_table *dtable;
+> +       const char * const *parent_names;
+> +       unsigned int num_parents;
+> +       u8 mux_flags;
+>         u32 flag;
+>  };
+>
+> @@ -107,6 +131,7 @@ enum clk_types {
+>         CLK_TYPE_FF,            /* Fixed Factor Clock */
+>         CLK_TYPE_PLL,
+>         CLK_TYPE_DDIV,          /* Dynamic Switching Divider */
+> +       CLK_TYPE_SMUX,          /* Static Mux */
+>  };
+>
+>  #define DEF_TYPE(_name, _id, _type...) \
+> @@ -125,6 +150,13 @@ enum clk_types {
+>                 .parent = _parent, \
+>                 .dtable = _dtable, \
+>                 .flag = CLK_DIVIDER_HIWORD_MASK)
+> +#define DEF_SMUX(_name, _id, _smux_packed, _parent_names) \
+> +       DEF_TYPE(_name, _id, CLK_TYPE_SMUX, \
+> +                .cfg.smux = _smux_packed, \
+> +                .parent_names = _parent_names, \
+> +                .num_parents = ARRAY_SIZE(_parent_names), \
+> +                .flag = CLK_SET_RATE_PARENT, \
+> +                .mux_flags = CLK_MUX_HIWORD_MASK)
+>
+>  /**
+>   * struct rzv2h_mod_clk - Module Clocks definitions
+> --
+> 2.49.0
+>
+
+
+--
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
