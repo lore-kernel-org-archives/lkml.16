@@ -1,305 +1,181 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2041.outbound.protection.outlook.com [40.107.212.41])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5991027A13C;
-	Tue, 15 Apr 2025 10:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713005; cv=fail; b=ibXeAvivheMhMRCfQy75HHnTVXkZTWrky7D78Oid8lemgWkNEZFU3j9vn7Hr51y6VI6VGCxMw+crLQXkFJBv9MQTddowhV5l5utGimsKcSkAV5Lk6Fp+XRKYTEs364T+J/9jdDOnhgJftS2RL5KWmxJwCFRkxU58FXyVL1+4Vr4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713005; c=relaxed/simple;
-	bh=R4eU63THEgrlF2VMGXTVzJ6+zYHIYWEAXvXmzahKio0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sRnLU08NckyP6mQgBbKYJlsW21jiAf1raqPNOnfEF9Ru2hgaeVcypuLuJHMan6pXbZalW9AAhXW9VCoIuG+1N3JNOIDuGxtsTUD37lP/lQqIDAma9U/ddSkq1i3Dn7qHGaoUHssmGvAOKCbWdEBn9Br21I6Gee6yE6/SgcDPfik=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tPwRU9Hd; arc=fail smtp.client-ip=40.107.212.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ED124C67A;
+	Tue, 15 Apr 2025 10:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744713055; cv=none; b=ZA8MtadYGVPLRLs9ehjL1Jg3i9GojfLSaQPmyE9MiPfSNfP1IBGs8AGIAkt29gzxUxL8QbuJDk48P31Y6B7UjOq1BWRjRhasysUkH8l0hGZx70rjiCqBDS7Kpw4TLqowiom2GfiHMkjymrmM0KMFnI32B4n2STrh9CD+tyOg/28=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744713055; c=relaxed/simple;
+	bh=Q54juk+v31PrpOLCs3PzMZAzlsgDwULR2WsC5y+MfCQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=qoK0pnlownSDnGLPNNK+KyJUJNnf/RkYbP4FZ1q1IuWRhIdx1KAdCkJvXJR+ev0ngoRGRwu87kTaV9Ig+O6QLryip3ksxvNEQf4vpwywhBR5LyLeDQZaA0sFFXX8CBoih6WotYOyfIxNIited+rlhXUgZSXKhCs0bDZfhbd2wNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=KBKRB/+h; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tPwRU9Hd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ov0mnlfQ8545vPEhL8dJActih/9tWp/BWXvq10Eql86yDc5YGNCDeVsuf1DOJDsLVHma697tEFY+649xmvCO7yXbH3kYTbEkOmlhb1WxgGYocpyp6T5pUpLIoh4UAxwxk42Ws+Gur2RKOBPlrTveajmxVFs7HyjXNgP/loof/d1pUPHc604q5tP0UWe/Pw9eVbj9M+YEi3cq/pe2H6jk+wVN4Og4dyY1xBiwKa7wwuVfLGkWFRztob7w2gEXn/4OyAceH56VSljNt0p1Fm6LJRX/M+T6Q07llwSXMLETITJiBO34cc/SVovp9pA3jU4PJ1vI0j2stKc3FwCchk6tkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ErxX5SkbAsebA8T3Sl8QDv1CS1CirEMuUKvUSj+03kU=;
- b=riHYraIHKwXTDCQ/J+omQanVcwyZdudLosw7yiRC4j63tRb4GUBa07A5oxD0qfyFkSZlJ19OYJ33vpMHs2ROWnlfNFIIUNf5Y+bhv87oeS6EhRvC27hB1tZb+GcfKVXLGRKoQzVw54dbB/a9RGGQaYOfq2d/YFCoT1ZjzDVMgfpx+FrHi4gq7UFvcxVKS8o7o2CUrqb1XbBi7HnODijsbZ5+2tmnblBWEPuSIsGIOo7ce22H63QTitYFa7JuU4T7+lsdPJ2WOfhMBEMaj5W65Yw1fBF319c8XrDdCUQLPm1iRzafvZMGgvyQ5rvxaPQ9ObpmcksGlRwqM9SB3r+tJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ErxX5SkbAsebA8T3Sl8QDv1CS1CirEMuUKvUSj+03kU=;
- b=tPwRU9HdGaM97/Q1RpN+ILbsXtv8kU9yUVDbrdZgBRT7YVsc26paRUngFkZR65bLFfCV9WMXPcLHLvPjOUCLSf2IoLIwGGvU7fHBCn2v8CR/wyvNvG2kKPOb93ZqP1zoqjK6skr/IVyDsEJIugQeOjKAWdw/LLPp+TPZ+74Gp38=
-Received: from DM6PR02CA0081.namprd02.prod.outlook.com (2603:10b6:5:1f4::22)
- by DS7PR12MB5960.namprd12.prod.outlook.com (2603:10b6:8:7f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
- 2025 10:29:59 +0000
-Received: from DS2PEPF0000343C.namprd02.prod.outlook.com
- (2603:10b6:5:1f4:cafe::d) by DM6PR02CA0081.outlook.office365.com
- (2603:10b6:5:1f4::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.32 via Frontend Transport; Tue,
- 15 Apr 2025 10:29:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF0000343C.mail.protection.outlook.com (10.167.18.39) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 10:29:59 +0000
-Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
- 2025 05:29:56 -0500
-From: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-To: <gautham.shenoy@amd.com>, <mario.limonciello@amd.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Dhananjay
- Ugwekar" <dhananjay.ugwekar@amd.com>
-Subject: [PATCH 2/2] cpufreq/amd-pstate: Add support for the "Requested CPU Min frequency" BIOS option
-Date: Tue, 15 Apr 2025 10:21:21 +0000
-Message-ID: <20250415102118.694999-3-dhananjay.ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415102118.694999-1-dhananjay.ugwekar@amd.com>
-References: <20250415102118.694999-1-dhananjay.ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="KBKRB/+h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
+	s=s31663417; t=1744713033; x=1745317833; i=frank-w@public-files.de;
+	bh=WgqIUu9ojr7beR3hG5sdV5nNo9HnDoiSsjOcC+kJudY=;
+	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+	 References:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=KBKRB/+hV4VwsG13/u+SDHwxEdTIc5MWNOTLfsAfmiAiNisKI8u2qYTwxuFKDrao
+	 uGrl8cjZPYN4epfmln5w1JjkV1R7ikHrz18h2HRljODfQR7RS4qhfBPcuxg9JkD7L
+	 Skc3m+Qb35/kbDbzvEdLippNpkeS9J7K0uM/f00RIPcAOwxo7/UF3skIXcCugbYEm
+	 bOQPNAqrdmz8G/BNq76ohSfeZjIksLA0WjqkojRDK3bqVbj+NnfcOvIKjcJhwf8cL
+	 HQgyxpOg9ExgGvS1YY8MV7jYBU/Dzj6zNiokB306hs274Rs0Ltji+HPxbKFobOTBu
+	 YdPRRjMDtQcP2e0/Qw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([217.61.148.30]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MPogF-1tiPqk3DHP-00P9pF; Tue, 15
+ Apr 2025 12:30:33 +0200
+Date: Tue, 15 Apr 2025 12:30:34 +0200
+From: Frank Wunderlich <frank-w@public-files.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Daniel Golle <daniel@makrotopia.org>
+CC: Frank Wunderlich <linux@fw-web.de>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_arm64=3A_dts=3A_mediatek=3A_mt7?=
+ =?US-ASCII?Q?988a-bpi-r4=3A_allow_hw_variants_of_bpi-r4?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <8fe762e3-a9eb-4a9c-81a2-b7a10539b615@collabora.com>
+References: <20250412102109.101094-1-linux@fw-web.de> <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com> <Z_0AdtyvehR9SHnU@pidgin.makrotopia.org> <36fe0778-399a-4406-8516-54b968cd9073@collabora.com> <D7682B25-5BEF-46D1-A5FD-32D2AAF84EFF@public-files.de> <8fe762e3-a9eb-4a9c-81a2-b7a10539b615@collabora.com>
+Message-ID: <48DEC6CC-A81B-4DD7-9F55-CA1179FBA2F2@public-files.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343C:EE_|DS7PR12MB5960:EE_
-X-MS-Office365-Filtering-Correlation-Id: c76677d1-47ba-4df3-2cb2-08dd7c087937
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yZc9fRY91p3V11C1mHtd/9xX8icR2Agyctqww7uLeZ/f01Q/cwwLVvGyTCo6?=
- =?us-ascii?Q?qnLA/3ODZnVWZctKsf7tCn13dFhU+tT5oVWkRSiSMlCdg73Ha3BsDI0QVNCz?=
- =?us-ascii?Q?B3dbBuoxLLujd/P92Ga2k2A5T/j8YfYtRYrJ808dGaQ/nZphoqhDJzyiL/zw?=
- =?us-ascii?Q?aF2gvk2AYqTNz90EzN/aD9f8b1DBjkcu5M9uBa41ikVYOrjlXigtm5j5DKXY?=
- =?us-ascii?Q?ZD0/j7j/mFzbvuq+WMyXUWRpYJGMis/h1CQREc/BglXPjq2f+eyGg4JRbSNJ?=
- =?us-ascii?Q?69MpfyGlLm+eamCglvZj5uP8RPNhS2x8P+Z1tCHNNwEbvNTDvqzG3wLziHe9?=
- =?us-ascii?Q?Qr4xAiteRUpNH4PZC9dk6ryWa40jOLnjHDlkXHvJJ295V9dubs2XE9sfugxI?=
- =?us-ascii?Q?ZkT0ekcelJ7yzXfq7WGGut7T1h6tVAenL0JUBsxQZY2mf5IFXOZj/L9Cw1tD?=
- =?us-ascii?Q?txthocifHj39RufA/XHiClgUytK+ZtM5dDoSQvJxP4uMydq7Evl1tz7zs57e?=
- =?us-ascii?Q?55N2WXdY3x8TuipcdZZZNp3cAR6KUSpY4Y8wzOEqaWvUJAvCYHrlCE6RpSV9?=
- =?us-ascii?Q?cRJQqVnTsA7CjbZb/77zyLIiQJO92oFv8wEuwHCShg7aT/3J7FJfqjLu9DgU?=
- =?us-ascii?Q?yHG4kO4ii1wTP5mM0xf5CcIBCdZu1Xc2Knkk/Fy07EVuYwolAIBj50adjRKV?=
- =?us-ascii?Q?TuvJ7tlNsWVsmJO/wRb0jJH/qWJU6tbl9WWiBIU6d+nGYFpODjesmCkW4STY?=
- =?us-ascii?Q?ogG269b0kowejCoMJ3sI5YXpxc1WNBcP4ZgLW9GXXwuxQy15Yrcn1HqzAWPV?=
- =?us-ascii?Q?CfpIWzWbnJh5z3E87vvaJ+x7vb4NY6+zId9pDVwCG3RIfzYv/jNhx7n1adB/?=
- =?us-ascii?Q?YLIzXy2YoawT4zykgo7brCGWOg/n9STnjX6pHkqsZPnvFhxpc8bavomZvEpi?=
- =?us-ascii?Q?ng6C3be0Kv5nBNOvhzwgz2q/LBwn7mZBNb2NU8dKvBxyxTuXAjxRGcOUM81Y?=
- =?us-ascii?Q?PeU3CgVGBFqLXiqCVN5Js4kyOg8LMQNDhLp4QbhN4um5sn+7u9fQqwJjbmuu?=
- =?us-ascii?Q?GgOcc7pImonTYALL37t4fE95afxlh+T/Koe1OK5edPHdIN84iHKqgchJdo1/?=
- =?us-ascii?Q?im0lFNH0vIXMUcNlVqQjOnXmADXnH0yDIXiNo4o6y7RPGaWbaG+DfT2D3SWZ?=
- =?us-ascii?Q?992CuyTpFb75AyC4EiYBUW2HEScntDSVul9mGd0rMLd7Q6as2OyQMp71lHoC?=
- =?us-ascii?Q?dvIBlGe7ATo4g/z1XA6+69PT1FGwVar6/k01wzujfesQtXErOLpSLDQisESa?=
- =?us-ascii?Q?IyWI+J86XgRRCd6jnOyXfgJ3JDrInZ/rhZQAXzUxERC2WMt6R0jbFf6CYqTX?=
- =?us-ascii?Q?ukwMV3tn91jTlH97YRDgPjp/klBGDNCcUrZlxI/GnE1e1QoW387Y1r9GjCAo?=
- =?us-ascii?Q?qwKTGaOzpRjegsK8PQq+AqPN9Y8OYN2EQAfrvgCidSGHntb2iZXqfx1eWP6h?=
- =?us-ascii?Q?2ClrtSPUzkt+jgYde/H3jdBawOrfXWN6YtMD?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 10:29:59.0782
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c76677d1-47ba-4df3-2cb2-08dd7c087937
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343C.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5960
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lLJIj65VGXw+6G0LOY49tgPACHjwE3VmkBrGn+7shtl1EW3b2pG
+ 87M+pcoS5dfrkhJV1oEnCSXo883Gg8iJB2t6prExwVn2sOM3ym2YdLBEYKOI5iEwjOakmPD
+ Jiuflz9K6fxopQjHYtG4qCcgMKu4raqvuQX5r0l4Zllzf0MSihg2UOE1sScINe55K1NQX1w
+ sok0WiGqjFLEmC4tC77lg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/3vDsJWtv0o=;QGAKzf3I6xXFSnXdXYw9JtixUZR
+ v/Jr3O2zcgq4wWSgbg4j7rPEJCpMei+48d83imI29JgDOWg9lz6V0i5tC19RalvNnijHfk6rl
+ NDW4jtZRx9QEsTUC7hi4xXaxedKIuCE859QJltFtOIV0J7hmL5N2KPlbD0QJVUevkC889cNRt
+ og15QY5/wcG6ch1JonLkOAXPdcqndUoll/z8AVVFAqwR5DwU4MZhFhM34BrXxzJgAm0kFL8JF
+ 0so6of1X+oJ2QBRx/Es7x/pm07/WqK9SJt/bs8SH7LtLgOjlAjXzeEOPIFGm1pZnEV42+CI8U
+ Rcs0cj86+H3P42qZj6Yz1k909PHeWNonkZl4h6Dk5qJhgtIirqmbEjhwgpROjJhKYQGkU2GCN
+ vk+E+Nvg+BSEJplTExpi2Oy12Q7gMcEi5MotIiGkelR1xITAlMKwoX1cy2QYo+djgmkq8d1xN
+ 35znS0oLfjAbB18q6ive0ToCOEBeMV7MbaddZrO9wOtYCMLP6m5DK7lfcovO8iYk55U2FfASD
+ sZs4UhadMLYNehBEhEmqFDPkq2b7Erl5K1uaGFD01dC/yCpiLCgnmktTRkKwKKAchR1MCiXnl
+ g8B/fuN1XDlLFt7D/wbQ51NfO0vN8NbB5qimULGNSv6EzU1oacQ4zyVIlyi6YeLO5FCvFrchk
+ pLLLWQLMMmkIK4CgsbUdjFu3rlCxC1dxw5rfUhX5Nla1yZgQmcsUttwViseLP/PLPvIxrakUj
+ Fwdvh9/mQBdSKblK4rDYKT5j2F5wgoiRnQI5jAD3i0K4RdfOqZvWwzEFBK5STLotoGVvqvrW+
+ VlSJJkkO6KqFZ/T+saf3jXPdGEF4JD+DEbdUgQ7Qyt+8/kEJlQpM0bjBpoCQkixi732vl4ojO
+ fROZQ11i3MRv2ldocIREGhbEgytuHDMkmWWj5P3ny+9HX07+K77JOkD73DA8dsaQNNx4ahl8N
+ v7g1ugZ1Ku/ybZhZgFlFfJ6YBVPa6daB4/o9NbkxMgA0wwJ62SIoZKXXsViWPXg/cVz9XISYp
+ TV52ckCzlEdPk1ClGjqwVrqxZkzM3U9+jNhKyx1MO8gnHzbVQJrhdMWAxnHD15ZJrRBZvSBPM
+ 6BRodsAokbbMx8UVFZWcSbu1F8ZaSD7knRomIVZNLcIVxs+JHAGmmE1mJOUQUATynKJNl+Hq1
+ iK58dagAlTZe6rAmD4iruqKkiRd7uAm3x0C1719njucipZUwASy4yU+KH9LuOTKnFgTAAwbqQ
+ k0Zo68MIyg5YSzNnc1XUr5Zi040LFFC+qtFK6OOy7Ra2ojz2zKFrQevatMAim7Gje9XRAVGPM
+ sjN1UozOIs1ydU63P9H9+6sauUJHn3ObOT+3l1czMTL87fT3YHBa/UbM99wqQsPbuKFMWt7N3
+ V0QW1p3QBWVVnNDWyNq20Hk5ZLNx2SF7qP7i2Qe0vICZMUy/A9kJayzcSQBG00TOCncczpaNv
+ WSjEKuEdR8yRUPQukvhe8prWqaQ2tZ2MnuG/2n2UJRMwAaUcj
 
-Initialize lower frequency limit to the "Requested CPU Min frequency"
-BIOS option (if it is set) value as part of the driver->init()
-callback. The BIOS specified value is passed by the PMFW as min_perf in 
-CPPC_REQ MSR. To ensure that we don't mistake a stale min_perf value in 
-CPPC_REQ value as the "Requested CPU Min frequency" during a kexec wakeup, 
-reset the CPPC_REQ.min_perf value back to the BIOS specified one in the 
-offline, exit and suspend callbacks.
+Am 15=2E April 2025 11:56:37 MESZ schrieb AngeloGioacchino Del Regno <angel=
+ogioacchino=2Edelregno@collabora=2Ecom>:
+>Il 15/04/25 10:07, Frank Wunderlich ha scritto:
+>> Am 15=2E April 2025 09:36:43 MESZ schrieb AngeloGioacchino Del Regno <a=
+ngelogioacchino=2Edelregno@collabora=2Ecom>:
+>>> Il 14/04/25 14:32, Daniel Golle ha scritto:
+>>>> On Mon, Apr 14, 2025 at 11:27:23AM +0200, AngeloGioacchino Del Regno =
+wrote:
+>>>>> Il 12/04/25 12:21, Frank Wunderlich ha scritto:
+>>>>>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>>>>>=20
+>>>>>> Sinovoip has released other variants of Bananapi-R4 board=2E
+>>>>>> The known changes affecting only the LAN SFP+ slot which is replace=
+d
+>>>>>> by a 2=2E5G phy with optional PoE=2E
+>>>>>>=20
+>>>>>> Just move the common parts to a new dtsi and keep differences (only
+>>>>>> i2c for lan-sfp) in dts=2E
+>>=20
+>>>>> This should at least have some different compatible, if not probably=
+ also a
+>>>>> different model string - as it's a different device=2E
+>>>>>=20
+>>>>> 	compatible =3D "bananapi,bpi-r4-2g5", "bananapi,bpi-r4", "mediatek,=
+mt7988a";
+>>>>=20
+>>>> Imho it doesn't make sense to declare compatibility with the
+>>>> "bananapi,bpi-r4" as the "bananapi,bpi-r4-2g5" is NOT compatible with=
+ the
+>>>> "bananapi,bpi-r4"=2E It's a different board and using firmware meant =
+for the
+>>>> "bananapi,bpi-r4-2g5" on the "bananapi,bpi-r4" (or vice versa) will r=
+esult
+>>>> in a non-working Ethernet port=2E
+>>>>=20
+>>>=20
+>>> Is this device a BananaPi R4 variant, or is it a completely different =
+device?
+>>=20
+>> The only difference is that sfp-lan is replaced by RJ45 socket with mt7=
+988 internal phy=2E
+>>=20
+>
+>Perfect, then:
+> - The only difference is one routing
+>   - The base board is the same
+>   - Same hw project
+>     - The two machines are compatible with each other
+>       =2E=2E=2Ebar one difference
+>
+>=2E=2E=2Ethen the compatibles shall be as I said before :-)
+>
+>>> If this is a completely different device, then it's not even a BananaP=
+i R4,
+>>> otherwise this is compatible with BananaPi R4, with a small variation =
+:-)
+>>=20
+>> Sinovoip now announces a R4Pro with some more changes (e=2Eg=2E an exte=
+rnal 2=2E5g switch),but we have no detailed shematic yet=2E It looks they a=
+lso plan a R4lite which is based on different SoC (afair mt7987),but this i=
+s for sure different device (and so not using this bpi-r4=2Edtsi)=2E
+>
+>In that case, R4Lite shall not be compatible with R4, as the name may be =
+the
+>same, but in practice it's a different machine=2E
+>
+>>=20
+>> But basicly all are named BPi-R4=2E I guess R4Pro will also get own dts=
+ as too much changed=2E
+>
+>If R4pro is a redesign of the R4 board, that would not be compatible, as =
+it
+>would not be the same base design; otherwise, I'm sure you have well unde=
+rstood
+>how it works for the compatibles, anyway :D
 
-amd_pstate_target() and amd_pstate_epp_update_limit() which are invoked
-as part of the resume() and online() callbacks will take care of restoring
-the CPPC_REQ back to the latest sane values.
+Yes, should i use 3 const in the binding (as i do not expect another hw va=
+riant of current R4) or still enum for the first compatible?
 
-Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
----
- drivers/cpufreq/amd-pstate.c | 62 ++++++++++++++++++++++++++++--------
- drivers/cpufreq/amd-pstate.h |  2 ++
- 2 files changed, 51 insertions(+), 13 deletions(-)
+>Cheers!
+>
+>>=20
+>>> Cheers,
+>>> Angelo
+>>=20
+>>=20
+>> regards Frank
+>
+>
 
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 02de51001eba..d94fd2a38990 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -389,7 +389,8 @@ static inline int amd_pstate_cppc_enable(struct cpufreq_policy *policy)
- static int msr_init_perf(struct amd_cpudata *cpudata)
- {
- 	union perf_cached perf = READ_ONCE(cpudata->perf);
--	u64 cap1, numerator;
-+	u64 cap1, numerator, cppc_req;
-+	u8 min_perf;
- 
- 	int ret = rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
- 				     &cap1);
-@@ -400,6 +401,22 @@ static int msr_init_perf(struct amd_cpudata *cpudata)
- 	if (ret)
- 		return ret;
- 
-+	ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
-+	if (ret)
-+		return ret;
-+
-+	WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
-+	min_perf = FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
-+
-+	/*
-+	 * Clear out the min_perf part to check if the rest of the MSR is 0, if yes, this is an
-+	 * indication that the min_perf value is the one specified through the BIOS option
-+	 */
-+	cppc_req &= ~(AMD_CPPC_MIN_PERF_MASK);
-+
-+	if (!cppc_req && min_perf)
-+		perf.bios_min_perf = min_perf;
-+
- 	perf.highest_perf = numerator;
- 	perf.max_limit_perf = numerator;
- 	perf.min_limit_perf = FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1);
-@@ -580,20 +597,26 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
- {
- 	/*
- 	 * Initialize lower frequency limit (i.e.policy->min) with
--	 * lowest_nonlinear_frequency which is the most energy efficient
--	 * frequency. Override the initial value set by cpufreq core and
--	 * amd-pstate qos_requests.
-+	 * lowest_nonlinear_frequency or the min frequency (if) specified in BIOS,
-+	 * Override the initial value set by cpufreq core and amd-pstate qos_requests.
- 	 */
- 	if (policy_data->min == FREQ_QOS_MIN_DEFAULT_VALUE) {
- 		struct cpufreq_policy *policy __free(put_cpufreq_policy) =
- 					      cpufreq_cpu_get(policy_data->cpu);
- 		struct amd_cpudata *cpudata;
-+		union perf_cached perf;
- 
- 		if (!policy)
- 			return -EINVAL;
- 
- 		cpudata = policy->driver_data;
--		policy_data->min = cpudata->lowest_nonlinear_freq;
-+		perf = READ_ONCE(cpudata->perf);
-+
-+		if (perf.bios_min_perf)
-+			policy_data->min = perf_to_freq(perf, cpudata->nominal_freq,
-+							perf.bios_min_perf);
-+		else
-+			policy_data->min = cpudata->lowest_nonlinear_freq;
- 	}
- 
- 	cpufreq_verify_within_cpu_limits(policy_data);
-@@ -1041,6 +1064,9 @@ static void amd_pstate_cpu_exit(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 
-+	/* Reset CPPC_REQ MSR to the BIOS value */
-+	amd_pstate_update_perf(policy, cpudata->perf.bios_min_perf, 0U, 0U, 0U, false);
-+
- 	freq_qos_remove_request(&cpudata->req[1]);
- 	freq_qos_remove_request(&cpudata->req[0]);
- 	policy->fast_switch_possible = false;
-@@ -1428,7 +1454,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
- 	struct amd_cpudata *cpudata;
- 	union perf_cached perf;
- 	struct device *dev;
--	u64 value;
- 	int ret;
- 
- 	/*
-@@ -1493,12 +1518,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
- 		cpudata->epp_default = AMD_CPPC_EPP_BALANCE_PERFORMANCE;
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
--		ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
--		if (ret)
--			return ret;
--		WRITE_ONCE(cpudata->cppc_req_cached, value);
--	}
- 	ret = amd_pstate_set_epp(policy, cpudata->epp_default);
- 	if (ret)
- 		return ret;
-@@ -1518,6 +1537,9 @@ static void amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 
- 	if (cpudata) {
-+		/* Reset CPPC_REQ MSR to the BIOS value */
-+		amd_pstate_update_perf(policy, cpudata->perf.bios_min_perf, 0U, 0U, 0U, false);
-+
- 		kfree(cpudata);
- 		policy->driver_data = NULL;
- 	}
-@@ -1575,13 +1597,27 @@ static int amd_pstate_cpu_online(struct cpufreq_policy *policy)
- 
- static int amd_pstate_cpu_offline(struct cpufreq_policy *policy)
- {
--	return 0;
-+	struct amd_cpudata *cpudata = policy->driver_data;
-+
-+	/*
-+	 * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
-+	 * min_perf value across kexec reboots. If this CPU is just onlined normally after this, the
-+	 * limits, epp and desired perf will get reset to the cached values in cpudata struct
-+	 */
-+	return amd_pstate_update_perf(policy, cpudata->perf.bios_min_perf, 0U, 0U, 0U, false);
- }
- 
- static int amd_pstate_suspend(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 
-+	/*
-+	 * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
-+	 * min_perf value across kexec reboots. If this CPU is just resumed back without kexec,
-+	 * the limits, epp and desired perf will get reset to the cached values in cpudata struct
-+	 */
-+	amd_pstate_update_perf(policy, cpudata->perf.bios_min_perf, 0U, 0U, 0U, false);
-+
- 	/* invalidate to ensure it's rewritten during resume */
- 	cpudata->cppc_req_cached = 0;
- 
-diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
-index fbe1c08d3f06..2f7ae364d331 100644
---- a/drivers/cpufreq/amd-pstate.h
-+++ b/drivers/cpufreq/amd-pstate.h
-@@ -30,6 +30,7 @@
-  * @lowest_perf: the absolute lowest performance level of the processor
-  * @min_limit_perf: Cached value of the performance corresponding to policy->min
-  * @max_limit_perf: Cached value of the performance corresponding to policy->max
-+ * @bios_min_perf: Cached perf value corresponding to the "Requested CPU Min Frequency" BIOS option
-  */
- union perf_cached {
- 	struct {
-@@ -39,6 +40,7 @@ union perf_cached {
- 		u8	lowest_perf;
- 		u8	min_limit_perf;
- 		u8	max_limit_perf;
-+		u8	bios_min_perf;
- 	};
- 	u64	val;
- };
--- 
-2.34.1
 
+regards Frank
