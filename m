@@ -1,155 +1,151 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10654315C;
-	Tue, 15 Apr 2025 15:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E284C1EEA59;
+	Tue, 15 Apr 2025 15:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744732281; cv=none; b=bpZtupQu1YXlW8BISfJpFrpUU6iknp5ulr3ZCNq2FpyxA2FIF/42NhFNb0p7ln0rMk+qmpt2woFdwjryjMEPHXVuEo2qHniVlYpkU/xnj0CfXN1NFVUOhGXSPEjaIe066UNyLMEIk0maLdvUQW8DSKKXQXivWXTaMlqVbH2KBDQ=
+	t=1744732363; cv=none; b=c2JNZd/OmHo0HhJMwGUQ4WPI8unGjsV7ImFjMjfRStfSJMl34Pi1PWf9HrN8KsF25qEey/6dRfdwm8Pn/CvO9Nh8eSpD53lqSP0OtnwLzCuCCl2cpqd+iM5akzFfI8sz3F4kpT6HSHqvXYlI/aXLo41PcNC+vq0Q2wA8UdxB2go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744732281; c=relaxed/simple;
-	bh=h8pYCryFTyz3ogsg8CjJtivghY5nNbY3fs8XAmTefAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ky6mrXNYtS6EaTFbysALQe2CeNeZaKSLxMEaPCwY/obF3StyPxCueNW4FwL3nK5RCYPhGsGNQ9GBjOyqYBs4DzoRIOlXwoedK+R9ZOCPWt2jYcDVgUnTNmyTsALDziTFtYRZBiRwb9HLr4s7qgxkW+Sx0DkZvMw1Io4TDkpd6j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so2183782241.3;
-        Tue, 15 Apr 2025 08:51:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744732273; x=1745337073;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VQOaA84/gJX5YcmA1yI2UrffzTTDGmIxxE06BR+8a5Q=;
-        b=GvuaecnYUyp5NRqywkySyYs91mVAzaLNan/VqrKgJ+/l+VP/iZksfZUpX1m+VQ9k/Z
-         W/A2Wx1N13rQeMk2mCgvXPWkuE1duuDJiubpvqcFxO61E0aDjHkZ3JNDUCpDtSwhL6qR
-         77r4+B/WhXlCmxkLimlcTzlEg6fG60BPhPwS9V023hGXchLF9jYOyfF+RN3Q+tZw1P4U
-         O7MDee8WLzfzp3aSlv+Zn7yEXLcwB8RMj/NfJMByIPBxqe1q3ilM6bxuAGnjC0sbGeDF
-         3IB9jUmlzXJTne+GaZpG9s+m85KOAeNYynKVmVshIUQAYg4xnXMaxP7qWAuUKIkkOaZi
-         gDdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUo8kLC6Y6+BMlBTMhR1C+MAASYZAAZ2WZM1DONIjtdBZhfFd/GO0E49RT5LtHoOExCbfGFSTm+epZc@vger.kernel.org, AJvYcCV+NTbFm3HN79BaEbjRVZWY1781hK5HB7TQxnTMd083i4Z/kH70WdKOcc4F5hgPxOIbB1dn+RxPGEHb8x8n@vger.kernel.org, AJvYcCVqjNUONnEFIkF9nKIEvmWlfjDNyqOpNLI8CB407AI0UitLKikNaEUacOmtQPRmyYdxnv3Sw+qMDCEKaK0xOYXg+L8=@vger.kernel.org, AJvYcCX8gcHuM931Sl9+wbJogeYfAwaPLYAsRnhXeqSm4DbPFfS9cOkNZWlVF+zUnlbxOc3rOFSfvYJtOnGM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG2ssW/jCV1frT4xSZs4rVM4Eikm5mSDd2HtJocN8yD95aoWEU
-	xeQTCxp3xSHQjdbRxfFNePdmgcyPInSJPnTSYhZROzIea/PhMmUrFvDd/iA/
-X-Gm-Gg: ASbGncuyuPzWKbsU40dRmFMMo6GHugTkKc23CUoyhouEEf60p5kDXKSLOsGWS2EFaX7
-	8mR4G0QT5O9zZdYLQJXOIAqlYqQBK8rioYcze0wN+fQ0Vc/5Pcr1q79kZUpNYO1NREsetj8Mz+z
-	4jWBYZzgf9gQ3XZ9/Mi4WS5ZiGmlx2C3StDqiMM/ynpm5Dx1/cURZ7tq07dGwBHIMtCrMcA5kPi
-	OV7+7B8k5E8aLv249H/K5KQi8YwcwD+KmPhxdPDAxhjMbi+wcy8eWMWZZT190jKqWViEjoiWkJV
-	uNM6vNUkdtoMpeSVr942cwE5Orgrd8YG8/IYdN6ViJDfigBkSYLTqKwC5OFJXIEaLMSQi2MizFQ
-	j0Tw=
-X-Google-Smtp-Source: AGHT+IGYm29SA0ta3+Nwv6yv8KhX8nXsE95hHyFYJ2IqxbBzl85keeoOy3oHLK5c9YeIwEBcUzeFXw==
-X-Received: by 2002:a05:6102:2ad3:b0:4c3:6568:3e18 with SMTP id ada2fe7eead31-4c9e4f1f1a5mr12426613137.15.1744732273403;
-        Tue, 15 Apr 2025 08:51:13 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c98ee49csm2585306137.26.2025.04.15.08.51.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 08:51:11 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-4c3183ec801so197087137.1;
-        Tue, 15 Apr 2025 08:51:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEFUm8AOCY9eqowOPSW7hT4RmM3xgG/+vr5RD49z3DnHsmnd8Nv6zFBVXZtp8poSyK6rC91ns6U7sJ@vger.kernel.org, AJvYcCVB2n2bJP2RGKFUP5UU3lIt07UMzETHsj1xt7xXS3ZYU54MgwaL7qaBRq8Tumm8FwFo0Or2ymaHEVL65WLK4xjPpLI=@vger.kernel.org, AJvYcCVsG7Kvb6QBkEii/C75r9lIJ+u33AYdZmFgkJDIeMUCZYJ8UeA3tz3zOanIkPFlbi81S5NLgQO8/kla@vger.kernel.org, AJvYcCWthxuQMya7V16yYqaEkK3NfV7CT4uj7t8IzjXRKu5aSDOgdu+4Xe/oLypybb1pC+rNRlofiEHI8PCveopU@vger.kernel.org
-X-Received: by 2002:a05:6102:c05:b0:4c1:6feb:83aa with SMTP id
- ada2fe7eead31-4c9e4ee9fe6mr12739669137.9.1744732271060; Tue, 15 Apr 2025
- 08:51:11 -0700 (PDT)
+	s=arc-20240116; t=1744732363; c=relaxed/simple;
+	bh=xGINZiurunNqT7Sjhf4GRxno/zL+xXdahm7qTRDteUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R8XeyktgaAS0GsFO6yhH3SoAh5mqMkUzBBra55EyMtEAaFMgjPEzvjugvWsrrAHJQtT2NXakqMbxtQUZHgCqlR7j1TmoTYYP0qF25wD26Ch14WwkDHGh22/uf5j08gJ8phdgq3s4Zd7nn2UcNopQZCdRwdy9rlBpYlnmPftWyfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZlsxAtck; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZlsxAtck"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC9B5725;
+	Tue, 15 Apr 2025 17:50:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744732238;
+	bh=xGINZiurunNqT7Sjhf4GRxno/zL+xXdahm7qTRDteUU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZlsxAtckn2HJvPc+WvLK7jai4kCXy66sIrWFMzm0ZD0J1IHu3LGnY9gTB9/URPu9s
+	 ZDw2Tugemhs1jtEigETtiZCjgFTzsBEFHA4es126qGhZIReagbyIKcZnWHbvtJQXUT
+	 BjzwHE+SrBs4Ynx0a4KOcc59xgMSYZig9Cl2t5d0=
+Date: Tue, 15 Apr 2025 18:52:39 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: Jai Luthra <jai.luthra@ideasonboard.com>,
+	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
+Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
+Message-ID: <20250415155239.GH9439@pendragon.ideasonboard.com>
+References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
+ <ZxYiCv6SpLq9uh08@dragon>
+ <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
+ <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
+ <20250415154724.GG9439@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250408200916.93793-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250408200916.93793-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 17:50:59 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWj91VbxRbb_pZ23ySbvjzzgfTgy83GXTEtC9CAS=d5Sg@mail.gmail.com>
-X-Gm-Features: ATxdqUGU1HbZIqRGMDrZbhA-dxUGjQxgUi_EpOym7TmGQkaFVWVIrulXG2lf2bU
-Message-ID: <CAMuHMdWj91VbxRbb_pZ23ySbvjzzgfTgy83GXTEtC9CAS=d5Sg@mail.gmail.com>
-Subject: Re: [PATCH v2 02/15] clk: renesas: r9a09g057: Add clock and reset
- entries for DSI and LCDC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415154724.GG9439@pendragon.ideasonboard.com>
 
-Hi Prabhakar,
+On Tue, Apr 15, 2025 at 06:47:26PM +0300, Laurent Pinchart wrote:
+> Hi Catalin,
+> 
+> On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
+> > Hi Jai,
+> > 
+> > This issue was already reported by Stefan. The problem is that I don't 
+> > have a Debix board to investigate.
+> > The main difference b/w WFI and cpu-pd-wait is that the first doesn't 
+> > call PSCI/TF-A. So, the issue looks to be related to some settings in 
+> > the TF-A.
+> 
+> Jai, are you using mainline U-Boot and TF-A, or a downstream version of
+> either (or both) ?
 
-On Tue, 8 Apr 2025 at 22:09, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add clock and reset entries for the DSI and LCDC peripherals.
->
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1->v2:
-> - No changes
+Actually, same question for Calatin :-)
 
-You did change CSDIV0_DIVCTL2 to the NO_RMW-variant...
+I'm running mainline U-Boot 2025.01 and TF-A rel_imx_5.4.70_2.3.6 (from
+https://github.com/nxp-imx/imx-atf) and don't seem to experience the
+issue:
 
-> --- a/drivers/clk/renesas/r9a09g057-cpg.c
-> +++ b/drivers/clk/renesas/r9a09g057-cpg.c
+# cat /sys/devices/system/cpu/cpu*/cpuidle/state1/disable
+0
+0
+0
+0
 
-> @@ -148,6 +182,12 @@ static const struct cpg_core_clk r9a09g057_core_clks[] __initconst = {
->         DEF_SMUX(".smux2_gbe0_rxclk", CLK_SMUX2_GBE0_RXCLK, SSEL0_SELCTL3, smux2_gbe0_rxclk),
->         DEF_SMUX(".smux2_gbe1_txclk", CLK_SMUX2_GBE1_TXCLK, SSEL1_SELCTL0, smux2_gbe1_txclk),
->         DEF_SMUX(".smux2_gbe1_rxclk", CLK_SMUX2_GBE1_RXCLK, SSEL1_SELCTL1, smux2_gbe1_rxclk),
-> +       DEF_FIXED(".plleth_lpclk_div4", CLK_DIV_PLLETH_LPCLK, CLK_PLLETH, 1, 4),
-> +       DEF_CSDIV(".plleth_lpclk", CLK_CSDIV_PLLETH_LPCLK, CLK_DIV_PLLETH_LPCLK,
-> +                 CSDIV0_DIVCTL2, dtable_16_128),
+$ ping debix
+PING debix.farm.ideasonboard.com (192.168.2.230) 56(84) bytes of data.
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=1 ttl=64 time=1.03 ms
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=2 ttl=64 time=0.800 ms
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=3 ttl=64 time=0.935 ms
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=4 ttl=64 time=0.902 ms
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=5 ttl=64 time=0.738 ms
+64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=6 ttl=64 time=0.939 ms
 
-The clock names look strange to me: "plleth_lpclk_div4" sounds like it is
-"plleth_lpclk" divided by four, but that is not the case here.
+> > What I don't get is why I don't see this issue neither on our IMX8MP 
+> > specific design nor on the EVK, which uses the same PHY as the Debix board.
+> >
+> > On 14/04/2025 14:07, Jai Luthra wrote:
+> > > On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
+> > >> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
+> > >>> So far, only WFI is supported on i.MX8mp platform. Add support for
+> > >>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
+> > >>> usage during runtime. This is a port from NXP downstream kernel.
+> > >>>
+> > > Since the introduction of this patch in mainline, I am facing sluggish
+> > > network performance with my Debix Model-A board with i.MX8mp SoC.
+> > >
+> > > The network latency jumps to >1s after almost every other packet:
+> > >
+> > > PING debix (10.0.42.5) 56(84) bytes of data.
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
+> > > ^C
+> > > --- debix ping statistics ---
+> > > 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
+> > > rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
+> > > darkapex at freya in ~
+> > >
+> > > If I revert the patch, or disable the deeper cpuidle state through
+> > > sysfs, the issue goes away.
+> > >
+> > > # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
+> > >
+> > > PING debix (10.0.42.5) 56(84) bytes of data.
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
+> > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
+> > > ^C
+> > > --- debix ping statistics ---
+> > > 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
+> > > rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
+> > >
+> > >>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+> > >>
+> > >> Applied, thanks!
 
-> +
-> +       DEF_PLLDSI_DIV(".plldsi_sdiv2", CLK_PLLDSI_SDIV2, CLK_PLLDSI,
-> +                      CSDIV1_DIVCTL2, dtable_2_32),
->
->         DEF_DDIV(".pllgpu_gear", CLK_PLLGPU_GEAR, CLK_PLLGPU, CDDIV3_DIVCTL1, dtable_2_64),
->
+-- 
+Regards,
 
-> --- a/drivers/clk/renesas/rzv2h-cpg.h
-> +++ b/drivers/clk/renesas/rzv2h-cpg.h
-
-> @@ -117,6 +118,8 @@ struct smuxed {
->
->  #define CSDIV0_DIVCTL0 DDIV_PACK(CPG_CSDIV0, 0, 2, CSDIV_NO_MON)
->  #define CSDIV0_DIVCTL1 DDIV_PACK(CPG_CSDIV0, 4, 2, CSDIV_NO_MON)
-> +#define CSDIV0_DIVCTL2 DDIV_PACK_NO_RMW(CPG_CSDIV0, 8, 2, CSDIV_NO_MON)
-
-The documentation says:
-
-    DIVCTL2[3:2] is reserved.
-    When writing, read modify write is needed.
-
-So the NO_RMW-logic seems to be inverted?
-
-> +#define CSDIV1_DIVCTL2 DDIV_PACK(CPG_CSDIV1, 8, 4, CSDIV_NO_MON)
->
->  #define SSEL0_SELCTL2  SMUX_PACK(CPG_SSEL0, 8, 1)
->  #define SSEL0_SELCTL3  SMUX_PACK(CPG_SSEL0, 12, 1)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
