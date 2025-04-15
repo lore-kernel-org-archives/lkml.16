@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1212918E4;
-	Tue, 15 Apr 2025 10:43:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1A729292E;
+	Tue, 15 Apr 2025 10:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713823; cv=none; b=tjHhVNt5DxdOZ9QtTE8bMrn86DKgFEFAKZ8oaKSJuxVEjj+PnhVVqXqDt6WugeZ+mv/Py2QKTLqHWjUYrqP+ONdjr4BwtjPH5kHeWKGT8y/BZtuESdMjlkHL2oJr5V2Fle5A/G63ECge0xA7+wf/ixYVZb3BCINBCM1/BonInoA=
+	t=1744713826; cv=none; b=UUA+0WISFy2oVQwq00Yqp/to+MnyfJHzkLsavyHJWRWGDAkyUETlDTsXweWibcPg51h53Cs0ARsqC8TTaREZYCSwoQMyf/vJJSdrbKoAcc9i6O1azC6M3cts81iZqfO6wCUo9Bn++33VI6UPxO/XOrTb6Hjet5sQNLKer8pO/Ro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713823; c=relaxed/simple;
-	bh=r8XjHIUpdFze0aP1XI8TvJSSXCRQLWUsHj0RVTJ30gw=;
+	s=arc-20240116; t=1744713826; c=relaxed/simple;
+	bh=lO1tVBaGS5QiIgrHjUQoCiRTe0+qk8VZWC3xyyFqbFU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kfNurcOtJ1+vs0mfFGeqrnSt3b3tIMQ5Q8iQLLXASxBpI4eVYpRxAFmjw491CyLk6wop4PP1pNDC2nRdtFHpwhq/ajH8q5V2GGJL9PYigE+qE2jsGFZ9yQpqTcZJiJVoxqZMRkwwHz2rPMkCmbdZIiTs+Efaq/gthUkhpDhK4BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qm+AtJaD; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=BOJNhqWPXsQrXwA9Mxh0Q7OLUIAyR4pGHo4u74Q8vuYCOMwy25sP1OIZllf5dr5grSjGbfSy2G/Bl8UlLHFj1y4sqTTcA7DKGXp1EONfOh850bUdawdgAyF/IV1Xuyjtrsnu7pV5hh5TxMIK0I0ITyhpmHXT0mka00ioZUqbvKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OXHq3TWC; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qm+AtJaD"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OXHq3TWC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744713819;
-	bh=r8XjHIUpdFze0aP1XI8TvJSSXCRQLWUsHj0RVTJ30gw=;
+	s=mail; t=1744713823;
+	bh=lO1tVBaGS5QiIgrHjUQoCiRTe0+qk8VZWC3xyyFqbFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qm+AtJaDf8+LfMdeAsgBYaWD188DRKOH1j7ZWJ29BNGg64xPx0m2RvqbvUv0EUyuj
-	 wqBf3gmBTifQbJxowjAbXZiEAUWxyGZfgVIRYt2Umrr7itGFpjLVpcjN1MVP9dZWQ3
-	 9mj0p/PN+VfxH74Sh9fdsWTHzWx+6ykkiDyP/AyK/69XhqdPt5EJ8L5SOnlSX5wmhQ
-	 E+PggJaX7QfkVoRZBCXsgHeFxzaQ6OY0eo+U4AALK7vuB2k/70IUqaHmp16ZUDeKGN
-	 8q9oCrrrQOtgTkLsORViFfNLKVUIUwHWA3C7f+pFT6PCBYrhsqZg+Kui72+M9/n2N6
-	 YObtFnUSQ1Rew==
+	b=OXHq3TWCIXqpX5NnUgs3vt7C9yfmVNpW6tcaoj091guGgCh2cjqEWQ78xFER6b/qP
+	 TYBK7G+pnf9gQo30Ec08KkM+qeTj2nPI+4n9u9AYJ2Vk/4/DQ7boPrnnT0qJuDJ8Lt
+	 vguEmRIaWNDARUPLXIdPj9CFplo8lsejO3+vWVuwiMqND/RsXQhUKFtqu64H9CanqM
+	 baZzmNC+4ml6RLsHtZoP9ctdXwiq7BMw/L7My/jrruA34xoEYzw8H/Js2bWN7rOOiH
+	 qNWsxRLLPmu12fshzvgGJ96Z+FA/kEqhngtQdnpPyLrUHZarwMIbVtBQVollexNiKv
+	 kRBlNrcPiLl+Q==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0F6B617E362B;
-	Tue, 15 Apr 2025 12:43:38 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9412C17E3640;
+	Tue, 15 Apr 2025 12:43:41 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
@@ -60,11 +60,10 @@ Cc: p.zabel@pengutronix.de,
 	lewis.liao@mediatek.com,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
-	jason-jh.lin@mediatek.com,
-	Alexandre Mergnat <amergnat@baylibre.com>
-Subject: [PATCH v9 06/23] drm/mediatek: mtk_hdmi: Convert to module_platform_driver macro
-Date: Tue, 15 Apr 2025 12:43:04 +0200
-Message-ID: <20250415104321.51149-7-angelogioacchino.delregno@collabora.com>
+	jason-jh.lin@mediatek.com
+Subject: [PATCH v9 08/23] drm/mediatek: mtk_hdmi: Disgregate function mtk_hdmi_audio_set_param()
+Date: Tue, 15 Apr 2025 12:43:06 +0200
+Message-ID: <20250415104321.51149-9-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
 References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
@@ -76,51 +75,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that all of the mtk_hdmi subdrivers are a platform driver on
-their own it is possible to remove the custom init/exit functions
-in this driver and just use the module_platform_driver() macro.
+As a cleanup, and in preparation for splitting common bits of this
+driver, disgregate the code in function mtk_hdmi_audio_set_param()
+to the beginning and end of function mtk_hdmi_audio_hw_params().
 
-While at it, also compress struct of_device_id entries and remove
-stray commas in mtk_hdmi_driver assignments.
+In a later commit, the hw_params callback function will also be
+disgregated so that the code will get two functions: one that
+performs the generic hdmi_audio_param copy, and one that performs
+IP specific setup, both of which will be called in the callback,
+allowing all of the non IP version specific code to get moved in
+a common file.
 
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 20 +-------------------
- 1 file changed, 1 insertion(+), 19 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index a6d719fa9017..68b1632a2d00 100644
+index 5a1552f5a519..be4b34d83db1 100644
 --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1784,25 +1784,7 @@ static struct platform_driver mtk_hdmi_driver = {
- 		.pm = &mtk_hdmi_pm_ops,
- 	},
- };
--
--static struct platform_driver * const mtk_hdmi_drivers[] = {
--	&mtk_hdmi_driver,
--};
--
--static int __init mtk_hdmitx_init(void)
--{
--	return platform_register_drivers(mtk_hdmi_drivers,
--					 ARRAY_SIZE(mtk_hdmi_drivers));
--}
--
--static void __exit mtk_hdmitx_exit(void)
--{
--	platform_unregister_drivers(mtk_hdmi_drivers,
--				    ARRAY_SIZE(mtk_hdmi_drivers));
--}
--
--module_init(mtk_hdmitx_init);
--module_exit(mtk_hdmitx_exit);
-+module_platform_driver(mtk_hdmi_driver);
+@@ -1045,20 +1045,6 @@ static void mtk_hdmi_audio_disable(struct mtk_hdmi *hdmi)
+ 	hdmi->audio_enable = false;
+ }
  
- MODULE_AUTHOR("Jie Qiu <jie.qiu@mediatek.com>");
- MODULE_DESCRIPTION("MediaTek HDMI Driver");
+-static int mtk_hdmi_audio_set_param(struct mtk_hdmi *hdmi,
+-				    struct hdmi_audio_param *param)
+-{
+-	if (!hdmi->audio_enable) {
+-		dev_err(hdmi->dev, "hdmi audio is in disable state!\n");
+-		return -EINVAL;
+-	}
+-	dev_dbg(hdmi->dev, "codec:%d, input:%d, channel:%d, fs:%d\n",
+-		param->aud_codec, param->aud_input_type,
+-		param->aud_input_chan_type, param->codec_params.sample_rate);
+-	memcpy(&hdmi->aud_param, param, sizeof(*param));
+-	return mtk_hdmi_aud_output_config(hdmi, &hdmi->mode);
+-}
+-
+ static int mtk_hdmi_output_set_display_mode(struct mtk_hdmi *hdmi,
+ 					    struct drm_display_mode *mode)
+ {
+@@ -1472,6 +1458,11 @@ static int mtk_hdmi_audio_hw_params(struct device *dev, void *data,
+ 	struct hdmi_audio_param hdmi_params;
+ 	unsigned int chan = params->cea.channels;
+ 
++	if (!hdmi->audio_enable) {
++		dev_err(hdmi->dev, "hdmi audio is in disable state!\n");
++		return -EINVAL;
++	}
++
+ 	dev_dbg(hdmi->dev, "%s: %u Hz, %d bit, %d channels\n", __func__,
+ 		params->sample_rate, params->sample_width, chan);
+ 
+@@ -1532,8 +1523,13 @@ static int mtk_hdmi_audio_hw_params(struct device *dev, void *data,
+ 
+ 	memcpy(&hdmi_params.codec_params, params,
+ 	       sizeof(hdmi_params.codec_params));
++	memcpy(&hdmi->aud_param, &hdmi_params, sizeof(hdmi_params));
++
++	dev_dbg(hdmi->dev, "codec:%d, input:%d, channel:%d, fs:%d\n",
++		hdmi_params.aud_codec, hdmi_params.aud_input_type,
++		hdmi_params.aud_input_chan_type, hdmi_params.codec_params.sample_rate);
+ 
+-	mtk_hdmi_audio_set_param(hdmi, &hdmi_params);
++	mtk_hdmi_aud_output_config(hdmi, &hdmi->mode);
+ 
+ 	return 0;
+ }
 -- 
 2.49.0
 
