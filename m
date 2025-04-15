@@ -1,113 +1,135 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06FD28A1DE;
-	Tue, 15 Apr 2025 12:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C1618DF8D;
+	Tue, 15 Apr 2025 12:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719675; cv=none; b=WwRaJKc2ZNQK58sGdMwzl509W+DRixaU/vhEcYkRusWEJ+ogElMX7YzC8vLM+404S6F+8uRtSY8g9DA7RRUuBQ2N5RACRCh7aF9nJix7wQbVZM0e3kCVxL+Jwqa48LNMzy/hc1QlmtJ+niqdCytmR7RVfhw0JiauxC+i4d28eaM=
+	t=1744719697; cv=none; b=lqy49FbPMuYGvxp8Cfe7K9iOmbCGGNLZlMBPZlHx1Vl53UMOti216tjCgGGkgeN8/bvTddlXRt8+6ADYmCUuKm8CS6xTg12Yz9/VMmfs3BgPyNQomknDqHMvpup5WGgOaQ5BJhsH1lV8Pk7VojiGDBZYfeYyx4f39dPbUGkjx1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719675; c=relaxed/simple;
-	bh=SarEd5mR20idHoJNvSbnPeVnnEjWVIZIGYfMWjf11Fw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z/fbdSC+nm/PFrp/N9naQPICRD9Q3nmQqh4Ly7C0X/z/wqAi5uzgbswAeN11DHppOb8Af2JP4lUzSQANHfJTp1gPL0Ewl8YxNipLvKkm43Vlp0FDGdWrkMU1I9kVKdL4dqkV4hFU/OE3vWZR8nIHOV2HhI7Sk7qRk4hmqbJBuIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAD3oD0vT_5n_OEBCQ--.19632S2;
-	Tue, 15 Apr 2025 20:21:04 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: arend.vanspriel@broadcom.com,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v4] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
-Date: Tue, 15 Apr 2025 20:20:01 +0800
-Message-ID: <20250415122001.3325-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744719697; c=relaxed/simple;
+	bh=G3XB6UzV4Lp7TDvalgUjF5IBx2asgbZze4/GQq/rx2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=psk0epAIaj4wjsSVZG0TGhFm4//K/a6N/jZF6mY/8lR/CtP4ubIQoLI+4+KYvolqrUNW0C2wvToQXYIV3cEBMw68ceMxZjgp78+U3zzWsjkL82ze8ovV3/8Z5Vq83HGVv5RXqfVeIseC2k2ax7KvlulY/ov+AwyMFP5cqkW7cIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=csSa2P4q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="csSa2P4q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53770C4CEE5;
+	Tue, 15 Apr 2025 12:21:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744719697;
+	bh=G3XB6UzV4Lp7TDvalgUjF5IBx2asgbZze4/GQq/rx2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=csSa2P4qCSf7BymqLXMDqrEtTT4mXJtk446y/cNdv8bF2Wj+ARbhPGZFABQexVVKE
+	 dT9uDIaxt71NgBlOyC+l76Vpk0+bTOal+wNRiI18hNZBjDdG7EaUVRn4dXHpKnM+gf
+	 ckhsX/grAd9u0g+AhtgWyGNWLUSiB+FON0ZFAejA=
+Date: Tue, 15 Apr 2025 14:21:33 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] cpuidle: psci: Transition to the faux device
+ interface
+Message-ID: <2025041515-duplex-recant-7235@gregkh>
+References: <20250318-plat2faux_dev-v2-0-e6cc73f78478@arm.com>
+ <20250318-plat2faux_dev-v2-2-e6cc73f78478@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAD3oD0vT_5n_OEBCQ--.19632S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4kuFWkAw1UCFWrJryUGFg_yoW8AFW8pr
-	4xXa90yFy8Wr1SganayrZxG3Z8K3Wktayvkay293s7ur4kCw10gr4rKFy09r4kCrWxC347
-	XFWUtF1DXr17GFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Xr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfUnhL0DUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCRANA2f+IlKYJQACsB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318-plat2faux_dev-v2-2-e6cc73f78478@arm.com>
 
-In brcmf_usb_dl_cmd(), the error logging is not enough to describe
-the error state. And some caller of the brcmf_usb_dl_cmd() does not
-handle its error. An error log in brcmf_usb_dl_cmd() is needed to
-prevent silent failure.
+On Tue, Mar 18, 2025 at 05:01:40PM +0000, Sudeep Holla wrote:
+> The PSCI cpuidle driver does not require the creation of a platform
+> device. Originally, this approach was chosen for simplicity when the
+> driver was first implemented.
+> 
+> With the introduction of the lightweight faux device interface, we now
+> have a more appropriate alternative. Migrate the driver to utilize the
+> faux bus, given that the platform device it previously created was not
+> a real one anyway. This will simplify the code, reducing its footprint
+> while maintaining functionality.
+> 
+> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/cpuidle/cpuidle-psci.c | 32 ++++----------------------------
+>  1 file changed, 4 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index 2562dc001fc1de69732ef28f383d2809262a3d96..5d4d6daed36d8540ba2ce3dc54a3180731b03d22 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -16,7 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/device/faux.h>
+>  #include <linux/psci.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/pm_runtime.h>
+> @@ -404,14 +404,14 @@ static int psci_idle_init_cpu(struct device *dev, int cpu)
+>   * to register cpuidle driver then rollback to cancel all CPUs
+>   * registration.
+>   */
+> -static int psci_cpuidle_probe(struct platform_device *pdev)
+> +static int psci_cpuidle_probe(struct faux_device *fdev)
+>  {
+>  	int cpu, ret;
+>  	struct cpuidle_driver *drv;
+>  	struct cpuidle_device *dev;
+>  
+>  	for_each_possible_cpu(cpu) {
+> -		ret = psci_idle_init_cpu(&pdev->dev, cpu);
+> +		ret = psci_idle_init_cpu(&fdev->dev, cpu);
+>  		if (ret)
+>  			goto out_fail;
+>  	}
+> @@ -431,28 +431,4 @@ static int psci_cpuidle_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> -static struct platform_driver psci_cpuidle_driver = {
+> -	.probe = psci_cpuidle_probe,
+> -	.driver = {
+> -		.name = "psci-cpuidle",
+> -	},
+> -};
+> -
+> -static int __init psci_idle_init(void)
+> -{
+> -	struct platform_device *pdev;
+> -	int ret;
+> -
+> -	ret = platform_driver_register(&psci_cpuidle_driver);
+> -	if (ret)
+> -		return ret;
+> -
+> -	pdev = platform_device_register_simple("psci-cpuidle", -1, NULL, 0);
+> -	if (IS_ERR(pdev)) {
+> -		platform_driver_unregister(&psci_cpuidle_driver);
+> -		return PTR_ERR(pdev);
+> -	}
+> -
+> -	return 0;
+> -}
+> -device_initcall(psci_idle_init);
+> +module_faux_driver(psci_cpuidle, psci_cpuidle_probe, NULL, true);
 
-Add error handling in brcmf_usb_dl_cmd() to log the command id and
-error code in the brcmf_usb_dl_cmd() fails. In this way, every
-invocation of the function logs a message upon failure.
+See, what does "true" mean here?
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v4: Fix spelling problem.
-v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
-v2: Remove redundant bailing out code.
+Why would you ever want "false"?
 
- .../wireless/broadcom/brcm80211/brcmfmac/usb.c   | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+thanks,
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index d06c724f63d9..a11a6d9f3c2b 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -744,12 +744,16 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- 	char *tmpbuf;
- 	u16 size;
- 
--	if ((!devinfo) || (devinfo->ctl_urb == NULL))
--		return -EINVAL;
-+	if (!devinfo || !devinfo->ctl_urb) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	tmpbuf = kmalloc(buflen, GFP_ATOMIC);
--	if (!tmpbuf)
--		return -ENOMEM;
-+	if (!tmpbuf) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
- 
- 	size = buflen;
- 	devinfo->ctl_urb->transfer_buffer_length = size;
-@@ -783,6 +787,10 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- finalize:
- 	kfree(tmpbuf);
- 	return ret;
-+
-+err:
-+	brcmf_err("dl cmd %u failed: err=%d\n", cmd, ret);
-+	return ret;
- }
- 
- static bool
--- 
-2.42.0.windows.2
-
+greg k-h
