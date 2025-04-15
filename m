@@ -1,69 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5366D24293C;
-	Tue, 15 Apr 2025 19:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B78424729F;
+	Tue, 15 Apr 2025 19:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744603; cv=none; b=biHNTAXj6b+9btq7Yd+SxvnTgpVBAmM60P15DVdUp0jB+aENMRIIvdxuYF8LJE5SpVk3FnMPjmAtpQUB4LuvHAKTPErbf/rsl6l2P9BaBeYeE/DpB+j1kzk58Y2U98o69qnXrK2WKdbf0FlHo8SvGzgQ0as7fwmhJtkGhY1QREs=
+	t=1744744615; cv=none; b=UJ5xVIuaqAOI7M/bOzM53eVBHZ/uiz0qhnC0scMUNatxen2I+S0FVh0dyl+gnI88bmfsIgsHmdPfFuUEBRtj8G31Vh2UOu1Y4FpP4H8C/BetG3jQz6Bxs7Eq0emFTz+YQB272pNhJ62IIaseLWSmsOivxhNAM5N26VgUJowmTyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744744603; c=relaxed/simple;
-	bh=MflXTqys6HJWP+NOX4G/u4i7B51/eL+CWgLhzzKn8Hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SvLogIAbcctFgfFWgOgiP5YEkqwStDX5YHsPcTR6bR0k140pZ3O40yNj0/ZIrSfoRGpnsVvZQyZzneqHCno0uM3LzYRywFbbL5tEbIYtD6dls5denwS0jzXobjjykLlmlV11hbr2C+SxyOMcMhu5oXFqiTJyq3Q/EZrDs7n2tSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jqMZ5o8U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744744615; c=relaxed/simple;
+	bh=7FbUO2HP+oVng33uxir9ExlN5OZMQvyixLWLLllHeGM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SFUxeX9lQUZCzvCA1/WDg2fLmUzSA42691RCIg7Nku4TqKT9rY97bptKocMriyBr7RcK9xSxpYfWI7ytP30l9jUKs6Eq+DhyUx4GCo87KBY5MHg2lWY8JQVP6UIP2Pd9qdL6b0pcDIMI8tC5B8QKVIaItCb23gKlwm0QqvJe/yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=OhleGdP6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SYjsNswk; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jqMZ5o8U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D313C4CEE7;
-	Tue, 15 Apr 2025 19:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744744601;
-	bh=MflXTqys6HJWP+NOX4G/u4i7B51/eL+CWgLhzzKn8Hk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jqMZ5o8UaVlfbFjfD4nOGKNtEiFXSy859sVi6f3fdd6o1u8E3ZTg3NT53QkCRvrvS
-	 bksYzyLLeiS4pLwg+EFzuIfow/z/Piam/pSOpzKs9aFCLwyy7y2fKkSO6V7Ly6DU3I
-	 QAuYy77YC/OKcn3gB6TG6MctJ55upddFG5UD4kAue8Ng8JUu/+9srM42dpQyss1MVS
-	 c9p7TTxPrMJIjxhlXvhnL+MmoQCJ4y/2uKbX3geQZMRDOllOOko80E3nYki25A16gY
-	 ygFLioPm1Izj9xbmtHu/wi/Oa2I0vHO8hQ2xG/eLFwtV1JEA2yaZNXNG+ekvmInucV
-	 LSXMMzHnGofsw==
-Date: Tue, 15 Apr 2025 14:16:39 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: mturquette@baylibre.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	conor+dt@kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, sboyd@kernel.org, krzk+dt@kernel.org,
-	geert+renesas@glider.be, magnus.damm@gmail.com,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] Revert "dt-bindings: clock: renesas,rzg2l-cpg:
- Update #power-domain-cells = <1> for RZ/G3S"
-Message-ID: <174474459922.828239.14816147248352723282.robh@kernel.org>
-References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
- <20250410140628.4124896-8-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="OhleGdP6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SYjsNswk"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 45CA011401BD;
+	Tue, 15 Apr 2025 15:16:51 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-05.internal (MEProxy); Tue, 15 Apr 2025 15:16:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744744611; x=1744831011; bh=wKWBw7tFzB
+	azlYNeBHUmp7sAO6mkfGaYnxWKhhTdSTo=; b=OhleGdP62z3vMHfQynGIRMZjQ2
+	1tgjaypsob+gUCX5p6/Lwi1xxIBNVyMkt/lYksvFUVd2ngr+PBsUkdP40Vz77tey
+	rh8C+bSojnssSc0N1lM/QMxMiyVxYk85DtH4SnoeWp34CykpFqkd93e3Tx99qTLe
+	G3CdSY0SiS2CwqPOlnKMvCNS6mO5vou9H6FfYwm6Gm9l7Pu6uSYOwNS2IrBrgldr
+	FozPB4X6sahsi88RyZE0eegwy9Hv7mKm3y6PSUyg58NEMCTuy9tE/NVNCpcTeuSA
+	HrjEBFvPpgz8hfr1i8G1KB+tSyxI6k9wWNNbe6KNUIFIjiEWV5gcif7gSS7A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744744611; x=1744831011; bh=wKWBw7tFzBazlYNeBHUmp7sAO6mkfGaYnxW
+	KhhTdSTo=; b=SYjsNswkWXkMO7Dqjezk5g06xQ7IYYe3pcLLni4C1vriCPnaEnp
+	E0fIkj6ycNSFJc8FXogtMKT7OwAGdX5Iq5F7SIwHs4g5aX/5gUj0BfoSi0WQdADV
+	0WreWBefVuQ47Np1UHYk2qJf0+gRSzA9MtBQ0Cn+NlzyqivopPsi+zT273SWMZSL
+	z0XROCkJFIruXSK2uW5/OywKptLaI6BObnicCAs3TU3ehkyc+iRJI5qnQSQrzOmZ
+	9m0fwYHeetV1pEMPRMiAbZLhFHmZzXmLoto5+tXAlJ+yqCpL/nakKABcy/jgT04c
+	2xrbsBW25VaeHb9L+OWFqsvtuY0sKNehcKA==
+X-ME-Sender: <xms:o7D-Z1AB1LT7Y_2Is1_ONOhrNafYKZnj6ECzWmiPDPRF9_w371lDTw>
+    <xme:o7D-ZziLKFUXQX5Rl9BsrKLuBEVCGurUPwnGOnNK6knCXkcGwGYk86zTByc23-nq_
+    PRucjQl7bBA-vc_7Wo>
+X-ME-Received: <xmr:o7D-ZwnvV44CFMdPyCIBhSyd2QrHrD0TCckJsPyIBaF4YCP-TB8iS4UtLGqSc16-f3XOOym2CTxiCpX9SVj6MV-7ksW0N4tXdbzTZmbWiJQzc634Cw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegfedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
+    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
+    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
+    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
+    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhirhhishhlrggshieskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:o7D-Z_xIYguSoj6HH8ylQkCrU3LIj2F6xeCHBeuaOaRYLraR4foU1g>
+    <xmx:o7D-Z6Q__zLvw0ddxJSwcb2IppapdUGTU8NSShYA8CmooNfz1BBmgw>
+    <xmx:o7D-ZyYN8m00PX7zZveWfUkXncQEpRZxM8ID4BcXNBvuJ3b3BvlR2w>
+    <xmx:o7D-Z7ROhc0PSAV1teCMh0xMh8HY_ZMa2Y_RJmAn4txdFTCkPuh71g>
+    <xmx:o7D-Z1k6-IilWNtlUxj2-M55E84rRV8o9Rr3i3BGcK-ZhxOFynyO9G1N>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Apr 2025 15:16:50 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6C2B711165EA;
+	Tue, 15 Apr 2025 15:16:50 -0400 (EDT)
+Date: Tue, 15 Apr 2025 15:16:50 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Jiri Slaby <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/11] vt: update gen_ucs_width.py to produce more space
+ efficient tables
+In-Reply-To: <f876fe1c-0058-4f96-b6de-9d0a597e1143@kernel.org>
+Message-ID: <4rn89r00-8294-092o-1n35-opopo1273qnp@syhkavp.arg>
+References: <20250410011839.64418-1-nico@fluxnic.net> <20250410011839.64418-10-nico@fluxnic.net> <f876fe1c-0058-4f96-b6de-9d0a597e1143@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410140628.4124896-8-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset=US-ASCII
 
+On Mon, 14 Apr 2025, Jiri Slaby wrote:
 
-On Thu, 10 Apr 2025 17:06:28 +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> On 10. 04. 25, 3:14, Nicolas Pitre wrote:
+> > From: Nicolas Pitre <npitre@baylibre.com>
+> > 
+> > Split table ranges into BMP (16-bit) and non-BMP (above 16-bit).
+> > This reduces the corresponding text size by 20-25%.
 > 
-> This reverts commit f33dca9ed6f41c8acf2c17c402738deddb7d7c28.
-> Since the configuration order between the individual MSTOP and CLKON bits
-> cannot be preserved with the power domain abstraction, drop the
-> Currently, there are no device tree users for #power-domain-cell = <1>.
+> I like this!
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->  .../bindings/clock/renesas,rzg2l-cpg.yaml      | 18 +-----------------
->  1 file changed, 1 insertion(+), 17 deletions(-)
+> > -struct interval {{
+> > +struct interval16 {{
+> > +	uint16_t first;
+> > +	uint16_t last;
+> > +}};
+> > +
+> > +struct interval32 {{
+> >    uint32_t first;
+> >    uint32_t last;
 > 
+> Actually, why not to use u16 and u32, respectively?
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+No particular reason. The kernel uses both so I picked the one that made 
+it easier for prototyping in user space. It is u16+u32 now.
 
+
+Nicolas
