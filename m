@@ -1,89 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B017148FE6
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B69148FE6;
+	Tue, 15 Apr 2025 15:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730210; cv=none; b=fWJxL2xFBdljx4qg5QKi86vhBkBp0htITv49VsvORUsVm+73Zf4fscK6jbDUiNZbbuFBYERyNj0Vu1YQ2aq5BB2wHpDCUNX2zEsbTHkxZqf6UhmPGj92zxwUQ3mYXwtavNlivBinU2fOB0jQ4F2vX+O6kRzD2Zo6jx6yzFoYuCE=
+	t=1744730291; cv=none; b=IQ0xwdk2zQNe3kAhtWGQjpXNn9GOCDvWNI7b5i4mRKgc1Q5AzeHcsQ4h/xWQQQnEILPNKy40Oj+V61Z4y3i/EH2nn1ScJH685AVq2QaofkJbvBf/Id3W8rtx/GRY2XgOQntnJg920M2TwejRWiY36H0/2hMqzZ+wf4qRrGWOSVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730210; c=relaxed/simple;
-	bh=7LSQEwmVoiHPmM17BefBKFp45q9gGv/SEiq9lDzA8CU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RJuHfUqbZar5TzJxpsuLik54T//BszmKz38klw2IrLwktCdOi0OG8HHRR6wPAdPmtjsaKUrC8Rqwd5D+Zs8fHEShxB+bqlTvX/7QGQSIbRj8X3urvTwbmW64yWXTTHLCU0vLxURdsnGWpSoLgZnjMajP6eQJDcMMd1lBtCUZveA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AGz5+YWT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744730291; c=relaxed/simple;
+	bh=qehmhwwNrGQ+HyIxMkgGTQGUuBUtxetxsKslqhmsroU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f59U96usPSBivixBEjrtX4ganGZXCe409EWEp+dyP2WNTvSrycjaoqd3QFIe2Vbd4NEn3y8ThyEURmgoIc56p72UzsPjc3DHs6O4rlq9oRxCvPCDFN3Xyg6Z2tADqkkWzAFhK7xh+LVz74onMiFbfj9aJUwA8o6t056Si0xQmRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDyMx45B; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AGz5+YWT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A14C4CEEB;
-	Tue, 15 Apr 2025 15:16:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744730209;
-	bh=7LSQEwmVoiHPmM17BefBKFp45q9gGv/SEiq9lDzA8CU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AGz5+YWToJQatsQAbyr1/ITxIkhQCVxdihMzelw89ef7JAXNODuXMX93q3/uZbgv8
-	 TZtldK5/eATugiIzSIctHrSb9AVwyiQeyyyPilooYP6Jq0HeydgAKXQTtNRQC/Xiqk
-	 rqSGaRPnKJYxIPS4J/qSUDQtBvyzIJtOZj3G6Ylw=
-Date: Tue, 15 Apr 2025 17:16:46 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Jinliang Zheng <alexjlzheng@gmail.com>
-Cc: alexjlzheng@tencent.com, linux-kernel@vger.kernel.org, tj@kernel.org
-Subject: Re: [PATCH kernfs 1/3] kernfs: switch global kernfs_idr_lock to
- per-fs lock
-Message-ID: <2025041506-punk-conflict-ffa3@gregkh>
-References: <2025041318-unnatural-caucasian-48d2@gregkh>
- <20250414032054.72526-1-alexjlzheng@tencent.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDyMx45B"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240b4de10eso10332275ad.1;
+        Tue, 15 Apr 2025 08:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744730289; x=1745335089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qehmhwwNrGQ+HyIxMkgGTQGUuBUtxetxsKslqhmsroU=;
+        b=iDyMx45BEOJbZKiUd2+oGDg4r0qR5qfuJzYR1fEGzw8c8DSxcUZlGdCiOTqglZgG7k
+         jBY9Sml06Pf+xBMfy7aiKQxYQT/eStMgl4RDxALE0NxSLRvZShiA5plH+igV2OMcviO4
+         7TCL95DFlc6f4hJXHxRsyLJixlmK/nIydJwY4w5Dm39Cq56EjiR+RScKkUx0nzAV/wXh
+         myAt60CyYNN1UB3pz9qrCVbZe1mX+Xp/pBb0DdEqSkzOyRUATyEnBPHiTVh2hD8jFLON
+         G0II3aYFUByBXtMw704E3L53pGGzG7VyQslCv5HAzegn2DyAmnfxVpIV+iP6ol1ISA4p
+         qyvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744730289; x=1745335089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qehmhwwNrGQ+HyIxMkgGTQGUuBUtxetxsKslqhmsroU=;
+        b=ff0YbR277wdH+Ih1T+AsZ2LA/T5ci7h9cWv+1gzuw1MYP5jPzx29nDQXip3UbaFHyy
+         tJkZKk6gi83AjUwp2itGmdqKE+WeR2c+c+sdMU/5Y1lPVJnTR+rwN9XAYtNCswXGR/RY
+         zfQV7ShWPUSqMlmWDPB3lmvmfTA+cqBoJadVkNoGS+kftLpudLxxC+NI0c2omIgGpQI3
+         TfzL45JutaevNbQsF8XecWmqDpDT1ZwAVwtKwqevtI5/H3f9JU930AqHSAxqR5xqVAmY
+         Vi1P8mhVwHj98JNBZN5Va6ghNdXaROYSPilqFt3MZ78i2bXT74yz8qG6N2hoCi6HKIme
+         Ajsg==
+X-Forwarded-Encrypted: i=1; AJvYcCV1ioxR6DRQE+/sIOolxiAsJqhzHK7qfVIXxxee/kzJKXs5sPtF/nhTlEYNfa/YOC13wDMOcFMyITUBUrE=@vger.kernel.org, AJvYcCVM2d5soCGHzUUaeyze9ZDJ+rAJM53zxebrT9lwBMLhYN1QqHxCjVX0FOSn/iF4svKfor4vpoqIUzwVLs63gV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwtrXiSu/CCza5X34GZhygInvzfB1INun+5Qw5Vx+I44CSPzbg
+	Em6rXVYfHvQ3WaVBc8zwe0fOZd8GHq4Y8xVCg9HtQiageeZU3gTo0sNPChNyAqlzohTp/SY1MW/
+	7HxvknvL3ts7UqUtDCLuQ/hdy0Ds=
+X-Gm-Gg: ASbGncuOyjdWnjUUEdZoONGKcwLtHTvTObUrR1HT+ZEcFaaTQmsh4eLpPop3ji8k6/y
+	i33NLu83PScMV5JJ6xD08je2n0gla9Jrz6jE/nR/SNOIA0Qo0YXVreYhZ9KmJvWZXi7ONcrG1ZW
+	D4kEIrv1QMk8UqeHHwh5JO2g==
+X-Google-Smtp-Source: AGHT+IEHeMo/joK7pGh3tWT75d/VxTzSSwE/yVc1lJE9aZmTNKXHXQayJMaK88ctlg3+JsdJDfj+WLfpHEeoXtsYIDU=
+X-Received: by 2002:a17:902:ef02:b0:215:435d:b41a with SMTP id
+ d9443c01a7336-22bea49d0abmr86657545ad.1.1744730288935; Tue, 15 Apr 2025
+ 08:18:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414032054.72526-1-alexjlzheng@tencent.com>
+References: <20250414131934.28418-1-dakr@kernel.org> <20250414131934.28418-2-dakr@kernel.org>
+ <Z_5KHVHh-Zs9HSlq@google.com> <Z_5UjWZIkPxTv1G0@cassiopeiae>
+In-Reply-To: <Z_5UjWZIkPxTv1G0@cassiopeiae>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 15 Apr 2025 17:17:56 +0200
+X-Gm-Features: ATxdqUGazTzfRT72LCmMNUIGnZQNT1S9YLlN1ZRwlb5Cl0BYQEmihY3ymbcW6Eg
+Message-ID: <CANiq72mHkdUhk+64NYVO3BvTbaPPsXAC7uAjyEr06LSxZooehw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] rust: types: add `Opaque::zeroed`
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, ojeda@kernel.org, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, david.m.ertman@intel.com, ira.weiny@intel.com, 
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@kernel.org, 
+	tmgross@umich.edu, airlied@gmail.com, acourbot@nvidia.com, 
+	jhubbard@nvidia.com, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 11:20:54AM +0800, Jinliang Zheng wrote:
-> > On Sat, Apr 12, 2025 at 07:50:54PM +0800, alexjlzheng@gmail.com wrote:
-> > > On Sat, 12 Apr 2025 08:12:22 +0200, gregkh@linuxfoundation.org wrote:
-> > > > On Sat, Apr 13, 2025 at 02:31:07AM +0800, alexjlzheng@gmail.com wrote:
-> > > > > From: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > > > 
-> > > > > The kernfs implementation has big lock granularity(kernfs_idr_lock) so
-> > > > > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
-> > > > > 
-> > > > > This patch switches the global kernfs_idr_lock to per-fs lock, which
-> > > > > put the spinlock into kernfs_root.
-> > > > > 
-> > > > > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
-> > > > > ---
-> > > > >  fs/kernfs/dir.c             | 14 +++++++-------
-> > > > >  fs/kernfs/kernfs-internal.h |  1 +
-> > > > >  2 files changed, 8 insertions(+), 7 deletions(-)
-> > > > 
-> > > > What kind of testing / benchmark did you do for this series that shows
-> > > > that this works, AND that this actually is measureable?  What workload
-> > > > are you doing that causes these changes to be needed?
-> > > 
-> > > Thank you for your reply. :)
-> > > 
-> > > We are trying to implement a kernfs-based filesystem that will have
-> > > multiple instances running at the same time, i.e., multiple kernfs_roots.
-> > 
-> > I don't think that kernfs is meant for that very well, what is that
-> > filesystem going to be for?
-> 
-> Thank you for your reply. :)
-> 
-> Similar to cgroupfs and sysfs, it is used to export the status and configurations
-> of some kernel variables in hierarchical modes of the kernel. The only difference
-> is that it may have many instances, that is, many kernfs_roots.
+On Tue, Apr 15, 2025 at 2:44=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> @Miguel: Can I get an ACK for taking this one through the nova tree?
 
-Let's see that filesystem first please before determining more, as you
-would be adding a new user/kernel api that we all need to argue about :)
+Sure, please go ahead.
 
-Anyway, for the 2 patches that Tejun agrees with here, can you resend
-just them?
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
-thanks,
+Thanks!
 
-greg k-h
+Cheers,
+Miguel
