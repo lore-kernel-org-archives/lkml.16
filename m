@@ -1,148 +1,115 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAE5022DFB1;
-	Tue, 15 Apr 2025 18:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDF923315F;
+	Tue, 15 Apr 2025 18:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744743020; cv=none; b=ksonfkM1dE0alk5bp7WVHqxoaiRRPGJFFx/G3SzlC+yDvmUukxIp2fhN8gyNr8yovdMP7X7wP335iBKVLhxdfWdkGv9rNushH+FqWVQLY0a3Gf9HXn1+9e/w+NNM4+dwVXK4QV4p0pR/QMk6DJX+P4EqUQalLVzDC9ocFnLtIWA=
+	t=1744743021; cv=none; b=cee5DpMtDXxVYQL+D9QGJqJztc10IPhuGJ1TQF/xjamX+k9z0CAQXtAL9L2xg+Raf0LlrXQ/UAGdMaRs+d2a3RgPowyoi/yHzcPHYfXDqTmLWbLknWLhNbU6903Cepngfez2TeyUXcXKzDyvBIZNend2AQxQo/zPkjknQWRlv+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744743020; c=relaxed/simple;
-	bh=1vq/iYdbkX8WMkFqiHBNY/g7/r4iMpTcSkW0w4OHcaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tVWZYqWvPHLYVYobIPCDwgG5cWXfTKQG+5SZcXvCVkzzKASveiv1/9FUaceSv3MEJFFyJA/KJkvtmr3WrrywvLmsw/9erNhMEAtW41rv6lj+EsLjWPv7u8jZZIXzINqo98b/aqdxNpa6Ao0PuL56g10rnCbgQjDADYU3/oxNiI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CBC31756;
-	Tue, 15 Apr 2025 11:50:16 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DEAFF3F694;
-	Tue, 15 Apr 2025 11:50:16 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: peterhuewe@gmx.de,
-	jarkko@kernel.org,
-	jgg@ziepe.ca,
-	sudeep.holla@arm.com,
-	stuart.yoder@arm.com,
-	sgarzare@redhat.com
-Cc: linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v5 1/2] tpm_ffa_crb: access tpm service over FF-A direct message request v2
-Date: Tue, 15 Apr 2025 19:50:12 +0100
-Message-Id: <20250415185013.2387369-2-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415185013.2387369-1-yeoreum.yun@arm.com>
-References: <20250415185013.2387369-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1744743021; c=relaxed/simple;
+	bh=Wh9+r6C8QnFxVuYP0gI7fEkh16Fr4uto4HN5gD1lmc8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a068dNKuNxayUNUoyqYf8HKfb3ZZPwvwtaypcxXs3HUV3xd+gULSWMlK0rFTJ3L8ogslBgFq2EDNN8b8AQph0RU9MXW+QkE9dHrmbYkM+6fU0ZEwF3WKpUlN0zCi8Bdek9WsYzW7+L8gX6Ff8x73mgM3rXXjFyXTtPZZ74vNEZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BI7MZsmW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BI7MZsmW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62A6AC4CEE7;
+	Tue, 15 Apr 2025 18:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744743019;
+	bh=Wh9+r6C8QnFxVuYP0gI7fEkh16Fr4uto4HN5gD1lmc8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BI7MZsmWrpStN+UFK57Vh+JYaiGy27sqvN9DyRh0TD3VVvAZG7/+W8ONOyhbBNPL7
+	 r5agAYMUXNtsaU4F3qgfjATl+sQFxMa1K5b0foC6mvTp2rdeehWoCf1b+YVR9aTzbD
+	 P3gM3+K7KljWg7ssH7OR38k8U3d4rV0iLd1CHbjsX35V+V9IcAyOEko8feTh4XsYjT
+	 NRNlNumc3Zu2Hk3O8Rnt6fTS8x+VGdJJnX7BgmD6Wzv7qjLQA/xky4Zu4QUhTgmX5w
+	 znDuosk8B0A/sWelciOSoRzCiIoFbiowIEShqIenTJLat9kMu8z1HNen8IwUYhIeJJ
+	 gsf0HIqAk0wZw==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/8] ref_tracker: add ability to register a debugfs file
+ for a ref_tracker_dir
+Date: Tue, 15 Apr 2025 14:49:38 -0400
+Message-Id: <20250415-reftrack-dbgfs-v2-0-b18c4abd122f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEKq/mcC/13MQQ6CMBCF4auQWVvTdqgQV97DsCgwLQ2mNVNCN
+ IS7W0ncuPxn8r4NMnGgDNdqA6Y15JBiCX2qYJhs9CTCWBq01EbWCgWTW9gOsxh777LA5tL0KJG
+ 0s1BGz/IPrwO8d6WnkJfE78Nf1ff6o+p/alVCCifRtKZFrSXeZuJIj3NiD92+7x8pbae5rQAAA
+ A==
+X-Change-ID: 20250413-reftrack-dbgfs-3767b303e2fa
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Jeff Layton <jlayton@kernel.org>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1896; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=Wh9+r6C8QnFxVuYP0gI7fEkh16Fr4uto4HN5gD1lmc8=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBn/qphBv0yiZyz25NAHCFtGVV8gUZ7l4UWmbc7B
+ +j56syFNuuJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ/6qYQAKCRAADmhBGVaC
+ FfjaD/48Cd1Nn25CCF68ks0mWwqMtvSe77wgEdeZQlx75JAipkoc5V/CFnVddb326XiSs594Nqx
+ ECjL0Z0ZKnIYbxSf91nZuAX7XErhEv0vKK1iwvMQ5gTFpIff7V+pftQdBxKKKfMffEks9cugesI
+ vT/+KAv66lh0Q6aTx67jj4Z/hXKVA3DRtuWcHOcNG3WxpmLaFDRp5OcTOkRutpNP2JchDQlPXVm
+ RBtAcTqB8Mfjk+sUfsPsXd4+rPlxkKTBpufgHDXkfL2qr5AjR1yaPh9a8Hyxsz3gpOFcUY2u5jA
+ WbcVHOUYvU620P0DgDq6Q+y7H5Ljgun8cmuTJmR8zmBsU528wZN1PNF+43KTMon+wwlx1FYL1Am
+ yN+6pk92KZMKPGG27aL29g00Aj0QAoU6HblcJlSWyM2OKx3/TWW3xxUahhphZ76qoaikuO+yUJi
+ UmsTmUqZHaIEMIwKRLE8besrQHqnbE07oEg/L2A/uw1MGiSDYks7jX6z72+5T+8KOCIVhRS3cjh
+ Hp98Hxh2R5QAHdbsmTKugmAF/IDVvRqs7RpMii3k+RcD/f3kXrGPolu62SCIBiWkfIpOXPmRM1P
+ 0CYyivox08stucvvJiwRhDQkiPFWI9nOM57mG/uZP1stpTGxPLXZzbtFRlEDsLM9D7BAIdhPNxq
+ W4FqTQpXu7rYIpA==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-For secure partition with multi service, tpm_ffa_crb can access tpm
-service with direct message request v2 interface according to chapter 3.3,
-TPM Service Command Response Buffer Interface Over FF-A specificationi v1.0 BET.
+I had previously sent some patches to add debugfs files for the net
+namespace refcount trackers, but Andrew convinced me to make this more
+generic and better-integrated into the ref_tracker infrastructure.
 
-This patch reflects this spec to access tpm service over
-FF-A direct message request v2 ABI.
+This adds a new ref_tracker_dir_debugfs() call that subsystems can call
+to finalize the name of their dir and register a debugfs file for it.
+The last two patches add these calls for the netns and netdev
+ref_trackers.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- drivers/char/tpm/tpm_crb_ffa.c | 55 ++++++++++++++++++++++++----------
- 1 file changed, 40 insertions(+), 15 deletions(-)
+Changes in v2:
+- Add patch to do %pK -> %p conversion in ref_tracker.c
+- Pass in output function to pr_ostream() instead of if statement
+- Widen ref_tracker_dir.name to 64 bytes to accomodate unique names
+- Eliminate error handling with debugfs manipulation
+- Incorporate pointer value into netdev name
+- Link to v1: https://lore.kernel.org/r/20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 3169a87a56b6..fed775cf53ab 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -105,7 +105,10 @@ struct tpm_crb_ffa {
- 	u16 minor_version;
- 	/* lock to protect sending of FF-A messages: */
- 	struct mutex msg_data_lock;
--	struct ffa_send_direct_data direct_msg_data;
-+	union {
-+		struct ffa_send_direct_data direct_msg_data;
-+		struct ffa_send_direct_data2 direct_msg_data2;
-+	};
- };
- 
- static struct tpm_crb_ffa *tpm_crb_ffa;
-@@ -185,18 +188,34 @@ static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
- 
- 	msg_ops = tpm_crb_ffa->ffa_dev->ops->msg_ops;
- 
--	memset(&tpm_crb_ffa->direct_msg_data, 0x00,
--	       sizeof(struct ffa_send_direct_data));
--
--	tpm_crb_ffa->direct_msg_data.data1 = func_id;
--	tpm_crb_ffa->direct_msg_data.data2 = a0;
--	tpm_crb_ffa->direct_msg_data.data3 = a1;
--	tpm_crb_ffa->direct_msg_data.data4 = a2;
-+	if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-+		memset(&tpm_crb_ffa->direct_msg_data2, 0x00,
-+		       sizeof(struct ffa_send_direct_data2));
-+
-+		tpm_crb_ffa->direct_msg_data2.data[0] = func_id;
-+		tpm_crb_ffa->direct_msg_data2.data[1] = a0;
-+		tpm_crb_ffa->direct_msg_data2.data[2] = a1;
-+		tpm_crb_ffa->direct_msg_data2.data[3] = a2;
-+
-+		ret = msg_ops->sync_send_receive2(tpm_crb_ffa->ffa_dev,
-+				&tpm_crb_ffa->direct_msg_data2);
-+		if (!ret)
-+			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data2.data[0]);
-+	} else {
-+		memset(&tpm_crb_ffa->direct_msg_data, 0x00,
-+		       sizeof(struct ffa_send_direct_data));
-+
-+		tpm_crb_ffa->direct_msg_data.data1 = func_id;
-+		tpm_crb_ffa->direct_msg_data.data2 = a0;
-+		tpm_crb_ffa->direct_msg_data.data3 = a1;
-+		tpm_crb_ffa->direct_msg_data.data4 = a2;
-+
-+		ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
-+				&tpm_crb_ffa->direct_msg_data);
-+		if (!ret)
-+			ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
-+	}
- 
--	ret = msg_ops->sync_send_receive(tpm_crb_ffa->ffa_dev,
--			&tpm_crb_ffa->direct_msg_data);
--	if (!ret)
--		ret = tpm_crb_ffa_to_linux_errno(tpm_crb_ffa->direct_msg_data.data1);
- 
- 	return ret;
- }
-@@ -231,8 +250,13 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
- 
- 	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
- 	if (!rc) {
--		*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
--		*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
-+			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
-+			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
-+		} else {
-+			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+			*minor = CRB_FFA_MINOR_VERSION(tpm_crb_ffa->direct_msg_data.data2);
-+		}
- 	}
- 
- 	return rc;
-@@ -277,7 +301,8 @@ static int tpm_crb_ffa_probe(struct ffa_device *ffa_dev)
- 
- 	tpm_crb_ffa = ERR_PTR(-ENODEV); // set tpm_crb_ffa so we can detect probe failure
- 
--	if (!ffa_partition_supports_direct_recv(ffa_dev)) {
-+	if (!ffa_partition_supports_direct_recv(ffa_dev) &&
-+	    !ffa_partition_supports_direct_req2_recv(ffa_dev)) {
- 		pr_err("TPM partition doesn't support direct message receive.\n");
- 		return -EINVAL;
- 	}
+---
+Jeff Layton (8):
+      ref_tracker: don't use %pK in pr_ostream() output
+      ref_tracker: add a top level debugfs directory for ref_tracker
+      ref_tracker: have callers pass output function to pr_ostream()
+      ref_tracker: allow pr_ostream() to print directly to a seq_file
+      ref_tracker: add ability to register a file in debugfs for a ref_tracker_dir
+      net: add ref_tracker_dir_debugfs() calls for netns refcount tracking
+      ref_tracker: widen the ref_tracker_dir.name field
+      net: register debugfs file for net_device refcnt tracker
+
+ include/linux/ref_tracker.h |  15 ++++-
+ lib/ref_tracker.c           | 153 +++++++++++++++++++++++++++++++++++++++-----
+ net/core/dev.c              |   6 +-
+ net/core/net_namespace.c    |  34 +++++++++-
+ 4 files changed, 190 insertions(+), 18 deletions(-)
+---
+base-commit: 695caca9345a160ecd9645abab8e70cfe849e9ff
+change-id: 20250413-reftrack-dbgfs-3767b303e2fa
+
+Best regards,
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Jeff Layton <jlayton@kernel.org>
 
