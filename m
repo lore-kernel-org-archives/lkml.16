@@ -1,80 +1,169 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84B3194C86;
-	Tue, 15 Apr 2025 07:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADBD194C86;
+	Tue, 15 Apr 2025 07:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703409; cv=none; b=rGEQXQbqfD6hFGIXy8bXuL+A2Hw+UWTLxK0WO1yx44KpR5rrrN62tC3pC77qZRrPYBIPUGnzgym7zzw5IKnFd+DX9fKAi4Dd6/9NX9AvL4ykM7ylOKEhjkgjvD1BQN/Z/799kMkUJmTLK/nZ8R4Z8TdVG9UlofQlzaBnqCPvLW8=
+	t=1744703447; cv=none; b=kfIB8VW5ZunMcQdXw8lkP7/LQB1XA9u/8WTZwnTSXrudhvXTlc2MsRmuQ7xbe95YAT74Z/yIUqNuD3kNC+mo0rEbGwnLEJmB1I802Syfxs7ftfiHrLvPbAKRnt3BYdYfDvWyA6l3lr6X9vFPoX5lhLhqcDc2oXPkVCzaz9JPQ5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703409; c=relaxed/simple;
-	bh=ZSydm9Jlx+I1aH900HrLtzFJRplcxK22NCacX8LxP4s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=YqwU725Au27WtiU7qAS/TufRbCtdfLxq6NnoH94LRo/eTaBBu1NCchnc1wugeF/Ha+9oDigX3k0ojua5S9FxKDIA/bUiqGdyvjIRAmxa/FkJIPZSY0zaVl2q24XxkxKSwHlVVuQxw13V/hGDkrWTta83k7mouNKrECm7cmuG2j8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WWI9D+B9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744703447; c=relaxed/simple;
+	bh=qC/0FXLpOvgrDoBUcYckTUw8tEHEKThRr/hZUIioUQo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GLVriRAhq1Mh70+rtrvcqBl4Kt2gtCpTGhIRyiKqOERiHDIVpJXFrpQUXZHBngtcSnj6gKj0m0pUu1ya6IXWtb/u4ulc+OiBV3Ff5WL+W/7cnfPX0Vn+VPaNg+eER95z1jM8v+DDW5J/kM4zyBRrtUnfbxn/2Gb3Dgaql6637+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=exI9TlEL; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WWI9D+B9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744703405;
-	bh=ZSydm9Jlx+I1aH900HrLtzFJRplcxK22NCacX8LxP4s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=WWI9D+B9tLo4kylUCqMTuhqvPIDHD7Qzag0J/WLsfI1ZLdrb2taQv8V5YscJjQK4/
-	 MNxKLWcZKjAdFQBV6JuK/pXIrDLr23zsmLp0O2ykMMAlDm1OE6+Fp8TX7l8bpCOLCR
-	 AJhEz8Xu74ppF+hz/6NL7FGvSerfwn6j21imTQiMAX/AFLH3N5Z08/BqgkHCSJpGcX
-	 Y+ifpIQqN3WrM7ozbTKF5wOowgM9sUr3QVfKW+uOg/mMNbT3hYp5E7kBbfZIIs2cQH
-	 zNg5l8ljLiQrLcN2Lh9XxtAaqmwCQyEuBynbVptCmofRiIXp/sNiP7VjoZT0IDpvCu
-	 xmjNStevdO9WA==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F1F2417E05EA;
-	Tue, 15 Apr 2025 09:50:04 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>, 
- Macpaul Lin <macpaul@gmail.com>, Sen Chu <sen.chu@mediatek.com>, 
- Chris-qj chen <chris-qj.chen@mediatek.com>, 
- MediaTek Chromebook Upstream <Project_Global_Chrome_Upstream_Group@mediatek.com>, 
- Chen-Yu Tsai <wenst@chromium.org>, Tommy Chen <tommyyl.chen@mediatek.com>
-In-Reply-To: <20240925080515.16377-1-macpaul.lin@mediatek.com>
-References: <20240925080515.16377-1-macpaul.lin@mediatek.com>
-Subject: Re: [PATCH v3] arm64: dts: mediatek: mt8195: Add power domain for
- dp_intf0
-Message-Id: <174470340491.18036.10677308762787483666.b4-ty@collabora.com>
-Date: Tue, 15 Apr 2025 09:50:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="exI9TlEL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744703445; x=1776239445;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=qC/0FXLpOvgrDoBUcYckTUw8tEHEKThRr/hZUIioUQo=;
+  b=exI9TlELx6s/q0eLIsBv5uVr3cgUt+CS9COZU2ZllhO9wxbhCUjhCpDH
+   ONPRdo8LQ7bhLRKasn2X2cDGAuwsDjaZcOm/H5sbVYyQWnjkMVwKqrRqW
+   lGDh6LF7YNNT1QA+bNJA/jxiM6dY//YlY5yQZWf7uXBmAIUtrgUJZ2KJM
+   nyRwrwicg+zaGqXkI4u6f6mTyfKp+M/zcbMM/BcUP7Du4SWfcgTfLnsTu
+   3N4A/zH+QITqEpCC/LJxBFw1aEjDYYFAkUGzJB+Es8KCrgJDjTRRk+Bop
+   eO9xiooL7+Al67ySyH99j0Xo5p4LY+2T663Eoq6t1Fw+ZpIxMi37fLdyW
+   w==;
+X-CSE-ConnectionGUID: qVRgBJCqTVWEF0XLioWV2w==
+X-CSE-MsgGUID: iYF0jDjMQCqwM9qd0WsXIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46329978"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46329978"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:49:36 -0700
+X-CSE-ConnectionGUID: rQ4ZqfbXTIuwZv8Nk1Ab8Q==
+X-CSE-MsgGUID: ecXfQhzOSzu0xo52qs9ShA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129809381"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.249])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:49:32 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, Jonathan Corbet
+ <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, "Gustavo
+ A. R. Silva" <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell
+ King <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
+In-Reply-To: <Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1744106241.git.mchehab+huawei@kernel.org>
+ <871pu1193r.fsf@trenco.lwn.net> <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
+ <87mscibwm8.fsf@trenco.lwn.net> <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+ <Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
+Date: Tue, 15 Apr 2025 10:49:29 +0300
+Message-ID: <87v7r5sw3a.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-On Wed, 25 Sep 2024 16:05:15 +0800, Macpaul Lin wrote:
-> During inspecting dtbs_check errors, we found the power domain
-> setting of DPI node "dp_intf0" is missing. Add power domain setting
-> to "MT8195_POWER_DOMAIN_VDOSYS0" for "dp_intf0"
-> 
-> 
+On Tue, 15 Apr 2025, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
+> On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote:
+>> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
+>> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:
+>> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
+>> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>> > >> 
+>> > >> > This changeset contains the kernel-doc.py script to replace the verable
+>> > >> > kernel-doc originally written in Perl. It replaces the first version and the
+>> > >> > second series I sent on the top of it.
+>> > >> 
+>> > >> OK, I've applied it, looked at the (minimal) changes in output, and
+>> > >> concluded that it's good - all this stuff is now in docs-next.  Many
+>> > >> thanks for doing this!
+>> > >> 
+>> > >> I'm going to hold off on other documentation patches for a day or two
+>> > >> just in case anything turns up.  But it looks awfully good.
+>> > >
+>> > > This started well, until it becomes a scripts/lib/kdoc.
+>> > > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
+>> > > "disgusting turd" )as said by Linus) in the clean tree.
+>> > >
+>> > > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
+>> > 
+>> > If nothing else, "make cleandocs" should clean it up, certainly.
+>> > 
+>> > We can also tell CPython to not create that directory at all.  I'll run
+>> > some tests to see what the effect is on the documentation build times;
+>> > I'm guessing it will not be huge...
+>> 
+>> I do not build documentation at all, it's just a regular code build that leaves
+>> tree dirty.
+>> 
+>> $ python3 --version
+>> Python 3.13.2
+>> 
+>> It's standard Debian testing distribution, no customisation in the code.
+>> 
+>> To reproduce.
+>> 1) I have just done a new build to reduce the churn, so, running make again does nothing;
+>> 2) The following snippet in shell shows the issue
+>> 
+>> $ git clean -xdf
+>> $ git status --ignored
+>> On branch ...
+>> nothing to commit, working tree clean
+>> 
+>> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+>> make[1]: Entering directory '...'
+>>   GEN     Makefile
+>>   DESCEND objtool
+>>   CALL    .../scripts/checksyscalls.sh
+>>   INSTALL libsubcmd_headers
+>> .pylintrc: warning: ignored by one of the .gitignore files
+>> Kernel: arch/x86/boot/bzImage is ready  (#23)
+>> make[1]: Leaving directory '...'
+>> 
+>> $ touch drivers/gpio/gpiolib-acpi.c
+>> 
+>> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+>> make[1]: Entering directory '...'
+>>   GEN     Makefile
+>>   DESCEND objtool
+>>   CALL    .../scripts/checksyscalls.sh
+>>   INSTALL libsubcmd_headers
+>> ...
+>>   OBJCOPY arch/x86/boot/setup.bin
+>>   BUILD   arch/x86/boot/bzImage
+>> Kernel: arch/x86/boot/bzImage is ready  (#24)
+>> make[1]: Leaving directory '...'
+>> 
+>> $ git status --ignored
+>> On branch ...
+>> Untracked files:
+>>   (use "git add <file>..." to include in what will be committed)
+>> 	scripts/lib/kdoc/__pycache__/
+>> 
+>> nothing added to commit but untracked files present (use "git add" to track)
+>
+> FWIW, I repeated this with removing the O=.../out folder completely, so it's
+> fully clean build. Still the same issue.
+>
+> And it appears at the very beginning of the build. You don't need to wait to
+> have the kernel to be built actually.
 
-Applied to v6.15-next/dts64, thanks!
+kernel-doc gets run on source files for W=1 builds. See Makefile.build.
 
-[1/1] arm64: dts: mediatek: mt8195: Add power domain for dp_intf0
-      commit: c6419e4f2ae22bf1404ac39e88c9bf0de8767874
-
-Cheers,
-Angelo
+BR,
+Jani.
 
 
+>
+>> It's 100% reproducible on my side. I am happy to test any patches to fix this.
+>> It's really annoying "feature" for `make O=...` builds. Also note that
+>> theoretically the Git worktree may be located on read-only storage / media
+>> and this can induce subtle issues.
+
+-- 
+Jani Nikula, Intel
