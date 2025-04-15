@@ -1,78 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE33296D06;
-	Tue, 15 Apr 2025 14:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96BF296D0A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728111; cv=none; b=jcTyTverxvuVY++UA5tRDL/YJVrVe0DyYFt/2RMsdvhLu7qLAiFphnVwZVl01rFqZHAcuI9f4IvbBGaSoMVzHp33o7rLS2uwtHZABYC1vTb5vThJAMlsg6ss8zbJ375jGjc8lwO/PcqBmznW92QeUgudPPy13UC9P4JX3PSwZr8=
+	t=1744728189; cv=none; b=SP2+Iypu0nvI8Pr0FwX3bv+I65nJoh7sJzUKdgO6P4JNpVuKI4n/hRZQ2Dq5ckPc34EDaezgiInYCmx63x+sWZpv0i+9n5cQSFoBdkNpjXaDIxB8g9x2HQAeKmJNnl2EEcjqEDdLmqRBUduDgVlgD5B1Vwq3CxLchP3kiVuerGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728111; c=relaxed/simple;
-	bh=zlRT5hZp/BfIE5GKT/WAW1Lj+zdB3ypVFh179TfYHOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fFkb4AZBk/hhCOFKYBj4myzB5H0UoAgHAsBaijRppsw2msu4tNzHM1rG4CSumSLDT3Br//KSYUm4q4Gt7QCgdctu+yPhgklnFkb+6mQSP337imHDQD63iaLBMNiJR3ZV0DmqijsDEYaOiAb9xu18XzPWZ8gH2TkvuL+TZ7+SAoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2MRril7+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744728189; c=relaxed/simple;
+	bh=LOsU+N+ngWcNTUp0v7jIwqfqmT9V5NxpNoIMNt01EQM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rIELpLBpD9soJv2Za/LIbeYrMzx7Dp8JqaTjw9PunMzd+VGPe77lcsm8ZZVZwOvuoYxreBztMliEtoforRDDbgTbrCwKvYRSVyjg5R2L6/PkS9I6nA3SUWoAotglFDhGVPQPDJGlXtVw6swSkGGoAiccWUhiapW0Okuozz0xO6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tp34xGkS; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2MRril7+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D17EBC4CEDD;
-	Tue, 15 Apr 2025 14:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744728110;
-	bh=zlRT5hZp/BfIE5GKT/WAW1Lj+zdB3ypVFh179TfYHOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=2MRril7+PXSL1hSkzhy/7iemVsh/YccywuaXq8GAPMrPkkxZREjMm+NQQIt33jDg9
-	 S3nGBT1/pVd1fmzRThjNJAlwemYBrtXKdOOLMg7mU6/+4IA1xpkbKZaQIIEFC0vcp9
-	 f6dP3PgnK9wfuu9GWBDWusUYFBBJ/tppmiUt6jP4=
-Date: Tue, 15 Apr 2025 16:41:47 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Michael Rubin <matchstick@neverthere.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>, dpenkler@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 01/18] staging: gpib: struct typing for gpib_interface
-Message-ID: <2025041512-coveting-scrimmage-9312@gregkh>
-References: <20250408222504.186992-1-matchstick@neverthere.org>
- <20250408222504.186992-2-matchstick@neverthere.org>
- <804eaa0e-e1ce-4ee2-8ad4-f56bedd6d14f@stanley.mountain>
- <Z_az87Yx-NJvGASJ@tiamat>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tp34xGkS"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7398d70abbfso7127913b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744728187; x=1745332987; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LOsU+N+ngWcNTUp0v7jIwqfqmT9V5NxpNoIMNt01EQM=;
+        b=Tp34xGkSc3garxw4BdziH4p1CjtsVmVw6SDIq7R21xRzGzoVkjcYXV8unAgWpyYVc+
+         ltcVioJatUK4FOgm+CCq2tACdTO18Zhv2aQRGHHpiKLtFMLIIaXQlhAr0dvO07OTmj34
+         fBinTVhPxV1RBbw2gLbqn3sCfZ2Gnbine/sbhvJ5LDcBKPcmMcXp4uS9rlONWlCQ3gps
+         qeJUakzGJ5Smd8GQfwRw9QwdvFwfqAfRLBK7c8Y+8JyPWAwUtojN1HWhWXGiMutk5h5V
+         N/7f+Kc/DmsAauT/JpRiP35vWoCjQwFk67cl2yQ80UnmM0vGmue54R0Slvnk919j9miM
+         iruA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744728187; x=1745332987;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LOsU+N+ngWcNTUp0v7jIwqfqmT9V5NxpNoIMNt01EQM=;
+        b=FrSBjGGA85BU6U6MhQQdD1ITViGGunN7PMweHHr/7lfwH9jcxey8Y2CLBBxBFslCG8
+         3bm4o5xT52/n6I9s3mC4diuEkDyhKVsW/cbU6hm71Qrnd+bJktBbdTY7B9iFGQALFGIv
+         +DMZ07HOGhVchaprYyaAHJQgg16ClPt/gBAquCnodVYK9LhtB4BqYNNGdF+HL0eZRUwX
+         JGW+o4jwxraWn1+CvtCkqccGmLmON6HZ2pjeqSdGqz5KfEkVZwwBDp7VYbwnBOO5PuUE
+         iI3PwwI4SijhVNyxGoe/9US2n2ucIPVYB12c97LyhHbbY9BzsB4zjZhfITYKpvrT3WKy
+         CySw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4J0UTnRXWUpOjhTqjV2oahRcBhRp0kcn3boZvKTR57bqtSM5AY+dzfFLUuKKKqt5MMCWOvqDm/u+Ih+s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySvUoaR3WyNmUnyeI+qTbNcMK+Hf0WqnyKgVhjMqoFLgaV6rqH
+	VU1QnWCScrl0G+ipJcekwoXM4iTpBdEFrYr2NUhA1qhqr8rQ7s7cgRtgMmXqt2B+S1rkPd3zbQb
+	fyA==
+X-Google-Smtp-Source: AGHT+IGuRKECsaS6tDd8viezt75dTMwoPb2acVz8TD+3vlgc6I4Z8PNDNOHSKbUgHY4y52rCyt+QPrfOwEo=
+X-Received: from pfbkq7.prod.google.com ([2002:a05:6a00:4b07:b0:739:3659:ad9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1414:b0:72d:9cbc:730d
+ with SMTP id d2e1a72fcca58-73bd11fb281mr21135681b3a.11.1744728187081; Tue, 15
+ Apr 2025 07:43:07 -0700 (PDT)
+Date: Tue, 15 Apr 2025 07:43:05 -0700
+In-Reply-To: <20250415.AegioKi3ioda@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_az87Yx-NJvGASJ@tiamat>
+Mime-Version: 1.0
+References: <20250313203702.575156-1-jon@nutanix.com> <20250415.AegioKi3ioda@digikod.net>
+Message-ID: <Z_5weSEpN1rDbYAs@google.com>
+Subject: Re: [RFC PATCH 00/18] KVM: VMX: Introduce Intel Mode-Based Execute
+ Control (MBEC)
+From: Sean Christopherson <seanjc@google.com>
+To: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>
+Cc: Jon Kohler <jon@nutanix.com>, Paolo Bonzini <pbonzini@redhat.com>, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alexander Grest <Alexander.Grest@microsoft.com>, Nicolas Saenz Julienne <nsaenz@amazon.es>, 
+	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, Tao Su <tao1.su@linux.intel.com>, 
+	Xiaoyao Li <xiaoyao.li@intel.com>, Zhao Liu <zhao1.liu@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 05:52:51PM +0000, Michael Rubin wrote:
-> On Wed, Apr 09, 2025 at 11:26:41AM +0300, Dan Carpenter wrote:
-> > On Tue, Apr 08, 2025 at 10:24:47PM +0000, Michael Rubin wrote:
-> > > Using Linux code style for gpib_interface struct in .h to allow drivers to
-> > > migrate.
-> > > 
-> > > Adhering to Linux code style.
-> > > 
-> > > In general, a pointer, or a struct that has elements that can reasonably be
-> > > directly accessed should never be a typedef.
-> > > 
-> > > Reported by CheckPatch
-> > > 
-> > > WARNING: do not add new typedefs
-> > > 
-> > 
-> > This commit message is quite long but it's totally unrelated to what the
-> > patch does.
-> > 
-> > This commit message should just say "Having the word "_struct" in the
-> > name of the struct doesn't add any information so rename struct
-> > gpib_interface_struct to struct gpib_interface."
-> 
-> Thank you for the input. New commit marked v2 sent to the list.
+On Tue, Apr 15, 2025, Micka=C3=ABl Sala=C3=BCn wrote:
+> Hi,
+>=20
+> This series looks good, just some inlined questions.
+>=20
+> Sean, Paolo, what do you think?
 
-I think we need a whole new v2 series, I can't just pick up 1 of the 18
-patches as a v2 as our tools will get very confused.  Can you just
-rebase and resend a v3 for the whole thing?
-
-thanks,
-
-greg k-h
+It's high up on my todo, but I've been swamped with non-upstream stuff for =
+the
+last few weeks (and I'm not quite out of the woods), so I might not get to =
+it
+this week.
