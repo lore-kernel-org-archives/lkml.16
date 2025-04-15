@@ -1,16 +1,16 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE5A21E0A6;
-	Tue, 15 Apr 2025 04:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F33422256E;
+	Tue, 15 Apr 2025 04:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744691602; cv=none; b=utsm9PxCF8PL2VUKq4BMBwpkMtFhul9K67B6e0URgYwKzgVHD570hy+kXvXCXVlDsUbSNjiQVkCR5Lw3kc5cIu6ujBou8gBugWv7qo3bLSpq5xBwt5LrsNJyqHV/nfTvcsSnf0nNWOmFpLQBeeSu/Fi+h/39+e1l1xd1prFjxO4=
+	t=1744691607; cv=none; b=S4VRVsQPpIS8SArNraGjn6lZS+5MRhRuiP/1LjGFelcW9f8oCJQ0TxYOJqJyPcbnDivez/ZLNC5NyaCUltD+Hnlk3kZnVxOKTL6q6kuErTBG7ckqzaltV3AS4iPUoi58y2LQ77oTFq1Poxy0bp1a839mWLs5izsUlE4HxzkzsMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744691602; c=relaxed/simple;
-	bh=YzUKU8kn34sjtdtovrzqRVvT15prf19xMPzU/lYPYKw=;
+	s=arc-20240116; t=1744691607; c=relaxed/simple;
+	bh=tIG8vwSuRloETWjN8KHStfV/v0IeQ/xpYwHXlWkA7hs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VQq1M2D0EtGQYtykMj9CWRhtgzLhWfXhLuYyVbpulTJgYq/VUj1GuXC0Ez+QLyWzWUGUdjAU2wWdxddyEBdadIWcxjGPWNaUNY3wVakJEL8I4mloN64v5SzUSciJtlK4fMyyVcmRBGwip2Jxsr3vexfcuTnexjtV3CoWCrAOLiQ=
+	 MIME-Version; b=IV1jvFFSgRb0hMamHFCtUQzSiOfwAk7ORDX8RF3lowKP6lPDgLEz4gfHco2Uv9rGYmRx9IXGP/tmRMkGqZPEj47Mr3P3l64NWfzdu4lzSbWEMBbWQYTz+FoIEG0z5nBFTAKfkkFZ4PKL6rF+Lsv2ypLxdAygkfQ5jzUd07iGaPE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
@@ -18,8 +18,8 @@ Received: from [89.212.21.243] (port=52324 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u4Xz0-00Gb4I-05;
-	Tue, 15 Apr 2025 06:33:13 +0200
+	id 1u4XzA-00Gb4I-2N;
+	Tue, 15 Apr 2025 06:33:23 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -33,9 +33,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v2 04/15] arm64: dts: freescale: imx93-phycore-som: Enhance eMMC pinctrl
-Date: Tue, 15 Apr 2025 06:33:00 +0200
-Message-Id: <20250415043311.3385835-5-primoz.fiser@norik.com>
+Subject: [PATCH v2 11/15] arm64: dts: freescale: imx93-phyboard-segin: Add CAN support
+Date: Tue, 15 Apr 2025 06:33:07 +0200
+Message-Id: <20250415043311.3385835-12-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250415043311.3385835-1-primoz.fiser@norik.com>
 References: <20250415043311.3385835-1-primoz.fiser@norik.com>
@@ -57,98 +57,75 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Improve eMMC on phyCORE-i.MX93 SOM by adding 100MHz and 200MHz pinctrl
-modes. This enables to use eMMC at enhanced data rates (e.g. HS400).
-
-While at it, apply a workaround for the i.MX93 chip errata ERR052021.
+Add support for CAN networking on phyBOARD-Segin-i.MX93 via the flexcan1
+interface. The CAN PHY chip SN65HVD234D used on the board is compatible
+with the TCAN1043 driver using the generic "can-transceiver-phy" and is
+capable of up to 1Mbps data rate.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 ---
 Changes in v2:
-- no changes
+- drop CAN regulator hack in favor or "can-transceiver-phy" mechanism
+- reword commit message
 
- .../boot/dts/freescale/imx93-phycore-som.dtsi | 57 +++++++++++++++----
- 1 file changed, 47 insertions(+), 10 deletions(-)
+ .../dts/freescale/imx93-phyboard-segin.dts    | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-index 06a9e674e338..663530a7e2bb 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -166,8 +166,10 @@ eeprom@50 {
- 
- /* eMMC */
- &usdhc1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
- 	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
- 	bus-width = <8>;
- 	non-removable;
- 	status = "okay";
-@@ -213,18 +215,53 @@ MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
- 		>;
+diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+index 38b89398e646..be9c0a436734 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
++++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+@@ -26,6 +26,15 @@ chosen {
+ 		stdout-path = &lpuart1;
  	};
  
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
- 	pinctrl_usdhc1: usdhc1grp {
++	flexcan1_tc: can-phy0 {
++		compatible = "ti,tcan1043";
++		#phy-cells = <0>;
++		max-bitrate = <1000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_flexcan1_tc>;
++		enable-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	reg_usdhc2_vmmc: regulator-usdhc2 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -38,6 +47,14 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
+ 	};
+ };
+ 
++/* CAN */
++&flexcan1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	phys = <&flexcan1_tc>;
++	status = "okay";
++};
++
+ /* I2C2 */
+ &lpi2c2 {
+ 	clock-frequency = <400000>;
+@@ -79,6 +96,19 @@ &usdhc2 {
+ };
+ 
+ &iomuxc {
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins = <
++			MX93_PAD_PDM_BIT_STREAM0__CAN1_RX	0x139e
++			MX93_PAD_PDM_CLK__CAN1_TX		0x139e
++		>;
++	};
++
++	pinctrl_flexcan1_tc: flexcan1tcgrp {
++		fsl,pins = <
++			MX93_PAD_ENET2_TD3__GPIO4_IO16		0x31e
++		>;
++	};
++
+ 	pinctrl_lpi2c2: lpi2c2grp {
  		fsl,pins = <
- 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
--			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
--			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
--			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
--			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
--			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
--			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
--			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
--			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
--			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x40001386
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x40001386
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x4000138e
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x40001386
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x40001386
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x40001386
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x40001386
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x40001386
-+			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-+		>;
-+	};
-+
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x4000139e
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x4000139e
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x4000139e
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x4000139e
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x4000139e
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x4000139e
-+			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-+		>;
-+	};
-+
-+	/* need to config the SION for data and cmd pad, refer to ERR052021 */
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000139e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x400013be
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x400013be
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x400013be
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x400013be
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x400013be
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x400013be
- 			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
- 		>;
- 	};
+ 			MX93_PAD_I2C2_SCL__LPI2C2_SCL		0x40000b9e
 -- 
 2.34.1
 
