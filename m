@@ -1,93 +1,145 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6019A25525E;
-	Tue, 15 Apr 2025 20:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0A82550C6
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749819; cv=none; b=aGLhInv2FMLCv2teYgr+AAao6vvejE8FughIuOFl0TmsA33JuBgPP5fI1y5ISzeUlTWh5XBmiSpDyNtFU+fwPX6vojLIoYrJsfmDodQvRQOlU9TB7y1qbSghMTgjsslf9Vij5vq24gL3NRuFX8z+L6U+6+P6j5mAbHcaWWyV4/4=
+	t=1744749871; cv=none; b=aIXccXZifVDidSBvV8Jlwbox8/yUs/SsWdyCObIkxdD6PXnJZIz7ubk3vWpXNM9dbfV2kNp825qugJtmXT8WmljxbFNhgJUH9wrwRV1HnGigxgkKlgIfukakv3SRPdzndbeL742Ci0vtnJ3ma0lW+D/2xuupoGPoisRF9wvRWCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749819; c=relaxed/simple;
-	bh=1EYMhKxcRTGteJOZXgc+9Mq4KqYNF9X4ORio08rRZe0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AOipBuIarTTP/MW/LCXkV8+IybE5HjPnfaAcVk5xOmO0zf4Q4xcrSYykmfqq2p70Vk+QGquzCSwB6bv/0dTI00bh/Vj967FNptGdnid1LbQRflL1+utMfdZ3N5d2SpFYPifNBgk5AWLsxpgqyD2LN/zzH1rk17xWUG223QNGl54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yntpc1eL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744749871; c=relaxed/simple;
+	bh=3Hky3VM+4JjapqUY7cn5G98RWX49+pbBZqsiggC7wdE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tw0Jt3d0Q2AXlkx9qBB/0s602xansMgRVWKCvhcik0lXFxIhHjIPiSZ6sgNPynVzbUaSOvWWZM5yPy7w+q+kMOhggZS4kYE2ashGEL/5mifk2+H+umHi/phMLIVTIoBry7WPsg7VEEEhUPm74jH9wS3I5kGAr0R9LYiQcu/9gtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GEZVEokG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yntpc1eL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DED9C4CEE7;
-	Tue, 15 Apr 2025 20:43:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744749819;
-	bh=1EYMhKxcRTGteJOZXgc+9Mq4KqYNF9X4ORio08rRZe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yntpc1eLYzygWqALEt6TgeHFdDkjme0qwJLRDQQnmQQ4IBHNmsiLd3xYrcJPXAMdI
-	 Knng/iNI+DJ9PYj4LkXZGvXgn2NlZaEbo33Zwv8+EzwoJnO874IDL/xIsbAzMepcqe
-	 ieBsBctbhoZC93k+efuD8jcjBKo6C3I4ZJbNynJhBQEnutSbwEZP19qz9dfTWytMi/
-	 ySJ7qHEDtioOb8jZvH8kIzhhcncbaGkmTapHT6gnAkPZt56XeaT9ImOLfj/8AMsId4
-	 qCPZZvVFIAAhY394uS2y0iAL8CmjSAi45i7LR8AihNXvLRVFElghLMcKlfow1YYGLM
-	 ZPPpDJXQN16XQ==
-Date: Tue, 15 Apr 2025 13:43:36 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, akpm@linux-foundation.org,
-	elver@google.com, andreyknvl@gmail.com, ryabinin.a.a@gmail.com
-Subject: Re: [PATCH v2] lib/test_ubsan.c: Fix panic from
- test_ubsan_out_of_bounds
-Message-ID: <202504151343.794CF53@keescook>
-References: <20250415203354.4109415-1-smostafa@google.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GEZVEokG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FI5E3K019542
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:44:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3iYh8x4j7pll1qdXNxRlsV8aiYA7Wu+q1V+bKZrVFss=; b=GEZVEokGb1/sIQn9
+	3eB85tNbU//iXTbysYvwvKI4SDos4KqVhNIHSiLIylQRN1CbzAfy6zEKdh3xBdy5
+	pYXRSGq0kMgvg7QYpIGqNNvPveVVq381hjMJCGMOXpjrI265gAuI0HyruZqAezOr
+	oRJVnyNa5Ml0XovDZox+S8oh42SNLX4SO6qbskIjXK067Wi8ikbW1FwTphU3z3TP
+	nStWwiod+5FoD1xAwGkY3a6z0NUv+pJJZnz3pv2a0IhQoywoMvmbLinST3UZnM3U
+	T9CNpKlsTGVFIUW5Gmeu+iLxQ36vJes83oHygHf6g8aJhlNL5hIQkaUbFiG06QGn
+	2AL1uA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhfd1a9n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:44:28 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5560e0893so54018485a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:44:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744749867; x=1745354667;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iYh8x4j7pll1qdXNxRlsV8aiYA7Wu+q1V+bKZrVFss=;
+        b=JTxI3GFlYdo+IXb2o++dQEp3b1I95sCs27zejBNyBP8jTigLYH6IxCsfu1pguy/kJO
+         pQZJZ428WNY8fgLxaZEu8fSQ3B8gpniX0rLT++2S+6KKUwvn//Xr91BEMTjwQX4YHkcd
+         EKWbm9NZYjRnqMbizV2h3w8US1PQuxfCEujSzPLep0NAWrABOPubgindKBM5e6SriVz/
+         cPG1SMB2lgot5oIwvH4pl06JCBbHmOHr051Z/q5cvHbTbLHiMAhSsaieIPLUlPbMlWOj
+         R1pQ7E33YlOjmgZ3/UtP36rdyvkSZQQXV52lBGX6z+334PV3BBWW/85xWQWmrh6tcr/3
+         saSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM05KSW5OFr+kbTj+jDh3QlCZIal9FMsG5iSFsKpDcGsBPLruAOJvTPyC1vj/htix4h5PZqddBClk6bPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbxI06vxSCe9HyrU7rpN4HN/xfvsmw74q4pfvjNdDbkj25m8Lk
+	U3chifyEaR4IjUpg3+NWOdgU7R8w79j+8hFMobjkb0XWw9LlhrSzJQProUliT8tnee8PD7ptasN
+	3n4K9OAJjcKddAF7LYEsbb48Fj1LXe4NaRTtJYrvN2OCS5v+EjLW5pZqK+pHFN0U=
+X-Gm-Gg: ASbGncvcAGLoQOKUfw1dUX642RDVONOv9VpDsKgGWZpbjtBqGCnTpMnUPkbK8k1Ow9a
+	vGt0cb4jGFTHZFeAxMr+kUSrIAYm9hR6AnTwT+QCPbWBCCC5gaiwf9lq2QlRChMg/BAxqZjxMuh
+	ddqvkaXV81cf4RRe6I7cc2UDMgI+VCvr1F+d2bJJrqo57gYAbyzcsqO1TCEY8yxaPOHC9KzLi/z
+	6z+AXNFpBOvBDGK0YHyXYCo8s7N8vdy0NZKQO/e+UOMJ0jjnd97Bbdno8c1AAQAY9uechUwgIUy
+	Cz/+aROIA7JN3GPiskxtE32DUt/V64pt+MSUdY1rrzE2YjSMfqx0UsreNep/v2LuShQ=
+X-Received: by 2002:a05:620a:3948:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7c91446145cmr42359685a.12.1744749867522;
+        Tue, 15 Apr 2025 13:44:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGNAmm+Nsu1+i6NMNPpiCxCuo5yorpSMFeDlVllWB1nRU+D/UM58m4iMW4+QW/WPBFPp1icJQ==
+X-Received: by 2002:a05:620a:3948:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7c91446145cmr42357685a.12.1744749867191;
+        Tue, 15 Apr 2025 13:44:27 -0700 (PDT)
+Received: from [192.168.65.126] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce6fd9sm1125506966b.161.2025.04.15.13.44.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 13:44:26 -0700 (PDT)
+Message-ID: <5a6715c3-d82e-4f9c-9296-a8fe07251278@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 22:44:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415203354.4109415-1-smostafa@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/8] arm64: dts: qcom: msm8916-motorola: Use UART1 console
+ pinctrl
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sam Day <me@samcday.com>, Casey Connolly <caleb.connolly@linaro.org>
+References: <20250415-msm8916-console-pinctrl-v1-0-a1d33ea994b9@linaro.org>
+ <20250415-msm8916-console-pinctrl-v1-4-a1d33ea994b9@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250415-msm8916-console-pinctrl-v1-4-a1d33ea994b9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=CfUI5Krl c=1 sm=1 tr=0 ts=67fec52c cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=3tw8hlomtGf0Dfnn5nkA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: Hggeql-A5W04Xr5whX2KJJzo8SvWikM7
+X-Proofpoint-ORIG-GUID: Hggeql-A5W04Xr5whX2KJJzo8SvWikM7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_07,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=757 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150146
 
-On Tue, Apr 15, 2025 at 08:33:54PM +0000, Mostafa Saleh wrote:
-> Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
-> kernel
+On 4/15/25 3:52 PM, Stephan Gerhold wrote:
+> The Motorola MSM8916-based smartphones all use UART1 with 2 pins (TX, RX)
+> as debug UART console, so make use of the new &blsp_uart1_console_default
+> template. This applies the needed bias-pull-up to avoid garbage input,
+> bootph-all for U-Boot and avoids having to override the UART pins.
 > 
-> [   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
-> [   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
-> [   31.648153] Hardware name: linux,dummy-virt (DT)
-> [   31.648970] Call trace:
-> [   31.649345]  show_stack+0x18/0x24 (C)
-> [   31.650960]  dump_stack_lvl+0x40/0x84
-> [   31.651559]  dump_stack+0x18/0x24
-> [   31.652264]  panic+0x138/0x3b4
-> [   31.652812]  __ktime_get_real_seconds+0x0/0x10
-> [   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
-> [   31.654388]  init_module+0x24/0xff4 [test_ubsan]
-> [   31.655077]  do_one_initcall+0xd4/0x280
-> [   31.655680]  do_init_module+0x58/0x2b4
-> 
-> That happens because the test corrupts other data in the stack:
-> 400:   d5384108        mrs     x8, sp_el0
-> 404:   f9426d08        ldr     x8, [x8, #1240]
-> 408:   f85f83a9        ldur    x9, [x29, #-8]
-> 40c:   eb09011f        cmp     x8, x9
-> 410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
-> 
-> As there is no guarantee the compiler will order the local variables
-> as declared in the module:
->         volatile char above[4] = { }; /* Protect surrounding memory. */
->         volatile int arr[4];
->         volatile char below[4] = { }; /* Protect surrounding memory. */
-> 
-> There is another problem where the out-of-bound index is 5 which is larger
-> than the extra surrounding memory for protection.
-> 
-> So, use a struct to enforce the ordering, and fix the index to be 4.
-> Also, remove some of the volatiles and rely on OPTIMIZER_HIDE_VAR()
-> 
-> Signed-off-by: Mostafa Saleh <smostafa@google.com>
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
 
-Looks good; thanks!
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+>  arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
+> index 48134e5ff524fd5708db7b9c3a567ec3f751868c..4e202e7ed7db1921f347ca8b4a01ccec593a8d8e 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916-motorola-common.dtsi
+> @@ -69,8 +69,8 @@ rmi4-f11@11 {
+>  };
+>  
+>  &blsp_uart1 {
+> -	pinctrl-0 = <&blsp_uart1_default>;
+> -	pinctrl-1 = <&blsp_uart1_sleep>;
+> +	pinctrl-0 = <&blsp_uart1_console_default>;
+> +	pinctrl-1 = <&blsp_uart1_console_sleep>;
+>  	pinctrl-names = "default", "sleep";
+>  	status = "okay";
+>  };
+> @@ -132,14 +132,6 @@ &wcnss_mem {
+>  	status = "okay";
+>  };
+>  
+> -/* CTS/RTX are not used */
 
--- 
-Kees Cook
+Yeah, no raytracing here
+
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
