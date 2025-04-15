@@ -1,119 +1,79 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC457EEA9;
-	Tue, 15 Apr 2025 01:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2401A5BA8;
+	Tue, 15 Apr 2025 01:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744681306; cv=none; b=MdMihUBWC29vhroWTbyk4TzM64cQz+k/PoG2NQlPHVBGaYtIHudAtzNeguZioexSremYZzqWsAytBbSW2G9LF2n4AHSl7bkU0lblOCfmXqxVd76e83oSxrGg+NwjKqkTySqiLJTo/JBu8WY7SsQ7kek5GosUSCoclGzw1pKvLPo=
+	t=1744681448; cv=none; b=bgjLPt0Y7XyVDLCEv+6DC+LMf2T9EZkpXnCkdWtWdzQd2s8ygooQnCRIPVoEEeJ914MUN5xEFu4TeqyNKcDFCOOjQ2acyiYhRh3kh45ZpnkPGQFhhmAKVGKznqL7EVS08J3YVt5RZIK1ec+VaA56tk6wV2AapQCNf8brsj71frY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744681306; c=relaxed/simple;
-	bh=5V0c5pcHPBJDFeK7QcA59uEXxs97k1DgLs4FaxIv7Zo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hKOz2ZRh4STQSP6Xw+9M/CrSNGW+/r9Rp96iP9b0A6u+DkSLBIm3ncD6K3/LQb01p/mYzzH7/ovfOYnstavJii2nQaBrydrTsGuFTg5GVJhv4Z5Bp+Tl2dJYsdgafIO7jXPsSLpyoscaNIQYU139zOHdgRdz5UaX3LmsYHnT5pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=pUxcYfAj; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744681448; c=relaxed/simple;
+	bh=5/BeXwKcj97t82jM+9oYwA9IQD7JHFcv3WYKpcXTkHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OkvF7n2MGT5RjMy0eYKgDPgCkD1367YKbGVW4WE9Avrr+xqsDn+dkEEuyayqHfqzKtqmKN5ulX9XDSFPcptGq/BMWgGG7MA8Lh1SdvsBaTZpnBGMgM0QBOKbeb1P7KoRz21VSQQqvHFChF0PPWoukVlRT/SmT1pJ0Pd1KYDBvCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=gkT1XCiF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="pUxcYfAj"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53F1fTTQ1362095, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744681289; bh=5V0c5pcHPBJDFeK7QcA59uEXxs97k1DgLs4FaxIv7Zo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=pUxcYfAjAidLK5Bmvni9fSunlluItwiOIosCP7yDZX6J+ZekdOLyuyDftC3bp7kS5
-	 vHsRoF2V3wMfjKAmaVWnAF6IU9q5DXaho1mFKVJp/mm6PJl/nEZdjmiYVksNcTCYdA
-	 2QTy7ILvJUhzm86dme7FKxIGwLeLyG3dy/oSSQnwUFgDLqqHkL+0x2JKOeSQOAZfNk
-	 aaFVSC3k0Yy7XV/23BPfE5n18ceRiJprWOPdvHnl79GWDEcD/SU1lfG5oxrgt281m+
-	 /OfmqLoMbvr8bZLKdTDRqTeVrep9J0guadruIsWZYYDi3WgR0yzDQh/kXC0aM+6ELw
-	 Bz8LiyoZyCfbg==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53F1fTTQ1362095
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 09:41:29 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 15 Apr 2025 09:41:30 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 15 Apr 2025 09:41:29 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 15 Apr 2025 09:41:29 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Zhen XIN <zhen.xin@nokia-sbell.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>
-Subject: RE: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
-Thread-Topic: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue
- TX_DESC_QSEL_MGMT
-Thread-Index: AQHbqi/AoiBG2M0l1Umtjv/+rZii17Oj+WcQ
-Date: Tue, 15 Apr 2025 01:41:29 +0000
-Message-ID: <0ea484ea33794b1f9b99de46c94553ad@realtek.com>
-References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
- <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
-In-Reply-To: <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="gkT1XCiF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=wGR7nK8EU+Cj5W9ySk84JYng8rysMk1dgDF+70d6Bc8=; b=gkT1XCiFMPbPvAozaSPSIi2XnW
+	7ylKKmYfn5zEZNYYZb8vFvCYJOsVlqoJAYTK9KVIxklBr4X/NwyS2mkh+jVnyd8898ni4BXUR3UOE
+	ut9/u80pzzVHjE5+nrAGEWQ7cBye7POaHgaQOP/YdOv0Orw03jhVVcnp4WQZKyqWeLK0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4VL9-009Jyv-LS; Tue, 15 Apr 2025 03:43:55 +0200
+Date: Tue, 15 Apr 2025 03:43:55 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
+Subject: Re: [net-next v5 4/6] net: mtip: The L2 switch driver for imx287
+Message-ID: <45a4fe47-d590-442a-9073-39472a49d52d@lunn.ch>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-5-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414140128.390400-5-lukma@denx.de>
 
-Zhen XIN <zhen.xin@nokia-sbell.com> wrote:
-> Rtw88-sdio do not work in AP mode due to the lack of tx status report for
-> management frames.
->=20
-> Map the management frames to queue TX_DESC_QSEL_MGMT, which enables the
-> chip to generate TX reports for these frames
+On Mon, Apr 14, 2025 at 04:01:26PM +0200, Lukasz Majewski wrote:
+> This patch series provides support for More Than IP L2 switch embedded
+> in the imx287 SoC.
+> 
+> This is a two port switch (placed between uDMA[01] and MAC-NET[01]),
+> which can be used for offloading the network traffic.
+> 
+> It can be used interchangeably with current FEC driver - to be more
+> specific: one can use either of it, depending on the requirements.
+> 
+> The biggest difference is the usage of DMA - when FEC is used, separate
+> DMAs are available for each ENET-MAC block.
+> However, with switch enabled - only the DMA0 is used to send/receive data
+> to/form switch (and then switch sends them to respecitive ports).
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-I will change the order of this patch to first one, because with patch 1/2
-only, it will throw many messages that times out to wait for TX reports
-from firmware.=20
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-By the way, patch subject should contain "rtw-next" as hint for NIPA to
-test build [1]. This patchset is simple so it also work to build with
-wireless-next.
-
-[1] https://patchwork.kernel.org/project/linux-wireless/patch/2025041015421=
-7.1849977-3-zhen.xin@nokia-sbell.com/
-
->=20
-> Tested-on: rtl8723ds
->=20
-> Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO =
-based chipsets")
-> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/sdio.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->=20
-> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wire=
-less/realtek/rtw88/sdio.c
-> index ef51128a4b44..4311eb7cffef 100644
-> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
-> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
-> @@ -718,10 +718,7 @@ static u8 rtw_sdio_get_tx_qsel(struct rtw_dev *rtwde=
-v, struct sk_buff *skb,
->         case RTW_TX_QUEUE_H2C:
->                 return TX_DESC_QSEL_H2C;
->         case RTW_TX_QUEUE_MGMT:
-> -               if (rtw_chip_wcpu_11n(rtwdev))
-> -                       return TX_DESC_QSEL_HIGH;
-> -               else
-> -                       return TX_DESC_QSEL_MGMT;
-> +               return TX_DESC_QSEL_MGMT;
->         case RTW_TX_QUEUE_HI0:
->                 return TX_DESC_QSEL_HIGH;
->         default:
-> --
-> 2.25.1
-
+    Andrew
