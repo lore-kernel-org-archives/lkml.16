@@ -1,136 +1,272 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A9229A3C7;
-	Tue, 15 Apr 2025 14:58:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729108; cv=none; b=gr+szJ9ubUOMN6m7Kuy1zNvzIRFnglHudt/pDfnypydy3R5qzhycijBnUOzaIMWwCSsd1+psZLZXIiR/jRTNekfx/Y6ZoTKKaZnwEIN4GN/oUoSBDJhdxmUw5CfE0qvMwTe9bOR0nAOGyVTzsbZC9QR0QUb1dRuYZG2m2auDW5o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729108; c=relaxed/simple;
-	bh=yj24jdntq7KtOcQz/LewZwXTbNubrVvLzcvOkoHp5D4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QAGfL30+Q83ZbsZhjijvBJVHW+OWgW8LOHnTls9Le9oF5jZCSsNpJ5tqnTzGTTPTZrTtB1BoxA/9Z3vpmIPA23ZGmLaBYXXX6EWCLXEIl7ApDDcknoRE5/hD20nfnopF+Oi3gS59Jdk+fUBSBGLjpjVD+Cr2llxpIe/BRabIaAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5262475372eso2351508e0c.2;
-        Tue, 15 Apr 2025 07:58:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744729105; x=1745333905;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q4a6j47dvp+eA1P3zGtnscPx3AJ8IAar6Kj7Z5zUOvU=;
-        b=XMfMXg+JvY1Ll4Tj5KLIjGDukLADUmB6l98ciybsFvkOfa9aGLJU2QJ9nG5JKvs7G6
-         lHpRu57R3MzkqLm8yS1+NIM5LdByEj03EL01E44OtJBcMI1g//6xp6+nwiO1S2kJ23s5
-         uPWpiQoAyqyxNRYsKZ7ZZPx6i2OQbHTu+lZFUFH6Pz4uuRvKA621iwvRvCXgG4P8NGt6
-         pw6v7U7LBcAAdzHAAsSs7kkFYQ4dWx3TTxcxa+Z00SDjHvdOSHW3ynWbqY5SkhVPBn0b
-         1dHH8rKTTusVVimM/n4lBNJ0v5ct5kYLWJLysgbyduyb1iJK6RRxo0wXRzwuSOHjLMRG
-         Be3g==
-X-Forwarded-Encrypted: i=1; AJvYcCU9g/WPjtNZqgHaX7QZxPXsZMR9WjQK1x0SzmBHDW1HoAlCt/N7rvw51kD6odCSPKhqNZR8DwR4rdST@vger.kernel.org, AJvYcCVHJ65A5yr2G1OqddL3d2h/l0Ih29P44wuk3Jt16nOckgsbcguV7QNkVCUECJLQ/h4P6RtdzNkcKylnRpZSyfqVbcM=@vger.kernel.org, AJvYcCVPpIxsQx33oEFu+fgyKkSzwEfwBCqTt5zj0snYjS7ryDsuOOSuiuMPHIn+FvHsaHAtEs5RcrvYiRF9m9WZ@vger.kernel.org, AJvYcCXZcUrmtmovuch6Rf/C0LTyFp4fv34DOXb/yu7x/39hQbjJkVo9coTwllqS0QrkHEvUIs5uT5bnFrsy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN+d+MX5DesxpT5Abi4nnc1AFkbwUK3Z6PNIyMKTX22NPpPycr
-	ZySc6lL4/RUCmOCLlbyanMshI8Chb5ztd+TS1FAknrAl/Rq+X0EZJsiElE3t
-X-Gm-Gg: ASbGncu8X8DRcD1+4A37XieqghLgCryIyvGRHWulZP5l4N5AFltrCiQW91lgypHlc/3
-	F9gimWEh9du2qLkhjg18AuvrHTqpVuocj6UvhT8mq83CXgykw3VblW/aGHrD2bX1Zc8WL/dFtHp
-	7eeqlM7q4fA3DjamkWWmuxl9OreIFtiZcIyugtzqSq2sZ+5L1TxFyGTv86Gonfrq/5KjWrMdUvc
-	3f+JPqXcO/P0NFmlHs9ocm9+RTOnar6mnVqIbucnqEtnRCnmz85liBvKUm5oZrbTTwLckERCAWP
-	pqK1DKoZu5QuLH/V34vDOcyuDCSjBJUdM2sLM+Vdd8mMCYd60DBZXHaV6cppn1jIC7bXB/B1U6U
-	TVYY=
-X-Google-Smtp-Source: AGHT+IHYIpc6eXTwxqg2OTiCpS87O/yX0GXyVfcp5WPoZ/HlG3JXR6eXSpHI1fn7HvrahjhfOzmSIg==
-X-Received: by 2002:a05:6122:2221:b0:519:fcf2:ef51 with SMTP id 71dfb90a1353d-527c34cac1fmr11330912e0c.5.1744729105366;
-        Tue, 15 Apr 2025 07:58:25 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd77f82sm2692998e0c.17.2025.04.15.07.58.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 07:58:25 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4c30a4bcceeso257796137.3;
-        Tue, 15 Apr 2025 07:58:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1EoIjQvNAv9hxy7XPegaT6ZeOaR+7ytZNpiPl8EPKkd8h4rzBCMDXyCEHwmhndhkav8u2dLvd8ZbFxWpe90uQor8=@vger.kernel.org, AJvYcCUR76D28iITHQT9P4+vMtJu56JhNbDgmHWtWs+z3GSwUCfKyOUPJ5bBWlNFDECt0X7Mez3m0rJjq4np@vger.kernel.org, AJvYcCUT4GeMaF3dC8z6FNCfGlTH9Zkt/8IpV0zg6SJ7zXYeI8wW8yJ/KaqlLW1n/g+9LVddtNPxalGwgH5Wn2pG@vger.kernel.org, AJvYcCWgFvlwxqiqX9J5ZEUx3greebUJLJvor7kxigiFBdZUQQApqc29koXQBR3QWE7tGIvfprNimSdIJrnw@vger.kernel.org
-X-Received: by 2002:a05:6102:160a:b0:4c4:f128:3abb with SMTP id
- ada2fe7eead31-4c9e504d016mr10205575137.25.1744729104858; Tue, 15 Apr 2025
- 07:58:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7551AF0C9;
+	Tue, 15 Apr 2025 14:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.145.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744729138; cv=fail; b=crph6G+QheJ3HS+5Xjin0rvG5xeT52Jq4nkIDTM+vx3AVDPiZSSD6iOsHI7LWTEOYN0f/rZQHx9aMTJjLue8fyCevaK7HKYZJ/9hFMj79/LigRfgbvytaudg0TEQWVY96X5DejswN7oj3wYjWzkeZc39W27LkqSZGRa8Yl9933Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744729138; c=relaxed/simple;
+	bh=tOmA+QNzYR/BaM/oIUzYDWl9RWmFTHoc1ojTLhYjoOw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=sHjSUL5sEicuei0y20eOoO1OEEphNL6gZBi9qSkcZKz3t1MSB0cXy0iDpGQ11DbAggC0YXZ0FT5x2Fn+PM+toY9/bU7wbr4mN0aWbxl/oQ44fJHaRKJ+/xhw5W5MqfckRmiAL1FuqjhMU1CZzfLun+RFXdRLBM6+OsoBQ8DUlOc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=IEmFpEdb; arc=fail smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="IEmFpEdb"
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FC59G6032285;
+	Tue, 15 Apr 2025 07:58:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-id:content-transfer-encoding:content-type:date:from
+	:in-reply-to:message-id:mime-version:references:subject:to; s=
+	s2048-2021-q4; bh=tOmA+QNzYR/BaM/oIUzYDWl9RWmFTHoc1ojTLhYjoOw=; b=
+	IEmFpEdbogNqXGQHPRANpkXf3H1LiRjXAcJ8AzpDKN3kuINM/GR0C95MNPgs9XMR
+	j9B8Zh6z7N4egDmvQZgjS6eydH7xUNnZgK9Svr7Uiuixrr++skxOoO7IW+FAkEiz
+	k6NOD5TlDrrE7TZg/4W8w5SMVPkPb1hhrhkMTYKewvyKSVW0bl8kYTBxEL58Ve1z
+	n7DZblbZ4WfQReXbo4Zm75XluHOsYNoHX+pMyt59RiWYP4nOS+6Zr71VtwhS/ueB
+	7V4yy890E3uD+CBQBB9pW+87QhDZ0Gl2m1EJsOuynS8Fqf95U2khBuRcTeF2y556
+	UkkxtT/v/9JlkAZgJf13DA==
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2170.outbound.protection.outlook.com [104.47.73.170])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 461ne11s2e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 07:58:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bAZ2EKYCpGlLiyO/W/LLvT+zOLXiDOQHl3lNnKaLiKgZV+D5xlrAx4KUNib+egxMkAKBnJRWiCEuyOahtqtiHCtJzIwhZyddspr7WF82xu0uptQ8JQSSHjwmeuYHt5Y5Uyxa8Yo6AB7dbY3p6gJ/JPj301Vdbi8i9doFHcKqPV1R6l1TGkiFag+jbz4H26CpAx4E9M6LeNMgnvixsUixsdFKpA1Fny/LZ+TPYI60eu+uNw3l3JQt3WoBnxF0DKGpy0fqikzQLjpL7TVq/rFh9e0ngAXbH6CrhKZ5MPboY1TdSKiHsmjWQSFAicllrKw7YZR0v1u9KbKXVl99z3T2Iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1NKH7xxDhT3YgZl9cfeQ+cgvAh9r08QSpjZaY/UrVNM=;
+ b=McpEQipAA2FGtysKAZBTYYJ5s9HZtOOAMfxkfqRP6lob6QnD+eTyfPN9umT60fGK+2zBbrp0HRDmru7rjkZ858IDWQZ/IPYbE+OyCZ4Y6HuXn2Imv4tGDzBoPuWMtyBGQh4WAoXa/mpDgteyvXK4ifnrI+VWV2P8lcI7a7s7k1+24cia4I5zlTvlJvDwxCoaup10ejo8Zq4gTEiuZJpLdJXYm8g3CUFYPSd81KQVHT8/9a0NwYq4Zu5N3M3vnwH4bbN4KE/5jOtLaxsuyFi9jjFl2VPl5ANz90/RcluIVEr+UjmIFvYKHj6x2DIox4VyKJD1aHJo9/rj16P+oGrI2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from MW4PR15MB4732.namprd15.prod.outlook.com (2603:10b6:303:10d::15)
+ by MW4PR15MB4666.namprd15.prod.outlook.com (2603:10b6:303:10b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Tue, 15 Apr
+ 2025 14:58:51 +0000
+Received: from MW4PR15MB4732.namprd15.prod.outlook.com
+ ([fe80::f3ab:533:bb24:3981]) by MW4PR15MB4732.namprd15.prod.outlook.com
+ ([fe80::f3ab:533:bb24:3981%7]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 14:58:51 +0000
+From: Nick Terrell <terrelln@meta.com>
+To: Qu Wenruo <wqu@suse.com>
+CC: Daniel Vacek <neelx@suse.com>, "dsterba@suse.cz" <dsterba@suse.cz>,
+        Qu
+ Wenruo <quwenruo.btrfs@gmx.com>, Chris Mason <clm@meta.com>,
+        Josef Bacik
+	<josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Nick Terrell
+	<terrelln@meta.com>,
+        "linux-btrfs@vger.kernel.org"
+	<linux-btrfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
+ modes
+Thread-Topic: [PATCH] btrfs: zstd: add `zstd-fast` alias mount option for fast
+ modes
+Thread-Index:
+ AQHbohZYYy5kzhLcC0OWpc0QE7SIYLOM71MAgAAVk4CAALqTgIAAHMuAgAKXRYCAElwbgIABXy2AgAC6woA=
+Date: Tue, 15 Apr 2025 14:58:51 +0000
+Message-ID: <BE89F6F9-FDE9-4DE0-BED0-ED8F350895A8@meta.com>
+References: <20250331082347.1407151-1-neelx@suse.com>
+ <2a759601-aebf-4d28-8649-ca4b1b3e755c@suse.com>
+ <CAPjX3Fdru3v6vezwzgSgkBcQ28uYvjsEquWHBHPFGNFOE8arjQ@mail.gmail.com>
+ <b1437d32-8c85-4e5d-9c68-76938dcf6573@gmx.com>
+ <20250331225705.GN32661@twin.jikos.cz>
+ <CAPjX3FfVgmmqbT2O0mg9YyMnNf3z7mN5ShnXiN1cL9P=4iUrTg@mail.gmail.com>
+ <CAPjX3FfOJMFC8cXCqLa2yS1qSYmhu5cjV__+7xVRFGuKu=RqiA@mail.gmail.com>
+ <f6b92c77-d702-465b-a36a-93c42ecf59a8@suse.com>
+In-Reply-To: <f6b92c77-d702-465b-a36a-93c42ecf59a8@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR15MB4732:EE_|MW4PR15MB4666:EE_
+x-ms-office365-filtering-correlation-id: e114b580-ddec-4970-66e4-08dd7c2e08fc
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|1800799024|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?VDM3dzM5NE9GaW5aOGxwUUw5MmNHTDZjTkdscGtOcUxYbmlhWFNKOVJFUzAx?=
+ =?utf-8?B?ZUo0UlJZa1NabmxkNkZJNUQxV1NQNHRJZysrd3ZodWg4QkV1QW9Ic3FPVllu?=
+ =?utf-8?B?eEllVkExcE85VXZtL3BWN2xXclYvTWZ2U0RXUDZIRG1McVpIZ1pSNVZhb3Zq?=
+ =?utf-8?B?RG94RmQ2RStFRjJHSElDMXFEMlBSbWJ2SnhOMXcxSDcyTzAyQm8xYythRW5k?=
+ =?utf-8?B?dTZsNnpiL0V3S0NzZEE2TG02TFY0WXNueWg5WWkzQ0hVSUJSVlZCWDQxM25T?=
+ =?utf-8?B?elYwZkdDSHVrZWtDUVRhU3JVakExZjFOY0pIWTBYc1U2SVk1YytuWi9VQXFJ?=
+ =?utf-8?B?WGZBNVJjN1ErQU5VOEhVQUZUaThlbGtISHNWU1hKQUdUMnozMzYwdjRDSlNu?=
+ =?utf-8?B?dGxtN1J5RXYzb1Q0c2pWMkVmclY3RUk5WndQMksweTJ5amFpRlpPYXcxQ09X?=
+ =?utf-8?B?ZjgyZWNJNlBRL2hKMDh4U1AyaE9PQWl2WjRYQXY4aUVCSjJaMFhDdk9GTGlB?=
+ =?utf-8?B?Qy9MWXBqTi9rcy85Rk5sN3FYNTc2ZjRGcjg5ZjRISzZ5aTYxaEQxYTM1bUlr?=
+ =?utf-8?B?bWxTZzNPcU11bHRZMTRMeGdPeGlFQmx5ZHlvSVpuS1lrU3kxODV1VldYRnNx?=
+ =?utf-8?B?K1cvTURuSnYrT21uMDlpendTQTBBdkNoZXp5Wlo1NzVrU1VsVmZJRi9JRWVq?=
+ =?utf-8?B?bUhDdC91VGRSZm5oNW5TclNGQittSFRiWTlYd0x3MlVmSTNSa1VON3Jqc1ZK?=
+ =?utf-8?B?dkFhTFVqNFFxdndDZkc2QmZCT1VnMXVQa2dmZHJIZExqUnpHaVlFUWtkQnk5?=
+ =?utf-8?B?WEVqTkRrVUFUQ3pLTzNFOVVRY2JRMVM0MUlOYkk3SHI1Vndka3ZpM0YyVDBZ?=
+ =?utf-8?B?czFuYkY2MDNiRkpESlcyWlRQMktMMitTa1dBVWJWL01MK002c3BPQXVORHpL?=
+ =?utf-8?B?M2poOXRZL2VDS2x0LzZMVVdkckxWWjZpNnNSaE5MWnBHUzhDbytNUEsvTjdh?=
+ =?utf-8?B?WGVUbWY4aUlqRXZBTEJZRndIbS9hTWdPWVNHaW9sYVdrZERhU3ZwK0dFSWpl?=
+ =?utf-8?B?MDRaRVZKNVVoSlpMU3p0S0xndjlWUW9Ka0xVYThFUm5mRU11Z2J0Mm9HUUpK?=
+ =?utf-8?B?eS9BWUZtYW5PYnFPM05qOVFYd2krV0tXdUh3dDFmWmt1NmErdHYzQ3BVdzdi?=
+ =?utf-8?B?UjlzOW1abmxvTUg1ODhXTWx5ellZREZKTSt4OE1jOThKQWc4UGNoZ2pDSVh3?=
+ =?utf-8?B?UTBQU3NJc1J0TXQ5UlJ3MDRwMy9ua3dpdEc0andNQ3JGOXpmYTRGYUQrNDRV?=
+ =?utf-8?B?TjJqbzlPME5vMElyR2NRSms2SmxrdW93aVUwb3JYeFM4NFVjdGgxK29hbzFL?=
+ =?utf-8?B?bWZGWjhKQXdTYklybjd0QXBHVDFXd0tmVU5ONTd6WTRVSkE3M1kyMDNHS0NZ?=
+ =?utf-8?B?bGhKcytwcmtsMlZXMVRmbERaRk0yRHQ0eWxTZHBsMXFyeS9XSG55d1Z2ZFBh?=
+ =?utf-8?B?eDMrdUdKdEFwTno3WndSY3NCV1FUSTdpNGlVY09zWFcyVUs1L3dhNUhKcVc4?=
+ =?utf-8?B?cW5xVWY3eHlPNzdjdnNrZlZKa2RZbFRTTUxZa0s2RzhQMjIvNDI2NnJiQ1dU?=
+ =?utf-8?B?OWxsZ2RxajZQbDE2WWM5T1ZvYnV0Uk9MNkNHdWdDZ0pCVlJ2RzR0MXVsSG1K?=
+ =?utf-8?B?OXljdGVCQkJ5WjFuYjRZUkE2c1NXblJtUkpTcXFvMWNmQnQ0V0ZrTkNQN1R3?=
+ =?utf-8?B?eXBUUXVuc3hiMnljNjhUVlg2dXdXeU1GZWpyVzJXTEN1ckY5YkZMenhZTkZF?=
+ =?utf-8?B?RDM5aG1DNUhzVkNXUDNKZXFnRVBPS3dEb3NwMlo2enJHeWRGQzhxUGx1aXJ3?=
+ =?utf-8?B?K3A0empqdnQ5Zi91QjFqeGM3Q291WkEzbnU3NzhZdUZyV0kveWhVUXpSU25j?=
+ =?utf-8?Q?OMh9LYGY25+An+5WzGvhvjL+bOAg89Zn?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR15MB4732.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(10070799003)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aEZzVUlYaWtXci9CblhGLzM2NHdIUVZWYzl0c09FaXdldjVxaDkzdGVmMENN?=
+ =?utf-8?B?Wm0vM2J4QmpBZWlybnNxS2twZHdCZ1o5Zi9wVGJ5Y0VJcWxYTHVYYXJ1OU1W?=
+ =?utf-8?B?TDNQYUlrcHZqSFE4ZGUyTUk0QUtKRVE5N25PRjZhSHp1cUJBMnBMQ2dSOUwx?=
+ =?utf-8?B?OEI2TlVrSnl0M2g0RGhzbHUrVUdJajhrRUJWMll0eks0WUsvcXhFOXp3T0JO?=
+ =?utf-8?B?eFc0MVFod3N2MGtBdnZneTBQVkR4amNUOFgwdGNvcnpYNXVTcHIwSExydHBH?=
+ =?utf-8?B?VGZLKzAyUVlGemhrZTFYUFhXUml1VHd6YzJWNlpRRmo3NUEzN1MwbVg1aURv?=
+ =?utf-8?B?M1hRd2kzaUZ3K0ZMWEpib2pZSGJrV2syYmJhL2dpL2xubHYrSHdDUzh4K1pP?=
+ =?utf-8?B?VUI5TUhrQktjYWxtek1pU1phWFBKODlXRzZMZkFIbU1kMVBHMXB2ZWtsTDU0?=
+ =?utf-8?B?aW9KOVMzc1NtZ0hIOGMzUFNqTGhhVllDTjNScTcrRnZIYS9SYzIzakRJWWxE?=
+ =?utf-8?B?cHJudkZMU3FodHY0dy95UjZmc3VLcmVVaUFTMGZHNzdiOStOZGErRS96WlQ5?=
+ =?utf-8?B?cjVtdFhxbGdUZ3BLZk9uQnVGMHVqM0ZxNjZsUnBtRWFvMEVOSDVOVS9PcTZr?=
+ =?utf-8?B?bHAzYTJ0WE42TGZzN21iaDROcVdxKzJIQjVwZmR0Y3NCczNtQ2VtbmlOanEx?=
+ =?utf-8?B?aFpEalBvS2dieVA5eE80cXJzZ2hXOWNOSFhSbkdTOTE2Qjc1ZHdkZThHZExt?=
+ =?utf-8?B?cHpDcVRIVy81RzYxeEJ2UUJja1paS0t5RzRsNVVuY2ZNa084eTh6VE5jQ2FP?=
+ =?utf-8?B?R1JpRTNOR3FsbkxOdGg1ZTY1T3pPTUNpbzh5UzRndGV6Q2lTaTR6QmtZcUpB?=
+ =?utf-8?B?Q1RYd1laK1hDdFVKcXBlYlR6dkJLa0xnTjZLSHg5QzI1VlBCcmo0RkMvRU5k?=
+ =?utf-8?B?b2lZOFNzUzdEbkRXejQwUDBNUzQ4aXV3WkV4Zm00dHNXMHMxNzFKRXl5S1Rs?=
+ =?utf-8?B?bHlCSDh3NFJzSjh6YlNNdnNVTHdQU3FocHFuajh1SzNmb09pcFN0d2hMWXhY?=
+ =?utf-8?B?VHo3OTZvb0ZNVVZDT0ZWSHQ4UGFacjZ4Y1A0ZHp4L1pTZE1mNzBRR2d1Wmxn?=
+ =?utf-8?B?K2pMSzN2VzlIcnRXSTJFTjhtL2hrSlBLTVR5ME5xdGNNcXV6YTFldG5TU1U3?=
+ =?utf-8?B?TmVGbHJTTzBNVzN3RGZhaTdWc29hRWlyMVRVdUpvakFGTVpBRG9iMkljb0Vp?=
+ =?utf-8?B?UWNnL3lhUXY1eHFldXhSVko3aUR4T3JHbXVQck1jZlEzQzNTK3ptNXVUT3BR?=
+ =?utf-8?B?MlE5dEFqY3YxMDhkTFE3bWc1bVZqcFNZVTZHNHFLcjVkbGNRZUNnbjhZZ25T?=
+ =?utf-8?B?MUN6TGhiTjdZOGN6SXlSNU5MWElvV0VwdFF1Y0ZSd2JCWmhXdEZtckdzUFFz?=
+ =?utf-8?B?Y0ZMc0ZqNTBwUVpvVXh0N1JoTUp3bEpLZkdRWGNldDdmRVVZSDhCbTFJallB?=
+ =?utf-8?B?bkJHNDVYbkp0VTBTdmNIMlpkcGRKSnFOSysxRTd0MjJFc1R0QmkvK1pJNGgv?=
+ =?utf-8?B?MWZkdU4yVXlLUllJYjVnajlieGpRUFJQWVIxS0Z2VVVhSDAxb29JUWdyZDB2?=
+ =?utf-8?B?dUZsZ1VBRXhpMllXUXB1VEtIdjd2MlB0MFhMcmxkbUZVQ05Sdm9BSW9VQ29F?=
+ =?utf-8?B?bFozSEVIN0p5NjFrOHZXblM3MFlGbVNTTHhpWE55ZmtBNjNUaE9FYjF3dit5?=
+ =?utf-8?B?OTIvQzJPR0grYmpBZDc0alFsYzQ1Mm5MYXhXK0pYS2sxMXo5aDk4VVFRMWtW?=
+ =?utf-8?B?RHRuSE1FY1JSZDJQLzBTTlc0QldQaGY3MTVsTzVBUitpQVplNHN6UTFFczlN?=
+ =?utf-8?B?ZmlScUwyTjlZbVNJa1JuUUFWWmxFR2k0Y3Y0MWcwM2k5R0t2WUJuQ1UwYnRp?=
+ =?utf-8?B?T01ld3Y3SDdweHFzMEI0US9DOHdMN2dLcXRnaTE2RDc0SSs3eEg5OVp4SDc3?=
+ =?utf-8?B?RUpNTHhFK3VrSFVRSDBuaklUWThONHYvemZIcWFBQ2gzZnAzMU5Tak5mRS8v?=
+ =?utf-8?B?MkcyK2VJTkEvRGdsTUpDNkxtZXBDQVhaM1FsNzNVSVRpRWlQYzJGUFZtRXBM?=
+ =?utf-8?B?OW9HQU9UbVQ2RURYaXFxWHRTWDlzV0N6cC9QbTdXY0dCMERpTWdyQzNFZm9s?=
+ =?utf-8?Q?gWUt6QSUL54HGEuQb01ybas=3D?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407165202.197570-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 16:58:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWZisqxyGL32Y-AD1UgQD9fWKG+a-o71R+KeuSqn=U6gQ@mail.gmail.com>
-X-Gm-Features: ATxdqUF7uCq3d6TZFmW1hFAcHR_xum_PX4q7kLPsABlFSFkCIzYc0BA79FKRuvQ
-Message-ID: <CAMuHMdWZisqxyGL32Y-AD1UgQD9fWKG+a-o71R+KeuSqn=U6gQ@mail.gmail.com>
-Subject: Re: [PATCH v2 6/9] clk: renesas: rzv2h-cpg: Ignore monitoring CLK_MON
- bits for external clocks
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR15MB4732.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e114b580-ddec-4970-66e4-08dd7c2e08fc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2025 14:58:51.7495
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: de9dthyfMpKDj2n2eFbFez0UVhOZwomEqmWARPTkoz1+RbXOKFVwl1TdpZwBgXV3QAa78OMJ0N1YK/skp6YBbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR15MB4666
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-ID: <06DC83FB2C04FE48993264189B1E43FF@namprd15.prod.outlook.com>
+X-Proofpoint-GUID: HVE2ZRFJMUuFihmAdWaOXQEZGdilBLWj
+X-Authority-Analysis: v=2.4 cv=FfU3xI+6 c=1 sm=1 tr=0 ts=67fe742f cx=c_pps a=uuboLt+qr3MZZMeqEnD08g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=TJ1helccAAAA:8 a=NEAV23lmAAAA:8 a=iox4zFpeAAAA:8 a=rS-HvqRvPkmjRo7KKgUA:9 a=QEXdDO2ut3YA:10 a=AblZ_v9dXwsA:10 a=1reW4qy83QYD4J8wWhho:22 a=WzC6qhA0u3u7Ye7llzcV:22
+X-Proofpoint-ORIG-GUID: HVE2ZRFJMUuFihmAdWaOXQEZGdilBLWj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_06,2025-04-15_01,2024-11-22_01
 
-Hi Prabhakar,
 
-On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Ignore CLK_MON bits when turning on/off module clocks that use an external
-> clock source.
->
-> Introduce the `DEF_MOD_EXTERNAL()` macro for defining module clocks that
-> may have an external clock source. Update `rzv2h_cpg_register_mod_clk()`
-> to update mon_index.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> --- a/drivers/clk/renesas/rzv2h-cpg.c
-> +++ b/drivers/clk/renesas/rzv2h-cpg.c
-> @@ -569,6 +569,25 @@ static void rzv2h_mod_clock_mstop_disable(struct rzv2h_cpg_priv *priv,
->         spin_unlock_irqrestore(&priv->rmw_lock, flags);
->  }
->
-> +static bool rzv2h_mod_clock_is_external(struct rzv2h_cpg_priv *priv,
-> +                                       u16 ext_clk_offset,
-> +                                       u8 ext_clk_bit,
-> +                                       u8 ext_cond)
-> +{
-> +       u32 value;
-> +
-> +       if (!ext_clk_offset)
-> +               return false;
-> +
-> +       value = readl(priv->base + ext_clk_offset) & BIT(ext_clk_bit);
+> On Apr 14, 2025, at 11:50=E2=80=AFPM, Qu Wenruo <wqu@suse.com> wrote:
+>=20
+> >=20
+>=20
+>=20
+> =E5=9C=A8 2025/4/14 16:23, Daniel Vacek =E5=86=99=E9=81=93:
+>> On Wed, 2 Apr 2025 at 16:31, Daniel Vacek <neelx@suse.com> wrote:
+> [...]
+>>> I'd still opt for keeping full range and functionality including
+>>> negative levels using the plain `zstd:N` option and having the other
+>>> just as an additional alias (for maybe being a bit nicer to some
+>>> humans, but not a big deal really and a matter of preference).
+>>> Checking the official documentation, it still mentions "negative
+>>> compression levels" being the fast option.
+>>>=20
+>>> https://urldefense.com/v3/__https://facebook.github.io/zstd/__;!!Bt8RZU=
+m9aw!7KPURbKO2g65XCAyShKtwZo6K7VjTovi2iOlXsfo1zUBg-bqxGY6TFndfisxqKk_kQzI$ =
+https://urldefense.com/v3/__https://facebook.github.io/zstd/zstd_manual.htm=
+l__;!!Bt8RZUm9aw!7KPURbKO2g65XCAyShKtwZo6K7VjTovi2iOlXsfo1zUBg-bqxGY6TFndfi=
+sxqHPiTlxm$=20
+>>> The deprecation part looks like just some gossip. It looks more about
+>>> the cli tool api and we are defining a kernel mount api - perfectly
+>>> unrelated.
+>> Any feedback, Dave? I tend to drop this ida of `zstd-fast` alias.
+>=20
+> Not Dave here, but if the future of "zstd-fast" is not that clear, we can=
+ definitely wait for a while.
+>=20
+> It's always safer to adapt when the terminology is mature enough.
 
-As ext_clk_offset is actually the offset of the Static Mux Control
-Registers (CPG_SSELm), this reads the current state of the mux.
-However, can't the state be changed at runtime (despite it being named
-a "static mux")?
+Upstream refers to the negative compression levels as fast levels. Both bec=
+ause it describes
+their aim (to be fast), and because passing a negative compression level is=
+ hard in the CLI where
+`zstd -1` means level 1. So the CLI says `zstd --fast=3D1` means level nega=
+tive 1.
 
-> +       value >>= ext_clk_bit;
-> +
-> +       if (value == ext_cond)
-> +               return true;
-> +
-> +       return false;
-> +}
-> +
->  static int rzv2h_mod_clock_is_enabled(struct clk_hw *hw)
->  {
->         struct mod_clock *clock = to_mod_clock(hw);
+However, on the library side there is no "zstd-fast" concept. You just pass=
+ a negative compression
+level to zstd.
 
-Gr{oetje,eeting}s,
+Other libraries, like folly::compression, also refer to negative compressio=
+n levels as ZSTD_FAST [0].
+However, this is only because there were pre-existing "enum" values that as=
+signed different semantics
+to levels -1 through -3, so we couldn't just pass a negative compression le=
+vel.
 
-                        Geert
+Overall, the concept of "fast" compression levels meaning negative levels i=
+sn't going anywhere. However,
+neither is passing negative compression levels to the upstream API. Both ar=
+e valid.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I'd lean towards just referring to using `zstd:-N` because it keeps the use=
+r interface smaller.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best,
+Nick Terrell
+
+
+[0] https://github.com/facebook/folly/blob/5237d93b450bfd9170c4746f00aa583f=
+0e662c2d/folly/compression/Compression.h#L113-L125
+[1] https://github.com/facebook/folly/blob/5237d93b450bfd9170c4746f00aa583f=
+0e662c2d/folly/compression/Compression.h#L446-L448
+
+> Thanks,
+> Qu
+>=20
+>>>> We can make this change before 6.15 final so it's not in any released
+>>>> kernel and we don't have to deal with compatibility.
+
