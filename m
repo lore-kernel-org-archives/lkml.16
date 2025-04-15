@@ -1,61 +1,61 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850914830F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD79D20ADE9
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685169; cv=none; b=L4MA5aGfgI1X8sr1STtNa3oEcnBNma2x8D5BaulQ5nhWgKbDVpdHIpZ1XqJFhGV//Q3ubrJXUs+llbHsNvGDRubGm+Fpdc+Zf9UQdzeI+zqLu7udtXbQxPxF3GfC3Syzy762ifwJnJrwlk6roJh4vt6EimBeGbU9Ye23rQpuCXg=
+	t=1744685174; cv=none; b=iWF0KtDRF1Ag72ezFsqLoi8I+qnUFLHqTIMFs6/qktWmRHdW9rrGKrOVCBsJB4WQM3pDISFRy5Jk7Tl14/J/dGomd1cQb9jRFD4cBQH2iNlabYSriEOQHhRKpW8JQcbLe/xhVGNNwEdR0ADietNM0xWECgw9Cz3BYgb+j4lRO7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685169; c=relaxed/simple;
-	bh=SmGY8uUfPfu4APqtxCqC7OBXU35g8mxz82QCGYM/o0o=;
+	s=arc-20240116; t=1744685174; c=relaxed/simple;
+	bh=coPa0VZ+lz8ATwbtZkKdsUxWQhC+KKG60nOSR2hGqUQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mSElc3ctOopUou42Lnku/r3Lkb3TVxPgNeYUJeK8aMkoP9a2lV80nRBlAvXcW+jTISu9Aq5oaYiF0VUPDjEXCbS6tcXB3fQaTZ44LLcbYEmYgXlUobSaALL6QH8iBjZUjVSaGLoDSYp+rAV+pOZQe9i/BziRzLaN3gDCYBkLfnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hbl4yyBt; arc=none smtp.client-ip=209.85.215.177
+	 MIME-Version; b=uQfYYDUj3r4uroeOEJhphuKoJhWkrKROltRy5O1UpSzIVYrK9DoXP6y5nUGrNv/i/MJWNL9EEsekPwDfgUZt0mpSmaXvy1enk4R+TAbyNxPboNrG7rBG9pEmx1/QXMcLh54H93iAHxm4QRSPKLBv9FVLMI3wYyeSHph5LLemQA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=g7TnzUTo; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hbl4yyBt"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-aee79a0f192so3336901a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:46:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="g7TnzUTo"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224100e9a5cso56026985ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744685167; x=1745289967; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744685172; x=1745289972; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gvWIGpHR+GW9zZlduzgMx/Do9egOoQOFfamShBDZoJg=;
-        b=hbl4yyBtfmMe5vGr9HAqp5ANdG+B/Z+HV15Y+4Q48zqDXXWTy0Qh5bYW8syDEQHU6a
-         vBTq/zubKEbTrtbZV29I0avu89C6TCvLHLPEeL3C2pcBKHEezszA5myLsV4kh/aVvBbe
-         ++mMDcbfe0JtVt/Nn1WMGh+qFC2h8HAGEaz4IfA8WZ6EpJ0ptLx6+2MbENJjPEp7dMX7
-         Z8udqVvMrbjV8HKaAmbRq3u0JF/90N4NqziVKrKj429rVSbuMJ1G6+7rbucbhCmMAiZ5
-         lzitCQd3mGibykn903yHqMMtCGjjUI+cu6a2Fo2kKLWYFut85bfz7beFFDCOBOjwV033
-         +BZA==
+        bh=WxEqDGFZMUmXVsS40Ac89DQGDSUswXt+C8ij+v7lQJA=;
+        b=g7TnzUTo27NnuNpVdGbuY2kPLu+ed9HtSEaBn+VMpJZksRwEKRafjaQzmAkmtk4z8v
+         flY8QSCqyV35m9dLFRN55bfxL0rw2k5or062olD03Hn1BvEVmPEkvbUq0ZFDbdJz5RIb
+         pbBmUFeyLOqEdqdt9/2+VSItJdczW4ESgtNKUxk+KziSBkcx/XWWaxQVJ+kKtIUwGVdY
+         TvjA4nNb9d+/iqyChMhFoAflXuJIaYbfsaiKY/RgWC1NETIn90lEzQesRzX8JBLyYXk3
+         OFc4eT+FBOYjSUPkLIjMOHLFlcnyMkQIN+edV5CrspNcQARFFZutJPiPKJ1Skd6+iIRz
+         j9zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744685167; x=1745289967;
+        d=1e100.net; s=20230601; t=1744685172; x=1745289972;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gvWIGpHR+GW9zZlduzgMx/Do9egOoQOFfamShBDZoJg=;
-        b=rK1c1xVKUrMV5x7X8Pq5Yc3USA8YjgSdMaUUkWq4XLVCpq4OZVLG6k4OkOQtmrtyi4
-         QbxA2hZYHbRl0SS0whPob2t1LDXGWQ5ZNtHqaqkcw0bUSqgv36N7E6oePqsUEc73iVHp
-         xd4SW5zKoKPQLTTtAV5YSIbp4AE2QfbxTZ8zBVAXR/ZXBkoXLSVqX0avqZ4dRcbk/scZ
-         jI5uU8H8M8Q24rlwRHt/b7uQbQ8oyFwHqCIJrD5lVyi+mtc8tVnIw6/JpFwBWOhb6yAT
-         +L0zkMIX51lUP2hFSc2RdeFWqoqRBsFN73jasPG3FSgOV69hifEzigBubu+1ggvtzrSM
-         D+rA==
-X-Gm-Message-State: AOJu0YxjUSKeA/eP4nyU1ovo31xfE5ziWb5+uGtNH/lm15JenR7EGuXZ
-	AZBGrDlgXriSQ1T+x2ukQlQ68nS2TNq/tof3Ju5Bk0inIsPz5rBVDVUwCSWyzso=
-X-Gm-Gg: ASbGncvA3Pgg2u5QUu+lXeppdnedIo2SYG/hO0UGBU4L7TzjjLUCTynLyVW+p+s/6eO
-	uIKQofjHAUrfhcGM9p64WEf/zBuzpdss1VWr5BpYlnzIqCO6A2MiGIgXZrMc19UAr0Jc2w/rzG8
-	0a5yuTtjKbavjfGJNfVEeMtrCh52zyXg57SLcKzbOjcmNRcGo3vRWr6mer4QuUH6P3AE9YBCVuj
-	t1CWQHK6KPYs47VXpiaTW3cqWKIe8rMzZKqeox9ozywALZxrvWhAXk71a5+8NPlyMnOfAySLg++
-	ZfbchG97+jXVYkMK+fHtFNXMK+p4hvZp3OGJB10LXxTm7SN0lean1tLJPIsJxzsZQSmAe0pO
-X-Google-Smtp-Source: AGHT+IH8Y9q5TPLiC8967x/6BZ0skn8uSLHYwF2c4d9LznyXXEA3aGsij5atdYTxBM4bP93XVTR95w==
-X-Received: by 2002:a17:90a:c105:b0:2fa:157e:c790 with SMTP id 98e67ed59e1d1-30823676374mr19082580a91.5.1744685166974;
-        Mon, 14 Apr 2025 19:46:06 -0700 (PDT)
+        bh=WxEqDGFZMUmXVsS40Ac89DQGDSUswXt+C8ij+v7lQJA=;
+        b=xIdvrY3F054/U+LtKUSm//M86S+L/mLz1A4hoWdshTqPRfG9ancpy/ZeBigqUJV4NR
+         B5VA4XbXZv6oEEvZZ0jU1WaPNUcE7j7OjsJwvY7KzztSWtcK75injQehUXp7bH0YZ+EM
+         KRuDrltKi4JyspeJPlm19heVdFaq+BiebGIyLfkfvpfGvDzaBdz6/GaqdbjE/I2UV56N
+         Yrqi5ezMistB3G+8pQ29nCSyrCM9VKytIYjkFAxoqvkDOF1D/RMsF4uwals3DxdNJOXk
+         3A/mju441bY0R884treZ76zmGuXueFzEyLNaW5en0txrc0NhZ9kMAes0pNWs31Pa17O0
+         7eZA==
+X-Gm-Message-State: AOJu0YwgmhFQbkrjImxNgEnOnnQjoe7eHS/LlpjtlfIoMP9apjYrFarm
+	J7U4BQMwFTasH8Y274LxKc6wYBkrC50XKoOSe2P3BFpa53DzQdCkLAGBFXR+0iA=
+X-Gm-Gg: ASbGncu/1jNu7SlVYxQe9QFeTSO6Uh89kqQf6tyj6AKeDllSar0h0FlyrS/1hHgAQax
+	FAoQLDLL4mjNuJ1f6Uu7oC3SXvonKmUHtqYfe57csnVG8NfSSMrwyEZNoOn2wB5SOsG/zqNIyBW
+	ylC+bMZfSs2leBz1S9dYCffKHGZCwAEYD1d6VOF7emekAnTzK4ydNSyNkoq5Q/Fx42l/sK/PjRb
+	blM7MQi2oe3Ke7vsyIDtjyq9hpxa/hWNnxdqb8Zp6n13O4Fk+XxO7afqbhj90bw06JhsxQyLpbQ
+	A+cFzJt8YdIF+8WBtzbIKScytkpNtMewtB4EY1zAVWo7fhMoCAj632Vb9AmReix+ZfW/huHb
+X-Google-Smtp-Source: AGHT+IEIXidh/WytIqsVeM73H2bfcV0T/EuPMcTn2oTZb/fVqTSwur1YIJZD8NROyg3NAghPl0x8VQ==
+X-Received: by 2002:a17:903:228f:b0:220:bcc5:2845 with SMTP id d9443c01a7336-22bea49548fmr180452435ad.7.1744685172229;
+        Mon, 14 Apr 2025 19:46:12 -0700 (PDT)
 Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.46.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.46.07
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 19:46:06 -0700 (PDT)
+        Mon, 14 Apr 2025 19:46:11 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: hannes@cmpxchg.org,
 	mhocko@kernel.org,
@@ -74,9 +74,9 @@ Cc: linux-kernel@vger.kernel.org,
 	hamzamahfooz@linux.microsoft.com,
 	apais@linux.microsoft.com,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH RFC 02/28] mm: memcontrol: use folio_memcg_charged() to avoid potential rcu lock holding
-Date: Tue, 15 Apr 2025 10:45:06 +0800
-Message-Id: <20250415024532.26632-3-songmuchun@bytedance.com>
+Subject: [PATCH RFC 03/28] mm: workingset: use folio_lruvec() in workingset_refault()
+Date: Tue, 15 Apr 2025 10:45:07 +0800
+Message-Id: <20250415024532.26632-4-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
 References: <20250415024532.26632-1-songmuchun@bytedance.com>
@@ -88,44 +88,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If a folio isn't charged to the memory cgroup, holding an rcu read lock
-is needless. Users only want to know its charge status, so use
-folio_memcg_charged() here.
+Use folio_lruvec() to simplify the code.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/memcontrol.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ mm/workingset.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 61488e45cab2..0fc76d50bc23 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -797,20 +797,17 @@ void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- void __lruvec_stat_mod_folio(struct folio *folio, enum node_stat_item idx,
- 			     int val)
+diff --git a/mm/workingset.c b/mm/workingset.c
+index 4841ae8af411..ebafc0eaafba 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -534,8 +534,6 @@ bool workingset_test_recent(void *shadow, bool file, bool *workingset,
+ void workingset_refault(struct folio *folio, void *shadow)
  {
+ 	bool file = folio_is_file_lru(folio);
+-	struct pglist_data *pgdat;
 -	struct mem_cgroup *memcg;
- 	pg_data_t *pgdat = folio_pgdat(folio);
  	struct lruvec *lruvec;
- 
--	rcu_read_lock();
+ 	bool workingset;
+ 	long nr;
+@@ -557,10 +555,7 @@ void workingset_refault(struct folio *folio, void *shadow)
+ 	 * locked to guarantee folio_memcg() stability throughout.
+ 	 */
+ 	nr = folio_nr_pages(folio);
 -	memcg = folio_memcg(folio);
--	/* Untracked pages have no memcg, no lruvec. Update only the node */
--	if (!memcg) {
--		rcu_read_unlock();
-+	if (!folio_memcg_charged(folio)) {
-+		/* Untracked pages have no memcg, no lruvec. Update only the node */
- 		__mod_node_page_state(pgdat, idx, val);
- 		return;
- 	}
- 
+-	pgdat = folio_pgdat(folio);
 -	lruvec = mem_cgroup_lruvec(memcg, pgdat);
-+	rcu_read_lock();
-+	lruvec = mem_cgroup_lruvec(folio_memcg(folio), pgdat);
- 	__mod_lruvec_state(lruvec, idx, val);
- 	rcu_read_unlock();
- }
+-
++	lruvec = folio_lruvec(folio);
+ 	mod_lruvec_state(lruvec, WORKINGSET_REFAULT_BASE + file, nr);
+ 
+ 	if (!workingset_test_recent(shadow, file, &workingset, true))
 -- 
 2.20.1
 
