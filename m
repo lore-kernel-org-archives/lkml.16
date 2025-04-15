@@ -1,316 +1,191 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2079.outbound.protection.outlook.com [40.107.223.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26ED825771
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724108; cv=none; b=dJ0VrzVaO9XNZa5q7ma/ehpFcPiZ37m7QV/yprsM+w0x8Y3umBJnyljP/bK3f+/WIZfK5F7/gFcma/OGXkLYWUc/KDNMuWC3fbjW/w5J6avq9Mq/ONHdAfE4v/POSCt1O6Km9Z2IHuvZeXEPKBMijUizV4RlyQnjqzGU8vIaXzg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724108; c=relaxed/simple;
-	bh=m0xfAS8QK+GM0ddqcKkgH7JaMDCagUiMUdtp3obSN4I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NO1spdI2jF1I0wDmYc0gntzOre8o2SJGh/GOr9cB1K3MzhbR1LRLiugbnYSIZEyyFebsJsnc0Y19c78ePSDxjJ0dwnXh5eiPWbS3PJhdELce59mYswy9AREkhp0KMEnYmX1Q/6V/IC09Q4xronp4dwHzza9BFSQb4tDp6ysI0Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ok1L0+c4; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EB61EA91;
+	Tue, 15 Apr 2025 13:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744724136; cv=fail; b=KZHjleGQIYhroe5988YZ9ovX8Gt4EQ8T5nGG8cXFEIZy3rtwW7/GlxIjZ4BMVLSNLKwYGAZTe48EZDMlNCZmbYR6DHix5QXO4o4TIkbFKmgspn4FHm7R+sBKrkSr0vxYhVg/ZwYFoTDPXyL669kN7GZ8oghs6akaDjcvKK9hVso=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744724136; c=relaxed/simple;
+	bh=Z2kAg/c50dGRVXRYCAW1JBrEkkojMNUC/wphXaWLlXg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cNXCe6ict3yKBwRKAsCmnYpLLESzcY6Id4NdHJ2KWBmicvJJ33hF8MJmi3m4Or4zttN/aOd7oKpieHKA8cKyIxilyJvXrLmeUdvor22EcAs6sePIvLJET2f/J0v3LbnDykXlsLD/Cp7TNfg9IBKkc/vXh8SGCapFnM0uq/JbaXM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=nIsw5QmH; arc=fail smtp.client-ip=40.107.223.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ok1L0+c4"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso10346509a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744724104; x=1745328904; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PGZ9B42C0yWg7Qpk0chgVgDrU0joNg71F+OhP9lllNY=;
-        b=Ok1L0+c4LDhurErTMbt5LwXAnpZch32QF7h9gD5tkw6/AkbDG1gtTGLYtaq4lukbOH
-         NEai5EYSH2AtExNiVQC79KEl1dPTLssMjNNWSoaosyEEo95mJiaqz7KLdKS/JrDE7XDB
-         SX2Lgppf5XY4apEXwL/ayD9WlEDqLGfm8TxC3bL6ykfkJXBmH8kr3/Ereta/Th8TqTu+
-         V4dQv3aUn5y+89qgXufIzZuI1iYhnfPvNoN7+qGOP0cSH8bCmHQibq6Z4AXnubCZRoqF
-         l7uB2hpdCSjELygg3bOZmGRjKYwSbTaLlaWU6Ba9BkjauLz5yWLB+QjfDSEZZhMzRxbu
-         Q/BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744724104; x=1745328904;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PGZ9B42C0yWg7Qpk0chgVgDrU0joNg71F+OhP9lllNY=;
-        b=HhTZ5HdEMOy847op6N4I9/zyWO2UwgJhpb+3XzTV1WgUE0RZDbKKbMHtXw17oVDnEO
-         VYpuHkd6i0tc/+UMElIj4K/JRY5Fs0tS7I8WThTcySDjjtsma1miQfYTeExy7HXBH1K9
-         RWr+jGEZHLTPjnwmH/4bl+fyA7X4qQrSxCbODGNka9any+wL4k3xQor8k4OM3nN4Sgl+
-         nBSTtbTvuNIF3K9bxwWG5NY5FgHkTQ85LNNLQysWv+iQgFkcSly6i3dIVhpy2Y2H25kC
-         IE4C/b4m0+yU9wRw1WF2IQi3QAaJsS9J7q58HitHch8HLpbK6JF7xqFw5IQdvAH2fMjO
-         DOXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVPW3u3Gx1HrizjeOkSU8yeDPxRUJCwnOB52PRlj27Q8Fn/lxQzYXFMFZyG9TkUWJzENz0iGXCFNVlEas=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1ZBchjU/HXxqb5WJrfyPwJ3q0oHB6IyQB5BHg4bkaiBThOgC5
-	I1O5BsLvt+ZA7j6fK/nnF7Dw/d/kc8Eku8eQNyMtng2PDDOdTTrZC6gaNFjICg1l9dqfWdKnBHM
-	pNv0JukRZ17NXUj5D/dW8P/xqtl8oXjlPKke/FQ==
-X-Gm-Gg: ASbGncseHR/lVkROzFiCRgg/33LQz9kt66sLk8ZaP8PENoSwx1PcSztNTYfD9nLY2oo
-	wqr34F7pKGqqx+AGRsAwqiVfNFAutgkYX90mmvSb7i59fMVjjpcTLILlw4XbjxHoL/jeNO+sUp6
-	l0Iozo40KJQEKZJqFNiOk2s4JO59VnDKoI5X+1estJvucipVxqjf/cC72V
-X-Google-Smtp-Source: AGHT+IFeWYl7QrxdNMXm+KJ0xt4slhUexWmapLP1aBEJ5DfrmKAWMNsZFlYEzQq89QgGem5AgCQoBcOQpxhvkd68zAk=
-X-Received: by 2002:a05:6402:1e96:b0:5f0:9eb3:8e76 with SMTP id
- 4fb4d7f45d1cf-5f3702b02eamr14469259a12.34.1744724103928; Tue, 15 Apr 2025
- 06:35:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="nIsw5QmH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nn96vFX3q7Ag8tNZDbee6cboRIAZGmDH4jC7efs0O/A/DplO9jh//W1ae7+ajfsYnOMpPmBKHOOiewN4u58Q5eZ7AlXk4yxmAiaSAGIDXgA3N/6/lvhKUpkCtcJEYFdhxjlrs/8D2gQhufQqI9rh1cUlAGBGerjwhNnnEL4NKV9ifmm5zfjS0yu+TZSt5rdY0bvZWigCDmYQOSkVmgb5z88r00qJRmFYUGiObr9J2CsocnGl/ghfd+tjWGGEVGptt3YKOOwXmORf91RYSH5wU58L9i5jWwDBU+8+E+ZPwEcQLZ7UWFl43D5HTuioqInq2bAGsb1sGbfBMuFdODdxSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eQ09OyS/pbDtT+JbnqEb1gCI76Q67boGk6J5L11bxPM=;
+ b=wzQf1ZuTKEhfe6vKnCVsWiB3GEP4PsH6TbaxYFv8XW7wRgZVKSKH9QeIrwrnFKC96b21HgU3gD33L+LuXzOw/aCStrpu2/inmf1faWHXdBIganBjIkgqeeQTnGg/t04aEDLti7TsmM3lUMkrvdUR47QnIvkFtWv//9AY1erJgDsJuP2nZD6E29t+UuTxwN/IVdKA89V4PyOn2ld+7z/Stm++DVNaR4sdxb+afut3/Mq4RZNKHHiLnYG3xeAuBSw7Aawg7Qbpe1FNhkEGZGrzKGBLp3gG+Kqs76ho/a8elpFA9Y09A43004FUsIoQ9YTbQOLLg2oaqQIZoHtkCjuOsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eQ09OyS/pbDtT+JbnqEb1gCI76Q67boGk6J5L11bxPM=;
+ b=nIsw5QmHhtKFNUaK6706NDx1NxhYjabUfUHw0xcR3e6AIsA+fr6ULAxLqkQEoAPjlaSdes32pN0UKKJQ8vvXkrUve8loO69s4A8Nttj/76SF1UQ+tKA84OvkATHRaRrSTphp0f8PrWee8MOSuW9/lxm1Hn8lNt733vCr6kidK+0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5338.namprd12.prod.outlook.com (2603:10b6:408:103::23)
+ by SA3PR12MB7859.namprd12.prod.outlook.com (2603:10b6:806:305::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Tue, 15 Apr
+ 2025 13:35:32 +0000
+Received: from BN9PR12MB5338.namprd12.prod.outlook.com
+ ([fe80::a140:210f:ff90:335c]) by BN9PR12MB5338.namprd12.prod.outlook.com
+ ([fe80::a140:210f:ff90:335c%4]) with mapi id 15.20.8655.021; Tue, 15 Apr 2025
+ 13:35:31 +0000
+Message-ID: <2e066edc-e279-4252-ba67-b4be2b462084@amd.com>
+Date: Tue, 15 Apr 2025 09:35:27 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] drm/amdkfd: Fix kfd_smi_event_process()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Kent Russell <kent.russell@amd.com>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+References: <Z_44oq-aSZOsvxTN@stanley.mountain>
+Content-Language: en-US
+From: Eric Huang <jinhuieric.huang@amd.com>
+In-Reply-To: <Z_44oq-aSZOsvxTN@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR0101CA0192.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:f::35) To BN9PR12MB5338.namprd12.prod.outlook.com
+ (2603:10b6:408:103::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409213030.3489481-1-iuliana.prodan@oss.nxp.com>
- <Z_0snwzpkPTJqjWX@p14s> <8116ac27-4c2e-41a4-9e05-7d20a7c6a361@nxp.com>
-In-Reply-To: <8116ac27-4c2e-41a4-9e05-7d20a7c6a361@nxp.com>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Tue, 15 Apr 2025 07:34:52 -0600
-X-Gm-Features: ATxdqUGSQ5S_l_W8BKKUHjnxrDXxD3sYIeidnBz7Dp1f6y94_0PqsAy6EwgwgCw
-Message-ID: <CANLsYkzehT=ghX0XCNEp7Dod1Jc1YCm33B3ByDrfMoKvbssHag@mail.gmail.com>
-Subject: Re: [PATCH v4] remoteproc: imx_dsp_rproc: Add support for
- DSP-specific features
-To: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, "S.J. Wang" <shengjiu.wang@nxp.com>, 
-	Fabio Estevam <festevam@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	Mpuaudiosw <Mpuaudiosw@nxp.com>, imx@lists.linux.dev, linux-remoteproc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, "Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5338:EE_|SA3PR12MB7859:EE_
+X-MS-Office365-Filtering-Correlation-Id: 096fa7f5-7743-4af8-b308-08dd7c22648e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TDJiNTlpYy9SYzdwZlI5SXdvdWJnVUFsQUFmaU1OWXp4OHFPR1ZVU09GMVcv?=
+ =?utf-8?B?ZkFRcVJvZlpITStsa29pNHBGKzdjc1BURUU4R0M4V2FmNkhXNHBaNnFURVF0?=
+ =?utf-8?B?UVpHWGZsM0VKUHdqd3k2cGw2M1dmSVpSTFpvNmt1bDVKV3AwYnR4ZkU1TUNM?=
+ =?utf-8?B?MU9SakIvVERCNU5PUHpHU0VzeWcwckRGQXZzSk5WWWY0aEFteFczVzdJNHJK?=
+ =?utf-8?B?QVRLaGdzU0NvNld2WFNFc1lPUkVkdjJEeXdaWXkrMmVPSG5BaFd1NzlBcHdr?=
+ =?utf-8?B?Z0tkZ3VJTldNa004Z3hjVlJha1ZzV1RQZ25JTEFzTzh6bTlsMEwxZmpOdGdJ?=
+ =?utf-8?B?bVZxRWNVcnJKVWYvNDFST1NVVVdTcDdOeldvQ0hwQTI5cWorTjlzREoxbDI5?=
+ =?utf-8?B?Zm96bWx4ZW5jM2FwU3BlT2VzTVdGcmxtT2dOWG9EaWlZczUyS3FPdG1GcVJP?=
+ =?utf-8?B?ZU5GalBBWnlrNlZUdFM2N1F1cWRVb2k1L3ZTbW1jSnd3ZmZXNWJsb2YvYm9J?=
+ =?utf-8?B?T2preVQxNUZySjhZTldma3JRWkRqR3ArTzVvTmkwRkczRXFkdWY2V0hIWFdZ?=
+ =?utf-8?B?Uk12MHo1bC9OcThWUWVvbm9iNUlJc1k3UkVNQWRvNjdlRDc0ODczQk1iR0pH?=
+ =?utf-8?B?UkFLeWRFQy9rZ3BYMTdxMExKMDNBNk5Qak15c0RzMEpyQUd4aXk2T09jTlQz?=
+ =?utf-8?B?QjlscHZMYTZ6blpUeTRBWVljcVZXSk5YemQxcm8reUt3QVRZbjlSdGpwTXVn?=
+ =?utf-8?B?WlNLdzc2QU5pZnF4TFpRRGt6bno0NUxYSzdyZFVPOUlRenpUQWh4N1VmRkRM?=
+ =?utf-8?B?ZmcxZ2tIK2J3d0VQc0RrTk9hZ1V3Vi9uWWd5U3lqdjJCNERWd3NsYUxjcm9j?=
+ =?utf-8?B?U2VyVXVrWlM4S0cyVTA2Z3VEV1lINHVjZWZrWDhkM2lBZGFIbGpUSWFWV0NG?=
+ =?utf-8?B?dk1KTTQwc2FieU5EdVhwSnZKTHhLbEhyUGpEczhsamJKUzh6Q3pZRkh4ZWlm?=
+ =?utf-8?B?NE1QMysrMkNQWWFLZTNWTkIrWDRzaFM5bEFsdFFQdG1OWG9xVkorWmhucGl6?=
+ =?utf-8?B?Y1E2RlRNSVNxRDBTcnF4Ui9vS0xmb2ZSbUFmZ1hvYWpScGplbVdTWWM0RWdm?=
+ =?utf-8?B?dEdVZEF3czBHYkFkSkNBR1V5M2xaQmI1QVNWa0JFU3NaVG1YczB6VEVoYlY5?=
+ =?utf-8?B?WWtBdjBhT0Y0dGh0Nm5SRm1OSHpaMTBTeUk5eCtNVDU4TFhUbzBNNCt5Vng4?=
+ =?utf-8?B?eU1CVWZEVTd5dXV6MVhJakthZGJaUjhzdVNPSDJBOUhKOEZnNmN2cGNETmtQ?=
+ =?utf-8?B?cnkvOGtvWm5kRC92YXFkZmhlZTBpZDJ5dElmNlB6OXkweGViQnJWdFlRZnY4?=
+ =?utf-8?B?SXJGM0poNG1tbTZ6NFlza3FjYVRKN0RaT0N2ajFqNjVqYWRzL3cvTGlsUk5q?=
+ =?utf-8?B?YkFCcHJhK202cENjbU5naHIwTGVXSnNvN0FraW1RcWowTjM0WWgwYnd2TmNw?=
+ =?utf-8?B?RytPM1BFTVdCSHdmOEMxRlI4a1lRZURhS1VJWTBYVkFycEdUditxNTh1MTVY?=
+ =?utf-8?B?MkJaVEJ3TkRoVC9SL2t3NzFGd0dobzR6dFEzTHFSSklhT0ttVUdOcG9GT0Mv?=
+ =?utf-8?B?VlpQUG1DRk1SQTFvc2tTTjl5QmFBOU1FcVhvOWh6T0xsYlplZGJmQW1ORHlH?=
+ =?utf-8?B?ai9mU0lGcXV3eG9CdDJlNk5DNnVMNVdZTnhUQ3AyeVhic000OC9leDJqcTRM?=
+ =?utf-8?B?YnZmUUwwNGFLNGpLczhZak44NXRKNjUyaXZadXQ5d0RsdCs1Rm5lbjVWWGFO?=
+ =?utf-8?B?M05hWE4raElONFhaY0xGQ3pXSThpNUoyWXh2UE9yWHI1Y3dhd3ExUjZMQjdU?=
+ =?utf-8?B?WkJJSGZEenk5cld6ZzljZnM1YXJkOE1yektFTGxZRFJOVDk0NUNNdDMyTEFB?=
+ =?utf-8?Q?IQ2NQ7VgDPw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5338.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R1F0K2pJVzlZUStqVUJqdVdtZkJ5TFNmNktvR05UZkFwVTJDcDU1Tm90UlNG?=
+ =?utf-8?B?cXBCamRuUWxuazVPYWpnMnZlMCtSWFQ2Nzlwb1BhRHFtejcyUUVFYUxsYWZz?=
+ =?utf-8?B?N1VjY2tyK2NmeFNOaXBCTm52YkxGU0ZTUmo3disyZUpnVG5OZzBhTEF0S0lv?=
+ =?utf-8?B?T2RJS0hRc1ZnZlA4ZHJXYXlHN2VQRGg1d3Iwd3RUWVh2cFdqQzA5NGV0UDkv?=
+ =?utf-8?B?Wlh2dzRHMExJVTFmQ2JFem9nNTJvNkRkU0RaS1F1NlF5b1RiRUpkc1I4RGM1?=
+ =?utf-8?B?OGtscTY0a2R0eTU0QTYvYVdxczA2Rm9GZ0xINFZuMDdxT1hGSUh5ZE12VVdR?=
+ =?utf-8?B?TGozNkZOSVYvMVF3WWE1RXJxczlaRldvbWdXQ3RFekhXZmJZVGNCY0E5bS9l?=
+ =?utf-8?B?S0x5MGJxNlFkVmk4bUcxMHhsQWlncFhjMlAwOWNhTFloYU5YUUlId2ZMMmZC?=
+ =?utf-8?B?ejU2UDNhaGMrSVFaalhmSnQ1b05GT0I2V3ljMVVMVWozWExKMVpRL0U4bHhn?=
+ =?utf-8?B?TDRWQVl6Vkd0bWdocmk3SWRWZi9jTzJLS09nUDJud1ZnME9pWnJ1dUVHdWw1?=
+ =?utf-8?B?THcvYnI0VERJTnVDNktDd3NOQlpQamJxMTJkaTJTK2hXMHVBcDc2WmVab3ZH?=
+ =?utf-8?B?SjdKTDJubXBsbThKREwvUGdyNTRUSGo1RWNRYk8wYjdCazk0V1hiNTFLN2dO?=
+ =?utf-8?B?eDVXZTY1bjhpWmRsSXdwZDVOaDFnR1hhTmwyanBwUkt0NHFoUWZWc05GaFJB?=
+ =?utf-8?B?anVaSUhrQ2FJeUpYT2w0dExYL2ZOMDQ0QnZ2U2dzRDEwOXFqWnVYSXpZS1A2?=
+ =?utf-8?B?T3hiZ2tBQVQ4UzFMQk5zYzhOME1tYUxPWFI5YTVRWGZpVVRPVVhGdXZqdWNa?=
+ =?utf-8?B?UnY1N0szV0F3WnR5NDVvMVd4TlZ3RFRxU25uczRzdkZoWDYzQ2pkMkJpMHQx?=
+ =?utf-8?B?ckppcWVibythYzc3TjFhZWlUdForOSs1MC82Q3VHd3RtdWdkMU1LY2F5UFBQ?=
+ =?utf-8?B?UVVhUSsvc1c4SkRiSzYyRDJJSC9MZHVZdTBqd3dncThzODZHV1dlQzEyVmFC?=
+ =?utf-8?B?SVZkMWV0SnV2a1Z1R0ZQbUZ2ditobmlGMmdtK21rSnRCRWdLU3B2b3k5TGNV?=
+ =?utf-8?B?TVZiN1FFQkZGZzhveEp0MGk4N04vYk55cmZ6WjN5WTZ1SFBhNG52WXhWL21v?=
+ =?utf-8?B?cHNnR25oaXl3Qmh1cXhLd0FzaERnZG9uSUFKeEVBMTBDMVlON2t4dDJ2TGsr?=
+ =?utf-8?B?ejdOUStaQ1pRazJBTFVDbjdKdTgyUENBWE9VWmN5ekJhZlR3Z2pMMWVDcVhR?=
+ =?utf-8?B?elFnRzkyNXJDWjlBZDRvTy9GKzJjc3h5aWNPZ2ZKZlpvUW5ETURsTFE1RVU3?=
+ =?utf-8?B?YTJDM3hhbFNPYjYvUWwxTDIyZUxIL3RBbzVmUk40OEwyUlhzV3FXRWN3aWVB?=
+ =?utf-8?B?ZEhPYUF5RVp2aDBTYTR0Q0NQTmFRZzJGNG5Vd1VKNkttemFGR1N2MTIzeSs3?=
+ =?utf-8?B?UE9PenBseXJPeEJlTHFDYnRJVkJFbEI1eDdTdFlZSnR5UVhIOHpIcW43M3V6?=
+ =?utf-8?B?a0hzN0N5eGJ4aUxtemttYkxqaW10YUwvVjJzd2FzbEFEc3hLWUVrbS8yUFg1?=
+ =?utf-8?B?THZ0UjNtdHcxV1lLbThSdFNqYStKMjkrVnF0bHpseGR0U0k0OXhSdlpWVzVp?=
+ =?utf-8?B?aHhCR1FZcnhsOXFnUUVKR0RucG9yMjF6RTFML0FsTmlxdkdsVk1WN0ZGcUw1?=
+ =?utf-8?B?SlNkRU5rQ2VqRjdvZ0RHaXM4QW9jQXM4ZDBRVG5KcFhGU1F2NDFoNXZ4S0FK?=
+ =?utf-8?B?cVp1OVo5Mzd0USsrTWlxc1Vxcm4wQzFsZ0RYQjFxZ3pDQTdObFE4T2g0Mm9J?=
+ =?utf-8?B?UVBFT2xHVjFhdGF6TmE4TmVsbTFDRlI4MGFzTVAzK3ZGeURGeWczeE9Rc3Vv?=
+ =?utf-8?B?cW9GRTBqTnJ6OTVUUFU3ejYrR3ZScUNWNk1tN3RKSkc1UWE4ZVVXN2dCdkVQ?=
+ =?utf-8?B?c3poSWpjRWVGQWtKZk5IelFUWGpWbGdCRk5tVjBXQVdQaUhMTWtJODZaUVFN?=
+ =?utf-8?B?Q0ZQcVVNSko5a1o0cUJSMWFGQmpSRWlmektOUkp6dE82ZnJUN2c2aXhBOWR5?=
+ =?utf-8?Q?UeD3ZxQEcTSQA7vzK1ZhbYxFm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 096fa7f5-7743-4af8-b308-08dd7c22648e
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5338.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 13:35:31.6625
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LbAgrnUWlgPzOuCjYZuaOIoJDuhCUL7UpVddSdxerdxtzYaiA/DwLDeu0X0CbUzThh81TbvkSwj1hiRpEKhfyA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7859
 
-On Tue, 15 Apr 2025 at 05:04, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
+Thanks for the fix, I had the same patch submitted yesterday.
+
+Regards,
+Eric
+
+On 2025-04-15 06:44, Dan Carpenter wrote:
+> The "pdd->drm_priv" NULL check is reversed so it will lead to a NULL
+> dereference on the next line.
 >
-> On 4/14/2025 6:41 PM, Mathieu Poirier wrote:
-> > On Thu, Apr 10, 2025 at 12:30:30AM +0300, Iuliana Prodan (OSS) wrote:
-> >> From: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >>
-> >> Some DSP firmware requires a FW_READY signal before proceeding, while
-> >> others do not.
-> >> Therefore, add support to handle i.MX DSP-specific features.
-> >>
-> >> Implement handle_rsc callback to handle resource table parsing and to
-> >> process DSP-specific resource, to determine if waiting is needed.
-> >>
-> >> Update imx_dsp_rproc_start() to handle this condition accordingly.
-> >>
-> >> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> >> ---
-> >> Changes in v4:
-> >> - Reviews from Mathieu Poirier:
-> >>    - Adjusted len to include the size of struct fw_rsc_imx_dsp.
-> >>    - Updated len validation checks.
-> >> - Review from Frank Li:
-> >>    - In imx_dsp_rproc_handle_rsc(), removed the goto ignored statement.
-> >> - In probe(), set flags to WAIT_FW_READY to ensure the host waits
-> >> for fw_ready when no vendor-specific resource is defined.
-> >> - Link to v3: https://lore.kernel.org/all/20250403100124.637889-1-iuliana.prodan@oss.nxp.com/
-> >>
-> >> Changes in v3:
-> >> - Reviews from Mathieu Poirier:
-> >>    - Added version and magic number to vendor-specific resource table entry.
-> >>    - Updated defines to maintain backward compatibility with a resource table that doesn't have a vendor-specific resource.
-> >>      - By default, wait for `fw_ready`, unless specified otherwise.
-> >> - Link to v2: https://lore.kernel.org/all/20250318215007.2109726-1-iuliana.prodan@oss.nxp.com
-> >>
-> >> Changes in v2:
-> >> - Reviews from Mathieu Poirier:
-> >>    - Use vendor-specific resource table entry.
-> >>    - Implement resource handler specific to the i.MX DSP.
-> >> - Revise commit message to include recent updates.
-> >> - Link to v1: https://lore.kernel.org/all/20250305123923.514386-1-iuliana.prodan@oss.nxp.com/
-> >>
-> >>   drivers/remoteproc/imx_dsp_rproc.c | 98 +++++++++++++++++++++++++++++-
-> >>   1 file changed, 96 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
-> >> index b9bb15970966..e4212e624a91 100644
-> >> --- a/drivers/remoteproc/imx_dsp_rproc.c
-> >> +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> >> @@ -35,9 +35,18 @@ module_param_named(no_mailboxes, no_mailboxes, int, 0644);
-> >>   MODULE_PARM_DESC(no_mailboxes,
-> >>               "There is no mailbox between cores, so ignore remote proc reply after start, default is 0 (off).");
-> >>
-> >> +/* Flag indicating that the remote is up and running */
-> >>   #define REMOTE_IS_READY                            BIT(0)
-> >> +/* Flag indicating that the host should wait for a firmware-ready response */
-> >> +#define WAIT_FW_READY                               BIT(1)
-> >>   #define REMOTE_READY_WAIT_MAX_RETRIES              500
-> >>
-> >> +/*
-> >> + * This flag is set in the DSP resource table's features field to indicate
-> >> + * that the firmware requires the host NOT to wait for a FW_READY response.
-> >> + */
-> >> +#define FEATURE_DONT_WAIT_FW_READY          BIT(0)
-> >> +
-> >>   /* att flags */
-> >>   /* DSP own area */
-> >>   #define ATT_OWN                                    BIT(31)
-> >> @@ -72,6 +81,10 @@ MODULE_PARM_DESC(no_mailboxes,
-> >>
-> >>   #define IMX8ULP_SIP_HIFI_XRDC                      0xc200000e
-> >>
-> >> +#define FW_RSC_NXP_S_MAGIC                  ((uint32_t)'n' << 24 |  \
-> >> +                                             (uint32_t)'x' << 16 |  \
-> >> +                                             (uint32_t)'p' << 8 |   \
-> >> +                                             (uint32_t)'s')
-> >>   /*
-> >>    * enum - Predefined Mailbox Messages
-> >>    *
-> >> @@ -136,6 +149,24 @@ struct imx_dsp_rproc_dcfg {
-> >>      int (*reset)(struct imx_dsp_rproc *priv);
-> >>   };
-> >>
-> >> +/**
-> >> + * struct fw_rsc_imx_dsp - i.MX DSP specific info
-> >> + *
-> >> + * @len: length of the resource entry
-> >> + * @magic_num: 32-bit magic number
-> >> + * @version: version of data structure
-> >> + * @features: feature flags supported by the i.MX DSP firmware
-> >> + *
-> >> + * This represents a DSP-specific resource in the firmware's
-> >> + * resource table, providing information on supported features.
-> >> + */
-> >> +struct fw_rsc_imx_dsp {
-> >> +    uint32_t len;
-> >> +    uint32_t magic_num;
-> >> +    uint32_t version;
-> >> +    uint32_t features;
-> >> +} __packed;
-> >> +
-> >>   static const struct imx_rproc_att imx_dsp_rproc_att_imx8qm[] = {
-> >>      /* dev addr , sys addr  , size      , flags */
-> >>      { 0x596e8000, 0x556e8000, 0x00008000, ATT_OWN },
-> >> @@ -300,6 +331,66 @@ static int imx_dsp_rproc_ready(struct rproc *rproc)
-> >>      return -ETIMEDOUT;
-> >>   }
-> >>
-> >> +/**
-> >> + * imx_dsp_rproc_handle_rsc() - Handle DSP-specific resource table entries
-> >> + * @rproc: remote processor instance
-> >> + * @rsc_type: resource type identifier
-> >> + * @rsc: pointer to the resource entry
-> >> + * @offset: offset of the resource entry
-> >> + * @avail: available space in the resource table
-> >> + *
-> >> + * Parse the DSP-specific resource entry and update flags accordingly.
-> >> + * If the WAIT_FW_READY feature is set, the host must wait for the firmware
-> >> + * to signal readiness before proceeding with execution.
-> >> + *
-> >> + * Return: RSC_HANDLED if processed successfully, RSC_IGNORED otherwise.
-> >> + */
-> >> +static int imx_dsp_rproc_handle_rsc(struct rproc *rproc, u32 rsc_type,
-> >> +                                void *rsc, int offset, int avail)
-> >> +{
-> >> +    struct imx_dsp_rproc *priv = rproc->priv;
-> >> +    struct fw_rsc_imx_dsp *imx_dsp_rsc = rsc;
-> >> +    struct device *dev = rproc->dev.parent;
-> >> +
-> >> +    if (!imx_dsp_rsc) {
-> >> +            dev_dbg(dev, "Invalid fw_rsc_imx_dsp.\n");
-> >> +            return RSC_IGNORED;
-> >> +    }
-> >> +
-> >> +    /* Make sure resource isn't truncated */
-> >> +    if (sizeof(struct fw_rsc_imx_dsp) > avail ||
-> > We agree on that part.
-> >
-> >> +        sizeof(struct fw_rsc_imx_dsp) < imx_dsp_rsc->len) {
-> >  From the above, "sizeof(struct fw_rsc_imx_dsp) > imx_dsp_rsc->len" would be a
-> > valid condition when it clearly isn't.  I am still convinced the only
-> > valid option is:
-> >
-> >              sizeof(struct fw_rsc_imx_dsp) != imx_dsp_rsc->len)
-> >
-> > I am happy to change my mind but would need more information.
+> Fixes: 4172b556fd5b ("drm/amdkfd: add smi events for process start and end")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>   drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> You're right, it should be sizeof(struct fw_rsc_imx_dsp) > imx_dsp_rsc->len.
-> The ->len comes from the remote size, while in Linux we need to check if
-> the length is at least sizeof(struct fw_rsc_imx_dsp).
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+> index 727a4ce29fe6..c27fd7aec1c3 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_smi_events.c
+> @@ -350,7 +350,7 @@ void kfd_smi_event_process(struct kfd_process_device *pdd, bool start)
+>   	struct amdgpu_task_info *task_info;
+>   	struct amdgpu_vm *avm;
+>   
+> -	if (pdd->drm_priv)
+> +	if (!pdd->drm_priv)
+>   		return;
+>   
+>   	avm = drm_priv_to_vm(pdd->drm_priv);
 
-To be clear, I think it should _not_ be sizeof(struct fw_rsc_imx_dsp)
-> imx_dsp_rsc->len, this is an error condition.
-
-> This is for backwards compatibility - if someone changes the structure
-> on the remote side and increases the length, in Linux we can still load
-> that firmware, but probably not all features will be checked.
-
-And nothing good can come out of that situation.
-
->
-> If you agree with this, I'll send a v5 with this fix - s/</>.
-
-To me, the only valid condition is:
-
-sizeof(struct fw_rsc_imx_dsp) != imx_dsp_rsc->len)
-
->
-> Thanks,
-> Iulia
->
-> > Thanks,
-> > Mathieu
-> >
-> >> +            dev_dbg(dev, "Resource fw_rsc_imx_dsp is truncated.\n");
-> >> +            return RSC_IGNORED;
-> >> +    }
-> >> +
-> >> +    /*
-> >> +     * If FW_RSC_NXP_S_MAGIC number is not found then
-> >> +     * wait for fw_ready reply (default work flow)
-> >> +     */
-> >> +    if (imx_dsp_rsc->magic_num != FW_RSC_NXP_S_MAGIC) {
-> >> +            dev_dbg(dev, "Invalid resource table magic number.\n");
-> >> +            return RSC_IGNORED;
-> >> +    }
-> >> +
-> >> +    /*
-> >> +     * For now, in struct fw_rsc_imx_dsp, version 0,
-> >> +     * only FEATURE_DONT_WAIT_FW_READY is valid.
-> >> +     *
-> >> +     * When adding new features, please upgrade version.
-> >> +     */
-> >> +    if (imx_dsp_rsc->version > 0) {
-> >> +            dev_warn(dev, "Unexpected fw_rsc_imx_dsp version %d.\n",
-> >> +                     imx_dsp_rsc->version);
-> >> +            return RSC_IGNORED;
-> >> +    }
-> >> +
-> >> +    if (imx_dsp_rsc->features & FEATURE_DONT_WAIT_FW_READY)
-> >> +            priv->flags &= ~WAIT_FW_READY;
-> >> +
-> >> +    return RSC_HANDLED;
-> >> +}
-> >> +
-> >>   /*
-> >>    * Start function for rproc_ops
-> >>    *
-> >> @@ -335,8 +426,8 @@ static int imx_dsp_rproc_start(struct rproc *rproc)
-> >>
-> >>      if (ret)
-> >>              dev_err(dev, "Failed to enable remote core!\n");
-> >> -    else
-> >> -            ret = imx_dsp_rproc_ready(rproc);
-> >> +    else if (priv->flags & WAIT_FW_READY)
-> >> +            return imx_dsp_rproc_ready(rproc);
-> >>
-> >>      return ret;
-> >>   }
-> >> @@ -936,6 +1027,7 @@ static const struct rproc_ops imx_dsp_rproc_ops = {
-> >>      .kick           = imx_dsp_rproc_kick,
-> >>      .load           = imx_dsp_rproc_elf_load_segments,
-> >>      .parse_fw       = imx_dsp_rproc_parse_fw,
-> >> +    .handle_rsc     = imx_dsp_rproc_handle_rsc,
-> >>      .find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
-> >>      .sanity_check   = rproc_elf_sanity_check,
-> >>      .get_boot_addr  = rproc_elf_get_boot_addr,
-> >> @@ -1053,6 +1145,8 @@ static int imx_dsp_rproc_probe(struct platform_device *pdev)
-> >>      priv = rproc->priv;
-> >>      priv->rproc = rproc;
-> >>      priv->dsp_dcfg = dsp_dcfg;
-> >> +    /* By default, host waits for fw_ready reply */
-> >> +    priv->flags |= WAIT_FW_READY;
-> >>
-> >>      if (no_mailboxes)
-> >>              imx_dsp_rproc_mbox_init = imx_dsp_rproc_mbox_no_alloc;
-> >> --
-> >> 2.25.1
-> >>
