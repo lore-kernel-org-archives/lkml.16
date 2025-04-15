@@ -1,158 +1,174 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DC9288C88
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1201E28A1E0
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709986; cv=none; b=FE4K37SDS4/o97vVPDmX9yhN4jEIFGUvG704a9IhCKTrr3k1UfEOi9sI5yZl8IUD6wBx7mb2q3BtgnuGntuk0UDcIybK9Rq/y8/33ug4kgS42AtpvM3/OX3E4FMbF8gxkFtWfY0xa8JB5WR4sJSrkILK75N4sHUkP2BhjhYGrWk=
+	t=1744709986; cv=none; b=og6pkpeH+1dIrcSPSXezv00j3mhey1bs92t52VUE7NRTIrUT+Z/lLgAsTb+pT2MJBXfbvUJBH/64FVcR0FrisU2ZxWonhjfpaYFdZya8F2Y8bJ8OfCB9fNO1HJW9CkzXXP+UbjAI0tBj7yZ0tqUN67fXpAbLBG3iOY6rH4R00YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744709986; c=relaxed/simple;
-	bh=RGg6LqJQHNLz/YdyIPSyHxFlnkDpez0kLY/KCeMZs7M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LLcNV3YDgmz+44i8yzHPbmtJcX25fjc7TY/Lwb0DyPDcW0uCmsd1FklZAhfET08ORhKXWLpEhzQl9Eqm1OAClPYrLMOpAIcT4Lq255eXWogbTcNyaJeJvkZ04ja664+uc5L5lhcD15IE/wx63nTHljYZrOt4Yqh79ZH6twU1cyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k/IqUdzR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	bh=+eLU52m0ORdIdJCapPT1WBaFvqjvCeD37wwm9qhfv7c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BLTw3LqtHMIY9SEQc7BUwNK6enrMF3HJWj9WOe4ROtO+yOhq5NZ70wrOD5VQ+WC5N7Yw11O5Xu7Chi8PS4LH+Iq+JxUxBhIDX7raFhqC8bhoylL8g9QKgEWV5nZe1bX7IRIIUK86BXA0MY581V7QV8qXpAEhIeIJBnrBQPu7yYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=q+RQZ2aP; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k/IqUdzR"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tGru013127
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	/QbvJSKxnfDapkwl00/Ate2tQHcvUoOl5cDQeaEM+xs=; b=k/IqUdzRBucNQj92
-	R2oMofXUSvg68XqSvUpoLzeKhEkncj37fRhj7sxxT//9KzNeIettuvkUxeJbWAhp
-	fdJjNj2HXxpls9vmuDQkZy2t6pBID1MAMU3GPI+sdTNiLGXnK3Bv01zlRd9uy6yR
-	4YZWkhKD5Y/7HxcIA5Bs2wddIVY5vA8gCr2nLxUDQyYEv6WcpM19N/W1MAE2OzLE
-	kP3LvobnWGmInRCNGAwZVuwvEXT0KDAN7KStXKnT3/irwgp00WQDh7d93J2knVTQ
-	KXKNbhFJslrB1yBKTxM7Dd6sGnRj48GgY5phhPhURKtEstJDk3TXGjfIY1iIvTnP
-	pygfig==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6fgwa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:39:43 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f0e2d30ab4so94713686d6.1
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="q+RQZ2aP"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47688ae873fso53311471cf.0
         for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1744709983; x=1745314783; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rp5QhzXK0d3ipbL7De1Z7Dt2PtgQVBDiovxjTMuv9UE=;
+        b=q+RQZ2aP6N7OS7xlRi3J4F+VzBhsXV1hxTB2Lt0jwKXqahoAg5W64SgCncWenV+sB0
+         CjwTXNgC1EV4On/xfAdMdzxEMG5V1g0lzEuvZsGNpf1EKHT7KcUXUdsuhfJa0wnwglgq
+         yq6U5qftICTN+V0xK1cRhgv2yxrmGUZtw7dW0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744709982; x=1745314782;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/QbvJSKxnfDapkwl00/Ate2tQHcvUoOl5cDQeaEM+xs=;
-        b=TgcYLIcYlH0MzyzBe/DMCB58SLuh//oupl5rNBz2rluiZVBd8D7yPogIfHJxb6ym8d
-         QcST6cdhp+wkIn5+AqMDAhH2Y2PtVTXNX0L7R6C0ElVSDJEz43LcUhsUYtkNDRqgJjcO
-         7jit2WYCakc/MyWVnE0zXMxxoxboSuYBy2FdUuR3n71V5fSZi9/OQjwuVk4FUiU7ow42
-         ha+QncdGkOC1mxbcHr0CW30rQJo3X9CIqtY16iXSOFNkVueDiuvB4N+RrVOTHEMyqzKb
-         IUctN4UKEComkZ4KTsJc2cRAZhvOeqqV9MNEzW57cpAPUGhTmrZ0aNwtaeh+qZ0zW2/2
-         LRTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqKkTCvc5TP4HR/UNImRQtMj3J59DA1s6m7KNEDxHgUch+MRviHC9/4/TQ5A5OQnhJcxwE1JyL9PgRYis=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9SkwTPMvFw1inhafaTkAI/FBYGTJjCpjnvcgri+EDrM7y669I
-	koucZ+4gPHo557KUt/p/NYtWgOoaU9p+06sBOsM3eMCpOG7CZ86w29CjNrx2fr7XdgHdue32dJL
-	1DKSSGn+r78va89nbN+jH4lLs/FmuuIAVKl3runBxWG/FYrLoe0sbIh9RJbmmt2M=
-X-Gm-Gg: ASbGncuPK8JPd/usMwwHQbQqKJTuJaZsugYSXkYWZTMscDnD3yKGZPk1MK9wDo/d5uy
-	Ok4t+udtuegWtdEVvplngqRTF2I3+ldOvq9nV3NO8dn4R33UHlNLxx+9IDrGRjynYwTBcuIAJtA
-	8zCE90FdSVzdd6q7NMFWbu6sKBr3VZyGxsSq4jG//O/O4GvEgyDphmVEW955LtQxCWl6np/XCkT
-	d27LRZonXD2ibOyLgozbZvdoop3fZTkF5t+rjSaY/9vr27cLfQe9WJCspD1+VosCgPupCCCVoJV
-	gbyorXzhYoX+P5OvL1PQbi3HBL9buAOEcfZOBHltScW4ZGw7kUMAkv3YNI50z8jTEY/2Mb8eKgz
-	H12fVCXQdJXhZpqBtSrhezOsZ
-X-Received: by 2002:ad4:5ca4:0:b0:6f0:e2d4:51fe with SMTP id 6a1803df08f44-6f230d950dfmr209919616d6.26.1744709982011;
-        Tue, 15 Apr 2025 02:39:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFD83JrRkLeYEAhElysIxFYiO/qrqAOuHzc5Obfv6TO5nQKTCzkIT8H0zCFaFZ205TMR64XhQ==
-X-Received: by 2002:ad4:5ca4:0:b0:6f0:e2d4:51fe with SMTP id 6a1803df08f44-6f230d950dfmr209919446d6.26.1744709981708;
-        Tue, 15 Apr 2025 02:39:41 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cbc60sm20141901fa.24.2025.04.15.02.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 02:39:40 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Tue, 15 Apr 2025 12:39:31 +0300
-Subject: [PATCH v3 03/10] dt-bindings: display/msm: dsi-phy-7nm: describe
- SAR2130P
+        d=1e100.net; s=20230601; t=1744709983; x=1745314783;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rp5QhzXK0d3ipbL7De1Z7Dt2PtgQVBDiovxjTMuv9UE=;
+        b=jEdzXvdN6NhXQuDCZrRPVQletqw9yn8ljvDYk+zpumIJXY7TNGKFX9rkMxP7/DofQ6
+         zdsqTTuHID4/UeQnoRZpoTGFXf5PAfd/AZYZy2zIc/r1lzTbOxODgCK5cnEF9EJWCBAP
+         TpWdqtxJo6ZR0l2MJu/epx6mGupZ5zLvMc827LjEEy/0muq/g8CjeHTGT/6X1ogvmiEl
+         lWyh8SNE7SuG45WME9cwfZ3rKBow/d4NlLN4Ee4kaD45yDisFDLLXwh6M/q6+CoqsiOb
+         +PbS5lQuRyXB2Izld5shDyvcYRCBsXcCamp2FkNoHnd0Q2F2H/1sSTal/yIHac2ir6BT
+         E7Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVTGrtabO1zmzolpbLyIDEoEgh4+sxhK3XzN0EWoYtNFZDf8S6YeeaOgl6f91yFHxfIDlqZv/LPtY7QasI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC/SuP6pkpqHU77f9mdeg6qrpVmQMhx2X8cycT+AJrQF7jUTku
+	hB/XeB1JGUNxGSIUdXlDkTFSbTCAxoZr36B+XcfzswwC2aY7D2hE7Aj5gtp2jNL4sFAv9lN0pt5
+	kmFeh4Hrzrg0gngeRvp19oS3OYxP/gGvNb3leDg==
+X-Gm-Gg: ASbGnctnAe/SJWdE9bZuX6ACF+hqZufAag4g0QR3IuOAPiQYf/wUkoqmOg0f9KT36m3
+	knr5m49NTZdto/6ZQsfVgey1j2/RIlxOZyX6uNFT41LZ5J5rYhzlZf+OdwCzVQg6/3kdDfiJYbe
+	aIErqYMbdtUQa01OcT6d14
+X-Google-Smtp-Source: AGHT+IHAloQRbW9NojhcvEEtRbgJNH88Mbd8WiXMbNgiI5cPN7g+71vwOchhjGPft+4cYmSg7Sbt+jh1WcjqLl8RB54=
+X-Received: by 2002:a05:622a:28d:b0:476:ac03:3c2a with SMTP id
+ d75a77b69052e-479775e9723mr251931571cf.43.1744709982849; Tue, 15 Apr 2025
+ 02:39:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-sar2130p-display-v3-3-62314b1c9023@oss.qualcomm.com>
-References: <20250415-sar2130p-display-v3-0-62314b1c9023@oss.qualcomm.com>
-In-Reply-To: <20250415-sar2130p-display-v3-0-62314b1c9023@oss.qualcomm.com>
-To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-        linux-arm-kernel@lists.infradead.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=939;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=azlck2n2u+qrgsVJ0BAEOEuqH2At8nKdcftYTsEljlc=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ/o/zTCVhoZqo+Bz7P3TL5bcP8LWqHb9WPmSzRN/6Mx8t
- JRtt11JJ6MxCwMjF4OsmCKLT0HL1JhNyWEfdkythxnEygQyhYGLUwAmEq3B/t+n82fyAwOWZ0dv
- PQi/YfRnoaUis4BRVXovq1edzsmEqUVHTrdOvs16+XxRjd2kRFfpKnYrr3s/Sg5n8zE+vRt19kr
- emb2N7Hczpm7uPHs5a8Ozdt+nsWZnpopssj7n9ztevHnXqT+KM7bJHD9U4ZDceeCz3UZJxqhcY2
- bfKZJHtx0J+unkeXSPm4/mvxRFo6DpBWrLlG7E39CzPrSUUffJtip2YckvRx9dFTl68ax/rjRj/
- rITUXJcKVqJTgevc69s124x8WP8UtfY35m3NJmb+5v1HSOB9Wulv7/psJ691q+2W5pRoniGdIzb
- oQd2T3rNquoO2tobl3n9+WZ2iC+twMVggef195KsnoXcAA==
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: WS_iVtFodwKxIvFzjs7W0UKh6qvz0zRF
-X-Proofpoint-GUID: WS_iVtFodwKxIvFzjs7W0UKh6qvz0zRF
-X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67fe295f cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=5g6dqdCWcepBQtZB-T0A:9 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=926 suspectscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150067
+References: <20250203-fuse-sysfs-v2-1-b94d199435a7@kernel.org>
+In-Reply-To: <20250203-fuse-sysfs-v2-1-b94d199435a7@kernel.org>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 15 Apr 2025 11:39:31 +0200
+X-Gm-Features: ATxdqUFhPFymDj11-t61NAng2LH1InHt-a0YDOQdAb8tGbHo3D0mz7v0DZE-BT0
+Message-ID: <CAJfpegtLjFVRLxeUUGjT1V0iQ8+pwsFn0t2n2yOVfqSjn_7bPg@mail.gmail.com>
+Subject: Re: [PATCH v2] fuse: add a new "connections" file to show longest
+ waiting reqeust
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Joanne Koong <joannelkoong@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Dmitry Baryshkov <lumag@kernel.org>
+On Mon, 3 Feb 2025 at 20:57, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> Add a new file to the "connections" directory that shows how long (in
+> seconds) the oldest fuse_req in the processing hash or pending queue has
+> been waiting.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> This is based on top of Joanne's timeout patches, as it requires the
+> "create_time" field in fuse_req.  We have some internal detection of
+> hung fuse server processes that relies on seeing elevated values in the
+> "waiting" sysfs file. The problem with that method is that it can't
+> detect when highly serialized workloads on a FUSE mount are hung. This
+> adds another metric that we can use to detect this situation.
+> ---
+> Changes in v2:
+> - use list_first_entry_or_null() when checking hash lists
+> - take fiq->lock when checking pending list
+> - ensure that if there are no waiting reqs, that the output will be 0
+> - use time_before() to compare jiffies values
+> - no need to hold fc->lock when walking pending queue
+> - Link to v1: https://lore.kernel.org/r/20250203-fuse-sysfs-v1-1-36faa01f2338@kernel.org
+> ---
+>  fs/fuse/control.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/fuse/fuse_i.h  |  2 +-
+>  2 files changed, 59 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+> index 2a730d88cc3bdb50ea1f8a3185faad5f05fc6e74..b27f2120499826040af77d7662d2dad0e9f37ee6 100644
+> --- a/fs/fuse/control.c
+> +++ b/fs/fuse/control.c
+> @@ -180,6 +180,57 @@ static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
+>         return ret;
+>  }
+>
+> +/* Show how long (in s) the oldest request has been waiting */
+> +static ssize_t fuse_conn_oldest_read(struct file *file, char __user *buf,
+> +                                     size_t len, loff_t *ppos)
+> +{
+> +       char tmp[32];
+> +       size_t size;
+> +       unsigned long now = jiffies;
+> +       unsigned long oldest = now;
+> +
+> +       if (!*ppos) {
+> +               struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
+> +               struct fuse_iqueue *fiq = &fc->iq;
+> +               struct fuse_dev *fud;
+> +               struct fuse_req *req;
+> +
+> +               if (!fc)
+> +                       return 0;
+> +
+> +               spin_lock(&fc->lock);
+> +               list_for_each_entry(fud, &fc->devices, entry) {
+> +                       struct fuse_pqueue *fpq = &fud->pq;
+> +                       int i;
+> +
+> +                       spin_lock(&fpq->lock);
+> +                       for (i = 0; i < FUSE_PQ_HASH_SIZE; i++) {
+> +                               /*
+> +                                * Only check the first request in the queue. The
+> +                                * assumption is that the one at the head of the list
+> +                                * will always be the oldest.
+> +                                */
+> +                               req = list_first_entry_or_null(&fpq->processing[i],
+> +                                                              struct fuse_req, list);
+> +                               if (req && time_before(req->create_time, oldest))
+> +                                       oldest = req->create_time;
 
-Describe MIPI DSI PHY present on Qualcomm SAR2130P platform.
+Couldn't this be merged with the timeout expiry code?  I.e. implement
+get_oldest_req_time() helper, the result of which could be compared
+against req_timeout.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml b/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
-index 321470435e654f1d569fc54f6a810e3f70fb168c..f79be422b8892484216b407f7385789764c2de1b 100644
---- a/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
-@@ -17,6 +17,7 @@ properties:
-     enum:
-       - qcom,dsi-phy-7nm
-       - qcom,dsi-phy-7nm-8150
-+      - qcom,sar2130p-dsi-phy-5nm
-       - qcom,sc7280-dsi-phy-7nm
-       - qcom,sm6375-dsi-phy-7nm
-       - qcom,sm8350-dsi-phy-5nm
+> +                       }
+> +                       spin_unlock(&fpq->lock);
+> +               }
+> +               spin_unlock(&fc->lock);
+> +
+> +               spin_lock(&fiq->lock);
+> +               req = list_first_entry_or_null(&fiq->pending, struct fuse_req, list);
+> +               if (req && time_before(req->create_time, oldest))
+> +                       oldest = req->create_time;
+> +               spin_unlock(&fiq->lock);
+> +
+> +               fuse_conn_put(fc);
+> +       }
+> +       size = sprintf(tmp, "%ld\n", (now - oldest)/HZ);
 
--- 
-2.39.5
+now - oldest will always be zero if *ppos != 0.  It would be much more
+logical to return an error for *ppos != 0, then to return success with
+a nonsense value.
 
+use_conn_limit_write() already does so, and existing read callbacks
+could be changed to do the same with a very slight risk of a
+regression.  But for a new one, I don't think there's any worries.
+
+Thanks,
+Miklos
+
+
+Thanks,
+Miklos
