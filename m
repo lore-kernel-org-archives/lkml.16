@@ -1,63 +1,63 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EDC2253BB;
-	Tue, 15 Apr 2025 18:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC860226CF0;
+	Tue, 15 Apr 2025 18:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744740476; cv=none; b=YEsrxgxlm/hHQL2m6GtcMVPbFxyNYObBkrWvEcI+go2m3ZGUeMQhryuMMwR8wo6hAJaWCU6isHwiEDyq8I+NdOZDtoKrdATGYGCoWqCr/Fx/6JqTB0WgJAdhraKd6wYPdwFQO2gVg07qX3d4BI7XDJbCrFVd+exgenzCh8sHNHM=
+	t=1744740477; cv=none; b=ArPxoOb7hMr76hVGbxEDQ5IY9vOfCQnk4z1vjUJn5m+cu4O5GOPigGLxthrdactR2T6lySv9eDFbHebo8JE233iHDrdYGg3gA+pgbs5AqsyqLZz2qkk0Xq1Z0Nytv2bsJdmqXUU+r70y/pWKiuZVJyFY8hAB5ayCi3qeI9NXMzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744740476; c=relaxed/simple;
-	bh=HqP29UM9WTwkhhOVyDYPq9uHobiLRZYmeg5rOM3U9CU=;
+	s=arc-20240116; t=1744740477; c=relaxed/simple;
+	bh=PVq45EJryN0baNfrDzWcCyc+ciSw5qcADqeFGudXY5M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bk2iEo/RfJFal6/qzye9EWfnEOn/FQeGgUcY9m9Hb5n/Qt/8VYcnDarYNkqhwyDBypgB9ZAjHpUJslpBZKfkfVOOOxN7FoUmgpQIpFhDAKCKj0sJVQywLcZke0e58Li+Fgif3F95kLQI0asglUYc3S82h/AtK2DvpZ6TgFKRpgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ho1Szp54; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=WMLSCJHzh/DpnCfPNNGVCDdGqBDueYT5+vMuQ06rYefyk3aQdzbrliOCKryswidyTOkwu4TQjtZ+zmFjQnj1B4CRG+ogfUvyKxzh/EiOzAUhLczRcUme4+/nVEM25XxByOcxpB8/LToAgc7mH0+1Vs5gx4DB7fsirRe81m38RyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G8NdThnA; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ho1Szp54"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2241053582dso81675615ad.1;
-        Tue, 15 Apr 2025 11:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8NdThnA"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2295d78b433so62135025ad.2;
+        Tue, 15 Apr 2025 11:07:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744740473; x=1745345273; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744740475; x=1745345275; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=M3jQ8j3ltfDdE83JponI6X0TRjneHIZzSPt8rmBXSPA=;
-        b=ho1Szp54SiOYKR2paHzh//T2VNuoIX3gDRh0/2CueN3VYeaEvza1S20rupAxeKA0PQ
-         zO/LVPFLcfRA+461FH68XBR7BOltDCKiDxE55tocc3+1GwtBy+vrePpKeudEcQU7V+Pl
-         Dz+DXGkjctDVOkbDBH6hX9G+H8NV+6b+D993U0CQN48Nqvcc8H9Tz0o17STWfZNKO5hg
-         ao0Ole/Q1mZj4Dogj/IZcuVASzlUeilqhiC67ZiUFptFTfS1bM7FIlyyAuK8cYKI/YcP
-         Q1bU4NrSz7oVltn/7Q4oUr5jFj26zxDGdGZO78li69SeweSB08vxx629qWocvGBBhiK0
-         03KQ==
+        bh=CuTip/h4L4y1gLplPd0zYkyfMFr9unWCWC/uusRHlzs=;
+        b=G8NdThnAhSD4iN2aMoPHR8LeSgyXHi55QmZrXb1Q/UPz+xFcaRoQIau+B4o0SWH0Qp
+         7MIB/ooT0tvszMOQpe6Y8jI1znNoUDd9KKSMW3W2VmhojpSATv5o7kdZpOVnXf7HZjP0
+         UEk+VcoUky/kIRrHd7CBi3m5nA2+FSOHO3cD9PrVcNRgTcfsB8F+mB1g+IvlnjFk8bEA
+         tbHLce56R2gNQCO7qf9qx5hHPjqipcm3P2E/yu6sSRxSy5koFGNEEdKqL+ikFGwvDkl6
+         bLqCF4m1acb6MV6EzQoY1hv2NuCnuYtiu1Al2zD+TpuzbQCbnUFsI/3/WiBx4Y6wvRH/
+         c+Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744740473; x=1745345273;
+        d=1e100.net; s=20230601; t=1744740475; x=1745345275;
         h=content-transfer-encoding:mime-version:reply-to:references
          :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=M3jQ8j3ltfDdE83JponI6X0TRjneHIZzSPt8rmBXSPA=;
-        b=Rimnq5hKPkoyw3Gi8Dn6TEnDAs3X7jRMuDWtKRHS/6kSJhAH8bs1KSWq8D0uw29qmU
-         p9474brGS3xHwl2O03X+uIX68IaBBojVGbm79Uz3yHMk69Ec2KVtDShQIg9RoDprqh4C
-         9/g9i7w1LDOKvnedRLjN7Fbi8EjRHSBM2+vvQN1lhZ6ZPnV0YXNsBRVRPkE8aV8NGbYY
-         6CdHstHB2HYJ3aKOpwMxFvPi1ka4LP7FjKIMhjpZRkfdyRfEGqbIgzAF96Z9R8dgALHb
-         Cvf8lpM7zlLdyDC8B2xGyUy97kyy16wY1kGqqh/cqGqdQiHpKHQJrxhZCnUy4tdt5QET
-         aQZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBXTOgwFwoGzWdvzVuqx/5buqQEmXFGGHeEaQyQa2qGwkpAUyMC8LbZuPog/Z3BRi70X7kOxNk3tUi@vger.kernel.org, AJvYcCWd6VnHFM+k6iP0PnLpBxs8sCy9QgNR+RQcgJH5GSIbbm4NxusAROF0Nw+Xdbvq13b+xJMF6bA0b/KA5AlO@vger.kernel.org, AJvYcCXWiSSiZwSHlt3cVQbEkc1rwPklAQgt6q1ji8HkKJxQ059fbnGU5N/FZU6qTRDl9pw0WBjf4FeNxoAQ@vger.kernel.org, AJvYcCXmI01wuAsG1MsYjh9hPMlvErMm6cW2suRHy/EWmvPI0pvYGXDwV1kkh2AnDX0xmKVKnKjRo60Lg9p1QZS0@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVOvrAIx1N4tZJq94oUwIQwskCEJFTTQXRzR3L6WU26YtuTuUQ
-	Mz370uLbJF68vDHUy7PC6aNgqvWq5XomhP2Poi+y7PHxmPzu6iVq
-X-Gm-Gg: ASbGnctQWWAuFc28nsUuFqiYlbipEmselB1spR+IoHFXvePWP9paAMYPvb9d3OJsbOF
-	lHq2J98a/CF0TRe0RJtXIhst/PdT636PG39A+v3xGkkcD6c/p+0F+Z5fgYu0xqI7PuvwusTZ/xa
-	6SImP7kwPHxHJ1coAppZU/pRvyEvQ3caWXZnxNOusZ5a5FSmhU56ZVIiyA/lU+gz54wj1RyHAlg
-	E8AQ9Sjsq83KBG8peqX1qpe/i8i2mrhhPnqqxJ2sIAN/xLQqQtn8Dy5dn9Q+w2whQ+AQBNpzE+I
-	+DaGln8q1b1LfVNJXE3x+VPzuro22PzahtxwKNFQIfgiFctfsCoGxtETFKJoLfABOsmtOZwV2im
-	AF3TajXVGRyNXk7gY4U4=
-X-Google-Smtp-Source: AGHT+IEMxysTi3FUHFr3RwKNcy7O705ie5TcwDsgpfUdTDjlk+dAuGCmKwDaRys95Y06UoYi6VC4xg==
-X-Received: by 2002:a17:902:f710:b0:224:1ef:1e00 with SMTP id d9443c01a7336-22c318d0837mr1956765ad.19.1744740472798;
-        Tue, 15 Apr 2025 11:07:52 -0700 (PDT)
+        bh=CuTip/h4L4y1gLplPd0zYkyfMFr9unWCWC/uusRHlzs=;
+        b=L0Xc7oLJqC1JGEJPHnSFzPHncXTXxLEiuVRwp0jjOMPVfW5/jV5o8rxmCLjW3PkAWO
+         IZ6K59bmZcRENTwn6Fx45AzXDy8icnlB8uxwwnJ2lBmnVatnX1EqMso2prtoHSmaae5u
+         KgJXug7A+RCu+6Or/zDzdAaZ+k0tjHthtNUOd/ZbCVHZgx0hqIloViRLrzc31gHpPmih
+         P5dr+oja+1McAqV2usz+dpYF4U1S7sJ59msCB1Q2W5Ya1Weu0O9rLfBk/F5jNDLGxJTZ
+         hNgOR5luddF29gAa8zGkEs2jOsDlbbp1G41NwP4F+JHCbjBNrX02wKsUn5B+OmOAucae
+         xkWw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7YQF6SqknttWG51llgZPdO03XXURDrq70oRyb0LqnQWSV74430oDdX5VG5999Bf+htCVkkS2PTBgz@vger.kernel.org, AJvYcCV3HqeJprtNoirbO157n4jk44D6XABPFs8SzLkF79IIi2dzm87+7CbMcvvY5qSHwQiNIFOWb8bcoxdx+uFe@vger.kernel.org, AJvYcCVPVm/UlV5JAskYrM8l38fTUO1KpH/48N7d619VxjxUkuNM4R8EDfs9wV+gi1CIkm+MLdBtB2oF2lnd@vger.kernel.org, AJvYcCXZahV+HjjKS4RMQLb0kiHFkS4qrp4rFcnB8DqHuWYEbLiudALME8vxtmjbNuHJqbzD2yK90+KR54TLuGDT@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT3U9cKlewvca7O5iV7EJmjWSYvFGY/NbrvPerlPJ9lknu9Xqt
+	idbXZ5PhFYXIabkNNZBboRFhfrsMukjvYVsXUh2wYyflPeCVMpz1T6q1kg==
+X-Gm-Gg: ASbGncsEUIp3Y8kURMLtyrr/qv6ipF82enRhKxIlUbpI3Mm4cS/pDnpCH5dOWLovJxf
+	FnXt7KeaQnLDQbb/fxmDy+CWY5nxhxR5/IkZg3n9q7ZktNFy3uf5IjAplggVwhAJcEK5G38hMUl
+	ZmsWiNEl9INgpQrzOFL1yztjp3sWQ8CKwZ5E9ksN4r8P3ZRF6nX/TR+ZoYmDsz45XwknBsPMxLg
+	KskfivXl7gy8odAPWxz6+mu+J6ulVDDBu969HP+pKJZb70aBV337tNEWFO/RDx+uhMYSBzTcu63
+	D2CyhZk5Winwu9nMGwr4FEeeuQvMY0ILQ1oE/b0BToNp6uxlESxWNDR2tWn60dsHqwImJsETaMa
+	6iccMoUMk2Ri1+6WuTfo=
+X-Google-Smtp-Source: AGHT+IEvXshEYRrrGB61pmgi3piIsJRkMfRvD+Osw+HeayU3VTDAQLzHVkQYYIYV/TTllO2U6s2ehQ==
+X-Received: by 2002:a17:903:32d0:b0:215:8809:b3b7 with SMTP id d9443c01a7336-22c318b10d7mr1919555ad.7.1744740475201;
+        Tue, 15 Apr 2025 11:07:55 -0700 (PDT)
 Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb52c2sm120168425ad.194.2025.04.15.11.07.51
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb52c2sm120168425ad.194.2025.04.15.11.07.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 11:07:52 -0700 (PDT)
+        Tue, 15 Apr 2025 11:07:54 -0700 (PDT)
 From: mhkelley58@gmail.com
 X-Google-Original-From: mhklinux@outlook.com
 To: kys@microsoft.com,
@@ -80,9 +80,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-arch@vger.kernel.org
-Subject: [PATCH v3 2/7] x86/hyperv: Use hv_hvcall_*() to set up hypercall arguments -- part 1
-Date: Tue, 15 Apr 2025 11:07:23 -0700
-Message-Id: <20250415180728.1789-3-mhklinux@outlook.com>
+Subject: [PATCH v3 4/7] Drivers: hv: Use hv_hvcall_*() to set up hypercall arguments
+Date: Tue, 15 Apr 2025 11:07:25 -0700
+Message-Id: <20250415180728.1789-5-mhklinux@outlook.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250415180728.1789-1-mhklinux@outlook.com>
 References: <20250415180728.1789-1-mhklinux@outlook.com>
@@ -99,172 +99,165 @@ From: Michael Kelley <mhklinux@outlook.com>
 
 Update hypercall call sites to use the new hv_hvcall_*() functions
 to set up hypercall arguments. Since these functions zero the
-fixed portion of input memory, remove now redundant calls to memset()
-and explicit zero'ing of input fields.
+fixed portion of input memory, remove now redundant zero'ing of
+input fields.
+
+In hv_post_message(), the payload area is treated as an array to
+avoid wasting cycles on zero'ing it and then overwriting with
+memcpy().
 
 Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 ---
 
 Notes:
-    Changes in v2:
-    * Fixed get_vtl() and hv_vtl_apicid_to_vp_id() to properly treat the input
-      and output arguments as arrays [Nuno Das Neves]
-    * Enhanced __send_ipi_mask_ex() and hv_map_interrupt() to check the number
-      of computed banks in the hv_vpset against the batch_size. Since an
-      hv_vpset currently represents a maximum of 4096 CPUs, the hv_vpset size
-      does not exceed 512 bytes and there should always be sufficent space. But
-      do the check just in case something changes. [Nuno Das Neves]
+    Changes in v3:
+    * Removed change to definition of struct hv_input_post_message so the
+      'payload' remains a fixed size array. Adjust hv_post_message() so
+      that the 'payload' array is not zero'ed. [Nuno Das Neves]
+    * Added check of the batch size in hv_free_page_report(). [Nuno Das Neves]
+    * In hv_call_deposit_pages(), use the new hv_hvcall_in_batch_size() to
+      get the batch size at the start of the function, and check the
+      'num_pages' input parameter against that batch size instead of against
+      a separately defined constant. Also use the batch size to compute the
+      size of the memory allocation. [Nuno Das Neves]
 
- arch/x86/hyperv/hv_apic.c   | 10 ++++------
- arch/x86/hyperv/hv_init.c   |  6 ++----
- arch/x86/hyperv/hv_vtl.c    |  9 +++------
- arch/x86/hyperv/irqdomain.c | 17 ++++++++++-------
- 4 files changed, 19 insertions(+), 23 deletions(-)
+ drivers/hv/hv.c         |  4 +++-
+ drivers/hv/hv_balloon.c |  8 ++++----
+ drivers/hv/hv_common.c  |  2 +-
+ drivers/hv/hv_proc.c    | 23 ++++++++++-------------
+ 4 files changed, 18 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 6d91ac5f9836..cd794baaa636 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -108,21 +108,19 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
- {
- 	struct hv_send_ipi_ex *ipi_arg;
- 	unsigned long flags;
--	int nr_bank = 0;
-+	int batch_size, nr_bank = 0;
- 	u64 status = HV_STATUS_INVALID_PARAMETER;
- 
- 	if (!(ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED))
- 		return false;
- 
- 	local_irq_save(flags);
--	ipi_arg = *this_cpu_ptr(hyperv_pcpu_input_arg);
--
-+	batch_size = hv_hvcall_in_array(&ipi_arg, sizeof(*ipi_arg),
-+					sizeof(ipi_arg->vp_set.bank_contents[0]));
- 	if (unlikely(!ipi_arg))
- 		goto ipi_mask_ex_done;
- 
- 	ipi_arg->vector = vector;
--	ipi_arg->reserved = 0;
--	ipi_arg->vp_set.valid_bank_mask = 0;
- 
- 	/*
- 	 * Use HV_GENERIC_SET_ALL and avoid converting cpumask to VP_SET
-@@ -139,7 +137,7 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector,
- 		 * represented in VP_SET. Return an error and fall back to
- 		 * native (architectural) method of sending IPIs.
- 		 */
--		if (nr_bank <= 0)
-+		if (nr_bank <= 0 || nr_bank > batch_size)
- 			goto ipi_mask_ex_done;
- 	} else {
- 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index ddeb40930bc8..cc843905c23a 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -400,13 +400,11 @@ static u8 __init get_vtl(void)
- 	u64 ret;
- 
- 	local_irq_save(flags);
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
- 
--	memset(input, 0, struct_size(input, names, 1));
-+	hv_hvcall_inout_array(&input, sizeof(*input), sizeof(input->names[0]),
-+			      &output, sizeof(*output), sizeof(output->values[0]));
- 	input->partition_id = HV_PARTITION_ID_SELF;
- 	input->vp_index = HV_VP_INDEX_SELF;
--	input->input_vtl.as_uint8 = 0;
- 	input->names[0] = HV_REGISTER_VSM_VP_STATUS;
- 
- 	ret = hv_do_hypercall(control, input, output);
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 13242ed8ff16..ccd9c24722f9 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -125,8 +125,7 @@ static int hv_vtl_bringup_vcpu(u32 target_vp_index, int cpu, u64 eip_ignored)
- 
- 	local_irq_save(irq_flags);
- 
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	memset(input, 0, sizeof(*input));
-+	hv_hvcall_in(&input, sizeof(*input));
- 
- 	input->partition_id = HV_PARTITION_ID_SELF;
- 	input->vp_index = target_vp_index;
-@@ -216,13 +215,11 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
- 
- 	local_irq_save(irq_flags);
- 
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	memset(input, 0, sizeof(*input));
-+	hv_hvcall_inout_array(&input, sizeof(*input), sizeof(input->apic_ids[0]),
-+			      &output, 0, sizeof(*output));
- 	input->partition_id = HV_PARTITION_ID_SELF;
- 	input->apic_ids[0] = apic_id;
- 
--	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
--
- 	control = HV_HYPERCALL_REP_COMP_1 | HVCALL_GET_VP_ID_FROM_APIC_ID;
- 	status = hv_do_hypercall(control, input, output);
- 	ret = output[0];
-diff --git a/arch/x86/hyperv/irqdomain.c b/arch/x86/hyperv/irqdomain.c
-index 31f0d29cbc5e..82c4e84541ab 100644
---- a/arch/x86/hyperv/irqdomain.c
-+++ b/arch/x86/hyperv/irqdomain.c
-@@ -20,15 +20,15 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 	struct hv_device_interrupt_descriptor *intr_desc;
- 	unsigned long flags;
- 	u64 status;
--	int nr_bank, var_size;
-+	int batch_size, nr_bank, var_size;
- 
- 	local_irq_save(flags);
- 
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
--	output = *this_cpu_ptr(hyperv_pcpu_output_arg);
-+	batch_size = hv_hvcall_inout_array(&input, sizeof(*input),
-+			sizeof(input->interrupt_descriptor.target.vp_set.bank_contents[0]),
-+			&output, sizeof(*output), 0);
- 
- 	intr_desc = &input->interrupt_descriptor;
--	memset(input, 0, sizeof(*input));
- 	input->partition_id = hv_current_partition_id;
- 	input->device_id = device_id.as_uint64;
- 	intr_desc->interrupt_type = HV_X64_INTERRUPT_TYPE_FIXED;
-@@ -40,7 +40,6 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
+diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
+index 308c8f279df8..3e7d681ff2b7 100644
+--- a/drivers/hv/hv.c
++++ b/drivers/hv/hv.c
+@@ -66,7 +66,9 @@ int hv_post_message(union hv_connection_id connection_id,
+ 	if (hv_isolation_type_tdx() && ms_hyperv.paravisor_present)
+ 		aligned_msg = this_cpu_ptr(hv_context.cpu_context)->post_msg_page;
  	else
- 		intr_desc->trigger_mode = HV_INTERRUPT_TRIGGER_MODE_EDGE;
+-		aligned_msg = *this_cpu_ptr(hyperv_pcpu_input_arg);
++		hv_hvcall_in_array(&aligned_msg,
++				   offsetof(typeof(*aligned_msg), payload),
++				   sizeof(aligned_msg->payload[0]));
  
--	intr_desc->target.vp_set.valid_bank_mask = 0;
- 	intr_desc->target.vp_set.format = HV_GENERIC_SET_SPARSE_4K;
- 	nr_bank = cpumask_to_vpset(&(intr_desc->target.vp_set), cpumask_of(cpu));
- 	if (nr_bank < 0) {
-@@ -48,6 +47,11 @@ static int hv_map_interrupt(union hv_device_id device_id, bool level,
- 		pr_err("%s: unable to generate VP set\n", __func__);
- 		return EINVAL;
- 	}
-+	if (nr_bank > batch_size) {
-+		local_irq_restore(flags);
-+		pr_err("%s: nr_bank too large\n", __func__);
-+		return EINVAL;
-+	}
- 	intr_desc->target.flags = HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET;
- 
- 	/*
-@@ -77,9 +81,8 @@ static int hv_unmap_interrupt(u64 id, struct hv_interrupt_entry *old_entry)
+ 	aligned_msg->connectionid = connection_id;
+ 	aligned_msg->reserved = 0;
+diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
+index 2b4080e51f97..801c03fe10f8 100644
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1577,21 +1577,21 @@ static int hv_free_page_report(struct page_reporting_dev_info *pr_dev_info,
+ {
+ 	unsigned long flags;
+ 	struct hv_memory_hint *hint;
+-	int i, order;
++	int i, order, batch_size;
  	u64 status;
+ 	struct scatterlist *sg;
+ 
+-	WARN_ON_ONCE(nents > HV_MEMORY_HINT_MAX_GPA_PAGE_RANGES);
+ 	WARN_ON_ONCE(sgl->length < (HV_HYP_PAGE_SIZE << page_reporting_order));
+ 	local_irq_save(flags);
+-	hint = *this_cpu_ptr(hyperv_pcpu_input_arg);
++
++	batch_size = hv_hvcall_in_array(&hint, sizeof(*hint), sizeof(hint->ranges[0]));
+ 	if (!hint) {
+ 		local_irq_restore(flags);
+ 		return -ENOSPC;
+ 	}
++	WARN_ON_ONCE(nents > batch_size);
+ 
+ 	hint->heat_type = HV_EXTMEM_HEAT_HINT_COLD_DISCARD;
+-	hint->reserved = 0;
+ 	for_each_sg(sgl, sg, nents, i) {
+ 		union hv_gpa_page_range *range;
+ 
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index a7d7494feaca..895448954f37 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -306,7 +306,7 @@ void __init hv_get_partition_id(void)
+ 	u64 status, pt_id;
  
  	local_irq_save(flags);
--	input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+-	output = *this_cpu_ptr(hyperv_pcpu_input_arg);
++	hv_hvcall_inout(NULL, 0, &output, sizeof(*output));
+ 	status = hv_do_hypercall(HVCALL_GET_PARTITION_ID, NULL, output);
+ 	pt_id = output->partition_id;
+ 	local_irq_restore(flags);
+diff --git a/drivers/hv/hv_proc.c b/drivers/hv/hv_proc.c
+index 7d7ecb6f6137..e85d9dd08a9d 100644
+--- a/drivers/hv/hv_proc.c
++++ b/drivers/hv/hv_proc.c
+@@ -8,12 +8,6 @@
+ #include <linux/minmax.h>
+ #include <asm/mshyperv.h>
  
--	memset(input, 0, sizeof(*input));
-+	hv_hvcall_in(&input, sizeof(*input));
- 	intr_entry = &input->interrupt_entry;
- 	input->partition_id = hv_current_partition_id;
- 	input->device_id = id;
+-/*
+- * See struct hv_deposit_memory. The first u64 is partition ID, the rest
+- * are GPAs.
+- */
+-#define HV_DEPOSIT_MAX (HV_HYP_PAGE_SIZE / sizeof(u64) - 1)
+-
+ /* Deposits exact number of pages. Must be called with interrupts enabled.  */
+ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ {
+@@ -24,11 +18,13 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 	int order;
+ 	u64 status;
+ 	int ret;
+-	u64 base_pfn;
++	u64 base_pfn, batch_size;
+ 	struct hv_deposit_memory *input_page;
+ 	unsigned long flags;
+ 
+-	if (num_pages > HV_DEPOSIT_MAX)
++	batch_size = hv_hvcall_in_batch_size(sizeof(*input_page),
++			   sizeof(input_page->gpa_page_list[0]));
++	if (num_pages > batch_size)
+ 		return -E2BIG;
+ 	if (!num_pages)
+ 		return 0;
+@@ -39,7 +35,7 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 		return -ENOMEM;
+ 	pages = page_address(page);
+ 
+-	counts = kcalloc(HV_DEPOSIT_MAX, sizeof(int), GFP_KERNEL);
++	counts = kcalloc(batch_size, sizeof(int), GFP_KERNEL);
+ 	if (!counts) {
+ 		free_page((unsigned long)pages);
+ 		return -ENOMEM;
+@@ -73,7 +69,9 @@ int hv_call_deposit_pages(int node, u64 partition_id, u32 num_pages)
+ 
+ 	local_irq_save(flags);
+ 
+-	input_page = *this_cpu_ptr(hyperv_pcpu_input_arg);
++	/* Batch size is checked at the start of function; no need to repeat */
++	hv_hvcall_in_array(&input_page, sizeof(*input_page),
++			   sizeof(input_page->gpa_page_list[0]));
+ 
+ 	input_page->partition_id = partition_id;
+ 
+@@ -125,9 +123,8 @@ int hv_call_add_logical_proc(int node, u32 lp_index, u32 apic_id)
+ 	do {
+ 		local_irq_save(flags);
+ 
+-		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
+ 		/* We don't do anything with the output right now */
+-		output = *this_cpu_ptr(hyperv_pcpu_output_arg);
++		hv_hvcall_inout(&input, sizeof(*input), &output, sizeof(*output));
+ 
+ 		input->lp_index = lp_index;
+ 		input->apic_id = apic_id;
+@@ -168,7 +165,7 @@ int hv_call_create_vp(int node, u64 partition_id, u32 vp_index, u32 flags)
+ 	do {
+ 		local_irq_save(irq_flags);
+ 
+-		input = *this_cpu_ptr(hyperv_pcpu_input_arg);
++		hv_hvcall_in(&input, sizeof(*input));
+ 
+ 		input->partition_id = partition_id;
+ 		input->vp_index = vp_index;
 -- 
 2.25.1
 
