@@ -1,125 +1,96 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D93A32
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B5F1B0412;
+	Tue, 15 Apr 2025 02:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744683516; cv=none; b=ftEaPf2aGzHQmSMeAoJ25KnYI7LmpIK9Kt3zCxwXcx6jPlBqRVUWWtJImNP1FS6/OiCzCJkjc+HS1w7pJ1aP0lJ8tg8FQwuAhNR5C2XSDHRpQhWZozxAoP6bI8z0amvgrXeKUxwhsVkRhUxrj4rgmfmL/Fy1XmjPO26P55NyhwI=
+	t=1744683519; cv=none; b=qrUsHlee/qs0HgBBS4b+5WFPyXoDtqOkcjh0FzaueMB7pq3LzHhk2Zn9BcYkC4Qo2/NZY5s/gPULFCD/OMyVnEoowrMCY3X5DSWXtE0lQCWHI4WsI6dNS3isZ3cskCUZPX1pApuHl6JEn6n9HizGdr6UnvDghaU4+mq36Z1SGFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744683516; c=relaxed/simple;
-	bh=thOPuvLIQzgv7to5Bo3IVi6FkYgZ8CRe10HyczY2goc=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nJKKh2H1pysPmQJk7OcXiNqisSqzjL67CxaiHpqthhUQWuASzf173mUetbF0sz1ynTVWnsIyBZWhWDHlFm+DOEkDB/sAJajL8AfLb/lvsHqY8ny46jvoFJG6oAvv6FqIxwSgAKLu1QXBYKxsjtf+3qa53Xq3a5odAVFDm8VcHV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com; spf=pass smtp.mailfrom=trustnetic.com; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trustnetic.com
-X-QQ-mid:Yeas5t1744683425t915t24530
-Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [36.20.107.143])
-X-QQ-SSF:0000000000000000000000000000000
-From: =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
-X-BIZMAIL-ID: 3094269659863382227
-To: "'Abdun Nihaal'" <abdun.nihaal@gmail.com>
-Cc: <Markus.Elfring@web.de>,
-	<mengyuanlou@net-swift.com>,
-	<andrew+netdev@lunn.ch>,
-	<davem@davemloft.net>,
-	<edumazet@google.com>,
-	<kuba@kernel.org>,
-	<pabeni@redhat.com>,
-	<saikrishnag@marvell.com>,
-	<przemyslaw.kitszel@intel.com>,
-	<ecree.xilinx@gmail.com>,
-	<netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250412154927.25908-1-abdun.nihaal@gmail.com>
-In-Reply-To: <20250412154927.25908-1-abdun.nihaal@gmail.com>
-Subject: RE: [PATCH v2 net] net: ngbe: fix memory leak in ngbe_probe() error path
-Date: Tue, 15 Apr 2025 10:17:04 +0800
-Message-ID: <00b401dbadac$7b36f120$71a4d360$@trustnetic.com>
+	s=arc-20240116; t=1744683519; c=relaxed/simple;
+	bh=nGVvF6nK59wes4T4bei2C9AddEL7aiF3cGhmMHQLGzQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OQ8LMuAOY6E6NrLbpx2znNaTdQdV2eSMRbFVeHc6Vux2QRdHshnAQpyqWbsGxmYa7uQKBB9p0t9ahYwXXwbr0FgdLAH4FFk+QllTebZxDhRODYCHdWBy56xM6NhjDS2LqhGVgX8qxhvi6tqKYVw+2X0DHeoDDO5GbadIIRNV7BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-01 (Coremail) with SMTP id qwCowAD3oQLqwf1n5O3rCA--.14844S2;
+	Tue, 15 Apr 2025 10:18:21 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: davem@davemloft.net,
+	andreas@gaisler.com,
+	sam@ravnborg.org,
+	dawei.li@shingroup.cn,
+	make24@iscas.ac.cn,
+	rob.gardner@oracle.com
+Cc: sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] sparc: fix error handling in scan_one_device()
+Date: Tue, 15 Apr 2025 10:18:12 +0800
+Message-Id: <20250415021812.3106169-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGCg9mRcHVPncQlJ+6fjxtFMDYEpbRWUAdQ
-Content-Language: zh-cn
-X-QQ-SENDSIZE: 520
-Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: McFs54YitxxBBAiVtOSbXOoLUYu+Q1dG+CjLfjJM76F5BvehNHQWD4W/
-	pvCukRuSVEXaF5GPaFDyrIPPP/FOoZd1DFj8xaGJyZCgh0ajooRPgO9NDEwoW0SWqS/bHGp
-	D+G9RyIFELnrV+L063oKSihBgcJ3T6YOUK3GeufjWIclT2KE6l75DVdCd4i6/7DZJHbUMU5
-	HIKpUlbs1RHXYL7Zu4yVf0b2MbtmfeiVD/vt0H5Ce6kgD+mS6X9ZmuQYrAOMeJdAZgqfgy6
-	QXh4eEYwhQo5ID5d/2+nSmKKVsLsnsAago0kv8AYTapUVtjN9Z2jv5udXEdGJeVYVESL588
-	/FBNUdV3SMBqjhWiSaH0T4pQ/BSQTKGanXJURmNkG8KAgwYlJLe8OVRRyuEHRbNrpMLTeHo
-	vHelDKzrDwsgqDjmXLTO2y7rLCcCKw+aJb1YRgaLI5Lw/IVbb4gEkoK2hrsY068z+EJuscU
-	OgH2Zvv9kjSIy40BVxp/aLooPhkFHDuxYiF9IM5BmhiMtvTALAUMHTdcO6WC1K6ps4l2fWB
-	H7h1XG3Zu6CPZgILFR9nK0gDeUps2UumZHQyGLGkDak3Z7xkMN0/xMewY/VtoWsk6VBZ3RM
-	3fqdjcGSn7oPFiAWcd60Zf5Kd/ZA/+ss/d1gDx0oBqcPfs6Xb9dTNDv3wBa1rf9NoNo+RQA
-	9hR7o3mG0y9BQ/69Ke5xNAx0No+bZ8sQXhHIwnILrQLLEzUTzq3zNSXQYWBNfkydss5YWTF
-	/G54KIrZiXzYm51SfNCfMZuQTBr9i5i29nlfSHkwpKrjn6W4sDMWvh4g+bBLMIM8fmWwx11
-	W3b1F+UbJlK3CF/DuwvH/J2jT6sNyIOHX4pj6k+rWYW5Yd7JEZCgSL6ruI/ezWX+XPnn8IK
-	fmx/TCnVGnCpqJe8492Rs7ZHlIIUxx74TgMIPBxZw48fc6Dc+gUYjSWBxbwYQSFnTPNlC8Q
-	ZfMijR/TWQoaw8SGMLQXRKRq84KvztSA+kMoHmLz4ObEmbcteexTpitAYp+XRoITTVYdf6v
-	T/4OhUaiQXUYJSXR948loxYBhiRyyknuauT3GZAA==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAD3oQLqwf1n5O3rCA--.14844S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WryrKw45JFyrCr15ZF1DWrg_yoW8Gr4xp3
+	s7Aas8JrWUur1vkws7XF18ZF1UCw4jy3Wruw45C3W0krn3WryrJ3yv9r4kK3W5trZrAF40
+	qrZrtw10yF4Uu3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8v
+	x2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-On Sat, Apr 12, 2025 11:49 PM, Abdun Nihaal wrote:
-> When ngbe_sw_init() is called, memory is allocated for wx->rss_key
-> in wx_init_rss_key(). However, in ngbe_probe() function, the subsequent
-> error paths after ngbe_sw_init() don't free the rss_key. Fix that by
-> freeing it in error path along with wx->mac_table.
-> 
-> Also change the label to which execution jumps when ngbe_sw_init()
-> fails, because otherwise, it could lead to a double free for rss_key,
-> when the mac_table allocation fails in wx_sw_init().
-> 
-> Fixes: 02338c484ab6 ("net: ngbe: Initialize sw info and register netdev")
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-> ---
-> v1 -> v2:
-> - Add fixes tag, as suggested by Markus and Jakub.
-> - Also set the branch target as net instead of net-next as it is a fix
-> 
-> v1 link: https://lore.kernel.org/all/20250409053804.47855-1-abdun.nihaal@gmail.com
-> 
->  drivers/net/ethernet/wangxun/ngbe/ngbe_main.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c b/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
-> index a6159214ec0a..91b3055a5a9f 100644
-> --- a/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
-> +++ b/drivers/net/ethernet/wangxun/ngbe/ngbe_main.c
-> @@ -625,7 +625,7 @@ static int ngbe_probe(struct pci_dev *pdev,
->  	/* setup the private structure */
->  	err = ngbe_sw_init(wx);
->  	if (err)
-> -		goto err_free_mac_table;
-> +		goto err_pci_release_regions;
-> 
->  	/* check if flash load is done after hw power up */
->  	err = wx_check_flash_load(wx, NGBE_SPI_ILDR_STATUS_PERST);
-> @@ -719,6 +719,7 @@ static int ngbe_probe(struct pci_dev *pdev,
->  err_clear_interrupt_scheme:
->  	wx_clear_interrupt_scheme(wx);
->  err_free_mac_table:
-> +	kfree(wx->rss_key);
->  	kfree(wx->mac_table);
->  err_pci_release_regions:
->  	pci_release_selected_regions(pdev,
-> --
-> 2.47.2
-> 
+Once of_device_register() failed, we should call put_device() to
+decrement reference count for cleanup. Or it could cause memory leak.
+So fix this by calling put_device(), then the name can be freed in
+kobject_cleanup().
 
-Reviewed-by: Jiawen Wu <jiawenwu@trustnetic.com>
+Calling path: of_device_register() -> of_device_add() -> device_add().
+As comment of device_add() says, 'if device_add() succeeds, you should
+call device_del() when you want to get rid of it. If device_add() has
+not succeeded, use only put_device() to drop the reference count'.
 
-Thanks Abdun,
-I think this release bug is also present in txgbe driver.
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: cf44bbc26cf1 ("[SPARC]: Beginnings of generic of_device framework.")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
+---
+Changes in v2:
+- retained kfree() manually due to the lack of a release callback function.
+---
+ arch/sparc/kernel/of_device_64.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/sparc/kernel/of_device_64.c b/arch/sparc/kernel/of_device_64.c
+index f98c2901f335..f53092b07b9e 100644
+--- a/arch/sparc/kernel/of_device_64.c
++++ b/arch/sparc/kernel/of_device_64.c
+@@ -677,6 +677,7 @@ static struct platform_device * __init scan_one_device(struct device_node *dp,
  
+ 	if (of_device_register(op)) {
+ 		printk("%pOF: Could not register of device.\n", dp);
++		put_device(&op->dev);
+ 		kfree(op);
+ 		op = NULL;
+ 	}
+-- 
+2.25.1
 
