@@ -1,107 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999B3E571;
-	Wed, 16 Apr 2025 05:09:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3D2282F5
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744780162; cv=none; b=N4Hs+U4Ylg2kyeWmZYuqhUH8bcXJk9JSbgsnKpKmwDtc5mv2+QDlETZXWBqwlPgHKKzQjR0JPXCu5hKEwmdXfGHTlXGWTfxUeJ0PZVhbKNaaf57anvFjI8p6f3nInsYm5/9eFenBiB2WuA4XaqWkWBmpp5jMoRf1AAtH7ZvbRws=
+	t=1744780345; cv=none; b=NtU09nV5b2XErvmwmV8NOcv5Q2IFz90E+naoCOcYuymSJXYYbt4ovdJleqlsV86ytfvQRsGo7h/vTswWQgiLa8vDsOwiBRhUX/tQQa+nVFM9gFaEOGCklY/N0dH6WiuVkpyvoB8OYcMBBSz9MCF8uQ5H6KJspEthx9r+mKbIWwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744780162; c=relaxed/simple;
-	bh=e1Lp5ixfYUQL/UpWA37iCPdyNEu3VQXvga0TafZCxLg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZegG5gGtZQiwdQLxo25tkCv4VkqGQLhofIHlbdmIdv1yuWZuS4SLwTVx5JLfm6UhVJexIo+CUMV/89+i9NQQntNGqBLniJztxWKJm0GTDVAcFKuZ/VdMPt8hEywtGdmvxi9QQFMXi3X+kaSRwRZprqv6FEabBoOW1mGK39eRu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0B39Fku; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744780345; c=relaxed/simple;
+	bh=6bzi3D22lEmU94cfFmZ/44w/jYRm3tcbTK2SL0b/7qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=QdHfsZJShqSaZ5tP/XVYdvHLOB1lLYSblxNSS77cuymcXLuoUTmmAXp8381uGIAv+APSKZCHGu2kkZ+JvRgzRAFIB6zVdgsEAJY0V2tD1PwbzkSKfdojgdgGM8oi3PnMu+2stsI7V6JVIIL/T543chYayeNlt5ruMyap8kYXBQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZqWCGCTl; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0B39Fku"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E39C4CEE2;
-	Wed, 16 Apr 2025 05:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744780162;
-	bh=e1Lp5ixfYUQL/UpWA37iCPdyNEu3VQXvga0TafZCxLg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=U0B39Fku1N8z1wNorOsoCocHEU0M9xxS6PVG3O7x9dhaupje0Vji6AkrB2LSNHTzS
-	 /TihnWKTcIUDNuC/ZmZNjGTCmGO5BSM+O2mydEBvj3F2VIYk/tKbRST8aFPaiEFQtx
-	 F+wuFRvoH8cuLAg+sNU3hhCpqKL+iXx39URrT5Cu/DQVHPZVM4vKknFIusod3twdhR
-	 LicG67f6KrasAEtQTYdR+XdKwdgZmOVPo8uBVEms1l4ZxtZGoGLijzX5JOj65IuEbR
-	 jF3bVlW9OhskuJRLQJURshxbcdS/1nISNrxu+Dr3kelqxF7HsrFBf9ALJXT9A3tBdh
-	 L03EPESj9t5YA==
-Message-ID: <63e4c667-cc2e-47ea-bfba-3d7260317975@kernel.org>
-Date: Wed, 16 Apr 2025 07:09:19 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZqWCGCTl"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250416051214epoutp03dfa284fe840efa3ae9314f397048b9fb~2tHhHPKt00647806478epoutp037
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:12:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250416051214epoutp03dfa284fe840efa3ae9314f397048b9fb~2tHhHPKt00647806478epoutp037
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744780334;
+	bh=dzQh9mvOLRGKcWm4cppheiYkU52WIlpYku50a1fRGtE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=ZqWCGCTlCsHTPIS9VX9gZLstFaiZ59EhDfd100LI4LfMCsQVjQFN/xkkkQ/v2s+QS
+	 WGu7WKegWzVG0RvxPGBVLflyP4G7NVLu1gSGOa83ko5Y4FtfVmJi4GiEqPxm6EeDZz
+	 Jd2WsNAmR4F5+NQ6RHovpfi8sd+JfzeD1a8S43XE=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250416051213epcas5p23c5d1557f05dbeb64502608569838a6e~2tHgoTyKp2406024060epcas5p2d;
+	Wed, 16 Apr 2025 05:12:13 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4Zcpzw4R8Vz6B9m6; Wed, 16 Apr
+	2025 05:12:12 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7C.B2.09853.C2C3FF76; Wed, 16 Apr 2025 14:12:12 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2~2kQwmVSOH2250122501epcas5p4M;
+	Tue, 15 Apr 2025 18:23:07 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250415182306epsmtrp259a11fde6be21a409cc0b89808187745~2kQwh3gXP0804808048epsmtrp2Y;
+	Tue, 15 Apr 2025 18:23:06 +0000 (GMT)
+X-AuditID: b6c32a4a-03cdf7000000267d-2b-67ff3c2ca495
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8B.98.08805.A04AEF76; Wed, 16 Apr 2025 03:23:06 +0900 (KST)
+Received: from green245.sa.corp.samsungelectronics.net (unknown
+	[107.99.41.245]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250415182305epsmtip106aa6f26d8fc4664d70ea47fb308391e~2kQvaYugy3219632196epsmtip1R;
+	Tue, 15 Apr 2025 18:23:05 +0000 (GMT)
+From: Nitesh Shetty <nj.shetty@samsung.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton
+	<akpm@linux-foundation.org>
+Cc: axboe@kernel.dk, gost.dev@samsung.com, nitheshshetty@gmail.com, Nitesh
+	Shetty <nj.shetty@samsung.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] iov_iter: Use iov_offset for length calculation in
+ iov_iter_aligned_bvec
+Date: Tue, 15 Apr 2025 23:44:19 +0530
+Message-Id: <20250415181419.16305-1-nj.shetty@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGKsWRmVeSWpSXmKPExsWy7bCmpq6Ozf90gyn/lSzmrF/DZrH6bj+b
+	xc0DO5ksLu+aw2ax40kjo8W23/OZLc7/Pc7qwO6xc9Zddo/LZ0s9Tsz4zeLRt2UVo8fnTXIe
+	m568ZQpgi8q2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXL
+	zAE6RUmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJTYFKgV5yYW1yal66Xl1piZWhg
+	YGQKVJiQnXHo4jKmgg+sFT+frGRrYLzH0sXIySEhYCLx4Pk31i5GLg4hgd2MEk/PHmSBcD4x
+	Stz9dQcq841RYsPO/4wwLY+eN7NDJPYySqzasJ4JJCEk0Mok8XGeShcjBwebgLbE6f8cIGER
+	gUiJvQebmUDqmQU6GSXal/aBDRIWiJb4vXUOmM0ioCrRPx9kGwcHr4CVxI9nKhC75CVWbzjA
+	DNIrIbCJXeLExZOsEAkXiaVzDjBB2MISr45vYYewpSQ+v9vLBmGXS6ycsgLKLpF4/qcXyraX
+	aD3Vzwyyi1lAU2L9Ln2IsKzE1FPrwEYyC/BJ9P5+AjWeV2LHPBhbWWLN+gVQYyQlrn1vhLI9
+	JD7seggNhliJrZv2sE9glJ2FsGEBI+MqRsnUguLc9NRi0wKjvNRyeDwl5+duYgQnMC2vHYwP
+	H3zQO8TIxMF4iFGCg1lJhPec+b90Id6UxMqq1KL8+KLSnNTiQ4ymwCCbyCwlmpwPTKF5JfGG
+	JpYGJmZmZiaWxmaGSuK8zTtb0oUE0hNLUrNTUwtSi2D6mDg4pRqYBCI784SrMmTPLpBeUudw
+	ivXxkaeVC5zXLJrZN2nPqvwwB9dkdSm/jcc+u2rbhxr9+PKjf6fnEvtJZuvvHv+sWvDuQ61z
+	Y+e7O37Lj3Zey15k3tD2T2PNqol/T7NWTBTtWvx3yjJnqwMxPb9nsdz8VKITJbxvwX1Onb2r
+	+B3+H5J//OICs/CZWcrdj5amt2jpF3cx2x4xTniqZ7uTs7Ska/WkKxpzH218GSG87Nnfyjs7
+	bRes9v23P7QyM3baw69Z947by67SeDQr+oHc3C0/c7IuSkWuCRfRTL176xnjFIkUrzzN9nVJ
+	z4SXFj38e0nb/1PxO+87jwJKLnLc2frJxyK4zSQncGfse5bIZqP9z5VYijMSDbWYi4oTAVYW
+	b1XpAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpiluLIzCtJLcpLzFFi42LZdlhJTpdryb90g5/zDS3mrF/DZrH6bj+b
+	xc0DO5ksLu+aw2ax40kjo8W23/OZLc7/Pc7qwO6xc9Zddo/LZ0s9Tsz4zeLRt2UVo8fnTXIe
+	m568ZQpgi+KySUnNySxLLdK3S+DKOHRxGVPBB9aKn09WsjUw3mPpYuTkkBAwkXj0vJm9i5GL
+	Q0hgN6PEsvZdrBAJSYllf48wQ9jCEiv/PYcqamaSOHr0K1A3BwebgLbE6f8cIDUiApESaw7/
+	YgKpYRboZ5Q429DECJIQBkr8Ov0WbBuLgKpE//w7rCC9vAJWEj+eqUDMl5dYveEA8wRGngWM
+	DKsYJVMLinPTc4sNC4zyUsv1ihNzi0vz0vWS83M3MYKDSUtrB+OeVR/0DjEycTAeYpTgYFYS
+	4T1n/i9diDclsbIqtSg/vqg0J7X4EKM0B4uSOO+3170pQgLpiSWp2ampBalFMFkmDk6pBqbA
+	lUlLYtLEKuOX8Zv9ibuSLMDoXOulcGK1eURg/QGVZ9VCc3+6XSjlVhXIzHNOetbSrj734m0L
+	gXntdSJe3x1v9K22+P7tVTzPxv/T7X+ujvVdkFkeoHpj/5H7nB4mLFpL125V05mfyZg3pYw1
+	a80jxdmH35sklxZycKT75J//2KL5wTuxya+br/FTttoNDuaireH6gTwXTOadjrq32cHxrX+H
+	3sc1l/PEdcIn79/weMnClgXvI8zsNQvOiRvy37p7SVJ0Q+HOTf2/V736xSXzQOywgbSL5eIz
+	m99xT7b8X8F32Md393erj3U2h+LZ9E9w+vkXXqsrsF+0KFUo9fnZgxxVbPmbtDIehPdrKbEU
+	ZyQaajEXFScCAK9gQrWVAgAA
+X-CMS-MailID: 20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2
+References: <CGME20250415182307epcas5p4853044d013dbc943a8e54dca0f2a39c2@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/13] vt: update gen_ucs_width_table.py to make tables
- more space efficient
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415192212.33949-1-nico@fluxnic.net>
- <20250415192212.33949-13-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250415192212.33949-13-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 15. 04. 25, 21:18, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
-> 
-> Split table ranges into BMP (16-bit) and non-BMP (above 16-bit).
-> This reduces the corresponding text size by 20-25%.
-> 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+If iov_offset is non-zero, then we need to consider iov_offset in length
+calculation, otherwise we might pass smaller IOs such as 512 bytes
+with 256 bytes offset.
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+---
+ lib/iov_iter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 8c7fdb7d8c8f..aa80fb094004 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -820,7 +820,7 @@ static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
+ 	size_t size = i->count;
+ 
+ 	do {
+-		size_t len = bvec->bv_len;
++		size_t len = bvec->bv_len - skip;
+ 
+ 		if (len > size)
+ 			len = size;
 
+base-commit: 834a4a689699090a406d1662b03affa8b155d025
 -- 
-js
-suse labs
+2.43.0
+
