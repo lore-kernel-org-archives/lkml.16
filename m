@@ -1,146 +1,152 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD6624B28;
-	Tue, 15 Apr 2025 07:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744702848; cv=pass; b=DBXHTtn6LPZpZ5xWBIUNcSnQWs+ciHeTbfueKPt/iaJECSLKhhCoZagl86AzRD6XBrxnPY2E3E/nkiKpE8HV24rErQXXCIfEUIqHvO7xI1Kfq8S9QvJVx7S9Xa3xo1OKpQNuAhrXdCd0Vlhug6+FMTfiNV16AF3zOd6pgkDNfGc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744702848; c=relaxed/simple;
-	bh=yU0uVlGtDXeaxlwOodUHke+tqbdX1S3tQgjMGMTi7t8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=buzCz3kLhFI4cEd1IjqNbIXGAYkOrOthRcp3fr5K1c0SSANbeJA2MY2h99jpw23VxoHqVWCYAbkXnNzxnVheG2f+58vBUAXxUMvbd4aoGzgDW5319/MgO0+FaJK2ECj49+Rf7gHO44k7P11HOW7uV9fIeM7dj0Yi9slxXRqVXLg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b=EVuhjwAw; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DBAA48
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744702905; cv=none; b=bou+P07ArV/FQ23b2i1VuTZ8n4t8mo42hKldhPbnMrbLz6xgHbB7mhc9wj/zCnlBHdg77mkaSbOZa11xzFevExYxNV3B50pFKwRbmCgTamcQbBda9U39+01jtUxv1W8j/A6XzqhXFkgJJs1xRvSBR5R4yuB++OfSnXkGy03RkoU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744702905; c=relaxed/simple;
+	bh=YL5QJ110xB5bIstZFqLfAhe6+k8X5YNSR1kmNf8Sb/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tuv8zx8hznDhXiK+VJTfKv1b7nqk7DTQfoO+0i/R0MZzqBMg4OnCTzkeriEM7SM334p4NQBiGWxQWewtiODgyOJK0aJsXMynvR6s5M8U2o0iaAs/joZqHBM4QYix+++P5wqBWjdNZa2Pu7OYgWy5Q5W3CDJuV4Y6Xh0IZ+muq48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ON63hOS+; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sjoerd@collabora.com header.b="EVuhjwAw"
-ARC-Seal: i=1; a=rsa-sha256; t=1744702774; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NkU8spe0vKT08V1fXVABu5/53/gQbYk4BNMrFwDPZsuuvccHpPHSsVbcfjrjR/bQGLUg9Ta0Mg02gUixO06nxIxeTPQSKi3jUFH83n25ZCq62lGhw4Led0V0GjA7GTAh5rgreZW4JKllVNYa6Gz6Hs8LKWCS6YZEq7z7qodE7DA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744702774; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=yU0uVlGtDXeaxlwOodUHke+tqbdX1S3tQgjMGMTi7t8=; 
-	b=Y7ZPpfE+id/ntFmKRy7y2NAhV1gzFzurNoW0ZjmrU75LSbbfQn2BVs//6r53AB1Bc+Zy8jQLy9PGjv6Zd7vZU1xDRpoS9RRqtDyBbLlyN7wHOp8Zza+oiI2lDUSLuPtk0CznX7rat0ZZG8MMvtHwNZw/MT/1D1OGX7JAJCl0QQE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sjoerd@collabora.com;
-	dmarc=pass header.from=<sjoerd@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744702774;
-	s=zohomail; d=collabora.com; i=sjoerd@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=yU0uVlGtDXeaxlwOodUHke+tqbdX1S3tQgjMGMTi7t8=;
-	b=EVuhjwAwRYM7/0zcg7r0GCMTJSTlVHZMZxkNQFQxVzGr6goyPp8DbT7Ng4UWe5VX
-	H2iA36/QNHPm/XrnD6QsdJzrkrACjX0HSj5+gX+Z81sYUllypQmYHKKqpqVtfvF/o4l
-	v0qUEpQ/qmRJ6tFUcmenLs0EYQHBlQJSv8Yvo/n4=
-Received: by mx.zohomail.com with SMTPS id 17447027670091011.7454237538764;
-	Tue, 15 Apr 2025 00:39:27 -0700 (PDT)
-Message-ID: <096a8318629dea9073ad6c4807a2f1dedc6b0cd6.camel@collabora.com>
-Subject: Re: [PATCH v3 10/10] riscv: dts: eswin: add HiFive Premier P550
- board device tree
-From: Sjoerd Simons <sjoerd@collabora.com>
-To: Samuel Holland <samuel.holland@sifive.com>, Ariel D'Alessandro	
- <ariel.dalessandro@collabora.com>, Pinkesh Vaghela	
- <pinkesh.vaghela@einfochips.com>, Conor Dooley <conor@kernel.org>, Rob
- Herring	 <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Thomas Gleixner	 <tglx@linutronix.de>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt	
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Daniel Lezcano	
- <daniel.lezcano@linaro.org>, Min Lin <linmin@eswincomputing.com>, Pritesh
- Patel	 <pritesh.patel@einfochips.com>, Yangyu Chen <cyy@cyyself.name>, Lad
- Prabhakar	 <prabhakar.mahadev-lad.rj@bp.renesas.com>, Yu Chien Peter Lin	
- <peterlin@andestech.com>, Charlie Jenkins <charlie@rivosinc.com>, Kanak
- Shilledar <kanakshilledar@gmail.com>, Darshan Prajapati
- <darshan.prajapati@einfochips.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Aradhya
- Bhatia	 <a-bhatia1@ti.com>, rafal@milecki.pl, Anup Patel
- <anup@brainfault.org>, 	devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, 	linux-kernel@vger.kernel.org,
- "kernel@collabora.com" <kernel@collabora.com>
-Date: Tue, 15 Apr 2025 09:39:21 +0200
-In-Reply-To: <0dc3bb03-3708-4134-96bf-d5f95187e8bb@sifive.com>
-References: <20250410152519.1358964-1-pinkesh.vaghela@einfochips.com>
-	 <20250410152519.1358964-11-pinkesh.vaghela@einfochips.com>
-	 <956d76b0-4f82-4f95-8f70-70896d488bd3@collabora.com>
-	 <0dc3bb03-3708-4134-96bf-d5f95187e8bb@sifive.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0-1 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ON63hOS+"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso5268369a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744702903; x=1745307703; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OAto5TMsyfm0PnIWFCrMK2YomypnAVk8abWD+aRoNLw=;
+        b=ON63hOS+eyH/EAiaIay06G0QAqs1s7XB2LSLl146SotkR8kx2/1kiPqpSTDQ09O+HD
+         31UsPWK5kFrGN9oDrf1vGOp9jLCmBS8Xlw8oNXEhN359r1SPKnR/zdyD9cbf+PTGBx3h
+         y+B/VGkjmEXPxvtxIBscNff90XFueT7F9VFXA6Qli+tO02nGPkWCMg0JAgXG4dSGd6Fq
+         3mOKt0a/D9yi4roHx3gyVkIdycl1TQGdfMSOX0oQMcaguRITDi8+uzh+9zdHJqfXfsiD
+         98vRuRt2gF6JtToY+iTer4r0tdEKeYeu3E7H9RZ53jeWyd6rhAfUlEMkA6t0KsIyMHfY
+         kFuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744702903; x=1745307703;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OAto5TMsyfm0PnIWFCrMK2YomypnAVk8abWD+aRoNLw=;
+        b=lxGCbd5UHF3R8WRyVirTOhOMMU96sPi+8jDKO0LdxMB/plAIDw5xLQoGYVGHFEqYIA
+         aH8eYXUlDczFlwdbGQoFXYI3asdzKjFu0kbcX+Tx/71urTmZXE3oERnjZ1le05Z00MEo
+         I+8OzDJogBlkKMYaD9f/kyK1RlNDSl5fQU7Agf+FYMx1RPmAjgNM7CZEPu1A7p727PZj
+         cfu7FB7TXwy2J68nrZ/OziEhuMi9/YXtCXn9CIEXmbiygNw8aaPuExBIVGwOgaqqLQZ3
+         zRy6dgb1AYlofnhx22Gjf7cL60aHwvKGl+VL+l57cd5TK1aruXDQOx+FB0jKQuDUti1i
+         GSFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUaw9PsMocPRZMj0JKIvPHjDFK6JJOEyWegTwQzWw8gHcUJ1yOQ+DzJhStSdt+LB6wOoApPkbegLTDIDTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIzklATltTBKztDyYZoG/KwOCt4oomA1RgRpSebeAUYg8+Sm79
+	GNqdcHYnMkEsl3Bmot5Tdfcwc7NIJoPCP7FsuiacGR7+qMH4UYvJfE2u7nVl+A==
+X-Gm-Gg: ASbGncuDza/+rBiGJhHcNX4EWkO19WmSdZT6ppsGpqsteTrCT/9I5DQ2MBu8xcUMlSt
+	sdF7FzJYo/RMVbdQouu37LwELhwRFMtCL26IsKsDgHZ8YDaLD0vq/Bxl8GTSdBRuIYwHFkQ2Ljk
+	fkh+dvPr+lWgw/wlpbVBtZjNFMhwZve9JRfFKP9HbJinh7xyKkRtlbecoPFsf+JFS4DDuXbmEXs
+	HqPcgknJl9xf4t6npYTT5/Ocatl6QnLgUxjZS9r9ZMs+lQZG9dbVH2snG+ePvsH7txAUxB/l7TH
+	/aaCIqVsm7wCqmSWEl4nKhi5HWJ1jMOaNa0sRJLWvE2TBTC1gg==
+X-Google-Smtp-Source: AGHT+IGKE+4zKM94UuTJQK/vyjfN6oxik3zVIACkmE5DFSJGrhrXSedhBxQ3pi+f1PJx7Y4YJ1fP+g==
+X-Received: by 2002:a17:90b:17ca:b0:301:6343:1626 with SMTP id 98e67ed59e1d1-308236281f7mr19205173a91.1.1744702903554;
+        Tue, 15 Apr 2025 00:41:43 -0700 (PDT)
+Received: from thinkpad ([120.60.71.35])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e6c8sm12572515a91.14.2025.04.15.00.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 00:41:43 -0700 (PDT)
+Date: Tue, 15 Apr 2025 13:11:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Caleb Connolly <caleb.connolly@linaro.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
+ gpio's to root port
+Message-ID: <tsnvoy2spr2dtqt3q2cnvl7rxobjgcgxntxb6rjtjdeej625i5@35je7sp3xqea>
+References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-1-89247746d755@oss.qualcomm.com>
+ <ody5tbmdcmxxzovubac4aeiuxvrjjmwujqmo6uz7kczktefcxz@b6i5bkwpvmzl>
+ <6db146b9-ad63-42c7-9f33-83ecf64ed344@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6db146b9-ad63-42c7-9f33-83ecf64ed344@linaro.org>
 
-Hey,
+On Mon, Apr 14, 2025 at 02:50:19PM +0200, Caleb Connolly wrote:
+> 
+> 
+> On 4/14/25 10:04, Dmitry Baryshkov wrote:
+> > On Mon, Apr 14, 2025 at 11:09:12AM +0530, Krishna Chaitanya Chundru wrote:
+> > > Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
+> > > the bridge node, as agreed upon in multiple places one instance is[1].
+> > > 
+> > > Update the qcom,pcie-common.yaml to include the phy, phy-names, and
+> > > wake-gpios properties in the root port node. There is already reset-gpio
+> > > defined for PERST# in pci-bus-common.yaml, start using that property
+> > > instead of perst-gpio.
+> > > 
+> > > For backward compatibility, do not remove any existing properties in the
+> > > bridge node.
+> > > 
+> > > [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> > > 
+> > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> > > ---
+> > >   .../devicetree/bindings/pci/qcom,pcie-common.yaml      | 18 ++++++++++++++++++
+> > >   .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml      | 17 +++++++++++++----
+> > >   2 files changed, 31 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> > > index 0480c58f7d998adbac4c6de20cdaec945b3bab21..16e9acba1559b457da8a8a9dda4a22b226808f86 100644
+> > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
+> > > @@ -85,6 +85,24 @@ properties:
+> > >     opp-table:
+> > >       type: object
+> > > +patternProperties:
+> > > +  "^pcie@":
+> > > +    type: object
+> > > +    $ref: /schemas/pci/pci-pci-bridge.yaml#
+> > > +
+> > > +    properties:
+> > > +      reg:
+> > > +        maxItems: 1
+> > > +
+> > > +      phys:
+> > > +        maxItems: 1
+> > > +
+> > > +      wake-gpios:
+> > > +        description: GPIO controlled connection to WAKE# signal
+> > > +        maxItems: 1
+> > > +
+> > > +    unevaluatedProperties: false
+> > 
+> > Please mark old properties as deprecated.
+> 
+> Since this is a trivial change, just moving two properties, I don't see why
+> it makes sense to deprecate -- just remove the old properties, and move over
+> all the platforms at once.
+> 
 
-On Mon, 2025-04-14 at 11:00 -0500, Samuel Holland wrote:
-> Hi Ariel,
->=20
-> On 2025-04-14 7:55 AM, Ariel D'Alessandro wrote:
-> > Hi Pinkesh,
-> >=20
-> > On 4/10/25 12:25 PM, Pinkesh Vaghela wrote:
-> > > From: Min Lin <linmin@eswincomputing.com>
-> >=20
-<snip>
+This will be an ABI break. You should not remove properties all of a sudden
+without first deprecating them (even if you convert all upstream DTS at once).
+ABI is for older DTS also.
 
-> > Although commit log says that this includes DRAM configuration, looks l=
-ike
-> > it's
-> > missing? In order to test this patchset, had to add this following memo=
-ry
-> > definition (picked from vendor kernel repository):
-> >=20
-> > =C2=A0=C2=A0=C2=A0 L50: memory@80000000 {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 comp=
-atible =3D "sifive,axi4-mem-port", "sifive,axi4-port",
-> > "sifive,mem-port";
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 devi=
-ce_type =3D "memory";
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =
-=3D <0x0 0x80000000 0x7f 0x80000000>;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sifi=
-ve,port-width-bytes =3D <32>;
-> > =C2=A0=C2=A0=C2=A0 };
->=20
-> That is a misstatement in the commit message. The memory node is not incl=
-uded
-> in
-> the static devicetree because the amount of RAM installed on the board is
-> variable. It is the responsibility of firmware to provide the memory map,
-> either
-> through EFI or by patching the memory node into the DT at runtime. I beli=
-eve
-> the
-> current BSP U-Boot does the former but not the latter.
+- Mani
 
-Amount of RAM being variable is pretty common on devices using FDT these da=
-ys;
-Typically the dts still gets a memory node that's a reasonable default, wit=
-h the
-expectation that e.g. u-boot will fix it up. If you look at other risc-v
-devicetrees in upstream they (almost?) all come with a pre-defined memory n=
-ode.
-For the P550 board a default memory node for 16G ram seems reasonable (as t=
-hat
-seems the minimal SKU?)
-
-That all being said. Indeed the sifive BSP u-boot doesn't seem to call the
-relevant `fdt_fixup_memory` to fixup the memory node, hence us having issue=
-s
-booting with u-boot directly (without going through EFI). Honestly this was=
- a
-bit of a surprise to me as only most other architectures that's just done b=
-y
-common code, but that doesn't seem to be the case for risc-v (either upstre=
-am or
-downstream)
-
---=20
-Sjoerd Simons
-Collabora
+-- 
+மணிவண்ணன் சதாசிவம்
