@@ -1,311 +1,254 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2042.outbound.protection.outlook.com [40.107.94.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2771DE8B0;
-	Tue, 15 Apr 2025 08:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706666; cv=none; b=ZtB3RWlh+UHSKXgmj+NsnEkJBdiiMObVEH/aH0+ma+Ipkjt1H3v6kV/yYxQeuRRIpMhY6E9W/KNpxB+e/5ihVpjuS5J5aeJLPk55hd7qKNLH7fjy0O7RHYUjcqpvAzu6sLzEFH9iukTuz+nn2x24T7Hl6FbtAoiKrDH/AJhvDSM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706666; c=relaxed/simple;
-	bh=tTQC2d50IWaHk+pOnbgalVH8CC4lcqM8R16udFXoxsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n5AhF9ofcBBqVlzbTC3yUzaRRKkwmA8Pw3lJf0p5kqbbmKRgt4O00YNeXh2Oz2QxrzlBc27APUTkAk8HHgGA3DQUSnJTh4RwTOXF9k5rlhRKU7NKyZpO/HV8nYBeXPPTxmIHu5BUXd5yL3iAvfNEoJCZsSuQhILqivnCFavKzjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4sN4Akx; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A23D1DE4CE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744706717; cv=fail; b=WWlrcGM8sf0U/jNG8mI8C6ooZZdCgQD4+uBnLFQvpBCdSOI1JiUjM9j9/LmBMfi76a/PW7Wek0lO+NJ/K0W0pl77Z8VKsgRS3HDg4FOOTo05o0MP+0WVmQdtS0djdlzSC0/YuuvKY2Q5fxJtLjDWgPRbSqy6WMEg4vMWHOvCq0Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744706717; c=relaxed/simple;
+	bh=IkcD4xXEBGlOe1jc7CVxsvcq8PyLqvlbCv+Hddrsi2k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=vCdjdVo7ipWsUfz/UX7GMQCfljdJrkFUsN7m4nWrc9lJFn/mGDpc12l1vRWyLchyl1nY+5KaJTLnRi46XyPAM0jL+j0IY92gWYL2mhJN4CFTPn8uNONbjkyaKAffpFdzbHfdWGKWPlf6E90lyScZAQX57jRCTVqpz+L3y+w/1jA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Igxs4co0; arc=fail smtp.client-ip=40.107.94.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4sN4Akx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744706664; x=1776242664;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tTQC2d50IWaHk+pOnbgalVH8CC4lcqM8R16udFXoxsE=;
-  b=C4sN4Akx1eCb1wXo5RoaU4yqOpI75yK8y8Ls9KHfpdAtpcUMbGd1VMX3
-   KjS8f/Zz8BXMtBh5R32OZVIjoAuYDfp4TkCNF0n6mNjYlRCszMPA84acm
-   kFdZTQ8PLrrxhOXQ8zipAALT76GuNBrqub/Kj+OnbKoIXw+XSWAF6P76q
-   HSTB/Zq3cjVaW3XGWfZQQ1mXAAb+sgSCDGGf02G9+qGBmwuoHZ4Ps5mk1
-   KJ/BKbrkItSwvnnqJG9uJ9gZ0BlIf8QfnoseOV60abSFHA3AFzX21XB91
-   41/v+ButXFA8ok0M28YMEch/7LUdWwHIA+vGhLIaXjQMTYHovq1D0XmbB
-   w==;
-X-CSE-ConnectionGUID: PrtPQIieQEa/gYTBwV/peQ==
-X-CSE-MsgGUID: M+2r/EByT6OmFFpFfGx8Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="63745014"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="63745014"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:44:23 -0700
-X-CSE-ConnectionGUID: Dd7Wr1IVSUeIPUZVeoOEZQ==
-X-CSE-MsgGUID: xlzBoADzQ/GGkY8cyvRjUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130593508"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 15 Apr 2025 01:44:18 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4btv-000FQo-2S;
-	Tue, 15 Apr 2025 08:44:15 +0000
-Date: Tue, 15 Apr 2025 16:44:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	chaitanya chundru <quic_krichai@quicinc.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Jingoo Han <jingoohan1@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	quic_vbadigan@quicnic.com, amitk@kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	jorge.ramirez@oss.qualcomm.com,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 8/9] PCI: pwrctrl: Add power control driver for tc9563
-Message-ID: <202504151632.tCoey9d8-lkp@intel.com>
-References: <20250412-qps615_v4_1-v5-8-5b6a06132fec@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Igxs4co0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MeGd2wVHiu0CWunKvJ/p/iQtWatMqaPUpG6DXEqurOqNris7Lm8m54uWmkexYajiXrJ4I1MkXG0crzp/nX+NcNOziPMXVuSS6PHSaTWYlhghniZKVWAe8w8IZuNE5hffz7FL/paxm6g+fKas3zcpvu63evg9A/cL7E/UV6oceQeX+Ap0HOcAH1Z03O4SXeUgzcDG5A74Jrvsrufsl4RWK0HJr0wkj7EE7Up5JSWindZWo9664qJij71lUohD3KMmPjh7IKCg+wu0CSYv4eaWVj0lc4q7AdL/+KlWLROPLy9mfTvuBkmANwd/3KhR9YcAZkO+McPYw8GZEEuJ8MG5WA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aVrlxHmqkF9Zc4qIICliFvRemKFeJ5pOznyGAbYnJOU=;
+ b=BuddQKdivPhRBPvrwWidHeuy46orrhJcLh6fktFr4STeKQnQhB+K35e3k2cU2WTf2UP/K5U4prylQlNTzwzXCtKAWmlnknm1MaAXS5e7APNy7NrKo8Fnavmi/F7LSLUwQAC+yjRSjXE9r1z/qMJmD41mS7oX82M+bxmOwnTytbKue8Cb1tbsvmNd1SitD7D18Xin89G8bHefFmdRQVjxynZ6+k0O4mZQ2WOa6pkXonyhPPREzeTiabjW/sYP3CYH9A1NhkPCLA1wH8tgOBq6m9sANBMt4QyBGOuHpVd7ce0tKtlqvh/9xgLRzxNY+4FjBtyjukt0b9ZGjLm7rP6Zvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=siemens.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aVrlxHmqkF9Zc4qIICliFvRemKFeJ5pOznyGAbYnJOU=;
+ b=Igxs4co0SS+72QtWtR+yVmqpNFjE/OdxAUdjCiL1FmFtuomrgmK/wdkKaYgofsnuZc5Ps8jIHn19YNkz2tRA65Jm1Ze4Cg/26fsb2EMLgGtCP3+aF0wydNdhGgJGUSkzpBIhEAEelgq9t68Bb0p2uTxsSGNOZTqzGAbj/AsGpPQ=
+Received: from BY3PR04CA0008.namprd04.prod.outlook.com (2603:10b6:a03:217::13)
+ by IA0PR12MB7721.namprd12.prod.outlook.com (2603:10b6:208:433::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
+ 2025 08:45:11 +0000
+Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
+ (2603:10b6:a03:217:cafe::35) by BY3PR04CA0008.outlook.office365.com
+ (2603:10b6:a03:217::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Tue,
+ 15 Apr 2025 08:45:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 08:45:10 +0000
+Received: from [10.85.36.22] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 15 Apr
+ 2025 03:45:04 -0500
+Message-ID: <5e919998-338c-4055-b58a-e4586134956c@amd.com>
+Date: Tue, 15 Apr 2025 14:15:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412-qps615_v4_1-v5-8-5b6a06132fec@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 0/7] Defer throttle when task exits to user
+To: Jan Kiszka <jan.kiszka@siemens.com>, Aaron Lu <ziqianlu@bytedance.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+CC: Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>,
+	Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo
+ Molnar <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Xi
+ Wang <xii@google.com>, <linux-kernel@vger.kernel.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven
+ Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, Chengming Zhou
+	<chengming.zhou@linux.dev>, Chuyi Zhou <zhouchuyi@bytedance.com>, "Sebastian
+ Andrzej Siewior," <bigeasy@linutronix.de>
+References: <20250409120746.635476-1-ziqianlu@bytedance.com>
+ <cee5bca4e2b024d3406b40b84c0d5db91c7d276f.camel@siemens.com>
+ <20250414120407.GC3558904@bytedance>
+ <7483d3ae-5846-4067-b9f7-390a614ba408@siemens.com>
+ <0a06f6c4-5d69-4fd1-badd-92fd55d8f38d@amd.com>
+ <55687bb5-7e8a-4d7d-a597-6f97087cab32@siemens.com>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <55687bb5-7e8a-4d7d-a597-6f97087cab32@siemens.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|IA0PR12MB7721:EE_
+X-MS-Office365-Filtering-Correlation-Id: 422d32b2-24d7-4077-912a-08dd7bf9d52b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aEJ2RnFQR2g4bnlFcGZ0bzJSRXZVWWdLNTQ3T2FXNWVzZlFWY0dXTnM1VVNy?=
+ =?utf-8?B?SDAvNDVsbURmbGFzcWlNZlJsRGVuVFd0Wm5BbkhSRmNrZXZkb3ZDVWl3eDln?=
+ =?utf-8?B?WXh4a2ZZb3NnRWJjdlNHVkhSTU00VHFiOGNNa0RxTS9oMDdqL1ZHTFpiQk8r?=
+ =?utf-8?B?T01kNVo5bWJWb2dOa2o3b2dUNlA1TThVbzJNRGZYdWprYnh4OWlBRjh6WkEw?=
+ =?utf-8?B?bGF4N2MxZG9aWkJvY2xNbkdCT3QyQlhlWXVZZnUvcUJ3ak1hQTYwN3ZCcjFa?=
+ =?utf-8?B?azRzZlJEQ2dVODkyQlhIMkFGWWFnVzNCZ2hEeDZOY3pFZFNldUpuZWRnbGU4?=
+ =?utf-8?B?QjFDSndOb2ZrMlZNWHFCT2E3dEtSQUZVK1V3b29iZHlzVXh5NEcwOFBkV2d3?=
+ =?utf-8?B?aWxxREZyaTBDNjYybit4b280cFRkNElMdDNreVA2V3o3NTRnSnE0Um9COE4z?=
+ =?utf-8?B?VEN5ZktCOGFnQUJNdlU4bmtBWnhqNnBVSktaOGJIZTA3TExhU2oyTHI3SXdl?=
+ =?utf-8?B?c2VYQzRZNEJqTkQ2dWgySk13ckRja0lRdHRvWTFOeDJRcGp4bVU0S0tWQkxa?=
+ =?utf-8?B?a3JhbEFWN3dac3d6Y2ROdXM2VEJEMWJhWFdEMDE0NnJaV2p1VEhaL2tjS0Yy?=
+ =?utf-8?B?T0JCQWd0Y3Q0Yms0ZFpwNXBMZjJHRDRWS09zTmcyWWcyemJDVFZicnZ3TkV2?=
+ =?utf-8?B?S2w5eE5xWGZEbkRXVUVkSnBWM2svRSs2QTdhZ05NZmd3S3NBV3VlV3ZBenZU?=
+ =?utf-8?B?RDRMejFVd2VnWFpXWkJwcEZDQUczNCtzY29QUnNHOWhiSjRBNm1aU244WElw?=
+ =?utf-8?B?OWVmR3Y0dkF6dGNFeUQ0bFZIbWJBSE0zL0g4dmZEOTNOV1NIQlZsK0NGTXJx?=
+ =?utf-8?B?VUNybUo5ZVhndHZGd2pvUVAvYXprbXE0ajVpYjZKdzNDejFCNU5meHQrWVRG?=
+ =?utf-8?B?MXhzT0h1azhBWEJTVTRBSmJFcXBrSkVJdGoxc0dQczFJeVZSZUlwWkk5bDFh?=
+ =?utf-8?B?QU02YW1INytncU5IL2o1YVkxNmp5b3JLcDVBWHdpWDlPWktxQXdkU00xY2Vq?=
+ =?utf-8?B?YmRnZW5QWGdha0U2NVkxaTlPWU5CVDJqL0twTG43ZVRvc0szdTFJNGFNeGJJ?=
+ =?utf-8?B?eDVMckZJcThubnYwMTZhSGFVZXc2QXdzTVRMK3FSNW83Wk00WExZNzVZTUMv?=
+ =?utf-8?B?OFhiblVTOUdWREhJN1BHNkVzMDVyOUVDbFkwQjFjcktCcXZHMGtzZ3g1akpj?=
+ =?utf-8?B?dkZaK0NDUmFnVmpHVlhtSlh6RWlCMDVSWTVYb1lrV2lsYVBzaXF3Uld4UXBF?=
+ =?utf-8?B?K1o2Y3VqOUhINDFhSHVMVk1hck55T0w4aXVTMFlmT2xRWXd3d08vSm9DVDIw?=
+ =?utf-8?B?KzRrZ2laWFFHWlQzSktQcWlFOFBSOW1vTk45aUQ5YXFLSUFQT3lmWTd1VU9S?=
+ =?utf-8?B?NGtCMUpIL29QbjV2Mjh4Z2UraU8xSS9pa1ZYVzFjQkJrOW03b3hpdW9BblZi?=
+ =?utf-8?B?czlTbGFHSDNGdDJYVUIvZkUrWWhVUk4wY3lSNElBTkF0cDljTlVzOEpURlY3?=
+ =?utf-8?B?RFhyOCtCYmg4S3VJd3BlMWJ2WnVFVXlJUWpJOThUTXZISnVlK2ZEKzgxbW1M?=
+ =?utf-8?B?VFp4WWx5UkpNMGFYS0UxdDd6Q29odnRkbDFWLythdFdqTkpCaDVIbEJWY1Nt?=
+ =?utf-8?B?MTF4aUsyNEtoMGlxTE5qZ3YzVWIzZFJxOXM3cFRpdTY3a0xVcTE4eG1uUHlI?=
+ =?utf-8?B?cUp6YSt0MVpvYWtGc0QrWU5GelZBSEYxWXR2dlVnWE5oRW5zaFZVeVY2TDVq?=
+ =?utf-8?B?bDgxSktwczBsTmtmNHVIYVhnY2NjTnNRYllZVE9QaFR6SkRUWVlkSElPQmRW?=
+ =?utf-8?B?c01aZm1UWEVIL21nZ1FFSjZscCttZHpFamZWelF2VEsvS3c5M2FHOCtZY3Ew?=
+ =?utf-8?B?Rnk4L3RGaElRRTJxdFZ5eEVvdXNza3ZUTzVTWUxnZ2pSOGZNQWM3TU4rRlhU?=
+ =?utf-8?B?VGhuVlJvTFREQjEyZ1kzZlc1U2JPWnZtVHlYR29DVWRtT1doR2Y5ZHF3UFMy?=
+ =?utf-8?Q?mnOKFK?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 08:45:10.8547
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 422d32b2-24d7-4077-912a-08dd7bf9d52b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D5.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7721
 
-Hi Krishna,
+(+ Sebastian)
 
-kernel test robot noticed the following build errors:
+Hello Jan,
 
-[auto build test ERROR on f4d2ef48250ad057e4f00087967b5ff366da9f39]
+On 4/15/2025 11:39 AM, Jan Kiszka wrote:
+>>> Attached the bits with which we succeeded, sometimes. Setup: Debian 12,
+>>> RT kernel, 2-4 cores VM, 1-5 instances of the test, 2 min - 2 h
+>>> patience. As we have to succeed with at least 3 race conditions in a
+>>> row, that is still not bad... But maybe someone has an idea how to
+>>> increase probabilities further.
+>>
+>> Looking at run.sh, there are only fair tasks with one of them being run
+>> with cfs bandwidth constraints. Are you saying something goes wrong on
+>> PREEMPT_RT as a result of using bandwidth control on fair tasks?
+> 
+> Yes, exactly. Also our in-field workload that triggers (most likely)
+> this issue is not using RT tasks itself. Only kernel threads are RT here.
+> 
+>>
+>> What exactly is the symptom you are observing? Does one of the assert()
+>> trip during the run? Do you see a stall logged on dmesg? Can you provide
+>> more information on what to expect in this 2min - 2hr window?
+> 
+> I've just lost my traces from yesterday ("you have 0 minutes to find a
+> power adapter"), but I got nice RCU stall warnings in the VM, including
+> backtraces from the involved tasks (minus the read-lock holder IIRC).
+> Maybe Florian can drop one of his dumps.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Krishna-Chaitanya-Chundru/dt-bindings-PCI-Add-binding-for-Toshiba-TC9563-PCIe-switch/20250414-123816
-base:   f4d2ef48250ad057e4f00087967b5ff366da9f39
-patch link:    https://lore.kernel.org/r/20250412-qps615_v4_1-v5-8-5b6a06132fec%40oss.qualcomm.com
-patch subject: [PATCH v5 8/9] PCI: pwrctrl: Add power control driver for tc9563
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250415/202504151632.tCoey9d8-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504151632.tCoey9d8-lkp@intel.com/reproduce)
+So I ran your reproducer on a 2vCPU VM running v6.15-rc1 PREEMPT_RT
+and I saw:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504151632.tCoey9d8-lkp@intel.com/
+     rcu: INFO: rcu_preempt self-detected stall on CPU
+     rcu:     0-...!: (15000 ticks this GP) idle=8a74/0/0x1 softirq=0/0 fqs=0
+     rcu:     (t=15001 jiffies g=12713 q=24 ncpus=2)
+     rcu: rcu_preempt kthread timer wakeup didn't happen for 15000 jiffies! g12713 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+     rcu:     Possible timer handling issue on cpu=0 timer-softirq=17688
+     rcu: rcu_preempt kthread starved for 15001 jiffies! g12713 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+     rcu:     Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+     rcu: RCU grace-period kthread stack dump:
+     task:rcu_preempt     state:I stack:0     pid:17    tgid:17    ppid:2      task_flags:0x208040 flags:0x00004000
+     Call Trace:
+      <TASK>
+      __schedule+0x401/0x15a0
+      ? srso_alias_return_thunk+0x5/0xfbef5
+      ? lock_timer_base+0x77/0xb0
+      ? srso_alias_return_thunk+0x5/0xfbef5
+      ? __pfx_rcu_gp_kthread+0x10/0x10
+      schedule+0x27/0xd0
+      schedule_timeout+0x76/0x100
+      ? __pfx_process_timeout+0x10/0x10
+      rcu_gp_fqs_loop+0x10a/0x4b0
+      rcu_gp_kthread+0xd3/0x160
+      kthread+0xff/0x210
+      ? rt_spin_lock+0x3c/0xc0
+      ? __pfx_kthread+0x10/0x10
+      ret_from_fork+0x34/0x50
+      ? __pfx_kthread+0x10/0x10
+      ret_from_fork_asm+0x1a/0x30
+      </TASK>
+     CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1-test-dirty #746 PREEMPT_{RT,(full)}
+     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+     RIP: 0010:pv_native_safe_halt+0xf/0x20
+     Code: 22 df e9 1f 08 e5 fe 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa eb 07 0f 00 2d 85 96 15 00 fb f4 <e9> f7 07 e5 fe 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+     RSP: 0018:ffffffff95803e50 EFLAGS: 00000216
+     RAX: ffff8e2d61534000 RBX: 0000000000000000 RCX: 0000000000000000
+     RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000081f8a6c
+     RBP: ffffffff9581d280 R08: 0000000000000000 R09: ffff8e2cf7d32301
+     R10: ffff8e2be11ae5c8 R11: 0000000000000001 R12: 0000000000000000
+     R13: 0000000000000000 R14: 0000000000000000 R15: 00000000000147b0
+     FS:  0000000000000000(0000) GS:ffff8e2d61534000(0000) knlGS:0000000000000000
+     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+     CR2: 000055e77c3a5128 CR3: 000000010ff78003 CR4: 0000000000770ef0
+     PKRU: 55555554
+     Call Trace:
+      <TASK>
+      default_idle+0x9/0x20
+      default_idle_call+0x30/0x100
+      do_idle+0x20f/0x250
+      ? do_idle+0xb/0x250
+      cpu_startup_entry+0x29/0x30
+      rest_init+0xde/0x100
+      start_kernel+0x733/0xb20
+      ? copy_bootdata+0x9/0xb0
+      x86_64_start_reservations+0x18/0x30
+      x86_64_start_kernel+0xba/0x110
+      common_startup_64+0x13e/0x141
+      </TASK>
 
-All errors (new ones prefixed by >>):
+Is this in line with what you are seeing?
 
->> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:419:2: error: call to undeclared function 'gpiod_set_value'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     419 |         gpiod_set_value(ctx->reset_gpio, 1);
-         |         ^
-   drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:433:2: error: call to undeclared function 'gpiod_set_value'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     433 |         gpiod_set_value(ctx->reset_gpio, 0);
-         |         ^
->> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:535:20: error: call to undeclared function 'devm_gpiod_get'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     535 |         ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-         |                           ^
->> drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c:535:49: error: use of undeclared identifier 'GPIOD_OUT_HIGH'
-     535 |         ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-         |                                                        ^
-   4 errors generated.
-
-
-vim +/gpiod_set_value +419 drivers/pci/pwrctrl/pci-pwrctrl-tc9563.c
-
-   416	
-   417	static void tc9563_pwrctrl_power_off(struct tc9563_pwrctrl_ctx *ctx)
-   418	{
- > 419		gpiod_set_value(ctx->reset_gpio, 1);
-   420	
-   421		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-   422	}
-   423	
-   424	static int tc9563_pwrctrl_bring_up(struct tc9563_pwrctrl_ctx *ctx)
-   425	{
-   426		struct tc9563_pwrctrl_cfg *cfg;
-   427		int ret, i;
-   428	
-   429		ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-   430		if (ret < 0)
-   431			return dev_err_probe(ctx->pwrctrl.dev, ret, "cannot enable regulators\n");
-   432	
-   433		gpiod_set_value(ctx->reset_gpio, 0);
-   434	
-   435		 /* wait for the internal osc frequency to stablise */
-   436		usleep_range(10000, 10500);
-   437	
-   438		ret = tc9563_pwrctrl_assert_deassert_reset(ctx, false);
-   439		if (ret)
-   440			goto power_off;
-   441	
-   442		for (i = 0; i < TC9563_MAX; i++) {
-   443			cfg = &ctx->cfg[i];
-   444			ret = tc9563_pwrctrl_disable_port(ctx, i);
-   445			if (ret) {
-   446				dev_err(ctx->pwrctrl.dev, "Disabling port failed\n");
-   447				goto power_off;
-   448			}
-   449	
-   450			ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, false, cfg->l0s_delay);
-   451			if (ret) {
-   452				dev_err(ctx->pwrctrl.dev, "Setting L0s entry delay failed\n");
-   453				goto power_off;
-   454			}
-   455	
-   456			ret = tc9563_pwrctrl_set_l0s_l1_entry_delay(ctx, i, true, cfg->l1_delay);
-   457			if (ret) {
-   458				dev_err(ctx->pwrctrl.dev, "Setting L1 entry delay failed\n");
-   459				goto power_off;
-   460			}
-   461	
-   462			ret = tc9563_pwrctrl_set_tx_amplitude(ctx, i, cfg->tx_amp);
-   463			if (ret) {
-   464				dev_err(ctx->pwrctrl.dev, "Setting Tx amplitube failed\n");
-   465				goto power_off;
-   466			}
-   467	
-   468			ret = tc9563_pwrctrl_set_nfts(ctx, i, cfg->nfts);
-   469			if (ret) {
-   470				dev_err(ctx->pwrctrl.dev, "Setting nfts failed\n");
-   471				goto power_off;
-   472			}
-   473	
-   474			ret = tc9563_pwrctrl_disable_dfe(ctx, i);
-   475			if (ret) {
-   476				dev_err(ctx->pwrctrl.dev, "Disabling DFE failed\n");
-   477				goto power_off;
-   478			}
-   479		}
-   480	
-   481		ret = tc9563_pwrctrl_assert_deassert_reset(ctx, true);
-   482		if (!ret)
-   483			return 0;
-   484	
-   485	power_off:
-   486		tc9563_pwrctrl_power_off(ctx);
-   487		return ret;
-   488	}
-   489	
-   490	static int tc9563_pwrctrl_probe(struct platform_device *pdev)
-   491	{
-   492		struct pci_host_bridge *bridge = to_pci_host_bridge(pdev->dev.parent);
-   493		struct pci_dev *pci_dev = to_pci_dev(pdev->dev.parent);
-   494		struct pci_bus *bus = bridge->bus;
-   495		struct device *dev = &pdev->dev;
-   496		enum tc9563_pwrctrl_ports port;
-   497		struct tc9563_pwrctrl_ctx *ctx;
-   498		struct device_node *i2c_node;
-   499		int ret, addr;
-   500	
-   501		ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-   502		if (!ctx)
-   503			return -ENOMEM;
-   504	
-   505		ret = of_property_read_u32_index(pdev->dev.of_node, "i2c-parent", 1, &addr);
-   506		if (ret)
-   507			return dev_err_probe(dev, ret, "Failed to read i2c-parent property\n");
-   508	
-   509		i2c_node = of_parse_phandle(dev->of_node, "i2c-parent", 0);
-   510		ctx->adapter = of_find_i2c_adapter_by_node(i2c_node);
-   511		of_node_put(i2c_node);
-   512		if (!ctx->adapter)
-   513			return dev_err_probe(dev, -EPROBE_DEFER, "Failed to find I2C adapter\n");
-   514	
-   515		ctx->client = i2c_new_dummy_device(ctx->adapter, addr);
-   516		if (IS_ERR(ctx->client)) {
-   517			dev_err(dev, "Failed to create I2C client\n");
-   518			i2c_put_adapter(ctx->adapter);
-   519			return PTR_ERR(ctx->client);
-   520		}
-   521	
-   522		ctx->supplies[0].supply = "vddc";
-   523		ctx->supplies[1].supply = "vdd18";
-   524		ctx->supplies[2].supply = "vdd09";
-   525		ctx->supplies[3].supply = "vddio1";
-   526		ctx->supplies[4].supply = "vddio2";
-   527		ctx->supplies[5].supply = "vddio18";
-   528		ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies), ctx->supplies);
-   529		if (ret) {
-   530			dev_err_probe(dev, ret,
-   531				      "failed to get supply regulator\n");
-   532			goto remove_i2c;
-   533		}
-   534	
- > 535		ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-   536		if (IS_ERR(ctx->reset_gpio)) {
-   537			ret = dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "failed to get reset GPIO\n");
-   538			goto remove_i2c;
-   539		}
-   540	
-   541		pci_pwrctrl_init(&ctx->pwrctrl, dev);
-   542	
-   543		port = TC9563_USP;
-   544		ret = tc9563_pwrctrl_parse_device_dt(ctx, pdev->dev.of_node, port);
-   545		if (ret) {
-   546			dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-   547			goto remove_i2c;
-   548		}
-   549	
-   550		/*
-   551		 * Downstream ports are always children of the upstream port.
-   552		 * The first node represents DSP1, the second node represents DSP2, and so on.
-   553		 */
-   554		for_each_child_of_node_scoped(pdev->dev.of_node, child) {
-   555			ret = tc9563_pwrctrl_parse_device_dt(ctx, child, port++);
-   556			if (ret)
-   557				break;
-   558			/* Embedded ethernet device are under DSP3 */
-   559			if (port == TC9563_DSP3)
-   560				for_each_child_of_node_scoped(child, child1) {
-   561					ret = tc9563_pwrctrl_parse_device_dt(ctx, child1, port++);
-   562					if (ret)
-   563						break;
-   564				}
-   565		}
-   566		if (ret) {
-   567			dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-   568			goto remove_i2c;
-   569		}
-   570	
-   571		if (!pcie_link_is_active(pci_dev) && bridge->ops->stop_link)
-   572			bridge->ops->stop_link(bus);
-   573	
-   574		ret = tc9563_pwrctrl_bring_up(ctx);
-   575		if (ret)
-   576			goto remove_i2c;
-   577	
-   578		if (!pcie_link_is_active(pci_dev) && bridge->ops->start_link) {
-   579			ret = bridge->ops->start_link(bus);
-   580			if (ret)
-   581				goto power_off;
-   582		}
-   583	
-   584		ret = devm_pci_pwrctrl_device_set_ready(dev, &ctx->pwrctrl);
-   585		if (ret)
-   586			goto power_off;
-   587	
-   588		platform_set_drvdata(pdev, ctx);
-   589	
-   590		return 0;
-   591	
-   592	power_off:
-   593		tc9563_pwrctrl_power_off(ctx);
-   594	remove_i2c:
-   595		i2c_unregister_device(ctx->client);
-   596		i2c_put_adapter(ctx->adapter);
-   597		return ret;
-   598	}
-   599	
+> 
+>>
+>> Additionally, do you have RT throttling enabled in your setup? Can long
+>> running RT tasks starve fair tasks on your setup?
+> 
+> RT throttling is enabled (default settings) but was not kicking in - why
+> should it in that scenario? The only RT thread, ktimers, ran into the
+> held lock and stopped.
+> 
+> Jan
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks and Regards,
+Prateek
+
