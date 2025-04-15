@@ -1,92 +1,177 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD979DF59
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AAF126C02;
+	Tue, 15 Apr 2025 22:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744754902; cv=none; b=iVFU/aPCGID9gHFd8Pfqjsc59Ww7CXnDD4ACe1UiH2/jPBxmwJKf03NKVmJJAvjs1/dec8GJc0FObOfKy9lXXRDKW3PyNE3xPwxJqm8Vt9BwELe6VfJXTeA8GnHm5AlzEdnTp0JvYNmwdHYXaNZYGAayXZWwc6R19QmIml86Ixg=
+	t=1744754937; cv=none; b=q4JCJiMEs+h+ZUpaCklAco9f73ScY7CxQWZaMjYiCvp66SUXdX+9mdbEZxOrYY2BJxpLNgLTXSbVG+zC5cm9JKDevgWm307VR8CY/VppdvbcaNbr+6Drltl2m+gRqdA1FKHFQdzZBBp2jfntG94Ljxa8VGb9QHAPKFpHf7t+t4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744754902; c=relaxed/simple;
-	bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t25ck4LuVaDggtgTx0lPlOC+odrYXEWyxZWu5umdwHKl3V0zSV4fKv2872CLnhU7XZUbMcBY18dpPPLQe1fpCV8YBgVDkYpNnirCGdWYQPBCt1tH4TtjTGIEKbUocPwbLZPXGSMaM0BtQLm+kjHMdKFDmASGnTlMNXxBqLEO4gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xSYrZxu0; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744754937; c=relaxed/simple;
+	bh=tyVsM8sNu2PCOz+arnoETnAj/qNuujBFl5CZuIgb6qU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvFgtjSWK8VEqzNW8mAItku5OuV4j1FEnPynFHXFPJYHQqDA58yPagu9soxJYqMZGRGOkRY1NMyFntfwjCsEbMX2lQ6xzQPu7I4qEer4j56uMgQt6P68eXJKJrEhNVgUY2dueGRL99M+TCLQqD2QyFwJd9sypc7uASsRej0j/9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUL+er06; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xSYrZxu0"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so53670501fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744754898; x=1745359698; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
-        b=xSYrZxu0DoyRTV0mZiTPDGQ9TRl2xvLyKNHhTlqtvj6QdpTobdhvzHJj3/wmq8+D6N
-         hSHsEfWLt3jEsgKx36ct4D7FePEn47DWjdA2Hfjyfg50ynz5rVro47BAJFH9JTENaIRk
-         D1oPjAZ56+XsVhEXDvIS2Xs0VoQztfX+orIBKBn0wUpjbA+XT7vtAst4vbfR799cPHa8
-         UXebE2Rr1TY2VALPC29IaKqUnp8tuSxmhLihpwGUJN7J+5MqGLS8o4q5LqfQedZ1ar1U
-         thl8u1t0SXgy1zbx4GCmofhos5O7IWw5ZxM5pLSyYN/6HBJOQA0m6aqRdFGvlk0lEcWC
-         PoHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744754898; x=1745359698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BfzcMj9rMfWGxK4br5oNdBb324jSxRfmapgoM2d2W88=;
-        b=UMVYedTYFsNiLgyT8jRBx6ddjmcirAVVgv7iiqjJDmmDJu+aZ16YGQNK7dh8jCv1Rj
-         58xpmUw0CPT1od2tpFDU2RVu1uAztc4A+/Fnh7+ZJxL4XVAYlYf3DqCiyQ69/8/yrU/W
-         DPt9OGD4rUNbGmq7i1T8Tc7zdtK9h61/3RDuP4TiyF1sJUMxJ8D1ymeKsFHI2eLJt6bh
-         DpmXU5fp28Z2S7wobi4SmLxCeBETz01ont5E+7ZisTv7P+6nCuISxXnj71iOKOhfDn6s
-         0Tnz1OIkT37Kd6EU/4jwmb4fkMkScyLZyM7ZO6N4VEH0DJCgVJnhuayVa008tXRCH8n3
-         RtGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNerSF5WihWhHM52PHyYKGURQ/JNvdj7MHe8Uk0aNBeFqoVYo4l1iBcxkPLUX5KFpJLapY1u6xLSx3Ed0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVhqBQNi6lx8j8gabLJQ/fFARtHLU4Nj4T8KuGJnG+mGIeiND8
-	kMkaLiq9nCDxTgCkEkyv1r8B5rC9DlHfgVOE1Hk5z3kyR8xynjTAol0nkO+5rNN0/T9GnSizEel
-	JuUiwDJ5IbFgOrYco+KZBjtqlCswOEyJnWzPF/Q==
-X-Gm-Gg: ASbGncuiWfSMssiAZOkccYE9QTYrX58KVzkOxxKXfGYI/0FNGrx2VaAD2F7ZeY8c9cP
-	gDvzSEt/6uOdKd5b3C2eeQlUiokjS0Xo/G78KF2YVD2fh8foLwWiEld7224gKaoIIcexjQptPaX
-	CR5SiEUWeF1P6DCtfPx6fj9AYnA3RPD7O1
-X-Google-Smtp-Source: AGHT+IHME6WhXalxlSPMh3DrzpLBS3m4KTrSQRda1Fkzzwg9vWhHTJqmuOgiRLVa0dHhEZ5Zf/JplgqHpAebpbRY5D4=
-X-Received: by 2002:a05:651c:1470:b0:30d:e104:b593 with SMTP id
- 38308e7fff4ca-3107c36e105mr1677811fa.39.1744754897789; Tue, 15 Apr 2025
- 15:08:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUL+er06"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E63C4CEE7;
+	Tue, 15 Apr 2025 22:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744754935;
+	bh=tyVsM8sNu2PCOz+arnoETnAj/qNuujBFl5CZuIgb6qU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LUL+er06cdomuT2To0Vp+vl3RezE21eS9FHO39xYrxl13ItAS72cgNN1YDbw2sDoI
+	 jZUM/ht2DCGfCQaOp4g3ktg4fzLibFvaacZA5KDdh4rrxDAhJnGlOgRTyfsjnfVGOZ
+	 rfLw4v57o6nzJQXAMX1FG97HnypSpNKjwJ/AvgDZKW8bmOjgWAsz8OFRckuSetUJbF
+	 h0KpuhqmWYAaBuooEoYERzR+4RL9c7X/EHqyMPCfwCRh1ZVi7tFK0Tqgki7uWm4FP5
+	 OmXmrl5M1eFTenfphFKy6xfN4WQrh6WhZSGrw5NtFjPXPxj7ExiMR1Btj2Agl3onuA
+	 i9k7R/0At5mgg==
+Date: Tue, 15 Apr 2025 17:08:53 -0500
+From: Rob Herring <robh@kernel.org>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
+Subject: Re: [net-next v5 1/6] dt-bindings: net: Add MTIP L2 switch
+ description
+Message-ID: <20250415220853.GA903775-robh@kernel.org>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-2-lukma@denx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410023652.8266-1-hanchunchao@inspur.com>
-In-Reply-To: <20250410023652.8266-1-hanchunchao@inspur.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 00:08:06 +0200
-X-Gm-Features: ATxdqUFR6vsrzijVD_Qjdt1doHFGMo0fgRLa54xDdj1l3AD5b73FKPjghdKzqJ0
-Message-ID: <CACRpkdYhsoermgqTiLqUZHUL8c06meg89F_gei1CatH6hJ_nkg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Remove the repeated word "the" in Kconfig.
-To: Charles Han <hanchunchao@inspur.com>
-Cc: linux@armlinux.org.uk, rmk+kernel@armlinux.org.uk, ardb@kernel.org, 
-	arnd@arndb.de, iuyuntao12@huawei.com, ruanjinjie@huawei.com, 
-	ebiggers@google.com, david@redhat.com, masahiroy@kernel.org, 
-	dave@vasilevsky.ca, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414140128.390400-2-lukma@denx.de>
 
-Hi Charles,
+On Mon, Apr 14, 2025 at 04:01:23PM +0200, Lukasz Majewski wrote:
+> This patch provides description of the MTIP L2 switch available in some
+> NXP's SOCs - e.g. imx287.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v2:
+> - Rename the file to match exactly the compatible
+>   (nxp,imx287-mtip-switch)
+> 
+> Changes for v3:
+> - Remove '-' from const:'nxp,imx287-mtip-switch'
+> - Use '^port@[12]+$' for port patternProperties
+> - Drop status = "okay";
+> - Provide proper indentation for 'example' binding (replace 8
+>   spaces with 4 spaces)
+> - Remove smsc,disable-energy-detect; property
+> - Remove interrupt-parent and interrupts properties as not required
+> - Remove #address-cells and #size-cells from required properties check
+> - remove description from reg:
+> - Add $ref: ethernet-switch.yaml#
+> 
+> Changes for v4:
+> - Use $ref: ethernet-switch.yaml#/$defs/ethernet-ports and remove already
+>   referenced properties
+> - Rename file to nxp,imx28-mtip-switch.yaml
+> 
+> Changes for v5:
+> - Provide proper description for 'ethernet-port' node
+> ---
+>  .../bindings/net/nxp,imx28-mtip-switch.yaml   | 141 ++++++++++++++++++
+>  1 file changed, 141 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> new file mode 100644
+> index 000000000000..6f2b5a277ac2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
+> @@ -0,0 +1,141 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/nxp,imx28-mtip-switch.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
+> +
+> +maintainers:
+> +  - Lukasz Majewski <lukma@denx.de>
+> +
+> +description:
+> +  The 2-port switch ethernet subsystem provides ethernet packet (L2)
+> +  communication and can be configured as an ethernet switch. It provides the
+> +  reduced media independent interface (RMII), the management data input
+> +  output (MDIO) for physical layer device (PHY) management.
+> +
+> +$ref: ethernet-switch.yaml#/$defs/ethernet-ports
+> +
+> +properties:
+> +  compatible:
+> +    const: nxp,imx28-mtip-switch
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  phy-supply:
+> +    description:
+> +      Regulator that powers Ethernet PHYs.
+> +
+> +  clocks:
+> +    items:
+> +      - description: Register accessing clock
+> +      - description: Bus access clock
+> +      - description: Output clock for external device - e.g. PHY source clock
+> +      - description: IEEE1588 timer clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ipg
+> +      - const: ahb
+> +      - const: enet_out
+> +      - const: ptp
+> +
+> +  interrupts:
+> +    items:
+> +      - description: Switch interrupt
+> +      - description: ENET0 interrupt
+> +      - description: ENET1 interrupt
+> +
+> +  pinctrl-names: true
+> +
+> +  ethernet-ports:
+> +    type: object
+> +    additionalProperties: true
+> +    properties:
+> +      ethernet-port:
+> +        type: object
+> +        unevaluatedProperties: false
 
-On Thu, Apr 10, 2025 at 4:37=E2=80=AFAM Charles Han <hanchunchao@inspur.com=
-> wrote:
+This is going to fail if you have any property other than 'reg'. But 
+then it will never be applied because you never have a node called
+'ethernet-port' since you have more than 1 child node. You need this 
+under 'patternProperties' and 'additionalProperties: true' instead. And 
+please test some of the requirements here. Like a reg value of 3 or 
+remove 'phy-mode'.
 
-> Fix "The the" typo in the description.
->
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-
-Please put this patch into Russell's patch tracker so it's easy for
-him to apply it.
-https://www.armlinux.org.uk/developer/patches/
-
-Yours,
-Linus Walleij
+> +
+> +        properties:
+> +          reg:
+> +            items:
+> +              - enum: [1, 2]
+> +            description: MTIP L2 switch port number
+> +
+> +        required:
+> +          - reg
+> +          - label
+> +          - phy-mode
+> +          - phy-handle
