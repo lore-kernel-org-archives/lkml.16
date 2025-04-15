@@ -1,163 +1,121 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5525257426
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A812250C09
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749992; cv=none; b=WbwQL8uOay4QrK3dvUsLuyFS/Ce0BpM4xTRKkj4eaMMEIxwHDzMAOYSUlJ4Hh11Z/R/zi+WneodTg9XaRWHnAdXNTdk0G7FsYKg3yuicWL6IBCz89l4qgRDV3cFNkmMWY9M0yD7qWLv4ZKME5b1PLDT/BmLIZ916qfGKhdACuHo=
+	t=1744749997; cv=none; b=Tf9IlM9gUfFMNZM6ipXZH5bz4B3MeP+6jqoPj1zHEPnFnXAVCjfaP4b7oKjUJcDvGXZZyjADgSnXF/2BP5zEu6aJj3lBOeAYpBSSoCBXO4qw0bBndSU7IcgvO3WfZkmTuiwmDmEoqK1MUpbzW3dUg94bCG/nvKerLKXFK2rWTRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749992; c=relaxed/simple;
-	bh=TygAyc8ZcamwcaK7R4ldaqjD/sb+gNyDwakhRjNo3Oo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ulsFMkOKMW1gxxjmMLNtvxgviXktbuB0bD8lzmnWXzdUQ5ilAHDqLbendzypg+BO2p5mKlT7/74k9RKIxIsO9rryXbihSZi5in6b+kOKdWZGGHZ6nk+Mzr4QnDU6HjvYvLXXI1O7TN+1Uk0aD9OLW1riL/9MQrb/uj6fQ/sxiww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Jibk6yjx; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744749997; c=relaxed/simple;
+	bh=vfr/VRykqbJeKWTK4pwPjRELlnhBE42z2Z4846zXLMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GBRZ5e8n7iCGpvMgnPMDPElfWe4RrLI96k3nBHt1TU3bCUuxhk4vFte07DIJdromO5eiTu0fQAiMczCjy4kUe06vGdojEfFJPsqZDdDfT9id0PxWZc4EmdJHcfxZR0FAS4lBIuHUa3B/o5/1ZGyXoy6m4x/oBDh9ORN14xeCuaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Iss8FBiL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jibk6yjx"
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72b938f6014so356176a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744749987; x=1745354787; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xe9yiz5hRk6Ih7N2Ac32P9e4ZYaPgsUiw3u3c/ePwGs=;
-        b=Jibk6yjxEJ5kBPWKSm8G5V8pxgYtwwfDtD8VaX2T41RZCkMdHsmhAkzCskyHxfywjp
-         WRl6ml709hO38lFn+o1POmPSBQN5vjMzNLNJCLbnBx2ip/yCBeSMbSoPW8nHUrVV79rb
-         Tik5rbPlKaSlqAivcqqeP6edbMWohqkFG4Zmo=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Iss8FBiL"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FItBFU002464
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:46:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BTYA/YX4Ow0hsnVmRfwm8pQaD7/pmsS8NyHfWH3V9lA=; b=Iss8FBiLOrFcd6Jy
+	H0CURZTsJspn0Xsve+G0FX+hEIooHW7buVCSacyDgHIk/IAJT3uXCJmMusciEWiR
+	7icmBl1QuL+O4MAIellDYSg0mLIOtUhBekSfnW1eeaaBGTVGPUbvqybRpKcXEEhv
+	ZfSoBnzQR0dhmEzYlJfURUEbJ/LpfB6f1j625NDiimOzg/qEEeLdtIintSzAuNGo
+	f7gxt6KPV8HpUNMrE7aUXKhRMuJbgMky4x8TUo7bSi3tZ34jOunI3G1d+gi7mHpD
+	c0tbOywIPfJRE7UeNX1SHg8hc56bkUlIPFArdj331gFZFyA8FdmJo85NWgtZPE8v
+	MsKTvw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vhfuh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:46:35 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5af539464so141105785a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:46:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744749987; x=1745354787;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xe9yiz5hRk6Ih7N2Ac32P9e4ZYaPgsUiw3u3c/ePwGs=;
-        b=FRwBNEADI+iAEYNR5NHxPDkbO4fWKuxg4n003F6nXfSj26ynFhmXH2YKknRsTXgbDY
-         OBs8T9QiyNesMvb64pDQXM+M+sX91M2m6VZgafEs2A5mlNBR6ojNIj6TfaMG6tr8g7yp
-         udiw6JNJj5Ti8m1Jp087qQx1WfaGkTJwI7u2V6wucMJScnWJqxyey6I8SfUewCHNrnVY
-         L0026qnaJ0rNBoV+uAENQkatNrPFpeZlZ4M4tCvfo3t3CSHtRaGHlN2FLPW6ATDwG7O6
-         4lJMrvR3TvDFkW8ou8VUknjleYNWCpTcXX/L7tMrLVBGYbG6JGnQd5AKGN+OCcBcwfQ/
-         1Ynw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6T2IJF5n9IrGBlAtPplRdL2CY7IGoeYuDPZdMwlX4LZRbCgk+tZJPWQuRfOfy3a9AC6U3bIjkv2zit/M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhtD9e9kf8V5nMr3O8vYIIut9e1OaE7BOM6A5b/j3CJ+5uAU/i
-	W4KGOr636Ri3G2QFLe5XMUGykZg5vxbprkCQw4BkcSTWujsNa78rqJ/b3hSTkAFQyqL3xl7+KJ/
-	jri2MoLyvCn61lD1O7UrHysNYSSBljMQbwVBN
-X-Gm-Gg: ASbGncsJDOPVRacfAPIijK7Idb3pLJ/+S0OQEP7zCrvtUmZIJYnmfFxenpykt9xVR9+
-	dN0jAiwZsA8OL/tV9pPfEJJNe6W2KA9Ujvw/Ei8oxDDqdMMzOtSYg82rn867GRRCsNEdc/9gffR
-	J5DCb8jXifo1+OOnK/7OzWzYH7jbYq6nd85YNIwOWHK3BXJahtaQ==
-X-Google-Smtp-Source: AGHT+IF1laZWfAr2YIqlDARR+3dKjqHrGIZm755fOrYIwd7mc6DGetjqrkzit1gFufVSqqgi3FL0ISL0YLiHKXN9uFo=
-X-Received: by 2002:a05:6808:1582:b0:3f4:210e:c0f2 with SMTP id
- 5614622812f47-400acc3f649mr216633b6e.0.1744749986835; Tue, 15 Apr 2025
- 13:46:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744749994; x=1745354794;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BTYA/YX4Ow0hsnVmRfwm8pQaD7/pmsS8NyHfWH3V9lA=;
+        b=YL+4GEQtvjHbzHaSvcvHLJE3cR0kXv/nQBPebdDV7EtU0/gmKXgR1NX+DBXrKF7hTG
+         dSbFRIVEkBuMHWiW+lq44BiTIe7g9KgHGy5F0S/6OiXEbPwslywqSOPwbGx4H4W55PCZ
+         mIWQhjP07xL3vc7UtQjuTyYzOSAx1CbLjiJFAb2MhKiKiIDREcEEjiII+NXRs0NC+/B2
+         RaOcDj2ad+skZkkn0M41zoMP4FfbwsDb8VwblPDQaiuI9TyaUh7N5fhvj/zjOAAwAwKX
+         jgRHqhQQYGR7oyAB99JejsfHibN2VtQsduqYhOcXcLa/86GBAQ6PapCdBBKG/dcwAkz4
+         3m9A==
+X-Forwarded-Encrypted: i=1; AJvYcCU3I3JCh/VTy3eEVp/AJiOQRenTgMcAbW+JCFmHg4/BhuJ3KUu3wkd/lTIY6i9Iy0am/hCWq+morTTfk+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+P4VZGLsNgOZdROtWhqpXU23i++ASU5hHAbSuGwkjdlPfILc1
+	kPmgWjug60HZwYOCXBS35a79YHD2SAx5uyr69uMiZAJuVZ4nSzj9+yrszfzw7eDvCJc0cQ8Rr8i
+	dEznqByGIaAveUf4S6TrtVwwODLH/9de0yCHG7O+Q4mmXZWuc53kx3dOMuvol8nI=
+X-Gm-Gg: ASbGnctjnCtER02wx4C3/J+O2b8aIxd0ebTZzv1jLqfoWvOhnE6L6Y1WjLoz/KXOAPp
+	XbIYMUMu7ui01tK98NXMH1viEnS7g1N5rROadit8T0QsnSD1ZJBk1bJ0OAF3faj1KGfQD1XLzvq
+	37x+JSAioNfPYpnrtOlI7UauTlZNeX6XwGbG/WIXb4CnoPNsivdPLDrXMGgp6yzz5gJpEvaDKXI
+	tRQTdxFurft514SVPj8zzkYcg/16t3h2FmdbC21QCZmnB+3nI3hu949bkJSTckiTxZpI5BB0T6B
+	yd/H4cVc9RQpEn0j/buUMp0wm8BZEvpA2t1WKQiGnEVMeVOQmCKykaPpq/0N2YwGt6s=
+X-Received: by 2002:a05:620a:2408:b0:7c3:c340:70bf with SMTP id af79cd13be357-7c91426a799mr51601685a.14.1744749994193;
+        Tue, 15 Apr 2025 13:46:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHe2uVrJ0l4+MP0qlXvf/lUk4eaGJqZesswmBSmdDqzmucTn9AiaoIA1RcrmIUWXdghTgZOgA==
+X-Received: by 2002:a05:620a:2408:b0:7c3:c340:70bf with SMTP id af79cd13be357-7c91426a799mr51600185a.14.1744749993888;
+        Tue, 15 Apr 2025 13:46:33 -0700 (PDT)
+Received: from [192.168.65.126] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54dfasm7504765a12.10.2025.04.15.13.46.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 13:46:33 -0700 (PDT)
+Message-ID: <d31a17f9-6aed-4b23-b67d-908a673c31e8@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 22:46:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com>
-In-Reply-To: <648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 15 Apr 2025 13:46:14 -0700
-X-Gm-Features: ATxdqUEmIxsEAScvJDNIReMH4unvMuy3JinsyoEKeBkvV32K_0n2IQ9VdZ-tyfo
-Message-ID: <CABi2SkV2v-48Mhn9qLzx08KatToWMpgc63HAWn8RKe8Y8HXWPA@mail.gmail.com>
-Subject: Re: [PATCH v2] mseal sysmap: enable LoongArch
-To: WangYuli <wangyuli@uniontech.com>
-Cc: corbet@lwn.net, chenhuacai@kernel.org, kernel@xen0n.name, 
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
-	Liam.Howlett@oracle.com, kees@kernel.org, hca@linux.ibm.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, xry111@xry111.site, tglx@linutronix.de, 
-	thomas.weissschuh@linutronix.de, Jason@zx2c4.com, zhanjun@uniontech.com, 
-	niecheng1@uniontech.com, guanwentao@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] arm64: dts: qcom: apq8016-sbc: Move non-console UART
+ pinctrl to board
+To: Stephan Gerhold <stephan.gerhold@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sam Day <me@samcday.com>, Casey Connolly <caleb.connolly@linaro.org>
+References: <20250415-msm8916-console-pinctrl-v1-0-a1d33ea994b9@linaro.org>
+ <20250415-msm8916-console-pinctrl-v1-5-a1d33ea994b9@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250415-msm8916-console-pinctrl-v1-5-a1d33ea994b9@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: G567lOytk48p8mKMGqo9Ypgc0qeCuTh1
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fec5ab cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=1t5JXeF_XfhXocsUcwUA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: G567lOytk48p8mKMGqo9Ypgc0qeCuTh1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_07,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150146
 
-Hi Yuli
-
-On Tue, Apr 15, 2025 at 8:40=E2=80=AFAM WangYuli <wangyuli@uniontech.com> w=
-rote:
->
-> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on LoongArch,
-> covering the vdso.
->
-> Link: https://lore.kernel.org/all/25bad37f-273e-4626-999c-e1890be96182@lu=
-cifer.local/
-> Tested-by: Yuli Wang <wangyuli@uniontech.com>
-> Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
+On 4/15/25 3:52 PM, Stephan Gerhold wrote:
+> Prepare for removing the generic UART pinctrl templates from msm8916.dtsi
+> by copying the definition for the 4 pin UART1 instance into apq8016-sbc.dts
+> Having it defined separately in the board DT file makes it clear that the
+> set of pins/pull etc are specific to the board and UART use case.
+> 
+> No functional change.
+> 
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 > ---
-> Changelog:
->  *v1->v2: Modify mseal_sys_mappings/arch-support.txt.
-> ---
->  .../features/core/mseal_sys_mappings/arch-support.txt         | 2 +-
->  Documentation/userspace-api/mseal.rst                         | 2 +-
->  arch/loongarch/Kconfig                                        | 1 +
->  arch/loongarch/kernel/vdso.c                                  | 4 +++-
->  4 files changed, 6 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/features/core/mseal_sys_mappings/arch-support.=
-txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> index c6cab9760d57..a3c24233eb9b 100644
-> --- a/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> @@ -12,7 +12,7 @@
->      |       arm64: |  ok  |
->      |        csky: |  N/A |
->      |     hexagon: |  N/A |
-> -    |   loongarch: | TODO |
-> +    |   loongarch: |  ok  |
->      |        m68k: |  N/A |
->      |  microblaze: |  N/A |
->      |        mips: | TODO |
-> diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/usersp=
-ace-api/mseal.rst
-> index 1dabfc29be0d..ef733f69003d 100644
-> --- a/Documentation/userspace-api/mseal.rst
-> +++ b/Documentation/userspace-api/mseal.rst
-> @@ -144,7 +144,7 @@ Use cases
->    architecture.
->
->    The following architectures currently support this feature: x86-64, ar=
-m64,
-> -  and s390.
-> +  loongarch and s390.
->
->    WARNING: This feature breaks programs which rely on relocating
->    or unmapping system mappings. Known broken software at the time
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 067c0b994648..54ed5b59a690 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -69,6 +69,7 @@ config LOONGARCH
->         select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
->         select ARCH_SUPPORTS_LTO_CLANG
->         select ARCH_SUPPORTS_LTO_CLANG_THIN
-> +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
->         select ARCH_SUPPORTS_NUMA_BALANCING
->         select ARCH_SUPPORTS_RT
->         select ARCH_USE_BUILTIN_BSWAP
-> diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/vdso.c
-> index 10cf1608c7b3..7b888d9085a0 100644
-> --- a/arch/loongarch/kernel/vdso.c
-> +++ b/arch/loongarch/kernel/vdso.c
-> @@ -105,7 +105,9 @@ int arch_setup_additional_pages(struct linux_binprm *=
-bprm, int uses_interp)
->
->         vdso_addr =3D data_addr + VVAR_SIZE;
->         vma =3D _install_special_mapping(mm, vdso_addr, info->size,
-> -                                      VM_READ | VM_EXEC | VM_MAYREAD | V=
-M_MAYWRITE | VM_MAYEXEC,
-> +                                      VM_READ | VM_EXEC |
-> +                                      VM_MAYREAD | VM_MAYWRITE | VM_MAYE=
-XEC |
-> +                                      VM_SEALED_SYSMAP,
->                                        &info->code_mapping);
->         if (IS_ERR(vma)) {
->                 ret =3D PTR_ERR(vma);
-> --
-> 2.49.0
->
-LGTM, thank you for taking care of the documentation as well.
 
-Reviewed-by: Jeff Xu <jeffxu@chromium.org>
+I think it'd be better if patches 5,6,8.0 and 7, 8.1 should be
+squashed instead
+
+Konrad
