@@ -1,144 +1,124 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF86E2797B0;
-	Tue, 15 Apr 2025 08:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3328D27510D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744704434; cv=none; b=QKZ5yR3SS2GjIy4YbHmb/2OdOsW+D1hLTN7Ftf1IaE+/zo0DsuSYtlGFI1qy6OMb2wcPTDNwFCSdYfFgKS/eDHHnoQUKkw0ttNphHj5Dz/ZXye6y+FmPqinaTkMu6bQsAwuHunovJzqBmUM5V8BHaj5hPT3UpZnKmxpkRh0gtes=
+	t=1744704475; cv=none; b=kEsSRNGrWNgXAkZ0Nbm1/nYfTgs3BZRvXzE96hpqwXm40VGE629ikhTiMfgZffUg2GE8VqZkIZuTkhFE3vWgPPYnMPFJWWoazoMakTrFW/TfMbb709wvNQl66UJkUdqYRECSf7AM2xkdW/LU6EagIS+XdmGzx/ppKpeC11VeJsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744704434; c=relaxed/simple;
-	bh=+m+uNy+59Q122M1MZy6kii8sx83LYMOv463vHliVczo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NhUdra+ZDLjk+pLJBDLoY+S51dGXJXurvfEI2UbA1gbUioDB6sQTLeAIsy9GnE31l1ZfLz2oaAnG2rEwSBXNgJU1+j3VB4Bi6iblHqYKRL1zu6mlUE1HWkYpgIJuLkR+NwoYZOA73qbegNLyv2BIJP/C+OO2X53nvJ15b4xjjYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=qxHviqfs; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1744704475; c=relaxed/simple;
+	bh=NyNzWYetkJTOEcUyWJ6oeCzC6581aAO1Ja8RqfVJ2gc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ko1rJoSIfYae0fbZZ8ByKmY9WSXEq8vkjTXvPG49VoTBEIWkmFvI6MXsMlHmnVXNhEoK0iMSHVT5fWwQd+nMkoZFbdg0N6PuRWmMiZQ2DivYjErJpPOZ37z2KEfC06w0A1xX9jr7luUVwhZCipyVcqfP69B1N61S34ZK2ujH0oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BBNP9Ppf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="qxHviqfs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1744704420; x=1745309220; i=frank-w@public-files.de;
-	bh=XClP9NrLHwO9fwyHdOh4Auz1PVrNeq/TxoOgtoY90n0=;
-	h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-	 References:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=qxHviqfsMTqZ1v990RvfJ9bRejEDPM0U7zJhNy/0Jz/s823RYlcXko39BUK7gDBk
-	 ZhsuG+0A9/Y8gHs1taDTTVHTmEsa9qJFT5ASKK93XvH4uU+unsxSIAddfWIrRZK+6
-	 zzohCcaWpcFIE0fdCHQbysIfaEHC+NfO5+j9DfW2RdGQURNPoCJdX0Vq6rxc5MzhR
-	 5WN7K8KKXsA0jKHeZWFXybZxdZzY1B0wnx98xesCkFU4krFxaUITraweE3cyDUAIO
-	 2uWpljywdxKA7muLP95/90h1xtnDfFIOfnszdYQ2n0Kbemr4xffaYsMmjzrQNqubR
-	 8EGNdXS+0u518+F8xA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [127.0.0.1] ([217.61.148.30]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxDkw-1t7P002D2u-00zhBt; Tue, 15
- Apr 2025 10:07:00 +0200
-Date: Tue, 15 Apr 2025 10:07:01 +0200
-From: Frank Wunderlich <frank-w@public-files.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Daniel Golle <daniel@makrotopia.org>
-CC: Frank Wunderlich <linux@fw-web.de>, Matthias Brugger <matthias.bgg@gmail.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- devicetree@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2=5D_arm64=3A_dts=3A_mediatek=3A_mt7?=
- =?US-ASCII?Q?988a-bpi-r4=3A_allow_hw_variants_of_bpi-r4?=
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <36fe0778-399a-4406-8516-54b968cd9073@collabora.com>
-References: <20250412102109.101094-1-linux@fw-web.de> <c8f9f019-a238-47c8-a900-9ca48ce09503@collabora.com> <Z_0AdtyvehR9SHnU@pidgin.makrotopia.org> <36fe0778-399a-4406-8516-54b968cd9073@collabora.com>
-Message-ID: <D7682B25-5BEF-46D1-A5FD-32D2AAF84EFF@public-files.de>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BBNP9Ppf"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F15KUg014550
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:07:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=sfo0CAie457ANf0kjWKsPJLb
+	W7vU/MFpplDe4Ai78WQ=; b=BBNP9PpfdhajR2945x3HlPCWnTuhBTegq2vbd7R+
+	9EdR0voLPMPsh0+5bfEYHQyUAKrab+o8TEzLe3OCQyK2HwCbBRClz6FudolPF0uB
+	buGgss9a83w3QqAh00ABZTcyb2d+a51058OAmKWHwtI1+H8VJeWJhDc5O4noa9t8
+	plicwiLrLrwi0Iw5lCsC7lXo72Wu5gg+yTu64OCBQv2AizpSQ7XmFUT+43DSjehA
+	3v1vfT6EC0cMe8NWgdBCzBvIy5/61VDCOUkuGo2YTKtW5e0m95dzmwzI+kgM7HCL
+	/GrHOjNnHxnl2zYCZui8HH7issfMNVlLf87+FSiRzYMG8A==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhfcy362-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:07:53 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e8f99a9524so153880456d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:07:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744704471; x=1745309271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sfo0CAie457ANf0kjWKsPJLbW7vU/MFpplDe4Ai78WQ=;
+        b=eUKtC4wZFmfFddMcpu6pavhxzGORoIyJkYTMcE2XhvGJWGgsA5PXd7NzVBimrR/Cme
+         3n4coVYTQoJeMTKrZ7dAD5Tw4sHG06/b7v6peV7CLAS6XQHqIDms5j/LxM7VIRzTQ5Ad
+         1cGMgh8aINisUSraPY7dAL3wXu4vWUr6EyiISy3DEb/ikxG80MWhquBPZScOrvf+ehAm
+         k286IgKOyiCYCWat44urnL7MwbTiwxnRFoybTxLn9MBF0ce81K7mtuq69wsDT/rXPL6+
+         M2JeCohHvgFYWgSH3qniL+Kn6+5cLanvd0X0+bbghJ1ZYd6HS/TBWf8sqgYFjByZnNHt
+         XZtg==
+X-Forwarded-Encrypted: i=1; AJvYcCU87aGtotXc3pzi9tTEb+qnJMAqfyWOwhogl4k5gHXY1eWPFZkxzrXx61daBeHHohWxf3m82zhxZWW96m8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwR3x1Y7lhwP3abTUb3e+J6YoqS8D9c8NVQJimjhpEvgQHwLQh
+	gW/yKosvV8x6X96HmUR9CY/XkQDhJ6p3Pkkhm5lBDxNzkeNCY4F17zqahuiy6wd+grmC/tLdJEn
+	k/S/Grl/30o12iXjK6hPeHIxSigFpHheoKsItMJDHrhrYQKVD3SsV0MaOjo/11XH3rBmkPE6hg0
+	z3
+X-Gm-Gg: ASbGnct9POKrSw2CDwVRQ1o9WXa792BTlW4INcu5Pk3HIkA4J7+nTlaTZyygpFq/9t2
+	yHovHaL0tADAfbXy1Hzz+sYPs5VyN3ChcahbCGU2+nEUsZiUFli6ipqX8IIRDceYLvlyHnRNDz4
+	fLZ5Zs6vQl2JR0YvVxiDs1swZRxcImizlkw36AIzvEzi3pHoJ20Se1jdEOdZRqJ2uf0kvf9ztnA
+	fE+dzFvStFWw1QIdxOhmH1RjsYjjQ4qBe1d8/22c3vssTD0Jz/LDQ5f3B6KlZpQCyktpl9H/uXt
+	Auwr4ECGRwmvcwbUa5rk6CIn72i8rpjF0zGCbS4NdiiJTCtP9ej4iD1rGAjs19nFxiBVyG8xfFk
+	=
+X-Received: by 2002:a05:620a:4627:b0:7c5:6df2:b7a5 with SMTP id af79cd13be357-7c7af0e3291mr2024047485a.29.1744704470924;
+        Tue, 15 Apr 2025 01:07:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9hUvwu6zZUyY6fvtVdyJ4E4LxMjO1kvcyqX+7MW3VKl++jBJZlmvKb0i86KlUbaBirAtYaQ==
+X-Received: by 2002:a05:620a:4627:b0:7c5:6df2:b7a5 with SMTP id af79cd13be357-7c7af0e3291mr2024045785a.29.1744704470658;
+        Tue, 15 Apr 2025 01:07:50 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238bafsm1329060e87.65.2025.04.15.01.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 01:07:49 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:07:48 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Varadarajan Narayanan <quic_varada@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] phy: qcom-qusb2: reuse the IPQ6018 settings for
+ IPQ5424
+Message-ID: <jli32pwz53xmyymhvud6nsdc4b7gp4mhdpsg63yubnbk2fpv5k@t2jl4btfuq3o>
+References: <20250415-revert_hs_phy_settings-v3-0-3a8f86211b59@oss.qualcomm.com>
+ <20250415-revert_hs_phy_settings-v3-2-3a8f86211b59@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pa0vggB9lm+W0OPebuX0jYpX0yjxP/JpOSgB44M0VVskPM3DXyD
- 9LogsfM/xLxC6PLuk+GPj2lPIj+CtvYDf3dqHiqwYp+1+ps1ov8I/5nqfuf8HkliFx46miv
- 2ji2rqWXr0YnZB4RZbPRjU72vNPHSgRp7NBP74IVwtTQSLijfJwg3ShW2lHmIExQfDiS1mI
- S5jTXNRgwb52P104LTVSg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:urNve2rXxnY=;yiVEU3OJuoqbJPWsNk3xJFPrslb
- 6XgS7F0953EiOMGLEpbanm9yU02fg8ccgzjIi0iXX3k0JbeVJmatpmQ0OxrvwBozA9scOQwtB
- LeWsYLKdKmMC7QK5IiZDJQNu3aqlCFRUFY+GdZBJBsLsEq9w/NACKuhqn4MWuWQhUSWE7fOnC
- PrX5inR6etO5xToJwZsDUisQ+SMdnidz9banxNUDlKnRcmDN0vP+ejNP+wwc8oKTnRXC+NXT9
- VhJoIvkkjeS2MuibBDBFH/4kzziiCM2GBZTjU69EGpCtS/PSX6VYbL+BU4O0nnY5HBoqzbckv
- /SuHRxbQLbf9HWGHgwtpCVKhM/riHH0iT3IbtPmnBz0HeTf1QbykqDmdN4v3IqpXjbp3T5p8k
- 1pLnRsKOlP+M1CKqTIqY274QCeAE9KeIGE6AIQMkEr3nLT2evNKLemkG/ne9+RNncC/WO0aPF
- KTkP0IS1TqjHtgKd6vXdxSaYbqzJ9wPHOu6/AES0HiIqEL+Y8lFR70PZfELIH7arD2RyKdl9J
- Igu0F9CtNCKZmcBVOgfHuTGrKHRE+lhZk229WhmKgNPhgEOFK5zHlNlPYPCvcRT5jA2U48rk0
- HZyOzDTdqWxeMA+lTTmoFKDHLFkKchhz15QjnMq9QKbxuWJYgOMp3cen6Hi72vZQwzaoQ2XBy
- b3+Emgoie2bcxIvittQuIGqQMHkhnHm/9Yd6KiChBPUnXGT7JbeYFbKSFj73RWQ10Kj+5u94F
- AnaTrqIQhYT6FQxGcpjPM3dNj39H/93cp5srg8MYx+6GnVOAcWfwLWsgjTUHDVHje08mkfMsN
- 4cnJ+3fZHF2BYOHw4bVcJ7YnpC1F9XPX9+ryNE47Erez086ZTT6Mhyr9EqKFG68lKzlnjx4An
- dl2hTJSW/u5LJHj0Rlz1pB7ngcHAfcNq7akmimLdUPIloS9kk8PVl7tUo5ZqLQAx9rTrzcg8R
- Snh9QekEJwREWFzPX6WqGSWTUr78SXEjlTOiIZclYuq8ijLAqSBYJ8EZolMRaT+mOieEEsGYL
- JNEeMdgdjMG8YV14fJl1j/EalciKqiN9NPmtmKghF3ALIVD9V2Beu8E5CPA3L2osLQN5sd7lU
- YAKSO51USU4lq3J4/XaUzvSA5vbfh8MuX1LsbyYsvZHs16JkRtqPv1io+9WZuATW/2Rvx80zf
- 8zuje60L1jI87s/w7Kr2LUbbF7KlbFDWF3NI8vZXAVGYOtTnAVvxQV2CCmdRMBZP3ToA8X9r7
- 8dTnfIJrnnd2rqukxpcuof4UVfcsD3UJ8Za4ofC7FPScImpdXYFMXXwbeyy2hRET1f8RXe2E5
- BSxa8e4dkzAdAmFGiJc2WnHcm+H0ibda5TzgR9M5zfmOO8D3m0K+vMt/oAJNT8CjALXAOcHxu
- VXZMc66BXlRBdfnotXsGsbyJJCqA+cqwBBdpgz/Ae8MJ3IgBdCv0bvttpfExjDPiuz2kscm36
- kGEPDeYkQPSpHY6Ilqqq3Ml01/vHudSElaMy3TzjSMSrSZJrr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415-revert_hs_phy_settings-v3-2-3a8f86211b59@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=CfUI5Krl c=1 sm=1 tr=0 ts=67fe13d9 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=SwJ4zpY-I9peookiyZkA:9 a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-GUID: sFIeAyhjGy7U5V-GFE_X_I706w37TTFi
+X-Proofpoint-ORIG-GUID: sFIeAyhjGy7U5V-GFE_X_I706w37TTFi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_03,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=807 mlxscore=0 clxscore=1015
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150055
 
-Am 15=2E April 2025 09:36:43 MESZ schrieb AngeloGioacchino Del Regno <angel=
-ogioacchino=2Edelregno@collabora=2Ecom>:
->Il 14/04/25 14:32, Daniel Golle ha scritto:
->> On Mon, Apr 14, 2025 at 11:27:23AM +0200, AngeloGioacchino Del Regno wr=
-ote:
->>> Il 12/04/25 12:21, Frank Wunderlich ha scritto:
->>>> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>>>=20
->>>> Sinovoip has released other variants of Bananapi-R4 board=2E
->>>> The known changes affecting only the LAN SFP+ slot which is replaced
->>>> by a 2=2E5G phy with optional PoE=2E
->>>>=20
->>>> Just move the common parts to a new dtsi and keep differences (only
->>>> i2c for lan-sfp) in dts=2E
+On Tue, Apr 15, 2025 at 09:52:51AM +0530, Kathiravan Thirumoorthy wrote:
+> With the settings used in the commit 9c56a1de296e ("phy: qcom-qusb2: add
+> QUSB2 support for IPQ5424"), compliance test cases especially
+> eye-diagram (Host High-speed Signal Quality) tests are failing.
+> 
+> Reuse the IPQ6018 settings for IPQ5424 as mentioned in the Hardware
+> Design Document which helps to meet all the complaince requirement test
+> cases.
+> 
+> Fixes: 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for IPQ5424")
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
->>> This should at least have some different compatible, if not probably a=
-lso a
->>> different model string - as it's a different device=2E
->>>=20
->>> 	compatible =3D "bananapi,bpi-r4-2g5", "bananapi,bpi-r4", "mediatek,mt=
-7988a";
->>=20
->> Imho it doesn't make sense to declare compatibility with the
->> "bananapi,bpi-r4" as the "bananapi,bpi-r4-2g5" is NOT compatible with t=
-he
->> "bananapi,bpi-r4"=2E It's a different board and using firmware meant fo=
-r the
->> "bananapi,bpi-r4-2g5" on the "bananapi,bpi-r4" (or vice versa) will res=
-ult
->> in a non-working Ethernet port=2E
->>=20
->
->Is this device a BananaPi R4 variant, or is it a completely different dev=
-ice?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-The only difference is that sfp-lan is replaced by RJ45 socket with mt7988=
- internal phy=2E
-
->If this is a completely different device, then it's not even a BananaPi R=
-4,
->otherwise this is compatible with BananaPi R4, with a small variation :-)
-
-Sinovoip now announces a R4Pro with some more changes (e=2Eg=2E an externa=
-l 2=2E5g switch),but we have no detailed shematic yet=2E It looks they also=
- plan a R4lite which is based on different SoC (afair mt7987),but this is f=
-or sure different device (and so not using this bpi-r4=2Edtsi)=2E
-
-But basicly all are named BPi-R4=2E I guess R4Pro will also get own dts as=
- too much changed=2E
-
->Cheers,
->Angelo
-
-
-regards Frank
+-- 
+With best wishes
+Dmitry
