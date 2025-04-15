@@ -1,299 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09741296D25;
-	Tue, 15 Apr 2025 12:54:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B5928E61D;
+	Tue, 15 Apr 2025 12:56:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721693; cv=none; b=KoGPRdbTyv4AOELxg4T6/1adpzaJkpz0mF1H8tHFlFI2N8ku1JFrVzY1zHe0SYb1XZRFqtlQbNL4KhOLBE5Vz9SoBsdM1BPCpAW+843X0x5UqH12U7NFk1jV7uEPOyZHZB7EkUxsTyErDQVlwGUWrJ+2kYwxu7OVfLnyrPVH3Mw=
+	t=1744721792; cv=none; b=BY6U4RNVylTBeAIUTKTAXfWdc8naXWEt9UCW00qSWSSNgrqd2zodJHg16geJL8o7uFDkNJzPJAE6odcjifSAEvNBpxVks0ZfRAf7S7A9KsiJ2WeRPwJJgUIu5ESpQ40JPPbgcg3tbDNbOZ5TkMFkG0ySpIqJ1Ps14yemGXehTuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721693; c=relaxed/simple;
-	bh=F1Jjk4WtdWJuBFIQPO3BROHb+U4HbYu6L0Bka+00cq4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tQ3p/43eIWO+Dp7Myy4zGqKQ6j/LdgQzZERqXjyzlLNVprspOAx9T7TyXaN2ZPu8rJG17wWcqcCYjTDGRsMz/BdiQf286NDItfYElwYHk4JYMQUedidY/wPBW3GgZAabwFFgHq1tkIG7+9NHlE2ytHFaRqzlgccsdrbE0sEPgMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUc0FhEv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744721792; c=relaxed/simple;
+	bh=JRDcI9XTL6/McMvP9bm95+ugxrRXAWejJmT4xuEZ0Kc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nA0j38sQ/cEmtbRraTAAAQRkYglGb6a+m67lEO5ZwFIResp6jhtcyFze13F6zeAvdXddmhxkb8xfeMBqRxa/LpdXyEQWbn/n6rrBkiPxnOnkTbL/GyYvfh77x9R90WdQEMl2w7s9Dh991ZRO867k68m3zLDqu6r5XxQ84Qj1SKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bKFQTpTO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUc0FhEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DBAC4CEDD;
-	Tue, 15 Apr 2025 12:54:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bKFQTpTO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC31C4CEDD;
+	Tue, 15 Apr 2025 12:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744721692;
-	bh=F1Jjk4WtdWJuBFIQPO3BROHb+U4HbYu6L0Bka+00cq4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iUc0FhEvObXYncICP5fpbuiS2AU4JviCFTHWrb5AD7hJ0IDuSX/FmDD1iNlurNHin
-	 PV4/kZ+8iHmZJvfhADeLBuBFEvi5x6gJ33GbK4jZQU2mBIg5UGLBT3o1xPAiUnW4bn
-	 UYB6iNaZ+2mZBTXaCd/gaW82lMTXgJaxOjeUD4a+HnSnNjRoBXQJqNpXPMGGaTTsyQ
-	 OVkSW7cGoLWB2sqgTJdmQj3Wo9uxGeNxwvYlJFqGGEeScn4ZNTaDP/50QvOLBYSqwm
-	 xJvtm3GWHfRQUaXPIQxeepOWvokAe/ZJIThmvpYtStVJ3DtjC/AmiCNu1q2yX26APr
-	 8BhO98OiVfs8g==
-Message-ID: <ac1b4cf8ef40b8f723abad5c5421e3dc9ad310c0.camel@kernel.org>
-Subject: Re: [PATCH 2/4] ref_tracker: add ability to register a file in
- debugfs for a ref_tracker_dir
-From: Jeff Layton <jlayton@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
-	 <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	 <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	 <horms@kernel.org>, Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor
-	 <nathan@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date: Tue, 15 Apr 2025 08:54:50 -0400
-In-Reply-To: <b697c51c0788e4e462e45a5cc78d3b5c2d01d496.camel@kernel.org>
-References: <20250414-reftrack-dbgfs-v1-0-f03585832203@kernel.org>
-		 <20250414-reftrack-dbgfs-v1-2-f03585832203@kernel.org>
-		 <a86aab21-c539-48f5-bad1-25db9b8f3ced@lunn.ch>
-	 <b697c51c0788e4e462e45a5cc78d3b5c2d01d496.camel@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=k20201202; t=1744721792;
+	bh=JRDcI9XTL6/McMvP9bm95+ugxrRXAWejJmT4xuEZ0Kc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bKFQTpTOYJTq9Xbi4PMEhhH6FlQ6iSYPS357S2a4IgeH0WZ7YuCStXAjBWTFacPm6
+	 ho1VNMgc66AbfbBZ1J94dSV1qq6F8g6VfWgYUH6GQXOmAjGWnVhywfKh/OceFYCgLb
+	 QNlr6a0wrP2H7GFV7pCwuYhxk4WaIV3pj124FI8TpjRqYEYVHHXwIdO7GOlFRGIFEF
+	 OfvzQ7nXMRdlMStl7bMzakbBpEm+Ik5NCueeQy+S6cLr2+Xbw9/EWx+uy1qa4C4mO6
+	 NXJv0Q9mBg+j6/i7NcsJNsJcbCc0L22yAPufZdkN2ngxHqqZFMkPfzAeKdKBEfeG9E
+	 U7GbztbFaaAIw==
+Date: Tue, 15 Apr 2025 13:56:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+	"Szabolcs.Nagy@arm.com" <Szabolcs.Nagy@arm.com>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"debug@rivosinc.com" <debug@rivosinc.com>,
+	"mgorman@suse.de" <mgorman@suse.de>,
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+	"fweimer@redhat.com" <fweimer@redhat.com>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"hjl.tools@gmail.com" <hjl.tools@gmail.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"vschneid@redhat.com" <vschneid@redhat.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"hpa@zytor.com" <hpa@zytor.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"bsegall@google.com" <bsegall@google.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+	"yury.khrustalev@arm.com" <yury.khrustalev@arm.com>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+	"jannh@google.com" <jannh@google.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"wilco.dijkstra@arm.com" <wilco.dijkstra@arm.com>,
+	"kees@kernel.org" <kees@kernel.org>
+Subject: Re: [PATCH RFT v15 4/8] fork: Add shadow stack support to clone3()
+Message-ID: <e0bd1091-0342-447e-a74d-4d2ce01144fa@sirena.org.uk>
+References: <20250408-clone3-shadow-stack-v15-0-3fa245c6e3be@kernel.org>
+ <20250408-clone3-shadow-stack-v15-4-3fa245c6e3be@kernel.org>
+ <b15bf40b530f74d3339a313e7f5f5cb09205d348.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AwGzYJdIo8nWtgmb"
+Content-Disposition: inline
+In-Reply-To: <b15bf40b530f74d3339a313e7f5f5cb09205d348.camel@intel.com>
+X-Cookie: 10.0 times 0.1 is hardly ever 1.0.
 
-On Tue, 2025-04-15 at 06:23 -0400, Jeff Layton wrote:
-> On Tue, 2025-04-15 at 01:08 +0200, Andrew Lunn wrote:
-> > On Mon, Apr 14, 2025 at 10:45:47AM -0400, Jeff Layton wrote:
-> > > Currently, there is no convenient way to see the info that the
-> > > ref_tracking infrastructure collects. Add a new function that other
-> > > subsystems can optionally call to update the name field in the
-> > > ref_tracker_dir and register a corresponding seq_file for it in the
-> > > top-level ref_tracker directory.
-> > >=20
-> > > Also, alter the pr_ostream infrastructure to allow the caller to spec=
-ify
-> > > a seq_file to which the output should go instead of printing to an
-> > > arbitrary buffer or the kernel's ring buffer.
-> >=20
-> > When i see an Also, or And, or a list in a commit message, i always
-> > think, should this be multiple patches?
-> >=20
->=20
-> Sure. I actually had this part in a separate patch earlier, but I don't
-> usually like adding functions with no callers and this patch was pretty
-> small. I can break it up though.
->=20
-> > >  struct ostream {
-> > >  	char *buf;
-> > > +	struct seq_file *seq;
-> > >  	int size, used;
-> > >  };
-> > > =20
-> > > @@ -73,7 +83,9 @@ struct ostream {
-> > >  ({ \
-> > >  	struct ostream *_s =3D (stream); \
-> > >  \
-> > > -	if (!_s->buf) { \
-> > > +	if (_s->seq) { \
-> > > +		seq_printf(_s->seq, fmt, ##args); \
-> > > +	} else if (!_s->buf) { \
-> > >  		pr_err(fmt, ##args); \
-> > >  	} else { \
-> > >  		int ret, len =3D _s->size - _s->used; \
-> >=20
-> > The pr_ostream() macro is getting pretty convoluted. It currently
-> > supports two user cases:
-> >=20
-> > struct ostream os =3D {}; which means just use pr_err().
-> >=20
-> > And os.buf points to an allocated buffer and the output should be
-> > dumped there.
-> >=20
-> > You are about to add a third.
-> >=20
-> > Is it about time this got split up into three helper functions, and
-> > you pass one to __ref_tracker_dir_pr_ostream()? Your choice.
-> >=20
->=20
-> Maybe? It doesn't seem worth it for this, but I'll take a look.
->=20
-> >=20
 
-I took a crack at this and it's trickier than it looks. We have to pass
-a variadic function pointer (which is fine), but that means that they
-can't use handy macros like pr_err. We have to call functions that can
-take a va_list (which is also fine).
+--AwGzYJdIo8nWtgmb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The part I'm having trouble with is incorporating the pr_fmt(). I've
-attached the patch I have on top of the current series. It doesn't
-compile for me. If I remove the pr_fmt() calls and just pass in the
-format string, it does compile.
+On Mon, Apr 14, 2025 at 06:28:14PM +0000, Edgecombe, Rick P wrote:
 
-What am I doing wrong here?
+> First of all, sorry for not contributing on this since v9. I've had an unusual
+> enormous project conflict (TDX) combined with my test HW dieing.
 
--------------------------8<---------------------------------
+No worries, there doesn't seem to have been huge urgency on this one :(
 
-[PATCH] ref_tracker: have callers pass output function to pr_ostream
+> Both fixed in the diff below, but in debugging the off-by-one errors I've
+> realized this implementation wastes a shadow stack frame.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- lib/ref_tracker.c | 44 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 32 insertions(+), 12 deletions(-)
+I rolled your diff into the series, thanks.
 
-diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
-index 4cc49cc21f5b..e131fdc51838 100644
---- a/lib/ref_tracker.c
-+++ b/lib/ref_tracker.c
-@@ -77,21 +77,41 @@ struct ostream {
- 	char *buf;
- 	struct seq_file *seq;
- 	int size, used;
-+	void (*func)(struct ostream *stream, char *fmt, ...);
- };
-=20
-+#define ref_tracker_log(fmt, args) vprintk_emit(0, LOGLEVEL_ERR, NULL,
-pr_fmt(fmt), args)
-+
-+static void pr_ostream_log(struct ostream *stream, char *fmt, ...)
-+{
-+	va_list args;
-+
-+	ref_tracker_log(fmt, args);
-+}
-+
-+#define ref_tracker_vsnprintf(buf, size, fmt, args) vsnprintf(buf,
-size, pr_fmt(fmt), args)
-+
-+static void pr_ostream_buf(struct ostream *stream, char *fmt, ...)
-+{
-+	int ret, len =3D stream->size - stream->used;
-+	va_list args;
-+
-+	ret =3D ref_tracker_vsnprintf(stream->buf + stream->used, len,
-fmt, args);
-+	stream->used +=3D min(ret, len);
-+}
-+
-+static void pr_ostream_seq(struct ostream *stream, char *fmt, ...)
-+{
-+	va_list args;
-+
-+	seq_vprintf(stream->seq, fmt, args);
-+}
-+
- #define pr_ostream(stream, fmt, args...) \
- ({ \
- 	struct ostream *_s =3D (stream); \
- \
--	if (_s->seq) { \
--		seq_printf(_s->seq, fmt, ##args); \
--	} else if (!_s->buf) { \
--		pr_err(fmt, ##args); \
--	} else { \
--		int ret, len =3D _s->size - _s->used; \
--		ret =3D snprintf(_s->buf + _s->used, len, pr_fmt(fmt),
-##args); \
--		_s->used +=3D min(ret, len); \
--	} \
-+	_s->func(_s, fmt, ##args); \
- })
-=20
- static void
-@@ -138,7 +158,7 @@ __ref_tracker_dir_pr_ostream(struct ref_tracker_dir
-*dir,
- void ref_tracker_dir_print_locked(struct ref_tracker_dir *dir,
- 				  unsigned int display_limit)
- {
--	struct ostream os =3D {};
-+	struct ostream os =3D { .func =3D pr_ostream_log };
-=20
- 	__ref_tracker_dir_pr_ostream(dir, display_limit, &os);
- }
-@@ -157,7 +177,7 @@ EXPORT_SYMBOL(ref_tracker_dir_print);
-=20
- int ref_tracker_dir_snprint(struct ref_tracker_dir *dir, char *buf,
-size_t size)
- {
--	struct ostream os =3D { .buf =3D buf, .size =3D size };
-+	struct ostream os =3D { .buf =3D buf, .size =3D size, .func =3D
-pr_ostream_buf };
- 	unsigned long flags;
-=20
- 	spin_lock_irqsave(&dir->lock, flags);
-@@ -294,7 +314,7 @@ EXPORT_SYMBOL_GPL(ref_tracker_free);
-=20
- static int ref_tracker_dir_seq_print(struct ref_tracker_dir *dir,
-struct seq_file *seq)
- {
--	struct ostream os =3D { .seq =3D seq };
-+	struct ostream os =3D { .seq =3D seq, .func =3D pr_ostream_seq };
- 	unsigned long flags;
-=20
- 	spin_lock_irqsave(&dir->lock, flags);
---=20
-2.49.0
+> Do we want this? On arm there is SHADOW_STACK_SET_MARKER, which leaves a marker
+> token. But on clone3 it will also leave behind a zero frame from the CMPXCHGed
+> token. So if you use SHADOW_STACK_SET_MARKER you get two marker tokens. And on
+> x86 you will get one one for clone3 but not others, until x86 implements
+> SHADOW_STACK_SET_MARKER. At which point x86 has to diverge from arm (bad) or
+> also have the double marker frame.
+
+> The below fixes the x86 functionally, but what do you think of the wasted frame?
+> One fix would be to change shadow_stack_pointer to shadow_stack_token, and then
+> have each arch consume it in the normal HW way, leaving the new thread with:
+
+>    SSP = clone_args->shadow_stack_token + 8
+
+I think that's a good point with the extra frame, your suggestion is
+sensible.  This didn't translate well when refactoring from specifying
+the extent of the shadow stack.
+
+--AwGzYJdIo8nWtgmb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf+V3cACgkQJNaLcl1U
+h9DNCwf/d/78n/7YKAbpKnphufPOLaov4Aev9sMXOF3KDwmLA+ibe20td6Crz1ew
+If3etKclVlGQO0noH/YaRgSDdnddkDQt6RP7F9xEjM2Od2EFPGeSLgiMrLxGJfGz
+BGTwb86QvFglWwg2ohgMAQnMlEMCYJdSibhiid54Lj4iNwPrG/yMF7X4aZ4wJhVn
+mXn4/I+2Nc+sVI8lIPvUar+sXyYweNWcImeBHHy+KL64g6wUWFh8kP7gap6CHjEI
+vPr6UWB3PbD2TGkDzaxjecuLJSDewd78R551z3d60pS+46BEm3+Po28+bgvLrZbx
+ClDJ3HX6nnZtNBytKOSpXs5lG/cHJg==
+=OXqt
+-----END PGP SIGNATURE-----
+
+--AwGzYJdIo8nWtgmb--
