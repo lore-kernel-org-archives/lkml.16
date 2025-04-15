@@ -1,211 +1,272 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CBB2405E4;
-	Tue, 15 Apr 2025 23:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03A529DB90;
+	Tue, 15 Apr 2025 23:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744758089; cv=none; b=JjA4HEtKE5RYf831cNmX3GXqCAZvt8LXbP85RjkRrO1A59619RrNq83O94iNz9Z5T3iPkiQNdEtwlVvW+M+1VVYgRG0/QlrosLc6vu56GXTmjbzerhVeh/Sbve3koyWM4RFdGuKs8afK9rVHUOB2zqS1qAyD9pZflqBDvFIl3mE=
+	t=1744758188; cv=none; b=Uxj2CdNy7OBLBSVbFxGjWFg81pKk0vWoeSxzHa22v1XXqcuwQiSOhC3X2fPnI6DfoJFu7pKNgd3/TytoVVbU0rzTSwVMAi4YxD5PS/2tVqi+amPBWq7S97Qq6K5FFsp0xJl3SzmI2Jd2+srUUiWEu8If+C7Ysj/ktf70w96twEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744758089; c=relaxed/simple;
-	bh=reONu9DCX8yIdj7GLfXXkccHOkCnNJe0Ef9D9h6QGQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C1ifjyJ51UhTty0Rn9oos38J/7Oqj7f5Bo4b+Du9ineY0/SC/dH8fGCJR8C4efna77tzHNKDa/ip3R9ju31vMGlIdgaL8hWJyRUI1rH/0sKRwVYDa60jYlfn16cPOrY/FJSa6BzOGJFq/12Veu6fnviwx0297X7WuRb5rDV24IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LNinphU2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744758188; c=relaxed/simple;
+	bh=JZRovcjiwQ33A3xUCMsFycF3ql2BDyl9qeX4yMmp6bA=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKRSftGgBYL2CMwfWhz9pFK4Ebk0wqaTNX0NzIJfTNoNsd1rFxhbF52wq8ixlzS6g6Sct8YgdBRvVyiO841Y51yFubDQ+t7wVfuqegLa0x5QsgPo3r1mK19PaCHaVVqwGfMcT0/GasJa/8LcvQ9s+Kfx2LFxBU86oL91aB3liAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqEzR59W; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LNinphU2"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 16373353;
-	Wed, 16 Apr 2025 00:59:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744757963;
-	bh=reONu9DCX8yIdj7GLfXXkccHOkCnNJe0Ef9D9h6QGQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LNinphU21VM8OFnnSnZNbt5K+oDpNQ119G58IJinl3fPGKbpdtvWtuwTZNeC4uVwP
-	 zDUZYnkigre8k9BnHfz0utab+c0D7EoR7/Bq2dh/mlLw9pv+KOD0yWcF4k9fYySv4X
-	 g0VC6PFm+O/41wyVA4Q2yQinKO8r452Bwp7rsM8U=
-Date: Wed, 16 Apr 2025 02:01:24 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: POPESCU Catalin <catalin.popescu@leica-geosystems.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
-	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
-Message-ID: <20250415230124.GJ9439@pendragon.ideasonboard.com>
-References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
- <ZxYiCv6SpLq9uh08@dragon>
- <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
- <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
- <20250415154724.GG9439@pendragon.ideasonboard.com>
- <20250415155239.GH9439@pendragon.ideasonboard.com>
- <20250415181423.qderfey4wpmp2bjm@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqEzR59W"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c54b651310so816908785a.0;
+        Tue, 15 Apr 2025 16:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744758186; x=1745362986; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q21DKRIHxJEvdt+r1VLoxzAfD1ZQ4fXtiMyb7UHuaZI=;
+        b=hqEzR59W4HhSxePeWOTGxNpwgJPYr/WM4A62sqbNmUn1QQi5g1OHicjbKDu4+i0Pd4
+         RbXKvJLmezjtTZFBgvcZBxS27uuzmbIfkwA1iQsbiFJteBc/G1UorqUF5BfImvV7v74I
+         vApbt1ha5+Q3GexZp/b+gVWwo9vCm9/QN3h0RqNe6Lp7eqv2gtd1/9B0OgNbE/YLvy5l
+         j1LRvjKj51QHZ5r6nfF8GUeu8D37w4jsOj4pl6Ks88Qx29s80a7g17cu5i7BTswtaV7E
+         rlw4REa8iIf/Pi1jgwR5JE/+WY72fXW5FJrV+aOS6PCmiZXQVuIjT38qGaWXyIpEUyWa
+         Brqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744758186; x=1745362986;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q21DKRIHxJEvdt+r1VLoxzAfD1ZQ4fXtiMyb7UHuaZI=;
+        b=mUrwMpiecvYnYgEkm2uyRDqwqCSEeSOrGEhO3LE4icQw0SeVDicrfpgGch5Rq169x+
+         IHSTf9UUAWA5H1UGrHRTgiZKkEBA9Uq5C7q4QR0hQkisMxRyodJWlbkyFCCtQHjoSpjV
+         ei5yOdhtBi56GdQyAamSqiHzkI+coeBvNGnJ9tu+P61fAU8fBSVurYUfUOMyvddfl1Of
+         xY5C2a/KDP7vyUtVJ6DGeMWJjVzX9usEg1PDqNrYDo5v3kirG7BQI6sx7APpB3XYO7EM
+         BFCYXocmpkN6hJCEBwqI079O5iM8ZQAwoy1n3SxpkQqJYC/9XnBAlgej2RH0joDMNqAN
+         Ywhw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Ijq2ErJCo3hETPn3rVmSttq4vXKMCL9sWYf+ZREC/Mjdb0cUvbVnhJ2nJfkIe0I8g1GIBtVm7NV5egg=@vger.kernel.org, AJvYcCU8GEY4P1jVp0TtmilVzbzJA07UGRo7izGNcCm+/+G9VmYzZbO4RhQVtv90A2Nj9lG4yFHc44b42KwS@vger.kernel.org, AJvYcCUUtGH8qh/J5DM2zPkM67X0tnqowLGkaJJE1zHPlaKmkkZF285hLSsIBUThNYAD7vawuzqR7M0MjInwmj8Zntdr@vger.kernel.org, AJvYcCV9SwtRrS53UjNZvz4WSWrrcYia6tPrPjBoFChGHW1HnVVyc4s8lvZo6uFVtDLPLi9IUdazlPay7L3ShTNw@vger.kernel.org, AJvYcCWPBjMqqu76ifmHVYufb8A8ndS3NAr+kNZmk4sxiQ1dVPW/HLmTHp8PrQBiJdwsjuqdA1oVy2beyCzR@vger.kernel.org, AJvYcCWyfFwA2Hg/NtHFkMIpvcAjfYEfwEEyIFoRvk+cujRPRMxeMe6y/j0mHTjFDLNOHm4ehQ76vLt9FiQ7PjfZG5U=@vger.kernel.org, AJvYcCWzlaNeGQc9TDqP8v2lPZpubzry4eAnn0ibyqxKS1B3vNfU7pul8oe7KZ5SRLQI9vnkcob0ZiY63HDcFFMF@vger.kernel.org, AJvYcCXHcL9ZikTZFzIoWTKhVshXHQ2VXRKOozsEP+CayaxkcG/gB6FM0E5aqW2Hw7nB3PuLXqA4OghN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe5047ksgl1xC6hXsQqhjwSlnq1oW1P4JaE53yomeaHUQruZVR
+	UZj6ytotYT/rQWl6KG6J/sCQMPd53YCEKkZG0JF+9khhAW0VDD1m
+X-Gm-Gg: ASbGnctxY7Ie9ks5Lwcuz7daJSGS0eTIzHSyLZbkW2nWYzBcDCPYhG4w2j4MaGXbkRW
+	jDT9dOibMajY+SgXTwbON45ex1mYuu5NOrhF9fCyZmC46uoxKrm0ARcXGmTixUnwhZuhqwNDPWL
+	jq5qfGchLRmiS3TJ2vfoLHSgPGXrqEbghloO4LYTqplctoIFHLds3jzPb1wCN8zGaNFaXhlNd8U
+	SUZQd/U1LrYC31cXzFvaXIKz/Ms/0xFDUacTcc7c7RU8wlJ6+n/DBrWliOyick3qUR+/MI4ZrDW
+	8596+y2a3lEo4DCk8HjxxLcNggA+/dz+9w83u/tlpPys+5MvXlWB9w6fFoUy01FzywxcX8MeW7z
+	8yvF+bobI4+ThwQoojlL0Rpn5N2LPfQI=
+X-Google-Smtp-Source: AGHT+IFD/29vIxMjxOFxQ8BkiE/LEbZtqORNAZrDSp4aJ594XboCIC4xgBiV7FVPqr3EbX3zcQVpqw==
+X-Received: by 2002:a05:620a:459f:b0:7c5:4c6d:7fa5 with SMTP id af79cd13be357-7c91428098amr221292185a.48.1744758185614;
+        Tue, 15 Apr 2025 16:03:05 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a896a708sm969451385a.58.2025.04.15.16.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 16:03:05 -0700 (PDT)
+Message-ID: <67fee5a9.050a0220.25fe78.76d2@mx.google.com>
+X-Google-Original-Message-ID: <Z_7lpfy3H74dI1Ad@winterfell.>
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C4F0F1200043;
+	Tue, 15 Apr 2025 19:03:03 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Tue, 15 Apr 2025 19:03:03 -0400
+X-ME-Sender: <xms:p-X-Zz3WUcQHo5SPerJTk_Pdw6EezJuTH-lYjWN5uKuxBZn4sbkqSQ>
+    <xme:p-X-ZyEihct8Y5-jYRn-hwKhJNfUEQet1OPd2N-am8r60UUrmWLlmSgr1LcjP_tKs
+    b9VG5Lbohie4BDeIg>
+X-ME-Received: <xmr:p-X-Zz6GJVAyNj9lTiZEOMLtdkuSmnFOQWBwbEVDi79-oJdfu-HslPmbdD8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegjeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudejhfekieevvddvgeehhfdutdeggfel
+    gedugfejhffggeelkeeuffdthfetgeenucffohhmrghinhepihgushdrrghspdhkvghrnh
+    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvge
+    ehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhm
+    sehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepgeejpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehtrghmihhrugesghhmrghilhdrtghomhdprhgtphhtthhopehm
+    rghsrghhihhrohihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnrghthhgrnheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhope
+    hgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehp
+    rhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesph
+    hrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdho
+    rhhg
+X-ME-Proxy: <xmx:p-X-Z41IoaAkSc3EBgjWc6FXL709swaRQ4uUE1JmJ7uwRMFyWIM8qw>
+    <xmx:p-X-Z2FWGrBqGBVjFOLFXxauA-nSn0cOk80DjxXcxIfFi4pNOTsFBw>
+    <xmx:p-X-Z5-JJOXIKKn2Ask5SGKUS8sj6aH_plq-OmVqa5Dc4Y2gCsioRQ>
+    <xmx:p-X-ZzkEZZfroB1PnsAsuNes8k_rpPpUslzDA-16Zho9eYd0LiRujQ>
+    <xmx:p-X-ZyHPCpMV7Nst1ncTZ1st-JDeh20IBOZOttD2KMdbEi0SFLxqXbnu>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Apr 2025 19:03:02 -0400 (EDT)
+Date: Tue, 15 Apr 2025 16:03:01 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Frederic Weisbecker <frederic@kernel.org>,	Lyude Paul <lyude@redhat.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
+References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
+ <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com>
+ <67fe9975.c80a0220.1b5785.66e7@mx.google.com>
+ <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com>
+ <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
+ <CAJ-ks9=G1ajyT8gwLHyvHW09Z2gG=Geg7LDS6iyRyqx_wyp5Sg@mail.gmail.com>
+ <67fec6c1.0c0a0220.f907e.c6dd@mx.google.com>
+ <CAJ-ks9mZ4qqRwQTWyGYgPy9kf3=od=zbvX67ELVgctU0t6qHuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415181423.qderfey4wpmp2bjm@pengutronix.de>
+In-Reply-To: <CAJ-ks9mZ4qqRwQTWyGYgPy9kf3=od=zbvX67ELVgctU0t6qHuQ@mail.gmail.com>
 
-Hi Marco,
-
-On Tue, Apr 15, 2025 at 08:14:23PM +0200, Marco Felsch wrote:
-> On 25-04-15, Laurent Pinchart wrote:
-> > On Tue, Apr 15, 2025 at 06:47:26PM +0300, Laurent Pinchart wrote:
-> > > On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
-> > > > Hi Jai,
-> > > > 
-> > > > This issue was already reported by Stefan. The problem is that I don't 
-> > > > have a Debix board to investigate.
-> > > > The main difference b/w WFI and cpu-pd-wait is that the first doesn't 
-> > > > call PSCI/TF-A. So, the issue looks to be related to some settings in 
-> > > > the TF-A.
-> > > 
-> > > Jai, are you using mainline U-Boot and TF-A, or a downstream version of
-> > > either (or both) ?
-> > 
-> > Actually, same question for Calatin :-)
-> > 
-> > I'm running mainline U-Boot 2025.01 and TF-A rel_imx_5.4.70_2.3.6 (from
-> > https://github.com/nxp-imx/imx-atf) and don't seem to experience the
-> > issue:
-> 
-> Interessting, can you share your imx-atf build-config please?
-
-I've followed the instructions in the doc/board/nxp/imx8mp_evk.rst file
-(in the U-Boot source):
-
-```
-Get and Build the ARM Trusted firmware
---------------------------------------
-
-Get ATF from: https://github.com/nxp-imx/imx-atf
-branch: imx_5.4.70_2.3.0
-
-.. code-block:: bash
-
-   $ make PLAT=imx8mp bl31
-```
-
-I had to patch the TF-A makefile as follows to fix errors with recent
-versions of gcc:
-
-```
-diff --git a/Makefile b/Makefile
-index 2ae12fda741a..46512993c6e0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -285,7 +285,8 @@ ASFLAGS			+=	$(CPPFLAGS) $(ASFLAGS_$(ARCH))			\
- 				-ffreestanding -Wa,--fatal-warnings
- TF_CFLAGS		+=	$(CPPFLAGS) $(TF_CFLAGS_$(ARCH))		\
- 				-ffreestanding -fno-builtin -Wall -std=gnu99	\
--				-Os -ffunction-sections -fdata-sections
-+				-Os -ffunction-sections -fdata-sections		\
-+				-Wno-error=array-bounds
-
- ifeq (${SANITIZE_UB},on)
- TF_CFLAGS		+=	-fsanitize=undefined -fno-sanitize-recover
-@@ -300,9 +301,11 @@ GCC_V_OUTPUT		:=	$(shell $(CC) -v 2>&1)
- ifneq ($(findstring armlink,$(notdir $(LD))),)
- TF_LDFLAGS		+=	--diag_error=warning --lto_level=O1
- TF_LDFLAGS		+=	--remove --info=unused,unusedsymbols
-+TF_LDFLAGS		+=	-Wl,--no-warn-rwx-segment
- else
- TF_LDFLAGS		+=	--fatal-warnings -O1
- TF_LDFLAGS		+=	--gc-sections
-+TF_LDFLAGS		+=	--no-warn-rwx-segment
- endif
- TF_LDFLAGS		+=	$(TF_LDFLAGS_$(ARCH))
-
-```
-
-> I checked the code base and found a missing SLPCR_A53_FASTWUP_STOP_MODE
-> during the imx_set_sys_lpm() which is called during
-> .pwr_domain_suspend(). Can you check/trace if pwr_domain_suspend() was
-> entered?
-
-I'm no TF-A expert, can you tell me how to check/trace that ?
-
-> > # cat /sys/devices/system/cpu/cpu*/cpuidle/state1/disable
-> > 0
-> > 0
-> > 0
-> > 0
-> > 
-> > $ ping debix
-> > PING debix.farm.ideasonboard.com (192.168.2.230) 56(84) bytes of data.
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=1 ttl=64 time=1.03 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=2 ttl=64 time=0.800 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=3 ttl=64 time=0.935 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=4 ttl=64 time=0.902 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=5 ttl=64 time=0.738 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=6 ttl=64 time=0.939 ms
-> > 
-> > > > What I don't get is why I don't see this issue neither on our IMX8MP 
-> > > > specific design nor on the EVK, which uses the same PHY as the Debix board.
+On Tue, Apr 15, 2025 at 04:59:01PM -0400, Tamir Duberstein wrote:
+[...]
+> > > > > > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
+> > > > > > > index 4063f09d76d9..37cc03d1df4c 100644
+> > > > > > > --- a/rust/kernel/device_id.rs
+> > > > > > > +++ b/rust/kernel/device_id.rs
+> > > > > > > @@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable<T, U> for IdArray<T, U, N> {
+> > > > > > >      fn as_ptr(&self) -> *const T::RawType {
+> > > > > > >          // This cannot be `self.ids.as_ptr()`, as the return pointer must have correct provenance
+> > > > > > >          // to access the sentinel.
+> > > > > > > -        (self as *const Self).cast()
+> > > > > > > +        let this: *const Self = self;
+> > > > > >
+> > > > > > Hmm.. so this lint usually just requires to use a let statement instead
+> > > > > > of as expression when casting a reference to a pointer? Not 100%
+> > > > > > convinced this results into better code TBH..
+> > > > >
+> > > > > The rationale is in the lint description and quoted in the commit
+> > > > > message: "Using `as` casts may result in silently changing mutability
+> > > > > or type.".
+> > > > >
 > > > >
-> > > > On 14/04/2025 14:07, Jai Luthra wrote:
-> > > > > On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
-> > > > >> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
-> > > > >>> So far, only WFI is supported on i.MX8mp platform. Add support for
-> > > > >>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
-> > > > >>> usage during runtime. This is a port from NXP downstream kernel.
-> > > > >>>
-> > > > > Since the introduction of this patch in mainline, I am facing sluggish
-> > > > > network performance with my Debix Model-A board with i.MX8mp SoC.
-> > > > >
-> > > > > The network latency jumps to >1s after almost every other packet:
-> > > > >
-> > > > > PING debix (10.0.42.5) 56(84) bytes of data.
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
-> > > > > ^C
-> > > > > --- debix ping statistics ---
-> > > > > 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
-> > > > > rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
-> > > > > darkapex at freya in ~
-> > > > >
-> > > > > If I revert the patch, or disable the deeper cpuidle state through
-> > > > > sysfs, the issue goes away.
-> > > > >
-> > > > > # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
-> > > > >
-> > > > > PING debix (10.0.42.5) 56(84) bytes of data.
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
-> > > > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
-> > > > > ^C
-> > > > > --- debix ping statistics ---
-> > > > > 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
-> > > > > rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
-> > > > >
-> > > > >>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-> > > > >>
-> > > > >> Applied, thanks!
+> > > > Could you show me how you can silently change the mutability or type? A
+> > > > simple try like below doesn't compile:
+> > > >
+> > > >         let x = &42;
+> > > >         let ptr = x as *mut i32; // <- error
+> > > >         let another_ptr = x as *const i64; // <- error
+> > >
+> > > I think the point is that the meaning of an `as` cast can change when
+> > > the type of `x` changes, which can happen at a distance. The example
+> >
+> > So my example shows that you can only use `as` to convert a `&T` into a
+> > `*const T`, no matter how far it happens, and..
+> 
+> I don't think you're engaging with the point I'm making here. Suppose
+> the type is `&mut T` initially and `as _` is being used to convert it
+> to `*mut T`; now if the type of `&mut T` changes to `*const T`, you have
+> completely different semantics.
+> 
 
--- 
+You're right, I had some misunderstanding, the "`_`" part of `as _`
+seems to be a red herring, the problematic code snippet you meant can be
+shown as (without a `as _`):
+
+	f(x as *mut T); // f() takes a `*mut T`.
+
+where it compiles with `x` being either a `&mut T` or `*const T`, and
+`as` has different meanings in these cases.
+
+> >
+> > > shown in the clippy docs uses `as _`, which is where you get into real
+> > > trouble.
+> > >
+> >
+> > ... no matter whether `as _` is used or not. Of course once you have a
+> > `*const T`, using `as` can change it to a different type or mutability,
+> > but that's a different problem. Your argument still lacks convincing
+> > evidences or examples showing this is a real trouble. For example, if
+> > you have a `x` of type `&i32`, and do a `x as _` somewhere, you will
+> > have a compiler error once compilers infers a type that is not `*const
+> > i32` for `_`. If your argument being it's better do the
+> > reference-to-pointer conversion explicitly, then that makes some sense,
+> > but I still don't think we need to do it globablly.
+> 
+> Can you help me understand what it is I need to convince you of? There
+> was prior discussion in
+> https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/,
+> where it was suggested to use this lint.
+> 
+> I suppose in any discussion of a chance, we should also enumerate the
+> costs -- you're taking the position that the status quo is preferable,
+> yes? Can you help me understand why?
+> 
+
+In this case the status quo is not having the lint, which allows users
+to convert a raw pointer from a reference with `as`. What you proposed
+in patch is to do the conversion with a stand-alone let statement, and
+that IMO doesn't suit all the cases: we are dealing with C code a lot,
+that means dealing raw pointers a lot, it's handy and logically tight if
+we have an expression that converts a Rust location into a raw pointer.
+And forcing let statements every time is not really reasonble because of
+this.
+
+Also I didn't get the problematic code the lint can prevent as well
+until very recent discussion in this thread.
+
+I would not say the status quo is preferable, more like your changes in
+this patch complicate some simple patterns which are reasonable to me.
+And it's also weird that we use a lint but don't use its suggestion.
+
+So in short, I'm not against this lint, but if we only use let-statement
+resolution, I need to understand why and as you said, we need to
+evaluate the cost.
+
+> >
+> > > > also from the link document you shared, looks like the suggestion is to
+> > > > use core::ptr::from_{ref,mut}(), was this ever considered?
+> > >
+> > > I considered it, but I thought it was ugly. We don't have a linter to
+> > > enforce it, so I'd be surprised if people reached for it.
+> > >
+> >
+> > I think avoiding the extra line of `let` is a win, also I don't get why
+> > you feel it's *ugly*: having the extra `let` line is ugly to me ;-)
+> 
+> I admit it's subjective, so I'm happy to change it. But I've never
+> seen that syntax used, and we lack enforcement for either one, so I
+> don't find much value in arguing over this.
+> 
+
+If the original code use "as" for conversion purposes, I think it's good
+to be consistent and using from_ref() or from_mut(): they are just
+bullet-proof version of conversions, and having a separate let statement
+looks like a distraction to me. If for new code, and the author has a
+reason for let statement, then it's fine.
+
 Regards,
-
-Laurent Pinchart
+Boqun
