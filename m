@@ -1,123 +1,103 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DFF18A6A9;
-	Tue, 15 Apr 2025 06:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BC121171C
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744697826; cv=none; b=fgaa2/Klw/lCmsGz7OpFww28p0qv+swBN7aFKunnHpihqXuy0MB2FmM2aF1AJRVMj1fvdIfCTZ549mr94mNhTtMNIkXH/n2gGDLxyL2uVk6XBkrG+J2kMV7eFPZsRL5fe+qhDMqJlVoAwSnhzG+K4JpLTseWGzc+N7bclq3EyZA=
+	t=1744697853; cv=none; b=utZ53IgOhXOXoQ3/T5CWUltpxjSqI+besRjvXOGvHTHUb1qgXyJSp9eQ+vUR+C64WvJXBRPquY/YEzJ2u6Jxus4G5+4pI4hYksKGIZxw0IERvXX6wPqmvXcpZQBAcSOEpop2SLHwAh3aJ0D5HLzATEcciBQ3mQAyL4Q56I3TRQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744697826; c=relaxed/simple;
-	bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t1mF/jjRZl4oE5f84XyzKRJmEeMDn/msJckZEt2O2M6LcjQBXOHmheoPfnYHA82vWeH9t47HbQ2J25HDR3gJ6s6ew+gcUpRY13wa6jUA/hLfnKe+hvyhtYdlLqINiFvAtw3koIv02i/8EYZYPsmesR3ZO0vDcCJ6PjaFBglUPiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JybAhIuL; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744697853; c=relaxed/simple;
+	bh=oMp5bg88AhH5U94XDV4HaMSAy3UaGzipazBEuW0fFLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XGNXtpnT5j1eR2D+V2CuKz/RT+NLh2PrqBNrZPC6gdSQLmamksq4tFlMJIFpYijwK5MRS6CdyvN54d6Ql3KVGUWLpHyv9PRW2Y8rYL/X0ZMi/YudhSmB01KK6/EskDhaVqNwIZQJcptLDfyagyqamGSWVspoy9tsC86BVk7whcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8VjnLjj; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JybAhIuL"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bf1d48843so43868861fa.2;
-        Mon, 14 Apr 2025 23:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744697823; x=1745302623; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
-        b=JybAhIuLcEGUS4Ty9Rg3zZ+S+MgUpuMfuFzJFEDvtxlRrFlxhWUVs6rIc/DG4yjv0C
-         nHOuKEEhfV80dsp9AZWmGRqFiOnqqU8ZXONN7MpMciKeo3J8AJAGONN6+LzflFMxncce
-         Ybh6yRdTl6H+lLz++2mzE/QIP5QCBgCQC+8nLlP//8MM0czl4Nq2PpFQ+lasewZZCI8Z
-         BJNiLYkOkYrTzeHFqrKoUKxxADa0xz0HYaI7UtYQ1pAQEu32UNTXDcyNH+9ngWOF+xmf
-         LoAqMkVBs/Nmqu84yNSpjzVzHMM9r+kRst7CwCC7LL/JmwwJVRV2CVXNQcuJLbfp2rOB
-         lQYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744697823; x=1745302623;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=14o5+/rPRNUSc5/tPisvurCwfLOCXGtfSja4B9Ey210=;
-        b=bRVRakNTGaNYPHnc0v767gR8j6uoS5fiYuOOjsyi0IxN8BLwIobjUH742lBr6eBIuG
-         F+PMhRspbkTsIfGGzAMju8dweHOMh+wtvQ7ffYMJKdhJe3t6jhkvxCehN7i5Q4N9K2uU
-         A5MuZN7FGZi456mrwN4eylJQiS2dWuhMsMftHWhMzdogoELFqs2YgJGtHQjJwewH6Aru
-         uYaj8e9f7i04V1/FwbrqqYMNon6xoWKwScn0reyewsypor0PjuoAa0Cp4AiWNWx+f5ZT
-         u6ghvxwj0LjA/HbKbJSBqcLkxAy9ftOSpFhodyre4BJyI/fWvzVDcL8oL5VR0JtKob7n
-         pZgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUE3SnAA7x02sLxd5AVqZGx5VLrahoE4rRM9A1FwrgmG4G5fGK8FXQrN0IKoIXLJ5x7RGcgFxP+uzKBh8o=@vger.kernel.org, AJvYcCUJbzOI1AjZ9ZTXc1WXNd2X6WbLZDmEbTUti6/P2MHVQaPYqy9/FT/5kN5/hFMtvbyfK/O+Z5NmSBcuXkDM75sC9rY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPmsCywwiPeAPpaKQdhFvnu6qWVif6HMN78OKlRtOCyKdGlZUm
-	6E72kulpvz6/FFSPai/9jj3l5OleU6OkAqcC1Hkl8qOaTprcIb18QcrJI5HQbmrZnvlXS8VQFQC
-	nj1z7KrH8EXzd1jUGGxH6RhIGha4=
-X-Gm-Gg: ASbGncs8tnruU0e8fsTmUkq0RScyKmWPNytXf4O7Tqlrid5+pXYdCk0dF0w5TJmg7vi
-	pUk3B3ad9aj/bX4S2IuBRvX+n1oPkozNLVRY/XgLbQ+MyfFhDVp3P9Qpyu2pPpJo7XXl0qnfOrX
-	WtGu0CNmdyC2m4dHnqERBWmw==
-X-Google-Smtp-Source: AGHT+IFDRgfCx4zdnCFN4jix8GVMsmPDba+WEwhclFcXgG1NE9K+WIxonDPVN3Cv91Mfe1j688Kq9/qIp5YU91jbxqE=
-X-Received: by 2002:a05:651c:220a:b0:30b:edd8:886 with SMTP id
- 38308e7fff4ca-310499f5dacmr46680681fa.9.1744697822644; Mon, 14 Apr 2025
- 23:17:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8VjnLjj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744697852; x=1776233852;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oMp5bg88AhH5U94XDV4HaMSAy3UaGzipazBEuW0fFLQ=;
+  b=I8VjnLjj3KZFAH6gC5kcZlmTqniRLtYFGssW8bX8fZt4QW9foYdEP0CW
+   LDI5qN4DKcbGaPV0w84MW9J0O0GoAtdYLcGpZv9aYoMe1/gMtYutZIxAa
+   WIknaKOeGz9lDruTufxs7ImV3qqINXztCVKyJ34gRcuSRIfM7Qlzs5ytV
+   26DLPROH9lWltW2KMrKKwUIEC7UnXoc2RD99lztAO/EbUItABVvE7Nyda
+   WH/EaWgFGmnu9+53G3HUz2GqxtKMnLh+lizkx6pPo0dXc6slyRzWjQ3Bt
+   +8zeVBZ38/AzgR5TI/gTuu3g1sr6bShnVrisDk59OsktvM6GohBRIoCl4
+   w==;
+X-CSE-ConnectionGUID: Mqgv4hG9Q0ShVa8MeHdi8w==
+X-CSE-MsgGUID: /LeUoXndSo2fWqp2u4+ubg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57553655"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="57553655"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:17:31 -0700
+X-CSE-ConnectionGUID: F3Bjzp7aS8yBT+ylbnfwxA==
+X-CSE-MsgGUID: 09qgvQJFTgupxCMA3RiOYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130349942"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:17:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4Zbp-0000000CSTC-2I7c;
+	Tue, 15 Apr 2025 09:17:25 +0300
+Date: Tue, 15 Apr 2025 09:17:25 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mikulas Patocka <mpatocka@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, dm-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] dm table: Fix W=1 build warning when
+ mempool_needs_integrity is unused
+Message-ID: <Z_359RoIe9TjAWV0@smile.fi.intel.com>
+References: <20250407072126.3879086-1-andriy.shevchenko@linux.intel.com>
+ <Z_zdwSCfaYDotOI2@smile.fi.intel.com>
+ <Z_zd1NCtn_QxaCzC@smile.fi.intel.com>
+ <a0b1fcbf-9cda-9da2-ecbe-ac5cbc75b775@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <174428272631.31282.1484467383146370221.tip-bot2@tip-bot2>
- <20250411210815.GAZ_mEv8riLWzvERYY@renoirsky.local> <Z_oqalk92C4G6Rqt@gmail.com>
- <CAFULd4bTd6GMftLBX7Nu0xftini00o4v7=1XfuoDC8ydUr9Ueg@mail.gmail.com>
- <Z_t7_brzSoboOsen@gmail.com> <CAFULd4ZBbAG4ndn+rzjjqF+pmtGa3UbyDOWfEXww0XhExJByVA@mail.gmail.com>
- <Z_wI0uNoG2G2TQMC@gmail.com> <CAFULd4b2afcu5PnxhqwwepwWMSA7mvYNyPnMtkCjjT84VG8VXA@mail.gmail.com>
- <Z_wOYOrVJJkUUUF9@gmail.com> <20250414182057.fe2fc32273ca1520c9b5dd4d@linux-foundation.org>
-In-Reply-To: <20250414182057.fe2fc32273ca1520c9b5dd4d@linux-foundation.org>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 15 Apr 2025 08:16:51 +0200
-X-Gm-Features: ATxdqUH6F8RrUNX5r2VRC6HS0yoSNbzfnBSgkjnh9sqT5xjH4_eBMJ2syY3oV-k
-Message-ID: <CAFULd4YOGgH39+Fge=N3M0jKzchg36005ZYss_qPD_0qzQ2scg@mail.gmail.com>
-Subject: Re: [tip: core/urgent] compiler.h: Avoid the usage of
- __typeof_unqual__() when __GENKSYMS__ is defined
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, 
-	linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0b1fcbf-9cda-9da2-ecbe-ac5cbc75b775@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 15, 2025 at 3:20=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Sun, 13 Apr 2025 21:20:00 +0200 Ingo Molnar <mingo@kernel.org> wrote:
->
-> > > > > If this commit is removed, [...]
-> > > >
-> > > > I did not remove commit ac053946f5c4, it's already upstream. Nor
-> > > > did I advocate for it to be reverted - I'd like it to be fixed. So
-> > > > you are barking up the wrong tree.
-> > >
-> > > If the intention is to pass my proposed workaround via Andrew's tree,
-> > > then I'm happy to bark up the wrong tree, but from the referred
-> > > message trail, I didn't get the clear decision about the patch, and
-> > > neither am sure which patch "brown paper bag bug" refers to.
-> >
-> > It's up to akpm (he merged your original patch that regressed), but I
-> > think scripts/genksyms/ should be fixed instead of worked around -
-> > which is why I zapped the workaround.
->
-> I'm OK with the original workaround - super simple and fixes the issue.
-> I don't know if Borislav intends to upstream this, so I'll grab a copy
-> also.
->
-> Nobody has commented on Uros's more recent alteration to genksyms
-> (https://lkml.kernel.org/r/CAFULd4aLMF_2AbUAvpYw+o1qo6U-Ya_+Ewy-wW17g-r-M=
-BF9_g@mail.gmail.com)?
->
-> Uros, please persist with that approach and hopefully we'll have a
-> patch which removes the temporary workaround.
+On Mon, Apr 14, 2025 at 02:13:18PM +0200, Mikulas Patocka wrote:
+> On Mon, 14 Apr 2025, Andy Shevchenko wrote:
+> > On Mon, Apr 14, 2025 at 01:04:49PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Apr 07, 2025 at 10:21:26AM +0300, Andy Shevchenko wrote:
+> > > > The mempool_needs_integrity is unused. This, in particular, prevents
+> > > > kernel builds with Clang, `make W=1` and CONFIG_WERROR=y:
+> > > > 
+> > > > drivers/md/dm-table.c:1052:7: error: variable 'mempool_needs_integrity' set but not used [-Werror,-Wunused-but-set-variable]
+> > > >  1052 |         bool mempool_needs_integrity = t->integrity_supported;
+> > > >       |              ^
+> > > > 
+> > > > Fix this by removing the leftover.
+> > > 
+> > > This issue is still present in v6.15-rc1.
+> > 
+> > I meant v6.15-rc2, of course.
+> 
+> I will send it to Linus (maybe with other changes) before 6.15 comes out.
 
-The genksyms patch was posted as formal patch submission at [1] and
-was accepted to -tip tree. The genksyms patch obsoletes compiler.h
-patch [2], so there is no need for compiler.h change anymore.
+Thank you!
 
-[1] https://lore.kernel.org/lkml/20250413220749.270704-1-ubizjak@gmail.com/
-[2] https://lore.kernel.org/all/CAFULd4aLMF_2AbUAvpYw+o1qo6U-Ya_+Ewy-wW17g-=
-r-MBF9_g@mail.gmail.com/
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks,
-Uros.
+
