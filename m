@@ -1,37 +1,49 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226A4E552;
-	Tue, 15 Apr 2025 01:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86B3EAC7;
+	Tue, 15 Apr 2025 01:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679391; cv=none; b=LUkwTzfstxbUyQH6SngvLjyvZSgrkpeDlvp7VJ/Xyd4mOPFwZJq/Tk6c4B/4rpWvXg5ukeXHxYGToqa5hVLdES8AxnfjD27j2Ec0hjxAEj3ZXAJxI4fMDu0TMoDmCera7qda6NcXoDAPI0k9MFyfZ2F6jlSchswSysepPBLHzc8=
+	t=1744679584; cv=none; b=bTzsCf8iyV40UWWgICMz2ivdntqDaZVRiefJjYfPUxVOswIcLojhrp+pi/DECcOmLrZOPoRZybXzc5D0IgbT73YnjfYP+DuSL1fYy0IIGrK6Vqf2q3kyEGWvAK9bjPBw9C5aJUZ85+84t8I+SyjiCUmGfI45taxHIaPVHYvncko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679391; c=relaxed/simple;
-	bh=LMeLUEKg5xDcGioaeFPFvRZ04XyTLfjMaXAPpjddU/4=;
+	s=arc-20240116; t=1744679584; c=relaxed/simple;
+	bh=84YCmoE01lUz2YapbrjPW8M0/IKGwioAWUGj+qkTfDw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HuRkLtnVsiEl5lFtBSvqmPDL440LIEj+OUAI9AUx0rw5spjKA1B4RQ4CK+1GHgCy6QmMPqNjhNSjSyqO7A5LsQsb55Hs9sZKBTherHYNrfITSLnI3jqE4mD5VHkp03sw1AL3/m+f1RXprusBZWdrBT1THXakkU7p1D0JTRWT7Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mGWRfMcB; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=n92nvFp6LdwOV9Hyx5c5dA4mR8Dib5pt5oxTLSDiV9ahE79UCK+2Ke5wL/6hK9Lfmu7qz9JKWI+b5Mfwfm3JWbJH+bvgmnrb8exT1ppvXbtPeb4u7guiYCMKCxnq584RGMG8OopVQ/FsSf9VZTwNj+Kwoa+00EKpdFndkk6xmBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=exO+S9i/; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mGWRfMcB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=tkpYvkCIQ/uMw3T3hwTBxYM93KgGHR0Qg2Z4WopPNg8=; b=mGWRfMcBluKY5szv4YyyZdWO0A
-	tGJjrHZD61V16NoOYr/Bdp8TvKCrOZ0D7brHyZfAtH/OGTRderEz/ZNE9KpG7c7G7+hsH64EcH53N
-	3lmD4riYUr5WpDa22yfHucMb3N+5L/ABxB3TC5CVq6cDcc7Bo3uEOzl+aqvO7RegCZ9ZPQFxqAlbx
-	fhNLtFz+t0eW4D6rBqZMyRZUjKScqdPhzfNCsT5EQufORCl095Tdnu16bPWWXN7bR/vd1H+sRd+E+
-	VKpgtst32G/nkc+OmCBmS2Xx0XRR9jFSLR3o4wkpuOjf+GPPC0IXRML3OWBMGSBq7Jc5qhRP7LV2J
-	ItGDSmSA==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4Uns-00000007kMN-3dik;
-	Tue, 15 Apr 2025 01:09:33 +0000
-Message-ID: <984797ec-9073-4a83-b3ee-7c5041f2d423@infradead.org>
-Date: Mon, 14 Apr 2025 18:09:22 -0700
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="exO+S9i/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744679574; bh=YUfCUXc9dLZAgNOChQgWAb9EGyfeu6+s4QfhyEy+3bw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=exO+S9i/7cpNjHciwzQtrjRi0Npr3sdxBbAv9aktvV9OQbGRJcZwSzfUSKPbprM+x
+	 YXlmybLUwBuHgG6ghO0ilv881s2ijqIot/gDWwXCPGMspot16JiPadYboybARRVDo0
+	 QOgqleOsq+qJsFgpjfXDHG9iommHoOwBfB5iPrGI=
+Received: from [10.42.13.21] ([116.128.244.169])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 3343ACA5; Tue, 15 Apr 2025 09:12:52 +0800
+X-QQ-mid: xmsmtpt1744679572tl5xrvhpq
+Message-ID: <tencent_AE7CE43CDAD6747AFF0E952C8D0908A98D0A@qq.com>
+X-QQ-XMAILINFO: OVAgSpUT8SOPvEgLvZV/uG70/5NHHXIy7HWky6Qmc4Qyt2WEHHhTQRsok7f0wY
+	 0aZrNczMkcwgXyXxHyd6M6gJfd2XEy0e8I9u7JKbfvMFzz8y6e/HITuw8ZQxYSQqBOP+50lNEbkf
+	 reJwJuXvqg6NNgj6QBnURVWHma28IaIe81kaZozWFMdWEpR00J5lXUlm/qAeIuGOiF+UqXEZXB+w
+	 q6mX84savOHARMEuwphCJZmsAfjwqhiv8j+nqap+HWxWmfws6DQjAtcNK6lTPPEFcyMw4Twycmcb
+	 u6m4Zdiv08l8rNOr96ITTpxsv5871M7+Iwd3gI9UYUE5jeOiZMfvuWwv0qqeitU6thDXsCT36/uU
+	 h7t3TH34ZKf+iQY/PWgestHeAkcX21gbgDVqQqKmY7jxMHQEpCMDkLzkoka08CwN2HpZA4OKcSM0
+	 C7iJiTUwL9P7Fz5BUXU5iQprhXuevSU7rRKJjr69ulwe78MxmYC32sfJJKn2fsHjkFzM3iyBsWWw
+	 u/GPXcX3OKeq2yyrePC4S8JeiqsUx/foS4kN0wB+jdbZ5HttEozX9XAs8/5FxBvz9rexYLNzgpao
+	 wi+hwsvQHKIjqdL2e5D/cZhKGush7J+w8L4en9vK7ne8Fq6PF6IYI8qLM7mP6o6MQHx6EL40dEDq
+	 j9jVVLibLGjYTe+2agONkCtegYnLd5WHIq+cNEQjiQxiqccYincxG1yQSRmJKyifIoiz45MB9U71
+	 zngTbwqiIXFGRYtn9Eyuw7dan7vb6gyxVcMqXtmp2Ol+9QYHdepVXzGP7bPHHvLbKFYRzLvaDp1G
+	 p1DOFS0ra6vlU9a1MoDIV/zO4EbDQSvryd9v5RlQs0RhP5+vvWQTs7e353+nwpUWLkzriXVje+6m
+	 x4MvxM2FzfSvrDSC0h76tHPwC+KszuRu5hiWN/R5IjZi5blqjH6tz0UenGjWJ61cEFHGOOaX2UEp
+	 GltgMleO4=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+X-OQ-MSGID: <b1cd955e-3d10-4251-9d83-cd73401ef3e2@qq.com>
+Date: Tue, 15 Apr 2025 09:12:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,76 +51,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 12/12] Documentation: mm: update the admin guide for
- mTHP collapse
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com,
- willy@infradead.org, peterx@redhat.com, ziy@nvidia.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com
-References: <20250414220557.35388-1-npache@redhat.com>
- <20250414220557.35388-13-npache@redhat.com>
+Subject: Re: [PATCH v2] PM: EM: Fix potential division-by-zero error in
+ em_compute_costs()
+To: Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>, rafael@kernel.org
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+ <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250414220557.35388-13-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Yaxiong Tian <iambestgod@qq.com>
+In-Reply-To: <143378b0-5740-4f2b-9a79-f04cf9ef1f77@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 4/14/25 3:05 PM, Nico Pache wrote:
-> Now that we can collapse to mTHPs lets update the admin guide to
-> reflect these changes and provide proper guidence on how to utilize it.
+在 2025/4/14 16:08, Lukasz Luba 写道:
+> Hi Yaxiong,
 > 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  Documentation/admin-guide/mm/transhuge.rst | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> On 4/11/25 02:28, Yaxiong Tian wrote:
+>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>
+>> When the device is of a non-CPU type, table[i].performance won't be
+>> initialized in the previous em_init_performance(), resulting in division
+>> by zero when calculating costs in em_compute_costs().
+>>
+>> Since the 'cost' algorithm is only used for EAS energy efficiency
+>> calculations and is currently not utilized by other device drivers, we
+>> should add the _is_cpu_device(dev) check to prevent this division-by-zero
+>> issue.
+>>
+>> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove 
+>> division")
+>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>> ---
+>>   kernel/power/energy_model.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+>> index d9b7e2b38c7a..d1fa7e8787b5 100644
+>> --- a/kernel/power/energy_model.c
+>> +++ b/kernel/power/energy_model.c
+>> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, 
+>> struct em_perf_state *table,
+>>                       cost, ret);
+>>                   return -EINVAL;
+>>               }
+>> -        } else {
+>> +        } else if (_is_cpu_device(dev)) {
+>>               /* increase resolution of 'cost' precision */
+>>               power_res = table[i].power * 10;
+>>               cost = power_res / table[i].performance;
 > 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index dff8d5985f0f..f0d4e78cedaa 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -63,7 +63,7 @@ often.
->  THP can be enabled system wide or restricted to certain tasks or even
->  memory ranges inside task's address space. Unless THP is completely
->  disabled, there is ``khugepaged`` daemon that scans memory and
-> -collapses sequences of basic pages into PMD-sized huge pages.
-> +collapses sequences of basic pages into huge pages.
->  
->  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
->  interface and using madvise(2) and prctl(2) system calls.
-> @@ -144,6 +144,13 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
->  sizes, the kernel will select the most appropriate enabled size for a
->  given allocation.
->  
-> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size to
-> +determine collapses. When using mTHPs its recommended to set max_ptes_none low.
+> 
+> As the test robot pointed out, please set the 'cost' to 0
+> where it's declared.
+> 
+> The rest should be fine.
+> 
+> Regards,
+> Lukasz
 
-                                         it's
+Sorry, the V3 version with cost=0 still has issues.
 
-> +Ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will prevent
+I noticed that if the cost is set to 0, the condition "if (table[i].cost
+  >= prev_cost)" in the following code will always evaluate to true. This
+  will incorrectly set the flags to EM_PERF_STATE_INEFFICIENT.
 
-   ^^^ not a sentence
+Should we change ">=" to ">"?
 
-> +undesired "creep" behavior that leads to continuously collapsing to a larger
-> +mTHP size. max_ptes_shared and max_ptes_swap have no effect when collapsing to a
-> +mTHP, and mTHP collapse will fail on shared or swapped out pages.
-> +
->  It's also possible to limit defrag efforts in the VM to generate
->  anonymous hugepages in case they're not immediately free to madvise
->  regions or to never try to defrag memory and simply fallback to regular
 
--- 
-~Randy
+
+
+
 
