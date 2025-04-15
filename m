@@ -1,72 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0893313D891
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC7136349;
+	Tue, 15 Apr 2025 14:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725696; cv=none; b=NF+k+Ui2FTpE1jHb2ZmBw1M95PcNuTwk4wjS1qc06WOnkPzO7q9/8ai8U/zRKzLLp+W4SnD9b9eT+RamRn9bWMAUrGR9pyamliB8VzHZiNrIDIAlS4gevckBonEfoa2A2UIXbcj4+DB4+uhq5YUT+Mg7ZL36JSjB6r1wbhxYlLQ=
+	t=1744725716; cv=none; b=jfUpSrvkMhYZXq4tAOe4ZBdUhCHPMj5bslVZ5eURwQqOVbBL3ObkaBrWRIZSTWjEPzB7ITYC/BicWJWKEvKXwviL4Xr41XaZi96/bbxekdcsPKwLTwGmRt+DoVCFIEaCIh2NGvRBxOmFtWSZR+LbfQOj451fZCIjpGnxt/CfDSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725696; c=relaxed/simple;
-	bh=jJ00cmDebEg3Lq6cemab7gx8kqd0guaBrK8pL7azQNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFG7a4oIjOQXyfRU3Kq755WDkCEJEJoOZYBIDyNIKs+dbYyJCPWlgEo72aNIeMLZ2LKH8zMXuk3jPiEe0ba+49LYB0qElG+Utm7trjT6xDvv5ZZuwtcS7dzHfiybQqunU1GakvGDWrAMmodB1CuXHj1jSmf75hiAzzxLGlI2k6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W4UBx/wc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W4UBx/wc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FEADC4CEDD;
-	Tue, 15 Apr 2025 14:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744725694;
-	bh=jJ00cmDebEg3Lq6cemab7gx8kqd0guaBrK8pL7azQNI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W4UBx/wceSav5wpibhPSfHyItpbLiETkMWRLCLOQyYdWn/xuCI/E8zEC8pew/PjJs
-	 OYzcFr7RqrB1WwwHT8b6O1sXEOcuhuZZwLRkk5xkZwg0IJb1vw7SltpmnN5sr6m+Ax
-	 L4SWojDv04MsQ70WGhVvp/NwIS8OXLyoKE/RWWMVMZ4k27GJjT7fnzyx8eOAOFpSR0
-	 6Pj6YvJ72NlGhMKUKOpbssq4bmAM1+2+LugpMjUwpnbEzmuBn5yaTsqqFSngrW4lvR
-	 xwH6+SuCplrVdJaYd3MZ4TPmiZ+7hcBKH+oAfAQNb3cuVnv+FZq8Z+J7TspUcOTP+y
-	 S+1uRqZQt7Khw==
-Date: Tue, 15 Apr 2025 15:01:29 +0100
-From: Lee Jones <lee@kernel.org>
-To: "Tiffany Y. Yang" <ynaffit@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Carlos Llamas <cmllamas@google.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v4] binder: use buffer offsets in debug logs
-Message-ID: <20250415140129.GA2892100@google.com>
-References: <20250401202846.3510162-2-ynaffit@google.com>
+	s=arc-20240116; t=1744725716; c=relaxed/simple;
+	bh=ZDZ3kTOH3WzYKYGM1zYcLDGYv1+7JCX43o7jH6uQRt0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uoscjNMjSWZSMGVPzxWcP+WkSbHeOMxr/naFVIV5eqB3Ht7Cgn34tDgbz/82BCD757gUM6W3cBb3z38M14uUHbfpxk7oe6PHUDcBqn0F9eRLqRJdM9H0SN12/PIwXlmukQYPFoC7jRct70hGM3u2W1TFhBmim7oucV+0skl8jm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZcQhx62xNz6LD6T;
+	Tue, 15 Apr 2025 21:57:53 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6CCDB140144;
+	Tue, 15 Apr 2025 22:01:51 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 15 Apr
+ 2025 16:01:50 +0200
+Date: Tue, 15 Apr 2025 15:01:49 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: <dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/1] cxl/feature: Update out_len in set feature
+ failure case
+Message-ID: <20250415150149.00006116@huawei.com>
+In-Reply-To: <20250410024521.514095-1-ming.li@zohomail.com>
+References: <20250410024521.514095-1-ming.li@zohomail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250401202846.3510162-2-ynaffit@google.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 01 Apr 2025, Tiffany Y. Yang wrote:
+On Thu, 10 Apr 2025 10:45:21 +0800
+Li Ming <ming.li@zohomail.com> wrote:
 
-> Identify buffer addresses using vma offsets instead of full user
-> addresses in debug logs or drop them if they are not useful.
+> CXL subsystem supports userspace to configure features via fwctl
+> interface, it will configure features by using Set Feature command.
+> Whatever Set Feature succeeds or fails, CXL driver always needs to
+> return a structure fwctl_rpc_cxl_out to caller, and returned size is
+> updated in a out_len parameter. The out_len should be updated not only
+> when the set feature succeeds, but also when the set feature fails.
 > 
-> Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
-> ---
-> 
-> V3 -> V4: Replace alloc.buffer with alloc.vm_start
-> V2 -> V3: Drop transaction data addresses
-> V1 -> V2: Resend to mailing lists
-> 
->  drivers/android/binder.c | 27 +++++++++++----------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
-
-Reviewed-by: Lee Jones <lee@kernel.org>
-
--- 
-Lee Jones [李琼斯]
+> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Seems reasonable and well explained.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
