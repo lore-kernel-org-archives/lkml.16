@@ -1,48 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71411AD41F;
-	Tue, 15 Apr 2025 09:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339227A936
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709495; cv=none; b=XoldVrkrjRB7lBxQPocu68C1oV7G4uRZWbHngGXlbYIv0qahDVwsGGQoI3RYJCiCduGhTFDINojWGCGhccq6apinlLaVrpHtLiIhNUwx8enYqsFsa7NAUdgAgOotrSsdgh73wiSm0ZzJ0h1rBlTidI6ZY+N1ZhQPVYFwxGkXc/U=
+	t=1744709570; cv=none; b=i971+QCU7bvlFX6BDKDawfrtUgfGMXg9CQGHDUevT8aj6u5rrltb1IjQfeg0pLYk7xLj9aUIviTwK2hsDRJ8iafLMpcfM5Hivs2rccM5Wv1i6DyWHC6uGINyAaMdJzNl19uAOt/CLDZymCqocTBE7RDpSneKFIEliyjNxYiS2Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709495; c=relaxed/simple;
-	bh=ZZjxea9kGTZqK61EKBJRyCtQhNZWLg61gtTvU9KDKwk=;
+	s=arc-20240116; t=1744709570; c=relaxed/simple;
+	bh=lOiRTAybYayb9gL8oPxlmFEgR3nBNh/2YNLccv8btMM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D1IUIH29NZGXIUAJL/bJbjUj+tWuyy2rhUzC6Me1J3FLogMGbnswFEWXvc8NB2EpXHFBAKA/gw1k90sXPxbppBF+vQcUM2PBPFGzIXHPy3diQNCFc9ixKvgB7SxmGD4yZltUZlLRizBfj2vnlatCEIPO8AFKZNcCLhz90+p3/oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8lhZkGj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+kM3fM+gjrKIjf9VahG53ebZAjpq8bC15gZif7gHNjltRJJGsz8914IP8XlOLIwCzYvqvXbauSafr/J5dnH0CCsws8PQRPSqApHHjaNaCk6sFdpHZtzXUsDG7cAiXYUbCbWUNVuO9334KUtIlMjChGr5e6+LbPUhGyMqivtrg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IpytIuqY; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8lhZkGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29317C4CEDD;
-	Tue, 15 Apr 2025 09:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744709494;
-	bh=ZZjxea9kGTZqK61EKBJRyCtQhNZWLg61gtTvU9KDKwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h8lhZkGj9fCQBr7rddZ4KmxM/RYWn/0ac1xWgLWF975Cvt/MWwC6lEvlebj6hqqck
-	 oUzFa6wp6diN+ADYAzC7Yx684CA3qJTno2GbOb0ccnXDNAVKrOZa1cuWseLqWHEOZK
-	 Lii+SOcehYt5Ti/6Z6zQS5RQVaBjjqInZ9TmFwMIhbPjyj5bjSmkIj0xHCRfTtwE3P
-	 YvtR8kp5Go8Jkc7sWereeqM7UMqsJ4kg+4xneDVRYEcDlu8Sib1zUOFeyK7ebqIVWw
-	 4yNO3yPpRDp5A8tcdGSh6U64F5fal8/+JmqR0yIxkkZiKyjhiKjwpXM9eE2SPKdipd
-	 EaYjEdnx1PwpQ==
-Date: Tue, 15 Apr 2025 11:31:28 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc: David Sterba <dsterba@suse.cz>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>, 
-	now4yreal <now4yreal@foxmail.com>, Jan Kara <jack@suse.com>, Viro <viro@zeniv.linux.org.uk>, 
-	Bacik <josef@toxicpanda.com>, Stone <leocstone@gmail.com>, Sandeen <sandeen@redhat.com>, 
-	Johnson <jeff.johnson@oss.qualcomm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] OOB-read BUG in HFS+ filesystem
-Message-ID: <20250415-razzia-umverteilen-4e8864b62583@brauner>
-References: <tencent_B730B2241BE4152C9D6AA80789EEE1DEE30A@qq.com>
- <20250414-behielt-erholen-e0cd10a4f7af@brauner>
- <Z_0aBN-20w20-UiD@casper.infradead.org>
- <20250414162328.GD16750@twin.jikos.cz>
- <20250415-wohin-anfragen-90b2df73295b@brauner>
- <786f0a0e-8cea-4007-bbae-2225fcca95b4@wdc.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IpytIuqY"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso53952705e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744709566; x=1745314366; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
+        b=IpytIuqYB1iZlG1FBCK44GFQ0Y6B6AogN5/V9y7Kqe9X6jUd8/U2JgCZ8xD2Bgoxxa
+         eNEr1nfYhr2U9ijqubTSJyyfCLqr8Kutd1HQhh/jlFaJtZQirMjaGk771aA+LzXB6CJi
+         8wfCWx95Ks4qCM6MyAOMuRgMzmb7C31vqi4NLJLjdw3uw3Wrz+8y1y7n4n8T2B8XHsuc
+         LjqFuKay7ec4MCRBYj1gYVJ/PovE/M5WXPUnfg54gfDOnw5eT5MvhJajIkUJyOv+JZs2
+         rvVDNq+lG4SVfeX3hlPXLeq+PGTfeMAP9ziklVz/rtlDvuX6szYNRyUX2wPnpVBhSe9N
+         ofVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744709566; x=1745314366;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
+        b=HUgKoSYh2hISwwUrCsHEPYtsddVC8xxYxEPUxtCWnIkTGKLHSX4QNU/8x3TgJmgu+a
+         rCTzLTkEd5MBI82Snb7xIo/3FsIFssdmb6QF7I6wyvP3oZGgYQPwpax1bVAs2pM3oAFe
+         0cF3jZkJmtp7Ulk2BIknxbxPTcz6jP5EF93NK32FjC/CjRi3/BCwAbRMoN7NVmp+aGoD
+         YtGJOzTMNAQa57I4a3GQmpFd4B0nHbRIzW2Qn1QkPK31HdHm/ZevEbAztpQMN74Pvi3n
+         YhPPdMXurlIcZgaadfv3CZUORJuW/mdQygXG/X+WqFspmhpGeslL6lnp4AWIM2yES79+
+         tbuA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwuSx60cf8ZwFOKZMR3jb9ACVXXR9fmG8d5KI9M4XSGXIoic3qHB3h4gUR3oaHxRjpgEq1o0hB9wibyyU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsOqfL4k0AC8EXVAcED9VjJanyuG7ld8ytfFyPEJUpRJA0c4iM
+	UlNBxAOGnStzH8g8ZyqYtreXgwDxnuYLG9GvLeQtIkMzREQREr2wzseMWSyL9Ek=
+X-Gm-Gg: ASbGnct9E7EdG2HrquFwS45BJspBOSoYQKM3GwRbbAGZ6rN1pk/G81IsGzvc94ag93Y
+	mAihtw4T3JcqWaxUqEJTDx4Z7QVjZIEsrgsqdEx4tKUArcB/GR4gGcriABE8+KjH1OznqsBi2+2
+	uJ96jn9DAuHsIBpw58IXT9KrZ05EifBkRmIAzdi/BSz3ZamiAyI54ipuVBzeRu+UvbhoFW/C46M
+	z3yx58lNPsB8GK89msoP0/DKHoV5suPIHB5Cj9aAHJNF1Hq11jJ/ia93Ibl3QJbHKUIvIH1r/BK
+	MWpylt6Z6sBS2mvy2v0wavypAYL1Dq0qN4Qo0h+K8CI=
+X-Google-Smtp-Source: AGHT+IEGMxNjBijRd5ZIgU9ekSNtXsFNAXAuAYjOiFrUbssXpLTKzHUZ7y47I01Bc0l8S/SL3FcMWQ==
+X-Received: by 2002:a05:600c:1c8e:b0:439:6118:c188 with SMTP id 5b1f17b1804b1-43f3a95c43amr120754165e9.19.1744709566592;
+        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e90sm201822225e9.38.2025.04.15.02.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:32:44 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
+Message-ID: <Z_4nvJEB-RXX9T0n@pathway.suse.cz>
+References: <cover.1744355018.git.namcao@linutronix.de>
+ <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,49 +77,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <786f0a0e-8cea-4007-bbae-2225fcca95b4@wdc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
 
-On Tue, Apr 15, 2025 at 09:16:58AM +0000, Johannes Thumshirn wrote:
-> On 15.04.25 09:52, Christian Brauner wrote:
-> > On Mon, Apr 14, 2025 at 06:23:28PM +0200, David Sterba wrote:
-> >> On Mon, Apr 14, 2025 at 03:21:56PM +0100, Matthew Wilcox wrote:
-> >>> On Mon, Apr 14, 2025 at 04:18:27PM +0200, Christian Brauner wrote:
-> >>>> On Mon, Apr 14, 2025 at 09:45:25PM +0800, now4yreal wrote:
-> >>>>> Dear Linux Security Maintainers,
-> >>>>> I would like to report a OOB-read vulnerability in the HFS+ file
-> >>>>> system, which I discovered using our in-house developed kernel fuzzer,
-> >>>>> Symsyz.
-> >>>>
-> >>>> Bug reports from non-official syzbot instances are generally not
-> >>>> accepted.
-> >>>>
-> >>>> hfs and hfsplus are orphaned filesystems since at least 2014. Bug
-> >>>> reports for such filesystems won't receive much attention from the core
-> >>>> maintainers.
-> >>>>
-> >>>> I'm very very close to putting them on the chopping block as they're
-> >>>> slowly turning into pointless burdens.
-> >>>
-> >>> I've tried asking some people who are long term Apple & Linux people,
-> >>> but haven't been able to find anyone interested in becoming maintainer.
-> >>> Let's drop both hfs & hfsplus.  Ten years of being unmaintained is
-> >>> long enough.
-> >>
-> >> Agreed. If needed there are FUSE implementations to access .dmg files
-> >> with HFS/HFS+ or other standalone tools.
-> >>
-> >> https://github.com/0x09/hfsfuse
-> >> https://github.com/darlinghq/darling-dmg
-> > 
-> > Ok, I'm open to trying. I'm adding a deprecation message when initating
-> > a new hfs{plus} context logged to dmesg and then we can try and remove
-> > it by the end of the year.
-> > 
-> > 
+On Fri 2025-04-11 09:37:19, Nam Cao wrote:
+> Each RV monitor has one static buffer to send to the reactors. If multiple
+> errors are detected simultaneously, the one buffer could be overwritten.
 > 
-> Just a word of caution though, (at least Intel) Macs have their EFI ESP 
-> partition on HFS+ instead of FAT. I don't own an Apple Silicon Mac so I 
-> can't check if it's there as well.
+> Instead, leave it to the reactors to handle buffering.
+> 
+>  include/linux/panic.h            |  3 +++
+>  include/linux/printk.h           |  5 ++++
+>  include/linux/rv.h               |  9 +++++--
+>  include/rv/da_monitor.h          | 45 +++++++-------------------------
+>  kernel/panic.c                   | 17 ++++++++----
+>  kernel/printk/internal.h         |  1 -
+>  kernel/trace/rv/reactor_panic.c  |  8 ++++--
+>  kernel/trace/rv/reactor_printk.c |  8 ++++--
+>  kernel/trace/rv/rv_reactors.c    |  2 +-
+>  9 files changed, 50 insertions(+), 48 deletions(-)
 
-Yeah, someone mentioned that. Well, then we hopefully have someone
-stepping up to for maintainership.
+For the changes in the printk and panic code:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>    # printk, panic
+
+I have just briefly looked at the changes in the rv code.
+I wonder if a __printf(1, 2) declaration might be needed
+in the printk and panic reactors code, see below.
+
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -38,7 +38,7 @@ union rv_task_monitor {
+>  struct rv_reactor {
+>  	const char		*name;
+>  	const char		*description;
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+>  };
+>  #endif
+>  
+> @@ -50,7 +50,7 @@ struct rv_monitor {
+>  	void			(*disable)(void);
+>  	void			(*reset)(void);
+>  #ifdef CONFIG_RV_REACTORS
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+>  #endif
+>  };
+>  
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -12,9 +12,13 @@
+>  #include <linux/init.h>
+>  #include <linux/rv.h>
+>  
+> -static void rv_printk_reaction(char *msg)
+> +static void rv_printk_reaction(const char *msg, ...)
+
+I wonder whether "make W=1 kernel/trace/rv/reactor_printk.o" would
+start complaining about that this function is a candidate for
+‘gnu_printf’ format attribute.
+
+I am not sure. Maybe it is enough that this function is later assigned to
+the .react callback in struct rv_reactor.
+
+I wanted to tried it myself. But I was not able to compile the
+code in linux-next. I got something like:
+
+./include/linux/rv.h: In function ‘rv_ltl_valid_state’:
+./include/linux/rv.h:55:43: error: ‘struct ltl_monitor’ has no member named ‘states’
+   55 |         for (int i = 0; i < ARRAY_SIZE(mon->states); ++i) {
+      |                                           ^~
+...
+
+I am actually not sure against which tree I should apply this patchset.
+It did apply on linux-next after skipping the 1st patch.
+But it does not compile there.
+
+And there are more conflicts when I tried to apply it
+on Linus' master.
+
+>  {
+> -	printk_deferred(msg);
+> +	va_list args;
+> +
+> +	va_start(args, msg);
+> +	vprintk_deferred(msg, args);
+> +	va_end(args);
+>  }
+
+The __printf statement might be missing also in the other two
+reactors (panic, nop).
+
+Best Regards,
+Petr
