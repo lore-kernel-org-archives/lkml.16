@@ -1,126 +1,148 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAA62475C2
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900842951DD;
+	Tue, 15 Apr 2025 11:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716412; cv=none; b=a62BxAUDkHIRnMU3iCDrHgAXVEdytRwrDMZXa7lvyLkw77wQkWYPgAtRyDNROHCZxH+oscPTB4Aa1xHfBKQFjg4kZkX6+Ebx+xmKguSyE3HnjXiqcpUkLel0tVrJMfc+HgzZwZK6KvTvk35Ws75X5Fd54XhrGH4jhrdVq4eOTPo=
+	t=1744716424; cv=none; b=tKj1MGICgPONBItZKRTs8y1McgSxS/CPRBHZqzgBTylbz4YxUMjz/h92JSdEX2XHBxN4gwAxqNqWScskcKLou9hmGvob3yLNr2ZdcDcz1ik4rQWoKDKtZMvLffd246x1wSBBe9BFs9ojdyRiPqzueMMivBLPrmJ2t8yh7e9TNeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716412; c=relaxed/simple;
-	bh=1lvlm0rOtEEi2CD0DFC4F6gzjLvuIlQ4WS063WSEIi4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aL7LnBXtYGKUVBnLhM/SM1C/VSUCUy9BuGoJaxIEcTULHO3lw1pC6A0HtQ7TOoUKdkAkqzr8ANhU8EyXFcrM/AlQzMRsAsfsNs/xZCDe9mM53Vxp20MunUbV/543lzV8emRxnk5vM9SoGBUdZuKosD6WeRGTocZJDckh+1C3Sgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dGk+UUMi; arc=none smtp.client-ip=209.85.208.171
+	s=arc-20240116; t=1744716424; c=relaxed/simple;
+	bh=FaCD1PkoKrxS9v1U5rFWElyeE6LW8xfKfPTFbahvHaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bxEkr8sefGcr+BAK8BVLeZQJ5ezUTGbFg/UPGEEt9Nx7yZPwMNyShB4HjC+HrIELtAPahlj3FcwoRPm7kZcmBSV2l1uDUtxeNR+lvIWkOcjQggsI1lpKii9FIryWJcCjOm8Ro22K4Smw4iiQYYCk/NsOYzJ01BwTzWgc9ULvEwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mLrpNKzV; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGk+UUMi"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30ddad694c1so54176951fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:26:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLrpNKzV"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-399749152b4so3049802f8f.3;
+        Tue, 15 Apr 2025 04:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744716409; x=1745321209; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ae2vhRMvIWUBa1bi47eF6Ga7Y/YbQJwW6SK4mLPFno0=;
-        b=dGk+UUMiT2dLySiy4KgBzx7xV39kMndi7JevKFHQ85c43fg8a4+HBAD/HzaPrhBDsq
-         LptrmZ3zbmdTlmZfG2FVpZk9YHgwXvk11YsXL2AnP7jhNx4JXuocMJDwS4Ix3sLeFaK8
-         cpYpkp2H85lq/2lWXRj57ZeFcFcIEP5yIrwyBij+tfEb/rm0JiYjfXLvXU1wx1WVI9jn
-         VMLC933LZEiFSijQJDG93f0LHmeS3YisQIvesEBGPdGdp/Euh4zESzy5+l+H9yYsIkJX
-         TdUAb+cJiP7iwhqFHYjx1jl0lAjzxdXft88ePcSFAMypXC7i3ncnhuSDoFrKyIml8z3L
-         BDYA==
+        d=gmail.com; s=20230601; t=1744716421; x=1745321221; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5iNvyUJ84OrchQt/uudTnU275/tZN5oX4rI5S/XVpaE=;
+        b=mLrpNKzVGLP9uvOkWH5kFsk1EOvIvB1O9AUR/qQ40X+fYa6qJhblhcyLwnQlxOjltz
+         ZwOn4ffPpYhSFIDm/Ljwr8NpfjS2Jl7UXblm0QqNC8NCFRz3V727D1D1OcOIVG+zgbGR
+         p+0lcDzHNd8PMuTwZU1a10gnp87jrTD9QL+9tqh47w9bkHouAlhCuBLV1Kzp/xiRj39Z
+         6BbMwL2GD/tKQi9WmFmzbjtqthZ84X5hciktmA8urYX+141GduJqdbuN7PGYCSoLpdbo
+         r+wGbn3QMmGMsBi88sIpEfjbIAaNYr5j9zR3hUhTy7ZuqQMbyxSrdVO33oy3bZX+X1oY
+         n/4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744716409; x=1745321209;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ae2vhRMvIWUBa1bi47eF6Ga7Y/YbQJwW6SK4mLPFno0=;
-        b=eUUdr5JXf5sPGaBNWtFcsRsYIydmWWfeQRnA3YbrjFqow6UdoOLg/+5nCgd/ZjetJa
-         WSR4/Ud3+73pc+Ja/0WAu00b7NmVLX9s1ozuowNr3qeWOmCLI7bU23BBdSfmmAOvA3ZD
-         FRtd7+x6ZeGfhJ3DoDIOfUiKZmnk14+Ii995PRHwYBR+gCOqxntw78tRKIb4TGag3t0z
-         G8Bxe6OBH2pAMLAA4xQFPvCnJKsH+dUE1pOGJpHyKg0UQRihY0sA5WfApwwcJg3MQ9BP
-         XO7nqM8RccAqGOkqS6U4JhzO/mcMZBQl9OcmTNeeasU7gvbvZsKo3pxhLH5Rmd39yEVE
-         sqpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIFfA1fOc2SyDX057UdsTUJFJhpF6MitdZZ8/51bHLOvshUSM2ATIkDUshmwvekeiIbDQ4kbRwdVtRzBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoqyrPt5smB0E68xKCAWoCXS6WuZ06TpP6NTuPpBmaAU/Stbpw
-	a37KRBfz4i8ImM8DNTdMkbVRt6oV5olr57kvXEq3etYH55Xn5Z7F
-X-Gm-Gg: ASbGnct3NxZJMt6zgwH/Q04RPFlPbgGi7X0H2je/9NFD5+BG7D3vlHMv/lgm5YbvuvL
-	4D9llsfIVyDseUimGNIUlAfD6vnNaW1DXyMIR4WtO0iqu20jA3iDnb0ahJRoiUUUdiTANsbkWXH
-	uJnDeCyYDWf+ZOJ+bARLa0Q1s40L3hhG+EW6qKa3ozyv/WyTInDtGe2E/qp6nFBtStWRvF2Q6Mm
-	rngFYRpXsPqOQEFj7jMiDpCYIk/GN+UzqERKVtcWqgczL48mlnM7oAvqk5bSL0Q7UxcQaP+W4X1
-	2MUWLIvTBpoQIXx9s02LBLAchNY5ZibjBJS7
-X-Google-Smtp-Source: AGHT+IHf31KluLOI1TeXjsIV5f6k4fYrZpAtXvgClNVdm8sYzKQ8FM9K2CDwvmNrMd2hDUyQo/i0LQ==
-X-Received: by 2002:a05:651c:2212:b0:30c:2e22:c893 with SMTP id 38308e7fff4ca-310499fbf5dmr50004841fa.23.1744716408778;
-        Tue, 15 Apr 2025 04:26:48 -0700 (PDT)
-Received: from pc638.lan ([2001:9b1:d5a0:a500:2d8:61ff:fec9:d743])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f4638da16sm21394461fa.0.2025.04.15.04.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 04:26:48 -0700 (PDT)
-From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: [PATCH] vmalloc: Use atomic_long_add_return_relaxed()
-Date: Tue, 15 Apr 2025 13:26:46 +0200
-Message-Id: <20250415112646.113091-1-urezki@gmail.com>
-X-Mailer: git-send-email 2.39.5
+        d=1e100.net; s=20230601; t=1744716421; x=1745321221;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5iNvyUJ84OrchQt/uudTnU275/tZN5oX4rI5S/XVpaE=;
+        b=Vyei5mR7TyMBO+A7iSowU09RtUZdyEsR/adZnZWxBUU+GwqDGK9Z6UQEwwHjusyM+k
+         1sYzlqol1D7cZjj8BByF0tJgmxeSo5HzTk69yPK1GE41DniCCkLo4NAsshBK2W0dKMXM
+         /egvzE/TtJEzfdYsb8X6DB/qa5G7PVUHXRqiftBHDQG82Kv7l0jn3AiP34q8xl131ArN
+         ztNuIhTsV9Ze1Al9l/SpXthi4UPSdFejbq+ebCwHdUXhbEtu//PeotQnxJPhdhZK3NvU
+         7rsgOFyZHt6JGVpbBMQzjptTWxaLiqRs+jGbnRwuDu4204rK6iXwhN2e/A12f1Kneez5
+         wRGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUb4ZWsXy/e1mR25LiCaiLZq2YqSI0Oa5rvzhdTWKkXPgOdN7J5lxZESmG2qe3f7dICnwhYwpX@vger.kernel.org, AJvYcCVByzcNXt+LicCRqZB13g4gNhh8c+HjrOiw3ied5BQOFkHPytJ64NrwPTDf+K1cvbFo7Hc9KoBVJxxv84Q=@vger.kernel.org, AJvYcCXFSsax7knxxLAfm25ArkBs7il90gJxcd1uB/MQzxJSB4lKiufm3Syy3Yg54esDMvphM9rKA3qiqrfJHg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeRGz799KePKRf5ovnFpoJ/YXU/mnOBcK3Gm+1WaFKnawcPSpr
+	UaMYd6BXaL2dBhLMf6nKx4vf4ppfJxxrybbaFdshTVFvFAyA5zMi
+X-Gm-Gg: ASbGncte0srJ8tn0fiR6jIN6ap+qlUQEA58FeRtGjVLSYIyfTiv2RofGQlBgvKN5Iju
+	c/olKjYLkLalLgorQ0Q6XfCjoG2q5zT/MNOrtqljpkPYb97XJTbKBE3xrog8JBKibdI/HYo1RnL
+	OK2DkEtcfx4Tnce8CG0ubfZOHMmJlb7Fq5UcoGxuXmOcSFmRYk84I5chdN5fujmaerxySRYJvSB
+	iUWlxDWzIdIxq0aJ84G2/a49upaG8s1aZF1i2BACgbxRaMg1ZYdAHLEeYPPzdAYjE2izzuNMDNW
+	F+UppQ+o7EGtmKjCzZwuwVLrN9yv7A0ptmFdKGp3UskOSYyy7sH+jif6R7YZOw==
+X-Google-Smtp-Source: AGHT+IGMq12De2oewFtOUPkn4B9s8mMPlc1IAgczwnQeYBI/+GnxWt2tkhjormePlZdXHT1UTfHavw==
+X-Received: by 2002:a05:6000:40dd:b0:391:13ef:1b1b with SMTP id ffacd0b85a97d-39eaaea8457mr11165434f8f.30.1744716420525;
+        Tue, 15 Apr 2025 04:27:00 -0700 (PDT)
+Received: from [172.27.58.151] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979615sm14294303f8f.54.2025.04.15.04.26.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 04:27:00 -0700 (PDT)
+Message-ID: <c909292b-68ae-4396-8494-aaa555604168@gmail.com>
+Date: Tue, 15 Apr 2025 14:26:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/1] net/mlx5: Fix null-ptr-deref in
+ mlx5_create_{inner_,}ttc_table()
+To: Henry Martin <bsdhenrymartin@gmail.com>, saeedm@nvidia.com,
+ leon@kernel.org, tariqt@nvidia.com, netdev@vger.kernel.org
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, amirtz@nvidia.com, ayal@nvidia.com,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Tariq Toukan <tariqt@nvidia.com>
+References: <20250411131431.46537-1-bsdhenrymartin@gmail.com>
+ <20250411131431.46537-2-bsdhenrymartin@gmail.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20250411131431.46537-2-bsdhenrymartin@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Switch from the atomic_long_add_return() to its relaxed version.
 
-We do not need a full memory barrier or any memory ordering during
-increasing the "vmap_lazy_nr" variable. What we only need is to do it
-atomically. This is what atomic_long_add_return_relaxed() guarantees.
 
-AARCH64:
+On 11/04/2025 16:14, Henry Martin wrote:
+> Add NULL check for mlx5_get_flow_namespace() returns in
+> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
+> NULL pointer dereference.
+> 
+> Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> V3 -> V4: Fix potential memory leak.
+> V2 -> V3: No functional changes, just gathering the patches in a series.
+> V1 -> V2: Add a empty line after the return statement.
+> 
+>   drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> index eb3bd9c7f66e..077fe908bf86 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> @@ -651,10 +651,16 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+>   			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, inner_l4_type);
+>   		break;
+>   	default:
+> +		kvfree(ttc);
 
-<snip>
-Default:
-    40ec:       d34cfe94        lsr     x20, x20, #12
-    40f0:       14000044        b       4200 <free_vmap_area_noflush+0x19c>
-    40f4:       94000000        bl      0 <__sanitizer_cov_trace_pc>
-    40f8:       90000000        adrp    x0, 0 <__traceiter_alloc_vmap_area>
-    40fc:       91000000        add     x0, x0, #0x0
-    4100:       f8f40016        ldaddal x20, x22, [x0]
-    4104:       8b160296        add     x22, x20, x22
+Unrelated change.
+Not described in patch subject or commit message.
+Please introduce in a separate patch.
 
-Relaxed:
-    40ec:       d34cfe94        lsr     x20, x20, #12
-    40f0:       14000044        b       4200 <free_vmap_area_noflush+0x19c>
-    40f4:       94000000        bl      0 <__sanitizer_cov_trace_pc>
-    40f8:       90000000        adrp    x0, 0 <__traceiter_alloc_vmap_area>
-    40fc:       91000000        add     x0, x0, #0x0
-    4100:       f8340016        ldadd   x20, x22, [x0]
-    4104:       8b160296        add     x22, x20, x22
-<snip>
+>   		return ERR_PTR(-EINVAL);
+>   	}
+>   
+>   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns) {
+> +		kvfree(ttc);
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +	}
+> +
+>   	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>   			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+>   
+> @@ -724,10 +730,16 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
+>   			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, outer_l4_type);
+>   		break;
+>   	default:
+> +		kvfree(ttc);
 
-Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
----
- mm/vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Same.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 7bb32f498d39..9d4027041a3f 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2370,7 +2370,7 @@ static void free_vmap_area_noflush(struct vmap_area *va)
- 	if (WARN_ON_ONCE(!list_empty(&va->list)))
- 		return;
- 
--	nr_lazy = atomic_long_add_return(va_size(va) >> PAGE_SHIFT,
-+	nr_lazy = atomic_long_add_return_relaxed(va_size(va) >> PAGE_SHIFT,
- 					 &vmap_lazy_nr);
- 
- 	/*
--- 
-2.39.5
+>   		return ERR_PTR(-EINVAL);
+>   	}
+>   
+>   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns){
+> +		kvfree(ttc);
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +	}
+> +
+>   	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>   			       &ttc_groups[TTC_GROUPS_DEFAULT];
+>   
 
