@@ -1,129 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB422741AD
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-m155116.qiye.163.com (mail-m155116.qiye.163.com [101.71.155.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A651C700B;
+	Tue, 15 Apr 2025 05:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744693191; cv=none; b=NHUZGDS7wdKD8FXAHSdJ8ZTBXzE9Nx7/bqaUVfbEtNhKVunujcP+E1ThgF0kSgbk6BMNf1RXhtxFA8G1gb5WSNcdsfHWW9mBkdnL8N4NKq73jT2JPYChzYoPBKH7dGIa/cOXnAhNBDzyjCdtaUfUmEP84yquHHGZ6Uk1pFetiOc=
+	t=1744693224; cv=none; b=T0euRrie4V0Jl2H6fCvnBmD0yC0458ChUsYcPfY5jOoiHBSbYw/c8YILA+x2nWXHL9OGD40Y0O7mRK1GSPMR6tkEeBXPqkGn+OpfM+DapeIs/jSropChSAwKDEHJjpireaanQCSEwZ27fCWvm5QnBlW4z3c1ItgI7NNLSVO3d3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744693191; c=relaxed/simple;
-	bh=0NoQvozSdclDxiV2xGKA9RSXgdntWBTdc62dx5ProLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=noX2s9C0TGeXqANvedp2ix25jXPkLiKpciKID0zyJk7KyloY/uERrpLxadjJLOSiZwDnGNqqcSvROfNMX8fgpruGuPBlYtAsIHL7v7BZ5pwwJFWcLB+fPZ2XFVhSG8yPM0KDVXd4M3EI6ZF1jch/1FYLbOqEqDlx9y0w4xs4jHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54BFA15A1;
-	Mon, 14 Apr 2025 21:59:47 -0700 (PDT)
-Received: from [10.163.49.104] (unknown [10.163.49.104])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A51D3F66E;
-	Mon, 14 Apr 2025 21:59:45 -0700 (PDT)
-Message-ID: <7e68b780-0591-4b05-98f0-154441f5dd14@arm.com>
-Date: Tue, 15 Apr 2025 10:29:42 +0530
+	s=arc-20240116; t=1744693224; c=relaxed/simple;
+	bh=8jqYI0EByecC2fLiUKI6Pqa1siE9R5RfGBsWg72hUB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MP9pSn3C26KO2bCJimQIIi5RjfOaSSHRDcDJ06vr8UJkKo/Yl01kyQJN9uTI8thjhvlmSC7EGFn7lathmmohu4MsZHbHsHSfMUGThmrHSS5c/T06+tOmpo1h8XI3YqaXg/n/LWPPUvrm/Vx4A74FJNU+oOejK1fXWS5AyKgVUs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=AltgW+jK; arc=none smtp.client-ip=101.71.155.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="AltgW+jK"
+Received: from localhost.localdomain (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11e63de92;
+	Tue, 15 Apr 2025 13:00:07 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Vinod Koul <vkoul@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-phy@lists.infradead.org,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] dt-bindings: phy: rockchip,inno-usb2phy: add rk3562
+Date: Tue, 15 Apr 2025 13:00:04 +0800
+Message-Id: <20250415050005.52773-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Implement pte_po_index() for permission overlay
- index
-To: Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250410052021.1533180-1-anshuman.khandual@arm.com>
- <0bad3714-06b3-488f-a414-b825f409b926@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <0bad3714-06b3-488f-a414-b825f409b926@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQ0sdVkJOGkJIH04YH0tJS1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a9637d1a3b703afkunm11e63de92
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pxw6DRw4GDJDChoYCxMRDEpK
+	QiowCRFVSlVKTE9PTUJISUtCTUNKVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlLTk43Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=AltgW+jK0JJUfNplT0CLT0w63zWHfOzrDxZzdcHNwmDCZ0cyjgReKmoLn4YVzJXgoH8gPHpqk1nbS0Bf0wLKTyfNKPWuyfCFlyf9glBxs7bF3MKUB6+q4DSopGib8RCZoOG0o+6MGW+iY94a5G4x5sSkBWQryFmLxaAGkhN/Du8=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=g+mEjASylUFx9fn2pmmTmSoWE7P1UK6z/VvOamLA1/s=;
+	h=date:mime-version:subject:message-id:from;
 
+Add compatible for the USB2 phy in the Rockchip RK3562 SoC.
 
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+---
 
-On 4/14/25 18:58, Ryan Roberts wrote:
-> On 10/04/2025 06:20, Anshuman Khandual wrote:
->> From: Ryan Roberts <ryan.roberts@arm.com>
->>
->> Previously pte_access_permitted() used FIELD_GET() directly to retrieve
->> the permission overlay index from the pte. However, FIELD_GET() doesn't
->> work for 128 bit quanitites. Since we are about to add support for D128
->> pgtables, let's create a specific helper, pte_po_index() which can do
->> the required mask and shift regardless of the data type width.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> This patch applies on v6.15-rc1
->>
->>  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
->>  arch/arm64/include/asm/pgtable-prot.h  | 2 ++
->>  arch/arm64/include/asm/pgtable.h       | 2 +-
->>  3 files changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
->> index f3b77deedfa2..028a164924df 100644
->> --- a/arch/arm64/include/asm/pgtable-hwdef.h
->> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
->> @@ -211,6 +211,7 @@
->>  #define PTE_PO_IDX_2	(_AT(pteval_t, 1) << 62)
->>  
->>  #define PTE_PO_IDX_MASK		GENMASK_ULL(62, 60)
->> +#define PTE_PO_IDX_SHIFT	60
->>  
->>  
->>  /*
->> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
->> index 7830d031742e..b53bc241e4e7 100644
->> --- a/arch/arm64/include/asm/pgtable-prot.h
->> +++ b/arch/arm64/include/asm/pgtable-prot.h
->> @@ -136,6 +136,8 @@ static inline bool __pure lpa2_is_enabled(void)
->>  	((pte & BIT(PTE_PI_IDX_1)) >> (PTE_PI_IDX_1 - 1)) | \
->>  	((pte & BIT(PTE_PI_IDX_0)) >> (PTE_PI_IDX_0 - 0)))
->>  
->> +#define pte_po_index(pte)	((pte_val(pte) & PTE_PO_IDX_MASK) >> PTE_PO_IDX_SHIFT)
->> +
->>  /*
->>   * Page types used via Permission Indirection Extension (PIE). PIE uses
->>   * the USER, DBM, PXN and UXN bits to to generate an index which is used
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index d3b538be1500..41979c0e6c21 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -182,7 +182,7 @@ static inline bool por_el0_allows_pkey(u8 pkey, bool write, bool execute)
->>  	(((pte_val(pte) & (PTE_VALID | PTE_USER)) == (PTE_VALID | PTE_USER)) && (!(write) || pte_write(pte)))
->>  #define pte_access_permitted(pte, write) \
->>  	(pte_access_permitted_no_overlay(pte, write) && \
->> -	por_el0_allows_pkey(FIELD_GET(PTE_PO_IDX_MASK, pte_val(pte)), write, false))
->> +	por_el0_allows_pkey(pte_po_index(pte), write, false))
->>  #define pmd_access_permitted(pmd, write) \
->>  	(pte_access_permitted(pmd_pte(pmd), (write)))
->>  #define pud_access_permitted(pud, write) \
-> 
-> kvm also uses PTE_PO_IDX_MASK in compute_s1_overlay_permissions(). Shouldn't we
-> be converting that site too?
+Changes in v2:
+- Collect review tag
 
-Just wanted to keep the KVM changes for later but sure, will fold these in.
+ .../devicetree/bindings/phy/rockchip,inno-usb2phy.yaml          | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 
-> ----8<----
-> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
-> index 3a96c96816e9..d9a8ee8e600f 100644
-> --- a/arch/arm64/kvm/at.c
-> +++ b/arch/arm64/kvm/at.c
-> @@ -1073,7 +1073,7 @@ static void compute_s1_overlay_permissions(struct kvm_vcpu
-> *vcpu,
->  {
->         u8 idx, pov_perms, uov_perms;
-> 
-> -       idx = FIELD_GET(PTE_PO_IDX_MASK, wr->desc);
-> +       idx = pte_po_index(__pte(wr->desc));
-> 
->         switch (wi->regime) {
->         case TR_EL10:
-> ----8<----
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+index 6a7ef556414c..6f56e7c70f3d 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+@@ -19,6 +19,7 @@ properties:
+       - rockchip,rk3328-usb2phy
+       - rockchip,rk3366-usb2phy
+       - rockchip,rk3399-usb2phy
++      - rockchip,rk3562-usb2phy
+       - rockchip,rk3568-usb2phy
+       - rockchip,rk3576-usb2phy
+       - rockchip,rk3588-usb2phy
+@@ -190,6 +191,7 @@ allOf:
+               - rockchip,rk3328-usb2phy
+               - rockchip,rk3366-usb2phy
+               - rockchip,rk3399-usb2phy
++              - rockchip,rk3562-usb2phy
+               - rockchip,rk3568-usb2phy
+               - rockchip,rk3588-usb2phy
+               - rockchip,rv1108-usb2phy
+-- 
+2.25.1
+
