@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E655B292911;
-	Tue, 15 Apr 2025 12:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB615291160;
+	Tue, 15 Apr 2025 12:44:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720982; cv=none; b=S2dTdc9LCtMBPy3LnbEXnEie1FRnDcd0jfKnbhMxOqLmNw6S4krUdcTRuTlZ/yOmnn9ZhAhsv7jjjHPyky15uxD5Zi5fV+AwmHPM667LkBbhquNNpKxrtMaAQNdxtB7v5w9n7FUBKAQNchNanR0VBuhFUhCsuWhUkaM1UMwksqE=
+	t=1744721045; cv=none; b=b5WnKwj8DlKTQLUieSjNfa+EIeyh76oF3Hg7VurKWiEzQX98swPKveZwni2nlFZutN/LKbpBEOqq/DjA1NTL3m0MG+yg4WdBC9tY3I836+gSRIPQNCt8aT3lTnaNXRu0p0EXvX/9sNsVLDd1Yv0+3cgydQKX/VqEivzqPsZz97Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720982; c=relaxed/simple;
-	bh=fCa6LFz7pmMqmxuGDVYZ+Em0r89FCnzEM1WDIkSnQa8=;
+	s=arc-20240116; t=1744721045; c=relaxed/simple;
+	bh=/AmFSfoSnA6eIeCSxLandIuhUazOwU9meS2IMrJepeM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mnPmnwdaeFheqOlrmXVWDzbEGUefTKfVmz2eg7I7tB96kTesLD7QKbx3TpIFMbyEuqBszWQcMQKQr/ziNZVDgfuTRL2opzRW0a4L8FOgdqfByPS4DHtyvuA5l95g9oi1K+0PS1cCLLyqx1x8BZk6M8zKucbg5QbxW7ZAYhJNjbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g40yS1Ds; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7D34FHz3f/PIqR2zCfYSZaUx51dv8Yqj+/jW/PmKegUPZ75TzdiGv+LLrIewovuSMZpn0aW7hK25xsv1YtXYmsJygzLjVQerjonLYKTkPG4l52FSjPDUCyEGPYpLsyZy+CtVSomVBOCIyVV9J7wwsIchdu3fCsHftaBxYXc1y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0jv3Tua; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g40yS1Ds"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A432CC4CEDD;
-	Tue, 15 Apr 2025 12:42:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0jv3Tua"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C824DC4CEE5;
+	Tue, 15 Apr 2025 12:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744720981;
-	bh=fCa6LFz7pmMqmxuGDVYZ+Em0r89FCnzEM1WDIkSnQa8=;
+	s=k20201202; t=1744721044;
+	bh=/AmFSfoSnA6eIeCSxLandIuhUazOwU9meS2IMrJepeM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g40yS1Ds+w32o5gKi0VdoEL4DYZvPhjxhEAyDVcxuTwW4fCSppgm7B293f+c5P5/5
-	 UKfJSJX8sgSfHQaUtEfelxkjzY46fDijeQecV1TljYzpWVy3T5o+2jUPQwHa6Ev8UQ
-	 kSqPKIwN3SKTQnAiqgnL6J8Ql7ndxVOiAyhjZ6V94FMxB4dfrqcgv8KoZIq3GdJ5lS
-	 YsVXQgYCvT+fW78gGoXHUVY3VkDXate+yLucGpl0eNp9curljw4lhwnLWnEQDS+gcz
-	 KbWeY32GEReiTSavtwM6Qm2kFnRUlbF2RRh7YGnWp9hLaZrpsBt3KcQcubg/qliKxk
-	 R3wBKX/UK3UJg==
-Date: Tue, 15 Apr 2025 14:42:54 +0200
+	b=m0jv3Tua3cEMNkfJ4fkNKlGfMis9dr3yRO0u0sR97qADqjxyrzG6VLKYrBtJlur0g
+	 FsTa99arEQaAnHzJDfi3UGyFD0es0f64Zpc59ro9M2dOs8itsnEgKDQPKBUcjo79aS
+	 MMqtmkmqWLM+SOHYA8MYdozD/G4h7bGtC82C5sXRjGTRQ0UDlypUf1DdMwzJKW4pSL
+	 9rwJQEKHfdg0l2L6ZMK2J6sHoubfys6jTfbnMlZCsOtFIEQu0xblXwOC6w1tBcoGF6
+	 3GdCtjbJ8xHlISRRbZQuCE8qFowoOHdT4o1ZXVem8cRtJ3VxKpPbo2pD52Vl2C/VtV
+	 fSb/JK4nxxCbw==
+Date: Tue, 15 Apr 2025 14:43:57 +0200
 From: Danilo Krummrich <dakr@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, david.m.ertman@intel.com, ira.weiny@intel.com,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
+To: Alice Ryhl <aliceryhl@google.com>, ojeda@kernel.org
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, alex.gaynor@gmail.com, boqun.feng@gmail.com,
 	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com,
+	a.hindborg@kernel.org, tmgross@umich.edu, airlied@gmail.com,
+	acourbot@nvidia.com, jhubbard@nvidia.com,
 	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] Auxiliary bus Rust abstractions
-Message-ID: <Z_5UTvuMpYhRN24T@cassiopeiae>
+Subject: Re: [PATCH v4 1/5] rust: types: add `Opaque::zeroed`
+Message-ID: <Z_5UjWZIkPxTv1G0@cassiopeiae>
 References: <20250414131934.28418-1-dakr@kernel.org>
- <2025041559-regulator-mutt-e8ed@gregkh>
+ <20250414131934.28418-2-dakr@kernel.org>
+ <Z_5KHVHh-Zs9HSlq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,24 +48,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025041559-regulator-mutt-e8ed@gregkh>
+In-Reply-To: <Z_5KHVHh-Zs9HSlq@google.com>
 
-On Tue, Apr 15, 2025 at 01:38:29PM +0200, Greg KH wrote:
-> On Mon, Apr 14, 2025 at 03:18:03PM +0200, Danilo Krummrich wrote:
-> > This series adds Rust abstractions for the auxiliary bus.
+On Tue, Apr 15, 2025 at 11:59:25AM +0000, Alice Ryhl wrote:
+> On Mon, Apr 14, 2025 at 03:18:04PM +0200, Danilo Krummrich wrote:
+> > Analogous to `Opaque::uninit` add `Opaque::zeroed`, which sets the
+> > corresponding memory to zero. In contrast to `Opaque::uninit`, the
+> > corresponding value, depending on its type, may be initialized.
 > > 
-> > It implements the required abstractions to write auxiliary drivers and create
-> > auxiliary device registrations. A driver sample illustrates how the
-> > corresponding abstractions work.
-> > 
-> > The auxiliary abstractions are required for the Nova driver project, in order to
-> > connect nova-core with the nova-drm driver.
-> > 
-> > A branch containing the patches can be found in [1].
-> > 
-> > [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/dakr/linux.git/log/?h=rust/auxiliary
+> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > 
-> Looks good to me, want to take this through a gpu tree so you can build
-> on top of it, or do you want it in the driver-core.git tree?
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-Yes, I'd like to take this one through the nova tree.
+@Miguel: Can I get an ACK for taking this one through the nova tree?
