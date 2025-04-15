@@ -1,306 +1,102 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA1F297A5D;
-	Tue, 15 Apr 2025 12:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9015828E61D;
+	Tue, 15 Apr 2025 12:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744721816; cv=none; b=XIG6pNkqXh225vaZeAc2tnTj+qGEx7fAXlaKCp6pq/DwyWlqspI6OX5Y1kV0IV6sqGrV+9XHjeUtIdSaXdtk2rWuDJuNlorWe0+bzGcus4/MYrmuBVIIOMBFHMEgjjurZLmbfuD8BADHw0Hyq0rlmw0bR7gTH70GT4sW3oMqolQ=
+	t=1744721866; cv=none; b=fNvbsWM5DVlfHjyqaghmo/CDA+LWsxbGAMcMpoUO9J9lDPrT9B945vNciUO0zOP3Rr8FdLtHL1OsdUQIqMd8HbyLoYIqowljKcgNA84NMyT+8ZpvnyAmDr7Mb8/sSKEgo9o3bhByENJpmNce2m8/lsn1jhlXE+QObEl+DIYtswc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744721816; c=relaxed/simple;
-	bh=aABG160iPkttRbzQvTne5eKaMCxjrJNVzk7fpnwaoco=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A1Phv+ODZ5/GDngJVnA9kdjCqOLZssfXR5S1Ng6QZGirc9E5sdyg6yosktI6lXtrfe+nz+L8lSgM44yYFd9k/hwZ/FtIxJbHcuonbvkj8e3rE4JTNpE3MOav81fsctru572AsXns+A8mK0IG6hTeAH5hcElj97XoN/f+9bnW+CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NjGLSACL; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744721866; c=relaxed/simple;
+	bh=2EOO+sAkwFqCxra83O6A2BDPgugA7NN6ZkUL1xXLrbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iyy2K6Q48HZvngR1JjR12rQ5uh6kQf3Zw1Bf/FFKP5jXsjQDAjLMyZUjpypq5ePi4qr9mA6wcJ/9MIgKhGrUzJ5vEbLegvEu2sP96B7x+5m0i/o9fAVhFh+frvBA0CCHYBKz73tT4oMU9KB4GLAkt3MJ2Inn30YLXipJMfnU0lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=utNpLyac; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjGLSACL"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso60168365e9.3;
-        Tue, 15 Apr 2025 05:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744721812; x=1745326612; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=os69xApG4J/eUJVtkfaP7Pm1DMV7TS+WoXn/btx4EnY=;
-        b=NjGLSACLeCV1DZFViK4k73ULM+xbtI2K08PNIio4gbGhYwRnntbsRSsf2dBIJl3XP8
-         qLRv4eKB0gddeTUwv8QfUf4WIHdzFvhUPW4eELu2nrAK16wL+epPu39hEf8NsXEfwWXF
-         7LHONIKdW/KpLPn+Ib104NfEB4VAdpWJFrTfJghoyxaQdJ6v7eMbzz81hcuTBmEJtH4u
-         43lIpah++1EZqhnhUsF9a/jCVAAmdlEi6rzAiTfEF33g0ue/e984NouyjLSNAOkSO0xx
-         30AFn/OEyGZpIB69fDv9TVts1zIB0BC3HYIxqhTEdzRYfgWiujQxPEKZY/3C7/w2W11J
-         12DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744721812; x=1745326612;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=os69xApG4J/eUJVtkfaP7Pm1DMV7TS+WoXn/btx4EnY=;
-        b=uwCXdDJmU9W9ABiv6+Jar6IKfsJCOlaztUN+54EqS8TNh/Ql/AcxmOj5Hageyg7Cf5
-         UxtDs+9Vo0jcbr+gXhnBHqVgvTLq0ffW0nwXjy8kMwwduMXhrlYucLCAUQACvMmQp4p4
-         ov/dtWaa/nSM+z+gR5q2HFMhtbKjV7+kSXVpJOh0mIWwlmV4YnQc6NePs2aKgWDoJOLd
-         SZFNTlXkn4y+3FdVeVgxpdF8wvHBf7zpSsDfsCpGMqbNqD9BrpZ49ddguh1QbRkaNOYK
-         0UMNFCkBqqsy/1s4crApHZ9WL2gonz6uMEV9oSmdfgugn5PuzJnSnQjGOSa93Bc5aZVE
-         7MRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVoEhcOxwzc6GxgAm5/cWeeeSnSRBHBZXvSOZvrP1L9F5zMpIFnf0aoIVyVun01UxPaiPZmLuSgTs2oGrqjtK6YUkA=@vger.kernel.org, AJvYcCX0Xb4Bu96mt63SVimK1wmn+BWKx7kyJ93fG/Os/HjzdsJFB1rilmuuHPfDSMmFzw/qnE9H6yRbDD6x@vger.kernel.org, AJvYcCXO/w71vKhtGZSk+GsAeqHM3QQkohQF5Er9RR/IGpXv4ZonFdThFq6csbCnow5tCRrtP+RplzLUwgNrJodg@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDJClt/jgcTTWUa8/MK2e7KlEtXgmEiyReWOZs2y0Wkqmfy2y1
-	gsd+fIKTkhHaaoj2UDsVH2XDwYjUBhv9ZVasiZpUcAu1phsg0rma
-X-Gm-Gg: ASbGncsBEug2oVIekax0h03P9gNvEfHoUftNfYhS91q/vylLhqMeATKCDdWFG46j6GY
-	wH7LW9PXRcBBdI3Pc8COhbAzfumMGtwOrxP/zwO6tTVQooCw5GvXhLFnjIhhhXZwYkIlVcSV9V3
-	WElKNqd66hfUxcO0IuSRmoNeXLWgcxOuaxFKHdlBLyz74wQnBFiGJJwPL3t5IPQttUtNjoIkHJo
-	iaCERyKwvyMgZF+xdh81hg2t2LwS9VLaDkCVn7xd+ESZnD9fmVOpJLcwu0YWPERdt++XHu52nLi
-	2Itf02jcos5F2PQSyKU0zjuu98+S/6Zu114d6A7bUqlEEIF8TXT+lCGwYVbqYtPz
-X-Google-Smtp-Source: AGHT+IHM99iCt9uGoM1ut7bwj22u5iPsrbMzCmzAjPLvhvpnLXPGkQlOQNK8dR5lm5kw+uFojdnLkg==
-X-Received: by 2002:a05:600c:674a:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f4da84f37mr86587135e9.14.1744721812206;
-        Tue, 15 Apr 2025 05:56:52 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:1883:aa4:a265:bc12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm13922334f8f.25.2025.04.15.05.56.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 05:56:51 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="utNpLyac"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=/zg+4LuvKN2MfsYaYQDPTMDY3vRum1BuvjjkEVMSOMM=; b=utNpLyacBxVYcE4VG7k4ynrztr
+	ZBf69qa3y5t2IoS/iSjBwfypRhUnM3WBelKCWR4xODoRhm5+CZk6ukSO3TpymSQdE71yemvFAi49c
+	kmH2BrBhX4cgKRtWcDskgGDDpmfpX2xT/loN6Ucwmp+VuXQnUPSac8o1YhnyqNskJMBw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u4fr1-009RZD-DL; Tue, 15 Apr 2025 14:57:31 +0200
+Date: Tue, 15 Apr 2025 14:57:31 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: Andy Shevchenko <andy@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
+	Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>
-Cc: netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH net-next v6 3/4] net: stmmac: Add DWMAC glue layer for Renesas GBETH
-Date: Tue, 15 Apr 2025 13:56:41 +0100
-Message-ID: <20250415125642.241427-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 07/14] mfd: zl3073x: Add components versions register
+ defs
+Message-ID: <e1389e78-ead0-4180-a652-5dc48a691548@lunn.ch>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-8-ivecera@redhat.com>
+ <df6a57df-8916-4af2-9eee-10921f90ff93@kernel.org>
+ <c0ef6dad-ce7e-401c-9ae1-42105fcbf9c4@redhat.com>
+ <098b0477-3367-4f96-906b-520fcd95befb@lunn.ch>
+ <003bfece-7487-4c65-b4f1-2de59207bd5d@redhat.com>
+ <8c5fb149-af25-4713-a9c8-f49b516edbff@lunn.ch>
+ <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9de10e97-d0fa-4dee-b98a-e4b2a3f7019c@redhat.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Hi Andrew,
+> the idea looks interesting but there are some caveats and disadvantages.
+> I thought about it but the idea with two regmaps (one for simple registers
+> and one for mailboxes) where the simple one uses implicit locking and
+> mailbox one has locking disabled with explicit locking requirement. There
+> are two main problems:
+> 
+> 1) Regmap cache has to be disabled as it cannot be shared between multiple
+> regmaps... so also page selector cannot be cached.
+> 
+> 2) You cannot mix access to mailbox registers and to simple registers. This
+> means that mailbox accesses have to be wrapped e.g. inside scoped_guard()
+> 
+> The first problem is really pain as I would like to extend later the driver
+> with proper caching (page selector for now).
+> The second one brings only confusions for a developer how to properly access
+> different types of registers.
+> 
+> I think the best approach would be to use just single regmap for all
+> registers with implicit locking enabled and have extra mailbox mutex to
+> protect mailbox registers and ensure atomic operations with them.
+> This will allow to use regmap cache and also intermixing mailbox and simple
+> registers' accesses won't be an issue.
 
-Add the DWMAC glue layer for the GBETH IP found in the Renesas RZ/V2H(P)
-SoC.
+As i said, it was just an idea, i had no idea if it was a good idea.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 ++
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
- .../stmicro/stmmac/dwmac-renesas-gbeth.c      | 148 ++++++++++++++++++
- 3 files changed, 160 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
+What is important is that the scope of the locking becomes clear,
+unlike what the first version had. So locking has to be pushed down to
+the lower levels so you lock a single register access, or you lock an
+mailbox access.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 3c820ef56775..2c99b23f0faa 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -131,6 +131,17 @@ config DWMAC_QCOM_ETHQOS
- 	  This selects the Qualcomm ETHQOS glue layer support for the
- 	  stmmac device driver.
- 
-+config DWMAC_RENESAS_GBETH
-+	tristate "Renesas RZ/V2H(P) GBETH support"
-+	default ARCH_RENESAS
-+	depends on OF && (ARCH_RENESAS || COMPILE_TEST)
-+	help
-+	  Support for Gigabit Ethernet Interface (GBETH) on Renesas
-+	  RZ/V2H(P) SoCs.
-+
-+	  This selects the Renesas RZ/V2H(P) Soc specific glue layer support
-+	  for the stmmac device driver.
-+
- config DWMAC_ROCKCHIP
- 	tristate "Rockchip dwmac support"
- 	default ARCH_ROCKCHIP
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 594883fb4164..91050215511b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_DWMAC_LPC18XX)	+= dwmac-lpc18xx.o
- obj-$(CONFIG_DWMAC_MEDIATEK)	+= dwmac-mediatek.o
- obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o dwmac-meson8b.o
- obj-$(CONFIG_DWMAC_QCOM_ETHQOS)	+= dwmac-qcom-ethqos.o
-+obj-$(CONFIG_DWMAC_RENESAS_GBETH) += dwmac-renesas-gbeth.o
- obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
- obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
- obj-$(CONFIG_DWMAC_S32)		+= dwmac-s32.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-new file mode 100644
-index 000000000000..8674b7605d83
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * dwmac-renesas-gbeth.c - DWMAC Specific Glue layer for Renesas GBETH
-+ *
-+ * The Rx and Tx clocks are supplied as follows for the GBETH IP.
-+ *
-+ *                         Rx / Tx
-+ *   -------+------------- on / off -------
-+ *          |
-+ *          |            Rx-180 / Tx-180
-+ *          +---- not ---- on / off -------
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corporation
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "stmmac_platform.h"
-+
-+struct renesas_gbeth {
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct reset_control *rstc;
-+	struct device *dev;
-+	void __iomem *regs;
-+};
-+
-+static const char *const renesas_gbeth_clks[] = {
-+	"tx", "tx-180", "rx", "rx-180",
-+};
-+
-+static int renesas_gbeth_clks_config(struct renesas_gbeth *gbeth, bool enabled)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	int ret;
-+
-+	plat_dat = gbeth->plat_dat;
-+	if (enabled) {
-+		ret = reset_control_deassert(gbeth->rstc);
-+		if (ret) {
-+			dev_err(gbeth->dev, "Reset deassert failed\n");
-+			return ret;
-+		}
-+
-+		ret = clk_bulk_prepare_enable(plat_dat->num_clks,
-+					      plat_dat->clks);
-+		if (ret)
-+			reset_control_assert(gbeth->rstc);
-+	} else {
-+		clk_bulk_disable_unprepare(plat_dat->num_clks, plat_dat->clks);
-+		ret = reset_control_assert(gbeth->rstc);
-+		if (ret)
-+			dev_err(gbeth->dev, "Reset assert failed\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static int renesas_gbeth_init(struct platform_device *pdev, void *priv)
-+{
-+	return renesas_gbeth_clks_config(priv, true);
-+}
-+
-+static void renesas_gbeth_exit(struct platform_device *pdev, void *priv)
-+{
-+	renesas_gbeth_clks_config(priv, false);
-+}
-+
-+static int renesas_gbeth_probe(struct platform_device *pdev)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	struct device *dev = &pdev->dev;
-+	struct renesas_gbeth *gbeth;
-+	unsigned int i;
-+	int err;
-+
-+	err = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (err)
-+		return dev_err_probe(dev, err,
-+				     "failed to get resources\n");
-+
-+	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
-+	if (IS_ERR(plat_dat))
-+		return dev_err_probe(dev, PTR_ERR(plat_dat),
-+				     "dt configuration failed\n");
-+
-+	gbeth = devm_kzalloc(dev, sizeof(*gbeth), GFP_KERNEL);
-+	if (!gbeth)
-+		return -ENOMEM;
-+
-+	plat_dat->num_clks = ARRAY_SIZE(renesas_gbeth_clks);
-+	plat_dat->clks = devm_kcalloc(dev, plat_dat->num_clks,
-+				      sizeof(*plat_dat->clks), GFP_KERNEL);
-+	if (!plat_dat->clks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < plat_dat->num_clks; i++)
-+		plat_dat->clks[i].id = renesas_gbeth_clks[i];
-+
-+	err = devm_clk_bulk_get(dev, plat_dat->num_clks, plat_dat->clks);
-+	if (err < 0)
-+		return err;
-+
-+	plat_dat->clk_tx_i = stmmac_pltfr_find_clk(plat_dat, "tx");
-+	if (!plat_dat->clk_tx_i)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "error finding tx clock\n");
-+
-+	gbeth->rstc = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(gbeth->rstc))
-+		return PTR_ERR(gbeth->rstc);
-+
-+	gbeth->dev = dev;
-+	gbeth->regs = stmmac_res.addr;
-+	gbeth->plat_dat = plat_dat;
-+	plat_dat->bsp_priv = gbeth;
-+	plat_dat->set_clk_tx_rate = stmmac_set_clk_tx_rate;
-+	plat_dat->init = renesas_gbeth_init;
-+	plat_dat->exit = renesas_gbeth_exit;
-+	plat_dat->flags |= STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY |
-+			   STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
-+			   STMMAC_FLAG_SPH_DISABLE;
-+
-+	return devm_stmmac_pltfr_probe(pdev, plat_dat, &stmmac_res);
-+}
-+
-+static const struct of_device_id renesas_gbeth_match[] = {
-+	{ .compatible = "renesas,rzv2h-gbeth", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, renesas_gbeth_match);
-+
-+static struct platform_driver renesas_gbeth_driver = {
-+	.probe  = renesas_gbeth_probe,
-+	.driver = {
-+		.name		= "renesas-gbeth",
-+		.of_match_table	= renesas_gbeth_match,
-+	},
-+};
-+module_platform_driver(renesas_gbeth_driver);
-+
-+MODULE_AUTHOR("Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas GBETH DWMAC Specific Glue layer");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0
+Also, you say this is an MFD partially because GPIOs could be added
+later. I assume that GPIO code would have the same locking issue,
+which suggests the locking should be in the MFD core, not the
+individual drivers stacked on top of it.
 
+	Andrew
