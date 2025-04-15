@@ -1,74 +1,101 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013019.outbound.protection.outlook.com [52.101.72.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492B3253938;
-	Tue, 15 Apr 2025 21:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7950257443;
+	Tue, 15 Apr 2025 21:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744752607; cv=fail; b=gvGunc8jIKGMIpCq02ZROcFS6JyY/Fn5p0Qo9xZpAAaZJjaN6CL2mcxDYyEatM9j+xtxxVS1ScW0B0DJJdaBPA0FGMTqw+VKULtIUihV84ylOIJ8vGf44XEhE7wxQVJHlIi/eK6+kWSFxVfupyDTDhM9Z2GzicFJQ9coME/fDGM=
+	t=1744752625; cv=fail; b=Y1KptAoPG9HPb783HX1z79Lj0G89s3cvPHJOSNnChcZAmndmI0DeQ9+wB4qQrOj2ImYLlD6kh6TjcT5kzol8WkIXAgIpeOlrQj7LGbEymjQe5LsmP18LS0MjwPZMMvVLUgj0kvohTsvD7FYW+q1x/heZ6LHyMNU3iyV4qbcldyk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744752607; c=relaxed/simple;
-	bh=G1X2VwCL5WtatAoNX7zC0n+RmOF5RHMxZBv4FofibFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Gj1GvMa/SMOXOYtYz12vueKp3lL1394RBEoc8ysJfT0zepj3IZcgWj7H+ZoxxTHe32Ac9fFSZfuaVoVfwhKyM/MxLxhpgXneQT35snE+OKOOkCIlGosepqD5zf2K8jnPObobthb1R+ce8vEFOYEWhJkFiuQjlx+b8MwaWiiEaNA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=VDbN52LM; arc=fail smtp.client-ip=52.101.72.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1744752625; c=relaxed/simple;
+	bh=46wyz+HVKWw7a7kGZ8VhKh59fzWvPR4XawzHCCsGG+4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mQet/X0ckl7nQ+pGWqijTCyOUmdUQo5Als0IARjhwl1z7hnCWEp+muN0gukcCjmesxhhV0t/wH5s8gsrqkwplgeLXfFAGg0086B3cNwMgj28La2ClA3t6HYji0ist5B21YpSeogRiGnzCjrcZc13XZk8mchmUBdMV/PFLzv3LD8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vmfj2HBC; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="VDbN52LM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vmfj2HBC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744752622; x=1776288622;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=46wyz+HVKWw7a7kGZ8VhKh59fzWvPR4XawzHCCsGG+4=;
+  b=Vmfj2HBC7qoYgTQ/CGu6TKYRTgTt03emmEZNXNwJqNnH0x524cGTnEGf
+   jrAhZ/Ecnm2JtQTiVSQ++3ciFHNPoRoUEWwFc7q3L7MbyaV3QiKXEtxDF
+   27KeRJrvhW51mB4iTseyW06aQ0ETxFArJ7g83FbPk9xwXDrDB1NtcT9ZE
+   VsRV0RuwqMVJ2yHuT+jmQLU3ux6e2Y4zZ3V+yZ0Xxa3ScJBSN6CMq4ELa
+   ZLe1ooybPTaBBCv9vsj0cgB3NQCiq06A5R9guFyzsGmlFtlGVGh16WP2l
+   JftRysjUEyRizh+UTcw7FFh9nh1sQMTiS0pQ9dE61/ryw1rGyH7pR+zoq
+   g==;
+X-CSE-ConnectionGUID: NUOowHKuQP+D88pxf5AaWw==
+X-CSE-MsgGUID: F37HyYNpT3m41FCkAyYXqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50105327"
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="50105327"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 14:30:18 -0700
+X-CSE-ConnectionGUID: ryiFkG9ORIyCOYK3dYlQ7w==
+X-CSE-MsgGUID: Y7rh5B6TSQmR85HaCuA5KQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,214,1739865600"; 
+   d="scan'208";a="130195528"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 14:30:18 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 15 Apr 2025 14:30:17 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 15 Apr 2025 14:30:17 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 15 Apr 2025 14:30:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W/7E5FAcbQDgO1Kry+uRVsTP0tJYhZKmywXv79GC931zGFhEI/uJlOHxSJmQGh7+XSXt0kMnfKHEMW0SspsQ0Ex0a8e3PQk6Jfml2BHZJPhILOQ8qTWfJJh755HDOTvDJPOeydqhBR6t08dSxQVUo02vZw0w9M2elQ5YN3fPhOEte5cA5E4eW2y8859v6Gf6+WACzmaK7KU81GYhu8AUulnVDLYPqZzJBowEZKnI3kaRqwdx6sJX/1ER4LNpIsQ8bJNK+X/fjiI4uCSNiSAIhyz+wMMKDStJ/D/Kuv7OTm12/B0FNkSJrVyNRUzmRz/6gZzSYxl0iHbA0zCPONhwSw==
+ b=qqmEvvrvBNOw6KepiV/CygqINtUMJX73CLPpY3KqNLuUjFAaIZFnCB5ILejA8r0KcjFHC1sba9smlmZDlbNf26+46Ja6rh5S/VxTibE1hVPik6QAfDAcFcA9ERImLwbI+JRjTo4FR/V+evGP/HtlUpAIQE4zb2pBIvk7s3nQ0htfJI8aWO35+TneD6iDT7lBy7yabB7XL8oagBswF/yxy16WqUQ3c0GddOz3ovTeABrPeR3LgxinoMIxQDyFbuP+dTPefwilvPTdTnZT+oOWLrtl5Ki6B8xM0LsH60HOOYl7dc8gb6u/XIb0GCHTP6KGkPNM4RnoBaXdSy/ErsHFGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CrVQAq1baSOeuNjRCkVasSr2b5/PDXoNjMnqS/jPGYc=;
- b=eJBGrHQCOI7a803oTF6GE36j5ETPulUa9sYzoisjacQhccqQ1a6DardL4+FXhiOldLnv+KfUatdWNhcS95Ai1snEb6qm8BjWBmfJ3Tec95s5MTFW9liWRCZcF98YDsOkVa9EUpy/WjpJOS17vlzvIw9DvGzAksbiuTA/Kd743VxdJh9CUD8hJYAa7mJdNnFdtT+uweRxxRKTtGHj3C0J9BYXw1ZYEcxYoTOXAoFJPDhj3oarys1kMxn2lHjE/jbPrSfigvn14gaEj4BxWIfeOqWpXTdXAXUVGWD2yFPrT/Q9tT5oO8I2dLm68BTWnYc49C6G4NlKKpyXEDQtWxqfzw==
+ bh=ZUvy7D/cvGU+txh0cd0X2UVLZgpETAnbvVaRQbEG/AI=;
+ b=XfyUL/+rZJ8ks18W4qmn/ld9pr0XjqMxCzJDN2ZScjjl7p00cW0eRe30PmaDuc7QU6Chu2AYFDBWE5sGtxxpSz5qcx2BTLEw3yiR+vBBfZz46wNcfYVF4MdUa7K/8w+sUcWhEMSQ15Db5JZD/bOcn56jxyX0aSBHlQ7pLazJN+OkZmFWBVDFFpgfY49NJrL8nWg8dScGuGfYALPjBDeTwZEiM4bTTONPSqwj8DuyPvh6BGVrNudK8yTm13dtiqSyIn/dVcpvlWjl4DG80uuXlgAKnSN7te19EMtZra2wa8eo8f/1dQcTTLDCMgU1Pn9MV3C+Ydxctr3OSFwOAgvOpg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CrVQAq1baSOeuNjRCkVasSr2b5/PDXoNjMnqS/jPGYc=;
- b=VDbN52LMX77mkQqwZs74mLHEvP1jUwqLghyjCjQD/dr5ZtKPidJYK61Q21Ip9HrRrri2yjtl2XE9NHQR05bUi+TWpneOZnZe8We87gORFJGQZ+XG7fLqU72YMbGDSaxJBzzBnbRVNAyBIxN5eRNNVxssoQsF2v/+euCUYBW+97T4U+0f4IHrhy/JZzZ4x4qmbfJugIiMwGWQYiwcK8EkhPy4f4f2yWrG8M2PUM23S3ngn516vvvW/kmCN267BRAgr1yLwfq1f1RAZcVMJBq2i1iRQhCu+0vMxRaxFsyCqyMGjNcBju6aGxvzQbgY3Ixa1YjuhNz+Kv/jtTQHXzZFPg==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by DU2PR04MB9523.eurprd04.prod.outlook.com (2603:10a6:10:2f6::9) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
+ by DS7PR11MB8827.namprd11.prod.outlook.com (2603:10b6:8:254::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Tue, 15 Apr
- 2025 21:30:01 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 21:30:01 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR FREESCALE IMX 5/6),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: display: imx: convert fsl-imx-drm.txt to yaml format
-Date: Tue, 15 Apr 2025 17:29:42 -0400
-Message-Id: <20250415212943.3400852-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH8P220CA0005.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:345::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Tue, 15 Apr
+ 2025 21:30:14 +0000
+Received: from SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
+ ([fe80::a3d4:9d67:2f5d:6720%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 21:30:14 +0000
+Date: Tue, 15 Apr 2025 14:30:10 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Robert Richter <rrichter@amd.com>
+CC: Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>, Jonathan Cameron
+	<Jonathan.Cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Davidlohr
+ Bueso" <dave@stgolabs.net>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Gregory Price <gourry@gourry.net>, "Fabio M.
+ De Francesco" <fabio.m.de.francesco@linux.intel.com>, Terry Bowman
+	<terry.bowman@amd.com>
+Subject: Re: [PATCH v4 03/14] cxl/pci: Add comments to cxl_hdm_decode_init()
+Message-ID: <Z_7P4ny6RFgewnbC@aschofie-mobl2.lan>
+References: <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-4-rrichter@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250306164448.3354845-4-rrichter@amd.com>
+X-ClientProxiedBy: MW4P222CA0025.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:303:114::30) To SA1PR11MB8794.namprd11.prod.outlook.com
+ (2603:10b6:806:46a::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,614 +103,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|DU2PR04MB9523:EE_
-X-MS-Office365-Filtering-Correlation-Id: d5ab83f6-5313-4a56-5739-08dd7c64ad0e
+X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|DS7PR11MB8827:EE_
+X-MS-Office365-Filtering-Correlation-Id: 164a014a-8498-465d-0afa-08dd7c64b572
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|7416014|366016|921020|38350700014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gq8mr5lq7JaPAWfTFY35m5RVA+SkVW4M5igFVyPSZaQTi/C/UtL+6FboAqbi?=
- =?us-ascii?Q?earzcYq8mgQPAsbNGYuwBaYI7Et8p4CU0cEOuzTwD78t1TJcxosA14iFD8Er?=
- =?us-ascii?Q?04kBRxqkSy0nuWxIFwtNT9jhMaNX+hTj94P8vwJPeT1KvJDssxuj0J3OO7Kx?=
- =?us-ascii?Q?n5p0iTl9zFH9kVsKbooqu9G/DmWOwOBpoXQ/TlwBabQA8XG3feh8GDBH2cxp?=
- =?us-ascii?Q?Y1ETnbrEBkrmNI/JgKEvjM6u/old2Ti5O5FZiP8dS5SwhI/dbnX6TOr98g7m?=
- =?us-ascii?Q?LMAROLDocGHrC4Nsxiro1w7jE/GeaIowJhTT7fArxyEFuff6geXsUhxsi9ce?=
- =?us-ascii?Q?xd+k24eXopfbUnwpjpuFVYDaQczjVaseYy+sUZPOg6pNjOns/KkqPuPh8E1j?=
- =?us-ascii?Q?Hh9XW2OpwQYyuHQfaSBy1iJDRrQYoiy3R1cwb0nkOiuUJp6teRcKoBWfSJ1h?=
- =?us-ascii?Q?YI72PD9CtGkLeZg6nVpE9CZCDSNJeyf1nU8MSYVC/voDhhh5Cq/oskYdy5om?=
- =?us-ascii?Q?4i4JhCWnPOObHppuKUYTTRWA7tWtlN3TDn+lld8rd4qxW5p/l62lvJUb8kFa?=
- =?us-ascii?Q?4eVOeZIuzF1V4yGFII73A9SksglrVDOIwToNKeSh9pLEmIpF3Nk8nfHHKmTU?=
- =?us-ascii?Q?6tSh2VlbiCS9HnwCCuwoWyr7m5cUbHbbXm1/J91XIgNFiytkhsUluJjmlshQ?=
- =?us-ascii?Q?w878uFPB3ZTEwUNvbQzbtA/459O5muZupCJ4MahRF5ja/unZ3laxNv/tdTp3?=
- =?us-ascii?Q?BTP8XiiT3Wp5wASL2Q5VybogKRftTEZEffdlsuzJ/qQRbvlW3lgmo6Z6SrPj?=
- =?us-ascii?Q?EhC5+FIbvw2vVAvCYZTn3jU2lZy9cIvW+OVvfosRQ8APMoOF1EyVaSpOiJbx?=
- =?us-ascii?Q?BCbv/N/vCrejWd8Ylayxk7FsMKMPwvACgpOgyQ44d8o/lkjlf/briKwy4l5P?=
- =?us-ascii?Q?Iyjh0xHEOe/lM6MTObBMis9Kx0H1K8hxItaUANNROGSnnms0WJeJSOYhJXcX?=
- =?us-ascii?Q?6X0XYDoebWa5cFDKC5ZBrv7O6HQFgKrPEd7CJwiuHRRlI09lbjVIAmfkYwqr?=
- =?us-ascii?Q?n8+MDEt+vBuJPLtd3qupRnb1YaDViY1ZrbhH+zXKaBavyOXSbD2D8yi/46Be?=
- =?us-ascii?Q?S4iwBA9YeJRCzr0tX31sM2wUxGJijuIQTvm+GWRB+GCXMJZF3rhx9+EngRTZ?=
- =?us-ascii?Q?BYtzoTzOOhyH2SP2s1uX2V7gBz3XMiBVLrCntwnbuMV8q+DGUPunZu+yQKiA?=
- =?us-ascii?Q?7nroED2tAXUHvUsRo54t0DUtL8+UN9MC8N2agxj3n86fSr/jX3p1y0TpSPjq?=
- =?us-ascii?Q?e7Up6WGQV7QKWQZzQxUypyeDQ4meotgR7I6C9Wh48y7sQTXfzLWh5OOBJyaH?=
- =?us-ascii?Q?AtVqMVUMjtnSJi+D9d0SdIsVCZjOQr3pWc8V9A+6UjiKOdUgt4g8DiMzUE7m?=
- =?us-ascii?Q?vVM3tDB/d5OndqU7Irc2Vf7ZjBW9nzfG?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(7416014)(366016)(921020)(38350700014)(13003099007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?5dOhewopSzrCCd6jBPK+bgYWex6uQ1XJZFheDssT5TJmzf+MMq3JG6NTemaT?=
+ =?us-ascii?Q?4OppgmKaVpA8+s0krDuotFXGYwGKcI9oUuNDz9sF+XKccLz3p6nTGAVmk/0b?=
+ =?us-ascii?Q?7ogqASWEeOtW0OiF/Jzq0nCku/REiIwXMhmeZ1zZuxgKLxa+i8nqiZ3g5YBo?=
+ =?us-ascii?Q?d08mraz2iMKqn6aytC5w0gK/+wgFEIBZn/wLU+VIL2MhbJIBGcVUcK9vSox8?=
+ =?us-ascii?Q?E+tutaXfRXPbU4owk1k1SP/vuB7MMPBd7DEXkz5TtDEL1z1zfj3JjVTkXy1W?=
+ =?us-ascii?Q?jpBCF1X1cxsDm3xDfOOQDOU4o00jsxI7QPBd2RokwwUTZpYZJ6ksnxabV475?=
+ =?us-ascii?Q?zwzrFGgJJRWpYwjjeB/mOyV2S7ZM87nuQD+9JZ6X3BsVmuTQzKH9yHIGBSHU?=
+ =?us-ascii?Q?ii6VTG+FVC3fjLkqstydjA0alKOo69qUVGP1V+29kiy6fsL7Sf1T4jVF4tN8?=
+ =?us-ascii?Q?6lAYYc0W2ByaGy18cFX3OjwXLdGZ+ypbuh0lUJacmAzkaY6gncskVvEoO80M?=
+ =?us-ascii?Q?WS4Wl493WhAR89rU2OOE+qFZCdqiU2MtTI+Ht7y2WldLnKb8vk2vsLteaE9t?=
+ =?us-ascii?Q?5NIMGHaW1ovSGy9rDrG93P1/ctCbBnmjUVOkmHJbKD1CF99YL0LQG5j0STpS?=
+ =?us-ascii?Q?CthXuWiPX+FlNNlMqJuuv4ssWfNvB7ORf7JrVRg5Ko6yGdwIC3fuaiChNWO4?=
+ =?us-ascii?Q?T8JXB4nWt70+HcqMX+m4aHt74yyMajCRN0T3j+HroM0rLAXMu+vFHpFhJR/k?=
+ =?us-ascii?Q?QZ9dO79iZGVwgZhjCCNSEtTmne+80w0+fyEuCjHFbL+TcaYe9v4dqDDW3gqM?=
+ =?us-ascii?Q?0IupTOTVv/BvEVHqnbLAqVAOR4TSs4TfYvsT5emptiDaz3DQP+oUxVkRYJsr?=
+ =?us-ascii?Q?ziYxqNdCvQV+lsec3ltLZ5SETw+c9rSIhUkfonrt/fTvw45UcOfPIA4z4HFI?=
+ =?us-ascii?Q?r1FTcaFd4BVS/N36nUWWodNVJ8M4nOb0ueL+4evYDbmnsNOhLjTldLQn1sWG?=
+ =?us-ascii?Q?ri8+1dnyd2pI9j5mWVkYZ/zdmldzsVk6bRkFAWtAPYlQ5C07+fkMd5z4wnnb?=
+ =?us-ascii?Q?c1hqwnY4XpAM09f1BujHbp084clEo7581UukkHUa+QCBQ6atES6o32irdAaT?=
+ =?us-ascii?Q?1mQlkuHbLKsK/lnMHs46pzG3w6DDtFnNRGvqDmSU3QNh1uDl4HOABmCgDUJX?=
+ =?us-ascii?Q?x8SpAhmnlkYCY3TvTOrAwAcod9FSKgwsMtH/mYYUwg+3m8ip2UkiyoRxQqsV?=
+ =?us-ascii?Q?rVOQL/Vnp08EHXJ8nNrA/fep+fn1cAgVvdATxXC/gbMhNlrR77HBhbDP4w8d?=
+ =?us-ascii?Q?Wn5ZCzRxLeiIul1Dnk+zBBukTbyz7SINXplpwbY+vEorhLjQ6VPEQhgCaCTE?=
+ =?us-ascii?Q?nynNd4n1vHt6o2S2B1T+KGfqURjG9KGPb8jJzTywoVSH1DphWItRxydK1bLa?=
+ =?us-ascii?Q?Q/TlfDk3FwM=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1joh6Knr+cBIHXSWtgr0dEWEP4Elu6Kw0UxwGpoI0TGfLwbQMc5baAvpeWcG?=
- =?us-ascii?Q?pDfXWtQxjTrZsIikhwRbnAEEMLKNaxl6BfrGUCaDIW23rd1HM0KpFlPOLU/R?=
- =?us-ascii?Q?hxiBPuMdqXSwVmTp1VnDDZeIgSbXGqJgSOR5TSxxGorRjLYrBm4M+Dc+FSmj?=
- =?us-ascii?Q?BcHoaEnHBNcC3gVxvgft4ondFdBBBT5L7pt4InrKQuSsx32p/oH1IX3+C2x1?=
- =?us-ascii?Q?NMcsbIR3BaMJnq3wJSJ+MjQ4Fc+VfA9OXyLj/oNgPwSlbEVBvngzWZExBB70?=
- =?us-ascii?Q?cVT4+Iv+4ugNiwJd2MRJkP/Hmv9t3C8h4Y8rwhwbwZb96qmMkdvpq3e0sO5n?=
- =?us-ascii?Q?rXHcO2QpvqyZsr8ZZ6+kERpOpluexxvumL+nW80gzphCL8pbEDFiEmqDnlPS?=
- =?us-ascii?Q?eUa3Br9jHeFBG8OE1bplGqBrxoZP0KrQLhDpPUuUY1NqVOp28KrAQhvgk/2G?=
- =?us-ascii?Q?PMRtHpRjki7T3ONs3jJ2pJ2qSTO/odasiv+7xCi/bbKwlkMmfOJK0ggMDYrj?=
- =?us-ascii?Q?d2mGR6kQuo+Xv0bVSiobPEY4dkGRWkKkXZILVJ1gNdOdZkmCFjc95y6W1bmL?=
- =?us-ascii?Q?q5G3j10PZGt7sP+G0Y7vV2SkEsc0SyiaB0vZnGFbOrKTgmPkyccfvo97YTZw?=
- =?us-ascii?Q?rOOHRayuMxjUI0YJ6D6Oj/TPspDCeKcfP/+8MidM8FZdDFjpks9VlRhCc//J?=
- =?us-ascii?Q?NIq9KX3T065F3JHymjrrYO8fRkblUEts4dfbBQMpmbPAV8jEEfK5z3doPcvH?=
- =?us-ascii?Q?Z3+CW9ZtZYFxGSkdmGZ7UPnRQOv62G8HzbyTEdZq7NRnT83kdLJp8b+CtR3j?=
- =?us-ascii?Q?hP4ozYK7lVdJVpEdkXAlvVPF/WiOx4c6Q8tQJflUMmF73wsW4fudwyHbJtKA?=
- =?us-ascii?Q?9X7ynmhs16iURXcuEuncFpWIJob59cmw/k7z0/ifjP03Ikt9cLYHw3a2A6qy?=
- =?us-ascii?Q?sDPhdfnebaoC/kYDj5fuXZ87A1ZR7X+uuEO2vNvIFhfcuQN6n88+8leEO8yu?=
- =?us-ascii?Q?zP4GY4dMGA86YM5ftJCnO16z7Va4ITJDUK4zKQ0MeHni+vTNjZ15VGE5Hfjl?=
- =?us-ascii?Q?a0LRkdGnRcUQZhyrIcAN45TiCIZAXyUzE8+Ivz+6udUHp+pCHi0NltBTlm4g?=
- =?us-ascii?Q?27oCwLHIcCvN/ET4ZZVEWuyeCPHlJPdlsmV/c4FD6riywUrFTRGkzIcKE1qm?=
- =?us-ascii?Q?Ykrs26vQcF3XV/5ePPoeOMFU4iP3DJC5a2taeccsbV89XjRRi15zAaYWbHy5?=
- =?us-ascii?Q?QGweSZEja1r3o7tL28+qBzJPEJdhJaUQhDzoVfismYCc/e2RojrqbW1H0zMO?=
- =?us-ascii?Q?j5Z7Lo7aVstSz2D+jJTrPnbjWO8KIGJFhpGpX9tb6uJFRkjLGHhjfDY2OeIh?=
- =?us-ascii?Q?mrndhIkergz5lwaKhyrmlW5M6VMTxQoygEJUSxGV5/6bkR76oSHlL74iRNeH?=
- =?us-ascii?Q?YADIgEdoDNM9NMI5qI0cIrp0EsyE6CqELuQ9wyIRpxn7cWbyz9Nr+VGppLFf?=
- =?us-ascii?Q?emVoriKTFZfGFVLOab5t9rxIqPWVNhJmyw4asq6J0CM4VUhje+rxOAWGzn9Y?=
- =?us-ascii?Q?H7RWjSoRPFUAqqeO5vU=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5ab83f6-5313-4a56-5739-08dd7c64ad0e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?po7u91D4LbaW2hNTdoeksMLin/rrUJR+ROg5PtCXquuNWKfydLGv56uvCmxv?=
+ =?us-ascii?Q?Ub1bxHZDWSwsAtYefxIbQBxTBW1eiFrQ8UcIqfzbsUxBAekDFYCjPnkjAiOd?=
+ =?us-ascii?Q?ADJLAS4S3/rNAzN1D4x0Gp+jbyMyJpY73FFM5WX6MDADAuUA3Nv5mXZyROOE?=
+ =?us-ascii?Q?RkVmnjSqsgZUYtJb/4MlYC4+DQtvcFViLdZNowswKSdDcXx674+rg7LozOP+?=
+ =?us-ascii?Q?cVG2tUFb/1bwC10WyEc82wgffUhhC/Q/hIxkl+HGlorkjgY8Awum+eFCfkr6?=
+ =?us-ascii?Q?dZy4uTx+4g0By78w3l8wDbL8nGOelBhngNLp8QWkTByP+JLxBUXPcYqTnV94?=
+ =?us-ascii?Q?+uYQL3z9IlTU99AZaiLo5ry24pWgKwwR7U3gHv8PDLZXk08oWSqcQotwDZnx?=
+ =?us-ascii?Q?NDotboW0AZq1CcIGLOFWm3Bx/5RmO9Jq6l6gRcLfAVmpTDyUK4+E0oUQntPF?=
+ =?us-ascii?Q?mloLCG+rJ4tUG9PD+VCnFcuDzuhneTmwBj7if9KOByQAqNIudgcYcUtgBVbq?=
+ =?us-ascii?Q?RZ3555g0KQCcTSLyPBaW1yViQOCu8E8uNRvGP4Hpwpcaqd9HUfJtx5EKkFJE?=
+ =?us-ascii?Q?CbnaWPFGJ4fmn5MeqRD+8mP4dzXg3tWjeBkUp2WFRTifwhnyBJRMqd8TjAPm?=
+ =?us-ascii?Q?s4h3n3Jab3ZqovB2oXoJTX5D4sx2j50uN5nwH5y5BagyleqDyhhopCMOCsAP?=
+ =?us-ascii?Q?3SzA3M6yzjCNpgYWA+FipcSF65sO/y6vD2Vdx6hFcI3s49CiN+iOYycbbCWO?=
+ =?us-ascii?Q?jzppg15gFTI7U3wlnMQs45e7y+Y13GpxEolmc08BVVIXowj2bRwsXoM8VOLV?=
+ =?us-ascii?Q?3k3SGQKLD1YZjj2nbtsA3jjjorh5MACRnIfpthHGFgTfCelQ1BI73FHzp9mC?=
+ =?us-ascii?Q?bns3xSyJxI+A3Sm4fNedr1QGnhpestvFCBj7+/NO7ou2HnMhRGikWvs/ewHy?=
+ =?us-ascii?Q?glDdUVDmY6fHc5qy4dJzznci01ml80AaMiR801FxPyW2WbdGF2YFI7tqNage?=
+ =?us-ascii?Q?dpsvVwXbC7OzT/rpBZP6cGLwAWVUD5qjjJgQF5iwjUg7SguYnTK8Yd/bnl0k?=
+ =?us-ascii?Q?tFi/c8qQoEQSp5x5Qf4Vy1yf33nbGlw7ZOjBTmCJdaTYkLmsCcki6pmO0/GL?=
+ =?us-ascii?Q?yagnf/qDi+aDzWmp2y7F7vpUJMjzdau8SCuyz9XOKxq13s9f5yGqZmZwUhHA?=
+ =?us-ascii?Q?42f+kZ/Mria1fuNS5WT150AGgUeSNSqZn3hJKT6M+iwtyBYvQ/Flc7KwqCjC?=
+ =?us-ascii?Q?MwbKhGZsCLzt0OjlifEZPP23mD47YuiEyJupN4n+Mt3iePslcHWOHqOQAFMu?=
+ =?us-ascii?Q?vIu3VXkZrTMWXXjVmEbF1UIM0lPgdoHnve6z39Sg3HqlX28590+eKnneuEoq?=
+ =?us-ascii?Q?JOuBQa7X1g1OlMhY/p87JTwcnmwf5zRcZ0UDFhLYJy+VCbt3PCj/1wRmiHqU?=
+ =?us-ascii?Q?YuO7tqbTPCphyEt+dATeeK+zJt6X1ZQ7V/9yEAHTIiHk0GFApGafa/Rx5nf1?=
+ =?us-ascii?Q?tFIJh9qlPBfclNTrDEHVn13e5O8gGAmGxyZk9afVWlf7Ht9x4O8htADvNqgQ?=
+ =?us-ascii?Q?QeblKR3+A2Zpzo/oguaazOfIxbiyYVT6lWdww7FeY/B2PFuHJX93bkf/OnEh?=
+ =?us-ascii?Q?Aw=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 164a014a-8498-465d-0afa-08dd7c64b572
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 21:30:00.9874
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 21:30:14.1240
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x40x/TJBvMbPVQLqO3yKRc+5XMOHSEkO5FCk7GmxP0Q3KWj4cyikX2D7UQpzzjeo+x9hxkSZwyE/QH0K3WnK4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9523
+X-MS-Exchange-CrossTenant-UserPrincipalName: kQHneIKOtQlcOiLOO66SVPKoCqOhDszX+t9xAlcdzAW6UQgxacz+Nt6ijLKHCUPPu1E0gkd8twV86agSokE+FN6xF+RApDD21EfPjfaphag=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB8827
+X-OriginatorOrg: intel.com
 
-Convert fsl-imx-drm.txt to yaml format and create 5 yaml files for
-differences purpose.
+On Thu, Mar 06, 2025 at 05:44:37PM +0100, Robert Richter wrote:
+> There are various configuration cases of HDM decoder registers causing
+> different code paths. Add comments to cxl_hdm_decode_init() to better
+> explain them.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
 
-Additional changes:
-- add missed include file in examples.
-- add clocks, clock-names for ipu.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../imx/fsl,imx-display-subsystem.yaml        |  36 ++++
- .../display/imx/fsl,imx-parallel-display.yaml |  74 ++++++++
- .../bindings/display/imx/fsl,imx6q-ipu.yaml   |  97 +++++++++++
- .../bindings/display/imx/fsl,imx6qp-pre.yaml  |  55 ++++++
- .../bindings/display/imx/fsl,imx6qp-prg.yaml  |  52 ++++++
- .../bindings/display/imx/fsl-imx-drm.txt      | 160 ------------------
- 6 files changed, 314 insertions(+), 160 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx-display-subsystem.yaml
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx-parallel-display.yaml
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx6q-ipu.yaml
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx6qp-pre.yaml
- create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,imx6qp-prg.yaml
- delete mode 100644 Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-display-subsystem.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx-display-subsystem.yaml
-new file mode 100644
-index 0000000000000..92a0a797d099a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-display-subsystem.yaml
-@@ -0,0 +1,36 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx-display-subsystem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX DRM master device
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+description:
-+  The freescale i.MX DRM master device is a virtual device needed to list all
-+  IPU or other display interface nodes that comprise the graphics subsystem.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx-display-subsystem
-+
-+  ports:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      Should contain a list of phandles pointing to camera
-+      sensor interface ports of IPU devices.
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    display-subsystem {
-+        compatible = "fsl,imx-display-subsystem";
-+        ports = <&ipu_di0>;
-+    };
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-parallel-display.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx-parallel-display.yaml
-new file mode 100644
-index 0000000000000..bbcfe7e2958b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-parallel-display.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx-parallel-display.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Parallel display support
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx-parallel-display
-+
-+  interface-pix-fmt:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum:
-+      - rgb24
-+      - rgb565
-+      - bgr666
-+      - lvds666
-+
-+  ddc:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle describing the i2c bus handling the display data channel
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  port@0:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: input port connected to the IPU display interface
-+
-+  port@1:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: output port connected to a panel
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    display {
-+        compatible = "fsl,imx-parallel-display";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        interface-pix-fmt = "rgb24";
-+
-+        port@0 {
-+            reg = <0>;
-+
-+            endpoint {
-+                remote-endpoint = <&ipu_di0_disp0>;
-+            };
-+        };
-+
-+        port@1 {
-+            reg = <1>;
-+
-+            endpoint {
-+                remote-endpoint = <&panel_in>;
-+            };
-+        };
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx6q-ipu.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx6q-ipu.yaml
-new file mode 100644
-index 0000000000000..ec78645d4de00
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx6q-ipu.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx6q-ipu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX IPUv3
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - fsl,imx51-ipu
-+          - fsl,imx53-ipu
-+          - fsl,imx6q-ipu
-+      - items:
-+          - const: fsl,imx6qp-ipu
-+          - const: fsl,imx6q-ipu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: bus
-+      - const: di0
-+      - const: di1
-+
-+  resets:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  fsl,prg:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to prg node associated with this IPU instance
-+
-+  port@0:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: CSI0
-+
-+  port@1:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: CSI1
-+
-+  port@2:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: DI0
-+
-+  port@3:
-+    $ref: /schemas/graph.yaml#/$defs/port-base
-+    unevaluatedProperties: false
-+    description: DI1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - resets
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    display-controller@18000000 {
-+        compatible = "fsl,imx53-ipu";
-+        reg = <0x18000000 0x080000000>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        interrupts = <11 10>;
-+        resets = <&src 2>;
-+
-+        port@2 {
-+            reg = <2>;
-+
-+            endpoint {
-+                remote-endpoint = <&display_in>;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-pre.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-pre.yaml
-new file mode 100644
-index 0000000000000..73bc73ff6e693
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-pre.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx6qp-pre.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX PRE (Prefetch Resolve Engine)
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx6qp-pre
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: axi
-+  fsl,iram:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle pointing to the mmio-sram device node, that should be
-+      used for the PRE SRAM double buffer.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    pre@21c8000 {
-+        compatible = "fsl,imx6qp-pre";
-+        reg = <0x021c8000 0x1000>;
-+        interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&clks IMX6QDL_CLK_PRE0>;
-+        clock-names = "axi";
-+        fsl,iram = <&ocram2>;
-+    };
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-prg.yaml b/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-prg.yaml
-new file mode 100644
-index 0000000000000..dea9d3ad43c97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx6qp-prg.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/imx/fsl,imx6qp-prg.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale i.MX PRG (Prefetch Resolve Gasket)
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx6qp-prg
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: axi
-+
-+  fsl,pres:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      phandles to the PRE units attached to this PRG, with the fixed
-+      PRE as the first entry and the muxable PREs following.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/imx6qdl-clock.h>
-+
-+    prg@21cc000 {
-+        compatible = "fsl,imx6qp-prg";
-+        reg = <0x021cc000 0x1000>;
-+        clocks = <&clks IMX6QDL_CLK_PRG0_APB>, <&clks IMX6QDL_CLK_PRG0_AXI>;
-+        clock-names = "ipg", "axi";
-+        fsl,pres = <&pre1>, <&pre2>, <&pre3>;
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-deleted file mode 100644
-index 269b1ae2fca99..0000000000000
---- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-+++ /dev/null
-@@ -1,160 +0,0 @@
--Freescale i.MX DRM master device
--================================
--
--The freescale i.MX DRM master device is a virtual device needed to list all
--IPU or other display interface nodes that comprise the graphics subsystem.
--
--Required properties:
--- compatible: Should be "fsl,imx-display-subsystem"
--- ports: Should contain a list of phandles pointing to display interface ports
--  of IPU devices
--
--example:
--
--display-subsystem {
--	compatible = "fsl,imx-display-subsystem";
--	ports = <&ipu_di0>;
--};
--
--
--Freescale i.MX IPUv3
--====================
--
--Required properties:
--- compatible: Should be "fsl,<chip>-ipu" where <chip> is one of
--  - imx51
--  - imx53
--  - imx6q
--  - imx6qp
--- reg: should be register base and length as documented in the
--  datasheet
--- interrupts: Should contain sync interrupt and error interrupt,
--  in this order.
--- resets: phandle pointing to the system reset controller and
--          reset line index, see reset/fsl,imx-src.txt for details
--Additional required properties for fsl,imx6qp-ipu:
--- fsl,prg: phandle to prg node associated with this IPU instance
--Optional properties:
--- port@[0-3]: Port nodes with endpoint definitions as defined in
--  Documentation/devicetree/bindings/media/video-interfaces.txt.
--  Ports 0 and 1 should correspond to CSI0 and CSI1,
--  ports 2 and 3 should correspond to DI0 and DI1, respectively.
--
--example:
--
--ipu: ipu@18000000 {
--	#address-cells = <1>;
--	#size-cells = <0>;
--	compatible = "fsl,imx53-ipu";
--	reg = <0x18000000 0x080000000>;
--	interrupts = <11 10>;
--	resets = <&src 2>;
--
--	ipu_di0: port@2 {
--		reg = <2>;
--
--		ipu_di0_disp0: endpoint {
--			remote-endpoint = <&display_in>;
--		};
--	};
--};
--
--Freescale i.MX PRE (Prefetch Resolve Engine)
--============================================
--
--Required properties:
--- compatible: should be "fsl,imx6qp-pre"
--- reg: should be register base and length as documented in the
--  datasheet
--- clocks : phandle to the PRE axi clock input, as described
--  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
--  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
--- clock-names: should be "axi"
--- interrupts: should contain the PRE interrupt
--- fsl,iram: phandle pointing to the mmio-sram device node, that should be
--  used for the PRE SRAM double buffer.
--
--example:
--
--pre@21c8000 {
--	compatible = "fsl,imx6qp-pre";
--	reg = <0x021c8000 0x1000>;
--	interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
--	clocks = <&clks IMX6QDL_CLK_PRE0>;
--	clock-names = "axi";
--	fsl,iram = <&ocram2>;
--};
--
--Freescale i.MX PRG (Prefetch Resolve Gasket)
--============================================
--
--Required properties:
--- compatible: should be "fsl,imx6qp-prg"
--- reg: should be register base and length as documented in the
--  datasheet
--- clocks : phandles to the PRG ipg and axi clock inputs, as described
--  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
--  Documentation/devicetree/bindings/clock/imx6q-clock.yaml.
--- clock-names: should be "ipg" and "axi"
--- fsl,pres: phandles to the PRE units attached to this PRG, with the fixed
--  PRE as the first entry and the muxable PREs following.
--
--example:
--
--prg@21cc000 {
--	compatible = "fsl,imx6qp-prg";
--	reg = <0x021cc000 0x1000>;
--	clocks = <&clks IMX6QDL_CLK_PRG0_APB>,
--		 <&clks IMX6QDL_CLK_PRG0_AXI>;
--	clock-names = "ipg", "axi";
--	fsl,pres = <&pre1>, <&pre2>, <&pre3>;
--};
--
--Parallel display support
--========================
--
--Required properties:
--- compatible: Should be "fsl,imx-parallel-display"
--Optional properties:
--- interface-pix-fmt: How this display is connected to the
--  display interface. Currently supported types: "rgb24", "rgb565", "bgr666"
--  and "lvds666".
--- ddc: phandle describing the i2c bus handling the display data
--  channel
--- port@[0-1]: Port nodes with endpoint definitions as defined in
--  Documentation/devicetree/bindings/media/video-interfaces.txt.
--  Port 0 is the input port connected to the IPU display interface,
--  port 1 is the output port connected to a panel.
--
--example:
--
--disp0 {
--	compatible = "fsl,imx-parallel-display";
--	interface-pix-fmt = "rgb24";
--
--	port@0 {
--		reg = <0>;
--
--		display_in: endpoint {
--			remote-endpoint = <&ipu_di0_disp0>;
--		};
--	};
--
--	port@1 {
--		reg = <1>;
--
--		display_out: endpoint {
--			remote-endpoint = <&panel_in>;
--		};
--	};
--};
--
--panel {
--	...
--
--	port {
--		panel_in: endpoint {
--			remote-endpoint = <&display_out>;
--		};
--	};
--};
--- 
-2.34.1
 
