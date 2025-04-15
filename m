@@ -1,209 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E4F2741AF;
-	Tue, 15 Apr 2025 04:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB422741AD
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744693139; cv=none; b=doO1dtG6cvqd33MtZIJ2K7XaeHZvNpT1aJ/VCv2oe3XkIX9Opw15uioJFXLjsh+yHBTu/Lmh89vtTRTLcdkWPjDFZXQxdH2nSMfI+v34avvt8JNy0hvt+4zkM+9E2Pook3pdrp4R8tyRF3285mqzyrZlzR7wyaayeRdP7103YFo=
+	t=1744693191; cv=none; b=NHUZGDS7wdKD8FXAHSdJ8ZTBXzE9Nx7/bqaUVfbEtNhKVunujcP+E1ThgF0kSgbk6BMNf1RXhtxFA8G1gb5WSNcdsfHWW9mBkdnL8N4NKq73jT2JPYChzYoPBKH7dGIa/cOXnAhNBDzyjCdtaUfUmEP84yquHHGZ6Uk1pFetiOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744693139; c=relaxed/simple;
-	bh=9lGod6WqYYl/rO9s0C3ikCS4fm+rF6VO8qe2Pg1E0qI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B9Xn97NqOuCI2QBHeGVe+zSrjH1mOeajynGUtsqVY4k2HoYLLi6ALIviLzQibjemqou4hYyOTIpP4QHbrv6qImXnVtz/Ml8x0cEa3jCZ6CrjS8ir6Uj3agEZKhfYLByaVjN108iV3kQBY708aNXcHj1sAQSbeNa5ZDt8lUfAyy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JDhbaWGl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JDhbaWGl"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F15Nbc005441;
-	Tue, 15 Apr 2025 04:58:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wWezN7uFN+RzaL3qpsgmIaG5ICwn+G0ehLPVglPL+r0=; b=JDhbaWGl6+vvgC/E
-	7XyYtygurCecCzCJw/EqlnDpg4gSUVHP3Z1DVGnLYqDMAb7Yr1h0v989K9+Ccj8R
-	hSVUFIeyO9kg3nuVUNtuwzsj28yAhCENlnw+gPzVMy2UL1s3EdQ4ZNh9cxejB5q2
-	VaQZpCYxIuKK4h/qGZDVILimuoK2E2/F934z8ackR2VUAjBB0q9KABHmAwu292/i
-	en2eAu/jKp25zrqR5yauRPibpabosW0J1Ezghzo+7oM1ZYwAe0F8MyfzHhGCyJXY
-	8aq+1exz7Iqi5Qo5I8NChMABvxWjNyu6ZWTxgt4h15pY68SasLDLh5eSX2m55wif
-	RDm16A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhq6wys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Apr 2025 04:58:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53F4wpN0027101
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Apr 2025 04:58:51 GMT
-Received: from [10.50.52.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 14 Apr
- 2025 21:58:45 -0700
-Message-ID: <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
-Date: Tue, 15 Apr 2025 10:28:42 +0530
+	s=arc-20240116; t=1744693191; c=relaxed/simple;
+	bh=0NoQvozSdclDxiV2xGKA9RSXgdntWBTdc62dx5ProLE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=noX2s9C0TGeXqANvedp2ix25jXPkLiKpciKID0zyJk7KyloY/uERrpLxadjJLOSiZwDnGNqqcSvROfNMX8fgpruGuPBlYtAsIHL7v7BZ5pwwJFWcLB+fPZ2XFVhSG8yPM0KDVXd4M3EI6ZF1jch/1FYLbOqEqDlx9y0w4xs4jHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54BFA15A1;
+	Mon, 14 Apr 2025 21:59:47 -0700 (PDT)
+Received: from [10.163.49.104] (unknown [10.163.49.104])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A51D3F66E;
+	Mon, 14 Apr 2025 21:59:45 -0700 (PDT)
+Message-ID: <7e68b780-0591-4b05-98f0-154441f5dd14@arm.com>
+Date: Tue, 15 Apr 2025 10:29:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 01/20] media: iris: Skip destroying internal buffer if not
- dequeued
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Implement pte_po_index() for permission overlay
+ index
+To: Ryan Roberts <ryan.roberts@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250410052021.1533180-1-anshuman.khandual@arm.com>
+ <0bad3714-06b3-488f-a414-b825f409b926@arm.com>
 Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Stefan Schmidt
-	<stefan.schmidt@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
- <20250408-iris-dec-hevc-vp9-v1-1-acd258778bd6@quicinc.com>
- <811cd70e-dc27-4ce0-b7da-296fa5926f90@linaro.org>
- <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: QlRzTnvec0eQYNpsNvi7_FdVOlfD84PS
-X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=67fde78c cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=z6aZsptlrjkmvRdYYoYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: QlRzTnvec0eQYNpsNvi7_FdVOlfD84PS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
- impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150031
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <0bad3714-06b3-488f-a414-b825f409b926@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-On 4/14/2025 3:56 PM, Bryan O'Donoghue wrote:
-> On 11/04/2025 13:10, Bryan O'Donoghue wrote:
->> On 08/04/2025 16:54, Dikshita Agarwal wrote:
->>> Firmware might hold the DPB buffers for reference in case of sequence
->>> change, so skip destroying buffers for which QUEUED flag is not removed.
->>>
->>> Cc: stable@vger.kernel.org
->>> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue
->>> internal buffers")
->>> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
->>> ---
->>>   drivers/media/platform/qcom/iris/iris_buffer.c | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/
->>> media/platform/qcom/iris/iris_buffer.c
->>> index e5c5a564fcb8..75fe63cc2327 100644
->>> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
->>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
->>> @@ -396,6 +396,13 @@ int iris_destroy_internal_buffers(struct iris_inst
->>> *inst, u32 plane)
->>>       for (i = 0; i < len; i++) {
->>>           buffers = &inst->buffers[internal_buf_type[i]];
->>>           list_for_each_entry_safe(buf, next, &buffers->list, list) {
->>> +            /*
->>> +             * skip destroying internal(DPB) buffer if firmware
->>> +             * did not return it.
->>> +             */
->>> +            if (buf->attr & BUF_ATTR_QUEUED)
->>> +                continue;
->>> +
->>>               ret = iris_destroy_internal_buffer(inst, buf);
->>>               if (ret)
->>>                   return ret;
->>>
+On 4/14/25 18:58, Ryan Roberts wrote:
+> On 10/04/2025 06:20, Anshuman Khandual wrote:
+>> From: Ryan Roberts <ryan.roberts@arm.com>
 >>
->> iris_destroy_internal_buffers() is called from
+>> Previously pte_access_permitted() used FIELD_GET() directly to retrieve
+>> the permission overlay index from the pte. However, FIELD_GET() doesn't
+>> work for 128 bit quanitites. Since we are about to add support for D128
+>> pgtables, let's create a specific helper, pte_po_index() which can do
+>> the required mask and shift regardless of the data type width.
 >>
->> - iris_vdec_streamon_output
->> - iris_venc_streamon_output
->> - iris_close
->>
->> So if we skip releasing the buffer here, when will the memory be released ?
->>
->> Particularly the kfree() in iris_destroy_internal_buffer() ?
->>
->> iris_close -> iris_destroy_internal_buffers ! -> iris_destroy_buffer
->>
->> Is a leak right ?
-Good catch, Thanks!
->>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 >> ---
->> bod
+>> This patch applies on v6.15-rc1
+>>
+>>  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+>>  arch/arm64/include/asm/pgtable-prot.h  | 2 ++
+>>  arch/arm64/include/asm/pgtable.h       | 2 +-
+>>  3 files changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+>> index f3b77deedfa2..028a164924df 100644
+>> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+>> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+>> @@ -211,6 +211,7 @@
+>>  #define PTE_PO_IDX_2	(_AT(pteval_t, 1) << 62)
+>>  
+>>  #define PTE_PO_IDX_MASK		GENMASK_ULL(62, 60)
+>> +#define PTE_PO_IDX_SHIFT	60
+>>  
+>>  
+>>  /*
+>> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+>> index 7830d031742e..b53bc241e4e7 100644
+>> --- a/arch/arm64/include/asm/pgtable-prot.h
+>> +++ b/arch/arm64/include/asm/pgtable-prot.h
+>> @@ -136,6 +136,8 @@ static inline bool __pure lpa2_is_enabled(void)
+>>  	((pte & BIT(PTE_PI_IDX_1)) >> (PTE_PI_IDX_1 - 1)) | \
+>>  	((pte & BIT(PTE_PI_IDX_0)) >> (PTE_PI_IDX_0 - 0)))
+>>  
+>> +#define pte_po_index(pte)	((pte_val(pte) & PTE_PO_IDX_MASK) >> PTE_PO_IDX_SHIFT)
+>> +
+>>  /*
+>>   * Page types used via Permission Indirection Extension (PIE). PIE uses
+>>   * the USER, DBM, PXN and UXN bits to to generate an index which is used
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index d3b538be1500..41979c0e6c21 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -182,7 +182,7 @@ static inline bool por_el0_allows_pkey(u8 pkey, bool write, bool execute)
+>>  	(((pte_val(pte) & (PTE_VALID | PTE_USER)) == (PTE_VALID | PTE_USER)) && (!(write) || pte_write(pte)))
+>>  #define pte_access_permitted(pte, write) \
+>>  	(pte_access_permitted_no_overlay(pte, write) && \
+>> -	por_el0_allows_pkey(FIELD_GET(PTE_PO_IDX_MASK, pte_val(pte)), write, false))
+>> +	por_el0_allows_pkey(pte_po_index(pte), write, false))
+>>  #define pmd_access_permitted(pmd, write) \
+>>  	(pte_access_permitted(pmd_pte(pmd), (write)))
+>>  #define pud_access_permitted(pud, write) \
 > 
-> Thinking about this some more, I believe we should have some sort of
-> reaping routine.
-> 
-> - The firmware fails to release a buffer, it is up to APSS/Linux
->   to run some kind of reaping routine.
->   We can debate when is the right time to reset.
->   Perhaps instead of ignoring the buffer as you have done here
->   we schedule work with a timeout and if the timeout expires then
->   this triggers a reset/reap routine.
-> 
-> - Since Linux allocates a buffer on the APSS side, you can't have a
->   situation where firmware can indefinitely hold memory.
-> 
-> - APSS is in effect the bus master here since it can assert/deassert
->   RESET lines to the firmware, can control regulators and clocks.
-> 
-> So we should have some kind of watchdog logic here.
-> 
-> As alluded to above, what exactly do you do if firmware never returns a
-> buffer ? Accept memory leak on the APSS side ?
-> 
-> Rather we should agree when it is appropriate to run a watchdog routine to
-> 
-> 1. Timeout firmware not returning a buffer
-> 2. Put the iris/venus hardware into reset
-> 3. Reap leaked memory
-> 4. Restart
-> 
-> I see we have IRQ based watchdog logic but, I don't see that it reaps memory.
-> 
-> In any case we should have the ability to reset iris and reclaim/reap
-> memory in this type of situation.
-> 
-> Perhaps I'm off on a rant here but, this seems like a problem we should
-> address with a more comprehensive solution.
-> 
-That's right, but we don't need to over complicate this.
+> kvm also uses PTE_PO_IDX_MASK in compute_s1_overlay_permissions(). Shouldn't we
+> be converting that site too?
 
-We need to skip destroying these buffers for a running session so that the
-DPB buffers which are still being referenced by firmware are not lost.
-But these should be freed during session close which is missing in current
-code.
-Although firmware makes sure that during session close, all buffers are
-returned to driver and driver will release them but still we shouldn't rely
-for this on firmware and should handle in driver.
-Will fix this in next patch set.
+Just wanted to keep the KVM changes for later but sure, will fold these in.
 
-Thanks,
-Dikshita
-> ---
-> bod
+> 
+> ----8<----
+> diff --git a/arch/arm64/kvm/at.c b/arch/arm64/kvm/at.c
+> index 3a96c96816e9..d9a8ee8e600f 100644
+> --- a/arch/arm64/kvm/at.c
+> +++ b/arch/arm64/kvm/at.c
+> @@ -1073,7 +1073,7 @@ static void compute_s1_overlay_permissions(struct kvm_vcpu
+> *vcpu,
+>  {
+>         u8 idx, pov_perms, uov_perms;
+> 
+> -       idx = FIELD_GET(PTE_PO_IDX_MASK, wr->desc);
+> +       idx = pte_po_index(__pte(wr->desc));
+> 
+>         switch (wi->regime) {
+>         case TR_EL10:
+> ----8<----
