@@ -1,134 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303B61C9B9B;
-	Tue, 15 Apr 2025 08:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F21C9B9B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706866; cv=none; b=QEBLC+FTxbTojpYB81xpZaJCwWwFdDLvzu1IJpxl0uaXNHHBW1aMWUQlJyzS9bGhiKkga8p6KQ1kJgtlLRHvwStiABV20syIS5KI7CvF6y49GQdMagZmeBYNyXmYd+PXbXbkB0tneTGCne41AAAsCsQHUOdz+xbse1atRnK4UMU=
+	t=1744706918; cv=none; b=QhQ93wU+Cxvjuqf3OVF9cImu6yCpxSP7TXzd08SVa83UZ4SM9BDqoBiPRJGhdkxPCdoXojYFdqazV1+fBXqfcSb6VgOEiDyKTRr/eMgTqj4nfpcp8xRB9GXrc1ou0LwAjOcC1PtRoB6fMacZHPn6uMX7JSA/wsNOe9DVxpDym9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706866; c=relaxed/simple;
-	bh=rCkQaiV8UvXZZucXLcojjy+jRldKKp9rj/zIIx3mUcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mupNxTb/uheSlxqIdQBeapF6DmyfUT0tUKBKxjAb7OrQvxn+dVi5omFypKM0hLix9KbBLJHJztcVLn98TOwhY1KRSClh5dBetMuWZh5B/a3i4QGN9TvKk4zxrQPaQX9TuSevO4lhRK+XIjOV87Bl1u9R/JJo/Su0jducOyFf5CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BID48Jc4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744706918; c=relaxed/simple;
+	bh=YpGE9PeI6qljbIjagiXOfBb0zzsFMHdNh4gM5kYQc20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZUfFse5oq6qusIHiZHq3wDkJN4G/BJbwitY+fWqSUmi7cN1P274lAvd2XSXkxdRHOMgzH89mV/I5jFKotbNEfv6PIR8OLbTkC3u6fpdno1Z/9zAA4yG9/BTDIOCJssLVHzHShlIdSKTT55/Y063SwwsGpwfPzZ95WI1ptqdLho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BViVzzqA; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BID48Jc4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4FDC4CEE9;
-	Tue, 15 Apr 2025 08:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744706865;
-	bh=rCkQaiV8UvXZZucXLcojjy+jRldKKp9rj/zIIx3mUcc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BID48Jc49LHTZ1e1fkby0OWl7Oe8Ldt8kVabt6gCDQjf5E29z7zKgiZztk20aCpdz
-	 Rbk1TO62AoAN5E6wLjKmsrtqACu37msR2CPFUoOq+eRZxtE6BHIIL/qYekhoCk0RzS
-	 C5kl1SjOZnoZOV5M21zGerkxFowbKwyFqDOyPUqCeRlqyGcymrEsOv3DUDYvygEMW9
-	 XE9YDa/8kPh2AeroewtYFWRyb3kpx76vwxtdYA5KkhrwgP7ux/P5IlrWzNhqfR5d++
-	 iDCZ0WdWfyYhjEGErGDlhMvpsLw6qnRU5xx+F4GO7ZkHyi21AXD9RWTHZEdjoqV1/j
-	 HIi0bo+kgwlgw==
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so9210749a12.0;
-        Tue, 15 Apr 2025 01:47:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVig85Qb6XZbUPaMAiHwWGjDt2aI87TouoDPBzc+VyMUw/Ob83q7+tx08jFwpoxhTsgmc3bbkR2QGgFIWRX7ib@vger.kernel.org, AJvYcCWb4TnH/7BQDcADyTjOfbe5bM9yFS9Pts+hU6crJP1eVcJz5Yp0GbG9QmO6awC6iQe5R+2n6cJwX9hojLQ=@vger.kernel.org, AJvYcCXpZso0GtWNPdMZadlJmg9H1dl6s4INxWkVEDmlO7Islk39f7ww1Q/+1nxPbaHmCy20UAoIoW/si7ns0w==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmE5zcnUYx1ttKXNf8dUbdWKLobE8MKUivh5FnKTgisz/UhUu3
-	29dGyaxroSPNhbCffOg5uSK9xuNbe8B9sQffbKPe3U9QQrH+ZKZnzdErP/W2QVD66Rth3UYQ6Jp
-	HA1UnY/oQMxU3rT7m8KNT5NFXhxQ=
-X-Google-Smtp-Source: AGHT+IGGGp4mD43KUIHTnp6qprRyupvO+rjVcFQNkbhkl5DWOmFNSNrWDn0Ycc+UUCRvlHnlaxWm/lqhAeEBj4G3WcI=
-X-Received: by 2002:a17:906:dc94:b0:ac7:3a23:569c with SMTP id
- a640c23a62f3a-acad34468e4mr1593829966b.1.1744706864187; Tue, 15 Apr 2025
- 01:47:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BViVzzqA"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso34415e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:48:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744706915; x=1745311715; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P2dLV0t9lDObm6obO+scd0gk1JmVp4YwTv7aMmXR6dQ=;
+        b=BViVzzqAS+RwFsvXqalo32FHBj7Ze9d2F3a6pSssFPxP4M77hI33r3HxCH1PWKEKwt
+         2cYZtkNcGmBk8x7gzn1nuugBvzwhpsudNmugKfKc7jmadl1E4v6vHa5BToq6A95OLMKU
+         J1vk7NZWu6DW9DT92km1Xt/wzQGYFteE+QxQWDpMTI983t5IXFbjU/hbmD3z/L/J3t6G
+         tzhqAGJzHEZMn8g6+W7DlXo1tw/aYqLppU33NR7au8b+N5AwhEhSadI32CjUqxiHWhVh
+         Hl6dvlgwZ2yEh04FvU02o/NJxr5j7wvx6pYVVp7qfG8IDswB3mA1ltlmxXTMPYka94HF
+         u9hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744706915; x=1745311715;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P2dLV0t9lDObm6obO+scd0gk1JmVp4YwTv7aMmXR6dQ=;
+        b=JiGdfzBp9zlr52CGTlOEcebxAm/4lOI0zFQ11LEIkrvVqaGwntTaF5cbm2Loc1HYlP
+         qhZuGiM1JKDjAGTpOqzMKS7fAI6d+aW5khA6nuuqoRCY+W3v3/Ed6OooUverIfar4nUm
+         d/KBiDBrgxSqJa4z/5QIYbnLRHIVbPefyD2oBFHeSY2wW19yG5NP62jc1QNULf4x4yj8
+         tejynsCVqAwRI8Wkg545Ovc7XcAWGiIfiqxZ2YoDyrXUoTsX6uSwRmISTScLcTyUNJc7
+         dkLxVW5AzfstGC0duVWzipw9qJYgJ7a85dtuAWUHqFtEuFbBvVViMjXm8ZCdsFfEvwTO
+         Y/RA==
+X-Gm-Message-State: AOJu0Yz15HkLKsE0dhyhfcavrOY9bTAwI+sUW8QcWkcHzOWCZo4JuD5U
+	LdUVAZUmXoJmnnO9lZ5t5FG+n2hzzNKGsHr2AXZ4n2e8t/fcp18BP23mzmoQSw==
+X-Gm-Gg: ASbGnctFLA7vzopqRU61mL90AKr0OjcBycikqd0GHdYzFg73s5l9N+6OPcObynUhcBL
+	S5FSiMD9G44p6gP1s04JHaAx0FD4TSoB1yLtqnREE5tbORIt2Gue5DF6Su+/AhN36gzDkIpSpnS
+	g2mW+Jpxq3iEFk84oBR4Xk11cth7V23EEzs3IS5ua9r4ZEDMqDIZVY6qQqLvgDensQNxTNkG7YQ
+	uhMCWLk8DRO3ZCxYb4hBJd8UeLi0sysGlyRw0E1zUIg9uv4XZK3e9qshWFEAXWXvmeCDS0SiibH
+	TNj291/OucRywyv1mRpccLXv/7euFzbMWtAAQKfLll29Cm/xgWyTXbcE0NF/NoUl/DZ3n46c51m
+	YMd8=
+X-Google-Smtp-Source: AGHT+IEw3FcKaMzh8DzK+uNK+g/Fol/Pa9NIHCybAcjdx76dEeQ3Is9Gamr39YCVdPE+Fgj9TkcRtA==
+X-Received: by 2002:a05:600c:4247:b0:43d:169e:4d75 with SMTP id 5b1f17b1804b1-44039657a6bmr408175e9.1.1744706914774;
+        Tue, 15 Apr 2025 01:48:34 -0700 (PDT)
+Received: from google.com (202.88.205.35.bc.googleusercontent.com. [35.205.88.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43cb43sm13614636f8f.65.2025.04.15.01.48.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 01:48:34 -0700 (PDT)
+Date: Tue, 15 Apr 2025 08:48:30 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org, kees@kernel.org, elver@google.com,
+	andreyknvl@gmail.com, ryabinin.a.a@gmail.com
+Subject: Re: [PATCH] lib/test_ubsan.c: Fix panic from test_ubsan_out_of_bounds
+Message-ID: <Z_4dXk0RlyXYuzYt@google.com>
+References: <20250414213648.2660150-1-smostafa@google.com>
+ <20250414170414.74f1c4e3542b1f10c8b24d90@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-kunit-mips-v3-0-4ec2461b5a7e@linutronix.de> <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
-In-Reply-To: <20250415-kunit-mips-v3-1-4ec2461b5a7e@linutronix.de>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Tue, 15 Apr 2025 16:47:31 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5b8ePEkCyECax37BOiqu57ZVRt_FHt11ijbPgsty+r=A@mail.gmail.com>
-X-Gm-Features: ATxdqUFuEM48gRpDnFeEggn2BIbSPZXdcbVAh9Rsa0I8PR7GkoEkvAFVvvabfxk
-Message-ID: <CAAhV-H5b8ePEkCyECax37BOiqu57ZVRt_FHt11ijbPgsty+r=A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] MIPS: Don't crash in stack_top() for tasks without
- ABI or vDSO
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414170414.74f1c4e3542b1f10c8b24d90@linux-foundation.org>
 
-Hi, Thomas,
+On Mon, Apr 14, 2025 at 05:04:14PM -0700, Andrew Morton wrote:
+> On Mon, 14 Apr 2025 21:36:48 +0000 Mostafa Saleh <smostafa@google.com> wrote:
+> 
+> > Running lib_ubsan.ko on arm64 (without CONFIG_UBSAN_TRAP) panics the
+> > kernel
+> > 
+> > [   31.616546] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: test_ubsan_out_of_bounds+0x158/0x158 [test_ubsan]
+> > [   31.646817] CPU: 3 UID: 0 PID: 179 Comm: insmod Not tainted 6.15.0-rc2 #1 PREEMPT
+> > [   31.648153] Hardware name: linux,dummy-virt (DT)
+> > [   31.648970] Call trace:
+> > [   31.649345]  show_stack+0x18/0x24 (C)
+> > [   31.650960]  dump_stack_lvl+0x40/0x84
+> > [   31.651559]  dump_stack+0x18/0x24
+> > [   31.652264]  panic+0x138/0x3b4
+> > [   31.652812]  __ktime_get_real_seconds+0x0/0x10
+> > [   31.653540]  test_ubsan_load_invalid_value+0x0/0xa8 [test_ubsan]
+> > [   31.654388]  init_module+0x24/0xff4 [test_ubsan]
+> > [   31.655077]  do_one_initcall+0xd4/0x280
+> > [   31.655680]  do_init_module+0x58/0x2b4
+> > 
+> > That happens because the test corrupts other data in the stack:
+> > 400:   d5384108        mrs     x8, sp_el0
+> > 404:   f9426d08        ldr     x8, [x8, #1240]
+> > 408:   f85f83a9        ldur    x9, [x29, #-8]
+> > 40c:   eb09011f        cmp     x8, x9
+> > 410:   54000301        b.ne    470 <test_ubsan_out_of_bounds+0x154>  // b.any
+> > 
+> > As there is no guarantee the compiler will order the local variables
+> > as declared in the module:
+> 
+> argh.
+> 
+> > 	volatile char above[4] = { }; /* Protect surrounding memory. */
+> > 	volatile int arr[4];
+> > 	volatile char below[4] = { }; /* Protect surrounding memory. */
+> > 
+> > So, instead of writing out-of-bound, we can read out-of-bound which
+> > still triggers UBSAN but doesn't corrupt the stack.
+> 
+> Would it be better to put the above three items into a struct, so we
+> specify the layout?
 
-On Tue, Apr 15, 2025 at 3:10=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> Not all tasks have an ABI associated or vDSO mapped,
-> for example kthreads never do.
-> If such a task ever ends up calling stack_top(), it will derefence the
-> NULL ABI pointer and crash.
->
-> This can for example happen when using kunit:
->
->     mips_stack_top+0x28/0xc0
->     arch_pick_mmap_layout+0x190/0x220
->     kunit_vm_mmap_init+0xf8/0x138
->     __kunit_add_resource+0x40/0xa8
->     kunit_vm_mmap+0x88/0xd8
->     usercopy_test_init+0xb8/0x240
->     kunit_try_run_case+0x5c/0x1a8
->     kunit_generic_run_threadfn_adapter+0x28/0x50
->     kthread+0x118/0x240
->     ret_from_kernel_thread+0x14/0x1c
->
-> Only dereference the ABI point if it is set.
->
-> Also move the randomization adjustment into the same conditional.
->
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
->  arch/mips/kernel/process.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-> index b630604c577f9ff3f2493b0f254363e499c8318c..02aa6a04a21da437909eeac4f=
-149155cc298f5b5 100644
-> --- a/arch/mips/kernel/process.c
-> +++ b/arch/mips/kernel/process.c
-> @@ -690,18 +690,20 @@ unsigned long mips_stack_top(void)
->         }
->
->         /* Space for the VDSO, data page & GIC user page */
-> -       top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
-> -       top -=3D PAGE_SIZE;
-> -       top -=3D mips_gic_present() ? PAGE_SIZE : 0;
-> +       if (current->thread.abi) {
-> +               top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
-> +               top -=3D PAGE_SIZE;
-> +               top -=3D mips_gic_present() ? PAGE_SIZE : 0;
-I'm not sure, but maybe this line has nothing to do with VDSO.
+Yes, that also should work, but I ran into a panic because of another
+problem, where the padding before and after the arr is 4 bytes, but
+the index is "5", which is 8 bytes out of bound.
+As we can only use 4/-1 as out of bounds.
+That should also work:
 
-Huacai
+diff --git a/lib/test_ubsan.c b/lib/test_ubsan.c
+index 8772e5edaa4f..4533e9cb52e6 100644
+--- a/lib/test_ubsan.c
++++ b/lib/test_ubsan.c
+@@ -77,18 +77,18 @@ static void test_ubsan_shift_out_of_bounds(void)
+ 
+ static void test_ubsan_out_of_bounds(void)
+ {
+-	volatile int i = 4, j = 5, k = -1;
+-	volatile char above[4] = { }; /* Protect surrounding memory. */
+-	volatile int arr[4];
+-	volatile char below[4] = { }; /* Protect surrounding memory. */
+-
+-	above[0] = below[0];
++	volatile int i = 4, j = 4, k = -1;
++	struct {
++		volatile char above[4]; /* Protect surrounding memory. */
++		volatile int arr[4];
++		volatile char below[4]; /* Protect surrounding memory. */
++	} data;
+ 
+ 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
+-	arr[j] = i;
++	data.arr[j] = i;
+ 
+ 	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
+-	arr[k] = i;
++	data.arr[k] = i;
+ }
+ 
+ enum ubsan_test_enum {
 
-> +
-> +               /* Space to randomize the VDSO base */
-> +               if (current->flags & PF_RANDOMIZE)
-> +                       top -=3D VDSO_RANDOMIZE_SIZE;
-> +       }
->
->         /* Space for cache colour alignment */
->         if (cpu_has_dc_aliases)
->                 top -=3D shm_align_mask + 1;
->
-> -       /* Space to randomize the VDSO base */
-> -       if (current->flags & PF_RANDOMIZE)
-> -               top -=3D VDSO_RANDOMIZE_SIZE;
-> -
->         return top;
->  }
->
->
-> --
-> 2.49.0
->
+---
+
+I can send v2 with this approach if it's better.
+
+Thanks,
+Mostafa
+
+> 
+> > --- a/lib/test_ubsan.c
+> > +++ b/lib/test_ubsan.c
+> > @@ -77,18 +77,15 @@ static void test_ubsan_shift_out_of_bounds(void)
+> >  
+> >  static void test_ubsan_out_of_bounds(void)
+> >  {
+> > -	volatile int i = 4, j = 5, k = -1;
+> > -	volatile char above[4] = { }; /* Protect surrounding memory. */
+> > +	volatile int j = 5, k = -1;
+> > +	volatile int scratch[4] = { };
+> >  	volatile int arr[4];
+> > -	volatile char below[4] = { }; /* Protect surrounding memory. */
+> > -
+> > -	above[0] = below[0];
+> >  
+> >  	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "above");
+> > -	arr[j] = i;
+> > +	scratch[1] = arr[j];
+> >  
+> >  	UBSAN_TEST(CONFIG_UBSAN_BOUNDS, "below");
+> > -	arr[k] = i;
+> > +	scratch[2] = arr[k];
+> >  }
+> 
