@@ -1,206 +1,261 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD40D27FD68
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40171F460E;
+	Tue, 15 Apr 2025 08:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705390; cv=none; b=bTeT+vVzjgM9qAH27nWV96Tl2J6py51+UbpheCYGCM2NbdW6ICngZAvkyq8ZeqwhCmH9ARV+wmmt2Uxu1lYKlfAecsVuC0E6d9qWYdJamx3ooXFsDpSKoVYXWH1UefwHrwoxy/s17LKrZZsj6lOk7suApMC3JafF9BjnfHYmtaw=
+	t=1744705409; cv=none; b=UNF5L998vvgF9PoqrZW7mAJSk1SnCJUCypJG+vHlZoxZ+yNWYZXoJl3mW+mwETVsqE9u0LiptLGLCHSPypjNHlktqKSxEysuOo6yr7/QDzF0109/3lkBJsFiLeGO4ZquMB8oNUNETkiEVm48itWK+YbDacHHNMeMO9S2cJpQJSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705390; c=relaxed/simple;
-	bh=JpGjNbvJ68b1+c8DHkGd85uMGGsQlUTSW2ospchYelE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AlNb2t0nipi97xwiRGIlcruTH2cmYuZ0/WwnyFnAhelE1o+5scU1amJoWlSfra43ghqValUkg9hBXZlGCY9ZOyn/kD/FZqRry/VzvxBG+5FbaatfU2enK7Sl9O4f7tcG81lRTS6qe7G9ccclrgkK0Pxld7M7f1bx+dEVosNgdAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u4bYu-0001z5-0U; Tue, 15 Apr 2025 10:22:32 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u4bYs-000O14-3C;
-	Tue, 15 Apr 2025 10:22:31 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u4bYs-0003Kq-2s;
-	Tue, 15 Apr 2025 10:22:30 +0200
-Message-ID: <eee41968ecb0c16da214819b9a43e9dd881fcf13.camel@pengutronix.de>
-Subject: Re: [PATCH v4 6/7] clk: spacemit: define new syscons with only
- resets
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Alex Elder <elder@riscstar.com>, mturquette@baylibre.com,
- sboyd@kernel.org,  robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: dlan@gentoo.org, heylenay@4d2.org, guodong@riscstar.com, 
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
- spacemit@lists.linux.dev, devicetree@vger.kernel.org,
- linux-clk@vger.kernel.org,  linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Date: Tue, 15 Apr 2025 10:22:30 +0200
-In-Reply-To: <20250414191715.2264758-7-elder@riscstar.com>
-References: <20250414191715.2264758-1-elder@riscstar.com>
-	 <20250414191715.2264758-7-elder@riscstar.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1744705409; c=relaxed/simple;
+	bh=THPWTcNrmMqrZSGJ5ztCISz7v65l37PxQ6MERtG7qnA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CeG4kPOP8Pd8qeJq4Dz1U91Wt+E72f+eALhILEoe6/1uyImDqiHMlt9sNQ5xI305/J5FOEycT6vB0ldLeN84AnH+j4JCqjOyPBz+YTR/pU8qkO1TxtIIpzSoDgLISJXnHreJNTdloUvbRR19fTeb40KWVt875ZmoSOxxWHS+6CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BFPJlCZR; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BFPJlCZR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744705408; x=1776241408;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=THPWTcNrmMqrZSGJ5ztCISz7v65l37PxQ6MERtG7qnA=;
+  b=BFPJlCZRyH5at2QFlBDZ9cUhlx9QJ2Er+gn4T4EoTBv8QPNMYTS6myfP
+   patAcMZeAS/uLZZOmrsVbQUVHIyChLFQxQ60yoKFmRgjIEno/VvpK7IHI
+   VjvMLvS+gqOcDTunsXQnPvcpPy7mItdgOu24Q8jW8n2utgLmA7tefuNWN
+   zkODHHt3cCErbovHgKGaM/6LQTxAWcPIO9GDCTI2+AfE8XYZov5lyxemm
+   nSnIvKuJ2iS1rx1eaGZrCCT3fZtxdl5Mjs4yBEY7F+gPKSfOJ8h9FD9wD
+   XmAKwflScssdXsNTMjRW546k+El9UNShsbgK/aDBFxUDKJNEWfIKoG+h0
+   A==;
+X-CSE-ConnectionGUID: P8RmYE6uThe0hOHQuZcAEg==
+X-CSE-MsgGUID: Pakhtqd/RzyiPIKKyEEsjw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46115887"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46115887"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:23:28 -0700
+X-CSE-ConnectionGUID: 79kwlrdORlSUgmKv+Rel7Q==
+X-CSE-MsgGUID: REX9lZgRRPqeZoKtDBkMgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130055502"
+Received: from emr.sh.intel.com ([10.112.229.56])
+  by fmviesa007.fm.intel.com with ESMTP; 15 Apr 2025 01:23:24 -0700
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 05/22] perf/x86/intel: Rename x86_pmu.pebs to x86_pmu.ds_pebs
+Date: Tue, 15 Apr 2025 11:44:11 +0000
+Message-Id: <20250415114428.341182-6-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-On Mo, 2025-04-14 at 14:17 -0500, Alex Elder wrote:
-> Enable support for three additional syscon CCUs which support reset
-> controls but no clocks:  ARCPU, RCPU2, and APBC2.
->=20
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
->  drivers/clk/spacemit/ccu-k1.c | 93 +++++++++++++++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
->=20
-> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.=
-c
-> index 7494c97c3c7ec..cd1a0668bd203 100644
-> --- a/drivers/clk/spacemit/ccu-k1.c
-> +++ b/drivers/clk/spacemit/ccu-k1.c
-> @@ -130,6 +130,36 @@
->  #define APMU_EMAC0_CLK_RES_CTRL		0x3e4
->  #define APMU_EMAC1_CLK_RES_CTRL		0x3ec
-> =20
-> +/* RCPU register offsets */
-> +#define RCPU_SSP0_CLK_RST		0x0028
-> +#define RCPU_I2C0_CLK_RST		0x0030
-> +#define RCPU_UART1_CLK_RST		0x003c
-> +#define RCPU_CAN_CLK_RST		0x0048
-> +#define RCPU_IR_CLK_RST			0x004c
-> +#define RCPU_UART0_CLK_RST		0x00d8
-> +#define AUDIO_HDMI_CLK_CTRL		0x2044
-> +
-> +/* RCPU2 register offsets */
-> +#define RCPU2_PWM0_CLK_RST		0x0000
-> +#define RCPU2_PWM1_CLK_RST		0x0004
-> +#define RCPU2_PWM2_CLK_RST		0x0008
-> +#define RCPU2_PWM3_CLK_RST		0x000c
-> +#define RCPU2_PWM4_CLK_RST		0x0010
-> +#define RCPU2_PWM5_CLK_RST		0x0014
-> +#define RCPU2_PWM6_CLK_RST		0x0018
-> +#define RCPU2_PWM7_CLK_RST		0x001c
-> +#define RCPU2_PWM8_CLK_RST		0x0020
-> +#define RCPU2_PWM9_CLK_RST		0x0024
-> +
-> +/* APBC2 register offsets */
-> +#define APBC2_UART1_CLK_RST		0x0000
-> +#define APBC2_SSP2_CLK_RST		0x0004
-> +#define APBC2_TWSI3_CLK_RST		0x0008
-> +#define APBC2_RTC_CLK_RST		0x000c
-> +#define APBC2_TIMERS0_CLK_RST		0x0010
-> +#define APBC2_KPC_CLK_RST		0x0014
-> +#define APBC2_GPIO_CLK_RST		0x001c
-> +
->  struct ccu_reset_data {
->  	u32 offset;
->  	u32 assert_mask;
-> @@ -1177,6 +1207,57 @@ static const struct spacemit_ccu_data k1_ccu_apmu_=
-data =3D {
->  	.reset_num	=3D ARRAY_SIZE(apmu_reset_data),
->  };
-> =20
-> +static const struct ccu_reset_data rcpu_reset_data[] =3D {
-> +	[RESET_RCPU_SSP0]	=3D RESET_DATA(RCPU_SSP0_CLK_RST,	0, BIT(0)),
-> +	[RESET_RCPU_I2C0]	=3D RESET_DATA(RCPU_I2C0_CLK_RST,	0, BIT(0)),
-> +	[RESET_RCPU_UART1]	=3D RESET_DATA(RCPU_UART1_CLK_RST, 0, BIT(0)),
-> +	[RESET_RCPU_IR]		=3D RESET_DATA(RCPU_CAN_CLK_RST,	0, BIT(0)),
-> +	[RESET_RCPU_CAN]	=3D RESET_DATA(RCPU_IR_CLK_RST,	0, BIT(0)),
-> +	[RESET_RCPU_UART0]	=3D RESET_DATA(RCPU_UART0_CLK_RST, 0, BIT(0)),
-> +	[RESET_RCPU_HDMI_AUDIO]	=3D RESET_DATA(AUDIO_HDMI_CLK_CTRL, 0, BIT(0)),
-> +};
-> +
-> +static struct spacemit_ccu_data k1_ccu_rcpu_data =3D {
+Since architectural PEBS would be introduced in subsequent patches,
+rename x86_pmu.pebs to x86_pmu.ds_pebs for distinguishing with the
+upcoming architectural PEBS.
 
-Could be const.
+Besides restrict reserve_ds_buffers() helper to work only for the
+legacy DS based PEBS and avoid it to corrupt the pebs_active flag and
+release PEBS buffer incorrectly for arch-PEBS since the later patch
+would reuse these flags and alloc/release_pebs_buffer() helpers for
+arch-PEBS.
 
-> +	/* No clocks in the RCPU CCU */
-> +	.reset_data	=3D rcpu_reset_data,
-> +	.reset_num	=3D ARRAY_SIZE(rcpu_reset_data),
-> +};
-> +
-> +static const struct ccu_reset_data rcpu2_reset_data[] =3D {
-> +	[RESET_RCPU2_PWM0]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM1]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM2]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM3]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM4]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM5]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM6]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM7]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM8]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +	[RESET_RCPU2_PWM9]	=3D RESET_DATA(RCPU2_PWM9_CLK_RST, BIT(2), BIT(0)),
-> +};
-> +
-> +static struct spacemit_ccu_data k1_ccu_rcpu2_data =3D {
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/core.c |  6 +++---
+ arch/x86/events/intel/ds.c   | 32 ++++++++++++++++++--------------
+ arch/x86/events/perf_event.h |  2 +-
+ 3 files changed, 22 insertions(+), 18 deletions(-)
 
-const
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 16049ba63135..7bbc7a740242 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4584,7 +4584,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 		.guest = intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_mask,
+ 	};
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return arr;
+ 
+ 	/*
+@@ -5764,7 +5764,7 @@ static __init void intel_clovertown_quirk(void)
+ 	 * these chips.
+ 	 */
+ 	pr_warn("PEBS disabled due to CPU errata\n");
+-	x86_pmu.pebs = 0;
++	x86_pmu.ds_pebs = 0;
+ 	x86_pmu.pebs_constraints = NULL;
+ }
+ 
+@@ -6252,7 +6252,7 @@ tsx_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ static umode_t
+ pebs_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ {
+-	return x86_pmu.pebs ? attr->mode : 0;
++	return x86_pmu.ds_pebs ? attr->mode : 0;
+ }
+ 
+ static umode_t
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index d894cf3f631e..1d6b3fa6a8eb 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -624,7 +624,7 @@ static int alloc_pebs_buffer(int cpu)
+ 	int max, node = cpu_to_node(cpu);
+ 	void *buffer, *insn_buff, *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return 0;
+ 
+ 	buffer = dsalloc_pages(bsiz, GFP_KERNEL, cpu);
+@@ -659,7 +659,7 @@ static void release_pebs_buffer(int cpu)
+ 	struct cpu_hw_events *hwev = per_cpu_ptr(&cpu_hw_events, cpu);
+ 	void *cea;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	kfree(per_cpu(insn_buffer, cpu));
+@@ -734,7 +734,7 @@ void release_ds_buffers(void)
+ {
+ 	int cpu;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	for_each_possible_cpu(cpu)
+@@ -750,7 +750,8 @@ void release_ds_buffers(void)
+ 	}
+ 
+ 	for_each_possible_cpu(cpu) {
+-		release_pebs_buffer(cpu);
++		if (x86_pmu.ds_pebs)
++			release_pebs_buffer(cpu);
+ 		release_bts_buffer(cpu);
+ 	}
+ }
+@@ -761,15 +762,17 @@ void reserve_ds_buffers(void)
+ 	int cpu;
+ 
+ 	x86_pmu.bts_active = 0;
+-	x86_pmu.pebs_active = 0;
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (x86_pmu.ds_pebs)
++		x86_pmu.pebs_active = 0;
++
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	if (!x86_pmu.bts)
+ 		bts_err = 1;
+ 
+-	if (!x86_pmu.pebs)
++	if (!x86_pmu.ds_pebs)
+ 		pebs_err = 1;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -781,7 +784,8 @@ void reserve_ds_buffers(void)
+ 		if (!bts_err && alloc_bts_buffer(cpu))
+ 			bts_err = 1;
+ 
+-		if (!pebs_err && alloc_pebs_buffer(cpu))
++		if (x86_pmu.ds_pebs && !pebs_err &&
++		    alloc_pebs_buffer(cpu))
+ 			pebs_err = 1;
+ 
+ 		if (bts_err && pebs_err)
+@@ -793,7 +797,7 @@ void reserve_ds_buffers(void)
+ 			release_bts_buffer(cpu);
+ 	}
+ 
+-	if (pebs_err) {
++	if (x86_pmu.ds_pebs && pebs_err) {
+ 		for_each_possible_cpu(cpu)
+ 			release_pebs_buffer(cpu);
+ 	}
+@@ -805,7 +809,7 @@ void reserve_ds_buffers(void)
+ 		if (x86_pmu.bts && !bts_err)
+ 			x86_pmu.bts_active = 1;
+ 
+-		if (x86_pmu.pebs && !pebs_err)
++		if (x86_pmu.ds_pebs && !pebs_err)
+ 			x86_pmu.pebs_active = 1;
+ 
+ 		for_each_possible_cpu(cpu) {
+@@ -2662,12 +2666,12 @@ void __init intel_pebs_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_DTES64))
+ 		return;
+ 
+-	x86_pmu.pebs = boot_cpu_has(X86_FEATURE_PEBS);
++	x86_pmu.ds_pebs = boot_cpu_has(X86_FEATURE_PEBS);
+ 	x86_pmu.pebs_buffer_size = PEBS_BUFFER_SIZE;
+ 	if (x86_pmu.version <= 4)
+ 		x86_pmu.pebs_no_isolation = 1;
+ 
+-	if (x86_pmu.pebs) {
++	if (x86_pmu.ds_pebs) {
+ 		char pebs_type = x86_pmu.intel_cap.pebs_trap ?  '+' : '-';
+ 		char *pebs_qual = "";
+ 		int format = x86_pmu.intel_cap.pebs_format;
+@@ -2759,7 +2763,7 @@ void __init intel_pebs_init(void)
+ 
+ 		default:
+ 			pr_cont("no PEBS fmt%d%c, ", format, pebs_type);
+-			x86_pmu.pebs = 0;
++			x86_pmu.ds_pebs = 0;
+ 		}
+ 	}
+ }
+@@ -2768,7 +2772,7 @@ void perf_restore_debug_store(void)
+ {
+ 	struct debug_store *ds = __this_cpu_read(cpu_hw_events.ds);
+ 
+-	if (!x86_pmu.bts && !x86_pmu.pebs)
++	if (!x86_pmu.bts && !x86_pmu.ds_pebs)
+ 		return;
+ 
+ 	wrmsrl(MSR_IA32_DS_AREA, (unsigned long)ds);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ac6743e392ad..2ef407d0a7e2 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -898,7 +898,7 @@ struct x86_pmu {
+ 	 */
+ 	unsigned int	bts			:1,
+ 			bts_active		:1,
+-			pebs			:1,
++			ds_pebs			:1,
+ 			pebs_active		:1,
+ 			pebs_broken		:1,
+ 			pebs_prec_dist		:1,
+-- 
+2.40.1
 
-> +	/* No clocks in the RCPU2 CCU */
-> +	.reset_data	=3D rcpu2_reset_data,
-> +	.reset_num	=3D ARRAY_SIZE(rcpu2_reset_data),
-> +};
-> +
-> +static const struct ccu_reset_data apbc2_reset_data[] =3D {
-> +	[RESET_APBC2_UART1]	=3D RESET_DATA(APBC2_UART1_CLK_RST, BIT(2), (0)),
-> +	[RESET_APBC2_SSP2]	=3D RESET_DATA(APBC2_SSP2_CLK_RST, BIT(2), (0)),
-> +	[RESET_APBC2_TWSI3]	=3D RESET_DATA(APBC2_TWSI3_CLK_RST, BIT(2), (0)),
-> +	[RESET_APBC2_RTC]	=3D RESET_DATA(APBC2_RTC_CLK_RST,	BIT(2), (0)),
-> +	[RESET_APBC2_TIMERS0]	=3D RESET_DATA(APBC2_TIMERS0_CLK_RST, BIT(2), (0)=
-),
-> +	[RESET_APBC2_KPC]	=3D RESET_DATA(APBC2_KPC_CLK_RST,	BIT(2), (0)),
-> +	[RESET_APBC2_GPIO]	=3D RESET_DATA(APBC2_GPIO_CLK_RST, BIT(2), (0)),
-
-Superfluous parentheses.
-
-> +};
-> +
-> +static struct spacemit_ccu_data k1_ccu_apbc2_data =3D {
-
-const
-
-> +	/* No clocks in the APBC2 CCU */
-> +	.reset_data	=3D apbc2_reset_data,
-> +	.reset_num	=3D ARRAY_SIZE(apbc2_reset_data),
-> +};
-> +
->  static int spacemit_reset_update(struct reset_controller_dev *rcdev,
->  				 unsigned long id, bool assert)
->  {
-> @@ -1351,6 +1432,18 @@ static const struct of_device_id of_k1_ccu_match[]=
- =3D {
->  		.compatible	=3D "spacemit,k1-syscon-apmu",
->  		.data		=3D &k1_ccu_apmu_data,
->  	},
-> +	{
-> +		.compatible	=3D "spacemit,k1-syscon-rcpu",
-> +		.data		=3D &k1_ccu_rcpu_data,
-> +	},
-> +	{
-> +		.compatible	=3D "spacemit,k1-syscon-rcpu2",
-> +		.data		=3D &k1_ccu_rcpu2_data,
-> +	},
-> +	{
-> +		.compatible	=3D "spacemit,k1-syscon-apbc2",
-> +		.data		=3D &k1_ccu_apbc2_data,
-> +	},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, of_k1_ccu_match);
-
-regards
-Philipp
