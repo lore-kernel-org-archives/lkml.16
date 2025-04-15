@@ -1,155 +1,90 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647472D8DB5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDDC2D8DCE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744761200; cv=none; b=Mc2Mzbr9AvaQ9YPo8Z78dUbziUpGEUZt7iNVcf9rO9wbdJ8HfkJyxgoPm3WaIRBR8cg4WW5JFXSTMQPAqopCFDt3X2WKvPmzIk4nXrpyc1taQ9KZsdZ7CLuR9ChCpXIk1I3+gdugothhfsetB/ZnhByLK4NX73nxpKOMCIZR5mU=
+	t=1744761217; cv=none; b=DLjMSFBcEMmo49PXfZ070ohJPiOH0/6W2cTAhFjeCpf8qnw1T/MQTR0s/ksP7lvhK2BfCdgc9+sXfmqT6Xmb1qpLvEti8aKA2q+HtfClB0P73kbcy5zAFslVtqLXDZoZd8/kcQ5jgAYWSDYsMoj462HoW/Le8ZQ5uiNAMACr3JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744761200; c=relaxed/simple;
-	bh=HXkqcx2ZNAR3MgBMkemVZlr6XaFgZx7DtM8Y81VBFzs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZN7aO5JVm2vamR++7C5ofNoPkp5pHsNFfnLFLwaBVa31NUfLzUbdtmv+8vXQI3909tgGuaQlw/Gle+KFQWz9tb2/Tf0PSDHkaKikUi2JdQ9/5EV9/B5gaCHunXVCs9/Gy5ecyor3FoYvR5KLE5jt9c/48QG0yMM+kwTUObm9TV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yGsAv4PL; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+	s=arc-20240116; t=1744761217; c=relaxed/simple;
+	bh=gtqu+hW7zVXxmCZiU7N4xV8OySI1M3oubuMPlaun3AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WNWsNto/VHKVdstraxjQgplGSKxBgqBaueFqVRwwqa9HHVhm+N4fY2/xxyaHovLjqUiFBDudzx5zt0/x4YPXbSfRFcRvl0jVDjHZJwKO9NIJTVOkKxGtlAFFobPZVW13ncrLx0XfbxTo93p3GhJCKccGj8aOvGQMeKXe/+h+lrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHwW834I; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yGsAv4PL"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73c205898aaso223201b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:53:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHwW834I"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736e52948ebso6930549b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744761198; x=1745365998; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/YGrgTL2+oDLw5q7YMCd5Rvj3aEMaQaNt09r3bkhF+Q=;
-        b=yGsAv4PLYROAf6y7BynQ/LxnOkx4dDhBGz+h7q229r9aRCMQKLiCwyCy+qoQUTyd4q
-         sjXh9j+ZifgxwiK5xzk5GMpfKm28cpw1BY6zcsiNX6Tz5DrwqLyEez9cXr5+mbJbsshX
-         dvluW5n6eaMzdOpZg5LhG8IWglK9tRjtl68JNwbim5oGzpK3wqYMOlBNLy1tP/pPh1Hw
-         w2duiNtAHC7nclBeKSF/1n612AGuJgNleEwttqLqXnkyFin2AE+EkNHGGmJLWOCbdnrS
-         LunKzvgxWW/EHxQC1HnGPgQ6sUf0rUblrbbX2uf3nkLHW0JzYVj43FgUuYxax46h+tDo
-         lWHg==
+        d=gmail.com; s=20230601; t=1744761214; x=1745366014; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HYQb/vAVflfTMHmxSSvin2OsSyxjzOK0qvbBWBFGiXM=;
+        b=nHwW834IxP7A3l7luyqiIm+Rjf2JX0mtJ99g5pUjmTqwpSTzkbLXVEBEBvZq0M/O8C
+         ctTqf6F7f195t72DouwlFkpzvOcGu5oMxiQpBGlVZYig4309kkYmn4B1CUKsawpy60Hb
+         uD8Le/+02x3pSwl3fawwU9t3Nk5oIUGWulYL4iGsOrKZiMHVs36kevJu7yx7xlMgGHok
+         ykrvbVPGhuksis+bC8601Tra/z6eZAjBi9kX2wOKNitH0OGkQ3knhmbAHp/GG8M86Bpg
+         R7Sn3g/ja6WKGKEkSXFU07oz4iTpNK1Eg7SB/qgNlN1/HtF1x1M+O2fpOXhPEpaz/oQz
+         Wv/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744761198; x=1745365998;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/YGrgTL2+oDLw5q7YMCd5Rvj3aEMaQaNt09r3bkhF+Q=;
-        b=Y69zrI01TgfM+AWL7rt3H+andyOkGkBIaNDD3nwl+0/pgCIAoYjLKy8YtC5jvTqmNW
-         a9IMopiIzJh+/jMphstBYoLLhHrkK5QB8l1Cp+SUJ3+dlev6Y+Obj8CtTzu/Tv+RzEh9
-         mJnWc9KYFArDtZgAK3uXVGTzep8ko4tww8O8NXZDq8WWWeoAMMXx279FGNe+e8OzpT9y
-         sZS5QtEHmpX6xezXfxlFlFsUVrry2fly5VMmVOnYJz4kvpjWUfnIYM3IrMIQvP/khN5v
-         YuLgQPmwZMDM3HUuKkAz5LoV0kLkIkKKY/65vTDLqvytbPo5NbxNL+DJUioVKO4xC4UQ
-         HzWA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3t3YObITX6kmgwEQT9o9vm7Ycj80xZcjXjFQyT5BCygU2LyorN5yfs2hlSYDV5N2JmVI3QeM1UAdUUv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTHdTRV7V9mtUfig7iijzOlXccl6rumM1eb70d9ofhcsKwqG/g
-	4oi3MESJ3wYhqWymxRGVViPQPTY/X3LZRqGRCpELhA3e6fB9uIfqpd84AT3saubQ5+995MVk7WZ
-	TriRH0XZxwRHGUw==
-X-Google-Smtp-Source: AGHT+IE7bA+Epf0Jw9RBloEojnGr5yL1MgbHZ3M/WXOieK8JDAU4vde/iJaqsYqpSx1NFMbLMFBdp5uyhqF4/ec=
-X-Received: from pfiu22.prod.google.com ([2002:a05:6a00:1256:b0:730:8b4c:546c])
- (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
- 2002:aa7:9308:0:b0:736:ab48:5b0 with SMTP id d2e1a72fcca58-73c1f8c3c9cmr1921173b3a.2.1744761198662;
- Tue, 15 Apr 2025 16:53:18 -0700 (PDT)
-Date: Tue, 15 Apr 2025 23:53:07 +0000
+        d=1e100.net; s=20230601; t=1744761214; x=1745366014;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HYQb/vAVflfTMHmxSSvin2OsSyxjzOK0qvbBWBFGiXM=;
+        b=Y1rnEd7w65GrRan9xssZvXn0hBKePem+MucNzdRY5fvGHLlR+Tk7Bl1ZlbRLR3YkJ1
+         S4acTgdCl/6qgNDZqfCbLhWSsrrqoqRYeS9j9LQygbuaEXw63DjsXH23NZYTVpBExzfw
+         pqEOGg5h3yXz09UkXlE3iZwJ88YyMkFEn2Avyp7sLsWtL7mFyfhah9wS5rwD0YeT5che
+         TNQoRzspqbmlavrwMLx7xwi3AqrUe6cA206tFQJWjNrnIK9lCmk5X7AtIG/4Ma0RKbY7
+         DoK2v4vuRJ5zhiodcV/zxa+A9773frGfGv4QyFi003DIOTjlb4R7SPx49TAz++O2G4gv
+         noaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdCe6+X7f9btCVj5ltgY9Aeol4s5g97Ne/wZTBJXIV0cmnNsrzg0vkryDc/awCGKEubFDRIW3P7ffpYy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSor5FYIsHK0wdPEh4QIj21XjRTWM548hev3dmrvPhPfLwFH9N
+	abHSpVo9/MtgKNxrLzv5qFqNxQoDX7P9q3BwMcgsTjxjnf2EN6Pd
+X-Gm-Gg: ASbGnct+xvpPY0QOa3A2dbFiyYoRwb1RhdhmENIgnJlfoeLgpRRpQPSdd+qsJyxSj9/
+	K1Ntou9YNJVzulpeYyBM4g2pfmnDQXhXn64o+wly3Mw2rt/lavxHwJtrWoVVoM7TLG51u7WiKPr
+	kdiCVPf46cRNucL2rBcymnAqt29jDhM1vzVQJdZBbWZq4WI7DouUgTC2ZS/Iy40JOmDATJDfQr5
+	+WleLoqPP1utDcCbGiKZcI9s4wC8aA2TV8b7+XV2zKo47dRkD8qVPspGpHZyHE7GD/98b+T6BZR
+	pDblsHnv3etigM1DCUgeX4RLxcqV1u4SR54JcOIn/FxQp3jGwNTc/5JH3UHBn+ax0ZfBXwew
+X-Google-Smtp-Source: AGHT+IF9AGYaMGmU+YAriBxrgwOx89adt7HoWOhuVq0Fg95nw1pi8fJCQ6J9UgCYtMmgen35WpsVwg==
+X-Received: by 2002:a05:6a00:90a8:b0:736:4b85:ee05 with SMTP id d2e1a72fcca58-73c1f925dbdmr1909994b3a.11.1744761214209;
+        Tue, 15 Apr 2025 16:53:34 -0700 (PDT)
+Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230db26sm9439188b3a.134.2025.04.15.16.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 16:53:33 -0700 (PDT)
+Date: Tue, 15 Apr 2025 16:53:31 -0700
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] mm/vmalloc.c: change purge_ndoes as local static
+ variable
+Message-ID: <Z_7xeycZwymvffbt@fedora>
+References: <20250415023952.27850-1-bhe@redhat.com>
+ <20250415023952.27850-2-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250415235308.424643-1-tjmercier@google.com>
-Subject: [PATCH v2] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
-From: "T.J. Mercier" <tjmercier@google.com>
-To: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	"=?UTF-8?q?Michal=20Koutn=C3=BD?=" <mkoutny@suse.com>, Waiman Long <longman@redhat.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415023952.27850-2-bhe@redhat.com>
 
-Android has mounted the v1 cpuset controller using filesystem type
-"cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
-behavior where the controller name is not added as a prefix for cgroupfs
-files. [2]
+On Tue, Apr 15, 2025 at 10:39:48AM +0800, Baoquan He wrote:
+> Static variable 'purge_ndoes' is defined in global scope, while it's
+> only used in function __purge_vmap_area_lazy(). It mainly serves to
+> avoid memory allocation repeatedly, especially when NR_CPUS is big.
+> 
+> While a local static variable can also satisfy the demand, and can
+> improve code readibility. Hence move its definition into
+> __purge_vmap_area_lazy().
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-Later, a problem was discovered where cpu hotplug onlining did not
-affect the cpuset/cpus files, which Android carried an out-of-tree patch
-to address for a while. An attempt was made to upstream this patch, but
-the recommendation was to use the "cpuset_v2_mode" mount option
-instead. [3]
-
-An effort was made to do so, but this fails with "cgroup: Unknown
-parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
-mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
-update the special cased cpuset_mount(), and only the cgroup (v1)
-filesystem type was updated.
-
-Add parameter parsing to the cpuset filesystem type so that
-cpuset_v2_mode works like the cgroup filesystem type:
-
-$ mkdir /dev/cpuset
-$ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
-$ mount|grep cpuset
-none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_mode,release_agent=/sbin/cpuset_release_agent)
-
-[1] https://cs.android.com/android/_/android/platform/system/core/+/b769c8d24fd7be96f8968aa4c80b669525b930d3
-[2] https://cs.android.com/android/platform/superproject/main/+/main:system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=2dac5d89a0f024a2d0cc46a80ba4ee13472f1681;l=192
-[3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@redhat.com/T/
-
-Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2 behavior in v1 cgroup")
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
----
- kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 27f08aa17b56..cf30ff2e7d60 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type = {
- };
- 
- #ifdef CONFIG_CPUSETS_V1
-+enum cpuset_param {
-+	Opt_cpuset_v2_mode,
-+};
-+
-+const struct fs_parameter_spec cpuset_fs_parameters[] = {
-+	fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
-+	{}
-+};
-+
-+static int cpuset_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
-+	struct fs_parse_result result;
-+	int opt;
-+
-+	opt = fs_parse(fc, cpuset_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case Opt_cpuset_v2_mode:
-+		ctx->flags |= CGRP_ROOT_CPUSET_V2_MODE;
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+
- static const struct fs_context_operations cpuset_fs_context_ops = {
- 	.get_tree	= cgroup1_get_tree,
- 	.free		= cgroup_fs_context_free,
-+	.parse_param	= cpuset_parse_param,
- };
- 
- /*
-@@ -2392,6 +2420,7 @@ static int cpuset_init_fs_context(struct fs_context *fc)
- static struct file_system_type cpuset_fs_type = {
- 	.name			= "cpuset",
- 	.init_fs_context	= cpuset_init_fs_context,
-+	.parameters		= cpuset_fs_parameters,
- 	.fs_flags		= FS_USERNS_MOUNT,
- };
- #endif
--- 
-2.49.0.777.g153de2bbd5-goog
-
+Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
