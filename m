@@ -1,74 +1,79 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F59D22F01;
-	Tue, 15 Apr 2025 12:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBB62750F2;
+	Tue, 15 Apr 2025 12:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720800; cv=none; b=Yz/v5myjtyt84jnPWejjKHxzGu3AQtgD7ct5vpfvUi9Xl3DxhfVUaNGkww0Fl5YOWAJDmDOPX90iWgqtQ2UEjtBae4ug5/VKFirAEmfttXY3HAtmqAdQ/msix/4jJa35jn24aCLP0zrADFyFCbakm30tN4HKAsrtYR1mWNXQBd0=
+	t=1744720907; cv=none; b=uFI4olU8tkDJGXwtgRA3ScrnYtNtgLTLyEt+h0ZKef1IYhK1Y4bsvdYbQ0I1ovwvO9swrx7wQYFH5HpDa/PMnYSjg+CnaYWsXLwAZ3KUoXymqn38b6nOOEAApKm7dqfQ/v3zXD7SWygDEE7L7xnr6I/Gac1NLU3JtpOoapyPU0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720800; c=relaxed/simple;
-	bh=t1kou4M8X297Aad+caa6GBhyKnczwsX+gDFBhuB55m4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pTzQl/vKIMOgyKWJypgWZxptQUQT3pPexZKtX+ArmL48m+qWB/kyzkSgxk95Nw6KZM2F8asNgtdPx+3Niz0t0fzYlJs7OgVz6X135p8dmllAyOLSghoHjwP6M5dxx5/0k5Dik0hylKRWJx7fFf8ZReZa78wcxf6rXZpyYr0kODo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eLOp8zQX; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1744720907; c=relaxed/simple;
+	bh=fDxE4wSAq/YY1DyMcYsiL5IWBx7nIAkShrFFTjARGdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CV4s3fPliID5tQ7WhN57QyD0NCNz8x2ZoOKbtSkEP6Z7zFimI/EwQ9rpJKpBo0PRtHegKukCjM9Z+mvtmslxaUfrEYjLTY3J5xQ3qWxoZCX+p6QImoR6YyvJagOZr64emnlr6b5HWWjGwt6tVVk1+kn7psbc+yLvqslcp1YBx54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gr0TYgLm; arc=none smtp.client-ip=209.85.210.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eLOp8zQX"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39d83782ef6so4213266f8f.0;
-        Tue, 15 Apr 2025 05:39:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gr0TYgLm"
+Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-7399838db7fso5235104b3a.0;
+        Tue, 15 Apr 2025 05:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744720797; x=1745325597; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744720905; x=1745325705; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A9hVPDb1RM67wHiurj3uzHcX5sDObVhpjzOPgy4uCpM=;
-        b=eLOp8zQXtLgEDVA8f/UjsKvxT28iqgV3CKJDV1nG4Hzp+0YMn52mVLsqtCmH+tf+nC
-         1gefJyHu4iLJXMNvII4lpEVKX86Agz9uH8TQrsBitNUxK+xm0/R42Bm8UrLoPzze4Dt4
-         POoRQOBX3eRuKSStYCnZAi1L8CbB75GMf7uODBELMQNZ86dEzWUeEl1f6WyO662cBBJ6
-         P173HKcoKE4gq6/QTdM/ZOTg4jY8zoTTJ/UIT4V8OHjITgGhGW2Y8l+fJluthmq+Mudz
-         UJK9GEwveozJSI27i0FQVvlFxepGncudNMw1AKS7ScTUnSWGrb23ARnznKOsoKvmS5nV
-         x1+g==
+        bh=Ikl99qE5tjOJg27716w7wKHeCynXZLbB4yh926R2k+8=;
+        b=Gr0TYgLmOtJoPdkDALcrQZEt2/f6SJWsQU8LBHJAN0Wv+V3ClXsEiXGNpCm0AJl743
+         ZiEjBDRmam+uBFg3SlGK1ByjpI5ix/nTi5/YLzfovmIfi1CKQiv8BTc5EkGqoJFnZQWe
+         KRimyBeUd1moQtd+RL4xyXkiKz632+c0WvVuEX60PzkRLm9+NqNqBvmH0myj8H55yufU
+         mLgZotkl6Ypsvo6s10xON8iRqc6RaIbvTMhzRH7ZqFzbn2KdhJJw4e5Ipw6OfTHoD9Sj
+         FvxDP5hsR+Grh03nun8rvUSY/Nhj5j9GzXrbU64ERsK2eo/KSOUEyMsPJV62wPjxNLYw
+         jGmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744720797; x=1745325597;
+        d=1e100.net; s=20230601; t=1744720905; x=1745325705;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=A9hVPDb1RM67wHiurj3uzHcX5sDObVhpjzOPgy4uCpM=;
-        b=EL8ECfq8wgBwLEWLlaMVe1gQ+Tu9tMQzzy20lmVC+V6O/1R3bKdCYvoTGcw3asog/w
-         mj+SAQcO01mYiS0UTHMzyOwzj3nQDAncPX2CrWzSuxNNXY3d28163YENOUS1+HtFP/7U
-         P9v0qbMNI3K4J8lc4S/Bm/calkdkFs31zYzpT+jF4MGXUNLrWlFPRv7JsKVHdp5pmNZv
-         grbkl4F6PDzBIPhArximbsxOwqlD4YVYU9wVpuMAv3t4WM/FYtBdn74sZ71eMXPwsPjk
-         FpTNXhD3kn2LvomRAFTP8Bn2nWzssvGHZ0yu7XCe37i5CpgWkKrIZ4a1zIqFhnOksCzM
-         jjcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKhOwXUtbVr/Vp57VFggLcOCQAUAfyWwUsI4QhZVKm3RdxK5iARyn2YdSBBdb9BHJPA2q+Sbp2qrW8hWdS@vger.kernel.org, AJvYcCXhE39mvXDD+U2Lqpp3BL5MznLiFrXv7dirExAhkMm9ODyNldyThgGvg9gclz7mYSzH78v1dRdA+VJHshYty0E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV+4ov5TZ765dCWgYaF4NONV7yspBoXWjZUDrLn+TxVDAaiRMR
-	8GRIZutyx3XUWB/ffsSohVVNhK8KIME2zK88xPpfiwOG9FpIrfxl
-X-Gm-Gg: ASbGncs1EF5OEdVWoiPxYKGVzkmMFgdAU0LQ1RiJqZTjvnbh5pmqQD0QPNDYk3z81no
-	lEqr6JV93LoVeNIXQ74zH/uAphDtTUInsJaHnR+NQAT/wrGN9FSt6qdEBE5ESBXG3xxGuwTlHel
-	u74hsX8BdL/XJWzTHA2VsWAyFQQ5Hs7d78vm3wii8Qwqrc/fLE++56R1L4ODQz89Os95P+3UJke
-	lD9RkMlygBJ7/5SGCzynG763trxB15Fbg1pPts1oVWgWCGwEc85zOYN+bs1u6t/ZwPYFRxIk2dG
-	gQUsulg5C0QDGrGCTwCFJZ9XBn5s7uSXDcSInAS3zi9kurUdukrKeOU=
-X-Google-Smtp-Source: AGHT+IHYSdt9pTasjIPhxubmU/E7a5prFsj10ow1xBwQi1o756hKjk73AI9GctSNBy9NpEjOxkAqtw==
-X-Received: by 2002:a05:6000:2582:b0:39c:e0e:b7ea with SMTP id ffacd0b85a97d-39edc311dabmr2526257f8f.20.1744720796513;
-        Tue, 15 Apr 2025 05:39:56 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:a041:e0ba:3a00:c718:382c:d2c:5124])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979663sm14547128f8f.51.2025.04.15.05.39.55
+        bh=Ikl99qE5tjOJg27716w7wKHeCynXZLbB4yh926R2k+8=;
+        b=MIBcRJQ/g3lVrEcyWCgi/7tZh67iV+bVRXgVTHW3/k9oH41DA9Xcc9n8duEe0y4+5A
+         XrdSluibkLOpgLM29dAynXKl1y7B4N3/9JIiY8Q90Uvua0KMtxOV8qP2kUx+Afg+6wuq
+         YQ7TAxKAjXIusMWaL2UAYAnW5RknQh3CAKlkQpTee9DyZLZ9VETGSxS9owBsySBsk9EQ
+         dBc8eAYq3eEC1oMStHmwFldfEGGqqB/Sc1SAOn+foBPUem8XAR6Nf9BrEtPxLKNe6mUN
+         gzmpTG0KRAFk8KNcZc7ujVVhh8CrAG01BpLmMYeM0Fc916xtkoyhYNrwX7aBNgnwtb5L
+         5ZSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkgngXb3oi7HI6IE3Jry9xwE1o7oRM164rFwGIf3uA2KqvQ16uB+xdzvnjh0/v150XAEEc6MTWu9BmXg==@vger.kernel.org, AJvYcCWYFT5ymhnpuPrwgR2bVQtFqoYwd37xOaVPITu9NpKGhu0X+0NIhnaEFREfBaRN/iyL5xYnS3zAmNanoag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTKErewryKhTFc/0l1Mi4LQ4zu4s4TwtgcUkUnwaR7//spmbFE
+	Vo7Iaeg0nQT7ZbFtXQ/GpguHnS3KddFC/0Hfo3Jryc0iP+QQ+UdC
+X-Gm-Gg: ASbGncuAw/+UKEp0dCzdtt0CCE0c329hz8ixfQEL0hCTPWEMv9HLUvl3bUcpno33blK
+	HWFtR2qAvgefLYRnsZY99ti4XwddYBmVtBk7wH7qVrotDSn1h7m6KGQRZHNx+vb9RdOXYZxhNzY
+	1XqM42C2YgCeccSlSgrlA9qyUq0Z+auh0vjX1u4d2yoDJ4R95RhNSbNIRYKmhGvl+touDYy05Vj
+	cP3h4Jju5m+9uFqsNYvhZQWkQRzy7vm/4YXaMLFWR6Akj79Jc7Q7c20niXZ2uK1jzmxjTiErbfg
+	gNTonsqdPKuHB0dXXmhtJMcI9+wgwsgz2PNItmejZ2NhxaaIye4LtiOg+rcEzPemKQ==
+X-Google-Smtp-Source: AGHT+IGLNl7gk0+/I/KVjgm96hI7uQLjfjSuTp2jZidGRgz5R6WhImd/hPBssuJ/4vflX8mgELOeTA==
+X-Received: by 2002:a05:6a00:1c84:b0:736:4c3d:2cba with SMTP id d2e1a72fcca58-73c0c9b352dmr5276155b3a.9.1744720904882;
+        Tue, 15 Apr 2025 05:41:44 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.49])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e5ccsm8339526b3a.152.2025.04.15.05.41.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 05:39:56 -0700 (PDT)
-From: Andrew Kreimer <algonell@gmail.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	"Dr . David Alan Gilbert" <linux@treblig.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: linux-media@vger.kernel.org,
+        Tue, 15 Apr 2025 05:41:44 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Andrew Kreimer <algonell@gmail.com>
-Subject: [PATCH] media: dvb: Fix typos bloc -> block
-Date: Tue, 15 Apr 2025 15:38:55 +0300
-Message-ID: <20250415123952.16802-1-algonell@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	bsdhenrymartin@gmail.com,
+	amirtz@nvidia.com,
+	ayal@nvidia.com
+Subject: [PATCH v5 0/2] net/mlx5: Fix NULL dereference and memory leak in ttc_table creation
+Date: Tue, 15 Apr 2025 20:41:26 +0800
+Message-Id: <20250415124128.59198-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,60 +82,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are some typos in comments / dprintk messages: bloc -> block.
+This patch series addresses two issues in the
+mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() functions:
 
-Fix them via codespell.
+1. A potential NULL pointer dereference if mlx5_get_flow_namespace()
+returns NULL.
 
-Signed-off-by: Andrew Kreimer <algonell@gmail.com>
----
- drivers/media/dvb-frontends/dib7000p.c | 4 ++--
- drivers/media/dvb-frontends/dib8000.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+2. A memory leak in the error path when ttc_type is invalid (default:
+switch case).
 
-diff --git a/drivers/media/dvb-frontends/dib7000p.c b/drivers/media/dvb-frontends/dib7000p.c
-index c5582d4fa5be..b40daf242046 100644
---- a/drivers/media/dvb-frontends/dib7000p.c
-+++ b/drivers/media/dvb-frontends/dib7000p.c
-@@ -2630,7 +2630,7 @@ static int dib7090_set_output_mode(struct dvb_frontend *fe, int mode)
- 			dib7090_configMpegMux(state, 3, 1, 1);
- 			dib7090_setHostBusMux(state, MPEG_ON_HOSTBUS);
- 		} else {/* Use Smooth block */
--			dprintk("setting output mode TS_SERIAL using Smooth bloc\n");
-+			dprintk("setting output mode TS_SERIAL using Smooth block\n");
- 			dib7090_setHostBusMux(state, DEMOUT_ON_HOSTBUS);
- 			outreg |= (2<<6) | (0 << 1);
- 		}
-@@ -2654,7 +2654,7 @@ static int dib7090_set_output_mode(struct dvb_frontend *fe, int mode)
- 		outreg |= (1<<6);
- 		break;
- 
--	case OUTMODE_MPEG2_FIFO:	/* Using Smooth block because not supported by new Mpeg Mux bloc */
-+	case OUTMODE_MPEG2_FIFO:	/* Using Smooth block because not supported by new Mpeg Mux block */
- 		dprintk("setting output mode TS_FIFO using Smooth block\n");
- 		dib7090_setHostBusMux(state, DEMOUT_ON_HOSTBUS);
- 		outreg |= (5<<6);
-diff --git a/drivers/media/dvb-frontends/dib8000.c b/drivers/media/dvb-frontends/dib8000.c
-index cfe59c3255f7..ae438bd80317 100644
---- a/drivers/media/dvb-frontends/dib8000.c
-+++ b/drivers/media/dvb-frontends/dib8000.c
-@@ -1584,7 +1584,7 @@ static int dib8096p_set_output_mode(struct dvb_frontend *fe, int mode)
- 				dib8096p_configMpegMux(state, 3, 1, 1);
- 				dib8096p_setHostBusMux(state, MPEG_ON_HOSTBUS);
- 			} else {/* Use Smooth block */
--				dprintk("dib8096P setting output mode TS_SERIAL using Smooth bloc\n");
-+				dprintk("dib8096P setting output mode TS_SERIAL using Smooth block\n");
- 				dib8096p_setHostBusMux(state,
- 						DEMOUT_ON_HOSTBUS);
- 				outreg |= (2 << 6) | (0 << 1);
-@@ -1612,7 +1612,7 @@ static int dib8096p_set_output_mode(struct dvb_frontend *fe, int mode)
- 
- 	case OUTMODE_MPEG2_FIFO:
- 			/* Using Smooth block because not supported
--			   by new Mpeg Mux bloc */
-+			   by new Mpeg Mux block */
- 			dprintk("dib8096P setting output mode TS_FIFO using Smooth block\n");
- 			dib8096p_setHostBusMux(state, DEMOUT_ON_HOSTBUS);
- 			outreg |= (5 << 6);
+Henry Martin (2):
+  net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
+  net/mlx5: Fix memory leak in error path of ttc creation
+
+ drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
 -- 
-2.49.0
+2.34.1
 
