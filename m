@@ -1,192 +1,235 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EC22750F2;
-	Tue, 15 Apr 2025 12:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718627; cv=fail; b=qFOiOnwzelc6JkEz/CcT0lKBg9sW6mMo3gaQGu6JqD/tA8uaUbn5+jev/logOnwwrWfZ7J3sDcHceGVnYhJG7k2am+j6zToG9eo8kOvPUEPZT2eByzFwNwUK05EoBMrbWKobdTEw7k7g9teZg5QeOPd9rPf/dSMutaTnmidA+aw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718627; c=relaxed/simple;
-	bh=JysCC1r1soSB0vxbkObYGHNXosCO/3psQfn3j0PtjIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FCg4+4idYU7IACX8PgQsqr304mMAR3W9zRkv6tRr23hD5pLd3gjDWJiQAUqVYD5Gpd/2o7B/nLs7rEN+DyTEj7z8hKzDogx26ETUcIGbKcuJhC/nn5wRlGEdSCflbMgwMaXcYStyGG13roIWHUTNU9WzfQzPQOLz0rfTtiLgXKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=SCO38vgM; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=vOJEBDJC; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SCO38vgM";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="vOJEBDJC"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F6G2Pu030986;
-	Tue, 15 Apr 2025 07:03:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=; b=
-	SCO38vgMhoRTDMQfLjENxz+34S75nQkWOPgZiMnwljvp7+lbArnowNYErSg10WRh
-	xPq7F4biwNQJ86ekFj9r7v3dnko7c7BpihoF4Uqv1YWS9pNNboguMfo+f8giSoXz
-	2r9cY1gGbZL9w9CCEuoeTHOuhXZd3Zpyv2316FTJjUhGM1XYKB1jTLZozgHHJcRl
-	MtE1PTEPx2CLiD+MS0K16GVBQNMQJfjsCqJ1Uv+4CkqOane4qooyfCAmzF2D6QYy
-	aaNdGGYThd0x13EU+ejr0hV9oki7GnFh4U8dGGYCAiJ0A7KplArRtYnOp9/oK7D0
-	GfD0sWRcD3fFjOLKGbQegQ==
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4615wt11a4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 15 Apr 2025 07:03:26 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fvwt/28vLRy8oR1uzJowmIMa+/waXujr0aUbVGFl21yyCrt3Wt/awD0lGKaBjDu8HJACN8KcC8CFKhubZqoSOz/LsCOg4a7ufWYBCO6u3vtbHDWGqNVqwkKeLaYS5Zwa+tn5fkA83BRtWBNpbzPexHyVajdDKjQtywQA6X1jB/TtS30rEYUeBxQvFeExSlwErriJ/MoB7oYGJRi30IhehwdF1NtZOBw2pGTksgtKrdBjQEtbpNI5bPmR6LVK4aD/2/9JFMGT37U36l1CglYCmNwUvUr98lj+PoPv1aEFeFEjPmIv8TTrAjF+x+3Z1IFP9CDaW2RrppcU0LYEvtfXrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=;
- b=Dm5P2kmG34arDEA0NmvxaLZ65ceA57RPx2eHu9gW8342pmzySaPUCjEYnPPAK4LahqNXoXZgnYBRmk7BhOgNdsIOLQ1gB55mZpf5AVGkoVzjsQGcb9PAMLpf/Lb3v83mIyLnQRM4/2hTkZ1frT4bN69u13nipe1Q9h8LvaQ8i82kN7HmXpBklwM8rdQ5SU0QfOPMmteMLwaJvEUKnAdiIRR8s6APzsp5YOoqCUb4nmazUEAqzAfzd9/Xv/Iw4hOHUF9xq+prpYH6I6xl6gk2sBXpfL8hgkyeDQoA9Qo/AULbzze9WB86s67k7vE7Troz9ny/vDFBTHeVTd6iRStc5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=temperror (sender ip
- is 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=temperror action=none header.from=opensource.cirrus.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s8T1wNUdYF/8dTgq+8hPiMmt4eZSlKvB9Id76U46g48=;
- b=vOJEBDJCoZrrBQQvw4eC14UMGGg+wNood6fzrqQ0UhK7vAJ+r1e6Sp/RTgZma39uDu25bCgTyAO00171lgGC6nhxP3jpv3UcfnYBAGAFbQ4Wf7bixClWBHWNFzNg78bXG80TnmcnspZLsjauzPzinEeiwAVwvjJvsOgv+6ruLEM=
-Received: from BN9PR03CA0781.namprd03.prod.outlook.com (2603:10b6:408:13f::6)
- by PH0PR19MB5443.namprd19.prod.outlook.com (2603:10b6:510:fd::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Tue, 15 Apr
- 2025 12:03:21 +0000
-Received: from BN3PEPF0000B370.namprd21.prod.outlook.com
- (2603:10b6:408:13f:cafe::3c) by BN9PR03CA0781.outlook.office365.com
- (2603:10b6:408:13f::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.35 via Frontend Transport; Tue,
- 15 Apr 2025 12:03:20 +0000
-X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
- 84.19.233.75) smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=temperror action=none header.from=opensource.cirrus.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of cirrus.com: DNS Timeout)
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- BN3PEPF0000B370.mail.protection.outlook.com (10.167.243.167) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8678.4
- via Frontend Transport; Tue, 15 Apr 2025 12:03:19 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 3C831406541;
-	Tue, 15 Apr 2025 12:03:18 +0000 (UTC)
-Received: from [198.90.208.23] (ediswws06.ad.cirrus.com [198.90.208.23])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 1D849820259;
-	Tue, 15 Apr 2025 12:03:18 +0000 (UTC)
-Message-ID: <c344e6bd-1a95-4982-927d-f679410c444b@opensource.cirrus.com>
-Date: Tue, 15 Apr 2025 13:03:18 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4055C28DF08;
+	Tue, 15 Apr 2025 12:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744718645; cv=none; b=HUBqgtNtTVwzRK354B4lql1CRgPihLz7dDXRrwFyhOqBxwkcn+9Pdvg/p5QT6yRYPnJrJO28MPtBt7EOXPKn7jv7+yFdLazJNz7AeW0eiV/WfAvn5H57VSc8V37z5IuQEpv6pFv2yNjkXZa8LOV3e3+HRv867eUAcAAG5uwEmkg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744718645; c=relaxed/simple;
+	bh=loUPvVMNGiwJlE21jeP0tvM4KuSweofRWQ237qVAJkg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dxCjV5mIz0kDXNfgKiG9roKYtRfg0PQbgtFZKpZZdogybSxlj+3gUKxURZuKzg1Wh8pm5x2H9Nco9xavMy7+rpUuBzJLJfV3DkKnZrSlJfHtzJC2C/YeEajzMHenmLcaAdncAyxat3ECo8kFrVBxOV+BNppTpmLnQqAF3tDUK8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4768f90bf36so49362731cf.0;
+        Tue, 15 Apr 2025 05:04:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744718641; x=1745323441;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=44jbS69cKT35Gp4Aiz2OWrUPbtiSlX2R3KlB9msotSY=;
+        b=UmgrR8KowXoDl3bM/NysVfSPenzAL0XCEdhiszKSYMMD4gVQkhoV9iAHjCATf+t3c+
+         zaWa1MX6BJl6XZWkXY1Oe7hfQnj0Yy4P1V5sWHLkjiVKGA0E5KBHx1AYYM4FeAdkjytV
+         4xTEqibcgtcCECA7b524A7/eybVC/ankmZwSdd8rxUNtyLlq6QYQvhoUtlT95LUrJUuS
+         IZtQdWD/XcimRmZ73iks3gjvkxhcjtLYPqkrWoXEYa9a86iQuLnsZm1Usow007vvhROl
+         JEBaHvY2b1CHw73LZ1jQZozGU98Wf43FLFE9J+68PEV+T9JnmHR5soCgU3TaqtCd5/Lq
+         C4Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUYHy9XtE68IQjy50+ijE1epAy9vCRmx6E8fq6K4jJaYZJeEbTVR5ins7Y13BAzWGY9YSaXiAtaltvfUQ==@vger.kernel.org, AJvYcCVGlOGWQ199GwviH/Aw0OJQYOGm1rT4fCstLC8zXt48WVhw0NnWiyP/eGxxOjnAMYT9p6QlwCdyotdzLDeDygf3VxM=@vger.kernel.org, AJvYcCVQChwfLwrN8kJWaWuU7UbDS2jlMOc3yYP9AwyX0ATf/gRBH11XXRGp1RxBKZWVi2nqiFqVVTbaP9Mq@vger.kernel.org, AJvYcCW9GY+xYp1/D9zsRg8P08OQGTpaes0nspbM7cCd/WiXj00SUm1qJY/77gqntCRSOhO8ARfFKtp2PF3n@vger.kernel.org, AJvYcCX3F3Q5MyDNmUz+OZ8Cv4ojeaXd9EoeDyAAYf5S752NBGrw5CBxYp5Iqj/CflK1yBlDIpoiJKsdCqmRmpzo@vger.kernel.org, AJvYcCXGrm0BK5xB/cc/jO7laL2Jc+oFSuWfdK6BT/9GyvpQkQSOYvYcdHk1eMEaOpd2klmnibn4KLI2M+hMys8d@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkvWd0BP6FFDGqgc4ud0xoM/Et6dliRCUCbC7UgzBmmDBtxLlG
+	5vGxNCaFn82kjvDHLcv7WCDw7YrbLJOn1RRKMZPImBma2pDVB3X2Yf+pw037
+X-Gm-Gg: ASbGncvBUQCEdzk2I2ZXHNq1stwWJBxJbjpIqfNmgbM0CP3oeipCML1N1hKzp8GzzFo
+	8zMY0Bmewptao7WmmAR8FxFrlEN0eT20RMRgR26z47trPgBrs9lLV9utChS2oqYXvqpX1f/+8OY
+	0iOyZxo8i+XcFoA+QcL4ykqBmzp8lo2dlhj+whSo+ZTelDuicx3qvH2D5zxUcqfYKnuiWTwSkhi
+	PREUTbsaljyzSoVbY7iz6Nr8F+tlZTVVqsyhrUwVGRs/l5MFOvgaTP2Z8tpIvAjD96owTOUEOTr
+	2++XeaxAEdkl7NGhCrt/uNGHi5ntqJ8cQ0ulXzUgDDOBV3BftewuzU8Gexxxf9t8TH+njxKsWUh
+	AXCF+Tb8=
+X-Google-Smtp-Source: AGHT+IGaWlcXVHtddiVmvhbwkdxS/y1KAEPPoBrfx8AnRt5614HjJGYRDpBMfS0w8c3LE2TvY1vdcg==
+X-Received: by 2002:a05:622a:50d:b0:476:7ff5:cc27 with SMTP id d75a77b69052e-479775d637fmr201579011cf.51.1744718640802;
+        Tue, 15 Apr 2025 05:04:00 -0700 (PDT)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796ed9cce7sm92073521cf.59.2025.04.15.05.03.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 05:04:00 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5e39d1e0eso529805685a.1;
+        Tue, 15 Apr 2025 05:03:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVrUNgzJ3ZDmPbm+oCTmywK07fiIRP4ZjY8p9MAf/5FIoMpYsOqFBnxuf492qJKZLFgojijOybe6Nfoqy++@vger.kernel.org, AJvYcCVuZAsQTR0bZD5/4Qfv4NjEiEsVN8pRrcPGUiCRAT/o08VVOIVb2otGukl67bQfJ3CIxBKUbPIa9H6IAk/Uc4br8CM=@vger.kernel.org, AJvYcCWJiFrx0MSdIpPQSxyWQwixwUbhUIz2EZakrKzDbQQsiwIT4dEMT3QOJjnqkftpMv2Ak1Bq+lIvLDtbuqqs@vger.kernel.org, AJvYcCWuUmEdCnlpDyBU/2HbsjMQeYFweqQZT5ikT7GTctv+RXXYG2rAvaiHeIfA3dOZ7JGbVSKpsQQ396hqnQ==@vger.kernel.org, AJvYcCWzvUGXCVhLZR4J+YShUt0hakqSfFZkcbL7JwTVkyLcdJtrkhGvBAJXNMX9K2zU7WZZJPKd0EnZlZv+@vger.kernel.org, AJvYcCXzETkJOEdAYqj36Lg3ESSB6OXhGOR4kTf0kRl5rTe4TTCDf5QQZO0BDVQyk8JK0q+SmL+pFiXD8IC1@vger.kernel.org
+X-Received: by 2002:a05:620a:3944:b0:7c0:b523:e1b6 with SMTP id
+ af79cd13be357-7c7af118d54mr2235481685a.11.1744718637820; Tue, 15 Apr 2025
+ 05:03:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: cs-amp-lib: Annotate struct cirrus_amp_efi_data
- with __counted_by()
-To: Thorsten Blum <thorsten.blum@linux.dev>, Mark Brown <broonie@kernel.org>
-Cc: David Rhodes <david.rhodes@cirrus.com>, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250415090354.92211-2-thorsten.blum@linux.dev>
- <9a0595a3-00c0-4006-bd54-99b938ee95bd@sirena.org.uk>
- <C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <C0A89B4A-14BC-48F3-9D0F-31C8C0AF7ECE@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B370:EE_|PH0PR19MB5443:EE_
-X-MS-Office365-Filtering-Correlation-Id: d316ada9-15a3-42fb-8036-08dd7c15839f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|36860700013|82310400026|61400799027;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WHN1ZmplUHVaS2Y5a09QbjNrWUxKS1VlbzNLVmNqTTJlTDk3UXpsd3h5ZGR0?=
- =?utf-8?B?Y290b09FTXpJeitHZXJHL0E2QnFHaTRMV1BUdVVHWXNNcVJBMHRySm4rSUFE?=
- =?utf-8?B?WXhNbDN6dk1XTTRqM0RBNi9QRkF2Nm1RNHhPOGl0RmpFTzdHV1N1bXFJbEVa?=
- =?utf-8?B?Y29OWTVjV0pxaXhybjh4aVBiTXFZVFdEREZYdEM5MHQyK3UyTUQwcmYxY1V5?=
- =?utf-8?B?VVBBZFpiaUFFTnZLazZCbGFPRUVKOEFjMmp1QnhzOWpUTXlnQnZmZVVFckVW?=
- =?utf-8?B?QzJyWS9hZmcwaXNqb3QyZm1lRFBiRWM0UER4d05tOGZCQW5YUjI1OGZDakds?=
- =?utf-8?B?aUFuV09xWjhDREpxdzVxUSs3QzBwS1JCRUdqNDhpV1gydm9RRi9mRUVDL2hs?=
- =?utf-8?B?R0ZtUjZnQzFlakNsL0hsRG9wSlFtZlpmczZkOThTWTFaSjRUTU5aeE53Mmdm?=
- =?utf-8?B?N2JKM3VEZUkyM1Q2Ukd1MXlIMTJhL0d0aTdQdTZvYmJwNG9ramxyZi9SMlRv?=
- =?utf-8?B?bU81Z21tMEM3RnVYaGJNUS9YZjFIM2NIcWxoR1g0Q3liTm0rRzJSd2lWMzlY?=
- =?utf-8?B?Z2pHeXR3ejFyc1N2Ylk1OEdtU1RjLzJKVVI2S3RJOURybUh1UDBKTDRuTy9L?=
- =?utf-8?B?bUFaSm85SEpCNy82aVlqZXNLUkZ1WlI1amsxdG1XRW1CT2ZmZHNXcUFvdGRL?=
- =?utf-8?B?ck1BT2EyYmFsdnFnd1lDU25GQSs5WVd3STZYUWxPTDlLRzBoa3RNUXRKVzN0?=
- =?utf-8?B?eWwydmhOZzNwYmJtQ1MxbE1pVWdzc1lkQk9OMXl1K2FrYWhLbHBvbi8yc0Ur?=
- =?utf-8?B?ZFgxQ0FGMkJlVHR0UDlLRkl2VFY0QWdabkZmTUdQSWZZQTFOOUtLNzlqQTh0?=
- =?utf-8?B?eFJZMXgrQnN2aExMVVpVQzdaTW9IMVhjMGIyVjE2Ui9JblVDMlNxWU9GSUdt?=
- =?utf-8?B?ZGxhZFFlcCt5YVdza3QrZ0tiTHNlbjRpWGNqZG5DbTBUOGlhdjRrd0JCcHhY?=
- =?utf-8?B?bXBNeWFpaXdZN0NEbmRlNlFnUjBaNko5RVI4UVhFc3o1cFpLS0JwWCtpQjYy?=
- =?utf-8?B?ZHI0U0VZd3UxaDdERkNUeVkrbHNZd0k5OTFQQitueHdrZnVCMmdWRGJuRWRX?=
- =?utf-8?B?SmlsQXhQY2lkOVhPeUxIK0xNS2N5YU9mVGZPWWtYZ1JCWEhRWWVkUHZSeGxj?=
- =?utf-8?B?bXV5Ymowc3hTd3NOT2xsNnRLVVU3SThmRnRnZGdvQUVJOUtidFQ4OG5UYSt4?=
- =?utf-8?B?eW9NTnhlWWZCSW82VzhCL1RkaCt2VlVwNGNwaU5maHZWWitTVkx4MDdCcUJq?=
- =?utf-8?B?Z0lCMWswc3ZoRGg0bUxVa3c1K0xyakFEQThBQWlVTncxNUpYVG9xUmhjOXd0?=
- =?utf-8?B?WG1XLzhWYXFldDg1eFo1SlZva0NYUXFKbmFQTDJQVGI0Mlp1blFZekx0L1lC?=
- =?utf-8?B?RkhHYUZoTVcrSERIUC9LYXE0QjU0Q2k4b2NOWS9aMzltTDQvWEhBbUFSREJF?=
- =?utf-8?B?OHcxSmk1aVBEaTVIQi9rZmpRODN0QUlmWWYyOVprZktuaGUvTkpyVm5oWTZM?=
- =?utf-8?B?VTI1TDRsbXJJZExnWVFXczJPUTRkbFloL1ZxT01KeTBtSGo1QkU3R00zbmpM?=
- =?utf-8?B?U1BtS21rNGplWTZ6U3M0Yk9FT05xa3BWSXhxcjV3NU5RdnBSc2VIeEtSelVq?=
- =?utf-8?B?bDdDWlZYMndpbFJzRVgvaDBVcGRqZDdxbHlpWnFuNFRqdXR5cXVycEN6ZkVv?=
- =?utf-8?B?cDQ0K3lUd3RRWWY0bFdvTVMwL1k2NXVSQit0Y3puM0VNTGZUbXNXM1pIdFVL?=
- =?utf-8?B?ZllMb2IwT3lOcGI3dEM4RHI1TitzRFdrMjlPWEFJVnRuSW1jTFMxb3duNUpH?=
- =?utf-8?B?aE5TL2dSc2tIVlVGcVJRbVdXY2VIelNlM2dsdys5a25jT0xaTlgwY2ZYQmMx?=
- =?utf-8?B?MGZTUmhId01GUllsa212THYzd2dRTGNOeFhJRXVndlJNRHBzV2JVNmo0Vkhk?=
- =?utf-8?B?THN3d01pT3V3PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(376014)(36860700013)(82310400026)(61400799027);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 12:03:19.8759
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d316ada9-15a3-42fb-8036-08dd7c15839f
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B370.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR19MB5443
-X-Proofpoint-GUID: eRkUwvRZTdMt1IeDfrrfteIcyw0M7gya
-X-Proofpoint-ORIG-GUID: eRkUwvRZTdMt1IeDfrrfteIcyw0M7gya
-X-Authority-Analysis: v=2.4 cv=OeuYDgTY c=1 sm=1 tr=0 ts=67fe4b0e cx=c_pps a=vIBLTX18KUGM0ea88UIWow==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10
- a=RWc_ulEos4gA:10 a=jE4wCpEYmYNN9sJuJygA:9 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8useBh5m+MqGXQwQJhuemehm=bPidL6XydR-FOmVN9QNQ@mail.gmail.com>
+ <CAMuHMdU+U8D8iQdks72=Kki2HL+bo8tw9gA1S4D3c4hOphLTuA@mail.gmail.com> <CA+V-a8tH9BLjy5aG1qkRJnUFO_4VARu6rW4fQzHoSxvaMgo1Xg@mail.gmail.com>
+In-Reply-To: <CA+V-a8tH9BLjy5aG1qkRJnUFO_4VARu6rW4fQzHoSxvaMgo1Xg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Apr 2025 14:03:45 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVT0R_ypz7sLxLzYU+v-Cj94Pd4FaFJsdQq-c_Evx5neA@mail.gmail.com>
+X-Gm-Features: ATxdqUHZOQ_kXb78-Adsku78g9ckdafL4-bL26h3gggOf0fLadQBp1hSbjMhNWk
+Message-ID: <CAMuHMdVT0R_ypz7sLxLzYU+v-Cj94Pd4FaFJsdQq-c_Evx5neA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] Add support for Renesas RZ/V2N SoC and EVK
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-serial@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15/04/2025 12:51 pm, Thorsten Blum wrote:
-> On 15. Apr 2025, at 12:56, Mark Brown wrote:
->> On Tue, Apr 15, 2025 at 11:03:55AM +0200, Thorsten Blum wrote:
->>> Add the __counted_by() compiler attribute to the flexible array member
->>> 'data' to improve access bounds-checking via CONFIG_UBSAN_BOUNDS and
->>> CONFIG_FORTIFY_SOURCE.
->>
->> As documented in submitting-patches.rst please send patches to the
->> maintainers for the code you would like to change.  The normal kernel
->> workflow is that people apply patches from their inboxes, if they aren't
->> copied they are likely to not see the patch at all and it is much more
->> difficult to apply patches.
-> 
-> I just use whatever scripts/get_maintainer.pl outputs. Maybe the
-> MAINTAINERS file should be updated?
-> 
-> Best,
-> Thorsten
-> 
+Hi Prabhakar,
 
-MAINTAINERS only lists Takashi and Jaroslav as maintainers of
-include/sound/*.
+On Tue, 15 Apr 2025 at 11:28, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Mon, Apr 14, 2025 at 2:40=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Mon, 14 Apr 2025 at 13:19, Lad, Prabhakar <prabhakar.csengg@gmail.co=
+m> wrote:
+> > > On Mon, Apr 7, 2025 at 8:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gm=
+ail.com> wrote:
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > This patch series adds initial support for the Renesas RZ/V2N (R9A0=
+9G056)
+> > > > SoC and its evaluation board (EVK). The Renesas RZ/V2N is a vision =
+AI
+> > > > microprocessor (MPU) designed for power-efficient AI inference and
+> > > > real-time vision processing. It features Renesas' proprietary AI
+> > > > accelerator (DRP-AI3), delivering up to 15 TOPS AI performance, mak=
+ing
+> > > > it ideal for applications such as Driver Monitoring Systems (DMS),
+> > > > industrial monitoring cameras, and mobile robots.
+> > > >
+> > > > Key features of the RZ/V2N SoC:
+> > > >   Processing Power:
+> > > >     - Quad Arm Cortex-A55 cores at 1.8GHz for high-performance comp=
+uting
+> > > >     - Single Arm Cortex-M33 core at 200MHz for real-time processing
+> > > >     - 1.5MB on-chip SRAM for fast data access
+> > > >     - LPDDR4/LPDDR4X memory interface for high-speed RAM access
+> > > >
+> > > >   AI and Vision Processing:
+> > > >     - DRP-AI3 accelerator for low-power, high-efficiency AI inferen=
+ce
+> > > >     - Arm Mali-C55 ISP (optional) for image signal processing
+> > > >     - Dual MIPI CSI-2 camera interfaces for multi-camera support
+> > > >
+> > > >   High-Speed Interfaces:
+> > > >     - PCIe Gen3 (2-lane) 1ch for external device expansion
+> > > >     - USB 3.2 (Gen2) 1ch (Host-only) for high-speed data transfer
+> > > >     - USB 2.0 (Host/Function) 1ch for legacy connectivity
+> > > >     - Gigabit Ethernet (2 channels) for network communication
+> > > >
+> > > >   Industrial and Automotive Features:
+> > > >     - 6x CAN FD channels for automotive and industrial networking
+> > > >     - 24-channel ADC for sensor data acquisition
+> > > >
+> > > > LINK: https://tinyurl.com/renesas-rz-v2n-soc
+> > > >
+> > > > The series introduces:
+> > > > - Device tree bindings for various subsystems (SYS, SCIF, SDHI, CPG=
+, pinctrl).
+> > > > - RZ/V2N SoC identification support.
+> > > > - Clock and pinctrl driver updates for RZ/V2N.
+> > > > - Initial DTSI and device tree for the RZ/V2N SoC and EVK.
+> > > >
+> > > > These patches have been tested on the RZ/V2N EVK with v6.15-rc1 ker=
+nel,
+> > > > logs can be found here:
+> > > > https://gist.github.com/prabhakarlad/aa3da7558d007aab8a288550005565=
+d3
+> > > >
+> > > > @Geert, Ive rebased the patches on top of v6.15-rc1 + renesas-dts-f=
+or-v6.16
+> > > > + renesas-clk-for-v6.16 branches. Also these patches apply on top o=
+f the below
+> > > > series [1] and [2]. I had to sort the order in Makefile for patch [=
+3] to
+> > > > avoid conflicts.
+> > > > [1] https://lore.kernel.org/all/20250401090133.68146-1-prabhakar.ma=
+hadev-lad.rj@bp.renesas.com/
+> > > > [2] https://lore.kernel.org/all/20250403212919.1137670-1-thierry.bu=
+ltel.yh@bp.renesas.com/#t
+> > > > [3] https://lore.kernel.org/all/20250403212919.1137670-13-thierry.b=
+ultel.yh@bp.renesas.com/
+> > > >
+> > > > Note, dtbs_check will generate the below warnings this is due to mi=
+ssing
+> > > > ICU support as part of initial series. I will be sending a follow-u=
+p patch
+> > > > series to add ICU support which will fix these warnings.
+> > > > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@104=
+10000 (renesas,r9a09g056-pinctrl): 'interrupt-controller' is a required pro=
+perty
+> > > >         from schema $id: http://devicetree.org/schemas/pinctrl/rene=
+sas,rzg2l-pinctrl.yaml#
+> > > > arch/arm64/boot/dts/renesas/r9a09g056n48-rzv2n-evk.dtb: pinctrl@104=
+10000 (renesas,r9a09g056-pinctrl): '#interrupt-cells' is a required propert=
+y
+> > > >         from schema $id: http://devicetree.org/schemas/pinctrl/rene=
+sas,rzg2l-pinctrl.yaml#
+> > > >
+> > > > v1->v2:
+> > > > - Added acks from Rob.
+> > > > - Squashed the RZ/V2N EVK and SoC variant documentation into a sing=
+le
+> > > >   commit.
+> > > > - Updated the commit messages.
+> > > > - Added RZV2N_Px, RZV2N_PORT_PINMUX, and RZV2N_GPIO macros in
+> > > >   SoC DTSI as we are re-using renesas,r9a09g057-pinctrl.h
+> > > >   in pictrl driver hence to keep the consistency with the
+> > > >   RZ/V2H(P) SoC these macros are added.
+> > > > - Dropped `renesas,r9a09g056-pinctrl.h` header file.
+> > > > - Followed DTS coding style guidelines
+> > > > - Dropped defconfig changes from the series.
+> > > > - Dropped SDHI dt-binding patch as its already applied to mmc -next=
+ tree.
+> > > >
+> > > > Cheers,
+> > > > Prabhakar
+> > > >
+> > > > Lad Prabhakar (12):
+> > > >   dt-bindings: soc: renesas: Document Renesas RZ/V2N SoC variants a=
+nd
+> > > >     EVK
+> > > >   soc: renesas: Add config option for RZ/V2N (R9A09G056) SoC
+> > > >   dt-bindings: soc: renesas: Document SYS for RZ/V2N SoC
+> > > >   soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
+> > > >   dt-bindings: serial: renesas: Document RZ/V2N SCIF
+> > > >   dt-bindings: clock: renesas: Document RZ/V2N SoC CPG
+> > > >   clk: renesas: rzv2h-cpg: Sort compatible list based on SoC part n=
+umber
+> > > >   clk: renesas: rzv2h: Add support for RZ/V2N SoC
+> > > >   dt-bindings: pinctrl: renesas: Document RZ/V2N SoC
+> > > >   pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
+> > > >   arm64: dts: renesas: Add initial SoC DTSI for RZ/V2N
+> > > >   arm64: dts: renesas: Add initial device tree for RZ/V2N EVK
+> > > >
+> > > Would it be OK if I send version 3 containing only patches 4/12 and 1=
+0/12?
+> >
+> > For patch 4/12: yes, that is fine. Thx!
+> > For patch 10/12: I have already applied it.
+> >
+> For patch 10/12 ("pinctrl: renesas: rzg2l: Add support for RZ/V2N
+> SoC") will that be part of renesas-pinctrl-for-v6.16 branch (which is
+> yet to be pushed)?
 
-A separate section lists Mark as maintainer of a specific set of files
-within include/sound/
+Sorry, my bad; I misread the patch number. I have not applied 10/12 yet.
 
-I guess any files we put in include/sound that are for an ASoC driver
-have to also be added to Mark's ASoC section of MAINTAINERS?
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
