@@ -1,100 +1,177 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail-m49234.qiye.163.com (mail-m49234.qiye.163.com [45.254.49.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC2D27A127
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 10:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9312227A119;
+	Tue, 15 Apr 2025 10:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713081; cv=none; b=jrM6qxfUre8YT/9hVYimjloIRYQ8vtSwxTLQPmjlW0x67jOUxPFa4IzPmdMePJ2i4860FF+YiebQYD6uR1Hn5aN9zihHmNs7hQWNKHuKnbvI1nDEBxexOZpIgMGopVEdgeRzQw7ocjVQunnc7iGV1kNyB915/AS9lkmSWhtN9FU=
+	t=1744713137; cv=none; b=RoWDKGL+H3//yGBEXQJufa9Gp2lOSAvMe5+N4qTHGQs9YinhDUcqHf7SN5+sc3GY+B5wcGwW5MaFBwhI4fT9OUewY5rGXPK7RDjKjolzPbP69B90uAS+edCiy682ltKsPt+TjhIbYFZhKzNr+fkF30pQIt/E6xU9NFXfUILfc1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713081; c=relaxed/simple;
-	bh=FLZYQl/9prDX0eLEC/XoYXKAHhhffs0dRY+G5p5tNjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m/C14oxXIfYLWdyh5Tb+D7N6Oa+dvh66CuOXYpeo6J49wxUJD/HGVSxV7u7DyNdoO0odotsaU6Ovgw013ZheRrirvw6JfPBeYRV9mh5YUO4IJ5KzTPNWe+3dXtfkgR+HBmALNbVxfRd8jX1dB4h7j9retdxcqAUgdp5p6O7Xl14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4dZP-0005vb-7M; Tue, 15 Apr 2025 12:31:11 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u4dZO-000P3u-1l;
-	Tue, 15 Apr 2025 12:31:10 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 45B213F9BCA;
-	Tue, 15 Apr 2025 10:31:10 +0000 (UTC)
-Date: Tue, 15 Apr 2025 12:31:10 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Weizhao Ouyang <o451686892@gmail.com>
-Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Heiko Stuebner <heiko@sntech.de>, kernel@pengutronix.de, linux-can@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] can: rockchip_canfd: fix broken quirks checks
-Message-ID: <20250415-glorious-spider-of-imagination-2c084f-mkl@pengutronix.de>
-References: <20250324114416.10160-1-o451686892@gmail.com>
+	s=arc-20240116; t=1744713137; c=relaxed/simple;
+	bh=pHjveY6KoURnQuwE5Fd0lcHQLQ3u3khaDsZ0Fw6YzOQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bUPLntsTTi4zCy8saExqVIf0IezFvqbeyNZhfrwr9X2pS1I4E/gmiy79LaiNukQBQ0qis2gJzelj5WuyUPuygmsK39epdHJK/vguECRKAMQXQcKRfAgk/l7Y0XoY2fyWcgcLft9OucVSOl59msKVlkyozyBtQ3zDW/fiLuf2zPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Fpvav24r; arc=none smtp.client-ip=45.254.49.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Fpvav24r"
+Received: from localhost.localdomain (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11f2f600c;
+	Tue, 15 Apr 2025 18:32:07 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 1/3] dt-bindings: nvmem: rockchip,otp: Add support for rk3562 and rk3568
+Date: Tue, 15 Apr 2025 18:32:01 +0800
+Message-Id: <20250415103203.82972-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250415103203.82972-1-kever.yang@rock-chips.com>
+References: <20250415103203.82972-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5niwputommw5d6bc"
-Content-Disposition: inline
-In-Reply-To: <20250324114416.10160-1-o451686892@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQ0xIVkkeGkhDTEMdSkIYGVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a963901956e03afkunm11f2f600c
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PVE6PRw*NzJRMBgIMh4dIi4w
+	GgpPCiJVSlVKTE9PTEpISklDQklDVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUhNTU43Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=Fpvav24r00q9fYbGPkYAhH/bkoQv1u1vQmhEWGHRQNhoex6kebUG3A5krHs2i2h3fOqORNA6vqk3FqWVIAZbfmLkhzl6y/o+57CdlQgp/2FV4Bdn3tFyQDgB0e8PCWYxSQfY3QrqyNm1ytP5ozwjq0Ghp04uvIoTNLqI11gjDo4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=iiNUR2t26Uu7+OW1iXl8pE11P0d1ljLW8CEOcUnql5c=;
+	h=date:mime-version:subject:message-id:from;
 
+Add compatible entry for the otp controller in rk3562 and rk3568, add schema
+for different clock names for new entry.
 
---5niwputommw5d6bc
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] can: rockchip_canfd: fix broken quirks checks
-MIME-Version: 1.0
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-On 24.03.2025 19:44:16, Weizhao Ouyang wrote:
-> First get the devtype_data then check quirks.
->=20
-> Fixes: bbdffb341498 ("can: rockchip_canfd: add quirk for broken CAN-FD su=
-pport")
-> Signed-off-by: Weizhao Ouyang <o451686892@gmail.com>
+Changes in v3:
+- update the clock name from "usr" to "otp" and re-order to sync with
+ other soc.
 
-Applied to linux-can.
+Changes in v2:
+- Update the commit message and add maxItems in schema.
 
-Thanks,
-Marc
+ .../bindings/nvmem/rockchip,otp.yaml          | 53 ++++++++++++++++---
+ 1 file changed, 46 insertions(+), 7 deletions(-)
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+index a44d44b32809..8b257662f282 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+@@ -14,6 +14,8 @@ properties:
+     enum:
+       - rockchip,px30-otp
+       - rockchip,rk3308-otp
++      - rockchip,rk3562-otp
++      - rockchip,rk3568-otp
+       - rockchip,rk3588-otp
+ 
+   reg:
+@@ -25,19 +27,15 @@ properties:
+ 
+   clock-names:
+     minItems: 3
+-    items:
+-      - const: otp
+-      - const: apb_pclk
+-      - const: phy
+-      - const: arb
++    maxItems: 4
+ 
+   resets:
+     minItems: 1
+-    maxItems: 3
++    maxItems: 4
+ 
+   reset-names:
+     minItems: 1
+-    maxItems: 3
++    maxItems: 4
+ 
+ required:
+   - compatible
+@@ -62,12 +60,45 @@ allOf:
+       properties:
+         clocks:
+           maxItems: 3
++        clock-names:
++          items:
++            - const: otp
++            - const: apb_pclk
++            - const: phy
+         resets:
+           maxItems: 1
+         reset-names:
+           items:
+             - const: phy
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3562-otp
++              - rockchip,rk3568-otp
++    then:
++      properties:
++        clocks:
++          minItems: 4
++          maxItems: 4
++        clock-names:
++          items:
++            - const: otp
++            - const: apb_pclk
++            - const: phy
++            - const: sbpi
++        resets:
++          minItems: 4
++          maxItems: 4
++        reset-names:
++          items:
++            - const: otp
++            - const: apb
++            - const: phy
++            - const: sbpi
++
+   - if:
+       properties:
+         compatible:
+@@ -78,8 +109,16 @@ allOf:
+       properties:
+         clocks:
+           minItems: 4
++          maxItems: 4
++        clock-names:
++          items:
++            - const: otp
++            - const: apb_pclk
++            - const: phy
++            - const: arb
+         resets:
+           minItems: 3
++          maxItems: 3
+         reset-names:
+           items:
+             - const: otp
+-- 
+2.25.1
 
---5niwputommw5d6bc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmf+NWsACgkQDHRl3/mQ
-kZwmzgf9EQR3QqPh+Se+JjLbC/f3lT2pfHqQCqOiObr7flwz+27gHXmsQHjMfYt8
-P8r00Km0qdMN37hnSWlrde5POFa+ubE2SQXyCILdcOUZc4fTs4Ehi8kX9nbuN76w
-K39/SgcfCMTib4VGhzuB2ZBOpmIljZkKlfYkjolYMBmjoJXANe2P+D3eP2tM4HKu
-pLXWLS0flXatk2Jt2q86d1ObggIFTakkog1AM3XKBX7DnE2si1vfc4AXFxx3SHGG
-vpT9OD2snz91AMWweE9142o2ny1AVTSszTI8Z861/V6zZZ13EexTU6BvCXUjBabV
-fHMRDSBSy4xFAaci/e3DJD8SRNNrFQ==
-=/XME
------END PGP SIGNATURE-----
-
---5niwputommw5d6bc--
