@@ -1,93 +1,77 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625C724A043
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A472750FA
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744702530; cv=none; b=nNqPBtZk2aDHD4OJunlxm9QhaFHaFdCkwjNzSnD9+bOALoFWD0O0Amu02Vm2QYsVRFjPRoY3WgWmxij7ScGWi5SExnnIlZwvn0aEqA6a4c5FhPBYR6oMsei3pKw9yuiIyqjQ8/3JhuUzFuqK+9JhCeOq6Mztg7rRPPlzjWwPMgw=
+	t=1744702553; cv=none; b=rWG63G7VrS0XpOYKCFcBvwkPPfAnr0+WeUjVAv6yKrEKx3AxklY45FMfW7jXuBtOZYtAzQMAR6lg0vphJ7TyMVTQL+LML852IQLgSET+qqIw6nEfr6VK9/ionZnKiwCYo8QvFI79PaxVSJ9KVj7it3gY8lJWLeYKmp1NYrsHVN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744702530; c=relaxed/simple;
-	bh=/t01dfXvGRgfX4KTskLD9RHr8QjggEKBR5una7CkTdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wez+vb2JF8VSuW1CsFuriC5f7bKmg5hUuNGAzdo8WcJTPt39Tkl7cGrUNrGHaNCTiJJjw2it8u95REpwkCW4HGlagrQU16pstLhg5jlQnl+TALTvS43Wex4xfRUyAxuc1H5hvBrj53rAN80KUv5RUy7OiGtbIB0tzqy3MnaWIW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s+oo7O0h; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744702553; c=relaxed/simple;
+	bh=dgumXb6j7La/BC/Odb2opmjGR1aZZC7uEw5ri8A/dyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHonCTmwyvB5rSwPvv48QT4EuvnopsJkD2BZlMqh8HeBjpi3elKLB9IOF1keGMgHa+wE6BZgbs+mHEexm7Iix37kUtSwbX8/kk67NAppbxSZkO8GWFgTKiIrldbX31QDO/+ngZjJ9JQdK6AcAXDnGDFwgjnmwWjhKzFkuOx0rWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LWU8Ygmj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+oo7O0h"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30db1bd3bddso51076941fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:35:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744702526; x=1745307326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z5s8lHjULdMShwAF8jjer9y5ggl6mu2Z2yK+KvFB6hE=;
-        b=s+oo7O0hziTMTn6ffzLugD78KNSlG1XVVmBSNq7/dA2+BW+COsqPeulYH1zmbHlyXD
-         YRiFIof75U2YhtqwpQOc4yHyBTmuwwaNjI9STsEKbAuHlHbhGEJhGavHL6jwgqQ6K1Q8
-         u4T5uVapy/DQM8ExQU4KQE5sFdt7QdIgLpAmVtIzavjMn4ci77v0VtHX2K8sl+obp34G
-         GHgVk1E5oiRb59saVQLjCA2W8y5XWTmcG6bPqRVFHyJl28t+hBio6SXIB5BNOX+ienNf
-         ntV0TX487Fw+Gngj+c9Y5JiENlGQRJ82XYkt+0FFvVvjEo/HefvdGyiHqPI7/GzadqRm
-         liAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744702526; x=1745307326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z5s8lHjULdMShwAF8jjer9y5ggl6mu2Z2yK+KvFB6hE=;
-        b=KAbrzPVz3wePQKbplRXKGzH55nGyoM1pqaNQq0oHNo6zJhZeuuHE8dGUApI4ZbpRDg
-         szzeF6i/GPVbDO4y9Ewlv3w49icCImQKADKlAROZ4esdn5iBTaaw6IMKmfLAijZXZ3oY
-         OWph2v1M7WZRWLvbiUEm1lG/K8x/9l+0MLtcaGWKpMUK+TTBeTH3bFvOxRP2fwirYue9
-         5hDbWmT1Z08kikueeN7SHKQXDCYf6GwhUoq/NzdCBh1PsVMdIV8NlwistmgbmeZkVE6X
-         7qJSPxZcEymu3/YThdySLA1VO6BHuAkyz+6NokCxIo9tUqhbQ9jZEt9L/xJT4HGmpXOQ
-         u6rg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0/M6tnPgqI9TqBclYHDtFY/ZKEEyo1YdrjPT+DEBajP/dTBrUPrx+EyQejCJFak2/KUITBuKvoJckRF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx4t15rgbwjnhUhEsH114Ii+GDrksqVv5KZksfKN99qZXykvxM
-	PG0S+F1TD4EieGtaWLzifec3JX3BOa7QPnXiKBcdBIZIsNLHDhLHcMp/w5UfWXTcdMHNNbzkT9c
-	HuxfVTfIu9FCvwlN05LMqioXRYYpZLfbl1bJokg==
-X-Gm-Gg: ASbGncvBJrzGSH/SqFrKOgFv/eKc7w76XaPBcrcn9nRvYPr13ptL5MLvZpdDwCK+CS2
-	i5Rb8+RqKaD9+DGPDbcr+wWgnFN8PZAxBLWtHNTVPmeoPQ8QwFti+ar27u9SeXkB09t4Fyxw6Zt
-	8PmQoV+gNGtPHbwp2cy1KHc77I6AbWzsUq
-X-Google-Smtp-Source: AGHT+IF/f3ma4C5o9c0efnyvduCTab9wDDK72+7lhXFZsmhgzu8nGsMsG6D4c0qe2PhRQIiyrICHnRVYY1XaZjetoDw=
-X-Received: by 2002:a05:651c:30c1:b0:30d:b3d1:a71 with SMTP id
- 38308e7fff4ca-31049a80682mr54317271fa.33.1744702526493; Tue, 15 Apr 2025
- 00:35:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LWU8Ygmj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F24C4CEDD;
+	Tue, 15 Apr 2025 07:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744702553;
+	bh=dgumXb6j7La/BC/Odb2opmjGR1aZZC7uEw5ri8A/dyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LWU8YgmjJsUnl4ZNI6frWhPFGzm7qdWuUhd7xlyjBOGsbHnEVm3HEoSkVMkWwdK2y
+	 wJQWaV9jSKMwIziHwPZinYcEEcOW6ROM7cGcUZ/nu6Ym9MItoTc1QO/jnEQ2QJjcQF
+	 VwmNjiL5lE00vhQ9ymHn44aSHJRonNK0FuehBiEU6xrZQ8eEOiWMRX2cbtRdGlpkgP
+	 55aGOOgZmWgWpP3kVBG8rsKPAY4f565L7lHzxq1eUYgQMLy9S/xuwtcv1hCry2DrVa
+	 w7Usc6HNzq2Pnxobl8kPugaBTk3iPcQXhPhI1RFLvmhTFpKAxhgEXjMusqy5cWY7Yj
+	 wB8rbtuNZLb6A==
+Date: Tue, 15 Apr 2025 09:35:49 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] release_task: kill the no longer needed
+ get/put_pid(thread_pid)
+Message-ID: <20250415-haare-kroch-2c11f03bd81d@brauner>
+References: <20250411121857.GA10550@redhat.com>
+ <20250414-lappalie-abhilfe-eb7810af39bb@brauner>
+ <20250414-tintenfleck-planbar-656144f25a3b@brauner>
+ <CAGudoHGyN5qno0TVfY-vCJBHjkDd-CL82-W_o7u6b+qXraAJVA@mail.gmail.com>
+ <20250414204535.GI28345@redhat.com>
+ <CAGudoHGi6yZNDVzA1coEu5t4NB_PB51wo1tJmKV0f=mxzWs=0w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org> <20250415023234-GYA29961@gentoo>
-In-Reply-To: <20250415023234-GYA29961@gentoo>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 09:35:15 +0200
-X-Gm-Features: ATxdqUFrvoN3oToav7nR6RzJi6WKzvpJz5pszWK5ULoM2MOJjET7tU5z2QtEKvY
-Message-ID: <CACRpkdZ6A0xORRQBnNNPFcNHg3xL=U3_xAcePmaDN3_ZYMzsaA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] riscv: spacemit: add gpio support for K1 SoC
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>, 
-	Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
-	Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGudoHGi6yZNDVzA1coEu5t4NB_PB51wo1tJmKV0f=mxzWs=0w@mail.gmail.com>
 
-On Tue, Apr 15, 2025 at 4:32=E2=80=AFAM Yixun Lan <dlan@gentoo.org> wrote:
+On Mon, Apr 14, 2025 at 11:26:35PM +0200, Mateusz Guzik wrote:
+> On Mon, Apr 14, 2025 at 10:46 PM Oleg Nesterov <oleg@redhat.com> wrote:
+> > I'd prefer to move add_device_randomness() after release_thread(),
+> > but perhaps this needs another minor cleanup?
+> >
+> 
+> I have no opinion on that front. As far as cosmetics go I would not
+> touch it past the nit I mentioned in my previous e-mail, but I'm not
+> going to protest any other changes.
+> 
+> imo the real thing to do concerning the routine is to figure out if
+> the call is even of any benefit -- it very well may be this is call is
+> only there because nobody with random-fu bothered to remove it.
+> Personally I have epsilon knowledge of that area, so I'm not even
+> going to try to evaluate it. But it would be nice if someone(tm)
+> reached out to random folk concerning it. Worst case, even if it still
+> has to be there, maybe the sucker can trylock and bail. It does
+> contribute to contention, likely for no good reason.
 
-> Hi Bartosz,
->   I think this version is good to go, if you agree,
-> can you take patch [1,2 / 5] through gpio tree?
-
-I agree with this, it's the final piece making use of all the nice
-infrastructure we put in for threecell GPIO and threecell
-IRQ so let's merge patches 1+2!
-
-Yours,
-Linus Walleij
+Afaict, add_device_randomness() cannot block. So why can't we just move
+this into put_task_struct_rcu_user() (or some variant that's local to
+kernel/exit.c)? I see no reason why this would need to be done
+synchronously?
