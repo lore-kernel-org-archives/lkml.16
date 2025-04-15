@@ -1,73 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A3910F2
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFC10F2;
+	Tue, 15 Apr 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744699280; cv=none; b=PPodxPFp4auFsy11acG2iEuPH7v+ozgsf1jMKJRwGLUrLJl3zwWuDxP5wUP0MZMf3nkF8BUaQ0swQSw3qRdEeDIZyFslxTS1Psfq+fcoiz5Ljuq3NF+1YEtug1Gf38rus0xzqLOuOMYyYxB6FAh3IM1zj63SN+r3rXPaF/eSXuU=
+	t=1744699325; cv=none; b=YrOpLUrGJmfhxhn2matLhPqeCvZ8+6g1DJ4lZjZWLHQSzwD4zzGqdgAvJBXH3WSUXv0W2cBWygCeDqg8e5kV7qaq0aSqb51FaAOGKXw96KfZURVtV4sfXTx49aoX4Q3WR1V5H6gehenv2FutHtlWc/D/YHCbMk1j1g1nL5BOsIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744699280; c=relaxed/simple;
-	bh=kyx9ZTv5QhPux6wHjdjpZpiuUg8YVuJrGIbwp9i+DBY=;
+	s=arc-20240116; t=1744699325; c=relaxed/simple;
+	bh=0p0Ko0PYLixwXFVovp7Vk4gNnBAomxKJKvB8ulTWsdU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUVSxiG4InQyXyIkhA+v86TxLX1+CjZdCjS9RgnkCLtGK+M/OQDWBD0+UEPQlF6rdn3eWfOB+2i0LBRzcxfnRZzutdTTfoMcpbEwbbtjf8hxtZvvVZZ0AzKJyAY3r28TMhvVQyk+Pg6s7pqnyIlxn4uU+2bNuwJlMcLxPEYmDKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dEObrn/i; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPK64BDbjFqUkrsC4L7ZRzGscK9FUPtOnKrOmbKLempoqhSIxTyW2WEKa9aujnD6TktunVscSxoOStpHdTLS4c+qeIgyOg/RZXuVzAITtSLi7JoSGDqw0Ggyq2IIyUMUDnwvM78tSMRKNm5g1f7Sc4kOdci/5DBhmu9TYGPkg4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eJQyJh4P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vkHNJiYe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dEObrn/i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AA8C4CEDD;
-	Tue, 15 Apr 2025 06:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744699277;
-	bh=kyx9ZTv5QhPux6wHjdjpZpiuUg8YVuJrGIbwp9i+DBY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dEObrn/iMiTZ+OvgyVt4UBL8z5ifHgl4HcvGlbII2FLEG+Sxk56DXZbmAn+9+dzVY
-	 JKdUS4MMsHsS0pMyUcoP3y3I3auc2JnXNaaUknbAhGUc7AcWeLGduUKVia4KrrpRbV
-	 Eq1TTooU+Z9QPFLsZy7uo+kLTCmnIKobGmUJ/ot5c/f1U8mTWmQhSnXiSYiEJgmcZk
-	 EcLgjEmexx6wbEVgoku+V0VeD/2MONZE5RDPTg+3uzWgRzVqaFIXC9bHc9bvs0cRcY
-	 HQ3QSCYU/c3Z689jZyITPmX6DcomXtPFD8huesBY78uwDb+wxLyF8FtVpJEJvPaEUW
-	 tFhC7Du6IwL3w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4Zyr-000000005Am-48vN;
-	Tue, 15 Apr 2025 08:41:14 +0200
-Date: Tue, 15 Apr 2025 08:41:13 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Adam Xue <zxue@semtech.com>
-Cc: dnlplm@gmail.com, fabio.porcedda@gmail.com, chester.a.unal@arinc9.com,
-	larsm17@gmail.com, vanillanwang@163.com, mank.wang@netprisma.com,
-	michal.hrusecky@turris.com, linux-kernel@vger.kernel.org,
-	imocanu@semtech.com
-Subject: Re: [PATCH v2] USB: serial: option: Add Sierra Wireless EM9291
-Message-ID: <Z_3_iVfb16NqGGyb@hovoldconsulting.com>
-References: <20250414211437.1905816-1-zxue@semtech.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eJQyJh4P";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vkHNJiYe"
+Date: Tue, 15 Apr 2025 08:42:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744699322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcIAga6GYfzSYtTDO27V82Rac8anYUyHC4H02k+lpNo=;
+	b=eJQyJh4PDfD3MFybZK57HSiim6SrToWbG5vis+3yeZ9uaCDEfrs1/zbSr78EZdhDUZqCNk
+	Zb6/iGTUh8vhK2//ahfE75aaTSwuo+npGWmBUM3RA3qj6pI7LkNvKFrBqcnQw5+I9NxgbK
+	r4//3qKNtN7PlsoJNA45nC2bOEapn03Nie9UL7Wi+ePAMxRzEqI63hCy43JtHOv1WxpK49
+	GsRer8kOiweAFl/VXWLzf3qUqrJnIaaXuHTwtBwpf+l51hxVG8iszaDWVsjWsAQR96dMIu
+	Capvt/4r0j4sNdPTJSDsubtyM3mzzOeljZtVvRZghnIytaTK8FN07P1AyYPLVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744699322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zcIAga6GYfzSYtTDO27V82Rac8anYUyHC4H02k+lpNo=;
+	b=vkHNJiYezAQSOxrKFxNBB4BL/zW1bwvyrhu4JqnD9CdZgyVlWlwHGv6AvwNgS/LfIMGT6K
+	FJueRUo6PMOUBVCQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cc: Jeff Johnson <jjohnson@kernel.org>, 
+	Loic Poulain <loic.poulain@linaro.org>, Brian Norris <briannorris@chromium.org>, 
+	Francesco Dolcini <francesco@dolcini.it>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
+	Tariq Toukan <tariqt@nvidia.com>, ath10k@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	ath11k@lists.infradead.org, ath12k@lists.infradead.org, wcn36xx@lists.infradead.org, 
+	linux-wireless@vger.kernel.org, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next 0/7] net: Don't use %pK through printk
+Message-ID: <20250415084125-a8677bbf-5fee-4670-8d4c-4afda6669e5f@linutronix.de>
+References: <20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de>
+ <9c53011a-0e00-49f8-bf7e-b04ddc8c575b@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250414211437.1905816-1-zxue@semtech.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9c53011a-0e00-49f8-bf7e-b04ddc8c575b@oss.qualcomm.com>
 
-On Mon, Apr 14, 2025 at 02:14:37PM -0700, Adam Xue wrote:
-> Add Sierra Wireless EM9291.
+On Mon, Apr 14, 2025 at 08:02:39AM -0700, Jeff Johnson wrote:
+> On 4/14/2025 1:26 AM, Thomas Weißschuh wrote:
+> >       wifi: ath10k: Don't use %pK through printk
+> >       wifi: ath11k: Don't use %pK through printk
+> >       wifi: ath12k: Don't use %pK through printk
+> >       wifi: wcn36xx: Don't use %pK through printk
 > 
-> Interface 0: MBIM control
->           1: MBIM data
->           3: AT port
->           4: Diagnostic port
+> the first four should go through ath-next and not net-next
 > 
-> T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
-> D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-> P:  Vendor=1199 ProdID=90e3 Rev=00.06
-> S:  Manufacturer=Sierra Wireless, Incorporated
-> S:  Product=Sierra Wireless EM9291
+> >       wifi: mwifiex: Don't use %pK through printk
+> 
+> this should go through wireless-next
 
-> Signed-off-by: Adam Xue <zxue@semtech.com>
-> ---
-> v2: remove unused device interface entry
-
-Thanks for the update, now applied.
-
-Johan
+Ack, thanks. I'll resend it there when the discussions here are done.
