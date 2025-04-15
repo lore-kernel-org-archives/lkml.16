@@ -1,70 +1,64 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED20EEC3
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1100C1C8634
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708494; cv=none; b=lLxofykqx1ifaX3ZmE4K6uV9YtbKkO5ULq9SVgqu/yykYoSeOGbo48QEL2TOpZZrfo5xS6ZLonXcqaooUHHNiAoZ4/5qhAi2Rm4gjt3GWzsC63S1Jg64MQmlTfmxu0YvJu59TzDk6pTIPvnrXB5UIdUrdlrEAKqHJkbKi4c9xrs=
+	t=1744708541; cv=none; b=Z7olBPQXK3UnNGa9ut3b5lp4KAIw4ecPFuxam4JjOmYvK5lmiP6+4Sf4bAVr2VaJUc/IAeTebuNTUU2Il7BORg7Ijy/pi++pTDfzGLdyD2Wko060iM8So8eTDCnmTmAHo32SSUXgUNn50PPPakGx2x6o3c7YYqO8iVUxTwAA5Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708494; c=relaxed/simple;
-	bh=0eUTeZWOvy/sEdBDw2DnwA5spT7b3OSAoKHMZ2s8vQM=;
+	s=arc-20240116; t=1744708541; c=relaxed/simple;
+	bh=Xb56mDUhjw/Q1oLqLQeKgmtGUX5Xo/aS80fWKCCJGY4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ACzEAZQCNNFUq1EMInUbC1C6STKhYnrYfosYwbthXZimYryZ7bMh2rq8yrjZDsvzkFi5K2Tj3R6hEz8te4tzO0vhPh3K5VAh/J82VfLqTVlz1mBaXJR5VAQLzdiZT/wHW3fnqFzFJKuNlYcuJEKjFXy+Pqvb7qpV33uUZ4RnSpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b9hH2Pku; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=lfauluCK2rhmxK2eCo4ZRn8rXJJ+LrLGKK3BeRVSPBIMpUml9EWWcRynyPgn723UOzJCHOqAZsOn2zky5de+ydIA7GVSgTGAREDr/mp5xBBHwovtQvJWm+VCCOdPZeCJlNLQmyEyIkTGP3qIsUVDOupOi/r+4ayjpk6fhFn0v4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p4+61tZf; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b9hH2Pku"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744708491;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0xBj6wYND6XkoPsEsHNHqa6He4rhHss1QsFv4wuPqUQ=;
-	b=b9hH2PkubbKFvEiaoqCSk4hyKnsX1lEvmVzyBmwGB/Xt1EG80je2FgdT1cnfaZlKBLnEK2
-	85Vd9I3JnCGctCeZVz8nIWCwjObi523m2OfFUa88wuIuSZLtert/1MfyBkgW2wBmRe9vK6
-	CHaB60DjYvFD9ryM414kKd3p2abhZtc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-102-vjl-qwwAOhiQx6cSGjtJgQ-1; Tue, 15 Apr 2025 05:14:50 -0400
-X-MC-Unique: vjl-qwwAOhiQx6cSGjtJgQ-1
-X-Mimecast-MFC-AGG-ID: vjl-qwwAOhiQx6cSGjtJgQ_1744708489
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so26800795e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:14:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4+61tZf"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso4217630f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744708538; x=1745313338; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a5vJVCTJwtq6/DnoPIdPI95VzLb9KuC0ho+ih6r4jso=;
+        b=p4+61tZfZsRtLrQ5oB37BJMO/eOm3NYN/GGX0TK1gaFwTEzG4G5504m4qJcZRKljQw
+         3a35414jm03uVrhdE5YSOQmyd6J7PdHIjIb/qm31TRuULvZWYWVAxAatDKZets0dP1dR
+         h+vMrEEgq/qPRq5r/QPTQFWX0TIbJ4KwvVjDMq+mE77WPNuprKFQadF5re9zM3vmEbDC
+         gN+VJ7/EF8w9QwskePUs92+BzzQKhdR98W34Z6cXhGCn5HLsOu2yFGbX3V3q3TRDrlag
+         AsaXTepufABky3aHTLlUIEX4LCWO+N+HdK/1ouOvi6pqgbyeTOzNeN/6qYpKj/4rKzgz
+         r6rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744708489; x=1745313289;
+        d=1e100.net; s=20230601; t=1744708538; x=1745313338;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0xBj6wYND6XkoPsEsHNHqa6He4rhHss1QsFv4wuPqUQ=;
-        b=ASohzuVFMCFzNFj4N0pgX44qs2FiCnPmDQUSaeCtiG9s5uQicN0INdm+yP2IZmLGI+
-         yueWDpa6VrqmIoRMelL7CA0cdRr9q2txdUtk1CIYbV6R0zDfkhTZt2M1dVHtFOL2Hzea
-         ZbL56l2QeiCBSZSMkElBKyFQ47CyNYGi0lpHuLBOZbduenOIQukfARDJ+gr74cU5WWzH
-         19/2f1K9ozUxZw20Q2URrirD7Y2Tc7krtrycQwgxEF3MZNaYUif1ctRD3FIl+2G8Wg0g
-         eLgKtf9Eg3b0bGOOecDi36iQmx+3W03PyFiLT4F54vpRCBIESK3CBSfQGePCmjQg4ZK8
-         51iA==
-X-Gm-Message-State: AOJu0YyMs2WolB4HnC7FA3vMok4Xdc63xJv/+Xdsb9fSoMuOkYiBSTCe
-	TkjaYfaK9BpD5itpgua+R8ctZNtFl1bdeKdk2K7ECNQs7pTY6IbezJYE+rxlW683hyuHpgpBdu1
-	g9Iddi+fLXrfGYCcMSGREQqh5YXxyi4ySC+wFYuq6w+74pSBrWSuvufi59AumQw==
-X-Gm-Gg: ASbGncu1k92bX3T3V9GlvsasYizDw4qlgHacGj/R1lhE/c3lcd8Nee6CBrdtO6vt13Y
-	On67/7P73UDwrdxETQefMdKm15052VvqbD4YixpErER0QNYnA5RnfdXMbHwHBVrDhZDqFP0G+61
-	rveLuMhrqBnJKU5DKkwRrrY9bIWphBLvGruzUmHL/37wUMoPJPhbkRDfycbDEh++JsedWdcTttI
-	Sn947wMwV79Z9NUt2UEJiPR4d7k/2SFcmddK5XNkLtw9CLp3AOXQMuet/mgFRBRe5NcNBQNZ8dR
-	ol6HtF5GyIjSnULbfvVcBf1Q/LHK/fr6AG+MXt4=
-X-Received: by 2002:a05:600c:4704:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f3a9af837mr161581245e9.30.1744708488745;
-        Tue, 15 Apr 2025 02:14:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHfovw9rzSF7/UhE9C8ntddanjESFbdGIFJq3+2VnKz80vs7HYJjirXobBVEqXPkTQJgbF6JA==
-X-Received: by 2002:a05:600c:4704:b0:43b:d0fe:b8ac with SMTP id 5b1f17b1804b1-43f3a9af837mr161580875e9.30.1744708488359;
-        Tue, 15 Apr 2025 02:14:48 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-34-52.dyn.eolo.it. [146.241.34.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9797aasm13673088f8f.56.2025.04.15.02.14.47
+        bh=a5vJVCTJwtq6/DnoPIdPI95VzLb9KuC0ho+ih6r4jso=;
+        b=CCz0zPNsCyP89L69VY3wKyt44AVRRgItFO89GaAWMDc4O/MMCI84AFtbHjMyBBNYfU
+         kOswD0thw4tOKPbB/BaZGk978/ESwbCNWfYXKmLAqAsjOLyut558up6kanXsVR+QyqdC
+         MKiC7g9Elzb68VRy2zFZjpHrjikJ/oYubUeL3qlziZ+8gDAhBozfaKKkunMeodTWk8A7
+         Pp4b7pEe5cJNgFQ+Bb5h6H4iq3EowVll4IwDbED2uK2cDEdBiKLX0B7bBGPFKzq4sWVY
+         py2dM8ku1nvOkH18HH05TDFd2LXEtbICxSUXTMMv1quM7EYBJ2bS/KlbS7horU8OA6w1
+         ztXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWg7VlgdP8oC6j8qSUFz5mxOndrMyS4R9GwfjIemZeM6U4PqLjMFa4TNF7EZRrhuvco6StzAF7Vnp55h8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeCT3XeYZPIA/wQ0ox/K5yVugLEZei02utHKIQM+ZvNrVqIiOU
+	JYJ+k6GoNTkXcQzWyl3Im4p6Yas0eNegIExG5WfoaZl3GMkIqrVwZkOW78TYgTU=
+X-Gm-Gg: ASbGncvwq+WivByWTznb2dLbS4hG3W6FxLHDA9GEUPtI6BE5s/67UHTgi1rV7pZnFqM
+	iasB0ijcXV6ABOcYCvcrtLGWl9MlXY9otminokhegezuh6gF8l3kESsNccfhslXT9DezkCUZtzU
+	Mqxj8priOfyi/wHPrUmL2n1g6VanvAz3l1tqnMCxlEjxVYNxwgDJg5Xdne86C3XD5FvrVmwbE/2
+	B5C2HCA3rDqKePkVCt2q/QusoStRaQIaQLYdeRRPuSjaN6hvPrWAgWTlvZFlCn3G3KfPIFVjtka
+	mNl38n38KKePUIcspU+4zJImL2OVBnFfko0/qf0o3pk8c9D1G6kyxaoHwCHjkaqyLkpJyZc=
+X-Google-Smtp-Source: AGHT+IEfr/Hk5p9L21/uIcg8UOwfZhTDJAOMWzS89QUdqyXz4YBi2QMOGRnZPOYkn8+5CJxQQ8lFQQ==
+X-Received: by 2002:a5d:5989:0:b0:39c:11a1:21d6 with SMTP id ffacd0b85a97d-39edc30b4fdmr1951577f8f.17.1744708538062;
+        Tue, 15 Apr 2025 02:15:38 -0700 (PDT)
+Received: from [192.168.1.47] (i5E863ACE.versanet.de. [94.134.58.206])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338dc13sm209176705e9.3.2025.04.15.02.15.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:14:47 -0700 (PDT)
-Message-ID: <6851d6b8-109c-4de0-89a8-a56659c87cf4@redhat.com>
-Date: Tue, 15 Apr 2025 11:14:46 +0200
+        Tue, 15 Apr 2025 02:15:37 -0700 (PDT)
+Message-ID: <6275ada5-f7c4-42cd-8d47-f4cbf0a0d4cc@linaro.org>
+Date: Tue, 15 Apr 2025 11:15:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,70 +66,158 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v1] net: stmmac: starfive: Add serdes PHY init/deinit
- function
-To: Minda Chen <minda.chen@starfivetech.com>,
- Emil Renner Berthing <kernel@esmil.dk>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250410070453.61178-1-minda.chen@starfivetech.com>
+Subject: Re: [PATCH v2 2/3] arm64: qcom: sc7280: Move phy, perst to root port
+ node
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_vbadigan@quicinc.com, quic_mrana@quicinc.com
+References: <20250414-perst-v2-0-89247746d755@oss.qualcomm.com>
+ <20250414-perst-v2-2-89247746d755@oss.qualcomm.com>
+ <511f8414-bbb1-4069-a0a6-f7505190c1e0@linaro.org>
+ <7atbwco3htsrfzfb5hd36t3tprqdgcxbtvggdww7pabibbs44i@zncb2tznzzvc>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250410070453.61178-1-minda.chen@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
+From: Caleb Connolly <caleb.connolly@linaro.org>
+In-Reply-To: <7atbwco3htsrfzfb5hd36t3tprqdgcxbtvggdww7pabibbs44i@zncb2tznzzvc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/10/25 9:04 AM, Minda Chen wrote:
-> To support SGMII interface, add internal serdes PHY powerup/
-> powerdown function.
+
+
+On 4/15/25 09:59, Dmitry Baryshkov wrote:
+> On Mon, Apr 14, 2025 at 02:49:00PM +0200, Caleb Connolly wrote:
+>>
+>>
+>> On 4/14/25 07:39, Krishna Chaitanya Chundru wrote:
+>>> Move phy, perst, to root port from the controller node.
+>>>
+>>> Rename perst-gpios to reset-gpios to align with the expected naming
+>>> convention of pci-bus-common.yaml.
+>>>
+>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts   | 5 ++++-
+>>>    arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi | 5 ++++-
+>>>    arch/arm64/boot/dts/qcom/sc7280-idp.dtsi       | 5 ++++-
+>>>    arch/arm64/boot/dts/qcom/sc7280.dtsi           | 6 ++----
+>>>    4 files changed, 14 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>> index 7a36c90ad4ec8b52f30b22b1621404857d6ef336..3dd58986ad5da0f898537a51715bb5d0fecbe100 100644
+>>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>>> @@ -709,8 +709,11 @@ &mdss_edp_phy {
+>>>    	status = "okay";
+>>>    };
+>>> +&pcie1_port0 {
+>>> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>> +};
+>>> +
+>>>    &pcie1 {
+>>> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>    	pinctrl-0 = <&pcie1_reset_n>, <&pcie1_wake_n>;
+>>>    	pinctrl-names = "default";
+>>> diff --git a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>>> index 2ba4ea60cb14736c9cfbf9f4a9048f20a4c921f2..ff11d85d015bdab6a90bd8a0eb9113a339866953 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sc7280-herobrine.dtsi
+>>> @@ -472,10 +472,13 @@ &pcie1 {
+>>>    	pinctrl-names = "default";
+>>>    	pinctrl-0 = <&pcie1_clkreq_n>, <&ssd_rst_l>, <&pe_wake_odl>;
+>>> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>    	vddpe-3v3-supply = <&pp3300_ssd>;
+>>>    };
+>>> +&pcie1_port0 {
+>>> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>> +};
+>>> +
+>>>    &pm8350c_pwm {
+>>>    	status = "okay";
+>>>    };
+>>> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>>> index 7370aa0dbf0e3f9e7a3e38c3f00686e1d3dcbc9f..3209bb15dfec36299cabae07d34f3dc82db6de77 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
+>>> @@ -414,9 +414,12 @@ &lpass_va_macro {
+>>>    	vdd-micb-supply = <&vreg_bob>;
+>>>    };
+>>> +&pcie1_port0 {
+>>> +	reset-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>> +};
+>>> +
+>>>    &pcie1 {
+>>>    	status = "okay";
+>>> -	perst-gpios = <&tlmm 2 GPIO_ACTIVE_LOW>;
+>>>    	vddpe-3v3-supply = <&nvme_3v3_regulator>;
+>>> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>>> index 0f2caf36910b65c398c9e03800a8ce0a8a1f8fc7..376fabf3b4eac34d75bb79ef902c9d83490c45f7 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+>>> @@ -2271,9 +2271,6 @@ pcie1: pcie@1c08000 {
+>>>    			power-domains = <&gcc GCC_PCIE_1_GDSC>;
+>>> -			phys = <&pcie1_phy>;
+>>> -			phy-names = "pciephy";
+>>
+>> Isn't this a huge API breakage that will break using new DT with old
+>> kernels? It will also break U-boot which uses upstream DT.
+>>
+>> This is bad enough, but at least let's break it a clean break by changing
+>> all platforms at once.
 > 
-> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
-> ---
->  .../ethernet/stmicro/stmmac/dwmac-starfive.c  | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
+> Up to now as the kernel was the only and the main user, we allowed
+> forward breakage (new DT breaks with the old kernel), only backwards
+> compatibility was required (new kernels work with old DT).
 > 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
-> index 2013d7477eb7..f5923f847100 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-starfive.c
-> @@ -9,6 +9,8 @@
->  
->  #include <linux/mod_devicetable.h>
->  #include <linux/platform_device.h>
-> +#include <linux/phy.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/property.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
-> @@ -28,6 +30,7 @@ struct starfive_dwmac_data {
->  struct starfive_dwmac {
->  	struct device *dev;
->  	const struct starfive_dwmac_data *data;
-> +	struct phy *serdes_phy;
->  };
->  
->  static int starfive_dwmac_set_mode(struct plat_stmmacenet_data *plat_dat)
-> @@ -80,6 +83,26 @@ static int starfive_dwmac_set_mode(struct plat_stmmacenet_data *plat_dat)
->  	return 0;
->  }
->  
-> +static int starfive_dwmac_serdes_powerup(struct net_device *ndev, void *priv)
-> +{
-> +	struct starfive_dwmac *dwmac = priv;
-> +	int ret;
-> +
-> +	ret = phy_init(dwmac->serdes_phy);
-> +	if (ret)
-> +		return ret;
+> Maybe, as this breaks external projects, we should allow a grace period
+> and list _both_ properties, dropping them after the LTS?
 
-This is called also in case of PM suspend/resume. Do you need to keep
-the init here, or should that moved at probe time only? Similar question
-for phy_exit() below.
+This would be good, especially with some mechanism like below that would 
+allow us to collect and list all the ABI breakages in DT for a given 
+kernel release.
 
-Thanks!
+Thanks,>
+>>
+>> As I understand it, we seem to allow these breakages in DT for now (and this
+>> patch landing will confirm that), but perhaps we could at least track them
+>> somewhere or at acknowledge the breakage with a tag in the commit message
+>> pointing to the relevant dt-bindings patch.
+>>
+>> Breaks-dt: https://lore.kernel.org/linux-arm-msm/20250414-perst-v2-1-89247746d755@oss.qualcomm.com
+>>
+>> Kind regards,
+>>
+>>> -
+>>>    			pinctrl-names = "default";
+>>>    			pinctrl-0 = <&pcie1_clkreq_n>;
+>>> @@ -2284,7 +2281,7 @@ pcie1: pcie@1c08000 {
+>>>    			status = "disabled";
+>>> -			pcie@0 {
+>>> +			pcie1_port0: pcie@0 {
+>>>    				device_type = "pci";
+>>>    				reg = <0x0 0x0 0x0 0x0 0x0>;
+>>>    				bus-range = <0x01 0xff>;
+>>> @@ -2292,6 +2289,7 @@ pcie@0 {
+>>>    				#address-cells = <3>;
+>>>    				#size-cells = <2>;
+>>>    				ranges;
+>>> +				phys = <&pcie1_phy>;
+>>>    			};
+>>>    		};
+>>>
+>>
+>> -- 
+>> Caleb (they/them)
+>>
+> 
 
-Paolo
+-- 
+Caleb (they/them)
 
