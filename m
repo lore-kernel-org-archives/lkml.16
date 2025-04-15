@@ -1,44 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6820C2222C5;
-	Tue, 15 Apr 2025 23:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D16F2D8DA3;
+	Tue, 15 Apr 2025 23:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744759627; cv=none; b=E7UMylWhu449vTbRDxCm386lKMFZ4YawTGcIJ1vAweRVOsMOV6vLkWd5vyN7yhCU6pVIQvPoQIVwLBeKUyauHiFSODb27kIhyIC4CsVkmp+21Z1fOFMpfOWdLPzaZnja4TQh/PLpQewd5my9IMmN2Sg/IA75q9lLu22vFijw6Qw=
+	t=1744759676; cv=none; b=T3xTEz3ftC0usgrgMrUi3IwT/6Kqy4FW0ryyZcsBTnSsTVSmgoGr7iofPUWJH3vgzpR5awHClaX4lfMBwCP914PFYD/mHoNOcOdAbEOcf0qrx1aC4G6fGZLswKCV/J/JKv+NUxhGEePFw4jLUGN/aeICF7YXbktlgCCT1+Cnsng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744759627; c=relaxed/simple;
-	bh=3Sir4+T4AwfnNy/8QK8vbEwvLVe1miGWHDLZq0uyyT4=;
+	s=arc-20240116; t=1744759676; c=relaxed/simple;
+	bh=xFZThZAwd6sgcs4jLPlvefAr9HMS2oFrx8khX6DALzw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=II1JmNqBD/0GrUsLEmTOJ7GKtQVGXsFSAwJ+X409vyjneOiNs0zxbHkBDdr/XVZHCQHmuteK6l9l4vRTQCyFNgNmv+g6JL8i3dVnanERZ5g1C0ElFGn/6J/CkMdkkaEPZWGkZCwp+lN2c3LJOEjP00OpEQ7P6RZeuzBdfSqDLWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIo8SYty; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Lz6UZp8+OHywzTANf01h353/3ZhLG7EjppU0fmfllUgJE62vXVZlW7XyYGqHypPdEM7jWidPPtQgfla+LyOxGbe11OBHK1TlDW+eIEBPtAimcsqQft/XP1GRSsvOWdYh7SQT90FTdH5a9R8Gd5xT33+/KHAPaCK4rpqsSAinM0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s55FM5NH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIo8SYty"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E89C4CEE7;
-	Tue, 15 Apr 2025 23:27:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s55FM5NH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5ACEC4CEE7;
+	Tue, 15 Apr 2025 23:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744759626;
-	bh=3Sir4+T4AwfnNy/8QK8vbEwvLVe1miGWHDLZq0uyyT4=;
+	s=k20201202; t=1744759676;
+	bh=xFZThZAwd6sgcs4jLPlvefAr9HMS2oFrx8khX6DALzw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hIo8SYtyHoSoPk7lqB1o5VyWLcsrN9ObJNjJM7opi7LfMakYyW9skhMN2wELTC95b
-	 fMamKvJNicBpVQLjaXFK/JUL6H7aCuVUcpbfLv9u9RPqtYVMy2ZNhTRBd+kC4NZaXN
-	 50SIVZFqhi/vt9fXL4M3n3gOUT4kKtQ1JQKmachq0VjrIAD+2yhWgZeSn8/7gi2DWX
-	 Pu7fj8RRmRicIPjcQGqXF9A6qs+TVgBUV6VO0CdCwbtgZOpUMCsIuyKEgxo0Mm/Mqr
-	 /kjVcANx6I7v6ppDZLd72i+ENJMIDM1CjUs40JFZQ7kGDl+Qvthn98ZW6tfxlKrp9k
-	 HMwkNp/vaogpA==
-Date: Tue, 15 Apr 2025 18:27:04 -0500
-From: Rob Herring <robh@kernel.org>
-To: patchwork-bot+bluetooth@kernel.org
-Cc: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, marcel@holtmann.org,
-	luiz.dentz@gmail.com, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, amitkumar.karwar@nxp.com,
-	sherry.sun@nxp.com, manjeet.gupta@nxp.com
-Subject: Re: [PATCH v3 1/2] dt-bindings: net: bluetooth: nxp: Add support for
- host-wakeup
-Message-ID: <20250415232704.GA956317-robh@kernel.org>
-References: <20250414175952.403002-1-neeraj.sanjaykale@nxp.com>
- <174474844000.2765712.3519619421796978194.git-patchwork-notify@kernel.org>
+	b=s55FM5NHKn9UWkQGkkp3Lm71ct0k86m3v6URIEpcNFl91F7Um+aotyx9yOzTJEU/C
+	 bCkdTGLxKsY6W+ndO+e6/hXMooFhnlfJY5LpwR1onOAYr0gBQ9DAV8V+Rr6jHBwZuC
+	 X2W2XJ+xuH5aW8+bEM31KoE18yb94akbx2TcOPeuDe9V0PclQsAQqm1fnLMKy9FzFf
+	 bmMiAYOSIqfORFs6S/iZaz5r3JImTARJzvxrhHxBZKVAOrOQyqBFmIg0S2CR9BAUAV
+	 75QpbV+iJ8pN/TffgLnQF5hfJWho48CMjNbLQ4qrrjetIzhgLmvqhXgH4H97ZUpWms
+	 aAp1Zzix7Hqcg==
+Date: Tue, 15 Apr 2025 18:27:54 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-pci@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>, imx@lists.linux.dev,
+	Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, dlemoal@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Niklas Cassel <cassel@kernel.org>, jdmason@kudzu.us,
+	Shawn Guo <shawnguo@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v18 04/15] dt-bindings: PCI: pci-ep: Add support for
+ iommu-map and msi-map
+Message-ID: <174475967369.1016540.6220438967935307132.robh@kernel.org>
+References: <20250414-ep-msi-v18-0-f69b49917464@nxp.com>
+ <20250414-ep-msi-v18-4-f69b49917464@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,29 +63,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <174474844000.2765712.3519619421796978194.git-patchwork-notify@kernel.org>
+In-Reply-To: <20250414-ep-msi-v18-4-f69b49917464@nxp.com>
 
-On Tue, Apr 15, 2025 at 08:20:40PM +0000, patchwork-bot+bluetooth@kernel.org wrote:
-> Hello:
-> 
-> This series was applied to bluetooth/bluetooth-next.git (master)
-> by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-> 
-> On Mon, 14 Apr 2025 23:29:51 +0530 you wrote:
-> > Add support for host wakeup on interrupt.
-> > 
-> > Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-> > ---
-> > v2: Use interrupt instead of host-wakeup-gpios. (Rob Herring)
-> > v3: Fix errors in dt_binding_check. (Neeraj Kale)
-> > 
-> > [...]
-> 
-> Here is the summary with links:
->   - [v3,1/2] dt-bindings: net: bluetooth: nxp: Add support for host-wakeup
->     https://git.kernel.org/bluetooth/bluetooth-next/c/f68f62f57917
 
-I happen to have no more comments in this case, but please let DT 
-maintainers have a chance to ack/review bindings.
+On Mon, 14 Apr 2025 14:30:58 -0400, Frank Li wrote:
+> Document the use of (msi|iommu)-map for PCI Endpoint (EP) controllers,
+> which can use MSI as a doorbell mechanism. Each EP controller can support
+> up to 8 physical functions and 65,536 virtual functions.
+> 
+> Define how to construct device IDs using function bits [2:0] and virtual
+> function index bits [31:3], enabling (msi|iommu)-map to associate each
+> child device with a specific (msi|iommu)-specifier.
+> 
+> The EP cannot rely on PCI Requester ID (RID) because the RID is determined
+> by the PCI topology of the host system. Since the EP may be connected to
+> different PCI hosts, the RID can vary between systems and is therefore not
+> a reliable identifier.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change from v17 to v18
+> - mask max value should 0x7ffff
+> - order according to property name
+> 
+> Change from v16 to v17
+> - new patch
+> ---
+>  Documentation/devicetree/bindings/pci/pci-ep.yaml | 68 +++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
 
-Rob
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
