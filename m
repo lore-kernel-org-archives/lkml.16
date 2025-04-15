@@ -1,98 +1,123 @@
-Received: from mail-m49243.qiye.163.com (mail-m49243.qiye.163.com [45.254.49.243])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2119C274FCB;
-	Tue, 15 Apr 2025 05:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.243
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FECC2749D2;
+	Tue, 15 Apr 2025 05:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744696479; cv=none; b=jZrRs+AL62KPp6P/K0ySadQ3RnkY6YD8yddCL8xwIPojcB5lV4OMIT9Qvj/sHkGcmcuNh3RUjeAUKCiZId/B3NtQ11uo6rwe3cPf4OyWZZtzLJ8TFV1OqRMiq6wZpNw9Lt50Yq8tuI5FVWn/R6V3SUe/eF8yjwwv2OBB5MLT8/I=
+	t=1744696618; cv=none; b=tlg7ZGOBeYT4KblVUcJ32YHjPqHH7bZ76WAkNxKmDWgqHUgAQ7nO8mMMSoQe8w/j1p1mFQfwF5YT+6ZJ6WFMS9Tkz3nu4twJJjge3Q4oQVW40guZkV1j9dQlaLAC5BEJWBmZj8Vo+Venzmiah3HoXzid9fB+P571Uk2aCA/lqHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744696479; c=relaxed/simple;
-	bh=hrUYP5CdehdjGTXKv9LKCof4H8DlhEJfkYve2U/AWG0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gjYevJsF47u7Bi7impIOUbYWqWexY35YnHkvCSjEYIHghZOZbHcX/Gh4lqca2esO+dnbx1052njEWrxeEii5fESYJqYp6Avx+rF7dsFyQC9sEnjgOkMgJG/kvftWHydcKjz2j8rWoTFVttrepYKTH+z+wp59gBvXFreLffLPIY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jtGENCM+; arc=none smtp.client-ip=45.254.49.243
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1744696618; c=relaxed/simple;
+	bh=B+KREJM4mAb3R4rAMIV3uUfDJPy0U59jzlDGI/zlTnA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RXKKpjmNmEJGGEdWsMQ3YpWHECLNhjSra+I6ZqmOAOAhyZ8jW1zQ2gujcGN6WJAwRQoVBUFDPPTAKSrKBezgewfBHtngmiPfu6UVxxVcbwt219uEAdH9XSCv6iVDjP2uLqW06Hj2YNjEEgqaVA2X+R1yYIz9GVQbt0O04S+3tb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ivv8gz1U; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jtGENCM+"
-Received: from localhost.localdomain (unknown [103.29.142.67])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 11e6d966d;
-	Tue, 15 Apr 2025 13:19:06 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Rob Herring <robh@kernel.org>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Elaine Zhang <zhangqing@rock-chips.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 3/7] dt-bindings: rockchip: pmu: Add rk3562 compatible
-Date: Tue, 15 Apr 2025 13:18:51 +0800
-Message-Id: <20250415051855.59740-4-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250415051855.59740-1-kever.yang@rock-chips.com>
-References: <20250415051855.59740-1-kever.yang@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ivv8gz1U"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-601fcbff303so2508305eaf.3;
+        Mon, 14 Apr 2025 22:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744696615; x=1745301415; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F+Lq5aH54mbxFUn1f3Q1yft6LGpjwARyan/SZu5Jevk=;
+        b=Ivv8gz1U++XrR4YK8gnYgLcP3EqGEUdJZ+ETQ1G489dNsl4t1dNefETvXR4TJwTZTT
+         aRZ9L4OiY0UeCt86vtDXi1GqacE0NRoi1Icha61Zoe8qm12qhiVbExAVnklzPYvcI+yG
+         EiqPB9W62YFgqcKNxpemPdx+6hQkoQtGIf8jyl/j6uMO6p/kGVpUp8rKGBmhg0n75nbV
+         ne3w4+gCFlHIpF0tgoV/ej+i1N/sLGRgyoP4cNUeZUlsZvoRp6EooozYwpskn5YGKzTU
+         Zy8k4XuEDjFzS5Pgohh+ksclQH5U+dQwUg/aWTDV/8PFYgwxDstIBOuNi6CrXBRrHC1h
+         o3lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744696615; x=1745301415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F+Lq5aH54mbxFUn1f3Q1yft6LGpjwARyan/SZu5Jevk=;
+        b=lSt4wg6fmm0oOiIeuVZLq0XEn6+9ztYFImBZgKTizrO9hsSzTliGiqmFfm1yQEfXNv
+         M2DFJK/h9cZ8lqcXwSfYXt6tF4FR3rxR/i+y/ni9GhdNkRlyoAmHTkYX6plTrFkjwC5+
+         1LJx7Cyzgjyx2SjF6VfqrQieHQxGqIwGA5eVYOyPACMpomF6FBY4xNdnJ4DWeSzsJCQy
+         lqj9lEiFXc0XzGU0T0VaTO6nMtsVTZASMAKTA+T+04k28qFsIXJawOv44rPcw6jzvnSn
+         qfyL0r4ph6DgbW2BLLmXyvD0F58EuUMOjnqFQTlVK/mKdf48FLzJhMRRmZ6SfGQWdR5H
+         wfRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3IXhk0+6jp3f2ks6LZdTLNYfBettuBzbRmoIwvY8MRrayekg+QgE8kGMvgHOk8/ZQ23OibKyiWJrbLw==@vger.kernel.org, AJvYcCX+Uk0AThz8Gf6ukof4PWRdbYAiWVekRGS51562kHOC6jOvz0nQRYG9aGA29v921GG4LtV2e9aKaFoxgDa1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+3oSzXuFIphTfSdz+anFJZKfddvG7oqiQEq+bMRqnryZLVx35
+	PYbXbYX6KqF+97kSxqI05ggywhPl5V05Ye6n88WZwMjuM+Zzp/AtmBjPydntqjMDE/zUCbp86Id
+	pVD1k/kHg4+u2Q/+uzzuFghLDkaM=
+X-Gm-Gg: ASbGnctrihUMmtEWNXzbUcYo1sUC5AKmG7Ra1IYEd1f7z3PhwEoTbJoSQHeufnEgZtk
+	/G00JsXHV5ouS3f9ehG9GNhgx0yLVUp8Grr4y05WHQNhy8HZbR4Ehog9ov7lCPrSsOCBS/d/FBF
+	vSpXR56765BDBLbUIKwLVpImDz44Ff6phZKQ==
+X-Google-Smtp-Source: AGHT+IEmj2a8nxWV7QLjMqim/mpCeFuiCq/hoRyEihjWrREzvYE+1MMd1R2sq2i7W3FyrfQ5+1FNPpinKH+si8J5g8U=
+X-Received: by 2002:a05:6871:a582:b0:29e:3c90:148b with SMTP id
+ 586e51a60fabf-2d0d5ef2381mr9183774fac.26.1744696615464; Mon, 14 Apr 2025
+ 22:56:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTEIdVkIeTh9CSEpDQ0hMTFYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxOVUpLS1
-	VKQktLWQY+
-X-HM-Tid: 0a9637e304a703afkunm11e6d966d
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6Cww6SjJKNBo0TwIRCi4U
-	IT4aCSxVSlVKTE9PTUJPSE9DTkxOVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlLTUg3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=jtGENCM+ktq9G0tOxqmN118wdD1TdJcDd0UqC0149qCp5Pg/KTYsnAV/b5MpAP8qH+63VwauZaQuaTthR5Alf3NbWFg+gaYj6L1NgjSnjFQgkiiK3zrw56P3yzCdYIHSAbzUfHakNFaWLzC2DLCJJDOUKFsntLDA3HrxBH7y2g4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=8S7bpP8L+83uDnLeLHDjhzH/u+pvrl1W2ywecgY5JP4=;
-	h=date:mime-version:subject:message-id:from;
+References: <20250415054436.512823-1-yunlong.xing@unisoc.com>
+In-Reply-To: <20250415054436.512823-1-yunlong.xing@unisoc.com>
+From: yunlong xing <yunlongxing23@gmail.com>
+Date: Tue, 15 Apr 2025 13:56:44 +0800
+X-Gm-Features: ATxdqUGVr2B6RvZrhcmEhVPU3cI0v3wMM4xNTKOHuXrtRP-NAetVPXlDwnSVpX4
+Message-ID: <CA+3AYtRRgL2-vPNm=1XBKd_PFuRcB5fZh96VGsfTO2VaAvqv9w@mail.gmail.com>
+Subject: Re: [PATCH V3] loop: aio inherit the ioprio of original request
+To: Yunlong Xing <yunlong.xing@unisoc.com>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, bvanassche@acm.org, 
+	hch@lst.de, niuzhiguo84@gmail.com, linux-kernel@vger.kernel.org, 
+	hao_hao.wang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add the compatible for the pmu mfd on rk3562.
+Yunlong Xing <yunlong.xing@unisoc.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=8815=
+=E6=97=A5=E5=91=A8=E4=BA=8C 13:45=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
+> The purpose is to inherit the original request ioprio in the aio
+> flow.
+>
+> Signed-off-by: Yunlong Xing <yunlong.xing@unisoc.com>
+> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Link: https://lore.kernel.org/r/20250414030159.501180-1-yunlong.xing@unis=
+oc.com
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> ---
+> V3:
+> - fix Signed-off-by error in commit message
+> ---
+> V2:
+> - Assign cmd->iocb.ki_ioprio in lo_rw_aio()
+> ---
+>  drivers/block/loop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 674527d770dc..dd7f33d47f4f 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -447,7 +447,7 @@ static int lo_rw_aio(struct loop_device *lo, struct l=
+oop_cmd *cmd,
+>         cmd->iocb.ki_filp =3D file;
+>         cmd->iocb.ki_complete =3D lo_rw_aio_complete;
+>         cmd->iocb.ki_flags =3D IOCB_DIRECT;
+> -       cmd->iocb.ki_ioprio =3D IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
+> +       cmd->iocb.ki_ioprio =3D req_get_ioprio(rq);
+>
+>         if (rw =3D=3D ITER_SOURCE)
+>                 ret =3D file->f_op->write_iter(&cmd->iocb, &iter);
+> --
+> 2.25.1
+>
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
----
+Hi Jens=EF=BC=8C
 
-Changes in v4:
-- Collect ack tag
+There is a mistake of Signed-off-by in commit message on previous version.
+I noticed that you had commited it in block-6.15. Could you please help fix=
+ it.
 
-Changes in v3: None
-Changes in v2: None
-
- Documentation/devicetree/bindings/arm/rockchip/pmu.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-index 52016a141227..46c1af851be7 100644
---- a/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip/pmu.yaml
-@@ -25,6 +25,7 @@ select:
-           - rockchip,rk3288-pmu
-           - rockchip,rk3368-pmu
-           - rockchip,rk3399-pmu
-+          - rockchip,rk3562-pmu
-           - rockchip,rk3568-pmu
-           - rockchip,rk3576-pmu
-           - rockchip,rk3588-pmu
-@@ -43,6 +44,7 @@ properties:
-           - rockchip,rk3288-pmu
-           - rockchip,rk3368-pmu
-           - rockchip,rk3399-pmu
-+          - rockchip,rk3562-pmu
-           - rockchip,rk3568-pmu
-           - rockchip,rk3576-pmu
-           - rockchip,rk3588-pmu
--- 
-2.25.1
-
+Best regards,
