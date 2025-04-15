@@ -1,173 +1,91 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5339227A936
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C13E2853EB
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709570; cv=none; b=i971+QCU7bvlFX6BDKDawfrtUgfGMXg9CQGHDUevT8aj6u5rrltb1IjQfeg0pLYk7xLj9aUIviTwK2hsDRJ8iafLMpcfM5Hivs2rccM5Wv1i6DyWHC6uGINyAaMdJzNl19uAOt/CLDZymCqocTBE7RDpSneKFIEliyjNxYiS2Yc=
+	t=1744709582; cv=none; b=IobuM75hCswzHwk6gzN4rchTwGh39qOMHdcb0pg535S/2QPKh22zJhwqcVWj86tx3KFeb+/w3H5c+SI+D7qoDUX7RGf8hwULFYp3dDOYy0+fVRuTEJ3NgX0FokbAb98MigWhwqmthOOSVqi7M0kUh/lcxgnCGb5oYCCWj1nt/s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709570; c=relaxed/simple;
-	bh=lOiRTAybYayb9gL8oPxlmFEgR3nBNh/2YNLccv8btMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+kM3fM+gjrKIjf9VahG53ebZAjpq8bC15gZif7gHNjltRJJGsz8914IP8XlOLIwCzYvqvXbauSafr/J5dnH0CCsws8PQRPSqApHHjaNaCk6sFdpHZtzXUsDG7cAiXYUbCbWUNVuO9334KUtIlMjChGr5e6+LbPUhGyMqivtrg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IpytIuqY; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744709582; c=relaxed/simple;
+	bh=TYo0D+KDl11xFC39h9/SnQkS4gevK+SUbiiPgxcbnQo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=skO27QaZO2v8xYbY1Su8dOLtBDZ3d3Ww3Ec0nU+QPG7ZHbtydxuitz5+znQJdGqW4Mwubfgt/FRooKHh/LpHbNCvmwEtZ0R6iF1bPkvxfKUHOHQKkRh4D+eE82TmmGFuO07niYaZ8y7ZLC1bIauNdf2Eh6R33sBLBvbPAZTdIZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B6rvqVDp; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IpytIuqY"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso53952705e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:32:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B6rvqVDp"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so46227421fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:32:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744709566; x=1745314366; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
-        b=IpytIuqYB1iZlG1FBCK44GFQ0Y6B6AogN5/V9y7Kqe9X6jUd8/U2JgCZ8xD2Bgoxxa
-         eNEr1nfYhr2U9ijqubTSJyyfCLqr8Kutd1HQhh/jlFaJtZQirMjaGk771aA+LzXB6CJi
-         8wfCWx95Ks4qCM6MyAOMuRgMzmb7C31vqi4NLJLjdw3uw3Wrz+8y1y7n4n8T2B8XHsuc
-         LjqFuKay7ec4MCRBYj1gYVJ/PovE/M5WXPUnfg54gfDOnw5eT5MvhJajIkUJyOv+JZs2
-         rvVDNq+lG4SVfeX3hlPXLeq+PGTfeMAP9ziklVz/rtlDvuX6szYNRyUX2wPnpVBhSe9N
-         ofVQ==
+        d=linaro.org; s=google; t=1744709578; x=1745314378; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TYo0D+KDl11xFC39h9/SnQkS4gevK+SUbiiPgxcbnQo=;
+        b=B6rvqVDpegf7DGD4yfK0AKuAE1776nur2Is+Hx7iadg0V2TwzBDFoDFHlKzeLiQedQ
+         yw9RGJyr3HMMZDR4ak4DHhGM3lxKRPR/1XHJNpNihQnQ1W6+ErfhBdLepRM1aor0wOJl
+         Wv1Gj2a2zmObgjudCHJsZGRDCCERfxKFuJclAVLQipGGGF90wUoDLhs2itWUEdhcxMSZ
+         UWAtzzUjKQ0+fwCJpp2g8n4oWWBSnEeYVk0K2LX8LCrJFcn6LxcCIB1oHvrIMaBHjqiy
+         TblYr1pRAh640bbCESmeLGq+HtXS2G5DN6Hdt9dNrO0SjDfT506e8s3koM1Wf673YbPQ
+         7mJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744709566; x=1745314366;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
-        b=HUgKoSYh2hISwwUrCsHEPYtsddVC8xxYxEPUxtCWnIkTGKLHSX4QNU/8x3TgJmgu+a
-         rCTzLTkEd5MBI82Snb7xIo/3FsIFssdmb6QF7I6wyvP3oZGgYQPwpax1bVAs2pM3oAFe
-         0cF3jZkJmtp7Ulk2BIknxbxPTcz6jP5EF93NK32FjC/CjRi3/BCwAbRMoN7NVmp+aGoD
-         YtGJOzTMNAQa57I4a3GQmpFd4B0nHbRIzW2Qn1QkPK31HdHm/ZevEbAztpQMN74Pvi3n
-         YhPPdMXurlIcZgaadfv3CZUORJuW/mdQygXG/X+WqFspmhpGeslL6lnp4AWIM2yES79+
-         tbuA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwuSx60cf8ZwFOKZMR3jb9ACVXXR9fmG8d5KI9M4XSGXIoic3qHB3h4gUR3oaHxRjpgEq1o0hB9wibyyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsOqfL4k0AC8EXVAcED9VjJanyuG7ld8ytfFyPEJUpRJA0c4iM
-	UlNBxAOGnStzH8g8ZyqYtreXgwDxnuYLG9GvLeQtIkMzREQREr2wzseMWSyL9Ek=
-X-Gm-Gg: ASbGnct9E7EdG2HrquFwS45BJspBOSoYQKM3GwRbbAGZ6rN1pk/G81IsGzvc94ag93Y
-	mAihtw4T3JcqWaxUqEJTDx4Z7QVjZIEsrgsqdEx4tKUArcB/GR4gGcriABE8+KjH1OznqsBi2+2
-	uJ96jn9DAuHsIBpw58IXT9KrZ05EifBkRmIAzdi/BSz3ZamiAyI54ipuVBzeRu+UvbhoFW/C46M
-	z3yx58lNPsB8GK89msoP0/DKHoV5suPIHB5Cj9aAHJNF1Hq11jJ/ia93Ibl3QJbHKUIvIH1r/BK
-	MWpylt6Z6sBS2mvy2v0wavypAYL1Dq0qN4Qo0h+K8CI=
-X-Google-Smtp-Source: AGHT+IEGMxNjBijRd5ZIgU9ekSNtXsFNAXAuAYjOiFrUbssXpLTKzHUZ7y47I01Bc0l8S/SL3FcMWQ==
-X-Received: by 2002:a05:600c:1c8e:b0:439:6118:c188 with SMTP id 5b1f17b1804b1-43f3a95c43amr120754165e9.19.1744709566592;
-        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e90sm201822225e9.38.2025.04.15.02.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
-Date: Tue, 15 Apr 2025 11:32:44 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
-Message-ID: <Z_4nvJEB-RXX9T0n@pathway.suse.cz>
-References: <cover.1744355018.git.namcao@linutronix.de>
- <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
+        d=1e100.net; s=20230601; t=1744709578; x=1745314378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TYo0D+KDl11xFC39h9/SnQkS4gevK+SUbiiPgxcbnQo=;
+        b=jdhHDrQ6Kv/6IOn6PlWN1TcZ2R9XRwAxnaIRhPc6Vjzz70Bx78Yx8Ylo3eC0BJvzF5
+         cXEgLUoB1I1L8Y4MFSUX0pNBHqPCFEvmBKJ6NAtREg+ML54JvuYRqqdngEjHwo6wwSxl
+         d3EfMfLKKd3FE/Qo2B+MGKNcScnBsGdgLa2/vgB/HVklSTCmKLyHvw6wVw42S7XA6ndJ
+         R0AyKhq3NBiEcXUoDvbJKrxq8jDLKrG2UC7jsFrVdsYkLAtbBigGgfzQzuZqtpTIJhlH
+         a1yaLwFtCf6/0kr1CHiaWFioxk5DmwrTDYyEUPp0ugbgaxf69Dga+82IoDXde7v1voIN
+         0SNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9zFhq+zbYTkgzsy5ERVClvXz3AdUiVb6Tb5HZNSAoh4dCoEPGWHkCcSWel1rumRnGpSVXq21psaOYMPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxZ27Xw7uKifzVwo8lj39mhDndavDUbqLU3u3DtHr/blcFv2a6
+	lWINwtn/lEiKqUY4puKwBxFdCQJWiNxt8wagI0i0VdpYkRmWZXZ06pdHCua6ax8yDIgkGfkHSqj
+	zuCqvnX/8obgG6qjUtyR4TdXD0T62BlBL7Eu3M6kpb5tMquBR
+X-Gm-Gg: ASbGncsIC3ZUU0CAw3SuIDarfbXApUx9tL4bXF1bVzrwRtspYHMmFju+u68gy4AZVGS
+	QOGFVKch89H6H5PqJ9M9kuGPzsrUY2vQ+2M8DJxYzRvVUEcSVikgM5X5+9h1UjvmSa5VaT5o7ue
+	VWFqpf6sJc600u/IBs0MNH8w==
+X-Google-Smtp-Source: AGHT+IGU2b9uF/Mr57XthdvMPG13t7lA8NxInFQyj+fRoSHR4tQinYzmzSuhecKB5pvA2tk7Cr+fEwEs5eWUwydjpYU=
+X-Received: by 2002:a2e:b8c1:0:b0:30b:ec4d:e5df with SMTP id
+ 38308e7fff4ca-31049a80d31mr57193171fa.34.1744709578159; Tue, 15 Apr 2025
+ 02:32:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
+References: <20250402152000.1572764-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MfzRVy85NR_eSQc3ZX_OmgCRUKuBdd6TqCu=Adwh9drrA@mail.gmail.com>
+ <Z-5BHzTEed607Afz@smile.fi.intel.com> <CAMRc=Mc12B-b-w6bJeOgwFvzbmaqzL+uT7vJssVYN4tMu3YpaQ@mail.gmail.com>
+ <Z-5uJxij4jmhint3@smile.fi.intel.com> <CAMRc=MdPiz_YD451Arrm4mT-SwU_OdK1U-WozPxsvt11mHsLZQ@mail.gmail.com>
+ <Z-6Lm_Aqe3-LS4lj@smile.fi.intel.com> <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
+In-Reply-To: <CAMRc=Md0gD=XPEkb=C6JJcRvDpBbcJb5Xv8fE-v94iT=COHw7A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Apr 2025 11:32:46 +0200
+X-Gm-Features: ATxdqUHT3f-K_QRzZoZnTfm9C29GKiIq3DgoOZEp9KXQm5MQ6Pw3GxYPP1ol6S8
+Message-ID: <CACRpkdadk7a9QQUjEuS5w-aWpxBW1mrqZPe+qTbNZuL6t-YMPw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Make gpiod_put() error pointer aware
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri 2025-04-11 09:37:19, Nam Cao wrote:
-> Each RV monitor has one static buffer to send to the reactors. If multiple
-> errors are detected simultaneously, the one buffer could be overwritten.
-> 
-> Instead, leave it to the reactors to handle buffering.
-> 
->  include/linux/panic.h            |  3 +++
->  include/linux/printk.h           |  5 ++++
->  include/linux/rv.h               |  9 +++++--
->  include/rv/da_monitor.h          | 45 +++++++-------------------------
->  kernel/panic.c                   | 17 ++++++++----
->  kernel/printk/internal.h         |  1 -
->  kernel/trace/rv/reactor_panic.c  |  8 ++++--
->  kernel/trace/rv/reactor_printk.c |  8 ++++--
->  kernel/trace/rv/rv_reactors.c    |  2 +-
->  9 files changed, 50 insertions(+), 48 deletions(-)
+On Mon, Apr 7, 2025 at 2:49=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-For the changes in the printk and panic code:
+> I explained why I believe this change is wrong and I will allow myself
+> to not accept it unless Linus is very positively in favor.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>    # printk, panic
+I am neutral on this unfortunately so my opinion doesn't help...
+I'm simply fine either way :/
 
-I have just briefly looked at the changes in the rv code.
-I wonder if a __printf(1, 2) declaration might be needed
-in the printk and panic reactors code, see below.
-
-> --- a/include/linux/rv.h
-> +++ b/include/linux/rv.h
-> @@ -38,7 +38,7 @@ union rv_task_monitor {
->  struct rv_reactor {
->  	const char		*name;
->  	const char		*description;
-> -	void			(*react)(char *msg);
-> +	__printf(1, 2) void	(*react)(const char *msg, ...);
->  };
->  #endif
->  
-> @@ -50,7 +50,7 @@ struct rv_monitor {
->  	void			(*disable)(void);
->  	void			(*reset)(void);
->  #ifdef CONFIG_RV_REACTORS
-> -	void			(*react)(char *msg);
-> +	__printf(1, 2) void	(*react)(const char *msg, ...);
->  #endif
->  };
->  
-> --- a/kernel/trace/rv/reactor_printk.c
-> +++ b/kernel/trace/rv/reactor_printk.c
-> @@ -12,9 +12,13 @@
->  #include <linux/init.h>
->  #include <linux/rv.h>
->  
-> -static void rv_printk_reaction(char *msg)
-> +static void rv_printk_reaction(const char *msg, ...)
-
-I wonder whether "make W=1 kernel/trace/rv/reactor_printk.o" would
-start complaining about that this function is a candidate for
-‘gnu_printf’ format attribute.
-
-I am not sure. Maybe it is enough that this function is later assigned to
-the .react callback in struct rv_reactor.
-
-I wanted to tried it myself. But I was not able to compile the
-code in linux-next. I got something like:
-
-./include/linux/rv.h: In function ‘rv_ltl_valid_state’:
-./include/linux/rv.h:55:43: error: ‘struct ltl_monitor’ has no member named ‘states’
-   55 |         for (int i = 0; i < ARRAY_SIZE(mon->states); ++i) {
-      |                                           ^~
-...
-
-I am actually not sure against which tree I should apply this patchset.
-It did apply on linux-next after skipping the 1st patch.
-But it does not compile there.
-
-And there are more conflicts when I tried to apply it
-on Linus' master.
-
->  {
-> -	printk_deferred(msg);
-> +	va_list args;
-> +
-> +	va_start(args, msg);
-> +	vprintk_deferred(msg, args);
-> +	va_end(args);
->  }
-
-The __printf statement might be missing also in the other two
-reactors (panic, nop).
-
-Best Regards,
-Petr
+Yours,
+Linus Walleij
