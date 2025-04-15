@@ -1,139 +1,264 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484BC27B4F5;
-	Tue, 15 Apr 2025 09:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11970250C08
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708640; cv=none; b=ngpjXj+Ae3p3QNDeUT05e8flQzI7jxQtKwZEngLUDqCmWf1/ygO2DBKKnAHXwMQIPSqid1G2oCB20jpzE8TfSjZOSsutxxU9OnwyYXv45835kgoAeBtIGTQeyZvBShggt9E5jITeFDo4OZlEcZ+GClNdkXnVQgQc004JnT+VwHk=
+	t=1744708786; cv=none; b=CSjHGfsvCjNKPi2NqgfAQDpMhpzYDdVfENV9/Rg2Q3Y+Pqh/vOE91xSj7gSRSBS5bD+QqvnTJ4dtOkfIbsKwckzoFVt0hnwXzXAOW/UBnqLuKBEvHydb4ncYKy1fGC+7+ygsnobxOulNCbRM0/+GfQ3GcMyiEk48yb1j9hA+64Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708640; c=relaxed/simple;
-	bh=/Z6Vnn+qWI+21lnQkuUK+7Nswud+sktGjAVWAnSCZ5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nI4xuc+K5LZdo6GNGrTfeUeY56hGCcmqyi73NMJcy2s2izlBkmFYK0BXjwAKv/gp5kbl5tVQsFpLhDSezMZ4lXJ9+DeSjWi5V4kdYmAHW34Pe5/Z/oZ2HY1jGDXZF1p1eDQbJpk8HinURbbWtYVqr+dsZ6aMEynfx/PfB8qHETo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=lJ8uWvmz; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="lJ8uWvmz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.com;
-	s=s31663417; t=1744708612; x=1745313412; i=quwenruo.btrfs@gmx.com;
-	bh=E8m44XUDiZ8rmpdGVKtUxtqM66u9YgxFJM/5gTCVYPY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=lJ8uWvmztbzLU+nNiA7oIMNmiZ65Ja+LYaKNS7aMy+LFXjy3qQAGEqnoZlJX5MUh
-	 jO7UpvuKP8jjhifD5hWXfL6uprlVZO9K2kKcA0lq5AVDewHgu2/G9g3Jv7DiO9k1s
-	 U1541gPBJBJPp6TcgRtCBZcVc1YkFjw0TpKyMOrewnRxgDX/cLK2DzVlXg/b+4x7R
-	 M5K3wuO8zd1WIU5oQwLvpak/AtpMQCmKYIkHUsKOzrvNxcFj4AXFdRxClaWVL8ImL
-	 2nwMqcWJ7soQWan4D2rGumvaz1EkPkuk742VQwXsD35AG396aVVQhhzUvF+74CruT
-	 aMGEVsLufdCqEw9xsQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [172.16.0.191] ([159.196.52.54]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MQv8x-1thKXE4C19-00QF05; Tue, 15
- Apr 2025 11:16:52 +0200
-Message-ID: <2e158208-4914-4bfb-984a-0d35e8b93225@gmx.com>
-Date: Tue, 15 Apr 2025 18:46:48 +0930
+	s=arc-20240116; t=1744708786; c=relaxed/simple;
+	bh=LUmlEpZ4Ez9LtPfiPkGnfU5PRDp3fu5I4ZGM8vvkSnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFH9ZSWA1u/zeQXm08krFLWplh+SvN3iYVf4xBwfwPaymywiFw+xxvtmOrKVZGxXYbb2Z8z6zfjuE224u3dU47JjKouRLJLWWfN1G3wLWVFw994kjfS+2ZJgWyNIbp50fxqWts/4ljyMxZyuKtqOsRfs4zsLZszz/gfeG/3drKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxIK+sJP5n38u9AA--.50120S3;
+	Tue, 15 Apr 2025 17:19:40 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCx7xukJP5nHMyCAA--.57263S2;
+	Tue, 15 Apr 2025 17:19:34 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
+Date: Tue, 15 Apr 2025 17:19:30 +0800
+Message-ID: <20250415091930.19529-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
-To: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>, "clm@fb.com" <clm@fb.com>,
- "josef@toxicpanda.com" <josef@toxicpanda.com>,
- "dsterba@suse.com" <dsterba@suse.com>
-Cc: "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250415083808.893050-1-frank.li@vivo.com>
- <472ae717-5494-44ae-973a-85249a65d289@gmx.com>
- <SEZPR06MB52691756B32BA90DBE82BDFDE8B22@SEZPR06MB5269.apcprd06.prod.outlook.com>
-Content-Language: en-US
-From: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1YAUJEP5a
- sQAKCRDCPZHzoSX+qF+mB/9gXu9C3BV0omDZBDWevJHxpWpOwQ8DxZEbk9b9LcrQlWdhFhyn
- xi+l5lRziV9ZGyYXp7N35a9t7GQJndMCFUWYoEa+1NCuxDs6bslfrCaGEGG/+wd6oIPb85xo
- naxnQ+SQtYLUFbU77WkUPaaIU8hH2BAfn9ZSDX9lIxheQE8ZYGGmo4wYpnN7/hSXALD7+oun
- tZljjGNT1o+/B8WVZtw/YZuCuHgZeaFdhcV2jsz7+iGb+LsqzHuznrXqbyUQgQT9kn8ZYFNW
- 7tf+LNxXuwedzRag4fxtR+5GVvJ41Oh/eygp8VqiMAtnFYaSlb9sjia1Mh+m+OBFeuXjgGlG
- VvQFzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
- CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
- /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
- GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
- q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
- ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCZxF1gQUJEP5a0gAK
- CRDCPZHzoSX+qHGpB/kB8A7M7KGL5qzat+jBRoLwB0Y3Zax0QWuANVdZM3eJDlKJKJ4HKzjo
- B2Pcn4JXL2apSan2uJftaMbNQbwotvabLXkE7cPpnppnBq7iovmBw++/d8zQjLQLWInQ5kNq
- Vmi36kmq8o5c0f97QVjMryHlmSlEZ2Wwc1kURAe4lsRG2dNeAd4CAqmTw0cMIrR6R/Dpt3ma
- +8oGXJOmwWuDFKNV4G2XLKcghqrtcRf2zAGNogg3KulCykHHripG3kPKsb7fYVcSQtlt5R6v
- HZStaZBzw4PcDiaAF3pPDBd+0fIKS6BlpeNRSFG94RYrt84Qw77JWDOAZsyNfEIEE0J6LSR/
-In-Reply-To: <SEZPR06MB52691756B32BA90DBE82BDFDE8B22@SEZPR06MB5269.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:D6zxEJdb73VG9FWcLNJ7JFeRbdERziL59ko9inq5fb4VNDDDMV+
- zXSpGkkGpCSJr18UWKo+8VYooiJZnvIZJ8WUpsQGImPx0/e7JwJl4WwFqtakDpCbVjtF5md
- T2sYC7MXp1fnRqsAcnwULCIOPPudam9AuqPJpSZ2HQwgoRVYsH85wdQ/ciGVYEw5Zt2bfIp
- p4wiefKvRtAj8JA3JSIaA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Mh5kB+Mczr4=;8zYrTSiqDlmduS55hGEieOqfpKx
- GIB/yrp96GCGjc273RVBh+zaDWMcKS1ToteMw/q3w2rPsbnDI28r7VobZCcl9bbBhjaHrCL1y
- 1AY5lFYVgu2qUZu0p8uIhna9NBUUy3WuMtQ4BTScaolCsxIEISKTHRazSvce6jXlQVEwKV2kT
- vwokWJesMny45SYHnIOfLzjxrpwxOSA1zJChEXnWHY2PDJCzQxL35ZlMaF8R6moN7+PwvF32k
- 9haLOMUY8l37kvye9CF8mOWBb0Ar+XPqkyMsjqZ1vwbPEIolb3Bk82GuJ5iPiPz0xwj6m2nuL
- 5DkvM+Bss64rYedKuRPLC5HCpK3xSsObiADteO6L5EC9WtxwFcdjJ63bVcLHJ7sg3x611LTtC
- AlQs8IQxmXqrHcNOeVYo2DmV95VbFovSXj9EFbqpXaOB2eGXbKXB9/7n8/BwoXSUCqp5IFpMY
- OqxaBey9gethsfQ2/LOvAayWxN778DucKB6JuJ3iht/03RyTS6piWKFFxwWg6f1xPr96lZ1Ww
- VYKOWZkhbekf1saXg9Du5KoLxzCHj0zrgi7xvsPWp1HGTEzkLjnaFo/bfFii0mQiR7fw6semy
- 3HV8RJ23x4iVVYK7Uh2S3anHL1t9NxbZwjvPt4b4s/wvFs+0ej4kdybCQ6tyfT/V+5phWxpSY
- t5/up5ypYPjzHAYVyFbH3g6+iFtQOwsUxEi4Yjp2ShpQDCryxnsgbxbqg95LMNoK+uKZeF4qr
- itH5qUw4GRGzfI843I8u5b02UsMnzFSuA35g/MDkJH2PLNzc84g6hnTGg11wSLcaC/A2zQnCg
- c0U+CHRIVuyYCdgHvID3FyKgDxFx3X3ZVSZKEUugi2JZM8UFuwQjA6+EHtnuaS/wpDfgrxkIi
- wgTkrEyaSnw5BN194HCw/dk7a1L7KBv3MSuI4H1mWc1nu+PDmixJePdlCr3ZGJysaznWxrU+l
- AE4WWFpyzLuOB+JyHt25caVCc8/vlNyOrEODGrtVbeXtZordh1yyogZcbaUdBcp7qdeRjqnEu
- WqB9nx0OXLWpIoojdL2RaoqpBtMm1Fs9cnDCGsUyMOWsRfCvwK2jCm1LbDWqXkJ4KmK0Nz8V1
- mO5tdzNOiR1Xdt2H99MzFeDaA2hgGCIzXRth/b6D0586Y/gSRpVdNQbutTxucw7kSqCadtmI0
- sHHuWrWL03GXdnhB92Ae0TzxV9ZBworK7MuGhMby0XfbL4uaVZZXry0c11KVgpOAFqCvk7Py7
- TN09v7QseI9Vdhqm9TKLQqX1+za+AtfVVfiNhMNbm39YsCugDuiW+/vSSo4hMmItrMHCJM+VI
- n62AZSg62yy/VZtWUYVn/yJDOY7r7vX7eezbYVQ66Nzhs9a+BJTcxUJz8R7emXT+/1BAn0+4N
- Les/O+w4lHlda9snB4s9bvXzOeq6ERv2gdCwsqDj/6W+UEGYjgd9VYewtgktCwP+4xBXPwUE6
- HLhInog==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx7xukJP5nHMyCAA--.57263S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3JF4rtw48CFy3JFW3Wr4fXrc_yoW3Zr47pr
+	nrArn5Cw48GFnav34DJ34jvFZ8Xas5Ga1S93Zrt34fCr1jkr9rurn7Ga1DZFy8Ka48Ar1F
+	9r4avF1Sy3WUC3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8r9N3UUUUU==
 
+Like the other relevant symbols, export some fp, lsx, lasx and lbt
+assembly symbols and put the function declarations in header files
+rather than source files.
 
+While at it, use "asmlinkage" for the other existing C prototypes
+of assembly functions and also do not use the "extern" keyword with
+function declarations according to the document coding-style.rst.
 
-=E5=9C=A8 2025/4/15 18:26, =E6=9D=8E=E6=89=AC=E9=9F=AC =E5=86=99=E9=81=93:
->> History please.
->
-> Did you mean change commit msg to below?
->
-> 	Commit b28b1f0ce44c ("btrfs: delayed-ref: Introduce better documented d=
-elayed ref structures") introduce BTRFS_REF_LAST but never use it,
-> 	So let's remove it.
+Cc: stable@vger.kernel.org # 6.6+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/loongarch/include/asm/fpu.h | 38 ++++++++++++++++++--------------
+ arch/loongarch/include/asm/lbt.h | 10 ++++++---
+ arch/loongarch/kernel/fpu.S      |  6 +++++
+ arch/loongarch/kernel/lbt.S      |  4 ++++
+ arch/loongarch/kernel/signal.c   | 21 ------------------
+ 5 files changed, 39 insertions(+), 40 deletions(-)
 
-It's the common practice to leave a last entry for sanity checks.
-
-But since it's not utilized for anything, I'm fine to remove it.
-
->
->> The _LAST or _NR suffix can be utilized to do sanity checks, and this i=
-s not part of the on-disk format.
->
-> IIRC, delayed ref belongs to the extent tree memory kv cache.
->
->> And if this exposed by some automatic tools, please also mention it.
->
-> I'm just looking at this code.
->
-> Thx,
-> Yangtao
+diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
+index 3177674228f8..23f5a4b9c32d 100644
+--- a/arch/loongarch/include/asm/fpu.h
++++ b/arch/loongarch/include/asm/fpu.h
+@@ -22,22 +22,28 @@
+ struct sigcontext;
+ 
+ #define kernel_fpu_available() cpu_has_fpu
+-extern void kernel_fpu_begin(void);
+-extern void kernel_fpu_end(void);
+-
+-extern void _init_fpu(unsigned int);
+-extern void _save_fp(struct loongarch_fpu *);
+-extern void _restore_fp(struct loongarch_fpu *);
+-
+-extern void _save_lsx(struct loongarch_fpu *fpu);
+-extern void _restore_lsx(struct loongarch_fpu *fpu);
+-extern void _init_lsx_upper(void);
+-extern void _restore_lsx_upper(struct loongarch_fpu *fpu);
+-
+-extern void _save_lasx(struct loongarch_fpu *fpu);
+-extern void _restore_lasx(struct loongarch_fpu *fpu);
+-extern void _init_lasx_upper(void);
+-extern void _restore_lasx_upper(struct loongarch_fpu *fpu);
++void kernel_fpu_begin(void);
++void kernel_fpu_end(void);
++
++asmlinkage void _init_fpu(unsigned int);
++asmlinkage void _save_fp(struct loongarch_fpu *);
++asmlinkage void _restore_fp(struct loongarch_fpu *);
++asmlinkage int _save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
++asmlinkage int _restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
++
++asmlinkage void _save_lsx(struct loongarch_fpu *fpu);
++asmlinkage void _restore_lsx(struct loongarch_fpu *fpu);
++asmlinkage void _init_lsx_upper(void);
++asmlinkage void _restore_lsx_upper(struct loongarch_fpu *fpu);
++asmlinkage int _save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
++asmlinkage int _restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
++
++asmlinkage void _save_lasx(struct loongarch_fpu *fpu);
++asmlinkage void _restore_lasx(struct loongarch_fpu *fpu);
++asmlinkage void _init_lasx_upper(void);
++asmlinkage void _restore_lasx_upper(struct loongarch_fpu *fpu);
++asmlinkage int _save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
++asmlinkage int _restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
+ 
+ static inline void enable_lsx(void);
+ static inline void disable_lsx(void);
+diff --git a/arch/loongarch/include/asm/lbt.h b/arch/loongarch/include/asm/lbt.h
+index e671978bf552..38566574e562 100644
+--- a/arch/loongarch/include/asm/lbt.h
++++ b/arch/loongarch/include/asm/lbt.h
+@@ -12,9 +12,13 @@
+ #include <asm/loongarch.h>
+ #include <asm/processor.h>
+ 
+-extern void _init_lbt(void);
+-extern void _save_lbt(struct loongarch_lbt *);
+-extern void _restore_lbt(struct loongarch_lbt *);
++asmlinkage void _init_lbt(void);
++asmlinkage void _save_lbt(struct loongarch_lbt *);
++asmlinkage void _restore_lbt(struct loongarch_lbt *);
++asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
++asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
++asmlinkage int _save_ftop_context(void __user *ftop);
++asmlinkage int _restore_ftop_context(void __user *ftop);
+ 
+ static inline int is_lbt_enabled(void)
+ {
+diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
+index 6ab640101457..28caf416ae36 100644
+--- a/arch/loongarch/kernel/fpu.S
++++ b/arch/loongarch/kernel/fpu.S
+@@ -458,6 +458,7 @@ SYM_FUNC_START(_save_fp_context)
+ 	li.w		a0, 0				# success
+ 	jr		ra
+ SYM_FUNC_END(_save_fp_context)
++EXPORT_SYMBOL_GPL(_save_fp_context)
+ 
+ /*
+  * a0: fpregs
+@@ -471,6 +472,7 @@ SYM_FUNC_START(_restore_fp_context)
+ 	li.w		a0, 0				# success
+ 	jr		ra
+ SYM_FUNC_END(_restore_fp_context)
++EXPORT_SYMBOL_GPL(_restore_fp_context)
+ 
+ /*
+  * a0: fpregs
+@@ -484,6 +486,7 @@ SYM_FUNC_START(_save_lsx_context)
+ 	li.w	a0, 0					# success
+ 	jr	ra
+ SYM_FUNC_END(_save_lsx_context)
++EXPORT_SYMBOL_GPL(_save_lsx_context)
+ 
+ /*
+  * a0: fpregs
+@@ -497,6 +500,7 @@ SYM_FUNC_START(_restore_lsx_context)
+ 	li.w	a0, 0					# success
+ 	jr	ra
+ SYM_FUNC_END(_restore_lsx_context)
++EXPORT_SYMBOL_GPL(_restore_lsx_context)
+ 
+ /*
+  * a0: fpregs
+@@ -510,6 +514,7 @@ SYM_FUNC_START(_save_lasx_context)
+ 	li.w	a0, 0					# success
+ 	jr	ra
+ SYM_FUNC_END(_save_lasx_context)
++EXPORT_SYMBOL_GPL(_save_lasx_context)
+ 
+ /*
+  * a0: fpregs
+@@ -523,6 +528,7 @@ SYM_FUNC_START(_restore_lasx_context)
+ 	li.w	a0, 0					# success
+ 	jr	ra
+ SYM_FUNC_END(_restore_lasx_context)
++EXPORT_SYMBOL_GPL(_restore_lasx_context)
+ 
+ .L_fpu_fault:
+ 	li.w	a0, -EFAULT				# failure
+diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
+index 001f061d226a..71678912d24c 100644
+--- a/arch/loongarch/kernel/lbt.S
++++ b/arch/loongarch/kernel/lbt.S
+@@ -90,6 +90,7 @@ SYM_FUNC_START(_save_lbt_context)
+ 	li.w		a0, 0			# success
+ 	jr		ra
+ SYM_FUNC_END(_save_lbt_context)
++EXPORT_SYMBOL_GPL(_save_lbt_context)
+ 
+ /*
+  * a0: scr
+@@ -110,6 +111,7 @@ SYM_FUNC_START(_restore_lbt_context)
+ 	li.w		a0, 0			# success
+ 	jr		ra
+ SYM_FUNC_END(_restore_lbt_context)
++EXPORT_SYMBOL_GPL(_restore_lbt_context)
+ 
+ /*
+  * a0: ftop
+@@ -120,6 +122,7 @@ SYM_FUNC_START(_save_ftop_context)
+ 	li.w		a0, 0			# success
+ 	jr		ra
+ SYM_FUNC_END(_save_ftop_context)
++EXPORT_SYMBOL_GPL(_save_ftop_context)
+ 
+ /*
+  * a0: ftop
+@@ -150,6 +153,7 @@ SYM_FUNC_START(_restore_ftop_context)
+ 	li.w		a0, 0			# success
+ 	jr		ra
+ SYM_FUNC_END(_restore_ftop_context)
++EXPORT_SYMBOL_GPL(_restore_ftop_context)
+ 
+ .L_lbt_fault:
+ 	li.w		a0, -EFAULT		# failure
+diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
+index 7a555b600171..4740cb5b2388 100644
+--- a/arch/loongarch/kernel/signal.c
++++ b/arch/loongarch/kernel/signal.c
+@@ -51,27 +51,6 @@
+ #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
+ #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
+ 
+-/* Assembly functions to move context to/from the FPU */
+-extern asmlinkage int
+-_save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
+-extern asmlinkage int
+-_restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
+-extern asmlinkage int
+-_save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
+-extern asmlinkage int
+-_restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
+-extern asmlinkage int
+-_save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
+-extern asmlinkage int
+-_restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
+-
+-#ifdef CONFIG_CPU_HAS_LBT
+-extern asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
+-extern asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
+-extern asmlinkage int _save_ftop_context(void __user *ftop);
+-extern asmlinkage int _restore_ftop_context(void __user *ftop);
+-#endif
+-
+ struct rt_sigframe {
+ 	struct siginfo rs_info;
+ 	struct ucontext rs_uctx;
+-- 
+2.42.0
 
