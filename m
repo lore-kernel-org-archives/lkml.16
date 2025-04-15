@@ -1,116 +1,87 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1D81DF963;
-	Tue, 15 Apr 2025 16:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1B015F306;
+	Tue, 15 Apr 2025 16:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744734878; cv=none; b=opNb0M4ihV1TQfHvYf+U2xrymJnfF8xL7TdOmFrcd5+Ij+LGJ3n/hHVlNvAZp5+DB8hNT2sbf6CpgIshp6QPutE/ilQelssNQMKtX2+uCE9tyiGovVN1vOIKkZfUusqOe5Rv71Fb++pPFGcRElZKc1A/8fu8l3ZOymGlWZDQ2/c=
+	t=1744734940; cv=none; b=lY2/n8XGqg7s+qiU47rne+VVHlcdKGnyvKHZTz1aaLJEkKxew/aB5MfY80y1sizke4D/5E2pelrbNKNno3dYo7vjJHEyBre9yvtL/62dIjODW66Sk/XvdQK9OJnM/SZepeFe02HzNJyQnX3vt7+4PLy2CCG/XT5upwYuTiROsbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744734878; c=relaxed/simple;
-	bh=97gm5W0r3azJQxTc+o1GBu6+7gHPltvUIellyROuN9Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DpqJUxil1tqZGhNHTLHBJEnU/rX02/8THI02THuY6EnLfZVpzptMoXkzjd0l3fF75Nu8WJBQS3yQzu/E/434SkOBi91duVIgNCITsSFPydKgSGeNXCQl6BeoFZf1GTdYc0rpGbqD1c4rqf+Alg8IYTiPGH+sn/GZVSy85nYMZdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lDtzA1Fo; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744734940; c=relaxed/simple;
+	bh=qQPlLCaHQYe+gqLPm35pHARjmiBk4+PpLo1qXkmjFPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOMg1ZY2wezGXnEEmDVbl4VHqyZZX4HFVH0xDnSVUqUjr+8OoCxCe8mWwg2s8PXAJO0qdqLSS7Czkt+U/5y4sh37yyUclRmh5HnFYXwVUD241EqhM5nkyGZOK26fZY0txGo1gbs9VZkhC/BXuJelWb7h4BoOvCv2uyTrNKxpcjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yi2BxjzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lDtzA1Fo"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FGYRMV071702
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 11:34:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744734868;
-	bh=iFq+f28rvVPKPSrubIQp1tokt+o0pF9109v9jVjSGIo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=lDtzA1FoWC9cSnfpYWCdhYJpszR/YkBTzbinL0HRYQxpLJ50Nt+NbGPXtSmxhT7aB
-	 WL4SOmdHi3ysvYV6GgjcdlF84LpYDt3y6dD5VtWrUDfkDo4yYVWQQCK6x+ydv7Jv1F
-	 YX/xLyjKxE+sOW0cTc041kx4Fh/2s0ozHt9qkiRI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FGYRnV057982
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 11:34:27 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
- Apr 2025 11:34:27 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 15 Apr 2025 11:34:27 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FGYQOS059307;
-	Tue, 15 Apr 2025 11:34:26 -0500
-Message-ID: <fe5583ca-d476-4e57-b412-3dd4fe4ff82c@ti.com>
-Date: Tue, 15 Apr 2025 11:34:26 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yi2BxjzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 221B2C4CEEB;
+	Tue, 15 Apr 2025 16:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744734940;
+	bh=qQPlLCaHQYe+gqLPm35pHARjmiBk4+PpLo1qXkmjFPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yi2BxjzI5SS9GasqB1mrG7VGqf/qr3KLNsPj6olTEq/xwEyFuBJ/CoHDkRfZLCJKl
+	 1wNR0NvBf4CfKpluiko2DxFirtrllqs8Asr7/HLZp/3dCUKp+nTK7MXVjpZmhiRGTA
+	 P8NdCQrfk1p/5EZhfWR/zR3r1OPELisyF6ml5geKUA+1VDQiVWsDQBk14UGhn4/oWB
+	 oovpgwl2GWP7vKpebsgnTLlXUNdCdHsKL6N7AxtUZ3NEyCdxi+E0w9p1L7OZYhMNv1
+	 z01ek110ohyc/yRuFklq1r4sVF+k8Q4AH0lKTb40dQN9n5J3qzSsUx1xocd7ch3iC+
+	 I4hGyaRgW5CpA==
+Date: Tue, 15 Apr 2025 17:35:36 +0100
+From: Simon Horman <horms@kernel.org>
+To: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, skhan@linuxfoundation.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH net-next] net: ipconfig: replace strncpy with strscpy
+Message-ID: <20250415163536.GA395307@horms.kernel.org>
+References: <20250412160623.9625-1-pranav.tyagi03@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 01/11] arm64: dts: ti: k3-am62: Add ATCM and BTCM cbass
- ranges
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar
- Prasad <b-padhi@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>,
-        Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>
-References: <20250415153147.1844076-1-jm@ti.com>
- <20250415153147.1844076-2-jm@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250415153147.1844076-2-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250412160623.9625-1-pranav.tyagi03@gmail.com>
 
-On 4/15/25 10:31 AM, Judith Mendez wrote:
-> Add cbass ranges for ATCM and BTCM on am62x device, without
-> these, remoteproc driver fails to probe and attach to the DM
-> r5 core and IPC communication is broken.
+On Sat, Apr 12, 2025 at 09:36:23PM +0530, Pranav Tyagi wrote:
+> Replace the deprecated strncpy() with strscpy() as the destination
+> buffer is NUL-terminated and does not require any
+> trailing NUL-padding.
 > 
-> Signed-off-by: Judith Mendez <jm@ti.com>
+> Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+
+Thanks,
+
+I agree that strscpy() is the correct choice here for
+the reasons you give above.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
 > ---
-
-Acked-by: Andrew Davis <afd@ti.com>
-
->   arch/arm64/boot/dts/ti/k3-am62.dtsi | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
+>  net/ipv4/ipconfig.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62.dtsi b/arch/arm64/boot/dts/ti/k3-am62.dtsi
-> index bfb55ca113239..59f6dff552ed4 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62.dtsi
-> @@ -86,7 +86,9 @@ cbass_main: bus@f0000 {
->   			 /* Wakeup Domain Range */
->   			 <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
->   			 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>,
-> -			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
-> +			 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
-> +			 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM*/
-> +			 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM*/
->   
->   		cbass_mcu: bus@4000000 {
->   			bootph-all;
-> @@ -103,7 +105,9 @@ cbass_wakeup: bus@b00000 {
->   			#size-cells = <2>;
->   			ranges = <0x00 0x00b00000 0x00 0x00b00000 0x00 0x00002400>, /* VTM */
->   				 <0x00 0x2b000000 0x00 0x2b000000 0x00 0x00300400>, /* Peripheral Window */
-> -				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>;
-> +				 <0x00 0x43000000 0x00 0x43000000 0x00 0x00020000>,
-> +				 <0x00 0x78000000 0x00 0x78000000 0x00 0x00008000>, /* DM R5 ATCM*/
-> +				 <0x00 0x78100000 0x00 0x78100000 0x00 0x00008000>; /* DM R5 BTCM*/
->   		};
->   	};
->   
+> diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+> index c56b6fe6f0d7..eb9b32214e60 100644
+> --- a/net/ipv4/ipconfig.c
+> +++ b/net/ipv4/ipconfig.c
+> @@ -1690,7 +1690,7 @@ static int __init ic_proto_name(char *name)
+>  			*v = 0;
+>  			if (kstrtou8(client_id, 0, dhcp_client_identifier))
+>  				pr_debug("DHCP: Invalid client identifier type\n");
+> -			strncpy(dhcp_client_identifier + 1, v + 1, 251);
+> +			strscpy(dhcp_client_identifier + 1, v + 1, 251);
+
+As an aside, I'm curious to know why the length is 251
+rather than 252 (sizeof(dhcp_client_identifier) -1).
+But that isn't strictly related to this patch.
+
+>  			*v = ',';
+>  		}
+>  		return 1;
+> -- 
+> 2.49.0
+> 
