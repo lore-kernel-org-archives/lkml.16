@@ -1,131 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23BA28BA95
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2170717C98;
+	Tue, 15 Apr 2025 11:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715390; cv=none; b=BCej6U85LB9IBVHCeRbLUqLiVQKKWuSPfXEd1dG8IAQ9I3Z4oAS2vzmWingJpbCaTlcWIAp4qxn5lFZ5VuuKG0lq/LVc2qkYVD2AzD4TzVQdwGgsN849B7P2zTmF1HRomBUUTv5IXw1Q3JdYrVw7j304LXNyWXOp+vIG8F/EiK4=
+	t=1744715479; cv=none; b=PlSM3hwPB8ojlj/92W2ftG2R2orhf8FqanjIVcfOImhkDCuysE/Y3QRrkbrn2u16ynn6m599chwJUVFmZD8oSjTnYT4+C9mSSdWuDbQzM08buDtjgdTLNe45NNGi9nTXlBIlpkeu9CCq2FgmIXD2zFlvPRy8ZzhUDrSzNEVM57s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715390; c=relaxed/simple;
-	bh=pO/orhA4CZkpIQOEAHrMBfFRKYVsaK4BFhuTXpXsFyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fiIy0pHxehwCFRL2VxjX1OaBbxW4YKXtZPkiFjWAOWMob9LPnIvQ+41ODZRy2wQg3YKYoKdDlFdjdJNBztKbdjmud4gzkw6YZJGJevxmrHJdvnXUNQ7sIeYcXYq36HT9DbqAmVBGsORWklczeKqo7Cqeik+RP2mxQDXzFp1H9sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TtsodRGN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TtsodRGN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744715386;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zfg6hG/K/bUlTifslFe0q0e0tS/Hfe18LY4wSrh6Bck=;
-	b=TtsodRGNZ9ue2rsXY3vY+GH8J6ZaRx/KQBrOGfN6vh1d1sECINHNOMAsSPwEjDvnhrb/zN
-	fBUiglxjBJVZ0i3NnWymOpE/R0clBl1e8hnCazMbUSOZtvhqZO6MZemPTvC3yBZC1GXuSx
-	F0IAIBLWi2mc5e0B0rEtvjLR9YwHs5w=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-638-uCkpwbZAP6WPCscpvZwkAw-1; Tue, 15 Apr 2025 07:09:45 -0400
-X-MC-Unique: uCkpwbZAP6WPCscpvZwkAw-1
-X-Mimecast-MFC-AGG-ID: uCkpwbZAP6WPCscpvZwkAw_1744715384
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39131851046so1971338f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:09:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744715384; x=1745320184;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zfg6hG/K/bUlTifslFe0q0e0tS/Hfe18LY4wSrh6Bck=;
-        b=sROKca2oeQYjY4BhT8HvWS1qZ1G+/AzxIpud9Ww1lzJVaFzeXvf6I+1mZMRg+Y46hT
-         FADzPZhwnz66+s2/C+2f8yRLOl1VsfRKDKJ4OOY6myD3xdVCtQaoNwllNTWc7zT0PMQA
-         9Q5cr7Q/URhXtc8/xjp8A8tgWdL21jTIReG/ktUMpgnQVr5IlcboAP6vSnjdWoDgDpUo
-         44F5sU9WZFC+mU1LJH3OIflu6lV+OPzIbyfhlowNoJqiEfxX9PLdinVCK7EKnVUzACWM
-         15CA7QBqfJxu9vDCzzW2lBJtaaYjyLEH8mkhXNBmlXJTBXJj6luCbA5VUDMVdw2mvpJx
-         QQQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrER0vtq4ukXxScDaEHzXyxNtaobIANR6jw0ZmvbdAaihRhzDt97JaFF66GH4hKza6XFZKQpAy0uhy2no=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYXaj7f7yZkux92KzmTt4M2qf/qohifq5MPoaOToMZ3djwC4Tt
-	nCAJrHrmwGw3p+p1pTIRauOoPrFDK4k9eiUascNXRlNjjVpTUZqsw63PCjlQDIL2dWfDC5n1CvW
-	or9uuNLVZJb/azMrjNbGXFu/lt2k49yidWgT+0b/+9ettQmMpeGnbB+jzvNOI5g==
-X-Gm-Gg: ASbGncv5v9zHiYOvuin4tSoHJ70G63WF63FUvW7Qus3791Js6ATcRY+1tTs5/5IUvAY
-	QZ2ykdKow/QL1NEVt8Qk8ihbOC3qPyQE7NKEJRSpp/c9QHv+MzyYfytCNP8gVNITmRF9cBPA92U
-	uq7CeDtnQxdllS3yrOZ5MvD99YipP1Yt29tb+JiZrbx1awyigvsulcYn0U17C1ZJ0LRYbRJ3qsi
-	5A5T/Ycs9GteHNwyWLFArJ/6fwiRWxrZWthlzzI/LcNKkF3oq3OY/0ZhQfBhMlRtM+I2kA3JWKZ
-	/tQw+42FNCL1GmSzOjeuLiY0f2QeXJkLv1hJg+M=
-X-Received: by 2002:a5d:6da8:0:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39ea51d3527mr11800060f8f.2.1744715383965;
-        Tue, 15 Apr 2025 04:09:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHanO8hlN3E2sYMOBJM/QMDt/pr4AiCH7Bh4HhFQVy1kY1F4hzOAbHErMxD96ZS7aMhWnOulw==
-X-Received: by 2002:a5d:6da8:0:b0:39c:1424:3246 with SMTP id ffacd0b85a97d-39ea51d3527mr11800043f8f.2.1744715383632;
-        Tue, 15 Apr 2025 04:09:43 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-34-52.dyn.eolo.it. [146.241.34.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce3bsm14172785f8f.66.2025.04.15.04.09.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 04:09:43 -0700 (PDT)
-Message-ID: <ed49eed8-3e0f-4bda-aa30-f581005c4865@redhat.com>
-Date: Tue, 15 Apr 2025 13:09:42 +0200
+	s=arc-20240116; t=1744715479; c=relaxed/simple;
+	bh=PQP9aQ4AewNgvBkjS7rl4kENezRz6vX7JiNLpToEyK4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=IHqSZFEsIezSp9d6xxyvQ2OwwF5Cfbpn7/GMG752HCssM0b0jl8wgxpVQh2Mux7UyRbY8JMIGsmeFgIxWKUTTgdaPBfEwtOr6/GfGn+KIkNdZdQhbT1APBSuMUdDitcO+aOs1PN0eUV/okjZsFFLo/oAhaZxzxddvqQeEv4USws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZcM0b59Smz9t2W;
+	Tue, 15 Apr 2025 13:11:11 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] net: ncsi: Fix GCPS 64-bit member variables
-To: Paul Fertser <fercerpav@gmail.com>, kalavakunta.hari.prasad@gmail.com
-Cc: sam@mendozajonas.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, npeacock@meta.com, akozlov@meta.com,
- hkalavakunta@meta.com
-References: <20250410172247.1932-1-kalavakunta.hari.prasad@gmail.com>
- <Z/j7kdhvMTIt2jgt@home.paul.comp>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <Z/j7kdhvMTIt2jgt@home.paul.comp>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Tue, 15 Apr 2025 13:11:07 +0200
+Message-Id: <D9760KMM0PSB.HONQ7MUG8OTN@buenzli.dev>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Danilo Krummrich" <dakr@kernel.org>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-3-remo@buenzli.dev> <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+ <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev> <Z_4rVyUjK1dlnTsT@pollux>
+In-Reply-To: <Z_4rVyUjK1dlnTsT@pollux>
 
-On 4/11/25 1:22 PM, Paul Fertser wrote:
-> On Thu, Apr 10, 2025 at 10:22:47AM -0700, kalavakunta.hari.prasad@gmail.com wrote:
->> From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
->>
->> Correct Get Controller Packet Statistics (GCPS) 64-bit wide member
->> variables, as per DSP0222 v1.0.0 and forward specs. The Driver currently
->> collects these stats, but they are yet to be exposed to the user.
->> Therefore, no user impact.
->>
->> Statistics fixes:
->> Total Bytes Received (byte range 28..35)
->> Total Bytes Transmitted (byte range 36..43)
->> Total Unicast Packets Received (byte range 44..51)
->> Total Multicast Packets Received (byte range 52..59)
->> Total Broadcast Packets Received (byte range 60..67)
->> Total Unicast Packets Transmitted (byte range 68..75)
->> Total Multicast Packets Transmitted (byte range 76..83)
->> Total Broadcast Packets Transmitted (byte range 84..91)
->> Valid Bytes Received (byte range 204..11)
->>
->> v2:
->> - __be64 for all 64 bit GCPS counters
->>
->> v3:
->> - be64_to_cpup() instead of be64_to_cpu()
-> 
-> Usually the changelog should go after --- so it's not included in the
-> final commit message when merged. I hope in this case the maintainers
-> will take care of this manually so no need to resend unless they ask
-> to.
-> 
-> Other than that,
-> 
-> Reviewed-by: Paul Fertser <fercerpav@gmail.com>
+On Tue Apr 15, 2025 at 11:48 AM CEST, Danilo Krummrich wrote:
+> On Tue, Apr 15, 2025 at 01:55:42AM +0200, Remo Senekowitsch wrote:
+>> On Mon Apr 14, 2025 at 7:44 PM CEST, Danilo Krummrich wrote:
+>> > On Mon, Apr 14, 2025 at 05:26:27PM +0200, Remo Senekowitsch wrote:
+>> >> The device property API is a firmware agnostic API for reading
+>> >> properties from firmware (DT/ACPI) devices nodes and swnodes.
+>> >>=20
+>> >> While the C API takes a pointer to a caller allocated variable/buffer=
+,
+>> >> the rust API is designed to return a value and can be used in struct
+>> >> initialization. Rust generics are also utilized to support different
+>> >> types of properties where appropriate.
+>> >>=20
+>> >> The PropertyGuard is a way to force users to specify whether a proper=
+ty
+>> >> is supposed to be required or not. This allows us to move error
+>> >> logging of missing required properties into core, preventing a lot of
+>> >> boilerplate in drivers.
+>> >
+>> > The patch adds a lot of thing, i.e.
+>> >   * implement PropertyInt
+>> >   * implement PropertyGuard
+>> >   * extend FwNode by a lot of functions
+>> >   * extend Device by some property functions
+>> >
+>> > I see that from v1 a lot of things have been squashed, likely because =
+there are
+>> > a few circular dependencies. Is there really no reasonable way to brea=
+k this
+>> > down a bit?
+>>=20
+>> I was explicitly asked to do this in the previous thread[1].
+>
+> I'm well aware that you were asked to do so and that one reason was that
+> subsequent patches started deleting code that was added in previous ones
+> (hence my suspicion of circular dependencies and that splitting up things=
+ might
+> not be super trivial).
+>
+>> I'm happy
+>> to invest time into organizing files and commits exactly the way people
+>> want, but squashing and splitting the same commits back and forth
+>> between subsequent patch series is a waste of my time.
+>
+> I don't think you were asked to go back and forth, but whether you see a
+> reasonable way to break things down a bit, where "reasonable" means witho=
+ut
+> deleting code that was just added.
 
-@Paul: it's not clear to me if as a consequence of the discussion
-running on v2 of this patch you prefer reverting back to be64_to_cpu().
+I was asked to squash two specific commits. The first was making the
+read method generic. That was the one that deleted much code. Totally
+reasonable, and the generic stuff might be discarded anyway, so I won't
+be moving stuff back and forth.
 
-The packet alignement should yield to the correct code in both cases.
+However, the second commit was the one introducing PropertyGuard. That
+was a beautifully atomic commit, no circular dependencies in sight. If
+this commit is to be split up, one of the smaller ones would without
+doubt look exactly the same as the one before. I provided a link[1]
+to the exact email telling me to squash that exact patch to avoid any
+confusion.
 
-/P
+>> Do reviewers not typically read the review comments of others as well?
+>
+> I think mostly they do, but maintainers and reviewers are rather busy peo=
+ple.
+> So, I don't think you can expect everyone to follow every thread, especia=
+lly
+> when they get lengthy.
+>
+>> What can I do to avoid this situation and make progress instead of
+>> running in circles?
+>
+> I suggest to investigate whether it can be split it up in a reasonable wa=
+y and
+> subsequently answer the question.
 
+The point is that I agree with you that the PropertyGuard patch can be
+split out. And possibly more: I think a reasonable person could make a
+separate commit for every `property_read_<type>` method. And I'm happy
+to do that if it's the way to go.  But if I do that, send a v3 and then
+someone else asks me to squash it again (because they didn't read this
+exchange between you and me...) then I would've wasted my time.
+
+> With your contribution you attempt to add a rather large portion of prett=
+y core
+> code. This isn't an easy task and quite some discussion is totally expect=
+ed;
+> please don't get frustrated, the series goes pretty well. :)
+
+I'm trying, but I can't say I have a good first impression of doing
+code review over a mailing list. Doing open-heart surgery with a
+pickfork and writing documents in Microsoft Word both seem like more
+productive and enjoyable activities to me.
+=20
+Link: https://lore.kernel.org/rust-for-linux/20250326171411.590681-1-remo@b=
+uenzli.dev/T/#m68b99b283a2e62726ee039bb2394d0741b31e330 [1]
