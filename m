@@ -1,244 +1,124 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BD429A3E3;
-	Tue, 15 Apr 2025 11:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2F129116F
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716147; cv=none; b=oG5XNsBIuMmtWVwjQHCcj2USEUvS9+pkXWr6FAFoF2apDwaSLI6WEtgK9u3jOAbQTALZrbCI8FcCvlRR+UtbVaRQNIDdD8hg7kiUBWY5nBHFpJ86qW01ls+0wqfEicx10DyhF8oyMjqkePBPXVQchPlqIxnHEGHFKlxEM5FyYYM=
+	t=1744716226; cv=none; b=Gi89iQ2oeuX1dy3QkByNphPJpiN6MifdNWCxxPIg3YdAUG1RGdVqbHE7LjkPIp4k6rQPlF5K838WD17HXcX4lfkkqMSIcLVvA4P8+vKDN7sMr/dhnnrOyfownD8xzNmUXK+uVobdA+N6wJPdNmBhdJ/I+gzM2JuXXK2sZ7E2M2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716147; c=relaxed/simple;
-	bh=ycEo2Z8x5NpwyAIKbT3u/HI0dSC/LsbzhXmIWQ8tBEY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GTk+m0G8BqwE9TuBlFBY/Vp2iwSeuMh2zoiBDqU4kAQKripbgK6cOb40sIFGZvzJ2gYpuKomPRI5b5z+OolDdv3aoDg+YhZsJ3i4dhJStyvkC9UGv1T06UReSeFMc3P93+GDIiVQu/vMT8cKhi3A39AKV6r0tAZGKJxePv+VrUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lq4OFBo5; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744716226; c=relaxed/simple;
+	bh=PF3l3c0RlgTSrkT0Lcop8ROwRYuJe0YUYCpoN+ANMf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m+ozlt5SUNUXfx+s1c3HqcrnZOn7JM4B1tZ4TsvctMy5H5D6qxPBylGdRE5+FwoMTS97+83U6G+Az5joj3E4sxtExUiScs9IhYzpvH2ztfbTIX/NuIODKLzCRI+LEEZX1YX6H65dPQ+0VzGOh8txqTqcfQkYF+prbwwjiiCniNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M8HnkicC; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lq4OFBo5"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 571201FCE7;
-	Tue, 15 Apr 2025 11:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744716143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LOPeQ3QXBoCTF3FUds9Uh4yiTkt5BuZd+Sa0Yo8E0Qs=;
-	b=lq4OFBo5n/VHsMXt7eaqVQV2i3E3Ys+yaadhsx26TRwy8dumU4wHWX0hc1/LHRB6ZkWnHN
-	81bJLMnXDjxpId/oH0EqfzdA9cYdv2ZuRBmE4mW7TQRDNGpdIg8pvfX8mWJuSBrlgpEjj5
-	/EwgcYcZD/Z+e2d+uhVg4D24YDendCzHabENLlu+m8/3K+otjlhf1IhsRRKaSwJ/24KQ+F
-	beQc3Qo669tV+fw6t78Yu+kSUv9i0okQj+zYn0aE4cn/fDSWvAHiF6b/hN5dAeDb8P2xwD
-	orhq9KFBrHUf/zgYQbF1gcLGcpC8g6ibZ1q/ncejoumhvYRKVYRhfIprNSL2CQ==
-Date: Tue, 15 Apr 2025 13:22:20 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha Srivatsa
- <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, Dmitry
- Baryshkov <lumag@kernel.org>, =?UTF-8?B?SGVydsOp?= Codina
- <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/2] drm/bridge: documentat bridge allocation and
- lifecycle
-Message-ID: <20250415132220.3246d9ca@booty>
-In-Reply-To: <20250414-dangerous-stoic-lemur-5e083c@houat>
-References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
-	<20250409-drm-bridge-alloc-doc-test-v7-1-a3ca4b97597f@bootlin.com>
-	<20250414-dangerous-stoic-lemur-5e083c@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M8HnkicC"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736a7e126c7so4603811b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744716224; x=1745321024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xqiBmH3cXQhVO3Oi9TyesxzQNNmvWhKNONR9ZJLERQE=;
+        b=M8HnkicCO+jItc2zihqNpMBT5YFs3bbhUk2b0WuOaHFPTkfgH7sBUbaez1Iv+qHACv
+         zIUYvZ/dsaFrt4OTrTFAg09XW0ZYEBZG5yS67TkhMgBeIvWcXqzrG8rwWTtwA6RFC7E4
+         wgm4EMXSFb5CW6Q2LQ7O3EfThyOFTY+w9FGmA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744716224; x=1745321024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xqiBmH3cXQhVO3Oi9TyesxzQNNmvWhKNONR9ZJLERQE=;
+        b=uASLq9DrbGAcOxp0Su0tqLr4iGFTaFAXQcBc/TTuBCR4hBcDa6RlZO6E2B1MuIsqH/
+         IC7DSgfIl3fE0SaJNsKarDWbx/fJd3rFf8C89u8+Au+l001m4wmA+FBpV5DxnvEuKXhp
+         tIO43crrtKVU1SgMjh/Vgf4vYOdpFP2VwmnMKYj9q8No7/gYwN/lQv45j7NG3Z+roHjb
+         gN5iW/vWbOywkBXV5RjgSab5NYki6RRAL0QxWT8mjoF+N0tiTvxRbccl99PJUpdbCOsi
+         IcodEXF3eUmd0QlIbXaFRMCgZRe+YwFemvCjr8TEjpHTSEL4NZ7JbD/zlINHFMY2ErMm
+         hsdg==
+X-Forwarded-Encrypted: i=1; AJvYcCW4efGbtwVCkUxDwoyC6oy5k2N2r27l2AWb7cJIDWmxDi3hNuO6F9dXj3JQX7UP+wPyczZdjYjfHh0pljo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgA7gGUZwI6O4UcJDYWpPJsfxVTpvnM7+4gquG75Wdkn6N4XxC
+	uq2vIC10jTKZnwL+b3xUHSObVzD46rPo5zOAwtirOpaUBD5FuXzD527LMkQKHA==
+X-Gm-Gg: ASbGnctBjG0WhBcEkx+fpvMoBUQ8TN4ZLVV9rkK3E1xTU9s0epxR8Nf2a0h+Mv7lSFJ
+	F+8tz/U+j0QHdEe8pR7cEe3jE2K/e/CDCXlhGYYXRiNA708mUHjJR77QH5Ra8vPG5aSdnnJmPnV
+	nxlDJ5rindbEGKfqFKiAgVGlz2r0oxjhJVIvc5liIDnJzwBuJ0kFlj6nm2eaquK29SRHk3FlGSq
+	CKcI7cqS5yLisrv1bmXWSGX1MQ6HMLiYt8XmFbcdJ5mF5fytQViLMsX1C3FzRgPXs4A9crjtSse
+	5Nvq7yR8h+bnvvwTjlo2a7rDwyERGt15xVhKrdw9P2uLuydU2mi8CumWvQ==
+X-Google-Smtp-Source: AGHT+IHLztgc2AXA8MRVXKVLULr5aHlO9vKzoTKy2KAhml+hRnJpGVjxL+/NKMKFeR5E/N1M9tqKmA==
+X-Received: by 2002:a05:6a00:1481:b0:736:ab1e:b1ab with SMTP id d2e1a72fcca58-73bd0e97a1emr19543011b3a.0.1744716224175;
+        Tue, 15 Apr 2025 04:23:44 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:558:e14a:ece3:dc28])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f105asm8244136b3a.116.2025.04.15.04.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 04:23:43 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Sean Wang <sean.wang@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Hao Chang <ot_chhao.chang@mediatek.com>,
+	Qingliang Li <qingliang.li@mediatek.com>
+Subject: [PATCH] pinctrl: mediatek: common-v1: Fix EINT breakage on older controllers
+Date: Tue, 15 Apr 2025 19:23:37 +0800
+Message-ID: <20250415112339.2385454-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeffeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrn
- hhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Apr 2025 17:40:46 +0200
-Maxime Ripard <mripard@kernel.org> wrote:
+When EINT support for multiple addresses was introduced, the driver
+library for the older generations (pinctrl-mtk-common) was not fixed
+together. This resulted in invalid pointer accesses.
 
-> Hi,
-> 
-> On Wed, Apr 09, 2025 at 04:50:34PM +0200, Luca Ceresoli wrote:
-> > Document in detail the DRM bridge allocation and refcounting process based
-> > on the recently introduced devm_drm_bridge_alloc().
-> > 
-> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>  
-> 
-> There's a typo in your commit title.
-> 
-> > ---
-> > 
-> > Changes in v7:
-> >  - remove mention of "legacy mode", we now support only refcounted
-> >    bridges
-> >  - rename patch title from "drm/bridge: add documentation of refcounted
-> >    bridges", we now support only refcounted bridges
-> > 
-> > Changes in v6:
-> >  - update to the new devm_drm_bridge_alloc() API
-> >  - rewrite and improve various sentences for clarity
-> >  - fix typos (Randy Dunlap)
-> > 
-> > This patch was added in v5.
-> > ---
-> >  Documentation/gpu/drm-kms-helpers.rst |  6 +++
-> >  drivers/gpu/drm/drm_bridge.c          | 73 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 79 insertions(+)
-> > 
-> > diff --git a/Documentation/gpu/drm-kms-helpers.rst b/Documentation/gpu/drm-kms-helpers.rst
-> > index 5139705089f200b189876a5a61bf2a935cec433a..393cd0e4cb5af3fe98674e7a96c853ffb2556c97 100644
-> > --- a/Documentation/gpu/drm-kms-helpers.rst
-> > +++ b/Documentation/gpu/drm-kms-helpers.rst
-> > @@ -151,6 +151,12 @@ Overview
-> >  .. kernel-doc:: drivers/gpu/drm/drm_bridge.c
-> >     :doc: overview
-> >  
-> > +Bridge allocation and lifecycle
-> > +-------------------------------
-> > +
-> > +.. kernel-doc:: drivers/gpu/drm/drm_bridge.c
-> > +   :doc: bridge lifecycle
-> > +
-> >  Display Driver Integration
-> >  --------------------------
-> >  
-> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> > index b4c89ec01998b849018ce031c7cd84614e65e710..b7e1ad761dad52bdb2ec09d425e69ee23a18fd36 100644
-> > --- a/drivers/gpu/drm/drm_bridge.c
-> > +++ b/drivers/gpu/drm/drm_bridge.c
-> > @@ -61,6 +61,79 @@
-> >   * encoder chain.
-> >   */
-> >  
-> > +/**
-> > + * DOC: bridge lifecycle
-> > + *
-> > + * In some use cases such as hot-plugging a DRM bridge device can
-> > + * physically disappear and reappear at runtime. To handle such cases
-> > + * without destroying and recreating the entire DRM pipeline, DRM bridge
-> > + * lifetime is managed using reference counting:  
-> 
-> That case doesn't exist yet, so documenting it seems a source of confusion.
+Fix up the filled in |struct mtk_eint| in pinctrl-mtk-common to match
+what is now expected by the mtk-eint library.
 
-OK, I'd replace it all with:
+Reported-by: "Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
+Closes: https://lore.kernel.org/all/43nd5jxpk7b7fv46frqlfjnqfh5jlpqsemeoakqzd4wdi3df6y@w7ycd3k5ezvn/
+Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+Cc: Hao Chang <ot_chhao.chang@mediatek.com>
+Cc: Qingliang Li <qingliang.li@mediatek.com>
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+Stepped on this today on an MT8173 Chromebook. Thanks goes out to Uwe
+for pointing out what was broken.
 
-+ * DRM bridge lifetime is managed using reference counting:  
+This should be applied and sent to Torvald's tree ASAP.
 
-> > + * - each &struct drm_bridge is reference counted since its allocation
-> > + * - any code taking a pointer to a bridge has APIs to get a reference and
-> > + *   put it when done, to ensure the memory allocated for the bridge won't
-> > + *   be deallocated while there is still a reference to it
-> > + * - the driver implementing the bridge also holds a reference, but the
-> > + *   allocated struct can survive the driver in case other references still
-> > + *   exist
-> > + * - deallocation is done when the last put happens, dropping the refcount
-> > + *   to zero
-> > + *
-> > + * Usage of refcounted bridges happens in two sides: the bridge *provider*
-> > + * and the bridge *consumers*. The bridge provider is the driver
-> > + * implementing the bridge. The bridge consumers are all parts of the
-> > + * kernel taking a &struct drm_bridge pointer, including other bridges,
-> > + * encoders and the DRM core.
-> > + *
-> > + * For bridge **providers**, the bridge driver declares a driver-specific
-> > + * struct embedding a &struct drm_bridge. E.g.::
-> > + *
-> > + *   struct my_bridge {
-> > + *       ...
-> > + *       struct drm_bridge bridge;
-> > + *       ...
-> > + *   };
-> > + *
-> > + * The driver must allocate and initialize ``struct my_bridge`` using
-> > + * devm_drm_bridge_alloc(), as in this example::
-> > + *
-> > + *     static int my_bridge_probe(...)
-> > + *     {
-> > + *         struct device *dev = ...;
-> > + *         struct my_bridge *mybr;
-> > + *
-> > + *         mybr = devm_drm_bridge_alloc(dev, struct my_bridge, bridge, &my_bridge_funcs);
-> > + *         if (IS_ERR(mybr))
-> > + *             return PTR_ERR(mybr);
-> > + *
-> > + *         // Get resources, initialize my_bridge members...
-> > + *         drm_bridge_add(&mybr->bridge);
-> > + *         ...
-> > + *     }
-> > + *
-> > + *     static void my_bridge_remove(...)
-> > + *     {
-> > + *         struct my_bridge *mybr = ...;
-> > + *
-> > + *         drm_bridge_remove(&mybr->bridge);
-> > + *         // Free resources
-> > + *         // ... NO kfree here!
-> > + *     }  
-> 
-> This part is already documented by drm_bridge_add(), so it's not clear
-> what that section brings to the table either.
-> 
-> > + * Bridge **consumers** need to handle the case of a bridge being removed
-> > + * while they have a pointer to it. As this can happen at any time, such
-> > + * code can incur in use-after-free. To avoid that, consumers have to call
-> > + * drm_bridge_get() when taking a pointer and drm_bridge_put() after they
-> > + * are done using it. This will extend the allocation lifetime of the
-> > + * bridge struct until the last reference has been put, potentially a long
-> > + * time after the bridge device has been removed from the kernel.  
-> 
-> And it's kind of the same thing here. You're saying here that every
-> consumer absolutely needs to call drm_bridge_get() and drm_bridge_put()
-> on their pointer ...
-> 
-> > + * Functions that return a pointer to a bridge, such as
-> > + * of_drm_find_bridge(), internally call drm_bridge_get() on the bridge
-> > + * they are about to return, so users using such functions to get a bridge
-> > + * pointer only have to take care of calling drm_bridge_put().
-> > + */  
-> 
-> ... but that every function that gives you a pointer will take care of
-> drm_bridge_get already and (will) document that you need to call
-> drm_bridge_put ?
-> 
-> I guess my larger question is kind of an editorial one. What do you want
-> people to learn here that isn't in some function documentation already?
-> At the moment, it looks like a doc that used to be useful but got kind
-> of deprecated by the documentation you created on all the functions we
-> merged so far, or a documentation that might be useful at some point but
-> not quite yet. Either way, it's confusing.
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-When I start looking into a kernel subsystem that is new to me, I am
-very happy when there is high-level, "big picture" introductory
-documentation like this. Otherwise I need to learn from existing code,
-with the risk of learning from drivers that not following the best
-practice. That's what I tried to do here.
-
-Of course neither you or I will need this documentation. But I suspect
-you consider this not useful in general.
-
-Do you think this patch should be removed entirely?
-
-(no offense taken if you do, just I won't invest more time in improving
-this patch if it is not going to be taken)
-
-Luca
-
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index 91edb539925a..7585de11854b 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -1015,7 +1015,13 @@ static int mtk_eint_init(struct mtk_pinctrl *pctl, struct platform_device *pdev)
+ 	if (!pctl->eint)
+ 		return -ENOMEM;
+ 
+-	pctl->eint->base = devm_platform_ioremap_resource(pdev, 0);
++	pctl->eint->nbase = 1;
++	/* mtk-eint expects an array */
++	pctl->eint->base = devm_kzalloc(pctl->dev, sizeof(pctl->eint->base), GFP_KERNEL);
++	if (IS_ERR(pctl->eint->base))
++		return -ENOMEM;
++
++	pctl->eint->base[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctl->eint->base))
+ 		return PTR_ERR(pctl->eint->base);
+ 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0.604.gff1f9ca942-goog
+
