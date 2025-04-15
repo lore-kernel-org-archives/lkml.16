@@ -1,147 +1,107 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D218610B;
-	Tue, 15 Apr 2025 12:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8450722F01;
+	Tue, 15 Apr 2025 12:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720401; cv=none; b=sfA+ugppS+eFErL5ApFV01UU2AOTcSSjjtB6DWqcOwmtvaOtjfaPjFKlRY8UMiMuYQK75Qj0oX9xTMuz3CDC8d77xbEQ556NdjareJ5O1lSseExjRGsMPnNx3djzlvewznVeoY/NOJ2mylwv5NHJn2oHqJuQKGOnguXAOSp++1A=
+	t=1744720438; cv=none; b=I8yPgNLcatAr0hgmEYXNuLjRgjM/dLwPTNXbY8VVcWXi/W8Fxm/6xuI3mCvl9ZzyYPZrwyjrMNOtKldujZKy5wdJHtr9KVOGOH/ZMRfGOHPyHTkLDUG3Y9AVzd/NzVQWsNOfy8tiOSuE7+9cIvq2MAfDkRb95QpqElab3uQlKpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720401; c=relaxed/simple;
-	bh=Ii+F19AJs5opq+KeLJNbqzuvmk0s6lxbaw99dsOiyXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qVwkQQc2bwq7yPBVJhRp6gOLUtUniQvk7s/hTItOA8KUv+ebBiwqjcFTKr7owevIpULJwImgM0BKmrhxtIug8nh8LMvRVD6YyfS9Bs5QFn9tgqyXC7kll7JxpLGr1YFOTWrVzr65OuRMm8bYvKvb00Kech+DRWGxNKOaVefdhJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3FW3SlT; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744720438; c=relaxed/simple;
+	bh=MNvE2UciHcCATVpJmKQhjrJtY36mxwEqQHk00pdt6J4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=UE53k2zFb/K0ggdPUm6Q62ARKtcr6ew5J2Pooc8GShYgYVbdgC+bBbsIIqyu9oC+1FOPG7hmUX7a341WoFjCae0M3+ddkac3NRnELKt9a0c3WMyUPYnq25AUQv/PW8+mh2M3P9+oVePi1krSZQ6K1cDVgwM2ojVkOS+11nyO5Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L6j2TmlH; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3FW3SlT"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39bf44be22fso3491152f8f.0;
-        Tue, 15 Apr 2025 05:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744720398; x=1745325198; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ISejIS0NoteW5+822XXFLOsDwPRqdqjmt0InyJ7Yj2s=;
-        b=F3FW3SlTl6N0PbVUP/4taQhELT8xjHAT3Q64jb6GqqRAK/fegzUtV1wdvqoz91opak
-         FvuZ8b6v0VHkM6+WVOnk2OhOdZAS5dgD5mxvp/8IEYLYVZOCigf7HoS1P9EB+Mx9hiro
-         1r43gxm3K0dfwBQ1JzNz+dswoEcYV0PNJD+/oW0Xyfa5AewIzUJV0XULHYAF84jS6C8v
-         GPahIQlgBfc3ibWgG4/aoR3zNK8kgdaLbteeDVsHBL/floidYUEeCKQqFAt8kHiZXfK6
-         S8wtaG+TcNP/11D+xN/2/TEeSmkjuvfT709gJZ+eK0OvQSGjEFyICqfspLm+A3+BOoaE
-         qLWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744720398; x=1745325198;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ISejIS0NoteW5+822XXFLOsDwPRqdqjmt0InyJ7Yj2s=;
-        b=TsZalPf2DJpIOSRXaJtu4zXiuGV3/t4PIsDuMuekHRUVe29cTmb0Qp23QndnVDbVJI
-         ot6pwr6jRoUzMs+No0jQdV++XYUh4kPp1Fsf5Mso6elq2pC/wFftfbh+HIuUFxJA/UeR
-         EtHi7GOeGQEw5mcNEhB4mdfy9ebLiAFlxOFrIG52S8iiAtdy8XtJo/pQwkH929N00Co6
-         25bjDLfFrNz5013UXieCapVjbN1Dm+oWaOfacxCVx7IIMLwXT44hkid1zRzagzJH1bxV
-         13qV73GhF4QYzCwqI1ol6t9qDA6lY/muQWMdKsxX6KyJrHGaWsyiJddp2b/BTzDO/yij
-         n7rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUFheITyke3ofM+wCVj0n+cLTMmwfEySrVQ4YOHda2XebGzLJLDz4CkQJOEERcN/ybULxAOSq9G@vger.kernel.org, AJvYcCUyUbKQHhPV2XtfkkQabdU3IzSr6EqFLeGZd+M1RBv9ys4u69jhEiYRxd8PNbo7IUCr/PvmCmCMCjt5@vger.kernel.org, AJvYcCWGP0QYM0sp/aHKLwizXjNMahc37tPpfc0+QxuDqnv4m0sOPtXcUYWKlDp9Gfi+5Dycb+AOMQx3uxRV0Su5eGAmV5k=@vger.kernel.org, AJvYcCXn4LCwIUyZfGy7gdWY5hhoVTsIgWg39FVkJaqhOhpfimqYZSw06h/hu6EOge1a0SUnsiB4Hl9gckWkldsQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+pmx692EoEJw/TFtqqM/ZUKcsq08JrDg1yOSdrjc5hptUaYOI
-	tDqwcloUEsLQldRevKkzDWyH38/otSt3Eoy2LtxxNpy/FucoKz4H4X7pXKyKTZnwaG/Lo3RVNgP
-	53kHAeZBPiwpa3y3KJsvUD55tqTQ=
-X-Gm-Gg: ASbGncuzuEmVgbaa8eghwBRlNlCkNw4Y8Fh9bOXntFJ4FfSx4dwW1A0SEcnVPt5X0wL
-	aAeWjic63u1hfUlhZYngpACRKSoa/oByZNSBayAsqVsSS5nwiIcxGiZbzykSA4JR/AmP+6gCsqp
-	KzILsa9TW2mrBrGKRi9+uVxaiGn9xgiYP5HyyDuN89PGEjXwOHKWl+SIqXMF+hpIeo
-X-Google-Smtp-Source: AGHT+IFwJex1FRxNns/6VHFTGeLhVt+kuVcAblH1w86U7VFm3sR6UibK49iXZpLHLruiVNnIp7i8sraSXqWjt0jcORA=
-X-Received: by 2002:a05:6000:4021:b0:39c:dfa:c3de with SMTP id
- ffacd0b85a97d-39eaaebc663mr13620738f8f.47.1744720397705; Tue, 15 Apr 2025
- 05:33:17 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L6j2TmlH"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 45CF440E0242;
+	Tue, 15 Apr 2025 12:33:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id G6shJrgwfx3o; Tue, 15 Apr 2025 12:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744720423; bh=zyR8Wu7rN0QSLorbTrWYixx98F1h7tDtKpJUD3C8MnM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=L6j2TmlHZJYVEx+WRcgMuiACGD/hIMNrm4Warsu0JLfcYuBwIN206ixb62BBFTU/w
+	 DaYCEba1H4LDOh2rlz8tsbKVIaiYOTc+IsARumRcfzSdWvzbNe+/7d7d5HE+AuLLIe
+	 OYK1tp6qfMeSJmY2O9KZrzgSA6WLYTNbIXcF4UETS05ocZq6Hce1FGnjcePPgBJiPr
+	 6bdc9DT83MeS1OQqxYi5nVKtt9vm/EyM4Pvucy3bl5Yv9OXUD1e2hKkimWceY6/AW0
+	 NE7M0IZyHTH0jiVv6RKzC8Q18IoJAGn5iXKl7rbZYqJk3fU9vRXE2Eg13V7cA9MhHx
+	 4Qd8H/p10+8MW17zxsXdFB/2t56uR4tlmIlvlwq7pu5tFjHZ5zpDVKIgxCJ+MUYhAj
+	 CkMAHVlGwP7p/mf0E/ss9fI9Fm/eVy35xY+h8MLc7/9tUWcIWs03C1O3cS50koohtD
+	 1EVBHu8oTFICF1mj8/0TD+HxtPrK1lUHPTMJrJaakVhyHDQU0wlbpBnhPKqSvOEphT
+	 UvEY2h4tQX+4yJQN2f/keju+3Hdyyx3E6unjp9zpeKwghrhoA92bix2X4gnRq0bNve
+	 syeeVsJXFWAL+du64s0tsyDUCzefbtLHCKiic0UmdhNtFnf3b6iMYxm2xQxwfHCSlp
+	 nmdv3sBZx4vhrSHXVw26K2og=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 841EC40E01FF;
+	Tue, 15 Apr 2025 12:33:40 +0000 (UTC)
+Date: Tue, 15 Apr 2025 14:33:32 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent for v6.15-rc3
+Message-ID: <20250415123332.GAZ_5SHIlZcpQxbLMj@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407120317.127056-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407120317.127056-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <Z_0-iH91A4Sexlzj@shell.armlinux.org.uk> <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
-In-Reply-To: <CA+V-a8sS0TtS-TEdkQ8MB5F4JtzV9358Y9fmKe5MggGU+wP=4Q@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 15 Apr 2025 13:32:51 +0100
-X-Gm-Features: ATxdqUFXWhW8_Nw5u1OaWa5-kTdFNmMYCXvTAenRwVBKAiwpOUnqgIySUTDSG10
-Message-ID: <CA+V-a8tbW2Zs6op20yRTcihSm1bcMC2dYnRXVCKRf=q4fymZyg@mail.gmail.com>
-Subject: Re: [PATCH net-next v5 3/3] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>, Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Hi Russell,
+Hi Linus,
 
-On Mon, Apr 14, 2025 at 7:14=E2=80=AFPM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Russell,
->
-> On Mon, Apr 14, 2025 at 5:57=E2=80=AFPM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Mon, Apr 07, 2025 at 01:03:17PM +0100, Prabhakar wrote:
-> > > +     gbeth->rstc =3D devm_reset_control_get_exclusive(dev, NULL);
-> > > +     if (IS_ERR(gbeth->rstc))
-> > > +             return PTR_ERR(gbeth->rstc);
-> > > +
-> > > +     gbeth->dev =3D dev;
-> > > +     gbeth->regs =3D stmmac_res.addr;
-> > > +     gbeth->plat_dat =3D plat_dat;
-> > > +     plat_dat->bsp_priv =3D gbeth;
-> > > +     plat_dat->set_clk_tx_rate =3D stmmac_set_clk_tx_rate;
-> > > +     plat_dat->clks_config =3D renesas_gbeth_clks_config;
-> > > +     plat_dat->flags |=3D STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY |
-> > > +                        STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
-> > > +                        STMMAC_FLAG_SPH_DISABLE;
-> > > +
-> > > +     err =3D renesas_gbeth_clks_config(gbeth, true);
-> > > +     if (err)
-> > > +             return err;
-> > > +
-> > > +     err =3D stmmac_dvr_probe(dev, plat_dat, &stmmac_res);
-> > > +     if (err)
-> > > +             renesas_gbeth_clks_config(gbeth, false);
-> > > +
-> > > +     return err;
-> > > +}
-> > > +
-> > > +static void renesas_gbeth_remove(struct platform_device *pdev)
-> > > +{
-> > > +     stmmac_dvr_remove(&pdev->dev);
-> > > +
-> > > +     renesas_gbeth_clks_config(get_stmmac_bsp_priv(&pdev->dev), fals=
-e);
-> > > +}
-> >
-> > Would calling renesas_gbeth_clks_config() in the suspend/resume paths
-> > cause problems?
-> >
-> > If not, please consider using plat_dat->init() and plat_dat->exit()
-> > to control these clocks, and then use devm_stmmac_pltfr_probe()
-> > which will call the ->init and ->exit functions around the probe
-> > as necessary and at removal time (and you won't need the remove
-> > method.)
-> >
-On the RZ/G3E, the upstream support for testing S2R is not yet in a
-usable state. So for now, I'll switch to using init/exit callbacks and
-drop the PM callback.
+please pull two urgent EDAC fixes for v6.15-rc3.
 
-Cheers,
-Prabhakar
+Thx.
+
+---
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.15_rc3
+
+for you to fetch changes up to 58029c39cdc54ac4f4dc40b4a9c05eed9f9b808a:
+
+  RAS/AMD/FMPM: Get masked address (2025-04-08 19:30:58 +0200)
+
+----------------------------------------------------------------
+Two fixes to the AMD translation library for the MI300 side of things:
+
+  - Use the row[13] bit when calculating the memory row to retire
+
+  - Mask the physical row address in order to avoid creating duplicate
+    error records
+
+----------------------------------------------------------------
+Yazen Ghannam (2):
+      RAS/AMD/ATL: Include row[13] bit in row retirement
+      RAS/AMD/FMPM: Get masked address
+
+ drivers/ras/amd/atl/internal.h |  3 +++
+ drivers/ras/amd/atl/umc.c      | 19 +++++++++++++++++--
+ drivers/ras/amd/fmpm.c         |  9 ++++++++-
+ 3 files changed, 28 insertions(+), 3 deletions(-)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
