@@ -1,255 +1,136 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CF421CFF6;
-	Tue, 15 Apr 2025 02:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721A4232792
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685263; cv=none; b=Nckh+uxZ7ylN0BlzCotmWZP1QHC5+s+zEj1rEBISHm1RDeR5Ty+LXi+E0FCGbJ8Ur3HfoGWvBgjiUfcyaR7TOlTAgfvQlNE5HgpCME6dnhWlfSo8A1ZfbaKt6oDM8voPtYJajcruM7ovk9SOTXvnLfDYUaChA/NQWcZxs4cU7As=
+	t=1744685266; cv=none; b=HzF3zZphIjKhs41HPUIKH2nF2PjxkvPMOCq7HXNVwfk7QlUbK9pwWVcJ06oYfWuD5K9aN863Tzw3qB/BVdw5jXdIa3FwHP7A340j/VCNTKFInuVWMzOzXoQtvf/7Rqi9XAzz472dDZrxDqhnbHv29N9XxmHaT/N1iIHVjDREenc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685263; c=relaxed/simple;
-	bh=nGGYa/bok5qJ8KVw7OSMgHlxCvXTiVuD2OOmgM0FeYU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sGCEZGppQw01ljIMsIz86wv71HMCFU9qnvb9gWrf9xnz/juC878NWYSTmpw2T1ggXZX+eb2R4uRPA2qqrCImcF1fhtdjp8MC0HR2YMbwxTc2bhNvdq1u6PjHHJCsqaZCyjRIM7yEzxJD5Hn0UY846m8ByZV4JOuZvJneudFWeVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQNbOBEu; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744685266; c=relaxed/simple;
+	bh=MrXrXjTBYXLdLREsfYrjSTNotRmujCm0BhazHpTsW2w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Mg1agWYhSkChplVTweX34dtjsy4ZKLig7CNJGBw9CRGg7prNtZGPpKg/oH6R/XN8LpbAApjq3tKELjZOfkBYlx04yhro1SQlxHXL80F9Z1TUnvsMAsKAVE2Sx0j7kdIvc6WYhRjCQXUdC7s8a44eKB7PhgqbpBlogRTZW3lxFD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=RpS6rVR3; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQNbOBEu"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22423adf751so45813615ad.2;
-        Mon, 14 Apr 2025 19:47:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="RpS6rVR3"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22423adf751so45813865ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744685261; x=1745290061; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cWvpma1dORIiySs5jF5nA8uB3wDE1U9RthmOs2kPK+Y=;
-        b=iQNbOBEu/iza0ZlmCXA7y44eZDZuyZNH5+dm3/0MZb5Vsbfg6RdL+KC5/YdCtpganO
-         zr8/kAYh9M7VDCqtE99FvnTf5FZkD5D2XnuLSmnmYXA9WEF655+zJ5zjPzITMhjyAzQA
-         g7CPPf7vgma/Pb24U8mtBuzxc5UFo3rKM5JtOGf7Yy0jKLRx7I9DdK/rt4Fgjh45ht0s
-         npWzu97OHw/zAIHXe/WSCDb6HAwFdFSrVDIKcHqZUNOuzGw3VfFj3JyWrfTeC4rGtqDl
-         ItnsXXwpd4QmJNNQizopv5ERkUT6dfW5vqLd1H44U/uySmT51S0BoxozScI5SRkzFMJC
-         3PoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744685261; x=1745290061;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1744685265; x=1745290065; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cWvpma1dORIiySs5jF5nA8uB3wDE1U9RthmOs2kPK+Y=;
-        b=l7IiyevBGdo5pcM2CxP64i4Bf9aWSU/GqjA0UpY2DVk3DRZyaQPXmJK/J0QFD8m/Eu
-         Ay/AcweBRuAN/51gfLk1yHPxAWRvZ13q2HTkJFgXRzN76kaExomRKQV3JDgufPROb77H
-         LC75XjL2MNWjRegwfrmi/gRVR9GreWZzQnPvHeOYKqXhH3z+tkwgnbJT/clTGPkl4RXM
-         hsj/jAcY7EjMRabAP5IdWx3HBFQgzgVv5Hs0H9E3Wzju/KW6FkQqh7AHPpEuqA6NvzlR
-         kzqT+ls/7vZ+NKRzyQTlFz+FSwJG5avMd36esKqxx/+ddbN/z+pTSeQOjba9feh44L8r
-         G1Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCUYK3J9Tu2ORQOHp93PJZbZRsYjF9YQ7uKC4SDfEkalTfNwdyVHYa+JoxW2vXAkTx2Y4uPFelbN5fa8A2Oy@vger.kernel.org, AJvYcCXW23Rap0eGt6grGhm1b+7Zv7C/5HcKtj7OcCx9VRame8FfBOTccGmEzMNP29SxQ+gVIxRbeUHZEUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3JNBhofyiMBUi/hJFS1q4vtFACCarB/skLwIHqVkx8V2AeMI8
-	JrB/8H9kJ34kEJm4MrEyluK0w9yF2YIDZX2oahytog7b5kkWT9GM
-X-Gm-Gg: ASbGncs3CmWqHXsyPSEYpxYAwfDCtuagiAIrH90oeQt1VPJ8nAJDzUL1majeZ3lujcI
-	5Le4luBMW83UrUOkAlMb8fUuQ2modvqZsnOgnRlLUOSh4E/13vKWlLNZJDgMYm9nNKMOUBQvnVn
-	gA8j8AAGCXOz3KQArPUQfqwTuNRrwr5Clz70tcK4OdMRqD9uqY8wLgDMCnPOkTl9OwX6+hmZfUk
-	u9Mzkmi5QCVlfNGD+mykSMoRkVd6K6onOLzMekRI7HVymfOMRN73gLpgKEAFRe41RrgUgzOnDAf
-	s7Ax/fYVwWfXniwnKN9ARo7x9c4p3QV1S2pm
-X-Google-Smtp-Source: AGHT+IHBix5KPP3nRhmwiVvvlwa79tN2lYjB87B7Yo6JZ4XsMjjb6cCLThbByHf08kY8KD0bEF4xHQ==
-X-Received: by 2002:a17:903:3c44:b0:223:517c:bfa1 with SMTP id d9443c01a7336-22bea4efa84mr222013945ad.38.1744685261112;
-        Mon, 14 Apr 2025 19:47:41 -0700 (PDT)
-Received: from debian ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c97298sm106915325ad.138.2025.04.14.19.47.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 19:47:40 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Mon, 14 Apr 2025 19:47:38 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Fan Ni <nifan.cxl@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: Re: [PATCH v9 00/19] DCD: Add support for Dynamic Capacity Devices
- (DCD)
-Message-ID: <Z_3Iyk7oj-EiJWgX@debian>
-References: <20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com>
- <Z_0v-iFQpWlgG7oT@debian>
- <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
+        bh=63b5+F5fFo9uNyjbfST0FZ55aigVErZF90xX0QFU4a4=;
+        b=RpS6rVR3Kav0RuLYj5Hi8WHnWyG74tKTln+QeVE4hgeO1oZvihhy6UQC3eUTGfhfin
+         7Go+fHxQOr+rTpcdDZrwkUzdfDmIfPz0dfeMPEcdaw0EHodfp1VID0DEmlJBJY5DNc8F
+         zYz2P+Cea1TCqDwziLNcV3S/eNfuaGBbSxXvoumaIrX+LxyelIUk26/qNyhnkxKwXXLS
+         TGTX79vnfEbKKOz+0OL0mZ3VlMqTAbs9crJszuvY3NYuthu8ru3s886AdlCJrIWmVEXg
+         WMkJ18nFMSOSQGZX8vHANNX7mCtiHJyddQDQ5cpr77sOBjIWNAJxRTVcgrhnuAQU+H86
+         PDLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744685265; x=1745290065;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=63b5+F5fFo9uNyjbfST0FZ55aigVErZF90xX0QFU4a4=;
+        b=CLGRq/hIrEg/eyVNQArIm6aY24unmp91BIktBADqV9/wpna3y6v94/AvPwRE1QychP
+         oBPlFGnCr3N+eTZd6L+noOnYkPgn2j51/0SfZJRfPsNdW7cW2yjJxfVIpbRkMFiNdh/y
+         xK3nminsl7zu2BeDS6FdjoqVHVgVBQ5xpq5+5PC9BqExSo+Tj3ZGpqy4cJZwOEFYCY+j
+         iwMkGzsdamh2yiuPRW2sqxY2f+b5wMWc8GLgpGgUXbVtGYzhFH3HSkdgzJ+LceJ+6rsR
+         tiTZ1+AfFFlCczku29qzAyqREVBo9yLqBuzKspq2ppFFD35LzNjIoqCnQyMS8LQBaCDR
+         hp+A==
+X-Gm-Message-State: AOJu0YzW2gy+JhB4cOfbvfJpi1+/HvkySTkFOfmxYSaHnbiG7HgLuaAu
+	14uBB6yEVs4SwO0qpn13JUC/crZP6bLRdFoRlICHHUK3FCxSSAzS5OnQKedcX60=
+X-Gm-Gg: ASbGncuD5tWhJqYvTWUxqfk+nYo/YVf1ItC08WvRvQn+xsFBM3J3yuY4sfGEkF3DRG+
+	FRGHK+3hPWQhd0jjNsWgoxiQAp1EpCydg8yNdQHABFiH22wMYqvoHLe5x9bcbwDk1ajP5ZZ86Dt
+	lwXF0frba61sTRJ3G/zTeu8Ag6EZeAQT0lxyPOKNGnTxh13B51jQ4S/5ZHpAyH9sKSSY2RgqxsT
+	7DqjlmnUHLLRa76sWi5SXnezyCGLoI3K2elmPMsEJdob+EOPXhHBOrpRNbc7OA/Am8vgfZBhRmO
+	u84pcGJ0QuM8UpWQj+i9P+muC9ikBZ2ThqBRbT6XJH05ceYspQla71kdBtN9TPw/Q8wVdSUR
+X-Google-Smtp-Source: AGHT+IFmIkyy7FOoYDJmjbvJNymfdfM84C+MAEagetSFHxG3fte/Kh1b2EKbddjsXQhUKdg0bAYVCg==
+X-Received: by 2002:a17:902:da91:b0:220:f7bb:842 with SMTP id d9443c01a7336-22bea4efafamr182908255ad.42.1744685264764;
+        Mon, 14 Apr 2025 19:47:44 -0700 (PDT)
+Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.47.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 14 Apr 2025 19:47:44 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	akpm@linux-foundation.org,
+	david@fromorbit.com,
+	zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	hamzamahfooz@linux.microsoft.com,
+	apais@linux.microsoft.com,
+	Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH RFC 20/28] mm: workingset: prevent lruvec release in workingset_refault()
+Date: Tue, 15 Apr 2025 10:45:24 +0800
+Message-Id: <20250415024532.26632-21-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
+References: <20250415024532.26632-1-songmuchun@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67fdc64e3fa03_15df832946e@iweiny-mobl.notmuch>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 09:37:02PM -0500, Ira Weiny wrote:
-> Fan Ni wrote:
-> > On Sun, Apr 13, 2025 at 05:52:08PM -0500, Ira Weiny wrote:
-> > > A git tree of this series can be found here:
-> > > 
-> > > 	https://github.com/weiny2/linux-kernel/tree/dcd-v6-2025-04-13
-> > > 
-> > > This is now based on 6.15-rc2.
-> > > 
-> > > Due to the stagnation of solid requirements for users of DCD I do not
-> > > plan to rev this work in Q2 of 2025 and possibly beyond.
-> > > 
-> > > It is anticipated that this will support at least the initial
-> > > implementation of DCD devices, if and when they appear in the ecosystem.
-> > > The patch set should be reviewed with the limited set of functionality in
-> > > mind.  Additional functionality can be added as devices support them.
-> > > 
-> > > It is strongly encouraged for individuals or companies wishing to bring
-> > > DCD devices to market review this set with the customer use cases they
-> > > have in mind.
-> > 
-> > Hi Ira,
-> > thanks for sending it out.
-> > 
-> > I have not got a chance to check the code or test it extensively.
-> > 
-> > I tried to test one specific case and hit issue.
-> > 
-> > I tried to add some DC extents to the extent list on the device when the
-> > VM is launched by hacking qemu like below,
-> > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 87fa308495..4049fc8dd9 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -826,6 +826,11 @@ static bool cxl_create_dc_regions(CXLType3Dev *ct3d, Error **errp)
-> >      QTAILQ_INIT(&ct3d->dc.extents);
-> >      QTAILQ_INIT(&ct3d->dc.extents_pending);
-> >  
-> > +    cxl_insert_extent_to_extent_list(&ct3d->dc.extents, 0,
-> > +                                     CXL_CAPACITY_MULTIPLIER, NULL, 0);
-> > +    ct3d->dc.total_extent_count = 1;
-> > +    ct3_set_region_block_backed(ct3d, 0, CXL_CAPACITY_MULTIPLIER);
-> > +
-> >      return true;
-> >  }
-> > 
-> > 
-> > Then after the VM is launched, I tried to create a DC region with
-> > commmand: cxl create-region -m mem0 -d decoder0.0 -s 1G -t
-> > dynamic_ram_a.
-> > 
-> > It works fine. As you can see below, the region is created and the
-> > extent is showing correctly.
-> > 
-> > root@debian:~# cxl list -r region0 -N
-> > [
-> >   {
-> >     "region":"region0",
-> >     "resource":79725330432,
-> >     "size":1073741824,
-> >     "interleave_ways":1,
-> >     "interleave_granularity":256,
-> >     "decode_state":"commit",
-> >     "extents":[
-> >       {
-> >         "offset":0,
-> >         "length":268435456,
-> >         "uuid":"00000000-0000-0000-0000-000000000000"
-> >       }
-> >     ]
-> >   }
-> > ]
-> > 
-> > 
-> > However, after that, I tried to create a dax device as below, it failed.
-> > 
-> > root@debian:~# daxctl create-device -r region0 -v
-> > libdaxctl: __dax_regions_init: no dax regions found via: /sys/class/dax
-> > error creating devices: No such device or address
-> > created 0 devices
-> > root@debian:~# 
-> > 
-> > root@debian:~# ls /sys/class/dax 
-> > ls: cannot access '/sys/class/dax': No such file or directory
-> 
-> Have you update daxctl with cxl-cli?
-> 
-> I was confused by this lack of /sys/class/dax and checked with Vishal.  He
-> says this is legacy.
-> 
-> I have /sys/bus/dax and that works fine for me with the latest daxctl
-> built from the ndctl code I sent out:
-> 
-> https://github.com/weiny2/ndctl/tree/dcd-region3-2025-04-13
-> 
-> Could you build and use the executables from that version?
-> 
-> Ira
+In the near future, a folio will no longer pin its corresponding
+memory cgroup. So an lruvec returned by folio_lruvec() could be
+released without the rcu read lock or a reference to its memory
+cgroup.
 
-That is my setup.
+In the current patch, the rcu read lock is employed to safeguard
+against the release of the lruvec in workingset_refault().
 
-root@debian:~# cxl list -r region0 -N
-[
-  {
-    "region":"region0",
-    "resource":79725330432,
-    "size":2147483648,
-    "interleave_ways":1,
-    "interleave_granularity":256,
-    "decode_state":"commit",
-    "extents":[
-      {
-        "offset":0,
-        "length":268435456,
-        "uuid":"00000000-0000-0000-0000-000000000000"
-      }
-    ]
-  }
-]
-root@debian:~# cd ndctl/
-root@debian:~/ndctl# git branch
-* dcd-region3-2025-04-13
-root@debian:~/ndctl# ./build/daxctl/daxctl create-device -r region0 -v
-libdaxctl: __dax_regions_init: no dax regions found via: /sys/class/dax
-error creating devices: No such device or address
-created 0 devices
+This serves as a preparatory measure for the reparenting of the
+LRU pages.
 
-root@debian:~/ndctl# cat .git/config 
-[core]
-	repositoryformatversion = 0
-	filemode = true
-	bare = false
-	logallrefupdates = true
-[remote "origin"]
-	url = https://github.com/weiny2/ndctl.git
-	fetch = +refs/heads/dcd-region3-2025-04-13:refs/remotes/origin/dcd-region3-2025-04-13
-[branch "dcd-region3-2025-04-13"]
-	remote = origin
-	merge = refs/heads/dcd-region3-2025-04-13
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ mm/workingset.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/mm/workingset.c b/mm/workingset.c
+index e14b9e33f161..ef89d18cb8cf 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -560,11 +560,12 @@ void workingset_refault(struct folio *folio, void *shadow)
+ 	 * locked to guarantee folio_memcg() stability throughout.
+ 	 */
+ 	nr = folio_nr_pages(folio);
++	rcu_read_lock();
+ 	lruvec = folio_lruvec(folio);
+ 	mod_lruvec_state(lruvec, WORKINGSET_REFAULT_BASE + file, nr);
+ 
+ 	if (!workingset_test_recent(shadow, file, &workingset, true))
+-		return;
++		goto out;
+ 
+ 	folio_set_active(folio);
+ 	workingset_age_nonresident(lruvec, nr);
+@@ -580,6 +581,8 @@ void workingset_refault(struct folio *folio, void *shadow)
+ 		lru_note_cost_refault(folio);
+ 		mod_lruvec_state(lruvec, WORKINGSET_RESTORE_BASE + file, nr);
+ 	}
++out:
++	rcu_read_unlock();
+ }
+ 
+ /**
+-- 
+2.20.1
 
-Fan
-
-> 
-> > 
-> > The dmesg shows the really_probe function returns early as resource
-> > presents before probe as below,
-> > 
-> > [ 1745.505068] cxl_core:devm_cxl_add_dax_region:3251: cxl_region region0: region0: register dax_region0
-> > [ 1745.506063] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4801
-> > [ 1745.506953] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
-> > [ 1745.507911] cxl_core:__cxl_process_extent_list:1802: cxl_pci 0000:0d:00.0: Got extent list 0-0 of 1 generation Num:0
-> > [ 1745.508958] cxl_core:__cxl_process_extent_list:1815: cxl_pci 0000:0d:00.0: Processing extent 0/1
-> > [ 1745.509843] cxl_core:cxl_validate_extent:975: cxl_pci 0000:0d:00.0: DC extent DPA [range 0x0000000000000000-0x000000000fffffff] (DCR:[range 0x0000000000000000-0x000000007fffffff])(00000000-0000-0000-0000-000000000000)
-> > [ 1745.511748] cxl_core:__cxl_dpa_to_region:2869: cxl decoder2.0: dpa:0x0 mapped in region:region0
-> > [ 1745.512626] cxl_core:cxl_add_extent:460: cxl decoder2.0: Checking ED ([mem 0x00000000-0x3fffffff flags 0x80000200]) for extent [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.514143] cxl_core:cxl_add_extent:492: cxl decoder2.0: Add extent [range 0x0000000000000000-0x000000000fffffff] (00000000-0000-0000-0000-000000000000)
-> > [ 1745.515485] cxl_core:online_region_extent:176:  extent0.0: region extent HPA [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.516576] cxl_core:cxlr_notify_extent:285: cxl dax_region0: Trying notify: type 0 HPA [range 0x0000000000000000-0x000000000fffffff]
-> > [ 1745.517768] cxl_core:cxl_bus_probe:2087: cxl_region region0: probe: 0
-> > [ 1745.524984] cxl dax_region0: Resources present before probing
-> > 
-> > 
-> > btw, I hit the same issue with the previous verson also.
-> > 
-> > Fan
-> 
-> [snip]
