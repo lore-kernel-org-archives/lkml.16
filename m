@@ -1,174 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB2194C86;
-	Tue, 15 Apr 2025 07:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D6524C67A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:55:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703738; cv=none; b=dygVGLhAp8bS4VvnA/RCvAVWqi5TfK7je5xp7C45H/qnNZNXrob0cAo7vDFtjh+mYM/60oGYGhJ+LvYdKFnkLL1TFKIU5x4MMRaJ5JNTxUfsU1KihUTfQO+rgJzLTPtROJTN9BvbjNJZ5xN+/QQc3Pm70c/qAMJW9Ud+SlA/LJY=
+	t=1744703750; cv=none; b=twxqBZ3cph9LgMnwjOokCU5NIgLfaXoNzmN67HBHTBuLId/pQEOizzzcQFgpj16pb9i85HA2d9JX0zpYYG3PeFJPrnTosw2G4LANpOEFrZdJy1+P6z4ZLtGdEPMpHe78C3nxNKABDphNlMq6frby9XxP90vTXaSAH4emaqmMyPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703738; c=relaxed/simple;
-	bh=SfLVHsoY/QAXKrai3AX+QQVNRS3TPHWbMePbzgi022w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fJVBbjbc+MDoYmZNSHpZ+RruB8g2UMHsg/E7N7sL2jqxJchJuFoD0q92+hmdL7+dGFgZJ7p+eYaslCv0YS2Xq7VqTP4EtYvG5A6HJ6826myOPeS9mlJh/MOnjGV/5vwq1NCit4jxHAWb2W1Iu9hfimp7y8qVQv6Fow64MHLE8RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAMWoD50; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744703750; c=relaxed/simple;
+	bh=YYqmdGWqTh2Zlj11kfwicGpoEMJ9HdJBcKGJ5TTeHcY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lgVDuyZPgV8svMPCJUXri/gk+W5vFeYaZxctTCSFm+WqYSfKPTEVC8Jb2XYfSh6v+eTnAclMzENtg+pl96NLoR9o/DSc5+DZDdeJfKLIreX1ALFphY2XQbyGUiyntFc6dvmNdPXbrHRJS6bretydIIpXyswXetCGVdqAxMPYy9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OehvcAxG; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAMWoD50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D2CC4CEDD;
-	Tue, 15 Apr 2025 07:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744703738;
-	bh=SfLVHsoY/QAXKrai3AX+QQVNRS3TPHWbMePbzgi022w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KAMWoD50iF7dn8HbeSqrfhwq+k9/9WTxoioDlcoI10nMivxsaWqAAVXVBuxHciHwV
-	 XJdR7nPdSOZWwfygd0dvIwqMdg3+SAroKSM27h6W8jlh+Z7GAG/CgFmHt21H4RIJsA
-	 7Dc9yoZx2cKuZoxm/Sbmn5apFOG0N+6jFjbuy0LzFeLI3+piR55KfICWJ0/WnM5w/1
-	 2aqqH1LpOw6iMKenTWjI8HlfUdziQfVqvTnIaQFxiIK5YjmskW3Bi2unk0obcLYK5o
-	 HXD61Q737t8VqyaGhcpd7ulnabhOG5iDK7GPoyWaltb6BmXts/MYp9KTxOVfroIPls
-	 l+Gcrm/BOOXBw==
-Date: Tue, 15 Apr 2025 09:55:33 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Ante Knezic <ante.knezic@helmholz.de>
-Cc: linux-leds@vger.kernel.org, lee@kernel.org, pavel@kernel.org, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net, 
-	knezic@helmholz.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: leds: add binding for WL-ICLED
-Message-ID: <20250415-dashing-impartial-baboon-70d086@shite>
-References: <cover.1744636666.git.knezic@helmholz.com>
- <35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OehvcAxG"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30ddad694c1so52226771fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744703746; x=1745308546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YYqmdGWqTh2Zlj11kfwicGpoEMJ9HdJBcKGJ5TTeHcY=;
+        b=OehvcAxGfG/APACuiUEUyxhqQ6UleZ/jUX0OruoxDs7gEBe3rU+VoXsEn3BRUu5/ut
+         S6mXG3yW/fw9oq8zaDGnF++ED1qilTOZg6bthZWF+94vVc4gtr+RuRsTTNZyTe1kzLFQ
+         FHV3qN5PX7dzACEURE99CZAWgILEH0dkpOIPHW4xoiJy34HPvCWK8q258/RKNBhlg8ac
+         jhKkLHUHsw9WQIivTdQ/e1mk/Vp4ZlA7aGHdh9n719CczqyzyxCxq48lCBNRqKwdoAFJ
+         Fp5z0P+tUSSmHY1/6ozNbxbl+JL9QB8/mF2QSJLim8qdrAdTozm/uQUnKkYpoE4xCUzE
+         hBSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744703746; x=1745308546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YYqmdGWqTh2Zlj11kfwicGpoEMJ9HdJBcKGJ5TTeHcY=;
+        b=ZhmShuw57FQqFK/lr3fAS/om9qgRfSCPOTcTUARJOVJ9QOLo98xOXEEUrAjaf854eR
+         cziIfiwEcKiVwzZvLdrO3cQvm7WK3xmCzZtCq+oBTYTWMr8PQlxVkyduWcGM7+2WsNON
+         DAQpdCBsoNGEUzNsLL3oImDwOurXYfU378idFmth9uMfkMuOL74nnN5Kc5yGf3unZgEA
+         PKhR+BdcHqi0y9soXrcHqENxtiQol6qCohHpmJjxnavsgFZ/vOSqt+I2iDh4YJiGej6i
+         fD01s6kriXiXMkXxvBB6SBD1Dw5OBeqF0/s4nS8yDQr2eBBU8u0PfPb4O75REcqwmNji
+         a7WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXtCcePushxPE6nvP5smVIlmIqQgmoCJNGFybAtix2G3t739IIhsC7O6eSXO644LDYc16CR0w/2+6lBIAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFrWMmA2RNZNQ06JdvIKrmt+ui5i/KTRaIqhKCnL24H1fJj3lV
+	nAbepWKunLECnOkPwQES7BYpbMxix5l0Va/gwllU+fG5XZwxuvVMhZlj5XgynyJJstgk/rU4d1T
+	EwjlLFeo6AD2Q4EQcZA9xgkdtEmeS8fV0U7HLIA==
+X-Gm-Gg: ASbGnctOB3MLozE0Qx/oqeyzQYJihq0n1RXkkAX8l8AwT1Mpwgjov6jkkAb0fsnGtf3
+	FBAmdZO5H+gZFgqG2FMiW73Xy1a4XY0G7GNkyzWGvrb64/NjdZCNveBFyjXzUlL39bE+cfm2QNG
+	nZaMPXU/xZWJTfsJ3pifRn/Q==
+X-Google-Smtp-Source: AGHT+IFs/nUVE9ZHpBsM9ISeqvfrNgJXQKoiGQRya625PualetasE53RPjloI8lyn4EgmyL5PlrCTCKXaoZAKNCtz2s=
+X-Received: by 2002:a05:651c:146c:b0:306:10d6:28b0 with SMTP id
+ 38308e7fff4ca-310499b5baamr48649081fa.1.1744703746535; Tue, 15 Apr 2025
+ 00:55:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <35c7f697070b3939727f1115d3a279e280f72cd6.1744636666.git.knezic@helmholz.com>
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <20250401-gpio-todo-remove-nonexclusive-v2-2-7c1380797b0d@linaro.org>
+In-Reply-To: <20250401-gpio-todo-remove-nonexclusive-v2-2-7c1380797b0d@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Apr 2025 09:55:35 +0200
+X-Gm-Features: ATxdqUE321qDjf0iPOYzjELC5SbNbPWdhKHQ6bsHvDdXjB1_8CjTFcaqogQt9nM
+Message-ID: <CACRpkdbV=n1BjiTni44BbNnLqPtE+oirX4wbmHcGvdhi_3Va6w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] gpio: deprecate devm_gpiod_unhinge()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 03:28:50PM GMT, Ante Knezic wrote:
-> From: Ante Knezic <knezic@helmholz.com>
-> 
-> WL-ICLED is a RGB LED with integrated IC from Wurth Elektronik.
-> Individual color brightness can be controlled via SPI protocol.
-> 
-> Signed-off-by: Ante Knezic <knezic@helmholz.com>
-> ---
->  .../bindings/leds/leds-wl-icled.yaml          | 88 +++++++++++++++++++
+On Tue, Apr 1, 2025 at 2:46=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-Filename based on compatible. Choose one compatible and use it here.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> This function was introduced as a workaround for an issue with resource
+> ownership in the regulator subsystem. Rather than passing the ownership
+> of a GPIO, we should make the regulator core be able to deal with
+> resources it didn't request. Deprecate this function so that we don't
+> get more users in the tree.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
-> new file mode 100644
-> index 000000000000..bf79c7a1719b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-wl-icled.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for WL-ICLEDs from Wurth Elektronik.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-driver as Linux driver? Then drop and describe hardware.
-
-Also drop full stop
-
-> +
-> +maintainers:
-> +  - Ante Knezic <ante.knezic@helmholz.de>
-> +
-> +description: |
-> +  The WL-ICLEDs are RGB LEDs with integrated controller that can be
-> +  daisy-chained to arbitrary number of LEDs. Communication with LEDs is
-> +  via SPI interface and can be single or two wire, depending on the model.
-> +  For more product information please see the link below:
-> +  https://www.we-online.com/en/components/products/WL-ICLED
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - we,1315x246
-> +      - we,1315x002
-> +      - we,131x000
-> +      - we,131161x
-> +      - we,131212x
-
-Is that a wildcard in each compatible?
-
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  '^led@[0-9a-f]$':
-> +    type: object
-> +    $ref: leds-class-multicolor.yaml#
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description:
-> +          This property denotes the LED position in the daisy chain
-> +          series. It is a zero based LED identifier.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-
-Missing ref to spi periph schema. See other bindings.
-
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        icled@1 {
-
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-led-controller
-
-> +            compatible = "we,131x000";
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            reg = <1>;
-> +            cs-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-> +
-> +            led@0 {
-> +                reg = <0>;
-> +                color = <LED_COLOR_ID_RGB>;
-> +                function = "error";
-
-Use standard defines.
-
-> +            };
-> +
-> +            led@1 {
-> +                reg = <1>;
-> +                color = <LED_COLOR_ID_RGB>;
-> +                function = "warning";
-
-Best regards,
-Krzysztof
-
+Yours,
+Linus Walleij
