@@ -1,78 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5325D43146
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925BD19E7F9;
+	Tue, 15 Apr 2025 06:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698981; cv=none; b=mBIuUFodGM27exvRijc3vFoZMTWfmV70ZABlD/9zPp3epMuTJIZhDzAhNrsa5Z48OSmliIin8TnnLxCFvfp9tikQkWhH2oQMbEtyB4j01XtgLYSMrGFfmR5NtLYG3zhgDwnaWQK91ixfdQPJsva+oFAf0MYaXogozs2a65EX2BM=
+	t=1744698998; cv=none; b=kd+6PoF651tU9BP6BBF05DGs/QSbE3Clc27Sj8Y+PkT8BgIoX+SzHYgfhQZW6WOd0HEISeoOq3niHrRrqdb5KYRF1lsOkvmfdlmpH9eplgFiPOx130VlZsewAIcgyydrp3qmpDdzBKakUhMpcknSTMzHfcximREt5CEJlR9y0yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698981; c=relaxed/simple;
-	bh=SywP8t9wqOOU/8ix1gqduSsYqPmyq/rtNdkMj6TjcXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I27cbouC90A6xHe8nRNEr/wW9ox64FrAmoMnSFDv4oFtAan+B/KBrn84Fl3hvfLF8DDoMlXAgfU4mQJ8tjP929rfgQ2rQS4g44CsolR0DzqVr6pCnCOLCA075DE6xAmuf75JEvkQh33m05TfGb1IYOe99fp4Oky5X4EQcPopcsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k00gBR3r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744698998; c=relaxed/simple;
+	bh=DHUV3MAYnLx14usRygDI5XOlCbsTZ4F018P9Ye7MW1c=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=a6gEc6W1vHpgN1CmxNxJkjUxB7j1hOylNPKN5gSVC/SZmXHu6xaX4nhB0TSjmdh3Q8vnp7MkWccv8te/RKp3Cl2Eyp6RcDVcaYAWH/Nfh+ML1IRuAeigh1Q/3O1ufJw/1G4dPoTwMHn6SQHQ/9hQmqiXTGfJs7Xo88kfsLxsP6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NYpdtCQz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=75WBXRH5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k00gBR3r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B8D5C4CEDD;
-	Tue, 15 Apr 2025 06:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744698976;
-	bh=SywP8t9wqOOU/8ix1gqduSsYqPmyq/rtNdkMj6TjcXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k00gBR3rr2VN5htvNnFsTKuaPzBEF3nmYk9+S8n8OaMZLoVgO7xH2lvyB2cJE2Pgt
-	 YkXCx92F1xTG71gOEbqOy54C4f1fKAOGVSM3D6VOxjjGJMM5W/U5uYlI/5Sar03ePq
-	 yDlKOFabvRYQk6MkxFzAW8R2YKbWlo+iI/dWGC0W571Ugmq4KSLQKxZZhT/NdyVY1A
-	 ISeCamnd8mY3dT1dZmwP8mxUAPjcil4UVFqgYCZfQbmaiusm58XTiweGxw8zPbuFaR
-	 cixDdH7qEcTv1MbGsDRKNXwr8Ebjw6Ng2IrUCwsYDXH65G8cJGPFs5iBkwIlalewKn
-	 S1eIrr6S9uq2A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4Zu1-0000000040P-1Y3Q;
-	Tue, 15 Apr 2025 08:36:13 +0200
-Date: Tue, 15 Apr 2025 08:36:13 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: Reformat code in
- gb_operation_sync_timeout()
-Message-ID: <Z_3-XS2DHEbqkSdx@hovoldconsulting.com>
-References: <20250413104802.49360-2-thorsten.blum@linux.dev>
- <Z_yztGweLAfJgwXh@hovoldconsulting.com>
- <BF2CF4C6-5381-4266-9E49-9C81E9604007@linux.dev>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NYpdtCQz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="75WBXRH5"
+Date: Tue, 15 Apr 2025 06:36:34 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744698995;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NfUDejjWqOqJXYAaBs/4aO76M02EaPR8YrF/co/oIII=;
+	b=NYpdtCQz/IvahgJwfZL5R5u1j9i4cE4DtPMa94HYERYoMjJwgC876p3iFEH71sqdJCjIp8
+	lrj/3dgTVKbfhgKGKPc3f6iHMeRw6b98i7uN172P1ejWGes2dR3XUHr652XlZ3lElBeJw1
+	YtzcOyPthyn1ey2aq379MsqaffEg2ijPLjfgrIPfv9eHNyG8tQB4oyEQLyKJgNWArk6QwT
+	c9m904o0QDe8QdsDX4je1nYqTNk73chKt00SLSAGmnD77mmkEJ296Cp8FU2mTij54QudEJ
+	BCe2BeAL/2R/mSU/6lyMNwK3xn9qr6kl9DsoSlKxW8zXgttIfXA5ANB1JMcDTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744698995;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NfUDejjWqOqJXYAaBs/4aO76M02EaPR8YrF/co/oIII=;
+	b=75WBXRH55nanlf0kuF2uY/2vnV0bv+l/dsrjc4M4h3MDa12NRT7DxYHc8B6GIgHc3BUWWf
+	/5X6ZBEawtuVUuAw==
+From: "tip-bot2 for Jonathan Currier" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] PCI/MSI: Add an option to write MSIX ENTRY_DATA
+ before any reads
+Cc: Jonathan Currier <dullfire@yahoo.com>,
+ Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20241117234843.19236-2-dullfire@yahoo.com>
+References: <20241117234843.19236-2-dullfire@yahoo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BF2CF4C6-5381-4266-9E49-9C81E9604007@linux.dev>
+Message-ID: <174469899423.31282.16890035810253105875.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 05:00:41PM +0200, Thorsten Blum wrote:
-> On 14. Apr 2025, at 09:05, Johan Hovold wrote:
-> > This just makes the code *less* readable.
-> 
-> I guess you prefer the code with curly braces?
+The following commit has been merged into the irq/urgent branch of tip:
 
-Around multiline statements yes, but the proposed if-else here also
-obscures the logic for no good reason.
+Commit-ID:     cf761e3dacc6ad5f65a4886d00da1f9681e6805a
+Gitweb:        https://git.kernel.org/tip/cf761e3dacc6ad5f65a4886d00da1f9681e6805a
+Author:        Jonathan Currier <dullfire@yahoo.com>
+AuthorDate:    Sun, 17 Nov 2024 17:48:42 -06:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 15 Apr 2025 08:32:18 +02:00
 
-> What about the Linux kernel coding style [1]? Specifically "Do not
-> unnecessarily use braces where a single statement will do."
-> 
-> My patch just removes any unnecessary curly braces, resulting in less
-> lines of code and no line break in the memcpy() arguments.
+PCI/MSI: Add an option to write MSIX ENTRY_DATA before any reads
 
-I really don't care, the code is more readable as it stands which is
-what matters.
+Commit 7d5ec3d36123 ("PCI/MSI: Mask all unused MSI-X entries") introduced a
+readl() from ENTRY_VECTOR_CTRL before the writel() to ENTRY_DATA.
 
-If you want to practise sending patches you can send all the "cleanups"
-you want for code in drivers/staging where churn like this may be
-accepted (and where the core greybus code no longer lives, contrary to
-what your Subject suggests).
+This is correct, however some hardware, like the Sun Neptune chips, the NIU
+module, will cause an error and/or fatal trap if any MSIX table entry is
+read before the corresponding ENTRY_DATA field is written to.
 
-Johan
+Add an optional early writel() in msix_prepare_msi_desc().
+
+Fixes: 7d5ec3d36123 ("PCI/MSI: Mask all unused MSI-X entries")
+Signed-off-by: Jonathan Currier <dullfire@yahoo.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20241117234843.19236-2-dullfire@yahoo.com
+---
+ drivers/pci/msi/msi.c | 3 +++
+ include/linux/pci.h   | 2 ++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 6569ba3..8b88487 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -615,6 +615,9 @@ void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc)
+ 		void __iomem *addr = pci_msix_desc_addr(desc);
+ 
+ 		desc->pci.msi_attrib.can_mask = 1;
++		/* Workaround for SUN NIU insanity, which requires write before read */
++		if (dev->dev_flags & PCI_DEV_FLAGS_MSIX_TOUCH_ENTRY_DATA_FIRST)
++			writel(0, addr + PCI_MSIX_ENTRY_DATA);
+ 		desc->pci.msix_ctrl = readl(addr + PCI_MSIX_ENTRY_VECTOR_CTRL);
+ 	}
+ }
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 0e8e3fd..51e2bd6 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -245,6 +245,8 @@ enum pci_dev_flags {
+ 	PCI_DEV_FLAGS_NO_RELAXED_ORDERING = (__force pci_dev_flags_t) (1 << 11),
+ 	/* Device does honor MSI masking despite saying otherwise */
+ 	PCI_DEV_FLAGS_HAS_MSI_MASKING = (__force pci_dev_flags_t) (1 << 12),
++	/* Device requires write to PCI_MSIX_ENTRY_DATA before any MSIX reads */
++	PCI_DEV_FLAGS_MSIX_TOUCH_ENTRY_DATA_FIRST = (__force pci_dev_flags_t) (1 << 13),
+ };
+ 
+ enum pci_irq_reroute_variant {
