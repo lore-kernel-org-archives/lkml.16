@@ -1,61 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5354F1A29A;
-	Tue, 15 Apr 2025 00:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FCFB1CA81;
+	Tue, 15 Apr 2025 00:18:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744676234; cv=none; b=GND9hImpy85geSKJyVR1x4crPZNHCatMp/kzhxznufiqaxn48g8m1UTJO3wvi1JivmtcHKZuywQw6V4QF6t4pTmYLOpLpf4gHvq6ZjDKBCuRurZp9AiKxgF9POMINgF14yaIIdY4hYo1Gx4ihyQL4zTgRVKF5lL6YpeGuZmlCZk=
+	t=1744676292; cv=none; b=OIihIgnJTxz80dABCu+IJivJ41JxXeNk+BcxQtRW1gZS6+4wlheoASGGdjlRjE1cHTHQL/5FM7ubEv0mL+L8KeB5HiET+MuvM4U5cVDg5BBgtaHEsd/RgQP9MQNRrnQCC4buLqkmdi18ahA10WHYnywsCKf9az/iZBpy827tf7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744676234; c=relaxed/simple;
-	bh=u8pUDLjTJYg0M7lx8nH/iZVN19UT7IjeebixwVF3GWo=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=tGG8Yh32kzRGKd4XcfPsvJmsA5dNHlgbq5NlsINWpfzTwCp88jRSwmThx4twDAPQbMnfZAL0k6UIqjl+RMO8nIGf5qRuQu0sbKP/GlEHm2bW6GnTG8P1pkj0rU57fc2jOAcVF/a8ETTGYXnqtueAod886InkYM9sw8OUJfcHnqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmOc4dKx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744676292; c=relaxed/simple;
+	bh=En+g8/MYoY3+vHqrlspwzisTuuyIQjqOggN9YUEOg8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMVzUYHzGv8WGmrai/hjeeGNc/swKI0akZMtDrM9ZRaCcyO10IpMyEUo89rWtzyY93B5YTZY3ZIU61EPzeiZhoOhVn/e2ujaWM0rPL/NWGUyGYpTFJtUxdbM3g+/m1e3jMXhM6+QeeX8Z0gPBM5j44Jgw+vQ9eDhnJXvXGmVo40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hg+vgASn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmOc4dKx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86F5C4CEE2;
-	Tue, 15 Apr 2025 00:17:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hg+vgASn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F69C4CEE2;
+	Tue, 15 Apr 2025 00:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744676233;
-	bh=u8pUDLjTJYg0M7lx8nH/iZVN19UT7IjeebixwVF3GWo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=GmOc4dKxSbt8DH+9plUWbWoiDbdrlVcVnMOzzA2tON8bTTt0aDzKDCJlFQ+878V1Z
-	 rKo6oloFxv/lapdi8ojCoG1XgUd3PWBYWBAqZ0imC30oBzJjJKm+1/wx8tlGNZTkrF
-	 kbu301SZrXLy2IHWY8OzqtEw1W84WvycbdObw+cduXEJ1Ro5YvFVO35aEVsyjZPmDr
-	 S3fpPVH3XycaUiWck++UnzrgwjVWn0qKEdPhgXVcphQ5TRUGGUIcqbxuJLzfg+VlpZ
-	 XG3ENnEjgq5Od/LVCUKq5VluxXKVH8+26GbjFThuCAu5+Px0REO/7CwViOqMD0NY/8
-	 BmCtSY87R/8bQ==
-Message-ID: <8494f5e76de6544e3d83b5b763ca42a2@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1744676290;
+	bh=En+g8/MYoY3+vHqrlspwzisTuuyIQjqOggN9YUEOg8w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hg+vgASn1CLUWwEYOx1nDjG/CuaQUGKdSLQsZQydi6tPdHfrEtfntlwNvPTnNi92n
+	 B6dXBcFA6UQwS8JXAWq+wu5uzPKV/E0aNxX67wHMgmjq5eGmTbP3hu1FUArr8f5Jnc
+	 4PaZP8IcW1iomq176t58lC8WyqSYApU4aKdCCeFX3YG9Dgl+ingFbJWHYC0NrZl9fO
+	 c3tqkEqMBIcYVV4AOYvFHo0zMGZbR9FHsTjUvoVu90tai9b4M25xW/nKUiaE3qQ4vH
+	 UMd5nbgvaL8h94V+HM7jk1gEHt7UpyXR5Aocyvj5id+ng+qHDOeNOhDWe/LqiCR5Z5
+	 s3hpeNOsSMsPw==
+Date: Mon, 14 Apr 2025 17:18:08 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: kernel test robot <lkp@intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>
+Cc: oe-kbuild@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: drivers/bluetooth/hci_vhci.o: error: objtool:
+ vhci_coredump_hdr(): STT_FUNC at end of section
+Message-ID: <lvkw74yzzsqh2jnt267wdqir43leq35jehy6spcblwv2havo7w@pwqle5eer2h3>
+References: <202504130652.o7UWcPMe-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250409-spmi-v4-2-eb81ecfd1f64@gmail.com>
-References: <20250409-spmi-v4-0-eb81ecfd1f64@gmail.com> <20250409-spmi-v4-2-eb81ecfd1f64@gmail.com>
-Subject: Re: [PATCH v4 2/3] spmi: add a spmi driver for Apple SoC
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sasha Finkelstein <fnkl.kernel@gmail.com>, Jean-Francois Bortolotti <jeff@borto.fr>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Conor Dooley <conor+dt@kernel.org>, Janne Grunau <j@jannau.net>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>, Sven Peter <sven@svenpeter.dev>, fnkl.kernel@gmail.com
-Date: Mon, 14 Apr 2025 17:17:11 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202504130652.o7UWcPMe-lkp@intel.com>
 
-Quoting Sasha Finkelstein via B4 Relay (2025-04-09 14:52:13)
-> From: Jean-Francois Bortolotti <jeff@borto.fr>
->=20
-> The connected PMU contains several useful nvmem cells such as RTC offset,
-> boot failure counters, reboot/shutdown selector, and a few others.
-> In addition M3+ machines have their USB-PD controller connected via SPMI.
->=20
-> Signed-off-by: Jean-Francois Bortolotti <jeff@borto.fr>
-> Reviewed-by: Sven Peter <sven@svenpeter.dev>
-> Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-> Co-developed-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
+On Sun, Apr 13, 2025 at 06:16:42AM +0800, kernel test robot wrote:
+> :::::: 
+> :::::: Manual check reason: "only suspicious fbc files changed"
+> :::::: 
+> 
+> BCC: lkp@intel.com
+> CC: llvm@lists.linux.dev
+> CC: oe-kbuild-all@lists.linux.dev
+> CC: linux-kernel@vger.kernel.org
+> TO: Josh Poimboeuf <jpoimboe@kernel.org>
+> CC: Ingo Molnar <mingo@kernel.org>
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   b676ac484f847bbe5c7d29603f41475b64fefe55
+> commit: 3e7be635937d19b91bab70695328214a3d789d51 objtool: Change "warning:" to "error: " for fatal errors
+> date:   12 days ago
+> :::::: branch date: 2 hours ago
+> :::::: commit date: 12 days ago
+> config: x86_64-buildonly-randconfig-001-20250413 (https://download.01.org/0day-ci/archive/20250413/202504130652.o7UWcPMe-lkp@intel.com/config)
+> compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250413/202504130652.o7UWcPMe-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/r/202504130652.o7UWcPMe-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> drivers/bluetooth/hci_vhci.o: error: objtool: vhci_coredump_hdr(): STT_FUNC at end of section
 
-Applied to spmi-next
+Hi Nathan,
+
+This is looking like a Clang bug to me.  .text.vhci_coredump_hdr has
+zero bytes, and its zero-length vhci_coredump_hdr() function is
+referenced by force_devcd_write() as a function pointer.  I wasn't able
+to find any undefined behavior that might trigger that somehow.
+
+-- 
+Josh
