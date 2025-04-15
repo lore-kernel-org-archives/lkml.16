@@ -1,134 +1,92 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD19B24DFFA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD1528E3F;
+	Tue, 15 Apr 2025 20:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744747908; cv=none; b=TLaa90YA65Z8czJBbVtVv1YIGDYfQFVJ6ZDu0zIx0H7cSmE1tJU9h3KwBQ4Q17SSLs6YgyzP22TFLo/o/U7QFN1ycMu2U08QEaWdA6jfnR3KtvEUhla+8Cv77AwjsH3wBe3q9D172Bvons4GnFOTDlBV5rXNq4SfA+sLyLoSurQ=
+	t=1744747946; cv=none; b=l5zq+oLWyJkPxZyJPfhO6OYBsxvo2rzZb+b0ReSva5hzLiWpE36bY32SZlhaYIsqhZayWoFPBbbWTfay9qHomh7HiAIYwzOI3GUrjN+mbYgKa7k7zE94/QIBz83mS569k+1qkw6SkBPAp8XTlwuYWCDtAUKBpNKEbFeI/ksMUaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744747908; c=relaxed/simple;
-	bh=j6DpsRtxeAufc7WU767Ru+aAt+J5SQT9TpcAKaY4mu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mD8orY7xc/WSWZSEpSQkQrd6j9FGG785tHWurJijtgLK5k/t0GcYphqlraxoaPe/eq0nW4921WvugwdLqjxpXiu7XyrCLMXD/pAttvQ8o6pJRK7N5Z9TczLt0KLcQT7apXfkHDHtoXpIOjXKa846MiISh+x9mXV6M4P1C8VZtss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=O3GVqXD9; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744747946; c=relaxed/simple;
+	bh=CRMG8Zo6ps4IacifJ4+/Vz/sac8EDxbZzPUiT/AZtfI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hNZO4PZsZrscYtrzGzvyjWB1/TU+aw1/PDPZIYzLipAZ7V6kLCKaPeJESqdG+Vygct7kM7CccavgCNL58yoN/6WCtBdaX5Xw1LMcEt96B+hIVWoc/XaaFIVLkNi33Tf277tdcGNOW7XDdgP5myWKJb8FX0cTYFZz8yJ5VyGKED8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsSnOwDI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="O3GVqXD9"
-Message-ID: <1bf43164-e6de-445f-9c3d-94d69a149a66@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744747904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RabZih8waE5zBMPNF2lBOJUi8w/qOpEgWhUZo/pD2tQ=;
-	b=O3GVqXD9iOIsI52flwOjSVur5HU3PgOU5fbpc57OxHmva1NCjRiLS3V/gZndAcPFdSz0hH
-	+3TID8Ieq7Ss4fSV6mO6ilT29CisQEvnPNElZ/+7NU9iJd3ZXH6cfIAsamwuiabctOjntG
-	vY9f2nSjYZMsUyFy/Moiy45pVBhNhl0=
-Date: Wed, 16 Apr 2025 01:40:51 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsSnOwDI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88A88C4CEE7;
+	Tue, 15 Apr 2025 20:12:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744747946;
+	bh=CRMG8Zo6ps4IacifJ4+/Vz/sac8EDxbZzPUiT/AZtfI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nsSnOwDIglcMO65HoUItvURy0yMGsR+RO4D1XCsFYzJOCxsYxxgxqcqYEwTAxGTBJ
+	 gTreP+lqa1LCvBssGXg2Wyo1uJ/AELu0llj4hosvjuYvs9Rmny/cfuA7aYw+Etb9/5
+	 rA1/JdGAe5BVvJyGh/9S8RcCAHn2JnEjvJ7LLmUvaoIjyeiqxZlqFw4v5HfZsFXUhS
+	 br1YY8xeyKeeyadZdfX5okG8aYmeLZNtjSCn71cMKqZjvvXeyWYrDLf+outvqDSpxV
+	 5Pw0JeecFPkVW+kuoTLumD0J6Ya81dgmTQPPYFGaJpYBSRYecvcpAUqYDjquy0htQg
+	 q2H+UJOAjPSDg==
+From: Mark Brown <broonie@kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, 
+ Sowjanya Komatineni <skomatineni@nvidia.com>, 
+ Laxman Dewangan <ldewangan@nvidia.com>, Breno Leitao <leitao@debian.org>
+Cc: linux-tegra@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, rmikey@meta.com, kernel-team@meta.com
+In-Reply-To: <20250401-tegra-v2-0-126c293ec047@debian.org>
+References: <20250401-tegra-v2-0-126c293ec047@debian.org>
+Subject: Re: [PATCH v2 0/2] spi: tegra210-quad: Improve messages on
+ pathological case
+Message-Id: <174474794125.1085405.1696078775184536618.b4-ty@kernel.org>
+Date: Tue, 15 Apr 2025 21:12:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 13/17] drm/bridge: cdns-dsi: Fix REG_WAKEUP_TIME value
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Jayesh Choudhary <j-choudhary@ti.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>
-References: <20250414-cdns-dsi-impro-v3-0-4e52551d4f07@ideasonboard.com>
- <20250414-cdns-dsi-impro-v3-13-4e52551d4f07@ideasonboard.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <20250414-cdns-dsi-impro-v3-13-4e52551d4f07@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Hi Tomi,
-
-On 14/04/25 16:41, Tomi Valkeinen wrote:
-> The driver tries to calculate the value for REG_WAKEUP_TIME. However,
-> the calculation itself is not correct, and to add on it, the resulting
-> value is almost always larger than the field's size, so the actual
-> result is more or less random.>
-> According to the docs, figuring out the value for REG_WAKEUP_TIME
-> requires HW characterization and there's no way to have a generic
-> algorithm to come up with the value. That doesn't help at all...
+On Tue, 01 Apr 2025 06:47:48 -0700, Breno Leitao wrote:
+> I maintain several hosts with tegra210-quad controllers, some of which
+> experience data transmission failures. Debugging these issues has been
+> challenging due to excessive log messages from the driver.
 > 
-> However, we know that the value must be smaller than the line time, and,
-> at least in my understanding, the proper value for it is quite small.
-> Testing shows that setting it to 1/10 of the line time seems to work
-> well. All video modes from my HDMI monitor work with this algorithm.
+> Since these devices do not have a way to reset[1], then we want to avoid
+> warning and printing a bunch of messages, otherwise the host will
+> overflow the serial. Fix it by:
 > 
-> Hopefully we'll get more information on how to calculate the value, and
-> we can then update this.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> ---
->  drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> index 182845c54c3d..fb0623d3f854 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> @@ -786,7 +786,13 @@ static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
->  
->  	tx_byte_period = DIV_ROUND_DOWN_ULL((u64)NSEC_PER_SEC * 8,
->  					    phy_cfg->hs_clk_rate);
-> -	reg_wakeup = (phy_cfg->hs_prepare + phy_cfg->hs_zero) / tx_byte_period;
+> [...]
 
-I think the primary point of failure in the original calculation is due
-to fact that the hs_prepare and hs_zero are defined in picoseconds (ps),
-and the tx_byte_period is in nanoseconds (ns) as evident by the usage of
-NSEC_PER_SEC macro.
+Applied to
 
-The resulting tx_by_period is 1000 times smaller, and the reg_wakeup - a
-1000 times larger. =)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Further, the TRM does indeed mention that some characterization is
-required to fine tune the exact reg_wakeup value, but it ends up giving
-a vague-ish formula -
+Thanks!
 
--> reg_wakeup_time = wakeup_time_dsi + wakeup_time_cl + wakeup_time_dl +
-		     (hs_host_eot × 4 / lane_nb)
+[1/2] spi: tegra210-quad: use WARN_ON_ONCE instead of WARN_ON for timeouts
+      commit: 41c721fc093938745d116c3a21326a0ee03bb491
+[2/2] spi: tegra210-quad: add rate limiting and simplify timeout error message
+      commit: 21f4314e66ed8d40b2ee24185d1a06a07a512eb1
 
-I think the characterization may only be required for the
-wakeup_time_dsi component. The existing formula in the driver (after
-corrected for time unit) is the wakeup_time_dl component. wakeup_time_cl
-seems to be a range of constants, which the phy-core is auto-settling on
-defaults. The document never specifically mentions "hs_host_eot" other
-than the equation, but on the off-chance it is same as phy_cfg->eot,
-then that's 0 and avoidable.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-> +
-> +	/*
-> +	 * Estimated time [in clock cycles] to perform LP->HS on D-PHY.
-> +	 * It is not clear how to calculate this, so for now,
-> +	 * set it to 1/10 of the total number of clocks in a line.
-> +	 */
-> +	reg_wakeup = dsi_cfg.htotal / nlanes / 10;
->  	writel(REG_WAKEUP_TIME(reg_wakeup) | REG_LINE_DURATION(tmp),
->  	       dsi->regs + VID_DPHY_TIME);
->  
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
--- 
-Regards
-Aradhya
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
