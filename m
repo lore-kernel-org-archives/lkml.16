@@ -1,71 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD1C1BEF87;
-	Tue, 15 Apr 2025 08:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964DC1AF0AE;
+	Tue, 15 Apr 2025 08:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706549; cv=none; b=D4R70sV1jQblqI38ckfYpkzSdv8nRTbiPEG62ksK5Ecw0xNnKgY9lSuywpKhAS1gpEJXdvxX5zWIYiJ/tMPFpT6eMn1dbTjsas4or2Zb0eoSNOvKbXPz7BlVvLBGhnMb2Uu/xNfkRV2ujuwrBK6YiNVgorX569H/+5dUq8CrM7k=
+	t=1744706605; cv=none; b=Liu86L2bshNTYmlh1IEgdcQqu3K4795O5n93lg1RspaIQEb/tAFMzyL+rd0CNIYqf4ATGVMfygFyllGfpoQghr26jKBN2F8VLkXLdvp4zjCujpB+s8PUyVWrVzA8QecOSFxz5VTKKzoBBMtg8DIU3YxWIdNBVA68sU+/k5UfWrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706549; c=relaxed/simple;
-	bh=w20RGK1lkSyIU02M7FlR9nHuOTWKhV+wVle+Ia548sM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqmkrUM2uxzaU61SG/yvk1jGtNaSOKmdhlyQ91fDru/WZVXCb1w7xe3BU4tR/iFOOuSXUjhAF+FOT3CZpg02l1mFttRM/9z2Gc5Wp5v6pmxosIU/MNtB9sc/+MEirJaHNiwzj32zUORTJ8Z32ySPc+Ar55ZZgOnTiNbSpv2ePf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFr04ROQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFr04ROQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2D0C4CEDD;
-	Tue, 15 Apr 2025 08:42:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744706549;
-	bh=w20RGK1lkSyIU02M7FlR9nHuOTWKhV+wVle+Ia548sM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qFr04ROQjCPZskawdYZm1LJIXKm+wWP1N3bQQQ/0JzdF/sxRmQ4fCmk3CMrpdH174
-	 o7IhOJ1/wRb8yiDG5CY+ZOojbCTn77uDbhnjPk1g108VCVJXnaizQtBl5IBI9+TqWv
-	 RtepyqGdlw71edWkKAJNJVH6BrzB4hg17WIqMm0T+Lvz39aSAAJkC+L1zTkpemADhe
-	 NdnhH9cR0zz/wJU42JKbVAz8o9vuFY8ItIAa/ULy2JqVXkKoCWkEChvv9sbaNZkm2a
-	 ur+ch3z+VHVFQ1ZtdWopUM6LPTFtiLoD2/mNtYzxZHhd7tgW2RXMYmAVURq7yNFkyM
-	 XGgIYGWJhJPQg==
-Message-ID: <9333ced0-88ac-4035-a2da-b2ec9ab4eccb@kernel.org>
-Date: Tue, 15 Apr 2025 11:42:25 +0300
+	s=arc-20240116; t=1744706605; c=relaxed/simple;
+	bh=HtsOkMq+WLgJHrBJNsrJTc1wbQ/EcZYFGAgOXBZbQrM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fb4Ye/nQcliAp/DdSredi9TcSLaFYSaZZ1pvrEUK48aOR6TDTrqeX8dzAaNBYKApXKJRz8V+evCUEy7mx+f6Mj5Nf1RCSKSVamNzbrqAeYIEKRfonXMxmtOb5Za0NKLbypFDwBHmZjVtRiDXscabziUF8cWCPqGWOCOMhMCac/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowACXOTYgHP5nYXz5CA--.18019S2;
+	Tue, 15 Apr 2025 16:43:13 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: arend.vanspriel@broadcom.com,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v3] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
+Date: Tue, 15 Apr 2025 16:42:39 +0800
+Message-ID: <20250415084239.2906-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: qcom: sm8650: enable QoS configuration
-To: neil.armstrong@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250407-topic-sm8650-upstream-icc-qos-v1-1-93b33f99a455@linaro.org>
- <b9f90b0c-cae5-4dc3-817a-183b49f947b9@kernel.org>
- <d80e2553-e5b9-4b79-b96e-f7092ac8d707@linaro.org>
-Content-Language: en-US
-From: Georgi Djakov <djakov@kernel.org>
-In-Reply-To: <d80e2553-e5b9-4b79-b96e-f7092ac8d707@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACXOTYgHP5nYXz5CA--.18019S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4kuFWkAFWrWF4Dtr4fXwb_yoW8AF1fpr
+	4xXayqyFy8Xr1Sgan3trZxG3W5K3WkJayvkay29wn7ur4kCw10gr4rKFy09r1kCrWxA347
+	ZFWUtF1DXr17GFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
+	W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU0_MaDUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgNA2f95Gzj0wAAso
 
-On 15.04.25 11:17, Neil Armstrong wrote:
-> On 14/04/2025 19:08, Georgi Djakov wrote:
->> On 7.04.25 18:16, Neil Armstrong wrote:
->>> Enable QoS configuration for master ports with predefined values
->>> for priority and urgency forwarding.
->>>
->>
->> Hi Neil,
->>
->> Thanks for the patch! It looks fine, but i noticed that there should be also
->> QoS configuration for the qnm_apss_noc node, but it's missing from the driver.
->> Do you know if skipping it was intentional?
-> 
-> The qnm_apss_noc node is not present in the upstream driver, I wanted to add it
-> in a second time. Or I can do it first as you prefer
+In brcmf_usb_dl_cmd(), the error logging is not enough to describe
+the error state. And some caller of the brcmf_usb_dl_cmd() does not
+haddel its error. An error log in brcmf_usb_dl_cmd is needed to
+prevent silent failure.
 
-I was just wondering if there is any specific reason for not adding it or was
-it just missed. A follow-up patch is fine.
+Add error handling in brcmf_usb_dl_cmd() to log the command id and
+error code in the brcmf_usb_dl_cmd() fails. In this way, every
+invocation of the function logs a message upon failure.
 
-Thanks,
-Georgi
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
+v2: Remove redundant bailing out code.
+
+ .../wireless/broadcom/brcm80211/brcmfmac/usb.c   | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+index d06c724f63d9..a11a6d9f3c2b 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -744,12 +744,16 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
+ 	char *tmpbuf;
+ 	u16 size;
+ 
+-	if ((!devinfo) || (devinfo->ctl_urb == NULL))
+-		return -EINVAL;
++	if (!devinfo || !devinfo->ctl_urb) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	tmpbuf = kmalloc(buflen, GFP_ATOMIC);
+-	if (!tmpbuf)
+-		return -ENOMEM;
++	if (!tmpbuf) {
++		ret = -ENOMEM;
++		goto err;
++	}
+ 
+ 	size = buflen;
+ 	devinfo->ctl_urb->transfer_buffer_length = size;
+@@ -783,6 +787,10 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
+ finalize:
+ 	kfree(tmpbuf);
+ 	return ret;
++
++err:
++	brcmf_err("dl cmd %u failed: err=%d\n", cmd, ret);
++	return ret;
+ }
+ 
+ static bool
+-- 
+2.42.0.windows.2
+
