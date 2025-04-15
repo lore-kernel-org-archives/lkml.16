@@ -1,116 +1,93 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C88E2500AF;
-	Tue, 15 Apr 2025 19:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B992512CF;
+	Tue, 15 Apr 2025 19:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744745362; cv=none; b=F7N6dR2eXe5LU30SU/vD3S0GMaE03CaOUz6r4n7cu2kQW/xYGY8rWlebPAQrn+m6ZRry7qSpXKXpkMsrb5mS9FJfju4oNHSQjJ8hYQ+NAG3vdyvhxnqkwSsDPmZ9NNmFUAV3NvWpqtebrRF6puUQjZD+Q8RD+5XqQeomEcpdEyY=
+	t=1744745507; cv=none; b=nBNdLaz3fHiGM87sD4a+tDskbAs9KRgul8ZB8XchKmd4o9ZSlvlRdWUoRVxkBtQgaFSL84TSB//Fvx2yT4rKgkbmRpNS5OYvRheeO0tPR2j9JF7FT4jw78BeCp7g13NIyuXy5TLd7tA43IZRF9FAD6BRLV9YLBvfvXvEB2kpnk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744745362; c=relaxed/simple;
-	bh=OgrBYJChauo/HPg7YP4x5vW5FU/rpTEOS7oljUwK8rM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pTkX0e9HEHNr3t63e/ZItYunAbWKVh37mPHu0gKAAzrvetUwziHhicCP5H9l3muPGBVwwnojW4rhmucR/tWsQN76QDAGOGyRqJCJXsErlc3Tc7A2cnY/yx9yC3LBfZgMjuWa9z8Q2StTwbvpSuekwvUJW/O57gPFnwL0Rwxl2bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaecf50578eso1042725166b.2;
-        Tue, 15 Apr 2025 12:29:20 -0700 (PDT)
+	s=arc-20240116; t=1744745507; c=relaxed/simple;
+	bh=uXrwHriue1xzFcX0NlnL7L4va+Nr2MvYO+zfZjiUBSg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EBNhBY6RBNX5rOyenrm3yFABJYLh4EsM8el1/lA2NfCYSqMkpQBtAl86s9Q7zpIovxvkxip+4RbexT01DWVWjGhrqOKATQtYcJCsoc19hCCKhyUPTSmVhAcn0PUKPG78MgiFwvS3H9kxIllYbuZBzdF2UvVRxNunlzApj8LViTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=c6q8v7qJ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="c6q8v7qJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-223f4c06e9fso3775ad.1;
+        Tue, 15 Apr 2025 12:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1744745505; x=1745350305; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uXrwHriue1xzFcX0NlnL7L4va+Nr2MvYO+zfZjiUBSg=;
+        b=c6q8v7qJG/Jc/8j8tvDuvsKJQoiBql6hie7KvxTXOHbaw+H5W3mVX4UNuo9iZ9VA3H
+         lce//ibmLinvVjBDGgYE9h10iStqChN0ZKlXsDx9mG/h9VDuwM3kAXtSkHT6Q21KDXHA
+         XTLQHg4sQYybEntOOPUJ/nkg/pQCT/mM0VfNDxpyc6FB2cnMEe+pBdi7yMBgLljWUBo6
+         6W+m5bDx8wfaS2finuvSrtmoaIWFC+/7LeiJ9pzOJjEYz8h0wh5SXZGcaV8/J+WdjtKi
+         EZeQCuITTdf9BquNKRBC9O6V/yKTA3u/gkQNv5BfvDDggiNXcLmWkuZLr+XvQZiesXVl
+         /9VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744745359; x=1745350159;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744745505; x=1745350305;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=i6hvu4BsV8Pf9sNrCipl1rnYTmbH/rxrZvF7/I/JnHw=;
-        b=DJyYG55cFkx8/YGCBfj0xPCmVQkNqS6tB5cLqMtrSUJANrq0PzjTvbLdwYjX4OqXdT
-         0/RFViI6ktzQIPZLj04l+g5px6nHBbVTceIyaoTItPK6FpNT4fohswc8LVGy0AyPOIPO
-         C2yCOk6bQy+rYVTeQ7iUEYVY8FprFzGfZXsGIbUDZ+sixFVjl86ih7el1lNWv5zxvTbx
-         yIPCQQyZ0kO05v+Tah2HL5OyLOhtM0fXtyiP1yPYOCvEFd2Xd/MiF0cC1Nj6WPe31zCJ
-         GVfksI1T+zCgLaqJgJcO8FNpIOxaBtzzrdSKLlfK07MAbIWueGk+HikWNC3nFW3bqH6d
-         8U4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU54nYcG8kPSkA5PDL2QQ53/hTLEuOjPxkU9eW5pNjcO4Al/eJ5GJ9jiIZzwPsk61uq1YW9FrxctJE+bio=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztHofTdmcqyCwIb3SLvXEZNpd6J75a9DP4YGjWFnpUDMZn9fZL
-	3zIzQzkPIJfogerlvWshV/JjsZz0fDzd6oZE/dk8cUUTj/qoq0z2
-X-Gm-Gg: ASbGnctcJumICfshQScBnLsOeh+6bcP+ZQJt7Ji81RNboMymUNl3zJstiSpFvW+QFWx
-	K7yPAbi+s7Qxk+b8qvsiY8gU82A9M04rPXpT4zC8y7kxvgJ4kOULIrHN3jDy8Fgs9y8+R7WklZH
-	RQK2S914seLCs1KZbMex0h0uHlsXiPQbXZohtSdIrP8p8swft4sp3s7O84aiNuxXuxC5kmJAh9/
-	RC1beS1QE8SD8OQ4f3cf7qwsULHFu8YCFkWusf/QvEeojqBUWv7PH+m6dEqF3HCL26vsg8kAeZ+
-	L7cQ/IE3btTK5bLtaRy+eakmdPkORaFD
-X-Google-Smtp-Source: AGHT+IGVfUJY7W1XY/WBNr6AudkjRfbjJR9dZA+ebNVkkbGmeuRcsY/9F3AKwsFYN6oIvfdsXAxr9Q==
-X-Received: by 2002:a17:907:c807:b0:aca:c4a6:cd90 with SMTP id a640c23a62f3a-acb3818e421mr28861666b.5.1744745359175;
-        Tue, 15 Apr 2025 12:29:19 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:70::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce732dsm1162393166b.171.2025.04.15.12.29.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 12:29:18 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 15 Apr 2025 12:28:59 -0700
-Subject: [PATCH net-next 8/8] vxlan: Use nlmsg_payload in
- vxlan_vnifilter_dump
+        bh=uXrwHriue1xzFcX0NlnL7L4va+Nr2MvYO+zfZjiUBSg=;
+        b=rl5Sn4Lltdeie/fZ5LdFI/WS8/WNKuV4BBzMDeddWQMHWWxY6PbDyyuVRkxADlhDcm
+         OwarZVAUCV2EnfBQobxnIGRMPfbRxuF+ydvuYfye2+WxdQMQzYSU1HKl/XjtY+Y4Sy4V
+         nBiGJX0ln/GSq9Nkv3sLrOq/rCIbBdw0Q6Y4LzjTpJqfv7aIzNY/5LeCKcf24IdG1r6y
+         CI9SQmMzTOAV1tBo3Do3Fejmai6/KAgPcZaTb+Xm+sCEIby4m9b4BvnDVWH83iZL6QQG
+         7ttTpEnzDb4TNMX6PFyuZh2/1bVb9nNLq/cI6yzYSYepw1uklBzGVtvYDm7zHALlJkXI
+         n/yA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/OLFJ7cHUS9flQr7El8WqOT861J+r3YBJH1gubI4Ujq8zUMMSCSWoYxAQIa9XVGYHRyIhbke7f6DkDgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxamAieCyMcy9Xt5rOLqSFCqq6ooo2/ZTUDoQjsB3RO6xAht3v
+	aX8LM9P40gPFMd9dIElfHZyVrRpLTUyXH7Q6u7DxZuRTiUta0Qa7TM2QvNUV9RNTLC49eih/KsF
+	GbMHTzcTe2JBi1pM6H5reNRUDmMYjgdmU
+X-Gm-Gg: ASbGnctGy+Rcs7coGDqcN+LVugtPQpItpA+r91yppLDElYWF6l8gA4/bYvoD3SUMc78
+	7VQGeLoGjPULVxAVUI5vSx1/Suc8dJB9AB7y5Uu/dy7xrhqTBaxEte/JM92ORjwu9Q7LFrELimQ
+	pf6n5alAFCHi5E8ENPJnTShC8jIAvJ08xgcoA=
+X-Google-Smtp-Source: AGHT+IGQimAHQywtuph0ZEiNuyta8ZWk38tDuzyx8t4xoSPIQI1oj5CZhpjrv2kNypRqIcjiDpKHDIsy7Vamei/H5z8=
+X-Received: by 2002:a17:903:3c6d:b0:215:a303:24e9 with SMTP id
+ d9443c01a7336-22c30cf9994mr10480955ad.3.1744745504687; Tue, 15 Apr 2025
+ 12:31:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-nlmsg_v2-v1-8-a1c75d493fd7@debian.org>
-References: <20250415-nlmsg_v2-v1-0-a1c75d493fd7@debian.org>
-In-Reply-To: <20250415-nlmsg_v2-v1-0-a1c75d493fd7@debian.org>
-To: kuniyu@amazon.com, "David S. Miller" <davem@davemloft.net>, 
- David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, kernel-team@meta.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1066; i=leitao@debian.org;
- h=from:subject:message-id; bh=OgrBYJChauo/HPg7YP4x5vW5FU/rpTEOS7oljUwK8rM=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn/rOCEUemxTQJ0FDQkWPxEA6SxvBxQkovRNSa7
- cWLckBmgDSJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/6zggAKCRA1o5Of/Hh3
- bV3RD/47K97tUzXRHFT1jK072Q9PeGv4X/4956I8jmYt9tyzYwDRYiocnRf2zCWf4STa7o3OMSW
- C8hHVG6ZVDopKtD1qvbkYRseEjehPGKNOM0505K1oMZmLoqIRmRxWq8A3isvFibavBqSLtVe0Pp
- ACYIEWyKYbHJ8oYOjbfdgPXJpcGbraxjMjYt1eDFVCcwdIP4gJ4IUdJCQw68Lkihy7Wr7zjmu6s
- pq5SlvzEvWK0HVJWidovqDeE7ZajFVPftAdsLDNEn4c8Dw7hobgjq4IzYGdeEx4wnKT+U0bHpEO
- QkIS7/9xhwdqdTI0S2UJvTXUlX3Stigvk4Q7fxoisu/XPakV+dCL47P9SzTpi7eFpFYZHe9FLBV
- CUOsdq6chW6fm+8JnMZ8b99VG4xI+l+3fFWuWp8tRTI0mq/BrnqwaN4HmEirSx02gpdpmiBN407
- hk6QMOKL3DW6QMzaYvx+S+6Vt7860dynu1afFOBjdFNAsAOmdJ1BRFE+2yYQ5l9TqOe0eGQCM3d
- esKZ2Sc5Jv049l+tK+IJgLufeICCfTsTb2oua9RVBL4aZuS0Cr4Wh4ZzcrwxanjDgyN1hJpgiBt
- faeB3T76cerrlBtUXFGrzZ2xf4ImFsccnUAnZKfpArdKwsMEKVdnCeIWwm+a4djnAWLGUd8o4LR
- NIZEwq7WCPGedVQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com> <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
+In-Reply-To: <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 15 Apr 2025 21:31:32 +0200
+X-Gm-Features: ATxdqUHuvaE_kTWnp1pw1aEWxbeqUvrLcUHl_SDv9pR8jWo7LjRdHj175WC1HZ0
+Message-ID: <CAFBinCDVd6eVFcDzP1N8ayS6OmVZng5ti2jrHfYkbqFY4BdfLQ@mail.gmail.com>
+Subject: Re: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
+To: Zhen XIN <zhen.xin@nokia-sbell.com>
+Cc: linux-wireless@vger.kernel.org, pkshih@realtek.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Leverage the new nlmsg_payload() helper to avoid checking for message
-size and then reading the nlmsg data.
+On Thu, Apr 10, 2025 at 5:46=E2=80=AFPM Zhen XIN <zhen.xin@nokia-sbell.com>=
+ wrote:
+>
+> Rtw88-sdio do not work in AP mode due to the lack of tx status report for
+Ping-Ke, in case you want to keep the spelling of rtw88 consistent:
+can you update it while applying the patch (or do we need a v3)?
+Same question for the other patch in this series.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/vxlan/vxlan_vnifilter.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/vxlan/vxlan_vnifilter.c b/drivers/net/vxlan/vxlan_vnifilter.c
-index 6e6e9f05509ab..d0753776d3394 100644
---- a/drivers/net/vxlan/vxlan_vnifilter.c
-+++ b/drivers/net/vxlan/vxlan_vnifilter.c
-@@ -411,13 +411,12 @@ static int vxlan_vnifilter_dump(struct sk_buff *skb, struct netlink_callback *cb
- 	struct tunnel_msg *tmsg;
- 	struct net_device *dev;
- 
--	if (cb->nlh->nlmsg_len < nlmsg_msg_size(sizeof(struct tunnel_msg))) {
-+	tmsg = nlmsg_payload(cb->nlh, sizeof(*tmsg));
-+	if (!tmsg) {
- 		NL_SET_ERR_MSG(cb->extack, "Invalid msg length");
- 		return -EINVAL;
- 	}
- 
--	tmsg = nlmsg_data(cb->nlh);
--
- 	if (tmsg->flags & ~TUNNEL_MSG_VALID_USER_FLAGS) {
- 		NL_SET_ERR_MSG(cb->extack, "Invalid tunnelmsg flags in ancillary header");
- 		return -EINVAL;
-
--- 
-2.47.1
-
+> management frames.
+>
+> Map the management frames to queue TX_DESC_QSEL_MGMT, which enables the
+> chip to generate TX reports for these frames
+>
+> Tested-on: rtl8723ds
+>
+> Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO =
+based chipsets")
+> Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
