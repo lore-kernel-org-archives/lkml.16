@@ -1,16 +1,16 @@
 Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B1621E0B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE5A21E0A6;
 	Tue, 15 Apr 2025 04:33:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744691602; cv=none; b=QDH71k+R0rCYklhoD0hHqIkuVjdst5SJOxPyNDSfHEYTKG1RBL0b33D0ImGMpLkKXyzfoe9aaqtig8Hk6+On647aCFOkseq7a9MhWZdyUAxK5kjsTYiLwUY4SozwupdWslbe4OLGafGGU25Kyp2zPoNNwhksXQwE4RH/2vqtjx0=
+	t=1744691602; cv=none; b=utsm9PxCF8PL2VUKq4BMBwpkMtFhul9K67B6e0URgYwKzgVHD570hy+kXvXCXVlDsUbSNjiQVkCR5Lw3kc5cIu6ujBou8gBugWv7qo3bLSpq5xBwt5LrsNJyqHV/nfTvcsSnf0nNWOmFpLQBeeSu/Fi+h/39+e1l1xd1prFjxO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744691602; c=relaxed/simple;
-	bh=5NiuUZyPNNRHGS09OfMi5gXlbyn66vSovJPHVv2RxHg=;
+	bh=YzUKU8kn34sjtdtovrzqRVvT15prf19xMPzU/lYPYKw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MqzSbc7X+g9PsYLalvPrgv9KZ5pvcPl6zY47Zqbjed9elMBkj1fQvDYP6GSKAPiOzXyjn2WRsjhsHiOac5o/zzzUnunlu8gDJjmSWtojX4GkoRuZ3RScxIYJsMRpcb8vDMd+dQkISiUTMbfBKqpryEtcRgugDWGKvMooeRdzDzE=
+	 MIME-Version; b=VQq1M2D0EtGQYtykMj9CWRhtgzLhWfXhLuYyVbpulTJgYq/VUj1GuXC0Ez+QLyWzWUGUdjAU2wWdxddyEBdadIWcxjGPWNaUNY3wVakJEL8I4mloN64v5SzUSciJtlK4fMyyVcmRBGwip2Jxsr3vexfcuTnexjtV3CoWCrAOLiQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; arc=none smtp.client-ip=46.19.9.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
@@ -18,8 +18,8 @@ Received: from [89.212.21.243] (port=52324 helo=localhost.localdomain)
 	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96.2)
 	(envelope-from <primoz.fiser@norik.com>)
-	id 1u4Xz5-00Gb4I-16;
-	Tue, 15 Apr 2025 06:33:18 +0200
+	id 1u4Xz0-00Gb4I-05;
+	Tue, 15 Apr 2025 06:33:13 +0200
 From: Primoz Fiser <primoz.fiser@norik.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -33,9 +33,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	upstream@lists.phytec.de
-Subject: [PATCH v2 07/15] arm64: dts: freescale: imx93-phyboard-segin: Disable SD-card write-protect
-Date: Tue, 15 Apr 2025 06:33:03 +0200
-Message-Id: <20250415043311.3385835-8-primoz.fiser@norik.com>
+Subject: [PATCH v2 04/15] arm64: dts: freescale: imx93-phycore-som: Enhance eMMC pinctrl
+Date: Tue, 15 Apr 2025 06:33:00 +0200
+Message-Id: <20250415043311.3385835-5-primoz.fiser@norik.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250415043311.3385835-1-primoz.fiser@norik.com>
 References: <20250415043311.3385835-1-primoz.fiser@norik.com>
@@ -57,34 +57,98 @@ X-Source:
 X-Source-Args: 
 X-Source-Dir: 
 
-Add disable-wp flag (write-protect) to usdhc2 node (SD-card) to get rid
-of the following kernel boot warning:
+Improve eMMC on phyCORE-i.MX93 SOM by adding 100MHz and 200MHz pinctrl
+modes. This enables to use eMMC at enhanced data rates (e.g. HS400).
 
-  host does not support reading read-only switch, assuming write-enable
-
-Micro SD cards can't be physically write-protected like full-sized
-cards anyways.
+While at it, apply a workaround for the i.MX93 chip errata ERR052021.
 
 Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
 ---
 Changes in v2:
-- reword commit message
+- no changes
 
- arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts | 1 +
- 1 file changed, 1 insertion(+)
+ .../boot/dts/freescale/imx93-phycore-som.dtsi | 57 +++++++++++++++----
+ 1 file changed, 47 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-index 902b523fc92c..3d5cd0561362 100644
---- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -48,6 +48,7 @@ &usdhc2 {
- 	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
- 	bus-width = <4>;
- 	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+	disable-wp;
- 	no-mmc;
- 	no-sdio;
- 	vmmc-supply = <&reg_usdhc2_vmmc>;
+diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+index 06a9e674e338..663530a7e2bb 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+@@ -166,8 +166,10 @@ eeprom@50 {
+ 
+ /* eMMC */
+ &usdhc1 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
+ 	bus-width = <8>;
+ 	non-removable;
+ 	status = "okay";
+@@ -213,18 +215,53 @@ MX93_PAD_ENET2_RD3__GPIO4_IO27		0x31e
+ 		>;
+ 	};
+ 
++	/* need to config the SION for data and cmd pad, refer to ERR052021 */
+ 	pinctrl_usdhc1: usdhc1grp {
+ 		fsl,pins = <
+ 			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
+-			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
+-			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
+-			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
+-			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
+-			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
+-			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
+-			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
+-			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
+-			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
++			MX93_PAD_SD1_CMD__USDHC1_CMD		0x40001386
++			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
++			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x40001386
++			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x4000138e
++			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x40001386
++			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x40001386
++			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x40001386
++			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x40001386
++			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x40001386
++			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
++		>;
++	};
++
++	/* need to config the SION for data and cmd pad, refer to ERR052021 */
++	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
++		fsl,pins = <
++			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
++			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
++			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000138e
++			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x4000139e
++			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
++			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x4000139e
++			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x4000139e
++			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x4000139e
++			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x4000139e
++			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x4000139e
++			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
++		>;
++	};
++
++	/* need to config the SION for data and cmd pad, refer to ERR052021 */
++	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
++		fsl,pins = <
++			MX93_PAD_SD1_CLK__USDHC1_CLK		0x17be
++			MX93_PAD_SD1_CMD__USDHC1_CMD		0x4000139e
++			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x4000139e
++			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x400013be
++			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x400013be
++			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x400013be
++			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x400013be
++			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x400013be
++			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x400013be
++			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x400013be
+ 			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
+ 		>;
+ 	};
 -- 
 2.34.1
 
