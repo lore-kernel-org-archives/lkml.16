@@ -1,105 +1,146 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4252DFA29;
-	Tue, 15 Apr 2025 15:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7614A207A3A
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730147; cv=none; b=NJ9/Q1KdzieSZPkzvAKtdrov9+eYX7wYbuzNfHDCSfLa2opSY4OEuWklWNVGJIxPXyFV//n28Ut7bodYFNX8Gdfza7jk+HUzJCngsSZ5+Iu9OkEg558XX6ZtgKpVOXi+oxRlQqivYLVr5n9ty/lDc7KHLGGQwtjRtIPNM67EC5M=
+	t=1744730160; cv=none; b=RnJpBvmWQqVoUSsOxzUz2tf/CyYcTYFEfR8SWR2/LMneDcLoxeRIIKM1SMpKrB7XvGVw5HT7c4e8kVJAFpGu1B0gtIewYHO2jXdbo1YMDZSb1HSe/FAtF/OjIzG5HrlnsPjIN2VfofpKY3Ees7d+o7USG8z5498097gyPSTYzfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730147; c=relaxed/simple;
-	bh=NpC2l7gMdFN7S4l3VmerC2J4g0BTa/HJrMGkyw2j7sI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fU/nMX0fheIj9W6s2F7jGGHSJoUC+x51XMYVzso50l/3xvMvcIUteeZieSrHd5B0UogYPcXOuQ008e8MVuT+89zqpj0q4vGSL9iC/Y8k6YIv8rtILjyXFqLLbWzRt5L4u/GGEMlyvf0P62/r2Vbyy89S0DtCK6y3z5TTthBs1Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I4rJ7ACQ; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744730160; c=relaxed/simple;
+	bh=s451NwJTdK9pKu+ndL7Arl2MesG2pCDms37nQ7IyPMA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cGDOYkseV3g6D98xnN77wQxVro7vkMDGeDOJ0iXRpjQwAUtML1Ur831AJzNXQMv1oo+fBG3ZdFdxwKQKa+PSfebcSjbeiblUmVYJHnAIyaf7Ldr4dOhPz/K+7iJLFPicxzFMEtUuVcTxapNpoi64HQVDN0ruBHxLmyyzhS1PGrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cls2Kaxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O7zQZ8p/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cls2Kaxj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O7zQZ8p/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4rJ7ACQ"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff73032ac0so853483a91.3;
-        Tue, 15 Apr 2025 08:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744730145; x=1745334945; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2468/LM85vMjkRChHfRHxsgSwhSOwl5E/WHDOoeYPTo=;
-        b=I4rJ7ACQRWtq461SpCWcqQqN1phdRbpDOnPPBPCC9T8vnMHhxMgIRf/4NCbOj+rWg5
-         gNhZO8VUcNUlJ2LTXMVnUd+mrnCQV9lkHq6dDL3Sl05VnjeV2rhXoDPXlPhlZg58PSuv
-         T5c7TbFxX3/dFeGNSKTkI5KHs3VkIG27AcDR6TkzVc7IqugXXbYQrZ9TIwNH+Mf+eNAX
-         iYOPuGEHwklZsYw9bPrSW7iqSfKUsjMpPmRXzrs4zcZtpu/mlGwIbvMYPQse6xWOFUfV
-         hqDooNkh5xqVS7zhGLOuEqV86+zUmUtHDd2634ANM6dgf4AZ/cBSIvGFG+KchH07q/iu
-         0Sww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744730145; x=1745334945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2468/LM85vMjkRChHfRHxsgSwhSOwl5E/WHDOoeYPTo=;
-        b=Z7T6VvQMnCAEZnTcQ2TNNpDXPZFQhJL0paSysMTUSqIBBpZKChdZZ7GGfSMZQa8utR
-         TMOK2PeF9Ju9qNbP73I0F3P8thGTXY+9fwnkGMsxziX0Kx6Mkc4Q1oyubG+lUFzU8R+P
-         5HzrG9lJHfiUhD99YSSx1ddX3lp5C0Hv5V7SKofd6oGGe+yk243onyilBtuhokBN3hww
-         THsQA4Woy5iwsg+FeLJeFynVq+2OwuOAaG2Tv8nnD7u1H2jgDdp+CGAopuAEIljhyFp6
-         mU3lSOXTAawmXv4/QoKMvA5w70qrz57KLUfjZidRbxGips1mOUk5xvjiGR9sUfnrWweL
-         ECDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyawamcJragxUANC8DtQiaGjsIatE/1x8oGuPh1npz+tPhFLPCgJFNjiOgT2wSIV2PaY6QAefjeQ5r9mg=@vger.kernel.org, AJvYcCXBMqx7gi5WHRG8mclMDyWyZCn+TJV1n1Q8o0Fdj/XAwZXELO7UNPRUUYg/L+SOaIXdtjO1yicK32FgsWEOki4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKyETdLwrH12XHp3rdrjlLNvXVzyiZBgvisLFUqAtN3OMAv6a5
-	s85cs66eipeEYgTKY3AdnABqJDR8aS6+10tkoNmpHncqT82GFkC9t3SP5B1J8lGfv7Lar/ZsFqi
-	j9iXjE4G1TZ6B/dqGYO7E/HWE1AZ4ybrk
-X-Gm-Gg: ASbGncvrgzvjPJVIMrDjfp/0sW6ABbJ5pGoTT4fy2vJvfO7eHDRiR/4LXOJ2OWlEIg/
-	sUPY+WoGJWV/V6YXJRlqBnj2lta18VLW0ldpgIFqabYbAA6cy8KTTlsfNUpFkRjlS3lo3n6jXd4
-	TTB3W4O8xl+TTWTdrEd8JWZA==
-X-Google-Smtp-Source: AGHT+IEFtNfPYrRt8OtnFJdTJOSjdTNl3ZwiRUfdzkcjE16zsauWc+s5qcKhNOFduPWtd+QgjELZmANl1IldidZvAgM=
-X-Received: by 2002:a17:90b:1651:b0:2ff:5540:bb48 with SMTP id
- 98e67ed59e1d1-308237e291fmr9552418a91.8.1744730145258; Tue, 15 Apr 2025
- 08:15:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cls2Kaxj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O7zQZ8p/";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cls2Kaxj";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O7zQZ8p/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7D5A71F395;
+	Tue, 15 Apr 2025 15:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744730156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
+	b=cls2KaxjXnU67suCAjpeG/NmTADtraNnlbMluUiJDMCsq8t1iOQhAxpFosXmfrmQqk9Cl4
+	WGGiw7J2u9Qix2S1CcijMxmF1mIGtG2+uHoNUFFZFTkKGKq1tS45vnnZw097eqt7+pMQ6j
+	pbuZ5JtABI/J/V5OIIxAKBkAft7q7Cw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744730156;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
+	b=O7zQZ8p/no6lg9RtpMWtBkFkel7KvtrT+eB29HZUXJbTDFTt3qAUGu7XlnBEVPN9jvXqe2
+	2mIqaYGoIDMb4hCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cls2Kaxj;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="O7zQZ8p/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744730156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
+	b=cls2KaxjXnU67suCAjpeG/NmTADtraNnlbMluUiJDMCsq8t1iOQhAxpFosXmfrmQqk9Cl4
+	WGGiw7J2u9Qix2S1CcijMxmF1mIGtG2+uHoNUFFZFTkKGKq1tS45vnnZw097eqt7+pMQ6j
+	pbuZ5JtABI/J/V5OIIxAKBkAft7q7Cw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744730156;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8rQFJzSR7WgZFd5/vD6kR7iiIa7sHuVwjXtD/YIn4Sg=;
+	b=O7zQZ8p/no6lg9RtpMWtBkFkel7KvtrT+eB29HZUXJbTDFTt3qAUGu7XlnBEVPN9jvXqe2
+	2mIqaYGoIDMb4hCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 52D64137A5;
+	Tue, 15 Apr 2025 15:15:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7omwEix4/mfESwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 15 Apr 2025 15:15:56 +0000
+Date: Tue, 15 Apr 2025 17:15:55 +0200
+Message-ID: <87zfghxxp0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com
+Subject: Re: [PATCH] ALSA: hda/cirrus_scodec_test: Modernize creation of dummy devices
+In-Reply-To: <20250415105414.471039-1-rf@opensource.cirrus.com>
+References: <20250415105414.471039-1-rf@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
- <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
- <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
-In-Reply-To: <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 15 Apr 2025 17:15:31 +0200
-X-Gm-Features: ATxdqUHa6UdR98KTWL2iHc9V1olrDQLq-UwRQIcblSixMFPevJPtLVIQDFs4VWU
-Message-ID: <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Matthew Maurer <mmaurer@google.com>, 
-	Ramon de C Valle <rcvalle@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 7D5A71F395
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-On Thu, Apr 10, 2025 at 4:00=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> I submitted a PR that I believe should fix it:
-> https://github.com/rust-lang/rust/pull/139632
+On Tue, 15 Apr 2025 12:54:14 +0200,
+Richard Fitzgerald wrote:
+> 
+> Replace the old direct use of platform_device APIs with newer KUnit APIs
+> and the faux bus.
+> 
+> The dummy codec driver device doesn't need to be a platform device.
+> It can be a faux bus device.
+> 
+> The dummy GPIO driver still must be a platform_device so that a
+> software_node can be added to it before it probes. But use the new
+> KUnit-managed APIs to create the platform_device and platform_driver.
+> These will cleanup automatically when a test completes or fails.
+> 
+> Also use KUnit resource cleanup to destroy the faux bus driver and the GPIO
+> software node instead of doing this "manually" in test exit() functions.
+> 
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
-This landed, scheduled for Rust 1.88 (2025-06-26) if all goes well.
+Thanks, applied now to for-next branch.
 
-Peter: are you OK with landing a patch like this? Well, modified to
-look like this now that we know the version:
 
-    depends on FINEIBT
-    depends on !RUST || RUSTC_VERSION >=3D 108800
-
-(assuming we confirm the nightly build works properly)
-
-Thanks!
-
-Cheers,
-Miguel
+Takashi
