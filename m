@@ -1,80 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9312566CC;
-	Tue, 15 Apr 2025 22:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7D0253938
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744754987; cv=none; b=HB43KVTtWCOHeP/lkHm8jhCY3UohAmuKw7LZBcHytNHJ2rXCWuZs/xGlcSobqeKUqjihgE8LXOZKtDR1h2PiBprMw/vsJuQAqWX6wZ35hBf8ytrM8WIhg9WcMW8u1vOq/ViOxai96A5EcLf4mq14XxzRpKnqJ50SB726TVurzPo=
+	t=1744754999; cv=none; b=StIIaV8R/WPNVfhlIVkYukdtKrbDWFv5wNKMKs8RoiK5YkNgBHCXnc8QqiEyVKQQMBJJEZh772ulx8ccKY0vVtOtFJFrac6mYI9mLyDqpa48szkjzn2MP6HHL1vDXe4zTohDWJ2J8SzPM9Jx4rGqaSQdbrXrdbTesACnj3AobhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744754987; c=relaxed/simple;
-	bh=vepstU+VeqHh6+qowybjXxUtB+33ICGyCl2PjWvB54k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RZMnWcgTVkpjp5qb3nBGCVUzFUL9BwslFkI0J606ubrwHa7tgSOrSjgFa1Q8jXB71MFhE34Ynzm+pVGS+hwwdiZmkTrkH3McoW8IWlg+vo+s8q4ojhGyo5RweHuGfngC2O5orEONzDlRcfi+pxeNURDizFt7dH7G7TsveCxZCu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrNpJFHq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744754999; c=relaxed/simple;
+	bh=BMZDbfJYgBYYsrYfrjT1g3jBLaGULzwTXCbAyy2bq4w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a8TDXpXmycL1erv8yjhWh1P4p+WhNML+47kp8acL4zwL9spY0mH71sHe18+aB80BUeCBgp+i3woqMtrJevqlX1fWe6iv5OhTlgN0QfMq5FJ6moY5dp3/gjTIk+qTkoI91Zycu+MBet3I158iU3l4oCeNQumrC+tKOK6WyGrQ5jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kHuF3zzn; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrNpJFHq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F269C4CEE7;
-	Tue, 15 Apr 2025 22:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744754985;
-	bh=vepstU+VeqHh6+qowybjXxUtB+33ICGyCl2PjWvB54k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nrNpJFHqxnf7NuMjQ7A2rLJfEiZp/qUE+pTwIFP9WvmsQymAs3iOysdoMzq07esey
-	 ECQ63f0Z6p2cXP3+v+h9RxOivgatgmqqctGsDIev9rNjbrJYBIRZt+7slWSQq/1BEW
-	 3q0klbefSoZdlKSrBMlY+wudQDsYkjSC3K73bRINAl0oq0jBpi/SB5edCi2zeRT3ch
-	 anK6KLLg9I2iKA295/swHvIGlgZ4qv3JWQOFYq8Vl52q1AOzLpfHP7VlYABQh2U0tW
-	 CdELjZnRqxCGU4EcsWMKe3l/dLq2Q0LeQacAYkmIDdoHll0b6WklFK65X1DJMwBGwL
-	 +Ksg5n09OYcxg==
-Date: Tue, 15 Apr 2025 17:09:43 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-phy@lists.infradead.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Vinod Koul <vkoul@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: phy: renesas,usb2-phy: Document
- RZ/V2H(P) SoC
-Message-ID: <174475498350.920532.9822490271876719178.robh@kernel.org>
-References: <20250414145729.343133-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250414145729.343133-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kHuF3zzn"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30db2c2c609so65864031fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744754994; x=1745359794; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BMZDbfJYgBYYsrYfrjT1g3jBLaGULzwTXCbAyy2bq4w=;
+        b=kHuF3zznt0wAgtDxx5rBMS6i9u+WxyY2mZY5WSg9Mcte2bHhpNuIOgH3osVmLNrXOx
+         UFmgiZ8L39OVHPh9F9617j4luOSZ13mvIVUILSAepJ4ZilR+fQNt6BnM94/jFabz/122
+         W/fW66NXrRUVs2T0J0Fg/4+w3lTFZDYAZU0Y4CivaNNIDaHOhR3YStXfw3zF2rq+6sRD
+         J9NU81zWbhirXu9i9vCdJ/vU4BbJ1akUweooUxo64K5Av+p/QJmnGKScW9/R+llSnN7K
+         u7+JJY3tVh21Ni8ncEnNonvSS8yLnIGmS9wJaoJymYsliHTCNjHLqm4VMX9k07l9aibq
+         9Buw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744754994; x=1745359794;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BMZDbfJYgBYYsrYfrjT1g3jBLaGULzwTXCbAyy2bq4w=;
+        b=tHTi9MW48UktmoeMbLDLzH+MdE++aPVFZB3QCiyKIt9XVmolyOE83HnUBQrcuw40Lh
+         BFYXsqyUdgAy7d/Y8yFf7DliP/J2/e4XDqwNz5m2ucodWSAF++aubfyq+wIFEKKiPA3l
+         2QU+RzldzOu9DZx9gaI3ycNcJmC+I9V5HMpngG8l4CmcpSLdRBrNUjis4WKqShrnw5a1
+         Kh8ZDHU01YiM7vlvVfFZLlAHEAG+GdL/dD9DtvwNxhcfNmvRlsdS2HObz4YZ3eXUPBz3
+         0gcovfs2bAd2bzcev4NdGovpxGQJc6Vd8GjHgaW8VtP6+H1qkRTz2hXQ62Y3RdxVSR3P
+         BGCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUT+R6NYYT3kSdkLWG3NRD1GkO+kwLZvT5054NvP8XMDPKvO7X9wOCMTxh5CVYHtgJvuoaedXmCOr3bRbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMoevN9qU+s4A53nfyh29SJ/bE2pEtQjVtIhLLOCmCqdW0aUEK
+	lqCL1VnkrddOIZUi3S1xFYcCRb8pj8jIU1fsDfo1Lg3MRSZCyhv0ATks66srCAtAms+qUbFXuIW
+	/Wb0b9dC7tt/GjsDWAuCJnLIDTlra5bZBsTzAtg==
+X-Gm-Gg: ASbGncvAlfnGYms4x4Vv96nSfoFnr0BSDxPH1p73EHDVFtgPQ8B3PO9GFeeYuPgXc8L
+	rfyN+tJ1htQCMdEMiMddQlObiQJth0BtCoIw0DMb0tSTVnXSROKLXHg43+S7OAKohEVJNxJqbP2
+	8/D10BEpX2Qi39ND2YGQ54dNDB0RCjhVnM
+X-Google-Smtp-Source: AGHT+IGCYPQ+b5FRodJ8wxuEHegzDnmUa6Evm4QmQdnqKruHFaVQ55qUyUsMYu12ZNgCb46mTc3ah90RckpXK0EBciM=
+X-Received: by 2002:a05:651c:1989:b0:30d:629c:4333 with SMTP id
+ 38308e7fff4ca-3107c36cd96mr1776621fa.34.1744754993762; Tue, 15 Apr 2025
+ 15:09:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414145729.343133-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250409080030.62254-1-wojciech.slenska@gmail.com>
+In-Reply-To: <20250409080030.62254-1-wojciech.slenska@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 00:09:42 +0200
+X-Gm-Features: ATxdqUHZ5uDLzgQCP5maQ9X1ZgCSKxId_N-06QIwPSuLwaXV3MxBAYqEvsqUNCU
+Message-ID: <CACRpkdaY440anO7WX-em3b80RD_ZrRGcgTa8me+ys6sd=v0m1g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: pinctrl-qcm2290: Add egpio support
+To: Wojciech Slenska <wojciech.slenska@gmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 9, 2025 at 10:00=E2=80=AFAM Wojciech Slenska
+<wojciech.slenska@gmail.com> wrote:
 
-On Mon, 14 Apr 2025 15:57:27 +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Document USB2.0 phy bindings for RZ/V2H(P) ("R9A09gG57") SoC.
-> 
-> RZ/V2H(P) USB2.0 phy is similar to one found on the RZ/G2L SoC, but it
-> needs additional configuration to be done as compared RZ/G2L USB2.0 phy.
-> To handle this difference a SoC specific compat string is added for
-> RZ/V2H(P) SoC.
-> 
-> Like the RZ/G2L SoC, the RZ/V2H(P) USB2.0 PHY requires the `resets`
-> property and has two clocks.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> qcm2290 supports the egpio feature on GPIOs ranging from 98 to 126.
+> This change is necessary to allow these GPIOs to be driven by TLMM.
+>
+> Signed-off-by: Wojciech Slenska <wojciech.slenska@gmail.com>
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Patch applied.
 
+Yours,
+Linus Walleij
