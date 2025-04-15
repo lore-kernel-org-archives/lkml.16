@@ -1,177 +1,351 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012049.outbound.protection.outlook.com [52.101.71.49])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011037.outbound.protection.outlook.com [52.103.67.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5525B29A3FE
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A34B2DFA58;
+	Tue, 15 Apr 2025 16:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733728; cv=fail; b=ruOi4tQ+FQbB5pRhkSfZET7oIQ5JYmE4up7Q4n/rbn6xQFGUGeVHD2Sk7L3XH/AwraFUv3w5SEB/DgDTWh6QW9/GRdSPELi1au7S20Finc01hH3nXxJ0gjVrTB58wpcclVbMSKoV2DJgWCs1p+oop03edlwswIRvyqc+RITgXYw=
+	t=1744733862; cv=fail; b=ugL+cOObMM/4JCKK08Hil2nA9Snka0YfH1WyVtdLvvTuBI4pEHaXIsISMKlOAAL7a3R6cz7zEpXlVt1t2e1Eb8oaeaAQqI7qRICvBVC5DfUo63Vm9g2aRvVD26zSA1NjeTEai5GwKoIw0Rva27uMDDR2bGUdAuIO63XugSEo84k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733728; c=relaxed/simple;
-	bh=Qkt42kcIP0qg4iwz35sD6h21tVIFUYyvbgql5/ATQOA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=lMhpBgp64EERSE3OHE0h1p/VB/9Ofqb4VNGajSsHLALAheBMFf2p3ka3IDBso3XNduTg2nHsjTnJIdaT1NhnmsinbUjRZ7U0Wrw/f09uklMioduq33sQSXN2Q+iWv8lgXwCr4lTM856+8KDT+F54mK5kRhtog7rvN7iGKhDEnGE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=g2Vmksiz; arc=fail smtp.client-ip=52.101.71.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1744733862; c=relaxed/simple;
+	bh=LCk9i/j/BhvloRvlrwVcZXldErQNzEJy0uNCdgACbtc=;
+	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=WP4Doec2lfb0yCPPw8UI6pxoQPq2IhJhWMi3YD3q9jI8m+CbPUt4QdfU9VyqgAsRH6Ok5c27pw2cJCjdraqUni25AzLPx5S8PGYsmIS/DVUY8i2Y0+ZDceTI8wg5XH2DD3Z0ZUkmOydsqaH/rDuAxkiZqz+aS7tC0NMtlir7sik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=B3rcunuE; arc=fail smtp.client-ip=52.103.67.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="g2Vmksiz"
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="B3rcunuE"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I3r8gcLRtRkJwJNWLA69N8hvjUR33Y2qvJ3Vc2MeA71VxOeMVfl2cgqJI+Al3zL9CtzU+I/1+/VCvra1KFHmSe1N6tS98NYZVXkGpRcVMtYm15XV5rPWPneMwNgCW2H/8R/VFoXn3b7gyZBpUkQ4U6/qpldnwrixkuGWkpn+APu9TLvzygII1AwGHp+KT3YmaVem/jiuarjBKDnrb8YdqWI2GK6Ttg8Ex6Nf3sn5Fi06rOC99ZXn1ObQEcaWjJ0xwUqDg4aCwPNRj4Mw4uguuO52CzDvFzB1CSB4k28jmoV+gHtNFqirzDXs7zzBNs6Han22lDiva3LJabg7Fu7a3w==
+ b=VxmF2zSCD/G4tmqBRS+EmIkqhLS+bFpCAjGy8IJ7dBooR0PRF9CE6PJuicUSbwLkmal0jApb1wrvLPkEJ7Qn7gGEh63x+wR+eDn/xf4V2/wtKxQaZrsIRIA/mWQde2qsGRALKoIVOmyNLmgAYNgXQuOlfQxx6hAw13DO9uqIdd3Ux5aWrmlza6thT6/CUZsYXFRVdBN5+GHvYfjmqP2F0/0GfAVbEOPxqW9bFKIPUv4kWiKPk0XHwdOOQ/1dBbpNtKW3FIQi28dzm9JR80UKOO72utvB2dW3c0dr8rq4NG6hrOjyJceozAdnhQafUXwhC6a4UNLFWkhJlZ4KGl56Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kHqtDAAITSLgUf+Y20C7/Infe2Aa39qbgsJvy0QfwKg=;
- b=LlhjUfmkAWM+d32q+isuw+0xWcseZQVd9KJSQ4YucAXsBxNrzZaxYSYFp5aIIuIS8rEIJk7DReqMCivX9sQbZu2RsWL/Buj7Df2PetomM6IqlaWdRRt3FlvaccoC5xiRNPRRW/viHqr8jpUQ865azwK5GCSjyN21/GrlrVM4B+1aUtWWhhfjx0IBcSbYWzGMNZlrQ4Sp8s3j0P9tsWKt5HbjRAMv3uSHUk43/RiZ36/8FKg9r8z7I0JE0CxBVgrDrqi23H8cLAse9JhYJ/woNhYa5f2NGcrR3NNbxTkZrIaQd95Kf0krTBTbhG1DtwpKzB+kSArrdcWjJUd0lczTGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ bh=AfhgnReNOkT4JdoJm3g9gNI4Uz3uOoqKYEDdE0SAEG8=;
+ b=c8/0fsmcW7YSa8V4P/St0bVMfbZum70AKeN+soVQDqTSlzJ5d0Y8CJLr0XHoPiiPYHj6RKs8KIEmuj937tCK92n50Ig5N0vIKc2JkhJFQ6rKsRJvpTA1dWHybdt4ioXLFWw14cOzlruv84LUuah8g+qoIJcuPsV4SNt4CzVLhDNkV++rjTXa5GJfCZMseHHh4UdI4M3UDtBtNZKK+QkXoHyu3k9d2lk2APrm5I2kXunR69OKLjdQz5gsnDs4kWVBOUoL81iRBxK6nhsK023qBX8D1Uu7WNn83i0WsURTC0SKvJhslIiEGXp5r5tQZDcjqPQ7SwU8wu6x/0gHd6Q9DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kHqtDAAITSLgUf+Y20C7/Infe2Aa39qbgsJvy0QfwKg=;
- b=g2VmksizF8CngQhzonDFIvCkvGwgsXJN6ACrjUBmDsnVyyGfYnR/CfXQzVSx44eAF/m8OdDpAMGMwMWx5zB933Lj2hTe+X88llhxsJNpV0rY5ouU1/jfkRWYB/guRxXGfMcsiYp4mW5K+vRJq7W579/jEzm4Y3Zsd9rFlgCclCxWgI85VygakR83heJltoSrIjS1T1TEMeoRdWbJtg49AURI57zlaBTpGPc8Cp2R06alMkJI8kGX0hfJNzlfWmDWRj7R6WAMFEiqyXY27UGE8TjbV/yfdQIFw4MR0okD6eiM63gwHpi9oHmXAA/WCHICOdts9YC++eZ4Z8E1yb1ZwA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com (2603:10a6:10:309::18)
- by AS4PR04MB9649.eurprd04.prod.outlook.com (2603:10a6:20b:4cc::5) with
+ bh=AfhgnReNOkT4JdoJm3g9gNI4Uz3uOoqKYEDdE0SAEG8=;
+ b=B3rcunuEGTW/3ucUd1NK/LvjFJ/JLzwKiRq+vspexo3ZWIV21IZhuosDVBfPkAC2exwVXpu8GYHh9ozdVxI3xB5Y61gAivImP/VG65clwxxldtPz2l9ZzTVH09DHRyuR7OL29/NhrDtbYfkxuMX41iZFg2HP+7yxLOnNC20tfyb3tFd90ahyR7VcUOaiP+fTAub6C9cbq5macbtIIA78cbZwW3dloe8+Eb221ijaYak5hkSakVzxy9eaLjVTFFo5GeZZOvUDS7nf8Lpr4/XikOxURPTniTPtRNz2vglt+B3ehR3zSWNpVQytb//eltsRAKJRb8Sqi9vVhGw1QNFYAw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN2PR01MB9735.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:12d::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
- 2025 16:15:23 +0000
-Received: from DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d]) by DB9PR04MB9626.eurprd04.prod.outlook.com
- ([fe80::e81:b393:ebc5:bc3d%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 16:15:23 +0000
-Date: Tue, 15 Apr 2025 12:15:15 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Stanley Chu <stanley.chuys@gmail.com>
-Cc: miquel.raynal@bootlin.com, alexandre.belloni@bootlin.com,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org,
-	tomer.maimon@nuvoton.com, kwliu@nuvoton.com, yschu@nuvoton.com
-Subject: Re: [PATCH v1 2/2] i3c: master: svc: Emit STOP asap in the IBI
- transaction
-Message-ID: <Z/6GE9TWVdC8A2gx@lizhi-Precision-Tower-5810>
-References: <20250415051808.88091-1-yschu@nuvoton.com>
- <20250415051808.88091-3-yschu@nuvoton.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415051808.88091-3-yschu@nuvoton.com>
-X-ClientProxiedBy: PH7P222CA0030.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:33a::13) To DB9PR04MB9626.eurprd04.prod.outlook.com
- (2603:10a6:10:309::18)
+ 2025 16:17:36 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
+ 16:17:36 +0000
+Message-ID:
+ <PN3PR01MB95978C46B66BD92230030AD4B8B22@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 15 Apr 2025 21:47:32 +0530
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-input@vger.kernel.org
+From: Aditya Garg <gargaditya08@live.com>
+Subject: [PATCH RESEND v2] HID: magicmouse: Apple Magic Mouse 2 USB-C support
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0P287CA0003.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:d9::20) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <e1d4e53c-a931-4130-9666-fa92f59f0d4a@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR04MB9626:EE_|AS4PR04MB9649:EE_
-X-MS-Office365-Filtering-Correlation-Id: a69b2239-9c43-4649-a8b3-08dd7c38b9e1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PR01MB9735:EE_
+X-MS-Office365-Filtering-Correlation-Id: c7348f60-76f7-46ca-740f-08dd7c3908b0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
+	BCL:0;ARA:14566002|461199028|5062599005|8060799006|6090799003|19110799003|5072599009|15080799006|7092599003|440099028|3412199025|41001999003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NtTxBili3yqlYcamDRD2bGZbKPionAi+gEiDkK7vX31FUMgXCmo43R6MxHgl?=
- =?us-ascii?Q?juNm5X0mvD2ixGbpb0+SG/aniw+p/PUQs+b6pETiX5NXqTL4SQrxbgqk7zM6?=
- =?us-ascii?Q?c6njopsBiCuaBQMp9Rq9SBXtRFo1VEb6mACPTlSkDPtujvb5e4da42Ida18Q?=
- =?us-ascii?Q?ZWG6qvC8FmMcp29rfSk6yRIuLZ5ZHMxPbV/GJMwtysHwsfUWxftw/wrBgfog?=
- =?us-ascii?Q?CiwoRvrY48cIJjTYCuxkDn+1sTdZwTh70Q0k8vOHSw+R4YGBNN/0GM/GzSQr?=
- =?us-ascii?Q?MUYB/sjdys2sYbTZIl5h5QAIrqe1R1xxBGlh5USHaCD6z/Y0VYWzoTjvvLh9?=
- =?us-ascii?Q?ddMDeEJ/sd3dt8YY0RYGXCCFiRjZqqEA6mHOmqq+NeE2MQ5Bpq8A7I4Pzz5F?=
- =?us-ascii?Q?zeoRg8AqXSWtFIguQ7KIEEufyiL98nQvED0KL7fG/QCCHbSr36PWkwUrh5nG?=
- =?us-ascii?Q?1uQ06wuG+kqi28i2N0bu52BQvZRJcBGubUIP5kStb4lgcOm55R7JWzc8Ub/e?=
- =?us-ascii?Q?rbTAsXT5xjiRGrkHNijw7+rnL7upAndI+9XZAZ0BeT191DsWA7cak/yWUH+V?=
- =?us-ascii?Q?tPf5HiLv1Bj/SxrKVx8cnageko3/V5GmSzWK2NvJ87BgeS/FaW+OZUGj9Ka4?=
- =?us-ascii?Q?Dyk6mTYdY7dbHfPOratwXBsPF8BmQzU3BCZSmkSnnfhUzQ0HsQHitzG7VCoZ?=
- =?us-ascii?Q?3SPOs2hy5xi4EMb+5n2R3UqXlVf2e5/jTK+15CSh2FIENEF8eqjc2mcuNVKa?=
- =?us-ascii?Q?8D4sm75tMdSaniuIho2OwJOCwLImpI11Fyg75cBwT94pvAaZd+PqvejtJRW5?=
- =?us-ascii?Q?NFSNiOzmW6cVRiiYp8Rz9W6xwzDaUmBF9swlWLJX3B3U9bz8Py6Xh3nTVLPD?=
- =?us-ascii?Q?qVMHUbbte3yNDXWan0BgqwPGXYtyP0FybAnBoIn9Z/uMEnKWa3oB+xbZSHxv?=
- =?us-ascii?Q?bcYUW6sSZe3iqn6rc+yJMVVtUIJYdKxjDuZ4NwWQmR9S1S24AJgLNYorxHcq?=
- =?us-ascii?Q?Ow3AMRUm54mXz9csRu39J8yMaXX/B5wtfMHZvTBse3mxSDYNIF0msTFv0WSz?=
- =?us-ascii?Q?e9B0k3ggPmZkzqS7sEtL4lzczzYuc7m4Z24Ozzm4lagpPjMMepuZf5uOnRe1?=
- =?us-ascii?Q?taefYwvGGR/+scA/2JX9Td/wPdcZCL8GyUSQq6W3lkaVTOtByNP5A+qdZsET?=
- =?us-ascii?Q?+HHECVsovBwZsSWkRO75tPavh+wInywIvqgN37/WdNvt/bxwFyBDs2XCRklz?=
- =?us-ascii?Q?wbUcRARQAALd8uY/cjdmvxBKTTFsB7dM5RX4EmnaLzpo6E5T2fnxTRvKq9zl?=
- =?us-ascii?Q?D6ePY0t6R17BEX8KWG17tJYO/VR1Fv1LiifpC4dsdM9L+quGcZNaPbl1A2di?=
- =?us-ascii?Q?KeBwnXM9CQrmMlN61P8gGLgROfHHlgMeZ8wedmyiyFnyd1MrEn2ikUzVxtXM?=
- =?us-ascii?Q?tku2U1xocvpfCwEObCbDsEPIB3s+8FXfPADIzQl03RzCQCsWISb+3A=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB9626.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1101;
+	=?utf-8?B?aVZEWmJQbkx6ODRpVHlqanhBWkZiMFFCL014SENhR1BSbGZVT2xrY0c0Y01z?=
+ =?utf-8?B?dU9HS1IyR3lzY2RFSnpuczRaS09pMnEyWk9ONDJrV0JXcVhxdHhNMXdqb2xh?=
+ =?utf-8?B?cnQwVElxNHVBb3U3NEM3N0tReVczSGdOTXUrbTRtS2tsUWl2VWNYc0FoVzI1?=
+ =?utf-8?B?M0JFdGFTT2I1clFGVHV6QmZFWUFPaTI5ejZJMGdSRmF1VFB6TkxGUllOOWhH?=
+ =?utf-8?B?RjFyUmtrYmdZdXRrSnh6UHR0YlhGaXZkWDZ4Q1FoeHltczlDeXhFYzZCVys4?=
+ =?utf-8?B?QURoZ1NHSVpvL0ZMd21BaHNsc3MrczJ2aDg0RUhZRFhsUnR0VnZBTldibGQ0?=
+ =?utf-8?B?a2JhN0RXZXNBcDNrTnB1MkE0enQ0Rmdwc2RSeUVqTHRCdWJhMzRKNWhYTllv?=
+ =?utf-8?B?SVVsRExUalFQMFZ3TXM2Mm9ubHJUbUg2bFRMdlRWdHpuZkdMcThwN3dpcTZS?=
+ =?utf-8?B?VjBwWkxnV1o2UzdtTzhyRmdkYmQ3SlBvTHpyUWp5RSsvYkswakw3aW9La0FK?=
+ =?utf-8?B?b3FubGUzSmZTZkFNQXVyNitZUTVNOFk0UG9QTFFWNWQ2THdLY0ROWTRDQ3cy?=
+ =?utf-8?B?TGd1MGpJa0YwUzBpbEpUQW1CYkRXeENEYnIyVytVT2hqbWxiVC9pbDZxRXJn?=
+ =?utf-8?B?QThwS3RnWXkvWCtPRmZxeS9lb2pzUmU3MkJNdVMxK2xUSE4rTnBrUTFQOHJQ?=
+ =?utf-8?B?VWk2ZVFxRVMvNmxsSEV1WFNyZlRZS3dDTklvTWlkc0xLNUZUU2J5aUtFbmd4?=
+ =?utf-8?B?SFBTRGRDQy9WY25DQ1lKU1ZMRCtTZHppVXFnTVIwcldJQjIrcUJYYXBHb1NO?=
+ =?utf-8?B?emY3aWJ0V2N2dVFFQ2VrOHZsTFpPOHNUSDMyNEx3RzE0dFcyazR6T3dNdVps?=
+ =?utf-8?B?b1pDZURENjZCL2d1RkNSTVFUeUVrelMwQXU3VnRBYVJUalNZN3dqTDFsRCtt?=
+ =?utf-8?B?RDdudVQrVzVPODYwbWVNZUxMUWtmdTJRM3ZlZzhnVGFSV3FadWZkam4zK20w?=
+ =?utf-8?B?NVBGR3VlUTYyODBRVmNLQWFzQW5hNnJKVFNZSlhhRDh1V1BOT09KZGdyVno5?=
+ =?utf-8?B?WVdZZW4xZldQcnpqcndxaURDdWhac3dlUHAxVVlhbUs4QXordGROWnRCblVZ?=
+ =?utf-8?B?ZzVDTks5eXkxSlQzajRXTytXSE1tU3BnK2xoQWlnUGhuQnp0a2xZeGtyWUo4?=
+ =?utf-8?B?REFsZEt5OU54MHZVU1RUVVVIcUxTOFk2SHdhSzBSaEJ5eCtPRVhONW91ekU0?=
+ =?utf-8?B?eW03TjkyQ2lMRUl6dWV4eW1ubUJndFg0TXp4Z205SXovV3NhdkhEeVpmWC9P?=
+ =?utf-8?B?Y0UxMktycHN3TTNVK0Jyc3RqQ0p1RDNqcXhzbDlla1JYQzBXblRmbTVPSFFu?=
+ =?utf-8?B?YTdhdlJxSzJmL3E1bTh3ck5yUHkzN0NIdGIwbjA3SXZvc1AyejliN2JNcXRi?=
+ =?utf-8?B?bXk3aEpWczVOL1RJT1pmMFhlQ2dGSW5BczhLVGdFU0w4TmR0NkFPWHlWaU01?=
+ =?utf-8?B?VmIvSnV4UmpVVmZQMWMxTlZMd2liWk51Z1ZleElnNG5lT28xUkdEdldadEcv?=
+ =?utf-8?B?cm8xNTlkMW9HWi9ockswYXFoZ0tjS25GUFlTSVBwWlI0Yk5QRDBTSlQrRFI4?=
+ =?utf-8?B?RVNjZFVScVQ3REZSQXBCNnZ1RVRGUUE9PQ==?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?cob0tWS6t6SMTN8jG5JCdMcfnhLqhEv2+82bjFg+9b8qkrJR0R1tAzKAiGkN?=
- =?us-ascii?Q?RoecoANgtAXOHIg3vH3Qq6ysbR84hZurZLn7LDDYvpF6Ecaeg0i1W+YGwkxK?=
- =?us-ascii?Q?zxqA7g6nuJ7PaK2OPbEPtGctMCGYB47uMvNss45k/WJhKejsOnU2NzQJIY5M?=
- =?us-ascii?Q?e0KtmlD42XIsGfGr4O25a8OoE/K7+F/gJToC9LlPLCyYBINn8cHAbpQIh+HB?=
- =?us-ascii?Q?28a6I0zaJVxsvTr/HeDtdOAmsi9utib3lW+FtPbih+vJFUbSi540Yd+O8fdk?=
- =?us-ascii?Q?YdAPVLQzS/0yMELtp+TjznXE7sDev3PzqaDqlPw9mc45GwX+M8JAzgmKaSi5?=
- =?us-ascii?Q?N4zC7ZppsRoUFrZEXRh5773DJzAVusNnxVtNd1E7mwPOEvZBjkobEK94mp5j?=
- =?us-ascii?Q?fWf4/h0lXmQpJULVQvzBSCy8uXPMgQjjsIg7QCjVIsiwOyMjbEc4pxgsa74c?=
- =?us-ascii?Q?6/Vlz1NmD0rdHBJKtumpQQ78YYwajiJ4S0BAz1AGkatkjCo0fiYqzT7VAAlG?=
- =?us-ascii?Q?M6701HKSAElw3aEtxaJdNWyqQ2lLAHF6ZvCKLMHENX7ofG5hIlcaeh2lCSwA?=
- =?us-ascii?Q?c9Ya8q78cS/+520NJDMblj84ZdOKLex7UBjIuI911zP9w1oby17IHetahtun?=
- =?us-ascii?Q?KchYrlAoQLJ0E/5pRrK1KZx4HRerLpvHTJWuAnziwrdlFlg1RAZEagvFEX3X?=
- =?us-ascii?Q?CrSNN2TNgpE9oaZtdx8tr2YsB2l6pU73Ao+tOS8T/7PEbM4R2ZoemL2IgJnQ?=
- =?us-ascii?Q?bhyk4MI9sPVc8+l3BU4RzF+A7MkPOwCqvEbDGJTxASakbJFxaZ5iY4/22udE?=
- =?us-ascii?Q?hsuOWKbfhN+XjjQ75siq/GeIZ13Q6HvfROD5ezgi0SMm5rUlS3d6P9iSa9zp?=
- =?us-ascii?Q?PCBM521mxNOO/H+GtkuTGYKjvNa4QZC2AsQwf41A5I5CvGwgP0HbPIcckm5e?=
- =?us-ascii?Q?4HN0rba0RlLFB7S8TTE47aH5q/HS9kunYT+NZCH8Wimfj3k1t0UweMhxYyWw?=
- =?us-ascii?Q?Yn6JMselCflnBsJLLPcoQ6WtARslzwXJaiAp+7LaeEWp4Oomz6ofzdXfEuxJ?=
- =?us-ascii?Q?85zMy/AUw0bsNF0VoOOohR6lx3ahKAxPTUEh86VOjNM6NKjz8LP8Kw+ijJAX?=
- =?us-ascii?Q?psG/R9l2C/6N7DTrt3NcMwjg6ptUyFPvp0rjcdNpDMou4TzxGCkcpJ9WMUe9?=
- =?us-ascii?Q?hpjdPKu2KYCZ71RKgSb81u4ZEPCXVQEaDe4iKjFcrVij/h2aVGEdkeOpE0CE?=
- =?us-ascii?Q?imT5SMY3YVio5wVCW1S4LtGgwYnpLddVgCYM+9onzab/l1iCrlP7+ZQs4fdH?=
- =?us-ascii?Q?iCru/0wHTxPs9bKO8B3MaJsXzI8XdFW5+N1Wye40YsyeziVw8PTYczDFOKyk?=
- =?us-ascii?Q?4REriw5Ez2HBT8s8ojFCbNp0DICIRdSk63yCuQdearTTSAyN1QsFxD6/p2An?=
- =?us-ascii?Q?QD58s6wfK32GHD1Vjhm9XLoGs9smrSX0rVtCQlLuMGGQoiANVm3afcaT8Y0z?=
- =?us-ascii?Q?8J6x2+lejmeBLzCQZw/2XglAhnxgFYppRA1AOzGym70twaeiUGygQuz42RQS?=
- =?us-ascii?Q?gIMfPhOeXrwo/R9NMi4ckx9aHXpEcjp/glWnQ9id?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a69b2239-9c43-4649-a8b3-08dd7c38b9e1
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB9626.eurprd04.prod.outlook.com
+	=?utf-8?B?K0VBRFVOL21IWXpWa3BVNXdIc0taSFcxMHdHVk5kaDFaYW40bFVtQ1pGU2Z2?=
+ =?utf-8?B?U2RySzhaQjdCZ0w2Z2dXcHQ1dVN3ZnMwT3F0b3lJNWRsZUxrNGFiUnJZWnl2?=
+ =?utf-8?B?NmM0c1dwTDl6ZGlXKzlhblpWQVhxcHRxNTRPdkptY0NHaEtweW4yVzBtUU9T?=
+ =?utf-8?B?VlZQNTFvOEhrVzlmNkpRUFRTL2NKQTM5c1FyNUU5bHB5STA1dnl6Nk9ZZ0hJ?=
+ =?utf-8?B?TmxYTCt6VTBya3NSeC9kWmttRmZ3SFdhdThqaHpBT2l0OHdqakkxV3ozZGhS?=
+ =?utf-8?B?VjJwbndJdDJSWkxVRTIxRnQzZ0N5VlVBYmJUZHFHUU56T0hKdllHK0szUnc0?=
+ =?utf-8?B?VDJ0VUtqSmpIUkdMTTFFZzlLeWcxbVBHSUw1YTZkeUgyUTEraTA3ME9aMWVK?=
+ =?utf-8?B?NVExTUtRL0YyRmV2SUV4c3doL216WXdLTElUb3hIVnlnM29jaFBYR2FTeGJN?=
+ =?utf-8?B?TWsySWNlTDhvVHZrL0RsT0xnbVdYbktMc2tWdkk4VE55c2Y0bnJPTERDQWJt?=
+ =?utf-8?B?TFhZamk1R1dwYXlZR2Z6emkrbW9WR2dqTWRrNHMxYXh6VjA0dkRRcklJUjZn?=
+ =?utf-8?B?WndwVzRMVWFUOFl2Q21rY3N4RmNCSVM2cTNjUWNqVldiMjV5SzlKMTl5NjY0?=
+ =?utf-8?B?QjNzTDR1YVFoek1RY0N5Q3BacjNxRWNkSWU0MzU1dDBNSDRRalNmTDYrSjRQ?=
+ =?utf-8?B?MngrbVRqbmdCUTluZUp0Y3B1WUh0VEsvWDdlcFdsSGt2N3VyYzJOVFF3elhV?=
+ =?utf-8?B?cE14QUNzam5zMFVLaHpCUnlOMk5RTU02SUhqQk5hOUJ3QUJhZkROYzIzTGpz?=
+ =?utf-8?B?MU5JWUZDdS9YWldHOEdEY3UvVGVEcDgvVmEyQnNuUWV1cG5mYXdoa0YyNlh6?=
+ =?utf-8?B?dDJla2liWlJ2cTJvVUlwVDVEVDdyLzNDMUd5U0M1aTZUSmo3bVpzSS9QODNm?=
+ =?utf-8?B?Zm03SUo4VEhuNWs1dWRXK1gvN0tHMUZPRjRaeU4vci8zTUowK0VqNFl2SmJW?=
+ =?utf-8?B?ZWVYTk03MXVVcnVSSHBUNDkwc1FKeHc0ajA1a0VPZS9Jc29POHExVE0vNndS?=
+ =?utf-8?B?L0RrbThQZWFtM2xUaFpmT3hvZExQakh6elVDeE5yWFh0N0ZqTnVueWxkN2px?=
+ =?utf-8?B?MkJoZ3B0cWs5TnBKc2FobGFXckp3ZjZOZDlzTGtGdDhKVWV3ZHZRVDJERnlY?=
+ =?utf-8?B?dkV0L1JONDBPMGI0bGVKakk1akEvdEpQYlpBcmtOUnloRStINzZ2Q0wxN0hl?=
+ =?utf-8?B?anUxOFFyNUltR0NBNlpteUcvWmJkaGpkSFpucVBXMUJwMUhRcitBL0FhcENE?=
+ =?utf-8?B?VXR6MCt1ME5JTmlWN1ZmZGowbC9zS0E2dzkyUEU1TDF6M2h6VzlaZTlwL1Ji?=
+ =?utf-8?B?RW9LRHN1dUQvQ2RJckN4REVEcW5Iay9IaWNjNnp5U25yZzhTaXQ0MlZaZE9D?=
+ =?utf-8?B?Y1pqdlhONVJ5YTNBNjczOTFGZXhkWXhJeElIQXd4TGxtQlM1UHMxS2dyWGYz?=
+ =?utf-8?B?aDFxcDdTYTRZOEtYZXVFTUlHV3k0NXltTWs4N0dudkIxWmFiT1pwNUJOMy9x?=
+ =?utf-8?B?R011RHA2cklERU9GTnFDOUlFQTlqTDBhVWxUc2lOVFYzaUdSbUxTMnRiT1dz?=
+ =?utf-8?B?WDFkSVI2K2ZDRTJ6M1E1SXNSemhVUGcwdVFJVjN5RGdGbk9hMEE3OUJkanJm?=
+ =?utf-8?B?NGRjN0hJL2RmMjV5V3pFc3JoOFNYQitMS2Iyb2p1TE1xMHNlRGlsWTVZVDhR?=
+ =?utf-8?Q?lRW/mmIzBFcQTrIZWw6MH5VEzByVD2k3eevWYXX?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7348f60-76f7-46ca-740f-08dd7c3908b0
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 16:15:23.6715
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 16:17:35.9652
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UxIU9JLe4gVhVzwbXmSl7/fAIFhO6IvG00kpowgKXde/7J4gHdDCu1UcqISz/E//tCmOV4T3jsrgFSmPz+UdTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9649
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9735
 
-On Tue, Apr 15, 2025 at 01:18:08PM +0800, Stanley Chu wrote:
-> From: Stanley Chu <yschu@nuvoton.com>
->
-> Queuing the IBI request does not need to be done earlier than emitting
-> the STOP. Emitting STOP immediately after receiving the IBI request can
-> complete the IBI transaction earlier and return the bus to idle.
->
-> Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+From: Aditya Garg <gargaditya08@live.com>
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+This patch adds support for USB-C model of Apple Magic Mouse 2.
 
-> ---
->  drivers/i3c/master/svc-i3c-master.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-> index 7ceaf3ec45bb..9b23239ad8db 100644
-> --- a/drivers/i3c/master/svc-i3c-master.c
-> +++ b/drivers/i3c/master/svc-i3c-master.c
-> @@ -577,11 +577,11 @@ static void svc_i3c_master_ibi_isr(struct svc_i3c_master *master)
->  	/* Handle the non critical tasks */
->  	switch (ibitype) {
->  	case SVC_I3C_MSTATUS_IBITYPE_IBI:
-> +		svc_i3c_master_emit_stop(master);
->  		if (dev) {
->  			i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
->  			master->ibi.tbq_slot = NULL;
->  		}
-> -		svc_i3c_master_emit_stop(master);
->  		break;
->  	case SVC_I3C_MSTATUS_IBITYPE_HOT_JOIN:
->  		svc_i3c_master_emit_stop(master);
-> --
-> 2.34.1
->
+Except for the hardware ID, it should resemble the existing configuration
+for the older Magic Mouse 2.
+
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+v2: Fix broken patch
+ drivers/hid/hid-ids.h        |  1 +
+ drivers/hid/hid-magicmouse.c | 74 ++++++++++++++++++++++++------------
+ 2 files changed, 51 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 288a2b864..2d3f96af6 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -92,6 +92,7 @@
+ #define USB_DEVICE_ID_APPLE_MIGHTYMOUSE	0x0304
+ #define USB_DEVICE_ID_APPLE_MAGICMOUSE	0x030d
+ #define USB_DEVICE_ID_APPLE_MAGICMOUSE2	0x0269
++#define USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC	0x0323
+ #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD	0x030e
+ #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2	0x0265
+ #define USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC	0x0324
+diff --git a/drivers/hid/hid-magicmouse.c b/drivers/hid/hid-magicmouse.c
+index a76f17158..423d50702 100644
+--- a/drivers/hid/hid-magicmouse.c
++++ b/drivers/hid/hid-magicmouse.c
+@@ -218,7 +218,8 @@ static void magicmouse_emit_touch(struct magicmouse_sc *msc, int raw_id, u8 *tda
+ 	int pressure = 0;
+ 
+ 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+-	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+ 		id = (tdata[6] << 2 | tdata[5] >> 6) & 0xf;
+ 		x = (tdata[1] << 28 | tdata[0] << 20) >> 20;
+ 		y = -((tdata[2] << 24 | tdata[1] << 16) >> 20);
+@@ -370,7 +371,8 @@ static void magicmouse_emit_touch(struct magicmouse_sc *msc, int raw_id, u8 *tda
+ 
+ 		if (report_undeciphered) {
+ 			if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+-			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
++			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++			    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC)
+ 				input_event(input, EV_MSC, MSC_RAW, tdata[7]);
+ 			else if (input->id.product !=
+ 					 USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
+@@ -497,7 +499,8 @@ static int magicmouse_raw_event(struct hid_device *hdev,
+ 	}
+ 
+ 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+-	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+ 		magicmouse_emit_buttons(msc, clicks & 3);
+ 		input_report_rel(input, REL_X, x);
+ 		input_report_rel(input, REL_Y, y);
+@@ -519,7 +522,8 @@ static int magicmouse_event(struct hid_device *hdev, struct hid_field *field,
+ 		struct hid_usage *usage, __s32 value)
+ {
+ 	struct magicmouse_sc *msc = hid_get_drvdata(hdev);
+-	if (msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
++	if ((msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	     msc->input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) &&
+ 	    field->report->id == MOUSE2_REPORT_ID) {
+ 		/*
+ 		 * magic_mouse_raw_event has done all the work. Skip hidinput.
+@@ -540,7 +544,8 @@ static int magicmouse_setup_input(struct input_dev *input, struct hid_device *hd
+ 	__set_bit(EV_KEY, input->evbit);
+ 
+ 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+-	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+ 		__set_bit(BTN_LEFT, input->keybit);
+ 		__set_bit(BTN_RIGHT, input->keybit);
+ 		if (emulate_3button)
+@@ -625,7 +630,8 @@ static int magicmouse_setup_input(struct input_dev *input, struct hid_device *hd
+ 	 * inverse of the reported Y.
+ 	 */
+ 	if (input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE ||
+-	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	    input->id.product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC) {
+ 		input_set_abs_params(input, ABS_MT_ORIENTATION, -31, 32, 1, 0);
+ 		input_set_abs_params(input, ABS_MT_POSITION_X,
+ 				     MOUSE_MIN_X, MOUSE_MAX_X, 4, 0);
+@@ -741,19 +747,25 @@ static int magicmouse_enable_multitouch(struct hid_device *hdev)
+ 	int ret;
+ 	int feature_size;
+ 
+-	if (hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+-	    hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
+-		if (hdev->vendor == BT_VENDOR_ID_APPLE) {
++	switch (hdev->product) {
++	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2:
++	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC:
++		switch (hdev->vendor) {
++		case BT_VENDOR_ID_APPLE:
+ 			feature_size = sizeof(feature_mt_trackpad2_bt);
+ 			feature = feature_mt_trackpad2_bt;
+-		} else { /* USB_VENDOR_ID_APPLE */
++			break;
++		default: /* USB_VENDOR_ID_APPLE */
+ 			feature_size = sizeof(feature_mt_trackpad2_usb);
+ 			feature = feature_mt_trackpad2_usb;
+ 		}
+-	} else if (hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++		break;
++	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
++	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
+ 		feature_size = sizeof(feature_mt_mouse2);
+ 		feature = feature_mt_mouse2;
+-	} else {
++		break;
++	default:
+ 		feature_size = sizeof(feature_mt);
+ 		feature = feature_mt;
+ 	}
+@@ -787,6 +799,7 @@ static int magicmouse_fetch_battery(struct hid_device *hdev)
+ 
+ 	if (!hdev->battery || hdev->vendor != USB_VENDOR_ID_APPLE ||
+ 	    (hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2 &&
++	     hdev->product != USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC &&
+ 	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 &&
+ 	     hdev->product != USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC))
+ 		return -1;
+@@ -857,6 +870,7 @@ static int magicmouse_probe(struct hid_device *hdev,
+ 
+ 	if (id->vendor == USB_VENDOR_ID_APPLE &&
+ 	    (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	     id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
+ 	     ((id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+ 	       id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
+ 	      hdev->type != HID_TYPE_USBMOUSE)))
+@@ -868,21 +882,27 @@ static int magicmouse_probe(struct hid_device *hdev,
+ 		goto err_stop_hw;
+ 	}
+ 
+-	if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE)
+-		report = hid_register_report(hdev, HID_INPUT_REPORT,
+-			MOUSE_REPORT_ID, 0);
+-	else if (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2)
+-		report = hid_register_report(hdev, HID_INPUT_REPORT,
+-			MOUSE2_REPORT_ID, 0);
+-	else if (id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+-		 id->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) {
+-		if (id->vendor == BT_VENDOR_ID_APPLE)
++	switch (id->product) {
++	case USB_DEVICE_ID_APPLE_MAGICMOUSE:
++		report = hid_register_report(hdev, HID_INPUT_REPORT, MOUSE_REPORT_ID, 0);
++		break;
++	case USB_DEVICE_ID_APPLE_MAGICMOUSE2:
++	case USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC:
++		report = hid_register_report(hdev, HID_INPUT_REPORT, MOUSE2_REPORT_ID, 0);
++		break;
++	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2:
++	case USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC:
++		switch (id->vendor) {
++		case BT_VENDOR_ID_APPLE:
+ 			report = hid_register_report(hdev, HID_INPUT_REPORT,
+ 				TRACKPAD2_BT_REPORT_ID, 0);
+-		else /* USB_VENDOR_ID_APPLE */
++			break;
++		default:
+ 			report = hid_register_report(hdev, HID_INPUT_REPORT,
+ 				TRACKPAD2_USB_REPORT_ID, 0);
+-	} else { /* USB_DEVICE_ID_APPLE_MAGICTRACKPAD */
++		}
++		break;
++	default: /* USB_DEVICE_ID_APPLE_MAGICTRACKPAD */
+ 		report = hid_register_report(hdev, HID_INPUT_REPORT,
+ 			TRACKPAD_REPORT_ID, 0);
+ 		report = hid_register_report(hdev, HID_INPUT_REPORT,
+@@ -909,7 +929,8 @@ static int magicmouse_probe(struct hid_device *hdev,
+ 		hid_err(hdev, "unable to request touch data (%d)\n", ret);
+ 		goto err_stop_hw;
+ 	}
+-	if (ret == -EIO && id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2) {
++	if (ret == -EIO && (id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++			    id->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC)) {
+ 		schedule_delayed_work(&msc->work, msecs_to_jiffies(500));
+ 	}
+ 
+@@ -945,6 +966,7 @@ static const __u8 *magicmouse_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ 	 */
+ 	if (hdev->vendor == USB_VENDOR_ID_APPLE &&
+ 	    (hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2 ||
++	     hdev->product == USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC ||
+ 	     hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2 ||
+ 	     hdev->product == USB_DEVICE_ID_APPLE_MAGICTRACKPAD2_USBC) &&
+ 	    *rsize == 83 && rdesc[46] == 0x84 && rdesc[58] == 0x85) {
+@@ -971,6 +993,10 @@ static const struct hid_device_id magic_mice[] = {
+ 		USB_DEVICE_ID_APPLE_MAGICMOUSE2), .driver_data = 0 },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE,
+ 		USB_DEVICE_ID_APPLE_MAGICMOUSE2), .driver_data = 0 },
++	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE,
++		USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC), .driver_data = 0 },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE,
++		USB_DEVICE_ID_APPLE_MAGICMOUSE2_USBC), .driver_data = 0 },
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_APPLE,
+ 		USB_DEVICE_ID_APPLE_MAGICTRACKPAD), .driver_data = 0 },
+ 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE,
+-- 
+2.49.0.windows.1
