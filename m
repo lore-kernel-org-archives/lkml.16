@@ -1,269 +1,336 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05A215CD55;
-	Tue, 15 Apr 2025 02:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41CF2DFA26
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685158; cv=none; b=aQTErLC48Zf01rMViyclXY3hNDHvY2RTC90VUWI7pAksmsS2zGEXqEbe+iXf7DUhDT+oIxKbWCin5kISKlatzpuh8UrSJBRmPfuKJ84Ax/bcIjoesb2wKy0x9XlN6l1doU1iAfKHzmq3tg/eNcJA1kItXO/g6EZLXBYo3WtkIaE=
+	t=1744685160; cv=none; b=NK8l6lzI9BgkfuEerk/GAqmwgiW7MZqnnKyA/x4w1pJWPRCp7tQBA7hTjB/WT9mO2Ba4hlDDnGye/wVG6NmJhxCfCrjKtEwCJ8j6Jj04bBTB4HPAiPl8hq5b8Bfo/l9L1CyF0cGRryNEMAOKHeaUilBL/krla+FRc5tnvjx70tA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685158; c=relaxed/simple;
-	bh=7afw2GikOUql8Y40DBVsPNt9neHl43vLxvEPVJEx/c0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RQfs/9ghv+mOmshTpKWLoH1lTB7+kDRNQugg+UTTdusfjTmSfl0YxCKbWLRwPwRiflynzS4uwM8uG5yTVRvgqF9NLMVZNQAfmwHYUu9DR83kHQvx17Ghw3SeM5LjE5/oGMyciro1gxGpbKI5L0ARFhYmzPvwoPZhAMAqTZzDJvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuSg2bFE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744685160; c=relaxed/simple;
+	bh=JBWagI/b04ghXu58sKhKZXloEglf9TTNfTAKDNcOL2A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=h1LruKfyk0fx2+Zka7TYP3oAVmssGLQGQ81139zhOlo7NbDUL8wA9NYY4IpuhP07LFPKchzesj2e8lwKWIKfjrb5I8USP7UUmYYm7Ohxi8Gb7w3UmAZAbXzmwht6beFlG6o+ztDx7Xw0lpuoJS3k+Y8eUKkNk4Dxu0Z+yi3oXpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FDPWFLSW; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuSg2bFE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 17165C4CEF8;
-	Tue, 15 Apr 2025 02:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744685158;
-	bh=7afw2GikOUql8Y40DBVsPNt9neHl43vLxvEPVJEx/c0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=SuSg2bFE5DnrfYCtlbu99c/CO3+QTdI9R8rmE+y9v3Rsb8i2512JYWaWuJZbMVHMs
-	 T6mLDJkKLbqLdwiL/4t4dB8FrxVZVsFjPItZG7lxwTOEbEeP6nGmsch7EVndVIgnZh
-	 aSLzsLF0vqDBOvRKXaQ8WzqzCNG6BGuOCrjUShVCJmKEiJkYuXMzUU9ELCXt9bnYkL
-	 pwQvWt3+fdJjPz6nYDRIxf0vmoIQKNkMYzuLlDqYG/l1IDypGdwriCCPdFowABFaAf
-	 Z3S2s96FnlQF8gvjWZQLkxhGt/NEPg2p/TpQKVGaCmJF8hWNh6iwrJ1X2COmdaOdCK
-	 0gPxd7yeyzHiQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071AFC369B2;
-	Tue, 15 Apr 2025 02:45:58 +0000 (UTC)
-From: Chuan Liu via B4 Relay <devnull+chuan.liu.amlogic.com@kernel.org>
-Date: Tue, 15 Apr 2025 10:45:28 +0800
-Subject: [PATCH v3 5/7] soc: amlogic: clk-measure: Add support for S4
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FDPWFLSW"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2295d78b433so52209745ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744685156; x=1745289956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vmef3ZlMZg7TO+ldIj898v58g7NCeQi8xtcn9yDmmsc=;
+        b=FDPWFLSWG2HTak8aPJfuex5yNeLuP6Q14D8XTfX4i7z1hOHMVzAD7nhkSM4fF2y1OM
+         r7RdADH6TSdWksWvd+mYraOITKaeJZ9MzLzOAlX80CcP1TjhAvzkGh5z7rmnSKfKQV08
+         psTeoM1mJT7/WiTeLCGI+Enf05oVaFH0B+6EnkU7IF2QJourLzTavOv2pwTqH1S1bnde
+         IHP4cl45og3C91q8/copPBZds6mmaHbsrNJJgfTmF+K7uMBPR9C02Q/c49v+SP/h2wMY
+         puzXF9Mlcmr0MbWYa4noCWUMetsj6LFp2AmqoPGgwyBRn1jGD4Jikq6yAOY+lbL062+z
+         4uxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744685156; x=1745289956;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vmef3ZlMZg7TO+ldIj898v58g7NCeQi8xtcn9yDmmsc=;
+        b=SSPpyVDgXUaEdez+3GJVfB4r6mFZBHjMQNhkkQzoe8aXNqHdkAs/1GC+sQH5ZzWJ4b
+         xzuYZuxm3eRztgCmMpJQcj+Wwa4bg7mmyafh39LPfaZiVHN5g4jKDDVEWrmhjk3e6H2y
+         eTgmParqK/vt8mzJAoJWqq9Xlj5uh08MmIOWvBB8hgljwneGCAeaOhWYKtVtofanXvqu
+         ZFlhAsSpCAwWeOqKR6rcae2tG/WhJUMPNVFKqALvzsURy1ooEDOqzxDsIayc6V+Qg0He
+         7U6TIQsn3CmXk/NG6OPNYuwI1CxEIEZO7sme+6KL82rVIdmS7lmV9xuU9am8pyaVSe3o
+         lRAg==
+X-Gm-Message-State: AOJu0Yy2UkdOZz1rIhYUlYZeNfWkRKQL8u4hMPcreaR1rZEEwDW5/a4R
+	vOhGjPvSNGYnCWRV9mndiQtLVIK+gpquLDAGN3lwI3sZYzYJaDsouDWhTX+A5nQ=
+X-Gm-Gg: ASbGnct1yK0TK1cF2MQZPvqV3w0gYzcRe2hJggOQanvBwLsZBDxn3RaCzaBSqVfBy1Q
+	PZC2GqGPVuzA2ZIq/LFVuy+QRaTdALh+9plLXKZKSWQOTI9a/eJ/c3fTMAEWC1prUbOjh+BuR7m
+	5WhMu3cPEUUk3lljeOKmHMqNMGR9ru4ukSPkkVjExirLOhK50zIEL6o+0BBQK+EdryMhDgD6l+K
+	q8fXgW5yHAjRcMPr6lkHJB1/9xAMgeQyx6Zw+WLUqkcPCC1ivZzIwi29Zlt1pegbL60HoS7t7n6
+	JrRf9VDS71zOmWYZjuO8q1lZSrXCC7bDHQqOl/efohFPsu3tpUEVwX0CXhAbjVC9VqeCt0mu
+X-Google-Smtp-Source: AGHT+IE0pZ/5yl+DX5hKsSJ8q3otL9DZ3TTCxY1dn2jd+uRX0/xON+LgsEquVuUnMUfbbGTr0hzbkg==
+X-Received: by 2002:a17:902:d48d:b0:21f:6546:9af0 with SMTP id d9443c01a7336-22bea502685mr170782125ad.44.1744685155939;
+        Mon, 14 Apr 2025 19:45:55 -0700 (PDT)
+Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.45.49
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 14 Apr 2025 19:45:53 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: hannes@cmpxchg.org,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	akpm@linux-foundation.org,
+	david@fromorbit.com,
+	zhengqi.arch@bytedance.com,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	hamzamahfooz@linux.microsoft.com,
+	apais@linux.microsoft.com,
+	Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH RFC 00/28] Eliminate Dying Memory Cgroup
+Date: Tue, 15 Apr 2025 10:45:04 +0800
+Message-Id: <20250415024532.26632-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-clk-measure-v3-5-9b8551dd33b4@amlogic.com>
-References: <20250415-clk-measure-v3-0-9b8551dd33b4@amlogic.com>
-In-Reply-To: <20250415-clk-measure-v3-0-9b8551dd33b4@amlogic.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Chuan Liu <chuan.liu@amlogic.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744685155; l=6985;
- i=chuan.liu@amlogic.com; s=20240902; h=from:subject:message-id;
- bh=f1yZNHZfuwZo3oCuCZ/1ipyUb4zDYUsgVOzb/0UumTA=;
- b=ewP/ejHLfQiMnXGyduhwRSB8WJAwB5Q9/wsascpILyAjEJtuQ76dEf163qOxy6L3gynM/PTsH
- 0UwFv1wHGGBA5FpFwAAz8y9fEV65Cgctj/ToLl4jTKQtq3O5HpJN73I
-X-Developer-Key: i=chuan.liu@amlogic.com; a=ed25519;
- pk=fnKDB+81SoWGKW2GJNFkKy/ULvsDmJZRGBE7pR5Xcpo=
-X-Endpoint-Received: by B4 Relay for chuan.liu@amlogic.com/20240902 with
- auth_id=203
-X-Original-From: Chuan Liu <chuan.liu@amlogic.com>
-Reply-To: chuan.liu@amlogic.com
+Content-Transfer-Encoding: 8bit
 
-From: Chuan Liu <chuan.liu@amlogic.com>
+This patchset is based on v6.15-rc2. It functions correctly only when
+CONFIG_LRU_GEN (Multi-Gen LRU) is disabled. Several issues were encountered
+during rebasing onto the latest code. For more details and assistance, refer
+to the "Challenges" section. This is the reason for adding the RFC tag.
 
-Add the clk-measurer clocks IDs for the Amlogic S4 SoC family.
+## Introduction
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Chuan Liu <chuan.liu@amlogic.com>
----
- drivers/soc/amlogic/meson-clk-measure.c | 163 ++++++++++++++++++++++++++++++++
- 1 file changed, 163 insertions(+)
+This patchset is intended to transfer the LRU pages to the object cgroup
+without holding a reference to the original memory cgroup in order to
+address the issue of the dying memory cgroup. A consensus has already been
+reached regarding this approach recently [1].
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index dfbc34a976dc..d862e30a244e 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -634,6 +634,159 @@ static const struct meson_msr_id clk_msr_c3[] = {
- 
- };
- 
-+static const struct meson_msr_id clk_msr_s4[] = {
-+	CLK_MSR_ID(0, "sys_clk"),
-+	CLK_MSR_ID(1, "axi_clk"),
-+	CLK_MSR_ID(2, "rtc_clk"),
-+	CLK_MSR_ID(5, "mali"),
-+	CLK_MSR_ID(6, "cpu_clk_div16"),
-+	CLK_MSR_ID(7, "ceca_clk"),
-+	CLK_MSR_ID(8, "cecb_clk"),
-+	CLK_MSR_ID(10, "fclk_div5"),
-+	CLK_MSR_ID(11, "mpll0"),
-+	CLK_MSR_ID(12, "mpll1"),
-+	CLK_MSR_ID(13, "mpll2"),
-+	CLK_MSR_ID(14, "mpll3"),
-+	CLK_MSR_ID(15, "fclk_50m"),
-+	CLK_MSR_ID(16, "pcie_clk_inp"),
-+	CLK_MSR_ID(17, "pcie_clk_inn"),
-+	CLK_MSR_ID(18, "mpll_clk_test_out"),
-+	CLK_MSR_ID(19, "hifi_pll"),
-+	CLK_MSR_ID(20, "gp0_pll"),
-+	CLK_MSR_ID(21, "gp1_pll"),
-+	CLK_MSR_ID(22, "eth_mppll_50m_ckout"),
-+	CLK_MSR_ID(23, "sys_pll_div16"),
-+	CLK_MSR_ID(24, "ddr_dpll_pt_clk"),
-+	CLK_MSR_ID(30, "mod_eth_phy_ref_clk"),
-+	CLK_MSR_ID(31, "mod_eth_tx_clk"),
-+	CLK_MSR_ID(32, "eth_125m"),
-+	CLK_MSR_ID(33, "eth_rmii"),
-+	CLK_MSR_ID(34, "co_clkin_to_mac"),
-+	CLK_MSR_ID(35, "mod_eth_rx_clk_rmii"),
-+	CLK_MSR_ID(36, "co_rx_clk"),
-+	CLK_MSR_ID(37, "co_tx_clk"),
-+	CLK_MSR_ID(38, "eth_phy_rxclk"),
-+	CLK_MSR_ID(39, "eth_phy_plltxclk"),
-+	CLK_MSR_ID(40, "ephy_test_clk"),
-+	CLK_MSR_ID(50, "vid_pll_div_clk_out"),
-+	CLK_MSR_ID(51, "enci"),
-+	CLK_MSR_ID(52, "encp"),
-+	CLK_MSR_ID(53, "encl"),
-+	CLK_MSR_ID(54, "vdac"),
-+	CLK_MSR_ID(55, "cdac_clk_c"),
-+	CLK_MSR_ID(56, "mod_tcon_clko"),
-+	CLK_MSR_ID(57, "lcd_an_clk_ph2"),
-+	CLK_MSR_ID(58, "lcd_an_clk_ph3"),
-+	CLK_MSR_ID(59, "hdmitx_pixel"),
-+	CLK_MSR_ID(60, "vdin_meas"),
-+	CLK_MSR_ID(61, "vpu"),
-+	CLK_MSR_ID(62, "vpu_clkb"),
-+	CLK_MSR_ID(63, "vpu_clkb_tmp"),
-+	CLK_MSR_ID(64, "vpu_clkc"),
-+	CLK_MSR_ID(65, "vid_lock"),
-+	CLK_MSR_ID(66, "vapb"),
-+	CLK_MSR_ID(67, "ge2d"),
-+	CLK_MSR_ID(68, "cts_hdcp22_esmclk"),
-+	CLK_MSR_ID(69, "cts_hdcp22_skpclk"),
-+	CLK_MSR_ID(76, "hdmitx_tmds"),
-+	CLK_MSR_ID(77, "hdmitx_sys_clk"),
-+	CLK_MSR_ID(78, "hdmitx_fe_clk"),
-+	CLK_MSR_ID(79, "rama"),
-+	CLK_MSR_ID(93, "vdec"),
-+	CLK_MSR_ID(99, "hevcf"),
-+	CLK_MSR_ID(100, "demod_core"),
-+	CLK_MSR_ID(101, "adc_extclk_in"),
-+	CLK_MSR_ID(102, "cts_demod_core_t2_clk"),
-+	CLK_MSR_ID(103, "adc_dpll_intclk"),
-+	CLK_MSR_ID(104, "adc_dpll_clk_b3"),
-+	CLK_MSR_ID(105, "s2_adc_clk"),
-+	CLK_MSR_ID(106, "deskew_pll_clk_div32_out"),
-+	CLK_MSR_ID(110, "sc"),
-+	CLK_MSR_ID(111, "sar_adc"),
-+	CLK_MSR_ID(113, "sd_emmc_c"),
-+	CLK_MSR_ID(114, "sd_emmc_b"),
-+	CLK_MSR_ID(115, "sd_emmc_a"),
-+	CLK_MSR_ID(116, "gpio_msr_clk"),
-+	CLK_MSR_ID(118, "spicc0"),
-+	CLK_MSR_ID(121, "ts"),
-+	CLK_MSR_ID(130, "audio_vad_clk"),
-+	CLK_MSR_ID(131, "acodec_dac_clk_x128"),
-+	CLK_MSR_ID(132, "audio_locker_in_clk"),
-+	CLK_MSR_ID(133, "audio_locker_out_clk"),
-+	CLK_MSR_ID(134, "audio_tdmout_c_sclk"),
-+	CLK_MSR_ID(135, "audio_tdmout_b_sclk"),
-+	CLK_MSR_ID(136, "audio_tdmout_a_sclk"),
-+	CLK_MSR_ID(137, "audio_tdmin_lb_sclk"),
-+	CLK_MSR_ID(138, "audio_tdmin_c_sclk"),
-+	CLK_MSR_ID(139, "audio_tdmin_b_sclk"),
-+	CLK_MSR_ID(140, "audio_tdmin_a_sclk"),
-+	CLK_MSR_ID(141, "audio_resamplea_clk"),
-+	CLK_MSR_ID(142, "audio_pdm_sysclk"),
-+	CLK_MSR_ID(143, "audio_spdifout_b_mst_clk"),
-+	CLK_MSR_ID(144, "audio_spdifout_mst_clk"),
-+	CLK_MSR_ID(145, "audio_spdifin_mst_clk"),
-+	CLK_MSR_ID(146, "audio_pdm_dclk"),
-+	CLK_MSR_ID(147, "audio_resampleb_clk"),
-+	CLK_MSR_ID(160, "pwm_j"),
-+	CLK_MSR_ID(161, "pwm_i"),
-+	CLK_MSR_ID(162, "pwm_h"),
-+	CLK_MSR_ID(163, "pwm_g"),
-+	CLK_MSR_ID(164, "pwm_f"),
-+	CLK_MSR_ID(165, "pwm_e"),
-+	CLK_MSR_ID(166, "pwm_d"),
-+	CLK_MSR_ID(167, "pwm_c"),
-+	CLK_MSR_ID(168, "pwm_b"),
-+	CLK_MSR_ID(169, "pwm_a"),
-+	CLK_MSR_ID(176, "rng_ring_0"),
-+	CLK_MSR_ID(177, "rng_ring_1"),
-+	CLK_MSR_ID(178, "rng_ring_2"),
-+	CLK_MSR_ID(179, "rng_ring_3"),
-+	CLK_MSR_ID(180, "dmc_osc_ring(LVT16)"),
-+	CLK_MSR_ID(181, "gpu_osc_ring0(LVT16)"),
-+	CLK_MSR_ID(182, "gpu_osc_ring1(ULVT16)"),
-+	CLK_MSR_ID(183, "gpu_osc_ring2(SLVT16)"),
-+	CLK_MSR_ID(184, "vpu_osc_ring0(SVT24)"),
-+	CLK_MSR_ID(185, "vpu_osc_ring1(LVT20)"),
-+	CLK_MSR_ID(186, "vpu_osc_ring2(LVT16)"),
-+	CLK_MSR_ID(187, "dos_osc_ring0(SVT24)"),
-+	CLK_MSR_ID(188, "dos_osc_ring1(SVT16)"),
-+	CLK_MSR_ID(189, "dos_osc_ring2(LVT16)"),
-+	CLK_MSR_ID(190, "dos_osc_ring3(ULVT20)"),
-+	CLK_MSR_ID(192, "axi_sram_osc_ring(SVT16)"),
-+	CLK_MSR_ID(193, "demod_osc_ring0"),
-+	CLK_MSR_ID(194, "demod_osc_ring1"),
-+	CLK_MSR_ID(195, "sar_osc_ring"),
-+	CLK_MSR_ID(196, "sys_cpu_osc_ring0"),
-+	CLK_MSR_ID(197, "sys_cpu_osc_ring1"),
-+	CLK_MSR_ID(198, "sys_cpu_osc_ring2"),
-+	CLK_MSR_ID(199, "sys_cpu_osc_ring3"),
-+	CLK_MSR_ID(200, "sys_cpu_osc_ring4"),
-+	CLK_MSR_ID(201, "sys_cpu_osc_ring5"),
-+	CLK_MSR_ID(202, "sys_cpu_osc_ring6"),
-+	CLK_MSR_ID(203, "sys_cpu_osc_ring7"),
-+	CLK_MSR_ID(204, "sys_cpu_osc_ring8"),
-+	CLK_MSR_ID(205, "sys_cpu_osc_ring9"),
-+	CLK_MSR_ID(206, "sys_cpu_osc_ring10"),
-+	CLK_MSR_ID(207, "sys_cpu_osc_ring11"),
-+	CLK_MSR_ID(208, "sys_cpu_osc_ring12"),
-+	CLK_MSR_ID(209, "sys_cpu_osc_ring13"),
-+	CLK_MSR_ID(210, "sys_cpu_osc_ring14"),
-+	CLK_MSR_ID(211, "sys_cpu_osc_ring15"),
-+	CLK_MSR_ID(212, "sys_cpu_osc_ring16"),
-+	CLK_MSR_ID(213, "sys_cpu_osc_ring17"),
-+	CLK_MSR_ID(214, "sys_cpu_osc_ring18"),
-+	CLK_MSR_ID(215, "sys_cpu_osc_ring19"),
-+	CLK_MSR_ID(216, "sys_cpu_osc_ring20"),
-+	CLK_MSR_ID(217, "sys_cpu_osc_ring21"),
-+	CLK_MSR_ID(218, "sys_cpu_osc_ring22"),
-+	CLK_MSR_ID(219, "sys_cpu_osc_ring23"),
-+	CLK_MSR_ID(220, "sys_cpu_osc_ring24"),
-+	CLK_MSR_ID(221, "sys_cpu_osc_ring25"),
-+	CLK_MSR_ID(222, "sys_cpu_osc_ring26"),
-+	CLK_MSR_ID(223, "sys_cpu_osc_ring27"),
-+
-+};
-+
- static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 			    unsigned int duration)
- {
-@@ -867,6 +1020,12 @@ static const struct meson_msr_data clk_msr_c3_data = {
- 	.reg = &msr_reg_offset_v2,
- };
- 
-+static const struct meson_msr_data clk_msr_s4_data = {
-+	.msr_table = (void *)clk_msr_s4,
-+	.msr_count = ARRAY_SIZE(clk_msr_s4),
-+	.reg = &msr_reg_offset_v2,
-+};
-+
- static const struct of_device_id meson_msr_match_table[] = {
- 	{
- 		.compatible = "amlogic,meson-gx-clk-measure",
-@@ -896,6 +1055,10 @@ static const struct of_device_id meson_msr_match_table[] = {
- 		.compatible = "amlogic,c3-clk-measure",
- 		.data = &clk_msr_c3_data,
- 	},
-+	{
-+		.compatible = "amlogic,s4-clk-measure",
-+		.data = &clk_msr_s4_data,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, meson_msr_match_table);
+## Background
+
+The issue of a dying memory cgroup refers to a situation where a memory
+cgroup is no longer being used by users, but memory (the metadata
+associated with memory cgroups) remains allocated to it. This situation
+may potentially result in memory leaks or inefficiencies in memory
+reclamation and has persisted as an issue for several years. Any memory
+allocation that endures longer than the lifespan (from the users'
+perspective) of a memory cgroup can lead to the issue of dying memory
+cgroup. We have exerted greater efforts to tackle this problem by
+introducing the infrastructure of object cgroup [2].
+
+Presently, numerous types of objects (slab objects, non-slab kernel
+allocations, per-CPU objects) are charged to the object cgroup without
+holding a reference to the original memory cgroup. The final allocations
+for LRU pages (anonymous pages and file pages) are charged at allocation
+time and continues to hold a reference to the original memory cgroup
+until reclaimed.
+
+File pages are more complex than anonymous pages as they can be shared
+among different memory cgroups and may persist beyond the lifespan of
+the memory cgroup. The long-term pinning of file pages to memory cgroups
+is a widespread issue that causes recurring problems in practical
+scenarios [3]. File pages remain unreclaimed for extended periods.
+Additionally, they are accessed by successive instances (second, third,
+fourth, etc.) of the same job, which is restarted into a new cgroup each
+time. As a result, unreclaimable dying memory cgroups accumulate,
+leading to memory wastage and significantly reducing the efficiency
+of page reclamation.
+
+## Fundamentals
+
+A folio will no longer pin its corresponding memory cgroup. It is necessary
+to ensure that the memory cgroup or the lruvec associated with the memory
+cgroup is not released when a user obtains a pointer to the memory cgroup
+or lruvec returned by folio_memcg() or folio_lruvec(). Users are required
+to hold the RCU read lock or acquire a reference to the memory cgroup
+associated with the folio to prevent its release if they are not concerned
+about the binding stability between the folio and its corresponding memory
+cgroup. However, some users of folio_lruvec() (i.e., the lruvec lock)
+desire a stable binding between the folio and its corresponding memory
+cgroup. An approach is needed to ensure the stability of the binding while
+the lruvec lock is held, and to detect the situation of holding the
+incorrect lruvec lock when there is a race condition during memory cgroup
+reparenting. The following four steps are taken to achieve these goals.
+
+1. The first step  to be taken is to identify all users of both functions
+   (folio_memcg() and folio_lruvec()) who are not concerned about binding
+   stability and implement appropriate measures (such as holding a RCU read
+   lock or temporarily obtaining a reference to the memory cgroup for a
+   brief period) to prevent the release of the memory cgroup.
+
+2. Secondly, the following refactoring of folio_lruvec_lock() demonstrates
+   how to ensure the binding stability from the user's perspective of
+   folio_lruvec().
+
+   struct lruvec *folio_lruvec_lock(struct folio *folio)
+   {
+           struct lruvec *lruvec;
+
+           rcu_read_lock();
+   retry:
+           lruvec = folio_lruvec(folio);
+           spin_lock(&lruvec->lru_lock);
+           if (unlikely(lruvec_memcg(lruvec) != folio_memcg(folio))) {
+                   spin_unlock(&lruvec->lru_lock);
+                   goto retry;
+           }
+
+           return lruvec;
+   }
+
+   From the perspective of memory cgroup removal, the entire reparenting
+   process (altering the binding relationship between folio and its memory
+   cgroup and moving the LRU lists to its parental memory cgroup) should be
+   carried out under both the lruvec lock of the memory cgroup being removed
+   and the lruvec lock of its parent.
+
+3. Thirdly, another lock that requires the same approach is the split-queue
+   lock of THP.
+
+4. Finally, transfer the LRU pages to the object cgroup without holding a
+   reference to the original memory cgroup.
+
+## Challenges
+
+In a non-MGLRU scenario, each lruvec of every memory cgroup comprises four
+LRU lists (i.e., two active lists for anonymous and file folios, and two
+inactive lists for anonymous and file folios). Due to the symmetry of the
+LRU lists, it is feasible to transfer the LRU lists from a memory cgroup
+to its parent memory cgroup during the reparenting process.
+
+In a MGLRU scenario, each lruvec of every memory cgroup comprises at least
+2 (MIN_NR_GENS) generations and at most 4 (MAX_NR_GENS) generations.
+
+1. The first question is how to move the LRU lists from a memory cgroup to
+   its parent memory cgroup during the reparenting process. This is due to
+   the fact that the quantity of LRU lists (aka generations) may differ
+   between a child memory cgroup and its parent memory cgroup.
+
+2. The second question is how to make the process of reparenting more
+   efficient, since each folio charged to a memory cgroup stores its
+   generation counter into its ->flags. And the generation counter may
+   differ between a child memory cgroup and its parent memory cgroup because
+   the values of ->min_seq and ->max_seq are not identical. Should those
+   generation counters be updated correspondingly?
+
+I am uncertain about how to handle them appropriately as I am not an
+expert at MGLRU. I would appreciate it if you could offer some suggestions.
+Moreover, if you are willing to directly provide your patches, I would be
+glad to incorporate them into this patchset.
+
+## Compositions
+
+Patches 1-8 involve code refactoring and cleanup with the aim of
+facilitating the transfer LRU folios to object cgroup infrastructures.
+
+Patches 9-10 aim to allocate the object cgroup for non-kmem scenarios,
+enabling the ability that LRU folios could be charged to it and aligning
+the behavior of object-cgroup-related APIs with that of the memory cgroup.
+
+Patches 11-19 aim to prevent memory cgroup returned by folio_memcg() from
+being released.
+
+Patches 20-23 aim to prevent lruvec returned by folio_lruvec() from being
+released.
+
+Patches 24-25 implement the core mechanism to guarantee binding stability
+between the folio and its corresponding memory cgroup while holding lruvec
+lock or split-queue lock of THP.
+
+Patches 26-27 are intended to transfer the LRU pages to the object cgroup
+without holding a reference to the original memory cgroup in order to
+address the issue of the dying memory cgroup.
+
+Patch 28 aims to add VM_WARN_ON_ONCE_FOLIO to LRU maintenance helpers to
+ensure correct folio operations in the future.
+
+## Effect
+
+Finally, it can be observed that the quantity of dying memory cgroups will
+not experience a significant increase if the following test script is
+executed to reproduce the issue.
+
+```bash
+#!/bin/bash
+
+# Create a temporary file 'temp' filled with zero bytes
+dd if=/dev/zero of=temp bs=4096 count=1
+
+# Display memory-cgroup info from /proc/cgroups
+cat /proc/cgroups | grep memory
+
+for i in {0..2000}
+do
+    mkdir /sys/fs/cgroup/memory/test$i
+    echo $$ > /sys/fs/cgroup/memory/test$i/cgroup.procs
+
+    # Append 'temp' file content to 'log'
+    cat temp >> log
+
+    echo $$ > /sys/fs/cgroup/memory/cgroup.procs
+
+    # Potentially create a dying memory cgroup
+    rmdir /sys/fs/cgroup/memory/test$i
+done
+
+# Display memory-cgroup info after test
+cat /proc/cgroups | grep memory
+
+rm -f temp log
+```
+
+## References
+
+[1] https://lore.kernel.org/linux-mm/Z6OkXXYDorPrBvEQ@hm-sls2/
+[2] https://lwn.net/Articles/895431/
+[3] https://github.com/systemd/systemd/pull/36827
+
+Muchun Song (28):
+  mm: memcontrol: remove dead code of checking parent memory cgroup
+  mm: memcontrol: use folio_memcg_charged() to avoid potential rcu lock
+    holding
+  mm: workingset: use folio_lruvec() in workingset_refault()
+  mm: rename unlock_page_lruvec_irq and its variants
+  mm: thp: replace folio_memcg() with folio_memcg_charged()
+  mm: thp: introduce folio_split_queue_lock and its variants
+  mm: thp: use folio_batch to handle THP splitting in
+    deferred_split_scan()
+  mm: vmscan: refactor move_folios_to_lru()
+  mm: memcontrol: allocate object cgroup for non-kmem case
+  mm: memcontrol: return root object cgroup for root memory cgroup
+  mm: memcontrol: prevent memory cgroup release in
+    get_mem_cgroup_from_folio()
+  buffer: prevent memory cgroup release in folio_alloc_buffers()
+  writeback: prevent memory cgroup release in writeback module
+  mm: memcontrol: prevent memory cgroup release in
+    count_memcg_folio_events()
+  mm: page_io: prevent memory cgroup release in page_io module
+  mm: migrate: prevent memory cgroup release in folio_migrate_mapping()
+  mm: mglru: prevent memory cgroup release in mglru
+  mm: memcontrol: prevent memory cgroup release in
+    mem_cgroup_swap_full()
+  mm: workingset: prevent memory cgroup release in lru_gen_eviction()
+  mm: workingset: prevent lruvec release in workingset_refault()
+  mm: zswap: prevent lruvec release in zswap_folio_swapin()
+  mm: swap: prevent lruvec release in swap module
+  mm: workingset: prevent lruvec release in workingset_activation()
+  mm: memcontrol: prepare for reparenting LRU pages for lruvec lock
+  mm: thp: prepare for reparenting LRU pages for split queue lock
+  mm: memcontrol: introduce memcg_reparent_ops
+  mm: memcontrol: eliminate the problem of dying memory cgroup for LRU
+    folios
+  mm: lru: add VM_WARN_ON_ONCE_FOLIO to lru maintenance helpers
+
+ fs/buffer.c                      |   4 +-
+ fs/fs-writeback.c                |  22 +-
+ include/linux/memcontrol.h       | 190 ++++++------
+ include/linux/mm_inline.h        |   6 +
+ include/trace/events/writeback.h |   3 +
+ mm/compaction.c                  |  43 ++-
+ mm/huge_memory.c                 | 218 +++++++++-----
+ mm/memcontrol-v1.c               |  15 +-
+ mm/memcontrol.c                  | 476 +++++++++++++++++++------------
+ mm/migrate.c                     |   2 +
+ mm/mlock.c                       |   2 +-
+ mm/page_io.c                     |   8 +-
+ mm/percpu.c                      |   2 +-
+ mm/shrinker.c                    |   6 +-
+ mm/swap.c                        |  22 +-
+ mm/vmscan.c                      |  73 ++---
+ mm/workingset.c                  |  26 +-
+ mm/zswap.c                       |   2 +
+ 18 files changed, 696 insertions(+), 424 deletions(-)
 
 -- 
-2.42.0
-
+2.20.1
 
