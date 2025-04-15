@@ -1,86 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2852B9A7;
-	Tue, 15 Apr 2025 11:43:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34D028DEF5;
+	Tue, 15 Apr 2025 11:45:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717396; cv=none; b=FByT9avgoI80y/mYsbXoFHjbcejNNUIb6rPqj5ulfLPtgi3EjIx5PASRHLsHF5iCFsrkTBPC38OadSiqmcqPrBvKi/sG3nB8VqyzsiZ/nUM4rFq8XpQIhIZ/2M9w4dDDZt9ZpiHWTM5ox4e2jmPRvk4YTaQmeCWz6r+jBWPgVE4=
+	t=1744717501; cv=none; b=YjTXbBNKFArhx0VQL6ivhlsfiPwLjlC+2PW+LKiiesiZDpq9W9HO9TDRDKxN5GZ3u5yAJs0gpNt4+O8wuokbBwwXarjZ8yTrx7zdWmWyrq2HXUWmMzNdCW6mUfwVh8HhHaLf1UA45+9oJZvJQs77d5JfyRnjVQwdLiMwuTkN8mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717396; c=relaxed/simple;
-	bh=trG5DdsOiG8NeThA812fgykRNksnpDmhYLcOXxGaqGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O9oIahXXfLFMqqY8v44GVSfLhBagLb4mkC0LnmHz0QPk/ibArSnSfwzIwb56sQFgnRy2qgJaqRRg1FPpR3+POm4I+dHGrYbfhd64A7MdBtYyEROb1V0/K1A+c7zNJNvnZpNmDFhQ2EWQrVImPpJPV+IkbY17tDT6Me0pr0wpwRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wP5Owd+z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wP5Owd+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ADCDC4CEDD;
-	Tue, 15 Apr 2025 11:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744717396;
-	bh=trG5DdsOiG8NeThA812fgykRNksnpDmhYLcOXxGaqGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wP5Owd+zjv497is2T2hpPymcDdeNsHMTU7TaEX0bI31pqzumlXFjw3izhest8gx00
-	 7AjefdryygCNGgEYbzz8Kb2+fI8nE6BN4MDBuq9K9GMoENep8FxawgJLk8DhYk3ll1
-	 bmets7KsVJqTCmeb1OXJ3dmHC3UiR+iJGy1Re4kc=
-Date: Tue, 15 Apr 2025 13:43:13 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: vulab@iscas.ac.cn, brcm80211-dev-list.pdl@broadcom.com,
-	brcm80211@lists.linux.dev, linux-wireless@vger.kernel.org,
-	stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-	Erick Archer <erick.archer@outlook.com>,
-	Jacobe Zang <jacobe.zang@wesion.com>, Kalle Valo <kvalo@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2] brcm80211: fmac: Add error handling
- forbrcmf_usb_dl_writeimage()
-Message-ID: <2025041507-proclaim-frigidity-da8c@gregkh>
-References: <20250415072048.2629-1-vulab@iscas.ac.cn>
- <af72dff7-8ad1-476f-81f2-6f7d76761b12@web.de>
+	s=arc-20240116; t=1744717501; c=relaxed/simple;
+	bh=7JPX+2GYolK1KRD+y0abQNSxtm1R8tnluqSvHjMuoyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=okBEsNm0tsDKbCcHDbRT0+y6g6rxiKOh1ZvZdfo31JA47eCQb9hHVnqlc7VyMUkhpbph4RQOow9Tdmo3Fm3ZfX/hNlJh9z/5l+YLbGOkKOoxGjzff38SAPT+B539uECXknpzs0uM5bc2EwkNdY/DuSdNXFuzrwT/xIYXauqQSQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616F4C4CEDD;
+	Tue, 15 Apr 2025 11:45:00 +0000 (UTC)
+Date: Tue, 15 Apr 2025 07:46:33 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jin Guo <menglong8.dong@gmail.com>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jin Guo <guoj17@chinatelecom.cn>
+Subject: Re: [PATCH] ftrace: make ftrace_location() more accurate
+Message-ID: <20250415074633.3cf7546d@gandalf.local.home>
+In-Reply-To: <20250415112750.1477339-1-guoj17@chinatelecom.cn>
+References: <20250415112750.1477339-1-guoj17@chinatelecom.cn>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <af72dff7-8ad1-476f-81f2-6f7d76761b12@web.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 01:21:23PM +0200, Markus Elfring wrote:
-> …
-> > brcmf_usb_dl_cmd() but dose not check its return value. The
-> > 'state.state' and the 'state.bytes' are uninitialized if the
-> …
+On Tue, 15 Apr 2025 19:27:50 +0800
+Jin Guo <menglong8.dong@gmail.com> wrote:
+
+> The function ftrace_location is used to lookup the ftrace location with an
+> ip. However, the result that it returns can be wrong in some case.
 > 
-> Would you ever like to benefit any more from change descriptions
-> which may contain text lines that would occasionally be longer
-> than 60 characters?
+> Let's image that we have the following kallsyms:
 > 
-> Regards,
-> Markus
-> 
+>   ffffffff812c35f0 T sys_ni_syscall
+>   ffffffff812c38b0 W __pfx___x64_sys_io_pgetevents_time32
+>   ffffffff812c38c0 W __x64_sys_io_pgetevents_time32
 
-Hi,
+Have you tried the latest kernel? because on x86, weak functions that are
+not used should no longer be in the ftrace table. That is, you should never
+see __ftrace_invalid_addres_* anymore.
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+See https://lore.kernel.org/all/20250218195918.255228630@goodmis.org/
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+That was just added this merge window, which would make your patch obsolete.
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
+-- Steve
