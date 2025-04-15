@@ -1,157 +1,246 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02372957CD
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E531E0E0C;
+	Tue, 15 Apr 2025 11:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715955; cv=none; b=TLDJBf65PJQSj7Qon6ibNgm1zRYKPdBW+tLpNMWQ5auYwZVwOdEgvqXPPeeZBz3MS9yIlLCBClin7XR60l4dZPqO0ybXpO27840P4nYMoSHsC2rq8E5LjAuMiQK7aKdLkiofSLxTLIIiIH1E65XxwtcvyhVOjT4xufp1DnNm2zQ=
+	t=1744715986; cv=none; b=MKADfIOgMSbDYNhGIr02KPiEVnI0ETFCe3FrHMBP6LqX+9oCCo9gVys+pu3J7fpug8AFlkDj+iZq952Yu4IC6pneGaRjck9/OvOTvd8OZwrfgsymivLppvdCR7Yy4IsDhLieBMEsXTu5YS4RbE/MF5XZkMpTkf7JSh4rzacOqHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715955; c=relaxed/simple;
-	bh=o88/OolMElgWSR8SJDk87YXyFNQ8PpMtws8gwn/nr0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E0izeprd0IdykXGbCd4ftX/+yciMq4rxqBduVx85XZBryvKH/65Ep2zhfv0ZkXFtACDNjl9wILsQJ2HHHmvu9cfU7azCUk8xhclzSWtyZtWa03BG5ygZ4TNBxN3Hr/5dQfCX8nGiKK+gGP17HBLxtlv7JhDL6ns/UQDTMSkRb8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LGVWtH98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=febXkoSZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LGVWtH98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=febXkoSZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744715986; c=relaxed/simple;
+	bh=fm8nBPd0osnUG6dqX12oQsoVPD0PFBn5UOMP1jMH0mM=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=I8bXc/mBn0OJHPdBisG0CLxqqFoSXjMJNYdS3SGGtDILXhxmsaUqy+RUFl97iUlILvunB8AAMVmNYsD4Qcji+nWzXZl4bFa81qd4m1zMtM+62UaynnlfsrMc70AIdAXiZz0JYLl2C0Sw0PryZvvD74DofCiaVwPO6D8VuMPpHiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gu4568tB; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LGVWtH98";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="febXkoSZ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LGVWtH98";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="febXkoSZ"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id DDE931F385;
-	Tue, 15 Apr 2025 11:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744715951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
-	b=LGVWtH989xPiwP8zqKoBX3bYue6AZmt3bqCzdRB/dSU3pIlIKYnSQZK63L/CuPgDjgOVpv
-	gUK58QjZqRjUuWcS2+OTfVBiL0wih43w//6Cue30f7FlFaUqWGhWx4QnDLK3hyAkGdq0sw
-	XW7QXiouBwzSTFrzwilRea+XcOfb5Do=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744715951;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
-	b=febXkoSZ+3CTR0yy0FFWj5hJ/EHVkLUE/YQXJwalZx72TGin1+mlpqdE/38g3THbEmMPdX
-	nOv8yqgAsJwbL3BA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=LGVWtH98;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=febXkoSZ
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744715951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
-	b=LGVWtH989xPiwP8zqKoBX3bYue6AZmt3bqCzdRB/dSU3pIlIKYnSQZK63L/CuPgDjgOVpv
-	gUK58QjZqRjUuWcS2+OTfVBiL0wih43w//6Cue30f7FlFaUqWGhWx4QnDLK3hyAkGdq0sw
-	XW7QXiouBwzSTFrzwilRea+XcOfb5Do=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744715951;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=2tkYgBN93De44ZUzQ+u2SMXn56k/+Th3v9B5mugI918=;
-	b=febXkoSZ+3CTR0yy0FFWj5hJ/EHVkLUE/YQXJwalZx72TGin1+mlpqdE/38g3THbEmMPdX
-	nOv8yqgAsJwbL3BA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7FCAE137A5;
-	Tue, 15 Apr 2025 11:19:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vVx2HK9A/mdvegAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 15 Apr 2025 11:19:11 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH] mm, hugetlb: Increment the number of pages to be reset on HVO
-Date: Tue, 15 Apr 2025 13:18:59 +0200
-Message-ID: <20250415111859.376302-1-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gu4568tB"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 3609620BCAD2; Tue, 15 Apr 2025 04:19:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3609620BCAD2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744715979;
+	bh=z0JDToXaxOj4YM1xG5O0anHRB/LqnT8FbQltl3n3bNE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gu4568tBswLAGhTi89YoOKz5ULZDWS2wkjK0n4L2pObpW1lczkOEUOLKP2xpaqGHE
+	 9Mx/MXOPMRYU+RqiQGkx4PuJNxnOe98N0em6hRtbinxatYNk5ih9sZLZ8YNuDAR0Hv
+	 d3x0QB13Z+Z2wLj2F+0IdWPmlB2/SZS+UK0E/8G8=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH v4] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Date: Tue, 15 Apr 2025 04:19:38 -0700
+Message-Id: <1744715978-8185-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: DDE931F385
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-commit 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
-shifted hugetlb specific stuff, and now mapping overlaps _hugetlb_cgroup field.
+Allow the KVP daemon to log the KVP updates triggered in the VM
+with a new debug flag(-d).
+When the daemon is started with this flag, it logs updates and debug
+information in syslog with loglevel LOG_DEBUG. This information comes
+in handy for debugging issues where the key-value pairs for certain
+pools show mismatch/incorrect values.
+The distro-vendors can further consume these changes and modify the
+respective service files to redirect the logs to specific files as
+needed.
 
-Upon restoring the vmemmap for HVO, only the first two tail pages are reset, and
-this causes the check in free_tail_page_prepare() to fail as it finds
-an unexpected mapping value in some tails.
-
-Increment the number of pages to be reset to 4 (head + 3 tail pages)
-
-Fixes: 4eeec8c89a0c ("mm: move hugetlb specific things in folio to page[3]")
-Suggested-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Reviewed-by: Naman Jain <namjain@linux.microsoft.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 ---
- mm/hugetlb_vmemmap.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Changes in v4:
+ * renamed the debug option from "debug_enabled" to "debug"
+ * shorten a debug message by removing unnecessary strings
+---
+ Changes in v3:
+ * remove timestamp from raw message
+ * use i+1 instead of i while printing record array
+ * add debug logs in delete operation
+---
+ Changes in v2:
+ * log the debug logs in syslog(debug) instead of a seperate file that
+   we will have to maintain.
+ * fix the commit message to indicate the same.
+---
+ tools/hv/hv_kvp_daemon.c | 65 ++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 60 insertions(+), 5 deletions(-)
 
-diff --git a/mm/hugetlb_vmemmap.c b/mm/hugetlb_vmemmap.c
-index 9a99dfa3c495..27245e86df25 100644
---- a/mm/hugetlb_vmemmap.c
-+++ b/mm/hugetlb_vmemmap.c
-@@ -238,11 +238,11 @@ static void vmemmap_remap_pte(pte_t *pte, unsigned long addr,
-  * struct page, the special metadata (e.g. page->flags or page->mapping)
-  * cannot copy to the tail struct page structs. The invalid value will be
-  * checked in the free_tail_page_prepare(). In order to avoid the message
-- * of "corrupted mapping in tail page". We need to reset at least 3 (one
-- * head struct page struct and two tail struct page structs) struct page
-+ * of "corrupted mapping in tail page". We need to reset at least 4 (one
-+ * head struct page struct and three tail struct page structs) struct page
-  * structs.
-  */
--#define NR_RESET_STRUCT_PAGE		3
-+#define NR_RESET_STRUCT_PAGE		4
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 04ba035d67e9..37ebe1cf0641 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -83,6 +83,7 @@ enum {
+ };
  
- static inline void reset_struct_pages(struct page *start)
+ static int in_hand_shake;
++static int debug;
+ 
+ static char *os_name = "";
+ static char *os_major = "";
+@@ -183,6 +184,20 @@ static void kvp_update_file(int pool)
+ 	kvp_release_lock(pool);
+ }
+ 
++static void kvp_dump_initial_pools(int pool)
++{
++	int i;
++
++	syslog(LOG_DEBUG, "===Start dumping the contents of pool %d ===\n",
++	       pool);
++
++	for (i = 0; i < kvp_file_info[pool].num_records; i++)
++		syslog(LOG_DEBUG, "pool: %d, %d/%d key=%s val=%s\n",
++		       pool, i + 1, kvp_file_info[pool].num_records,
++		       kvp_file_info[pool].records[i].key,
++		       kvp_file_info[pool].records[i].value);
++}
++
+ static void kvp_update_mem_state(int pool)
  {
+ 	FILE *filep;
+@@ -270,6 +285,8 @@ static int kvp_file_init(void)
+ 			return 1;
+ 		kvp_file_info[i].num_records = 0;
+ 		kvp_update_mem_state(i);
++		if (debug)
++			kvp_dump_initial_pools(i);
+ 	}
+ 
+ 	return 0;
+@@ -297,6 +314,9 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		 * Found a match; just move the remaining
+ 		 * entries up.
+ 		 */
++		if (debug)
++			syslog(LOG_DEBUG, "%s: deleting the KVP: pool=%d key=%s val=%s",
++			       __func__, pool, record[i].key, record[i].value);
+ 		if (i == (num_records - 1)) {
+ 			kvp_file_info[pool].num_records--;
+ 			kvp_update_file(pool);
+@@ -315,20 +335,36 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ 		kvp_update_file(pool);
+ 		return 0;
+ 	}
++
++	if (debug)
++		syslog(LOG_DEBUG, "%s: could not delete KVP: pool=%d key=%s. Record not found",
++		       __func__, pool, key);
++
+ 	return 1;
+ }
+ 
+ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 				 const __u8 *value, int value_size)
+ {
+-	int i;
+-	int num_records;
+ 	struct kvp_record *record;
++	int num_records;
+ 	int num_blocks;
++	int i;
++
++	if (debug)
++		syslog(LOG_DEBUG, "%s: got a KVP: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
+ 
+ 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+-		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
++		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
++		syslog(LOG_ERR, "%s: Too long key or value: key=%s, val=%s",
++		       __func__, key, value);
++
++		if (debug)
++			syslog(LOG_DEBUG, "%s: Too long key or value: pool=%d, key=%s, val=%s",
++			       __func__, pool, key, value);
+ 		return 1;
++	}
+ 
+ 	/*
+ 	 * First update the in-memory state.
+@@ -348,6 +384,9 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		 */
+ 		memcpy(record[i].value, value, value_size);
+ 		kvp_update_file(pool);
++		if (debug)
++			syslog(LOG_DEBUG, "%s: updated: pool=%d key=%s val=%s",
++			       __func__, pool, key, value);
+ 		return 0;
+ 	}
+ 
+@@ -359,8 +398,10 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		record = realloc(record, sizeof(struct kvp_record) *
+ 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+ 
+-		if (record == NULL)
++		if (!record) {
++			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
+ 			return 1;
++		}
+ 		kvp_file_info[pool].num_blocks++;
+ 
+ 	}
+@@ -368,6 +409,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 	memcpy(record[i].key, key, key_size);
+ 	kvp_file_info[pool].records = record;
+ 	kvp_file_info[pool].num_records++;
++
++	if (debug)
++		syslog(LOG_DEBUG, "%s: added: pool=%d key=%s val=%s",
++		       __func__, pool, key, value);
++
+ 	kvp_update_file(pool);
+ 	return 0;
+ }
+@@ -1662,6 +1708,7 @@ void print_usage(char *argv[])
+ 	fprintf(stderr, "Usage: %s [options]\n"
+ 		"Options are:\n"
+ 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
++		"  -d, --debug            Enable debug logs(syslog debug by default)\n"
+ 		"  -h, --help             print this help\n", argv[0]);
+ }
+ 
+@@ -1683,10 +1730,11 @@ int main(int argc, char *argv[])
+ 	static struct option long_options[] = {
+ 		{"help",	no_argument,	   0,  'h' },
+ 		{"no-daemon",	no_argument,	   0,  'n' },
++		{"debug",	no_argument,	   0,  'd' },
+ 		{0,		0,		   0,  0   }
+ 	};
+ 
+-	while ((opt = getopt_long(argc, argv, "hn", long_options,
++	while ((opt = getopt_long(argc, argv, "hnd", long_options,
+ 				  &long_index)) != -1) {
+ 		switch (opt) {
+ 		case 'n':
+@@ -1695,6 +1743,9 @@ int main(int argc, char *argv[])
+ 		case 'h':
+ 			print_usage(argv);
+ 			exit(0);
++		case 'd':
++			debug = 1;
++			break;
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+@@ -1717,6 +1768,9 @@ int main(int argc, char *argv[])
+ 	 */
+ 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+ 
++	if (debug)
++		syslog(LOG_INFO, "Logging debug info in syslog(debug)");
++
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+ 		exit(EXIT_FAILURE);
 -- 
-2.49.0
+2.34.1
 
