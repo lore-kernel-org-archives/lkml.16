@@ -1,105 +1,109 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 247632820B0;
-	Tue, 15 Apr 2025 09:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76CA2820B7
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709236; cv=none; b=AY7ETay/B0v7yu54jxXKoqnkKOBp15osUhghTtKUim0gkZEcrbwL2sBCeO1Kto/u5f57+8Fi299+1n1i9ne0qqYpXoWyJ8Jf0QtnPs/iv100WHJ/2YW9QgxNaNv0ChiMI2vyaK6kUa3yqkrHlOb+W5phcHWaJEKpMyLC8PupMdg=
+	t=1744709249; cv=none; b=HfY7/2rH7NvEtIN2yXUKcFgEXKusogmT+x1EjzFr6mhEcEqhSeH/D8i/tEP7Iuqkb5Q+fNCSfD9om5bVxY+XOXt22LMLuhiBRcyzaHKlODKBC5odjlOuyBNxor0EUfiFO3kbKP2jGYg8uXluvGVlIabEo+0/1ecxZa/GbUgWULg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709236; c=relaxed/simple;
-	bh=LP2dtJdyJA35myFiGrNHz8KbwDPs7k7TIUhuQIUB7U8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i6gxDjaMtaLIowz0x/5bVbJIusynr10gS0z/F2TlLVZRakiycmKCmtv+RzepiktExoHBTMviom/a4aO5/TsgfqLjiPaQ4S0sfou3JPuhmcZFeb07GLs6QvS1SQhD72a7n/FjH5oLe5ch6wlO6QBnPPt0xIbLfF2LR9jfPvHLzV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F6JK5V008571;
-	Tue, 15 Apr 2025 09:26:42 GMT
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ydd1k67t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 15 Apr 2025 09:26:41 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 15 Apr 2025 02:26:40 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 02:26:37 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <jack@suse.cz>
-CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
-        <hch@infradead.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
-        <ntfs3@lists.linux.dev>,
-        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
-Subject: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Date: Tue, 15 Apr 2025 17:26:37 +0800
-Message-ID: <20250415092637.251786-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <q5zbucxhdxsso7r3ydtnsz7jjkohc2zevz5swfbzwjizceqicp@32vssyaakhqo>
-References: <q5zbucxhdxsso7r3ydtnsz7jjkohc2zevz5swfbzwjizceqicp@32vssyaakhqo>
+	s=arc-20240116; t=1744709249; c=relaxed/simple;
+	bh=ACQuDtLySJGUDdPySwcX9laZ30nm6+nLm5qXV88Hr4g=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BItx8VGlAMQpnJuu66qOBs7w4wd39WW2wFGba2nYrZHYyeDWAvU/waDKDrdf6gMw7wjWCrm3P4P1By5HhASC3dn7tEQL2NnvTmAnhARs5yT86MwZvpqWJsYWg0xxoa26lpa2lKYhZvxEMQJ5MPk/Vml9I1MYiQ36/A6OtRLC2ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TTscjFax; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TTscjFax"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so42050975e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744709246; x=1745314046; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xNqTolRYwEdQ0xZi5RcJyGoxOrWsQ0mEIGkr1N9o2c4=;
+        b=TTscjFaxJJTBmBvktlTtVNPIhW4kOtmlmtVfJDUya0+0QptH5G6TO616jAkxIYgWzS
+         VI/HF3KEb5k4gwdMtOubR51cHOTkl1SH03800okzDCgX2fj5lte064eD9JqOno+O+yuF
+         A0MWFpMghyouF4Xj30Jjc0WXNd+iG84x94okp2IL7OEmND9nNAwlawQzB+cnoSsSAzTg
+         dynNN2//ZE9c7Kge33bJihgvJyW9OX3J4XWIKFMdJyAM5AymCN/Qz5VFBgbwA/e+xsEs
+         16EjoYYAfV2lBEbKQzXQceIdSBEcE01ozo9KvyYahcbovRGrFmlzEj9lQGIE1YbQYsxr
+         HxUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744709246; x=1745314046;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xNqTolRYwEdQ0xZi5RcJyGoxOrWsQ0mEIGkr1N9o2c4=;
+        b=acO6zwda6Ig6NZEaRHACZCWsbr4rWsGYR/LTkmjhDbtmslIzkXcGVu0t+5Cu1YZadH
+         n5r9VLwpHYpN5NMtEmjrMB2LrIC+laasVVl+E4sxDbZ8VFpLsHE4wHWs+ZLGKZi1x9O7
+         6PBdaGfib03qd8Urm05tr2fSlGKKzSP+IAPhH3AGW7P7+GjDbXW/VHQfLpzFdS74WVIX
+         ZZ9iFq5atuXpeyVv1KeLiRfKwabhts1fvZ2GS6gyDKOHN8emvunsaFIiCNUknfpiwh90
+         lGU6At/JNDJX7vdLACr/l9zopQeb0nShbBVPHBnbsExemXK9X3UQ00f8Ajcj602qxD8Z
+         e/OA==
+X-Forwarded-Encrypted: i=1; AJvYcCUtZaLIJC43dT5w07KCuRfpQYkfBAdssUP9khlIKcKK/ghtxeXLjtReNEnUSHYiF5qhD3M5LvpYesPWc/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzidFroukGWm4y0O+NsFw3WsO7OkvslwZyGae8a4UsTuxG89l/h
+	w51Wv+TYK0UuUE7Ova+s0Zct6lXqVIGxDZwVcXahsxmNOQ6vRth0AWMNqemCriPnTwOTN6v/foh
+	8/AJYzBLL0YnrUA==
+X-Google-Smtp-Source: AGHT+IGNOnYD9JWXHsjrfEKTxmUhjAQDAgXAWdeq5XqvcbzsPrWDx2ckJ/DQU+m/oiKaf2kSydGbCqfW3XxRxAo=
+X-Received: from wmbz6.prod.google.com ([2002:a05:600c:c086:b0:43d:4ba5:b5d6])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b86:b0:43d:db5:7b21 with SMTP id 5b1f17b1804b1-43f3a9b4865mr111301865e9.28.1744709246233;
+ Tue, 15 Apr 2025 02:27:26 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:27:24 +0000
+In-Reply-To: <20250414171241.2126137-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: ajtiTctVFHTci5pOX7J_hLlgq0UvoyFH
-X-Proofpoint-GUID: ajtiTctVFHTci5pOX7J_hLlgq0UvoyFH
-X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=67fe2651 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=edf1wS77AAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=wy8MQQXfsJFEdZ-aUNQA:9 a=DcSpbTIhAlouE1Uv7lRv:22
- a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=921 impostorscore=0 suspectscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504150065
+Mime-Version: 1.0
+References: <20250414171241.2126137-1-ojeda@kernel.org>
+Message-ID: <Z_4mfK2MK2xclvbW@google.com>
+Subject: Re: [PATCH] rust: kbuild: use `pound` to support GNU Make < 4.3
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-The ntfs3 can use the page cache directly, so its address_space_operations
-need direct_IO. Exit ntfs_direct_IO() if it is a compressed file.
+On Mon, Apr 14, 2025 at 07:12:41PM +0200, Miguel Ojeda wrote:
+> GNU Make 4.3 changed the behavior of `#` inside commands in commit
+> c6966b323811 ("[SV 20513] Un-escaped # are not comments in function
+> invocations"):
+> 
+>     * WARNING: Backward-incompatibility!
+>       Number signs (#) appearing inside a macro reference or function invocation
+>       no longer introduce comments and should not be escaped with backslashes:
+>       thus a call such as:
+>         foo := $(shell echo '#')
+>       is legal.  Previously the number sign needed to be escaped, for example:
+>         foo := $(shell echo '\#')
+>       Now this latter will resolve to "\#".  If you want to write makefiles
+>       portable to both versions, assign the number sign to a variable:
+>         H := \#
+>         foo := $(shell echo '$H')
+>       This was claimed to be fixed in 3.81, but wasn't, for some reason.
+>       To detect this change search for 'nocomment' in the .FEATURES variable.
+> 
+> Unlike other commits in the kernel about this issue, such as commit
+> 633174a7046e ("lib/raid6/test/Makefile: Use $(pound) instead of \#
+> for Make 4.3"), that fixed the issue for newer GNU Makes, in our case
+> it was the opposite, i.e. we need to fix it for the older ones: someone
+> building with e.g. 4.2.1 gets the following error:
+> 
+>     scripts/Makefile.compiler:81: *** unterminated call to function 'call': missing ')'.  Stop.
+> 
+> Thus use the existing variable to fix it.
+> 
+> Reported-by: moyi geek
+> Closes: https://rust-for-linux.zulipchat.com/#narrow/channel/291565/topic/x/near/512001985
+> Cc: stable@vger.kernel.org
+> Fixes: e72a076c620f ("kbuild: fix issues with rustc-option")
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Fixes: b432163ebd15 ("fs/ntfs3: Update inode->i_mapping->a_ops on compression state")
-Reported-by: syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=e36cc3297bd3afd25e19
-Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
----
-V1 -> V2: exit direct io if it is a compressed file.
-
- fs/ntfs3/inode.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-index 3e2957a1e360..0f0d27d4644a 100644
---- a/fs/ntfs3/inode.c
-+++ b/fs/ntfs3/inode.c
-@@ -805,6 +805,10 @@ static ssize_t ntfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 		ret = 0;
- 		goto out;
- 	}
-+	if (is_compressed(ni)) {
-+		ret = 0;
-+		goto out;
-+	}
- 
- 	ret = blockdev_direct_IO(iocb, inode, iter,
- 				 wr ? ntfs_get_block_direct_IO_W :
-@@ -2068,5 +2072,6 @@ const struct address_space_operations ntfs_aops_cmpr = {
- 	.read_folio	= ntfs_read_folio,
- 	.readahead	= ntfs_readahead,
- 	.dirty_folio	= block_dirty_folio,
-+	.direct_IO	= ntfs_direct_IO,
- };
- // clang-format on
--- 
-2.43.0
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
