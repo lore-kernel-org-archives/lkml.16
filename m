@@ -1,82 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45CC7279799
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5F910F2
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744699002; cv=none; b=Vrj30zOj0qn4iD6yQuKpg6JyUVOPapef7HebRC8IcU8Y4ymQEl4B1vf5Ai1dx2OoIN8T2yB33GF7FW/NN0tV40hVZ9bt0Qh06GkguiJWx+rlMM8k48FEZZhKRUuH6cTmCMKCSlYLLQbu0Eh9QvfxEjCvMsFLDAowHSSC10mY7w8=
+	t=1744699042; cv=none; b=brCXxbEV4mEkAINTYoY8wvMuolOUBbhCIZYLacjn7bDa7E7JGfITM9bPnwpMNw1zLobZogm7DqPhqMhx743QcKWP6eJEpbjWyLKh9dwcCFOaP0LWqlhhBKYwfB+zufhRKYPNdzpKxNQDjyqCCamL3f2uzCf2/Gy56rE3yCYJwjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744699002; c=relaxed/simple;
-	bh=0w1mAf0KNTYZjdmbTaPxEL5sNssyvZfwmOjdvquXwJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nBZlScEa0ntDpH8YX5ICYymP7RAyxqrVK9bBvwe4IMLdplowhHe4zTawxOyfYqFNn/Rw3uplpsikoXAoBTqtyiqG3ac/MXzmUTYxFapwbAZOnIfYAMt1juYoIrPxOx0L+zuon0IWm2u7w7gvvA6zssA8DKteFctgwN+UoEoSgk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEFA415A1;
-	Mon, 14 Apr 2025 23:36:37 -0700 (PDT)
-Received: from [10.163.49.104] (unknown [10.163.49.104])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 00C033F694;
-	Mon, 14 Apr 2025 23:36:34 -0700 (PDT)
-Message-ID: <f998cbba-bda0-472b-8f4a-a972a29f21ef@arm.com>
-Date: Tue, 15 Apr 2025 12:06:31 +0530
+	s=arc-20240116; t=1744699042; c=relaxed/simple;
+	bh=qP4MZDymKa+78tN1SibePW4jXrZOInGp63nQGSXwajk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i4CTfX1zMriOmhur4VWmybwS6hnHmiiC4fzT5IiLyXg9nrWxxkk6jqZxEtzKL/UJsMn3r7q10l9Vditklxo7r9WpNoPn4K2pWKa9Xxu9UKFuebQ7Var16+dwu0gzBH7ajxskFXnwnrywjF0hkErpIbSOi73nyc2YQnJjOYd7u2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=enxE4Z10; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enxE4Z10"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2264aefc45dso76484935ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744699040; x=1745303840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NA2ukYcQNWFd46tbKc45ZOEveZYhJ9ZUVezXZPsOMj0=;
+        b=enxE4Z105dSiGYdQ/nvY/r9A4vTtmEg1NlpkDmaLcipvcX+ekF6mVpJUAeFZOn9L+4
+         mBLUuso03qrWBPADwWOjajyCD6AV/3oAxkRery8g/9/8dVaU1W/7ek/ivcZR/i4iP0Ay
+         /gUstlUoIF2+51Xd4u5hUA47e9jzG9cU0oJFOOWw5dNbjW/j9kS1/xwe2R9tA8q/Dg8m
+         zsVm6l14CHBFqE1k5W/3BnZG6LLD0R336MnVar4R7m28Ss5lEg4dCzMr8nleRrkXNteQ
+         n4knpQMbyWAOFL/1OiWeIQPxZHnp7KMFlL4Gq14S0UzGt5gaAS9JO63jS7a8hI9Zo2t0
+         4CLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744699040; x=1745303840;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NA2ukYcQNWFd46tbKc45ZOEveZYhJ9ZUVezXZPsOMj0=;
+        b=Nol3pX+58aGHNj4mdAGFNevBpClNjJpYM1Q/OnO1fRGRkCRUw66tC2G3RPiwT21wU4
+         W5hZ1+/h3aGD94TYhsTgYi923lUSjcKV2kKSKbmXH2/AyockLQCOPdhOoHKAu7gEJOiA
+         ww6kue5x03dpFZ79VqqtufOohjBu8uWRhlSjqdEDDCHFzv9hRrVi+C/hd0pepWaBMeTB
+         lueDyyajxmEy4cLFvvrJ0PJfRit4gS2xr9oFXzHF4RbQS3XwV/K68cOhJdbcNoRFBwfi
+         XbNYcmq5BJM6z5++QBdNCIVKT9Xi+2D2F4iTB5dK+pBg47Eb2QtmMYAaToszzN2kv2Yg
+         xNxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXTHzvzpey3BJpHuVqC1QpuyGRtEPkN3eTOsYwC6U7jvCAuDzyS0cPF81rHKsADsqpHuzaDnSCL8AjJxE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+cFjfBldDouSSrPunbxgbYDSlx0mYwsMl6w5I8TSbffoKjkmG
+	A0MDLH4uoagGeLgPixefs2MKDSd1a9WJeqiwXyl3N2xElAHunnq7
+X-Gm-Gg: ASbGnctTQVqOLkJRqMssKNdLTDH5YLSEOjHINBHk8ZkocbVaUXY4eS8GvmUuTsglbGw
+	o3Rd+fccRbHuHkCEuLn5DtvqXtpHNCmXPUQEj/d5NEQUx5jdFNj5ywZMACgBTRJH7rXB626288R
+	WcbyGzqZlvFGBV3sPwJ+valS6IP3cccaSMgIk8G3Kq8j49yrYjxyv0l4CckVwldYeJACZMkgz3e
+	V/0Bf8mtIFENl+88v2NfHw4BUYZGcKVzo1fnsO+Sd6IFk3XONmcrFPKYY09tX5MK7hNVt0sIuLp
+	HeRt95N1ULdMCvArh7mrxTbN4wEdMEy9bdlUHCuOedULILO8bsA=
+X-Google-Smtp-Source: AGHT+IENxf+UYko9kPc+7Uqjj19g4l60bcYBTsDrmkwErQ+SIJr7sZ6J0VirVstwYMZaIH54j70HTw==
+X-Received: by 2002:a17:903:1aa5:b0:223:377f:9795 with SMTP id d9443c01a7336-22bea3de1a8mr234328695ad.0.1744699040407;
+        Mon, 14 Apr 2025 23:37:20 -0700 (PDT)
+Received: from VM-16-38-fedora.. ([43.135.149.86])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb534csm110014575ad.180.2025.04.14.23.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Apr 2025 23:37:20 -0700 (PDT)
+From: Jinliang Zheng <alexjlzheng@gmail.com>
+X-Google-Original-From: Jinliang Zheng <alexjlzheng@tencent.com>
+To: tj@kernel.org
+Cc: alexjlzheng@gmail.com,
+	alexjlzheng@tencent.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH kernfs 3/3] kernfs: switch global kernfs_pr_cont_lock to per-fs lock
+Date: Tue, 15 Apr 2025 14:37:18 +0800
+Message-ID: <20250415063718.342738-1-alexjlzheng@tencent.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <Z_1FeW2XQTLFGGbV@slm.duckdns.org>
+References: <Z_1FeW2XQTLFGGbV@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: kvm: Replace ternary flags with str_on_off()
- helper
-To: Seongsu Park <sgsu.park@samsung.com>, will@kernel.org,
- catalin.marinas@arm.com, yuzenghui@huawei.com, suzuki.poulose@arm.com,
- joey.gouly@arm.com, oliver.upton@linux.dev, maz@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org, cpgs@samsung.com
-References: <CGME20250415012410epcas1p42b48977934c21b5db0b19f4185f7a63c@epcas1p4.samsung.com>
- <1891546521.01744691102904.JavaMail.epsvc@epcpadp1new>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <1891546521.01744691102904.JavaMail.epsvc@epcpadp1new>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 4/15/25 06:54, Seongsu Park wrote:
-> Replace repetitive ternary expressions with the str_on_off() helper
-> function. This change improves code readability and ensures consistency
-> in tracepoint string formatting
+On Mon, 14 Apr 2025 07:27:21 -1000, tj@kernel.org wrote:
+> On Sat, Apr 12, 2025 at 02:31:09AM +0800, alexjlzheng@gmail.com wrote:
+> > From: Jinliang Zheng <alexjlzheng@tencent.com>
+> > 
+> > The kernfs implementation has big lock granularity(kernfs_pr_cont_lock) so
+> > every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the lock.
+> > 
+> > This patch switches the global kernfs_pr_cont_lock to per-fs lock, which
+> > put the spinlock into kernfs_root. Of course, kernfs_pr_cont_buf also needs
+> > to be moved to kernfs_root.
+> > 
+> > Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
 > 
-> Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
-> ---
->  arch/arm64/kvm/trace_arm.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/trace_arm.h b/arch/arm64/kvm/trace_arm.h
-> index c18c1a95831e..9c60f6465c78 100644
-> --- a/arch/arm64/kvm/trace_arm.h
-> +++ b/arch/arm64/kvm/trace_arm.h
-> @@ -176,7 +176,7 @@ TRACE_EVENT(kvm_set_way_flush,
->  	    ),
->  
->  	    TP_printk("S/W flush at 0x%016lx (cache %s)",
-> -		      __entry->vcpu_pc, __entry->cache ? "on" : "off")
-> +		      __entry->vcpu_pc, str_on_off(__entry->cache))
->  );
->  
->  TRACE_EVENT(kvm_toggle_cache,
-> @@ -196,8 +196,8 @@ TRACE_EVENT(kvm_toggle_cache,
->  	    ),
->  
->  	    TP_printk("VM op at 0x%016lx (cache was %s, now %s)",
-> -		      __entry->vcpu_pc, __entry->was ? "on" : "off",
-> -		      __entry->now ? "on" : "off")
-> +		      __entry->vcpu_pc, str_on_off(__entry->was),
-> +		      str_on_off(__entry->now))
->  );
->  
->  /*
+> I don't think this one makes sense. There are lots more things that are
+> globally synchronizing in the printk pass. This is necessarily a really cold
+> path and it doesn't make anything better to split this lock.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Thank you for your reply, :)
+
+From a performance perspective, I agree. From a design perspective, I can
+only agree 50%, hahahaha.
+
+But compared to the other two global locks in this patchset, the changes to
+this lock are relatively unimportant.
+
+thanks,
+Jinliang Zheng :)
+
+> 
+> Thanks.
+> 
+> -- 
+> tejun
