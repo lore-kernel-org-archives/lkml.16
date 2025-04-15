@@ -1,105 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB136FC5;
-	Tue, 15 Apr 2025 00:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112E6FC5;
+	Tue, 15 Apr 2025 00:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744678202; cv=none; b=mz9BDS2BToUrq47ddmfcQwLZxRQ5gcfic39ibmdGwYbpxJ0KPwg1lrJtqSmF/3MuPYeAngeYtpk2u0unZyRUr5m/jTglFWhwWZa1785+vMq+nCFJmHpvHs8oV/FWdGHbh0ug0mX/ilpwhBEyT+7u1XEgl3l0g8K7XvHt8rNiXkQ=
+	t=1744678220; cv=none; b=fRgrR7ewnwqvZ0RA45TgL9Kpz7iUjSuftFlGbXjIZtAVvibOcDavFjNiHJ25Q8omyLh5b17vU4gvcWL6m6AvpLp0MBVcFhush241T5CodvNNGjoxDzlpJGHIWfKU0rx/X1Cyjmh8I9GAFDq42XWdPe50yxE62+AuL/erZ1TqaRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744678202; c=relaxed/simple;
-	bh=r/W/tyUA4SIffvZwjzA7RNTAzNJ3bqHs4/X+NSWYwx8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ixj5ir2G2+3I7lFmwOZU/0FSZMM1J1olXLT+xjK83HGgh9TFTB/XXWNQHaEeTrjBA4UWW7NnRWvuLOJCdUoWnIw22jWEYdW/P8MVs8reoVBCXQ3wVoSWf7HVpiaZrqHaaY5qFpHNGqWtJ6crGQSoZ3e43uMaf60HOElASSJwpRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wb0Xae5R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744678220; c=relaxed/simple;
+	bh=fkIT4XOhmgQ9Dgwghj4eYY0BwPt0ZkTj4KhWD2vfeM4=;
+	h=Date:From:To:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FH5lvHYn76hO2au1SMrtf/vLQEXO4txTj7pWMwAlv644qE0zVlx6xOe7kocZrzHe70F8vnmVBr5Y2wR1zTp4qJbiOBrXMceE2+1eya0eOMWCK5RSXfAbiAgHTTkwswdGQ3VxnO0EX/cDMq+ld7gwxobgY5+cIBn0Xj8ZBwnrPXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jF8PKxXT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wb0Xae5R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFE72C4CEE2;
-	Tue, 15 Apr 2025 00:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744678201;
-	bh=r/W/tyUA4SIffvZwjzA7RNTAzNJ3bqHs4/X+NSWYwx8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Wb0Xae5RLAJ9fz055t1A+y5GE9mnj+by8FmRoXcUv5/4A2HZ6UUfbgbaDogcw7fCQ
-	 vT/R9RLxI5tdB4bVfMJLrR8w9q4+h8uGz+u4WmzrCxcqTMngPH3by+8DsUnlsxVRE2
-	 MExdz3ZV0bBlSa1R0SVcC7OhUHugxlqTjD9AAoeFLaeFs9IV3UHOpTNTV9ycPBHr0W
-	 Cf+DLa03LipDQA2A6cSGiTP/glUeFiHkGXOrZyv5E4yohE6+Eex4yS13r/qvEG9oZS
-	 nbBWY2rkz7OjITBnpxWR86+3TpmzkiH35jnFW3KRxDzVYrUIp1sL6XAv5qs/clJR8H
-	 MJNuW/bYqTKAA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADED3822D1A;
-	Tue, 15 Apr 2025 00:50:40 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jF8PKxXT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA5EC4CEE2;
+	Tue, 15 Apr 2025 00:50:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744678219;
+	bh=fkIT4XOhmgQ9Dgwghj4eYY0BwPt0ZkTj4KhWD2vfeM4=;
+	h=Date:From:To:Subject:In-Reply-To:References:From;
+	b=jF8PKxXTj/N1UV0q80okyrWrgOjARI0AeiQqrGWHe8a1efJ2U8u8oDRund6nyswIf
+	 FiZqBYIzxNPULTV6+3dfQqLqlPJBLwAXG8q+oiXyWLach1PkSSIStRLD770BPj873k
+	 ulnUYLbvRhACyOXIIkXo0ZO3uhIL6D6TSxa5jIbA=
+Date: Mon, 14 Apr 2025 17:50:17 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, corbet@lwn.net, shuah@kernel.org,
+ david@redhat.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+ ryan.roberts@arm.com, willy@infradead.org, peterx@redhat.com,
+ ioworker0@gmail.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ dev.jain@arm.com, mhocko@suse.com, rientjes@google.com, hannes@cmpxchg.org,
+ zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org,
+ jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de,
+ catalin.marinas@arm.com, anshuman.khandual@arm.com, raquini@redhat.com,
+ aarcange@redhat.com, kirill.shutemov@linux.intel.com,
+ yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com,
+ vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org
+Subject: Re: [PATCH v3 0/4] mm: introduce THP deferred setting
+Message-Id: <20250414175017.872f9cf6d475674b28922a92@linux-foundation.org>
+In-Reply-To: <20250414173735.b6df2f87c2e8dea610efa901@linux-foundation.org>
+References: <20250414222456.43212-1-npache@redhat.com>
+	<20250414173735.b6df2f87c2e8dea610efa901@linux-foundation.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 00/14] rxrpc,
- afs: Add AFS GSSAPI security class to AF_RXRPC and kafs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174467823949.2089736.14930552033478134698.git-patchwork-notify@kernel.org>
-Date: Tue, 15 Apr 2025 00:50:39 +0000
-References: <20250411095303.2316168-1-dhowells@redhat.com>
-In-Reply-To: <20250411095303.2316168-1-dhowells@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, marc.dionne@auristor.com, kuba@kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, brauner@kernel.org, chuck.lever@oracle.com,
- linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Mon, 14 Apr 2025 17:37:35 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> This will need updating to latest kernels, please.
 
-On Fri, 11 Apr 2025 10:52:45 +0100 you wrote:
-> Here's a set of patches to add basic support for the AFS GSSAPI security
-> class to AF_RXRPC and kafs.  It provides transport security for keys that
-> match the security index 6 (YFS) for connections to the AFS fileserver and
-> VL server.
-> 
-> Note that security index 4 (OpenAFS) can also be supported using this, but
-> it needs more work as it's slightly different.
-> 
-> [...]
+There I go, applying patchsets in reverse time order again.
 
-Here is the summary with links:
-  - [net-next,v3,01/14] rxrpc: kdoc: Update function descriptions and add link from rxrpc.rst
-    https://git.kernel.org/netdev/net-next/c/28a79fc9b03e
-  - [net-next,v3,02/14] rxrpc: Pull out certain app callback funcs into an ops table
-    https://git.kernel.org/netdev/net-next/c/23738cc80483
-  - [net-next,v3,03/14] rxrpc: Remove some socket lock acquire/release annotations
-    https://git.kernel.org/netdev/net-next/c/019c8433eb29
-  - [net-next,v3,04/14] rxrpc: Allow CHALLENGEs to the passed to the app for a RESPONSE
-    https://git.kernel.org/netdev/net-next/c/5800b1cf3fd8
-  - [net-next,v3,05/14] rxrpc: Add the security index for yfs-rxgk
-    https://git.kernel.org/netdev/net-next/c/01af64269751
-  - [net-next,v3,06/14] rxrpc: Add YFS RxGK (GSSAPI) security class
-    https://git.kernel.org/netdev/net-next/c/0ca100ff4df6
-  - [net-next,v3,07/14] rxrpc: rxgk: Provide infrastructure and key derivation
-    https://git.kernel.org/netdev/net-next/c/c86f9b963dc6
-  - [net-next,v3,08/14] rxrpc: rxgk: Implement the yfs-rxgk security class (GSSAPI)
-    https://git.kernel.org/netdev/net-next/c/9d1d2b59341f
-  - [net-next,v3,09/14] rxrpc: rxgk: Implement connection rekeying
-    https://git.kernel.org/netdev/net-next/c/7a7513a3081c
-  - [net-next,v3,10/14] rxrpc: Allow the app to store private data on peer structs
-    https://git.kernel.org/netdev/net-next/c/b794dc17cdd0
-  - [net-next,v3,11/14] rxrpc: Display security params in the afs_cb_call tracepoint
-    https://git.kernel.org/netdev/net-next/c/d03539d5c2de
-  - [net-next,v3,12/14] afs: Use rxgk RESPONSE to pass token for callback channel
-    https://git.kernel.org/netdev/net-next/c/d98c317fd9aa
-  - [net-next,v3,13/14] rxrpc: Add more CHALLENGE/RESPONSE packet tracing
-    https://git.kernel.org/netdev/net-next/c/fba6995798c6
-  - [net-next,v3,14/14] rxrpc: rxperf: Add test RxGK server keys
-    https://git.kernel.org/netdev/net-next/c/aa2199088a39
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+"[PATCH v3 07/12] khugepaged: add mTHP support" has one reject against
+current mainline, and two against current mm.git.
