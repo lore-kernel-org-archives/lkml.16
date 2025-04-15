@@ -1,262 +1,199 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2053.outbound.protection.outlook.com [40.107.243.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A815F1F542A;
-	Tue, 15 Apr 2025 20:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744747841; cv=none; b=mVM7U5qETjh7+W+cofHrPkDfhwnKYnSFtO4FpR2eZ6FuTPJ2iy3dbFoguEM3rFdSvZ5jgEMVPI6qKJDkATpZV6dX4Jd8IoMZ9yoKrhOzgUw6vQdY0oslGCmOpGxKS2TLltJ3Uy80+CQu+Qdzo2gR6+ahmVb6rVdaAIw29eXc0xY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744747841; c=relaxed/simple;
-	bh=dJMTmdqQ72cO70qaEEev0EvSkDUVmn1Nod8NeWRbBw8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ah9s3+bp29Dd7gRTTmNQsOLwRgIZ2TRMvXNtUvf609FstczoBdRHQlldz2Xbrt2awiGKwQqbCf/jXKyuMJsGZJNchjaeDh2eocmLKk8hgADvUXgZdNj7zrtcZAQarTWXwblYUqaGQ66M1mHa6Bjgult0v3ofkPS9pMGfmPwSHJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jp01jsw5; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D8324169E
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744747871; cv=fail; b=c8H22yUqPBDtOlBS8KEBWyJW/++VEoN2qqno5Sr0zienvjp7V3pJwQ+VPit7pYJ5qPOdhhkPTUdkrHuj7nepJODPLwMYfsXsfU7V9T6eehnWvJRaNonQTM3zHqeqUYhTMedfxLa/nktdzRrl04vNaXBcn1FjHPgGHE+hpUPV8LI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744747871; c=relaxed/simple;
+	bh=fmCA9NMk+eD2CxMtRBZ6OjEVkTIgtcVDZI5Nsc3ubBY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dRDQUitfpouTqKRJwjAPzG2NX4/iQpAZj1TdiexxUkiRkYlwnNNo3E7rJlEXu69CPCTyxEqG8pZrEJQMRwncRethmS17B/D8yQLnDZx3QlW01MhayMVKkrM315B+xsDYtBCCU+eEi+7p0LLBj8kJKV/MO5/ivLJ5nolFdfQoZmE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hvtYBb8S; arc=fail smtp.client-ip=40.107.243.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jp01jsw5"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso379431fa.1;
-        Tue, 15 Apr 2025 13:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744747838; x=1745352638; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SHELFzxVVmsy2zgSKA6PLaix5nlp2CFpgVoQsmmD40s=;
-        b=jp01jsw59l/kh6RdDKzVHKkegIuegYNJz8zFNvW5quyo57XpcwAOMr/w1prWDIUNLw
-         plnpT2Yvc4i/bgTZhqTsKNehIJQrefPIMkfWOkMyEaY6D3Uw2k5n+yGgvzhXNB/raKMc
-         1l/oBiB6/ky68q2PJ/SmGBJr8N7pDr8u44SYolgRtrOmxBgIBHC1cEJMg50CvryDm8E/
-         lW+ugeksfo7IGkqg5jLVEewRqT0qpQ7a4PQmiRSlGNalQueGMVlExK+kgXg/eFZbrMEu
-         NKc+wKy3y2fX9QuKPr7arN1NffxorUg5/HT7xwVwCVp7uralRBC22E+fdMi9pFqXpylz
-         ufZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744747838; x=1745352638;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SHELFzxVVmsy2zgSKA6PLaix5nlp2CFpgVoQsmmD40s=;
-        b=Y7tYVTImAGBpKcYUKxt2Fq3OCN+c04i2XI92kAzmvKTQ+0cDQzIZ7iJrZjmFXHbTQA
-         fi3dfAkjcNfh+olp9VfwEPKpqSUd49r6Vj+ukfrv2rlt3k5AkZEbfuyROgcMtR+Ri9rc
-         yhu1Surl4NQIxx24Ra6vJnY1tExBDi9tEroXf992Na+2ZL29Owjj0t5lzsmP0NyrvRlR
-         WXLNTjZK4TbEC8oWy5qjdFW5e/k9c3OfJ6C0DyLa2Gr6sOsFJBsDGy2dSRQIxnvxkmV2
-         0ENVzZmXm5HCFIX5k0yIOykJ3y50A557iHJSyHc5nZQhJGHVlNRiV0QsPT1G6I4SwWnl
-         JmPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUd01zr//KmGabdArWADRcGKkDEaSDYfQpM84sSF07PA9Os21YCZ9nuA7tNg47LwTcuIEfI+JW/8HMPevk=@vger.kernel.org, AJvYcCUpjO2LCLCMN5v7Uus15Q5j6UjG4ru65z9seMnToHgr6SBgffSehsAQ+iBh2bnyLjZW6k0bsRhhbPwy@vger.kernel.org, AJvYcCVPwX/TpjIxIp+klDQsSxa9FTbwFHYsOt5oJLY7bcuxlROOC5ZSZdTNbCbIWxqE7+FOONC0udi1@vger.kernel.org, AJvYcCW5Blj2urWF+XyILI4rCSJ2xN1J1wIdaO0EFUqAvg+1v7s2qF5cuFG0Z2xqtRPnFXxeBWUy0uOVT7e2RJ0J@vger.kernel.org, AJvYcCWp1BFUEkMYlqnFKGH29qirUKcMot9oSa8Z8j7YT48A4A/Er0CXNITGmhjNplKb9zI+ogq3fCdAr7w/@vger.kernel.org, AJvYcCX9+xF9KHwp3yPERXv8S5R3z7KTYbRQ92ZJtO1dldqR/7GbNFaInYEaogHeLGDZUfWJXuqKw1bT7N8w7aPr@vger.kernel.org, AJvYcCXPB31KAREkHQXMyoUbARiZ8v4vTNCX+HG1Fi0AJ/GS9bfDMT/5fzTbdB3oKGtK/RgvzAGElFWcIeZws599nmdt@vger.kernel.org, AJvYcCXYyrC57v9osBS8g5Raq/6ldP4VL5dso/jKwsxKD7PBlzYXoWTp/t9oZhKcRl4lGUtmEwq5b4dN79We7G3J6ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG4DoccEFagINo/RkLpZxByPY2TeMescus6xMY3MWTtoYzMcbk
-	l6bzEwg0XGsv0og0DF5qREjpojyL2RocDY322290rZz78Z2i5zGYAgY8+9saGA+sfG/rcG37OC8
-	w6p0WRY9A0rzJMQnB7MtLO20DORg=
-X-Gm-Gg: ASbGncsTpzyWxrIKkDaEjuyzyxAaYR6qLPLhD4iTgyuHVeO0zycqlmdsxFL8nGRhS3F
-	3pIfndt2XBUsPjlkDup2WClSLT137dBgdiGjjNsqKH35KACDMCHobaqpiBYgBYtY0gqQcwajPNx
-	RB/MGk28YVWmlAU2NkAgNQhk1A25ipZI4uE6CVIQ==
-X-Google-Smtp-Source: AGHT+IHHpITksB955oQm5ARBuGAcVFAjDyvUs2PTCTEghg3Tq3v8kUReDzyNimxph/3Sw67RckF5NDVyJKnzu5cOggg=
-X-Received: by 2002:a2e:e09:0:b0:30b:9f7b:c186 with SMTP id
- 38308e7fff4ca-31071be6a50mr16553061fa.1.1744747837350; Tue, 15 Apr 2025
- 13:10:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hvtYBb8S"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eb6tqGEzmnArEYfR9O6WqubGTuqWPFV7228REIKy4PIE6HkR6EmvAl1DA7WnOQNPXCExPt8oWkZusts+Z8uApm4bW60amVs0dvt2UZ+Cw2uIbMCf37aZt2s8kQtaarxgDFmBVQ/srjQ4cjriQZMRV2190iuqYRKjvf8GlUwAQboTbm46pJNu9DekAU5FRmKxF8sOu1yZN+L9xmQzwAJOJSjsXprBqI9tdWF7th2A4AaJ6P4XSpQKAKbkRILzYo2l9u3jaAWOuUnkqCE2apsfhb5o1jc5p2XogTBeB7IAo6QlCv3GFI3F9Je/wK46jPc9NnJXVyDSq/VXGIxJWVYRZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PbV1XuJ3+uJm4oL+QTmsTmtocPfmSX2G+6vA169NjlY=;
+ b=yc1q3zx//wCs72vKXzlXgLcsjkXhPVCPkyA15xJzvmeCa2lGy5YzZtdVsNqYsYZ3Srdl9Wo0JjmsfFdUTZjcs0H9ELJxbQZKOMRKG3mQbJi2DDNHdqyUPBuqmIcChLFqWgtSI5SWDzKirEM5b3Aa4OHtpB/ZW43qXV9cck5bMndvsJUU+nvArXAMTo9XwCveMCWliT+PM/M3VSvcRfpIeY9QhJgz7jtLj0Dgn5qTsdH9rJ+kBXo0vJKif/sU4MqJjxxYO7Hlt+5eEaIY57TtgKv6aaIDDEJyaAcsbIVTsOwErVcnWiYGGiIoIx1knn2ddNa+06lyr1Sw8jKzmxeW7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PbV1XuJ3+uJm4oL+QTmsTmtocPfmSX2G+6vA169NjlY=;
+ b=hvtYBb8SY/2zi+MrUdURZxBFOHq6CL/8qXYiKUf7vb1nktdEfZpkjyNvUTy+BcEoLZkC8yDhJGXycX4IqDzA3/cH11QlA0GWwVkr/GKrPQbH1Gssn7Z58llaFWXAJq6JcYNl6QNSnwOYI1rMa8OdN2Gf2oW+mBIY/uKWVaeriIPJ79QRKxHLpMhpn+ffLN5rmxZXGqJG8F2m2TosckEYhSsXHlm1obeJ3fDebcNl7a3HMA7MOgcFjt3WcF13aOtL/9iWjxzZkSG3CMFgDMgonHGkAi8ZTwPE1Wyz/Gnh/wTvBM1LAyEjPVoxvJGYyA1NoI05Z8y0dHKYmICFqhY/2A==
+Received: from MW4PR04CA0300.namprd04.prod.outlook.com (2603:10b6:303:89::35)
+ by MW4PR12MB5604.namprd12.prod.outlook.com (2603:10b6:303:18d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 20:11:04 +0000
+Received: from CO1PEPF000042AD.namprd03.prod.outlook.com
+ (2603:10b6:303:89:cafe::36) by MW4PR04CA0300.outlook.office365.com
+ (2603:10b6:303:89::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.15 via Frontend Transport; Tue,
+ 15 Apr 2025 20:11:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1PEPF000042AD.mail.protection.outlook.com (10.167.243.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Tue, 15 Apr 2025 20:11:03 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 15 Apr
+ 2025 13:10:41 -0700
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 15 Apr
+ 2025 13:10:41 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 15 Apr 2025 13:10:39 -0700
+Date: Tue, 15 Apr 2025 13:10:37 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<kevin.tian@intel.com>, <praan@google.com>, <nathan@kernel.org>,
+	<yi.l.liu@intel.com>, <peterz@infradead.org>, <mshavit@google.com>,
+	<jsnitsel@redhat.com>, <smostafa@google.com>,
+	<jeff.johnson@oss.qualcomm.com>, <zhangzekun11@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <shameerali.kolothum.thodi@huawei.com>
+Subject: Re: [PATCH v2 06/11] iommu/arm-smmu-v3: Introduce
+ arm_smmu_s2_parent_tlb_ invalidation helpers
+Message-ID: <Z/69PTDANYagKX3d@Asurada-Nvidia>
+References: <cover.1744692494.git.nicolinc@nvidia.com>
+ <61fef9052b2034e5b4ffa1fa6ce481667d8ea6b1.1744692494.git.nicolinc@nvidia.com>
+ <20250415125042.GA517881@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-ptr-as-ptr-v8-0-3738061534ef@gmail.com>
- <20250409-ptr-as-ptr-v8-6-3738061534ef@gmail.com> <67fe9975.c80a0220.1b5785.66e7@mx.google.com>
- <CAJ-ks9mzyfvsxkyud_wLXfhLD_zP95bivCQ9i2aC-3ea=Y7+0A@mail.gmail.com> <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
-In-Reply-To: <67fea2d6.050a0220.8fa7f.6690@mx.google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 15 Apr 2025 16:10:01 -0400
-X-Gm-Features: ATxdqUH2AXGR5D179vLUcxKCqAiKWiqv74mYwXiMQpvC31RtT7QM1E9QIgjYVQU
-Message-ID: <CAJ-ks9=G1ajyT8gwLHyvHW09Z2gG=Geg7LDS6iyRyqx_wyp5Sg@mail.gmail.com>
-Subject: Re: [PATCH v8 6/6] rust: enable `clippy::ref_as_ptr` lint
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250415125042.GA517881@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000042AD:EE_|MW4PR12MB5604:EE_
+X-MS-Office365-Filtering-Correlation-Id: b7ff6d03-0361-4e92-8cef-08dd7c59a63c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vyiGO3s/TEP53JlCyB7WiqEjO1MAaYUrq8Up2O2ecISdyTHFVRD5yIt+keRk?=
+ =?us-ascii?Q?QQzbxcK+pHR5N4cwp1o103SWCOs9JUIayexFy23SkiDuivxuqrFHwWFB57A1?=
+ =?us-ascii?Q?saLpKxTByi5Ay9Kgu6LHSTL/1wNykLzX+o4K/2rOcxBEzWV2zo9epBnQJvZX?=
+ =?us-ascii?Q?gKBd/Z1vzvHhDt3EsVYKy4xLrGpyFIv/2MYTCemlFHz7eFVg08wJbP0i+8+s?=
+ =?us-ascii?Q?4cikRBEsJLMqu+mNUyDIwk5uhLQh4CnahkvJ9WyIQyxopaCI8wCW9rh/aE37?=
+ =?us-ascii?Q?n7hkZbILhOialjqgRKuy+yTabmHoIelr8GdykpKqwoXldIkX8gH5fy/Cl0jp?=
+ =?us-ascii?Q?MAGFlDihkzJsG3dXuBd4H/pOQ7udtLJlPbgrMyP+/zsKcy4mlhU5CwLPA/lI?=
+ =?us-ascii?Q?N3xCYBp1DwyyIwQWQ09z0zbTkuamdJOYrxoXTRRO+D6zi23Vic0uCvq7rXYO?=
+ =?us-ascii?Q?o51O+oyahEjQ2jklA9vindO/M+RRTofWghygESO/SGqiOjnRs5QE/xkEqOPn?=
+ =?us-ascii?Q?wTnzoALDOWEh/iZuMVeFQ7T6qHjyLR8pFQksSB7Pf72Ki3am/bVsfhk09zMf?=
+ =?us-ascii?Q?4lExeDui5QGQsEhvl7w1xX3hCiqqnZ4dh3mBlHVHOvmLvoUXMtlqQ+x+TLBX?=
+ =?us-ascii?Q?1Stfs9SULgBepy2FpmBc1t5jdsAEugLzgc6HNH0jesLUPkNCF0s3ErQgkTQw?=
+ =?us-ascii?Q?d/MYv8Az8UkagloZpQ7f4WgjvmWdND8eoDdbS50AXb2QSWbUcpguU69rCUQu?=
+ =?us-ascii?Q?kiGyePItDdANh5uKpxifsxSjrcsl4bA1JvSUezPak2He7pC/H9mvjqDg/OhE?=
+ =?us-ascii?Q?i2Dcu/sJuA2gcw0hUifVeDe9n0AVKcCHNnLYLTn698Y/JqmQbFnj8qIMQFJz?=
+ =?us-ascii?Q?TqNlblLsb7Izamr4uZZYPt571dls7gBKPj6mcWebloBMMnWnfEF8c3ZbSarD?=
+ =?us-ascii?Q?+4oNm779Wm9lj1escdn5nJelvptMduPzaPNOjBpBDW+lSe5Waxy8kLkGNmOJ?=
+ =?us-ascii?Q?zC49CD5k3kM6vhoWGkPuxpcHuZj+DEOjpkVcnUQwSNsHS4O12sQJgOjkedcy?=
+ =?us-ascii?Q?0xZPJWp1/BtFha0MIbbTHgdhQCJMgJT5bLMvBXYYL017tzC++8TM/fn78CRU?=
+ =?us-ascii?Q?JcxrZcRJ1Qwu1LKly4uEbV2bvCtv6GmBEDtZ5zTwXX+pb72UNXKNJLeqq7RK?=
+ =?us-ascii?Q?9u0EnS3yM39OEVnmqnAz0sKqE+7G6UhjfrZDN7cbhtjBDgt9+mgBktZsYLT5?=
+ =?us-ascii?Q?wDbgydAAwVh8IBOpiNMNCP9WVg5diTEg4toVGC0SZ9pGOmy5l53YeTDUTbXg?=
+ =?us-ascii?Q?3wqQc2nwrlaYi92BvcGXURAbSiZBtIvemHVcFkIgipPK/HYV10CQTlaJemOe?=
+ =?us-ascii?Q?PhtB8/cvU0nHHYNKGnfzIRvNkldKMYb8Z3GdJg7cORjphPvrowxnmx/e7n/2?=
+ =?us-ascii?Q?e5s9QCz+fz32SKrLELX5rMYFOvZQ+xy+PaAfkka+/qJKX4EmryTJ+wZ9E+6n?=
+ =?us-ascii?Q?y0ICGutXKb6o/Kf1UK3hud4HjdfkyjkPtcsB?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 20:11:03.7991
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7ff6d03-0361-4e92-8cef-08dd7c59a63c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000042AD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5604
 
-On Tue, Apr 15, 2025 at 2:18=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Tue, Apr 15, 2025 at 01:58:41PM -0400, Tamir Duberstein wrote:
-> > Hi Boqun, thanks for having a look!
-> >
-> > On Tue, Apr 15, 2025 at 1:37=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > On Wed, Apr 09, 2025 at 10:47:23AM -0400, Tamir Duberstein wrote:
-> > > > In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
-> > > >
-> > > > > Using `as` casts may result in silently changing mutability or ty=
-pe.
-> > > >
-> > > > While this doesn't eliminate unchecked `as` conversions, it makes s=
-uch
-> > > > conversions easier to scrutinize.  It also has the slight benefit o=
-f
-> > > > removing a degree of freedom on which to bikeshed. Thus apply the
-> > > > changes and enable the lint -- no functional change intended.
-> > > >
-> > > > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref=
-_as_ptr [1]
-> > > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > > > Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton=
-.me/
-> > > > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > > > ---
-> > > >  Makefile                 |  1 +
-> > > >  rust/bindings/lib.rs     |  1 +
-> > > >  rust/kernel/device_id.rs |  3 ++-
-> > > >  rust/kernel/fs/file.rs   |  3 ++-
-> > > >  rust/kernel/str.rs       |  6 ++++--
-> > > >  rust/kernel/uaccess.rs   | 10 ++++------
-> > > >  rust/uapi/lib.rs         |  1 +
-> > > >  7 files changed, 15 insertions(+), 10 deletions(-)
-> > > >
-> > > > diff --git a/Makefile b/Makefile
-> > > > index eb5a942241a2..2a16e02f26db 100644
-> > > > --- a/Makefile
-> > > > +++ b/Makefile
-> > > > @@ -485,6 +485,7 @@ export rust_common_flags :=3D --edition=3D2021 =
-\
-> > > >                           -Wclippy::no_mangle_with_rust_abi \
-> > > >                           -Wclippy::ptr_as_ptr \
-> > > >                           -Wclippy::ptr_cast_constness \
-> > > > +                         -Wclippy::ref_as_ptr \
-> > > >                           -Wclippy::undocumented_unsafe_blocks \
-> > > >                           -Wclippy::unnecessary_safety_comment \
-> > > >                           -Wclippy::unnecessary_safety_doc \
-> > > > diff --git a/rust/bindings/lib.rs b/rust/bindings/lib.rs
-> > > > index b105a0d899cc..2b69016070c6 100644
-> > > > --- a/rust/bindings/lib.rs
-> > > > +++ b/rust/bindings/lib.rs
-> > > > @@ -27,6 +27,7 @@
-> > > >  #[allow(dead_code)]
-> > > >  #[allow(clippy::cast_lossless)]
-> > > >  #[allow(clippy::ptr_as_ptr)]
-> > > > +#[allow(clippy::ref_as_ptr)]
-> > > >  #[allow(clippy::undocumented_unsafe_blocks)]
-> > > >  mod bindings_raw {
-> > > >      // Manual definition for blocklisted types.
-> > > > diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-> > > > index 4063f09d76d9..37cc03d1df4c 100644
-> > > > --- a/rust/kernel/device_id.rs
-> > > > +++ b/rust/kernel/device_id.rs
-> > > > @@ -136,7 +136,8 @@ impl<T: RawDeviceId, U, const N: usize> IdTable=
-<T, U> for IdArray<T, U, N> {
-> > > >      fn as_ptr(&self) -> *const T::RawType {
-> > > >          // This cannot be `self.ids.as_ptr()`, as the return point=
-er must have correct provenance
-> > > >          // to access the sentinel.
-> > > > -        (self as *const Self).cast()
-> > > > +        let this: *const Self =3D self;
-> > >
-> > > Hmm.. so this lint usually just requires to use a let statement inste=
-ad
-> > > of as expression when casting a reference to a pointer? Not 100%
-> > > convinced this results into better code TBH..
-> >
-> > The rationale is in the lint description and quoted in the commit
-> > message: "Using `as` casts may result in silently changing mutability
-> > or type.".
-> >
->
-> Could you show me how you can silently change the mutability or type? A
-> simple try like below doesn't compile:
->
->         let x =3D &42;
->         let ptr =3D x as *mut i32; // <- error
->         let another_ptr =3D x as *const i64; // <- error
+On Tue, Apr 15, 2025 at 09:50:42AM -0300, Jason Gunthorpe wrote:
+> struct invalidation_op {
+>     struct arm_smmu_device *smmu;
+>     enum {ATS,S2_VMDIA_IPA,S2_VMID,S1_ASID} invalidation_op;
+>     union {
+>         u16 vmid;
+>         u32 asid;
+>     	u32 ats_id;
+>     };
+>     refcount_t users;
+> };
+> 
+> Then invalidation would just iterate over this list following each
+> instruction. 
+> 
+> When things are attached the list is mutated:
+>  - Normal S1/S2 attach would reuse an ASID for the same instance or
+>    allocate a new list entry, users keeps track of ID sharing
+>  - VMID attach would use the VMID of the vSMMU
+>  - ATS enabled would add entries for each PCI device instead of the
+>    seperate ATS list
 
-I think the point is that the meaning of an `as` cast can change when
-the type of `x` changes, which can happen at a distance. The example
-shown in the clippy docs uses `as _`, which is where you get into real
-trouble.
+Interesting. I can see it generalize all the use cases.
 
-> also from the link document you shared, looks like the suggestion is to
-> use core::ptr::from_{ref,mut}(), was this ever considered?
+Yet are you expecting a big list combining TLBI and ATC_INV cmds?
 
-I considered it, but I thought it was ugly. We don't have a linter to
-enforce it, so I'd be surprised if people reached for it.
+I think the ATC_INV entries doesn't need a refcount? And finding
+an SID (to remove the device for example) would take long, when
+there are a lot of entries in the list?
 
->
-> > >
-> > > > +        this.cast()
-> > > >      }
-> > > >
-> > > >      fn id(&self, index: usize) -> &T::RawType {
-> > > > diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
-> > > > index 791f493ada10..559a4bfa123f 100644
-> > > > --- a/rust/kernel/fs/file.rs
-> > > > +++ b/rust/kernel/fs/file.rs
-> > > > @@ -359,12 +359,13 @@ impl core::ops::Deref for File {
-> > > >      type Target =3D LocalFile;
-> > > >      #[inline]
-> > > >      fn deref(&self) -> &LocalFile {
-> > > > +        let this: *const Self =3D self;
-> > > >          // SAFETY: The caller provides a `&File`, and since it is =
-a reference, it must point at a
-> > > >          // valid file for the desired duration.
-> > > >          //
-> > > >          // By the type invariants, there are no `fdget_pos` calls =
-that did not take the
-> > > >          // `f_pos_lock` mutex.
-> > > > -        unsafe { LocalFile::from_raw_file((self as *const Self).ca=
-st()) }
-> > > > +        unsafe { LocalFile::from_raw_file(this.cast()) }
-> > > >      }
-> > > >  }
-> > > >
-> > > > diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> > > > index 40034f77fc2f..75b4a18c67c4 100644
-> > > > --- a/rust/kernel/str.rs
-> > > > +++ b/rust/kernel/str.rs
-> > > > @@ -28,8 +28,9 @@ pub const fn is_empty(&self) -> bool {
-> > > >      /// Creates a [`BStr`] from a `[u8]`.
-> > > >      #[inline]
-> > > >      pub const fn from_bytes(bytes: &[u8]) -> &Self {
-> > > > +        let bytes: *const [u8] =3D bytes;
-> > > >          // SAFETY: `BStr` is transparent to `[u8]`.
-> > > > -        unsafe { &*(bytes as *const [u8] as *const BStr) }
-> > > > +        unsafe { &*(bytes as *const BStr) }
-> > >
-> > >         unsafe { &*(bytes.cast::<BStr>()) }
-> > >
-> > > ? I'm curious why this dodged the other lint (ptr_as_ptr).
-> >
-> > The reason it has to be written this way is that BStr is !Sized, and
-> > `pointer::cast` has an implicit Sized bound.
-> >
-> > Perhaps the lint is smart enough to avoid the suggestion in that case?
-> > Seems like yes:
-> > https://github.com/rust-lang/rust-clippy/blob/d3267e9230940757fde2fcb60=
-8605bf8dbfd85e1/clippy_lints/src/casts/ptr_as_ptr.rs#L36.
-> >
->
-> Oh, I see, so fat pointers get their way from this check? Hmm... however
-> fat pointers also suffer the same problem that ptr_as_ptr prevents,
-> right? How should we avoid that?
+Should the ATS list still be separate, or even an xarray?
 
-Probably the proper solution is to remove the `Sized` bound from
-`pointer::cast`. Short of that, I'm not sure how -- but I don't think
-this deficiency should prevent us from the benefits of this change,
-even if they are a bit limited.
+> To do this without locking on the invalidation side would require
+> using RCU to manage the list, which suggests it is probably an array
+> that is re-allocated each time it is changed.
+> 
+> That means some fancy algorithms to copy and mutate the array, deal
+> with error cases and sort it (ATS must follow ID, want things grouped
+> by instance).
+> 
+> There is some tricky memory barriers needed and RCU would require that
+> SMMU unplug do a synchronize_rcu(). IIRC riscv did this in their
+> driver.
+
+I will refer to their driver. Yet, I wonder what we will gain from
+RCU here? Race condition? Would you elaborate with some use case?
+
+> But the end result is we fully disconnect the domain from the smmu
+> instance and all domain types can be shared across all instances if
+> they support the pagetable layout. The invalidation also becomes
+> somewhat simpler as it just sweeps the list and does what it is
+> told. The special ATS list, counter and locking is removed too.
+
+OK. I'd like to give it another try. Or would you prefer to write
+yourself?
+
+Thanks
+Nicolin
