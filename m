@@ -1,71 +1,122 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6C92DFA34
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A158427586F;
+	Tue, 15 Apr 2025 07:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700411; cv=none; b=jbcqQhx8NhoGflFLsJWovl6ZO7n5ytrrMzRKizJ3iMPNQT8m8RcN7OtKRChnxZ2533jJBysviuQsm892/wwQKymZB6ypiNKXmEl8IWZ/Ov6DsCwmBhQAxGzCryVGIfccEHTUu31UzXp8gUN1qxhyX8n4lJxaDklG1XQfBVsjo3Q=
+	t=1744700411; cv=none; b=OcQP1WUchNYcBZ4GR/fgcKYkDByg3Hfm/oNFJVZe0NJTRtvO/ElJIs6PCdo+dZ4x8+rd64VvNr1wF4xQESb8YqY5mstw+4khFcHL87pAhB6Xz9lbKeT6qc4CJarm0N9K/FfFVTtOElhDO4BaCs5sm/muHz5W9Tu84BMdvWZcDJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744700411; c=relaxed/simple;
-	bh=gq+phSkihUwXvObYCdgmWbj7fw9c2Fm+kZJFOElZVy8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=nRubzMOmPlRAYitmLw05O6Wu/2UCkTTdY30wF/MFp/PNQQJ3Sw7yacNXxpUJ8gEy6q+5t32sjtiXdUJomqzSkhIf8GtV8Y8zY66anjHj2o0VaYktDC9UdeG5xTbUcEXDyoSGdlLS1trvIlM46aE6zl3OLhCRtA0FSqMZ9oYh0V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d5da4fb5e0so50577115ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:00:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744700402; x=1745305202;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z49npPDVJcoYR8QVvdvdqVpd4WlK4Gx1afo3n21Bw8k=;
-        b=CkVul4uHumzjTs2aYikwq/dFV/QwhwCunAzkthDsYZxB2HKsj955WuvHBJ8uLw9wz4
-         JNBKjuLD2qMm5Z4jKNaDoztIcfaeHSQcnBKn9Vy3dcBqPQKfmrwgMAjfUynbW4euryaw
-         1mo3AxqtdE6mAWzZIKoHdDMgyO/0Ftf2phz+cNaXjLGgXFAZ0nFgHDcqMA8UaX4uUEg2
-         hCGcFC0tPc7vA6BZbulBzr5W+Tw6YbroSDTbpbHWm8Itl5tUOjTkygkJXgeeJLj/9/JV
-         TqRTyygxE5NnEdRZW3ckFO39HklbxmY8CR//4qIHbu64mhm/1yx5vIZ4NgTfIf28m5vc
-         KnMw==
-X-Gm-Message-State: AOJu0YymnQQpd/yf3OUa6ucu1nucuFeUVGYFzlLj8o0x51LrXYT83OJb
-	Ido6obzvEwXRmij2Tsn9R7TuOsjBxCkkQmtSqtQA67dRrY5nOcPnuGz97hDrlLaDVT2zROiY7Qx
-	ZXin8RIllkTQCoRROMnehr94vsK8oQ2LR2WsXz36iLm9o4oG0N/1zn4Y=
-X-Google-Smtp-Source: AGHT+IEGshKwwwOsZNljXOkQecSSf1AbtGyIQlrMSUXKG1XKUbJyYXhCVtKeFFa6N8F8sUlFCWKRL7Hp87zBogUSgWF+MG3+tG4u
+	bh=C2p/GvdSf/MpUlUE7MKNGjq3PmhkSh1z6bGrbPDYfFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCnDM+sVO9/Xd8q/aA3aGaBxD0Vyw8sqtnp2dQ1+uOUM0TjpASkVj+R0IwnmvCP7MRyQb71NW2JJrGzGg2geJ7qKCTXupYUjRxSM1ypAXGYKEVFIu/Taox0ZRvnJ7Q0y4cjv5Qv7LpvwD3e16UOgCB0ND+LOeuWbI72IgLm1bgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dJp1aN7u; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dJp1aN7u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744700406; x=1776236406;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C2p/GvdSf/MpUlUE7MKNGjq3PmhkSh1z6bGrbPDYfFM=;
+  b=dJp1aN7u2jJvF9SS9fgjccMVDIGSaz1M1NWJsbOn7pU1+4c1pViUqY8O
+   /9wEqjyL3DqeIMkpmJwI5rCss5PsG2CKZjlR4cQdoAV4vqT17ByPz4cUg
+   ljmKRge/NzDP1aWlU6CeUWVRZOL1P/k6TAK5lc7DGGO1vTctCzbQfYTgE
+   yKgOXhXYBZD3uhJpm5op8B6TXH1aNV1EJmqUkMmrgezNdtqvMkPKgI6de
+   5HK82OcLtUlC+YZonKylxnY3NeExZSi/RH1fEOPC07LuJONhD8ktTtJoI
+   pdXKA2LWxG6BTmPrTmqjD2gxwV1CvaDVn4ilR+gcdxvQr/G+DmLJmEexU
+   A==;
+X-CSE-ConnectionGUID: +4nLEZdmSwOIQKT/6+9rbw==
+X-CSE-MsgGUID: 0S0cvsHZQn+TYUv90xQwyA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="57184134"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="57184134"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:00:06 -0700
+X-CSE-ConnectionGUID: sIz9rrG7Sge0gB7h0E3a9A==
+X-CSE-MsgGUID: 5+P3nvfqTKq2uA116uid1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130571783"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:00:03 -0700
+Date: Tue, 15 Apr 2025 08:59:43 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v2] ptp: ocp: fix NULL deref in __handle_s for irig/dcf
+Message-ID: <Z/4D3/PW9FkxQSdo@mev-dev.igk.intel.com>
+References: <20250415064638.130453-1-maimon.sagi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3f05:b0:3a7:820c:180a with SMTP id
- e9e14a558f8ab-3d7ec27ceebmr150520165ab.19.1744700402270; Tue, 15 Apr 2025
- 00:00:02 -0700 (PDT)
-Date: Tue, 15 Apr 2025 00:00:02 -0700
-In-Reply-To: <da6db2de-0f48-490b-8f91-a94e80d0567f@amd.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fe03f2.050a0220.3483fc.0048.GAE@google.com>
-Subject: Re: [syzbot] [mm?] WARNING in move_to_new_folio
-From: syzbot <syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, shivankg@amd.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415064638.130453-1-maimon.sagi@gmail.com>
 
-Hello,
+On Tue, Apr 15, 2025 at 09:46:38AM +0300, Sagi Maimon wrote:
+> SMA store/get operations via sysfs can call __handle_signal_outputs
+> or __handle_signal_inputs while irig and dcf pointers remain
+> uninitialized. This leads to a NULL pointer dereference in
+> __handle_s. Add NULL checks for irig and dcf to prevent crashes.
+> 
+> Fixes: b286f4e87e32 ("serial: core: Move tty and serdev to be children of serial core port device")
+> Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> ---
+> Addressed comments from Paolo Abeni:
+>  - https://www.spinics.net/lists/netdev/msg1082406.html
+> Changes since v1:
+>  - Expanded commit message to clarify the NULL dereference scenario.
+> ---
+>  drivers/ptp/ptp_ocp.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> index 7945c6be1f7c..4e4a6f465b01 100644
+> --- a/drivers/ptp/ptp_ocp.c
+> +++ b/drivers/ptp/ptp_ocp.c
+> @@ -2434,15 +2434,19 @@ ptp_ocp_dcf_in(struct ptp_ocp *bp, bool enable)
+>  static void
+>  __handle_signal_outputs(struct ptp_ocp *bp, u32 val)
+>  {
+> -	ptp_ocp_irig_out(bp, val & 0x00100010);
+> -	ptp_ocp_dcf_out(bp, val & 0x00200020);
+> +	if (bp->irig_out)
+> +		ptp_ocp_irig_out(bp, val & 0x00100010);
+> +	if (bp->dcf_out)
+> +		ptp_ocp_dcf_out(bp, val & 0x00200020);
+>  }
+>  
+>  static void
+>  __handle_signal_inputs(struct ptp_ocp *bp, u32 val)
+>  {
+> -	ptp_ocp_irig_in(bp, val & 0x00100010);
+> -	ptp_ocp_dcf_in(bp, val & 0x00200020);
+> +	if (bp->irig_out)
+Why not irig_in? Can we asssume that "in" isn't NULL if "out" isn't?
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> +		ptp_ocp_irig_in(bp, val & 0x00100010);
+> +	if (bp->dcf_out)
+The same here.
 
-Reported-by: syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
-Tested-by: syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
+> +		ptp_ocp_dcf_in(bp, val & 0x00200020);
 
-Tested on:
+Just my opinion, I will move these checks into ptp_ocp_...() functions
+as bp is passed to a function not bp->sth.
 
-commit:         01c6df60 Add linux-next specific files for 20250411
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=166f7c04580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=db03cefa26ecf825
-dashboard link: https://syzkaller.appspot.com/bug?extid=8bb6fd945af4e0ad9299
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10d6c470580000
-
-Note: testing is done by a robot and is best-effort only.
+>  }
+>  
+>  static u32
+> -- 
+> 2.47.0
