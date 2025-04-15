@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4270528F527;
-	Tue, 15 Apr 2025 10:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF73297A7D;
+	Tue, 15 Apr 2025 10:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713849; cv=none; b=fhzQaCsDQPzTPwbiqDnUspEi2l0dEyWemohFnAcLRjm2A564M/nSnEo7GhCBpU9rb5YijlqA7+Gd+zRqfYQlhlvokM59fvFsvTBaCgl1pwQ7MeTd+uQYvv6hnMyJOVIduwS65JYKfUH+3FEihgOiXjwKqcuzR7dyLLfU+OZecz0=
+	t=1744713852; cv=none; b=O2I4IOyv7/IX1BGKBTRYfhzwaOfmq0sdviOaWxAJrIe9DPMzABEre6DYeqNaDkklm0Kv8ZmRbTg7oDp1e/lYAhiS3n+RtGJT08Fzp06sqXSkBHwf8tyFYRY06441u2PkYFgnJLpIeEBGdBTCmJpkUVCMtKGbQhw2QYKyzqUOVm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713849; c=relaxed/simple;
-	bh=a91+q+20hy0NODEIDCf468pEbhhoKhEbHoR3+M0KwbE=;
+	s=arc-20240116; t=1744713852; c=relaxed/simple;
+	bh=xh7Jj9EwZ14z10Z5YmH2kybmKZ8PUNlCUMcMfNXz5ow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XRm14aDMoH7ziteMHVgBtVFLQcE4pIbmtA3bmqOWg+h85+aH9qcaXIBK/1TvaZvLjp+m0ZtOp4Q3Tq3yGkppKgoEMeh3ctVB9myfZZAOpqVM2rk4KsAhHpWXnB99RPN0YZnut8cNUhmkwHyxE2+fP0ASZXA8gmraVAx/5dYAJ4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=B8IBB8PS; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=IHpT8O1U4mb5pPcy5OvjWGvhj/y+Bu/Hy1+s79+x6Ejn80OwqjUxCQ1Vh0rwXbxeEy/tjNH7CFT5qgUnasUEcLVjZBOaYxJLYKqTCxL3NEDXJ41fIWOsx9pHzuh6TK70YzUGJTjTWgcfjkJbXHr3FI0gFRumEjxifvVFrJdlH/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H0GcVP4N; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="B8IBB8PS"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H0GcVP4N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744713845;
-	bh=a91+q+20hy0NODEIDCf468pEbhhoKhEbHoR3+M0KwbE=;
+	s=mail; t=1744713848;
+	bh=xh7Jj9EwZ14z10Z5YmH2kybmKZ8PUNlCUMcMfNXz5ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B8IBB8PSD6tv37+sGw2GaVj06lmR8S7OdnHoLX7wrGawQz31qaIAgrFAaOl0waVvP
-	 Snyodm8roOGQjm80u+fsFx5XPndAPIJ15WUEvwh1wyIzLQHEM+03iFO445edwj+KcU
-	 ZYVxbmg/x7dXh3NehVoYSS1jV7qMrZqS8URlMJn4Lp4fv9TPSVcnn0fnv9uHfIs346
-	 3OZAfkyRKpDBMva7XKowBk2wn13wZVnmDo7rcWIRTUB43nWCAWCTGTdjQ2mUE0qZwJ
-	 Rp+vxGuqz+Y5K/qBx4/U8HpO5rYuLUV0jFtmdGkqLG9bGIU98ce+kPzJ+Hg16EbAiW
-	 hj+pyohmM9F0A==
+	b=H0GcVP4NzvA1Xb/LixrkEuPOh9lBAgvyY+YWlLvxVXJdSASm7CzedyjhX+ZMiFVzV
+	 KDYppK/mxYep+iSKfSrJBLXJD/wqcE566DwkwMwqNOmiLwkaW4UA32w+saCGVRwiLN
+	 7l88q2RwRRrRLQbAD8TFGaZ9hGbIog/AuZiEzw1I74hiNVW9ngFCGFMrXtmSx8kCWk
+	 iSfV+OX6i2TpTNriz3kSl9rBQ+1rh2E62ZdxIgjCg3fr3+X7KJFqkPBLxeXbWkdPqt
+	 W9dRNMLBWW1a+dY7iKMHvWGZAkwn/xDA0yuzm/f1oLEzVtR296ggt0W1PJpG3+BNcc
+	 q93y/0RhL4VZw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E2C7B17E09B5;
-	Tue, 15 Apr 2025 12:44:03 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5BC0017E35E5;
+	Tue, 15 Apr 2025 12:44:07 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
@@ -61,9 +61,9 @@ Cc: p.zabel@pengutronix.de,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
 	jason-jh.lin@mediatek.com
-Subject: [PATCH v9 21/23] drm/mediatek: mtk_hdmi_common: Add var to enable interlaced modes
-Date: Tue, 15 Apr 2025 12:43:19 +0200
-Message-ID: <20250415104321.51149-22-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v9 23/23] drm/mediatek: mtk_hdmi_v2: Add debugfs ops and implement ABIST
+Date: Tue, 15 Apr 2025 12:43:21 +0200
+Message-ID: <20250415104321.51149-24-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
 References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
@@ -75,41 +75,169 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add an interlace_allowed bool member to struct mtk_hdmi_ver_conf
-which will be used to signal whether interlaced modes are supported
-by the bridge (in our case, the HDMI IP), and enable it for HDMIv2.
+Implement the Automated Built-In Self-Test ABIST functionality
+provided by the HDMIv2 IP and expose it through the "hdmi_abist"
+debugfs file.
 
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Write "1" to this file to activate ABIST, or "0" to deactivate.
+
+The ABIST functionality can be used to validate that the HDMI
+Transmitter itself works and that can output a valid image to
+the HDMI Display that is connected.
+
+This is especially useful when trying to rule out any possible
+issue that is related to the display pipeline, as the HDMI Tx
+is always the last component; this means that HDMI ABIST can be
+used even without prior display controller pipeline configuration.
+
+The expected output is a 100% color bar (rainbow) test pattern.
+
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi_common.c | 1 +
- drivers/gpu/drm/mediatek/mtk_hdmi_common.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_hdmi_v2.c | 123 +++++++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_common.c b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
-index b6043d99be7e..dc59f46b790c 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
-@@ -415,6 +415,7 @@ struct mtk_hdmi *mtk_hdmi_common_probe(struct platform_device *pdev)
- 	hdmi->bridge.ddc = hdmi->ddc_adpt;
- 	hdmi->bridge.vendor = "MediaTek";
- 	hdmi->bridge.product = "On-Chip HDMI";
-+	hdmi->bridge.interlace_allowed = ver_conf->interlace_allowed;
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c b/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
+index dd10f272eabd..284d5cc0cffd 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_v2.c
+@@ -1188,6 +1188,128 @@ static int mtk_hdmi_v2_hdmi_write_infoframe(struct drm_bridge *bridge,
+ 	return 0;
+ }
  
- 	ret = devm_drm_bridge_add(dev, &hdmi->bridge);
- 	if (ret)
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_common.h b/drivers/gpu/drm/mediatek/mtk_hdmi_common.h
-index d3de8afff40f..38d1bdf4c77e 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi_common.h
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_common.h
-@@ -131,6 +131,7 @@ struct mtk_hdmi_ver_conf {
- 	const struct hdmi_codec_ops *codec_ops;
- 	const char * const *mtk_hdmi_clock_names;
- 	int num_clocks;
-+	bool interlace_allowed;
++static int mtk_hdmi_v2_set_abist(struct mtk_hdmi *hdmi, bool enable)
++{
++	struct drm_display_mode *mode = &hdmi->mode;
++	int abist_format = -EINVAL;
++	bool interlaced;
++
++	if (!enable) {
++		regmap_clear_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_ENABLE);
++		return 0;
++	}
++
++	if (!mode->hdisplay || !mode->vdisplay)
++		return -EINVAL;
++
++	interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
++
++	switch (mode->hdisplay) {
++	case 720:
++		if (mode->vdisplay == 480)
++			abist_format = 2;
++		else if (mode->vdisplay == 576)
++			abist_format = 11;
++		break;
++	case 1280:
++		if (mode->vdisplay == 720)
++			abist_format = 3;
++		break;
++	case 1440:
++		if (mode->vdisplay == 480)
++			abist_format = interlaced ? 5 : 9;
++		else if (mode->vdisplay == 576)
++			abist_format = interlaced ? 14 : 18;
++		break;
++	case 1920:
++		if (mode->vdisplay == 1080)
++			abist_format = interlaced ? 4 : 10;
++		break;
++	case 3840:
++		if (mode->vdisplay == 2160)
++			abist_format = 25;
++		break;
++	case 4096:
++		if (mode->vdisplay == 2160)
++			abist_format = 26;
++		break;
++	default:
++		break;
++	}
++	if (abist_format < 0)
++		return abist_format;
++
++	regmap_update_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_VIDEO_FORMAT,
++			   FIELD_PREP(HDMI_ABIST_VIDEO_FORMAT, abist_format));
++	regmap_set_bits(hdmi->regs, TOP_CFG00, HDMI_ABIST_ENABLE);
++	return 0;
++}
++
++static int mtk_hdmi_v2_debug_abist_show(struct seq_file *m, void *arg)
++{
++	struct mtk_hdmi *hdmi = m->private;
++	bool en;
++	u32 val;
++	int ret;
++
++	if (!hdmi)
++		return -EINVAL;
++
++	ret = regmap_read(hdmi->regs, TOP_CFG00, &val);
++	if (ret)
++		return ret;
++
++	en = FIELD_GET(HDMI_ABIST_ENABLE, val);
++
++	seq_printf(m, "HDMI Automated Built-In Self Test: %s\n",
++		   en ? "Enabled" : "Disabled");
++
++	return 0;
++}
++
++static ssize_t mtk_hdmi_v2_debug_abist_write(struct file *file,
++					     const char __user *ubuf,
++					     size_t len, loff_t *offp)
++{
++	struct seq_file *m = file->private_data;
++	int ret;
++	u32 en;
++
++	if (!m || !m->private || *offp)
++		return -EINVAL;
++
++	ret = kstrtouint_from_user(ubuf, len, 0, &en);
++	if (ret)
++		return ret;
++
++	if (en < 0 || en > 1)
++		return -EINVAL;
++
++	mtk_hdmi_v2_set_abist((struct mtk_hdmi *)m->private, en);
++	return len;
++}
++
++static int mtk_hdmi_v2_debug_abist_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, mtk_hdmi_v2_debug_abist_show, inode->i_private);
++}
++
++static const struct file_operations mtk_hdmi_debug_abist_fops = {
++	.owner = THIS_MODULE,
++	.open = mtk_hdmi_v2_debug_abist_open,
++	.read = seq_read,
++	.write = mtk_hdmi_v2_debug_abist_write,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++static void mtk_hdmi_v2_debugfs_init(struct drm_bridge *bridge, struct dentry *root)
++{
++	struct mtk_hdmi *dpi = hdmi_ctx_from_bridge(bridge);
++
++	debugfs_create_file("hdmi_abist", 0640, root, dpi, &mtk_hdmi_debug_abist_fops);
++}
++
+ static const struct drm_bridge_funcs mtk_v2_hdmi_bridge_funcs = {
+ 	.attach = mtk_hdmi_v2_bridge_attach,
+ 	.detach = mtk_hdmi_v2_bridge_detach,
+@@ -1207,6 +1329,7 @@ static const struct drm_bridge_funcs mtk_v2_hdmi_bridge_funcs = {
+ 	.hdmi_tmds_char_rate_valid = mtk_hdmi_v2_hdmi_tmds_char_rate_valid,
+ 	.hdmi_clear_infoframe = mtk_hdmi_v2_hdmi_clear_infoframe,
+ 	.hdmi_write_infoframe = mtk_hdmi_v2_hdmi_write_infoframe,
++	.debugfs_init = mtk_hdmi_v2_debugfs_init,
  };
  
- struct mtk_hdmi_conf {
+ /*
 -- 
 2.49.0
 
