@@ -1,131 +1,160 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEA1251790
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E24254848;
+	Tue, 15 Apr 2025 20:26:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744748797; cv=none; b=Di2QGeRrig8c4W2vCR8zddkWVOmgbaibg1ojq8tIDR5egEnTlE1OCWXNmAxg9L4hbnzrO5PYAdyr1GkDZISUXszPQirNCiNyYVWm0icyIv7LDOpphsFjPDEWjGeMa8QuPHNYG3kgzsqpXbyeA9Jaww/sVwJa9sfxvEp3yJxJJc4=
+	t=1744748804; cv=none; b=b2WpGQ/Wf8zx2bNLZc5yvJ4jz0cneAKRMTXZHhBQo+E2zHPEo/+DPIPZeMzWc4OpDiBMRNY1p+AC6kduJHYT2XwthYms0rLmIJHeoB0yeFdguOZmffUHmMlM1vwVVyaHp5zkiWpCwxX/exuaBwp8PDygSTfFYRqxQiEKA/X463A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744748797; c=relaxed/simple;
-	bh=pvhdq1iT6xGsvgus+UKN3OsBlAAH0DtpK3RlifG8BJM=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=jRm2RK0+TOcnJ7cePTG4xkiVULTgW/WGEoepBJxxcfXcFym1mJim7SgsBZEMHLuzesa4c8s5hqUjdclN6GaoTzmFxPJSxNh8zCfIyPXcXCEW6LQb0whWjcu3NvPY+nTGOYjYpXMhG4CA008RXoEvBZGSsepfV0kulxldoKU6TQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=XLDo79tU; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1744748804; c=relaxed/simple;
+	bh=SZ05gaZMA5JVkKHPiFvRvLzr0lgvzW0VYZRquAxG1K0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=SnybA9tqxONqT6Y8dTa5U5cR4sxSQw/Jwn4fVvd2aspF//fCAOEbDVtkqZwMMmJ9kj14Pp0CzVVYEJI24Ay8UCYYTdJOZR2QxExuWtx014Odl/zN6efv/pyb5V6kLWn80Uz/H5anVkQxtUJ4iiof3yvpVCYBdYnopxp2k6hk4Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A2yFx5d1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HqueY0KA; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="XLDo79tU"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22403cbb47fso64729035ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1744748795; x=1745353595; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=75O+xckdYXwHr1AtIxgXc+6DXaHjIxC/DyVy3zDpIz0=;
-        b=XLDo79tUWtsSyOg3xIXO22NF80KF+kIkz56BKthwC91b4eFF7bJO0jyzCHuTI262xE
-         SGBooLKeSiFXReSSauJuw0Bqedg/QneFBy5IpgixbWcYzF/E4kgFlhshdVgaUe6aWUMi
-         vJx+bgEA9kQ23l4FtxT9Z/PXaFZNURfI1kQW08KruJp1maHDt6x2fTyKZ7GYzc6okJvY
-         kiP/IhTjuDDuQLS6lp+BxCYaoKxNQekkNdOVb+60IfUdRCZbFUOeKkMSWDKS0kB8bm32
-         UGxMxfXzN3SSB++/LG2qlT6dyhle6Go0XLRAyz3IiiVWrjZh8LajjCztPmwhvlN8o0jb
-         exIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744748795; x=1745353595;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75O+xckdYXwHr1AtIxgXc+6DXaHjIxC/DyVy3zDpIz0=;
-        b=Rn2NaXIePUhK+/OBNluWUJlZnOCzXLSKfx46rQ6qYqwdQtVR7eHBqVoHgs77RTbcW0
-         PpN9p0theoLHnkhApd/iFUQhgXPPqfKi4Zd3XnRTnDKXHhd6z7taKiAMuxZTljxpggWa
-         kuScETKDXE+pkp4tY01GUBvAiejyQY9nM04Rhoj/jS2H3r4Xjc8UTW3oDNnIKQiImwsq
-         nm1xhTf9TQI7iu6ghL0Yl3J6fJrp3fDb/1dYW/1hEuWpH9v/i0lk11ezx46+0tmgHzWw
-         CUUZBgoJ2Fhx2KDM+W3xTxgxp2uW5cqqmwX/mKtT7ZsD19AcYBP3fZxTdttf5vxvfIzO
-         NInA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEUQnzM8frwNK9y5mvg/JXCtjR0vTSfKUvW4hYMs0SBMoAWZBJOKG1/Dv1XNl2mn/kanHssbIoEqf8Wq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVYlFDiceP4sV16ncJ8kYnzwKi74h+1c3xzY8NZSJDu1m/FO8Q
-	GT3T1WUCr+kjqMZcthWP87V651oC0PzsS95RVWTHkcUXRfT0W9eEwbQkwqDCO8U=
-X-Gm-Gg: ASbGnctvl37VV7U25jJ7SfCLXUdXReeHeEWw496s8O4iNV3F5rPzUE9tBhtC7ZbcDlz
-	EM1urDgUpvD9X2Dx0DXBkFf7oFWEnUW3DdaBil/TUjGaoNs6rbsWQyk2G/saSwVvzGSRZm7kRFC
-	bUOx2IGjmGgmR9kpZpCtrPcJimj3aw77XnPJQP3hXNvBE/a2Sleb/568kPGS7dFse400hisrUQT
-	j6arUsz9kQlEyxjat11MeGxXR9a7q8MWIzcblUnawNAnvBT+uw5nh+88jjqJ5cavVB6IQyNdxUY
-	c/pXP17FB6Q0025QLuDJ2xSdeoNXfu2gHg==
-X-Google-Smtp-Source: AGHT+IGZO5UAvPkrrKwYYPSXRVF2GgYYFWa7uULNbD4bFXFpfMPqMwk2vBYgwS4j3xl5itHBc4XrIg==
-X-Received: by 2002:a17:902:cec9:b0:216:2bd7:1c2f with SMTP id d9443c01a7336-22c318bd3a5mr7320125ad.18.1744748794919;
-        Tue, 15 Apr 2025 13:26:34 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c93ad2sm122460825ad.115.2025.04.15.13.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 13:26:34 -0700 (PDT)
-Date: Tue, 15 Apr 2025 13:26:34 -0700 (PDT)
-X-Google-Original-Date: Tue, 15 Apr 2025 13:26:31 PDT (-0700)
-Subject:     Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-In-Reply-To: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
-CC: Linus Torvalds <torvalds@linux-foundation.org>, kees@kernel.org, mic@digikod.net,
-  gnoack@google.com, Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, broonie@kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: broonie@kernel.org
-Message-ID: <mhng-812ee330-2f86-4561-8b88-cbb6a51f8515@palmer-ri-x1c9a>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A2yFx5d1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HqueY0KA"
+Date: Tue, 15 Apr 2025 20:26:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744748794;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CQbZBn1ckwYSGZifm3PodLOTGWlBhRy/B2yw5rHj+O0=;
+	b=A2yFx5d1DaS9/W2jcvKEvyrhajgC/rMPcsoBtyb1/PzGdRojFTsJyiZRGGtMxE2ROMOUUC
+	e+/W6fZmaN5Z+z+z1MGfSZTxOP6ykijHcVA0KclV9XVk9ECdMZ6Tr+3eQxZcwT5d5MRhCQ
+	DbKus+t0k13uXVg8x5BCytW6VS9qV2elAtOvixj3mJtNgK455Rn+SUspIFzIT/CBo5rDyp
+	cEmQGFbyQD/ybQmXWMYWSpyO/nlEN8B5GzcARBQnFyEFKakYl9ekdq58aLcBF+9qZs2425
+	N5Oj6ySzrOSRY4pvaQhTaSobCInQIR0u4ZtBHlgqmDn7oYW2DqvxTMIOZXboJA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744748794;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CQbZBn1ckwYSGZifm3PodLOTGWlBhRy/B2yw5rHj+O0=;
+	b=HqueY0KAkIQiq2j2a51vlg76Qi8eO5oUuA++mVJ1u3fomOd3LpvDkB97BxQPmc6MFXCq6p
+	O9qoKRHRQgg9vADQ==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cpu] x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, "Xin Li (Intel)" <xin@zytor.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250415175410.2944032-4-xin@zytor.com>
+References: <20250415175410.2944032-4-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Message-ID: <174474878899.31282.14609854394955863221.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, 07 Apr 2025 13:57:32 PDT (-0700), broonie@kernel.org wrote:
-> In current mainline x86_64 allmodconfig builds done with tuxmake GCC 13
-> and GCC 14 toolchains (which are Debian ones packaged up into containers)
-> generate ICEs in landlock:
->
-> Event                            | Plugins
-> PLUGIN_FINISH_TYPE               | randomize_layout_plugin
-> PLUGIN_FINISH_DECL               | randomize_layout_plugin
-> PLUGIN_ATTRIBUTES                | latent_entropy_plugin randomize_layout_plugin
-> PLUGIN_START_UNIT                | latent_entropy_plugin stackleak_plugin
-> PLUGIN_ALL_IPA_PASSES_START      | randomize_layout_plugin
-> /build/stage/linux/security/landlock/fs.c: In function ‘hook_file_ioctl_common’:
-> /build/stage/linux/security/landlock/fs.c:1745:61: internal compiler error: in c
-> ount_type_elements, at expr.cc:7075
->  1745 |                         .u.op = &(struct lsm_ioctlop_audit) {
->       |                                                             ^
->
-> Arnd bisected this to c56f649646ec ("landlock: Log mount-related
-> denials") but that commit is fairly obviously not really at fault here,
-> most likely this is an issue in the plugin.  Given how disruptive having
-> key configs like this failing let's disable the plugins for compile test
-> builds until a fix is found.
->
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  scripts/gcc-plugins/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> index e383cda05367..29b03c136165 100644
-> --- a/scripts/gcc-plugins/Kconfig
-> +++ b/scripts/gcc-plugins/Kconfig
-> @@ -7,6 +7,7 @@ config HAVE_GCC_PLUGINS
->
->  menuconfig GCC_PLUGINS
->  	bool "GCC plugins"
-> +	depends on !COMPILE_TEST
->  	depends on HAVE_GCC_PLUGINS
->  	depends on CC_IS_GCC
->  	depends on $(success,test -e $(shell,$(CC) -print-file-name=plugin)/include/plugin-version.h)
->
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250407-kbuild-disable-gcc-plugins-8701aa609cb3
->
-> Best regards,
+The following commit has been merged into the x86/cpu branch of tip:
 
-This one's been biting me too.  It manifests for me on gcc-12 and gcc-13 
-(both locally built toolchains off the release branches, cross compiling 
-for RISC-V).
+Commit-ID:     3aba0b40cacdfba4a604dd09315fa6cdbeb0ed90
+Gitweb:        https://git.kernel.org/tip/3aba0b40cacdfba4a604dd09315fa6cdbeb0ed90
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Tue, 15 Apr 2025 10:54:10 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 15 Apr 2025 22:09:20 +02:00
 
-Tested-by: Palmer Dabbelt <palmer@rivosinc.com>
+x86/cpufeatures: Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES
+
+Shorten X86_FEATURE_AMD_HETEROGENEOUS_CORES to X86_FEATURE_AMD_HTR_CORES
+to make the last column aligned consistently in the whole file.
+
+No functional changes.
+
+Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250415175410.2944032-4-xin@zytor.com
+---
+ arch/x86/include/asm/cpufeatures.h       | 2 +-
+ arch/x86/kernel/acpi/cppc.c              | 2 +-
+ arch/x86/kernel/cpu/scattered.c          | 2 +-
+ arch/x86/kernel/cpu/topology_amd.c       | 2 +-
+ tools/arch/x86/include/asm/cpufeatures.h | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index bd27a1d..bc81b9d 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -478,7 +478,7 @@
+ #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
+ #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
+ #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
+-#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
++#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
+ #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+ 
+diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
+index 77bfb84..62ca714 100644
+--- a/arch/x86/kernel/acpi/cppc.c
++++ b/arch/x86/kernel/acpi/cppc.c
+@@ -272,7 +272,7 @@ int amd_get_boost_ratio_numerator(unsigned int cpu, u64 *numerator)
+ 	}
+ 
+ 	/* detect if running on heterogeneous design */
+-	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES)) {
++	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES)) {
+ 		switch (core_type) {
+ 		case TOPO_CPU_TYPE_UNKNOWN:
+ 			pr_warn("Undefined core type found for cpu %d\n", cpu);
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 16f3ca3..c75c57b 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -53,7 +53,7 @@ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_PERFMON_V2,		CPUID_EAX,  0, 0x80000022, 0 },
+ 	{ X86_FEATURE_AMD_LBR_V2,		CPUID_EAX,  1, 0x80000022, 0 },
+ 	{ X86_FEATURE_AMD_LBR_PMC_FREEZE,	CPUID_EAX,  2, 0x80000022, 0 },
+-	{ X86_FEATURE_AMD_HETEROGENEOUS_CORES,	CPUID_EAX, 30, 0x80000026, 0 },
++	{ X86_FEATURE_AMD_HTR_CORES,		CPUID_EAX, 30, 0x80000026, 0 },
+ 	{ 0, 0, 0, 0, 0 }
+ };
+ 
+diff --git a/arch/x86/kernel/cpu/topology_amd.c b/arch/x86/kernel/cpu/topology_amd.c
+index 03b3c9c..eb799e2 100644
+--- a/arch/x86/kernel/cpu/topology_amd.c
++++ b/arch/x86/kernel/cpu/topology_amd.c
+@@ -182,7 +182,7 @@ static void parse_topology_amd(struct topo_scan *tscan)
+ 	if (cpu_feature_enabled(X86_FEATURE_TOPOEXT))
+ 		has_topoext = cpu_parse_topology_ext(tscan);
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES))
++	if (cpu_feature_enabled(X86_FEATURE_AMD_HTR_CORES))
+ 		tscan->c->topo.cpu_type = cpuid_ebx(0x80000026);
+ 
+ 	if (!has_topoext && !parse_8000_0008(tscan))
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index e10c3f4..fdbc92a 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -468,7 +468,7 @@
+ #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* BHI_DIS_S HW control enabled */
+ #define X86_FEATURE_CLEAR_BHB_VMEXIT	(21*32+ 4) /* Clear branch history at vmexit using SW loop */
+ #define X86_FEATURE_AMD_FAST_CPPC	(21*32+ 5) /* Fast CPPC */
+-#define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32+ 6) /* Heterogeneous Core Topology */
++#define X86_FEATURE_AMD_HTR_CORES	(21*32+ 6) /* Heterogeneous Core Topology */
+ #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32+ 7) /* Workload Classification */
+ #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+ 
