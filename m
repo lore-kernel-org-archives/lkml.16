@@ -1,98 +1,128 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A7E2820B0;
-	Tue, 15 Apr 2025 13:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50EA29117F;
+	Tue, 15 Apr 2025 13:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744722779; cv=none; b=Tvqzvwbh+iHeKgsPVVyH8GLRjLg6LrJ9uOgXco1nEFJOqxwa7ccLyspTaGgTkqOpQaTGp93Id5HUFTVR5fKrmEB2nj6LYtzVskNYETMHgNWPulCgqBcxyhHEyP2dCbM7sve6f8mfplZn6PzKhpwhIlrIkqY6Qm/+etVwtslMCdo=
+	t=1744722895; cv=none; b=ILb6ZQhVwK9TdamOgZdyJx1LRrinJMRn5ZkSHypAeGNzICpv4f3XnookRnG0tupajome/C3qOXod7VeZSRrVDkWkyyxvNWM93CepDNk/WlphWieqGr8U3wWfA2YnOXBosrkcMCgNUZDbJ5TFtKB6SNN2OjmADUiRVw/CzcbxSAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744722779; c=relaxed/simple;
-	bh=II8WfqWmBa0u/1Ud+4A6+S3+jfYeVrIHrFaibEYV3WA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V6Sx5wRZaAZpPqz33ug/IkSw3Yzh1OzfJMtqL0xe07wchxGlN0dj2BCTobElQ36DG5hRlqqntX1wWOPa3jj+kDEHmvitXjm1I3IsOAQURCOoKdnrJoCRlej+F8gHZLiZGCHmmg7ULHI+RSaZsV/2pq5VynEtY3IPpf/HIig4CwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c59e7039eeso772681985a.2;
-        Tue, 15 Apr 2025 06:12:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744722776; x=1745327576;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K6O/BJeErtsOvgZOv8LjuIOrFRcKVVensh0XWZV1Eoo=;
-        b=QsCqxN/iJmypdaRloWlEsDE4mLeN+0/aTyY+ura3HzB92xJ2v/Z97vkiYJz1M7LRGg
-         rW20Poe+QltopwOZ86vfao2PUYcOoOTPJS828mhoVMfsfwyBn4BXl3jYfOMedfv/qhSc
-         6Ii2SQkxMwZ5K1ZKcNn8gMEBwUIMLAbg6+i7Gfa92vPAcEOYacpWAwUeH0cXfAR5SmSA
-         t+TJqhXq6P1LXhkApwo/RfcmnsQKsTypMav5ugJ0hqB0z9UVAsDq1+8vYlxMmzft7sd3
-         ATY8Ga1ofEN+OGZ3275HzGEM3t8wpYvyvwsYokNYEuDy9TacJJM1OO50aPYZU1IbDwgW
-         r42A==
-X-Forwarded-Encrypted: i=1; AJvYcCUPMv+oaYgL3umTQYIx1hNxhIfllxYgH2SqqRa5bB9xbljXfJxsrqLdxs7EzRx6+F5kii6N5ghdbOF0hm01@vger.kernel.org, AJvYcCUjjP6rRB7ciPJDCvS0t6pjJ32b3lxynPZ3w106Q1JNhhfd6+wmIbwZEqc/4gKMlvl+G8R/lSOgDTUB@vger.kernel.org, AJvYcCUzGUvJKQ5Zkbe4ejg1ScSyqoUUJz2g8cbw3l4jiBomVt2IrciJx4cLYJkc7oodXTkKEHucq1wtxWVI@vger.kernel.org, AJvYcCV/oNmG7FnkRaoQxS4028BtkVoOwTtN/AIxk1pTufLXDgHwVFZMXRKAnzqkGxvMPcmbsdXHSqBGYuoCJJ+EB6/+DZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFMvA6L06btrQpcm6JojQ3CmZdDDunOAchKCSH3idIsEspOyhA
-	0hF4bNbbdQIIuBhicf4bEWJcu9CJnn5JeNvx0W9Jq6qg3cYjgRc2xblCWWWM
-X-Gm-Gg: ASbGncvbXZMHL24vGOoR4SdoBzOSWhr3UKxr1MFfQrY1Rma8AUOHoPGJmf+d14x86fP
-	NuVs9T1uvPanNtdOjP+P2gw4Vc0/ZCMX6Kix4o08WujftUQX0GQHtThvev7qOKeEpEVnoSwUbSt
-	CMHy2kKW29zY96NVteaAV+98IU2bLF2o+sAtRTUH9xAg6jnIeuSp2gNUamiFdedoqZiHuZYk14P
-	u6vCegScZitR10DGbnMnMvpBe5u+KKjcvHYuhwg5RVv6iMgliE1vRa177A3vQosxtZ9HhYJuN5u
-	dDqaRMrXz57ic9YBJcEf+8MlAwdxz2Dmsl0Fvkutjuquw62751XPYU3Wm075WKn0omjMKd3vMM7
-	K05CXZ00=
-X-Google-Smtp-Source: AGHT+IFvEbtlcTy7OAGj3TbDr6+RilAwJ+Rkk6nifb8AOWeiki61CW7bB2Rywi+TF5zZVT1bTRYkVA==
-X-Received: by 2002:a05:620a:d93:b0:7c5:674c:eecc with SMTP id af79cd13be357-7c7af12dc43mr2364564485a.32.1744722775802;
-        Tue, 15 Apr 2025 06:12:55 -0700 (PDT)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com. [209.85.222.174])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0dc9fsm906115285a.96.2025.04.15.06.12.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 06:12:55 -0700 (PDT)
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c081915cf3so693192485a.1;
-        Tue, 15 Apr 2025 06:12:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUPOfXtL+tD03krDWy5tjwhIfEVsKAjtcadpDcZ9/SsBpuEVRkLpnnytJFlhJIwSqb4rfdut+pNE03l@vger.kernel.org, AJvYcCVUI2HKfYJKRwUyVn2OF/Sz6qtSG0mElOjYhZHHkKfsb5cbh97g0iwDw3egj7Kui5GLWCcCm5Ut+ai2WjkQ@vger.kernel.org, AJvYcCWaxDWIwDMWiXMTAFZBYMlRWoUflIm1OjA1RhLFW0AWOOuYXAILGKoMGt4rTZTySh13NLITFmoN7K0Na2P4SdwFayo=@vger.kernel.org, AJvYcCXz7m9upCdlzuvtWp0xmWI60bxWtSvCLP6mNt0wsAakxmnmoNfNVGzgWFZyk0Fe/JRANtAoZuhW00ig@vger.kernel.org
-X-Received: by 2002:a05:620a:f0b:b0:7c7:5ad8:aece with SMTP id
- af79cd13be357-7c7af126989mr2643432285a.25.1744722775107; Tue, 15 Apr 2025
- 06:12:55 -0700 (PDT)
+	s=arc-20240116; t=1744722895; c=relaxed/simple;
+	bh=EkXGyCOE3xPaZmPI/Zws1XQgorOCwXDnbNA4uFRzZdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pzAJ0ncY7aWl2qxnatafArt9VrTThNdjc7yigRvq7NYKwSQ9RaUbnCWXo//usSmVRKScMPaxcMp6gzxZxqcdakx/8t0S2DvtZ3Nd1pAV3jbCftxpObV03/IF81B6V+xff3hU3VElVNKtnJn/ckh27POG5E4nM8fLbK2fKpRLpXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NWR/sIhK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NWR/sIhK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lYmK/WS3ekIfja6Gz/BbjmC+YRaWmyyvrp83kJkGeFI=; b=NWR/sIhKT1gDu8aHjS48fF2aZt
+	lw41iRUOiWacG726FRxRGbX78++vRtWrxR7cn3bQRhaSaWBWbw6nQZsqUZ36kCSK9l9cDKhO55mLF
+	wCaVSco6UaQkCbRyEqHOAVqcM4F+R0iRX650jS5zeYJntrD2Z43NozMpB8qMOQk8rtSYavtdB5HS1
+	tCOqhNcvQtUZ+ldIx1aXi2h9xtBvZs5grEgWKuUOKyxxV7obZbk8VJB6MRScETDaUgG/kzsbzEtK6
+	SZPbRkeaymti+oenbNGNNoug6N2GJmN3pEOwbO2H5HZ7LLT2lX1xeXgTCQA3bp8JgPk0yvIXOw4/E
+	GBcuAHjA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u4g7j-00000009tFM-1Yn2;
+	Tue, 15 Apr 2025 13:14:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 7A4E630037D; Tue, 15 Apr 2025 15:14:46 +0200 (CEST)
+Date: Tue, 15 Apr 2025 15:14:46 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Frederic Weisbecker <fweisbec@gmail.com>
+Subject: Re: [tip:perf/core] [perf] da916e96e2:
+ BUG:KASAN:null-ptr-deref_in_put_event
+Message-ID: <20250415131446.GN5600@noisy.programming.kicks-ass.net>
+References: <202504131701.941039cd-lkp@intel.com>
+ <20250414190138.GB13096@noisy.programming.kicks-ass.net>
+ <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
+ <5bc5f54b-ce6a-4834-86d4-5014d44c7217@linaro.org>
+ <20250415100840.GM5600@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407165202.197570-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407165202.197570-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 15 Apr 2025 15:12:43 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXr76BBXJJ-EHf3rCEAknsDCesn0AhnRcSHHSzpLk-6Ng@mail.gmail.com>
-X-Gm-Features: ATxdqUH9HUes13_WK517nkwq-HYNdrkhCnl7W9u-lJtD6AwpRvVE_3bTSo20vsk
-Message-ID: <CAMuHMdXr76BBXJJ-EHf3rCEAknsDCesn0AhnRcSHHSzpLk-6Ng@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] clk: renesas: rzv2h-cpg: Use str_on_off() helper
- in rzv2h_mod_clock_endisable()
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415100840.GM5600@noisy.programming.kicks-ass.net>
 
-On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Replace hard-coded "ON"/"OFF" strings with the `str_on_off()` helper in
-> `rzv2h_mod_clock_endisable()`.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Apr 15, 2025 at 12:08:40PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 10:14:05AM +0100, James Clark wrote:
+> > On 15/04/2025 5:46 am, Oliver Sang wrote:
+> 
+> > > yes, below patch fixes the issues we observed for da916e96e2. thanks
+> > > 
+> > > Tested-by: kernel test robot <oliver.sang@intel.com>
+> > > 
+> > 
+> > Also fixes the same issues we were seeing:
+> > 
+> > Tested-by: James Clark <james.clark@linaro.org>
+> 
+> Excellent, thank you both! Now I gotta go write me a Changelog :-)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-clk for v6.16.
+Hmm, so while writing Changelog, I noticed something else was off. The
+case where event->parent was set to EVENT_TOMBSTONE now didn't have a
+put_event(parent) anymore. So that needs to be put back in as well.
 
-Gr{oetje,eeting}s,
+Frederic, afaict this should still be okay, since if we're detached,
+then nothing will try and access event->parent in the free path.
 
-                        Geert
+Also, nothing in perf_pending_task() will try and access either
+event->parent or event->pmu.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+---
+Subject: perf: Fix event->parent life-time issue
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Tue Apr 15 12:12:52 CEST 2025
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Due to an oversight in merging da916e96e2de ("perf: Make
+perf_pmu_unregister() useable") on top of 56799bc03565 ("perf: Fix
+hang while freeing sigtrap event"), it is now possible to hit
+put_event(EVENT_TOMBSTONE), which makes the computer sad.
+
+This also means that for the event->parent == EVENT_TOMBSTONE, the
+put_event() matching inherit_event() has gone missing.
+
+Previously this was done in perf_event_release_kernel() after calling
+perf_remove_from_context(), but with it delegated to put_event(), this
+case is now entirely missed, leading to leaks.
+
+Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2343,6 +2343,7 @@ static void perf_child_detach(struct per
+ 	 * not being a child event. See for example unaccount_event().
+ 	 */
+ 	event->parent = EVENT_TOMBSTONE;
++	put_event(parent_event);
+ }
+ 
+ static bool is_orphaned_event(struct perf_event *event)
+@@ -5688,7 +5689,7 @@ static void put_event(struct perf_event
+ 	_free_event(event);
+ 
+ 	/* Matches the refcount bump in inherit_event() */
+-	if (parent)
++	if (parent && parent != EVENT_TOMBSTONE)
+ 		put_event(parent);
+ }
+ 
