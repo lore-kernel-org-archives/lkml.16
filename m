@@ -1,106 +1,163 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60BB829B772;
-	Tue, 15 Apr 2025 16:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4879429E05C;
+	Tue, 15 Apr 2025 16:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744735507; cv=none; b=oPWewtsjiIgqCIjVLUOC/AVYpF1OhJah7dkv35aE2PNPwObjxsHbpTrKhYGmcnMVEFwFSQzaZXc9UWB6RFZnNkkgRg3dDRyXcSH0EYC8uWHkUb6OkIdxEguEXZr0XLwIvtA7r+8sFkKYvG4uNgLZ+MlXjNAy287wUNOpL36NDWM=
+	t=1744735512; cv=none; b=UlKX7b9WcfrvB4RZHzaF7j+i1HRstwki+8IO9FpI0B/YhLZyopOw44iF4nEeGsKv1fqwS1tzzqdTMD/urn16HoZahKyoYyx1VG8WKivco/0ayBsWe6f7djKveQNci4+0GsrdEUPgYVqa9jcrBPCmKkb1nJpgIiOXbcsXRolv8BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744735507; c=relaxed/simple;
-	bh=J8lu/X3lLuKDP3cqf1zZsh7zscD/5IgaDYnIhZlUs3o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pffNXn7cOjBXU/vN+aQLh820sePGRpIC7drO2EVky91EM05P7E6Xq875eEEEfS+n/hlGEgEmA23NSN8qKystUuCnSezhjjK8PuKkofIHR9ope9QwI8E0pdkZJGaga/BH9fkAHXEf/bIZngDbh4iTB/Ts85X4KNdzqjLI4mEA/ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=KEYRW8Xg; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744735512; c=relaxed/simple;
+	bh=VOnDxQaAKRWw2IKlU/+VitLZInyTZ7+P1ECUBgtIElI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RZuEsRRD1mzZma9kYWuXXOnGDEqO3FKlx5Ki2NklR7oO9dg/5L0fnET8CKE09fOQOcaQvPE65gbo+LkvM6qsX6PSlyJqDThgziMwdxz4qKiBG7Xcbt1KCAZbB4NFam1hlWR4Q9ThiSfw9Y6Jm6VsMaed0sh5Ol55tNw4JJon9MQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q6oA97FC; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="KEYRW8Xg"
-Received: from DESKTOP-RSFL4TU.corp.microsoft.com (unknown [167.220.238.203])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D8CFF210C44A;
-	Tue, 15 Apr 2025 09:45:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D8CFF210C44A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744735506;
-	bh=mUh/kcEUt4luQu4o7NTZ5EU1iGIvJuoZ7W5qUBGmp+A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KEYRW8Xg+ZFYUw0WWlhjqqMSlMRD4Du48prVydUlK7ccJV2QbxABymrGTVm/LjYog
-	 SN4cdpiNtgqxQl9+4QXzc9qgwOco/vQqbw9/HA/kKAnLGndNOWSfIe54KdT1pCfy5t
-	 f410wxLhjo7A2SagKYSKLAw+fz1x6r6rD46iUbXg=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stephen Hemminger <stephen@networkplumber.org>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Naman Jain <namjain@linux.microsoft.com>
-Subject: [PATCH v5 2/2] Drivers: hv: Make the sysfs node size for the ring buffer dynamic
-Date: Tue, 15 Apr 2025 22:14:52 +0530
-Message-Id: <20250415164452.170239-3-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415164452.170239-1-namjain@linux.microsoft.com>
-References: <20250415164452.170239-1-namjain@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q6oA97FC"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tCtH025071;
+	Tue, 15 Apr 2025 16:44:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=+kDB+MDxRVThD8Eyv10zNktc
+	2R/pYfeT2l4xLH5sq0c=; b=Q6oA97FCcAITogJh02z4K9O3Oh77YbOdAt0jViLC
+	GsRzb7YcHmSMJT7flsasQeNge24zxRQqa0esofn4G9vjwRyv6tikvC4UpQDKgp6W
+	I2fmDiAq2tI8tQRoOn1ZNYa/yc1a+8g052Rq90KUrbwSEGsjliOjIEaafTmL/aLz
+	pk2B12DJ9eVvPdoiYKrGixaBkDufi2YVPHNoFWggFo2uQET6Bf3UF/49lDRNmIH7
+	uQ3fLzSAiSCy8f71mE2Ig7LnHgrXcxyqRFrGom7wrPW6XxZ3kDbaknGZ9wgtFbbc
+	rizWfVdhmIDePT6lwrFM/TOT7G4j5tk0ZZ4gmT9afd1F3g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wgu3x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 16:44:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53FGiuiK019612
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 16:44:56 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 15 Apr 2025 09:44:56 -0700
+Date: Tue, 15 Apr 2025 09:44:55 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+CC: Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi
+	<cristian.marussi@arm.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Viresh
+ Kumar <viresh.kumar@linaro.org>, <arm-scmi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: scmi: Skip SCMI devices that aren't used by the
+ CPUs
+Message-ID: <Z/6NB2QRvRrqwgcQ@hu-mdtipton-lv.qualcomm.com>
+References: <20250411212941.1275572-1-quic_mdtipton@quicinc.com>
+ <20250415090655.GA10243@nxa18884-linux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250415090655.GA10243@nxa18884-linux>
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67fe8d09 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=nqZ6nTEg5KUHkvYbfU8A:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 6zJdl26a50mbWxYTiGA4Xw4GOcA4slVa
+X-Proofpoint-GUID: 6zJdl26a50mbWxYTiGA4Xw4GOcA4slVa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150116
 
-The ring buffer size varies across VMBus channels. The size of sysfs
-node for the ring buffer is currently hardcoded to 4 MB. Userspace
-clients either use fstat() or hardcode this size for doing mmap().
-To address this, make the sysfs node size dynamic to reflect the
-actual ring buffer size for each channel. This will ensure that
-fstat() on ring sysfs node always return the correct size of
-ring buffer.
+On Tue, Apr 15, 2025 at 05:06:55PM +0800, Peng Fan wrote:
+> On Fri, Apr 11, 2025 at 02:29:41PM -0700, Mike Tipton wrote:
+> >Currently, all SCMI devices with performance domains attempt to register
+> >a cpufreq driver, even if their performance domains aren't used to
+> >control the CPUs. The cpufreq framework only supports registering a
+> >single driver, so only the first device will succeed. And if that device
+> >isn't used for the CPUs, then cpufreq will scale the wrong domains.
+> >
+> >To avoid this, return early from scmi_cpufreq_probe() if the probing
+> >SCMI device isn't referenced by the CPU device phandles.
+> >
+> >This keeps the existing assumption that all CPUs are controlled by a
+> >single SCMI device.
+> >
+> >Signed-off-by: Mike Tipton <quic_mdtipton@quicinc.com>
+> >---
+> > drivers/cpufreq/scmi-cpufreq.c | 29 +++++++++++++++++++++++++++++
+> > 1 file changed, 29 insertions(+)
+> >
+> >diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+> >index 944e899eb1be..7981a879974b 100644
+> >--- a/drivers/cpufreq/scmi-cpufreq.c
+> >+++ b/drivers/cpufreq/scmi-cpufreq.c
+> >@@ -393,6 +393,32 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
+> > 	.set_boost	= cpufreq_boost_set_sw,
+> > };
+> > 
+> >+static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
+> >+{
+> >+	struct device_node *scmi_np = scmi_dev->of_node;
+> >+	struct device_node *np;
+> >+	struct device *cpu_dev;
+> >+	int cpu, idx;
+> >+
+> >+	for_each_possible_cpu(cpu) {
+> >+		cpu_dev = get_cpu_device(cpu);
+> >+		if (!cpu_dev)
+> >+			continue;
+> >+
+> >+		np = cpu_dev->of_node;
+> >+
+> >+		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+> >+			return true;
+> >+
+> >+		idx = of_property_match_string(np, "power-domain-names", "perf");
+> >+
+> >+		if (of_parse_phandle(np, "power-domains", idx) == scmi_np)
+> >+			return true;
+> >+	}
+> >+
+> >+	return false;
+> >+}
+> >+
+> > static int scmi_cpufreq_probe(struct scmi_device *sdev)
+> > {
+> > 	int ret;
+> >@@ -404,6 +430,9 @@ static int scmi_cpufreq_probe(struct scmi_device *sdev)
+> > 	if (!handle)
+> > 		return -ENODEV;
+> > 
+> >+	if (!scmi_dev_used_by_cpus(dev))
+> >+		return 0;
+> 
+> Should 'return -ENOTSUPP' be used here?
+> There is no need to mark the probe success.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
- drivers/hv/vmbus_drv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Returning -ENOTSUPP will add noise in the logs from probe failures, for
+example:
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index cbca403be2ab..88240b021034 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1820,7 +1820,6 @@ static struct bin_attribute chan_attr_ring_buffer = {
- 		.name = "ring",
- 		.mode = 0600,
- 	},
--	.size = 2 * SZ_2M,
- 	.mmap = hv_mmap_ring_buffer_wrapper,
- };
- static struct attribute *vmbus_chan_attrs[] = {
-@@ -1880,11 +1879,21 @@ static umode_t vmbus_chan_bin_attr_is_visible(struct kobject *kobj,
- 	return attr->attr.mode;
- }
- 
-+static size_t vmbus_chan_bin_size(struct kobject *kobj,
-+				  const struct bin_attribute *bin_attr, int a)
-+{
-+	const struct vmbus_channel *channel =
-+		container_of(kobj, struct vmbus_channel, kobj);
-+
-+	return channel->ringbuffer_pagecount << PAGE_SHIFT;
-+}
-+
- static const struct attribute_group vmbus_chan_group = {
- 	.attrs = vmbus_chan_attrs,
- 	.bin_attrs = vmbus_chan_bin_attrs,
- 	.is_visible = vmbus_chan_attr_is_visible,
- 	.is_bin_visible = vmbus_chan_bin_attr_is_visible,
-+	.bin_size = vmbus_chan_bin_size,
- };
- 
- static const struct kobj_type vmbus_chan_ktype = {
--- 
-2.34.1
+    scmi-cpufreq scmi_dev.4: probe with driver scmi-cpufreq failed with error -524
 
+These are "expected" failures, so this would be misleading. However, we
+could return -ENODEV instead which doesn't log anything by default. It
+uses a dev_dbg() in that case:
+
+    scmi-cpufreq scmi_dev.4: probe with driver scmi-cpufreq rejects match -19
+
+Returning -ENODEV seems more appropriate. I can make that change.
