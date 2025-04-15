@@ -1,87 +1,71 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90D3221FDC;
-	Tue, 15 Apr 2025 17:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F1F21B9D8;
+	Tue, 15 Apr 2025 17:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737674; cv=none; b=g52dLqIAzw9tNIR0zmy7vpgAekdq0xRlP0S8lB3OmvyZWdJ+ByMIjq8uvy67lxF9ECg/U7r6AF3lFvDl7EgcEvpPQ8orsM+AEkUfq+Hu3OHaVluto6ansDtSwk3UQQK5+ZVCsh2ozR6BGNHVKJ33DNdOh72L0lJP17xlvY/ie9U=
+	t=1744737740; cv=none; b=RpGxojyQFuoJqjkZqxHC2xA8XaTZEHzW/YvNJM17Gs/2xRibL83Q41WmoWEwY2EcQxRPF+wOqu6m0blkr59wo9EsSrD7tjQZDU3pxXlrniNUI+naCG8ovascjhVBbeJzMbllBOuYTlBk6sRuUy/TLZ3U1mVETV/ljwSmi5SXbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737674; c=relaxed/simple;
-	bh=NfgaXQBvNUUvr0jFlV9J8eVtkLOh24tR5qYNGiYdAo8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fzpnmsHT3MiVxvjvwcJBl2yjGODBEGRubWlUSyOe0IaRPJdt6UFLPvy0qCt5bvuo6j+y5kubBk4DdFDUY8yTgIu0iKbDqpaTU1mrIP+y9MQJWjTZ4O1O+/oE+QFnCtUiUAD3re/ugfGwtfZzxASgW7doJxItkVrR0dme9QfsQzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SfsYktNR; arc=none smtp.client-ip=209.85.128.53
+	s=arc-20240116; t=1744737740; c=relaxed/simple;
+	bh=VyZNJRydtqRP4tIJFtKk5xpXTG5rj7MnfC8y7oF8ZiA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pFtAOz8vjznjVaL9oVWbZav4oU4U60HCAUcwVHOHrANw96Qlrz+tDcKZNABIoMnpBGLmjW/BTFP7lpFAWP7XbEdg28Y6mhRL7Eqg9xLo3CSe+VCR3hSA8ywFKThGwYLjPUVIf8zMczdCwAoxqdptYxLduwYR3aAj9D2yW9J5CR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2pxtO5L; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SfsYktNR"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a823036so58390905e9.0;
-        Tue, 15 Apr 2025 10:21:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2pxtO5L"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227914acd20so54703585ad.1;
+        Tue, 15 Apr 2025 10:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744737671; x=1745342471; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HBQF3LhiaELkhAhvThHHQLxtoJjXQ7QMmkLPCh9kTRw=;
-        b=SfsYktNR7zqS1hNBIG5CpkneWeMix26k+Au8F8SPeBj9jvHWqohvOedqPa0LR6RXh/
-         bkpe3rlWgRiRHsCtFb/kwdUfXZX64yhd3FwxKQp4SEiDhOgz6e/xOxsH8bSnFjBaTUpc
-         0C7GGlQ0HlWO+//RW5CuBfiWFmSZl7OGVtvYRHhvFN81igd8geEx2r2/R/No/iKBNxe6
-         HUSCkUDaVyUu8sywLPp51ZNpo73bVdYDsnrKpjXR++QxncKSF7H1Uv6EiuOmORY/9iwO
-         GX5Pa7oS6l2umf4QDy/l8Pva/pHips9eppj/qE7cexETg0kKDSiLDgb/cAw76c3T2PhD
-         e26Q==
+        d=gmail.com; s=20230601; t=1744737738; x=1745342538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FwKXjChYz6Is/rS9aNK0pEeqdCKV3joL7n7XCoKDlvE=;
+        b=a2pxtO5LdRb5todPF/Xchy4m9qLC9a4LL6QHrj08iHIdDtLHK7Hab60aVW1h6yZIja
+         ZDsGlPrtC8Ti8h1fE3ErzbR0Qncn+UutDLpfoLF5ePUQXKa/6HuO9wo8qFouQLgpVYEx
+         KXSnEHyCTjVh+40P8POQdcDcvsfbksQ42qvS4NhCh9GA4lwtJGargpByZq37SqwMTAcB
+         nSXGnCVm6tCYkxnNsVS0faewloapDSkBrul+boF/WyDOYW5BSe8brtCZSFq7UitffWtM
+         vxaU/A5v2S4x39rllRLtH/dDWvkdOlxKwDf3RpjdKFXIJ5EPWG5TtkRkFJkIfypucQ8F
+         OlHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744737671; x=1745342471;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HBQF3LhiaELkhAhvThHHQLxtoJjXQ7QMmkLPCh9kTRw=;
-        b=f2IEoiI38zAizX200TNlhXAdjS54z6Ol10DL+KRRQk/9LNqEATPAnm0FzHa3atzM0F
-         LyrBfNQfJjLxdXFSJh/fbNmtBafXaCjxD5kYC6M/+qtzxoxUzCP7Dh8Y3l0wAD0g5hRs
-         vK961Y3hFUVtC3sdTNWnEajFjfbMzvtaEhAfy3nqyX8gbSKxAiDvwXJO7TSb44FsE5SU
-         ju36tVay+ZM8t0xxapMeHgBTJU5j2gl3thLCeBkQIxGIc5IGxutkQUhg+mUndpsCXNa0
-         vaueFISPyJyxO/WUWNRlMzw6TXgjp8e4hsOw2QcQkdI22V9GurUXcYFYMMcgj4hZREIQ
-         ZLvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgbfhvD0ixXK0xKSCNmAzdUKmlojrU8En1/RgwiMvbLpMD8B4oQu24NBwurmna22rKC1pd9G/8GNsP@vger.kernel.org, AJvYcCVGr35sC4Kfydq0+ue00ojVJMYszRtTyCCFnVeiFitN+JVDK1XpUZMzjm9/ScFgduCoDMRKpilJI99e4MfY@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTH0UFyvmlz4qZ+Cjx+IWqMD0mn+8QpbBPNUR/fXI2MWkujM2H
-	RYnHYKeWu7YsM3oXE0pwlMxxMrBxSZ3JxTtcPnAnWhFcFE3rkYiv
-X-Gm-Gg: ASbGncuFMiyQtFgOZs0ySDkX7mkRxcdsZm8w4P+m//5Ev6TGssSgqi+nvWELp+DUcQV
-	u1KXxInRaWGZv2jd53i/+Gip5eyjHZtzXtCxlrt/yWlVNFIMDN+Lmvig+PltVh24xc28v5KRTqN
-	f20KR4HNexlcb6lgcHmtQPW4W48To0EO0qdeBDlp01LUpRZ+f14Ah3WQIhHSQJyLPzRx3zGKiBE
-	1pcC8Shm4V2RSTSuTYgkC+NZ+ojejGWtdlcLZafiPURPcowLlOndCk3+GlZhzbwE68rXsCjbC4W
-	gu9wrZHeQW3XLU5kuDPGiTELDCRi1Eg+v9Q4LExzL8lAffJysttIAAMTRVLeuZW3MFxRQh1Fz5n
-	6xgI=
-X-Google-Smtp-Source: AGHT+IHmlSKDjijdhVP4MsrrIOmDn69e4RJTHJc1yap6d2BaTmoYqDqW9yK+cYJfmW31Obrp3rSSKA==
-X-Received: by 2002:a05:6000:4310:b0:39c:268b:8b66 with SMTP id ffacd0b85a97d-39ee27632c2mr255465f8f.43.1744737671070;
-        Tue, 15 Apr 2025 10:21:11 -0700 (PDT)
-Received: from playground.localdomain ([82.79.237.157])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963f4asm14987714f8f.16.2025.04.15.10.21.09
+        d=1e100.net; s=20230601; t=1744737738; x=1745342538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FwKXjChYz6Is/rS9aNK0pEeqdCKV3joL7n7XCoKDlvE=;
+        b=nkxZObNA6vKkGJ0N7BJv2bH4Vm50AEGQTBaxi8SYRT15j3tsf1tie3N/X3BN7nmYR3
+         dt2KHwZYs+7S/D03duOerb6c+KFm6uhfdJ7u5qWUx/qkOoX68rbJR1Ryf6IXX6NT3WXT
+         AvcgZbX2MK7qoL3U24+IGSdSQxArZhtxI4ygos363AMW/VYAK8nz+RCqLOnLRX1CcejG
+         dumD4SPAdOWMGqFnJAk+EA5gXYl8IjOhj/Ct9ZWfIvvfZUla2p7dafJzrM0qf0yPDINB
+         IR5zTVqkHhcm94SqwxW+HC7++FqlP/r3hZvDz3URgjWIGpwsIH0RW07htDQPtzSiHCWj
+         6HPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVyLzKu1Kq7nYsm3CAza/1hQeo9J6GczB+meyZOC5Ji8dcejkBH9pGRxnnhxR9CqHRiVecMQfN+J4yeYno=@vger.kernel.org, AJvYcCXHulnq5eNRkFWEQcLSpKtdaTZf5mAFWTi8Ge9P7BthbrOB8f2VtbpX+qD18WnNRiU8mNUWeS820KUK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCAjqt/ClJUB6vDr+RqH5rU3lKR5Zf+0vsEaLPx1HxL9icVIpJ
+	TIwSZjF3ThT5uPktHqAseUkmWRONp+uNe2t21CHkf7Zo3oJ1MfstZyzih5jT
+X-Gm-Gg: ASbGncuX2U5FSmDUwiiCex6Pco6m29oy+gQUrj+nUEq41Y699b8Dm9sUGM20aLkC6Vg
+	3+GFKi+tBZgPzCimuQoL9y0txmmXjXWghPok9SxKqFPsajJRt/qwFGTsSqSWZeFgZVbYkuxP4Y3
+	oag/vTVjT6S5dmM13FM+69rIBRwZVY8eu9BqZOqtBd0Kz+6ft+Rll2Te7LbVhSws2raF8dyol+U
+	gxlgQJeVj3/KRJs8Yuvw+I4oa4WRjI0zknr0fnGpT/ST3ceTc0sOyAwBkWuvXzver8nEgKViRkn
+	XTACSxFKxVGGEm277eNFfyqzkoXeK5lPIEUE5GI=
+X-Google-Smtp-Source: AGHT+IFVOpubUVLLQVtvo7qirvjW9oD1wrN9HqH+MmwM72PBdc70iqYfMbJISwhSYp/zGkEAR1mu2Q==
+X-Received: by 2002:a17:903:1b2f:b0:21f:5063:d3ca with SMTP id d9443c01a7336-22c24a142a9mr64747355ad.16.1744737737795;
+        Tue, 15 Apr 2025 10:22:17 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm120493215ad.217.2025.04.15.10.22.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 10:21:10 -0700 (PDT)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>,
-	Frank Li <Frank.li@nxp.com>,
-	Marco Felsch <m.felsch@pengutronix.de>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
+        Tue, 15 Apr 2025 10:22:17 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Pengyu Luo <mitltlatltl@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/6] arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
-Date: Tue, 15 Apr 2025 13:19:19 -0400
-Message-Id: <20250415171919.5623-7-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
-References: <20250415171919.5623-1-laurentiumihalcea111@gmail.com>
+Subject: [PATCH] usb: typec: ucsi: huawei_gaokun: add error checking
+Date: Wed, 16 Apr 2025 01:20:05 +0800
+Message-ID: <20250415172006.126740-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,36 +74,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+'cci' may be uninitialized, adding error checking to fix it.
 
-The DSP needs to access peripherals on AIPSTZ5 (to communicate with
-the AP using AUDIOMIX MU, for instance). To do so, the security-related
-registers of the bridge have to be configured before the DSP is started.
-Enforce a dependency on AIPSTZ5 by adding the 'access-controllers'
-property to the 'dsp' node.
-
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/all/Z_44zoTyLLdXNkKT@stanley.mountain
+Fixes: 00327d7f2c8c ("usb: typec: ucsi: add Huawei Matebook E Go ucsi driver")
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index ebbc99f9ceba..d0d24fe92c3e 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -2425,6 +2425,11 @@ dsp: dsp@3b6e8000 {
- 			mboxes = <&mu2 2 0>, <&mu2 2 1>,
- 				<&mu2 3 0>, <&mu2 3 1>;
- 			memory-region = <&dsp_reserved>;
-+			access-controllers = <&aips5
-+				IMX8MP_AIPSTZ_HIFI4
-+				IMX8MP_AIPSTZ_MASTER
-+				(IMX8MP_AIPSTZ_MPL | IMX8MP_AIPSTZ_MTW | IMX8MP_AIPSTZ_MTR)
-+			>;
- 			status = "disabled";
- 		};
- 	};
+diff --git a/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c b/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
+index 344aa7aeaf..7b5222081b 100644
+--- a/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
++++ b/drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
+@@ -359,6 +359,7 @@ static int gaokun_ucsi_notify(struct notifier_block *nb,
+ 			      unsigned long action, void *data)
+ {
+ 	u32 cci;
++	int ret;
+ 	struct gaokun_ucsi *uec = container_of(nb, struct gaokun_ucsi, nb);
+ 
+ 	switch (action) {
+@@ -368,7 +369,10 @@ static int gaokun_ucsi_notify(struct notifier_block *nb,
+ 		return NOTIFY_OK;
+ 
+ 	case EC_EVENT_UCSI:
+-		gaokun_ucsi_read_cci(uec->ucsi, &cci);
++		ret = gaokun_ucsi_read_cci(uec->ucsi, &cci);
++		if (ret)
++			return NOTIFY_DONE;
++
+ 		ucsi_notify_common(uec->ucsi, cci);
+ 		if (UCSI_CCI_CONNECTOR(cci))
+ 			gaokun_ucsi_handle_no_usb_event(uec, UCSI_CCI_CONNECTOR(cci) - 1);
 -- 
-2.34.1
+2.49.0
 
