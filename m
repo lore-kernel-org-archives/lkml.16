@@ -1,96 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051DB76025;
-	Tue, 15 Apr 2025 13:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684EF33991;
+	Tue, 15 Apr 2025 13:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724251; cv=none; b=fj5RElY4jyypvOjOTzQBwRcod+6tGmPb7lHg6qO/MDjynhan+raSP+7XgMkq7TL/QbLvdeHckX+vKi71kkSPGsnWWVN8fG+gzaYkdAtlWOpJXEeGkO9ykPuKGgopxZRporoOMgm+eejvRgybxLTiodKsqUeT10p9Gug1YYUPhIQ=
+	t=1744724291; cv=none; b=fMWpp+aGkGqYRKdkqQlQX/NNTo1j0y9DYfwkDH44dusD4Q2JPELhAsFxA00kWnWvM+JbFE+RAMIRQ8L3KI4M7FmfgmNmNK4db/5MMLtoHF5B3byUq0e+wdlb7n2P/y38YOYRKbtlzWyW4tULJjRyeMuXh3d+QSCEx4TZbSFdOaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724251; c=relaxed/simple;
-	bh=d65VUzC+gp0Nh/nz0QJI3UYVT/j3ah8Q+Pab3E0+gx8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WvverYo9vAKlLZYHJ5b/F5vQJJDxtjDkg2x/dqNcS3rmaMvzM+Uh8NYyheymyOnQF8CQDTCpcbGHJyLUht79L0hXRPg9njy+EX+bmqLHfVSbvcL4HeA9WtXZM9Y9Vfa7UwU57+fK+3sQqXK41+8LqfQ/a3dIv1IRV6yMUof+PrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZ3MAWVy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744724291; c=relaxed/simple;
+	bh=VJ3gEoMrY9GSmpMAxaxPj/YimtW7F3AAHn+QjvcDw2c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KrxhMP6AjBc6hTycw2WcqoOajbC4PAswwOUaTY6xqoaY16Fv0taG5XI6+6eK8xcV5Z3IGRs215M4hePgtg1Vwugcfc/1XWfcdW/gE+yD37SyBMsO3TWsLgbS4sK8JaUFfi6VeeQ6zFPRW6jcHZUySCCGvW9GeVkAi27IG0wWGbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=QjK4O07T; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=e7+PfyrZ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZ3MAWVy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF72C4CEED;
-	Tue, 15 Apr 2025 13:37:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744724250;
-	bh=d65VUzC+gp0Nh/nz0QJI3UYVT/j3ah8Q+Pab3E0+gx8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jZ3MAWVy4NxoEgJ5I6vU9WoYaGTrL+teTgbhpWy3uJjS+/dfLfHyq9DP1VML3KCjs
-	 T0unwOlVE5P8fnTPiWxuDwHueSThfr8ZdgxSce6O42dlQBGyddQnbfdPAKpG/9YjOb
-	 N9RlVZNSqCKMWbxAUd/xLBbVMR8dlBEWUv7vX0b7Kfb32znr8dl9H0wLYW4WKxtRDt
-	 5jtcH+9le5Cib7lVZtFo932Im7uj3PIubvMIXrMnuviCMDr1/UwCW4CiZxbjNy+NOW
-	 j2Y8L4iWEzwX5K/ijWf8K3KZZWnW9FA5N8pOxkbvirGJNSKL8lyL73rqXcrFubzPpN
-	 t83W3B83lbQ7g==
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72bbd3a3928so3126313a34.2;
-        Tue, 15 Apr 2025 06:37:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUMb8Bt8nEDAJ+CfD6PaivysoCm+zlc0480njCb0ZXP1vBEHmDnIAHDJkBSPEz6Gg/VD0iGWpK86M8jhTcz@vger.kernel.org, AJvYcCVV4d9TyEUQ4xqeMN5UNSLVf/zcQjMMuN/hpJ+ajYQlGwPJg96ACRxg1yTZ/w5wQ0yxBNg8muSfyiB7lQ==@vger.kernel.org, AJvYcCXvrvWWbX+DFCaem2TGycCQiSQiJjzPjuCp00nC+gQ9pfVhMASmlZQe5GOKsCp0agyHzl/vgqiwwfpP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW8INOw/QHEqft4soyKMVTOiLqJJl77oprZx4ciBvAV/PK2ugS
-	BDnR4G7fz6V0NLMWNXaEEedeczt2hxssGFkJSZdzRn5mIjFNsDz3ceehvX0UNhupwsBAx8+vmxy
-	j+F0JB1aJ+In5eHcyAbdiF+LKOqo=
-X-Google-Smtp-Source: AGHT+IE11JHCuqB8/U/WeGs4WYMQP6FxuDrC1VzqUKMC/KmA1BTT2oGZxuLY2SD5Zv5UI0sP7/8+OclGGWeWdB/IuNU=
-X-Received: by 2002:a05:6830:6408:b0:72a:f44b:13ed with SMTP id
- 46e09a7af769-72e862dedd1mr10259803a34.2.1744724249784; Tue, 15 Apr 2025
- 06:37:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="QjK4O07T";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="e7+PfyrZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744724289; x=1776260289;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=dd/5Px/F9IuikFlpnjP8bxiqM2ZSWPgSpxK2sGkLbZ8=;
+  b=QjK4O07Tytno+dSz8Uiti/mMHKSbVXWBH32ZewsCmtGGno+aAXV3bg6e
+   GL72xJFaTQhc0PZq0yllNpPsANq7j3CxO+PjeMmOwDNYup2WWtAV/NYub
+   Cf5ejF5Curr2TgOk67kbvHQ5D4DDXKS1R+WRO/n/AheyeeMJaXrYqvpyN
+   ypetDsGA1Nadg8u0Vvu5LpSdIyj9DVpKlK28ydPAEBZ7njawTNLAPpdP6
+   PqbQiatQjvfMX4wWPInFzp/XUWmziKRXTPzddIFe/gBycOkwQV1BLd93S
+   tqxBKNoQqlSKD2zvFjuZ+cuP+6nzPgTmRN2NP5eJMy9lhLcf1cXIhgxoS
+   g==;
+X-CSE-ConnectionGUID: 7CG+LNsBTBavByIdzUta9A==
+X-CSE-MsgGUID: tHp09WNSSFWLPaU8u9Z0jQ==
+X-IronPort-AV: E=Sophos;i="6.15,213,1739833200"; 
+   d="scan'208";a="43544216"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 15 Apr 2025 15:38:06 +0200
+X-CheckPoint: {67FE613D-31-2417938-F0170C2B}
+X-MAIL-CPID: CB4D6A87F8E3381F1E4D34D623E7452D_2
+X-Control-Analysis: str=0001.0A006370.67FE614B.000C,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id F1AB21661B1;
+	Tue, 15 Apr 2025 15:37:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744724281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dd/5Px/F9IuikFlpnjP8bxiqM2ZSWPgSpxK2sGkLbZ8=;
+	b=e7+PfyrZ/AJ3fizvjDeYO41owEVjehzE44DjCMmbjQuHWldP5IfQhoBf/9Jw8Ks+ex1Ykw
+	eW5KSMjdZTKSzEP2UzETo8inbTMFu4clfBW2Uwt7Mt9IDD9rmsDHIUtz+iG0r1EuOr9HrS
+	Wj9DNc/wwwF+FRzfnpYD5wxVBwIwbxUR3advPXTXqHNRjjkeYXAFdJHzOjY57YOkl6sBYL
+	upyvE7oROOy6MbhSQAdXhV5zNKMbOYbehKl02OKTNvA8rXKO80W2o/q+FDZnEX21ycGtXw
+	l+wJA99dax0jjBVW5LBZgr4VQVkMMU7nKimucF6WtPmfbGkjMgYT6aOoYqNr8Q==
+Message-ID: <9e0e6365a2c0151c819e442775ece37353468d91.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andy Whitcroft
+ <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn
+ <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>, Jonathan Corbet
+ <corbet@lwn.net>, Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, Roger Quadros
+ <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+ linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Date: Tue, 15 Apr 2025 15:37:59 +0200
+In-Reply-To: <659d6affd7c58474c4bca5c92fc762925591d0d9.camel@ew.tq-group.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <9d73f6ac-9fee-446b-b011-e664a7311eca@lunn.ch>
+	 <659d6affd7c58474c4bca5c92fc762925591d0d9.camel@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414203551.779320-1-superm1@kernel.org> <CACRpkdaHru55wo5MdVsRKRbfPS9Hv3vGxgXNi8eXGvAOQzyDww@mail.gmail.com>
-In-Reply-To: <CACRpkdaHru55wo5MdVsRKRbfPS9Hv3vGxgXNi8eXGvAOQzyDww@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 15 Apr 2025 15:37:18 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h_Qc2xukPMmwHr-E1HvMwSoLT4TM96aV0e9QKfeRSGGQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFHl1qbyTf4tzc_yiGREMeHFSI_-MloFKLcN4qBhZNpu4QBPLLAtFtlKEw
-Message-ID: <CAJZ5v0h_Qc2xukPMmwHr-E1HvMwSoLT4TM96aV0e9QKfeRSGGQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: amd: Fix use of undeclared identifier 'pinctrl_amd_s2idle_dev_ops'
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mario Limonciello <superm1@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-acpi@vger.kernel.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, Apr 15, 2025 at 3:34=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Mon, Apr 14, 2025 at 10:35=E2=80=AFPM Mario Limonciello <superm1@kerne=
-l.org> wrote:
->
-> > From: Mario Limonciello <mario.limonciello@amd.com>
-> >
-> > `pinctrl_amd_s2idle_dev_ops` is hidden under both `CONFIG_ACPI` and
-> > `CONFIG_PM_SLEEP` so the functions that use it need the same scope.
-> >
-> > Adjust checks to look for both, and while updating make it CONFIG_SUSPE=
-ND
-> > instead as that's what the acpi header uses.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202504100420.88UPkUTU-lkp=
-@intel.com/
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > ---
-> > v2:
-> >  Use CONFIG_SUSPEND instead of CONFIG_PM_SLEEP
->
-> This seems to be based on the previous fixes merged by Rafael?
->
-> Do I need to rebase on -rc2 or something to merge this patch?
->
-> Or can Rafael queue this too?
+On Tue, 2025-04-15 at 15:36 +0200, Matthias Schiffer wrote:
+> On Tue, 2025-04-15 at 15:20 +0200, Andrew Lunn wrote:
+> >=20
+> > > +  **UNCOMMENTED_RGMII_MODE**
+> > > +    Historially, the RGMII PHY modes specified in Device Trees have =
+been
+> > > +    used inconsistently, often referring to the usage of delays on t=
+he PHY
+> > > +    side rather than describing the board.
+> > > +
+> > > +    PHY modes "rgmii", "rgmii-rxid" and "rgmii-txid" modes require t=
+he clock
+> > > +    signal to be delayed on the PCB; this unusual configuration shou=
+ld be
+> > > +    described in a comment. If they are not (meaning that the delay =
+is realized
+> > > +    internally in the MAC or PHY), "rgmii-id" is the correct PHY mod=
+e.
+> >=20
+> > It is unclear to me how much ctx_has_comment() will return. Maybe
+> > include an example here of how it should look. I'm assuming:
+> >=20
+> > /* RGMII delays added via PCB traces */
+> > &enet2 {
+> >     phy-mode =3D "rgmii";
+> >     status =3D "okay";
+> >=20
+> > fails, but
+> >=20
+> > &enet2 {
+> >     /* RGMII delays added via PCB traces */
+> >     phy-mode =3D "rgmii";
+> >     status =3D "okay";
+> >=20
+> > passes?
+>=20
+> Yes, it works like that. I can't claim to fully understand the checkpatch=
+ code
+> handling comments, but I copied it from other similar checks and tested i=
+t on a
+> few test patches.
+>=20
+> One thing to note is that I implemented it as a CHK() and not a WARN() be=
+cause
+> that's what is used for other comment checks like DATA_RACE - meaning it =
+will
+> only trigger with --strict.
 
-I can.
+Oops, DATA_RACE is actually a WARN(). I must have copied it from some other
+comment check that uses CHK(). Let me know which you want me to use.
 
-> In that case:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+>=20
+> >=20
+> > > =20
+> > >  Commit message
+> > >  --------------
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index 784912f570e9d..57fcbd4b63ede 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -3735,6 +3735,17 @@ sub process {
+> > >  			}
+> > >  		}
+> > > =20
+> > > +# Check for RGMII phy-mode with delay on PCB
+> > > +		if ($realfile =3D~ /\.dtsi?$/ && $line =3D~ /^\+\s*(phy-mode|phy-c=
+onnection-type)\s*=3D\s*"/ &&
+> >=20
+> > I don't grok perl. Is this only looking a dtsi files? .dts files
+> > should also be checked.
+>=20
+> It is a regular expression - the ? makes the previous character optional,
+> matching both .dts and .dtsi files.
+>=20
+> Best,
+> Matthias
+>=20
+>=20
+> >=20
+> > Thanks for working on this, it will be very useful.
+> >=20
+> > 	Andrew
+>=20
 
-Thanks!
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
