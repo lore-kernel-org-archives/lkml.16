@@ -1,215 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ED8E552;
-	Tue, 15 Apr 2025 01:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095474204E;
+	Tue, 15 Apr 2025 01:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744681790; cv=none; b=d3bDM2aEYSK2OayJ/m8x8MvJVyCpGvqzx8YfLeM3lhrggpP7dNjuzh3Egvp+W80p4nwNddiqv9uNPGxNSBI+b9WitZoQDz1NZQ7YTuXZDjwuS4wwSy2Ch27BQKzGUFlzbrWczRX1zBsK4ajWPTHsIgaFji/Ui0T3gxTpWBOKjXk=
+	t=1744681809; cv=none; b=tPcD0lsEqzZiXK1MbAsIAXU5uBNyZZRsjYjXBbu+J/ZjZdNRaj/kxz2BbfBu/XQCcfdjSnnpfvkHf5kElBQFU7vcTjwPOlCcLW9ZCsb0H8KxorKXVyOgV0vRaUHaD4UofwVJX4E7o++GLQ8H/TyxCv+sUowNoShRxs2+g2H7rJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744681790; c=relaxed/simple;
-	bh=lXraKbXdGYRiaA2c3nWO0O4y2vkLQF8MT/B2jHkIbeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QvGlRr/S7fy2pEf0FHpELoXbeHiq++T2TmHuK1rjAEm5dRXwTMQYXIux1XANPYBcCc8Z0VIxrNV20PDNGHGI6qQsvX75KgElQeiEiR5do9Lf81k71RIXX2ph/kZxwcNMdSzHy9H4SiU5o8wBGA/7nvX4thwan0jd82auSKDBqHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QjkYHVr/; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744681809; c=relaxed/simple;
+	bh=PCBf1sHz+qb02q833Znt/SYbg2/nGCK7pnysKuPNny0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ljdU1KkqLVrZB2o9PZSM3zethkdE6gFDW/LmowtfwdQ4M3cE/XBarD8FMQ8Zywd0NUBta05gvyzve7hAnvSU4w0SndUOCCmiYDrAZ8/TNTG+64A88nNoPjvW7jXSkSBTqKYLN8rfCN9VH1fXOSqOX4UnuwTFlxtTo5gWhpQ8ADE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=mwtFSOt+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QjkYHVr/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744681787; x=1776217787;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lXraKbXdGYRiaA2c3nWO0O4y2vkLQF8MT/B2jHkIbeg=;
-  b=QjkYHVr/sumppZZWGCeQR0zSCwp8T2l8jpV3cKL+ugL50RJ73epu5u22
-   gUhhnyLvYvxRPB+mcF3UHi6eKS97UYwSTakjBoSZh1Ku2aKCZSEyzztGV
-   Lmce+An5iPpxNRjy1/KncmdnX9xgIC5mfXG8N551WDVLHh8yCHMuvm2Wn
-   MBpR9K07E2ABwKLR/xrADWfJFxrw4KGzhcpOXdPUfjoqWLOgNHP+VGnfZ
-   VHKkCDwgajS7a/9DATbT5JcfahTjlXbgNnSpH679jKTbr1YyspGBgiai9
-   18llhfxa6ufXBtI6jnmwUiIQNfnusl043RVuRGUy2FMjRG9u8+L6bIwsC
-   g==;
-X-CSE-ConnectionGUID: Z4FTA/I+QqmxdxpGHZhfRA==
-X-CSE-MsgGUID: E3BDWLzpR+mFfeHEjkRJmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="33786037"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="33786037"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 18:49:47 -0700
-X-CSE-ConnectionGUID: 6IoTLRUjRgO96cvwmF0tFw==
-X-CSE-MsgGUID: c1qKzYpBTOeWrETvkV5KJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="134955131"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 18:49:41 -0700
-Message-ID: <98408cbc-4244-4617-864d-c87a3b28b3af@intel.com>
-Date: Tue, 15 Apr 2025 09:49:38 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mwtFSOt+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744681801;
+	bh=DO4rEzkkjgvlef90M/Hhs9kIdnWi1zT1HZG3OACfSGM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mwtFSOt+1ml5Gwaej42ipk7zdAk0Vo08H7G9XIXMBGG9v9EOQzm8gox01nuflgkqL
+	 TO/yrPsJMazXUM23LBG2DUn/J97ufOpANStf9JKeruP9krUDHfYzWyVhrDX9QXJeUx
+	 7Bjsbblm3I6VcztSOas0qjOcEa186UoG3wbprMLhXfIFPi92G2LZy01pdDgMnLRk9j
+	 Z1S5IErhkWJIcu49PDh1f/1p/+NMyF35/DdMJq4a7aqyMhG2Fu1HL0kxuQPoXHOw6q
+	 Moeq9vmuEF0Cde+wHwrJCouTACNk7de1O5dB4mYYYt+Cihuc4qTISH6u9CP6ljIZdj
+	 GzYwGzUxyDEnQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zc6Y5696Vz4xM7;
+	Tue, 15 Apr 2025 11:50:01 +1000 (AEST)
+Date: Tue, 15 Apr 2025 11:50:00 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the ipsec-next tree
+Message-ID: <20250415115000.08d2d16a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
-To: Binbin Wu <binbin.wu@linux.intel.com>, pbonzini@redhat.com,
- seanjc@google.com, kvm@vger.kernel.org
-Cc: rick.p.edgecombe@intel.com, kai.huang@intel.com, adrian.hunter@intel.com,
- reinette.chatre@intel.com, tony.lindgren@intel.com,
- isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com,
- mikko.ylinen@linux.intel.com, linux-kernel@vger.kernel.org
-References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
- <20250402001557.173586-2-binbin.wu@linux.intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250402001557.173586-2-binbin.wu@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/nT4OyU7NxTV_yCc1TMY35J9";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 4/2/2025 8:15 AM, Binbin Wu wrote:
-> Handle TDVMCALL for GetQuote to generate a TD-Quote.
-> 
-> GetQuote is a doorbell-like interface used by TDX guests to request VMM
-> to generate a TD-Quote signed by a service hosting TD-Quoting Enclave
-> operating on the host.  A TDX guest passes a TD Report (TDREPORT_STRUCT) in
-> a shared-memory area as parameter.  Host VMM can access it and queue the
-> operation for a service hosting TD-Quoting enclave.  When completed, the
-> Quote is returned via the same shared-memory area.
-> 
-> KVM forwards the request to userspace VMM (e.g., QEMU) and userspace VMM
-> queues the operation asynchronously.  After the TDVMCALL is returned and
-> back to TDX guest, TDX guest can poll the status field of the shared-memory
-> area.
-> 
-> Add KVM_EXIT_TDX_GET_QUOTE as a new exit reason to userspace and forward
-> the request after some sanity checks.
-> 
-> Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
-> Tested-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
-> ---
->   Documentation/virt/kvm/api.rst | 19 ++++++++++++++++++
->   arch/x86/kvm/vmx/tdx.c         | 35 ++++++++++++++++++++++++++++++++++
->   include/uapi/linux/kvm.h       |  7 +++++++
->   3 files changed, 61 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index b61371f45e78..90aa7a328dc8 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -7162,6 +7162,25 @@ The valid value for 'flags' is:
->     - KVM_NOTIFY_CONTEXT_INVALID -- the VM context is corrupted and not valid
->       in VMCS. It would run into unknown result if resume the target VM.
->   
-> +::
-> +
-> +		/* KVM_EXIT_TDX_GET_QUOTE */
-> +		struct tdx_get_quote {
-> +			__u64 ret;
-> +			__u64 gpa;
-> +			__u64 size;
-> +		};
-> +
-> +If the exit reason is KVM_EXIT_TDX_GET_QUOTE, then it indicates that a TDX
-> +guest has requested to generate a TD-Quote signed by a service hosting
-> +TD-Quoting Enclave operating on the host. The 'gpa' field and 'size' specify
-> +the guest physical address and size of a shared-memory buffer, in which the
-> +TDX guest passes a TD report. When completed, the generated quote is returned
-> +via the same buffer. The 'ret' field represents the return value. The userspace
-> +should update the return value before resuming the vCPU according to TDX GHCI
-> +spec. It's an asynchronous request. After the TDVMCALL is returned and back to
-> +TDX guest, TDX guest can poll the status field of the shared-memory area.
-> +
->   ::
->   
->   		/* Fix the size of the union. */
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index b952bc673271..535200446c21 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -1463,6 +1463,39 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
->   	return 1;
->   }
->   
-> +static int tdx_complete_get_quote(struct kvm_vcpu *vcpu)
-> +{
-> +	tdvmcall_set_return_code(vcpu, vcpu->run->tdx_get_quote.ret);
-> +	return 1;
-> +}
-> +
-> +static int tdx_get_quote(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
-> +
-> +	u64 gpa = tdx->vp_enter_args.r12;
-> +	u64 size = tdx->vp_enter_args.r13;
-> +
-> +	/* The buffer must be shared memory. */
-> +	if (vt_is_tdx_private_gpa(vcpu->kvm, gpa) || size == 0) {
-> +		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
-> +		return 1;
-> +	}
-> +
-> +	if (!PAGE_ALIGNED(gpa) || !PAGE_ALIGNED(size)) {
-> +		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_ALIGN_ERROR);
-> +		return 1;
-> +	}
-> +
-> +	vcpu->run->exit_reason = KVM_EXIT_TDX_GET_QUOTE;
-> +	vcpu->run->tdx_get_quote.gpa = gpa;
-> +	vcpu->run->tdx_get_quote.size = size;
-> +
-> +	vcpu->arch.complete_userspace_io = tdx_complete_get_quote;
-> +
-> +	return 0;
-> +}
-> +
->   static int handle_tdvmcall(struct kvm_vcpu *vcpu)
->   {
->   	switch (tdvmcall_leaf(vcpu)) {
-> @@ -1472,6 +1505,8 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
->   		return tdx_report_fatal_error(vcpu);
->   	case TDVMCALL_GET_TD_VM_CALL_INFO:
->   		return tdx_get_td_vm_call_info(vcpu);
-> +	case TDVMCALL_GET_QUOTE:
-> +		return tdx_get_quote(vcpu);
->   	default:
->   		break;
->   	}
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index c6988e2c68d5..eca86b7f0cbc 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -178,6 +178,7 @@ struct kvm_xen_exit {
->   #define KVM_EXIT_NOTIFY           37
->   #define KVM_EXIT_LOONGARCH_IOCSR  38
->   #define KVM_EXIT_MEMORY_FAULT     39
-> +#define KVM_EXIT_TDX_GET_QUOTE    41
+--Sig_/nT4OyU7NxTV_yCc1TMY35J9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Number 40 is skipped and I was told internally the reason is mentioned 
-in cover letter
+Hi all,
 
-     Note that AMD has taken 40 for KVM_EXIT_SNP_REQ_CERTS in the
-     patch [4] under review, to avoid conflict, use number 41 for
-     KVM_EXIT_TDX_GET_QUOTE and number 42 for
-     KVM_EXIT_TDX_SETUP_EVENT_NOTIFY.
+The following commits are also in the ipsec tree as different commits
+(but the same patches):
 
-I think we shouldn't give up number 40 unless this series depends on AMD 
-one or it's agreement that AMD one will be queued/merged earlier.
+  ee2fc517feba ("espintcp: remove encap socket caching to avoid reference l=
+eak")
+  4f1d804e288e ("espintcp: fix skb leaks")
 
->   /* For KVM_EXIT_INTERNAL_ERROR */
->   /* Emulate instruction failed. */
-> @@ -447,6 +448,12 @@ struct kvm_run {
->   			__u64 gpa;
->   			__u64 size;
->   		} memory_fault;
-> +		/* KVM_EXIT_TDX_GET_QUOTE */
-> +		struct {
-> +			__u64 ret;
-> +			__u64 gpa;
-> +			__u64 size;
-> +		} tdx_get_quote;
->   		/* Fix the size of the union. */
->   		char padding[256];
->   	};
+These are commits
 
+  028363685bd0 ("espintcp: remove encap socket caching to avoid reference l=
+eak")
+  63c1f19a3be3 ("espintcp: fix skb leaks")
+
+in the ipsec tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/nT4OyU7NxTV_yCc1TMY35J9
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf9u0gACgkQAVBC80lX
+0Gxn8gf/UFTV2evs7kTYyj/k063pAnA9VJ0cWuH7Ohv8gQ/53WmjY8fgJioj3Jan
++iRrhFIelz/u+6iix4iPbl9MuH1RWKrjUaCoD8nLl6Tu5P+EvhbJvTFFYxeUorWN
+jG+KYND/05ixQdE1PY/RMnJoZYBJz9YL7v8J+nkPMODkgQHjrgmfiRNcAQ+KnaXV
+RSlt33qE8iBA3AvQWF+8nwzai3e+hTsL+TG8aWZXHN1jB+ufDt89Qm3Z1IWBU5Ap
+jx7FbKBqpRWo4dttLrV7GgpYzSPxvLzs6BL4FSScDZkW60SLtQoXKLhtFcyXL2je
+iBO4IzpOmmo+WzyCqNP0krNeLRHB2A==
+=9kIM
+-----END PGP SIGNATURE-----
+
+--Sig_/nT4OyU7NxTV_yCc1TMY35J9--
