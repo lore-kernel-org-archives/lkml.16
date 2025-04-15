@@ -1,128 +1,114 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1023728DEE0
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9F128BABB;
+	Tue, 15 Apr 2025 11:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744717258; cv=none; b=r89/t/TrpMUm8Moi4gi9TRv4RUbhoW2janncLTqXGjP+aqFh3rbCxSo3rlmp1woJFDhVQNDZuGgJdo9oSyc1BEZbdOH0/dxdcd/rnU56Zurp5UZ+mDA2mSN7uf9FfoY2vhITbHk0xGw7BwltXSIWbvo51PYLkIVk63xpEFxywQY=
+	t=1744717272; cv=none; b=i13PiC2CHXp2dfdp1jyQ6pBj0m0AtZtlr74vGZgUupkZfEmKHMRoSpNM39qEjBTzfS7KvBrBaRyHVTTEI2/BXGdvdkXERr4LRi9cOvO2PXPGLvMYR7XPtY2bmRCz07pbsADq+fWGL6T12dPoCRPdNtZ3710Gjyljc1g9nKdKFnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744717258; c=relaxed/simple;
-	bh=ZJ7OpKdka1F7ZBFYQVrdJ8oxYihNjUeS07C9hmUDydA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uYiA9PMZwLZRhe15O+ICfBY+CioXxiIV6de7AV1RKtf7gt8ymMItNmwlpu/UtsJbICkSrpxEc+YSH32OGtoNBRWjoPLx2FH8j7pwdYN5oLu6lfYeNyCI9fg4NkBtCb5wG3xK7SPSX1R7JtWVnTJpUcKqAsFIRdJcKbCyoicr3qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Kc3Jsi0K; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744717272; c=relaxed/simple;
+	bh=g3hn0yGJMo7DDiRSHoTwt5wFttVxHTxAvkwjmrqrWco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kI0J4/P2+I3cItqJGPaJPLtgUtu2SmETxjAHTLGRhoghGQos/WoMqAfd7ToGlaUWBfxgzlS8YtcXTQ03JVzjJL4UvZ+Rd0ruCYrEAap6xpRzoUcioWLjRK9V6br95zjc3jKjwbYbgrBrxTSnHy9NLpOHRl9xY24OOuij5TzH0Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IFtj4Kom; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kc3Jsi0K"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so2108877241.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:40:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFtj4Kom"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54b166fa41bso6362957e87.0;
+        Tue, 15 Apr 2025 04:41:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744717256; x=1745322056; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5wyWC2vD7HP03u0+k9/k2OZ1y4kWaoLC9/4tNgnhE0=;
-        b=Kc3Jsi0KY160f4uj0Ayy+TunoD8RNWiDrQx7ttcx31mqGQssgTu6jmqcf3zV1MWFz8
-         BjJJSWg+ane+n/TKKX6bnrpaE8y56DaNb7kkdlnwM1y7izNeAWvpHXFSPoHtcFD2dLp4
-         z3sRybuMfP3aqK2BpeDBpAZMdEB0czvgfuvpkqdvbqVap5uJCYHa5W3WkTbdFdzuVfjs
-         XtoYq+ZiN+vkSyrGGCZDo9O5/vFkZMtL1yL/X+txQ5j/LLyZgisBO2BR+fJB1m8Ze9Sm
-         z8bGxqJy7il7DKapMYdtzdmu+BqMVS/OZYrT+pulhgo73NrATMSHoxZ+9NpXeEMRAqsK
-         k//w==
+        d=gmail.com; s=20230601; t=1744717269; x=1745322069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WgLwTxTesNXhvi5z13KJSwx0wnAaoY7RDa9n3Jg4iDE=;
+        b=IFtj4Kom/F0fNbWof0XQmXY5+13t9BYi7jH+Z7zxZafEs9FyQDH3fLTJCQ0gUX2tSA
+         RmP7HhxD2cNic+6DLJOIvVKc0M1MTBl38Gh2KcqlPk0bPA0p4GIPRD7FjJ8ZVEWUa0J5
+         OzuifTtaQGe3TEROG2Zj2DR5t5ygTbjydVxBxWWRf2m7MGPnKTZ9ANHWQIRvtrXzFZY0
+         BTom7vrzLqz6CiucYyhlM99VBCXRcDB8VZsUnRVZwVETZ2dBLO13Dqi6hKr9yiMZ8t6f
+         yu/hhFSMtHpXWJ+2snyUA4OQsORQyu9Xa1CkcbtSG5TSmkpTCSkF0L17jev+Oud9ZBkp
+         SDkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744717256; x=1745322056;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/5wyWC2vD7HP03u0+k9/k2OZ1y4kWaoLC9/4tNgnhE0=;
-        b=P2BKbdqQh/EPVosf6SdTxJ+3A/iL01v87k5DhdjsXTWcAmdDiCU8mkL8LHpXmegbCq
-         44lArFklBagymhN9bl9MlVVWBU1715fKX3S0ed2ChY0sqzKmTn/ygo8K0cLX1Q43v6mT
-         2VDlb5SOF2PtUwXAmCSb7OEenD2wxQ1aKisEiopxEJMcdySHVJcSZnBPsJSgD/rfGHuo
-         c+bbj1ExroTUUdXDL6eggm5syf31ywdzpAnLihlQaQOuPUTx/GhiCGohFnJoglQKWD9W
-         js2mOCygVQxifoDRCbMhZ4/AOCw8rgmgaPzM/sOzcAt9L0LEhSx+uYamR9tsB+nkX1Ti
-         c1oQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzi49c/SnbB5+mqpdMKOsgKWEFy+ZjhfLYxx4ZlWBgbzIlbR9pcdbsGAwj3SRwOxozNm+oYL/IFSG3gEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2IaJokVXGBuOaRKRiz4NnLTXL47DFowejYoxq/QfJLD8U+6hS
-	qVyizRhsfDYToMfEUbb1cin2op12/PSMQc2S1W3v37i92A0x4X+HOJL6OXV+RqU0L9dvssG1j68
-	7rOB44qEFnSKsHBTHrJD7O4J6oVZOR6ggo81SnQ==
-X-Gm-Gg: ASbGncvOORn2AHRSwENfZJl3YqL4yIgo8N0e9qXo/oLMLQC2OCFRsUI/hqOHuffJ5Vm
-	KNbFoSD3lw7kvWAnK5bpjNKmZ2SIs2zaAotOKDz/TYL5zVjQU5AcixT/oLhMBleCWt8aqTm5EVd
-	m8uiPkyt6L3pJswE8AeqTjsi75R1Rrs2CFOYcJ7qUaqczIcaACV6FwFEo=
-X-Google-Smtp-Source: AGHT+IE+NNVE88iDUwAaQ7r8ENal9D9/Spnw5Z3aSwELhPsIBbz/10RGMoWuKFkC1AOSsqEBVzUhDU6ew73aGrw3MS8=
-X-Received: by 2002:a05:6102:dce:b0:4bb:eb4a:f9ef with SMTP id
- ada2fe7eead31-4c9e4eb963emr10663742137.4.1744717255872; Tue, 15 Apr 2025
- 04:40:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744717269; x=1745322069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WgLwTxTesNXhvi5z13KJSwx0wnAaoY7RDa9n3Jg4iDE=;
+        b=O5CcVWWLqs5GYsXeCI0FAoKMuVXxvU+1FiWCMMTeGV0FKbly85HnByPm+G6WztAy/z
+         +n5k35FQGJOsDNQShajkbg5blzjGFVndis6ZWq1OikBmQ7zqaKnUhfDu6XJnV9rXBmEy
+         MLYoVL0cMgEsR62cBSqHTbIoGKsFQ6k61jXtlD0GCYFtw6HVskXlRKhVrMDS2kokg2A2
+         FJ6FA1c+07VTn0rUAwEpYOQ/MJcVyomu5uZSvahHTB/6wohej1kGi6lfAQkFXLLr8vPk
+         2OC1fIE5POeWn4qOCjqDV82dVtZd3c1CqxS2flNhDooeR5isUirWW8/GDd1Urdr1nzY3
+         Na9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVkSflHSdl/jC/AtatQ/WtpgN/Capoo6Kd/7mQ3xselrJx1XvPvT0RF1h9ZTGdmZGR0h4s+0RRK@vger.kernel.org, AJvYcCXLVXV1iTLS139WVKDBsIjfdrlQ6fth7ZfAoGINp7MqR10v82MjL6xmEw1rPu+NBQnzsOWePM8WEQLpJ/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjFNYbJlZcMOKzM4bOeWFdc2XxpF6b4jbB9+GNM0SDPsD6btap
+	K2RqzMkD8oBuEJqgU6y4i7p5xE9Ib/lgwKpcZmxOWxy67DSichWs
+X-Gm-Gg: ASbGnctFx/P+zJJ1EZlJJFA2JpyHIuE3pDoSveYy9SaRxUtw9/DN1+PXlxQO42WnIMP
+	HrqBjFz9vkr4Lhd+GHJaXDRIOedecm3DE2aslu0iKo2G0kHddISj2kqSGGWMcRi8RfUVYBdnRnH
+	cLLWEOa7xdXZnlVGUW6tBbl4LUiDry8gT8uIpuomiOQZ4z1L3+6+hmm8X8PlZbt1EILbfK1ZJW4
+	d480AQnph8xmb2zt1nCpLG5nTn4hqfarCemIrl5Oi41A1PaGnHOOnXqru1Jviz61nHe2oTtf9mY
+	dXSnUe/pWwc1mkBXHFk8R6heYY6qBNrODJlOTS08gt/rxM79xTYFH4E=
+X-Google-Smtp-Source: AGHT+IHV+K8qXT7IR0FR10Mxo2JrlNWFRM/MZldNhPuRhi4cHdWhibmxpGQXnMajrdq3ZLJL1H7Ktw==
+X-Received: by 2002:a05:6512:3e12:b0:545:f1d:6f2c with SMTP id 2adb3069b0e04-54d452965b5mr4581312e87.18.1744717268913;
+        Tue, 15 Apr 2025 04:41:08 -0700 (PDT)
+Received: from home.paul.comp (paulfertser.info. [2001:470:26:54b:226:9eff:fe70:80c2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d123663sm1407642e87.25.2025.04.15.04.41.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 04:41:08 -0700 (PDT)
+Received: from home.paul.comp (home.paul.comp [IPv6:0:0:0:0:0:0:0:1])
+	by home.paul.comp (8.15.2/8.15.2/Debian-22+deb11u3) with ESMTP id 53FBf4mG029154;
+	Tue, 15 Apr 2025 14:41:06 +0300
+Received: (from paul@localhost)
+	by home.paul.comp (8.15.2/8.15.2/Submit) id 53FBf38t029153;
+	Tue, 15 Apr 2025 14:41:03 +0300
+Date: Tue, 15 Apr 2025 14:41:03 +0300
+From: Paul Fertser <fercerpav@gmail.com>
+To: kalavakunta.hari.prasad@gmail.com
+Cc: sam@mendozajonas.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        npeacock@meta.com, akozlov@meta.com, hkalavakunta@meta.com
+Subject: Re: [PATCH net-next v2] net: ncsi: Fix GCPS 64-bit member variables
+Message-ID: <Z/5FzySnQ2y3stpj@home.paul.comp>
+References: <20250410012309.1343-1-kalavakunta.hari.prasad@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
- <20250407183716.796891-1-ojeda@kernel.org>
-In-Reply-To: <20250407183716.796891-1-ojeda@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 15 Apr 2025 17:10:44 +0530
-X-Gm-Features: ATxdqUHRgjnjW4n6eMFjqJplHcq4SMBMewSYmPqnuxbGTAXBMTStlZNMQ3l7DSk
-Message-ID: <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
-Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
-To: Miguel Ojeda <ojeda@kernel.org>, Christian Schrrefl <chrisi.schrefl@gmail.com>
-Cc: Russell King <rmk+kernel@armlinux.org.uk>, Rudraksha Gupta <guptarud@gmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org, 
-	torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410012309.1343-1-kalavakunta.hari.prasad@gmail.com>
 
-Hey Christian, Miguel,
+Hello,
 
-On Tue, 8 Apr 2025 at 00:07, Miguel Ojeda <ojeda@kernel.org> wrote:
->
-> On Mon, 07 Apr 2025 22:58:02 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > Regressions on arm build with config rustgcc-lkftconfig-kselftest on the
-> > Linux mainline and next failed with CONFIG_RUST=y enabled.
->
-> > Bad: next-20250327
-> > Good: next-20250326
->
-> > Unable to generate bindings: clang diagnosed error: error: unknown
-> > argument: '-mno-fdpic'
->
-> I assume this is the arm support, i.e. commit ccb8ce526807 ("ARM: 9441/1:
-> rust: Enable Rust support for ARMv7").
->
-> Clang does not seem to support `-mno-fdpic`, thus you probably need to add it to
-> `bindgen_skip_c_flags` in `rust/Makefile` so that it gets skipped when the C
-> compiler is GCC.
->
-> If you do so, please double-check if the flag could potentially alter the ABI in
-> a way that `bindgen` would generate the wrong bindings.
+On Wed, Apr 09, 2025 at 06:23:08PM -0700, kalavakunta.hari.prasad@gmail.com wrote:
+> From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
+> 
+> Correct Get Controller Packet Statistics (GCPS) 64-bit wide member
+> variables, as per DSP0222 v1.0.0 and forward specs. The Driver currently
+> collects these stats, but they are yet to be exposed to the user.
+> Therefore, no user impact.
+> 
+> Statistics fixes:
+> Total Bytes Received (byte range 28..35)
+> Total Bytes Transmitted (byte range 36..43)
+> Total Unicast Packets Received (byte range 44..51)
+> Total Multicast Packets Received (byte range 52..59)
+> Total Broadcast Packets Received (byte range 60..67)
+> Total Unicast Packets Transmitted (byte range 68..75)
+> Total Multicast Packets Transmitted (byte range 76..83)
+> Total Broadcast Packets Transmitted (byte range 84..91)
+> Valid Bytes Received (byte range 204..11)
+> 
+> v2:
+> - __be64 for all 64 bit GCPS counters
+> 
+> Signed-off-by: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
 
-I tested this idea and it works but I don't know enough about
-rust to double-check if the flag could potentially alter the
-ABI in a way that `bindgen` would generate the wrong bindings.
+This version looks correct to me (other than the changelog being
+before ---) so
 
-diff --git a/rust/Makefile b/rust/Makefile
-index 3aca903a7d08..f207ba0ed466 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -273,7 +273,7 @@ bindgen_skip_c_flags := -mno-fp-ret-in-387
--mpreferred-stack-boundary=% \
-  -fzero-call-used-regs=% -fno-stack-clash-protection \
-  -fno-inline-functions-called-once -fsanitize=bounds-strict \
-  -fstrict-flex-arrays=% -fmin-function-alignment=% \
-- -fzero-init-padding-bits=% \
-+ -fzero-init-padding-bits=% -mno-fdpic \
-  --param=% --param asan-%
-
- # Derived from `scripts/Makefile.clang`.
-
-- Naresh
-
->
-> I hope that helps!
->
-> Cheers,
-> Miguel
+Reviewed-by: Paul Fertser <fercerpav@gmail.com>
