@@ -1,57 +1,88 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8450722F01;
-	Tue, 15 Apr 2025 12:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F0D201017
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744720438; cv=none; b=I8yPgNLcatAr0hgmEYXNuLjRgjM/dLwPTNXbY8VVcWXi/W8Fxm/6xuI3mCvl9ZzyYPZrwyjrMNOtKldujZKy5wdJHtr9KVOGOH/ZMRfGOHPyHTkLDUG3Y9AVzd/NzVQWsNOfy8tiOSuE7+9cIvq2MAfDkRb95QpqElab3uQlKpk=
+	t=1744720456; cv=none; b=Yvd+OLy64/oCdVX85L3Q3ink7xaRvEumXQkUYV3rQ2vOCJyRuei7saJ/PIuAByMjxiAjna5PWr7A0toNK0A/TS/3iZWvwWclfrghG/LCYIbJ/LWgXW4x4842c23kP+zDE8THXyaMfgvGAC75dTteXuKDDbXM0Hhs0V062UOsHUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744720438; c=relaxed/simple;
-	bh=MNvE2UciHcCATVpJmKQhjrJtY36mxwEqQHk00pdt6J4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=UE53k2zFb/K0ggdPUm6Q62ARKtcr6ew5J2Pooc8GShYgYVbdgC+bBbsIIqyu9oC+1FOPG7hmUX7a341WoFjCae0M3+ddkac3NRnELKt9a0c3WMyUPYnq25AUQv/PW8+mh2M3P9+oVePi1krSZQ6K1cDVgwM2ojVkOS+11nyO5Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L6j2TmlH; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744720456; c=relaxed/simple;
+	bh=ggnIbNLWvG1z5jMSBO1ziwufHB2LZNe9Z8V0RajgShI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAIlomJj3P6ZJioOyyXI7indybpi2Dp2suin8DDPCwfDS/g+drzAVOAbpse3p+YTyNQbMHLPecDqB2D2+BnERbRcB/wOuVbJtTWHp0FkSi/ytjqRwe81AR/AIvGD89FO/QhTjg73DZW8omtLjfCs2i0/49/Bp0XNEKKNn+RdHGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JPBs7s9m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BzjtjqQs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JPBs7s9m; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BzjtjqQs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L6j2TmlH"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 45CF440E0242;
-	Tue, 15 Apr 2025 12:33:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id G6shJrgwfx3o; Tue, 15 Apr 2025 12:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744720423; bh=zyR8Wu7rN0QSLorbTrWYixx98F1h7tDtKpJUD3C8MnM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=L6j2TmlHZJYVEx+WRcgMuiACGD/hIMNrm4Warsu0JLfcYuBwIN206ixb62BBFTU/w
-	 DaYCEba1H4LDOh2rlz8tsbKVIaiYOTc+IsARumRcfzSdWvzbNe+/7d7d5HE+AuLLIe
-	 OYK1tp6qfMeSJmY2O9KZrzgSA6WLYTNbIXcF4UETS05ocZq6Hce1FGnjcePPgBJiPr
-	 6bdc9DT83MeS1OQqxYi5nVKtt9vm/EyM4Pvucy3bl5Yv9OXUD1e2hKkimWceY6/AW0
-	 NE7M0IZyHTH0jiVv6RKzC8Q18IoJAGn5iXKl7rbZYqJk3fU9vRXE2Eg13V7cA9MhHx
-	 4Qd8H/p10+8MW17zxsXdFB/2t56uR4tlmIlvlwq7pu5tFjHZ5zpDVKIgxCJ+MUYhAj
-	 CkMAHVlGwP7p/mf0E/ss9fI9Fm/eVy35xY+h8MLc7/9tUWcIWs03C1O3cS50koohtD
-	 1EVBHu8oTFICF1mj8/0TD+HxtPrK1lUHPTMJrJaakVhyHDQU0wlbpBnhPKqSvOEphT
-	 UvEY2h4tQX+4yJQN2f/keju+3Hdyyx3E6unjp9zpeKwghrhoA92bix2X4gnRq0bNve
-	 syeeVsJXFWAL+du64s0tsyDUCzefbtLHCKiic0UmdhNtFnf3b6iMYxm2xQxwfHCSlp
-	 nmdv3sBZx4vhrSHXVw26K2og=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JPBs7s9m";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BzjtjqQs";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JPBs7s9m";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BzjtjqQs"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 841EC40E01FF;
-	Tue, 15 Apr 2025 12:33:40 +0000 (UTC)
-Date: Tue, 15 Apr 2025 14:33:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent for v6.15-rc3
-Message-ID: <20250415123332.GAZ_5SHIlZcpQxbLMj@fat_crate.local>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 90BAB1F454;
+	Tue, 15 Apr 2025 12:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744720452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+67X3s0+LtDgnVqweOYLzcbxICYyQTbn4dfq/CvPpQ=;
+	b=JPBs7s9mwTexAkKO2LUNyZLvLV1QdJrBs67wF4khREKN7XM6UvA/BDvpfY2QIHz1+rk36F
+	EJ+sZZoVXV6hYQ2nBWNlKoGOywFDkPle69CUofEnruD2mn60gaBCre9n/4ZB8Tm2G6PuQB
+	hmHTCcTNGETr/JxeyJBBVvutm2Fe4KA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744720452;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+67X3s0+LtDgnVqweOYLzcbxICYyQTbn4dfq/CvPpQ=;
+	b=BzjtjqQsZcu+jHqQ41mwllcXcIISpeVsJPaDPLxTiCELx7lPzj3t9GnGyySExXGN8ymaFn
+	8J9thXLcFcfHmCBw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=JPBs7s9m;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BzjtjqQs
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744720452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+67X3s0+LtDgnVqweOYLzcbxICYyQTbn4dfq/CvPpQ=;
+	b=JPBs7s9mwTexAkKO2LUNyZLvLV1QdJrBs67wF4khREKN7XM6UvA/BDvpfY2QIHz1+rk36F
+	EJ+sZZoVXV6hYQ2nBWNlKoGOywFDkPle69CUofEnruD2mn60gaBCre9n/4ZB8Tm2G6PuQB
+	hmHTCcTNGETr/JxeyJBBVvutm2Fe4KA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744720452;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+67X3s0+LtDgnVqweOYLzcbxICYyQTbn4dfq/CvPpQ=;
+	b=BzjtjqQsZcu+jHqQ41mwllcXcIISpeVsJPaDPLxTiCELx7lPzj3t9GnGyySExXGN8ymaFn
+	8J9thXLcFcfHmCBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7BA97137A5;
+	Tue, 15 Apr 2025 12:34:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id N948HURS/mfEFAAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Tue, 15 Apr 2025 12:34:12 +0000
+Date: Tue, 15 Apr 2025 14:34:08 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Jiewei Ke <jiewei_ke@163.com>
+Cc: wagi@kernel.org, hare@suse.de, hch@lst.de, jmeneghi@redhat.com, 
+	kbusch@kernel.org, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, 
+	mkhalfella@purestorage.com, randyj@purestorage.com, sagi@grimberg.me
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <424fe473-8472-42b8-99c7-8b0534771343@flourine.local>
+References: <8F2489FD-1663-4A52-A50B-F15046AC2878@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,48 +91,96 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8F2489FD-1663-4A52-A50B-F15046AC2878@163.com>
+X-Rspamd-Queue-Id: 90BAB1F454
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[163.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[flourine.local:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-Hi Linus,
+Hi Jiewei,
 
-please pull two urgent EDAC fixes for v6.15-rc3.
+On Thu, Apr 10, 2025 at 11:44:13PM +0800, Jiewei Ke wrote:
+> I just noticed that your patchset addresses a similar issue to the one I ’m
+> trying to solve with my recently submitted patchset [1]. Compared to your
+> approach, mine differs in a few key aspects:
+> 
+> 1. Only aborted requests are delayed for retry. In the current implementation,
+> nvmf_complete_timed_out_request and nvme_cancel_request set the request status
+> to NVME_SC_HOST_ABORTED_CMD. These requests are usually already sent to the
+> target, but may have timed out or been canceled before a response is received.
+> Since the target may still be processing them, the host needs to delay retrying
+> to ensure the target has completed or cleaned up the stale requests. On the
+> other hand, requests that are not aborted — such as those that never got
+> submitted due to no usable path (e.g., from nvme_ns_head_submit_bio), or those
+> that already received an ANA error from the target — do not need
+> delayed retry.
 
-Thx.
+If I understand you correctly, you are concerned about delaying all
+commands even these which are not transmitted yet. If there are no
+garantees on ordering it would be possible to failover these commands
+immediately. Sure something which could be improved in my series.
 
----
+> 2. The host explicitly disconnects and stops KeepAlive before delay scheduling
+> retrying requests. This aligns with Section 9.6 "Communication Loss Handling"
+> of the NVMe Base Specification 2.1. Once the host disconnects, the target may
+> take up to the KATO interval to detect the lost connection and begin cleaning
+> up any remaining requests. Retrying too early may still lead to data
+> corruption issues.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+The host error handler is executed thus all communication is stopped.
+This part hasn't changed. Not sure what you are referring too. The only
+thing which changes in this series is when we enqueue the failed
+commands again.
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+> @@ -2178,6 +2180,7 @@ static void nvme_rdma_shutdown_ctrl(struct nvme_rdma_ctrl *ctrl, bool shutdown)
+>  	nvme_quiesce_admin_queue(&ctrl->ctrl);
+>  	nvme_disable_ctrl(&ctrl->ctrl, shutdown);
+>  	nvme_rdma_teardown_admin_queue(ctrl, shutdown);
+> +	nvme_delay_kick_retry_lists(&ctrl->ctrl); <<< delay kick retry
+>  	after teardown all queues
 
-are available in the Git repository at:
+Without the kick it hangs. The admin has explicitly removed the ctrl.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.15_rc3
+As I already said, this is a RFC for the sake to figure out if this
+approach is a good idea. We all agreed, we should first try to sort this
+out before introducing a new queue. There are many problems which it
+will introduce, like the one from above 'why delaying not send
+requests?', 'What happens when we have several short
+disconnects/connects?', ...
 
-for you to fetch changes up to 58029c39cdc54ac4f4dc40b4a9c05eed9f9b808a:
+BTW, there is already a hack in disconnect/connect state transition.
+Ideally we solve this in a more generic manner.
 
-  RAS/AMD/FMPM: Get masked address (2025-04-08 19:30:58 +0200)
-
-----------------------------------------------------------------
-Two fixes to the AMD translation library for the MI300 side of things:
-
-  - Use the row[13] bit when calculating the memory row to retire
-
-  - Mask the physical row address in order to avoid creating duplicate
-    error records
-
-----------------------------------------------------------------
-Yazen Ghannam (2):
-      RAS/AMD/ATL: Include row[13] bit in row retirement
-      RAS/AMD/FMPM: Get masked address
-
- drivers/ras/amd/atl/internal.h |  3 +++
- drivers/ras/amd/atl/umc.c      | 19 +++++++++++++++++--
- drivers/ras/amd/fmpm.c         |  9 ++++++++-
- 3 files changed, 28 insertions(+), 3 deletions(-)
-
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+Daniel
