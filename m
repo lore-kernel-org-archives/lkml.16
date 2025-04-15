@@ -1,170 +1,244 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D008E1E5B70;
-	Tue, 15 Apr 2025 07:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96B7634
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744700635; cv=none; b=AuBMLwlHGVEqvjBzPWz6v9lgPdep4gVaEwJQfK8zMPqyDprxOlGvEkcOWdSv2qXH7AtKFZ2qEp0nEFAfjz8BrhomO7CgjhOzAFbSv7glTLCHWeVhmnlc80qnQbaanFbEJ9ykkbc91X+iYiYkiItdtr625aznUJ5s9uTOKLfKTOQ=
+	t=1744700989; cv=none; b=b25LTeFKmt5ITiE+rsMxx4NZUd1sMSi+QFH0oWC/1j7Y3rwIUPpqpiUipV3NNN81yf7M8bd1qh9gogC23s/+i9l+BEUJeT23Snt4SglgAlIZ6P3OVYFDhZJN32EixRXpQdvFHS/7XZbNga45gQi1E2UdCvIKluI1e1+N5QjNUQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744700635; c=relaxed/simple;
-	bh=ISHme36ClXIZls+3gW0ZDvgDcWa18XrAFOfHqyp+34c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afVj7nMKqCmNPnROwqdbxEynNGwAbciNKpWsRD/fJk1rglj7yS6TmT/Ubx/09J9TbF1e2pEd1IzK4yvsbXOsnHzAS0/mnW439hpit2b9WGrMIC8nJcBvqTvySoIf0RgfqClhQUCO6elygTWheptvi/UALUB91glIkgCv6uCAbyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KjuL2bnE; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744700989; c=relaxed/simple;
+	bh=/8P/xLSMj/KQXAUxbACwRA390xXl77sG2wWF0zjr1vs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UgX9PP5aHtOiGH/d/izlDoajNYIIwuIRTxq1aYa/6vshw+dLI5yGsTE07wfFYvRg/fRgT36vywt/dAzkR4ht7j6CQhH0UaUVWI7QjQVzS+Ld8TwMm65ZSgLunZhOyXZPl+kj4lj3O1xw52y8nnu/jMxXjbWFRMYlGrYHVtTTk4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZELVIMeb; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KjuL2bnE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744700634; x=1776236634;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ISHme36ClXIZls+3gW0ZDvgDcWa18XrAFOfHqyp+34c=;
-  b=KjuL2bnEV6ve+0IjYnUVAgRoQUpX9oe3AIm9C+Pirg2NMwfH8QxYWIlg
-   wl0TCF6/mLaMYFag8aPf0gAHW1l9Kp96kaIL8YJeyUvqUz/0mK5Di8tIX
-   gFlE7/Vddp3VwSM5K6K/Kz5zSMYMT22XzQvrzHKEQDFVjtlJiWQ9KYc3S
-   6PTIPFxd6BfqE6snrqFg6maHK0iz2e0L0k9lx+twibGUESM+0Ddl2UC8+
-   o84ptihqYmeHegI89a66ywoe0l1moq25U8W1xXxwg/GZXr895ZheITqEx
-   bqB4/DZIJF66DTgOo7/OKCtwiROL+6Bmj/owRCcwJkvjfiOxeZcsJ0qoZ
-   A==;
-X-CSE-ConnectionGUID: /jKFhcu1R9qBNiNGO3ytUg==
-X-CSE-MsgGUID: Kk7EVFatSaCFRATopBUcTQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56854783"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56854783"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:03:53 -0700
-X-CSE-ConnectionGUID: zwdmO1Y1QXGDlEV2QT4Sjw==
-X-CSE-MsgGUID: MiXPFpmxRKu7CnxoYAq6DA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="161002059"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 00:03:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u4aKi-0000000CTBW-0UUp;
-	Tue, 15 Apr 2025 10:03:48 +0300
-Date: Tue, 15 Apr 2025 10:03:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-Message-ID: <Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
- <871pu1193r.fsf@trenco.lwn.net>
- <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
- <87mscibwm8.fsf@trenco.lwn.net>
- <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZELVIMeb"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53F79MoT2403775
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Apr 2025 02:09:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744700962;
+	bh=MgDXnjyVZlpStO44bqEYevY9Nn+8PUgujzMmn5CY9zE=;
+	h=From:To:CC:Subject:Date;
+	b=ZELVIMeb4vWYM3lMXp4yvTURKOH2k39GgdQH7HAwIaxjKPMoqlXPswGaPJ1E5kiAO
+	 101qr9yfm3da/nArxekTBa3NdxIHEqSDT9QqX8D81XejAYhKil0q4Xk0ccibwsUxtu
+	 HSQIT6bISBvIJrru4QpT8rMwrKpbyZuvrRIXmIWo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53F79MKe082251
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 15 Apr 2025 02:09:22 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
+ Apr 2025 02:09:21 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 15 Apr 2025 02:09:21 -0500
+Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.150])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53F79Hpu014712;
+	Tue, 15 Apr 2025 02:09:18 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <13564923607@139.com>, <13916275206@139.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <robinchen@ti.com>,
+        Shenghao Ding <shenghao-ding@ti.com>
+Subject: [RESEND PATCH v2] ALSA: hda/tas2781: Create a common header for both spi and i2c tas2781 hda driver
+Date: Tue, 15 Apr 2025 15:09:13 +0800
+Message-ID: <20250415070913.679-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
-> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:
-> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
-> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> > >> 
-> > >> > This changeset contains the kernel-doc.py script to replace the verable
-> > >> > kernel-doc originally written in Perl. It replaces the first version and the
-> > >> > second series I sent on the top of it.
-> > >> 
-> > >> OK, I've applied it, looked at the (minimal) changes in output, and
-> > >> concluded that it's good - all this stuff is now in docs-next.  Many
-> > >> thanks for doing this!
-> > >> 
-> > >> I'm going to hold off on other documentation patches for a day or two
-> > >> just in case anything turns up.  But it looks awfully good.
-> > >
-> > > This started well, until it becomes a scripts/lib/kdoc.
-> > > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
-> > > "disgusting turd" )as said by Linus) in the clean tree.
-> > >
-> > > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
-> > 
-> > If nothing else, "make cleandocs" should clean it up, certainly.
-> > 
-> > We can also tell CPython to not create that directory at all.  I'll run
-> > some tests to see what the effect is on the documentation build times;
-> > I'm guessing it will not be huge...
-> 
-> I do not build documentation at all, it's just a regular code build that leaves
-> tree dirty.
-> 
-> $ python3 --version
-> Python 3.13.2
-> 
-> It's standard Debian testing distribution, no customisation in the code.
-> 
-> To reproduce.
-> 1) I have just done a new build to reduce the churn, so, running make again does nothing;
-> 2) The following snippet in shell shows the issue
-> 
-> $ git clean -xdf
-> $ git status --ignored
-> On branch ...
-> nothing to commit, working tree clean
-> 
-> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
-> make[1]: Entering directory '...'
->   GEN     Makefile
->   DESCEND objtool
->   CALL    .../scripts/checksyscalls.sh
->   INSTALL libsubcmd_headers
-> .pylintrc: warning: ignored by one of the .gitignore files
-> Kernel: arch/x86/boot/bzImage is ready  (#23)
-> make[1]: Leaving directory '...'
-> 
-> $ touch drivers/gpio/gpiolib-acpi.c
-> 
-> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
-> make[1]: Entering directory '...'
->   GEN     Makefile
->   DESCEND objtool
->   CALL    .../scripts/checksyscalls.sh
->   INSTALL libsubcmd_headers
-> ...
->   OBJCOPY arch/x86/boot/setup.bin
->   BUILD   arch/x86/boot/bzImage
-> Kernel: arch/x86/boot/bzImage is ready  (#24)
-> make[1]: Leaving directory '...'
-> 
-> $ git status --ignored
-> On branch ...
-> Untracked files:
->   (use "git add <file>..." to include in what will be committed)
-> 	scripts/lib/kdoc/__pycache__/
-> 
-> nothing added to commit but untracked files present (use "git add" to track)
+Move the common macro definition of kcontrols into a common header.
 
-FWIW, I repeated this with removing the O=.../out folder completely, so it's
-fully clean build. Still the same issue.
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-And it appears at the very beginning of the build. You don't need to wait to
-have the kernel to be built actually.
+---
+v2:
+ - Follow IWYU principle, add sound/asound.h into the header file.
+v1:
+ - Revise the year of spi and i2c tas2781 hda drivers.
+ - Create a common header for both spi and i2c tas2781 hda driver to define
+   the common macros and declare the common functions.
+---
+ sound/pci/hda/tas2781_hda.h     | 44 +++++++++++++++++++++++++++++++++
+ sound/pci/hda/tas2781_hda_i2c.c | 29 ++--------------------
+ sound/pci/hda/tas2781_hda_spi.c | 35 ++------------------------
+ 3 files changed, 48 insertions(+), 60 deletions(-)
+ create mode 100644 sound/pci/hda/tas2781_hda.h
 
-> It's 100% reproducible on my side. I am happy to test any patches to fix this.
-> It's really annoying "feature" for `make O=...` builds. Also note that
-> theoretically the Git worktree may be located on read-only storage / media
-> and this can induce subtle issues.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/sound/pci/hda/tas2781_hda.h b/sound/pci/hda/tas2781_hda.h
+new file mode 100644
+index 000000000000..fc741fac419a
+--- /dev/null
++++ b/sound/pci/hda/tas2781_hda.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0-only=0D
++ *=0D
++ * HDA audio driver for Texas Instruments TAS2781 smart amp=0D
++ *=0D
++ * Copyright (C) 2025 Texas Instruments, Inc.=0D
++ */=0D
++#ifndef __TAS2781_HDA_H__=0D
++#define __TAS2781_HDA_H__=0D
++=0D
++#include <sound/asound.h>=0D
++=0D
++/*=0D
++ * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD=0D
++ * Define two controls, one is Volume control callbacks, the other is=0D
++ * flag setting control callbacks.=0D
++ */=0D
++=0D
++/* Volume control callbacks for tas2781 */=0D
++#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinver=
+t, \=0D
++	xhandler_get, xhandler_put, tlv_array) { \=0D
++	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, .name =3D (xname), \=0D
++	.access =3D SNDRV_CTL_ELEM_ACCESS_TLV_READ | \=0D
++		SNDRV_CTL_ELEM_ACCESS_READWRITE, \=0D
++	.tlv.p =3D (tlv_array), \=0D
++	.info =3D snd_soc_info_volsw, \=0D
++	.get =3D xhandler_get, .put =3D xhandler_put, \=0D
++	.private_value =3D (unsigned long)&(struct soc_mixer_control) { \=0D
++		.reg =3D xreg, .rreg =3D xreg, \=0D
++		.shift =3D xshift, .rshift =3D xshift,\=0D
++		.min =3D xmin, .max =3D xmax, .invert =3D xinvert, \=0D
++	} \=0D
++}=0D
++=0D
++/* Flag control callbacks for tas2781 */=0D
++#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { =
+\=0D
++	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, \=0D
++	.name =3D xname, \=0D
++	.info =3D snd_ctl_boolean_mono_info, \=0D
++	.get =3D xhandler_get, \=0D
++	.put =3D xhandler_put, \=0D
++	.private_value =3D xdata, \=0D
++}=0D
++=0D
++#endif=0D
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2=
+c.c
+index 29dc4f500580..9d94ae5fcfe0 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -2,7 +2,7 @@
+ //
+ // TAS2781 HDA I2C driver
+ //
+-// Copyright 2023 - 2024 Texas Instruments, Inc.
++// Copyright 2023 - 2025 Texas Instruments, Inc.
+ //
+ // Author: Shenghao Ding <shenghao-ding@ti.com>
+ // Current maintainer: Baojun Xu <baojun.xu@ti.com>
+@@ -30,35 +30,10 @@
+ #include "hda_component.h"
+ #include "hda_jack.h"
+ #include "hda_generic.h"
++#include "tas2781_hda.h"
+=20
+ #define TASDEVICE_SPEAKER_CALIBRATION_SIZE	20
+=20
+-/* No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
+- * Define two controls, one is Volume control callbacks, the other is
+- * flag setting control callbacks.
+- */
+-
+-/* Volume control callbacks for tas2781 */
+-#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinver=
+t, \
+-	xhandler_get, xhandler_put, tlv_array) \
+-{	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, .name =3D (xname),\
+-	.access =3D SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
+-		 SNDRV_CTL_ELEM_ACCESS_READWRITE,\
+-	.tlv.p =3D (tlv_array), \
+-	.info =3D snd_soc_info_volsw, \
+-	.get =3D xhandler_get, .put =3D xhandler_put, \
+-	.private_value =3D (unsigned long)&(struct soc_mixer_control) \
+-		{.reg =3D xreg, .rreg =3D xreg, .shift =3D xshift, \
+-		 .rshift =3D xshift, .min =3D xmin, .max =3D xmax, \
+-		 .invert =3D xinvert} }
+-
+-/* Flag control callbacks for tas2781 */
+-#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) \
+-{	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, .name =3D xname, \
+-	.info =3D snd_ctl_boolean_mono_info, \
+-	.get =3D xhandler_get, .put =3D xhandler_put, \
+-	.private_value =3D xdata }
+-
+ enum calib_data {
+ 	R0_VAL =3D 0,
+ 	INV_R0,
+diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_sp=
+i.c
+index 399f2e4c3b62..c6be2be1b53e 100644
+--- a/sound/pci/hda/tas2781_hda_spi.c
++++ b/sound/pci/hda/tas2781_hda_spi.c
+@@ -2,7 +2,7 @@
+ //
+ // TAS2781 HDA SPI driver
+ //
+-// Copyright 2024 Texas Instruments, Inc.
++// Copyright 2024 - 2025 Texas Instruments, Inc.
+ //
+ // Author: Baojun Xu <baojun.xu@ti.com>
+=20
+@@ -38,38 +38,7 @@
+ #include "hda_component.h"
+ #include "hda_jack.h"
+ #include "hda_generic.h"
+-
+-/*
+- * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
+- * Define two controls, one is Volume control callbacks, the other is
+- * flag setting control callbacks.
+- */
+-
+-/* Volume control callbacks for tas2781 */
+-#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinver=
+t, \
+-	xhandler_get, xhandler_put, tlv_array) { \
+-	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, .name =3D (xname), \
+-	.access =3D SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
+-		SNDRV_CTL_ELEM_ACCESS_READWRITE, \
+-	.tlv.p =3D (tlv_array), \
+-	.info =3D snd_soc_info_volsw, \
+-	.get =3D xhandler_get, .put =3D xhandler_put, \
+-	.private_value =3D (unsigned long)&(struct soc_mixer_control) { \
+-		.reg =3D xreg, .rreg =3D xreg, \
+-		.shift =3D xshift, .rshift =3D xshift,\
+-		.min =3D xmin, .max =3D xmax, .invert =3D xinvert, \
+-	} \
+-}
+-
+-/* Flag control callbacks for tas2781 */
+-#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { \
+-	.iface =3D SNDRV_CTL_ELEM_IFACE_CARD, \
+-	.name =3D xname, \
+-	.info =3D snd_ctl_boolean_mono_info, \
+-	.get =3D xhandler_get, \
+-	.put =3D xhandler_put, \
+-	.private_value =3D xdata, \
+-}
++#include "tas2781_hda.h"
+=20
+ struct tas2781_hda {
+ 	struct tasdevice_priv *priv;
+--=20
+2.34.1
 
