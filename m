@@ -1,150 +1,109 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8734025392C
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966AE2561B6;
+	Tue, 15 Apr 2025 20:30:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744749029; cv=none; b=XouBoKw1Lr6i9vbxKNO6H8At7otOcBm2f+F72mBUUcaOw4mWud6YOfBmiEPGBSIwGJDq9z1dXzX2SmGGd7qeovI6+gukDzIOjyuVay1oe5uULKZ5tLBz9C64jcb8GV2+ZNfL4hWrlWfJvuu/ZY6C8WmS//TjFWzh4rxKP0rCNaQ=
+	t=1744749043; cv=none; b=cGHiUMSyullk8oBbLsF/vyQMhCM0ANQj10CA0kS66lOu+r45HH679U3mdmLsBD9Y+Ge+80PS7A4cLgZBKmaQbHZEqByfe87sIoEGpX1MEAILykZ71lWpbcQsEhrQX/5ay9ehssJanTeS1d4gWtTWujC5LVRVkD1f4ddRPAmOqKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744749029; c=relaxed/simple;
-	bh=/96doEOtwTjIZYMe15BCBKTEvpm2l+nIfJoQ3F8LAq4=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=PIjn1RI8UmzSbdMMBzOGD1Q5C8VKXrdSprFVDNCrDWSmTc9owD66jum00D6fTAHCNzvHwXXTBN4Z8sLe9jM3soJUvMbXLQICy9tuYpUrcUy0nlOJD2UI9Vuj8wH93cgVqbNgAZiH8LDjI3j9+ppC5GtcqOy5yUZ24GvBEVi2sR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kQZk35Do; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744749043; c=relaxed/simple;
+	bh=wCxBeybE6qJRE3pXHWxqErGRwtA/zocP0Tj2YURCkZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DyrREKbzJnlyst3V8+Ri8plLYn0WU3vwjdWkvX3sjm4/3WVzxjXHaQ81UrmQYlj+pFK4VMd59f+G1w1IMPhNxQi16tJxfcRqrGVA/LXdxY7LhGw1KBysleGasmsE61vyVkCHvkeKn65UhZF23MQB2EwVCt/N6vxb+QkWLxg0q58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XnTpoP/Z; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQZk35Do"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so3648214f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:30:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnTpoP/Z"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2aeada833so11817966b.0;
+        Tue, 15 Apr 2025 13:30:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744749024; x=1745353824; darn=vger.kernel.org;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=loaKyM630zA7zEN1/UNPOs/akSRyWfGEwfls76DM9Gg=;
-        b=kQZk35DohW49b5rqYS2YPwxKliYCg8aKspiI2JZcbyhO7fureX5M2+mqTiTbj8dcL/
-         avLzwrIaZD+MW2rpaShDJgepoz45KXA1RYXKpilVco3DjiqSAfb0p9f6NW3DvuEgpsoY
-         /pWKI9uaOtwNF7zFP+9pBWHKWSAB8InekA87lke4t9S4jRDFCn0bdQx2i4wy8bPZvcZL
-         9de3FhZ7v9X9bbWGNyveprhVE+yvJGFy1IkLNlSVhCiSSoHpjVReJVsyuSJW4zj/Wqg7
-         41VKQHHISn5hLHmnLwDrrtyXBN5sayniIlTJv3RjHRcL0u9HlZkeIr9toUtD3xObLL+z
-         9oyQ==
+        d=gmail.com; s=20230601; t=1744749039; x=1745353839; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2EnaYYq5VpNpfq3jhDm3c5QMz4PJIrMHZNekW0Qvzd4=;
+        b=XnTpoP/Z0mRYteG9fiEU1x8fMKetqEUsJ7W3FyzLN1oEYlz8LxeQCwlcrEqXDYnD1n
+         W1Ql92KV4y64kESqvZvkM68i4nz5nGb3tV5WCOe3OQHtxf9WbEoCRywJKbx2h/dQBXww
+         TnxQEaLhHuolW6vybrPgm2Ihru0DIU6QktVOVkWI2Tb1kj8GAhVVesG/hUwV5tVfZSLS
+         0U2Ae/TkrkVVuI1jd4DFXeUzfNgcgaAwt58dq1QGBBzskNAm+hS1CEdi36d37uWets3g
+         luQMYH22fOAS2l85WWCDIp6oWB3CPfiUet1hKli6d/dVSKNE6BTlESRJnhdCUc8V1849
+         lJEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744749024; x=1745353824;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=loaKyM630zA7zEN1/UNPOs/akSRyWfGEwfls76DM9Gg=;
-        b=dx8q2KDbgTczWB202N7T4fhchTDXsxEsYkS48NjfSHFtCWQyCXiFAYI2h/Lx3Ik91w
-         H0ZF6epJQ1E1Jav0+4KV6ZD/bIppMrXfQEqwdJsQ9wUrsd5hUA4U62tm0HP2U4jN9wrn
-         6M38sR41X5TtugLPWakyKmwcVwOemUjt+jJIaofQhsyycMErE3ordoGJ8RVu0gKji4tP
-         s2hIC0ZUOI2TnHUhQGv2tyiurim9so5p6toE32hhTZjg++poedRhSjRZDrBdgm4tJe4Q
-         YgJHDCUkgrOEdG2lF21HEBQGWCfcewZ30Kxbpinc4LR4Szlzpbmic/UHT2633JGmQwRs
-         hoZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWXMqeE8OvJzT94tr//9XTO6+wXwmrQ+Zfvqt5LgTnaO7kExgozI0PuJXigGhIo+H5jU/h/sDLY60OtB8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMenDEpsETZlbNoyEONamGDt6culGST3voxsvMiVD7i6jy0Lha
-	cNn3F8Yg6E8gb0UdjOrkp/HawFk12cHTs5CxM3Dsvt/PS/wtQ4j/Osu144kmrtA=
-X-Gm-Gg: ASbGncv2Ac1iOL/+TII61L9pyZbM9ZmlU6moQasI5t72+/pD7/Ns3T87/OC/z0t2E1w
-	Xv+R2RP+HNF7A7MepInil7rKLOdwOypoRUyoGuFs5j8vAy9Nmw6RAqTgfWMQX0kbg/KS0mPGG3A
-	F7dvQsPQjKIVb661eMWkb84hpEEN/86LsQ7YwQog3rf7Aqehw/XVrFddzcPZL918BHIdOW6ryRc
-	D++Sek8g5b/BvSCLKV+zr1NOOIchLzaFwBVXREkOBuE8Qnv2bk0WzKX2rJItlKlUE2dHTZEOmtV
-	78WkBZ790rQGbjoX0MgCY3oH2x7J+7fDS+eEySpePw60AcIdsaUfp+Cgr6JiMyBZgtGnhCpL1f6
-	af48N
-X-Google-Smtp-Source: AGHT+IE8Ga583hP6MeWQc3SP+sZk2HL6J0Mdlbn8bdA8Uud4ZliUSVIwJw/726D3uEIjVRfGPnlJIQ==
-X-Received: by 2002:a05:6000:430c:b0:39c:1258:2dc7 with SMTP id ffacd0b85a97d-39ee2771b3amr673507f8f.56.1744749023992;
-        Tue, 15 Apr 2025 13:30:23 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4405b4d33a6sm282105e9.15.2025.04.15.13.30.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 13:30:22 -0700 (PDT)
-Message-ID: <d2cd5a8a-c8fe-4a6b-9712-15755a4a5e3e@linaro.org>
-Date: Tue, 15 Apr 2025 22:30:22 +0200
+        d=1e100.net; s=20230601; t=1744749039; x=1745353839;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2EnaYYq5VpNpfq3jhDm3c5QMz4PJIrMHZNekW0Qvzd4=;
+        b=INEUiVsr4BJwpC2DQiOrgqkxG6dvnpQExjhBfNuAsAaHPgO6B+FK1rzNfvd9oXPsuL
+         /DYZgbJBCUXS9sjLd0bquvelRwC6VjCO8i7aQfUns4bmGmcc8ElciEnAVU95u8ATpg6+
+         FcOi5h1vXPTi9gNoUT7wRUt16GWqdv0pFnN1nzQ78s4oCLiDdwK8R/9XgR9SC8CZNcpN
+         pZG6xrQexYVlj3HXGhcFa2ONKWJywrPqzH2zQOAOK6tsooxoQC9mCCbohUR1U5Ab0BGB
+         bpkYN0yH9N0TxCTbVM9EDkPjbsb8fGQNmXJKYqoKI9bk3GYykVn2QHJ8QBoPZQzkwOVP
+         yTLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUP2VqK1LTYflq9VUvxjXCj8iB2nwM6xGnDF466peghJS6T2PtHmZENI6+EhA9/DT16QzrF3v8htT8I@vger.kernel.org, AJvYcCWfxRLWZm+e10OAqEvwjY8hJX0keKJzVVLjybhX9cPEhMxJ5WQfdUPIIFY0axgK42ZiKPUbRHTMD5NXD6zJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHy5GzJVp7aoxzLGVj6Z9P5RRhuKjxstspS8awsgU85+H5oNHp
+	BhCGwGV8PKZ0Pcsl0gOWdLYMQOq4L0uMMe9Dr0jn9VRi8QZWMgRYFXE4L30L4FI=
+X-Gm-Gg: ASbGnctpMPPK4Z1JVUru44WdDOQRn1a8tKJT89bighL+T8lNc6xnvN8Iux24/UOgdE7
+	ecNHNIDHb+NaLUThkPNESfQTD82TWmVZcHsxKBNIGyPfHqBqCfW1iFyva8AlSMPku2RAq+VGaMF
+	gPjyfwtE9WFYYh5mCpZoEtiI8RPkfPrkWg3HSyLeKyPZ7Y9bQVIJe90M5UYQ/S1jvz/HZovoKfj
+	97Nex5rsRJRhPUIOIK7VEQ53x4uX/4kr34sJwCfGA+8O81M9cvETpVnnWVIF8nFY7obenOfXdYt
+	PDCrcI7DeSfwwh9KmXd7K+O1p1k3wpdnxrh9nOveOCsV
+X-Google-Smtp-Source: AGHT+IFpMejbMKxwYVP3ClTbtsxDAvjUr56x/paNPdsUiAiUOxhFmTaY2rFqndunam8jIBSsD9BHVQ==
+X-Received: by 2002:a17:907:3f99:b0:aca:aeb4:938e with SMTP id a640c23a62f3a-acb357fd0f8mr75255766b.8.1744749038369;
+        Tue, 15 Apr 2025 13:30:38 -0700 (PDT)
+Received: from gmail.com ([103.210.134.105])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bed98esm1149894366b.72.2025.04.15.13.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 13:30:38 -0700 (PDT)
+Date: Wed, 16 Apr 2025 02:00:26 +0530
+From: Brahmajit <brahmajit.xyz@gmail.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Robert Moore <robert.moore@intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org, 
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] ACPI: Fix building with GCC 15
+Message-ID: <gwmtns3c6lxgsxtbit2vwjr64yqlp3wlmvj4p3o6oqi34bng5h@tenldomcival>
+References: <20250414161644.30400-1-listout@listout.xyz>
+ <20250415190457.351e22a1@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: dl-S32 <S32@nxp.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: s32g2 crash
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415190457.351e22a1@pumpkin>
 
+On 15.04.2025 19:04, David Laight wrote:
+> 
+> Doesn't than generate an 'unknown attribute' error on older compilers?
+> 
+> Does:
+> 	typedef char char_nonstring __attribute__((nonstring));
+> 	char_nonstring name[4] = "abcd";
+> work?
+> 
+> If so the attribute could even be applied to 'u8'.
+> 
+> 	David
 
-Hi,
+David, what if I used the __nonstring attribute from
+include/linux/compiler_attributes.h which defines the following
 
-I've the following error when I run several grep in parallel.
+#if __has_attribute(__nonstring__)
+# define __nonstring                    __attribute__((__nonstring__))
+#else
+# define __nonstring
+#endif
 
-How to reproduce:
+Which I came across from
+https://www.kernel.org/doc/html/latest/process/programming-language.html#attributes
+Also the checkpatch.pl scripts suggests using that instead.
 
-for i in $(seq 1 6); do sudo grep -rI azertyuiop / & done
-
-Even if the trace show v6.15-rc1-*dirty, the changed code is disabled.
-
-
-[  442.556646] Internal error: synchronous external abort: 
-0000000096000210 [#1]  SMP
-[  442.564390] CPU: 3 UID: 0 PID: 384 Comm: grep Not tainted 
-6.15.0-rc1-00010-g67d222ce45c5-dirty #245 PREEMPT
-[  442.574403] Hardware name: NXP S32G2 Reference Design Board 2 
-(S32G-VNP-RDB2) (DT)
-[  442.582106] pstate: 200000c5 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS 
-BTYPE=--)
-[  442.589194] pc : regmap_mmio_read32le+0x8/0x60
-[  442.593724] lr : regmap_mmio_read+0x44/0x70
-[  442.597981] sp : ffff800084423b60
-[  442.601353] x29: ffff800084423b60 x28: ffff8000822b2000 x27: 
-ffff000800a91c00
-[  442.608632] x26: 0000000000000104 x25: ffff800084423dc0 x24: 
-0000000000042000
-[  442.615913] x23: ffff00005dc80000 x22: ffff000800a91c00 x21: 
-ffff800084423c4c
-[  442.623189] x20: 0000000000000010 x19: ffff0008002f8300 x18: 
-00000000ffffffff
-[  442.630466] x17: 0000000000000000 x16: 0000000000000000 x15: 
-ffff800084423a80
-[  442.637737] x14: 0000000000000001 x13: ffff00005dc80038 x12: 
-000000000001e08f
-[  442.645010] x11: 0000000000000000 x10: 0000000000000020 x9 : 
-fffffdffc1772000
-[  442.652283] x8 : 0000000000000020 x7 : 0000000000000002 x6 : 
-000000000000003a
-[  442.659556] x5 : ffff800080b6c808 x4 : 0000000000000010 x3 : 
-0000000000000010
-[  442.666828] x2 : ffff800080b6cf88 x1 : 0000000000000010 x0 : 
-ffff800082d8d108
-[  442.674103] Call trace:
-[  442.676590]  regmap_mmio_read32le+0x8/0x60 (P)
-[  442.681118]  _regmap_bus_reg_read+0x70/0xb0
-[  442.685379]  _regmap_read+0x60/0xd8
-[  442.688932]  regmap_read+0x4c/0x78
-[  442.692396]  regmap_read_debugfs+0x138/0x3a0
-[  442.696747]  regmap_map_read_file+0x28/0x34
-[  442.701009]  full_proxy_read+0x70/0xd0
-[  442.704830]  vfs_read+0xc4/0x324
-[  442.708120]  ksys_read+0x70/0x108
-[  442.711495]  __arm64_sys_read+0x1c/0x28
-[  442.715401]  invoke_syscall+0x48/0x10c
-[  442.719222]  el0_svc_common.constprop.0+0x40/0xe0
-[  442.724013]  do_el0_svc+0x1c/0x28
-[  442.727388]  el0_svc+0x30/0xcc
-[  442.730500]  el0t_64_sync_handler+0x10c/0x138
-[  442.734935]  el0t_64_sync+0x198/0x19c
-[  442.738670] Code: b5000001 d65f03c0 f9400000 8b214000 (b9400000)
-[  442.744871] ---[ end trace 0000000000000000 ]---
-[  442.749569] note: grep[384] exited with irqs disabled
-[  442.754898] note: grep[384] exited with preempt_count 1
-
-
+I guess this would work from older compilers as well.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Regards,
+listout
