@@ -1,70 +1,41 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAC2535D8
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BBD145FE0;
+	Tue, 15 Apr 2025 15:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730955; cv=none; b=h+XILnmoJhTIMWqsDfFE/em9/hl+qU8/QyZasYKLlvPX6XGB7Oy7rK0PVsQ7FIEMxbRc5b2swKhTyUIlRG4zqmHwJUq2Pih5N5zr/gwwDdngkax3K6uDtLHQgYy8KG+iq6xoDLdh4opZs+cys1gUuySVkHJ1gKYpobasIIxCMxs=
+	t=1744730990; cv=none; b=S+1XrXOcKcslfUseqt8q401r4q1HwOSO058mABVjZeLRJP1rvefUsUNvfjurquS1PhX/2PdqYbEi8q+u+QMb/Uudd7ZYGZO7CilBQkgGTwDHLXf6u7tbWFUGZgJTe3LfrVy9fgloXYW9OL3edwWdYZogKRqV/SZguJSb3CZRh0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730955; c=relaxed/simple;
-	bh=245uPgAjq0DuLIQiQTeNyrixfMQkPyaf8ibRk1MsNlU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DaxoMvGk063mzOxkv4+CpoLTx6NBU907JT5O/0liYI/KiFzbblNFZ5Am/o85A3BgR8lxH7YWvDv9looGKE2gyLAPSGVNcs6fm54CmQ/fR/YtfUmaZv04IbfmlBY5Fs1uZ81YogJD4/GRiWCjo4MV5W2lY8k+sOZPAtG5ttJnzQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuU3HVPK; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744730990; c=relaxed/simple;
+	bh=dPGucQf30xfK8uBOtJ0iEsLmxYFmROsJSFUyouZE5zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nykIOKk6UpbM90F9NqlbIp4ege/y3N2TkKsgtji7DqVqnH3BPlUO91fI7iSPfOvSgpQlPlLojhsGb/c6wravONKuHJAEChz4HU+/fNgmPzaCwCWd17njlklM8+x8mR5b+hn73acToPhU6te//poLZtff38BrnaMyhGyMvKWzfps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZQdgT24c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuU3HVPK"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499d2134e8so6887254e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744730951; x=1745335751; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jJkk1wWpcI9CJBo5G8AdG0tP+GsY23btFhNdL79cMeM=;
-        b=MuU3HVPKA6mHqAUkAf5d2HhdtvUm/DHR/3xI7I9frhDIjk4rGJ+rlaUQFK4+e1e6Xf
-         hezk6NIkehzAgfpTKEr5ei4nOyC7vQpM+sO9E0JkOApd4668/fwyW++QxaMeYy1fIjNu
-         03azdcbYWzcNSHs8oSLOnN/Id396CvZHJNtFSZ70GpNjW/7EdSxr1tBZz/D8CusCwzwY
-         rrcvBJawAIaKU1hnQ83XciHOhAdpIZZvB3ZiwihQHrv/4UbonoXaTmye7jc0TTNj5a/H
-         TkfstON19D2XtGzR65W8mEq/mUTnFhCK7RBZ6ySonhNWBMTXrgad9rJm82L4S8+ydbw7
-         Qm3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744730951; x=1745335751;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJkk1wWpcI9CJBo5G8AdG0tP+GsY23btFhNdL79cMeM=;
-        b=w+3PfQ3Y8ExVC5esb1jy0FozmwCin7vJQ5XfUrw23HmZZp1GKiK0GAWXg40P59euM7
-         sw2kCU1s+dKr4RtqSuXPtokywscmGaN4RW6indnTTDTcSKhYtokKQoua5Nk5xsPV/2eS
-         0TK88sJZhCagWgCB7GyrQ4KNdeHdyhhLmZTT4eAW4iMIRCGeeOUtBJl0FHpnsbByokN/
-         hb+2na/blUeemjLGmPJAaqyoxlCUvFjbXRDMAcE5tXJNDkeIkngeMPi9mN9JDFpDMqMI
-         PW4b82n5P+X9AH1z7528rQyjCqjZIGTEffhj0clOuP8oueb8H21jqP/bcSZ88BHUHE55
-         JTYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJNMZcEHxKe6rzQVOIt8SvkOD6GFsj+zB2S8y8RESPBTrIbHyRxMqm/YF1e9+Oxe2IXwO80pGAzQz4np8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu6NGbjhyVh10AusH6zTNBexlltSbnf46I8T70+I39zJFvD6KM
-	FqdQAjm3TwpfJyA5RStPQQWH0Y3Fgh+zm8ip70rltj6gc7IxbIoR
-X-Gm-Gg: ASbGncuaZzXMy0nhqjsXuYlPf9Gv4atGCyWX8CljEgts1D0/PtP3vx+R0b0azVUE3w2
-	RAPgdqwoDIxSQY90hdjW3Hy1nl5aJDjSQ7r2OlW7SwgsaqjoC0ykh7gX6ddCSAI3vpbZkGkSw8e
-	uKUUCZ32g/AkYdSquBylCGrVDaanf14ExCyhGBJTicNFmJucfXFEAysXqzxJZEhBCTwjZDHh9Mi
-	nO5SBBfe/gPMZzY7ooyaVJEbFjD2gM+OjC4IbA+REmJy/vdDBLgLpYejyXmfqlG4Nhfw8UP1EzK
-	SIey+FCMe/a2Q97vBhsUWtrCpDrjjsgtjkdTK9WY1wZktbgeq7mqfTpWZDWXjDjtN43f
-X-Google-Smtp-Source: AGHT+IGthHCiCnSTOdaKz2P1xlRe4YqTl43iv6lmCdhGP8sdcumtlSnQXLNds04x4aSalCSuTBLeJA==
-X-Received: by 2002:a05:6512:12c9:b0:549:916b:e665 with SMTP id 2adb3069b0e04-54d4528d0ecmr4338831e87.1.1744730951219;
-        Tue, 15 Apr 2025 08:29:11 -0700 (PDT)
-Received: from pc636 (host-90-233-217-52.mobileonline.telia.com. [90.233.217.52])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d24277esm1459193e87.103.2025.04.15.08.29.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 08:29:10 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 15 Apr 2025 17:29:08 +0200
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] mm/vmalloc.c: code cleanup and improvements
-Message-ID: <Z_57RKPhHm24kMRu@pc636>
-References: <20250415023952.27850-1-bhe@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZQdgT24c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACC80C4CEEB;
+	Tue, 15 Apr 2025 15:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744730989;
+	bh=dPGucQf30xfK8uBOtJ0iEsLmxYFmROsJSFUyouZE5zo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZQdgT24c5icprcudK/z9ESiXZffsqiHZGp7KM/Bpezy2s4C1K1ma8lJS2qayFrNOP
+	 HeaTPJYb4np35A3ZimG/VnX36KzePj3+X5blukibFCHYo9McmMXF+g1mzP5HMHxqnb
+	 /AnjCguRUORU9T+irLxQSggFQoIUrykWa3/cfpJg=
+Date: Tue, 15 Apr 2025 17:29:46 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Shyam Saini <shyamsaini@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+	petr.pavlu@suse.com, code@tyhicks.com, linux@rasmusvillemoes.dk,
+	christophe.leroy@csgroup.eu, hch@infradead.org, mcgrof@kernel.org,
+	frkaya@linux.microsoft.com, vijayb@linux.microsoft.com,
+	linux@weissschuh.net, samitolvanen@google.com, da.gomez@samsung.com,
+	rafael@kernel.org, dakr@kernel.org, stable@kernel.org
+Subject: Re: [PATCH v4 4/4] drivers: base: handle module_kobject creation
+Message-ID: <2025041538-coming-busload-3813@gregkh>
+References: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
+ <20250227184930.34163-5-shyamsaini@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,25 +44,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415023952.27850-1-bhe@redhat.com>
+In-Reply-To: <20250227184930.34163-5-shyamsaini@linux.microsoft.com>
 
-On Tue, Apr 15, 2025 at 10:39:47AM +0800, Baoquan He wrote:
-> These were made from code inspection in mm/vmalloc.c.
+On Thu, Feb 27, 2025 at 10:49:30AM -0800, Shyam Saini wrote:
+> module_add_driver() relies on module_kset list for
+> /sys/module/<built-in-module>/drivers directory creation.
 > 
-> Baoquan He (5):
->   mm/vmalloc.c: change purge_ndoes as local static variable
->   mm/vmalloc.c: find the vmap of vmap_nodes in reverse order
->   mm/vmalloc.c: optimize code in decay_va_pool_node() a little bit
->   mm/vmalloc: optimize function vm_unmap_aliases()
->   mm/vmalloc.c: return explicit error value in alloc_vmap_area()
+> Since,
+> commit 96a1a2412acba ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
+> drivers which are initialized from subsys_initcall() or any other
+> higher precedence initcall couldn't find the related kobject entry
+> in the module_kset list because module_kset is not fully populated
+> by the time module_add_driver() refers it. As a consequence,
+> module_add_driver() returns early without calling make_driver_name().
+> Therefore, /sys/module/<built-in-module>/drivers is never created.
 > 
->  mm/vmalloc.c | 68 +++++++++++++++++++++++++---------------------------
->  1 file changed, 32 insertions(+), 36 deletions(-)
+> Fix this issue by letting module_add_driver() handle module_kobject
+> creation itself.
 > 
+> Fixes: 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
+> Cc: stable@kernel.org
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
+> ---
+>  drivers/base/module.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/base/module.c b/drivers/base/module.c
+> index 5bc71bea883a..218aaa096455 100644
+> --- a/drivers/base/module.c
+> +++ b/drivers/base/module.c
+> @@ -42,16 +42,13 @@ int module_add_driver(struct module *mod, const struct device_driver *drv)
+>  	if (mod)
+>  		mk = &mod->mkobj;
+>  	else if (drv->mod_name) {
+> -		struct kobject *mkobj;
+> -
+> -		/* Lookup built-in module entry in /sys/modules */
+> -		mkobj = kset_find_obj(module_kset, drv->mod_name);
+> -		if (mkobj) {
+> -			mk = container_of(mkobj, struct module_kobject, kobj);
+> +		/* Lookup or create built-in module entry in /sys/modules */
+> +		mk = lookup_or_create_module_kobject(drv->mod_name);
+> +		if (mk) {
+>  			/* remember our module structure */
+>  			drv->p->mkobj = mk;
+> -			/* kset_find_obj took a reference */
+> -			kobject_put(mkobj);
+> +			/* lookup_or_create_module_kobject took a reference */
+> +			kobject_put(&mk->kobj);
+>  		}
+>  	}
+>  
 > -- 
-> 2.41.0
-> 
-I have review some patches, the rest i will check tomorrow!
+> 2.34.1
 
---
-Uladzislau Rezki
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
