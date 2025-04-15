@@ -1,113 +1,237 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E528A1C3;
-	Tue, 15 Apr 2025 08:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4545D28B505;
+	Tue, 15 Apr 2025 08:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705660; cv=none; b=uhGqyJ3gKv0OhEq+azKqovJkGD0eRKJ81pN6ilcMuOs1JbDNFthzgMJs7Y1xoF0sB5MBuubnZ+cV0DvlHwDU8YXvj61e5NBQ6/MOuX1ubal34yxA8XEKG/oJBFpKZu8JwKI6+em61AHUe1AdtXzWOWUrWJXFE2KmQ6KWe2LcfD8=
+	t=1744705673; cv=none; b=jVmAQNoVIvftSI2WgDDQHeYt1qmpqQWKOqLAWFRNZlBrPrtYE3K09t9PvKQuGmEJOC7PoPKNA7wEMNd4gUaC+PKRKIrRqbLxYr9OyQaquBRFv1PLLVfBXk6PPvOBJOfN4A3e1mPGd3mZXCNOq82jYRu/BCHrqmxRB5wHNX2GTQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705660; c=relaxed/simple;
-	bh=/NWQer13qfQtTS0IPMGbnftEkMcL2u4+nq/Oeev8wi0=;
+	s=arc-20240116; t=1744705673; c=relaxed/simple;
+	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g2FtpTNqrf2qNe6vYD1ifY16slJv20q4VLrwZyb6zdhQ8Sf/zycqDNLv7C9iRU9uGOGAazkbP6rTR9+u+m61OrJHALdylmccFRl92o2K52FER8U9u61l4xVklDtBxjHJSKeu/gJPJlGWS268YG2hlo1rBrQXl98obLEoe+/qaz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a3U2rZCA; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IQlx0EHO9M2CGxJnHwMjZn2E63YLm7oOwDPVVmNPSTDzSDrIhkCooF14Le68oWcYXZr2ANr5Zdiv8OtYAbByQ+irC9F8lo2oGSItfSyGNd8DEnjivUrFdqqfR8yMHjxtdeZQ5OZVZBWfUJek8b+VfcOrWK9UxAJcDEqBtK47PP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iX6u1f/i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a3U2rZCA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744705659; x=1776241659;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/NWQer13qfQtTS0IPMGbnftEkMcL2u4+nq/Oeev8wi0=;
-  b=a3U2rZCARQVjrpZuRLpKnGGoK0EogJN4Rl2Bs0ifXJGJlXfGd8C+URFa
-   ibRBGomjzlQelZDt4Dyg8cfvnyogzDm2/AZ74NimLWcKP4WgXlKwK0GcH
-   6i3APbuWdnRJIPtP4QkJ0JwjGh33u2WAprFJ6PmwoTN8o6DX3Hcj9o7lP
-   YnPZVM2qH/5QyEeVmwhQ7f0Mvbbv0kCbea8VAiLV6p+WFUGLYUPzFvV6j
-   5kUq3SUMG/2qQDCFKGMdZC5FvVPLMGELYj/wYfT1RZrmwyHlWCKEzfXik
-   h06Xlg8pf7FotgFCxVmmJD7YnpMwaonvwu0wDClGLK7Dy5hnw95rtaEx5
-   A==;
-X-CSE-ConnectionGUID: tHaVRnPaRlKIeVA+SX4+KA==
-X-CSE-MsgGUID: 9RCRcqzHTL63RxL8gsfq0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45914696"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="45914696"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:26:32 -0700
-X-CSE-ConnectionGUID: qrpIY++ySUCX/8SUuS4vUA==
-X-CSE-MsgGUID: xgVmuuT2QAu6SMtEtu38Ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130374897"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:26:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4bcd-0000000CUHm-0iFL;
-	Tue, 15 Apr 2025 11:26:23 +0300
-Date: Tue, 15 Apr 2025 11:26:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Yu-Hsian Yang <j2anfernee@gmail.com>
-Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	javier.carrasco.cruz@gmail.com, gstols@baylibre.com,
-	tgamblin@baylibre.com, alisadariana@gmail.com,
-	antoniu.miclaus@analog.com, eblanc@baylibre.com,
-	jstephan@baylibre.com, matteomartelli3@gmail.com,
-	angelogioacchino.delregno@collabora.com, herve.codina@bootlin.com,
-	marcelo.schmitt@analog.com, chanh@os.amperecomputing.com,
-	KWLIU@nuvoton.com, yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] iio: adc: add support for Nuvoton NCT7201
-Message-ID: <Z_4YLq_uR_6uroNd@smile.fi.intel.com>
-References: <20250409012351.2543450-1-j2anfernee@gmail.com>
- <20250409012351.2543450-3-j2anfernee@gmail.com>
- <Z_aeEuIk9brES6dM@smile.fi.intel.com>
- <CA+4VgcKG2EEsicysds0zu7y1xDhg88m3heGUBaQZ7-MVWanCaw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iX6u1f/i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3007BC4CEDD;
+	Tue, 15 Apr 2025 08:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744705671;
+	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iX6u1f/i6SkDFvVRC9+ra7KaJDNon9ZgZoCF1yyg3aTHP2tUpudugUG+9MO6MhjsY
+	 lPvCWgMWAZyPtnIvjyBuTXF6oqmC4o/tio4cgeGhqQ6LA0nRQIB9Bxc1gPnFSc+CCc
+	 F9z+VgFb38toE3Q0ckFx3w/ZAv6P6rYpss8Fx9RMjCPhjQFMEunuIsWjSxPYOXIv+6
+	 JYiPFFdgnk06PcK3JdqNGc1unUa+tv+AMwMHMqMGsSxkKWlQbubHMjxCk88tInC+0V
+	 rXqiodGYNZgl0zl3FPvHKj2pm+bJO31/VuW1ycSrSWXsEIuMv+JVqlvwlcv0sAuhql
+	 kZCVAdV/YPqEQ==
+Date: Tue, 15 Apr 2025 10:27:46 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_vpernami@quicinc.com
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
+Message-ID: <Z_4YgkXR1Retq7n9@ryzen>
+References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
+ <Z-0xJpBrO4wN9UzN@ryzen>
+ <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
+ <Z-4-A29UddizBUPz@ryzen>
+ <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+4VgcKG2EEsicysds0zu7y1xDhg88m3heGUBaQZ7-MVWanCaw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
 
-On Mon, Apr 14, 2025 at 09:40:35PM +0800, Yu-Hsian Yang wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> 於 2025年4月10日 週四 上午12:19寫道：
-> > On Wed, Apr 09, 2025 at 09:23:51AM +0800, Eason Yang wrote:
-
-...
-
-> > Here and elsewhere why ' < 0' is used? Do you expect positive return values
-> > from those?
-> 
-> In regmap_read function, A value of zero will be returned on success,
-> a negative errno will be returned in error cases.
-> We don't have a positive return case.
-
-So, can we remove ' < 0' parts where they are not required, please?
-
-...
-
-> > > +     chip->client = client;
+On Tue, Apr 15, 2025 at 01:07:23PM +0530, Manivannan Sadhasivam wrote:
+> On Thu, Apr 03, 2025 at 09:51:31AM +0200, Niklas Cassel wrote:
+> > Hello Krishna,
 > >
-> > How exactly is _client_ used elsewhere? Shouldn't it be just a struct device
-> > pointer?
-> 
-> Yes, it is just a struct device pointer.
-> In nct7201_init_chip(chip), we would use the chip->client->dev as
-> dev_err_probe() parameter
+> > On Thu, Apr 03, 2025 at 09:26:08AM +0530, Krishna Chaitanya Chundru wrote:
+> > > On 4/2/2025 6:14 PM, Niklas Cassel wrote:
+> > > >
+> > > > Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
+> > > >
+> > > > Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
+> > > > was enough for me to produce:
+> > > >
+> > > > [   40.209887] r8169 0004:41:00.0 eth0: Link is Down
+> > > > [   40.216572] ------------[ cut here ]------------
+> > > > [   40.216986] called from state HALTED
+> > > > [   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
+> > > > [   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
+> > > > [   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
+> > > > [   40.220908] Hardware name: Radxa ROCK 5B (DT)
+> > > > [   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > > > [   40.221899] pc : phy_stop+0x134/0x1a0
+> > > > [   40.222222] lr : phy_stop+0x134/0x1a0
+> > > > [   40.222546] sp : ffff800082213820
+> > > > [   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
+> > > > [   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
+> > > > [   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
+> > > > [   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
+> > > > [   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
+> > > > [   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
+> > > > [   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
+> > > > [   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
+> > > > [   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
+> > > > [   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
+> > > > [   40.229093] Call trace:
+> > > > [   40.229308]  phy_stop+0x134/0x1a0 (P)
+> > > > [   40.229634]  rtl8169_down+0x34/0x280
+> > > > [   40.229952]  rtl8169_close+0x64/0x100
+> > > > [   40.230275]  __dev_close_many+0xbc/0x1f0
+> > > > [   40.230621]  dev_close_many+0x94/0x160
+> > > > [   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
+> > > > [   40.231426]  unregister_netdevice_queue+0xe4/0x100
+> > > > [   40.231848]  unregister_netdev+0x2c/0x60
+> > > > [   40.232193]  rtl_remove_one+0xa0/0xe0
+> > > > [   40.232517]  pci_device_remove+0x4c/0xf8
+> > > > [   40.232864]  device_remove+0x54/0x90
+> > > > [   40.233182]  device_release_driver_internal+0x1d4/0x238
+> > > > [   40.233643]  device_release_driver+0x20/0x38
+> > > > [   40.234019]  pci_stop_bus_device+0x84/0xe0
+> > > > [   40.234381]  pci_stop_bus_device+0x40/0xe0
+> > > > [   40.234741]  pci_stop_root_bus+0x48/0x80
+> > > > [   40.235087]  dw_pcie_host_deinit+0x34/0xe0
+> > > > [   40.235452]  rockchip_pcie_shutdown+0x24/0x48
+> > > > [   40.235839]  platform_shutdown+0x2c/0x48
+> > > > [   40.236187]  device_shutdown+0x150/0x278
+> > > > [   40.236533]  kernel_restart+0x4c/0xb8
+> > > > [   40.236859]  __do_sys_reboot+0x178/0x280
+> > > > [   40.237206]  __arm64_sys_reboot+0x2c/0x40
+> > > > [   40.237561]  invoke_syscall+0x50/0x120
+> > > > [   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
+> > > > [   40.238305]  do_el0_svc+0x24/0x38
+> > > > [   40.238597]  el0_svc+0x30/0xd0
+> > > > [   40.238868]  el0t_64_sync_handler+0x10c/0x138
+> > > > [   40.239251]  el0t_64_sync+0x198/0x1a0
+> > > > [   40.239575] ---[ end trace 0000000000000000 ]---
+> > > >
+> > > Hi Niklas,
+> > >
+> > > The issue which you are seeing with specific to the RealTek ethernet
+> > > driver and should be fixed by RealTek driver nothing to do with the host
+> > > controller.
+> >
+> > The warning comes from:
+> > drivers/net/phy/phy.c:phy_stop()
+> > so from the networking phylib.
+> >
+> > Doing a simple:
+> > $ git grep -p phy_stop
+> >
+> > shows that practially all Ethernet drivers call phy_stop() from the
+> > .ndo_stop() callback.
+> >
+> > So after your suggested patch, you should see this warning appear with
+> > any NIC, if connected to your PCIe controller.
+> >
+>
+> I think the issue here is that phy_stop() is called without calling
+> corresponding phy_start(). This means that either rtl8169_up() is never called
+> or rtl8169_down() is called twice.
 
-Just save there struct device *dev and use chip->dev instead.
-
--- 
-With Best Regards,
-Andy Shevchenko
+phy_start() is called.
 
 
+>
+> I don't think this issue is applicable to all drivers. It'd be worth
+> investigating what is going wrong with this r8169 driver.
+
+In case you are curious, I added a dump_stack() before phy_stop() is called:
+
+First phy_stop() call:
+
+[   21.733574] platform fc400000.usb: deferred probe pending: dwc3: failed to initialize core
+[   23.827753] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
+[   23.827762] Hardware name: Radxa ROCK 5B (DT)
+[   23.827764] Call trace:
+[   23.827765]  show_stack+0x20/0x40 (C)
+[   23.827774]  dump_stack_lvl+0x60/0x80
+[   23.827778]  dump_stack+0x18/0x24
+[   23.827782]  rtl8169_down+0x30/0x2a0
+[   23.827788]  rtl_shutdown+0xb0/0xc0
+[   23.827792]  pci_device_shutdown+0x3c/0x88
+[   23.827797]  device_shutdown+0x150/0x278
+[   23.827802]  kernel_restart+0x4c/0xb8
+[   23.827807]  __do_sys_reboot+0x178/0x280
+[   23.827811]  __arm64_sys_reboot+0x2c/0x40
+[   23.827816]  invoke_syscall+0x50/0x120
+[   23.827822]  el0_svc_common.constprop.0+0x48/0xf0
+[   23.827826]  do_el0_svc+0x24/0x38
+[   23.827828]  el0_svc+0x30/0xd0
+[   23.827834]  el0t_64_sync_handler+0x10c/0x138
+[   23.827837]  el0t_64_sync+0x198/0x1a0
+[   23.827841] calling phy_stop() rtl8169_down:4844
+[   23.834789] r8169 0004:41:00.0 eth0: Link is Down
+
+Second phy_stop() call:
+
+[   23.841458] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
+[   23.841467] Hardware name: Radxa ROCK 5B (DT)
+[   23.841468] Call trace:
+[   23.841470]  show_stack+0x20/0x40 (C)
+[   23.841478]  dump_stack_lvl+0x60/0x80
+[   23.841483]  dump_stack+0x18/0x24
+[   23.841486]  rtl8169_down+0x30/0x2a0
+[   23.841492]  rtl8169_close+0x64/0x100
+[   23.841496]  __dev_close_many+0xbc/0x1f0
+[   23.841502]  dev_close_many+0x94/0x160
+[   23.841505]  unregister_netdevice_many_notify+0x160/0x9d0
+[   23.841510]  unregister_netdevice_queue+0xf0/0x100
+[   23.841515]  unregister_netdev+0x2c/0x58
+[   23.841519]  rtl_remove_one+0xa0/0xe0
+[   23.841524]  pci_device_remove+0x4c/0xf8
+[   23.841528]  device_remove+0x54/0x90
+[   23.841534]  device_release_driver_internal+0x1d4/0x238
+[   23.841539]  device_release_driver+0x20/0x38
+[   23.841544]  pci_stop_bus_device+0x84/0xe0
+[   23.841548]  pci_stop_bus_device+0x40/0xe0
+[   23.841552]  pci_stop_root_bus+0x48/0x80
+[   23.841555]  dw_pcie_host_deinit+0x34/0xe0
+[   23.841559]  rockchip_pcie_shutdown+0x20/0x38
+[   23.841565]  platform_shutdown+0x2c/0x48
+[   23.841571]  device_shutdown+0x150/0x278
+[   23.841575]  kernel_restart+0x4c/0xb8
+[   23.841580]  __do_sys_reboot+0x178/0x280
+[   23.841584]  __arm64_sys_reboot+0x2c/0x40
+[   23.841588]  invoke_syscall+0x50/0x120
+[   23.841595]  el0_svc_common.constprop.0+0x48/0xf0
+[   23.841598]  do_el0_svc+0x24/0x38
+[   23.841601]  el0_svc+0x30/0xd0
+[   23.841605]  el0t_64_sync_handler+0x10c/0x138
+[   23.841609]  el0t_64_sync+0x198/0x1a0
+[   23.841613] calling phy_stop() rtl8169_down:4844
+
+
+So it seems that the driver's rtl_shutdown() calls rtl8169_net_suspend(),
+which calls rtl8169_down() which calls phy_stop().
+
+
+If I compare rtl8169_close() with e.g. e1000e_close(),
+e1000e_close() does have a guard:
+
+if (netif_device_present(netdev)) {
+
+around the call to e1000e_down(),
+while rtl8169_close() does not have a similar guard around the call to
+rtl8169_down().
+
+So, I think you are right, this is probably a r8169 driver specific
+problem after all.
+
+
+Kind regards,
+Niklas
