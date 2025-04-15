@@ -1,79 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F8324338F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5AA1A2632;
+	Tue, 15 Apr 2025 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716774; cv=none; b=NRgLmHSVSOGy6PUN840gInI6rIUILM0WFn7ubBCIdOjl3K+ov9BycLy3fwl9Sma1fn5cZd1Uuyay8vYOXR9Yc1G6BazVC1n5NpXDEAWjQ2ob86kfNkWe779EbLIckbKwNM3Ny3hYFOiGba+Apk1HhGebLp9iiAcar2pdYtz/rsY=
+	t=1744716824; cv=none; b=n0cc+YQsvilt7Ja8wfI/syRgKWkphNex4+AASVlXMWZ/FzhJv+NGrQWvUBPmCj0kNkpu9MvW5RaWCuFAXC/lfVeoFA2mg7NHmDVGBqeUZrQRnBCBWVjDZZRDRDr4pYxGsTf4SvKckVzax0I7Yfq99APmoW04K5MXyIuX4fJT0eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716774; c=relaxed/simple;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z/uaDGOKIm16qLO3gVXgnsUQnSkqTctmTLrxANvejsH8J/Av09Ozce4Jk3To60CWvNytq2kiiAutkzatyLyP8NFtnRM1P06ITt2BeYAvyNQQ9obfvKCRVtcaXP0hfMqqFrYTxJk/XCjhfHn3v0J2M9zhjtc6p+j01X3frBez3qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IZG3kuZ5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744716824; c=relaxed/simple;
+	bh=UySWb7DE/4jjUVFy5D283u54nEUkfVIzvcKtZZVJoOg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=ZSgLSkr/MTkbst7A1Zfh+TgHFuCf1aFjO1bh3WC3Mwei8/tGq+ccmQhE8XAVa388J8Xd7bh0Gtc2d9WM3LqITJAtMGOJjM/dEGBL9ZitExtatq1Bl8x4zqopAWbtoCNMC+nFkwDd5etAyd75ki8U7QVn+wEvkP01MrTKZ8djX3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=a2GtEIVX; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZG3kuZ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744716771;
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="a2GtEIVX"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout3.routing.net (Postfix) with ESMTP id 4755860DDB;
+	Tue, 15 Apr 2025 11:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1744716813;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cyh9GNwkSeiWX8VVWJet6cmrStrv1Y1BhHYKMAKCy08=;
-	b=IZG3kuZ5BUsCh/TAET2gb2s6LaKn3ztL+qiMBme8T86u/WcK4hnCE0r7CTbCEukOF3/xA9
-	Q3Ser2QxoUGBmCWI/LuEsqjoz0GS40WAEcuhI96aVGrpOuokXSe+bvH8DoYU/K+Tijt2lz
-	B1wflsFJpNTqs1czaUxN8UhQ4FcRdUk=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-536-ZRJ3MaDwNpax-opShLQo6A-1; Tue,
- 15 Apr 2025 07:32:46 -0400
-X-MC-Unique: ZRJ3MaDwNpax-opShLQo6A-1
-X-Mimecast-MFC-AGG-ID: ZRJ3MaDwNpax-opShLQo6A_1744716765
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A578419560AE;
-	Tue, 15 Apr 2025 11:32:44 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 45FA1180176A;
-	Tue, 15 Apr 2025 11:32:42 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com,
-	kirill.shutemov@linux.intel.com,
-	kai.huang@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@linux.intel.com,
-	binbin.wu@linux.intel.com,
-	isaku.yamahata@intel.com,
-	linux-kernel@vger.kernel.org,
-	yan.y.zhao@intel.com,
-	chao.gao@intel.com
-Subject: Re: [PATCH 0/2] KVM: x86: Correct use of kvm_rip_read()
-Date: Tue, 15 Apr 2025 07:31:53 -0400
-Message-ID: <20250415113153.214515-1-pbonzini@redhat.com>
-In-Reply-To: <20250415104821.247234-1-adrian.hunter@intel.com>
-References: 
+	bh=Wn/K4EMIl2PBfUi2u8eilvhlvKBANZeEcdbvG8VYM2U=;
+	b=a2GtEIVXory+IgYl0EmnoCOcxVptYv4o7dG/MwxsKzW/G4mQwgLwN0x4TD010FCxaxF57J
+	Gs/NzzX7KKjaV/JadskIj18TqOiPj0DHJBsiCZdPFyxz8lA7t9Uv2EyS88oLSosadxy2lY
+	ce6YWG0NW+JzKP1yX7l6o9dRnoKEJWw=
+Received: from [127.0.0.1] (fttx-pool-217.61.148.30.bambit.de [217.61.148.30])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 4858136014D;
+	Tue, 15 Apr 2025 11:33:32 +0000 (UTC)
+Date: Tue, 15 Apr 2025 13:33:34 +0200
+From: Frank Wunderlich <linux@fw-web.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ frank-w@public-files.de, Chunfeng Yun <chunfeng.yun@mediatek.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+CC: Daniel Golle <daniel@makrotopia.org>, Sam Shih <sam.shih@mediatek.com>,
+ MandyJH Liu <mandyjh.liu@mediatek.com>, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BRFC_3/5=5D_dt-bindings=3A_power=3A_Add_binding?=
+ =?US-ASCII?Q?_for_MediaTek_MT7988_topmisc_power_controller?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <bbb81e79-95da-4cf9-9eef-7cbaea191ebb@collabora.com>
+References: <20250413085806.8544-1-linux@fw-web.de> <20250413085806.8544-4-linux@fw-web.de> <700af1ab-f43e-4583-8f0e-27e5d4424338@collabora.com> <2EA2BDB0-E1C9-49BC-98FC-5048905AA036@public-files.de> <bbb81e79-95da-4cf9-9eef-7cbaea191ebb@collabora.com>
+Message-ID: <0B0447D6-0495-4BBA-9F44-8A5191F00377@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mail-ID: 5c3047d5-1951-4654-9899-7fad06ca004b
 
-Queued, thanks.
+Am 15=2E April 2025 11:59:06 MESZ schrieb AngeloGioacchino Del Regno <angel=
+ogioacchino=2Edelregno@collabora=2Ecom>:
+>Il 15/04/25 11:52, Frank Wunderlich ha scritto:
+>> Hi Angelo,
+>>=20
+>> Am 14=2E April 2025 12:25:23 MESZ schrieb AngeloGioacchino Del Regno <a=
+ngelogioacchino=2Edelregno@collabora=2Ecom>:
+>>> Il 13/04/25 10:58, Frank Wunderlich ha scritto:
+>>>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>>>=20
+>>>> Topmisc is a systemcontroller used for xs-phy and ethernet on  mt7988=
+=2E
+>>>> Add binding for it=2E
+>>>=20
+>>> That's the wrong binding=2E=2E=2E check mfd/syscon=2Eyaml :-)
+>>>=20
+>>> P=2ES=2E: Is there any reset controller in topmisc? Any clock?
+>>>       If yes, syscon=2Eyaml is also wrong, and you need a driver for t=
+hat=2E
+>>>       Remember: If it turns out *later* that this has clk/resets and t=
+he
+>>>       bindings are already set for just a syscon, it's gonna be way ha=
+rder!
+>>>=20
+>>> Cheers,
+>>> Angelo
+>>=20
+>> Ok based on the power-domain-cells property i guessed powercontroller i=
+s the right place=2E
+>
+>power-domain-cells, but without any power domain assignment, so that was =
+wrong :)))
+>
+>>=20
+>> But based on your suggestion i tried moving compatible to syscon bindin=
+g and made dtbs_check here=2E
+>>=20
+>> I can confirm dropping the unexpected properties reported by syscon bin=
+ding (power-domain-cells,clock-cells,adress-cells and size-cells) are not n=
+eeded for function (xsphy and ethernet)=2E
+>>=20
+>> For verifying that there are really no clocks/resets in topmisc (have n=
+ot found it in public available register documents) i asked mtk (waiting fo=
+r answer)=2E
+>>=20
+>> Also got it working without the syscon compatible by changing ethernet =
+driver too (after this change xsphy was also working)=2E
+>
+>Perfect, a bit of a cleanup and you're done, then!
 
-Paolo
+If i do not have to change/merge driver code=2E=2E=2Eand i hope getting re=
+sponse from mtk soon=2E
+
+>Cheers!
+>
+>>=20
+>> Eth:
+>> https://github=2Ecom/frank-w/BPI-Router-Linux/commit/d866e648717800b6f6=
+395ad36c38f9effcf0498d
+>> Xsphy:
+>> <https://github=2Ecom/frank-w/BPI-Router-Linux/commit/0121a94df99700487=
+704ca056b210b13db07e90c>
+>>=20
+>> regards Frank
+>
+>
+>
 
 
+regards Frank
