@@ -1,175 +1,159 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F50222568;
-	Tue, 15 Apr 2025 18:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780C7222568;
+	Tue, 15 Apr 2025 18:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744742387; cv=none; b=IvHFVkGRlIQ+mt1at7ogzc/NcddLRi0sycT/kkir0whX+QMMe7pBdEDQsLNxX8neRwr0CjQFdwBK/FO3t7sUHNFsciiwMqqOnFUMK99ox3hAmryqbgefhIjkEY7gl4kxHeXRtv7Qmo+mxY8ov56Oqvn/Gth7gcN2MNlbZb9oXcI=
+	t=1744742417; cv=none; b=DafXSTGiilwL/r6pF/vQyPFojulK+8OJ2xGcyTlP9kIUzsxuYkzS2lkdKb4WMCSZYGwZTxG5Y32QLOsEoiFrMcFj+Z+AdxvoodDWGhkus17upy5gkp9LB+kyk1QupZU2p/e2sHx+O2KoT0lrKobWjM5SbV54hlJCgk2GExZuL14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744742387; c=relaxed/simple;
-	bh=qmJc2MyLlEUxcwBk5X+Clsm2SNsgozIxnrGPnZqoGcA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GqYD9olAZDDzP9cEaAxH0CTePIeBSqj2hs5Yq6NSlMoKJQl8b+w5SX1oYvNsZaYG9UXqEVgMKm4R9lx4++DxPrCBXvX8i4EhvmWvsuZwTnm/exrMTIJRWtx4BpqIZM0lc6uzAgmjQbRjzIYPGz/Hjzz/IMmQHkQpCI+dkvBrXxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M3YBn7OS; arc=none smtp.client-ip=209.85.208.49
+	s=arc-20240116; t=1744742417; c=relaxed/simple;
+	bh=uJJWlYxC2n/XPAh2wuaGtIwzaSCPDPze4SI0d2I+hlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKYsGdOW4hOG0PXBzGz6dNu67ZNYWqWoMNQeATxhlkIymKQkATVlTSo1Dw96lHY9p40H8lYDAAwK1PSkqmS/pAEyqDEU6r+qdsPaDzD5dX6+0iVBfvWC0dSaMbZ050CNqf/haPZjhBQmRFSaG3tpaEY7q3nBmY/CofcvTZThh/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KO5CYnMf; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3YBn7OS"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso9727200a12.2;
-        Tue, 15 Apr 2025 11:39:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KO5CYnMf"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af55b7d56a1so4516299a12.2;
+        Tue, 15 Apr 2025 11:40:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744742383; x=1745347183; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MuxD6d+TE3jsbY2UIjFJC1hqHPSQGHUKcYAlc4rVPHI=;
-        b=M3YBn7OSyA/43jy/FZo9EAaSKw5ACjblMVSQ5nILIpZGr6c/Qtexw+y1j+mgJJBOL5
-         rjhb30obhDQUAZ9kUAKePeTxoo2tl9sPzqr0AZAiR5Jn0TUTrqmZpTzGE8vKETsmY6sT
-         5bjjhVi2HK3mRO2+z0u8bl7AWCnNlRh2XzMycYUzXetLo7X9I/un6wkbWOS1lTPTIoT3
-         Ni+pDeLB5OplfVTx80YfhGadGDRu69WjJBjCbSezIgMVEKyV+x5uHlQyMBgziXRAA8hK
-         eK6PnUuhRbwarxh+++1MGz0M0z+54An4ygYE7gUQQnRWXE/Rb4IQ7CuvUckov9zSmDE9
-         6e9w==
+        d=gmail.com; s=20230601; t=1744742415; x=1745347215; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=r7LdJfX/NiQcyQWhxd6h6QFvrDjuTzax4bkOLSIcqCY=;
+        b=KO5CYnMfua2nivxva9A7cDdsF/v8HBqb9s+62wvbk61lxCl+FvjDF/E+BM8LMyT0Ov
+         ImTsMeUgDkrZ/aUIoKfzkUE/8WmOvemi3GCThIAgX0Vu6I1Prl6g5LahND7bwMFw+tCj
+         wqN9wRkjEEw5q8qAD6FksM6KAgsHwuHAGrn+ZZ4gpLS+TKZ0QGY3vMn201ufThlTaGwh
+         NZEqQGTEemqHTPRQ/BEsarCyKXckT+dXvciXpVDLPljjDlPjt94w6ANBqSF+ITqmc1W0
+         7fWaonpp7NU+UvSyaYLjYR60gTNEhMhytpuNgcH51+nxvPKFBRYVhydmhiWpAHoYz8c8
+         T5Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744742383; x=1745347183;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MuxD6d+TE3jsbY2UIjFJC1hqHPSQGHUKcYAlc4rVPHI=;
-        b=eBSGDNBaje23ziKaxNHzrlKmqsdtG004G3hcMVBo4Qb+z7cYxIXNb9cQcsnDfdNDt8
-         xlpInc9xwJN9RmslIqxfdQsSdNA4ND/h/rd5i818XO6ZSVFb9jf9j0LBMNMoVaTe2Lqj
-         COZBS8qVfN+Ppw0okdbWIH9MPTAIfvn39RKxNFvSz8Kab6eSb4EPMZYP0paYLjqEXSBh
-         WO6sBeDgLZCDQsxm1Wlxp7+AItT1D193YAz2v9FdKEY2eCiJRKoFdpp8Dl50dX6H3plo
-         wJFV1mmHzSKWfYV3o8lii2ilb20No1XA8cCC+zKOQkC6tANAjv1H0YkqpQqeFWEEFNXM
-         WhLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFNBZy+fAo6P3rAaEIMhxkMNyJrAvMctnEI1PDAN5zH1H6LTTFsDkU61Z5oerRzEX1ugyCKRqrSBuaXM8B@vger.kernel.org, AJvYcCWr+MhctU7LPnatGAj/CXjVNVisDmLEgB6BxTVVB/oDn59Pip6mfiMXu6eaCHqfQH3T1H82ud8fFg8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgS6laAb4Yg7iXVAwL4DLtZZT+LeCxEE70qYGGoHP3HtKxO12j
-	ghH0t2IOJclcoCkkhEly3tLfua4GAd5sDB1pnXKSXs64LXFW/pjpoogB6dcUalCU6c795FpkniC
-	DjDK3tFyflwSgW4Ax5G26CK6Xjbk=
-X-Gm-Gg: ASbGncu/QptNgsb/fWrhcF35MOJzkz/VrbaWK2jUbIif+Uf8aAlyULOQwTzZpVUYjJA
-	Pjw+eM4Hs5i1yv2Bg2KblprFk9Hz5Zs489clMVde73WQ+thnnSMnRFRb9+dctjkKbrJbZT6lYBl
-	/Ivv2bSIBKCbyEJQzBwOFsKA==
-X-Google-Smtp-Source: AGHT+IEisiwVczW2Sf8mkqkbd1qMc0N+ZCObtgQq+MjEOc6IRfS8cIH59uCiLcWPYmA3XlAX9I6cpJIhvMKb7CtM6QM=
-X-Received: by 2002:a17:907:7f8b:b0:ac7:ed27:974 with SMTP id
- a640c23a62f3a-acb3826464amr11355366b.20.1744742382684; Tue, 15 Apr 2025
- 11:39:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744742415; x=1745347215;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r7LdJfX/NiQcyQWhxd6h6QFvrDjuTzax4bkOLSIcqCY=;
+        b=GojtPtfTfUeIBIsUrELUjZHBY3NBmi+AH25r4keA/GVB+QDRn0JVAfs7WmwsG5sFpN
+         yf4I6YdRGcLVWq6mIWimm00przZkb9/IG6+EDWJ8gY6wofC2l++VqpRYDNT/KgwYCWp6
+         2heveS1LS8/8GnWarTfYw5t0wGWViKZFmF3JjW/TXfxBhtksVfVQUj9qI2QNRMB/K34k
+         PY8WpPmqjXlFIeRueyGriuK5BxwD1Y1pMRpDqz5dlUy4JPr//i+z5yFyx0jJBDR8AIsT
+         8RlJOQRu+E+2qGuF1Y3WkXcCXtknAW/Juxy7tflY00rDxfkf66F55w3TCnMJZCMq1Pr0
+         noHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVa9yseiVlhYSaOH76XiGdM92dKfbR12m0qhAd7anD/icLMvueVvrSjhgrRtCMiFv9vHutCeMpvpdLOeG8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmHUZEwSbuFSs2a+7hCT4hWkMEt+MdTLTibbEbtKHgNKXejrQd
+	Iwxyo2tYR9179RYozaxskxqPXPp+PRG5SGzMhpeJpypUlrhwVcbO
+X-Gm-Gg: ASbGncuGvNZsMdPQ14Z3FFNngJgvpFPwd66TiK0iAHmnvmxZt/qkWTlmq0lve5lYWw4
+	qJ8tLmzGum//Eou32wLDpxdhjkq+H38FJQWpZsF87aWUXhAwTQlmKT7ZTnclHwNhngeKmlxgM8h
+	3VvGfpLqRl02JnWc5LnQQRqVh6nbE4SVcglKC3uEHhSn3FFWX5EL6bzSNZB5Clgklh83Mo+PVrH
+	xXpQjj2JOuFIxoq06VaWQunG1Ke3vr3Q9aatYJwK4wCHDYwrn+XUFDxkK3QaIOYkDCN2j/lK7TZ
+	k0cN1TqsmiFQkFfjf1u40Pg6kNDLOAH8GL/t2u4=
+X-Google-Smtp-Source: AGHT+IH0/rViGbAh62y8CYGqkS4uAeLP96QgGfU8Xo0+eLty4NFaaNFFothcrivWo5vjv19P3qVGDw==
+X-Received: by 2002:a05:6a20:2d13:b0:1fe:9537:84a0 with SMTP id adf61e73a8af0-203adfc5f55mr67704637.15.1744742414609;
+        Tue, 15 Apr 2025 11:40:14 -0700 (PDT)
+Received: from hiago-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a321f921sm11325860a12.72.2025.04.15.11.40.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 11:40:14 -0700 (PDT)
+Date: Tue, 15 Apr 2025 15:40:09 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X when
+ Cortex-M4 is running and it was started by U-Boot bootaux
+Message-ID: <20250415184009.2fvtn7tbe6uzwiyg@hiago-nb>
+References: <20250404141713.ac2ntcsjsf7epdfa@hiago-nb>
+ <20250411125024.i2pib4hyeq4g6ffw@hiago-nb>
+ <PAXPR04MB8459ED6CE869173D4051257088B62@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250411162328.y2kchvdb4v4xi2lj@hiago-nb>
+ <PAXPR04MB8459ED33238AA790252E730988B32@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <20250414224452.gk4ccniqtumfbjth@hiago-nb>
+ <PAXPR04MB84591C4D560C0D3D64F927FC88B22@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com>
- <20250415-losd-3-inv-icm42600-add-wom-support-v2-2-de94dfb92b7e@tdk.com>
-In-Reply-To: <20250415-losd-3-inv-icm42600-add-wom-support-v2-2-de94dfb92b7e@tdk.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 15 Apr 2025 21:39:06 +0300
-X-Gm-Features: ATxdqUECvbr-Dz-xvlev5FJ7fdhC999j7ns3HMlVrNdQB14LcWiptXGSsn4Npnw
-Message-ID: <CAHp75VcgEJaWRPCGV1NOUKd1Kxw90=cyMT6d4mcRvQSWJ99RUg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: imu: inv_icm42600: add wakeup functionality
- for Wake-on-Motion
-To: jean-baptiste.maneyrol@tdk.com
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB84591C4D560C0D3D64F927FC88B22@PAXPR04MB8459.eurprd04.prod.outlook.com>
 
-On Tue, Apr 15, 2025 at 5:47=E2=80=AFPM Jean-Baptiste Maneyrol via B4 Relay
-<devnull+jean-baptiste.maneyrol.tdk.com@kernel.org> wrote:
->
-> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
->
-> When Wake-on-Motion is on, enable system wakeup and keep chip on for
+On Tue, Apr 15, 2025 at 12:11:33AM +0000, Peng Fan wrote:
+> > Subject: Re: [REGRESSION] Kernel reboots unexpectdely on i.MX8X
+> > when Cortex-M4 is running and it was started by U-Boot bootaux
+> > 
+> > Hi Peng,
+> > 
+> > On Mon, Apr 14, 2025 at 06:09:49AM +0000, Peng Fan wrote:
+> > >
+> > > In your case, m4 is in same scu partition as a53, so m4 power domain
+> > > is manageable(owned) by Linux.
+> > >
+> > > However to m4 earlyboot(kicked by bootloader), if you not wanna
+> > linux
+> > > to handle m4, use scu_rm to create a separate partition in u-boot.
+> > > If you wanna linux to handle m4, but not wanna linux to shutdown
+> > the
+> > > pd in kernel boot, imx_rproc.c needs to be built in, and need to add a
+> > > clock entry or use clock optional api in imx_rproc.c .
+> > >
+> > > Current imx_rproc.c needs a clock entry to probe pass.
+> > >
+> > > I think in your case, this driver not probe pass, so the
+> > > M4 pd still get powered off.
+> > 
+> > This was correct, indeed. I was not able to find exactly where the
+> > cortex-m4 clock is defined, so I added a clk_dummy to the imx8x-cm4
+> > remoteproc node and now it works, the code continues to run and I
+> > can control the m4 with Linux. Thanks!
+> > 
+> > One thing that I noticed is I cannot make the RPMsg work with this
+> > devicetree node, even tought I assigned the correct memory-regions
+> > (vdev0buffer, vdev0ring0...). Also tested with the rpmsg-lite from the
+> > linux-imx. Is this supposed to work with RPMsg as well?
+> 
+> To make rpmsg work, you need a m4 demo that could publish
+> resource table, such as i.MX tty echo or pingpong demo.
+> 
+> There is downstream rpmsg driver under drivers/rpmsg/imx_*.c
+> that could be used to talk with m4.
+> 
+> helloworld demo does not have any virtio devices, so no rpmsg.
 
-keep the chip
+Got it, I was able to make it work with the downstream pingpong driver
+and the MCUXpresso demo. I can launch the firmware using the remoteproc
+and exchange data between the two cores.
 
-> waking up system with interrupt.
+There is something I noticed, when I start the pingpong demo with
+U-Boot, it does not work. I run the pingpong modprobe on Linux but the
+name service is never annouced. It only works if I start with the
+remoteproc on Linux, not U-Boot. Is this because of Linux not being able
+to control the M4?
 
-up the system
-with an interrupt.
+If I start the binary using U-Boot, the "state" always report as
+"offline" by the remoteproc driver.
 
+> 
+> Regards,
+> Peng.
+> 
+> > 
+> > >
+> > >
+> > > Regards,
+> > > Peng.
+> > >
+> > 
+> > Hiago
 
-
-
-> +       /* keep chip on and wake-up capable if APEX and wakeup on */
-> +       accel_dev =3D &st->indio_accel->dev;
-> +       wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true :=
- false;
-
-Redundant ternary.
-
-> +
-
-This blank line should be rather after the accel_dev =3D ... line.
-
-> +       if (!wakeup) {
-
-Can we use positive conditionals? Generally they are easier to read.
-
-> +               /* disable APEX features and accel if wakeup disabled */
-> +               if (st->apex.wom.enable) {
-> +                       ret =3D inv_icm42600_disable_wom(st);
-> +                       if (ret)
-> +                               goto out_unlock;
-> +               }
-> +               accel_conf =3D INV_ICM42600_SENSOR_MODE_OFF;
-> +       } else {
-> +               /* keep accel on and setup irq for wakeup */
-> +               accel_conf =3D st->conf.accel.mode;
-> +               enable_irq_wake(st->irq);
-> +               disable_irq(st->irq);
->         }
-
-...
-
-> +       /* check wakeup capability */
-> +       accel_dev =3D &st->indio_accel->dev;
-> +       wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true :=
- false;
-> +
-> +       /* restore vddio if cut off or irq state */
-> +       if (!wakeup) {
-
-Same comments as per above.
-
-> +               ret =3D inv_icm42600_enable_regulator_vddio(st);
-> +               if (ret)
-> +                       goto out_unlock;
-> +       } else {
-> +               enable_irq(st->irq);
-> +               disable_irq_wake(st->irq);
-> +       }
-
-...
-
-> +       /* restore APEX features if disabled */
-> +       if (!wakeup) {
-> +               if (st->apex.wom.enable) {
-
-This is effectively if (foo && bar).
-
-> +                       ret =3D inv_icm42600_enable_wom(st);
-> +                       if (ret)
-> +                               goto out_unlock;
-> +               }
->         }
-
-...
-
-> @@ -924,6 +955,8 @@ static int inv_icm42600_resume(struct device *dev)
->                 inv_sensors_timestamp_reset(&accel_st->ts);
->                 ret =3D regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFI=
-G,
->                                    INV_ICM42600_FIFO_CONFIG_STREAM);
-> +               if (ret)
-> +                       goto out_unlock;
->         }
-
->  out_unlock:
-
-Stray / unneeded change.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Hiago.
