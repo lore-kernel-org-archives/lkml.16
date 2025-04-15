@@ -1,113 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from outbound.pv.icloud.com (p-west1-cluster1-host3-snip4-8.eps.apple.com [57.103.64.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E23294A1D
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CB82951AA
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719123; cv=none; b=muYoRgDJrucZniIwQzUd2nFAw+HtnLsEkdo6XuS1QRKEMiIXceWHHKoG7Dgi2ndaToOpuGNh7Jq+MsHrTN9qVadfe+O52krVt1g2SJk/92LA0uT69X881L69Uyr06BbUVzqvaKby937xf6cb6KEts+Y/N1p7+r+VCyOpn2/R8XU=
+	t=1744719136; cv=none; b=fDWiFK99xlRCjBUN5gpvwMz5qP697899Q5uVwL6gpFnSgtmMxYs390RbvHdeqQMcMkOAl3tCR2t6WqzWjQJTk74DwibRXJZ5b890r0n2nMnQO+681SqtbmpuZPjfCCBgBjrlqL1AIKN5iG3FVBQWOUFDkxg55QC0vK/OUjWirug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719123; c=relaxed/simple;
-	bh=0hYUve0xkE/hQHXWHLhI5xgSlQ8xtJMN237cyCHu2cw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7+HH6r9fqv1uulBh69fe3NkF0Jti1hvx1Ved7AbfQKVUe+Z0EBunzkeuXKJL8mML3SAKGTkz5Dnk6cTa3SiEswAZSDFc37+FcDB9xzrKk+u1DXRx98nH7FotG81P5SVb6BJwq3m8GIQG19gGL0cIVAH8aOzJy+cUVc899iTNmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a56sdakV; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744719136; c=relaxed/simple;
+	bh=H7LTL9umZKyDsnfMDzZYM/E8okgqBQBFrUVan+djzmA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DNlGVzovV4iYGdF5bJNcBkw8JDsTJnHrJe7xWDKfRaKF9jgnOhwZZS3GvLE0p6SyNDc+eSjgGfO7uSZlDaEhEPdbvtQAXYFtJVK2Io5qpd51kYXU8J8G5jrerqeRSLA3jCFfh+wlh4UMo3+XZeC7beFS05YUcOkWELWXux7+nSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=rY4RX+8e; arc=none smtp.client-ip=57.103.64.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a56sdakV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744719122; x=1776255122;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0hYUve0xkE/hQHXWHLhI5xgSlQ8xtJMN237cyCHu2cw=;
-  b=a56sdakVQ4i43fWkQ9/41W4VrTFVi9C6ZtweZbBFLSx3NfZkiJGKIVJu
-   brxa19368ltHxNAroikQpkj+OVOAf8gKpDVEymQ7/Fr1+pL5vD+BRz05G
-   5L3r7rmQ0ggLzGKSXWexKVP3rOUkXevHkkHnYzgZ1j3q8rbEd/Fa/B1w5
-   45wUZTqjP6c4zsY/Av87iYvsXejq16rw1203uYIsxmKzov4tBGtHgAh17
-   2kk9yna9WGQRXSYtB41TjHsY+bOIwPDtfA2jzFj1W77wRiqnc+k6+6nHJ
-   GNot1lhjgGAR4Zpb8ae1IH0BX4ouxgBz0+8koPQjnpkZGdv8tsbYRwJye
-   w==;
-X-CSE-ConnectionGUID: 2aWsOd8ATJGyghdebbdECA==
-X-CSE-MsgGUID: 2AM3B8nuTE6d+u/VL6SmvA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45458678"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="45458678"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:12:01 -0700
-X-CSE-ConnectionGUID: si6E1ClKTem4PZIaad4ZSA==
-X-CSE-MsgGUID: u+ZNaiIjTsSSyRqFj1oGwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="131001182"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 05:11:59 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4f8u-0000000CXRT-1mVG;
-	Tue, 15 Apr 2025 15:11:56 +0300
-Date: Tue, 15 Apr 2025 15:11:56 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Corey Minyard <corey@minyard.net>
-Cc: openipmi-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] ipmi: si: Cast to smaller integer type without
- warning
-Message-ID: <Z_5NDNeDztC1-6vx@smile.fi.intel.com>
-References: <20250415085156.446430-1-andriy.shevchenko@linux.intel.com>
- <Z_5FV65cyIwiI9rs@mail.minyard.net>
- <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="rY4RX+8e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=prbX2eDvC7yhKvTFBuMdrTVaSPa9eB/EAv2umF7suu0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=rY4RX+8e7g4QCLojUtasymv7m5M97ry3w3nFeup362SH0UJO7shq5Ch8lQJQ3aIbC
+	 nQ/nWn4/6PLvQ8WssIqwHmtM+WzNYPcw+JsiBZl0/bTxHcuXxAlmiyiZUjOvVraiNJ
+	 FF05PzQKA1KPNPXgJGVDCFXy/K+mPsWWcdCcxVm83UwlyIlqSfwAtuKFmNYql21bUX
+	 P89ogrilMe7uTwE0xgxw6dzarAR5uIegf7xZ6GMIVu6qe1bePx3lT0Cl8T4oSeS8fT
+	 Pq5jkf9iyPWF7HhaeQSHhM+1Z7a99o5bJO7nBwF/lVYTT3KfTqDSY6vGh/N8b+pYbC
+	 0Pt1IGiO1xT+w==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id B5E271800096;
+	Tue, 15 Apr 2025 12:12:08 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Tue, 15 Apr 2025 20:11:52 +0800
+Subject: [PATCH v3] fs/fs_parse: Remove unused and problematic
+ validate_constant_table()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_5L1J11W-ArXcUe@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250415-fix_fs-v3-1-0c378cc5ce35@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAAdN/mcC/2WMQQ7CIBBFr9LM2jFQqbWuvIdpDI6DnYWgoETTc
+ HexW5fv/5c3Q+IonGDfzBA5S5LgK2xWDdBk/ZVRLpWhVW2njFbo5H1yCbes7NCT4W5wUOV75Po
+ soeNYeZL0DPGzdLP+rX+JrFFhT9oQ0Y7P1h4eLyHxtKZwg7GU8gVHj39wngAAAA==
+X-Change-ID: 20250410-fix_fs-6e0a97c4e59f
+To: Jonathan Corbet <corbet@lwn.net>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: bl664JtNcEyBld6oDCHqRLPUmC_pp4Ln
+X-Proofpoint-GUID: bl664JtNcEyBld6oDCHqRLPUmC_pp4Ln
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 spamscore=0
+ adultscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504150086
 
-On Tue, Apr 15, 2025 at 03:06:45PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 15, 2025 at 06:39:03AM -0500, Corey Minyard wrote:
-> > On Tue, Apr 15, 2025 at 11:51:56AM +0300, Andy Shevchenko wrote:
-> > > Debian clang version 19.1.7 is not happy when compiled with
-> > > `make W=1` (note, CONFIG_WERROR=y is the default):
-> > > 
-> > > ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
-> > >   268 |         io.si_type      = (enum si_type)device_get_match_data(&pdev->dev);
-> > > 
-> > > Fix this by intermediate cast to the uintptr_t, that makes compiler happy.
-> > 
-> > Unless things have changed recently, Linus prefers "unsigned long" per
-> > https://patchwork.kernel.org/project/linux-hardening/patch/20220616143617.449094-1-Jason@zx2c4.com/#24899749
-> 
-> I'm not sure I got your point. That discussion seems irrelevant to me.
-> They are talking about pointer-as-an-integer cases. Here we already know
-> that we are passing integer-as-a-pointer and this is the opposite
-> conversion.
-> 
-> > And it would match what is in the match table.
-> 
-> Match tables are tend to move to pointers, enum is usually goes to int.
-> 
-> > Is that change ok?
-> 
-> If you don't like my change, please do yours and consider this as
-> a bug report that needs to be addressed. I prefer more my solution
-> as we do that in many places for the exact scenario.
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Note, the proper solution to the cases like this is to move to info-like
-structure and actually operate with the pointers instead of enums, longs, etc.
+Remove validate_constant_table() since:
 
-That's what's slowly moving on in IIO subsystem, for instance.
+- It has no caller.
 
+- It has below 3 bugs for good constant table array array[] which must
+  end with a empty entry, and take below invocation for explaination:
+  validate_constant_table(array, ARRAY_SIZE(array), ...)
+
+  - Always return wrong value due to the last empty entry.
+  - Imprecise error message for missorted case.
+  - Potential NULL pointer dereference since the last pr_err() may use
+    @tbl[i].name NULL pointer to print the last empty entry's name.
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+Changes in v3:
+- Remove validate_constant_table() instead of fixing it
+- Link to v2: https://lore.kernel.org/r/20250411-fix_fs-v2-2-5d3395c102e4@quicinc.com
+
+Changes in v2:
+- Remove fixes tag for remaining patches
+- Add more comment for the NULL pointer dereference issue
+- Link to v1: https://lore.kernel.org/r/20250410-fix_fs-v1-3-7c14ccc8ebaa@quicinc.com
+---
+ Documentation/filesystems/mount_api.rst | 15 ----------
+ fs/fs_parser.c                          | 49 ---------------------------------
+ include/linux/fs_parser.h               |  5 ----
+ 3 files changed, 69 deletions(-)
+
+diff --git a/Documentation/filesystems/mount_api.rst b/Documentation/filesystems/mount_api.rst
+index d92c276f1575af11370dcd4a5d5d0ac97c4d7f4c..cf56086bbd6622a07bbb1e283a86fea40a98a8e6 100644
+--- a/Documentation/filesystems/mount_api.rst
++++ b/Documentation/filesystems/mount_api.rst
+@@ -753,21 +753,6 @@ process the parameters it is given.
+      If a match is found, the corresponding value is returned.  If a match
+      isn't found, the not_found value is returned instead.
+ 
+-   * ::
+-
+-       bool validate_constant_table(const struct constant_table *tbl,
+-				    size_t tbl_size,
+-				    int low, int high, int special);
+-
+-     Validate a constant table.  Checks that all the elements are appropriately
+-     ordered, that there are no duplicates and that the values are between low
+-     and high inclusive, though provision is made for one allowable special
+-     value outside of that range.  If no special value is required, special
+-     should just be set to lie inside the low-to-high range.
+-
+-     If all is good, true is returned.  If the table is invalid, errors are
+-     logged to the kernel log buffer and false is returned.
+-
+    * ::
+ 
+        bool fs_validate_description(const char *name,
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index e635a81e17d965df78ffef27f6885cd70996c6dd..07a78a5064d05009148fa9780f3e031cd3a9b529 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -379,55 +379,6 @@ int fs_param_is_path(struct p_log *log, const struct fs_parameter_spec *p,
+ EXPORT_SYMBOL(fs_param_is_path);
+ 
+ #ifdef CONFIG_VALIDATE_FS_PARSER
+-/**
+- * validate_constant_table - Validate a constant table
+- * @tbl: The constant table to validate.
+- * @tbl_size: The size of the table.
+- * @low: The lowest permissible value.
+- * @high: The highest permissible value.
+- * @special: One special permissible value outside of the range.
+- */
+-bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+-			     int low, int high, int special)
+-{
+-	size_t i;
+-	bool good = true;
+-
+-	if (tbl_size == 0) {
+-		pr_warn("VALIDATE C-TBL: Empty\n");
+-		return true;
+-	}
+-
+-	for (i = 0; i < tbl_size; i++) {
+-		if (!tbl[i].name) {
+-			pr_err("VALIDATE C-TBL[%zu]: Null\n", i);
+-			good = false;
+-		} else if (i > 0 && tbl[i - 1].name) {
+-			int c = strcmp(tbl[i-1].name, tbl[i].name);
+-
+-			if (c == 0) {
+-				pr_err("VALIDATE C-TBL[%zu]: Duplicate %s\n",
+-				       i, tbl[i].name);
+-				good = false;
+-			}
+-			if (c > 0) {
+-				pr_err("VALIDATE C-TBL[%zu]: Missorted %s>=%s\n",
+-				       i, tbl[i-1].name, tbl[i].name);
+-				good = false;
+-			}
+-		}
+-
+-		if (tbl[i].value != special &&
+-		    (tbl[i].value < low || tbl[i].value > high)) {
+-			pr_err("VALIDATE C-TBL[%zu]: %s->%d const out of range (%d-%d)\n",
+-			       i, tbl[i].name, tbl[i].value, low, high);
+-			good = false;
+-		}
+-	}
+-
+-	return good;
+-}
+-
+ /**
+  * fs_validate_description - Validate a parameter description
+  * @name: The parameter name to search for.
+diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
+index 53e566efd5fd133d19e313e494b975612a227b77..8d1c2fdd382fb51aee3ccdcc49735d7441581c26 100644
+--- a/include/linux/fs_parser.h
++++ b/include/linux/fs_parser.h
+@@ -87,14 +87,9 @@ extern int lookup_constant(const struct constant_table tbl[], const char *name,
+ extern const struct constant_table bool_names[];
+ 
+ #ifdef CONFIG_VALIDATE_FS_PARSER
+-extern bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+-				    int low, int high, int special);
+ extern bool fs_validate_description(const char *name,
+ 				    const struct fs_parameter_spec *desc);
+ #else
+-static inline bool validate_constant_table(const struct constant_table *tbl, size_t tbl_size,
+-					   int low, int high, int special)
+-{ return true; }
+ static inline bool fs_validate_description(const char *name,
+ 					   const struct fs_parameter_spec *desc)
+ { return true; }
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250410-fix_fs-6e0a97c4e59f
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Zijun Hu <quic_zijuhu@quicinc.com>
 
