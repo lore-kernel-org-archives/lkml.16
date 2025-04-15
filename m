@@ -1,61 +1,61 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB57B233716
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7CD21D5B3
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685277; cv=none; b=EcEAawRJ0irPKt+AxVpyM+zyzs7Q41XAHClyj52Igeq3EohKWYLmFQdl5kD8Tv4VgiYva+qbfvSf0Df3Zb5wZkcHcMeNUkobBvoafRwDBjIA+0rnmV7Yy7DbWW1QwwADfGyvlEnqRHnCB6ZXXisidc23EXCJcShTLejtuXJguR4=
+	t=1744685282; cv=none; b=NSBlJbkUf1ka5tgDwBZOq7G8Qih+3In0I/V3pOL8aLn9/hwIouPFXypAXKrmHVMhoSpxIR/vnUnMIeq525iIA20aujDEeS+sP1YIrDLbYevsF4v+r1XhHixX2SZGZGV1HobXVrPRSzCQVLC6nFbmU7BGLKiJQhCfxVeihWe9gYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685277; c=relaxed/simple;
-	bh=gqcWvL8puEcB8VURLE0CUOfUeKpOQO4iYFAmWiCBYCM=;
+	s=arc-20240116; t=1744685282; c=relaxed/simple;
+	bh=hwnyuwbVRBFAA56pD1wDk9t8QUtkgrEJu4P2YyCqkrs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dH1QhJgt052e1ykeJKn/Z02IbHPh2l0kjhWrtGPuHDFQ5TpAJy1gAQEdC78as3jG5BCF2nYzSsAW1OwmSV6b7aklgQ8d0Acn8Qrg6PaEkDKSCwx+xWORzuTnbZfxbeqIx7Oua4VRR+9KQoEhYBy9HSFny0+/t5mHWobj1NvwGG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fpcKFjh9; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=nOq9khp9z3vfkPdrfYK3PvRUh5++b6OR5qfY+7CCG7yMxuohDd26+9t8rBBv39ZyfNIXsbiF6UNYnQgjRaUU/97qJFrShpkbE/LsA6QO+uhAXf8QVcX1jP8TGqg10HPFdvbX6YHDiigTpCL53FJlrSyGZa1d5cf1fG4N6gtPszY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=icfJr1De; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fpcKFjh9"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2264aefc45dso74533615ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="icfJr1De"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22423adf751so45815345ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744685275; x=1745290075; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744685280; x=1745290080; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lBa3KcBA5wxUNKsQ+K1hpla3o8QIUcc8xJR0inNtMu0=;
-        b=fpcKFjh9ienup1D85vtSvbp1TeT+MWhoUrsOsNiiTa/M9+staSsJXBEj/iebO1CNsZ
-         4+tY6T/BYJ+Z9EzqNB5EoZvdUU5YZB/PnmFSsk8hfZZY4XCDvUF1CjiuNMZ6clk7HrmD
-         q7inDR24jRI5JmJKK76Q5sGJgfUrKE8PJBjIYdPOFKKtixrvZvejpjTC5lmujZ1JPH/F
-         72kGqWXE6HbyLtz6aNcpBfv4+0r6N0EoANMeJDU4RtTt2mmMrCfxOrT7ndmtJFDhXILX
-         i+g47tpkmbCzZxuXKaFVTk8/EeFRbAkAj90+gz0MAUmqVwBvj04LNNDbGLT7QqiOy5Az
-         22Fw==
+        bh=OUs32dtFutsOKBw24WRLrtykUD+fXNK5AQbCBXYyH+U=;
+        b=icfJr1De56/vcTa7+gUpdgphPSQa1E/gQI2fjVNw0kcGTsds1P9wtpQlbJupMPay9t
+         mYGk33QtWk/T+PKgnt6VFyIRPqaJzPprjoIbq/RIOfxmZNeTG/9k9ELI8Dm3dHfsvlmc
+         l1oFbmS0qPvowHqVkahE10TO0ABgwzjiq+uDnawxGZ0s4TFEYlHhb4FKaKfbWIqthtV8
+         2/71Xg7JthTfU0KWaS2pUDr5g0enmzFiGvNO6+nFrwqJes/CLxDfM2C5+s05W2YVL45q
+         5nfn/JQ5hUICwiBesTDtZUdRSsj1VghkzZZYYbGxQd8+kKZLgx+Nit5W4KP7LxO/6Tin
+         g8UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744685275; x=1745290075;
+        d=1e100.net; s=20230601; t=1744685280; x=1745290080;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lBa3KcBA5wxUNKsQ+K1hpla3o8QIUcc8xJR0inNtMu0=;
-        b=t7fzE0+w8FFdjTMmGQtF1XsEPzFqVA/6qjaXwMgblQmEaN6aUscfK6JDQUJeEB2WO/
-         sKr1bV+MXCI251CQrIat/NqI5OWTkNKrgLMaefaDXhKonol0WEYMheZsTt41hQ17N120
-         Bj5X38+/Wtew6Zj5oRInP/uO+tjsAFtRI71HiysFzBtF68J19XhABUm9uXvLLf/mVc4n
-         QijyhuUzyvqRXNHgFL/UBLuiu686Tlzpzb5PHValJ03swY4QpRY3wg18fQ5VvrCTkR0Y
-         rcCDl4ZtIMBt+UCuUbAOaUCBe57fLLzxzfMEZr2fKKr33otAgL5Sx6sTrb6IefTx3Xfi
-         fAEQ==
-X-Gm-Message-State: AOJu0YxEC8tqgX26tC+4PGlS3YC0B77OU2p/w25z5YTqrLQ/NZkQTbOk
-	yfGgGsU8zUfjYp9TDG2U7z6VbqLZZ2SojRMXsSdPfkTNrSHMHy9w7rZ5fFP2BKM=
-X-Gm-Gg: ASbGncsA7t5rVUIzgcw1Nij1fZ68DiwcqNwWHVQI/S0K5JflYtCG1lFIFSgAaoxfhJF
-	9e+Mx2dRUDZfrVsu3X8bkojQi3q0F6bnDQJeO+9/pPp3Q4OLx+q4ErJMnpTbSyApkYUMykE9jB5
-	HYwAqZUiYwCfuv2O+kMrFH6z4ekftm6xfM+xyFEQDUQzZpBEZYw2ud3UD6nSHEs7xzFz3HaSOKU
-	aVLJY0GLG03UVGfenOZzSXSWMqFm+0qnh/U6oq8vS0YZogQcm86jb0GXW8+LL32+4ppFDokD8Si
-	3uCv7mpUsbVRC2w78YFfBlUxg6CmMbHPbS+2/CkI3pEd++KDhfiTKpqj0gIhxWpQtAkv6zFW
-X-Google-Smtp-Source: AGHT+IHI4hqLb4XlutpOFIzQEdrRaemLqaUdJqfYPhQI+o4uvusfdbjBRgP5q4orxhE3PLyGhMO1fw==
-X-Received: by 2002:a17:903:3202:b0:224:1c41:a4bc with SMTP id d9443c01a7336-22bea4ab6c4mr253471365ad.12.1744685275144;
-        Mon, 14 Apr 2025 19:47:55 -0700 (PDT)
+        bh=OUs32dtFutsOKBw24WRLrtykUD+fXNK5AQbCBXYyH+U=;
+        b=pMg/aaexCid1Lu65vH4OhQba6H13/OgMaP6w9sJkJuWh4pZyOGN0XtudxaKFzt0Rw4
+         HT2OUJjzX8alj0/hgYOFvaMbIWxdheGjwLlglElOILgwlNq8cyB+PhFdv7r0A6tbh+2N
+         Kl3LnU3m8oSFCJ8G1XrBAdXbAweF2KxeXAni41KTJETffzHvBGuSqZpZBFiAHZjNr+uK
+         uW+VXd9fKy4fyyTGd91nLXzZE6GIHxz4K4PI6lpXjyGkX2qIufVeivi2DsWD5OWJFaVM
+         +hxt9ePF4SJCcqSpJTdLs6aRNhJHAGgjXXK4aLOC5rdQpMTmVc//bO2xhuQAyQg5l/5V
+         ps2g==
+X-Gm-Message-State: AOJu0YwxKgTZkY4Xgw+ZRgR7F5u/X9yImKbEPTm8O3TbO4DXj9YtZQdL
+	uzVDgnVO6VhIO14GGMc8hdg2r0dPAcRR0gYDAK4V4fivj3g97fNwJDJzmq5Kzgs=
+X-Gm-Gg: ASbGnctLEyMt7o8yR8fn5rOVfYZ9g+LkRWKDZi/OtKtWpGw7PrPvVT1gQIQZF5hMWO7
+	LJWcEucfOAZEmtpozlaSQSJ7YmxvHInzmTqWmQEfveCnHQgOLP/YMvgE8zUY9eRmpfS0XdgT5Vp
+	rE7ucQ20NsDuENAPP3GYtdlsFcY3IPxqyAovYV0etVis8JrU1cwB5qqTRL16QBeDF8iSQUu4uzc
+	Im9MhiA+a76UvDsslkljrpTrOY3w7gWhnSgVwxk5vtJinqjqfBrysIn/2qs6jsoM4os0Vg0W0nG
+	2kLIL2HYt+iKb5baKoObyeWBO1VZxgdxPk6LdvsqQmE5uW4EiTX9NG1GYlHeOhIMbPklVqtl
+X-Google-Smtp-Source: AGHT+IEtjVtnb1BSndquKXoPm2m8j71DYv9c3rLhXw+JhVIvJMgE2spfc/6lyYJ7b6Mu11ismWhvkw==
+X-Received: by 2002:a17:902:e547:b0:220:c911:3f60 with SMTP id d9443c01a7336-22bea4fd182mr195573825ad.47.1744685280634;
+        Mon, 14 Apr 2025 19:48:00 -0700 (PDT)
 Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.47.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.47.55
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 19:47:54 -0700 (PDT)
+        Mon, 14 Apr 2025 19:48:00 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: hannes@cmpxchg.org,
 	mhocko@kernel.org,
@@ -74,9 +74,9 @@ Cc: linux-kernel@vger.kernel.org,
 	hamzamahfooz@linux.microsoft.com,
 	apais@linux.microsoft.com,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH RFC 22/28] mm: swap: prevent lruvec release in swap module
-Date: Tue, 15 Apr 2025 10:45:26 +0800
-Message-Id: <20250415024532.26632-23-songmuchun@bytedance.com>
+Subject: [PATCH RFC 23/28] mm: workingset: prevent lruvec release in workingset_activation()
+Date: Tue, 15 Apr 2025 10:45:27 +0800
+Message-Id: <20250415024532.26632-24-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
 References: <20250415024532.26632-1-songmuchun@bytedance.com>
@@ -94,56 +94,33 @@ released without the rcu read lock or a reference to its memory
 cgroup.
 
 In the current patch, the rcu read lock is employed to safeguard
-against the release of the lruvec in lru_note_cost_refault() and
-lru_activate().
+against the release of the lruvec in workingset_activation().
 
 This serves as a preparatory measure for the reparenting of the
 LRU pages.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/swap.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ mm/workingset.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index ee19e171857d..fbf887578dbe 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -291,8 +291,10 @@ void lru_note_cost(struct lruvec *lruvec, bool file,
- 
- void lru_note_cost_refault(struct folio *folio)
- {
-+	rcu_read_lock();
- 	lru_note_cost(folio_lruvec(folio), folio_is_file_lru(folio),
- 		      folio_nr_pages(folio), 0);
-+	rcu_read_unlock();
+diff --git a/mm/workingset.c b/mm/workingset.c
+index ef89d18cb8cf..ec625eb7db69 100644
+--- a/mm/workingset.c
++++ b/mm/workingset.c
+@@ -595,8 +595,11 @@ void workingset_activation(struct folio *folio)
+ 	 * Filter non-memcg pages here, e.g. unmap can call
+ 	 * mark_page_accessed() on VDSO pages.
+ 	 */
+-	if (mem_cgroup_disabled() || folio_memcg_charged(folio))
++	if (mem_cgroup_disabled() || folio_memcg_charged(folio)) {
++		rcu_read_lock();
+ 		workingset_age_nonresident(folio_lruvec(folio), folio_nr_pages(folio));
++		rcu_read_unlock();
++	}
  }
  
- static void lru_activate(struct lruvec *lruvec, struct folio *folio)
-@@ -406,18 +408,20 @@ static void lru_gen_inc_refs(struct folio *folio)
- 
- static bool lru_gen_clear_refs(struct folio *folio)
- {
--	struct lru_gen_folio *lrugen;
- 	int gen = folio_lru_gen(folio);
- 	int type = folio_is_file_lru(folio);
-+	unsigned long seq;
- 
- 	if (gen < 0)
- 		return true;
- 
- 	set_mask_bits(&folio->flags, LRU_REFS_FLAGS | BIT(PG_workingset), 0);
- 
--	lrugen = &folio_lruvec(folio)->lrugen;
-+	rcu_read_lock();
-+	seq = READ_ONCE(folio_lruvec(folio)->lrugen.min_seq[type]);
-+	rcu_read_unlock();
- 	/* whether can do without shuffling under the LRU lock */
--	return gen == lru_gen_from_seq(READ_ONCE(lrugen->min_seq[type]));
-+	return gen == lru_gen_from_seq(seq);
- }
- 
- #else /* !CONFIG_LRU_GEN */
+ /*
 -- 
 2.20.1
 
