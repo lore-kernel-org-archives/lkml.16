@@ -1,83 +1,121 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7173224B28
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C0924B28
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744761277; cv=none; b=uTZNgtkK7Ne4UVJjMlm1z9YMv27DDXqP6JvdT2VunXtg74p4Y3DyAbOLhL034iSRH+Wdy4L8YeBqM7lcRWxEzZyuZ4WaARVkBcLhHT3WJfqR1/HTNfdvq2ukW4MeQR4EMrIL4HrN9bviyTnmGqk2MfmfxpIUVmXRdQRGTvPxVXk=
+	t=1744761466; cv=none; b=TKvOkoCLkmLyuIpUeDJByxQGu97ZWaRf08ftlr3KLhBxfaJw/356YY0fTNQwacKRTvNmE3bWNi3iOFT75YcdyvZlAQZkAUmE4a8+Qj63URzgDluiPvczMGmlPLpFz+jMjqpER9RgsfX5qmS68sHmqwO0CTpVv2p2g/fL5qqo2LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744761277; c=relaxed/simple;
-	bh=BL6yJJeDhXCD93iNRfTEC9Bm5Muyaz2aL0uVyTx/0Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rCBG28LUWNSy1Nu9TfJMNcDWbtrRqN5mS2UOc09DWKJEVbG54yUhHdsu3VPVzP5qXZCeW91bJ5W6Qysdux/DK7jNlfAeWtVW2NbAz1V7O7cZ2pi9yE0hJm7P2eNonoljzWWGuiL8mojIpmS5gnSsASi9BcNJB2xx2NGLJjQ4Zhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wdz0i6H4; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744761466; c=relaxed/simple;
+	bh=f2L76U4BdNcmr3RzuD0bOY4xvLiqJal06xcikMkuAE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pO3kOJMRz+8okk4HjTpUxYvdFsv4MeMX1ZY9v4/rznOwZZHdthMkMSL0zhaZqQRWNjf+q5X0pSW9WYzsSICoGwRM+gZkECCDbBy2ThrZWTkRAOYT6IePSoU4oF+UmFvhiYXu0U/zLrgkWI8hr+f5ySKmG45EkC/qQWvjF9q5Q+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=KeQZ4mn6; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wdz0i6H4"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22c336fcdaaso1249985ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:54:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="KeQZ4mn6"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-391342fc1f6so5297828f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:57:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744761276; x=1745366076; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E8HpTrNOtO0f0qUYgBWZe9nM+c1PhefRgZpp2Tj+Gnw=;
-        b=Wdz0i6H4YQ9/oNh4SL5t+ra3oBPNqaGT0zKKRNld+gqgFRm/H+TqwsBwQDnbng4w2S
-         5/s3yGjYhWhCPtd7AYOpByfFq+CMDDT7bisdIQQboWwjAaUAJRYCdP6fiSx9Gwz8fKHq
-         rLx4Fmzi3fFn0m7LuDPM1yzyGPCj5KiHPC0lErIjYw0LIXBZlFVDQ5tSjmRAVyW36bKz
-         WHDTxcDl1wQgvG5qbKZ7SheQQ3xTsEEiuaZsY4MatsjBTh5fH9SBwYeK8AXMqjarz3jh
-         bnk0X3yKaHKkRocSmJXJF+BkcUZNgYLjGTAInTXqqNgd5CirbtIptDBB+Ai36Dp049W5
-         VdSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744761276; x=1745366076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=purestorage.com; s=google2022; t=1744761462; x=1745366262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E8HpTrNOtO0f0qUYgBWZe9nM+c1PhefRgZpp2Tj+Gnw=;
-        b=nCYw8+OCRxHqvwf8FvrpcrXYP1IlTRGlWWiK0Lc5KLjK4SQODKl3VmK7bwLjKRr1Pc
-         QQtj8x8a0os5srzR/LVOm0Bci9R3D039OeEXsuh5/vi/udKueeYQTkSY5lX9yCUOjxhB
-         Q6/h7jsZ5mSJiLFYPDkiMk3BO2oURW38hlq4+jNWUwujPlBm/MVnO1K3P0COY5w3Jyyg
-         cPF+1J9qVNqlapJwS/6zKa+PWvCzcWtaO4CPIiTjMuiqqsSzLfjvW3hI23KcE2TLVS5r
-         SspBqh4+HYS90vpKarDEIJNVAdUDVdvW7wk6KrdDPbR7umHAt9ciTTmUJ1lNV8mpfNn1
-         OFEg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0wYL6k5J30Zgd83I6lQt6us9n8iiyPx/BUR+y6uvthMev6tIk1AWWVrpFxwi2agaAta/McAMWAcQw0ds=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUbGtuxK8ZK1Fo5906GpJfANMPcRHG40P2A6B597EBuaANDwpg
-	TAPIcyoaGVwtt4USgsiRm+NNX99hlzq+yl36Pg42GBQqB1zHTs/U
-X-Gm-Gg: ASbGnctgIH1arcXP9ZabcAe+2UP/Lydc4UJUMEnb2dOD6scyXlA7vyEZa3Ml7nJoBU2
-	XvXCkDp1x6t+rEnFACe/vtPApppXhWyK5Vqo3VoYXPztkdg/cxWtCruZB2VlQxEkGSideW9Qycm
-	1hGwH5cZInUxxDhSH6U2Qt9WuVlctcnmX1subpLbLtFnneNDAz2Q9OMZkN57IV6v2PDZjtLWPhG
-	xxnVSI0Eq8jGbRHPZWTx+3ugB9sfzHBaImJysbOJpbunmtItR/jNs9lPQm0nm9TrLWIJlKfBQrB
-	uD80DoZSPjyNeSONO2t3YgGYXnr2g/Lll54IogQRCXFi65cqJjK0zPXJ3Z3PcY+5e7rrBmqY
-X-Google-Smtp-Source: AGHT+IHE04hm6CnIpiqr9PbOzqTmilez2ZUFv/ZTrw+STC2K4EXBs1DSf6evz7bomONQiej6L7EtWg==
-X-Received: by 2002:a17:902:ea05:b0:223:325c:89de with SMTP id d9443c01a7336-22c3189e69bmr16764165ad.1.1744761275674;
-        Tue, 15 Apr 2025 16:54:35 -0700 (PDT)
-Received: from fedora (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0f41sm1270095ad.41.2025.04.15.16.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 16:54:35 -0700 (PDT)
-Date: Tue, 15 Apr 2025 16:54:32 -0700
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] mm/vmalloc: optimize function vm_unmap_aliases()
-Message-ID: <Z_7xuEblD2PXBhRw@fedora>
-References: <20250415023952.27850-1-bhe@redhat.com>
- <20250415023952.27850-5-bhe@redhat.com>
+        bh=UWD5pI6GDA2fnJlpFdI06Xm5PY6v+zWnkPUtQT6JobI=;
+        b=KeQZ4mn6eMyxe7iUyGd2DvFqQtZsHjV5mPzwpjevzRWS4g9hzxagSBLx58FO0DsZcP
+         kS3q+iVffn513tFOA58ynWEGxpXkxnVcG9qJk17RPlA3ZaK+xYn5KDqR23JF8WmMNcf9
+         UWTuXTHQpDxLMBNi3njGPOzyC0y8xjZbiauT9LIVKD+5WB3ydLTnzM86+VEsriIVIKbZ
+         5os0xRjdMC9ejVBJy8BOyNACXVoE/YFYclAh/hLBWYepxMAnYLQHvD85vwgKtwfOjJXf
+         K3AsYjna1tnW9nYHZ/4i/PPqTLcf5EU5thAdU9D76LaCmRFOZUohj9fGmkbkwUUdIoFK
+         OLZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744761462; x=1745366262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UWD5pI6GDA2fnJlpFdI06Xm5PY6v+zWnkPUtQT6JobI=;
+        b=Zx3OjiIE8D+zKsciXg06/bDYlSY4bvOHy6oBab7Opm9EFKIECXNmPjW4aaCdiKNRav
+         ioobMGB68VAAJm2zEB6df04Xf1unMTV84wqjLJn496McATacP2GruwsWN2P362jmVb3M
+         Wjb2GZHQJDklC18o+g40z3h2UXkyw6SrDHT0ABrY83SOOBhdW10RxyWx0C+FbC/+zLmG
+         97eBRBYk1qyk/2+K4dwmxClEOJoGhYwjSUF3drhRmjZ/aW58QAFEcvdt5UtRNOabInUf
+         bNSScCCsK1DFtxOGm3kf2mNzJy5sLY6ETk/K/jYlRNRcOzamaPtyCw64wQbl/+tY8Vb3
+         fADA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgdMzKnDFket2kRwcXFeE0N+OpSDS7fV5mIRMnZhAnZ4Qdq3CMu74ssui6WHKyA6ndwTl/J28SNPHZKy4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxde7Z4vTNxTt7Eujk07633m2s8J2bnXIvm7JGUKJHpO/IUgpSS
+	Gxv0PqedRhqWxoSiwlhV4ossnChhRUnSysm25OUIYX/d3gIWZG97biyOqzFpWZ9f4gtM+52ORER
+	yj/hSerWOs3tmLxyNgJ8Yj5bNfmGQ2MsjUoSsuw==
+X-Gm-Gg: ASbGncu/qusoCs8hLzRk4XcNJRNv37SEfMSrn6OIuYUPXPJk/lmylCzcpmavSPbdvGP
+	PF1lBZf1dEDuQkpIna8zp+GWSx9SxDQu85LqDwbTKMB5L2VDoK0B3NZFnmofUvHeYQrWcaYx9FI
+	d3Flbf3vPZbn+cuZ7cWQ1W/pn6chpDI6kakg==
+X-Google-Smtp-Source: AGHT+IGGD6454gToVDn/IoUIEfR1+ItsL/HISjK3ehJg9NVRI5QeW5I9RnXyLdaCHCAikYx5stTntOwf9Gs+iVc7lQw=
+X-Received: by 2002:a5d:5985:0:b0:39e:cbd2:986b with SMTP id
+ ffacd0b85a97d-39ee2729edcmr926257f8f.7.1744761462016; Tue, 15 Apr 2025
+ 16:57:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415023952.27850-5-bhe@redhat.com>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org> <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com> <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
+ <4cd2cbb4-95ff-4f3b-b33b-9c066147d12b@flourine.local> <4c334216-74d7-4a30-add1-67b6e023d8d2@grimberg.me>
+ <CAPpK+O0tmewK7pH458TOxjtimjO9on=4YDRFbS=FPTgM+KFTzQ@mail.gmail.com> <8ac6cc96-8877-4ddc-b57a-2a096f446a4c@grimberg.me>
+In-Reply-To: <8ac6cc96-8877-4ddc-b57a-2a096f446a4c@grimberg.me>
+From: Randy Jennings <randyj@purestorage.com>
+Date: Tue, 15 Apr 2025 16:57:29 -0700
+X-Gm-Features: ATxdqUGpEGX9YZAHGCTlBMQHQBANn-EtpiIizt1Virtao_yXmWw0UoGELM1OZAU
+Message-ID: <CAPpK+O2SBm6-zqbiDbUB0yubVTvTrXWn1R+GAPne_+LGvVXp6g@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Daniel Wagner <dwagner@suse.de>, Mohamed Khalfella <mkhalfella@purestorage.com>, 
+	Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>, 
+	Hannes Reinecke <hare@suse.de>, John Meneghini <jmeneghi@redhat.com>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 10:39:51AM +0800, Baoquan He wrote:
-> Remove unneeded local variables and replace them with values.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+On Tue, Apr 15, 2025 at 4:35=E2=80=AFPM Sagi Grimberg <sagi@grimberg.me> wr=
+ote:
+>
+>
+> >> What I meant was that the user can no longer set kato to be arbitraril=
+y
+> >> long when we
+> >> now introduce failover dependency on it.
+> >>
+> >> We need to set a sane maximum value that will failover in a reasonable
+> >> timeframe.
+> >> In other words, kato cannot be allowed to be set by the user to 60
+> >> minutes. While we didn't
+> >> care about it before, now it means that failover may take 60+ minutes.
+> >>
+> >> Hence, my request to set kato to a max absolute value of seconds. My
+> >> vote was 10 (2x of the default),
+> >> but we can also go with 30.
+> > Adding a maximum value for KATO makes a lot of sense to me.  This will
+> > help keep us away from a hung task timeout when the full delay is
+> > taken into account.  30 makes sense to me from the perspective that
+> > the maximum should be long enough to handle non-ideal situations
+> > functionally, but not a value that you expect people to use regularly.
+> >
+> > I think CQT should have a maximum allowed value for similar reasons.
+> > If we do clamp down on the CQT, we could be opening ourselves to the
+> > target not completely cleaning up, but it keeps us from a hung task
+> > timeout, and _any_ delay will help most of the time.
+>
+> CQT comes from the controller, and if it is high, it effectively means
+> that the
+> controller cannot handle faster failover reliably. So I think we should
+> leave it
+> as is. It is the vendor problem.
+Okay, that is one way to approach it.  However, because of the hung
+task issue, we would be allowing the vendor to panic the initiator
+with a hung task.  Until CCR, and without implementing other checks
+(for events which might not happen), this hung task would happen on
+every messy disconnect with that vendor/array.
 
-Reviewed-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+Sincerely,
+Randy Jennings
