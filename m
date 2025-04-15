@@ -1,118 +1,168 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634F72741D2;
-	Tue, 15 Apr 2025 07:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A223127F74B
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744702940; cv=none; b=OyCoGr5Q0VvlK5CLXdWnIsGvgOgNiBTJI0TEVzd/agtmR/fAtS3Q2zwkahWyk2+HJaJRHId9l8Yl0UDL1psofKILup7qmlYAezeUfh3d7FzefwwKd0J59aAAQviKj7ghwVYktrugubnBXuGsASsQHZDfyjg/cVa565XfknhVWCs=
+	t=1744702944; cv=none; b=f/1yfpuI0M7B0ehcgTilbdfqPg1uvHgtPavivfNLlUMYJ76SXeWgRAdGNrVywaQ/SC8FdnkRDM6z7UQIgTs9PP/JeNTeD3/lZgRdw5q5vt7Vq1ARjLVJUDgkrx6kENg5I0IkKHTLNFgE1I1LQrfH1KUR9pMyyiemhfxUT5b+9Bg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744702940; c=relaxed/simple;
-	bh=2ghFJ/WoNNJtx50ePbwntOjD68huaKDwuNVZLJOMKkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B4fcqVGJEpDzbBnAQh0ESVxI1ZQaPGRH/AXfS+s8aKzo8ZG0pdvcGaNiddZCSeU2hlUpdROyzFdUqrNS01hn2Hrdn11wnVsJ/nSmrmuv9AF+/7ryoYJQ3XcejB4vynDt70xWIn8v0sk49OAa2qRzW1naSRq0euhHRf1WwJprzok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q4JPAz/b; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744702944; c=relaxed/simple;
+	bh=uK2/Dxz411mr86DPhoimn0/NYOMMuBpqlFIDU660bk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pgLZPQkB1FbR0yRSSO6hP3gvgCLvM40m9alsja0stdWlxFKjGQhvqZWfMKQgRc9ywfgEwvBv7zuFg4xyaogMZ2zRLuCk6omi/qSadmNLMAPwg4bSyhBE0ZVZDXZahNacDaykzfkkPI5FnatdIi8D7W/JWm3e47Am0TQBd02jsIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=RoQKc07K; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4JPAz/b"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so46690411fa.2;
-        Tue, 15 Apr 2025 00:42:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="RoQKc07K"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so1008394566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:42:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744702936; x=1745307736; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=58EGUTXtUxIy6cjRPhm4Aku8724XI9vW76TExXikKn0=;
-        b=Q4JPAz/b+0iSs7uRpEigR5sV+xhPAcJ3XKQxwcJf3AM1SmTU9D1qCQvEpxkQSd4GrN
-         ehnYQScs8xv28ONpr9+iOU+WNkVOJ8G4Wf9U/XdCkmU9EyVfKsweAJUAcwRh/OuSiaKj
-         XSIKyeS1/Zgv9psRSUmYkWj8Sg4Qfv1xWc4OtZCGCdmd0bQW0CaiqkR6BR5nYNnPnYSg
-         zX0DulEJuznod0lZsG6Yz5n50E8he/N0PeIkEYGw2PFF4oItRZrzSpiXtGcmbdGT/to3
-         r4Hm/fkApd+RkDdDG8GOLmgsxTTTFGwGZCjzCKYzIp1Lqm5Sox2Fn+NooeaJQV0ssQuP
-         K/hw==
+        d=mandelbit.com; s=google; t=1744702941; x=1745307741; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=z6aIxFI0Ol1WOfMYVyYLmlgjphiUFu7Rh53Xz6QKHBQ=;
+        b=RoQKc07K+3U6TXhYAVa7M4aG0SXwVgGV467pslv//wggfo5Vnhhjnw+5lhaicpdmWh
+         sJ6w7WgDXXhkntC1nIikdYiI1jYx+DwUkbKSmG/GI/wPG1dF8bMVabi/8L/ohsURcv7H
+         wDNyrRVD5CSeddIAhZz6Ay0SnwzXKD6Z/rYx8Qo9z9EQ9e9Z1fD29R0lkJWPCfuegwmd
+         NDQEUx+++vyXR+GOfJ5nqrLPuhxh3FtGH4eIIb+J56g7tsDywaf4qvDzpKzdm7jUtCKU
+         eFIPRtdHyg4ZsI8RPlFL4Ic5mXeHeJuNSKzc/jFg8iwpoKTQHPkUi7v8VryS9RaCz5o/
+         1x+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744702936; x=1745307736;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=58EGUTXtUxIy6cjRPhm4Aku8724XI9vW76TExXikKn0=;
-        b=tUW5LXfSVx5AWOxBoWamsVAfCI0cN5BCgP+OXw1k5s7/Lmf4q9knphBj2xJ1Kp5tx9
-         s7P5GtfFdOTDepdtauSACnnJSKfhhrfssuLEgK+7C7BAq0v9C3oCKSEzhAESjzsQ12PG
-         WQD8SN8F7QGB3jwtlRB/oeP1hGquLaRbLxRmDKqKDm3ffe2n0V0HjM8X7MaB83+FyvUh
-         CZAn0Xt+mHnaTl6qT+wzf2kh3GEHs/UtUv4oD0/vupc++P+ftBnVpP/VxQ5cnoAXMUoE
-         cSaJ3map51HdVkvH9yqOys2R0bV1e4cOQPVUGDc8Hun9zsnpRmCMO1svlWfK4P6qvbHC
-         aoKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWATbN9hadiG+7wBLXUXXJ1HN9E8yIZCkEZRLeX3epIB0xNblDtrJDLpYG2+rNj/M4iNf14gv4B7Be27qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiVTfxkCENzzuvJn4kfzntwifCxoLXRnjmv+Tv9hFee0TbAGr1
-	6jKvcowMye+oRa39Ou4uy6WowPp6BYGQT0gw+kw066HUav1TOJr1fjkMUHvDrmOAKCKeb9NKuaW
-	neVtEh/luoWP0F3aOM2sECxlHEXU=
-X-Gm-Gg: ASbGnctKqdyEPwB/O6o5s73JEWmad1d2v/lvoiCSIrtchp9kFiME2eWy+rUMpNzuvOE
-	KiSa2W1RFNDyWY/BdJmXuqfWOK2VNfLBKYlJ2EDaE6Wt/Kc9nyryAmEhDG0yNX8fyeqC24IeZpo
-	ySctwzdYPKEsZvdTKnQJ178g==
-X-Google-Smtp-Source: AGHT+IFqY2Ai6W20JnTL0J8N86I8549zpNUihb226F0nRPPDMlA56u8QLiP98AvL2JxttrEV2EWptz6FoxXQQSG+a78=
-X-Received: by 2002:a2e:a908:0:b0:30c:3099:13db with SMTP id
- 38308e7fff4ca-310499f92e8mr40275881fa.14.1744702936159; Tue, 15 Apr 2025
- 00:42:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744702941; x=1745307741;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z6aIxFI0Ol1WOfMYVyYLmlgjphiUFu7Rh53Xz6QKHBQ=;
+        b=hYCI3lULaXxJkXZNfROe3xnaFrJpXZupl1oUvA0QsC67m9wjXl+mF3aaH4RS9dLMXu
+         BBjLDdDcfZLEdelvvcvxDvVuoRwiYM7jxOBya6il/D3df4FW3tUXDz/BV6P7jeWRE2mx
+         +jrHYamFHRF4RlALH/sdLJchd4AUthKguIlFXDkVLJFBBPqrHC4/HrfPm+CO52RmUjYE
+         TkaCAxoY6qPYZkmsu7DvdtX8WQgei2XBEnvtG/SaHRRHYZgqSQ+ggeKQ6gUjxCcuPc02
+         cbb4f/dTz1eaJxbJyN5dhsx+LOqbybnluCiV5+u40UEhYFOBcPsAyuj21v9T3XdPKBZs
+         t0uw==
+X-Gm-Message-State: AOJu0YwvMycmGpzq0xB8dUYEK55gD/HZ6Aljy5V/4qPi8HHj5k8R0L4Y
+	gbwkN6D1JZ/RP34SQGVByZb2CXfKkEwW6vMnjEPj2rzHpnVm7VEO3R4RiTOaW88=
+X-Gm-Gg: ASbGnctOCmetvgFH8XGd2cvPNsledad8x4Gf/VtAKpfb4MIOIl5JRKtF4Rdi479s0yR
+	z0Ocgtha4b1955Kxs0pDyF/pA+JM1hB4eGI2slycpG+2Czhl6n7dt3J6EaA8NnW24VsGPKhQyyG
+	+JpamOdNCXuzIMisM6b2AnnpWCxWw76nyM/w86/g3DtE4/wWJXHRc4Lryj8j+DSvwLK9h7Vid/+
+	JsEUjd+8RsqcahAkBzqcd2ty9QhEOI49f/12ZwKxs8vOTBZT04ghoittGrF2EA9rcsV5qF4bC2M
+	JqzJr/trlqaFIaFB/JfV0or9Tg86+wh+fAAL8D+9fTe7ooxjj0SyWs/cQ5DloNvF2hooZFreCAU
+	JNQ6lRQ==
+X-Google-Smtp-Source: AGHT+IHWuUmjwnhSNam4loWc9ZSrLB56k66TTcvhhaYiN2BAECONe1UrVOovbVL6pOGwZ0wV2SidVg==
+X-Received: by 2002:a17:906:4fcd:b0:abf:641a:5727 with SMTP id a640c23a62f3a-acad3456dbemr1531749366b.7.1744702940732;
+        Tue, 15 Apr 2025 00:42:20 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:83ac:73b4:720f:dc99? ([2001:67c:2fbc:1:83ac:73b4:720f:dc99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb312bsm1056251366b.15.2025.04.15.00.42.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 00:42:20 -0700 (PDT)
+Message-ID: <6ec928b7-6980-4e9a-bab5-654c91db4a95@mandelbit.com>
+Date: Tue, 15 Apr 2025 09:42:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414081131.97374-1-ubizjak@gmail.com> <20250414081131.97374-2-ubizjak@gmail.com>
- <Z_2w7XJ0LI65qo0i@google.com>
-In-Reply-To: <Z_2w7XJ0LI65qo0i@google.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Tue, 15 Apr 2025 09:42:03 +0200
-X-Gm-Features: ATxdqUGEjkAZMYpBZa78JeCKlM_WaZfMUf7VqCOpDC_-0YmnSnUCybmBVKcILT0
-Message-ID: <CAFULd4argBdTBM7m7U1Q-RMJdyYtAfOD08ukGn+JsT-v4Z6NrA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KVM: VMX: Use LEAVE in vmx_do_interrupt_irqoff()
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
+ traversal
+To: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@mandelbit.com>
+Autocrypt: addr=antonio@mandelbit.com; keydata=
+ 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
+Organization: Mandelbit SRL
+In-Reply-To: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 3:05=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Mon, Apr 14, 2025, Uros Bizjak wrote:
-> > Micro-optimize vmx_do_interrupt_irqoff() by substituting
-> > MOV %RBP,%RSP; POP %RBP instruction sequence with equivalent
-> > LEAVE instruction. GCC compiler does this by default for
-> > a generic tuning and for all modern processors:
->
-> Out of curisoity, is LEAVE actually a performance win, or is the benefit =
-essentially
-> just the few code bytes saves?
 
-It is hard to say for out-of-order execution cores, especially when
-the stack engine is thrown to the mix (these two instructions, plus
-following RET, all update %rsp).
 
-The pragmatic solution was to do what the compiler does and use the
-compiler's choice, based on the tuning below.
+On 10/04/2025 14:22, Breno Leitao wrote:
+> When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
+> warning:
+> 
+>      WARNING: suspicious RCU usage
+>      kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
+> 
+>      other info that might help us debug this:
+> 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
+> 
+>      Call Trace:
+> 	fprobe_module_callback
+> 	notifier_call_chain
+> 	blocking_notifier_call_chain
+> 
+> This warning occurs because fprobe_remove_node_in_module() traverses an
+> RCU list using RCU primitives without holding an RCU read lock. However,
+> the function is only called from fprobe_module_callback(), which holds
+> the fprobe_mutex lock that provides sufficient protection for safely
+> traversing the list.
+> 
+> Fix the warning by specifying the locking design to the
+> CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
+> hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
+> provides the required protection.
+> 
+> Fixes: a3dc2983ca7b90 ("tracing: fprobe: Cleanup fprobe hash when module unloading")
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-> > DEF_TUNE (X86_TUNE_USE_LEAVE, "use_leave",
-> >         m_386 | m_CORE_ALL | m_K6_GEODE | m_AMD_MULTIPLE | m_ZHAOXIN
-> >         | m_TREMONT | m_CORE_HYBRID | m_CORE_ATOM | m_GENERIC)
+I just hit this issue and I verified that the patch actually solves it 
+without causing side effects.
 
-The tuning is updated when a new target is introduced to the compiler
-and is based on various measurements by the processor manufacturer.
-The above covers the majority of recent processors (plus generic
-tuning), so I guess we won't fail by following the suit. OTOH, any
-performance difference will be negligible.
+FWIW
 
-> > The new code also saves a couple of bytes, from:
-> >
-> >   27: 48 89 ec                mov    %rbp,%rsp
-> >   2a: 5d                      pop    %rbp
-> >
-> > to:
-> >
-> >   27: c9                      leave
+Tested-by: Antonio Quartulli <antonio@mandelbit.com>
 
-Thanks,
-Uros.
+-- 
+Antonio Quartulli
+
+CEO and Co-Founder
+Mandelbit Srl
+https://www.mandelbit.com
+
