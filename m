@@ -1,109 +1,253 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1A21DF994
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9D545C18;
+	Tue, 15 Apr 2025 09:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710480; cv=none; b=r40COYPMVYkuO6M224wlfBpF3u8dXjXMZeD7fBeYunccobpPpJuh+cJJ1lhXVT1xEbWpw8ALH53Z1uxjDyDzeKGkCJ6wyWiJaHEC/hJ4ditb30iAzPmza/2OeeE4f7pdBioELSVnbYgZEL9Ac3yg4kPnQM66Udx6wWJ54MyIxas=
+	t=1744710494; cv=none; b=JGYueDHD7B3mE2WJeqdTHdYcuh+VDuEUAty7nLG5y8TUjZmw+kInUUKO6QdZiovmg/5Sisn9RVszZfqbjRZKVZi0/aFy81A94SSjbtqZHjCmw9RQ4EtQRdlEm14vreb6oqIX3W8bpfsF7teM2fx9TaG3eIP63g2ksjYceZFY8bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710480; c=relaxed/simple;
-	bh=NHYgoMavZomgR155FPH8MIHUNwsEbiNGYwRCeljlovQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EabNq0niqHINfpdEh9ZdCeYQQTKx8ywQLLEkH2u0wMaWA4Pqd8hEZfGsfy6GpuS34h0k/XjQKLKJTGS+u4xaSDKb8w6tFaJ5/BNp2Z9vrqslqZTgb+xu2GWAGIIT0E3eWKxF5/d9YT/f78F3Vjg0tmA/4ewIp4FqqLoiYnRfEHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B9QkKGZO; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744710494; c=relaxed/simple;
+	bh=yUDOtL59iR5TIGbk9FlCT53L9VrFtzpvAbsj9EwZ4Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoXMDM25/7em2/Xon3RzNSrkRKyjDYdLnSIoKp+I6706DWQGZ9DdBYPkjRoJu+dX5XuVcN+h+iruvdrx+2Gaj5jP3oXlhKSxUmTt0dh8X1KeSlaKUMc27/daBaRhnV/pEsFjQ8APrcsbe3CioMsryUXxyBtesGO27IHHQqm7qgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwQUxlN3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9QkKGZO"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso819562766b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744710475; x=1745315275; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z9B0Bd1BUx68w7Mbxfm0Ifu9JvY4VuLu19QSTLgTNRs=;
-        b=B9QkKGZO+C2u1z0+gxW524kJgW8Mna6DZHh0p6bqGwvzjtkS5+ozy3Xr6P9MpPxr/F
-         6PEtIs0tUb8beieGgWvr5xPEPVGhsxrcnlvHs4WG11te5tbnTsnQ0lnHqgfeiYhnE+3y
-         rWxs4MouYtA40IN7g0eH/U0V82jcx0PmeiZPeQ+sX2oCCEwyrYHyMCsIelbY2lVxL8F9
-         DfCmOEANHRtFChXxitvg0gn2T2ad4Eaakh/lhlrbAjqc5quKj9fJdK+guapF9GV0zMue
-         LtsiWPS+xdry+m7lUV0uNGPutpMm5yoCVmqjez17mHeechF2ZYquXI0ubYl3A/CIeuQx
-         gPgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744710475; x=1745315275;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z9B0Bd1BUx68w7Mbxfm0Ifu9JvY4VuLu19QSTLgTNRs=;
-        b=OljJb5L1IRVjvdA1QWfFDHuRoVjALglaj7Z4wXsOOpbrTbJFH9fYSJDhJgrWQipRO1
-         i119MygrLNjjamItZ3YmTQhxW359kwGxkvxlf6r/oIgKp2adXVqoTnFQdkapPt7wYRpF
-         xTa64wlBp0hrVH35lsmGyOHFq49nMosqCJ8gnLrGU3iJ8tcOAZ/AMdqqH/NXmi1OWEwt
-         f304k/O//En7OZxwHSCkDvw9xBg1ogHqqGYz01h2dmYgRs5s8Y0LziX0eVsKb/FXku1r
-         9jz/om0xo6dnoEZP10yCPVr8ENv5C2RimyfdAJDoKSs1Tu4BX3N5rZ7oQ64dW3k1g6SH
-         v/Xg==
-X-Gm-Message-State: AOJu0Yx0mdCYFQpKTBWWTuQCFF92FsCazBQpYvXPdd9a+KsaLq9i0Dh1
-	Jld7eK2h+5A6+itqXog8EwSxMXODJz0juUvN75ntLP3rozjp+Qqb
-X-Gm-Gg: ASbGnct6ny/fcVl5wQe8dyWpXvlKFhv7VDd1B5YY3aTVs4B1IG8d8NQ63Fd0cbPRK2J
-	iilKGwNbRQ8Fn8yO3FNI/f17xzXXZ1FlgxpHRsXp68fs2wW3WnSf/rgcSY2HCTrjtlApnGnPeSD
-	ERkbMK+ZuDk6+z+9V2m6isQ67vkJ0uBdOlmFchzSHvXqV1b+CaJRVfjf53uPEwjTxmoduqEBsxN
-	dqnkts/chTgDxXk5OqOECwb3NxM0cyMV+Kbgb4UuXajM+q8ianweOiScI9f/vLTYOlheL7EpNwW
-	QFipkJ3d2nzz01XLNJYH73SuOjoN3Ybg4vELd7xcG8SGW/ZkOLs8pvvtklUuJm1nlPj59ph+y28
-	gXb0A
-X-Google-Smtp-Source: AGHT+IFi/pl1+kYD/76ekvd4gzjSl0YfqXxDau9kzWZIzbXn80QsA39CkXQWExTlmp9UQ9EcAAO6Eg==
-X-Received: by 2002:a17:907:1b05:b0:ac3:45c6:a1ec with SMTP id a640c23a62f3a-acad34bfaecmr1477673866b.25.1744710475082;
-        Tue, 15 Apr 2025 02:47:55 -0700 (PDT)
-Received: from [10.1.1.210] (89-139-41-229.bb.netvision.net.il. [89.139.41.229])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3d9csm1060597466b.25.2025.04.15.02.47.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:47:54 -0700 (PDT)
-Message-ID: <aedaf79b-7bd3-885c-2bcf-ab9c73f7cf86@outbound.gmail.com>
-Date: Tue, 15 Apr 2025 12:46:51 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwQUxlN3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ACDAC4CEDD;
+	Tue, 15 Apr 2025 09:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744710494;
+	bh=yUDOtL59iR5TIGbk9FlCT53L9VrFtzpvAbsj9EwZ4Nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LwQUxlN3IhuTC9DttPgBP/p4Zzm3jgByNlywNderSDuuqMNJr33MxEb2UQY29oPkk
+	 eRi8bIbxCgfiMYkxA4MmIlLJ+Eo9uy7DcEzDIikFkBBzoSeeyoeYD/n5fRTS78OdIq
+	 82d0a+Ex6UAD0Qw0+/9JTkmf9JceR7zgANkLKJr/3d9l0KinXJtjKKa29kguXhTJWG
+	 MqSgBG2KVEVe8liD41gRzvW3MppGwnLoL0Mvtq2TSWORM65KjL82CVfvVwOlDPb8ae
+	 geA8XoUKUEGecyKuLbAXw/Q/Qycprv5xHLTR2vWj9DjhiL3peCx8FWx1xc3qVf7IkM
+	 CMcx/0cJG90Ow==
+Date: Tue, 15 Apr 2025 11:48:07 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
+Message-ID: <Z_4rVyUjK1dlnTsT@pollux>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-3-remo@buenzli.dev>
+ <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+ <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH] char: xillybus: Use to_delayed_work()
-Content-Language: en-US
-To: Chen Ni <nichen@iscas.ac.cn>, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org
-References: <20250414074559.3954142-1-nichen@iscas.ac.cn>
-From: Eli Billauer <eli.billauer@gmail.com>
-In-Reply-To: <20250414074559.3954142-1-nichen@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev>
 
-Yes, I suppose this is the right way to do it.
-
-Thanks,
-    Eli
-
-Acked-by: Eli Billauer <eli.billauer@gmail.com>
-
-On 14/04/2025 10:45, Chen Ni wrote:
-> Use to_delayed_work() instead of open-coding it.
+On Tue, Apr 15, 2025 at 01:55:42AM +0200, Remo Senekowitsch wrote:
+> On Mon Apr 14, 2025 at 7:44 PM CEST, Danilo Krummrich wrote:
+> > On Mon, Apr 14, 2025 at 05:26:27PM +0200, Remo Senekowitsch wrote:
+> >> The device property API is a firmware agnostic API for reading
+> >> properties from firmware (DT/ACPI) devices nodes and swnodes.
+> >> 
+> >> While the C API takes a pointer to a caller allocated variable/buffer,
+> >> the rust API is designed to return a value and can be used in struct
+> >> initialization. Rust generics are also utilized to support different
+> >> types of properties where appropriate.
+> >> 
+> >> The PropertyGuard is a way to force users to specify whether a property
+> >> is supposed to be required or not. This allows us to move error
+> >> logging of missing required properties into core, preventing a lot of
+> >> boilerplate in drivers.
+> >
+> > The patch adds a lot of thing, i.e.
+> >   * implement PropertyInt
+> >   * implement PropertyGuard
+> >   * extend FwNode by a lot of functions
+> >   * extend Device by some property functions
+> >
+> > I see that from v1 a lot of things have been squashed, likely because there are
+> > a few circular dependencies. Is there really no reasonable way to break this
+> > down a bit?
 > 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->   drivers/char/xillybus/xillybus_core.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/char/xillybus/xillybus_core.c b/drivers/char/xillybus/xillybus_core.c
-> index 11b7c4749274..efb1ae834265 100644
-> --- a/drivers/char/xillybus/xillybus_core.c
-> +++ b/drivers/char/xillybus/xillybus_core.c
-> @@ -1184,8 +1184,7 @@ static int xillybus_flush(struct file *filp, fl_owner_t id)
->   
->   static void xillybus_autoflush(struct work_struct *work)
->   {
-> -	struct delayed_work *workitem = container_of(
-> -		work, struct delayed_work, work);
-> +	struct delayed_work *workitem = to_delayed_work(work);
->   	struct xilly_channel *channel = container_of(
->   		workitem, struct xilly_channel, rd_workitem);
->   	int rc;
+> I was explicitly asked to do this in the previous thread[1].
 
+I'm well aware that you were asked to do so and that one reason was that
+subsequent patches started deleting code that was added in previous ones
+(hence my suspicion of circular dependencies and that splitting up things might
+not be super trivial).
+
+> I'm happy
+> to invest time into organizing files and commits exactly the way people
+> want, but squashing and splitting the same commits back and forth
+> between subsequent patch series is a waste of my time.
+
+I don't think you were asked to go back and forth, but whether you see a
+reasonable way to break things down a bit, where "reasonable" means without
+deleting code that was just added.
+
+> Do reviewers not typically read the review comments of others as well?
+
+I think mostly they do, but maintainers and reviewers are rather busy people.
+So, I don't think you can expect everyone to follow every thread, especially
+when they get lengthy.
+
+> What can I do to avoid this situation and make progress instead of
+> running in circles?
+
+I suggest to investigate whether it can be split it up in a reasonable way and
+subsequently answer the question.
+
+With your contribution you attempt to add a rather large portion of pretty core
+code. This isn't an easy task and quite some discussion is totally expected;
+please don't get frustrated, the series goes pretty well. :)
+
+> 
+> Link: https://lore.kernel.org/rust-for-linux/20250326171411.590681-1-remo@buenzli.dev/T/#m68b99b283a2e62726ee039bb2394d0741b31e330 [1]
+> 
+> >> +    /// helper used to display name or path of a fwnode
+> >> +    ///
+> >> +    /// # Safety
+> >> +    ///
+> >> +    /// Callers must provide a valid format string for a fwnode.
+> >> +    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CStr) -> core::fmt::Result {
+> >> +        let mut buf = [0; 256];
+> >> +        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.as_raw()` is
+> >> +        // valid because `self` is valid.
+> >> +        let written = unsafe {
+> >> +            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as_ptr(), self.as_raw())
+> >> +        };
+> >
+> > Why do we need this? Can't we use write! right away?
+> 
+> I don't know how, can you be more specific? I'm not too familiar with
+> how these formatting specifiers work under the hood, but on the face of
+> it, Rust and C seem very different.
+
+See below.
+
+> 
+> >> +        // SAFETY: `written` is smaller or equal to `buf.len()`.
+> >> +        let b: &[u8] = unsafe { core::slice::from_raw_parts(buf.as_ptr(), written as usize) };
+> >> +        write!(f, "{}", BStr::from_bytes(b))
+> >> +    }
+> >> +
+> >> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> >> +    /// printing the name of a node.
+> >> +    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
+> >> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+> >> +
+> >> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+> >> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> >> +                // SAFETY: "%pfwP" is a valid format string for fwnode
+> >> +                unsafe { self.0.fmt(f, c_str!("%pfwP")) }
+
+I think this could just use write!() and fwnode_get_name(), right?
+
+> >> +            }
+> >> +        }
+> >> +
+> >> +        FwNodeDisplayName(self)
+> >> +    }
+> >> +
+> >> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> >> +    /// printing the full path of a node.
+> >> +    pub fn display_path(&self) -> impl core::fmt::Display + use<'_> {
+> >> +        struct FwNodeDisplayPath<'a>(&'a FwNode);
+> >> +
+> >> +        impl core::fmt::Display for FwNodeDisplayPath<'_> {
+> >> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> >> +                // SAFETY: "%pfwf" is a valid format string for fwnode
+> >> +                unsafe { self.0.fmt(f, c_str!("%pfwf")) }
+
+This one is indeed a bit more tricky, because it comes from
+fwnode_full_name_string() in lib/vsprintf.c.
+
+Maybe it would be better to replicate the loop within fwnode_full_name_string()
+and call write! from there.
+
+> >> +            }
+> >> +        }
+> >> +
+> >> +        FwNodeDisplayPath(self)
+> >> +    }
+> >>  }
+> >>  
+> >>  // SAFETY: Instances of `FwNode` are always reference-counted.
+> >> @@ -73,3 +257,200 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+> >>          unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
+> >>      }
+> >>  }
+> >> +
+> >> +/// Implemented for several types that can be read as properties.
+> >> +///
+> >> +/// Informally, this is implemented for strings, integers and arrays of
+> >> +/// integers. It's used to make [`FwNode::property_read`] generic over the
+> >> +/// type of property being read. There are also two dedicated methods to read
+> >> +/// other types, because they require more specialized function signatures:
+> >> +/// - [`property_read_bool`](Device::property_read_bool)
+> >> +/// - [`property_read_array_vec`](Device::property_read_array_vec)
+> >> +pub trait Property: Sized {
+> >> +    /// Used to make [`FwNode::property_read`] generic.
+> >> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self>;
+> >> +}
+> >> +
+> >> +impl Property for CString {
+> >> +    fn read(fwnode: &FwNode, name: &CStr) -> Result<Self> {
+> >> +        let mut str: *mut u8 = ptr::null_mut();
+> >> +        let pstr: *mut _ = &mut str;
+> >> +
+> >> +        // SAFETY: `name` is non-null and null-terminated. `fwnode.as_raw` is
+> >> +        // valid because `fwnode` is valid.
+> >> +        let ret = unsafe {
+> >> +            bindings::fwnode_property_read_string(fwnode.as_raw(), name.as_char_ptr(), pstr.cast())
+> >> +        };
+> >> +        to_result(ret)?;
+> >> +
+> >> +        // SAFETY: `pstr` contains a non-null ptr on success
+> >> +        let str = unsafe { CStr::from_char_ptr(*pstr) };
+> >> +        Ok(str.try_into()?)
+> >> +    }
+> >> +}
+> >
+> > I think it would be pretty weird to have a function CString::read() that takes a
+> > FwNode argument, no? Same for all the other types below.
+> >
+> > I assume you do this for
+> >
+> > 	pub fn property_read<'fwnode, 'name, T: Property>(
+> > 	   &'fwnode self,
+> > 	   name: &'name CStr,
+> > 	)
+> >
+> > but given that you have to do the separate impls anyways, is there so much value
+> > having the generic variant? You could still generate all the
+> > property_read_{int}() variants with a macro.
+> >
+> > If you really want a generic property_read(), I think you should create new
+> > types instead and implement the Property trait for them instead.
+> 
+> Yeah, that would be workable. On the other hand, it's not unusual in
+> Rust to implement traits on foreign types, right? If the problem is
+> the non-descriptive name "read" then we can change it to something more
+> verbose. Maybe `CStr::read_from_fwnode_property` or something. It's not
+> meant to be used directly, a verbose name wouldn't cause any damage.
+
+Yeah, if we keep this approach, I'd prefer a more descriptive name.
+
+However, I'd like to hear some more opinions from other members of the Rust team
+on this one.
