@@ -1,264 +1,343 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11970250C08
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:19:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-m3274.qiye.163.com (mail-m3274.qiye.163.com [220.197.32.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B1D14B945
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708786; cv=none; b=CSjHGfsvCjNKPi2NqgfAQDpMhpzYDdVfENV9/Rg2Q3Y+Pqh/vOE91xSj7gSRSBS5bD+QqvnTJ4dtOkfIbsKwckzoFVt0hnwXzXAOW/UBnqLuKBEvHydb4ncYKy1fGC+7+ygsnobxOulNCbRM0/+GfQ3GcMyiEk48yb1j9hA+64Q=
+	t=1744708883; cv=none; b=iVKRPHNAaqzT+xjiiPKpdPQepXDi2u+mEBgBa8ggskZm66LebyMxh/cw2xX9A5jz+Ai8NKQCbEoqO4QTntC6QU82TJHvwxmqqP5iYrGnLYp4Ipr9TrpZ8E0PXzkS8JJs9y1HvdpSeOAicKphTm8JGHPHCWtZmYdha6E1kDtLfmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708786; c=relaxed/simple;
-	bh=LUmlEpZ4Ez9LtPfiPkGnfU5PRDp3fu5I4ZGM8vvkSnM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GFH9ZSWA1u/zeQXm08krFLWplh+SvN3iYVf4xBwfwPaymywiFw+xxvtmOrKVZGxXYbb2Z8z6zfjuE224u3dU47JjKouRLJLWWfN1G3wLWVFw994kjfS+2ZJgWyNIbp50fxqWts/4ljyMxZyuKtqOsRfs4zsLZszz/gfeG/3drKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxIK+sJP5n38u9AA--.50120S3;
-	Tue, 15 Apr 2025 17:19:40 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMCx7xukJP5nHMyCAA--.57263S2;
-	Tue, 15 Apr 2025 17:19:34 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-Date: Tue, 15 Apr 2025 17:19:30 +0800
-Message-ID: <20250415091930.19529-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1744708883; c=relaxed/simple;
+	bh=xaYS/ny1ssrKGT83SQ6r2ZY5Mse7fdt3O8+TCun9qJI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOrLx8HecwiAdz0ZEom5HbXQifCRIYSK7S+Y/oN4MK3BMT8a9ujvGcZQkUOcnJRoT26Bcg1ltr0rk5s+9z1ayapePq2XVay/RRjirTSPhQ/olHv9G3aL7nIBCRbbUOuwCwx2Dc25LgNAEUWL8OW/eLq3nDj27fkCRryWjDBto34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=aN7IwJwS; arc=none smtp.client-ip=220.197.32.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="aN7IwJwS"
+Received: from [192.168.60.65] (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11f0ba4a1;
+	Tue, 15 Apr 2025 17:21:09 +0800 (GMT+08:00)
+Message-ID: <9e2b5033-b09b-4264-a9d6-f5354292be64@rock-chips.com>
+Date: Tue, 15 Apr 2025 17:21:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCx7xukJP5nHMyCAA--.57263S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JF4rtw48CFy3JFW3Wr4fXrc_yoW3Zr47pr
-	nrArn5Cw48GFnav34DJ34jvFZ8Xas5Ga1S93Zrt34fCr1jkr9rurn7Ga1DZFy8Ka48Ar1F
-	9r4avF1Sy3WUC3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8r9N3UUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] nvmem: rockchip-otp: Add support for rk3568-otp
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+References: <20250227110804.2342976-1-kever.yang@rock-chips.com>
+ <20250227110804.2342976-2-kever.yang@rock-chips.com>
+ <8c697031-9978-40cd-a1e0-f40552db9107@kwiboo.se>
+Content-Language: en-US
+From: Kever Yang <kever.yang@rock-chips.com>
+In-Reply-To: <8c697031-9978-40cd-a1e0-f40552db9107@kwiboo.se>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCQktMVk4aTE1CTBkaGkhMTlYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a9638c09dc003afkunm11f0ba4a1
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6ODI6Lhw4TzJLLBgXOEoPTwML
+	MU4aChBVSlVKTE9PTEtDQ0xKS01JVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUJNSEo3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=aN7IwJwSJ62qLkfuHxNsKpcehfAkHojBLvWL5iItJ9OXLJDA54xozFm6USSxFPM4ZGtRh/gXUksV0Ui2Qk42PvRGqpA8W6ST8kqqWW2bTIh1Lq0o92dg2MC5JphlVAFpkuMM0n1UHvJVbmhN7dZRNhfWGZSvgPJSzmSnstY78mc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=dIHeTD8Kwvo6z8MEqZL3742x9P8G+OUFPUsU1G6dCK8=;
+	h=date:mime-version:subject:message-id:from;
 
-Like the other relevant symbols, export some fp, lsx, lasx and lbt
-assembly symbols and put the function declarations in header files
-rather than source files.
+Hi Jonas,
 
-While at it, use "asmlinkage" for the other existing C prototypes
-of assembly functions and also do not use the "extern" keyword with
-function declarations according to the document coding-style.rst.
+On 2025/3/17 05:52, Jonas Karlman wrote:
+> Hi Kever,
+>
+> On 2025-02-27 12:08, Kever Yang wrote:
+>> From: Finley Xiao <finley.xiao@rock-chips.com>
+>>
+>> This adds the necessary data for handling efuse on the rk3568.
+>>
+>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>> ---
+>>
+>> Changes in v2: None
+>>
+>>   drivers/nvmem/rockchip-otp.c | 82 ++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 82 insertions(+)
+>>
+>> diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
+>> index ebc3f0b24166..a04bce89ecc8 100644
+>> --- a/drivers/nvmem/rockchip-otp.c
+>> +++ b/drivers/nvmem/rockchip-otp.c
+>> @@ -27,6 +27,7 @@
+>>   #define OTPC_USER_CTRL			0x0100
+>>   #define OTPC_USER_ADDR			0x0104
+>>   #define OTPC_USER_ENABLE		0x0108
+>> +#define OTPC_USER_QP			0x0120
+>>   #define OTPC_USER_Q			0x0124
+>>   #define OTPC_INT_STATUS			0x0304
+>>   #define OTPC_SBPI_CMD0_OFFSET		0x1000
+>> @@ -53,6 +54,8 @@
+>>   #define SBPI_ENABLE_MASK		GENMASK(16, 16)
+>>   
+>>   #define OTPC_TIMEOUT			10000
+>> +#define OTPC_TIMEOUT_PROG		100000
+> This is not used anywhere in this patch, please drop it.
+>
+>> +#define RK3568_NBYTES			2
+>>   
+>>   /* RK3588 Register */
+>>   #define RK3588_OTPC_AUTO_CTRL		0x04
+>> @@ -184,6 +187,70 @@ static int px30_otp_read(void *context, unsigned int offset,
+>>   	return ret;
+>>   }
+>>   
+>> +static int rk3568_otp_read(void *context, unsigned int offset, void *val,
+>> +			   size_t bytes)
+>> +{
+>> +	struct rockchip_otp *otp = context;
+>> +	unsigned int addr_start, addr_end, addr_offset, addr_len;
+>> +	unsigned int otp_qp;
+>> +	u32 out_value;
+>> +	u8 *buf;
+>> +	int ret = 0, i = 0;
+>> +
+>> +	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
+>> +	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
+>> +	addr_offset = offset % RK3568_NBYTES;
+>> +	addr_len = addr_end - addr_start;
+>> +
+>> +	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
+>> +		      GFP_KERNEL);
+>> +	if (!buf)
+>> +		return -ENOMEM;
+>> +
+>> +	ret = rockchip_otp_reset(otp);
+>> +	if (ret) {
+>> +		dev_err(otp->dev, "failed to reset otp phy\n");
+>> +		return ret;
+> This is leaking the kzalloc memory above.
+>
+>> +	}
+>> +
+>> +	ret = rockchip_otp_ecc_enable(otp, true);
+>> +	if (ret < 0) {
+>> +		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
+>> +		return ret;
+> Same here.
+>
+>> +	}
+>> +
+>> +	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+>> +	udelay(5);
+>> +	while (addr_len--) {
+>> +		writel(addr_start++ | OTPC_USER_ADDR_MASK,
+>> +		       otp->base + OTPC_USER_ADDR);
+>> +		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
+>> +		       otp->base + OTPC_USER_ENABLE);
+>> +		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
+>> +		if (ret < 0) {
+>> +			dev_err(otp->dev, "timeout during read setup\n");
+>> +			goto read_end;
+>> +		}
+>> +		otp_qp = readl(otp->base + OTPC_USER_QP);
+>> +		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
+>> +			ret = -EIO;
+>> +			dev_err(otp->dev, "ecc check error during read setup\n");
+>> +			goto read_end;
+>> +		}
+>> +		out_value = readl(otp->base + OTPC_USER_Q);
+>> +		memcpy(&buf[i], &out_value, RK3568_NBYTES);
+>> +		i += RK3568_NBYTES;
+>> +	}
+>> +
+>> +	memcpy(val, buf + addr_offset, bytes);
+>> +
+>> +read_end:
+>> +	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+>> +	kfree(buf);
+>> +
+>> +	return ret;
+>> +}
+> This can be simplified if this is rebased on top of "nvmem: rockchip-otp:
+> Handle internal word_size in main reg_read op" [1].
+>
+> [1] https://lore.kernel.org/r/20250316191900.1858944-1-jonas@kwiboo.se
+This look good to me, I will do it.
+>
+> Something like following could be squashed in with this:
+>
+> diff --git a/drivers/nvmem/rockchip-otp.c b/drivers/nvmem/rockchip-otp.c
+> index ea48d51bc2ff..0991a4047bec 100644
+> --- a/drivers/nvmem/rockchip-otp.c
+> +++ b/drivers/nvmem/rockchip-otp.c
+> @@ -54,8 +54,6 @@
+>   #define SBPI_ENABLE_MASK		GENMASK(16, 16)
+>   
+>   #define OTPC_TIMEOUT			10000
+> -#define OTPC_TIMEOUT_PROG		100000
+> -#define RK3568_NBYTES			2
+>   
+>   /* RK3588 Register */
+>   #define RK3588_OTPC_AUTO_CTRL		0x04
+> @@ -188,24 +186,12 @@ static int px30_otp_read(void *context, unsigned int offset,
+>   }
+>   
+>   static int rk3568_otp_read(void *context, unsigned int offset, void *val,
+> -			   size_t bytes)
+> +			   size_t count)
+>   {
+>   	struct rockchip_otp *otp = context;
+> -	unsigned int addr_start, addr_end, addr_offset, addr_len;
+> -	unsigned int otp_qp;
+> -	u32 out_value;
+> -	u8 *buf;
+> -	int ret = 0, i = 0;
+> -
+> -	addr_start = rounddown(offset, RK3568_NBYTES) / RK3568_NBYTES;
+> -	addr_end = roundup(offset + bytes, RK3568_NBYTES) / RK3568_NBYTES;
+> -	addr_offset = offset % RK3568_NBYTES;
+> -	addr_len = addr_end - addr_start;
+> -
+> -	buf = kzalloc(array3_size(addr_len, RK3568_NBYTES, sizeof(*buf)),
+> -		      GFP_KERNEL);
+> -	if (!buf)
+> -		return -ENOMEM;
+> +	u16 *buf = val;
+> +	u32 otp_qp;
+> +	int ret;
+>   
+>   	ret = rockchip_otp_reset(otp);
+>   	if (ret) {
+> @@ -214,39 +200,39 @@ static int rk3568_otp_read(void *context, unsigned int offset, void *val,
+>   	}
+>   
+>   	ret = rockchip_otp_ecc_enable(otp, true);
+> -	if (ret < 0) {
+> +	if (ret) {
+>   		dev_err(otp->dev, "rockchip_otp_ecc_enable err\n");
+>   		return ret;
+>   	}
+>   
+>   	writel(OTPC_USE_USER | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+>   	udelay(5);
+> -	while (addr_len--) {
+> -		writel(addr_start++ | OTPC_USER_ADDR_MASK,
+> +
+> +	while (count--) {
+> +		writel(offset++ | OTPC_USER_ADDR_MASK,
+>   		       otp->base + OTPC_USER_ADDR);
+>   		writel(OTPC_USER_FSM_ENABLE | OTPC_USER_FSM_ENABLE_MASK,
+>   		       otp->base + OTPC_USER_ENABLE);
+> -		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS, OTPC_USER_DONE);
+> -		if (ret < 0) {
+> +
+> +		ret = rockchip_otp_wait_status(otp, OTPC_INT_STATUS,
+> +					       OTPC_USER_DONE);
+> +		if (ret) {
+>   			dev_err(otp->dev, "timeout during read setup\n");
+>   			goto read_end;
+>   		}
+> +
+>   		otp_qp = readl(otp->base + OTPC_USER_QP);
+>   		if (((otp_qp & 0xc0) == 0xc0) || (otp_qp & 0x20)) {
+>   			ret = -EIO;
+>   			dev_err(otp->dev, "ecc check error during read setup\n");
+>   			goto read_end;
+>   		}
+> -		out_value = readl(otp->base + OTPC_USER_Q);
+> -		memcpy(&buf[i], &out_value, RK3568_NBYTES);
+> -		i += RK3568_NBYTES;
+> -	}
+>   
+> -	memcpy(val, buf + addr_offset, bytes);
+> +		*buf++ = readl(otp->base + OTPC_USER_Q);
+> +	}
+>   
+>   read_end:
+>   	writel(0x0 | OTPC_USE_USER_MASK, otp->base + OTPC_USER_CTRL);
+> -	kfree(buf);
+>   
+>   	return ret;
+>   }
+>
+>> +
+>>   static int rk3588_otp_read(void *context, unsigned int offset,
+>>   			   void *val, size_t bytes)
+>>   {
+>> @@ -274,6 +341,17 @@ static const struct rockchip_data px30_data = {
+>>   	.reg_read = px30_otp_read,
+>>   };
+>>   
+>> +static const char * const rk3568_otp_clocks[] = {
+>> +	"usr", "sbpi", "apb_pclk", "phy",
+> Why do we change from using the "otp"-name for the main clock?
+>
+> I suggest we keep the main clock named "otp" instead of "usr" for
+> consistency.
 
-Cc: stable@vger.kernel.org # 6.6+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/loongarch/include/asm/fpu.h | 38 ++++++++++++++++++--------------
- arch/loongarch/include/asm/lbt.h | 10 ++++++---
- arch/loongarch/kernel/fpu.S      |  6 +++++
- arch/loongarch/kernel/lbt.S      |  4 ++++
- arch/loongarch/kernel/signal.c   | 21 ------------------
- 5 files changed, 39 insertions(+), 40 deletions(-)
+The name is from the hardware design, it follows the hardware naming by 
+default.
 
-diff --git a/arch/loongarch/include/asm/fpu.h b/arch/loongarch/include/asm/fpu.h
-index 3177674228f8..23f5a4b9c32d 100644
---- a/arch/loongarch/include/asm/fpu.h
-+++ b/arch/loongarch/include/asm/fpu.h
-@@ -22,22 +22,28 @@
- struct sigcontext;
- 
- #define kernel_fpu_available() cpu_has_fpu
--extern void kernel_fpu_begin(void);
--extern void kernel_fpu_end(void);
--
--extern void _init_fpu(unsigned int);
--extern void _save_fp(struct loongarch_fpu *);
--extern void _restore_fp(struct loongarch_fpu *);
--
--extern void _save_lsx(struct loongarch_fpu *fpu);
--extern void _restore_lsx(struct loongarch_fpu *fpu);
--extern void _init_lsx_upper(void);
--extern void _restore_lsx_upper(struct loongarch_fpu *fpu);
--
--extern void _save_lasx(struct loongarch_fpu *fpu);
--extern void _restore_lasx(struct loongarch_fpu *fpu);
--extern void _init_lasx_upper(void);
--extern void _restore_lasx_upper(struct loongarch_fpu *fpu);
-+void kernel_fpu_begin(void);
-+void kernel_fpu_end(void);
-+
-+asmlinkage void _init_fpu(unsigned int);
-+asmlinkage void _save_fp(struct loongarch_fpu *);
-+asmlinkage void _restore_fp(struct loongarch_fpu *);
-+asmlinkage int _save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
-+asmlinkage int _restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
-+
-+asmlinkage void _save_lsx(struct loongarch_fpu *fpu);
-+asmlinkage void _restore_lsx(struct loongarch_fpu *fpu);
-+asmlinkage void _init_lsx_upper(void);
-+asmlinkage void _restore_lsx_upper(struct loongarch_fpu *fpu);
-+asmlinkage int _save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+asmlinkage int _restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+
-+asmlinkage void _save_lasx(struct loongarch_fpu *fpu);
-+asmlinkage void _restore_lasx(struct loongarch_fpu *fpu);
-+asmlinkage void _init_lasx_upper(void);
-+asmlinkage void _restore_lasx_upper(struct loongarch_fpu *fpu);
-+asmlinkage int _save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
-+asmlinkage int _restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
- 
- static inline void enable_lsx(void);
- static inline void disable_lsx(void);
-diff --git a/arch/loongarch/include/asm/lbt.h b/arch/loongarch/include/asm/lbt.h
-index e671978bf552..38566574e562 100644
---- a/arch/loongarch/include/asm/lbt.h
-+++ b/arch/loongarch/include/asm/lbt.h
-@@ -12,9 +12,13 @@
- #include <asm/loongarch.h>
- #include <asm/processor.h>
- 
--extern void _init_lbt(void);
--extern void _save_lbt(struct loongarch_lbt *);
--extern void _restore_lbt(struct loongarch_lbt *);
-+asmlinkage void _init_lbt(void);
-+asmlinkage void _save_lbt(struct loongarch_lbt *);
-+asmlinkage void _restore_lbt(struct loongarch_lbt *);
-+asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
-+asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
-+asmlinkage int _save_ftop_context(void __user *ftop);
-+asmlinkage int _restore_ftop_context(void __user *ftop);
- 
- static inline int is_lbt_enabled(void)
- {
-diff --git a/arch/loongarch/kernel/fpu.S b/arch/loongarch/kernel/fpu.S
-index 6ab640101457..28caf416ae36 100644
---- a/arch/loongarch/kernel/fpu.S
-+++ b/arch/loongarch/kernel/fpu.S
-@@ -458,6 +458,7 @@ SYM_FUNC_START(_save_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_save_fp_context)
-+EXPORT_SYMBOL_GPL(_save_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -471,6 +472,7 @@ SYM_FUNC_START(_restore_fp_context)
- 	li.w		a0, 0				# success
- 	jr		ra
- SYM_FUNC_END(_restore_fp_context)
-+EXPORT_SYMBOL_GPL(_restore_fp_context)
- 
- /*
-  * a0: fpregs
-@@ -484,6 +486,7 @@ SYM_FUNC_START(_save_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lsx_context)
-+EXPORT_SYMBOL_GPL(_save_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -497,6 +500,7 @@ SYM_FUNC_START(_restore_lsx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lsx_context)
-+EXPORT_SYMBOL_GPL(_restore_lsx_context)
- 
- /*
-  * a0: fpregs
-@@ -510,6 +514,7 @@ SYM_FUNC_START(_save_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_save_lasx_context)
-+EXPORT_SYMBOL_GPL(_save_lasx_context)
- 
- /*
-  * a0: fpregs
-@@ -523,6 +528,7 @@ SYM_FUNC_START(_restore_lasx_context)
- 	li.w	a0, 0					# success
- 	jr	ra
- SYM_FUNC_END(_restore_lasx_context)
-+EXPORT_SYMBOL_GPL(_restore_lasx_context)
- 
- .L_fpu_fault:
- 	li.w	a0, -EFAULT				# failure
-diff --git a/arch/loongarch/kernel/lbt.S b/arch/loongarch/kernel/lbt.S
-index 001f061d226a..71678912d24c 100644
---- a/arch/loongarch/kernel/lbt.S
-+++ b/arch/loongarch/kernel/lbt.S
-@@ -90,6 +90,7 @@ SYM_FUNC_START(_save_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_lbt_context)
-+EXPORT_SYMBOL_GPL(_save_lbt_context)
- 
- /*
-  * a0: scr
-@@ -110,6 +111,7 @@ SYM_FUNC_START(_restore_lbt_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_lbt_context)
-+EXPORT_SYMBOL_GPL(_restore_lbt_context)
- 
- /*
-  * a0: ftop
-@@ -120,6 +122,7 @@ SYM_FUNC_START(_save_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_save_ftop_context)
-+EXPORT_SYMBOL_GPL(_save_ftop_context)
- 
- /*
-  * a0: ftop
-@@ -150,6 +153,7 @@ SYM_FUNC_START(_restore_ftop_context)
- 	li.w		a0, 0			# success
- 	jr		ra
- SYM_FUNC_END(_restore_ftop_context)
-+EXPORT_SYMBOL_GPL(_restore_ftop_context)
- 
- .L_lbt_fault:
- 	li.w		a0, -EFAULT		# failure
-diff --git a/arch/loongarch/kernel/signal.c b/arch/loongarch/kernel/signal.c
-index 7a555b600171..4740cb5b2388 100644
---- a/arch/loongarch/kernel/signal.c
-+++ b/arch/loongarch/kernel/signal.c
-@@ -51,27 +51,6 @@
- #define lock_lbt_owner()	({ preempt_disable(); pagefault_disable(); })
- #define unlock_lbt_owner()	({ pagefault_enable(); preempt_enable(); })
- 
--/* Assembly functions to move context to/from the FPU */
--extern asmlinkage int
--_save_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_restore_fp_context(void __user *fpregs, void __user *fcc, void __user *csr);
--extern asmlinkage int
--_save_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lsx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_save_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--extern asmlinkage int
--_restore_lasx_context(void __user *fpregs, void __user *fcc, void __user *fcsr);
--
--#ifdef CONFIG_CPU_HAS_LBT
--extern asmlinkage int _save_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _restore_lbt_context(void __user *regs, void __user *eflags);
--extern asmlinkage int _save_ftop_context(void __user *ftop);
--extern asmlinkage int _restore_ftop_context(void __user *ftop);
--#endif
--
- struct rt_sigframe {
- 	struct siginfo rs_info;
- 	struct ucontext rs_uctx;
--- 
-2.42.0
+To be honest the driver does not care the clock/reset naming and the 
+sequence at all,
 
+and the clock/reset name and number are keep changing due to the 
+controller IP
+
+may come from different vendor or process change.
+
+I can rename the "usr" to "otp" to make it looks better, and also 
+reorder it so like it
+
+look like rk3588.
+
+
+Thanks,
+- Kever
+>> +};
+>> +
+>> +static const struct rockchip_data rk3568_data = {
+>> +	.size = 0x80,
+> If this is rebased on top of [1] you should also add:
+>
+> 	.word_size = sizeof(u16),
+>
+> Above suggested changes can also be found in a FIXUP commit at my
+> linux-rockchip tree of pending RK3528 patches [2].
+>
+> [2] https://github.com/Kwiboo/linux-rockchip/commits/next-20250314-rk3528/
+>
+> Regards,
+> Jonas
+>
+>> +	.clks = rk3568_otp_clocks,
+>> +	.num_clks = ARRAY_SIZE(rk3568_otp_clocks),
+>> +	.reg_read = rk3568_otp_read,
+>> +};
+>> +
+>>   static const char * const rk3588_otp_clocks[] = {
+>>   	"otp", "apb_pclk", "phy", "arb",
+>>   };
+>> @@ -294,6 +372,10 @@ static const struct of_device_id rockchip_otp_match[] = {
+>>   		.compatible = "rockchip,rk3308-otp",
+>>   		.data = &px30_data,
+>>   	},
+>> +	{
+>> +		.compatible = "rockchip,rk3568-otp",
+>> +		.data = &rk3568_data,
+>> +	},
+>>   	{
+>>   		.compatible = "rockchip,rk3588-otp",
+>>   		.data = &rk3588_data,
+>
