@@ -1,168 +1,155 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF46317C98
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F4228DEF1;
+	Tue, 15 Apr 2025 11:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715335; cv=none; b=UThAHwEuD2gtyEAksx/Gw4wd+bEYZyNYAjiJ0SzYOjzFhzdZzTrYbXl2fK/bpOOFgwIDUBFb8EX5N3lEk9at+dbn0QAynaqhxfvNgsTQWtDsidhiSfgN0SOJyV3aVCl/JF1xK0vKrtpttlx5ZPrvfeaJL0Smeghm6ZBcBshzVOE=
+	t=1744715337; cv=none; b=VH7lgSJI6TInfTV4Pytz9P9aQxfTIGl2DFofGnIuI05m9U/MR+rWwu2iYu7vMNAcXh1couBk62INcmugrHqGX3rXSE4g4ABI3iqh86iOgJ6S3J6rNjhcZKXSFKKIylYOAruYqOutXVIZTUY3N/EUKpw+qy3pAy0lwg18ergPm8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715335; c=relaxed/simple;
-	bh=bwEfUzuopWre1ZySt0NNb2cBAIv614nzpCPXlndK/2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XO1A4MwARxri3WpdkgtmXnBItqAnqa5lFbEGAeas9VdL6BT0iu/FT511S/uPzkyVfM7LNCuvEeL7BOtoP+LQVi2RhhphwDkyhVpaKlGxRhvKURCu9LAcfEgBRYPo8IzVyObESYKhdedNKCgVdWj8yDECCZBvynKY2TtMjmirz5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uI1xDssi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=MtaJyPc5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OIOY4hfw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7VatcsVk; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744715337; c=relaxed/simple;
+	bh=cyf6aOq5K5ci6RMx4xG3AbjsXQn9rINF7Xjd0gLpgdI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=IJ9IXyuDBHWwKLm+/8dVkdHjJWbQoImU4i/re+Ccjn1EuICkofQ659Jw2W6hp5JfXKeaugBlWbCZ65iz9YGxPniREsIi151ct1kpeeN7meH4DOfAOsOinto9rDdt4lbAqMZunmlNok5rJXolbbUL78UdSQtbzpMpRuELzgn9j3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hi5hOqjw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uI1xDssi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="MtaJyPc5";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OIOY4hfw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7VatcsVk"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B22EE21134;
-	Tue, 15 Apr 2025 11:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744715332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BoJpHota7+8QJvowdrK3ydyh8Nvcw7MRfbekl5i6fho=;
-	b=uI1xDssijvRPgEhNjgtz/d6LHJHiMoqgk5+aFRRc3TIz6/DmeOdcu5XGL39KBj6KqGOcrO
-	0XpSWSnbZwGvXRsm6oGA0z77nqgRCqCaY8XqYmK87caNiCtKeWsyp39NryH3YGo8CBp10x
-	PpYi4w3My4PY++qjZzeLrQnUr0/8G+o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744715332;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BoJpHota7+8QJvowdrK3ydyh8Nvcw7MRfbekl5i6fho=;
-	b=MtaJyPc5cWZQYB7VnrET301ACxGfazmbdNZVQOE8fK3bIHQNNZuteBWfh/viz5zxlRkR/q
-	cn8LabHNcJ6+clAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744715330; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BoJpHota7+8QJvowdrK3ydyh8Nvcw7MRfbekl5i6fho=;
-	b=OIOY4hfwzHclarmjQp/4Xik9oOW9ugDd/LWh4EgqDsCEpcQKasmTqt9zbP/1vY4jB9td+q
-	xz8DzyK382A+YIWVBzaRfHRQVDMkjsfyAPXOu+dkEyhWVyd3XIV1H8QQ6S/nHrJ3gANo/p
-	JFrMhFz5BL7/bLPI+Neg7O2yfNNWCZs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744715330;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BoJpHota7+8QJvowdrK3ydyh8Nvcw7MRfbekl5i6fho=;
-	b=7VatcsVkssUeeHiklmJg5w6/ZXOoXk92eR5NGTr4sNe2dGmEz/70aE/wGW57xDwpjA8vJa
-	llng1ct7294y0rAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6F27137A5;
-	Tue, 15 Apr 2025 11:08:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Vee7KEI+/mcLdwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 15 Apr 2025 11:08:50 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 664B2A0947; Tue, 15 Apr 2025 13:08:46 +0200 (CEST)
-Date: Tue, 15 Apr 2025 13:08:46 +0200
-From: Jan Kara <jack@suse.cz>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: jack@suse.cz, almaz.alexandrovich@paragon-software.com, 
-	brauner@kernel.org, hch@infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev, 
-	syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Message-ID: <tgj6l2ymwspc7gd4mexoxtey27ewmrgj42mdozxmr7uymtubqr@q46d6tdh7kid>
-References: <q5zbucxhdxsso7r3ydtnsz7jjkohc2zevz5swfbzwjizceqicp@32vssyaakhqo>
- <20250415092637.251786-1-lizhi.xu@windriver.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hi5hOqjw"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tXTD002470;
+	Tue, 15 Apr 2025 11:08:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1SPJQT/eSawmiTnqZoilA6dL0SuUb0o3I9TRPtunBS4=; b=hi5hOqjwpRef4TMU
+	cF04y9TFXOQd7kYHyEEK/Nc67av1cQ1uyIfq4/iyne+doeobKuTpMmvznuKKmfya
+	xaxt+/n1HPAPSfgzaBXLcY9tseMj12ZN1xHKCwOvfZheO/ynJM+hoBui3jqSdgcT
+	1mkMfYi0XAcGRR5vN3Map3kUN99wI2Jbm63KsHvmaCPFUAh/NUMbYeM1auNKmTF9
+	+BDz7iq/iOJEe52/a6hc72lvpcHsQ27TvQF3TVTiroxlcZku97DLkK3eETm3UOBI
+	vgZ+5iiMJn6GuqGFh4StouAMQ3Aunk16xWfAWzSuYV06shxiu3uVIsXV88ba/Ovo
+	pd6VoA==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vfw8j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 11:08:51 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53FB8pa9019631
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 11:08:51 GMT
+Received: from [10.216.26.146] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 15 Apr
+ 2025 04:08:47 -0700
+Message-ID: <2b132133-9c03-4b7a-b59a-e0f701dfbd01@quicinc.com>
+Date: Tue, 15 Apr 2025 16:38:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415092637.251786-1-lizhi.xu@windriver.com>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[e36cc3297bd3afd25e19];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[windriver.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo,syzkaller.appspot.com:url,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 1/2] dt-bindings: mailbox: Document qcom,ipq5424-tmel
+From: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <andersson@kernel.org>, <konradybcio@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>, <dmitry.baryshkov@linaro.org>
+References: <20250327181750.3733881-1-quic_srichara@quicinc.com>
+ <20250327181750.3733881-2-quic_srichara@quicinc.com>
+ <20250328-lively-axiomatic-starfish-f9c0df@krzk-bin>
+ <321e1d4a-5aa3-49cb-8a85-e05dbaa08e78@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <321e1d4a-5aa3-49cb-8a85-e05dbaa08e78@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: qv3EqA0K8bhk-H5MKt6cVM8nNBweeZYZ
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67fe3e43 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=O0SNEarKJYvUgdu6pMAA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qv3EqA0K8bhk-H5MKt6cVM8nNBweeZYZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_05,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150078
 
-On Tue 15-04-25 17:26:37, Lizhi Xu wrote:
-> The ntfs3 can use the page cache directly, so its address_space_operations
-> need direct_IO. Exit ntfs_direct_IO() if it is a compressed file.
+
+
+On 4/1/2025 12:59 PM, Sricharan Ramabadhran wrote:
 > 
-> Fixes: b432163ebd15 ("fs/ntfs3: Update inode->i_mapping->a_ops on compression state")
-> Reported-by: syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=e36cc3297bd3afd25e19
-> Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
-
-OK, this looks sensible to me. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
-> V1 -> V2: exit direct io if it is a compressed file.
 > 
->  fs/ntfs3/inode.c | 1 +
->  1 file changed, 1 insertion(+)
+> On 3/28/2025 1:32 PM, Krzysztof Kozlowski wrote:
+>> On Thu, Mar 27, 2025 at 11:47:49PM +0530, Sricharan R wrote:
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - qcom,ipq5424-tmel
+>>
+>> blank line
+> ok
 > 
-> diff --git a/fs/ntfs3/inode.c b/fs/ntfs3/inode.c
-> index 3e2957a1e360..0f0d27d4644a 100644
-> --- a/fs/ntfs3/inode.c
-> +++ b/fs/ntfs3/inode.c
-> @@ -805,6 +805,10 @@ static ssize_t ntfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
->  		ret = 0;
->  		goto out;
->  	}
-> +	if (is_compressed(ni)) {
-> +		ret = 0;
-> +		goto out;
-> +	}
->  
->  	ret = blockdev_direct_IO(iocb, inode, iter,
->  				 wr ? ntfs_get_block_direct_IO_W :
-> @@ -2068,5 +2072,6 @@ const struct address_space_operations ntfs_aops_cmpr = {
->  	.read_folio	= ntfs_read_folio,
->  	.readahead	= ntfs_readahead,
->  	.dirty_folio	= block_dirty_folio,
-> +	.direct_IO	= ntfs_direct_IO,
->  };
->  // clang-format on
-> -- 
-> 2.43.0
+>>
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  interrupts:
+>>> +    maxItems: 1
+>>> +
+>>> +  mboxes:
+>>> +    maxItems: 1
+>>
+>> Why mbox is having an mbox? This does not look right and suggest the
+>> block is misrepresented. I read the diagram and description two times
+>> and still do not see how this fits there.
+> TMEL/QMP secure functionalities are exposed to clients (like rproc) by 
+> registering TMEL as mailbox controller. The IPC bit to communicate with 
+> the TMEL/QMP controller itself is handled by the apcs mailbox. Hence
+> it looks like a mbox inside mbox.
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Alternatively, would it be fine to fold the IPC bit handling in this 
+> driver itself for doing the regmap_write (instead of connecting to
+> apcs mailbox separately) ?
+> 
+> Also, there are couple of other ways of designing this as well.
+> Earlier i mentioned this in the RFC post [1] for getting the design
+> sorted out.
+> 
+> [1] https://lore.kernel.org/lkml/20241205080633.2623142-1- 
+> quic_srichara@quicinc.com/T/
+> 
+> -------------------------------------------------------------
+> Had the below mentioned in the RFC earlier.
+> 
+> The intention of posting this is to get the design reviewed/corrected 
+> since there are also other possible ways of having this SS support like:
+> 
+> a) Make TMEL QMP as a 'rpmsg' driver and clients can connect using
+>     rmpsg_send
+> 
+> b) Keep TMEL APIs seperately in drivers/firmware which would export APIs
+>     and QMP mailbox seperately.
+>     Clients can then call the exported APIS.
+> 
+> c) Combine both TMEL and QMP as mailbox (this is the approach used here)
+> 
+
+Hi Krysztof,
+
+Can you kindly provide your suggestion on how to proceed for the above ?
+Would want to align on the design approach before posting the next
+version.
+
+Regards,
+  Sricharan
