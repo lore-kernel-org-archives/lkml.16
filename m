@@ -1,193 +1,110 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B32292920;
-	Tue, 15 Apr 2025 11:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A05528B4EC;
+	Tue, 15 Apr 2025 11:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718153; cv=none; b=ZVdJ/83cXm4fGf72whoQoOL3Ooknd24qIUO/e0nWQDlvhpaqW8egK/2X9SD9GG4H4mIRCfJ/tQSZJd3F9U3mAJ1XVkqIpzpXo+VoPv9dg9o0UiKhyFcnhWT4tbxXA2KZByCVMf8ZTHopu6alPbmC8KJMN2bwoaDjXMMnW8eFpkU=
+	t=1744718197; cv=none; b=qgSzj+dUSBtqIWNUaEo8NgAkaNIMNlXONxIU9OYpqHMNgoF6e5ZmjftV5lepM7VXS25ab4GHioTrsc15N+NkRzihyFxhrf17tpfCLuRdxPbkDQPtxbwCet8L4ju/1BwubTHv1SQaCdbbOEuybNza1GBqQMeJbLsl8OUyyL4jnFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718153; c=relaxed/simple;
-	bh=zo+r2sNEz6UwnSlLcoN279KEjH3LqnKjrK6N1YxxbB4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KT6BV2TFD2spfKx3iPOWqBdS+OdHxD/Mx/Dk30M+cjB8ZcWUPCs9DqqQKeXB48TuUHG+q6nO3xyFl7yiM4rOCJAO0lvOkKoFNLgmY3f/8HKcV7QHqn002BbP75crqPWU93Xhy7VgwbzKeMk7ZlJ3vLJz7E/qDLKGb+fzH3JihQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u+nxzOqF; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u+nxzOqF"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBtQPg3022404
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 06:55:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744718126;
-	bh=jzqacroDsAOYpxYHjTL1g6D7LTgb86zIA+otutCdK9o=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=u+nxzOqFw63Yr04cyhBA8F2SWK9SFbES4a4uJOmOa+jg5VB9qmLIhxEIIupQYGeP9
-	 euzAqWhZ+otzQpCrhWFh2oZl2krWEIY2AtUwYQ/Z6xQjViz13UWhYLJDxJOlQhgzLh
-	 7zNgZzTf3IlFlq4gQrKo4r7ofGFSbDgEh5aCQk+I=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBtQos017475
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 06:55:26 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
- Apr 2025 06:55:25 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 15 Apr 2025 06:55:25 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FBtOI6103847;
-	Tue, 15 Apr 2025 06:55:24 -0500
-Date: Tue, 15 Apr 2025 17:25:23 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Andrew Lunn
-	<andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Andy Whitcroft
-	<apw@canonical.com>,
-        Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn
-	<lukas.bulwahn@gmail.com>,
-        Joe Perches <joe@perches.com>, Jonathan Corbet
-	<corbet@lwn.net>,
-        Nishanth Menon <nm@ti.com>, Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Roger Quadros <rogerq@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
- update descriptions of RGMII modes
-Message-ID: <5d74d4b2-f442-4cb8-910e-cb1cc7eb2b3d@ti.com>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
- <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
+	s=arc-20240116; t=1744718197; c=relaxed/simple;
+	bh=TWaCut/RExePpx4QTK5CSr1MZZMK62Zu9FZPK47hfJE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LSsYBt7Zn90x2KQHYQTxy+jsS1W9hQfaCOXsEk/bxzpKJZE6ygjbihi1gS6gdgOKiV5g3u8NIIGlVOD51XbYbgJz/u2+5qz+NLHVbCwuu4iYwreVv8w2Pw5LOetSHbjz5fxCqpTb5w54wY2W8fuvWI6LJXQT5RMDZhXJgqFBnPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowAD3oD1oSf5nr+UACQ--.19460S2;
+	Tue, 15 Apr 2025 19:56:26 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: kenneth.feng@amd.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/amd/pm/powerplay/smumgr/vegam_smumgr: Fix error handling in vegam_populate_smc_boot_level()
+Date: Tue, 15 Apr 2025 19:56:00 +0800
+Message-ID: <20250415115601.3238-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cd483b43465d6e50b75f0b11d0fae57251cdc3db.camel@ew.tq-group.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAD3oD1oSf5nr+UACQ--.19460S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww48Jr4UWFWkJryUGFWfKrg_yoW8ur1xpF
+	9xCr9Ivwn5JanxJFnrtF1IvF1rZ3W8JFWrCF17C340vw1Yqr1UZr4YyFyavayUCFyxGwsI
+	qr17Z3W5ur4I9aDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUqeHgUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkNA2f+Ih6YKQAAsU
 
-On Tue, Apr 15, 2025 at 01:28:48PM +0200, Matthias Schiffer wrote:
-> On Tue, 2025-04-15 at 16:06 +0530, Siddharth Vadapalli wrote:
-> > 
-> > On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
-> > > As discussed [1], the comments for the different rgmii(-*id) modes do not
-> > > accurately describe what these values mean.
-> > > 
-> > > As the Device Tree is primarily supposed to describe the hardware and not
-> > > its configuration, the different modes need to distinguish board designs
-> > 
-> > If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
-> > with CPSW Ethernet Switch), and, given that "phy-mode" is a property
-> > added within the device-tree node of the MAC, I fail to understand how
-> > the device-tree can continue "describing" hardware for different board
-> > designs using the same SoC (unchanged MAC HW).
-> 
-> The setting is part of the MAC node, but it is always set in the board DTS,
-> together with assigning a PHY to the MAC.
+In vegam_populate_smc_boot_level(), the return value of
+phm_find_boot_level() is 0 or negative error code and the
+"if (result)" branch statement will never run into the true
+branch. Besides, this will skip setting the voltages later
+below. Returning early may break working devices.
 
-The MAC is the same independent of which board it is used in. So are we
-really describing the "MAC" or configuring the "MAC"? Isn't it the PHY
-along with the PCB lines on a given board that determine how the "MAC"
-should be "configured" to make the combination of "MAC" + "PHY"
-functional together?
+Add an error handling to phm_find_boot_level() to reset the
+boot level when the function fails. A proper implementation
+can be found in tonga_populate_smc_boot_level().
 
-> 
-> > How do we handle situations where a given MAC supports various
-> > "phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
-> > descibe the HW? Even if we set aside the "rgmii" variants that this
-> > series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
-> > and "usxgmii/xfi" as well.
-> 
-> This is not about PHY mode support of the MAC, but the mode to be used on a
-> particular board. I would not expect a board to use multiple different
-> interfaces with a single PHY (and if such cases exist, I consider them out of
+Fixes: 4a1132782200 ("drm/amd/powerplay: return errno code to caller when error occur")
+Cc: stable@vger.kernel.org # v5.6+
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ .../drm/amd/pm/powerplay/smumgr/vegam_smumgr.c    | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-For a fixed PHY, the MAC will be "configured" to operate in a set of
-modes supported by the PHY. The HW description is coming from the PHY
-that has been "fixed", and not the MAC. But the "phy-mode" property
-resides within the device-tree node of the MAC and not the PHY. So are
-we still "describing" the MAC when it is the "PHY" that introduces the
-limitation or requires the MAC to be configured for a particular
-"phy-mode"?
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/smumgr/vegam_smumgr.c b/drivers/gpu/drm/amd/pm/powerplay/smumgr/vegam_smumgr.c
+index 34c9f59b889a..c68dd12b858a 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/smumgr/vegam_smumgr.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/smumgr/vegam_smumgr.c
+@@ -1374,15 +1374,20 @@ static int vegam_populate_smc_boot_level(struct pp_hwmgr *hwmgr,
+ 	result = phm_find_boot_level(&(data->dpm_table.sclk_table),
+ 			data->vbios_boot_state.sclk_bootup_value,
+ 			(uint32_t *)&(table->GraphicsBootLevel));
+-	if (result)
+-		return result;
++	if (result != 0) {
++		table->GraphicsBootLevel = 0;
++		pr_err("VBIOS did not find boot engine clock value in dependency table. Using Graphics DPM level 0!\n");
++		result = 0;
++	}
+ 
+ 	result = phm_find_boot_level(&(data->dpm_table.mclk_table),
+ 			data->vbios_boot_state.mclk_bootup_value,
+ 			(uint32_t *)&(table->MemoryBootLevel));
+-
+-	if (result)
+-		return result;
++	if (result != 0) {
++		table->MemoryBootLevel = 0;
++		pr_err("VBIOS did not find boot engine clock value in dependency table. Using Memory DPM level 0!\n");
++		result = 0;
++	}
+ 
+ 	table->BootVddc  = data->vbios_boot_state.vddc_bootup_value *
+ 			VOLTAGE_SCALE;
+-- 
+2.42.0.windows.2
 
-> scope for this patch series).
-> 
-> > 
-> > > (if a delay is built into the PCB using different trace lengths); whether
-> > > a delay is added on the MAC or the PHY side when needed should not matter.
-> > > 
-> > > Unfortunately, implementation in MAC drivers is somewhat inconsistent
-> > > where a delay is fixed or configurable on the MAC side. As a first step
-> > > towards sorting this out, improve the documentation.
-
-While this patch is improving the documentation and making it consistent
-when it comes to the description of "rgmii" by stating that the "MAC"
-shouldn't add a delay, for the remaining cases, as to who adds the delay
-and whether or not the MAC should add a delay has been left open.
-Existing documentation clarifies what the MAC should do for each case
-except "rgmii" which is being fixed by your patch.
-
-> > > 
-> > > Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/ [1]
-> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> > > ---
-> > >  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
-> > >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > > index 45819b2358002..2ddc1ce2439a6 100644
-> > > --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > > +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-> > > @@ -74,19 +74,21 @@ properties:
-> > >        - rev-rmii
-> > >        - moca
-> > >  
-> > > -      # RX and TX delays are added by the MAC when required
-> > > +      # RX and TX delays are part of the board design (through PCB traces). MAC
-> > > +      # and PHY must not add delays.
-> > >        - rgmii
-> > >  
-> > > -      # RGMII with internal RX and TX delays provided by the PHY,
-> > > -      # the MAC should not add the RX or TX delays in this case
-> > > +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
-> > > +      # delays are included in the board design; this is the most common case
-> > > +      # in modern designs.
-> > >        - rgmii-id
-> > >  
-> > > -      # RGMII with internal RX delay provided by the PHY, the MAC
-> > > -      # should not add an RX delay in this case
-> > > +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
-> > > +      # part of the board design.
-> > >        - rgmii-rxid
-> > >  
-> > > -      # RGMII with internal TX delay provided by the PHY, the MAC
-> > > -      # should not add an TX delay in this case
-> > > +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
-> > > +      # part of the board design.
-
-[...]
-
-Regards,
-Siddharth.
