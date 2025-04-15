@@ -1,123 +1,115 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FECC2749D2;
-	Tue, 15 Apr 2025 05:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8471B6CEF;
+	Tue, 15 Apr 2025 05:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744696618; cv=none; b=tlg7ZGOBeYT4KblVUcJ32YHjPqHH7bZ76WAkNxKmDWgqHUgAQ7nO8mMMSoQe8w/j1p1mFQfwF5YT+6ZJ6WFMS9Tkz3nu4twJJjge3Q4oQVW40guZkV1j9dQlaLAC5BEJWBmZj8Vo+Venzmiah3HoXzid9fB+P571Uk2aCA/lqHk=
+	t=1744696624; cv=none; b=hD9SToSbsn96ATGRiicZ8l9C1MzcJ6kAuIaVPf1oxHQ5fe+yEVjaExjYlHqOPVQ8TLgJXucTn18SZ9RU1u+bvgjNpDyl/G+pzVdl8pqXMVp+qoOPVzU3o7JadLPPNgu26hMTovJeVUzn8tomUeTzhmc8xR+Hy3NTsPxeI7K3tO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744696618; c=relaxed/simple;
-	bh=B+KREJM4mAb3R4rAMIV3uUfDJPy0U59jzlDGI/zlTnA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXKKpjmNmEJGGEdWsMQ3YpWHECLNhjSra+I6ZqmOAOAhyZ8jW1zQ2gujcGN6WJAwRQoVBUFDPPTAKSrKBezgewfBHtngmiPfu6UVxxVcbwt219uEAdH9XSCv6iVDjP2uLqW06Hj2YNjEEgqaVA2X+R1yYIz9GVQbt0O04S+3tb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ivv8gz1U; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ivv8gz1U"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-601fcbff303so2508305eaf.3;
-        Mon, 14 Apr 2025 22:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744696615; x=1745301415; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F+Lq5aH54mbxFUn1f3Q1yft6LGpjwARyan/SZu5Jevk=;
-        b=Ivv8gz1U++XrR4YK8gnYgLcP3EqGEUdJZ+ETQ1G489dNsl4t1dNefETvXR4TJwTZTT
-         aRZ9L4OiY0UeCt86vtDXi1GqacE0NRoi1Icha61Zoe8qm12qhiVbExAVnklzPYvcI+yG
-         EiqPB9W62YFgqcKNxpemPdx+6hQkoQtGIf8jyl/j6uMO6p/kGVpUp8rKGBmhg0n75nbV
-         ne3w4+gCFlHIpF0tgoV/ej+i1N/sLGRgyoP4cNUeZUlsZvoRp6EooozYwpskn5YGKzTU
-         Zy8k4XuEDjFzS5Pgohh+ksclQH5U+dQwUg/aWTDV/8PFYgwxDstIBOuNi6CrXBRrHC1h
-         o3lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744696615; x=1745301415;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=F+Lq5aH54mbxFUn1f3Q1yft6LGpjwARyan/SZu5Jevk=;
-        b=lSt4wg6fmm0oOiIeuVZLq0XEn6+9ztYFImBZgKTizrO9hsSzTliGiqmFfm1yQEfXNv
-         M2DFJK/h9cZ8lqcXwSfYXt6tF4FR3rxR/i+y/ni9GhdNkRlyoAmHTkYX6plTrFkjwC5+
-         1LJx7Cyzgjyx2SjF6VfqrQieHQxGqIwGA5eVYOyPACMpomF6FBY4xNdnJ4DWeSzsJCQy
-         lqj9lEiFXc0XzGU0T0VaTO6nMtsVTZASMAKTA+T+04k28qFsIXJawOv44rPcw6jzvnSn
-         qfyL0r4ph6DgbW2BLLmXyvD0F58EuUMOjnqFQTlVK/mKdf48FLzJhMRRmZ6SfGQWdR5H
-         wfRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3IXhk0+6jp3f2ks6LZdTLNYfBettuBzbRmoIwvY8MRrayekg+QgE8kGMvgHOk8/ZQ23OibKyiWJrbLw==@vger.kernel.org, AJvYcCX+Uk0AThz8Gf6ukof4PWRdbYAiWVekRGS51562kHOC6jOvz0nQRYG9aGA29v921GG4LtV2e9aKaFoxgDa1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+3oSzXuFIphTfSdz+anFJZKfddvG7oqiQEq+bMRqnryZLVx35
-	PYbXbYX6KqF+97kSxqI05ggywhPl5V05Ye6n88WZwMjuM+Zzp/AtmBjPydntqjMDE/zUCbp86Id
-	pVD1k/kHg4+u2Q/+uzzuFghLDkaM=
-X-Gm-Gg: ASbGnctrihUMmtEWNXzbUcYo1sUC5AKmG7Ra1IYEd1f7z3PhwEoTbJoSQHeufnEgZtk
-	/G00JsXHV5ouS3f9ehG9GNhgx0yLVUp8Grr4y05WHQNhy8HZbR4Ehog9ov7lCPrSsOCBS/d/FBF
-	vSpXR56765BDBLbUIKwLVpImDz44Ff6phZKQ==
-X-Google-Smtp-Source: AGHT+IEmj2a8nxWV7QLjMqim/mpCeFuiCq/hoRyEihjWrREzvYE+1MMd1R2sq2i7W3FyrfQ5+1FNPpinKH+si8J5g8U=
-X-Received: by 2002:a05:6871:a582:b0:29e:3c90:148b with SMTP id
- 586e51a60fabf-2d0d5ef2381mr9183774fac.26.1744696615464; Mon, 14 Apr 2025
- 22:56:55 -0700 (PDT)
+	s=arc-20240116; t=1744696624; c=relaxed/simple;
+	bh=O+NBj4j3iQU7jiJviRGpSHLKS7C8evzhpxJmsJ8nUn8=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OrYQp6ccJxAjhz5wjBdWnZjmnx4C3gXN25MZxEnm3Tr1Ggyz9RJP3libHT8l05VXDaD726G2eKkCWBezBt2u1adiccYG01qYrMNziZxHD1BKlAouqXOQgfHY8vdTWiqQAwaEWIjqtbBQfmwXAJM0tykHmZhKI1/IgpVkX6v0AIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com; spf=pass smtp.mailfrom=trustnetic.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=trustnetic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trustnetic.com
+X-QQ-mid:Yeas9t1744696533t013t26505
+Received: from 3DB253DBDE8942B29385B9DFB0B7E889 (jiawenwu@trustnetic.com [36.20.107.143])
+X-QQ-SSF:0000000000000000000000000000000
+From: =?utf-8?b?Smlhd2VuIFd1?= <jiawenwu@trustnetic.com>
+X-BIZMAIL-ID: 2050150904681905092
+To: "'Abdun Nihaal'" <abdun.nihaal@gmail.com>
+Cc: <mengyuanlou@net-swift.com>,
+	<andrew+netdev@lunn.ch>,
+	<davem@davemloft.net>,
+	<edumazet@google.com>,
+	<kuba@kernel.org>,
+	<pabeni@redhat.com>,
+	<horms@kernel.org>,
+	<netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250415032910.13139-1-abdun.nihaal@gmail.com>
+In-Reply-To: <20250415032910.13139-1-abdun.nihaal@gmail.com>
+Subject: RE: [PATCH net] net: txgbe: fix memory leak in txgbe_probe() error path
+Date: Tue, 15 Apr 2025 13:55:31 +0800
+Message-ID: <00b701dbadca$ffa3de50$feeb9af0$@trustnetic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415054436.512823-1-yunlong.xing@unisoc.com>
-In-Reply-To: <20250415054436.512823-1-yunlong.xing@unisoc.com>
-From: yunlong xing <yunlongxing23@gmail.com>
-Date: Tue, 15 Apr 2025 13:56:44 +0800
-X-Gm-Features: ATxdqUGVr2B6RvZrhcmEhVPU3cI0v3wMM4xNTKOHuXrtRP-NAetVPXlDwnSVpX4
-Message-ID: <CA+3AYtRRgL2-vPNm=1XBKd_PFuRcB5fZh96VGsfTO2VaAvqv9w@mail.gmail.com>
-Subject: Re: [PATCH V3] loop: aio inherit the ioprio of original request
-To: Yunlong Xing <yunlong.xing@unisoc.com>
-Cc: axboe@kernel.dk, linux-block@vger.kernel.org, bvanassche@acm.org, 
-	hch@lst.de, niuzhiguo84@gmail.com, linux-kernel@vger.kernel.org, 
-	hao_hao.wang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGw4ep9NYQY3hr1lQ/YBs2b0q+BSrP50eSw
+Content-Language: zh-cn
+X-QQ-SENDSIZE: 520
+Feedback-ID: Yeas:trustnetic.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NYaClDVrQHFLyLKUkR75c38Ry+138fLCVf1amXOAY07nXqx50xFUcNR7
+	ZBHaTeMAwONC+rski3oyaZRjiZozB0HLl72/hHl/mPg0rF4NBNuMr3+o+jU9/vKpGIsP+sk
+	05V9tcRAE4Hw2N1e+f5g2V4WpbgH6ePv7oQAcO3kRD180A2biCvNsRNTjExpi6ipihVsx/Y
+	v/ltxJWRUzg7xwrf8mH7VCp4z7JtnND8RYOQxwxv/FxZjVKAEEQ9Es62CBB6YDPM/781Uak
+	2uOEsI75M27xRuqXsPx9bVl2K1H/frawwtfCoi4oNcqvm/+RV4P2BZ4KRT0as6zLx1MdE1I
+	iMah5Ka0BUefjQ0cykjljD7QhqSLb1iiCBj0+GiChOCbA5gYX9r5owyPdcHKbN25bXJk701
+	xbJbjE3oZsGzuaHglqD0O+CtHiH7b83zP+VLV+1QreNeLwZlB13+l7L1CKTcuCo+YHmS3Sb
+	YOanZxLKv2w2E5QNS3a1B17FBBZfD7jyyXuXv/+j2hX8XKkqMJoGuIiWLmNmOJkaZF2ftyX
+	3cwci8zxWCCW6Tjua+B2y+QQQljV8jKGmi5RPpeTr4+CCY/ZGG+6JaRgVmEe2tKeyoZBd46
+	L6/F4wRgdDqdOcjl69DVKCHUTrxOboM87Lk+/p1oBEjy+HMurVtlOJYP1kE0g1+74QF5mEJ
+	odLYmYx9lzjo0yYHacgdWbfXhN5/OwiS4FtaGdlmBcgTkldwF26milH+WzVkDi3MeXi+KJr
+	zpHkuBpx6JLBM0OiiGzfPIPm0O7kVBjdWCeelTsOd7F+LONUKQ/LehKdu8tOpH/Yc3AaWA5
+	9eYhj1xUDpoRRrzrV6ZlqMFGS3xdmpSyHfPXWohAyb5o0k4CVEHXnWDtvqI1cJaeBC34ew6
+	BmVktpdGHBLFhDvGeJcWqNvcmnxHTQUgeslJcq330FJQailf7ZRn8zXlD8S6Or/3+SqPJiL
+	9r1HdFOYKnRv/PI9/UvTwrFqYsHei4x1P3iQ0EOcFUixTEkCT6rGtdqUHNGRvtji+MZ03ZA
+	cyyapCNg==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-Yunlong Xing <yunlong.xing@unisoc.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=8815=
-=E6=97=A5=E5=91=A8=E4=BA=8C 13:45=E5=86=99=E9=81=93=EF=BC=9A
->
-> Set cmd->iocb.ki_ioprio to the ioprio of loop device's request.
-> The purpose is to inherit the original request ioprio in the aio
-> flow.
->
-> Signed-off-by: Yunlong Xing <yunlong.xing@unisoc.com>
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Link: https://lore.kernel.org/r/20250414030159.501180-1-yunlong.xing@unis=
-oc.com
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+On Tue, Apr 15, 2025 11:29 AM, Abdun Nihaal wrote:
+> When txgbe_sw_init() is called, memory is allocated for wx->rss_key
+> in wx_init_rss_key(). However, in txgbe_probe() function, the subsequent
+> error paths after txgbe_sw_init() don't free the rss_key. Fix that by
+> freeing it in error path along with wx->mac_table.
+> 
+> Also change the label to which execution jumps when txgbe_sw_init()
+> fails, because otherwise, it could lead to a double free for rss_key,
+> when the mac_table allocation fails in wx_sw_init().
+> 
+> Fixes: 937d46ecc5f9 ("net: wangxun: add ethtool_ops for channel number")
+> Reported-by: Jiawen Wu <jiawenwu@trustnetic.com>
+> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
 > ---
-> V3:
-> - fix Signed-off-by error in commit message
-> ---
-> V2:
-> - Assign cmd->iocb.ki_ioprio in lo_rw_aio()
-> ---
->  drivers/block/loop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index 674527d770dc..dd7f33d47f4f 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -447,7 +447,7 @@ static int lo_rw_aio(struct loop_device *lo, struct l=
-oop_cmd *cmd,
->         cmd->iocb.ki_filp =3D file;
->         cmd->iocb.ki_complete =3D lo_rw_aio_complete;
->         cmd->iocb.ki_flags =3D IOCB_DIRECT;
-> -       cmd->iocb.ki_ioprio =3D IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
-> +       cmd->iocb.ki_ioprio =3D req_get_ioprio(rq);
->
->         if (rw =3D=3D ITER_SOURCE)
->                 ret =3D file->f_op->write_iter(&cmd->iocb, &iter);
+>  drivers/net/ethernet/wangxun/txgbe/txgbe_main.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
+> index a2e245e3b016..38206a46693b 100644
+> --- a/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
+> +++ b/drivers/net/ethernet/wangxun/txgbe/txgbe_main.c
+> @@ -611,7 +611,7 @@ static int txgbe_probe(struct pci_dev *pdev,
+>  	/* setup the private structure */
+>  	err = txgbe_sw_init(wx);
+>  	if (err)
+> -		goto err_free_mac_table;
+> +		goto err_pci_release_regions;
+> 
+>  	/* check if flash load is done after hw power up */
+>  	err = wx_check_flash_load(wx, TXGBE_SPI_ILDR_STATUS_PERST);
+> @@ -769,6 +769,7 @@ static int txgbe_probe(struct pci_dev *pdev,
+>  	wx_clear_interrupt_scheme(wx);
+>  	wx_control_hw(wx, false);
+>  err_free_mac_table:
+> +	kfree(wx->rss_key);
+>  	kfree(wx->mac_table);
+>  err_pci_release_regions:
+>  	pci_release_selected_regions(pdev,
 > --
-> 2.25.1
->
+> 2.47.2
+> 
 
-Hi Jens=EF=BC=8C
+Thanks.
 
-There is a mistake of Signed-off-by in commit message on previous version.
-I noticed that you had commited it in block-6.15. Could you please help fix=
- it.
+Reviewed-by: Jiawen Wu <jiawenwu@trustnetic.com>
 
-Best regards,
