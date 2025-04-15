@@ -1,170 +1,339 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9793257AC1
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2382749CE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744755784; cv=none; b=MKyYzT0BYzdz1rf7VLsq0Fo2iutfn+5NBEG3Ohqzjgai2Fei71j2HPBLxHpGA66CtJqUTdipeU3z4H50DCH4eWafgDww3AAiykunGuJ2U7nc2MKE6qMkU/evsJcTOZ+GpKESyrWlYKW6Fa5vQ0x9eQtLhSd5BsAK6uT1pyN0u+c=
+	t=1744755939; cv=none; b=ZI4NyxFucI1Ygj+ZOr+UrZ6tl7R04OiwernZLeAnLVTTCWWMNgbPUkSuE9fYswk/2KhDNsW6JWKZiP8ERkcTJlTVePBkfIN9LtBzVQtvKfIMFwHSXnFlneg6gFadERpTB6Sd4/IN533oFOUgBD6XrZvFehT7z1uiRrC6ez3z1HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744755784; c=relaxed/simple;
-	bh=V3suW2v5QBE6nG88sxJLLDE1MJ3MqszmlsAMfTuktVU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=k4wgTMOXzh8Mn1w5bDAjdQj6d6NNa/tUZn0/jh9J2eRi0xVtLNzhmrSeJCyCJP8LtPeq/JcqHjkamZcX6eqzAPeVu5fkBoaz7jMNWWc87y4qaN2IJL2KS/U48aMlGhLf9LZmASMO7yuvVP43IzmTSqvzoMNAHnLE6ujSdBLItWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d451ad5b2dso1511735ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:23:02 -0700 (PDT)
+	s=arc-20240116; t=1744755939; c=relaxed/simple;
+	bh=gGSD0CWGPy24MKZUpaTIEP/iS1AfnleyWsM/vgcWFu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PG+v+qKV7338yUTbpF/tUB9YqhpxrOOThyboDgdTt4xb+//9avQw1qISHmHCP3p2oYIsg8qKB19XxxcffwllGQeD92+j6YG6MQKqXU4dX3CMV0dOFi+L5xmbk6zbJVJetGcveMCla1tX1Krm5Mh+mt1PVaWx/QmDL9+/i4On+ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cKmt+PLk; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cKmt+PLk"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2254e0b4b79so83314185ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:25:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744755936; x=1745360736; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3fuXWDiU20Sf9ZYkFZ5DAYPiYmbHBo8nFl2I2ufv9pM=;
+        b=cKmt+PLkl04j5+jkcaIBNBGZg5vVlRJR7zagsTobFucS1PzWd6T75nMcQu1+N5URQt
+         6G/WsjOM+yYFU02ncSIfn47OViLCkNkEsIX3M8fcsuN8g+rNdzY8icEZUmRCbYBYDgO9
+         UnewsHdQMeEpn+ehYW6RYffCZEfHh94zC7+htokTcmrhhc7Ogp/zu7atgic+i83hZIPM
+         AVnIc7ca0Ae1Sr4PavRgSFbJgrSqVK201q+11ADGw0l/xxuKi51m7iA5wijaGQ97V9Kj
+         Qi8kq6RtEa6waaAx7OT8umgQAeooUXv4O86WULRToqUXnIE5HFRqOSJTCG2HvZBFv+OM
+         W4OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744755782; x=1745360582;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3i7903g5EAF+f4ORhceVKA5HXfzObg0MAESpYv0oEyQ=;
-        b=hjuLXMA7rKEDOQ6OaKMxBl+U+bEc9/47YI4RCeiUBgbhpIj6RYu+4s6TaJpj/jV14x
-         XpfnG6edlO90ma7A5XBbOuS0kewFaon0uC0Z7IFQA59Df8aT6TX+pwJ7vnV7cYmNzOE6
-         h4YZZy6zuoiiWHq8PTNsFdBUc4isxHaeMy0gKYoEkxDkKr31CfwIFTLsx29wQP6jKczn
-         GfF7U4f1NDe8rgcllcJ3i7yk9bzNSxUMMYVOEm3rZGdQW/nwzVH4Lib5wlhfuiRXYaGQ
-         dZrJqNBKuA9+lGoEAXfWdadKWVdC3TCO0nodOeh4ygjCS8cvVwrtaNj7ckxh7Ykq0HIK
-         bvMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXU3Gzi1pPCrYzbVDR2VXab+EIYdwCrZfAcmzj3qYC4HDHb6S9lytzOj1DXUMM8g2dD/daL2tqFwO87MXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPxh4bLB8EhPq6qbw+y4Wce3CSsd4ESLpLVj9lke7u6uiqUepp
-	FUalJP/l+UGSM8laoxYtsg7HWhkD4rRpsAW6NsqBUB9L5Wj0EV9v+LP7rnk5iBvsPiVe46iZcnD
-	NOrbZZ6RBaW8KUlXND/HHIlER1NQU3Esnf97u4EqY+qlSdrC/PNQJNG4=
-X-Google-Smtp-Source: AGHT+IEBKnxqT1ZwNmaDG1uST9jMMrlFj+hWUykXfE0e1aT0R0aopB88dlEox0O7mk665ODgrJMXikwrsPT0ltXBMUgRwy56xkhY
+        d=1e100.net; s=20230601; t=1744755936; x=1745360736;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3fuXWDiU20Sf9ZYkFZ5DAYPiYmbHBo8nFl2I2ufv9pM=;
+        b=OQa5wphfgCtXcE50prZOLKoCvKRNeuRow6et5N4BTi6RvLsKkNs3qSm8tW70oM9VA4
+         N+IGeiB8whgCL41y10UhUazq5itTr0+HqOWG4oVEvOU2QJnp5zeR3QTJ68ekeQtv50dv
+         efWIwFn8+l67kQlQpR6E3iaFKoat66hDDPEafHW5aIbKMzfo0gfwMzCXHRPzIgIuxP28
+         DYb6CHYYjld3DtFNJ6304AgRGnWIMtvZGI4fVW4e8FdpTYd31ikcnYjE304u6MP4pV3z
+         gFP7v3fUI2iGdjEmODW5bAwN/MMg3PdE8yQ4JGOpvS8VUv75rpn6KshScY4CLH/DRG1q
+         vPyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNByFyPxU5WpoTtJwBUsBSHgs2W4KcNCNypZZd1aQ7NttGKDjtuXtDXAEUMIqywV59lhkHieBGcj6i8Fk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynqDIU9fdF3haGr+iXlLznUCvB1KFfr8u8VydvHnV7ItSyCHD6
+	jOEYmD6LMwEVvZDnRmFU8T6iHCA6XknsLEeuhwPLS7sJ0MTDhx6D2A6fKb/qrAk=
+X-Gm-Gg: ASbGncutzMIeDd8zL3lX+xi5FaSOGLQCt1Pn7moY1ZSwSVsSqdBSeEgIbGY7C7p0F3r
+	jByBsjQHLamfAzvQhWcYyUftPJnyKiCEnmVM6KvcM54huosNEKt7f8msQNpNOHbRisEC3hc0JGs
+	GX8Rmazgr0LDOc7ImwAWfGyInK5PjrVMTOIEzqK5w2YKwSSDFttsN3fE8aLuuD1r5fWbzh+NrVf
+	b5FVEXITyphoWXas4BfZjp4p3IVEDyzG8eomoz2jORBo/5++cxEfxMjOv6maOXByfQhPYvGt2Hu
+	+MfM8GKdFGqJtYHoPUbciy7MSdRfnPVsBYy+iY87DJo/6hO3mjkJ8YjSZsaId1wevqFG4l0DrKf
+	a
+X-Google-Smtp-Source: AGHT+IHcP/y9sOhdqTXx+CzHnAkpFEegaFiMWTBYUuZTI6u7KezT4jTw8ONp+O7d4rHZKOQdUAY7jQ==
+X-Received: by 2002:a17:902:f650:b0:224:584:6f05 with SMTP id d9443c01a7336-22c31a86891mr13687825ad.41.1744755935917;
+        Tue, 15 Apr 2025 15:25:35 -0700 (PDT)
+Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe6dc5sm400445ad.228.2025.04.15.15.25.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 15:25:35 -0700 (PDT)
+Date: Tue, 15 Apr 2025 15:25:32 -0700
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution
+ devices support
+Message-ID: <Z/7c3HgvkjB770ep@dev-linux>
+References: <20250408132120.836461-1-sbellary@baylibre.com>
+ <20250408132120.836461-3-sbellary@baylibre.com>
+ <cb81cba4-0fa3-431a-924f-b362fd0c4638@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1565:b0:3d4:2acc:81fa with SMTP id
- e9e14a558f8ab-3d8120f9dbamr15975235ab.2.1744755781841; Tue, 15 Apr 2025
- 15:23:01 -0700 (PDT)
-Date: Tue, 15 Apr 2025 15:23:01 -0700
-In-Reply-To: <20250415174856.379736-1-duttaditya18@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67fedc45.050a0220.6a185.01e0.GAE@google.com>
-Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in add_missing_indices
-From: syzbot <syzbot+b974bd41515f770c608b@syzkaller.appspotmail.com>
-To: duttaditya18@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, syzkaller-lts-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb81cba4-0fa3-431a-924f-b362fd0c4638@gmail.com>
 
-Hello,
+On Mon, Apr 14, 2025 at 09:40:03AM +0300, Matti Vaittinen wrote:
+> On 08/04/2025 16:21, Sukrut Bellary wrote:
+> > The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> > interface. The device family responds with 12-bit data, of which the LSB
+> > bits are transmitted by the lower resolution devices as 0.
+> > The unavailable bits are 0 in LSB.
+> > Shift is calculated per resolution and used in scaling and
+> > raw data read.
+> > 
+> > Lets reuse the driver to support the family of devices with name
+> > ADC<bb><c>S<sss>, where
+> > * bb is the resolution in number of bits (8, 10, 12)
+> > * c is the number of channels (1, 2, 4, 8)
+> > * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > and 101 for 1 MSPS)
+> > 
+> > Complete datasheets are available at TI's website here:
+> > https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> 
+> I tried looking up:
+> https://www.ti.com/lit/gpn/adc102s051.pdf
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in add_missing_indices
+Sorry about that. I missed to check the link before submitting the
+patch series v3.
 
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-================================================================================
-UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:2946:28
-index -128 is out of range for type 'struct dtslot[128]'
-CPU: 0 PID: 5101 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
- dump_stack+0x1c/0x58 lib/dump_stack.c:113
- ubsan_epilogue lib/ubsan.c:151 [inline]
- __ubsan_handle_out_of_bounds+0x108/0x15c lib/ubsan.c:282
- add_missing_indices+0x6d0/0xaac fs/jfs/jfs_dtree.c:2946
- jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
- iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
- __do_sys_getdents64 fs/readdir.c:369 [inline]
- __se_sys_getdents64 fs/readdir.c:354 [inline]
- __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
- __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
- el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
- do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
- el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
- el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
- el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
-================================================================================
-==================================================================
-BUG: KASAN: slab-out-of-bounds in diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
-Read of size 32 at addr ffffff80e16dc130 by task syz.0.16/5101
+> > 
+> > Tested only with ti-adc102s051 on BegalePlay SBC.
+> > https://www.beagleboard.org/boards/beagleplay
+> > 
+> > Co-developed-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> > ---
+> > Changes in v3:
+> >          - used be16_to_cpu() for the endian conversion.
+> >          - used config index enum while setting up the adc128_config[]
+> > 
+> > - Link to v2:
+> >          https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
+> > 
+> > Changes in v2:
+> >          - Arranged of_device_id and spi_device_id in numeric order.
+> >          - Used enum to index into adc128_config.
+> >          - Reorder adc128_config in alphabetical.
+> >          - Include channel resolution information.
+> >          - Shift is calculated per resolution and used in scaling and
+> >          raw data read.
+> > 
+> > - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
+> > ---
+> >   drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
+> >   1 file changed, 112 insertions(+), 37 deletions(-)
+> > 
+> 
+> Hi dee Ho,
+> 
+> Thanks for improving this! It's always nice to be able to support more
+> devices with small(ish) changes!
+> 
+> This looks good to me. I will take another, hopefully more in-depth look at
+> the rebased version when available though.
+> 
+> I have just one comment for now, but it's not strictly related to this
+> change. If you wish to go the extra mile, then I'd appreciated it. If not,
+> then it can be re-worked later. Anyways, please, see below.
+> 
+> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> > index a456ea78462f..d4b76fd85abd 100644
+> > --- a/drivers/iio/adc/ti-adc128s052.c
+> > +++ b/drivers/iio/adc/ti-adc128s052.c
+> > @@ -7,6 +7,22 @@
+> >    * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+> >    * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+> >    * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
+> > + *
+> > + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> > + * interface. This driver supports the whole family of devices with a name
+> > + * ADC<bb><c>S<sss>, where
+> > + * bb is the resolution in number of bits (8, 10, 12)
+> > + * c is the number of channels (1, 2, 4, 8)
+> > + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > + * and 101 for 1 MSPS)
+> > + *
+> > + * Complete datasheets are available at TI's website here:
+> > + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> > + *
+> > + * 8, 10, and 12 bits converters send 12-bit data with
+> > + * unavailable bits set to 0 in LSB.
+> > + * Shift is calculated per resolution and used in scaling and
+> > + * raw data read.
+> >    */
+> >   #include <linux/err.h>
+> > @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> >   	if (ret < 0)
+> >   		return ret;
+> > -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> > +	return be16_to_cpu(*((__be16 *)adc->buffer));
+> >   }
+> >   static int adc128_read_raw(struct iio_dev *indio_dev,
+> > @@ -70,7 +86,8 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >   		if (ret < 0)
+> >   			return ret;
+> > -		*val = ret;
+> > +		*val = (ret >> channel->scan_type.shift) &
+> > +			GENMASK(channel->scan_type.realbits - 1, 0);
+> >   		return IIO_VAL_INT;
+> >   	case IIO_CHAN_INFO_SCALE:
+> > @@ -80,7 +97,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >   			return ret;
+> >   		*val = ret / 1000;
+> > -		*val2 = 12;
+> > +		*val2 = channel->scan_type.realbits;
+> >   		return IIO_VAL_FRACTIONAL_LOG2;
+> >   	default:
+> > @@ -89,24 +106,34 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >   }
+> > -#define ADC128_VOLTAGE_CHANNEL(num)	\
+> > -	{ \
+> > -		.type = IIO_VOLTAGE, \
+> > -		.indexed = 1, \
+> > -		.channel = (num), \
+> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> > -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
+> > +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits, store_bits)		\
+> > +	{								\
+> > +		.type = IIO_VOLTAGE,					\
+> > +		.indexed = 1,						\
+> > +		.channel = (num),					\
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +		.scan_index = (num),					\
+> > +		.scan_type = {						\
+> > +			.sign = 'u',					\
+> > +			.realbits = (real_bits),			\
+> > +			.storagebits = (store_bits),			\
+> > +			.shift = (12 - real_bits),			\
+> > +		},							\
+> >   	}
+> > -static const struct iio_chan_spec adc128s052_channels[] = {
+> > -	ADC128_VOLTAGE_CHANNEL(0),
+> > -	ADC128_VOLTAGE_CHANNEL(1),
+> > -	ADC128_VOLTAGE_CHANNEL(2),
+> > -	ADC128_VOLTAGE_CHANNEL(3),
+> > -	ADC128_VOLTAGE_CHANNEL(4),
+> > -	ADC128_VOLTAGE_CHANNEL(5),
+> > -	ADC128_VOLTAGE_CHANNEL(6),
+> > -	ADC128_VOLTAGE_CHANNEL(7),
+> > +#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8, 16)
+> > +#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10, 16)
+> > +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12, 16)
+> > +
+> > +static const struct iio_chan_spec adc082s021_channels[] = {
+> > +	ADC082_VOLTAGE_CHANNEL(0),
+> > +	ADC082_VOLTAGE_CHANNEL(1),
+> > +};
+> > +
+> > +static const struct iio_chan_spec adc102s021_channels[] = {
+> > +	ADC102_VOLTAGE_CHANNEL(0),
+> > +	ADC102_VOLTAGE_CHANNEL(1),
+> >   };
+> >   static const struct iio_chan_spec adc122s021_channels[] = {
+> > @@ -121,10 +148,46 @@ static const struct iio_chan_spec adc124s021_channels[] = {
+> >   	ADC128_VOLTAGE_CHANNEL(3),
+> >   };
+> > +static const struct iio_chan_spec adc128s052_channels[] = {
+> > +	ADC128_VOLTAGE_CHANNEL(0),
+> > +	ADC128_VOLTAGE_CHANNEL(1),
+> > +	ADC128_VOLTAGE_CHANNEL(2),
+> > +	ADC128_VOLTAGE_CHANNEL(3),
+> > +	ADC128_VOLTAGE_CHANNEL(4),
+> > +	ADC128_VOLTAGE_CHANNEL(5),
+> > +	ADC128_VOLTAGE_CHANNEL(6),
+> > +	ADC128_VOLTAGE_CHANNEL(7),
+> > +};
+> > +
+> > +enum adc128_configuration_index {
+> > +	ADC128_CONFIG_INDEX_082S,
+> > +	ADC128_CONFIG_INDEX_102S,
+> > +	ADC128_CONFIG_INDEX_122S,
+> > +	ADC128_CONFIG_INDEX_124S,
+> > +	ADC128_CONFIG_INDEX_128S,
+> > +};
+> 
+> I like the fact you added these indexes as it makes this a lot clearer.
+> But...
+> 
+> > +
+> >   static const struct adc128_configuration adc128_config[] = {
+> > -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
+> > -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
+> > -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
+> > +	[ADC128_CONFIG_INDEX_082S] = {
+> > +		.channels = adc082s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc082s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_102S] = {
+> > +		.channels = adc102s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc102s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_122S] = {
+> > +		.channels = adc122s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc122s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_124S] = {
+> > +		.channels = adc124s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc124s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_128S] = {
+> > +		.channels = adc128s052_channels,
+> > +		.num_channels = ARRAY_SIZE(adc128s052_channels)
+> > +	},
+> >   };
+> 
+> ... I don't really love this array. I believe the code would be clearer if
+> this array was changed to individual structs because ...
+> 
+> >   static const struct iio_info adc128_info = {
+> > @@ -177,31 +240,43 @@ static int adc128_probe(struct spi_device *spi)
+> >   }
+> >   static const struct of_device_id adc128_of_match[] = {
+> > -	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
+> > -	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
+> > -	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
+> > -	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
+> > +	{ .compatible = "ti,adc082s021", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc082s051", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc082s101", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc102s021", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc102s051", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc102s101", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc122s021", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc122s051", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc122s101", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc124s021", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc124s051", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc124s101", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc128s052", .data = &adc128_config[ADC128_CONFIG_INDEX_128S] },
+> 
+> ... here we could then directly refer to individual structs. That way we
+> would not need to define the names for the array indexes (for clarity), or
+> look up the individual array members based on magic numbers.
 
-CPU: 1 PID: 5101 Comm: syz.0.16 Not tainted 5.15.180-syzkaller-07499-gf7347f400572-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- dump_backtrace+0x0/0x530 arch/arm64/kernel/stacktrace.c:152
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:216
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x108/0x170 lib/dump_stack.c:106
- print_address_description+0x7c/0x3f0 mm/kasan/report.c:248
- __kasan_report mm/kasan/report.c:434 [inline]
- kasan_report+0x174/0x1e4 mm/kasan/report.c:451
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x274/0x2b4 mm/kasan/generic.c:189
- memcpy+0x90/0xe8 mm/kasan/shadow.c:65
- diWrite+0xb48/0x1604 fs/jfs/jfs_imap.c:753
- txCommit+0x748/0x5548 fs/jfs/jfs_txnmgr.c:1255
- add_missing_indices+0x74c/0xaac fs/jfs/jfs_dtree.c:2960
- jfs_readdir+0x1974/0x31dc fs/jfs/jfs_dtree.c:3316
- iterate_dir+0x1f4/0x4ec fs/readdir.c:-1
- __do_sys_getdents64 fs/readdir.c:369 [inline]
- __se_sys_getdents64 fs/readdir.c:354 [inline]
- __arm64_sys_getdents64+0x1c4/0x4c4 fs/readdir.c:354
- __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:52
- el0_svc_common+0x138/0x258 arch/arm64/kernel/syscall.c:142
- do_el0_svc+0x58/0x14c arch/arm64/kernel/syscall.c:181
- el0_svc+0x7c/0x1f0 arch/arm64/kernel/entry-common.c:608
- el0t_64_sync_handler+0x84/0xe4 arch/arm64/kernel/entry-common.c:626
- el0t_64_sync+0x1a0/0x1a4 arch/arm64/kernel/entry.S:584
+Thanks for the review.
+yes, I will take care of this in v4.
 
-Allocated by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffffff80e16dc0c0
- which belongs to the cache jfs_ip of size 2240
-The buggy address is located 112 bytes inside of
- 2240-byte region [ffffff80e16dc0c0, ffffff80e16dc980)
-The buggy address belongs to the page:
-page:0000000001ce143c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1216d8
-head:0000000001ce143c order:3 compound_mapcount:0 compound_pincount:0
-memcg:ffffff80e68fcb01
-flags: 0x5ffc00000010200(slab|head|node=0|zone=2|lastcpupid=0x7ff)
-raw: 05ffc00000010200 0000000000000000 dead000000000122 ffffff80c2b8ea80
-raw: 0000000000000000 00000000800d000d 00000001ffffffff ffffff80e68fcb01
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffffff80e16dc000: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
- ffffff80e16dc080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffffff80e16dc100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                     ^
- ffffff80e16dc180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffffff80e16dc200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-
-ERROR: (device loop0): jfs_readdir: JFS:Dtree error: ino = 2, bn=0, index = 0
-
-ERROR: (device loop0): remounting filesystem as read-only
-JFS: Invalid stbl[1] = -128 for inode 2, block = 0
-
-
-Tested on:
-
-commit:         f7347f40 Linux 5.15.180
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git linux-5.15.y
-console output: https://syzkaller.appspot.com/x/log.txt?x=163c0204580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e433a356d25f60cb
-dashboard link: https://syzkaller.appspot.com/bug?extid=b974bd41515f770c608b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=135bfc04580000
-
+> >   	{ /* sentinel */ },
+> >   };
+> >   MODULE_DEVICE_TABLE(of, adc128_of_match);
+> 
+> Yours,
+> 	-- Matti
