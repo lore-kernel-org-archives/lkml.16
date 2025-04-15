@@ -1,86 +1,45 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE9D2DFA3A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD351B0F23
 	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744740063; cv=none; b=e/V305dq5suxeIinla1rOTC8mnXak3GmjE9jETCdbZ14ypIs7LMdRC21DmGCOX2yXhUO8XQhvHXwgy9m97CGYpmit/iRbdJlJM38yt+W2wqzZF13pxP3+/l5XwDPF+pgmzB2jvWnGVplF8S83IFi6MUIVrfJv6tbFnj66nV6ybE=
+	t=1744740067; cv=none; b=iRa7OIIEDz6AfaqOvQFTndc4EY5V8RIK7jENqfxYAL3Z8VtsMtUqxXKoUeTwbLUysjiPkclrN86Xm9nNrWEPgFjBNSf7GcinYUqE5xAjn19dJcbBXBUzv/W1+wBbb+YDs3moE56sXD1Rq6rubMjpk+qadSbRVvZpeU1jnCwFRRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744740063; c=relaxed/simple;
-	bh=VIU3YOiY98/f9r8pgYFEwVekiGO4a/6jeSkcROssuaM=;
+	s=arc-20240116; t=1744740067; c=relaxed/simple;
+	bh=Nyzb63+6ECw80+pUwzVBdX+d5cp/0OnVvi2FidZOps4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=duOJ+sKZdF+QS0ILJMxOQx3Km74GFAKRgENP0XPaBvlQz4GHJTK6vzN3eZHF17lltgf/IpSXxfEwkCx3rKeD0bd+yvvtR4cIATl/sbzFwGqMi5j02HEJWSfMkib1O1HAz9tDY32HPZj8PTiffgUVH1g2V4NPYe0/J0z4fPmbGJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=id7uEHpB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=z9mD24ut; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=id7uEHpB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=z9mD24ut; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=qL2WsOxVm9fWU1yJE2g2xH3bOW9qO3+uqMVqmWCfI9LPFeiK27kTOlh80RJCXk5IF8SMnpMufCy9qvroLQpK+vrAgJbEQHW+XZ3aCPEI4A8NikHTN4KrZP81uvabGZYGj4bgeLyQ/68Yf232g7Dbwb1BwaCdV+nhmlhjXeM88kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ax5/05cm; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="id7uEHpB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="z9mD24ut";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="id7uEHpB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="z9mD24ut"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AD69C1F461;
-	Tue, 15 Apr 2025 18:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ax5/05cm"
+Date: Tue, 15 Apr 2025 11:00:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
 	t=1744740059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tqDzUeAHeeGUgPBZz4cnwRo1kx8yqknbBXRcS6TgjCE=;
-	b=id7uEHpBccTvHsZak3MoZNMnxFC7UG4xA4s+XbSQ78U2OmS6u+DTKVgToDLQ9G68QZ+MMg
-	M2Z+lMuJt3FkltuZjTvfLH/HKqVZjAjQGeDMmvh/pjQs4Nj6ALUXm9f7Lbun88FCVscdwV
-	48mv55AVF+1uiysxyKm+026sTAuwSV4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744740059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tqDzUeAHeeGUgPBZz4cnwRo1kx8yqknbBXRcS6TgjCE=;
-	b=z9mD24ut1cSunXEq2zrT/NyTgiRunihmTBMmIrQzlD/mU9ExEvTufClOQNeyYUs66ZXmqq
-	zBjdL8vQQLtGyUCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=id7uEHpB;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=z9mD24ut
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744740059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tqDzUeAHeeGUgPBZz4cnwRo1kx8yqknbBXRcS6TgjCE=;
-	b=id7uEHpBccTvHsZak3MoZNMnxFC7UG4xA4s+XbSQ78U2OmS6u+DTKVgToDLQ9G68QZ+MMg
-	M2Z+lMuJt3FkltuZjTvfLH/HKqVZjAjQGeDMmvh/pjQs4Nj6ALUXm9f7Lbun88FCVscdwV
-	48mv55AVF+1uiysxyKm+026sTAuwSV4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744740059;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tqDzUeAHeeGUgPBZz4cnwRo1kx8yqknbBXRcS6TgjCE=;
-	b=z9mD24ut1cSunXEq2zrT/NyTgiRunihmTBMmIrQzlD/mU9ExEvTufClOQNeyYUs66ZXmqq
-	zBjdL8vQQLtGyUCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BF1E137A5;
-	Tue, 15 Apr 2025 18:00:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zhCrIdue/md4fAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 15 Apr 2025 18:00:59 +0000
-Date: Tue, 15 Apr 2025 20:00:58 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Charles Han <hanchunchao@inspur.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: Fix the incorrect description in comments.
-Message-ID: <20250415180058.GM16750@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250410090723.10166-1-hanchunchao@inspur.com>
+	bh=1Mo25pBuBWiN307HIbqRzDBZRU7fU/K2LqdF6ML5T2o=;
+	b=ax5/05cmrpg2/AeaSBKsb2/ealQFqKIK4UHWFFhwkppTdUcbnPQIiCF1SQn3VD+10qsAyU
+	IBm0Wto5C8Z7bRZgIFvzEd+gYNyPqV1FbBnsE3lZS4cSui65FvUtTf6hzWc0Dnd9WVJJ4r
+	WwPyk3jbp1rgUBWSdpPfAIs7Ty3kvOw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Jann Horn <jannh@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	SeongJae Park <sj@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] MAINTAINERS: add section for locking of mm's and VMAs
+Message-ID: <g6u6f5euahanr5tmhjakxude6eswz6vl245sdzmhsjwv34pz7h@cleoudcjnwfr>
+References: <cover.1744720574.git.lorenzo.stoakes@oracle.com>
+ <0722c3fe0cb4c1e54ce01c7689ce4615ecc87e16.1744720574.git.lorenzo.stoakes@oracle.com>
+ <bxgksbw7qplw3pp7gpve2ir63oyds7mxsnvprz45fj6oadotm5@syvchqjd2n6z>
+ <0e796032-4f6d-4b7c-9ce6-6519f8f245af@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,62 +48,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410090723.10166-1-hanchunchao@inspur.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: AD69C1F461
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,twin.jikos.cz:mid,suse.cz:replyto,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <0e796032-4f6d-4b7c-9ce6-6519f8f245af@lucifer.local>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 10, 2025 at 05:07:22PM +0800, Charles Han wrote:
-> Replace PTR_ERR(-ENOMEM) to ERR_PTR(-ENOMEM) in comments.
+On Tue, Apr 15, 2025 at 04:43:41PM +0100, Lorenzo Stoakes wrote:
+> On Tue, Apr 15, 2025 at 11:37:04AM -0400, Liam R. Howlett wrote:
+> > * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250415 09:11]:
+> > > We place this under memory mapping as related to memory mapping
+> > > abstractions in the form of mm_struct and vm_area_struct (VMA). Now we have
+> > > separated out mmap/vma locking logic into the mmap_lock.c and mmap_lock.h
+> > > files, so this should encapsulate the majority of the mm locking logic in
+> > > the kernel.
+> > >
+> > > Suren is best placed to maintain this logic as the core architect of VMA
+> > > locking as a whole.
+> > >
+> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > > ---
+> > >  MAINTAINERS | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 8d834514a047..ce55676a16a4 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -15595,6 +15595,21 @@ F:	mm/vma_internal.h
+> > >  F:	tools/testing/selftests/mm/merge.c
+> > >  F:	tools/testing/vma/
+> > >
+> > > +MEMORY MAPPING - LOCKING
+> > > +M:	Andrew Morton <akpm@linux-foundation.org>
+> > > +M:	Suren Baghdasaryan <surenb@google.com>
+> > > +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> > > +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > > +R:	Vlastimil Babka <vbabka@suse.cz>
+> > > +L:	linux-mm@kvack.org
+> > > +S:	Maintained
+> > > +W:	http://www.linux-mm.org
+> > > +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> > > +F:	Documentation/mm/process_addrs.rst
+> > > +F:	include/linux/mmap_lock.h
+> > > +F:	include/trace/events/mmap_lock.h
+> > > +F:	mm/mmap_lock.c
+> >
+> > It would be good to have more M's here in the case Suren is away or
+> > whatever.
+> >
+> > I have worked on the mmap locking due to the maple tree addition, and I
+> > have helped with vma locking in some areas.
+> >
+> > Lorenzo wrote the locking document, which Suren pointed out last mmap
+> > lock meeting and does make locking changes.
+> >
+> > Are there others that could be M here?
 > 
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
->  fs/btrfs/delayed-inode.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I mean I'm fine to take an M here, based on having done _some_ work in this
+> area and being involved in the meetings and documenting, though I'd largely
+> defer to Suren who was the true expertise, and I also feel Liam has better
+> knowledge than I do.
 > 
-> diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
-> index 3f1551d8a5c6..e35626270f2b 100644
-> --- a/fs/btrfs/delayed-inode.c
-> +++ b/fs/btrfs/delayed-inode.c
-> @@ -119,7 +119,7 @@ static struct btrfs_delayed_node *btrfs_get_delayed_node(
->  	return NULL;
->  }
->  
-> -/* Will return either the node or PTR_ERR(-ENOMEM) */
-> +/* Will return either the node or ERR_PTR(-ENOMEM) */
+> So I suggest probably, unless there are other viable and active takers, we
+> should M myself and you Liam?
+> 
+> >
+> > Shakeel and/or Jann might be good additions to this list somewhere
+> > (looking at the edits to the file).
+> 
+> Don't mind R in these cases if Shakeel or Jann want of course :),
 
-Thanks, while this is correct it would be better to update the whole
-function comment so it's more descriptive. I'll write someting when
-adding the patch to for-next, thanks.
+Thanks Liam. I don't mind an R here if you decide to send a new version.
+
+Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+
