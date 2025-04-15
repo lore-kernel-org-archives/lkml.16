@@ -1,198 +1,162 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8221DED7B;
-	Tue, 15 Apr 2025 10:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27FE1CEAA3;
+	Tue, 15 Apr 2025 10:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744713298; cv=none; b=s4Kr5SlOsDcWdE1uaDbloFNmdAyUfhRb95EVWYXMUEyfo5ZtiqRgLMU4DGvfP49avtX7TNcZjWMUWrNOP63SEc1DFEE/lOM+sV+7XivMbc1N58KaPQfkZrD5Rv92JuuJ5T8RVEjVUal2wWtk4w7CpLDAWv9UltEHQ5L4gyQvhZE=
+	t=1744713421; cv=none; b=XdBy9D4ahPnW4kAktUYee3b9SzSoXrgQaxN/Ru5799uyTAsJSWOr3G2V1sZWalcRICHetme0mQVw0QQiBO1xiEz5KJCqM9iDYILBAfMdlKqYDKBSrC9Iz1PSRktQQBDSJYOSFN+dGuX/m/ote7Zw09CzpGeAzVc27NSN+JY2zNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744713298; c=relaxed/simple;
-	bh=2d9Ov9hhikBrse5IuoWoSVSQmXqSkr5D1kwckyMnTgE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GX3v8BQwITPb0+X5ZAv5Cp+sQRw8bh4uCXEIN3gD1iSSaH2dLjtgZHU/6ZgCLSoR2GBsiEB85ipbhYq+9UgwixDb56WwLOphPT8nV5hzNYmJgOfqiaOcCbqf06ICxMqhUbZznlaZ9IjC2WmW5I5Z6PvyoP+LnIKN6V3gjgxOBFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=F6OoJux8; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744713421; c=relaxed/simple;
+	bh=wx4mo1LEKkoBZxLsIQ9KT/z2lr/0ddIEgTR9LY19wIY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OPjRDmrTr7v35UqjJ9j3V8mK/e1zBA2jS1ITfS1fN2zg3+vlk5orN97KgRPfWXrSEs1r3GkNhnyYcu+G8rzwJPF2A57IbJ6zf+5ZOiU6huI/jz+KMQg/yRaTyaLY219oQjQYB9fKzHxGX7gVtw6Eo1FgC21N0ydfoLZx4qN0GJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ons7m0hO; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="F6OoJux8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=LWR5t3wZU4YK8CsxmecAlIdhPIhp9PGOYDkAfl34jM4=; b=F6OoJux8+/bCieuXVjValq70t2
-	cTdJRe+Ir8SW8mXbIKCQfxLBsMT9tX8WyWsH42SBVwwVfIPhRJycIVUkfXmDUMd7c96wi4coosRJg
-	JPWyDLJ0Xp3FmBXcULBbTYca0B1fqsaPHjNU9I26a6bZlx7GfVRnZmDz4TKrAFPx43C3qILSyI4ds
-	ZyLiVH+qCzFAb34wNYshC4SJeD0SS+P0UZRUWtAUdOFotNuvqUVoqfMikAzmDIZ7CTsecSO1gYwx+
-	TNnT+knOBEQj7OAWCpPa/DLxI7mdKRUlzdYRbElzt3tNMlKua1Wvaw9Ph0el69eNbPYrhu5urtNvt
-	fxmJ8UHg==;
-Received: from bl23-10-177.dsl.telepac.pt ([144.64.10.177] helo=localhost)
-	by fanzine2.igalia.com with utf8esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1u4dcq-00GtmQ-4B; Tue, 15 Apr 2025 12:34:44 +0200
-From: Luis Henriques <luis@igalia.com>
-To: Laura Promberger <laura.promberger@cern.ch>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  Bernd Schubert <bschubert@ddn.com>,
-  Dave Chinner <david@fromorbit.com>,  Matt Harvey
- <mharvey@jumptrading.com>,  "linux-fsdevel@vger.kernel.org"
- <linux-fsdevel@vger.kernel.org>,  "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8] fuse: add more control over cache invalidation
- behaviour
-In-Reply-To: <GV0P278MB07182F4A1BDFD2506E2F58AC85B62@GV0P278MB0718.CHEP278.PROD.OUTLOOK.COM>
-	(Laura Promberger's message of "Fri, 11 Apr 2025 15:16:53 +0000")
-References: <20250226091451.11899-1-luis@igalia.com>
-	<87msdwrh72.fsf@igalia.com>
-	<CAJfpegvcEgJtmRkvHm+WuPQgdyeCQZggyExayc5J9bdxWwOm4w@mail.gmail.com>
-	<875xk7zyjm.fsf@igalia.com>
-	<GV0P278MB07182F4A1BDFD2506E2F58AC85B62@GV0P278MB0718.CHEP278.PROD.OUTLOOK.COM>
-Date: Tue, 15 Apr 2025 11:34:38 +0100
-Message-ID: <87r01tn269.fsf@igalia.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ons7m0hO"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FAaXB32330796
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Apr 2025 05:36:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744713394;
+	bh=CM1FfPxfT6qnGQR4NUV0eAkHxH46NNtG6XNVqSWakkc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=ons7m0hOXmjdWeM8ngfIhGEh25WQ/OKmnzeqD8KBWTVxgFA6gcDtM3AkeT+k5TfFa
+	 rm40vZh6RA3UuZ2YVaFCkPVmtG3G+0Aeb6e2N9jqQB5EoK8DKCXkgwIiVc9v5dzOeQ
+	 zpxFFM6SC3gQk4ObqM05Q5ERQP1VlvidXZnpqbv8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FAaXrB008560
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 15 Apr 2025 05:36:33 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
+ Apr 2025 05:36:33 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 15 Apr 2025 05:36:33 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FAaWR6017032;
+	Tue, 15 Apr 2025 05:36:32 -0500
+Date: Tue, 15 Apr 2025 16:06:31 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray
+	<dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>,
+        Nishanth Menon
+	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Siddharth Vadapalli
+	<s-vadapalli@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, Tero Kristo
+	<kristo@kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux@ew.tq-group.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: ethernet-controller:
+ update descriptions of RGMII modes
+Message-ID: <6be3bdbe-e87e-4e83-9847-54e52984c645@ti.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <218a27ae2b2ef2db53fdb3573b58229659db65f9.1744710099.git.matthias.schiffer@ew.tq-group.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Laura,
+On Tue, Apr 15, 2025 at 12:18:01PM +0200, Matthias Schiffer wrote:
+> As discussed [1], the comments for the different rgmii(-*id) modes do not
+> accurately describe what these values mean.
+> 
+> As the Device Tree is primarily supposed to describe the hardware and not
+> its configuration, the different modes need to distinguish board designs
 
-On Fri, Apr 11 2025, Laura Promberger wrote:
+If the Ethernet-Controller (MAC) is integrated in an SoC (as is the case
+with CPSW Ethernet Switch), and, given that "phy-mode" is a property
+added within the device-tree node of the MAC, I fail to understand how
+the device-tree can continue "describing" hardware for different board
+designs using the same SoC (unchanged MAC HW).
 
-> Hello Miklos, Luis,
->
-> I tested Luis NOTIFY_INC_EPOCH patch (kernel, libfuse, cvmfs) on RHEL9 an=
-d can
-> confirm that in combination with your fix to the symlink truncate it solv=
-es all
-> the problem we had with cvmfs when applying a new revision and at the sam=
-e time
-> hammering a symlink with readlink() that would change its target. (
-> https://github.com/cvmfs/cvmfs/issues/3626 )
->
-> With those two patches we no longer end up with corrupted symlinks or get=
- stuck on an old revision.
-> (old revision was possible because the kernel started caching the old one=
- again during the update due to the high access rate and the asynchronous e=
-vict of inodes)
->
-> As such we would be very happy if this patch could be accepted.
+How do we handle situations where a given MAC supports various
+"phy-modes" in HW? Shouldn't "phy-modes" then be a "list" to technically
+descibe the HW? Even if we set aside the "rgmii" variants that this
+series is attempting to address, the CPSW MAC supports "sgmii", "qsgmii"
+and "usxgmii/xfi" as well.
 
-Even though this patch and the one that fixed the symlinks corruption [1]
-aren't really related, it's always good to have extra testing.  Thanks a
-lot for your help, Laura.
+> (if a delay is built into the PCB using different trace lengths); whether
+> a delay is added on the MAC or the PHY side when needed should not matter.
+> 
+> Unfortunately, implementation in MAC drivers is somewhat inconsistent
+> where a delay is fixed or configurable on the MAC side. As a first step
+> towards sorting this out, improve the documentation.
+> 
+> Link: https://lore.kernel.org/lkml/d25b1447-c28b-4998-b238-92672434dc28@lunn.ch/ [1]
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  .../bindings/net/ethernet-controller.yaml        | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> index 45819b2358002..2ddc1ce2439a6 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> +++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+> @@ -74,19 +74,21 @@ properties:
+>        - rev-rmii
+>        - moca
+>  
+> -      # RX and TX delays are added by the MAC when required
+> +      # RX and TX delays are part of the board design (through PCB traces). MAC
+> +      # and PHY must not add delays.
+>        - rgmii
+>  
+> -      # RGMII with internal RX and TX delays provided by the PHY,
+> -      # the MAC should not add the RX or TX delays in this case
+> +      # RGMII with internal RX and TX delays provided by the MAC or PHY. No
+> +      # delays are included in the board design; this is the most common case
+> +      # in modern designs.
+>        - rgmii-id
+>  
+> -      # RGMII with internal RX delay provided by the PHY, the MAC
+> -      # should not add an RX delay in this case
+> +      # RGMII with internal RX delay provided by the MAC or PHY. TX delay is
+> +      # part of the board design.
+>        - rgmii-rxid
+>  
+> -      # RGMII with internal TX delay provided by the PHY, the MAC
+> -      # should not add an TX delay in this case
+> +      # RGMII with internal TX delay provided by the MAC or PHY. RX delay is
+> +      # part of the board design.
 
-In the meantime, I hope to send a refreshed v9 of this patch soon (maybe
-today) as it doesn't apply cleanly to current master anymore.  And I also
-plan to send v2 of the (RFC) patch that adds the workqueue to clean-up
-expired cache entries.
+Since all of the above is documented in "ethernet-controller.yaml" and
+not "ethernet-phy.yaml", describing what the "MAC" should or shouldn't
+do seems accurate, and modifying it to describe what the "PHY" should or
+shouldn't do seems wrong.
 
-[1] That's commit b4c173dfbb6c ("fuse: don't truncate cached, mutated
-    symlink"), which has been merged already.
+>        - rgmii-txid
+>        - rtbi
+>        - smii
 
-Cheers,
---=20
-Lu=C3=ADs
-
-
->
-> Have a nice weekend
-> Laura
->
->
-> ________________________________________
-> From:=C2=A0Luis Henriques <luis@igalia.com>
-> Sent:=C2=A0Monday, March 17, 2025 12:28
-> To:=C2=A0Miklos Szeredi <miklos@szeredi.hu>
-> Cc:=C2=A0Laura Promberger <laura.promberger@cern.ch>; Bernd Schubert
-> <bschubert@ddn.com>; Dave Chinner <david@fromorbit.com>; Matt Harvey
-> <mharvey@jumptrading.com>; linux-fsdevel@vger.kernel.org
-> <linux-fsdevel@vger.kernel.org>; linux-kernel@vger.kernel.org
-> <linux-kernel@vger.kernel.org>
-> Subject:=C2=A0Re: [PATCH v8] fuse: add more control over cache invalidati=
-on behaviour
-> =C2=A0
-> Hi Miklos,
->
-> [ adding Laura to CC, something I should have done before ]
->
-> On Mon, Mar 10 2025, Miklos Szeredi wrote:
->
->> On Fri, 7 Mar 2025 at 16:31, Luis Henriques <luis@igalia.com> wrote:
->>
->>> Any further feedback on this patch, or is it already OK for being merge=
-d?
->>
->> The patch looks okay.=C2=A0 I have ideas about improving the name, but t=
-hat can wait.
->>
->> What I think is still needed is an actual use case with performance numb=
-ers.
->
-> As requested, I've run some tests on CVMFS using this kernel patch[1].
-> For reference, I'm also sharing the changes I've done to libfuse[2] and
-> CVMFS[3] in order to use this new FUSE operation.=C2=A0 The changes to th=
-ese
-> two repositories are in a branch named 'wip-notify-inc-epoch'.
->
-> As for the details, basically what I've done was to hack the CVMFS loop in
-> FuseInvalidator::MainInvalidator() so that it would do a single call to
-> the libfuse operation fuse_lowlevel_notify_increment_epoch() instead of
-> cycling through the inodes list.=C2=A0 The CVMFS patch is ugly, it just
-> short-circuiting the loop, but I didn't want to spend any more time with
-> it at this stage.=C2=A0 The real patch will be slightly more complex in o=
-rder
-> to deal with both approaches, in case the NOTIFY_INC_EPOCH isn't
-> available.
->
-> Anyway, my test environment was a small VM, where I have two scenarios: a
-> small file-system with just a few inodes, and a larger one with around
-> 8000 inodes.=C2=A0 The test approach was to simply mount the filesystem, =
-load
-> the caches with 'find /mnt' and force a flush using the cvmfs_swissknife
-> tool, with the 'ingest' command.
->
-> [ Disclosure: my test environment actually uses a fork of upstream cvmfs,
-> =C2=A0 but for the purposes of these tests that shouldn't really make any
-> =C2=A0 difference. ]
->
-> The numbers in the table below represent the average time (tests were run
-> 100 times) it takes to run the MainInvalidator() function.=C2=A0 As expec=
-ted,
-> using the NOTIFY_INC_EPOCH is much faster, as it's a single operation, a
-> single call into FUSE.=C2=A0 Using the NOTIFY_INVAL_* is much more expens=
-ive --
-> it requires calling into the kernel several times, depending on the number
-> of inodes on the list.
->
-> |------------------+------------------+----------------|
-> |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | small filesystem | "big" fs=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 |
-> |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | (~20 inodes)=C2=A0=C2=A0=C2=A0=C2=A0 | (~8=
-000 inodes) |
-> |------------------+------------------+----------------|
-> | NOTIFY_INVAL_*=C2=A0=C2=A0 | 330 us=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 4300 us=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |
-> | NOTIFY_INC_EPOCH | 40 us=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 | 45 us=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |
-> |------------------+------------------+----------------|
->
-> Hopefully these results help answering Miklos questions regarding the
-> cvmfs use-case.
->
-> [1] https://lore.kernel.org/all/20250226091451.11899-1-luis@igalia.com/
-> [2] https://github.com/luis-henrix/libfuse
-> [3] https://github.com/luis-henrix/cvmfs
->
-> Cheers,
-> --
-> Lu=C3=ADs
-
+Regards,
+Siddharth.
