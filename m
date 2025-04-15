@@ -1,123 +1,153 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D951017A316;
-	Tue, 15 Apr 2025 15:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86ACA199FA4;
+	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729541; cv=none; b=r4aUHCHs7jLN8Acx84lKQ5zew8ZJ/MXHg9jghtGaZTEilfo0envzpq7RlIbHPB6VhMjtPGqPCl2UTXi5oKHnScVODWobNw1ZJuyHuQ4V0F8bYCwDyRVNlcZcOfiy1g5qMmi024s5eFD5NqEPxgTmN1uKXij9ExkKN7Tr4FdZ6uo=
+	t=1744729736; cv=none; b=ZCOUQrb+wL8YivW4y26Eb2IFz/J21txmmAqcGXkptfTrujwtQJI1GtMLRItTSne7n1yF2j3bIzcJbPB+MJqE8CcrQhRyOcL2JNsIvKtaVCrIhF2LProKXYd2x0L9KEnA0pubeTQEKApW969aLNGauRTgTg236bjb+cqoMUa1MXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729541; c=relaxed/simple;
-	bh=fph/GqhjZhoz1tpBFFHpktak06Ykrl7Ng2ZZ9kGhlw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PDymDHs3ldU0KTjn+Vt+lGolsONlzJzwFXqcDiBGIFQXKv+hfxaVed3TKaQBWJBejwmC6pcpLTP9/GtzUSNFlsP9cYZCLPOth3oszyivHtqBafo8sTyFpJHv6t4Iclr6VKyQ6qFG8IzC/AVT8BLDRBLFKYYIS1oU5RUaVQN0TYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=e1i+aKoQ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Iy9PUxIM; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1744729736; c=relaxed/simple;
+	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P65x3XRp9JSQ/PQkfE7IQ59tY7YsZPsvyzhctSLete+kWi4a6skS+qNQ96Tu2IEgEe5z60x60s8dAZC8okjyIZ1Hz2NbGlJ//oEV8F+uHF2ecURsioJVny2YcSkmd5+W9HgP9M2pGtctfPaRv4XyS2pP0LK0oHBJ+sMROyP8edg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRrGEh6D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="e1i+aKoQ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Iy9PUxIM"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id C669A1380212;
-	Tue, 15 Apr 2025 11:05:37 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Tue, 15 Apr 2025 11:05:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
-	 t=1744729537; x=1744815937; bh=kwjwUckSCSBSaxgPLzqJL3F5+m9BbFCd
-	aP0FISKu/pE=; b=e1i+aKoQTp/qG3a/AvuoqXJEKqEjGZ7Xu5i5UZWuFQEaqqxP
-	IRZJcFF0hh68y7U1qYJ716fePeYevZYuAddaNn8TDHPYcnL7KfmzFVaM38FRg3uR
-	t/2Yk0xwotoEZHmnBAMzXQRphDXhu/K7HDs0pHzOiASQ4q/smIoaioGGsGsIfB2G
-	kxEQXBF/0QIvL6SxZaGbSgaUUAQDQLBHgV2Vo38UpckMGYoL+IfXTBX2s9LA+Fwf
-	Mk+9c7sjpNFoVlpZ20yUCvadcKZel/uYI/lffgkUNBzN1guxQxfXxzv6eYu1xZvI
-	Fwd3f+SL2DMm70L01Np53vDYkyftqTVob/udOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744729537; x=
-	1744815937; bh=kwjwUckSCSBSaxgPLzqJL3F5+m9BbFCdaP0FISKu/pE=; b=I
-	y9PUxIMZKyx/wWiunAgFAXidgGRyW3HZxHbDbJhY2IV6uLhTAEMXOQOSujgoSmJ2
-	eyKMz73oEbPHArYwm/c1VpaRYA4LDK+UXG3wfCxMm017XFmxQHFmWUtB04+lcIt2
-	/BCafFPHApSWp9o94je/xTB9FHtt8oQr8Gj8AQ7JxRv1BNyVGOtgdJspuhlnNJbc
-	Z/pOp8dZkUB344j5pcTJldOcJmOTH/vdAexu5qGzPERkAQcm4TXnxxPKIsx8YTzE
-	8FsF5TuaUlKUyX1+A2OYMUk7rLxxB4gcOFEgwRU7UtqI0FkjmFfzq3XnjzciJ0WL
-	IqE3RM0Vsn/THhQIQlhcg==
-X-ME-Sender: <xms:wHX-Zz92DOTRw4C0ot-ejLCYTcM4v6Sb-YhKYL4dZmf9WIwun9Vspw>
-    <xme:wHX-Z_sOlTfWPuLGWyKcGZqj4KcLd44iTJaJVym86VT0dm7TVrqm3A_toN18NL98q
-    AG6-o5dOa9vgQhD-98>
-X-ME-Received: <xmr:wHX-ZxA7sQbMtGcVQ7ieDdVNxsB3nf5G-vtGiXEEnF3eDjfkChhEaj0d4cdxD-0edVPo6I_7Dy_IaNvaEm4rrUjXVSa0OJP3iBjMEJGBF-AudOvyWZAryRsgMX4Yh0o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdefkedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertder
-    tdejnecuhfhrohhmpefuvhgvnhcurfgvthgvrhcuoehsvhgvnhesshhvvghnphgvthgvrh
-    druggvvheqnecuggftrfgrthhtvghrnhepleetudehlefgteduffeijeehfeduudekhffg
-    fedvueekvedvveeuhefgieetgfegnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnhes
-    shhvvghnphgvthgvrhdruggvvhdpnhgspghrtghpthhtohepudehpdhmohguvgepshhmth
-    hpohhuthdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegrlhih
-    shhsrgesrhhoshgvnhiifigvihhgrdhiohdprhgtphhtthhopehssghohigusehkvghrnh
-    gvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthht
-    ohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoug
-    htsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvggrlhesghhomhhprgdruggvvhdp
-    rhgtphhtthhopehfnhhklhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
-X-ME-Proxy: <xmx:wHX-Z_fxKazDrAyXj0GgdL1YHnnm5RWu9mzovfCRmhBuubKnKX5TyQ>
-    <xmx:wHX-Z4O0N3vNAHS2aI2UAEW1fbVOUJQ9GYJ-dp76zhfhncrUCI5nAw>
-    <xmx:wHX-ZxkqkAZM7BJJFZ7kaWbZDXfOTX3OaCV_14q50IMz_tFztaeaIw>
-    <xmx:wHX-Zyv03UDgmVQsjCgdhMqA9Xf42gf0x1q02Ac3WVcmaf5sMfOdhA>
-    <xmx:wXX-Z5cVCwJgp4WWzKe8YRLgEhp5rxtkwsx1Gf4smRcrQY1y9AutgjxR>
-Feedback-ID: i51094778:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 15 Apr 2025 11:05:34 -0400 (EDT)
-From: Sven Peter <sven@svenpeter.dev>
-To: Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Stephen Boyd <sboyd@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRrGEh6D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0849BC4CEEB;
+	Tue, 15 Apr 2025 15:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744729736;
+	bh=iOCFGQAT84b68xAt3pMOFOVCOmjgcX1L+OzWMeDgY+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DRrGEh6Dx4EKmnikulVWAAbjfm1F0kKtYZQ8q3BEwTpCDZA0B9+QzGhuCuBKrLymY
+	 HV/yOnn7C8aTzJXBXnUmq4iyL34gnw2vr2UacavgID0On6wW26QnN/9ByvcBn57ZSx
+	 QnN4owL31dMbGuRaEr6/1i403ibnllJv3xrmPCbvjfyvZDI/bqizPnEgFo+mPzwFKR
+	 yYedYK9YV9W+FdohnLbAlY5xySk9MVdddKDk/2RAQp4uMF/Tb9wTwG64yZi3phdI1g
+	 JA4V8NNuptOnMFG74HHX/Vi4QD6pEr86q0WMz/EgK09XUoUnOMLZ8KN8iWSMugGijC
+	 jwOTQfgTv9e/g==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u4hu9-000000007Q0-1YOd;
+	Tue, 15 Apr 2025 17:08:53 +0200
+Date: Tue, 15 Apr 2025 17:08:53 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neal Gompa <neal@gompa.dev>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc: Sven Peter <sven@svenpeter.dev>,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Jean-Francois Bortolotti <jeff@borto.fr>,
-	Nick Chan <towinchenmi@gmail.com>
-Subject: Re: (subset) [PATCH v4 0/3] Driver for the Apple SPMI controller
-Date: Tue, 15 Apr 2025 17:05:22 +0200
-Message-Id: <174472945748.1150.17125023476658706352.b4-ty@svenpeter.dev>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250409-spmi-v4-0-eb81ecfd1f64@gmail.com>
-References: <20250409-spmi-v4-0-eb81ecfd1f64@gmail.com>
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+Message-ID: <Z_52heGno2Y5M6uF@hovoldconsulting.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
+ <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
 
-On Wed, 09 Apr 2025 23:52:11 +0200, Sasha Finkelstein wrote:
-> This patch series adds support for the SPMI controller persent in most
-> Apple SoCs. The drivers for the attached PMU and subdevices will be in
-> further patch series.
+On Mon, Apr 14, 2025 at 04:37:59PM +0100, Robin Murphy wrote:
+> On 2025-04-11 9:02 am, Johan Hovold wrote:
+> > On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
+
+> >> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+> >>   		dev_iommu_free(dev);
+> >>   	mutex_unlock(&iommu_probe_device_lock);
+> >>   
+> >> -	if (!err && dev->bus)
+> >> +	/*
+> >> +	 * If we're not on the iommu_probe_device() path (as indicated by the
+> >> +	 * initial dev->iommu) then try to simulate it. This should no longer
+> >> +	 * happen unless of_dma_configure() is being misused outside bus code.
+> >> +	 */
+> > 
+> > This assumption does not hold as there is nothing preventing iommu
+> > driver probe from racing with a client driver probe.
 > 
+> Not sure I follow - *this* assumption is that if we arrived here with 
+> dev->iommu already allocated then __iommu_probe_device() is already in 
+> progress for this device, either in the current callchain or on another 
+> thread, and so we can (and should) skip calling into it again. There's 
+> no ambiguity about that.
+
+I was referring to the this "should no longer happen unless
+of_dma_configure() is being misused outside bus code" claim, which
+appears to be false given the splat below.
+
+> >> +	if (!err && dev->bus && !dev_iommu_present)
+> >>   		err = iommu_probe_device(dev);
+> >>   
+> >>   	if (err && err != -EPROBE_DEFER)
+> > 
+> > I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
+> > is probed late due to a clock dependency and can end up probing in
+> > parallel with the GPU driver.
 > 
+> And what *should* happen is that the GPU driver probe waits for the 
+> IOMMU driver probe to finish. Do you have fw_devlink enabled?
 
-Applied to git@github.com:AsahiLinux/linux.git (asahi-soc/dt), thanks!
+Yes, but you shouldn't rely on devlinks for correctness.
 
-[3/3] arm64: dts: apple: Add SPMI controller nodes
-      https://github.com/AsahiLinux/linux/commit/2e0e70c95077
+That said it does seem like something is not working as you think it is
+here, and indeed the iommu supplier link is not created until SMMUv2
+probe_device() (see arm_smmu_probe_device()).
 
-Best regards,
--- 
-Sven Peter <sven@svenpeter.dev>
+So client devices can start to be probed (bus dma_configure() is called)
+before their iommu is ready also with devlinks enabled (and I do see
+this happen on every boot).
 
+> > [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+
+> > [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
+> > 
+> > [    3.992050] ------------[ cut here ]------------
+> > [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
+> > [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
+> > 
+> > [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
+> > [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
+> > 
+> > [    4.025943] Call trace:
+> > [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
+> > [    4.030453]  iommu_probe_device+0x38/0x7c
+> > [    4.030455]  of_iommu_configure+0x188/0x26c
+> > [    4.030457]  of_dma_configure_id+0xcc/0x300
+> > [    4.030460]  platform_dma_configure+0x74/0xac
+> > [    4.030462]  really_probe+0x74/0x38c
+> 
+> Indeed this is exactly what is *not* supposed to be happening - does 
+> this patch help at all?
+> 
+> https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
+
+I've only seen that splat once so far so I don't have a reliable
+reproducer.
+
+But AFAICS that patch won't help help here where we appear to have iommu
+probe racing with bus dma_configure() called from really_probe() for the
+client device.
+
+Johan
