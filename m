@@ -1,118 +1,115 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9742E27B4EB;
-	Tue, 15 Apr 2025 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD491624CE
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744708091; cv=none; b=pbMeM7ZpWMi8aq8EHRH574jiCzFCRauYO/pJRcqLX8+jWcuFSIrHINUK7LoXFUPq2HKyO4Dvu2Sg/tefJUdIcYxgJ9ANe4SH4rlHw0hqe8eEQrMXrHD5+YajNQfjQ/cXvTFThE2MCOydfXRSB6WSRzEQx6D9igB07lzwWJ3YKpk=
+	t=1744708153; cv=none; b=LMMq2Cip+0YQXOIqB9SZITrIi849fNAEDHrTAoTWGv0RtV9asP1zX37N9Bs9gEv20HzG8f3xQTom/EXtxOLTbpVfZ5jQ48Wtrh27+bPiZZujokaAJZnuGcl7yLS3AotSMh9r2V78vzsLaWqRu4CrH1g7LJGHvCez9ehDcqveUUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744708091; c=relaxed/simple;
-	bh=lfUREmygUPm0Jj5r1LTZOWueVQMn0sd7cjQR1OIjf3c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GG5fs7vMkJCMaq1aavY1Zr07vT+VZTX2YuBn0Vesww6uXyYCrHzdWoGj8b8dk6xixAlEodbkdA/Mwq8EGyYLyCrtvsO27SmrLnXElTPEdYODF7wgtQLnECgZ4S+it5dIrj/SGKfK/bf2euAS778e8ZMe5YEBVykYh2tYEpQ+fyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LDR7UbSH; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744708153; c=relaxed/simple;
+	bh=oMGn+Uvpm63tpBWdMLqAzsaYy5MGQUBVh3XFJ4N+pY4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rGoMGxpp5r5zU5sAmmudSFrMpJFQcmxd99IIHZvBr+C7uqo2G8pVjxM8bo7iXK+0Tf4oi/0pMlpRzUe/znsSGJAp5pyuKjYfsYevQp/10quyXrdZEdMD5tybEdrLtiGYzL90VrBU/9WKZpeP+XBdIVKr/pnJkR2alfxXdRrcdsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7mNn46J; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LDR7UbSH"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c14016868so4839987f8f.1;
-        Tue, 15 Apr 2025 02:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744708088; x=1745312888; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lfUREmygUPm0Jj5r1LTZOWueVQMn0sd7cjQR1OIjf3c=;
-        b=LDR7UbSH/EAttQLIO7bgdWcLHfqXHuHWuBQRcoUuesGWAmA+2lCJE8BSL1JhqxOzFP
-         9antJ1Oe7r1evDk2iiBY52332Wwbyz3JbuoAMk6T5O6x+YexWPYpqiQ30NaI+4NMkzeR
-         GEuRy9fSbmnI1fCe5M5vaE2cIST6PwjOmDUiaO133+Dwk0Db5VSGJQNCPu+O0QkQ8bbt
-         f6LkqjfYyMz1Ir6RJ7lwRgPa3DmTY+Y4HcYk5R4x+uSPsqOGHa4l09GQFqdmx0D78gbd
-         ykeS+DmZ3y2AQKSaR5azL5Mw9PBsM7vo9mxpBoEvD/nytctMjYnHoiAeFrGno/KKIhAT
-         9uaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744708088; x=1745312888;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lfUREmygUPm0Jj5r1LTZOWueVQMn0sd7cjQR1OIjf3c=;
-        b=dQwV+rEM6Vcfz6N7UoHa+PY/twQLooBvvGqStIVac/BX/HN0/XLuxxVUULfYs6cR5m
-         MDHNnyHyzw9H3jnSdgeKwWE5+Oy0m5etixxBtfyrefpkNqOIlE6GG6pHezHkTPOBEvm+
-         OqLc9JgOf2dXoB07APb4h2ljgj1ux1HYhjlroBICV8rJYTbrHHuDFs0irEWHZqjvx/Db
-         XzvIKglKVzp7w3mruAgGgzXShFA+ke8i0ctUTqCw/p2ODhDJyECNoo1J+Uon3CV0OIf0
-         poMGuHFUb+jzA8ZHizmtASVO+Hg9P8Nr5mQFxfo+ti5OBgcfzmZT0HmucvtbrCS+n+fg
-         9Q5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHQBJf7dEjzA2tIwuCsMa0aClK0259BJOmPz8g/0azDaofsZCq59sgK6tMc3IApF931n+KM2LBqFU=@vger.kernel.org, AJvYcCWhbYlZmX3O/YoySI6wdyhweKduDigUvP2zgrgnEY3mO6MMdniw5LnclTkxEIUJkHeqTSGL3hS2XK+6fkzQ@vger.kernel.org, AJvYcCXwx6meFILnY8vTY7B9wHBMxrRjVciyXqYlb9UbC61NJYdLY9UHcgx/nOBuLVRifhQa5aONdk/AI2Bq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTr8qt0cRHsF1WIzWl5ZcjbaJRzkYL5BBYLy6rgKe4cVg8tRWQ
-	7tsZt5Ld5R3tAdaFifGNdNsPqG05bC+y+ZVFZcpzF/mUUl2igFM2
-X-Gm-Gg: ASbGnctCCh2LtqcCHYXNY4arqzz3dBGRYfG3gQ5zyJ7yfG+QcSm2g2robnvvUJk406y
-	zNucrhIJZCj3qsqen3JVCZD8tRGXoFytR4s5rvp+CBovcFKGkg2LPt5ft+R5YwfaFfUyKOYW32K
-	QUiqgQKc64XEmz9HckCXcqNxzxe5exGI4NC0lUgbKnXEnxHtnlU5b/aY1EG/21CdywdTSslObHj
-	md/hINN+irss02/mCaDbesBkmDXAHW+VwzTiyf14Nb73OQROs1Fzbq+uG8gsZRxUDcPgSOMCj9A
-	YFbSaPMf2GqzvlloN5fhLb+Teo/rwvY+wTmKeECt2qXTjwvURIuE9tYeisawjioCZuP2kKVIauT
-	ox+Jdwr92lE8T
-X-Google-Smtp-Source: AGHT+IHvFokkxMDwtcFkEpaJ0Z4DYBlnrZDQ/ooZwQvYNR1ae6siZqjs8Qu/4aQtubMfy6kh8zYE/Q==
-X-Received: by 2002:a05:6000:40cd:b0:39c:268e:ae04 with SMTP id ffacd0b85a97d-39e9f3cf20dmr11718479f8f.0.1744708087834;
-        Tue, 15 Apr 2025 02:08:07 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96bf97sm13325934f8f.25.2025.04.15.02.08.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 02:08:07 -0700 (PDT)
-Message-ID: <087b28aeecb54645a52627d84291a5ed6d309011.camel@gmail.com>
-Subject: Re: [PATCH] docs: iio: ad3552r: fix malformed table
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	 <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, David Lechner	
- <dlechner@baylibre.com>, Andy Shevchenko <andy@kernel.org>, Jonathan Corbet
-	 <corbet@lwn.net>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-iio@vger.kernel.org, 	linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, sfr@canb.auug.org.au
-Date: Tue, 15 Apr 2025 10:08:09 +0100
-In-Reply-To: <20250415-wip-bl-ad3552r-fix-doc-table-v1-1-717ffd320c9d@baylibre.com>
-References: 
-	<20250415-wip-bl-ad3552r-fix-doc-table-v1-1-717ffd320c9d@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7mNn46J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744708152; x=1776244152;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=oMGn+Uvpm63tpBWdMLqAzsaYy5MGQUBVh3XFJ4N+pY4=;
+  b=A7mNn46JOiz3E2uPfIa6QaaF41QmaSSbVgFtT69ypj3b3oWhHgqU/I03
+   Tm8rCcVym5DKYkwaZu8wJ7M6gxaJnm5y1uiLSzESzzf9c09ejGYfyValA
+   x4PPWqP+1fyYYzuPuPj51oD3Vrlhe6u6xedxQpD8yIkDJyGC7U1flUyDg
+   +yZVfZio/gIKY0CYKFjv0ukYb+smpkqOZD7uPKn+8Pu4TpTXdyTwcSSci
+   0wRCNjg3S7cB1zJ5UcY7nlo4FpugSsWlHJUX7UKkW83gFE2dz0zJekOZk
+   scSqqZnaDHBhaWsT5DNa9PydZE8KrfuHvin3RdC3aYXU5s1BUUA/r8IKj
+   Q==;
+X-CSE-ConnectionGUID: 4zResP5dQ1qQdyQ+tzlxIw==
+X-CSE-MsgGUID: eZ1SjwOBRiqhF8BENXQZHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46370514"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46370514"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 02:08:04 -0700
+X-CSE-ConnectionGUID: PWdu4CxjQrGoEVn4JNCM2Q==
+X-CSE-MsgGUID: Ko5iN2FuRuy0a2/a9weotQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="130595799"
+Received: from dprybysh-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.35])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 02:08:00 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Alan Previn
+ <alan.previn.teres.alexis@intel.com>, Daniele Ceraolo Spurio
+ <daniele.ceraolospurio@intel.com>
+Subject: Re: [RFC PATCH 4/7] drm/i915/pxp: fix undefined reference to
+ `intel_pxp_gsccs_is_ready_for_sessions'
+In-Reply-To: <CAC1kPDMuAmfoJfL4wjrBEcK+rpgbWk7kYEWJjvps=2UJ6-_WHw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
+ <20250411105459.90782-1-chenlinxuan@uniontech.com>
+ <8921351F23CD8948+20250411105459.90782-4-chenlinxuan@uniontech.com>
+ <87sem9svmn.fsf@intel.com>
+ <CAC1kPDMuAmfoJfL4wjrBEcK+rpgbWk7kYEWJjvps=2UJ6-_WHw@mail.gmail.com>
+Date: Tue, 15 Apr 2025 12:07:56 +0300
+Message-ID: <87mschssgj.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyMDI1LTA0LTE1IGF0IDA5OjQ0ICswMjAwLCBBbmdlbG8gRHVyZWdoZWxsbyB3cm90
-ZToKPiBGcm9tOiBBbmdlbG8gRHVyZWdoZWxsbyA8YWR1cmVnaGVsbG9AYmF5bGlicmUuY29tPgo+
-IAo+IEZpeCBtYWxmb3JtZWQgdGFibGUuCj4gCj4gRml4ZXM6IDlhMjU5YjUxZTNlYSAoImRvY3M6
-IGlpbzogYWRkIGRvY3VtZW50YXRpb24gZm9yIGFkMzU1MnIgZHJpdmVyIikKPiBTaWduZWQtb2Zm
-LWJ5OiBBbmdlbG8gRHVyZWdoZWxsbyA8YWR1cmVnaGVsbG9AYmF5bGlicmUuY29tPgo+IC0tLQoK
-UmV2aWV3ZWQtYnk6IE51bm8gU8OhIDxudW5vLnNhQGFuYWxvZy5jb20+Cgo+IEZpeCBtYWxmb3Jt
-ZWQgdGFibGUuCj4gLS0tCj4gwqBEb2N1bWVudGF0aW9uL2lpby9hZDM1NTJyLnJzdCB8IDIgKy0K
-PiDCoDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2lpby9hZDM1NTJyLnJzdCBiL0RvY3VtZW50YXRpb24v
-aWlvL2FkMzU1MnIucnN0Cj4gaW5kZXgKPiA1ODI1MDdhYmU4YzRjMmVjYjUxYTFmODM4OWQ3ZGVl
-YzQ0ZDIwMjIyLi5mNWQ1OWU0ZTg2YzdlYzgzMzhmM2Y0ZTgyZDdhMDc1ODdlM2QKPiA4NDA0IDEw
-MDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vaWlvL2FkMzU1MnIucnN0Cj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9paW8vYWQzNTUyci5yc3QKPiBAQCAtNTYsNyArNTYsNyBAQCBzcGVjaWZpYyBkZWJ1
-Z2ZzIHBhdGggYGAvc3lzL2tlcm5lbC9kZWJ1Zy9paW8vaWlvOmRldmljZVhgYC4KPiDCoHwgRGVi
-dWdmcyBkZXZpY2UgZmlsZXPCoCB8Cj4gRGVzY3JpcHRpb27CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHwKPiDCoCstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gLS0rCj4gwqB8IGRhdGFfc291cmNlwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgfCBUaGUgdXNlZCBkYXRhIHNvdXJjZSwKPiBhc8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwKPiAtfMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgYGBub3JtYWxgYCwgYGBy
-YW1wLTE2Yml0YGAsCj4gZXRjLsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfAo+ICt8wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfCBgYG5vcm1hbGBgLCBgYHJhbXAtMTZiaXRgYCwKPiBldGMuwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8Cj4gwqArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+IC0tKwo+
-IMKgfCBkYXRhX3NvdXJjZV9hdmFpbGFibGUgfCBUaGUgYXZhaWxhYmxlIGRhdGEKPiBzb3VyY2Vz
-LsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwKPiDC
-oCstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gLS0rCj4gCj4gLS0tCj4gYmFzZS1jb21taXQ6IDMxYzUy
-ZmUzYjJlZmVlYmZjNzJjYzUzMzY2NTNiYWFhOTg4OWI0MWUKPiBjaGFuZ2UtaWQ6IDIwMjUwNDE1
-LXdpcC1ibC1hZDM1NTJyLWZpeC1kb2MtdGFibGUtNTg5MjkzYzliODYwCj4gCj4gQmVzdCByZWdh
-cmRzLAo=
+On Tue, 15 Apr 2025, Chen Linxuan <chenlinxuan@uniontech.com> wrote:
+> Jani Nikula <jani.nikula@linux.intel.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=
+=8815=E6=97=A5=E5=91=A8=E4=BA=8C 15:59=E5=86=99=E9=81=93=EF=BC=9A
+>>
+>> On Fri, 11 Apr 2025, Chen Linxuan <chenlinxuan@uniontech.com> wrote:
+>> > On x86_64 with gcc version 13.3.0, I compile kernel with:
+>> >
+>> >   make defconfig
+>> >   ./scripts/kconfig/merge_config.sh .config <(
+>> >     echo CONFIG_COMPILE_TEST=3Dy
+>> >   )
+>> >   make KCFLAGS=3D"-fno-inline-functions -fno-inline-small-functions -f=
+no-inline-functions-called-once"
+>>
+>> The change looks good, but I'm guessing the real explanation is that you
+>> have CONFIG_DRM_I915_PXP=3Dn and that appears to be broken.
+>>
+>> Fixes: 99afb7cc8c44 ("drm/i915/pxp: Add ARB session creation and cleanup=
+")
+>> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+>>
+>> But how do you want this merged?
+>>
+>
+> As patch 5 has been merged into rdma-next, I think it's OK to merge
+> this single patch into your tree.
 
+Thanks. I amended the commit message a little, and resent this to
+intel-gfx [1], and will merge it via drm-intel-next.
+
+BR,
+Jani.
+
+
+
+[1] https://lore.kernel.org/r/20250415090616.2649889-1-jani.nikula@intel.com
+
+
+
+--=20
+Jani Nikula, Intel
