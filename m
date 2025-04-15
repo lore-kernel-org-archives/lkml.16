@@ -1,50 +1,70 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA8520E003;
-	Tue, 15 Apr 2025 15:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CAC2535D8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744730866; cv=none; b=Zcpv4BQc/YrO58LJy2P2mdxojtwIHSF5YDfaYjuCm+afrgu1TvzlIQKFuCIcR+Mm/JBGry6i/n2r+4MTrzMwaH85AVmzwtIA9rF3GwNSkbZPKRU/b1rkfosbR5aEFg0+rXK/+kZjiWBf6DmnUAfT/uiTD7x8PuctiWUQLkdpn4c=
+	t=1744730955; cv=none; b=h+XILnmoJhTIMWqsDfFE/em9/hl+qU8/QyZasYKLlvPX6XGB7Oy7rK0PVsQ7FIEMxbRc5b2swKhTyUIlRG4zqmHwJUq2Pih5N5zr/gwwDdngkax3K6uDtLHQgYy8KG+iq6xoDLdh4opZs+cys1gUuySVkHJ1gKYpobasIIxCMxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744730866; c=relaxed/simple;
-	bh=VErCuvMt2wWRUemVF5KwKivhZmgRpbT0ckqDN43FWYw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EVAg/+mEBs/+5er+Fcd/blILhbRSIAQbIQGxFWptjLqcrXwa/slfkJiHKt5zqO4cxRCAt9bzpw3b0Cpn0rZ9Ski0YRP8je2xApnMAQTDJVRK0yNl3WS2GD4eUQVZUUP265KXAs3hm8FlFAs7/sGnEi1a7WX7ugdQDy9Xyz/yoiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=f96StIq7; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744730955; c=relaxed/simple;
+	bh=245uPgAjq0DuLIQiQTeNyrixfMQkPyaf8ibRk1MsNlU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DaxoMvGk063mzOxkv4+CpoLTx6NBU907JT5O/0liYI/KiFzbblNFZ5Am/o85A3BgR8lxH7YWvDv9looGKE2gyLAPSGVNcs6fm54CmQ/fR/YtfUmaZv04IbfmlBY5Fs1uZ81YogJD4/GRiWCjo4MV5W2lY8k+sOZPAtG5ttJnzQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuU3HVPK; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="f96StIq7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=oml1Mrnp47RusR5d0ApAKkTSky1zT7/Gd1S7AMinXF0=; b=f96StIq7u2cg4/MtulmKNAp16A
-	1OO3m/xvx3je0VnrZwj+YB4U8Civ6zLKNI1Pucg9kLD/hU0/wiD11+A0p7CP++SyR98rp4KN+EfaE
-	wz5adawaEkkukTZnuA0pAJIyACMaWt3JJkgjKwLPlNiccEJESrZjkZhZx7+k43yeTNlE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u4iCH-009TLQ-L9; Tue, 15 Apr 2025 17:27:37 +0200
-Date: Tue, 15 Apr 2025 17:27:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
-	linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: freescale: add initial device tree for
- TQMa8XxS
-Message-ID: <aa21556c-8c79-4d03-b6db-3b4cf450fc3a@lunn.ch>
-References: <20250415133301.443511-1-alexander.stein@ew.tq-group.com>
- <20250415133301.443511-2-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuU3HVPK"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499d2134e8so6887254e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744730951; x=1745335751; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJkk1wWpcI9CJBo5G8AdG0tP+GsY23btFhNdL79cMeM=;
+        b=MuU3HVPKA6mHqAUkAf5d2HhdtvUm/DHR/3xI7I9frhDIjk4rGJ+rlaUQFK4+e1e6Xf
+         hezk6NIkehzAgfpTKEr5ei4nOyC7vQpM+sO9E0JkOApd4668/fwyW++QxaMeYy1fIjNu
+         03azdcbYWzcNSHs8oSLOnN/Id396CvZHJNtFSZ70GpNjW/7EdSxr1tBZz/D8CusCwzwY
+         rrcvBJawAIaKU1hnQ83XciHOhAdpIZZvB3ZiwihQHrv/4UbonoXaTmye7jc0TTNj5a/H
+         TkfstON19D2XtGzR65W8mEq/mUTnFhCK7RBZ6ySonhNWBMTXrgad9rJm82L4S8+ydbw7
+         Qm3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744730951; x=1745335751;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jJkk1wWpcI9CJBo5G8AdG0tP+GsY23btFhNdL79cMeM=;
+        b=w+3PfQ3Y8ExVC5esb1jy0FozmwCin7vJQ5XfUrw23HmZZp1GKiK0GAWXg40P59euM7
+         sw2kCU1s+dKr4RtqSuXPtokywscmGaN4RW6indnTTDTcSKhYtokKQoua5Nk5xsPV/2eS
+         0TK88sJZhCagWgCB7GyrQ4KNdeHdyhhLmZTT4eAW4iMIRCGeeOUtBJl0FHpnsbByokN/
+         hb+2na/blUeemjLGmPJAaqyoxlCUvFjbXRDMAcE5tXJNDkeIkngeMPi9mN9JDFpDMqMI
+         PW4b82n5P+X9AH1z7528rQyjCqjZIGTEffhj0clOuP8oueb8H21jqP/bcSZ88BHUHE55
+         JTYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJNMZcEHxKe6rzQVOIt8SvkOD6GFsj+zB2S8y8RESPBTrIbHyRxMqm/YF1e9+Oxe2IXwO80pGAzQz4np8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu6NGbjhyVh10AusH6zTNBexlltSbnf46I8T70+I39zJFvD6KM
+	FqdQAjm3TwpfJyA5RStPQQWH0Y3Fgh+zm8ip70rltj6gc7IxbIoR
+X-Gm-Gg: ASbGncuaZzXMy0nhqjsXuYlPf9Gv4atGCyWX8CljEgts1D0/PtP3vx+R0b0azVUE3w2
+	RAPgdqwoDIxSQY90hdjW3Hy1nl5aJDjSQ7r2OlW7SwgsaqjoC0ykh7gX6ddCSAI3vpbZkGkSw8e
+	uKUUCZ32g/AkYdSquBylCGrVDaanf14ExCyhGBJTicNFmJucfXFEAysXqzxJZEhBCTwjZDHh9Mi
+	nO5SBBfe/gPMZzY7ooyaVJEbFjD2gM+OjC4IbA+REmJy/vdDBLgLpYejyXmfqlG4Nhfw8UP1EzK
+	SIey+FCMe/a2Q97vBhsUWtrCpDrjjsgtjkdTK9WY1wZktbgeq7mqfTpWZDWXjDjtN43f
+X-Google-Smtp-Source: AGHT+IGthHCiCnSTOdaKz2P1xlRe4YqTl43iv6lmCdhGP8sdcumtlSnQXLNds04x4aSalCSuTBLeJA==
+X-Received: by 2002:a05:6512:12c9:b0:549:916b:e665 with SMTP id 2adb3069b0e04-54d4528d0ecmr4338831e87.1.1744730951219;
+        Tue, 15 Apr 2025 08:29:11 -0700 (PDT)
+Received: from pc636 (host-90-233-217-52.mobileonline.telia.com. [90.233.217.52])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d24277esm1459193e87.103.2025.04.15.08.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 08:29:10 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Tue, 15 Apr 2025 17:29:08 +0200
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, urezki@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] mm/vmalloc.c: code cleanup and improvements
+Message-ID: <Z_57RKPhHm24kMRu@pc636>
+References: <20250415023952.27850-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,38 +73,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415133301.443511-2-alexander.stein@ew.tq-group.com>
+In-Reply-To: <20250415023952.27850-1-bhe@redhat.com>
 
-> +&fec1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec1>;
-> +	phy-mode = "rgmii-id";
-> +	phy-handle = <&ethphy0>;
-> +	fsl,magic-packet;
-> +	mac-address = [ 00 00 00 00 00 00 ];
-> +
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <0>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_ethphy0>;
-> +			ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-> +			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-> +			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-> +			ti,dp83867-rxctrl-strap-quirk;
-> +			ti,clk-output-sel = <DP83867_CLK_O_SEL_OFF>;
-> +			reset-gpios = <&lsio_gpio3 22 GPIO_ACTIVE_LOW>;
-> +			reset-assert-us = <500000>;
-> +			reset-deassert-us = <50000>;
-> +			enet-phy-lane-no-swap;
-> +			interrupt-parent = <&lsio_gpio1>;
-> +			interrupts = <30 IRQ_TYPE_EDGE_FALLING>;
+On Tue, Apr 15, 2025 at 10:39:47AM +0800, Baoquan He wrote:
+> These were made from code inspection in mm/vmalloc.c.
+> 
+> Baoquan He (5):
+>   mm/vmalloc.c: change purge_ndoes as local static variable
+>   mm/vmalloc.c: find the vmap of vmap_nodes in reverse order
+>   mm/vmalloc.c: optimize code in decay_va_pool_node() a little bit
+>   mm/vmalloc: optimize function vm_unmap_aliases()
+>   mm/vmalloc.c: return explicit error value in alloc_vmap_area()
+> 
+>  mm/vmalloc.c | 68 +++++++++++++++++++++++++---------------------------
+>  1 file changed, 32 insertions(+), 36 deletions(-)
+> 
+> -- 
+> 2.41.0
+> 
+I have review some patches, the rest i will check tomorrow!
 
-EDGE_FALLING is very likely to be wrong. PHYs are generally level
-triggered, not edge.
-
-	Andrew
+--
+Uladzislau Rezki
