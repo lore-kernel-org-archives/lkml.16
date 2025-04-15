@@ -1,216 +1,407 @@
-Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11022089.outbound.protection.outlook.com [40.93.200.89])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8040F18801A
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.200.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738244; cv=fail; b=pzbaIl/MwvNGJgzN3BeKoQGSIWL8p60bh7gXpj+SI8rbMkV+7hJlgkXyCHmS2BEKZzEvZ4foi3baogOXQrpKJFOffNB6VxTGWJ/1/Z1EIysAOG0yH2V+1L4+pY58kj714w8qDiOGjpy/CM6f8Z27M/iUGakGTBzJJT+OZz6CaFY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738244; c=relaxed/simple;
-	bh=zG3pKkZ/A2GNGXasP+vBeWXgmxK8uGgEEm5NKJnw0QU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 Content-Type:MIME-Version; b=Ocgo5ZtpjrKe/pIIROQsid3bsSV252uV1vvm1Sa5NgQuIFO3l7IMD1zNXI27djiHDsgFSA93b07jtlVMQOwCU/4wFX+n9O7KPFy01u3dknTYiz51DV653/H0QaZa/GFmHZAeZ4k19qa4zfzATAZAqw+xCoxPbtHSD4XXjgPxc50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=BfjcTRdR; arc=fail smtp.client-ip=40.93.200.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4895B21D5B1;
+	Tue, 15 Apr 2025 17:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744738328; cv=none; b=jATKQlj1l56y9NtcpE1S0ryJRbREDTL3Kk+69o/oGxVSq34YgjVrjt+BMQ/zlIbppgNoMRpKjhJsdUxuEDMRE1IOGqAvczIOLJJX5L6y8mpwT2S0OHLW+DVTFKBDZW52oSCgBBwSIkklhwuVlIV7JTx9yy6Z05txPgroRTkqH+k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744738328; c=relaxed/simple;
+	bh=TcdDi4JssqzFrA5WEswEqn/d4UAMFN9FdFx1E6HlpvA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ePox1LC8/EYVTFflso/PB2ijVUgmllEWuTr6oYiXCKrQL2m8zw1u7aPfVPn0ENjMfAk0Tx/CJsrW37IJci3pwN+TCZGJBBNfdtvfRXHP67DoeeKWKOOvzYKsBQAuKNtK5Y8NeHHj14ZG2Q3tqXrzygOYy5SGN5riUj3YVUwRXMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TL7nqzkC; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="BfjcTRdR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BAG2cpwFpy92yv6Jtc7C+4LVJL19aAnz/FaiFSgmGkcDQU4Z18LFllW2VjwJFTRVL4dD448YaEFGad3wzTfCu79wor7FMK8xL4R2XCazPJX9/bpUqDxbOJZTpPf3osVSj51wP7mQ1HHhxu8jEhqdFU3cs4XkngGf/PX2cx1tnFUzU7wnSWLnflOS8zh8YJi0thZfrCafNV61jPC7Nrgpa34fbp6vS2D7TPJ8mxC5NC8ci3TulfDUvwiviCrqPEznLNcRGZlZv0A4ZiVIuOssYGd03qJTVdWNqpnqvV+JyR8E1HLd1eFB7uqjzoeHXZBCY7EnOm0KoqMb4vT3IAH++A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=geC3ZZywBXUpRLxBXH+7/PGAvP+uOI8nVJnCo5nRy9M=;
- b=R0w7eJaRj53X5RaBUONfli/VXT3xIOF8/N7LJmb9Te5YnvXdiVFKy4vY1v6KS4c2NDuMhthx0B8JEHWR+xSYeQ3GN1YeT2D0zVFN9xPN3L4R03NULpDafux01cQFpI7UYNh2dJG8lt6BW1kx1eLIPvl3/aZWU5e82+/qSqDlyzH4s50QKHs70Xqmumj0L4pw9CNjzo6/EyB8TJakclGLeOgh9veie7A82XJAmToWG2cR+hvsWFWbw/Ecz5uZG/7P1GAgE+KBaRdSQ3s/S1dXnRxvbEpTf0jAlY/9xEtwUx8ihhOMyaZQd9wGCVkiUwshRll04LP9ew+DPe/rCeVPkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=geC3ZZywBXUpRLxBXH+7/PGAvP+uOI8nVJnCo5nRy9M=;
- b=BfjcTRdRoQJp+5IPbO1Lww6SfOcqfEiVfRM2xOajuy29s2szyfqWMv2CQ1d1HpVmHISxQMdKb3zC3wXJmlbvX65Ft6LHxaped32nBBDehjWUFumRyehDjUtimZjw/LptFdAzt2Dp+Mo/ThGS1ic8UWr6zfAGaB9x/kBYla2sUXQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
- CH0PR01MB6859.prod.exchangelabs.com (2603:10b6:610:100::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.36; Tue, 15 Apr 2025 17:30:39 +0000
-Received: from LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 17:30:39 +0000
-From: D Scott Phillips <scott@os.amperecomputing.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, James Clark
- <james.clark@linaro.org>, James Morse <james.morse@arm.com>, Joey Gouly
- <joey.gouly@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, Marc Zyngier
- <maz@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, "Rob Herring (Arm)" <robh@kernel.org>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>, Shiqi Liu
- <shiqiliu@hust.edu.cn>, Will Deacon <will@kernel.org>, Yicong Yang
- <yangyicong@hisilicon.com>, kvmarm@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: errata: Work around AmpereOne's erratum
- AC03_CPU_36
-In-Reply-To: <Z_6Te1TjMqyXChvQ@linux.dev>
-References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
- <Z_6Te1TjMqyXChvQ@linux.dev>
-Date: Tue, 15 Apr 2025 10:30:36 -0700
-Message-ID: <86cyddgwn7.fsf@scott-ph-mail.amperecomputing.com>
-Content-Type: text/plain
-X-ClientProxiedBy: CY5PR17CA0040.namprd17.prod.outlook.com
- (2603:10b6:930:12::34) To LV2PR01MB7792.prod.exchangelabs.com
- (2603:10b6:408:14f::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TL7nqzkC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744738326; x=1776274326;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=TcdDi4JssqzFrA5WEswEqn/d4UAMFN9FdFx1E6HlpvA=;
+  b=TL7nqzkCv96hYhiBSByQQxSktMwGC7nHef8A9bWeNeICO4vZze3pNmDz
+   5hhpdx6/3qHQYB4xpOf5HPtZRKI0w4VbClC+A4w5gQHtRfsIuHNN3r8f0
+   XYxmGD+1q6sixCGrbfxIzxRGc9rktWZvn60WcVOpW0+f8cOz1tjCBjL17
+   a4OrSX9k+2NtNuZwqUWCYdzf//FfyOnGTkwL+kcjC8aSt5BRTxK43TE2E
+   U/LNl4qptIvCElYsoTXpLvaneThgQvfKvdAHYIqiu8guXEMY61pOvSl8W
+   I2G3R5xWG2RTwraLhfvAgretyEfmO3D+Fhf6sgzFcWQr8c7OzQnXKRts1
+   w==;
+X-CSE-ConnectionGUID: P+aNTClOTdm4W1pJD0UrUQ==
+X-CSE-MsgGUID: Ab+3jL3OTnu8ucVDjMtJsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46349449"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46349449"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 10:32:05 -0700
+X-CSE-ConnectionGUID: Izul22wzTrq7I7hZKELFXQ==
+X-CSE-MsgGUID: hirzGeTgTRGqagxLTbaF3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="161221604"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 10:32:03 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 15 Apr 2025 20:32:01 +0300 (EEST)
+To: Werner Sembach <wse@tuxedocomputers.com>
+cc: Hans de Goede <hdegoede@redhat.com>, bentiss@kernel.org, 
+    linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 1/1] platform/x86/tuxedo: Add virtual LampArray for
+ TUXEDO NB04 devices
+In-Reply-To: <52b7051e-cc41-4983-aee9-a9a9fc4a404d@tuxedocomputers.com>
+Message-ID: <7d083fb7-74e9-37b6-0fa4-4f97d55ef619@linux.intel.com>
+References: <20250403212934.561943-1-wse@tuxedocomputers.com> <20250403212934.561943-2-wse@tuxedocomputers.com> <9251783a-de2e-b923-2e05-ee30761846bc@linux.intel.com> <52b7051e-cc41-4983-aee9-a9a9fc4a404d@tuxedocomputers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|CH0PR01MB6859:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45b1cb2b-5fa7-4703-84e9-08dd7c433d75
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|366016|1800799024|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DkbLyBG9IfNasvJ+KupSBLIxgnbJ6OIbzsN6uoubxTqW9+EgoEL7u0TGmVRh?=
- =?us-ascii?Q?lMzQzRRmbbvjKjCuYedkGE3Eds34IDzUg6BTrPR5+KbxIUEvyCKw3N0p8M6u?=
- =?us-ascii?Q?9NXGXS8o61bd2rpSwyyn7jhq+CW5r2iEEse2QMQ3kXt3V0ZjWjAQanF7eT5v?=
- =?us-ascii?Q?drMr1VCY1aTObAowz3z7qT22rj3u4xngy2Ft6Afx7//1uzhjzWn9AtQf//g+?=
- =?us-ascii?Q?hcRC32oyezHn6XABGXsDNAPOauo9PZI5Bzx1zbmBD9AXALEI21lrwr+aIMGy?=
- =?us-ascii?Q?5i1ANDqrEPdj3aa5DL0fO+7oGSQL1MtOdn1PzTfZ1gYjates8v8R9EUFXaIm?=
- =?us-ascii?Q?b8lA0V1V4PC2Vlms7dFwU49SuJ+wl4gIhhSpjqN2Iae6xCVYqmWp+hXH+T2f?=
- =?us-ascii?Q?o7FaPBQUYFn3boERv21vPIUK8PBz8oS8Q484b139FHxlkikGfJ+Qjpt/beWC?=
- =?us-ascii?Q?wAil1BN8kemnIIFBD5CBpaa/iiMaUWGf3ORIjLfgiDj16m0LSpUllCk0rR2d?=
- =?us-ascii?Q?6AAl2EGyd/5TMMv6sim8C7YIOEd5L5ltxWF/87BpAviwcTSuOUz/X2JMRaOf?=
- =?us-ascii?Q?EaKe1GUEq9dCgkwFafmWdHCrICLUNYCfgVmz8hMXhAj3del6Pg3iISPPxAuT?=
- =?us-ascii?Q?gcnVXj+nfeQKnlUYNMwFXISruPVCnlZ0DL+Pr+zsjX5y4ssaBPxF52H5Kyhj?=
- =?us-ascii?Q?VIN1xjJJmrPWbZBwkuItj9vFLc3JGP1itBMKWeOGmbWN2cUZzCJgVtVMhfun?=
- =?us-ascii?Q?jOHjz3XiNZiHLq5n2lQOp2UWMv3Q8AFbmirxkglkrlkR2vBzHizcBY9363cQ?=
- =?us-ascii?Q?VwdGMMC+jnNRSl/o5m2OQno/4huMarLJFEOle4S9ebr6P2bn+7EGJUgyvZey?=
- =?us-ascii?Q?MkB/qvfC9I3dtqFTgWOVcj3D4DwSPRbE5XsXg21bk2M6SVrlRWf4yaSUcvCt?=
- =?us-ascii?Q?YkC0tAPwlXkE1nTieYcENX1OjjxJWOnPVlkMhpeBtJFLYrf/7di4XcLG3qzs?=
- =?us-ascii?Q?Un6bwkhR2keLH+hoy+zjEBiC5Yz73OF6cBrPUI5rt3CEZi7UZohzPjgaXKlO?=
- =?us-ascii?Q?0dDA6o8RXrKEhuJjeXoUjhQ2VfnkROBHXOhpXwks53XEyoMXncW4RBV5Qq8V?=
- =?us-ascii?Q?A7suFF7hEdtrwDxbg6zfLGHAXreoHTaDxVfoQFcMZ8ECzc3bzGh65wqUspI3?=
- =?us-ascii?Q?ocT4X5tk5HhiuifrzYEkpl87aS602fOJ8aFcR09gQLjrM7rLAe9lDabT1Kqr?=
- =?us-ascii?Q?ZVL8YZbt/eA9IDqLnQaVJ6N7lXzWyNNlh0RECdmkY3yRzvqdzh0sRo69/zT3?=
- =?us-ascii?Q?edVsGXPivk1RufpNVQy2CKlrJOMZk49yYkgYh6Xz67swNzlRRVM49tGAU9d7?=
- =?us-ascii?Q?UPJ5w4i3kQniJp+EO9xk+RCm/uhY2RX3POO8CUeY8+Vzu8i6LHVkCAjat/0w?=
- =?us-ascii?Q?GYeMrhAP8X6xJTr9uba4UoiU3hEvQ/8Q4jHTgQb4/PPAaYWX8ti4Uw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(366016)(1800799024)(38350700014)(7053199007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0+PlM72PJzD/8ol61DvxytGsaqV2T8/Ym1pUx3YMEtGmDC66rtnrUaQHpY3M?=
- =?us-ascii?Q?TsA4jSPYkBWVbK/jBPBZGd7ji3E0e9yTrLz0B25p/+3RHxmNoWmCagq1QN9Y?=
- =?us-ascii?Q?CpdcEF5oDCzyOb7i66LDNv/1j0M0ofnRasVc2YqIl77Cktbmh5M2MrWez0Yo?=
- =?us-ascii?Q?dVSswr/nyK4s24SFKzJ2tfSnE524H020RGqI6ee0EA1C22s8jwyuHJS3Sg9H?=
- =?us-ascii?Q?YYg4OIVR8Lm+wrLFPHEgBemsk9OzhdQsLy+ZheD2Y3xY00prZcIqyda/UhE7?=
- =?us-ascii?Q?zHZWYsrQdG5fOOvqXRN8BIqiDdy4Bv274YqNgDOyqtZxcNvmmgyqzsvXJ3Bv?=
- =?us-ascii?Q?9q+i9JktYOWCrG+qaxktla5g4y5pxHVtw0VEN2Qj6u3GgUaeaJz9hJecgHL4?=
- =?us-ascii?Q?ARmuCVh5dXeZ67ScNVao/UCxXL/E+M/CVdauLn4v+wfyQcnDSoLpmhIBERhV?=
- =?us-ascii?Q?r8pSIP7XCFRk3eQXVyAL1naXF+WFfSuMAKTR0xt2j+sBMfF9cVwOyHMxoIxY?=
- =?us-ascii?Q?UE/QHo8gOKwzmuckWvHhxe2WTwjlNJyyMU1Cek+eH1mfoIxQ62B5os+Puv8D?=
- =?us-ascii?Q?9P3AQ4cToP7zDRP8Icog2yxcqP5+jVdn+3YzuXK9vtxwSon3kFZgNzJBwIFz?=
- =?us-ascii?Q?uoOv4+KhgiEG0Fl/at628cWsoYUCvlNPhaCACdB+1TOw6TdoCPCGdLr5uIYK?=
- =?us-ascii?Q?Zt+ZGbHQTMEaRAaniNPFKdSGfl9nHXC5cY4JEWW7eOBTihqZqUhkcof/sjAr?=
- =?us-ascii?Q?LH174KL7uBH7g1AQTSSjGneNxI+kcCGwTV83lKAMfsNioaqwZipixKaNqZuJ?=
- =?us-ascii?Q?1Gn9G8oWYcFhyLxiOo4kbe4t/doQR8qzn5ACU/hAcCMJcjaVo7r2oYiGQJGZ?=
- =?us-ascii?Q?rxK4bKrCue8C0pt3NHJD6AlElcLd8ackCv7TGZIK5W6gOG/lTrxcxe3gcGMC?=
- =?us-ascii?Q?C2SQ3juUyh6iNyrkpfvUJhlcKcCQEeAcG2tXSGQ4E3WpAM4/KoRV/6kYlKXX?=
- =?us-ascii?Q?QoIC72+tdGD8b8jDibyboKMg9i6JxdVJ1wcAcU3uyA/WVI+7AM/EvNMaEP1b?=
- =?us-ascii?Q?OnzlOeG08TLj92+eKVIWgpLljX7/9q8UP8CSbMJntlqaHCYCs3nNeeruc5pF?=
- =?us-ascii?Q?HDjlxyhlzuxlobgWKvkDlRgZf1dFCrBdUPK14c0OrB3aGJ7CtR5P5NU+nRc6?=
- =?us-ascii?Q?9sY9rSBhHSd6ysVxhgMDlHSzAwtyBjpn6umwrwFcwq2qGjM526U4Y/za8oY5?=
- =?us-ascii?Q?SHFJTeA8PKbmJFM4nG2g194xam6ScuT3+2yPU3c9u3okIRJN74U18PUICnBN?=
- =?us-ascii?Q?q7+GcQyR3dGLhDBnQPcRuR2ybgTOAOLNrfoJC3ORsa1WA1cNu33X+K2w0h4o?=
- =?us-ascii?Q?d24Tt0UPsk7dKxqHg0kSqVnfA/9f9qjTt5ZJ9Tei5voir6YtcaoM+yk0uVjo?=
- =?us-ascii?Q?coqRpA76GhLUO+ZGyiNHPHwEdlwLaVd9uh0how2UPip9Z1Ip7bUfpCJEUDUn?=
- =?us-ascii?Q?xYiWoB2gKSv+ftNr7fIkiXK+BAttjfIIDWu/OUfhjRqYyjES3muRkZuDXIkS?=
- =?us-ascii?Q?Ha/HugJTIFIYO5p6g4WC02FmHaGZB2FN1SwMEzmGVe6XO8jHlHM4GIf/fIJU?=
- =?us-ascii?Q?bg+G8PgjihD+q3659Fu3SMs=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45b1cb2b-5fa7-4703-84e9-08dd7c433d75
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 17:30:39.4019
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gfKN7lIFVCjm/Qjtw/1PtTinz/R1R05BWDR+i61vdrMYMpv5gRZlYZ9e2UYyMKZe+2LPGQyKDkHPa6KbzVBEFtUkEC86vhVI3eJnMrgQB7EPoNMsHlicvaUr85XD4LuN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR01MB6859
+Content-Type: multipart/mixed; boundary="8323328-443296695-1744738321=:942"
 
-Oliver Upton <oliver.upton@linux.dev> writes:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-> On Tue, Apr 15, 2025 at 08:47:10AM -0700, D Scott Phillips wrote:
->> AC03_CPU_36 can cause asynchronous exceptions to be routed to the wrong
->> exception level if an async exception coincides with an update to the
->> controls for the target exception level in HCR_EL2. On affected
->> machines, always do writes to HCR_EL2 with async exceptions blocked.
->> 
->> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
->> ---
->>  arch/arm64/Kconfig              | 17 +++++++++++++++++
->>  arch/arm64/include/asm/sysreg.h | 18 ++++++++++++++++--
->>  arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
->>  arch/arm64/tools/cpucaps        |  1 +
->>  4 files changed, 48 insertions(+), 2 deletions(-)
->> 
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index a182295e6f08b..e5fd87446a3b8 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -445,6 +445,23 @@ menu "Kernel Features"
->>  
->>  menu "ARM errata workarounds via the alternatives framework"
->>  
->> +config AMPERE_ERRATUM_AC03_CPU_36
->> +        bool "AmpereOne: AC03_CPU_36: CPU can take an invalid exception, if an asynchronous exception to EL2 occurs while EL2 software is changing the EL2 exception controls."
->> +	default y
->> +	help
->> +	  This option adds an alternative code sequence to work around Ampere
->> +	  errata AC03_CPU_36 on AmpereOne.
->> +
->> +	  If an async exception happens at the same time as an update to the
->> +	  controls for the target EL for async exceptions, an exception can be
->> +	  delivered to the wrong EL. For example, an EL may be routed from EL2
->> +	  to EL1.
->> +
->> +	  The workaround masks all asynchronous exception types when writing
->> +	  to HCR_EL2.
->> +
->> +	  If unsure, say Y.
->> +
->>  config AMPERE_ERRATUM_AC03_CPU_38
->>          bool "AmpereOne: AC03_CPU_38: Certain bits in the Virtualization Translation Control Register and Translation Control Registers do not follow RES0 semantics"
->>  	default y
->> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
->> index 2639d3633073d..e7781f7e7f7a7 100644
->> --- a/arch/arm64/include/asm/sysreg.h
->> +++ b/arch/arm64/include/asm/sysreg.h
->> @@ -1136,14 +1136,28 @@
->>  	__val;							\
->>  })
->>  
->> +#define __sysreg_is_hcr_el2(r)					\
->> +	(__builtin_strcmp("hcr_el2", __stringify(r)) == 0)
->
-> This looks fragile. What about:
->
-> 	write_sysreg(hcr, HCR_EL2);
->
-> or:
->
-> 	write_sysreg_s(hcr, SYS_HCR_EL2);
+--8323328-443296695-1744738321=:942
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-I had also thought about changing the users of write_sysreg(..hcr_el2)
-to some new function write_hcr_el2() or something, but I guess that
-would have the same fragility. Any suggestions on a better way? Trying
-harder with the string stuff, or do something totally else?
+On Tue, 15 Apr 2025, Werner Sembach wrote:
+> Am 11.04.25 um 15:48 schrieb Ilpo J=C3=A4rvinen:
+> > On Thu, 3 Apr 2025, Werner Sembach wrote:
+> >=20
+> > > The TUXEDO Sirius 16 Gen1 and TUXEDO Sirius 16 Gen2 devices have a pe=
+r-key
+> > > controllable RGB keyboard backlight. The firmware API for it is
+> > > implemented
+> > > via WMI.
+> > >=20
+> > > To make the backlight userspace configurable this driver emulates a
+> > > LampArray HID device and translates the input from hidraw to the
+> > > corresponding WMI calls. This is a new approach as the leds subsystem
+> > > lacks
+> > > a suitable UAPI for per-key keyboard backlights, and like this no new=
+ UAPI
+> > > needs to be established.
+> > >=20
+> > > Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> > > ---
+> > >   MAINTAINERS                                 |   6 +
+> > >   drivers/platform/x86/Kconfig                |   2 +
+> > >   drivers/platform/x86/Makefile               |   3 +
+> > >   drivers/platform/x86/tuxedo/Kconfig         |   8 +
+> > >   drivers/platform/x86/tuxedo/Makefile        |   8 +
+> > >   drivers/platform/x86/tuxedo/nb04/Kconfig    |  15 +
+> > >   drivers/platform/x86/tuxedo/nb04/Makefile   |  10 +
+> > >   drivers/platform/x86/tuxedo/nb04/wmi_ab.c   | 847 +++++++++++++++++=
++++
+> > >   drivers/platform/x86/tuxedo/nb04/wmi_util.c |  95 +++
+> > >   drivers/platform/x86/tuxedo/nb04/wmi_util.h | 109 +++
+> > >   10 files changed, 1103 insertions(+)
+> > >   create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+> > >   create mode 100644 drivers/platform/x86/tuxedo/Makefile
+> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
+> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/Makefile
+> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.c
+> > >   create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.h
+> > >=20
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 00e94bec401e1..c1f7460c246ad 100644
+
+
+> > > +struct tux_driver_data_t {
+> > > +=09struct hid_device *hdev;
+> > > +};
+> > > +
+> > > +struct tux_hdev_driver_data_t {
+> > > +=09u8 keyboard_type;
+> > > +=09u8 lamp_count;
+> > > +=09u8 next_lamp_id;
+> > > +=09union tux_wmi_xx_496in_80out_in_t next_kbl_set_multiple_keys_in;
+> > > +};
+> > > +
+> > > +static int tux_ll_start(struct hid_device *hdev)
+> > > +{
+> > > +=09struct wmi_device *wdev =3D to_wmi_device(hdev->dev.parent);
+> > > +=09struct tux_hdev_driver_data_t *driver_data;
+> > > +=09union tux_wmi_xx_8in_80out_out_t out;
+> > > +=09union tux_wmi_xx_8in_80out_in_t in;
+> > > +=09int ret;
+> > > +
+> > > +=09driver_data =3D devm_kzalloc(&hdev->dev, sizeof(*driver_data),
+> > > GFP_KERNEL);
+> > > +=09if (!driver_data)
+> > > +=09=09return -ENOMEM;
+> > > +
+> > > +=09in.get_device_status_in.device_type =3D
+> > > WMI_AB_GET_DEVICE_STATUS_DEVICE_ID_KEYBOARD;
+> > > +=09ret =3D tux_wmi_xx_8in_80out(wdev, WMI_AB_GET_DEVICE_STATUS, &in,=
+ &out);
+> > > +=09if (ret)
+> > > +=09=09return ret;
+> > > +
+> > > +=09driver_data->keyboard_type =3D
+> > > out.get_device_status_out.keyboard_physical_layout;
+> > > +=09if (driver_data->keyboard_type =3D=3D
+> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII)
+> > > +=09=09driver_data->lamp_count =3D sizeof(sirius_16_ansii_kbl_mapping=
+);
+> > > +=09else if (driver_data->keyboard_type =3D=3D
+> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO)
+> > > +=09=09driver_data->lamp_count =3D sizeof(sirius_16_iso_kbl_mapping);
+> > > +=09else
+> > > +=09=09return -EINVAL;
+> > > +=09driver_data->next_lamp_id =3D 0;
+> > > +
+> > > +=09dev_set_drvdata(&hdev->dev, driver_data);
+> > > +
+> > > +=09return ret;
+> > > +}
+> > > +
+> > > +static void tux_ll_stop(struct hid_device __always_unused *hdev)
+> > > +{
+> > > +}
+> > > +
+> > > +static int tux_ll_open(struct hid_device __always_unused *hdev)
+> > > +{
+> > > +=09return 0;
+> > > +}
+> > > +
+> > > +static void tux_ll_close(struct hid_device __always_unused *hdev)
+> > > +{
+> > > +}
+> > > +
+> > > +static int tux_ll_parse(struct hid_device *hdev)
+> > > +{
+> > > +=09return hid_parse_report(hdev, tux_report_descriptor,
+> > > +=09=09=09=09sizeof(tux_report_descriptor));
+> > > +}
+> > > +
+> > > +struct __packed lamp_array_attributes_report_t {
+> > > +=09const u8 report_id;
+> > > +=09u16 lamp_count;
+> > > +=09u32 bounding_box_width_in_micrometers;
+> > > +=09u32 bounding_box_height_in_micrometers;
+> > > +=09u32 bounding_box_depth_in_micrometers;
+> > > +=09u32 lamp_array_kind;
+> > > +=09u32 min_update_interval_in_microseconds;
+> > > +};
+> > > +
+> > > +static int handle_lamp_array_attributes_report(struct hid_device *hd=
+ev,
+> > > +=09=09=09=09=09       struct
+> > > lamp_array_attributes_report_t *rep)
+> > > +{
+> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
+> > > dev_get_drvdata(&hdev->dev);
+> > > +
+> > > +=09rep->lamp_count =3D driver_data->lamp_count;
+> > > +=09rep->bounding_box_width_in_micrometers =3D 368000;
+> > > +=09rep->bounding_box_height_in_micrometers =3D 266000;
+> > > +=09rep->bounding_box_depth_in_micrometers =3D 30000;
+> > > +=09/*
+> > > +=09 * LampArrayKindKeyboard, see "26.2.1 LampArrayKind Values" of
+> > > +=09 * "HID Usage Tables v1.5"
+> > > +=09 */
+> > > +=09rep->lamp_array_kind =3D 1;
+> > > +=09// Some guessed value for interval microseconds
+> > > +=09rep->min_update_interval_in_microseconds =3D 500;
+> > > +
+> > > +=09return sizeof(*rep);
+> > > +}
+> > > +
+> > > +struct __packed lamp_attributes_request_report_t {
+> > > +=09const u8 report_id;
+> > > +=09u16 lamp_id;
+> > > +};
+> > > +
+> > > +static int handle_lamp_attributes_request_report(struct hid_device *=
+hdev,
+> > > +=09=09=09=09=09=09 struct
+> > > lamp_attributes_request_report_t *rep)
+> > > +{
+> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
+> > > dev_get_drvdata(&hdev->dev);
+> > > +
+> > > +=09if (rep->lamp_id < driver_data->lamp_count)
+> > > +=09=09driver_data->next_lamp_id =3D rep->lamp_id;
+> > > +=09else
+> > > +=09=09driver_data->next_lamp_id =3D 0;
+> > > +
+> > > +=09return sizeof(*rep);
+> > > +}
+> > > +
+> > > +struct __packed lamp_attributes_response_report_t {
+> > > +=09const u8 report_id;
+> > > +=09u16 lamp_id;
+> > > +=09u32 position_x_in_micrometers;
+> > > +=09u32 position_y_in_micrometers;
+> > > +=09u32 position_z_in_micrometers;
+> > > +=09u32 update_latency_in_microseconds;
+> > > +=09u32 lamp_purpose;
+> > > +=09u8 red_level_count;
+> > > +=09u8 green_level_count;
+> > > +=09u8 blue_level_count;
+> > > +=09u8 intensity_level_count;
+> > > +=09u8 is_programmable;
+> > > +=09u8 input_binding;
+> > > +};
+> > > +
+> > > +static int handle_lamp_attributes_response_report(struct hid_device
+> > > *hdev,
+> > > +=09=09=09=09=09=09  struct
+> > > lamp_attributes_response_report_t *rep)
+> > > +{
+> > > +=09struct tux_hdev_driver_data_t *driver_data =3D
+> > > dev_get_drvdata(&hdev->dev);
+> > > +=09u16 lamp_id =3D driver_data->next_lamp_id;
+> > > +
+> > Don't leave empty lines into the variable declaration block.
+> ack, an oversight
+> >=20
+> > > +=09const u32 *kbl_mapping_pos_x, *kbl_mapping_pos_y, *kbl_mapping_po=
+s_z;
+> > > +=09const u8 *kbl_mapping;
+> > > +
+> > > +=09rep->lamp_id =3D lamp_id;
+> > > +=09// Some guessed value for latency microseconds
+> > > +=09rep->update_latency_in_microseconds =3D 100;
+> > > +=09/*
+> > > +=09 * LampPurposeControl, see "26.3.1 LampPurposes Flags" of
+> > > +=09 * "HID Usage Tables v1.5"
+> > > +=09 */
+> > > +=09rep->lamp_purpose =3D 1;
+> > > +=09rep->red_level_count =3D 0xff;
+> > > +=09rep->green_level_count =3D 0xff;
+> > > +=09rep->blue_level_count =3D 0xff;
+> > > +=09rep->intensity_level_count =3D 0xff;
+> > > +=09rep->is_programmable =3D 1;
+> > > +
+> > > +=09if (driver_data->keyboard_type =3D=3D
+> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ANSII) {
+> > > +=09=09kbl_mapping =3D &sirius_16_ansii_kbl_mapping[0];
+> > > +=09=09kbl_mapping_pos_x =3D &sirius_16_ansii_kbl_mapping_pos_x[0];
+> > > +=09=09kbl_mapping_pos_y =3D &sirius_16_ansii_kbl_mapping_pos_y[0];
+> > > +=09=09kbl_mapping_pos_z =3D &sirius_16_ansii_kbl_mapping_pos_z[0];
+> > > +=09} else if (driver_data->keyboard_type =3D=3D
+> > > WMI_AB_GET_DEVICE_STATUS_KEYBOARD_LAYOUT_ISO) {
+> > > +=09=09kbl_mapping =3D &sirius_16_iso_kbl_mapping[0];
+> > > +=09=09kbl_mapping_pos_x =3D &sirius_16_iso_kbl_mapping_pos_x[0];
+> > > +=09=09kbl_mapping_pos_y =3D &sirius_16_iso_kbl_mapping_pos_y[0];
+> > > +=09=09kbl_mapping_pos_z =3D &sirius_16_iso_kbl_mapping_pos_z[0];
+> > Could these components be put inside another struct so you don't need 3
+> > variables to store them?
+>=20
+> Reworked that a little bit, is now stored in struct tux_hdev_driver_data_=
+t
+>=20
+> struct tux_hdev_driver_data_t {
+> =C2=A0=C2=A0=C2=A0 u8 lamp_count;
+> =C2=A0=C2=A0=C2=A0 const u8 *kbl_map;
+> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_x;
+> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_y;
+> =C2=A0=C2=A0=C2=A0 const u32 *kbl_map_pos_z;
+> =C2=A0=C2=A0=C2=A0 u8 next_lamp_id;
+> =C2=A0=C2=A0=C2=A0 union tux_wmi_xx_496in_80out_in_t next_kbl_set_multipl=
+e_keys_in;
+> };
+>=20
+> initialized only once during ll_start
+>=20
+> or should go another level and do a nested struct?
+
+I'd prefer the pos ones to be nested as they seem strongly related. It=20
+also makes it possible to store it into temporary pointer variable if
+that's beneficial somewhere to make the code more readable.
+
+> > > +=09=09for (unsigned int j =3D 0; j <
+> > > lamp_multi_update_report.lamp_count; ++j) {
+> > > +=09=09=09lamp_multi_update_report.lamp_id[j] =3D i + j;
+> > > +=09=09=09lamp_multi_update_report.update_channels[j].red =3D
+> > > +=09=09=09=09rep->red_update_channel;
+> > > +=09=09=09lamp_multi_update_report.update_channels[j].green =3D
+> > > +=09=09=09=09rep->green_update_channel;
+> > > +=09=09=09lamp_multi_update_report.update_channels[j].blue =3D
+> > > +=09=09=09=09rep->blue_update_channel;
+> > > +=09=09=09lamp_multi_update_report.update_channels[j].intensity
+> > > =3D
+> > > +=09=09=09=09rep->intensity_update_channel;
+> > > +=09=09}
+> > > +
+> > > +=09=09ret =3D handle_lamp_multi_update_report(hdev,
+> > > &lamp_multi_update_report);
+> > > +=09=09if (ret < 0)
+> > > +=09=09=09return ret;
+> > > +=09=09else if (ret !=3D sizeof(struct lamp_multi_update_report_t))
+> > Unnecessary "else".
+>=20
+> practically handle_lamp_multi_update_report can only return <0 or the cor=
+rect
+> size the was i implemented it, but theoretically other values would be wr=
+ong
+> and this code would document that if in the future other values are possi=
+ble
+>=20
+> I know a somewhat philosophical train of thought. If you want i can just
+> delete the else and optionally replace it with a comment about the return
+> value.
+
+I think you misunderstood why, I didn't mean remove the whole else if=20
+thing.
+
+There's return statement in the if block so else is not required, you can=
+=20
+do the same without explicit "else":
+
+=09=09if (ret < 0)
+=09=09=09return ret;
+=09=09if (ret !=3D sizeof(...))
+=09=09=09...
+
+> > Take sizeof directly from the related struct variable.
+> ack
+> >=20
+> > > +=09=09=09return -EIO;
+> > > +=09}
+> > > +
+> > > +=09return sizeof(*rep);
+> > > +}
+
+
+> > > +{
+> > > +=09/*
+> > > +=09 * The keyboards firmware doesn't have any built in controls and =
+the
+> > > +=09 * built in effects are not implemented so this is a NOOP.
+> > > +=09 * According to the HID Documentation (HID Usage Tables v1.5) thi=
+s
+> > > +=09 * function is optional and can be removed from the HID Report
+> > > +=09 * Descriptor, but it should first be confirmed that userspace
+> > > respects
+> > > +=09 * this possibility too. The Microsoft MacroPad reference
+> > > implementation
+> > > +=09 * (https://github.com/microsoft/RP2040MacropadHidSample 1d6c3ad)
+> > > +=09 * already deviates from the spec at another point, see
+> > > +=09 * handle_lamp_*_update_report.
+> > > +=09 */
+> > > +
+> > > +=09return sizeof(*rep);
+> > > +}
+> > > +
+> > > +static int tux_ll_raw_request(struct hid_device *hdev, unsigned char
+> > > reportnum,
+> > > +=09=09=09      __u8 *buf, size_t len, unsigned char rtype,
+> > For in-kernel usage, always use non-__ variants, so u8.
+> copied that over from the definition in hid.h, but can change it ofc
+
+Yes, use u8.
+
+
+--=20
+ i.
+
+--8323328-443296695-1744738321=:942--
