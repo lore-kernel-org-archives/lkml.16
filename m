@@ -1,104 +1,253 @@
-Received: from sonic308-15.consmr.mail.ne1.yahoo.com (sonic308-15.consmr.mail.ne1.yahoo.com [66.163.187.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010006.outbound.protection.outlook.com [52.103.67.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65271F5434
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 16:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.187.38
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733600; cv=none; b=I5mKhEpMg9lMSODzUE9s2mbjmPQn5oPWn8akhc1V6D4lc2AVQ/w5jeDQiYefGv4vXMVc6j9o+UU0f8bOtygBRPo2jcI5gEVp9iMFOO7vcF8JsFBLuZOA5IChkgPwdqHBbYbBjTvn5V8o8cU0OLHGJTr8Z5bSfWgazFq1lV4o1L8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733600; c=relaxed/simple;
-	bh=V+yze5hQz8lB1IfMX09lvbL0g1lT4RBGvyMq/xzi9iA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ofGponn7E/QdoNyPALBe1cmvZjyahd33DBlCdKW1eqjEFAGPaoMO3W4Ov0hmAL+GK4pVNi9fp1r8E0FFhSCaziGfjTfd7cEwI9F6Rtyxxka1stRnge6C1Sqlv9dY3gu/HLs3ocnxMJeOf71/lKbYsyM6QkW5TFA6egieOcBsRhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=gMXKjx2m; arc=none smtp.client-ip=66.163.187.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A758D20AF9C;
+	Tue, 15 Apr 2025 16:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744733603; cv=fail; b=E7OHD0lhvFd9VNRLqaatbEL31VllYYBj+I5Mervy0qvxTvUAR3QMoLZskaRYmrkHdLW6jiquO6NzEQiEXPF7HYiFZPCI/BkQDSq2OmxtLR/jO+gNV6wEbENx1r1XIAElfo+V4n4+GrLh8+w9FoMfhx/XaUSOzChwB8bniBmj44Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744733603; c=relaxed/simple;
+	bh=FS7hBHvXyqLE+Clhwk5Ap0AeWggtrPNArMYSNfkgerM=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hgZM7waPVVXKg3E0PFy1HfnPqm89O+2sI5WSzt+erb6iCbOCJ1HvG1EYeq9jxLmiQ78Yen6rxAUaU5opqp9dkwm2ePW5d5kZN9C7brPJRIbHoH/6J9wsRjp1TpRDlskvjJdA8GXjIt+/xqFU2Fss6dHSqoIhC4IxINKHiBVf0YY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=WGd10ofT; arc=fail smtp.client-ip=52.103.67.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="gMXKjx2m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744733592; bh=XNONWKl0jaudWlmwk2oEYdjO8PF0qEpq0lhcm/vXCEM=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=gMXKjx2mIshOPx/4hnZWhoLY15MwL7Tp6H+i9ClyR+GO/JkPCcZElTQW5sgs/9UQUuXpUiBIaZxGKFYY9CWilZu7jlpYrx650SJAjr/3NM7nuIkYy7Ak9inGEjYKSEjx199q3iIxU3Gu1umYeL2YgDbP+YEKe9PT5wJJQHgVNQdobw1x+K3LKj9ltKRyLziXrtjbIUZMS6cPLiayx74exYoGoWVanyyrt7b5luHMAGFC5th+x1wtjtpj4twzrY5hlR1AEpb6RtnqNamb8VfCPiW6tdBD8iWL6J0rzCBmunT72aXwp4mmON/bxaP+bFEnAsrfPhrDC/JI1XeY2vhyWA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1744733592; bh=xzWg4C5CztZQ2RZK3oKfaBX1OOpaEcI9z8NJCTg8jsp=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=avOth21YY0THsvb/81T9NeFnAQz2ce259lwAwG4UwQmLwEd3TWO9OAFL8EjBsFtPypizYanqlol62/oK9pE9/QqAP6VoVbjRvUnAuGajthgyf+jhqeLdFapJx+3TYrPE8Twd09DqC7XGqNfkaBxbXoihl4xjPwuUe6YpPGCWGCk47xnwoWOMZWfpoZl3Rvhi85foGGWTA1gy0S9CAR9SZPgimAZ+YNOAv+ia7l23e/Bf6CcLuxXyjLS5TyNEI0effD6u1vm6ceHrMCCsiWOFNyUzVckMOSjxjjskh+QLVk40Rol9ytXvRDqL75feUfNMrBhCk8Sh7Att1WWatv/RTg==
-X-YMail-OSG: ADN_yYgVM1m3z4jaaoyeySxawOtdGlyJ_lplipfhdlepBdw5s2PqpIY6UQOUhjd
- ksnM3pgZUPT2A554AToBCCWeN156xaHCrR5Fb91Drwo9T.57A77RAiknJTlOYwW_aDcUvtbhjN6e
- z_D26GnjuQo9vJFNb_BDVCjcje4GyKk1zhnzDq8Z9kdX5sjyAIt5rTKd8qGmJ8QN9I4PWjEl1gab
- 6gc3FV4uP6PRfiNnmFJsu9WNVDNxtjLuu29b_cD1R_dxnsbfk79neGO2WNmiWNIz46XedSYLSuLX
- iK3ESits3z1nx4UUj455.RBMlkXARNKjUcGRn1H0d.eXVDj_vznDvf_uPcSEoPDfvBhrIEJ3C5Nn
- Ykop45Lh7A5EWxCW4tKIqL4f5ycSaUa64mZhOTeCBm7vId9JdofYISR4Jq1YoYOU3kRCW7C_JWl3
- gXszRK7l8s5szzOlqeLMu4zcrF51od4gJV3WpH6bm6o4Z7uACLjY3n4TMB6K4Mj8vgQFd0x9OVfv
- GIMYvFkEJNgt5Ylw0AZj3bWBxFa0kXT8Z9pbfP5Cmg8xHPCIn6SwE3btbXYjBglVTtrazct5qj_1
- 5g02XRIG_w0GsXn4h7SKxnjG.LvyTTOu09J9p7C6hFfeTQiVjjG9iiteTIoBj4wo0u1L5oawD6cc
- gKcoHA49b5N1KUqsErwkAfwCbRi255cphWDswBSvTV_FRnJ.3tCb.95GEABk3BitBXEOyZ_ZN1.o
- shZ6jgy5JjIe0gWglZ51NGThZotkFWfN8UCX3fYfA3iGfqL0m3t__aTzjWNO518GQp9ndSUpixdt
- nuWk7qXTVNxRZvRATtjtul3sTOePyI2k.GZpq5neEzOQJX6ztMThaJe4aV9q3MDKhoW9Soa.BW1Y
- 8_pOriBArr1..kbfzMSZrBqItBVfjbqgwpnZb9D7daUa8vhJVhu5BavPT50A9kZdLbLUj5Uca_Wj
- 3oL1ElQma1_38tTdYkr3IQXIJyUF1x5hLUpSlKcoUL5fkHUulw850pCCJV5af7MNrVcuoc9YrpWW
- _GlaUyY9yOJ1DhourwVZz23uy8mkmh7D1dsyS7G58iJWT.pWQus3aq.bvBVwE0isPczGk89sr2Lf
- QSrIbLt1WlpOfLLzpEGHc9jjSsqRuHL2RlBvmoPkZJUd1zHH9brK0djLG3nLvXSF10KuRtFJkJ8Y
- lHm1dTmIUGR_2C4yhO2ekSaitTuhwggvgLS8jzNUTAupWhJjBq7qBX4N3TNT704MeAxKwqQE_wdW
- 5QkvhpwycpXvOH21k1iEg5LyjVa3Mpm9bH5Pupz5IDNi8MmtEFwh8T0MM.TF3NemQ65a5KXnBEe4
- o5p9KZKB5XKEQjQINn76h7INbkmtLrUDn_Si7KKFvqMAm_kz3gNprMcNbtihy265zxhP1yMW8ymI
- 9XApn8dNknWK8c7ptNVyK3sf3o2ZQZhoFxxkL.fzTBG6U6jtiZPz16K0dwyHzP6bCcneX39GnpiF
- uG_d4wMhxbX3EA3a96yMPW1cW9_OrpwlTYRIvWSbKEZTMq9H2v9KZxaG5wGbn_KqQ9q9cl14GsYw
- _alA72ciSVX07yIdDkrPJrWUpvZsn_7PJh84AwxE3tm7QJZn_zVVD_p2KMNPPh1xgx96QrcEZe_i
- v.61n58vVn9vg_Udh7nQI7UyIdGshiazXr1XfBvSGgdAGeBcP2d_gDynsYo0WVcc_deqeY28x4fj
- iYjS0HhVxQ.tmbFhrUp6sSLyL5FpKXQBL3DGv4ZAT9xLXjxr34HmoOsaHZvVqH.yHsLkTwbblcCf
- whjfdEdc_mgCbfnGtLUnCqyeqt6alI5PHuA_HhVue_0KZ68pBw72TdMKaRD16YVo4b.5tAXQDWx0
- LadMdNtR2cXNi6jJrtDkJF2TD3RhM.qEtvp.7rQx.gj4fXu1oVK2LQL9htY0SiU66CY.u48YrYfD
- XzP_OVrIMje3xC8BrS_HY_h0ubJwtJnb.5gl.EeGIfZu9e4wMsSvVU1nYVjCUYAFkoOwr.mWRYvq
- M4pJwEem281pMOsfPnsG4xU.GvGHM0AYUjG1RdnMYT9_vEDDm2UR8sXr0Ct6pATlUWhQKf8lh19E
- .mV6AkBci_LQVx6.13qpUQYj3rU0HfTwA2zlXovrPZBIJ44HsMXLjHbTlcOtaKzcJae_p3L.q7AO
- Bgl.CUVtXNPiQ9Mvh.sGr45vxKrty1DilbQQV7tGhKRbFLfJ72A4dGXnUwBp7Yh3zBFrJL65l.fK
- o4HvdUnWPE6.YfvuaTiKtLwXSBVlAA29kR4lWHXP0Gw9Bhl2GqDNJC.QF32ovssYA7zZQBvnH1pA
- jN9v8
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 8f75c530-de34-4864-9dc1-b4323dc33f68
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Tue, 15 Apr 2025 16:13:12 +0000
-Received: by hermes--production-gq1-74d64bb7d7-mh87r (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID b5dd3583aeda04525e68f8f8b81efdbb;
-          Tue, 15 Apr 2025 16:13:06 +0000 (UTC)
-Message-ID: <69763528-bb00-44c5-a3ce-8c30530b29ee@schaufler-ca.com>
-Date: Tue, 15 Apr 2025 09:13:05 -0700
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="WGd10ofT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IC3pdHj7pTL0racm0MXPyK6cUt5z/lNAnO0O+KTDwIxM4tP0uAkNjbnSY7McZvSM/1cg3TWAQSQd4HQwJcC1PgcKmGfEfU0LNcjwVUbN9elYbi4guS34Rga/m7kaCvFDihVTFG9kl8MN/RqYsk8OHGtPYFr0osUU9ja7v403ApEEiMGWuAM/PZKCkVrsWJVDFOoWiyw5DwSIUHEWJKrLCy2siFy4bj3dzHYJ7zCfa/Be6l6/onZvAXkZTTbY4PBIfn/BC6TFxdMWciMffob2TxGqIsTytxzM3V6M6dCOwPUkDdfB/K891r9mbWhm1oqqCZN4yblDJ1g202DvHACLig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gtc+M+CQmqzmrC0LRrLgaPI0HpccnUQG4WHu9ptieOc=;
+ b=nYXsH8Jdr+/viD2WilUD/bw1BFFV3ajqm502YNzZLtcHujX4oV2B0b2F+cA0LC+fzQGWRZu47eSs1R+9JEqC+4apghSRaNAgkpXu+KRZ8OmnT5Jvx2DOZjx/CcUyNQXe5tLU7MsV48JHWxhXrO9qux1CYnN84QzA1mcJQKFLCtAeGbBJbkV7AkungwAkLRfzPRHCfh0bZTw0iw4AH7nqYG8jl5rrR0sk+cQTeApXrcQOsTcQOCGrMnGodp1FehJqxDKp4A4mKHyHeDEoEEiG9ytimrCrUkuHFZibZqirbBl/Hqf/yqvK7NmZJx/rm9hDD9Z8VgkYPfRPFlsE81336g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gtc+M+CQmqzmrC0LRrLgaPI0HpccnUQG4WHu9ptieOc=;
+ b=WGd10ofTjRT5TyHr8MPSHEkm1WH0gp0Qed3ywv2Gk1+RdiWd+xAFNIKmspMP4CDoSO4jXu4qlzBOCIlD//giJwUuP5pwT+og32prRA6CZ9/16tGTfJiErprhcdnEsR0lihRZjiLlVNV01ftT+GEkdt6nFB5hzL/XJgsJv/S6504GOeYSOAkI/czn5QdidMPYIgA0sA19oiRjOqkiRKB1VBTGge+N5J1ccBL4Yx9ad/4bFcmBS15hWwbcfatPGB79lJ6nWxb5iGbaQ54n1/VTblwo/Mj+QH6SsZQRS07brPV38NIdyPvJufPQiUNxdt982rrhY9EozwQTagbqxRlDOg==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN2PR01MB9735.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:12d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 16:13:17 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
+ 16:13:17 +0000
+Message-ID:
+ <PN3PR01MB9597FCBB8741CD49349DDA12B8B22@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 15 Apr 2025 21:43:14 +0530
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH RESEND v5 4/5] HID: apple: Add Apple Magic Keyboard A3118
+ USB-C support
+From: Aditya Garg <gargaditya08@live.com>
+To: Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: Grigorii Sokolik <g.sokol99@g-sokol.info>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-input@vger.kernel.org
+References: <7EB9780A-026A-405E-AC07-DD33C11E7EE5@live.com>
+Content-Language: en-US
+In-Reply-To: <7EB9780A-026A-405E-AC07-DD33C11E7EE5@live.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0165.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::35) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <ebd4b0f3-be6e-4b80-a24b-7182c9dd8fd8@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 1/3] lsm, selinux: Add setup_report permission to
- binder
-To: Li Li <dualli@chromium.org>, dualli@google.com, corbet@lwn.net,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, donald.hunter@gmail.com, gregkh@linuxfoundation.org,
- arve@android.com, tkjos@android.com, maco@android.com,
- joel@joelfernandes.org, brauner@kernel.org, cmllamas@google.com,
- surenb@google.com, omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de,
- masahiroy@kernel.org, bagasdotme@gmail.com, horms@kernel.org,
- tweek@google.com, paul@paul-moore.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, netdev@vger.kernel.org, selinux@vger.kernel.org,
- hridya@google.com
-Cc: smoreland@google.com, ynaffit@google.com, kernel-team@android.com
-References: <20250415071017.3261009-1-dualli@chromium.org>
- <20250415071017.3261009-2-dualli@chromium.org>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20250415071017.3261009-2-dualli@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.23665 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PR01MB9735:EE_
+X-MS-Office365-Filtering-Correlation-Id: af53ffd2-2894-4015-e583-08dd7c386e84
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|8060799006|6090799003|19110799003|5072599009|15080799006|7092599003|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VWZCOEY2WXpYekVRdmJUN1ZSMStVNU9xMEtTUUl3UDZQVEZCc0szWVYzMjRH?=
+ =?utf-8?B?SjlTeHl2ZHhhbjVIanJEeHlkUGZxSjRuRWs3NER2L000dEV4cDhDcGx4NjZE?=
+ =?utf-8?B?SS9QTkw4UGJYM3RQNThsNVN5aENpNnZiTHFxeE40OGorT08xa1Flc3RaYUpR?=
+ =?utf-8?B?Ykh1TFNpV0ZJT2xha1A1VDd4SWRIT1lYZUl0YjRUaTZtdVpBNGNHU2IxNThV?=
+ =?utf-8?B?K09yYnJ4amdvZk12UEExdzJiemJhRExQZmdzalpmR29wYTZ1VzIwd2Zxa0J5?=
+ =?utf-8?B?blNhamNBd1FXN05kTlI1UnVMb1ZqbEgrZmhZdzdlSVJISUswdkR5a3lacGtD?=
+ =?utf-8?B?QktURVozKzJmMEZKRnpqTU41K3ZiM3E1M1pPeUJPUUJqbXk1clptcEhadTFY?=
+ =?utf-8?B?WWdSRXdNT3owZVNEWUlCZ2hzT2g1L1U2QTg3MTI3U1BIQXNNRFhtRkhaRkhs?=
+ =?utf-8?B?Qk5id3ZBbktSclk4M0cxMGNrLzhOckhkL1J5WUlDZUtuSks0NEw4SDhvNkU1?=
+ =?utf-8?B?UmE1Yk5hYzRvRHZNc1NSRjdSN1dYUUJDUHZuT0svNXp2dUpLVHhuYWJ4UXB2?=
+ =?utf-8?B?MEVsWFJSZ1JtZXRMM0tZK0JaeHA3Wm5oL3F0ZHpDRWE1L1ZOdFF4NjZQWmlp?=
+ =?utf-8?B?NUtoVGpNQmR4YUhOSlVCK2VSeEVYTDNramZJamNjdlQvb2MwUk5tSStsK3Vj?=
+ =?utf-8?B?VVZWOWlOdnRDSGpHRGYwUWR6andLQ1VSVHowaW0vMzdsbXJLdXRJdmg2TS9y?=
+ =?utf-8?B?QXJZajN6d0xaa25MUTB2WFpPR0ZJZytVWFUrWVJkSEl4dzF1THVYZGJkV08x?=
+ =?utf-8?B?SENHQnRQRTR1ZmsvS1ZoOE9aQXBkU0pvYWtYVDFqRklWdkdVRU8vTHRHYmg3?=
+ =?utf-8?B?TDVZM3NQVVlINHBtbTJlNlRGSFR1ZjhtU0RLOU1ZRytmMFlwK2Y0YTBIcTFS?=
+ =?utf-8?B?YjZPaWRHTWlQN0IyL0d2azk2ZmkvRXBPVnFtWGxnSHpVK1BEQVdrOVd4ZDVQ?=
+ =?utf-8?B?VnU1U3JQZzE1QjZFV1BBSVZ1cXdQeXlERGJnaHBmUzAwTFZKWnVmYi9hMFBx?=
+ =?utf-8?B?NzlqSVZrK2VtSnlRZkQ4SjVJYWx2YldaVWtZWmlvT2QzSjRpRDFHTC92WFJ3?=
+ =?utf-8?B?aHlWYkE2SW9CeW9YZHA5Q0V6QlhxMmJyeXVnSTNRSWZHRXA5S3NTQWpheTIv?=
+ =?utf-8?B?SzcrSGpZUTJUMTIreEJpMGgxSm9MK3gzT1FJVzdlYWNMQUxubk1CQXZjNW1m?=
+ =?utf-8?B?V0wvR0k2NlRmL2JvS1dwZElXOHhzakp6d1c3eUlrOEFSTThoOE10NFB2TXM1?=
+ =?utf-8?B?Nk1zUnNsTHFvRmpZWGVQQlpjenhvNDF6RWUyMXNaMlZRa01LZDhJeHZRMXR6?=
+ =?utf-8?B?RHU4TVF6ZHZNd3lHUGlUTExFNzB5TVkzeGluTDBvaDk0U3VyWXBiSFVWRGN0?=
+ =?utf-8?B?ako4emlHL0hiR3ZHTVV6eWc4RVFRL2JINmhqcXVsUzhTdWdnamdqZStPM0Ey?=
+ =?utf-8?B?ME1Ld0ZIbXFoR3dsQnVuY1pvVnB4OGNXS1NaMzhDZU0rU1hCZ3lQZWZFamJJ?=
+ =?utf-8?B?YzJXUT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dHhBM2FKZFBNWURxWmR0ZmJyZTVFMFM3M3A1bDhWMmFkRmV4Qy9RNWcxSXEx?=
+ =?utf-8?B?Rmk5eDR3QzBWanhPSWNkRDE2bWR1N0xEbU92bGtXTTQ3NkkvaXlpaThWT2Mv?=
+ =?utf-8?B?bWFYSWRYNkFoUGNtT1BYaWFZcXJuYW94ejFwV20rTGI2dHJKVUIvR0F6bG1a?=
+ =?utf-8?B?eVNPcmFFOGd6SjdZZTZPRzFaeERVSkwyeGV4VVZ0bFVrZHExcGJHYUpTQ200?=
+ =?utf-8?B?REN3Z1Y2bFVRcTRvcmZhOGxhYVpneTV3bmFpNXhMbnE5dllnajJIalFrTjQx?=
+ =?utf-8?B?MmxidmpkMHVIdnNuZWFyTEdUVFdqcFRUd0hycGZxYXM4aWxoUU8wTWU1L1BE?=
+ =?utf-8?B?THNVZHZVTjRjc3MwUjc1SkFMMGJTMkYwck93UTZUbHNOS1hWNno3T3lzb3ZL?=
+ =?utf-8?B?NjdkUDI3WUs2M3ZxMVpNR0xuOS9XM3FIUWE4ZnNseTJnNmE4emFpMWJobXcw?=
+ =?utf-8?B?Vi9ZYmlJd2tmNDVJZHFQU085bWJmakVlMkVTaTZydEtQY09yWjdpeml5eGwr?=
+ =?utf-8?B?b0NMTjBIbXRZMUFuT0JQdXRmdlZnWnduM1huKzZWRnJqTlhNWmJTWHJSYkp1?=
+ =?utf-8?B?cDN6NXZSRHEzSE5JbktQVENhWTN3NHRUYWtCejJ4cFIyWWVka28xWHpoUUli?=
+ =?utf-8?B?ZDB0UEh2ZS9UMFYxWEFROHFRMW1wWktpQ1BVSEc4KzMyU3JPQmhwdjlwRG9x?=
+ =?utf-8?B?ZXpJdXRqRFRyRUNleFdYZGgvZWdrTjR6UEFIeEpSUXkzcjc5WVk5VkRFalVp?=
+ =?utf-8?B?d2o0SmV1bTRoNmtSZno5eGhwa2FvcXhaOW1kMkhUMDBYRGE4K2VjVTJRQmwx?=
+ =?utf-8?B?M0lBMm9lb3d2VC8xc0lEYTFpOG4vaWFhL0k2cGxadkJwa1hlSWFscnEyM3p0?=
+ =?utf-8?B?UGN4MlJvTk43eGV4MEphM1dmOGxibFNUM0tWNGZBZXNtTzc0dXk4d0pSUE1M?=
+ =?utf-8?B?TmJJY1VsNHd6cjdPTVNNMG9tNGlmQnNLNFQ2QjZMTVlzSDZQckpVb25oM2Y2?=
+ =?utf-8?B?Yjc4emFKZUpvbUdiSmdjR1ZGM254NUJmQ3VzL2Y5YUNlekNlN2pyQWxIS3U5?=
+ =?utf-8?B?WTZ6dFZTN3FmSWdZVmdJS3k5SStJRTIvMWdBZnI3NDgzZUpJWlRhMFFTUXNt?=
+ =?utf-8?B?aCt4OVpIcGZnTGJiSzc4dnlreE5DT3paZ1c2WHFFZ3NQM1h0N0NZdEJ3T0tx?=
+ =?utf-8?B?OWYwV2RSb0pneC85d2tyN016Sm1qNURPQm1mWUtmdlpMWXpVSE04Q0NIczZy?=
+ =?utf-8?B?SG5WTHk2SURITFhsWlErN3ZXMzdUaVh1U2IyUEVTOGx2U1hqbmhGSFFGbGNL?=
+ =?utf-8?B?MjV5ZWsza1F5S294Q2N5dDJ6aVNvcEE0RG1QSWZ3VjVEaVBhMjNzbVZ1TVVj?=
+ =?utf-8?B?UTdRdWdianYxR2JhR0FOWlJ4YlhJNWt5VWN1QnpTSE4zVEQrQ0lIbnhBdjV0?=
+ =?utf-8?B?UDZXSnlSNnJyZjk5Nkd1b29SOWVKeXQ1Vk11MmJ6VmhzRU02eXRuQnhVSHJZ?=
+ =?utf-8?B?MjZIMXdSS0FZSEEzcDJpT1hyV0gvWDVyeFQ4TFh2aFRPdFRiUnNVeWZTd3p3?=
+ =?utf-8?B?UjZTSTRYcE1LdnN4a25mdUJFdFBlS3pCYlJvRHJta3lDaWVEdk0wYUQ1Z2pW?=
+ =?utf-8?B?MG1yOGsxUStSUlhrSmcrdWRuWmQwZ0RXSHpsdUxIcVVseXN1SllHU2M5Yksr?=
+ =?utf-8?B?NEtmM0t4eE8vSFphWldCVTg0VmhwbTdCUzFlbU14U3lESkRWY0lSNmhKQ3o1?=
+ =?utf-8?Q?vfuXYzYvNyGydyycm1vY356v/5oYSd3Qw2ee2Kl?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: af53ffd2-2894-4015-e583-08dd7c386e84
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 16:13:17.3182
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9735
 
-On 4/15/2025 12:10 AM, Li Li wrote:
-> From: Thiébaud Weksteen <tweek@google.com>
->
-> Introduce a new permission "setup_report" to the "binder" class.
-> This persmission controls the ability to set up the binder generic
-> netlink driver to report certain binder transactions.
->
-> Signed-off-by: Thiébaud Weksteen <tweek@google.com>
-> Signed-off-by: Li Li <dualli@google.com>
-> ---
->  include/linux/lsm_hook_defs.h       |  1 +
->  include/linux/security.h            |  6 ++++++
->  security/security.c                 | 13 +++++++++++++
+From: Grigorii Sokolik <g.sokol99@g-sokol.info>
 
-This patch needs to be sent to the linux-security-module list.
+Add Apple Magic Keyboard 2024 with Touch ID device ID (05ac:0321) to
+those recognized by the hid-apple driver. Keyboard is otherwise
+compatible with the existing implementation for its earlier 2021 model.
+
+Signed-off-by: Grigorii Sokolik <g.sokol99@g-sokol.info>
+Co-developed-by: Aditya Garg <gargaditya08@live.com>
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+ drivers/hid/hid-apple.c | 21 +++++++++++++--------
+ drivers/hid/hid-ids.h   |  9 +++++----
+ 2 files changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index fde438bee..e95a54113 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -165,7 +165,7 @@ static const struct apple_key_translation magic_keyboard_2015_fn_keys[] = {
+ 	{ }
+ };
+ 
+-static const struct apple_key_translation apple2021_fn_keys[] = {
++static const struct apple_key_translation magic_keyboard_2021_and_2024_fn_keys[] = {
+ 	{ KEY_BACKSPACE, KEY_DELETE },
+ 	{ KEY_ENTER,	KEY_INSERT },
+ 	{ KEY_F1,	KEY_BRIGHTNESSDOWN, APPLE_FLAG_FKEY },
+@@ -482,10 +482,11 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+ 			table = magic_keyboard_2015_fn_keys;
+ 			break;
+ 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2021:
+-		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024:
+ 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2021:
+ 		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021:
+-			table = apple2021_fn_keys;
++		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024:
++		case USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024:
++			table = magic_keyboard_2021_and_2024_fn_keys;
+ 			break;
+ 		case USB_DEVICE_ID_APPLE_WELLSPRINGT2_J132:
+ 		case USB_DEVICE_ID_APPLE_WELLSPRINGT2_J213:
+@@ -690,7 +691,7 @@ static void apple_setup_input(struct input_dev *input)
+ 	apple_setup_key_translation(input, apple_iso_keyboard);
+ 	apple_setup_key_translation(input, magic_keyboard_alu_fn_keys);
+ 	apple_setup_key_translation(input, magic_keyboard_2015_fn_keys);
+-	apple_setup_key_translation(input, apple2021_fn_keys);
++	apple_setup_key_translation(input, magic_keyboard_2021_and_2024_fn_keys);
+ 	apple_setup_key_translation(input, macbookpro_no_esc_fn_keys);
+ 	apple_setup_key_translation(input, macbookpro_dedicated_esc_fn_keys);
+ }
+@@ -1165,10 +1166,6 @@ static const struct hid_device_id apple_devices[] = {
+ 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
+ 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2021),
+ 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024),
+-		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
+-	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024),
+-		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2021),
+ 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
+ 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2021),
+@@ -1177,6 +1174,14 @@ static const struct hid_device_id apple_devices[] = {
+ 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
+ 	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021),
+ 		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024),
++		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
++	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024),
++		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024),
++		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK | APPLE_RDESC_BATTERY },
++	{ HID_BLUETOOTH_DEVICE(BT_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024),
++		.driver_data = APPLE_HAS_FN | APPLE_ISO_TILDE_QUIRK },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_APPLE, USB_DEVICE_ID_APPLE_TOUCHBAR_BACKLIGHT),
+ 		.driver_data = APPLE_MAGIC_BACKLIGHT },
+ 
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 288a2b864..8682e1b11 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -162,6 +162,11 @@
+ #define USB_DEVICE_ID_APPLE_ALU_WIRELESS_2011_JIS   0x0257
+ #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2015   0x0267
+ #define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2015   0x026c
++#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2021   0x029c
++#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2021   0x029a
++#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021   0x029f
++#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024   0x0320
++#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2024   0x0321
+ #define USB_DEVICE_ID_APPLE_WELLSPRING8_ANSI	0x0290
+ #define USB_DEVICE_ID_APPLE_WELLSPRING8_ISO	0x0291
+ #define USB_DEVICE_ID_APPLE_WELLSPRING8_JIS	0x0292
+@@ -183,10 +188,6 @@
+ #define USB_DEVICE_ID_APPLE_IRCONTROL3	0x8241
+ #define USB_DEVICE_ID_APPLE_IRCONTROL4	0x8242
+ #define USB_DEVICE_ID_APPLE_IRCONTROL5	0x8243
+-#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2021   0x029c
+-#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_2024   0x0320
+-#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_FINGERPRINT_2021   0x029a
+-#define USB_DEVICE_ID_APPLE_MAGIC_KEYBOARD_NUMPAD_2021   0x029f
+ #define USB_DEVICE_ID_APPLE_TOUCHBAR_BACKLIGHT 0x8102
+ #define USB_DEVICE_ID_APPLE_TOUCHBAR_DISPLAY 0x8302
+ 
+-- 
+2.49.0
 
