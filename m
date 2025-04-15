@@ -1,159 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22A1F3B90
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCB127FD6B;
+	Tue, 15 Apr 2025 09:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710616; cv=none; b=VhAEEv2j5OFdvphoVuSeHkdtLSUMRjuYRjEnh5o+duJ3VCqBCe5xv7Hg70VUjXeEa4ecaDTe7Yq3SyamEedT2ZSJBPsn+N/lQXWCU7tk9Va4wWnFrdM6bTqdrVDfCCFq+uZmjRa2ZerTNqD1W+nXwhG84DVyN7h769v+Olq3Gz8=
+	t=1744710654; cv=none; b=I8at3D1aQ0E3tUP1Nxf2d0jTlJTAU+HVoEv3T9PgoATSdiGdr90e4Ew/s1YRY19O9O7H75AP+6U+sjf4LEvHdrsKHfQCw2SIUvKJeBa2cYup1akexo2FbNg+rjcSpDgNW0luqaWGiUaA2qcE2zfj1sFzWbOCsgA4DrMVcwHLkZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710616; c=relaxed/simple;
-	bh=+kNDX9GZFWMIjdRCqiE+Y41Qa1XiSPMSkIdlFy6x5PU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VCVtlv5HxKnlLTWhnnxlPGzCECHji+D0QHd+U6eDxJo7KTMCrXXW0mT1DlzEGY1Ye5fl9yHXkNSByM5SUvtSBWzIWA0ZrkKRvKLBrKT+7ckVGksfmuKfhxIbNxY8+F1VNdGLTEGMfwRjOZ9CdFJVjXjLJ14OEcuXNAN8XmwPzvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMTJ2PQw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744710654; c=relaxed/simple;
+	bh=uWXNFhSWbSEShQiyQF5i1yq9PoN545++J/zBx1ZtRbg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t1lfv9Z0qfsuJBxbWKrQGy8YTbmkJGaAkZ2jtvjgjK7mKumbiP7h9ZUoYRNHynAHs34GaMU+Bw4iVCI2x89dyXLtWNXYmPItHcNez8lwK1f1OVIpHGFW2KMllWs84Ek0bZ4P5sfwWMOk+pd6I15YgWZcdE2ZMgfk8S0KYCkFQh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SaAyArZV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMTJ2PQw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744710612;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iwq1mTB+TbHGTyxESwiSfmoXeV9JrDkURlCGnWcYFAk=;
-	b=UMTJ2PQwqzA6YEc1YbkrQMUice1R+d5K61ruqicCtTinFU86Q4Uv/mP4pIjHQgbIgLRlZb
-	uLO+a8sdfGZ42q1rmnDkSS8Nr86mWPnzfaXaCfbdgLwqZ+GNyOmDYF6gZ5sqWer55Djl3U
-	jgXiV9mvmPWOuPuFBpOnR2oM+3sWLGE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-462-vMgkFP0cOV6HVF_vxAvDVw-1; Tue, 15 Apr 2025 05:50:10 -0400
-X-MC-Unique: vMgkFP0cOV6HVF_vxAvDVw-1
-X-Mimecast-MFC-AGG-ID: vMgkFP0cOV6HVF_vxAvDVw_1744710609
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f405810b4so19719435e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:50:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744710609; x=1745315409;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iwq1mTB+TbHGTyxESwiSfmoXeV9JrDkURlCGnWcYFAk=;
-        b=qAj6VmCTWH2a/+O/fbCSOAm5j0AN9axNU9y27iuV75YBtdUN6wLuaIGCINC+x//oLg
-         3S7MAsHaowlXQd2K2qfRHIbbEYdZAOQb/c00CQiWPAEUXHFI/9uB9igujoQYJQRplND7
-         EtKB46ZA9rh+k/i9lHGSXRl7acifQlcSs1IYJqWIFl/nonF5eKagleD/hGSIUJZ0flGo
-         PagGsoIR1HJnf5lRihkeG2nzNPeJQEDNHE9Weh1Y2IQaNbqcbFucZbmxGfrit+9oqfSH
-         IHXf2xvXLgXCY0UY5ZgdDsdwJXdJySJQ2kJiKShFsywr4qEt2ZjTSeg3hDM6IgfP0i9m
-         BTGg==
-X-Gm-Message-State: AOJu0YxiXVdmCw0R5gqqZ+oZVcwlRQUWDZIX5I5PEzfLmlojwtrqoHlW
-	XYe4pDJBZ+BXnnSsR5brCHiyOGQGYFed3P5p2nuw9abX7ZqICu67HKTuDGmb3gtxx9drlIL/Ftf
-	NQe0sAkuWCUCJ512IefdzUPIY/TSSyp55gzzoZ8H0UA0OpRqOGeyl6EGMOGIVJ0uExyCV1Dq/76
-	F0xiN3YfwnneN3uU6xVizsaEeqmFmibnJsXvSFE/0PYP6nzc4=
-X-Gm-Gg: ASbGnctygaoZ2hzypYxG2K2TWlhHsMQBkcX0s1pY6+XrU1BpAvZJ9jre0RqdPbXK2KC
-	JONB4O7dWl8tQAnTlesciExENyHZyLROQHM/s/kFEdQq/3Ton26+ILgPBe8p6dQg0+eb5EXC8+s
-	bJzpClkTh8VHoV/I4veXSteNuJ9/3mEBhHF0ThO2vkBrilqBiTT5HADCgM0JFC3oIOyAu9d9C2R
-	AS4z5Iy18vGiZYK+842ukk3csf51BIv14dcwnj4ju8Bxh17IQXOJE59hE9+0iRs6TR35aUcj7fS
-	ewIyaa9sLuOv5yO3WvDbY7gpkeU10eTcS+EL3iv0DL8tBegBafJHRdfqA3hpwwG3DzMAbKQ=
-X-Received: by 2002:a05:6000:1a8e:b0:39c:12ce:67e with SMTP id ffacd0b85a97d-39eaaebe9b2mr12343823f8f.41.1744710609342;
-        Tue, 15 Apr 2025 02:50:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHw8ad78S6WE7q/ocC1X8mx345RwUrR7dg9JzzjrWE6ClRK+3xTkOCj6SSrMDhQnjXLb4HRNw==
-X-Received: by 2002:a05:6000:1a8e:b0:39c:12ce:67e with SMTP id ffacd0b85a97d-39eaaebe9b2mr12343795f8f.41.1744710608953;
-        Tue, 15 Apr 2025 02:50:08 -0700 (PDT)
-Received: from localhost (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eaf43ce0asm13726944f8f.70.2025.04.15.02.50.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:50:08 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v1] mm/memory: move sanity checks in do_wp_page() after mapcount vs. refcount stabilization
-Date: Tue, 15 Apr 2025 11:50:07 +0200
-Message-ID: <20250415095007.569836-1-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SaAyArZV"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tIdu012707;
+	Tue, 15 Apr 2025 09:50:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=uWXNFhSWbSEShQiyQF5i1yq9
+	PoN545++J/zBx1ZtRbg=; b=SaAyArZVsdvFFtlUz5ImfF26EeuyRdUfTBkSars9
+	rwuu3m3syvUHOyOPKIxyb3dWPZsTcvQVpI/cp02vree61xZc8B4E7O9jAI3KHoJR
+	Dujt5R7Hrq/jY/DEhzwjJ3iUwHnEvcssL5B+YHRNv4wZ/TBFLWPDDVJEV4PvDWxS
+	ycc2AdvEQ+Ea4vF5yfjHt9Iq0uyyxvfNlX4jvz8DqTLGoAGzpDhkeFRov8p0FzMO
+	g2TnVsbrYMhyyqlh5PriJ3NPAF25PVXNuT5niTMJERzpc4rt8g0RyxKObniDJyk5
+	Vbt4pT9cGMdFptGd1D8ta5DYoqaRBqSLGZnW8G8b1Q4Grw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydhq7t6v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:50:44 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53F9oVYK016076
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Apr 2025 09:50:31 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 15 Apr 2025 02:50:27 -0700
+Date: Tue, 15 Apr 2025 15:20:23 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+CC: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Praveenkumar I
+	<quic_ipkumar@quicinc.com>
+Subject: Re: [PATCH v14 3/4] arm64: dts: qcom: ipq5332: Add PCIe related nodes
+Message-ID: <20250415095023.dxipm4hd73jxoe4n@hu-varada-blr.qualcomm.com>
+References: <20250317100029.881286-1-quic_varada@quicinc.com>
+ <20250317100029.881286-4-quic_varada@quicinc.com>
+ <48361e2a-89b2-4474-97aa-557fbbbdf601@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <48361e2a-89b2-4474-97aa-557fbbbdf601@oss.qualcomm.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zOicwmg99osoW_qkt04ALmcbknNXxAD4
+X-Authority-Analysis: v=2.4 cv=C7DpyRP+ c=1 sm=1 tr=0 ts=67fe2bf4 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=PnGFYBFXPhy9mkTWHzgA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: zOicwmg99osoW_qkt04ALmcbknNXxAD4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=587
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150069
 
-In __folio_remove_rmap() for RMAP_LEVEL_PMD/RMAP_LEVEL_PUD and with
-CONFIG_PAGE_MAPCOUNT we first decrement the folio mapcount (and
-recompute mapped shared vs. mapped exclusively) to then adjust the
-entire mapcount.
+On Fri, Apr 11, 2025 at 01:22:39PM +0200, Konrad Dybcio wrote:
+> On 3/17/25 11:00 AM, Varadarajan Narayanan wrote:
+> > From: Praveenkumar I <quic_ipkumar@quicinc.com>
+> >
+> > Add phy and controller nodes for pcie0_x1 and pcie1_x2.
+> >
+> > Signed-off-by: Praveenkumar I <quic_ipkumar@quicinc.com>
+> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > ---
+>
+> [...]
+>
+> I think you're reaching out of the BAR register space by an order of magnitude,
+> on both hosts
+>
+> IIUC it's only 32 MiB for both
 
-This means that another process might stumble in do_wp_page() over a
-PTE-mapped PMD folio that is indicated as "exclusively mapped", but still
-has an entire mapcount (PMD mapping), because it is racing with the process
-that is unmapping the folio (PMD mapping). Note that do_wp_page() will
-back off once it detects the remaining folio reference from the process
-that is in the process of unmapping the folio.
+Checked with h/w person and he confirmed that the BAR register space is correct.
+It is 256MB for one and 128MB for the other controller.
 
-This will trigger the early VM_WARN_ON_ONCE(folio_entire_mapcount(folio))
-check in do_wp_page(), that can easily be reproduced by looping a couple
-of times over allocating a PMD THP, forking a child where we immediately
-unmap it again, and writing in the parent concurrently to the THP.
+> the register addresses/sizes look good
 
-[  252.738129][T16470] ------------[ cut here ]------------
-[  252.739267][T16470] WARNING: CPU: 3 PID: 16470 at mm/memory.c:3738 do_wp_page+0x2a75/0x2c00
-[  252.740968][T16470] Modules linked in:
-[  252.741958][T16470] CPU: 3 UID: 0 PID: 16470 Comm: ...
-...
-[  252.765841][T16470]  <TASK>
-[  252.766419][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  252.767558][T16470]  ? rcu_is_watching+0x12/0x60
-[  252.768525][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  252.769645][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-[  252.770778][T16470]  ? lock_acquire+0x33/0x80
-[  252.771697][T16470]  ? __handle_mm_fault+0x5e8/0x3e40
-[  252.772735][T16470]  ? __handle_mm_fault+0x5e8/0x3e40
-[  252.773781][T16470]  __handle_mm_fault+0x1869/0x3e40
-[  252.774839][T16470]  handle_mm_fault+0x22a/0x640
-[  252.775808][T16470]  do_user_addr_fault+0x618/0x1000
-[  252.776847][T16470]  exc_page_fault+0x68/0xd0
-[  252.777775][T16470]  asm_exc_page_fault+0x26/0x30
+Ok.
 
-While we could adjust the sequence in __folio_remove_rmap(), let's rater
-move the mapcount sanity checks after the mapcount vs. refcount
-stabilization phase. With this fix, a simple reproducer is happy.
+Thanks
+Varada
 
-While at it, convert the two VM_WARN_ON_ONCE() we are moving to
-VM_WARN_ON_ONCE_FOLIO().
-
-Reported-by: syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com
-Closes: https://lkml.kernel.org/r/67fab4fe.050a0220.2c5fcf.0011.GAE@google.com
-Fixes: 1da190f4d0a6 ("mm: Copy-on-Write (COW) reuse support for PTE-mapped THP")
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 2d8c265fc7d60..625886d40e091 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3734,8 +3734,6 @@ static bool __wp_can_reuse_large_anon_folio(struct folio *folio,
- 		return false;
- 
- 	VM_WARN_ON_ONCE(folio_test_ksm(folio));
--	VM_WARN_ON_ONCE(folio_mapcount(folio) > folio_nr_pages(folio));
--	VM_WARN_ON_ONCE(folio_entire_mapcount(folio));
- 
- 	if (unlikely(folio_test_swapcache(folio))) {
- 		/*
-@@ -3760,6 +3758,8 @@ static bool __wp_can_reuse_large_anon_folio(struct folio *folio,
- 	if (folio_large_mapcount(folio) != folio_ref_count(folio))
- 		goto unlock;
- 
-+	VM_WARN_ON_ONCE_FOLIO(folio_large_mapcount(folio) > folio_nr_pages(folio), folio);
-+	VM_WARN_ON_ONCE_FOLIO(folio_entire_mapcount(folio), folio);
- 	VM_WARN_ON_ONCE(folio_mm_id(folio, 0) != vma->vm_mm->mm_id &&
- 			folio_mm_id(folio, 1) != vma->vm_mm->mm_id);
- 
--- 
-2.49.0
-
+> I'm not super glad that we decided to move forward with not putting PARF first,
+> as the other registers are in the BAR region, but bindings are bindings and
+> bindings are ABI..
+>
+> Konrad
