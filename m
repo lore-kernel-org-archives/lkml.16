@@ -1,86 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFC22309B6;
-	Tue, 15 Apr 2025 11:34:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD72676CF
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744716899; cv=none; b=LkQMJQU+7f6Z/52PEnrIsPmoZpHQ4Hjki2s7KuTrD1XtXpd9iAl+pfdrscBmPNGCewBVxENtAfHuCUuDvtfaMFjH+tNBlkVBWSvRSMrgY+EvW+KAvf/hluZXcnCOrYQmXr96eYpJ5WQQrkg4KY99vp5EtBlXryLev8dI6w3J6ow=
+	t=1744716905; cv=none; b=cMoET0ORu8pnW/lGgZkabU3Wv/tBLdlYKY0DJLWoLlFQ5W9lJxDi1hIwL5ziRh3FRMsBNrwBVve3Rah7cL3clKw55V55HRlv/CBLMTgcQCOXRF2OS9XQvmA7rzLnmUyWF+V/m7/5FazvD1PgWXErYU1PwKqOV+oTzz7iWzoTi7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744716899; c=relaxed/simple;
-	bh=VvbYNPXEIAjf/KeE1NBkd5nqIQJfNLJU5dIe4vPAdpA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=oOPJCkI+yGIKBrKHto+yQC4S4d2QUG2fNasGISBPkEYNv6HCL3E28WaAkQbCA4MBGDeqg6XHn4ljJ+I+N76WVV8hrWDiBxG1EiDlIo6LpkJlMy6Lp+2sDQnccz7VAP8I8FVzdhcALNsfvj/wWjGAJv81nF+90q3JIv2GLGFOQeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdzr+ERL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdzr+ERL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB14C4CEDD;
-	Tue, 15 Apr 2025 11:34:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744716899;
-	bh=VvbYNPXEIAjf/KeE1NBkd5nqIQJfNLJU5dIe4vPAdpA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gdzr+ERLwT6QEhOUvS3fsZ7QWkUZzv085l4z2ghp1KkrJ0B709wwuviidG+L9ulPm
-	 vqBCzNNsgAqIjbQIco4HMhYyn3tDinVenaqsXHQRmcmrGhg5pdOW5GdU/GLz20AADW
-	 nxOYIk+fnSQ4HGUlIkkUfFaJwIhgFSxVi098XPTRcvTxRJ8tky2WOHvnNhJqmWxbcB
-	 Abm0TbxIksXPqJMwiPU9jiTmnjX84Da/xWR4m6reihLifEIzyUW+gFTgSYCEKm37I0
-	 e0aVHR7eAwJUmdb80ZzBDMpePIvFL1gN542U1fpivpW3g9qzUd3xy/oKhskK4Vchjx
-	 tO6cNEtD1htdw==
-From: Mark Brown <broonie@kernel.org>
-To: David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250414114528.355204-2-thorsten.blum@linux.dev>
-References: <20250414114528.355204-2-thorsten.blum@linux.dev>
-Subject: Re: [PATCH v2] ASoC: cs-amp-lib: Replace offsetof() with
- struct_size()
-Message-Id: <174471689730.19628.17211699174764357615.b4-ty@kernel.org>
-Date: Tue, 15 Apr 2025 12:34:57 +0100
+	s=arc-20240116; t=1744716905; c=relaxed/simple;
+	bh=QMBO7s385E9wpAKLsdE56tnQxhF9JHBAqthceUgkueE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=QDPJP2+2eTwAgxScxYzTT97LVSDFCJTAFJZH2Wz0UcJu0VXWTQoiIB80SBNO4+cHrNZ0ylOqec9AhXleqGNHIRoPxQZkZZTVulDnd9qQjRHbCP7+xVxG3XH0oXQkikFzQIszDl7xA83VpC2V8OYez4r6P5RNhmOkqDhK2AmdZ2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so1165916139f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 04:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744716903; x=1745321703;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OZNIc1WYG85SzpoeWu8JTudhH152po17+aoqc2UVZ38=;
+        b=jkK+oByNwnoKxV3un25m33RI1yES/0+GBfC02qn+4ZE/ewRBmpUrqjktRVjWuCxd9K
+         jOHPAtige4/CPR8ZiMzJlG5p79Laubhrpts0hB0t8ZSKb/WbrRa9dJX1HNhfxSGNksQj
+         5ZWbgtm7ZH6LNntz0djSzC0Fy4wdMkGsM0C4IEeZgquV9wrO+EAem1wD5IdkDSnzz8q+
+         fHDOn+xOujWVuyLWovWoDAgrYF0muQlT0i0/TUsOYKyLd4P7JfRV2sCJnqRBIb3tWZjh
+         AoKesJ0TqU2vcnN6FAwqj9C103p4HzY0A2sOCSXbIvgSdvCjrFeq/vSdhr7Y4nNFyaKN
+         fNzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcE5AhH7tDMdr54WXJ3LWCIl6qMEUtFLvTS1yZasPptpJm6PR9JGZsApvthP4L+FqUESpq6QrrurzRpxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLKMJ7RKjBTQc6SOt1KQoVgEq3h+B2E64QAv5w6+IR+nJJiWKq
+	9z4qADnpPluNoWdOlHfvW8xK6iZsL9jm2qUeeEICy7N8uLdlm/wdKjq9bnsYY157HAkaaWOYB4K
+	/R4YOmgVE1qtyuocd51n3Ugo3utWl1BDAubqRlmyCaaH8qHD5dq4AFnk=
+X-Google-Smtp-Source: AGHT+IHDZtBqgAvBINungu1atdPDykDelhYZ35UbVTMWaK1tO3SyOCkV9LKztHt0oPiCVygEZehcS37fmMULxWVR//AQsuQTt9hj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+X-Received: by 2002:a05:6e02:12e6:b0:3d4:35d3:87d3 with SMTP id
+ e9e14a558f8ab-3d7ec1cb534mr172656595ab.4.1744716902819; Tue, 15 Apr 2025
+ 04:35:02 -0700 (PDT)
+Date: Tue, 15 Apr 2025 04:35:02 -0700
+In-Reply-To: <20250415110145.4052-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67fe4466.050a0220.6a185.01d7.GAE@google.com>
+Subject: Re: [syzbot] [acpi?] KASAN: slab-use-after-free Read in software_node_notify_remove
+From: syzbot <syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 14 Apr 2025 13:45:28 +0200, Thorsten Blum wrote:
-> Use struct_size() to calculate the number of bytes to allocate and used
-> by 'cirrus_amp_efi_data'. Compared to offsetof(), struct_size() provides
-> additional compile-time checks (e.g., __must_be_array()).
-> 
-> 
+Hello,
 
-Applied to
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Reported-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
+Tested-by: syzbot+2ff22910687ee0dfd48e@syzkaller.appspotmail.com
 
-Thanks!
+Tested on:
 
-[1/1] ASoC: cs-amp-lib: Replace offsetof() with struct_size()
-      commit: 46e7ea05bf5d9fe4d05e173c824ae173c956cb5f
+commit:         834a4a68 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16cafc04580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a972ee73c2fcf8ca
+dashboard link: https://syzkaller.appspot.com/bug?extid=2ff22910687ee0dfd48e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=14f5f0cc580000
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+Note: testing is done by a robot and is best-effort only.
