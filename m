@@ -1,229 +1,136 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4264D15746E;
-	Tue, 15 Apr 2025 13:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6A01DC9A8;
+	Tue, 15 Apr 2025 13:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744725261; cv=none; b=Iy+wf5N34K1X+qiC4Igoml09/W3faQoj3dYsPX7Q8zYunvjmN2q9+9lCEApO9GW4VamXy2dmHsQe5qbLOF79yPd99TaPpY4KmLVaz6CBQyArm09mIowb+2IFNSitGb2znqJFM1x6cqYHtE5o+qvCeZ66kcuEeUJydnVHTL/x7cE=
+	t=1744725264; cv=none; b=Fw3GFsMwhe0YvZgt16p4C/UcAyREW0fsIZT5jte7GQUOQ+WbXGRUrWbfjWMzSk6Jyx1+SKu3r0AUD6OyxG77At5hzKh4lkm5b77HrEI6F2h+7BYeV9rIAdnsXxVcFREUmgyMeDzQvAYI6OpG54Ok5fi1eS1gWuDBu5F5y4YqTmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744725261; c=relaxed/simple;
-	bh=zBkHuXnANZVP3lW1YInnfwbWrJ1LhDettt+qmAX2aMU=;
+	s=arc-20240116; t=1744725264; c=relaxed/simple;
+	bh=OrjfuIsLyMWBHpdPMqn3UuNzRJEMzPl4gvGx5zjyKQY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SVXPEOeEqBRFKN8Urra/bpN2e+Q+Qjbi+r4D6QfLBUQlEDzNyWyySkPag0iGNpUjgRfHyQpUUk1IO8kcDYVL9RtUZXJe8Ved0xmgMKi8Fhb30I+dZNe+XVzoMPNfD0ZIULLEL63j6ukWQqeoKodHLJYo5M6ZR97IgTxAE1ytdBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g5nMr8Mj; arc=none smtp.client-ip=209.85.221.45
+	 To:Cc:Content-Type; b=qygIf2V/0RNfV9qy7C5u7ZBmw7Kvgw0ncTGrqb7AYDcOxdlYd7qUWZEpsnS2sEthc6b0N2BjXO81/OHY6fYzK5z7EsPyVAoqqIkp7EviR0uDpkHBBOq9U0ZqooePfXP+GwTgkVt/s5op/ctSePOUQnsOCoX9nPAEbohpVWKVbjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ku3wig1A; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g5nMr8Mj"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso3386515f8f.2;
-        Tue, 15 Apr 2025 06:54:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ku3wig1A"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47698757053so64454321cf.0;
+        Tue, 15 Apr 2025 06:54:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744725256; x=1745330056; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744725262; x=1745330062; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dxTErC+KnB5NGpCTc9/w/rpBQLv25Jj15o+pnsH3W3I=;
-        b=g5nMr8Mj4ub4Ri5D9sdjMlKSBeRSX1s3UtLLK5zM8DQmGRQmVK92k5Dw/Wo+DZABVB
-         ZHsO3x73q4x5VlWq1KwLJg9VG22erbGumiEFkyYNloYCwW/YW06UicmeoLOyfbdkbzYs
-         spf7k8VhHM/dzq62yYlcehBsRmjUC4CFUtAuZPhMdB7lia4fL3EjtEwGb2q6xenqSjXi
-         vIDpXPQg1P5ELrmG9WyoAZiGZZ8lhj3WvCOsRE9zjqUjdjcQq5OOa9XQjlf4kGSerNMB
-         4WyVw1Owjrx6/W+qDJ9iVmZDBYhkHGJCHCAKkatCzX/Njq12i4ZubjVelOLHAhaBk61w
-         IKAw==
+        bh=8u/AmDRTyguVPS15vuo1k2JAoSJfdZVWVLXGNvKqIt0=;
+        b=ku3wig1AiWHBNkRAJfejif03uN3tO2uDfduvHjk+/WRar3/mhNKf4tskEHF7PAmLec
+         Xns4szP/HFvKooK01lO/uOr+Xx+BIU6/qJY3gcKKn3yO7Bw0lqShoXMC0UCSczJWB5fg
+         eXAdTFkk+fiApgT5aqDBaw4HwHCl6FShBaRbsALMPVUYVay99fSmln/FwaRyHMPjZ7Cu
+         F76RtTo8WG1M5xEb90CxeD6RwPHPhK7Wl5MFKaFY6hDFM2SznAthmfjLMJSc3CuS94zK
+         uawmVZZ+HbxwTDWwq+jMqgJ3Bf3ZNR/GURPjwuKQH4NK9yn1lqAowYpQ3K9xTIM7CBYC
+         BRgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744725256; x=1745330056;
+        d=1e100.net; s=20230601; t=1744725262; x=1745330062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dxTErC+KnB5NGpCTc9/w/rpBQLv25Jj15o+pnsH3W3I=;
-        b=qf4610B1XyCxAmIxHj8Inx4DzdyHTYvgN74gp1frjSilPzynLTue+RbPs9fczuMSNs
-         VrnOPWo3iYzcZPWw2UsqAhWw9hQS0/Acd67UmXCOBG2rizN80BCt4KZuw0vMBf7kYWHh
-         gu3+WF32fgNSvHTJKteuGHiW2rpQFsPXDasxua8jaH7QHw/fvERUYU7HLrh2p5DcXYKu
-         qhksyCxrUZOTdzWnPRbK+LQLD4SGCU0geUZCCY6l66ynTF2Z+mkDxCtXjmFyN6zdW566
-         o1IkNC9ABOAa4jnNJTr5B/XzHDamNE2yPQZAppXke/SQz3mXEXqp2Ad+jLDVs8iIz7n0
-         72BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCre7fp0Ea4PQsuPrGUy01BYD0i81/WnUpEH4ZPOisSODTSLBM/WpE5N/AME3jAqxHAYonBpZc@vger.kernel.org, AJvYcCVUi3fuRrRxjF/TEsbKNOW8lm2kj4fFWHO8Dng6DUjeIoPyj5YqjiSkd0gHKWU+UVnfzxateQvSNMHco+0KoSg2GWs=@vger.kernel.org, AJvYcCVhMKTi99MCWPIH8qVmXAwgo0Mu6QXBcwPnecYHa3j5+5z4XNTc4Q1K6K24XOfctBFKGpoeocQ4PdFD@vger.kernel.org, AJvYcCXoTjIao/bdytctOFPZg2s3ahN2bXBO6XpREfXLKih+eVJ4A2KuwH/dsXGmlp7C72xef5fu+ObZDs7STr1q@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp5eM4pbnopimWnkqfvum2scnB67QDizXhUIKs3LqOzAYMKd36
-	oUI7G0FnE/KbRgNWbKRQSf3VShgE09Ap9Fr2Y3o4DDT+ZSPYWjeMqbQB3lcoNd/q9pN+Q6XyxjN
-	WrJCAtYJ7DLStv8UUWdjOJRtjhCg=
-X-Gm-Gg: ASbGncvNnClGKo8TxjWZfTWhgCh4URT2ByV4c7evAYmtMm42JuqQeGiqVRaZfr+9XPo
-	ouUzwFhTmmt64Ki7+qqJVspx3sX0Rj2NZaMdtpoy9U2+/WHzF/fg6RNft/fth+55fyAtJww1gAY
-	9XyuMCUb6hpyZ9KPzorpyo7uNZ2t8IRmJvQeNFgKdO+7vKcSNw+u0e6A==
-X-Google-Smtp-Source: AGHT+IHIlDUG50nBX2u1LH9CaXEXWCjuUqqrtu+RUgth3OiXGHRpRs4KPtJjbrXWad3okXBSN+tXr8a7mC+87EouhWY=
-X-Received: by 2002:a05:6000:18af:b0:391:4743:6dc2 with SMTP id
- ffacd0b85a97d-39ea52120e2mr13543818f8f.25.1744725256350; Tue, 15 Apr 2025
- 06:54:16 -0700 (PDT)
+        bh=8u/AmDRTyguVPS15vuo1k2JAoSJfdZVWVLXGNvKqIt0=;
+        b=Dh2XmOzOApTxXb2P9aIw+KlfrJXAyCvQ6YtGg530rQcDEi0nWd/ZGSLGF3kYxI9/IE
+         FztDlPIAxS7Qqnhu99dTLhBzd6BHWKFEG0GyBbJacWBwl/IVzJPN/olX9DKXQ4O2dRD0
+         C/8htqLo829vjhFOTig0b+GBwuhugUtcYAFCzyPTSHdRQZFYwPepm7x5fe97g6Eh3myX
+         7xwm1UNeonoCblvuzkR9x4CFGAMockMgWhddGx1PZ0gA2VjAP5HcPUI6JL4Vb4y54ofX
+         U/HL69fNQXRVozGi4pX1sGH+ziR9wkrafTQSou7dl+uc7bUEf45R9u/WHL92TGFcJ4Yw
+         OcZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiHS2s+crOKWiBTt8m20XWdaxkImHB98GQ8dV1RLb23pHe+mI22DfpKTD3WX4uXNOT6pMohd7B0kQ=@vger.kernel.org, AJvYcCVj+KD9KsaOPVErVNw2BB1ecS/GqbFddxaN+OgkyxbBk+uGNxfSpfd4avaLMQyaXbVeHS7HoePzLteKYijG@vger.kernel.org, AJvYcCXd9swfJtQcwlgjeo1uX8oMAQdabY5mv772EY5ENGc/V/KFl/UBRZkt4PnBw5YiKYHA+tHJ/hQd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxQyPcSh6V4+Jza6iJUVtrSuaFDaPEb/Ab6xfyKjU5m4Qf6A+R
+	nrsZkTVH5WAgLxBdEvY8jUEuS1smdXESKzvKgY4JW47tAh0KwLbOiTo9VFBDRylj9lq9GWI67q3
+	aLDUSpLsdQ6BIa+M02MNMraUPhAY=
+X-Gm-Gg: ASbGncuJSwTZHfpl7aUbODhJgZJLK23li3TCDlqGkGI0fxaejb1IkZGAQWm5tBbCgDt
+	nVo9rLgemngdrSjlOv3n7jrxjCfvTmCe2btY3f2ZA8uG6AkDA86b4ZlkKiQwavm3n2AkLU3/PUS
+	brFzPOSrVoCPcS8oqfKjDw2fwpl9M7cQPMnaOMY0ZtFO+ryUOj6sYxdClrIRfoGOk=
+X-Google-Smtp-Source: AGHT+IFncftquQsvM6bfh/Y2dgpRTHBlyTEX3Cse3b1bJHNcdPkrggiROQdsJEycAmbcnvsivaFxwRd0WVtvqZwZ3eU=
+X-Received: by 2002:ac8:5ac3:0:b0:478:e507:f6ec with SMTP id
+ d75a77b69052e-47977562f45mr289779871cf.23.1744725261700; Tue, 15 Apr 2025
+ 06:54:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415125642.241427-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250415125642.241427-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <c9d8f97470c3c5a8c0214af266b9579086460ba1.camel@pengutronix.de>
-In-Reply-To: <c9d8f97470c3c5a8c0214af266b9579086460ba1.camel@pengutronix.de>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 15 Apr 2025 14:53:50 +0100
-X-Gm-Features: ATxdqUE9J0buGzHkD1AbdOnLT3zfOWdA_YFucRbFLlm3VKoGvgJwL6K9gejz2HM
-Message-ID: <CA+V-a8tr=6ZgKSF5=CmRvrMO8ZSwtfD-cqSpi=5+5WwB-_pj_Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 3/4] net: stmmac: Add DWMAC glue layer for
- Renesas GBETH
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
-	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250414154050.469482-1-gshahrouzi@gmail.com> <1fb5f1c5e61ce386cb431d48296e952bdd560a6c.camel@gmail.com>
+In-Reply-To: <1fb5f1c5e61ce386cb431d48296e952bdd560a6c.camel@gmail.com>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Tue, 15 Apr 2025 09:54:00 -0400
+X-Gm-Features: ATxdqUHDElwhcKQXFR5mLMfMHxqVt-H7NGE6w7tSv_4jShaz4NFmHUQo7t9FlX4
+Message-ID: <CAKUZ0zLiP_w-4xOXfBDdZbm+M8yVYvd+A=M73fnRT_kMyWwk7Q@mail.gmail.com>
+Subject: Re: [PATCH v3] iio: adc: Correct conditional logic for store mode
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org, 
+	stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Philipp,
-
-Thank you for the review.
-
-On Tue, Apr 15, 2025 at 2:38=E2=80=AFPM Philipp Zabel <p.zabel@pengutronix.=
-de> wrote:
+On Tue, Apr 15, 2025 at 5:13=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com=
+> wrote:
 >
-> On Di, 2025-04-15 at 13:56 +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On Mon, 2025-04-14 at 11:40 -0400, Gabriel Shahrouzi wrote:
+> > The mode setting logic in ad7816_store_mode was reversed due to
+> > incorrect handling of the strcmp return value. strcmp returns 0 on
+> > match, so the `if (strcmp(buf, "full"))` block executed when the
+> > input was not "full".
 > >
-> > Add the DWMAC glue layer for the GBETH IP found in the Renesas RZ/V2H(P=
+> > This resulted in "full" setting the mode to AD7816_PD (power-down) and
+> > other inputs setting it to AD7816_FULL.
+> >
+> > Fix this by checking it against 0 to correctly check for "full" and
+> > "power-down", mapping them to AD7816_FULL and AD7816_PD respectively.
+> >
+> > Fixes: 7924425db04a ("staging: iio: adc: new driver for AD7816 devices"=
 )
-> > SoC.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 > > ---
-> >  drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 ++
-> >  drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
-> >  .../stmicro/stmmac/dwmac-renesas-gbeth.c      | 148 ++++++++++++++++++
-> >  3 files changed, 160 insertions(+)
-> >  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-g=
-beth.c
+>
+> LGTM, do you happen to have this device? It would more interesting to mov=
+e this
+> driver out of staging :)
+Unfortunately, I do not have this device. However, I would still be
+interested in contributing if possible. I was looking over
+https://lore.kernel.org/all/20230716144024.30ded663@jic23-huawei/T/
+where the goal seemed to be to modernize it by replacing the sysfs
+interface with the iio channel. I also looked through the datasheet
+and it seemed to be missing some stuff like a channel that can be
+selected.
+>
+> Acked-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+>
+> > Changes since v3:
+> >       - Tag stable@vger.kernel.org instead of an email CC
+> >       - Use the correct version for patch
+> > Changes since v2:
+> >       - Add fixes tag that references commit that introduced the bug.
+> >         - Replace sysfs_streq with strcmp.
+> > ---
+> >  drivers/staging/iio/adc/ad7816.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/=
-ethernet/stmicro/stmmac/Kconfig
-> > index 3c820ef56775..2c99b23f0faa 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> > @@ -131,6 +131,17 @@ config DWMAC_QCOM_ETHQOS
-> >         This selects the Qualcomm ETHQOS glue layer support for the
-> >         stmmac device driver.
+> > diff --git a/drivers/staging/iio/adc/ad7816.c
+> > b/drivers/staging/iio/adc/ad7816.c
+> > index 6c14d7bcdd675..081b17f498638 100644
+> > --- a/drivers/staging/iio/adc/ad7816.c
+> > +++ b/drivers/staging/iio/adc/ad7816.c
+> > @@ -136,7 +136,7 @@ static ssize_t ad7816_store_mode(struct device *dev=
+,
+> >       struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> >       struct ad7816_chip_info *chip =3D iio_priv(indio_dev);
 > >
-> > +config DWMAC_RENESAS_GBETH
-> > +     tristate "Renesas RZ/V2H(P) GBETH support"
-> > +     default ARCH_RENESAS
-> > +     depends on OF && (ARCH_RENESAS || COMPILE_TEST)
-> > +     help
-> > +       Support for Gigabit Ethernet Interface (GBETH) on Renesas
-> > +       RZ/V2H(P) SoCs.
-> > +
-> > +       This selects the Renesas RZ/V2H(P) Soc specific glue layer supp=
-ort
-> > +       for the stmmac device driver.
-> > +
-> >  config DWMAC_ROCKCHIP
-> >       tristate "Rockchip dwmac support"
-> >       default ARCH_ROCKCHIP
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net=
-/ethernet/stmicro/stmmac/Makefile
-> > index 594883fb4164..91050215511b 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-> > @@ -20,6 +20,7 @@ obj-$(CONFIG_DWMAC_LPC18XX) +=3D dwmac-lpc18xx.o
-> >  obj-$(CONFIG_DWMAC_MEDIATEK) +=3D dwmac-mediatek.o
-> >  obj-$(CONFIG_DWMAC_MESON)    +=3D dwmac-meson.o dwmac-meson8b.o
-> >  obj-$(CONFIG_DWMAC_QCOM_ETHQOS)      +=3D dwmac-qcom-ethqos.o
-> > +obj-$(CONFIG_DWMAC_RENESAS_GBETH) +=3D dwmac-renesas-gbeth.o
-> >  obj-$(CONFIG_DWMAC_ROCKCHIP) +=3D dwmac-rk.o
-> >  obj-$(CONFIG_DWMAC_RZN1)     +=3D dwmac-rzn1.o
-> >  obj-$(CONFIG_DWMAC_S32)              +=3D dwmac-s32.o
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c =
-b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-> > new file mode 100644
-> > index 000000000000..8674b7605d83
-> > --- /dev/null
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
-> > @@ -0,0 +1,148 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * dwmac-renesas-gbeth.c - DWMAC Specific Glue layer for Renesas GBETH
-> > + *
-> > + * The Rx and Tx clocks are supplied as follows for the GBETH IP.
-> > + *
-> > + *                         Rx / Tx
-> > + *   -------+------------- on / off -------
-> > + *          |
-> > + *          |            Rx-180 / Tx-180
-> > + *          +---- not ---- on / off -------
-> > + *
-> > + * Copyright (C) 2025 Renesas Electronics Corporation
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/reset.h>
-> > +
-> > +#include "stmmac_platform.h"
-> > +
-> > +struct renesas_gbeth {
-> > +     struct plat_stmmacenet_data *plat_dat;
-> > +     struct reset_control *rstc;
-> > +     struct device *dev;
-> > +     void __iomem *regs;
->
-> This doesn't seem to be used anywhere.
->
-I'll get rid of it.
-
-> > +};
-> > +
-> > +static const char *const renesas_gbeth_clks[] =3D {
-> > +     "tx", "tx-180", "rx", "rx-180",
-> > +};
-> > +
-> > +static int renesas_gbeth_clks_config(struct renesas_gbeth *gbeth, bool=
- enabled)
-> > +{
-> > +     struct plat_stmmacenet_data *plat_dat;
-> > +     int ret;
-> > +
-> > +     plat_dat =3D gbeth->plat_dat;
-> > +     if (enabled) {
-> > +             ret =3D reset_control_deassert(gbeth->rstc);
-> > +             if (ret) {
-> > +                     dev_err(gbeth->dev, "Reset deassert failed\n");
-> > +                     return ret;
-> > +             }
-> > +
-> > +             ret =3D clk_bulk_prepare_enable(plat_dat->num_clks,
-> > +                                           plat_dat->clks);
-> > +             if (ret)
-> > +                     reset_control_assert(gbeth->rstc);
-> > +     } else {
-> > +             clk_bulk_disable_unprepare(plat_dat->num_clks, plat_dat->=
-clks);
-> > +             ret =3D reset_control_assert(gbeth->rstc);
-> > +             if (ret)
-> > +                     dev_err(gbeth->dev, "Reset assert failed\n");
-> > +     }
-> > +
-> > +     return ret;
-> > +}
->
-> Apart from the plat_dat assignment, this function has two completely
-> separate paths. I'd fold its contents into renesas_gbeth_init/exit().
->
-OK, I'll fix that in v7.
-
-Cheers,
-Prabhakar
+> > -     if (strcmp(buf, "full")) {
+> > +     if (strcmp(buf, "full") =3D=3D 0) {
+> >               gpiod_set_value(chip->rdwr_pin, 1);
+> >               chip->mode =3D AD7816_FULL;
+> >       } else {
