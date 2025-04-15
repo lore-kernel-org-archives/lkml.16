@@ -1,104 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB1017A317;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AE7EEA9;
 	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728456; cv=none; b=jPLdLQc5EM8XU/7gtTRaM/IOsexqnC2GYujnK7+nM8/HUX+XBJ4OUjTPRl0UxRU6EMvNepBhv+Ufm4BouX3wvIqF0kVLDDAuKVXGdlTI3u3AI2A89qHrmhdDsdu1GRmcQVsHrlI8WLJQC/rNaFruh7sFnfXtqV51xLanKat05Gs=
+	t=1744728458; cv=none; b=ozTrwAP1lxFDyQJzNEXi0gqZLopHiTnRTjYEXF1EcmV2or1xBuyALeMBxJLXKtU6zMiXHOP+qKgBv1sae78A6fweka6vbfehQj8Ei2Wsk+3XXswQUr38uNOOT/olMl3DnBscJ7HuzveYN+PPasIBFKRzA/w/e3ud8PeTDXEB8W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728456; c=relaxed/simple;
-	bh=GW6rmLEB+/jR0gzntBZE6oCSjXW/0GJVVJVpvKoCtfc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LUQclM/BKQ3GefStw+qQvBPe4kAgaHQ5UPeVy6Rk8PwQXgmM7I3GAT4iIuid3D4G5HmEN91p2c4LIeI9nsLCo3l67zybIQv307VoCSwtWGcgmALiu739ZEkO8VgGbkaQ5A7QUJH/Bgfzc791Ja24N6oIBXc7ngcH8CU/hJqJLlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zk1CgVzY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zk1CgVzY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 878D9C4CEE5;
-	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744728455;
-	bh=GW6rmLEB+/jR0gzntBZE6oCSjXW/0GJVVJVpvKoCtfc=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Zk1CgVzYnx7oMucamAHdVdoOfUm3MSz3BoP5sXAOgTjqF5vv7Fwm3JObOowYPkYPJ
-	 Q5zstOHUGiOwTXgIZZMXB0Crb+6S4FSWMhncbcpo3xoDFggqaix4kk7rnc6v9lxJS5
-	 UJqmhdh3z5pcL8aHmFaYT3c5kryybotKAgziWSZLjLM0CWotnALbvuU0Pxv3QAqcwO
-	 gxtSCPsjoqr2Uo+ZgmvdHC7CdSFlsAU4pN8zc1S/iJCaKiQ00QZMAf+OUQcdljc1bo
-	 DfoRWaHhXmvkyA2akaw3QO7OtRqHMz0VZciqCv6pzBM0k9PUUYaCfmslZwulyZ8q/j
-	 lWuDZP+D7GumA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D767C369AB;
-	Tue, 15 Apr 2025 14:47:35 +0000 (UTC)
-From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Subject: [PATCH v2 0/2] Add support for WoM (Wake-on-Motion) feature
-Date: Tue, 15 Apr 2025 16:47:30 +0200
-Message-Id: <20250415-losd-3-inv-icm42600-add-wom-support-v2-0-de94dfb92b7e@tdk.com>
+	s=arc-20240116; t=1744728458; c=relaxed/simple;
+	bh=yehWU6Cn1U0Ig31Ss4U++BRxjRmpPRpJ3DovWt/2v+w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=PWwWFzEk8vJHIfX42NSP3VAPSAJNo0RGUQfhKwyruiU7XS1zpREw2cspsys84dx8ojLs3/36IQoH5MTQ5hC08oXubLoNJUyZqDuBHTVJSTxAEukDsPsoBreiT+U7OE7MaO426AsRDLceAeptal/L39Ke5WrWPije6RDWL0/h93U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZcRp62VGNz9tRl;
+	Tue, 15 Apr 2025 16:47:26 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIJx/mcC/5WNSw6CMBBAr0Jm7Zhx+GhdeQ/DAmgrE4WSFquGc
- HcrN3D53uK9BYLxYgKcswW8iRLEjQl4l0HXN+PNoOjEwMQlMRM+XNCYo4wRpRsKroiw0RpfbsD
- wnCbnZ6SKyRqrdMs5pNLkjZX3drnWiXsJs/OfbRoPP/tfPx6QULUqP1p1qlRZXGZ933dugHpd1
- y/W0xKX1AAAAA==
-X-Change-ID: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744728454; l=1534;
- i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=GW6rmLEB+/jR0gzntBZE6oCSjXW/0GJVVJVpvKoCtfc=;
- b=Yb4lqMPuRKStcCXktJRLJOTaN8pYqhSL6Bbwgc6KcEZO3aE2jCejFsr5xle77v3m3Eir8k3ht
- sua8y/RfdJ3D12NX37dIHDPeN8OUOWzEix/l2R1JqJpgNHX8XstWl2x
-X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
- pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
-X-Endpoint-Received: by B4 Relay for
- jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
-X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Reply-To: jean-baptiste.maneyrol@tdk.com
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 15 Apr 2025 16:47:21 +0200
+Message-Id: <D97AM4S7VLL2.260GHNH82O60I@buenzli.dev>
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Rob Herring" <robh@kernel.org>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-3-remo@buenzli.dev> <Z_1Jfs5DXD2vuzLj@cassiopeiae>
+ <D96RNFS3N8L2.33MSG7T019UQM@buenzli.dev> <Z_4rVyUjK1dlnTsT@pollux>
+ <D9760KMM0PSB.HONQ7MUG8OTN@buenzli.dev>
+ <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+wGopPRcdp6t0h2cu03vrxxP3=msNmpju4nqq9XENmng@mail.gmail.com>
 
-Similar to feature present in older chip, it compares the magnitude of
-the last 2 accel samples against a threshold and returns an interrupt
-even if the value is higher.
+On Tue Apr 15, 2025 at 2:46 PM CEST, Rob Herring wrote:
+>
+> Adding PropertyGuard changes the API. I don't think it makes sense to
+> review the API without it and then again with it.
 
-WoM maps best to accel x|y|z ROC event. This series add system wakeup
-functionality if WoM is on and wakeup is enabled when system suspends.
-
-This series also prepare the driver for supporting further APEX
-features like pedometer, tilt, ... It introduces an apex structure that
-will hold all APEX settings and track the enable state.
-
-Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
----
-Changes in v2:
-- change struct order to avoir DMA overflow
-- separate wom enable/disable in 2 functions
-- delete mutex rework
-- Link to v1: https://lore.kernel.org/r/20250220-losd-3-inv-icm42600-add-wom-support-v1-0-9b937f986954@tdk.com
-
----
-Jean-Baptiste Maneyrol (2):
-      iio: imu: inv_icm42600: add WoM support
-      iio: imu: inv_icm42600: add wakeup functionality for Wake-on-Motion
-
- drivers/iio/imu/inv_icm42600/inv_icm42600.h        |  56 +++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c  | 283 ++++++++++++++++++++-
- drivers/iio/imu/inv_icm42600/inv_icm42600_buffer.c |   2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c   | 103 +++++++-
- 4 files changed, 430 insertions(+), 14 deletions(-)
----
-base-commit: d3d6cb27a945c6fc7ddd3e7423c4303b4b6bad36
-change-id: 20250220-losd-3-inv-icm42600-add-wom-support-0620fef9db23
-
-Best regards,
--- 
-Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-
-
+We could add the PropertyGuard first and introduce the users later.
+Then they are in separate patches and the API doesn't change.
