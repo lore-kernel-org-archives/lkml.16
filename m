@@ -1,111 +1,116 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CA229E061;
-	Tue, 15 Apr 2025 12:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8131F4629
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 12:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744719763; cv=none; b=AA+6OLwZxjlwbfIrrauESmNjgt3QI0JJd9Cle5piVESmh0ttL3ziaKAGtfH1Fs4fPgJsGhUrwQtcTYU5vGAtIzgeiDMyZ4BAunv2S5UfAImJye8oRYWWz+W27JqptlhtRbejG3+smshRvlj5NQwnH1WWm3WnD42WJBmEgok8FEU=
+	t=1744719844; cv=none; b=cYKpt83eCtRdLJdgN592UuvlH1XKStikz5fuwBwlcb64lYh/NIyxAbwi1mSoRq5J4q4j6B9XGO5D2UXjfCKjbIxj8KQr7LcYopbeDozwSr1/uU1Is0UXeUdELzH/lYn9USDI7icCesL61bqDCDQNrZJGVjNUHGvdmIsXhnO/B3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744719763; c=relaxed/simple;
-	bh=D4eEpj/ycymL1dKwAiypTkZdxNwjEWty1bTxfH4ci8o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aMiGb8CdoTwWMVhQxxwww7jYwnvZMUdHEr7+USHcpPSxdXurie/tnyl8PdYA5rey3sjk26vCdLDTydkVdrOyAonHucP4vUac9wkGcjJ3rwYKBTcl5OprMEN+LlCBYQEyXLWnuo9X/7zVylU46n5xAlUrbeEH4k9ci503D9uOpmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=rfcIg5br; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744719844; c=relaxed/simple;
+	bh=b/pzgfnIhjNBJcq/S8/1l0RsJNTfD6XOM3mOkmG1ntk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avVQIxbq+ZL7RJ6fS2WjZhqDeK0RTw8MKGLUtJ/c3TurrrwXT6AlCcF0zoi9G8PZ2BjvVNG2wKhZhe3AZuDr8cMFoWmDtFtb3Uv2kE5bXJW7ZNDkboQMHO7mfflp3uQufXSTgJoNI5xwfxDY3jqpD1tJuqKcQMsQmmUJhxFihGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ThisYkbb; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="rfcIg5br"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53FCMKelC1309616, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744719740; bh=D4eEpj/ycymL1dKwAiypTkZdxNwjEWty1bTxfH4ci8o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=rfcIg5briub8VqHwihOriwXxttbXBsaM3dve489uAcrhMssAgzlZvEwNQNEHhsjdP
-	 5ceLkwSk+ocjPl1mN0pRjmVP3i4mvDG5Gb3fwgwr7A/lfU6fj8pNHTxVU5EXpNfYY/
-	 uiI7RWiaYPNqas9L9VMv8Iv6Z4qqhuRkVtgFSPKDLqZIXGZiMpSxofViPu/aERkaOT
-	 ++9yTbuAQFKKLdMmsS5ByzMvLgWdsHwmMHcKD7+qHBFqTdOnx6RbGxDQ4UkRFrneUh
-	 aBT8gzSlG7SUdttW5KiVDN0KUAG/DaeMEmssmlFspol91D473UBzd/kBh7sDSeTyhX
-	 Fyj0Kuyp0X9HA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53FCMKelC1309616
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 20:22:20 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 15 Apr 2025 20:22:20 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 15 Apr
- 2025 20:22:14 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
-        "kernel
- test robot" <lkp@intel.com>
-Subject: [PATCH net 2/3] rtase: Fix the compile warning reported by the kernel test robot
-Date: Tue, 15 Apr 2025 20:21:43 +0800
-Message-ID: <20250415122144.8830-3-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415122144.8830-1-justinlai0215@realtek.com>
-References: <20250415122144.8830-1-justinlai0215@realtek.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThisYkbb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744719841;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wkzv6EQZzHxHc8eCWYu69gq70uV4laVRsXuWVaOH3yI=;
+	b=ThisYkbb4+GrHXvDmY03cyxiMEat+ylzC6qZDNIIpSJU241gKwBZmvuSbIcRnKI7jp1EIr
+	ZIoHpshp/MGcWn/q6qs8YopqaOgP7mvbKdAYdtsjHoFPzKbZpYYHxg6J+yJBNu31xn0Rz4
+	nc836tXucXMsxp3MSwxGd9UDTVCwt+Y=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-66-kUD4lY17PE66YQGqoFajoQ-1; Tue,
+ 15 Apr 2025 08:23:57 -0400
+X-MC-Unique: kUD4lY17PE66YQGqoFajoQ-1
+X-Mimecast-MFC-AGG-ID: kUD4lY17PE66YQGqoFajoQ_1744719836
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 88C1919560BB;
+	Tue, 15 Apr 2025 12:23:56 +0000 (UTC)
+Received: from f39 (unknown [10.44.32.35])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9A3C180886A;
+	Tue, 15 Apr 2025 12:23:54 +0000 (UTC)
+Date: Tue, 15 Apr 2025 14:23:51 +0200
+From: Eder Zulian <ezulian@redhat.com>
+To: Nathan Lynch <nathan.lynch@amd.com>
+Cc: Basavaraj.Natikar@amd.com, vkoul@kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ptdma: Remove unused pointer dma_cmd_cache
+Message-ID: <Z_5P1563zcU3xpek@f39>
+References: <20250409114019.42026-1-ezulian@redhat.com>
+ <87v7r673kv.fsf@AUSNATLYNCH.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v7r673kv.fsf@AUSNATLYNCH.amd.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Fix the following compile warning reported by the kernel test robot by
-increasing the size of ivec->name.
+Hello Nathan,
 
-drivers/net/ethernet/realtek/rtase/rtase_main.c: In function 'rtase_open':
->> drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:52: warning:
-'%i' directive output may be truncated writing between 1 and 10 bytes
-into a region of size between 7 and 22 [-Wformat-truncation=]
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-                                                     ^~
- drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:45: note:
- directive argument in the range [0, 2147483647]
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-                                              ^~~~~~~~~~
- drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:4: note:
- 'snprintf' output between 6 and 30 bytes into a destination of
- size 26
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       tp->dev->name, i);
-       ~~~~~~~~~~~~~~~~~
+On Mon, Apr 14, 2025 at 05:58:40PM -0500, Nathan Lynch wrote:
+> Eder Zulian <ezulian@redhat.com> writes:
+> > The pointer 'struct kmem_cache *dma_cmd_cache' was introduced in commit
+> > b0b4a6b10577 ("dmaengine: ptdma: register PTDMA controller as a DMA
+> > resource") but it was never used.
+> >
+> > Signed-off-by: Eder Zulian <ezulian@redhat.com>
+> > ---
+> >  drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ---
+> >  drivers/dma/amd/ptdma/ptdma.h           | 1 -
+> >  2 files changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > index 715ac3ae067b..3f7f6da05142 100644
+> > --- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > +++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+> > @@ -656,8 +656,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+> >  	kmem_cache_destroy(pt->dma_desc_cache);
+> >  
+> >  err_cache:
+> > -	kmem_cache_destroy(pt->dma_cmd_cache);
+> > -
+> 
+> I think you could remove the 'err_cache' label and convert the users of it
+> to return -ENOMEM directly, since there aren't any unmanaged allocations
+> to unwind:
+> 
+> 	desc_cache_name = devm_kasprintf(pt->dev, GFP_KERNEL,
+> 					 "%s-dmaengine-desc-cache",
+> 					 dev_name(pt->dev));
+> 	if (!desc_cache_name) {
+> 		ret = -ENOMEM;
+> 		goto err_cache;
+> 	}
+> 
+> 	pt->dma_desc_cache = kmem_cache_create(desc_cache_name,
+> 					       sizeof(struct pt_dma_desc), 0,
+> 					       SLAB_HWCACHE_ALIGN, NULL);
+> 	if (!pt->dma_desc_cache) {
+> 		ret = -ENOMEM;
+> 		goto err_cache;
+> 	}
+> 
+> Otherwise LGTM.
+> 
+Thank you for your review and suggestion. Please find a link to the v2.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.com/
-Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- drivers/net/ethernet/realtek/rtase/rtase.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/dmaengine/20250415121312.870124-1-ezulian@redhat.com/
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
-index 2bbfcad613ab..1e63b5826da1 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase.h
-+++ b/drivers/net/ethernet/realtek/rtase/rtase.h
-@@ -259,7 +259,7 @@ union rtase_rx_desc {
- #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
- #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
- 
--#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
-+#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 14)
- 
- struct rtase_int_vector {
- 	struct rtase_private *tp;
--- 
-2.34.1
+Eder
 
