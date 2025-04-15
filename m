@@ -1,181 +1,106 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9860F15E96;
-	Tue, 15 Apr 2025 13:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8641EA91
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724047; cv=none; b=uBtMp/60qsCLSnrymIwukfVMte3xoHzpxrvXlO/GB3hfXUVsZ6MoV6IffR/ai4fAcTN80Olj5u8/Z6ghirly06s3PGTKExOYl2fVNj9HGXI7GbF1dO66Y99PARwAQFQYQf0GIzcv6rGS1IGRie/mlKXnh1zPGgdx4MvHsp5N5LM=
+	t=1744724080; cv=none; b=fRT3LYUbACVMSuYZB+B5lz5Z/E5ew7E5HtDAAinQwSv9xjVfi0MWSNww1QmZ01GiGN2rSmePsXutc7ZRcUW8dgOp/ydVEBNqjdbRo9HydbhgtX+/lKRXIycCzlpEQNlLJtjidaBI2OGvXqRf4CI3CQhU3JkYf+wOk9FC2WaKpws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724047; c=relaxed/simple;
-	bh=D8QE8JgrUBczpSJWqnmRKCNqoinTq+e1JucXx1W1WZQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P6/GuscI1K7RthuXdQiRhfWw9dZK2nFkXkY2UZmKCPU/lTfeSpfvT7W7ujKJify7l1QCBAIEKR+ymWJqP8c59OCYOoe+WWzhC4QVWAd2oHd/qwVsg0QSJs13DZtei+W5+fwhl6BItAK1SAot3AONbHcYjyqkP0DXdtzxVgBMS0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=E3GQRXB6; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1744724080; c=relaxed/simple;
+	bh=OjK0XJ46y3jXAILf9s+jwpNgMQ658DzTtoQ7CdC3VPQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fl4idgvZNz3WQOjzoLvv7bsVyXrBpLU8eQz0JnXVS3lrV9XvATWL+dPMyZUWkCgDQaQtJHO0E33GBtIPk9vyAFFtwXnIZotBkstmSGOzoFZwKFCPIBIN98Ncwi2Kxqtwab4Ve6o0I0xpIZhqJJwpd4BgatoLGE41J5roh67CrM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SUJM4pyE; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="E3GQRXB6"
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.100])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id 80BD52618F;
-	Tue, 15 Apr 2025 13:34:03 +0000 (UTC)
-Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
-	by relay1.mymailcheap.com (Postfix) with ESMTPS id 681FB3E8C9;
-	Tue, 15 Apr 2025 13:33:56 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 083A540009;
-	Tue, 15 Apr 2025 13:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1744724034; bh=D8QE8JgrUBczpSJWqnmRKCNqoinTq+e1JucXx1W1WZQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E3GQRXB6izAkdBxeI74SACdHR7L6l2Yf8MEeWrrO94EtzA8nsTm+3ERCO3/TaMc71
-	 BKfcoZhtaFH5PXs1WtAva6yeWSMacyTmu/lUH4fx9e1vyCtqN/hFae4Euf6n1bfDre
-	 HP6xpZJ9CY41O3c5Cz2usbwyebRfejbuYqNyqsjA=
-Received: from JellyZhongke.localdomain (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 5BBC74073B;
-	Tue, 15 Apr 2025 13:33:49 +0000 (UTC)
-From: Mingcong Bai <jeffbai@aosc.io>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	intel-gfx@lists.freedesktop.org,
-	Mingcong Bai <jeffbai@aosc.io>,
-	stable@vger.kernel.org,
-	Wenhao Sun <weiguangtwk@outlook.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu: intel: apply quirk_iommu_igfx for 8086:0044 (QM57/QS57)
-Date: Tue, 15 Apr 2025 21:33:29 +0800
-Message-ID: <20250415133330.12528-1-jeffbai@aosc.io>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SUJM4pyE"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-549946c5346so6265570e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:34:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744724077; x=1745328877; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JRbWLe8uR6+Ruh67h/yoUWYHHmofvLoQK7bKV1fiz0s=;
+        b=SUJM4pyEPzwHkAaUe8NOhwuoxMyJpfQ2ftc2ecJVQCWkVGXrozPU4vyeNkG7tdI1e0
+         PlPRYs/VWnvxBa4Nh3SjpEZVxNUbGXZgzXszpL8BRv1jesfjJW+MJVg5e2Iau9EbsoDZ
+         dFH+v+fNWSDE51GEsQjCpwSa2mplJnMXty06NRIUwO5Q53v+WHqXaH+Rtk71HzXplW68
+         LcfgL70P4QdenulPlY+MPpYSqNsHkennGIEoYOMn5qL24SnPpA/YbUCiwSjAhfYPz6kn
+         c/2pSW+eYmxOwm6OsCVTaJ3azB2jZRqDGTkY1fMTcSulEPPczfFAWjgGT0Q08fplb4wr
+         8gmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744724077; x=1745328877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JRbWLe8uR6+Ruh67h/yoUWYHHmofvLoQK7bKV1fiz0s=;
+        b=gXW5SaLPdGO0ILmkE8rGeMIoGNp6HHYv0sfXlVpdmq0pLYgLJQwYA7UFuXQ3FgoRyz
+         jxYHr4swxbxLAo+R6qKWfu5Qi7EAa4+9v5aQckEdCdoHnNp1R/2GTNOTtukYV9kps1J1
+         h+cvvl9ZrLkQOt/sFE68ZdWotmA2ef0uA+v0wK/FUAWk6Qs80gf3D9L0BYde9bINSquD
+         WTwT6Ahj3/z8g3XAeTey1doNf/xmj0Cxsme4V4P0wrtrI3viIDylxtmeUw6GZCACwK/8
+         Vn6PT5N5OJoXke+T6LdfiyVmxjWExzOkKEi/M/yTjgSX7wnKwvSJeBlprdi4am5mtSYL
+         udIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUx7KraRtg7RbPI6ZCjgSHh881bPWLrEYnEeCoyHATLfs/6DiSUz8KDTxJlnoKtvktoJA81uafUa/5lDrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmlN+L+jXT/TWVWJG1z4VEVT6Q7VWJrcxRi4z8MKn0kNu5qyzU
+	+4iAnHMg4DOJfUwQfRRCegdeaQi8eHSOfIWwrcWf1D5NbLricOPCZygtadEePBjKeItJYqK1qAu
+	0lRRJ+xPpSS8AfAk/7olINpsxlTG9NO7N9yyEaB/TQ55RqgDW
+X-Gm-Gg: ASbGncs86/jBK+ax+5I1ZZ/AaV+ZzW3wVPHoHQVVXn4JQnxl5WMifdaoDVgYcJbziRT
+	uLBd2l6ACs1Ep/8vxqLobbTl3MW2xrMB5wCq/MEuRcMg0jZHLInVOzREyPx3+FO8dDlp0ZegIjx
+	tvcp43NZPSY0efRmRscXrPeA==
+X-Google-Smtp-Source: AGHT+IEqPbPcf25mevdtkKDV6Fu+XRejh24WiH4D40O8WO7gYV8t0TQe0MF4yA5cyBf8Yjg2SvmSG81yhNrMiWcs3lg=
+X-Received: by 2002:a05:6512:1106:b0:545:2f97:f6e9 with SMTP id
+ 2adb3069b0e04-54d452ca7bcmr4104272e87.42.1744724077079; Tue, 15 Apr 2025
+ 06:34:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 083A540009
-X-Rspamd-Server: nf1.mymailcheap.com
-X-Spamd-Result: default: False [3.19 / 10.00];
-	BAYES_SPAM(1.79)[85.81%];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[aosc.io,lists.freedesktop.org,vger.kernel.org,outlook.com,infradead.org,8bytes.org,kernel.org,arm.com,intel.com,lists.linux.dev];
-	FROM_HAS_DN(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,weiguangtwk.outlook.com:server fail,stable.vger.kernel.org:server fail];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[outlook.com];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
+References: <20250414203551.779320-1-superm1@kernel.org>
+In-Reply-To: <20250414203551.779320-1-superm1@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Apr 2025 15:34:25 +0200
+X-Gm-Features: ATxdqUGANNzFO3svuoLX47zpuOlc5Ol6z4O2iG_JyD2ta49DsLYE47fIs0OLH-k
+Message-ID: <CACRpkdaHru55wo5MdVsRKRbfPS9Hv3vGxgXNi8eXGvAOQzyDww@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: amd: Fix use of undeclared identifier 'pinctrl_amd_s2idle_dev_ops'
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-acpi@vger.kernel.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On the Lenovo ThinkPad X201, when Intel VT-d is enabled in the BIOS, the
-kernel boots with errors related to DMAR, the graphical interface appeared
-quite choppy, and the system resets erratically within a minute after it
-booted:
+On Mon, Apr 14, 2025 at 10:35=E2=80=AFPM Mario Limonciello <superm1@kernel.=
+org> wrote:
 
-DMAR: DRHD: handling fault status reg 3
-DMAR: [DMA Write NO_PASID] Request device [00:02.0] fault addr 0xb97ff000
-[fault reason 0x05] PTE Write access is not set
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> `pinctrl_amd_s2idle_dev_ops` is hidden under both `CONFIG_ACPI` and
+> `CONFIG_PM_SLEEP` so the functions that use it need the same scope.
+>
+> Adjust checks to look for both, and while updating make it CONFIG_SUSPEND
+> instead as that's what the acpi header uses.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202504100420.88UPkUTU-lkp@i=
+ntel.com/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v2:
+>  Use CONFIG_SUSPEND instead of CONFIG_PM_SLEEP
 
-Upon comparing boot logs with VT-d on/off, I found that the Intel Calpella
-quirk (`quirk_calpella_no_shadow_gtt()') correctly applied the igfx IOMMU
-disable/quirk correctly:
+This seems to be based on the previous fixes merged by Rafael?
 
-pci 0000:00:00.0: DMAR: BIOS has allocated no shadow GTT; disabling IOMMU
-for graphics
+Do I need to rebase on -rc2 or something to merge this patch?
 
-Whereas with VT-d on, it went into the "else" branch, which then
-triggered the DMAR handling fault above:
+Or can Rafael queue this too?
+In that case:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-... else if (!disable_igfx_iommu) {
-	/* we have to ensure the gfx device is idle before we flush */
-	pci_info(dev, "Disabling batched IOTLB flush on Ironlake\n");
-	iommu_set_dma_strict();
-}
-
-Now, this is not exactly scientific, but moving 0x0044 to quirk_iommu_igfx
-seems to have fixed the aforementioned issue. Running a few `git blame'
-runs on the function, I have found that the quirk was originally
-introduced as a fix specific to ThinkPad X201:
-
-commit 9eecabcb9a92 ("intel-iommu: Abort IOMMU setup for igfx if BIOS gave
-no shadow GTT space")
-
-Which was later revised twice to the "else" branch we saw above:
-
-- 2011: commit 6fbcfb3e467a ("intel-iommu: Workaround IOTLB hang on
-  Ironlake GPU")
-- 2024: commit ba00196ca41c ("iommu/vt-d: Decouple igfx_off from graphic
-  identity mapping")
-
-I'm uncertain whether further testings on this particular laptops were
-done in 2011 and (honestly I'm not sure) 2024, but I would be happy to do
-some distro-specific testing if that's what would be required to verify
-this patch.
-
-P.S., I also see IDs 0x0040, 0x0062, and 0x006a listed under the same
-`quirk_calpella_no_shadow_gtt()' quirk, but I'm not sure how similar these
-chipsets are (if they share the same issue with VT-d or even, indeed, if
-this issue is specific to a bug in the Lenovo BIOS). With regards to
-0x0062, it seems to be a Centrino wireless card, but not a chipset?
-
-I have also listed a couple (distro and kernel) bug reports below as
-references (some of them are from 7-8 years ago!), as they seem to be
-similar issue found on different Westmere/Ironlake, Haswell, and Broadwell
-hardware setups.
-
-Cc: stable@vger.kernel.org
-Fixes: 6fbcfb3e467a ("intel-iommu: Workaround IOTLB hang on Ironlake GPU")
-Fixes: ba00196ca41c ("iommu/vt-d: Decouple igfx_off from graphic identity mapping")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=197029
-Link: https://groups.google.com/g/qubes-users/c/4NP4goUds2c?pli=1
-Link: https://bugs.archlinux.org/task/65362
-Link: https://bbs.archlinux.org/viewtopic.php?id=230323
-Reported-by: Wenhao Sun <weiguangtwk@outlook.com>
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
----
- drivers/iommu/intel/iommu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index b29da2d96d0b..64935e14b9ec 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4432,6 +4432,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2e30, quirk_iommu_igfx);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2e40, quirk_iommu_igfx);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2e90, quirk_iommu_igfx);
- 
-+/* QM57/QS57 integrated gfx malfunctions with dmar */
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0044, quirk_iommu_igfx);
-+
- /* Broadwell igfx malfunctions with dmar */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x1606, quirk_iommu_igfx);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x160B, quirk_iommu_igfx);
-@@ -4509,7 +4512,6 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
- 	}
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0040, quirk_calpella_no_shadow_gtt);
--DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0044, quirk_calpella_no_shadow_gtt);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x0062, quirk_calpella_no_shadow_gtt);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x006a, quirk_calpella_no_shadow_gtt);
- 
--- 
-2.49.0
-
+Yours,
+Linus Walleij
