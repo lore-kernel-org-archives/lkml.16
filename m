@@ -1,55 +1,55 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA9324503A;
-	Tue, 15 Apr 2025 19:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63E823D2A4;
+	Tue, 15 Apr 2025 19:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744744942; cv=none; b=bC0oxJewlAjOKY5qBjHRMyq7MPLv1qXAeHh79U4wuLoA8hJGzKHMcg22JAfkq+PP7aleCZkK1qIpMSGIYuGJ0/pifEuXIO14ITPWueKZ9BEDGoHJNdRTg7QjgL4Tl446gg04GIMZKEiuR28ALRvGbXTCXiT44JjI5I+8o9pHnMA=
+	t=1744744942; cv=none; b=lmndI9s9lYGMf4Cu/bYD/Z7xnAeX0eDga0vk/Co4ifKOW8vXQvhDiBlpwlxaSI7FBPqQCKVjesTSexis4oJYIXJR//FvQasbKcQE8t+JCs03YZWdXPipvI7IsDodGY/xnY8caZuyy/WhXajwuAhAY2Jb8vXkMJQRWpBcto0UmRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744744942; c=relaxed/simple;
-	bh=ft54p6bhTxDj+z0qJTAsmGd30EjVDhq/ynj+X5E4H/g=;
+	bh=nm1E1FEVMIfYg7pbvLYIfRTfxicisS5FpQYS0urX5/Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ciAIGGu+NP/s8fDN43wVT/rH9hkUIXEje+gRLLiVwN8bJPVpjF6Kg4plzmxxyxAEXZSOo6LhiUdgufSSGexq/FPyvPjs8WGKlNwN9FDYdwEHH/bV9ReQmfnmthhjYS7FYl8PjPRft//jaD/bu/beYKabc3mAY5Xw8WT8byXHdd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=GSvR5vFq; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Gygb56/N; arc=none smtp.client-ip=103.168.172.156
+	 MIME-Version; b=NqE0rhvTJz+vHML9OnVebKWGzVAJPfCXRTCGlop74yrhXF4n5VaNvBZG0qquz/Vl6noQXpDmbbt50n54UERd0O0DgcqWWc1AZ7g3BsofRxb2nHrUcqnu0wflNFoWZPoWS76RdQdHCcobV1it5qgY+d47f6V73H4Pdp6uT4Ew67Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=nWzMEJ6G; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AR7syuZC; arc=none smtp.client-ip=103.168.172.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="GSvR5vFq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Gygb56/N"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 0BADE11401BE;
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="nWzMEJ6G";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AR7syuZC"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id B982813801DB;
 	Tue, 15 Apr 2025 15:22:19 -0400 (EDT)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-05.internal (MEProxy); Tue, 15 Apr 2025 15:22:19 -0400
+Received: from phl-frontend-02 ([10.202.2.161])
+  by phl-compute-06.internal (MEProxy); Tue, 15 Apr 2025 15:22:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
 	cc:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to; s=fm2; t=1744744939; x=
-	1744831339; bh=zNG1YKUsmyDP/ojfVRvL6wcBsNKK7C86m9dSyKIqDh8=; b=G
-	SvR5vFq7pJ6IVgUWVYyRCthVZYfp42xWizOdCXTZe4xJJFIHmt6mnh5nnJAY2CMM
-	YNC/fdyCkzukzpEeNUMbJgOGx5yhYR1DeCG0xShc5oWZJ8E0yfXcsC0HJuj+tKqV
-	CO/7EvzYtftM/bssMoNa+OL2pGiZYfg09gi84m8aTDHzm1eGWz/2vmtZ3N4vgtZZ
-	7g/TR3UBulotuf6onK2cLawtPTYNykuXdU7sD8AlS6DqENiaUDgvE5aOX3hfDbM+
-	9tzVSDmfKDQm0nFYrjX9Tr5WhQiIjApU0vMsa9MwTqMN8Rlo3/yEBygdP3aNkpwn
-	eYleefb2KNzsC8dxuhFbA==
+	1744831339; bh=clBP/AOC+t0fTcP1nwoYlcZ2Ogk0dwhdHt+FVl4HuhU=; b=n
+	WzMEJ6GIq/0jujeV4cf14lB0cWoVTk8AQighnIQHd6T0Boy2U5bNtmhhXqRyU6aI
+	zRvN/R1d3Kg4EnZZIyK/GZoBB+0WxKnOxcE7MDCjq77mNuCPsJVUtJpwASd1ol3F
+	B586GgRPuMX7BL2FQwHjlqAA3G5T4Nm/H4VE3ni66dgskLCBdjwBzcS6bkWn5Y3t
+	8ch3GMv+4hMRVqFVClJeuPCsyTfOdZLibkI6HbUFW97KyR/gcsndqKGRGiOi2xJe
+	MSJCyILCn+tA4ivLLBF7mm7/0F9Pcb9UVg2RlGte/GphXZZhriI4xlsDQf9DZD84
+	w8UEIeD6L72ACsXjr0dZg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1744744939; x=1744831339; bh=z
-	NG1YKUsmyDP/ojfVRvL6wcBsNKK7C86m9dSyKIqDh8=; b=Gygb56/NugqO1PuGX
-	mMAcaVLa5yPvQCURno3XhjB76khWPAFCIxhumsh9L6RIyIOMS6t1YQpsYwutx39J
-	K+KSfgYgTIDKP8wfXOgdIWOWNDKd9y0PUkB/IM4pQgIBoMEviIsqAbXApegRjCd6
-	+L1rM3GmIIVHmlIq+2/KDilrcOcKtN88QyWxqBOa7i74keAYabeZHh+GLU1a8zu+
-	t7wN57Iw10uyd9BSs2PgNeieaKYsMDDpbxUL4Z5ux0XTZdHY/g27kRXweOL01wjp
-	QLRYx/bNejWKpXpGlaR1sZnOHbABaBs1rPDX2vInhXRuPfHw/1Op+R4Mcp3G7VeI
-	tRUOg==
-X-ME-Sender: <xms:6rH-Z-GHlB6M-iw6v1qAJ7_30nYjTqm89U3iCFDWP6OwIVOLIlbL0Q>
-    <xme:6rH-Z_UctCBfpNtnexacr1Jotu4XJPNmBNKDLB5Ag3YkRSuwqSg-WpQQjnQ2WMzbH
-    Iupg7gIr6RQdTEBYNo>
-X-ME-Received: <xmr:6rH-Z4LK8N2IBfCzsUooiDM2Yktje7hDNgecPdSjsPRFfeSnhsNGrvmXjL-7bzxDlYtQesFaYluP6TgdBjgV3jLI1DLirf_EeOFKohr_2l1wZlkwVg>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1744744939; x=1744831339; bh=c
+	lBP/AOC+t0fTcP1nwoYlcZ2Ogk0dwhdHt+FVl4HuhU=; b=AR7syuZCE24ugIg7r
+	crDGxFKTsUm/D/vUY9qkvlC4GRIKipROXgfkL1/HtAOvuXjH0ZEeuArL8b6DhrwG
+	cG4gAdCd6eik/E7GxIY5J5O7g2KGPRERS0YCI3hAMsEU0WCNtH4zZAhVhC7Gs+cA
+	KCCNoSOO5RdbCOXfLBL+Pl9Y4WhceaA7EKHaUhhUBqw6JhjkWx63LYIzaVYMPDTT
+	yprQPbvUM2br2ow5r/hGcfZBghTWOaTPL7s2yCDVZYcX2r+L9VWmjH5DDLgrxIxr
+	TZlvcGYeLJdo9aqwUsBB4PTKcDn5/xgs75/6tvS3mxkg+EW/MTnxpC5oxZj8Pjip
+	Jo9JQ==
+X-ME-Sender: <xms:67H-Z1VT8ZmZiI9wrc0m5J0s3nQiAURotj2Sh3Aw9Xu0k05QzEy6Fw>
+    <xme:67H-Z1n18Cx0tWkT7sEYwzqLHEGcRZt6YzrWMYRvw9i1kAp2H5FCUKAAFuTDiXXGj
+    zfxQjwzcZTK07DPGRc>
+X-ME-Received: <xmr:67H-ZxbFcvKNG70zWxreToJ_V1coybWfhOXSN0QZrMOqHxGjJn7dvRv4omXy4dEgYF0atM4oTV_ACcjMH6946hpLjdbzVDZU8RcsDUl53tIZRQF3bQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegfedvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
@@ -64,26 +64,26 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdegfedvucetufdote
     hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
     rhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdrkhgvrhhnvghlrd
     horhhg
-X-ME-Proxy: <xmx:6rH-Z4FxMoZiBib1o3l9f10DWxslO3Plo7b1mcKnaJUJyZ8FcdQxyw>
-    <xmx:6rH-Z0X-ozI8mNpdTk_Z--8ZZliNGkbKxV6a03IWYZUAaTNHvwXCkA>
-    <xmx:6rH-Z7Pdx6RZhJcxfaVjty-9Jv1OcYCOLUOG_xU53Kn9oE8oSZAuIA>
-    <xmx:6rH-Z73I6ccdmyBjXPQO-BSoU5ygZiyrMz1Ph52zwnIYJEk3RdPGRw>
-    <xmx:67H-Z30VL7C5arXQ2o_JUoLcPkzuUbiv8N2hVXbbaGNsnwlANRcIDUK6>
+X-ME-Proxy: <xmx:67H-Z4UaG2Hss25npzAFfwfidEdkGlMA22yaegLWxI8vHUsF9VK_ig>
+    <xmx:67H-Z_mMPbceuwvDqE2uxsAyrrRhUnpxwnnhA4tGtq-HGBD_matAdg>
+    <xmx:67H-Z1dYT7bwIvqtvKRmysUTOKlfSbqnigupF15KpiHCfSnPpV1RWg>
+    <xmx:67H-Z5FY-D3nY7EjrLFZLV_dD7zp0Jwe3pYXPRn0j0usBtTwCa2ahQ>
+    <xmx:67H-ZyH20worOBLGeWgsDk_EuG5QC_A-AJis2s_7ceOwWc2qoZU_6Alu>
 Feedback-ID: i58514971:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 15 Apr 2025 15:22:18 -0400 (EDT)
+ 15 Apr 2025 15:22:19 -0400 (EDT)
 Received: from xanadu.lan (OpenWrt.lan [192.168.1.1])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id DCEAC1116607;
-	Tue, 15 Apr 2025 15:22:17 -0400 (EDT)
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 0F7801116613;
+	Tue, 15 Apr 2025 15:22:19 -0400 (EDT)
 From: Nicolas Pitre <nico@fluxnic.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>
 Cc: Nicolas Pitre <npitre@baylibre.com>,
 	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/13] vt: minor cleanup to vc_translate_unicode()
-Date: Tue, 15 Apr 2025 15:17:50 -0400
-Message-ID: <20250415192212.33949-2-nico@fluxnic.net>
+Subject: [PATCH v2 10/13] vt: pad double-width code points with a zero-width space
+Date: Tue, 15 Apr 2025 15:17:59 -0400
+Message-ID: <20250415192212.33949-11-nico@fluxnic.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250415192212.33949-1-nico@fluxnic.net>
 References: <20250415192212.33949-1-nico@fluxnic.net>
@@ -97,63 +97,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Nicolas Pitre <npitre@baylibre.com>
 
-Make it clearer when a sequence is bad.
+In the Unicode screen buffer, we follow double-width code points with a
+space to maintain proper column alignment. This, however, creates
+semantic problems when e.g. using cut and paste.
+
+Let's use a better code point for the column padding's purpose i.e. a
+zero-width space rather than a full space. This way the combination
+remains with a width of 2.
 
 Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
 ---
- drivers/tty/vt/vt.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/tty/vt/vt.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index f5642b3038..b5f3c8a818 100644
+index 76554c2040..1bd1878094 100644
 --- a/drivers/tty/vt/vt.c
 +++ b/drivers/tty/vt/vt.c
-@@ -2817,7 +2817,7 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 	if ((c & 0xc0) == 0x80) {
- 		/* Unexpected continuation byte? */
- 		if (!vc->vc_utf_count)
--			return 0xfffd;
-+			goto bad_sequence;
- 
- 		vc->vc_utf_char = (vc->vc_utf_char << 6) | (c & 0x3f);
- 		vc->vc_npar++;
-@@ -2829,17 +2829,17 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 		/* Reject overlong sequences */
- 		if (c <= utf8_length_changes[vc->vc_npar - 1] ||
- 				c > utf8_length_changes[vc->vc_npar])
--			return 0xfffd;
-+			goto bad_sequence;
- 
- 		return vc_sanitize_unicode(c);
- 	}
- 
- 	/* Single ASCII byte or first byte of a sequence received */
- 	if (vc->vc_utf_count) {
--		/* Continuation byte expected */
-+		/* A continuation byte was expected */
- 		*rescan = true;
- 		vc->vc_utf_count = 0;
--		return 0xfffd;
-+		goto bad_sequence;
- 	}
- 
- 	/* Nothing to do if an ASCII byte was received */
-@@ -2858,11 +2858,14 @@ static int vc_translate_unicode(struct vc_data *vc, int c, bool *rescan)
- 		vc->vc_utf_count = 3;
- 		vc->vc_utf_char = (c & 0x07);
- 	} else {
--		return 0xfffd;
-+		goto bad_sequence;
- 	}
- 
- need_more_bytes:
- 	return -1;
-+
-+bad_sequence:
-+	return 0xfffd;
+@@ -2923,6 +2923,7 @@ static void vc_con_rewind(struct vc_data *vc)
+ 	vc->vc_need_wrap = 0;
  }
  
- static int vc_translate(struct vc_data *vc, int *c, bool *rescan)
++#define UCS_ZWS		0x200b	/* Zero Width Space */
+ #define UCS_VS16	0xfe0f	/* Variation Selector 16 */
+ 
+ static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
+@@ -2941,8 +2942,8 @@ static int vc_process_ucs(struct vc_data *vc, int *c, int *tc)
+ 		/*
+ 		 * Let's merge this zero-width code point with the preceding
+ 		 * double-width code point by replacing the existing
+-		 * whitespace padding. To do so we rewind one column and
+-		 * pretend this has a width of 1.
++		 * zero-width space padding. To do so we rewind one column
++		 * and pretend this has a width of 1.
+ 		 * We give the legacy display the same initial space padding.
+ 		 */
+ 		vc_con_rewind(vc);
+@@ -3065,7 +3066,11 @@ static int vc_con_write_normal(struct vc_data *vc, int tc, int c,
+ 		tc = conv_uni_to_pc(vc, ' ');
+ 		if (tc < 0)
+ 			tc = ' ';
+-		next_c = ' ';
++		/*
++		 * Store a zero-width space in the Unicode screen given that
++		 * the previous code point is semantically double width.
++		 */
++		next_c = UCS_ZWS;
+ 	}
+ 
+ out:
 -- 
 2.49.0
 
