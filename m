@@ -1,143 +1,126 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1823233E4
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F2EA932;
+	Tue, 15 Apr 2025 13:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744723931; cv=none; b=SybkXHPxC+ggLk337rKrivZ3g80oXjGARMc9ds9lf2G3p4mhl8DuOdQ2xWY6Ljj8bBXlWz7wkPi96TiDc25x0wBcZdJIrrmJDtYsczRrfgjeBhN6QAwNInG2h78UZsq7WHq2HwbCgrvdJQRuEUEqhbpHfAd11ALNVPi2UR4FRUA=
+	t=1744723999; cv=none; b=tUHxX8di39B2eACZHXb9bBU0DC48hrxnGixc/UjBhc5BRtXDoqwYF20O05LjSweuBZibakfF0LyPZGPETvNLBQ+iQBFaJPGDNIyKl6//qjrio6y6eBejRLBmJ121jEMRAPtVI27m3jbC5XpalhmUr1qplVsQJEf+FWmLCvKne18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744723931; c=relaxed/simple;
-	bh=mNmWI5a/NGto+Hyvm/KHAbdndoEXS5kAJAkq1uPI+6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z/QuhPweHw0BiuMlyk80Z4Ffoa+z1iAQp+ws9W9Hf3gxXpKw/06KKWVLhDgF/E3kwSC0hZJO02ZHzApETUJWdlT7i/QIvER1ySbvDvMwiU0B6nD+/VsDozgkHrLJJxDQafFHixupXOV+y5k+yW10uH2y18OnGNFtoOIvoSHudO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Jwj71ZpT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744723999; c=relaxed/simple;
+	bh=IBF9J0ep9cjAC9XCYOJFD2EZwlaLg4Ku/1yVlWlYkPg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kYUEMYrR1otZ4sM0Hxlcsi7VXx0arjNBDPBlkMOo84k9pbu0CqqQWBJWhI5bUESuJbetgacbSiwpbSKwMNSRSjuO0zW1j6cm8QsICh1ef7Q9JeZ2DRWdr4Qiv0Or0EyRPd+tSFZfzCqm1+RGPrwAxer3EeWC/1cNGkdL+wvHryw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Riz0HDuv; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Aye+2S9O reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Jwj71ZpT"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8u75O002933
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:32:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=tMo2J3XOclwxj1TWtY/6AjNf
-	tlM4bSlyekUBY7EeXPc=; b=Jwj71ZpTou+Ck1S5OZ9bi0o2aWsoNJXy0ZkkF6aZ
-	1WDVeyWlVD8UdWJTH2DuG8Levmhi/eKldN40YTdzMCuVmxRJ8GTlxp7+WETTsp9b
-	obGnwvYi9oQdJzqNa0v0i9k1KwQ9WRgq+UEIjcweRSkZ8bxThYGH6ZRHK95i6YNp
-	Vi7Rk3Zyws5vsUV/V8FG9RZRSac2WckgQZtt3kMoeqYQSp5I8z21ocmPQIUeG8Zy
-	GdxF+y6ChfdFYhmR4533SxhtOi6588oha5IleqdfwzJyJ/DAu2JvfLAco70usxXE
-	ZVWbmSGiqkm/BnFsOm3FSlva8fsNuQK98ESZnhdSf1vN+g==
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygxk02b9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:32:09 +0000 (GMT)
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d586b968cfso69664635ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:32:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744723928; x=1745328728;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tMo2J3XOclwxj1TWtY/6AjNftlM4bSlyekUBY7EeXPc=;
-        b=VO5dNcIF/IdaRSHVxGTwEWl/AFjNvyj4wPAN9mnOf5odSEMNEgCJ48DJqNSnEJ0Nd1
-         yOb0fizc4xWbbVyXBB76d1XBL4KxJDQCA8g1fAbv3GoIUEP0jS7/dkw3BFihsTCD9JD8
-         6jLOa3/F54LmVNft91oqDJYpWMayN3sKvQDEZ2y8VmpyKedSeNepgdpxKMGlbNudb3IS
-         lQ34BSU3BnNpkCZhniUXRioPGcp/c+zeUZV5iQYRNYWSaig8HmnsBckzT/EYq/g1G88n
-         gJkui2ZfYtUd/5M19TrVMWAzJfpXT4h2EzdF8+KsrJ6heGdguNV+UKkpQ2LZFcto0pNH
-         uLHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgxORjClqEelW2GKDO5WaCW2npNOUDtKbUmRYidgMYL9frczEeSLh4ooZLturKHbq64mwSAnmJPNxaeiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgvsYgkCNSUNrCAQbyswfy3fBYXSmA0vtDBn8ewp11H76cdMjQ
-	khjd2SW5IO64Kcs/QagJshYwqRDRb8Ohu9ELFPqNfLPa6LsATNhl7g6gn/SccJopKIu5VKYMYU3
-	PzF2NJxcyjucY+eo1R4hjd0nNclv5W7MURQBFA6keVKW+xDHAZ+iUYhaONezelbFpW3MkrD+RxZ
-	4f
-X-Gm-Gg: ASbGncs+0a1gi2ybBNHbUXLOJVuVnryiPs0CJv9dcENKngMJShZr6OQEJ55zGskBbS7
-	kIzGgZcJBs9TDLowX0G3INT8Rh7zoZpcRwxZihwn311donMYi+HZNiGOjyT9hQlZOTkOv+ps5ty
-	tP/NlpMpT4DVXYhzUtH4wV5z6VVYIjtZEXQd3tEJJBxte4HD6ANjzmjZmgghCYXixIbVUmOMEHL
-	RSBIjpQzwUHgbQcrhkrdbZtGTTe433X9kgGWJfi+FzdI9HJlI1mRbB7TFLUICA7rHta+gNl1lFf
-	Kt2K8WACtuUwxdhqWdZZx6e0fHMmrifE/WM/NKX14VWpfRzjFX/ViY/2LXPD6tlMGULNUcUcmzg
-	=
-X-Received: by 2002:a05:6e02:1888:b0:3d4:244b:db20 with SMTP id e9e14a558f8ab-3d7ec265c11mr152477635ab.16.1744723928178;
-        Tue, 15 Apr 2025 06:32:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjkRXsde0tZnrtNCiF/pKp2trQ13hfjPIvmR3Bsadnu+TSqlnAIYji1ttuBV+mHEymtp0pnA==
-X-Received: by 2002:a05:6e02:1888:b0:3d4:244b:db20 with SMTP id e9e14a558f8ab-3d7ec265c11mr152477395ab.16.1744723927899;
-        Tue, 15 Apr 2025 06:32:07 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465d48adsm20959401fa.74.2025.04.15.06.32.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 06:32:06 -0700 (PDT)
-Date: Tue, 15 Apr 2025 16:32:04 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Michael Grzeschik <mgr@pengutronix.de>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] usb: typec: mux: fsa4480: add regulator support
-Message-ID: <j2ennvznqeihlfejwjqpxd3q76ifqm6djurvokbw6hrpeph7e3@pw3m4eohamxm>
-References: <20250404-ml-topic-typec-mux-fs4480-v1-1-475377ef22a3@pengutronix.de>
- <aiechdq62mjgta5p5g3s33okgnp56fe5ing2va7vaaf74nerug@nvrwrgnoyp7g>
- <Z_g-Hl-G9IwRZmqF@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Riz0HDuv";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Aye+2S9O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744723996; x=1776259996;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R2SZvhgWOcXu74APsWOF5IGVz2bjc0yiT34pBzEhPzg=;
+  b=Riz0HDuvtBiuXTfAo5GRjnCc+OHY7Lzkgq2SEF2jqi2RpsJnHLRHXGK6
+   gisPoH0WlX6YRO1LQ8EVxsMlRDw0dfPzT72iUlW2buoJY/ovrJ7eCexPq
+   2DBDFKfGSQZreqURqLUaTng6GD03lYw5xcIWR2eYQhHdKR95kcfVV8YA7
+   0nfuPbyEOjjx7JyMrEEFokyL/IW99bMWvoXap3rlextocqchIDkdLDzpP
+   aMcqngfnbd5PSP8hXza5kSPPmVrM4LbSyAWzUmV8oxZ1MnJFlSwq1hHMZ
+   TsPfdg2xmZiH5YNwhlaN1/+E3FWzRqqeNO+WhM7SwAg9Cq93pHIW2e/pB
+   g==;
+X-CSE-ConnectionGUID: FzvENSeBT/eNc8+aXFsG1Q==
+X-CSE-MsgGUID: iKjBA6smT3i4jVEC3eJDkQ==
+X-IronPort-AV: E=Sophos;i="6.15,213,1739833200"; 
+   d="scan'208";a="43543921"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 15 Apr 2025 15:33:12 +0200
+X-CheckPoint: {67FE6017-19-903EAEAC-E04C76C8}
+X-MAIL-CPID: 41A4BAF9440150BB2E011C50814F7D8B_5
+X-Control-Analysis: str=0001.0A006397.67FE6014.0029,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 072EA16352A;
+	Tue, 15 Apr 2025 15:33:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744723987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R2SZvhgWOcXu74APsWOF5IGVz2bjc0yiT34pBzEhPzg=;
+	b=Aye+2S9OSazLcxSrARooQIIqEveTec8F0AuUZg7N0qxWL4N3rFbkLV0m/aKsaWjujxk4KJ
+	iVbqYFijDFu5vULgJ3uzsKQI6FeOpEV+cWnb2ocKKBc5EYWUGOftgpoXCUhRPcaDbvOTQ8
+	QLsngYPwAJDruKTEh2ffEyatPXO17Cl4Swmi/H9PpurvFivHiuUAWLQ1YwVThexqDYj+EP
+	B+z3T+aXfrcaWgSvHxXSrsx/9yHiC8dit59WZCd04ziXxRkpJFSD0cyA5qDAfrAe5ATeFG
+	o5cx6e2F+E7h8wbwrElMBJo0vtNblnMYym0EF3LEpGkZefwH9FNGInu1HGsfsA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: Markus Niebel <Markus.Niebel@tq-group.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux@ew.tq-group.com,
+	linux-renesas-soc@vger.kernel.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: [PATCH 1/2] dt-bindings: arm: add TQMa8XxS boards
+Date: Tue, 15 Apr 2025 15:32:58 +0200
+Message-ID: <20250415133301.443511-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_g-Hl-G9IwRZmqF@pengutronix.de>
-X-Authority-Analysis: v=2.4 cv=WecMa1hX c=1 sm=1 tr=0 ts=67fe5fd9 cx=c_pps a=5fI0PjkolUL5rJELGcJ+0g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=D91KrFGzpyoBZT2t0akA:9 a=CjuIK1q_8ugA:10 a=HaQ4K6lYObfyUnnIi04v:22
-X-Proofpoint-GUID: A4BmYYRX5WmlYPLRGAz_uiwk9yqZhV3n
-X-Proofpoint-ORIG-GUID: A4BmYYRX5WmlYPLRGAz_uiwk9yqZhV3n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_06,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=785 spamscore=0 malwarescore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150096
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, Apr 10, 2025 at 11:54:38PM +0200, Michael Grzeschik wrote:
-> On Tue, Apr 08, 2025 at 03:18:14PM +0300, Dmitry Baryshkov wrote:
-> > On Fri, Apr 04, 2025 at 01:02:20AM +0200, Michael Grzeschik wrote:
-> > > The fsa4480 vcc lane could be driven by some external regulator.
-> > > This patch is adding support to enable the regulator before probing.
-> > > 
-> > > Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
-> > > ---
-> > >  drivers/usb/typec/mux/fsa4480.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/typec/mux/fsa4480.c b/drivers/usb/typec/mux/fsa4480.c
-> > > index f71dba8bf07c9..c54e42c7e6a16 100644
-> > > --- a/drivers/usb/typec/mux/fsa4480.c
-> > > +++ b/drivers/usb/typec/mux/fsa4480.c
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/regmap.h>
-> > >  #include <linux/usb/typec_dp.h>
-> > >  #include <linux/usb/typec_mux.h>
-> > > +#include <linux/regulator/consumer.h>
-> > > 
-> > >  #define FSA4480_DEVICE_ID	0x00
-> > >   #define FSA4480_DEVICE_ID_VENDOR_ID	GENMASK(7, 6)
-> > > @@ -273,6 +274,10 @@ static int fsa4480_probe(struct i2c_client *client)
-> > >  	if (IS_ERR(fsa->regmap))
-> > >  		return dev_err_probe(dev, PTR_ERR(fsa->regmap), "failed to initialize regmap\n");
-> > > 
-> > > +	ret = devm_regulator_get_enable_optional(dev, "vcc");
-> > 
-> > Missing DT bindings update that describes this supply.
-> 
-> Looking into "Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml" it
-> seems vcc-supply is alread documented. Is more needed?
-> 
+From: Markus Niebel <Markus.Niebel@tq-group.com>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+TQMa8XxS is a SOM series featuring NXP i.MX8X SoC.
+They are called TQMa8XQPS and TQMa8XDPS respectively.
+MB-SMARC-2 is a carrier reference design.
 
+Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index a6fd347de03fe..1c5fcd69e93e6 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1333,6 +1333,22 @@ properties:
+               - const: tq,imx8qxp-tqma8xqp     # TQ-Systems GmbH TQMa8XQP SOM (with i.MX8QXP)
+               - const: fsl,imx8qxp
+ 
++      - description:
++          TQMa8XxS is a series of SOM featuring NXP i.MX8X system-on-chip
++          variants. It has the SMARC-2.0 form factor and is designed to be placed on
++          different carrier boards. MB-SMARC-2 is a carrier reference design.
++        oneOf:
++          - items:
++              - enum:
++                  - tq,imx8qxp-tqma8xqps-mb-smarc-2 # TQ-Systems GmbH TQMa8QXPS SOM on MB-SMARC-2
++              - const: tq,imx8qxp-tqma8xqps         # TQ-Systems GmbH TQMa8QXPS SOM
++              - const: fsl,imx8qxp
++          - items:
++              - enum:
++                  - tq,imx8dxp-tqma8xdps-mb-smarc-2 # TQ-Systems GmbH TQMa8XDPS SOM on MB-SMARC-2
++              - const: tq,imx8dxp-tqma8xdps         # TQ-Systems GmbH TQMa8XDPS SOM
++              - const: fsl,imx8dxp
++
+       - description: i.MX8ULP based Boards
+         items:
+           - enum:
 -- 
-With best wishes
-Dmitry
+2.43.0
+
