@@ -1,114 +1,125 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C9D20ADD8;
-	Tue, 15 Apr 2025 17:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA398F7D;
+	Tue, 15 Apr 2025 17:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738785; cv=none; b=GOqcbK3Xw31OLek8qtJ11pHKHY6+85KxJvfEcMr404FjGOxoA+M2n9QzH+/VV+2GmlU339XVuc+o21Q2F0LVHlJV8g/q3dGJPBoJCCZ66sYJq1EGwRketQf0BdKO8T7zJVG0mZ6aFIrmiCA4mlHCLO+eARm4un0UWBIa8PAMQoc=
+	t=1744738886; cv=none; b=TJN8lI9B42oWZzqGHHrlg1fd9dQ1L1SPp5U8nVcOj1/zqyQ1Z0s1NPUrrj59lz4AX5GFw4VarUU1anapQjCt2ZuLka4PMWmOLH1FeVG4zM7QcUjCZm5MKrJdvg00RAtbdveg/twhc7Zc2jBJfelzdO1AClT5CYHxouyNBacHjXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738785; c=relaxed/simple;
-	bh=1OgdAc+XMf9ceuv3aO00YGNV+dWHLwywXLVNSuFAj58=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cE0bpfOwNErJ7MwnI5Xo8/8SCHuXos5Ao4S/aQhVz2rxLRXmRfvP2UzPYpn0np4DwDw4S0ilLpEU4eIf8Zcu6Cb/jUI5ndOUfE5NmyCw1RJoHblPjM71wOHSO4rYm/L4Vc6gPNWDNofAqp4pjSNkKvPz4IV7GFBWjRtscCOq0ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jGQw7H/v; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1744738886; c=relaxed/simple;
+	bh=R+u7Raqr1wH47gNA4jfCVwciRYoRGjsSb+B2q9lx440=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TwlCcCYyuqmNKJH+df6p6lLEYUer+l9pZqceE1YT1ALwW54SIOyLKFdm22cRfNWmURyXlbNV9+uauSC2TZB7BEK355filiKqNahXnowN+y0dlZ4xybhb+2/06OD4KfIt2MDDFlMM/YqEweDvVFHa/+qQs5MbHiaLqQT/vbQVBgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VH+9LVFV; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGQw7H/v"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-391342fc1f6so5040235f8f.1;
-        Tue, 15 Apr 2025 10:39:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VH+9LVFV"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d0782d787so42504415e9.0;
+        Tue, 15 Apr 2025 10:41:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744738782; x=1745343582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c7WHnmwev1Rd+gE3kqETUhHFn9A0Fc9wyWPE7zQNdrY=;
-        b=jGQw7H/v1nhSzGt5Tg4EpGq4SQwp1UVtUVpPF9ajS/0ZhjOACdOk2QqaVTezfC9x3F
-         7efJgQ92tLxkGEUE6G6zKkDfW/VpScBFaRzachP/0Iev8xi0wLj4u3sK8Bp/jvJnsSOh
-         5llOFnGlM5EhyXCfOesdVgqdJ0KHDXV/Fn75/Bf0eqQgzOk7z0T+PDUtUPHD0sT1kaLc
-         P/1BosvNT2UQkaWJr5DmORkvUDvYWSEd0UCHsUjlMhHwPcrukY4hXxTGcflTDOBngPAt
-         7Up4e/ElJH0YKcGc0ply2WT43ZoJqv2KhH59DBq3Ntk1fC80agjT3PEde/WQWj3p3AwX
-         udcg==
+        d=gmail.com; s=20230601; t=1744738883; x=1745343683; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cTXPAi6MOk7dtbnvu8pX0TutnX5nRreaYjpyTtvIq2M=;
+        b=VH+9LVFVapeL2OI/QkB7PszceljfwGJpqCsWBvU42E09G0F8mgJnk1F+KcCWbgzSRi
+         +nZIy1RAApIzzlSAHRzefNijUKtvu/fot5zl4LZOfNyKZ7R8VLLB0V4ldWBUyd2Urhlq
+         USWZY0aYv0CKh/4ORBmTj2KP1j+Ei4pSI3Pcj6jBrBx8lxkkqsh+nb6ELboLlFcm3zDH
+         OGlOHQFR1tWSi7IYpUyKtakb24p9hGO5rP6vG6H49J4fWeCJtXSbONG9mtN0DX0Rqyeu
+         5MaIrhZLaaAf39sX1oKFXl9XgLmvkFYF0CuHu9s55+3vYj5Bsv+S0QPo8v0dReA2csov
+         I4Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744738782; x=1745343582;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c7WHnmwev1Rd+gE3kqETUhHFn9A0Fc9wyWPE7zQNdrY=;
-        b=nhtBBfCbu2pHc+EVk0RiQihp0rKfmmzJ1K6YEqPnDukykyVj2kyWLaw6WUNWfF+5vt
-         BnLWYBCsMAaI6dQRjtKq9Vf9yjJWkfqzmhPuhHl/sPQEfRsDI5CzQY/z8/KI6TKZNebE
-         v2am34eYWLoGgJn14OV55lg6CsyI5sIauolmGVuW11JpPtoH3B4BNfS27a9kvj8SYPrT
-         GwMp5QY5pgJYG2HYIaAZlJn9d1EwWGm3CyrPS5bcRBRWCTjiQKGPp3Y3yRAN85i7QVoL
-         ui+wcfjkzR3Rlf1xAAxPmZPvj75PigRIwVvYxtFae079wsfK4QMKiBVytti6fWrbH6cE
-         sXgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUin6B2/KcpHDgsXbmdR+EuriMA8IUayzQ8IovL1YCddC4R6J6Cc36iIcIRwwbw94X+s68mf46pomc1iAk=@vger.kernel.org, AJvYcCVTX0SpLeSSUKMXRPgLDjyPlo3h0bD2ujYJQjbV3U+PTAZK+tWX0bjyIC+9FaVA3wtmQqeu04hPQZCqtEha@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygt7ld1bsJKSHV4Eo5HRmPYi2LAINO+NRB9yquHwzi5ceqVJxW
-	DQjoaHaDtub4JXF7O4azr2YaOpBDydGMEL9SwOdmASe4JtKT8lty
-X-Gm-Gg: ASbGnctV68DP4XVwbXbIu/fgrljOV7LzbDqdEyGKXE4s9EyPBRcLz5Wy3FpvU28vZcy
-	GWYp5PHsjv99CDl0GELmWAj/pt4rSkhny7Brzu7iBCIM6/PLVBu9i3cJiPxhjS44JR6KMhhbU0E
-	E5rGpnMgD2ittFuPnftof4riKWOwEEQIEM/TNzk0i4psfmgACI5oAR9F2AqKYIDD6UOjujsNmn7
-	NdDG0qm2NXD/y8TlCKiWitPAt9efm4SNOuKTAimnl7BO//7IVC9K4o7cB9V89kxmZmjZ35RHhPb
-	eBhpi9cZ7IDnUHbLOdXIVlEtPq2P1hQ6mvC+u3dR/wL7fBvmOlenQHew9s0zhmGhLo2rprtV2lV
-	SlJQ=
-X-Google-Smtp-Source: AGHT+IHt+/APiwEUu2bWsXv0tc2W1Z5iXsXMlW8SN5vGt1RjeUjffpRFfxAaTi7RMpaV5OcRH5vvuA==
-X-Received: by 2002:a05:6000:18a8:b0:39e:cbe1:8d68 with SMTP id ffacd0b85a97d-39ee2729e8fmr291658f8f.6.1744738781637;
-        Tue, 15 Apr 2025 10:39:41 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae979637sm15148655f8f.53.2025.04.15.10.39.40
+        d=1e100.net; s=20230601; t=1744738883; x=1745343683;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cTXPAi6MOk7dtbnvu8pX0TutnX5nRreaYjpyTtvIq2M=;
+        b=RS3hTU0ZKItCcyUauObpwICfExxyZp6gTWxjlPHRYUZvEmtEbrwoYBVcI+w3g1i625
+         KkTMFsTgJYUmH3MYsMZDLfWwz182rkJpJVDfQ1M/RsDGPMkVVdk4fdUzowQXC2Lt32Ut
+         259rBhBQu0yhq7NQmj8dHesflA2dK/mbqZb6wkE4VAKWuI5WVkYjDNhUq6WF0hofN1ld
+         /f+D/2Mr50CHPyqNKnqF+6YSnWrfjPIUACiWsdlIpi5Bi59OU3IZwjT7d549k8XXQ1oD
+         /P+QFLPbij0Nuy0AapvjgFo6guYYmWMFqU3rlYq9cetjnoSNzXKAcd0QZB3YWCQoNu/x
+         viTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwEnaRKVT0vu+OZn/5zmqnfd3lCC4fJG6+RUbNttJ4ffIbhvhcX4btkiIuE02Ihta+t/kXAXGCI96J@vger.kernel.org, AJvYcCXI9PlRwEjyba0XzhN+ZVGguyxEgR1anwkLxM8hyY4P+SPP99lxH4/iVpdK4h5YQovnStk6vk3lGTXWFkT+@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVivRZIsktIyR0t51JWIf23OlGLNZ9pbNinDuQESEPuQcYCY+p
+	R3IHyIOnAfGxBre6SHrc/hNJhfRbsMX1iJrc4LgoNOPT/pI2COJh
+X-Gm-Gg: ASbGncuHWBUUHX6/dAvGJlU4E12CgRETDHcsH3kEcD0HPqLQRAW+p32JAfd9wWnJgfU
+	CQtXMZMMZBP2CXu76s7K8vURASxlnnPFu85ugwENuf2s07xNOXXfyhiP4gczAce7Rh2Z7NxIDT1
+	fnuBMFEBwUd5kTp2M1sH7LNtNHyWygVtmhy/QW4VbnAJDhHn+xgLE4RrFy6qbZ9c7VHeEmf2mNn
+	2m4iS4gTLhEbGzcHAhB//ZMKeLpeE9kE9yNYbQA2nuCrHe88wIEcamcgis7cjgbwnyW0PtUu7C4
+	RSgqHzh2xKEyzoR1SQay66xvHFJ8vg==
+X-Google-Smtp-Source: AGHT+IFFkHczMfWUBryQoEPMfRR49gHduMJO8eujnvBaQZWraQ8x1TmZx7EfHqV2ufIBghk74M0ZZA==
+X-Received: by 2002:a5d:64e3:0:b0:39d:724f:a8a0 with SMTP id ffacd0b85a97d-39ee2763a76mr338132f8f.58.1744738882892;
+        Tue, 15 Apr 2025 10:41:22 -0700 (PDT)
+Received: from pc ([165.51.55.171])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44572csm15473451f8f.90.2025.04.15.10.41.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 10:39:41 -0700 (PDT)
-Date: Tue, 15 Apr 2025 18:39:34 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>, Rae Moar <rmoar@google.com>, Shuah
- Khan <skhan@linuxfoundation.org>, Sergio =?UTF-8?B?R29uesOhbGV6?= Collado
- <sergio.collado@gmail.com>, David Gow <davidgow@google.com>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Mostafa Saleh <smostafa@google.com>, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
-Message-ID: <20250415183934.46f4ed6f@pumpkin>
-In-Reply-To: <20250412102218.560196c0@batman.local.home>
-References: <20250328112156.2614513-1-arnd@kernel.org>
-	<ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
-	<20250411065054.GM9833@noisy.programming.kicks-ass.net>
-	<0073e739-e3aa-4743-ad2d-29d7c969f454@app.fastmail.com>
-	<20250411105849.GA5600@noisy.programming.kicks-ass.net>
-	<20250412102218.560196c0@batman.local.home>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Tue, 15 Apr 2025 10:41:22 -0700 (PDT)
+Date: Tue, 15 Apr 2025 18:41:19 +0100
+From: Salah Triki <salah.triki@gmail.com>
+To: Namjae Jeon <linkinjeon@kernel.org>, Steve French <smfrench@gmail.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: salah.triki@gmail.com
+Subject: [PATCH v2] smb: server: smb2pdu: check return value of xa_store()
+Message-ID: <Z_6aP_ZpEpxA5pfS@pc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, 12 Apr 2025 10:22:18 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+xa_store() may fail so check its return value and return error code if
+error occurred.
 
-...
-> I just hit this on my allyesconfig build:
-> 
->   NM      .tmp_vmlinux1.syms
->   KSYMS   .tmp_vmlinux1.kallsyms.S
-> Symbol __cfi_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
-> Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
-...
-> 
-> I grepped for that symbol and it lives in: lib/tests/longest_symbol_kunit.o
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+Change in v2:
+   - Free chann before returning the error.
 
-Looks like it is carefully counted to be 511 characters.
-And then the compiler adds __cfi_ making 517.
-I guess the test could be changed?
+ fs/smb/server/smb2pdu.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Is it possible to remove the __cfi_ symbols (to save kernel memory) and then
-use a single bit to indicate that the previous few bytes (the same number for
-all such symbols) belong to the following symbol?
-Then stack backtraces would say "foo-n" instead "__cfi_foo+n".
+diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+index d24d95d15d87..2219dc8e6740 100644
+--- a/fs/smb/server/smb2pdu.c
++++ b/fs/smb/server/smb2pdu.c
+@@ -1445,7 +1445,7 @@ static int ntlm_authenticate(struct ksmbd_work *work,
+ {
+ 	struct ksmbd_conn *conn = work->conn;
+ 	struct ksmbd_session *sess = work->sess;
+-	struct channel *chann = NULL;
++	struct channel *chann = NULL, *old;
+ 	struct ksmbd_user *user;
+ 	u64 prev_id;
+ 	int sz, rc;
+@@ -1557,7 +1557,10 @@ static int ntlm_authenticate(struct ksmbd_work *work,
+ 				return -ENOMEM;
+ 
+ 			chann->conn = conn;
+-			xa_store(&sess->ksmbd_chann_list, (long)conn, chann, KSMBD_DEFAULT_GFP);
++			old = xa_store(&sess->ksmbd_chann_list, (long)conn, chann,
++					KSMBD_DEFAULT_GFP);
++			if (xa_is_err(old))
++				goto free_channel;
+ 		}
+ 	}
+ 
+@@ -1574,6 +1577,10 @@ static int ntlm_authenticate(struct ksmbd_work *work,
+ 		return -ENOENT;
+ 	}
+ 	return 0;
++
++free_channel:
++	kfree(chann);
++	return xa_err(old);
+ }
+ 
+ #ifdef CONFIG_SMB_SERVER_KERBEROS5
+-- 
+2.43.0
 
-	David
