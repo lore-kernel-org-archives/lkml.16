@@ -1,83 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DFC10F2;
-	Tue, 15 Apr 2025 06:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E065274667;
+	Tue, 15 Apr 2025 06:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744699325; cv=none; b=YrOpLUrGJmfhxhn2matLhPqeCvZ8+6g1DJ4lZjZWLHQSzwD4zzGqdgAvJBXH3WSUXv0W2cBWygCeDqg8e5kV7qaq0aSqb51FaAOGKXw96KfZURVtV4sfXTx49aoX4Q3WR1V5H6gehenv2FutHtlWc/D/YHCbMk1j1g1nL5BOsIQ=
+	t=1744699347; cv=none; b=N69Ga2P2fgOoKRKIbm9Ldpw+L+7LRsL2Wd0ffpBKyxeb1QmMXAqwqh1DX9JR1pQdZVgEQp5rMhDon7iBR8rH7rfWNmYqIId584mij5p1KkHY0CshtpGANnikVeLP15AGp3CDOK07oe+tbxTbW+B2fx2/akKvFUUnwcOe727e24c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744699325; c=relaxed/simple;
-	bh=0p0Ko0PYLixwXFVovp7Vk4gNnBAomxKJKvB8ulTWsdU=;
+	s=arc-20240116; t=1744699347; c=relaxed/simple;
+	bh=K2AbIrX1FH4nIalS0DSLv4PIKSumjkkHve93sNSsPOc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPK64BDbjFqUkrsC4L7ZRzGscK9FUPtOnKrOmbKLempoqhSIxTyW2WEKa9aujnD6TktunVscSxoOStpHdTLS4c+qeIgyOg/RZXuVzAITtSLi7JoSGDqw0Ggyq2IIyUMUDnwvM78tSMRKNm5g1f7Sc4kOdci/5DBhmu9TYGPkg4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eJQyJh4P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vkHNJiYe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=sGl7JiUky5H3sapYd5mR03A120gJlQYm9JgFDTMafGrfuSIteYA9LFo4UkMYnoup8b4MCRg2iHDPHSrZ8lVVxz2AQuMQB6YmrIkrWf8+IqzHFr4n/2NAaEMFP8Ikdy+98uQnuiHsb7DJ8jeg0AJm49Wy9xlXJL3pUPV392/yDdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GH3sgxKY; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eJQyJh4P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vkHNJiYe"
-Date: Tue, 15 Apr 2025 08:42:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744699322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zcIAga6GYfzSYtTDO27V82Rac8anYUyHC4H02k+lpNo=;
-	b=eJQyJh4PDfD3MFybZK57HSiim6SrToWbG5vis+3yeZ9uaCDEfrs1/zbSr78EZdhDUZqCNk
-	Zb6/iGTUh8vhK2//ahfE75aaTSwuo+npGWmBUM3RA3qj6pI7LkNvKFrBqcnQw5+I9NxgbK
-	r4//3qKNtN7PlsoJNA45nC2bOEapn03Nie9UL7Wi+ePAMxRzEqI63hCy43JtHOv1WxpK49
-	GsRer8kOiweAFl/VXWLzf3qUqrJnIaaXuHTwtBwpf+l51hxVG8iszaDWVsjWsAQR96dMIu
-	Capvt/4r0j4sNdPTJSDsubtyM3mzzOeljZtVvRZghnIytaTK8FN07P1AyYPLVA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744699322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zcIAga6GYfzSYtTDO27V82Rac8anYUyHC4H02k+lpNo=;
-	b=vkHNJiYezAQSOxrKFxNBB4BL/zW1bwvyrhu4JqnD9CdZgyVlWlwHGv6AvwNgS/LfIMGT6K
-	FJueRUo6PMOUBVCQ==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>, 
-	Loic Poulain <loic.poulain@linaro.org>, Brian Norris <briannorris@chromium.org>, 
-	Francesco Dolcini <francesco@dolcini.it>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
-	Tariq Toukan <tariqt@nvidia.com>, ath10k@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	ath11k@lists.infradead.org, ath12k@lists.infradead.org, wcn36xx@lists.infradead.org, 
-	linux-wireless@vger.kernel.org, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next 0/7] net: Don't use %pK through printk
-Message-ID: <20250415084125-a8677bbf-5fee-4670-8d4c-4afda6669e5f@linutronix.de>
-References: <20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de>
- <9c53011a-0e00-49f8-bf7e-b04ddc8c575b@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GH3sgxKY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744699346; x=1776235346;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=K2AbIrX1FH4nIalS0DSLv4PIKSumjkkHve93sNSsPOc=;
+  b=GH3sgxKYZVFWUxPzzVoDGecMWLi0dZ86XhK7ceFREzQL+ua/L4N7QQE3
+   T+iiI//CoEwicJPSogLQrZyB0VSMM8dAWx7d94wRkxStm3AiLNfgZqlWp
+   JApiBqgkgbsHDqnhO1s3HkKve3Oh3/QAwMwtjmzeeHWDQghFGhXz4AZUL
+   MEPDpEKxWWLC80H5CKpejUJXzuFKhcB5kW+JDNQz68hGkmWQOpyzncXT5
+   IiS5ljwxtbSQQTn25sv80Z038z8SUqdM63wr+z4cw9yv4oItcXKz+Eu6K
+   KtN/KgJbdCFpQpfrsKkkEjU9695FB4SxAAeEUabkv98lP4ZHxRA6iWEQG
+   w==;
+X-CSE-ConnectionGUID: +iy02/4UTxuOCg60aS3DWg==
+X-CSE-MsgGUID: AYz9bRCgRwexCdTkTrqALA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45901623"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="45901623"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:42:25 -0700
+X-CSE-ConnectionGUID: xDWLzVhOQ2OA5rTpy+ytdg==
+X-CSE-MsgGUID: suOE4PDaQYGVuZnvmMD98Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129792965"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:42:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4Zzv-0000000CSpk-11u0;
+	Tue, 15 Apr 2025 09:42:19 +0300
+Date: Tue, 15 Apr 2025 09:42:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+Subject: Re: [PATCH 2/2] software node: Correct a OOB check in
+ software_node_get_reference_args()
+Message-ID: <Z_3_yrvxHBwY6LBn@smile.fi.intel.com>
+References: <20250410-fix_swnode-v1-0-081c95cf7cf9@quicinc.com>
+ <20250410-fix_swnode-v1-2-081c95cf7cf9@quicinc.com>
+ <Z_zCeHu9MKgLG0jN@smile.fi.intel.com>
+ <fb77f98a-7e1e-40ac-bccb-0023da6bc297@icloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c53011a-0e00-49f8-bf7e-b04ddc8c575b@oss.qualcomm.com>
+In-Reply-To: <fb77f98a-7e1e-40ac-bccb-0023da6bc297@icloud.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14, 2025 at 08:02:39AM -0700, Jeff Johnson wrote:
-> On 4/14/2025 1:26 AM, Thomas Weißschuh wrote:
-> >       wifi: ath10k: Don't use %pK through printk
-> >       wifi: ath11k: Don't use %pK through printk
-> >       wifi: ath12k: Don't use %pK through printk
-> >       wifi: wcn36xx: Don't use %pK through printk
+On Mon, Apr 14, 2025 at 07:12:27PM +0800, Zijun Hu wrote:
+> On 2025/4/14 16:08, Andy Shevchenko wrote:
+> > On Thu, Apr 10, 2025 at 09:12:12PM +0800, Zijun Hu wrote:
+> >> From: Zijun Hu <quic_zijuhu@quicinc.com>
+> >>
+> >> software_node_get_reference_args() wants to get @index-th element, so
+> >> the property value requires at least '(index + 1) * sizeof(*ref)' bytes.
+> >>
+> >> Correct the check to avoid OOB access.
+> > Any real traceback?
 > 
-> the first four should go through ath-next and not net-next
-> 
-> >       wifi: mwifiex: Don't use %pK through printk
-> 
-> this should go through wireless-next
+> no, find this issue during reading code.
 
-Ack, thanks. I'll resend it there when the discussions here are done.
+Please, mention this in the commit message.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
