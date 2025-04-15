@@ -1,231 +1,128 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DBE27FD6E;
-	Tue, 15 Apr 2025 07:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05042417C8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744703107; cv=none; b=LvDQ9TyFW3GKmwcKnzsgbr9wHf4ZCHtUmWBokSalpCUJbCsTpoZV3DlREJlg1BvEkokHTPAb4OLGKbBuDCkOyBsY/NaKhrMUWMs/51e5iq0ZEkJ76d1YO1tcJIN0BUQPO+LEzzPO6J17K111KwzDQUWOgwtVgyw3OiBwAN3sYkQ=
+	t=1744703146; cv=none; b=J/2Nls4thQ3+BJDo0ph1oiLhIYlIXJ1aFVKCvxlcPZdvvbu8R+NNqeYcJM4b8cuG+oMYm8v4S7iJ9vHTzLfbHrWoy/sP+TFr57eYzXRL6/MjEqX2Vv3h50BHMRg+FJYOwGhkLfwwmKYkAab43MUF80y5bkHEs/DdtoDiwCO0i58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744703107; c=relaxed/simple;
-	bh=1niKW98sQ32RMpVs4DRJjX8QJwWQRiEGm9x2KiIx0VM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqHa+2h8M2VO/Ro5hjMrXnW4LlBaLzocvK2fzCMaWrEuikG0SCf6BwvRvT8bP5RVG55m2iYTy4OZdrtaeuCu93aU4sJupeavnRT65T90mexI0CzPT1Am4CWVNgeTnh3uz/pYc/oeVQm0ZFXfp5CD/yQGhQGU69cy4HqLuop7BFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FILAHZgz; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744703146; c=relaxed/simple;
+	bh=LYTo/8Wrk86/MtiAPfbdDE26Hplmwpiabqw+vW+JUaI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HUkzS6lAkBi0HnVpBLTpo3ZEGJhrHj+EccnYDqM/TVZ0GC4eQFtO38iz8tZS7Cxoulr2PqiP4Vk97g1uJZcrnWqkNkN01Kb4Dmf3JtLcWRl0juNThJyAvl+GaIeGhMYfj08PUOySRjKHox5NIF7gnZJw0d9jGrQ3kJuAs8h/P/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ANpTy5e6; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FILAHZgz"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-879d2e419b9so4307930a12.2;
-        Tue, 15 Apr 2025 00:45:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ANpTy5e6"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39c30d9085aso3217498f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744703105; x=1745307905; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=693uulZB/KQcPYpgvsd2vMghBxNx5O/cumoSUcuA5cA=;
-        b=FILAHZgzmECdlZnlG0WGee0VxvVjQMHm5NHeRWE3JogKUSXvr+LJXpJlJlhxfkLRWP
-         SSAGmcCrHhb9gdyBXU9NEpbBjsFPjyBlWaC3tNBcnpwK6AM95UIx0RJ4Mfnzk5gjFewD
-         XAtHnr/UX0fswtucVW3Kn9AwC9TowyU+cvArJVOtsbM4fHeC8tTgLj3d9iJ0VDyamcQv
-         kY+dTRcrT6eMkZ0l6/L7eOtbs3YkwLO8iS52N5BfhdQNiYRzGrSSm7MYzuGhgAm3iaBx
-         5xAlhTC6v32TlCQ7TOg189ZSJ+bQF0g1rOquqgd1Y1FjkNDCLHpL9fs5bXhmKQCEKsoP
-         Iztw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744703141; x=1745307941; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uZGd0w9zY9e8wiKe6AcqxmAzlgtf9nDIhq/RZijuzI0=;
+        b=ANpTy5e6H88t8JoihICGKrnOBDrQKp5o9rEInBSkFqeYXIzI83BED+wdqSIGAdWY58
+         Pk73XBzL5i5KW10GgOnkwSUU5LLQTrwhl2htyk8BBBnNSdQbZiv+q9CNe28g/yzL61pC
+         0PLmQuRx5HBv/Fdzor/CbgdExPacB/6oqmiasoWVWNbdlpS2386mB4+9iMHQfDM3RhqC
+         Irbqh3NcBIvpENxqOUVVX2M7TsWHB0bL1lMUTGex/Ga5FOt5JJ0TObhpI3csRFWDazR0
+         Arnh30fztajOvlp4kQ5MblEqACN4QqoyFB1anXZybzNGWzPl8S920bKgD70GOjr+1xfn
+         56Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744703105; x=1745307905;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=693uulZB/KQcPYpgvsd2vMghBxNx5O/cumoSUcuA5cA=;
-        b=aau4UQlC5Zj9hLjpESYHYkTkwYXKJXSjgx3gGlBltAblw+7m6c0CHN2pFmqIjt/MJ2
-         0amg1hJy4JQsKcas2UXfaKVjrz4hldKvx7nmV51X6TaWLwGh24LlLCCaXHl/2gA0WB9H
-         wsbLk8SjOEf3Qgjq3dDu7/0FWbltu6/q2WzQqsyFnfJ+oRNp/nPz315+KTncXyzk2AOb
-         bTuh9R1Zy4EupzQi3dqoQcDoc6Ocz/IN+5DuJ4c3p1Bw0NwG8sla5NFOnrsSSgdwsviK
-         CfXP6nQLWHOQ9I8rU38pMID+bPPSXmFqBuPuuZjUPfDUx23q3X815jpEIcj9w9DRXrSH
-         3w/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWvmrLhr0vMpVZIusKrZj1XGA9W1UOsqa+J8ly0S2tocjwdriiz+s3zj3LekqlOr4MN6hLtdTs9DzpKzSLu@vger.kernel.org, AJvYcCXLV/fgdNG6LwtE7N67nYfVeUgh6Ka95hDUyTTSuGMNdukVBLUqa89JZtQwgojxH6Qg1ZI=@vger.kernel.org, AJvYcCXnp7uONSKo9X9RnSFqNzYbqGQGti11bBTRCuiTF355Onfy3K2aAPkLwHbQ98Nd4GR1p/AF+I7w@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUyeUGA0EQJQKBlRuu+TD8W826AlJlbht5u0D8MfGFIblmpxuw
-	jy5vwaQJRsu2EPcscSVkAP8hcktmcM9r7aIkVe3KlIanOaLSQg+T
-X-Gm-Gg: ASbGncuKiRZwj6wdREWmjE6DSlM6dWZ8UamvqcPG8cJroVsEdDWXhQKsG0PA/tJPGEY
-	mXJesyxRJixEqpiGiiTcwcrAQK03cxIVhgDSkb3I29abBtcqE4zDNipLV7ZaRYhS0Ug8+uq+iYc
-	mWMh4NJAXDHCf+kdxn82sj32IBNC1OMQf9kmfm27bBV370NlVur8oGJniYu15W+hmYcvK7tfA66
-	zaAOgl4e8PRwlBY56C+SBpSD3piEXpsrkL34Y7SFCZzJmuqhDE7NQRHL7K0UHFS0Y3iLBwts9ve
-	yVsEYxpQ4hF09QzXcVam1AfK58C0cY8lrUdhl1d08Ek0sC5c+uDcDFs3Z7eXt/Qhq74=
-X-Google-Smtp-Source: AGHT+IH+G17f4AOelzFwX1SUg4M9HSnGkdTV05DRb9VJ6OVH1IN3h5ijtvA9l3wacdqrXeHJfCrK0Q==
-X-Received: by 2002:a17:90b:544c:b0:2fe:99cf:f566 with SMTP id 98e67ed59e1d1-3082377c5dbmr22710108a91.13.1744703105441;
-        Tue, 15 Apr 2025 00:45:05 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:2e0b:88f9:a491:c18a])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-306df401ac8sm12299767a91.45.2025.04.15.00.45.00
+        d=1e100.net; s=20230601; t=1744703141; x=1745307941;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uZGd0w9zY9e8wiKe6AcqxmAzlgtf9nDIhq/RZijuzI0=;
+        b=NtfoAI7O1S+ZrEnTUdyrxK5vEAUnq+lQhHcPfLDbqEXD6LX4G9SAhVYVlJjY1TA+8f
+         9yhdy7AWz3RuWUvjFIba/iyxIDQeB1a2bFJ4pPWh6uZHgsHVl4LBzBWvz4CkJJQv2hw5
+         RpzQULE3RBEwDhZRLwO/ccKcqMiI08EPHV2UZVCdKcpnnYlIVw5DDc87USI6UOSBx5kk
+         AmU6/kMXfVZZt6A7Q6hKCPuUJMbPIxx3AsijBXJCZFx2iaDxbsW+yfNAX7mdYOgelmMW
+         gLOIXVdKw9y5Zkt03b8t4j/zX1zpQbLaG5E390zgrrPJ7l0bOZYe38e10/ckf1NATaxR
+         xP6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXr43dtmLmV8GfpE5TCSHA6k4ofWJAcHEcq4k8+nGhK+mWGiSftGQdYUL0OcBoyN7KOuSa8fbTVxAw57XA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcUcTeZyOpJntms6AHFPFYdP4TUmob7dI5ZmYmK5yDWe3JeTMG
+	SSHyFZMkYDj8JQYlr/SIiIbd3UtYhu4IqTJFuUHlGH0JUYeeqkOlkYOVx34wDqpr0e2Fh2r/ypK
+	D
+X-Gm-Gg: ASbGnctIMTK2eFk0LUWeU2YpDkLnj7Umb1PPjWj9ZNWa1EUv1H5Qb46iflCYnjx6SIf
+	ZpUZY82IFAPJQ447exnXdx68lX6xtW6RjG2NnrLFlaMEhIdSO+fcXjYJOWfQioAOS6Dj98l4K9H
+	GdvJCOT6b58vtUKk4n+ThEml6rp+gZd1KtsH3pRK96CCTOsiUWW8tJNjDXbBD3qai2fsRAEhCx7
+	1y/2rYDkOT4Bjh9RW7abgpGsnC+lej9bH7G3ZtLtnVHR2qX47O4GSEH4JpSpweUIp1HF+t6CjJ1
+	O78ynUKzY+cpDxppVFQtPHOPsnFhupiyUBk5ld6kpomOVx5UYTljxkH+RTlSoCq+k5x/D4eNeJ8
+	5YlMOuSy+w7zOX9TEPg==
+X-Google-Smtp-Source: AGHT+IHV7T+O8BH10hFsQ0yYigBYFXjp4027w7i9ivXroOobo0vEoRWLMN+TMIMe0o1dY3KNhquw+A==
+X-Received: by 2002:a05:6000:40d9:b0:39c:16a0:fee4 with SMTP id ffacd0b85a97d-39ea52133cbmr13519488f8f.27.1744703141589;
+        Tue, 15 Apr 2025 00:45:41 -0700 (PDT)
+Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445270sm13137060f8f.81.2025.04.15.00.45.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 00:45:05 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: virtualization@lists.linux.dev
-Cc: "Michael S . Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock selftest
-Date: Tue, 15 Apr 2025 14:43:41 +0700
-Message-ID: <20250415074341.12461-4-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250415074341.12461-1-minhquangbui99@gmail.com>
-References: <20250415074341.12461-1-minhquangbui99@gmail.com>
+        Tue, 15 Apr 2025 00:45:40 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Tue, 15 Apr 2025 09:44:12 +0200
+Subject: [PATCH] docs: iio: ad3552r: fix malformed table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250415-wip-bl-ad3552r-fix-doc-table-v1-1-717ffd320c9d@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAEsO/mcC/x3MTQqEMAxA4atI1gZqOxHrVcRFf6IGRKUVZ0C8+
+ xSXHzzeDZmTcIa+uiHxJVn2raCpKwiL22ZGicWglSb1aQi/cqBf0UVDpBNO8sO4BzydXxmps9q
+ aYH3XKiiLI3EJ3v0wPs8fCe7Ikm4AAAA=
+X-Change-ID: 20250415-wip-bl-ad3552r-fix-doc-table-589293c9b860
+To: =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, sfr@canb.auug.org.au, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1466;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=uyyyxJVkC1X19c9K6rX5j2f5tLF1UJIDKdItLe/uiwA=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/x+dX8FdT6cgy2T+eN9l1VjlW3s5XKq64YBookfUmZ
+ 8KsRkXjjlIWBjEuBlkxRZa6xAiT0NuhUsoLGGfDzGFlAhnCwMUpABOpm8nI8FPDqaq0NvpIql3C
+ n1PTJ39gOtL5prT6bNlfyVU3Pte1hzP8Dz39Lz64fH+AElPa+bmJRxdd0S5b01nxptTi+2ITnad
+ qLAA=
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-The selftest reproduces the deadlock scenario when binding/unbinding XDP
-program, XDP socket, rx ring resize on virtio_net interface.
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+Fix malformed table.
+
+Fixes: 9a259b51e3ea ("docs: iio: add documentation for ad3552r driver")
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 ---
- tools/testing/selftests/Makefile              |  2 +-
- .../selftests/drivers/net/virtio_net/Makefile |  2 +
- .../selftests/drivers/net/virtio_net/config   |  1 +
- .../drivers/net/virtio_net/lib/py/__init__.py | 16 ++++++
- .../drivers/net/virtio_net/xsk_pool.py        | 52 +++++++++++++++++++
- 5 files changed, 72 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/drivers/net/virtio_net/lib/py/__init__.py
- create mode 100755 tools/testing/selftests/drivers/net/virtio_net/xsk_pool.py
+Fix malformed table.
+---
+ Documentation/iio/ad3552r.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index c77c8c8e3d9b..0a6b096f98b7 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -130,7 +130,7 @@ TARGETS_HOTPLUG = cpu-hotplug
- TARGETS_HOTPLUG += memory-hotplug
- 
- # Networking tests want the net/lib target, include it automatically
--ifneq ($(filter net drivers/net drivers/net/hw,$(TARGETS)),)
-+ifneq ($(filter net drivers/net drivers/net/hw drivers/net/virtio_net,$(TARGETS)),)
- ifeq ($(filter net/lib,$(TARGETS)),)
- 	INSTALL_DEP_TARGETS := net/lib
- endif
-diff --git a/tools/testing/selftests/drivers/net/virtio_net/Makefile b/tools/testing/selftests/drivers/net/virtio_net/Makefile
-index 7ec7cd3ab2cc..82adda96ef15 100644
---- a/tools/testing/selftests/drivers/net/virtio_net/Makefile
-+++ b/tools/testing/selftests/drivers/net/virtio_net/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0+ OR MIT
- 
- TEST_PROGS = basic_features.sh \
-+        xsk_pool.py \
-         #
- 
- TEST_FILES = \
-@@ -8,6 +9,7 @@ TEST_FILES = \
-         #
- 
- TEST_INCLUDES = \
-+        $(wildcard lib/py/*.py ../lib/py/*.py) \
-         ../../../net/forwarding/lib.sh \
-         ../../../net/lib.sh \
-         #
-diff --git a/tools/testing/selftests/drivers/net/virtio_net/config b/tools/testing/selftests/drivers/net/virtio_net/config
-index bcf7555eaffe..12e8caa22613 100644
---- a/tools/testing/selftests/drivers/net/virtio_net/config
-+++ b/tools/testing/selftests/drivers/net/virtio_net/config
-@@ -6,3 +6,4 @@ CONFIG_NET_L3_MASTER_DEV=y
- CONFIG_NET_VRF=m
- CONFIG_VIRTIO_DEBUG=y
- CONFIG_VIRTIO_NET=y
-+CONFIG_XDP_SOCKETS=y
-diff --git a/tools/testing/selftests/drivers/net/virtio_net/lib/py/__init__.py b/tools/testing/selftests/drivers/net/virtio_net/lib/py/__init__.py
-new file mode 100644
-index 000000000000..b582885786f5
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/virtio_net/lib/py/__init__.py
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import sys
-+from pathlib import Path
-+
-+KSFT_DIR = (Path(__file__).parent / "../../../../..").resolve()
-+
-+try:
-+    sys.path.append(KSFT_DIR.as_posix())
-+    from net.lib.py import *
-+    from drivers.net.lib.py import *
-+except ModuleNotFoundError as e:
-+    ksft_pr("Failed importing `net` library from kernel sources")
-+    ksft_pr(str(e))
-+    ktap_result(True, comment="SKIP")
-+    sys.exit(4)
-diff --git a/tools/testing/selftests/drivers/net/virtio_net/xsk_pool.py b/tools/testing/selftests/drivers/net/virtio_net/xsk_pool.py
-new file mode 100755
-index 000000000000..3f80afd97d4e
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/virtio_net/xsk_pool.py
-@@ -0,0 +1,52 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# This is intended to be run on a virtio-net guest interface.
-+# The test binds the XDP socket to the interface without setting
-+# the fill ring to trigger delayed refill_work. This helps to
-+# make it easier to reproduce the deadlock when XDP program,
-+# XDP socket bind/unbind, rx ring resize race with refill_work on
-+# the buggy kernel.
-+
-+from lib.py import ksft_exit, ksft_run
-+from lib.py import KsftSkipEx, KsftFailEx
-+from lib.py import NetDrvEnv
-+from lib.py import bkg, ip, cmd, ethtool
-+import re
-+
-+def _get_rx_ring_entries(cfg):
-+    output = ethtool(f"-g {cfg.ifname}").stdout
-+    values = re.findall(r'RX:\s+(\d+)', output)
-+    return int(values[1])
-+
-+def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
-+    # Probe for support
-+    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
-+    if xdp.ret == 255:
-+        raise KsftSkipEx('AF_XDP unsupported')
-+    elif xdp.ret > 0:
-+        raise KsftFailEx('unable to create AF_XDP socket')
-+
-+    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_queue_id}',
-+               ksft_wait=3)
-+
-+def check_xdp_bind(cfg):
-+    ip(f"link set dev %s xdp obj %s sec xdp" %
-+       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
-+    ip(f"link set dev %s xdp off" % cfg.ifname)
-+
-+def check_rx_resize(cfg, queue_size = 128):
-+    rx_ring = _get_rx_ring_entries(cfg)
-+    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
-+    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
-+
-+def main():
-+    with NetDrvEnv(__file__, nsim_test=False) as cfg:
-+        xsk_bkg = setup_xsk(cfg)
-+
-+        ksft_run([check_xdp_bind, check_rx_resize],
-+                 args=(cfg, ))
-+    ksft_exit()
-+
-+if __name__ == "__main__":
-+    main()
+diff --git a/Documentation/iio/ad3552r.rst b/Documentation/iio/ad3552r.rst
+index 582507abe8c4c2ecb51a1f8389d7deec44d20222..f5d59e4e86c7ec8338f3f4e82d7a07587e3d8404 100644
+--- a/Documentation/iio/ad3552r.rst
++++ b/Documentation/iio/ad3552r.rst
+@@ -56,7 +56,7 @@ specific debugfs path ``/sys/kernel/debug/iio/iio:deviceX``.
+ | Debugfs device files  | Description                                          |
+ +-----------------------+------------------------------------------------------+
+ | data_source           | The used data source, as                             |
+-|                       | ``normal``, ``ramp-16bit``, etc.                        |
++|                       | ``normal``, ``ramp-16bit``, etc.                     |
+ +-----------------------+------------------------------------------------------+
+ | data_source_available | The available data sources.                          |
+ +-----------------------+------------------------------------------------------+
+
+---
+base-commit: 31c52fe3b2efeebfc72cc5336653baaa9889b41e
+change-id: 20250415-wip-bl-ad3552r-fix-doc-table-589293c9b860
+
+Best regards,
 -- 
-2.43.0
+Angelo Dureghello <adureghello@baylibre.com>
 
