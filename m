@@ -1,44 +1,28 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from animx.eu.org (tn-76-7-174-50.sta.embarqhsd.net [76.7.174.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD1C111BF;
-	Tue, 15 Apr 2025 00:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0A1E552
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.7.174.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744677210; cv=none; b=Jqz673a6G5cbozy3ly8JjorHZFkPfKTukhgYaEVezpUdFrrcCYXsXjkqD6Z3cOwHaU+gdPsUgR2NRldUx3SNWD7x9VyHR6NY6H2H3+Ue/4mkvym9oLS/oh6NYWsgORIbamJyUmjtgKoHOe6+qOdYCvSZPHVU6JPuE9YI1EYCruc=
+	t=1744677336; cv=none; b=nk929jEaDffW26w2E52n3beHdH7KKlXMVDNwLY+nwLIygQgb5MJE3qy1QI1xGeL/mHDxZAf8nu/BtDRP57La/MjT4GpftuZZf1KW/Ilx9nAFb+erfEbfwu7mPhmLB2q9c/14tO1IJXjoNm2rcQukpTitWUPx2lZfAFnRV7wIQ2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744677210; c=relaxed/simple;
-	bh=eqwIVwtN+887ohiYvMh6dcfPcTmfL2U0sNbhIFk8RqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uD1rr8k5WNI+iNdfhKkgu9xg2EOkM62moCsCUqVosaVxrMufM+fRxZuo358DNDL2oIuxAYXOttt+PpqN3Ls3S06UINjYcoLz9K9sqzT4zIbqYOhQicWyYXeG2Uq7gtsDkomDm8z8ZqkZgh8NczDiMgDdl2FlPOMtBTF676vPhCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4T4hIGr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4T4hIGr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF9C8C4CEE2;
-	Tue, 15 Apr 2025 00:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744677210;
-	bh=eqwIVwtN+887ohiYvMh6dcfPcTmfL2U0sNbhIFk8RqY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=p4T4hIGrPHKtm5upVjDdTU4+H33Plv3vz4qEX5/QKH1aVIk383lDoSuvqN8jOPkRl
-	 iGBfUoHAT/TwGtMT48xH3s72eTNnbPfzlp1wEPiDwyr18K1oSNJt7tPotiztpIrGSI
-	 +UaLOUcdxTiDVnpsbZhxorANJzaQLP+pkJeSD1SpTXNyibSuzWfgrcOWjdnfDWcMeY
-	 1Qf+Kq9xVutzRW7wtOR/Av06dX8F9vw9Q1QLeTidkysEoqeh/Lx98VaEEHJbtb4d2j
-	 aWZhDIr+8SV9gD7EnjUQE/CnusTS9mvEpXGVjfupClwJp6Syidc4dr1qu977+VCbib
-	 Ex6ev+hcEcZdw==
-Date: Mon, 14 Apr 2025 17:33:26 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] HID: simplify code in fetch_item()
-Message-ID: <20250415003326.GA4164044@ax162>
-References: <ZvwYbESMZ667QZqY@google.com>
- <20241010222451.GA3571761@thelio-3990X>
- <Z_yrjPBO_CPS8WX1@black.fi.intel.com>
+	s=arc-20240116; t=1744677336; c=relaxed/simple;
+	bh=VlDWD+tcU+XzK5CrGv1+CLSKYaFa3UIM7cOylNqx7uk=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lOpfe55BoPj0WeYiprjNXrEPYA3ZIyH1t1doTDv9q5TplxJHttuaWHSrHB6AMZy8iJ11WAFATf9qJwPgDsgqhS7ED9zEcr6Q1k4Rmqr52xprkyjGpUFfxLkRVtBIsVtjNEk5PsMrcUgpXZvmM7mvYkepgongke9gIQ+vaa7gVe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=animx.eu.org; spf=pass smtp.mailfrom=animx.eu.org; arc=none smtp.client-ip=76.7.174.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=animx.eu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=animx.eu.org
+Received: from wakko by animx.eu.org with local 
+	id 1u4UGq-00045q-Tk;
+	Mon, 14 Apr 2025 20:35:24 -0400
+Date: Mon, 14 Apr 2025 20:35:24 -0400
+From: Wakko Warner <wakko@animx.eu.org>
+To: linux-kernel@vger.kernel.org, airlied@redhat.com
+Subject: Re: MGA G200 issue in 6.12 and up
+Message-ID: <Z/2pzDAplsZz8AVd@animx.eu.org>
+References: <Z/anHRAx3SQWr+h8@animx.eu.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,26 +31,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_yrjPBO_CPS8WX1@black.fi.intel.com>
+In-Reply-To: <Z/anHRAx3SQWr+h8@animx.eu.org>
 
-On Mon, Apr 14, 2025 at 09:30:36AM +0300, Andy Shevchenko wrote:
-> On Thu, Oct 10, 2024 at 03:24:51PM -0700, Nathan Chancellor wrote:
-> > On Tue, Oct 01, 2024 at 08:42:36AM -0700, Dmitry Torokhov wrote:
-> 
-> ...
-> 
-> > Getting rid of the unreachable() in some way resolves the issue. I
-> > tested using BUG() in lieu of unreachable() like the second change I
-> > mentioned above, which resolves the issue cleanly, as the default case
-> > clearly cannot happen. ...
-> 
-> As Dmitry pointed out to this old discussion, I have a question about the above
-> test. Have you tried to use BUG() while CONFIG_BUG=n? Does it _also_ solve the
-> issue?
+I found the fix that works for me.  See below.
 
-Yes because x86 appears to always emit ud2 for BUG() regardless of
-whether CONFIG_BUG is set or not since HAVE_ARCH_BUG is always
-respected.
+Wakko Warner wrote:
+> I decided to upgrade to 6.14 on a system with a Matrox G200 onboard vga
+> (supermicro X9SCL).
+> 
+> I use this system via the BMC.  When the mgag200 driver loads, the bmc
+> screen flashes between no signal and the screen.  The rate seems to be about
+> 1 second no signal and 1 second with signal.
+> 
+> 6.12 and 6.13 both have this problem.
+> 
+> 6.11 does not have this problem.
+> 
+> I have a monitor plugged into the vga port and it doesn't have this problem
+> on any of the kernels I've tried.  Only the remote connection through the bmc
+> has this problem.  I have booted the system with and with out the monitor
+> plugged in, it does not appear to make a difference.
 
-Cheers,
-Nathan
+I found a thread on arch linux forums
+(https://bbs.archlinux.org/viewtopic.php?id=303819) where the op has the
+same issue.  He bisected and came up with the bad commit.
+That commit is 
+d6460bd52c27fde97d6a73e3d9c7a8d747fbaa3e drm/mgag200: Add dedicated variables
+for blanking fields
+
+I searched this commit and manually reverted it from my vanilla 6.14 and it
+works fine.  No blinking in the BMC remote console and the external VGA
+works fine as well.
+
+-- 
+ Microsoft has beaten Volkswagen's world record.  Volkswagen only created 22
+ million bugs.
