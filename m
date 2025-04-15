@@ -1,459 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013067.outbound.protection.outlook.com [40.107.159.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE68720298D;
-	Tue, 15 Apr 2025 15:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744731737; cv=none; b=C6BamLOcP/K8+YNXXJAdERnMq39aVp49SB9Ufk1T3jJK2J8Hd9IQ3qJqK7TpKMY4lZ0BhoP7Nv2kQzEyufdYUB8dXxS3IJcIEAt3UWhZNZwvoz8X3Ls5OSpx1uG+eOajFA8qQxY9H/ww3pR6GjV7Kjj8ZQm8+/GDwP98cmbbvTw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744731737; c=relaxed/simple;
-	bh=UGKtzN4aWO6U1O3ajTIdkODTuzeF0Vgi+tMgVObbm84=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=q2bC+mNLx4nW77GtRsYD+JpaAhm/9Xv9WwYdvxjCB0NdVe7mqH6I04wp5rSrz6VUmdBgAmrlZ+xpjdwKIMfqxSmP6HbmaK7EjMqs9siUxQpWsLmDjGRlp/foSV5b62ODpKKoPh/IYQdI43V6DHsC7qTrp+EMHVUZe0j100UBmKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mux0kKKV; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1A820298D;
+	Tue, 15 Apr 2025 15:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744731747; cv=fail; b=jjVqwCsTVAGw2DuwTVLvw2G8AKFEqM1ExtNNxaW2cTj8CpfdytsjYcu/bvpCae8Fy177OQ2gp7/FnKcltSaaxZmXbMdqR6lsSUoSowsBixX2oYo6GKw9yuQSRdaMm9obVTZeRQ3q8GR00bG7pG3wG0Nidobh114xyOty2smVyUg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744731747; c=relaxed/simple;
+	bh=HZS2T6sHruQun6NUM1mO3/iBGa10dxTyPRqcWMU/VA4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Kjis46t6OIHbt9En27hkG0eTSh4w+tyVMczTocIwTPOSkWJFMKcKzK7XbFonvCmTF7kK6lqsfd0FYUhMW7e70dcX4tciHHmGGZ60HoXtXQCuRWB3b8FZir57S2MKoX3rb6g0qzN2biljVhHWuH3terR1URHr4BxpLGNKk1kG72M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=rnIz+RMm; arc=fail smtp.client-ip=40.107.159.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mux0kKKV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744731736; x=1776267736;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=UGKtzN4aWO6U1O3ajTIdkODTuzeF0Vgi+tMgVObbm84=;
-  b=Mux0kKKVtIzzey5/UdTbzwiqzbGOKiqxHP18IsxZHPO44jLxgrrrJ5oN
-   N5G1Bh0NYZd0xGANZerBuscBFxKs1Eb1z2waV5h5i5jfZzgA4wr+2TdtJ
-   fF71cpdqf6J6SUPrV1uIcC/v0liSWWRlZayTkKlbmi486QtlbqGbqUlOv
-   EKwlFLP7OVKkxz0hn1EQF6HKHuv833eoArFZnSNQgLtQ4YoehxovwbxEZ
-   2JeBiZkqeXNexpKaYaaUhgJrYGWmMG9monWqTy8NUBQ38VCzqKxf6yyiN
-   2dwNTeSoj/IQII6ceNVxL119UiQgmBWZWWxOz8Fo2R8bakHyYwORD1XmQ
-   Q==;
-X-CSE-ConnectionGUID: sDjE0CRyTCmz9Hu43yS1gg==
-X-CSE-MsgGUID: C5zy0IAyTY+TyAfnS2E5qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63790100"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="63790100"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:42:15 -0700
-X-CSE-ConnectionGUID: Ye6D+9loQNiOBrfe1MypMA==
-X-CSE-MsgGUID: tKB5YzzWTpCwPkUPWosLEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130016602"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.140])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 08:42:10 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 15 Apr 2025 18:42:07 +0300 (EEST)
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>
-cc: Hans de Goede <hdegoede@redhat.com>, W_Armin@gmx.de, 
-    mario.limonciello@amd.com, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
-    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v5] platform/x86: Add AMD ISP platform config for
- OV05C10
-In-Reply-To: <20250408203330.801792-1-pratap.nirujogi@amd.com>
-Message-ID: <128ded89-f8e2-6306-47eb-2275b3f33a6c@linux.intel.com>
-References: <20250408203330.801792-1-pratap.nirujogi@amd.com>
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="rnIz+RMm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tW3HE5WILOxo9vHSyi/+Sj+Hyjprvtot97SYZ1m9+b8xb0anEm+1jO6rP3cphuA3ESSwNrKat/6AN/nW9fGWxBpFzCF1IdGGJss+DgucZWPMMF2lrtu6YU9+/IJ+D8k1ryYqfXiHAOv60H3IJu0+AICb4rjWvCtnkSHJEhr3MxdVBcS6vvNKHlMMfGpnA2BOh/0HW+XJbhiKoKZ3rTYtzs3wNZqRcFgP+BdNMfGhpJ7LkqmSxyTFyYfx12bl/lto1CRpHxfmZIJ2TNjYoD89yHBICegMtHVM3CdLaX3XBWLiNYtsIxN9SLW79oMTkj/fRqdoZgcnhlZkhRisacPTSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HZS2T6sHruQun6NUM1mO3/iBGa10dxTyPRqcWMU/VA4=;
+ b=nlnBaq4oP3OqDmuaig2V34o61vKwbDoJoMDEsGICb5n1YEnBpSLru7eNcgPfD+8Fbz5pMnJXS5BAtTg342JP+ePdD7StYLywR1JVh336K3m8dg7naN1uRU5vpUjD1Lh+ATT153qyszN88yxZoGypUrS2jBV8CJm/rCvIylVM+RRYDATVI9sJeZ8ksVljLb40gjgw0WC53mH1qUHBQnhvPZ470Cg1OaFLfRE5QRQTPHAK1wYAOMbZxVvtVW8ZDjmj2LvoOkJ+aEgI2b9uhHXoZHDTUxudnl65738RHLXx7qhicl3vIpLmNSZhYI4bwwBKrB0PSAGbqfZ95PKPlEeYTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=leica-geosystems.com; dmarc=pass action=none
+ header.from=leica-geosystems.com; dkim=pass header.d=leica-geosystems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HZS2T6sHruQun6NUM1mO3/iBGa10dxTyPRqcWMU/VA4=;
+ b=rnIz+RMm4kp07nGgibhY+oPrr6KGwCvZTr0uaXNrGbI5gA2LBpgaxKxZvgtLA8V14YtqyosF9eFgbviVZzQtlEUrIgVuASzNI9wIwsE/Nv7V1WQeIpRIEgdKJhDyZ7NmkILxGvhI8+iUSx9C3omoqDhBZ1dqZNvNj/2+JdJdY/w=
+Received: from DBAPR06MB6901.eurprd06.prod.outlook.com (2603:10a6:10:1a0::11)
+ by PA4PR06MB8475.eurprd06.prod.outlook.com (2603:10a6:102:2a6::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 15:42:22 +0000
+Received: from DBAPR06MB6901.eurprd06.prod.outlook.com
+ ([fe80::3988:68ff:8fd1:7ea0]) by DBAPR06MB6901.eurprd06.prod.outlook.com
+ ([fe80::3988:68ff:8fd1:7ea0%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 15:42:22 +0000
+From: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+To: Jai Luthra <jai.luthra@ideasonboard.com>, Shawn Guo <shawnguo2@yeah.net>
+CC: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
+	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "m.felsch@pengutronix.de"
+	<m.felsch@pengutronix.de>, GEO-CHHER-bsp-development
+	<bsp-development.geo@leica-geosystems.com>, "stefan.klug@ideasonboard.com"
+	<stefan.klug@ideasonboard.com>, "laurent.pinchart@ideasonboard.com"
+	<laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
+Thread-Topic: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
+Thread-Index: AQHbGL8KifipXUsSOk2/fobsQXRO0bOkOinfgAHOTQA=
+Date: Tue, 15 Apr 2025 15:42:22 +0000
+Message-ID: <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
+References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
+ <ZxYiCv6SpLq9uh08@dragon>
+ <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
+In-Reply-To: <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
+Accept-Language: en-CH, en-US
+Content-Language: aa
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=leica-geosystems.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DBAPR06MB6901:EE_|PA4PR06MB8475:EE_
+x-ms-office365-filtering-correlation-id: 48ee6b40-d690-4576-b69e-08dd7c341d0a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?aHpoVTRSZWU3OGN6aEpKZGliWGMydHZLZjA3bVQzc0pKd2pvbnJsdHRFR0FP?=
+ =?utf-8?B?cnR4bCtPOFhrczkzNUxpeVphSDhXd1EwRFYzTDllRmdhU1hydFlOMjJmSnUz?=
+ =?utf-8?B?UkRvd0JXVzdtbC9zT3hGbUJtOUgzTTZPSDFlNzRNaUhOdmxLMm9mMm9veldD?=
+ =?utf-8?B?dC9YMXZBcW5aMDF5Mjh0djVmN2VBL1hKQzE1akpTZlkvNVFxbk1vR21OOHhv?=
+ =?utf-8?B?K0o2WlJpaDlITUpGSHJWQ3RWNktKNFVUMWxMMTlDWFRqbDhpZ1JLNERIaElK?=
+ =?utf-8?B?VVJhU2ZNa0FFM1BDSStLN251ZXc3bVl2S3p6MkVLeklacklSYkhhYnZXZExv?=
+ =?utf-8?B?WTNtNWxWSHRJRnZ2eGdMZ0dEc0tBNjhRdmhVNDBpRGdnd05vM1I2R0pSWDV2?=
+ =?utf-8?B?WlJvUmFsdG1hTGtKeTUvYzNacnZTdjhHcmVocC9VM3VwNkFJK3ZkZHhNL2lY?=
+ =?utf-8?B?RnQxeFFqSUtzMW1tNXA5MmdFSGg1NHU2dmcwOUFRRUdDUDNUNmhBZjJxcmx5?=
+ =?utf-8?B?ejBLcytLOHpDbnBoa3FSZGlLeS9OMzVPUnZnZGNURTdQdUJhOW8vZHlXZjI5?=
+ =?utf-8?B?N2FNVGJyK3RpMHpyTy8zWjhqN2ZXUktXbjNDZDd1L1pESUNERTNBWG1lRkt0?=
+ =?utf-8?B?a2JqUGdlY1I3WW9SWHBaMUlaZy9CQTN6NkJCa0Nub2dDYTAySnpGaG4ycWV3?=
+ =?utf-8?B?cWJmRFhCS0xUOW9nSWcwTXN4ZzVsY3pLSWJJUWNLRGpRTkNYRWxLT2NZTFc4?=
+ =?utf-8?B?c2ZGMmFYMWFJaitSc2ppdUJ3LzZWaXhHUmFCRzF1SDdnaGFpWnhtQURzUmMx?=
+ =?utf-8?B?VEw1Z1ZNQ0QwTmppQlgzelNmMjE1UmtnYmE1MkV0TksxS1VhM0I5dDV1bEhr?=
+ =?utf-8?B?SE1YZm1pSUxhRVNIVTdKNHcvblc3MlVNVkhOVjgrMTFSbzUyWEg5RFlLaW96?=
+ =?utf-8?B?V21tWW9uNVBCNXVCV01VU25kaVVLOFFmVmoreVpDZHhKRmVRNysxZHR3WUlj?=
+ =?utf-8?B?ZlJpYnZiQUhIT0VDUVZwQWNMVUlHVTFPSUFGSGhuMkZJOWxFdnRhWXVCam9M?=
+ =?utf-8?B?ekpMOWZ6OGpWTmJ1QVRKRVgySzF1YnE0TldlU3Q3YlpKZFVYS0g4bko5Tzc0?=
+ =?utf-8?B?NVRoOHFmVy9mbFh2T0poVDFBUkh1WFdSazlFem5VUlhQaUU2bzZ4anlXTUJL?=
+ =?utf-8?B?M3p4bmVOZTB1OFNGK2xEZDRHKzVQQlpHR3pkOTltREdNVmxMbGczaDE3Z3Yr?=
+ =?utf-8?B?WkpXbVI0dXNzYzFuVjBPYm85SmhjSHV0M3hKZlg0RzcwbnFmc29CMjBnbXBU?=
+ =?utf-8?B?WERGM0UyQkxNcVFrU0EyU2pLTTlpeGdZWGsrQno4elRqSmE3RmErbE9BaHpQ?=
+ =?utf-8?B?SUgySW4vRXpMYllBRHM3VS9lYi9heVRmQjZ1aGhiMWxsdWEwMzMwZURhYmd5?=
+ =?utf-8?B?eTlnelNtOHd3N1FZT2lUajA1c0JUQkxvRUdTQW90S2N1ZVV0cFJwUVJlNWI1?=
+ =?utf-8?B?bE1QRHlURmVEdUkyVjdOS3dSNGptT0dYRmJ1YzJKZFV3bUdMOVdxRnpIdVZo?=
+ =?utf-8?B?eWdSUWhxcUNZZnFLR0FITmVhK3VJV0J5MDV1N2t6M0tOVWtsTFdrQW5GZzdD?=
+ =?utf-8?B?S0hGRDh0V1VHMVNZK29DcVN3OENvZ1FIblFZbUxkckFweEJGdi9DZDRrQXpp?=
+ =?utf-8?B?UnV3cEdFTHFoZ3NnNDdQR3ZOQWI2dlY1Y09sYU50YzBrdEZJTGY3ZFNBd3FI?=
+ =?utf-8?B?dTFtblFQNHc1bkh6OFh3c283bG9oVFdyOE8vNUc4MHZyZ2htTEpXSnY3dTBr?=
+ =?utf-8?B?TnMxVnlrYmcwSGhzd3VITlM5Uk1YdjYza3Y3VGtGZlROTW9MMzBzN0dUOVM1?=
+ =?utf-8?B?Skp6ZnRoUnJabFM0S2tiemVraUlaTkJJbVo5bEJVMUduaWVxOS80RVMyM3hN?=
+ =?utf-8?B?QTRJMmJoR3M2V1k4eEZLS0tYZVpuT3ZESVUzN2xlZytZTTRUckpJQzJWY2l0?=
+ =?utf-8?B?RGtPQ1RrUC9nPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBAPR06MB6901.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cmVjRUo3dVdEN0N4dW1DY2FheW1DVlg0N1NTcXNjc0RZN0xEZEc0TnJzNWkz?=
+ =?utf-8?B?WXN2Vm1BL1NyZDlCeUJ4cEdMS01iczJKZmhkVUxrV0hGcExLOWRUNHRpR2R2?=
+ =?utf-8?B?Y09NdGVFcXpDaVk1KzFaUmxlZ0d5d0NnclpvbW81SThUR09NUTN5cHVkL2RZ?=
+ =?utf-8?B?UVBVZ2lBV3hqbmlpMHJqS2xmVkdYclMzNUZCTkhhS1lUMzR6YUwzRXVKZ2pD?=
+ =?utf-8?B?MXViK3pHL3NDRDRZL3k5cXF2L2xqVkEvWGthT1ZwSkxFZW9MMGplMSt6blVE?=
+ =?utf-8?B?aGswMEh3Vjg5clZZQ0V0aHVYdEZZclJRalVXdWJMYUI2WEIzYzcrWWtKNG12?=
+ =?utf-8?B?Sm5tUjhYSHR6czJYT2dJYTlOUUQ5MFhKKzFiRG5Hb2tIcTBsSUowY1ZaMFV3?=
+ =?utf-8?B?dHNIMFAyUmw4dDFidTEyRnpnSVFLVEdSNi9iZU1Db0pSelpEQ3ZoYzlyc2dt?=
+ =?utf-8?B?SUpUK3ZFelZ5Z1hENVBvNVMrVHU4OG5OSVlwdHhSUUJHaTBsYTZlbjdyaWtt?=
+ =?utf-8?B?UllQQTBsRG9CLzJjdWVyeGt1TGROYURGSWhkWitLRzQvUFU2WCszRlJVWDdB?=
+ =?utf-8?B?TGZxYnFrTFlyNURWVFBYOGtBaHFVM1dOLzltSUkwSEdBd21mOVZtd1FvcFVm?=
+ =?utf-8?B?VmwrdWdFVG05MmtnYUw5UnNkRS8xSnk2Vmo5eGFsN3NnSVdYQm1tOXdXdmVM?=
+ =?utf-8?B?L2tVYk1MNTM3TFJaeVlXM3M2RjBnQk1WYTNBZnd2MStpUGIxWitjWEVFdzZM?=
+ =?utf-8?B?RkZWV0RKL0tmbDduQ2x6aktjc2FxN1p0R2doc1UwK3QyaEp4N2NxSDJrcTRt?=
+ =?utf-8?B?d1MvV1JwU2JUUVk0QW5vSW5yeWZzZDNuUE5EWmJkVmNHNllaMFVrSjlPMDht?=
+ =?utf-8?B?czV5QzgyK3ZwcjhyY3Nqc0NhUkpTNWxNQ0s4ZkNNcWR3K1pqWnI4alhDLy9V?=
+ =?utf-8?B?NWxIb1Y4OVorRDdYN1RucDFnZzRUeHphVlBRSEU0MlR2ZVNVYk1SaXhvcjdQ?=
+ =?utf-8?B?QjhuR2gzOG5lNnlLbFplc2graVNlNU1MN1ltVmc5Y2ZNOXdzeVg2K0xEMmVG?=
+ =?utf-8?B?aE1IRzJqeUFRM2g3U2VBSXh4bmN2aEdxYTN5TlJFY1RKOUVHZXkxRzNZQWNj?=
+ =?utf-8?B?ZGIvQjlMT2toZVYzSUN2STBha2cxQy8ycmdOU1R1R2N2SzNIQlFPNzNITFBG?=
+ =?utf-8?B?K1Z0NUUxS1pmM2p3MS9VdkJkbVV6REQxY3BNbFVRRnpta09IN3hFcGw1eVNk?=
+ =?utf-8?B?NUI4alpYOXY5eDkzaHRLUVYzZHpZeDEyQWxWS2hzY2h3WHl2V09QZW9Oa00v?=
+ =?utf-8?B?WUNIWGwzcUxKWjZ2UUtjRlFNN3VjV3JiVnFzWlNKUG1qUS9vbDFhLy82VlFD?=
+ =?utf-8?B?UjhVcFRpejN3LzBVeTFRQXVFbjN4R1M3N1ZISEMwTGNReG5tc3ExWkx0L0t0?=
+ =?utf-8?B?eE5LaG8wcmlmRkpiVGtjNFVOZ0tyaUNJMUtibzhGQlBxN0RGTTAxL3dNTVdM?=
+ =?utf-8?B?R3F3MGpuaGlzL0V2RmpuanZ5aHVrVmp6WnlnZGx2cW1ocWlZMFNNcW1sY09Z?=
+ =?utf-8?B?MW94anlYYW1EK3V1cnpkbkVLNUplVU9BMWZSakVSQlNuMmpDT045d2piVUt2?=
+ =?utf-8?B?TmdJV09WZEZmRDFMdXRuakI5SmxjWlA5cXBiNm1rZlJmbFBHd3BrdmoxV0Z4?=
+ =?utf-8?B?S1dHSm93Nm5lS3M4QWt5MFNhamJEbHIzVE5UeDM2NVlLRUt2TzFibDhTeU9m?=
+ =?utf-8?B?VWd0a1FsdGRrWWdmRlBvZjRWMnU4dWRUczhkempnLzl3dURLRUJ1Z3JCTmp4?=
+ =?utf-8?B?RUFaY3VMbGVSVWxVRWkrQVhyRFM1SUJ1d2F3ZnQveUt3K2huS1ROSkZsZElZ?=
+ =?utf-8?B?QStJQkhJM2xpZU5vUlBib3NMU3ppYWNMbFQ5TUpoaVlBMFZ5UGVtZHlJdEJy?=
+ =?utf-8?B?aWJmTUcrUjVSWk1uRmpoekQ1WnF2Q2trUjZTSzNLVm1TVWwyWTVoem1RTDkr?=
+ =?utf-8?B?alZCM3dtYjJubGtBNEpJcVJ5RktWN2xtaFJQYytKd0tiTFVBT2JzZTQ5anNi?=
+ =?utf-8?B?RnZ2OHRKYTlkdVpDYnl3VkpVdUFFUTVKOXl2Um8vajdhajA2eDdoUmowU2hU?=
+ =?utf-8?B?dGlWdStKdU1hdjFYOXFSUHF5TmtPeWVGWm8ydXBvYWVON3YwM3RzWUlYZzlZ?=
+ =?utf-8?B?Z3c9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1DADD95B79E8204C8ED1CF4CF9927F19@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: leica-geosystems.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DBAPR06MB6901.eurprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48ee6b40-d690-4576-b69e-08dd7c341d0a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2025 15:42:22.3478
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oYgCFSZks37S5UoUkjn5nkLXRjqUgIwlVwmoxyDLb+/1rR3283Wfk7xgc8M0RcAxNEVPVAzSay2DVDoygsEqiZ7NZ+0rs0QpPHy4VkENe361XK4JZhwdATZxMkrCOWwL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR06MB8475
 
-On Tue, 8 Apr 2025, Pratap Nirujogi wrote:
-
-> ISP device specific configuration is not available in ACPI. Add
-> swnode graph to configure the missing device properties for the
-> OV05C10 camera device supported on amdisp platform.
-> 
-> Add support to create i2c-client dynamically when amdisp i2c
-> adapter is available.
-> 
-> Co-developed-by: Benjamin Chan <benjamin.chan@amd.com>
-> Signed-off-by: Benjamin Chan <benjamin.chan@amd.com>
-> Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> ---
-> Changes v4 -> v5:
-> 
-> * Avoid global variables and make driver reentrant following the
-> state container design pattern.
-> 
-> * Fix coding error referencing i2c_dev variable of amdisp_platform
-> in instantiate_isp_i2c_client().
-> 
-> * Remove i2c_put_adapter(). Not required as i2c_get_adapter() is not called.
-> 
-> * Use i2c_board_info->swnode instead of fwnode to fix refcount imbalance
-> warnings when module is removed.
-> 
-> * Address review comments.
-> 
->  drivers/platform/x86/amd/Kconfig    |  11 ++
->  drivers/platform/x86/amd/Makefile   |   1 +
->  drivers/platform/x86/amd/amd_isp4.c | 295 ++++++++++++++++++++++++++++
->  3 files changed, 307 insertions(+)
->  create mode 100644 drivers/platform/x86/amd/amd_isp4.c
-> 
-> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
-> index c3e086ea64fc..ec755b5fc93c 100644
-> --- a/drivers/platform/x86/amd/Kconfig
-> +++ b/drivers/platform/x86/amd/Kconfig
-> @@ -32,3 +32,14 @@ config AMD_WBRF
->  
->  	  This mechanism will only be activated on platforms that advertise a
->  	  need for it.
-> +
-> +config AMD_ISP_PLATFORM
-> +	tristate "AMD ISP4 platform driver"
-> +	depends on I2C && X86_64 && ACPI && AMD_ISP4
-> +	help
-> +	  Platform driver for AMD platforms containing image signal processor
-> +	  gen 4. Provides camera sensor module board information to allow
-> +	  sensor and V4L drivers to work properly.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called amd_isp4.
-> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
-> index c6c40bdcbded..b0e284b5d497 100644
-> --- a/drivers/platform/x86/amd/Makefile
-> +++ b/drivers/platform/x86/amd/Makefile
-> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
->  obj-$(CONFIG_AMD_HSMP)		+= hsmp/
->  obj-$(CONFIG_AMD_PMF)		+= pmf/
->  obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
-> +obj-$(CONFIG_AMD_ISP_PLATFORM)	+= amd_isp4.o
-> diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
-> new file mode 100644
-> index 000000000000..ad181ab96423
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/amd_isp4.c
-> @@ -0,0 +1,295 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * AMD ISP platform driver for sensor i2-client instantiation
-> + *
-> + * Copyright 2025 Advanced Micro Devices, Inc.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device/bus.h>
-> +#include <linux/dmi.h>
-> +#include <linux/gpio/machine.h>
-> +#include <linux/init.h>
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/units.h>
-> +
-> +#define AMDISP_OV05C10_I2C_ADDR		0x10
-> +#define AMDISP_OV05C10_PLAT_NAME	"amdisp_ov05c10_platform"
-> +#define AMDISP_OV05C10_HID		"OMNI5C10"
-> +#define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
-> +#define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
-> +
-> +/*
-> + * AMD ISP platform definition to configure the device properties
-> + * missing in the ACPI table.
-> + */
-> +struct amdisp_platform {
-> +	const char *name;
-> +	u8 i2c_addr;
-> +	u8 max_num_swnodes;
-> +	struct i2c_board_info board_info;
-> +	struct notifier_block i2c_nb;
-> +	struct i2c_client *i2c_dev;
-> +	struct software_node **swnodes;
-
-Can't this too be const struct so you can avoid a few casts below?
-
-> +};
-> +
-> +/* Top-level OV05C10 camera node property table */
-> +static const struct property_entry ov05c10_camera_props[] = {
-> +	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
-> +	{ }
-> +};
-> +
-> +/* Root AMD ISP OV05C10 camera node definition */
-> +static const struct software_node camera_node = {
-> +	.name = AMDISP_OV05C10_HID,
-> +	.properties = ov05c10_camera_props,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Ports node definition. No properties defined for
-> + * ports node for OV05C10.
-> + */
-> +static const struct software_node ports = {
-> +	.name = "ports",
-> +	.parent = &camera_node,
-> +};
-> +
-> +/*
-> + * AMD ISP OV05C10 Port node definition. No properties defined for
-> + * port node for OV05C10.
-> + */
-> +static const struct software_node port_node = {
-> +	.name = "port@",
-> +	.parent = &ports,
-> +};
-> +
-> +/*
-> + * Remote endpoint AMD ISP node definition. No properties defined for
-> + * remote endpoint node for OV05C10.
-> + */
-> +static const struct software_node remote_ep_isp_node = {
-> +	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
-> +};
-> +
-> +/*
-> + * Remote endpoint reference for isp node included in the
-> + * OV05C10 endpoint.
-> + */
-> +static const struct software_node_ref_args ov05c10_refs[] = {
-> +	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
-> +};
-> +
-> +/* OV05C supports one single link frequency */
-> +static const u64 ov05c10_link_freqs[] = {
-> +	925 * HZ_PER_MHZ,
-> +};
-> +
-> +/* OV05C supports only 2-lane configuration */
-> +static const u32 ov05c10_data_lanes[] = {
-> +	1,
-> +	2,
-> +};
-> +
-> +/* OV05C10 endpoint node properties table */
-> +static const struct property_entry ov05c10_endpoint_props[] = {
-> +	PROPERTY_ENTRY_U32("bus-type", 4),
-> +	PROPERTY_ENTRY_U32_ARRAY_LEN("data-lanes", ov05c10_data_lanes,
-> +				     ARRAY_SIZE(ov05c10_data_lanes)),
-> +	PROPERTY_ENTRY_U64_ARRAY_LEN("link-frequencies", ov05c10_link_freqs,
-> +				     ARRAY_SIZE(ov05c10_link_freqs)),
-> +	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", ov05c10_refs),
-> +	{ }
-> +};
-> +
-> +/* AMD ISP endpoint node definition */
-> +static const struct software_node endpoint_node = {
-> +	.name = "endpoint",
-> +	.parent = &port_node,
-> +	.properties = ov05c10_endpoint_props,
-> +};
-> +
-> +/*
-> + * AMD ISP swnode graph uses 5 nodes and also its relationship is
-> + * fixed to align with the structure that v4l2 expects for successful
-> + * endpoint fwnode parsing.
-> + *
-> + * It is only the node property_entries that will vary for each platform
-> + * supporting different sensor modules.
-> + */
-> +#define NUM_SW_NODES 5
-> +
-> +static const struct software_node *ov05c10_nodes[NUM_SW_NODES + 1] = {
-> +	&camera_node,
-> +	&ports,
-> +	&port_node,
-> +	&endpoint_node,
-> +	&remote_ep_isp_node,
-> +	NULL
-> +};
-> +
-> +/* OV05C10 specific AMD ISP platform configuration */
-> +static const struct amdisp_platform amdisp_ov05c10_platform_config = {
-> +	.name = AMDISP_OV05C10_PLAT_NAME,
-> +	.board_info = {
-> +		.dev_name = "ov05c10",
-> +		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
-> +	},
-> +	.i2c_addr = AMDISP_OV05C10_I2C_ADDR,
-> +	.max_num_swnodes = NUM_SW_NODES,
-> +	.swnodes = (struct software_node **)ov05c10_nodes,
-> +};
-> +
-> +static const struct acpi_device_id amdisp_sensor_ids[] = {
-> +	{ AMDISP_OV05C10_HID },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-> +
-> +static bool is_isp_i2c_adapter(struct i2c_adapter *adap)
-> +{
-> +	return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-> +}
-> +
-> +static void instantiate_isp_i2c_client(struct amdisp_platform *ov05c10, struct i2c_adapter *adap)
-> +{
-> +	struct i2c_board_info *info = &ov05c10->board_info;
-> +	struct i2c_client *i2c_dev;
-> +
-> +	if (ov05c10->i2c_dev)
-> +		return;
-> +
-> +	if (!info->addr) {
-> +		dev_err(&adap->dev, "invalid i2c_addr 0x%x detected\n",
-> +			ov05c10->i2c_addr);
-
-Put on a single line, you've longer lines already than what this is.
-
-> +		return;
-> +	}
-> +
-> +	i2c_dev = i2c_new_client_device(adap, info);
-> +	if (IS_ERR(i2c_dev)) {
-> +		dev_err(&adap->dev, "error %pe registering isp i2c_client\n",
-> +			i2c_dev);
-
-Ditto.
-
-> +		return;
-> +	}
-> +	ov05c10->i2c_dev = i2c_dev;
-> +}
-> +
-> +static int isp_i2c_bus_notify(struct notifier_block *nb,
-> +			      unsigned long action, void *data)
-> +{
-> +	struct amdisp_platform *ov05c10 = container_of(nb, struct amdisp_platform, i2c_nb);
-> +	struct device *dev = data;
-> +	struct i2c_client *client;
-> +	struct i2c_adapter *adap;
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		adap = i2c_verify_adapter(dev);
-> +		if (!adap)
-> +			break;
-> +		if (is_isp_i2c_adapter(adap))
-> +			instantiate_isp_i2c_client(ov05c10, adap);
-> +		break;
-> +	case BUS_NOTIFY_REMOVED_DEVICE:
-> +		client = i2c_verify_client(dev);
-> +		if (!client)
-> +			break;
-> +		if (ov05c10->i2c_dev == client) {
-> +			dev_dbg(&client->adapter->dev, "amdisp i2c_client removed\n");
-> +			ov05c10->i2c_dev = NULL;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct amdisp_platform *prepare_amdisp_platform(const struct amdisp_platform *src)
-> +{
-> +	struct amdisp_platform *isp_ov05c10;
-> +	const struct software_node **sw_nodes;
-> +	const struct software_node *sw_node;
-> +	struct i2c_board_info *info;
-> +	int ret;
-> +
-> +	isp_ov05c10 = kmemdup(src, sizeof(*isp_ov05c10), GFP_KERNEL);
-> +	if (!isp_ov05c10)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	info = &isp_ov05c10->board_info;
-> +
-> +	sw_nodes = (const struct software_node **)src->swnodes;
-> +	ret = software_node_register_node_group(sw_nodes);
-> +	if (ret)
-> +		goto error_unregister_sw_node;
-> +
-> +	sw_node = (const struct software_node *)src->swnodes[0];
-> +	info->swnode = sw_node;
-> +
-> +	return isp_ov05c10;
-> +
-> +error_unregister_sw_node:
-> +	software_node_unregister_node_group(sw_nodes);
-
-If register failed, why you are calling unregister for it?? 
-
-> +	kfree(isp_ov05c10);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static int amd_isp_probe(struct platform_device *pdev)
-> +{
-> +	struct amdisp_platform *ov05c10;
-> +	int ret;
-> +
-> +	ov05c10 = prepare_amdisp_platform(&amdisp_ov05c10_platform_config);
-> +	if (IS_ERR(ov05c10))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(ov05c10),
-> +				     "failed to prepare amdisp platform fw node\n");
-
-fwnode
-
-Please also capitalize properly as this is user visible message, AMD ISP ?
-
-> +
-> +	ov05c10->i2c_nb.notifier_call = isp_i2c_bus_notify;
-> +
-> +	ret = bus_register_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-> +	if (ret)
-> +		goto error_free_platform;
-> +
-> +	platform_set_drvdata(pdev, ov05c10);
-> +	return ret;
-
-return 0
-
-> +
-> +error_free_platform:
-> +	kfree(ov05c10);
-> +	return ret;
-> +}
-> +
-> +static void amd_isp_remove(struct platform_device *pdev)
-> +{
-> +	struct amdisp_platform *ov05c10 = platform_get_drvdata(pdev);
-> +
-> +	if (IS_ERR_OR_NULL(ov05c10))
-
-How can this happen??
-
-> +		return;
-> +
-> +	bus_unregister_notifier(&i2c_bus_type, &ov05c10->i2c_nb);
-> +	i2c_unregister_device(ov05c10->i2c_dev);
-> +	software_node_unregister_node_group((const struct software_node **)
-
-Unnecessary cast?
-
-> +					    ov05c10->swnodes);
-> +	kfree(ov05c10);
-> +}
-> +
-> +static struct platform_driver amd_isp_platform_driver = {
-> +	.driver	= {
-> +		.name			= AMD_ISP_PLAT_DRV_NAME,
-> +		.acpi_match_table	= amdisp_sensor_ids,
-> +	},
-> +	.probe	= amd_isp_probe,
-> +	.remove	= amd_isp_remove,
-> +};
-> +
-> +module_platform_driver(amd_isp_platform_driver);
-> +
-> +MODULE_AUTHOR("Benjamin Chan <benjamin.chan@amd.com>");
-> +MODULE_AUTHOR("Pratap Nirujogi <pratap.nirujogi@amd.com>");
-> +MODULE_DESCRIPTION("AMD ISP4 Platform Driver");
-> +MODULE_LICENSE("GPL");
-> 
-
--- 
- i.
-
+SGkgSmFpLA0KDQpUaGlzIGlzc3VlIHdhcyBhbHJlYWR5IHJlcG9ydGVkIGJ5IFN0ZWZhbi4gVGhl
+IHByb2JsZW0gaXMgdGhhdCBJIGRvbid0IA0KaGF2ZSBhIERlYml4IGJvYXJkIHRvIGludmVzdGln
+YXRlLg0KVGhlIG1haW4gZGlmZmVyZW5jZSBiL3cgV0ZJIGFuZCBjcHUtcGQtd2FpdCBpcyB0aGF0
+IHRoZSBmaXJzdCBkb2Vzbid0IA0KY2FsbCBQU0NJL1RGLUEuIFNvLCB0aGUgaXNzdWUgbG9va3Mg
+dG8gYmUgcmVsYXRlZCB0byBzb21lIHNldHRpbmdzIGluIA0KdGhlIFRGLUEuDQpXaGF0IEkgZG9u
+J3QgZ2V0IGlzIHdoeSBJIGRvbid0IHNlZSB0aGlzIGlzc3VlIG5laXRoZXIgb24gb3VyIElNWDhN
+UCANCnNwZWNpZmljIGRlc2lnbiBub3Igb24gdGhlIEVWSywgd2hpY2ggdXNlcyB0aGUgc2FtZSBQ
+SFkgYXMgdGhlIERlYml4IGJvYXJkLg0KDQpCUiwNCkNhdGFsaW4NCg0KT24gMTQvMDQvMjAyNSAx
+NDowNywgSmFpIEx1dGhyYSB3cm90ZToNCj4gSGkgQ2F0YWxpbiwgU2hhd24sDQo+DQo+IE9uIE9j
+dCAyMSwgMjAyNCBhdCAxNzo0MjozNCArMDgwMCwgU2hhd24gR3VvIHdyb3RlOg0KPj4gT24gTW9u
+LCBPY3QgMDcsIDIwMjQgYXQgMDM6NDQ6MjRQTSArMDIwMCwgQ2F0YWxpbiBQb3Blc2N1IHdyb3Rl
+Og0KPj4+IFNvIGZhciwgb25seSBXRkkgaXMgc3VwcG9ydGVkIG9uIGkuTVg4bXAgcGxhdGZvcm0u
+IEFkZCBzdXBwb3J0IGZvcg0KPj4+IGRlZXBlciBjcHVpZGxlIHN0YXRlICJjcHUtcGQtd2FpdCIg
+dGhhdCB3b3VsZCBhbGxvdyBmb3IgYmV0dGVyIHBvd2VyDQo+Pj4gdXNhZ2UgZHVyaW5nIHJ1bnRp
+bWUuIFRoaXMgaXMgYSBwb3J0IGZyb20gTlhQIGRvd25zdHJlYW0ga2VybmVsLg0KPj4+DQo+IFNp
+bmNlIHRoZSBpbnRyb2R1Y3Rpb24gb2YgdGhpcyBwYXRjaCBpbiBtYWlubGluZSwgSSBhbSBmYWNp
+bmcgc2x1Z2dpc2gNCj4gbmV0d29yayBwZXJmb3JtYW5jZSB3aXRoIG15IERlYml4IE1vZGVsLUEg
+Ym9hcmQgd2l0aCBpLk1YOG1wIFNvQy4NCj4NCj4gVGhlIG5ldHdvcmsgbGF0ZW5jeSBqdW1wcyB0
+byA+MXMgYWZ0ZXIgYWxtb3N0IGV2ZXJ5IG90aGVyIHBhY2tldDoNCj4NCj4gUElORyBkZWJpeCAo
+MTAuMC40Mi41KSA1Nig4NCkgYnl0ZXMgb2YgZGF0YS4NCj4gNjQgYnl0ZXMgZnJvbSBkZWJpeCAo
+MTAuMC40Mi41KTogaWNtcF9zZXE9MSB0dGw9NjQgdGltZT0xMDA4IG1zDQo+IDY0IGJ5dGVzIGZy
+b20gZGViaXggKDEwLjAuNDIuNSk6IGljbXBfc2VxPTIgdHRsPTY0IHRpbWU9MC40ODggbXMNCj4g
+NjQgYnl0ZXMgZnJvbSBkZWJpeCAoMTAuMC40Mi41KTogaWNtcF9zZXE9MyB0dGw9NjQgdGltZT0x
+MDI1IG1zDQo+IDY0IGJ5dGVzIGZyb20gZGViaXggKDEwLjAuNDIuNSk6IGljbXBfc2VxPTQgdHRs
+PTY0IHRpbWU9MC44MTAgbXMNCj4gNjQgYnl0ZXMgZnJvbSBkZWJpeCAoMTAuMC40Mi41KTogaWNt
+cF9zZXE9NSB0dGw9NjQgdGltZT01OTAgbXMNCj4gNjQgYnl0ZXMgZnJvbSBkZWJpeCAoMTAuMC40
+Mi41KTogaWNtcF9zZXE9NiB0dGw9NjQgdGltZT0wLjM1MSBtcw0KPiBeQw0KPiAtLS0gZGViaXgg
+cGluZyBzdGF0aXN0aWNzIC0tLQ0KPiA3IHBhY2tldHMgdHJhbnNtaXR0ZWQsIDYgcmVjZWl2ZWQs
+IDE0LjI4NTclIHBhY2tldCBsb3NzLCB0aW1lIDYxMjZtcw0KPiBydHQgbWluL2F2Zy9tYXgvbWRl
+diA9IDAuMzUxLzQzNy40MTYvMTAyNC43NTUvNDU5LjM3MCBtcywgcGlwZSAyDQo+IGRhcmthcGV4
+IGF0IGZyZXlhIGluIH4NCj4NCj4gSWYgSSByZXZlcnQgdGhlIHBhdGNoLCBvciBkaXNhYmxlIHRo
+ZSBkZWVwZXIgY3B1aWRsZSBzdGF0ZSB0aHJvdWdoDQo+IHN5c2ZzLCB0aGUgaXNzdWUgZ29lcyBh
+d2F5Lg0KPg0KPiAjIGVjaG8gMSA+IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdSRpL2NwdWlk
+bGUvc3RhdGUxL2Rpc2FibGUNCj4NCj4gUElORyBkZWJpeCAoMTAuMC40Mi41KSA1Nig4NCkgYnl0
+ZXMgb2YgZGF0YS4NCj4gNjQgYnl0ZXMgZnJvbSBkZWJpeCAoMTAuMC40Mi41KTogaWNtcF9zZXE9
+MSB0dGw9NjQgdGltZT0wLjQ4MiBtcw0KPiA2NCBieXRlcyBmcm9tIGRlYml4ICgxMC4wLjQyLjUp
+OiBpY21wX3NlcT0yIHR0bD02NCB0aW1lPTIuMjggbXMNCj4gNjQgYnl0ZXMgZnJvbSBkZWJpeCAo
+MTAuMC40Mi41KTogaWNtcF9zZXE9MyB0dGw9NjQgdGltZT0yLjI2IG1zDQo+IDY0IGJ5dGVzIGZy
+b20gZGViaXggKDEwLjAuNDIuNSk6IGljbXBfc2VxPTQgdHRsPTY0IHRpbWU9MC44NDggbXMNCj4g
+NjQgYnl0ZXMgZnJvbSBkZWJpeCAoMTAuMC40Mi41KTogaWNtcF9zZXE9NSB0dGw9NjQgdGltZT0w
+LjQwNiBtcw0KPiBeQw0KPiAtLS0gZGViaXggcGluZyBzdGF0aXN0aWNzIC0tLQ0KPiA1IHBhY2tl
+dHMgdHJhbnNtaXR0ZWQsIDUgcmVjZWl2ZWQsIDAlIHBhY2tldCBsb3NzLCB0aW1lIDQwNTFtcw0K
+PiBydHQgbWluL2F2Zy9tYXgvbWRldiA9IDAuNDA2LzEuMjU1LzIuMjgwLzAuODQyIG1zDQo+DQo+
+Pj4gU2lnbmVkLW9mZi1ieTogQ2F0YWxpbiBQb3Blc2N1DQo+Pj4gPGNhdGFsaW4ucG9wZXNjdUBs
+ZWljYS1nZW9zeXN0ZW1zLmNvbT4NCj4+IEFwcGxpZWQsIHRoYW5rcyENCj4+DQo+Pg0KPiBUaGFu
+a3MsDQo+IEphaQ0KDQoNCg==
