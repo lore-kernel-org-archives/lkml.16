@@ -1,105 +1,96 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5E4275113
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABEA21171C;
+	Tue, 15 Apr 2025 06:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744698055; cv=none; b=IXSphRcW/6g9y82BZ/rVSOLsGC3u3etoexbjAFeDqY+pD/T64FuEdUGy9/P4n7qtA63EoOZm+m/xZ+NIZxvV/Sy9TcTU9qFF4RC60Gr/hTSXVQtnfCDv/WMP7Rb4c6+uyUiPoF9HXGsY6AHHVafZEbAWO6i/IMzNP/mgaBPfM/E=
+	t=1744698206; cv=none; b=E1jK+j22KUfxso3TJv2TAhLrYHUNqgENQbZSX7aDUKV5czqX8WY/AUjHRzop5ZvFYv+J6+HmxvG4aTR4NuIHOg58UDjQGPtgAiVqwNykbMq4N9458fg2IMXc1JJGVYXbEgn/FAjAlDZeKlg08f/58S73CLCCF0k8/u0uS6Eq2K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744698055; c=relaxed/simple;
-	bh=15dopjAkrKSs5ScMZ+NYEAva1LfA/eDSoY1MTLaL05k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hAoGwViRJfYercP3ijLbe07VxDFVKbdQwXHW0kZt4GopNhcGBUF3+IfbQ9jqqUdGJwoH96AXG43X20yOQaTwn630hCbVMCHI6el41CXjv8mjeYVdElSjeRAvV6HTN/CUIOmf4pAEnYA1PwV8ZhINMF4xSqSV4x5+gxU45rlkeYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ruAXXydm; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744698206; c=relaxed/simple;
+	bh=c7TaSe2LYpB4ZDOSpGdN1Qj/+Gj3ShV4vNKW7jjtFQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rgD0o5g8ZUMaSu94KxRVFylq9xIgNtzHZHc3nqtBHH3/gBUkgPmN0rPWsx4Ycf7wnGlfcRZ50VEvxFoB0bAHR0zFxQM5LfaB6BRWbK9y9+jRuCF7Z77zsuOiFvv1I/9/hMokj886hJQmIaDsumY8HGJhiNZrvyBCprpObvkdW2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RSgvb0VN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3U3DybJF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ruAXXydm"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac3f58b9156so60832866b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744698051; x=1745302851; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oTt43XJFM8d74lWj5+YE+mCHEBEmob8rG+QikYcC3hM=;
-        b=ruAXXydm1sbUdzoNjfuMCVIW3f+dEsw8LlyrOvQa4cPID51dafQZydGvALUad5Age5
-         ZGo41Y1PJlqF6WP2vfTg9i1TNYVbz+IYupBwBPBFvvZBRukIQ39C9PfV3Q2G0QIWt1NL
-         fO+OCumBDINY8fqGmMFLSLnHrMPs4+zNUXHslswMYyFcOGJA1XQx6FXTpiUIpiAvAd0n
-         y3kGE5o28YCdlUsUj9k8kcIb660gY8P6+O/yHEjq/laqpK3JF/6v7IQeOkOIuE+XShYn
-         ejI/HsLzFH0j8TGHuL9miRtQ6kHWKaMh6kIZnSDkHvY96KYHEqSmoN7DjpuX46g5DqjG
-         jp5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744698051; x=1745302851;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oTt43XJFM8d74lWj5+YE+mCHEBEmob8rG+QikYcC3hM=;
-        b=a/fGsK48i1tzgK2uhjS1yK7+oFP4hRx5n+p2P/oBptn01sCSx0OV1p12NwoBWSFCs5
-         CZRKG1claGQUmvamuuzwOvympbprswDqAegqxJ7Lgy3L+I0rgGX4ur3ayHha3L3EL4Al
-         vpHCScw8mGSKKphwCoeSozbV48u+TRECdOSK6G1dCFf2qDTx3fIseglrcfdDER81XJbl
-         JZcKd8Cd79trUp+4aeXxtjuPS8dydo5pLtTsAyEbGjRBSan8WvWXbN8Pv6lw+S4+ONVA
-         9c6GwGYU/IWyYc/8Xtp5bVaWroFd7hxyZ3OeeHm0FGkqEaZJCkjEgN0YupPOAy4tQoS4
-         RyfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXh0YrwJWcizSZvRBNL+FL65H+HxzQS/sUejiJW/XoEJSH1Ug4HA22HTVs/0x+yFrMHr3UADQwuu7eDjAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHb+T6dI4pb0hq5DQpClFD47bSkJKTZjQ1/23mamg6/sm11sYk
-	OB7V5gWuJ0CbLMc0udtAiYLw5GZHO7ABlTqXSomIGzGNQMO2LpuL/2fsJG40h1o=
-X-Gm-Gg: ASbGncsgDqbzQKDzYIUDDhFU7VhCGcZ2rudV3KUolyTwfPjZuCfwdQIXj96R5Vi8XmF
-	Bc8M9e23MNh5BMu/ns4Kqg6EFdEwAsXDCwzf3yYEeLDidFWnhFgxUIQC5OisLr2E9ywUrWXca+3
-	EwiMWjdmzjQ/BnlE30r4YN8LUnrMMFwvn4gPk0YGRXR9owHL9/Y0p+/oJ3JMiVNi8PsV/A9oJR+
-	lLQU5VycRe46fmhwrKly8w5477ns758gWcFUrdT3pgcDm0WHrGGZoTwDoHRfrf5Ru1A11FBzFJ0
-	VXmd8IlfWbiea07SC9NZponig5Md9wF6gRT7hpdF9dt0ELLpLsq2EteOAlKQ8X+xMtulCZsHTkC
-	BRfchsEStF0RUZBw=
-X-Google-Smtp-Source: AGHT+IEN0ddkfxeUgfcu3uOUBPG5D5WB3HL16m1L/qkNsUmiRD8iOuxqK/rPwSxrQiytFN9HNB8I7Q==
-X-Received: by 2002:a17:907:bc87:b0:ac0:b71e:44e0 with SMTP id a640c23a62f3a-acad34d87admr480746866b.9.1744698051564;
-        Mon, 14 Apr 2025 23:20:51 -0700 (PDT)
-Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb4129sm1053861866b.98.2025.04.14.23.20.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 23:20:51 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: yong.wu@mediatek.com, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: krzk@kernel.org, robh@kernel.org, conor+dt@kernel.org, 
- matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, kernel@collabora.com
-In-Reply-To: <20250410143958.475846-1-angelogioacchino.delregno@collabora.com>
-References: <20250410143958.475846-1-angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH v1 0/2] MediaTek Dimensity 1200 - Add SMI support
-Message-Id: <174469805024.15476.6855555365246052771.b4-ty@linaro.org>
-Date: Tue, 15 Apr 2025 08:20:50 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RSgvb0VN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3U3DybJF"
+Date: Tue, 15 Apr 2025 08:23:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744698202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uKG4WTJy0TDLjBIU7XHiGKXcjUAjTuLwBXl8UqxVMWY=;
+	b=RSgvb0VNy18x+lLX69KHvLlHZ6JjmulAwQXxChoU1tZvG+yXGyucJVKtMOi+1bfiYQIX2b
+	0m8F5y5Pkc6dEzMpQTS9ITsKUhc+7f0g+xOg9Khmm1Q/A2Fjw6iC4aJ/GmFeTSEpfyYw8j
+	dt3oguYojAhZt7j8TUPyhAQkQsCooN1S5LqSiEkSLKEDwkGpYa7mpvBZytcAOSSxbi853M
+	4BHnpeoUYg3CtQSRJdbvj//dPgM9Q1RjzFns4aCQx/4G5ZcW6HWvm+MBichQ05fUy2RQQf
+	n8MQE+x6OfF9pLjWt7Ekf0OcHkIQkS4ycHJC+0pmnjMqEvtLYMZIUvpwIYgxpA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744698202;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uKG4WTJy0TDLjBIU7XHiGKXcjUAjTuLwBXl8UqxVMWY=;
+	b=3U3DybJFcMBeNJmKsj44yW6aAP0ytnABpExbl03ORaBForOgEXFBdX7BEElVlgqZ/3wFbl
+	BiB6N1smfm8kynDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Aaron Lu <ziqianlu@bytedance.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Andreas Ziegler <ziegler.andreas@siemens.com>,
+	Felix Moessbauer <felix.moessbauer@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
+ controller
+Message-ID: <20250415062320.bMvqQsQ4@linutronix.de>
+References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
+ <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
+ <c92290e0-f5db-49bd-ac51-d429133a224b@amd.com>
+ <20250409121314.GA632990@bytedance>
+ <3d13e35a-51bb-4057-8923-ebb280793351@siemens.com>
+ <f2e2c74c-b15d-4185-a6ea-4a19eee02417@amd.com>
+ <20250414150513.klU46xkw@linutronix.de>
+ <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
 
-
-On Thu, 10 Apr 2025 16:39:56 +0200, AngeloGioacchino Del Regno wrote:
-> In preparation for adding basic support for the OnePlus Nord 2 5G
-> DN2103 smartphone, this series adds support for the Smart Multimedia
-> Interface and Local Arbiters of the MediaTek Dimensity 1200 (MT6893) SoC.
+On 2025-04-15 07:35:50 [+0200], Jan Kiszka wrote:
+> > On RT the read_lock() in the timer block, the write blocks, too. So
+> > every blocker on the lock is scheduled out until the reader is gone. On
+> > top of that, the reader gets RCU boosted with FIFO-1 by default to get
+> > out.
 > 
-> AngeloGioacchino Del Regno (2):
->   dt-bindings: memory: mtk-smi: Add support for MT6893
->   memory: mtk-smi: Add support for Dimensity 1200 MT6893 SMI
-> 
-> [...]
+> There is no boosting of the active readers on RT as there is no
+> information recorded about who is currently holding a read lock. This is
+> the whole point why rwlocks are hairy with RT, I thought.
 
-Applied, thanks!
+Kind of, yes. PREEMPT_RT has by default RCU boosting enabled with
+SCHED_FIFO 1. If you acquire a readlock you start a RCU section. If you
+get stuck in a RCU section for too long then this boosting will take
+effect by making the task, within the RCU section, the owner of the
+boost-lock and the boosting task will try to acquire it. This is used to
+get SCHED_OTHER tasks out of the RCU section.
+But if a SCHED_FIFO task is on the CPU then this boosting will have to
+no effect because the scheduler will not switch to a task with lower
+priority.
 
-[1/2] dt-bindings: memory: mtk-smi: Add support for MT6893
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/98a4109320f9b7007475a9d6706d3434cd8aafb4
-[2/2] memory: mtk-smi: Add support for Dimensity 1200 MT6893 SMI
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/bd4f5f6c84d074d9347b55731891729f136d35c8
+> Jan
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+Sebastian
