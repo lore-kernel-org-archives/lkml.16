@@ -1,123 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29956E552;
-	Tue, 15 Apr 2025 01:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9072AD25
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679250; cv=none; b=jPeegKXZps6ClqaRjZYzcVzcC+jCwXQxNk5EUKu0Q7/W/fSI+EOKh5XRYDJLEN4vTQvxRXCrqXXdl0QLH6XorDhzmB4VHfHSlLYT7Z5e8w6hxlWxqgzTvOesDJzXcvAFwjTHsFplSTagnAH106ZfYIxQHSp1rOCcN6dbYZi9iGA=
+	t=1744679344; cv=none; b=uBs8VfqeEaWUcIeQxmepH1dOHkXHlvgxjLFn8vxSCIhq2NeZXTV/5qWUBL/Yz9oLr4DajpdHZqlI0gor7e1Ts/qjmWPEzosrn9657zkclMr4rE9pCA7kYc+NvS/4DiltqUE/lD7q/qsrpDVwUeZdibxFinFJ77xJTaAhM/ZZJHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679250; c=relaxed/simple;
-	bh=KEKYNbGROJcLOPsF4oFGeclcgykvueLsJrKulbwE26I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IVhxYZhiNVTZpIr2NR9gcAnL8q8133Ww5rjAcQhF9WSi6fgL8IC1h202KYY/DjAf/7tBSzCh8NNmjJvWPh7aJLB1J6DXl7rDAGnS10Za8RRdub6dWgDfuDLk9umQzPHeMUsu7GfGzEZzzsm9XGAhzmpZNylnTQOReaShG2I7E0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A14CC4CEE2;
-	Tue, 15 Apr 2025 01:07:28 +0000 (UTC)
-Date: Mon, 14 Apr 2025 21:09:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Mark
- Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Differentiate bash and dash in
- dynevent_limitations.tc
-Message-ID: <20250414210900.4de5e8b9@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744679344; c=relaxed/simple;
+	bh=FuTM6gRQya84npgDpMLnySLZi5ndPrsQR1RKMSLyiDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bhbZCkSYUYJgYklwUKpceF7OnLc1Lhn133x9lSTQa16/ZYEPmhAjQFe7atwGkAwOt/JwZpJe10MH9lgjDdijErXhfZBYZPxa06PYP4Y0m7br4rzwpErJL/97qyCagINN3ZJEwabGsU2QLOtXfx4IuIro0i7vWwsUmjVyxDuzwFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=bkWYNQbM; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="bkWYNQbM"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 14471240103
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 03:08:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
+	t=1744679333; bh=FuTM6gRQya84npgDpMLnySLZi5ndPrsQR1RKMSLyiDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=bkWYNQbM2iv7rk/uah0lHCRSTO3s1ZiX4eFrNpNma7CPQdP+ANDCMvi3PbYrOfiUV
+	 61BAXGIEuO8iC2up5GXptaiVLGAS9PHudk9sFu3/zh3qWnc2bNO7sGcDOAGFazsJrg
+	 iDgUvbrRFcZ9X0Wtn1cWBL3+D+Uwdr2IaTi1usLbYJeeq9LDsTwP/4IaJTh+7UNAsi
+	 C1uvfYWFB5dZIGvPW/+wdXjH9QbGC+IYW4SBULphGrmD3wznA6Qk9+jB4pBBRz8LiA
+	 v+WM/QhzEhCm1auPJJh7dcCwmHdX25IthfBnpFg8rZnen9rCzsV1vSKpMbU0DzzB+c
+	 OMK0oheLEwAjg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Zc5dc2Vk6z9rxF;
+	Tue, 15 Apr 2025 03:08:52 +0200 (CEST)
+Message-ID: <f265594f-6676-459e-9900-ae10f2efa0d5@posteo.net>
+Date: Tue, 15 Apr 2025 01:08:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH] xfs: Verify DA node btree hash order
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Carlos Maiolino <cem@kernel.org>, linux-xfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+ <20250414221559.GC25675@frogsfrogsfrogs>
+Content-Language: en-US
+From: Charalampos Mitrodimas <charmitro@posteo.net>
+In-Reply-To: <20250414221559.GC25675@frogsfrogsfrogs>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-bash and dash evaluate variables differently.
-dash will evaluate '\\' every time it is read whereas bash does not.
+On 15/4/25 01:15, Darrick J. Wong wrote:
+> On Sat, Apr 12, 2025 at 08:03:57PM +0000, Charalampos Mitrodimas wrote:
+>> The xfs_da3_node_verify() function checks the integrity of directory
+>> and attribute B-tree node blocks. However, it was missing a check to
+>> ensure that the hash values of the btree entries within the node are
+>> strictly increasing, as required by the B-tree structure.
+>>
+>> Add a loop to iterate through the btree entries and verify that each
+>> entry's hash value is greater than the previous one. If an
+>> out-of-order hash value is detected, return failure to indicate
+>> corruption.
+>>
+>> This addresses the "XXX: hash order check?" comment and improves
+>> corruption detection for DA node blocks.
+>>
+>> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
+>> ---
+>>   fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
+>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+>> index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
+>> --- a/fs/xfs/libxfs/xfs_da_btree.c
+>> +++ b/fs/xfs/libxfs/xfs_da_btree.c
+>> @@ -247,7 +247,16 @@ xfs_da3_node_verify(
+>>   	    ichdr.count > mp->m_attr_geo->node_ents)
+>>   		return __this_address;
+>>   
+>> -	/* XXX: hash order check? */
+>> +	/* Check hash order */
+>> +	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
+>> +
+>> +	for (int i = 1; i < ichdr.count; i++) {
+>> +		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
+>> +
+>> +		if (curr_hash <= prev_hash)
+> Does XFS support a directory with two names that hash to the same value?
 
-  TEST_STRING="$TEST_STRING \\$i"
-  echo $TEST_STRING
 
-With i=123
-On bash, that will print "\123"
-but on dash, that will print the escape sequence of \123 as the \ will be
-interpreted again in the echo.
+Hi Darrick,
 
-The dynevent_limitations.tc test created a very large list of arguments to
-test the maximum number of arguments to pass to the dynamic events file.
-It had a loop of:
+I believe so, yes. These are handled at the leaf level by comparing the
+actual names. This adds a check which ensures the intermediate node's
+internal B-tree entries are strictly ordered by hash.
 
-   TEST_STRING=$1
-   # Acceptable
-   for i in `seq 1 $MAX_ARGS`; do
-     TEST_STRING="$TEST_STRING \\$i"
-   done
-   echo "$TEST_STRING" >> dynamic_events
+C. Mitrodimas
 
-This worked fine on bash, but when run on dash it failed.
-
-This was due to dash interpreting the "\\$i" twice. Once when it was
-assigned to TEST_STRING and a second time with the echo $TEST_STRING.
-
-bash does not process the backslash more than the first time.
-
-To solve this, assign a double backslash to a variable "bs" and then echo
-it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
-"bs" accordingly, and use that to assign TEST_STRING.
-
-Now this could possibly just check if "$BASH" is defined or not, but this
-is testing if the issue exists and not just which shell is being used.
-
-Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-index 6b94b678741a..885631c02623 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-@@ -7,11 +7,32 @@
- MAX_ARGS=128
- EXCEED_ARGS=$((MAX_ARGS + 1))
- 
-+# bash and dash evaluate variables differently.
-+# dash will evaluate '\\' every time it is read whereas bash does not.
-+#
-+#   TEST_STRING="$TEST_STRING \\$i"
-+#   echo $TEST_STRING
-+#
-+# With i=123
-+# On bash, that will print "\123"
-+# but on dash, that will print the escape sequence of \123 as the \ will
-+# be interpreted again in the echo.
-+#
-+# Set a variable "bs" to save a double backslash, then echo that
-+# to "ts" to see if $ts changed or not. If it changed, it's dash,
-+# if not, it's bash, and then bs can equal a single backslash.
-+bs='\\'
-+ts=`echo $bs`
-+if [ "$ts" = '\\' ]; then
-+  # this is bash
-+  bs='\'
-+fi
-+
- check_max_args() { # event_header
-   TEST_STRING=$1
-   # Acceptable
-   for i in `seq 1 $MAX_ARGS`; do
--    TEST_STRING="$TEST_STRING \\$i"
-+    TEST_STRING="$TEST_STRING $bs$i"
-   done
-   echo "$TEST_STRING" >> dynamic_events
-   echo > dynamic_events
--- 
-2.47.2
-
+>
+> --D
+>
+>> +			return __this_address;
+>> +		prev_hash = curr_hash;
+>> +	}
+>>   
+>>   	return NULL;
+>>   }
+>>
+>> ---
+>> base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
+>> change-id: 20250412-xfs-hash-check-be7397881a2c
+>>
+>> Best regards,
+>> -- 
+>> Charalampos Mitrodimas <charmitro@posteo.net>
+>>
+>>
