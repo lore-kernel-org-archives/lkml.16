@@ -1,69 +1,124 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2128.outbound.protection.outlook.com [40.107.255.128])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2081.outbound.protection.outlook.com [40.107.105.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB1827FD68;
-	Tue, 15 Apr 2025 10:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4F2284691;
+	Tue, 15 Apr 2025 10:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744712627; cv=fail; b=TYTEgzCp62dlOH3nrSQs81TWwsctU090jcZX6egt5vrmYX8RQKfQhFLnug68AcQLNU7ngpngtnYAHb5X1b6vJJI5iWkdcis4i0+5CSV7o4XrS8WR18kRr5T5+RJLwT64Pmg2LePBpxQNX8IqhdGe149wuTXn1D2yxC/vNbf9tOY=
+	t=1744712640; cv=fail; b=ULm9M5LDHrzy1gz4EwgHmcpfIxM8oLuSnoC14NXsZdz8vnBtlvE+sW1kPqbIHL12/J3+luWRR4YJcU7MFggAcddVN3v36J6LxLeAJWevw2Jzvd5zEfXwKMtbjN6YasDijwU4zD73ufKOZzcdPcGfY6Bki2ZwEIDiijxPexIsSbQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744712627; c=relaxed/simple;
-	bh=D4AOTUIbSqN6YXvvQCLcm91hakbTY5dO3+ptfyGSuA0=;
-	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YZLLbCI3OpDTVIqW+SFNcb94wTJZoJUnH4Ku9G+2Xvle3gSPsEP3rGWyB7/EG+HOcO2spyF8Xg0aOV5tgEmVpGLC61onB5diLF7gMiqrzttVUoGuc9+1eeooxkFvbk5QRvCqC/K8phWT+HpRxRLty07sZLmyns/YxSy+MFH7GNo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw; spf=pass smtp.mailfrom=portwell.com.tw; dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b=mdaiMj47; arc=fail smtp.client-ip=40.107.255.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=portwell.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=portwell.com.tw
+	s=arc-20240116; t=1744712640; c=relaxed/simple;
+	bh=8/VbUnvOL+km9U7PGC2zqmsWwyT9cmtpHGpJM6nGf4I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XFE2YHyPY+1uuD4k6Labu4b0qKb9XtNchrnr3VwPF0hra91+akdpkjuCGTN/w/2XZPXfmL2oXt4SCebfZrDzZwMx1Ycn7b4nIZ17eyIMQNsNBzrbcL3aZ0ACEReeCEc+c4bJOxMl5+c/1hJsL06MaGRVtcjAbHFSPaaIKxqoi0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b=qabUrMel; arc=fail smtp.client-ip=40.107.105.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fetCA905017.onmicrosoft.com header.i=@fetCA905017.onmicrosoft.com header.b="mdaiMj47"
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=@siemens.com header.b="qabUrMel"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fMRWso0OUBaYFXWGdQ6uCP8NTWUjyQNXrBFWtnMPj4ImDALwMAUIJDx4AdBncfStjcwtIceHCBZSFBButoyZLRMi6I9lfIft1a4sjW9F8ua/Iz0/HirrSHESVzAitPbAGNtiI/bVasr8ivTgbQ5T75gf4BqarjhFF5f/JC8kyf660If+pQ6zwMJ0Nks6YjIjuV4OoyMVH0q5kcutFVppRjcWyO6+BBhbIgf/m/EO8g/NrvJ0G02EEM9EupMX5/SoeAo3ulgb+dj3M7kZ/CKaylFN2iPuH7YGE7OKKK04ptmJvzJslkp0k5deLGpY7DVH1UF8MMIodfbIBUHo6X04NA==
+ b=kiybk1lriV7BrSY7t84YxLLdpmknzeNneq6Fq8cngyRIQzUOQXB3wR5JfBBuA8bKfVvY9/GKl9qRQMEHCrGXLJky47bBUg6nfllWUg++FaIeJAHzRo3ZBNIdtys9A7dUPUfZlYTghVgg5/unmajYWf1YGzlQdo0kuGtwf3HKiANEfiJg+3FkAcjGqI19Fq86fcU3VcizBrl5MwNdx9a9rjK0vss6zQZwaqf5Z4rycfrzd6+VwhcHCxGV6EjIoAlskafC08F20hn9dBZoIJ1HPpWH7id+Y9tpbklzojd0Neo3SPUKF3dqNkifYjvsasBE8NtJajFChITOkJ0GCcILgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UP5UpMTBO//Zk19oEG1+bx8VpIDCQOJuq+cv51oGSDg=;
- b=AuEWDI9Zv8exo/7jtJ61MEAX7FTs3Lsnjofgbx9GIgmPhxcMgeIW0yehNRBsy3PEyx5CrgOzFO+1IlHGXajtjk51BWu0A6PDyMCqJM5uQWujrn1weUDndVMQnT3OPvjfDMxe8qR/6H/GUeT4993SbVpD3MrzTRH+u3/I/E4N40gF6j4EU9xkpLsi8gi9IiG1b2+qNA7u3EImaPu5ZwUU2yXlDa/ACdXmgx1rVEObpDj6wwAyc8Ij01WlGKRDBmIGRVlpFDI8ChRr5DerQEyAFzhXdLpdwyB34xcRNg1CUNKvXZjmaWaYtar6PtPaMkBhVdafKBnVkrmRY/lZh3yxQg==
+ bh=2a7IXNgPZSKH0LdO95lAfj/LzTbd2rIH053q3qzRAgY=;
+ b=ROvLSzln72AxDst4oGOJ+PD6A83uOlRWZomy7PtlkdV0pUFnbm++27PB77YUcYDYUD6zjqTfk8pLhUJl65Z69sGAG4iAuv3dg/1vy2DFoabqRIQipWx+VjGI5+s0gUgZAkc0zD+mGotV2KTVUP72lQXxFZYGMtuVEqyKsRMeJHZTs2r+MfbWSVHGG22h5Mjylr4U0ISv5yp++X0+lvCA5ufMexM1c02cG2fyEUepZsHbmRDQMpGxxXOqpFUZ9QxaCuoZUfnBjHgT7OWrRoxk3shBmiXKZx7yG3MmXW8EjUTpDhmtE0BH0BQaL9cqeoq84yHU7mieN4JJlD3DLofY0g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=portwell.com.tw; dmarc=pass action=none
- header.from=portwell.com.tw; dkim=pass header.d=portwell.com.tw; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fetCA905017.onmicrosoft.com; s=selector1-fetCA905017-onmicrosoft-com;
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UP5UpMTBO//Zk19oEG1+bx8VpIDCQOJuq+cv51oGSDg=;
- b=mdaiMj47lsiMQoLlxVJ8yYYWzVbVXx8uOfO2lcmySqT88Oi4rmsOvytMAHIZmvYhGjZQjbIvAOgXLb+DCEXtzIP6nc5cSwKspA0d8dVuHgOZS5fdnrnOXpSe7ID2H7+i1ilPpe+sknKhreVwtuU1s8o8VOLmp20i2Uq0gtvQMHfVckvJSbyqmXSDwd2tXEILAWJfKyxWImlXe2QEmT5PneDPhjhM03yf2e+yd35FntVNiorlEK4V009N00TEODIoqb9J+sKKnb+v4GJ3aWKuDeHC7lKIBusUgiqA0FywHrsBgVlvwaYQGaBWTbEq9QCbWcQ+Qpw6KkRHbLx1Ou/k1A==
+ bh=2a7IXNgPZSKH0LdO95lAfj/LzTbd2rIH053q3qzRAgY=;
+ b=qabUrMelcnsKLjTuhqxAD/i8/p/WXjjIDttMjEhwFZou2J2uHx7tvB+InW8GUJpmQFOw54YC+/AxIDPauKkdBqDPL6ps14nbfwNuqo+6uVh/zfp0ONoIoDS1u2MFpqqrxZD9OPGZA8LGBXClQEP+M655f8rObQATvQmw131mEtqKXd0wk7RRsl1O0W5yHsRyjC2CIBP8Rg4yNL4b/0z+OQuGDbnIi/RCBYJByITrsta7xfWuWTjL+UpRcLo40LuNja5xO62NQt1ynmQLDjIHWE0Qv0x+t5YrHrmVvaDJhk1AtultMQ6wUINyUHgjYpjQ8wNlmcju/KoSsR2yXa520g==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=portwell.com.tw;
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com (2603:1096:820:e7::10)
- by OSQPR06MB7109.apcprd06.prod.outlook.com (2603:1096:604:2a1::13) with
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:588::19)
+ by PR3PR10MB4030.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:ab::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Tue, 15 Apr
- 2025 10:23:37 +0000
-Received: from KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224]) by KL1PR06MB6395.apcprd06.prod.outlook.com
- ([fe80::9235:5570:71b3:224%3]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 10:23:35 +0000
-Message-ID: <38b1900f-0027-4342-a5a7-a78b179a6a51@portwell.com.tw>
-Date: Tue, 15 Apr 2025 18:23:30 +0800
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Tue, 15 Apr
+ 2025 10:23:55 +0000
+Received: from AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8fe1:7e71:cf4a:7408]) by AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8fe1:7e71:cf4a:7408%4]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 10:23:55 +0000
+Message-ID: <e2d5f785-193b-46de-9a64-5cefa5196345@siemens.com>
+Date: Tue, 15 Apr 2025 12:23:53 +0200
 User-Agent: Mozilla Thunderbird
-From: jesse huang <jesse.huang@portwell.com.tw>
-Subject: Re: [PATCH v3] platform/x86: portwell-ec: Add GPIO and WDT driver for
- Portwell EC
-To: Guenter Roeck <linux@roeck-us.net>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linus.walleij@linaro.org,
- brgl@bgdev.pl, wim@linux-watchdog.org, LKML <linux-kernel@vger.kernel.org>,
- platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-watchdog@vger.kernel.org, jay.chen@canonical.com
-References: <d6b14c26-e70b-4edb-8661-b213e3fed9d4@portwell.com.tw>
- <475693ed-d11c-024a-c9f3-a270ab5b68a3@linux.intel.com>
- <a24155a3-281b-433d-9964-eedc40ae2bf8@roeck-us.net>
+Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
+ controller
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+ Aaron Lu <ziqianlu@bytedance.com>, Valentin Schneider <vschneid@redhat.com>,
+ linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Juri Lelli <juri.lelli@redhat.com>,
+ Clark Williams <williams@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+ Andreas Ziegler <ziegler.andreas@siemens.com>,
+ Felix Moessbauer <felix.moessbauer@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
+ <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
+ <c92290e0-f5db-49bd-ac51-d429133a224b@amd.com>
+ <20250409121314.GA632990@bytedance>
+ <3d13e35a-51bb-4057-8923-ebb280793351@siemens.com>
+ <f2e2c74c-b15d-4185-a6ea-4a19eee02417@amd.com>
+ <20250414150513.klU46xkw@linutronix.de>
+ <438a5250-30c0-4820-9084-cdef50f67865@siemens.com>
+ <20250415062320.bMvqQsQ4@linutronix.de>
+ <f5520221-b5ec-4204-966c-881b3428d4c0@siemens.com>
+ <20250415080041.kePLxkOG@linutronix.de>
+From: Jan Kiszka <jan.kiszka@siemens.com>
 Content-Language: en-US
-In-Reply-To: <a24155a3-281b-433d-9964-eedc40ae2bf8@roeck-us.net>
+Autocrypt: addr=jan.kiszka@siemens.com; keydata=
+ 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
+In-Reply-To: <20250415080041.kePLxkOG@linutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PS2PR03CA0007.apcprd03.prod.outlook.com
- (2603:1096:300:5b::19) To KL1PR06MB6395.apcprd06.prod.outlook.com
- (2603:1096:820:e7::10)
+X-ClientProxiedBy: FR5P281CA0034.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f3::13) To AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:20b:588::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,264 +126,146 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6395:EE_|OSQPR06MB7109:EE_
-X-MS-Office365-Filtering-Correlation-Id: 735c672b-33fe-4d69-e482-08dd7c0793fc
+X-MS-TrafficTypeDiagnostic: AS4PR10MB6181:EE_|PR3PR10MB4030:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6eb5cc1e-e60d-45fd-27c1-08dd7c07a018
+X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0gzS0Jla0Q5MmFCZDY4MUg3MVZZbjVTVUZTWUtYbXp4NFkxR3NndDJjTmZB?=
- =?utf-8?B?dlptSGZrQko3NkQxczFwclVPWExZMEp1YWd4MUxDblZvNDlDcW5nTXNhRW84?=
- =?utf-8?B?RnFoeFNXYmkrY3kxNmlJTXYyR2dQY2svZHRjOUozQzdjb21QWmVla1Y1QVdz?=
- =?utf-8?B?b1d1ODRiQlJ5YzViUGg5ZDczS29oK3lzaWllcGY0QlZ3V2RmWFJSdFBvdTNS?=
- =?utf-8?B?VytoeHlHaHYrbyt4QjZXSUJuMW92Q2gwOW1naEF5WDRpWVh6ODhmbGhFUE0w?=
- =?utf-8?B?UUloTmNERHhrcWkzTTZUdkY2N0w3TTdZNjViL2hlMGE1RFZRejlCTk1aSkpK?=
- =?utf-8?B?b09LdnBjY2hxbmFGZWRTTWVHT3pmckZnbEhmL3EreFlCVGdvbU41ekY5aWFs?=
- =?utf-8?B?SS9mR0tTV2RMMmZ6VUUzNktHQS9YeGRtOWRGa0NsQy9RbEk3QzZzUDUwc0lj?=
- =?utf-8?B?YTZFRVdodHN6UGRvZUZ4TzkxL05OMkcwRG8zMTZqUlJmL0ZXSDBIeFBtTWxJ?=
- =?utf-8?B?T2twVnNjNm5lZkdmVlR5ZSs0NnhKMi8zYnJrZmR1aXV0ZmhoS0FNWElBVmJE?=
- =?utf-8?B?YnBFVm1xTk4xWXFpS1cxTWZrcCtubTNkOHFudE1HUG11UXIydGhWSVFydGd5?=
- =?utf-8?B?ODBoQThuYVU1dFlaSndnVk9QVzhaQWhYbkc3Yi8zc1ZkaEdZL3NTUDFOd0Ja?=
- =?utf-8?B?MlpuVThhVjh5VlhUVFgySEtiV1hvZ00vNFFXaytuWVJjOFJpelIrTWRldUE0?=
- =?utf-8?B?UlgyTnp2bkZNVU5oWGtqUDRkQU9XMm1URTcwWHlkRi84QWFlRmxRRTJJTFVO?=
- =?utf-8?B?MEIvYTZGa3hveTJtQkRYZTNLTUdqS0lhQWE5OXl6aEZIdlFvVmtoeUpEUWE0?=
- =?utf-8?B?TVlkUlN0NjcwMUYyUFFZT1dzQUlpa3dTSEJkdzFiUVczQnA1RkpiN0ZmSUtr?=
- =?utf-8?B?K1dYbStTQ1laRWRiL1F0alFpT3hUQWJScFhQUmpjbGVJaU1yWHRWUWY5UVI3?=
- =?utf-8?B?T0hrU1U2anBvZHlOREhLR2xJbE5CT2tMbkNreXVqYTBnUjRJMElycUFBZS9U?=
- =?utf-8?B?czhxTktqVjBzQWJYdEYwMXlrZkxORFk1c2RyL1JJWUlUQ0tmT1oyQzFyS3g0?=
- =?utf-8?B?Z3NUUkMydkR3b2YxV0owTERmOGo4VERYcDk0MkNURHV4MnpERkl3VmwyOWN0?=
- =?utf-8?B?VU5obHYrZUZIQy9MWlJlckt4aklsVFZTLzRJYnprbll2NmxrQlRPU09PUitW?=
- =?utf-8?B?bU5zOG9aSjl2S0txcVI2YXFRczBnR1Qyd0p0NnUwVjBRY2hMYUMrSHhpSVha?=
- =?utf-8?B?WGYrOHNNVURwdjRVckROMnlxaE5aMzh2cnBlaXlqVEVxcDF2c1B0K3JFcmZ4?=
- =?utf-8?B?bDE0dlBoSGNSNmFuelN1eG83VWVod2I1WDZNY3FPTWJQNXMxcTBMODlyLzRK?=
- =?utf-8?B?aE96ZXdjcmpHdWZXbWs0bzJBb3IzYnFGYnlhVkpSQ3lnZHNLNlRhNS9ZZG91?=
- =?utf-8?B?UXZIbHNITW9LTC9LZjNzbEd6ZmRaNlI3WnVyM3FlMGpnMjdMWmhIalFYZGxy?=
- =?utf-8?B?d1hhSzNQRkxhejJPSkpFd2prMXk4dmw2c3dGcEE4KzRWR0gxNVZtR256djBp?=
- =?utf-8?B?OGErcTYwZC9RWi9heUNVOW9icEdrQzJHVUtSV2g3T1hsckZUYjlpTE0vc1hu?=
- =?utf-8?B?UDA0TllwTUpqdkVETFo5RldzRTE0dnk4SW5GVGlpMW5NY2tkY1QybTc2Wjl2?=
- =?utf-8?B?bCtRdTY1UEhHd0EyK09YeSt6SHFlNlN4YkIrV0tObWVqM0RXcnhZMXRCVTNZ?=
- =?utf-8?B?MDdhaXpFVk54MEVpRmZkOEQ1YThNSitVQ2x3Qm5hdnhKbkQ2ZUNCVTNYcFU3?=
- =?utf-8?B?eGxja2luNVVxN0R6NklTWEwvejJwVWcya3NwUVd6N0tKRTVocFlxSUxEdjF4?=
- =?utf-8?Q?f3S0caIZ2Oo=3D?=
+	=?utf-8?B?WVpyYU9VSkcyUTQ0dlFhVnV3OWFiSFZoSWFlSkdxWVA0aE5OaWJZWWdZeWtP?=
+ =?utf-8?B?NkFMbCtLUkRNOW11U3BXZVB2RDlZdDJ5SWgwZGpDNHZ4LzlpanVsQXdDWG5I?=
+ =?utf-8?B?UDFNSTRRNnA0dFdpYXYrZG05Y2RzbXBDSFdwV1NhS0VOWUJOcGlhSmdjZGd4?=
+ =?utf-8?B?TmV0VE0zb2x0Q01jMEloZDhSTWRmcVpieEdTcTFsL2huYXo4dC9iamd5ZjV6?=
+ =?utf-8?B?RjlVbXNOQm95R1UzOWZmQmczUnBteHZDVVUvcXptK0o1SFBITEFBZUNJOG9n?=
+ =?utf-8?B?clhVbjNIVU81MGMyYStqWGhlZ3MwL3lzSDJtU1B6M3NVRUFTelVQMStWQkho?=
+ =?utf-8?B?aVFmbmwyMGhvL0FBTGdOaldCWDNWV2JPZUFwZGQxNGQzaUlVbjVnU08xd3R6?=
+ =?utf-8?B?OVUvWGVaVzVlcVZCbWFrUGF6SU8yd09ha1dxSUtqdDk5ODVPbEtZOUFMUGRy?=
+ =?utf-8?B?SjUrdDdkT2FMZXdRaHg0V2RuSU5pd2xkNDJzMVVlU01QaHpGbkk2RXhMcy9B?=
+ =?utf-8?B?WjFQWnJhUkVkRVJYcTZWVXJPdmswZGdaNmtuUGZGSkRmSENvZmNyN2ZrK0wx?=
+ =?utf-8?B?WThKK1EvRU5JcktBaWZsU252d2EzZHB3ZWZUZDhxK1J3MlJtQ3p1Qlk5NEtY?=
+ =?utf-8?B?SWFoYmpOSUVXeXNvY3ltVHJnb0dVUXRRbG4xeWhzL1pPbWxXRjcyM2I5eGJq?=
+ =?utf-8?B?K09HWXpsSWNKYXhER1k3VTJPMjNRV2FJbEZXallHZDNVOHpSekk2a3VyNmVt?=
+ =?utf-8?B?bmxaeGwvMzF5TWJENDdyb3FEZkNvR2F2TmhXVHpOY2NCV2tFUmF1eTdIY21y?=
+ =?utf-8?B?TkRiV25KNThjK0lzMXZhdk1lbmhkQ3R6SjRLSTI3RVJzYmxueThkOC8vallh?=
+ =?utf-8?B?MXo0ekpuM1huc1ZQc0x4Q3dnMGVyMG96VEtrTWdMN0RPNDlZVi9rNVhJU3U4?=
+ =?utf-8?B?YjZZSjRtTGFqdWM5RnZiOTY4MEVVQUNiVVdvZ2ZPdlRMTXJtZFl5SFFRYXJX?=
+ =?utf-8?B?aUdrRFlwOUpoeWxwUkdlWGtVZ0NyK3lKRzlNMElrdy9PN09ZSXh3TzlGdFBa?=
+ =?utf-8?B?eTMrR1hicjA1TGxCOEl4YW90OGpQd3ZlelM1VTZvSk4rbGVZT1JqdVprQWtR?=
+ =?utf-8?B?SmRVYlo1V0NiZm5jMVRxcXY2dVpLenQrYnF1SjdIcE15bDdENU90M3RpSEJJ?=
+ =?utf-8?B?eVdWdzU5NmdMN1RUSzFtUGJCZmswYjRwSTFDSHo0ZXMreE16Z1BQbExjQk9k?=
+ =?utf-8?B?U0QzcGlNV095OHF1aENNVzhHWjNsZndidTZzc3ZDak9kZ2V0V0x6bS96Y1N5?=
+ =?utf-8?B?eU04WFNRMnVsdXdraE9COFp6TnVkVFVkanRaT2lyUFVzbTljSm5kMkNvMjM5?=
+ =?utf-8?B?VncrRWpiR3ZQUXZtcE9LL25lR0dRSnB5YWpqcGw2dklPYzFmTlozYldXV1Jl?=
+ =?utf-8?B?TGVSM1VqTWRCUjRWdTVWdkFBdzArZ3IwOW9LY2c1djNRa3Rsb25VSXIvRm9y?=
+ =?utf-8?B?Z2xYaVJHL0dFVGpFais5TGVmME5ySXg5endscGpqUS9tQjkvZ2pEd3NWS0Iy?=
+ =?utf-8?B?TkxOaiszWGhKdGRIMkVFWlFlRlhYRHpqZGZ5VDVHeHJ4YXB3L2kwQzZ3OHVu?=
+ =?utf-8?B?cmNQOXMxalpLdHlFNWF6ZG5lUWdCVGRNV29ULytOVUpieW1KbjBCeDZIMENS?=
+ =?utf-8?B?Tzl1UFF1aTlUOXB1OGpQS0V3WmtvRVpNSE9wM0FnWkxUMVAvSUpNUXk0eTlG?=
+ =?utf-8?B?VXVWMkgzbHlud2dsUDgvSGN0YVdmSGFleGdjNVhSaTNPYitSa0V2YkZLS25P?=
+ =?utf-8?B?TE5nSVFOQUJHSTFDeEFKWTZPSEF2bXJBVVZXdysrS0xqQUdUdmdYTzFpdHcv?=
+ =?utf-8?B?enJBT0N3OVZLZ3JBUE1hTzQ2L3dLKzYyb05GckFCUkt4ak1OUmtlMEpVc1cr?=
+ =?utf-8?Q?2MliKdVFj0w=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6395.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NGg2YWk1dTYzL2tJMU01ZTFaenlOcldNOG9SRFk5Qjg4SHIvR0Y5dDRNQkZ3?=
- =?utf-8?B?a0pZRnNuYVVXRzI4c2NuUnNkSmNEdW0zdXpicEhBeDVzcGgzUityL2M0anBK?=
- =?utf-8?B?eW1aRnEyWTNwTzQ5VVR2YjZFMjV1allRdWJYVmtEWWs2N0lNMWZtekhLVmVi?=
- =?utf-8?B?MUlkdU5acTZrTUdGN09wdVlDMUQ0dG9QVFdwSFowdW1ZY013Q0dtS1o0dytj?=
- =?utf-8?B?ZUtSZ2h4MXpGM25TNGFyZVBWNzVacHd0MjdRcW5qRDlMd0NVYVZkTWk2c3No?=
- =?utf-8?B?Z3hpOUdpbjYxd1IvdUtDRSsrRVpGdEZZYk1BbnFCUkRsTDZ0VVk5QWxsRXZE?=
- =?utf-8?B?clZ2cDJ0M3owbnV6cEljQTJWRC8xdy9nUXgwTmZ0Vm55QldTbFhKeW1NcTJR?=
- =?utf-8?B?M25VcGJoOTdhNVpERWlUVFdXOTlPbnV6a1hpR0w5OFlQWCtmaUc3UjZDQ1VN?=
- =?utf-8?B?UU5yT2VPa2lvMFJjcTVyOTNYR2JrQVpjd2pjbC9tYjRheGlVUkpUbG5hRUlJ?=
- =?utf-8?B?TnQycHRRL29MeSt4THRKaHpSUjhXWDlHamUrQ1JGMzNxbFFoTFM0UUwzclJR?=
- =?utf-8?B?N1hFUk50ZkdTalBvSkRRRWdJeG5nWVFwZ1ZjWlRVazhVcXJUSktKL2hTTkVo?=
- =?utf-8?B?WklSZ0thYTFMYXM1U1QvM2taRkdsVW5qN0NGV1F5blpXeTVEdDc3TjB5TnlW?=
- =?utf-8?B?ZFZJbWtFV1hFODR3cWJpSUZQNnVETHZnamhHUEFnVnpFcW1rdkFYNENoWW16?=
- =?utf-8?B?YnkvWjVwZDNnMFhqOUp0QlpkZHRBd21adXM3alBnRS9Xc3R0WDdQK0V4b0NC?=
- =?utf-8?B?WjVGaVdsZHRYKzBCbEhUS3lrZ09HV0dRREJ2eU1tSlhNQ0FRdmVvVGozVnV2?=
- =?utf-8?B?MDllY1hJS1poWE9NVHpCY1dEQzljT3NhUWV0NXFMbXpPb1hmUVB4Z0kvU2dx?=
- =?utf-8?B?ME5CV3BBTExMdGR1TWN6QkM0aVJ4Y2t5RFA1WlRjd1d3VUVsNHZPUEx1WVZu?=
- =?utf-8?B?Ulk4WXFBeUwxTVpxakprc0ptRDd5OHhJdmVCNjZDOUI3bnM3aWUrbjU5VEJi?=
- =?utf-8?B?eDhpUzFFN29yYjlWVzBXUEZvVlhRYi96YXlpSm9Bc2pWWHU3czB2NXBDa0Zr?=
- =?utf-8?B?REk5dXZuZzIweE0wUllWcjlBVGtaZGpxeDJlN0lJU0QvbjhtSXIwYW16VDg3?=
- =?utf-8?B?aENRTXQvU0MvNkY0U3BNaml5NFNCcWgwcGpnV2ZNMHJyZGN2SytmUkp4VWxL?=
- =?utf-8?B?Njg1U2ZqSzZBaHBONmZMV0h3V1FEWjlKVmlURTdrMlczdDF1ZGpoOWo0Mzhl?=
- =?utf-8?B?U2Nid2RpZ0krOUtDRTB2REM5aitxQ2VzN25KQnZUak0rK2txSzlGQ3pobCs4?=
- =?utf-8?B?MXFqejQ5WGxKbUVKeXNuZ3FLY29JOGpINzBFR0I5V3B5ZktWbFIyU0pIdGtl?=
- =?utf-8?B?My9iazBKemJWVTJrK3EveTIvWDFNaFRnVkQvRVZXRklHVnBsSmN2TkxSUnF5?=
- =?utf-8?B?YkZaeHNUbmRmT2NpZjg5WEhrN1pIcmoya0V6RkZ3MGNuRzd3d001UGNLbGlr?=
- =?utf-8?B?akFFWDNXT0NWZnZ6Y2NrODF0R2R3cDVyNHdRK3FCQlFlQXVXOEYrNVc4dDlY?=
- =?utf-8?B?S01DdmRsaU1sODVKeHB6RXdOdUJnQ01EcGt4VUhHMCs3dU12K1k4bE5xT0RI?=
- =?utf-8?B?NExHYUpLZGpGTk1xUFFOVkRtL1BvNGU2UFdmYzdzelBReGduZVA1dVlWYjhM?=
- =?utf-8?B?SWtBZkNrV0FqWTFWcVNubVNDSkJvcEZzZGFuMEpCNU5nK0xyYkdQTFlwYkRw?=
- =?utf-8?B?cGVXc1BYSDZLd29uUUpoNG1EZE44b3RVY1dGby8xQlE1WWZ1UU5NMjVFbVRZ?=
- =?utf-8?B?WTNkbEthcGErUUVvUjZxSS9vQnYxQnhFcE5SaUtkMElSTjdmRnFPT1kyRkFi?=
- =?utf-8?B?cUsrTFN2c2ZXT3ZrUVc1b1ZOZFB2YjhGTlJGZUF1a3VGaGhUVjVLdXJWdEk2?=
- =?utf-8?B?cGd4dmVXdHNQNklRUytjWW5IRTdnZ1RHRkVnNU1vN0lrdm43SUw3eHV6K1dt?=
- =?utf-8?B?cC9kQjY0OU82WHdZUit6c1lwMmJjb2dUNVIrRDJMSXJadlB3bW9JQlQwdkor?=
- =?utf-8?B?S1ZmWEk0UXJ5Zks1NGJJb3JrY3NpSERLSGRFdndMMFhMcno1Z1F5OFM5YTlZ?=
- =?utf-8?B?Q2c9PQ==?=
-X-OriginatorOrg: portwell.com.tw
-X-MS-Exchange-CrossTenant-Network-Message-Id: 735c672b-33fe-4d69-e482-08dd7c0793fc
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6395.apcprd06.prod.outlook.com
+	=?utf-8?B?UGRCOEJyc3dvOU5LS1c4a3VyQXlQaW1wM3EzajY3RzE0dzVRTXEvQisvUjBo?=
+ =?utf-8?B?WUxlcmJNU1V1a2g2Y2ZKb1pvRG1qZEpFbHg4RkVMTUNoTWxmSGF2dG9PTDlM?=
+ =?utf-8?B?bCtlQm15NVVxMDhydDJlUHVWUVpGYVpXcmlhcG9NNUtpRitxYUVOY3BuNHJr?=
+ =?utf-8?B?aS9WVGM5ZW5LUk9WZUJaTkdMT3ovYzV2YlIxUFBId3YvVlRDTHFBK3BOT0ZN?=
+ =?utf-8?B?SW5FL3pNeGk1cVJSdU1uWnh5T2N4c0ZCbGM1T2JWV3JDVG1iVEFyeVYvSUhF?=
+ =?utf-8?B?ajBpMnY4WWpRWjlQTTZKZG1LSk5JWjF3dnBkTzExOU5qSDZOTUFmemRFZWVk?=
+ =?utf-8?B?ZUVuODkzTXZuSEtkWjJIWTZOOEhqdjI0ZU5vU1lUN0RjYzJ6aTJNZWV2ZWdr?=
+ =?utf-8?B?RnhFZVlsRFJCZkkvWm9aKzJSK00va0R2VzF4WXZCM2hUL1FQR3VkSFQ3aVVu?=
+ =?utf-8?B?SWF5Mmd3V003TUNhNGc3ZTllNG1PMEZPUk5NcUMyMmtSM2MrZ0YxL2pPS3B5?=
+ =?utf-8?B?RklGVmpmYk5ySzBUWUs0S3Z1QjJUcHdZQmJGQXMyVVBrWG9oeWJJTFNubDJE?=
+ =?utf-8?B?dEUyOFlDL3VrOU1UWHFOU1pMR3JCanhzNUdIUmpBRm1QTDB1MHF1SzU1U1F0?=
+ =?utf-8?B?aDdvTEZmVTYyYmdjNFBtQXI4WXkxTFJhTUgrdDdRdjZYOE54bWdrbjI2VTVw?=
+ =?utf-8?B?dHF5WDFrRVU5ZmxjMmJtc2VncU8ydDBURWl5SU1ueWJESWlaUWU5ZHJzNkx1?=
+ =?utf-8?B?OURtT2JzNHRyNCs2WXZuTEFqRExEWkxwZWY3NEpVR0dkczdOMTFvNmlvdTlM?=
+ =?utf-8?B?MDkzNVAwVUswUkFaVXQzQVhzKzlOb0Z1NzR3U2wyZ1Bia3MxNmRrS0V1aXpG?=
+ =?utf-8?B?Q0RVK09ISUlBSSsxT1lobWh0WFlYd1c1aWlDM21jZlNkaXRaM04xNkhESHlo?=
+ =?utf-8?B?TnFZTStaQlN3WmgzbEFwd1VqKy9JSkJxR0dBQ0FiUzBGVmQxU1YvNlVMSk9K?=
+ =?utf-8?B?QXVObDBTM0lkQkNFMWdDV1RDMU9aOENPeGhWUFYrNkd4SFRUWURRaXdlUklT?=
+ =?utf-8?B?RXh4K3E0Z3N4UVEwZUIreUlMbkdjNlVwZnlvL1pma3B0YXdOdHRiUDJkQVIx?=
+ =?utf-8?B?YnQxcUZqZ1ZnMUNLYnRBdE9OcUxCelVEZzdEaXZHWEh2eCtEVWtmRndCQmxi?=
+ =?utf-8?B?S3c1TWV2K3RvSlVwek8zT211Y1FkTzhQLzJuSzQ2SlVHanRQVkZKVlNybWIy?=
+ =?utf-8?B?SWJCN211TGpUOFBKaEFubzFRRjJtUVhCY1N1dHBhUDNlY1MrT0kzQzhYS2NI?=
+ =?utf-8?B?TlZPRzFBajNiWWcxN1VMM3pmdUhqdG81K2dHeTcrTm1mL2oyNEc2SmRTNHJm?=
+ =?utf-8?B?eU1FNFppRno5VXRzU2pzSndvck8vTEtCLzQvbFdJSElXdSsvWjR4SWNZczBI?=
+ =?utf-8?B?Z1kxL1VQMXlRZVpPdnhiVm9DcU93MzZvenRvUCtnWEl1QzZuYk43bXRleUd1?=
+ =?utf-8?B?UVRkSjJLUUdBejk0SEgxN3Bta2VyVGswNWE4cForK0t4dG0yZWY0NG1adG50?=
+ =?utf-8?B?MzgwcXhUc3lUMFQ0VXhCdFRXaStacVhQNy83ME11NkxPTGNkR0YwQ2kyZGE5?=
+ =?utf-8?B?ZlNOQk1GK3h0TkdhVzNOTEVtd0xOQmtDSDNnS09YTWcwMHZQV09lK204ZWNn?=
+ =?utf-8?B?SU1RNTVUUnNXVlJrZUVNajhxbVVzUW95TnY5TUpoZUtYcDVzOWIwaCtpeGFQ?=
+ =?utf-8?B?YXFEcFNLbWlMNUNWbkhDUWtOU1JGMGFYOUliM3hvajN4dmRuc2tnSjA0dXBw?=
+ =?utf-8?B?dVJoMytWVXdTUUZUOE13NGd1SlViVGN3TGN6bXlOTm9YdXZybTg5VE53S2pt?=
+ =?utf-8?B?Mm1nU0RHblY1TDZ2T0xYNWcxOXFCanlVQ2dnbUZWalN3c1pEZFNvZUFYZjdB?=
+ =?utf-8?B?M2EwemgxanVTQ3htSVViVEt6aU5nSURUZ2dYZnQ1Z1RzWDl2NzdxL1BxUC85?=
+ =?utf-8?B?OWFZNGd3RzQ2M29ueGNXQkZuZTBkMzNhaUkxZ1kxSVErMURZaVoxRWZITXhP?=
+ =?utf-8?B?WEJPRURqdzg0NE1rL09leCtpZlZyRVZoMW9wZzNDTlY0ZXdmY080SEVKMWg3?=
+ =?utf-8?B?Um5rb3RWZWQrRUVCWHpET1ZLbHRsUWp0T2lnSVpTRHhGZkYwaGNEc2ROQjAr?=
+ =?utf-8?B?c1E9PQ==?=
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6eb5cc1e-e60d-45fd-27c1-08dd7c07a018
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR10MB6181.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 10:23:35.0681
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 10:23:55.0892
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e309f7e-c3ee-443b-8668-97701d998b2c
+X-MS-Exchange-CrossTenant-Id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Jk6cOcG2T4BG0EVFNZLGM+7i3RN/GDOwjkBKHFpPdiaO7ig1aA3YGPRUXygI472LUNuHZHje3JA8pBzRxN9ggAJkxPMDuIpH6XXgF/yKUQA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR06MB7109
+X-MS-Exchange-CrossTenant-UserPrincipalName: ECxnyPJssIhmKSkLYTE1U2CHdBDI+L+IeWzXtL94ujosjU2UFyn92fuDTX7bk03UkUWqz1vPwaW6GseOkKzchg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR10MB4030
 
-Hi Ilpo, Guenter,
-
-Thanks for your reviews and detailed comments. Please see my replies inline below.
-
-
-On 10/04/2025 8:25 pm, Guenter Roeck wrote:
-> On 4/10/25 05:07, Ilpo Jarvinen wrote:
->> On Thu, 10 Apr 2025, Yen-Chi Huang wrote:
+On 15.04.25 10:00, Sebastian Andrzej Siewior wrote:
+> On 2025-04-15 08:54:01 [+0200], Jan Kiszka wrote:
+>> On 15.04.25 08:23, Sebastian Andrzej Siewior wrote:
+>>> On 2025-04-15 07:35:50 [+0200], Jan Kiszka wrote:
+>>>>> On RT the read_lock() in the timer block, the write blocks, too. So
+>>>>> every blocker on the lock is scheduled out until the reader is gone. On
+>>>>> top of that, the reader gets RCU boosted with FIFO-1 by default to get
+>>>>> out.
+>>>>
+>>>> There is no boosting of the active readers on RT as there is no
+>>>> information recorded about who is currently holding a read lock. This is
+>>>> the whole point why rwlocks are hairy with RT, I thought.
+>>>
+>>> Kind of, yes. PREEMPT_RT has by default RCU boosting enabled with
+>>> SCHED_FIFO 1. If you acquire a readlock you start a RCU section. If you
+>>> get stuck in a RCU section for too long then this boosting will take
+>>> effect by making the task, within the RCU section, the owner of the
+>>> boost-lock and the boosting task will try to acquire it. This is used to
+>>> get SCHED_OTHER tasks out of the RCU section.
+>>> But if a SCHED_FIFO task is on the CPU then this boosting will have to
+>>> no effect because the scheduler will not switch to a task with lower
+>>> priority.
 >>
->> +#define PORTWELL_EC_IOSPACE 0xe300
->> +#define PORTWELL_EC_IOSPACE_LEN 0x100
+>> Does that boosting happen to need ktimersd or ksoftirqd (which both are
+>> stalling in our case)? I'm still looking for the reason why it does not
+>> help in the observed stall scenarios.
 > 
-> SZ_256 + add #include for it.
+> Your problem is that you likely have many reader which need to get out
+> first. That spinlock replacement will help. I'm not sure about the CFS
+> patch referenced in the thread here.
 
-Will fix in v4 and include <linux/sizes.h>.
+Nope, we only have two readers, one which is scheduled out by CFS and
+another one - in soft IRQ context - that is getting stuck after the
+writer promoted the held lock to a write lock.
 
->> +#define PORTWELL_WDT_EC_CONFIG_ADDR 0x06
->> +#define PORTWELL_WDT_CONFIG_ENABLE 0x1
->> +#define PORTWELL_WDT_CONFIG_DISABLE 0x0
 > 
-> Align values.
+> That boosting requires a RCU reader that starts the mechanism (on rcu
+> unlock). But I don't think that it will help. You would also need to
+> raise the priority above to the writer level (manually) and that will
+> likely break other things. It is meant to unstuck SCHED_OTHER tasks and
+> not boost stuck reader as a side effect. Also I am not sure how that
+> works with multiple tasks.
 
-Will align all definitions in v4
+Ok, that is likely why we don't see that coming in for helping us out.
 
->> +#define PORTWELL_WDT_EC_MAX_COUNT_SECOND 15300 //255*60secs
-> 
-> Move the formula from the comment to the define itself. While doing so, 
-> you need to add () around it and add spaces around *.
+Jan
 
-Will use `(255 * 60)` in v4.
-
->> +MODULE_PARM_DESC(force, "Force loading ec driver without checking DMI boardname");
-> 
-> EC
-> 
-
-Will capitalize "EC" in v4.
-
->> +/* GPIO functions*/
-> 
-> Missing space. Please check all your comments as the one above seems to 
-> have the same lack of space at the end.
-
-Will review all comments and ensure consistent spacing.
-
->> +	pwec_write(PORTWELL_GPIO_VAL_REG, tmp);
-> 
-> Add empty line here.
-
-Will add the missing empty line in v4.
-
->> +static int pwec_wdt_trigger(struct watchdog_device *wdd)
-[...]
-> Is this write until timeout matches the one written typical thing for 
-> watchdog drivers, or is there something specific to this HW you should 
-> comment + note in the changelog so it is recorded for future readers of 
-> this code?
-
-> No, this is absolutely not typical, and it has nothing to do with watchdog
-> drivers in the first place. If the code was in drivers/watchdog/ I'd
-> request a detailed comment explaining why it is needed.
-> 
-> Guenter
-
-I will remove the retry loop. It was originally a workaround for an old EC firmware bug and is no longer needed.
-
-> I'd add empty line here.
-> Unnecessary else.
-
-Will remove in v4 along with the retry logic.
-
->> +static int pwec_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-> Add empty line here.
-> Add empty line hre
-
-Will add the missing empty lines.
-
->> +static unsigned int pwec_wdt_get_timeleft(struct watchdog_device *wdd)
->> +{
->> +	u8 min, sec;
->> +
->> +	min = pwec_read(PORTWELL_WDT_EC_COUNT_MIN_ADDR);
->> +	sec = pwec_read(PORTWELL_WDT_EC_COUNT_SEC_ADDR);
-> 
-> Does the HW "lock" sec value in place after min is read or do you need to 
-> consider the possibility of these values getting updated while you're 
-> reading them and the driver reading sec after it has wrapped?
-
-Will fix by double-read and comparison in v4. The EC firmware team confirmed that the registers are not latched.
-
-> Add an empty line here.
-
-Will fix in v4.
-
->> +static struct watchdog_device ec_wdt_dev = {
->> +	.info = &(struct watchdog_info){
->> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
->> +	.identity = "Portwell EC Watchdog",
-> 
-> Please indent the inner struct correctly.
-
-Will fix indentation in v4.
-
->> +	return (strcmp(PORTWELL_EC_FW_VENDOR_NAME, buf) == 0) ? 0 : -ENODEV;
-> 
-> return !strcmp() ? 0 : -ENODEV;
-
-Will simplify the return expression.
-
->> +static int pwec_probe(struct platform_device *pdev)
->> +{
->> +	int ret;
->> +
->> +	if (!devm_request_region(&pdev->dev, PORTWELL_EC_IOSPACE,
->> +				PORTWELL_EC_IOSPACE_LEN, dev_name(&pdev->dev))) {
->> +		pr_err("I/O region 0xE300-0xE3FF busy\n");
-> 
-> Use dev_err() instead of pr_err().
-> 
-> I'd use the defines while printing the region's address.
-> 
-
->> +		pr_err("failed to register Portwell EC Watchdog\n");
-> 
-> Watchdog -> watchdog ?
-
-Will lowercase "Watchdog" in v4
-
->> +static struct platform_driver pwec_driver = {
->> +	.driver = {
->> +		.name = "portwell-ec",
->> +	},
->> +	.probe = pwec_probe
-> 
-> Add comma. In general, the comma is to be left out only from a 
-> terminator entry that is used by some types of arrays.
-
-Will add the missing comma in v4.
-
->> +	if (!force) {
->> +		if (!dmi_check_system(pwec_dmi_table)) {
->> +			pr_info("unsupported platform\n");
-> 
-> This will be unnecessary noise for most systems.
-> 
->> +			return -ENODEV;
->> +		}
->> +	}
-> 
-> I think logically you should do it in a slightly different order:
-> 
-> 	if (!dmi_check_system(...)) {
-> 		if (!force)
-> 			return -ENODEV;
-> 		pr_warn("...\n");
-> 	}
-
-Will rework the logic and remove the dummy message.
-
->> +	pwec_dev = platform_device_register_simple("portwell-ec", -1, NULL, 0);
-> 
-> If this fails, you need to unroll the other register.
-
-Will add `platform_driver_unregister()` on failure in v4.
-
-Thanks again for your feedback. I will address all comments in v4.
-
-Best regards,  
-Yen-Chi Huang
+-- 
+Siemens AG, Foundational Technologies
+Linux Expert Center
