@@ -1,90 +1,169 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162DC1D959B
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FB42820A4;
+	Tue, 15 Apr 2025 08:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705861; cv=none; b=mCQwWdt3dPPA6GsfIsI6MK7yMC3ryabFJTpsP82AFJHOwDN4yXx44wgPVouKhDH6jILEKJD0fZbMaBTrPbcgW/sryIwWIrjgR9keDUU1rAncBmNqLM04oZsAg6+STMW5mRo+Gn50j2Nj/oecbhnNwUtt7Ed7XllJ1JG4J9HOnqQ=
+	t=1744705880; cv=none; b=tVTql/NnKdRH2sAwyFyFVQ+vrsZgvgh1At7myB08RbuRQ2+GkOkHp8SUjO1VrnxhZJA8xm959hws3RFaSTKtgdt31tviP7ZJVXmpsK/EV+vaBB0DvbzpkpJTvZKtAnz1RV9KwBve72/tPnWJSx4RfyQQx+8oCvPwf1bFfh4rm04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705861; c=relaxed/simple;
-	bh=7FMR4vK7CkGM3l4LtzpFaWNe/WG6upyNAAMbvvMmdJU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WroeIDwqsIklxpOhsYfUQzTEHYE4MS9oKoOYWP5qlx+NoDQK9niYIzcacAVQlF5nN3oaz65/kBUMHmu+ZO61mJSGqWk6HkHNrUW1PNVlQC2AYWIIX7MwqAhK0x0pbWsN0gcWy8POkflBG8Vx5EZS0JihwNOhmYXEdXwh/g63MGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DVB4REjZ; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DVB4REjZ"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54b166fa41bso6172384e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:30:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744705858; x=1745310658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7FMR4vK7CkGM3l4LtzpFaWNe/WG6upyNAAMbvvMmdJU=;
-        b=DVB4REjZhro4kEG4VqMryl27liadrsNjzwAcPgzkM860OmRDlOxd+nHLAsVUT5gT+G
-         te/t5aLLPUPwIRmdNkiOd1lZL38YPQui9kk7jMfuMu/iBvIhrHZKrI1sFjDjy5/DsXil
-         TL5uH1KiFPXKOS7cFBZX9MXCbmGkM31L32gVrUPCwDoyiysmfYzVGG9Xh8a2twujwt/p
-         qZU1ATkcil24bV5Vl1U/3fExjNB3cLDV2gw7d+9HRk8MgdjN8IPDNnsuO1xMszfHaufK
-         HIIo2wdLPlHw1vD+51uGlR1TETW0QHDyVO+ZMr1Dvj+vCNf51UzxLuDYN2FIBWlt+PE8
-         21vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744705858; x=1745310658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7FMR4vK7CkGM3l4LtzpFaWNe/WG6upyNAAMbvvMmdJU=;
-        b=pEEf6YBf0A2uin7xTKJagycUzvX8WZF+hxorcPZkXFFjsnQ58LklJnmxWrQgtUUrw+
-         xzxRGNZskKAvB3FrM/zTYXr5S5ODEFyBdrKLT5aTgUKbSMVToI7Mo2Tmbz60NSAcOSI9
-         VYVmGPQn7ojPXHPdQ99i8RiloEuiVkxoJ0Nj4JJLEkw2yTkBeTqrb1Kpdyy4JFu8d9QG
-         BGd9OnrKyolccQ7vihBqlyGXykUsbqgnQafSDIJcubOfkfVyPVotRceA3IitSLLiHbn7
-         OelpzFSNMXj7RlKg5T4hJmQh+sC0bNnRclWcC01wB3ohKmg5KzoATflHOBZiJX8uAfdJ
-         8UKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOi/OfvPP5EaimOXQ4Gg1l/J5uYI/ms+32QREZsb/Xvv/jq5XJLKSKEHJ7TXmFaSk3QTLMEtYUcHSBZI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh/vSpEy3ikN78XsKnV+zsqbyIFB7Ok3H4CoIyvtoRh4+49H0m
-	ejSh2uqIuDUjsExLy8ba51yJdSQzPWw29PFlh83Uuz/sV7wdkxEBrBKjQRG5mytUh/tIx6pzbE+
-	fTl5Nn4HuI/VhrvmmYAmhrY/REftHHnhxZS/9ZQ==
-X-Gm-Gg: ASbGncuPRC5w2LrpHvUqz1+nJzPjz9r5dpnJAJQMIvnM2rxFyJyU+0rDkNnzhJ9YeiC
-	LHb/j0kWoU0bGiE30pPTNMogvGhL/T6dzs+OgvyIs4+XH3RR4jk+vbUxA0avHUyXhd1abkIjsKr
-	Tme+ZpLIBGElEITiPw81XJqA==
-X-Google-Smtp-Source: AGHT+IGnEYdC/tbXp6zUzoQmRqryQKEflVM5MqJd7M1yWtqEwMnlg/Eex3aKuiEz7JOwodkSWTklDUqq0ZZR8bJmqxg=
-X-Received: by 2002:a2e:a545:0:b0:30b:a92e:8b42 with SMTP id
- 38308e7fff4ca-31049a930d6mr47194111fa.26.1744705858086; Tue, 15 Apr 2025
- 01:30:58 -0700 (PDT)
+	s=arc-20240116; t=1744705880; c=relaxed/simple;
+	bh=Pwxu9zhvfv34pQqIHOPHl37aXod6oVxsH7nMhW0hsVQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X8wrF3AcQHwrMrBX1hNI0p26SXLXsjKbJH2BT73YWKFr5aVCJUaOJt0jpn1zrjlDjKe3F4z0NY9O5tM9Cftwbs1T7E3dYfFWtHL1uBIx6qvx4KTDmWDYYw9FELoI54gEComdjj4Lh4S0/6QcfOLPqgmicZFgKngKxMzJu20cmJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C867339;
+	Tue, 15 Apr 2025 01:31:15 -0700 (PDT)
+Received: from [10.57.68.100] (unknown [10.57.68.100])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 745883F694;
+	Tue, 15 Apr 2025 01:31:15 -0700 (PDT)
+Message-ID: <d29e4ea6-2bfe-4017-b7c8-0d77613959f4@arm.com>
+Date: Tue, 15 Apr 2025 09:31:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org> <20250407-gpiochip-set-rv-gpio-part1-v1-11-78399683ca38@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-11-78399683ca38@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Apr 2025 10:30:47 +0200
-X-Gm-Features: ATxdqUGWGRkCpITOv-VvtHky0F7dBdnGGWgz8_h-UuiVgFohkRnQE4Ctw9GFm-8
-Message-ID: <CACRpkdZKH6SaW3LEjTXgkoewH=E+Y0O9x0mJ9sVutb7QjyTS5Q@mail.gmail.com>
-Subject: Re: [PATCH 11/12] gpio: ich: enable building with COMPILE_TEST=y
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, Andy Shevchenko <andy@kernel.org>, Peter Tyser <ptyser@xes-inc.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PM: EM: Add inotify support when the energy model is
+ updated.
+To: Changwoo Min <changwoo@igalia.com>, rafael@kernel.org
+Cc: christian.loehle@arm.com, tj@kernel.org, len.brown@intel.com,
+ kernel-dev@igalia.com, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, pavel@kernel.org
+References: <20250415004215.48757-1-changwoo@igalia.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20250415004215.48757-1-changwoo@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 7, 2025 at 9:13=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+Hi Changwoo,
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Extend the build coverage by allowing to build the module with
-> COMPILE_TEST enabled.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Thanks for the patch.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 4/15/25 01:42, Changwoo Min wrote:
+> The sched_ext schedulers [1] currently access the energy model through the
+> debugfs to make energy-aware scheduling decisions [2]. The userspace part
+> of a sched_ext scheduler feeds the necessary (post-processed) energy-model
+> information to the BPF part of the scheduler.
 
-Yours,
-Linus Walleij
+This is very interesting use case!
+
+> 
+> However, there is a limitation in the current debugfs support of the energy
+> model. When the energy model is updated (em_dev_update_perf_domain), there
+> is no way for the userspace part to know such changes (besides polling the
+> debugfs files).
+> 
+> Therefore, add inotify support (IN_MODIFY) when the energy model is
+> updated. With this inotify support, the sched_ext scheduler can monitor the
+> energy model change in userspace using the regular inotify interface and
+> feed the updated energy model information to make energy-aware scheduling
+> decisions.
+> 
+> [1] https://lwn.net/Articles/922405/
+> [2] https://github.com/sched-ext/scx/pull/1624
+> 
+> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> ---
+>   kernel/power/energy_model.c | 47 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+> 
+> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+> index d9b7e2b38c7a..0c06e0278df6 100644
+> --- a/kernel/power/energy_model.c
+> +++ b/kernel/power/energy_model.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/cpumask.h>
+>   #include <linux/debugfs.h>
+>   #include <linux/energy_model.h>
+> +#include <linux/fsnotify.h>
+>   #include <linux/sched/topology.h>
+>   #include <linux/slab.h>
+>   
+> @@ -156,9 +157,53 @@ static int __init em_debug_init(void)
+>   	return 0;
+>   }
+>   fs_initcall(em_debug_init);
+> +
+> +static void em_debug_update_ps(struct em_perf_domain *em_pd, int i,
+> +			       struct dentry *pd)
+> +{
+> +	static const char *names[] = {
+> +		"frequency",
+> +		"power",
+> +		"cost",
+> +		"performance",
+> +		"inefficient",
+> +	};
+> +	struct em_perf_state *table;
+> +	unsigned long freq;
+> +	struct dentry *d, *cd;
+> +	char name[24];
+> +	int j;
+> +
+> +	rcu_read_lock();
+> +	table = em_perf_state_from_pd(em_pd);
+> +	freq = table[i].frequency;
+> +	rcu_read_unlock();
+> +
+> +	snprintf(name, sizeof(name), "ps:%lu", freq);
+> +	d = debugfs_lookup(name, pd);
+> +
+> +	for (j = 0; j < ARRAY_SIZE(names); j++) {
+> +		cd = debugfs_lookup(names[j], d);
+> +		if (!cd)
+> +			return;
+> +		fsnotify_dentry(cd, FS_MODIFY);
+> +		cond_resched();
+> +	}
+> +}
+> +
+> +static void em_debug_update(struct device *dev)
+> +{
+> +	struct dentry *d;
+> +	int i;
+> +
+> +	d = debugfs_lookup(dev_name(dev), rootdir);
+> +	for (i = 0; i < dev->em_pd->nr_perf_states; i++)
+> +		em_debug_update_ps(dev->em_pd, i, d);
+> +}
+>   #else /* CONFIG_DEBUG_FS */
+>   static void em_debug_create_pd(struct device *dev) {}
+>   static void em_debug_remove_pd(struct device *dev) {}
+> +static void em_debug_update(struct device *dev) {}
+>   #endif
+>   
+>   static void em_release_table_kref(struct kref *kref)
+> @@ -323,6 +368,8 @@ int em_dev_update_perf_domain(struct device *dev,
+>   
+>   	em_table_free(old_table);
+>   
+> +	em_debug_update(dev);
+> +
+
+I would move this out of the locked section, below the mutex
+unlock. Looking at the code in em_debug_update() you are trying
+to send such notification for each EM's table entry * number of
+fields, which is heavy. The RCU copy that you get will make sure
+you have consistent view on the data and you don't have to
+be under the mutex lock.
+
+A different question would be if the notification has to be
+that heavy?
+Can we just 'ping' the user-space that there is a change and ask to read
+the new values?
+
+Another question, but this time to Rafael would be if for such use case
+we can use debugfs, or we need a sysfs?
+
+>   	mutex_unlock(&em_pd_mutex);
+>   	return 0;
+>   }
+
+
+Regards,
+Lukasz
