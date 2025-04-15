@@ -1,69 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B318633F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8574A8633F;
+	Tue, 15 Apr 2025 11:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744718129; cv=none; b=bXimhve2YzNu+o7eE+qqrkMQjNq2HExM5rHHEl5jqIz3u3j2AXQkb30TCD77bA5U1M7KJTLsLdGWdhZCwkVo7X4fGKQlGB0dTeEDbHFv4mWElAAAVpMxq0HQiPti352JMXTl/XM57kny/2vk7urKSt/HS3Gr8XPtWC70yjAX9T4=
+	t=1744718137; cv=none; b=KwuAhogvYbEQ4aqylwfADjD4Fuu6E0ZSyCrWg/Co5/SKpxRdgNHD2t/kGGEwUrBuYqMpfFFh6StO6a/dWrbxK5VKRG6AxzYorSiL30CbhAIkgQHKrsL6OfM3xsVROOcwML/bIEi8w/EJsYjQAt1JkFXVBJUZKXqHvkG8dX+DgVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744718129; c=relaxed/simple;
-	bh=/esvY+L8tDw+9+UnsY+H5W6t4i2xiOeZDwq6uVWi18M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SVsg2Bj4Vc/TNbFA2W90SUmodLlMseiNNaxJQ+3iO4yQ0ofqrYPif4TzIBrCPM6bu6HgKUXDl1nxoQYUbiT6t3MpY3VwR9K9UJs1WNLDxnX3Xvn/ZKmX3Ma78BfurTvx/4eyW2/jJ4RvrArz/n0qHg/irl1kZwOslRP/9pYEu6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=o479CiQm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744718137; c=relaxed/simple;
+	bh=UvsCuSDHYInrelqa0vP4LiwOooLTqAXXZ/velEhZj6Y=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WUsD6R7joexvpfkuBxzmyPUcNOLkRrW2RkyW3upMESGbMJ3pyh26C1sUFrfNpZ8AMgIJ/IvN/bXgbHSumtaLhsEa3wHr+x7zjMlXnQaw191m06aAGsEKIIMhOJLJfssX6yWlxCV9ss6G/oR2u/4dnjdvNiGCbH+KuFxsauYXsec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=srIJkOjM; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="o479CiQm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F3FC4CEDD;
-	Tue, 15 Apr 2025 11:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744718129;
-	bh=/esvY+L8tDw+9+UnsY+H5W6t4i2xiOeZDwq6uVWi18M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o479CiQmUxW36GKoOF6x32SBZjrgOSP32Ko2KP3wD64KpFfVOQznCzWXNtM6+NGBR
-	 goV2NYOhV2HfDfBdmJoNNVaJVuYM+htK/nngCi7B6waaR8rnOMH/7kGFmVuWIH059+
-	 SXeVcHUgH+RxlwBqQhBBksKXyjLAK9ajrYFnDgHk=
-Date: Tue, 15 Apr 2025 13:55:20 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-	Tejun Heo <tj@kernel.org>, Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] MAINTAINERS: update the location of the driver-core git
- tree
-Message-ID: <2025041551-oblivion-pusher-0744@gregkh>
-References: <2025041447-showbiz-other-7130@gregkh>
- <Z_1LZHFnwiKl2MlO@cassiopeiae>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="srIJkOjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744718106; x=1745322906; i=markus.elfring@web.de;
+	bh=7vJwDbjhhUUleO+YsM2fphJAvcNc8PwwTfNeKp67nKU=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=srIJkOjMJWaD7i/GUniCujRPiO5MLuTjxNVRTjC6MCcAC0NcrQ0kelACtuoCF4TR
+	 Ptgy8Fi5Xrj2htF3lo1v6P2XyhDg1rKvR+TQXq7+EJpatl4lmk68sJnrmzj7XVJji
+	 tPc3I4h8ZUOBAjkeRiKNSimiXxJ/d/5/z8llQSrtQl0zKB1mVRtt0DO/UlyH0kdZk
+	 5UD+eR47z43chlA7hiNgvc35dNc4u+jRjX7k7KSmpLNdtrC3u4hrb4pSqS9gQzh40
+	 A+5XHF4YxyjdK9qrvqfju2lTv8SMiRu7qdxHPwOZvowggd3QY1OQ8IS57NZr5ajfs
+	 zGRBcde5VWFnUcUgKQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.24]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MuFD7-1tAtvj2X9h-017YGo; Tue, 15
+ Apr 2025 13:55:06 +0200
+Message-ID: <777983bf-08d2-4ccd-aa92-4791c8f9195d@web.de>
+Date: Tue, 15 Apr 2025 13:55:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_1LZHFnwiKl2MlO@cassiopeiae>
+User-Agent: Mozilla Thunderbird
+To: vulab@iscas.ac.cn, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Kenneth Feng <kenneth.feng@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Xinhui Pan <Xinhui.Pan@amd.com>
+References: <20250415100813.3071-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH v2] drm/amd/pm/powerplay/smumgr/fiji_smumgr: Add error
+ check in fiji_populate_smc_boot_level()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250415100813.3071-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:j95cmp4iIHJldfBrtlJ3dqRgSUtrCjG/E336CB1WJIsSKZJCTSr
+ QfSBc24kCx/pYxQqM4Nm0fduoBgsUwyJyYQKeXPm5LuEy604pfnbdARzdSzh43U6aih94mo
+ A267dXnnWmXXgybTVGZXTwApcn5GAgtn1bTpyP/8pDG82/YAEewmRvqiTmm6ZVosHZ7EIRO
+ d6C/NkUKTYYahRlDPNFig==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ci3YOdjsLss=;IEKbIWfFHAoKltwaFh0/d4So4zt
+ xUUcNirA8UGA4vkj1cLZ8a8+J6yARIThOsgVSOv0WsFaY6zDSmCxwPchfrT3CQtNckDq6zqin
+ LZ+aGDXty6nUWvjCzLUoMNIgaB5NDChhfQVk0bT7KjxbxOi6FYWear1/fxrIKHC5Jj+ECKOVM
+ PWR5w82031Eax+VY112aAEZhLDEd3O9Brw5aZHqCMoxp2MGxw7VYs0Sgy1Noqo64FOuIi8Ojb
+ SbjRDYQatCad2t2KYAJcwE2zmg8/isGt4aH0BMPqCE/Jm0M4McfJDK0Vn0fMozAa1xinx97NS
+ pPUk5iJsjh8p3E+dnlPaBjpFmBLHB4vokcLCBXNPHf0FZ9M/Rx3mo8O4P3bneJNs1FYMyVqe7
+ aD1bMBqg57LiIqVFo8PqTIQXBtBQbwQz9uOh2HghVecw4NUi5+pzqrbSida/ioxT7/nSLY3dT
+ xJb6b83566fiz5V9Z5/rzW8V88YBGTbUofYPSoM24veseVEqaYIEFIBk4DXdRHJqNkv2K9DOC
+ ucfxyFhnfwhV1qv1glXFWmzmK9uyy4WYBuM5N0Jha4DO6wYnSzfbHQQQ3DOn1Ym2tv5LgYXGw
+ ORBBaMZbWGtXEO8ZNXlHf/QRKpiD6551ArvsStwsT3DfhhfLWbpweHIrA9pR4ItliRW6V2j7E
+ HuMCkAFid+7/mTKKBtPfCM5P6Juv2cSH70+Tix0PAcfWGV15yfk0diXmYJQu4/d5nxm59LjM5
+ 232EY+OleqV9QDI+nrj1giiKbI4dHr7K5/zb49cuLKQY7q0ST1lUf7IfQzemo2pat6ItOCm5a
+ ELNKYX4o20kVVk/tcDC1gzH80Y8mQTCZBNgdUxeK7cc3QJ7OWJbY7TFdLYNfbkSULuEvFoxnO
+ wZt1nVOIuI473sllLkJTjo+Bk1a2V5UsXQXbUMBkBRqUoGDGlRF+VFWJjAJth6ISO8gjpUuTp
+ I6MCiaj/mWrk8gWajQnVNKpYV3k1eLwO/daZatWBOs3m+pTRWuHq44rvWMM/mlHzHfpNopQIi
+ sc3DEYfUhW5CduIM5Atfi6JDN1Sh3Oib8UotLjCOXASYmrtvUNi0Bg5SxA8X5sxYywCqfa27y
+ qJu2goJ8NSc71QD29ldgYeR6cxr5BIC5oalos3AOEK9vOMvo/AzfFpqUvbyRFB5RqP7DPKN/u
+ A1c71vNT31yfuUsEgbAtq5N+9W++oA3jVpid2QZgrLaQm5CTdIPqPBuog9Wpp4147WzZXufGL
+ kgzJ3JE1fQt5h8+InF83UJYM7p0PfYIPo7CNwmP96YwwZ/R2mkKADoqYlfMWCXlH1DoAg/wwm
+ Wf7bYfaPBMjJw7d9YjrUVkbSc5j1z4U7IFh4684A93Iw4khKxO4mFziWfyFtd8DaXYcGVThRr
+ 1DWBl7Jr6QAtin8S9Q/s69hnWOT5pPdCWq4kKJhpc+ttRsNjDTIfKUz6OQ4jRXVxaUTfyCTFo
+ UuJm6av/ts38/D79SvmNQYfC8rj1RQAXOmEfStyhcHx5sqsYGNhK7M7F/dOW6Hcg16WNL4Q==
 
-On Mon, Apr 14, 2025 at 07:52:36PM +0200, Danilo Krummrich wrote:
-> On Mon, Apr 14, 2025 at 07:40:48PM +0200, Greg Kroah-Hartman wrote:
-> > The driver core git tree has moved, so properly document it.
-> > 
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Danilo Krummrich <dakr@kernel.org>
-> > Cc: Tejun Heo <tj@kernel.org>
-> > Cc: Dave Ertman <david.m.ertman@intel.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Should we use the chance to also add the corresponding T: field to the
-> FIRMWARE LOADER entry?
+> The return value of fiji_populate_smc_boot_level() is needs to be checked.
 
-We can add that in a separate patch, as this is just a "rename" patch :)
+                                                     should?
 
-> Are there other entries that go through driver-core?
 
-Not that I can think of at the moment.
+> An error handling is also needed to phm_find_boot_level() to reset the
+> boot level when the function fails. A proper implementation can be found
+> in tonga_populate_smc_boot_level().
 
-thanks,
+Can you propose in a nicer way to complete the error handling?
 
-greg k-h
+Regards,
+Markus
