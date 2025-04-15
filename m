@@ -1,292 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C5F257458;
-	Tue, 15 Apr 2025 21:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E463F2571B5
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744753964; cv=none; b=X+JYtbjkNdpWb2TvOwuimQQZprW/lklNK/M7qOYGBnSSnSx3G0SwN4c+Tc+WYdwHG4UWO+lD359OSOsCO8PIwg/xKtFP951A2X7ZKvMSzb/rTzfuiIburNL3AZk2ZAQ4+6dzwsxHEdFTwXnIKV05+vEMNqsJJeG4n9DZF/gHoBg=
+	t=1744753965; cv=none; b=K4QUZfG22FsgL/jGZfJC0VnqTF0Rs45aqSo+vZGt7mR1OcdQBFVIOgrVBSPt99PDrnoSXNbsCEUdvAjUuDA4Pioev3VWOY3ez4wkNnYCVnU+E+YB0xxTFWeshcAyOUwQBZGnIZJQLNRL9L/9A/2G4Yw87u9kMryKg6gbrinLGfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744753964; c=relaxed/simple;
-	bh=PVTDyzSaiIpFn2vPpTAguPeJMOjp9i2ibxMxEsqpwtU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=luJEO/2QQjhh1NwTjgYdV0Dqq+S7/x0gAZNpeUQdKXUN4Q2Oz7Iqnw91IB86SMQ4Aiwp86cuxfJGMyxv5qwjk8KHk9nXTU6jIS9/RAGgoBnpDrNjp7BYflfWju+tOODSykVfmqbnLZ4iX3hCb6nlGtB5R4O4FFLVp0IdUmcRPa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrWxDEgR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744753965; c=relaxed/simple;
+	bh=RB9DkFDjFYaAz0XoV8GvJIl9KPIPe0zT4OKarjuneSc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JzI1kn1BO66G6RQcpsyD8KZxuKKbwiwp0IHKJ94pcIveOiJxqsxVIYK/HZ7PP1bECrygemcweyZt4mBlCOkJxfYZ0jDhCRfY+l3iCYUeHkZH91lVnx+qQ3xTqEVBm/clFmfc/iyTQv/1VmVECeOLPwd3Zzycy9WLcFZ3+k75mDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GmRThp2T; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrWxDEgR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 98794C4CEEF;
-	Tue, 15 Apr 2025 21:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744753963;
-	bh=PVTDyzSaiIpFn2vPpTAguPeJMOjp9i2ibxMxEsqpwtU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RrWxDEgRTK0ZhOd9MR4BMDNEXRcE5G/gjnmwtUjBP9KmWSqgL4BULz+k/afSa4MgT
-	 CQqsW41hnNrFQABLehM4kxETZUhayV8MlQ6RSgW/Mg3+/aWxU5hMTQjtyc64Xld+l6
-	 kb4H/HwTxNm/L9CSewRwAKPy1V6Z3+mL52EXY7YtEybROQ6Qg5tyQ+BSyasOSvoWwt
-	 VfumhB34E+4s0eKC3u92eiCN/1t7X8HXICLEGRWBAoULY459dCRUnJ5gMsWNolMD2u
-	 QUXoXytECeWN4WphHAL3M+2HS1N2dJj9cztv4ZQRRda+HKBIZwcZBJCcLrejWlZRdc
-	 /ltw25iRNkQPg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA72C369C2;
-	Tue, 15 Apr 2025 21:52:43 +0000 (UTC)
-From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Tue, 15 Apr 2025 23:52:36 +0200
-Subject: [PATCH 3/3] arm64: dts: apple: Add PMU NVMEM
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GmRThp2T"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso5997076a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744753963; x=1745358763; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sEakkyYbkL3hmGVUI0s4nR0ZmkUz+iNkcqjHnh41YfA=;
+        b=GmRThp2THo8Hz51D2fHGmhCEZIMSEk1bfZfkbcXROXrxi92YJepOQ9ACdmb6Pq0a4q
+         otPd6j61CQpK9CXUFZ23HVB2vmMCh/4eKp1w69LLw3eXjhwTm3H9wqwLHgc2FbIEfbfv
+         BMw01lFYZrqIEaTdopOZNnlspU0lj/HW5PCGO88A6u3JBiI8MzpYEHi1oJf0OjejWxgF
+         3maVlMVCLxNcvAmEWwo5+8QnC6JSEwNlA8Zx4RuUpfpS6t2gl9t5XoApdIePwmacWxpn
+         Sxgagi6B5mJtK+GRe/DlgLAJdv0CS00LFAM3ef9kNSAqRqxrXwibOik/sB3vhhzffJ7j
+         pzoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744753963; x=1745358763;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sEakkyYbkL3hmGVUI0s4nR0ZmkUz+iNkcqjHnh41YfA=;
+        b=qaeC2QgO1p0iPBzOIP/NuQ4a0t4hOzyRSqiDk9GDXvjhbbyWh2FbfrFFJARYzNTJdn
+         2sdZNkbu6OMyfViav4Jh9skMdouakXE/33jkd4fWl1dQijPTA2Ui2UE4yxfn2CIoS4ZT
+         sghR1rf3J3V6chV1mhosyqJnf1ClH0iC+1S5lp6wvTRqbAGAfFn5YKV6mIEMA3qypvsp
+         Dqt7cycrVjGFkiG5uXMc73n1PeRfl4J99+yJfSjtK3IBVXYmlf4dzB3eRyRFMAdPigw0
+         0smFqe5dOqpg+NpVJcN2w8SzILm9Wk4lM80wz7hTYqTExMvW/UmG7QPvJcvsxbnoKp9m
+         yzwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUk0JxbZS3fbdL8DNRaf9l4UdcEY9HZMcL+MLL6iIbFRFyzFrK7iCuKdLhl1W00DaM6fMd8FtXXBDcypQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvx9X+68oFnreuaBptED0qUgmkjxj42U2qXFWM6XzY/A5L+OY2
+	D4TtPYzZxRYJPmUGe+ynYaOBqgcsp/lndKOfR6HBgyC4vNWglNejRJpVMhCeiB1unM4zuvg2+nS
+	6iw==
+X-Google-Smtp-Source: AGHT+IE5X1SEViPqpTe89vzn6EtzphukY6AvSLniOTlThnRLrJgSHxS02dH03m+qXPZkT33RR5rviIXHEb8=
+X-Received: from pjbok14.prod.google.com ([2002:a17:90b:1d4e:b0:2ff:5df6:7e03])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:2ff:7b28:a519
+ with SMTP id 98e67ed59e1d1-3085efefbb2mr1188859a91.30.1744753963182; Tue, 15
+ Apr 2025 14:52:43 -0700 (PDT)
+Date: Tue, 15 Apr 2025 14:52:41 -0700
+In-Reply-To: <20250415200635.GA210309.vipinsh@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250415-spmi-nvmem-v1-3-22067be253cf@gmail.com>
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
-In-Reply-To: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
-To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, Hector Martin <marcan@marcan.st>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744753962; l=6050;
- i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=FkRZ7GthVmmbSujIkVNnHCgsxe2R4byiyM8zrad9aQk=;
- b=S9noVN4xTQB1SJbqDHNgWXzSMmzjFVX+fRWTLRXOciHR2Sy3C/qKKNwyTbNWTmspqZJpPnVtO
- EDTq4fBajrJBOSTVksgxKk7sENUihDeYFmybk/ZaZCE2iWK8OQET+zR
-X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
- pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
-X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
- auth_id=283
-X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Reply-To: fnkl.kernel@gmail.com
+Mime-Version: 1.0
+References: <20250401155714.838398-1-seanjc@google.com> <20250401155714.838398-4-seanjc@google.com>
+ <20250415200635.GA210309.vipinsh@google.com>
+Message-ID: <Z_7VKWxfO7n3eG4p@google.com>
+Subject: Re: [PATCH v2 3/3] KVM: x86/mmu: Defer allocation of shadow MMU's
+ hashed page list
+From: Sean Christopherson <seanjc@google.com>
+To: Vipin Sharma <vipinsh@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: Hector Martin <marcan@marcan.st>
+On Tue, Apr 15, 2025, Vipin Sharma wrote:
+> On 2025-04-01 08:57:14, Sean Christopherson wrote:
+> > +static __ro_after_init HLIST_HEAD(empty_page_hash);
+> > +
+> > +static struct hlist_head *kvm_get_mmu_page_hash(struct kvm *kvm, gfn_t gfn)
+> > +{
+> > +	struct hlist_head *page_hash = READ_ONCE(kvm->arch.mmu_page_hash);
+> > +
+> > +	if (!page_hash)
+> > +		return &empty_page_hash;
+> > +
+> > +	return &page_hash[kvm_page_table_hashfn(gfn)];
+> > +}
+> > +
+> >  
+> > @@ -2357,6 +2368,7 @@ static struct kvm_mmu_page *__kvm_mmu_get_shadow_page(struct kvm *kvm,
+> >  	struct kvm_mmu_page *sp;
+> >  	bool created = false;
+> >  
+> > +	BUG_ON(!kvm->arch.mmu_page_hash);
+> >  	sp_list = &kvm->arch.mmu_page_hash[kvm_page_table_hashfn(gfn)];
+> 
+> Why do we need READ_ONCE() at kvm_get_mmu_page_hash() but not here?
 
-Add device tree entries for NVMEM cells present on the PMU
+We don't (need it in kvm_get_mmu_page_hash()).  I suspect past me was thinking
+it could be accessed without holding mmu_lock, but that's simply not true.  Unless
+I'm forgetting, something, I'll drop the READ_ONCE() and WRITE_ONCE() in
+kvm_mmu_alloc_page_hash(), and instead assert that mmu_lock is held for write.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
----
- arch/arm64/boot/dts/apple/t6001.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t6002.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t600x-die0.dtsi | 50 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t8103.dtsi      | 50 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t8112.dtsi      | 50 +++++++++++++++++++++++++++++++
- 5 files changed, 152 insertions(+)
+> My understanding is that it is in kvm_get_mmu_page_hash() to avoid compiler
+> doing any read tear. If yes, then the same condition is valid here, isn't it?
 
-diff --git a/arch/arm64/boot/dts/apple/t6001.dtsi b/arch/arm64/boot/dts/apple/t6001.dtsi
-index 620b17e4031f069874aaabadbf06b7b29ec4031e..d2cf81926f284ccf7627701cc82edff31d4d72d6 100644
---- a/arch/arm64/boot/dts/apple/t6001.dtsi
-+++ b/arch/arm64/boot/dts/apple/t6001.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/apple-aic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/apple.h>
-+#include <dt-bindings/spmi/spmi.h>
- 
- #include "multi-die-cpp.h"
- 
-diff --git a/arch/arm64/boot/dts/apple/t6002.dtsi b/arch/arm64/boot/dts/apple/t6002.dtsi
-index a963a5011799a0480f88688fb4372a31f0bbf806..e36f422d257d8fe3a62bfa6e0f0e0dc6c34608a4 100644
---- a/arch/arm64/boot/dts/apple/t6002.dtsi
-+++ b/arch/arm64/boot/dts/apple/t6002.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/apple-aic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/apple.h>
-+#include <dt-bindings/spmi/spmi.h>
- 
- #include "multi-die-cpp.h"
- 
-diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-index 4c224e686ffe5602329f7f394d3354559c4130ab..9e4402b0bdc085a32d26048ccf1ac4ea20c1e0c2 100644
---- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-+++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-@@ -50,6 +50,56 @@ nub_spmi0: spmi@2920a1300 {
- 		reg = <0x2 0x920a1300 0x0 0x100>;
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-+
-+		pmu1: pmu@f {
-+			compatible = "apple,maverick-pmu", "spmi-nvmem";
-+			reg = <0xf SPMI_USID>;
-+
-+			nvmem-layout {
-+				compatible = "fixed-layout";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				pm_setting: pm-setting@1405 {
-+					reg = <0x1405 0x1>;
-+				};
-+
-+				rtc_offset: rtc-offset@1411 {
-+					reg = <0x1411 0x6>;
-+				};
-+
-+				boot_stage: boot-stage@6001 {
-+					reg = <0x6001 0x1>;
-+				};
-+
-+				boot_error_count: boot-error-count@6002 {
-+					reg = <0x6002 0x1>;
-+					bits = <0 4>;
-+				};
-+
-+				panic_count: panic-count@6002 {
-+					reg = <0x6002 0x1>;
-+					bits = <4 4>;
-+				};
-+
-+				boot_error_stage: boot-error-stage@6003 {
-+					reg = <0x6003 0x1>;
-+				};
-+
-+				shutdown_flag: shutdown-flag@600f {
-+					reg = <0x600f 0x1>;
-+					bits = <3 1>;
-+				};
-+
-+				fault_shadow: fault-shadow@867b {
-+					reg = <0x867b 0x10>;
-+				};
-+
-+				socd: socd@8b00 {
-+					reg = <0x8b00 0x400>;
-+				};
-+			};
-+		};
- 	};
- 
- 	wdt: watchdog@2922b0000 {
-diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-index bdb1cb9e406a441e458b1c735359b0148146e91b..03bfe1cb173de009b4cd46508e24358008cf42f5 100644
---- a/arch/arm64/boot/dts/apple/t8103.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-@@ -747,6 +747,56 @@ nub_spmi: spmi@23d0d9300 {
- 			reg = <0x2 0x3d0d9300 0x0 0x100>;
- 			#address-cells = <2>;
- 			#size-cells = <0>;
-+
-+			pmu1: pmu@f {
-+				compatible = "apple,sera-pmu", "spmi-nvmem";
-+				reg = <0xf SPMI_USID>;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					pm_setting: pm-setting@d001 {
-+						reg = <0xd001 0x1>;
-+					};
-+
-+					rtc_offset: rtc-offset@d100 {
-+						reg = <0xd100 0x6>;
-+					};
-+
-+					boot_stage: boot-stage@9f01 {
-+						reg = <0x9f01 0x1>;
-+					};
-+
-+					boot_error_count: boot-error-count@9f02 {
-+						reg = <0x9f02 0x1>;
-+						bits = <0 4>;
-+					};
-+
-+					panic_count: panic-count@9f02 {
-+						reg = <0x9f02 0x1>;
-+						bits = <4 4>;
-+					};
-+
-+					boot_error_stage: boot-error-stage@9f03 {
-+						reg = <0x9f03 0x1>;
-+					};
-+
-+					shutdown_flag: shutdown-flag@9f0f {
-+						reg = <0x9f0f 0x1>;
-+						bits = <3 1>;
-+					};
-+
-+					fault_shadow: fault-shadow@a67b {
-+						reg = <0xa67b 0x10>;
-+					};
-+
-+					socd: socd@ab00 {
-+						reg = <0xab00 0x400>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pinctrl_nub: pinctrl@23d1f0000 {
-diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
-index 950d1f906ba3023c1d118179207a2099345aae94..55ab72cf627efe2e3295409b9af1b2128b829801 100644
---- a/arch/arm64/boot/dts/apple/t8112.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8112.dtsi
-@@ -787,6 +787,56 @@ nub_spmi: spmi@23d714000 {
- 			reg = <0x2 0x3d714000 0x0 0x100>;
- 			#address-cells = <2>;
- 			#size-cells = <0>;
-+
-+			pmu1: pmu@e {
-+				compatible = "apple,stowe-pmu", "spmi-nvmem";
-+				reg = <0xe SPMI_USID>;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					pm_setting: pm-setting@f801 {
-+						reg = <0xf801 0x1>;
-+					};
-+
-+					rtc_offset: rtc-offset@f900 {
-+						reg = <0xf900 0x6>;
-+					};
-+
-+					boot_stage: boot-stage@f701 {
-+						reg = <0xf701 0x1>;
-+					};
-+
-+					boot_error_count: boot-error-count@f702 {
-+						reg = <0xf702 0x1>;
-+						bits = <0 4>;
-+					};
-+
-+					panic_count: panic-count@f702 {
-+						reg = <0xf702 0x1>;
-+						bits = <4 4>;
-+					};
-+
-+					boot_error_stage: boot-error-stage@f703 {
-+						reg = <0xf703 0x1>;
-+					};
-+
-+					shutdown_flag: shutdown-flag@f70f {
-+						reg = <0xf70f 0x1>;
-+						bits = <3 1>;
-+					};
-+
-+					fault_shadow: fault-shadow@867b {
-+						reg = <0x867b 0x10>;
-+					};
-+
-+					socd: socd@8b00 {
-+						reg = <0x8b00 0x400>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pinctrl_smc: pinctrl@23e820000 {
-
--- 
-2.49.0
-
-
+The intent wasn't to guard against a tear, but to instead ensure mmu_page_hash
+couldn't be re-read and end up with a NULL pointer deref, e.g. if KVM set
+mmu_page_hash and then nullfied it because some later step failed.  But if
+mmu_lock is held for write, that is simply impossible.
