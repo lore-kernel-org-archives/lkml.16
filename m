@@ -1,188 +1,174 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F05BE571;
-	Tue, 15 Apr 2025 16:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744733519; cv=none; b=iNfOaEhyj0Mz/VDcyDwXdmQ9R53LtRo4sC43i0RpLaQ09kW09iTYoKSCdzuWSGHi2ZsBDdRVEzyC2EkDHyBXiwlLTlGo818Lw+5rORySTu2qis4HGJMXWA+5lKPc0bJvsQYLs7IBvU9SLGdtVZD7v/ZNtDJvzzXhvu7PIQ9EzXs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744733519; c=relaxed/simple;
-	bh=8A1G9OPw4Pet+Vp2FCp9VI/Zj4szJwWJjH7k9d9V6sE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ntuNTbWFs3RR/oe/e+2inCKAz6Z2dYPlxXd2Wd06q3aIthLq2mncoRC+quUGCrwViioFyuRVT7Hfwc2rXV+n9kGgLmNdD6wL7EwtHLLCdisP8Gop4K3NVmSu78UBn4xNsWx6naSRJvcdXFe7r1U6BTA/IPsQ2eYsCWkwltHL6LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=axPtlhy/; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010000.outbound.protection.outlook.com [52.103.67.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52051F5434;
+	Tue, 15 Apr 2025 16:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744733566; cv=fail; b=un/qrRIJ9byOxXZ9BGtrC/1g1CXEm95zIkyxCOMpPkEFa4FieNlgD781rY2tN55hQFb65DNyKQL3LEYcwm3hxOyT4xGNocrftFkjVa60zUgjz5rhmJ+IUhrt6QaqY/2uVdQjmI/24qMJFdCHIrGuN25eQDekfnpu1ShNaUzCJ4E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744733566; c=relaxed/simple;
+	bh=5Tx+ToFKEej0FRFLmgCMR9Q+LKDvLFC2UIzpNzM6Kr4=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=n6EcyW1CF3YQnXG5VfI0xeOPXWApMC3PrJE+mB+W5Xj7btANLkfQC1JApleZ6DYQ4WinjIM5sK2wzWsy6mCVCsJpEZQzriEUIl/Sj+IGIatuVuCSvkvNY9SfWFp5O4Awb+l6sGTzvTOHTgB1eCBpHZCExfdoHNfu5YrD0EteaQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=MIPwdAiP; arc=fail smtp.client-ip=52.103.67.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="axPtlhy/"
-Received: from [100.79.96.170] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 44D89210C446;
-	Tue, 15 Apr 2025 09:11:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 44D89210C446
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744733517;
-	bh=Mgi4vDnP6Y4O2FUhjNmAIlMySt38MscHkht0lI4fvKA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=axPtlhy/XtRSrsbz7zOPVR+5scASZYezU92U61jKm6HE74YG2WBMlgdp84U7R0U1w
-	 BbiNJbVk0GdGNkWbMuddIs/inATo+qGMv4/HEiKngNLimHZYMf3cI/P/Wfnvt0CucC
-	 hiQGVLiJGK9d23qFDa9SbaPiO9Rwn1yD/gvbcGo8=
-Message-ID: <46572a83-2ed0-47a4-8f28-211f56a48a16@linux.microsoft.com>
-Date: Tue, 15 Apr 2025 21:41:50 +0530
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="MIPwdAiP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kMtapFSx2Xcf8F40M8xXZw9euy6k40O946dg3STUEQwQcgd/MvJ1oO816jqL5usnTF77YkS3uEn61WHdWBigEERyr/eLX+LTAeBzKADDT8U14dxAH0HgNKmvXHC+plQBkSCFrVK6YPaevtEc2epUWenw0l1Z0MzVFNDhcPo7WM4nmmeCInIZOea0vSUe6eOqi22d1uHlqkKBIFhtWxEVljjhvyupWKeVy3AAQhTjG81y0QysN4IA6FVIJ1BKh4b95VNVTiYDu84h5IOqMl2UvSldKkC6HUGKVfcQoff4Unxt5E/4yZ4tl2oSVRr0apbJ4bMfELwN38JMHEXB+6NOkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EwptqMdlGzxr66m2sTe3iqOC8vt3EIf8xP4xUDidl1E=;
+ b=k2cZQKGswFx2TQiuJa8AIkxMFyPcLHEHXounWUC0MWGvNTKl54+oNNw7ZufU/5MOm/Ju75lOS5hz30mIDAHxChx/Mof/ddrusbXZPmbtzB593s61kC3jTwivAFpmT+IelI22xX2/kIa5aRnHn2maLgnqigzaQ1pkHD3rh6UTWhSj+4f+Yh7XrjLYIwfOnOOeDtsMeCbwtUj8kFeWFu6b/LDbk2IUYTH44TL34ImZFGJSV7wKLj4b7llUGhxmHivbWSMXydzd29Mw/GHJ/x/ygRDpEMOnMyssuyOuMBAooOON4aAVCxxmuWZpIZdSZkaLYExL23hWg+q9+c/IEa44Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwptqMdlGzxr66m2sTe3iqOC8vt3EIf8xP4xUDidl1E=;
+ b=MIPwdAiP973I8/ZfLGrRQxbyHM8jI31tNsWwZXShmsHr6EMFbfzPWgzsNaLCy7WuZ9dlVlGbyckqHsItbOV5hQysdMqyF2TdV6fGmFxPi1wAJbqosLeYOfPc3oSFReV0c0gKS6oe2j9J9t+ABEJgnSaHuvImsGv59y45qdMZmNBFzZ53MGjWxWa2Lv3MU1BJvES9BdeKjq6Y/kEgzm9N7hvKqAAhihCmeIo3XmsiUd7BscsDU+Qpi9mDoRc1nqYg1BYnrIr3ESGbW7WpFRiYvNLAdWqtyLVqLdZtllrhmCx8qGNiQ78TXxy/NBmEzKdlkGLLRQGhyl/nwye8qRtCpQ==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN2PR01MB9735.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:12d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 16:12:38 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
+ 16:12:38 +0000
+Message-ID:
+ <PN3PR01MB959785DA292ABDC730CD78E9B8B22@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Tue, 15 Apr 2025 21:42:33 +0530
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH RESEND v5 3/5] HID: apple: remove unused APPLE_IGNORE_MOUSE
+ quirk
+From: Aditya Garg <gargaditya08@live.com>
+To: Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.com>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Benjamin Tissoires <bentiss@kernel.org>
+Cc: Grigorii Sokolik <g.sokol99@g-sokol.info>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-input@vger.kernel.org
+References: <7EB9780A-026A-405E-AC07-DD33C11E7EE5@live.com>
+Content-Language: en-US
+In-Reply-To: <7EB9780A-026A-405E-AC07-DD33C11E7EE5@live.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR01CA0163.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::33) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <6476b6c8-7b79-46b9-acfc-b562f3ce63b7@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-To: Michael Kelley <mhklinux@outlook.com>,
- "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Stephen Hemminger <stephen@networkplumber.org>
-Cc: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "stable@kernel.org" <stable@kernel.org>,
- Saurabh Sengar <ssengar@linux.microsoft.com>
-References: <20250410060847.82407-1-namjain@linux.microsoft.com>
- <SN6PR02MB4157D5A900435AD1663BC720D4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157D5A900435AD1663BC720D4B22@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN2PR01MB9735:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d2f9e61-3e94-473d-9168-08dd7c3855ef
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|461199028|8060799006|6090799003|19110799003|5072599009|15080799006|7092599003|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N0hFRmdRejBsV1BxeW03dGVHbXZJOWt5SXFzYTk3YVFHZHQxRWc1SU85a1Z1?=
+ =?utf-8?B?N0NxZmx2a0dSYmZWQUVTb0hLVmNYU29ORjErMjBSUDJGUDBsMm5UbTZVUUtB?=
+ =?utf-8?B?REJLS3Q3dUY4NWVRY3hrbEFyNGM2QXlJN2IvZWVNVnUrejRuQTRpb2dkK1Bl?=
+ =?utf-8?B?SmpOeXhadzRnR05FazhFZzg4MW5IRUhDUk5OaEdYamJLZFdUb2paN3U2Sk1z?=
+ =?utf-8?B?cHVvNENxdFJyVVU1WkpOS2JoNHN2K2N2WDhDLzlpN2lRVXJXTUhqTDlnUkRD?=
+ =?utf-8?B?Mmd3dFFxRGJrR1FhZlVVeHFyTnJ1cGwvdGloWHVuSVliOGhULzJQbVo1bEhU?=
+ =?utf-8?B?aXl1Y3I3V0o0YS9IMzZTcEhwQW5EVUc1VlNJYWxXSlNpeUE1Ny9JVVhDTktE?=
+ =?utf-8?B?UERWeVFFNkp0SWVRcDN6cWg1bzdKRFpoUG5Pb044Qm4zL3l6TS9sRFdjdzFI?=
+ =?utf-8?B?QnpmRzNjNnpJTzJIZmNLeTlVenR4NXBjNStTQjdBSFVJWUhpa2l6aW1WV0NT?=
+ =?utf-8?B?Zk9ubVNvRWswcXhEZ0RvZS9XdW4wSnZHZVhXdkFGUVBsYzN5T1FKS3lVMXFW?=
+ =?utf-8?B?UWpBOUR0K3FTRDhYVXp4VlRIYnkxSEhjWE5nVk5ORFRBQ0dJck9Nd1lOWmNF?=
+ =?utf-8?B?T3JDWEt1N1g2MVdQVGVVQm5qNjNJN0UzNE43d2RYSmd4OVJFOEo1T1hZVzhC?=
+ =?utf-8?B?bjdDZG1hcTB0c2RpK1JYMG9uK2FtSDVmbjhnQnlXWWE1aXgxb1lZaGZEdTIv?=
+ =?utf-8?B?TFBCUlFIQ2VONGd5ZVFFOUVzeTV0NHlZbE9rMUp0UG80bDNMV0thSGtzSWNE?=
+ =?utf-8?B?VENYUmFZcjVRQ2hGMWdWNFF5ZklUck5xdFZVeHk1UmFlVmsza1lDQ3hmSDFY?=
+ =?utf-8?B?cUNOWVNmY0FjL2x3UTEwRmpQMGNSQWlBbzkvQ3lpd2tCMUlYRGJEbkNjYUZJ?=
+ =?utf-8?B?ZDVTNzBEY1V3NFB2cTNHNGdySWtRemw4VmR2TEdRTnVibmhub1RtSjV5bklG?=
+ =?utf-8?B?RXZYanlFUmp3alZpM25VZy9mdTR1UVVTZjl5TU9mSUhkVEE4NHgzbFNRKysw?=
+ =?utf-8?B?Y2J5QU9rS0FhZ3k2NEdkMjhQRTB4SmQvUmVBeGQvM2hDeE9mU2tyZENLZXBZ?=
+ =?utf-8?B?T09tVVdKZEs4a2xPRUFrTzVWcG5vSDN5bGMwYUtXWjBHN1NnTVNacFUrODNU?=
+ =?utf-8?B?Z09FSTFhajF5WmdQQTlpcXlPRzJybGxuRFRQNFhpV0QrNDdTV0NVdE5hOTg1?=
+ =?utf-8?B?S3RQTGhRM2lCMC8zY0UzMXd6SDluUDFiV0hQcDU4TExrOG5qL3ZWTXBRNm9x?=
+ =?utf-8?B?aU5BRjg5TWIyYVVqZHlCcVhBVEs3UWlaSCtPOFZudzBVQ0JUcndsZXRuNEpC?=
+ =?utf-8?B?RmRxeG5oNjZ3R3pVdGJUZTVyS0JSWFpRRStnWEVFMFhsRHZMQlNmaTJjY08x?=
+ =?utf-8?B?ZTVRSjJwMUpZR05lOG9zZ1RnQ0NrUC82M0NDb3Jad281NEN3Myt3Z3ZBeEJW?=
+ =?utf-8?B?R3hCazMxQVZmamV2TkNXRXpnWUVYMVprdUQ5cEF3S0RteFB1bzBjVmFxa3M2?=
+ =?utf-8?B?ZVFuZz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eitmY3dQWExVL3VLNzhGaUdpWUZUbzNjamtOTXR6OHM1M2lQSXNBcDljdGxm?=
+ =?utf-8?B?SnN5dFdtRWd5V1BlY0FHdE15dFM0dnQwOXJCYjdlaGhmQmdiVXAyemYvT1Bm?=
+ =?utf-8?B?TncxaXVOMTJXdlZWRzhtRnF4SjBMTWRJOWtETGpHNXpEbWpmdFMweWl0Q3Ez?=
+ =?utf-8?B?dWoyY2ZNcXl6dWE1S0wwY3VzbjFaQnN1SFQvN3dSZW1aL1g5bG5tVXlYRjdm?=
+ =?utf-8?B?UUdmcUJ4UldlS05peE93TkFKK0EwWlNpdUtYR2gvRDZWUjNpZXljdUI5dTE1?=
+ =?utf-8?B?c1UwRno0QUpmUzJic2I1NGR5RzVNRHZ5dTZOaTN6R3FoS1ZEOGdTTU9vLzVy?=
+ =?utf-8?B?cjFkOElCcnRXRjlwSjhyK0tQODMyRS9FQ2w3bklpQ0tXYVd5UEc2cEdUZENK?=
+ =?utf-8?B?REhjL01LUlFlb3RCR0RkaDZ3MEdUK1lBMSt0aGNjMnRhdlBkUTFPYXNQVlNY?=
+ =?utf-8?B?eGpncjA4KzcwUW1lRGxIWVJYT2hiamtoU1JFRmFucW9qZmRqYWhYNUYrcGw5?=
+ =?utf-8?B?NDRmSUhYZ0VROExtd1gzVDlMencraHNCUHcramNqVENpRldoNUZpRittcS9s?=
+ =?utf-8?B?TkRHVlJHZ1ZMQ1lHblRoK1RzMFY0NGhYV3JBcnYzSm5MMEd5UnVWM0I4M2pI?=
+ =?utf-8?B?QWp6YmZHRHBiS1EyMEQ5ZjFOZGZ6QnNZTWJUc0tMK3BZVDVRczMzbm9iSnAw?=
+ =?utf-8?B?d3BrOXIxTUZwRk5rdVQ4dm9EMVhuc3k1eTdibm9mck50YURNd1VaSE14SG1l?=
+ =?utf-8?B?ejlvN0d4UUtwT3k5MEQyU25NQ2x0b1Bob2g1NUNGcGF3RjNyY3R0N2x6ai9v?=
+ =?utf-8?B?ekpFeDZ4cFU4QmU0L2UvUDc5RDUwOC9SRXBUZllBeFdJaEYxQWdvdmVmSlZE?=
+ =?utf-8?B?NnZRWnBKOU1IUFE1QWhTUTJ6aGdkbkx3K1hpTFpEWDdSNzJ0aDkrQmh2bG9t?=
+ =?utf-8?B?cG1IY2VhSGpwQ3JXOHF3ZWkzRHRqZjF5ZXNUcFhZc21uV0dSZnZSREtMMFRY?=
+ =?utf-8?B?UERHM1c4Q3piL0d1UzJua3NGSWlHcnErRlZNbWxZMFhhV3RMdXBTblF6K3JJ?=
+ =?utf-8?B?dmhrbWw4aHhjc0xRU2ZPZmlzRkMxaThSSCs3Q1dwcVRleUU2RWw3WE1kaDI4?=
+ =?utf-8?B?dHpFSHdkeFN2VTZLSnJSWFFXS01Ud20yYUo0MXZ5WFZoMHJUdHZXL1VaQjBq?=
+ =?utf-8?B?Q3lqOFBVNWNDbzQvWXZZSC94eXJxN0pNOVJXOTdaVjJyMUFZbmpsc3REcVRv?=
+ =?utf-8?B?cVRydk1ZMHJmeGVYOGlxbEpXditLSzIyaDlHSzkvS3IyMzVBZG9LcHBOMnc5?=
+ =?utf-8?B?c1M4TUoxSUpSMzJCcm9jR0Y1Q3ZBRm9RM0tGdmtyNUZXTXpNazhuYWNCcUg3?=
+ =?utf-8?B?bStSTUVMc2Y5N0JrT0pndlUwRkdDMXdUTXJ2Vi8xckFTWXNhMHd1Mit0cjVW?=
+ =?utf-8?B?RnVmRWxmbnk0S2REemRFOXhTQXNnbUZXZXRRQmlZa2hQc0p3WFZCblNHL1RJ?=
+ =?utf-8?B?czFiajBKSW5wSktNd1VFWVBVa3V6SlFuYU44OWd2aFhBc0lXQ2NUUkFLQndF?=
+ =?utf-8?B?TFVFZjEreE1TeXZOa0V4QjdiWjdRTUR1ZTY1ZFlITGJYd2ZqNlloV1FMWnI3?=
+ =?utf-8?B?V3djQkYrdVVVWVNkaVR6V01zM1lJdjRiS1FhcVg1Tk9FK1UySjV1ZjZJTkZE?=
+ =?utf-8?B?N2tBRHE2c01aNmJmaS9uNzFablBhWmxmbTF0YUQ5L3NnRjdRRWtXNXQwby9B?=
+ =?utf-8?Q?85odZhSM+b81SLK6AVlaThwEVL+wrOpGHP5N+et?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d2f9e61-3e94-473d-9168-08dd7c3855ef
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 16:12:36.1603
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB9735
 
+From: Aditya Garg <gargaditya08@live.com>
 
+The APPLE_IGNORE_MOUSE quirk was not used anywhere in this driver, so can
+be removed.
 
-On 4/15/2025 9:38 PM, Michael Kelley wrote:
-> From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, April 9, 2025 11:09 PM
->>
->> Hi,
->> This patch series aims to address the sysfs creation issue for the ring
->> buffer by reorganizing the code. Additionally, it updates the ring sysfs
->> size to accurately reflect the actual ring buffer size, rather than a
->> fixed static value.
->>
->> PFB change logs:
->>
->> Changes since v3:
->> https://lore.kernel.org/all/20250328052745.1417-1-namjain@linux.microsoft.com/
->> * Addressed Michael's comments regarding handling of return value of
->> sysfs_update_group in uio_hv_generic.
->>
->> Changes since v2:
->> https://lore.kernel.org/all/20250318061558.3294-1-namjain@linux.microsoft.com/
->> Addressed Greg's comments:
->> * Split the original patch into two.
->> * Updated the commit message to explain the problem scenario.
->> * Added comments for new APIs in the kerneldoc format.
->> * Highlighted potential race conditions and explained why sysfs should not be created in
->> the
->>    driver probe.
->>
->> * Made minor changes to how the sysfs_update_group return value is handled.
->>
->> Changes since v1:
->> https://lore.kernel.org/all/20250225052001.2225-1-namjain@linux.microsoft.com/
->> * Fixed race condition in setting channel->mmap_ring_buffer by
->>    introducing a new variable for visibility of sysfs (addressed Greg's
->>    comments)
->> * Used binary attribute fields instead of regular ones for initializing attribute_group.
->> * Make size of ring sysfs dynamic based on actual ring buffer's size.
->> * Preferred to keep mmap function in uio_hv_generic to give more control over ring's
->>    mmap functionality, since this is specific to uio_hv_generic driver.
->> * Remove spurious warning during sysfs creation in uio_hv_generic probe.
->> * Added comments in a couple of places.
->>
->> Changes since RFC patch:
->> https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
->> * Different approach to solve the problem is proposed (credits to
->>    Michael Kelley).
->> * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
->>    drivers where rest of the sysfs attributes for a VMBus channel
->>    are defined. (addressed Greg's comments)
->> * Used attribute groups instead of sysfs_create* functions, and bundled
->>    ring attribute with other attributes for the channel sysfs.
->>
->> Error logs:
->>
->> [   35.574120] ------------[ cut here ]------------
->> [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
->> [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
->> [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
->> [   35.574197] Call Trace:
->> [   35.574199]  <TASK>
->> [   35.574200]  ? show_regs+0x69/0x80
->> [   35.574217]  ? __warn+0x8d/0x130
->> [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
->> [   35.574222]  ? report_bug+0x182/0x190
->> [   35.574225]  ? handle_bug+0x5b/0x90
->> [   35.574244]  ? exc_invalid_op+0x19/0x70
->> [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
->> [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
->> [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
->> [   35.574271]  vmbus_probe+0x3b/0x90
->> [   35.574275]  really_probe+0xf4/0x3b0
->> [   35.574279]  __driver_probe_device+0x8a/0x170
->> [   35.574282]  driver_probe_device+0x23/0xc0
->> [   35.574285]  __device_attach_driver+0xb5/0x140
->> [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
->> [   35.574291]  bus_for_each_drv+0x86/0xe0
->> [   35.574294]  __device_attach+0xc1/0x200
->> [   35.574297]  device_initial_probe+0x13/0x20
->> [   35.574315]  bus_probe_device+0x99/0xa0
->> [   35.574318]  device_add+0x647/0x870
->> [   35.574320]  ? hrtimer_init+0x28/0x70
->> [   35.574323]  device_register+0x1b/0x30
->> [   35.574326]  vmbus_device_register+0x83/0x130
->> [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
->> [   35.574331]  process_one_work+0x177/0x340
->> [   35.574348]  worker_thread+0x2b2/0x3c0
->> [   35.574350]  kthread+0xe3/0x1f0
->> [   35.574353]  ? __pfx_worker_thread+0x10/0x10
->> [   35.574356]  ? __pfx_kthread+0x10/0x10
->>
->> Regards,
->> Naman
->>
->> Naman Jain (2):
->>    uio_hv_generic: Fix sysfs creation path for ring buffer
->>    Drivers: hv: Make the sysfs node size for the ring buffer dynamic
->>
->>   drivers/hv/hyperv_vmbus.h    |   6 ++
->>   drivers/hv/vmbus_drv.c       | 119 ++++++++++++++++++++++++++++++++++-
->>   drivers/uio/uio_hv_generic.c |  39 +++++-------
->>   include/linux/hyperv.h       |   6 ++
->>   4 files changed, 147 insertions(+), 23 deletions(-)
->>
-> 
-> I've tested this series with linux-next20250411. Did the basics of binding the
-> uio_hv_generic driver to the FCOPY device. The "ring" sysfs attribute shows up
-> correctly, and with the expected size of 32 KiB. Did the same with a synthetic
-> networking device, and the "ring" attribute has the expected size of 4 MiB. In both
-> cases opened and mmap'ed the "ring" attribute, then read from the ring to
-> verify accessibility.  Did not do any ring operations or create any subchannels.
-> 
-> Did some test hackery to create the conditions where hv_create_ring_sysfs()
-> could fail because the subdirectory under "channels" had not yet been created.
-> hv_uio_probe() correctly ignores the error. When the subdirectory under
-> "channels" is created later in vmbus_device_register(), the "ring" attribute
-> appears with the correct size.
-> 
-> Just saw Greg KH's comment about running checkpatch.pl.  I did not see any
-> errors from checkpatch.pl.  Maybe that comment should have been directed
-> to a different patch?
-> 
-> For the series:
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-> Tested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+ drivers/hid/hid-apple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you so much Michael for reviewing and testing this thoroughly.
-Really appreciate it.
+diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+index 3d7befe0a..fde438bee 100644
+--- a/drivers/hid/hid-apple.c
++++ b/drivers/hid/hid-apple.c
+@@ -30,7 +30,7 @@
+ #include "hid-ids.h"
+ 
+ #define APPLE_RDESC_JIS		BIT(0)
+-#define APPLE_IGNORE_MOUSE	BIT(1)
++/* BIT(1) reserved, was: APPLE_IGNORE_MOUSE */
+ #define APPLE_HAS_FN		BIT(2)
+ /* BIT(3) reserved, was: APPLE_HIDDEV */
+ #define APPLE_ISO_TILDE_QUIRK	BIT(4)
+-- 
+2.49.0
 
-Regards,
-Naman
 
