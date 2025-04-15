@@ -1,115 +1,117 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D08B1B043F
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5468E29E068
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744729045; cv=none; b=Yh9se/vmy3xKnRfu9mO/eQ8LH/0C4/3WQYgMTmBpgZJeLSta9LrfnUxw88805aaP8BRqk3B4wl1OT03jAxgBxQvipCgVZpdZeJRoMLs0OxI8wn5I2qLqtyLBZBojjcWQuv5VqgjvtH3r4pBd44D0HXWToKD9AcPJGo4JXpZ1e/I=
+	t=1744729068; cv=none; b=VODw8c7bcpHo458g9xn9RIdebrp4JozKkpWEScHtSXs5OVfScyTSLTWuFzCpkgGyeFx2r75FqGft3Pc/93jPSdAjX3N3mNHzZTthfMqgHeyfxn/Vag40MgYokzXqY/4xQ3Z6kJIYZV6YVAVonK+nMrUPxddTJbp2Dnoh/tqrkMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744729045; c=relaxed/simple;
-	bh=TmbQCAQuL850VcC8mWpbyBi0guSCzKnednL7iUfUBi4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LpN3dbiN09FBauHYnYW9SArgHmvyZ8p/SIWJfaAKSLnJO+dy9EVvWFpq9c5KZmIht1mNrasNO8Qs1P/z4J1D8Iuyirl26KbUBHH8Ueh6xW5wB0i+zP8n2UoI6FCaZ3Cg2dwFRXlGBVXfyM2vc48P1CD5EPOS0SQHNBoBd8co2aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SyuNHZeD; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SyuNHZeD"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-229170fbe74so47021685ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:57:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744729043; x=1745333843; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3cubAcR5buc4RrtmjyrGPOPaYzbW+tbw+H7cOkEDn8=;
-        b=SyuNHZeD/735HiymHu0kVG4RFxW8Fo9o8OLcB+v2kx8JqwIxCojQZijto4Q3USH+SZ
-         R1J9JGpc53/4Co9G+25dbvX0pGHCSBNYdjg4VBnx1OIH9rBInyTSZNrZujvW3CrhXVCe
-         NoY3UNX0kM64N508pGOsPgVIgPTB/GKsiS5g8F1B/b58h+nQ3mttbLppUqvlrCx2fPKs
-         n6VVP6EbMnYmLiRb9Fe8zHWTBipECa4BkumAVvkpX0vXZsVB0jPNJFA31DsM8WoUlddH
-         +UzhOXKhN8+mcYHmVxv1/nXiE5Dz6HOHOrABKh9W7M+iRhvc/khsoeJQirtXqgdR6mpH
-         D8XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744729043; x=1745333843;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3cubAcR5buc4RrtmjyrGPOPaYzbW+tbw+H7cOkEDn8=;
-        b=O6/Gj3eiHieaTgJExZkAo9gmJ70mnASMXhfpK0iDopyCx1YVh1On2gFsePDj24eJQB
-         lbOzIKGvYb1cT76tNJgPKGJNqUWL+Vgz7NA6AH3qKbRvEw1hQgsERc4sKV/URkg6+odA
-         g2cSQt/QRi5l6F30JD8tefEoWMUClc2CQlvNc8rANlYwWAPt6Z8FJq7ntwE9kdHxMKoe
-         mlJPUMjg9nPzngm0dG8bcEVYMloKojbHs71DZeAXBImcalsKat0IYeExwqVZN38oG1Nz
-         mMbEjuTu1evrATdgnPt23GSiRbGO8jqEcoDTBrJehpSVuT29FwbbYvfUIJVy0EnjwQeJ
-         Lh2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXjO8rXSn3Qnzn1ckFFzwGTgS5GoB3Y3m+xLP1MeKmec7Xr87ezTBANWtvN3W8xxKHXayLandZkEOVQxKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGzJwipGUhqrYLIUVvhSgSXvQGVoHRFdMmwZ/8D+ZhxDcvOTWT
-	hC3XbQWLdtu1aEV0GaOR/1N9nrWETuqa5Z1OFh7Vr5QdhGYCUvsXN/QfKIeiSsBdHlPoghjug4i
-	Jcg==
-X-Google-Smtp-Source: AGHT+IFaFxQFXBxv1LVPQSIMqbDfDKQXIvk2koBUD5c6YTcCNKoR1Psp7St8pkylyftGChHPBfIrP+rfE64=
-X-Received: from plri17.prod.google.com ([2002:a17:903:32d1:b0:21f:14cc:68b0])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b08:b0:21f:85af:4bbf
- with SMTP id d9443c01a7336-22bea4b70d6mr235612035ad.20.1744729043268; Tue, 15
- Apr 2025 07:57:23 -0700 (PDT)
-Date: Tue, 15 Apr 2025 07:57:21 -0700
-In-Reply-To: <2cc31ce5-0f1a-41d6-a169-491f9712ffdc@amd.com>
+	s=arc-20240116; t=1744729068; c=relaxed/simple;
+	bh=vZtrQ9crj21c10RvKKaTlulPnt3zya5f6BVM9Z/ki/c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HboLgvJaUYwTabrKmx331NdFwQb6HLrOxSQoP/++fFepC0Ydb4OPzG+b/0IQSSKzR4LQv8tImGkHv3UrfIqS3ukxJy99nZbP5J+QCUkucUg2G3+EtYmtPmqMfKpXK9NiYuN2tdohFdPvRTzhradFRFMDSVP1CrMJz1wAtc1YEXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 845B3152B;
+	Tue, 15 Apr 2025 07:57:43 -0700 (PDT)
+Received: from K4MQJ0H1H2.arm.com (unknown [10.163.73.130])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D127B3F59E;
+	Tue, 15 Apr 2025 07:57:40 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com,
+	david@redhat.com,
+	willy@infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	hughd@google.com,
+	vishal.moola@gmail.com,
+	yang@os.amperecomputing.com,
+	ziy@nvidia.com,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH v2] mempolicy: Optimize queue_folios_pte_range by PTE batching
+Date: Tue, 15 Apr 2025 20:27:31 +0530
+Message-Id: <20250415145731.86281-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-15-seanjc@google.com>
- <2cc31ce5-0f1a-41d6-a169-491f9712ffdc@amd.com>
-Message-ID: <Z_5z0an7-BJ1bTzF@google.com>
-Subject: Re: [PATCH 14/67] KVM: SVM: Add helper to deduplicate code for
- getting AVIC backing page
-From: Sean Christopherson <seanjc@google.com>
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025, Sairaj Kodilkar wrote:
-> On 4/5/2025 1:08 AM, Sean Christopherson wrote:
-> Hi Sean,
-> 
-> > Add a helper to get the physical address of the AVIC backing page, both
-> > to deduplicate code and to prepare for getting the address directly from
-> > apic->regs, at which point it won't be all that obvious that the address
-> > in question is what SVM calls the AVIC backing page.
-> > 
-> > No functional change intended.
-> > 
-> > Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
-> >   arch/x86/kvm/svm/avic.c | 14 +++++++++-----
-> >   1 file changed, 9 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> > index f04010f66595..a1f4a08d35f5 100644
-> > --- a/arch/x86/kvm/svm/avic.c
-> > +++ b/arch/x86/kvm/svm/avic.c
-> > @@ -243,14 +243,18 @@ int avic_vm_init(struct kvm *kvm)
-> >   	return err;
-> >   }
-> > +static phys_addr_t avic_get_backing_page_address(struct vcpu_svm *svm)
-> > +{
-> > +	return __sme_set(page_to_phys(svm->avic_backing_page));
-> > +}
-> > +
-> 
-> Maybe why not introduce a generic function like...
-> 
-> static phsys_addr_t page_to_phys_sme_set(struct page *page)
-> {
-> 	return __sme_set(page_to_phys(page));
-> }
-> 
-> and use it for avic_logical_id_table_page and
-> avic_physical_id_table_page as well.
+After the check for queue_folio_required(), the code only cares about the
+folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
+this loop by skipping over a PTE batch mapping the same folio.
 
-Because subsequent commits remove the "struct page" tracking (it's suboptimal
-and confusing), and I don't want to encourage that bad pattern in the future.
+With a test program migrating pages of the calling process, which includes
+a mapped VMA of size 4GB with pte-mapped large folios of order-9, and
+migrating once back and forth node-0 and node-1, the average execution
+time reduces from 7.5 to 4 seconds, giving an approx 47% speedup.
+
+v1->v2:
+ - Follow reverse xmas tree declarations
+ - Don't initialize nr
+ - Move folio_pte_batch() immediately after retrieving a normal folio
+ - increment nr_failed in one shot
+
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
+ mm/mempolicy.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index b28a1e6ae096..ca90cdcd3207 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -566,6 +566,7 @@ static void queue_folios_pmd(pmd_t *pmd, struct mm_walk *walk)
+ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 			unsigned long end, struct mm_walk *walk)
+ {
++	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+ 	struct vm_area_struct *vma = walk->vma;
+ 	struct folio *folio;
+ 	struct queue_pages *qp = walk->private;
+@@ -573,6 +574,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 	pte_t *pte, *mapped_pte;
+ 	pte_t ptent;
+ 	spinlock_t *ptl;
++	int max_nr, nr;
+ 
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+@@ -586,7 +588,8 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 		walk->action = ACTION_AGAIN;
+ 		return 0;
+ 	}
+-	for (; addr != end; pte++, addr += PAGE_SIZE) {
++	for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
++		nr = 1;
+ 		ptent = ptep_get(pte);
+ 		if (pte_none(ptent))
+ 			continue;
+@@ -598,6 +601,11 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 		folio = vm_normal_folio(vma, addr, ptent);
+ 		if (!folio || folio_is_zone_device(folio))
+ 			continue;
++		if (folio_test_large(folio) &&
++		   (max_nr = ((end - addr) >> PAGE_SHIFT)) != 1)
++			nr = folio_pte_batch(folio, addr, pte, ptent,
++					     max_nr, fpb_flags,
++					     NULL, NULL, NULL);
+ 		/*
+ 		 * vm_normal_folio() filters out zero pages, but there might
+ 		 * still be reserved folios to skip, perhaps in a VDSO.
+@@ -630,7 +638,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+ 		if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
+ 		    !vma_migratable(vma) ||
+ 		    !migrate_folio_add(folio, qp->pagelist, flags)) {
+-			qp->nr_failed++;
++			qp->nr_failed += nr;
+ 			if (strictly_unmovable(flags))
+ 				break;
+ 		}
+-- 
+2.30.2
+
