@@ -1,130 +1,143 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82CB254AFC
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839C71A0BCF
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:57:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744750474; cv=none; b=U1emqTfyzwRjST5Z0g2I7Jpa1fjrRLdfX8UE2s7finCBbLqB/dtdqJUZy2zs/b1ZE5fk9SpKl8/eXkxJWffQpGf6WHAlu4OK6IacL4pzq3tzXWL0HjTCFkv8CQks30tNVBzGe2Wot8WCFExmwBHjQd7njbbdYoFVNRmVhEknIvI=
+	t=1744750640; cv=none; b=cZb783kDWaphkY4NVp+xR0sz8UCdvDeVKA8ehpJvQKMh7aME7IUeP3pyE0CbJ6FSL+7IIbqtZ92ouZc21FzKTTQkzhquoLk/fp+vBEQxt10peEJos3aaGGSoIz/x9lr1uWVUOSzu4JyYYronrASCb4H4HkvV9rHX49jsN6LUKDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744750474; c=relaxed/simple;
-	bh=rs7Jtw6f3Bfz8LXeOIlcVNnKXGGiSrBPkr0EaB+/l58=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kmo9j9yd9Lbe6mWdch/fBd3KKpbaLsUAdMWXpoCeGrRowVVKN3JtyqbD2QNpKu5ls9+GRWFcfz11uAPLQZnPCjBdtPvg8R+UByg9YZ9odkqn6j+nBKc08SPH55mjcnPYlF7QygHhVwl/ZgQDV9OCQCxSTQYrF0A5InzAV+vFfAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IU56kcl8; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1744750640; c=relaxed/simple;
+	bh=Rigphh5nMgvo+Y6TLM+7fpUEnpEJucdeei2X7fHzbEw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iOWofIFc4kDy6EezaxS+Yy40bN9zK+wLqv3PusP4yojvCe+WTYznvWMI9h4hUfZTNVXJ2b/J9wH4/rYS/zfJgb2+PHontiu4SeI2aYWzXtJflS4YoWfb3PtEivsGtbKZnXNukKujAabGdm2ya4kjyPIUaRnUwkkjd7gIUnbQTyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NhAXugaI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IU56kcl8"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4A75C2C0117;
-	Wed, 16 Apr 2025 08:54:28 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1744750468;
-	bh=1YMkTjFWZdA9nR3aSWtqvqZGk8IWr6oCbr19z+jFINk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IU56kcl8W1QspNfGDMfsgBJwTeeAwTFK53Mabj1IVY8iG1j3tNpbQxVo4sepBpGKm
-	 cRW7BnHWchuD9/he/tTK7lfi4qNbeViFGZROxa79xVBBAFM5beSYFqYZm9kvrtcI9C
-	 6/FkRdjl4EZFCeyUx2rR1trRIo8AUKDeuLbRJVFbGLcwhMRUhhWzYjiw6KM5kgb8pR
-	 ueuSM0At+5y9a/Iv3gIcZ+Op8igtocL4TjZhKPFR42Uujjixb68DZkNEzQBE6Nc/Ol
-	 nurb01DLpBE+Xug9b7/NsWSjg0jRTulOUJSGIcTwGNpFShQEWtt00zewhEf0k6GExk
-	 mNl8LCETDff+Q==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67fec7830000>; Wed, 16 Apr 2025 08:54:27 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id D798C13ED56;
-	Wed, 16 Apr 2025 08:54:27 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id D423A280A40; Wed, 16 Apr 2025 08:54:27 +1200 (NZST)
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-To: tsbogend@alpha.franken.de
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	sander@svanheule.net,
-	devicetree@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] mips: dts: realtek: Add MDIO controller
-Date: Wed, 16 Apr 2025 08:54:25 +1200
-Message-ID: <20250415205425.1491165-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NhAXugaI"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe808908so21155e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744750636; x=1745355436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uztEYCXIvwAqBo9EVY+2Bc2ZaaRmX1aT5eydd4qFLW0=;
+        b=NhAXugaIiJJsKoWldWRgPmsLN3idWggw92w4W7Z6+kMVAq+6ZChlLmT3rUvJGZe4fD
+         BJYDJK80FLViVzwFykawFgSzjIqoDPVGnlBXuYr5a4Rl+TNZt6FpCcTPks+syMVlEPrG
+         50hwxkplSNLeRMfaECMc+CpaK3z+9Lc6Xtp2Xz82lHnQPY/gKb2VkZyOXJBDvNvoQ2XB
+         2KlKCinBa3S795I4fgvZskdqUqa2mef9TEJ8XxE5s2Yv3kDd5huln7MU1H40JhGYu7m8
+         UfNSmsimvx3AvGsHoPGi2iaf3uXBJePOzTRZxj6z2uNRsfgs1O8OF7lK96eEISkqnG1D
+         NRNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744750636; x=1745355436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uztEYCXIvwAqBo9EVY+2Bc2ZaaRmX1aT5eydd4qFLW0=;
+        b=f3S0IZrQLg2jCLYGTK5ta4yCcdZ0FdXaKe5Q0dGyIXcKrQZvux6mdgIcXhVazUgOYr
+         JHMKqVe/gqZmgHYH2baHlz2qeGy8Qfs/88GI3zOUUfTq7hmfZrvxqEubxP2qF2uz1Zk0
+         h1HV0qoZrFHXum3kcHb0UTJiLobj5BUXmyIZQ8Jn5z3I/Re55DZuIS2GUXTsHmZ7wvE+
+         b90MGYOe9XsfmRQ8dWqn3ON6yHkbVaJOm3+J/f5PuCjwyJnMnMfCMRETWSo7KTDPoTlx
+         Drx0B0dpo/vDZip7NY8gst9AIPjEobZrz9Wcsa6W40yfzv5/riu2FHj6E5b73RY79OfE
+         oKAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWW/PkP6w7bFrrZkARDyqb1NqsBrn8E05x8QMZmwi5gGXypJSXnP30iorGtABaGJ+Rf67KM5JkuOu08w4M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbfBHoX2klkgrq1yb2u9CfJc+wEPAljDYDbRHcfMXlExtOjohN
+	ckEdDoJ2dA30dgTqee0rzXMFUYc0b54s7anl93Oi5nS5xXMzaM1WNhBKyBZc2ps0ax2IYJs8uc0
+	8epc2RQw5eYefKLjoDXvOluV1+DYcVPY/mtXx
+X-Gm-Gg: ASbGncvDYZysKXS5+jdmjXFlE3nvD4pPAry+njoDacV+yEiuq9NZ8+Adzpw4qSiDCL+
+	SvFkl/BLS8FwGI5rBcpFVf+7Rusj0eArhUr93GS/KDDVYw7zPXPfnKLrmTm+bO9owY974nZtZ4Y
+	8K4Tr9MVgbZ8hdx9WYWku+f35IjaQV3nXOvzDKlYw2CwibO8414PYe
+X-Google-Smtp-Source: AGHT+IGXD1VxTGyGvWZV4CehXI+QLZxEMIErZViq4RxE7yiw+R8JJCPy5nW28NNv/NwEDI4yCJEpKavgYMSn7I/9ZYo=
+X-Received: by 2002:a05:600c:12c8:b0:439:8f59:2c56 with SMTP id
+ 5b1f17b1804b1-4405a159a48mr207845e9.2.1744750635333; Tue, 15 Apr 2025
+ 13:57:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250415171954.3970818-1-jyescas@google.com>
+In-Reply-To: <20250415171954.3970818-1-jyescas@google.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Tue, 15 Apr 2025 13:57:03 -0700
+X-Gm-Features: ATxdqUEYkJHID5PFTCgbNHb3ti1GO56rHU_cmcbEsJdS2z-qA1eNXNoty6ETrDs
+Message-ID: <CABdmKX3Ht=bCcPFxK5mGX2qD4riXQ7Ucw6H_-+1PupXy-1ABGQ@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
+To: Juan Yescas <jyescas@google.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
+	baohua@kernel.org, dmitry.osipenko@collabora.com, jaewon31.kim@samsung.com, 
+	Guangming.Cao@mediatek.com, surenb@google.com, kaleshsingh@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=67fec783 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=sgiY_DZ3Ly_kI_xlMHAA:9 a=3ZKOabzyN94A:10 a=GD4noUi3QJbYS--_YAA1:22
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
 
-Add a device tree node for the MDIO controller on the RTL9300 chips.
+On Tue, Apr 15, 2025 at 10:20=E2=80=AFAM Juan Yescas <jyescas@google.com> w=
+rote:
+>
+> This change sets the allocation orders for the different page sizes
+> (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
+> for large page sizes were calculated incorrectly, this caused system
+> heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
+>
+> This change was tested on 4k/16k page size kernels.
+>
+> Signed-off-by: Juan Yescas <jyescas@google.com>
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+I think "dma-buf: system_heap:" would be better for the subject since
+this is specific to the system heap.
 
-Notes:
-    This was originally part of a series adding the bindings and the
-    driver[1]. These were split off and have now been applied via net-nex=
-t.
-    That just leaves the dts changes to come in via linux-mips.
-   =20
-    [1] - https://lore.kernel.org/all/20250227213248.2010986-3-chris.pack=
-ham@alliedtelesis.co.nz/
+Would you mind cleaning up the extra space on line 321 too?
+@@ -318,7 +318,7 @@ static struct page
+*alloc_largest_available(unsigned long size,
+        int i;
 
- arch/mips/boot/dts/realtek/rtl930x.dtsi | 33 +++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+        for (i =3D 0; i < NUM_ORDERS; i++) {
+-               if (size <  (PAGE_SIZE << orders[i]))
++               if (size < (PAGE_SIZE << orders[i]))
 
-diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
-/realtek/rtl930x.dtsi
-index f2e57ea3a60c..101bab72a95f 100644
---- a/arch/mips/boot/dts/realtek/rtl930x.dtsi
-+++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
-@@ -69,6 +69,39 @@ i2c1: i2c@388 {
- 			#size-cells =3D <0>;
- 			status =3D "disabled";
- 		};
-+
-+		mdio_controller: mdio-controller@ca00 {
-+			compatible =3D "realtek,rtl9301-mdio";
-+			reg =3D <0xca00 0x200>;
-+			#address-cells =3D <1>;
-+			#size-cells =3D <0>;
-+			status =3D "disabled";
-+
-+			mdio0: mdio-bus@0 {
-+				reg =3D <0>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+			mdio1: mdio-bus@1 {
-+				reg =3D <1>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+			mdio2: mdio-bus@2 {
-+				reg =3D <2>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+			mdio3: mdio-bus@3 {
-+				reg =3D <3>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+				status =3D "disabled";
-+			};
-+		};
- 	};
-=20
- 	soc: soc@18000000 {
---=20
-2.49.0
+With that,
+Reviewed-by: T.J. Mercier <tjmercier@google.com>
 
+Fixes: d963ab0f15fb ("dma-buf: system_heap: Allocate higher order
+pages if available") is also probably a good idea.
+
+> ---
+>  drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/=
+system_heap.c
+> index 26d5dc89ea16..54674c02dcb4 100644
+> --- a/drivers/dma-buf/heaps/system_heap.c
+> +++ b/drivers/dma-buf/heaps/system_heap.c
+> @@ -50,8 +50,15 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, HIGH_O=
+RDER_GFP, LOW_ORDER_GFP};
+>   * to match with the sizes often found in IOMMUs. Using order 4 pages in=
+stead
+>   * of order 0 pages can significantly improve the performance of many IO=
+MMUs
+>   * by reducing TLB pressure and time spent updating page tables.
+> + *
+> + * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The p=
+ossible
+> + * page sizes for ARM devices could be 4K, 16K and 64K.
+>   */
+> -static const unsigned int orders[] =3D {8, 4, 0};
+> +#define ORDER_1M (20 - PAGE_SHIFT)
+> +#define ORDER_64K (16 - PAGE_SHIFT)
+> +#define ORDER_FOR_PAGE_SIZE (0)
+> +static const unsigned int orders[] =3D {ORDER_1M, ORDER_64K, ORDER_FOR_P=
+AGE_SIZE};
+> +
+>  #define NUM_ORDERS ARRAY_SIZE(orders)
+>
+>  static struct sg_table *dup_sg_table(struct sg_table *table)
+> --
+> 2.49.0.604.gff1f9ca942-goog
+>
