@@ -1,73 +1,73 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765312820DA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0873E1BEF87
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:30:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744709371; cv=none; b=j76qbBa6WSZPSYjo9XohJN8QKnsnrHad+gJzWGyqzKFyUi6Texodivbw9O4/I/1BwC3ri6yWANTAHnGRWxShq72G7aQ5EdiCIkCNhIo3FgdcIMxa2wNZRB+86jqvo6Tkd3+cQGmE6ja7n/ZPg7ccYlrvwJF4bwT4ze5ABWXoCFE=
+	t=1744709439; cv=none; b=mUcEJcq9badJhJTVEZmHiA2h2NBwJaJCNX3iWREAtyDl7fwaxB2Ohc7UmjI228tlo9q5hx9a044ozNPs30I3HlLM64bAhOoR14gHB1r+/VZr1YGNpc8F0rFkQqXu4Jq0P1FddwGfcpZIFoHUUpTPuKajReX2NasS0ySpm4M25Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744709371; c=relaxed/simple;
-	bh=NC5DCaREdjauFdpQNc0ev1qolVFUfP5OhphwHgwEVKc=;
+	s=arc-20240116; t=1744709439; c=relaxed/simple;
+	bh=Th7WriDiYrkxmx3/hBn6QByQtuMX0uB1qla4rW6g5GA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Po0EccKCZ6wawWyom+mhD5Dkm7sR/6I1WyqSmXyblgpiGsXh5plXg31L8/r1xD4btnO0YbGi8YzYGTy0V2rXdE41zvgzV04AJVJYjlgiScDZIvJZsUJ0ONCASz8ncnNXUw5PJwh9SMUmuey2xNBTU46gshJmViuic3aHEcLbmUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HaJ9E2iI; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=cFRPEmzKBopwuAfI+74PWjcaIhDvP12u2g9ai4Y3nhU62ZTf3SEBP1ijZeJP9hkUhn+xiIYpzRjyMUWFxNYImzxt44UHUdUtXRVHy25ywxg62ue4upQ7NO/+YixCpl1tDeoTNz9MRYAD+vGRU1+kjAbzUG0zTmopszcST8b/Qjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Zha2cXVs; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HaJ9E2iI"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tCWS022962
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:29:28 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Zha2cXVs"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tNFN005961
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:30:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+DQx+6nDYoMWkFAXLYdIlJNZxYtgpOoe+Wc439AsM1s=; b=HaJ9E2iItwmtVZb7
-	hnM/qvXYEnujd45SmZ55VlJ4IF81QQcrspbgH4yuSz7tZoBe9u6y948xZr7vjbZx
-	sUP7SNptYAW2RAsIRDuDR6S5wrQhyqbjWoUn9WyCqK82CZcYyl9YYEo5aCO7por3
-	N0uBfw0ARjEIlrZox9D1//df7jBQP4VzViZ1NgZ8/+vauZJmvahTTaaSI2Qa5ZcJ
-	1KXpeMc9o1b2ITDJ+JPfbAy7JmEZ3dHPJDWKVzNjoecfRz8JJtpBgBj5GpAYG+/0
-	ynGW17OczbIwxYwualJ/8ljarFfi+xblNcVlKQ3FDYDWXLLpm5A0OTI03Dp4w0NE
-	XK0OYg==
+	e7rEIe9nkXGFJWd3ji5OvlykGCyqATfbb/4yOX6WSIs=; b=Zha2cXVsLk6EOw+1
+	pWzvoQ5TlIRWzAfdm5c1M+TesYRoan9tapyeBb++xJb15uyaWa2HsEtvtIxW4ZKn
+	G9KkGoAQIvCzM9dK8j6u5Q06/RriFiGlhkQ/ZFJz+Uc+7Jb34YlU4UdR6urUNFSg
+	GT/0Sg1l8rZumkUuZYfpzQarn+GZ5H0VJ7CBOP4zur6PuGSCOEkOnEwd4J15F5SQ
+	O8F26k81NDwhYKFo65hgqlOsoaINGhLXmWYiD3bmAbJemY5QU9U62/dH4Q1FjvSa
+	y2qxQR+35Sy9pYNPOtl7hsFOI9cV0Tb2j3jd7X4gZVzYXG4PFCYRCkKK4P1/K8Db
+	KwHlSg==
 Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygj97fg7-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvj7pjj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:29:28 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c548e16909so477848485a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:29:27 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:30:37 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5d608e703so898886785a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:30:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744709367; x=1745314167;
+        d=1e100.net; s=20230601; t=1744709419; x=1745314219;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DQx+6nDYoMWkFAXLYdIlJNZxYtgpOoe+Wc439AsM1s=;
-        b=S9X3XThY1+OiF8ddCOqdsP6q41mm9sz+pV6DFJPr/bneqKT5ClyqpgH0uTi/B8LSSX
-         xvGHboGIXxgQGclF/aoAjB4H0QA/XzTwpSB5bZOqlOERAPprJOFNn42GIze8OVJlcXWI
-         dXLlNmVn06qTRvHtSfSOnUp6572EiCx+OcWeUj9UWiQFyzHN47uPRjkNvgvIx5uZ6ezT
-         PM96sX3+CNw5k+QTVFxczQS6VWD3Uk2AU2B8vh84pV3R/Ff1C2C4Ceh/Wrm01k6YzIt7
-         H6adhTxY6rhwGythNpyIX2rrk+VSDv4CQ4NFVInwTVfu+LX/wKOWIlqq6BrkhigtaNtZ
-         sa2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVY1PGJMrY/3oBIw+sYh8D2D78YfgqsSR2ritCXUZecrWlRbnyiUQWp4OOft+xBj7jyXkRMcabunxT1B4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJO9+MA+agnC/rkw7StgQZjyfyoO9HcPYsY//rEjdMR727TIr5
-	EBwZqIaL0vhchAOqzGq2LXJCAEDIX6ILSUcT6gAmnrTPE7Bh/IcpGDeBqatJdCaFuyuClDsWdEv
-	kKpvuY6+guVL+lCY1mZQP1gWmzfi7Vd/03GvlIF4PeywAj4vxRxs/aWHg43ZEAVE=
-X-Gm-Gg: ASbGncsL7hZv2Yirj6BHPiinBE57W5+AMctSpOWbDSzbs2RgzJ1mmh7fOh9cSqUqaTZ
-	RAaLoJv9L+j6yeDtRmRXqJlk+QyMVUdOILnGRBUWuAOYNmuwOgpojeJrvybm+xmOH4XE+NVnICg
-	HDUHdlPYSbcg9OHnn82vjUH/BXp1m0hmjPhekew62d8DEJZsvxg5xZCwPgxXYZKGQZhef9t2yyQ
-	23RvZ/9vmlt/KOi6lBdVWuy46/9qM5Lg6tIJ6huS4DX0+sTOVwbfxng4akYEj0QbTT/ndS1As45
-	yd41XYDVvZioA4npkbpxZaBeTLuwmh6qhBJa1EoPIXLkmeax4JfCIpmAyYyH+WK68WNdM5BhoXr
-	BMaPRcSM/Ua96AlpktR2u5ckw76ZqoirLH23GQE6CtoFpiNF+/7y/kNuA9Pau
-X-Received: by 2002:a05:620a:4316:b0:7c5:60c7:346 with SMTP id af79cd13be357-7c7af0b97c3mr2006009685a.10.1744709367189;
-        Tue, 15 Apr 2025 02:29:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFujg27qdYNPJcN55cZ+HIN0mfrHoNU47hlImWynWN+yTG5SH9uM9PPLNNq6/CYxgOEVjDfag==
-X-Received: by 2002:a05:620a:4316:b0:7c5:60c7:346 with SMTP id af79cd13be357-7c7af0b97c3mr2006006985a.10.1744709366781;
-        Tue, 15 Apr 2025 02:29:26 -0700 (PDT)
+        bh=e7rEIe9nkXGFJWd3ji5OvlykGCyqATfbb/4yOX6WSIs=;
+        b=RVGcB2/z4EkHh7NDY180fF/XJcpM4Gqi7UlId6i+uyk+lTpTsbKAom2G2zbvSpwawx
+         NzusFcPwXAA8S4Q8VnWTGFXtxztm+BqRwvExbEFQplEG4KFqTQ+u2jO4BzPKHBiKFlIW
+         Lt2DzhmkWI5Ba7WwHMiqun1mRvzdHle+1X2w22PiAPPRE1ZWq9vqlqkY0nTFgnkkmDJX
+         JtWWRuSD2RINAzPIlq4oSDOSgsDJZJxVFuPiSP0ORd32vqSetINoH/N+OnboGsbn92g2
+         l5pgGMKLd5OpnJZ2SlVS+oTAIhxDnhl8AYPnODVRVHck0CLCs3QFiXxOOEJEUeway2ap
+         qcNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNHSNckc0+yOVn0TrDOfL5W0FKFQg9sXrk43c+KFZK7Tt+QXH5FOvey9r6OWqvDPeYziCaIyZd7L+nEdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAGB5TQpw48JMQdvyFTOtxgEJSmvw8flb5f3rB1EkhhhT8xRaL
+	gzk3Lhwv3Qc8MI804sKp0loEq4lJ/+ft7vXoHB4bNIdh4MFb8zjWHAJyKrG/+UZGAME+eEN+Lo0
+	d3yf8GkBwvP4j1B8b/tgW5m5FjrDb9vDc4JL8bleQJ0T+kBP7pMJOGgT+A2tVW2A=
+X-Gm-Gg: ASbGncvgGRYQ6IRkYUz8Ihm7iUy7zGAQ0z6zadRhk/p2o9FeaJ6pVYG7p5NjnEr0K83
+	YEbpHtLrPBaPzimSG/Q0gGyrNxlfFWKxc7X9ENsA8FpoJfsmkioehWFgM6oBy79XX0HNmh7M6hC
+	H7claWJZN3O/lWxmadtjSvGooapTDMiyRaxTVSBuSf/PziQL/zGqtAhh02Zk20ekQ4q2VQ/1MdZ
+	E5zXrHtcXmyHUo6woDsRgD9MiQPFK82nBQYvahRAN8Sm5gvyFKfpatFa8qZOAgKR3JU1au2FsoS
+	wPcsBYyEbCUfinQ9hCeCPuTnrQEtDW1xOYUSvbJT17lza4wE1VVlpYvo2taY7M4Iei5Buuk/Eh2
+	kb42WwIgajPR7vpcgSP8eiV7JjW9XswfvtQNtXlnir5HZhM/oLNEgqOc2z4Em
+X-Received: by 2002:a05:620a:3182:b0:7c5:dfe5:ea78 with SMTP id af79cd13be357-7c7af118cb9mr2148269285a.8.1744709419530;
+        Tue, 15 Apr 2025 02:30:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHD7KeYwZL5LASnn/RIXjWS4yY4pIenuEWMyr8YbWxKLXL0KqveiG1Fu/gAksh1TLOPVMlFyg==
+X-Received: by 2002:a05:620a:3182:b0:7c5:dfe5:ea78 with SMTP id af79cd13be357-7c7af118cb9mr2148265485a.8.1744709419051;
+        Tue, 15 Apr 2025 02:30:19 -0700 (PDT)
 Received: from ?IPV6:2001:14bb:aa:77bc:64e0:30e4:f6ff:5bd? (2001-14bb-aa-77bc-64e0-30e4-f6ff-5bd.rev.dnainternet.fi. [2001:14bb:aa:77bc:64e0:30e4:f6ff:5bd])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d50270csm1387967e87.114.2025.04.15.02.29.24
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f464cc096sm20862631fa.29.2025.04.15.02.30.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:29:25 -0700 (PDT)
-Message-ID: <c2ec6b7c-421d-43c3-8c0a-de4f7bdd867c@oss.qualcomm.com>
-Date: Tue, 15 Apr 2025 12:29:23 +0300
+        Tue, 15 Apr 2025 02:30:18 -0700 (PDT)
+Message-ID: <ebfbc145-eb8f-4354-b6b6-ad7ecec5856b@oss.qualcomm.com>
+Date: Tue, 15 Apr 2025 12:30:16 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,238 +75,242 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 4/9] phy: qcom-qmp-ufs: Refactor UFS PHY reset
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
-        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
- <20250410090102.20781-5-quic_nitirawa@quicinc.com>
- <pur4y63xhfmqlyymg4pehk37ry4gg22h24zceoqjbsxp3hj4yf@4kptase3c4qp>
- <317faeaa-3130-4e28-8c5d-441a76aa79b4@quicinc.com>
- <CAO9ioeXnnbNzriVOYPUeBiWdrPfYUcMk+pVWYv0vZpJbFeByoQ@mail.gmail.com>
- <2820908b-4548-4e0a-94b2-6065cb5ff1f3@quicinc.com>
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Ayushi Makhija <quic_amakhija@quicinc.com>
+Cc: konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+ <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+ <wzqct2y67h6bkazxv3se77slsheaw5rspgcrcfjm7ngr5t4alw@nktpqrt5woky>
+ <bb277124-a225-450b-acfe-0acd0f94b263@quicinc.com>
+ <7b876428-6f54-4c40-a234-57443eb97ecb@oss.qualcomm.com>
+ <a2b44f41-bb54-4d88-bba0-f5b86b8186b5@quicinc.com>
 Content-Language: en-US
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <2820908b-4548-4e0a-94b2-6065cb5ff1f3@quicinc.com>
+In-Reply-To: <a2b44f41-bb54-4d88-bba0-f5b86b8186b5@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: KRH9ytbmN2ea3wDA8WSrGThuJrdVn0-0
-X-Authority-Analysis: v=2.4 cv=PruTbxM3 c=1 sm=1 tr=0 ts=67fe26f8 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=BcQP8Xzm53tihf4Fw6EA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: KRH9ytbmN2ea3wDA8WSrGThuJrdVn0-0
+X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=67fe273d cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=yQgE6wdlrsv_WjiXGEMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: bmCYNLHzVEKnc8PCUxDFEYoKiyitynAR
+X-Proofpoint-ORIG-GUID: bmCYNLHzVEKnc8PCUxDFEYoKiyitynAR
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150065
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
+ spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504150066
 
-On 14/04/2025 23:34, Nitin Rawat wrote:
-> 
-> 
-> On 4/11/2025 4:38 PM, Dmitry Baryshkov wrote:
->> On Fri, 11 Apr 2025 at 13:50, Nitin Rawat <quic_nitirawa@quicinc.com> 
->> wrote:
->>>
->>>
->>>
->>> On 4/11/2025 1:38 AM, Dmitry Baryshkov wrote:
->>>> On Thu, Apr 10, 2025 at 02:30:57PM +0530, Nitin Rawat wrote:
->>>>> Refactor the UFS PHY reset handling to parse the reset logic only once
->>>>> during probe, instead of every resume.
->>>>>
->>>>> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
->>>>> qmp_ufs_probe to avoid unnecessary parsing during resume.
->>>>
->>>> How did you solve the circular dependency issue being noted below?
->>>
+On 14/04/2025 16:54, Ayushi Makhija wrote:
+> On 4/14/2025 3:37 PM, Dmitry Baryshkov wrote:
+>> On 14/04/2025 12:56, Ayushi Makhija wrote:
 >>> Hi Dmitry,
->>> As part of my patch, I moved the parsing logic from qmp_phy_power_on to
->>> qmp_ufs_probe to avoid unnecessary parsing during resume. I'm uncertain
->>> about the circular dependency issue and whether if it still exists.
+>>>
+>>> On 4/11/2025 1:31 AM, Dmitry Baryshkov wrote:
+>>>> On Thu, Apr 10, 2025 at 06:37:54PM +0530, Ayushi Makhija wrote:
+>>>>> Hi Dmirity/Konard
+>>>>>
+>>>>> On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+>>>>>> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>>>>>>> Add anx7625 DSI to DP bridge device nodes.
+>>>>>>>
+>>>>>>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>>>>>>> ---
+>>>>>>>    arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>>>>>>    1 file changed, 207 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>> index 175f8b1e3b2d..8e784ccf4138 100644
+>>>>>>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>>>>>>> @@ -28,6 +28,13 @@ chosen {
+>>>>>>>            stdout-path = "serial0:115200n8";
+>>>>>>>        };
+>>>>>>>    +    vph_pwr: vph-pwr-regulator {
+>>>>>>> +        compatible = "regulator-fixed";
+>>>>>>> +        regulator-name = "vph_pwr";
+>>>>>>> +        regulator-always-on;
+>>>>>>> +        regulator-boot-on;
+>>>>>>> +    };
+>>>>>>> +
+>>>>>>>        vreg_conn_1p8: vreg_conn_1p8 {
+>>>>>>>            compatible = "regulator-fixed";
+>>>>>>>            regulator-name = "vreg_conn_1p8";
+>>>>>>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>>>>>>                };
+>>>>>>>            };
+>>>>>>>        };
+>>>>>>> +
+>>>>>>> +    dp-dsi0-connector {
+>>>>>>> +        compatible = "dp-connector";
+>>>>>>> +        label = "DSI0";
+>>>>>>> +        type = "full-size";
+>>>>>>> +
+>>>>>>> +        port {
+>>>>>>> +            dp_dsi0_connector_in: endpoint {
+>>>>>>> +                remote-endpoint = <&dsi2dp_bridge0_out>;
+>>>>>>> +            };
+>>>>>>> +        };
+>>>>>>> +    };
+>>>>>>> +
+>>>>>>> +    dp-dsi1-connector {
+>>>>>>> +        compatible = "dp-connector";
+>>>>>>> +        label = "DSI1";
+>>>>>>> +        type = "full-size";
+>>>>>>> +
+>>>>>>> +        port {
+>>>>>>> +            dp_dsi1_connector_in: endpoint {
+>>>>>>> +                remote-endpoint = <&dsi2dp_bridge1_out>;
+>>>>>>> +            };
+>>>>>>> +        };
+>>>>>>> +    };
+>>>>>>>    };
+>>>>>>>      &apps_rsc {
+>>>>>>> @@ -517,9 +548,135 @@ &i2c11 {
+>>>>>>>      &i2c18 {
+>>>>>>>        clock-frequency = <400000>;
+>>>>>>> -    pinctrl-0 = <&qup_i2c18_default>;
+>>>>>>> +    pinctrl-0 = <&qup_i2c18_default>,
+>>>>>>> +            <&io_expander_intr_active>,
+>>>>>>> +            <&io_expander_reset_active>;
+>>>>>>
+>>>>>> These pinctrl entries should go to the IO expander itself.
+>>>>>>
+>>>>>>>        pinctrl-names = "default";
+>>>>>>> +
+>>>>>>>        status = "okay";
+>>>>>>> +
+>>>>>>> +    io_expander: gpio@74 {
+>>>>>>> +        compatible = "ti,tca9539";
+>>>>>>> +        reg = <0x74>;
+>>>>>>> +        interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>>>>> +        gpio-controller;
+>>>>>>> +        #gpio-cells = <2>;
+>>>>>>> +        interrupt-controller;
+>>>>>>> +        #interrupt-cells = <2>;
+>>>>>>> +
+>>>>>>> +        gpio2-hog {
+>>>>>>
+>>>>>> This needs a huuge explanation in the commit message. Otherwise I'd say
+>>>>>> these pins should likely be used by the corresponding anx bridges.
+>>>>>
+>>>>> Thanks, for the review.
+>>>>>
+>>>>> Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+>>>>> After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+>>>>> to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+>>>>> ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
+>>>>
+>>>> Please make sure that there are pinctrl entries for all pins.
+>>>>
+>>>
+>>> Thanks, for the review.
+>>>
+>>> While declaring the pinctrl entries inside the io_expander node, I am getting below error while checking the DTBS check against DT-binding.
+>>>
+>>> Error : /local/mnt/workspace/amakhija/linux_next_11042025/linux/arch/arm64/boot/dts/qcom/sa8775p-ride.dtb: gpio@74: 'dsi0-int-pin-state', 'dsi1-int-pin-state' do not match any of the regexes:
+>>>           '^(hog-[0-9]+|.+-hog(-[0-9]+)?)$', 'pinctrl-[0-9]+' from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
 >>
->> It surely does. The reset controller is registered in the beginning of
->> ufs_qcom_init() and the PHY is acquired only a few lines below. It
->> creates a very small window for PHY driver to probe.
->> Which means, NAK, this patch doesn't look acceptable.
+>> TCA9539 is a GPIO controller rather than a pinctrl device, so it doesn't use pinctrl functions. You don't need to describe properties of the pins that it provides. However, it can use some pins on its own (like reset-gpios). In such a case corresponding pin should have a pinctrl configuration under its pinctrl device.
+>>
 > 
 > Hi Dmitry,
 > 
-> Thanks for pointing this out. I agree that it leaves very little time 
-> for the PHY to probe, which may cause issues with targets where 
-> no_pcs_sw_reset is set to true.
+> Thanks, for the review.
 > 
-> As an experiment, I kept no_pcs_sw_reset set to true for the SM8750, and 
-> it caused bootup probe issues in some of the iterations I ran.
+>   ______________                  _____________________                       ___________________
+> |              |                |                     |                     |                   |
+> |       GPIO 98|---ioexp_intr-->|              GPIO 0 |------Reset--------->|RESET_N            |
+> |       GPIO 97|<--ioexp_reset--|              GPIO 1 |----power-enable---->|POWER_EN           |
+> |              |                |                     |                     |                   |
+> |    SOC       |                |  tca9539            |                     |    anx7625 bridge |
+> |  LeMans      |                |  io_expander        |                     |                   |
+> |              |                |              GPIO 2 |<----DSI0_INT_1P8_N--|ALERT_N/INTP       |
+> |______________|                |_____________________|                     |___________________|
 > 
-> To address this, I propose updating the patch to move the 
-> qmp_ufs_get_phy_reset call to phy_calibrate, just before the 
-> reset_control_assert call.
+> 
+> Based on the above connection diagram, I have already configured the reset(gpio0), power-enable(gpio1) and interrupt (ALERT_N/INTP) (gpio2) for first instance of anx7625 bridge. Similarly I have configured the reset(gpio8), power-enable(gpio9) and interrupt (gpio10) for the second instance of the anx7625 bridge.
+> 
+> bridge@58 {
+>               compatible = "analogix,anx7625";
+>               reg = <0x58>;
+>               interrupts-extended = <&io_expander 2 IRQ_TYPE_EDGE_FALLING>;
+>               enable-gpios = <&io_expander 1 GPIO_ACTIVE_HIGH>;
+>               reset-gpios = <&io_expander 0 GPIO_ACTIVE_HIGH>;
+> 
+> 
+> I think above configuration should be fine, we don't need any pinctrl for io expander's gpios going to anx7625 bridge.
+> 
+> Other two RESET (gpio97) and INTR (gpio98) gpios, which is connecting SOC to io expander (tca9539), I have already declared them under tlmm node.
+> 
+> io_expander_intr_active: io-expander-intr-active-state {
+>          pins = "gpio98";
+>          function = "gpio";
+>          drive-strength = <2>;
+>          bias-disable;
+> };
+> 
+> io_expander_reset_active: io-expander-reset-active-state {
+>          pins = "gpio97";
+>          function = "gpio";
+>          drive-strength = <2>;
+>          bias-disable;
+>          output-high;
 
-Will it cause an issue if we move it to phy_init() instead of 
-phy_calibrate()?
+Yes, this this was I was looking for, thank you.
 
+> };
 > 
-> This change will delay the UFS PHY reset as much as possible in the 
-> code. Additionally, moving it from phy_power_on to calibrate will ensure 
-> that qmp_ufs_get_phy_reset is called only once during boot, rather than 
-> during each phy_power_on call.
+> Thanks,
+> Ayushi
 > 
-> Please let me know your thoughts.
-> =====================================================================================================
->   static int qmp_ufs_phy_calibrate(struct phy *phy)
->   {
->          struct qmp_ufs *qmp = phy_get_drvdata(phy);
-> @@ -1793,6 +1826,12 @@ static int qmp_ufs_phy_calibrate(struct phy *phy)
->          unsigned int val;
->          int ret;
-> 
-> +       pr_err("%s %d\n", __func__, __LINE__);
-> +
-> +       ret = qmp_ufs_get_phy_reset(qmp);
-> +        if (ret)
-> +                return ret;
-> +
->          ret = reset_control_assert(qmp->ufs_reset);
->          if (ret)
->                  return ret;
-> @@ -1817,7 +1856,7 @@ static int qmp_ufs_phy_calibrate(struct phy *phy)
->                  dev_err(qmp->dev, "phy initialization timed-out\n");
->                  return ret;
-> =====================================================================================================
-> 
-> 
-> Regards.
-> Nitin
->>
 >>>
->>> Regards,
->>> Nitin
+>>>           io_expander: gpio@74 {
+>>>                   compatible = "ti,tca9539";
+>>>                   reg = <0x74>;
+>>>                   interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>>>                   gpio-controller;
+>>>                   #gpio-cells = <2>;
+>>>                   interrupt-controller;
+>>>                   #interrupt-cells = <2>;
 >>>
+>>>                   pinctrl-0 = <&io_expander_intr_active>,
+>>>                               <&io_expander_reset_active>;
+>>>                   pinctrl-names = "default";
 >>>
->>>>
->>>>>
->>>>> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->>>>> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->>>>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->>>>> ---
->>>>>    drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 61 ++++++++++++ 
->>>>> +------------
->>>>>    1 file changed, 33 insertions(+), 28 deletions(-)
->>>>>
->>>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/ 
->>>>> qualcomm/phy-qcom-qmp-ufs.c
->>>>> index 636dc3dc3ea8..12dad28cc1bd 100644
->>>>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->>>>> @@ -1799,38 +1799,11 @@ static int qmp_ufs_com_exit(struct qmp_ufs 
->>>>> *qmp)
->>>>>    static int qmp_ufs_power_on(struct phy *phy)
->>>>>    {
->>>>>       struct qmp_ufs *qmp = phy_get_drvdata(phy);
->>>>> -    const struct qmp_phy_cfg *cfg = qmp->cfg;
->>>>>       int ret;
->>>>>       dev_vdbg(qmp->dev, "Initializing QMP phy\n");
->>>>>
->>>>> -    if (cfg->no_pcs_sw_reset) {
->>>>> -            /*
->>>>> -             * Get UFS reset, which is delayed until now to avoid a
->>>>> -             * circular dependency where UFS needs its PHY, but 
->>>>> the PHY
->>>>> -             * needs this UFS reset.
->>>>> -             */
->>>>> -            if (!qmp->ufs_reset) {
->>>>> -                    qmp->ufs_reset =
->>>>> -                            devm_reset_control_get_exclusive(qmp- 
->>>>> >dev,
->>>>> -                                                             
->>>>> "ufsphy");
->>>>> -
->>>>> -                    if (IS_ERR(qmp->ufs_reset)) {
->>>>> -                            ret = PTR_ERR(qmp->ufs_reset);
->>>>> -                            dev_err(qmp->dev,
->>>>> -                                    "failed to get UFS reset: %d\n",
->>>>> -                                    ret);
->>>>> -
->>>>> -                            qmp->ufs_reset = NULL;
->>>>> -                            return ret;
->>>>> -                    }
->>>>> -            }
->>>>> -    }
->>>>> -
->>>>>       ret = qmp_ufs_com_init(qmp);
->>>>> -    if (ret)
->>>>> -            return ret;
->>>>> -
->>>>> -    return 0;
->>>>> +    return ret;
->>>>>    }
->>>>>
->>>>>    static int qmp_ufs_phy_calibrate(struct phy *phy)
->>>>> @@ -2088,6 +2061,34 @@ static int qmp_ufs_parse_dt(struct qmp_ufs 
->>>>> *qmp)
->>>>>       return 0;
->>>>>    }
->>>>>
->>>>> +static int qmp_ufs_get_phy_reset(struct qmp_ufs *qmp)
->>>>> +{
->>>>> +    const struct qmp_phy_cfg *cfg = qmp->cfg;
->>>>> +    int ret;
->>>>> +
->>>>> +    if (!cfg->no_pcs_sw_reset)
->>>>> +            return 0;
->>>>> +
->>>>> +    /*
->>>>> +     * Get UFS reset, which is delayed until now to avoid a
->>>>> +     * circular dependency where UFS needs its PHY, but the PHY
->>>>> +     * needs this UFS reset.
->>>>> +     */
->>>>> +    if (!qmp->ufs_reset) {
->>>>> +            qmp->ufs_reset =
->>>>> +            devm_reset_control_get_exclusive(qmp->dev, "ufsphy");
->>>>
->>>> Strange indentation.
->>>>
->>>>> +
->>>>> +            if (IS_ERR(qmp->ufs_reset)) {
->>>>> +                    ret = PTR_ERR(qmp->ufs_reset);
->>>>> +                    dev_err(qmp->dev, "failed to get PHY reset: 
->>>>> %d\n", ret);
->>>>> +                    qmp->ufs_reset = NULL;
->>>>> +                    return ret;
->>>>> +            }
->>>>> +    }
->>>>> +
->>>>> +    return 0;
->>>>> +}
->>>>> +
->>>>>    static int qmp_ufs_probe(struct platform_device *pdev)
->>>>>    {
->>>>>       struct device *dev = &pdev->dev;
->>>>> @@ -2114,6 +2115,10 @@ static int qmp_ufs_probe(struct 
->>>>> platform_device *pdev)
->>>>>       if (ret)
->>>>>               return ret;
->>>>>
->>>>> +    ret = qmp_ufs_get_phy_reset(qmp);
->>>>> +    if (ret)
->>>>> +            return ret;
->>>>> +
->>>>>       /* Check for legacy binding with child node. */
->>>>>       np = of_get_next_available_child(dev->of_node, NULL);
->>>>>       if (np) {
->>>>> -- 
->>>>> 2.48.1
->>>>>
->>>>
+>>>                   dsi0_int_pin: dsi0-int-pin-state {
+>>>                           pins = "gpio2";
+>>>                           input-enable;
+>>>                           bias-disable;
+>>>                   };
 >>>
+>>>                   dsi1_int_pin: dsi1-int-pin-state {
+>>>                           pins = "gpio10";
+>>>                           input-enable;
+>>>                           bias-disable;
+>>>                   };
+>>>
+>>>           };
+>>>
+>>> I couldn't find any devicetree example of tca9539 which is using pinctrl. The gpio-pca95xx.yaml DT binding does not match with any regex of the patterns properties.
+>>>
+>>> Thanks,
+>>> Ayushi
 >>
 >>
 > 
