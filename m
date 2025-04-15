@@ -1,91 +1,104 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DD22DFA58
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D732DFA3A;
+	Tue, 15 Apr 2025 18:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744740115; cv=none; b=iL8ZPCTGlrvdznISb9sBZa6VeaL4hVm8IKIVzJ6nwMvNdDmiE+9jc8nVfbxfKPb45MwexYbISh3MVcgl7SXeHg6zYB0FA9FADHDYcU4g6YgCZM7a8kPzbgc93U1OPzAZk3HwDOgtRme9tHptQzaNQFHB7GBjaKkAYlBvYJsAX4E=
+	t=1744740207; cv=none; b=Q59BRGQ4J15Ol/9zXLPfRq74gXY2pMYzQzBZ4fWn/qaKTXX5cukvy/wVvUg1VBTedpgIoEe/Ic8FNJJJKViv36Gcm+7stBVrvuRy8+zKQldbIJ2oHtt8s4MTK0FsGrJqEwJSoFuUT3IyoZZ54m9d0fHbQxJAEwMfXoAXXnJHOII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744740115; c=relaxed/simple;
-	bh=EZkcBzEwklFYHdA30Mkd9gwwJhwN+Uhz+aWzVBgHtOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RrRnRVr+LkQFUtyrKXtrtmWT5f9Fb8lJnE6fo9bx7Cet9gH1xthO0+Y1KgP3oYmR6IjvLZQqXX+h70WmOkMSz2K9eUpZrsDc52jA2YQIKKPC6PCwSrxePNR2CdZSQ/1yv/PLlI2LZm+btggm+HUc50wlSZOznk7qJczbrK+k3Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ajwELetX; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744740207; c=relaxed/simple;
+	bh=+eghJ4x+Ds+Ccq/zvXc4mswzGPnjEx99kC6uBVTT3Ak=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vFfB74uJo69E4YiW/f34Stdjklt5DsSropma0Zj4v5DYWZZ/7fukrHY7yTiqH+GTk9y2pLv9XoVo3nDucq7hUEgDKGHR8fi+uh9hziiHhCnnKZ/PyK6wMFL+7ta8J2qrnPNxGMBQ4r70+sditHTPUNWK42zxYUqTLiZQ+1TUGYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lyi/3x9+; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ajwELetX"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 708EE40E0242;
-	Tue, 15 Apr 2025 18:01:49 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TeArVCvk0sca; Tue, 15 Apr 2025 18:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744740104; bh=iWWIR36544IPsAfZOkt4jW4spzPhPRLmPKIHd6pLcNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ajwELetXOjJ+J4On6fZN6WsNzNE6y/rt36kjidyh5ffA/xS/CArfWBwnS0/d2d6ns
-	 ep2w+IUdhSiFK2VROdsFsLNlqo2uOzmyg90Qa57qik8QB1sl8r31VvdH05kt2RJWPo
-	 Y5t/F7feb5f9eumIFDCpg6qfq3SNMBUfSz2CgzpVLAd2FN3DXUHVkGGrO3VLzbX20W
-	 Ze38YgAA/0XzyKwU7QU5XAOY2Rt0ACIdDc6bVAH5U+Pd3wNWyw8o9sH2Pe24eABMJl
-	 UfxuP6eBb8B8o2xJwfLMhLWrzWq7F09M/4UiB+07r5P5QIlD+3S8lfz18R2+hOO21U
-	 K7UPcCMrfIMxZ1gJtDLUWjnpuZfcJE9orLWg8t21XmPSZbQ9ktlZcvnUOxBurW2X0V
-	 bbHe91oaooTE2csskWibNIpWxN+SZa8zTuYHUiaaWdZE9AqUZSZv0JSxEE7TKAdxZL
-	 6eOygf4ebYruIz1gzfxZIPzrmGWZENC704j0ePUJ/9OWqKn+L+H/rONg2lVD7/56Bk
-	 UWQX1YJehKVKHnh2jMj+oI5q2/kkQI89ESEuH4q/q8d+200yf0Y+7TYOAgOEkEh4NV
-	 oBUnva1D/AP8fYE8oWElyPMjaqqKazO+sQ+yxX4WuMToq9Jo3oxO5wMw/x7vFIxbjn
-	 4Ifzea7Kr2om3gvD0CdK4qq8=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4464D40E015E;
-	Tue, 15 Apr 2025 18:01:36 +0000 (UTC)
-Date: Tue, 15 Apr 2025 20:01:28 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>
-Subject: Re: sev_es_trampoline_start undefined symbol referenced errors
- during kunit run
-Message-ID: <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
-References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
- <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
- <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lyi/3x9+"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so8634834a12.0;
+        Tue, 15 Apr 2025 11:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744740204; x=1745345004; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wb9qKhu2k1IpUvme0BwFktjGiMrYNfcDlPf0UXzXUVI=;
+        b=Lyi/3x9+j9R0dqkv+ukxDE+U7rh0dnEHaQ/rfvCcmZO+aIHhNqDks+jdNCl+dpCGft
+         DzP/1PDaxkgqK17fgV01ha7UgRUOnS3rotA1VEiHeYnpET82bYv7c7j2R0PG7RuuodYg
+         2w0a4QE2jiuBIsRU/R83FiVbusue0/rIa3fpD9H3sr2jZAvp5bZBQecd8SVyVykhHnN4
+         rXji/Pnvu95h3j1/AfP1uWeQ+eH4yGz6xP8vmD+opEqeNs3FHkg8cwRQxyyKAt3Itpv1
+         UZBrFgPDftGuon3k/nRdhNpWbSYTyCPA3Ebcdiu5mtbGglEAjylpHJ5QxEMn0/NIt85q
+         ceOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744740204; x=1745345004;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wb9qKhu2k1IpUvme0BwFktjGiMrYNfcDlPf0UXzXUVI=;
+        b=V/7x1mXeuSk69MZN9aqSfrLs7viTurRxdhhgPMWJMUmxtzy7OugnHOTCTGzfPu5LyO
+         TbUZBRd6uO0LdKKEObNHGuCWvD3w6DNlW/d/92avTnBz9c65IA9cbuAiQF2j4AiYkk/5
+         1k5azzCApp+cp6Mzvz75iAn9V4Bm9Umd7Ri328i93Rl6VhsF0vtSHay3Zcb4b+8MgHSK
+         HZILeLeXgqBaVvwHzw+Ur+ZRDsiwzOyIFvB9JiFThmKEELLGWGhIUEfZhcauRSiV4LDb
+         5z852aK/QvPLrI9Lko6LsoavkA8l1Et8Uti2fMvpYVNOAlWkbM5PHkbojPBqMtTZKibL
+         LOww==
+X-Forwarded-Encrypted: i=1; AJvYcCUifHg9nosAQPEp0/inHe41+OKHizmW98U1iTnluRLJSEKIZemV+4JFYnF5pcvMmyrOvTEHzMPdLYVzTA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtmE5Ty2qDVeufADs9E5CNJyCcU3B5C7CezHCGnbFJitzHDq+Q
+	ASfy9s7ZCTIusDNye/afxntTpBu1WnNR5Hx9kNqDnXT98VsCD5wzxbzp+tFjkiAqivG1KpCWN4I
+	D8lCBJUD16dHDUVcAeo838XHcGrE=
+X-Gm-Gg: ASbGncsimddXVbckJhyutBgrN04u9SOn9V9/nu1AJnUm8kTZsgTQ346Ywtwg4W/KYAf
+	eotkq/IDwMbsb4rUfyHV/HvNZCte1GiE4SR5zasA6YHr/7Z0i6uZHSaaFdZ/4i9ag8xlVNK6Y5Z
+	p/YY5joNAw+xof4HKhkXgyxw==
+X-Google-Smtp-Source: AGHT+IGyoaExq6lmduv0ioWZoFMPyQfOKlchXrfsCHKLALExxyE/uhXIbOVRgv4AlIM/ZVfNMa3oiOaBOBFwlsQ+6ko=
+X-Received: by 2002:a17:907:3ea6:b0:ac8:17a1:e42 with SMTP id
+ a640c23a62f3a-acb38251b55mr1864866b.22.1744740204008; Tue, 15 Apr 2025
+ 11:03:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+References: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
+In-Reply-To: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 15 Apr 2025 21:02:47 +0300
+X-Gm-Features: ATxdqUHo0j2G7HhInsD2Ea9yS3LAPGWvf8sSTVKbBAs4CuoCzvP5lAmVqkvszb0
+Message-ID: <CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: ad4000: Avoid potential double data word read
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, 
+	lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com, 
+	andy@kernel.org, marcelo.schmitt1@gmail.com, 
+	David Lechner <dlechner@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 08:25:09AM -0600, Shuah Khan wrote:
-> ./tools/testing/kunit/kunit.py run --arch x86_64
-> or
-> ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
-> 
-> The tree I see this every single time I do my tree testing.
+On Tue, Apr 15, 2025 at 3:21=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
+>
+> Currently, SPI-Engine offload module always sends 32-bit data elements to
+> DMA engine. Appropriately, when set for SPI offloading, the IIO driver us=
+es
+> 32 storagebits for IIO ADC channel buffer elements. However, setting SPI
+> transfer length according to storagebits (32-bits in case of offload) can
+> lead to unnecessarily long transfers for ADCs that are 16-bit or less
+> precision. Adjust AD4000 single-shot read to run transfers of 2 bytes whe=
+n
+> that is enough to get all ADC data bits.
 
-Doesn't reproduce here:
+...
 
-# ./tools/testing/kunit/kunit.py run --arch x86_64 > log.00 2>&1
-# ./tools/testing/kunit/kunit.py run --alltests --arch x86_64 > log.01 2>&1
-# grep -i error log.*
-log.00:[19:04:52] [PASSED] error_pointer
-log.01:[19:44:06] [PASSED] error_pointer
+>         xfers[1].rx_buf =3D &st->scan.data;
+> -       xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.storagebits);
+> +       xfers[1].len =3D chan->scan_type.realbits > 16 ? 4 : 2;
 
--- 
-Regards/Gruss,
-    Boris.
+But wouldn't be logical to have
 
-https://people.kernel.org/tglx/notes-about-netiquette
+       xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.realbits);
+
+?
+
+--=20
+With Best Regards,
+Andy Shevchenko
