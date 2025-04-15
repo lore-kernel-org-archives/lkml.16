@@ -1,64 +1,71 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00B2154423
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE39154423
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744724497; cv=none; b=KEeGfDRmE82SmiCO+9ZLaYY5SdUdU0uVc3OMqjzpyoFv56/hEVu4gU3/5QVkfwTVtMAexpeW+ZhUiiIk+CFna9ChFo009ZaaCp3WfHKu99iEWsS8y9wEC2R7emOKsT22vp/4sdbT/NdpPomYeyMT8AiZ7Cnf22tuD+7ZZdoTe2U=
+	t=1744724603; cv=none; b=osDgfvYoSj0Rj0EO0dwVm8dptSTk01pFZgvljbD6bd6/OHI+tza6zkuL27Qfn3m6CG9vXFdt3cgHEh23ubIQ6E5i5fjiX4b1KP83KArN49VBQx7b0ATTaOB0+E8+ekwNDmpVQzNa3Ic2U84wX7gQWxm0G/GL/AOTXNJh8LjMFS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744724497; c=relaxed/simple;
-	bh=acK/K+ABXlORBiRjpy5LxXDMPi99CEA2jo4mdhVYH1U=;
+	s=arc-20240116; t=1744724603; c=relaxed/simple;
+	bh=Kr1AFDD5BTer6jIrOh1jS8j+MJa8b+J/by2OIVffdRY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i3pXDA2nz0KLO6f6UFgopJFOGuOEoTkYXJggaAVS4UbRcXUYaihJ+3vZhb/EIUsCC5yJdqo8Y6P9StBmRDAbB/MTCa8pclZxZmggXKW7WJFRuWJAHJBNh1BJj7gYaPyqDL1QQC3SmsQYP00qxI7OiZNadiLUGQZC/NSr30QQKFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xr5P2S2x; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=A+gWN4nnfNDNHu5QnD8nZqt1pqGR7R6Qr+9+jiefbEuRDgD2OPlqZ4QrS5S8stK8A6reDArKt+DG8hbs2flqJSFrWUFviSj4QPOeIyBD9IKoQIHwhcHUx2n0n++Ea3BepE6MF/NI6DeazqiecMdm8Do/5y67tLBVLYTGlTrXYco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=alAQXHpm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xr5P2S2x"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c30d9085aso3520256f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744724494; x=1745329294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C4yB7kQlZUb6xayWQsrmLdqiBMKXxBZBkdVERCDut1w=;
-        b=Xr5P2S2xAmD4LKgmhA91Qlybm0kX124NX0sCHdQ+izLubUVYlrz4JQnt0XbYR6SyC/
-         pd+yq+cCCJ7jVcypNU/7qy547ydJYWwtO4l9XMTgycoJIKEmRup0hCULSh4oEI4p8uoy
-         cuJjFvSo1ZUxGHNqXzqc3VBdDC+AZX0SuhbZn+rdFqg/NJ0ngXS7Vuit3VgwrQoRkqtG
-         //C9YkXmvXwnJSDFDHrL4kBcxjHVb2GT2fKOvJ02gLhK0omvzZhcL22o57f7gW1s8JiM
-         5fR6UQ6urpRCkUkN//g5Xnb/e0Gz94n0sn0HcnxLcTq9eMHU27Xx+12BsaCNNe7ZgOEo
-         G1qw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="alAQXHpm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744724600;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/BknlwHAWOUIUSD2VyjY9YAAgdtDCJlgRixChgK4ykw=;
+	b=alAQXHpm6q7vB3vlrIfi04Cz5+LYp0S/EVncI2bIVPU02L8MlVrt4UAhk27E4JKMAPwxhs
+	6k+TDMoYps2stPdSVulH2BIBBxRElsqlYNBks5jxWsY+nbBmdDt/43w6C4hAqr9iHdDu8Z
+	zpZSilMmlt9BXbVOnIz9+RGhK+yQxNk=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-594-EKGW2kt5MoSMGGPwUlVt9A-1; Tue, 15 Apr 2025 09:43:19 -0400
+X-MC-Unique: EKGW2kt5MoSMGGPwUlVt9A-1
+X-Mimecast-MFC-AGG-ID: EKGW2kt5MoSMGGPwUlVt9A_1744724598
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39c1b1c0969so3771014f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:43:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744724494; x=1745329294;
+        d=1e100.net; s=20230601; t=1744724598; x=1745329398;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C4yB7kQlZUb6xayWQsrmLdqiBMKXxBZBkdVERCDut1w=;
-        b=P1c9evXQb65yqNs6gMbVsfzUH1rDHFuWIlM1O1SJu6oSPTOnPi4USlOC8RsWrxntLq
-         Wbej35njuEW9WZip0FoL4VxGfpZyKCljFWaU0kRjodZqKOCaV7oCvRC80YTpcRHlei2K
-         1WJAgQfbSaO4asJZciELnYPaZBQJ1LBz/fF2GE82Eltcg1DSRB2nvZPxSZDG5YyabLMg
-         WC+RnydSn37Fqpt33ahhz0any+QPimCNx3stXnmnSbxknUXfzB5/QDdnxmnK/qNKevBo
-         8agjkCqgjQQrRu0mBDOxrP7lW4OmOab68WYsnvfLifwCQSba8XFAv4JHqerC/4G9OLbR
-         aZCw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5m99MM1KA3xXuZc+R62vJzawKP1eZjGiKSAj/yC8J/+TAa7Cbz1ZnhJ2z8Ufib8ceIhP2uW0DokFdvxo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxk8dWMjQMVagGW29nA3koJVM10xpfOjWvrQwp2kq0kUqZFtuGT
-	y237W2hBtSz6icH9GMa6ZpoDg28I2iFqd78FdAaqSTFG70tNPUIf8vBErcYPaSw=
-X-Gm-Gg: ASbGncuv6sEcNJZnXcRHIREUTn6wt5V1AGu58NkX+KbkfRDsvgyiZu1kEJnUMMmsI/P
-	78GJp9m8qGTcwN1ha6MDwhOVkzr3FoltZEQBqZNBrxV3bJgTOIgwPXGgPrkc5vHhnYSadKdW1lV
-	z1GVQBtuL8xsBCsKBY9JAbvlTgrR/uoS6LUt0WqxlPbBD+2CsbUqMKIeiDkgZOJUrSoq76Q1UMc
-	qeDgvtmxVBrQOke2zbLp1xJi4PTG/+9sFNPL6b8Oq0aOtCCAsmaOUSj2xemxswifKg35OVbQM98
-	G+YXP3cGyDxkW4FJ3Yd12msCXkyx5+xSqXGSr2M1Xbw=
-X-Google-Smtp-Source: AGHT+IGfWgdOUteKBd0Xg5+jg66EqrcGaih9n9NEZtkwhykKyItVqvzsTpM2lpnDn7APIwWUE1dwLw==
-X-Received: by 2002:a5d:584f:0:b0:39c:1257:c7a1 with SMTP id ffacd0b85a97d-39eaaecaeb2mr12782034f8f.57.1744724493943;
-        Tue, 15 Apr 2025 06:41:33 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963fccsm14162453f8f.3.2025.04.15.06.41.33
+        bh=/BknlwHAWOUIUSD2VyjY9YAAgdtDCJlgRixChgK4ykw=;
+        b=SLCVbOeRTMjj9XENBBpd9Qrx0deOXGQR9s2/oPEnVSjmJWXqHseArX0t5LnAH7uyMc
+         s/pCBi8xVoq2Fi4P0qEW73RrRUZwV5hvtbjyz8GVzJZ8b7hB7r/msGADu1b8d8uteZVI
+         z5jnuPYYxxoX8jJN6/5VmY7xpi397DXBTqDe9NbHQJ5i2t0OYRuJniuccEj2TJzxQWWv
+         KFTZXnlCmF/lDkV3okk/Nj9w7BXbTLzILYi6udO9f+FVU9PSsd2AWkxxe8pkmPxtan9W
+         N6MuviBZqEuZWeukGxIbEIpR3E+r3IH3OIsBuyWIv9TWNeGU8gvevh136BTg2XJUsRIq
+         gzJA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9OYTP0MwHddrdRtl2biHcBPrqd5aveEka6tYQ53hwQGD2SbvXStRm+0KufWRgDS8hsE/Wew0TfxRU+yI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJrWCACYqZFQo/FT+F+9iki0iF88aqoyZbkzmVMnN2trhZOk8k
+	Jkj9eC7vVxp3uzIw6meUE06Xn5PMJlatk6N1IlPq+EQHbTtCUNRgh/h41s0JYqfFGKxySybIc6n
+	pzEraorCpHhKql8TVlZ+YJIcvBwBreNlVcBMo3RWcdCUrXyU8X43wuPbAQ/0Dhw==
+X-Gm-Gg: ASbGncvY1ftHJ3zvVzdn458Yp+V+s0MBR6GPj9jOiT7sv4iYspAI6fQUubOp9mk+trq
+	DvdgUsp9zAlJQDoOxv9LhlMGDiXuWBMb39vfYggSxnf+xXOrM+RhdrxN8aeV14A8ubYJPtqja76
+	R8YpBCQcWerB71Dteb/qzrVmpZpfCqm219lqqZ/jV9YK7TfyQUrAv38vhDRzSuzxhRgFlfBaOdU
+	pZwuAaQ9RMvWT5yqR+/3KWhHPz4EpDNMh9aIiS4jzyPbZoyKYW4aBS2PAS34hGa06BScdFdjLul
+	ImVaWI1OyPRr+TvU+Q/NzBaPv+SYrEYna8gRyjA=
+X-Received: by 2002:a5d:59a3:0:b0:390:e1e0:1300 with SMTP id ffacd0b85a97d-39eaaea4548mr13282369f8f.33.1744724597995;
+        Tue, 15 Apr 2025 06:43:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0JyZk7iu1Ps9aWjZNEP8lEOiYdz+v1T/ibFseJb/dw7p9p9LOXvKaUssvdPPF8RDwWIrTgw==
+X-Received: by 2002:a5d:59a3:0:b0:390:e1e0:1300 with SMTP id ffacd0b85a97d-39eaaea4548mr13282344f8f.33.1744724597586;
+        Tue, 15 Apr 2025 06:43:17 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-34-52.dyn.eolo.it. [146.241.34.52])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c02esm14065754f8f.23.2025.04.15.06.43.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 06:41:33 -0700 (PDT)
-Message-ID: <2e9f1ad4-d490-4c22-bcff-7d19b8a89721@linaro.org>
-Date: Tue, 15 Apr 2025 14:41:32 +0100
+        Tue, 15 Apr 2025 06:43:17 -0700 (PDT)
+Message-ID: <4ffd3630-bc75-47db-b63c-3dcb7af8249c@redhat.com>
+Date: Tue, 15 Apr 2025 15:43:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,99 +73,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] coresight: catu: Introduce refcount and spinlock
- for enabling/disabling
-To: Yabin Cui <yabinc@google.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@arm.com>,
- Jie Gan <quic_jiegan@quicinc.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-References: <20250408195922.770377-1-yabinc@google.com>
- <20250408195922.770377-2-yabinc@google.com>
+Subject: Re: [PATCH v5 net-next 06/14] net: enetc: add set/get_rss_table()
+ hooks to enetc_si_ops
+To: Wei Fang <wei.fang@nxp.com>, claudiu.manoil@nxp.com,
+ vladimir.oltean@nxp.com, xiaoning.wang@nxp.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org
+Cc: christophe.leroy@csgroup.eu, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+References: <20250411095752.3072696-1-wei.fang@nxp.com>
+ <20250411095752.3072696-7-wei.fang@nxp.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250408195922.770377-2-yabinc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250411095752.3072696-7-wei.fang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 08/04/2025 8:59 pm, Yabin Cui wrote:
-> When tracing ETM data on multiple CPUs concurrently via the
-> perf interface, the CATU device is shared across different CPU
-> paths. This can lead to race conditions when multiple CPUs attempt
-> to enable or disable the CATU device simultaneously.
+On 4/11/25 11:57 AM, Wei Fang wrote:
+> Since i.MX95 ENETC (v4) uses NTMP 2.0 to manage the RSS table, which is
+> different from LS1028A ENETC (v1). In order to reuse some functions
+> related to the RSS table, so add .get_rss_table() and .set_rss_table()
+> hooks to enetc_si_ops.
 > 
-> To address these race conditions, this patch introduces the
-> following changes:
-> 
-> 1. The enable and disable operations for the CATU device are not
->     reentrant. Therefore, a spinlock is added to ensure that only
->     one CPU can enable or disable a given CATU device at any point
->     in time.
-> 
-> 2. A reference counter is used to manage the enable/disable state
->     of the CATU device. The device is enabled when the first CPU
->     requires it and is only disabled when the last CPU finishes
->     using it. This ensures the device remains active as long as at
->     least one CPU needs it.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
 > ---
->   drivers/hwtracing/coresight/coresight-catu.c | 25 +++++++++++++-------
->   drivers/hwtracing/coresight/coresight-catu.h |  1 +
->   2 files changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index fa170c966bc3..30b78b2f8adb 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -458,12 +458,17 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, enum cs_mode cs_mode,
->   static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
->   		       void *data)
->   {
-> -	int rc;
-> +	int rc = 0;
->   	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
-> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
->   
+> v5 changes:
+> Add enetc_set_default_rss_key() to enetc_pf_common.c and use it in both
+> enetc v1 and v4 drivers
 
-Very minor nit only because you need to resend anyway, but there should 
-be a newline between the variable definitions and the code. Not sure why 
-checkpatch doesn't warn here.
+Note for the reviewers: this changelog actually applies to the next
+(07/14) patch.
 
-> -	CS_UNLOCK(catu_drvdata->base);
-> -	rc = catu_enable_hw(catu_drvdata, mode, data);
-> -	CS_LOCK(catu_drvdata->base);
-> +	if (csdev->refcnt == 0) {
-> +		CS_UNLOCK(catu_drvdata->base);
-> +		rc = catu_enable_hw(catu_drvdata, mode, data);
-> +		CS_LOCK(catu_drvdata->base);
-> +	}
-> +	if (!rc)
-> +		csdev->refcnt++;
->   	return rc;
->   }
->   
-> @@ -486,12 +491,15 @@ static int catu_disable_hw(struct catu_drvdata *drvdata)
->   
->   static int catu_disable(struct coresight_device *csdev, void *__unused)
->   {
-> -	int rc;
-> +	int rc = 0;
->   	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
-> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
->   
-> -	CS_UNLOCK(catu_drvdata->base);
-> -	rc = catu_disable_hw(catu_drvdata);
-> -	CS_LOCK(catu_drvdata->base);
-> +	if (--csdev->refcnt == 0) {
-
-Hopefully this never underflows if disable is called again after a 
-failed enable. We could add a WARN_ON() but I think this is a general 
-case and not specific to these patches so is probably better to do later 
-as separate change.
-
-Reviewed-by: James Clark <james.clark@linaro.org>
+/P
 
