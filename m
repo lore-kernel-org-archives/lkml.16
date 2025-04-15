@@ -1,237 +1,330 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4545D28B505;
-	Tue, 15 Apr 2025 08:27:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C9128BAB0;
+	Tue, 15 Apr 2025 08:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705673; cv=none; b=jVmAQNoVIvftSI2WgDDQHeYt1qmpqQWKOqLAWFRNZlBrPrtYE3K09t9PvKQuGmEJOC7PoPKNA7wEMNd4gUaC+PKRKIrRqbLxYr9OyQaquBRFv1PLLVfBXk6PPvOBJOfN4A3e1mPGd3mZXCNOq82jYRu/BCHrqmxRB5wHNX2GTQc=
+	t=1744705683; cv=none; b=PT3YHjzFAeYRBm+unsbSs+a5JM9IlURbzM9YPanGQ+Pic6xPhjLlFW6s6LK9625QEoPOxNexffN4ntEDF10fMFLE7wsg49Uw2PEUcQcB+phQG24VZcyop8kNy2VaqI6iFIfAQsZ3v9gUGth2znQ8HarnqjGWC36Q0menguSbtCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705673; c=relaxed/simple;
-	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IQlx0EHO9M2CGxJnHwMjZn2E63YLm7oOwDPVVmNPSTDzSDrIhkCooF14Le68oWcYXZr2ANr5Zdiv8OtYAbByQ+irC9F8lo2oGSItfSyGNd8DEnjivUrFdqqfR8yMHjxtdeZQ5OZVZBWfUJek8b+VfcOrWK9UxAJcDEqBtK47PP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iX6u1f/i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744705683; c=relaxed/simple;
+	bh=bJ7ZPUThSUnefT1KsfBYGvnQ6e2CeijPhdt/RibAHwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S3bORvji5xmDSqulPau67rvQyR0E3XS1XdRSkF8TajOwvF/xNtnclkXyuAFHJCZ5LF9TNuGbGeWHg6WlRneTjFOJS2TlJ5a8Wu7ladLSoOz3/t9ljvfvdkrQC+Tlwl3Nvlgn37kBmrW3Uk28eC6goRYDuU3mN+P3S9Gps0BGKYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2KXtqb3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iX6u1f/i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3007BC4CEDD;
-	Tue, 15 Apr 2025 08:27:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2KXtqb3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7143EC4CEDD;
+	Tue, 15 Apr 2025 08:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744705671;
-	bh=fjkrfY0lZ8FPKQsVDzR6S31DolSwoQ9U9E/X2erSNEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iX6u1f/i6SkDFvVRC9+ra7KaJDNon9ZgZoCF1yyg3aTHP2tUpudugUG+9MO6MhjsY
-	 lPvCWgMWAZyPtnIvjyBuTXF6oqmC4o/tio4cgeGhqQ6LA0nRQIB9Bxc1gPnFSc+CCc
-	 F9z+VgFb38toE3Q0ckFx3w/ZAv6P6rYpss8Fx9RMjCPhjQFMEunuIsWjSxPYOXIv+6
-	 JYiPFFdgnk06PcK3JdqNGc1unUa+tv+AMwMHMqMGsSxkKWlQbubHMjxCk88tInC+0V
-	 rXqiodGYNZgl0zl3FPvHKj2pm+bJO31/VuW1ycSrSWXsEIuMv+JVqlvwlcv0sAuhql
-	 kZCVAdV/YPqEQ==
-Date: Tue, 15 Apr 2025 10:27:46 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_vpernami@quicinc.com
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
-Message-ID: <Z_4YgkXR1Retq7n9@ryzen>
-References: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
- <Z-0xJpBrO4wN9UzN@ryzen>
- <798f9a15-f3de-18fa-1b8f-2c9973e8be61@oss.qualcomm.com>
- <Z-4-A29UddizBUPz@ryzen>
- <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
+	s=k20201202; t=1744705682;
+	bh=bJ7ZPUThSUnefT1KsfBYGvnQ6e2CeijPhdt/RibAHwM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U2KXtqb3X8Sj4NOHcaB0jB/39OR8RnneTpvE9qkMnlxDNYSEY0Xy8QHQ0b/i/RGjr
+	 GxSfW9wiusROd+zLSDJNprWvntdBrsZ4yN+mJqrbXVEDAY5rDqAHucIPBvHXWF3RBD
+	 l00i8I+CqoOn6PI57gFXdVrl/aiwj1ctef0+vW0Q36Zry+u4tEGycAAuzVr4p4ZBgW
+	 /oFuRNcpIfepK46d2YK2B3ODSHb6YrpkjTWul0PQt+/0NICyrZ5RIY3ANFUVe1iqOR
+	 UhIDFLpQHr1HPb5hXP7hgouSTMI/OSaUCts0fcz+S361EM/PscBPutwJCgl3ylLOjZ
+	 RMfotyZJTZknw==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Christian Brauner <brauner@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH] fs: remove uselib() system call
+Date: Tue, 15 Apr 2025 10:27:50 +0200
+Message-ID: <20250415-kanufahren-besten-02ac00e6becd@brauner>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <lv47zu5dcbsweqkcbj5t67klgkfxmioganbk5jy4722bhvhnyn@ewhulcqkmcpd>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8390; i=brauner@kernel.org; h=from:subject:message-id; bh=bJ7ZPUThSUnefT1KsfBYGvnQ6e2CeijPhdt/RibAHwM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/k+jKqri+95XfjR+eWidNb05iWhacquLxIo6H45aS9 c1Xi+azd5SyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwkqISRYUZhhfz7gqjCXw0+ b10LjgsqP17E7b0wiKvilomKbeSFTkaGyXf4GI9sV42sUH7uHbmIpewg/yz2q5Ebz7+7OHvvokx dbgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 01:07:23PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, Apr 03, 2025 at 09:51:31AM +0200, Niklas Cassel wrote:
-> > Hello Krishna,
-> >
-> > On Thu, Apr 03, 2025 at 09:26:08AM +0530, Krishna Chaitanya Chundru wrote:
-> > > On 4/2/2025 6:14 PM, Niklas Cassel wrote:
-> > > >
-> > > > Out of curiosity, I tried something similar to on pcie-dw-rockchip.c
-> > > >
-> > > > Simply having a ->shutdown() callback that only calls dw_pcie_host_deinit()
-> > > > was enough for me to produce:
-> > > >
-> > > > [   40.209887] r8169 0004:41:00.0 eth0: Link is Down
-> > > > [   40.216572] ------------[ cut here ]------------
-> > > > [   40.216986] called from state HALTED
-> > > > [   40.217317] WARNING: CPU: 7 PID: 265 at drivers/net/phy/phy.c:1630 phy_stop+0x134/0x1a0
-> > > > [   40.218024] Modules linked in: rk805_pwrkey hantro_vpu v4l2_jpeg v4l2_vp9 v4l2_h264 v4l2_mem2mem videobuf2_v4l2 videobuf2_dma_contig videobuf2_memops videobuf2_common vidf
-> > > > [   40.220267] CPU: 7 UID: 0 PID: 265 Comm: init Not tainted 6.14.0+ #134 PREEMPT
-> > > > [   40.220908] Hardware name: Radxa ROCK 5B (DT)
-> > > > [   40.221289] pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > > > [   40.221899] pc : phy_stop+0x134/0x1a0
-> > > > [   40.222222] lr : phy_stop+0x134/0x1a0
-> > > > [   40.222546] sp : ffff800082213820
-> > > > [   40.222836] x29: ffff800082213820 x28: ffff45ec84b30000 x27: 0000000000000000
-> > > > [   40.223463] x26: 0000000000000000 x25: 0000000000000000 x24: ffffbe8df7fde030
-> > > > [   40.224088] x23: ffff800082213990 x22: 0000000000000001 x21: ffff45ec80e10000
-> > > > [   40.224714] x20: ffff45ec82cb40c8 x19: ffff45ec82ccc000 x18: 0000000000000006
-> > > > [   40.225340] x17: 000000040044ffff x16: 005000f2b5503510 x15: 0720072007200720
-> > > > [   40.225966] x14: 0720072007200720 x13: 0720072007200720 x12: 0720072007200720
-> > > > [   40.226592] x11: 0000000000000058 x10: 0000000000000018 x9 : ffffbe8df556469c
-> > > > [   40.227217] x8 : 0000000000000268 x7 : ffffbe8df7a48648 x6 : ffffbe8df7a48648
-> > > > [   40.227842] x5 : 0000000000017fe8 x4 : 0000000000000000 x3 : 0000000000000000
-> > > > [   40.228468] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff45ec84b30000
-> > > > [   40.229093] Call trace:
-> > > > [   40.229308]  phy_stop+0x134/0x1a0 (P)
-> > > > [   40.229634]  rtl8169_down+0x34/0x280
-> > > > [   40.229952]  rtl8169_close+0x64/0x100
-> > > > [   40.230275]  __dev_close_many+0xbc/0x1f0
-> > > > [   40.230621]  dev_close_many+0x94/0x160
-> > > > [   40.230951]  unregister_netdevice_many_notify+0x14c/0x9c0
-> > > > [   40.231426]  unregister_netdevice_queue+0xe4/0x100
-> > > > [   40.231848]  unregister_netdev+0x2c/0x60
-> > > > [   40.232193]  rtl_remove_one+0xa0/0xe0
-> > > > [   40.232517]  pci_device_remove+0x4c/0xf8
-> > > > [   40.232864]  device_remove+0x54/0x90
-> > > > [   40.233182]  device_release_driver_internal+0x1d4/0x238
-> > > > [   40.233643]  device_release_driver+0x20/0x38
-> > > > [   40.234019]  pci_stop_bus_device+0x84/0xe0
-> > > > [   40.234381]  pci_stop_bus_device+0x40/0xe0
-> > > > [   40.234741]  pci_stop_root_bus+0x48/0x80
-> > > > [   40.235087]  dw_pcie_host_deinit+0x34/0xe0
-> > > > [   40.235452]  rockchip_pcie_shutdown+0x24/0x48
-> > > > [   40.235839]  platform_shutdown+0x2c/0x48
-> > > > [   40.236187]  device_shutdown+0x150/0x278
-> > > > [   40.236533]  kernel_restart+0x4c/0xb8
-> > > > [   40.236859]  __do_sys_reboot+0x178/0x280
-> > > > [   40.237206]  __arm64_sys_reboot+0x2c/0x40
-> > > > [   40.237561]  invoke_syscall+0x50/0x120
-> > > > [   40.237891]  el0_svc_common.constprop.0+0x48/0xf0
-> > > > [   40.238305]  do_el0_svc+0x24/0x38
-> > > > [   40.238597]  el0_svc+0x30/0xd0
-> > > > [   40.238868]  el0t_64_sync_handler+0x10c/0x138
-> > > > [   40.239251]  el0t_64_sync+0x198/0x1a0
-> > > > [   40.239575] ---[ end trace 0000000000000000 ]---
-> > > >
-> > > Hi Niklas,
-> > >
-> > > The issue which you are seeing with specific to the RealTek ethernet
-> > > driver and should be fixed by RealTek driver nothing to do with the host
-> > > controller.
-> >
-> > The warning comes from:
-> > drivers/net/phy/phy.c:phy_stop()
-> > so from the networking phylib.
-> >
-> > Doing a simple:
-> > $ git grep -p phy_stop
-> >
-> > shows that practially all Ethernet drivers call phy_stop() from the
-> > .ndo_stop() callback.
-> >
-> > So after your suggested patch, you should see this warning appear with
-> > any NIC, if connected to your PCIe controller.
-> >
->
-> I think the issue here is that phy_stop() is called without calling
-> corresponding phy_start(). This means that either rtl8169_up() is never called
-> or rtl8169_down() is called twice.
+This system call has been deprecated for quite a while now.
+Let's try and remove it from the kernel completely.
 
-phy_start() is called.
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ arch/m68k/configs/amcore_defconfig         |  1 -
+ arch/x86/configs/i386_defconfig            |  1 -
+ arch/xtensa/configs/cadence_csp_defconfig  |  1 -
+ fs/binfmt_elf.c                            | 76 ----------------------
+ fs/exec.c                                  | 60 -----------------
+ include/linux/binfmts.h                    |  1 -
+ init/Kconfig                               | 10 ---
+ tools/testing/selftests/bpf/config.aarch64 |  1 -
+ tools/testing/selftests/bpf/config.s390x   |  1 -
+ 9 files changed, 152 deletions(-)
 
+diff --git a/arch/m68k/configs/amcore_defconfig b/arch/m68k/configs/amcore_defconfig
+index 110279a64aa4..60767811e34a 100644
+--- a/arch/m68k/configs/amcore_defconfig
++++ b/arch/m68k/configs/amcore_defconfig
+@@ -2,7 +2,6 @@ CONFIG_LOCALVERSION="amcore-002"
+ CONFIG_DEFAULT_HOSTNAME="amcore"
+ CONFIG_SYSVIPC=y
+ # CONFIG_FHANDLE is not set
+-# CONFIG_USELIB is not set
+ CONFIG_LOG_BUF_SHIFT=14
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ # CONFIG_AIO is not set
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index 91801138b10b..7cd2f395f301 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -1,7 +1,6 @@
+ CONFIG_WERROR=y
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+-CONFIG_USELIB=y
+ CONFIG_AUDIT=y
+ CONFIG_NO_HZ=y
+ CONFIG_HIGH_RES_TIMERS=y
+diff --git a/arch/xtensa/configs/cadence_csp_defconfig b/arch/xtensa/configs/cadence_csp_defconfig
+index 91c4c4cae8a7..49f50d1bd724 100644
+--- a/arch/xtensa/configs/cadence_csp_defconfig
++++ b/arch/xtensa/configs/cadence_csp_defconfig
+@@ -1,6 +1,5 @@
+ CONFIG_SYSVIPC=y
+ CONFIG_POSIX_MQUEUE=y
+-CONFIG_USELIB=y
+ CONFIG_NO_HZ_IDLE=y
+ CONFIG_HIGH_RES_TIMERS=y
+ CONFIG_IRQ_TIME_ACCOUNTING=y
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 584fa89bc877..7e2afe3220f7 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -68,12 +68,6 @@
+ 
+ static int load_elf_binary(struct linux_binprm *bprm);
+ 
+-#ifdef CONFIG_USELIB
+-static int load_elf_library(struct file *);
+-#else
+-#define load_elf_library NULL
+-#endif
+-
+ /*
+  * If we don't support core dumping, then supply a NULL so we
+  * don't even try.
+@@ -101,7 +95,6 @@ static int elf_core_dump(struct coredump_params *cprm);
+ static struct linux_binfmt elf_format = {
+ 	.module		= THIS_MODULE,
+ 	.load_binary	= load_elf_binary,
+-	.load_shlib	= load_elf_library,
+ #ifdef CONFIG_COREDUMP
+ 	.core_dump	= elf_core_dump,
+ 	.min_coredump	= ELF_EXEC_PAGESIZE,
+@@ -1361,75 +1354,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	goto out;
+ }
+ 
+-#ifdef CONFIG_USELIB
+-/* This is really simpleminded and specialized - we are loading an
+-   a.out library that is given an ELF header. */
+-static int load_elf_library(struct file *file)
+-{
+-	struct elf_phdr *elf_phdata;
+-	struct elf_phdr *eppnt;
+-	int retval, error, i, j;
+-	struct elfhdr elf_ex;
+-
+-	error = -ENOEXEC;
+-	retval = elf_read(file, &elf_ex, sizeof(elf_ex), 0);
+-	if (retval < 0)
+-		goto out;
+-
+-	if (memcmp(elf_ex.e_ident, ELFMAG, SELFMAG) != 0)
+-		goto out;
+-
+-	/* First of all, some simple consistency checks */
+-	if (elf_ex.e_type != ET_EXEC || elf_ex.e_phnum > 2 ||
+-	    !elf_check_arch(&elf_ex) || !file->f_op->mmap)
+-		goto out;
+-	if (elf_check_fdpic(&elf_ex))
+-		goto out;
+-
+-	/* Now read in all of the header information */
+-
+-	j = sizeof(struct elf_phdr) * elf_ex.e_phnum;
+-	/* j < ELF_MIN_ALIGN because elf_ex.e_phnum <= 2 */
+-
+-	error = -ENOMEM;
+-	elf_phdata = kmalloc(j, GFP_KERNEL);
+-	if (!elf_phdata)
+-		goto out;
+-
+-	eppnt = elf_phdata;
+-	error = -ENOEXEC;
+-	retval = elf_read(file, eppnt, j, elf_ex.e_phoff);
+-	if (retval < 0)
+-		goto out_free_ph;
+-
+-	for (j = 0, i = 0; i<elf_ex.e_phnum; i++)
+-		if ((eppnt + i)->p_type == PT_LOAD)
+-			j++;
+-	if (j != 1)
+-		goto out_free_ph;
+-
+-	while (eppnt->p_type != PT_LOAD)
+-		eppnt++;
+-
+-	/* Now use mmap to map the library into memory. */
+-	error = elf_load(file, ELF_PAGESTART(eppnt->p_vaddr),
+-			eppnt,
+-			PROT_READ | PROT_WRITE | PROT_EXEC,
+-			MAP_FIXED_NOREPLACE | MAP_PRIVATE,
+-			0);
+-
+-	if (error != ELF_PAGESTART(eppnt->p_vaddr))
+-		goto out_free_ph;
+-
+-	error = 0;
+-
+-out_free_ph:
+-	kfree(elf_phdata);
+-out:
+-	return error;
+-}
+-#endif /* #ifdef CONFIG_USELIB */
+-
+ #ifdef CONFIG_ELF_CORE
+ /*
+  * ELF core dumper
+diff --git a/fs/exec.c b/fs/exec.c
+index 8e4ea5f1e64c..cfbb2b9ee3c9 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -115,66 +115,6 @@ bool path_noexec(const struct path *path)
+ 	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
+ }
+ 
+-#ifdef CONFIG_USELIB
+-/*
+- * Note that a shared library must be both readable and executable due to
+- * security reasons.
+- *
+- * Also note that we take the address to load from the file itself.
+- */
+-SYSCALL_DEFINE1(uselib, const char __user *, library)
+-{
+-	struct linux_binfmt *fmt;
+-	struct file *file;
+-	struct filename *tmp = getname(library);
+-	int error = PTR_ERR(tmp);
+-	static const struct open_flags uselib_flags = {
+-		.open_flag = O_LARGEFILE | O_RDONLY,
+-		.acc_mode = MAY_READ | MAY_EXEC,
+-		.intent = LOOKUP_OPEN,
+-		.lookup_flags = LOOKUP_FOLLOW,
+-	};
+-
+-	if (IS_ERR(tmp))
+-		goto out;
+-
+-	file = do_filp_open(AT_FDCWD, tmp, &uselib_flags);
+-	putname(tmp);
+-	error = PTR_ERR(file);
+-	if (IS_ERR(file))
+-		goto out;
+-
+-	/*
+-	 * Check do_open_execat() for an explanation.
+-	 */
+-	error = -EACCES;
+-	if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode)) ||
+-	    path_noexec(&file->f_path))
+-		goto exit;
+-
+-	error = -ENOEXEC;
+-
+-	read_lock(&binfmt_lock);
+-	list_for_each_entry(fmt, &formats, lh) {
+-		if (!fmt->load_shlib)
+-			continue;
+-		if (!try_module_get(fmt->module))
+-			continue;
+-		read_unlock(&binfmt_lock);
+-		error = fmt->load_shlib(file);
+-		read_lock(&binfmt_lock);
+-		put_binfmt(fmt);
+-		if (error != -ENOEXEC)
+-			break;
+-	}
+-	read_unlock(&binfmt_lock);
+-exit:
+-	fput(file);
+-out:
+-	return error;
+-}
+-#endif /* #ifdef CONFIG_USELIB */
+-
+ #ifdef CONFIG_MMU
+ /*
+  * The nascent bprm->mm is not visible until exec_mmap() but it can
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index 1625c8529e70..65abd5ab8836 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -90,7 +90,6 @@ struct linux_binfmt {
+ 	struct list_head lh;
+ 	struct module *module;
+ 	int (*load_binary)(struct linux_binprm *);
+-	int (*load_shlib)(struct file *);
+ #ifdef CONFIG_COREDUMP
+ 	int (*core_dump)(struct coredump_params *cprm);
+ 	unsigned long min_coredump;	/* minimal dump size */
+diff --git a/init/Kconfig b/init/Kconfig
+index 63f5974b9fa6..b7cc7f5b2595 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -479,16 +479,6 @@ config CROSS_MEMORY_ATTACH
+ 	  to directly read from or write to another process' address space.
+ 	  See the man page for more details.
+ 
+-config USELIB
+-	bool "uselib syscall (for libc5 and earlier)"
+-	default ALPHA || M68K || SPARC
+-	help
+-	  This option enables the uselib syscall, a system call used in the
+-	  dynamic linker from libc5 and earlier.  glibc does not use this
+-	  system call.  If you intend to run programs built on libc5 or
+-	  earlier, you may need to enable this syscall.  Current systems
+-	  running glibc can safely disable this.
+-
+ config AUDIT
+ 	bool "Auditing support"
+ 	depends on NET
+diff --git a/tools/testing/selftests/bpf/config.aarch64 b/tools/testing/selftests/bpf/config.aarch64
+index 3720b7611523..e1495a4bbc99 100644
+--- a/tools/testing/selftests/bpf/config.aarch64
++++ b/tools/testing/selftests/bpf/config.aarch64
+@@ -158,7 +158,6 @@ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_TUN=y
+ CONFIG_UNIX=y
+ CONFIG_UPROBES=y
+-CONFIG_USELIB=y
+ CONFIG_USER_NS=y
+ CONFIG_VETH=y
+ CONFIG_VLAN_8021Q=y
+diff --git a/tools/testing/selftests/bpf/config.s390x b/tools/testing/selftests/bpf/config.s390x
+index 706931a8c2c6..26c3bc2ce11d 100644
+--- a/tools/testing/selftests/bpf/config.s390x
++++ b/tools/testing/selftests/bpf/config.s390x
+@@ -128,7 +128,6 @@ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_TUN=y
+ CONFIG_UNIX=y
+ CONFIG_UPROBES=y
+-CONFIG_USELIB=y
+ CONFIG_USER_NS=y
+ CONFIG_VETH=y
+ CONFIG_VLAN_8021Q=y
+-- 
+2.47.2
 
->
-> I don't think this issue is applicable to all drivers. It'd be worth
-> investigating what is going wrong with this r8169 driver.
-
-In case you are curious, I added a dump_stack() before phy_stop() is called:
-
-First phy_stop() call:
-
-[   21.733574] platform fc400000.usb: deferred probe pending: dwc3: failed to initialize core
-[   23.827753] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
-[   23.827762] Hardware name: Radxa ROCK 5B (DT)
-[   23.827764] Call trace:
-[   23.827765]  show_stack+0x20/0x40 (C)
-[   23.827774]  dump_stack_lvl+0x60/0x80
-[   23.827778]  dump_stack+0x18/0x24
-[   23.827782]  rtl8169_down+0x30/0x2a0
-[   23.827788]  rtl_shutdown+0xb0/0xc0
-[   23.827792]  pci_device_shutdown+0x3c/0x88
-[   23.827797]  device_shutdown+0x150/0x278
-[   23.827802]  kernel_restart+0x4c/0xb8
-[   23.827807]  __do_sys_reboot+0x178/0x280
-[   23.827811]  __arm64_sys_reboot+0x2c/0x40
-[   23.827816]  invoke_syscall+0x50/0x120
-[   23.827822]  el0_svc_common.constprop.0+0x48/0xf0
-[   23.827826]  do_el0_svc+0x24/0x38
-[   23.827828]  el0_svc+0x30/0xd0
-[   23.827834]  el0t_64_sync_handler+0x10c/0x138
-[   23.827837]  el0t_64_sync+0x198/0x1a0
-[   23.827841] calling phy_stop() rtl8169_down:4844
-[   23.834789] r8169 0004:41:00.0 eth0: Link is Down
-
-Second phy_stop() call:
-
-[   23.841458] CPU: 6 UID: 0 PID: 238 Comm: init Not tainted 6.15.0-rc2+ #149 PREEMPT
-[   23.841467] Hardware name: Radxa ROCK 5B (DT)
-[   23.841468] Call trace:
-[   23.841470]  show_stack+0x20/0x40 (C)
-[   23.841478]  dump_stack_lvl+0x60/0x80
-[   23.841483]  dump_stack+0x18/0x24
-[   23.841486]  rtl8169_down+0x30/0x2a0
-[   23.841492]  rtl8169_close+0x64/0x100
-[   23.841496]  __dev_close_many+0xbc/0x1f0
-[   23.841502]  dev_close_many+0x94/0x160
-[   23.841505]  unregister_netdevice_many_notify+0x160/0x9d0
-[   23.841510]  unregister_netdevice_queue+0xf0/0x100
-[   23.841515]  unregister_netdev+0x2c/0x58
-[   23.841519]  rtl_remove_one+0xa0/0xe0
-[   23.841524]  pci_device_remove+0x4c/0xf8
-[   23.841528]  device_remove+0x54/0x90
-[   23.841534]  device_release_driver_internal+0x1d4/0x238
-[   23.841539]  device_release_driver+0x20/0x38
-[   23.841544]  pci_stop_bus_device+0x84/0xe0
-[   23.841548]  pci_stop_bus_device+0x40/0xe0
-[   23.841552]  pci_stop_root_bus+0x48/0x80
-[   23.841555]  dw_pcie_host_deinit+0x34/0xe0
-[   23.841559]  rockchip_pcie_shutdown+0x20/0x38
-[   23.841565]  platform_shutdown+0x2c/0x48
-[   23.841571]  device_shutdown+0x150/0x278
-[   23.841575]  kernel_restart+0x4c/0xb8
-[   23.841580]  __do_sys_reboot+0x178/0x280
-[   23.841584]  __arm64_sys_reboot+0x2c/0x40
-[   23.841588]  invoke_syscall+0x50/0x120
-[   23.841595]  el0_svc_common.constprop.0+0x48/0xf0
-[   23.841598]  do_el0_svc+0x24/0x38
-[   23.841601]  el0_svc+0x30/0xd0
-[   23.841605]  el0t_64_sync_handler+0x10c/0x138
-[   23.841609]  el0t_64_sync+0x198/0x1a0
-[   23.841613] calling phy_stop() rtl8169_down:4844
-
-
-So it seems that the driver's rtl_shutdown() calls rtl8169_net_suspend(),
-which calls rtl8169_down() which calls phy_stop().
-
-
-If I compare rtl8169_close() with e.g. e1000e_close(),
-e1000e_close() does have a guard:
-
-if (netif_device_present(netdev)) {
-
-around the call to e1000e_down(),
-while rtl8169_close() does not have a similar guard around the call to
-rtl8169_down().
-
-So, I think you are right, this is probably a r8169 driver specific
-problem after all.
-
-
-Kind regards,
-Niklas
