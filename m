@@ -1,107 +1,117 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492441C700B;
-	Tue, 15 Apr 2025 03:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81A32DFA24;
+	Tue, 15 Apr 2025 04:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744689502; cv=none; b=bOVp2FkhWAZ849PdQZ9h8NZZiW75rYq0zmdylPcOmK9ZkGvO3b6LRxGfxooyqMO0ZASW+bv6GUjFFSIeHZxKVeZrII1FYgMokVXe9x5R+djnk3DwVa74yQlR5F2MjdZ/SsJFMJqR1iTE6a538QQ5mdPD8AByLQkrDYfMT46Yu5Y=
+	t=1744689684; cv=none; b=qZ61pbwc1d66d7Om67xFihVPpAHPn5szjVtYIwYd/fSks6jb3caQrPbWpV2kLkBFCafP6TPyyf8wQZ0wHGsw2uN1rwrGc34LeX5tVp0SMGRcRBzzp029+mSHzJCe4i+iplLfDUcnchw87mMl+wfIDfMB4NrKimLJbdyENzPnkZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744689502; c=relaxed/simple;
-	bh=8/7OE/PdvhXXx4ntXvRyNwEbGhavbkvSh1I4OENjYd4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dqrw4Y/Eo9gIOL/QHUe9fcZl9qtnxwIoCjylpHc6FIVEKtEXeDYVX7NBOjY/b1OjrOd+4x1GQBd/H9qNJIWWimMQHN5LNV9UT6Xtkf4v+QNCm+gvLirbAFI8IKn0/pp6UXLjGK7GRaRXjsYEkO4slzr3AcWWi1Ow0TbOAH3Uk3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=d7BS8tEG; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744689684; c=relaxed/simple;
+	bh=Cd27p6e5+DxALqVmbQjHz0b+JAdPJCpC5x1NC6XYTU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=diGZmVB8MvTJWdA87fFM4n7XlIAkM0JWtW3RBg2N2TuFE/AffgyyobEAgQ7lJK3Cr0kbbuc1NOe3nxXXj+7ZnSnTlip6w++xHsc5iqi1ZHuaH/7840wNQkGTD1Vg6DoetaUy2PJeou1FJD/UISJqeLFwj/1qqNfufRXwp60MP3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Ku5IoKx5; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="d7BS8tEG"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53F3vSDj9559644, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744689448; bh=8/7OE/PdvhXXx4ntXvRyNwEbGhavbkvSh1I4OENjYd4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=d7BS8tEGrxJz/z1Rizy5jApxZx1ODze1VPoBKsBp5KVV4ArhlMflxy2956t/WVkWY
-	 pZKeTyOprCG15703bCZy0CBfCk421UeI/KIJTfp68S/yFeWi7W9AOSqjRznGvIUCt4
-	 rrUEovxO49FYgFvTnf5NEr9WLPZpNCMpXCpjeZ4Gi3Cz6D/7gjIh9mm3PrQdyVbSjq
-	 QmdrkTTm520HFWDM2mf/ZIo/OK9XiuyuUEJoiL0UjQTN1P2C6nY+9pLxBGWrFfeBQw
-	 O3zQJwOUuhpkWXr21HlY30a6Ee888nhGlcPvUS5kDioJ3qX/DTsLFWpHsfpJ/kJksZ
-	 1w5CZa4Lb9vFw==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53F3vSDj9559644
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 11:57:28 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 15 Apr 2025 11:57:27 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 15 Apr 2025 11:57:17 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 15 Apr 2025 11:57:17 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Andrew Lunn <andrew@lunn.ch>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "horms@kernel.org" <horms@kernel.org>,
-        Ping-Ke Shih
-	<pkshih@realtek.com>,
-        Larry Chiu <larry.chiu@realtek.com>,
-        kernel test robot
-	<lkp@intel.com>
-Subject: RE: [PATCH net] rtase: Fix kernel test robot issue
-Thread-Topic: [PATCH net] rtase: Fix kernel test robot issue
-Thread-Index: AQHbrSDD9CZVAae2F06UCtZ1tmoHg7Oij+6AgAGIZ0A=
-Date: Tue, 15 Apr 2025 03:57:17 +0000
-Message-ID: <4ae769fc0f9f4c26a26f3fb2233ee025@realtek.com>
-References: <20250414093645.21181-1-justinlai0215@realtek.com>
- <3d5a5a7d-a8fb-4a6a-9f3d-3ea27f9d06e7@lunn.ch>
-In-Reply-To: <3d5a5a7d-a8fb-4a6a-9f3d-3ea27f9d06e7@lunn.ch>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ku5IoKx5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744689677;
+	bh=tA9QKFq722kIEtFpTFO8bBX/kak8Infi5qK0zrKPtXs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Ku5IoKx51C6b31JOonLanRlQKkah7n0yktN14S8W01ddijLW8oplojAqEIo5NMkQO
+	 MBhcG8i5T3SjD7rcDkAvsEmQ0ZRdTs52/DVib1JpsA560V6CWGbvMOMLJfvq1QETtb
+	 wJoJG3c+NAUMNo7CVw4dGK0ny+k0o+mmj7yMErZTZFd6Ki/qL8ntKwfCMpXCR2SULM
+	 C7Mm32YAxHDmzBfnLPmxqa8r+PiTZQlxtfeK43YQfZg+5VWCryTXywDhJZshJjS41f
+	 Y5BHk+aLQfZXnNxnf0jmxU4SSfGYb0N39gELCkCdgB3gNph2fjpckSbIyREKugPy81
+	 f+h9nM1DDq1Kg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zc9SX6FsMz4xFb;
+	Tue, 15 Apr 2025 14:01:16 +1000 (AEST)
+Date: Tue, 15 Apr 2025 14:01:16 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Tejun Heo <tj@kernel.org>
+Cc: Tamir Duberstein <tamird@gmail.com>, Benno Lossin
+ <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, Andreas
+ Hindborg <a.hindborg@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the workqueues tree
+Message-ID: <20250415140116.13544ac6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/CDcVZdAuuHqb3M33qX0P8+z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-> On Mon, Apr 14, 2025 at 05:36:45PM +0800, Justin Lai wrote:
-> > 1. Fix the compile error reported by the kernel test robot by modifying
-> > the condition used to detect overflow in rtase_calc_time_mitigation.
-> > 2. Fix the compile warning reported by the kernel test robot by
-> > increasing the size of ivec->name.
-> > 3. Fix a type error in min_t.
->=20
-> Looks like three patches should be used, not one. You can then include
-> the details of what the test robot reported making it easier to
-> understand each fix.
->=20
->=20
->     Andrew
->=20
-> ---
-> pw-bot: cr
+--Sig_/CDcVZdAuuHqb3M33qX0P8+z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andrew,
+Hi all,
 
-Thank you for your response. I will split this patch into three
-separate patches and include the detailed report from the kernel
-test robot.
+After merging the workqueues tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Thanks,
-Justin
+error[E0308]: mismatched types
+   --> rust/kernel/lib.rs:204:9
+    |
+204 |           ptr.sub(offset) as *const $type
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ types differ in mutability
+    |
+   ::: rust/kernel/workqueue.rs:495:18
+    |
+495 |               ) -> *mut Self {
+    |                    --------- expected `*mut ClosureWork<T>` because o=
+f return type
+...
+505 | / impl_has_work! {
+506 | |     impl{T} HasWork<Self> for ClosureWork<T> { self.work }
+507 | | }
+    | |_- in this macro invocation
+    |
+    =3D note: expected raw pointer `*mut ClosureWork<T>`
+               found raw pointer `*const ClosureWork<T>`
+    =3D note: this error originates in the macro `$crate::container_of` whi=
+ch comes from the expansion of the macro `impl_has_work` (in Nightly builds=
+, run with -Z macro-backtrace for more info)
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+
+Caused by commit
+
+  345e029b561e ("rust: workqueue: remove HasWork::OFFSET")
+
+I have used the workqueues tree from next-20250414 for today.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CDcVZdAuuHqb3M33qX0P8+z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf92gwACgkQAVBC80lX
+0GwmaAf8Dsixzyse4NYMeHcBBXz1yhbLq/MpxWxUABAJGFHo84iDsaGb4EPpfQbY
+EEUZ4QitfUWEFYhn3Vi3/YBI/YbUXJcnka10sqdArpE1uTMzQsLaHBLO4ClyLJm6
+rGVVuCkZds7Z6BgALv50bRa7j/4276LV5LT7VxVxAuFFC65IRxKCk885g7cJPc9n
+lBbaIXMnfhcj14gOEMspXe1oi51RuXScVKCzF5kd0z85kcySzgTOgpRWxHHCUwCh
+iJW0545AzaBxoZ+l+IdiZFlOt59io4OTi8s0OqfemRdIJFMdiaVvo5kTFSCRHNCg
+CBXK1+mOowe3dm4GvinqHC+gYjeBXA==
+=iv8+
+-----END PGP SIGNATURE-----
+
+--Sig_/CDcVZdAuuHqb3M33qX0P8+z--
