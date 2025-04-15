@@ -1,117 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35CC2144DB;
-	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C142710E9;
+	Tue, 15 Apr 2025 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=204.191.154.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744736403; cv=none; b=rtwfXCUqnS0uk4r6m2P8i+f/OaQmelsb4uMAyaamm9VfUFu9Q81ssMVa48Q6YXeN0lTSlgA1HZ+VGaGrmMQOUBl6dXRl8Jn4kmUkup+CjQo1kNrYjvZdHGenKHuws1hJ3y0HEWB1zPfLx8/gaJA9ItXJER9PAT1jB4bVGJ213GI=
+	t=1744736422; cv=none; b=nb4WXazMsOE11ehQ8VxYp5Zjg5jP5JQt0iBaO+50jGSoWicgcapJl1Ieql98VqThhgL4eubve2HsWFD0TfJIE6t623XBkfNYXriw4dZRVxMBhLkTeB3CiUt5axf6s0LS+YD5cvWXrjqElgKsL39BhXTq6GWIKjxLm69p/mHiBNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744736403; c=relaxed/simple;
-	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W+cZInrMHxxNRqS7EdoO3CU+xQe3GkDAOx/yJJ0IJsMtHhGz5oR20nqQ6borrjWnkeMKhM28H5nO0gE69nAHR2wNwos2fEs5FH/PKooLTN2g7x43VlsSXCTeW1+kGOo1Fi+x9jaPN0RckhHJtM3JlDwQq30fofRr3zye/CHFzTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edUbzBjj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744736422; c=relaxed/simple;
+	bh=KsPCEMVc2LMLTS4j1lUJZrful794O99DydUdMIngm8A=;
+	h=Message-ID:Date:MIME-Version:To:References:From:In-Reply-To:
+	 Content-Type:Subject; b=OO/1HlEoJ9rViMKa+Dw/nDZeQF2us4nK8BajhBkWKWVsyHK8zMDVgKrNFcRqUNhxmMXK1z9FGfgIS2LDaFWweBMcYwo2mx6x29ROJm6g0EsDmlX6oRXo7yB2ENT2dVHb5GBR5HiRwnyziE3pRpaLa3RL79Cy1dakUa0Wwo0D17I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com; spf=pass smtp.mailfrom=deltatee.com; dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b=P3RtSJ+k; arc=none smtp.client-ip=204.191.154.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=deltatee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deltatee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edUbzBjj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E4BC4CEE9;
-	Tue, 15 Apr 2025 17:00:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744736403;
-	bh=K5ffwUoIPZMzOdb9wN+7SAH5h6bX8pLcajxWE/Iis2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=edUbzBjjOmodaXj6JfbuCpTgUp2PWa37c1CGYhXKWoY0uDuA5eSN6qrmxKwUZOtZE
-	 iC/8CHBAPcHyDLW6By/H2BS/HBP1apDreRO0gpTS9DJM7ksbPOOHAN9GOoZIxl1NWl
-	 vloz5ui324K8NL3oA5ZCbY/daYek0pmLRc0k06EmM1LbbiJNFuW90CZJmqpAR70tuG
-	 PYKLbUaQIS9x9wLJpsuKmbFpTT8WTN9W7XCOdqZCaLKEZWuEF1GYUr3YTNxlbD1wGN
-	 /gCkpoDEHp/I1Edrp1av53pb84/+h59ZyzDgZD5tGBr5YcD2bo/3FzEVCOwIuoADYK
-	 pqtWr5YahT1UA==
-Date: Tue, 15 Apr 2025 10:00:00 -0700
-From: Kees Cook <kees@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Sergio Perez Gonzalez <sperezglz@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Tamir Duberstein <tamird@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org,
-	Thomas Huth <thuth@redhat.com>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] slab: Decouple slab_debug and no_hash_pointers
-Message-ID: <202504150956.9AFF9545@keescook>
-References: <20250410174428.work.488-kees@kernel.org>
- <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
+	dkim=pass (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="P3RtSJ+k"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:To:
+	MIME-Version:Date:Message-ID:cc:content-disposition;
+	bh=KsPCEMVc2LMLTS4j1lUJZrful794O99DydUdMIngm8A=; b=P3RtSJ+kk9OJ5LuMQzZga8rlKU
+	lwj6oFYa7EtD7N+rEKwDyzNt8XfjFLRuIHwZOchBOA71z9i2CZjmKmW4t06/+LKOdaewTrVnxhHCs
+	AxaOXIxquT/r/b6Y3ZjsIXNtsYBw+U/LtVWR5eOldEBRU03n1F6I0nq8u8nNPWf0CAT1ijVsgocPX
+	zUS8oYl1s82QpX9yylOxZWHhHg2qySHGgBU9uIX5eU1tdc8WXq3FN54a/U2EcpzPS+tlgDg9wnEQq
+	hH0T4z2w1KjwkswMhwFoYDLEakw3amD0T/Cl5m86x7nWSDLp7obeEh+qyC0Hz9hu19JJNm4RanAnQ
+	UnsLJESg==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+	by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <logang@deltatee.com>)
+	id 1u4jdt-000rei-0Q;
+	Tue, 15 Apr 2025 11:00:12 -0600
+Message-ID: <dbb07d97-433b-4792-bbd7-74033c838d29@deltatee.com>
+Date: Tue, 15 Apr 2025 11:00:11 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_0AFjai6Bvg-YLD@pathway.suse.cz>
+User-Agent: Mozilla Thunderbird
+To: Stephen Bates <sbates@raithlin.com>, bhelgaas@google.com,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z_2nIRgPqp2JlT9m@MKMSTEBATES01.amd.com>
+Content-Language: en-CA
+From: Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <Z_2nIRgPqp2JlT9m@MKMSTEBATES01.amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Level: 
+Subject: Re: [PATCH] p2pdma: Whitelist the QEMU host bridge for x86_64
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 
-On Mon, Apr 14, 2025 at 02:31:42PM +0200, Petr Mladek wrote:
-> On Thu 2025-04-10 10:44:31, Kees Cook wrote:
-> > Some system owners use slab_debug=FPZ (or similar) as a hardening option,
-> > but do not want to be forced into having kernel addresses exposed due
-> > to the implicit "no_hash_pointers" boot param setting.[1]
-> > 
-> > Introduce the "hash_pointers" boot param, which defaults to "auto"
-> > (the current behavior), but also includes "always" (forcing on hashing
-> > even when "slab_debug=..." is defined), and "never". The existing
-> > "no_hash_pointers" boot param becomes an alias for "hash_pointers=never".
-> > 
-> > This makes it possible to boot with "slab_debug=FPZ hash_pointers=always".
-> 
-> The idea makes sense. But it seems that the patch did not handle
-> the "always" mode correctly, see below.
+Hi Stephen,
 
-Actually, it was the "never" mode that was being ignored. Whoops! (The
-double negation language is a little odd.) I've fixed this for v2 with
-an explicit switch statement.
+On 2025-04-14 18:24, Stephen Bates wrote:
+> It is useful to be able to develop and test p2pdma applications in
+> virtualized environments. Whitelist the QEMU PCI host bridge emulated
+> by the default QEMU system for x86_64.
 
-> > -int __init no_hash_pointers_enable(char *str)
-> > +void __init hash_pointers_finalize(bool slub_debug)
-> >  {
-> > -	if (no_hash_pointers)
-> > -		return 0;
-> > +	if (hash_pointers_mode == HASH_PTR_AUTO && slub_debug)
-> > +		no_hash_pointers = true;
-> >  
-> > -	no_hash_pointers = true;
-> > +	if (!no_hash_pointers)
-> > +		return;
-> >  
-> >  	pr_warn("**********************************************************\n");
-> >  	pr_warn("**   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **\n");
-> 
-> 
-> The mode/policy is generic but this function is ready to be called
-> only once. And we might actually want to call it twice, see below.
+The host bridge is also in real hardware. 82G33 motherboards from c.
+2007. Given it's age the real hardware probably doesn't support P2P
+transactions, but at the same time it's probably pretty rare and I
+wouldn't expect there to be much risk of someone trying and failing a
+P2P transaction on such a machine. These things are probably worth
+noting in the commit message.
 
-I'd like to keep it a single call. I feel this simplifies the reporting
-logic, keeps the selection logic in one place, and allows us to
-trivially examine that it is safe to use with __init.
+Other than that:
 
-Thanks for the review!
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
--- 
-Kees Cook
+Logan
