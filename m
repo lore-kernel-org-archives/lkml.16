@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 918D32973D8;
-	Tue, 15 Apr 2025 14:30:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 364FFEAC7;
+	Tue, 15 Apr 2025 14:30:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744727416; cv=none; b=uQI7yJX9jpMxfx6JOqhC4fIqFTxloLfMQsXsM4LwL/gCRQc8XDhRGRTMJ+4LQqxMFTmzvc5x/ZKJv4ZXJuFIkSyTnwCY/s1RdfUSAv4yQ491WjIiagXyY/YmF2lE4wGZIv9my4E7EEmcWFJjE0ZUt4hU+6Vzbdt1LwYnHjkz64A=
+	t=1744727419; cv=none; b=FDiGTTy3C6MF4XvQBqFh4AVk/hz6hKLNVCMrco3rQmqnClP0RfOTkXnzNA7iLFlysyTGRSmANkdTYwZ1bdxj/SB+BRhynB7CzHKVL3rJzvsN6MyySxbUI0MECB7hO0gCNN2MrrdjeF8EJPUdyhrvWXOD8wWRu+VHFcbgk/1r7jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744727416; c=relaxed/simple;
-	bh=rSLNgVWj5qpZs5sQRSm5+2qoH0KVwXp8IEn94Pr5CWk=;
+	s=arc-20240116; t=1744727419; c=relaxed/simple;
+	bh=a4ZwrR1VvUBppHXUT6mwYMQSNlX5JxtCSjYaQEKueQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ntKT4z/fwsVkyND4Uoy+SzaDUZSc4T0Yy78NLrfmOGfZPjg61eKHjtyEXwH4YBYwHF140P8djGTeBV8A8QKNggMram7zkmrx9Jq4JCWeQ/80SuO6yA8KTynDrgi615iCTankuH/8pX6klSmtETKuqq7nvsz1fFsAViYCqVtAH1g=
+	 MIME-Version; b=BsutPdfX+MiSiR4bb1c2WSThZLkIlQHG6W086KPQqbMGnLZZPLTu2R9rOj3XpBpq9/RpJj0A9tYJMCFg9PEkifQqeh2uJJhwqaCmvW2fTrYYcuRuvbKJPVTQtn2jUbbW44Rj06A1cUo7f1INMjNoJ2wUSW9ELRHauMXfWf9LTY4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5CC161756;
-	Tue, 15 Apr 2025 07:30:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DED1615A1;
+	Tue, 15 Apr 2025 07:30:14 -0700 (PDT)
 Received: from pluto.guest.local (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2B293F694;
-	Tue, 15 Apr 2025 07:30:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F3AC3F694;
+	Tue, 15 Apr 2025 07:30:14 -0700 (PDT)
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
@@ -33,9 +33,9 @@ Cc: sudeep.holla@arm.com,
 	maz@kernel.org,
 	johan@kernel.org,
 	Cristian Marussi <cristian.marussi@arm.com>
-Subject: [PATCH 3/4] firmware: arm_scmi: quirk: Fix CLOCK_DESCRIBE_RATES triplet
-Date: Tue, 15 Apr 2025 15:29:32 +0100
-Message-ID: <20250415142933.1746249-4-cristian.marussi@arm.com>
+Subject: [PATCH 4/4] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk: Ignore FC bit in attributes
+Date: Tue, 15 Apr 2025 15:29:33 +0100
+Message-ID: <20250415142933.1746249-5-cristian.marussi@arm.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250415142933.1746249-1-cristian.marussi@arm.com>
 References: <20250415142933.1746249-1-cristian.marussi@arm.com>
@@ -47,122 +47,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert an existing quirk in CLOCK_DESCRIBE_RATES parsing to the new quirk
-framework. This is a sort of a peculiar quirk since it matches any platform
-and any firmware.
+Some platform misreported the support of FastChannel when queried: ignore
+that bit on selected platforms.
 
 Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- drivers/firmware/arm_scmi/clock.c  | 49 ++++++++++++++++--------------
- drivers/firmware/arm_scmi/quirks.c |  2 ++
- drivers/firmware/arm_scmi/quirks.h |  3 ++
- 3 files changed, 32 insertions(+), 22 deletions(-)
+Match features has to be set-up properly before upstreaming this.
+Ideally the out-of-spec firmware should be matched with a quirk matching
+pattern based on Vendor/SubVendor/ImplVersion....but it is NOT clear if the
+platform at hand will ship with future fixed firmwares where the ImplVersion
+field is properly handled.
+If we cannot be sure about that, we should fallback to a compatible match.
 
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-index 2ed2279388f0..cb9839ec96d7 100644
---- a/drivers/firmware/arm_scmi/clock.c
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -11,6 +11,7 @@
+RFC->V1
+- fix QUIRKS conditions
+---
+ drivers/firmware/arm_scmi/driver.c | 8 ++++++++
+ drivers/firmware/arm_scmi/quirks.c | 3 +++
+ drivers/firmware/arm_scmi/quirks.h | 1 +
+ 3 files changed, 12 insertions(+)
+
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 1d500663004a..e38cf3c3b157 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -1904,6 +1904,13 @@ struct scmi_msg_resp_desc_fc {
+ 	__le32 db_preserve_hmask;
+ };
  
- #include "protocols.h"
- #include "notify.h"
-+#include "quirks.h"
- 
- /* Updated only after ALL the mandatory features for that version are merged */
- #define SCMI_PROTOCOL_SUPPORTED_VERSION		0x30000
-@@ -429,6 +430,31 @@ static void iter_clk_describe_prepare_message(void *message,
- 	msg->rate_index = cpu_to_le32(desc_index);
- }
- 
-+#define QUIRK_OUT_OF_SPEC_TRIPLET					       \
-+	({								       \
-+	/* Warn about out of spec replies ... */			       \
-+	if (!p->clk->rate_discrete &&					       \
-+	    (st->num_returned != 3 || st->num_remaining != 0)) {	       \
-+		dev_warn(p->dev,					       \
-+			 "Out-of-spec CLOCK_DESCRIBE_RATES reply for %s - returned:%d remaining:%d rx_len:%zd\n",\
-+			 p->clk->name, st->num_returned, st->num_remaining,    \
-+			 st->rx_len);					       \
-+		/*							       \
-+		 * A known quirk: a triplet is returned but num_returned != 3  \
-+		 * Check for a safe payload size and fix.		       \
-+		 */							       \
-+		if (st->num_returned != 3 && st->num_remaining == 0 &&	       \
-+		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {       \
-+			st->num_returned = 3;				       \
-+			st->num_remaining = 0;				       \
-+		} else {						       \
-+			dev_err(p->dev,					       \
-+				"Cannot fix out-of-spec reply !\n");	       \
-+			return -EPROTO;					       \
-+		}							       \
-+	}								       \
++#define QUIRK_PERF_FC_FORCE						\
++	({								\
++		if (pi->proto->id == SCMI_PROTOCOL_PERF &&		\
++		    message_id == 0x8 /* PERF_LEVEL_GET */)		\
++			attributes |= BIT(0);				\
 +	})
 +
- static int
- iter_clk_describe_update_state(struct scmi_iterator_state *st,
- 			       const void *response, void *priv)
-@@ -442,28 +468,7 @@ iter_clk_describe_update_state(struct scmi_iterator_state *st,
- 	st->num_returned = NUM_RETURNED(flags);
- 	p->clk->rate_discrete = RATE_DISCRETE(flags);
+ static void
+ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
+ 			     u8 describe_id, u32 message_id, u32 valid_size,
+@@ -1924,6 +1931,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
  
--	/* Warn about out of spec replies ... */
--	if (!p->clk->rate_discrete &&
--	    (st->num_returned != 3 || st->num_remaining != 0)) {
--		dev_warn(p->dev,
--			 "Out-of-spec CLOCK_DESCRIBE_RATES reply for %s - returned:%d remaining:%d rx_len:%zd\n",
--			 p->clk->name, st->num_returned, st->num_remaining,
--			 st->rx_len);
--
--		/*
--		 * A known quirk: a triplet is returned but num_returned != 3
--		 * Check for a safe payload size and fix.
--		 */
--		if (st->num_returned != 3 && st->num_remaining == 0 &&
--		    st->rx_len == sizeof(*r) + sizeof(__le32) * 2 * 3) {
--			st->num_returned = 3;
--			st->num_remaining = 0;
--		} else {
--			dev_err(p->dev,
--				"Cannot fix out-of-spec reply !\n");
--			return -EPROTO;
--		}
--	}
-+	SCMI_QUIRK(clock_rates_triplet_out_of_spec, QUIRK_OUT_OF_SPEC_TRIPLET);
- 
- 	return 0;
- }
+ 	/* Check if the MSG_ID supports fastchannel */
+ 	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
++	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
+ 	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
+ 		dev_dbg(ph->dev,
+ 			"Skip FC init for 0x%02X/%d  domain:%d - ret:%d\n",
 diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
-index 2f95b35b5ca1..b523bd1ca49f 100644
+index b523bd1ca49f..3e3b61a03780 100644
 --- a/drivers/firmware/arm_scmi/quirks.c
 +++ b/drivers/firmware/arm_scmi/quirks.c
-@@ -86,6 +86,7 @@ struct scmi_quirk {
- 	__DEFINE_SCMI_QUIRK_ENTRY(_qn, _comp, _ven, _sub, _impl)
+@@ -87,6 +87,8 @@ struct scmi_quirk {
  
  /* Global Quirks Definitions */
-+DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL, NULL);
+ DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL, NULL);
++DEFINE_SCMI_QUIRK(perf_level_get_fc_force,
++		  NULL, "bad-vend", NULL, "0x20000-");
  
  /*
   * Quirks Pointers Array
-@@ -94,6 +95,7 @@ struct scmi_quirk {
-  * defined quirks descriptors.
+@@ -96,6 +98,7 @@ DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL, NULL);
   */
  static struct scmi_quirk *scmi_quirks_table[] = {
-+	__DECLARE_SCMI_QUIRK_ENTRY(clock_rates_triplet_out_of_spec),
+ 	__DECLARE_SCMI_QUIRK_ENTRY(clock_rates_triplet_out_of_spec),
++	__DECLARE_SCMI_QUIRK_ENTRY(perf_level_get_fc_force),
  	NULL
  };
  
 diff --git a/drivers/firmware/arm_scmi/quirks.h b/drivers/firmware/arm_scmi/quirks.h
-index 0f1a14b13ba5..e5252ba4774b 100644
+index e5252ba4774b..f8a7f234b2ae 100644
 --- a/drivers/firmware/arm_scmi/quirks.h
 +++ b/drivers/firmware/arm_scmi/quirks.h
-@@ -37,4 +37,7 @@ static inline void scmi_quirks_enable(struct device *dev, const char *compat,
+@@ -39,5 +39,6 @@ static inline void scmi_quirks_enable(struct device *dev, const char *compat,
  
- #endif /* CONFIG_ARM_SCMI_QUIRKS */
+ /* Quirk delarations */
+ DECLARE_SCMI_QUIRK(clock_rates_triplet_out_of_spec);
++DECLARE_SCMI_QUIRK(perf_level_get_fc_force);
  
-+/* Quirk delarations */
-+DECLARE_SCMI_QUIRK(clock_rates_triplet_out_of_spec);
-+
  #endif /* _SCMI_QUIRKS_H */
 -- 
 2.47.0
