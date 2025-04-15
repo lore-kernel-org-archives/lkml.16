@@ -1,70 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44819535D8;
-	Tue, 15 Apr 2025 14:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21C1A3056
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 14:52:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744728733; cv=none; b=uuqB8mWF7vFKRWc1YwCJeTQePYf50zSqBew7I5S82mEnzYcBAIOzkEk6STF76RgNvvuJm7vrRl05o+fK2BIVzGqQOvOm2NuVsAbU4a5yoroKMuMwA1DUzzSctipVgf5Es4voI/8sM0nwyALdqFtX12tJ675zRvEFCnHayT9UBeQ=
+	t=1744728770; cv=none; b=HMMtJE8KdQtnTcsOdI0NQDmOzqmCzFD4acqBp3mJKK6nNVlY0KR4HWd4hUzLnMhijXdy9AtOQvUaIrCJC3ug1hZTFpNyR+XBhFDvk5QO7FGeKzPhzc/OIvWIMGnRQFEwa+X6akvNMMIVAsyTUOzq7ir4JvU/otDMWg9W2wmWphQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744728733; c=relaxed/simple;
-	bh=snCmSC3+XllzjenNJuiYQQLOeMF1tUGdj1sBr7T4mIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HKcxCfNwn40rpiQ8mokhTxGfFkDHfPQqWeWP6py3zcGDaPxO9C2P0qq5yfXEZgaW4xr6fAvxWoQSVWQbRZ8PwOIotM2UwfoUFO8enqqHlGz5bWc80vDUILpSyp3Nc1eQaaCZSjqIs5UVGJxuTJwDlZey39tyBZIcZCf2Y4J14f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uf5NBddi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744728770; c=relaxed/simple;
+	bh=xIesYGqrd51RI1bI3MW7wEcJi9adYQW4DsrOO8n7sIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YE9AtRL172XcMmdMkOd4oMxaXRGwN1AFFZod1+gWNkrhEfL2rzXG1Nijy3omweX0eSVLhVDE96Z3zYnPWfBYH81QAE972Sb8N333iwGeTQEcffdemSAwI84M9VSPkxv3R9aNO2w8JatVht3EIcvGsl6SmEST6jInOK4ec39uczg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c78S8arg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uf5NBddi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B893CC4CEEE;
-	Tue, 15 Apr 2025 14:52:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c78S8arg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171BDC4CEEB;
+	Tue, 15 Apr 2025 14:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744728732;
-	bh=snCmSC3+XllzjenNJuiYQQLOeMF1tUGdj1sBr7T4mIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Uf5NBddiATB3RryAFZESQswmTpJLcveWI1tafe6mo8n5v44sRHJIVPg9AJL2rSpWe
-	 uO3Xjg0NLjXQ9eR1QAkwV3hpkI3TNZO3gzvZwTc1ZZWqf2D0KUJNoJ8OByN/PYG1Hm
-	 q5/lZl0aNgH4dqFYVGsp7Pudi3GU2iGLYmyD7Vay09MmQs4Ojb9kPqGvpj384rmT1S
-	 JUfpt+jcK7CjIGx3Y9f2gpc/TcCongTNvF7CqHsXLv871FPBT0SltXp3u+b1i5Z7wn
-	 NZZmFem0s6HuFfwrQdGW6Sci6ZkiG1I0kxtbIFqv4uXD+2IN/W+9aNLtyykjFb28cd
-	 MHZBATTF4o75A==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso12404179a12.1;
-        Tue, 15 Apr 2025 07:52:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV74UHwbZfckA5/N05HacBCreBkO0XsBm5ENkye2Ss03i1IFMVq/iuYBoPbJaa4K0De7ODWFlu34DeMU5UP@vger.kernel.org, AJvYcCVeYknn6UIRy8UjN8WQWrw0rXhf8d/W7aPoVYQtGPWMACBw6NORYoEUgJbeFopakLxt2T94xhWVFYuZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+kYnGPBJf5MKpdO8aCPW4zfXKwhZEgNRZXBNlRmzi6XAZECAu
-	D91ZqZa9tUoEYUQrCdyfK6+qohQGDsrlUBQHy4LTTnEXAleHmGiezuCG766GWCCweJ5e8qpu2s8
-	xGcTkhjXc3QEYTu3acu4dDAG4lw==
-X-Google-Smtp-Source: AGHT+IElNRejW7H0MvMKqVJd83SYHEviVdbU4tEY6r816KeYkX6joN56eHCYOKnpTL5DFaiKBdwIU12luYEJVqfMFTA=
-X-Received: by 2002:a05:6402:210f:b0:5ec:8aeb:812a with SMTP id
- 4fb4d7f45d1cf-5f45dff3335mr3104516a12.14.1744728731365; Tue, 15 Apr 2025
- 07:52:11 -0700 (PDT)
+	s=k20201202; t=1744728770;
+	bh=xIesYGqrd51RI1bI3MW7wEcJi9adYQW4DsrOO8n7sIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c78S8argiE3N+N5ell9sxHjrSw3z3sm9QWSSV299ElxruWwqtyHr4XuQrj7nKTx9z
+	 Km8HOL58VzY6OkLfQnINPTa+Mb8Dyoj6M7gAJ3nfCTtfoNM7GTFDF60Ti9QCWgoJ+Z
+	 +YZgrwDQk0TS3SpN1QV1psl4nvwpguDnN2LIHnQKqIWu6QkLawfTVqNkyRjfh8ryMb
+	 5HUTiWNJO3wMmDZLe2U6yIfKNbj2IIxHUdSdcyJtg6p35Ue2rIhqWDFGZ+OOxCVtCJ
+	 zt3qpAQYzH1XdM3U8aVEP1+E7nIWIRaay+4qHw3o/kgR9vzmGyBjCrVXUyExd5Lnaa
+	 GmoN2MsV5b0zg==
+Date: Tue, 15 Apr 2025 07:52:47 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Uros Bizjak <ubizjak@gmail.com>
+Subject: Re: [PATCH v2] noinstr: Use asm_inline() in
+ instrumentation_{begin,end}()
+Message-ID: <ivrnem5v2svx72fi5i5ibobdihjlal6cfibtimmzicar2pxkeb@qtlnpkakmkoq>
+References: <165d2a0b882050f3f6cc0315af66cd2d16e5925b.1744676674.git.jpoimboe@kernel.org>
+ <20250415074849.GJ5600@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_FFC8E7A5A76050982D28F811C81F936D9205@qq.com>
-In-Reply-To: <tencent_FFC8E7A5A76050982D28F811C81F936D9205@qq.com>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 15 Apr 2025 09:51:59 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq++MbY=s5t1hmE0AhcmFA14t3fxLM1xPFZAA0ETX_ee-g@mail.gmail.com>
-X-Gm-Features: ATxdqUG4c4EClp3gS0m6AEGJjtYgevxH2MgIUqsCDzJiOk0kU1YmnC23zzTKW2c
-Message-ID: <CAL_Jsq++MbY=s5t1hmE0AhcmFA14t3fxLM1xPFZAA0ETX_ee-g@mail.gmail.com>
-Subject: Re: [PATCH] of: reserved-mem: Warn for missing initfn in __reservedmem_of_table
-To: Liya Huang <1425075683@qq.com>
-Cc: Saravana Kannan <saravanak@google.com>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415074849.GJ5600@noisy.programming.kicks-ass.net>
 
-On Tue, Apr 15, 2025 at 9:16=E2=80=AFAM Liya Huang <1425075683@qq.com> wrot=
-e:
->
-> For the data in __reservedmem_of_table, its function pointer initfn might
-> be NULL. However, __reserved_mem_init_node() only considers non-NULL case=
-s
-> and ignores NULL function pointers.
+On Tue, Apr 15, 2025 at 09:48:49AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 14, 2025 at 05:27:11PM -0700, Josh Poimboeuf wrote:
+> > Use asm_inline() in the instrumentation begin/end macros to prevent the
+> > compiler from making poor inlining decisions based on the length of the
+> > objtool annotations.
+> > 
+> > Without the objtool annotations, each macro resolves to a single NOP.
+> > Using inline_asm() seems obviously correct here as it accurately
+> > communicates the actual code size to the compiler.
+> > 
+> > These macros are used by WARN() and lockdep, so this change can affect a
+> > lot of functions.
+> > 
+> > For a defconfig kernel built with GCC 14.2.1, bloat-o-meter reports a
+> > 0.17% increase in text size:
+> > 
+> >   add/remove: 74/352 grow/shrink: 914/353 up/down: 80747/-47120 (33627)
+> >   Total: Before=19460272, After=19493899, chg +0.17%
+> 
+> Hmm, I was surprised that defconfig was affected at all. Why does
+> defconfig have DEBUG_ENTRY on?
 
-If initfn is NULL, there's no point to the entry and that's a bug.
-Unless you have a build time check, there's no point to add this.
+Hm, looks like Ingo enabled that with:
 
-Rob
+  70c8dc910427 ("x86/defconfig: Enable CONFIG_DEBUG_ENTRY=y")
+
+Though, is there any reason NOINSTR validation needs to depend on
+DEBUG_ENTRY?
+
+-- 
+Josh
