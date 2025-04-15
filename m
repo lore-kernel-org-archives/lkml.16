@@ -1,112 +1,127 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964DC1AF0AE;
-	Tue, 15 Apr 2025 08:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB37F1AF0AE;
+	Tue, 15 Apr 2025 08:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744706605; cv=none; b=Liu86L2bshNTYmlh1IEgdcQqu3K4795O5n93lg1RspaIQEb/tAFMzyL+rd0CNIYqf4ATGVMfygFyllGfpoQghr26jKBN2F8VLkXLdvp4zjCujpB+s8PUyVWrVzA8QecOSFxz5VTKKzoBBMtg8DIU3YxWIdNBVA68sU+/k5UfWrM=
+	t=1744706609; cv=none; b=h778TppLzjMw9gJxDuRjwYa1VBhgvxkjCYZKeiDkMP+LY22Pnj+Pxt5riOgEGfZKDqwGF27RZs/oIGztWgX0mr63A6z9zXol5nhAQ+YyMiIeww2gdtQa/TAhJidayMZZDSOVSTqeHH/rELz81MJZGb19AbdPyQ+buJt01MNdoH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744706605; c=relaxed/simple;
-	bh=HtsOkMq+WLgJHrBJNsrJTc1wbQ/EcZYFGAgOXBZbQrM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fb4Ye/nQcliAp/DdSredi9TcSLaFYSaZZ1pvrEUK48aOR6TDTrqeX8dzAaNBYKApXKJRz8V+evCUEy7mx+f6Mj5Nf1RCSKSVamNzbrqAeYIEKRfonXMxmtOb5Za0NKLbypFDwBHmZjVtRiDXscabziUF8cWCPqGWOCOMhMCac/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowACXOTYgHP5nYXz5CA--.18019S2;
-	Tue, 15 Apr 2025 16:43:13 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: arend.vanspriel@broadcom.com,
-	kvalo@kernel.org
-Cc: linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3] brcm80211: fmac: Add error log in brcmf_usb_dl_cmd()
-Date: Tue, 15 Apr 2025 16:42:39 +0800
-Message-ID: <20250415084239.2906-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744706609; c=relaxed/simple;
+	bh=bqVy4cE5Zj6YhNLsiG6Ni3/flTkFOehuJyaTktuTw8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HiwFpu7nQrORWuTWn/aW/uAEbIwoJbEtU5RzwoWM9UXsp109JHAD/4IneVngughTYg4veaUyL26dNlIrMhwgcoZoifHQ9w/ZIC9faXo8gZc7gogCIIUraSBHwzETGSBGFH6IR0CVF2gJyp0jsWMHVOLS3F0cTRM0kLfDf3Yiwh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYlsRpYi; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYlsRpYi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744706607; x=1776242607;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bqVy4cE5Zj6YhNLsiG6Ni3/flTkFOehuJyaTktuTw8U=;
+  b=PYlsRpYiSNNdOgkKJ0Y2RaKkE0SSWeMxxSNcLtIEykO0m57Asl7iiJjZ
+   jLGxrUPc/nTX5ybHo5Hdq5vVtwbIXb0aEfT4Slm+T9LPOBwgOSXX3x/BB
+   HOG3pswZOMUNqFcbDF7i+FKWPHVE3WZuq37k2+GsZsAiLlnFiRdnITv1b
+   sTNpE6vdzte7hGgqZFwy1Uj2BbyYmJzORa6+CAILU2CNM1SL/gmduqTTk
+   9eNKDnDlvjGfbVyzskBQMo1fKCS0GzkNbaIvHTlsFmarsEtP8uRieAy+K
+   +mptbK9SdT7ayiwcCfCI9MK/hxD1tUD5jAPlD6gs2sLus+sDdhO+5OGhf
+   g==;
+X-CSE-ConnectionGUID: 78cmM3JyTte1z+ahX+cECg==
+X-CSE-MsgGUID: XtPQZG5VTw2PYc1X/7+bBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46333922"
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="46333922"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:42:20 -0700
+X-CSE-ConnectionGUID: HnqHzjShTlKUyNcLOiNO1g==
+X-CSE-MsgGUID: mBmnoFvZTgaMt8H91teEdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
+   d="scan'208";a="129827887"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:42:16 -0700
+Date: Tue, 15 Apr 2025 10:41:58 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Henry Martin <bsdhenrymartin@gmail.com>
+Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+	netdev@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	amirtz@nvidia.com, ayal@nvidia.com, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] net/mlx5: Fix null-ptr-deref in
+ mlx5_create_{inner_,}ttc_table()
+Message-ID: <Z/4b1hUpp6FMjfR9@mev-dev.igk.intel.com>
+References: <20250411131431.46537-1-bsdhenrymartin@gmail.com>
+ <20250411131431.46537-2-bsdhenrymartin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACXOTYgHP5nYXz5CA--.18019S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr4kuFWkAFWrWF4Dtr4fXwb_yoW8AF1fpr
-	4xXayqyFy8Xr1Sgan3trZxG3W5K3WkJayvkay29wn7ur4kCw10gr4rKFy09r1kCrWxA347
-	ZFWUtF1DXr17GFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	W0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfU0_MaDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgNA2f95Gzj0wAAso
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411131431.46537-2-bsdhenrymartin@gmail.com>
 
-In brcmf_usb_dl_cmd(), the error logging is not enough to describe
-the error state. And some caller of the brcmf_usb_dl_cmd() does not
-haddel its error. An error log in brcmf_usb_dl_cmd is needed to
-prevent silent failure.
+On Fri, Apr 11, 2025 at 09:14:31PM +0800, Henry Martin wrote:
+> Add NULL check for mlx5_get_flow_namespace() returns in
+> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
+> NULL pointer dereference.
+> 
+> Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> V3 -> V4: Fix potential memory leak.
+> V2 -> V3: No functional changes, just gathering the patches in a series.
+> V1 -> V2: Add a empty line after the return statement.
+> 
+>  drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> index eb3bd9c7f66e..077fe908bf86 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+> @@ -651,10 +651,16 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+>  			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, inner_l4_type);
+>  		break;
+>  	default:
+> +		kvfree(ttc);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns) {
+> +		kvfree(ttc);
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +	}
+> +
+>  	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>  			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+>  
+> @@ -724,10 +730,16 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
+>  			MLX5_CAP_NIC_RX_FT_FIELD_SUPPORT_2(dev, outer_l4_type);
+>  		break;
+>  	default:
+> +		kvfree(ttc);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+> +	if (!ns){
+> +		kvfree(ttc);
+> +		return ERR_PTR(-EOPNOTSUPP);
+> +	}
+> +
+>  	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>  			       &ttc_groups[TTC_GROUPS_DEFAULT];
 
-Add error handling in brcmf_usb_dl_cmd() to log the command id and
-error code in the brcmf_usb_dl_cmd() fails. In this way, every
-invocation of the function logs a message upon failure.
+Thanks for addressing leak
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v3: Change patch name and comment. Move error log into brcmf_usb_dl_cmd().
-v2: Remove redundant bailing out code.
-
- .../wireless/broadcom/brcm80211/brcmfmac/usb.c   | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-index d06c724f63d9..a11a6d9f3c2b 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -744,12 +744,16 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- 	char *tmpbuf;
- 	u16 size;
- 
--	if ((!devinfo) || (devinfo->ctl_urb == NULL))
--		return -EINVAL;
-+	if (!devinfo || !devinfo->ctl_urb) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 
- 	tmpbuf = kmalloc(buflen, GFP_ATOMIC);
--	if (!tmpbuf)
--		return -ENOMEM;
-+	if (!tmpbuf) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
- 
- 	size = buflen;
- 	devinfo->ctl_urb->transfer_buffer_length = size;
-@@ -783,6 +787,10 @@ static int brcmf_usb_dl_cmd(struct brcmf_usbdev_info *devinfo, u8 cmd,
- finalize:
- 	kfree(tmpbuf);
- 	return ret;
-+
-+err:
-+	brcmf_err("dl cmd %u failed: err=%d\n", cmd, ret);
-+	return ret;
- }
- 
- static bool
--- 
-2.42.0.windows.2
-
+>  
+> -- 
+> 2.34.1
