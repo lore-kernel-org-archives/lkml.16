@@ -1,97 +1,96 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9AB27F726
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499131DE4C3
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744755345; cv=none; b=DMun2B0kIB8YJCdcfCunhO0KU+STwiaRwK+DQ1bO20YTrMZ80JC5EashwEIsgxpLMLV2tckMy/Q/2jgJFrn3B4YG7/N+gmOE+4wA0BWZ+zv3f2k1zOUKQtySuIpGXVy0tNocFcxb6yFIG4Bc/NyiWkbMWCPi0lpWP+v1SA0B1z8=
+	t=1744755444; cv=none; b=Ry/vU2QZ+MAgwnj5k6t0FLN/cv8wMcSfWQwWwE441hn5VLXdn4+GmzDtJiirS8h+9UYnO2zTUrfapHi/cCqA0+LDg9y0R2KbynIiVffvixrsCQkl6F3IW7fPsG6ElXm3GO6OVdXYJNdyNHYDwr3tZpHkX/Zpo5NfRKbc3mNOK8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744755345; c=relaxed/simple;
-	bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z//ZEDlOJueX9yBxKyqXcyoeyWAfi4N4baR6KHK+k5ea3p0AaZ5fzUI/pfwFJo2L/er3gsF9guO7JIOWAFVjHOeYYwtJ8xXCIHc5adq38oAycbTIaSlajs9T2CD8boBquBLC7v3lVqYXBEwVMt9HsF7pWoSuknSTYBdcW6+lBhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xgJo06PG; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744755444; c=relaxed/simple;
+	bh=of5v57glO70v4geqyCkOK6IF3XI+eNn/Yya+oMglVBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NieKlCr6nk8vDvCnuqMn/CQOzWXaog498SY8Ms3N8PZk5YZL5l6AnHYs005KmL/PRPctVe+fCBFv9G0ezElOUhND/h2yL79+qjmhXbHruZxyF3DUUfVZw1uxgBGK/p1eKu6IfM9IVGOdm13VuGGUu+8nuM0rfgGHzrfibPrcPWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Ge3ejjmT; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xgJo06PG"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso50350141fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744755341; x=1745360141; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-        b=xgJo06PGDjE/C/mqIWjOtCx+0tQ4IRb+or3O9QwH22qaijmjDXXgIC+KJLlZRXFUTV
-         lIRVucqzW0Cdj4mB8TpzbuWFH7NFlOuf8czjP9eTEUKRIqdfYOItvy8N02+wlzXiw+f3
-         Lzqpx+0Sz6A6GfVcnWcAK3hlAWh5IQNnA9sFbkCqTkqpi2y/eBs9p3lLjlwf9d7dsFKm
-         TH5v2wnS3qbIlHqTAE5c8JEOySBTjuzL0TqfzJ0DJ4gX4PIrs6EROu0+X59Ewl0tr2CY
-         WMwnFWHcNGhgAvfl0MLUvqriC80GW8TRApplSAHMMoux5wSMY2X6Q/4or2NOXe3nsP92
-         J3vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744755341; x=1745360141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3IDLTt/ybfWS/Yh/QoGmWJI4cRQW9Qqw72xuwSQQoz4=;
-        b=k/K7x1j6zkjOt8XIvdXds11hBo8LNeAWz5RPa7+UyNkyL7d4b8y1hZq69Z/YivaEkY
-         p/8BO9ngWutsgNqOyPz6++FHmhgbhrwyJoSDmOi10X34n5RR9IYfFpS47svAOi1CRn35
-         PbTFFheRV822s8SZyfd9/2u+BbDOuXiwugv7sh2agPsUTNd0awQYj1CE/V7NSwDkC5fS
-         /o7PwI+K3E2RHSSGWcivCIm6u/jpM7qgRkIayc9JiSHjPD401zSpqvJWiVzOJHf4rr8G
-         URz7GLsA04Pp324pPtcX/W8WSMtWrAsHYyTWSrq29wibBtJico/q3WUJ1z2w8zHhQVRr
-         nuTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUeGInzjentdn8nBNrD+2LC++F72Y0SLYYxENudQ0N8NlTupEQTq/WfcuwcBMLOM+ILklbYzjv7Y5YZ6j8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLLOtYFRoHDMWl0C0U9ScxNpkTC/xXqfCEfRcHX1HTLfbJjspn
-	rOoLG+AnuYF5+hPSGIP+5gtlOhSXkBNjE8Ze9c4di8MjBHWkhlewJj/e3syIIEum8JGUkEjA891
-	D+fc0GhfSMrqV/9As1/wO9Ry2eqI5NiCYIUA0Ng==
-X-Gm-Gg: ASbGnct7zyUYBqonWQ0IYViXUhwNFUFCOsyLARAYDJWjC1o9QW5Dn6ro+t+3KGkNus6
-	EzS0pcVhJBMtd9NTQmGc0jn3RszncNVR4RVB6fwKOQlVJMTGdWbFJ0J+NYEmlB2pNA5+/PcV9P1
-	NTF6lPwCxxDM0WDqsNxKhSGw==
-X-Google-Smtp-Source: AGHT+IGz291D+ba2B23NSZhprn8muxlxhfCK8P3qwCVwnjg64DejVDMET1qWa0V8mNtq0S/w6O4IvzOXyFabUdyweWA=
-X-Received: by 2002:a2e:bcce:0:b0:30b:bce7:80da with SMTP id
- 38308e7fff4ca-3107c2a5e07mr1935241fa.9.1744755341129; Tue, 15 Apr 2025
- 15:15:41 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ge3ejjmT"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 14F6B40E0200;
+	Tue, 15 Apr 2025 22:17:20 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id UTLeQtGprgwl; Tue, 15 Apr 2025 22:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744755436; bh=fU/gwMrSl7SyuKsX9jLjCnOcxSKA9Sp11Rp1Ryc665w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ge3ejjmTcNocFTIyepBLteHsu689NqpNGlADTMU6sQKtzEQA4lhY5mtYiLlo1Fg+f
+	 u3PEKt3gpX0UpdkQzKWfC/l+EijNwaJZKMfWIrn0Mb41TZ+gSBEUEM7h1BQZmU/Qnc
+	 3AJvmlzUuY9UkGyUGaQYUoaJoBmgQzkjX4KCMESizxQsBwgp96sdlS+l7T7nL5+MRH
+	 M1BfojTioA8mcilXyiicwjhamYiQ1dwljHOraYwwjXjLFt6KSh/mX6j6i092jBivYv
+	 1slN43XveLBgzU7rRDV/b8CZow0AZyyJhtfzlZS5meSS0je+r9KLL7Y2nEsxRpeoRn
+	 c5S886AG11sBD3P/xxFMSyuEKAeRDZv+Ukbc2WcOGf9mJEvOcZ7VWtQ6qnc9Wc6oAA
+	 OOtTcC2em6tZZqdlkaJ1qJdJWgoZSxrRbKpsE4uL1qTJlX73RBzpS+LNQLjc2fOqF9
+	 t2ta8m85oacDXZJNeob+DLvCsSusWJWlFaF5wnOHrYrToRtsyiqaC5ehz4RV+ov4XN
+	 s/CHNrjGOMEI3OBjjvFxKpLPxKpBV8RboEvuIclS1LHOKFp2mG8MswXxHhYxBEyHel
+	 VZbCxuxgHqcVacwlrlkJxE5xqsMxTVF1x6thC8tWeXhxyuZr3a7kWLDj9MZ1Vt2zTO
+	 rn4opNpRqHts/DKTtbmyhFsI=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F1CFF40E0196;
+	Tue, 15 Apr 2025 22:17:07 +0000 (UTC)
+Date: Wed, 16 Apr 2025 00:17:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors
+ during kunit run
+Message-ID: <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
+ <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+ <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+ <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
+ <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com> <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
-In-Reply-To: <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 00:15:30 +0200
-X-Gm-Features: ATxdqUHsUTdiuzHDBft1cRFTLonjrdMquqGFbjXe9OBWsOq1Lj_ycSHfvYfu6WU
-Message-ID: <CACRpkdbN15ZTeeN2Gj24RC8cB=s8ZqeyOtz9fkPSS1fTgwRKhA@mail.gmail.com>
-Subject: Re: [PATCH v6 08/12] gpio: regmap: Allow to provide init_valid_mask callback
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
-	=?UTF-8?Q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
 
-On Wed, Apr 9, 2025 at 4:56=E2=80=AFPM Mathieu Dubois-Briand
-<mathieu.dubois-briand@bootlin.com> wrote:
+On Tue, Apr 15, 2025 at 01:06:49PM -0600, Shuah Khan wrote:
+> Does your arch/x86/realmode/rm/pasyms.h has reference to sev_es_trampoline_start?
+> 
+> The one in my tree has it.
+> 
+> arch/x86/realmode/rm/pasyms.h:pa_sev_es_trampoline_start = sev_es_trampoline_start
 
-> Allows to populate the gpio_regmap_config structure with
-> init_valid_mask() callback to set on the final gpio_chip structure.
->
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> Reviewed-by: Michael Walle <mwalle@kernel.org>
 
-Makes perfect sense!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+# ./tools/testing/kunit/kunit.py run --arch x86_64
+...
 
-Yours,
-Linus Walleij
+[00:15:36] Elapsed time: 58.840s total, 2.096s configuring, 53.170s building, 3.487s running
+
+# cat arch/x86/realmode/rm/pasyms.h
+cat: arch/x86/realmode/rm/pasyms.h: No such file or directory
+
+Could explain why I don't see the issue...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
