@@ -1,86 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F5F190068
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0DF1F55F8;
+	Tue, 15 Apr 2025 06:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744699628; cv=none; b=PmqTTViYp8mO6oznjGsU+kwhtvAnI04P2iDPwf5sCjE/ekUlNYrVALrujWaaJ5YwiwGkImpXK7VSWyP2KradmvFGU9JscAVOZvVw8+ydOVOmrC7AgWamFvssOJvBpmn8auEi3b5mUFQUmi1gliYjQff2Vy4Llfegt1mcS4nmuYQ=
+	t=1744699792; cv=none; b=aC0nypW7W/bgDKgQkefAF2o+WaD/vJRRDTUzbyon6YtEli7fTL4VUSeVEHUXwvAVAdyxKL8yyr5cWLwHn4+NJ2xf1hm0MgtCIhHynmdYOhX2K9r2gi2DaMK9k4JpVoDqdTzR554SCJm+EMcksQhhU9tqQQrYdrUAdhkpGtx737Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744699628; c=relaxed/simple;
-	bh=6tTR64EQPvbi2DJSbe3CfVvBjbA8At40asFOpUjhmt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rEqrCKlOfj2VOVShME8WMGY54PKrVhFCtHxpF/onb+01Ixcs9GkdcU2GBcNFnGaDYq4xcN6DFGQ4H8qYBwhLhTNdF5xfjGzBQVOBDNCQ3OYEC5cAZimTDId5a7eT3RBFZyNkI8dOwoTy9Ua3RlyF9P9aqWT6SUFR6TLcgUSdSPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLHcPJfn; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744699792; c=relaxed/simple;
+	bh=kJzx0/ptwNomLA7kasvYM1WLB6lv6Uu5JbFGyyL9hDI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PvkB8SU9S7U7VeqgDCbT7c1aQ38QSm3lGqk6ccSMMG8sfyIfAF9M7p/SWeTWRRaAE/Ilp35sq0Ngo3ufH5z7/lPh45O+fnJskFn9FO5nUbKB19zanewpnATRIFR5ZYuVa5Y9qFh8btVpLTQYt+zwEIP0ZfHL3Z1+McFMs3dFEcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fA0XE7bl; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLHcPJfn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744699626; x=1776235626;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=6tTR64EQPvbi2DJSbe3CfVvBjbA8At40asFOpUjhmt8=;
-  b=bLHcPJfnYEnwoitc32Z6pD0b9Y/fVlRbRKM/I99tYUImkdHax2WLrhGv
-   lPeXf3xSYij0pUvpPR2oMMebYVJq283AyYDTyZOGPsbrY52r151s91k9p
-   JxRgAJ5minPV0IQdhVIIcvo3e2LFcZ0bU/eikWk8LhAOOgH1JO5DoRaE0
-   N6D+8B1Oru+UaeB+0WVdW5Eqom1EJiAHTTqzkgrl+jXV5HYRYGx6qEXTb
-   ppzwA1wHNQaCUwe4Geo/tHsf/N/lD4Hfe5BGz4mIof8FSs9O9ncmaIidp
-   PVrmkGh/T0MdwP7HLqhAPAYgeM5ZAmLk+gzi5q7jPTu8ynBs4BWKX9oZe
-   A==;
-X-CSE-ConnectionGUID: p9fnp7MISFOodLz/ciQ1Sg==
-X-CSE-MsgGUID: uN8kA8joSO+/qMOTFiPTFg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="56370031"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="56370031"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 23:47:06 -0700
-X-CSE-ConnectionGUID: nKZzEvZVRXi+H5mtiLr9Dg==
-X-CSE-MsgGUID: hlQckR5uT2OvdD8USO7m3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130914300"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 14 Apr 2025 23:47:04 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u4a4U-000FIm-2X;
-	Tue, 15 Apr 2025 06:47:02 +0000
-Date: Tue, 15 Apr 2025 14:46:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Mike Rapoport (IBM)" <rppt@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: vmlinux.o: warning: objtool: set_ftrace_ops_ro+0x13e: relocation to
- !ENDBR: __cfi_machine_kexec_prepare+0x4
-Message-ID: <202504151432.cBR45Uyk-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fA0XE7bl"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b09c090c97eso962461a12.1;
+        Mon, 14 Apr 2025 23:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744699790; x=1745304590; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kJzx0/ptwNomLA7kasvYM1WLB6lv6Uu5JbFGyyL9hDI=;
+        b=fA0XE7blk31XHkji0RZuXKjmcbTEInPPzk3BZlY/qk8vPdy6mJnPymyhR2TIbMEO+C
+         kn1seVTszJWXHSX/ID4tEF+s6yLr14ATeFxVExPFtdx0Bu/hn4aPHcm+J5jn5NDVpgI4
+         crfRmhpdz6MSoC+u5RrWuZTLlEIcEOnhbQJY8AcPFmf817PyqLcbq591BBgaMRYY2tuw
+         oXVsOx3cG5EKnqom+g65L2hj2CWtuUgDW+PiUbKT9+aUgHa9wMz6sKHucn0qxifvQc+h
+         znEBLY59Gd6ibyGaZm0M8iLOOgwTN4zXsc4k1xe+T/8/f/JISZ1/b/uELZk/jdJDscNr
+         KoQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744699790; x=1745304590;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kJzx0/ptwNomLA7kasvYM1WLB6lv6Uu5JbFGyyL9hDI=;
+        b=bX4ikwSuemZqA1FCDvvLUr0Y8cfhNkyh0XN7ErWgJewfZGpTINWCGyPN4O/ILbDMph
+         GXNlovM50eTIHISyOrAZr2ep/E50XzprKtZXIUdstPz5VgrfNeLLjY1rg3S2IFxDYgHo
+         ZhlK6xBkgoOc2PUFBLfdjwN+UbGV5is/ZCLi9EZPKCePPletfzYXvSD0qS1rCIKoW3ln
+         kZpA/q629Rx5a5C5NQZ/DBjZxXHq+hn2E+M7tnlLRyPpMzS2aY+t6TrKRRXco3mF09Ic
+         UBzIst9Yws20oPEq52u06wlMmvtd6NVgsypN9m59p/Yycqr+MFJyAgidoKBXnGe/2dmP
+         ntvw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/3lpIqr74UKO8qinfeacV8fFOVKsT4ZdW8q6KjZBksLj7semGAe4j66/ya2N2F2wEBZXwqlNRkOFdf2J2@vger.kernel.org, AJvYcCUKlhTvRJtsLm0fOnveYIyv7FQljbvvsBpWUz5mspXkwDJFmPmmpo5R+ae98kuc/E2q9QI64RB4N/1+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrB/ZswS5AQEEiE7rxXFuBgmkjqaJkbflQfKgQXBU3XuzLklnV
+	K2vY9Pi3+HfHYg2OIzIUAhgUehUn1vqMSXK5ibkgcomwXUuJHp+sDwIPHBB9MYqSdoudhCQ1b+S
+	UbTrt4g4Gha415TKauk5YCoL8EzE=
+X-Gm-Gg: ASbGncsfADCgn+HUpJw+LAbfv+Kg42tsrw8Zv0XUXyERFBDgJ2pndcmZY4tNnCwgUTK
+	HCxqABUOq7ACM+7p3JykrwnaWbJETyJahGkRvUpYi/dLimBwvpG5/t0d/MmT2BPGbyp8j6ieP4B
+	uGa0Y4568rZS+xGT+ufg==
+X-Google-Smtp-Source: AGHT+IFMZUtkQbu7mm7ZLs+kY0QKdEKtmThlD5QKRWrM4g1DvYwjmO6k9i/uFm77B2cDKAYrjrYbbSSoguq6moDT3Ig=
+X-Received: by 2002:a17:90b:3850:b0:2ea:a9ac:eee1 with SMTP id
+ 98e67ed59e1d1-3082377bff7mr24287491a91.10.1744699790057; Mon, 14 Apr 2025
+ 23:49:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250414123827.428339-1-ivitro@gmail.com> <20250414123827.428339-2-ivitro@gmail.com>
+In-Reply-To: <20250414123827.428339-2-ivitro@gmail.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Tue, 15 Apr 2025 09:51:34 +0300
+X-Gm-Features: ATxdqUF2mlCy5wLvRgtr9F6qqRWxDpa7csK2QzF8vZDYH555TrufO2MOn5eZ-98
+Message-ID: <CAEnQRZAb9DBVQTZZ-rDkn3aBHjQSxKHe+Ru8d88wr_oNfk6ebQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: fsl: add Toradex SMARC iMX8MP
+ SoM and carrier
+To: Vitor Soares <ivitro@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Vitor Soares <vitor.soares@toradex.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   834a4a689699090a406d1662b03affa8b155d025
-commit: 7582b7be16d0ba90e3dbd9575a730cabd9eb852a kprobes: remove dependency on CONFIG_MODULES
-date:   11 months ago
-config: x86_64-buildonly-randconfig-005-20250415 (https://download.01.org/0day-ci/archive/20250415/202504151432.cBR45Uyk-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250415/202504151432.cBR45Uyk-lkp@intel.com/reproduce)
+On Mon, Apr 14, 2025 at 3:39=E2=80=AFPM Vitor Soares <ivitro@gmail.com> wro=
+te:
+>
+> From: Vitor Soares <vitor.soares@toradex.com>
+>
+> Add DT compatible strings for Toradex SMARC iMX8MP SoM and
+> Toradex SMARC Development carrier board.
+>
+> Link: https://www.toradex.com/computer-on-modules/smarc-arm-family/nxp-im=
+x-8m-plus
+> Link: https://www.toradex.com/products/carrier-board/smarc-development-bo=
+ard-kit
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Vitor Soares <vitor.soares@toradex.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504151432.cBR45Uyk-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   vmlinux.o: warning: objtool: ___bpf_prog_run+0x1be: sibling call from callable instruction with modified stack frame
->> vmlinux.o: warning: objtool: set_ftrace_ops_ro+0x13e: relocation to !ENDBR: __cfi_machine_kexec_prepare+0x4
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
