@@ -1,112 +1,140 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C312957A1;
-	Tue, 15 Apr 2025 11:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A148127991E;
+	Tue, 15 Apr 2025 11:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715693; cv=none; b=P7R52OcTC5QXaidjMg/dEcePQyocbzG9+XA7RiZQt3XVgAKkOnG5uh66qXMkZ88RrkwAtu/5sh41/Zro3u76jjK8qW0dXwMhWpe9TiJfkhVm0LkOe8uuUNmNPwznEFbPeWNR8vRq/IS74Nd7ih1+73IfHUZBXnlO7X0FpL2k2hY=
+	t=1744715757; cv=none; b=hq/NSA08lwmYpzTk1rhYUmo5zIh4r9f3Uf+QcmOeXkqfsdjjzXWG+2/epylSgMo5SAofKjzbDDKQ2/vcQiUag7FSR0M7gemO3/AF5Dj8DuV2z+b2MgkycgBHpw+3uIMSaRpvooN4pXUjVGXSmabpeET3EWlBWEf5yCV9k5w3EPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715693; c=relaxed/simple;
-	bh=eNIcSBZQVNw/KKf1Vw49N8gKD+OmysqrdbVpiImP62I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L4WVhrc9+GEGxEoAJPP789KpbjR+Z7hu5EmQtvh8E6uCef3IY1yuDWO1GXriTpUqkBAHISOJiV29UFx1FWEVutsMzJPkYue+7xbIRzyu87UBmMU/N720yM1xmUEpPY1VvSqZhUSvEI1LAdlH43fB2KgDdCVOAJshBHTU7Z5Ij0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FQabwCd0; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744715757; c=relaxed/simple;
+	bh=ESdxRsI5H2fH1qLuof0hi0dgsc52nyAkcdU9rpUfqUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HyOIbHtrgWHimkF+/U6ogKNNryLldl/+dopt7c+ZMkzCbVaR3EsUgiLteUEWiFNypxBfstNbxcjzkfK8oS4WAe2mpsJAvgXx4qEvQFLtd4lQoop3j1s3bzRnW2LDcFjYxveaYEbtsXqnbDs2XO0KdickqZUKTH8sXUalopi2GyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D7ztH0mK; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FQabwCd0"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBEe9d2458138
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 15 Apr 2025 06:14:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744715680;
-	bh=XPMxJ40frsXOuFqUO5rZ6SQtIL9Nh2U8XEG0aMai8MU=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=FQabwCd0UrEoZias5D+lULwTGZqtPlD1AyoMu1DD6O6UEBx7Ml76gZu/q2jA1MaSA
-	 4nSFOKTzZzuJ048e89cjDzGXzpb1rK7KxAg3OziIEoPMMM9RTm5huzESBGRuLl0Q1G
-	 KhDiaYI9DHpS/mJquDd/Pew9SNef7bc/OEfLckSg=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53FBEePX001003
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 15 Apr 2025 06:14:40 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 15
- Apr 2025 06:14:40 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 15 Apr 2025 06:14:40 -0500
-Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53FBDqIC051431;
-	Tue, 15 Apr 2025 06:14:36 -0500
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-        <stable@vger.kernel.org>, Neha Malcom Francis <n-francis@ti.com>
-Subject: [PATCH v3 7/7] arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
-Date: Tue, 15 Apr 2025 16:43:28 +0530
-Message-ID: <20250415111328.3847502-8-y-abhilashchandra@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415111328.3847502-1-y-abhilashchandra@ti.com>
-References: <20250415111328.3847502-1-y-abhilashchandra@ti.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D7ztH0mK"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EF13243A01;
+	Tue, 15 Apr 2025 11:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744715751;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XFB15gTIJBDpeGlS/cv2ReAhXeiDDHLVaR68JGGc0xo=;
+	b=D7ztH0mKUYnIvtU2sA00xwI+e+PY+KeBEYH0fBLkwBzMuDOYcFTMJwc3egCuVEFwdZk3BK
+	N+54vsjLUHrm/IZ9xgAqtLsVE/oakR1DkGzTb+9Z/CQD2TmPR/55gVtJSWJvU3pfHzqFbx
+	zrbyzzPN45ilYCymFE85YGem/1O/v+9x8eMd0yGGUR2rQ+0XUSz223J6nJEf9kEccUi4R3
+	A2fA7+9G6nFBCimb11vj6r61kDBrQ1T/GnRIFNcCzrR4cQusfGBe8FouCuP55R7osd0zzR
+	VYM8wJskqoCcBxRQpG7hBIMB1+I5EvXLBDrJdJAcX26yZlRDYvU4Grj6d2snqA==
+Date: Tue, 15 Apr 2025 13:15:48 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe
+ Perches <joe@perches.com>, Jonathan Corbet <corbet@lwn.net>, Nishanth Menon
+ <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli
+ <s-vadapalli@ti.com>, Roger Quadros <rogerq@kernel.org>, Tero Kristo
+ <kristo@kernel.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux@ew.tq-group.com, Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+Message-ID: <20250415131548.0ae3b66f@fedora.home>
+In-Reply-To: <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	<16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeffeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfgleelvddtffdvkeduieejudeuvedvveffheduhedvueduteehkeehiefgteehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedviedprhgtphhtthhopehmrghtthhhihgrshdrshgthhhifhhfvghrsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvhesl
+ hhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The OV5640 device tree overlay incorrectly defined an I2C switch instead
-of an I2C mux. According to the DT bindings, the correct terminology and
-node definition should use "i2c-mux" instead of "i2c-switch". Hence,
-update the same to avoid dtbs_check warnings.
+On Tue, 15 Apr 2025 12:18:04 +0200
+Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
 
-Fixes: 635ed9715194 ("arm64: dts: ti: k3-am62x: Add overlays for OV5640")
-Cc: stable@vger.kernel.org
-Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-Reviewed-by: Neha Malcom Francis <n-francis@ti.com>
-Reviewed-by: Jai Luthra <jai.luthra@linux.dev>
----
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso      | 2 +-
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> Historially, the RGMII PHY modes specified in Device Trees have been
+  ^^^^^^^^^^^
+  Historically
+> used inconsistently, often referring to the usage of delays on the PHY
+> side rather than describing the board; many drivers still implement this
+> incorrectly.
+> 
+> Require a comment in Devices Trees using these modes (usually mentioning
+> that the delay is relalized on the PCB), so we can avoid adding more
+> incorrect uses (or will at least notice which drivers still need to be
+> fixed).
+> 
+> Suggested-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+>  Documentation/dev-tools/checkpatch.rst |  9 +++++++++
+>  scripts/checkpatch.pl                  | 11 +++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/dev-tools/checkpatch.rst b/Documentation/dev-tools/checkpatch.rst
+> index abb3ff6820766..8692d3bc155f1 100644
+> --- a/Documentation/dev-tools/checkpatch.rst
+> +++ b/Documentation/dev-tools/checkpatch.rst
+> @@ -513,6 +513,15 @@ Comments
+>  
+>      See: https://lore.kernel.org/lkml/20131006222342.GT19510@leaf/
+>  
+> +  **UNCOMMENTED_RGMII_MODE**
+> +    Historially, the RGMII PHY modes specified in Device Trees have been
+       ^^^^^^^^^^^
+      	 Historically
+> +    used inconsistently, often referring to the usage of delays on the PHY
+> +    side rather than describing the board.
+> +
+> +    PHY modes "rgmii", "rgmii-rxid" and "rgmii-txid" modes require the clock
+> +    signal to be delayed on the PCB; this unusual configuration should be
+> +    described in a comment. If they are not (meaning that the delay is realized
+> +    internally in the MAC or PHY), "rgmii-id" is the correct PHY mode.
+>  
+>  Commit message
+>  --------------
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 784912f570e9d..57fcbd4b63ede 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3735,6 +3735,17 @@ sub process {
+>  			}
+>  		}
+>  
+> +# Check for RGMII phy-mode with delay on PCB
+> +		if ($realfile =~ /\.dtsi?$/ && $line =~ /^\+\s*(phy-mode|phy-connection-type)\s*=\s*"/ &&
+> +		    !ctx_has_comment($first_line, $linenr)) {
+> +			my $prop = $1;
+> +			my $mode = get_quoted_string($line, $rawline);
+> +			if ($mode =~ /^"rgmii(?:|-rxid|-txid)"$/) {
+> +				CHK("UNCOMMENTED_RGMII_MODE",
+> +				    "$prop $mode without comment -- delays on the PCB should be described, otherwise use \"rgmii-id\"\n" . $herecurr);
+> +			}
+> +		}
+> +
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-index ccc7f5e43184..7fc7c95f5cd5 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-@@ -22,7 +22,7 @@ &main_i2c2 {
- 	#size-cells = <0>;
- 	status = "okay";
- 
--	i2c-switch@71 {
-+	i2c-mux@71 {
- 		compatible = "nxp,pca9543";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-index 4eaf9d757dd0..b6bfdfbbdd98 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-@@ -22,7 +22,7 @@ &main_i2c2 {
- 	#size-cells = <0>;
- 	status = "okay";
- 
--	i2c-switch@71 {
-+	i2c-mux@71 {
- 		compatible = "nxp,pca9543";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.34.1
+My Perl-fu isn't good enough for me to review this properly... I think
+though that Andrew mentioned something along the lines of 'Comment
+should include PCB somewhere', but I don't know if this is easily
+doable with checkpatch though.
 
+Maxime
