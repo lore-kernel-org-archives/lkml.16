@@ -1,151 +1,203 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E284C1EEA59;
-	Tue, 15 Apr 2025 15:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832011EEA59
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744732363; cv=none; b=c2JNZd/OmHo0HhJMwGUQ4WPI8unGjsV7ImFjMjfRStfSJMl34Pi1PWf9HrN8KsF25qEey/6dRfdwm8Pn/CvO9Nh8eSpD53lqSP0OtnwLzCuCCl2cpqd+iM5akzFfI8sz3F4kpT6HSHqvXYlI/aXLo41PcNC+vq0Q2wA8UdxB2go=
+	t=1744732382; cv=none; b=VwkEO42pgspcUq3SOIlbaSsJk4LeVK6mze2wd7EnKWBTv/LMjcMQt+m4NxlMGAvM9c/oDwip+6FAUcsKtelVLkUDx8I6DM0QDV8HPOc+N6qnuW/6/Yl9+F/cpFmrPizUKrx9axt4vRZFEhL+S7K+obCw20E3aktQHgWJ1GsDwN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744732363; c=relaxed/simple;
-	bh=xGINZiurunNqT7Sjhf4GRxno/zL+xXdahm7qTRDteUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8XeyktgaAS0GsFO6yhH3SoAh5mqMkUzBBra55EyMtEAaFMgjPEzvjugvWsrrAHJQtT2NXakqMbxtQUZHgCqlR7j1TmoTYYP0qF25wD26Ch14WwkDHGh22/uf5j08gJ8phdgq3s4Zd7nn2UcNopQZCdRwdy9rlBpYlnmPftWyfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZlsxAtck; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744732382; c=relaxed/simple;
+	bh=1s5VUpfsnLrgZQzcnItw9zwtWIcSEbXxWfNt96WJWRU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q3/d0JlanoUNFZhqv/Q7821gLjTHUA+fCFr1+cw96kje2PLGiXEb39oODQ9AHVrBNl/80bG4dGXjFE0s+8FTtkuyAjL0VewoKX1yKZwreTbXetgwnHYcsxiZAiSM7bEj9IyS0Wtb3kvC4rJM2O+lCwvSorjp4VJQuPia0DEdp9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=caRmoM1X; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZlsxAtck"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC9B5725;
-	Tue, 15 Apr 2025 17:50:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744732238;
-	bh=xGINZiurunNqT7Sjhf4GRxno/zL+xXdahm7qTRDteUU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZlsxAtckn2HJvPc+WvLK7jai4kCXy66sIrWFMzm0ZD0J1IHu3LGnY9gTB9/URPu9s
-	 ZDw2Tugemhs1jtEigETtiZCjgFTzsBEFHA4es126qGhZIReagbyIKcZnWHbvtJQXUT
-	 BjzwHE+SrBs4Ynx0a4KOcc59xgMSYZig9Cl2t5d0=
-Date: Tue, 15 Apr 2025 18:52:39 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
-Cc: Jai Luthra <jai.luthra@ideasonboard.com>,
-	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
-	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
-Message-ID: <20250415155239.GH9439@pendragon.ideasonboard.com>
-References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
- <ZxYiCv6SpLq9uh08@dragon>
- <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
- <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
- <20250415154724.GG9439@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caRmoM1X"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so47048075e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744732378; x=1745337178; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4JLTNvpaptplrjpn5KAL5k+FFz54c8FMnV1vnh7J1TI=;
+        b=caRmoM1XbBPpexImhybaQTxNStkQnwIHa4lpr6DMrjtQUBTEBE2EoWlAnioQG5KUrX
+         t4LZC2JdvmhEGS2oGWtS9iZQ5Jxg7j1w91nz6+xd5ovYOyOIbXPLJW74UdiH0CfPJyv1
+         PLUOrHlRo9dY7oWWzeQwjNbSXLEh7TiXhb22BXlWWIZzPR8L1aVHdY0reTty6DnyrBCj
+         vWfSfq8YfrSliGd0sfvy2U+yH/yNHRVy/SdeZ/8vfaNKhjImSWRFQ5izEtLBUBkByR9L
+         JIkr7V7AS7Ig/lzZ4Yyo9vKIVBPkmcmp+H0j1pj4wNd0t7dalDwzjIiYzbN+UikJAgBA
+         SNKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744732378; x=1745337178;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4JLTNvpaptplrjpn5KAL5k+FFz54c8FMnV1vnh7J1TI=;
+        b=f83w0NR61Skx0TN8XhnOhJSu4oLm+Aqlt8kzylfXXG7/RjqJCWgVWlL0GBeEE/sIIn
+         4RoFjxj3xFmKVdQbQHZzD6PvAzsEVUGnHp/joBoBXN8ek0oJI5Mr50rd6Tc4B9svs241
+         nSdnEVUUJZ8Vno+b0EXYeU0zVcPR0bzOBEy3eF4kfXUuGRVKr+O8bnrRceEpcdcOmA2F
+         +wqGtpZVoLOseDn2XZhWMOrf3t0Rocu/2kMY8+5xg6bfdIcmV4uMzWxOLQR3IIQm99p/
+         GMJbhs+4DABfNozTSqFz2ydYKlGEBwLNo6dFcGioCl3IEUvclqWhB09xiLuLwvpp+pfp
+         VsLw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/t9V8hOhk2SGDOOBm3XqUR6Rsyu8ck5N7S3VtU979khInEV10xxCs5ErSLoncg4oTHBc5jxY397dK+uA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDzRakJXzhoWuoq18uyP84lzyDDGgjKA1sjc3AdN2cAY710zpg
+	iOxhFvdG1LQvC3/1EI/WFY/79Rq+qU7xa0zdqX9pFjCdYJT5VSbSd9YrY58mTtY=
+X-Gm-Gg: ASbGncuI6TJ8cTuNv2JHj6uoy76oWh0LOITquHIixkAaeFZxV1EAspC8TuxNMLGe1rA
+	r7KV2CyNlFriZa++V6sUkaX0D4h5xHmGuCqeeNyiXmw49CFx+I0+56sjizjtwNmerF9y4zejzor
+	uy8MSIkiTsZhzIZIpk+Ch5ZMA+/VFQyg5+x7T5JnITIrfKkOMxYHm5mVYItg1KfgVBeAyeSTZsC
+	6N2xCeC15hzHiillbRVNQtnk1KxyIVuxzfTdzMrPvVidJUbl12v7W5aXEyOceucsKIRjpVKP5PL
+	CiPV2MvfU7c3rrpYKGodF1u8DvQKeIwuj2OjYjlovO8=
+X-Google-Smtp-Source: AGHT+IEW4aMzZl2rGLN44yAGHE5w9xSC1sSpotrF9GYoahU/09L/4ARMu3yhHo2dTSnx9WvVaGY6jw==
+X-Received: by 2002:a05:600c:5107:b0:43c:fcb1:528a with SMTP id 5b1f17b1804b1-43f3a93379dmr138039845e9.6.1744732377761;
+        Tue, 15 Apr 2025 08:52:57 -0700 (PDT)
+Received: from [192.168.1.3] ([77.81.75.81])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f204c500bsm222451965e9.0.2025.04.15.08.52.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 08:52:57 -0700 (PDT)
+Message-ID: <77036114-8723-4af9-a068-1d535f4e2e81@linaro.org>
+Date: Tue, 15 Apr 2025 16:52:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250415154724.GG9439@pendragon.ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [tip:perf/core] [perf] da916e96e2:
+ BUG:KASAN:null-ptr-deref_in_put_event
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Oliver Sang <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>, Frederic Weisbecker <fweisbec@gmail.com>
+References: <202504131701.941039cd-lkp@intel.com>
+ <20250414190138.GB13096@noisy.programming.kicks-ass.net>
+ <Z/3krxHJLaWJTj4R@xsang-OptiPlex-9020>
+ <5bc5f54b-ce6a-4834-86d4-5014d44c7217@linaro.org>
+ <20250415100840.GM5600@noisy.programming.kicks-ass.net>
+ <20250415131446.GN5600@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250415131446.GN5600@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 06:47:26PM +0300, Laurent Pinchart wrote:
-> Hi Catalin,
+
+
+On 15/04/2025 2:14 pm, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 12:08:40PM +0200, Peter Zijlstra wrote:
+>> On Tue, Apr 15, 2025 at 10:14:05AM +0100, James Clark wrote:
+>>> On 15/04/2025 5:46 am, Oliver Sang wrote:
+>>
+>>>> yes, below patch fixes the issues we observed for da916e96e2. thanks
+>>>>
+>>>> Tested-by: kernel test robot <oliver.sang@intel.com>
+>>>>
+>>>
+>>> Also fixes the same issues we were seeing:
+>>>
+>>> Tested-by: James Clark <james.clark@linaro.org>
+>>
+>> Excellent, thank you both! Now I gotta go write me a Changelog :-)
 > 
-> On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
-> > Hi Jai,
-> > 
-> > This issue was already reported by Stefan. The problem is that I don't 
-> > have a Debix board to investigate.
-> > The main difference b/w WFI and cpu-pd-wait is that the first doesn't 
-> > call PSCI/TF-A. So, the issue looks to be related to some settings in 
-> > the TF-A.
+> Hmm, so while writing Changelog, I noticed something else was off. The
+> case where event->parent was set to EVENT_TOMBSTONE now didn't have a
+> put_event(parent) anymore. So that needs to be put back in as well.
 > 
-> Jai, are you using mainline U-Boot and TF-A, or a downstream version of
-> either (or both) ?
+> Frederic, afaict this should still be okay, since if we're detached,
+> then nothing will try and access event->parent in the free path.
+> 
+> Also, nothing in perf_pending_task() will try and access either
+> event->parent or event->pmu.
+> 
+> ---
+> Subject: perf: Fix event->parent life-time issue
+> From: Peter Zijlstra <peterz@infradead.org>
+> Date: Tue Apr 15 12:12:52 CEST 2025
+> 
+> Due to an oversight in merging da916e96e2de ("perf: Make
+> perf_pmu_unregister() useable") on top of 56799bc03565 ("perf: Fix
+> hang while freeing sigtrap event"), it is now possible to hit
+> put_event(EVENT_TOMBSTONE), which makes the computer sad.
+> 
+> This also means that for the event->parent == EVENT_TOMBSTONE, the
+> put_event() matching inherit_event() has gone missing.
+> 
+> Previously this was done in perf_event_release_kernel() after calling
+> perf_remove_from_context(), but with it delegated to put_event(), this
+> case is now entirely missed, leading to leaks.
+> 
+> Fixes: da916e96e2de ("perf: Make perf_pmu_unregister() useable")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>   kernel/events/core.c |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2343,6 +2343,7 @@ static void perf_child_detach(struct per
+>   	 * not being a child event. See for example unaccount_event().
+>   	 */
+>   	event->parent = EVENT_TOMBSTONE;
+> +	put_event(parent_event);
+>   }
+>   
+>   static bool is_orphaned_event(struct perf_event *event)
+> @@ -5688,7 +5689,7 @@ static void put_event(struct perf_event
+>   	_free_event(event);
+>   
+>   	/* Matches the refcount bump in inherit_event() */
+> -	if (parent)
+> +	if (parent && parent != EVENT_TOMBSTONE)
+>   		put_event(parent);
+>   }
+>   
 
-Actually, same question for Calatin :-)
+Hi Peter,
 
-I'm running mainline U-Boot 2025.01 and TF-A rel_imx_5.4.70_2.3.6 (from
-https://github.com/nxp-imx/imx-atf) and don't seem to experience the
-issue:
+Unrelated to the pointer deref issue, I'm also seeing perf stat not 
+working due to this commit. And that's both with and without this fixup:
 
-# cat /sys/devices/system/cpu/cpu*/cpuidle/state1/disable
-0
-0
-0
-0
+  -> perf stat -- true
 
-$ ping debix
-PING debix.farm.ideasonboard.com (192.168.2.230) 56(84) bytes of data.
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=1 ttl=64 time=1.03 ms
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=2 ttl=64 time=0.800 ms
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=3 ttl=64 time=0.935 ms
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=4 ttl=64 time=0.902 ms
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=5 ttl=64 time=0.738 ms
-64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=6 ttl=64 time=0.939 ms
+  Performance counter stats for 'true':
 
-> > What I don't get is why I don't see this issue neither on our IMX8MP 
-> > specific design nor on the EVK, which uses the same PHY as the Debix board.
-> >
-> > On 14/04/2025 14:07, Jai Luthra wrote:
-> > > On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
-> > >> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
-> > >>> So far, only WFI is supported on i.MX8mp platform. Add support for
-> > >>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
-> > >>> usage during runtime. This is a port from NXP downstream kernel.
-> > >>>
-> > > Since the introduction of this patch in mainline, I am facing sluggish
-> > > network performance with my Debix Model-A board with i.MX8mp SoC.
-> > >
-> > > The network latency jumps to >1s after almost every other packet:
-> > >
-> > > PING debix (10.0.42.5) 56(84) bytes of data.
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
-> > > ^C
-> > > --- debix ping statistics ---
-> > > 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
-> > > rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
-> > > darkapex at freya in ~
-> > >
-> > > If I revert the patch, or disable the deeper cpuidle state through
-> > > sysfs, the issue goes away.
-> > >
-> > > # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
-> > >
-> > > PING debix (10.0.42.5) 56(84) bytes of data.
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
-> > > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
-> > > ^C
-> > > --- debix ping statistics ---
-> > > 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
-> > > rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
-> > >
-> > >>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-> > >>
-> > >> Applied, thanks!
+      <not counted> msec task-clock 
 
--- 
-Regards,
+      <not counted>      context-switches 
 
-Laurent Pinchart
+      <not counted>      cpu-migrations 
+
+      <not counted>      page-faults 
+
+      <not counted>      armv8_cortex_a53/instructions/ 
+
+      <not counted>      armv8_cortex_a57/instructions/ 
+
+      <not counted>      armv8_cortex_a53/cycles/ 
+
+      <not counted>      armv8_cortex_a57/cycles/ 
+
+      <not counted>      armv8_cortex_a53/branches/ 
+
+      <not counted>      armv8_cortex_a53/branch-misses/ 
+
+      <not counted>      armv8_cortex_a57/branch-misses/ 
+
+
+        0.074139992 seconds time elapsed
+
+        0.000000000 seconds user
+        0.054797000 seconds sys
+
+Didn't look into it more other than bisecting it to this commit, but I 
+can dig more unless the issue is obvious. This is on Arm big.LITTLE, 
+although I didn't test it elsewhere so I'm not sure if that's relevant 
+or not.
+
+Thanks
+James
+
