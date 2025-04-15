@@ -1,61 +1,62 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE8C218AB3
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B093D2192EA
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744685221; cv=none; b=hxfNxwQ90vwYWBmZsmtLxMG86xA7YLb36pFwaIHDMw01pHUXAsQn8SrmvpHoUwVYllqItnUbVA62oH0QyHfj90r2TyRdsyhEm8d6yp0p8v3eu93WnVTugccNXywnRN880IK+4i5yq8QRn/BHJDp0RQ1il1hFg+K8m9SiLrj8bS0=
+	t=1744685228; cv=none; b=QpogfhVO/2oceNqawosJbGiqJX67EYMeAMWuEkYPEji6vXmu+yKxYMdzQ0TqNDMWpfAukSqgVyY3qZFqsY1fOh4qGj9xFSvCSqvpPwBfz5mRa87c2oUMp8RGOepnuiRFW8QEXjGUy6tM8QNFJcMX+Pt0TRL+aNBJFLncuOVM0eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744685221; c=relaxed/simple;
-	bh=8KxT6StpABCnUuNQIAeV85jX8gee7ZWYN/zcNFzGT4s=;
+	s=arc-20240116; t=1744685228; c=relaxed/simple;
+	bh=siUlYavAtRsgutfSnr0p3JN+rwISg9BNgAgZ+S/EI4c=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fLeWiZuAbZH2x7Nrxcpin5CsWPweD7kqgiTQHNvycTJSBxeqk35yysVvOHdBwDFSB+LUi+7RPUiFDDHQvn2yBgi0xCLSdijvjDJGKB1xr9EzXXqZ/7psl7J+93BUrBj0+vf37fyqPqO9pilp8XtuJN6/kbWjOJ2VnAd5Eedn/AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hA4TWiGa; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=Lq65hCykgg3tmEErQlaSVoiTh6GoCSe9jVRAV0OLczrZ284y66ifUPNDQLeS85zUi72rCASSpTfC/UQMg1tV4BOnXMVVOvOZK/l/krusyBPcUE5ipzsV11iFtszGIxC/nuSeiZoZKpDA2iRmIUQknFBRh68uIK+wOY0Iv+0EWq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Zge6eyoQ; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hA4TWiGa"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2264aefc45dso74528075ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Zge6eyoQ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso59344645ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 19:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744685219; x=1745290019; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744685226; x=1745290026; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ubou74n5eLeoB4dEz2IgWAHxjcUZtEwt6QUiSiKGpOQ=;
-        b=hA4TWiGaBdT+RW5VnjUM6tC4UrKaXvoCPUwBytpgIhn/60hJksyYg3EemIvna66WTJ
-         4oQ2MyLj1R4QC6qwP1kYEoaaIFtxDafQCqNH0qYeYf7d26FaHhm5g3FtJZCkEeHnYzUu
-         jhaiLwX0sANJm6szjo3VJkePNru5Y5H11vsAzCBrmnjKETwNr48YWjW9A3n8EJghXGX1
-         iKdJilALnEpKuIayKEAHdS4dvHPG+iMpW1zynIzZnF5ZCQoNbNmJLFJzrgxQy2OP1k8N
-         ZZv7lz3CEus9KZnw8uPutC61wd+ZcPGVh67pTvso5bQfsq69/7G6eF4ZUDIGhFiD1XBL
-         fhyA==
+        bh=obht/6Kk0NnhGpMOiil8TzYARUGhrq+7EhlNkpnMaGs=;
+        b=Zge6eyoQtTo+KWQwgZv3uVtbLgNpcW4KVrD4GgWi6glKPs3KIc5PvRSHHUYmwT0XSo
+         Y8X02l5DH0DdSgBqtrVb0Ox8zH7aUPiU7I1DrL/ZYfRBHRJv9Pi8FdUJTAEG5+V7G4uR
+         MdD4swA667z2qYYiU5jEpwHJu9xI4o+f0JBn0l9/6qF7FrtmTw8jTDLS0do14sUDf+Qj
+         DTzDsja0xDwavFmNj/ZIsvhBE+10Yp7pyHOEg7sZ0KirT3ETo5nQSoeHFjkrpIE8VmEH
+         PzBqApdV158/x5lb4qNkBMGgdu6uSqV7ZX0nDEu4Os4ykgutjbvzpzR+4hHwNDSjGx0a
+         O/EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744685219; x=1745290019;
+        d=1e100.net; s=20230601; t=1744685226; x=1745290026;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ubou74n5eLeoB4dEz2IgWAHxjcUZtEwt6QUiSiKGpOQ=;
-        b=SJZcur1OYx9/F8ZF7NWLxWIiLQezBF5xazLlpwY3y08pMOVe9+tQ0qx3G3y4YqmfLU
-         I/chue1/0WAiYzSyCMSItBP5HtIWeIym2KnrT3weZH+Jg1dTh+KazI6KZLO3/V42RC4l
-         oHg52nPrGTwXt14EOqK+QSrzMMBnUUlcip48mvz5HXvz6rTPgNNXiGEa64c1aP9eVUdY
-         T9+L4lc+STaaSLMCYRm1/8bTjxLeB5cJNKjWN/6B95UYMYqFyW1odsgiBuwvBSRApmOJ
-         WYoOyeqPovIeD5RdHXaNHqd3zBdxSuRYXINwOA+MVDS7uVpDJ7nTdahWWx8tFKe3nSgK
-         YpZA==
-X-Gm-Message-State: AOJu0YzAKog62sxPqbPUA8CjL8kl6HspJyB1aXDBr5hKTv/SFFYJdQw/
-	hUAJByjxwQqF4h1lHYpUFhxmmnY5UPrkJueZVJxgtDTmAXB6gaMrbxrWTKIOwE4=
-X-Gm-Gg: ASbGncv0fQYvQpU1R6lLX95MFciRoWvjdz70JfV2mphw9BH+47JxZp3GtGDRPyFBSEl
-	r5yf85GPziL6SP6geLHbzzUJGvkQJNiy0bxx2xMlr3w/nSoirKpkbUnaW1zJvdkiNPxroHP+Uj1
-	e+KG4Bc4UIqBpez5HGl4l7GwZpG4MLtPViPFjmtN35V33mVnaa3cIMmH7BtdzHAUINUTV4wGu4K
-	2CmWzSv865Ubh1TfAGzOJpbEfrEFSHO9t2/RBFXEDZx2oYNc7RI+xc7Tna9nEvDzo/k5ZEBUYBZ
-	nORdgrwPMrt5VH6CWZXbhS17/L+kM3mnvlmp+blPBf/Rk104C1pt/jFAXrdgPEJbcBHET2Qv
-X-Google-Smtp-Source: AGHT+IFRGP6yJdpVqApS9S/aczCeDW7cEdxeVDyn5gX3MHZ0LzmgIuZG2begu5ay7gyJ3d0hK4lbIw==
-X-Received: by 2002:a17:902:db0e:b0:224:23be:c569 with SMTP id d9443c01a7336-22bea4adf49mr221463895ad.22.1744685219616;
-        Mon, 14 Apr 2025 19:46:59 -0700 (PDT)
+        bh=obht/6Kk0NnhGpMOiil8TzYARUGhrq+7EhlNkpnMaGs=;
+        b=Gs1lUFAgvSKfWwtn8YJk0SKVVn9OLXVx8dHQVbQ5Ca3qUA7C+bHTtWRA4bbihkOdFE
+         MjJmnNI1rieoCpZqjZ8+5uJnt8xJjCBOgN/0WRRNvXm6sCViHGCtqdvxzqIBdXzcM1eO
+         7YnAGY5ZMTYqMq8Z/ozViOkt7xx7MlGCWqML1y190qfNkQKw+FmsFcWal3mO+UZ+wJ/c
+         cgDco8xe/6W93Ln1842dk7tPmBAaU/TS3gtcxyADWK0e7y438j/kZ5vbOEuzGGgCkc0S
+         NgChdZs1/WeWzORKI9lCtRsiFkwBpmF40ZriTmH8P+/6GM6wXYj6CrikfpQOa3tdxAX0
+         A1vQ==
+X-Gm-Message-State: AOJu0Yxl8CsuZCOG5eJqSAZeMF88BNLL9XlSkRN0gS7tYfYtDB0vP2Ut
+	/LMVnpke21TAR8OGT0UmQJpBGJYymZLVHl24kxpi977eHkz/0HAYJgP0pD4KWNs=
+X-Gm-Gg: ASbGncvhmDT7LMwYl8tKZdoASxsld/o5W5bvJz+cxctyC6bW9BPwIPaGl5Elp0kl/Xn
+	l5cMh/E+uhYg9pdUnSoKV2hhZUtYHM6TcbdHmv36p1HdgR5lOEe3zLUPfS/VJoWFNgJF+Ntn1yI
+	UjedFsA0L/ue/0goJfCrc5dMGdxnFHIuhytWV+cxt8zZLeXA+Z83rRZNEvpsvMleyes95pDp2ty
+	uhRM/eaE3dTKmPPXuNY8gISStRHJCre03e8M0pXApuxfsiVvlt/2NqK0GjEAiS1XFxb6hEaPt1Y
+	KY6CWFjp7uSwlk/O1XQha5vGIFqYo2XWPQbVW+CTzCKiF5xbDdQPLZ5Lb4gbXJ50lG7m/DjYPLH
+	wp47goKE=
+X-Google-Smtp-Source: AGHT+IF1G++5FxihLJJNREqKO+5yf6OFv8YN+5YM0gPXaE7ee12PkODsP2jTee4zjVH6VXKddsDutQ==
+X-Received: by 2002:a17:902:d490:b0:226:3392:3704 with SMTP id d9443c01a7336-22c24984d71mr24086475ad.12.1744685225787;
+        Mon, 14 Apr 2025 19:47:05 -0700 (PDT)
 Received: from PXLDJ45XCM.bytedance.net ([61.213.176.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.46.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccac49sm106681185ad.217.2025.04.14.19.46.59
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 14 Apr 2025 19:46:59 -0700 (PDT)
+        Mon, 14 Apr 2025 19:47:05 -0700 (PDT)
 From: Muchun Song <songmuchun@bytedance.com>
 To: hannes@cmpxchg.org,
 	mhocko@kernel.org,
@@ -74,9 +75,9 @@ Cc: linux-kernel@vger.kernel.org,
 	hamzamahfooz@linux.microsoft.com,
 	apais@linux.microsoft.com,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH RFC 12/28] buffer: prevent memory cgroup release in folio_alloc_buffers()
-Date: Tue, 15 Apr 2025 10:45:16 +0800
-Message-Id: <20250415024532.26632-13-songmuchun@bytedance.com>
+Subject: [PATCH RFC 13/28] writeback: prevent memory cgroup release in writeback module
+Date: Tue, 15 Apr 2025 10:45:17 +0800
+Message-Id: <20250415024532.26632-14-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250415024532.26632-1-songmuchun@bytedance.com>
 References: <20250415024532.26632-1-songmuchun@bytedance.com>
@@ -93,38 +94,155 @@ memory cgroup. To ensure safety, it will only be appropriate to
 hold the rcu read lock or acquire a reference to the memory cgroup
 returned by folio_memcg(), thereby preventing it from being released.
 
-In the current patch, the function get_mem_cgroup_from_folio() is
-employed to safeguard against the release of the memory cgroup.
+In the current patch, the function get_mem_cgroup_css_from_folio()
+and the rcu read lock are employed to safeguard against the release
+of the memory cgroup.
+
 This serves as a preparatory measure for the reparenting of the
 LRU pages.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- fs/buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/fs-writeback.c                | 22 +++++++++++-----------
+ include/linux/memcontrol.h       |  9 +++++++--
+ include/trace/events/writeback.h |  3 +++
+ mm/memcontrol.c                  | 14 ++++++++------
+ 4 files changed, 29 insertions(+), 19 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index c7abb4a029dc..d8dca9bf5e38 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -914,8 +914,7 @@ struct buffer_head *folio_alloc_buffers(struct folio *folio, unsigned long size,
- 	long offset;
- 	struct mem_cgroup *memcg, *old_memcg;
+diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+index cc57367fb641..e3561d486bdb 100644
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -269,15 +269,13 @@ void __inode_attach_wb(struct inode *inode, struct folio *folio)
+ 	if (inode_cgwb_enabled(inode)) {
+ 		struct cgroup_subsys_state *memcg_css;
  
--	/* The folio lock pins the memcg */
--	memcg = folio_memcg(folio);
-+	memcg = get_mem_cgroup_from_folio(folio);
- 	old_memcg = set_active_memcg(memcg);
- 
- 	head = NULL;
-@@ -936,6 +935,7 @@ struct buffer_head *folio_alloc_buffers(struct folio *folio, unsigned long size,
+-		if (folio) {
+-			memcg_css = mem_cgroup_css_from_folio(folio);
+-			wb = wb_get_create(bdi, memcg_css, GFP_ATOMIC);
+-		} else {
+-			/* must pin memcg_css, see wb_get_create() */
++		/* must pin memcg_css, see wb_get_create() */
++		if (folio)
++			memcg_css = get_mem_cgroup_css_from_folio(folio);
++		else
+ 			memcg_css = task_get_css(current, memory_cgrp_id);
+-			wb = wb_get_create(bdi, memcg_css, GFP_ATOMIC);
+-			css_put(memcg_css);
+-		}
++		wb = wb_get_create(bdi, memcg_css, GFP_ATOMIC);
++		css_put(memcg_css);
  	}
- out:
- 	set_active_memcg(old_memcg);
-+	mem_cgroup_put(memcg);
- 	return head;
- /*
-  * In case anything failed, we just free everything we got.
+ 
+ 	if (!wb)
+@@ -929,16 +927,16 @@ void wbc_account_cgroup_owner(struct writeback_control *wbc, struct folio *folio
+ 	if (!wbc->wb || wbc->no_cgroup_owner)
+ 		return;
+ 
+-	css = mem_cgroup_css_from_folio(folio);
++	css = get_mem_cgroup_css_from_folio(folio);
+ 	/* dead cgroups shouldn't contribute to inode ownership arbitration */
+ 	if (!(css->flags & CSS_ONLINE))
+-		return;
++		goto out;
+ 
+ 	id = css->id;
+ 
+ 	if (id == wbc->wb_id) {
+ 		wbc->wb_bytes += bytes;
+-		return;
++		goto out;
+ 	}
+ 
+ 	if (id == wbc->wb_lcand_id)
+@@ -951,6 +949,8 @@ void wbc_account_cgroup_owner(struct writeback_control *wbc, struct folio *folio
+ 		wbc->wb_tcand_bytes += bytes;
+ 	else
+ 		wbc->wb_tcand_bytes -= min(bytes, wbc->wb_tcand_bytes);
++out:
++	css_put(css);
+ }
+ EXPORT_SYMBOL_GPL(wbc_account_cgroup_owner);
+ 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index e74922d5755d..a9ef2087c735 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -874,7 +874,7 @@ static inline bool mm_match_cgroup(struct mm_struct *mm,
+ 	return match;
+ }
+ 
+-struct cgroup_subsys_state *mem_cgroup_css_from_folio(struct folio *folio);
++struct cgroup_subsys_state *get_mem_cgroup_css_from_folio(struct folio *folio);
+ ino_t page_cgroup_ino(struct page *page);
+ 
+ static inline bool mem_cgroup_online(struct mem_cgroup *memcg)
+@@ -1594,9 +1594,14 @@ static inline void mem_cgroup_track_foreign_dirty(struct folio *folio,
+ 	if (mem_cgroup_disabled())
+ 		return;
+ 
++	if (!folio_memcg_charged(folio))
++		return;
++
++	rcu_read_lock();
+ 	memcg = folio_memcg(folio);
+-	if (unlikely(memcg && &memcg->css != wb->memcg_css))
++	if (unlikely(&memcg->css != wb->memcg_css))
+ 		mem_cgroup_track_foreign_dirty_slowpath(folio, wb);
++	rcu_read_unlock();
+ }
+ 
+ void mem_cgroup_flush_foreign(struct bdi_writeback *wb);
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 0ff388131fc9..99665c79856b 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -266,7 +266,10 @@ TRACE_EVENT(track_foreign_dirty,
+ 		__entry->ino		= inode ? inode->i_ino : 0;
+ 		__entry->memcg_id	= wb->memcg_css->id;
+ 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
++
++		rcu_read_lock();
+ 		__entry->page_cgroup_ino = cgroup_ino(folio_memcg(folio)->css.cgroup);
++		rcu_read_unlock();
+ 	),
+ 
+ 	TP_printk("bdi %s[%llu]: ino=%lu memcg_id=%u cgroup_ino=%lu page_cgroup_ino=%lu",
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 4802ce1f49a4..09ecb5cb78f2 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -229,7 +229,7 @@ DEFINE_STATIC_KEY_FALSE(memcg_bpf_enabled_key);
+ EXPORT_SYMBOL(memcg_bpf_enabled_key);
+ 
+ /**
+- * mem_cgroup_css_from_folio - css of the memcg associated with a folio
++ * get_mem_cgroup_css_from_folio - acquire a css of the memcg associated with a folio
+  * @folio: folio of interest
+  *
+  * If memcg is bound to the default hierarchy, css of the memcg associated
+@@ -239,14 +239,16 @@ EXPORT_SYMBOL(memcg_bpf_enabled_key);
+  * If memcg is bound to a traditional hierarchy, the css of root_mem_cgroup
+  * is returned.
+  */
+-struct cgroup_subsys_state *mem_cgroup_css_from_folio(struct folio *folio)
++struct cgroup_subsys_state *get_mem_cgroup_css_from_folio(struct folio *folio)
+ {
+-	struct mem_cgroup *memcg = folio_memcg(folio);
++	struct mem_cgroup *memcg;
+ 
+-	if (!memcg || !cgroup_subsys_on_dfl(memory_cgrp_subsys))
+-		memcg = root_mem_cgroup;
++	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys))
++		return &root_mem_cgroup->css;
+ 
+-	return &memcg->css;
++	memcg = get_mem_cgroup_from_folio(folio);
++
++	return memcg ? &memcg->css : &root_mem_cgroup->css;
+ }
+ 
+ /**
 -- 
 2.20.1
 
