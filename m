@@ -1,266 +1,128 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11020103.outbound.protection.outlook.com [52.101.51.103])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2331D79A5
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 15:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.51.103
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744732043; cv=fail; b=l8+JTl/SmCidr7kfLq5WQgNCxp4vQjoXW3ryi5LU5UEp7u0GpWPQ6cUxm11Z4171XS9U+K1jN9QJxMV2XhxybH6RmKsswMxAG751JeQT0BhMpOwQq3bMiHAr7xc8qFqvdC4fiuCOAf1oCKsWp7Y1R7l/rgFjvfWUkuhRntI43jI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744732043; c=relaxed/simple;
-	bh=Y5sh/IIt4scjmu4xJotwbJ/uxNHStj/VIgPys6Uf0Yk=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UahM+q7CNQG8Fzcbbd0myVIB8F0te/nB2po6PKFP30C3FqzMOZcm2GpeBQXTmYeyKLfjM1mXxOA/TlbjABlTVeFC1x3DX7GvGJes3xU8ogIWesKchAqmA/0ptW0FU47/jsQPCF1UPknL51yGpOdcsqyF+F87HByH3LjkxhuSPxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=DKfezJKl; arc=fail smtp.client-ip=52.101.51.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69FB29A3ED;
+	Tue, 15 Apr 2025 15:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744732049; cv=none; b=Lw7sStBjykIggpUOq+GXjTFmR+WjHbD+/60Qpgw2qH/V037t7PRNOKoljR3SxnYW5RIwJR4pH9dkPhTsekTznnZdiUszxbyL5EML26K68AYcdZblJWvxL2U2YH9cfJHu8BlXgPzOSn/0/0xhcQRycDJXrzaJwyKwGiVZIhFgHWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744732049; c=relaxed/simple;
+	bh=bbkjmiJcxIoYe1Svw2F1maJ0updDHydTwr2isqonX3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EG7EABHCiw3tzJkKCrE3g674Mn3y01KwnfYwbEz0zu0ncFV8Vs/QyL1nVrCtzZga+DJu6Hyz0LIu6WiMID2CHjzGyIFSPRNFpOqEXjKR15047DSjW4jiqldcF0Q9o0b8usAZHrYPbWlrj5bvMz0PisddKfxdhdhSVjv1U1rs7sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SUOUXvKe; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="DKfezJKl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FXOizZ8VdOXSZat2sg4UsmCuPdfpY6tx0YHYbF+1rIKno45mvSpDwq6W/pH8J/CIS4Wg1PuJdsBVO6mOdBNsxA0Bm1ZdIqG3v2LauEmG1bXDj8p6SvcaSowtJPMrQdnpmJhYZ9t51BxtvaaZiFWkAwzpL9EJ1xsEixRf6Xanm0GDIaigAEJNTFoqikMZ8f/q+5CfM6tXwdNSxRDaXEakyb9riuerKMGuvkmJM1T74Si5MjJKP1fWtv8XpTW8p1zLQl9mloyUGRx8VUuDSGiRz3uqgqqoZV6+CegS0+KtQ1fQIMlgHXpExxhrIR09yMh9FNQQwHt47p3RlS2FW9+Kpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z4LrIF1gpvcMufIXFCSkAw1pI1SKk6DkG6UHbcupINM=;
- b=VBRbjB2ZP5vgCxzEtrqzGFIf1jSVSQVYq53ldkDu7+HJF/TX7PP8vGEyNYqdvkPEA0xRYDPxf1S8u43m5lvF1GEs7DCuanyXbEOUSpEm8Ndx+bMz22I86sV5mVpMA5H/nHSB8rQ9OvXrnuxhzv1WnD/Bqg0kOoHt4tLKRxrFFbHIXW90JaxU+XLulxUtlgxk8SOeUMCjR/PhgW3waeeprOygFAXoqskDUmpmm2eaxw3b955Dna0e2KW3QYvgCD1d4tQe56cJSIXy/xZ2DsGgJkatiW9uDf9TDEkcONGtcGnKn44MONYB3LTEhV2jou/0vdSrjI/LKsc0dowqb7u4gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4LrIF1gpvcMufIXFCSkAw1pI1SKk6DkG6UHbcupINM=;
- b=DKfezJKlHWbk/iIvDd70NoT88qvG/0Pb+7ISGHZU0LNMrDgpX327UkSf+H9LCTcdjgfPo6FrR4WGaezSxRok7N0078UZraPjt2AN64OOuHM2VCTmZ3uob2kYsxxJbrqNXEdoghmB2c1rV0Og4O6WGQUzdOiEmeu0YeghAXsuZtA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
- IA0PR01MB8278.prod.exchangelabs.com (2603:10b6:208:488::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.32; Tue, 15 Apr 2025 15:47:17 +0000
-Received: from LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
- ([fe80::2349:ebe6:2948:adb9%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 15:47:17 +0000
-From: D Scott Phillips <scott@os.amperecomputing.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	James Morse <james.morse@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Shiqi Liu <shiqiliu@hust.edu.cn>,
-	Will Deacon <will@kernel.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] arm64: errata: Work around AmpereOne's erratum AC04_CPU_23
-Date: Tue, 15 Apr 2025 08:47:11 -0700
-Message-ID: <20250415154711.1698544-2-scott@os.amperecomputing.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250415154711.1698544-1-scott@os.amperecomputing.com>
-References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SA9PR13CA0140.namprd13.prod.outlook.com
- (2603:10b6:806:27::25) To LV2PR01MB7792.prod.exchangelabs.com
- (2603:10b6:408:14f::10)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SUOUXvKe"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7B29C725;
+	Tue, 15 Apr 2025 17:45:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744731923;
+	bh=bbkjmiJcxIoYe1Svw2F1maJ0updDHydTwr2isqonX3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SUOUXvKeXcxohklxFHUkWWXRp0PbligOUf+58jeoCTYXSLluDxiPm7W4J1mvx7zGT
+	 7Gic2UrUhA7FZTS7I/HHcCQy+S+f6KVM5mJ1B069/KntDGu2FYaENisZg7C3J33xWd
+	 +3dsmvNnfTy/N+W5ih9LAzE/vMibEOVXybehxp4k=
+Date: Tue, 15 Apr 2025 18:47:24 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: Jai Luthra <jai.luthra@ideasonboard.com>,
+	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
+Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
+Message-ID: <20250415154724.GG9439@pendragon.ideasonboard.com>
+References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
+ <ZxYiCv6SpLq9uh08@dragon>
+ <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
+ <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|IA0PR01MB8278:EE_
-X-MS-Office365-Filtering-Correlation-Id: 822c3980-9db3-402c-c244-08dd7c34ccc2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|52116014|7416014|376014|1800799024|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aUxk7WKbqfvaP08lxv4YbONeSJ0mUkVqu1sE7lJq3BYjHTcZdrr6j6uYszLK?=
- =?us-ascii?Q?jSsisHJC+/QN35Ts2znqUOqft6sKEDye6jN4OBXrZLuO2f6D1AQ7ES9pwpOi?=
- =?us-ascii?Q?BiugfKltLwALcxGkEbJ14SqVPwGOi8PmAlM+pIoJ/HR6qFyjTBb4G0ertQ2M?=
- =?us-ascii?Q?UFZT7p3tE3CBkFuiMIUhT285U/SmGtiIabmXFIGq8TkdVPO4ebEsJLhVO0lV?=
- =?us-ascii?Q?GZiQR6ogdWrvsKGObfs3Vv/Gni7vvaa0yMnfcyfnHAdrw08oH9HfP8fqWy+z?=
- =?us-ascii?Q?SoBGmXMVFNvfIy1oOZuB8Xy5PoytuyjVjSLjJTay9iVO2F2R/kiH5hotKVsm?=
- =?us-ascii?Q?PoC0g2hWGfMX4rpSi39SLszxOt8+4KDXdmXqnn1HNpq2lwh9CZdru8Q4qFS2?=
- =?us-ascii?Q?sUyOSfxyHrqWYw+t8yDrVx9bE/+ldJyS5f4DX30zmJlm6RfravYaCCDpRJOd?=
- =?us-ascii?Q?UJ3dVwrlvPY4mNSF3dzP6ItCXorRJTOmeK2Clfre5mhN4zvT63vvHA8tM5C4?=
- =?us-ascii?Q?QFcyIn1gw6aCSTtkU+IDTLUsPXxhSwh8hlok2OUhDNfKgK41Xo2fnl1dK57A?=
- =?us-ascii?Q?BEyG5BXAmtYqk9UL4w64szqKVftCBCkuiYEPg3iQIDJ7jEZtU2FJr0DuwrAS?=
- =?us-ascii?Q?a4fCpSxTbo03T8jkoeZCQ2OK+Gk5hOTgjtSH0q5ktW1WjCyNpfDLdjwSbnBS?=
- =?us-ascii?Q?LxCGEoTFVhs3v9ZcBTphz2t7xU9Q4mEJJ5ekCLP1lEAWokbRYAxfkMLcn36w?=
- =?us-ascii?Q?5L6I8Pt18th/s3PLtlvegxWv0oQ9u7aQfFcIiDkhXMuG+hv8nHyaGTjD09jb?=
- =?us-ascii?Q?3GMYfXbr2akkRsJhJU21/AXnbC7YkY6eeTdwVbK7RI9OeuD/k6QSMROmSsAa?=
- =?us-ascii?Q?zIUDZVRmu2IqC3LyuOuXQK+OGn/NQzDKWI6LfGqBIA8Tz1cHF8TJB7iNDNus?=
- =?us-ascii?Q?FgLLF8/d8G+cb2Y5TU7GJuku1zPQ16tWtZJQGobJOUqkwszSPKeODe5EM95i?=
- =?us-ascii?Q?Lwg/HC1uPUlI2iW9+ss9fNwcVk+Gd55zcghcI6jI/6GZxJZG7mAgZj4jqTQD?=
- =?us-ascii?Q?ZylqRdFFMmmFkVg7VFjDhI4pha+jQequ9SkhgnfD5TjtgVbaKywFMEu/GsZ9?=
- =?us-ascii?Q?62pCZgnf2LvRCuwXEoy2MX99jUwUDuC8uxlb8+Vdv8Kqsk6jz1AfNq9VVDFQ?=
- =?us-ascii?Q?LMCzu9NPBgHj2X0xXyLp1+BAdwbc8EDy3ULlxNICt4YNslAiCvy73hSnTqyh?=
- =?us-ascii?Q?LPXFGn/38cnv1QVBMki4q8vj/enuJ/R1vBemVV4IcYYREUINqGtoKj4elsGB?=
- =?us-ascii?Q?dJE6JqeyBGuJ8Wn/k7heBsHq1d1Tre8Ae2FAq0crRt1TQST9COSywnfXyrmP?=
- =?us-ascii?Q?wwtg5kv7AIpYm1m28I2H6rrlLW2PDfFhpOp3491kcmK6GGZyZWLnxle6ubOg?=
- =?us-ascii?Q?y6iYWNolpbClTvCWtXg+XuBkTkLr24ON5uCaD65aSXeV5iT1QLQrSlDWr3YI?=
- =?us-ascii?Q?2YSFo+NlYiEsrYA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(7416014)(376014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?v7BzdkmKkdAYl0R1oDFsGKHnK3rKhfPSssLPmBboLNs1KYK0cFw8rXT3Yezw?=
- =?us-ascii?Q?t35MPSnZxD7EjsdBE+0WcD2YQG7CJXZJVCV63SORRvKFneps6wRkzA6dwV7f?=
- =?us-ascii?Q?gt0bSaV06w0xEU15PzK5I9FqxJuENc4EblgSUPNPRreAaUXSl8uDc4f9uVZs?=
- =?us-ascii?Q?0Wh+79DLkSziA28+Go9AGHiv2Gb3D39okfD3R2qNYJSg9lM20XXCRzgddjQw?=
- =?us-ascii?Q?EJrWvyJMTAG/gD9uA1mLuXANjrg4yCCFVg9Ed15WDZ/hBjnixd0nakie0tMB?=
- =?us-ascii?Q?50Cwb3tl6ypzF+yZ74U2gUQL85lsllTNDH0kpkyjyysJI0vlefYXe1ylGHl/?=
- =?us-ascii?Q?JnzBBhg0nyOcoD+MULZyqtH0EuSZARiMKZStuFaNqaUJl9PDA6uamdvjRFis?=
- =?us-ascii?Q?TcBRRKNxxngOEXQDFW7PRYw4DpnCP8Pnp3D8DMa1g+krNJVLVTrYfT/xpJM6?=
- =?us-ascii?Q?Wc8aeNWQE37Fm0R34b2aizoBDp3XceFJtmn1nx+mTh9yeWYWQGNOLhRvblPR?=
- =?us-ascii?Q?KTw0wtizEr+Fpp2EnyKXVOBSRF7P/ijHDKfREZrlyBg2JKCRGkesjJ4tewSG?=
- =?us-ascii?Q?VdO/h44i67rzXsxPcN9b9RrxAzru2yJFw0CVkSphjc8Ji3S9L8IcIzXkLrgz?=
- =?us-ascii?Q?po6UFZgAAiVFDtfu7UDmiIP8hPoUH1bZWPgviu9Vc0nXHah96C4jPB9dlHut?=
- =?us-ascii?Q?BjHJWZ97UxOMj3AkRCwUoVFg/cIJguJo1GV64YnrZVCFRVdtWDijb2QRhcn7?=
- =?us-ascii?Q?qKDulwB9BIjE2g21NbCNlcH8DM9ntei2U/68YsJhM1zFdkScuojLUO6GGwnQ?=
- =?us-ascii?Q?PSUfbl3Oh0Gkzjb14ZHNr6b8YrNVB+1u8l5tId2kKD+7NnimvBeG/oeRiMOZ?=
- =?us-ascii?Q?KPn4OGQZ03wnjF7nyF0cdmP4RfZp1q/VKd/IJwE7UfEhDzTiMr2gHrVgAe8R?=
- =?us-ascii?Q?sKM4p+9Xacz8OfWijPTFc88NsV2TOEdksfL8rZY4UniX759f3Gpt/c5WDPJL?=
- =?us-ascii?Q?lHnBnWE1aGNag/doMHafhgeRQVB1EF352DnqqW1d9A0a85HYq5NRx5TGdpms?=
- =?us-ascii?Q?QI/7UCpqgK790b+U6KuAZcvsBUZf4gZRHzXKktF+dx+e0VeemUWWvUd4Z2qQ?=
- =?us-ascii?Q?o0Qg+5FdBZGVBcLwc9LMiHTajZlMXrZB6tCserwmRhhaM21j/xz29bpQy4xA?=
- =?us-ascii?Q?Vyi+SXapQwwIp67FSHl8nFM9wXLHUka7HBjBEPQvzjv6tMwBA2q6a0imcpTx?=
- =?us-ascii?Q?+qUzf+mNbLXebHhh1TP3/0y0z0W0wWMP4Ezeg5L73kaZ1v/c/AfLBi0IKS60?=
- =?us-ascii?Q?FAjYM7koPVfZRx41Wc0aoZwVjGKKUVMj3JolpugYK5B8m0xI3SZfnFotkAje?=
- =?us-ascii?Q?G7WrH+V/9lwPKjj1go7eArGhqRJxmVAY2FirUIbdS0xCLXR851KAg8V4ogMH?=
- =?us-ascii?Q?yU4K/M2C6AFC6Qj0zQHVBOLGoWrPfUGlArmeL63o/vXmgrLMQRz0d5B1Yc1v?=
- =?us-ascii?Q?QjScWqzQ+qnWVM8f0xFPDLDnDW3nsXaJ+QEh+akN/8JsKw/Dnj18cNl2aszZ?=
- =?us-ascii?Q?fmf0mqLnNP2pVAe2wY9CP1YASyNujqHoNmcYdQmMiWEp8ovRZ+ca2DsN5sMq?=
- =?us-ascii?Q?qBYFfsTwdnE0KZLvC1pFRTc=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 822c3980-9db3-402c-c244-08dd7c34ccc2
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 15:47:17.3735
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /tlj6e9r35S/+WN9fINFipMBPfgcpl2HdM/irNZJe4DwbxkmXdbrpxx7cogFwO+4vwYClaJpy1LNLsRgfknk/SUcFzOMAa7Wu5IrLdNSia7lieviSEy/vG9Z8j/D/YWh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR01MB8278
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
 
-Updates to HCR_EL2 can rarely corrupt simultaneous translations from
-either earlier translations (back to the previous dsb) or later
-translations (up to the next isb). Put a dsb before and isb after writes
-to HCR_EL2.
+Hi Catalin,
 
-Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
----
- arch/arm64/Kconfig              | 13 +++++++++++++
- arch/arm64/include/asm/sysreg.h |  7 +++++++
- arch/arm64/kernel/cpu_errata.c  | 14 ++++++++++++++
- arch/arm64/tools/cpucaps        |  1 +
- 4 files changed, 35 insertions(+)
+On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
+> Hi Jai,
+> 
+> This issue was already reported by Stefan. The problem is that I don't 
+> have a Debix board to investigate.
+> The main difference b/w WFI and cpu-pd-wait is that the first doesn't 
+> call PSCI/TF-A. So, the issue looks to be related to some settings in 
+> the TF-A.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index e5fd87446a3b8..2a2e1c8de6a16 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -481,6 +481,19 @@ config AMPERE_ERRATUM_AC03_CPU_38
- 
- 	  If unsure, say Y.
- 
-+config AMPERE_ERRATUM_AC04_CPU_23
-+        bool "AmpereOne: AC04_CPU_23:  Failure to synchronize writes to HCR_EL2 may corrupt address translations."
-+	default y
-+	help
-+	  This option adds an alternative code sequence to work around Ampere
-+	  errata AC04_CPU_23 on AmpereOne.
-+
-+	  Updates to HCR_EL2 can rarely corrupt simultaneous translations from
-+	  either earlier translations (back to the previous dsb) or later
-+	  translations (up to the next isb).
-+
-+	  If unsure, say Y.
-+
- config ARM64_WORKAROUND_CLEAN_CACHE
- 	bool
- 
-diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index e7781f7e7f7a7..253de5bc68834 100644
---- a/arch/arm64/include/asm/sysreg.h
-+++ b/arch/arm64/include/asm/sysreg.h
-@@ -1142,6 +1142,10 @@
- 	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC03_CPU_36) &&	\
- 	 __sysreg_is_hcr_el2(r) &&				\
- 	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC03_CPU_36))
-+#define __hcr_el2_ac04_cpu_23(r)				\
-+	(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23) &&	\
-+	 __sysreg_is_hcr_el2(r) &&				\
-+	 alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC04_CPU_23))
- 
- /*
-  * The "Z" constraint normally means a zero immediate, but when combined with
-@@ -1154,6 +1158,9 @@
- 		asm volatile("mrs %0, daif; msr daifset, #0xf;"	\
- 			     "msr hcr_el2, %x1; msr daif, %0"	\
- 		: "=&r"(__daif) : "rZ" (__val));		\
-+	} else if (__hcr_el2_ac04_cpu_23(r)) {			\
-+		asm volatile("dsb nsh; msr hcr_el2, %x0; isb"	\
-+			     : : "rZ" (__val));			\
- 	} else {						\
- 		asm volatile("msr " __stringify(r) ", %x0"	\
- 			     : : "rZ" (__val));			\
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 89be85bf631fd..bdb92872791f3 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -564,6 +564,13 @@ static const struct midr_range erratum_ac03_cpu_38_list[] = {
- };
- #endif
- 
-+#ifdef CONFIG_AMPERE_ERRATUM_AC04_CPU_23
-+static const struct midr_range erratum_ac04_cpu_23_list[] = {
-+	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
-+	{},
-+};
-+#endif
-+
- const struct arm64_cpu_capabilities arm64_errata[] = {
- #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
- 	{
-@@ -889,6 +896,13 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 		.capability = ARM64_WORKAROUND_AMPERE_AC03_CPU_38,
- 		ERRATA_MIDR_RANGE_LIST(erratum_ac03_cpu_38_list),
- 	},
-+#endif
-+#ifdef CONFIG_AMPERE_ERRATUM_AC04_CPU_23
-+	{
-+		.desc = "AmpereOne erratum AC04_CPU_23",
-+		.capability = ARM64_WORKAROUND_AMPERE_AC04_CPU_23,
-+		ERRATA_MIDR_RANGE_LIST(erratum_ac04_cpu_23_list),
-+	},
- #endif
- 	{
- 		.desc = "Broken CNTVOFF_EL2",
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index f430fd5900d15..2b3afe4421af9 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -95,6 +95,7 @@ WORKAROUND_2645198
- WORKAROUND_2658417
- WORKAROUND_AMPERE_AC03_CPU_36
- WORKAROUND_AMPERE_AC03_CPU_38
-+WORKAROUND_AMPERE_AC04_CPU_23
- WORKAROUND_TRBE_OVERWRITE_FILL_MODE
- WORKAROUND_TSB_FLUSH_FAILURE
- WORKAROUND_TRBE_WRITE_OUT_OF_RANGE
+Jai, are you using mainline U-Boot and TF-A, or a downstream version of
+either (or both) ?
+
+> What I don't get is why I don't see this issue neither on our IMX8MP 
+> specific design nor on the EVK, which uses the same PHY as the Debix board.
+>
+> On 14/04/2025 14:07, Jai Luthra wrote:
+> > On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
+> >> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
+> >>> So far, only WFI is supported on i.MX8mp platform. Add support for
+> >>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
+> >>> usage during runtime. This is a port from NXP downstream kernel.
+> >>>
+> > Since the introduction of this patch in mainline, I am facing sluggish
+> > network performance with my Debix Model-A board with i.MX8mp SoC.
+> >
+> > The network latency jumps to >1s after almost every other packet:
+> >
+> > PING debix (10.0.42.5) 56(84) bytes of data.
+> > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
+> > ^C
+> > --- debix ping statistics ---
+> > 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
+> > rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
+> > darkapex at freya in ~
+> >
+> > If I revert the patch, or disable the deeper cpuidle state through
+> > sysfs, the issue goes away.
+> >
+> > # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
+> >
+> > PING debix (10.0.42.5) 56(84) bytes of data.
+> > 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
+> > 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
+> > ^C
+> > --- debix ping statistics ---
+> > 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
+> > rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
+> >
+> >>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+> >>
+> >> Applied, thanks!
+
 -- 
-2.48.1
+Regards,
 
+Laurent Pinchart
