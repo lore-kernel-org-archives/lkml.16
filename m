@@ -1,180 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011053.outbound.protection.outlook.com [52.101.129.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F7121ADCB;
-	Tue, 15 Apr 2025 08:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705109; cv=none; b=dvuC1Z1TS7P/6pIyT8zrHFcMit0zAmNudsCkj27sLNGez5/12R0n0y4T9K17aJws+1ZN0P3VwDv2mqO1ToNAQjYh1Mrya/J+aJhf+TiufFowrZtLoO7jSDYGiPMtq2WJAAviS2Gos/9UU2gckFUEGQm76OlUUrUVitYHzO5oIwA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705109; c=relaxed/simple;
-	bh=g6D6sl641a9cuRCwXKKcjM7803pO8zwZMcpM3uNv6/g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e477rAsYfzjmndifcI7dcgVs+1Ke2pPZZkgiynB/M5jhtKXBHHyKnr0PYUoFUhSSNT+pY5lySJaBDRlppNpiLQcyO0/5wxeFIeY6Kz9O+LWU0jzgnRSYt2miRkQR1J6l2UNCbwC9Y+mB9CINK5SgQsbalgGCqzSaQF/fyrcXoKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WvN71Rp2; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800AA241CA2;
+	Tue, 15 Apr 2025 08:18:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744705119; cv=fail; b=PuO8WQce3yo8Co00RAMNhdGTrAA1Z1240uLawVlaUTme9Rw/Z25Y8QfM+DFXsVzljIHbXtdOlkvTN4LzawYqOhno3vVu6XG4q8DATEZRiGxjsnozZ3eSQUDi1QpkWvXh9E3++cYkQIhm1fwf5tAsOGqtRmWV6I2dwK91VFQYn8A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744705119; c=relaxed/simple;
+	bh=tdNFGp4MdNQE3cZ8WxZYAqytSSp8HUHt+dYQwN2G3Vk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ZK/r2tUZrITibBp2tWxRlLzqWffE1lx8gxVa+cFBeHqk0uz2uNhS3yyFM05/qVdNDz4+HdrltWaoTcPoYEBwQOnipiRSQjNlLcngBU7M7vCfPryucj3eY3Xq98R2vYxlc7pUS1XqH0hOz688yXK+UGIxKhqwsDSw+abY4Yq+INo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=f7R5GxdV; arc=fail smtp.client-ip=52.101.129.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WvN71Rp2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744705107; x=1776241107;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g6D6sl641a9cuRCwXKKcjM7803pO8zwZMcpM3uNv6/g=;
-  b=WvN71Rp2K8BDZ4qpKrhvqBLF9+Nn4Z0wHNEUrvkaDN7sRSpA6n5/JHYK
-   lqUBZG7GP/Sps15EB/Wdrd5mEscitc0DWUxW3V40HIHf+W0cfMXmJyefm
-   m4SXYjtxvqYtwNmyhpTXnAdhaPGun0L0VN9Plrp6s31yqdwhQb+z20Nlu
-   4jzqo+B7tImddoQtx0F3pEo1J9hYeCO+GK99Hbm/tkQ8iq+/W1SyiG1L7
-   rgdzuOhJ+OvDydf9IpTfheT/NHuA2FysLN6s0bzre5KDuOlPNEPYWZO71
-   uddiGAWSW9QAjANUSPWfXYG7q7S+E1nlbmkgTMJt9t3h312xRyyri2Z5F
-   A==;
-X-CSE-ConnectionGUID: vcZRsSJGSDSY7kDwMaBG3A==
-X-CSE-MsgGUID: wQia35/ETrCzUt042KcHEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="45434953"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="45434953"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:17:18 -0700
-X-CSE-ConnectionGUID: v77BI4t/QliJthM1JAmUjw==
-X-CSE-MsgGUID: SEpekbLOTkicFFElnexa6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="130015687"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 01:17:15 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u4bTk-0000000CUAC-2nI9;
-	Tue, 15 Apr 2025 11:17:12 +0300
-Date: Tue, 15 Apr 2025 11:17:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="f7R5GxdV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=elFzw08q1pTHy0+s3OWVXW4470ZZirdn44Ij98hjxj5VglymZ9mPzSuY6c100IVpXQiTtTX0lAE0nCcwZWEqMOBmB98wKLIuoAT1PnXdoc3PvCDx5MDhIFCEItjQV7eipn0jGUs7Le92TrrJQgfC8W9MthN2070pm5TViQ3L+sMnzrhctkpAW//tspm/p9hTm/Qt4+Hai70MXmEDyo4qAProGuZthGzB2SD19E12XbOIUd9WulqBCZsF55afRDg0wt1BTPhkTkCJ3dESc7kIIs3giaoWY/eBgi+Jst034CLrMlLalro/U+GwCyW1UVl8Y/V5ADsd+mCOJIsDkg43zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wnXvMxZy3YQsBt8iiFhZFi2C9qo8Y5vR8mTQ29fei/s=;
+ b=GocpCWEdOanRQfTkCXkPaRTPeOeXQWfEzDrNCNXAn0gpUQd/w9xbfyol0kP6CQ2UhAiMcEpOKoVOKVqAfx+xr31GOMMcQ1JB0YfbfAz/rZ/+SZasEzi6lp6kgHB9fsIjR50nA34SYPLCRxF0KGr17IzBWjQYUpGL3IE1MIcGjXj6ewcFKqhEeeO2QvccB+VYHW+HWT5qt04sXv5KFsXE7fIV74hFD+FdQ+I7fPwkupc7VGFpJQnDtyzdcRU8AXsRdtztpetyKFjYBNdKxGR4T77ctKb+b5RozDbRMVYSHu8Jzjo3JDoGHoLcximwAQslwhqDasoRPuli7tvmy4B1Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wnXvMxZy3YQsBt8iiFhZFi2C9qo8Y5vR8mTQ29fei/s=;
+ b=f7R5GxdV0DPCdjClIGMrJ0sci3oEmNAf/A/txT0Y6dgwd9cKW+nQADyFbSVS9Egu0kfTzj62ZCYqov4cj13XekzQow7uEtpvA22miVZlurEKJPUvkc9yOl0gLE/q27Aq+lClTQr34z0YQ6r/TyQ+NE+oG7domoKaUCBeMvJftQiQNvinXBB+Mpd/7QGPR5sPLupwd5Ddh6Lb/+IZGO+A9bURRqBYYlp3Ytno9qglzOkXkqU3TWB8eLQKTE2uPH0pqh0OEQABn6rmWj8wEQS+X6+p4UYJ26tsG5QHSbLUcR9HDj9N0UsGalW1oVZIqq/cqzNhix5JKlkh5j6S0nO9rw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SEZPR06MB6841.apcprd06.prod.outlook.com (2603:1096:101:191::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Tue, 15 Apr
+ 2025 08:18:30 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
+ 08:18:29 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Kees Cook <kees@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	linux-hardening@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-Message-ID: <Z_4WCDkAhfwF6WND@smile.fi.intel.com>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
- <871pu1193r.fsf@trenco.lwn.net>
- <Z_zYXAJcTD-c3xTe@black.fi.intel.com>
- <87mscibwm8.fsf@trenco.lwn.net>
- <Z_4EL2bLm5Jva8Mq@smile.fi.intel.com>
- <Z_4E0y07kUdgrGQZ@smile.fi.intel.com>
- <87v7r5sw3a.fsf@intel.com>
+	Yangtao Li <frank.li@vivo.com>
+Subject: [PATCH] btrfs: remove BTRFS_REF_LAST from btrfs_ref_type
+Date: Tue, 15 Apr 2025 02:38:07 -0600
+Message-Id: <20250415083808.893050-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0366.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:79::6) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v7r5sw3a.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEZPR06MB6841:EE_
+X-MS-Office365-Filtering-Correlation-Id: fdfd2a5d-46dd-44cb-d34b-08dd7bf61a24
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pw7BYwTl6WYSjlVg0fVGl4UFm0zwrhT3pM27KIguJsM/nKdVU5xtuRwn93BD?=
+ =?us-ascii?Q?riG6+nRgvBzYDWwFX8umk173KHHS+0A9PdPOoW/ipnJGtKd1hbNOxqXoy8UV?=
+ =?us-ascii?Q?8hs8wCHXkNikVCTsF/mo75dkAU5f2NpafLVgwfRWrakHmvhTRN2gyOSaaM8V?=
+ =?us-ascii?Q?6LzH3Cjai3HGnLOuK1JosgKfy4kr5CL9oSLWOTDbifiKxFR7c5vXg7zEtaIf?=
+ =?us-ascii?Q?dLCavKs5n+M9b6azGXcmogjSrW4zXcHwBDyddxJFk7TE3fp7Q/Q/yxO+L84z?=
+ =?us-ascii?Q?k59Ux5rCj3yP7bobGnDe8LmG5BnP4HpzEXniiQNIDlK52LjDJhXbrI9rZtfR?=
+ =?us-ascii?Q?ltQoTfrJIqV9mHRqzMnsJik/Gg9eqtqQ8yEsbcjl+h3W0MXKE0bHhfueWZ/n?=
+ =?us-ascii?Q?2rkAndfEykzp5Gcz5eAwqLnLbC7+3yJkxQSbkhEqvLjZkGkhOUNi055l3XHx?=
+ =?us-ascii?Q?K+zoDi5xaAPdZjxEpOdG7TXEtpV4k184o7cfRd2/N7QdYU8TlsFtJqF7oJUK?=
+ =?us-ascii?Q?d1rzoE00RXYilxPNOBsdz6O2TpSh2CcrZ78GVcCflnP+r8vyEXGlVQAGam/4?=
+ =?us-ascii?Q?oDkv05NlUemfOXmsrmG9GqL044uUibShmn6ckn+lOqc2FCD0nhhTBP+lJKOf?=
+ =?us-ascii?Q?d0Q6dN8BtbQfjzckARA/xUhiYLR5KEThFruotEzfgbq1zfuTZXNEUxKJb/Wa?=
+ =?us-ascii?Q?v8/6os+N7FGQ2WD+ecoHHXDuISMm1Pl7DnK8qk0yftXQhoiECI4c1KmEyOHT?=
+ =?us-ascii?Q?cMhK0OrZsfRr9fryo1j4duPfKG+pYCsAfyHyrYGWc0foByDVeyKGMbsJfWQC?=
+ =?us-ascii?Q?aqkQQ59JigL2nOPvi8DUK/AKGxll+4jpcT1VQSXKqkyZQfcLkGQss2u7iBMv?=
+ =?us-ascii?Q?MIHYqqMm3CGR3/ohVnSDCCjPOYyKwc3mrTunCcDzuRCKV4oZ0AMacoL+yQhi?=
+ =?us-ascii?Q?NpG4G4wUCUoE26Q4YyUaj2sCHK5GAbZSTsELkAu3fW+eFXhoH8V9gGnw4HNG?=
+ =?us-ascii?Q?gP9JLfbXNTgIjp7wKdgNqCtywzmpHeKHLqR8IHk0ZQboPA8FuAbftzX/kRuZ?=
+ =?us-ascii?Q?skvOMrqqojPrCkyN6rmjDiyGsNXQB6F8ekq3CWphpfebcCZdpUgMDTuzNY58?=
+ =?us-ascii?Q?OP3iJhERZIyDQ2R9ulxFNiNhY5UVp+BtIMbdSilvUoPJcSlmV74KyFF4JwpS?=
+ =?us-ascii?Q?NgpNNCqX7OIgFJ4/u0YOPsIlTFRk2VBRxfNdo0vfkkDAvVZqn5wE4BuJ5i5/?=
+ =?us-ascii?Q?82eSjQqH0vJx5eB+qtSTPwIhgyK4jJko2Qj5QdNOAFyGJr1zhn9dQ/DcKp2X?=
+ =?us-ascii?Q?q9nDKvs+xHhfcQ1YbbDh8/OTE7SrmLRMomWJi7grAOSj9Rv60tavjea1DHPc?=
+ =?us-ascii?Q?VI5mxCizAL0Q8CJgXWykzEr+R0EQfNgHHPhvyKR0hKFC1mMdLh+1707ifHsp?=
+ =?us-ascii?Q?WU6UJw7MXS+Fw9P+ncsZDvodmRyClwqptCAd/atS5+UT3nuUkLXLdw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hS/etpII1+ZeJUM0euPbd134O4Jfdoe3s4TFuUD+kLzW6xDQkphUJ/TqD4J4?=
+ =?us-ascii?Q?k52QiJna3hnFsYpxnO2hMApVBW56Z4Woo+EQ3LO5HWYWhn5cpH5h3rSfKcAA?=
+ =?us-ascii?Q?wY0aFPx/9gyToyUoBQG6Vx/1lYzW5kqOPqZGT0prBn2metm/mm90yDoPkR+a?=
+ =?us-ascii?Q?LLuFANqR2KETXGJQEVxFxFVP2komxfw70+GFwGDN6WTcymNOhzv9y0fs3KYT?=
+ =?us-ascii?Q?QheKlPSPOJksN1xHQjRN/s6cnEpw7+XF5VnSBtIS7+Ll5FXKvtdPqCy8LLsj?=
+ =?us-ascii?Q?Bl+0o6VH5A33dWvHu0mGLqEL8UEEs1/Xy31KKSslMijI1IEViYeYc/V5gWnX?=
+ =?us-ascii?Q?eLT2MgsNjNGiXebQ5eF3cWeYNRUKNzR90Fv0KewG1IF/D8j5dJVVqdU9+Sqw?=
+ =?us-ascii?Q?cGbXh+4xrHoJz93RDHZMXip3kg6Tp+Khqgh5rf6QVZY7/0xbV0Gks3yYNhC0?=
+ =?us-ascii?Q?+kR/VrWdDOMxQW0MgNeuoUtrJTiR8LvC2L/SXt159i+PcpX8xAyPn+WiDSJ7?=
+ =?us-ascii?Q?C9zFMrqOWg9eEY511w7ZvQE3FNyNoYO5GmIMdk8VZ/0U6g0g7qPq8rkTa+9u?=
+ =?us-ascii?Q?O6NvcoILsnfeUFPwhG8bnVi+vTLzJdg4Hyh1lEVdDTO8STdZPvdcyNQ0Hk++?=
+ =?us-ascii?Q?RgnsVYzVCLHV0p2iUvk8mtD4/9pJcc9syVAnHpvIFk/G2IZo4U5x6CYbxiFu?=
+ =?us-ascii?Q?H/kW70vfTuVxqbctDZrVBJvlMVsa8QsqT7NAlJ7lZ+uNGykM+zuHHfADvqyO?=
+ =?us-ascii?Q?eTKvJLz8HZtLow+xEjrIlTuSrfbbIhbLZNDEoygU7v4v2v09ISxXO6czIn0g?=
+ =?us-ascii?Q?D/msMOlwijYb+sgtYV6o+66MlrWIN4jZalWyKD9lnrVAuALNb5UxrPCT+0Bi?=
+ =?us-ascii?Q?LxbvTVc+8ulou0jEsbJZE8rcpNLLa0nNVsA4xB/gnHyOMAgFhjRj/ebaOU2n?=
+ =?us-ascii?Q?WJ1rb6Ym2c783rwlDKw3Xs+BzegaIKlNTu07X6VMFCIBLdZm+dx8iWUpbysH?=
+ =?us-ascii?Q?RmMT5UcnB10WGeWRxqgle2YKMbKM/PRIVnwhqvRjKbcXUKBklhe2aHzJV3Ds?=
+ =?us-ascii?Q?wPxAVDNpnbaC2aFWMdwDCnBv/5oTCoASRiTzHq7s2RALNkMp/CwBNNW/+xKM?=
+ =?us-ascii?Q?IOqL/Zv12HLEzaEnUitCfraqCMxjUiN7htdbIupZUUZeRL/4lIGJPYiy0JoI?=
+ =?us-ascii?Q?A1CYcZGO5zYqwrHNIFeHPhO6woat0/zOviN6jqtIA6N84QWb+37uqV/CVdu9?=
+ =?us-ascii?Q?REJ5o4FFrFWRGXb1kiNjOMj41LWmkPTsr4lRDi/Fp4rM1FVMOByJ6B9vfiXY?=
+ =?us-ascii?Q?18VqIWU65RgGZ9f7G7fKKcW74AWg0MVlwJs621x/v37wskleoX95QCDsL9pP?=
+ =?us-ascii?Q?t1tP6mgtzyl/zdrrAYA8Iu/uozINiAWtLolqYR8wHH/vjOnr9kiyo2yJTx3y?=
+ =?us-ascii?Q?GUk18U4q0wNSSFfNjaa4tKntKq2BsrkDr0cwjul+fiBP159am0cvTz3jfwWX?=
+ =?us-ascii?Q?if120QGrvBBESjQ5l/cxAGHKR9HJzGWX30qXhFTD9w1VSYtc3QtewtYJBqGf?=
+ =?us-ascii?Q?I7N++PWtm7hHKtm2ZQYZnZsiZHiE2VeT+zsRJA5P?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fdfd2a5d-46dd-44cb-d34b-08dd7bf61a24
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 08:18:29.1485
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9xedo6hjCzMNYbVH3zXtjoFayzgo2mVoFQwbtNMQeJFa1FQMOKUE8yL60pMJa5VktiRqfYXSbjtJnvJ5PC0+Pw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6841
 
-On Tue, Apr 15, 2025 at 10:49:29AM +0300, Jani Nikula wrote:
-> On Tue, 15 Apr 2025, Andy Shevchenko <andriy.shevchenko@intel.com> wrote:
-> > On Tue, Apr 15, 2025 at 10:01:04AM +0300, Andy Shevchenko wrote:
-> >> On Mon, Apr 14, 2025 at 09:17:51AM -0600, Jonathan Corbet wrote:
-> >> > Andy Shevchenko <andriy.shevchenko@intel.com> writes:
-> >> > > On Wed, Apr 09, 2025 at 12:30:00PM -0600, Jonathan Corbet wrote:
-> >> > >> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
-> >> > >> 
-> >> > >> > This changeset contains the kernel-doc.py script to replace the verable
-> >> > >> > kernel-doc originally written in Perl. It replaces the first version and the
-> >> > >> > second series I sent on the top of it.
-> >> > >> 
-> >> > >> OK, I've applied it, looked at the (minimal) changes in output, and
-> >> > >> concluded that it's good - all this stuff is now in docs-next.  Many
-> >> > >> thanks for doing this!
-> >> > >> 
-> >> > >> I'm going to hold off on other documentation patches for a day or two
-> >> > >> just in case anything turns up.  But it looks awfully good.
-> >> > >
-> >> > > This started well, until it becomes a scripts/lib/kdoc.
-> >> > > So, it makes the `make O=...` builds dirty *). Please make sure this doesn't leave
-> >> > > "disgusting turd" )as said by Linus) in the clean tree.
-> >> > >
-> >> > > *) it creates that __pycache__ disaster. And no, .gitignore IS NOT a solution.
-> >> > 
-> >> > If nothing else, "make cleandocs" should clean it up, certainly.
-> >> > 
-> >> > We can also tell CPython to not create that directory at all.  I'll run
-> >> > some tests to see what the effect is on the documentation build times;
-> >> > I'm guessing it will not be huge...
-> >> 
-> >> I do not build documentation at all, it's just a regular code build that leaves
-> >> tree dirty.
-> >> 
-> >> $ python3 --version
-> >> Python 3.13.2
-> >> 
-> >> It's standard Debian testing distribution, no customisation in the code.
-> >> 
-> >> To reproduce.
-> >> 1) I have just done a new build to reduce the churn, so, running make again does nothing;
-> >> 2) The following snippet in shell shows the issue
-> >> 
-> >> $ git clean -xdf
-> >> $ git status --ignored
-> >> On branch ...
-> >> nothing to commit, working tree clean
-> >> 
-> >> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
-> >> make[1]: Entering directory '...'
-> >>   GEN     Makefile
-> >>   DESCEND objtool
-> >>   CALL    .../scripts/checksyscalls.sh
-> >>   INSTALL libsubcmd_headers
-> >> .pylintrc: warning: ignored by one of the .gitignore files
-> >> Kernel: arch/x86/boot/bzImage is ready  (#23)
-> >> make[1]: Leaving directory '...'
-> >> 
-> >> $ touch drivers/gpio/gpiolib-acpi.c
-> >> 
-> >> $ make LLVM=-19 O=.../out W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
-> >> make[1]: Entering directory '...'
-> >>   GEN     Makefile
-> >>   DESCEND objtool
-> >>   CALL    .../scripts/checksyscalls.sh
-> >>   INSTALL libsubcmd_headers
-> >> ...
-> >>   OBJCOPY arch/x86/boot/setup.bin
-> >>   BUILD   arch/x86/boot/bzImage
-> >> Kernel: arch/x86/boot/bzImage is ready  (#24)
-> >> make[1]: Leaving directory '...'
-> >> 
-> >> $ git status --ignored
-> >> On branch ...
-> >> Untracked files:
-> >>   (use "git add <file>..." to include in what will be committed)
-> >> 	scripts/lib/kdoc/__pycache__/
-> >> 
-> >> nothing added to commit but untracked files present (use "git add" to track)
-> >
-> > FWIW, I repeated this with removing the O=.../out folder completely, so it's
-> > fully clean build. Still the same issue.
-> >
-> > And it appears at the very beginning of the build. You don't need to wait to
-> > have the kernel to be built actually.
-> 
-> kernel-doc gets run on source files for W=1 builds. See Makefile.build.
+It seems that it has never been used, so remove it.
 
-Thanks for the clarification, so we know that it runs and we know that it has
-an issue.
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+---
+ fs/btrfs/delayed-ref.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-> >> It's 100% reproducible on my side. I am happy to test any patches to fix this.
-> >> It's really annoying "feature" for `make O=...` builds. Also note that
-> >> theoretically the Git worktree may be located on read-only storage / media
-> >> and this can induce subtle issues.
-
+diff --git a/fs/btrfs/delayed-ref.h b/fs/btrfs/delayed-ref.h
+index f5ae880308d3..78cc23837610 100644
+--- a/fs/btrfs/delayed-ref.h
++++ b/fs/btrfs/delayed-ref.h
+@@ -262,7 +262,6 @@ enum btrfs_ref_type {
+ 	BTRFS_REF_NOT_SET,
+ 	BTRFS_REF_DATA,
+ 	BTRFS_REF_METADATA,
+-	BTRFS_REF_LAST,
+ } __packed;
+ 
+ struct btrfs_ref {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.0
 
