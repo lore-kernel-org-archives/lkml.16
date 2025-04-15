@@ -1,137 +1,108 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0470C275101
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CE4275101
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707888; cv=none; b=hjn8H8pRdZtKJ+eebEI/fabu6EoK8Fw4RyEv9TXXqnIcU6DfGdmnKWO8qFMgKVpG0VI/r8BFq2V2jaiPX4RmXw1akHSTyEY6g2oS0V7Gbr7GiYTBeN0FDxJEQZKvglPwkVKCM2cJ88nuqHAo6zO4eKUjKvWl3bUS9hzC3X3i+Lc=
+	t=1744707921; cv=none; b=uIYVO4sRdPYC7iihmI32DlVloDz+e9fAFGbmcV+2XS74pXVEjs7nMEu2bof6Tsr7GRIDSLfdzSVs4RDsAAL08ZcyUl8gUJM5K6iWcopcheNOt16KjcbP5oG8ESBIZIyJeqSLEBY7sozLD44FS/Gmf9FSOXcP+C8XSxLMzO2v98c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707888; c=relaxed/simple;
-	bh=gF/lxQOhW5uuQMJ4XHbAi68oANaDpp+yw8NmQQVNo8E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pP8svcexxAmjPvVlFYVbrCnYaHT6U+p3AAPYfV2O31KPMiZtpNih6XIFPm7NrCHxAEipXtlMBth22b5t25MJbuxbPeqkWt60XEdToID0wOlDED7Qf+/afE3U6rgKHpsJAl1wT49eaisqyTfWn/hJfiTbmunJupyvDDAmSskhDao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mGiYYZeY; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744707921; c=relaxed/simple;
+	bh=h2DEK8fnN2Gh/YmAl5zHBzGdGpaDN5Or8Mju5hKUKd8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XTP92Bd2fQJrFgvvYMAoJDqutdK1LNfoCdLxSBNK1brgHu+joB75qEDwUMMXSpRD7ggiC6qF9DdH81JCYyyD8vK3zVzvy5SjsFIDmXqEyY23cnC7ubY8FuUtLkgk/1y6xmjDIqQZ/aU8TKiolHS3do0ginuQaMOZpVnZztolfZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gGkt+i89; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mGiYYZeY"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53F8tCTi019549
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:04:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	6hZpISES0U/oym4A/OtPRu8hY+MQbR3SyvSyRlk7Lsc=; b=mGiYYZeY0ltty7NV
-	zksty3KtGbaINtI0a7fCA+Mlxq1G2XrOCV7unWBG9fiXEbDUfW5jWodTsAyBPXC8
-	LbDLnrzZ+BvJdqtYcWe4AxLnlrB0WNA+aB6ChinrzkFVWNZfuvlM4PZkjRpNLssZ
-	kp/8KNfDshNRePyyPdOL2CZUUU4CwIzmMmybtQ2+KTnMP4TaMsvP1Mb+UAd/mjNi
-	7GQ7pAH+gvEk11wJzKZglvCkKBVYSyLOza75TLoHPO9Rd5D1wf1+iEijrbZuatI3
-	gHIS38+96VL/SkLWfW01SzUNCg2AwMkEMQ3zH8McmoRHLvNT67XB5/poRjvqE47C
-	0u4Srw==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yhfcyaf9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:04:46 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c572339444so712480185a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:04:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gGkt+i89"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39979ad285bso3134203f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744707918; x=1745312718; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=559hWc8vvPPLU6Zg7XW7jcJSKjSV/Q+pFH2bIUlCWes=;
+        b=gGkt+i89tLVsYLELj7dd+/fm6VkN/cfF5ZSFHN1rt6Yd9q/EtybUku9ex2k4loEohB
+         bNhl+eqaZLs8k7uruuk9mIFe31zT5Xd0sxSwUhx6Eld1euBmQM9UXd4KoJLI42vw5liq
+         QEdIPA4+eYZV/vbKVLLFg1iAAycm0W3lvcciUmE77Sq8NkY0VdsHowi20IVuYq6YrlRP
+         /4jpj4o7OfDsJBAuvU7ySzYlPxTsJyYuZyisPGPjOJ8y4oJk/k3di3BSlTNN7Psjj2Sp
+         pipGXAZgJ/1lxSR5DjlWYCe/VQPnfGFfy7S7L+7P+6maODIRRhb0Oba8F+tmz7otS7nG
+         DrcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744707885; x=1745312685;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6hZpISES0U/oym4A/OtPRu8hY+MQbR3SyvSyRlk7Lsc=;
-        b=vL/ONk96MwpryIbJMzLOQAEMZjX3qN/U2ubfZNm8Fo6/DFj6tOPwCstruc6ab2bj9k
-         dDSc8GhYNFI9lcI5Vwca6R9/+QN2ntAlZZz622WdGQPhrnur0lRSOdMyM9R7Szs5MUXh
-         iyFdHgsT4nfWe73KIjc6FMj+3NJY9s7dDiNsexVEQUmN1wd+fGZnOU9axwiXJjwfMWwj
-         EiS48APGi+KKGbK1f6VjPmJlCpnBTebAEB0BXA/EuR6Wr4AiCVdMuwjB3xRAH6ivGlUZ
-         ajEISJb/bGof/6Ek9K/JqZAirdIN93Ko0Rabstzu//cLrcfTXGMV7qCq1ngnIy2dZHT7
-         jLZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgog3tkq9gE/953G2/4VgVq3is78xV6ymLcfdj7wQpqDh1aGxPbAhYfslQipHzVCmnoHY0BuAppL56Gao=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw79fOQ7mZHgGDjIfP1ZVa4cjWcBTXPnX8RqkdnPgAJn8I84gvN
-	qFo32iWwIfqWlX0Cs7X63hyPiEgJvMAkmnFYT736txrWHvO0NC2PAMAL1y9BHxWzovrvB7q68fn
-	QRPxl6mGQ7n71rxGTj9SniWS+r0WsXbRykc2D7kyla0NsvZiTRTFvN3BZ8zIWyII=
-X-Gm-Gg: ASbGncs+gpMGhKcGdnGN+OCryXDJOzwi5AdPG6mTTb+8GLm24XkZEWYXcvLStt57D1+
-	cpKLe4RwlubcKyO7tnbUOA9yT3QCvF8Fry+wefI4ixszx6psEsDpuFG4YSUakppSYk5ris39V6D
-	Ou4NLuSvig5y+ggSZ+BWK/UdsyllTeGoV6wu7zmL9Tep8gd1yMA89XEuGlrnJySjRQdWkVttpUx
-	SiWNSq9wPVk2gNo8ivqt0KeH1ebZeDMTklck+M4yZ3j1z+Om5bkuKXZIigkmPlWwFVGh5UC2Z9q
-	P6w3aA8+vdA/a9HkGRtXDn6FDkGRS8psUNOR3Iq+o+lrhRLgk1ZEt/y3eEtDhFtf2MuNX3QWXjN
-	I8vZ3NyHRkk3ijFOEW5/LNLMj6kcPFBor/eTaMnl4fNDj7qZcC4hfJIbsY0m7
-X-Received: by 2002:a05:620a:170b:b0:7c7:a5c1:8247 with SMTP id af79cd13be357-7c7af0bdce9mr2263372285a.9.1744707884577;
-        Tue, 15 Apr 2025 02:04:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEqunBK84oqVf3RoA3SZGRSHrxH7q/c8tnI3gqgWn61qjL63ad60eci0nqMgqyVJRkBEaAlGA==
-X-Received: by 2002:a05:620a:170b:b0:7c7:a5c1:8247 with SMTP id af79cd13be357-7c7af0bdce9mr2263369085a.9.1744707884246;
-        Tue, 15 Apr 2025 02:04:44 -0700 (PDT)
-Received: from ?IPV6:2001:14bb:aa:77bc:64e0:30e4:f6ff:5bd? (2001-14bb-aa-77bc-64e0-30e4-f6ff-5bd.rev.dnainternet.fi. [2001:14bb:aa:77bc:64e0:30e4:f6ff:5bd])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465d509bsm19459131fa.84.2025.04.15.02.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 02:04:43 -0700 (PDT)
-Message-ID: <ca85e5e1-9887-4cea-91f5-3c312680506d@oss.qualcomm.com>
-Date: Tue, 15 Apr 2025 12:04:41 +0300
+        d=1e100.net; s=20230601; t=1744707918; x=1745312718;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=559hWc8vvPPLU6Zg7XW7jcJSKjSV/Q+pFH2bIUlCWes=;
+        b=CW++OXlPZS85f6pb0x8ugMtoz3Y6TxRj4HWGVP2u1svySisqlMzzfWKwdvLn7chGG4
+         bTfqWhKsPc4HySdrE2jrb6v+ZoKTKrjzhi2Vl6bg816WJ/CCVVdMRJgxQ9umcUTktycL
+         KQpVciudn0iyufPNvTu5ABP0rJrXL5hvjak9GLVW6hAmY0qZyvTIjTSCTk33qg1Mp88M
+         JPG02kmV8Lks4mmVfcAAzTVFsinhvMenx7wyf/3pjV+sd6sVisMtpi45glnl/sKArAcI
+         Q3lZXqAWTmnlLMhEjPqaFdtuFT+XOIX6DkWHZjFPbKK7qvdG2t0X2SF/afqJAOuTpiw6
+         hovg==
+X-Forwarded-Encrypted: i=1; AJvYcCURmU0KHc36sZhWdSijftAXXQc4GoDcd+3x1N+7TB/g0NQwgUwF4E8qZm7Ijd2TJXl3lFaqOFSxOqvU4Es=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzv45kp1TnLVwICvidh3kgx1BTQQrBzCnX0Pg/nxa50KAJyKXJd
+	msfy4+YS3LbGJUz4mR4PNTZ0F2DHHAinJNnx0zPGl+Qb1blFhtYzH+kgDlBg6XjDpiJiXNYCmgR
+	BK5zug0g7ZLCaVQ==
+X-Google-Smtp-Source: AGHT+IGaGphQUOfUzKJDXEiqvP3cldS/F/M+YoDjFINgZTcUVSnk0ewAEd4RsQKkgrKbPZ+Kg1iebePbw3cBLIs=
+X-Received: from wmbev15.prod.google.com ([2002:a05:600c:800f:b0:43d:7e5:30f0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:1843:b0:391:3d12:9afa with SMTP id ffacd0b85a97d-39ea5201eddmr13259999f8f.21.1744707918651;
+ Tue, 15 Apr 2025 02:05:18 -0700 (PDT)
+Date: Tue, 15 Apr 2025 09:05:16 +0000
+In-Reply-To: <Z_1EnkPiBKakGYtM@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/11] drm/vc4: hdmi: switch to generic CEC helpers
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
-        Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
- <20250407-drm-hdmi-connector-cec-v5-8-04809b10d206@oss.qualcomm.com>
- <20250414-thundering-marmoset-of-promotion-c8e0dc@houat>
-Content-Language: en-US
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-In-Reply-To: <20250414-thundering-marmoset-of-promotion-c8e0dc@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=CfUI5Krl c=1 sm=1 tr=0 ts=67fe212e cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=72TttzAs2X4TEUGSDZwA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: b09B7R3sFWbsHHAZpOkK2KnxS7KyTCWK
-X-Proofpoint-ORIG-GUID: b09B7R3sFWbsHHAZpOkK2KnxS7KyTCWK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150062
+Mime-Version: 1.0
+References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com> <Z_1EnkPiBKakGYtM@slm.duckdns.org>
+Message-ID: <Z_4hTBFdodhXkArL@google.com>
+Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tejun Heo <tj@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 14/04/2025 17:41, Maxime Ripard wrote:
-> On Mon, Apr 07, 2025 at 06:11:05PM +0300, Dmitry Baryshkov wrote:
->> +static const struct drm_connector_hdmi_cec_adapter_ops vc4_hdmi_cec_adap_ops = {
->> +	.base.unregister = drm_connector_hdmi_cec_unregister,
->> +	.init = vc4_hdmi_cec_init,
->> +	.enable = vc4_hdmi_cec_adap_enable,
->> +	.log_addr = vc4_hdmi_cec_adap_log_addr,
->> +	.transmit = vc4_hdmi_cec_adap_transmit,
->> +};
+On Mon, Apr 14, 2025 at 07:23:42AM -1000, Tejun Heo wrote:
+> Hello,
 > 
-> Did you compile it? it looks like drm_connector_hdmi_cec_adapter_ops has been renamed, and it
-> doesn't have a base.unregister field anymore?
-
-It seems, I've changed my build tree config and this got disabled. I'll 
-make sure that it is enabled for the next iteration.
-
+> On Fri, Apr 11, 2025 at 03:34:24PM +0000, Alice Ryhl wrote:
+> > Creating workqueues is needed by various GPU drivers. Not only does it
+> > give you better control over execution, it also allows devices to ensure
+> > that all tasks have exited before the device is unbound (or similar) by
+> > running the workqueue destructor.
+> > 
+> > This patch is being developed in parallel with the new Owned type [1].
+> > The OwnedQueue struct becomes redundant once [1] lands; at that point it
+> > can be replaced with Owned<Queue>, and constructors can be moved to the
+> > Queue type.
+> > 
+> > A wrapper type WqFlags is provided for workqueue flags. Since we only
+> > provide the | operator for this wrapper type, this makes it impossible
+> > to pass internal workqueue flags to the workqueue constructor. It has
+> > the consequence that we need a separate constant for the no-flags case,
+> > as the constructor does not accept a literal 0. I named this constant
+> > "BOUND" to signify the opposite of UNBOUND.
 > 
-> Maxime
+> Maybe name it NONE or DUMMY? Doesn't affect this patch but [UN]BOUND are a
+> bit confusing and as a part of the effort to reduce unnecessary usage of
+> cpu-bound workqueues, there's a plan to flip the default and use PERCPU for
+> the cpu-bound workqueues.
 
+Happy with whatever you think is best, but what about naming the
+constant PERCPU, then? In fact, by adjusting how I declare the flags in
+Rust, it is possible to *force* the user to include exactly one of
+PERCPU, UNBOUND, or BH in the flags argument.
 
--- 
-With best wishes
-Dmitry
+Of course, also happy to continue with NONE and adjust it when you flip
+the default value.
+
+Alice
