@@ -1,798 +1,183 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2089.outbound.protection.outlook.com [40.107.22.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFAB227BAA
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744741715; cv=none; b=dXY/j54y58dlWSs/7WVsn85BDbakK9aSEEJFqiqUw1U0UGQQ8JNp91af1JXXaHMry/NWZsgp1dCehTiwPFMKUmi6/HJL3wP/zcUVGHgIdhhq/xna0+PY/l3rToKBbmkQtXRczTfsG58+5KWc9j/K2E9l2Q2XVS2DNRJ1tYt8txI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744741715; c=relaxed/simple;
-	bh=1ZpYnkwEkzehUf34+luCinxOwC/G7Rm+QDZ1RSQKQS4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kESXs3vzyjCCFZMzYImre2q2ygutx7N2IDOr0Q5zYvEP8aI24VRqnCAGdQRfZG+v9K2DOkyTd+VZIthZzeYKczlgxkFrhoKJCVdiutlLgW/br71Bw7YKwEta1ZRFXxuXmNRCHA+DcVusnDFNgzDIL4xSrcMolbH7OU7A+7kEc1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=GJcnMjGr; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641068BE5;
+	Tue, 15 Apr 2025 18:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744741865; cv=fail; b=fPMjZV6cd4GcBAGe3EuV5PPzdsVjKrZl3wPgrCGWVruAph3L4CREfYWfGb5CbGl71nf1XMaifkcnjl7JIghP4phM8pSVwHeM/PIxoWqLf6XonTMKBL56ip6JYnfia6Wi59TEn5elSZk+q13Dw5pU0HEZrBlPMd+Vti/NgULchpc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744741865; c=relaxed/simple;
+	bh=P8wc3I6HtDdPCTZlx5mCLIgcRyIxN3PqLmX7QIVMY5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TVSL8x+nhJRCgLascAQigomGufMM1b4KWSa9d2Jc+hTn6YaNQVsZnLSyQ60T22HYT0C53VVhxgZGe3mSBYuKtFW/7/xg0GuKRr95Z0OeMUjRGgvHTVSEFnmuqOyo4koRGoo0NzTmqyZruT9PlvTSxtDpY8TwezStE6iI4qPjBX4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RuPpJ6dU; arc=fail smtp.client-ip=40.107.22.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GJcnMjGr"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3feaedb6670so3915622b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1744741713; x=1745346513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+Y8NnACZiT9j5kT8YQXM+xltY5Vhe9F9jexNNLMasjs=;
-        b=GJcnMjGrcslFqgEYBhCx74LN1IZB/Gjyf1+ypTpRkqeXuf6f8LRgE/QBkL5CUlcNX2
-         kgfVrQ1+ZZUCbhPjaAFP2i0BBcmipfYVylnI/9P8Ajg4Im5vqhfdXeuwcUQ6Py72llx2
-         SqlpE7hBjbSSiOZugqKH62ff4pH1H/MTpQ/f4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744741713; x=1745346513;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+Y8NnACZiT9j5kT8YQXM+xltY5Vhe9F9jexNNLMasjs=;
-        b=bMSC1OrlN6IhJf/i7BLsG4WWeAUr2JGUDMyOjqOw40eigtk2mGUXXMOY/Eo6RtTHEk
-         5X9S0y8SbzVfrceOEmx68PQtXwToG4mlrLgD8vx28UkadJ7H0rzHXvMdV401NYNfEdmP
-         fzTrHJuyFUL6Bl54E9gqnMd7saz9kPLQM1soLyUeFP3T8lU23udfkEN36VN1+e8UXBMe
-         0pUn/cp7hFfclepYl2UY/HIc7j9nW0U8kUS8/H9/uN9qm41KSQbtQA/3l+oeMuyqlD8X
-         xiONeGIZTwp/+ZOVpFO7KxAMbNo9dHGKzjdL3tdCl38vILzO6JBRF4aF7JDkIK6CWi7u
-         IvjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxBpxuEj6xZUuJJdflYaE60j5s/a0fJH6cmrp35zSPJStDfY9xYyvPU7kPBErbFUz6+VwiG8Qtsm7CjlU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyV3UdjL7PYUATOeO2hPA+ADz/EVZaLdtVnI5krj9wNjj4ZLsTi
-	5suDkzJnTlmJZWLQio+Y4GjJIIUReFErV+hG9wBuN310+sLIfs3pRlek94fKCg==
-X-Gm-Gg: ASbGncsGsjkBpgPw4aF5uVxgDHjWp56vMc7s8g12H+oxSxbq9AVW0S667+j1DIyh2q+
-	YzZCXeFVSz896bmifmUQFmTqKPYVfPOCmybA6anWPya73VoyspLpst/QDRYbgtOEjni1oNDaF4u
-	HC4JqvcWIHTuGJrt4wSRIFiCkeWJVJgyiPh7qcOCt+jr9ux1mSPjVataA2wKYcJdtH/Jm12YaSd
-	zbj5nVRqap+kk2bkXUbXZrc0gxzg6gyzdc1fAoGmFYQh0e/qrN3e4mXiYZ60PRAC1t503Oe/juH
-	3uEONyjPGeRssIVstlXYmVBsf43GGi6MyY3PF2BAJ7EAgsioLtWYVgi6zU+S5DxQ0mkvmoGvhxx
-	BDECNjrUNVAHJNVXxmA==
-X-Google-Smtp-Source: AGHT+IH/FoL7++9Dw7RpG3ssyEz62VGxebcE1CZZ4MsCtn5DI0eIdKYYOQ6dZwEynKv8UOoXhV+hjQ==
-X-Received: by 2002:a05:6808:2394:b0:3f6:7192:6aaf with SMTP id 5614622812f47-400acae8f64mr421968b6e.22.1744741712534;
-        Tue, 15 Apr 2025 11:28:32 -0700 (PDT)
-Received: from stbirv-lnx-1.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-400763baf5esm2434177b6e.47.2025.04.15.11.28.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 11:28:31 -0700 (PDT)
-From: justin.chen@broadcom.com
-To: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: florian.fainelli@broadcom.com,
-	conor+dt@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	jassisinghbrar@gmail.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	Justin Chen <justin.chen@broadcom.com>
-Subject: [PATCH v4 2/2] mailbox: Add support for bcm74110
-Date: Tue, 15 Apr 2025 11:28:26 -0700
-Message-Id: <20250415182826.3905917-3-justin.chen@broadcom.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415182826.3905917-1-justin.chen@broadcom.com>
-References: <20250415182826.3905917-1-justin.chen@broadcom.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RuPpJ6dU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YAquEF/QLhYRoEnIvNVz6GVw9WtlT5rNavYtR+DMrHvm/RkQA3K7b41IWmvX2fSyP9tnNLrDlkY/sg0f7/7L+y76Q++oagghI6MEC45hJGbJWDnZbjXxU+6btZvrEEc6DBhxejVC46uko2dBEHb+cKnkG6kKPXrIX+/34NjMAZfFKR3W3Btd/0ozg6onIOCevyy+4WwZllFSvk//95ho/oFo7zI1TjwifySUanJXLbvP4JLdMlBEYOgoW7Pxd53e+Cw/1zHo9PGtFH3qImiTONGVc3IBXmQOPHpcoMW4FKBOMozYe/dKdbFV7Crn/fC4bsVIQ3aydqhjKIDoYK/MUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BMuIQjhmXCvM26ZnqO2A6hT2z1GDpQOu0QQsu7jkcnk=;
+ b=RZ2tBxuNbsLQv7DjgTbgp82p+5YB+XfXly3BJzHR7NNe2LvlJpoX3+hmjxPlMyJHoznVKZSHVisiFg90c3sKvUR/rHhFhTMOeuOTnxlVI79RUVWynkyfFiD+MVR4+OKzynHdKE0/feBU6xZ+JvIFs++m/tF4W5M556yFoLdg/yfKj2uQBAn2l/tuohsggZHwV/58yIfIdtk+X2CR1aAwOKAyY4sLScPnfdpHeqEgxq+18/3xpDCgeiIFGbX12fIXeqOlpwnuFJ3BQa2Y34/ZPXi1JY3ixxRtZtE9/TuUxSpsjB8Oy5gRBlAEJ8xMmJ1ay1uyfEM026ODTuHXa/V0Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMuIQjhmXCvM26ZnqO2A6hT2z1GDpQOu0QQsu7jkcnk=;
+ b=RuPpJ6dU9GRlb8mIO0rRNhGCQ5MTpDzbmt8cYxHSgFbgfyMB+4Zfz6ngtTz2Z5YlNf7x55ry1Zl3o9TAjX1GSNB+S7PsQGE+jESdEhbPhmQ4NpUBQK4s5tCEtGGpqF9RSzHdUdsOe9pq7Vsn1NrfGpusxDZs/K6QbTSwVw8jRb3LK0FQtHD+hdt0g+JIVh/HoMpSeGrIDIgVxm6xz+U9SqMmm6oiKzxEYw3AO8hZefBq4/6dPlfXov8ddCTySiJd8qfnugXeXtoNHziYkq8E3Qm8XPkQStylxUHHJAG8Tc1lt/0oTaVGZedhmyyvGeDVWDDkGomoK3M475Gq3r6Ntw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA1PR04MB11059.eurprd04.prod.outlook.com (2603:10a6:102:485::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Tue, 15 Apr
+ 2025 18:30:58 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.035; Tue, 15 Apr 2025
+ 18:30:57 +0000
+Date: Tue, 15 Apr 2025 14:30:49 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Primoz Fiser <primoz.fiser@norik.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, upstream@lists.phytec.de
+Subject: Re: [PATCH v2 02/15] arm64: dts: freescale: imx93-phycore-som: Add
+ EEPROM support
+Message-ID: <Z/6l2btFEp1LsXWV@lizhi-Precision-Tower-5810>
+References: <20250415043311.3385835-1-primoz.fiser@norik.com>
+ <20250415043311.3385835-3-primoz.fiser@norik.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415043311.3385835-3-primoz.fiser@norik.com>
+X-ClientProxiedBy: PH8P221CA0036.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:510:346::25) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB11059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4cfe6d89-27ec-4c8f-8d4e-08dd7c4baa24
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|366016|376014|7416014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Lcg4YsBwj766APQ+XiEetQQJ0hNbFQIBoPvCaIipfImcPjRuNViPd5oTdEVV?=
+ =?us-ascii?Q?tmhdjxV7nfby9dWhCFDrN7hG+c9l2SYYHslk6V7vHf4d0q9pKGG6OoadjZuA?=
+ =?us-ascii?Q?89iiG0MNHAMIuboxcuZeWJqCVvjfAaPguYBn9YvuJfR6+TM7SP/SJ1iw7MyG?=
+ =?us-ascii?Q?QJ1H2U2xn+iIe5UOkRNvXqiD34YzNqORTO6gJ1sZOXMm2jqtohZf1DjR/Jcy?=
+ =?us-ascii?Q?23k7bV+tzfEH3GimctTEOKLSewkNz2dIss1XNdIScW96MQiIo9CHfrMRMO74?=
+ =?us-ascii?Q?DE3iQW0T3mnEu+Mv2Hzj2Vz3EZ5uwzVEvIc600FnNMTtCGzcv/NoAZ5+onfF?=
+ =?us-ascii?Q?+gmdSEfBu7WUo6RvRD12To2Zbxa3Y/FwuI7tCeTfxhMb8CiF7JNrh+tut597?=
+ =?us-ascii?Q?xE3kb9N6iO78etunTlGD9ukZwocNS1o6y2ywBpyi1QBeecQHsrt/P6QuS29k?=
+ =?us-ascii?Q?NwQmSP0Eib6fdGHSzsMB9Vv4zKTzXfuFVE9g6NB/OZBP7pG/BKZjhJ7SzI3G?=
+ =?us-ascii?Q?TGWuuQL+Ciuf5S8nWwx7wCG11ZidSzSEX9hHRgFtN06xzTY/RGaH2PDPyVIL?=
+ =?us-ascii?Q?wxZDEsjOYsyeC1/WdfA1cCq2jgeAh90hvKSk9l3Wh5+vOZtUXZYP9ORp+EfI?=
+ =?us-ascii?Q?AR4TJki7FTlLS22pkxmuGFkjq18Lzsspo0+nKoTDAtJpa6Gt0SAmqiTCGkMc?=
+ =?us-ascii?Q?K+eWdYfOA8+uUxnEmIlR6vLJEuUg5GylrH2h7u7yCWTS4H1e37HXdrUmiD8+?=
+ =?us-ascii?Q?/siByY87JVgxSBCJ1XZkjuj8qBk6P63TytoNaxgaT2F85tvWYhBy4lwcldZl?=
+ =?us-ascii?Q?ec0f1B6CAlU4d9nDdWWV75Lfao8rfzgH44xqN7v2IoQag1mdz1RjK4l5OBHP?=
+ =?us-ascii?Q?odfZCIwnppk99tmhd9BFLOWQEdg/LQ9NaU5x6VNKsjQjqbArxG+i5h9f7lX7?=
+ =?us-ascii?Q?vC9jWlcnuw1ssJoSVogIiObmoVEiwqdIf97A1UOChgMX3K6daujFwUm+Qc6R?=
+ =?us-ascii?Q?ZJ08nSybWaMswmSbnZ7QAmUHW5vetGDFRm9j5xobGVeWSKi6DSCEEGUChPdE?=
+ =?us-ascii?Q?MI94hLt79xyuFsr2j2BMLXwlBT+UBcHjHXhulCaJ1a1unRo6NAlDxguySXzS?=
+ =?us-ascii?Q?hBasA3/Hn885UP0t/XQCJyNiNHAPVuu3m+jBseo8d147HbLHbOEEyLD5VC1r?=
+ =?us-ascii?Q?YN3fomzpJzOTWcpWZMH0oKFWMqxhgPjQ7/La+F+8zMCVo5kxafI28DCMhMFf?=
+ =?us-ascii?Q?9WhNoJgryugq5fpG0YGKSp+dEMT4kGXX5yAUh4U+PjT1HDk5wPRghYIsX9Be?=
+ =?us-ascii?Q?YU8YsDKGoEohW3uq27nA6dswDJ6myNN7w830LJqaXbZfZMhyW0TKeVQekhBc?=
+ =?us-ascii?Q?WDAJur99sr8xBA9T/Aj1Adsz0SpCe94YFdz6j8/QREpgnNpxVJcA2+b7Crus?=
+ =?us-ascii?Q?K1ZiiOExf7pp4B2yxYRMZY+b34gKyMlxyX5d7Z3nLDAqSH7aIYevxQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(366016)(376014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jMtZLSLz3xSBJd7Q4Iu6tdWa+G5+0VsEkpvNv99E95yc+BySwufaJIRe/gsr?=
+ =?us-ascii?Q?TAZebyIOWCeNQONYn4ctBaF8N9aghWaKVdLdcdwWsTlv/ef+G8u8Qn7PFyKa?=
+ =?us-ascii?Q?7EJl/T7ickY4XhARaLxhAyuwmXHopcTXAFk2s8lgZ7eGXf6i3eWB6Ljm1Dp2?=
+ =?us-ascii?Q?j/N5agAy5ZZA+OmRgkRoKOhkv5cIZvqIADxbdwS/tgoMhHkH3hhxjTDbILv7?=
+ =?us-ascii?Q?2QTzS39Zee+P/dSaf12bFMYUUwF/P/96TlE1U44YDI9uEk5xamGI/j5nVKAi?=
+ =?us-ascii?Q?4W+3noTY3597+i9bHMdnrEIAlkCqJF6mjNy98aamlCvBaE2DXBwKEIpLHsal?=
+ =?us-ascii?Q?8MuCGmynavOAr05/M5+9xhTJCPB8RyEdX6jVfjtTLX8puPPXk+x+hUDivTdT?=
+ =?us-ascii?Q?gAnybS3ksnq3TWlLSUWueSUN7V/hxeZ3NNhYodCE0Phmt9s6gjbbw8xCx21x?=
+ =?us-ascii?Q?vfLq+cnpkI/qU9DXJMkBFl0UkIH5Say9mp8eLt3K+hsxnqfH4N1jjrLQYN1L?=
+ =?us-ascii?Q?8k5n0ZlPdp0jt8d88hD9u0LU3Q+154EgL5WtSF5JoWVTlOrxr41WgWZkIx5O?=
+ =?us-ascii?Q?8WQZ15Q017vy+JfwixW2GJkcxvjPVyX9Kt9TtAwV2BVUHwYBtw9SEnr8IqhN?=
+ =?us-ascii?Q?dV+OfpLCqRBXra4k/f3/8SYBHdKvaVtMt6Vbmz1GWUKU5BUw/9W5NaeIS6QO?=
+ =?us-ascii?Q?npWyUvcUcEJlxPdHsC2ZH22qPhj3LocJihuZKocstfEQekv+L8+ScrIuzXjF?=
+ =?us-ascii?Q?yFyvgB1BJxxSewwKJQNiSFIhCH0rJTLVIHwU6kbvzcsweCSXudBucyDZIuw/?=
+ =?us-ascii?Q?E8S2yO7AD/B2L6ggwVSS1FKxHvFO5WBLcHcV6W3COzTDU2zozedm3ed9dk/W?=
+ =?us-ascii?Q?dRCleqkl0sV2CCf51oQAdKfjIvodbHH6VXkzAYp75PkExhVrJ8ULccPYfvfk?=
+ =?us-ascii?Q?sd6ds1AaiLdZ0GHqDsaQsgG1YTlesDZWUV+Yq5CnHEHpbMCbc2Kwk9MSfpS4?=
+ =?us-ascii?Q?MC5XaFbQWd6YEmAIbCowmEWX4+i6awjEcdF+d0DNgP6UZ06uPfoXCOkDiTHs?=
+ =?us-ascii?Q?3L2ujfiJJhPSDTsvpP4zWyt9flY92qb/kWgfDChYGGMDNhuwIcQ/5t/anRZr?=
+ =?us-ascii?Q?474vpEyl2E1BkLpxJQ6klcIku29StNlDpAcXBai/sJwstyqQvblszcffMera?=
+ =?us-ascii?Q?J/8/uTh6aphCO4QWKZjUmUvHDvbfBKo6PFRx/BlIYoe09fIumLCuaWKSRemU?=
+ =?us-ascii?Q?6OJqHUuuwuqw2iNOLew+hPCsuSE8cDtwziuiyENY1T0WRpiqQ1PjzjXo2Cks?=
+ =?us-ascii?Q?+ClOCEXceZT9VOTN55HQebA5J2fI8RCgoAX5eZ0WCzDw/vdRm9DrDD2R+MHb?=
+ =?us-ascii?Q?yfKy35lrMIH98okg7lQNAuEhj22l2OnruK08NIGnFeG2CFBR/UhPNJ1G1EpV?=
+ =?us-ascii?Q?611ZXeuC+B9BjxG8i1rBv5tdWkjeXxntY+tpa1QlUxuBIvyeCvGgGD3945A3?=
+ =?us-ascii?Q?NDx6qWn8NG6E3vmciFPGnnebOcqPgYbXhX64A8U95VrO2+mT89L5aF0Avu1j?=
+ =?us-ascii?Q?FxpKymxMuHaDZeesEEY/LudV7awOpET8YGsK+SJs?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cfe6d89-27ec-4c8f-8d4e-08dd7c4baa24
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 18:30:57.7453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PvrRpUBZpDp6nMsvaHL6pNwA/Exitw+jU2Q/P7NdwSMJeaj0W1lu3XYHcjtM/+Hi5trv1ULDZNNJioo0VQ74qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11059
 
-From: Justin Chen <justin.chen@broadcom.com>
+On Tue, Apr 15, 2025 at 06:32:58AM +0200, Primoz Fiser wrote:
+> Add support for the EEPROM chip available on I2C3 bus (address 0x50),
+> used for the PHYTEC SOM detection.
+>
+> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
+> ---
 
-The bcm74110 mailbox driver is used to communicate with
-a co-processor for various power management and firmware
-related tasks.
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 
-Signed-off-by: Justin Chen <justin.chen@broadcom.com>
----
-v3/v4
-	No changes
-
-v2
-        Fixed minor formatting issues
-        Fixed error check of platform_get_irq()
-        Removed offsetted base iomem vars. Instead we just offset directly
-        from base.
-	Removed shmem variable. Hardcode it instead.
-
- drivers/mailbox/Kconfig            |  10 +
- drivers/mailbox/Makefile           |   2 +
- drivers/mailbox/bcm74110-mailbox.c | 655 +++++++++++++++++++++++++++++
- 3 files changed, 667 insertions(+)
- create mode 100644 drivers/mailbox/bcm74110-mailbox.c
-
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index ed52db272f4d..6fe3356ddde5 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -330,4 +330,14 @@ config THEAD_TH1520_MBOX
- 	  kernel is running, and E902 core used for power management among other
- 	  things.
- 
-+config BCM74110_MAILBOX
-+	tristate "Brcmstb BCM74110 Mailbox"
-+	depends on ARCH_BRCMSTB || COMPILE_TEST
-+	default ARCH_BRCMSTB
-+	help
-+	  Broadcom STB mailbox driver present starting with brcmstb bcm74110
-+	  SoCs. The mailbox is a communication channel between the host
-+	  processor and coprocessor that handles various power management task
-+	  and more.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index 9a1542b55539..eb2e8f55bd15 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -70,3 +70,5 @@ obj-$(CONFIG_QCOM_CPUCP_MBOX)	+= qcom-cpucp-mbox.o
- obj-$(CONFIG_QCOM_IPCC)		+= qcom-ipcc.o
- 
- obj-$(CONFIG_THEAD_TH1520_MBOX)	+= mailbox-th1520.o
-+
-+obj-$(CONFIG_BCM74110_MAILBOX)	+= bcm74110-mailbox.o
-diff --git a/drivers/mailbox/bcm74110-mailbox.c b/drivers/mailbox/bcm74110-mailbox.c
-new file mode 100644
-index 000000000000..04600f2b075e
---- /dev/null
-+++ b/drivers/mailbox/bcm74110-mailbox.c
-@@ -0,0 +1,655 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Broadcom BCM74110 Mailbox Driver
-+ *
-+ * Copyright (c) 2025 Broadcom
-+ */
-+#include <linux/list.h>
-+#include <linux/types.h>
-+#include <linux/workqueue.h>
-+#include <linux/io-64-nonatomic-hi-lo.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/delay.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/bitfield.h>
-+
-+#define BCM_MBOX_BASE(sel)		((sel) * 0x40)
-+#define BCM_MBOX_IRQ_BASE(sel)		(((sel) * 0x20) + 0x800)
-+
-+#define BCM_MBOX_CFGA			0x0
-+#define BCM_MBOX_CFGB			0x4
-+#define BCM_MBOX_CFGC			0x8
-+#define BCM_MBOX_CFGD			0xc
-+#define BCM_MBOX_CTRL			0x10
-+#define  BCM_MBOX_CTRL_EN		BIT(0)
-+#define  BCM_MBOX_CTRL_CLR		BIT(1)
-+#define BCM_MBOX_STATUS0		0x14
-+#define  BCM_MBOX_STATUS0_NOT_EMPTY	BIT(28)
-+#define  BCM_MBOX_STATUS0_FULL		BIT(29)
-+#define BCM_MBOX_STATUS1		0x18
-+#define BCM_MBOX_STATUS2		0x1c
-+#define BCM_MBOX_WDATA			0x20
-+#define BCM_MBOX_RDATA			0x28
-+
-+#define BCM_MBOX_IRQ_STATUS		0x0
-+#define BCM_MBOX_IRQ_SET		0x4
-+#define BCM_MBOX_IRQ_CLEAR		0x8
-+#define BCM_MBOX_IRQ_MASK_STATUS	0xc
-+#define BCM_MBOX_IRQ_MASK_SET		0x10
-+#define BCM_MBOX_IRQ_MASK_CLEAR		0x14
-+#define  BCM_MBOX_IRQ_TIMEOUT		BIT(0)
-+#define  BCM_MBOX_IRQ_NOT_EMPTY		BIT(1)
-+#define  BCM_MBOX_IRQ_FULL		BIT(2)
-+#define  BCM_MBOX_IRQ_LOW_WM		BIT(3)
-+#define  BCM_MBOX_IRQ_HIGH_WM		BIT(4)
-+
-+#define BCM_LINK_CODE0			0xbe0
-+#define BCM_LINK_CODE1			0xbe1
-+#define BCM_LINK_CODE2			0xbe2
-+
-+enum {
-+	BCM_MSG_FUNC_LINK_START = 0,
-+	BCM_MSG_FUNC_LINK_STOP,
-+	BCM_MSG_FUNC_SHMEM_TX,
-+	BCM_MSG_FUNC_SHMEM_RX,
-+	BCM_MSG_FUNC_SHMEM_STOP,
-+	BCM_MSG_FUNC_MAX,
-+};
-+
-+enum {
-+	BCM_MSG_SVC_INIT = 0,
-+	BCM_MSG_SVC_PMC,
-+	BCM_MSG_SVC_SCMI,
-+	BCM_MSG_SVC_DPFE,
-+	BCM_MSG_SVC_MAX,
-+};
-+
-+struct bcm74110_mbox_msg {
-+	struct list_head		list_entry;
-+#define BCM_MSG_VERSION_MASK		GENMASK(31, 29)
-+#define  BCM_MSG_VERSION		0x1
-+#define BCM_MSG_REQ_MASK		BIT(28)
-+#define BCM_MSG_RPLY_MASK		BIT(27)
-+#define BCM_MSG_SVC_MASK		GENMASK(26, 24)
-+#define BCM_MSG_FUNC_MASK		GENMASK(23, 16)
-+#define BCM_MSG_LENGTH_MASK		GENMASK(15, 4)
-+#define BCM_MSG_SLOT_MASK		GENMASK(3, 0)
-+
-+#define BCM_MSG_SET_FIELD(hdr, field, val)			\
-+	do {							\
-+		hdr &= ~BCM_MSG_##field##_MASK;			\
-+		hdr |= FIELD_PREP(BCM_MSG_##field##_MASK, val);	\
-+	} while (0)
-+
-+#define BCM_MSG_GET_FIELD(hdr, field)				\
-+		FIELD_GET(BCM_MSG_##field##_MASK, hdr)
-+	u32				msg;
-+};
-+
-+struct bcm74110_mbox_chan {
-+	struct bcm74110_mbox		*mbox;
-+	bool				en;
-+	int				slot;
-+	int				type;
-+};
-+
-+struct bcm74110_mbox {
-+	struct platform_device		*pdev;
-+	void __iomem			*base;
-+
-+	int				tx_chan;
-+	int				rx_chan;
-+	int				rx_irq;
-+	struct list_head		rx_svc_init_list;
-+	spinlock_t			rx_svc_list_lock;
-+
-+	struct mbox_controller		controller;
-+	struct bcm74110_mbox_chan	*mbox_chan;
-+};
-+
-+#define BCM74110_OFFSET_IO_WRITEL_MACRO(name, offset_base)	\
-+static void bcm74110_##name##_writel(struct bcm74110_mbox *mbox,\
-+				     u32 val, u32 off)		\
-+{								\
-+	writel_relaxed(val, mbox->base + offset_base + off);	\
-+}
-+BCM74110_OFFSET_IO_WRITEL_MACRO(tx, BCM_MBOX_BASE(mbox->tx_chan));
-+BCM74110_OFFSET_IO_WRITEL_MACRO(irq, BCM_MBOX_IRQ_BASE(mbox->rx_chan));
-+
-+#define BCM74110_OFFSET_IO_READL_MACRO(name, offset_base)	\
-+static u32 bcm74110_##name##_readl(struct bcm74110_mbox *mbox,	\
-+				   u32 off)			\
-+{								\
-+	return readl_relaxed(mbox->base + offset_base + off);	\
-+}
-+BCM74110_OFFSET_IO_READL_MACRO(tx, BCM_MBOX_BASE(mbox->tx_chan));
-+BCM74110_OFFSET_IO_READL_MACRO(rx, BCM_MBOX_BASE(mbox->rx_chan));
-+BCM74110_OFFSET_IO_READL_MACRO(irq, BCM_MBOX_IRQ_BASE(mbox->rx_chan));
-+
-+static inline struct bcm74110_mbox *bcm74110_mbox_from_cntrl(
-+					struct mbox_controller *cntrl)
-+{
-+	return container_of(cntrl, struct bcm74110_mbox, controller);
-+}
-+
-+static void bcm74110_rx_push_init_msg(struct bcm74110_mbox *mbox, u32 val)
-+{
-+	struct bcm74110_mbox_msg *msg;
-+
-+	msg = kzalloc(sizeof(*msg), GFP_ATOMIC);
-+	if (!msg)
-+		return;
-+
-+	INIT_LIST_HEAD(&msg->list_entry);
-+	msg->msg = val;
-+
-+	spin_lock(&mbox->rx_svc_list_lock);
-+	list_add_tail(&msg->list_entry, &mbox->rx_svc_init_list);
-+	spin_unlock(&mbox->rx_svc_list_lock);
-+}
-+
-+static void bcm74110_rx_process_msg(struct bcm74110_mbox *mbox)
-+{
-+	struct device *dev = &mbox->pdev->dev;
-+	struct bcm74110_mbox_chan *chan_priv;
-+	struct mbox_chan *chan;
-+	u32 msg, status;
-+	int type;
-+
-+	do {
-+		msg = bcm74110_rx_readl(mbox, BCM_MBOX_RDATA);
-+		status = bcm74110_rx_readl(mbox, BCM_MBOX_STATUS0);
-+
-+		dev_dbg(dev, "rx: [{req=%lu|rply=%lu|srv=%lu|fn=%lu|length=%lu|slot=%lu]\n",
-+			BCM_MSG_GET_FIELD(msg, REQ), BCM_MSG_GET_FIELD(msg, RPLY),
-+			BCM_MSG_GET_FIELD(msg, SVC), BCM_MSG_GET_FIELD(msg, FUNC),
-+			BCM_MSG_GET_FIELD(msg, LENGTH), BCM_MSG_GET_FIELD(msg, SLOT));
-+
-+		type = BCM_MSG_GET_FIELD(msg, SVC);
-+		switch (type) {
-+		case BCM_MSG_SVC_INIT:
-+			bcm74110_rx_push_init_msg(mbox, msg);
-+			break;
-+		case BCM_MSG_SVC_PMC:
-+		case BCM_MSG_SVC_SCMI:
-+		case BCM_MSG_SVC_DPFE:
-+			chan = &mbox->controller.chans[type];
-+			chan_priv = chan->con_priv;
-+			if (chan_priv->en)
-+				mbox_chan_received_data(chan, NULL);
-+			else
-+				dev_warn(dev, "Channel not enabled\n");
-+			break;
-+		default:
-+			dev_warn(dev, "Unsupported msg received\n");
-+		}
-+	} while (status & BCM_MBOX_STATUS0_NOT_EMPTY);
-+}
-+
-+static irqreturn_t bcm74110_mbox_isr(int irq, void *data)
-+{
-+	struct bcm74110_mbox *mbox = data;
-+	u32 status;
-+
-+	status = bcm74110_irq_readl(mbox, BCM_MBOX_IRQ_STATUS);
-+
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_CLEAR);
-+
-+	if (status & BCM_MBOX_IRQ_NOT_EMPTY)
-+		bcm74110_rx_process_msg(mbox);
-+	else
-+		dev_warn(&mbox->pdev->dev, "Spurious interrupt\n");
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bcm74110_mbox_mask_and_clear(struct bcm74110_mbox *mbox)
-+{
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_MASK_SET);
-+	bcm74110_irq_writel(mbox, 0xffffffff, BCM_MBOX_IRQ_CLEAR);
-+}
-+
-+static int bcm74110_rx_pop_init_msg(struct bcm74110_mbox *mbox, u32 func_type,
-+				    u32 *val)
-+{
-+	struct bcm74110_mbox_msg *msg, *msg_tmp;
-+	unsigned long flags;
-+	bool found = false;
-+
-+	spin_lock_irqsave(&mbox->rx_svc_list_lock, flags);
-+	list_for_each_entry_safe(msg, msg_tmp, &mbox->rx_svc_init_list,
-+				 list_entry) {
-+		if (BCM_MSG_GET_FIELD(msg->msg, FUNC) == func_type) {
-+			list_del(&msg->list_entry);
-+			found = true;
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&mbox->rx_svc_list_lock, flags);
-+
-+	if (!found)
-+		return -EINVAL;
-+
-+	*val = msg->msg;
-+	kfree(msg);
-+
-+	return 0;
-+}
-+
-+static void bcm74110_rx_flush_msg(struct bcm74110_mbox *mbox)
-+{
-+	struct bcm74110_mbox_msg *msg, *msg_tmp;
-+	LIST_HEAD(list_temp);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&mbox->rx_svc_list_lock, flags);
-+	list_splice_init(&mbox->rx_svc_init_list, &list_temp);
-+	spin_unlock_irqrestore(&mbox->rx_svc_list_lock, flags);
-+
-+	list_for_each_entry_safe(msg, msg_tmp, &list_temp, list_entry) {
-+		list_del(&msg->list_entry);
-+		kfree(msg);
-+	}
-+}
-+
-+#define BCM_DEQUEUE_TIMEOUT_MS 30
-+static int bcm74110_rx_pop_init_msg_block(struct bcm74110_mbox *mbox, u32 func_type,
-+					  u32 *val)
-+{
-+	int ret, timeout = 0;
-+
-+	do {
-+		ret = bcm74110_rx_pop_init_msg(mbox, func_type, val);
-+
-+		if (!ret)
-+			return 0;
-+
-+		/* TODO: Figure out what is a good sleep here. */
-+		usleep_range(1000, 2000);
-+		timeout++;
-+	} while (timeout < BCM_DEQUEUE_TIMEOUT_MS);
-+
-+	dev_warn(&mbox->pdev->dev, "Timeout waiting for service init response\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static int bcm74110_mbox_create_msg(int req, int rply, int svc, int func,
-+				    int length, int slot)
-+{
-+	u32 msg = 0;
-+
-+	BCM_MSG_SET_FIELD(msg, REQ, req);
-+	BCM_MSG_SET_FIELD(msg, RPLY, rply);
-+	BCM_MSG_SET_FIELD(msg, SVC, svc);
-+	BCM_MSG_SET_FIELD(msg, FUNC, func);
-+	BCM_MSG_SET_FIELD(msg, LENGTH, length);
-+	BCM_MSG_SET_FIELD(msg, SLOT, slot);
-+
-+	return msg;
-+}
-+
-+static int bcm74110_mbox_tx_msg(struct bcm74110_mbox *mbox, u32 msg)
-+{
-+	int val;
-+
-+	/* We can potentially poll with timeout here instead */
-+	val = bcm74110_tx_readl(mbox, BCM_MBOX_STATUS0);
-+	if (val & BCM_MBOX_STATUS0_FULL) {
-+		dev_err(&mbox->pdev->dev, "Mailbox full\n");
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&mbox->pdev->dev, "tx: [{req=%lu|rply=%lu|srv=%lu|fn=%lu|length=%lu|slot=%lu]\n",
-+		BCM_MSG_GET_FIELD(msg, REQ), BCM_MSG_GET_FIELD(msg, RPLY),
-+		BCM_MSG_GET_FIELD(msg, SVC), BCM_MSG_GET_FIELD(msg, FUNC),
-+		BCM_MSG_GET_FIELD(msg, LENGTH), BCM_MSG_GET_FIELD(msg, SLOT));
-+
-+	bcm74110_tx_writel(mbox, msg, BCM_MBOX_WDATA);
-+
-+	return 0;
-+}
-+
-+#define BCM_MBOX_LINK_TRAINING_RETRIES	5
-+static int bcm74110_mbox_link_training(struct bcm74110_mbox *mbox)
-+{
-+	int ret, retries = 0;
-+	u32 msg = 0, orig_len = 0, len = BCM_LINK_CODE0;
-+
-+	do {
-+		switch (len) {
-+		case 0:
-+			retries++;
-+			dev_warn(&mbox->pdev->dev,
-+				 "Link train failed, trying again... %d\n",
-+				 retries);
-+			if (retries > BCM_MBOX_LINK_TRAINING_RETRIES)
-+				return -EINVAL;
-+			len = BCM_LINK_CODE0;
-+			fallthrough;
-+		case BCM_LINK_CODE0:
-+		case BCM_LINK_CODE1:
-+		case BCM_LINK_CODE2:
-+			msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+						       BCM_MSG_FUNC_LINK_START,
-+						       len, BCM_MSG_SVC_INIT);
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		bcm74110_mbox_tx_msg(mbox, msg);
-+
-+		/* No response expected for LINK_CODE2 */
-+		if (len == BCM_LINK_CODE2)
-+			return 0;
-+
-+		orig_len = len;
-+
-+		ret = bcm74110_rx_pop_init_msg_block(mbox,
-+						     BCM_MSG_GET_FIELD(msg, FUNC),
-+						     &msg);
-+		if (ret) {
-+			len = 0;
-+			continue;
-+		}
-+
-+		if ((BCM_MSG_GET_FIELD(msg, SVC) != BCM_MSG_SVC_INIT) ||
-+		    (BCM_MSG_GET_FIELD(msg, FUNC) != BCM_MSG_FUNC_LINK_START) ||
-+		    (BCM_MSG_GET_FIELD(msg, SLOT) != 0) ||
-+		    (BCM_MSG_GET_FIELD(msg, RPLY) != 1) ||
-+		    (BCM_MSG_GET_FIELD(msg, REQ) != 0)) {
-+			len = 0;
-+			continue;
-+		}
-+
-+		len = BCM_MSG_GET_FIELD(msg, LENGTH);
-+
-+		/* Make sure sequence is good */
-+		if (len != (orig_len + 1)) {
-+			len = 0;
-+			continue;
-+		}
-+	} while (1);
-+
-+	return -EINVAL;
-+}
-+
-+static int bcm74110_mbox_tx_msg_and_wait_ack(struct bcm74110_mbox *mbox, u32 msg)
-+{
-+	int ret;
-+	u32 recv_msg;
-+
-+	ret = bcm74110_mbox_tx_msg(mbox, msg);
-+	if (ret)
-+		return ret;
-+
-+	ret = bcm74110_rx_pop_init_msg_block(mbox, BCM_MSG_GET_FIELD(msg, FUNC),
-+					     &recv_msg);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Modify tx message to verify rx ack.
-+	 * Flip RPLY/REQ for synchronous messages
-+	 */
-+	if (BCM_MSG_GET_FIELD(msg, REQ) == 1) {
-+		BCM_MSG_SET_FIELD(msg, RPLY, 1);
-+		BCM_MSG_SET_FIELD(msg, REQ, 0);
-+	}
-+
-+	if (msg != recv_msg) {
-+		dev_err(&mbox->pdev->dev, "Found ack, but ack is invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Each index points to 0x100 of HAB MEM. IDX size counts from 0 */
-+#define BCM_MBOX_HAB_MEM_IDX_START	0x30
-+#define BCM_MBOX_HAB_MEM_IDX_SIZE	0x0
-+static int bcm74110_mbox_shmem_init(struct bcm74110_mbox *mbox)
-+{
-+	u32 msg = 0;
-+	int ret;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_STOP,
-+				       0, BCM_MSG_SVC_INIT);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_TX,
-+				       BCM_MBOX_HAB_MEM_IDX_START,
-+				       BCM_MBOX_HAB_MEM_IDX_SIZE);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_SHMEM_RX,
-+				       BCM_MBOX_HAB_MEM_IDX_START,
-+				       BCM_MBOX_HAB_MEM_IDX_SIZE);
-+	ret = bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+	if (ret)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int bcm74110_mbox_init(struct bcm74110_mbox *mbox)
-+{
-+	int ret = 0;
-+
-+	/* Disable queues tx/rx */
-+	bcm74110_tx_writel(mbox, 0x0, BCM_MBOX_CTRL);
-+
-+	/* Clear status & restart tx/rx*/
-+	bcm74110_tx_writel(mbox, BCM_MBOX_CTRL_EN | BCM_MBOX_CTRL_CLR,
-+			   BCM_MBOX_CTRL);
-+
-+	/* Unmask irq */
-+	bcm74110_irq_writel(mbox, BCM_MBOX_IRQ_NOT_EMPTY, BCM_MBOX_IRQ_MASK_CLEAR);
-+
-+	ret = bcm74110_mbox_link_training(mbox);
-+	if (ret) {
-+		dev_err(&mbox->pdev->dev, "Training failed\n");
-+		return ret;
-+	}
-+
-+	return bcm74110_mbox_shmem_init(mbox);
-+}
-+
-+static int bcm74110_mbox_send_data(struct mbox_chan *chan, void *data)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+	u32 msg;
-+
-+	switch (chan_priv->type) {
-+	case BCM_MSG_SVC_PMC:
-+	case BCM_MSG_SVC_SCMI:
-+	case BCM_MSG_SVC_DPFE:
-+		msg = bcm74110_mbox_create_msg(1, 0, chan_priv->type, 0,
-+					       128 + 28, chan_priv->slot);
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	return bcm74110_mbox_tx_msg(chan_priv->mbox, msg);
-+}
-+
-+static int bcm74110_mbox_chan_startup(struct mbox_chan *chan)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+
-+	chan_priv->en = true;
-+
-+	return 0;
-+}
-+
-+static void bcm74110_mbox_chan_shutdown(struct mbox_chan *chan)
-+{
-+	struct bcm74110_mbox_chan *chan_priv = chan->con_priv;
-+
-+	chan_priv->en = false;
-+}
-+
-+static const struct mbox_chan_ops bcm74110_mbox_chan_ops = {
-+	.send_data = bcm74110_mbox_send_data,
-+	.startup = bcm74110_mbox_chan_startup,
-+	.shutdown = bcm74110_mbox_chan_shutdown,
-+};
-+
-+static void bcm74110_mbox_shutdown(struct platform_device *pdev)
-+{
-+	struct bcm74110_mbox *mbox = dev_get_drvdata(&pdev->dev);
-+	u32 msg;
-+
-+	msg = bcm74110_mbox_create_msg(1, 0, BCM_MSG_SVC_INIT,
-+				       BCM_MSG_FUNC_LINK_STOP,
-+				       0, 0);
-+
-+	bcm74110_mbox_tx_msg_and_wait_ack(mbox, msg);
-+
-+	/* Even if we don't receive ACK, lets shut it down */
-+
-+	bcm74110_mbox_mask_and_clear(mbox);
-+
-+	/* Disable queues tx/rx */
-+	bcm74110_tx_writel(mbox, 0x0, BCM_MBOX_CTRL);
-+
-+	/* Flush queues */
-+	bcm74110_rx_flush_msg(mbox);
-+}
-+
-+static struct mbox_chan *bcm74110_mbox_of_xlate(struct mbox_controller *cntrl,
-+						const struct of_phandle_args *p)
-+{
-+	struct bcm74110_mbox *mbox = bcm74110_mbox_from_cntrl(cntrl);
-+	struct device *dev = &mbox->pdev->dev;
-+	struct bcm74110_mbox_chan *chan_priv;
-+	int slot, type;
-+
-+	if (p->args_count != 2) {
-+		dev_err(dev, "Invalid arguments\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	type = p->args[0];
-+	slot = p->args[1];
-+
-+	switch (type) {
-+	case BCM_MSG_SVC_PMC:
-+	case BCM_MSG_SVC_SCMI:
-+	case BCM_MSG_SVC_DPFE:
-+		if (slot > BCM_MBOX_HAB_MEM_IDX_SIZE) {
-+			dev_err(dev, "Not enough shared memory\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+		chan_priv = cntrl->chans[type].con_priv;
-+		chan_priv->slot = slot;
-+		chan_priv->type = type;
-+		break;
-+	default:
-+		dev_err(dev, "Invalid channel type: %d\n", type);
-+		return ERR_PTR(-EINVAL);
-+	};
-+
-+	return &cntrl->chans[type];
-+}
-+
-+static int bcm74110_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct bcm74110_mbox *mbox;
-+	int i, ret;
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->pdev = pdev;
-+	platform_set_drvdata(pdev, mbox);
-+
-+	mbox->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(mbox->base))
-+		return dev_err_probe(dev, PTR_ERR(mbox->base), "Failed to iomap\n");
-+
-+	ret = of_property_read_u32(dev->of_node, "brcm,tx", &mbox->tx_chan);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to find tx channel\n");
-+
-+	ret = of_property_read_u32(dev->of_node, "brcm,rx", &mbox->rx_chan);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to find rx channel\n");
-+
-+	mbox->rx_irq = platform_get_irq(pdev, 0);
-+	if (mbox->rx_irq < 0)
-+		return mbox->rx_irq;
-+
-+	INIT_LIST_HEAD(&mbox->rx_svc_init_list);
-+	spin_lock_init(&mbox->rx_svc_list_lock);
-+	bcm74110_mbox_mask_and_clear(mbox);
-+
-+	ret = devm_request_irq(dev, mbox->rx_irq, bcm74110_mbox_isr,
-+			       IRQF_NO_SUSPEND, pdev->name, mbox);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request irq\n");
-+
-+	mbox->controller.ops = &bcm74110_mbox_chan_ops;
-+	mbox->controller.dev = dev;
-+	mbox->controller.num_chans = BCM_MSG_SVC_MAX;
-+	mbox->controller.of_xlate = &bcm74110_mbox_of_xlate;
-+	mbox->controller.chans = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
-+					      sizeof(*mbox->controller.chans),
-+					      GFP_KERNEL);
-+	if (!mbox->controller.chans)
-+		return -ENOMEM;
-+
-+	mbox->mbox_chan = devm_kcalloc(dev, BCM_MSG_SVC_MAX,
-+				       sizeof(*mbox->mbox_chan),
-+				       GFP_KERNEL);
-+	if (!mbox->mbox_chan)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < BCM_MSG_SVC_MAX; i++) {
-+		mbox->mbox_chan[i].mbox = mbox;
-+		mbox->controller.chans[i].con_priv = &mbox->mbox_chan[i];
-+	}
-+
-+	ret = devm_mbox_controller_register(dev, &mbox->controller);
-+	if (ret)
-+		return ret;
-+
-+	ret = bcm74110_mbox_init(mbox);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm74110_mbox_of_match[] = {
-+	{ .compatible = "brcm,bcm74110-mbox", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm74110_mbox_of_match);
-+
-+static struct platform_driver bcm74110_mbox_driver = {
-+	.driver = {
-+		.name = "bcm74110-mbox",
-+		.of_match_table = bcm74110_mbox_of_match,
-+		},
-+	.probe = bcm74110_mbox_probe,
-+	.shutdown = bcm74110_mbox_shutdown,
-+};
-+module_platform_driver(bcm74110_mbox_driver);
-+
-+MODULE_AUTHOR("Justin Chen <justin.chen@braodcom.com>");
-+MODULE_DESCRIPTION("BCM74110 mailbox driver");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
-
+> Changes in v2:
+> - move reg property ahead of pagesize
+>
+>  arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+> index 507a71f9294b..0528e293c03d 100644
+> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+> @@ -154,6 +154,14 @@ ldo5: LDO5 {
+>  			};
+>  		};
+>  	};
+> +
+> +	/* EEPROM */
+> +	eeprom@50 {
+> +		compatible = "atmel,24c32";
+> +		reg = <0x50>;
+> +		pagesize = <32>;
+> +		vcc-supply = <&buck4>;
+> +	};
+>  };
+>
+>  /* eMMC */
+> --
+> 2.34.1
+>
