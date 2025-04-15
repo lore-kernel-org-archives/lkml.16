@@ -1,114 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984D6FC5;
-	Tue, 15 Apr 2025 17:17:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A591422AB;
+	Tue, 15 Apr 2025 17:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744737478; cv=none; b=QMUkZzEcbuaYrYWu/dftSlMi5QWPTGMdgZUM9+z7DS+K+PhnKeuQFx9Qo1lLHrQ+LC5pn8QYO1JD8UrsLAprUXVuXlnfNtyrszr7D5bHtXpGBfanbSlvRoUPasr4jCrl3pAuB/4HMnYZkdtQFEev4m08+2mhEcIqHDzQ/VT0CAE=
+	t=1744737568; cv=none; b=In09srHnd/4eUigDvbhQCX4zuPFvBlpNElXbXfFPNr6CqBo5A548eaStV0M4/EgpK2hXfnkjGQHZJnLFOLacNJkksvI73TlM4csH531P8teAgrizfVwsfyDRo40pLG7v454e1a9sRKWux/9628qNojNXCRI0Ehl3Sg9+krZShTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744737478; c=relaxed/simple;
-	bh=0AKl/IsRYslwoVUW1m7o9u3fbr4ueHyDO0QWtpy18/E=;
+	s=arc-20240116; t=1744737568; c=relaxed/simple;
+	bh=8yka/gQeBhrlYJl1t7qkx70DxA7hHJaBmLjr/ZBHYqk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kHb7pWL88CaFzKlqTs5OD40ARQTZm/k8ntPmRXuntevB8yZS9/gJDBUTV16dxUkZvi5lof+0AppIpQ5Bo5snIJDbZ6U71J/VN4beKUJw/kgh8MV8o2QzjIjyDrMcBQDNqJCvGZwOWxwFYetgFcyvtODmNihShSnsPfW21ICfhcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uzmbIYra; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BcIB565tbTTck1/yUCxMsjoRQZd+PoSwpEnZSWHwoBcglAeiV6uSxn3Jm7q1ScXL807IXUnx0e5unV+f4ikkpaNw7PbBnI5A4wLVsT5Y6nQLcGNLFtTnHOM3POkHVO3ak6JtBVzUb+QmINe0dp4jO/8GhRyHYq2a4VRwrk07LFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jhw7DW3V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uzmbIYra"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2319CC4CEEF;
-	Tue, 15 Apr 2025 17:17:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jhw7DW3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F6EC4AF09;
+	Tue, 15 Apr 2025 17:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744737478;
-	bh=0AKl/IsRYslwoVUW1m7o9u3fbr4ueHyDO0QWtpy18/E=;
+	s=k20201202; t=1744737567;
+	bh=8yka/gQeBhrlYJl1t7qkx70DxA7hHJaBmLjr/ZBHYqk=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=uzmbIYraB+/hNPPpeHu5iQ59YfOzP/UIesCQXOHlU7LhdjCd3W/5SpGYiv/6/LyXH
-	 ZobA3oHULhM0Ktuxt4iv7U3aKT3kZKsF/H+fUBTIIijcvwxrv66m0Xt/+tiDJ6Rfrn
-	 ++YkWONByXXL2LR7lOh5YTabvrgPx7I3zsgPa6huIHsxp/gc2n7NWq2lAB5cXU7NUA
-	 AoKKOjUzfEVZZfKZdDXi+nHZBpNDomcEFSX87ZD7k19DVq252y7mLtRw7+EB83yk5A
-	 2LA4yBfGYoWXHVgUgSlEjwfSgTpW+Wip3c5uJINpQmKAjeP7kqB0EqORYu97HqcYSt
-	 xi0Hmv0T6/NhA==
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2b8e26063e4so2829108fac.3;
-        Tue, 15 Apr 2025 10:17:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVJIDV7jNvl6JyvNBxT8thhjmrLlwZMniCTJgefd9ildHFRqtVVacLG0n5HcQYcItwTfmg7PfOWrf/Hqs8=@vger.kernel.org, AJvYcCWzS0Ex30xW22RHBdSgFY5dV0Yt95I4MufraIzX1nuC/3wYltt9uE8rMm17Gn2ljBU3oCirlffLnXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNMpn9yYYZSVP7IgfHjEFWyB1hRNOI2COk06Dm/c18FEUW8l3X
-	PefonMcDY4toZZnR98cZF2W3mVN7CJjw/my+OPsZ8CCtFNkGn9bHRbemuTasPuhiVU2wNwk58DZ
-	3IsCKeG1Z/Qo3vs/lIgQthi9FbRY=
-X-Google-Smtp-Source: AGHT+IE8i9pYhCWpc0Z0zMWQ4IuY2YHkZmpW07tdSUgh5pECuqRMh2pTlndSFdkHU7kgpYSBSTpnnbMkIsLySUGS1Po=
-X-Received: by 2002:a05:6871:410c:b0:29e:4a13:603f with SMTP id
- 586e51a60fabf-2d4c3966836mr2578fac.4.1744737477341; Tue, 15 Apr 2025 10:17:57
- -0700 (PDT)
+	b=jhw7DW3VqHIP3oCC9zZ5B2min/ozWe4z3fTBJFePlfJBXw1PL3lvj0ebqpk47Xo1j
+	 fHsMk4C7B7Nz5Z74s2p6+lz16LQGmL5KIsMKFUeVCxUr0NFUR4t0h7FtxYVzjzUYyc
+	 GC8GcJxioY+WzXChQpvR+goTqMq9c/gvEsj4sa+ouSXG4WWdjFbrrOzFiwY+MSyfu6
+	 1vjNOH6wflfV7QvVtylAfwhJrHe0nqdRvrjBgb2z2FAIeluoRru+P40JGUGOAXrZPq
+	 SEHgAcq10VwKaQQG8nNKnKvPrdgiIQgYo43gx6PMzMgPxo3YSzCOisLK/vofeHF4dk
+	 LxllEjABcYLrA==
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso7528145a12.3;
+        Tue, 15 Apr 2025 10:19:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUdUv+7CK1iDP0ExWC6AVzzlOmbkYBNI4cAa/QfducYs3rWhbEmx9CEkpClIpj4PL0SP0CPUvCfoCAo@vger.kernel.org, AJvYcCVxjUKMR0UWiN6XEkqaMheyrONJ4YdDsaEUFBCWGiqIrry6Vsoe7o9DG8GsRYEHjkloXeqp+n04TBzG@vger.kernel.org, AJvYcCWjU18CYUy+fTgqvv0LW0t4Ee1OFtjxXVIMauLuAth6+PJ3TrEiZMa2yszXmm4enTyke79KnnMuiEKJ@vger.kernel.org, AJvYcCWnjnDwq8jhC6NGV5k4lr/PP6O46HXO5kiXHKXhNacVyNPKHjFrBWdW1dV6Ufr0lQAVV+gZFK1gIRqAIIBy@vger.kernel.org, AJvYcCXmQfqd9EVTU3inv2NLJyzym4Zz4MKA+XlhQtGWzBHtIU8E62boUkIUsmw1SEu6px/3+pdNsMA/cukPQA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeDny2ugsASXlGS8OxcehHXWiMANC+KYuYpmgB6XifP8UohcQp
+	YfFPWvXelpCk58KfYTauxxsDe36Qkh0bkXv1leg+dHs28sv4xrvV9boz6z23+Iejo/Zm+NSEl4m
+	b6hDgKJrdSFaR11+5JWHM0SzucQ==
+X-Google-Smtp-Source: AGHT+IFg/mg5Nw4gYKzUIV+g5HCy+mWdlEB6aIaPRaMh7pw+ii1aBxtkyH5Y0FGsRMWegnVV9LP1TH52Q9jz/Bmp/K4=
+X-Received: by 2002:a05:6402:84d:b0:5e5:c3bc:f4e0 with SMTP id
+ 4fb4d7f45d1cf-5f370118051mr12498419a12.29.1744737566354; Tue, 15 Apr 2025
+ 10:19:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com> <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com>
-In-Reply-To: <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 15 Apr 2025 19:17:45 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
-X-Gm-Features: ATxdqUGlC1rknMXLhtRZskxYJ82qaSpg2SVaqpZAeB9vwYey56V6yOt0pI7hiXI
-Message-ID: <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
-Subject: Re: [PATCH v3] PM: EM: Fix potential division-by-zero error in em_compute_costs()
-To: Yaxiong Tian <iambestgod@qq.com>
-Cc: lukasz.luba@arm.com, rafael@kernel.org, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>
+References: <cover.1742418429.git.andrea.porta@suse.com> <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+ <2025041557-masculine-abrasive-c372@gregkh> <20250415165505.0c05bc61@bootlin.com>
+ <2025041531-dubiously-duchess-276a@gregkh> <Z_5-Jjbu6XoHGmxN@apocalypse> <2025041530-random-cheek-125d@gregkh>
+In-Reply-To: <2025041530-random-cheek-125d@gregkh>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 15 Apr 2025 12:19:14 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJbdvMrUEVwp4_yC4efhwuK4eCLYWFpGdvrVcbr213aqg@mail.gmail.com>
+X-Gm-Features: ATxdqUHTw0_CVItdYBRikaW5EF3D0YJ32XibO0ClmZMuosKXRosNhnaQkfoIVa4
+Message-ID: <CAL_JsqJbdvMrUEVwp4_yC4efhwuK4eCLYWFpGdvrVcbr213aqg@mail.gmail.com>
+Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, Herve Codina <herve.codina@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczynski <kw@linux.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>, 
+	Stefan Wahren <wahrenst@gmx.net>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Phil Elwell <phil@raspberrypi.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	kernel-list@raspberrypi.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 11:09=E2=80=AFAM Yaxiong Tian <iambestgod@qq.com> w=
-rote:
+On Tue, Apr 15, 2025 at 11:14=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+> On Tue, Apr 15, 2025 at 05:41:26PM +0200, Andrea della Porta wrote:
+> > Hi Greg,
+> >
+> > On 17:14 Tue 15 Apr     , Greg Kroah-Hartman wrote:
+> > > On Tue, Apr 15, 2025 at 04:55:05PM +0200, Herve Codina wrote:
+> > > > Hi Greg,
+> > > >
+> > > > On Tue, 15 Apr 2025 16:06:43 +0200
+> > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > > On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrot=
+e:
+> > > > > > The RaspberryPi RP1 is a PCI multi function device containing
+> > > > > > peripherals ranging from Ethernet to USB controller, I2C, SPI
+> > > > > > and others.
+> > > > >
+> > > > > So shouldn't this be using the auxbus code?  That's designed to "=
+split
+> > > > > up" PCI devices such that you can share them this way.
+> > > > >
+> > > > > Or did that get rejected somewhere previously?
+> > > > >
+> > > >
+> > > > It doesn't use auxbus probably for the exact same reason that the
+> > > > one given for the LAN966x PCI device driver [0] and [1].
+> > > >
+> > > > Avoid all boiler plate needed with auxbus whereas drivers already e=
+xist
+> > > > as platform drivers. Internal devices are handled by those platform=
+ drivers.
+> > > > Those devi just need to be described as platform devices and device=
+-tree is
+> > > > fully relevant for that description.
+> > > >
+> > > > [0] https://lore.kernel.org/all/CAL_Jsq+1r3SSaXupdNAcXO-4rcV-_3_hwh=
+0XJaBsB9fuX5nBCQ@mail.gmail.com/
+> > > > [1] https://lore.kernel.org/all/Y9kuxrL3XaCG+blk@kroah.com/
+> > >
+> > > I really hate creating platform devices below a PCI device, so I'll k=
+eep
+> > > complaining about this every time people try to do it.
+> >
+> > I agree with you, but as Herve has already pointed out this would mean =
+incurring
+> > in significant work to adapt drivers for all the peripherals (there are=
+ quite a
+> > few), while with this approach they would be left untouched.
 >
-> When the device is of a non-CPU type, table[i].performance won't be
-> initialized in the previous em_init_performance(), resulting in division
-> by zero when calculating costs in em_compute_costs().
->
-> Since the 'cost' algorithm is only used for EAS energy efficiency
-> calculations and is currently not utilized by other device drivers, we
-> should add the _is_cpu_device(dev) check to prevent this division-by-zero
-> issue.
->
-> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove divis=
-ion")
+> We have no problem with reworking existing drivers, especially if they
+> will be doing the correct thing.  Don't let that be an excuse, it
+> doesn't work with me, sorry :)
 
-Please look at the Fixes: tags in the kernel git history.  They don't
-look like the one above.
+Let me resurrect of_platform_bus so we can stop repeating the same
+conversation... MMIO based devices using DT (and ACPI) are platform
+devices. There is no other answer in the kernel today.
 
-> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> ---
->  kernel/power/energy_model.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-> index d9b7e2b38c7a..fc972cc1fc12 100644
-> --- a/kernel/power/energy_model.c
-> +++ b/kernel/power/energy_model.c
-> @@ -235,7 +235,7 @@ static int em_compute_costs(struct device *dev, struc=
-t em_perf_state *table,
->
->         /* Compute the cost of each performance state. */
->         for (i =3D nr_states - 1; i >=3D 0; i--) {
-> -               unsigned long power_res, cost;
-> +               unsigned long power_res, cost =3D 0;
->
->                 if ((flags & EM_PERF_DOMAIN_ARTIFICIAL) && cb->get_cost) =
-{
->                         ret =3D cb->get_cost(dev, table[i].frequency, &co=
-st);
-> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, struc=
-t em_perf_state *table,
->                                         cost, ret);
->                                 return -EINVAL;
->                         }
-> -               } else {
-> +               } else if (_is_cpu_device(dev)) {
-
-Can't you just check this upfront at the beginning of the function and
-make it bail out if dev is not a CPU device?
-
->                         /* increase resolution of 'cost' precision */
->                         power_res =3D table[i].power * 10;
->                         cost =3D power_res / table[i].performance;
-> --
+Rob
