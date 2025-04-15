@@ -1,51 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15AAF126C02;
-	Tue, 15 Apr 2025 22:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3857F253938;
+	Tue, 15 Apr 2025 22:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744754937; cv=none; b=q4JCJiMEs+h+ZUpaCklAco9f73ScY7CxQWZaMjYiCvp66SUXdX+9mdbEZxOrYY2BJxpLNgLTXSbVG+zC5cm9JKDevgWm307VR8CY/VppdvbcaNbr+6Drltl2m+gRqdA1FKHFQdzZBBp2jfntG94Ljxa8VGb9QHAPKFpHf7t+t4M=
+	t=1744754961; cv=none; b=qHLjsNQAqETdqk/SHuXGaPk+MDX5PTk7y5WAc0k2sPE+lCcItCJn1ubqJYSp/+gjUEsij8kcnU2s94lf3IGfybuotJqxRkNK/AyqS2KNrO+eQnvs2CoStyTNdVsdEYFD20b80elnfKXYxboAbRe4sY01CuC4aXRVY8GlQzRH2rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744754937; c=relaxed/simple;
-	bh=tyVsM8sNu2PCOz+arnoETnAj/qNuujBFl5CZuIgb6qU=;
+	s=arc-20240116; t=1744754961; c=relaxed/simple;
+	bh=fT9KURxC+hnVBNlWWLo90bn9GjX86Jg2rXvY5sft3M0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QvFgtjSWK8VEqzNW8mAItku5OuV4j1FEnPynFHXFPJYHQqDA58yPagu9soxJYqMZGRGOkRY1NMyFntfwjCsEbMX2lQ6xzQPu7I4qEer4j56uMgQt6P68eXJKJrEhNVgUY2dueGRL99M+TCLQqD2QyFwJd9sypc7uASsRej0j/9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUL+er06; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JZKUQMZS4RgmfyNczSRiyWqrXJCIqaaKT43sKDe7YcsULSYSDAZFDjoC617h6yPQVnRRHttYshqaM+B6bylSAEq6RdRAlfEp6B/3kb+V511uT+dSmkYoKe74xxFzlxSBfzVb/xPiIq1vLS2QVFI/FaA5MC2DXxB5e1w4a5ODw24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tv580yO+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUL+er06"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24E63C4CEE7;
-	Tue, 15 Apr 2025 22:08:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tv580yO+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E7CDC4CEE7;
+	Tue, 15 Apr 2025 22:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744754935;
-	bh=tyVsM8sNu2PCOz+arnoETnAj/qNuujBFl5CZuIgb6qU=;
+	s=k20201202; t=1744754960;
+	bh=fT9KURxC+hnVBNlWWLo90bn9GjX86Jg2rXvY5sft3M0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LUL+er06cdomuT2To0Vp+vl3RezE21eS9FHO39xYrxl13ItAS72cgNN1YDbw2sDoI
-	 jZUM/ht2DCGfCQaOp4g3ktg4fzLibFvaacZA5KDdh4rrxDAhJnGlOgRTyfsjnfVGOZ
-	 rfLw4v57o6nzJQXAMX1FG97HnypSpNKjwJ/AvgDZKW8bmOjgWAsz8OFRckuSetUJbF
-	 h0KpuhqmWYAaBuooEoYERzR+4RL9c7X/EHqyMPCfwCRh1ZVi7tFK0Tqgki7uWm4FP5
-	 OmXmrl5M1eFTenfphFKy6xfN4WQrh6WhZSGrw5NtFjPXPxj7ExiMR1Btj2Agl3onuA
-	 i9k7R/0At5mgg==
-Date: Tue, 15 Apr 2025 17:08:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	b=Tv580yO+H2hOAOPlBB3efQAxuBRfoVkSJRz0fPP82iu2H+MDc9T4BGaCi39QUw/Px
+	 ElmDuFOHLsg+yWOZwPXvmONCyWqblstsRgCLYtTsfQluf9LoHTNm0lHBIle/sQ8Th4
+	 2bAZVzNpBt2AKZP4yOliVmXMGBpgbPDlUzEHuCKg8gev8050v7hQrhXbBB2HJ9lAtx
+	 29p2vPQWDJYE300DzbpjnxOsjeWUInfNoLOcDYoMoRUDrFZbEsBqUFUNHug1xLGBBO
+	 pxKOpEzQv1aB2+Sq88wrAcXBWnDWfKjivDitp9pWOc3pgs7aVc/lwbz5hoqKZWhfbK
+	 u30xF55sakPXQ==
+Date: Tue, 15 Apr 2025 17:09:18 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-phy@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	devicetree@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
-Subject: Re: [net-next v5 1/6] dt-bindings: net: Add MTIP L2 switch
- description
-Message-ID: <20250415220853.GA903775-robh@kernel.org>
-References: <20250414140128.390400-1-lukma@denx.de>
- <20250414140128.390400-2-lukma@denx.de>
+	linux-kernel@vger.kernel.org,
+	Kishon Vijay Abraham I <kishon@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: phy: renesas,usb2-phy: Add clock
+ constraint for RZ/G2L family
+Message-ID: <174475495805.919973.18097238405448838308.robh@kernel.org>
+References: <20250414145729.343133-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250414145729.343133-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,124 +54,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414140128.390400-2-lukma@denx.de>
+In-Reply-To: <20250414145729.343133-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Mon, Apr 14, 2025 at 04:01:23PM +0200, Lukasz Majewski wrote:
-> This patch provides description of the MTIP L2 switch available in some
-> NXP's SOCs - e.g. imx287.
+
+On Mon, 14 Apr 2025 15:57:26 +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> The RZ/G2L family requires two clocks for USB2 PHY, which are already
+> defined in the DTSI files. Add a constraint in the DT binding document
+> to ensure validation with `dtbs_check`.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> Changes for v2:
-> - Rename the file to match exactly the compatible
->   (nxp,imx287-mtip-switch)
+>  Documentation/devicetree/bindings/phy/renesas,usb2-phy.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Changes for v3:
-> - Remove '-' from const:'nxp,imx287-mtip-switch'
-> - Use '^port@[12]+$' for port patternProperties
-> - Drop status = "okay";
-> - Provide proper indentation for 'example' binding (replace 8
->   spaces with 4 spaces)
-> - Remove smsc,disable-energy-detect; property
-> - Remove interrupt-parent and interrupts properties as not required
-> - Remove #address-cells and #size-cells from required properties check
-> - remove description from reg:
-> - Add $ref: ethernet-switch.yaml#
-> 
-> Changes for v4:
-> - Use $ref: ethernet-switch.yaml#/$defs/ethernet-ports and remove already
->   referenced properties
-> - Rename file to nxp,imx28-mtip-switch.yaml
-> 
-> Changes for v5:
-> - Provide proper description for 'ethernet-port' node
-> ---
->  .../bindings/net/nxp,imx28-mtip-switch.yaml   | 141 ++++++++++++++++++
->  1 file changed, 141 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
-> new file mode 100644
-> index 000000000000..6f2b5a277ac2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/nxp,imx28-mtip-switch.yaml
-> @@ -0,0 +1,141 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/nxp,imx28-mtip-switch.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP SoC Ethernet Switch Controller (L2 MoreThanIP switch)
-> +
-> +maintainers:
-> +  - Lukasz Majewski <lukma@denx.de>
-> +
-> +description:
-> +  The 2-port switch ethernet subsystem provides ethernet packet (L2)
-> +  communication and can be configured as an ethernet switch. It provides the
-> +  reduced media independent interface (RMII), the management data input
-> +  output (MDIO) for physical layer device (PHY) management.
-> +
-> +$ref: ethernet-switch.yaml#/$defs/ethernet-ports
-> +
-> +properties:
-> +  compatible:
-> +    const: nxp,imx28-mtip-switch
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  phy-supply:
-> +    description:
-> +      Regulator that powers Ethernet PHYs.
-> +
-> +  clocks:
-> +    items:
-> +      - description: Register accessing clock
-> +      - description: Bus access clock
-> +      - description: Output clock for external device - e.g. PHY source clock
-> +      - description: IEEE1588 timer clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ipg
-> +      - const: ahb
-> +      - const: enet_out
-> +      - const: ptp
-> +
-> +  interrupts:
-> +    items:
-> +      - description: Switch interrupt
-> +      - description: ENET0 interrupt
-> +      - description: ENET1 interrupt
-> +
-> +  pinctrl-names: true
-> +
-> +  ethernet-ports:
-> +    type: object
-> +    additionalProperties: true
-> +    properties:
-> +      ethernet-port:
-> +        type: object
-> +        unevaluatedProperties: false
 
-This is going to fail if you have any property other than 'reg'. But 
-then it will never be applied because you never have a node called
-'ethernet-port' since you have more than 1 child node. You need this 
-under 'patternProperties' and 'additionalProperties: true' instead. And 
-please test some of the requirements here. Like a reg value of 3 or 
-remove 'phy-mode'.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-> +
-> +        properties:
-> +          reg:
-> +            items:
-> +              - enum: [1, 2]
-> +            description: MTIP L2 switch port number
-> +
-> +        required:
-> +          - reg
-> +          - label
-> +          - phy-mode
-> +          - phy-handle
