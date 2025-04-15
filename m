@@ -1,130 +1,189 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B354627979D
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCE11AF0D0;
+	Tue, 15 Apr 2025 07:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744701220; cv=none; b=aZc8xsdyxao8PHYrzV51skIMxNqBHSTKF6doNh/wm7fT5MasZ38TAjJU4+54w3dISmJZca3HyCXXP9s+8K0/QxoMYBWXoRBbiLKFTDR4779soW5YXtGxsfTQ3oA+FPRcSylfZD2WO/7JNPS4MtnbvuArJf68xwwQdNufjx6IGk0=
+	t=1744701248; cv=none; b=pvgqp2osSMfnGnEwKfNhsjVczfas7l1WtrLEs5VpH5at7NFCw3ZRspKstBNRPQKay8mysMmvyMdcDNtnDD1twva7e0y5PNXaRQKKjzIIR2TImgLQ6Fnz3XoFAOBgRPQx8vGaH7uHDjc01lqH2y4OaFmgdpFAwjGJh9VUG5zWjKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744701220; c=relaxed/simple;
-	bh=h5dIhNUGRcNVLReL7I05zUY5kTUC0DzPldBHwsd5x9E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sAtU5HhpMRAtACR2r0HYHfr5ZvFLDSlw4UA2ssWttebZPVflkzIzC1MyvWJfOSPihCniq20TVmzKBgiR3BBW4+jj27NaOjw4aU7yTfhncoqe2N0Z9Tkq3xrckG8voFdCAfFeaCz7LqBRRGzIp1vAGd7flkHcAITvOhIXSEXqTDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SaSrlG2N; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744701248; c=relaxed/simple;
+	bh=hcLPhfxenRnvO2U6OAAPVSctWKDdhcd6fkpJdxhI3xY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qwqOZOa/rGxjBn9oSDinfgRq/B6frEawXQqBAPJdKpFcRuT8kDJIMHqiE/FMgKy/Jb0kjmN+E8+hEGBxWOZUWg9+zVqImCy7INVmRYUNngDYBP7sfPTtirdEaQTAfQIvnEhMnpvhbUeDOQWmUAq/HH/1NlXjCArbozbd+Otv+O0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=iIgkH8cW; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SaSrlG2N"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22438c356c8so57754865ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744701217; x=1745306017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gvP3jktdcQlD/wgwVWubnz5z+eT6waZA1U4rtXZRHts=;
-        b=SaSrlG2NoX3QQbjT2KAZd263HQGTexf+55IukAw8U7sxe3JSb0Hm0tqgpSX8Bm0gpb
-         1KaF380X4EnRJAWWCIS9hVhm6vWAM5SgtBpgpefrE9LF9I69ybzHjK2ZCWiePpg6IK7u
-         4qzjEk3Q51umeo8sCsFII/9TFyBc1VetlGBjc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744701217; x=1745306017;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gvP3jktdcQlD/wgwVWubnz5z+eT6waZA1U4rtXZRHts=;
-        b=i/hbUOlNEGT1Vf2an+EjpRZL7BnKamYnCQTDN+l8VWhcKdP5Teq0CeYGyc+DmnCS1F
-         FvG+EsFzAeGmOhKh+48oGd+4v0sqmRe9wHhqEPpqv8idG3wSt3isFEjN1J0ONLWWMa/e
-         oNeDi9o0zgju3thUvpXvHs9mTVqJ8iD6CMs733dk1TNidnG8cRQ1EtjoYJxayPDcHhUL
-         wZZu51P5aAayw+32EKpp2Gg+dU+AjgJBnujJBdTMPmC+lN3M7/Ubeha6qi1OR6QNy3nF
-         nBdAP6npOpvr6OAIb30WDe0xUH1uLu3eC9R9D32jH0tinuiVaj40VC6N4OiZBMJKQGLB
-         hBEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVj5NgThvinuS7tLBJvKjsxCHS/QA70ex9oUWizaI+LIjxoI53WzcJn9qpGrNSUbZqOg6CV8CyKYzTH1FY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznKRGpgjDq0DYf2kmH01hIrgPPJRS/J2mdqZaJGLedt1fhTGn9
-	PAvCZN5+x037Y9WVb/3I/8MLL62aDxCgjgPOlBHQFxl6bXCzpjcd/2Ha1CdMOg==
-X-Gm-Gg: ASbGncsLYyqgbXon/8SrY/9BBfqpuAFbywdUiy4uMOkmUcAsinKkOpUaSKboHJMTqkz
-	Q0F1ah5cVMjOzN1OvLYGi8r1noJkNomCpAVyyBoPWlkLITtVzMp+7MZ0YhI4jv/g6UquNrLjozX
-	XRsq8hbL/Dk86oKhuhFBeixbmnqb4FLvs6I+ZJRyXq2Yh9Y9uSvfsJWATkW0zEeBvW1Ki+0wns4
-	gTuGHiLe9L6cxrQ39IhcO2bDyCFW94xWv57BsjU87yaq1yrNLVl8RI5a8eYqaJunFv6O9VubbUI
-	qKzqQZd3fc4BGJYCn64/y4P+7aYf210pMW+debvAuSw7SC3pRwzdhn0fKkdkvkPoMYt9KMisSDc
-	o+11C5dSVfxjpgrPLk7LFBvgdifHJcTu2
-X-Google-Smtp-Source: AGHT+IHzbUw60awGAdnr73JeuAX7Ko77w21zXHTS5A1bqgbmfAjViEsZsECWSFQGbmRiP92KE4/mbA==
-X-Received: by 2002:a17:902:e5c8:b0:224:78e:4eb4 with SMTP id d9443c01a7336-22bea50017emr210745615ad.39.1744701216954;
-        Tue, 15 Apr 2025 00:13:36 -0700 (PDT)
-Received: from li-cloudtop.c.googlers.com.com (132.197.125.34.bc.googleusercontent.com. [34.125.197.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b65496sm110776435ad.42.2025.04.15.00.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 00:13:36 -0700 (PDT)
-From: Li Li <dualli@chromium.org>
-To: dualli@google.com,
-	corbet@lwn.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	donald.hunter@gmail.com,
-	gregkh@linuxfoundation.org,
-	arve@android.com,
-	tkjos@android.com,
-	maco@android.com,
-	joel@joelfernandes.org,
-	brauner@kernel.org,
-	cmllamas@google.com,
-	surenb@google.com,
-	omosnace@redhat.com,
-	shuah@kernel.org,
-	arnd@arndb.de,
-	masahiroy@kernel.org,
-	bagasdotme@gmail.com,
-	horms@kernel.org,
-	tweek@google.com,
-	paul@paul-moore.com,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	netdev@vger.kernel.org,
-	selinux@vger.kernel.org,
-	selinux-refpolicy@vger.kernel.org,
-	hridya@google.com
-Cc: smoreland@google.com,
-	ynaffit@google.com,
-	kernel-team@android.com
-Subject: [PATCH] binder: add setup_report permission
-Date: Tue, 15 Apr 2025 00:13:29 -0700
-Message-ID: <20250415071329.3266921-1-dualli@chromium.org>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-In-Reply-To: <20250415071017.3261009-2-dualli@chromium.org>
-References: <20250415071017.3261009-2-dualli@chromium.org>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="iIgkH8cW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744701232;
+	bh=HmPsfRmAPmNXzJi9Xx7CUeeH3IbUJeikFdzI0teQOag=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=iIgkH8cWNYpqokau186oasELOai1Ts+BD7RuD4KyIAVhYtjkpCKK1AlnKnIXxiUdk
+	 hpC8uVoIPCntsiGcXAE8PhMNy2oRbzRVIT58kxXoqw3jMIH9T54Zer4BpcU+NgWHle
+	 mTFpQp64D5eZDZ2B2treG1tOjvqRHSXzLrvHHovY=
+X-QQ-mid: izesmtp77t1744701229t5e986da6
+X-QQ-Originating-IP: DvQef4tpabvAEBUKh00i+R3jcs2o+mDUrDTfaP4WggA=
+Received: from mail-yb1-f178.google.com ( [209.85.219.178])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 15 Apr 2025 15:13:47 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 15285789460902176528
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e6582542952so4101915276.3;
+        Tue, 15 Apr 2025 00:13:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUm1Fm/f21cU0imnEkqb4sC3SXQTviNaHddLgkd7gcW4+XdwrVRaqAUpboYqqeZF47M5ryVUI/Ap1orKwkr@vger.kernel.org, AJvYcCXHoD8BUTgN4AvBjFwIw2tWeT9G8ua2Q28Z4GDTl271j9bjQzR39m9M0WnbSEDkjmjXPZQdR5BRAroqy5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNX1tCY0nsJaLcJ4kWStq0kUHyOVb5yvsvNWMcZy+gFjDNQoVx
+	KzdRnF1NbJyp/bmRHdIZn+Uh3aQOAdOv2qhARLx94O8kwhOh5xF4F+xF+4CQwmnCzl9RsLtJxv8
+	HrSrYy5WhU48mynZLKlZK4GWPsr4=
+X-Google-Smtp-Source: AGHT+IEHwgvmHQkHmDgMlzvWPPgWIS0QJhl8XByWGSmXFpzp63NMw9b1uL3nCEc2EUX40kluM5VlaWS/voVwS2L2B38=
+X-Received: by 2002:a05:6902:228b:b0:e6d:e70f:dbed with SMTP id
+ 3f1490d57ef6-e704de8d4admr24101805276.16.1744701227015; Tue, 15 Apr 2025
+ 00:13:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com>
+ <20250411105459.90782-1-chenlinxuan@uniontech.com> <69F64A6F8DE504F5+20250411105459.90782-7-chenlinxuan@uniontech.com>
+In-Reply-To: <69F64A6F8DE504F5+20250411105459.90782-7-chenlinxuan@uniontech.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Tue, 15 Apr 2025 15:13:35 +0800
+X-Gmail-Original-Message-ID: <31560F16E64472CA+CAC1kPDNtOAj8qi2mu7ehMLW4KWf+2cSqKt9ahL-fW7J-Fs4f8g@mail.gmail.com>
+X-Gm-Features: ATxdqUGyoXiKBtkF46dLOBtNFE2b1W790LkV75qLDVk-33ax-fPFaX8poZnDK4o
+Message-ID: <CAC1kPDNtOAj8qi2mu7ehMLW4KWf+2cSqKt9ahL-fW7J-Fs4f8g@mail.gmail.com>
+Subject: Re: [RFC PATCH 7/7] lib/Kconfig.debug: introduce CONFIG_NO_AUTO_INLINE
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Winston Wen <wentao@uniontech.com>, 
+	Changbin Du <changbin.du@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: izesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: N10XyoOyIIl0vosdHlAwIkQVTLzIPv1yru2cnvJy6rxGaEI9g4VYvbeY
+	Qp32ZjO7T+CO6TV8TlR/VrPTw8rCO1XEAg0PmU5d/gKK29dWnU/ySZ9CglMYTP0OZzQL1B7
+	dWjDKgCNbeM3jvnCl3UwYnLyT7aJQSBiNiRwDFjlorwi301uddYz+ffNV6iW/NjMdwNWC1M
+	rAfL1MljNjc2gR8b2YPozbGI6cJ3WX7VmnqDboxdAsiYLGF3n8Dv5BCgVI7NLKMUsjmlJVq
+	/IEezkl54m3N25UJ61qBZPPUUSnO9r5z2Jgo2HOI2GhOBdGvXOtXc+6HH98q+V1IhsFLruH
+	r+OctPDCpmdu0bshZvoz2vPTJIMlo3TnJUmJiYDW55sgNLwd29L47xHVTw2ZMgXEhR29Z9C
+	VPt+DAb2b+iSLDzHmPJ3p+/DsZlyP6cKb11q33H/gxhQzsgj2cq9eu9yEJzHr2LmDS4Gv5t
+	e4hEaFn4uLa7vihsnDS283m07Wdb1tefHyrZyE4ordqBbDTq36a8RlWvk5tLZfOCzyoOzR9
+	QKUR+veP1wRaXGf+Sc1cavhbzia5BbLKWkCv9qpWOqrb4UOhvJosCznznfVtK8cOsnO6Rpp
+	qKlvEhe4JmQXIRzI5jY/dxVFhAIA8g4iUktMlZKDmRma4rUAUxB0SYRrMD1D0W/lghN6IlE
+	clSKu+Uc45zLFLzIX0POHj5HtZa7oKzUudib2bfmFBAKCYsRWreIzYmGxPDZ7ZCCWU6W24t
+	R8DtkhJGLn6VvCBJ5lSWlupoUyiNtMuB31/Uwop+r5h7yKzDZMPhHq9XL/do5GpuP99xBo1
+	NdJW/V3qMTsA3GOloCG63hldJQsRBpi+Gukj9untsFuJUsC+6nGpMxdsK5Nb1P2UyJ+A8gM
+	bl0qgra9crw+j7k2tRn8gH+2sxcBxLLzjRWjP6dP5ovInS3qIfmqHTkfV9ybZaqBzXEJX/w
+	HyW899HF/V6b9lI9o26m9e2UoqhycZ26amqUK3DK/dbkJhDsvdJ8bH2RqTpYudU++QlArBk
+	nFnOH3c5RBOqG9hWa8xoc6q1d/zOLfw39rS0+SXWQ5F2uUpg1slYIH7kHhc/Owk1wCQXDvx
+	WYKxpL6EGFI
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-From: Li Li <dualli@google.com>
+Chen Linxuan <chenlinxuan@uniontech.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=8811=
+=E6=97=A5=E5=91=A8=E4=BA=94 18:56=E5=86=99=E9=81=93=EF=BC=9A
+>
+> From: Winston Wen <wentao@uniontech.com>
+>
+> Add a new kernel hacking option CONFIG_NO_AUTO_INLINE that prevents the
+> compiler from auto-inlining functions not explicitly marked with the
+> 'inline' keyword.
+>
+> This enhancement improves function tracer capabilities as it can only
+> trace functions that haven't been inlined by the compiler.
+>
+> Previous discussions:
+> Link: https://lore.kernel.org/all/20181028130945.23581-3-changbin.du@gmai=
+l.com/
+>
+> This patch is modified from 917fad29febd ("kernel hacking: add a config
+> option to disable compiler auto-inlining") which can be founded in
+> linux-next-history:
+> Link: https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
+-history.git/commit/?id=3D917fad29febd
+>
+> Unlike the original implementation, this patch:
+>
+> 1. Make it depends on CC_IS_GCC,
+>    as Clang 18.1.3 break test_bitmap_const_eval() in lib/test_bitmap.c
+>
+> 2. Make it depends on X86_64,
+>    as I haven't test other architectures
 
-This adds the new permission "binder:setup_report" for the kernel
-patchset "binder: report txn errors via generic netlink". A new test
-is also added to selinux-testsuite to cover this new permission.
+LOONGARCH has been tested, too.
 
-Signed-off-by: Li Li <dualli@google.com>
----
- policy/flask/access_vectors | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/policy/flask/access_vectors b/policy/flask/access_vectors
-index 58a559ca1..36817566e 100644
---- a/policy/flask/access_vectors
-+++ b/policy/flask/access_vectors
-@@ -835,6 +835,7 @@ class binder
- 	call
- 	set_context_mgr
- 	transfer
-+	setup_report
- }
- 
- class netlink_iscsi_socket
--- 
-2.49.0.604.gff1f9ca942-goog
-
+>
+> 3. Removes unnecessary cc-option checks per 7d73c3e9c514 ("Makefile:
+>    remove stale cc-option checks").
+>
+> 4. Update help information.
+>
+> Cc: Changbin Du <changbin.du@gmail.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Winston Wen <wentao@uniontech.com>
+> Co-Developed-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
+>  Makefile          |  6 ++++++
+>  lib/Kconfig.debug | 15 +++++++++++++++
+>  2 files changed, 21 insertions(+)
+>
+> diff --git a/Makefile b/Makefile
+> index f42418556507..0a9bf33ce75f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1071,6 +1071,12 @@ endif
+>  # Ensure compilers do not transform certain loops into calls to wcslen()
+>  KBUILD_CFLAGS +=3D -fno-builtin-wcslen
+>
+> +ifdef CONFIG_NO_AUTO_INLINE
+> +KBUILD_CFLAGS   +=3D -fno-inline-functions \
+> +                  -fno-inline-small-functions \
+> +                  -fno-inline-functions-called-once
+> +endif
+> +
+>  # change __FILE__ to the relative path to the source directory
+>  ifdef building_out_of_srctree
+>  KBUILD_CPPFLAGS +=3D $(call cc-option,-ffile-prefix-map=3D$(srcroot)/=3D=
+)
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 9fe4d8dfe578..2ebb4802886a 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -436,8 +436,23 @@ config GDB_SCRIPTS
+>           instance. See Documentation/process/debugging/gdb-kernel-debugg=
+ing.rst
+>           for further details.
+>
+> +
+>  endif # DEBUG_INFO
+>
+> +config NO_AUTO_INLINE
+> +       bool "Disable compiler auto-inline optimizations (EXPERIMENTAL)"
+> +       default n
+> +       depends on CC_IS_GCC && (X86 || LOONGARCH)
+> +       help
+> +         This will prevent the compiler from optimizing the kernel by
+> +         auto-inlining functions not marked with the inline keyword.
+> +         With this option, only functions explicitly marked with
+> +         "inline" will be inlined. This will allow the function tracer
+> +         to trace more functions because it only traces functions that
+> +         the compiler has not inlined.
+> +
+> +         If unsure, select N.
+> +
+>  config FRAME_WARN
+>         int "Warn for stack frames larger than"
+>         range 0 8192
+> --
+> 2.48.1
+>
+>
