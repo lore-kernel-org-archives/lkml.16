@@ -1,253 +1,207 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0452C218EB7;
-	Tue, 15 Apr 2025 08:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A040B24169D
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707299; cv=none; b=IfoF7a92FS1MU6e6KKQkkCZnnm1gN8TscZrCe9aVq+KxXy5n0uTVSRXbaF3F+w4p1P0KpWU7p43rx4o6W2EpzSknmlGSJRz01dMVNK1Qv8R6qMpQhr3ClXsNQjXeuY+EZWezTFKXOionDM4/wVbbtpPxmFZGKHSoiHdN/F1X+n4=
+	t=1744707301; cv=none; b=UHWeM7FQ8jQFvezpVPdLEhegHEt/Fvn2cAoYB9cJ54E/Aaq6zrBNDl/hoOGj0rGqF2tLGD3hLBYkN0ijVf1KkZwWkCJOSjP23+brluzS9tp57z6Jh/eJqHvmO4GI0+Ebhrl6FcoHeplhZhwBa4cLJ8mqa+h+PvI3VWd32gNWt3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707299; c=relaxed/simple;
-	bh=wzQBQF8ORyj2oXWzu8VNoj3nCal7Tdwr8tyZz8abvSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JXqUER9ox6nGkT3lxeEWqp6j8FTR67/VaqXFiJnWOjh1cl0eR37lECbhkWZZecmDQqWDDLtoF31wJmcv0kO88nhzrb23okSRsNF3LMo0ifGNXUyHg4nud4L5CWrTbbRi5DEEDdWpX7e1b2J/yzTbx5FG8ZdbkfpyMNJyEhmyDDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3kvwCzC; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744707301; c=relaxed/simple;
+	bh=09RosKHkBOQmrJRGo9tXmgLTWI1e1QBw1cpob9jZmwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uYGaK4mFPtN+QtiGuUbPcHI87JT2AkHQnsGauy+ZW4ZeJ3U7llIJRrkZ5TU1xt4J2MWqUgnu2gffkJM2BhVWb/Lj8js1hR78zBDZcmuHfps/HwLee5rwPfm3Q8R8STn/skBTAF7buPzjLrI1nhmTCF6xdUQjl8kWRRM1ERyGDhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ON/YlB4E; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3kvwCzC"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso2915934f8f.2;
-        Tue, 15 Apr 2025 01:54:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ON/YlB4E"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6eb16dfa988so47108846d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:54:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744707296; x=1745312096; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mpPFETAdK6pHR99uQ7hWDbkrbXB15kaJorbk1ppPEHs=;
-        b=h3kvwCzCzFB9szTcWqONGwm+UPNuFSld5fIAiWoLEUD6C6ZuPQO998nGjrgfrMKeWA
-         3TYcRLQdCdGyGJcOVYYpnV+ULyVmgSBM4Avip5n1//s+Bk1nW6BGDUJf0IG020aSj2Q/
-         Gg0UQtFNyF0UxtEsBSMqaM+6lfR3eZn3J23YGahXiR4vh2Zyf/UqRJURuKHPZ7MH2pOl
-         zEzO1OkmyXx/BkzJBbJPnKX1P93b3x3pCxE9CF8jsA4V97DF5VepOBwjVkM0gDilwhGC
-         dubOmJQe0dhcOUKsoDdq3o83gvkRPSnmtLb+K/974LaT9+5jSyrrezDC69XQbsDEd9p4
-         mlzw==
+        d=google.com; s=20230601; t=1744707298; x=1745312098; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=09RosKHkBOQmrJRGo9tXmgLTWI1e1QBw1cpob9jZmwg=;
+        b=ON/YlB4EH5J6nFnlvhAnN1/mVwjCze4sUKwJ7ZMwFFxghPsY2Cxd/sFXSqea+X+cvf
+         ZN0yscWtDj4fLeorp/SLbc3pzuaefmHdYfpXpdHQasVrz5Dlgrcepyv+r6H/QFCG1cqr
+         oPpEIk83Hhi+nslUPwCV14Cx3JhKov64jpgCmYFdR4UguMthuRY3xhjaaBm96xSnoTDr
+         kPsEQS8JWl2gcA99+dDCaCujM7lOT+4fH25UtAT7385uoNm4d6h29k2UKRwiv/65Kh/1
+         VfPuJZWF/CzPqKs7DveZWu6TbdGL82OP9BOx2d8NBaABqzBqXXHWNsvWMH52n7KH5Kud
+         s0IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744707296; x=1745312096;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744707298; x=1745312098;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mpPFETAdK6pHR99uQ7hWDbkrbXB15kaJorbk1ppPEHs=;
-        b=d6mJ1+QcLXvBoaR556JoUwKONO/AVTlFf2BFKZteKEhCvBgRrNs1ptiTyqo9D7E9gu
-         EOX8JHes55KAVvYbdPOv2qzMn6CaWzgfIURcynRy5eMLwjVijtie1394+IEXsy1VvgtK
-         d5gB4enz5gWATBU0cmiyRaFikA6lftbUR7uTy2XdYdcLUwL4QtKaIcoUXCxXd+T5Y8bW
-         X1Zsz7/Rg06yprNGkf8IsMtR1l3iBiGUiWD9/Awv9mivHAJO4FYaNtHdUfr05ZONwKyu
-         cpkWly5omn3LUJFj5kjq67dXNxVFBMA25d3gytSZydKUPq1hrgT/CBESdNc79N7F+7zj
-         nSyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX16yCglgiPlHKZA18i4zqFbuly3UqPS94dSwZcccdCMoE5iuDn7Dqps1Wy4qFu/e3ZpWw/sxEuZlmwRu9a+3qS/g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFB64M6IsN0eABdyMm9VVbXSQt3vTReOgeGzYftEOR3gW4rOR4
-	f1hgQY8H7IDfAUA8/oDXAR9gWK/ycEhaFyShzQ/AsIbWdUrjVzgP
-X-Gm-Gg: ASbGncsC5rGDjL69Wm4oRYzCQmPsd9ZsZorWO5fqpd/6cCGte1enzXsWqS1BFR282MH
-	l4RRsvEZEwmxf/K65Rvc2IOKR6zgXmJ653ps714rfGOhPa2fEwxhv/+4yPlwCq8jZi24cw+FmPI
-	tk8a6p4FxavzmhRFyl7Eh1TLlVzkz4+3cZohAGcUTEaq6M5MjXFRTBXjYIFZLcQj6iK3y6gY4IQ
-	lowhtPdVaRUKOWaGeCdLcP0JcIXq0FK7ZGeKQUMjAjg8c2p5aaVk0txwa7NWFUG/+eG90Soajrc
-	20vPDCt3529Kvg8A5Gosk6Ci0PtkSazlazj2t9n+Bnw/AmD8nQyJXNO970tLZj5D
-X-Google-Smtp-Source: AGHT+IEY2B0zKtG6n2kdgsEnmJbc+t3/tvuPnGH7qJxdHPJ8tey1b6eY11+by9OyjwHzdUc3c+fNVg==
-X-Received: by 2002:a05:6000:1a88:b0:391:3cb7:d441 with SMTP id ffacd0b85a97d-39ea5212b03mr13391512f8f.25.1744707295918;
-        Tue, 15 Apr 2025 01:54:55 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:1883:aa4:a265:bc12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae9797aasm13616001f8f.56.2025.04.15.01.54.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 01:54:55 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3] soc: renesas: sysc: Add SoC identification for RZ/V2N SoC
-Date: Tue, 15 Apr 2025 09:54:38 +0100
-Message-ID: <20250415085438.83856-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        bh=09RosKHkBOQmrJRGo9tXmgLTWI1e1QBw1cpob9jZmwg=;
+        b=mM0LuVwDa4ag8qJwHft5z6pOlDT2aByN+gtD5uysSd8UsDjOlRb9EDVber+ZfBKep6
+         aFJwQ4dy/1m5xDvvfefHUToLHbWYFbhSdefz2aBDVARoUGtp06gopeKFay6HJcSEEvEu
+         CGEApQFwm/gbuxB40MiKOjGN5QIczc0duE3Woh2PEBUNrYzKk0WQe4yKKZ45KWaURQfd
+         /ptXmuQ5UVFjhRUK5xgD9NuRoktXxaFOK4iB0tugirUtt2AKICgSm6/N8Xnci9cOcFIw
+         1gRDM9y5O8aWo16in9Bzwix+p+pa3vqgXAt36C8uP3Zz2daXnvoHhzNofHGiaGa8mDOJ
+         4V/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXCS7wOfLGBdOisUF76JvmHPhtw8niEokWsSZLksJytchZ+DA357LKgDfvIXAGk19ScMA2gCnj83m34YbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywu8E5EGvce5BWiutSLtj0BHcmDw4jgfrfwogelM1wcC5XRGoWQ
+	tbJqqf/a23XkjavKWTCCrQ/qgyS8aUZcwqwI+bHTXzwZ2cXlNbzULROLIQembcxEB48fexpwtzP
+	mI54UrCnPwyuX+mYP3/vM8BH/ZgtqYfkmOLmR
+X-Gm-Gg: ASbGncslcC7kMO+ICSD8X3+ZOwVoHIzrTDWeqwfic28hUmxCoJrnsiEtmHouu/oGHM2
+	XRLdt2FzR5Z4Is7pufpZNA/qscPz5Fzq6WypJqaLCZKC2kyyeg6fLNXt7/EGkTSZNxMQGqodQe4
+	QW+AS1VzoeXyp+JsopSif6NKM=
+X-Google-Smtp-Source: AGHT+IHVvNQbwnoSjfqKdahsveK3x/sQwg5Q/8d5/FnGA8nZT+H2IbLRjQV5iQzuAUsMeAZjNizBx1JmDq3Q/9MK3MA=
+X-Received: by 2002:ad4:5ec6:0:b0:6e8:efd0:2dad with SMTP id
+ 6a1803df08f44-6f230cd097bmr188639046d6.12.1744707298314; Tue, 15 Apr 2025
+ 01:54:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org> <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+In-Reply-To: <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+From: David Gow <davidgow@google.com>
+Date: Tue, 15 Apr 2025 16:54:44 +0800
+X-Gm-Features: ATxdqUHoIv4itZtkU7J2hhdt-a3_FfCOZPa0_LkKHtmfq3XtMOp9_T06PIhN-xc
+Message-ID: <CABVgOS=LyuJEXDHzRaqsBK9HJEqquvfYQS9uVDM=uF75LwQrLA@mail.gmail.com>
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
+ kunit run
+To: Borislav Petkov <bp@alien8.de>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, thomas.lendacky@amd.com, 
+	"x86@kernel.org" <x86@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000c7ef5b0632cd52f1"
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+--000000000000c7ef5b0632cd52f1
+Content-Type: text/plain; charset="UTF-8"
 
-Add SoC identification for the RZ/V2N SoC using the System Controller
-(SYS) block.
+On Tue, 15 Apr 2025 at 07:01, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Apr 14, 2025 at 04:28:44PM -0600, Shuah Khan wrote:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-Hi All,
-This patch is from series [0]. Since most of the patches have already
-been queued, I'm sending this one separately.
+... snip ...
 
-[0] https://lore.kernel.org/all/20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com/
-Cheers, Prabhakar
+>
+> The real problem looks like that pasyms.h thing which gets included at the end
+> of realmode.lds and which contains that symbol.
 
-v2->v3:
-- Updated dev_info message to include the SoC revision and feature flags.
-- Dropped `<linux/string.h>` include.
-v1->v2:
-- No changes in the code.
----
- drivers/soc/renesas/Kconfig         |  5 ++
- drivers/soc/renesas/Makefile        |  1 +
- drivers/soc/renesas/r9a09g056-sys.c | 77 +++++++++++++++++++++++++++++
- drivers/soc/renesas/rz-sysc.c       |  3 ++
- drivers/soc/renesas/rz-sysc.h       |  1 +
- 5 files changed, 87 insertions(+)
- create mode 100644 drivers/soc/renesas/r9a09g056-sys.c
+I had a look at this a few months ago, and came to the same
+conclusion: that realmode.lds is where the issue is coming from. My
+suspicion was that realmode.lds was being generated when the kernel
+was built in-tree (with CONFIG_AMD_MEM_ENCRYPT), but somehow was not
+being deleted when the source tree was being cleaned before an
+out-of-tree build was being done (without CONFIG_AMD_MEM_ENCRYPT).
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index f02b8fe60e6b..fbc3b69d21a7 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -396,6 +396,7 @@ config ARCH_R9A09G047
- config ARCH_R9A09G056
- 	bool "ARM64 Platform support for RZ/V2N"
- 	default y if ARCH_RENESAS
-+	select SYS_R9A09G056
- 	help
- 	  This enables support for the Renesas RZ/V2N SoC variants.
- 
-@@ -445,6 +446,10 @@ config SYS_R9A09G047
- 	bool "Renesas RZ/G3E System controller support" if COMPILE_TEST
- 	select SYSC_RZ
- 
-+config SYS_R9A09G056
-+	bool "Renesas RZ/V2N System controller support" if COMPILE_TEST
-+	select SYSC_RZ
-+
- config SYS_R9A09G057
- 	bool "Renesas RZ/V2H System controller support" if COMPILE_TEST
- 	select SYSC_RZ
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index 81d4c5726e4c..3bdcc6a395d5 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_ARCH_R9A06G032)	+= r9a06g032-smp.o
- endif
- obj-$(CONFIG_SYSC_R9A08G045)	+= r9a08g045-sysc.o
- obj-$(CONFIG_SYS_R9A09G047)	+= r9a09g047-sys.o
-+obj-$(CONFIG_SYS_R9A09G056)	+= r9a09g056-sys.o
- obj-$(CONFIG_SYS_R9A09G057)	+= r9a09g057-sys.o
- 
- # Family
-diff --git a/drivers/soc/renesas/r9a09g056-sys.c b/drivers/soc/renesas/r9a09g056-sys.c
-new file mode 100644
-index 000000000000..1b7185db929d
---- /dev/null
-+++ b/drivers/soc/renesas/r9a09g056-sys.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * RZ/V2N System controller (SYS) driver
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+
-+#include "rz-sysc.h"
-+
-+/* Register Offsets */
-+#define SYS_LSI_MODE		0x300
-+#define SYS_LSI_MODE_SEC_EN	BIT(16)
-+/*
-+ * BOOTPLLCA[1:0]
-+ *	    [0,0] => 1.1GHZ
-+ *	    [0,1] => 1.5GHZ
-+ *	    [1,0] => 1.6GHZ
-+ *	    [1,1] => 1.7GHZ
-+ */
-+#define SYS_LSI_MODE_STAT_BOOTPLLCA55	GENMASK(12, 11)
-+#define SYS_LSI_MODE_CA55_1_7GHZ	0x3
-+
-+#define SYS_LSI_PRR			0x308
-+#define SYS_LSI_PRR_GPU_DIS		BIT(0)
-+#define SYS_LSI_PRR_ISP_DIS		BIT(4)
-+
-+#define SYS_RZV2N_FEATURE_G31		BIT(0)
-+#define SYS_RZV2N_FEATURE_C55		BIT(1)
-+#define SYS_RZV2N_FEATURE_SEC		BIT(2)
-+
-+static void rzv2n_sys_print_id(struct device *dev,
-+			       void __iomem *sysc_base,
-+			       struct soc_device_attribute *soc_dev_attr)
-+{
-+	unsigned int part_number;
-+	u32 prr_val, mode_val;
-+	u8 feature_flags;
-+
-+	prr_val = readl(sysc_base + SYS_LSI_PRR);
-+	mode_val = readl(sysc_base + SYS_LSI_MODE);
-+
-+	/* Check GPU, ISP and Cryptographic configuration */
-+	feature_flags = !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_FEATURE_G31 : 0;
-+	feature_flags |= !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N_FEATURE_C55 : 0;
-+	feature_flags |= (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N_FEATURE_SEC : 0;
-+
-+	part_number = 41 + feature_flags;
-+
-+	dev_info(dev, "Detected Renesas %s %sn%d Rev %s%s%s%s%s\n", soc_dev_attr->family,
-+		 soc_dev_attr->soc_id, part_number, soc_dev_attr->revision, feature_flags ?
-+		 " with" : "", feature_flags & SYS_RZV2N_FEATURE_G31 ? " GE3D (Mali-G31)" : "",
-+		 feature_flags & SYS_RZV2N_FEATURE_SEC ? " Cryptographic engine" : "",
-+		 feature_flags & SYS_RZV2N_FEATURE_C55 ? " ISP (Mali-C55)" : "");
-+
-+	/* Check CA55 PLL configuration */
-+	if (FIELD_GET(SYS_LSI_MODE_STAT_BOOTPLLCA55, mode_val) != SYS_LSI_MODE_CA55_1_7GHZ)
-+		dev_warn(dev, "CA55 PLL is not set to 1.7GHz\n");
-+}
-+
-+static const struct rz_sysc_soc_id_init_data rzv2n_sys_soc_id_init_data __initconst = {
-+	.family = "RZ/V2N",
-+	.id = 0x867d447,
-+	.devid_offset = 0x304,
-+	.revision_mask = GENMASK(31, 28),
-+	.specific_id_mask = GENMASK(27, 0),
-+	.print_id = rzv2n_sys_print_id,
-+};
-+
-+const struct rz_sysc_init_data rzv2n_sys_init_data = {
-+	.soc_id_init_data = &rzv2n_sys_soc_id_init_data,
-+};
-diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
-index 14db508f669f..ffa65fb4dade 100644
---- a/drivers/soc/renesas/rz-sysc.c
-+++ b/drivers/soc/renesas/rz-sysc.c
-@@ -88,6 +88,9 @@ static const struct of_device_id rz_sysc_match[] = {
- #ifdef CONFIG_SYS_R9A09G047
- 	{ .compatible = "renesas,r9a09g047-sys", .data = &rzg3e_sys_init_data },
- #endif
-+#ifdef CONFIG_SYS_R9A09G056
-+	{ .compatible = "renesas,r9a09g056-sys", .data = &rzv2n_sys_init_data },
-+#endif
- #ifdef CONFIG_SYS_R9A09G057
- 	{ .compatible = "renesas,r9a09g057-sys", .data = &rzv2h_sys_init_data },
- #endif
-diff --git a/drivers/soc/renesas/rz-sysc.h b/drivers/soc/renesas/rz-sysc.h
-index aa83948c5117..56bc047a1bff 100644
---- a/drivers/soc/renesas/rz-sysc.h
-+++ b/drivers/soc/renesas/rz-sysc.h
-@@ -42,5 +42,6 @@ struct rz_sysc_init_data {
- extern const struct rz_sysc_init_data rzg3e_sys_init_data;
- extern const struct rz_sysc_init_data rzg3s_sysc_init_data;
- extern const struct rz_sysc_init_data rzv2h_sys_init_data;
-+extern const struct rz_sysc_init_data rzv2n_sys_init_data;
- 
- #endif /* __SOC_RENESAS_RZ_SYSC_H__ */
--- 
-2.49.0
+But, alas, I was never able to find a way to reproduce this to test it
+out: realmode.lds seems to be properly deleted by make clean / make
+mrproper here.
 
+(My personal strategy is to always do out-of-tree builds, which may be
+why I don't tend to randomly come across this. Equally, it may be
+worth trying `--build_dir .` as an argument to kunit.py to force an
+in-tree build if you're already doing in-tree builds often.)
+
+Cheers,
+-- David
+
+--000000000000c7ef5b0632cd52f1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
+4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
+mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
+KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
+VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
+ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
+vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
+BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
+OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
+1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
+ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
+BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
+18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
+bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
+AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
+BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
+A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
+MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
+jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
+0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
+jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
+jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
+C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
+NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
+zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
+A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
+hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
+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
+YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
+/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
+N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
+BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
+MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
+LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
+bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
+FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
+exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
++ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
+XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
+QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
+TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
+oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
+cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
+uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
+PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
+Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
+BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgkUV1ucPgYaFeV855r9dVz14QtlAG
+qFAOm94bv7TaxcEwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDE1MDg1NDU4WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
+AQEBBQAEggEAQcR9FR8Uf/7ki9G7aCsS97A4mNIij5A/Mjjo4c0bBJ8pi7hpSwZRYxauZqHo3GOh
+dtgAdORE0vgfsL85MpwUFkWyPornbxgn0uILRyqj/YxUmyFK02ScJN3fuBVwbNhBoKcohS8TC19D
+BCglBXuJGzSMdCv1SAGlVOGIslzrkG/3NgAmdeqnfcifHnQYi8gvJqAkj1JK6OBeYdnGl9RrBM6D
+QTcCIo562tSObTaygrdpL4iLsM2jM03xg0Gu7bD0NovZO0XTIphOGkY+6c7KZ+KqFtm129InAbZ2
+PSuDXBjdUB1WqbbzSTzkfLWQYA8+yvgvExP22S8evpzC9doWHQ==
+--000000000000c7ef5b0632cd52f1--
