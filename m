@@ -1,77 +1,47 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49243.qiye.163.com (mail-m49243.qiye.163.com [45.254.49.243])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12102741C2
-	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 05:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F6E16F8E5;
+	Tue, 15 Apr 2025 05:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744694308; cv=none; b=TTKEcavA74RvTM5GgjKtlNkzudFgp1lMKWX7T2Jilyawu1DOubYh9bpouAX5PxpW1tRAuv9Jeg69ORxjLtl9Uyn1YMs+2XGIN0sOTwGBd1WpNu8m+FsSev5q3xusbn0ebKgXu0Yqpg4aQnijJ2wwQq5h5GNhAr7Po9Q4a57FwFg=
+	t=1744694351; cv=none; b=XQch7UXvC12doL84YPC/sE+J28+QqvMVb6PsM5dJHoMnEWExj+Uo56cOD5GBIn8u97fmwmB90Fm2tOpkUyFL/aiYOGOEKaMTO42LkBRW5qi13VMPT3gxUEoW6vywViL85KZ4KuoIRGDi72m3g9ANplm59K5+PULbhaRXRD3wkSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744694308; c=relaxed/simple;
-	bh=TzFuC9zTtfYZrrp+cUV0md+A75jRyy6klYJ2kVhLEuw=;
+	s=arc-20240116; t=1744694351; c=relaxed/simple;
+	bh=qFpwIxLkmlRcCCP6YKJbRCtaUYx+YjnwiBqW5Uy6wK0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iMXumCD4u1U3VvxZegCVNOu01UWX4Ilv8+r0OphaAzmLpeuu7aBuCISppd3JsQWq1K5J6Nceck8rikHSvvCw+ROheufb1ZhY8klxYX8e2+vWvAhe76YbGEWy8UFrDSIa7ly4hFrkE7DRFvPvTcPlONdL5HwFuKv+6/E/Ki5S68E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FKZFHfEC; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=aZcCh7oWsdwhsYmbhUMAt67s1Il79HzvtqmDGexpAwiXmbWeN0nIpd4jkfUc4RB3uZrVhD6wCpDPSrYtusYcMQtXfsLGgUbXzMJugNam+DHJzolrBtLYyK9ka3DjfBTPMgEjcfYEA4imbiZFi3CcvLykBeswDkgzofr4vpxYY8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=F+NgVsKF; arc=none smtp.client-ip=45.254.49.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKZFHfEC"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2279915e06eso54223975ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:18:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744694306; x=1745299106; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vI76QAcxqNzjywFLS0qo0pBVDITySnFHR3quT+EiiHU=;
-        b=FKZFHfECHIeF5+75frfFzDMRTiVSxa3PT/g7Sf9OCGH3S5EJPFgms5SxnAORs1NtR1
-         Fi5zQbYTCJSUvuJXC2vYietrnHssrnwpv9d48/h/7uiPXLWP8nVVkXd2gopNhbYDuAm2
-         WM4q1GcYXuRd/fJOrQZHqBUNVfCAQuDT4vjBCvjcs4N8XVVruMGHe2r81ST2f7zqzIu3
-         lep5sWNBAfBDokRY4M7Qt+MK1oVE3wKHI8VC/71XPcV+t1N8426yVvKubabBxSMwSGzY
-         SxJ1nFFPdazC3I+rNjIfos+ZaM48w92Sq4x/LdHxGtDtrrz17P4SQbJK6DTzR4hjcxX2
-         asvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744694306; x=1745299106;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vI76QAcxqNzjywFLS0qo0pBVDITySnFHR3quT+EiiHU=;
-        b=eHCdjaLJJolrCMxQfuySSg56gBBxikX/yw7FJtiKgMneM9zNNJAj4N1NjwNHBQl5wQ
-         gY2+kod9AgluiNiNmNJgOTEakifK3Zfma46M9d4F1JtuvwuDi4MXOEiKMNfZD0cnYnTx
-         Uh2RIF2hep8zzLb4PcvTArYEXRLM/8jAVA2ikciC8Ihfg6kRVCCYocR6MIzk/33WpN4x
-         NyoBddMoCnSbpXy2LgbhLCaSiJ1mAUuJt9HvyIjPCGSCpBl5AxYgFi2sTkWNdd1/tYNM
-         GayZ5L9/R01dXcF9zjXkjHB/da2+ed+K3k6psmoLxHiXEn3Z8ffaOP+ps0liFmb/FJRg
-         P8Xg==
-X-Gm-Message-State: AOJu0YymL8gJo1Lq/r9onkB3k1Gk+SaaeX3qQBL7rIR0bJWP5z24DtK8
-	zzBIxpbexSxt2bZbcVXL239l9CfNV9LGu/4EIwBEFoIhs0vuevSw
-X-Gm-Gg: ASbGncsr/nkB3xML6VO8vT1hE/ni0YIzJn0xFmT3p2KV2UB11PkkvYNSaaHN9BDY8A+
-	6fVZI1mHJcc+HYf/t01r36atlL9EE15OMu8WpQjvsiO0+xkuOaiDBC8yg6vV6r++UCplKBzFhjy
-	DFI6VIEAz40cz+m742CKmL1LMXP7kp0evSbz6BXYvvm7sPk0HHyNf2sR3XwjCttA4ZLTwAMK2yG
-	EBlabKj/7/+1P5soCe8WZOxXv81S5jvEVpVMRNTxF2ZjgTkCdhJtvyGWK1Hr7jfa0JsbwEW0R/r
-	HNx7g9ytpudNzNqIwbR/Gj83aqotxBpIuDz0QiJvvuc91WVKcX8=
-X-Google-Smtp-Source: AGHT+IHmzWyny0cRPPo46EzSAicI+hvTsIHybybAfvZel9Sp0MwXpEYdkTjuqOPptMMvCHcUx+yUJA==
-X-Received: by 2002:a17:902:d550:b0:224:194c:694c with SMTP id d9443c01a7336-22bea4bf56cmr240245735ad.28.1744694306193;
-        Mon, 14 Apr 2025 22:18:26 -0700 (PDT)
-Received: from cs20-buildserver.lan ([2402:7500:400:be8d:2e0:4cff:fe68:863])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df4011e6sm12127760a91.44.2025.04.14.22.18.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 22:18:25 -0700 (PDT)
-From: Stanley Chu <stanley.chuys@gmail.com>
-X-Google-Original-From: Stanley Chu <yschu@nuvoton.com>
-To: frank.li@nxp.com,
-	miquel.raynal@bootlin.com,
-	alexandre.belloni@bootlin.com,
-	linux-i3c@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org,
-	tomer.maimon@nuvoton.com,
-	kwliu@nuvoton.com,
-	yschu@nuvoton.com
-Subject: [PATCH v1 2/2] i3c: master: svc: Emit STOP asap in the IBI transaction
-Date: Tue, 15 Apr 2025 13:18:08 +0800
-Message-Id: <20250415051808.88091-3-yschu@nuvoton.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250415051808.88091-1-yschu@nuvoton.com>
-References: <20250415051808.88091-1-yschu@nuvoton.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="F+NgVsKF"
+Received: from localhost.localdomain (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 11e6d965f;
+	Tue, 15 Apr 2025 13:19:02 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v4 1/7] dt-bindings: PCI: dwc: rockchip: Add rk3562 support
+Date: Tue, 15 Apr 2025 13:18:49 +0800
+Message-Id: <20250415051855.59740-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250415051855.59740-1-kever.yang@rock-chips.com>
+References: <20250415051855.59740-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,35 +49,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGB0ZVhoZHx9PTkhCQxhKSVYVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
+	VKQktLWQY+
+X-HM-Tid: 0a9637e2f41403afkunm11e6d965f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mhg6DTo*NDJMMBoXCgxJCj1C
+	SlYKCUNVSlVKTE9PTUJPSE9PTUpCVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlNTEw3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=F+NgVsKFaUSn4Iwqzeyqodc6EoWQjFO6FCY9RXrhSGCiozim14KILpMuE5Z+P+/th0PILqxmSLTfrTS3kBbRbQsOM/p3wpJKe0CzBj+iLPMagIEYPRGTBHaSZlu4KOeG+FS5kjjj3aRSDFpApRV9lSlhxT9j8z1BfwMLopm3MJQ=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=b4p/0VxIff/BqHY5k/CUxFW5zZdAT12GHojWa2aHOQo=;
+	h=date:mime-version:subject:message-id:from;
 
-From: Stanley Chu <yschu@nuvoton.com>
+rk3562 is using the same dwc controller as rk3576.
 
-Queuing the IBI request does not need to be done earlier than emitting
-the STOP. Emitting STOP immediately after receiving the IBI request can
-complete the IBI transaction earlier and return the bus to idle.
-
-Signed-off-by: Stanley Chu <yschu@nuvoton.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/i3c/master/svc-i3c-master.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
-index 7ceaf3ec45bb..9b23239ad8db 100644
---- a/drivers/i3c/master/svc-i3c-master.c
-+++ b/drivers/i3c/master/svc-i3c-master.c
-@@ -577,11 +577,11 @@ static void svc_i3c_master_ibi_isr(struct svc_i3c_master *master)
- 	/* Handle the non critical tasks */
- 	switch (ibitype) {
- 	case SVC_I3C_MSTATUS_IBITYPE_IBI:
-+		svc_i3c_master_emit_stop(master);
- 		if (dev) {
- 			i3c_master_queue_ibi(dev, master->ibi.tbq_slot);
- 			master->ibi.tbq_slot = NULL;
- 		}
--		svc_i3c_master_emit_stop(master);
- 		break;
- 	case SVC_I3C_MSTATUS_IBITYPE_HOT_JOIN:
- 		svc_i3c_master_emit_stop(master);
+Changes in v4:
+- Collect ack tag;
+
+Changes in v3:
+- Rebase the change base on rk3576 pcie patches
+
+Changes in v2: None
+
+ .../devicetree/bindings/pci/rockchip-dw-pcie.yaml        | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 4764a0173ae4..6c6d828ce964 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -22,6 +22,7 @@ properties:
+       - const: rockchip,rk3568-pcie
+       - items:
+           - enum:
++              - rockchip,rk3562-pcie
+               - rockchip,rk3576-pcie
+               - rockchip,rk3588-pcie
+           - const: rockchip,rk3568-pcie
+@@ -76,7 +77,9 @@ allOf:
+         properties:
+           compatible:
+             contains:
+-              const: rockchip,rk3576-pcie
++              enum:
++                - rockchip,rk3562-pcie
++                - rockchip,rk3576-pcie
+     then:
+       required:
+         - msi-map
+@@ -85,7 +88,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: rockchip,rk3576-pcie
++            enum:
++              - rockchip,rk3562-pcie
++              - rockchip,rk3576-pcie
+     then:
+       properties:
+         interrupts:
 -- 
-2.34.1
+2.25.1
 
