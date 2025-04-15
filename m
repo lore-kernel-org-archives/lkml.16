@@ -1,128 +1,91 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715EA284691;
-	Tue, 15 Apr 2025 08:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7291DACB8
+	for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 08:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744705787; cv=none; b=rpE59I9JjzQvwv3zx2lwnyPRSgdgitN6LLqYX/YjtEe7R9hT35TSt107bwL+x1W1bFtXQtxCGdiVFENUFACp9Pzl75sFxwOJHEtOhjiDZm+OsTyRyDnP5SDmvI9QOidYzU3NGu60AVaKLolzoQ/kpsnaPwX7jAvlfKyxzkTcMfA=
+	t=1744705828; cv=none; b=pY/XszHUDBgZ9dFT2djMGfz2Fo3Vo3ocWyOi8NeL9vSjaElAH5vzBVIDEImmI2v1SIb9mOlyMHYsXbETMlNnBce1kIH2+3Kh77KP69Lm8snrJHHBawfoYUXGxBXn7h9ms51wKRogGpUj3C8bSU8FVrc8HJl0otsEfzuHpUdLL/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744705787; c=relaxed/simple;
-	bh=iHJWbSB0ymhRZHV1VgYAg5TLOfdwWd395GC4IpAL4TA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qkXCyQNRdwPAthF2URKHew6yhmMyRF26Vm/TimkiztxMMyhUDEn9rtwz1QU4hcny4g9nOI2cPLGszKbKDbLy1vX2TqS3TDmcyuyBoI7rK38zpjQdKSlhQrYu+OSXgWf1aXBbGPkSw8hQKP/5d2X5K12CRyTdQQyCcAV5hXxhWzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=avoJCGzO; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744705828; c=relaxed/simple;
+	bh=dA/4o6Pc5kzYT69miDJELdy/TW9cYoPGWvldFsoPOqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pN317EXLIwAcD7DITiWBH+1W/DIYWPr2WNaVcb5CoRfIcxtH5QOMiIai0vmRpG/Mo9TvWyPGJb7nTRgqPn6+36QIqUh7ULKy134nF7Q/qVKOpXhbi7e1b/IXsX8/igyPVd/7di6YmYjGLPyBjaoNWPtlSacseJHVnKR7W46Plu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EJr/fFy9; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="avoJCGzO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1910F1FCE6;
-	Tue, 15 Apr 2025 08:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744705782;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iHJWbSB0ymhRZHV1VgYAg5TLOfdwWd395GC4IpAL4TA=;
-	b=avoJCGzOyI+/qeQWpTYUeIpFAimgxpl3v3j63LrJbyqibztcNuLa5wdrkXU7UG3C7DND4I
-	U1/0jPMqPqlHPCpMQ0a0IXq376F4eRg0NQQyusk+eJKvrOJVWDKG+T6DQ5oCyvJ0a18u66
-	nMTvMqicqSWk6+EwZN9vIDLqpn+GNF9bUqPpA99323paG1mXgLCaS+e/QIluqgHUB9B6ol
-	R6cdP3JhJFPDyGX1FzAvLevIq4svrl6rBsiqN+nmLYJnRG89pYhAeFulyDxFytGzdVhxKX
-	dONbEoR4IKeeIAQ1Mn5nJFlVQK3SJlAHUcTIsX39lhMAVO69xIDcI4YpSw4SJg==
-Date: Tue, 15 Apr 2025 10:29:38 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek
- Kitszel <przemyslaw.kitszel@intel.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Bryan
- Whitehead <bryan.whitehead@microchip.com>, UNGLinuxDriver@microchip.com,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Paul Barker
- <paul.barker.ct@bp.renesas.com>, Niklas =?UTF-8?B?U8O2ZGVybHVuZA==?=
- <niklas.soderlund@ragnatech.se>, Richard Cochran
- <richardcochran@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Russell
- King <linux@armlinux.org.uk>, Andrei Botila <andrei.botila@oss.nxp.com>,
- Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, Vadim Fedorenko
- <vadim.fedorenko@linux.dev>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
- linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/2] net: ptp: driver opt-in for supported
- PTP ioctl flags
-Message-ID: <20250415102938.53665eda@kmaincent-XPS-13-7390>
-In-Reply-To: <20250414-jk-supported-perout-flags-v2-0-f6b17d15475c@intel.com>
-References: <20250414-jk-supported-perout-flags-v2-0-f6b17d15475c@intel.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EJr/fFy9"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso54384301fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 01:30:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744705824; x=1745310624; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dA/4o6Pc5kzYT69miDJELdy/TW9cYoPGWvldFsoPOqA=;
+        b=EJr/fFy9xKKf1odUcpDXeXaHHrIC+IzANZrzaXl/skQTpOSSzi1f6GRToQaBLqEmX9
+         1c4K3iQNZKXX2ZzpahxyGRv7+sCTu6mmmDvT5sYcHRrDpQF572hqa4Oy7MMF/k1yu/ro
+         VSQ/aawAGjWUOWOe9of9NW+EIaUjmf8BzVgGJHYxrDkYCiqEByKaQx9fhAYAvEeCIZ5W
+         C62C8xRLIf/KSyoAVNt9DBq9Tynu5HRfiKkgPstyaRBa5Wzx/RlouiReM2U169iYl4L4
+         uP5nrLQY4wOjnTm1/c8LvDbZ3w/BwAxBqfDqzkvymFYMc6tCy71FYuyd91KCP6a7GIKF
+         v5uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744705824; x=1745310624;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dA/4o6Pc5kzYT69miDJELdy/TW9cYoPGWvldFsoPOqA=;
+        b=Lwd/hm33lSljnf6Q1JrHLIIBj+PDsp9qud4vnoioxvJ2s0BmZ2Othny4Ly+mlf33K4
+         c6EjkllGlGMRl8pk2qAHMHzuSg7RIPO1UPONX3I7OWQWVED3WemxBa4xKXpFI9d1Y40Z
+         N9Tr5EWZDpRJo2Ob67Hz8YY1W9CPILFZ6DqUksfnNf+h+Tqa4be+6ViBdqSePE8ZdqYF
+         2m+Smieg24zafi6WW0o5Bm1aw6Y9TyebV8iKPeK7B7XfwRkN6Hyt0GmOILcqmM1Lqlt+
+         nZCQgmkgUx9W6T8yKIx9DdSnmjAFW/WOurHlK9T8BIL3uurm2b0E14d6Skh7ZtPjoBZv
+         RuwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXc7Iq8sDXQXIwaktGXQqJFWpcHkJpKfbKb5KwO47FeQkLj5zMDmfiRYYUs+hrwNHQLzt08NMkD0yXoVkE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw15WdJc3coYELn4+fUj2QJXn1TKHacoOWLeGbJtFxU5z163oSU
+	GSwcVEAiXj3zzwvla91GRMqmFlw4ccwRO/arTDf1cu2dSaxC4kxJ0ERiYwXQEbTwUiLKr0+0Hqz
+	7aMd5T8t7CsU6XxkmcT/htPrKFkqdISj9lIELVA==
+X-Gm-Gg: ASbGncttraswU3pmmbQnS3KqsLDCE0DTNAzYP8PTivLMymEJQj23KUYqVo4HmtuEf/x
+	x2c6eh67rK/otgpwdh+4zzLecjcj8kQDNMAVKICpqcvucEiBh9zSBhpExfIEJ58m1MITKnXT9eP
+	BLUzi3T9gcEN3cmxxKKeGw2Q==
+X-Google-Smtp-Source: AGHT+IFnkHgPenci5JpbiQ78vp1k4USgnq/9BvxSzEHvpE09Vk7uQXHULEOnoM1NzoUs2NLhz2eCy9/1WL61vHKGtdU=
+X-Received: by 2002:a2e:b8cc:0:b0:30c:12b8:fb8a with SMTP id
+ 38308e7fff4ca-310495188efmr46416771fa.0.1744705824468; Tue, 15 Apr 2025
+ 01:30:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org> <20250407-gpiochip-set-rv-gpio-part1-v1-5-78399683ca38@linaro.org>
+In-Reply-To: <20250407-gpiochip-set-rv-gpio-part1-v1-5-78399683ca38@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 15 Apr 2025 10:30:13 +0200
+X-Gm-Features: ATxdqUEjzKkwmn3_RQShaPxJfoWorbzsnHaGfDvqxf3hWT_HovesOIO4Pl6zfjI
+Message-ID: <CACRpkdbOACAtCr=DymS4GtauS9PuRqtbjWsmVTDmqGt97kkhSQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] gpio: allow building port-mapped GPIO drivers with COMPILE_TEST=y
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, Andy Shevchenko <andy@kernel.org>, Peter Tyser <ptyser@xes-inc.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeftddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudelmeekheekjeemjedutddtmeelugejtgemudgrudgsmegvkehfugemuggruddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkeehkeejmeejuddttdemlegujegtmedurgdusgemvgekfhgumegurgduvddphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepjhgrtghosgdrvgdrkhgvlhhlvghrsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohhlt
- hgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegrnhhthhhonhihrdhlrdhnghhuhigvnhesihhnthgvlhdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Mon, 14 Apr 2025 14:26:29 -0700
-Jacob Keller <jacob.e.keller@intel.com> wrote:
+On Mon, Apr 7, 2025 at 9:13=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 
-> Both the PTP_EXTTS_REQUEST(2) and PTP_PEROUT_REQUEST(2) ioctls take flags
-> from userspace to modify their behavior. Drivers are supposed to check
-> these flags, rejecting requests for flags they do not support.
->=20
-> Many drivers today do not check these flags, despite many attempts to
-> squash individual drivers as these mistakes are discovered. Additionally,
-> any new flags added can require updating every driver if their validation
-> checks are poorly implemented.
->=20
-> It is clear that driver authors will not reliably check for unsupported
-> flags. The root of the issue is that drivers must essentially opt out of
-> every flag, rather than opt in to the ones they support.
->=20
-> Instead, lets introduce .supported_perout_flags and .supported_extts_flags
-> to the ptp_clock_info structure. This is a pattern taken from several
-> ethtool ioctls which enabled validation to move out of the drivers and in=
-to
-> the shared ioctl handlers. This pattern has worked quite well and makes it
-> much more difficult for drivers to accidentally accept flags they do not
-> support.
->=20
-> With this approach, drivers which do not set the supported fields will ha=
-ve
-> the core automatically reject any request which has flags. Drivers must o=
-pt
-> in to each flag they support by adding it to the list, with the sole
-> exception being the PTP_ENABLE_FEATURE flag of the PTP_EXTTS_REQUEST ioctl
-> since it is entirely handled by the ptp_chardev.c file.
->=20
-> This change will ensure that all current and future drivers are safe for
-> extension when we need to extend these ioctls.
->=20
-> I opted to keep all the driver changes into one patch per ioctl type. The
-> changes are relatively small and straight forward. Splitting it per-driver
-> would make the series large, and also break flags between the introduction
-> of the supported field and setting it in each driver.
->=20
-> The non-Intel drivers are compile-tested only, and I would appreciate
-> confirmation and testing from their respective maintainers. (It is also
-> likely that I missed some of the driver authors especially for drivers
-> which didn't make any checks at all and do not set either of the supported
-> flags yet)
->=20
-> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Extend the build coverage by allowing the port-mapped drivers to be
+> build with COMPILE_TEST enabled.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Kory Maincent <kory.maincent@bootlin.com>
+That's really helpful!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thank you!
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Yours,
+Linus Walleij
