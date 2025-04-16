@@ -1,129 +1,61 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B92DF59
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445C04A1A;
+	Wed, 16 Apr 2025 04:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744778112; cv=none; b=PRD3As+juCNp7okBlQ9W3KNo0xpFZbVNnPaHbNTjVgPd4mqTagmmU4AS9+f6gRZvfcUI0V2Zi8Fgb160cdqlXFPd5xWn2rCmnD2taRG20TwtFXjMeliRyFVFytMGSnO1Rmok/+MeMAXWm/N6rKUQi8330xEleaH7jGsXvY8jP5w=
+	t=1744778227; cv=none; b=OP/lcwKgpSCWVbRJiNcBhP46bH7458iGLhyCInqRtMo+sm1xKk961IRDQr1by7vQbGFLljut18jz4Ll7U9qoqAUXZDLrpgppiB6sE8VJlYbxVVgCPDrnO+yARJciwT1nKsk6la11qO2hp4qfVEbhftOodvTU8yFvN0d5tjW5V1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744778112; c=relaxed/simple;
-	bh=8CsF+IkoXaFNBlPgPOug1CHa+VnlOdgwWlLXBEhp+Vg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=b4wbuEI5sfuDbWogyAIE9xCrRZsB5YrTUzdnTY6NwjcPvW1YCAi4lgQDWNjS6GmFtdUnVkieNX4QHMKs0rhe1qDGxcdALX0an3SbgbR7780UnAvDg3kYCZ4ZrRZPjUoe+fqhagAp4AVlBoS7doWdpiKn8B4FcQftAJmCeFpegKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D2XVE3e7; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
+	s=arc-20240116; t=1744778227; c=relaxed/simple;
+	bh=CLuTPtJ/W0nH0ifdaKYd5Lka79cNaAeH4PkTOAgL/WQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YFFsqk3oQuE7PA78CmhX21OiHGkDHttrJ+sGnxZvE/SGOzp/H+nxjEIUt+sqGkLKhUScIv0TccRBBWcJl+cuZRwDqyFTh39KPSxOnlkkDkYE4oQD3+A8v5PkHhwu4REtafZbFmlHityUhe8v2RqWSxnPizKwZ78ot4Fut5u4fLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EqYgKWsB; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D2XVE3e7"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30828f9af10so9759732a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744778110; x=1745382910; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NoVEwqwHV5q1ddAJeoGC7UZs2nQ52KxL1yB5sSPTYVI=;
-        b=D2XVE3e7NUp8dsHRMe5qCh57zLXHwq4Cygaws06C9dD2MZhCh+WlFj0LSAPq6ONBDC
-         qAkTvSmUzK0K8wa3CU3FDE0Vu0CyE1UnNPNL6G0jnfBmZxoPNQDbvbOo208Pt1XQu/Xv
-         tdaPq/KjkXhl5PcbjtsbE2QT5M2CB5oB5iFnKITjiNKoCZjC9A4HpX7eFISNj0+hHSjU
-         ohWKpebZslofHrRU9+Azoeeqfy/uZ3OfVtdSNguT4/F3wevxyx4zA2hfs/gXOtyTXxva
-         DSuiaYqNZ3Xi1PKVJrChdVry+32jOQZNnW9Cxt/X/KIZS4tXLjn5Hxfyv21ncUEN0qRx
-         lJ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744778110; x=1745382910;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NoVEwqwHV5q1ddAJeoGC7UZs2nQ52KxL1yB5sSPTYVI=;
-        b=UBo5xVq8T+S1KSLJOr+xOv5VEonlWAO171yt7SXNZ2M/RpoeKG+iPsQjOfCCBzpNwS
-         lgRA+UQ89E/AKQsjiOSGKEoIt1Nx9mJ8aqgnjj6tizVVKPYfIm/kxFehpB6gjBK71Cnv
-         zTWwfLKc7H9cz6s450N4qexLFb68/tKbY8HXTn0RiJmoFwnQlwVEY8vofZo9Bi9fl6b/
-         KTIH5/zxC+D177xuuPtDDzWo1hdBUQN6aLHPdXrAABLo016cUok7boitFz2E1T4rdqby
-         zxgdw8XUz3+lzkrrEZ9B4Wqr8LyCQ0VdME2L/QoKXiEoJ10v0QWTd7lHfaU1TWnpqT6s
-         XkhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkWA2lUM9EYViiEgFnCMu4dZnUYvO/BKQpTjVMNMeHng7tE8PM6rKYHiiI8ohRIW1tnM+C7l/ioNp4WTU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBB4/ZYphYqsyLqKR01U2AxO9IfBDxvw66//rfe2P7hcCt8qcz
-	RT+aRduDB79Ysg8zReVRWckiLpvWezl1Of1TbYfttIHVVLd1+qv1a+RVNEXFvF/hhDsEOA8O7K+
-	vlk4ADQ==
-X-Google-Smtp-Source: AGHT+IG2G4ywQjj332C/QbLj2/w1uiBgiH97/ajraV5DPfnUNzqGgNveWJxxAqmA9rtK2oDi4bz8OSxgEbBN
-X-Received: from pjci2.prod.google.com ([2002:a17:90a:3d82:b0:308:64af:7bb9])
- (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17c2:b0:2ff:6af3:b5fa
- with SMTP id 98e67ed59e1d1-3086415dde8mr408227a91.22.1744778110480; Tue, 15
- Apr 2025 21:35:10 -0700 (PDT)
-Date: Tue, 15 Apr 2025 21:34:10 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EqYgKWsB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PalyFqm2a9ht5Bv38AYsElqk2gmdRQBYGnXGQdGD96s=; b=EqYgKWsBgM6sOJ30PAi7VMCSzq
+	yKxQWFjE74FWHg0EAAmVlv9Eq0gFUhVO8QnR8uUiaNTPJxJ0dA9I8taYRe6YSxaZ86GtxKTwtDpge
+	E3OUYRk2NCREFa0O3dKxCW2UToRIP4gop6NfChx6DYq5Vjd51vjjUDoTzdDr72zmfciPmAvyqoGCk
+	AIaAElqyaB2Z2rwLQLscT7Ik9ru6qhYufQLh/vhIOtHf/Z0jxRr0r74aanxwMLveQV7Laa96EnRMp
+	S/FiK+Y++yp4jLrnMjwZit8Tjgi9AewGgE41EAq7XQN9b8jNWNnvnu7tql6dUXcL6GEAKkxoURZu0
+	QlGPUzyA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4uWG-00000008AJb-088f;
+	Wed, 16 Apr 2025 04:37:04 +0000
+Date: Tue, 15 Apr 2025 21:37:04 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Lizhi Xu <lizhi.xu@windriver.com>
+Cc: jack@suse.cz, almaz.alexandrovich@paragon-software.com,
+	brauner@kernel.org, hch@infradead.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Message-ID: <Z_8z8CD4FKlxw5Vm@infradead.org>
+References: <q5zbucxhdxsso7r3ydtnsz7jjkohc2zevz5swfbzwjizceqicp@32vssyaakhqo>
+ <20250415092637.251786-1-lizhi.xu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250416043412.956-1-jyescas@google.com>
-Subject: [PATCH v2] dma-buf: system_heap: Set allocation orders for larger
- page sizes
-From: Juan Yescas <jyescas@google.com>
-To: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
-	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org
-Cc: jyescas@google.com, baohua@kernel.org, dmitry.osipenko@collabora.com, 
-	jaewon31.kim@samsung.com, Guangming.Cao@mediatek.com, surenb@google.com, 
-	kaleshsingh@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415092637.251786-1-lizhi.xu@windriver.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-This change sets the allocation orders for the different page sizes
-(4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
-for large page sizes were calculated incorrectly, this caused system
-heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
+On Tue, Apr 15, 2025 at 05:26:37PM +0800, Lizhi Xu wrote:
+> The ntfs3 can use the page cache directly, so its address_space_operations
+> need direct_IO. 
 
-This change was tested on 4k/16k page size kernels.
-
-Signed-off-by: Juan Yescas <jyescas@google.com>
-Acked-by: John Stultz <jstultz@google.com>
-Reviewed-by: T.J. Mercier <tjmercier@google.com>
----
-
-Changes in v2:
-  - Add John's Acked-by tag.
-  - Add TJ's Reviewed-by tag
-  - Use dma-buf: system_heap: in the subject since this is specific to the
-    system heap, as per TJ.
-  - Remove extra space in if statement.
-
-
- drivers/dma-buf/heaps/system_heap.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
-index 26d5dc89ea16..ffc8f488eca6 100644
---- a/drivers/dma-buf/heaps/system_heap.c
-+++ b/drivers/dma-buf/heaps/system_heap.c
-@@ -50,8 +50,15 @@ static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
-  * to match with the sizes often found in IOMMUs. Using order 4 pages instead
-  * of order 0 pages can significantly improve the performance of many IOMMUs
-  * by reducing TLB pressure and time spent updating page tables.
-+ *
-+ * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The possible
-+ * page sizes for ARM devices could be 4K, 16K and 64K.
-  */
--static const unsigned int orders[] = {8, 4, 0};
-+#define ORDER_1M (20 - PAGE_SHIFT)
-+#define ORDER_64K (16 - PAGE_SHIFT)
-+#define ORDER_FOR_PAGE_SIZE (0)
-+static const unsigned int orders[] = {ORDER_1M, ORDER_64K, ORDER_FOR_PAGE_SIZE};
-+
- #define NUM_ORDERS ARRAY_SIZE(orders)
- 
- static struct sg_table *dup_sg_table(struct sg_table *table)
-@@ -318,7 +325,7 @@ static struct page *alloc_largest_available(unsigned long size,
- 	int i;
- 
- 	for (i = 0; i < NUM_ORDERS; i++) {
--		if (size <  (PAGE_SIZE << orders[i]))
-+		if (size < (PAGE_SIZE << orders[i]))
- 			continue;
- 		if (max_order < orders[i])
- 			continue;
--- 
-2.49.0.604.gff1f9ca942-goog
+This sentence still does not make any sense.
 
