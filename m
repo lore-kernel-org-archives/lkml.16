@@ -1,120 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D899A2356CA;
-	Wed, 16 Apr 2025 09:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B13E1AA1E0
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795392; cv=none; b=Kl8ROKf7BaVlorYYv/PoVJ8JcPZUIMSr1KbkyyLzWBTDVkHBxVH6jSR+eq0+8gpVUhoJGl3+PpVvLBGBGA0IdY/GlIA0SXSSDn+IOmberv06ndjNpcSCEe5h59THdtwFwBkbiNhPukjxsJpdbKXZm373d3mq5lHLKSnRetd3uXc=
+	t=1744795482; cv=none; b=GdmUSfPmWGqoMKOGsxvtrlsSxFRuDDvnFx2+3AgPJM/YXMvjmk6pyHmxsU5m46yDvpYArBjvd6y8hYtTi9MBsJTebwaKca62sncS2zWTPab/W4dif4UiCAo1RWLEynkdlTnnr5MjFv3M4/Cg1GvZ9QWHecbECj0H8VsJyJxrrpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795392; c=relaxed/simple;
-	bh=/tufIAG+VUZJC7b6YakwZhHyHBhfxxSru8ER1OFHfdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tvd3XG/R4lC2H4zkBHJ4La+pJhcD0U1WMKbgEOGg3o2nYjWGu4wSBuZmU9uh4l8meyTkD/GdZwTG9fDOkDwV6IKXlNNRWjcdJKINLbrm4olkBP0mdExvYNaJv+y02wNNvL95JPk7akZ2shpdZzNpXIx3+RFIToOIvIkEklsVD44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwJTco6I; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744795482; c=relaxed/simple;
+	bh=hHnar/R1bLTQG5T8505mOWlUcoq1efFUMRUpBQOrn8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hn14aMpT73cXUX0IGYlnkfT3az8uzxWy3qZPYOntuS7ON2NLwA5Y0iby44x7KGJ4A39xQsD94EXp1oW+EMpraIXXja6YB9GHSwod4oJCLY3lPrczVljSczH042iNvwPDVqgPRAPgCX4WhPWHW8068EZzFpte9dIEodPim8fsqzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=loZpzcsf; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwJTco6I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744795390; x=1776331390;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/tufIAG+VUZJC7b6YakwZhHyHBhfxxSru8ER1OFHfdc=;
-  b=HwJTco6IlTn/EeeWKTLZ/zSeULdXNnJvtItdeVyB/ot9Xrva51uyf1cc
-   iYiD4MSsgZFn8vCuWMjV2hjS2Qg7L8CH9vXvezcOfbJy/DodCsfasuNbs
-   fjywDKJkpN1D1WORQAgnSqcO0SQayeQiMoSxf2c+WgIw0tG4HeD6r5EYb
-   HALkrkdlyB1JP0Eo4boQ7ZCk3tFwP0ys3hGp9umi+nmpP6GpJ0YyAF/T/
-   vgj8/OniLPMUNuDKBNvSPFYjRmj8ytZS7AOTmm1JmBT+oFg8OGOxZxNL0
-   vUEm5I9Gbw2TfWeMTH96yCTdkArcsHiGfDQwcd+E/uuEPeX9TVDnVzqkq
-   w==;
-X-CSE-ConnectionGUID: veMJLjxpSuyo2/W2wBdeKw==
-X-CSE-MsgGUID: sjovWhO4R02+LTomiqncDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46495059"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46495059"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:23:09 -0700
-X-CSE-ConnectionGUID: i+2ZkBenQFK9UjPDvAV82Q==
-X-CSE-MsgGUID: byr1DdO/QXmCIVsDDjNGWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="153605640"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:23:05 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u4yyz-0000000Co6S-3lv7;
-	Wed, 16 Apr 2025 12:23:01 +0300
-Date: Wed, 16 Apr 2025 12:23:01 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@gmail.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
-Message-ID: <Z_929c1XSfeSi3QD@smile.fi.intel.com>
-References: <cover.1744789777.git.mchehab+huawei@kernel.org>
- <4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
- <87tt6opks7.fsf@intel.com>
- <20250416171917.0985c0eb@sal.lan>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loZpzcsf"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d377306ddso2524026241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744795479; x=1745400279; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHnar/R1bLTQG5T8505mOWlUcoq1efFUMRUpBQOrn8M=;
+        b=loZpzcsfqCUVEFR2ul0wCPy+cDNuIjY/0sPuFLa6NvA9KLRwnuu7zlpqHzKyktfUlD
+         J4LPBKM02UcyLWK1mLIEsJKeiOAgBOkmvqLOGAyCFxhOsDiBB7iyRaMdqGt604+VDuKf
+         kjp7S2XsRuj186jtsUWP5uMd/yR7q4uSJ0yjbw3gmoeNNy0LpMJOCtqP7k0Sy0i6zK5p
+         0v8dU9X5vEpT3d0tAL/5l0IJixPspFcoabmnHma2rWw55fwKgqoQIxlwf5xLDw3x0uqZ
+         mb41GQIqrF9VYBV/tcCj/qqPrXgQfH2+ps44GGvmrUN8K3Ct6WTsmb81u4jk/3l4xBoB
+         Z71w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744795479; x=1745400279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hHnar/R1bLTQG5T8505mOWlUcoq1efFUMRUpBQOrn8M=;
+        b=LV229xkPFHnwz5UNQVPjgATEhPAo5dP/JCPGX3EypIF96OXzLtK5je1FSHaUrDVf4f
+         HcFQMxkieCqxLHqyhp6CytwTBj+pRCTtMeOxBtaHs89oi5sSxksMX41XL9I6t03OxkqQ
+         NbYe+P85+JgE9m/ZaUoajrIUhIFmi3OFXyu8vgsEaNisU+MydiqA9JgJiLTveYxbCbTp
+         iNxyQ632C/r6qLEhKGrenrguWOPDj2PLEsg47x+A6alDmnLtG31SMnrnRuEOkH4myWCW
+         fS3DQYd6XUKuGCCg0YGHcUksMpqLwJgwfxLyi2NEGbZ2EcOveDINxO0Z61159mV+cMdZ
+         DY3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU6h/ZCC07dEVS3t1QdS98vWRHzTQYEieSfugkh6aL0zFtdcCRlWbg21AFCmB2Ahvmsr0eDjC349baTakQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPGJpHshaC2KuhrLHTQlGh5yKp4ojErSlvC4hv0Oac3XJZ2YK4
+	L4Xec7stH6pvxlnfrK4cZ9DtpT4uIeO98cC/WqNCcWffbGboG0tzWSQtX+h8gZXfxk03fM8uKMg
+	bwKe+hBEcUvOhjGa8jBmGMbO9DuQ=
+X-Gm-Gg: ASbGncvviUU0jouBVzAq79A66VpFZFYLp243dltsEMd7CZYs5Q39YMTBZllsAvQqNDu
+	LO+q+jj8hsAEBVvrW63/jlTMVnYxo+NMYz4XYisq2nsfJbZAId61cTujHFRsIBVNDpQl64CgKBK
+	1+gNAWKg9ABnhN824aJYqnjji+FfoestMI
+X-Google-Smtp-Source: AGHT+IFc6hLhG1BRBDAs3AcWYprpi1NvCFZHy+Fzt2jeq3AQ5eYFlyQTAvoJlabM+Ckb6agoT9lQ6MyxKq8NIJ0oiAQ=
+X-Received: by 2002:a05:6102:3115:b0:4c5:78ae:1e3a with SMTP id
+ ada2fe7eead31-4cb5930cef1mr272529137.23.1744795479179; Wed, 16 Apr 2025
+ 02:24:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416171917.0985c0eb@sal.lan>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250412085852.48524-1-21cnbao@gmail.com> <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
+In-Reply-To: <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 16 Apr 2025 17:24:28 +0800
+X-Gm-Features: ATxdqUHPpVHDcE4njgv8l7WvP6FJzZ4Hqu_QY8qPLeoJbLDDIVYAzTmNulKWw4Y
+Message-ID: <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Matthew Wilcox <willy@infradead.org>, Oscar Salvador <osalvador@suse.de>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 05:19:17PM +0800, Mauro Carvalho Chehab wrote:
-> Em Wed, 16 Apr 2025 11:34:16 +0300
-> Jani Nikula <jani.nikula@linux.intel.com> escreveu:
-> > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On Wed, Apr 16, 2025 at 4:32=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 12.04.25 10:58, Barry Song wrote:
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > Promoting exclusive file folios of a dying process is unnecessary and
+> > harmful. For example, while Firefox is killed and LibreOffice is
+> > launched, activating Firefox's young file-backed folios makes it
+> > harder to reclaim memory that LibreOffice doesn't use at all.
+>
+> Do we know when it is reasonable to promote any folios of a dying process=
+?
+>
 
-...
+I don't know. It seems not reasonable at all. if one service crashes due to
+SW bug, systemd will restart it immediately. this might be the case promoti=
+ng
+folios might be good. but it is really a bug of the service, not a normal c=
+ase.
 
-> > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
-> > >        cmd_hdrtest = \
-> > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
-> > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-> > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
-> > 
-> > KERNELDOC is not set here.
-> 
-> > 
-> > /bin/sh: 1: -none: not found
-> 
-> Weird. This is set on Documentation/Makefile:
-> 
-> 	$ grep KERNELDOC Documentation/Makefile 
-> 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
-> 	...
-> 
-> drivers/gpu/drm/Makefile should be able to see this variable there...
+> Assume you restart Firefox, would it really matter to promote them when
+> unmapping? New Firefox would fault-in / touch the ones it really needs
+> immediately afterwards?
 
-Does it work in the case of `make drivers/gpu/drm` ? This is probably how Jani
-tried it.
+Usually users kill firefox to start other applications (users intend
+to free memory
+for new applications). For Android, an app might be killed because it has b=
+een
+staying in the background inactively for a while.
 
-> > >  		touch $@
+On the other hand, even if users restart firefox immediately, their folios =
+are
+probably still in LRU to hit.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
+Thanks
+Barry
