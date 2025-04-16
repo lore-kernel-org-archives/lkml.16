@@ -1,38 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE78210E9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7663188735
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781469; cv=none; b=LG9yET7B3hHdK5oHr4FAjP2SN2PH7ka9g1kG+MYMvlxzogvQyGaRJ6kpgBfpinS6u3F9QurS2uueX85Z9Ce3pEqeUenKZwNa3YuC41jgt5l3nt/nJVXoLTh3P4RYlWlrjKfRTfTQP+ioE2/Vu5WuPTCVCrTvydh67pHBWF94AGw=
+	t=1744781495; cv=none; b=dH+BA894eRvFvHafT/PZqY1dSDocquwzb9ARDwFSgqpRtiyUMyOG1Dr61pXCO1fRKvVHrbYwz28LZS7ul3PNpGi/8HqJACsFITFBEDXvnE2O5Fqhhs+OZGKj1DHUGOk0/fpsvmHGvuaiMs05rxXhAgmvkN7mh8hP64yqfS2XxXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781469; c=relaxed/simple;
-	bh=2GxCLMiwAU1pkj0sCu2V3zOLdtzqZHidIe/zJo1aV58=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e9aTY67tHghR55RrCSn1IY4qszRIF9ExmABt0Q1I53Cnju9wZSEKocQEulTiRKxWQD/TXsfkWDyxqAZ3veI7bUZLLf2TuKbMzTc9CWSGJI6wsHYYV7Gvkx/3qT5pTF2/7Pt3eCr7VLZ9DBu0xAFlb2azPEEE6YtUNTao05pwHrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF045152B;
-	Tue, 15 Apr 2025 22:31:02 -0700 (PDT)
-Received: from K4MQJ0H1H2.arm.com (unknown [10.163.75.121])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A92473F66E;
-	Tue, 15 Apr 2025 22:30:59 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com,
-	david@redhat.com,
-	willy@infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	hughd@google.com,
-	vishal.moola@gmail.com,
-	yang@os.amperecomputing.com,
-	ziy@nvidia.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH v3] mempolicy: Optimize queue_folios_pte_range by PTE batching
-Date: Wed, 16 Apr 2025 11:00:48 +0530
-Message-Id: <20250416053048.96479-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1744781495; c=relaxed/simple;
+	bh=vZmMqwCoPGEpbjlYgVrbWq7PQvmeQqOpFND4sSyhKNI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oTFg6AzS/RZrWPkKXpEysZNm1batPdHJwD0U3cw7j+7QdOSfTtCO0lzF08AyXKp4X3nsqy6sZP4oEMVCIe8vFI3y1zC3xz7gIZittLivb7gjO32bG900ex3KWJy9kRrz0EEbcjEAc17oCt9Ed70sbYxkDCzzX/DyjgZOBztF5wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKjZ0ihS; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKjZ0ihS"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227b828de00so59088225ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744781493; x=1745386293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=00U42ZzUOxNRO4D8XKQxhoyIsJ3n5fks4Eku3muMMVM=;
+        b=kKjZ0ihSAE8qGYg5ECxJmz0/XyTce4ao5O+kVMpvorfnQmi77eXHtkyKWn+WFBekzD
+         9F4AV2ESPxj/yPH6fw3av2Qi4zEkuank0blPJE5K71fmTO1hY2U4TRiOAetCj0IH8LeF
+         OyOCHcaLqo6RhTLJvrG5PJNqiID9u/2bIUuFsHIG0thzAQsFS5MZM+lVyQ8X/CokI6RP
+         866uxlSUtwuFaCrlZy+i/E2BEJn7Z1/pc4tV7OKkOchrYSRQyCX4AwQM/EDcaZuymToC
+         DXG/fkpsMQzTASPsIdFbIxFwoFoNWaVidFME94zdbazdS8oD7j9Vs7IVQCwWeLYcEM/t
+         rorQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744781493; x=1745386293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=00U42ZzUOxNRO4D8XKQxhoyIsJ3n5fks4Eku3muMMVM=;
+        b=lyrUPm5U0ne7UfEyCaRJ8U01t7JNTsPzPy4Q3IV+CH2basKYOu+yhrjAEEKptPGQf5
+         i2ah7+C0cFYAxpRxZt6R0JTg7dM2iglm7KLDa4qJb9AeVrJNcHA10phCNIBSGk2wNgzI
+         Uaz3zom5JCJPDS07sMqG40hhfGjDMZp0kBDaHZ7pBJb58ocPD6wuuOquf3RhHNvMCWe6
+         bjPmFkZDJQS6WqXy5SMCLnZ4OoVBL2ud/XhkNPDcxPGVOLb87WvMVDtQBKqwj9TK70Wz
+         aSa/eDHutdiY5+NdaGyp9x5SMWAa2EyqRupUGJNAbZytpJKA7Fgm92gHOqvWd8M4oCky
+         APnw==
+X-Gm-Message-State: AOJu0Yx/9Z7wUAzxUKB8TcW+VyOtvbpyb8MmCGrmtVX087hAgfQwgwrV
+	KoWiQzck2wgdk1D9CAiO4FE9B0aanp8u2BjXqzDwwxi6Hjj4p0IcdgHHrmQf
+X-Gm-Gg: ASbGncvL1fMx6hrk913COMTIaCUKkxJyTetRfX5CFMa18ilkhW+ZJzEy7enOEXXfBHH
+	jr5NwUt17Q6hWxMgEEMVOCIe9VmbEtM25zWq+TN+bqeiRt502yazb/abwGmuPUdtrnXXRWE9Y8E
+	jrLhliQRrlIoCthz0GnXAbDHt0euaRfrUbBmzg4H/OCWQGI4IM/Vc90Pdp7Xl3fuF8sYJAzt0Dh
+	MLDy4Eilp9H7vphkXQyeM5xLrokLWerZWb1YVFblFJYVMDY0ICtaApzkaowiFSSj+vSrlVJ6V2e
+	/+XlhW7RnJz4RavTlfMBGbaqB628V1c1PTut1yiZOYDw7FnNEM1MtzN7
+X-Google-Smtp-Source: AGHT+IGzBezkIxVCJzUUB+qdYid6a8gIORMDZApggDa4nKeAbIQxX3qnx8Tko90P0qOPsoR+muKfZA==
+X-Received: by 2002:a17:902:ea04:b0:223:5ada:88ff with SMTP id d9443c01a7336-22c3590cd65mr11156435ad.24.1744781492715;
+        Tue, 15 Apr 2025 22:31:32 -0700 (PDT)
+Received: from shankari-IdeaPad.. ([103.24.60.250])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1bceasm5212715ad.62.2025.04.15.22.31.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 22:31:32 -0700 (PDT)
+From: Shankari02 <shankari.ak0208@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org,
+	skhan@linuxfoundation.org,
+	Shankari02 <shankari.ak0208@gmail.com>
+Subject: [PATCH] m68k: replace deprecated strncpy with strscpy
+Date: Wed, 16 Apr 2025 11:01:14 +0530
+Message-Id: <20250416053114.693917-1-shankari.ak0208@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,81 +71,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After the check for queue_folio_required(), the code only cares about the
-folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
-this loop by skipping over a PTE batch mapping the same folio.
+The use of strncpy() does not guarantee NUL-termination and is deprecated
+in the Linux kernel. This code manually terminates the buffer afterward,
+but using strscpy() is simpler and safer.
 
-With a test program migrating pages of the calling process, which includes
-a mapped VMA of size 4GB with pte-mapped large folios of order-9, and
-migrating once back and forth node-0 and node-1, the average execution
-time reduces from 7.5 to 4 seconds, giving an approx 47% speedup.
+This change replaces the strncpy() + NUL termination pattern with strscpy().
 
-v2->v3:
- - Don't use assignment in if condition
-
-v1->v2:
- - Follow reverse xmas tree declarations
- - Don't initialize nr
- - Move folio_pte_batch() immediately after retrieving a normal folio
- - increment nr_failed in one shot
-
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
 ---
- mm/mempolicy.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/m68k/kernel/setup_mm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index b28a1e6ae096..4d2dc8b63965 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -566,6 +566,7 @@ static void queue_folios_pmd(pmd_t *pmd, struct mm_walk *walk)
- static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 			unsigned long end, struct mm_walk *walk)
- {
-+	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
- 	struct vm_area_struct *vma = walk->vma;
- 	struct folio *folio;
- 	struct queue_pages *qp = walk->private;
-@@ -573,6 +574,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 	pte_t *pte, *mapped_pte;
- 	pte_t ptent;
- 	spinlock_t *ptl;
-+	int max_nr, nr;
+diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
+index 15c1a595a1de..48ce67947678 100644
+--- a/arch/m68k/kernel/setup_mm.c
++++ b/arch/m68k/kernel/setup_mm.c
+@@ -243,8 +243,7 @@ void __init setup_arch(char **cmdline_p)
+ 	setup_initial_init_mm((void *)PAGE_OFFSET, _etext, _edata, _end);
  
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
-@@ -586,7 +588,9 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 		walk->action = ACTION_AGAIN;
- 		return 0;
- 	}
--	for (; addr != end; pte++, addr += PAGE_SIZE) {
-+	for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
-+		max_nr = (end - addr) >> PAGE_SHIFT;
-+		nr = 1;
- 		ptent = ptep_get(pte);
- 		if (pte_none(ptent))
- 			continue;
-@@ -598,6 +602,10 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 		folio = vm_normal_folio(vma, addr, ptent);
- 		if (!folio || folio_is_zone_device(folio))
- 			continue;
-+		if (folio_test_large(folio) && max_nr != 1)
-+			nr = folio_pte_batch(folio, addr, pte, ptent,
-+					     max_nr, fpb_flags,
-+					     NULL, NULL, NULL);
- 		/*
- 		 * vm_normal_folio() filters out zero pages, but there might
- 		 * still be reserved folios to skip, perhaps in a VDSO.
-@@ -630,7 +638,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
- 		if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
- 		    !vma_migratable(vma) ||
- 		    !migrate_folio_add(folio, qp->pagelist, flags)) {
--			qp->nr_failed++;
-+			qp->nr_failed += nr;
- 			if (strictly_unmovable(flags))
- 				break;
- 		}
+ #if defined(CONFIG_BOOTPARAM)
+-	strncpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+-	m68k_command_line[CL_SIZE - 1] = 0;
++	strscpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
+ #endif /* CONFIG_BOOTPARAM */
+ 	process_uboot_commandline(&m68k_command_line[0], CL_SIZE);
+ 	*cmdline_p = m68k_command_line;
 -- 
-2.30.2
+2.34.1
 
