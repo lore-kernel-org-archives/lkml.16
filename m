@@ -1,46 +1,58 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D6C22DF96;
-	Wed, 16 Apr 2025 07:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BFB22E406;
+	Wed, 16 Apr 2025 07:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790373; cv=none; b=U8N5gKmoh09rwcrlP1TMEYKCAfq5R7UaLxK87axnIlyc5bOyhpthJhbZqQ89WrQI0gyQbVdOEbf2qa4WFvTXtO7yT+Q+V1o4ND8zpPXmGBwSmmLOVtpDskyLbX0qP0XI4dn9Uclc0ne+8eA8C1qUQcED2PuGjeVZcnYywxN4Rp8=
+	t=1744790380; cv=none; b=Xoj5P9D7xWLMFdF6WK38eIzA9f9gFrMnWXztTZ8GrUZaAOvqABIvRU8kuQTLkqucx0a4sCsDMz5xaBygcH8RiDM5YIFXUPi2bPso1iJzCLEuZEfox+NIvT2OTlSAQ6ppKe0VlNhimKuazcHqMs+EmlRZWJ6ndNRGNbw1UioL2jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790373; c=relaxed/simple;
-	bh=mOxBpRgtcyJIhsNVhF20F/Xs7vhTgJEsIpqDQe2I2hE=;
+	s=arc-20240116; t=1744790380; c=relaxed/simple;
+	bh=MkWy35MldUfbFDDapHrCdQRMkls14h+ATBdsggGtBv0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyHtv9wEkq/5RLUiZOyB6Y4TMJ5eNTTVfDb7sS9rk0JYXvTUijHrD8lsrTyHGwfqv0H5DCUUVjS+IhCYhTlV8DdWgBVeiRsjYRulLb1zVOVJr59cr18vHB/NDMxEWEK4iRBk2h4Usbh1HPkcG0NK1HRgsseSJMUnzTxkU2Qdgtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=YZOlpOyv; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDZp3XB9QiZd21CWhvCfrP6u8xCNa8OYKe43DtwVFCESMdseIUmUOCFsEZxqPDI76tLxxmRfSDyNYZy+Ji2WowcZo1hfXeghlyVFi1Gx+/QRnqF8aT/rk9K4ikBOpjJ8lJYFO4HhcTELPzZ5Iw5JDfdaIjYFnjpOIgWQ+Te4hhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G7y9R6jB; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="YZOlpOyv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WrhhNGGmHGn82GqlBOWy7dzaZJhKoFDZvvGJM5Qchb0=; b=YZOlpOyvwuZb8ro5AbjIQh4G46
-	Fp2VpfwNAQRKyM50eq+k2vuYKXr1pIqSSkydQ8FCAmPql/4oX91KX+QTzw499oks1G9EO9EGipZ+R
-	huR0rNUY8b/Lf3M3YwxJhL/Sj8QnnuvYzmduL9kZDwyj5/h11/yiJ6wwqYY3aEuseMB12rTki+BPS
-	9wy2g/Zjsw7Gt9u6aBXMCUzgvlfbeLbxqfShwFU4MgmIC2TtR/rsFUGDvYtskuI39mA3nj7qUTkWu
-	mjyBV2DvPSL0EUwO11bzM3rWm+QA9EYMB1ZXzdXl4OjM1mawvwZCda48zp1bhp8Kbjz1mvBNSmQ55
-	dJPkruJg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u4xg0-00G7xM-1d;
-	Wed, 16 Apr 2025 15:59:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Apr 2025 15:59:20 +0800
-Date: Wed, 16 Apr 2025 15:59:20 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: linux@treblig.org
-Cc: ardb@kernel.org, haren@us.ibm.com, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: deadcode structs from 'comp' removal
-Message-ID: <Z_9jWI3l-HKEzHX1@gondor.apana.org.au>
-References: <20250412233241.1167401-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7y9R6jB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yB4wmD74MiBKWLxUyjjkBFJ9xMt+iqwI8peAkwBlB74=; b=G7y9R6jBnX5I8JvtMu+x4Or/TJ
+	g1Xifo64oGj+hZluL5QLP2UvgBJI8qSSDlV8632AS3xOSiIifL7Qak2aDLyen43Koyo+htLlk1uvc
+	zPioYTpzUdonTeOuMSywXK7GdOwFmHji2GTYQlmWShiLXczJl+3IB9dUtTr2KtAWStN1d19qTHseO
+	w+QsDhma6+j9PSMRuI7txGeGK/huQkj3d1u3YIx2YsOGsJ8fsYD2InGTHXbbBwzYfQhmi8Zjj4Typ
+	9WRiA6PsX8jvqL5DRzrVAck8atFHtgxhVF7Xudm8aq9H2R2A2fW9myfn96Rv22GvFdrBDTh1EGorF
+	rtFWlEag==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u4xg6-0000000A4BX-2FGW;
+	Wed, 16 Apr 2025 07:59:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E9F493007A4; Wed, 16 Apr 2025 09:59:25 +0200 (CEST)
+Date: Wed, 16 Apr 2025 09:59:25 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Rik van Riel <riel@surriel.com>, Pat Cody <pat@patcody.io>,
+	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
+	patcody@meta.com, kernel-team@meta.com, stable@vger.kernel.org,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+Message-ID: <20250416075925.GB6580@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+ <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+ <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
+ <20250402180734.GX5880@noisy.programming.kicks-ass.net>
+ <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
+ <20250409152703.GL9833@noisy.programming.kicks-ass.net>
+ <20250411105134.1f316982@fangorn>
+ <20250414090823.GB5600@noisy.programming.kicks-ass.net>
+ <0049c6a0-8802-416c-9618-9d714c22af49@meta.com>
+ <20250415100705.GL5600@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,37 +61,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250412233241.1167401-1-linux@treblig.org>
+In-Reply-To: <20250415100705.GL5600@noisy.programming.kicks-ass.net>
 
-On Sun, Apr 13, 2025 at 12:32:41AM +0100, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Tue, Apr 15, 2025 at 12:07:05PM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 14, 2025 at 11:38:15AM -0400, Chris Mason wrote:
+> > 
+> > 
+> > On 4/14/25 5:08 AM, Peter Zijlstra wrote:
+> > 
+> > [ math and such ]
+> > 
+> > 
+> > > The zero_vruntime patch I gave earlier should avoid this particular
+> > > issue.
+> > 
+> > Here's a crash with the zero runtime patch. 
 > 
-> Ard's recent series of patches removing 'comp' implementations
-> left behind a bunch of trivial structs, remove them.
+> And indeed it doesn't have these massive (negative) avg_vruntime values.
 > 
-> These are:
->   crypto842_ctx - commit 2d985ff0072f ("crypto: 842 - drop obsolete 'comp'
-> implementation")
->   lz4_ctx       - commit 33335afe33c9 ("crypto: lz4 - drop obsolete 'comp'
-> implementation")
->   lz4hc_ctx     - commit dbae96559eef ("crypto: lz4hc - drop obsolete
-> 'comp' implementation")
->   lzo_ctx       - commit a3e43a25bad0 ("crypto: lzo - drop obsolete
-> 'comp' implementation")
->   lzorle_ctx    - commit d32da55c5b0c ("crypto: lzo-rle - drop obsolete
-> 'comp' implementation")
+> > I'm trying to reproduce
+> > this outside of prod so we can crank up the iteration speed a bit.
 > 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  crypto/842.c     | 4 ----
->  crypto/lz4.c     | 4 ----
->  crypto/lz4hc.c   | 4 ----
->  crypto/lzo-rle.c | 4 ----
->  crypto/lzo.c     | 4 ----
->  5 files changed, 20 deletions(-)
+> Thanks.
+> 
+> Could you add which pick went boom for the next dump?
+> 
+> 
+> 
+> I am however, slightly confused by this output format.
+> 
+> It looks like it dumps the cfs_rq the first time it encounters it,
+> either through curr or through the tree.
+> 
+> So if I read this correct the root is something like:
+> 
+> > nr_running = 2
+> > zero_vruntime = 19194347104893960
+> > avg_vruntime = 6044054790
+> > avg_load = 2
+> > curr = {
+> >   cgroup urgent
+> >   vruntime = 24498183812106172
+> >   weight = 3561684 => 3478
+> > }
+> > tasks_timeline = [
+> >   {
+> >     cgroup optional
+> >     vruntime = 19194350126921355
+> >     weight = 1168 => 2
+> >   },
+> > ]
+> 
+> group  19194347104893960
+> curr   24498183812106172 3561684
+> entity 19194350126921355 1168
+> 
+> But if I run those numbers, I get avg_load == 1, seeing how 1168/1024 =
+> 1. But the thing says it should be 2.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+N/m, late last night I remembered we have a max(2, ..) in there. So
+yeah, your numbers seem right.
+
+
