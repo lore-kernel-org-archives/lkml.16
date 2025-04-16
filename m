@@ -1,129 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BD735962;
-	Wed, 16 Apr 2025 15:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8DB154430
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744815966; cv=none; b=ID3D2hNwEqMyd8Xc1QBkAinmLx3eEsuSn6HdCMOWF6iekryrTjkrEInojImOKulaTDbPykzu/D6Dz3nti21XEAFDwB8VzY5zCI8y/Yuw4yBQ9+OjM7d4j3PhrZyI5MI7HIFONxMu3HMr72lSqpR0ciQxul5Gip2IaJOddADL75Q=
+	t=1744816042; cv=none; b=Gst3KK1HrAQcSdLuWbWlqoi4f3WBzadR9W9V93M2Ei3O3SRx/Cf0omqftzdGXfNLiQkOa2Vgoq2SLVRACNsI/ZNlHK9w2JxglCeyL3RFhp2SxXt5PB4lHVTl+EW1nDwHNCFmIUzDkhcIgtHTvA7IiZ8DnqqelURnmf2PenNjx+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744815966; c=relaxed/simple;
-	bh=l2u5/AR5KohY2Ne0q9kFZHfh95fUmdMdWQxvvpvtISs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJTToTUTVAmaeCOr0FhxYd8l/YVaawvsxMUHt6XyS3W69RdwIfFdPg/6H2Hnm3AasfJvKaaGhxYdKcN60Uvmf8zpyPfqAOwrQ9p0ONJK5XQSHVW2jPmED9eba7UmGdnhFZJnLKb15PjHF3DrslE86dPYnGg0AWXUD8a6wBNX7KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6APyql2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744816042; c=relaxed/simple;
+	bh=xydEv1bJS8nBM6VoPoPvUsURJKyB/Zca26umfk5kWjM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EdqCYXMPbH6Ec096CMJ5QIDn+Ki4k2bGIkh61OFtavKJXXYFevcltgd/Z5aibmntRPELBdnRrP4xKxPnJAElU/xD1CW2LqyjrK6P0HtzRdoxY7pSoGEcG3PRvoBnVaaIAhAgFd+vvKwIfeEKts2KPk6HPNdLtt3e0mVUwaUIm+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=luvrRmTW; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6APyql2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C20C4CEE2;
-	Wed, 16 Apr 2025 15:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744815965;
-	bh=l2u5/AR5KohY2Ne0q9kFZHfh95fUmdMdWQxvvpvtISs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f6APyql2LPE1KPUscXGJVcbv+8XglRtjpu12Za7zt5fVUWvF1TjCOCySAEKX1HmNZ
-	 HEpPDBw37fWjoQEc5J2jV4ydAonr9VKSvm3fcvczL+Qr4s9ipbFupyJaUvBTrmqTda
-	 e8XuKDH0nh6PMPI83QuI8H7vydAThj1U6XbIlaccfZ5SF3LzHDAgScQhVP601ufyTu
-	 pt2Nr2ZdOnRImv3W5SeJq8Jygepdnqh272RdUAN3KP90P6fgD+d7DnsoAGBl3gRGkk
-	 ccdGwrf9FpnKwMbOGPGxtuc/pXIBpUt/itkljlNG2OBVYdrel+t3GBB5hCpgCW1pO0
-	 8Esiltxwt5Pwg==
-Date: Wed, 16 Apr 2025 08:06:04 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	David Sterba <dsterba@suse.cz>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Josef Bacik <josef@toxicpanda.com>, Sandeen <sandeen@redhat.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hfs{plus}: add deprecation warning
-Message-ID: <20250416150604.GB25700@frogsfrogsfrogs>
-References: <20250415-orchester-robben-2be52e119ee4@brauner>
- <20250415144907.GB25659@frogsfrogsfrogs>
- <20250416-willen-wachhalten-55a798e41fd2@brauner>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="luvrRmTW"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d5e68418b5so52318865ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744816038; x=1745420838; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uSiz4ta79sjKF4kdwzdjhicKXhB4rJNdion/ll08cgM=;
+        b=luvrRmTW1ax0ITztpQatJNCGdU8WMDFJkKEIQPpXA5kWbTyOtMA6lX1Obb3BacsCbm
+         Tlkj+co6su9D3PWSiKvzkdIIrbPtCoVlEqM7N2X26nbr1RgvM3/OhTT/NpyIavuPZL2k
+         /DSaeVYc8NDx9HcwSFCYoiYDMkWBkRbUtTL+z5RJvzDWrJJ9qJA5JskvkJ9WG2PtIdj+
+         4BEzXeBOSsbU+zdHoYBLWSX59W3qMesue4hjOX9yjjgjs+4awHdAxNgXOXR2bdvDUuAr
+         1vem8v1HCqVKT0pO0AQD6k3qQGQ9q9zdYXwnmFaL4jwJ8a7ULmJ7kqkx5lXKZ4CZ3qB8
+         3vGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744816038; x=1745420838;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uSiz4ta79sjKF4kdwzdjhicKXhB4rJNdion/ll08cgM=;
+        b=pi3PuyMvutSh8DL9U0mUVv1foMuwSWtv90dX9ww2yF48rdE3Vy92xf61koqP/eVLh6
+         hX7yPASxKdkuitKqi8JRxLohwSs/yvRNr37kEwXWe8rJYZstRxO/ceugzuCMBHUfR16c
+         8ZCuw10KuRp1TUqmdl+PRqMHf6WsZGyjNBzu7EdTzKSg6HdPMIuF5ak1XBOPnSw/ozHF
+         lCLRZgzsLj9pDQZ62lpjsXcPuENeH/38fAaLH2Ql0gREEuGv4QPLH5YhGHn0joAvUhvA
+         vtyHgn0kJYirru+gjmSztKMqFWSIJl/gnp9S9jIx7a7AfmLLa+fdIjYQRjgkzqCZZgFu
+         H63g==
+X-Forwarded-Encrypted: i=1; AJvYcCUeN5wKve+UbKJVrx2tRAouZhN2h9z7C7HEePBPaXY4HqsvWcLmgTRG3ZStjrUB780/Kge2hpPyPWiMPaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGseCiwkI+tlOJFy8YMEJB4hX/VwYmPyRavt8COZS0ngILdn8A
+	zCr8EoWed9ZLz/BUa+6P/vR9cCKs5WZwtIWIbn8X1LS2QkFCS5u8xgUmwkPzJlU=
+X-Gm-Gg: ASbGncuqP4N5kkPkwjUNxgl7asdj5IN5srX6XnGZc4Ac7cPcykADwDqP3Ps/jB16OOU
+	UG9ljT1MjVcZrQiUra9rPU2+H40C3/gUNYhOjhu6tIKJPnRyfdtqtSQGAP9D9hSJOrIp6uZ0wWP
+	eucKeZTPR9D9BQ5JegzAy7zRaHl7cIfinnPB//1SLmCGoPuL2dBi+xP0r4yCDsAdnZ3I89VQT6O
+	mzh6j4ADU8X1e7289BGksdab6yEvh85vIOxusFiNyVB72mYsoKAv3aSpTDoNSBcEtKkdjnzsxKs
+	zOQSv8/ATm5q9+YBEzYvx+iasuMbEWhWNHGHQlrX7BKva94=
+X-Google-Smtp-Source: AGHT+IEiQF0hJJBv4FKHVHSG0TYD0Ys3nz+ZNjCcYIevxZBop88KC6KOO3PSA/ty3Te7NQIFJkQtZw==
+X-Received: by 2002:a05:6e02:216b:b0:3d6:d162:be54 with SMTP id e9e14a558f8ab-3d815b5e1dfmr19479345ab.14.1744816038264;
+        Wed, 16 Apr 2025 08:07:18 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e01512sm3601391173.102.2025.04.16.08.07.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 08:07:17 -0700 (PDT)
+Message-ID: <37c982b5-92e1-4253-b8ac-d446a9a7d932@kernel.dk>
+Date: Wed, 16 Apr 2025 09:07:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-willen-wachhalten-55a798e41fd2@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring/rsrc: send exact nr_segs for fixed buffer
+To: Pavel Begunkov <asml.silence@gmail.com>,
+ Nitesh Shetty <nj.shetty@samsung.com>
+Cc: gost.dev@samsung.com, nitheshshetty@gmail.com, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250416055250epcas5p25fa8223a1bfeea5583ad8ba88c881a05@epcas5p2.samsung.com>
+ <20250416054413.10431-1-nj.shetty@samsung.com>
+ <98f08b07-c8de-4489-9686-241c0aab6acc@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <98f08b07-c8de-4489-9686-241c0aab6acc@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 08:27:19AM +0200, Christian Brauner wrote:
-> On Tue, Apr 15, 2025 at 07:49:07AM -0700, Darrick J. Wong wrote:
-> > On Tue, Apr 15, 2025 at 09:51:37AM +0200, Christian Brauner wrote:
-> > > Both the hfs and hfsplus filesystem have been orphaned since at least
-> > > 2014, i.e., over 10 years. It's time to remove them from the kernel as
-> > > they're exhibiting more and more issues and no one is stepping up to
-> > > fixing them.
-> > > 
-> > > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > > ---
-> > >  fs/hfs/super.c     | 2 ++
-> > >  fs/hfsplus/super.c | 2 ++
-> > >  2 files changed, 4 insertions(+)
-> > > 
-> > > diff --git a/fs/hfs/super.c b/fs/hfs/super.c
-> > > index fe09c2093a93..4413cd8feb9e 100644
-> > > --- a/fs/hfs/super.c
-> > > +++ b/fs/hfs/super.c
-> > > @@ -404,6 +404,8 @@ static int hfs_init_fs_context(struct fs_context *fc)
-> > >  {
-> > >  	struct hfs_sb_info *hsb;
-> > >  
-> > > +	pr_warn("The hfs filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
-> > 
-> > Does this mean before or after the 2025 LTS kernel is released?  I would
+On 4/16/25 9:03 AM, Pavel Begunkov wrote:
+> On 4/16/25 06:44, Nitesh Shetty wrote:
+>> Sending exact nr_segs, avoids bio split check and processing in
+>> block layer, which takes around 5%[1] of overall CPU utilization.
+>>
+>> In our setup, we see overall improvement of IOPS from 7.15M to 7.65M [2]
+>> and 5% less CPU utilization.
+>>
+>> [1]
+>>       3.52%  io_uring         [kernel.kallsyms]     [k] bio_split_rw_at
+>>       1.42%  io_uring         [kernel.kallsyms]     [k] bio_split_rw
+>>       0.62%  io_uring         [kernel.kallsyms]     [k] bio_submit_split
+>>
+>> [2]
+>> sudo taskset -c 0,1 ./t/io_uring -b512 -d128 -c32 -s32 -p1 -F1 -B1 -n2
+>> -r4 /dev/nvme0n1 /dev/nvme1n1
+>>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> ---
+>>   io_uring/rsrc.c | 3 +++
+>>   1 file changed, 3 insertions(+)
+>>
+>> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+>> index b36c8825550e..6fd3a4a85a9c 100644
+>> --- a/io_uring/rsrc.c
+>> +++ b/io_uring/rsrc.c
+>> @@ -1096,6 +1096,9 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+>>               iter->iov_offset = offset & ((1UL << imu->folio_shift) - 1);
+>>           }
+>>       }
+>> +    iter->nr_segs = (iter->bvec->bv_offset + iter->iov_offset +
+>> +        iter->count + ((1UL << imu->folio_shift) - 1)) /
+>> +        (1UL << imu->folio_shift);
 > 
-> I would've tried before the LTS release...
+> That's not going to work with ->is_kbuf as the segments are not uniform in
+> size.
 
-Well you still could.  No better way to get an oft-ignored filesystem
-back into maintenance by throwing down a deprecation notice. :)
+Oops yes good point.
 
-> > say that we ought to let this circulate more widely among users, but
+> And can we make it saner? Split it into several statements, add variables
+> for folio size and so, or maybe just use ALIGN. If moved above, you
+> probably don't even need to recalc
 > 
-> which is a valid point. The removal of reiserfs and sysv has been pretty
-> surgically clean. So at least from my POV it should be simple enough to
-> revert the removal. But I'm not dealing with stable kernels so I have no
-> intuition about the pain involved.
+> iter->bvec->bv_offset + iter->iov_offset
 
-It'll probably cause a lot of pain for the distributions that support
-PPC Macs because that's the only fs that the OF knows how to read for
-bootfiles.  For dual-boot Intel Macs, their EFI partition is usually
-HFS+ and contains various system files (+ grub), but their EFI actually
-can read FAT.  I have an old 2012 Mac Mini that runs exclusively Debian,
-and a FAT32 ESP works just fine.
+Agree, was trying to do that with the shift at least, but seems like
+there is indeed room for further improvements here in terms of
+readability.
 
-> > OTOH I guess no maintainer for a decade is really bad.
-
-On those grounds,
-Acked-by: "Darrick J. Wong" <djwong@kernel.org>
-
---D
-
-> > 
-> > --D
-> > 
-> > > +
-> > >  	hsb = kzalloc(sizeof(struct hfs_sb_info), GFP_KERNEL);
-> > >  	if (!hsb)
-> > >  		return -ENOMEM;
-> > > diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
-> > > index 948b8aaee33e..58cff4b2a3b4 100644
-> > > --- a/fs/hfsplus/super.c
-> > > +++ b/fs/hfsplus/super.c
-> > > @@ -656,6 +656,8 @@ static int hfsplus_init_fs_context(struct fs_context *fc)
-> > >  {
-> > >  	struct hfsplus_sb_info *sbi;
-> > >  
-> > > +	pr_warn("The hfsplus filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
-> > > +
-> > >  	sbi = kzalloc(sizeof(struct hfsplus_sb_info), GFP_KERNEL);
-> > >  	if (!sbi)
-> > >  		return -ENOMEM;
-> > > -- 
-> > > 2.47.2
-> > > 
-> > > 
+-- 
+Jens Axboe
