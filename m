@@ -1,85 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC8223534D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:35:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9998623371A;
+	Wed, 16 Apr 2025 09:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796106; cv=none; b=atFUyJm2oDx7yjTP+uLaBIvI3NURfC1GKFnY5vuKWQgXxzJ3jA5JfAbHDL0FQewEhNMSVJsP9QCkWt3aRgfP60CkBj2bIVqLxtId3yc2ui9tij+ONsMQIcnlNRp6KpJ8h3sQ4A8Elk8AImBaNlE/WfVekXaY4AF27G8w4iX+ygs=
+	t=1744796134; cv=none; b=lS9osU3NWaposajnayihdNmz1Apc+sdCSaJDdIotAZ6MMWnvnuA1LJoLXFuTagruln5WyJA3Ei2wnvtQNu2Q6rW5jc+Yb91fEXvXD870IQ4JxnXvWmFYGLA3QmHZPtc4/g180dax5RbScbo106SqXD7ehSXuaBZRbEbpg4jJaec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796106; c=relaxed/simple;
-	bh=0LsiRsEyAZf+wy+fLg08t6UMmm0tdGr02V0DO9CEeko=;
+	s=arc-20240116; t=1744796134; c=relaxed/simple;
+	bh=05QxXqivbSdfbDCL7/ruM7xLHEtOAuyN8K6UqkeiaoA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X4VAidcS2qT5U4qauWF+NnOMHiUis3uIOr6qDs+wpVfse6izs+Mw+ybbpYEh2cHhhUVR51Po9+qgflCcAs8kv4EN+SgfXUM7GbbrEXS9DdQPynXEkkYNeyrQzjRgXVhV185bGxFtCcgFi5R6uFlBEqUnihzPXA+8pW6T4RPu/SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eFMieImb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:MIME-Version; b=KDXOJ4GtG/NCJGUk38FjeeIrFoWALqZy3wt8FVgPK8njdxdfS9Us9zM6ZDiBLoGHv5ZeohtA3s4/3reSMGQVDJlPX+VrT5EHr7fIFsHcPaOjnldSm2WkJo3ArPRJihW9ii3b+FSRqlQYyZwa5SgiHdWUmoDWW6/Vvi5lODiVNLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TYIoKdl9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFMieImb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744796101;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=R38kvr6YYwHybVl0KvxrQLj4rrauk+WxuzNkAEl5+ic=;
-	b=eFMieImbuCc4kYKAk0RwoV/KbaMBAycKbpMY9q3gchRUovr63rs17/vyuquKGuFQ3wWUpt
-	lCkW1WRLKg/9N1HM3q4tpHZkDdGCXW6tTdcmxudmM9PfoceLBMTTqzkxEhe0bsak4uDs8X
-	3t56Oyvx6jwFXIsfPZOKdc/w7wGHeOs=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-Zj1ZnPilP4eSfVCL3JgAMQ-1; Wed, 16 Apr 2025 05:34:57 -0400
-X-MC-Unique: Zj1ZnPilP4eSfVCL3JgAMQ-1
-X-Mimecast-MFC-AGG-ID: Zj1ZnPilP4eSfVCL3JgAMQ_1744796097
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac27d8ac365so452313966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:34:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796096; x=1745400896;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R38kvr6YYwHybVl0KvxrQLj4rrauk+WxuzNkAEl5+ic=;
-        b=o1z8s78h1TkAyS1Jc20ATV9YCAL6AN9QHWv9k1STK1h+N4WUY+BM6QPH/LE2wd812M
-         metVR6/IflEAMplvqgSgDsEXFfxm6ukmOttVgyLph0f4I9/HsdLvtqL3UeZ/v/JsWkj4
-         pxYGGi8TU2USAKv4JRHYfAI6Lx3h+IWdynab2hqstKpE/6fw4L434E559LFwW3K3Q94P
-         ii5aGw6UDpBkCtM955c7GFZNw/A+iBT6S3yWvUDBxMZyWSsoGGy0MoIMa4ei8lUSRkUZ
-         zaXib32KZ0whjsVlH9rB9OvyifS27xGWoHgh7GKrIIfx4rqESf6tdW6nb5C2dSTRkLup
-         uDhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWmpu7l1kCMjub/dXAueE9DtJ8vCnzxETQ6GoZhfI8ihJtCNKMTKyQHTgDWDsnZy+e7X5irxP9my+eqiw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5elyOUPWNaAOWznXZAMK+yU+iQvU5g4mBti4cwF/M8PveWMo+
-	Df9M7jH0pfE4QH5SMXDCSVyJZCMLBc8i5e9+K+iypNv4tyXGR5xMYcl/bwKE/D996fWV1+vmiRq
-	G4CrRua5hKr+598lkZAd+r3VYCtpzpbPRg5SeVYZQ5F49kXR77g/XgZId92MThhS+Gwf/wkBf
-X-Gm-Gg: ASbGncsbZZ24ep8tumLIkO3KCUh/uLymuvaJQWDBfeVCxM6pRnkd63z52BokrxbyWvz
-	aV+cqF96XA9ifBOQoVA+Sfdy0TOmeOe3R5Tsq+6HZpPajI/PQikvFpD16ufcIG/8nRaF5DOjtGq
-	vL6CDnEOSC2dQjtit7RqN7bcDyml8GC4exLEeEM22Y4zjROhDX/K0YglmmS4i8N5Ot3cDBrlJqr
-	hoAF8aNR2PkHe9OuaGxlEVuOFHA+O2KCLus314BJ80jNOadPkZHn+AuKaqupVkLstCIBYDJvTET
-	KTZjeoBCPEa0gvqn6oSeSgAdmzDOB92KihgLDI4=
-X-Received: by 2002:a17:906:f594:b0:aca:d4d0:a735 with SMTP id a640c23a62f3a-acb42ad330dmr92702566b.43.1744796096556;
-        Wed, 16 Apr 2025 02:34:56 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGA3tINUfuvkxHAN/j7OpwBay5sdkkyLpxkjrrvfKwXbTUdvRoKXKWFVl9vjG5myTqzr3sZpg==
-X-Received: by 2002:a17:906:f594:b0:aca:d4d0:a735 with SMTP id a640c23a62f3a-acb42ad330dmr92699866b.43.1744796096039;
-        Wed, 16 Apr 2025 02:34:56 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d128932sm90388766b.88.2025.04.16.02.34.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:34:55 -0700 (PDT)
-Message-ID: <4edad1940b2d05f1997895d4bbc11f02a921e8e5.camel@redhat.com>
-Subject: Re: [PATCH v3 13/22] rv: Add support for LTL monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Date: Wed, 16 Apr 2025 11:34:53 +0200
-In-Reply-To: <19f424c910bfa0f4854117e3f8771aeb6e98a9d2.1744785335.git.namcao@linutronix.de>
-References: <cover.1744785335.git.namcao@linutronix.de>
-	 <19f424c910bfa0f4854117e3f8771aeb6e98a9d2.1744785335.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TYIoKdl9"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FL3eha018902;
+	Wed, 16 Apr 2025 09:35:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=w3hM8Z
+	RRQsVyGIYjdZkA0T3THggoIVmw6QfZD7+58NA=; b=TYIoKdl9iIMnUJwFwsyKb0
+	tgMKkPUrmUOTfBziq1N0hPrhYMOE3HdJuDBBDLjMgt0E4GAnIXFbUYegTci3vwFA
+	NfdgCoz77U2uOkoyjfnhoJkThUh7fwSQAooF7leRl6r3n5vagn/sTCyKSdMiuU0d
+	IA69VtzXBsegzCRhyILc3RfsmJou8kdYDT+9AdIzPcXasLboSCnSlS2tqXTfITDZ
+	3sjV+skyKP3jywyyW6+CNWbla9ke2UliVv6VUD/xBxCZyD4g7Q/4ZSAZmXObJmRH
+	HhEhZOrBEVa0bn5MzrFDD/NBQeE9/F6tUw6p3hkfma3vxmMMfbKtjkMsUreSKD/w
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461y1gatra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:35:21 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9JEhj024907;
+	Wed, 16 Apr 2025 09:35:20 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtfx72-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:35:20 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G9ZJaG30147138
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 09:35:19 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5213E58045;
+	Wed, 16 Apr 2025 09:35:19 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5F6058050;
+	Wed, 16 Apr 2025 09:35:16 +0000 (GMT)
+Received: from [9.179.17.252] (unknown [9.179.17.252])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 09:35:16 +0000 (GMT)
+Message-ID: <925b1369de0d347ddee2115d1de63843623ac485.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 5/5] iommu/s390: allow larger region tables
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Matthew Rosato <mjrosato@linux.ibm.com>, joro@8bytes.org, will@kernel.org,
+        robin.murphy@arm.com, gerald.schaefer@linux.ibm.com
+Cc: hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, borntraeger@linux.ibm.com, clg@redhat.com,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Date: Wed, 16 Apr 2025 11:35:15 +0200
+In-Reply-To: <20250411202433.181683-6-mjrosato@linux.ibm.com>
+References: <20250411202433.181683-1-mjrosato@linux.ibm.com>
+	 <20250411202433.181683-6-mjrosato@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
@@ -89,333 +130,183 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: T7Kz7xVW64sq_e_qjCa8E4eR-1nL1WIt
+X-Proofpoint-GUID: T7Kz7xVW64sq_e_qjCa8E4eR-1nL1WIt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=948 priorityscore=1501 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160078
 
-
-On Wed, 2025-04-16 at 08:51 +0200, Nam Cao wrote:
-> While attempting to implement DA monitors for some complex
-> specifications,
-> deterministic automaton is found to be inappropriate as the
-> specification
-> language. The automaton is complicated, hard to understand, and
-> error-prone.
+On Fri, 2025-04-11 at 16:24 -0400, Matthew Rosato wrote:
+> Extend the aperture calculation to consider sizes beyond the maximum
+> size of a region third table.  Attempt to always use the smallest
+> table size possible to avoid unnecessary extra steps during translation.
+> Update reserved region calculations to use the appropriate table size.
 >=20
-> For these cases, linear temporal logic is more suitable as the
-> specification language.
->=20
-> Add support for linear temporal logic runtime verification monitor.
->=20
-> For all the details, see the documentations added by this commit.
->=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
 > ---
-> =C2=A0Documentation/trace/rv/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0.../trace/rv/linear_temporal_logic.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 119 ++++
-> =C2=A0Documentation/trace/rv/monitor_synthesis.rst=C2=A0 | 141 ++++-
-> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 62 +-
-> =C2=A0include/rv/ltl_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 184 ++++++
-> =C2=A0kernel/fork.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
-=A0 5 +-
-> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +
-> =C2=A0kernel/trace/rv/rv_trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- |=C2=A0 47 ++
-> =C2=A0tools/verification/rvgen/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +
-> =C2=A0tools/verification/rvgen/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
-> =C2=A0tools/verification/rvgen/__main__.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
-> =C2=A0tools/verification/rvgen/rvgen/ltl2ba.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 558
-> ++++++++++++++++++
-> =C2=A0tools/verification/rvgen/rvgen/ltl2k.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 242 ++++++++
-> =C2=A0.../rvgen/rvgen/templates/ltl2k/main.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 102 ++++
-> =C2=A0.../rvgen/rvgen/templates/ltl2k/trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 14 +
-> =C2=A015 files changed, 1465 insertions(+), 25 deletions(-)
-> =C2=A0create mode 100644 Documentation/trace/rv/linear_temporal_logic.rst
-> =C2=A0create mode 100644 include/rv/ltl_monitor.h
-> =C2=A0create mode 100644 tools/verification/rvgen/.gitignore
-> =C2=A0create mode 100644 tools/verification/rvgen/rvgen/ltl2ba.py
-> =C2=A0create mode 100644 tools/verification/rvgen/rvgen/ltl2k.py
-> =C2=A0create mode 100644
-> tools/verification/rvgen/rvgen/templates/ltl2k/main.c
-> =C2=A0create mode 100644
-> tools/verification/rvgen/rvgen/templates/ltl2k/trace.h
+>  arch/s390/include/asm/pci_dma.h |  1 +
+>  drivers/iommu/s390-iommu.c      | 70 ++++++++++++++++++++++++---------
+>  2 files changed, 53 insertions(+), 18 deletions(-)
 >=20
-> [...]
-> diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
-> new file mode 100644
-> index 000000000000..78f5a1197665
-> --- /dev/null
-> +++ b/include/rv/ltl_monitor.h
-> @@ -0,0 +1,184 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/**
-> + * This file must be combined with the $(MODEL_NAME).h file
-> generated by
-> + * tools/verification/rvgen.
-> + */
-> +
-> +#include <linux/args.h>
-> +#include <linux/rv.h>
-> +#include <linux/stringify.h>
-> +#include <linux/seq_buf.h>
-> +#include <rv/instrumentation.h>
-> +#include <trace/events/task.h>
-> +#include <trace/events/sched.h>
-> +
-> +#ifndef MONITOR_NAME
-> +#error "MONITOR_NAME macro is not defined. Did you include
-> $(MODEL_NAME).h generated by rvgen?"
-> +#endif
-> +
-> +#ifdef CONFIG_RV_REACTORS
-> +#define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
-> +static struct rv_monitor RV_MONITOR_NAME;
-> +
-> +static void rv_cond_react(struct task_struct *task)
+> diff --git a/arch/s390/include/asm/pci_dma.h b/arch/s390/include/asm/pci_=
+dma.h
+> index 8d8962e4fd58..d12e17201661 100644
+> --- a/arch/s390/include/asm/pci_dma.h
+> +++ b/arch/s390/include/asm/pci_dma.h
+> @@ -25,6 +25,7 @@ enum zpci_ioat_dtype {
+>  #define ZPCI_KEY			(PAGE_DEFAULT_KEY << 5)
+> =20
+>  #define ZPCI_TABLE_SIZE_RT	(1UL << 42)
+> +#define ZPCI_TABLE_SIZE_RS	(1UL << 53)
+> =20
+>  #define ZPCI_IOTA_STO_FLAG	(ZPCI_IOTA_IOT_ENABLED | ZPCI_KEY | ZPCI_IOTA=
+_DT_ST)
+>  #define ZPCI_IOTA_RTTO_FLAG	(ZPCI_IOTA_IOT_ENABLED | ZPCI_KEY | ZPCI_IOT=
+A_DT_RT)
+> diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
+> index 46f45b136993..433b59f43530 100644
+> --- a/drivers/iommu/s390-iommu.c
+> +++ b/drivers/iommu/s390-iommu.c
+> @@ -511,9 +511,25 @@ static bool s390_iommu_capable(struct device *dev, e=
+num iommu_cap cap)
+>  	}
+>  }
+> =20
+> +static inline u64 max_tbl_size(struct s390_domain *domain)
 > +{
-> +	if (!rv_reacting_on() || !RV_MONITOR_NAME.react)
+> +	switch (domain->origin_type) {
+> +	case ZPCI_TABLE_TYPE_RTX:
+> +		return ZPCI_TABLE_SIZE_RT - 1;
+> +	case ZPCI_TABLE_TYPE_RSX:
+> +		return ZPCI_TABLE_SIZE_RS - 1;
+> +	case ZPCI_TABLE_TYPE_RFX:
+> +		return U64_MAX;
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+>  static struct iommu_domain *s390_domain_alloc_paging(struct device *dev)
+>  {
+> +	struct zpci_dev *zdev =3D to_zpci_dev(dev);
+>  	struct s390_domain *s390_domain;
+> +	u64 aperture_size;
+> =20
+>  	s390_domain =3D kzalloc(sizeof(*s390_domain), GFP_KERNEL);
+>  	if (!s390_domain)
+> @@ -524,10 +540,26 @@ static struct iommu_domain *s390_domain_alloc_pagin=
+g(struct device *dev)
+>  		kfree(s390_domain);
+>  		return NULL;
+>  	}
+> +
+> +	aperture_size =3D min(s390_iommu_aperture,
+> +			    zdev->end_dma - zdev->start_dma + 1);
+> +	if (aperture_size <=3D (ZPCI_TABLE_SIZE_RT - zdev->start_dma)) {
+> +		s390_domain->origin_type =3D ZPCI_TABLE_TYPE_RTX;
+> +	} else if (aperture_size <=3D (ZPCI_TABLE_SIZE_RS - zdev->start_dma) &&
+> +		  (zdev->dtsm & ZPCI_IOTA_DT_RS)) {
+> +		s390_domain->origin_type =3D ZPCI_TABLE_TYPE_RSX;
+> +	} else if (zdev->dtsm & ZPCI_IOTA_DT_RF) {
+> +		s390_domain->origin_type =3D ZPCI_TABLE_TYPE_RFX;
+> +	} else {
+> +		/* Assume RTX available */
+> +		s390_domain->origin_type =3D ZPCI_TABLE_TYPE_RTX;
+> +		aperture_size =3D ZPCI_TABLE_SIZE_RT - zdev->start_dma;
+> +	}
+> +	zdev->end_dma =3D zdev->start_dma + aperture_size - 1;
+> +
+>  	s390_domain->domain.geometry.force_aperture =3D true;
+>  	s390_domain->domain.geometry.aperture_start =3D 0;
+> -	s390_domain->domain.geometry.aperture_end =3D ZPCI_TABLE_SIZE_RT - 1;
+> -	s390_domain->origin_type =3D ZPCI_TABLE_TYPE_RTX;
+> +	s390_domain->domain.geometry.aperture_end =3D max_tbl_size(s390_domain)=
+;
+> =20
+>  	spin_lock_init(&s390_domain->list_lock);
+>  	INIT_LIST_HEAD_RCU(&s390_domain->devices);
+> @@ -680,6 +712,8 @@ static void s390_iommu_get_resv_regions(struct device=
+ *dev,
+>  {
+>  	struct zpci_dev *zdev =3D to_zpci_dev(dev);
+>  	struct iommu_resv_region *region;
+> +	u64 max_size, end_resv;
+> +	unsigned long flags;
+> =20
+>  	if (zdev->start_dma) {
+>  		region =3D iommu_alloc_resv_region(0, zdev->start_dma, 0,
+> @@ -689,10 +723,21 @@ static void s390_iommu_get_resv_regions(struct devi=
+ce *dev,
+>  		list_add_tail(&region->list, list);
+>  	}
+> =20
+> -	if (zdev->end_dma < ZPCI_TABLE_SIZE_RT - 1) {
+> -		region =3D iommu_alloc_resv_region(zdev->end_dma + 1,
+> -						 ZPCI_TABLE_SIZE_RT - zdev->end_dma - 1,
+> -						 0, IOMMU_RESV_RESERVED, GFP_KERNEL);
+> +	spin_lock_irqsave(&zdev->dom_lock, flags);
+> +	if (zdev->s390_domain->type =3D=3D IOMMU_DOMAIN_BLOCKED ||
+> +	    zdev->s390_domain->type =3D=3D IOMMU_DOMAIN_IDENTITY) {
+> +		spin_unlock_irqrestore(&zdev->dom_lock, flags);
 > +		return;
-> +	RV_MONITOR_NAME.react("rv: "__stringify(MONITOR_NAME)":
-> %s[%d]: violation detected\n",
-> +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 task->comm, task->pid);
-> +}
+> +	}
+> +
+> +	max_size =3D max_tbl_size(to_s390_domain(zdev->s390_domain));
+> +	spin_unlock_irqrestore(&zdev->dom_lock, flags);
+> +
+> +	if (zdev->end_dma < max_size) {
+> +		end_resv =3D max_size - zdev->end_dma;
+> +		region =3D iommu_alloc_resv_region(zdev->end_dma + 1, end_resv,
+> +						 0, IOMMU_RESV_RESERVED,
+> +						 GFP_KERNEL);
+>  		if (!region)
+>  			return;
+>  		list_add_tail(&region->list, list);
+> @@ -708,13 +753,9 @@ static struct iommu_device *s390_iommu_probe_device(=
+struct device *dev)
+> =20
+>  	zdev =3D to_zpci_dev(dev);
+> =20
+> -	if (zdev->start_dma > zdev->end_dma ||
+> -	    zdev->start_dma > ZPCI_TABLE_SIZE_RT - 1)
+> +	if (zdev->start_dma > zdev->end_dma)
+>  		return ERR_PTR(-EINVAL);
+> =20
+> -	if (zdev->end_dma > ZPCI_TABLE_SIZE_RT - 1)
+> -		zdev->end_dma =3D ZPCI_TABLE_SIZE_RT - 1;
+> -
+>  	if (zdev->tlb_refresh)
+>  		dev->iommu->shadow_on_flush =3D 1;
+> =20
+> @@ -999,7 +1040,6 @@ struct zpci_iommu_ctrs *zpci_get_iommu_ctrs(struct z=
+pci_dev *zdev)
+> =20
+>  int zpci_init_iommu(struct zpci_dev *zdev)
+>  {
+> -	u64 aperture_size;
+>  	int rc =3D 0;
+> =20
+>  	rc =3D iommu_device_sysfs_add(&zdev->iommu_dev, NULL, NULL,
+> @@ -1017,12 +1057,6 @@ int zpci_init_iommu(struct zpci_dev *zdev)
+>  	if (rc)
+>  		goto out_sysfs;
+> =20
+> -	zdev->start_dma =3D PAGE_ALIGN(zdev->start_dma);
+> -	aperture_size =3D min3(s390_iommu_aperture,
+> -			     ZPCI_TABLE_SIZE_RT - zdev->start_dma,
+> -			     zdev->end_dma - zdev->start_dma + 1);
+> -	zdev->end_dma =3D zdev->start_dma + aperture_size - 1;
+> -
+>  	return 0;
+> =20
+>  out_sysfs:
 
-What about adding more context here (see below).
+Looks good, thanks for the great work!
 
-> +#else
-> +static void rv_cond_react(struct task_struct *task)
-> +{
-> +}
-> +#endif
-> +
-> [...]
-> diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-> index 99c3801616d4..f9fb848bae91 100644
-> --- a/kernel/trace/rv/rv_trace.h
-> +++ b/kernel/trace/rv/rv_trace.h
-> @@ -127,6 +127,53 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
-> =C2=A0// Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
-> =C2=A0
-> =C2=A0#endif /* CONFIG_DA_MON_EVENTS_ID */
-> +#if CONFIG_LTL_MON_EVENTS_ID
-> +TRACE_EVENT(event_ltl_monitor_id,
-> +
-> +	TP_PROTO(struct task_struct *task, char *states, char
-> *atoms, char *next),
-> +
-> +	TP_ARGS(task, states, atoms, next),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(comm, task->comm)
-> +		__field(pid_t, pid)
-> +		__string(states, states)
-> +		__string(atoms, atoms)
-> +		__string(next, next)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(comm);
-> +		__entry->pid =3D task->pid;
-> +		__assign_str(states);
-> +		__assign_str(atoms);
-> +		__assign_str(next);
-> +	),
-> +
-> +	TP_printk("%s[%d]: (%s) x (%s) -> (%s)", __get_str(comm),
-> __entry->pid, __get_str(states),
-> +		=C2=A0 __get_str(atoms), __get_str(next))
-> +);
-> +
-> +TRACE_EVENT(error_ltl_monitor_id,
-> +
-> +	TP_PROTO(struct task_struct *task),
-> +
-> +	TP_ARGS(task),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(comm, task->comm)
-> +		__field(pid_t, pid)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(comm);
-> +		__entry->pid =3D task->pid;
-> +	),
-> +
-> +	TP_printk("%s[%d]: violation detected", __get_str(comm),
-
-In your workflow you're probably using events and errors together, but
-wouldn't it help printing the atoms together with the violation
-detected?
-At least to give a clue on the error in case the user doesn't want to
-see the entire trace (which might be needed for a full debug though).
-
-The same could be said from reactors, the user doesn't have much
-information to infer what went wrong.
-
-> __entry->pid)
-> +);
-> +// Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
-> +#endif /* CONFIG_LTL_MON_EVENTS_ID */
-> =C2=A0#endif /* _TRACE_RV_H */
-> =C2=A0
-> =C2=A0/* This part must be outside protection */
-> [...]
-> diff --git a/tools/verification/rvgen/rvgen/ltl2k.py
-> b/tools/verification/rvgen/rvgen/ltl2k.py
-> new file mode 100644
-> index 000000000000..e2a7c4bcccc9
-> --- /dev/null
-> +++ b/tools/verification/rvgen/rvgen/ltl2k.py
-> @@ -0,0 +1,242 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +from pathlib import Path
-> +from . import generator
-> +from . import ltl2ba
-> +
-> +COLUMN_LIMIT =3D 100
-> +
-> +def line_len(line: str) -> int:
-> +=C2=A0=C2=A0=C2=A0 tabs =3D line.count('\t')
-> +=C2=A0=C2=A0=C2=A0 return tabs * 7 + len(line)
-> +
-> +def break_long_line(line: str, indent=3D'') -> list[str]:
-> +=C2=A0=C2=A0=C2=A0 result =3D []
-> +=C2=A0=C2=A0=C2=A0 while line_len(line) > COLUMN_LIMIT:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i =3D line[:COLUMN_LIMIT - li=
-ne_len(line)].rfind(' ')
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 result.append(line[:i])
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 line =3D indent + line[i + 1:=
-]
-> +=C2=A0=C2=A0=C2=A0 if line:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 result.append(line)
-> +=C2=A0=C2=A0=C2=A0 return result
-> +
-> +def build_condition_string(node: ltl2ba.GraphNode):
-> +=C2=A0=C2=A0=C2=A0 if not node.labels:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return "(true)"
-> +
-> +=C2=A0=C2=A0=C2=A0 result =3D "("
-> +
-> +=C2=A0=C2=A0=C2=A0 first =3D True
-> +=C2=A0=C2=A0=C2=A0 for label in sorted(node.labels):
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if not first:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resul=
-t +=3D " && "
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 result +=3D label
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 first =3D False
-> +
-> +=C2=A0=C2=A0=C2=A0 result +=3D ")"
-> +
-> +=C2=A0=C2=A0=C2=A0 return result
-> +
-> +def abbreviate_atoms(atoms: list[str]) -> list[str]:
-> +=C2=A0=C2=A0=C2=A0 abbrs =3D list()
-> +=C2=A0=C2=A0=C2=A0 for atom in atoms:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size =3D 1
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 while True:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 abbr =
-=3D atom[:size]
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if su=
-m(a.startswith(abbr) for a in atoms) =3D=3D 1:
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 break
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 size =
-+=3D 1
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 abbrs.append(abbr.lower())
-> +=C2=A0=C2=A0=C2=A0 return abbrs
-
-I get this is just a matter of preference, so feel free to ignore my
-suggestion.
-This abbreviation algorithm doesn't work too well with atoms starting
-with the same substring and can produce some unexpected result:
-
-LTL_BLOCK_ON_RT_MUTEX:                b,
-LTL_KERNEL_THREAD:                    ke,
-LTL_KTHREAD_SHOULD_STOP:              kt,
-LTL_NANOSLEEP:                        n,
-LTL_PI_FUTEX:                         p,
-LTL_RT:                               r,
-LTL_SLEEP:                            s,
-LTL_TASK_IS_MIGRATION:                task_is_m,
-LTL_TASK_IS_RCU:                      task_is_r,
-LTL_WAKE:                             wa,
-LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    woken_by_e,
-LTL_WOKEN_BY_HARDIRQ:                 woken_by_h,
-LTL_WOKEN_BY_NMI:                     woken_by_n,
-
-"woken_by_*" and "task_is_*" atom can get unnecessarily long and
-while reading "kt" I might think about kernel_thread.
-
-I was thinking about something like:
-
-LTL_BLOCK_ON_RT_MUTEX:                b_o_r_m
-LTL_KERNEL_THREAD:                    k_t
-LTL_KTHREAD_SHOULD_STOP:              k_s_s
-LTL_NANOSLEEP:                        n
-LTL_PI_FUTEX:                         p_f
-LTL_RT:                               r
-LTL_SLEEP:                            s
-LTL_TASK_IS_MIGRATION:                t_i_m
-LTL_TASK_IS_RCU:                      t_i_r
-LTL_WAKE:                             w
-LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    w_b_e_o_h_p
-LTL_WOKEN_BY_HARDIRQ:                 w_b_h
-LTL_WOKEN_BY_NMI:                     w_b_n
-
-or even
-
-LTL_BLOCK_ON_RT_MUTEX:                b_m
-LTL_KERNEL_THREAD:                    k_t
-LTL_KTHREAD_SHOULD_STOP:              k_s_s
-LTL_NANOSLEEP:                        n
-LTL_PI_FUTEX:                         p_f
-LTL_RT:                               r
-LTL_SLEEP:                            s
-LTL_TASK_IS_MIGRATION:                t_m
-LTL_TASK_IS_RCU:                      t_r
-LTL_WAKE:                             w
-LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    w_e_h_p
-LTL_WOKEN_BY_HARDIRQ:                 w_h
-LTL_WOKEN_BY_NMI:                     w_n
-
-I used the following code to come up with this:
-
-def abbreviate_atoms(atoms: list[str]) -> list[str]:
-    # completely arbitrary..
-    skip =3D [ "is", "by", "or", "and" ]
-    def abbr (n, s):
-        return '_'.join(word[:n] for word in s.lower().split('_') if word n=
-ot in skip)
-    for n in range(1, 32):
-        abbrs =3D [abbr(n, a) for a in atoms]
-        if len(abbrs) =3D=3D len(set(abbrs)):
-            return abbrs
-
-Which could even be tuned to use 2 letters per block instead of 1
-(improving readability by a lot actually)..
-'bl_on_rt_mu', 'ke_th', 'kt_sh_st', 'na', 'pi_fu', 'rt', 'sl', 'ta_mi',
-'ta_rc', 'wa', 'wo_eq_hi_pr', 'wo_ha', 'wo_nm'
-
-What do you think?
-
-Thanks,
-Gabriele
-
+Reviewed-by: Niklas Schnelle <schnelle@linux.ibm.com>
