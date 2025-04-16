@@ -1,191 +1,158 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AC227EB9;
-	Wed, 16 Apr 2025 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5575722FF5F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792167; cv=none; b=TPzk8WKt1x07jg2eEgwVlpAtXauPOiZ02x0z3utZUwat5jof4WPYIqzRuIFr/5DdaRtFt1gB1u5p2xyzrg+l1K0GFKt+BVrrBu/MI2lkSkR2JaIBBtQY57sUqnTFs6+HvcyWHkLCs5w+/P+4DQiiQ6nnZJtpUhFDCQNM4LPudDU=
+	t=1744792171; cv=none; b=eD7iVDpdu+kiCKQlvKW5W3gO2y2OFWkt4rtRGbYEROEkC1PreAVlTsBdCqC+Z/XFPm58ycVJDLOI4L4XN+YY0X4JBlTWW1pjbC0lmdgorVNHXrEzj1p5Fdfi2ORMol9dW75WfH4NAn7CXRsBRMhd2vgrAiDxYZaWYY8oYrzt78E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792167; c=relaxed/simple;
-	bh=pKkKKqoTEolPnTa/YFx9qPHQlIeHPpzcluXgfKWEFT8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AoFYhgfU/JWokxs7PAgMOQib1L7TTT15bnmShL3F5ikL8qbK8FUB0yl5ELTiXh4O1HyAiPNDvRhSe+ZcDhXxB5VRz0qlgaAtDPoSJSx3iEEZ+rxTmmmZdjQLOrmt1F0Ck9W7alhhwqB1/xxJVI9hsp4c8fjCuXbI40eYePMk8DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhiZO9on; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744792171; c=relaxed/simple;
+	bh=EA8oF/ldbOsSYZg81B4t+sYTz2WKrNkigSOvYkT5d8I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t6Z+6WeVAxJyHO2lgtomPUA2IqrazULgmv/29TjTpJnufWpbE9uMY3Pz05/x29CzPlWLx9scZCbn12Wyiz/dfvUcUYqlLQ1bFSTZLoVfzcHA3hWuxLNP9OBW9skIxXMIZs5ZTY+f07hWTYg3lK/Iu3cSovHc/VhgFVdp7fwccEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=oTSbokBN; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhiZO9on"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so5671363a12.3;
-        Wed, 16 Apr 2025 01:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744792165; x=1745396965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ovSlUrKCeKW3pPZbEQAJqu/9QO1u+A25+RyFvDwdr+Y=;
-        b=ZhiZO9onsC56+vjWpPOYm5nhe68RP0Zy6mU1Ww7SS7Z5h/W9iSX0T4zGUSRp5rj6BX
-         VvNW/ns0fiZ8VTKoBQAEiBdj5Vrk9ZtDoxM7aICLg+jmW5yd4nE/P3JHW1NQZ2+IXGLX
-         qvW+MrHlFk6En6893nJ+NMHYMvZkPBaIjiaCILH1Tur4B8bo8fIYjgPerjbtCgxxvosm
-         8pfmdN4qmo0Hr8359JPx0mOypS3iJ1xV2kA62G32ooNUwRLwOixNyTp5UVYMOv/g5xMc
-         apTNiZfALToDwmXXZU+41Roskuk2PVMeVt57SnU1ZGv7H4QHeB6N3wxF/BMPq9h0QbNs
-         m3hg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="oTSbokBN"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7JOGn006424
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:29:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=slpc2bXbOCKha90h+sjNzl
+	g3kbkNp7YexaKrDiTDN/w=; b=oTSbokBNImZ4hh/AOWmyP0XO29yfDjE7/gYhPa
+	eQg1jI/tBfvXaALTD0+XEoIYLuZ+vMnDzvVSnmDhd7QETQ51JXZYKTILd+bkMkHj
+	Kzeo9gVX3T0jrctn0E6pZHmDLWI7HjYijAq0nrovzvYdMth2AmK7hGyANekUdDgK
+	l3qEOPRA/Uxs4JnqmDK2StclVT503mOh3RMx75zA56yKhANzOvXTHc/wKSIkUdWS
+	twjdDN3zVyHxzrsaQNSkq5O+cpqp71rrDmZeQWztesAi8MsTRbK1U+fZC/QRN7nI
+	2PLxjZC99aSqRJJs3SU3EDUMehUgSUHaUZdXu63IB+szLmyg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs1atn0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:29:28 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2264e5b2b7cso57333205ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:29:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792165; x=1745396965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ovSlUrKCeKW3pPZbEQAJqu/9QO1u+A25+RyFvDwdr+Y=;
-        b=Z7ogmA0b38OYG210t2Yx8rBPoYDJMyUz8sOxY4fFqrniivKGYT+Cggdg7doOXY1SIo
-         ufllvtjo3p/5a75CJMnLTEQCwv7p7UGjPq2NujddlAjQ+yvrdsoYPoFUVWTjXVrZAfZw
-         9BMsQJHcKlQIa9fgAsxdPW7MJe4PegdQkXmur6nECjuyEV5Q9Y9iTIWLdkZgRuOtAoje
-         etDPY4oqRWf87y64jwNsyDRwLUKUshy5BZWyz16Jc7i9ZOBLgDKpyLdIaj6KCfi5vFD6
-         hBA1qvNA8rKG7GQtV0on78lV2qI4/ulXRetC1oeUACxq4HvWdBqhn1QAUZAnSHZSfr0y
-         XEjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVT53g6iVNbWfDlglp3AY9fAUyXLxixEGMMMeK5wEKzdfnQk0mCYT/g4N9kndYQulA3DJArkI6EG14onsiP@vger.kernel.org, AJvYcCWomounWRW7fvkyiFkwsffuJMJFzAgaaK+AMVGF+XYArZ5c0fdm1/RZ9TqizhKcQ/+d4mMfTksV@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd0b6NRzu9Ov/84jQ9MyiyupksdPgp8MAygqTY/uiapjfoxqkG
-	xvJa9vCyap4sd7LvANenwqXtZApW2Dutiy/DlZ1pViAJwQB1EHmygATQLcEtUXR4ex3z+X4+Da8
-	+b8ScSRbyCwFSpkuW5+1o65l8zQE=
-X-Gm-Gg: ASbGncuW4vDGIHGQZH1FR+kY0+OQ6WGM5B+oy8+QQiPDYv2aqP97+0GxTAldlJ6ycJ6
-	hNPXzVbgrYENht9asT0yyPiNIlK+iegJUfi7mVN79mAhA8yDua8qAj8W1iSHUO0Rk2d1ANLlS9w
-	SlMoH3UNsZmJVCHNrrsfmpvu3+41NCskWC
-X-Google-Smtp-Source: AGHT+IFPJsWFdxHLRn0A3K3T0Ttkaq59tPju15WeDboMAunp4Fr63JgpoiKfRarAkC7MF0/sucAkaLiHSi1wesRrcUY=
-X-Received: by 2002:a17:90a:d88d:b0:2f7:e201:a8cc with SMTP id
- 98e67ed59e1d1-30863f2f576mr1493568a91.18.1744792164501; Wed, 16 Apr 2025
- 01:29:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744792167; x=1745396967;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=slpc2bXbOCKha90h+sjNzlg3kbkNp7YexaKrDiTDN/w=;
+        b=GDm9eXjS8QQEigxRliIBlzqIH+3rweJ7p++rwuIFrWxmIvICcsPz7zErk6a7ioteXb
+         ntOFtYqL1ZWlO/QdfOeDYV8Hzow/zxLCZz9dVAm/QSepAxiZbJBXT8OtCrS+5FmAxw2+
+         r6aZrKprRPCfHnthrSIXUQIOD6PYtYEwEecND32BGX4jxTQtI7pb4y/u++MwBE4a0f+b
+         b2n9fr9BA5SmeQyZO055EgsN2Y8Jjby3gsUlYwYnqMJo4QZLEFVcz9OWi/Dm8z2PW0DU
+         eKa/7BIi5QvGG+piP9GdpESPsaziJawL3qR6DyE6VCkwhxTx4e5b3ukZbWK5Ae1qkkQ3
+         Phkw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHoGW3rhuiCbwtYBY6QId/OHBWw29kgyYk0oBL3M6Se6+VbQLbnHrhETcPvT0Ewkwe10tWJpAJCRUQAjY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt/XF0EBo4I2tZS5sKsBy3TmQIlCoBz9aSX68IX67ghE4VD8Es
+	UB6Fc1ZNN0aotZdch5qVBHVKjerJ1tud7KLl6FT/lnKlHP8GKWPc6Uw8Uui3u15G8Box7q3Kl/V
+	qy7s/t/ZlimuZBu0gGNamPndA2Z7d55RkrkpF88JyeeU+Fsp33ZKx45zwW7wgEVRABXg3wY0=
+X-Gm-Gg: ASbGncv/JjjYwugHCA2b6z0Ig6BJbUNv9HJpUemaKs/YxHPZ72FtHJfY/zw+U8k5Dgn
+	YOHeoJQkrSDH7esmZG/+qNmzDEk3InBFC4LlnmzTZ84oYlYe7YtntZgRTO83Jp0pTA/dYTg9YEB
+	rpwfXbodprW2oGElV4Z27j/OZ8KW7ArGe3Ad4zIURCH9hCFmWUi17a9D2o8U36+mCUBv9Va40tb
+	IDVrcV7msm6DTPrZnoe/eWjKkcZIxwpHOQRNRAAZd58L1XgD8ND5QXO1eKcOuw+1CdTHPGGSQIy
+	LAhz+GpiwuZ7a//8gl4iFnKQ4WG2nXaBBhowHwcsYS/J9Z3pzbRXW/2fS2a2SoWnN63+u4yIpBD
+	Bv83s11f/LOTwV++tsXPTWgQ94wESno1uB9kYXFqKu5HM6WA=
+X-Received: by 2002:a17:902:d589:b0:224:e33:8896 with SMTP id d9443c01a7336-22c358bc53bmr17010745ad.11.1744792166991;
+        Wed, 16 Apr 2025 01:29:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFkY0IYvPuynwwUfpOe7++iQmfTfrqoDmd0WU5zErlHpIIvo01R5A1nx55oi4Ov6D0iV7F6lA==
+X-Received: by 2002:a17:902:d589:b0:224:e33:8896 with SMTP id d9443c01a7336-22c358bc53bmr17010445ad.11.1744792166626;
+        Wed, 16 Apr 2025 01:29:26 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fcee11sm8340125ad.191.2025.04.16.01.29.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 01:29:26 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Subject: [PATCH v2 0/5] Add support to read the restart reason from IMEM
+Date: Wed, 16 Apr 2025 13:59:17 +0530
+Message-Id: <20250416-wdt_reset_reason-v2-0-c65bba312914@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
- <20250319064148.774406-3-jingxiangzeng.cas@gmail.com> <m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
- <7ia4tt7ovekj.fsf@castle.c.googlers.com> <20250320142846.GG1876369@cmpxchg.org>
- <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
- <4lygax4lgpkkmtmpxif6psl7broial2h74lel37faelc3dlsx3@s56hfvqiazgc>
- <CACSyD1NisD-ZggRz0BaxUdJ9so4j-sKPZi361HJAum3+bHO+tQ@mail.gmail.com>
- <CAJqJ8ihLfcDROuCjMfoNzOtRRZhVDWEx04ik6cS9NO6hVua0xA@mail.gmail.com> <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
-In-Reply-To: <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
-From: jingxiang zeng <jingxiangzeng.cas@gmail.com>
-Date: Wed, 16 Apr 2025 16:29:13 +0800
-X-Gm-Features: ATxdqUHMcJS3GpWxSBSZsTcmQzVqWzPzHcmjHLMzsnvNr2EqwFUfW8_JXgsUyHE
-Message-ID: <CAJqJ8iiyVQxf1Kg_UKuRM_Zg6u4Hqb=DwpbOH_7CrAscAonD-g@mail.gmail.com>
-Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
- memsw account on dfl
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Jingxiang Zeng <linuszeng@tencent.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, kasong@tencent.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF1q/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3fKUkvii1OJUEJlYnJ+nm2poZGlkaGlmnJZopgTUVlCUmpZZATY
+ yOra2FgBTMDTtYgAAAA==
+X-Change-ID: 20250408-wdt_reset_reason-e12921963fa6
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744792162; l=1923;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=EA8oF/ldbOsSYZg81B4t+sYTz2WKrNkigSOvYkT5d8I=;
+ b=azUibPrixdPFYTjGH1Dn65iNy5F9mluVpJcXL0XLa7TgNcdNm8r2Fz80gyro9nclD/Fk6SPkK
+ lbS6C3/1M7AD8gd87h65x+IS0GhZkIDpc02RFHsCAhnCFRTvrK+QNoW
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67ff6a69 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=6yf5bMAz9jDV2NJdPn0A:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-GUID: kTmfHOWgH11q1P9Rk3dLWgnriFdsth1a
+X-Proofpoint-ORIG-GUID: kTmfHOWgH11q1P9Rk3dLWgnriFdsth1a
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=991 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160068
 
-On Sat, 12 Apr 2025 at 00:57, Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
->
-> On Thu, Apr 03, 2025 at 05:16:45PM +0800, jingxiang zeng <jingxiangzeng.c=
-as@gmail.com> wrote:
-> > > We encountered an issue, which is also a real use case. With memory o=
-ffloading,
-> > > we can move some cold pages to swap. Suppose an application=E2=80=99s=
- peak memory
-> > > usage at certain times is 10GB, while at other times, it exists in a
-> > > combination of
-> > > memory and swap. If we set limits on memory or swap separately, it wo=
-uld lack
-> > > flexibility=E2=80=94sometimes it needs 1GB memory + 9GB swap, sometim=
-es 5GB
-> > > memory + 5GB swap, or even 10GB memory + 0GB swap. Therefore, we stro=
-ngly
-> > > hope to use the mem+swap charging method in cgroupv2
->
-> App's peak need determines memory.max=3D10G.
-> The apparent flexibility is dependency on how much competitors the app
-> has. It can run 5GB memory + 5GB swap with some competition or 1GB
-> memory + 9 GB with different competition (more memory demanding).
-> If you want to prevent faulty app to eating up all of swap for itself
-> (like it's possible with memsw), you may define some memory.swap.max.
-> (There's no unique correspondence between this and original memsw value
-> since the cost of mem<->swap is variable.)
->
->
-> > Yes, in the container scenario, if swap is enabled on the server and
-> > the customer's container requires 10GB of memory, we only need to set
-> > memory.memsw.limit_in_bytes=3D10GB, and the kernel can automatically
-> > swap out part of the business container's memory to swap according to
-> > the server's memory pressure, and it can be fully guaranteed that the
-> > customer's container will not use more memory because swap is enabled
-> > on the server.
->
-> This made me consider various causes of the pressure:
->
-> - global pressure
->   - it doesn't change memcg's total consuption (memsw.usage=3Dconst)
->   - memsw limit does nothing
-> - self-memcg pressure
->   - new allocations against own limit and memsw.usage hits memsw.limit
->   - memsw.limit prevents new allocations that would extend swap
->   - achievable with memory.swap.max=3D0
-> - ancestral pressure
->   - when sibling needs to allocate but limit is on ancestor
->   - similar to global pressure (memsw.usage=3Dconst), self memsw.limit
->     does nothing
->
-> - or there is no outer pressure but you want to prevent new allocations
->   when something has been swapped out already
->   - swapped out amount is a debt
->     - memsw.limit behavior is suboptimal until the debt needs to be
->       repaid
->       - repay is when someone else needs the swap space
->
-> The above is a free flow of thoughts but I'd condense such conversions:
-> - memory.max :=3D memory.memsw.limit_in_bytes
-> - memory.swap.max :=3D anything between 0 and memory.memsw.limit_in_bytes
->
-> Did I fail to capture some mode where memsw limits were superior?
->
-Hi, Michal
+In Qualcomm IPQ SoC, if the system is rebooted due to the watchdog
+timeout, there is no way to identify it. Current approach of checking
+the EXPIRED_STATUS in WDT_STS is not working.
 
-In fact, the memsw counter is mainly effective in proactive memory offload
-scenarios.
+To achieve this, if the system is rebooted due to watchdog timeout, the
+information is captured in the IMEM by the bootloader (along with other
+reason codes as well).
 
-For example, the current container memory usage is as follows:
-memory.limit_in_bytes =3D 10GB
-memory.usage_in_bytes =3D 9GB
+This series attempts to address this by adding the support to read the
+IMEM and populate the information via bootstatus sysfs file. As of now,
+we are handling only the non secure watchdog timeout reason.
 
-Theoretically, through the memory.reclaim proactive reclaim interface, the
-memory usage of [0GB, 9GB] can be reclaimed to the swap, so:
-memory.limit_in_bytes =3D 10GB
-memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+Konrad, I sticked with syscon API to access the IMEM instead of exposing
+it as mmio-sram to align with what is available in the mainline. Do let
+me know if the current approach is still not correct / feasible.
 
-In the case of proactive memory offload, the amount of memory that can be
-reclaimed is determined by the container's PSI and other indicators. It is
-difficult to set an accurate memory.swap.max value.
-memory.swap.current =3D [0GB, 9GB]
-memory.swap.max =3D ?
+Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+---
+Changes in v2:
+- Dropped the RFC tag
+- Reworked the driver changes to use the syscon API
+- Link to v1: 20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com
 
-The memory space saved by swapping out to swap can continue to load
-the operation of system components or more workloads.
-memory.limit_in_bytes =3D 10GB
-memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
-memory.swap.current =3D [0GB, 9GB]
+---
+Kathiravan Thirumoorthy (5):
+      dt-bindings: sram: qcom,imem: Document IPQ5424 compatible
+      arm64: dts: qcom: ipq5424: Add the IMEM node
+      dt-bindings: watchdog: separate out the IPQ5424 compatilble
+      arm64: dts: qcom: ipq5424: drop the fallback WDT compatible
+      watchdog: qcom: add support to read the restart reason from IMEM
 
-The memory usage of memory.usage_in_bytes is reduced due to proactive
-offload to swap, which will cause additional problems, such as:
-1. There may be some memory leaks or abnormal imported network traffic
-in the container, which may cause OOM to fail to trigger or be triggered la=
-te;
-2. In the oversold scenario, if the container's memory requirement is 10GB,
-the container's memory+swap should only use 10GB.
+ .../devicetree/bindings/sram/qcom,imem.yaml        |  1 +
+ .../devicetree/bindings/watchdog/qcom-wdt.yaml     |  7 +++-
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi              | 11 ++++-
+ drivers/watchdog/qcom-wdt.c                        | 47 +++++++++++++++++++++-
+ 4 files changed, 61 insertions(+), 5 deletions(-)
+---
+base-commit: 7702d0130dc002bab2c3571ddb6ff68f82d99aea
+change-id: 20250408-wdt_reset_reason-e12921963fa6
 
-In the above scenario, the memsw counter is very useful:
-memory.limit_in_bytes =3D 10GB
-memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+Best regards,
+-- 
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 
-memory.memsw.limit_in_bytes =3D 10GB
-memory.memsw.usage_in_bytes =3D 9GB
-
-Above, thanks.
-> Thanks,
-> Michal
