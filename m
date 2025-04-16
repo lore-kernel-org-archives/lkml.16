@@ -1,253 +1,235 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2060.outbound.protection.outlook.com [40.107.100.60])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65759183CB0;
-	Wed, 16 Apr 2025 18:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744827434; cv=fail; b=HkCcgIq+imV4fkZ4Hg7C3cYRkrbEVfEOyhRdnjPm8oNPmof6NZ1JvP0kekh0FuLiLYHwNgffwBJv5+nN7I7UXfPqYZI+Y33LxomV+aHaNxoCBVhY7X4MEaUCbZhCQHBPsPvVOE90nTWfiYuLBBPLcSCVQVx+FewUx0JH3j2o7/o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744827434; c=relaxed/simple;
-	bh=Ulf89X0s1vMljndysuDHcXKNJipg5QiZ894eqSkexy0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nzeCXiWCb9AgoodkJT+Kw7pY4O+DFdBAdJBHgvvPu1Lfo2Y9UUMpETCjJ5jqbpzQZOwoArh1PgS/TvINDYD/uuK0BUiJbpF2DEhFeswaKs2PHupbqFZMESuxqE7VlY0DQ3rlWZGHD40wc+P/Y4gnbjVetRcAnB0C4PdIpYyueFA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=s43ZzCgB; arc=fail smtp.client-ip=40.107.100.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02878215F53;
+	Wed, 16 Apr 2025 18:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744827517; cv=none; b=DTuq8HP7ClouWBwltVXnjkNJoM+iOxIyY8cUl7o2s3dHyGe8pZrsKX9D4+VQgX1BQ1/EAy/0T9ol1VL2UruGJ4hJXdjP0pU1eAkOjDS9opsAkUXxgyr0j+uWqb9dxHILXeGR8qZz8xcwAMCOzcMJca4kDlHyafIrg83HO+cbGmA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744827517; c=relaxed/simple;
+	bh=JVCd1sm27Jpjxfncw1+yCQlbL1TfosoxkuQJ5T+cmWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ohflRLWt0AFoI8Wid8uvEwA7Jrx/sLLfHlr12/K4cT/8bjVPK0EmOCMJCQOACi4aZFUDNU9a3vki/NVkVgso3EATtmUs+HxYzf0X8OqeRCj7Pt6fLEkUN8hM5c698WDiIVAEx0FHj/sVtayMeoNnM7/cnXjrYamWMiMPM935nvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Xa4AueY1; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="s43ZzCgB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sFDKCTVCHR0ra7pOgayCvSOlXNWJXTyIt1nES09yR6kS11UwTKvHaWywykq3vzUahnWu4tVQQcSceAkmMgqXubOkKK5CnlsRGF8mkIKvbwOKc7VA2m8WuVJjD7wawfOfuoLgStWlEeUGs3VgPJXK/2RZd1Mi6lLAOi7XxmQZYivmDikC7i400diVz9BaOX+pSU/yxZ64eiXtnhcYkQ8mfgyiFkCFJ53iExKfra4lOLvo8efzTGrbARAKVFdOvv8oEpDGmNYiUfBEzvrttvHtF56Ck80GTZYsmWkX9reEh3K/5BQ9ri5Zo6iQpcGmeCB0CTb74mgFOyAfck0UaP5F2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6f9El8VuJclWUtlVHRjX8rqnhOnaXEqJHeAOjOOz9ME=;
- b=l0q2vxnYixTMNM9IAEnkwhcRA9pY90t/hwu38EmZYh6SfCis/R7VNVldB7Y+jYrePnuqp6AtMEAwelI7Fn1gGzOdCQvbH5SegN9pVrkwBU/5ol/9rKePAiMwJzF4AoMSQOi+qbacc+IlJd/hrNsMm6Ffc4yPNrCJ7HCzrZTCY8NPCyQzNJNNtaZtex5HTTrYx3GIy9wIDzvhiTG4qKCHXM9t6ZGSnC1vrmHpNGuGvNFUs+jj+MJ2ypuJhGgfWC83iTupJHCTulyawii5Sqd5abybZ4jOkWLHoDHnqvBZeLBdoHWY3MswUWpixZzBJzP88vcBtfKCUvIF+0umlKXO9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6f9El8VuJclWUtlVHRjX8rqnhOnaXEqJHeAOjOOz9ME=;
- b=s43ZzCgBlpJiOiCpqFEO/caZ3G9eG47FmG+KzZagjU/Ot8zzLUGIFx7u+mnCDKUgCA5mVigf2i6v6GF/sBd7Ujvidyn4FtmkGc9FCd1Ig2uBb+mONQOIjYwYeYcSYO/8tAfJ/hVfzCNeDlZODlGztaBIema0sKfz/+S9L4S2fqc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by SJ1PR12MB6314.namprd12.prod.outlook.com (2603:10b6:a03:457::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Wed, 16 Apr
- 2025 18:17:08 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%6]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
- 18:17:07 +0000
-Message-ID: <35e9442d-0b09-43b8-aa18-9752d16b4656@amd.com>
-Date: Wed, 16 Apr 2025 13:17:03 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v12 14/26] x86/resctrl: Add the functionality to assign
- MBM events
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>, peternewman@google.com,
- corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
- rostedt@goodmis.org, ardb@kernel.org, gregkh@linuxfoundation.org,
- daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
- alexandre.chartre@oracle.com, pawan.kumar.gupta@linux.intel.com,
- thomas.lendacky@amd.com, perry.yuan@amd.com, seanjc@google.com,
- kai.huang@intel.com, xiaoyao.li@intel.com, kan.liang@linux.intel.com,
- xin3.li@intel.com, ebiggers@google.com, xin@zytor.com,
- sohil.mehta@intel.com, andrew.cooper3@citrix.com, mario.limonciello@amd.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- maciej.wieczor-retman@intel.com, eranian@google.com
-References: <cover.1743725907.git.babu.moger@amd.com>
- <22889d46484b2393d701ce83c82f253c1454216b.1743725907.git.babu.moger@amd.com>
- <59fbd325-04e8-459f-a724-ae0c4536b1a5@intel.com>
- <3d31259c-cac0-4b96-883c-6d2e8e427988@amd.com>
- <efa7aee8-d1f3-4d15-9a6e-09b19c296e47@intel.com>
- <b8ad6ebd-405e-4ce9-99ed-1658c3b94f73@amd.com>
- <Z__vIEObB27Rq7Le@agluck-desk3>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <Z__vIEObB27Rq7Le@agluck-desk3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR16CA0064.namprd16.prod.outlook.com
- (2603:10b6:805:ca::41) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Xa4AueY1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744827489; x=1745432289; i=wahrenst@gmx.net;
+	bh=Yx8aTI4JCFi43D7NV+jvG2vo27tYbIsl7r74CSBJ7Vs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Xa4AueY1DJNIzZveXMZu9vuTYQ0UDnNeYb+L+KAOmI7+OBto4UjWX8Yneqt3lp3i
+	 QN+7N1Tsh1Hjyhx6b2tn0KXVMjuNochP7u62jWYWzNuujTEFQaDbQe3md6WcegFPB
+	 RExGDEzjNWQv2pbDROunB6ma/zb6aPsV3kYclrbp6AMbPmH/9iG+EOdDzNnzciWXV
+	 wQQSaNJNKo5z/abdb7DMCF3O744XudCPC690rY7nPK5G4UzgIaCElG+Fk3uyYCAcU
+	 sAcG/W1jZ8fn7YVMivr6FGnyQK2rZobZlQjLNlQZHtIiFTwqsc1E87BgGV4toi7Kb
+	 75GDxubeBKhkhqbozw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mv31W-1tE7Av1MA4-016EO1; Wed, 16
+ Apr 2025 20:18:09 +0200
+Message-ID: <8da98fc4-f24e-40ba-b705-9faf31766398@gmx.net>
+Date: Wed, 16 Apr 2025 20:18:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|SJ1PR12MB6314:EE_
-X-MS-Office365-Filtering-Correlation-Id: f706610f-7e4b-45dd-8e69-08dd7d12e5b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cmxObGVFNU5oY1BWY3JOdXNoRjAzYW9IRGhYMUw1NzFQYUQxZFNUeGFRMFE5?=
- =?utf-8?B?MG10enJiL2l6SjJtaUVuOFRxTkZDNWo3d3FjY1pnQXVXUmdLMW1oSjFiV2hQ?=
- =?utf-8?B?d2Z0OG5tRGNuRFh6NlphQUFhMEJLelpDRVBwM1lRNlhTazBSS2VmRy9JcGZU?=
- =?utf-8?B?cG9SNGFtWm1PWTE2VFlvWkpTTlAwYzRsZGFwODlKZzZwaGpRUkQxMkxYZlNR?=
- =?utf-8?B?bUxnMjNSSUxlM2Y2OENJQUF0bzJIM2h3b1VNYUwzRUxtKzkxOVpvdk03YUVP?=
- =?utf-8?B?ZEw2MDh5dzJ1cVh1MVJIalFkVXpoVDYvT1dhQnhNOGV0OHZzNzBMTmdFdzNZ?=
- =?utf-8?B?S012dHlGV2RoSjd5bFpFdUZTUmcxK3hzYzg0cFladTA1dE4wYXRLSEdXbm1r?=
- =?utf-8?B?VW14TjlvZ0J0QVRYMWx4bVRRSEh1MFE3MU1lVVp0VU5MNmVrZlhmSlVUTHlY?=
- =?utf-8?B?QkhCdEVxOXFFQSttcWpzUEkzUktPSVdOdldsR09tckhyQUdaMnNRakFvai85?=
- =?utf-8?B?SHNRd1RxNWFvNVc0NFQrZWg4WlpTTUNJRldkOEluT1dLK00wZjJ6N25oVGpt?=
- =?utf-8?B?d0NkU284VkVPa3hiRkFxUXVIWkRLV2dyNlZIYmxmSjRpanRQRTJtbzFFZStI?=
- =?utf-8?B?UGVNU3BXZm8rRDk5TzRRMWlwQ05hMG42VUhnSmY4aVNqZUxzbUEzcHYyNzNi?=
- =?utf-8?B?SHZKYnVyNnF6bVZGanI1Z2FtMWRzQzRlNHFHREx0NWtqMFNxRXJPNWsvRDJL?=
- =?utf-8?B?dTFtU0lmZGphd2ZaNUk3MitYVlZVOW1pbkhFYUhMcDFNSjVPWGZjeXhzbjll?=
- =?utf-8?B?dmttZjM3NUxtUm1IYUljelBRaFpveFFjZXRjOHZyR3hlb2tEVUdOcm1ZalVS?=
- =?utf-8?B?cXQ5UERCd2YrVFkzVEh4bktQZW5QdDQ3OXdVTy9TUEJQRzJBdlFrV0hGbWc2?=
- =?utf-8?B?TVZCT0tocnVVTVV4ak1LekZqRFZhcDVnTEN3cmxxNTRraHdDNEs4SFlhRldh?=
- =?utf-8?B?d3JGNnpIZVFnUGlJVm9PSkkxL3pSMTJ2V2RSMExobE80Sk9aRk4xajBoS0RJ?=
- =?utf-8?B?cHBrLzI0VnNhUFk5UnZpSXdoYTZZSXRZZFBROXVzQzZURGt1QUQxYVpGOEo2?=
- =?utf-8?B?MmFZZ0IxZmpDSWlQS29WMFZvNUFYcWdnMXpaRXpud3JYT2RQUStwdTZiTXp1?=
- =?utf-8?B?dXRCd2tOellQcDdXdk8yR25wTlZGVStLKytWaUhFTzM4R3M0MmlBTE9ieG9J?=
- =?utf-8?B?VStDbUlQdmJ2Wit5dzRJbnNTOXFrUkJSUlRyL2NLdnlYS040ZG5yUWNpZGNk?=
- =?utf-8?B?VTN2bHE4b2pBVU04YThkVGhMdk5ldk1HRThDOGpZbXY3SWtRY3phZ3VvTEI0?=
- =?utf-8?B?TTM1cmxkekFtS1pWN3d1OVlLTmwyeGtyQVJzK1BMY2pReVNROFlRTTlhSFNZ?=
- =?utf-8?B?U3czUHB2MnpNeXJvbUhoREFsdFhPZEI1TVhHTkozdEUrTStvNUFFd3hqN3Fa?=
- =?utf-8?B?TlhGYXJqNVZZUi9zU3VVbXdMa3F1aHpWV0NrUUl0dkc3NThCTnJLU2FnZ2Iw?=
- =?utf-8?B?bUR0aE4ybUR5NnZBYSsycHQ3ajVRNFkwZGhOUS9QVm13ZzB1ZURHa2dORC9L?=
- =?utf-8?B?TDhDalRmN0NVL0N3MjZtWThhTzhHb2laeVpvcjJrQ000a2VZZjJjVjNYK3By?=
- =?utf-8?B?Zi92dENQZW16S2IvQzhNVFlxY21QV29UVE5Yanp5WXhYYlVaUFVlTEhHcWxj?=
- =?utf-8?B?VFdoOFFUcVZLQjYwbElSR1BORWxoUGFoVnQzd2VDZzBXOTlkeHJRVEUzV2V2?=
- =?utf-8?B?Rk1DaEduVUphQis1bnB0c0ZjaUxTK1IxQjFmZDVBdmlIZzFxanZ3QldETHIy?=
- =?utf-8?B?L3dmVW9UQ3lwcVNSeU9nZnFMT0Q2SnJENFdRZzMvVFZBK3RWbHhYOW9xbTJQ?=
- =?utf-8?Q?q4dufjr8O2Q=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RTM4L1M1d25PM2lYbFE0STh1bXlQSGFzMHhRV1hoNm9TTjl0Ny9jTDFYL1Zn?=
- =?utf-8?B?cE15V29KWFdROWFJQmtGd2dBd0dYMEk4RTZvWlJVdEd2TmdyWkl4OWdPSkxt?=
- =?utf-8?B?RmVJNzdLeUIrNWFtcjk5bTJiUDE3UlZwa0lDdllVRnpkcnRsZmJJcXBCNkxl?=
- =?utf-8?B?a2F6SGc4aEN1Y2NhK3NZVlZmejcxaHIvRU1vUG1EMms5ZnI4amthUFpkcENw?=
- =?utf-8?B?SDg0Yk94c3FYT1FOb3lqMVJ2dW5TSWNMcXVhSTlhWk5IUzNpdGRNeDl3ek5P?=
- =?utf-8?B?cjU5bkhDSUp4d3J2VXcrNVRmSkNYc01qblo5c3pGd29uYndsNU1xdWo0UTRs?=
- =?utf-8?B?bzdyd25jNi9ORlhDVWxlYk1hUDAvWWlhRXVxUndzSEJmblpvYkV3Y1V3Smls?=
- =?utf-8?B?SlhVeE1iNUZINUh5U09Tc2RuM1owSlFjUWVNeUlPZkQ3ZUJGK2NjMjZYY3d1?=
- =?utf-8?B?Q3ZRQ0svQm5MOEpRUGZtRjFDMEo2Qi9LOUlnUDl2YkNzeWV3UUt2MHBXTStF?=
- =?utf-8?B?SlVicXc5Ni8zVWEweHlvbUUxUXJtdEgxS0tRU1pGTFR1MnIvNEcrR0s5VFFt?=
- =?utf-8?B?cUNZcTRLUjF3ZDN6Q3pFWURHM3NhNDZLbHM1Y2V3R0Y4UkRiVHRzL2d6ZlFB?=
- =?utf-8?B?S3c1TGdSTXV3clovVEpLVkpmZFM1R0dBdUxRWmNzbnhOamk2UGpNU29lcjY5?=
- =?utf-8?B?SDRoS3hiVXNzM2lWNWdadUkySXdiTnZXVE82NjhrQmJYdVhxeFlkQ3JPQzRu?=
- =?utf-8?B?aU5CbC9lM0FXa2ZscWFSWlA0QW1MaklDdzI4dzRxZWFhU0swS1BobzE3SjRZ?=
- =?utf-8?B?WHJxdUF5b0RpSGU1RnZSOTQwN0VlSWFZaUxHRmdwNkppNG83aktCRTFTVXkv?=
- =?utf-8?B?dU12WjBibFdSTWNTMXd6TzlxWU1raldMaXVZZFJOVjM0b3hwbWw5cmJYT1Vo?=
- =?utf-8?B?TDdLMHozY3dzcG9lNTA4NCtFOEZtNUNPYkZ5djZsOEFydTZNYk42TnlkVitm?=
- =?utf-8?B?ZTdFOXo0Yk5XOWIrSHJlTEVJcGg5ZElTd083NE4yTkVzMXl0TkhwMEIyRG5k?=
- =?utf-8?B?dVB4TGxzaE0zaUdXNjd5ekRNT0IzU3V1SEE4T0NCaGY5NVI3dHRiUTN0b3FR?=
- =?utf-8?B?ODFWSVNhUnZOWVl0b2U1L1pHTFBYbFhacXV0aDg2bHJENVVTWUdreUdDckJ3?=
- =?utf-8?B?RkkyV1lweXBFQmZhbzJtVFltS0ZnbUlYMVRSNUMxT3VHMDdsemRaTUN6UktG?=
- =?utf-8?B?WkQyaDlGRml6Nm1IbDhSOEpoTlJ5OFRYU2xSTllVUkpiemN2WWNMSHdlem96?=
- =?utf-8?B?K25kcm5oZXVrVWxGN1JRZGU0cTN2R29aNnJTc3l1ZHVtbXBoaGozS3BnZDBn?=
- =?utf-8?B?SGx0WjdYMHExYXBHdWhkNW1lV3B3Rzg2NkE5NUszc2c2QnJKWEhwem9MeXdZ?=
- =?utf-8?B?UC9pdy9MN3dyMk51YWh4clBacUVRZlJSTEdzREprWFdNcjBEOHk4dGRGdFo0?=
- =?utf-8?B?S2txVkp1cmNaOFdRZkJqZDV0UEdwQWZyQW8wcWwrK21PZmNjUmtES1JwMUsy?=
- =?utf-8?B?Rkg5V0NySDlvZTFuN3ZHTjY1U2dMNFQ3RStUdzVaeXVDMnF4Q3cwbXc2aHFV?=
- =?utf-8?B?U0pvbGZZWm1FS290KzFrdnJmUzBjd2lyTXV0UkR3MWhwMU5JMW1WQmNoZk5H?=
- =?utf-8?B?ZnVKNUNWcTZreTRBZElxZHJJSWxZdkRRWHVOMEhjWU9FZWdFdnEvcDhtOUlT?=
- =?utf-8?B?UTlSTXJmRnZUQVVzQWNVKzFjNytwZ1pETG9HR2RRYi82NWF4YS9nOCtNNXU2?=
- =?utf-8?B?MFFqVXVDR1hkRGRYdXVwcVl4U3pkbHBTQXhmZnhuUElIM2xwUzgvQ2pDc2NK?=
- =?utf-8?B?SkcwdHZJTk5zdGJmclpaTlFma3d3NFg5KysvRG8xZ3VDNFR2aW0wMzNJMHB1?=
- =?utf-8?B?bDhXY3ZrS0g4T0NxcE5TSDZtb0Rldjk5b2FqL3g0R2NqbW42bzQ5Qm54UTZ4?=
- =?utf-8?B?M0RsbC95ak9JVko4ODZ2VVRLV1VWWGROSFRIU3h6dWV1Vkx1dlFvM3J1bk9R?=
- =?utf-8?B?Q2x4dkMvVkhQam8vTjFqZU02YlVEb3ZRRTE3ZkFWbUlsL2tiK0VEamI3OVBx?=
- =?utf-8?Q?o5zo=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f706610f-7e4b-45dd-8e69-08dd7d12e5b2
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 18:17:07.5646
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8jSLblpafnLHrtAv7UCCZVgfKfksaKhKBEiDIse0tAx9OKFJcwvOi3Tkyrvv0Y9t
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6314
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 09/13] arm64: dts: Add board DTS for Rpi5 which
+ includes RP1 node
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Derek Kiernan <derek.kiernan@amd.com>, Dragan Cvetic
+ <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, kernel-list@raspberrypi.com
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <c6498d8cf8dfade1980b566e99a9a91551fd8b53.1742418429.git.andrea.porta@suse.com>
+ <526751d2-c7e8-4097-9454-c9049b880225@gmx.net> <Z__sMg-RJ6B-3OL4@apocalypse>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <Z__sMg-RJ6B-3OL4@apocalypse>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:yaTnJqXN2hVC2bQS++P5Kut3+/Yey/QLr+fB/knovzlhQKJWqJc
+ AyEgEvkqq3aXU0ZDV6HB3+uKKuHbnKbCfeYyR5pAKk2ZH0R2W+GCG97LS/1tHXuZmmnWh9V
+ 1Ntt4byibq4JJq1bBKQRXiKvVMBZbhUeW2GXTc6lkToqXAKzhYPho97WTpgfORLsaEdWoZi
+ 6/ZfMN0Jy8bl+DxkwuPew==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:q5hkUnNaU5M=;bttCGUAApwen1kuInuvdTyhSYVJ
+ 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
 
-Hi Tony,
+Hi Andrea,
 
-On 4/16/25 12:55, Luck, Tony wrote:
-> On Wed, Apr 16, 2025 at 12:09:52PM -0500, Moger, Babu wrote:
->> Hi Reinette,
+Am 16.04.25 um 19:43 schrieb Andrea della Porta:
+> Hi Stefan,
+>
+> On 13:48 Mon 14 Apr     , Stefan Wahren wrote:
+>> Hi Andrea,
 >>
->> On 4/15/25 11:53, Reinette Chatre wrote:
->>> Hi Babu,
+>> Am 19.03.25 um 22:52 schrieb Andrea della Porta:
+>>> Add the board 'monolithic' DTS for RaspberryPi 5 which includes
+>>> the RP1 node definition.  The inclusion treeis as follow (the
+>>> arrow points to the includer):
 >>>
->>> On 4/15/25 7:20 AM, Moger, Babu wrote:
->>>> Hi Reinette,
->>>>
->>>> On 4/11/25 16:04, Reinette Chatre wrote:
->>>>> Hi Babu,
->>>>>
->>>>> On 4/3/25 5:18 PM, Babu Moger wrote:
->>>>>> The mbm_cntr_assign mode offers "num_mbm_cntrs" number of counters that
->>>>>> can be assigned to an RMID, event pair and monitor the bandwidth as long
->>>>>> as it is assigned.
->>>>>
->>>>> Above makes it sound as though multiple counters can be assigned to
->>>>> an RMID, event pair.
->>>>>
->>>>
->>>> Yes. Multiple counter-ids can be assigned to RMID, event pair.
+>>> rp1-common.dtsi ----> rp1-nexus.dtsi ----> bcm2712-rpi-5-b-monolithic.=
+dts
+>>>                                                  ^
+>>>                                                  |
+>>>                                              bcm2712-rpi-5-b.dts
+>> sorry for the delay. I'm not happy with the monolithic appendix.
+>>
+>> How about bcm2712-rpi-5-b-rp1.dts or something more self-explaining?Reg=
+ards
+> Sure, good catch. I'd go even further saying that we can rename (or merg=
+e if
+> the destination file already exists) as:
+>
+> bcm2712-rpi-5-b.dts             ->  bcm2712-rpi-5-b-norp1.dts (or some b=
+etter suffix other than -norp1)
+> bcm2712-rpi-5-b-monolithic.dts  ->  bcm2712-rpi-5-b.dts
+>
+> so the monolithic one, which seems to be the 'safest' option as of now,
+> would be the default dtb. Do you think it could be ok?
+i like the idea (include rp1 into default dtb), but not a fan of=20
+negative logic in naming. Unfortunately I don't have better idea.
+
+Regards
+>
+>>> This is designed to maximize the compatibility with downstream DT
+>>> while ensuring that a fully defined DT (one which includes the RP1
+>>> node as opposed to load it from overlay at runtime) is present
+>>> since early boot stage.
 >>>
->>> oh, are you referring to the assignments of different counters across multiple
->>> domains?
->>
->> May be I am confusing you here. This is what I meant.
->>
->> Here is one example.
->>
->> In a same group,
->>   Configure cntr_id 0, to count reads only (This maps to total event).
->>   Configure cntr_id 1, to count write only (This maps to local event).
->>   Configure cntr_id 2, to count dirty victims.
->>   so on..
->>   so on..
->>   Configure cntr_id 31, to count remote read only.
->>
->> We have 32 counter ids in a domain. Basically, we can configure all the
->> counters in a domain to just one group if you want to.
->>
->> We cannot do that right now because our data structures cannot do that.
->> We can only configure 2 events(local and total) right now.
-> 
-> Not just data structures, but also user visible files in
-> mon_data/mon_L3*/*
-> 
-> You'd need to create a new file for each counter.
+>>> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+>>> ---
+>>> Right now bcm2712-rpi-5-b.dts is the overlay-ready DT which will make
+>>> the RP1 driver to load the RP1 dtb overlay at runtime, while
+>>> bcm2712-rpi-5-b-monolithic.dts is the fully defined one (i.e. it
+>>> already contains RP1 node, so no overlay is loaded nor needed).
+>>> Depending on which one we want to be considered the default, we can
+>>> swap the file names to align with downstream naming convention that
+>>> has only the fully defined DT called bcm2712-rpi-5-b.dts.
+>> Could you please move some of this good explanation into this dts file =
+as
+>> comment?
+> Sure.
+>
+> Thanks,
+> Andrea
+>
+>>> ---
+>>>    arch/arm64/boot/dts/broadcom/Makefile                     | 1 +
+>>>    .../boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts      | 8 +++++=
++++
+>>>    2 files changed, 9 insertions(+)
+>>>    create mode 100644 arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-mon=
+olithic.dts
+>>>
+>>> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/d=
+ts/broadcom/Makefile
+>>> index 3d0efb93b06d..4836c6da5bee 100644
+>>> --- a/arch/arm64/boot/dts/broadcom/Makefile
+>>> +++ b/arch/arm64/boot/dts/broadcom/Makefile
+>>> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_BCM2835) +=3D bcm2711-rpi-400.dtb \
+>>>    			      bcm2711-rpi-4-b.dtb \
+>>>    			      bcm2711-rpi-cm4-io.dtb \
+>>>    			      bcm2712-rpi-5-b.dtb \
+>>> +			      bcm2712-rpi-5-b-monolithic.dtb \
+>>>    			      bcm2712-d-rpi-5-b.dtb \
+>>>    			      bcm2837-rpi-3-a-plus.dtb \
+>>>    			      bcm2837-rpi-3-b.dtb \
+>>> diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.d=
+ts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
+>>> new file mode 100644
+>>> index 000000000000..3aeee678b0bc
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b-monolithic.dts
+>>> @@ -0,0 +1,8 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>>> +/dts-v1/;
+>>> +
+>>> +#include "bcm2712-rpi-5-b.dts"
+>>> +
+>>> +&pcie2 {
+>>> +	#include "rp1-nexus.dtsi"
+>>> +};
 
-Yes. That is correct.
-
-> 
-> My patch for making it easier to add more counters:
-> 
-> https://lore.kernel.org/all/20250407234032.241215-3-tony.luck@intel.com/
-> 
-> may help ... though you have to pick the number of simultaneous counters
-> at compile time to size the arrays in the domain structures:
-> 
-> 	struct mbm_state	*mbm_states[QOS_NUM_MBM_EVENTS];
-> 
-> and if you are dynamically adding/removing events using the
-> configuration files, need to alloc/free the memory that those
-> arrays of pointers reference ... as well as adding/removing files
-> from the appropriate mon_data/mon_L3* directory.
-
-Not just that. Also there is that overflow handler to keep all these
-counters in sane state. So, pretty quickly it gets complicated. It is
-probably best to handle as a separate series.
-
--- 
-Thanks
-Babu Moger
