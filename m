@@ -1,75 +1,159 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF17204C36;
-	Wed, 16 Apr 2025 01:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859B31FFC5F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:07:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765619; cv=none; b=meQ3pUmnD2RXS6Cq3KaVve4UGQ65RQqM8BstntBXBpbP34tnWGCwzUrFFmoMBBH/sCQGJ9BGIz3X4KGShBCjCWvzWmEPlCdYno289DiFDyW6u3th9mYKB0jGLDXRcsTzrjoZxrRTSt+nKYOz9TISn/egpwaidkuY/UoCPS40Ve8=
+	t=1744765642; cv=none; b=Sd299P8yQEJ0H3PqjiXY6JM6dtb15Ul3SfzjMMk8wWcRRiytRJs0nnWmNJExL4+04VtqTon5ctLTOKLxSN9X5sA88rOxi8acMDxU2YSgL+wJW1IlVos18hCZP4iNdOp7eqwCuUoc2CZOy+KLT9pJrP+D2KGobHotCXROUbwpAj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765619; c=relaxed/simple;
-	bh=Mjjm6Mzqf4mF5cdpX26kfG0QtYpiA3cJIIijw5IrfHA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r+Kl20YK4IxSMdKie8mK96jU+p5z00FUu3OVBMkjs3nn8IS3TcpkOD5oF9RUU7FWL77cJiHFGTYWcBgLOqWC2MR5U/xhHAi9QkmDtIqEHcjKGvN4JKrn1pgabny1zh32EFfhXTIGn5QispQKgtHWH4iyKggyyOkrsV6SIyx1fnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Gy6qtbrI; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744765642; c=relaxed/simple;
+	bh=ynItsx9VlobavD/m9ywBxaQyHMxzKdeJNQN2wwMGYIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SJPA+SUiBsh+YGEx8GlR/tyl17sEhj75sLBDYpYn/AjvotrjhzTCAm9KM9NOjQhWirbv5jEAThxoOo+qP1sz9DRBG80fTFcthMOQXrd6qm5uFDNncTNf5qghgDEvlzdik97sfZx2fAAkYB5N4o51OHWOj68TqX4aU1xwkZWS4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDrEvyie; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Gy6qtbrI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744765618; x=1776301618;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EELDPN3KWPUe2puUTTKzUEAFHJseIIQ+Xj/tNjNHJC8=;
-  b=Gy6qtbrI0TcDaE08ZXMx8bmIwUPIw01P6Ex/NBDlhm3Yfw25uAltUgVL
-   F2+jq1DUpChkHtZWpA3EGnD2MGYp4/Zm8wFWwyO+0aamEiWY38ynrV10/
-   q6ByZwV/WiaGwGks9LPlARv5DsFlIoO6wqXdyelu2uUhNPUH5HL9L1266
-   0=;
-X-IronPort-AV: E=Sophos;i="6.15,214,1739836800"; 
-   d="scan'208";a="816357818"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:06:52 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:26034]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.8.63:2525] with esmtp (Farcaster)
- id 4b446256-361e-4eee-b9d4-b68a544bc03a; Wed, 16 Apr 2025 01:06:51 +0000 (UTC)
-X-Farcaster-Flow-ID: 4b446256-361e-4eee-b9d4-b68a544bc03a
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 01:06:51 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.88.149.87) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 01:06:48 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>
-Subject: Re: [PATCH net-next 7/8] ipv4: Use nlmsg_payload in ipmr file
-Date: Tue, 15 Apr 2025 18:06:38 -0700
-Message-ID: <20250416010640.23879-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415-nlmsg_v2-v1-7-a1c75d493fd7@debian.org>
-References: <20250415-nlmsg_v2-v1-7-a1c75d493fd7@debian.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDrEvyie"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744765639;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DWqUG7P0v1cOnPoUVc7aAn2jH8Xha4vfE5DOCxe6qxo=;
+	b=CDrEvyieA/HGcMUfmbOH30dX0yQVBCll5y/9WyFknRbkj6kP23gv91fgFxL4+A6kbm3VZ3
+	tNOpy6QkPYFC1AaT+lugk2JRkT1jWsMX15Xj6CXROzQA8VvMYhZreLTSnkglpMQuWcYu3e
+	SqgXigANv6iSjanx29Hp4COJs7F8BmE=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-qL3IZYAAO5-uck_js_6QCg-1; Tue,
+ 15 Apr 2025 21:07:15 -0400
+X-MC-Unique: qL3IZYAAO5-uck_js_6QCg-1
+X-Mimecast-MFC-AGG-ID: qL3IZYAAO5-uck_js_6QCg_1744765633
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9257519560AB;
+	Wed, 16 Apr 2025 01:07:13 +0000 (UTC)
+Received: from [10.22.64.119] (unknown [10.22.64.119])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BC1501828A87;
+	Wed, 16 Apr 2025 01:07:11 +0000 (UTC)
+Message-ID: <4c0b253e-993f-45b5-9f8a-16c4c4c6b8ca@redhat.com>
+Date: Tue, 15 Apr 2025 21:07:10 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D039UWB001.ant.amazon.com (10.13.138.119) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for
+ cpuset_v2_mode
+To: "T.J. Mercier" <tjmercier@google.com>, Tejun Heo <tj@kernel.org>,
+ Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?=
+ <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250415235308.424643-1-tjmercier@google.com>
+Content-Language: en-US
+From: Waiman Long <longman@redhat.com>
+In-Reply-To: <20250415235308.424643-1-tjmercier@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 15 Apr 2025 12:28:58 -0700
-> Leverage the new nlmsg_payload() helper to avoid checking for message
-> size and then reading the nlmsg data.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+On 4/15/25 7:53 PM, T.J. Mercier wrote:
+> Android has mounted the v1 cpuset controller using filesystem type
+> "cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
+> behavior where the controller name is not added as a prefix for cgroupfs
+> files. [2]
+>
+> Later, a problem was discovered where cpu hotplug onlining did not
+> affect the cpuset/cpus files, which Android carried an out-of-tree patch
+> to address for a while. An attempt was made to upstream this patch, but
+> the recommendation was to use the "cpuset_v2_mode" mount option
+> instead. [3]
+>
+> An effort was made to do so, but this fails with "cgroup: Unknown
+> parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
+> mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
+> update the special cased cpuset_mount(), and only the cgroup (v1)
+> filesystem type was updated.
+>
+> Add parameter parsing to the cpuset filesystem type so that
+> cpuset_v2_mode works like the cgroup filesystem type:
+>
+> $ mkdir /dev/cpuset
+> $ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
+> $ mount|grep cpuset
+> none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_mode,release_agent=/sbin/cpuset_release_agent)
+>
+> [1] https://cs.android.com/android/_/android/platform/system/core/+/b769c8d24fd7be96f8968aa4c80b669525b930d3
+> [2] https://cs.android.com/android/platform/superproject/main/+/main:system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=2dac5d89a0f024a2d0cc46a80ba4ee13472f1681;l=192
+> [3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@redhat.com/T/
+>
+> Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2 behavior in v1 cgroup")
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> ---
+>   kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
+>   1 file changed, 29 insertions(+)
+>
+> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> index 27f08aa17b56..cf30ff2e7d60 100644
+> --- a/kernel/cgroup/cgroup.c
+> +++ b/kernel/cgroup/cgroup.c
+> @@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type = {
+>   };
+>   
+>   #ifdef CONFIG_CPUSETS_V1
+> +enum cpuset_param {
+> +	Opt_cpuset_v2_mode,
+> +};
+> +
+> +const struct fs_parameter_spec cpuset_fs_parameters[] = {
+> +	fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
+> +	{}
+> +};
+> +
+> +static int cpuset_parse_param(struct fs_context *fc, struct fs_parameter *param)
+> +{
+> +	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
+> +	struct fs_parse_result result;
+> +	int opt;
+> +
+> +	opt = fs_parse(fc, cpuset_fs_parameters, param, &result);
+> +	if (opt < 0)
+> +		return opt;
+> +
+> +	switch (opt) {
+> +	case Opt_cpuset_v2_mode:
+> +		ctx->flags |= CGRP_ROOT_CPUSET_V2_MODE;
+> +		return 0;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+>   static const struct fs_context_operations cpuset_fs_context_ops = {
+>   	.get_tree	= cgroup1_get_tree,
+>   	.free		= cgroup_fs_context_free,
+> +	.parse_param	= cpuset_parse_param,
+>   };
+>   
+>   /*
+> @@ -2392,6 +2420,7 @@ static int cpuset_init_fs_context(struct fs_context *fc)
+>   static struct file_system_type cpuset_fs_type = {
+>   	.name			= "cpuset",
+>   	.init_fs_context	= cpuset_init_fs_context,
+> +	.parameters		= cpuset_fs_parameters,
+>   	.fs_flags		= FS_USERNS_MOUNT,
+>   };
+>   #endif
+
+LGTM
+
+Acked-by: Waiman Long <longman@redhat.com>
+
