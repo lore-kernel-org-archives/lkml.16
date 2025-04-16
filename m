@@ -1,79 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D5FA21E08B;
-	Wed, 16 Apr 2025 06:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C022206B3;
+	Wed, 16 Apr 2025 06:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744784837; cv=none; b=jqobvq+oAOgckU5r18rE4fRGYtqGueoig9BO+JBKR0+jFqLov8Lidn307T2kyRekEVXanF4oO+1Xm0EutMAKO04YpgPa12q2V9wbNaA0bslqHvSYWtN9d1hVaeMXl8ufjXmis7yWDBRI4oZ0dlcwJa+Sj7l9Yo++5kgOLrsVU/I=
+	t=1744784845; cv=none; b=IZ7sEogDi+4oPltwFuZQy7wCmGS6ckDWNMYeJuIqYrFgd4c/+91x5ZePyA7vMZ3TBTbN7PFuE+a2V+ODPY7arbMkDz1s6tMHo/xdPtg1cMJcwlYoGj4RlU046qxTDPEzPCUBdIuX2Utzk24XO3yS3NlNfQBguzWO0yoFYRbfEs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744784837; c=relaxed/simple;
-	bh=mrvOxsBtv8mVk1WXIRTpfq/489t4CJkuWe57iKSweXM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jK1uoGCqpiacndcGal3d44xySjpPtGEN7yRFOa1lh51apSXdmvTPo/Zuk2wTdm+Kc01qFQq2lM+T08Df5maSXVFAqNdWHDcjZYrT92OfBmZ0d4iqf4+pPrOm7BbDCOSOQgjYAxH5dheDIk4bFLTVRcDUdlTR4l14dgolSovkDsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCD48152B;
-	Tue, 15 Apr 2025 23:27:11 -0700 (PDT)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 35AEB3F694;
-	Tue, 15 Apr 2025 23:27:10 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-doc@vger.kernel.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] documentation: Add nodebugmon for arm64 platforms
-Date: Wed, 16 Apr 2025 11:57:06 +0530
-Message-Id: <20250416062706.2735563-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744784845; c=relaxed/simple;
+	bh=5/dvJapbezp2DjC3tieCg8oZ706CUrQvPxNTcrPLcgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KjC/GPhECArsVy69gvWuECtxEeWsF3xrGr7bC8K8RgJJ+t88gGWrzfKAwU8VqwBnx4+/OYQ7Oxg6FsNHyy6DluxsrTamaJrKcLRuqLj3sRPqaYT8BZftYSuKDJaNGfMwLkt0cV8R6m9y/CZw04bmwjTgg6aap0S2EMQSSUPY3po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QFhYlhKM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QFhYlhKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55696C4CEEC;
+	Wed, 16 Apr 2025 06:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744784844;
+	bh=5/dvJapbezp2DjC3tieCg8oZ706CUrQvPxNTcrPLcgA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QFhYlhKMq1V/g8Z0/ZIyhDnRdwM/jMiduzSS/kd6O/3DoBXKnPM27yH8PmGkld49I
+	 zeMvdHYqpb4EtvTIYW9r939l0wPpnYEoJ5n61qSL/7VPEXUrrIi/ssP7JNnY1OzK/t
+	 mj5SQuO+kEVR/pP3vXstM23M68NQwFiVmiXs0hGmbSqmz5qyCwPKXjcVaoxMKXTaSf
+	 Lk2XsbzpVPPehusvezbLvW/Wdf9xBahSC72plemcFbr6hN+l8oMQKOVm06YQqjwZJq
+	 hNmTOXqSUzM0/F2NOvN6erTTR89JUVVWI7cUB1ubDIlLzymw2g23e41G4hRCkDVrcL
+	 9PtVObNnKMKqQ==
+Date: Wed, 16 Apr 2025 08:27:19 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	David Sterba <dsterba@suse.cz>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Josef Bacik <josef@toxicpanda.com>, Sandeen <sandeen@redhat.com>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hfs{plus}: add deprecation warning
+Message-ID: <20250416-willen-wachhalten-55a798e41fd2@brauner>
+References: <20250415-orchester-robben-2be52e119ee4@brauner>
+ <20250415144907.GB25659@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250415144907.GB25659@frogsfrogsfrogs>
 
-Add an entry for nodebugmon which has been used on arm64 platforms.
+On Tue, Apr 15, 2025 at 07:49:07AM -0700, Darrick J. Wong wrote:
+> On Tue, Apr 15, 2025 at 09:51:37AM +0200, Christian Brauner wrote:
+> > Both the hfs and hfsplus filesystem have been orphaned since at least
+> > 2014, i.e., over 10 years. It's time to remove them from the kernel as
+> > they're exhibiting more and more issues and no one is stepping up to
+> > fixing them.
+> > 
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> > ---
+> >  fs/hfs/super.c     | 2 ++
+> >  fs/hfsplus/super.c | 2 ++
+> >  2 files changed, 4 insertions(+)
+> > 
+> > diff --git a/fs/hfs/super.c b/fs/hfs/super.c
+> > index fe09c2093a93..4413cd8feb9e 100644
+> > --- a/fs/hfs/super.c
+> > +++ b/fs/hfs/super.c
+> > @@ -404,6 +404,8 @@ static int hfs_init_fs_context(struct fs_context *fc)
+> >  {
+> >  	struct hfs_sb_info *hsb;
+> >  
+> > +	pr_warn("The hfs filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
+> 
+> Does this mean before or after the 2025 LTS kernel is released?  I would
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-This patch applies on v6.15-rc2
+I would've tried before the LTS release...
 
- Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+> say that we ought to let this circulate more widely among users, but
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index d9fd26b95b34..f4a313d6c0ab 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4085,6 +4085,13 @@
- 			/sys/module/printk/parameters/console_suspend) to
- 			turn on/off it dynamically.
- 
-+	nodebugmon
-+			[HW,ARM64] Disable debug monitor
-+			Disables the debug monitor exception handling on the platform
-+			regardless whether breakpoints and watchpoints are programmed
-+			or not. This prevents debug exceptions from being enabled via
-+			MDSCR_EL1 register.
-+
- 	no_debug_objects
- 			[KNL,EARLY] Disable object debugging
- 
--- 
-2.25.1
+which is a valid point. The removal of reiserfs and sysv has been pretty
+surgically clean. So at least from my POV it should be simple enough to
+revert the removal. But I'm not dealing with stable kernels so I have no
+intuition about the pain involved.
 
+> OTOH I guess no maintainer for a decade is really bad.
+> 
+> --D
+> 
+> > +
+> >  	hsb = kzalloc(sizeof(struct hfs_sb_info), GFP_KERNEL);
+> >  	if (!hsb)
+> >  		return -ENOMEM;
+> > diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
+> > index 948b8aaee33e..58cff4b2a3b4 100644
+> > --- a/fs/hfsplus/super.c
+> > +++ b/fs/hfsplus/super.c
+> > @@ -656,6 +656,8 @@ static int hfsplus_init_fs_context(struct fs_context *fc)
+> >  {
+> >  	struct hfsplus_sb_info *sbi;
+> >  
+> > +	pr_warn("The hfsplus filesystem is deprecated and scheduled to be removed from the kernel in 2025\n");
+> > +
+> >  	sbi = kzalloc(sizeof(struct hfsplus_sb_info), GFP_KERNEL);
+> >  	if (!sbi)
+> >  		return -ENOMEM;
+> > -- 
+> > 2.47.2
+> > 
+> > 
