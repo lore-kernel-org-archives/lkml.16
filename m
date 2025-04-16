@@ -1,151 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A48D946F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44026241CBA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841562; cv=none; b=s7FiYSioOmelmvXxM4nNxDOBkRnwrjEzo0TLl1RccOA0hp93hF5EtQv9W880dWurgIrtnphsVYLmx89wDdy1OmZOkHjkuU+dqjv7jWWYI2c/llsaTFO0r1bNk8WOVX+kDz33OK6A0+vRKY6NqvPQ7JVIIGlv1Nk6dGNhiOMj5+g=
+	t=1744841573; cv=none; b=DxhTSI+r91plPzjHPMZl3hZC8gMHlE6q6XMqySOla7zsIAmR6yH+DPQcMOuppv+M05hQufh0Dm40o8iNdf/d6E2wTGQe6YPBR7he1vsp4NIIK1dVT0/3FaCHORTrKWWV4f3reT6mnX8PKjj8fW/28qPbzSnY0aDGNRvcCnydS1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841562; c=relaxed/simple;
-	bh=+djmq/65MXaFk74ZdFkRIEnNr7KrEi62o3NkXvf2dIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N9biq5wH3Y4XOeIyKNWUDEEVln8qewnIJ5vaDEvKv3gFgxLzU0nuoWCB+6D/R7xQ/fZnpF6V07SLpZimRJ2QcxxP04yZ8JjADTLLlkou0wzbNeUf/p8Uehe7nhVz4lz4Ylu8UHRgNghHiZRTRKjmIZ+3WPcfTiraxRBWhpcm6xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6CCF1595;
-	Wed, 16 Apr 2025 15:12:29 -0700 (PDT)
-Received: from [192.168.178.115] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEF873F66E;
-	Wed, 16 Apr 2025 15:12:28 -0700 (PDT)
-Message-ID: <acef778c-a359-484d-a61d-aeca81bdae1d@arm.com>
-Date: Thu, 17 Apr 2025 00:12:20 +0200
+	s=arc-20240116; t=1744841573; c=relaxed/simple;
+	bh=qyZE63j0d2voV/G7WS3qaxVb9wlgL4RcIeSQSdW2Ax4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMEu7OLvhTlNrbEkWySLir21PrJFijTS2aHF21AObPQ+fWPYVp9FLsjgjOqjxd6/gq8Av9pnmU1tDwqk4T1pENaWFx23S4ul03zQxIj+tcVnWm7ci0PoDkAN3xX0KxgKdbicwf+9OYDweRR1SSMwvwubZjmlTUjkcKY5WAF6vxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=DZy4ur4X; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DZy4ur4X"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3771B2C030A;
+	Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1744841562;
+	bh=zAjFq0x7xF/IjFaQL1u6DO3Ifg7t+tCKOWceVPvynI8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DZy4ur4XcsjoL13gV0HLq47lWFFRJR2LSWsZYrLX2MbIE/eZ9Hai5cIs0fOaNXmkn
+	 hzJ1rJMyd1e2zmHTe0TtGgUWGxd6Y5E03opAVUPIl9I/SBZXikOtmnE0/KU0pFYBFk
+	 78XM6lbEfYJ9mKhTg2f4pdmyqDOM0OYvokvyArKITlVFAPWpND1+UqKdMKrkzofPdF
+	 Idzu9kTqjs/29bhc859kjn2SHOtH0grqyVQG+tRQFRfn/nz+jGqPKU/ywcZzS1PNcK
+	 5+2kX+rOsSTXiCrlxbWUR9BTVmYr0kwbiLfZ+RFeKSOU63Uv47YxhCX5j4loN61dpx
+	 9JZHlC+31tXhA==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B68002b5a0000>; Thu, 17 Apr 2025 10:12:42 +1200
+Received: from rutgerk-dl.ws.atlnz.lc (rutgerk-dl.ws.atlnz.lc [10.33.23.32])
+	by pat.atlnz.lc (Postfix) with ESMTP id 149AE13EDA9;
+	Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
+Received: by rutgerk-dl.ws.atlnz.lc (Postfix, from userid 1868)
+	id 093D33C0671; Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
+From: Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.co.nz>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.co.nz>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
+Date: Thu, 17 Apr 2025 10:12:30 +1200
+Message-ID: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] sched/uclamp: Align uclamp and util_est and call
- before freq update
-To: Vincent Guittot <vincent.guittot@linaro.org>,
- Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- hongyan.xia2@arm.com, qyousef@layalina.io, ke.wang@unisoc.com,
- di.shen@unisoc.com, linux-kernel@vger.kernel.org
-References: <20250325014733.18405-1-xuewen.yan@unisoc.com>
- <CAKfTPtA06D1EGg2VdVHt-P0PDE-1XZVJOp3myZPSNknnFT3nNg@mail.gmail.com>
- <CAB8ipk_uOKn+U0ozZyaQ8J9OjifoZWSh-9NUQ9UD+K-kLV28vw@mail.gmail.com>
- <CAKfTPtD2T8Qm-6Nq-9qODQASoU9Wn1Ujk4uQbbN1Dvo3+EFZFA@mail.gmail.com>
- <CAB8ipk-G_Q20Cyx69GRY5pdTj9C4SyVyiuRVFi-i-otQ1zBVFg@mail.gmail.com>
- <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=68002b5a a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=XR8D0OoHHMoA:10 a=hMUjD3Yoj6wRdRaDZV0A:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On 16/04/2025 14:19, Vincent Guittot wrote:
-> On Wed, 16 Apr 2025 at 13:07, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
->>
->> On Wed, Apr 16, 2025 at 5:42 PM Vincent Guittot
->> <vincent.guittot@linaro.org> wrote:
->>>
->>> On Wed, 16 Apr 2025 at 04:55, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
->>>>
->>>> On Wed, Apr 16, 2025 at 1:05 AM Vincent Guittot
->>>> <vincent.guittot@linaro.org> wrote:
->>>>>
->>>>> On Tue, 25 Mar 2025 at 02:48, Xuewen Yan <xuewen.yan@unisoc.com> wrote:
+Originally all ethtool eee setting updates were attempted even if the
+settings were not supplied, causing a null pointer crash.
 
-[...]
+Add check for each eee setting and only update if it exists.
 
->>> Why is testing sched_delayed enough for migrating/prio_change ?
->>> With your change, we will remove then add back util_est when changing
->>> prio of the task which is useless
->>
->> I sincerely apologize for any misunderstanding my previous description
->> may have caused.
->> When changing prio without changing class, the delayed_task's
->> sched_delayed flag is not changed,
->> we would not remove then add back util_est.
->> If the class was changed：
->>
->> if (prev_class != next_class && p->se.sched_delayed)
->>                  dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED |
->> DEQUEUE_NOCLOCK);
->>
->> It will dequeue the delayed-task first, and will not enqueue it.
->>
->> As for normal tasks which are not delayed, indeed, the issue you
->> mentioned can occur, but it seems that this problem has always
->> existed. Perhaps this is a new issue that has come up.
-> 
-> I have been confused by the patch that added  the condition "if
-> (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
-> ENQUEUE_RESTORE))))". I wrongly thought it was for
-> dequeue_save/enqueue_restore
+Signed-off-by: Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.=
+co.nz>
+---
+ net/ethtool/eee.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
 
-No, this was just for sched_delayed. I convinced myself that the
-logic stays the same with the following tests:
-
--->8--
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index eb5a2572b4f8..65692938696f 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6930,6 +6930,19 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-        int rq_h_nr_queued = rq->cfs.h_nr_queued;
-        u64 slice = 0;
- 
-+       bool D = !!p->se.sched_delayed;
-+       bool M = task_on_rq_migrating(p);
-+       bool Er = !!(flags & ENQUEUE_RESTORE);
-+       bool Ed = !!(flags & ENQUEUE_DELAYED);
+diff --git a/net/ethtool/eee.c b/net/ethtool/eee.c
+index bf398973eb8a..1b4831ff9a75 100644
+--- a/net/ethtool/eee.c
++++ b/net/ethtool/eee.c
+@@ -137,17 +137,26 @@ ethnl_set_eee(struct ethnl_req_info *req_info, stru=
+ct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
+=20
+-	ret =3D ethnl_update_bitset(eee.advertised,
+-				  __ETHTOOL_LINK_MODE_MASK_NBITS,
+-				  tb[ETHTOOL_A_EEE_MODES_OURS],
+-				  link_mode_names, info->extack, &mod);
+-	if (ret < 0)
+-		return ret;
+-	ethnl_update_bool(&eee.eee_enabled, tb[ETHTOOL_A_EEE_ENABLED], &mod);
+-	ethnl_update_bool(&eee.tx_lpi_enabled, tb[ETHTOOL_A_EEE_TX_LPI_ENABLED]=
+,
+-			  &mod);
+-	ethnl_update_u32(&eee.tx_lpi_timer, tb[ETHTOOL_A_EEE_TX_LPI_TIMER],
+-			 &mod);
++	if (tb[ETHTOOL_A_EEE_MODES_OURS]) {
++		ret =3D ethnl_update_bitset(eee.advertised,
++					  __ETHTOOL_LINK_MODE_MASK_NBITS,
++					  tb[ETHTOOL_A_EEE_MODES_OURS],
++					  link_mode_names, info->extack, &mod);
++		if (ret < 0)
++			return ret;
++	}
 +
-+       /* won't be called */
-+       BUG_ON(D && M && Er);                           // [1]
-+       BUG_ON(!D && M && Er);                          // [2]
++	if (tb[ETHTOOL_A_EEE_ENABLED])
++		ethnl_update_bool(&eee.eee_enabled, tb[ETHTOOL_A_EEE_ENABLED], &mod);
 +
-+       BUG_ON(D && ((M || Er) == Ed));                 // [3]
-+       BUG_ON(!(D && (M || Er)) != (!D || Ed));        // [4]
-+       BUG_ON(!(D && (M || Er)) != (!(D && !Ed)));
++	if (tb[ETHTOOL_A_EEE_TX_LPI_ENABLED])
++		ethnl_update_bool(&eee.tx_lpi_enabled, tb[ETHTOOL_A_EEE_TX_LPI_ENABLED=
+],
++				  &mod);
 +
-        /*
-         * The code below (indirectly) updates schedutil which looks at
-         * the cfs_rq utilization to select a frequency.
-@@ -7178,6 +7191,17 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
-  */
- static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- {
-+       bool D = !!p->se.sched_delayed;
-+       bool M = task_on_rq_migrating(p);
-+       bool Ds = !!(flags & DEQUEUE_SAVE);
++	if (tb[ETHTOOL_A_EEE_TX_LPI_TIMER])
++		ethnl_update_u32(&eee.tx_lpi_timer, tb[ETHTOOL_A_EEE_TX_LPI_TIMER],
++				 &mod);
 +
-+       /* won't be called */
-+       BUG_ON(D && M && Ds);                           // [5]
-+       BUG_ON(!D && M && Ds);                          // [6]
-+       BUG_ON(D && !M && !Ds);                         // [7]
-+
-+       BUG_ON(!(D && (M || Ds)) != !D);                // [8]
-+
-        if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
-                util_est_dequeue(&rq->cfs, p);
+ 	if (!mod)
+ 		return 0;
+=20
+--=20
+2.49.0
 
--->8--
-
-In enqueue, when D is true, M or Er is never set with Ed. [3], [4].
-In dequeue, since [7] is never true, [8] is never true as well.
-
-> Could you please split this in 2 patches :
-> patch 1 updates condition for util_est_dequeue/enqueue  and a
-> description why it's safe
-> patch 2 for aligning uclamp with util_est
-
-+1
-
-[...]
