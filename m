@@ -1,78 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082822DFB9;
-	Wed, 16 Apr 2025 04:26:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770BC228C86;
+	Wed, 16 Apr 2025 04:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744777567; cv=none; b=E6pgZ8OWpVOo3j3Rd3FsgIwlbEy+7AkVkwvuTkIPXDdKMFmX271tit7bYPCgorxh0WYCn6daLYWL26Yfa72TsLSUadrBOYADMI5+c5oYAPKOArfFn2fFRXbYRIdBrFkYbRdwRCVt66/woI58Isj8NXACV77FObgEVPNWpjxA7fw=
+	t=1744777632; cv=none; b=UN6sMarx6AXw7zVYvfLGVGDdofHYtI27nOu+BeGl7tTBJPYr30MyCuL5hAIIXzvdBPiYhzV7lhQQMz8RiREX6Xt6aSUb8Ok0bGRAi/p72HwTR/6UuVqDGBSDzYISEskdxFB5PUXmHt6I2+M3+phAa1RItulv9aKCHQgyD3VdDBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744777567; c=relaxed/simple;
-	bh=/j1OS/uEyNfmo61ogba2AmbAcqgkLIe4DTdICsLDGto=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B8owfhgTqtAasS70s3XLxfp28rEku+N4spGTwSik+nA+xYrvDKdqETmil6xMxa8GwyPbKvUWAoU1ld8FY5Ua8IAOeJfI/WK3ILIAIar0d0/h7cR71OkI7BJ1kJZ+wTYYWF8nTVO5ScuzIosJvLV+VlPLkGexnUghxz8YD2hS97M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IeZLjGNs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744777632; c=relaxed/simple;
+	bh=W7Voch1+j4hseVkaXNSIgcrVP+fBZoaIxH+l4PLXxjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d3HyAo5or+z8O2N5XbLn2RSSuFevf/dZpyJlrV1qmbHjqGWNln+lApGjoFvnJIbh3wRzFrOQNMrLPSQXjcrdUBeY2pTx7jAPmoXjW+PTCspb5/ROdORixx4cl+csZ/jxz8sO9RYJPQu/iQ3elNSFFyuhILkASaiEMlna53vSqMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VyEWX1XQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IeZLjGNs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C7CBC4CEEC;
-	Wed, 16 Apr 2025 04:26:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VyEWX1XQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20038C4CEE2;
+	Wed, 16 Apr 2025 04:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744777567;
-	bh=/j1OS/uEyNfmo61ogba2AmbAcqgkLIe4DTdICsLDGto=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IeZLjGNsZfaOR/wNb2zAJnAqECgTLd2+KnQHaoi8xm0hsVdUPDBz9KXeof/8T4t39
-	 QgBFbvKAzuR17LCpb9dl/GEhIYZ98yXKdAbbYnUNMWDavvk/S12W2L5elH4FQKeYgB
-	 9kXfLVLVvK9vmZuACGdRVR6u7afZxS6LLfatM1QtIam65SxWxQ2nRzo/lf46a/fWkD
-	 tm5bO23Q8EG3qSfwE3BCfJ4/QTEldcyPXUPhiBeBJTv9hINwya8nXoeyN3tETOPskn
-	 hJA7vw23dpe4AtheuhepzJkmC+iO2RqF4RU0NDflb49ybjmkaU5Q39l3bFcLDnhfYI
-	 le04l8PTI58YQ==
-From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ze Zuo <zuoze1@huawei.com>,
-	damon@lists.linux.dev,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [RFC PATCH 10/10] Docs/ABI/damon: document addr_unit file
-Date: Tue, 15 Apr 2025 21:25:51 -0700
-Message-Id: <20250416042551.158131-11-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250416042551.158131-1-sj@kernel.org>
-References: <20250416042551.158131-1-sj@kernel.org>
+	s=k20201202; t=1744777631;
+	bh=W7Voch1+j4hseVkaXNSIgcrVP+fBZoaIxH+l4PLXxjE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VyEWX1XQDYIgd3Wx2060YIKWdVLbIis3o96RWRP//C8p63CLQ/9vzB8fHW3kPvVXB
+	 kXmbhMXmTEX+n4jLaXn1k1eoRqukZ8KPrcLm0IMAPfbqY5FOoXupzVXXRrqZ4E6X/z
+	 H77AGG8LlZd4G8wC7ZSqpW7zU6dbCpJrnKsyvEj1KGdTfn0pF5Va5Q87rlRf9CC7dz
+	 Brt7ytIcNyXzvVcrXlvWotssMpfvcNlcBBkjpJKy0rWfZrpjM1VsQiFZw9LggGySlJ
+	 FD349Ye/93dz6StnkZn7HwtFur6V8R4364Y6g/AHtfVN0cFLu2CKCVkgRQs3LLmwgm
+	 hWhyPPUXUfOZg==
+Date: Tue, 15 Apr 2025 21:27:09 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: virtualization@lists.linux.dev, "Michael S . Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Eugenio
+ =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>, "David S . Miller"
+ <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock
+ selftest
+Message-ID: <20250415212709.39eafdb5@kernel.org>
+In-Reply-To: <20250415074341.12461-4-minhquangbui99@gmail.com>
+References: <20250415074341.12461-1-minhquangbui99@gmail.com>
+	<20250415074341.12461-4-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Document addr_unit DAMON sysfs file on DAMON ABI document.
+On Tue, 15 Apr 2025 14:43:41 +0700 Bui Quang Minh wrote:
+> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
+> +    # Probe for support
+> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
+> +    if xdp.ret == 255:
+> +        raise KsftSkipEx('AF_XDP unsupported')
+> +    elif xdp.ret > 0:
+> +        raise KsftFailEx('unable to create AF_XDP socket')
+> +
+> +    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_queue_id}',
+> +               ksft_wait=3)
+> +
+> +def check_xdp_bind(cfg):
+> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+> +
+> +def check_rx_resize(cfg, queue_size = 128):
+> +    rx_ring = _get_rx_ring_entries(cfg)
+> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
 
-Signed-off-by: SeongJae Park <sj@kernel.org>
----
- Documentation/ABI/testing/sysfs-kernel-mm-damon | 7 +++++++
- 1 file changed, 7 insertions(+)
+Unfortunately this doesn't work on a basic QEMU setup:
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-damon b/Documentation/ABI/testing/sysfs-kernel-mm-damon
-index 293197f180ad..40b7735f57d5 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-damon
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-damon
-@@ -70,6 +70,13 @@ Description:	Writing a keyword for a monitoring operations set ('vaddr' for
- 		Note that only the operations sets that listed in
- 		'avail_operations' file are valid inputs.
- 
-+What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/addr_unit
-+Date:		Apr 2025
-+Contact:	SeongJae Park <sj@kernel.org>
-+Description:	Writing an integer to this file sets the 'address unit'
-+		parameter of the given operations set of the context.  Reading
-+		the file returns the last-written 'address unit' value.
-+
- What:		/sys/kernel/mm/damon/admin/kdamonds/<K>/contexts/<C>/monitoring_attrs/intervals/sample_us
- Date:		Mar 2022
- Contact:	SeongJae Park <sj@kernel.org>
--- 
-2.39.5
+# ethtool -G eth0 rx 128
+[   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx queue index: 0 err: -2
+netlink error: No such file or directory
+
+Is there a way to enable more capable virtio_net with QEMU?
