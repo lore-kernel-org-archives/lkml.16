@@ -1,111 +1,221 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEC0184E;
-	Wed, 16 Apr 2025 12:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A02A11CA0;
+	Wed, 16 Apr 2025 12:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807622; cv=none; b=n2XNcDQ4O4MX51BdyiOd2d1FK/GELzN93p2ZXNXg+zbZDJuduflv7mUMhNXDj9erZXMawTgB8R8wrWvYC2GUY9uUJeG65iGfMF/ZL2J5HStD95DOEWjRFhQuo9/ifVOVpLNsz7viBedC7HmnYsgHYyiy0HuKy5v28zCKaKSKa/c=
+	t=1744807622; cv=none; b=iNJv4X0lFKAiQ+Mxmk23cKpfmfmPuZipnBEnVrkmwveUUjE7pyvE4B4rCvLE0mw9FjLSze17fVuCvaZ+PYUJCSWjZul39m5EUbn6ZXE9J0zL2fOel8B7kTFSz3+vQEvnE4ZHiwYQZ2DH4WZqtSlyv7/o6aHK29JHkNsfhHCrGQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744807622; c=relaxed/simple;
-	bh=D4eEpj/ycymL1dKwAiypTkZdxNwjEWty1bTxfH4ci8o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AvF8qwQYiU/8TL6VaW6FU8/yPeDkJJgnSVvATTaomZUaBeh5d9MAqOOAz/35iktR03nrJ4LNrgn2pRVM2sH2SzKUKP9hVcvu5vGv6za2e5j80zayLE+3Iv57nkDv+7nbh3kRe02wDlvCUtVh1rbhI6XuFLHW9O77ysGOXyqVPyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=TDiqHdHf; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	bh=LvJ12tKplLNrFrTCz4Wzqin22ujyIlOPSdlj12fSrN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p6c79JPwKqtOXmXDgcvRVoLY1XWr//82EF+0FRHX9E3pzXx0p6WkkqrSKfNQ1O0HpZPoWyENHVgaMFXykUfup+XXs6nZIFdMJ8DrmKxkKpERFWykekfTxKodQlYSyxKXRv2je2bW2vWcYcqmEQUp1SEqRurm/qDSnmSITzBNuvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufMbBZza; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="TDiqHdHf"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53GCkez973270922, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744807600; bh=D4eEpj/ycymL1dKwAiypTkZdxNwjEWty1bTxfH4ci8o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=TDiqHdHfwhWcItRyA/PlHV99qFXUiMmF1sEVg0UlzdmKXqUESuxOSQa3Tbc07b22v
-	 NKlWBh0bl1i9N+vxnvxwT6N7HosLzi77JvRnW5JMSUyg5CTPVmK2OfjSDWsOIqO3Lk
-	 ZEkRDWTVVHfZYZ6urCM73sRo3eo8NWZUIeK6A33CQk3i+2zfnjcsmZnpm3KZjkT8aY
-	 Vl4s8yQd8k0/jjiPzCp2I+mxO8n8SSuoNE53mA9SrbJ5DWTEnMpeanHhlRMebuiXTf
-	 dd5wk/pbdy8rbG4CFBrcSRY4zVTDB05siwPCG2iSLHddZioq8ylKquWp9QMTlAIUsQ
-	 1ki/mo75Pdquw==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53GCkez973270922
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 20:46:40 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 16 Apr 2025 20:46:41 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXDAG02.realtek.com.tw
- (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 16 Apr
- 2025 20:46:40 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
-        "kernel
- test robot" <lkp@intel.com>
-Subject: [PATCH net v2 2/3] rtase: Fix the compile warning reported by the kernel test robot
-Date: Wed, 16 Apr 2025 20:45:33 +0800
-Message-ID: <20250416124534.30167-3-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250416124534.30167-1-justinlai0215@realtek.com>
-References: <20250416124534.30167-1-justinlai0215@realtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufMbBZza"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 705C6C4CEE2;
+	Wed, 16 Apr 2025 12:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744807620;
+	bh=LvJ12tKplLNrFrTCz4Wzqin22ujyIlOPSdlj12fSrN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ufMbBZzaEUx30bSlUVP3sqOw//LJN3SAfJPd8tH3iTGtQ3tjSddJ5/M0RLqX4FSjT
+	 DhP7cnt0EWXxkA/8Xe3QuweEZl2iPLQwz6oQOWsWT0E+8G6+WOT5BUJP2zbTTKM91B
+	 xRY7Iu1ZfJ9LUnAMbZSLMQ51o3pObzL+uA/dz6TMyI1gIOh9d4PlQQ8s/CQFeGvX0t
+	 2Hf6RY7hq4jpgCpTCXEOjdIZk1FW+lQ/uS3Q36RpTrWzyM0EqTyZbanAomZaa+0LGs
+	 /m8dehnanFXVpzxyiJEZ6W89mnjJoTSwHGbF8OlQR0qI96XD99ls5QaMKTYVX6Fsqf
+	 sZOUnS9t3bOaA==
+Date: Wed, 16 Apr 2025 14:46:52 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 14/15] rust: opp: Extend OPP abstractions with
+ cpufreq support
+Message-ID: <Z_-mvB7hibFD4Q34@pollux>
+References: <cover.1744783509.git.viresh.kumar@linaro.org>
+ <a940d1b1a02d99fdc80ba8d0526c35a776854cb3.1744783509.git.viresh.kumar@linaro.org>
+ <Z_9v24SghlIhT62r@pollux>
+ <20250416095943.f3jxy55bamekscst@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXDAG02.realtek.com.tw (172.21.6.101)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416095943.f3jxy55bamekscst@vireshk-i7>
 
-Fix the following compile warning reported by the kernel test robot by
-increasing the size of ivec->name.
+On Wed, Apr 16, 2025 at 03:29:43PM +0530, Viresh Kumar wrote:
+> On 16-04-25, 10:52, Danilo Krummrich wrote:
+> > This config is needed quite often, it probably makes sense to move this code in
+> > its own Rust module, i.e.:
+> > 
+> > 	#[cfg(CONFIG_CPU_FREQ)]
+> > 	pub mod freq;
+> 
+> Like this ?
 
-drivers/net/ethernet/realtek/rtase/rtase_main.c: In function 'rtase_open':
->> drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:52: warning:
-'%i' directive output may be truncated writing between 1 and 10 bytes
-into a region of size between 7 and 22 [-Wformat-truncation=]
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-                                                     ^~
- drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:45: note:
- directive argument in the range [0, 2147483647]
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-                                              ^~~~~~~~~~
- drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:4: note:
- 'snprintf' output between 6 and 30 bytes into a destination of
- size 26
-     snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-       tp->dev->name, i);
-       ~~~~~~~~~~~~~~~~~
+Yes, I thought of a separate file, but I that should work as well.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.com/
-Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- drivers/net/ethernet/realtek/rtase/rtase.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
-index 2bbfcad613ab..1e63b5826da1 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase.h
-+++ b/drivers/net/ethernet/realtek/rtase/rtase.h
-@@ -259,7 +259,7 @@ union rtase_rx_desc {
- #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
- #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
- 
--#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
-+#define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 14)
- 
- struct rtase_int_vector {
- 	struct rtase_private *tp;
--- 
-2.34.1
-
+> 
+> diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+> index 734be8b6d0ef..f4cabe859c43 100644
+> --- a/rust/kernel/opp.rs
+> +++ b/rust/kernel/opp.rs
+> @@ -20,10 +20,67 @@
+>  };
+> 
+>  #[cfg(CONFIG_CPU_FREQ)]
+> -use crate::cpufreq;
+> +// Frequency table implementation.
+> +mod freq {
+> +    use crate::cpufreq;
+> +    use core::ops::Deref;
+> +    use super::*;
+> +
+> +    /// OPP frequency table.
+> +    ///
+> +    /// A [`cpufreq::Table`] created from [`Table`].
+> +    pub struct FreqTable {
+> +        dev: ARef<Device>,
+> +        ptr: *mut bindings::cpufreq_frequency_table,
+> +    }
+> +
+> +    impl FreqTable {
+> +        /// Creates a new instance of [`FreqTable`] from [`Table`].
+> +        pub(crate) fn new(table: &Table) -> Result<Self> {
+> +            let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
+> +
+> +            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+> +            // requirements.
+> +            to_result(unsafe {
+> +                bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
+> +            })?;
+> +
+> +            Ok(Self {
+> +                dev: table.dev.clone(),
+> +                ptr,
+> +            })
+> +        }
+> +
+> +        // Returns a reference to the underlying [`cpufreq::Table`].
+> +        #[inline]
+> +        fn table(&self) -> &cpufreq::Table {
+> +            // SAFETY: The `ptr` is guaranteed by the C code to be valid.
+> +            unsafe { cpufreq::Table::from_raw(self.ptr) }
+> +        }
+> +    }
+> +
+> +    impl Deref for FreqTable {
+> +        type Target = cpufreq::Table;
+> +
+> +        #[inline]
+> +        fn deref(&self) -> &Self::Target {
+> +            self.table()
+> +        }
+> +    }
+> +
+> +    impl Drop for FreqTable {
+> +        fn drop(&mut self) {
+> +            // SAFETY: The pointer was created via `dev_pm_opp_init_cpufreq_table`, and is only
+> +            // freed here.
+> +            unsafe {
+> +                bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw())
+> +            };
+> +        }
+> +    }
+> +}
+> 
+>  #[cfg(CONFIG_CPU_FREQ)]
+> -use core::ops::Deref;
+> +pub use freq::FreqTable;
+> 
+>  use core::{marker::PhantomData, ptr};
+> 
+> @@ -502,60 +559,6 @@ extern "C" fn config_regulators(
+>      }
+>  }
+> 
+> -/// OPP frequency table.
+> -///
+> -/// A [`cpufreq::Table`] created from [`Table`].
+> -#[cfg(CONFIG_CPU_FREQ)]
+> -pub struct FreqTable {
+> -    dev: ARef<Device>,
+> -    ptr: *mut bindings::cpufreq_frequency_table,
+> -}
+> -
+> -#[cfg(CONFIG_CPU_FREQ)]
+> -impl FreqTable {
+> -    /// Creates a new instance of [`FreqTable`] from [`Table`].
+> -    fn new(table: &Table) -> Result<Self> {
+> -        let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
+> -
+> -        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
+> -        // requirements.
+> -        to_result(unsafe {
+> -            bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
+> -        })?;
+> -
+> -        Ok(Self {
+> -            dev: table.dev.clone(),
+> -            ptr,
+> -        })
+> -    }
+> -
+> -    // Returns a reference to the underlying [`cpufreq::Table`].
+> -    #[inline]
+> -    fn table(&self) -> &cpufreq::Table {
+> -        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
+> -        unsafe { cpufreq::Table::from_raw(self.ptr) }
+> -    }
+> -}
+> -
+> -#[cfg(CONFIG_CPU_FREQ)]
+> -impl Deref for FreqTable {
+> -    type Target = cpufreq::Table;
+> -
+> -    #[inline]
+> -    fn deref(&self) -> &Self::Target {
+> -        self.table()
+> -    }
+> -}
+> -
+> -#[cfg(CONFIG_CPU_FREQ)]
+> -impl Drop for FreqTable {
+> -    fn drop(&mut self) {
+> -        // SAFETY: The pointer was created via `dev_pm_opp_init_cpufreq_table`, and is only freed
+> -        // here.
+> -        unsafe { bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw()) };
+> -    }
+> -}
+> -
+>  /// A reference-counted OPP table.
+>  ///
+>  /// Rust abstraction for the C `struct opp_table`.
+> 
+> -- 
+> viresh
