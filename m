@@ -1,186 +1,103 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14B1230BD9;
-	Wed, 16 Apr 2025 11:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F552746D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744801997; cv=none; b=CLfp1iKWlJC09Iz4JzOFTROp6U+keCa9/MukFBexJHXjCXk3DrF9+Df+3Si1cLBISA85Jnj1tTsQe+RwV81uoP4OdkbJmOcghOsdwfbUJ+LwnDfmRkDtJOkmuG7HGWthrufm5kvk6mymwDSGIL749ifYTs3PseQIsy+QzH28Hs4=
+	t=1744802047; cv=none; b=lu8GPRNu3ErgAkAqL5Kj1bpTkOvmcuTklXbuPoTgTCSacpERqZ6bG8LY7+42sCg48HQ1X3pRPx9YtGNpMbCHR790LP1IRjgSrrLlMkIPn7RBQepcYx3OVvXsJ0u7O3iK+KYuSZCxw6UqF3F+97Dbz2FnM6OVsG8m7FEXBroeXnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744801997; c=relaxed/simple;
-	bh=sOc+D0tolTcUGJ9KPHoXk+kBoSFT8/GUfkzNFqzDPzE=;
+	s=arc-20240116; t=1744802047; c=relaxed/simple;
+	bh=V0bcAVcIBXJUMVNToi/c3WDygqPJpKfs0dNrgJ/Ax5Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BYE8H19GZazTdwipOnuRDuktUJYmo8b9TwIoUMgOaelL7hW8kzzggva/A6LzNMb6grnwKSC7Sr6DCXMC6eY6PiayBTP9yPqaaiYw9iGlldm04uEGI6dPnp6susG4oT/A37dzrTCpLYpBkmfMXL+lbmj5/MKOhqJ8+5YZOSITRk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-5262475372eso2730321e0c.2;
-        Wed, 16 Apr 2025 04:13:14 -0700 (PDT)
+	 To:Cc:Content-Type; b=fr5TA8KgHQlJe+F/F6k/BhtDc2CDkKeBkhx1b/PRao8+APWgycTvi0U5zXMOpmIy/C2Q5I3QdlkU4TOJrRZPftwCdo/6bnTe5abiCHYPDbbi2Ci6giQqVJHfP7QU3nXRCwEvUhlycj99XvNhnwxhVquBXybbk5GzJvoexRW6kC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YB1QVpw3; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YB1QVpw3"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so6777911fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744802043; x=1745406843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V0bcAVcIBXJUMVNToi/c3WDygqPJpKfs0dNrgJ/Ax5Y=;
+        b=YB1QVpw3z8M//X3cWp1kZ2s5FqGb/F66hp8xvuLklA/BWrLpf9Yu5y9YQ47CmrHGya
+         cXkRAer3Xs1NiGZNF6rLHQmMIRUUtBC5zEoG7BJHOMQhqPneEXlc1R58pkTxRSm07WrC
+         rJyIw1s4b3eJYBhCncFPmitxfgp7eIW/MfKYkC6yhF63myhf5Tp6vt52urUxBaUF5GcF
+         4vT7hS/7b5DcnBlxRKC9GFMMpmdvsl2h9pq87Yl7rHLJgxie4L3OyfHAYCArePhdF21Y
+         94Rx/cmBi5RdMFfkAQugSzBkTcrKlvuzDpZT8Drq507USPjsK615UXztsAqTz6h3Kr2m
+         05vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744801992; x=1745406792;
+        d=1e100.net; s=20230601; t=1744802043; x=1745406843;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MocR616+VqlYQgKAO9looh+5bl/oUxpGHWgrj7ut1gY=;
-        b=YvNMRqd/Ri2E6uY5dZjEebDTvHCDbu6Rq+M/KmZ5qkcYrfYfFwG/aExDWVExRBHntA
-         QVDk4oOF+TmRSIzZ+6fIp0aDRf4LWFkNBSQ0LgWv2xcDnnyi9W6T00c7vnlRJF710CTi
-         8wdwHQY0+kCLEpzUBuGlIygk7NkHhxyLVLiiJdAWlzpg7YriFPKA7hg5cOHbLu05yZ/v
-         o33PpKrv9A3jQ5J8D30IJZ/VfkQhwzmo5Evp/CzVc8EpagvWXvDxahvb9vOfmi0B9O2o
-         RDALX9c3q7gVePwldpokH7C7UIjOLXuAkHt3YOlZMM+AgpPBrB61g0BMtjvpAs9bAfo1
-         wLnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxGVyaw2TJMtrRjThVoDGaaCCkXmkdxpSCLRFTzDDIEtrbt82J2PDL6qDRTWmGdVjCuHWQeP6qo6tX@vger.kernel.org, AJvYcCX894TN7okdCUn2QDEqX2uGO3OEJTs0uHUcW49j/3HhPmJJtIAm2ssMGIcFRIgX1zH9Yb7TfW5e1V4LyXWL@vger.kernel.org, AJvYcCXeVfS7kRwT44Ir0vQkk9IVhct4WHwihZQD/j8p0QFb2JyYKHp9LrAJnKhMVrexeHI9mOFUQ7MUHtZs@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjeC2RdXlNzHSQRGHKu3wtCk3cWS+dTevdI6zfbawqghqwKvPj
-	x4qd256D6cve77k5yQGKbVygqjjcHY3bLw3z3+YVncN4e60hsEPKUo/hiA5x
-X-Gm-Gg: ASbGncucB9DqEfxQo+9lnt27jtIFkCyQTk/O7wbezF/eZ+V9mpN9alEzB8J3r/nfdWT
-	b9H+YGR/cS064VZ0YYMcNt5vnR+fKfMlnw+1mGpGiewNL9osi2qbF+sczm+hLPV/NLbyWegAWvH
-	xkNLm3/S2l766uBsTr9RQYXtH/MrdR5RP0dBvbDewona2VEc6HNO85ahBVdbWyOAcbC7+7zEKI+
-	3dRBDQeHf4ICD5xYqBigWpRHq9qVkNCW2QviI/l5a3kqrV2CIVDknVjWglUmtpQyEN35/ykDAxM
-	2jQQdlSt738EKAoeW30S1ajE/PBkTBC6GIsrO1xB325iQgff4tKUL28NPUNIrWxe9/EyOaXojds
-	2V/k=
-X-Google-Smtp-Source: AGHT+IEmyT0XqqO/RVFmwLEG/URFxo9rKk0kXubHpUh/sz4yC3NCBWMjvghdHBXqXXgMwseAgRUbqg==
-X-Received: by 2002:a05:6122:3bc2:b0:520:5a87:66eb with SMTP id 71dfb90a1353d-5290debefcfmr557013e0c.3.1744801991987;
-        Wed, 16 Apr 2025 04:13:11 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd9b3desm3044757e0c.23.2025.04.16.04.13.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 04:13:11 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so2558267241.1;
-        Wed, 16 Apr 2025 04:13:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUeVEAKkO6nWZlWYQ6SKRb5cJQyGCYvXAyeWQIuwafJSbx5eP/J4io83z5G31xVC1MuRhIVdMEcAP5l77yK@vger.kernel.org, AJvYcCUzujGHKzpb2ouAmmtjjw5b0d2L6F4Ai4QKysZ6ritU7UYSgoS5Xb+gLyMgzCsdKccjZPRecpJubHnl@vger.kernel.org, AJvYcCXGswo+ZQ7Y/KL/H70uFWtJys7zIYzzQP4XvNc87cBLtXFiKka/gNiAmL6AnfhFB7PstvSGSj8E/x40@vger.kernel.org
-X-Received: by 2002:a05:6102:2991:b0:4c3:9b0:9e6b with SMTP id
- ada2fe7eead31-4cb591e784bmr414553137.10.1744801990755; Wed, 16 Apr 2025
- 04:13:10 -0700 (PDT)
+        bh=V0bcAVcIBXJUMVNToi/c3WDygqPJpKfs0dNrgJ/Ax5Y=;
+        b=BhjgcOg2Fo53qzrnkcwg4O4rjDAyvpxGM9BA+VSIsExkg+cT/0XbdYS8u5OsFQOR1M
+         bwVjpI8Hga13uDofv/lXo6ik+taSbGnhdxNMjubovl9Lc0uh3ivEylStOu/6k/BsSUxf
+         Hl1ah8qDqqLxaAr1brOpW2tup6fR+rNNkQC805RP/V2/I2vzaaQp3KjYQZItVTO95BJ8
+         Lgce+5UiQS6mbTCKfamgnCC3kqXmTJPlRvG1ww91IjgqvjKksNAwmB4asrweAgivLZgA
+         VYEkY0oN3p3D72DOiYWOg7r1YylkMOVfX2o2OB9sPvrG7YVjB/CGv0WmutNR0jTGkWfb
+         E6sA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9z+93LiX3u2/m3kSI3cK+uJ+4zpBJkuBfbYm/kORcx3cq1bFk+lkdr2Q0HIUpcpco7GX3FMTIMHvFxbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLRHKuSfPQX2Hx7rVMFCDFqrX0FKqvpgeOTuqQREFgtb2lLNWT
+	796vWIbU6gptaMKvEUamw+Prlaa9FXlehPxjFqYxMWwIR/mFOsmW2czOhIFBaQjTatbz0lMGJyY
+	61TFbVUOU3V79QvtaC0PSpGlcgvfsgqmWCZhUvw==
+X-Gm-Gg: ASbGncslKFEdMlh7uQ/2F9fGWc6pO+g95SZgX+OyG75Auaj0lQV8nVS2F2EU53y2maL
+	qJ7FT9wnxN7As+nlAPhEgJ5ZwwimvIWfKSACEbYaB5JgliYFpbaRZS9mYNwT/icONxN0mFLUMmz
+	k76RYUYCq1h3SSpErxRmtZfg==
+X-Google-Smtp-Source: AGHT+IGoVa8oKz/9H6qwN720SjI6iTNhQ//CNlCY1oUOFqYVxtOvYaL8+BRnRaElkmRz7KRCi++4w5Het53XuVm3gb8=
+X-Received: by 2002:a05:651c:892:b0:30b:fc3a:5c49 with SMTP id
+ 38308e7fff4ca-3107f6cedf2mr5715001fa.9.1744802043437; Wed, 16 Apr 2025
+ 04:14:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250109-enable-rtc-v3-0-f003e8144419@baylibre.com>
- <20250109-enable-rtc-v3-3-f003e8144419@baylibre.com> <erttkpna2hzg7zuddzlocaou2wqcwmgcxfhldwdt55yleie6dm@nfg374fv66fq>
-In-Reply-To: <erttkpna2hzg7zuddzlocaou2wqcwmgcxfhldwdt55yleie6dm@nfg374fv66fq>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 16 Apr 2025 13:12:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX3u97MtDiPuJgFtO5YTRuLeDHgs4tx7004CScLO11WkQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHjMszLt95drNgnUajxAYkWqRme3b0HzHSYcdCgcByHGIiSYzx7n6CDpNY
-Message-ID: <CAMuHMdX3u97MtDiPuJgFtO5YTRuLeDHgs4tx7004CScLO11WkQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/5] rtc: Fix the RTC time comparison issues adding cast
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Alexandre Mergnat <amergnat@baylibre.com>, Eddie Huang <eddie.huang@mediatek.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
+References: <20250414133219.107455-1-ross.stutterheim@garmin.com> <20250414142140.131756-1-ross.stutterheim@garmin.com>
+In-Reply-To: <20250414142140.131756-1-ross.stutterheim@garmin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 13:13:52 +0200
+X-Gm-Features: ATxdqUEiBb754m4GSLXFUAZJuTsxVh_7GqMvgbsAw6DFPoC5SezWgynWEt0JdL4
+Message-ID: <CACRpkdbYZAt=gs=Fqq_VvOzpmUHiwoaQuGy9e8nfydqjdM4NyQ@mail.gmail.com>
+Subject: Re: [PATCH v2] arm/memremap: fix arch_memremap_can_ram_remap()
+To: Ross Stutterheim <ross.stutterheim@garmin.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Russell King <linux@armlinux.org.uk>, Mike Rapoport <rppt@linux.ibm.com>, ross.sweng@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Uwe,
+On Mon, Apr 14, 2025 at 4:32=E2=80=AFPM Ross Stutterheim
+<ross.stutterheim@garmin.com> wrote:
 
-On Tue, 15 Apr 2025 at 00:30, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@baylibre.com> wrote:
-> On Fri, Apr 11, 2025 at 02:35:56PM +0200, Alexandre Mergnat wrote:
-> > The RTC subsystem was experiencing comparison issues between signed and
-> > unsigned time values. When comparing time64_t variables (signed) with
-> > potentially unsigned range values, incorrect results could occur leadin=
-g
-> > to runtime errors.
-> >
-> > Adds explicit type casts to time64_t for critical RTC time comparisons
-> > in both class.c and interface.c files. The changes ensure proper
-> > handling of negative time values during range validation and offset
-> > calculations, particularly when dealing with timestamps before 1970.
-> >
-> > The previous implementation might incorrectly interpret negative values
-> > as extremely large positive values, causing unexpected behavior in the
-> > RTC hardware abstraction logic.
-> >
-> > Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
-> > ---
-> >  drivers/rtc/class.c     | 6 +++---
-> >  drivers/rtc/interface.c | 8 ++++----
-> >  2 files changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-> > index e31fa0ad127e9..1ee3f609f92ea 100644
-> > --- a/drivers/rtc/class.c
-> > +++ b/drivers/rtc/class.c
-> > @@ -282,7 +282,7 @@ static void rtc_device_get_offset(struct rtc_device=
- *rtc)
-> >        * then we can not expand the RTC range by adding or subtracting =
-one
-> >        * offset.
-> >        */
-> > -     if (rtc->range_min =3D=3D rtc->range_max)
-> > +     if (rtc->range_min =3D=3D (time64_t)rtc->range_max)
-> >               return;
+> commit 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure
+> presence of linear map") added the definition of
+> arch_memremap_can_ram_remap() for arm[64] specific filtering of what page=
+s
+> can be used from the linear mapping. memblock_is_map_memory() was called
+> with the pfn of the address given to arch_memremap_can_ram_remap();
+> however, memblock_is_map_memory() expects to be given an address for arm,
+> not a pfn.
 >
-> For which values of range_min and range_max does this change result in a
-> different semantic?
+> This results in calls to memremap() returning a newly mapped area when
+> it should return an address in the existing linear mapping.
 >
-> Trying to answer that question myself I wrote two functions:
+> Fix this by removing the address to pfn translation and pass the
+> address directly.
 >
->         #include <stdint.h>
->
->         int compare_unsigned(uint64_t a, int64_t b)
->         {
->                 return a =3D=3D b;
->         }
->
->         int compare_signed(uint64_t a, int64_t b)
->         {
->                 return (int64_t)a =3D=3D b;
->         }
->
-> When I compile this (with gcc -Os) the assembly for both functions is
-> the same (tested for x86_64 and arm32).
->
-> >       ret =3D device_property_read_u32(rtc->dev.parent, "start-year",
-> > @@ -299,7 +299,7 @@ static void rtc_device_get_offset(struct rtc_device=
- *rtc)
-> >       if (!rtc->set_start_time)
-> >               return;
-> >
-> > -     range_secs =3D rtc->range_max - rtc->range_min + 1;
-> > +     range_secs =3D (time64_t)rtc->range_max - rtc->range_min + 1;
->
-> In the case where no overflow (or underflow) happens, the result is the
-> same, isn't it? If there is an overflow, the unsigned variant is
-> probably the better choice because overflow for signed variables is
-> undefined behaviour (UB).
->
-> Respective demo program looks as follows:
->
->         #include <stdint.h>
->
->         int test_unsigned(uint64_t a)
->         {
->                 return a + 3 > a;
->         }
->
->         int test_signed(int64_t a)
->         {
->                 return a + 3 > a;
->         }
->
-> Using again `gcc -Os`, the signed variant is compiled to a function that
-> returns true unconditionally while the unsigned one implements the
-> expected semantic.
+> Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure=
+ presence of linear map")
+> Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
 
-Hence that is why the kernel is compiled with -fwrapv...
+OMG
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Gr{oetje,eeting}s,
+Also add Cc: stable@vger.kernel.org as pointed out by Catalin.
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Yours,
+Linus Walleij
