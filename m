@@ -1,91 +1,146 @@
-Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C824229B38;
-	Wed, 16 Apr 2025 22:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B418245008
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843833; cv=none; b=RxyfIeTxG5LU7pZOdneBclZBJBOhXOzvy4xZ/n9RirfQ92EPYk72RDqWG018ZRKJey5PJgV//qwZFTIyhywYwwVUb0nKN9UFfBjQPUcDPpx+agI2/W6JIdYYCg0dBkA1PGZudS6c7DsNnoltrR39XqCfbJ0pKuzm/pCG3RduN20=
+	t=1744843914; cv=none; b=KX4vJcq1AP8xc6qzRnm3in7TodRz3Zz9aHbnGCPFEte1VpRfG9s4vS7f7+5IrL0yq5xJITECgsoDzNSxkkybbDfqH/t+5ja1eJJtQuKUYpZrVHOqXwuCOOOSFbPty6b2CoSuciXX6/E584yF38dtu4962c786X5qkCVjGyVmg4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843833; c=relaxed/simple;
-	bh=AXMAzwkb+HhD9cQprHeyvIO1TBk1VNbKSRHG42FWkOY=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jYZkAFCkLTE51Rhi1bBdKHVnjXrYAwO9aqTThFHfNj8aEjw4WwqdMIUdgCXjZn4rJiwSNjM9ZTZ46hkMB5RRh218BGUhQdZb63zjweuyyksNt4Nc0M2qoGzDbpjXMyAMQaTbd22IYNDBEA3WWQEwyWEHbW9gIlqDdlpvCTvSElc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=iqMHRKiQ; arc=none smtp.client-ip=79.135.106.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744843914; c=relaxed/simple;
+	bh=IoJJSCOlCHUpZacswypeEIdZhmajgDkZrYjCwe4+91k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MmDRq10w1qM0BzRLyfhKtTYhg7H2cZr5Oo+XG58SRp1S0Z7HyVyJ1iE+TQ9fpc0iRaXkP4Pjuttm4cGF9O+mlXD3zrqW/j/VDd7QAzzfn291+h4+16bjt0DmrnYv8MqDusqBzkgM72zG8sj+6D1/vWbyVv5ZdrkKkB/ml8I7XbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b5/XzFrA; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="iqMHRKiQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744843821; x=1745103021;
-	bh=AXMAzwkb+HhD9cQprHeyvIO1TBk1VNbKSRHG42FWkOY=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=iqMHRKiQ4XVtxPLK42zL6NOQgbPwgtygNBQobi+m5vf+9O5RGZIKJ3IQbnQ5mY4zL
-	 fKsOqi9PAZLxoYGY7fHHzcKvqYzbPMk8WCtoI3S1+2kIV/e7ENRFFn3m0yp/BBO0a+
-	 VSqOsGb9tts42HjqqCE0VWAdIupF8MPQnjjqUQFSRS90ycXlbD1hdk9r0YVxzI7bLW
-	 9DhJPuFkTE7v6e9dV9Bq4c+BKKePaKApBp9A0xliQSpcfe3SsZ679x8M+jsYyXsJui
-	 mzEIdn+DAmQmqIy6VAj/vngbILqEW/EnGJxUGPcI5fT0jnUjNkAf3hmPjM2UlpKq5V
-	 Z3rIF9RRVXAJg==
-Date: Wed, 16 Apr 2025 22:50:15 +0000
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rust: pin-init: synchronize README.md
-Message-ID: <20250416225002.25253-1-benno.lossin@proton.me>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: f60674c2c69acddae72483bc6c1bad1596e87cd1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5/XzFrA"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf3192d8bso12335e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744843911; x=1745448711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xgiFznxyXwNZAjYFXBtqbEchRNoGqLP4Udb3wMlePFc=;
+        b=b5/XzFrAbTLxITj8fEBhq+9TXE7M2zoaCl27FWagkLvqpsGuFKZYBr15J8SQArMn2X
+         PPpOgftSvgtG52poAdg86cS6H1cWhaioEbDgmCFtUH+VpMM0jtAnWrye9ZWXLodMfrDt
+         wEJmXouc254BJfa7SMDIwU0fX7vg3dP2tRJpGteI+93EUDDTb/9Acy6KFUtYPRXv+MNr
+         b0UCqUB9Via5KtkhSjK+63mulH9PocDSlsx2pV7hDJsl/vsiSerrSxBBIC+Lnizuyn9Z
+         3MWviFf41F7XxykpbM6AzcywbT7pYwmQwkH9AGEiHG7Rh6aqxeqkAbScYAmQBqsmUs++
+         pKPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744843911; x=1745448711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xgiFznxyXwNZAjYFXBtqbEchRNoGqLP4Udb3wMlePFc=;
+        b=k44KaG0ZfLoAklBP7NlNpOniDC1fyBktf63lnvJT04Dv4vKt4IKRblWTVAcfzmp8fv
+         gXoQyL/1UO3mCVCUvwjgi7to5RQBHHTR1X6HPTHhK/PMds+rg4EecVKJy9ZNgwzpjx3w
+         MmzeJrF4DmuSjCvYmCN3BnSuDPl5k49apc9lNmcHcRoKU+zJ/kqy5VDTtmxTrXNDuY5w
+         RUmLO6cW6tecDeK71chM3427L9slmiysUTn6ZVigMbJOwUsgTp79EhWXdiAEf+hsP9im
+         fTDzC0jnFTNpOqjW+SWPiY2tu9hAaf5Yc6tYjpRL4XHr2rpAlWxIIu4vdFBSLO6FfPto
+         RDmA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3V2JOmmNqRtWGsxN7j7RKC4ZTtlXm+0aPTtDyQEUfo0XFV2xcj0mUz9MhpZFjAl93oZM/Ka8Lc8ddhNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXb7LH77HPoxg8hImJVF/RKEZqIV1aWRKHDSUuTttMtEwBoqzb
+	N+ZeyI/kCHlNYEEk73XbmDlEbQkoia7rURsEmTu60EDo3VD2J9TrBHhwjFNhcnbFbMl+oEZjLyL
+	fkk26PjJ9X0x5mFw6/IsXfo0ML0xl7xyYa9Fh
+X-Gm-Gg: ASbGncsdaR/1EEEoiHqMetboOcN7aKHFjFo1Cw5ErGURVg5dk1oH0mXXGg8DxnGjwJb
+	O4WkRfNyB6zix+bpEuN7FKdEKqCWNewtk5PMXxHqoEIesNT7Z0tl+9pCUOU0aY/aGJY/SwvUt+p
+	Kla+1//v3y883Bfsnmr59ogP8gx1DNO1JCCXm+DhfWE2NXWXwVR4JK4GHeRhwDqA==
+X-Google-Smtp-Source: AGHT+IHXWGWfGEo9AOua5ZBzOd3bdHf6i/F7EC52V5Mq1yV8M20CMUTcOJBN7M+4okB7URR+SAXHkZhutXlJ3SZFaXo=
+X-Received: by 2002:a05:600c:3509:b0:43b:b106:bb1c with SMTP id
+ 5b1f17b1804b1-44062a3ef31mr505705e9.0.1744843910585; Wed, 16 Apr 2025
+ 15:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250414225227.3642618-1-tjmercier@google.com>
+ <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
+In-Reply-To: <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Wed, 16 Apr 2025 15:51:38 -0700
+X-Gm-Features: ATxdqUF2F5Lgo5RIa4ABADC_SqcPejYG0M9lcwCAu9guCcJWCuAb8fIDqfWHFPg
+Message-ID: <CABdmKX0bgxZFYuvQvQPK0AnAHEE3FebY_eA1+Vo=ScH1MbfzMg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
+To: Song Liu <song@kernel.org>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-The upstream version of the `README.md` differs by this change, so
-synchronize it.
+On Wed, Apr 16, 2025 at 3:02=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+>
+> On Mon, Apr 14, 2025 at 3:53=E2=80=AFPM T.J. Mercier <tjmercier@google.co=
+m> wrote:
+> [...]
+> > +
+> > +BTF_ID_LIST_GLOBAL_SINGLE(bpf_dmabuf_btf_id, struct, dma_buf)
+> > +DEFINE_BPF_ITER_FUNC(dmabuf, struct bpf_iter_meta *meta, struct dma_bu=
+f *dmabuf)
+> > +
+> > +static void *dmabuf_iter_seq_start(struct seq_file *seq, loff_t *pos)
+> > +{
+> > +       struct dma_buf *dmabuf, *ret =3D NULL;
+> > +
+> > +       if (*pos) {
+> > +               *pos =3D 0;
+> > +               return NULL;
+> > +       }
+> > +       /* Look for the first buffer we can obtain a reference to.
+> > +        * The list mutex does not protect a dmabuf's refcount, so it c=
+an be
+> > +        * zeroed while we are iterating. Therefore we cannot call get_=
+dma_buf()
+> > +        * since the caller of this program may not already own a refer=
+ence to
+> > +        * the buffer.
+> > +        */
+> > +       mutex_lock(&dmabuf_debugfs_list_mutex);
+> > +       list_for_each_entry(dmabuf, &dmabuf_debugfs_list, list_node) {
+> > +               if (file_ref_get(&dmabuf->file->f_ref)) {
+> > +                       ret =3D dmabuf;
+> > +                       break;
+> > +               }
+> > +       }
+> > +       mutex_unlock(&dmabuf_debugfs_list_mutex);
+>
+> IIUC, the iterator simply traverses elements in a linked list. I feel it =
+is
+> an overkill to implement a new BPF iterator for it.
 
-The reason that this wasn't in the original sync patch is that this was
-a late change that I didn't port back to the kernel repo, since it was
-generated by `cargo rdme`.
+Like other BPF iterators such as kmem_cache_iter or task_iter.
+Cgroup_iter iterates trees instead of lists. This is iterating over
+kernel objects just like the docs say, "A BPF iterator is a type of
+BPF program that allows users to iterate over specific types of kernel
+objects". More complicated iteration should not be a requirement here.
 
-Signed-off-by: Benno Lossin <benno.lossin@proton.me>
----
- rust/pin-init/README.md | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> Maybe we simply
+> use debugging tools like crash or drgn for this? The access with
+> these tools will not be protected by the mutex. But from my personal
+> experience, this is not a big issue for user space debugging tools.
 
-diff --git a/rust/pin-init/README.md b/rust/pin-init/README.md
-index 3d04796b212b..24d0f0a3f8fb 100644
---- a/rust/pin-init/README.md
-+++ b/rust/pin-init/README.md
-@@ -218,11 +218,13 @@ the `kernel` crate. The [`sync`] module is a good sta=
-rting point.
- [pinning]: https://doc.rust-lang.org/std/pin/index.html
- [structurally pinned fields]: https://doc.rust-lang.org/std/pin/index.html=
-#pinning-is-structural-for-field
- [stack]: https://docs.rs/pin-init/latest/pin_init/macro.stack_pin_init.htm=
-l
--[`Arc<T>`]: https://doc.rust-lang.org/stable/alloc/sync/struct.Arc.html
--[`Box<T>`]: https://doc.rust-lang.org/stable/alloc/boxed/struct.Box.html
- [`impl PinInit<Foo>`]: https://docs.rs/pin-init/latest/pin_init/trait.PinI=
-nit.html
- [`impl PinInit<T, E>`]: https://docs.rs/pin-init/latest/pin_init/trait.Pin=
-Init.html
- [`impl Init<T, E>`]: https://docs.rs/pin-init/latest/pin_init/trait.Init.h=
-tml
- [Rust-for-Linux]: https://rust-for-linux.com/
-=20
- <!-- cargo-rdme end -->
-+
-+<!-- These links are not picked up by cargo-rdme, since they are behind cf=
-gs... -->
-+[`Arc<T>`]: https://doc.rust-lang.org/stable/alloc/sync/struct.Arc.html
-+[`Box<T>`]: https://doc.rust-lang.org/stable/alloc/boxed/struct.Box.html
+drgn is *way* too slow, and even if it weren't the dependencies for
+running it aren't available. crash needs debug symbols which also
+aren't available on user builds. This is not just for manual
+debugging, it's for reporting memory use in production. Or anything
+else someone might care to extract like attachment info or refcounts.
 
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
---=20
-2.48.1
-
-
+> Thanks,
+> Song
+>
+>
+> > +
+> > +       return ret;
+> > +}
