@@ -1,122 +1,168 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530E01BC9E2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE03B235BFF;
+	Wed, 16 Apr 2025 10:40:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744800020; cv=none; b=S8IECOePiW+4Gs6YnQnm9ZVfK8c8DiCrL4MjgO5jzZNimi0Tuu4FwBz1zJhl70gBAaxV0PssLCMTbMbJL7s+k3pO+nhoMEYzYbc9r9KZcKo2fq2fuo3CLOAk47oTi6wj58FUThvGA0cOhttKrbD2bweFjqich1BTTNmNdUI0+uQ=
+	t=1744800026; cv=none; b=P+eJNVaJZ/c16dq9dAyR1Lq1Y5DKvYL2pLWNNA3DGfdZICjcsbQsdr5SJfl1yydpfovusHgSMhLSyytZqoj+bP4d0f2tc+C88Id6o3/+oGKmJp5GsMcMdj+Fou2iNEu8I0tzleENzNalTa0c6D0i1fictHzLtWupFPwZ9VeoYx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744800020; c=relaxed/simple;
-	bh=AW7LAXhV4M8nrRRBsTVlNww4j59JMk/7529JME2B/rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZe7rAENE6mgz94giu6Y6WDLDxmrZKQlbDioXn+APcNSyZlgBdSoYh5oGLf4XWO96XhFA16ei28mIuKmJ9oBIVbA+cMl80CMdUarBeqjwNowjR5lXARHd+UaPu0Wh+tc/8o+tmB/y3SlhGlAFHGHuWT1vvYkZg/l215KF+BKvpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JD+HC2/K; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744800026; c=relaxed/simple;
+	bh=fXeZ9vQLNT9oO0trkSA2nlDeHAA0eITiPzNU3LLWSHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5yXgZIX5AtbGTGVscAw55FrcBIOWURGoEU6xKEt1gtK0wYciSy2T26f3wzqyqJdkiHzgR3iDOABhIqkEjt+BBs0+2KetRsdoE/CBSp0Sq+6XYzcXjYBXRWcobZbYQAvXUy2NyEiqhvcfT3/SJHeifL0C6UUTdPbm8hFHiPk5js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cQ48uEDa; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JD+HC2/K"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736e52948ebso7448693b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:40:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQ48uEDa"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39bf44be22fso4266855f8f.0;
+        Wed, 16 Apr 2025 03:40:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744800018; x=1745404818; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ttWNacvPGMYQA86vkqzo9EZOaHGhJM4Jor7D4v7bz+0=;
-        b=JD+HC2/KLl5Kw1IwDPOQX1FlAefqYt5X4wCei0hd2eRydlFAvDFGe5D872rawwIKpb
-         tp5hIEPbOxZdeMzAsYCu9B7HUXtxXErxMBAqaCtE6NpMOP+epDQIx6bTe8VSaQThnFvX
-         YNgbTWwtKQ258NojH3FFi+DYLcIWIeEXFTReA9k89RMiOV7csOOHBkWMXGtY0slfGQ7f
-         lLTOKdoPwDdrSTTXLhqagSTfbp0wr70b+A9Dk0vj+SlqbFNJX9rGdHKAKeEXg549PWp1
-         Y2Vb4Ta8yi3b66F6coUD0kfIMJXDTOpBbnqaoRL50Lv1YM+3yMCPYV8oCmCh7KZQsRYZ
-         hnyQ==
+        d=gmail.com; s=20230601; t=1744800023; x=1745404823; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mv5JrbOdws3HwC8g5+UOFGbdPAGiQtrVxdnxmWTTx/I=;
+        b=cQ48uEDay4YcSkPl3QcHdA9jkpMc8HYY501yHntKuaWovoiTFzML4Y/zcSuKPxvfA8
+         vieD0+13foj2EKMDXBELL3eBDxtpORo1ufOSo4IWSeDIyWeMIirmBp7tGVbQ1qXCIqKB
+         mLDJ1PJSRQ+mGaCc6JEXGxKn5XCdT1SkP1JcpB1gjQli83mGWxNc/i12L8SFnfgXfGjU
+         0uol4SahMUtPH5OuekDb2zSTyUv5q+s1WsIcdTpjDY+X6r1UAzFPQXwKyS8hg+Qaglmg
+         j2lFbUmEQ0xAE4ATQxjjezdRKGJevllurAdikTvx/1b5UfAoUjBPpIisu+UnIsgBP3Du
+         Yrkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744800018; x=1745404818;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ttWNacvPGMYQA86vkqzo9EZOaHGhJM4Jor7D4v7bz+0=;
-        b=CgJZk4qX0gedoj60xTEhlyBZ9fjxxLlrm+/RdyCsFCK8zhPFBX1eUAi/i+1BHjLOGZ
-         eWugaEt4e3EWEYDjEbihusX2Tf4100pIKTJGd6Fp1IUXJtfjAY5zXHM41/4psKNyw/WV
-         DaKsP8YiAxDp6dn5vuxmw/Xr0mYW+abfgxoRqXIKEwb5LoSmCzE/OYvVN1SJJmaQ1n89
-         C2w8ZIOwmeOJ31YK8Ezjr4c0L4bwNxEsW9zzVaogdoaDCOpGXNxR7Kk00jHbpxVhwEI+
-         uU7ngHgIRjNd0PUi/lyovBizcMRSFz7UW+XM2WyswKiQfYCTzRdQzn0fJMfdQh+kLVve
-         rnFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+8WNit0iAvk/28HJ4Cr86R0t/9QHHlR2bLJBh9G4NSWquU3fp30jXjTXE8qwqmc+4/nLo5Vl2mWnVJTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQZ38HDQLV2JQa3rApLlS78Rq6kCdQre1mel5d50I7n1anEgJW
-	NVG99Wdq206CRgqH/JPYDgq5Tqs4dUUCwnm5xxjI7ZW4a8i4NTPHS82uiXCVFkE=
-X-Gm-Gg: ASbGnctAUJ3OBDcp42B+XGHeZbMV1cajvRLoRUUTa1EKULwgAyPPRV3qA6DKpadM5SJ
-	bht2T7/B725AdQGR5RA+qnxBJ0P69PXE1ep7aSbaS8BEnOlaDdS6uBsvFdYbAdzeXAJeV/DN1Rm
-	5x1m1laUEu7a+9YsnHbk7hSZtuhiZv0z7AXRhefBpIJz12u5u6frCRu/PaKke6tt04iuwe6YzWi
-	8V4szPL/ZHG0QmU71BXD4zYnwkv/MMYYNTwkXt1U4VNk0LRVtCa/el3zbGVK4IsHauQj4wC49ZM
-	jRhmjClLkfQ5odmS0cLF6Ptcgxs63WsAyjKQsReF4g==
-X-Google-Smtp-Source: AGHT+IGwBbJAub8B5aJaGw+Dq2HNzt5OaEsdk5WiMT3ZEcrD7+h/HrHX+IN/nBZbxfI2sbK6SePbFw==
-X-Received: by 2002:a05:6a20:9c8a:b0:1f5:8eb1:d5d2 with SMTP id adf61e73a8af0-203b3e90173mr1985396637.13.1744800018636;
-        Wed, 16 Apr 2025 03:40:18 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b2221e78csm808883a12.73.2025.04.16.03.40.17
+        d=1e100.net; s=20230601; t=1744800023; x=1745404823;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mv5JrbOdws3HwC8g5+UOFGbdPAGiQtrVxdnxmWTTx/I=;
+        b=pm62qJhjrK2jshu716Fs/A1xrOPfi7c88cjPhA4t+cAtD87rnJpF9UuVkJPqxOv8ke
+         wtST/seXLgaviyQJ/5+hI1d1rebFyc5x5dFCL6Kw/b0PBqqZKPheEIBcK/JdYs4Mac6c
+         jmbeiRGDAValIxu9Ui+qBlTMqjiGfgRVp5iTRY6M8bUbKUmRPWLfOnINWPpJbHX8YK7G
+         krkzPlMlyNBFRq5YNfIaPYq1oKkLwNdA6kHjwdbxBlRNnu/Q7M0z1RvfKkocMuOlHIum
+         R/EFU0pdyYfO+KP6Lp1yIuyAH4zbIqeSHRYyacKmluhdDG4BvdwqNihPdpeqKDEm3ZRC
+         hMyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLQnolJZK3dJYjEhixX2urvf/zm6i9UIl0R9bwlDL5zRlIGG12C6wk/g/1hMmgbfAwUUqxNpQQawlyiw57@vger.kernel.org, AJvYcCViB6rx5xcZumiJClTgL9rkw9CknUOu0QEVyCo1mNv2UcnGWN5spUXMTzl9+p3GjnGobbZ5p4ibqAuc@vger.kernel.org, AJvYcCWpt+iP+57BXJXTCmaYFe5V1qjqa+ws6BiG+arWizIKYlMRxZc4Ms9z67ngJtpgZVhDU6Y5FCfAL2jbXK8w0vT5Z2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLhWB3zhECP8zObH3w6b4RW07rlneKrwjgCfAxstIOCJZABlKn
+	koAL8CdUE9RbnIOnhdwkrQm7r6xoBtd98Z25DDelpFAJE0iaDBax
+X-Gm-Gg: ASbGncsD+kf8ZegWSWoTg8oNL6axyuZM3Wa3X/LCjFVi0L/K77sSP9mwWGRzQbt2nNu
+	WsO4JkRX5REym2+MzWQ1CPOkM47N46NAl5QmNgNGDMHNeA0wPW4OKbMmH5nFtXN8Kk28lLoK0z/
+	7M8gCingQAgfHkzbz8dkPn83vbBGgqgTdteFwjvzbJhIF50Ze9d+VlbN/Ty+vfAa8qDPSnc71HP
+	9usBGS1Upn7u3ThLp8c1Wn0ru42THlhOaZSc1weSuNJrEg1JW62Fvm7GQSH1H/PS9QPB4Fd85W1
+	ux5hZWaQIzWIpCc32cWouxLsd9M16FfVB0/MpKx7z9/uOnJECtkZkbV49YqOFICoJw==
+X-Google-Smtp-Source: AGHT+IEmC1A8qA+sRExHfTeMoNJfkOFZQJ7/LGNEZ1U+WdFIhRlxg60Mb+7It31CYcz1Dh5JA30pqw==
+X-Received: by 2002:a05:6000:4312:b0:39a:c9ac:cd58 with SMTP id ffacd0b85a97d-39ee5b1d601mr1003925f8f.29.1744800022869;
+        Wed, 16 Apr 2025 03:40:22 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:b4a2:e121:10d6:ac54])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae964089sm16824975f8f.15.2025.04.16.03.40.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 03:40:18 -0700 (PDT)
-Date: Wed, 16 Apr 2025 16:10:16 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V10 14/15] rust: opp: Extend OPP abstractions with
- cpufreq support
-Message-ID: <20250416104016.mkzyitdm4moz4qts@vireshk-i7>
-References: <cover.1744783509.git.viresh.kumar@linaro.org>
- <a940d1b1a02d99fdc80ba8d0526c35a776854cb3.1744783509.git.viresh.kumar@linaro.org>
- <Z_9v24SghlIhT62r@pollux>
- <20250416095943.f3jxy55bamekscst@vireshk-i7>
- <CANiq72=MQmUop5UzeeN-r7gAE0ep8Z+EUaLuA6exeazhZCHqLw@mail.gmail.com>
+        Wed, 16 Apr 2025 03:40:22 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH net-next v7 0/4] Add GBETH glue layer driver for Renesas RZ/V2H(P) SoC
+Date: Wed, 16 Apr 2025 11:40:11 +0100
+Message-ID: <20250416104015.47788-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72=MQmUop5UzeeN-r7gAE0ep8Z+EUaLuA6exeazhZCHqLw@mail.gmail.com>
 
-On 16-04-25, 12:31, Miguel Ojeda wrote:
-> On Wed, Apr 16, 2025 at 11:59 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > +// Frequency table implementation.
-> 
-> ///
-> 
-> > +        // Returns a reference to the underlying [`cpufreq::Table`].
-> 
-> Ditto.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hmm, I did not use /// as the comments were added to private
-definitions.
+Hi All,
 
-Sorry for the dumb question, but why should we use /// in such cases ?
-They will never show up in documentation anyway, right ?
+This patch series adds support for the GBETH (Gigabit Ethernet) glue layer
+driver for the Renesas RZ/V2H(P) SoC. The GBETH IP is integrated with
+the Synopsys DesignWare MAC (version 5.20). The changes include updating
+the device tree bindings, documenting the GBETH bindings, and adding the
+DWMAC glue layer for the Renesas GBETH.
+
+v6->v7
+- Rebased the changes on net-next
+- Added Reviewed-by tag from Russell
+- Folded contenets of renesas_gbeth_clks_config()
+  in renesas_gbeth_init/exit() as suggested by Philipp
+- Dropped regs member from struct renesas_gbeth
+
+v5->v6
+- stmmac_pltfr_find_clk() is now used to find the clocks
+- devm_stmmac_pltfr_probe() is now used to probe the platform device
+  and dropped remove callback
+- Switched to using init/exit callback to configure the clock
+  instead of using the clks_config callback
+- Dropped pm callback
+- Fixed checkpatch warnings
+- Added a new patch to update the MAINTAINERS file
+
+v4->v5
+- Rebased the changes on net-next
+
+v3->v4
+- Fixed maxItems for interrupt-names property
+- Maintained reverse christmas tree order in renesas_gbeth_clks_config
+- Returned err in case of success in renesas_gbeth_probe()
+
+v2->v3
+- Fixed review comments from Rob and Russell
+
+v1->v2
+- Updated commit description for patch 2/3
+- Updated tx/rx queue completion interrupt names
+- Added clks_config callback
+
+v1:
+https://lore.kernel.org/all/20250302181808.728734-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (4):
+  dt-bindings: net: dwmac: Increase 'maxItems' for 'interrupts' and
+    'interrupt-names'
+  dt-bindings: net: Document support for Renesas RZ/V2H(P) GBETH
+  net: stmmac: Add DWMAC glue layer for Renesas GBETH
+  MAINTAINERS: Add entry for Renesas RZ/V2H(P) DWMAC GBETH glue layer
+    driver
+
+ .../bindings/net/renesas,r9a09g057-gbeth.yaml | 201 ++++++++++++++++++
+ .../devicetree/bindings/net/snps,dwmac.yaml   |  25 ++-
+ MAINTAINERS                                   |   8 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../stmicro/stmmac/dwmac-renesas-gbeth.c      | 146 +++++++++++++
+ 6 files changed, 383 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/renesas,r9a09g057-gbeth.yaml
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c
 
 -- 
-viresh
+2.49.0
+
