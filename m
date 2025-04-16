@@ -1,110 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A321E1E09
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD42C10E9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843444; cv=none; b=XENpRewvQsR5O6487owXtEicEIQo5VZjfa7Eay1sAeTn3NlmWrkKy77msxHjXmEdyBp54eCzbueHWBXGuPLYLNH5y1WaSWi9S8PbxcS5eiJAdmXiOsQFRJ+ez5Y6w58t/VLxFgdGZoTbNB6wt+f/PxRjZ+5op0IcLnivHzjDIRY=
+	t=1744843494; cv=none; b=hF4Rb8JBySkZAvcw32ijJFhEfC5wXfs+Hk0a24nv7BKMX+p9qPCSlmqi1EsFdVjIVyq4zgXF5sOKsjVu5x6JVsN3thxCcDZrGt6UmB+cvkFRRkuHken6fYPwNermxV6uw+EXMkgU3U/sBCApT+6Fy98TLKcxfundwjX4Xkd3OJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843444; c=relaxed/simple;
-	bh=ud6izSoDKqdwP3xxxNF9Fdv/wdvU4q/pqZfe4RU1lnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sL3Fi3ZmayPejw8OsubYaF4E5JjvozeI/tEBOLEEhNVPVyUOvxLbdH5zAZFpk1jWBkbuV80PT52vTS/FAUOoWexx03vJ8lqiMObPkKbcuIToHqx34BNbkOnJoL052TRKLxHwYLY0VDAw1MQWdMpP/bMbSpg7ZbNdkGZbISVUA/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JVorljyf; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744843494; c=relaxed/simple;
+	bh=lWtRiDK4GuYnL50ftDSWuuwiDWAbUTxdlZJqd7w5VfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OcuHwGB7ea7fQ1nChncZ/EfE6x6ZsY5ZkOlhf+ynas4naOPKvCGENVCe4mnIt9AwAPhmbj/kfUUtJUzufpUPb+EOYd/SsK/5t2C0EF3s3bdHSh4muOFbO41tsWxVw3jag4a7d/EaSBSrBd8jYRGVRlzGxNRN+h3Vacbnldy555s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com; spf=pass smtp.mailfrom=riotgames.com; dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b=WscGazvc; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=riotgames.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riotgames.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JVorljyf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744843442; x=1776379442;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ud6izSoDKqdwP3xxxNF9Fdv/wdvU4q/pqZfe4RU1lnw=;
-  b=JVorljyfHkg33HRrQyTQ+8bpbfRlfeXLvfW/K6w6JM/ehbjPCfFme3yP
-   DPOaFNqfPq8M7N2SBU0PIQHBtM/lWrOsuWhGlvyOrfP6HC/NIvfnL2k3P
-   o/oQZ2zUGVCW0hNXaicziNK2YxoN+atlW3IJ349rL1XwTGFxXHQL4hIDA
-   lloFZGfMXys7hDSGC9PWywy56wuycWv3q7FrmB+VwqcZQ1MWZYVpgIiAB
-   Uf3PSJduRWnNpUs5VkpA6vFoB3cy5iKEgU99W4Oy/TIg5BgM5hRcuKHAX
-   FjicAjlIn+joU5dFc/XiOY8nkczF6XY6j0i+pb/y5h0Pz0nfWH+AqsY9H
-   w==;
-X-CSE-ConnectionGUID: cq34rZK5QwSibs5qV95dDw==
-X-CSE-MsgGUID: YrRaf6mQQr+FgPHNIBKoDg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50062185"
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="50062185"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 15:44:01 -0700
-X-CSE-ConnectionGUID: 5K15DnS0TTu3nIdvNqPkJw==
-X-CSE-MsgGUID: 2Hd9URidSvW/9TWO8i4lGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="130379979"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 16 Apr 2025 15:43:57 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u5BU2-000KPW-2w;
-	Wed, 16 Apr 2025 22:43:54 +0000
-Date: Thu, 17 Apr 2025 06:43:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Cedric Xing <cedric.xing@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-coco@lists.linux.dev,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Guorui Yu <guorui.yu@linux.alibaba.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Dan Middleton <dan.middleton@linux.intel.com>,
-	Mikko Ylinen <mikko.ylinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Cedric Xing <cedric.xing@intel.com>
-Subject: Re: [PATCH v4 2/5] tsm-mr: Add tsm-mr sample code
-Message-ID: <202504170616.5A5XCLVI-lkp@intel.com>
-References: <20250414-tdx-rtmr-v4-2-7edfa8d98716@intel.com>
+	dkim=pass (1024-bit key) header.d=riotgames.com header.i=@riotgames.com header.b="WscGazvc"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22435603572so2018805ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:44:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riotgames.com; s=riotgames; t=1744843492; x=1745448292; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lWtRiDK4GuYnL50ftDSWuuwiDWAbUTxdlZJqd7w5VfM=;
+        b=WscGazvc6226NbOTAwwf/iqesoetTwKZgLuK/IZjo6xW+YPKX9tYTqT4jAYcoacPfv
+         Wc+0PtgxY8iIXbE2KSlVic/hrFzNCDROkvG7D2CIhB0bwPa8AKuFiXIpNnetnYzQ3LqM
+         ORKJnN77DIY4Y+Rt2iPSHfeqlJGYWJhTK5H7Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744843492; x=1745448292;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lWtRiDK4GuYnL50ftDSWuuwiDWAbUTxdlZJqd7w5VfM=;
+        b=Lj47fs0RPym8SELGE4S3InLhQiZ1z5AbeMa+WCMIVs7udl2b8wKhVuy0zHPgOowasz
+         rbcijQtaJmG9A1RX7a/chIw3vqGJ1Z1zVpdviiZm2Q6AbMFobn8xhE2Y7E55gGWmUPrj
+         QBzuc/9Gy7xtlz3suuQqqfhwo1Ttie0XytjR8hZ/VrFxYxtuM06PQ3GiPyzscoSqRi0Y
+         zSn5JrfmGEKGZOW5J/OYXK31rhYp8VRsGY+dA0I1mAzM5tHsZYel/fs/FU8hwEprl/x5
+         KOgU/rQ16cXHdqoTxyfwqTgOVPCZwi67EU1warFPXcOKErdYQGytoCtXrct+U9l7hbGo
+         09dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWiqcVkCEhs3WbJplZS4U6PBOpXx++MpBN9/P/xdCm8r1SUik3FbWrj6TVfjcea4tjuf0d7uo2h6yseiNE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdDJFpnOQpFqVPPYukdNxJWwbZsYdjjrLiqjfa9aAVlCAuRd/I
+	cu1GfGGNgKM1tgHAXmMQ1+KtxY04p81V5CK6IEKI+TF/rnJvxlq/7TFxaqIEb2zuIs3A5J2zYMv
+	xLr5mAEOCCNg0Gl9BhltWu9fxrekHcSPi/SHrdA==
+X-Gm-Gg: ASbGncs9DlYJE5DlkxuBVWNnQP11nv8Ig/1JKtcgvKVpVueSIR+FfYen7TCXlj+HyHr
+	RfJI9TMHEAiZ72HgmHOqlhjTpHCIBF86NBmvtBRUYlcsKMF2ZAVEHvElMwzU3Y6KU7C0qr3qf+x
+	WAKJH/zYYQrTRqSaXVDtZ4UA==
+X-Google-Smtp-Source: AGHT+IF23yy1W1N8zHOh8gMq28w4MIjirJjRJMlSeq4g96UbuxXrOBHR1of087MhejUrgDtRSKU0t9qMRW/fnb3fU80=
+X-Received: by 2002:a17:902:ef0c:b0:220:e362:9b1a with SMTP id
+ d9443c01a7336-22c358e8abemr62582075ad.25.1744843491748; Wed, 16 Apr 2025
+ 15:44:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414-tdx-rtmr-v4-2-7edfa8d98716@intel.com>
+References: <20250410070258.276759-1-yangfeng59949@163.com> <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+In-Reply-To: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+From: Zvi Effron <zeffron@riotgames.com>
+Date: Wed, 16 Apr 2025 15:44:40 -0700
+X-Gm-Features: ATxdqUHbv-kzDAdKa3Vm_JbgIrOUv70g1P-9Qv64STJdsSN05EUNDYmZMxFRFuY
+Message-ID: <CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Feng Yang <yangfeng59949@163.com>, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Cedric,
+On Wed, Apr 16, 2025 at 2:56=E2=80=AFPM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.com=
+> wrote:
+> >
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> >
+> > Many conditional checks in switch-case are redundant
+> > with bpf_base_func_proto and should be removed.
+> >
+> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > Acked-by: Song Liu <song@kernel.org>
+> > ---
+> > Changes in v3:
+> > - Only modify patch description information.
+> > - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangf=
+eng59949@163.com/
+> >
+> > Changes in v2:
+> > - Only modify patch description information.
+> > - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangf=
+eng59949@163.com/
+> > ---
+> > kernel/trace/bpf_trace.c | 72 ----------------------------------------
+> > 1 file changed, 72 deletions(-)
+> >
+>
+> All this looks good, I checked that those functions indeed are allowed
+> in bpf_base_func_proto. The only (minor) differences are capabilities,
+> bpf_base_func_proto() correctly guards some of the helpers with
+> CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
+> doesn't seem to bother (which is either a bug or any tracing prog
+> implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
+>
+> But I think we can take it further and remove even more stuff from
+> bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
+> (perhaps as a few patches in a series, so it's easier to review and
+> validate).
+>
+> Basically, except for a few custom implementations that depend on
+> tracing program type (like get_stack and others like that), if
+> something is OK to call from a tracing program it should be ok to call
+> from any program type. And as such it can (should?) be added to
+> bpf_base_func_proto, IMO.
 
-kernel test robot noticed the following build warnings:
+Is this true? Does it make sense? (See below.)
 
-[auto build test WARNING on 8ffd015db85fea3e15a77027fda6c02ced4d2444]
+> P.S. I'd name the patch/series as "bpf: streamline allowed helpers
+> between tracing and base sets" or something like that to make the
+> purpose clearer
+>
+> [...]
+>
+> > case BPF_FUNC_get_current_uid_gid:
+> > return &bpf_get_current_uid_gid_proto;
+> > case BPF_FUNC_get_current_comm:
+> > return &bpf_get_current_comm_proto;
+>
+> I'm surprised these two are not part of bpf_base_func_proto, tbh...
+> maybe let's move them there while we are cleaning all this up?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Cedric-Xing/tsm-mr-Add-TVM-Measurement-Register-support/20250415-060059
-base:   8ffd015db85fea3e15a77027fda6c02ced4d2444
-patch link:    https://lore.kernel.org/r/20250414-tdx-rtmr-v4-2-7edfa8d98716%40intel.com
-patch subject: [PATCH v4 2/5] tsm-mr: Add tsm-mr sample code
-config: nios2-kismet-CONFIG_TSM_MEASUREMENTS-CONFIG_SAMPLE_TSM_MR-0-0 (https://download.01.org/0day-ci/archive/20250417/202504170616.5A5XCLVI-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250417/202504170616.5A5XCLVI-lkp@intel.com/reproduce)
+Do these make sense in all BPF program types such that they belong in
+bpf_base_func_proto? For example, XDP programs don't have a current uid and
+gid, do they?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504170616.5A5XCLVI-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for TSM_MEASUREMENTS when selected by SAMPLE_TSM_MR
-   WARNING: unmet direct dependencies detected for TSM_MEASUREMENTS
-     Depends on [n]: VIRT_DRIVERS [=n]
-     Selected by [y]:
-     - SAMPLE_TSM_MR [=y] && SAMPLES [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> pw-bot: cr
+>
+> > - case BPF_FUNC_trace_printk:
+> > - return bpf_get_trace_printk_proto();
+> > case BPF_FUNC_get_smp_processor_id:
+> > return &bpf_get_smp_processor_id_proto;
+>
+> this one should be cleaned up as well and
+> bpf_get_smp_processor_id_proto removed. All BPF programs either
+> disable CPU preemption or CPU migration, so bpf_base_func_proto's
+> implementation should work just fine (but please do it as a separate
+> patch)
+>
+> > - case BPF_FUNC_get_numa_node_id:
+> > - return &bpf_get_numa_node_id_proto;
+> > case BPF_FUNC_perf_event_read:
+> > return &bpf_perf_event_read_proto;
+>
+> [...]
+>
