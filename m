@@ -1,93 +1,81 @@
-Received: from forward101b.mail.yandex.net (forward101b.mail.yandex.net [178.154.239.148])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E55204C18;
-	Wed, 16 Apr 2025 20:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC5214235;
+	Wed, 16 Apr 2025 20:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836722; cv=none; b=Rvelocw7J9F2WvVezTEpojjlJXbNu/RYBcJy47/8fhSlsIr6crPl/Y07nfXJ8dm18S1dIIYVGQEUO2i2MkA7lXtgJNHdtKNNG/BMOlwqYUAwYyazzhzGtc8EZX3be7XicHHfgAZNfKdcdKRlOTyn6tl0d+gfHU7kbhenMGIl0P4=
+	t=1744836765; cv=none; b=s/HJ5qQ8kAJypd7fluMR8AYjFhalboMg4hG18UgdNuwQg6QfFrEZuvGmwqFRwVZ0V3Broex6k+aiNxkXAnlOZYNDqs1JSA21nP/vvbC6SwOE8qPYww/beqApTzzag2D0wnJ+d+NGGnluEG/8+8Df4Tiue3kOyyyw69CS8QX4KYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836722; c=relaxed/simple;
-	bh=FiTtog5zvspmbTqv+FZ5aKpQ31DBusR1CpLXeeR5Dys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=byTMEHSAkoCiUqMHgo5dEYhxHqTvEeRSOTRGsrVlgLA86Qkxn0RCwyxoJpEb2HaL3GuQgZ2HQ1QLy9eIy1kFaYJsAk6ihPK35alPqqVt2P/EVv9aIc7Da/bV5YLlzJkk0DH5P483gQAr0RQqCAmJt0f+9fiPjsdKFhTenRNPQ8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=TxkO2S4w; arc=none smtp.client-ip=178.154.239.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="TxkO2S4w"
-Received: from mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net [IPv6:2a02:6b8:c37:8f27:0:640:e8c0:0])
-	by forward101b.mail.yandex.net (Yandex) with ESMTPS id B8BA960AC1;
-	Wed, 16 Apr 2025 23:51:49 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id mpPrK7PLkqM0-ToHt0h2q;
-	Wed, 16 Apr 2025 23:51:49 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1744836709; bh=jVehpbNr4KSUhLtKlDNoBxrzz29Tw89g8VjmbtqBbuU=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=TxkO2S4wr8IiuwY912oCyS4XYzEubr4SMooT3rZRf5bYf/y5wU+WnURXMS2vd9bsx
-	 ltF5GqCngDfLAICVCyDkCjCSeLwAScIv5JkHiFJrw0EonswIfx5ij9t9ZI7FPiJ9Pd
-	 8FTaNOcfD6nx2OHJ/CdviBSzGJRvgQpE4XSWzfGI=
-Authentication-Results: mail-nwsmtp-smtp-production-main-74.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Nikiforov <Dm1tryNk@yandex.ru>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Dmitry Nikiforov <Dm1tryNk@yandex.ru>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Johan Hovold <johan@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH v3] media: davinci: vpif: Fix memory leak in probe error path
-Date: Wed, 16 Apr 2025 23:51:19 +0300
-Message-ID: <20250416205121.2348-1-Dm1tryNk@yandex.ru>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744836765; c=relaxed/simple;
+	bh=f0OYppxEavlfyHTNKLYVKPUYMvnUbW49R6+sWigyn6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ciupaw8Lgsty1bMAz2GH+FhkRjV2P6M9g9yepxT2liO+gOJtHRAN8+nWQYYDD1h64sF490HfiuWWbLzoO0yeYQJi6jORqfkNGa7H1T3DKWvR64nbrjTWi0ICcQoTJux7w//bdsFG1eZmjy9frYBEc0TMENj0p2K1+S3Fs94ImWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A339C4CEE2;
+	Wed, 16 Apr 2025 20:52:43 +0000 (UTC)
+Date: Wed, 16 Apr 2025 16:54:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] ftrace: Comment that ftrace_func_mapper is freed with
+ free_ftrace_hash()
+Message-ID: <20250416165420.5c717420@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-If an error occurs during the initialization of `pdev_display`,
-the allocated platform device `pdev_capture` is not released properly,
-leading to a memory leak.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Adjust error path handling to fix the leak.
+The structure ftrace_func_mapper only contains a single field and that is
+a ftrace_hash. It is used to abstract it out from a normal hash to control
+users of how it gets modified.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+The freeing of a ftrace_func_mapper structure is:
 
-Fixes: 43acb728bbc4 ("media: davinci: vpif: fix use-after-free on driver unbind")
-Signed-off-by: Dmitry Nikiforov <Dm1tryNk@yandex.ru>
+  free_ftrace_hash(&mapper->hash);
+
+Without context, this looks like a bug. It should be commented that it is
+not a bug and it is freed this way.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-v2: also fix of_graph_get_endpoint_by_regs() error path.
-v3: Rework incorrect error handling added in v2.
-Also fix missing platform_device_del() in another error path (Johan Hovold).
- drivers/media/platform/ti/davinci/vpif.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti/davinci/vpif.c b/drivers/media/platform/ti/davinci/vpif.c
-index a81719702a22..969d623fc842 100644
---- a/drivers/media/platform/ti/davinci/vpif.c
-+++ b/drivers/media/platform/ti/davinci/vpif.c
-@@ -504,7 +504,7 @@ static int vpif_probe(struct platform_device *pdev)
- 	pdev_display = kzalloc(sizeof(*pdev_display), GFP_KERNEL);
- 	if (!pdev_display) {
- 		ret = -ENOMEM;
--		goto err_put_pdev_capture;
-+		goto err_del_pdev_capture;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a8a02868b435..19b902b8de2b 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5160,8 +5160,12 @@ struct ftrace_func_map {
+ 	void				*data;
+ };
+ 
++/*
++ * Note, ftrace_func_mapper is freed by free_ftrace_hash(&mapper->hash).
++ * The hash field must be the first field.
++ */
+ struct ftrace_func_mapper {
+-	struct ftrace_hash		hash;
++	struct ftrace_hash		hash;	/* Must be first! */
+ };
+ 
+ /**
+@@ -5296,6 +5300,7 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
+ 			}
+ 		}
  	}
++	/* This also frees the mapper itself */
+ 	free_ftrace_hash(&mapper->hash);
+ }
  
- 	pdev_display->name = "vpif_display";
-@@ -527,6 +527,8 @@ static int vpif_probe(struct platform_device *pdev)
- 
- err_put_pdev_display:
- 	platform_device_put(pdev_display);
-+err_del_pdev_capture:
-+	platform_device_del(pdev_capture);
- err_put_pdev_capture:
- 	platform_device_put(pdev_capture);
- err_put_rpm:
 -- 
-2.49.0
+2.47.2
 
