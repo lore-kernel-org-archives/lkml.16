@@ -1,139 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB10224B09;
-	Wed, 16 Apr 2025 07:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37AE16E863
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786832; cv=none; b=dlZOPszXgZs8TKh/GMXnt+HtOnc8xgbXRalcznBqi812oxZOXe5y9uGieGsXn9jung9Ifo++XELy9Iay8U5dSXIPzFRnwpneOxa0Jj3PMDmXiktaLRZMFliSzmNv7oiNI1uXk6sb5mOXJSX5TqkGS5ZHfdzpDCbp2ARvAfvndVk=
+	t=1744786845; cv=none; b=syNz4HbZ8I5D5Ocj5lHc3Kri38XyO3n2/s4L/elbikZSnooiXwERz3DUp5qdV0TZXADaM+BokFw4nHhy1q3xAg+H7JJhAVn/VgRqfBl/eF5KkbX4xKpChLrTQKc0OwyteP4yquexCIe/fbH0Lxr1XC/SSQrIAxNLBTQxVfkf+Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786832; c=relaxed/simple;
-	bh=SsNuJ3RpS7E+2S0Ptg7xVQWifaO8YE/cOa8x5LLvIEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NgWI48OgW77mMdIKcmenCw3ZH5h4DN0cVGFyn2V/6B+TXJCx3naFTLa8v/e5Va+B1lbHUh0wQV9Ji3xYWYrRPRKJkyq83ZcEGmSUuwocLMukoHMCO1dx97sMDSZXgaPeuA1m0DvG6Uj9KxiiD9+8ZE5WH3dRmb9UgBPPEvlJS3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/NAiUy0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744786845; c=relaxed/simple;
+	bh=MZX0NyL7XhAWv3wI1eNlSgIT6OB5NQWs/WXya+IRPWc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=ViUQwjrHzbZD5o5Zrb0eUuXGPeURfp7prpl0npZsfSHlRZvgJcbIjomHnCk0lSo5vRj4i1K/gPXVAxOHK3sVeUpsvC3LbLwzVb5J9l3lTU3dyW5ui5KcQEMoCGaaB+V4hWxVwiQuJbU9MISUlGUSrEWTP+DQCL7hV6RcSDKd61w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NhSVRkOG; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/NAiUy0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F382C4CEED;
-	Wed, 16 Apr 2025 07:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786831;
-	bh=SsNuJ3RpS7E+2S0Ptg7xVQWifaO8YE/cOa8x5LLvIEE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=J/NAiUy0CsqRiLVh78VhnQz1sW+T3e/dGyEafTT/ifWafwgCuuiExr4fMRyxP4CT1
-	 Zyuiik8v5Asn806L1H7cMl3DUXMUnyyI16U274kE/7EOXdP+tDkXazh6F+trIvEFl4
-	 o+ZXVmGEly8mX4aTr/XdvAifuNssdnFB7maptVshBbQroUcGtVQCtopBcDcExgCmx8
-	 0QVF8Qi0KxQM7b/x8PJhrbEm1x7lTI5dNPLVwC+a/TN5lmoL6DiXuTZvKTdAAj1htT
-	 dePHsdE+L313jjO+hXqIP1Vm275Z/6qh1BWgXEIo5fKwnvlB/fnxAw72xzPglQkWtC
-	 d2xWRn98bMc1w==
-Date: Wed, 16 Apr 2025 15:00:07 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>
-Cc: "Andy Shevchenko" <andriy.shevchenko@intel.com>, David Airlie
- <airlied@gmail.com>, Jani Nikula <jani.nikula@linux.intel.com>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
- <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/kernel-doc.py: don't create *.pyc files
-Message-ID: <20250416150007.427f8161@sal.lan>
-In-Reply-To: <432f17b785d35122753d4b210874d78ee84e1bb5.1744785773.git.mchehab+huawei@kernel.org>
-References: <432f17b785d35122753d4b210874d78ee84e1bb5.1744785773.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NhSVRkOG"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FKXD5m020476;
+	Wed, 16 Apr 2025 07:00:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=D36A7KPoEBhyYjfZYvrPed95J2eo7HltAgjgLq94Xzo=; b=NhSVRkOG7HVe
+	H0GB71Om2YkjIzBzF6LF/CB7QuNtAsaEaUthUI3EM3QTOl6Uu4v9s3/B9hJapKXT
+	MMHAYAhuSBvpykckDDO8HcIlU4XXns091kkQf7WzqMKEFup6uaE8PvcNIAI0Wq3N
+	Ih1CFZOLkoYQNRrgRF4CIg8ZXKgk2PSWHGxFRW794qjXonGEr3MCbyVuEBhrqZoc
+	j61IOtvPpq0q5JhJNc6rMjlThwq4uluoj8YgCyciNBrcn4Qr85JdKdT/X/WySPc1
+	7hZSM77dt/vlnwqE3qDekKUKZcznJ8Kbt2OOHpHbMHwCA41rM6VStlBJAYKK6TXC
+	yBG2hc0/Mg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq4vsn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:00:13 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5SNAE024892;
+	Wed, 16 Apr 2025 07:00:12 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtfa83-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:00:12 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G70Cnj20185620
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 07:00:12 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5F13E5805C;
+	Wed, 16 Apr 2025 07:00:12 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2155658060;
+	Wed, 16 Apr 2025 07:00:10 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 07:00:09 +0000 (GMT)
+Message-ID: <37d018ac-ddb2-46c8-908e-9924f0f74e0c@linux.ibm.com>
+Date: Wed, 16 Apr 2025 12:30:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's
+ numa_preferred_nid.
+To: Chris Hyser <chris.hyser@oracle.com>
+References: <20250415013625.3922497-1-chris.hyser@oracle.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+        Mel Gorman <mgorman@techsingularity.net>, longman@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Reply-To: 20250415013625.3922497-1-chris.hyser@oracle.com
+In-Reply-To: <20250415013625.3922497-1-chris.hyser@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: XyLol5-JmvzDhOvqfVl5UPMIIujiNb_0
+X-Proofpoint-GUID: XyLol5-JmvzDhOvqfVl5UPMIIujiNb_0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1011 bulkscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160052
 
-Em Wed, 16 Apr 2025 14:42:57 +0800
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+Hi Chris,
 
-> As reported by Andy, kernel-doc.py is creating a __pycache__
-> directory at build time.
+On 15/04/25 07:05, Chris Hyser wrote:
+> From: chris hyser <chris.hyser@oracle.com>
 > 
-> Disable creation of __pycache__ for the libraries used by
-> kernel-doc.py, when excecuted via the build system or via
-> scripts/find-unused-docs.sh.
+
+[..snip..]
+
+> The following results were from TPCC runs on an Oracle Database. The system
+> was a 2-node Intel machine with a database running on each node with local
+> memory allocations. No tasks or memory were pinned.
 > 
-> Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-Sent a v2 with an extra patch, as this only solves the case where
-the script is called from the build system.
-
-When the script is manually called, if Python or the script is called 
-without any parameters, Python JIT will still create a __pycache__
-containing *.pyc files.
-
-As we don't want to show such binaries as sources that need to be
-committed, we need an extra patch adding *.pyc to .gitignore.
-
-This is done on v2 of this.
-
-> ---
->  drivers/gpu/drm/Makefile      | 2 +-
->  drivers/gpu/drm/i915/Makefile | 2 +-
->  include/drm/Makefile          | 2 +-
->  scripts/find-unused-docs.sh   | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+> There are four scenarios of interest:
 > 
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index ed54a546bbe2..1469d64f8783 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
->  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
->        cmd_hdrtest = \
->  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
-> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-> +		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
->  		touch $@
->  
->  $(obj)/%.hdrtest: $(src)/%.h FORCE
-> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-> index ed05b131ed3a..bb873f9cc2aa 100644
-> --- a/drivers/gpu/drm/i915/Makefile
-> +++ b/drivers/gpu/drm/i915/Makefile
-> @@ -408,7 +408,7 @@ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
->  #
->  # Enable locally for CONFIG_DRM_I915_WERROR=y. See also scripts/Makefile.build
->  ifdef CONFIG_DRM_I915_WERROR
-> -    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none -Werror $<
-> +    cmd_checkdoc = $(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none -Werror $<
->  endif
->  
->  # header test
-> diff --git a/include/drm/Makefile b/include/drm/Makefile
-> index a7bd15d2803e..6088ea458f44 100644
-> --- a/include/drm/Makefile
-> +++ b/include/drm/Makefile
-> @@ -11,7 +11,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
->  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
->        cmd_hdrtest = \
->  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
-> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-> +		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
->  		touch $@
->  
->  $(obj)/%.hdrtest: $(src)/%.h FORCE
-> diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
-> index ee6a50e33aba..d6d397fbf917 100755
-> --- a/scripts/find-unused-docs.sh
-> +++ b/scripts/find-unused-docs.sh
-> @@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
->  	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
->  	continue;
->  	fi
-> -	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
-> +	str=$(PYTHONDONTWRITEBYTECODE=1 scripts/kernel-doc -export "$file" 2>/dev/null)
->  	if [[ -n "$str" ]]; then
->  	echo "$file"
->  	fi
+> - Auto NUMA Balancing OFF.
+>     base value
+> 
+> - Auto NUMA Balancing ON.
+>     1.2% - ANB ON better than ANB OFF.
+> 
+> - Use the prctl(), ANB ON, parameters set to prevent faulting.
+>     2.4% - prctl() better then ANB OFF.
+>     1.2% - prctl() better than ANB ON.
+> 
+> - Use the prctl(), ANB parameters normal.
+>     3.1% - prctl() and ANB ON better than ANB OFF.
+>     1.9% - prctl() and ANB ON better than just ANB ON.
+>     0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting off
+> 
+
+Are you using prctl() to set the preferred node id for all the tasks of your run?
+If yes, then how `prctl() and ANB ON better than prctl() and ANB ON/faulting off`
+case happens?
+
+IIUC, when setting preferred node in numa_preferred_nid_force, the original
+numa_preferred_nid which is derived from page faults will be a nop which should
+be an overhead.
+
+Let me know if my understanding is correct. Also, can you tell how to set the
+parameters of ANB to prevent faulting.
+
+Thanks,
+Madadi Vineeth Reddy
+
+> In benchmarks pinning large regions of heavily accessed memory, the
+> advantages of the prctl() over Auto NUMA Balancing alone is significantly
+> higher.
+> 
+> Signed-off-by: Chris Hyser <chris.hyser@oracle.com>
+
+[..snip..]
