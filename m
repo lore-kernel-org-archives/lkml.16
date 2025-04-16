@@ -1,55 +1,55 @@
 Received: from mail-ed1-f73.google.com (mail-ed1-f73.google.com [209.85.208.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19072080DC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:26:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF052080DB
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:26:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817217; cv=none; b=u9KiE69o+RxEGXHG9g9GZV6FSKv2f/4RFdJJmYIMknjD8YIfQxCztlgjnMkR25AcvLfpenkzVJc3XYL14xcSu3ev5wdcWGlVXlRHU2pIhgBwH8Iish0JhMoWBTvmqFymKFJvu9GnnJoT47pkmh7HzMvoKR3ZYZwcGJ4IK7q/zls=
+	t=1744817218; cv=none; b=rzDIDm/c/dcm0a8nFOYwhBlYy7wnJr1qY/pF7OpXq4DO1FalFrrmPY2nf5l2eMZ8Ly/N62N6EJeCWwRErbz2nfvcOKrPy1uAGYob2zV4prXHcAHLxqzn6EnmvZB+WR+bmV1X+rIfn7PC35aNkltupUL/qWVn5LqW41HfAuDXjDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817217; c=relaxed/simple;
-	bh=+tI4PEfGQfafoe0FcQqYYwv3iwkEbI6CYxC3OLOKiy4=;
+	s=arc-20240116; t=1744817218; c=relaxed/simple;
+	bh=lw3AVtJbpuAwOe11LdCap/7mFJF4YAPAEl8JSKKuzOs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sZlmVvxk0WlXWTZwFpm/zpphLsyAuE32bs80TaLfzhgJwAjLXi/dlFRa+Te1Ucp5W8ERSQUIKZ89YpUWyWgdNNxnviAuNa/cLgsT5Lp+NM95pOI2ubFM0KA5WpPkG2z1yBR8+sOEVtZ2sKltLRzt21gOoCRWnqq8SefKLPKIG4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35vYyYP5; arc=none smtp.client-ip=209.85.208.73
+	 To:Cc:Content-Type; b=IyG/q5zta5SOc2cnYhAfmpGpIxNaIR4/MS4e1DRilTko8yIwCsa8Ff/TK2MgaOQkV04xSAfcCLhr7IwN1ADWuR88St/HH5G3UqVlOidnlnkgWXmCQxvYMLY6MzccLQrdj1JIDltgm3qe0TFim0uFKgbHOR2+AJcyFJPa93FuqUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hjsXrviy; arc=none smtp.client-ip=209.85.208.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35vYyYP5"
-Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5e5d9682f53so5918890a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:26:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hjsXrviy"
+Received: by mail-ed1-f73.google.com with SMTP id 4fb4d7f45d1cf-5e5c5ea184dso6420853a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744817213; x=1745422013; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744817215; x=1745422015; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzD2f0rxQ0+kK+W36kLcNjO+gtstze2fsnlGYTmtJfM=;
-        b=35vYyYP5L6+sw3b90ckhDCjI6k+3M2oTHD60jf5nVTL4GVAiLv1VGrXBkKVYFAtQ0p
-         xEb4hLrUJ7OrYvQnLPUDdBm1JFmJHYinbJYGOLwEpfk6sZwcYN2NahrjYj1/p+/OUvqd
-         bxHxNZ8li9q/SrhFLJwcPIKq40fNheD+mjakPgFHevoPDbZI269034wQMSXO/U0jiuB+
-         H0SQpgpOEO7hcVofzHm9suMlnuew6otZv0hYAqWmGcY+cAh5xkgo1vqPihVaBV+HqGZl
-         HI5KyM9TVt5nmoxskWvmPdzHfuK8MRJHwIpSO1BtbV9A3wpSSa4Z3iSjXu7u4CIX/fNT
-         yAaw==
+        bh=ySUALm4kAiEtFHHbP93/9gqyCVQ7SC9yKGUHGHBoiHU=;
+        b=hjsXrviyhWBG+ylfCl1U5eKuoBg2ZsHTISJiytZKGG8YPrn9g4KPUOYC6B6t7Cg6BI
+         B05cGtiAuKn9c0jzkNTOdj2CGHS1yHf+lyP7dwZU38z7Ez0D1BtroQl046flSr/v7ZZ2
+         ejPH2G0UzuP+1pYdUsjphUR1GTI5kv2ZAzCzgbIx0S6hkDBelErfxBu/FUJTCiwcOLNU
+         GRFoqIDRDdUDnsNgJnoQkfgAyML2MjsYCFyG9Rhq9i5SWdKXPZ1ms2yhhcQioGsbd0gR
+         qltWyuMFR5HJUBekmtJ8sfhwIJxoo3vwVaOq8isAefsa/sVrlACwhFGCvmxRuRSSIHeT
+         mO6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744817213; x=1745422013;
+        d=1e100.net; s=20230601; t=1744817215; x=1745422015;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzD2f0rxQ0+kK+W36kLcNjO+gtstze2fsnlGYTmtJfM=;
-        b=k07qRKhju12jZj6HcU0Tjh9S4ZNYFLeDfruMyVF221NU9uha1+mTdKBjchwYBrMXYW
-         8DDwUIyqQqH9tgTSZKO172mrjDqmWkV1i/B+4NKiLkqHrQzZ/9cpT0eMGOPd5W7q15w/
-         MKgBNrtbEqjF+Xyd3AAoo0YQpkXUC/bUVgOlIAKngOnnygEWwW2L/WN2OEcCQp+vqBTd
-         HoV68sB+v5hD1c7CDn+TV89mGj2kN6PGwfcPmV9VlPXRy4E+R9k/qdg1zfxwXgp+9YYO
-         Kd2CRXXypaoY+zZG9BygfJNbJWfVVUSspOOR76TUiz27pym2dNH+9rvO8kEo5JgS74TD
-         B/8A==
-X-Forwarded-Encrypted: i=1; AJvYcCViOrnc22u6S8mWEFVvoshNx8hwkWptxXnCZ+mlUQJhzB8Nw15BvJJqYe0qjaxJndKkmgDQPaGJI65lvRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyli3tsM8lrLvnvutlIKOa66Wu3YXf1OtuFw3FM51jPcKyKKoA5
-	MgA5Nt5eZ3UGlFHRlKu1mHWuQAL2FSLqO1swIDzhX5/dsMyNA/chuMhoJCaNOF2GzILoriI9f5Z
-	nbPcD8w==
-X-Google-Smtp-Source: AGHT+IHeDz4onV1W2s/vfCOCzAITZ8Cgy1MgbHMQ8Bx0jNC7ijt2U2LknXq2pGOSmZDw3fZM7GLT6soOihnk
-X-Received: from edsu15.prod.google.com ([2002:aa7:d98f:0:b0:5f4:ade4:88fd])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:35c2:b0:5e5:bbd5:676a
- with SMTP id 4fb4d7f45d1cf-5f4b75b2ce3mr1715528a12.22.1744817213096; Wed, 16
- Apr 2025 08:26:53 -0700 (PDT)
-Date: Wed, 16 Apr 2025 15:26:41 +0000
+        bh=ySUALm4kAiEtFHHbP93/9gqyCVQ7SC9yKGUHGHBoiHU=;
+        b=Suk55neh9Hu1GmdJq4L6a+XyeIjtI/B7WCMM4XfXYFR8CRU1Gs9DMOqwTCpq2rmfuF
+         0aaXzsFqlqTfTVKEj6WLvIYvR22mGnQ8D5ivdqwHuwfHhBkzUo8T3MSCU83fqeYDtd9n
+         1Fo9/1cngfFudwzMocKNx1kKQBbcDME2ozacnwaZjRqJKXVtek2VfioFpfhF74XbbEVj
+         1WPy+JJxKlPBlK1w4oDqI2XfHeLDIYp2wvjBrDPjjRCIqZr8sxFuqZ/Kj01xluFhZ6gN
+         L3V6zmPlqRmZ/YtKlUCfyOr8iAAVNMnZA3AXoNgvUwjGDB+z42aTmE8C0XMOqK6X9vH8
+         88Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwY/WwlIwds01pE1o3GeLZEHw+StHdY9utGM9x03HzkNkogyJvYHqZ6CmCZRBihuhlnQG7/UiGDdq1VAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAy+Y5gzRAxqC9BYvwdSwO9CbFF7yy8cqgi1dgPafFR++e8iF1
+	WDEXD7mLunl5OgkMwY3unWX4xzIF7fWoSe/OlHOBOruVscLxhYW1FaaKFt9t0t9541YUYH2uUwO
+	U+LqF1g==
+X-Google-Smtp-Source: AGHT+IFO6LqLQpchltIVKkcVMTkkcoAUlzOcNnFkY+QSrpAdIOkv/ajoQQVC0VjwY0/SmeO3qq2XvFKzCmMO
+X-Received: from edb17.prod.google.com ([2002:a05:6402:2391:b0:5f4:b71f:15a6])
+ (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:26c8:b0:5f4:c619:2392
+ with SMTP id 4fb4d7f45d1cf-5f4c6192660mr959365a12.1.1744817215420; Wed, 16
+ Apr 2025 08:26:55 -0700 (PDT)
+Date: Wed, 16 Apr 2025 15:26:42 +0000
 In-Reply-To: <20250416152648.2982950-1-qperret@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250416152648.2982950-1-qperret@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250416152648.2982950-2-qperret@google.com>
-Subject: [PATCH v2 1/7] KVM: arm64: Track SVE state in the hypervisor vcpu structure
+Message-ID: <20250416152648.2982950-3-qperret@google.com>
+Subject: [PATCH v2 2/7] KVM: arm64: Fix pKVM page-tracking comments
 From: Quentin Perret <qperret@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -71,152 +71,66 @@ Cc: Vincent Donnefort <vdonnefort@google.com>, Fuad Tabba <tabba@google.com>,
 	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Fuad Tabba <tabba@google.com>
+Most of the comments relating to pKVM page-tracking in nvhe/memory.h are
+now either slightly outdated or outright wrong. Fix the comments.
 
-When dealing with a guest with SVE enabled, make sure the host SVE
-state is pinned at EL2 S1, and that the hypervisor vCPU state is
-correctly initialised (and then unpinned on teardown).
-
-Co-authored-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Fuad Tabba <tabba@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Quentin Perret <qperret@google.com>
 ---
- arch/arm64/include/asm/kvm_host.h  | 12 ++++----
- arch/arm64/kvm/hyp/nvhe/hyp-main.c |  4 ---
- arch/arm64/kvm/hyp/nvhe/pkvm.c     | 47 ++++++++++++++++++++++++++++--
- 3 files changed, 51 insertions(+), 12 deletions(-)
+ arch/arm64/kvm/hyp/include/nvhe/memory.h | 29 ++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index e98cfe7855a6..931011b68819 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -971,20 +971,22 @@ struct kvm_vcpu_arch {
- #define vcpu_sve_zcr_elx(vcpu)						\
- 	(unlikely(is_hyp_ctxt(vcpu)) ? ZCR_EL2 : ZCR_EL1)
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+index 34233d586060..178028172c0b 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+@@ -8,20 +8,29 @@
+ #include <linux/types.h>
  
--#define vcpu_sve_state_size(vcpu) ({					\
-+#define sve_state_size_from_vl(sve_max_vl) ({				\
- 	size_t __size_ret;						\
--	unsigned int __vcpu_vq;						\
-+	unsigned int __vq;						\
- 									\
--	if (WARN_ON(!sve_vl_valid((vcpu)->arch.sve_max_vl))) {		\
-+	if (WARN_ON(!sve_vl_valid(sve_max_vl))) {			\
- 		__size_ret = 0;						\
- 	} else {							\
--		__vcpu_vq = vcpu_sve_max_vq(vcpu);			\
--		__size_ret = SVE_SIG_REGS_SIZE(__vcpu_vq);		\
-+		__vq = sve_vq_from_vl(sve_max_vl);			\
-+		__size_ret = SVE_SIG_REGS_SIZE(__vq);			\
- 	}								\
- 									\
- 	__size_ret;							\
- })
- 
-+#define vcpu_sve_state_size(vcpu) sve_state_size_from_vl((vcpu)->arch.sve_max_vl)
-+
- #define KVM_GUESTDBG_VALID_MASK (KVM_GUESTDBG_ENABLE | \
- 				 KVM_GUESTDBG_USE_SW_BP | \
- 				 KVM_GUESTDBG_USE_HW | \
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index 2c37680d954c..59db9606e6e1 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -123,10 +123,6 @@ static void flush_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu)
- 
- 	hyp_vcpu->vcpu.arch.ctxt	= host_vcpu->arch.ctxt;
- 
--	hyp_vcpu->vcpu.arch.sve_state	= kern_hyp_va(host_vcpu->arch.sve_state);
--	/* Limit guest vector length to the maximum supported by the host.  */
--	hyp_vcpu->vcpu.arch.sve_max_vl	= min(host_vcpu->arch.sve_max_vl, kvm_host_sve_max_vl);
+ /*
+- * Bits 0-1 are reserved to track the memory ownership state of each page:
+- *   00: The page is owned exclusively by the page-table owner.
+- *   01: The page is owned by the page-table owner, but is shared
+- *       with another entity.
+- *   10: The page is shared with, but not owned by the page-table owner.
+- *   11: Reserved for future use (lending).
++ * Bits 0-1 are used to encode the memory ownership state of each page from the
++ * point of view of a pKVM "component" (host, hyp, guest, ... see enum
++ * pkvm_component_id):
++ *   00: The page is owned and exclusively accessible by the component;
++ *   01: The page is owned and accessible by the component, but is also
++ *       accessible by another component;
++ *   10: The page is accessible but not owned by the component;
++ * The storage of this state depends on the component: either in the
++ * hyp_vmemmap for the host state or in PTE software bits for the hypervisor
++ * and guests.
+  */
+ enum pkvm_page_state {
+ 	PKVM_PAGE_OWNED			= 0ULL,
+ 	PKVM_PAGE_SHARED_OWNED		= BIT(0),
+ 	PKVM_PAGE_SHARED_BORROWED	= BIT(1),
+-	__PKVM_PAGE_RESERVED		= BIT(0) | BIT(1),
 -
- 	hyp_vcpu->vcpu.arch.mdcr_el2	= host_vcpu->arch.mdcr_el2;
- 	hyp_vcpu->vcpu.arch.hcr_el2 &= ~(HCR_TWI | HCR_TWE);
- 	hyp_vcpu->vcpu.arch.hcr_el2 |= READ_ONCE(host_vcpu->arch.hcr_el2) &
-diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-index 5a335a51deca..338505cb0171 100644
---- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-@@ -372,6 +372,18 @@ static void unpin_host_vcpu(struct kvm_vcpu *host_vcpu)
- 		hyp_unpin_shared_mem(host_vcpu, host_vcpu + 1);
- }
+-	/* Meta-states which aren't encoded directly in the PTE's SW bits */
++	__PKVM_PAGE_RESERVED            = BIT(0) | BIT(1),
++
++	/*
++	 * 'Meta-states' are not stored directly in PTE SW bits for hyp and
++	 * guest states, but inferred from the context (e.g. invalid PTE
++	 * entries). For the host, meta-states are stored directly in the
++	 * struct hyp_page.
++	 */
+ 	PKVM_NOPAGE			= BIT(2),
+ };
+ #define PKVM_PAGE_META_STATES_MASK	(~__PKVM_PAGE_RESERVED)
+@@ -44,7 +53,7 @@ struct hyp_page {
+ 	u16 refcount;
+ 	u8 order;
  
-+static void unpin_host_sve_state(struct pkvm_hyp_vcpu *hyp_vcpu)
-+{
-+	void *sve_state;
-+
-+	if (!vcpu_has_feature(&hyp_vcpu->vcpu, KVM_ARM_VCPU_SVE))
-+		return;
-+
-+	sve_state = kern_hyp_va(hyp_vcpu->vcpu.arch.sve_state);
-+	hyp_unpin_shared_mem(sve_state,
-+			     sve_state + vcpu_sve_state_size(&hyp_vcpu->vcpu));
-+}
-+
- static void unpin_host_vcpus(struct pkvm_hyp_vcpu *hyp_vcpus[],
- 			     unsigned int nr_vcpus)
- {
-@@ -384,6 +396,7 @@ static void unpin_host_vcpus(struct pkvm_hyp_vcpu *hyp_vcpus[],
- 			continue;
+-	/* Host (non-meta) state. Guarded by the host stage-2 lock. */
++	/* Host state. Guarded by the host stage-2 lock. */
+ 	enum pkvm_page_state host_state : 8;
  
- 		unpin_host_vcpu(hyp_vcpu->host_vcpu);
-+		unpin_host_sve_state(hyp_vcpu);
- 	}
- }
- 
-@@ -398,12 +411,40 @@ static void init_pkvm_hyp_vm(struct kvm *host_kvm, struct pkvm_hyp_vm *hyp_vm,
- 	pkvm_init_features_from_host(hyp_vm, host_kvm);
- }
- 
--static void pkvm_vcpu_init_sve(struct pkvm_hyp_vcpu *hyp_vcpu, struct kvm_vcpu *host_vcpu)
-+static int pkvm_vcpu_init_sve(struct pkvm_hyp_vcpu *hyp_vcpu, struct kvm_vcpu *host_vcpu)
- {
- 	struct kvm_vcpu *vcpu = &hyp_vcpu->vcpu;
-+	unsigned int sve_max_vl;
-+	size_t sve_state_size;
-+	void *sve_state;
-+	int ret = 0;
- 
--	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_SVE))
-+	if (!vcpu_has_feature(vcpu, KVM_ARM_VCPU_SVE)) {
- 		vcpu_clear_flag(vcpu, VCPU_SVE_FINALIZED);
-+		return 0;
-+	}
-+
-+	/* Limit guest vector length to the maximum supported by the host. */
-+	sve_max_vl = min(READ_ONCE(host_vcpu->arch.sve_max_vl), kvm_host_sve_max_vl);
-+	sve_state_size = sve_state_size_from_vl(sve_max_vl);
-+	sve_state = kern_hyp_va(READ_ONCE(host_vcpu->arch.sve_state));
-+
-+	if (!sve_state || !sve_state_size) {
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	ret = hyp_pin_shared_mem(sve_state, sve_state + sve_state_size);
-+	if (ret)
-+		goto err;
-+
-+	vcpu->arch.sve_state = sve_state;
-+	vcpu->arch.sve_max_vl = sve_max_vl;
-+
-+	return 0;
-+err:
-+	clear_bit(KVM_ARM_VCPU_SVE, vcpu->kvm->arch.vcpu_features);
-+	return ret;
- }
- 
- static int init_pkvm_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu,
-@@ -432,7 +473,7 @@ static int init_pkvm_hyp_vcpu(struct pkvm_hyp_vcpu *hyp_vcpu,
- 	if (ret)
- 		goto done;
- 
--	pkvm_vcpu_init_sve(hyp_vcpu, host_vcpu);
-+	ret = pkvm_vcpu_init_sve(hyp_vcpu, host_vcpu);
- done:
- 	if (ret)
- 		unpin_host_vcpu(host_vcpu);
+ 	u32 host_share_guest_count;
 -- 
 2.49.0.604.gff1f9ca942-goog
 
