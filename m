@@ -1,77 +1,88 @@
-Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D723B23FC55;
-	Wed, 16 Apr 2025 10:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6A5237700;
+	Wed, 16 Apr 2025 10:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797624; cv=none; b=i661/wzuKE2IWb21mPp647bBAbVnQkSphNmia62dKlByS49TD+aZx8TU0wg8jGbiB9nQW77YK1ZTbEY0vR4b7K8bJ6fqi/wpQ8TUgnpbGp4GjoAGkptTZ0LCJGoUk/kDcmjz02PgKCGT19LA2cGit92sfNOuk+bGKeh3M/T9ErE=
+	t=1744797775; cv=none; b=TDH7I5VBs+eGQ1KlSuJ8tA5voM/ICngyIZMhl5/IyTBk5DyTvI9qASijpv7pyOMAicVKAazL4UDkjZSM/UQjWfJPZPhu7COrwOLwklXl7tCAHx8VzcBDxs6DyKjpT1fGmHAmdd0iFaEQP9PXlSbCokks4K+nao30q38jOUkCnqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797624; c=relaxed/simple;
-	bh=kGN2aD857pJDb+H3nbziFSBMmHeAQay5/PvA7Ob7aBw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PMG2kclxI2HrTUyQgNpr1oT0DR5+J9fFxgN0/nawAUANX/IJpAcJf1jtdk5ysAORxJ1/EjZ4UFeOjr+8D26wEPBaAJxr2IZk5D/ZP6VgknzIkLy7e0qe1uTq3uVHPihwYmVH+xMqTu76R35+c6wI9u/cNwJ564aSpjrddu8jDGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=101.71.155.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from localhost.localdomain (unknown [119.122.214.249])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1215c4861;
-	Wed, 16 Apr 2025 18:00:10 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: [PATCH 1/1] arm64: dts: allwinner: correct the model name for Radxa Cubie A5E
-Date: Wed, 16 Apr 2025 18:00:06 +0800
-Message-Id: <20250416100006.82920-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744797775; c=relaxed/simple;
+	bh=+cKq8aKhcGOaMlZseIjnVl0ziwhnIryENv47tAzoNxg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BpLG34OIvUn5B5qM0xjmn7pKxbELkAH5uWqr0VcdgX4TYEune4g9t2nGd0FGXAKrIofTjPVIeb9cjVuR3NDzV78WfHEmG5CB8Wavq5zAimEj1F571hcixS3sXXl61LWO1WdqpDuxcgVtrqdle5wZM6U5Wd0sOvWe8m+p4j97zpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExvZvf32; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExvZvf32"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744797772; x=1776333772;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+cKq8aKhcGOaMlZseIjnVl0ziwhnIryENv47tAzoNxg=;
+  b=ExvZvf32+dVjk/6LNeB9Y4cQ56FI1Uw53YY2QATykGJ1L0UiMv2PUhsJ
+   wY0eeh9E4TxRtVnp7+u2uKVO33IazHE9dgIJUVRYtD7T7XjGCH36mFg9e
+   34Nbfkq0A6ElOId8nhC0Qgja/a6bXqzjnhgQmS2VDXg6CEz2kkUDKbxm6
+   SCI8aIf3cKrvNxHe2/wvLDbWu7bIIX02r9oNq+mauzGKQHdhh/pUz8oif
+   FyCKC28d9eccdyUB4Aidn3k13vJifpENzTrmSnATOmUBBCDMgzG3OiZzu
+   6CYPApYDEDepXho09xYPIGgllKfJep6jwHfXWJxOePSJHDHfwW6Ya95Xv
+   A==;
+X-CSE-ConnectionGUID: hfC2DSDNRIK9eLIep7XhrQ==
+X-CSE-MsgGUID: M7ZMF9lVT22htHuLvBquMA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="49987801"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="49987801"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:02:50 -0700
+X-CSE-ConnectionGUID: ffEA1J1qSkS2k+ZErWBacg==
+X-CSE-MsgGUID: 3sxvh7DWTuK/oFTttngPIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="161449257"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:02:47 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Use PCI_STD_NUM_BARS instead of 6
+Date: Wed, 16 Apr 2025 13:02:39 +0300
+Message-Id: <20250416100239.6958-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHkkfVh0fS05DTUxPGkhCH1YeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKT1VJT0JZV1kWGg8SFR0UWUFZS1VLVUtVS1kG
-X-HM-Tid: 0a963e0ab3c903a2kunm1215c4861
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Njo6Sgw4DzICGhM0OTkPDiwo
-	KjdPCkNVSlVKTE9PTEJMTUpJSUpJVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpPVUlPQllXWQgBWUFKTEpJNwY+
 
-According to https://radxa.com/products/cubie/a5e,
-the name of this board should be "Radxa Cubie A5E".
-This is also consistent with the dt-bindings.
+pci_read_bases() is given literal 6 that means PCI_STD_NUM_BARS.
+Replace the literal with the define to annotate the code better.
 
-Fixes: 80e0fb4e491b ("arm64: dts: allwinner: a523: add Radxa A5E support")
-Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts | 2 +-
+ drivers/pci/probe.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-index 912e1bda974c..03c9a9ef5adc 100644
---- a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-@@ -8,7 +8,7 @@
- #include <dt-bindings/gpio/gpio.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 364fa2a514f8..08971fca0819 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2058,7 +2058,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 		if (class == PCI_CLASS_BRIDGE_PCI)
+ 			goto bad;
+ 		pci_read_irq(dev);
+-		pci_read_bases(dev, 6, PCI_ROM_ADDRESS);
++		pci_read_bases(dev, PCI_STD_NUM_BARS, PCI_ROM_ADDRESS);
  
- / {
--	model = "Radxa A5E";
-+	model = "Radxa Cubie A5E";
- 	compatible = "radxa,cubie-a5e", "allwinner,sun55i-a527";
+ 		pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
  
- 	aliases {
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 -- 
-2.25.1
+2.39.5
 
