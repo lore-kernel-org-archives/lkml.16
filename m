@@ -1,161 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CDD22D7A8;
-	Wed, 16 Apr 2025 07:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACE322B8AF;
+	Wed, 16 Apr 2025 07:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789020; cv=none; b=jwnV7Ywmo7cwysdfsDIXV/KrZxzhMonfdB0LisUQedWqeqhjASXhEcbsDf4fgAmN+jclx81JW3+mGDko7GLNv5TiECrCqM2NCZevrC8wcSH5P5tlNrzbtc2VjAqFMpGcFMIXGmfIYYMBYvkWz62OVmzSdxz7Znk2y6vl4bKoLQw=
+	t=1744789045; cv=none; b=TqYWLRrWKF6piPf/nEygWvp5orAhnMYALBYWmcK+K5yh4uew/XTVxQTqL+HcJx33GY+50S92Q7uwfS4bTd8vaXPzmGrWUifxyS3azGOMzksKBuUz09+OCFUacKex7lczFrpXM/a2TmVqVNaZIoX70bUyd4EL5eleIQmdZGbxB/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789020; c=relaxed/simple;
-	bh=k12yYWnEtuAOb8FYj01ByawbqpUrWk4A5udTKrydTEs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=H68rqVN9F+CSESdhZKbqMccVgRbggOZ7jnncEb1N558YZcYCLlUfdY3eHxw6NusP8NT+Q/6aI7Xy0I4fGgA85PIXcuCE/kqNzo2qsnqOxWoGMHHmCnsyFHf7JUeOfc6fbDnwPEeihgINJvi8G/6B7u0nNpga5l4H5i7U+pR15wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aeYGFd4j; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aeYGFd4j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744789019; x=1776325019;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=k12yYWnEtuAOb8FYj01ByawbqpUrWk4A5udTKrydTEs=;
-  b=aeYGFd4jusE6CmvKpa/HdG/UqmbrCy5MHY0eskc4eKfZgGdSW9QieEst
-   +qKrzSlivROiWjveLpgaQ2JMV25jzUZQevm+fAOjUyVHePNECPmnJoeE3
-   8ugft9cGHK0nvNE7R0HTx0e2YuYCf60V2FDhLepOei863ZypyinXIqOWK
-   TWEEZl/jJQl7l4llJmm/mEofvmzHVqpf0ogs1mzuWLGYApX0e+TmghQpf
-   q9rmA6ezpyiN9r6iK8qh82rDnenJ/XhK19QJbOBT56qCbd15wyOn70j7G
-   m4zxfzgQul6hCdACgLxqiKEXRfo7DjgkLf1rIN+G2tLm/Oua8PEB7PB9P
-   w==;
-X-CSE-ConnectionGUID: CrGsPNGGTOOfVOYFee4Fxg==
-X-CSE-MsgGUID: k53T0AnLSN+3IrNqwf4N8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63729594"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="63729594"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:36:58 -0700
-X-CSE-ConnectionGUID: 2GDZYhD5Tuu3ame4S8uWNQ==
-X-CSE-MsgGUID: fPmLpTnpSIaidZAjcFFOrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="131274566"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.96])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:36:53 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, David Airlie <airlied@gmail.com>, Joonas
- Lahtinen <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
- <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] scripts/kernel-doc.py: don't create *.pyc files
-In-Reply-To: <8734e8r25j.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1744786420.git.mchehab+huawei@kernel.org>
- <432f17b785d35122753d4b210874d78ee84e1bb5.1744786420.git.mchehab+huawei@kernel.org>
- <8734e8r25j.fsf@intel.com>
-Date: Wed, 16 Apr 2025 10:36:50 +0300
-Message-ID: <87zfggpnfx.fsf@intel.com>
+	s=arc-20240116; t=1744789045; c=relaxed/simple;
+	bh=oGodWPuUb5+MnGToBbtDq5Xpwb8zsCN7+byc82DrjYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C1SwP41M787cW9o7+/BdBGwuCkxIrGyuoWDiAEwLYfLPVMj/LxO7oJ1BmNmhHwiV7pCE81bKpnmzevit8m68TGJam7j/eNZB/LR/YGZy1owmVGrcRVHdNu81/zSm0giEPla5Q7Y5xaeIPhSclTdEs/+URo0Qs8Yui9LhLkSSnyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f41.google.com with SMTP id a1e0cc1a2514c-86715793b1fso2508378241.0;
+        Wed, 16 Apr 2025 00:37:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789041; x=1745393841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2AaYCWwqfJc5zQMIS4PXsP90RkF2Rh7XV6isLc25jDU=;
+        b=vMiRHJ0bwATQIF4B8aGOI9xmeoWCNhR3uQ1M5EIDU1z+cQpxAp/sm+JRR+mvJ2i4og
+         eyWd+e1L5sKGyH7fYzbdokLl0TnZMwvMrtkK3zoqrL2Rr16elZQYXOPIoPQ4QH/ZX9h1
+         NZFfKfhnIwjp/DKf8qvz3iHOozVVYI2aqy0gtsBDcGudJ3ffdzsToSA4pObERP2y5rgl
+         oVVjPnXBAhBnovN1jWa3u4+WozxOeKbL5eTOaHk2xMlsyjm1WwBFRcQaI/fhFm5h+I5U
+         cKtC7ApTaEYlA5uQHWp6W4tQMXYJKjPbr9w5U2Ht8WHmcirKXv3GUQ/is+bajPQvnxSv
+         sfOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEOrQj8v9bxEEOsWZ6LepHn4xRoYHMjtjs+fnfcoGX19CbLk4gmJjYshJHVjTrH4Nu235EaGmik9sVJKg7GWK0Reo=@vger.kernel.org, AJvYcCWBOmqw+w0OuceayvyjEEvrcX1qZOXLMAPFKD5YB/9aF9YJA5OcKX/QlSo4S4cm4lvVl2dNT9FxJw643yEx@vger.kernel.org, AJvYcCWXqCuC9fheDDxVYPGNa+Mf2BWpzqt5pbpxBRFVYsS55jagafvprR63wB+4etYx0yr7vOurRtKgytq1@vger.kernel.org, AJvYcCXaP5JrlA1s4QmhSpjmKYqsthh+8yzbK1VnAN77n5xPYeVdPy0ftUN4iYD7a2V+YsuiMTaRdCp7ngtU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUIVEnp+W++sqtDhN3ICov81oQKWFubmthPL2ET8FX6QAgNQ4u
+	giyDjx4Tw//DACBq3qa6eKpkSG5bMIVZv0Jhdq5k3zbU0zlizkLfQ9LuArzS
+X-Gm-Gg: ASbGncu3obKWVmalrC8iLC5m0c/gWJRYTgMuzg6TX3AqrP/5t7qlqOMPcvVziJQuI7t
+	JScz7aophvenOsAoE2SePiEFZtD0uZfGJ7Opg/3/IqxzXXQT4Eq0jC46PTbEVC4E91KN5cyYKmF
+	dPtCMg5XARfqG4XJa8YfawEGaePDkkmKHCCdN9mVV2wYXM7VizuoA3Z0MLUr88tF8bEKBt2KaVb
+	k9nbpiYQNVCl0+9VXOMDkmSiAk4OBxwYT1la3KfsT5mimQJXoe7/zfsWacPoqw7kNIqQMS2pooh
+	BX3yn9CGfBo75dNLCI/O+WL47A9k26XS2V4LYU5lB0ohCzjR2+5SHq0JvEh0NjxH1yIhjy0hr5f
+	nd27blYw=
+X-Google-Smtp-Source: AGHT+IFMBo+Qq0LRXY49Rmg73p9OJkNoE1G2IsGCJUfZmD2i2ZxEv5+kFfMpZ/b4+bXtdYjraWORRQ==
+X-Received: by 2002:a67:f094:0:b0:4c4:dead:59a3 with SMTP id ada2fe7eead31-4cb591aeccdmr188559137.2.1744789041360;
+        Wed, 16 Apr 2025 00:37:21 -0700 (PDT)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com. [209.85.221.177])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87555547509sm3176098241.0.2025.04.16.00.37.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 00:37:21 -0700 (PDT)
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523d8c024dfso2491998e0c.3;
+        Wed, 16 Apr 2025 00:37:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUM+6s4vFnRjdKdefjd4H9AaMRP3R7OTcnxt8q9gpY8RWl5NsAoEcMmTkZ11aro33x2frMGlh24ApHc@vger.kernel.org, AJvYcCV5Vw6DolqhYSFwEKFynHMaRGAXJRCC66Gb3HoIThetHDu3McFfGH/PfltEyAzhBJeUjLuiAyHlQQE7rSVQAkmvpzo=@vger.kernel.org, AJvYcCWObDTWL8hlnAHNtOdJ7ddEGNPgXy9pciNfqknPY6u8/OMoH+UK5oy43LfLxIuWnKUBR1segFofiaQr@vger.kernel.org, AJvYcCXfLmFMeMTltE3S2BMDdu2c3y4T7GWKDWyoIyXoDpjHFLQxXcLkm8h3ESRu6z5dEfJ2eyeBJnFAvu90RWMW@vger.kernel.org
+X-Received: by 2002:a05:6122:20a3:b0:520:61ee:c815 with SMTP id
+ 71dfb90a1353d-5290e20a1a6mr224554e0c.10.1744789040901; Wed, 16 Apr 2025
+ 00:37:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250407165202.197570-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407165202.197570-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXDDBS1POX3AmvTLWBbYcpXjnZm6sNqRpKfghF4uPGsUA@mail.gmail.com> <CA+V-a8uSB62TSxgcGTaWbfkPsNOmxZmO31jH3TREE6g2HHtcXA@mail.gmail.com>
+In-Reply-To: <CA+V-a8uSB62TSxgcGTaWbfkPsNOmxZmO31jH3TREE6g2HHtcXA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 16 Apr 2025 09:37:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVXjs75gVEfS3WMtvtywP_m7wWaf2HQKCwkJZqX4T5M8w@mail.gmail.com>
+X-Gm-Features: ATxdqUHfLWZozTEbKvWHo6ddKkD-_L7IeLSAvaYLwHnDrViN4zVvtP7UkamFSY8
+Message-ID: <CAMuHMdVXjs75gVEfS3WMtvtywP_m7wWaf2HQKCwkJZqX4T5M8w@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] clk: renesas: r9a09g057: Add clock and reset
+ entries for GBETH0/1
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 16 Apr 2025, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
->> As reported by Andy, kernel-doc.py is creating a __pycache__
->> directory at build time.
->>
->> Disable creation of __pycache__ for the libraries used by
->> kernel-doc.py, when excecuted via the build system or via
->> scripts/find-unused-docs.sh.
->>
->> Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
->> Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
->> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->> ---
->>  drivers/gpu/drm/Makefile      | 2 +-
->>  drivers/gpu/drm/i915/Makefile | 2 +-
->>  include/drm/Makefile          | 2 +-
->>  scripts/find-unused-docs.sh   | 2 +-
->>  4 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
->> index ed54a546bbe2..1469d64f8783 100644
->> --- a/drivers/gpu/drm/Makefile
->> +++ b/drivers/gpu/drm/Makefile
->> @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
->>  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
->>        cmd_hdrtest = \
->>  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
->> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
->> +		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+Hi Prabhakar,
+
+On Tue, 15 Apr 2025 at 21:25, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Tue, Apr 15, 2025 at 3:37=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Mon, 7 Apr 2025 at 18:52, Prabhakar <prabhakar.csengg@gmail.com> wro=
+te:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > Add clock and reset entries for GBETH instances. Include core clocks =
+for
+> > > PTP, sourced from PLLETH, and add PLLs, dividers, and static mux cloc=
+ks
+> > > used as clock sources for the GBETH IP.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com=
 >
-> It doesn't work to put PYTHONDONTWRITEBYTECODE=1 as a parameter to
-> kernel-doc...
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/clk/renesas/r9a09g057-cpg.c
+> > > +++ b/drivers/clk/renesas/r9a09g057-cpg.c
+> >
+> > > @@ -78,6 +87,19 @@ static const struct clk_div_table dtable_2_64[] =
+=3D {
+> > >         {0, 0},
+> > >  };
+> > >
+> > > +static const struct clk_div_table dtable_2_100[] =3D {
+> > > +       {0, 2},
+> > > +       {1, 10},
+> > > +       {2, 100},
+> > > +       {0, 0},
+> > > +};
+> > > +
+> > > +/* Mux clock tables */
+> > > +static const char * const smux2_gbe0_rxclk[] =3D { ".plleth_gbe0", "=
+et0-rxc-rxclk" };
+> > > +static const char * const smux2_gbe0_txclk[] =3D { ".plleth_gbe0", "=
+et0-txc-txclk" };
+> > > +static const char * const smux2_gbe1_rxclk[] =3D { ".plleth_gbe1", "=
+et1-rxc-rxclk" };
+> > > +static const char * const smux2_gbe1_txclk[] =3D { ".plleth_gbe1", "=
+et1-txc-txclk" };
+> >
+> > The "et[01]-[rt]xc-[rt]xclk" clocks are not created by this driver.
+> > IIUIC, they are actually Ethernet PHY signals.
+> > How is this supposed to work?
+> >
+> My intention was to add support for PHY drivers to provide the clocks
+> and hook them up accordingly. Currently, for the RX clocks, we get a
+> rate of 0 since they are external.
 
-Moreover, KERNELDOC is only defined in Documentation/Makefile. It's
-empty here.
+So the link would not be provided by DT?
+If these clocks are inputs to the clock controller, they should be
+listed in the clock controller's clock{,-name}s' properties...
 
-Also scripts/Makefile.build uses kernel-doc, which is probably the one
-creating __pycache__ Andy sees.
-
+> I haven=E2=80=99t written a prototype yet for the PHY driver to provide t=
+he
+> clocks, but the plan is to get the initial pieces in place and then
+> extend support for that.
 >
-> BR,
-> Jani.
->
->
->>  		touch $@
->>  
->>  $(obj)/%.hdrtest: $(src)/%.h FORCE
->> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
->> index ed05b131ed3a..bb873f9cc2aa 100644
->> --- a/drivers/gpu/drm/i915/Makefile
->> +++ b/drivers/gpu/drm/i915/Makefile
->> @@ -408,7 +408,7 @@ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
->>  #
->>  # Enable locally for CONFIG_DRM_I915_WERROR=y. See also scripts/Makefile.build
->>  ifdef CONFIG_DRM_I915_WERROR
->> -    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none -Werror $<
->> +    cmd_checkdoc = $(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none -Werror $<
->>  endif
->>  
->>  # header test
->> diff --git a/include/drm/Makefile b/include/drm/Makefile
->> index a7bd15d2803e..6088ea458f44 100644
->> --- a/include/drm/Makefile
->> +++ b/include/drm/Makefile
->> @@ -11,7 +11,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
->>  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
->>        cmd_hdrtest = \
->>  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
->> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
->> +		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
->>  		touch $@
->>  
->>  $(obj)/%.hdrtest: $(src)/%.h FORCE
->> diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
->> index ee6a50e33aba..d6d397fbf917 100755
->> --- a/scripts/find-unused-docs.sh
->> +++ b/scripts/find-unused-docs.sh
->> @@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
->>  	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
->>  	continue;
->>  	fi
->> -	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
->> +	str=$(PYTHONDONTWRITEBYTECODE=1 scripts/kernel-doc -export "$file" 2>/dev/null)
->>  	if [[ -n "$str" ]]; then
->>  	echo "$file"
->>  	fi
+> Is my understanding correct that the PHY should provide the clocks? Or
+> would you suggest a different approach?
 
--- 
-Jani Nikula, Intel
+The Static Mux Control Registers (CPG_SSEL[01]) registers treat them as
+clock inputs.  However, Figure 6.3-1 ("Block Diagram of the Ethernet
+Interface") shows the TX clocks are bidirectional, so they can be used
+as either inputs or outputs?  On RGMII[1], RXC is an input (PHY-to-MAC),
+while TXC is an output (MAC-to-PHY).
+
+I'm a bit lost on how this works, and how to model and handle this...
+
+[1] https://en.wikipedia.org/wiki/Media-independent_interface#Reduced_gigab=
+it_media-independent_interface
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
