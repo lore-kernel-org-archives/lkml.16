@@ -1,135 +1,148 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06A024CEEB
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254E4233703;
+	Wed, 16 Apr 2025 20:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836151; cv=none; b=BxS569a48jiGpIZhArzhEs4UoRWJTK6VOESwYVW9YlWlWETlUtPohM3qqDVA0/VVXtd3i8bFQomChqJy8NcB7MQqnz8/e4PzjhJkmCGnLEtSP4M8A3nqi4DaWUpqA78BSDJIcOO4aj1xN2TzPjP7j7xCbAIVcmya3pvIe/UNbSU=
+	t=1744836209; cv=none; b=usH/7NFnzmjE38oDw5nM3sCA+Ww+KmZLLW2ZmSHyJcttq8OYWfNTgRmp4CbQ4AScOWUQBZ2wQ4pHUVPM4GoK+8mQ1gAqr87z75YQ69shdTTGFBqZdBkbwaI4bBjhgcW9epg3AQ+Zj1gWs2xhQ+OfKw7jNfkf7nTnev6BGRIVd1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836151; c=relaxed/simple;
-	bh=W7NKhnTpUeOCGlpiS2roAP2cc1f4BGRsQOUiHrDOA1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Iroivun+4wMOTN0/tdyqLD8hQjKaaLtmXWM+6DiZXccn4bRwakSyLqIOAWOfwtZleT7OnVMhNfzc3AIHdTNdq+W8m4MaINfuvI4xnkzpfqo4xc/+91/GNbm5SrVstrsaqKOUiJmvgd37yx8fDKkh7CAbA9UM6HTF3deGvAbnpPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=k29uOiZ6; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	s=arc-20240116; t=1744836209; c=relaxed/simple;
+	bh=zGeasa8yh7TvL+Z6S1rNVwaaw7P4CJofVtkAXYnoLEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bH8zPoxk8dwRw5UVCDGesdcoEa2dOdv1ijwyV4IauCLgvsxAEqppJYr/GFRzkCr1WJAW8xTyWvCD8Ia6VEUcJEtZdzyon1Y5PTUumKX400UHQCFtBuXmOxFAmHj6pcCNZ81dTJZ4a+LyeozJwyC5yN7Lz0OO89iyszEy3WUQBWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC7K6Xcb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="k29uOiZ6"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so14810b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744836149; x=1745440949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HUDIvKIBsD4gxpULDKxinqYIlQSnX87hM/ddYNKNziQ=;
-        b=k29uOiZ6VyaBVQiDDXpUkrNvF7xIL5114BEmfbsky1VnvzTgRpgNt5cd7+VZgS1gDW
-         n4tUo55naND8mkOdXxkpcfJc2l+k8EmyWy30YJ5PEpBxtDlB5ZqYfqOfz807/NxXp0kg
-         xJTGiVCjeVb4U9wxf47d7Cm+fEo4Cz0euo2vEsGz0aI8S+aKlrDk28tdm6XlL9FKgtqP
-         ZTQWp9AL6ic//be8bN7yC7FSEvWj/UE2LO4eF0CjXCNJ5p33+Lvtk8qBL4nHD2GxqkK6
-         rpOzHI3QThoZwc7OuZtPUhoP8E3B74hd6vNP9BJk7Ts/GCKJJQsFfIqmHsWZoDvD9+aV
-         HVoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744836149; x=1745440949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HUDIvKIBsD4gxpULDKxinqYIlQSnX87hM/ddYNKNziQ=;
-        b=bhtArdkF+rmq5uxZj7iyjYxXuQaREweiBT2A2qUi72pzp/0dRkL0JlAED9iYH/wvQY
-         /2DGVCCEFqwsHDjCyfh12dLXZl41eNlelPp0T/P7WHAFHezgqpkn0YMFziEEJByz2ovP
-         OH/Jxe0AVSHD3yZj6EgzEyH9Jm+JybLSvA16FpE4fdi5uxyq54qif5uUPFGWPMyPiKe2
-         zoJrRvNBJPLT7iqp7jBLlEEvi1XV4QAy/CAcm6oyUgJZxfnYeZONfm+w+Q5rVSGhrcm0
-         y2TgUfmcQx0GZwKIEv8XoZybwFBoLCBr1+hpAEEihX9F5DdWdxcZPS8fsvhoL475vuXz
-         o7KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWReo6TOpJh81bACS5O5omVQeCt+TbClXVlsOz9xJZ1z/dZorBpEzFmGG6Oxf6rnvCw0SK80DnVVJ/XRT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl+JIwlSuS44RZDGK2zVnBfyFFNKQLI3aa4y0PnqSqBx8pGxSd
-	LusDGZ8bi4ZwvtlyNmE2vxif1/VhEj7hDv8rQabW0MVDdv7yMmRHwZ8iWQsJOHCL4Hjr662Gv34
-	=
-X-Gm-Gg: ASbGncuP6oxjS4w49TE0mamIE6mgYlkzL0n9Z7mtFMTLaQQ7DND+LTWOqnBfzWNm1Nl
-	Iw4PdrKsbD2gtreuF9ClZAgLfDX2iLZ7gXvdCpS7uqtSGohJPI9HGN027TwdPLeLQAaopisrDCP
-	wQ2L+a3ApqavJTLsicHoG1BbVvknHfmrfQ9mEfOkhVFywUqiKr13nJNlUcrVt03yuxY+buh8UGW
-	PxztzPoPKM5pr0nZ0ps5h5BGKOBe0IPM6GBr/34u0/ZqjQ0WrvHRbmYouPiNlNAPha1Sgxl8HWI
-	E7OVc3VL2BFpOII0nAaMPoJt+Y5xgGDY+cDb6A3rKFnAAK3mg8OIRhGidtP1Ih+OnKW50VJ4xSK
-	TBpvDEA==
-X-Google-Smtp-Source: AGHT+IEX4eXsP44VjunXaWcttdOrgPWfZ/OAkwqbXiSZcKyF1PkjkyDAsrb9kEIF5F6lmw4jiz197Q==
-X-Received: by 2002:aa7:888d:0:b0:736:476b:fcd3 with SMTP id d2e1a72fcca58-73c267f174dmr5267257b3a.24.1744836148828;
-        Wed, 16 Apr 2025 13:42:28 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f0fc5sm11202994b3a.91.2025.04.16.13.42.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 13:42:28 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v2 18/18] staging: gpib: Removing typedef gpib_interface_t
-Date: Wed, 16 Apr 2025 20:42:04 +0000
-Message-ID: <20250416204204.8009-19-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416204204.8009-1-matchstick@neverthere.org>
-References: <20250416204204.8009-1-matchstick@neverthere.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC7K6Xcb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6174C4CEE2;
+	Wed, 16 Apr 2025 20:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744836208;
+	bh=zGeasa8yh7TvL+Z6S1rNVwaaw7P4CJofVtkAXYnoLEI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rC7K6XcbqNZ0sN7Ne2A7xHznlA+3Wx12X2gxBPa6ehrmVn/jrs5GZhykP79z7qhNo
+	 Rysqfp6vu14R69UW6g8gtQI9TRloKf4ZAn+KZk7j+LS/Nff8NHrboSTtW4+gcDX5vW
+	 HRskFbvS+5u0xlKoXHBhmxxyeK9DD6aOMjmy1j4dHqO1RcFPbmFYq3WDuXL/hArv33
+	 UM3EotzAPJCoW+kyKVVBzvZ7gvYoWGxmOhfXSRynnv8aDuoI1cmdgFpAsJCyhj0whS
+	 w1EIPIuzgdzkHq15rqwqyNXyFUH5k2yIll0dio4bpJsxLFk7j4RmUvhuyW66Nsk+9e
+	 PyaxDYBLXjZww==
+Message-ID: <cebf59f2-5d81-41f9-8c4f-d51fcb514f86@kernel.org>
+Date: Wed, 16 Apr 2025 15:43:26 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] Input: Add a helper for reporting a screen lock key
+ sequence
+To: Armin Wolf <W_Armin@gmx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250407152705.1222469-1-superm1@kernel.org>
+ <7bb43fb5-83dd-4531-b835-77a8e937f54b@gmx.de>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <7bb43fb5-83dd-4531-b835-77a8e937f54b@gmx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Removing gpib_interface_t to adhere to Linux code style.
+On 4/16/2025 3:39 PM, Armin Wolf wrote:
+> Am 07.04.25 um 17:27 schrieb Mario Limonciello:
+> 
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
+>> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L"
+>> to lock the screen. Modern hardware [2] also sends this sequence of
+>> events for keys with a silkscreen for screen lock.
+>>
+>> Introduced a helper input_report_lock_sequence() for drivers to utilize
+>> if they want to send this sequence.
+>>
+>> Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts- 
+>> in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
+>> Link: https://www.logitech.com/en-us/shop/p/k860-split- 
+>> ergonomic.920-009166 [2]
+>> Suggested-by: Armin Wolf <W_Armin@gmx.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/input/input.c | 20 ++++++++++++++++++++
+>>   include/linux/input.h |  2 ++
+>>   2 files changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/input/input.c b/drivers/input/input.c
+>> index ec4346f20efdd..dfeace85c4710 100644
+>> --- a/drivers/input/input.c
+>> +++ b/drivers/input/input.c
+>> @@ -508,6 +508,26 @@ void input_copy_abs(struct input_dev *dst, 
+>> unsigned int dst_axis,
+>>   }
+>>   EXPORT_SYMBOL(input_copy_abs);
+>> +/**
+>> + * input_report_lock_sequence - Report key combination to lock the 
+>> screen
+>> + * @dev: input device
+>> + *
+>> + * Key combination used in the PC industry since Windows 7 for 
+>> locking display
+>> + * is META + L. This is also used in GNOME and KDE by default.
+>> + * See https://support.microsoft.com/en-us/windows/keyboard- 
+>> shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
+>> + */
+> 
+> Hi,
+> 
+> maybe it would make more sense to have the input subsystem transparently 
+> translate between KEY_SCREENLOCK and this
+> special screen lock sequence. This way there would be no room for 
+> regressions as people could enable/disable this
+> behavior via Kconfig.
 
-Reported by checkpatch.pl
+Wouldn't all drivers that emit KEY_SCREENLOCK still need to be modified 
+to have support to emit KEY_LEFTMETA and KEY_L?
 
-In general, a pointer, or a struct that has elements that can reasonably be
-directly accessed should never be a typedef.
+Wouldn't that mean conditional code in every single driver based on the 
+Kconfig?
 
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/include/gpib_types.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Is that worth it?
 
-diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
-index 16aaade310fd..62ce174add85 100644
---- a/drivers/staging/gpib/include/gpib_types.h
-+++ b/drivers/staging/gpib/include/gpib_types.h
-@@ -8,7 +8,7 @@
- #define _GPIB_TYPES_H
- 
- #ifdef __KERNEL__
--/* gpib_interface_t defines the interface
-+/* gpib_interface defines the interface
-  * between the board-specific details dealt with in the drivers
-  * and generic interface provided by gpib-common.
-  * This really should be in a different header file.
-@@ -22,7 +22,6 @@
- #include <linux/timer.h>
- #include <linux/interrupt.h>
- 
--typedef struct gpib_interface gpib_interface_t;
- struct gpib_board;
- 
- /* config parameters that are only used by driver attach functions */
-@@ -212,7 +211,7 @@ static inline void init_gpib_pseudo_irq(struct gpib_pseudo_irq *pseudo_irq)
- /* list so we can make a linked list of drivers */
- struct gpib_interface_list {
- 	struct list_head list;
--	gpib_interface_t *interface;
-+	struct gpib_interface *interface;
- 	struct module *module;
- };
- 
-@@ -222,7 +221,7 @@ struct gpib_interface_list {
-  */
- struct gpib_board {
- 	/* functions used by this board */
--	gpib_interface_t *interface;
-+	struct gpib_interface *interface;
- 	/* Pointer to module whose use count we should increment when
- 	 * interface is in use
- 	 */
--- 
-2.43.0
+> 
+> Thanks,
+> Armin Wolf
+> 
+>> +void input_report_lock_sequence(struct input_dev *dev)
+>> +{
+>> +    input_report_key(dev, KEY_LEFTMETA, 1);
+>> +    input_report_key(dev, KEY_L, 1);
+>> +    input_sync(dev);
+>> +    input_report_key(dev, KEY_L, 0);
+>> +    input_sync(dev);
+>> +    input_report_key(dev, KEY_LEFTMETA, 0);
+>> +    input_sync(dev);
+>> +}
+>> +EXPORT_SYMBOL(input_report_lock_sequence);
+>> +
+>>   /**
+>>    * input_grab_device - grabs device for exclusive use
+>>    * @handle: input handle that wants to own the device
+>> diff --git a/include/linux/input.h b/include/linux/input.h
+>> index 7d7cb0593a63e..16f7bef12f1c1 100644
+>> --- a/include/linux/input.h
+>> +++ b/include/linux/input.h
+>> @@ -492,6 +492,8 @@ void input_set_abs_params(struct input_dev *dev, 
+>> unsigned int axis,
+>>   void input_copy_abs(struct input_dev *dst, unsigned int dst_axis,
+>>               const struct input_dev *src, unsigned int src_axis);
+>> +void input_report_lock_sequence(struct input_dev *dev);
+>> +
+>>   #define INPUT_GENERATE_ABS_ACCESSORS(_suffix, _item)            \
+>>   static inline int input_abs_get_##_suffix(struct input_dev *dev,    \
+>>                         unsigned int axis)        \
 
