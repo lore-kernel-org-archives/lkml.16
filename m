@@ -1,106 +1,135 @@
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958271F8676
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE42C1F8676
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811834; cv=none; b=rT8iMLHjc8lv1sHbD3LIi/uWNG5d9gHMJbJsD/f9Cwm2H4OQtjynrP6gyt506/dZFu1nx/c24Q4MO1Iwme1eHlWsGZ9nda9oYfe/CGhEu6AfmlKU7mLMFgKv4DImzBrCfYSaOGRJsNrPkGzzNeatVKp8pILGbnn1CzaMkxcU7/I=
+	t=1744811846; cv=none; b=fyKT9Y/dkM6SY4QjpgItOUZ0uaYJ4nYxDs/HX1Py0++sW5e1qp6/fQ6OMWCZIs8PJ5UfQtdwHwfMZo2nJW6FkJJdTQB7+002+Psd2fqmhiPQTWzmoSP0n5kWPVlnqRjksW3KAwfYHmRgv1qmDqvqyhcvmHnfUhgAqdgUGDv+F3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811834; c=relaxed/simple;
-	bh=z0fUxpuNNm6oF8pAf16JqL6vk3aXO1+XuxyXapz/+1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aqlz1qIBLXEsZDZ0hS123DvSA3oQm2U8Ad7tKcnJnXxWtmtlTDOPvOUo5aohGX/FRqJWo7kkwwIwSJVFv1JShICQ+5DTy8YhNZ7RZnkcP0ZqXOCZO+bnAo3NMtXt97FEX9K5AhXT2j+5F0SmrFOkfmUsv5ezCU6MANkJYH6D+y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D428PLPa; arc=none smtp.client-ip=209.85.161.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744811846; c=relaxed/simple;
+	bh=MNXVDNVfw5Twupf4cZaVoIvlSy9LnqYAExkWnEXMwE0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GHBQkqeZlgXyOjCxKxTfyBjqDoHB5V427PqRj/sSjhQV6tGKPHvnrHRFLQrUNHJ5BSW7uIMNIrddNyG5o5rtmB7Hn37IKVquamgXB9BGLReqOTQyB4kAtdl+6hiZetS6eXxm16DK0Gsc+8/F11J2ToTt4UQLw4rgfNlUt8i3wbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lxue+z7W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D428PLPa"
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-60245c7309bso1721771eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744811831; x=1745416631; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BqUwR/j4bGZrHGUzeU8HFrJ3dPz6gWbqr9WxRuB4G1Y=;
-        b=D428PLPayp2n+X2KIWkoyDiIUSPY899dZloLwVzUNMqt1Lqc2MVAmFaaaKxONl9EkR
-         Auhl09VtAjG5m8KUE9oa3gzscQ93daNiI/Xtc1c2z9tAmHD9tcy55npN/d0N/anIOHHF
-         rulLNP66r+7bZOcQhMMmxdQCVlyjh8RoVmetXEB/4owxaCdeXZ/PlXmBoDFxIrJmftKZ
-         fZhi77N7dNbL5r/t1I9m9dHzEK60fUrASPVdxzU9ynMXL51mLEzEEbrC4EOSw0OTxJGK
-         0AUEY/ne/D2WgI83iuLOmAgpx0V6fwozNqEfhddGae/f554+0qMnhQKD91OQTWcm/uNH
-         s4/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744811831; x=1745416631;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BqUwR/j4bGZrHGUzeU8HFrJ3dPz6gWbqr9WxRuB4G1Y=;
-        b=D600qwVNWQqfiLyGlUT0hHTPKSc/qUEDD0K0WRffrRk4A4NEIQTCzpWTuInQDQ4gVi
-         liPj2zkoFPxk5lsi2QxfgQNY1115nWhatFg8/xlARgIft9nYKBf4n9Dx7oJK3kZVmgKq
-         3oqYwAQJoppab8hh3kl5VheIn3blnEQTVvDybdXwptvjtQogxbeJL4JGZ3t9sS8zBenT
-         weJugSUNF2d8d4rAd2xrJBgIRKhKG0wjk9lCKtM+HiS8cjraF+qVPQQgQB7t8BcJbhdg
-         Ry4kHcqCXJUmJ0YtISKozGJn3homlVQWR9rZAN6t61JkzC9+xWUMQ7/75FtJNLDJLTQw
-         Y8hg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNmUx8im0v7htbod6KC7YFHMN/3DdSyVXZ9ncYvV5uIym54DC6dxFiYvvMlZXFmNWKEWB8dsbO8bnas2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUVwTT2bOEBtnPGTLCAzsXFLPgzUqbF6oFyv39LwUD/4X+kdLk
-	MJjFxlvzQFQ/rYFKQ1s8IpFe7Vp7sykIW/D8Nk60u1BxfzSQhH9o1W80np4ikFsLIQ==
-X-Gm-Gg: ASbGnct+IB2OhtBhOdmRUv9gVWNSCKEiuUUJZzRs/bAm+Y07u3rmXpkWNgI2sabzJr7
-	FMl/7Jl9TCvUC5pxC7CaDieMgkIs6KUw+KEd9kXb5Y8mZGSUDGO1qPng/kBPk0nh/fBaij4BFYS
-	DPiwLm6Q3xM0ePG0W3bssFcmSU9FlYOXHheGUVKrFpndm/0K+HyQ2QFIZCjy2xHoTRQbG9fmX6M
-	73uv+BkDirto85AMcceBtbzH8UBWg6ffNzn9X8PgTjvKpXBliuFKOfpFTJRLUxcTDsnTLqaYEN7
-	psUrx/YMC1ioS4xe3Nnpjvqn76g4VaM0X7yo8ZmQmOKVTgtw6nLeIA==
-X-Google-Smtp-Source: AGHT+IHsnTz6aRDqS91PsyklJ+2mGSMI2WceYpHCHhbZs6GUjWU0+dDU3rsBet/R6xgdANI/YTXZvw==
-X-Received: by 2002:a05:6820:2901:b0:604:66b4:a8f2 with SMTP id 006d021491bc7-604a91e80famr1013000eaf.2.1744811831457;
-        Wed, 16 Apr 2025 06:57:11 -0700 (PDT)
-Received: from [10.30.57.29] ([204.77.163.55])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-604a5bbac4fsm358847eaf.17.2025.04.16.06.57.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 06:57:10 -0700 (PDT)
-Message-ID: <c7db6fda-bf4e-4d6b-8cca-db82c40ce1b6@gmail.com>
-Date: Wed, 16 Apr 2025 08:57:09 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lxue+z7W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744811843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8FZv3owO9XjrPT1Qe2b2EgoIB5J4qrwytxe3pIKY7Sg=;
+	b=Lxue+z7WypC6qVnT1VsCVx3cZCrsjZzDFcbk5XfgEDekyWVZimKGAByXq7bMwbhqVPw2Mw
+	drw+Z+hU1vcUFdcbLbKe67L1sj2fpe/Sg40p+TzbhZQ0hBxj5xXdN6AdXcfbeQZdUN7rmX
+	gXRkg98Ne6E3NzZ03l8y1jZxzo6o1eA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-417-z8sKgJnPN2aC5T__Amqn7w-1; Wed,
+ 16 Apr 2025 09:57:17 -0400
+X-MC-Unique: z8sKgJnPN2aC5T__Amqn7w-1
+X-Mimecast-MFC-AGG-ID: z8sKgJnPN2aC5T__Amqn7w_1744811836
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B600E180098A;
+	Wed, 16 Apr 2025 13:57:15 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.44.32.216])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6C14F180045C;
+	Wed, 16 Apr 2025 13:57:14 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id ED6CB1800387; Wed, 16 Apr 2025 15:57:11 +0200 (CEST)
+Date: Wed, 16 Apr 2025 15:57:11 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Eric Auger <eric.auger@redhat.com>, 
+	Eric Auger <eauger@redhat.com>, Jocelyn Falempe <jfalempe@redhat.com>, 
+	David Airlie <airlied@redhat.com>, Gurchetan Singh <gurchetansingh@chromium.org>, 
+	Chia-I Wu <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
+Message-ID: <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
+ <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
+ <20250415095922-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm/memremap: fix arch_memremap_can_ram_remap()
-To: Catalin Marinas <catalin.marinas@arm.com>,
- Ross Stutterheim <ross.stutterheim@garmin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Russell King <linux@armlinux.org.uk>, Mike Rapoport <rppt@linux.ibm.com>,
- Linus Walleij <linus.walleij@linaro.org>
-References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
- <20250414142140.131756-1-ross.stutterheim@garmin.com>
- <Z_-B5fAhZzShX34I@arm.com>
-Content-Language: en-US
-From: Ross Stutterheim <ross.sweng@gmail.com>
-In-Reply-To: <Z_-B5fAhZzShX34I@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415095922-mutt-send-email-mst@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 4/16/25 05:09, Catalin Marinas wrote:
->> Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
->> Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
+On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
+> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
+> >   Hi,
+> > 
+> > > +static void virtio_gpu_shutdown(struct virtio_device *vdev)
+> > > +{
+> > > +	/*
+> > > +	 * drm does its own synchronization on shutdown.
+> > > +	 * Do nothing here, opt out of device reset.
+> > > +	 */
+> > 
+> > I think a call to 'drm_dev_unplug()' is what you need here.
+> > 
+> > take care,
+> >   Gerd
 > 
-> I think you could also add:
-> 
-> Cc: <stable@vger.kernel.org>
-Done. I also added some other Cc: entries on V3 along with Reviewed-by: 
-lines . I'm new here, so I'm not sure I've used those 100% properly.
+> My patch reverts the behaviour back to what it was, so pls go
+> ahead and send a patch on top? I won't be able to explain
+> what it does and why it's needed.
 
-> Not sure how Russell picks patches up these days (I used to send them to
-> the patch system -
-> https://www.arm.linux.org.uk/developer/patches/info.php).
-> 
-> It might be simpler with git send-email (that's the alias I had):
-> 
->    git send-email --add-header="KernelVersion: $(git describe --abbrev=0)" --no-thread --suppress-cc=all --to="patches@armlinux.org.uk"
-> 
-Thanks. I created an account there and submitted V3 through the web 
-interface (to avoid my SMTP server appending more stuff on the end).
+See below.  Untested.
 
---
-Ross
+Eric, can you give this a spin?
+
+thanks,
+  Gerd
+
+----------------------- cut here -------------------------------
+From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
+From: Gerd Hoffmann <kraxel@redhat.com>
+Date: Wed, 16 Apr 2025 15:53:04 +0200
+Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
+
+Calling drm_dev_unplug() is the drm way to say the device
+is gone and can not be accessed any more.
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+index e32e680c7197..71c6ccad4b99 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.c
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+@@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+ 
+ static void virtio_gpu_shutdown(struct virtio_device *vdev)
+ {
+-	/*
+-	 * drm does its own synchronization on shutdown.
+-	 * Do nothing here, opt out of device reset.
+-	 */
++	struct drm_device *dev = vdev->priv;
++
++	/* stop talking to the device */
++	drm_dev_unplug(dev);
+ }
+ 
+ static void virtio_gpu_config_changed(struct virtio_device *vdev)
+-- 
+2.49.0
+
