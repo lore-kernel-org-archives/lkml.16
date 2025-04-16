@@ -1,115 +1,132 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EE0227E8C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AF4221F13;
+	Wed, 16 Apr 2025 07:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788866; cv=none; b=kY0UP0MFT7DOufg2KrtPmFIRA9HkPbSuxFWdp9HM9I22+ugCsbN87zY1tAFzY5g0QtzR/Z0a9H/Jr085JdbAyba2Ud54ffPWbuTXBOGtGoSxgE7YHAvPaGTMsor6aX7MmsnOLa7zDrNLiz2h6IHeK2H4saAqPs8HHFiJNVCUCDI=
+	t=1744788873; cv=none; b=RHxnhwPhVgyJUOWx3j4sjR/ku5o/w/xxDayFVORrUZreaYrisZfbyA3Sh9oBaq8lWKXbz4KQatF6c0OKeX9433Ry299hSeTf/6dtoY7MTIzkHtuMrNVfeU8LfQ/dT+jPVdrzsH6oQlKRhS9kW1bA7d5R5BC18Y2vE59offk4vaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788866; c=relaxed/simple;
-	bh=Osz8UwWeE7SoEkx8hhEOY9AIQrzeHRMkeYvC/KMmssg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NdH4bANeO5VLroR4/z0zbbJd5Dvxbvc6UZGT2eAFlGKoVhwn9m0QWPRrQsiNw6fGjyNTAo4ZN5h5B6QDWWYM3qV2ZBSpRWAE3SnRFZ2OGVhIRqzsntTsITJrVWNotdWTO0gjIHLI/2iV0zn9p5cb8gIrGuyz8aA3DpCjfeSuE68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k9RTKt/u; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744788873; c=relaxed/simple;
+	bh=IIr/CJfIHxtPuwbupHvi4tuIt1QmK/DNk5uo9RXwJtg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Ojq0SxB7zB4wDxruTv3TiRDkMMssES4vzcHXuRAs1+4HU29Iqk1L9Y2PK0byfFil3SRLyaf4P6Db6KLjpI+VHHZ2O55D2pewzA13BALmGNl0y3r55J09WYAx0V0bmtdx9cixVV62CmXN9HXCo7X/UWD0a02mfe2jVTUYNBVWWRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KsXJmrz8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k9RTKt/u"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so5634539a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744788864; x=1745393664; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9OojZ/Set6ofgNmoLSDBYOLQFH7SYSkSj18BSfmQvXU=;
-        b=k9RTKt/uvTR1WeO25aPrI229c1HvXDZofuLiap+ruI3JkoA/nbq6fxCTIUUZe4DZQB
-         Z2VrF+lzQeUmdPOGe0qYh79VHj6jnLB/CcnmG5hj1jwLJHHaA5G8pzwslRCmDORUPcMP
-         mv2ncRtLlJfvz5n/1l+9NERw5IPD5RFut3RVRM5E6KfbIixxLtluGo+se7AQRY+DBv9q
-         EaN2EyBVD/oXrhonMyPWkfvVX/DRkS5DE7fsqrVXMaP9R++w0rgR4z6onWJgd7LrMwYe
-         LY2boD/J2CazvI0xDpDHP3XT9nPUrfGGxrsnkWcQecFqKrsg1n6T/lQV2ATfS06dne8B
-         siEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744788864; x=1745393664;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9OojZ/Set6ofgNmoLSDBYOLQFH7SYSkSj18BSfmQvXU=;
-        b=ANPHjytHsiVOI2x/DRwszIqLQcnpDeOv/kRqH1IUHO7AatWawdEpy2hAorQo1ccEbf
-         0mkcnEyKCxcgKvaWSdTJqeSDMd6sY0PHoir9mpMTv+T8Ging4va0PoritbVIpD4GvNj8
-         417Isyj/aoFRXHWY7t4XwGKgTvMJ39c1WsClIRCTXUCWzUsyyisNIgii7RiRCpI+Z4Hn
-         vgxlCKdOSiXMnNqBRgAZlVLUB9nB5DLzSGD5q04ROksXK0EzcOHCoZeYYk9KxrKTJ3Pu
-         tGpE3WSvGJcPuAjMmoi/w08gNjEUXbOMMe1HaH19E9DBEe6wLJcgesVP5/qVZqfGOS4h
-         QroQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVg/4SWH7w6xZuLibTiWkyzQ/rbCbdnyzTQBcy7GvQzADUQO4jxebYLJnXbPkG5mNFcG2xUh9KdLbbWKIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFstLGm6RMxMkctxZAAX419uJKohwIAbpRXJpOLtLatJ43yYQ5
-	okDNF0soj0GPthVsO3G9Spaj6Vayy0NEtuFwLj2WvQ2AQfEjIG7KCSfgcGaaMls=
-X-Gm-Gg: ASbGnctpKfhzT0j6p5HX5ZyeChgkfpeZVjxtQgIPV+cVEYelh9u7l6LRBRlpOyBXSvc
-	+To4aoBNV70P5gmFpibPVZ7teDdqd8pXt1W0eJq0HosmtJcnWzhrQCopQn4InP/gXhXDyMS1SE+
-	tcrqPvy/zvZHJSa3HIoTcDYV4KYgIIeURnBZB5unmOGQOXhS/8zkeTR8TUVLuLPCK7Xk1iEvSHd
-	YW0TiQyginejgJnPsbHU+bcyjmRnQPli8ksoZxurR3gZwFBq8xWcgr0SBU6cofpghxXfwoNDgiL
-	hE96CT+lgjX5zv48VXESHTYPpBvKRKgKyBvcazKa1g==
-X-Google-Smtp-Source: AGHT+IF5gr7KTNmsoqWboKzNZwhfvZjvETmtD0k891OgOb0tDlIqVA7ofglJmZDsPCASVeystx4Ztg==
-X-Received: by 2002:a17:90b:520a:b0:2fe:8282:cb9d with SMTP id 98e67ed59e1d1-3086415c684mr1191209a91.28.1744788863789;
-        Wed, 16 Apr 2025 00:34:23 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30861212c3esm872339a91.25.2025.04.16.00.34.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 00:34:23 -0700 (PDT)
-Date: Wed, 16 Apr 2025 13:04:20 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: rafael@kernel.org, Marc Zyngier <maz@kernel.org>
-Cc: Chenyuan Yang <chenyuan0y@gmail.com>, sven@svenpeter.dev, j@jannau.net,
-	alyssa@rosenzweig.io, neal@gompa.dev, marcan@marcan.st,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: apple-soc: Fix possible null pointer dereference
-Message-ID: <20250416073420.xrhwnzy22zf6yltm@vireshk-i7>
-References: <20250412160518.1824538-1-chenyuan0y@gmail.com>
- <86bjt0l6q4.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KsXJmrz8"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7Jtcv003492;
+	Wed, 16 Apr 2025 07:34:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GUcdvfwZrnNZuV2T27/n0P6rv0AUJGdNVs2JM7mtqa0=; b=KsXJmrz8NW0iFw6l
+	lFrg/RVIzvNpX4vYe/ZOkbT6WiLPDUm1hKVi3dybF+wCMK+U4Rix5eJ9fXtN36Bc
+	biSKHo89pewJseDp0xtcgpm5l6iReJKRllSm9Wejh5ctfkzJetdZj+tTG2PCqHfC
+	OH3FMrsgrFQ2/9vXUEKcWgZqudPN7E73TrLbcyT3019u11VC0sZuIgnyhqJoeJDk
+	iSYb3Ey6dGmqeTL+Ag87ARD55nVWv+SYM//m7oC3jEz9Lfb57Mwsl9qhubAUzpd/
+	eyg5j3Dmbzar0iexe6SWdqzfg3bkkIo2syWVQZLG8ShnxwWziBFc7vpqJ6JcKqJJ
+	kBkHYQ==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wjq3r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:34:25 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53G7YOwD030646
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:34:24 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
+ 2025 00:34:22 -0700
+Message-ID: <c806bd59-9c16-4a19-83a6-c3b395a77925@quicinc.com>
+Date: Wed, 16 Apr 2025 13:04:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86bjt0l6q4.wl-maz@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] spi: Add spi_bpw_to_bytes() helper and use it
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Mark Brown <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, David Lechner <dlechner@baylibre.com>
+References: <20250416062013.1826421-1-andriy.shevchenko@linux.intel.com>
+ <20250416062013.1826421-2-andriy.shevchenko@linux.intel.com>
+ <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
+ <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67ff5d81 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=kZJ_y26kylx110OhOT8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: AGYd2QMrjDtgv4pV23m3nsUG3a2AFxro
+X-Proofpoint-GUID: AGYd2QMrjDtgv4pV23m3nsUG3a2AFxro
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160060
 
-On 13-04-25, 11:02, Marc Zyngier wrote:
-> Irrespective of this, it would be good to describe under which
-> circumstances this can occur, because I can't see *how* this can
-> trigger. The policy is directly provided by the core code and provide
-> its association with a cpu, and is never NULL at the point of init.
+Thanks Andy !
+
+On 4/16/2025 12:39 PM, Andy Shevchenko wrote:
+> On Wed, Apr 16, 2025 at 12:33:24PM +0530, Mukesh Kumar Savaliya wrote:
+>> On 4/16/2025 11:46 AM, Andy Shevchenko wrote:
 > 
-> And if it can trigger, why only fix this one particular case?
-> Dereferences of policy are all over the map, and would be just as
-> wrong.
+> Thanks for the prompt review, my answers below.
 > 
-> So while this is not wrong, I don't think this serves any real
-> purpose.
+> ...
+> 
+>>> +/**
+>>> + * spi_bpw_to_bytes - Covert bits per word to bytes
+>>> + * @bpw: Bits per word
+>>> + *
+>>> + * This function converts the given @bpw to bytes. The result is always
+>>> + * power-of-two (e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
+>> Would it be good to say in 4 byte aligned /Multiples ?
+> 
+> It's not correct. The said wording describes the current behaviour.
+> 
+Sure.
+>>> + * Returns:
+>>> + * Bytes for the given @bpw.
+>> Returns: Bytes for the given @bpw.
+>> Good to keep in one line.
+> 
+> Aligned with the style of the other function in the same header, so I prefer to
+> leave the style the same.
+> 
+Yes, i see.
+>>> + */> +static inline u32 spi_bpw_to_bytes(u32 bpw)
+>> u8 bpw ?
+> 
+> Nope. See below why.
+> 
+>> struct spi_device {
+>> u8 bits_per_word;
+>> }
+> 
+>> so arg should be u8.
+> 
+> It's aligned with the above bpw related function.
+> Also note, that this helper might be moved to the global header at some point
+> as some other subsystems may utilise it, so I don't want to limit this to u8.
+> 
+Okay, if plan to move to global header then it's fine.
 
-I have applied such patches in the past, considering the same as good
-practice. But I do understand your inputs.
 
-And so I tried to see if there is actually a way to trigger this.
 
-- Platform with two cpufreq policies (freq domains) with one CPU in
-  each of them.
-- Boot the kernel, policies will initialize for both the domains.
-- Hotplug out CPU1, that will remove the policy as well.
-- Call cpufreq_quick_get(1), this will call the ->get() callback for
-  CPU1, for which there is no policy available.
 
-But this is the case only for drivers with `setpolicy` callback, this
-shouldn't happen on apple-soc.
-
-I am not sure now if we should just apply this patch to be safe, or
-leave it as is. The cpufreq core may change in the future and call the
-`get` callback for all drivers.
-
-Rafael, what do you suggest ?
-
--- 
-viresh
