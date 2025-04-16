@@ -1,115 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8877A2356DC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B6F207643;
+	Wed, 16 Apr 2025 10:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744801124; cv=none; b=isoyyzQT2O1oPIAwCJxCU9H3p2raK3BIPp1X4V7uVvP/G3+/Dlj1h9tGtfpXg2Twl9PEpN72L+WDLAD+VJZsyIwga1+vOiKXTEwaL3I7xMRs+ODXOvTRLtT9LuWc7IbAi02DzemFZK7z+hCOF43cVY9U0HQrOanJXXXsQhH8sy4=
+	t=1744801168; cv=none; b=FFx+2YVqM4eTRNFXSkWa+P3ac/hUEz7Ct5PvWu6Lg4zEePu1wvzvz3RgpDrEQ7Jv9dJWmWDtBgBX2I/gq5/TVYPhM7VHKqPfeNPmnULqMZkpNBufIrz6dVOuwkWnQ0f4CdDQJkUC5IHf7ueVmCwhWp64GS1aJGKSmYIUoTR5j3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744801124; c=relaxed/simple;
-	bh=TxoU34tTKNLJHWpe0Teo7XOD7hIqzcz5Qg8UfQsB1oY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=K5v1WcU8rKFoClO/Lhdayqv6ohUFfa7ATZZsBr9m69tgwzUjLWpXIh3343i/ZLHfx3MrxsNS2eodCi840pY5cForSh1LBaQ/Q1guAcaWTVhQPrBk3FDtoJ0Xk/EmEoi05NAAkz3Urj94o+jFaXCMtwJnZsWhWKKCIfjeFa+acnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V9c7H2mu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744801168; c=relaxed/simple;
+	bh=uMHGiZr/NxEIl4Dgh6kI7RFnOoEF1YTOBJysxCM4848=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ar2/SjxTJASTvANrUB9s7qd+Yr03QOevTXTfN/HOYVRvce9gewHi1rKi8YYfT1C8dfTN2xnZ1l4kH+6X7LWEb4/LU+2e5zTlE/sX9IVqeN0wd4fZpjoO09eP/yPrGCLvZJKw0HNLATgkybYqlctz2VB3yXYWHEzDZCWMhGvBr/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNbPAASA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V9c7H2mu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744801121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=TxoU34tTKNLJHWpe0Teo7XOD7hIqzcz5Qg8UfQsB1oY=;
-	b=V9c7H2muGPieXmk9OxJwZKzMewBC9YI/wXBip4R2eTZLoDZwc5OdsjGkQL7020mjugI9c1
-	9GOzOtmc+7w0C9+lCCmVnwA6f0KTu7dRhCb1LL8jndlTcbuVve98BveXDoqrHe8shhYjWr
-	lxBYb3H0nEj6N2tW1qJ3+SciEyZIFjQ=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-133-JhXxStJaPqetW5pILcXSvw-1; Wed, 16 Apr 2025 06:58:40 -0400
-X-MC-Unique: JhXxStJaPqetW5pILcXSvw-1
-X-Mimecast-MFC-AGG-ID: JhXxStJaPqetW5pILcXSvw_1744801119
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2ff6af1e264so9649911a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:58:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744801118; x=1745405918;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TxoU34tTKNLJHWpe0Teo7XOD7hIqzcz5Qg8UfQsB1oY=;
-        b=quPWVbbGMSInbwcQGLZWEmkS2wnWJmtxsRKr6bBvuDlru1qIEt3COVaIujUXHGz75w
-         6n74tygbUhq3PPszFDZlfD9h+0q74P82CCPPg5CtHKMEZC0ckMBK1EbSmEEkyPjfrkBz
-         W0ogIdYdaBSBIE9gjqw1hH+OlYndcjdpa/xlrEKeiWHawYBcWh6s89BIFmprKMbSrNfg
-         GMpICFsYC4m3rqugjTEu2/6on0HIrvjglezUDjPbpQRunuVE9p/ycMnIoKTrp1XCamNx
-         7X9sGXlnuK8Uy0h5kT8M4W+vcPWei14xfsMQxioYlUBmsR+Q/YURA1Z8cHezXez5AkZf
-         3IVA==
-X-Gm-Message-State: AOJu0YzcEKARdxReZCEX0sKj+gxAYWn4k/Xkm/EFbW0bhv5+btcIootH
-	fnZJuzBwshq6DwXlxpVWzghJEhBm+qddPepIYnXxkGdqFcFXECGj4L3oAYtKv7AtuqkSdyFuOqy
-	ME3ZEE4otN9wyTNGb01fqYK7NttwE7zHpK6WAoSFAgX7UP/CJ7eeMVhrgDq1aOI7zH6Be+NM4O7
-	VJLi3aDkoSoMuwcREnM4NmTA1/s1C80shpfYzSeo0GfppVwKA=
-X-Gm-Gg: ASbGnctZLXc8MELVTx2Vac5IPBxdCNkQzRHIohrLrZCoOMXidlPXynNPboWumq8gDyh
-	Vcbe8yYBoBUqpkrUa1UL3TdA6yVHSF0+f9+rAnmRHrFftjU1+iNjyfAISy41TtJ8i+KQ=
-X-Received: by 2002:a17:90b:5448:b0:2ee:8427:4b02 with SMTP id 98e67ed59e1d1-30864166cb2mr1845374a91.28.1744801118157;
-        Wed, 16 Apr 2025 03:58:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9rTWjhP3mPR/Rk3R8+yNxA8g2aXGub+h03s6mUyJr3miZGYX/7P74QeCG1qWPoYWEKuNoNfw15PQLW+22ANc=
-X-Received: by 2002:a17:90b:5448:b0:2ee:8427:4b02 with SMTP id
- 98e67ed59e1d1-30864166cb2mr1845362a91.28.1744801117914; Wed, 16 Apr 2025
- 03:58:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNbPAASA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A935C4CEE2;
+	Wed, 16 Apr 2025 10:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744801167;
+	bh=uMHGiZr/NxEIl4Dgh6kI7RFnOoEF1YTOBJysxCM4848=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UNbPAASAdV4gXY/qLJKWOIhLqBd/aIHlj9hlvyjZm1qooedQRcuiFBLiGKWuuXa0E
+	 qlPl5ThPLK3jzUT0esH99LT3Mz41Igeviw1emQOl83eIpCFblyUKs2UE0HNlfrdIbp
+	 YQctoRcHp8hDxk+O1ZuM9LcHOiNJsWVWCvC5bOR9b10cyO+Vw7CcW7J+PWLsOy604B
+	 IXoBfMCa1HfnE/AxemfOE2pOI+pCrET/AYBYlwBeZnanoXwUcb8dTye8L1RjOLhhJT
+	 wUff6iyUrrMV1CmBZTvq0JKbiT7BptMpKWgfyuv2yEI9n/FPUUT/WO5ItsnQwjapvG
+	 fvxiRDA+7341g==
+Date: Wed, 16 Apr 2025 12:59:19 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+Message-ID: <Z_-Nh_dDifS1lvOD@pollux>
+References: <cover.1744783509.git.viresh.kumar@linaro.org>
+ <8d04ef19d7a16610dbf0dfb5c9a611c6e1e3e318.1744783509.git.viresh.kumar@linaro.org>
+ <Z_9ysHFmvZvaoe8H@pollux>
+ <20250416101726.g5jm6wnbbsmuskxl@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 16 Apr 2025 12:58:01 +0200
-X-Gm-Features: ATxdqUHvNGtKzQpiTNEW2b7_QQkEt4Exq5YnQmrZAFT3EWOJFAPuauihsxqc8UA
-Message-ID: <CAJaqyWfcY0Hi=B9rPAqAfkJoXBgf0jYm_dUXrRX=sZ4XRCxjOw@mail.gmail.com>
-Subject: Merging CVQ handling for vdpa drivers
-To: linux-kernel <linux-kernel@vger.kernel.org>, Maxime Coquelin <mcoqueli@redhat.com>, 
-	Dragos Tatulea DE <dtatulea@nvidia.com>
-Cc: Jason Wang <jasowang@redhat.com>, Michael Tsirkin <mst@redhat.com>, 
-	Xie Yongji <xieyongji@bytedance.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416101726.g5jm6wnbbsmuskxl@vireshk-i7>
 
-Hi!
+On Wed, Apr 16, 2025 at 03:47:26PM +0530, Viresh Kumar wrote:
+> On 16-04-25, 11:04, Danilo Krummrich wrote:
+> > You need to justify why drv is a valid pointer to be passed to
+> > cpufreq_register_driver(), i.e. something like
+> > 
+> > 	// SAFETY:
+> > 	// - `drv` comes from Self::VTABLE and hence is a valid pointer to a `struct cpufreq_driver`,
+> > 	// - `cpufreq_register_driver()` never attempts to modify the data `drv` points to
+> 
+> The cpufreq core can try to change the data pointed by `drv`. For now
+> it updates the `cpufreq_driver->boost_enabled` flag.
 
-At this moment mlx driver and vdpa_net_sim share some code that
-handles the CVQ and are not very backend specific. In particular, they
-share the vringh usage and the ASID code.
+VTABLE is const and hence ends up in the read-only section of the binary.
 
-Now VDUSE could benefit from implementing part of the CVQ in the
-kernel too. The most obvious example is to avoid the userspace device
-being able to block the virtio-net driver by not responding to CVQ
-commands, but all DRY principles apply here too.
+I assumed that struct cpufreq_driver (like most driver structures) is const.
+Actually, I think it should be.
 
-I propose to abstract it in two steps:
+Anyways, that doesn't help for now. Unfortunately, I think you actually need to
+dynamically allocate it. There's no need to revert everything though. You can
+just allocate a new KBox from VTABLE, i.e.
 
-1) Introduce vringh-based CVQ core
+	let vtable = KBox::new(Self::VTABLE, GFP_KERNEL)?;
 
-Let's call it "struct vringh_cvq". It manages CVQ, and sends to the
-vdpa backend driver just the CVQ commands. No more buffers,
-notifications, etc handling for the driver.
-
-The backend driver can interact with this in many ways, like a
-function to poll commands. But I think the best way is for the driver
-to specify a struct of callbacks per command. This way vringh has its
-own thread able to run these callbacks, so the backend driver does not
-need to handle this thread too. If the driver does not specify a
-particular callback, vringh_cvq returns error to the driver.
-
-Just implementing this first step already has all the intended benefits.
-
-2) Driver-specific CVQ callbacks
-
-Move the vringh_cvq struct to the vdpa core (or to a new vdpa net
-core?), and let the backend driver just register the callback ops.
-
-This has less benefits compared with the first step, and it has more
-effort comparatively. But it helps to move shared logic out of the
-backend driver making it simpler.
-
-Is this plan interesting to you? Does anybody have the time to work on
-this? Comments are welcome :).
-
-Thanks!
-
+This makes it easy for you to remove the dynamic allocation once (or if) cpufreq
+is ever reworked to allow a static const struct cpufreq_driver.
