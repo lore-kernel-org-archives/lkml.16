@@ -1,99 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3606F22AE5D;
-	Wed, 16 Apr 2025 07:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE07F22AE5D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787133; cv=none; b=jpLqS4QWkobdbPBq0qB1K19vsw5GupyvX6kkVlRwOqhXyD9gbvuB8hBGY9WHd5yHXgVQTU/dHtLUwLMMgr9hIp8pp0Vv+rZpR3eFTFfVTbk6sHWBe5MmMB20+9ApUbORRJ+uL/lJB3Zc0pf8uxNZo0ZAKsgeBsCoUID8Xkypi90=
+	t=1744787143; cv=none; b=rih2QihY38sFNWFooFEWkAMjUAhbN1fc0H5n+ipS9Wq0sp/laTPTXLRG8eYcqeTIQv3PSyBefu+7Stks9VxDK3bjjlNkEFZ5n8vjrhTBPkkqgtHaecCvckSvl7jP0NCfZcS7ervgGyRUuuO6YVRQs/h+aFkZWnKVNg5AOTAtjKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787133; c=relaxed/simple;
-	bh=j8eWpTOg/shBeJKd5tKj0TWI9EVOGFzQqhxV9GqN8SY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUi9S6D9q7sT12NzQvKBCkIe34r+acoHhXED1cOAcanmdSTf35QF4V/yETWXEq6IkZeoyYBb2U+jXHaj9AoNra+oslWjyPmsArVZZpkJWMOJtR/eSgZN/voVQ8CvxGKRhaI+RhMi8gJ0+130TU5Diif3R5eKWOPEhSFlmfm3qzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T35I1GxC; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744787143; c=relaxed/simple;
+	bh=B+SyhYmeXs+TV+vvTI+cB1kiN4PsIxuppecibt9mSqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=alT78jzAsQQBX9GreRBqFRfuQ90FuYjCg0xQ260spcoos2ze2BpOVqQi3usrReTqjl65lAsCPSU+lnQQLM3weK9vvHaUOlApcUExoynVMQdsPZvnm8oxTncDe6v/7liRjmn4vBRyZwNX/Z56cccRqIr9PusFII90rOrrhFWvtSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iwLEriaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lbmYAwG8; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iwLEriaE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lbmYAwG8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T35I1GxC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744787132; x=1776323132;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=j8eWpTOg/shBeJKd5tKj0TWI9EVOGFzQqhxV9GqN8SY=;
-  b=T35I1GxCb9LNra0M4mKUwUfBAjfgFEKOGnUN1xsKMHe1kMjy+ADdrgFl
-   x5QWMlXTfk4I/P9NHDGaWo7SejPTeumlPUC/gfNQMBbUgC2WPZMPJGCyw
-   ysacRz6P7BPSVQ2KXf2+DkANSyRD32Xtj/TvPhhLjYT5ipadf/5ZS300A
-   hVRXGPemSjiVh+2HEoakxLst6AwErjPwsGsXL5wjCB9tNub6+XVFoRIQY
-   SOkbnrb6DOg0Kc6U5ACVuEDF+HKOxzcj9kHf5GRt3oF8uIgUHW2eLp/Gs
-   kLzepuMrmxMES6D1WfAXOzynPkyjNQdum5f10eTRYpH/JpACVRcEkIQIQ
-   g==;
-X-CSE-ConnectionGUID: hEhIUKuATBiT/MGClEc6fA==
-X-CSE-MsgGUID: cfOgsSoMQGGRO7wEzqOFng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46202402"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46202402"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:05:31 -0700
-X-CSE-ConnectionGUID: 3mhFgh7uRFSSbq9SLGe7uw==
-X-CSE-MsgGUID: CXlj7u0eR9G1mDXFDhiOfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="161306083"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:05:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wpq-0000000Cm7P-0xYw;
-	Wed, 16 Apr 2025 10:05:26 +0300
-Date: Wed, 16 Apr 2025 10:05:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v4 6/7] i2c: core: Deprecate of_node in struct
- i2c_board_info
-Message-ID: <Z_9WtfVzSDuxmqLK@smile.fi.intel.com>
-References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
- <20250414100409.3910312-7-andriy.shevchenko@linux.intel.com>
- <Z_69Jml3-CKi13wB@shikoro>
- <Z_9NEK7BDrvAQ0Qo@smile.fi.intel.com>
- <Z_9UHrgho0dGoUrG@shikoro>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iwLEriaE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lbmYAwG8";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iwLEriaE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lbmYAwG8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0895F211A3;
+	Wed, 16 Apr 2025 07:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744787140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xJ8BtjRc+iHzWexbG7wncjMlO/viTf1Hhzh8lNLLRe0=;
+	b=iwLEriaE+z7idt1FYvVztJnGn77K9uNhQszIIGKv+EE3ARHuTiBIiNEgPbAPYEfm8lrcVf
+	MkdjhutBIkjrVoLelq5jla0iZi7b/gU+0CE4iyjozvDJ5lrbgi+MsJkxewRKI5sZOys6gx
+	LGlliIi8eFC0SRaLVye9+oLxBB77tYE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744787140;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xJ8BtjRc+iHzWexbG7wncjMlO/viTf1Hhzh8lNLLRe0=;
+	b=lbmYAwG8f28evF1iA6LmnT72fWcn+ttaHfyJV+Y/IXL3SQohcw6zg62AqMme4xbga8texS
+	z3jtQXU73olf6BBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=iwLEriaE;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lbmYAwG8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744787140; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xJ8BtjRc+iHzWexbG7wncjMlO/viTf1Hhzh8lNLLRe0=;
+	b=iwLEriaE+z7idt1FYvVztJnGn77K9uNhQszIIGKv+EE3ARHuTiBIiNEgPbAPYEfm8lrcVf
+	MkdjhutBIkjrVoLelq5jla0iZi7b/gU+0CE4iyjozvDJ5lrbgi+MsJkxewRKI5sZOys6gx
+	LGlliIi8eFC0SRaLVye9+oLxBB77tYE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744787140;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xJ8BtjRc+iHzWexbG7wncjMlO/viTf1Hhzh8lNLLRe0=;
+	b=lbmYAwG8f28evF1iA6LmnT72fWcn+ttaHfyJV+Y/IXL3SQohcw6zg62AqMme4xbga8texS
+	z3jtQXU73olf6BBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6AD213976;
+	Wed, 16 Apr 2025 07:05:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LmbjJsNW/2fTRQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Wed, 16 Apr 2025 07:05:39 +0000
+Message-ID: <82de8253-7be6-40ed-b4a7-c840b3b46362@suse.de>
+Date: Wed, 16 Apr 2025 09:05:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_9UHrgho0dGoUrG@shikoro>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/virtio: Support drm_panic with non-vmapped shmem BO
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
+ kraxel@redhat.com, dmitry.osipenko@collabora.com,
+ gurchetansingh@chromium.org, olvaffe@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, simona@ffwll.ch,
+ jfalempe@redhat.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250412132012.291837-1-ryasuoka@redhat.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250412132012.291837-1-ryasuoka@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0895F211A3
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[redhat.com,collabora.com,chromium.org,gmail.com,linux.intel.com,kernel.org,ffwll.ch];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Wed, Apr 16, 2025 at 08:54:22AM +0200, Wolfram Sang wrote:
-> 
-> > > > that Linux kernel supports. Deprecate of_node in struct i2c_board_info,
-> > > > so users will be warned and in the future remove it completely.
-> > > 
-> > > Is there a plan or volunteer to do the conversion?
-> > 
-> > Yes, long-term as I'm alone for many janitor works.
-> 
-> I could help here if you are not keen on doing it on your own.
+Hi
 
-Thanks!
+Am 12.04.25 um 15:20 schrieb Ryosuke Yasuoka:
+> Pass array of pages of the scanout buffer [1] to shmem BO, allowing
+> drm_panic to work even if the BO is not vmapped.
+>
+> [1] https://lore.kernel.org/all/20250407140138.162383-3-jfalempe@redhat.com/
+>
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> ---
+>   drivers/gpu/drm/virtio/virtgpu_plane.c | 14 +++++++++++---
+>   1 file changed, 11 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index a6f5a78f436a..2ff57d559c86 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -500,11 +500,19 @@ static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+>   
+>   	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+>   
+> -	/* Only support mapped shmem bo */
+> -	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vaddr)
+> +	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
 
-At least the main objective is to avoid new code using of_node.
-The rest can slowly rotten on itself (esp. if there is any under
-arch/ for some old board files).
+Please adopt drm_gem_is_imported() instead of testing import_attach 
+directly. The helper is available in v6.15-rc1 and later.
+
+Best regards
+Thomas
+
+>   		return -ENODEV;
+>   
+> -	iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
+> +	if (bo->base.vaddr)
+> +		iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
+> +	else {
+> +		struct drm_gem_shmem_object *shmem = &bo->base;
+> +
+> +		if (!shmem->pages)
+> +			return -ENODEV;
+> +		/* map scanout buffer later */
+> +		sb->pages = shmem->pages;
+> +	}
+>   
+>   	sb->format = plane->state->fb->format;
+>   	sb->height = plane->state->fb->height;
+>
+> base-commit: e7bb7d44c3b97aea1f0e354c6499900154ac67f2
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
