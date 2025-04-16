@@ -1,105 +1,110 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055DC23F40D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0484B241673
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803770; cv=none; b=YweA4RZuhVIFQVBywSgkGanZXKqebYTzlgeSErQAdRu3e89K0L5bubT3kHgLmLDFTvUYUe0rS/jdFo1fmZGrI5ITP0km6YJhm1Xryfx9Nyi0jvXq4kaUoc+Nri6s0xyIlZjH6GSSjWu4HIclotoyJOk9bYQW0revIaNCCIbzdQA=
+	t=1744803773; cv=none; b=lqS7KhkW/w3jdrOiKJW5UF6xPp/TPAKqeg2aY2F9fH5DGvnLQoNYPng/toRboOYUCKTk+4bMoqladwfVReTM7pXMk7huPExSiAP8B2t4tcNfAKFFr8Hxv/yV8qkXi7DbPLWIXA0iSFhAZouvE4twLxSZ1jukaocQs4b1KYKI0oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803770; c=relaxed/simple;
-	bh=2LhwZRPX3le1pcDWgaebmjYcBMNO+zwSm1AT5T+GXjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DZ0viv5Jhf50IY7jGe+tiFLuP23hCm+XwWCS1hUXHbAXsTiJNWQjIw/JIf6PjJ99VEhkx20H+RQxfhIEBRmsxymvK/CiBCSG9Raesl7eZ46YVR6/eZQ9yPLgRTudF/wpz+T9HsHpHaG48sbnWVoJHrKqBDTSw0B/mhmjsvZXxBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b=M5ABpexV; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
+	s=arc-20240116; t=1744803773; c=relaxed/simple;
+	bh=JMjDwH/o8RzPEzjltNKbdLR6klIkr+mhqoHQ68CaRkc=;
+	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=HSZzq0aZHamxjm9n90SOk2+YpJ7N9FxgWcIpPaIyDI5yNPKdcN1MP0cLLRhBE1kz+ywMiEtXDMw1zYbajCDaOS4BCrCJju8nX8t2X0n3k5Pa4Bw0IZL5TRA17riCg3bEQC0A6KFvTNxlzEY+DGpvou/kDZtxuBlrl6FpImyL4y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CxQRyQRG; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="M5ABpexV"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso631337b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google; t=1744803766; x=1745408566; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QZ1kKIALmvRJch4ZVaRl0p94OzYXnQT7EpkhRUXULZI=;
-        b=M5ABpexV0t3NWImzykatOHEKZylbdyBfhHScB01FzNgbOoyCWwBL9Xlz4D/DB8fSny
-         EeupraSBJdxp4fCZyx6zBDYxwGjDyTXgfN0LXT1DyEEqRNJMCLIL3LqW5aanBDezUbiv
-         IehoFfpmsE3k1j7RbEd/pv8hl5/EHs3N6N168=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744803766; x=1745408566;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QZ1kKIALmvRJch4ZVaRl0p94OzYXnQT7EpkhRUXULZI=;
-        b=UJpx2y1Tmv2WIKrcbdTcP2DJpz9Y8GdgEkK3vbANjey6XyudgaYm/cwRX6+KBA5VBB
-         zHInVFxp/RwMPCNnvwToS2G+kpLG4y8++da28NPnzFi1FADx3oqgzyeSMRXOaRvp/BoM
-         OqoTUZYWdffx5vvtf0K/DE2XjRn7zi0XTJmf8RVCxzPt8J93sUa023fLqRxFRVrvo/+g
-         S0hzpgz9TweILeAsey0sHPqgrZKBmp965HoQwO3BR7MziUHAHWwVPdqtsDO/rR2yMVjJ
-         0rWLAblDk0pnI8C9tOQaZM6Fc49VBrHjthFYFcHoU2wrNSRyCG25iX9+H1PPopeX4kdz
-         /vdg==
-X-Gm-Message-State: AOJu0YyRrxMfqN3fr3RLde5g7PUTzudvKtr1VhwNtu3lLea5rTw7ksGf
-	KV8rUWKdD8AhWnq5KwCSdoCgYjwuIHQe0DNBfNk/XDb2wcUXVwotiSwgUyX5eJo=
-X-Gm-Gg: ASbGncutpwb/xO6sEtt+KKSllRURXy4Au0Lpf7G+KG+1jWeWzj86nGYv44hljGoYdAs
-	GfipVKSbDkG0XHel9FmVDdqF2l44tK+GR2TBv6HN6u58SuWUX3X3rdGruIj+nQ4ReezR9gajXqu
-	KJOzGtDGakU9j82A7MeXCpJJ8LJe80tOzpAyDKypmysy/Z133CxvNNSD6mXSspbpljRgoMMfimX
-	kZQoIUm+Ze8l3QGEnGi7PZvNPEVCmneQkf+uWcUzHUd+iOXeAzPOo/Rl4sWPxvd4hxkTstCeYTr
-	9tuXTZcngYvzvRoJeq65E0TuUksw3OvG5DKfftIYxQLXR0LCrNRMNEqZF4icX1EW
-X-Google-Smtp-Source: AGHT+IESZmQwnLlyeDHw9qMDSKTCYjAyPNnhbiBsQon2uT22cUwcOGjEHw6IbbM4+RMjOBEJeKwL7A==
-X-Received: by 2002:a05:6a00:3b8b:b0:732:56a7:a935 with SMTP id d2e1a72fcca58-73c26e42522mr1976219b3a.12.1744803765956;
-        Wed, 16 Apr 2025 04:42:45 -0700 (PDT)
-Received: from shiro.work.home.arpa. ([2400:4162:2428:2ffe:79a9:b58a:259c:e1fa])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd21e14e9sm10171722b3a.77.2025.04.16.04.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 04:42:45 -0700 (PDT)
-From: Daniel Palmer <daniel@0x0f.com>
-To: geert@linux-m68k.org,
-	linux-m68k@lists.linux-m68k.org
-Cc: linux-kernel@vger.kernel.org,
-	Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH] m68k: Enable dead code elimination
-Date: Wed, 16 Apr 2025 20:42:40 +0900
-Message-ID: <20250416114240.2929832-1-daniel@0x0f.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CxQRyQRG"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAiDqR026718;
+	Wed, 16 Apr 2025 11:42:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=VDC7VFGUydYdFkbJC9ubCp+8u8uW
+	7LLKOWCFxu0Qii4=; b=CxQRyQRG2kMPIfduLrEwLNMmneyWpqCraR99BpyO8t1l
+	di8G5iajEQmNLOPpEn8Tx5cHq9hl5rH7UfFgnMf62MsZS/ZLWkwdqzuUoInRNGwN
+	fRl0LHXBuJ7wjNNu9g0fLAbisfbIZSSe42Ezfh78AQck590X88CE9xn+ZrrXXA10
+	Z49ZJbzS7r278VOEQjuP76nEGxHpooyg4KotQem1Mif9et9SwN0buz/5RYAVayOD
+	5a+AGVJ69YEDA2OQePm4zYSQsB+/Wy1lkGV1y4RUFsLDAM8M50otjgwE2uvm2XBC
+	RkeVnfEjbCI6dLm7dfW7gJnTrbf9GVka11NDibtOXw==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt32sw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 11:42:48 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9JEEr024907;
+	Wed, 16 Apr 2025 11:42:47 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtgchq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 11:42:47 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GBgk9l26280530
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 11:42:47 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B106A58054;
+	Wed, 16 Apr 2025 11:42:46 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0219C5804E;
+	Wed, 16 Apr 2025 11:42:45 +0000 (GMT)
+Received: from [9.61.241.145] (unknown [9.61.241.145])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 11:42:44 +0000 (GMT)
+Message-ID: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+Date: Wed, 16 Apr 2025 17:12:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Namhyung Kim
+ <namhyung@kernel.org>, mingo@kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [mainline]tools/perf build warnings
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QqZ0DZG7bpE7aefwz3L6twNJeP_Y6A0H
+X-Proofpoint-ORIG-GUID: QqZ0DZG7bpE7aefwz3L6twNJeP_Y6A0H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=818 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160095
 
-Allow the experimental dead code elimination config to be enabled.
+Hello,
 
-For my 68000 nommu config this frees up a few hundred K of memory
-so seems worth while.
 
-Boot and build tested on nommu and mmu enabled configs.
+I am observing a new build warning on today mainline kernel, with head 
+commit: g834a4a689699
 
-Before:
-Memory: 5388K/8192K available (1986K kernel code, 114K rwdata,
-244K rodata, 92K init, 41K bss, 2624K reserved, 0K cma-reserved)
+Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 
-After
-Memory: 5684K/8192K available (1714K kernel code, 112K rwdata,
-228K rodata, 92K init, 37K bss, 2328K reserved, 0K cma-reserved)
 
-Signed-off-by: Daniel Palmer <daniel@0x0f.com>
----
- arch/m68k/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Warnings:
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index eb5bb6d36899..11835eb59d94 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -32,6 +32,7 @@ config M68K
- 	select HAVE_ASM_MODVERSIONS
- 	select HAVE_DEBUG_BUGVERBOSE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !CPU_HAS_NO_UNALIGNED
-+	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
- 	select HAVE_MOD_ARCH_SPECIFIC
- 	select HAVE_UID16
- 	select MMU_GATHER_NO_RANGE if MMU
--- 
-2.47.2
+diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+
+
+If you happen to fix this, please add below tag.
+
+
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Regards,
+
+Venkat.
+
+
 
