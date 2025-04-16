@@ -1,110 +1,251 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AECC24A04C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B16421CC74
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805407; cv=none; b=S4OunrFcI4fxr8g8G77y4sD8Qix3ySxbLXndfhKDZ17Go92ANstnTbSw4I8TQ9Fr0c1+toA1k5xLLIZsfM1T/WfTiD7DbrRJr4/IGCzDPN3fk4Wi+Y5gvqztvjNYY+VLW3OzLKBhxRXNH+r8J9Ph4ahS1gX8l8StX8l4ctLw6PI=
+	t=1744805476; cv=none; b=gOEP+YUu8DIWO7QiKMUiqMtAPjVpBZUY+Apl4nkY919N6/JyGJobO5P50wLAyZx+PNw0fPhMuRkhzfZPw+gBOy7BGelDsH4qOLcDgXUF49WS2xnyTWYoS6JFVYhZ8XIFzmziZFBWmpqLG+nDn/XtErkG/UwCEn+7vEsYtG8fvrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805407; c=relaxed/simple;
-	bh=eSqUxdw+knq0VEg3KUP5yWXKZxiSUA8O46Zm7+37lpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EMvhtSyUUYSsfpUiBzdDkt+oRhAahNKlfov6AdFxJLSu5rJL8y37dHbgZjuks2gv6e0bZ/3yxrNwZdibn1k66EES3ENKtXtYhvLghH6aqxiTrynaP8i17R1aVe23O4RyvDMo5kos1bs47II++jauOk12GSvX1LCIGLRrqNESEcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UUPd16u4; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744805476; c=relaxed/simple;
+	bh=mVKTSnM9Oe/QUznfF2Dc69xMAAfae2qm077KOikv5c8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xw+xw9vDN9xW3aAEwl8IH6iVBzr3HFTepqovPRC8U6uAWzumJSxF7P07yXymq8zsaYyrdW9x97oD7c6nfJMqqhyillrsfTnI3T9Gz1F/0WR6s5eddRf7MB7K/MOsVUYPINevoVyn8JcoE65R9fTspD0z7gEMf7+0WdMSVtNrz7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=daGOE/FO; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UUPd16u4"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso50004285e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="daGOE/FO"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso6307392f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744805404; x=1745410204; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y42aZbJ+EXJLkSTiNisifgjorzr07bQAgsETmkkzDgA=;
-        b=UUPd16u4zMkjxdNK3GkNr/6f8Qc0Va0FlgE6Xv/QK03WyuJTEcPWjh+ZwHOQc5mID4
-         7HelciPn5jYmJBhnf5D5XTZ+3FiLZddbNmVHaEMzqdi3WkQK9A32a1IxE1m2Q9fMuTSp
-         9z3G69ngRN9Cd3kAbcMbLZFELjOmPA6dEZIirqF6mR/qmEuRBPQn8y7eIjUjzMKalyjb
-         AG3krQv0h7TQrEb7WDvZjKbH6OhUdb9f1G8QDBGrtSmd94OP7XxfWn6xBUBeP3gP1D4Z
-         1UKSwKZFGYCnzv6CK7JEojm6coDpouAaO58U+ia5Lj04XxrESxGdpQisfdIDQ8aEWwiG
-         W58A==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1744805472; x=1745410272; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aIhNd1beHsCBJk7UARj/b4EA55X4Pt/IlSQhsaLXJEs=;
+        b=daGOE/FOhacgvhjlSEPIwPxIAyjWLKguaGu/X38J8Z2kSpBxth1ZQz2R5mkTJx4Lfc
+         CyIC/rqPiio5kS9pUO15ccFbhNeI7J5zXW3IX0rEJ9ik3H5lv2HORu8eNKqXufLFKxnC
+         H8VpLuVYsGYkp/8cExzwAwXAY7NRlZ0TBU42WpFaf467oNFlk4sMmVvKjxjCVceUYuos
+         MSiNZ/tauCATlUEMx/zEEhmBHkwu5N3uNbhZdZcqi/dnnAayAWcm/Vk8d+bT3qzLhIuj
+         FaXxYoO/uWtXEQkHLwyA/R4dD+BTHQGrNQnGY8GeJ8AJu75c42azCOKeebYyVF3OyScq
+         0KpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744805404; x=1745410204;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y42aZbJ+EXJLkSTiNisifgjorzr07bQAgsETmkkzDgA=;
-        b=ROhK4a5y6fHXQdzTDoXqog1q6ttr7FDwCiqct9gubQ7N47+LYv3w0A278U/MuSURDx
-         wKE53zfSeaUw8fy6NHeocQ9MyWZ1su1H8AA6/PPpuZeQj4/2Yq1CORREZPm4ihZcX8zZ
-         H+eN+moI3aWfHhgZS4YztSA4pk04wl22U8IyUpFIJAtHaBytMv8/O8wsE0wTd1H7jo3L
-         Bb1Ykg5ItiTMG8/c53l0Xy1lU4FIECEC/yMmPKE+tAVt9Vkni8rm/8zUF8tfdTh0TdtW
-         IDlQWnH0qQDZrAAi7J1imNjvV2ncCX5xmax04EZspJEKc3M0SjCrcXwg5iOGJPwDo01d
-         WvQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWA3w6++EN9t1yEkIFavxEMFO4hbpx/9Hkh0Ksq4pol7dKeZa3PWzqeJwilW8ojcSIYXc/sp9ZUIjA/FAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK9N2aP7dWZ3h/mJL1eVh6vaJNYyIKG98y43XjruTHujhKByvw
-	xjuLilI0YyOXX0bw+IEx9ZS+gtzBJiCR/QCfuZ4EyxaxOtDHf3SDfRaIpv1FpVE=
-X-Gm-Gg: ASbGncuXIK8ua8DOqPVFnA3Fq27rv6flxfXpjYCQ8ca1K1qhvzgMR1hla/bJKQubD4O
-	rm/AuRiGaK9Yq+9jl1+23fa+wDkcVwae/q+VHincldSan/ak2nSS9SOu6J9Ox9VgO1bHT4dhVCG
-	HGyOhrz11A5QMsRVrXeAvF1VTHy8D/kkt+e9C3X6IWR0lnm33EaUDQygpbPXTWDbcyjwwp+2zMZ
-	jNDwVxSfaaHJryv+DKG0jrFB76xxYadp8ZrD9j55t5mWTJJelIR0Ezb1xbqIWxQqjSssSnmrKIs
-	nYKSOuFS68hSZiY+N3IBlL7yiNrAXMZYqpSEi+PAjJPcG2g/PXeQKxBbychR/UpbjpsqFGWjeWl
-	pqBupXw==
-X-Google-Smtp-Source: AGHT+IG/5+8sfYkHLGOAY6lPDHCl7HnqCX318hQLUFTWjKL/iIuVLzmSZD/M/vmf4/QtA5Lbe/j/Cw==
-X-Received: by 2002:a05:600c:a09:b0:43c:f00b:d581 with SMTP id 5b1f17b1804b1-4405d6decb3mr13337465e9.29.1744805404203;
-        Wed, 16 Apr 2025 05:10:04 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4404352a536sm37332905e9.1.2025.04.16.05.10.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 05:10:03 -0700 (PDT)
-Message-ID: <70a630cb-06ad-403c-b2e2-ae6d26e0877e@linaro.org>
-Date: Wed, 16 Apr 2025 13:10:02 +0100
+        d=1e100.net; s=20230601; t=1744805472; x=1745410272;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aIhNd1beHsCBJk7UARj/b4EA55X4Pt/IlSQhsaLXJEs=;
+        b=OCqhoe9gfhLeLvJe2Cff6zQpN9ceLuWgnTKpzAvn1HcssicVccDOFuyU80iWbgVir+
+         XEK9jCUdEjVpk3IPE9KCRZks0Z4p2WETM5AK/DAIyS7VHn4HteJW8I/LUhXX5rnWesHG
+         WXrdsIMO/qtrkrE9QIaNLjFt+fuYsCFXC7JAjuZOrjsD2Wj9N8i35oDgdXG+fSBAsGdX
+         HdDgAvUZIPLM8iriNirS8+JSqwmg2ukADTGGYVfMR/cKe+julThYsAAy183VGqEOE6ds
+         yWWCGfUDRKs066VcvTYr1ZAke66rtpEENSy8eaCE+SGdoxHX3V2sZalE/7go4KJyCWXO
+         tXrg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBbWOY9KZV099xzxco/KodVDn1HihbGRoJ2+w6hktZUU1T8lSzr9XWMkgUcdFzsI1UDMYGbJ+OnGT4S8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTX+S5e7WVT4q43inQkRUZm1qERkhK+XxG3MWll1sefXdz3m4r
+	ERYAiPhv7nOLwyAAzuhbv5wrJJGfN1ruTobVh4I8/tzP4MzWIEo3QXhZLvmhhhY=
+X-Gm-Gg: ASbGncsICt8OPuMTQFcLidGV9QCORCe3DziXd8ofEbnxKD/b5nxAPeBxlsouORHPmJ6
+	8iFlyWAJxVOWe8O2dnbxyuwQOiGFifZ+mkxxeFH8JPoOHP8jAGoZQV+SaGq5w9/5RYYdiJFS6s3
+	AIegam7IuskQnXOO2jTXUxnrF9KQVV+RgAuMw22trFVSMJyn1JbcmrsDufnStaDJyWl3wPV8pW1
+	X3FJ3hWzUKe9rTJ0UHP4Ih+5vbJTVcotB2OLaQ4kjsaMGsOKR0L1xmTWOsnVzLZzsZN/lXtOBHz
+	LimVVU1u7Ua44B4BNuYoGteFOWHdhZy8/TxeA/JQYN4mCYdUp8m2i6Cg7Is=
+X-Google-Smtp-Source: AGHT+IGIAwh5paKCg/g4lQlBIPqJRZL9OcDB9OvQKhMNNe2NevcI1jcoYQQlLpJ2/+Ng8JEWh1CHCQ==
+X-Received: by 2002:a05:6000:40cd:b0:39c:13fd:ec44 with SMTP id ffacd0b85a97d-39ee5b138fdmr1428303f8f.5.1744805472113;
+        Wed, 16 Apr 2025 05:11:12 -0700 (PDT)
+Received: from jiri-mlt ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96407esm17110247f8f.17.2025.04.16.05.11.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 05:11:11 -0700 (PDT)
+Date: Wed, 16 Apr 2025 14:10:59 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
+	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
+	saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, jonathan.lemon@gmail.com, 
+	richardcochran@gmail.com, aleksandr.loktionov@intel.com, milena.olech@intel.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v2 3/4] dpll: features_get/set callbacks
+Message-ID: <lljouuqzmhcb2esfrxrviohrwgweee6632ntfoca5fqho736il@auarfibpahpf>
+References: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
+ <20250415181543.1072342-4-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/20] media: iris: Skip destroying internal buffer if not
- dequeued
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, stable@vger.kernel.org
-References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
- <20250408-iris-dec-hevc-vp9-v1-1-acd258778bd6@quicinc.com>
- <811cd70e-dc27-4ce0-b7da-296fa5926f90@linaro.org>
- <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
- <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415181543.1072342-4-arkadiusz.kubalewski@intel.com>
 
-On 15/04/2025 05:58, Dikshita Agarwal wrote:
-> Although firmware makes sure that during session close, all buffers are
-> returned to driver and driver will release them but still we shouldn't rely
-> for this on firmware and should handle in driver.
-> Will fix this in next patch set.
+Tue, Apr 15, 2025 at 08:15:42PM +0200, arkadiusz.kubalewski@intel.com wrote:
+>Add new callback ops for a dpll device.
+>- features_get(..) - to obtain currently configured features from dpll
+>  device,
+>- feature_set(..) - to allow dpll device features configuration.
+>Provide features attribute and allow control over it to the users if
+>device driver implements callbacks.
+>
+>Reviewed-by: Milena Olech <milena.olech@intel.com>
+>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+>---
+>v2:
+>- adapt changes and align wiht new dpll_device_info struct
+>---
+> drivers/dpll/dpll_netlink.c | 79 ++++++++++++++++++++++++++++++++++++-
+> include/linux/dpll.h        |  5 +++
+> 2 files changed, 82 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
+>index 2de9ec08d551..acfdd87fcffe 100644
+>--- a/drivers/dpll/dpll_netlink.c
+>+++ b/drivers/dpll/dpll_netlink.c
+>@@ -126,6 +126,25 @@ dpll_msg_add_mode_supported(struct sk_buff *msg, struct dpll_device *dpll,
+> 	return 0;
+> }
+> 
+>+static int
+>+dpll_msg_add_features(struct sk_buff *msg, struct dpll_device *dpll,
+>+		      struct netlink_ext_ack *extack)
+>+{
+>+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
+>+	u32 features;
+>+	int ret;
+>+
+>+	if (!ops->features_get)
+>+		return 0;
+>+	ret = ops->features_get(dpll, dpll_priv(dpll), &features, extack);
+>+	if (ret)
+>+		return ret;
+>+	if (nla_put_u32(msg, DPLL_A_FEATURES, features))
+>+		return -EMSGSIZE;
+>+
+>+	return 0;
+>+}
+>+
+> static int
+> dpll_msg_add_lock_status(struct sk_buff *msg, struct dpll_device *dpll,
+> 			 struct netlink_ext_ack *extack)
+>@@ -592,6 +611,11 @@ dpll_device_get_one(struct dpll_device *dpll, struct sk_buff *msg,
+> 		return ret;
+> 	if (nla_put_u32(msg, DPLL_A_TYPE, info->type))
+> 		return -EMSGSIZE;
+>+	if (nla_put_u32(msg, DPLL_A_CAPABILITIES, info->capabilities))
+>+		return -EMSGSIZE;
+>+	ret = dpll_msg_add_features(msg, dpll, extack);
+>+	if (ret)
+>+		return ret;
+> 
+> 	return 0;
+> }
+>@@ -747,6 +771,34 @@ int dpll_pin_change_ntf(struct dpll_pin *pin)
+> }
+> EXPORT_SYMBOL_GPL(dpll_pin_change_ntf);
+> 
+>+static int
+>+dpll_features_set(struct dpll_device *dpll, struct nlattr *a,
+>+		  struct netlink_ext_ack *extack)
+>+{
+>+	const struct dpll_device_info *info = dpll_device_info(dpll);
+>+	const struct dpll_device_ops *ops = dpll_device_ops(dpll);
+>+	u32 features = nla_get_u32(a), old_features;
+>+	int ret;
+>+
+>+	if (features && !(info->capabilities & features)) {
+>+		NL_SET_ERR_MSG_ATTR(extack, a, "dpll device not capable of this features");
+>+		return -EOPNOTSUPP;
+>+	}
+>+	if (!ops->features_get || !ops->features_set) {
+>+		NL_SET_ERR_MSG(extack, "dpll device not supporting any features");
+>+		return -EOPNOTSUPP;
+>+	}
+>+	ret = ops->features_get(dpll, dpll_priv(dpll), &old_features, extack);
+>+	if (ret) {
+>+		NL_SET_ERR_MSG(extack, "unable to get old features value");
+>+		return ret;
+>+	}
+>+	if (old_features == features)
+>+		return -EINVAL;
+>+
+>+	return ops->features_set(dpll, dpll_priv(dpll), features, extack);
 
-Shouldn't we reset iris in this case ?
+So you allow to enable/disable them all in once. What if user want to
+enable feature A and does not care about feature B that may of may not
+be previously set?
+How many of the features do you expect to appear in the future. I'm
+asking because this could be just a bool attr with a separate op to the
+driver. If we have 3, no problem. Benefit is, you may also extend it
+easily to pass some non-bool configuration. My point is, what is the
+benefit of features bitset here?
 
-i.e. its a breaking of the software contract to have failed to have 
-returned a buffer by - close.
 
-Its not enough to free the memory on the APSS side as the remote end 
-could still assume ownership of a buffer... right ?
 
----
-bod
+>+}
+>+
+> static int
+> dpll_pin_freq_set(struct dpll_pin *pin, struct nlattr *a,
+> 		  struct netlink_ext_ack *extack)
+>@@ -1536,10 +1588,33 @@ int dpll_nl_device_get_doit(struct sk_buff *skb, struct genl_info *info)
+> 	return genlmsg_reply(msg, info);
+> }
+> 
+>+static int
+>+dpll_set_from_nlattr(struct dpll_device *dpll, struct genl_info *info)
+>+{
+>+	struct nlattr *a;
+>+	int rem, ret;
+>+
+>+	nla_for_each_attr(a, genlmsg_data(info->genlhdr),
+>+			  genlmsg_len(info->genlhdr), rem) {
+>+		switch (nla_type(a)) {
+>+		case DPLL_A_FEATURES:
+>+			ret = dpll_features_set(dpll, a, info->extack);
+>+			if (ret)
+>+				return ret;
+>+			break;
+>+		default:
+>+			break;
+>+		}
+>+	}
+>+
+>+	return 0;
+>+}
+>+
+> int dpll_nl_device_set_doit(struct sk_buff *skb, struct genl_info *info)
+> {
+>-	/* placeholder for set command */
+>-	return 0;
+>+	struct dpll_device *dpll = info->user_ptr[0];
+>+
+>+	return dpll_set_from_nlattr(dpll, info);
+> }
+> 
+> int dpll_nl_device_get_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
+>diff --git a/include/linux/dpll.h b/include/linux/dpll.h
+>index 0489464af958..90c743daf64b 100644
+>--- a/include/linux/dpll.h
+>+++ b/include/linux/dpll.h
+>@@ -30,6 +30,10 @@ struct dpll_device_ops {
+> 				       void *dpll_priv,
+> 				       unsigned long *qls,
+> 				       struct netlink_ext_ack *extack);
+>+	int (*features_set)(const struct dpll_device *dpll, void *dpll_priv,
+>+			    u32 features, struct netlink_ext_ack *extack);
+>+	int (*features_get)(const struct dpll_device *dpll, void *dpll_priv,
+>+			    u32 *features, struct netlink_ext_ack *extack);
+> };
+> 
+> struct dpll_pin_ops {
+>@@ -99,6 +103,7 @@ struct dpll_pin_ops {
+> 
+> struct dpll_device_info {
+> 	enum dpll_type type;
+>+	u32 capabilities;
+> 	const struct dpll_device_ops *ops;
+> };
+> 
+>-- 
+>2.38.1
+>
