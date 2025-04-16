@@ -1,157 +1,97 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9910817B4EC;
-	Wed, 16 Apr 2025 16:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54C2191;
+	Wed, 16 Apr 2025 16:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819452; cv=none; b=q3+GzqvTfYl0kG21e9oz1YMwZ1oxsM3niJKxxTB+ENEpSPHWUTjLKEpFVXvOJlcLQyILPqIbyt1HKfkMa/o++pLPYA9lRaJpoN0FnmYOG//i9OULz5wpv4Vg2S/JKp0wmNXIGrFLZ/H+b0rud94/nVUp4EaLYLJ9szyH3vwJP1k=
+	t=1744819533; cv=none; b=M0qAyfrEATYCTphAtyNR15rb56U1dLWRrnAM7WhIH+h5RhnWpo8OPXrmxIdBh3XhESdBFqochncR32K9oCuk/0BGhmc1oTXSsh8sWIZ6xEMcf89Nrjy7cR4oKPteR+bbmlw8bUtqaDMllhCEIQrIl7jQt7nWb5J2oVDYr8H33ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819452; c=relaxed/simple;
-	bh=ExV+qopSCx6nEjSSIXQgiSqYOJWKXQsUnO9DDfAoE1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lHau9VYRNUSStqcgaUsQmbYtm0thqmVD/W9iAYOxkEOtibMs3oBJyB9Q+lYTjMbdGHQClMjKpAjCpvWwhCyYub7gE7ci2vbB60wzGL8l/DS3benTp6YR9zrlL5407yd8XxwWkaqPdpJ5C3+fTAXzA7AnTlInxAKNByQm0RoU97E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=PCBqdYjf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=L7FVybia; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	s=arc-20240116; t=1744819533; c=relaxed/simple;
+	bh=EhmqrT1n26AMQEMDb1XRZ5HxSAiGsR+p35wieLTxIRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AXtb4XNLenJ4ftBjHfhUdwEAlREEfFDDZ89S601MhcC2S9mblwEMFr9kYtnXUZtBgRtYhJwvj7feuZ6lZni55UvaJut0dvWOF2M+Gq0L+knhcRQIUsxBzPhFCxY8ten4CGv72QeEeEyOHaYj6Fx8aTSxTPpuWbKwe5kWS9Iq/Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=IVpc4FxV; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="PCBqdYjf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L7FVybia"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id 0E5DA11402AB;
-	Wed, 16 Apr 2025 12:04:08 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-07.internal (MEProxy); Wed, 16 Apr 2025 12:04:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1744819447; x=
-	1744905847; bh=dSpHFaLh+ehYJd+pg1fhaXxmbL6V+XvmhHymYCZ3B8A=; b=P
-	CBqdYjfWtkj3twvlhVkyTK4M71TdsCxiTecsKHEfC/jROKiCKa1n1rbPbaNUQCnB
-	hYz3YQj3uzTq/9t22PCT2daTfF7q/aeDxFeak1vAKy8CjRLEBrmo+AUH8mzvXsNP
-	oKcU8nXK13MwgltwEps3zHoaEOWD5xgiMTfTbBUYhya5dESLGyR32dPiQ5kP1ALo
-	KpJgyScwXxAGgJK164+KOdw+ThRI0RxKZTGY6dngfh89b2wBdKUJKN0wQax9vu6T
-	H+AfZ9PbHLs6ZJImDVOV55lop3JabaJQT+v2mUeFjXRSbDjWYGi4J0LEA1TPHD34
-	mHJ/MdW5s7QdziC0Df8gg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744819447; x=1744905847; bh=dSpHFaLh+ehYJd+pg1fhaXxmbL6V+XvmhHy
-	mYCZ3B8A=; b=L7FVybiaP4ytSd4jTXYyGatuZ6hh8KjMRfXuCAfdqp8TuM/3AjB
-	5iDS2u2jJw2YBpIhp+Kas8zryJCRGHetH8uLEU+5MheXWIpwHxtb1oWjCge1iyna
-	4GT1M1GweeOKLQcyQ3g9pgzdHtwBPEnL6f4rtCw4ayHcS9FcpQ+hIZNrDUgRIHOC
-	c2kLUPR7eocVTfQMEpiDKh1iPhLYNm8UXAGcr7G6f7yvmu1rJNyW6mGHoWabP8kD
-	2C8Bb9Bxa+JUSKP0G+N681tQqOIcHEep18B4C3CX5Jr9QuB+nY5VJQpLN5O48oES
-	gCeA4+7OuXlZRGzMGOrJaEGphDS97BawlPw==
-X-ME-Sender: <xms:9tT_Z5GoC386dAT-X9zwKmW00wMglb8EO7kAHO1qKxgpQmgxrhsVGg>
-    <xme:9tT_Z-UnC_3cIhz4I1fCi6oyJS4eOx_7kx5EDVvxssgI7_1Rcq8xUg2_vxYLPIykQ
-    E-rB-UYVne9tShN68Q>
-X-ME-Received: <xmr:9tT_Z7ISFBhAQSrsvLsTZ5p--02jmNsJqWFJ1ZfmkbyKlQfXK_K-wVDwMk4v>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeikedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomhepufgrsghrihhnrgcuffhusghrohgtrgcuoehsugesqhhuvggrshihsh
-    hnrghilhdrnhgvtheqnecuggftrfgrthhtvghrnheptddvhffhhfdugfegvdejfeetuddt
-    tdejteehfeejvdeugeffkefhgfffheeuudffnecuffhomhgrihhnpehgihhthhhusgdrtg
-    homhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehs
-    ugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgspghrtghpthhtohepudelpdhmohguvg
-    epshhmthhpohhuthdprhgtphhtthhopegrnhhtohhnihhosehophgvnhhvphhnrdhnvght
-    pdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrges
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-    dprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhihrgiirghnoh
-    hvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggv
-    vheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:9tT_Z_FNUybtwEEHxjdgESv01hFeFCTFiehIwm86rWwE9woo_VyWMw>
-    <xmx:9tT_Z_V57j3zUI-tZmgTnQiQQ38f_MMis7B0QV9didZs_2y_bGnqIQ>
-    <xmx:9tT_Z6On3gSY0v0VNqiiSQqwECh5-CNauMDNGbQ3mDUdCXpwI1RILg>
-    <xmx:9tT_Z-1jS3SPPmy0zf44EuIb2G3PSk5gnsd66tVSVptke69GASGEhA>
-    <xmx:99T_Zy2SxRHfqeyDJMj5GB8sf8P-xfhI5uilZHoNfgX-pn3whEzVnaLA>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Apr 2025 12:04:05 -0400 (EDT)
-Date: Wed, 16 Apr 2025 18:04:03 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>,
-	steffen.klassert@secunet.com, antony.antony@secunet.com,
-	willemdebruijn.kernel@gmail.com, David Ahern <dsahern@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH net-next v26 00/23] Introducing OpenVPN Data Channel
- Offload
-Message-ID: <Z__U881z4XdlkMHW@krikkit>
-References: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="IVpc4FxV"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4Zd5Tk3HCJzm0yVN;
+	Wed, 16 Apr 2025 16:05:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1744819525; x=1747411526; bh=4rA+OYQ/k01wwgm+jiFIFEx4
+	hVYW6A62leL4CloUvtI=; b=IVpc4FxVxUl02nZnmIlRB8AfWVTQcXcDjI7g+qLS
+	XSxRkVoM0SzjfHxAHdZabaGZYOhmKcE9S4Zu7Rvcsn2X1WMsxibhKmgF3d9pNm8B
+	NLN3WRWoJBbLlzgpb+QDeVVYCNQ0WrSBzGhpEfENba7fXOJEe7ITKb2+L6NBxzqk
+	WDLbgWblz4anjLuvefXnDadn1gWFq2NicjUStiM/py12gk9I0H6Clg9kjgeMilu8
+	wjIHxV7rDmHF0QYAYemBOoWoWHBWfkfpoE1/Jg9FgZhPG/UrrIa5SeZP31NbUL1J
+	ZVjskPOWJSo/jiJ3j8sXD5O3ynk+tekn5+d96iFunAf0Qw==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id 76cUTHYzIjV1; Wed, 16 Apr 2025 16:05:25 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4Zd5T91lhkzm0djk;
+	Wed, 16 Apr 2025 16:05:00 +0000 (UTC)
+Message-ID: <bb713790-0b68-4d91-831c-b18fa1ea01a9@acm.org>
+Date: Wed, 16 Apr 2025 09:04:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250415-b4-ovpn-v26-0-577f6097b964@openvpn.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 5/5] lib/Kconfig.debug: introduce
+ CONFIG_NO_AUTO_INLINE
+To: chenlinxuan@uniontech.com, Keith Busch <kbusch@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Andrew Morton <akpm@linux-foundation.org>,
+ Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>, Peter Huewe
+ <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, kvm@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-integrity@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ llvm@lists.linux.dev, Winston Wen <wentao@uniontech.com>,
+ Changbin Du <changbin.du@intel.com>
+References: <20250416-noautoinline-v2-0-e69a2717530f@uniontech.com>
+ <20250416-noautoinline-v2-5-e69a2717530f@uniontech.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250416-noautoinline-v2-5-e69a2717530f@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-2025-04-15, 13:17:17 +0200, Antonio Quartulli wrote:
-> Notable changes since v25:
-> * removed netdev notifier (was only used for our own devices)
-> * added .dellink implementation to address what was previously
->   done in notifier
-> * removed .ndo_open and moved netif_carrier_off() call to .ndo_init
-> * fixed author in MODULE_AUTHOR()
-> * properly indented checks in ovpn.yaml
-> * switched from TSTATS to DSTATS
-> * removed obsolete comment in ovpn_socket_new()
-> * removed unrelated hunk in ovpn_socket_new()
-> 
-> The latest code can also be found at:
-> 
-> https://github.com/OpenVPN/ovpn-net-next
-> 
-> Thanks a lot!
-> Best Regards,
-> 
-> Antonio Quartulli
-> OpenVPN Inc.
-> 
-> ---
-> Antonio Quartulli (23):
->       net: introduce OpenVPN Data Channel Offload (ovpn)
->       ovpn: add basic netlink support
->       ovpn: add basic interface creation/destruction/management routines
->       ovpn: keep carrier always on for MP interfaces
->       ovpn: introduce the ovpn_peer object
->       ovpn: introduce the ovpn_socket object
->       ovpn: implement basic TX path (UDP)
->       ovpn: implement basic RX path (UDP)
->       ovpn: implement packet processing
->       ovpn: store tunnel and transport statistics
->       ovpn: implement TCP transport
->       skb: implement skb_send_sock_locked_with_flags()
->       ovpn: add support for MSG_NOSIGNAL in tcp_sendmsg
->       ovpn: implement multi-peer support
->       ovpn: implement peer lookup logic
->       ovpn: implement keepalive mechanism
->       ovpn: add support for updating local or remote UDP endpoint
->       ovpn: implement peer add/get/dump/delete via netlink
->       ovpn: implement key add/get/del/swap via netlink
->       ovpn: kill key and notify userspace in case of IV exhaustion
->       ovpn: notify userspace when a peer is deleted
->       ovpn: add basic ethtool support
->       testing/selftests: add test tool and scripts for ovpn module
+On 4/16/25 2:44 AM, Chen Linxuan via B4 Relay wrote:
+> 2. Make it depends on X86 and LOONGARCH,
+>     as I haven't test other architectures
 
-The changes since v25 lgtm:
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+That sounds weird to me. Shouldn't this option be made architecture-
+independent?
 
--- 
-Sabrina
+> +config NO_AUTO_INLINE
+> +	bool "Disable compiler auto-inline optimizations (EXPERIMENTAL)"
+> +	default n
+> +	depends on CC_IS_GCC && (X86 || LOONGARCH)
+
+Why "depends on CC_IS_GCC"? Please make sure that both gcc and clang are
+supported.
+
+Thanks,
+
+Bart.
