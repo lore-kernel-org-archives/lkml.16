@@ -1,31 +1,32 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E922423B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702FB224238;
 	Wed, 16 Apr 2025 18:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828848; cv=none; b=Ddhd3mqxpHpXzJtD6JXiMn7gUup7TKJFyMCJb6g0qDrjEsBlaquruUC7bXGvu3hWD0+CJCyoL5MH/OuNI8jlm01TTomf1C9uhr7X+bNMCeTywrTw1N7mzGmHduGtkee6jRO6VUMPkUWA3VCXgK6IPkcdaWMYbHb9w1jZgPRSYqQ=
+	t=1744828848; cv=none; b=lt4540fpqiGCG2R/INza02WA5tRCZmhztrgAsJbQ/of5MdY8l2vTEviHjtLRrMMgJ8/ZGFRLO2KYwoEe4geBxo03rTFNtOYe+ovVt7pwGAsUjnsuNpAuIq7yITHqP1L+kdvVffPhTbrmH6I47Qcwk+WKznlEsyoGA9OgN7/8I60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744828848; c=relaxed/simple;
-	bh=umVrEBGRj3bl+YVGjKRcJZOWpy3k480FdxVtwmyb2hw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tZdQGxqe1l0Spx3xxWDS8mD2tVTFggD/Dymhye37Hp0wQ7jM3F7zx31hpYjBY6fcyAXAfxCNKcB6Tg0TK3TeNnAuIoV9MMLvd8MTfEwD3qk/yNPk9TTNi7QAtpFrdCk8Ig0KDfnXL8zrJJlpsMlXVwVWFxEr1hzAdilfYlnZqqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=RCSFiGSb; arc=none smtp.client-ip=159.69.126.157
+	bh=r74PEqmclp8XQ64KO3BZyy9Pvmd2TvaX9zqkaaQrnr0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ftvu3mV2aZJ1lsTQuiCn7ZkQwIbopG+kO6IMPUZmJzgCgc0VJnLVWSCcWU/zJoqAjAqTcU64fJKW0ekENDeXSNu4N3lDmq5XB9DfCT3y0pn8vAjDOlSm5W/04zVCLmHlro6lzDshfVbLPmibeujAa/7uS8tdvbM94hsmcsVMssM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=dl8ih4v0; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="RCSFiGSb"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="dl8ih4v0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1744828843;
-	bh=umVrEBGRj3bl+YVGjKRcJZOWpy3k480FdxVtwmyb2hw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RCSFiGSbJNYSLG3TxRHz6zwC1nVYkgdEcPDMdyvypV5waQC/RdDCNIqYZbBDOw6+i
-	 igglaxpIetgvkR2q2s/sLhXSwKegoNSLn4s2QOILM7DJUy+ky8SFXJ0dZRZBDWDrXM
-	 ChpeAm/9F8ru+DQVYZd/x2G2h9yGaFiAs+XYOz5w=
+	s=mail; t=1744828842;
+	bh=r74PEqmclp8XQ64KO3BZyy9Pvmd2TvaX9zqkaaQrnr0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=dl8ih4v05EXYagBRLU3hL7RzPuFE4iiPR8iKhO9bW9Vb+7W02xIgbLITW0u6wn0s3
+	 V4158DHDOoctonK9EyReBvntzjKI8ifsb8XbhZO12MOmWPumasSBZpcb5kQ8YHrc/P
+	 u01QJCDgzlwo5JrSh3DBrDm6L4LLuCsPHfnrRizk=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 16 Apr 2025 20:40:18 +0200
-Subject: [PATCH 3/6] tools/nolibc: properly align dirent buffer
+Subject: [PATCH 0/6] tools/nolibc: fix some undefined behaviour and enable
+ UBSAN
+Date: Wed, 16 Apr 2025 20:40:15 +0200
+Message-Id: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,44 +35,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250416-nolibc-ubsan-v1-3-c4704bb23da7@weissschuh.net>
-References: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
-In-Reply-To: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAJD5/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Mz3bz8nMykZN3SpOLEPF0DIwsTA0MzSwszUxMloJaCotS0zAqwcdG
+ xtbUAkqYcN14AAAA=
+X-Change-ID: 20250416-nolibc-ubsan-028401698654
 To: Willy Tarreau <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>, 
  Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744828842; l=934;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744828842; l=1096;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=umVrEBGRj3bl+YVGjKRcJZOWpy3k480FdxVtwmyb2hw=;
- b=ud/DqkVbfaY7SS7KVrfrdctaxRwKYJTWo+NBW9KWzJwf8p8VnzvEnICYp6FmU2c6+Tx80xco0
- oiUqr3VM+IjBauXHGu7hTqGat9mJ4WIiDuNP4ThCC9R2PZp8hw6DVCT
+ bh=r74PEqmclp8XQ64KO3BZyy9Pvmd2TvaX9zqkaaQrnr0=;
+ b=+RNKNlfx45F4oK8aKjqBBV9P7vD/FZXYqRMSfClRhC7KztqjtoDZZQmgm+QqJYgwrKadqBXkt
+ Wg6dtyHEqoRCRtATrHRTmKq14ooNmk43kLfeq/SGr5hWT13QqdDI7uu
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-As byte buffer is overlaid with a 'struct dirent64'.
-it has to satisfy the structs alignment requirements.
+Fix some issues uncovered by UBSAN and enable UBSAN for nolibc-test to
+avoid regressions.
 
-Fixes: 665fa8dea90d ("tools/nolibc: add support for directory access")
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/include/nolibc/dirent.h | 1 +
- 1 file changed, 1 insertion(+)
+Thomas Weißschuh (6):
+      tools/nolibc: add __nolibc_has_feature()
+      tools/nolibc: disable function sanitizer for _start_c()
+      tools/nolibc: properly align dirent buffer
+      tools/nolibc: fix integer overflow in i{64,}toa_r() and
+      selftests/nolibc: disable ubsan for smash_stack()
+      selftests/nolibc: enable UBSAN if available
 
-diff --git a/tools/include/nolibc/dirent.h b/tools/include/nolibc/dirent.h
-index c5c30d0dd6806b1bec2fa8120a3df29aaa201393..cd0ddff86c360b14913a809c8696d89d8a356e9e 100644
---- a/tools/include/nolibc/dirent.h
-+++ b/tools/include/nolibc/dirent.h
-@@ -58,6 +58,7 @@ int closedir(DIR *dirp)
- static __attribute__((unused))
- int readdir_r(DIR *dirp, struct dirent *entry, struct dirent **result)
- {
-+	__attribute__((aligned(__alignof__(struct linux_dirent64))))
- 	char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1];
- 	struct linux_dirent64 *ldir = (void *)buf;
- 	intptr_t i = (intptr_t)dirp;
+ tools/include/nolibc/compiler.h              |  6 ++++++
+ tools/include/nolibc/crt.h                   |  5 +++++
+ tools/include/nolibc/dirent.h                |  1 +
+ tools/include/nolibc/stdlib.h                | 24 ++++++++----------------
+ tools/testing/selftests/nolibc/Makefile      |  3 ++-
+ tools/testing/selftests/nolibc/nolibc-test.c |  1 +
+ 6 files changed, 23 insertions(+), 17 deletions(-)
+---
+base-commit: 7c73c10b906778384843b9d3ac6c2224727bbf5c
+change-id: 20250416-nolibc-ubsan-028401698654
 
+Best regards,
 -- 
-2.49.0
+Thomas Weißschuh <linux@weissschuh.net>
 
