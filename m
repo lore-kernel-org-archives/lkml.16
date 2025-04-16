@@ -1,73 +1,73 @@
-Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
+Received: from mail-yw1-f228.google.com (mail-yw1-f228.google.com [209.85.128.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6440E225390
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B914224891
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744832782; cv=none; b=kngaz9h+SD7jJqQGm2aCNTlxKyg5/aP4K//LLhI75eAcXv7/2LFgZ++a2NYU341hX6wJS+FGZdBb33Iq/3z9JkUtIp5/5yxVRPjPgnaXwNcq9qlZULmROyPnxJ8sDWfvp1JTZEcdnYramzOr+RrePGlshzNCMLJ/fcFOBYVmhE4=
+	t=1744832781; cv=none; b=ANZ/rY0GAKzjoEGr1eR92kvjB2NsaoOHsc35QUm1dClQhWZlwFLkaoufYe3CEo3Rk6jzBdVcyHXnlFavR6OYEd/HZgfLV+nu2eXBpFYjwzl1/s6IthxkkMmH5c3b1qOiJHSv9ugE/t81YGO1jGqbAV+agmZVyFOXO3vfcnwokz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744832782; c=relaxed/simple;
-	bh=6uOhhTg2M6Xc3JIAa7jixcn3vOphgn9bCMpImyxQ0aM=;
+	s=arc-20240116; t=1744832781; c=relaxed/simple;
+	bh=tYWKo49qWwobGHivnVbrXRT7o/0NtMaP2FGGsVhHUk0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BG3P8I6Uyxc5vz6fK+9ogPzS0wEBhy/JyI7so5T4qLEKmegw6IIWscjTBKXDqxFjjstZnE+8I77TPt3BpIuw+yr+ut/RQtHGL+dmFgVNTpTHXm6u/xrvamiLDzufvQDJzM3u+6vVIFEVjH2Z+wO8WRKvrEtgmazl+WisKJXZrxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cVCFFYKB; arc=none smtp.client-ip=209.85.166.227
+	 In-Reply-To:To:Cc; b=BpjdMSB5AbycO2IvXDK91qyxs400BqE7hUrbm1MXaaDnftie6/HHj237jUaHZPf7tF0AqHyiQBSqpnVyGZAdBM9q8KaQiu3jAffAWCVbKuIzyFXqt3i6aHvigNrznRSX7rxs1Lcp3WbWCxsdkYcZ1OjiKmpJQ1FP+LZeX2cwtXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=P9cxdZWM; arc=none smtp.client-ip=209.85.128.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cVCFFYKB"
-Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-3d80bbf3aefso231025ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:46:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="P9cxdZWM"
+Received: by mail-yw1-f228.google.com with SMTP id 00721157ae682-702599fa7c5so8314707b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:46:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744832778; x=1745437578; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1744832777; x=1745437577; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yq5esKCTo1m4AEup60elUDKAMcHgxmTnJjt4cP7Zh0E=;
-        b=cVCFFYKBZ8ZtVyS+h53nof2wbdQMKdyHyg74Z7r/2scyY+qDqkSBNXmN8VzLOtCtyj
-         CgEyVQ8374B3jqagSCv5Plszp2fmWoM/laYZ6JWTrIbiORWJ0bQwLnKeB1SFUA7hPQs0
-         XvkNdsAomqxRWob1TP7jvaV6vR0a7k+2DLEW+SkbQyPqvCv7yWjEArGy6DWRkkTUra6N
-         Vhdgb+4Whlet0ThS5P0FRPD91JnG2vgI0bs14ZGsx8hV/65drzbXUlSVYR2EAs4MG/0c
-         URYn8QRcGZhRDhfAUy1PQabuTB1c4d2tquoXFz06EbJOnpy7FgngHZob/3LiK9UyxWmM
-         ub3Q==
+        bh=OofhF9O27cVrb8WKj94QBUeimdnvDakh4zV4gN59Auk=;
+        b=P9cxdZWMqrsCEMoQNaOHOiknddPAA1vvdcpLEjhLd4R83CD+6hgWg7dH8XJTTW13mY
+         2d/fnmrqKEnjH9bwhSKDQFfPhRq3lQ0sIHwNWw5nTDiNpjk9/IPttXKXJoh6CNaH8tDW
+         F/eutFH7mAhqNETC+Wbs867u+qQXTINblJue93iVWnzsYjkAaHcODWwNYS6LzhSB0t1v
+         QVRj0nM1brG95gwRkyLKM8egeDf/5+VPmf+QsQ8mJeO8voGhDL1r3gfEKIUfSVCM2udF
+         4m7ukMr/e48tUWIXxUelwf/H1jMSxRHOAPbdKT8UVlTdr51y1sYNOz0z0e3//iT2LnhD
+         SlvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744832778; x=1745437578;
+        d=1e100.net; s=20230601; t=1744832777; x=1745437577;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yq5esKCTo1m4AEup60elUDKAMcHgxmTnJjt4cP7Zh0E=;
-        b=WJEWG1i1kkUtmpYy6KatVon9yW9U2qNxfE1uuSCx+JgedgqEEwG58Eac4FL3P88E9M
-         GAxgX6/ZTILdE4SSQKzpEL4qAMMRyYCbxMWCac/KjnKwQsdtKCr4TPhXW6bgcyZYEztF
-         Gtwz51+mPyA526x9gL0VyKT6sJJEbdrPwi0Q5R4R5XVPQOZ+xscuEPaMWG8WtVDJLDkk
-         j4Q+bI42SRDSFQnofYaj/sNyrPz+abg4IKOWCZVZJix6wVlP2Wn27FPAlnLzjz1iO6Mi
-         AA6PGBdcLj6Qy3xN7xMpW7jX0Er5tDKJyHwmureTBSUQx6QLyFpgw1Nj0bBquPFPYBM/
-         LlNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUi5E22RnAEKXNuwrqAMFluwZS/QWjWMYo/zt5x6AVztOdql124PEAPydC7xgc6dWkpHulrWnN9cOnl16g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0FXwbCDFpTziGJzVpbvsKKeY6yHuVhFlScZmEq8RHe2E66ePy
-	L18cQ/PoYZ0eeRV8MCjrD99xtZszZJOzkRBfMybGwfqZzmHnKM/YCp2WDcYnv+TsGcYvg8U1r3+
-	R4Oj3fgQl42Zb4qwLiGgGng7Ys0IhY7IkpCZLW5t5fbbcT3CY
-X-Gm-Gg: ASbGncswaoOj93/i+MCsNvawQGnnfltvLVOvTBARJpFCMPIkzopXwg3IDlMsNA3XlZQ
-	gbdj6SR3nY2IIQIZUiyDM4qQsJj+mBAMsjjEBuodqp9sowgEg9ys/LEli0XkHUswnYZL5nlJCg6
-	cnBkmf+SnBN8xLw9v9ffAedxGDTmhDI+6eAYpPvoPxIIBRhzyoGFO9P7VPKwxwQMgKpDZAhftF7
-	IjOJFG+EqOD74FWDaFSezo//SjPQnBqymt5wS6c9aslqdIIjDzwdQNRPGxmXOuJPLe2NyQWcTlk
-	BFGCVa07LwikJttdmUJ2w5bsDqutIW4=
-X-Google-Smtp-Source: AGHT+IGFFL/1z+Lvd5ijEsYgZEptvHunfhVfOarSer7ZQyhQrlZqQd0cZQYZgZi9sOPDgPcEnaNHXINcKFi1
-X-Received: by 2002:a05:6e02:1fc3:b0:3d3:cdb0:a227 with SMTP id e9e14a558f8ab-3d815b123fbmr33400865ab.9.1744832778357;
-        Wed, 16 Apr 2025 12:46:18 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d7dbaa438csm8540685ab.41.2025.04.16.12.46.17
+        bh=OofhF9O27cVrb8WKj94QBUeimdnvDakh4zV4gN59Auk=;
+        b=L9r9jXlyZWUkJ1yMu1zYLyj2Z3tYn1pPuRohbohuPBN+2mKf5/837YdaZbyf9iAE6l
+         2F/fOX4YqbbKHOlOBdP0pTwobzNxdzI/XJyUewX6omqyxTi3bzh2UW8IqzQI7lx4+CMT
+         lqbsSbsWpd5Une8bmiRPfFpMBysHQquMLsC2fRXiOoCVVE8ckEkVsHlK4YwJJY6Bn1VW
+         0SdIHBbsnkZJ23I9B+lDiSuv7qDc/bhKcwnPheiPT4a2nm72fBkhvJN6r7dDdRI4V0Q0
+         iMtAJWLl3uvX4ywQ11j0xJFO/HX+Ku/EUqa0nmUcVMfuhncuCRBOCmPsPCgtxU9NgmZA
+         vrVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFZ6TZp3smqBL7bnZRrT91A9cAovf29+Lqki6IlWc2bEMlQJzSvyfc66X2q0UGfqH1RXE3JD+iDfBnXNI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSqiRKeNRdadUmj75kqUzzWdYcRa6x0lBEu0modFWmCi7u9g67
+	u33kg3yNYeMWoiSrcIi6jLxyIL83ig09NZZxYLSWNf5NbqV8+PfYyOgOZ0gEYmxDe618jNB3aez
+	zuJDaxEOaNT7Od3TbM7dm+JYe/ZnuvryI
+X-Gm-Gg: ASbGncs+o2T5wq0rq7F7FwWPZt7/H6/kUiXRr70zZKsiqn5w+A8HcUEtKIpzvDBnogg
+	3s4gx7oX/uJeKZbVta4eDR2gvm2fBsIbs8TpWqIv2/gUsq1d3ep2OI3LAIdaEgy9Ad8+4jntME+
+	LKSUWBNou4+7qlirQidmXM/soBM+zcyl472PUrCMZ4c3UWQMgTnd+abXOoh5F1fDokSl0Qiub/0
+	6FU11ImPFVsXZpS4xhzAEc4qygN9Ta7omgxIgxz00WUaeHkl/Q06IVQ5v4ZxiW+2CsmJPeuahD3
+	T/OcC5c+f3A//Q3UOwxxQlYcnAixpkqufNG8Scnxy0EqXg==
+X-Google-Smtp-Source: AGHT+IHK6kJ+1KjaTnTQVEhaL8MlXYaxdyW3jy6ShqO7QymT3Ojn4Obrefs2o7lpRfVUMFUZ8u7oSSQml4nx
+X-Received: by 2002:a05:690c:3393:b0:6f9:4c00:53ae with SMTP id 00721157ae682-706beb2df29mr1335057b3.8.1744832777325;
+        Wed, 16 Apr 2025 12:46:17 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7053e0f43b6sm7203417b3.11.2025.04.16.12.46.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 12:46:18 -0700 (PDT)
+        Wed, 16 Apr 2025 12:46:17 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
 Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 8F90B3404A1;
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 8D61C340424;
 	Wed, 16 Apr 2025 13:46:16 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 8E5C0E409A2; Wed, 16 Apr 2025 13:46:16 -0600 (MDT)
+	id 81E3FE402BD; Wed, 16 Apr 2025 13:46:16 -0600 (MDT)
 From: Uday Shankar <ushankar@purestorage.com>
-Date: Wed, 16 Apr 2025 13:46:07 -0600
-Subject: [PATCH v5 3/4] ublk: mark ublk_queue as const for
- ublk_register_io_buf
+Date: Wed, 16 Apr 2025 13:46:05 -0600
+Subject: [PATCH v5 1/4] ublk: require unique task per io instead of unique
+ task per hctx
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-ublk_task_per_io-v5-3-9261ad7bff20@purestorage.com>
+Message-Id: <20250416-ublk_task_per_io-v5-1-9261ad7bff20@purestorage.com>
 References: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
 In-Reply-To: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
@@ -85,49 +85,275 @@ Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
  Uday Shankar <ushankar@purestorage.com>
 X-Mailer: b4 0.14.2
 
-We now allow multiple tasks to operate on I/Os belonging to the same
-queue concurrently. This means that any writes to ublk_queue in the I/O
-path are potential sources of data races. Try to prevent these by
-marking ublk_queue pointers as const in ublk_register_io_buf.
+Currently, ublk_drv associates to each hardware queue (hctx) a unique
+task (called the queue's ubq_daemon) which is allowed to issue
+COMMIT_AND_FETCH commands against the hctx. If any other task attempts
+to do so, the command fails immediately with EINVAL. When considered
+together with the block layer architecture, the result is that for each
+CPU C on the system, there is a unique ublk server thread which is
+allowed to handle I/O submitted on CPU C. This can lead to suboptimal
+performance under imbalanced load generation. For an extreme example,
+suppose all the load is generated on CPUs mapping to a single ublk
+server thread. Then that thread may be fully utilized and become the
+bottleneck in the system, while other ublk server threads are totally
+idle.
 
-Suggested-by: Ming Lei <ming.lei@redhat.com>
+This issue can also be addressed directly in the ublk server without
+kernel support by having threads dequeue I/Os and pass them around to
+ensure even load. But this solution requires inter-thread communication
+at least twice for each I/O (submission and completion), which is
+generally a bad pattern for performance. The problem gets even worse
+with zero copy, as more inter-thread communication would be required to
+have the buffer register/unregister calls to come from the correct
+thread.
+
+Therefore, address this issue in ublk_drv by requiring a unique task per
+I/O instead of per queue/hctx. Imbalanced load can then be balanced
+across all ublk server threads by having threads issue FETCH_REQs in a
+round-robin manner. As a small toy example, consider a system with a
+single ublk device having 2 queues, each of queue depth 4. A ublk server
+having 4 threads could issue its FETCH_REQs against this device as
+follows (where each entry is the qid,tag pair that the FETCH_REQ
+targets):
+
+poller thread:	T0	T1	T2	T3
+		0,0	0,1	0,2	0,3
+		1,3	1,0	1,1	1,2
+
+Since tags appear to be allocated in sequential chunks, this setup
+provides a rough approximation to distributing I/Os round-robin across
+all ublk server threads, while letting I/Os stay fully thread-local.
+
 Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- drivers/block/ublk_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/block/ublk_drv.c | 76 ++++++++++++++++++++++--------------------------
+ 1 file changed, 35 insertions(+), 41 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index b44cbcbcc9d1735c398dc9ac7e93f4c8736b9201..215ab45b00e10150e58d7f5ea5b5d13e40a1aa79 100644
+index cdb1543fa4a9817aa2ca2fca66720f589cf222be..4e4863d873e6593ad94c72cbf971f792df5795ae 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -211,7 +211,7 @@ struct ublk_params_header {
- static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq);
+@@ -150,6 +150,7 @@ struct ublk_io {
+ 	int res;
  
- static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
--		struct ublk_queue *ubq, int tag, size_t offset);
-+		const struct ublk_queue *ubq, int tag, size_t offset);
- static inline unsigned int ublk_req_build_flags(struct request *req);
- static inline struct ublksrv_io_desc *ublk_get_iod(struct ublk_queue *ubq,
- 						   int tag);
-@@ -1867,7 +1867,7 @@ static void ublk_io_release(void *priv)
+ 	struct io_uring_cmd *cmd;
++	struct task_struct *task;
+ };
+ 
+ struct ublk_queue {
+@@ -157,11 +158,9 @@ struct ublk_queue {
+ 	int q_depth;
+ 
+ 	unsigned long flags;
+-	struct task_struct	*ubq_daemon;
+ 	struct ublksrv_io_desc *io_cmd_buf;
+ 
+ 	bool force_abort;
+-	bool timeout;
+ 	bool canceling;
+ 	bool fail_io; /* copy of dev->state == UBLK_S_DEV_FAIL_IO */
+ 	unsigned short nr_io_ready;	/* how many ios setup */
+@@ -1072,11 +1071,6 @@ static inline struct ublk_uring_cmd_pdu *ublk_get_uring_cmd_pdu(
+ 	return io_uring_cmd_to_pdu(ioucmd, struct ublk_uring_cmd_pdu);
  }
  
- static int ublk_register_io_buf(struct io_uring_cmd *cmd,
--				struct ublk_queue *ubq, unsigned int tag,
-+				const struct ublk_queue *ubq, unsigned int tag,
- 				unsigned int index, unsigned int issue_flags)
+-static inline bool ubq_daemon_is_dying(struct ublk_queue *ubq)
+-{
+-	return ubq->ubq_daemon->flags & PF_EXITING;
+-}
+-
+ /* todo: handle partial completion */
+ static inline void __ublk_complete_rq(struct request *req)
+ {
+@@ -1224,13 +1218,13 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
+ 	/*
+ 	 * Task is exiting if either:
+ 	 *
+-	 * (1) current != ubq_daemon.
++	 * (1) current != io->task.
+ 	 * io_uring_cmd_complete_in_task() tries to run task_work
+-	 * in a workqueue if ubq_daemon(cmd's task) is PF_EXITING.
++	 * in a workqueue if cmd's task is PF_EXITING.
+ 	 *
+ 	 * (2) current->flags & PF_EXITING.
+ 	 */
+-	if (unlikely(current != ubq->ubq_daemon || current->flags & PF_EXITING)) {
++	if (unlikely(current != io->task || current->flags & PF_EXITING)) {
+ 		__ublk_abort_rq(ubq, req);
+ 		return;
+ 	}
+@@ -1336,23 +1330,20 @@ static void ublk_queue_cmd_list(struct ublk_queue *ubq, struct rq_list *l)
+ static enum blk_eh_timer_return ublk_timeout(struct request *rq)
+ {
+ 	struct ublk_queue *ubq = rq->mq_hctx->driver_data;
++	struct ublk_io *io = &ubq->ios[rq->tag];
+ 	unsigned int nr_inflight = 0;
+ 	int i;
+ 
+ 	if (ubq->flags & UBLK_F_UNPRIVILEGED_DEV) {
+-		if (!ubq->timeout) {
+-			send_sig(SIGKILL, ubq->ubq_daemon, 0);
+-			ubq->timeout = true;
+-		}
+-
++		send_sig(SIGKILL, io->task, 0);
+ 		return BLK_EH_DONE;
+ 	}
+ 
+-	if (!ubq_daemon_is_dying(ubq))
++	if (!(io->task->flags & PF_EXITING))
+ 		return BLK_EH_RESET_TIMER;
+ 
+ 	for (i = 0; i < ubq->q_depth; i++) {
+-		struct ublk_io *io = &ubq->ios[i];
++		io = &ubq->ios[i];
+ 
+ 		if (!(io->flags & UBLK_IO_FLAG_ACTIVE))
+ 			nr_inflight++;
+@@ -1552,8 +1543,8 @@ static void ublk_commit_completion(struct ublk_device *ub,
+ }
+ 
+ /*
+- * Called from ubq_daemon context via cancel fn, meantime quiesce ublk
+- * blk-mq queue, so we are called exclusively with blk-mq and ubq_daemon
++ * Called from io task context via cancel fn, meantime quiesce ublk
++ * blk-mq queue, so we are called exclusively with blk-mq and io task
+  * context, so everything is serialized.
+  */
+ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
+@@ -1669,13 +1660,13 @@ static void ublk_uring_cmd_cancel_fn(struct io_uring_cmd *cmd,
+ 		return;
+ 
+ 	task = io_uring_cmd_get_task(cmd);
+-	if (WARN_ON_ONCE(task && task != ubq->ubq_daemon))
++	io = &ubq->ios[pdu->tag];
++	if (WARN_ON_ONCE(task && task != io->task))
+ 		return;
+ 
+ 	ub = ubq->dev;
+ 	need_schedule = ublk_abort_requests(ub, ubq);
+ 
+-	io = &ubq->ios[pdu->tag];
+ 	WARN_ON_ONCE(io->cmd != cmd);
+ 	ublk_cancel_cmd(ubq, io, issue_flags);
+ 
+@@ -1836,8 +1827,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
+ 	mutex_lock(&ub->mutex);
+ 	ubq->nr_io_ready++;
+ 	if (ublk_queue_ready(ubq)) {
+-		ubq->ubq_daemon = current;
+-		get_task_struct(ubq->ubq_daemon);
+ 		ub->nr_queues_ready++;
+ 
+ 		if (capable(CAP_SYS_ADMIN))
+@@ -1934,6 +1923,7 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 			       const struct ublksrv_io_cmd *ub_cmd)
  {
  	struct ublk_device *ub = cmd->file->private_data;
-@@ -2044,7 +2044,7 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
++	struct task_struct *task;
+ 	struct ublk_queue *ubq;
+ 	struct ublk_io *io;
+ 	u32 cmd_op = cmd->cmd_op;
+@@ -1952,13 +1942,13 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 	if (!ubq || ub_cmd->q_id != ubq->q_id)
+ 		goto out;
+ 
+-	if (ubq->ubq_daemon && ubq->ubq_daemon != current)
+-		goto out;
+-
+ 	if (tag >= ubq->q_depth)
+ 		goto out;
+ 
+ 	io = &ubq->ios[tag];
++	task = READ_ONCE(io->task);
++	if (task && task != current)
++		goto out;
+ 
+ 	/* there is pending io cmd, something must be wrong */
+ 	if (io->flags & UBLK_IO_FLAG_ACTIVE) {
+@@ -2011,6 +2001,7 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 		}
+ 
+ 		ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
++		WRITE_ONCE(io->task, get_task_struct(current));
+ 		ublk_mark_io_ready(ub, ubq);
+ 		break;
+ 	case UBLK_IO_COMMIT_AND_FETCH_REQ:
+@@ -2248,9 +2239,15 @@ static void ublk_deinit_queue(struct ublk_device *ub, int q_id)
+ {
+ 	int size = ublk_queue_cmd_buf_size(ub, q_id);
+ 	struct ublk_queue *ubq = ublk_get_queue(ub, q_id);
++	struct ublk_io *io;
++	int i;
++
++	for (i = 0; i < ubq->q_depth; i++) {
++		io = &ubq->ios[i];
++		if (io->task)
++			put_task_struct(io->task);
++	}
+ 
+-	if (ubq->ubq_daemon)
+-		put_task_struct(ubq->ubq_daemon);
+ 	if (ubq->io_cmd_buf)
+ 		free_pages((unsigned long)ubq->io_cmd_buf, get_order(size));
+ }
+@@ -2936,15 +2933,8 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
+ {
+ 	int i;
+ 
+-	WARN_ON_ONCE(!(ubq->ubq_daemon && ubq_daemon_is_dying(ubq)));
+-
+ 	/* All old ioucmds have to be completed */
+ 	ubq->nr_io_ready = 0;
+-	/* old daemon is PF_EXITING, put it now */
+-	put_task_struct(ubq->ubq_daemon);
+-	/* We have to reset it to NULL, otherwise ub won't accept new FETCH_REQ */
+-	ubq->ubq_daemon = NULL;
+-	ubq->timeout = false;
+ 	ubq->canceling = false;
+ 
+ 	for (i = 0; i < ubq->q_depth; i++) {
+@@ -2954,6 +2944,10 @@ static void ublk_queue_reinit(struct ublk_device *ub, struct ublk_queue *ubq)
+ 		io->flags = 0;
+ 		io->cmd = NULL;
+ 		io->addr = 0;
++
++		WARN_ON_ONCE(!(io->task && (io->task->flags & PF_EXITING)));
++		put_task_struct(io->task);
++		io->task = NULL;
+ 	}
  }
  
- static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
--		struct ublk_queue *ubq, int tag, size_t offset)
-+		const struct ublk_queue *ubq, int tag, size_t offset)
- {
- 	struct request *req;
+@@ -2993,7 +2987,7 @@ static int ublk_ctrl_start_recovery(struct ublk_device *ub,
+ 	pr_devel("%s: start recovery for dev id %d.\n", __func__, header->dev_id);
+ 	for (i = 0; i < ub->dev_info.nr_hw_queues; i++)
+ 		ublk_queue_reinit(ub, ublk_get_queue(ub, i));
+-	/* set to NULL, otherwise new ubq_daemon cannot mmap the io_cmd_buf */
++	/* set to NULL, otherwise new tasks cannot mmap the io_cmd_buf */
+ 	ub->mm = NULL;
+ 	ub->nr_queues_ready = 0;
+ 	ub->nr_privileged_daemon = 0;
+@@ -3011,14 +3005,14 @@ static int ublk_ctrl_end_recovery(struct ublk_device *ub,
+ 	int ret = -EINVAL;
+ 	int i;
  
+-	pr_devel("%s: Waiting for new ubq_daemons(nr: %d) are ready, dev id %d...\n",
+-			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
+-	/* wait until new ubq_daemon sending all FETCH_REQ */
++	pr_devel("%s: Waiting for all FETCH_REQs, dev id %d...\n", __func__,
++		 header->dev_id);
++
+ 	if (wait_for_completion_interruptible(&ub->completion))
+ 		return -EINTR;
+ 
+-	pr_devel("%s: All new ubq_daemons(nr: %d) are ready, dev id %d\n",
+-			__func__, ub->dev_info.nr_hw_queues, header->dev_id);
++	pr_devel("%s: All FETCH_REQs received, dev id %d\n", __func__,
++		 header->dev_id);
+ 
+ 	mutex_lock(&ub->mutex);
+ 	if (ublk_nosrv_should_stop_dev(ub))
 
 -- 
 2.34.1
