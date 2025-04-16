@@ -1,244 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10E922837F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB3484E1C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781335; cv=none; b=dTVlb+LcBg1Ik/5T/U4zSD4DzmUXO2hXCzBS9hDSVXyPVgNgXUg61vvhxHU3Iymsf6s3Iw39qkvqot8ZHPg5rSnjBmnWSbweeyjMdPn1M+TZAPymBrSpMZCwXxrnIddLAKnijFS7EYq7m7V7KOag8w87acTXQCBDuf/3v/CxAEg=
+	t=1744781394; cv=none; b=XFfS3lZVSw3KYDsEcmSrXidTJqSy2DCPqrcF/pmSOXVrOotWmXXp8HKgUrLe1uqK6Weko/k/laiOUoeAhAa8zzkQ1g9Ap6+oL42t7YOTfZmdnf434Vo2KVdCoPzqnCv6PPj3CA/fm+TSv6CzV0oipnEXqDpSjpRw3I52csLTWxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781335; c=relaxed/simple;
-	bh=HUDRZvq5FdPxLGNy2+hnBvl4Z1n0T7sjEmHE2wsxyD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYX67nCu9k+LhetQK2kJGpNZIh6TjLNh1LjgGMnElOe9YfLFXjWA37Jzq+YKPcGcA5jFq0oVBC1fkbgBUNDBBpvH+up+PupRq/cE6b3BSokgiSMvmvwjSLcEVWqA4Tt3ybsngJhhwN0JeLUnlPeHAVBbhl3XgaHTuKP5NCO5YVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raP/Jepy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744781394; c=relaxed/simple;
+	bh=jc2P0FLKUbuUnuPT+QXDTqSMgRqcZBvymeXvHm2lyl4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KrFMPyUaCQrNOcefCnP6kQ8fGAMNO2koZqMDXiCVJr/xSQBTB0CcXPpHv390MVYxWBOFTWA2KA1b0GhFHteXHteAmF0S+bMIcQtLIc62xEzL0WN5QTqZ1H7ImhtNuBAJSNQvSvq7MDd9dgwXHiSjZzKlw9HsHA8amzu03DEtwiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dPP8+wAX; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raP/Jepy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A07D7C4CEE2;
-	Wed, 16 Apr 2025 05:28:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744781335;
-	bh=HUDRZvq5FdPxLGNy2+hnBvl4Z1n0T7sjEmHE2wsxyD4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=raP/JepyCV7bUkmDEuQ2IFlscYdMHjgwTtl1K5x1AwzXcR0VpnPRxXl2d0zI/7GKm
-	 T2ocsDbKd+3PDtTbPAWKORVyc4593qrwbmgWwzWIbiqsnZ4GrXnA0YQplpxSvvWS/Q
-	 3hyAnKlhOoclumtLmMD2mldl/gv16sK3EcTqBw8LHyh4vpeR2oRynJLABqzY+P2Xj6
-	 4xSJr0SDSkcaL1PUF1W9parKZ8+kMWnFVkhprHiTQLS4cg5IYW0WxWaobCD4Y6QMHO
-	 jkzafoPxMKJH5zp5O0HVDdtlVQ5V1L+7bgBTgzpnJo+HYOqoPTc/vGmPL6eIqmWuJi
-	 06FOjoxJ66lpA==
-Date: Wed, 16 Apr 2025 07:28:49 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
-Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
-Message-ID: <Z_9AEaeUIdWi2vLS@gmail.com>
-References: <20250414102301.332225-1-mingo@kernel.org>
- <20250414102301.332225-3-mingo@kernel.org>
- <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPP8+wAX"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c277331eso324962b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744781392; x=1745386192; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8JiAqsF5x2IY2pzcennaaVSFJ8VSWY+FvXn70ZrivFU=;
+        b=dPP8+wAXAcxn2BcOLUS5B7ZfOQmka39rt7vlNUE5CYOJs5EG6xhpEpBDoiCXKg7ErY
+         xVjBRG5RaCub8esr2a/vsLsYJjNN1JuCDGZ6Z7z+CdzTkW//nUnpYLpkOhzow0tRyuNu
+         UnXqTc4y9DJLR9dK2Hs09RqcOhTVLGxVmVHufXHzURH746CBnuUZi19gK7SYcwGh6WI1
+         x8DhXcALnwuKlJA6EE35BB9DBS4w36fq5HOideYGMIRqUaXHNj+mWfKh/asTWn23L72Y
+         frGrubXQU8kCp7IxpcBSzSaVBZd+2f35bCxN4HeedgCXjAqCtVCuHdD2t1kb7ZneWBB1
+         2Iag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744781392; x=1745386192;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8JiAqsF5x2IY2pzcennaaVSFJ8VSWY+FvXn70ZrivFU=;
+        b=QDRLzFysLny0Z5BlDhkueC/e5cjMKD+BsCKTSmH1xhNIHeFvaaJ0eMvEqbBHRkG9/t
+         LOungQqZ9JV1UqyInrGSnVLICMpqrGEjiIi+EAvHHmLpT6Ce8xMz4ec6HioCg5zzQwA4
+         fE2w9nkNj1vNeEqqWxGc9USTslWQyopZMlDbOlc54FVPoemkQUK/6U+4Yy2wpMpJCyfE
+         LzKz8j2V7i4bxtYe5j4pfmviTbS0NVQZnXzPgmjJeH18R1o1bFUjPvnlxpSTe9CDZY2n
+         O7A0g8SbOIpQT0YPXj6Lv0a7/PQKZ5jTlT0DtrOe8XT1Zcypyv3XP52gDYC59V3rxLnX
+         Wi5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXOJuCImzF1ZRZPFkfnByRd4/Isb0mVnQpNR5HkE1TOdUEbG1iA+dFtKj6bjozaR9e4dqk2MH0TNWvcJs8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5gMlDvllIGhBAmJ95Vl5ePF4mDM+4O3iaoVULVWWrlnJsv/sL
+	ImBQt0agoL+p9+FvwIG3I9BsPC85iLxsbnfmYNUhmmymzhaF7stGhLRSqqscCis=
+X-Gm-Gg: ASbGncvrUJ0mGxaka3BhdwC4F/MXco6lKlQyihvrBKz+Ap52MLHo+dAkPaSN6UYPbC/
+	qsUcKVyNZUCMWqemIFrjANsJZe0h40qRThrLrLCTBHbCbTCF72B4R/qq0gfIzkJtNuLala8tKY8
+	Fgw/FTZ6O/kQf2mVAuOml//GQotkJslW/mNr6yGv7LB2gWW03/liLVfGo/Yu7tLGyXTtT6FJ+1D
+	TJHMMwrl33wZbZgPUTr1P6XeoDkfgJPL+7FBsJvzH3KrNvdww98A07bs8lX9vBVgrW4YtUYdvcA
+	YRhRG5qBqF6dg/wbLSpVB0TQHTT+/Mkh45ypock5eA==
+X-Google-Smtp-Source: AGHT+IG61ZK8x5hBsfWexuPvwuzpYC8LpkByjNLxC/7ZjRGdoC7rJOSEBFLwDUjCqYQxWalVipYW4g==
+X-Received: by 2002:a05:6a20:9f8a:b0:1f3:2968:5ac5 with SMTP id adf61e73a8af0-203b3b60d60mr655797637.20.1744781391895;
+        Tue, 15 Apr 2025 22:29:51 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b220aa259sm474466a12.3.2025.04.15.22.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 22:29:51 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+Date: Wed, 16 Apr 2025 10:59:37 +0530
+Message-Id: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
 
+The boost-related code in cpufreq has undergone several changes over the
+years, but this particular piece remained unchanged and is now outdated.
 
-* Linus Torvalds <torvalds@linux-foundation.org> wrote:
+The cpufreq core currently manages boost settings during initialization,
+and only when necessary. As such, there's no longer a need to enable
+boost explicitly when entering system suspend.
 
-> On Mon, 14 Apr 2025 at 03:23, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > We'd like to introduce timer_mod() in the kernel, so make
-> > sure the namespace is clear.
-> 
-> No no, this is horribly wrong.
+Previously, this wasn’t causing issues because boost settings were
+force-updated during policy initialization. However, commit 2b16c631832d
+("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
+that behavior—correctly—by avoiding unnecessary updates.
 
-Yeah, that was a horrible script fail, I sent the updated -v2 patch 2 
-days ago (and it was updated in the Git tree then too):
+As a result of this change, if boost was disabled prior to suspend, it
+remains disabled on resume—as expected. But due to the current code
+forcibly enabling boost at suspend time, the system ends up with boost
+frequencies enabled after resume, even if the global boost flag was
+disabled. This contradicts the intended behavior.
 
-  https://lore.kernel.org/all/Z_0oWnbcjsekHXJd@gmail.com/
+Fix this by not enabling boost on policy exit.
 
-Unfortunately you weren't Cc:-ed for Thomas Wei�schuh's reply, so you 
-probably didn't see the fixed patch.
-
-Thanks,
-
-	Ingo
-
-=============>
-From 48f2aff7501a6dd1154297b7a00e0f2fbea36e24 Mon Sep 17 00:00:00 2001
-From: Ingo Molnar <mingo@kernel.org>
-Date: Mon, 14 Apr 2025 11:23:06 +0200
-Subject: [PATCH] scsi: bfa: Rename 'timer_mod' to 'timer_module'
-
-We'd like to introduce timer_mod() in the kernel, so make
-sure the namespace is clear.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220013
+Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/scsi/bfa/bfa.h         |  2 +-
- drivers/scsi/bfa/bfa_core.c    |  4 ++--
- drivers/scsi/bfa/bfa_ioc.c     | 16 ++++++++--------
- drivers/scsi/bfa/bfa_ioc.h     |  4 ++--
- drivers/scsi/bfa/bfa_modules.h |  2 +-
- drivers/scsi/bfa/bfad.c        |  2 +-
- 6 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
-index a6b8c4ddea19..80b75669fc50 100644
---- a/drivers/scsi/bfa/bfa.h
-+++ b/drivers/scsi/bfa/bfa.h
-@@ -429,7 +429,7 @@ bfa_status_t bfa_iocfc_israttr_set(struct bfa_s *bfa,
- void bfa_iocfc_enable(struct bfa_s *bfa);
- void bfa_iocfc_disable(struct bfa_s *bfa);
- #define bfa_timer_start(_bfa, _timer, _timercb, _arg, _timeout)		\
--	bfa_timer_begin(&(_bfa)->timer_mod, _timer, _timercb, _arg, _timeout)
-+	bfa_timer_begin(&(_bfa)->timer_module, _timer, _timercb, _arg, _timeout)
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index 924314cdeebc..85b5a88f723f 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
+ 	return false;
+ }
  
- struct bfa_cb_pending_q_s {
- 	struct bfa_cb_qe_s	hcb_qe;
-diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
-index a99a101b95ef..667a631a2abc 100644
---- a/drivers/scsi/bfa/bfa_core.c
-+++ b/drivers/scsi/bfa/bfa_core.c
-@@ -1526,14 +1526,14 @@ bfa_iocfc_attach(struct bfa_s *bfa, void *bfad, struct bfa_iocfc_cfg_s *cfg,
- 	bfa_iocfc_cbfn.reset_cbfn = bfa_iocfc_reset_cbfn;
- 
- 	ioc->trcmod = bfa->trcmod;
--	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_mod);
-+	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_module);
- 
- 	bfa_ioc_pci_init(&bfa->ioc, pcidev, BFI_PCIFN_CLASS_FC);
- 	bfa_ioc_mbox_register(&bfa->ioc, bfa_mbox_isrs);
- 
- 	bfa_iocfc_init_mem(bfa, bfad, cfg, pcidev);
- 	bfa_iocfc_mem_claim(bfa, cfg);
--	INIT_LIST_HEAD(&bfa->timer_mod.timer_q);
-+	INIT_LIST_HEAD(&bfa->timer_module.timer_q);
- 
- 	INIT_LIST_HEAD(&bfa->comp_q);
- 	for (i = 0; i < BFI_IOC_MAX_CQS; i++)
-diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-index aa68d61a2d0d..4a9bd084cd5d 100644
---- a/drivers/scsi/bfa/bfa_ioc.c
-+++ b/drivers/scsi/bfa/bfa_ioc.c
-@@ -28,12 +28,12 @@ BFA_TRC_FILE(CNA, IOC);
- #define BFA_IOC_POLL_TOV	BFA_TIMER_FREQ
- 
- #define bfa_ioc_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_ioc_timeout, (__ioc), BFA_IOC_TOV)
- #define bfa_ioc_timer_stop(__ioc)   bfa_timer_stop(&(__ioc)->ioc_timer)
- 
- #define bfa_hb_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->hb_timer,		\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->hb_timer,		\
- 			bfa_ioc_hb_check, (__ioc), BFA_IOC_HB_TOV)
- #define bfa_hb_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->hb_timer)
- 
-@@ -159,16 +159,16 @@ bfa_ioc_sm_to_state(struct bfa_ioc_sm_table *smt, bfa_ioc_sm_t sm)
-  */
- 
- #define bfa_iocpf_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_iocpf_timeout, (__ioc), BFA_IOC_TOV)
- #define bfa_iocpf_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->ioc_timer)
- 
- #define bfa_iocpf_poll_timer_start(__ioc)				\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_iocpf_poll_timeout, (__ioc), BFA_IOC_POLL_TOV)
- 
- #define bfa_sem_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->sem_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->sem_timer,	\
- 			bfa_iocpf_sem_timeout, (__ioc), BFA_IOC_HWSEM_TOV)
- #define bfa_sem_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->sem_timer)
- 
-@@ -2333,11 +2333,11 @@ bfa_ioc_isr(struct bfa_ioc_s *ioc, struct bfi_mbmsg_s *m)
-  */
- void
- bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa, struct bfa_ioc_cbfn_s *cbfn,
--	       struct bfa_timer_mod_s *timer_mod)
-+	       struct bfa_timer_mod_s *timer_module)
+-static int boost_set_msr(bool enable)
++static void boost_set_msr_each(void *p_en)
  {
- 	ioc->bfa	= bfa;
- 	ioc->cbfn	= cbfn;
--	ioc->timer_mod	= timer_mod;
-+	ioc->timer_module	= timer_module;
- 	ioc->fcmode	= BFA_FALSE;
- 	ioc->pllinit	= BFA_FALSE;
- 	ioc->dbg_fwsave_once = BFA_TRUE;
-@@ -5062,7 +5062,7 @@ bfa_diag_memtest(struct bfa_diag_s *diag, struct bfa_diag_memtest_s *memtest,
++	bool enable = (bool) p_en;
+ 	u32 msr_addr;
+ 	u64 msr_mask, val;
  
- 	memtest_tov = (bfa_ioc_asic_gen(diag->ioc) == BFI_ASIC_GEN_CT2) ?
- 		       CT2_BFA_DIAG_MEMTEST_TOV : BFA_DIAG_MEMTEST_TOV;
--	bfa_timer_begin(diag->ioc->timer_mod, &diag->timer,
-+	bfa_timer_begin(diag->ioc->timer_module, &diag->timer,
- 			bfa_diag_memtest_done, diag, memtest_tov);
- 	diag->timer_active = 1;
- 	return BFA_STATUS_OK;
-diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
-index d70332e9ad6d..3fa8a65bf067 100644
---- a/drivers/scsi/bfa/bfa_ioc.h
-+++ b/drivers/scsi/bfa/bfa_ioc.h
-@@ -333,7 +333,7 @@ struct bfa_ioc_s {
- 	bfa_ioc_sm_t		fsm;
- 	struct bfa_s		*bfa;
- 	struct bfa_pcidev_s	pcidev;
--	struct bfa_timer_mod_s	*timer_mod;
-+	struct bfa_timer_mod_s	*timer_module;
- 	struct bfa_timer_s	ioc_timer;
- 	struct bfa_timer_s	sem_timer;
- 	struct bfa_timer_s	hb_timer;
-@@ -918,7 +918,7 @@ void bfa_ioc_set_ct2_hwif(struct bfa_ioc_s *ioc);
- void bfa_ioc_ct2_poweron(struct bfa_ioc_s *ioc);
+@@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
+ 		msr_mask = MSR_K7_HWCR_CPB_DIS;
+ 		break;
+ 	default:
+-		return -EINVAL;
++		return;
+ 	}
  
- void bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa,
--		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_mod);
-+		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_module);
- void bfa_ioc_detach(struct bfa_ioc_s *ioc);
- void bfa_ioc_suspend(struct bfa_ioc_s *ioc);
- void bfa_ioc_pci_init(struct bfa_ioc_s *ioc, struct bfa_pcidev_s *pcidev,
-diff --git a/drivers/scsi/bfa/bfa_modules.h b/drivers/scsi/bfa/bfa_modules.h
-index ed29ebda30da..9911794286cc 100644
---- a/drivers/scsi/bfa/bfa_modules.h
-+++ b/drivers/scsi/bfa/bfa_modules.h
-@@ -61,7 +61,7 @@ struct bfa_s {
- 	struct bfa_trc_mod_s	*trcmod;	/*  driver tracing	    */
- 	struct bfa_ioc_s	ioc;		/*  IOC module		    */
- 	struct bfa_iocfc_s	iocfc;		/*  IOCFC module	    */
--	struct bfa_timer_mod_s	timer_mod;	/*  timer module	    */
-+	struct bfa_timer_mod_s	timer_module;	/*  timer module	    */
- 	struct bfa_modules_s	modules;	/*  BFA modules	    */
- 	struct list_head	comp_q;		/*  pending completions     */
- 	bfa_boolean_t		queue_process;	/*  queue processing enabled */
-diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
-index 598f2fc93ef2..695c77c5275d 100644
---- a/drivers/scsi/bfa/bfad.c
-+++ b/drivers/scsi/bfa/bfad.c
-@@ -691,7 +691,7 @@ bfad_bfa_tmo(struct timer_list *t)
+ 	rdmsrl(msr_addr, val);
+@@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
+ 		val |= msr_mask;
  
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 	wrmsrl(msr_addr, val);
+-	return 0;
+-}
+-
+-static void boost_set_msr_each(void *p_en)
+-{
+-	bool enable = (bool) p_en;
+-
+-	boost_set_msr(enable);
+ }
  
--	bfa_timer_beat(&bfad->bfa.timer_mod);
-+	bfa_timer_beat(&bfad->bfa.timer_module);
+ static int set_boost(struct cpufreq_policy *policy, int val)
+@@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
+ 	free_percpu(acpi_perf_data);
+ }
  
- 	bfa_comp_deq(&bfad->bfa, &doneq);
- 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
+-static int cpufreq_boost_down_prep(unsigned int cpu)
+-{
+-	/*
+-	 * Clear the boost-disable bit on the CPU_DOWN path so that
+-	 * this cpu cannot block the remaining ones from boosting.
+-	 */
+-	return boost_set_msr(1);
+-}
+-
+ /*
+  * acpi_cpufreq_early_init - initialize ACPI P-States library
+  *
+@@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
+ 
+ 	pr_debug("%s\n", __func__);
+ 
+-	cpufreq_boost_down_prep(policy->cpu);
+ 	policy->fast_switch_possible = false;
+ 	policy->driver_data = NULL;
+ 	acpi_processor_unregister_performance(data->acpi_perf_cpu);
+-- 
+2.31.1.272.g89b43f80a514
+
