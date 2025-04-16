@@ -1,99 +1,175 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAE92DFA39
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B337723536F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797972; cv=none; b=uoBle52UxtN9ghSrZFMuaimkvwwmRr6jgw0HiOGqrqWu3AwZRhnXdwiaxYkRGcxtdnul+BAzApbykKrq5I2Upxy1e3cOMvm37U8XBI8XDfKnVuXNHIxZCARwMn6DfK3+0Ed4770RBrAH4UqTLg8d/LSmle6oSnne7fs+BObBFLE=
+	t=1744798004; cv=none; b=Raq4HrMU/mvDTU+urqF3zEiruQ1CmRHqKJEUdzput98eXkmZiZcfWD5/zGCza/y+FddEDb26zAuU+sdoVAPiDIRvGmgCLR+wS6JUvRD7YoT6SHEtnuktqdJ1WckarPfV9QKB+LVHeAViiWSDZRrybqCXrcoF0X8NUmVSUmpuwKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797972; c=relaxed/simple;
-	bh=2IcbjuyAVM4kLhvW0gDdafAXht8sirWnrRq3F/Gm0hA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qj3/sPVTCrXSOOX4Z434mejae01ElSJ8KhGE1y9E4TXoqkBSPO4Wj7UsS638ORvPkv8oVNapRF9qNGFdUi+SMzeOPob8ySOHtNJC2vK9jiuPR+3moJ2iqYoG9nWGNl0kC8KwPTggrhJgZF21Yx2Phrbb3GDwdpUQc5BIu/1w8Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qDAwAVhb; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744798004; c=relaxed/simple;
+	bh=W43sdgqXTheATUR1xnioTdkhPutfeDefzJfdTHToV9g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfadzdwEFsKha/ibHdt3Vv+NEFdOfSOw6uGpd9FIAhEcTzh6gZBNgKrDfSWc116hinzoBMjKD8XyMnlVeVZjjWTPNHuiq9aTSHKkppaDbWnX0w5U54HeyH8tnhbnZhm1lZuJ4NGDwPzqDcOoewiIhPiyMjC18vHPfn/Nun7wmes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bL3EH1dg; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UdVJw91v; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=06qahNkR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LDu48oUJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qDAwAVhb"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso7529a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744797969; x=1745402769; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oJtO5p/6ZsGHTmasHcgl8RQRMFMxAkQzPoyy/PT0rL8=;
-        b=qDAwAVhbyh1j7xqLWYCZmU7OhzS+D/YSoxijZdC6bT5dPIuP+dBwrA2wS3X6MhVzcR
-         2Il0b8MvhDFvFAbVE0OwaXjjOKN5XxxMBbyiyzM78vpmKNhXKeFjjYiYgoOTu/9zbIDL
-         wiOf54On9z43wWQAFr4RhA4lWdmP3PbR/3pAAFiY3DTeS5uVYUrYg47zpmRslZED0HE3
-         L7NLfFicZncYUuPg28Qom/07aFjQt0jb1Rcy2PNrz5HpEOrX5kLkvO1mj7g2Gndtk88B
-         EOJ8/lg3CN4T7EDLjZYDcGj+S5mtXWPslXrzcCmTg3TjnHJ5XKZCESg9JU5wJgrhYZzl
-         cXBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744797969; x=1745402769;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oJtO5p/6ZsGHTmasHcgl8RQRMFMxAkQzPoyy/PT0rL8=;
-        b=c0nxHUOdOiuK7qU42jFxa32O7tdApgrq1XVFYadMWiGj/E/GVWehrT6o6AQIXGJJU9
-         shL5RJv8/4Xs0WtTnWfvMdcRuFgSEGPEPvd5iXaCpSUzjp6BbziQywMhGaJLZrsfqYqQ
-         QVt+r1+MYEchdnCSPxHRk4IsTQyzg534TN3M20oQ1odnCCnOY6udUYljM0Pq1QHAzeF7
-         lCoYfrdrxDrKmfilcdrD7TltVSUuyP2SKjSGjlSksMqKI3pr+dUCt734CbFT0E5QNNX6
-         TSVktgeqgh0t4IEZeAxp5YtyOvBIcQ04Nkrpmtnso/4s1ACoKhiqwYlZOJNwgPP2E4US
-         qKig==
-X-Forwarded-Encrypted: i=1; AJvYcCXIvm33JV+74+izVHgQBOeklCl+RCuWfu71Ki64YCF1Oc4496lUj0uVn/BowEsw91T0b9foaG8y0BScgbc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0yFDpdOKeAhqyci9QHEp0R9o61pKxBb2bL2hCm+S+oD8DWVd9
-	CpLS3+ytakX1fDlnuJ4QXUmji+4+kk6DDOpGvp7gNL8jrGfMLn0tHXvlN+m3n8/OL5q+3mmsxKS
-	4wzC+DweCh4s6AvtQNVYPg+em/wCKo0qP/Nbu
-X-Gm-Gg: ASbGncu0TTbWjv+PslUzKGkjHZTDIfnxyyheVPCdn7ilD6I/LHVPJNMhqZxMe/tb+AZ
-	dqVhdMcAJ4/wzntLomyIE9jMAV3pPIz6PHTSAZ2VRL9PQ6vgieUZZoYmn20ricUjP+WdFVOJJnY
-	2v2mTvkZ7DMFnfrPA3H9iSKSsG9bWCHVbevrGABA++1QABGw2Krdtj
-X-Google-Smtp-Source: AGHT+IFFSblm/GfnDiFSG1MLMOppLXh+oYcsUvCfbwn5ir+K9snJXxGTAxtAyqmuqMenSvvMadnZW3B6voE0rCrc9yU=
-X-Received: by 2002:a50:9517:0:b0:5e0:eaa6:a2b0 with SMTP id
- 4fb4d7f45d1cf-5f4b6dc8e63mr35464a12.5.1744797968923; Wed, 16 Apr 2025
- 03:06:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bL3EH1dg";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UdVJw91v";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="06qahNkR";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LDu48oUJ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C96A2211A9;
+	Wed, 16 Apr 2025 10:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744797999;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4eqvmwnkNKXAjzGYgdgqGMvB0VzEfPjxj8p2HmbMKXQ=;
+	b=bL3EH1dgQcINNM7gPVP/zG222MLC+LdZU8ghWj0C1mnn7tDrDsehj6MbPrLyhODb1gS4Xq
+	JJsYO1w57YsmOaUkmtjqKUBqqz3ym6PYunlvm/HUtu9MrJnG9x/zLNL4XODHZ8HRnJ8CZz
+	ZcCGzkryYSU+Q+tcqFJmNuOrTRmA4nE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744797999;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4eqvmwnkNKXAjzGYgdgqGMvB0VzEfPjxj8p2HmbMKXQ=;
+	b=UdVJw91v73bwdqXkO6XBHSCKRTZA4i6rRfuTjw5dXGdJWLoP3Lv0rYacWJmbIE9xxfu50t
+	eladOwJ/gqqzzRAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=06qahNkR;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=LDu48oUJ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744797995;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4eqvmwnkNKXAjzGYgdgqGMvB0VzEfPjxj8p2HmbMKXQ=;
+	b=06qahNkRTslsaqSo4Zm+P2pEDVQuhiwaaV5kZznGkrHel+z78i1FqLGbbWdgmjFG8+v1FV
+	zvdWNsrgoyJPXOQV4cdaaE1rAGGR8xX96ppDdn7NvubN98LBU0MUqEfv5oR2ciuB+NU17T
+	jRma8ZARnJszTXZ5SMFEE2G/n8bcuJs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744797995;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4eqvmwnkNKXAjzGYgdgqGMvB0VzEfPjxj8p2HmbMKXQ=;
+	b=LDu48oUJjbf37y6TIWvEsR/bCzp4FVZxgOIAD6zsIBwcnJsIvs/SywNaN+/aN2hj1DRlAx
+	KAiEcuDYrTT2dfAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B2B9A139A1;
+	Wed, 16 Apr 2025 10:06:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 71RgKyuB/2dqfQAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 16 Apr 2025 10:06:35 +0000
+Date: Wed, 16 Apr 2025 12:06:34 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Integral <integral@archlinuxcn.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Maybe we can set default zstd compression level to 1 when SSD
+ detected?
+Message-ID: <20250416100634.GB13877@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <8c2e5d04-dbda-4b12-992e-34f0e70c7218@archlinuxcn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408035833.844821-1-guanyulin@google.com> <20250408035833.844821-5-guanyulin@google.com>
- <2025041140-fernlike-reconvene-b2e5@gregkh>
-In-Reply-To: <2025041140-fernlike-reconvene-b2e5@gregkh>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Wed, 16 Apr 2025 18:05:00 +0800
-X-Gm-Features: ATxdqUFJFRm6-kvXF9DTZ5ctKMay55IyEenq8Hx1UwGOVHXGa1wo5iRkeFUV09U
-Message-ID: <CAOuDEK3b6vM_vyLDHjxYWu1UCaZ53hNse91bjkoB7vPaebEMPg@mail.gmail.com>
-Subject: Re: [PATCH v11 4/4] usb: host: enable USB offload during system sleep
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu, gargaditya08@live.com, 
-	kekrby@gmail.com, jeff.johnson@oss.qualcomm.com, elder@kernel.org, 
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c2e5d04-dbda-4b12-992e-34f0e70c7218@archlinuxcn.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: C96A2211A9
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.21 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	SUBJECT_ENDS_QUESTION(1.00)[];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.21
+X-Spam-Flag: NO
 
-On Fri, Apr 11, 2025 at 10:02=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> On Tue, Apr 08, 2025 at 03:57:24AM +0000, Guan-Yu Lin wrote:
-> > @@ -736,6 +737,7 @@ struct usb_device {
-> >       unsigned use_generic_driver:1;
-> >
-> >       refcount_t offload_usage;
-> > +     unsigned offload_at_suspend:1;
->
-> Please take a second and think about how the memory is now layed out
-> here with your new addition.  The tool 'pahole' is your friend...
->
-> thanks,
->
-> greg k-h
+On Sun, Apr 13, 2025 at 12:07:26PM +0800, Integral wrote:
+> Hi,
+> 
+> When SSD is detected, maybe we can set default zstd compression level to 1.
+> 
+> Current default compression level for zstd is 3, which is not optimal 
+> for SSDs.
+> 
+> This GitHub Gist [1] can serve as a reference.
 
-Thanks for providing this helpful information. I'll reconstruct the
-struct to minimize the effect of new additions.
+Well, while the linked gist is thorough I don't see that zstd:1 clearly
+wins against zstd:3. The compression brings overhead (more extents, CPU
+cost) so the preferred criteria should be space savings. The runtimes of
+read and write seem to be roughly the same.
 
-Regards,
-Guan-Yu
+I haven't found any description or classification of the input data
+(other than known to be incompressible). This is an important factor.
+
+> An example is Fedora Workstation [2], which uses `zstd:1` as default
+> compression option.
+> 
+> [1] Link: 
+> https://gist.github.com/braindevices/fde49c6a8f6b9aaf563fb977562aafec
+> 
+> [2] Link: https://fedoraproject.org/wiki/Changes/BtrfsTransparentCompression
+
+Unfortunately the Fedora evaluation disqualifies itself because it uses
+/dev/urandom (practically incompressible) and /dev/zero (trivially
+compressible). I would not select the default based on that benchmark
+for the wole distro, it's IMHO flawed or incomplete at best.
+
+For the evaluation I recommend some commonly found data types based on
+their compressibility, like we did for the recent fast zstd levels
+https://lore.kernel.org/linux-btrfs/20250128132235.1356769-1-neelx@suse.com/ .
+Binaries, documentation, enwik9 (commonly used for compression
+benchmarks), linux sources.
+
+The classes are not exact but should represent files that are common
+and have a chance of being considered for compression.  Already
+compressed files or other hard to compress files like media are
+detected and not considered by the heuristic.
+
+Changing defaults is possible but it affects everybody and from past
+experience breaks somebody's use case or negatively affects performance.
+
+The evaluation from the gist could be enhanced with more input data
+types and CPU strengths.
