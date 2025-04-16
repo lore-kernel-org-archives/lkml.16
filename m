@@ -1,170 +1,108 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986FF18DB35;
-	Wed, 16 Apr 2025 00:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A970418DB35;
+	Wed, 16 Apr 2025 00:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744762736; cv=none; b=k2NhykHz647MkBP6eiij+TboY6FuCObtkl0EyJTajtzrqinxJeMv7WlPwssRCRjG5BCq+O6J+24KAPqQg+ZWHPiCFl1mH867jBda2hLK+VSJQk59BXoQeIv9ukcpFShiPLw3T3F4q5/D8IZNYFrnzmDmsNntgMD8tIylZ/l6s3g=
+	t=1744762759; cv=none; b=XwzsSduLL75vKUTfLgn02SVUb5ap0zbs/A3Sdum+n2KaCx4VMnsIt5pisu8a6NBHFG2Ls5fykCZPtjUmabEcE1yC9OWEZdDwGzeYGLxP78T0FUO4IJaFvGNvvPCISufnBHnt0iU4gHRhm+foyKQ/ZtTqE431r3E0XAoMn9IKCZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744762736; c=relaxed/simple;
-	bh=5ML4W/RjpK8iw4ZCVAw31Bse8xFTwleELOCMZse8BYg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YQYvBBcux3GZxlY9IMGVN5BHCw5AMd5zoMa+KZpWPSdo/5loEfY+siG5xnr7wxOwMdb704rhIGe9n7mSvETM+z/2c+NYCX7bIE15CXvbBEfZcfZgdb8Pot2Ut3DMn9fip6qbFZn5rh5Xvo61L6lFrOvnLSlLFhGN38fGYYMxicI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nJCkDffy; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744762759; c=relaxed/simple;
+	bh=oDX8l4em8cbUbQirirjX1naQvZgLfu+lh5AjYsF7I0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O4PO+dft55G4a7vHhV6OUsAqObWiSsR/1rvqV91xd/eyCACVgev1bqzpuWtiZlcV294crhJBijIBnvfBL5GHimlPhutRFntfKvMTJ4wKj5Ou+YsMQ7RK0agwAccwBtBb5MTkYrqCloaG3iQIQ2cU8hUQK4roNUSdNjvmCtN1nfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwXrvQL/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJCkDffy"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22c33e5013aso1298865ad.0;
-        Tue, 15 Apr 2025 17:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744762734; x=1745367534; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Nfj8ktwxTSwL4bkXkIYJkl6noTbTsbTVvXV1tbIysv0=;
-        b=nJCkDffyhF2L1Px9212pUzFgmwqW1iUk2zT3RJv/OHD87NJ62mkJxsESbCqfoyl5Bz
-         qEMj8bHpfgJRhFRVPaLusnJCIV5OKrTgwFMJ3CdAPxBWUUvxYQq6Py22vTo93JT0Jpyc
-         Y8DGg87k/qQom0vC0un08ZvlR370jXGdwE3Onhql6+vUgWY9Y+GSaJA2KxRkSUja82WN
-         GYKzGAjqomr0MAMoJ8OSInG8uHvJ7RZT4/LrpR/sDpfzeo5/qjuEuzlnsIO4uj+fnkjl
-         rXa/5MDnAmoHlxtzrmWYeahjfVvVtVwaTWsOXwnzHcqCMK26ViqZSS+RQRjfM3ozNt+X
-         C9Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744762734; x=1745367534;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nfj8ktwxTSwL4bkXkIYJkl6noTbTsbTVvXV1tbIysv0=;
-        b=EShrBpJA0BN4wCO044H5AzbLhnogFkxgFPwKlvp0YK9QtxfW7voSN9oQvsUtloAmt0
-         6viISu9MDPs3gFHQZCjGmhKoNu82pMkBH2V5kUWUTArb1GHQTopkGGrHfWEEz+Fzl2XJ
-         847zl9hnyVqMB6HslAUFF9WCffqPajxYg+grvRZbE6Y5SlJJ8pS0weu72ZGD5SWldJKR
-         vQ4qeNWraBeQ/9K+hQwCrN3o3oWNqJsg6x0FHGdwBZ/96EV78AkweRoQYEDkglRfIoNt
-         FyETPsdsTeTj3ZtC8JmdsgLxo0LkRtpo3byxiQzYCGrhG89oYP+78Y9yuBgrcYhqUzUD
-         WYDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwez/eTH6TLARTozVrQRQZ9Gqd7ONCazwwFIRMhxAO0/KP0W/vKSEixy6XYfCWvcLciQM0bdX+C1a3@vger.kernel.org, AJvYcCXjJxLJvHOCJVY801RHe+V3w8Ezmk3kzSWbl00dD7ovZaCEifid+kdCie+dFZP0jxqV3FRHPLNoJZmFvyd3@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwDEvVfN7hcHLajcK2mB90HbiRWdEh8qeQ2dOy3CifcHjN16x2
-	mFT4xlCbKW+PvFgFBjo1CAFXjMz/I+9L7Ho/1oT73fLi4ZrkM85p
-X-Gm-Gg: ASbGncu7T0mNMUxCUKd91Hvw3HGy5xW1ln9WBus6vd18+dqS0IOvY23emNeGBr8mrhm
-	jM/z1B3ie+lgzpiAvYX3rUbOWzzXFHWOX523gLvAEI+OLwDV2QmlwW6gHhycrt7LrPP4khwte1z
-	OpCi35T9rpngTVw9qhua6pYfC2z73QFpQUb3pfOsjj2xUPDr7cuWzT+vIoDA/A+k2AzOIxB0wmq
-	2OYwdmc/fLFV3zNguxhvtpICLRLurxiYW6LkDasmBmf/+r5G30xYcRaZWS8c4NBvt8QHvE09Je+
-	mcScnck8XrUNKNM76cuYtMcbv0kGRyjeV16HnYjgHNCq0dc4c8zgIXkBugw=
-X-Google-Smtp-Source: AGHT+IFrWUVq6l1nS395CfiIcyKNT6DSygmpfiB+tI5u/2+sWwofsKb78LA11Ll+t0ii+Gk1Pil+iQ==
-X-Received: by 2002:a17:903:287:b0:223:4c09:20b8 with SMTP id d9443c01a7336-22c31abcebbmr17817755ad.37.1744762733812;
-        Tue, 15 Apr 2025 17:18:53 -0700 (PDT)
-Received: from [192.168.0.101] ([59.188.211.160])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0e90sm1489655ad.2.2025.04.15.17.18.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 17:18:53 -0700 (PDT)
-Message-ID: <63957942-173e-4c28-932e-a8ba7c60ee83@gmail.com>
-Date: Wed, 16 Apr 2025 08:18:49 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwXrvQL/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7746C4CEE7;
+	Wed, 16 Apr 2025 00:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744762757;
+	bh=oDX8l4em8cbUbQirirjX1naQvZgLfu+lh5AjYsF7I0Q=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=RwXrvQL/Hsgn7RosAZMiTqwXPae0wiKDtG3WHuUdgzJQiLQAf9EgSltODbwKuKKWi
+	 Gg47ku2jY45QxR9DL9DqPgpoF1nmMFpIzvMeHsw3Y65mTNz6Eeq0PkOpwcAzSsavEI
+	 zVwox//jMfhpgtC5RilP6uWl6B1YL3ecqPE4U2hgToNRxHIG0tApY2FZ7lTxfXRdTB
+	 K8VfEtuyTuofYVyxVyfxN8V8b00Tclx3VxgE6f+2a7nLD7RXDX2zweEHs3RadvJHLk
+	 Al5DTt+Iy6Y+dGZt5CuTcIYgjS/DademVMomHEAO8SBHYMS12vTYzF0CeXhRIauN/m
+	 3qv2V6sl/MFsQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 67631CE05B1; Tue, 15 Apr 2025 17:19:17 -0700 (PDT)
+Date: Tue, 15 Apr 2025 17:19:17 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, rcu@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rcutorture: Perform more frequent testing of
+ ->gpwrap
+Message-ID: <587e21be-9595-4625-b929-0e8b4a215a43@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250410150329.3807285-1-joelagnelf@nvidia.com>
+ <20250410150329.3807285-2-joelagnelf@nvidia.com>
+ <11caaa93-7acf-417c-9223-1b14a76310b2@paulmck-laptop>
+ <5ee46103-caef-46ac-8660-4b9f4bb5e4f0@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: spmi: Add generic SPMI NVMEM
-To: fnkl.kernel@gmail.com, Sven Peter <sven@svenpeter.dev>,
- Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Neal Gompa <neal@gompa.dev>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
- <20250415-spmi-nvmem-v1-1-22067be253cf@gmail.com>
-Content-Language: en-US
-From: Nick Chan <towinchenmi@gmail.com>
-In-Reply-To: <20250415-spmi-nvmem-v1-1-22067be253cf@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ee46103-caef-46ac-8660-4b9f4bb5e4f0@nvidia.com>
 
+On Mon, Apr 14, 2025 at 11:05:45AM -0400, Joel Fernandes wrote:
+> On 4/10/2025 2:29 PM, Paul E. McKenney wrote:
+> >> +static int rcu_gpwrap_lag_init(void)
+> >> +{
+> >> +	if (gpwrap_lag_cycle_mins <= 0 || gpwrap_lag_active_mins <= 0) {
+> >> +		pr_alert("rcu-torture: lag timing parameters must be positive\n");
+> >> +		return -EINVAL;
+> > When rcutorture is initiated by modprobe, this makes perfect sense.
+> > 
+> > But if rcutorture is built in, we have other choices:  (1) Disable gpwrap
+> > testing and do other testing but splat so that the bogus scripting can
+> > be fixed, (2) Force default values and splat as before, (3) Splat and
+> > halt the system.
+> > 
+> > The usual approach has been #1, but what makes sense in this case?
+> 
+> If the user deliberately tries to prevent the test, I am Ok with #3 which I
+> believe is the current behavior. But otherwise #1 is also Ok with me but I don't
+> feel strongly about doing that.
+> 
+> If we want to do #3, it will just involve changing the "return -EINVAL" to
+> "return 0" but also may need to be doing so only if RCU torture is a built-in.
+> 
+> IMO the current behavior is reasonable than adding more complexity for an
+> unusual case for a built-in?
 
-Sasha Finkelstein via B4 Relay 於 2025/4/16 清晨5:52 寫道:
-> From: Sasha Finkelstein <fnkl.kernel@gmail.com>
->
-> Add bindings for exposing SPMI registers as NVMEM cells
->
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
->  .../devicetree/bindings/nvmem/spmi-nvmem.yaml      | 44 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 45 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/spmi-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/spmi-nvmem.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..0041babefc37ed4d82d7d6f68fc67d29eed53d9f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/spmi-nvmem.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/nvmem/spmi-nvmem.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic SPMI NVMEM
-> +
-> +description: Exports a series of SPMI registers as NVMEM cells
-> +
-> +maintainers:
-> +  - Sasha Finkelstein <fnkl.kernel@gmail.com>
-> +
-> +allOf:
-> +  - $ref: nvmem.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - apple,maverick-pmu
-> +          - apple,sera-pmu
-> +          - apple,stowe-pmu
-> +      - const: spmi-nvmem
-Consider using pmic instead of pmu in the compatible names for consistency (see below).
-Also, the PMIC definitely has more (mostly independent) functions than just non-volatile
-memory, so I am not sure if it is really appropriate to model it as only a nvmem device.
+The danger is that someone adjusts a scenario, accidentally disables
+*all* ->gpwrap testing during built-in tests (kvm.sh, kvm-remote,sh,
+and torture.sh), and nobody notices.  This has tripped me up in the
+past, hence the existing splats in rcutorture, but only for runs with
+built-in rcutorture.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/spmi/spmi.h>
-> +
-> +    pmu@f {
-> +        compatible = "apple,maverick-pmu", "spmi-nvmem";
-> +        reg = <0xf SPMI_USID>;
-> +    };
+> On the other hand if the issue is with providing the user with a way to disable
+> gpwrap testing, that should IMO be another parameter than setting the _mins
+> parameters to be 0. But I think we may not want this testing disabled since it
+> is already "self-disabled" for the first 25 miutes.
 
-As agreed on the series for SPMI support, this should be pmic@f, not pmu@f.
-There should be an nvmem-layout subnode in the example too.
+We do need a way of disabling the testing on long runs for fault-isolation
+purposes.
 
+For example, rcutorture.n_up_down=0 disables SRCU up/down testing.
+Speaking of which, I am adding a section on that topic to this document:
 
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 96b82704950184bd71623ff41fc4df31e4c7fe87..e7b2d0df81b387ba5398957131971588dc7b89dc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2277,6 +2277,7 @@ F:	Documentation/devicetree/bindings/mailbox/apple,mailbox.yaml
->  F:	Documentation/devicetree/bindings/net/bluetooth/brcm,bcm4377-bluetooth.yaml
->  F:	Documentation/devicetree/bindings/nvme/apple,nvme-ans.yaml
->  F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
-> +F:	Documentation/devicetree/bindings/nvmem/spmi-nvmem.yaml
->  F:	Documentation/devicetree/bindings/pci/apple,pcie.yaml
->  F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
->  F:	Documentation/devicetree/bindings/power/apple*
->
-Nick Chan
+https://docs.google.com/document/d/1RoYRrTsabdeTXcldzpoMnpmmCjGbJNWtDXN6ZNr_4H8/edit?usp=sharing
+
+							Thanx, Paul
