@@ -1,115 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8DC1D8E10;
-	Wed, 16 Apr 2025 07:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EBD26296;
+	Wed, 16 Apr 2025 07:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787379; cv=none; b=TScOmFQ4Ov9BYWiEWSs0MUqAeyygC3NHdfIxqa3sP+0F9Qcr/rZJkwDvogvLPJuyFD+xaHxOuHoJVNVKVNAvZQ+eh3j2SacbWjjTSBvmO8wHIy3tIW4ymP/lfUMx/SdCo1DPzheMlIRC+jVhBApNqUXcxTqCxMitg1J2c659jLY=
+	t=1744787500; cv=none; b=tYlT0Zua33mqra1qIShytg/oKImbOEZm31F8rJdsHsMPggUdJo5AQlsQvbZR5NK1WOxca5Z31wt+gCtp+Pfmzo/7HM3G51cmMuIRH3SoVSba2gbmCiSOGdOvlFoY6wB5jaEh06Lz6gNz1h8InnOTt6G+I0gkgsxRkkPwZt2QGlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787379; c=relaxed/simple;
-	bh=mreBMLYe0CKLqCE1BsZv7kMlpxdCG883OuYrHI1cFh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Av3BT66AuPJxI9TDcvWmFAC0i/0pGpOHT4Uyvbqm11nb8vdaQmvQIHXI08as78lBSp/sqUjFSJbMs7xTQpqCOMUldsUk7TudqOYs+Mhudx5Ze/33annVg2I7BxGttNT0FiFJ9dAOTaUfRDLQAjTkv5MUhDddbIgzgshFv0NFR3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NfpAEuQJ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744787500; c=relaxed/simple;
+	bh=szqjAkZRW2FQzyNwPP2HrTZPgVMC0eK0PojCcr4EVeE=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q5EHtlP21mrxvA0OPxplxxC9qLda6kpnU5o1c2mIxRsCafs9FrvCwN4ZyZfPFUnxscZvQ2yKQcSrY/o7m5KLdL1ZBb3bI3HSMN5sKzqPFpxHDv9gCPoEaX8JdESj9exOk3LRoHTOTzdQmLBqt/O+uf0Jim5FrEkkjeyQFm8xi44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y5hlVazR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NfpAEuQJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744787378; x=1776323378;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mreBMLYe0CKLqCE1BsZv7kMlpxdCG883OuYrHI1cFh4=;
-  b=NfpAEuQJgWuyMyXJGTtQVS6uX6RUUSudkTEslsj5ayNOQMMyjdEqqCgO
-   9GVjzdeJRE5/1WrGD9Dgy8mbaX7hxRPPX7hf/FNj8PO5diJ+w4UCEw24+
-   QL7VwTMzOliJHVhgI/L1ZRBJMIKFHQsYYSwIQNR9/k6IZHWp2yfZGXgNB
-   8s+QA016PktE2OsqDXWu+iCy/cviigC8Z3gv/ytMTB+dU6ko7hqfy7/If
-   U6N5ScsXUGBoP6+cy0RNjQTrQFgN7l55dxOTudXiH5k6szcN6yxO5TU91
-   j1Vg14cibGXGb8JO+7rodIZMlRAAXApeaXs9jD02fCtn1IJiO7vvNhYh9
-   g==;
-X-CSE-ConnectionGUID: r3PZHjQhR2Crz8ectXUmKg==
-X-CSE-MsgGUID: MGdbwVmITIq8GzjOAFDyoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63860334"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="63860334"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:09:38 -0700
-X-CSE-ConnectionGUID: 6fwnGrY9QsiRUgthTi8peQ==
-X-CSE-MsgGUID: cuapS7feRGy6doKbTgPOKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135524565"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:09:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wtp-0000000CmAs-2GEo;
-	Wed, 16 Apr 2025 10:09:33 +0300
-Date: Wed, 16 Apr 2025 10:09:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
-Subject: Re: [PATCH v1 1/2] spi: Add spi_bpw_to_bytes() helper and use it
-Message-ID: <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
-References: <20250416062013.1826421-1-andriy.shevchenko@linux.intel.com>
- <20250416062013.1826421-2-andriy.shevchenko@linux.intel.com>
- <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y5hlVazR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0FCC4CEE2;
+	Wed, 16 Apr 2025 07:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744787499;
+	bh=szqjAkZRW2FQzyNwPP2HrTZPgVMC0eK0PojCcr4EVeE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y5hlVazRgUt0P5iJmGiFXgqESJvp6duOYlAtmxhyV7VbEQcH6RqQlmtge8oz+Q9xF
+	 iG/vG9W94rLdVaKbE+dYrhp/VUJdlm7oJxbdLGo7YB+KO4rt0Xe88M/c+Bm23spN24
+	 XuI89yyD95/Y/6+p89b2ALbFhM7Ybt29JDGX+ESMGqjs//lQXYOSPBaJdkXGM2zwjv
+	 NpAqY8pYtHZCMe2lX5WJlwlvfMcyRoDbTDPRdUgv7+PhQ3U2iXlsPokgPMLVaV1BhK
+	 qvZaepMUX3zP1HtUWaQQYMbQFzAMn5TyTeEK/bPlNHB0CZ1giIX7OdfS9387apm1zV
+	 DmqTRqSf0x6Fw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u4wvp-005wlp-Da;
+	Wed, 16 Apr 2025 08:11:37 +0100
+Date: Wed, 16 Apr 2025 08:11:36 +0100
+Message-ID: <86y0w0k2c7.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: D Scott Phillips <scott@os.amperecomputing.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark
+ <james.clark@linaro.org>,
+	James Morse <james.morse@arm.com>,
+	Joey Gouly
+ <joey.gouly@arm.com>,
+	Kevin Brodsky <kevin.brodsky@arm.com>,
+	Mark Brown
+ <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Rob Herring\
+ (Arm)" <robh@kernel.org>,
+	Shameer Kolothum
+ <shameerali.kolothum.thodi@huawei.com>,
+	Shiqi Liu <shiqiliu@hust.edu.cn>,
+	Will Deacon <will@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	open list
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: errata: Work around AmpereOne's erratum AC04_CPU_23
+In-Reply-To: <864iypgjjc.fsf@scott-ph-mail.amperecomputing.com>
+References: <20250415154711.1698544-1-scott@os.amperecomputing.com>
+	<20250415154711.1698544-2-scott@os.amperecomputing.com>
+	<Z_6SKjdvje1Lpeo3@linux.dev>
+	<864iypgjjc.fsf@scott-ph-mail.amperecomputing.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, oliver.upton@linux.dev, catalin.marinas@arm.com, james.clark@linaro.org, james.morse@arm.com, joey.gouly@arm.com, kevin.brodsky@arm.com, broonie@kernel.org, mark.rutland@arm.com, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, shiqiliu@hust.edu.cn, will@kernel.org, yangyicong@hisilicon.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Apr 16, 2025 at 12:33:24PM +0530, Mukesh Kumar Savaliya wrote:
-> On 4/16/2025 11:46 AM, Andy Shevchenko wrote:
+On Tue, 15 Apr 2025 23:13:43 +0100,
+D Scott Phillips <scott@os.amperecomputing.com> wrote:
+> 
+> Marc Zyngier <maz@kernel.org> writes:
+> 
+> > On Tue, 15 Apr 2025 16:47:11 +0100,
+> > If the write to HCR_EL2 can corrupt translations, what guarantees that
+> > such write placed on a page boundary (therefore requiring another TLB
+> > lookup to continue in sequence) will be able to get to the ISB?
+> 
+> Hi Marc, I understand now from the core team that an ISB on another page
+> will be ok as the problem is on the data side only.
 
-Thanks for the prompt review, my answers below.
+Are you guaranteed that a younger data access can't be hoisted up and
+affect things similarly? I don't see anything that would prevent this.
 
-...
+Thanks,
 
-> > +/**
-> > + * spi_bpw_to_bytes - Covert bits per word to bytes
-> > + * @bpw: Bits per word
-> > + *
-> > + * This function converts the given @bpw to bytes. The result is always
-> > + * power-of-two (e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
-> Would it be good to say in 4 byte aligned /Multiples ?
-
-It's not correct. The said wording describes the current behaviour.
-
-> > + * Returns:
-> > + * Bytes for the given @bpw.
-> Returns: Bytes for the given @bpw.
-> Good to keep in one line.
-
-Aligned with the style of the other function in the same header, so I prefer to
-leave the style the same.
-
-> > + */> +static inline u32 spi_bpw_to_bytes(u32 bpw)
-> u8 bpw ?
-
-Nope. See below why.
-
-> struct spi_device {
-> u8 bits_per_word;
-> }
-
-> so arg should be u8.
-
-It's aligned with the above bpw related function.
-Also note, that this helper might be moved to the global header at some point
-as some other subsystems may utilise it, so I don't want to limit this to u8.
+	M.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Without deviation from the norm, progress is not possible.
