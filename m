@@ -1,86 +1,148 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2EE22D787
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB9D2309BE;
+	Wed, 16 Apr 2025 08:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792959; cv=none; b=IengEReI3uieVhxc/YpsLGUIxelgh2h1kohxYzVfm/25PtnGHEQkD000U2gq7x1J3PZClTCn1uPSr32Dc5tQjs3Rybb4yLzXENeXJaBbZ14T5GzZjKoGUtcc1ZmSdHSJbU2TWXSoIqJ66NT8w1C/UneOyrtcIlp88TwFNW0FAAA=
+	t=1744793011; cv=none; b=BUq4lBZp0YwAWv+cUm/OKI9tOWMZKdwFj2ZnFwFZJlQ+uNuHn7Wh/JTMdXGUMfu3cnDGscwHaVcH6t+vVbkpYpwpWE+kAyyfnsm6VEKsobJckw1kqVpQBfnVEguuBNRYQOXjtjS2NweVKNKDIHX8SY2UC/koZi5BM7eJ3EKDwNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792959; c=relaxed/simple;
-	bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eXBo8ICeYFMt/RtCi4wFG1Hyq0+Kdy2tNkGo2ghABtt9OuhuC8UZgtekXwn7uh3tMimxxHf/Se4drg8NPRJxEji1rfvMSw9vPCvG1lDuzUfoRlHeoGYi6b0a283at0nhuQlxHTrMo9u6G8RxhhMZw86HjsjKMFguh0InuK6aap4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MKL4q0VZ; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744793011; c=relaxed/simple;
+	bh=nyUJtYiUjBjYYSAqTLhcIC3VjH6cvjN+MabNE2Z+0KA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2fSM+/i5DHmh0RCpqqAeHvsWaZ9eXyUaoUG68vAx/zGrR3xLIT4PTH2rlcd1Z7HBkRr8sybLOE4CprK1QfeToOJrwB2esqBq9g+Ob52OWDsH9yUp65Lh3nRyBrgelFUTn2X7Is/f3fJVbVud0GeCnU+StFOk9Jr+209ubrQFE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUunA5Yb; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MKL4q0VZ"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso65498521fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:42:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUunA5Yb"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso64154955e9.1;
+        Wed, 16 Apr 2025 01:43:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744792955; x=1745397755; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
-        b=MKL4q0VZ53nnCRoQy5sY1rQ/sGoX3wOMcC4SIYjQEwGCYhhRRDigzzB7GA0e3nMl7C
-         Ggx6TT/wK0M4N5c2NWsOMgiDMSz1hgMqqgFYm2GL0kdwvlCjF8VEwzM3x8sDIg4NFfrN
-         aUfKYEgrxrtJxKX7MiD+BN4c36ozksBJQ5Xi6FEDYcYdU04WfiTtCKGrvr2zQthTNLcE
-         0baL57HICUBnetiwla62FISfOISaj6A96fFvz49GzxGpbI+npweyTrvWqTzrYe9N/JxV
-         HGonTmKifn2YdqhdKYtXnqFtk439e6BmuKtz1FVmt2DjQ4ZT5AP9pnE0s8LWYPhZk27d
-         vi0g==
+        d=gmail.com; s=20230601; t=1744793007; x=1745397807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1Sjiyx/fN+GWyu9km6Rmgf6dDU0MGkyvJNdC+0C4yHI=;
+        b=lUunA5Yb/8AR7yEf8CX1exs4MoGrD+1uWbQzVe6VbEg5W7pZjm7pcl/7gEUg9Jdq1X
+         /O079IkWh0Q1zR7puqwzAi6WUv5PmocE/yPJVjKob8ipwbRrEH4ZThyMJzxCV6BpS7rb
+         /t3+v7pzhBrNt6qlrOu5AUtQC3AfVDNS0NbwrFJPfMS/zQfkx+tE7nprRJhvTX6mXRms
+         9lgS+MMpOGI7uxPeAFCXTzyk62oVruLIwJ/1NcWnx6jCt4BtGBym2MxwefFuGzFvu3oY
+         GUfZoWFcKbGYm8tl86pcdTumxL6ZY97qkgX/Iy25mz6pReCQRrE1rL9fyJQQjXwGJd5C
+         UC/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792955; x=1745397755;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=emU1ztpEHcPDJ3TesqEI0D74SFuoQkpyh55PmfPn1VE=;
-        b=At6kaS3KAyxxnM/HDJbOa+ixBYK5yZL74qS+85c28ZnDRxAot9mOPMuPQRlZUnASsV
-         nU0PfoKtdVeDnuUIbyCVXiliqM2RHir3rMVr1tPNBuTeBUiutX87aEBPrf0/vL0ugrO3
-         IYTmlqjI3G9YYmHhXFkKE1bwOaLYuhVg7lTzBe37ot6QSISEpPObJubuwzoHgyRJQ4S9
-         w3jrRIp/K/EGpniWS4ZSYooIagOMRpdRlWvNwAMDaL+kOwZdsGs+DZ/9MFCdC6QMjj5e
-         GGYjiTwHl30OpqFFlVdGPPW8FaqqcVYFApOArBBBLsbCX9H3QZ+nOE4vjVObRzQCEqPh
-         1A2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVBvvWj68Q/3gAbrlcIxbR2cwfiNT3ac+6tD2D8mack7Dmfj4klKcNaxC2HJETrYPWwrXx9tFCAC1j588M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkXaqx+5Ftk9+jXofzzlxdSmXBd3zPHfYWLJDVuE1udzCuhKRD
-	kCjZWiYVvXStfLZl4/pqcKtPf7v9t3b5G4WuwpfS790A4RTzFSCHNDcuOIITjDiR+QCE1JVFbaY
-	968v1GQ059CcULspJGrQepURQVPoAE52YUPzrlw==
-X-Gm-Gg: ASbGncspp4kcuKSI+FykxSYQvq4I5KQKrwb1opWOqNHVjQA9FqO4CeCewxRsPgkC6Q2
-	eheI8sytDbCAa7zbMxjZXU0u7YXDfqto/kDgSFS7Z4NrYceaxivOoCsvEhUIL1+tdD7hkKmSvfj
-	yaL20WT8f5mYZGOzE1pJQFkA==
-X-Google-Smtp-Source: AGHT+IG3vfJgDVatBWZn8CTY/EFP1pLWKS59uhKTgG+BQpORL3g5bmdKhrAO9ol2IZnTNVf832lwVZxuCek+mvzQcrs=
-X-Received: by 2002:a05:651c:b0b:b0:30d:e104:b592 with SMTP id
- 38308e7fff4ca-3107f73a75cmr2464581fa.38.1744792955305; Wed, 16 Apr 2025
- 01:42:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744793007; x=1745397807;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Sjiyx/fN+GWyu9km6Rmgf6dDU0MGkyvJNdC+0C4yHI=;
+        b=er75Cmq+XcMkThqkId0f/AktKYVLVR41n4MTDZqLWes5QUOPwFSlPZQSaxFGuj3Sc7
+         t64uPqFoAvx0vezUsCSk+2b+2pZTOcbjX4idLQbghWBeaG1hELZ6nDFtL9IjwoqscvFR
+         EnaKmxZesHYPQsww7RfnMdwknt9pXOW0d7+idsYZYZAtQjpxNfyNue1pkMfwGTiCo6jU
+         z1h9gZWs5qSyuTYoi/hROrjrYNYz4UOasFxKZOoP8qZBZ3vZEkB4y5U4geTZqnUKa3xS
+         hsytFaftkMUN6VfMgHrxRbEOOlrB1tmTaLuOZbRaWZisNC+ph+gZ9zpXv0fIczOgDcib
+         ISjA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/bIlfP60lb4fCKh384R3blEK5vMd/kG2UODrDJHSS3V3qPAqSRn6v4C2PO0RiT4LdTMK6d1JoFXQPcw==@vger.kernel.org, AJvYcCXhJ5ss4HMh4rF75rUzBYQAjIqtgJXR0fsotF9PMexoeqY5R8bSdg3Wc8EGQWRMeDCD9kOIri1Ph5h9kUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzy+QLC40Ns7zX8u2GBL/W0M1a8dgr+WVEtU+c6hvL/zadGa4hR
+	YToX27RwyfjoQEKO3YBsa2rIeytIkebcVThcEe/UzuaN8O9rtCzg
+X-Gm-Gg: ASbGncuNoCS8+NT8mH58VMnqMX0p/OJ7SuhcKaEVcyRKy8engs80sBpj/2SDzm3VmZ8
+	w+OOBsRBCNJXJ8fiioErYqo9YbSEVopaCZ0k9kHGV4+xtpWJAi8K1tpUcA6DYZ3ER+omO/pajnM
+	zelBHvAcWNUj2FHm+PTmcIpRlaPrDALGvVWgOFGShvw0mVdNw9IKTdRxwPb5UcFhwymqfGnbaSW
+	pd3N+Kik4oMJ2zDqZLcFbqqdSzwRW9D0pHYagpQoQomp6AXT3eZkZohTfpbzPX+3xujvJbxgvNC
+	y1YNvoLhRYy9OF+VNK5fNwDbDdDbuHMGZ7EBF2usXG4aXAZsfgJguvmaPP0=
+X-Google-Smtp-Source: AGHT+IHpy+sYxBz/Oe4uCHlDqUk4DjWqp50J3JpjBoi6v0tNOLkb64P60xE638/sIU0sdirYCxgssw==
+X-Received: by 2002:a05:600c:45ce:b0:43d:23fe:e8a6 with SMTP id 5b1f17b1804b1-4405d5fccb7mr8045235e9.5.1744793007111;
+        Wed, 16 Apr 2025 01:43:27 -0700 (PDT)
+Received: from [10.80.20.47] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf44577dsm16573027f8f.94.2025.04.16.01.43.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 01:43:26 -0700 (PDT)
+Message-ID: <1f99c69d-42c2-4093-9c13-c0b137994e30@gmail.com>
+Date: Wed, 16 Apr 2025 11:43:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-4-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20250415111124.1539366-4-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 10:42:24 +0200
-X-Gm-Features: ATxdqUFlkXxMm9jeA4EPLA5TxpwlyriYzwentOxHys1CKD_0gGXtuyJkG1m0nHg
-Message-ID: <CACRpkdYBn6v6ou9VpB9hDRcLQ=_-d4T-LU1v+_p96XT4SH2EVQ@mail.gmail.com>
-Subject: Re: [PATCH v1 3/7] gpiolib: Move validate_desc() and Co upper in the code
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/2] net/mlx5: Fix null-ptr-deref in
+ mlx5_create_{inner_,}ttc_table()
+To: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amirtz@nvidia.com, ayal@nvidia.com,
+ Gal Pressman <gal@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+ Leon Romanovsky <leon@kernel.org>, Saeed Mahameed <saeedm@nvidia.com>,
+ Henry Martin <bsdhenrymartin@gmail.com>, Mark Bloch <mbloch@nvidia.com>
+References: <20250415124128.59198-1-bsdhenrymartin@gmail.com>
+ <20250415124128.59198-2-bsdhenrymartin@gmail.com>
+ <e0db67c9-8e38-490a-98a2-13c61ef11aa5@nvidia.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <e0db67c9-8e38-490a-98a2-13c61ef11aa5@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> Move validate_desc() and Co upper in the code to be able to use
-> in the further changes.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 15/04/2025 16:45, Mark Bloch wrote:
+> 
+> 
+> On 15/04/2025 15:41, Henry Martin wrote:
+>> Add NULL check for mlx5_get_flow_namespace() returns in
+>> mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() to prevent
+>> NULL pointer dereference.
+>>
+>> Fixes: 137f3d50ad2a ("net/mlx5: Support matching on l4_type for ttc_table")
+>> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+>> ---
+>>   drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+>> index eb3bd9c7f66e..e48afd620d7e 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
+>> @@ -655,6 +655,11 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
+>>   	}
+>>   
+>>   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+>> +	if (!ns) {
+>> +		kvfree(ttc);
+>> +		return ERR_PTR(-EOPNOTSUPP);
+>> +	}
+>> +
+>>   	groups = use_l4_type ? &inner_ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>>   			       &inner_ttc_groups[TTC_GROUPS_DEFAULT];
+>>   
+>> @@ -728,6 +733,11 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
+>>   	}
+>>   
+>>   	ns = mlx5_get_flow_namespace(dev, params->ns_type);
+>> +	if (!ns) {
+>> +		kvfree(ttc);
+>> +		return ERR_PTR(-EOPNOTSUPP);
+>> +	}
+>> +
+>>   	groups = use_l4_type ? &ttc_groups[TTC_GROUPS_USE_L4_TYPE] :
+>>   			       &ttc_groups[TTC_GROUPS_DEFAULT];
+>>   
+> 
+> Reviewed-by: Mark Bloch <mbloch@nvidia.com>
+> 
+> Mark
+> 
 
-Yours,
-Linus Walleij
+netdev maintainers,
+
+Note that Mark is covering me while I'm on vacation (for the coming ~10 
+days). Please accordingly honor his submissions and replies for mlx5 
+content.
+
+In case this mail notification is not sufficient, please let us know 
+what extra action is required.
+
+Happy Holidays,
+Tariq
+
