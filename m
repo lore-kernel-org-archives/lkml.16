@@ -1,229 +1,197 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40C019066D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974F71922FA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744770387; cv=none; b=c30fxNbcxQGnQ4izwXvEXUuKouHRMRZMELNQKEZrYYjj7mlCyGfT8GP+b827TWcSn/hkL1kMTseulCGtmZWq+Z8SH8z3/Jl9i2sO0gQm/2aIt8xI37UEVUKohRetT1akAfJBGQARsUA1vON+M8B6O7cd8P4gHGe+R1a7EikWM3M=
+	t=1744770528; cv=none; b=g+oJ5Aa8f+WfOT+hOFm7Q/f9w0Gokt/ubwmjnzbdAW+xZpfljgGzAs7/f1EKLYa9DF0CPXx6vCQ/sUHxdzyynXGlNJsSrfrL2DABGFqJRAx9mhT6qS0Bd5MBYZ61Ri+NfT5H2RzgHOLAmA1g3HHOm69EfwYt8HEdMNb9piiuGww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744770387; c=relaxed/simple;
-	bh=EABY1uVOh+N45dTkrJxddyszLlM1hT8ouCdvVvjxWDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cnJN/TAGVwWcP9mNLtvEiL7DZUy3rnFJZyMsH6INY+QNwdGyjznOIj7mEnvdEm+qa5ExJefJKQyLIPf43RxyQ9P4gkqQJqmTxZ/Tyb4e0g/5udngksUnWjrmudiaaAdxLd9auCctxI2S/B9CwaUnoYEJ/56zjGtMZGu9709gIrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEA9F1595;
-	Tue, 15 Apr 2025 19:26:21 -0700 (PDT)
-Received: from [10.162.16.49] (a077893.blr.arm.com [10.162.16.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB9F53F694;
-	Tue, 15 Apr 2025 19:26:21 -0700 (PDT)
-Message-ID: <72e7684c-f41d-4620-8c62-204e1ac6354c@arm.com>
-Date: Wed, 16 Apr 2025 07:56:19 +0530
+	s=arc-20240116; t=1744770528; c=relaxed/simple;
+	bh=0WxuiN1Es5GCFOc2Kimqm5n+6q45fsvnvzSj9TxWCiU=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=m4sH887VeQCEHVC9ziuZPGDfAKXn9oS9fVXlY8Si0unSF3Na7FAXnZmqLYDRnTR/4c2nrLGp0dil+hQFmAYkPWFg64FhfdK0kswlORlmL5G/SwsFGK2i2jxMCVlc0hysd+vAg0AfjfLhx0WMAqN2GJi0qVewQEL1kWaAuHy/27c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=lCDOCEGq; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lCDOCEGq"
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250416022837epoutp043a6fa85bc095c2480327930a0d50e3e2~2q4qb5tEu2835128351epoutp04Q
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:28:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250416022837epoutp043a6fa85bc095c2480327930a0d50e3e2~2q4qb5tEu2835128351epoutp04Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744770517;
+	bh=0WxuiN1Es5GCFOc2Kimqm5n+6q45fsvnvzSj9TxWCiU=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=lCDOCEGql5AKw2m+EndZzADOjk8pHHfDqlsABOqqgR9PBc1qDlcyJBSdAov1sx19P
+	 /cyLg3+syrPrOK2uc7SsF/UlX2t8WgiEUQxAmYDjysJFKnkhN60OMoFNkruDU+et03
+	 OWwA/9RpFI+K8YUXPjCJY3fYNtpDkE9q51X1BFcI=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250416022836epcas1p302970f87172dbe801a9ccc0f0698a2e5~2q4p8VjNJ2814928149epcas1p3F;
+	Wed, 16 Apr 2025 02:28:36 +0000 (GMT)
+Received: from epsmgec1p1.samsung.com (unknown [182.195.36.227]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZclM842Ctz6B9m4; Wed, 16 Apr
+	2025 02:28:36 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+	epsmgec1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	00.ED.09912.4D51FF76; Wed, 16 Apr 2025 11:28:36 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250416022835epcas1p3bec0438e0950669f9f0b423970fcb8d4~2q4o_xSSs2814928149epcas1p3D;
+	Wed, 16 Apr 2025 02:28:35 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250416022835epsmtrp147d059c874edc77322235215edc3a940~2q4o91DbP1848718487epsmtrp1F;
+	Wed, 16 Apr 2025 02:28:35 +0000 (GMT)
+X-AuditID: b6c32a36-d05a3240000026b8-d8-67ff15d4a0b1
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A7.DB.19478.3D51FF76; Wed, 16 Apr 2025 11:28:35 +0900 (KST)
+Received: from jaewon31kim02 (unknown [10.253.104.100]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250416022835epsmtip2f5d593402a092f0d37e6d2708f9a4595~2q4otXI232683726837epsmtip2t;
+	Wed, 16 Apr 2025 02:28:35 +0000 (GMT)
+From: =?utf-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
+To: "'T.J. Mercier'" <tjmercier@google.com>, "'Juan Yescas'"
+	<jyescas@google.com>
+Cc: "'Sumit Semwal'" <sumit.semwal@linaro.org>, "'Benjamin Gaignard'"
+	<benjamin.gaignard@collabora.com>, "'Brian Starkey'"
+	<Brian.Starkey@arm.com>, "'John Stultz'" <jstultz@google.com>,
+	=?utf-8?Q?'Christian_K=C3=B6nig'?= <christian.koenig@amd.com>,
+	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+	<linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
+	<baohua@kernel.org>, <dmitry.osipenko@collabora.com>,
+	<Guangming.Cao@mediatek.com>, <surenb@google.com>, <kaleshsingh@google.com>
+In-Reply-To: <CABdmKX3Ht=bCcPFxK5mGX2qD4riXQ7Ucw6H_-+1PupXy-1ABGQ@mail.gmail.com>
+Subject: RE: [PATCH] dma-buf: heaps: Set allocation orders for larger page
+ sizes
+Date: Wed, 16 Apr 2025 11:28:35 +0900
+Message-ID: <106c301dbae77$414454a0$c3ccfde0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Ryan Roberts <ryan.roberts@arm.com>, Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
- <6e6305fd-3b93-43ec-8114-e81b2926adfc@arm.com>
- <CAMj1kXG5R1jVWLQ-XEcqF9U365T18pTW8u3DgC7OY4N53hchOA@mail.gmail.com>
- <16602b97-2f49-4612-9e9a-d6d0ed964fd3@arm.com>
- <CAMj1kXEnmpu3Dc5zZz1aQJGVwEFwx=JdYisSFkDNjUJ44FjX9Q@mail.gmail.com>
- <5d975762-7678-419f-8e2f-40547c079276@arm.com>
- <0eabad93-26ef-4452-bd89-17c153f483f3@arm.com>
- <7b26c6e4-5483-4ac3-a084-bb0769768006@arm.com>
- <fb411be7-b8e8-493f-ae79-90adb8bb79fd@arm.com>
- <30b6c851-993a-42a2-be71-9748faa2eb4d@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <30b6c851-993a-42a2-be71-9748faa2eb4d@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQDKWerKEeG60YHjLHi495x9XrZiDgIBaXUGAUclY0W1rfX84A==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmnu4V0f/pBi9/ylg8OdTLbLHlymxm
+	i0enLjBavL2/m9Xi5JPr7BZXvr5ns2h/dpHd4s+JjWwWp+ccYLFo2jeT3eLLlYdMFpd3zWGz
+	6NmwldXi1N3P7BaTLy1gs3i3/gubg4BH66W/bB5r5q1h9Nhxdwmjx4JNpR6bVnWyedy5tofN
+	4373cSaP2/8eM3u0nNzP4vF5k1wAV1S2TUZqYkpqkUJqXnJ+SmZeuq2Sd3C8c7ypmYGhrqGl
+	hbmSQl5ibqqtkotPgK5bZg7QL0oKZYk5pUChgMTiYiV9O5ui/NKSVIWM/OISW6XUgpScArMC
+	veLE3OLSvHS9vNQSK0MDAyNToMKE7IxbHS+ZCnrUK2a0nmZvYHyi2sXIySEhYCKx7uwe5i5G
+	Lg4hgR2MEot+zWGEcD4xShyfcZAFpArMmftdBabj3pk/7BDxnYwSy54kQDS8YZRYuGA2I0iC
+	TcBSYvfXY2DNIgLBErePzGUFKWIW6GGR2NXSxASS4BQIlFi64B9Yg7BAkMSxxVPZQGwWAVWJ
+	Tz8/A23g4OAVsJKYNxGsnFdAUOLkzCdgM5kFtCWWLXzNDHGQgsTuT0dZIXY5SdxdcRCqRkRi
+	dmcbVM1/Don93ZwgIyUEXCR69+hDhIUlXh3fwg5hS0m87G+DsoslOuYuZ4Ior5Ho3JgIEbaX
+	WLG/kxUkzCygKbF+lz7EIj6Jd197WCGqeSU62oQgqtUkWp59ZYWwZST+/nsGZXtIbH/yi3UC
+	o+IsJG/NQvLWLCTnz0JYtoCRZRWjWGpBcW56arFhgRE8opPzczcxgpO4ltkOxklvP+gdYmTi
+	YDzEKMHBrCTCe878X7oQb0piZVVqUX58UWlOavEhRlNgOE9klhJNzgfmkbySeEMTSwMTMyMT
+	C2NLYzMlcd49H5+mCwmkJ5akZqemFqQWwfQxcXBKNTAVLbfYvkTH2/RDJMsSryl/hKvraiXP
+	GYTs8mx5vfXXKe+WWvdffX+cri/4pJc84UfVC70b9ots56ZezzF1dpot/+91rJltweQvr19y
+	LPw4b8dmTZb7yWJ1X97NnKZ34pMhb57VOrNTpWF+DYfXGM45KT21xtKeibNYwcxGz6nS/F3e
+	lLe/HrmuZ3j9bEN3XG/9t4PXEvPf6fZ+P/tNVZm1u8iwNmC+/MZwwXjbi75fT1WevPCXZaqm
+	3/Wkmtd7xNWzt9xqVTRPr9R+dXbi9drlwVde2R05+OqCxPfMO6VSa805Whxuh3+ylfU5o2R7
+	MeBaVPK/X51zpwn2mcmGNXZ+nL2UPWflH5cC/SmH29yVWIozEg21mIuKEwGcpTDwawQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsWy7bCSvO5l0f/pBhPu61k8OdTLbLHlymxm
+	i0enLjBavL2/m9Xi5JPr7BZXvr5ns2h/dpHd4s+JjWwWp+ccYLFo2jeT3eLLlYdMFpd3zWGz
+	6NmwldXi1N3P7BaTLy1gs3i3/gubg4BH66W/bB5r5q1h9Nhxdwmjx4JNpR6bVnWyedy5tofN
+	4373cSaP2/8eM3u0nNzP4vF5k1wAVxSXTUpqTmZZapG+XQJXxouF+9kL1khX/Dw0hamBsUGs
+	i5GTQ0LAROLemT/sXYxcHEIC2xklLi04zwaRkJF4c/4pSxcjB5AtLHH4cDFEzStGibWbXjGD
+	1LAJWErs/nqMBcQWEQiW2HV+FhNIEbPADBaJR03tLBAdFxgltp+bBtbBKRAosXTBP0YQW1gg
+	QGLN2o3sIDaLgKrEp5+f2UG28QpYScybyAQS5hUQlDg58wnYAmYBbYmnN5/C2csWvmaGOFRB
+	Yveno6wQRzhJ3F1xEKpGRGJ2ZxvzBEbhWUhGzUIyahaSUbOQtCxgZFnFKJpaUJybnptcYKhX
+	nJhbXJqXrpecn7uJERzRWkE7GJet/6t3iJGJg/EQowQHs5II7znzf+lCvCmJlVWpRfnxRaU5
+	qcWHGKU5WJTEeZVzOlOEBNITS1KzU1MLUotgskwcnFINTKypZn9WKQTv+sUlYOTnEXD5UXVQ
+	gfSdrpPnCj5NXqldY8D+jcHoZqhR0/tJvbuWSHy7/0o1tfWEifr0fWxZKbMf77pwy+WnUfi5
+	mqRDbZmsc99tvPdvN8+ChF0HtCYe//u29TNnivnFMAeWRucnZ97rpbXxbmO/w3Zv05O95wJ3
+	n3tUpxOgNKM3S8hUNlI9o2qV19mnOcfbf/nK7TrhvU5WaqPCh/miS+TdWD6HJy+69cx9p4z5
+	Jvs/2zpZnEOEg8rqY99UvtnhudjM5Paz/sZdhbd3nm09n+DYe473ot3ZklD721MfyyUtipHi
+	TRK+9m0p/9MollNLdn0P/WNfyiPGP9Eoal9NbsGjlQtOdCmxFGckGmoxFxUnAgCtox99VwMA
+	AA==
+X-CMS-MailID: 20250416022835epcas1p3bec0438e0950669f9f0b423970fcb8d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250415205720epcas1p4a8bbb4ff1ad221a72776694d08801368
+References: <20250415171954.3970818-1-jyescas@google.com>
+	<CGME20250415205720epcas1p4a8bbb4ff1ad221a72776694d08801368@epcas1p4.samsung.com>
+	<CABdmKX3Ht=bCcPFxK5mGX2qD4riXQ7Ucw6H_-+1PupXy-1ABGQ@mail.gmail.com>
 
 
 
-On 4/15/25 23:13, Ryan Roberts wrote:
-> On 15/04/2025 10:46, Anshuman Khandual wrote:
->>
->>
->> On 4/15/25 13:23, Ryan Roberts wrote:
->>> On 15/04/2025 07:27, Anshuman Khandual wrote:
->>>>
->>>>
->>>> On 4/14/25 18:01, Ryan Roberts wrote:
->>>>> On 14/04/2025 13:28, Ard Biesheuvel wrote:
->>>>>> On Mon, 14 Apr 2025 at 14:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>>
->>>>>>> On 14/04/2025 10:41, Ard Biesheuvel wrote:
->>>>>>>> On Mon, 14 Apr 2025 at 09:52, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>>>>
->>>>>>>>> On 10/04/2025 08:40, Anshuman Khandual wrote:
->>>>>>>>>> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
->>>>>>>>>> as expected if those macro constants contain some 128 bit layout elements,
->>>>>>>>>> required for D128 page tables. Fix this problem via first loading up these
->>>>>>>>>> macro constants into a given memory location and then subsequently setting
->>>>>>>>>> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->>>>>>>>>
->>>>>>>>> From memory, the primary issue is that for D128, PIE_E[0|1] are defined in terms
->>>>>>>>> of 128-bit types with shifting and masking, which the assembler can't do? It
->>>>>>>>> would be good to spell this out.
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>>>>>>>> Cc: Will Deacon <will@kernel.org>
->>>>>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>>>>>> Cc: Ard Biesheuvel <ardb@kernel.org>
->>>>>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>>>>>>>>> Cc: linux-arm-kernel@lists.infradead.org
->>>>>>>>>> Cc: linux-kernel@vger.kernel.org
->>>>>>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>>>>>>>> ---
->>>>>>>>>> This patch applies on v6.15-rc1
->>>>>>>>>>
->>>>>>>>>>  arch/arm64/kernel/head.S         | 3 +++
->>>>>>>>>>  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->>>>>>>>>>  arch/arm64/kernel/pi/pi.h        | 1 +
->>>>>>>>>>  arch/arm64/mm/mmu.c              | 1 +
->>>>>>>>>>  arch/arm64/mm/proc.S             | 5 +++--
->>>>>>>>>>  5 files changed, 14 insertions(+), 2 deletions(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
->>>>>>>>>> index 2ce73525de2c..4950d9cc638a 100644
->>>>>>>>>> --- a/arch/arm64/kernel/head.S
->>>>>>>>>> +++ b/arch/arm64/kernel/head.S
->>>>>>>>>> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->>>>>>>>>>        * On return, the CPU will be ready for the MMU to be turned on and
->>>>>>>>>>        * the TCR will have been set.
->>>>>>>>>>        */
->>>>>>>>>> +     adr_l   x0, pir_data
->>>>>>>>>> +     bl      __pi_load_pir_data
->>>>>>>>>
->>>>>>>>> Using C code to pre-calculate the values into global variables that the assembly
->>>>>>>>> code then loads and stuffs into the PIR registers feels hacky. I wonder if we
->>>>>>>>> can instead pre-calculate into asm-offsets.h? e.g. add the following to
->>>>>>>>> asm-offsets.c:
->>>>>>>>>
->>>>>>>>> DEFINE(PIE_E0_ASM, PIE_E0);
->>>>>>>>> DEFINE(PIE_E1_ASM, PIE_E1);
->>>>>>>>>
->>>>>>>>> Which will generate the asm-offsets.h header with PIE_E[0|1]_ASM with the
->>>>>>>>> pre-calculated values that you can then use in proc.S?
->>>>>>>>>
->>>>>>>>
->>>>>>>> There is another issue, which is that mov_q tries to be smart, and
->>>>>>>> emit fewer than 4 MOVZ/MOVK instructions if possible. So the .if
->>>>>>>> directive evaluates the argument, which does not work with symbolic
->>>>>>>> constants.
->>>>>>>
->>>>>>> I'm not quite understanding the detail here; what do you mean by "symbolic
->>>>>>> constants"? asm-offsets.h will provide something like:
->>>>>>>
->>>>>>> #define PIE_E0_ASM 1234567890
->>>>>>>
->>>>>>> The current code is using a hash-define and that's working fine:
->>>>>>>
->>>>>>> mov_q   x0, PIE_E0
->>>>>>>
->>>>>>>
->>>>>>> Won't the C preprocessor just substitute and everything will work out?
->>>>>>>
->>>>>>
->>>>>> Yeah, you're right. I was experimenting with something like
->>>>>>
->>>>>> .set .Lpie_e0, PIE_E0_ASM
->>>>>> mov_q xN, .Lpie_e0
->>>>>>
->>>>>> where this problem does exist, but we can just use PIE_E0_ASM directly
->>>>>> and things should work as expected.
->>>>>
->>>>> Ahh great, sounds like this should be pretty simple then!
->>>>
->>>> Following change works both on current and with D128 page tables.
->>>>
->>>> --- a/arch/arm64/kernel/asm-offsets.c
->>>> +++ b/arch/arm64/kernel/asm-offsets.c
->>>> @@ -182,5 +182,7 @@ int main(void)
->>>>  #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->>>>    DEFINE(FTRACE_OPS_DIRECT_CALL,       offsetof(struct ftrace_ops, direct_call));
->>>>  #endif
->>>> +  DEFINE(PIE_E0_ASM, PIE_E0);
->>>> +  DEFINE(PIE_E1_ASM, PIE_E1);
->>>>    return 0;
->>>>  }
->>>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
->>>> index 737c99d79833..f45494425d09 100644
->>>> --- a/arch/arm64/mm/proc.S
->>>> +++ b/arch/arm64/mm/proc.S
->>>> @@ -536,9 +536,9 @@ alternative_else_nop_endif
->>>>  #define PTE_MAYBE_NG           0
->>>>  #define PTE_MAYBE_SHARED       0
->>>
->>> I think at minimum, you can remove this PTE_MAYBE_* hack from proc.S. But as Ard
->>> says, you may need to add it to asm-offsets.c? I'm surprised asm-offsets.c even
->>
->> Moving PTE_MAYBE_* inside asm-offsets.c works as well in both cases
->> but still wondering why this is even required ? What am I missing ?
-> 
-> Without the overrides:
-> 
-> #define PTE_MAYBE_NG		(arm64_use_ng_mappings ? PTE_NG : 0)
-> #define PTE_MAYBE_SHARED	(lpa2_is_enabled() ? 0 : PTE_SHARED)
-> 
-> And these are used in the definition of PROT_DEFAULT, which is used in the
-> definition of _PAGE_KERNEL*, which are used in the definition of PIE_E1.
-> 
-> For the assembly code arm64_use_ng_mappings and lpa2_is_enabled() are not
-> accessible. But we don't actually care about those bits so its just hacked to
-> override the fields to 0.
-
-Alright.
-
-> 
-> I would have expected the asm-offsets.c case to have a similer problem because
-> we have not defined arm64_use_ng_mappings and lpa2_is_enabled(). asm-offsets.c
-> is compiled as a standalone object then the macros are exfiltrated and
-> asm-offsets.h is created.
-
-Understood.
-
-> 
-> Perhaps the compiler is smart enough to see that we don't care about the bits in
-> those fields (pte_pi_index() is only keeping selected bits) and asm-offsets.c
-> can be safely compiled without the hack?
-
-I guess the best thing here would be to move PTE_MAYBE_* inside asm-offsets.c to
-be on the safer side, rather than depending on what compiler might do otherwise.
-I will respin the patch with both the changes included.
-
-> 
->>
->>> compiles without this hack since surely it doesn't have arm64_use_ng_mappings or
->>> is_realm_world() available?
->> Did not face any problem with defconfig for the mainline kernel and
->> both these symbols were visible in the built code.
->>
->>>
->>> Thanks,
->>> Ryan
->>>
->>>>  
->>>> -       mov_q   x0, PIE_E0
->>>> +       mov_q   x0, PIE_E0_ASM
->>>>         msr     REG_PIRE0_EL1, x0
->>>> -       mov_q   x0, PIE_E1
->>>> +       mov_q   x0, PIE_E1_ASM
->>>>         msr     REG_PIR_EL1, x0
->>>>  
->>>>  #undef PTE_MAYBE_NG
->>>>
->>>
-> 
+> -----Original Message-----
+> From: T.J. Mercier =5Bmailto:tjmercier=40google.com=5D
+> Sent: Wednesday, April 16, 2025 5:57 AM
+> To: Juan Yescas <jyescas=40google.com>
+> Cc: Sumit Semwal <sumit.semwal=40linaro.org>; Benjamin Gaignard
+> <benjamin.gaignard=40collabora.com>; Brian Starkey <Brian.Starkey=40arm.c=
+om>;
+> John Stultz <jstultz=40google.com>; Christian K=C3=B6nig=0D=0A>=20<christ=
+ian.koenig=40amd.com>;=20linux-media=40vger.kernel.org;=20dri-=0D=0A>=20dev=
+el=40lists.freedesktop.org;=20linaro-mm-sig=40lists.linaro.org;=20linux-=0D=
+=0A>=20kernel=40vger.kernel.org;=20baohua=40kernel.org;=20dmitry.osipenko=
+=40collabora.com;=0D=0A>=20jaewon31.kim=40samsung.com;=20Guangming.Cao=40me=
+diatek.com;=20surenb=40google.com;=0D=0A>=20kaleshsingh=40google.com=0D=0A>=
+=20Subject:=20Re:=20=5BPATCH=5D=20dma-buf:=20heaps:=20Set=20allocation=20or=
+ders=20for=20larger=20page=0D=0A>=20sizes=0D=0A>=20=0D=0A>=20On=20Tue,=20Ap=
+r=2015,=202025=20at=2010:20=E2=80=AFAM=20Juan=20Yescas=20<jyescas=40google.=
+com>=20wrote:=0D=0A>=20>=0D=0A>=20>=20This=20change=20sets=20the=20allocati=
+on=20orders=20for=20the=20different=20page=20sizes=0D=0A>=20>=20(4k,=2016k,=
+=2064k)=20based=20on=20PAGE_SHIFT.=20Before=20this=20change,=20the=20orders=
+=20for=0D=0A>=20>=20large=20page=20sizes=20were=20calculated=20incorrectly,=
+=20this=20caused=20system=20heap=0D=0A>=20>=20to=20allocate=20from=202%=20t=
+o=204%=20more=20memory=20on=2016KiB=20page=20size=20kernels.=0D=0A>=20>=0D=
+=0A>=20>=20This=20change=20was=20tested=20on=204k/16k=20page=20size=20kerne=
+ls.=0D=0A>=20>=0D=0A>=20>=20Signed-off-by:=20Juan=20Yescas=20<jyescas=40goo=
+gle.com>=0D=0A>=20=0D=0A>=20I=20think=20=22dma-buf:=20system_heap:=22=20wou=
+ld=20be=20better=20for=20the=20subject=20since=20this=0D=0A>=20is=20specifi=
+c=20to=20the=20system=20heap.=0D=0A>=20=0D=0A>=20Would=20you=20mind=20clean=
+ing=20up=20the=20extra=20space=20on=20line=20321=20too?=0D=0A>=20=40=40=20-=
+318,7=20+318,7=20=40=40=20static=20struct=20page=0D=0A>=20*alloc_largest_av=
+ailable(unsigned=20long=20size,=0D=0A>=20=20=20=20=20=20=20=20=20int=20i;=
+=0D=0A>=20=0D=0A>=20=20=20=20=20=20=20=20=20for=20(i=20=3D=200;=20i=20<=20N=
+UM_ORDERS;=20i++)=20=7B=0D=0A>=20-=20=20=20=20=20=20=20=20=20=20=20=20=20=
+=20=20if=20(size=20<=20=20(PAGE_SIZE=20<<=20orders=5Bi=5D))=0D=0A>=20+=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20if=20(size=20<=20(PAGE_SIZE=20<<=
+=20orders=5Bi=5D))=0D=0A>=20=0D=0A>=20With=20that,=0D=0A>=20Reviewed-by:=20=
+T.J.=20Mercier=20<tjmercier=40google.com>=0D=0A>=20=0D=0A>=20Fixes:=20d963a=
+b0f15fb=20(=22dma-buf:=20system_heap:=20Allocate=20higher=20order=20pages=
+=20if=0D=0A>=20available=22)=20is=20also=20probably=20a=20good=20idea.=0D=
+=0A>=20=0D=0A=0D=0A=0D=0AHi=20Juan.=0D=0A=0D=0AYes.=20This=20system_heap=20=
+change=20should=20be=20changed=20for=2016KB=20page.=20Actually,=0D=0Awe=20m=
+ay=20need=20to=20check=20other=20drivers=20using=20page=20order=20number.=
+=20I=20guess=0D=0Agpu=20drivers=20may=20be=20one=20of=20them.=0D=0A=0D=0A>=
+=20>=20---=0D=0A>=20>=20=20drivers/dma-buf/heaps/system_heap.c=20=7C=209=20=
+++++++++-=0D=0A>=20>=20=201=20file=20changed,=208=20insertions(+),=201=20de=
+letion(-)=0D=0A>=20>=0D=0A>=20>=20diff=20--git=20a/drivers/dma-buf/heaps/sy=
+stem_heap.c=0D=0A>=20>=20b/drivers/dma-buf/heaps/system_heap.c=0D=0A>=20>=
+=20index=2026d5dc89ea16..54674c02dcb4=20100644=0D=0A>=20>=20---=20a/drivers=
+/dma-buf/heaps/system_heap.c=0D=0A>=20>=20+++=20b/drivers/dma-buf/heaps/sys=
+tem_heap.c=0D=0A>=20>=20=40=40=20-50,8=20+50,15=20=40=40=20static=20gfp_t=
+=20order_flags=5B=5D=20=3D=20=7BHIGH_ORDER_GFP,=0D=0A>=20HIGH_ORDER_GFP,=20=
+LOW_ORDER_GFP=7D;=0D=0A>=20>=20=20=20*=20to=20match=20with=20the=20sizes=20=
+often=20found=20in=20IOMMUs.=20Using=20order=204=20pages=0D=0A>=20instead=
+=0D=0A>=20>=20=20=20*=20of=20order=200=20pages=20can=20significantly=20impr=
+ove=20the=20performance=20of=20many=0D=0A>=20IOMMUs=0D=0A>=20>=20=20=20*=20=
+by=20reducing=20TLB=20pressure=20and=20time=20spent=20updating=20page=20tab=
+les.=0D=0A>=20>=20+=20*=0D=0A>=20>=20+=20*=20Note:=20When=20the=20order=20i=
+s=200,=20the=20minimum=20allocation=20is=20PAGE_SIZE.=0D=0A>=20>=20+=20The=
+=20possible=0D=0A>=20>=20+=20*=20page=20sizes=20for=20ARM=20devices=20could=
+=20be=204K,=2016K=20and=2064K.=0D=0A>=20>=20=20=20*/=0D=0A>=20>=20-static=
+=20const=20unsigned=20int=20orders=5B=5D=20=3D=20=7B8,=204,=200=7D;=0D=0A>=
+=20>=20+=23define=20ORDER_1M=20(20=20-=20PAGE_SHIFT)=0D=0A>=20>=20+=23defin=
+e=20ORDER_64K=20(16=20-=20PAGE_SHIFT)=0D=0A>=20>=20+=23define=20ORDER_FOR_P=
+AGE_SIZE=20(0)=0D=0A>=20>=20+static=20const=20unsigned=20int=20orders=5B=5D=
+=20=3D=20=7BORDER_1M,=20ORDER_64K,=0D=0A>=20>=20+ORDER_FOR_PAGE_SIZE=7D;=0D=
+=0A>=20>=20+=0D=0A>=20>=20=20=23define=20NUM_ORDERS=20ARRAY_SIZE(orders)=0D=
+=0A>=20>=0D=0A>=20>=20=20static=20struct=20sg_table=20*dup_sg_table(struct=
+=20sg_table=20*table)=0D=0A>=20>=20--=0D=0A>=20>=202.49.0.604.gff1f9ca942-g=
+oog=0D=0A>=20>=0D=0A=0D=0A
