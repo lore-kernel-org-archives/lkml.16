@@ -1,106 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746613597A;
-	Wed, 16 Apr 2025 06:11:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4DA219A81;
+	Wed, 16 Apr 2025 06:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744783917; cv=none; b=XXYSWdLUpbU/aAQWWC6mw0jmerdXdLREEfqrVrjtH8iboBaTv0IW4fvs1KqtZXgzDWckkGIjxno/EC9OXekk3yGYLIdyPsya+wXEZ68fLO2JQ+8HR6ZGdOnggECIbJmSIK/6ROB/G6VD1qkFG5n3pxjqzQY3DFcm68K5R44Fbtw=
+	t=1744784331; cv=none; b=KzVr3YnyADvvFxL88zy57OnkM32QS5iiCy7k6lPBP2Zmaw8DFwdWHwq37617jYZpRUtzuqROidcm2DGfAiAm7sTaZwqFoUDGuce6DBoXRxZ7qMdG7gz2aKOT94yncSZog+79mFqWoHkZmoZ+y612aOetz4DO1g0soKzIuAu9r9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744783917; c=relaxed/simple;
-	bh=Ux+wyNixqbSXxuEjmcaLENj8uIw5/U9ErqcvHgV9HaQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bIceQZwzmNJg+fEUhFG5Kn9jS2TgF3Tdz8iisGC58PQ5qHty4GrCD/y4JM7fump0JN8Ts3vU1GsmUINec9KSwSSDoVZxSF8oQxhLERK3XZnEHmMalItqrYUB7WaQaL3LdHdYq7ZtYg05cPOIjvavgmxrWdWH1L73tVtiRSmdkIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNQ3CK4Y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNQ3CK4Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E6FC4CEE2;
-	Wed, 16 Apr 2025 06:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744783916;
-	bh=Ux+wyNixqbSXxuEjmcaLENj8uIw5/U9ErqcvHgV9HaQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XNQ3CK4YwPP1CZEQN8BRnsixRhPe7Ikh7H7wKC0u4muW/bY6YaWFZhCGQ90t/KM6g
-	 Dg3qav/HR+STQaEBYuRDNJ7HWQ312ClAxuVTEpSkCSHdihBRMQVYzMh8Dr1/olUs1G
-	 iL9rHUYt1O0YDh9vBtewIMh60ksPb1PPeVFr8oEzmN/PHa6xU7DyYX33HAiWrUFyjF
-	 B3p7mydK1qdEJeLmXV6jyQQPucegiUS1ICcjnS9QKJaEK0NCAMl06J3BWsMbd3desa
-	 6bk+frmt3G4zky1mi3KRvZ6ZDX1fy+Hlca6Jnnuxe7dt5/LQmtW3zXVUgovvjyE3ex
-	 QfLQ3Qr8YBcrA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u4w02-000000004GE-3HYz;
-	Wed, 16 Apr 2025 08:11:54 +0200
-Date: Wed, 16 Apr 2025 08:11:54 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Dmitry Nikiforov <Dm1tryNk@yandex.ru>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH v2] media: davinci: vpif: Fix memory leaks in probe error
- path
-Message-ID: <Z_9KKrbKFDekGLOw@hovoldconsulting.com>
-References: <20250415223825.3777-1-Dm1tryNk@yandex.ru>
+	s=arc-20240116; t=1744784331; c=relaxed/simple;
+	bh=suSMq9iVHxQM5u7UB4YBN9mUydNJQLH2Jg1AhbkJWHs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TfQCnJLdhcQCp7nYdMDJvgeTrTLj8YXrpWhEOyYuiT0n0S2MVeiPglkJbE8HOAWH5AJKrZlecUI7e+EWAjkCEl1GLfiG8e1lpErP7fmVkfW7Fi8xGdd7zkwFTBRgkSssa7jEZpE4wnZ41/zwDrEWzFIaVEIo7reAh1dUgsHdUis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5thZ9013510;
+	Tue, 15 Apr 2025 23:18:32 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yqpkm3dd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 15 Apr 2025 23:18:32 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 15 Apr 2025 23:18:31 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 23:18:28 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <hch@infradead.org>
+CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
+        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <ntfs3@lists.linux.dev>,
+        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Date: Wed, 16 Apr 2025 14:18:27 +0800
+Message-ID: <20250416061827.2995095-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_9IxOypdO5Ks44N@infradead.org>
+References: <Z_9IxOypdO5Ks44N@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415223825.3777-1-Dm1tryNk@yandex.ru>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: BnqVxG8VK0WFqjPmkANnMIqWHjR1nEQU
+X-Proofpoint-GUID: BnqVxG8VK0WFqjPmkANnMIqWHjR1nEQU
+X-Authority-Analysis: v=2.4 cv=UZBRSLSN c=1 sm=1 tr=0 ts=67ff4bb8 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=Lu9379bB4VU3hevTGzEA:9
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxlogscore=736 lowpriorityscore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504160050
 
-On Wed, Apr 16, 2025 at 01:38:20AM +0300, Dmitry Nikiforov wrote:
-> If `of_graph_get_endpoint_by_regs()` fails, the probe function currently
-> returns 0, skipping cleanup. 
+On Tue, 15 Apr 2025 23:05:56 -0700, Christoph Hellwig wrote:
+> > In the reproducer, the second file passed in by the system call sendfile()
+> > sets the file flag O_DIRECT when opening the file, which bypasses the page
+> > cache and accesses the direct io interface of the ntfs3 file system.
+> > However, ntfs3 does not set direct_IO for compressed files in ntfs_aops_cmpr.
 > 
-> Also, if an error occurs during the initialization of `pdev_display`,
-> the allocated platform device `pdev_capture` is not released properly,
-> leading to a memory leak.
-> 
-> Adjust error path handling to fix the leaks.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: 43acb728bbc4 ("media: davinci: vpif: fix use-after-free on driver unbind")
-> Signed-off-by: Dmitry Nikiforov <Dm1tryNk@yandex.ru>
-> ---
-> v2: also fix of_graph_get_endpoint_by_regs() error path (Johan Hovold).
->  drivers/media/platform/ti/davinci/vpif.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/ti/davinci/vpif.c b/drivers/media/platform/ti/davinci/vpif.c
-> index a81719702a22..4839e34e5d29 100644
-> --- a/drivers/media/platform/ti/davinci/vpif.c
-> +++ b/drivers/media/platform/ti/davinci/vpif.c
-> @@ -467,7 +467,8 @@ static int vpif_probe(struct platform_device *pdev)
->  	 */
->  	endpoint = of_graph_get_endpoint_by_regs(pdev->dev.of_node, 0, -1);
->  	if (!endpoint)
-> -		return 0;
-> +		ret = -ENODEV;
-> +		goto err_put_rpm;
-
-This looks wrong, since you're changing an early success path into a
-probe failure.
-
-Either way, that would need to go into a separate patch.
-
-I was referring to the error handling for the pdev_display allocation
-earlier, which also needs to deregister the capture device on errors
-(and that can be done as part of this patch).
-
->  	of_node_put(endpoint);
->  
->  	/*
-> @@ -527,6 +528,7 @@ static int vpif_probe(struct platform_device *pdev)
->  
->  err_put_pdev_display:
->  	platform_device_put(pdev_display);
-> +	platform_device_del(pdev_capture);
->  err_put_pdev_capture:
->  	platform_device_put(pdev_capture);
->  err_put_rpm:
-
-Johan
+> Not allowing direct I/O is perfectly fine.  If you think you need to
+> support direct I/O for this case it is also fine.  But none of this
+> has anything to do with 'can use the page cache' and there are also
+The "The ntfs3 can use the page cache directly" I mentioned in the patch
+is to explain that the calltrace is the direct I/O of ntfs3 called from
+generic_file_read_iter().
