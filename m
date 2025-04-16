@@ -1,80 +1,135 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEEC1E1C29;
-	Wed, 16 Apr 2025 19:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2344E224894;
+	Wed, 16 Apr 2025 19:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744832191; cv=none; b=PktyomSdGIwO8AHHLa5RmFEBMjYwnDdZgM81CjQ8O42elYRYS5zVz2sfEPbweMqEYANDnXuK9wE1j8kYp/zWYDCFFKmW0Q9FcJbA3rkrL9RxhLZOyEh5UqnCcfY2XcLmFA5Jy5viV9Q6cHOtzc39uX2mdWypZEpEypeWd5WEXKw=
+	t=1744832495; cv=none; b=vABE4yvCj3FhWOuPYbooPthGUfM2l7zur1R0E+bQKc0njozMpeVUF9k0uXuM37a0b9zrS1mep+BiVzxLrZUgNR1fR/Y94ffA5JuUjZS3nMbZzTvnaxdwDEJQuaUbrSSUz9vGIeMCPDqWimLJ85M2sNF2bmKbm9Atj+QCfCj5YFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744832191; c=relaxed/simple;
-	bh=sk6ZmLktKothKrYB9u4OPRZZ9exvwEOGkfDKvVDQXFM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FzwYlJ0Cg/PqWqwMwL0YvCVgDEm6md4mcXF9ACPaG1TtD7u2XqHTUQiN5B/IOYvzjIZ7YFZCb2yqTCNTw2PihIQlc3m1yR/Z+QOAiZZRv6/ijtnuaRPEF6ylEN/q4ptMPAMJIHooXz9pIy2VHpYXdmaceDpuINFmJC+0Km40f9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=SyR+q4kC; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744832495; c=relaxed/simple;
+	bh=rmmU8DVE2D232s4Grqwa87/AQMyhUhLBZFcdHIL8y6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B8mfp/jz1Ila1zjB/RNPHM0jKatwMTqVcrsS5ahzkRiFfFqRJTxK+yCGzbXs7NUFgcmAL7jK+ikZspW7PqA3sbm0uWVyya71E2CcOHTtQcOrYSKJEeoHLM5lkTswFsSgGszw2vTrfrqQ/C17KJqH8IZrs3kW/DGSDPpgAEHdL/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1CU0cv3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SyR+q4kC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744832190; x=1776368190;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6RBUxFztchZw7glVy76c73uvPI+lQYsfYgGiS/Z1R6E=;
-  b=SyR+q4kCZBuo+JbSRBJfIkYhlr3m1JtTYHHZr3m8/5b0gaVk10CMXmWF
-   9TgBC3K5pMuUiTHNVXPXNbhwlOGbQqadDrkwvnjJk/k23InIufEZTBtx6
-   T0JXmjfZ0iGeYUmOFqwD7sPZ7h9+bkFFND/U/ESKyv4MdjdY5L7RgE56p
-   A=;
-X-IronPort-AV: E=Sophos;i="6.15,217,1739836800"; 
-   d="scan'208";a="736205495"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:36:04 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:32778]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.160:2525] with esmtp (Farcaster)
- id b2479079-6d46-40d9-b761-533cc65d24df; Wed, 16 Apr 2025 19:36:03 +0000 (UTC)
-X-Farcaster-Flow-ID: b2479079-6d46-40d9-b761-533cc65d24df
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 19:36:02 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 19:35:58 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kernel-team@meta.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
-	<ncardwell@google.com>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<rostedt@goodmis.org>
-Subject: Re: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter in tcp_probe event
-Date: Wed, 16 Apr 2025 12:35:28 -0700
-Message-ID: <20250416193542.19206-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-References: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1CU0cv3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 973FBC4CEEC;
+	Wed, 16 Apr 2025 19:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744832493;
+	bh=rmmU8DVE2D232s4Grqwa87/AQMyhUhLBZFcdHIL8y6Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=M1CU0cv3LvBNE9z/Yc2FX8HmZVEw6+6VcHYheF+OtcAspQDMz54hYzxIKWZvwthRo
+	 YT1EsO+WZi7BtRyHfkvTG0FKUDnj9lJwT5n0aIRL7Wthsq0lg2YYVTFoQ1meg+1Ima
+	 3TNlsfxUHGK1eiRBfKqoNzQpr1PI8xnwC3XALDeLdyMVCs8u6YVi52YBwDpAU9wUqZ
+	 nAHcQHAh5akG+JLkjXR8TxZQE4Ii8dVXDP1uTHng361Q3EZji9Qik0wctWROzkomu0
+	 Li6ZAWT29QPG/T2U+3K41jTI1Xnjax8vkfD5Tk0vVTWw8BmViUegb6QRhXh6nahaQs
+	 4dJO4kmWhKA4A==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2aeada833so13879866b.0;
+        Wed, 16 Apr 2025 12:41:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVNZpC9ovb3DDG2QHdEGEXuminCnBtpmlMjz8GMp8F0Yu9Vnb/TTN948eliPuIqK2al5TyejZ2BC5GxLg==@vger.kernel.org, AJvYcCXPu6keCHMhytuDYBGr/x8kxCrBf3DQVIlOShlh2Rla3rzCHT73diyXiMHQ0tFcbRCYEUXp/lI+2+zj6hk3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4jcTew8QTOHiIRkGFAX2rAhNvwBUJ4263xdFBYW4kuRxG5Bhd
+	BL4rYrCbB/ZA1WY+4pkj3SIIDycKDIwSAwQLxNKa6FL3vjXV1acOtRFvLk2TOkntJ9fgJbtJKME
+	3qRWYFU23AJaA1hYZkwW93IOlLL8=
+X-Google-Smtp-Source: AGHT+IEgaa/lF0B29FUztngMKiosbNE8d6mYtZEseWvSqOPDgclr+4nqD0zjKMj3ce/uu47GWIitbbPs25Ap3GHoykY=
+X-Received: by 2002:a17:907:1c0f:b0:acb:3719:3011 with SMTP id
+ a640c23a62f3a-acb5b44ed5emr4653366b.9.1744832492096; Wed, 16 Apr 2025
+ 12:41:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20250415033854.848776-1-frank.li@vivo.com> <3353953.aeNJFYEL58@saltykitkat>
+ <20250415155637.GG16750@suse.cz> <SEZPR06MB5269DCFA737F179B0F552B01E8BD2@SEZPR06MB5269.apcprd06.prod.outlook.com>
+ <CAL3q7H7z_iVmeuRNXQvvZseB9ntSDz9_tUTXB0KvrcsSQVJb9w@mail.gmail.com> <20250416191111.GC13877@suse.cz>
+In-Reply-To: <20250416191111.GC13877@suse.cz>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 16 Apr 2025 20:40:54 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H4_vNoKokn213rY2Q0MNkDLWSk7XRBqJLxfiw1ikRGM7Q@mail.gmail.com>
+X-Gm-Features: ATxdqUGFLnuNhPUgUv0nT_paFBRUcDj_6lgiv8IK1W8lqC_R5oeLvBTUezr2lF0
+Message-ID: <CAL3q7H4_vNoKokn213rY2Q0MNkDLWSk7XRBqJLxfiw1ikRGM7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] btrfs: get rid of path allocation in btrfs_del_inode_extref()
+To: dsterba@suse.cz
+Cc: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>, 
+	Sun YangKai <sunk67188@gmail.com>, "clm@fb.com" <clm@fb.com>, "dsterba@suse.com" <dsterba@suse.com>, 
+	"josef@toxicpanda.com" <josef@toxicpanda.com>, 
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "neelx@suse.com" <neelx@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 16 Apr 2025 10:06:12 -0700
-> Change the tcp_probe tracepoint to accept a const struct sk_buff
-> parameter instead of a non-const one. This improves type safety and
-> better reflects that the skb is not modified within the tracepoint
-> implementation.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+On Wed, Apr 16, 2025 at 8:11=E2=80=AFPM David Sterba <dsterba@suse.cz> wrot=
+e:
+>
+> On Wed, Apr 16, 2025 at 02:37:33PM +0100, Filipe Manana wrote:
+> > On Wed, Apr 16, 2025 at 2:24=E2=80=AFPM =E6=9D=8E=E6=89=AC=E9=9F=AC <fr=
+ank.li@vivo.com> wrote:
+> > >
+> > >
+> > >
+> > > > Also a good point, the path should be in a pristine state, as if it=
+ were just allocated. Releasing paths in other functions may want to keep t=
+he bits but in this case we're crossing a function boundary and the same as=
+sumptions may not be the same.
+> > >
+> > > > Release resets the ->nodes, so what's left is from ->slots until th=
+e the end of the structure. And a helper for that would be desirable rather=
+ than opencoding that.
+> > >
+> > > IIUC, use btrfs_reset_path instead of btrfs_release_path?
+> > >
+> > > noinline void btrfs_reset_path(struct btrfs_path *p)
+> > > {
+> > >         int i;
+> > >
+> > >         for (i =3D 0; i < BTRFS_MAX_LEVEL; i++) {
+> > >                 if (!p->nodes[i])
+> > >                         continue;
+> > >                 if (p->locks[i])
+> > >                         btrfs_tree_unlock_rw(p->nodes[i], p->locks[i]=
+);
+> > >                 free_extent_buffer(p->nodes[i]);
+> > >         }
+> > >         memset(p, 0, sizeof(struct btrfs_path));
+> > > }
+> > >
+> > > BTW, I have seen released paths being passed across functions in some=
+ other paths.
+> > >
+> > > Should these also be changed to reset paths, or should these flags be=
+ cleared in the release path?
+> >
+> > Please don't complicate things unnecessarily.
+> > The patch is fine, all that needs to be done is to call
+> > btrfs_release_path() before passing the path to
+> > btrfs_del_inode_extref(), which resets nodes, slots and locks.
+>
+> But this leaves the bits set, btrfs_insert_inode_ref() sets
+> path->skip_release_on_error, this should be reset. In this case it may
+> not be significant but I'd rather make the path reusing pattern correct
+> from the beginning.
+>
+> My idea was to add only
+>
+> btrfs_reset_path() {
+>         memset(p, 0, sizeof(struct btrfs_path));
+> }
+>
+> and use it in conection with btrfs_release_path() only in case it's
+> optimizing the allocation.
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Honestly I don't like adding yet another function to do such "reset" thing.
 
+Leaving path->skip_release_on_error is perfectly fine in this scenario.
+If that bothers anyone so much, just set path->skip_release_on_error
+to 0 after calling btrfs_release_path() and before passing the path to
+btrfs_insert_inode_extref().
+
+This is the sort of optimization that is not worth spending this much
+time and adding new APIs - freeing and allocating a path shortly after
+is almost always fast as we're using a slab, plus this is a rarely hit
+use case - having to use extrefs, meaning we have a very large number
+of inode refs.
