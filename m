@@ -1,63 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4E0233709;
-	Wed, 16 Apr 2025 08:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6277E17A313
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:45:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793127; cv=none; b=ZhEg8u9I345kHBxpD/5cgustLW8hxNeW2Hb7kD0u4ENlGpAnuP/3A48l6EAQ6j1j/9now9ajGEAIlCbzZdTj0tNW5JyOC7zAnKRjORK65nqziLzZDagGlHKbO4a5FjHe4u70jaul6j3e4NmmLncj/NxNWAGQ7Woti8vMnDD2xf0=
+	t=1744793149; cv=none; b=UtyIegtbGfsY6+NQzQtZ5XKLb/8OOslLPLu4ucZQeEBce/sIbyE+wtlEUb+5TomBEbjhwn77mS7oJp1W3/lKHQO6Ibw1rFb5zb+IZSVMusEPMxbeU3487nFC5N+ccRQjx9pTNCBtoDO31LP941ni96s8FmOMrX+TRODegexdUDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793127; c=relaxed/simple;
-	bh=/tMw4MFQJxenXUlcjgLjfOEVd8C3ZeD+4Z/fOmZuipI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NE7p6ALhRp1yLAkjyueuKjLKqPkSY0jf6/HA2irJYlKebKFcdzUk2stvC0DzGOsk9C7mHpWg6LP0ieojx2qKyWoHAXhwRnQHaAyohWKIxmlcoKhJTF3XtdBmAZrJe1mcgfgJ51djqXpG3FbgjKS2CWARffQBp1Y16Aq5OYZKRR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+W5qO33; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744793149; c=relaxed/simple;
+	bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ht+DEj2ztet74e0MsQveLaOc6sle+VBUZkXVIPufae3NffKqKNJZgmTGJxez/1bbIjpfDrLJ8jd6Kj7EC+eLFGhVks6GSrD52u1USSXerh6+TSUVkK3VGbDkDH11Jk6wnNbUND1LdZ7V2i6DoK8mcYSlovuSc29ka05n/eQFdQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W+xaIO1o; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+W5qO33"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 382BAC4CEE9;
-	Wed, 16 Apr 2025 08:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744793126;
-	bh=/tMw4MFQJxenXUlcjgLjfOEVd8C3ZeD+4Z/fOmZuipI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=u+W5qO33cAizx5usKDDg9t5JScxjiWsZy+mtMEHuLz9XMbzAwGCsUlMEvs+zY0Swa
-	 nDoljfZW9tqShLxKroe70fLXASgYRpSi7/K9L/dl8skNTStOsofMPR0+HSXqrNQHBt
-	 XyKGNLNpY7qCwQLFjZnRoxAf0sW2p6qIObz8gzrRNE8gZSK+JUjaug9ezC9VZ5qp87
-	 UgoF1AoUSiFTusE1xre6d1CK5tYHgRxpvroQNRqFdDXDnsjaaAUEO00GChNcuKbylq
-	 HVqp7sBoP9jK8pVa12S+oAQkd3F2fRNfEpX4OQByxWXOxNzvM5wI9kc9kBZOSJFKoe
-	 ww+HyQb5om0jA==
-From: Carlos Maiolino <cem@kernel.org>
-To: djwong@kernel.org, long.yunjian@zte.com.cn
-Cc: djwong@kernel.org, linux-xfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, mou.yi@zte.com.cn, zhang.xianwei8@zte.com.cn, 
- ouyang.maochun@zte.com.cn, jiang.xuexin@zte.com.cn, lv.mengzhao@zte.com.cn, 
- xu.lifeng1@zte.com.cn, yang.yang29@zte.com.cn
-In-Reply-To: <20250315143216175uf7xlZ4jkOfP5o3oxuM4z@zte.com.cn>
-References: <20250315143216175uf7xlZ4jkOfP5o3oxuM4z@zte.com.cn>
-Subject: Re: [PATCH v2] xfs: Fix spelling mistake "drity" -> "dirty"
-Message-Id: <174479312384.188145.15074148652154459631.b4-ty@kernel.org>
-Date: Wed, 16 Apr 2025 10:45:23 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+xaIO1o"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30ddad694c1so65375861fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744793145; x=1745397945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
+        b=W+xaIO1oiPuwbY7E1W3UhAIGLbErFO5qIdBXyplE1PfRlfYU1bCE3bgq8gB97Y0Oot
+         BugGl5e3e4AWU6gjT8AfxzPr9W20x0hc7AVWKFOxz4Y0AgPJge60wCFI1NQVIEdisePe
+         dql+BKdsLEl1sFiluwZb2GnO1FiE0+XM+0IudWIxCkakzl/Nk0EaF4mE5uat+MZ7xn1T
+         8vz9s+/sUcvDlRp39H5WoZeZH2bRaJEvYOZm4SrgHThNJsrt3C8fU3TjTLvNUlDKGmJb
+         GDN66QeliDt2mnz/whBg3ypzOCs+X0qhxJPGquonIHPOwk5AYV3rATXnx8fxOYC5Njfj
+         uy5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744793145; x=1745397945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RE98C+gHqUp+2/XX8bTBngu2H+KXKruUzo51s1pekZg=;
+        b=PXYklL081tScPQ7VM838fJjgKuPcultlRO0tcEtJtTyIqxEbELMd2he4tFbvZ5PXld
+         kmUHsZAWqXLw4YePS9ZEBeqs9q1cgnbZ0zhqHGWT/gLM+aUqA4A5uasphGMlzlKVx06z
+         cb+fbRZG1Am1+qz0gLgvGNnViO5JpDIRolT9wGqexP7hDKEO8VHT62rvSkd2RppD2KR1
+         yzPllurhE84t/c6BXLQvTUnAG3BG1yzZ2XKm6ZJxfMqZe/YDMxtkDTrFTuSYBvh5rBIa
+         ZDj7qZVDLP6PRpUxXzuQK0g5XurZnGICmDcW4KhpU3dzaHSqFcRazqKtOC+wIB9nZdJt
+         XDPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6JFD3Yqsrg720bioKVqlSCNDQeKeK0YHwjtikaXpKPqzjeIgvx5clGdewo+Ia04+5cKCn3fUFBCcBUeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydRtCQT7mvbVewZED90J99PJfZmi1Vp9TtBTjOHEBmkrZL0OIw
+	oo/NX+KqrtgysAR6pCKJzoq0tR6kDy1qkOkNkP81HSI5fInbV+ZlgGgQswmEfT2RTrR1vwE8Srl
+	/lC+NRmYOaE7XPi256feRiGmAuuelQTHbuB8tWA==
+X-Gm-Gg: ASbGncvqbSAKdJuIT0XlXG1t+hckGwHhI7e75djYDzuFlcHfdwEWyQ0uqZY14pmf4VX
+	Xxr+k7q9Yb41zzpoeHeKYd80mXiGE3IWBwlwKGQM/jyamY6sGVCCWFua1PsUwCrUFh4GQBkw4WY
+	uFacXAy/20o2qEQCTZPwcyYg==
+X-Google-Smtp-Source: AGHT+IFmYxdzrZGUbGtKMa+u9hnYq1xmfRbmwLNj5G838Fi5mSqfD8BB7+HJ6tHui63K85iCuSDBoWduZ9oyUn/Qp4s=
+X-Received: by 2002:a05:651c:50b:b0:30b:9813:b004 with SMTP id
+ 38308e7fff4ca-3107f73175bmr3853981fa.34.1744793145362; Wed, 16 Apr 2025
+ 01:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-6-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250415111124.1539366-6-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 10:45:34 +0200
+X-Gm-Features: ATxdqUFF4O5obPmrMzaby6-Pz9kGjUdZrISDS5QYruNwCIm12lV8IvCKMpBO_AA
+Message-ID: <CACRpkdYvbbfKoCAJF8R=74tH3avEPa3K-xe0Y8aNJg_aZLDfvw@mail.gmail.com>
+Subject: Re: [PATCH v1 5/7] gpiolib: Make taking gpio_lookup_lock consistent
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, 15 Mar 2025 14:32:16 +0800, long.yunjian@zte.com.cn wrote:
-> There is a spelling mistake in fs/xfs/xfs_log.c. Fix it.
-> 
-> 
+On Tue, Apr 15, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Applied to for-next, thanks!
+> There are two ways to take a lock: plain call to the mutex_lock()
+> or using guard()() / scoped_guard(). The driver inconsistently uses
+> both. Make taking gpio_lookup_lock consistent.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[1/1] xfs: Fix spelling mistake "drity" -> "dirty"
-      commit: 1c406526bd84f1e0bd4bb4b50c6eeba0b135765a
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best regards,
--- 
-Carlos Maiolino <cem@kernel.org>
-
+Yours,
+Linus Walleij
