@@ -1,114 +1,142 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1502184E;
-	Wed, 16 Apr 2025 12:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1CB11CA0
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808200; cv=none; b=o10pV+mcBeH8P8GxE8T2AB9gHntnY7E0NuoHsjQ//DWTWkv/1+La8krIZP6pQo5v3NJElNSbHX1n29J4Rc4qNKhE8oJMJv1rDuT8fLvjGT2EYU7wvhXPXw5qkB9OuEW6qXA5UcZ3kLYD/d+xar1At2ntx/pHtHczoHLjstTdeR8=
+	t=1744808246; cv=none; b=HdIXzzalBRrRMHvwspnRUhNe0hVE3MISuqKjJJDakx+4ANlTeh0Dy+Pq1FJDwbpClX/TvhuZCnAI1qKmOzfSVMRCxwWaf2PvQcfG9KbHVu/L5CmluTMs5+5ITiJUKEwS1jkvzA0HpjyxvS8oXnHx6kQBud9MU7JO795YIo4xSww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808200; c=relaxed/simple;
-	bh=uX3O87AWZPxfZkORO3W8nePdskRN+Rjv+6WspIrqadg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=sbvCzbI3slP1mYTuPmm2xv91QeWfnKVe2qTY2y/rGX+LV4YVWPoxpTvSg3aL+P7TXThjNjD3YiPwHfwwmOJRcjhaX5yW3PcpG3TOo+VrC++iPlRYuB2ikyhmwiUbhlWQ/UxJKVsPr8CSCXPpOZKZZrJ/oeFYsdcVftF6xJ4GhmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HSjPNwEZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aHwSIA/m; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HSjPNwEZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHwSIA/m"
-Date: Wed, 16 Apr 2025 12:56:32 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744808197;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A2dWZBf1NHWVJPeEDkpar49IOCkSHszrPGKrNxrFs4o=;
-	b=HSjPNwEZL26KED+0zayVcbOPthKjiVqxtYAFNzWmjHQgFMCLR+xy81EQFPilliUZX8BNE8
-	ORU7K/sjhNDnd6bJdxCK2Wd/T+xoKHFCcOUSLKvGUWrxtoiqcNQwJV4ONBe+OZQQNxAMBO
-	/gD/OLysfXJTtTv2Y47BtxLVjeZx7VIcDOJrlpFu+Fnt++ykLxx5UkfqBoCNK81M6GRkKQ
-	KrN75kYVdkC0K0he3xzPfeaVqLhTabfDUldJHtmwQuK+/a/fkORA2cO654cAwEAYwQRtYc
-	vZ+p/rDmFjBUXNYvbV4vBJZxAb82IboO9Gsh3muujG7B57HeDPv23iy0ylurMA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744808197;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A2dWZBf1NHWVJPeEDkpar49IOCkSHszrPGKrNxrFs4o=;
-	b=aHwSIA/mfEgVl1TUHHGOGdNtlFtWnLYjgb0ifs0B87OyQCuPBUP2nkQkFpfn9qwjdRftUk
-	IGU+j3CSsBmH6hAA==
-From: "tip-bot2 for Peter Robinson" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/irq-bcm2712-mip: Enable driver when
- ARCH_BCM2835 is enabled
-Cc: Peter Robinson <pbrobinson@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250416082523.179507-1-pbrobinson@gmail.com>
-References: <20250416082523.179507-1-pbrobinson@gmail.com>
+	s=arc-20240116; t=1744808246; c=relaxed/simple;
+	bh=hMbhS79Mfn3XqB2vVxZ9w/HPqdOZ3hTT8ZETPJC/w5k=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TvjFJl16D/1SmEHc8oIQClJl1zaRag+abT8Unu3C7RZtuEd3/z7AxxYqXYR9caHF4drZ0tDIDOyatkfbkkeBWXCSQYpbHKvr3o+6xyPQM9fJcbhKvKulYtv4xLbbxGAZMDIrIa2dDwKiCy7RQYDCsg8s6Nj98RNfHMf5VvxrhpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d586b968cfso89370485ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:57:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744808243; x=1745413043;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YNAm+gwGmliDc62AX9Wt9ewTcdS/eTMF5peaZWNPeKU=;
+        b=ZOaa+dn7xHbyossJPMlEiqPzAZGeXjgxtry0t7NyICHYwkqHyAOcVG1EIZFRXO7+nQ
+         2jbl6lliaLptWWxNre+Cl31R5uTAWzqyXBqm8cotuCLHMBL+xLPzSnN4nhTPu+E1faN9
+         kFxComGyutJBlbhiiZ0hQGAMvv9tDKdnsuRuNTnPXZQJIWhHvx9vUONTCHihFAgldCXy
+         YsXgo+sZT9mqoX5SuJMTsdpdm/7VVpmWMzvmqdajBpacYS2M9eJCnRuQyc8TEoO0lr+H
+         RfLMN0iM09V1ZmZ/FYsp13RkvxokHx9rXW4SppNx/khLzCj0/0qPSkAoww7UwZ4SzDSB
+         6CxA==
+X-Gm-Message-State: AOJu0Yw1ePGb9rvW97r7QfzPTxF9JiXlxJ0/CBWcz7+O28w3kWx6Sf13
+	z36NMiDcM7c3x4zZ+Z4pqhBvmAsvMgm7QqtoXVG28H49MBKEmaczRrZzCNJ83mweXRXn8erGI3O
+	S9DjMotE1CruzTYUSJ2r1K0nquTzKxV0z5ubX07r3RDUiz0pZR6n+9fpCgg==
+X-Google-Smtp-Source: AGHT+IEY2/JxH5fF9jbc8XKb8qFntQdM+RGVVdkkk+xhSLw6bFB9Mo2uLJDTvXw8tFH9bxn5OkJODujswRD5/C6zaaoaTVLbx77z
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174480819279.31282.1393797277803876115.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:148b:b0:3d5:df21:8481 with SMTP id
+ e9e14a558f8ab-3d81598394fmr18668225ab.0.1744808243706; Wed, 16 Apr 2025
+ 05:57:23 -0700 (PDT)
+Date: Wed, 16 Apr 2025 05:57:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ffa933.050a0220.243d89.0004.GAE@google.com>
+Subject: [syzbot] [media?] WARNING: refcount bug in dvb_device_open
+From: syzbot <syzbot+0aea3ca127fe06c384f7@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	mchehab@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the irq/urgent branch of tip:
+Hello,
 
-Commit-ID:     9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24
-Gitweb:        https://git.kernel.org/tip/9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24
-Author:        Peter Robinson <pbrobinson@gmail.com>
-AuthorDate:    Wed, 16 Apr 2025 09:25:17 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 16 Apr 2025 14:39:25 +02:00
+syzbot found the following issue on:
 
-irqchip/irq-bcm2712-mip: Enable driver when ARCH_BCM2835 is enabled
+HEAD commit:    e618ee89561b Merge tag 'spi-fix-v6.15-rc1' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=109b8a3f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7a4e108575159039
+dashboard link: https://syzkaller.appspot.com/bug?extid=0aea3ca127fe06c384f7
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-The BCM2712 MIP driver is required for Raspberry PI5, but it's not
-automatically enabled when ARCH_BCM2835 is enabled and depends on
-ARCH_BRCMSTB.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-ARCH_BCM2835 shares drivers with ARCH_BRCMSTB platforms, but Raspberry PI5
-does not require the BRCMSTB specific drivers, which are selected via
-ARCH_BRCMSTB.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/6e9ff64c0a63/disk-e618ee89.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5a0301cd26c2/vmlinux-e618ee89.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d51cf55acedf/bzImage-e618ee89.xz
 
-Enable the interrupt controller for both ARCH_BRCMSTB and ARCH_BCM2835.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+0aea3ca127fe06c384f7@syzkaller.appspotmail.com
 
-[ tglx: Massage changelog ]
+------------[ cut here ]------------
+refcount_t: saturated; leaking memory.
+WARNING: CPU: 1 PID: 9920 at lib/refcount.c:22 refcount_warn_saturate+0xd4/0x210 lib/refcount.c:22
+Modules linked in:
+CPU: 1 UID: 0 PID: 9920 Comm: syz.5.1429 Not tainted 6.15.0-rc1-syzkaller-00288-ge618ee89561b #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:refcount_warn_saturate+0xd4/0x210 lib/refcount.c:22
+Code: 7d a1 0b 31 ff 89 de e8 4a e5 ed fc 84 db 75 dc e8 61 ea ed fc c6 05 2f 7d a1 0b 01 90 48 c7 c7 40 fa f3 8b e8 ed 7b ad fc 90 <0f> 0b 90 90 eb bc e8 41 ea ed fc 0f b6 1d 10 7d a1 0b 31 ff 89 de
+RSP: 0018:ffffc90002ee7908 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000cd2b000
+RDX: 0000000000080000 RSI: ffffffff817ad005 RDI: 0000000000000001
+RBP: ffff88802a664210 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: ffff888033636a80
+R13: ffffffff9afc7fa0 R14: ffff88802a2f28b0 R15: ffff88802a664210
+FS:  00007f9f6790e6c0(0000) GS:ffff888124ab9000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32715ff8 CR3: 0000000039f06000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ __refcount_add include/linux/refcount.h:291 [inline]
+ __refcount_inc include/linux/refcount.h:366 [inline]
+ refcount_inc include/linux/refcount.h:383 [inline]
+ kref_get include/linux/kref.h:45 [inline]
+ dvb_device_get drivers/media/dvb-core/dvbdev.c:624 [inline]
+ dvb_device_open+0x2ed/0x3b0 drivers/media/dvb-core/dvbdev.c:106
+ chrdev_open+0x231/0x6a0 fs/char_dev.c:414
+ do_dentry_open+0x741/0x1c10 fs/open.c:956
+ vfs_open+0x82/0x3f0 fs/open.c:1086
+ do_open fs/namei.c:3845 [inline]
+ path_openat+0x1e5e/0x2d40 fs/namei.c:4004
+ do_filp_open+0x20b/0x470 fs/namei.c:4031
+ do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
+ do_sys_open fs/open.c:1444 [inline]
+ __do_sys_openat fs/open.c:1460 [inline]
+ __se_sys_openat fs/open.c:1455 [inline]
+ __x64_sys_openat+0x174/0x210 fs/open.c:1455
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9f66b8d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9f6790e038 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007f9f66da5fa0 RCX: 00007f9f66b8d169
+RDX: 0000000000000001 RSI: 0000200000000000 RDI: ffffffffffffff9c
+RBP: 00007f9f66c0e990 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f9f66da5fa0 R15: 00007ffdfcf6c128
+ </TASK>
 
-Fixes: 32c6c054661a ("irqchip: Add Broadcom BCM2712 MSI-X interrupt controller")
-Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250416082523.179507-1-pbrobinson@gmail.com
+
 ---
- drivers/irqchip/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index cec05e4..08bb3b0 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -114,8 +114,8 @@ config I8259
- 
- config BCM2712_MIP
- 	tristate "Broadcom BCM2712 MSI-X Interrupt Peripheral support"
--	depends on ARCH_BRCMSTB || COMPILE_TEST
--	default m if ARCH_BRCMSTB
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
-+	default m if ARCH_BRCMSTB || ARCH_BCM2835
- 	depends on ARM_GIC
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN_HIERARCHY
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
