@@ -1,155 +1,81 @@
 Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0E221DA5;
-	Wed, 16 Apr 2025 21:55:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD9323237F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:56:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840560; cv=none; b=Tr6S7OSW9znjsU4YWOYhR/5MaG0vnPPz/uxFjyC6YhKBEKYZ3kA8ECJbcEZbq9sXHf38BoDw0juvi86m1P95SaYSk2Sk7uaouqRdmZDB4c5QEE8U0j4/pS8lj89puaiG7fMSIC3x4yUWpXqdAxc/gZ0rd4usbpD4uimnTFb0PZI=
+	t=1744840577; cv=none; b=kTQESN8eEASnYMYSHuqgw03zMd1qwowEeZCMhlf1HCuo86wLyH1A+xDxDPRZUA6ADScqj5wn3SL5parcIV0y2vIUmxpc2AFFCELlG4JweraA/t8QO9COLUsQjl1JPH4JsxcG2TR9D617XcAKa/HHx9KALYyzOxvHtsuDIUfoTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840560; c=relaxed/simple;
-	bh=lhcwbKPVRhdT6kYZMbI6MCrEmej6mQZJQIMAK/iLsaQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B2g3z/Cjkh4BTyxf999RCI55Jsl67cee5TnydrVBcrvWNk/bTIo71ueImvpJ8H+f4Ygw+8dOn3fffIKBJdBYqp00GleEw3ZxanTaynrgqwFbI44/nQkcQWwo9EqPEzgd+6DWF1rO3XELearuQJOzCWGV2FG5ufeVR6NWKE4mI+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNptsbOK; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744840577; c=relaxed/simple;
+	bh=rNJlO4/q80kk+PEPtW5ue8B+S2Qcu1i/6aKbO8a3aoI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=j9TrRmO/fe4goiUIV65M0bveAlTku8Ochr+XkQMBrLVEeWaUgFdW0M29W8WmRaBY+UYeWvBaziTmEUk/7HWc1u2EIGhI2xcVJAa+mDa+xjmhrw3BGiTIxWGxv33GfHHDfZ+miYXfxh1kNqLJbrllnZ/rpS9tlFWQoLg5Vd4LnPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hesling.com; spf=pass smtp.mailfrom=hesling.com; dkim=pass (2048-bit key) header.d=hesling.com header.i=@hesling.com header.b=Vexj+C7U; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hesling.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hesling.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNptsbOK"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399838db7fso160774b3a.0;
-        Wed, 16 Apr 2025 14:55:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hesling.com header.i=@hesling.com header.b="Vexj+C7U"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-739be717eddso51987b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744840556; x=1745445356; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=hesling.com; s=google; t=1744840575; x=1745445375; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
-        b=KNptsbOKsYCMGMlV2Yp+fhWpI9vvmHurRB+pV07gE/Iw+CxJjM7dcE8CJD8LJJu0Ci
-         9tMWZsFUBacReanciMO8qFepa0bvK81h5t/hpLgZnKT73Rv5TgTwmLcDYSM+6G8PRHZc
-         u96z5zGGecgf53XnVT3rG8zCHuZB7X/zDy39RTf+xxpEtEDbdDzGFt/QbQ9hsjIGOLfn
-         dU1iUd0pzapdYS5XwoT4bxaR9Vj6pHi1nHV5xJgnszmbpSy/mIx7xAQrecO/VSzqYrmF
-         sOTwZUDMq5D2WSKq2cubVI9ovGjRu5oveABC9bOVf5KJOoGxdL4KZKcTVn1XQW7Fyf1E
-         qJSQ==
+        bh=rNJlO4/q80kk+PEPtW5ue8B+S2Qcu1i/6aKbO8a3aoI=;
+        b=Vexj+C7Ul07JQBq2y0L3MzXMGWw8lqcRiwvvv0Hy+9AeJ5BM80EP3vopa3KHzoXMtx
+         dXacwweP011CQBSX1KM0N2hyu9wBxnVX+x85L0BlRLdbtq45VuVqskKjrloi8TGZAVCY
+         B4u/hgDj1STtVZvIb1Bg0aOU6zTDciOOQ5XaaPW2OeqHTYUauJLWgWWoPMzVAZIPd5TJ
+         8Zx450dbP419MinyygHSiSbWF7VypD6baQc69dQDP9mRiJC52xNvZ4hgPzTlq/QNU0kT
+         BstyTu/LwMUEHlx/kO7D7Y/sBcKfZWeBb/cCQeJPNsgcSTsKYLd+cmvn4ZbWpxClfZPD
+         BRmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744840556; x=1745445356;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744840575; x=1745445375;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
-        b=Yb92iexwJkQwjwxg+UtmFA0UqFwB2qsqsAyG3kIu6GGDXd116C2FUBk7AurK/kQZb5
-         3j7xBeslbgvBIWAB8coHaK9uU1NHsUJzzpBY3a0/ZAQOCLHgTaNfe8hJbGrHntDdT7TR
-         YDYM/QwcUxJp8d0J0QmiXLzrhsr81J76yY3D/hkj5G2V2xukcd/+yFCLnUgmS11t7gkX
-         RDmgD7Wm9EqBaLLZpHuK8aftfdHyoJMvQ7RzBYAI9mpVNIwL+TzsL1lmZ8QNJTSBPMDd
-         TW9F35MpLp/faeWAjfNfDvbKqAwQ8kuxfdOOEJKFNIrnT7DrHi7B673d8TgNroJ2GUvJ
-         36+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVRWoBGilHhFPbFn+7F73L3q4/skgLbSSNAdiX5+YrUHtZe+7W3Eev+KlZycPexrjce0AuWZuHVLfOOqj7Y@vger.kernel.org, AJvYcCVevcOy5NnC+aFvKuxvXoVj2390lW3mk/a17fH6w+nYScUIy+sBhU3AYmuvvY/tb4a+ZQAmeNl/xPRznW4/je0kpAnc@vger.kernel.org, AJvYcCVh6q+SEo7qZNgnzIEc8GU96cDDdIE5xL4O88dCAlRkXccJPs3yjbn0MG/PO5TS9uohHFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4wyPfUUUYQhdgamXc+Xu3CUXgzr/ELd15iC16OIyTdLDfhXQM
-	nwpR1bKsjgLNJu9o6cTn5XP3U6wCUeHz2Q8NtS98FFH2qoR+aBw9R/WcQiYz8gx35f/3yOnTbir
-	WE0LmtVQ9d6Gqh4y+psEaHw0CiM0=
-X-Gm-Gg: ASbGncvBT3wmBIiXGa9/TvDf8SvBt2uKqVCjU5D+uHxbElebQLQcklC0wwz5KWX5KpH
-	eUihz4QreXEAHpQu1ValI9Q02MB6dcvfAA9bWKvLIuhSeL5akNiAeJGUDtCSl1+GrovZUPZ748K
-	LKyuKb0cakMTswC7wMbQA62R4yXetmo5tPSenzgA==
-X-Google-Smtp-Source: AGHT+IHvIQixrAQdwsCTdh1GAxix6g9Del+gDgRZCEmjPlvhovZqA/cUFeAPLqBhVqXk0OeKqvy7+iSvRcbZ/ddq5Co=
-X-Received: by 2002:a05:6a00:35ca:b0:736:476b:fccc with SMTP id
- d2e1a72fcca58-73cf2a7466bmr675709b3a.8.1744840556239; Wed, 16 Apr 2025
- 14:55:56 -0700 (PDT)
+        bh=rNJlO4/q80kk+PEPtW5ue8B+S2Qcu1i/6aKbO8a3aoI=;
+        b=pRRD+pvxtz46mA3BW4Adqa1dorrkEiSSy9Post1rUnDDpJXvt2LgZxpFJWUVo60Gt8
+         tv7olEpbF9sHaHB9+yxW8h1urdhzgFo1H6cvYQQ0Q/lR/qxU74hE0zjVsTulZfq8NwSf
+         pxj2eESI9XlMvUeaH9QSE3VSOyXwPLbHh8FurpS5z8UIDsFkUDi/j219R8/pPzBCCuM1
+         cU3daBHGr1A0lDPmjzbn/hReVvs6yD+wQidVSY50NjyQwNYbSCjD1Ftb0ItkHMwT5+j8
+         vqUkJpv9kCNnzc5/iN4szExkroNOjCrV1VjOw3uqUkDt0V1K/IysQm+5q33gobbZNLEh
+         z00g==
+X-Forwarded-Encrypted: i=1; AJvYcCW5EN9jPiuBT63cgwIoIXeD25r/3mP5VJ+zmf02KoADZmTV/G7VFsO/lotf28Ifl5XeowqWvFBCUlVKjPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbVeT2YpKZpkWw9bxXqQQRTkWW1x9D6GCMOF82QaXz6zJKCt2J
+	+EC9T5N5vAWxvytrMpiHOTEhDceR/a5EDxYOMdLod4ubX1ndsAwNBIPooGtcyFw=
+X-Gm-Gg: ASbGncvCWXE6AUAFR877lINbh9nmNlyZ4+Kilp8o6GrVj/Ybif6sJShjeUTQFtij/Yi
+	FMkrF5UzBXbIU4VrTkRpCWMXTel5aXpq5DQjRKtw4ZAY92Qkt5nk6+ueDn51/sS+mJ1HasQMHml
+	046vqa+jpTJcky7w/9geaiv5wkFLL01aX6QzsD3zP1wZF+D7DXIyes7sWIdHX4bEP8DFuaC06/U
+	lUQ4XGytvbTFBUUPknkEz8BX8L9eDsBGsmNjnMmY5s6JAnayOO/bu+U+gV2/udg0fv3vFAg5EL4
+	trMB0Qa+l7KQwXd9vSpFPI/Tpoeak90zs1e4ziakwarAMBBF/A==
+X-Google-Smtp-Source: AGHT+IHNgzQj47NKKgEqJD5f4I6iY7S3hMdvrSvGtw/poQtKH3L1W5/yAej/xvhEAAGShLlDJSIYQA==
+X-Received: by 2002:a05:6a00:ac2:b0:736:3be3:3d77 with SMTP id d2e1a72fcca58-73c267c9faemr4932907b3a.16.1744840575375;
+        Wed, 16 Apr 2025 14:56:15 -0700 (PDT)
+Received: from craigwork.rex-boga.ts.net ([2601:646:300:8200::b8b4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230de24sm11210134b3a.136.2025.04.16.14.56.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 14:56:14 -0700 (PDT)
+From: Craig Hesling <craig@hesling.com>
+To: johan@kernel.org
+Cc: craig@hesling.com,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	sboyd@kernel.org
+Subject: Re: Re: [PATCH] USB: serial: simple: add OWON HDS200 series oscilloscope support
+Date: Wed, 16 Apr 2025 14:56:12 -0700
+Message-ID: <20250416215612.39029-1-craig@hesling.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <Z_9PssdqzDrAmgUb@hovoldconsulting.com>
+References: <Z_9PssdqzDrAmgUb@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410070258.276759-1-yangfeng59949@163.com>
-In-Reply-To: <20250410070258.276759-1-yangfeng59949@163.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 16 Apr 2025 14:55:43 -0700
-X-Gm-Features: ATxdqUEri2B4k1JC2L-7cp9JCUkFXx4Zbp6ziY-0nhDjM4z8AgOOsHlwGfpeeCA
-Message-ID: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
-wrote:
->
-> From: Feng Yang <yangfeng@kylinos.cn>
->
-> Many conditional checks in switch-case are redundant
-> with bpf_base_func_proto and should be removed.
->
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> Acked-by: Song Liu <song@kernel.org>
-> ---
-> Changes in v3:
-> - Only modify patch description information.
-> - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfen=
-g59949@163.com/
->
-> Changes in v2:
-> - Only modify patch description information.
-> - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfen=
-g59949@163.com/
-> ---
->  kernel/trace/bpf_trace.c | 72 ----------------------------------------
->  1 file changed, 72 deletions(-)
->
-
-All this looks good, I checked that those functions indeed are allowed
-in bpf_base_func_proto. The only (minor) differences are capabilities,
-bpf_base_func_proto() correctly guards some of the helpers with
-CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
-doesn't seem to bother (which is either a bug or any tracing prog
-implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
-
-But I think we can take it further and remove even more stuff from
-bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
-(perhaps as a few patches in a series, so it's easier to review and
-validate).
-
-Basically, except for a few custom implementations that depend on
-tracing program type (like get_stack and others like that), if
-something is OK to call from a tracing program it should be ok to call
-from any program type. And as such it can (should?) be added to
-bpf_base_func_proto, IMO.
-
-P.S. I'd name the patch/series as "bpf: streamline allowed helpers
-between tracing and base sets" or something like that to make the
-purpose clearer
-
-[...]
-
->         case BPF_FUNC_get_current_uid_gid:
->                 return &bpf_get_current_uid_gid_proto;
->         case BPF_FUNC_get_current_comm:
->                 return &bpf_get_current_comm_proto;
-
-I'm surprised these two are not part of bpf_base_func_proto, tbh...
-maybe let's move them there while we are cleaning all this up?
-
-pw-bot: cr
-
-> -       case BPF_FUNC_trace_printk:
-> -               return bpf_get_trace_printk_proto();
->         case BPF_FUNC_get_smp_processor_id:
->                 return &bpf_get_smp_processor_id_proto;
-
-this one should be cleaned up as well and
-bpf_get_smp_processor_id_proto removed. All BPF programs either
-disable CPU preemption or CPU migration, so bpf_base_func_proto's
-implementation should work just fine (but please do it as a separate
-patch)
-
-> -       case BPF_FUNC_get_numa_node_id:
-> -               return &bpf_get_numa_node_id_proto;
->         case BPF_FUNC_perf_event_read:
->                 return &bpf_perf_event_read_proto;
-
-[...]
+Thank you!
