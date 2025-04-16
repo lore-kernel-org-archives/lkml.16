@@ -1,37 +1,37 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
+Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8D423770B;
-	Wed, 16 Apr 2025 09:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6138423814F;
+	Wed, 16 Apr 2025 09:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797267; cv=none; b=Ew0qiLiuv111ec8GEokWie6pwCAdh87yRJTZOhi89IAAB76Buy1eMHFXQA92knmpCJM6xk9Tg2wNJWQm4hVtfDZLBNV6BUr1C3M5RL4AH/7HHBIbzp+Xgc5sTdGK0pjO26OJQDiwmdCFLOG9mp38IRlxDj7XBbbzQBOuD6Ajscg=
+	t=1744797270; cv=none; b=XMYUrbOVrSQtSYMBziJ8E/XDpM1sBwKLTj+PrcGTd02Eu966ms5fIx3tQmGt4+k1v3QGYsIRnegZPY2TmFZUTli/Gmv47WmWRD35xNXo2cYDurLJaYm/8QbkmvK5zbXsXDA9Y2jovxzGFgJR/AqmCe9eWSwK7xCjguRo1CH1usc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797267; c=relaxed/simple;
-	bh=u7PWWpWnN+JCQGAkrXpy7x5BE2/HL8HUyp74PolVQSE=;
+	s=arc-20240116; t=1744797270; c=relaxed/simple;
+	bh=em2nW4ErSe6f1DWXJFh6zTOm6m54qnj8AM0omgkBVdQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=owA2h/7S151RYKQwOtEi0oPZ00aReVk8ohiI0gjx68QbwXUy/SfBSjxDr12+lZJMbf7kB2aPtHd3sAAyJXVMRLKNKQMnHmTYuR+L+SSkkSeZtD3EyzMVF7m9Q/fSfCgEUL/V8bD1jl/z8zDPYh+Xox+jvKAqezdfy5XhgPkpaBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=OmBywSVI; arc=none smtp.client-ip=134.0.28.11
+	 MIME-Version; b=FLBK63yBJcC8vruMNsqsL0ru2W+K5/RVzgQDghSrpr1SLy1NPqUV/y+pexc4h/opBDSjLigwlBJ99HZTcw1uQ8Ea/ZgO60xOYzdllAz2Za+TEzPZ2ZWmG5DeHspVUzPQZ37YfSymGspiAJArSpzbcAr+Df2f8eyldf4VUH++uuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=oxckEjGQ; arc=none smtp.client-ip=134.0.28.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="OmBywSVI"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="oxckEjGQ"
 Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout1.routing.net (Postfix) with ESMTP id 95BC4400C5;
-	Wed, 16 Apr 2025 09:54:17 +0000 (UTC)
+	by mxout4.routing.net (Postfix) with ESMTP id 83C66100D7B;
+	Wed, 16 Apr 2025 09:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1744797257;
+	s=20200217; t=1744797260;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zRgDtNzjWlmBlKxgWUbFr0kAVAlRPqY5m6T9fKKPW3o=;
-	b=OmBywSVI08bANUw30P1zxMuoqkXaEnsNmPoatNF3mjYe+OHVuSlvjVvEFVVG+kRmERsSlv
-	p6Oa/bP5uNHAHOkAf/Iun0bGPINkyREaAZ8S6K56BcjLAiSuERJgC8piHNpqwlGqJloq/Z
-	q5hZISy2B077ed8J7iPq7TF16YB3xak=
+	bh=Tk944o+t28fwTlX6o9Q4U3/0SH31rFieSB+B7TGU3R0=;
+	b=oxckEjGQ55ln5RAA8KeA5PKqqQZXNmwZ0fLAbi7+fhNmAl47tcsVq+TCjXx2bDWlnIkIur
+	uoZ5Tm4mlNx9OAn12bs7bxkgZo1veF3Uxw6O5fWS1jmCeqs8+O1HOfWHCdVhl/o+YH4qKx
+	TwY4ZkGW1bc/CWKPqJsV6KQV9Bq/FLw=
 Received: from frank-u24.. (fttx-pool-80.245.72.47.bambit.de [80.245.72.47])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 8DB6D3600F2;
-	Wed, 16 Apr 2025 09:54:16 +0000 (UTC)
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 4A675360528;
+	Wed, 16 Apr 2025 09:54:19 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-mediatek@lists.infradead.org,
 	linux-phy@lists.infradead.org
-Subject: [PATCH v3 1/8] dt-bindings: arm: mediatek: add bpi-r4 2g5 phy variant
-Date: Wed, 16 Apr 2025 11:53:53 +0200
-Message-ID: <20250416095402.90543-2-linux@fw-web.de>
+Subject: [PATCH v3 4/8] dt-bindings: phy: mtk-xs-phy: support type switch by pericfg
+Date: Wed, 16 Apr 2025 11:53:56 +0200
+Message-ID: <20250416095402.90543-5-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250416095402.90543-1-linux@fw-web.de>
 References: <20250416095402.90543-1-linux@fw-web.de>
@@ -64,37 +64,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: b70a6ed7-f168-47b1-8fc9-816fd0c482a2
+X-Mail-ID: 5a7bdc89-6d2f-403a-9e25-48950e628308
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add new compatible for Bananapi R4 with 2.5G phy.
-Base board is compatible with existing BPI-R4 only 1 SFP is replaced
-by RJ45 port and use mt7988 internal phy.
+Add support for type switch by pericfg register between USB3/PCIe.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
-v3:
-- new patch adding compatible for 2.5g variant
----
- Documentation/devicetree/bindings/arm/mediatek.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/phy/mediatek,xsphy.yaml  | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index 108ae5e0185d..3aed03df0e3c 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-+++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -104,6 +104,10 @@ properties:
-           - enum:
-               - bananapi,bpi-r4
-           - const: mediatek,mt7988a
-+      - items:
-+          - const: bananapi,bpi-r4-2g5
-+          - const: bananapi,bpi-r4
-+          - const: mediatek,mt7988a
-       - items:
-           - enum:
-               - mediatek,mt8127-moose
+diff --git a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
+index 3b5253659e6f..5033d77c1239 100644
+--- a/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
++++ b/Documentation/devicetree/bindings/phy/mediatek,xsphy.yaml
+@@ -151,6 +151,22 @@ patternProperties:
+         minimum: 1
+         maximum: 31
+ 
++      mediatek,syscon-type:
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        maxItems: 1
++        description:
++          A phandle to syscon used to access the register of type switch,
++          the field should always be 3 cells long.
++        items:
++          items:
++            - description:
++                The first cell represents a phandle to syscon
++            - description:
++                The second cell represents the register offset
++            - description:
++                The third cell represents the index of config segment
++              enum: [0, 1, 2, 3]
++
+     required:
+       - reg
+       - clocks
 -- 
 2.43.0
 
