@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A4224A055
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D86024A062
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805185; cv=none; b=jO4jKeslbhT+ajhRebBnGRTwCvsnc7AMLR1c/1px2cYBK6gVnmMG1fl98yuAZ3D8oHkoDbOyxrQGW6eBEYkA28kMKB7JICjIozYERkwUcDh1vQ3woL8c6wZJ+u0hzbGxaBFKdVSbeXGxjEBs5BdNquw6Ta8LG0PgybZ3kAiyfDs=
+	t=1744805186; cv=none; b=Haq2ABNKFGlWCqIdIrYEGUmonFyWPVjWQ3U0yqTlDt7xLfFRgOZiV6cNxIMdC74tMKD9zDZF0VV5f/iSwfc5gxsDcxqrT8CcIvcH+ZMm4n+LAi3/mLO4QuFWF2RgW4ZVCwBpXly88CRy+yejegN41DVDJd3GmJ8DePf9e+fqi1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805185; c=relaxed/simple;
-	bh=/v1YZLb5r0nwuzBwXN9pK+KCnV1nO/MMUBtr8E5Yrus=;
+	s=arc-20240116; t=1744805186; c=relaxed/simple;
+	bh=jcMAMRnolUY1bDZt4MbiC8UWAP3z6gSGbjezDeJ4Z4c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pX3+SNsI06Jy715uQV5gSA0+2fGTvKjOc+AGh3P+20MpfXkiTnUZeSfIhpxkcYTdAv+wNMX6sRw2Z++Ge5Q6f/v+PiKVTmdtsAITGD1pCD9mcoJlERkVIVTE6nKAS3rI9QaJ9JPqagrYtKBhIy62GePVRdAoDAqpNoRbHf9F7CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JBlsWcpe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kV4dRiKD; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=culmVFKBx3NDroHyPytzSM5oLCXfXi8L/1QwXhkoNDBvmEqWADbm21MSJPyXrOsGg+S8B9BG+7NBdIzucdZ+fe2L9wGH0hzNa1nprSre8hqXkMj1oafa3UjsJtNWaVyk/a2qkKfavM5qJguGKCsFz1gx5VuhMwdJFH2QvvrKgkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aAPCOmpU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=443wkJ2F; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JBlsWcpe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kV4dRiKD"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aAPCOmpU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="443wkJ2F"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744805181;
+	s=2020; t=1744805182;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OtHlFmG4xMfevK368geVp5vwSOOouC9xi41I1IozzwI=;
-	b=JBlsWcpeztaI1nc0zF//sewYNrKtHRXzi58qL3SNexi/byDvrGdfu0asPhmShink3Lfpa9
-	IM9x/9G3YX850gGt7XUPsaMiobKSFtA86zZmgOWkbogrxIitbw3epFNoftcUdT9A7SwW67
-	5qsVwVkf3nR4Rx9F60xmWRiCV91rniPNUjYrW2uUd3gq1QPseGjAyFt5LX9KFbopxVnUVV
-	Y91eOPxClOCYcN19P6E16n48zS230kfR6TFQtIUP3YAd3CfNZ6tFDvSw9aE5M/RVT/n6TX
-	V7SbZBOFmziSTNOq1tpxGiH2SfeZMT2K3XpTg5MN2dEtoEpnN37ZTI2r0Bu6ew==
+	bh=O47BuNNWp13z6juq4IINR3lK0GsXcN1rSFQjsRGU+oc=;
+	b=aAPCOmpUbmUfN9GU8cEWehRy1RLDxdKpmrR9o1hWfEZ0IJ8GSs5bFaMm4I4qvIzTdcsVO2
+	1AQJgPGn+KSISGXYfAmHZfwC0hbh02dzqnyb5LjMfpUEn3cV8Kmt9yxRSuEk01eW2NUTsz
+	FIknA1Jl17tNWXLHogV+s9myUqAZ+xpcgxuRsQ2vrvN6m4AcwGG4ocG8DeLNVD/61NNtbZ
+	FkGZNWkBeMrqM1CmncoohLhO7yEUMX7J2n1hNgxFccwmlSjB4IfKegxMeZ5pIoot76P4s+
+	8GGI4rdQasbWe5nIO1jbt2Jlvk0ex4Flm1GrKKkVtEwzxxGH7wtja4zRJqwImQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744805181;
+	s=2020e; t=1744805182;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OtHlFmG4xMfevK368geVp5vwSOOouC9xi41I1IozzwI=;
-	b=kV4dRiKDz5DQHEpwBrkgpNlvTx0fV/A/GKdyywn3NkB/IO9JjEV5ZO/SPYhFpE4+2Hk4WE
-	usz8H422JvmKlzAg==
-Date: Wed, 16 Apr 2025 14:06:17 +0200
-Subject: [PATCH 02/10] tools/nolibc: add elf.h
+	bh=O47BuNNWp13z6juq4IINR3lK0GsXcN1rSFQjsRGU+oc=;
+	b=443wkJ2Fx2h89663rwxjRCIaGkba4s5yUfFWm3hFbSGtNoJdbH5sSvBB04uBXH7aH99DKt
+	tmMdL1A5bud7AlCw==
+Date: Wed, 16 Apr 2025 14:06:19 +0200
+Subject: [PATCH 04/10] tools/nolibc: move getauxval() to sys/auxv.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,76 +49,139 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250416-nolibc-split-sys-v1-2-a069a3f1d145@linutronix.de>
+Message-Id: <20250416-nolibc-split-sys-v1-4-a069a3f1d145@linutronix.de>
 References: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
 In-Reply-To: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
 To: Willy Tarreau <w@1wt.eu>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744805177; l=1759;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744805177; l=2973;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=/v1YZLb5r0nwuzBwXN9pK+KCnV1nO/MMUBtr8E5Yrus=;
- b=5urcga8JNB3Agfa0IMvsjpbtvE2GaILFFYBH/5wBZ8bt/eADjYapbnRcgcL4K2e0UBATT70/y
- wvHwLUOTD4MBXK2OdWSzB/SmsXeDavUra7zes98PIj+1dhONjlWivoN
+ bh=jcMAMRnolUY1bDZt4MbiC8UWAP3z6gSGbjezDeJ4Z4c=;
+ b=3AV1pfbj5N0QXHOFyF/zUAhXlsECD95xWZG41NbJ2748ZJt517h179aONPmKxhK6NlOdCheNp
+ XwfpxGZxs0WCvWqkVlDxgDbFWwJPK08aXchT3k/4gz1Z+i/8ceQ9UcZ
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The UAPI header do already provide an elf.h implementation.
-Reexport it under its libc name.
+This is the location regular userspace expects the definition.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/include/nolibc/Makefile |  1 +
- tools/include/nolibc/elf.h    | 15 +++++++++++++++
- tools/include/nolibc/nolibc.h |  1 +
- 3 files changed, 17 insertions(+)
+ tools/include/nolibc/Makefile   |  1 +
+ tools/include/nolibc/nolibc.h   |  1 +
+ tools/include/nolibc/stdlib.h   | 26 --------------------------
+ tools/include/nolibc/sys/auxv.h | 41 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 43 insertions(+), 26 deletions(-)
 
 diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index f562cb53be10efc4e0758b8836cf3ace5b3c151f..fd76d267d79a8533b7e78375c30324c962b01973 100644
+index 2132e4f4d2165729ec6d10860d0586f1b71ee0fb..a3781f39692532fb75c7aaf70f65b2d5bf7c7abd 100644
 --- a/tools/include/nolibc/Makefile
 +++ b/tools/include/nolibc/Makefile
-@@ -30,6 +30,7 @@ all_files := \
- 		crt.h \
- 		ctype.h \
- 		dirent.h \
-+		elf.h \
- 		errno.h \
- 		limits.h \
- 		nolibc.h \
-diff --git a/tools/include/nolibc/elf.h b/tools/include/nolibc/elf.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..beb0b3a87569a3037055c8fe7e9b086a26ca7d13
---- /dev/null
-+++ b/tools/include/nolibc/elf.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Shim elf.h header for NOLIBC.
-+ * Copyright (C) 2025 Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-+ */
-+
-+#ifndef _NOLIBC_SYS_ELF_H
-+#define _NOLIBC_SYS_ELF_H
-+
-+#include <linux/elf.h>
-+
-+/* make sure to include all global symbols */
-+#include "nolibc.h"
-+
-+#endif /* _NOLIBC_SYS_ELF_H */
+@@ -44,6 +44,7 @@ all_files := \
+ 		stdlib.h \
+ 		string.h \
+ 		sys.h \
++		sys/auxv.h \
+ 		time.h \
+ 		types.h \
+ 		unistd.h \
 diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 70872401aca8d5aa37b12ee585193353f692576d..127f0d9068c6508bd45acfe0ebf2ce15acc422b0 100644
+index bb4183a8fdc41023d9b8b37fe35ec37ca408b4c6..0d8c49e0dddc595c2f029788ecb5b51231e2695a 100644
 --- a/tools/include/nolibc/nolibc.h
 +++ b/tools/include/nolibc/nolibc.h
-@@ -97,6 +97,7 @@
+@@ -96,6 +96,7 @@
+ #include "arch.h"
  #include "types.h"
  #include "sys.h"
++#include "sys/auxv.h"
  #include "ctype.h"
-+#include "elf.h"
+ #include "elf.h"
  #include "signal.h"
- #include "unistd.h"
- #include "stdio.h"
+diff --git a/tools/include/nolibc/stdlib.h b/tools/include/nolibc/stdlib.h
+index 86ad378ab1ea220559d5ab1adc4bb9972977ba9e..ba8a1427121fc543fc83646e5108c645cbdd62a2 100644
+--- a/tools/include/nolibc/stdlib.h
++++ b/tools/include/nolibc/stdlib.h
+@@ -102,32 +102,6 @@ char *getenv(const char *name)
+ 	return NULL;
+ }
+ 
+-static __attribute__((unused))
+-unsigned long getauxval(unsigned long type)
+-{
+-	const unsigned long *auxv = _auxv;
+-	unsigned long ret;
+-
+-	if (!auxv)
+-		return 0;
+-
+-	while (1) {
+-		if (!auxv[0] && !auxv[1]) {
+-			ret = 0;
+-			break;
+-		}
+-
+-		if (auxv[0] == type) {
+-			ret = auxv[1];
+-			break;
+-		}
+-
+-		auxv += 2;
+-	}
+-
+-	return ret;
+-}
+-
+ static __attribute__((unused))
+ void *malloc(size_t len)
+ {
+diff --git a/tools/include/nolibc/sys/auxv.h b/tools/include/nolibc/sys/auxv.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..04c2b9cbe51a262025bbbc7c74a0640c71529eab
+--- /dev/null
++++ b/tools/include/nolibc/sys/auxv.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
++/*
++ * auxv definitions for NOLIBC
++ * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
++ */
++
++#ifndef _NOLIBC_SYS_AUXV_H
++#define _NOLIBC_SYS_AUXV_H
++
++#include "../crt.h"
++
++static __attribute__((unused))
++unsigned long getauxval(unsigned long type)
++{
++	const unsigned long *auxv = _auxv;
++	unsigned long ret;
++
++	if (!auxv)
++		return 0;
++
++	while (1) {
++		if (!auxv[0] && !auxv[1]) {
++			ret = 0;
++			break;
++		}
++
++		if (auxv[0] == type) {
++			ret = auxv[1];
++			break;
++		}
++
++		auxv += 2;
++	}
++
++	return ret;
++}
++
++/* make sure to include all global symbols */
++#include "../nolibc.h"
++
++#endif /* _NOLIBC_SYS_AUXV_H */
 
 -- 
 2.49.0
