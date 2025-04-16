@@ -1,125 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6786245028;
-	Wed, 16 Apr 2025 06:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0056221423F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786556; cv=none; b=QLHxxY1TGr1vc4vjSztEhT8ZJCX0ZBKdgo0GDyA/gKM/OgC6sAyXWyNQc2lCLSRUVEgmQMXhwtKyoTDYhlKnPmVjY/wxjyQrVf+FsvkeD0XPdCpU61C60/mhbKr7RdRkPpd3fv1gKRb+36GJBKJ+2RlgEV45T95SZObUUlSBIa8=
+	t=1744786649; cv=none; b=P95XfkFKsg0gw15U9ALDWH/VG0DI2mwb/bVPIxJg2zLbK5UWn50oSoGa9xbaEkFEEdrcDWoUL42cXqkjs1C4SCw2/zBDo7qd3gg5fd6fyFwKri9IK+gCZBCTf2dQXnS9jgn9YFdHUMpZbjN4d3rADSCrw7wSMcnfI6xn1+gNqh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786556; c=relaxed/simple;
-	bh=7ctWISr6An+Xtz+ZF8BYPpPAZWc40z7kMziXVV+iNo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxRXICQNotWsfF9QmXrH5kNO22LDf9rp4pnFJfw4A6u8yvCkw+2bGj+LW5butkutN1NP8bhVF4L7qNC3aVCcQEBegfrLf5rqgBfgmsCDjmNWbCt1GNB38LCDBLV1yJS5kpGxxOjKDoySQXG8SvMOuwIm7il2Mk/D0AjH4g9XaLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+kYWIQY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744786649; c=relaxed/simple;
+	bh=xE4OaP2qS1bIrkmed+eBjXcN49Q0yZ2cCth5OVNDDqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYGXjO4VwX9WjF+cKyO0hke1CJgb4Ovq/c5SM1x0TOzIzIsMZdlhKdiQpW02kRq5FoeKwe4fhZ62syo+IVFywCP2lvqnnb04W9Qw/5Tjf4teUKkYWuynm80+rkHe/OZDYO+aJC08ul1E0cho6kVu/r2UPhahEbk5LT3WmMOj/II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LV74hYsO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M3RlYC4Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yLSGObCQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/Wzt9If9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+kYWIQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA49DC4CEEC;
-	Wed, 16 Apr 2025 06:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786555;
-	bh=7ctWISr6An+Xtz+ZF8BYPpPAZWc40z7kMziXVV+iNo4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R+kYWIQYbT18nWvOAsDKIqjet8vBgkgCH2g+NgFwxKsLyB7XxDyLlKvPY/MhXKxaG
-	 lmD8N9LziGpUHtNnLh9hmZvQ/gUE6syOr/H5OTX+88Job0ZvyZjcWSZGtu4JglkuJu
-	 7YrjJGGXCDe/hnPQiqBQ8V/Dhhi/gWlOJ2eWQqGS2hMA4v2KlSChmG1cqLvCDT0CYI
-	 tKtHuKCsVdvK96URn1gib4ipcUfama56CrlyQTSOm8kCv8kIn9oqsYRpm1wwwFvjvS
-	 p++a/tz/x5ihEtr/BV+7rcYyyrRkE/eEbdI2JICAzdSpYCHXz0CvehCTwAPBGGWtdA
-	 c/l5e0YU1xjig==
-Message-ID: <0b58d01c-1aae-4f7b-80b9-57473c326d3b@kernel.org>
-Date: Wed, 16 Apr 2025 08:55:48 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LV74hYsO";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M3RlYC4Q";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yLSGObCQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/Wzt9If9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7BA0E211A0;
+	Wed, 16 Apr 2025 06:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744786645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
+	b=LV74hYsOuKHt+xd8wgXDedAvbkHC/CaZXvOU5jUnmO2Uu5uD8JJdbXrh8m9bRgZ1LdWZcq
+	waKpUVisPdlfvmDPFJloCuJ4mN/bwkwGMCRazqbsIrrZMSP8uedhIm87cfjI1HXGg9736e
+	Vdl6AWh5x6YVfelSebh+vLAcrj47U/w=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744786645;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
+	b=M3RlYC4QlTqqebPFUJXQqRXB5+53lX3tVI7XQWKv5BkL305wqslv+THoGKqatLtn7EL/PC
+	D02XqqfYKxae44Bg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yLSGObCQ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/Wzt9If9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744786644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
+	b=yLSGObCQ8kOZ49aa3WhYvfUsS6EIDrbNHBGrDQW3K14QaYwWaKSCHEsXmlEeYdbf7kLuCj
+	hGji9OmWllK298DcauoBcKPuW8I6fhxVAgnN3blM1BiOw9h7XkBRPN/QRkQ7fiG45Vvnb5
+	nmtuWyUI8v/dmEfVOGkUygXTRpzZ7PQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744786644;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
+	b=/Wzt9If9RTwj+WG8GtDuokUIFZl6IgsMxI1oTUE32Agxqxt3OteXPKXA9Gh19ebm90RtTA
+	Q/LCHk2eepKZC+Aw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6429D13976;
+	Wed, 16 Apr 2025 06:57:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gUIdGNRU/2ctQwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 16 Apr 2025 06:57:24 +0000
+Date: Wed, 16 Apr 2025 08:57:19 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Mohamed Khalfella <mkhalfella@purestorage.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
+	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <22e48664-63f3-4cc0-8b99-f56e98204e5b@flourine.local>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com>
+ <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
+ <20250416001738.GA78596-mkhalfella@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: arm: ti: Add PocketBeagle2
-To: Robert Nelson <robertcnelson@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-Cc: Conor Dooley <conor.dooley@microchip.com>, Dhruva Gole <d-gole@ti.com>,
- Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
- Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Andrew Davis <afd@ti.com>,
- Andrei Aldea <a-aldea@ti.com>, Jason Kridner <jkridner@beagleboard.org>,
- Deepak Khatri <lorforlinux@beagleboard.org>,
- Ayush Singh <ayush@beagleboard.org>
-References: <20250415225940.3899486-1-robertcnelson@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250415225940.3899486-1-robertcnelson@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416001738.GA78596-mkhalfella@purestorage.com>
+X-Rspamd-Queue-Id: 7BA0E211A0
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,flourine.local:mid,suse.de:dkim];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 16/04/2025 00:59, Robert Nelson wrote:
-> This board is based on ti,am625 family using the am6232 and am6254 variations.
+On Tue, Apr 15, 2025 at 05:17:38PM -0700, Mohamed Khalfella wrote:
+> Help me see this:
 > 
-> https://www.beagleboard.org/boards/pocketbeagle-2
-> https://openbeagle.org/pocketbeagle/pocketbeagle-2
+> - nvme_failover_req() is the only place reqs are added to failover_list.
+> - nvme_decide_disposition() returns FAILOVER only if req has REQ_NVME_MPATH set.
 > 
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Reviewed-by: Dhruva Gole <d-gole@ti.com>
-> CC: Nishanth Menon <nm@ti.com>
-> CC: Vignesh Raghavendra <vigneshr@ti.com>
-> CC: Tero Kristo <kristo@kernel.org>
-> CC: Rob Herring <robh@kernel.org>
-> CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> How/where do admin requests get REQ_NVME_MPATH set?
 
-Please drop the autogenerated scripts/get_maintainer.pl CC-entries from
-commit msg. There is no single need to store automated output of
-get_maintainers.pl in the git log. It can be easily re-created at any
-given time, thus its presence in the git history is redundant and
-obfuscates the log.
+Admin commands don't set REQ_NVME_MPATH. This is what the current code
+does and I have deliberately decided not to touch this with this RFC.
 
-If you need it for your own patch management purposes, keep it under the
---- separator.
+Given how much discussion the CQT/CCR feature triggers, I don't think
+it's a good idea to add this topic to this discussion.
 
+> > > - What about requests that do not go through nvme_failover_req(), like
+> > >   passthrough requests, do we not want to hold these requests until it
+> > >   is safe for them to be retried?
+> > 
+> > Pasthrough commands should fail immediately. Userland is in charge here,
+> > not the kernel. At least this what should happen here.
+> > 
+> > > - In case of controller reset or delete if nvme_disable_ctrl()
+> > >   successfully disables the controller, then we do not want to add
+> > >   canceled requests to failover_list, right? Does this implementation
+> > >   consider this case?
+> > 
+> > Not sure. I've tested a few things but I am pretty sure this RFC is far
+> > from being complete.
+> 
+> I think it does not, and maybe it should honor this. Otherwise every
+> controller reset/delete will end up holding requests unnecessarily.
 
-Best regards,
-Krzysztof
+Yes, this is one of the problems with the failover queue. It could be
+solved by really starting to track the delay timeout for each commands.
+But this is a lot of logic code and complexity. Thus during the
+discussion at LSFMM everyone including me, said failover queue idea
+should not be our first choice.
