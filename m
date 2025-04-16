@@ -1,55 +1,55 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6C81EE032
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA331DF985
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819752; cv=none; b=bhTInZ18/LpdNkEOCoAg9ENRjg5IJoSpj3bRNEGmq4Od6p55Veabb5X4NTMLNMuS86BXTuL+y2p0Fg1OrAUcIEKB636mywCB5yjvCzWUTVaho6jsL+8YnJ8ogugCQE8SbGUj2qqd9m6PZQn4p65H2ucu+Z4iCgxQ7bbIRrt2Rxs=
+	t=1744819754; cv=none; b=SZcOARF7O3UuQBWLd5BpjTRMmxGIsouoZLQp95H4hVBA/efPLzFsWbidSaLRmbnK1nHzui0GSO9wUv5Bto0i8eUL1YHFDAEi8qZmIarU+pbiSndgsVyTtsV/4m1nPAQSFZ9VZfGHMWJhviOhF+E2RaM6bk7a1tg44zlyte+sdUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819752; c=relaxed/simple;
-	bh=hhevQAoaSXWNMR7psqWfCUWbj4Q7A3+E702C4036N/o=;
+	s=arc-20240116; t=1744819754; c=relaxed/simple;
+	bh=f7rKsYLxVEDkcwBjeJizVeYDa7FJpyKUWA8MZrDtyWg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mo9OT1NzRXWsvpz70tSUhCdU73Yfqtul3Qx1ycjaoWIf+E2GkoFgL0qt+lwDoI9CL6SYdnASfwkst5oYyU7n3d+nL9g6Jq2ZLGAiCLIU6ySfqqOQAuo3FstWjF/f6wvKznFwb8rtMsYUw7ad9qpV2/IEsF0KToMoaQGxwcQEZVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YuybVPR7; arc=none smtp.client-ip=209.85.218.74
+	 To:Cc:Content-Type; b=SG1ZfHSOvuFrq1h92FJdZKv4cTpudE3wyiTGfzP4T/VpIzlNwNNBugOBMc7kySvXDie4wLlxoJsWTj4inQCUxJvGfcE8AlNEsPdvA9vDIHjsW3+TTplWk1VUmgP9GAAW5zhaxNIe5xnCg11twcMGrprejLo0GpsmExXSJQUQsco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QzXNbb3v; arc=none smtp.client-ip=209.85.208.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YuybVPR7"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ac3e0c1336dso570694366b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:09:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QzXNbb3v"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e68e9d9270so5717467a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:09:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744819749; x=1745424549; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744819750; x=1745424550; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtCepilI5OBYKPwI8IAZ8i1mwTcn2lnNiKdpddQ34xM=;
-        b=YuybVPR7fkIXM9CDZqWr7cIHSelcdtFZu7d/uuMM3M8R75KK0rEo3IlSOT1cNLXsb/
-         mhiFzb+bPg0x5b84w64x0Z8Gn+cTawbiqFVrEmAtc25MvH8hp3vw/T9O2XwoBG77gSQJ
-         hHlbjAYttJuFEwOp2Rb8Ho6jpa38EuHJsVB2j4iED4hP61kcDMgxzXHVGBuW/Hn7g1Fd
-         pYu/EXKIktbyyENOuLMasJd6cQqcjquTgTu8l2rQxF5yjy5cd7q0xwbFKUm0EfLvb6dX
-         isDSm3JxbAR4r9obzZ2Xb1Ug8tLK6UW/0dgpbem49IPMduX4cuIBfEJm6vEdcI5R8ubN
-         3cEw==
+        bh=bDcOKwVW00nNGG4NyR6ISobI0N8ZjJsPjdepkGhedWo=;
+        b=QzXNbb3vhLSYVvwEt2iqjYITgWJLI0NXuiffS/QutNekBlvtdmmuI85VWkDVNx4s64
+         ZHJmhppoHF8UjZLeijPRCrWNQIAsDdYMj8Mmfu0Rd5ZL9x98BWFxdz1Msz+LiNEHsrt4
+         VIMNnzTCV3aXLp8HnXbH2/iWNSpiLK+5pViGIHcNFppUvZo79Mz1v2/w7nE5S95q9w08
+         F5k8NZIoldxrGcMFMFmLUZPcXmdym8441J5ODQO0Fs5SjcypcKR/swCY0/BzkZaxwhWa
+         eIjs5pyTc4AjmTXB6ZAA4Vg1OF7Qv8Rv8byNXFSLwySq4Ljau3Lbv1u19ZrdCr1hZUC6
+         HaTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744819749; x=1745424549;
+        d=1e100.net; s=20230601; t=1744819750; x=1745424550;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RtCepilI5OBYKPwI8IAZ8i1mwTcn2lnNiKdpddQ34xM=;
-        b=N4n/yLHvMosxDTWnCO2fuS2Aw4FsHyGLf2pOxPpxQNKgydfhAqUKOtoPMWItE35kpC
-         sp3PZ0fb9KlyjaaXRB9TRZ9Yb3Zx+FIg5MX4m3RBNVVRG87M0iVkkjmiKU4/BzPoaKC+
-         eF5bNWS5+STDvfClFRdRJdaoal9GXBqOaD1j1PEcwZKZD37npwDiJQpVcvKrtkHCK9fT
-         zK7rusSXjSA3U+9UKpGmeUd2eQQL3CVPgVrHTKH4lO51Gkhl1K9EJ+3/DVFeS/OjcRCz
-         9qk7RwKJDRayA6rYPsOgqDmr3MDM3QMXQePfnIwDdYHcEFqaJVHqwCxKuaPLsAmuz3/m
-         V/zg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3sunqX3IuHTRAJ+9RzJLg+ZRu1oPsVulOSbUkrYQ+3YaHIoEvqeFl6wjnwyTsw9D2L+RxhrkTEV+EnvQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8QQVlg9ez2Gn/hl//Tv4kN5FEUbZ90TTYdS9YUQjLTO1Uy/ZD
-	zGXwVYM5VcCjlrIsX+Z0tgwnR9GB7hvkCp2be7N9s80wf453iSL+Q365GFI683I1Pyf5oiGVl/b
-	17S/8GQ==
-X-Google-Smtp-Source: AGHT+IE8dk7jeA22VzWx81hj6NCNcV+aNpnoCWIVeIKMbzFyUD7FL3Q4EHx6osWargcZiCuELO7brSsBTvZK
-X-Received: from ejcl9.prod.google.com ([2002:a17:906:789:b0:aca:9c9f:6358])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:7203:b0:ac7:82b3:7ad
- with SMTP id a640c23a62f3a-acb42b6bb71mr224251566b.46.1744819747999; Wed, 16
- Apr 2025 09:09:07 -0700 (PDT)
-Date: Wed, 16 Apr 2025 16:08:58 +0000
+        bh=bDcOKwVW00nNGG4NyR6ISobI0N8ZjJsPjdepkGhedWo=;
+        b=akzAMlYUb8kN1U1c6g9UEMVQ0pkpqTvEVsgoTkCOpBc6dEw/m7/i+ksBhIg+SvACZM
+         Pe35whELeWeTzdnXqMBeSDGhNTkjw5NyCvuG5oQv/KAx4SuI0fF5QEut+R1LQqBqrTCn
+         iJBpnS/PHStt7yixC2Kr1mn2/DYjlte5dWD2LUZegRlR3auxL2+Uwy4q3Tot5JXiSjd6
+         SAAIbmYDZkgCRJc2YL3hhnCwqkYYG63F+gEl+C83F+ZlMrm2wvY/CrGOzYsQgoznx+Ku
+         L2cJ3e52MuhhsEG8HkGb4mTSb00CRATpcfKnFsOWNqXpNy3ElM/Hs83wNDHX02mjDdm6
+         +FMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjPr76oD2fu1AXokr49zcn1Q0X7uaGOCUZQDDTOJQTV9p+V1HZu9FDQ0QIAcC9rDtCWv49cL2n+qrQ+Bc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ1tWZUTbE1FtbNm7tFLUHPQE0BytNit1nyGHJrZuPie+Wk9qb
+	QLotIkLyU5cYP78DshhS3f0hgZ7IOEcSBdufhZoB+Qg3yQXoeNB59nYyxCCtSQbQZm9mdSDu7os
+	cl7ElWA==
+X-Google-Smtp-Source: AGHT+IH44M1oUP6au2Aa62Uwe3W7YocYkvgokTJLiLufvbBovB2uSIcZxzrsLQa0fm+cjgs2UKBEThpNgR1E
+X-Received: from eduf26.prod.google.com ([2002:a05:6402:5a:b0:5ed:19b4:3ce])
+ (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:27ce:b0:5f3:5863:64b5
+ with SMTP id 4fb4d7f45d1cf-5f4b747b2c6mr2174230a12.12.1744819750663; Wed, 16
+ Apr 2025 09:09:10 -0700 (PDT)
+Date: Wed, 16 Apr 2025 16:08:59 +0000
 In-Reply-To: <20250416160900.3078417-1-qperret@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250416160900.3078417-1-qperret@google.com>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250416160900.3078417-3-qperret@google.com>
-Subject: [PATCH v3 2/4] KVM: arm64: Don't WARN from __pkvm_host_share_guest()
+Message-ID: <20250416160900.3078417-4-qperret@google.com>
+Subject: [PATCH v3 3/4] KVM: arm64: Selftest for pKVM transitions
 From: Quentin Perret <qperret@google.com>
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
 	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -70,28 +70,174 @@ Cc: Quentin Perret <qperret@google.com>, linux-arm-kernel@lists.infradead.org,
 	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-We currently WARN() if the host attempts to share a page that is not in
-an acceptable state with a guest. This isn't strictly necessary and
-makes testing much harder, so drop the WARN and make sure to propage the
-error code instead.
+We have recently found a bug [1] in the pKVM memory ownership
+transitions by code inspection, but it could have been caught with a
+test.
 
+Introduce a boot-time selftest exercising all the known pKVM memory
+transitions and importantly checks the rejection of illegal transitions.
+
+The new test is hidden behind a new Kconfig option separate from
+CONFIG_EL2_NVHE_DEBUG on purpose as that has side effects on the
+transition checks ([1] doesn't reproduce with EL2 debug enabled).
+
+[1] https://lore.kernel.org/kvmarm/20241128154406.602875-1-qperret@google.com/
+
+Suggested-by: Will Deacon <will@kernel.org>
 Signed-off-by: Quentin Perret <qperret@google.com>
 ---
- arch/arm64/kvm/hyp/nvhe/mem_protect.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |   6 +
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c         | 111 ++++++++++++++++++
+ arch/arm64/kvm/hyp/nvhe/setup.c               |   2 +
+ 3 files changed, 119 insertions(+)
 
+diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+index ea0a704da9b8..535722cd8417 100644
+--- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
++++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
+@@ -67,4 +67,10 @@ static __always_inline void __load_host_stage2(void)
+ 	else
+ 		write_sysreg(0, vttbr_el2);
+ }
++
++#ifdef CONFIG_NVHE_EL2_DEBUG
++void pkvm_ownership_selftest(void);
++#else
++static inline void pkvm_ownership_selftest(void) { }
++#endif
+ #endif /* __KVM_NVHE_MEM_PROTECT__ */
 diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 709d286999a1..4a0f98943577 100644
+index 4a0f98943577..1912cc22c987 100644
 --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
 +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -921,7 +921,6 @@ int __pkvm_host_share_guest(u64 pfn, u64 gfn, struct pkvm_hyp_vcpu *vcpu,
- 		if (page->host_share_guest_count)
- 			break;
- 		/* Only host to np-guest multi-sharing is tolerated */
--		WARN_ON(1);
- 		fallthrough;
- 	default:
- 		ret = -EPERM;
+@@ -1092,3 +1092,114 @@ int __pkvm_host_mkyoung_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu)
+ 
+ 	return 0;
+ }
++
++#ifdef CONFIG_NVHE_EL2_DEBUG
++struct pkvm_expected_state {
++	enum pkvm_page_state host;
++	enum pkvm_page_state hyp;
++};
++
++static struct pkvm_expected_state selftest_state;
++static struct hyp_page *selftest_page;
++
++static void assert_page_state(void)
++{
++	void *virt = hyp_page_to_virt(selftest_page);
++	u64 size = PAGE_SIZE << selftest_page->order;
++	u64 phys = hyp_virt_to_phys(virt);
++
++	host_lock_component();
++	WARN_ON(__host_check_page_state_range(phys, size, selftest_state.host));
++	host_unlock_component();
++
++	hyp_lock_component();
++	WARN_ON(__hyp_check_page_state_range(phys, size, selftest_state.hyp));
++	hyp_unlock_component();
++}
++
++#define assert_transition_res(res, fn, ...)		\
++	do {						\
++		WARN_ON(fn(__VA_ARGS__) != res);	\
++		assert_page_state();			\
++	} while (0)
++
++void pkvm_ownership_selftest(void)
++{
++	void *virt = hyp_alloc_pages(&host_s2_pool, 0);
++	u64 phys, size, pfn;
++
++	WARN_ON(!virt);
++	selftest_page = hyp_virt_to_page(virt);
++	selftest_page->refcount = 0;
++
++	size = PAGE_SIZE << selftest_page->order;
++	phys = hyp_virt_to_phys(virt);
++	pfn = hyp_phys_to_pfn(phys);
++
++	selftest_state.host = PKVM_NOPAGE;
++	selftest_state.hyp = PKVM_PAGE_OWNED;
++	assert_page_state();
++	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
++
++	selftest_state.host = PKVM_PAGE_OWNED;
++	selftest_state.hyp = PKVM_NOPAGE;
++	assert_transition_res(0,	__pkvm_hyp_donate_host, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
++
++	selftest_state.host = PKVM_PAGE_SHARED_OWNED;
++	selftest_state.hyp = PKVM_PAGE_SHARED_BORROWED;
++	assert_transition_res(0,	__pkvm_host_share_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
++
++	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
++	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
++	hyp_unpin_shared_mem(virt, virt + size);
++	WARN_ON(hyp_page_count(virt) != 1);
++	assert_transition_res(-EBUSY,	__pkvm_host_unshare_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
++
++	hyp_unpin_shared_mem(virt, virt + size);
++	assert_page_state();
++	WARN_ON(hyp_page_count(virt));
++
++	selftest_state.host = PKVM_PAGE_OWNED;
++	selftest_state.hyp = PKVM_NOPAGE;
++	assert_transition_res(0,	__pkvm_host_unshare_hyp, pfn);
++
++	selftest_state.host = PKVM_PAGE_SHARED_OWNED;
++	selftest_state.hyp = PKVM_NOPAGE;
++	assert_transition_res(0,	__pkvm_host_share_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
++	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
++	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
++
++	selftest_state.host = PKVM_PAGE_OWNED;
++	selftest_state.hyp = PKVM_NOPAGE;
++	assert_transition_res(0,	__pkvm_host_unshare_ffa, pfn, 1);
++	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
++
++	selftest_state.host = PKVM_NOPAGE;
++	selftest_state.hyp = PKVM_PAGE_OWNED;
++	assert_transition_res(0,	__pkvm_host_donate_hyp, pfn, 1);
++
++	selftest_page->refcount = 1;
++	hyp_put_page(&host_s2_pool, virt);
++}
++#endif
+diff --git a/arch/arm64/kvm/hyp/nvhe/setup.c b/arch/arm64/kvm/hyp/nvhe/setup.c
+index 2050bb5a6de7..47294134cf1b 100644
+--- a/arch/arm64/kvm/hyp/nvhe/setup.c
++++ b/arch/arm64/kvm/hyp/nvhe/setup.c
+@@ -312,6 +312,8 @@ void __noreturn __pkvm_init_finalise(void)
+ 		goto out;
+ 
+ 	pkvm_hyp_vm_table_init(vm_table_base);
++
++	pkvm_ownership_selftest();
+ out:
+ 	/*
+ 	 * We tail-called to here from handle___pkvm_init() and will not return,
 -- 
 2.49.0.604.gff1f9ca942-goog
 
