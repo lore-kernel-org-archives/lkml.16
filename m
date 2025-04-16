@@ -1,118 +1,146 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D631FECA1
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68A8223704;
+	Wed, 16 Apr 2025 18:34:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828385; cv=none; b=ToA29rXmM+h7D1xGSOpLyDGxo8Ch8uw680hgtewZ8C5SRvAo3HWZ41zujcuxkFLUOTCMDu3HA+EBgkUSJkYsoGLUACKC+LFADk6TAUt5cTyIHVyFSW5ZoaH8OWloQ7ZCU9nZ9YdqJ0bKVzBJuScQZTxuPGEP14cMNFYhl3fbmX8=
+	t=1744828444; cv=none; b=COWwWzJVqGZkcGjWpAh8euZp1L+Wn3SgE++djmgrlrGO8dsP+7eKC8lQBNMy7R0wlZGWeF+Uj6oX95HB34B0WoXmtSoYq7osqbFqSj4Pfbtl0nMUbFVkqaMGCdZOaFrVcY3OhwwavzBZJeh7lAWQKaYEbDzOTlG77T/vbW+oCNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744828385; c=relaxed/simple;
-	bh=lTS23+OVr+U8jOyUDY2Ng/g2joDRg5LwmQv4+9E7gU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HdUA1CdpT8VrBhnJ0HmJ1he29SsUQnpCna6gwlgQxNAOkJ8K5YomtniZcESkPAsvRYAloQFQxRg/PMioysM78j+JCEKMWqnR/V6RNXhjIGXJkmc4qzg4KyxQ4j1gm6Jbq6ZnAE1xyQOA5x7dkaioMwWGe+QXkSiELyWrGAijHjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lkHT60FW; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lkHT60FW"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53GIWl3M424996
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 13:32:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744828367;
-	bh=8LL977dbkymvSQK4ivUClHaDB3bJ8D34+HYE6+9SqpM=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=lkHT60FWwEMF9Kfnk03FqA8UaYB3TT3DzazCRdTXJWlV1AxR8VI1YlN0GqydumRgH
-	 bSHNEMU7xw+wJrmyitE2XBQNd0TAYloI/I8JpI0OXOlRPfHRY+vL62TuOzOquK3scR
-	 L9t5ES8u5naQZM7H47b0zuZJOmTRtHkzVAtu3g0w=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53GIWlwN009498
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 16 Apr 2025 13:32:47 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
- Apr 2025 13:32:47 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 16 Apr 2025 13:32:47 -0500
-Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53GIWhiW095159;
-	Wed, 16 Apr 2025 13:32:43 -0500
-Message-ID: <eb6c1dfc-11aa-421a-9b46-2fcaecb04435@ti.com>
-Date: Thu, 17 Apr 2025 00:02:42 +0530
+	s=arc-20240116; t=1744828444; c=relaxed/simple;
+	bh=nI4eMCXpXlIIBaVnc9BH396gww79YEtpd2CqFazhQOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cm5AyU1dev2FHuGN+as3vANg/SzD8f+nKFJ3C81t39rLfJ/+fC3cyvg7GUrKpK3+HSBnjRxJW2KPSSuetDhZwQQBHzthgfJSmS6M523JaC/7EPpVIQXj1mgYQhoY5hRjyIZGdhC9GYpV6vEw8cPQ8JahOJtai0IIjdxnElS5FY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so12876377a12.2;
+        Wed, 16 Apr 2025 11:34:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744828441; x=1745433241;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=II34oFPyGmpovKrvCA1FDiNQbtnPbuqRHfz3wqrX0Nc=;
+        b=Wzhk9c9Co6t7VC6DCkj3fbdmrG5ARKJByNcn3/bW8zYgG27k/sV0TMFsrQZSHzT6CP
+         UQw0bpcpAfP072uBA9T58Ss5rWLg40zZD/PaAsR0ffvo0mEvytjHaAmQE1hbm9jNP3By
+         S6J3ZnAdsu7WYvLF/wg8XMOhv89kZPBkHr6kdML2laYIXjtE0uqEjgYREFMduPrPLm8f
+         geuj1I4T9wuAPw1qDGRMHP7XMNzPqREO705WiLIg2JDxOnmRLMSWJEjtmeyBJ0Lqi8HP
+         gq8sulT1b2xVKF+QFBCJl8AP6yNfpsGkDXZMUoEkoiV/vF0PwlkdPTEl3KrrQulsxXit
+         qSJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXXhlAgsGZlhiL4YaTCawNdYmZM6vEQE2HzGUTUJuGKIBqr18HXlpaliPv4ZNS8gnUab7+dXL0l@vger.kernel.org, AJvYcCXXofit5MHenpBGZobrSURBakbD5Sly6xa9iMSXeb9Xqr8uzfZeGccCocW6QVtNlr0RvUJH@vger.kernel.org, AJvYcCXlf6RgxeITMbXjl2+XIYfNfHsRwwzaSrm1s4qH21OdWxAkyoUnRNomYbk5EnI3noaN5FqlfjWraNRDKVc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXPs7wEX4UKjBO+V5mi/M64FciGJSMWQU7zCXtt0AtD1C8iohc
+	zUIFNUbDOzoM67+8j4VmP4PSZhWobpsLTQ1JqQhiwGXdyjhOy6cQ
+X-Gm-Gg: ASbGnctYpeUuQe8nEQppTGF4rn1dH3+MM69rKbb1UfoDa3qN43HYXS4yZiFKPL6PJ60
+	T+RBVfJcki+dHuXb77VOl3twlEBjIanaWpxGo+eS5gbCqFQP77N+GVNFxs8g5ID+RHGiq6Nm53F
+	kq0aUvvINcewLvyH3FuUZeMen/1harWAVk/NBJ06Z+Jc2TEpTJnZHnu0MeXaln8N0blHH6J3xjw
+	EovRgDyHRbEerMl4wIZ5UYpwsx/BbISq9v8rcbnKHpt3Y+O20KM2BFc9MNj5L9PIqOa/OFaaLlP
+	Y0C/vNcawVOjxKgnNPjcjCs7SvCW90Bw
+X-Google-Smtp-Source: AGHT+IGfcWO1OWqg4XBLUSJ9Zwiz91FknHiSYKJiNdaWcjNSyHc4W1J3O1QOnmtZgxqyH2rgmq//xw==
+X-Received: by 2002:a05:6402:239c:b0:5f0:9eb3:8e76 with SMTP id 4fb4d7f45d1cf-5f4b76f4db4mr1959270a12.34.1744828440735;
+        Wed, 16 Apr 2025 11:34:00 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f06c4fcsm9052083a12.47.2025.04.16.11.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 11:34:00 -0700 (PDT)
+Date: Wed, 16 Apr 2025 11:33:57 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>, aeh@meta.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH 0/8] Introduce simple hazard pointers for lockdep
+Message-ID: <Z//4FUsm1/jbOTP1@gmail.com>
+References: <20250414060055.341516-1-boqun.feng@gmail.com>
+ <Z/+7LMnQqtV+mnJ+@gmail.com>
+ <Z__G_8VNrgUpfpuk@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
-To: Nishanth Menon <nm@ti.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <bjorn.andersson@oss.qualcomm.com>,
-        <krzysztof.kozlowski@linaro.org>, <geert+renesas@glider.be>,
-        <lumag@kernel.org>, <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
-        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
-        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>
-References: <20250411095043.272488-1-j-choudhary@ti.com>
- <20250411112802.x2q4f7cq4hwilxoe@blasphemy>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <20250411112802.x2q4f7cq4hwilxoe@blasphemy>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z__G_8VNrgUpfpuk@pc636>
 
-Hello Nishanth,
+Hello Vlad,
 
-On 11/04/25 16:58, Nishanth Menon wrote:
-> On 15:20-20250411, Jayesh Choudhary wrote:
->> Enable configs for cdns-dsi and cdns-dphy. (dsi wrapper for
->> j721e is enabled by default if cdns-dsi config is enabled)
+On Wed, Apr 16, 2025 at 05:04:31PM +0200, Uladzislau Rezki wrote:
+> On Wed, Apr 16, 2025 at 07:14:04AM -0700, Breno Leitao wrote:
+> > Hi Boqun,
+> > 
+> > On Sun, Apr 13, 2025 at 11:00:47PM -0700, Boqun Feng wrote:
+> > 
+> > > Overall it looks promising to me, but I would like to see how it
+> > > performs in the environment of Breno. Also as Paul always reminds me:
+> > > buggy code usually run faster, so please take a look in case I'm missing
+> > > something ;-) Thanks!
+> > 
+> > Thanks for the patchset. I've confirmed that the wins are large on my
+> > environment, but, at the same magnitute of synchronize_rcu_expedited().
+> > 
+> > Here are the numbers I got:
+> > 
+> > 	6.15-rc1 (upstream)
+> > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > 		real	0m3.986s
+> > 		user	0m0.001s
+> > 		sys	0m0.093s
+> > 
+> > 	Your patchset on top of 6.15-rc1
+> > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > 		real	0m0.072s
+> > 		user	0m0.001s
+> > 		sys	0m0.070s
+> > 
+> > 
+> > 	My original proposal of using synchronize_rcu_expedited()[1]
+> > 		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+> > 		real	0m0.074s
+> > 		user	0m0.001s
+> > 		sys	0m0.061s
+> > 
+> > Link: https://lore.kernel.org/all/20250321-lockdep-v1-1-78b732d195fb@debian.org/ [1]
+> > 
+> Could you please also do the test of fist scenario with a regular
+> synchronize_rcu() but switch to its faster variant:
 > 
-> What upstream supported boards need this change? Add that to the commit
-> message. Beagley-AI64? or others - please enumerate.
+> echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
 > 
+> and run the test. If you have a time.
 
-Posted v2 with the list of platforms that require these drivers:
-https://lore.kernel.org/all/20250416182930.32132-1-j-choudhary@ti.com/
+Of course, I am more than interesting in this topic. This is what I run:
 
 
->>
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->> ---
->>   arch/arm64/configs/defconfig | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index 5c85e5da152f..4c0eb2711bbe 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -938,6 +938,7 @@ CONFIG_DRM_TI_SN65DSI86=m
->>   CONFIG_DRM_ANALOGIX_ANX7625=m
->>   CONFIG_DRM_I2C_ADV7511=m
->>   CONFIG_DRM_I2C_ADV7511_AUDIO=y
->> +CONFIG_DRM_CDNS_DSI=m
->>   CONFIG_DRM_CDNS_MHDP8546=m
->>   CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
->>   CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
->> @@ -1579,6 +1580,7 @@ CONFIG_PHY_CAN_TRANSCEIVER=m
->>   CONFIG_PHY_NXP_PTN3222=m
->>   CONFIG_PHY_SUN4I_USB=y
->>   CONFIG_PHY_CADENCE_TORRENT=m
->> +CONFIG_PHY_CADENCE_DPHY=m
->>   CONFIG_PHY_CADENCE_DPHY_RX=m
->>   CONFIG_PHY_CADENCE_SIERRA=m
->>   CONFIG_PHY_CADENCE_SALVO=m
->> -- 
->> 2.34.1
->>
-> 
+	# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+	real	0m4.150s
+	user	0m0.001s
+	sys	0m0.076s
 
-Warm Regards,
-Jayesh
+	[root@host2 ~]# echo 1 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+	[root@host2 ~]# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+	real	0m4.225s
+	user	0m0.000s
+	sys	0m0.106s
+
+	[root@host2 ~]# cat /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+	1
+	[root@host2 ~]# echo 0 > /sys/module/rcutree/parameters/rcu_normal_wake_from_gp
+	[root@host2 ~]# /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq; time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+	real	0m4.152s
+	user	0m0.001s
+	sys	0m0.099s
+
+It seems it made very little difference?
+
+Thanks
+--breno
