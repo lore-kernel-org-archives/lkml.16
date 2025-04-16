@@ -1,324 +1,157 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E2F158520;
-	Wed, 16 Apr 2025 08:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2726158520;
+	Wed, 16 Apr 2025 08:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791603; cv=none; b=lO29YJC9cIgBFOYci8Ab7iaJF/53LuTzjaNV78FbA+QoVOu2oYgdJ6foScCOYJjL+ESOlN/fJqPAeYejFDL5lk2IM5hn4tAthgzDsP8EhDC7FtXPF2syLW60NKRqPE4Tr4rYOZwMFtsYqfUQSy16bsHndilyAPYZ9OK7im0Mw3k=
+	t=1744791715; cv=none; b=u9KoRSzIB3r8tnMb6BrbkDUNR1GcMU3sAuoZSJ7FWJDJDfGRkE2/YSKNSurE5o8N6AaCY57rK9KYWRnGRfFtJxnnAJX+q4LqjxCV1zGOsWHK1V40emzquo16hzpcN7tJ6sG49mWg4zbkzBmzUiKY2I39OYrMqW//PonWq6ktu68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791603; c=relaxed/simple;
-	bh=LEdsZgYyyJn3eLhzBrsi9GDJWL/o/T+gL45WIcdg/HM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=LPPG7UOFpcC1AFIZ3a6QZZ+Tc4A9yGV1olfmI4zClqv4mBkZHN5QSTaH0qH5VGTZ5hx7v+Wylj/h+BAe39u6sw2AOicIs+NkjjUuw/iXdky4Vq/HKEqSOZQXgaOI+kf0HtcnuE+4JDI0LiHeHlZqnNsdpx4n6wGrIZCFccfolmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zcv834t74z4f3jYS;
-	Wed, 16 Apr 2025 16:19:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 5D9011A06DC;
-	Wed, 16 Apr 2025 16:19:55 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgC3Gl8paP9nR7WNJg--.53124S3;
-	Wed, 16 Apr 2025 16:19:55 +0800 (CST)
-Subject: Re: [PATCH 2/4] md: add a new api sync_io_depth
-To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- yi.zhang@huawei.com, yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
- <20250412073202.3085138-3-yukuai1@huaweicloud.com>
- <CALTww29xMyNq0SpPGvVqp6YPmCVu+N+d_neeJD_mogiviiZpYw@mail.gmail.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <bf3deb80-4ed2-21b4-e919-a96cf329e947@huaweicloud.com>
-Date: Wed, 16 Apr 2025 16:19:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1744791715; c=relaxed/simple;
+	bh=VWW+FjoSMr2BVYRu/X2g0WXpS/3nXWF7DuGik59WEqM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hUDJBfAw3GilSrFZ8GT73Q5cf0LoF1p8Q8hHK8Yxb9+upJ1LSxCE8jYERgd6ohY44Xb4pfLEZzqvqkOhcim/cNVkw74Q8lRcnn6rhr5FavymNdgtZX3BtV9wJ3ypHOsv10pOrz4uuy7ZojaG6Q2aXdgZeDbF/uy5kw0dW5ZVeFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YHJEPI2j; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YHJEPI2j"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso34213671fa.2;
+        Wed, 16 Apr 2025 01:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744791711; x=1745396511; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kSn8ywScBr2S49CSRan+oKzZUY5sWQo+CXS/MBhnnS8=;
+        b=YHJEPI2jpEGnXGKs3WKdJVTs9+qUCkJ+DeUJbJR71TRFQbTTiP/myzYk3wqINlXZeT
+         YhoF5rUeIyqYMbrr4MfUp+16qTU6EBYxVnRhlF/Ts3np3DI2/b17n/IaYOPZcrDT4t+L
+         Mz9i4sV0RJuCtsKLBVeS2ocxoONyrfV1GhRgrWoTd5p5mvV0WWgyGlZS2JYjZequoKeE
+         7qXsVLrl+ZTFwI6QofHHcK7+W0hmCDouL63K/Yh7k7SNpX1F8UP800YBHnARV1HKsXIb
+         G6INo7F3G5kDZhyw3Emfa0IFE4rEqc0ctztSCJ7Jv+2/ZwmLSeVsL7UIlsZbzaOW+eZy
+         bPpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744791711; x=1745396511;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kSn8ywScBr2S49CSRan+oKzZUY5sWQo+CXS/MBhnnS8=;
+        b=OEwAp4uq4eCv5qL2fwgWE4x63mnHTzNzRnrH77C8gRflDLst4Emxto8Mi3mMdaoVBV
+         66nmzTwGKhsmccmdPJtDSj544ruI+OeG8BK3W4/vlhlrx8AqZ7IF2ejUvg63CRele6+R
+         Za1OM3fsaU1rfkX9By7QA6C5gJrAjRcYUnMnt2kC0l8MeSaOg2/6ijgpTSboz2J7HXUs
+         sJWSnWRA96SkUQU41RHBlY4rgG/fK9W4huOz1NqXHypWqqt56g782xyKW/haeQyuUROr
+         TTRuYg3CgLiFVt6b9swSYTebx7rjsunST2SRpJW5i+P/ZpLSyOpPCCN8nvKXeOhuIe4Z
+         Mvcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTxHzXGYLDKkeINdPrrggMFczDzBpaUdqzhmQuNys+RzkrtHk7/LySc+Vj3VQj/xG7ePNyaYnS@vger.kernel.org, AJvYcCVVJz6ZGRjEeU8LFVbNSiUard0dTjnLtui/5llJllk/9lefOclgEdq4Rv4ElDCNn5/hi33HbpER4vODW+mV@vger.kernel.org, AJvYcCW4Ns0c7TK4IcNYy3RyEZikJAbWspEQOie6fzjLA70bPKoHwKjG5LmZdljjxZmxSP/uSuP4MrOcxdYc@vger.kernel.org, AJvYcCW6Kl+6QojfNHkcgWyoTUOnA0A1+6k74YGxjruiUz/1YMeE9ENLDKU5Rm0fK0bq29aW9IGU4ManHeAg@vger.kernel.org, AJvYcCW88VFWmEDZB3buERNox57NSO88rdEEfmSynXGhZwCI5tP//hp515EcwXsWNqwc/3o+1DAVacD7vQJ8@vger.kernel.org, AJvYcCXv01/HEfkFgQ9Szw677HWSzYXHU+oUMhhcvDX8KFj15G/0DpHUb+MpNe61nOPNQzkNvRl10wH4BjY1@vger.kernel.org
+X-Gm-Message-State: AOJu0YylZriNctxEJd+YeJ8L0/V2CTxigrWUTThYOVk64LZAualfNvkS
+	6F5NIn4Z7n7DxW8QUddOG95mxweWwSn9MFbF80ESrw+SlyMFdwPW
+X-Gm-Gg: ASbGncs2s1eOq84mBGZuepupi+YPw2ycfTNzFD6iPNjbnm1wFVdJxqlCHF2DE62uxiY
+	jtVvIRtVf3SEdApuockyvsx/JIpy7xz5YnakKaPk/6pN64hhAM6HzIRPJb2u7uf5cjdolCYbuFD
+	ev0HhN/f/bYR0qRMvRTlUt77/jv1sjQJ9Y0CN4IbqU03hL2UUO3TNcC/tHG055NmeJ04tfm6dZp
+	0Xqhqbk4VremRXHRwJSreo9wnQrIjnPlHQLoj94NdYPjuSI9qimtZ4fBn3B9suTVsesyob8HGFU
+	pfXz5bdrwPKaR8ikY5XF/vn6tLswZAVhDsqtJgIAipP/GYIxoh5K
+X-Google-Smtp-Source: AGHT+IHs8w/edsjtM3rOM3Yclg32oaNqFZGls9C6H68akxr8+2plKYYeBm64f3z6Q4QArp+Lekmm2g==
+X-Received: by 2002:a2e:8404:0:b0:30c:aae:6d4a with SMTP id 38308e7fff4ca-3107f718b7bmr2182291fa.26.1744791710377;
+        Wed, 16 Apr 2025 01:21:50 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f7b20sm23025391fa.97.2025.04.16.01.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 01:21:49 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH 00/13] ARM: vt8500: DT bindings and dts updates
+Date: Wed, 16 Apr 2025 12:21:25 +0400
+Message-Id: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALTww29xMyNq0SpPGvVqp6YPmCVu+N+d_neeJD_mogiviiZpYw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3Gl8paP9nR7WNJg--.53124S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jw18uF47CF15Xr17Cw4xXrb_yoW3WFWfpa
-	yUJFW3Gr4UXrZxXry2qFsxCa4Sqw4fKrWjy3y7G3WfJFnI9r9xGF1FgrW5WFykua4rCrn2
-	v3WUJa9xua1ftrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIVo/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwNL3fLcEt3SgpTEktRiXVMLQ4NkM1NDI9NUEyWgjoKi1LTMCrBp0bG
+ 1tQD/e5EXXQAAAA==
+X-Change-ID: 20250409-wmt-updates-5810c65125e4
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744791712; l=3242;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=VWW+FjoSMr2BVYRu/X2g0WXpS/3nXWF7DuGik59WEqM=;
+ b=OE98dlaCoHtAdZilXLnTnuUMVF49Z4hZHmnAalJtuuKjjULVM27W5tpvrpJQD1KM7AV/MZCRX
+ fNJJtvtC0pHDBujTVpynkLYIbwLLeVLKIXeMo4GnDqOoMsFzt4LL7uX
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Hi,
+Convert some more VT8500 related textual DT binding descriptions to
+YAML schema, do minor dts correctness fixes, and add a DT for the
+board I'm actually testing those on (VIA APC Rock).
 
-在 2025/04/16 13:32, Xiao Ni 写道:
-> On Sat, Apr 12, 2025 at 3:39 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
->>
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Currently if sync speed is above speed_min and below speed_max,
->> md_do_sync() will wait for all sync IOs to be done before issuing new
->> sync IO, means sync IO depth is limited to just 1.
->>
->> This limit is too low, in order to prevent sync speed drop conspicuously
->> after fixing is_mddev_idle() in the next patch, add a new api for
->> limiting sync IO depth, the default value is 32.
->>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->> ---
->>   drivers/md/md.c | 103 +++++++++++++++++++++++++++++++++++++++---------
->>   drivers/md/md.h |   1 +
->>   2 files changed, 85 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/md/md.c b/drivers/md/md.c
->> index 438e71e45c16..8966c4afc62a 100644
->> --- a/drivers/md/md.c
->> +++ b/drivers/md/md.c
->> @@ -111,32 +111,42 @@ static void md_wakeup_thread_directly(struct md_thread __rcu *thread);
->>   /* Default safemode delay: 200 msec */
->>   #define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
->>   /*
->> - * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
->> - * is 1000 KB/sec, so the extra system load does not show up that much.
->> - * Increase it if you want to have more _guaranteed_ speed. Note that
->> - * the RAID driver will use the maximum available bandwidth if the IO
->> - * subsystem is idle. There is also an 'absolute maximum' reconstruction
->> - * speed limit - in case reconstruction slows down your system despite
->> - * idle IO detection.
-> 
-> These comments are useful. They only describe the meaning of those
-> control values. Is it good to keep them?
+While at that, also describe the PL310 L2 cache controller present on
+WM8850/WM8950.
 
-Sure
-> 
->> + * Background sync IO speed control:
->>    *
->> - * you can change it via /proc/sys/dev/raid/speed_limit_min and _max.
->> - * or /sys/block/mdX/md/sync_speed_{min,max}
->> + * - below speed min:
->> + *   no limit;
->> + * - above speed min and below speed max:
->> + *   a) if mddev is idle, then no limit;
->> + *   b) if mddev is busy handling normal IO, then limit inflight sync IO
->> + *   to sync_io_depth;
->> + * - above speed max:
->> + *   sync IO can't be issued;
->> + *
->> + * Following configurations can be changed via /proc/sys/dev/raid/ for system
->> + * or /sys/block/mdX/md/ for one array.
->>    */
->> -
->>   static int sysctl_speed_limit_min = 1000;
->>   static int sysctl_speed_limit_max = 200000;
->> -static inline int speed_min(struct mddev *mddev)
->> +static int sysctl_sync_io_depth = 32;
->> +
->> +static int speed_min(struct mddev *mddev)
->>   {
->>          return mddev->sync_speed_min ?
->>                  mddev->sync_speed_min : sysctl_speed_limit_min;
->>   }
->>
->> -static inline int speed_max(struct mddev *mddev)
->> +static int speed_max(struct mddev *mddev)
->>   {
->>          return mddev->sync_speed_max ?
->>                  mddev->sync_speed_max : sysctl_speed_limit_max;
->>   }
->>
->> +static int sync_io_depth(struct mddev *mddev)
->> +{
->> +       return mddev->sync_io_depth ?
->> +               mddev->sync_io_depth : sysctl_sync_io_depth;
->> +}
->> +
->>   static void rdev_uninit_serial(struct md_rdev *rdev)
->>   {
->>          if (!test_and_clear_bit(CollisionCheck, &rdev->flags))
->> @@ -293,14 +303,21 @@ static const struct ctl_table raid_table[] = {
->>                  .procname       = "speed_limit_min",
->>                  .data           = &sysctl_speed_limit_min,
->>                  .maxlen         = sizeof(int),
->> -               .mode           = S_IRUGO|S_IWUSR,
->> +               .mode           = 0644,
-> 
-> Is it better to use macro rather than number directly here?
+Note that this series is based upon Krzysztof's linux-dt/for-next
 
-checkpatch will suggest 0644 over S_IRUGO|S_IWUSR.
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+Alexey Charkov (13):
+      dt-bindings: i2c: i2c-wmt: Convert to YAML
+      dt-bindings: interrupt-controller: via,vt8500-intc: Convert to YAML
+      dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
+      dt-bindings: net: via-rhine: Convert to YAML
+      dt-bindings: pwm: vt8500-pwm: Convert to YAML
+      dt-bindings: timer: via,vt8500-timer: Convert to YAML
+      dt-bindings: arm: vt8500: Add VIA APC Rock/Paper boards
+      ARM: dts: vt8500: Add node address and reg in CPU nodes
+      ARM: dts: vt8500: Move memory nodes to board dts and fix addr/size
+      ARM: dts: vt8500: Use generic compatibles for EHCI
+      ARM: dts: vt8500: Use generic node name for the SD/MMC controller
+      ARM: dts: vt8500: Add VIA APC Rock/Paper board
+      ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
 
-Thanks,
-Kuai
+ Documentation/devicetree/bindings/arm/vt8500.yaml  | 19 ++++---
+ Documentation/devicetree/bindings/i2c/i2c-wmt.txt  | 24 ---------
+ .../devicetree/bindings/i2c/wm,wm8505-i2c.yaml     | 47 +++++++++++++++++
+ .../interrupt-controller/via,vt8500-intc.txt       | 16 ------
+ .../interrupt-controller/via,vt8500-intc.yaml      | 47 +++++++++++++++++
+ .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
+ .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 61 ++++++++++++++++++++++
+ .../devicetree/bindings/net/via,vt8500-rhine.yaml  | 41 +++++++++++++++
+ .../devicetree/bindings/net/via-rhine.txt          | 17 ------
+ .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 +++++++++++++++
+ .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 -------
+ .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 ------
+ .../bindings/timer/via,vt8500-timer.yaml           | 36 +++++++++++++
+ MAINTAINERS                                        |  7 ++-
+ arch/arm/boot/dts/vt8500/Makefile                  |  3 +-
+ arch/arm/boot/dts/vt8500/vt8500-bv07.dts           |  5 ++
+ arch/arm/boot/dts/vt8500/vt8500.dtsi               | 12 ++---
+ arch/arm/boot/dts/vt8500/wm8505-ref.dts            |  5 ++
+ arch/arm/boot/dts/vt8500/wm8505.dtsi               | 14 ++---
+ arch/arm/boot/dts/vt8500/wm8650-mid.dts            |  5 ++
+ arch/arm/boot/dts/vt8500/wm8650.dtsi               | 14 ++---
+ arch/arm/boot/dts/vt8500/wm8750-apc8750.dts        |  5 ++
+ arch/arm/boot/dts/vt8500/wm8750.dtsi               | 14 ++---
+ arch/arm/boot/dts/vt8500/wm8850-w70v2.dts          |  5 ++
+ arch/arm/boot/dts/vt8500/wm8850.dtsi               | 23 +++++---
+ arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts       | 21 ++++++++
+ arch/arm/boot/dts/vt8500/wm8950.dtsi               | 11 ++++
+ 27 files changed, 386 insertions(+), 165 deletions(-)
+---
+base-commit: 62db22c2af6ce306943df5de6f5198ea9bd3d47b
+change-id: 20250409-wmt-updates-5810c65125e4
 
-> 
->>                  .proc_handler   = proc_dointvec,
->>          },
->>          {
->>                  .procname       = "speed_limit_max",
->>                  .data           = &sysctl_speed_limit_max,
->>                  .maxlen         = sizeof(int),
->> -               .mode           = S_IRUGO|S_IWUSR,
->> +               .mode           = 0644,
->> +               .proc_handler   = proc_dointvec,
->> +       },
->> +       {
->> +               .procname       = "sync_io_depth",
->> +               .data           = &sysctl_sync_io_depth,
->> +               .maxlen         = sizeof(int),
->> +               .mode           = 0644,
->>                  .proc_handler   = proc_dointvec,
->>          },
->>   };
->> @@ -5091,7 +5108,7 @@ static ssize_t
->>   sync_min_show(struct mddev *mddev, char *page)
->>   {
->>          return sprintf(page, "%d (%s)\n", speed_min(mddev),
->> -                      mddev->sync_speed_min ? "local": "system");
->> +                      mddev->sync_speed_min ? "local" : "system");
->>   }
->>
->>   static ssize_t
->> @@ -5100,7 +5117,7 @@ sync_min_store(struct mddev *mddev, const char *buf, size_t len)
->>          unsigned int min;
->>          int rv;
->>
->> -       if (strncmp(buf, "system", 6)==0) {
->> +       if (strncmp(buf, "system", 6) == 0) {
->>                  min = 0;
->>          } else {
->>                  rv = kstrtouint(buf, 10, &min);
->> @@ -5120,7 +5137,7 @@ static ssize_t
->>   sync_max_show(struct mddev *mddev, char *page)
->>   {
->>          return sprintf(page, "%d (%s)\n", speed_max(mddev),
->> -                      mddev->sync_speed_max ? "local": "system");
->> +                      mddev->sync_speed_max ? "local" : "system");
->>   }
->>
->>   static ssize_t
->> @@ -5129,7 +5146,7 @@ sync_max_store(struct mddev *mddev, const char *buf, size_t len)
->>          unsigned int max;
->>          int rv;
->>
->> -       if (strncmp(buf, "system", 6)==0) {
->> +       if (strncmp(buf, "system", 6) == 0) {
->>                  max = 0;
->>          } else {
->>                  rv = kstrtouint(buf, 10, &max);
->> @@ -5145,6 +5162,35 @@ sync_max_store(struct mddev *mddev, const char *buf, size_t len)
->>   static struct md_sysfs_entry md_sync_max =
->>   __ATTR(sync_speed_max, S_IRUGO|S_IWUSR, sync_max_show, sync_max_store);
->>
->> +static ssize_t
->> +sync_io_depth_show(struct mddev *mddev, char *page)
->> +{
->> +       return sprintf(page, "%d (%s)\n", sync_io_depth(mddev),
->> +                      mddev->sync_io_depth ? "local" : "system");
->> +}
->> +
->> +static ssize_t
->> +sync_io_depth_store(struct mddev *mddev, const char *buf, size_t len)
->> +{
->> +       unsigned int max;
->> +       int rv;
->> +
->> +       if (strncmp(buf, "system", 6) == 0) {
->> +               max = 0;
->> +       } else {
->> +               rv = kstrtouint(buf, 10, &max);
->> +               if (rv < 0)
->> +                       return rv;
->> +               if (max == 0)
->> +                       return -EINVAL;
->> +       }
->> +       mddev->sync_io_depth = max;
->> +       return len;
->> +}
->> +
->> +static struct md_sysfs_entry md_sync_io_depth =
->> +__ATTR_RW(sync_io_depth);
->> +
->>   static ssize_t
->>   degraded_show(struct mddev *mddev, char *page)
->>   {
->> @@ -5671,6 +5717,7 @@ static struct attribute *md_redundancy_attrs[] = {
->>          &md_mismatches.attr,
->>          &md_sync_min.attr,
->>          &md_sync_max.attr,
->> +       &md_sync_io_depth.attr,
->>          &md_sync_speed.attr,
->>          &md_sync_force_parallel.attr,
->>          &md_sync_completed.attr,
->> @@ -8927,6 +8974,23 @@ static sector_t md_sync_position(struct mddev *mddev, enum sync_action action)
->>          }
->>   }
->>
->> +static bool sync_io_within_limit(struct mddev *mddev)
->> +{
->> +       int io_sectors;
->> +
->> +       /*
->> +        * For raid456, sync IO is stripe(4k) per IO, for other levels, it's
->> +        * RESYNC_PAGES(64k) per IO.
->> +        */
->> +       if (mddev->level == 4 || mddev->level == 5 || mddev->level == 6)
->> +               io_sectors = 8;
->> +       else
->> +               io_sectors = 128;
->> +
->> +       return atomic_read(&mddev->recovery_active) <
->> +               io_sectors * sync_io_depth(mddev);
->> +}
->> +
->>   #define SYNC_MARKS     10
->>   #define        SYNC_MARK_STEP  (3*HZ)
->>   #define UPDATE_FREQUENCY (5*60*HZ)
->> @@ -9195,7 +9259,8 @@ void md_do_sync(struct md_thread *thread)
->>                                  msleep(500);
->>                                  goto repeat;
->>                          }
->> -                       if (!is_mddev_idle(mddev, 0)) {
->> +                       if (!sync_io_within_limit(mddev) &&
->> +                           !is_mddev_idle(mddev, 0)) {
->>                                  /*
->>                                   * Give other IO more of a chance.
->>                                   * The faster the devices, the less we wait.
->> diff --git a/drivers/md/md.h b/drivers/md/md.h
->> index 1cf00a04bcdd..63be622467c6 100644
->> --- a/drivers/md/md.h
->> +++ b/drivers/md/md.h
->> @@ -483,6 +483,7 @@ struct mddev {
->>          /* if zero, use the system-wide default */
->>          int                             sync_speed_min;
->>          int                             sync_speed_max;
->> +       int                             sync_io_depth;
->>
->>          /* resync even though the same disks are shared among md-devices */
->>          int                             parallel_resync;
->> --
->> 2.39.2
->>
-> 
-> This part looks good to me.
-> 
-> Acked-by: Xiao Ni <xni@redhat.com>
-> 
-> 
-> 
-> .
-> 
+Best regards,
+-- 
+Alexey Charkov <alchark@gmail.com>
 
