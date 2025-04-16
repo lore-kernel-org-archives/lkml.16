@@ -1,96 +1,89 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EC3225390
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBD1224B1B
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744833293; cv=none; b=rTdC6+Nz84GEFMrR88lR3h3V5EiDDVYEEhUnXm29Qs3pa/6U8hK0vIl7NBdAigamrajKXR/HbPpZM9uNophrIDHG2ONJgkpa8S0Fr31FdfuGYfeax5FTsx5JfOCs/29neOyS2lzOq62KBpETW4c8ERo1Fr0VTtn3HT9cFCbH1K4=
+	t=1744833329; cv=none; b=XlQ6+mwR3E0LCza3dJdk2v2CUY8QiPsO7tUIp0SBZR2MvohxHW36sLr83GK29p2jTY4EsljT6NOJLoLCzhE+1JdHvPbJKTGi3GZols+zulNyV4Gq77P4MlSa78klj61PzgFOzmr4NQbBSCGElsgtOErYzdXKOQuIwcgvNgE6Iqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744833293; c=relaxed/simple;
-	bh=UnjEKaAwKTEtDaCYnG44TvlHj2XPzZ1wrYhnoD26JF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RFrdx1skT/KJnGVHsLtvstSuMy7FCCea3an8c/ui2dFpF3BTMY3Mg1b9wLNRoZuv9BbbrBwuamziifOXDelvdlY6zxu+nXgqkaTQyQgkGXrazgVwIsH0YtnzjeHi6zLznn0SNk835XUDn+hGlgXdXw0Fv5xFwZdnsVFQGluiyfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n06wiRZH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744833329; c=relaxed/simple;
+	bh=1HUg6vRplYnyCVWiBYojljLFNc1IiwTnkSohA4vTdkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W/OwmNxALhq23f5rW+SEAMzeQrOk3/6PFjGEAyZu1hgsF4uM6bYOPiiiFCAR67xw3TA1j0ykyixiwOGz5YuWeuB+QQz38dJeRlJQFYMMguEnwhuwF5cVmb9hivxukDjGgFIh4KIz5zK6avmhB/d5SRToxTPV3MZQtAIALKcvDx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BttANV3m; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n06wiRZH"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mjGs007820;
-	Wed, 16 Apr 2025 19:54:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	UnjEKaAwKTEtDaCYnG44TvlHj2XPzZ1wrYhnoD26JF8=; b=n06wiRZHqtIm1oZd
-	kjAc78dHq11YF7W6bgB6MJNabCAP7d3lj7owOAaq3ciiAH8V2mj9Hp3sX3aX8KoD
-	vEHgWp5Qo4W0cmVJL6HPIaAJx9aly4VAggWFRt4/i8bS3i4357ogWqjTw9IOELwO
-	txn2kSyzlNavmEbxeoTmQel/FIHtOltP+S+vUn/51YOYkVWm5biYQQyo7V8K2ldr
-	cOAxvVZL9GVKx+LwQud5HCPIEzmBZX0O65ony7TqC99rO+dD7LnZVyte88e88XjU
-	AZQgV8tWmoBPb1FWAvTW8wx8vtFkJYpHza2Hh12mxCqcdiji7XEqELflx51J+zJH
-	jJPWLg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6mrr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 19:54:41 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GJsfdj027392
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 19:54:41 GMT
-Received: from [10.111.181.123] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 12:54:40 -0700
-Message-ID: <b25547ce-f16b-4594-baf3-afb0346c90f2@quicinc.com>
-Date: Wed, 16 Apr 2025 12:54:39 -0700
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BttANV3m"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223f7b10cbbso84125ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744833326; x=1745438126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1HUg6vRplYnyCVWiBYojljLFNc1IiwTnkSohA4vTdkM=;
+        b=BttANV3mwvcyQwuziqUN7MbQfIuxxmpc5mJ334ngqS/qMDf2pmhi8oQWh7Bk6SR/oY
+         +rpLChmW8Lju3Wp49gcKHlnUMEEYa1ztzvaL64NbrDGIktFNp4zKKT//LzWB8CCR5OSO
+         /2ogF56ymHDTk21fV5KzmEc7PMZK5KfohJWXTG7TsnAZskfq5kBoQMjbv2cutSp3j0/j
+         0gzIHy71jpkhFt81MUgdQmlwvn35ipYa58AkDioyGZEtKcaRiQOMakOObVP7+vugAbkH
+         6f3ZIMXF+iuy8uUw1MCfT0EjITi52/Tm7jD9g/bAAsf1ssfuvJJmZ0bBKgMvnSnIpAnw
+         2uKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744833326; x=1745438126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1HUg6vRplYnyCVWiBYojljLFNc1IiwTnkSohA4vTdkM=;
+        b=Udwd3X8jpcUoLlbtirziFspWdQNrOWQUx3dGr90wz0klJL4TX/4w29Aqh8u48eV8mC
+         RdmRhGEDkXB/Pd0vxpsX6nx3MBFXjzEfoxreHr1kNQw1/zrArHslovGadlN5bHT0UZ+F
+         5/V3yxCOFA31OqlNNaOntQ2Oox2YyE9cECTn1zTVhdyif29WB5u9WDevTg4UTYjJkURg
+         iXTUaM18KzOi2lsmP/QFDu7LdBc8Dxbhd6orjtJxyzEYy+4SaQY33VVQ/FOVtphtqcGe
+         GMXGHOA1z2jLmL1kYenjRx/AUKofWEB61BJfvY1J7y7+7Kq0dS0CR0CNEEl/619unJma
+         pmqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/KkB+tRxNeWxV4P6n0kDRFz7ZyQ5xVSMUWYC8TUSFUsrLM4jFtvPqsux/6oxO+/9Dqv+Lq8L/+jUsv08=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLKMP3talQSRkHs15de7BKDphjyxkHOInc5ck2tjTfcjvMQUr7
+	dEuR4k9Z2Hpev8t4cqTycUglqdrK4Fl1skYL1ekd+tLyXDV+Jgv0O795+mrxGoH9qQh0u9b2SQU
+	HFjzuI/spjlV54zYHFHmVeMSzivkKD7pxa7U9uA==
+X-Gm-Gg: ASbGncvzyg6qCQbbLq+uQ1qpX9RbFc2N9TITfyD4U8UiASxWCJKws2OZUdMCQfW4e22
+	5kGrwsFnJ1L+OrqDEAf9039IkbIU2/VBFdw0W3CcuhnA+6WdV3RoYz8aOrQkaCAep4o112YVJo2
+	RmcBBtkRNeeoRpru/s6I78LWx8
+X-Google-Smtp-Source: AGHT+IGqDMF/ALxgIEpB98flitK9xgvxPgd44G7WeU/Xt83/u6oRlv7JHAEZnJWkR5Q0ZDEgWiYoqEe8L6aCLUjE4bg=
+X-Received: by 2002:a17:902:d2cb:b0:22c:336f:cb5c with SMTP id
+ d9443c01a7336-22c41200358mr2529885ad.6.1744833326409; Wed, 16 Apr 2025
+ 12:55:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [greybus-dev] [PATCH v2 1/4] staging: greybus: replace deprecated
- strncpy with strscpy in firmware.c
-To: Ganesh Kumar Pittala <ganeshkpittala@gmail.com>, <johan@kernel.org>,
-        <elder@kernel.org>, <gregkh@linuxfoundation.org>
-CC: <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, <hvaibhav.linux@gmail.com>,
-        <pure.logic@nexus-software.ie>
-References: <20250413073220.15931-1-ganeshkpittala@gmail.com>
- <20250413073220.15931-2-ganeshkpittala@gmail.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20250413073220.15931-2-ganeshkpittala@gmail.com>
+References: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com> <20250416-ublk_task_per_io-v5-4-9261ad7bff20@purestorage.com>
+In-Reply-To: <20250416-ublk_task_per_io-v5-4-9261ad7bff20@purestorage.com>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 16 Apr 2025 12:55:15 -0700
+X-Gm-Features: ATxdqUFwp4qvZeRJfWY7VwLd0YPT411Yqwdu1i1gJfqMCA8jsnrpr2zoR65e_0k
+Message-ID: <CADUfDZqNh1G8VDOw__y96ZBtYa=Y2ZhoX4emutMqxki85YABCQ@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] ublk: mark ublk_queue as const for ublk_handle_need_get_data
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: nR_WgbeSUnXWSUjpVrwTEIaNtdBRLRRC
-X-Proofpoint-GUID: nR_WgbeSUnXWSUjpVrwTEIaNtdBRLRRC
-X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=68000b01 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=o4_jF1gwsiqNhuO3VYgA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=D0TqAXdIGyEA:10 a=xa8LZTUigIcA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_07,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=582 suspectscore=0 clxscore=1015 lowpriorityscore=0
- phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160162
+Content-Transfer-Encoding: quoted-printable
 
-On 4/13/2025 12:32 AM, Ganesh Kumar Pittala wrote:
-> This patch replaces the use of the deprecated strncpy() function with
-> strscpy() in drivers/staging/greybus/Documentation/firmware/firmware.c.
+On Wed, Apr 16, 2025 at 12:46=E2=80=AFPM Uday Shankar <ushankar@purestorage=
+.com> wrote:
+>
+> We now allow multiple tasks to operate on I/Os belonging to the same
+> queue concurrently. This means that any writes to ublk_queue in the I/O
+> path are potential sources of data races. Try to prevent these by
+> marking ublk_queue pointers as const in ublk_handle_need_get_data. Also
+> move a bit more of the NEED_GET_DATA-specific logic into
+> ublk_handle_need_get_data, to make the pattern in __ublk_ch_uring_cmd
+> more uniform.
+>
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 
-Review:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
-
-Especially:
-Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
-of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
-if you are giving orders to the codebase to change its behaviour.
-
+Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
