@@ -1,86 +1,83 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2582045B7
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DA22248BB;
+	Wed, 16 Apr 2025 19:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830780; cv=none; b=NhtGZjcgtgQkilDbMgtDji1ryEJdVmgRuKc+FnQFeVXDkFnII5SmTX9Oa4XK9Y5AzoR+oZLZySo9rBPI4qVsNchy4cIg7UIimhpgVLjB+CU6U2/9zxrm+6rNvO5uug2mbHQzE+2W+DykqCtEqoZj7MzRJbRnP9Z1XqKgTarikLk=
+	t=1744830782; cv=none; b=X2aT3L09XoEJmeSd7HqjqIYde2cLkM9x2fV0gt/UuWfSF0SKXfSqm0a18fyHtfLkHlJuI6ANiL9Jqu9nfO6xFI2pkXoVRpnonkiHlzBv/XcRyhZo/UrDlOpaEHwSUuLFncZz3v3Ex3b9yKsz6L6OzK8/o/EQyJ9qBtcxxYwxtb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830780; c=relaxed/simple;
-	bh=YAJyde0rKlA3/Jqp4w4fxsQdvAfJUtcgdJrAhXCwwWk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NNlfKsE3bcjKiTD8t8oMCaUUcgsodG5g3SzjpK3pgtYLIErOHwOOD7Qjmg+YEaNVrj9lBLhHeUZbHM+fncy+KuJK6ggfDBhmr2fh7W1vj6LNrTvzuj5zcX0PrPvRnpFKAqhUQUtyk3SjyacaPT1A54iZ+vy/Np7RFMZHbkaAsYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=dNubGrkb; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1744830782; c=relaxed/simple;
+	bh=ABo2JdVK46DXWAOKBfrZRMK2GZ5M7loM12Fnkgx9HDI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jPey/KDU80ixLkxwXfgDvleZYf/tJSTZDmkkevwugakB/SxXq4I1EkupjrWngjd+yxn3dTTehTJ70LCYdNiGwUfIcQnh2wtV27cMsi/VpMa8SWrwpf9JPBtUE12DYkfg86wmoKRZIcUvSSb+sV+UpTyK0wUperBGRTeIPvX3EIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tejubgSR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="dNubGrkb"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301a6347494so1239205a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:12:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744830777; x=1745435577; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YAJyde0rKlA3/Jqp4w4fxsQdvAfJUtcgdJrAhXCwwWk=;
-        b=dNubGrkbCdiSRJ7SVPJ2fmimk4f7lxRhnPd8I6lRJGrHsfLy96c33eE1vZf5IDN3dn
-         GmD0et2ca+ZYf9mfDO/hxcka6zOLDOf4c46jEGH2bT0VwxzPH7enhGkzNCNsydofISMm
-         FUFn3of5G1nNhQtk9HS1QQUcVqZxCtXFhR10iGnbmJQTkn9+e9anSUix8+9YDXzLwjXQ
-         WpzMxfEBTv64CE8a+rhWWhNhOE5+4mkico+y+RIpzFZblHYUbIw5A8QT0xxKWkMQ/A8u
-         4VLLVC5IHLifkgPSYGrTmYSebbHxcKCN2xuoVGnh7PSbt4Yky6NDE5DBCahaY0XW3DzN
-         SASw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744830777; x=1745435577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YAJyde0rKlA3/Jqp4w4fxsQdvAfJUtcgdJrAhXCwwWk=;
-        b=ZDYMdBtU6JJQue4XcjQkKnqgaiz1V0bQjeOOiW9UI+UauJhOIt66HKDPH80HgKf3IY
-         w8tThrXF5XQtXa7ZB8H8mRlEzcTkpPR6M8v56LTnC6bRcqKYRanNmwphHnJg2sg9mIzR
-         f6iCD7qh58k6e9SHEQVGtxAbaKMKe3D+sPTgy5sOBH/QpCOxXSd5vPEhV5r6gftOgHbb
-         BFGpBBdtPyeUnEgT5njmdJx80OGCnPtelrFNrMr2iAjB3yzlAkQ3sCc+1A6ncv9MzM4W
-         5oFcZxY+gqyhi3gIj9ky29bVU/jbG6+24zEdQbpSKKksDN+BYxPpUD8H41P0rVfJ9QYZ
-         dFsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaH+tRgyVIBmVPFxdSBefVtx1kmLTsqDY8/PQ2AHyagnH8E7ba2MWAKWL7Bwpin648Lb3kS5h0a/8c1Ks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeXNR3WQRKO1st8tBoTnNaIdGRjg+g7VTZTlbCZu9kVx1EMCBi
-	J3r0Anl2WWoT4HGo3KBGpjs7QMHBe8Z98uQxcJsjiBB8c/sZEIrqFTZOAasAog2W7WYVlH8l8q2
-	oNMvOzYd4JO7XXnUrzbFbyYu50qvwyTWeKnzLxA==
-X-Gm-Gg: ASbGncv1bJHdXgozFjP5SWW3w8YCocVRQYLsERNdWwCZ0adlyZv/Op5j+gn8eZcui7j
-	J/FlRbYpsm2SkEgbONDOOYoAKp0Ee8SLt3sXj9s5zjJYq3Ll74Hoh5thMhCIt7rMH2C+66cPoT2
-	4CC0aV1bUaXoaDFzxzqPs6SWWz
-X-Google-Smtp-Source: AGHT+IEEcaK/kf+hnH7WpJIPAbQ8YV9bexKkzYpKirQXm53d9m61Se6AU0kOe6wu5D9y8Gg8iAntt2FdlcQVnKoaH4I=
-X-Received: by 2002:a17:90b:1c8b:b0:2fe:b879:b68c with SMTP id
- 98e67ed59e1d1-3086d45aa33mr512422a91.6.1744830777267; Wed, 16 Apr 2025
- 12:12:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tejubgSR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3161C4CEE2;
+	Wed, 16 Apr 2025 19:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744830782;
+	bh=ABo2JdVK46DXWAOKBfrZRMK2GZ5M7loM12Fnkgx9HDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tejubgSR875d+InWKWW3xVU68domAWgY0R2OwfYdVNdiUlO9yjM6A7c2Ts/L9oVnx
+	 5g+Pd3sLLxLEJ+xq/UGGFsTG2HzczyTBjLM+PrvHCDHIVr1ltTIQIZiTUtpn0GuRuf
+	 OHCLzeej58uk2zhF+/S+i2hhEZTUokILR97EX05doSJdkzlwlTMU1u8reA2xhICXWt
+	 HOrY3r3zAlBr+nESRzNcF38fFFHCXUTGxVDCy1X6pN8cEGrpGQ5lZZm+plxcpJD/Nw
+	 G/jD1TyAn0paiYWT/JQ+9RwZ02KAa1MhW0NWjzQHvtnswtzhhO/QVnoRi/0/0pyuHA
+	 rL0RsnDg4XK4w==
+Date: Wed, 16 Apr 2025 22:12:58 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
+	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH v3 1/2] x86/sgx: Use sgx_nr_used_pages for EPC page count
+ instead of sgx_nr_free_pages
+Message-ID: <aAABOi6OTCidBAeC@kernel.org>
+References: <20250415115213.291449-1-elena.reshetova@intel.com>
+ <20250415115213.291449-2-elena.reshetova@intel.com>
+ <Z__8AHPhZzyhB5A5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-ublk_task_per_io-v4-0-54210b91a46f@purestorage.com> <20250415-ublk_task_per_io-v4-3-54210b91a46f@purestorage.com>
-In-Reply-To: <20250415-ublk_task_per_io-v4-3-54210b91a46f@purestorage.com>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 16 Apr 2025 12:12:46 -0700
-X-Gm-Features: ATxdqUHTDCU2rQJ_X2Nhw10mB39sRHdrBHSFxas462wTw_XpTmSoKQxHVE6ODV4
-Message-ID: <CADUfDZofzZk4vE4E=aKcTTDwm7KxT1F-3_xMTrw796nL_tH=YA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] ublk: mark ublk_queue as const for ublk_register_io_buf
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z__8AHPhZzyhB5A5@kernel.org>
 
-On Tue, Apr 15, 2025 at 6:00=E2=80=AFPM Uday Shankar <ushankar@purestorage.=
-com> wrote:
->
-> We now allow multiple tasks to operate on I/Os belonging to the same
-> queue concurrently. This means that any writes to ublk_queue in the I/O
-> path are potential sources of data races. Try to prevent these by
-> marking ublk_queue pointers as const in ublk_register_io_buf.
->
-> Suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+On Wed, Apr 16, 2025 at 09:50:44PM +0300, Jarkko Sakkinen wrote:
+> On Tue, Apr 15, 2025 at 02:51:21PM +0300, Elena Reshetova wrote:
+> > Note: The serialization for sgx_nr_total_pages is not needed because
+> > the variable is only updated during the initialization and there's no
+> > concurrent access.
+> 
+> No. It's
+> 
+> - not a side-note but core part of the rationale.
+> - the reasoning here is nonsense, or more like it does not exist at all.
+> 
+> sgx_nr_free_pages can be substituted with sgx_nr_used_pages at the sites
+> where sgx_free_pages was previously used *exactly* because
+> sgx_reclaimer_init() is called only after sgx_page_cache_init(). This
+> gives the invariant of it to be constant whenever sgx_alloc_epc_page()
+> is called.
+> 
+> These type of changes give a proof of the legitimity of the invariant,
+> which I addressed here.
 
-Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
+Let's assume that this patch set had a bug just as a mind game.
+
+If we have a reasoning of the change documented, we will end up having
+better tools to reason what we did not consider while acking this patch
+set per se.
+
+With convoluted reasoning we have absolutely nothing.
+
+This why what I'm saying is important.
+
+BR, Jarkko
