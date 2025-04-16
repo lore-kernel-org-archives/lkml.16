@@ -1,345 +1,158 @@
-Received: from mail-ej1-f74.google.com (mail-ej1-f74.google.com [209.85.218.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7665B212B31
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4876D213221
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819756; cv=none; b=UGkW3vhshRy5o0pMZTkKHXTyVtZmTI0p1KRrppy5hkEoZzYTIxulSdhc7DxdtIVupEeAl0m/O4K5rCiSeRgfhx3P8asGj7o1+T/w0Kd80/RsBJNTkjZwF0IrOroWcUemvS/bx+DFv16ivNp0jtdG0DUy6r6F1O5VmhmBFLkZkPA=
+	t=1744819760; cv=none; b=dQO+uxch7u5ieUu2FJkrZK5iSzZ+SwXOeE7kd+oQOUbpQWy+VWkdpGJ/GGog+3nnA8drKH9jDMSNkP1OCUffC577f9LNTUdsZrmFP9MS/m3HwZ5I3v1ij4Cmfkbe4aTN1rogrGutsqGg5yRDn61dOWw2mOagjvfXXhf0pRY+CgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819756; c=relaxed/simple;
-	bh=fe2nMdzscGwLFIb9lWleR34iODAJvtXU+xcZ8COUBVI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ULrcfbeC570VFz2o0IeYludUWqaOlAvwQePQLHE/jWY03baetCs/x+QUohM+MPFHaYg71KE4el+4zJjCZ36ghDd/hDHhi8wjysVSBzHHB39tPWsnr3oZ7mgDRXsEDpGQJb8S4s7kftNOP9qJZQ0t+ex7bCHlLFebAwDtvG2n1gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dlBImrea; arc=none smtp.client-ip=209.85.218.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
+	s=arc-20240116; t=1744819760; c=relaxed/simple;
+	bh=FwIeW4qgOB5haxONFHXw7a6R1kS+Pg8/36trjRhroCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q8Xb+1LkNrI+nRmYpwkpSP+JAT6hoCiU/uIX1xPDzHi4zudDx7760i7UKgzCG0gajQP6p/B7WLKcdev+rtuDDADDU1/Yrtdad6TYvvTrGfkQKygNW3I+0LSqcr8F5wfjz1HkWe7lWBVYYXMses6uaQPGSGQDtf5RPDChVI1i0J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AmzkTcl3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dlBImrea"
-Received: by mail-ej1-f74.google.com with SMTP id a640c23a62f3a-ac28f255a36so551324766b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744819753; x=1745424553; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7DwcRfwYwPR3lOoszfjZJQ8USmI21/b/JDlDzaI3Rk=;
-        b=dlBImreaxuxLNDq00Dwa5Herp2TIJ9C1ytHbwCEedVv537bdzNP7A5w0dBZ0hFquC4
-         TCBqFYMPqinlh1BkCGLTFPaQ1Naxkhx2j/gQe8eF5epaSaPFZjptKSDiVn7GM71bkg8C
-         7o42oQ+WSSse2g3pfebrxJyfu/TjhjifcB6SE/dkIQSaE3FbH2xVjrle/u4hJKrfG0rh
-         gU3T3SM0X5L0hx00QJ6A+bO6z4zwv8jy5+ANGPj2/BMthrcwEbxk9XAE+cWwg595aDzG
-         H/ikhpnm2X44/zz8RlHq29lx0i7bZdg6o1WGs5xlQSPTaUIGSWR5AQUNl3rjA2neJNo+
-         gdew==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AmzkTcl3"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mjwI007820
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ODYn6AqMABErS0MGZHJyExJA6uxCB640fUmnvTdsDC0=; b=AmzkTcl3OozdoeXI
+	QOXa/7IT9EFhYmScZ021lQK85PBqhd/1vF8wBbc/9HjrE1131NbqkhogJz5pWlce
+	T4PoC4Wvfj/9JUB/KBOVG1CYWgl34wZOo1J4qIEJlME9TiUuzZz0F3lcDvAJR3X+
+	5Zf9uCwfTBXVamSw9o6zEnV3uibaPIaF1nPaJ1lP79yQRNUUHcxmcKJX3kItSKvo
+	sBxrhH0+QAW3OhNCw83pBVU/A5HFGu+SfGJRTledNqAQUWCP/VhKMXVeLnsBR+v5
+	B1OUXkFys97L5RMOsRgWvyfNgFPNeONuCNVzs2z4m2/w8CSZFEOouSVyUxDCEKFA
+	iQj6lg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygd6m53h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:09:17 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c76062c513so167420585a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:09:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744819753; x=1745424553;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7DwcRfwYwPR3lOoszfjZJQ8USmI21/b/JDlDzaI3Rk=;
-        b=wm7wj4dWIApDc2lv94XTqGfg1Fbs0iyz7Em0qA8QuhM2QBbSwCTG1R40gCz5h5yq+r
-         Kprl6T/BoPEHg5FHP8aOt+TfnfJe+CitrOMrM/qO/MsOwE996Vml2mLsb/D4PQSRE4ib
-         Me7c+qSKwg3rC+1fRUFZre1SEiZh5vQMotuYjrK6j0P4xirS4ukiOafxQjSz4+D0izcv
-         MEHIVa4bVla/q6hpizBudUIvLwMbh52SG7nb91fZUB8f0fjVUNZciln5KhHHi20c14P4
-         P/TUMolE1TZOfwKLrtSRktjL4zb+pnerhK1dWZXUidBFKasA6F2TieA5Wn65pKvBQB0w
-         Opug==
-X-Forwarded-Encrypted: i=1; AJvYcCXG3LYuNtKZpS5eVgs9mAUmaYeNLJiB2IJhF9i/YCaQWYmhv8hxRpqktZe0YWZ1PYI9sZoA8AGNqm1S1XI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbKzENtmHV6owqx5FiFERvUeYBP5BM9UoYeER7GdUE/UPZKVM7
-	zSJ5TdgRBdmObw7biaQAgw/bRvtg+y1JUaehyG30UZ66XUFtzvnto0fv7xsDxEJlKkPWlBWsarG
-	hOZTFiw==
-X-Google-Smtp-Source: AGHT+IEwA7qflYoiDn9H27dpBiFGe6SdivaSu7w3Um8NapHX8djDr1ytd9Hav23fIHauqobhXm8GW66CUx/Y
-X-Received: from ejbml21.prod.google.com ([2002:a17:906:cc15:b0:acb:205e:e0ad])
- (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:2da5:b0:ac2:e748:9f1c
- with SMTP id a640c23a62f3a-acb429e6f1cmr234278666b.33.1744819752696; Wed, 16
- Apr 2025 09:09:12 -0700 (PDT)
-Date: Wed, 16 Apr 2025 16:09:00 +0000
-In-Reply-To: <20250416160900.3078417-1-qperret@google.com>
+        d=1e100.net; s=20230601; t=1744819756; x=1745424556;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ODYn6AqMABErS0MGZHJyExJA6uxCB640fUmnvTdsDC0=;
+        b=Kjby5kYTkuLXJeOcg+6Tms14Q3P5FduH6YH5ZIJJ+7BtysUyWZs1KFZ06YxMxkboqV
+         zhsEGPVMKLC6vRYIY/aU/ghX31bAKrB+VV9wUdBBEQf4U3+KvxESf8smXU02Cyex/WiK
+         yknwp8nJJ6AXQnldSA7sAKcMCU9WC5OIdsE0O3PF3LWZJmUbRhapuVSVvbK/mYjsQYag
+         lTtg1FEgt8QW5z4k1zBJxIkkWWItuE+00dmmqVW2PqrTsuaVmRyF7zffPWDEOXXvGs+R
+         EHCHaZqMdEdhKcP0nDsDXauVOpr22OpYWg9LBUq+UF78BCpdPUM1lqbbqn6M0dJatYSo
+         RmwA==
+X-Forwarded-Encrypted: i=1; AJvYcCWqY5R0LCgAPtnEJ8AYNqvX1yQ0JccRpo97xH549riUI5CbqieAiKold9AQ0lszkf1D8/nP7KeNJJU0sgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8DZFFewvY68dgICA5oCqLy0SdHSGb/gZDjfh4I2Df1RDXAX+C
+	z5w/Z0wr4VYeLTxQILgZwFD2kIudt7Tk+52+BG7CEtBEkjPXaajGtPrT+Q8s2EbjjH01V8FcrZn
+	hMfqlJn+ouPqVewh3b5V5q/lg9MzaYk9/h36xgkEUMpQqGa2MYqnKunK6ss75tug=
+X-Gm-Gg: ASbGncuMFtxXZHixxSuUgSZT6iODoXqXSL8/BTLRB4FSh8qDNnkKEzNFGNkmjgtrNk7
+	pAx5ZTFWu2lwZBuR70dZ6tNKzW1LZ0mu8bSqTJ7vBsMNfrHpbhPsm9jy/6UIYZjLe+kSbTW3+Li
+	349ha8IbMjqY4W83DUn0Zh26unLCRo/MN77ljqxgj35v74PH31FUoRbLjyvRJafBxdaYGP3HDHi
+	gYCYl6aFYgIcZLTRwHb/Kq3s5YIeHrHd8RpOkSxJFrtPFJzATdC4A8Y1cos97r95wLBQT53LcNs
+	kYRhLMCAgDzQWglaSqlXQ5XuwGITmDL2NEZBjky5OxoTsv8rtLKqXVwk/kUgopdt9DM=
+X-Received: by 2002:a05:6214:e6d:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f2b949f763mr1424036d6.2.1744819755813;
+        Wed, 16 Apr 2025 09:09:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHqTEn4ZwnP85Wl9OFLZVFMob3CDIEgC8OxR/srPtQNfxgXZMTXzLdDo2GRaFTa3vUSJvc1xg==
+X-Received: by 2002:a05:6214:e6d:b0:6e8:fef8:8b06 with SMTP id 6a1803df08f44-6f2b949f763mr1423916d6.2.1744819755308;
+        Wed, 16 Apr 2025 09:09:15 -0700 (PDT)
+Received: from [192.168.65.178] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d127970sm153280866b.113.2025.04.16.09.09.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 09:09:14 -0700 (PDT)
+Message-ID: <b6c941d3-85d4-45e8-ae69-9d9e4dab8440@oss.qualcomm.com>
+Date: Wed, 16 Apr 2025 18:09:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416160900.3078417-1-qperret@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250416160900.3078417-5-qperret@google.com>
-Subject: [PATCH v3 4/4] KVM: arm64: Extend pKVM selftest for np-guests
-From: Quentin Perret <qperret@google.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>
-Cc: Quentin Perret <qperret@google.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] arm64: dts: qcom: sa8775p: Add support for camss
+To: Vikram Sharma <quic_vikramsa@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, rfoss@kernel.org,
+        todor.too@gmail.com, bryan.odonoghue@linaro.org, mchehab@kernel.org,
+        robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org, hverkuil-cisco@xs4all.nl,
+        cros-qcom-dts-watchers@chromium.org, catalin.marinas@arm.com,
+        will@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Suresh Vankadara <quic_svankada@quicinc.com>
+References: <20250210155605.575367-1-quic_vikramsa@quicinc.com>
+ <20250210155605.575367-3-quic_vikramsa@quicinc.com>
+ <6e98b5ca-3ff1-44c3-928f-e993cf29215f@oss.qualcomm.com>
+ <ee4d08b0-f291-4018-bda3-96dfbc7a07ff@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <ee4d08b0-f291-4018-bda3-96dfbc7a07ff@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: XXSucyMb1JyiOxyfNcg1F5KNWq9Dq4f2
+X-Proofpoint-GUID: XXSucyMb1JyiOxyfNcg1F5KNWq9Dq4f2
+X-Authority-Analysis: v=2.4 cv=ANaQCy7k c=1 sm=1 tr=0 ts=67ffd62d cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=eWPriOLmkRKYu5JWBSMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ mlxlogscore=941 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160132
 
-The pKVM selftest intends to test as many memory 'transitions' as
-possible, so extend it to cover sharing pages with non-protected guests,
-including in the case of multi-sharing.
+On 4/16/25 5:29 PM, Vikram Sharma wrote:
+> 
+> On 4/14/2025 7:14 PM, Konrad Dybcio wrote:
+>> On 2/10/25 4:56 PM, Vikram Sharma wrote:
+>>> Add changes to support the camera subsystem on the SA8775P.
+>>>
+>>> Co-developed-by: Suresh Vankadara<quic_svankada@quicinc.com>
+>>> Signed-off-by: Suresh Vankadara<quic_svankada@quicinc.com>
+>>> Signed-off-by: Vikram Sharma<quic_vikramsa@quicinc.com>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/sa8775p.dtsi | 187 ++++++++++++++++++++++++++
+>>>   1 file changed, 187 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>>> index 3394ae2d1300..83640fef05d2 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
+>>> @@ -7,6 +7,7 @@
+>>>   #include <dt-bindings/interconnect/qcom,icc.h>
+>>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>   #include <dt-bindings/clock/qcom,rpmh.h>
+>>> +#include <dt-bindings/clock/qcom,sa8775p-camcc.h>
+>>>   #include <dt-bindings/clock/qcom,sa8775p-dispcc.h>
+>>>   #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
+>>>   #include <dt-bindings/clock/qcom,sa8775p-gpucc.h>
+>>> @@ -3796,6 +3797,192 @@ videocc: clock-controller@abf0000 {
+>>>               #power-domain-cells = <1>;
+>>>           };
+>>>   +        camss: isp@ac7a000 {
+>>> +            compatible = "qcom,sa8775p-camss";
+>>> +
+>>> +            reg = <0x0 0xac7a000 0x0 0x0f01>,
+>>> +                  <0x0 0xac7c000 0x0 0x0f01>,
+>>> +                  <0x0 0xac84000 0x0 0x0f01>,
+>>> +                  <0x0 0xac88000 0x0 0x0f01>,
+>>> +                  <0x0 0xac8c000 0x0 0x0f01>,
+>>> +                  <0x0 0xac90000 0x0 0x0f01>,
+>>> +                  <0x0 0xac94000 0x0 0x0f01>,
+>> These I think should begin 0x1000 earlier and as a result be 0x1000
+> Hi Konrad,
+> Thanks for your comments.
+> First 0x1000 bytes of CSID are for secure usecase. Actually CSID register address space starts from
+> 'TITAN_A_RT_1_CSID_WRAPPER_CLC_CSID0_HW_VERSION' which is 0xac7a000.
 
-Signed-off-by: Quentin Perret <qperret@google.com>
----
- arch/arm64/include/asm/kvm_pkvm.h             |  6 ++
- arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |  4 +-
- arch/arm64/kvm/hyp/nvhe/mem_protect.c         | 90 ++++++++++++++++++-
- arch/arm64/kvm/hyp/nvhe/setup.c               |  8 +-
- arch/arm64/kvm/pkvm.c                         |  1 +
- 5 files changed, 104 insertions(+), 5 deletions(-)
+Alright, thanks
 
-diff --git a/arch/arm64/include/asm/kvm_pkvm.h b/arch/arm64/include/asm/kvm_pkvm.h
-index abd693ce5b93..d91bfcf2db56 100644
---- a/arch/arm64/include/asm/kvm_pkvm.h
-+++ b/arch/arm64/include/asm/kvm_pkvm.h
-@@ -135,6 +135,12 @@ static inline unsigned long host_s2_pgtable_pages(void)
- 	return res;
- }
- 
-+#ifdef CONFIG_NVHE_EL2_DEBUG
-+static inline unsigned long pkvm_selftest_pages(void) { return 32; }
-+#else
-+static inline unsigned long pkvm_selftest_pages(void) { return 0; }
-+#endif
-+
- #define KVM_FFA_MBOX_NR_PAGES	1
- 
- static inline unsigned long hyp_ffa_proxy_pages(void)
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-index 535722cd8417..26016eb9323f 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-@@ -69,8 +69,8 @@ static __always_inline void __load_host_stage2(void)
- }
- 
- #ifdef CONFIG_NVHE_EL2_DEBUG
--void pkvm_ownership_selftest(void);
-+void pkvm_ownership_selftest(void *base);
- #else
--static inline void pkvm_ownership_selftest(void) { }
-+static inline void pkvm_ownership_selftest(void *base) { }
- #endif
- #endif /* __KVM_NVHE_MEM_PROTECT__ */
-diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 1912cc22c987..31173c694695 100644
---- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -1097,16 +1097,60 @@ int __pkvm_host_mkyoung_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu)
- struct pkvm_expected_state {
- 	enum pkvm_page_state host;
- 	enum pkvm_page_state hyp;
-+	enum pkvm_page_state guest[2]; /* [ gfn, gfn + 1 ] */
- };
- 
- static struct pkvm_expected_state selftest_state;
- static struct hyp_page *selftest_page;
- 
-+static struct pkvm_hyp_vm selftest_vm = {
-+	.kvm = {
-+		.arch = {
-+			.mmu = {
-+				.arch = &selftest_vm.kvm.arch,
-+				.pgt = &selftest_vm.pgt,
-+			},
-+		},
-+	},
-+};
-+
-+static struct pkvm_hyp_vcpu selftest_vcpu = {
-+	.vcpu = {
-+		.arch = {
-+			.hw_mmu = &selftest_vm.kvm.arch.mmu,
-+		},
-+		.kvm = &selftest_vm.kvm,
-+	},
-+};
-+
-+static void init_selftest_vm(void *virt)
-+{
-+	struct hyp_page *p = hyp_virt_to_page(virt);
-+	int i;
-+
-+	selftest_vm.kvm.arch.mmu.vtcr = host_mmu.arch.mmu.vtcr;
-+	WARN_ON(kvm_guest_prepare_stage2(&selftest_vm, virt));
-+
-+	for (i = 0; i < pkvm_selftest_pages(); i++) {
-+		if (p[i].refcount)
-+			continue;
-+		p[i].refcount = 1;
-+		hyp_put_page(&selftest_vm.pool, hyp_page_to_virt(&p[i]));
-+	}
-+}
-+
-+static u64 selftest_ipa(void)
-+{
-+	return BIT(selftest_vm.pgt.ia_bits - 1);
-+}
-+
- static void assert_page_state(void)
- {
- 	void *virt = hyp_page_to_virt(selftest_page);
- 	u64 size = PAGE_SIZE << selftest_page->order;
-+	struct pkvm_hyp_vcpu *vcpu = &selftest_vcpu;
- 	u64 phys = hyp_virt_to_phys(virt);
-+	u64 ipa[2] = { selftest_ipa(), selftest_ipa() + PAGE_SIZE };
- 
- 	host_lock_component();
- 	WARN_ON(__host_check_page_state_range(phys, size, selftest_state.host));
-@@ -1115,6 +1159,11 @@ static void assert_page_state(void)
- 	hyp_lock_component();
- 	WARN_ON(__hyp_check_page_state_range(phys, size, selftest_state.hyp));
- 	hyp_unlock_component();
-+
-+	guest_lock_component(&selftest_vm);
-+	WARN_ON(__guest_check_page_state_range(vcpu, ipa[0], size, selftest_state.guest[0]));
-+	WARN_ON(__guest_check_page_state_range(vcpu, ipa[1], size, selftest_state.guest[1]));
-+	guest_unlock_component(&selftest_vm);
- }
- 
- #define assert_transition_res(res, fn, ...)		\
-@@ -1123,21 +1172,27 @@ static void assert_page_state(void)
- 		assert_page_state();			\
- 	} while (0)
- 
--void pkvm_ownership_selftest(void)
-+void pkvm_ownership_selftest(void *base)
- {
-+	enum kvm_pgtable_prot prot = KVM_PGTABLE_PROT_RWX;
- 	void *virt = hyp_alloc_pages(&host_s2_pool, 0);
--	u64 phys, size, pfn;
-+	struct pkvm_hyp_vcpu *vcpu = &selftest_vcpu;
-+	struct pkvm_hyp_vm *vm = &selftest_vm;
-+	u64 phys, size, pfn, gfn;
- 
- 	WARN_ON(!virt);
- 	selftest_page = hyp_virt_to_page(virt);
- 	selftest_page->refcount = 0;
-+	init_selftest_vm(base);
- 
- 	size = PAGE_SIZE << selftest_page->order;
- 	phys = hyp_virt_to_phys(virt);
- 	pfn = hyp_phys_to_pfn(phys);
-+	gfn = hyp_phys_to_pfn(selftest_ipa());
- 
- 	selftest_state.host = PKVM_NOPAGE;
- 	selftest_state.hyp = PKVM_PAGE_OWNED;
-+	selftest_state.guest[0] = selftest_state.guest[1] = PKVM_NOPAGE;
- 	assert_page_state();
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
-@@ -1145,6 +1200,8 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 
- 	selftest_state.host = PKVM_PAGE_OWNED;
- 	selftest_state.hyp = PKVM_NOPAGE;
-@@ -1152,6 +1209,7 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
- 	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
-+	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
- 
- 	selftest_state.host = PKVM_PAGE_SHARED_OWNED;
-@@ -1161,6 +1219,8 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 
- 	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
- 	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
-@@ -1171,6 +1231,8 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 
- 	hyp_unpin_shared_mem(virt, virt + size);
- 	assert_page_state();
-@@ -1188,6 +1250,8 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
- 	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
- 
- 	selftest_state.host = PKVM_PAGE_OWNED;
-@@ -1195,6 +1259,28 @@ void pkvm_ownership_selftest(void)
- 	assert_transition_res(0,	__pkvm_host_unshare_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
- 
-+	selftest_state.host = PKVM_PAGE_SHARED_OWNED;
-+	selftest_state.guest[0] = PKVM_PAGE_SHARED_BORROWED;
-+	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
-+	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
-+	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
-+	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
-+	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
-+
-+	selftest_state.guest[1] = PKVM_PAGE_SHARED_BORROWED;
-+	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn + 1, vcpu, prot);
-+	WARN_ON(hyp_virt_to_page(virt)->host_share_guest_count != 2);
-+
-+	selftest_state.guest[0] = PKVM_NOPAGE;
-+	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn, vm);
-+
-+	selftest_state.guest[1] = PKVM_NOPAGE;
-+	selftest_state.host = PKVM_PAGE_OWNED;
-+	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn + 1, vm);
-+
- 	selftest_state.host = PKVM_NOPAGE;
- 	selftest_state.hyp = PKVM_PAGE_OWNED;
- 	assert_transition_res(0,	__pkvm_host_donate_hyp, pfn, 1);
-diff --git a/arch/arm64/kvm/hyp/nvhe/setup.c b/arch/arm64/kvm/hyp/nvhe/setup.c
-index 47294134cf1b..6d513a4b3763 100644
---- a/arch/arm64/kvm/hyp/nvhe/setup.c
-+++ b/arch/arm64/kvm/hyp/nvhe/setup.c
-@@ -28,6 +28,7 @@ static void *vmemmap_base;
- static void *vm_table_base;
- static void *hyp_pgt_base;
- static void *host_s2_pgt_base;
-+static void *selftest_base;
- static void *ffa_proxy_pages;
- static struct kvm_pgtable_mm_ops pkvm_pgtable_mm_ops;
- static struct hyp_pool hpool;
-@@ -38,6 +39,11 @@ static int divide_memory_pool(void *virt, unsigned long size)
- 
- 	hyp_early_alloc_init(virt, size);
- 
-+	nr_pages = pkvm_selftest_pages();
-+	selftest_base = hyp_early_alloc_contig(nr_pages);
-+	if (nr_pages && !selftest_base)
-+		return -ENOMEM;
-+
- 	nr_pages = hyp_vmemmap_pages(sizeof(struct hyp_page));
- 	vmemmap_base = hyp_early_alloc_contig(nr_pages);
- 	if (!vmemmap_base)
-@@ -313,7 +319,7 @@ void __noreturn __pkvm_init_finalise(void)
- 
- 	pkvm_hyp_vm_table_init(vm_table_base);
- 
--	pkvm_ownership_selftest();
-+	pkvm_ownership_selftest(selftest_base);
- out:
- 	/*
- 	 * We tail-called to here from handle___pkvm_init() and will not return,
-diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-index c462140e640a..f4761a479280 100644
---- a/arch/arm64/kvm/pkvm.c
-+++ b/arch/arm64/kvm/pkvm.c
-@@ -79,6 +79,7 @@ void __init kvm_hyp_reserve(void)
- 	hyp_mem_pages += host_s2_pgtable_pages();
- 	hyp_mem_pages += hyp_vm_table_pages();
- 	hyp_mem_pages += hyp_vmemmap_pages(STRUCT_HYP_PAGE_SIZE);
-+	hyp_mem_pages += pkvm_selftest_pages();
- 	hyp_mem_pages += hyp_ffa_proxy_pages();
- 
- 	/*
--- 
-2.49.0.604.gff1f9ca942-goog
-
+Konrad
