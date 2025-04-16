@@ -1,65 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F9814B950;
-	Wed, 16 Apr 2025 17:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D1F215F42;
+	Wed, 16 Apr 2025 17:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825702; cv=none; b=QiER7k6vhUwWTI2jDJIqqBKg1+q70Ka1HR58RHFptZwXu2fPVWXYbpFHY9VMc8VQbGEI6cS3fup8ovzQqfNXuwwnqsOEdF1Yx3ShAMf5unv60V0wRaOGDVAiEFkUqFv2hEJm2GkkixLkqCp7McE3qND4JMKUGgEFh7d+UgG5vqI=
+	t=1744825728; cv=none; b=M4/jKtEAcclRuxO3szEucFJ2/RiDrzwm72BTqFF2xqfoOvWZLRExNvdgElyrgV2n7B1sz6rI6OVKVLN2HgW+E85NnnpFkTYUH3l4VkvFr6htFT5OavAPYik96GZD/OsGHMOrs1BbSB+vejanCAcmVJeiBkcHT4R3H2yI0nCSqbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825702; c=relaxed/simple;
-	bh=K01BARh6HijRfnPdurMe8L58/LzFkiQR5RkCkKbib+U=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SH/47vUya5vj7azHr0n7yjRHu1IQt8RaCs74y+uqGrbhItrGeGYLAwUgHnTtWusIDust5J+uKtHlYxN0vcOGN5pkFDsfUJuyJcBvRdAQhtHVt7QptfOj1QXcj+0rcFWqlBglTfVNseG9O9uRnOs3oeUogvbWjEjVChwvLm6eU4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ke4aSG9l; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744825728; c=relaxed/simple;
+	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nz7VWr1tycKxD89N08ox1V7PAHE7egYE1f8UeFFrI9FyO8SYVxNAR3Hb6SubB/0Tl+9MWprqHLA1oQWkIahH8w7Vo13Ii9u2dTe0I5Z9KSAE6ac1rn7VvwSef2H8ffOmJPokMAEshLmWEBxWW70WNptWjVUySJwJ13YSfK5Ofaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdBVAovm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ke4aSG9l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744825701; x=1776361701;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=K01BARh6HijRfnPdurMe8L58/LzFkiQR5RkCkKbib+U=;
-  b=Ke4aSG9lI9T0AYgKxlMv9sTtwB/a/ZfDFlrnIPWpca4IbDf+ZwGwsXVi
-   yM+JEOQNgEqj1fzQzSlkFgbh1ywgnQWS2DoKfHPJl7QTIBDPXroANeicJ
-   B5IzvY62zGjIk2fOoVT+kjY9FgQpj59+QcAoHcIcdpHWjRurUbUjwjPSM
-   M9tzhw8H1w2/VekIW05ECoN6rQGpXfi9hgFx2U5jKZLlCxEJg067QMzo2
-   19ea2LD7mBj5FLKa65DdlZBj/QZZ7chVjv6OWfeQrHerfXAd/tdhEccLO
-   J1lDob6svI68hWjJoG+UmujD2pa1NkCgr0ILBGcJJ59OEesWNC05cdFHO
-   Q==;
-X-CSE-ConnectionGUID: sQ9lVC+HRHibdbYbjQrodA==
-X-CSE-MsgGUID: M7MD8GztSdOLYok6cd2DEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57029321"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57029321"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:48:20 -0700
-X-CSE-ConnectionGUID: INewvuJ4Qp6+WveIGxtopQ==
-X-CSE-MsgGUID: 3/VcZldXSeOxWjFwqIBbFw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="167736133"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:48:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u56rv-0000000CvgL-0iO1;
-	Wed, 16 Apr 2025 20:48:15 +0300
-Date: Wed, 16 Apr 2025 20:48:14 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v5 0/7] i2c: core: Move client towards fwnode
-Message-ID: <Z__tXkgOhvJUIYXq@smile.fi.intel.com>
-References: <20250416070409.1867862-1-andriy.shevchenko@linux.intel.com>
- <Z__Wlri8-tjuctsa@shikoro>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdBVAovm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0408C4CEE2;
+	Wed, 16 Apr 2025 17:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744825727;
+	bh=v4XwhaUeZk3BYsAXaR29UkZdFjLWFGa044ZokdLWR8A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GdBVAovmhB1UljmHHNyLhF0hxqGhhRuRKXZwqcyO/adBY48zZBRbdDbJB9M7PJs+9
+	 0j2ko3cmHZdfFrkH5ZvxYdo9QFPEclZ3dj/jgrPIp3sr9duFHwG5JT2pijcIt27V07
+	 ZNX2u2l/RkL/hLsy/MtGuWmctwaG39Vfk7ejLVl+rzVAMCzANGUNVa9rlfzZYwIuNl
+	 AxFhvAvI0iDRRAQnzJZ3nFXpyy0F9M4Jmp8pKWFsEjPqMUDzjlZl99QnYpNx1IAIHf
+	 xvazOMDRyHkBglCDin7oFj4gJXMJRW+IYMi4GP7mzpkt1qGQpeus7aotP6Kaj8CDgY
+	 wlFKWO6r1sP8A==
+Date: Wed, 16 Apr 2025 10:48:45 -0700
+From: Kees Cook <kees@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Wei Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Simon Horman <horms@kernel.org>, Geoff Levand <geoff@infradead.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>,
+	Willem de Bruijn <willemb@google.com>,
+	Joshua Washington <joshwash@google.com>,
+	Furong Xu <0x1207@gmail.com>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Jisheng Zhang <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
+	netdev@vger.kernel.org, imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	Richard Cochran <richardcochran@gmail.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Shannon Nelson <shannon.nelson@amd.com>,
+	Ziwei Xiao <ziweixiao@google.com>,
+	Shailend Chand <shailend@google.com>,
+	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
+	Andrew Halaney <ahalaney@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net: ethtool: Adjust exactly ETH_GSTRING_LEN-long stats
+ to use memcpy
+Message-ID: <202504161047.79ED8EF5@keescook>
+References: <20250416010210.work.904-kees@kernel.org>
+ <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,27 +73,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z__Wlri8-tjuctsa@shikoro>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
 
-On Wed, Apr 16, 2025 at 06:11:02PM +0200, Wolfram Sang wrote:
-> On Wed, Apr 16, 2025 at 10:01:30AM +0300, Andy Shevchenko wrote:
-> > The struct i2c_board_info has of_node and fwnode members. This is quite
-> > confusing as they are of the same semantics and it's tend to have an issue
-> > if user assigns both. Luckily there is only a single driver that does this
-> > and fix is provided in the last patch. Nevertheless the series moves
-> > the client handling code to use fwnode and deprecates the of_node member
-> > in the respective documentation.
-
-...
-
-> Works at least on my OF-based platform. Let's go CI.
+On Wed, Apr 16, 2025 at 11:03:51AM +0200, Kory Maincent wrote:
+> On Tue, 15 Apr 2025 18:02:15 -0700
+> Kees Cook <kees@kernel.org> wrote:
 > 
-> Applied to for-next, thanks!
-Thank you!
+> > Many drivers populate the stats buffer using C-String based APIs (e.g.
+> > ethtool_sprintf() and ethtool_puts()), usually when building up the
+> > list of stats individually (i.e. with a for() loop). This, however,
+> > requires that the source strings be populated in such a way as to have
+> > a terminating NUL byte in the source.
+> > 
+> > Other drivers populate the stats buffer directly using one big memcpy()
+> > of an entire array of strings. No NUL termination is needed here, as the
+> > bytes are being directly passed through. Yet others will build up the
+> > stats buffer individually, but also use memcpy(). This, too, does not
+> > need NUL termination of the source strings.
+> > 
+> > However, there are cases where the strings that populate the
+> > source stats strings are exactly ETH_GSTRING_LEN long, and GCC
+> > 15's -Wunterminated-string-initialization option complains that the
+> > trailing NUL byte has been truncated. This situation is fine only if the
+> > driver is using the memcpy() approach. If the C-String APIs are used,
+> > the destination string name will have its final byte truncated by the
+> > required trailing NUL byte applied by the C-string API.
+> > 
+> > For drivers that are already using memcpy() but have initializers that
+> > truncate the NUL terminator, mark their source strings as __nonstring to
+> > silence the GCC warnings.
+> 
+> Shouldn't we move on to ethtool_cpy in these drivers too to unify the code?
+
+I decided that the code churn wasn't worth it. Perhaps in a follow-up
+patch if folks want to see the removal of the explicit memcpy() uses?
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Kees Cook
