@@ -1,190 +1,294 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E01221D94;
-	Wed, 16 Apr 2025 17:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 923E62153C8;
+	Wed, 16 Apr 2025 17:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823758; cv=none; b=CiGfzaNpvWRrRAP2plkiiaBnduVykeAhQp+eRRonaINqx2aA3FvRP7dK6QsHK9yHr1dl1uVgFha3VX0FAfk7g1IXtVL8r10rnv6XjLPW+7MACNCvdoRgNmPkCiV3VU2woDscbfcsG6bOkeAwl8xes4no4cY73rPMn+FKX7oqGPc=
+	t=1744823780; cv=none; b=VfprLxGAZGm7zAEcU8pff9R0ObcTBb/NsmfZZJpK1aGcwUzRxYNjIf7KCubJJGJxWeoNLykpqJzzp+6lMSxcp8b24kzXdyV6qbzQBXRyy04dNWceL3TbhompT8EyzY/wSC17IjFVQAB3gujsva1Rlbpxw6z5VqI1zAnIPsij0sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823758; c=relaxed/simple;
-	bh=HONVM/3gBdh6iNvjtIbFIPb2A1MgnYPmlfkaZFNDgT8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gszoBkV05zcrCDkVTFWjS942qtmdhY/bVl5jcZ7StYElbYCZWt7U+QAHILS8teHYwJEUNF7Lfa2UxNLelTRMzh9zUfVyGDjM15VcZ/f+jNIMQRSMbjc8F0y/s8Wo/KQdisucUzvcwE9WYS1SPyIx46gXZcAvvI54004eiwQnw54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i9Cu6Asf; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744823780; c=relaxed/simple;
+	bh=Ce5s6Z1CFV9qTUVus8GvzRNAMmORomOEL0qJSkFGRiI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hHWGFeflvAndKiTiz+7jOdECbfxKhUthZbIpLrL+I03ZXmg0MTnqC7bFP8zAl0icojV34xQiMQ2unqhz9djQ4Qe8Vv5mFNEoTsLPXxRm+F5SMWsnHQlOyCt2gpBEdvN52e/YUthMBFXViNb3b8Zyj0gT8H3aONw1zLZIywbSpA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZUejlzbj; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i9Cu6Asf"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c559b3eb0bso332376285a.1;
-        Wed, 16 Apr 2025 10:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744823755; x=1745428555; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eebxCf0do5RI0mDndq9BzvOFzHvt6jSVZ8J5rmAS1tI=;
-        b=i9Cu6AsfNpWkxa37YXBSd8/TJvxkRZWQudCa9kNAWb+9CsHz79m5Xl9Ywpyz5MljEG
-         v1Ko17ps3hs41wyiiF87g696UHjRkokguWMGWBZCdhBZASnkLoMScr59I5FOSz1PL0Mh
-         +14rKlpf+DyuCOxa2FBf2+PKYX5L67H9x7Rj/m1ObmX4Lh7i4rEDzyMnMGJdybPvkrxk
-         7hGAq9TBFmph8dcXNhLIBZShj1fVFIfDNrw36J3Jo3SB0VxR2D7Qe4vGSE36HmXMxF09
-         GyYFfwAEy6/AS/vU4VwkZQRwyVLM5fZX+1Bcpz+y/5WrcQrckEruZPj7GGo+0mTpAkjz
-         yUdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744823755; x=1745428555;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eebxCf0do5RI0mDndq9BzvOFzHvt6jSVZ8J5rmAS1tI=;
-        b=SMZ20nt49RM5DxtghxpImR3aMoTx/YJLjM5nY9qofDQjORHK/W+NACguwJEr2EBx4d
-         K6QBvIMqfudonoRIBTUxdnQglFXVMVmbXkVJI0DikdsyVFMy7/pwYp7o+8MP/vpqwNGx
-         f1JJREdWEZAqJnBtW10EKk5Ilgq3Brg6E7Dw4pOkHXJnlYPIFEx4ILJtpwddq+Gg3/+7
-         1rMH6+mYyq2SC4sYjOcamtIepaUKcrX40hHCohhIyHOklRKsMuVe41/eGPg246dThSnG
-         K4CuocPaaEayH83RIHhVw4L1Rzwzo+b/4iaJdViJidmXk75hMdFXvb5Bbxz0rPdCcovR
-         ViWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPzCxY2Jf3zQYj0jPdvJ35gNLwBU59U9gRxURyiR/rv6WSYnCYmW1rDhZH8CtNfIJKtkcH9d1HLCrW1Wk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjV8KMe1LchvYxZC7N52un5O5yJDyKIv4Wjcjkyy3rosrlYfhy
-	7hSYrLREwHp1zJfl6qABMIXdevXr4B9Y3TRYxTPivkTq7/Fpk8sBxa9UhvtM
-X-Gm-Gg: ASbGncvqZjyVUkT8PrU/45QEpM7bci7svHJ0AlqAj1HHJ1OrxzenKxL2nlWhp6tcGCL
-	Jh6Ho4OJp77eV6xavIGpjJKRxTxjv+cibHnUqJsE13/GPlXFWSUq3wjuxefkwcuWxCZ5//eqQL9
-	GLrLWgCw7nc7cz35dKGpwNS6GelVZA/l12OyDzkygnwbIKMIODkb2kNRDAlETyQ0HKpJEaAUBDC
-	uuaaK2YkoAn/j+xKysaWX5lq0JgGLKqEcLpbO3pT3Lg7IfDpv79OumzyeB/9I5T2kHPAhE1MDVi
-	7SY+m151WmWjYMVGnsLTqtS/56V7SKwOHykdN1earc5t78TOIWzhskwT+i7wgB13w36cFgDl0Tl
-	beEU3xV5EuUVmnVLjRjnD3jcLLmwMKFzyKgG1goMu5bYx
-X-Google-Smtp-Source: AGHT+IGuG697vPrZYBUJYZ8jq6lkxyIC5MFQzO5gQGWU6a19DuYPpQz+xfbwAAsfpA7POqntMoG1hg==
-X-Received: by 2002:a05:620a:2611:b0:7c5:42c8:ac89 with SMTP id af79cd13be357-7c9190057dcmr419158385a.33.1744823755425;
-        Wed, 16 Apr 2025 10:15:55 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:a61d])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8943834sm1084605185a.22.2025.04.16.10.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 10:15:54 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 16 Apr 2025 13:15:43 -0400
-Subject: [PATCH v4 4/4] rust: alloc: replace `Vec::set_len` with `inc_len`
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZUejlzbj"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAerFV020699;
+	Wed, 16 Apr 2025 17:16:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=3JEXEK
+	VtqBbKqxPYthqGMyYI10oaZ9cG2KfWeyoFoPs=; b=ZUejlzbjMR5Jp6lI2XDEyI
+	9axyU76abEi0pMHNoNR39q6K9R6eRIrX/OtVwI54ik5ibIXS6diKzTi2H5NVwEpy
+	ryjrV1weoJWmH+qucqYrl/sszY4CtcXvYJXa97eWQqnHNf2fFVyKDotXy2bGLUvE
+	8l+EiSyKKZkRV+P5gjdLiEsREIJ2qWO5z/uONFHyCtrXMCD/AOXQxeV4DtFo51tG
+	fdk7JXer/olvMtem6QxS51DiG0kSzLGurZgZXGIQDzXPVxfff+G4yQKYkzs4IMql
+	FC/CFljnQxmtTGZNOdMbQvxpOxJX0pTbao0RZwECa7/cF9wpNnR1/r/6sbqIVNTg
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462b0q22uh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:16:07 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GE5MK4000937;
+	Wed, 16 Apr 2025 17:16:07 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4602w01m0r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:16:07 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GHG6sX30081548
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 17:16:06 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F11D358043;
+	Wed, 16 Apr 2025 17:16:05 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4ABA75805F;
+	Wed, 16 Apr 2025 17:16:03 +0000 (GMT)
+Received: from [9.61.241.145] (unknown [9.61.241.145])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 17:16:03 +0000 (GMT)
+Message-ID: <40981d32-72f4-4935-a62c-444ad78ce336@linux.ibm.com>
+Date: Wed, 16 Apr 2025 22:46:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-vec-set-len-v4-4-112b222604cd@gmail.com>
-References: <20250416-vec-set-len-v4-0-112b222604cd@gmail.com>
-In-Reply-To: <20250416-vec-set-len-v4-0-112b222604cd@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>, 
- Andrew Ballance <andrewjballance@gmail.com>, 
- Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+User-Agent: Mozilla Thunderbird
+Subject: Re: [mainline]tools/perf build warnings
+Content-Language: en-GB
+To: Athira Rajeev <atrajeev@linux.ibm.com>,
+        Namhyung Kim
+ <namhyung@kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Ingo Molnar
+ <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, jiang.peng9@zte.com.cn,
+        shao.mingyin@zte.com.cn, Thomas Gleixner <tglx@linutronix.de>
+References: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+ <B34E8075-7F38-4E30-9E51-23E43DDDF06F@linux.ibm.com>
+ <1ec497ed-b98c-46aa-a9c2-5fa906790298@linux.ibm.com>
+ <99a06f56-08cf-42ce-a231-f9a38c6ece9a@linux.ibm.com>
+ <51BBBC12-9A42-4D72-BDBB-84879C940764@linux.ibm.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <51BBBC12-9A42-4D72-BDBB-84879C940764@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JRQ73GbY8oRCS7nWmmcSSVbwr81oZVWv
+X-Proofpoint-GUID: JRQ73GbY8oRCS7nWmmcSSVbwr81oZVWv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504160139
 
-Rename `set_len` to `inc_len` and simplify its safety contract.
 
-Note that the usage in `CString::try_from_fmt` remains correct as the
-receiver is known to have `len == 0`.
+On 16/04/25 8:04 pm, Athira Rajeev wrote:
+>
+>> On 16 Apr 2025, at 7:49 PM, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>>
+>>
+>> On 16/04/25 7:33 pm, Venkat Rao Bagalkote wrote:
+>>> On 16/04/25 6:41 pm, Athira Rajeev wrote:
+>>>>> On 16 Apr 2025, at 5:12 PM, Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>>>>>
+>>>>> Hello,
+>>>>>
+>>>>>
+>>>>> I am observing a new build warning on today mainline kernel, with head commit: g834a4a689699
+>>>>>
+>>>>> Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>>>
+>>>>>
+>>>>> Warnings:
+>>>>>
+>>>>> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>>>>>
+>>>>>
+>>>>> If you happen to fix this, please add below tag.
+>>>>>
+>>>>>
+>>>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>>>> Hi Venkat
+>>>>
+>>>> Can you please check with https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/?h=tmp.perf-tools-next
+>>>> with the tmp.perf-tools-next branch..
+>>>
+>>> I verified with perf-tools-next repo on both branches namely tmp.perf-tools-next and perf-tools-next, and I think this warning got recently introduced.
+>> /Typo in the last mail, please refer to below update./
+>>
+>> I verified with perf-tools-next repo on both branches namely tmp.perf-tools-next and perf-tools-next, and issue is not seen there. And I think this warning got recently introduced.
+> Hi Venkat,
+>
+> Can you please check with this change:
+>
+>  From 9a92d361ca2c22ac774b904211eb8c4f7c80fc85 Mon Sep 17 00:00:00 2001
+> From: Athira Rajeev <atrajeev@linux.ibm.com>
+> Date: Fri, 9 May 2025 07:49:40 -0500
+> Subject: [PATCH] tools headers: Update the include/vdso/unaligned.h to sync
+>   headers
+>
+> To pick up the changes in:
+> commit acea9943271b ("vdso: Address variable shadowing in macros")
+>
+> Addressing this perf tools build warning:
+>
+> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/alloc/kvec.rs | 25 ++++++++++++-------------
- rust/kernel/str.rs        |  2 +-
- rust/kernel/uaccess.rs    |  2 +-
- 3 files changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index 87dc37ecb94d..5798e2c890a2 100644
---- a/rust/kernel/alloc/kvec.rs
-+++ b/rust/kernel/alloc/kvec.rs
-@@ -185,20 +185,19 @@ pub fn len(&self) -> usize {
-         self.len
-     }
- 
--    /// Forcefully sets `self.len` to `new_len`.
-+    /// Increments `self.len` by `additional`.
-     ///
-     /// # Safety
-     ///
--    /// - `new_len` must be less than or equal to [`Self::capacity`].
--    /// - If `new_len` is greater than `self.len`, all elements within the interval
--    ///   [`self.len`,`new_len`) must be initialized.
-+    /// - `additional` must be less than or equal to `self.capacity - self.len`.
-+    /// - All elements within the interval [`self.len`,`self.len + additional`) must be initialized.
-     #[inline]
--    pub unsafe fn set_len(&mut self, new_len: usize) {
--        debug_assert!(new_len <= self.capacity());
--
--        // INVARIANT: By the safety requirements of this method `new_len` represents the exact
--        // number of elements stored within `self`.
--        self.len = new_len;
-+    pub unsafe fn inc_len(&mut self, additional: usize) {
-+        // Guaranteed by the type invariant to never underflow.
-+        debug_assert!(additional <= self.capacity() - self.len());
-+        // INVARIANT: By the safety requirements of this method this represents the exact number of
-+        // elements stored within `self`.
-+        self.len += additional;
-     }
- 
-     /// Decreases `self.len` by `count`.
-@@ -317,7 +316,7 @@ pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
-         // SAFETY: We just initialised the first spare entry, so it is safe to increase the length
-         // by 1. We also know that the new length is <= capacity because of the previous call to
-         // `reserve` above.
--        unsafe { self.set_len(self.len() + 1) };
-+        unsafe { self.inc_len(1) };
-         Ok(())
-     }
- 
-@@ -521,7 +520,7 @@ pub fn extend_with(&mut self, n: usize, value: T, flags: Flags) -> Result<(), Al
-         // SAFETY:
-         // - `self.len() + n < self.capacity()` due to the call to reserve above,
-         // - the loop and the line above initialized the next `n` elements.
--        unsafe { self.set_len(self.len() + n) };
-+        unsafe { self.inc_len(n) };
- 
-         Ok(())
-     }
-@@ -552,7 +551,7 @@ pub fn extend_from_slice(&mut self, other: &[T], flags: Flags) -> Result<(), All
-         //   the length by the same number.
-         // - `self.len() + other.len() <= self.capacity()` is guaranteed by the preceding `reserve`
-         //   call.
--        unsafe { self.set_len(self.len() + other.len()) };
-+        unsafe { self.inc_len(other.len()) };
-         Ok(())
-     }
- 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 878111cb77bc..d3b0b00e05fa 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -886,7 +886,7 @@ pub fn try_from_fmt(args: fmt::Arguments<'_>) -> Result<Self, Error> {
- 
-         // SAFETY: The number of bytes that can be written to `f` is bounded by `size`, which is
-         // `buf`'s capacity. The contents of the buffer have been initialised by writes to `f`.
--        unsafe { buf.set_len(f.bytes_written()) };
-+        unsafe { buf.inc_len(f.bytes_written()) };
- 
-         // Check that there are no `NUL` bytes before the end.
-         // SAFETY: The buffer is valid for read because `f.bytes_written()` is bounded by `size`
-diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-index 80a9782b1c6e..e4882f113d79 100644
---- a/rust/kernel/uaccess.rs
-+++ b/rust/kernel/uaccess.rs
-@@ -290,7 +290,7 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut Vec<u8, A>, flags: Flags) -> R
- 
-         // SAFETY: Since the call to `read_raw` was successful, so the next `len` bytes of the
-         // vector have been initialized.
--        unsafe { buf.set_len(buf.len() + len) };
-+        unsafe { buf.inc_len(len) };
-         Ok(())
-     }
- }
+Tested this patch and it fixes the reported warnings. Hence,
 
--- 
-2.49.0
+Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
+
+Logs:
+
+
+make -C perf/
+make: Entering directory '/root/linux/tools/perf'
+   BUILD:   Doing 'make -j32' parallel build
+Warning: Kernel ABI header differences:
+   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+   diff -u tools/include/linux/bits.h include/linux/bits.h
+   diff -u tools/arch/arm64/include/asm/cputype.h 
+arch/arm64/include/asm/cputype.h
+Makefile.config:1093: No libcapstone found, disables disasm engine 
+support for 'perf script', please install libcapstone-dev/capstone-devel
+Makefile.config:1155: libpfm4 not found, disables libpfm4 support. 
+Please install libpfm4-dev
+
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libbfd: [ on  ]
+...                          libbfd-buildid: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                                 libperl: [ on  ]
+...                               libpython: [ on  ]
+...                               libcrypto: [ on  ]
+...                               libunwind: [ OFF ]
+...                             libcapstone: [ OFF ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                               get_cpuid: [ OFF ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+
+   GEN     common-cmds.h
+   GEN /root/linux/tools/perf/arch/arm64/include/generated/asm/sysreg-defs.h
+   PERF_VERSION = 6.15.rc2.g834a4a689699
+   GEN     perf-archive
+   GEN     perf-iostat
+   CC      jvmti/libjvmti.o
+
+
+Regards,
+
+Venkat.
+
+> ---
+>   tools/include/vdso/unaligned.h | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/include/vdso/unaligned.h b/tools/include/vdso/unaligned.h
+> index eee3d2a4dbe4..ff0c06b6513e 100644
+> --- a/tools/include/vdso/unaligned.h
+> +++ b/tools/include/vdso/unaligned.h
+> @@ -2,14 +2,14 @@
+>   #ifndef __VDSO_UNALIGNED_H
+>   #define __VDSO_UNALIGNED_H
+>    -#define __get_unaligned_t(type, ptr) ({ \
+> - const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
+> - __pptr->x; \
+> +#define __get_unaligned_t(type, ptr) ({ \
+> + const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr); \
+> + __get_pptr->x; \
+>   })
+>    -#define __put_unaligned_t(type, val, ptr) do { \
+> - struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr); \
+> - __pptr->x = (val); \
+> +#define __put_unaligned_t(type, val, ptr) do { \
+> + struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr); \
+> + __put_pptr->x = (val); \
+>   } while (0)
+>     #endif /* __VDSO_UNALIGNED_H */
+> --  2.47.1
+>
+> Thanks
+> Athira
+>
+> Hi Namhyung,
+>
+> I see we have few other warnings for which fixes is planned to picked for next cycle: https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com/T/#me2ee1b70aeaad4901fb4d995b3b3015cd32f1adc
+>
+> Can we also consider picking this one include/vdso/unaligned.h .. Once Venkat tests , I will post this as separate patch
+>
+> Thanks
+> Athira
+>>> Git Bisect is pointing to acea9943271b62905033f2f8ca571cdd52d6ea7b as first bad commit.
+>>>
+>>>
+>>> Below is the bisect log:
+>>>
+>>> git bisect log
+>>> git bisect start
+>>> # status: waiting for both good and bad commits
+>>> # bad: [834a4a689699090a406d1662b03affa8b155d025] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+>>> git bisect bad 834a4a689699090a406d1662b03affa8b155d025
+>>> # status: waiting for good commit(s), bad commit known
+>>> # good: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
+>>> git bisect good 0af2f6be1b4281385b618cb86ad946eded089ac8
+>>> # bad: [ef7785882672e73847fb80f6c39e76998d4db57b] Merge tag 'bcachefs-2025-04-10' of git://evilpiepirate.org/bcachefs
+>>> git bisect bad ef7785882672e73847fb80f6c39e76998d4db57b
+>>> # good: [e4742a89cfaced383db758bef94037637899487a] Merge tag 'block-6.15-20250410' of git://git.kernel.dk/linux
+>>> git bisect good e4742a89cfaced383db758bef94037637899487a
+>>> # good: [eaa517b77e63442260640d875f824d1111ca6569] ethtool: cmis_cdb: Fix incorrect read / write length extension
+>>> git bisect good eaa517b77e63442260640d875f824d1111ca6569
+>>> # good: [ac253a537da3b210fa4b65d522d5533fc68f9515] Merge tag 'perf-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect good ac253a537da3b210fa4b65d522d5533fc68f9515
+>>> # good: [3c9de67dd37029cca1d0f391ff565b3809b40a1f] Merge tag 'x86-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect good 3c9de67dd37029cca1d0f391ff565b3809b40a1f
+>>> # bad: [0c7cae12f67c4c5fd232cffb27023deb409e1e20] Merge tag 'irq-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect bad 0c7cae12f67c4c5fd232cffb27023deb409e1e20
+>>> # bad: [34833819d2270ef96fa98fe3c1d3d297b5dec986] Merge tag 'timers-urgent-2025-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>> git bisect bad 34833819d2270ef96fa98fe3c1d3d297b5dec986
+>>> # good: [92e250c624ea37fde64bfd624fd2556f0d846f18] timekeeping: Add a lockdep override in tick_freeze()
+>>> git bisect good 92e250c624ea37fde64bfd624fd2556f0d846f18
+>>> # bad: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: Address variable shadowing in macros
+>>> git bisect bad acea9943271b62905033f2f8ca571cdd52d6ea7b
+>>> # first bad commit: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: Address variable shadowing in macros
+>>>
+>>>
+>>> Regards,
+>>>
+>>> Venkat.
+>>>
+>>>> Also there is a patchset here:
+>>>> https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com/T/#m3e9d6aac4c34ebf42f18f3c213b7dff8f8c70d9d
+>>>>
+>>>> Which I think you have already tested..
+>>>>
+>>>> Thanks
+>>>> Athira
+>>>>> Regards,
+>>>>>
+>>>>> Venkat.
+>
