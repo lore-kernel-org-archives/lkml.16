@@ -1,110 +1,84 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0484B241673
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D287207DF8
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803773; cv=none; b=lqS7KhkW/w3jdrOiKJW5UF6xPp/TPAKqeg2aY2F9fH5DGvnLQoNYPng/toRboOYUCKTk+4bMoqladwfVReTM7pXMk7huPExSiAP8B2t4tcNfAKFFr8Hxv/yV8qkXi7DbPLWIXA0iSFhAZouvE4twLxSZ1jukaocQs4b1KYKI0oE=
+	t=1744803844; cv=none; b=B3vwJVfa2CGm6j1X2ngGc8SPjje8OIqJONTcGjYMhFmmvswDznDgUf9TAepyZK3p2eUhvgFkK+Rs3sZ4j1d5IttGWKeSKmMbzbLYWq3QB592xCEK1bYMZxP1ZA0UlOaPevAzBg+S4ZvDt9j9tdktqS8R/4EmOpRtAVOIm3HrNGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803773; c=relaxed/simple;
-	bh=JMjDwH/o8RzPEzjltNKbdLR6klIkr+mhqoHQ68CaRkc=;
-	h=Message-ID:Date:MIME-Version:From:To:Subject:Content-Type; b=HSZzq0aZHamxjm9n90SOk2+YpJ7N9FxgWcIpPaIyDI5yNPKdcN1MP0cLLRhBE1kz+ywMiEtXDMw1zYbajCDaOS4BCrCJju8nX8t2X0n3k5Pa4Bw0IZL5TRA17riCg3bEQC0A6KFvTNxlzEY+DGpvou/kDZtxuBlrl6FpImyL4y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CxQRyQRG; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744803844; c=relaxed/simple;
+	bh=AZEe1RfOvu1q7GUgcepVbmiSBnsNo8L/yZQuZJXUvpo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E2YNBUiIRCLTKJCPs/7ssLcfUaRtTNLgbUy8umtwAIk36pFo+mmoQLMONDtrlNLiFfIwqG1LMT94tMhudbDZ5oI93SHAixM7By5mpUnzJZXSULA1GbSYolZvaHZK+VDz+Yss6GuUfGCL+Em/WqXtASaCCaRA5XSYhs+f8YmSR+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGveR/Te; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CxQRyQRG"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAiDqR026718;
-	Wed, 16 Apr 2025 11:42:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=VDC7VFGUydYdFkbJC9ubCp+8u8uW
-	7LLKOWCFxu0Qii4=; b=CxQRyQRG2kMPIfduLrEwLNMmneyWpqCraR99BpyO8t1l
-	di8G5iajEQmNLOPpEn8Tx5cHq9hl5rH7UfFgnMf62MsZS/ZLWkwdqzuUoInRNGwN
-	fRl0LHXBuJ7wjNNu9g0fLAbisfbIZSSe42Ezfh78AQck590X88CE9xn+ZrrXXA10
-	Z49ZJbzS7r278VOEQjuP76nEGxHpooyg4KotQem1Mif9et9SwN0buz/5RYAVayOD
-	5a+AGVJ69YEDA2OQePm4zYSQsB+/Wy1lkGV1y4RUFsLDAM8M50otjgwE2uvm2XBC
-	RkeVnfEjbCI6dLm7dfW7gJnTrbf9GVka11NDibtOXw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt32sw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 11:42:48 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9JEEr024907;
-	Wed, 16 Apr 2025 11:42:47 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtgchq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 11:42:47 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GBgk9l26280530
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 11:42:47 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B106A58054;
-	Wed, 16 Apr 2025 11:42:46 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0219C5804E;
-	Wed, 16 Apr 2025 11:42:45 +0000 (GMT)
-Received: from [9.61.241.145] (unknown [9.61.241.145])
-	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 11:42:44 +0000 (GMT)
-Message-ID: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
-Date: Wed, 16 Apr 2025 17:12:43 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGveR/Te"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb3so6327571a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744803843; x=1745408643; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AZEe1RfOvu1q7GUgcepVbmiSBnsNo8L/yZQuZJXUvpo=;
+        b=FGveR/Te9l61hgscuALBQoMQk6hob/H/eYGIBP1eM1FmeQmxsMSZ1oA9dg5T6TzRZs
+         d/xIdUFVUh6yITbICnX5JkAG7H2ggla0sdvh+rXSqM8L/UsQ+BPX/HEJVIrMJTzXYIHK
+         vf2BBIPKByYYVSD17/NBhS7kkag7BLPBRla0ctGCg9fUvyhVGUCW0XBC6G05JbfhbgbG
+         zj60I+KWGCreCTdXtpTzm0m+QXZ9CKcHlK+FOrsC13joPzlcJYvdnr/ufn9//zHpOTSr
+         BCb7ZjkaZY67xqUMbO3uwbRURQKfVuwnCODljn9xVAFXCQHZar94XTJVTvsDRci8Al/5
+         i8Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744803843; x=1745408643;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AZEe1RfOvu1q7GUgcepVbmiSBnsNo8L/yZQuZJXUvpo=;
+        b=dCT/4qdJRjO09MGLqNvx/gVNL4N2PCZCK771Dp5CcgJw5o7z2WjWBjMOCRO7le1mok
+         cOSEtBqXoMF/flR1WbXNTsCdXRbL+vxM11pgCEsGmxboJm833GKBj7aIBXwkOf8rnG9z
+         ofmxjucbmowTsB1nS1cJQhXCVMBTyZ7xgUDQMIBYx4nrBz2zqoxwmeRHMyDTjgdI+qBr
+         dUbLuwpjzjpSXyW/FCjSgGSsW8EW44CkqrR6zU2Uv92aXYi0V/eJIrOUeA1bhqhXioE4
+         hv5ba+CTG8UUbtD5uEuwTt/uTmdUpdI8BylN/qaYCNpoeeuqh1lxxyRwIY59TC82fitk
+         sXtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVvGQ4oex6XE4GK09oqShyApaXtMes0aZqdeZKAYIPZXaqKIVlhHNkiIgD2Awg8ItdjGwlYKlkgxgvDsKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLxBP/ADPxrom1eUvH/rAH+XgeUn9K6iq5XU+wp5R0+ow0RBl6
+	RMxAz0HuEqy1nFIFQipv3RE0YPIYa8TjRXJvODTHmTnpIBPb9RJfQ0uRLNuGj5vALqxGxueSemB
+	JZh9zDCTGXSnFAQ0w292/Xp3TUDPNUoNzvQ==
+X-Gm-Gg: ASbGncuhmmiGJ6hbMD1oq6auuRyCE6rTKVLnZV5y3fLilp6TpmiTGOkVZIzr3QMdI76
+	HQVbS6Y85rcrQ4WKlzY0FmqsGBuOuBmQd6TIaGuQuze43jCxJQIimiU2CKBYlh8/yLEBH7sXoTA
+	4xJPVyokOWLVVKfNAjXb1hliehxZe/y/lZqqp326PV6PcqBV27h1ydrWo=
+X-Google-Smtp-Source: AGHT+IHRzDwjfA3VhiXoJ9w7CvBGnZUfl1D3wlF7cVjsZnBUO1T3cpj1g1gCRyxquxD7cm2X4+bYulvm0qakj3Q2+Fc=
+X-Received: by 2002:a17:90b:1f92:b0:2ee:ad18:b309 with SMTP id
+ 98e67ed59e1d1-30863d1de84mr2289142a91.3.1744803842763; Wed, 16 Apr 2025
+ 04:44:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-To: Athira Rajeev <atrajeev@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Namhyung Kim
- <namhyung@kernel.org>, mingo@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [mainline]tools/perf build warnings
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: QqZ0DZG7bpE7aefwz3L6twNJeP_Y6A0H
-X-Proofpoint-ORIG-GUID: QqZ0DZG7bpE7aefwz3L6twNJeP_Y6A0H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=818 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504160095
+References: <20250416072825.3790-1-ujwal.kundur@gmail.com> <241a9bbb-6d59-4c24-8e18-a0acebc6f536@amd.com>
+In-Reply-To: <241a9bbb-6d59-4c24-8e18-a0acebc6f536@amd.com>
+From: Ujwal Kundur <ujwal.kundur@gmail.com>
+Date: Wed, 16 Apr 2025 17:13:50 +0530
+X-Gm-Features: ATxdqUHlTjwJQjfOZfGM2sNeVWakgF2t5Ff-hXQ0-Ap1ykAmMwP7TjWL6pmkSIw
+Message-ID: <CALkFLLLKT=4LD_YFJdq8QdzybknRQW+W3P-3GnJzT1eoYuGg8A@mail.gmail.com>
+Subject: Re: [PATCH RFC] drm/amdgpu: Block userspace mapping of IO
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: alexander.deucher@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	lijo.lazar@amd.com, sunil.khatri@amd.com, Hawking.Zhang@amd.com, 
+	Jun.Ma2@amd.com, Yunxiang.Li@amd.com, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Thanks for your response.
 
+> Hui what? Why do you think that grabbing a reference to an interrupt would block userspace mapping of IO registers?
 
-I am observing a new build warning on today mainline kernel, with head 
-commit: g834a4a689699
+It looks like I am missing a lot of pieces to do this, I'll try again
+once I have a better understanding.
 
-Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+Sorry about that and thanks again for your time.
 
-
-Warnings:
-
-diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
-
-
-If you happen to fix this, please add below tag.
-
-
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-Regards,
-
-Venkat.
-
-
-
+--- Ujwal.
