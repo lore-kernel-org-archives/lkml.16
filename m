@@ -1,157 +1,116 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567141DDC22
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F2B1DE2CA;
+	Wed, 16 Apr 2025 00:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744764538; cv=none; b=oWKcC6WzdGyfPvN+OIv+A4x4nMqRZ1Fw8J9WVxUyBJYKrlo5PYfs/U6iFSvt6Ox42map7HKHJ8ksUSmuQ2sNh0xzDW8czT1XeZEcD1UxlD0k7hkffGBepuKPSR0QQARC95qNXznFQoK1Jo5V3EGKUdFdjp7x/0tPQd9I0qV8gpA=
+	t=1744764568; cv=none; b=aRPQr53PzAuRQiSpfoR3/kZ9E9CV99eejWbk80e7UfqHq2I4qiWhG4NQQ3BdonlZTOgXuBm2mvmzhAEVmWTR/72Z23e6Zh6723AGDkJ7QxFwsA7yyo0s7K7O7I8Ms6J5l/XaXC1xflrROxpkMj39/s7E6GCJEocUNmNbJMueVO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744764538; c=relaxed/simple;
-	bh=33Q82DN/1LkX4HQTWn1/N29DNYBrd+/PzojjBX1SKMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hFCilbtOJAEQbBVuHm5n2Mo/Eb08rjQd6SxuUNHIP5Ql6sBoQIIVSjPUeAv86T99bQ1rwfdFXFyLfe4OzwF5omAOMeFg2ZrwBsm/kiKjyxaiPyzRWUyT0yazMZGcgffb9W5hmfmbUh/mINZKqOu9HJVhQBqnIzd8IYW6HHn8a28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ih3vdsj2; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744764568; c=relaxed/simple;
+	bh=kWr7Zj6a5RU412b1cBjqAp4YZ2i9JTR5ymTqMoBF490=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YPRp78qRxreCKAJn/x68eDJMoK3Frp9v7qtzGyyrPn8e8nGe7Sojec+wzHMLxUDGmFuPgWuw/dorgvhkFs/JPDC5vKqbj4jRwMFCWAggShUEdJakWWv/H5qpeOKbujB5lMustUAH7eYA6Ldv2rjB4UDqRyPtRaH88qXQeS96uOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=jJ8RMW0D; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ih3vdsj2"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499d2134e8so7445158e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744764534; x=1745369334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jPuCm+rqdGwG3G8jrDZZDGo/23fVRFHxYRG9lMWLEJA=;
-        b=ih3vdsj2Xjtjk1cFcsqow8z0mlZx1ODUeOe19/b32nTJxBNzXSeaHSFb/gwo7+Jydl
-         UiJ6N6GvKTUUHyikIvmhnKzWvK3lu+mA/4kyV3TgcDge7QJkHn70REIgfYN4/a4B+ceV
-         KAjtZ58+gU/YyB61gHXIEzlQm8Id0x4x5W/FZDzBQwaFyoDMSLEkmapAsf/g+QH/taSj
-         MiachVN4iYE4J4KVQTtYeKr0BzMt2aKjf8HVK/iNM9RIXg5yv8HU6SIa/Xqf+nbuvYGp
-         NdXYvOf/kz90O89xdEoYLWNottsFCbh5ZqVAkuR6td4/IFqbgxoPIK40DUSvIqUzWvH6
-         Hihg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744764534; x=1745369334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jPuCm+rqdGwG3G8jrDZZDGo/23fVRFHxYRG9lMWLEJA=;
-        b=uFfkaSA61rylsOO0iqbXSC1RUUo1N67sYNxIdcpq5bM/4pFx+5nR2qyosjld5AUQyq
-         fzofBNXZqno1YwMA8a5y3CXHGg+fpol1a7By9XzU32GehnJ0y/Ts3XaSSAHwlxFbfzlJ
-         /kW4EE2VMC1xGqo0dal25I5yehA7a8bshCODgx10bz+BtGKUxmrNxTqGeayHiKB/AykB
-         5EgbccZ5QjjL6+O++wzH1jPolT8B+6dZATlvmrfTMIinoryyhhnQ65sbxN2GQ0PyB5ZR
-         u5se9exIl+uQl43TWEQMUSnrVHVGa6WzcCcoH9qsUDZtH3b2UAOt9sQcQUB17C2ialuR
-         I5zg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5ljt068+oMKLjL7o8V/t2uLqH808/GEX2TeIt3zAL+opC280xsVq6DgB9xYUpmIuZz9fQ5qQ5bIzwT88=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0Ec4u+iapBvaICfC2NT91U4EzCBefTn9unA9slyhhPaoExMu7
-	7136NB/PVA3+nQDZ5R9SV5rS+alQ5q4MbqFRIK30qtGCeJNJqq0qCY36ojvIJYJX16bvk+vYd8s
-	W0tfx7zPr9ZhGbCJCTJTv2yzVrUfGpAHu/1U=
-X-Gm-Gg: ASbGncsTbCkOk2h+GZmUxf+R+Akp+VBLEw7rW2vkeiTOTnEai6xV/RxFh1HWUux+YWx
-	P3yUaHvdLAEZyX6f/8oAcgWxoCivFApvffOZ4V+SSWg8DDxT2i+u+KZHDxhbJrjC9gvKz3j+FG2
-	rZfBWLiy9HJlxE1Ib2jSSZ4jNRnjnm4IVHUAwk5V3davaQaRZ7tnLJ
-X-Google-Smtp-Source: AGHT+IHevqlecv2dltxTa35zkiIafMdIo1CxrQCwSubeqYYZhYuVA/55pwvpTD7H4AMyPSPDjg8VZ0rmS3Zb3gvZUq0=
-X-Received: by 2002:a05:6512:3b95:b0:549:8f15:db2f with SMTP id
- 2adb3069b0e04-54d6051d882mr218881e87.31.1744764534024; Tue, 15 Apr 2025
- 17:48:54 -0700 (PDT)
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="jJ8RMW0D"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53G0nL4o92331416, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744764561; bh=kWr7Zj6a5RU412b1cBjqAp4YZ2i9JTR5ymTqMoBF490=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=jJ8RMW0Dv4vJEGDgnZ0/w15dJAX7xo1UEuOwhBFMY9f5+jAN5h+niLe4HltnDNg3X
+	 UltJYjts2UgYGxD6gA4S9EqcHpQs/3wyeqwOQR9/mqDKOW1tWWiR+vYEs2v8wZ5sCO
+	 6Z3sMJxmZYlJTZL7YCKo6hFW01JKIqsZa8h9BMgmOjFehgb/7/YQjlGAmCwCNOamgm
+	 /tmEWwSUFjKplWNuuxJF2NcY9PyYG9UwdmHGD7/CjJPIsnc8nVb9HrrtwpXvl9RoKP
+	 7wg4as2jE67FapjY8QUkxEpSEtYWUmXKv4gOqZk+02YAZRnfnBykL1e84+eUtlL+as
+	 iphqcMGj+ynKQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53G0nL4o92331416
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 08:49:21 +0800
+Received: from RTEXMBS02.realtek.com.tw (172.21.6.95) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 16 Apr 2025 08:49:21 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 16 Apr 2025 08:49:21 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 16 Apr 2025 08:49:21 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Fedor Pchelkin <boddah8794@gmail.com>, Bernie Huang <phhuang@realtek.com>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter feature enabled
+Thread-Topic: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
+ feature enabled
+Thread-Index: AQHbrfBpW2AH+n1rZEuyFH6rIsW1k7Olc7dQ
+Date: Wed, 16 Apr 2025 00:49:20 +0000
+Message-ID: <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
+In-Reply-To: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS02.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com> <Z_6OZHYfC0bC5289@mai.linaro.org>
-In-Reply-To: <Z_6OZHYfC0bC5289@mai.linaro.org>
-From: John Stultz <jstultz@google.com>
-Date: Tue, 15 Apr 2025 17:48:41 -0700
-X-Gm-Features: ATxdqUEyC1e7tjK1ExejSG-_0fQdpJiMuKIAs5FGSCRFBKdclyuFULIgWiZplgs
-Message-ID: <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Will McVicker <willmcvicker@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	=?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Donghoon Yu <hoony.yu@samsung.com>, Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Youngmin Nam <youngmin.nam@samsung.com>, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Tue, Apr 15, 2025 at 9:50=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
-> On Wed, Apr 02, 2025 at 04:33:57PM -0700, Will McVicker wrote:
-> > From: Donghoon Yu <hoony.yu@samsung.com>
-> >
-> > On Arm64 platforms the Exynos MCT driver can be built as a module. On
-> > boot (and even after boot) the arch_timer is used as the clocksource an=
-d
-> > tick timer. Once the MCT driver is loaded, it can be used as the wakeup
-> > source for the arch_timer.
->
-> From a previous thread where there is no answer:
->
-> https://lore.kernel.org/all/c1e8abec-680c-451d-b5df-f687291aa413@linaro.o=
-rg/
->
-> I don't feel comfortable with changing the clocksource / clockevent drive=
-rs to
-> a module for the reasons explained in the aforementionned thread.
-
-I wasn't CC'ed on that, but to address a few of your points:
-
-> I have some concerns about this kind of changes:
->
->   * the core code may not be prepared for that, so loading / unloading
-> the modules with active timers may result into some issues
-
-That's a fair concern, but permanent modules (which are loaded but not
-unloaded) shouldn't suffer this issue. I recognize having modules be
-fully unloadable is generally cleaner and preferred, but I also see
-the benefit of allowing permanent modules to be one-way loaded so a
-generic/distro kernel shared between lots of different platforms
-doesn't need to be bloated with drivers that aren't used everywhere.
-Obviously any single driver doesn't make a huge difference, but all
-the small drivers together does add up.
-
->  * it may end up with some interactions with cpuidle at boot time and
-> the broadcast timer
-
-Do you have more details as to your concerns here? I know there can be
-cases of issues if the built in clockevent drivers are problematic and
-the working ones don't load until later, you can have races where if
-the system goes into idle before the module loads it could stall out
-(there was a recent issue with an older iMac TSC halting in idle and
-it not reliably getting disqualified before it got stuck in idle).  In
-those cases I could imagine folks reasonably arguing for including the
-working clock as a built in, but I'm not sure I'd say forcing
-everything to be built in is the better approach.
-
-> * the timekeeping may do jump in the past [if and] when switching the
-> clocksource
-
-? It shouldn't. We've had tests in kselftest that switch between
-clocksources checking for inconsistencies for awhile, so if such a
-jump occurred it would be considered a bug.
-
->  * the GKI approach is to have an update for the 'mainline' kernel and
-> let the different SoC vendors deal with their drivers. I'm afraid this
-> will prevent driver fixes to be carry on upstream because they will stay
-> in the OoT kernels
-
-I'm not sure I understand this point?  Could you expand on it a bit?
-While I very much can understand concerns and potential downsides of
-the GKI approach, I'm not sure how that applies to the submission
-here, as the benefit would apply to classic distro kernels as much as
-GKI.
-
-I realize in the time since I started this reply, Will has already
-covered much of the above! So apologies for being redundant.  That
-said, there are some non-modularization changes in this series that
-should be considered even if the modularization logic is a continued
-sticking point.
--john
+RmVkb3IgUGNoZWxraW4gPGJvZGRhaDg3OTRAZ21haWwuY29tPiB3cm90ZToNCj4gSGksDQo+IA0K
+PiB0aGVyZSBhcmUgSU9fUEFHRV9GQVVMVCBlcnJvcnMgb2NjYXNzaW9uYWxseSB0aHJvd24gaW50
+byB0aGUgbG9nIHdpdGgNCj4gcnR3ODlfODg1MmJlLWNvbXBhdGlibGUgZGV2aWNlIGluIHVzZToN
+Cj4gDQo+IFsgICAgNy4xMzU1MDldIHJ0dzg5Xzg4NTJiZSAwMDAwOjAzOjAwLjA6IGxvYWRlZCBm
+aXJtd2FyZSBydHc4OS9ydHc4ODUyYl9mdy0xLmJpbg0KPiBbICAgIDcuMTM1NjEwXSBydHc4OV84
+ODUyYmUgMDAwMDowMzowMC4wOiBlbmFibGluZyBkZXZpY2UgKDAwMDAgLT4gMDAwMykNCj4gWyAg
+ICA3LjEzNzA3NF0gcnR3ODlfODg1MmJlIDAwMDA6MDM6MDAuMDogRmlybXdhcmUgdmVyc2lvbiAw
+LjI5LjI5LjggKDM5ZGJmNTBmKSwgY21kIHZlcnNpb24gMCwgdHlwZSA1DQo+IFsgICAgNy4xMzcw
+NzldIHJ0dzg5Xzg4NTJiZSAwMDAwOjAzOjAwLjA6IEZpcm13YXJlIHZlcnNpb24gMC4yOS4yOS44
+ICgzOWRiZjUwZiksIGNtZCB2ZXJzaW9uIDAsIHR5cGUgMw0KPiBbICAgIDcuNDIzODUyXSBydHc4
+OV84ODUyYmUgMDAwMDowMzowMC4wOiBjaGlwIHJmZV90eXBlIGlzIDENCj4gWyAgICA3LjQ1Mjg0
+M10gcnR3ODlfODg1MmJlIDAwMDA6MDM6MDAuMDogcmZraWxsIGhhcmR3YXJlIHN0YXRlIGNoYW5n
+ZWQgdG8gZW5hYmxlDQo+IFsgICAgNy40Nzg0NjZdIHJ0dzg5Xzg4NTJiZSAwMDAwOjAzOjAwLjAg
+d2xvMTogcmVuYW1lZCBmcm9tIHdsYW4wDQo+IC4uLg0KPiBbIDEzNjEuODAzMzg0XSBydHc4OV84
+ODUyYmUgMDAwMDowMzowMC4wOiBBTUQtVmk6IEV2ZW50IGxvZ2dlZCBbSU9fUEFHRV9GQVVMVCBk
+b21haW49MHgwMDEwIGFkZHJlc3M9MHgwDQo+IGZsYWdzPTB4MDAwMF0NCj4gWyAxNDM0LjkxODAx
+Ml0gcnR3ODlfODg1MmJlIDAwMDA6MDM6MDAuMDogQU1ELVZpOiBFdmVudCBsb2dnZWQgW0lPX1BB
+R0VfRkFVTFQgZG9tYWluPTB4MDAxMCBhZGRyZXNzPTB4MA0KPiBmbGFncz0weDAwMDBdDQo+IFsg
+MTU1MS41NTMzNDRdIHJ0dzg5Xzg4NTJiZSAwMDAwOjAzOjAwLjA6IEFNRC1WaTogRXZlbnQgbG9n
+Z2VkIFtJT19QQUdFX0ZBVUxUIGRvbWFpbj0weDAwMTAgYWRkcmVzcz0weDANCj4gZmxhZ3M9MHgw
+MDAwXQ0KPiBbIDE2NDkuMzQ2ODA0XSBydHc4OV84ODUyYmUgMDAwMDowMzowMC4wOiBBTUQtVmk6
+IEV2ZW50IGxvZ2dlZCBbSU9fUEFHRV9GQVVMVCBkb21haW49MHgwMDEwIGFkZHJlc3M9MHgwDQo+
+IGZsYWdzPTB4MDAwMF0NCj4gDQo+IA0KPiBhZGRyZXNzIGFuZCBmbGFncyBhcmUgYWx3YXlzIGFs
+bCB6ZXJvcy4gSXQgaXMgcmVwcm9kdWNpYmxlIG9uIHRoZSBjdXJyZW50DQo+IG1haW5saW5lIHY2
+LjE1LXJjMiBrZXJuZWwgYW5kIHYwLjI5LjI5LjggZncgdmVyc2lvbi4NCj4gDQo+IA0KPiBJdCBp
+cyBtb3N0IHByb2JhYmx5IHJlbGF0ZWQgdG8gdGhlIGJlYWNvbiBmaWx0ZXIgZmVhdHVyZSBlbmFi
+bGVkIGluIHRoZQ0KPiBmaXJtd2FyZS4gQmlzZWN0aW9uIGluIHRoZSBrZXJuZWwgbGVhZHMgdG8N
+Cj4gDQo+IGNvbW1pdCBkNTZjMjYxZTUyMTRlNTFlMmM2ZDIyMTQ5ZjYzNTU1MDM5YjU2MDFlIChI
+RUFEKQ0KPiBBdXRob3I6IFBvLUhhbyBIdWFuZyA8cGhodWFuZ0ByZWFsdGVrLmNvbT4NCj4gRGF0
+ZTogICBUaHUgTm92IDI4IDEzOjU0OjI5IDIwMjQgKzA4MDANCj4gDQo+ICAgICB3aWZpOiBydHc4
+OTogODg1MmI6IGFkZCBiZWFjb24gZmlsdGVyIGFuZCBDUU0gc3VwcG9ydA0KPiANCj4gDQo+IGFu
+ZCBpbiBsaW51eC1maXJtd2FyZSB0bw0KPiANCj4gY29tbWl0IDIwY2FjZTFhZGY2YTMzY2FjNzM1
+OTVlYTMyMDJlYjc4NGRlYTk4YTYNCj4gQXV0aG9yOiBQby1IYW8gSHVhbmcgPHBoaHVhbmdAcmVh
+bHRlay5jb20+DQo+IERhdGU6ICAgVGh1IFNlcCAxOSAxNzowMjoyOCAyMDI0ICswODAwDQo+IA0K
+PiAgICAgcnR3ODk6IDg4NTJiOiB1cGRhdGUgZncgdG8gdjAuMjkuMjkuNw0KPiANCj4gICAgIEVu
+YWJsZSBiZWFjb24gZmlsdGVyIGZlYXR1cmUuDQo+IA0KPiANCg0KVGhhbmtzIGZvciB0aGUgcmVw
+b3J0LiANCg0KQXMgYmlzZWN0aW9uLCBjYW4gSSBzdW1tYXJpemUgYXMgYmVsb3cgdGFibGU/DQoN
+CiAgICBkNTZjMjYxZTUyICAgICAgICAgICBmaXJtd2FyZSAgICAgICAgICAgICBJT19QQUdFX0ZB
+VUxUDQogICAoQ1FNIHN1cHBvcnQpDQogIC0tLS0tLS0tLS0tLS0tLSAgICAgIC0tLS0tLS0tLS0t
+ICAgICAgICAgIC0tLS0tLS0tLS0tLS0tLS0tDQogICAgICBvICAgICAgICAgICAgICAgICAwLjI5
+LjI5LjcgICAgICAgICAgICAgICAgICB5ZXMNCiAgICAgIG8gICAgICAgICAgICAgICAgIDAuMjku
+MjkuNSAgICAgICAgICAgICAgICAgIG5vDQogICAgICB4ICAgICAgICAgICAgICAgICAwLjI5LjI5
+LjcgICAgICAgICAgICAgICAgICBubw0KICAgICAgeCAgICAgICAgICAgICAgICAgMC4yOS4yOS41
+ICAgICAgICAgICAgICAgICAgbm8NCg0KSWYgdGhpcyB0YWJsZSBpcyBjb3JyZWN0LCB3ZSB3aWxs
+IGNoZWNrIHRoZSBiZWFjb24gZmlsdGVyIGZlYXR1cmUgaW4gZmlybXdhcmUuIA0KDQo=
