@@ -1,169 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FF3217F35
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA22219303
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826714; cv=none; b=gIUxlqQQcC98+r7FE6KGo/gudM1fQNmkJIjQWM+66AEC2r3LecFM0sdpTv2sNzDOEV6qErFhGH2qZuFuAie0X/NYX8+yxTQv8R5W0CcZYjZk5sti/mRZiEL+AzFiUsP6+QDFA/TlqnY4f2orrLhmz/mH5vFxEeaOtHZ8+fLp5xU=
+	t=1744826722; cv=none; b=Rnl19Tq5RH4YLrqOB3pT9oZ+TX6F/GdENjQiwn0T6J/f/Rj494EHT/YgzftT/fXBko4L07fJxHJgFll/jwAO3Q0pZwKp2WfjOIqzyLgP6tLh0cOK8X6DYHacQde0v7tirNPWGoWJntc1SKjbiH+/Vx6PLgAV4OzcQItTrAiRU18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826714; c=relaxed/simple;
-	bh=ZIr5qWePhTTAu6QP9ykCRzp3/zXxyl7rRo50HkLvVzc=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=a8oQtZ8kMCoTMZuzoXwRJHs/SvDyOK4Eq6an4AquPYBDsRyVty5RR33w8sR1DYUG+kbryuMBtkwTLYCEG0q063AbxPcdzjqIPWnh5SaSUPGs3WCEzQQKlzYunezpJqgKcSDJjPQNEpsw6i9eguRH1ldtiZorHmel4ZFGdLwxjGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q1tXpvu6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744826722; c=relaxed/simple;
+	bh=mwforEguNwh38hMZjlrNS8MyeAClbrwYJZ9ftBkHh9E=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AJN3ANrT9EfCtNuRa5sIRUfnZUPFmIwBsh8UeRG85+NynF4dlthpfcLR5Nw3Yl7AtC+5AHBznnobn8FcCCQxGcU7KejtzGOboAG748gcUbGGJfa5n0ivWxomLwfB9xwYs/xpX3k4c30HD3UjGZirU2CCii7GxL+eurMi+cUWIyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4ccveUvO; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1tXpvu6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744826711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TvegWG7Gj78xUkKCUKVmQ3vNed+Ayv7sODOOTAUPKj4=;
-	b=Q1tXpvu6k4zw61/5aVV2COVuGr8WKW+Dkl0IEhxM8lJ88dDhvKnx3fXp1albceR12BHPei
-	CBlHEm/9vDPSgaIpFMi3aIyB+nfUyc8O/XUMjspgRK5G/1Og9WCnoBU1MbUp/d4oFDTwGA
-	eQYyLtReEQFMLSqpnfuEUXDf5MmRSS4=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-425-P9G5hST3PnmlHU-e4HRZ-g-1; Wed, 16 Apr 2025 14:05:10 -0400
-X-MC-Unique: P9G5hST3PnmlHU-e4HRZ-g-1
-X-Mimecast-MFC-AGG-ID: P9G5hST3PnmlHU-e4HRZ-g_1744826710
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4768d63b1dcso16070871cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4ccveUvO"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so56165855e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744826717; x=1745431517; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l4zrBJJLCZeJhENR6VmafxLFJBE/IGwmNNec6pbe9xA=;
+        b=4ccveUvOiBwOPn0uDqEmaB7W5LeeSUTOYLJ/vmPh/zaKnzABhIDT4fqjW4X/cNfjsw
+         eV+RQ0v//aXWmQptHR13fxBvqjfU0YP+7NOQ5SG5jX+c/gb+cUsRKA1UsItB6skcKW5o
+         W8KwDBpc/TnejASWv7zPXDIs9rJtnavPqjeBC/Ao3l+VwnH+f8AmPAIvPm+Ftl3EXEJY
+         LPthhpOvJ8BPIxNl6RjUD6/zRHiQi+06UhZc6VRmYiMelorISSj6m1vf/rMTn1MAWUHM
+         bh4YV4TrTHz2jQlpVd/DDJJRfor1gWIHZIy7+R8KmsIrCQI1G/ZHswlESTud8JcHQqRW
+         U9og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744826709; x=1745431509;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TvegWG7Gj78xUkKCUKVmQ3vNed+Ayv7sODOOTAUPKj4=;
-        b=vp6cbDOIN54ZAUBxm9R8ouaZJ9gXuf3j2UnxGNpBv0wsM5DePIvyXgT1jtLe6Is16V
-         eVPk4WohYzoCNfa8cx531zx/hoxTHx4tbNBhWMbsKy+miuf8PNtX9rVi/Kcdm3JfB53c
-         s3w8DoCvs1b6/BBZEKUqfqQslN8Q+BwIMyBmzw6O7qj7I8DSVX3owGW9Ym+hzZQK5Cdz
-         RlFIIVrO9+CXZygEtmOfB9hqb0VRC4VOd4EBoVCKCdvQhJ3VZF64WZrFb5ppkws/4jMa
-         1RpxcqQRYOOEyHkiGJF6viWQ027XzYyONO+ipLV3ihczgaNMQh/31Qeeiy5j7fc1ss0o
-         40xA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGQ1P6Tfl65UtyyHegHJoSTGm/f+7zQDmwhq+5EgZtKqLkMt/V/Z3PiFTUf3PeVcUiKVX9H+yTSsBJdFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiWJTDREZl9CDavQb/yxJFEwpApyfaRwv1dvkBzaEMPnKaEtZK
-	AoZa2JH1Z/OnK0OOHyVR8J1mTDXVOZFST/Qpl6go4YhlSTXIXa+oCdze4o9BxGct78QuwWqkTQW
-	OMqUk2fdkbI4DHFFgXWtiBdoFfU5qzI4QKJaDsIBudGhmJ+CBThmGzND9dOP4UQ==
-X-Gm-Gg: ASbGncsj5xbSPbVAo0qZDN31JlIxXnruZaU/w2eeDQqXwqVEgKbFlnz5jJtEp2vAOqj
-	fR6eKa1BYv4QIivrIBmEGTzSesjVzgy+CSe9mqo16SPLoGsEEu9g8LTpiyyPaoEagKaN4m4Cq93
-	pNnPrnszPmcj9tbIlCZrP5qEw8mvCkwCiWRwBpnGhtmFXTKkhO5dZVaQxhC4yuk5t5lw9ZZEYJP
-	FrTIx/oAQ7VuFGhGWdeMIqb3YBog+cSvm/0EPWPFNZhhVHLgtglzRpWRKyv/tHN/PyvZgIO1HUB
-	P9Rje2+aNEfqkHUfxZEUID4dYcJOuCO31b5r54EeOLdoN8ET1oOJjjzVWQ==
-X-Received: by 2002:a05:622a:229e:b0:477:113e:1fb3 with SMTP id d75a77b69052e-47add9b119dmr5840091cf.3.1744826709606;
-        Wed, 16 Apr 2025 11:05:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpCQG/sH+Ymk/ikKjnKHM6wtmN6xWEToIN33YtXK8oyvo+AxyY+0yFSum8ebtAl603wlPKvA==
-X-Received: by 2002:a05:622a:229e:b0:477:113e:1fb3 with SMTP id d75a77b69052e-47add9b119dmr5839651cf.3.1744826709102;
-        Wed, 16 Apr 2025 11:05:09 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969242sm1081236285a.49.2025.04.16.11.05.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 11:05:08 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <146ecd0e-7c4c-4c8c-a11f-029fafb1f2e3@redhat.com>
-Date: Wed, 16 Apr 2025 14:05:07 -0400
+        d=1e100.net; s=20230601; t=1744826717; x=1745431517;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l4zrBJJLCZeJhENR6VmafxLFJBE/IGwmNNec6pbe9xA=;
+        b=V8+4yuFDrCoEumkUZ6SCAKZiVakW0n5z3FqTuyg+RwAWKqONARvupej444KkZkSgUq
+         vD1ToEG0o/zwPnKsPkQL6FyZ+rCJJZiTDNRgjjTd2pANbikc/8gGoucfjQ9OXgdeTczv
+         l7m5/kHWKkBXp93cRRyGvYJ0gUN5zVc56Sfw+vyfD+J3vHVS3uPhJbZUvqaFQnz4XFUe
+         W3onWwbbSyvW9T0bkwZ/ftqGVYLx7ZWLBFZxE/LbIIZKhIbtQiyn/2PLsETl1NhrTEQ2
+         HrOzY6jSH0m+1AZEe76Sjeza2n/f+i8cveYpbg8QVh94DRUo9RDC/mfB2+QDXD98ddh3
+         PaaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgXOmiIC94Kx2vh4b/ZSZjIzxruibLDhKoxXcCFlsUhNaYTsa0w+Wmhb4NYYDKDHkggIepW+ondV4aL8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3NR8huo7a8ztgyE7KhsmIFRVK9BXF0CpI7xIIny7U9r9UZs4V
+	GMmoPAtCycXdYqwN7nscXdKW4J1SrQGYiDlyFNV46VTHCH4kIwUtS/CyEK/AjbK7NI+1tZCoGAh
+	ZkKoqjAF8gA==
+X-Google-Smtp-Source: AGHT+IG37/jJdPo16ODppABBlkwhdau6i150sm+0uUTYuYiDLU7nXYICCYXasqDCVq/D4SyObvt76W48aTqKsA==
+X-Received: from wmbbi11.prod.google.com ([2002:a05:600c:3d8b:b0:43b:bf16:d6be])
+ (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1ca3:b0:43c:fe85:e4ba with SMTP id 5b1f17b1804b1-4405d637b49mr28449355e9.15.1744826717658;
+ Wed, 16 Apr 2025 11:05:17 -0700 (PDT)
+Date: Wed, 16 Apr 2025 18:04:30 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for
- cpuset_v2_mode
-To: "T.J. Mercier" <tjmercier@google.com>,
- Kamalesh Babulal <kamalesh.babulal@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415235308.424643-1-tjmercier@google.com>
- <46892bf4-006b-4be1-b7ce-d03eb38602b3@oracle.com>
- <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250416180440.231949-1-smostafa@google.com>
+Subject: [PATCH 0/4] KVM: arm64: UBSAN at EL2
+From: Mostafa Saleh <smostafa@google.com>
+To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
+	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
+	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kees@kernel.org, elver@google.com, andreyknvl@gmail.com, 
+	ryabinin.a.a@gmail.com, akpm@linux-foundation.org, yuzenghui@huawei.com, 
+	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org, 
+	nathan@kernel.org, nicolas.schier@linux.dev, 
+	Mostafa Saleh <smostafa@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/16/25 1:55 PM, T.J. Mercier wrote:
-> On Wed, Apr 16, 2025 at 2:19 AM Kamalesh Babulal
-> <kamalesh.babulal@oracle.com> wrote:
->> Hi,
->>
->> On 4/16/25 5:23 AM, T.J. Mercier wrote:
->>> Android has mounted the v1 cpuset controller using filesystem type
->>> "cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
->>> behavior where the controller name is not added as a prefix for cgroupfs
->>> files. [2]
->>>
->>> Later, a problem was discovered where cpu hotplug onlining did not
->>> affect the cpuset/cpus files, which Android carried an out-of-tree patch
->>> to address for a while. An attempt was made to upstream this patch, but
->>> the recommendation was to use the "cpuset_v2_mode" mount option
->>> instead. [3]
->>>
->>> An effort was made to do so, but this fails with "cgroup: Unknown
->>> parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
->>> mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
->>> update the special cased cpuset_mount(), and only the cgroup (v1)
->>> filesystem type was updated.
->>>
->>> Add parameter parsing to the cpuset filesystem type so that
->>> cpuset_v2_mode works like the cgroup filesystem type:
->>>
->>> $ mkdir /dev/cpuset
->>> $ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
->>> $ mount|grep cpuset
->>> none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_mode,release_agent=/sbin/cpuset_release_agent)
->>>
->>> [1] https://cs.android.com/android/_/android/platform/system/core/+/b769c8d24fd7be96f8968aa4c80b669525b930d3
->>> [2] https://cs.android.com/android/platform/superproject/main/+/main:system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=2dac5d89a0f024a2d0cc46a80ba4ee13472f1681;l=192
->>> [3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@redhat.com/T/
->>>
->>> Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2 behavior in v1 cgroup")
->>> Signed-off-by: T.J. Mercier <tjmercier@google.com>
->> The patch looks good to me, please feel free to add
->>
->> Reviewed-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
->>
->> One nit below:
->>
->>> ---
->>>   kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
->>>   1 file changed, 29 insertions(+)
->>>
->>> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
->>> index 27f08aa17b56..cf30ff2e7d60 100644
->>> --- a/kernel/cgroup/cgroup.c
->>> +++ b/kernel/cgroup/cgroup.c
->>> @@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type = {
->>>   };
->>>
->>>   #ifdef CONFIG_CPUSETS_V1
->>> +enum cpuset_param {
->>> +     Opt_cpuset_v2_mode,
->>> +};
->>> +
->>> +const struct fs_parameter_spec cpuset_fs_parameters[] = {
->>> +     fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
->>> +     {}
->>> +};
->> A minor optimization you may want to convert the cpuset_fs_parameters into
->> a static const.
-> Thanks, I copied from cgroup1_fs_parameters since that's where
-> cpuset_v2_mode lives, which doesn't have the static currently
-> (cgroup2_fs_parameters does). Let me update cpuset_fs_parameters in
-> v3, and add a second patch for cgroup1_fs_parameters.
+Many of the sanitizers the kernel supports are disabled when running
+in EL2 with nvhe/hvhe/proctected modes, some of those are easier
+(and makes more sense) to integrate than others.
+Last year, kCFI support was added in [1]
 
-Besides not exposing the structure outside the current file or maybe a 
-tiny bit of linker speedup, is there other performance benefit by adding 
-"static"?
+This patchset adds support for UBSAN in EL2.
+UBSAN can run in 2 modes:
+  1) =E2=80=9CNormal=E2=80=9D (CONFIG_UBSAN_TRAP=3Dn): In this mode the com=
+piler will
+  do the UBSAN checks and insert some function calls in case of
+  failures, it can provide more information(ex: what is the value of
+  the out of bound) about the failures through those function arguments,
+  and those functions(implemented in lib/ubsan.c) will print a report with
+  such errors.
 
-Regards,
-Longman
+  2) Trap (CONFIG_UBSAN_TRAP=3Dy): This is a minimal mode, where similarly,
+  the compiler will do the checks, but instead of doing function calls,
+  it would do a =E2=80=9Cbrk #imm=E2=80=9D (for ARM64) with a unique code w=
+ith the failure
+  type, but without any extra information (ex: only print the out-bound lin=
+e
+  but not the index)
+
+For nvhe/hvhe/proctected modes, #2 would be suitable, as there is no way to
+print reports from EL2, so similarly to kCFI(even with permissive) it would
+cause the hypervisor to panic.
+
+But that means that for EL2 we need to compile the code with the same optio=
+ns
+as used by =E2=80=9CCONFIG_UBSAN_TRAP=E2=80=9D independently from the kerne=
+l config.
+
+This patch series adds a new KCONFIG for ARM64 to choose to enable UBSAN
+separately for the modes mentioned.
+
+The same logic decoding the kernel UBSAN is reused, so the messages from
+the hypervisor will look similar as:
+[   29.215332] kvm [190]: nVHE hyp UBSAN: array index out of bounds at: [<f=
+fff8000811f2344>] __kvm_nvhe_handle___pkvm_init_vm+0xa8/0xac!
+
+In this patch set, the same UBSAN options(for check types) are used for bot=
+h
+EL1/EL2, although a case can be made to have separate options (leading to
+totally separate CFLAGS) if we want EL2 to be compiled with stricter checks
+for something as protected mode.
+However, re-using the current flags, makes code re-use easier for
+report_ubsan_failure() and  Makefile.ubsan
+
+[1] https://lore.kernel.org/all/20240610063244.2828978-1-ptosi@google.com/
+
+
+Mostafa Saleh (4):
+  arm64: Introduce esr_is_ubsan_brk()
+  ubsan: Remove regs from report_ubsan_failure()
+  KVM: arm64: Introduce CONFIG_UBSAN_KVM_EL2
+  KVM: arm64: Handle UBSAN faults
+
+ arch/arm64/include/asm/esr.h     | 5 +++++
+ arch/arm64/kernel/traps.c        | 4 ++--
+ arch/arm64/kvm/handle_exit.c     | 6 ++++++
+ arch/arm64/kvm/hyp/nvhe/Makefile | 6 ++++++
+ arch/x86/kernel/traps.c          | 2 +-
+ include/linux/ubsan.h            | 6 +++---
+ lib/Kconfig.ubsan                | 9 +++++++++
+ lib/ubsan.c                      | 8 +++++---
+ scripts/Makefile.ubsan           | 5 ++++-
+ 9 files changed, 41 insertions(+), 10 deletions(-)
+
+--=20
+2.49.0.604.gff1f9ca942-goog
 
