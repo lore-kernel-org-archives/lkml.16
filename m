@@ -1,109 +1,101 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8883184E1C;
-	Wed, 16 Apr 2025 05:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAA2DFA2D;
+	Wed, 16 Apr 2025 05:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744780599; cv=none; b=MsH/IrdlQOXwaG2GrzeBj2UPdXY9bHE7xaQwSY1Uylof2iz1a/1Tsj76K6X46CzVinQ8K8kkJei/ymlW8IXs9XvWjXUj0lyAr8jJNGqzPbyNeNspLf6KCJ9i0Miiq6o+GN1zdcVvCM/XZhuWjw6dvP4LDsq13B2lnFaeJynBfaA=
+	t=1744780711; cv=none; b=QibJql9VlA8attYgvVIsKBZGxMO8+v/A38dnWC2AzS6/vV8dOPbLtmhvSrhbTJbqg2qzyu7gsYqS6T/zN0AiYidPAkiZxEH0hq8fa3I10Rgw9BLmGHfN9QRRG8UwjyqvLxaVO9dw6JVNEmOZZ4g+GSEhvcn4hboB5xd5Iem5kp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744780599; c=relaxed/simple;
-	bh=ei7rLsZrrryCoI6cB9rvLfiPFmPOEV6hkOqs5UKtwp4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t2BMR8V7K9OjXfJ9xQpUN8emqXpN7KWb0J0OD0cUuGCoxfZQOCGqKF4nq85++H9vf7wWRiigcQ3LOAt+kZT+38Y8hGIaO4UR/HgGtcHYzpgz6S1AlkTbYs7hHYTCNJyZ290zpPh5uays10oXErYkc+WffKO9B31o9tqi+GIwx9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=MuUZWUD2; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744780711; c=relaxed/simple;
+	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqAZiP/DX+SY5+/LWrZX9I8VKraoDb+pbyuXR/ZPxjq2dpch6NEgokil3q7zv0y2TIerAYWuXAPpnsXsoWa5hsn7G8MQSBKjD/hVperNKAe3vJYu63OkQIHQoWFDo2ObE4RsrhexKViDl5rvcYlHG6AsteZlo24K89xcY9T/D9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4YsDyhl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="MuUZWUD2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=CqfvsXbBiDDcFgpcq1IA10fHYCHWEZRKwfjjAwjhDy4=; b=MuUZWUD2eLWvH0Ktn8+FSuMZNv
-	DNCLnJt823oGDxR7hmZ7A5fErX3ULsvc5z/IhfbndVOrxY/TFNW3I4sA10g9xhAUyVW0pNAGaL3W1
-	XZkwgx1vo0J5OP+BvE8bQItr7/SWJ6PjO8AlAEl0S7tCXLdVpjRfEhVEoC8oPG1jrgZ9o6ZJFhXqa
-	jx3sbGY7tzObf2MegV5zyRpI49wc1ed03n5IGOqihuuPYEc8UaXsdDRdzTrH3I8+M1vdCHSV1AcFg
-	DnHwA87P/PaTJp/HUzgjOwsYwGc7j+fi2llUYN95CY22ofHoa7/RXkHPSHaXNDENW2NpYHR40Ssxx
-	gNfVcWJg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u4v8N-00G5V5-0Y;
-	Wed, 16 Apr 2025 13:16:28 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Apr 2025 13:16:27 +0800
-Date: Wed, 16 Apr 2025 13:16:27 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 6.15
-Message-ID: <Z_89K7tSzQVKRqr6@gondor.apana.org.au>
-References: <ZOxnTFhchkTvKpZV@gondor.apana.org.au>
- <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
- <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
- <ZbstBewmaIfrFocE@gondor.apana.org.au>
- <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
- <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
- <ZvDbn6lSNdWG9P6f@gondor.apana.org.au>
- <Z11ODNgZwlA9vhfx@gondor.apana.org.au>
- <Z-ofAGzvFfuGucld@gondor.apana.org.au>
- <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4YsDyhl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A5DC4CEEC;
+	Wed, 16 Apr 2025 05:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744780711;
+	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T4YsDyhl2RK//iQoGDJ4oxeuQ2oGCVN46wS8ndM2H1q8BTeAJYZse3I3Hpeb6+MNu
+	 PqY6HWPYLsznjFBt6m8JzrR/fXLChkABbOeyyF9rGB6uco9jqrCgPgnGAGePFdDDfH
+	 2ly5/wQBDFv785hDObgMrmIc59qEosIpIkxaACm3mgk6ZnAo/yI9Y9O2VnT4Z30ZTU
+	 vfQO4X/IPfT+u5J11+3LXI283MB3NthqovTArwv6n/Ohmz6DU2T6BfuQTpv4J8GFW3
+	 rV4VppRCG/NS8cr68X0Kp8MDwEI6Y2ZaNvlqjBQwSFwnGvxC+v7LZsHIScZHcg+T5l
+	 W1z+KsnM770wA==
+Date: Wed, 16 Apr 2025 07:18:27 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Alex Elder <elder@riscstar.com>, Guodong Xu <guodong@riscstar.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com, 
+	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
+	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+Message-ID: <hogqotzzpzcow2xjrwh34qcuiu7ooc2qnvlhuvexzvqkrcsfop@mhz26t5vu35p>
+References: <20250411131423.3802611-1-guodong@riscstar.com>
+ <20250411131423.3802611-2-guodong@riscstar.com>
+ <20250411-confider-spinster-35f23040d188@spud>
+ <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
+ <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
+ <20250415101249-GYA30674@gentoo>
+ <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
+ <20250415122807-GYA30943@gentoo>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="drktpjdibffse2jk"
 Content-Disposition: inline
-In-Reply-To: <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+In-Reply-To: <20250415122807-GYA30943@gentoo>
 
-Hi Linus:
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+--drktpjdibffse2jk
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
+ resets
+MIME-Version: 1.0
 
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+Hello,
 
-are available in the Git repository at:
+On Tue, Apr 15, 2025 at 12:28:07PM +0000, Yixun Lan wrote:
+> maybe there are cases that users don't want to issue a reset..
+> so, want to make it optional.. I can think one example that,
+> display controller is up and working from bootloader to linux,
+> reset it will got a flicker picture..
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p4
+Agreed. You can just deassert the reset at probe time. That shouldn't
+interfere with a PWM that is already producing an output.
 
-for you to fetch changes up to b2e689baf220408aff8ee5dfb4edb0817e1632bb:
+> GPG Key ID AABEFD55
 
-  crypto: ahash - Disable request chaining (2025-04-12 09:33:09 +0800)
+If you advertise your OpenPGP certificate, I recommend using the long
+id. See for example https://keys.openpgp.org/search?q=AABEFD55.
 
-----------------------------------------------------------------
-This push fixes the following issues:
+--drktpjdibffse2jk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- Disable ahash request chaining as it causes problems with the sa2ul driver.
-- Fix a couple of bugs in the new scomp stream freeing code.
-- Fix an old caam refcount underflow that is possibly showing up now
-  because of the new parallel self-tests.
-- Fix regression in the tegra driver.
-----------------------------------------------------------------
+-----BEGIN PGP SIGNATURE-----
 
-Akhil R (1):
-      crypto: tegra - Fix IV usage for AES ECB
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/PaEACgkQj4D7WH0S
+/k6ooQf/d4DhhdyM4QPOcTmcUpZ8HOxH7CFCD701mRLpmOlq1dz3/Mtz5tO4wLL2
+nvfA4N7zRagUW8grFQIpENy3IFx5DP3Rdg5PtVELqlqPrOW+NqTTJGslRBeIAoQ3
+0rybTAJEutOM0DPeL7Ay6iGy78VV/Qosh7dhFUWmzxeF1IBHry2tm+euAw5wKOzP
+PNPY/S0CfuOhb2G1ivYYVTBV3fsgYT5G+VfTJyR9/Gkf7F9yKMbX0LRYcG1LM8Ox
+0ilgkvwEu9kt2Au+q6PivMLURHJ28CtG1Fl+Qn50PZm0witW6kFfQqSA3WN4z6rz
+ueBYfIz0tcqYQIjClrgXnesRcLI+KA==
+=8FCS
+-----END PGP SIGNATURE-----
 
-Herbert Xu (4):
-      crypto: scomp - Fix null-pointer deref when freeing streams
-      crypto: caam/qi - Fix drv_ctx refcount bug
-      crypto: scomp - Fix wild memory accesses in scomp_free_streams
-      crypto: ahash - Disable request chaining
-
- crypto/ahash.c                      | 76 +------------------------------------
- crypto/scompress.c                  | 10 +++--
- drivers/crypto/caam/qi.c            |  6 +--
- drivers/crypto/tegra/tegra-se-aes.c |  5 +--
- include/crypto/hash.h               |  6 ++-
- include/crypto/internal/hash.h      |  2 +-
- 6 files changed, 18 insertions(+), 87 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+--drktpjdibffse2jk--
