@@ -1,109 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF521ABB2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A381DA634
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811947; cv=none; b=OSzcQ4BBXVB1DTd9FLvLOrGNt/PTgLPBsRZ+TjafO/ujm/LUq0G0tr0OEglj6zAci2zCIgT5EV1bGPmc9bXvohvsa02dZyWcNtqJs8hbZVgelgIeikRC2uGNJtsANIp7XfZj0MjU3vzREmxUz8HXz+E3Rfs1ebrvPNfQzchEscY=
+	t=1744811979; cv=none; b=QUaRz6QVr7uhFh3p5p0/qxNGUG93MfiN7LCcsdIFIfoSfyplo/36YQX0MjtrKHo0P79hhtury6tXOPs5j46fL/BdzDAhiDERU47MMPEeHNKBOU3H/kBBeedFcb1f2K888AdF/stixnjsW1PEHxtDH4/mwNaeMNdeDL2JGqiB9A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811947; c=relaxed/simple;
-	bh=hn6xwOP93/yhoELlBY8V8Xuv/wDTtTZJFnraUzSgg0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sw7z6ZzP7CCE35MZ6DlFg9Vvc5baLtqaRHJ6lrbl9paCvIF46UwbyzpWOeHUJkHTWuEEt7771HBRy6XIaan7sPydbWn1NK05GEiJINPOR6PhdfUdSoNSRyHeEadCWECvnuF8shuno30I9n18tvWwFwbdBt992TCRiATXSV4xw4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RaPiPvdR; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744811979; c=relaxed/simple;
+	bh=PrXWueJELQClhsRoDZoa/OuljX1rJijZLuQXa9z6ewA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ef9EOKI/KpOx/sD7Fnc4ssKla7c/U5MkJKTADjdgvWjXXCmcrGgmGE6Z+hl6/NhJATFlHSejSbQ1Nh2/AAdbsb++Zs+YCoL+CD5jqQsenm+mCk0yMSfuNtbG7kjFU0XRC0wFooU+VSAjwa+m155CAsuLrle/0mQixnk55FJ720s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VQgfCytX; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RaPiPvdR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744811946; x=1776347946;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hn6xwOP93/yhoELlBY8V8Xuv/wDTtTZJFnraUzSgg0c=;
-  b=RaPiPvdR9+zB7XSUQVH/ynI4nY93SMHDMyXHOTvCiHKENHW4GHL+eoZB
-   tc3TpPbMwxqONW9PM3+W3PODX6y1mC/YylZ50VaDM57h3zqp7g3Nlv1u3
-   VIyvlBanDlFJVdnlY/YR8v8VqvxReJ9yZ77WL8cu/U2q5qjCOGZXFcy+F
-   DwHaJBVnkv5BxsRqDnymcuKDUVDav2KwW9BF3GIiduEkGuMKJhERg4jmn
-   I+sHTDOWHVF8EMtVM6HfCdQciKhzcSrae59V1f1/JXgHBWOpocJpkV3nz
-   tlhOO/Omfej15o1bYNyP6zzxX9ctf6LIGeW1MWSXPQQL4pHilaTk23GUP
-   Q==;
-X-CSE-ConnectionGUID: WHr9XmbsQe61CZUsZdHENw==
-X-CSE-MsgGUID: XAdV1+LqRW2d+kyWTa2/Fg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50169605"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="50169605"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:05 -0700
-X-CSE-ConnectionGUID: og39v+s6Sf277AFQZeP/fQ==
-X-CSE-MsgGUID: h+35UNDxQyCysYGvgIBmow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="135291556"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 16 Apr 2025 06:59:02 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u53I4-000Jpw-0h;
-	Wed, 16 Apr 2025 13:59:00 +0000
-Date: Wed, 16 Apr 2025 21:58:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Song Shuai <songshuaishuai@tinylab.org>,
-	linux-riscv@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Nick Kossifidis <mick@ics.forth.gr>,
-	linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
-Subject: Re: [PATCH v3 2/2] riscv: kexec_file: Support loading Image binary
- file
-Message-ID: <202504162100.DHKsuYS1-lkp@intel.com>
-References: <20250409193004.643839-3-bjorn@kernel.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VQgfCytX"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43690d4605dso53727925e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744811975; x=1745416775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=D58Ch4hi8djKlPVHC4ID+DAXWkOZ6h8jrefgNN0XtNg=;
+        b=VQgfCytX2s1Rtn5PSnv/YDXAGdYzskOhaEv4pnJ6l9klesECs6JZnOdKPm8SF2p9MB
+         uEiVPwqLy9zN2HOSf6P8E24p9FfeX2/j3fhLDjS60yLpCDfcV5hr9rrw+TRKBiuOzKfc
+         /fF595J/1hsQ/XKGM8MdJhvmGPKxbRCkKwMmTg6XtELXemfJldMx5HGhx8JZ9sOmrh40
+         7dgoO7B1/pvkb3vJr/7T1gG05WD/lbMNG7LPBJnK64WZbS5VQSacP9hWLWM3U9HVo5rn
+         6J6wxQUur6JsE3/jAukmCNeHdHDzNCWJ9dIQj04LSNyhd2D7t+rioARz4WG9D/sEIERl
+         xDhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744811975; x=1745416775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D58Ch4hi8djKlPVHC4ID+DAXWkOZ6h8jrefgNN0XtNg=;
+        b=C724bCkRC1MvzJzegllVJfdq/f6Z52AGxJMJ78TkPt5yWpzH3mnahSBiBqCRdIvJ2J
+         jw4mlnU2Tar08YyypgQlF7bcI97r63KEujftPcyyDtwJnJFt5CVKB2GG+JX0cH6KqcmU
+         LFfZAAmscvH5omlrhUkiNxydmV5CWXaUxN0W7+vPiEDUMx7FNy6h9Pzbwx0fNtKq2eoN
+         ZdSuOpZgP2+nP1cKksAO5T2igoMMB+pxNHalAn3azNuUIPAdXwQo1geGaLXzflQ9/kr6
+         6AEs+DIB+4vhfnmGNesMh6kzFZoikgz9YYTxhu+sW0BoR6TYiQskyPA4ybtHNjrCxfr/
+         dlDw==
+X-Gm-Message-State: AOJu0YxGqxGm70aKU9UIzJrWPrF/IAHBn7Zc1xuyLrsT68mEu58nHwfv
+	3s5pims/dT+ai41M0wdW9paqGF5U7A9C3B6fDFzoAkEgw0wSfTUiq1AnuQ94Eks=
+X-Gm-Gg: ASbGncvn2R2IqnvvMOmZHqW+g07Sz4jL2pU/+qzGn1iQmCKL4zUzwuGF6IooxaOPvcI
+	2+vcuhaieO7MsQXqO8yczJ7z6I22EhE/akJmRdI4QVvwkGMZ8g9dZi+JAK/6tet/dS5UgzCSEcq
+	P08oNXXsDXpWiSpFPzCHEu3chtBuiG7KO5s9AgaoyzRwiPzlp+fhTdqzmqYfcIIrGvoeAGHwPb+
+	S3JbF3zjhM43djOLdJQaqXGGBWNl1QTu3VmoLMFdrwA8IQaubN7v9qmK1v0bPokSVQhhAaokVN2
+	SU6iFDvasc/jD2n20s3/6dwmfgPCwqxBHJSR683o0us=
+X-Google-Smtp-Source: AGHT+IHTIaWFA3QfhyJicogJ8cBkQ/je47l8+mLeE8Qjo2zZQg1uZN/gNAJBrvAGrFgjsLsXF8IfqA==
+X-Received: by 2002:a05:600c:1c04:b0:43c:fb36:d296 with SMTP id 5b1f17b1804b1-4405d6ab656mr15696095e9.25.1744811974863;
+        Wed, 16 Apr 2025 06:59:34 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b58cc4csm22365265e9.25.2025.04.16.06.59.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 06:59:34 -0700 (PDT)
+Message-ID: <de64c91f-efd5-49c2-8e24-b41aafe800fb@suse.com>
+Date: Wed, 16 Apr 2025 15:59:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409193004.643839-3-bjorn@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] Properly handle module_kobject creation
+To: Shyam Saini <shyamsaini@linux.microsoft.com>
+Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+ code@tyhicks.com, linux@rasmusvillemoes.dk, christophe.leroy@csgroup.eu,
+ hch@infradead.org, mcgrof@kernel.org, frkaya@linux.microsoft.com,
+ vijayb@linux.microsoft.com, linux@weissschuh.net, samitolvanen@google.com,
+ da.gomez@samsung.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org
+References: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Björn,
+On 2/27/25 19:49, Shyam Saini wrote:
+> Hi Everyone,
+> 
+> This patch series fixes handling of module_kobject creation.
+> A driver expect module_kset list populated with its corresponding
+> module_kobject to create its /sys/module/<built-in-module>/drivers
+> directory.
+> 
+> Since,
+> [1] commit 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
+> Call to populate module_kset list is deferred to save init time so that
+> external watchdog doesn't fireup on some boards and Linux can take
+> responsibility of feeding watchdog before it spuriously resets the
+> system. However, [1] this fix caused another issue i.e, consumers
+> of module_kset can't get related module_kobject during driver
+> initialisation and hence can't create their
+> /sys/module/<built-in-module>/drivers directory.
+> 
+> Consequently, [1] breaks user-space applications for eg: DPDK, which
+> expects /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id to be present.
+> 
+> The second issue was reported and the [2] revert of [1] was
+> proposed. However, [2] the Revert doesn't address the original issue
+> reported in [1].
+> 
+> This patch series addresses both issues reported in [1] and [2].
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=96a1a2412acb
+> [2] https://lore.kernel.org/lkml/20250130225803.321004-1-shyamsaini@linux.microsoft.com/
 
-kernel test robot noticed the following build warnings:
+I've queued now the series on modules-fixes, with some minor cleanups to
+the commit messages.
 
-[auto build test WARNING on a24588245776dafc227243a01bfbeb8a59bafba9]
+I changed the "Cc: stable@kernel.org" tag on the last patch to "Cc:
+stable@vger.kernel.org". Documentation/process/stable-kernel-rules.rst
+recommends using the latter address by default, unless the patch is
+fixing unpublished vulnerabilities.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bj-rn-T-pel/riscv-kexec_file-Split-the-loading-of-kernel-and-others/20250410-033243
-base:   a24588245776dafc227243a01bfbeb8a59bafba9
-patch link:    https://lore.kernel.org/r/20250409193004.643839-3-bjorn%40kernel.org
-patch subject: [PATCH v3 2/2] riscv: kexec_file: Support loading Image binary file
-reproduce: (https://download.01.org/0day-ci/archive/20250416/202504162100.DHKsuYS1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504162100.DHKsuYS1-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
->> Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
-   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
-   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
-   make[1]: *** [Makefile:1804: htmldocs] Error 2
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'htmldocs' not remade because of errors.
+I've removed "Fixes: 96a1a2412acb" and "Cc: stable@kernel.org" from the
+first three patches because only the final patch contains the actual
+fix. I suspect the stable tooling should automatically determine the
+dependencies in this case, but to be explicit, I added a note to
+stable@vger.kernel.org on the last patch indicating that it requires all
+other patches from the series.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Petr
