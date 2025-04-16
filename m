@@ -1,89 +1,91 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3BD23E229;
-	Wed, 16 Apr 2025 22:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C824229B38;
+	Wed, 16 Apr 2025 22:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843798; cv=none; b=YLOF9e0utQolfzvCa78/EK1ed7a25D0ihKi4RqNdL4cFox0Sjc9AxL9Tk/+AU37QYZ1tS0Yg+6/a548+0wgzKDeDCJz2vKk8Ex03V8YhaYkFD8RoGMwA81K1pAkVz5RNLps7GBrgMTf6hS0NcNlJ3nAO38srvNP1AxFFT+PJTFM=
+	t=1744843833; cv=none; b=RxyfIeTxG5LU7pZOdneBclZBJBOhXOzvy4xZ/n9RirfQ92EPYk72RDqWG018ZRKJey5PJgV//qwZFTIyhywYwwVUb0nKN9UFfBjQPUcDPpx+agI2/W6JIdYYCg0dBkA1PGZudS6c7DsNnoltrR39XqCfbJ0pKuzm/pCG3RduN20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843798; c=relaxed/simple;
-	bh=10it2hOPTXLKddj5XrUKTQ1gdjK4Sjw4bibvB7lQM0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cYFblqxSnNxFmGLv9pXoCxvbSmW0UseNO9Fp40xFs6o1ogdSgvDxeGmH2ra+KTf8rUDbttP2/1q8gdkIyU7ewmIyQEPLq9Z0nINMdZMUzTu7+lc9M9gryMo1ApziZl2L409B3NBQbOTXwg6L+cBxYlTiFjVP4Npyzio/KP62240=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P3iy2xCM; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744843833; c=relaxed/simple;
+	bh=AXMAzwkb+HhD9cQprHeyvIO1TBk1VNbKSRHG42FWkOY=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jYZkAFCkLTE51Rhi1bBdKHVnjXrYAwO9aqTThFHfNj8aEjw4WwqdMIUdgCXjZn4rJiwSNjM9ZTZ46hkMB5RRh218BGUhQdZb63zjweuyyksNt4Nc0M2qoGzDbpjXMyAMQaTbd22IYNDBEA3WWQEwyWEHbW9gIlqDdlpvCTvSElc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=iqMHRKiQ; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P3iy2xCM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744843789;
-	bh=dS4fYj308Mw6myLGLHdloM+bgQNtBjg/nr8Yq5j34FM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=P3iy2xCMtq+I2m76U4huDp0MfwAxTwWNAwdgKP5xVCvTNnMhUT8X4RDVnV4wOvtGK
-	 4IEC1U9eHZhIR91n/hN+G4EFXHMtm8qt00Kva+hg0eUb/Wuj4NgwgV3Uc73uxdiTnl
-	 2qWcbosFGXQ0YH3/fMOMh5h+QQXGtPb2aBw5z/mLSeoV2jz8dAeDSkHysNG7x/J1zT
-	 RHPpHyNCAMrqjQ4nV8sC/e3iAzKrP3JiwVOEc1kHXyXSRobMPKO5mnO2bld4D636Mz
-	 zyAXBDwx6XRA0lWelvzsdAcagx2LU9lxqWa3CmZ9uoeVe5XQ+5GJfoud6XcW8rjUUz
-	 SX0QKL7GoR+5g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZdGSF4j6gz4xN1;
-	Thu, 17 Apr 2025 08:49:49 +1000 (AEST)
-Date: Thu, 17 Apr 2025 08:49:49 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the vfs-brauner tree
-Message-ID: <20250417084949.7f9cfe19@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="iqMHRKiQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1744843821; x=1745103021;
+	bh=AXMAzwkb+HhD9cQprHeyvIO1TBk1VNbKSRHG42FWkOY=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=iqMHRKiQ4XVtxPLK42zL6NOQgbPwgtygNBQobi+m5vf+9O5RGZIKJ3IQbnQ5mY4zL
+	 fKsOqi9PAZLxoYGY7fHHzcKvqYzbPMk8WCtoI3S1+2kIV/e7ENRFFn3m0yp/BBO0a+
+	 VSqOsGb9tts42HjqqCE0VWAdIupF8MPQnjjqUQFSRS90ycXlbD1hdk9r0YVxzI7bLW
+	 9DhJPuFkTE7v6e9dV9Bq4c+BKKePaKApBp9A0xliQSpcfe3SsZ679x8M+jsYyXsJui
+	 mzEIdn+DAmQmqIy6VAj/vngbILqEW/EnGJxUGPcI5fT0jnUjNkAf3hmPjM2UlpKq5V
+	 Z3rIF9RRVXAJg==
+Date: Wed, 16 Apr 2025 22:50:15 +0000
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rust: pin-init: synchronize README.md
+Message-ID: <20250416225002.25253-1-benno.lossin@proton.me>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: f60674c2c69acddae72483bc6c1bad1596e87cd1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jzeJ=Ir2N.nO9n6yT3m43ly";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/jzeJ=Ir2N.nO9n6yT3m43ly
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+The upstream version of the `README.md` differs by this change, so
+synchronize it.
 
-The following commit is also in the vfs-brauner-fixes tree as a different
-commit (but the same patch):
+The reason that this wasn't in the original sync patch is that this was
+a late change that I didn't port back to the kernel repo, since it was
+generated by `cargo rdme`.
 
-  b1eb86b028e1 ("fs: ensure that *path_locked*() helpers leave passed path =
-pristine")
+Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+---
+ rust/pin-init/README.md | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-This is commit
+diff --git a/rust/pin-init/README.md b/rust/pin-init/README.md
+index 3d04796b212b..24d0f0a3f8fb 100644
+--- a/rust/pin-init/README.md
++++ b/rust/pin-init/README.md
+@@ -218,11 +218,13 @@ the `kernel` crate. The [`sync`] module is a good sta=
+rting point.
+ [pinning]: https://doc.rust-lang.org/std/pin/index.html
+ [structurally pinned fields]: https://doc.rust-lang.org/std/pin/index.html=
+#pinning-is-structural-for-field
+ [stack]: https://docs.rs/pin-init/latest/pin_init/macro.stack_pin_init.htm=
+l
+-[`Arc<T>`]: https://doc.rust-lang.org/stable/alloc/sync/struct.Arc.html
+-[`Box<T>`]: https://doc.rust-lang.org/stable/alloc/boxed/struct.Box.html
+ [`impl PinInit<Foo>`]: https://docs.rs/pin-init/latest/pin_init/trait.PinI=
+nit.html
+ [`impl PinInit<T, E>`]: https://docs.rs/pin-init/latest/pin_init/trait.Pin=
+Init.html
+ [`impl Init<T, E>`]: https://docs.rs/pin-init/latest/pin_init/trait.Init.h=
+tml
+ [Rust-for-Linux]: https://rust-for-linux.com/
+=20
+ <!-- cargo-rdme end -->
++
++<!-- These links are not picked up by cargo-rdme, since they are behind cf=
+gs... -->
++[`Arc<T>`]: https://doc.rust-lang.org/stable/alloc/sync/struct.Arc.html
++[`Box<T>`]: https://doc.rust-lang.org/stable/alloc/boxed/struct.Box.html
 
-  a681b7c17dd2 ("fs: ensure that *path_locked*() helpers leave passed path =
-pristine")
-
-in the vfs-brauner tree.
-
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 --=20
-Cheers,
-Stephen Rothwell
+2.48.1
 
---Sig_/jzeJ=Ir2N.nO9n6yT3m43ly
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgANA0ACgkQAVBC80lX
-0GywFAgAhd6rp2eDQwRrqpP2UzlXkxxO4duCIecBP5BoGan1VkpjLdwSa4uyDe4B
-wA+/733iSpUs9AreA/2ou0uMohzqIpzNmzqVnPNEg3Y9uLMvBbYO0M/cvDt0Ah1D
-D/jOtUC3x6smEZ4VUjhQQzjZOSix1L6PgkxbfyBuYDC/KDE13zLSP7CVr+zz1Lx1
-5utOV0DSSi7eFMj4/q3mQ7O46hXG6rJu16MQ0O769a5hel6cZUezAIxAgc8TS+A8
-Bslo1GEng4CETJz8wbMVkceIAKUUaT4wpGImtemFJRmgqa0VWX8/3HI+j1C2Dy6I
-t5m0YpxpBkJvcZ09coRJfIyts9km6g==
-=at0a
------END PGP SIGNATURE-----
-
---Sig_/jzeJ=Ir2N.nO9n6yT3m43ly--
