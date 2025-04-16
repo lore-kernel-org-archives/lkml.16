@@ -1,101 +1,97 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7663188735
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439BD10E9;
+	Wed, 16 Apr 2025 05:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781495; cv=none; b=dH+BA894eRvFvHafT/PZqY1dSDocquwzb9ARDwFSgqpRtiyUMyOG1Dr61pXCO1fRKvVHrbYwz28LZS7ul3PNpGi/8HqJACsFITFBEDXvnE2O5Fqhhs+OZGKj1DHUGOk0/fpsvmHGvuaiMs05rxXhAgmvkN7mh8hP64yqfS2XxXw=
+	t=1744781505; cv=none; b=tgD14hOXYym00YzGUVsBOGjUdQm8deK0JjpM0eBWcXJXYZ6OLqjOF3MV3PeGJEStIrRoIP2pd+IIL2paATybJzd89v+lq3Q+svxZGhpFFLyNv1lkz08hgGrSmOiwaCREV9SKJALGPek6EUBkDPNJW3G5dF0lpWC84XpXoEACl0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781495; c=relaxed/simple;
-	bh=vZmMqwCoPGEpbjlYgVrbWq7PQvmeQqOpFND4sSyhKNI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oTFg6AzS/RZrWPkKXpEysZNm1batPdHJwD0U3cw7j+7QdOSfTtCO0lzF08AyXKp4X3nsqy6sZP4oEMVCIe8vFI3y1zC3xz7gIZittLivb7gjO32bG900ex3KWJy9kRrz0EEbcjEAc17oCt9Ed70sbYxkDCzzX/DyjgZOBztF5wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKjZ0ihS; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744781505; c=relaxed/simple;
+	bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K+AkXFDMkntiJe1Et+SlpPVpoZ9rtKtTeHwQRmGNiGgXJaDPA4G9z+cT7ysnrFtLXbB2Tah5DR5CsaY0zyfraeZJsWjZwV/wSvOoNR/dLvb1CbYMwWacAQFEnwsNPA4SWB/GiIpANm+8WU/jADVMALgyL5DlGUnNYPSnQ1UFb4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=MpxdVaqd; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKjZ0ihS"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227b828de00so59088225ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:31:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MpxdVaqd"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33ac23edso3169065ad.0;
+        Tue, 15 Apr 2025 22:31:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744781493; x=1745386293; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=00U42ZzUOxNRO4D8XKQxhoyIsJ3n5fks4Eku3muMMVM=;
-        b=kKjZ0ihSAE8qGYg5ECxJmz0/XyTce4ao5O+kVMpvorfnQmi77eXHtkyKWn+WFBekzD
-         9F4AV2ESPxj/yPH6fw3av2Qi4zEkuank0blPJE5K71fmTO1hY2U4TRiOAetCj0IH8LeF
-         OyOCHcaLqo6RhTLJvrG5PJNqiID9u/2bIUuFsHIG0thzAQsFS5MZM+lVyQ8X/CokI6RP
-         866uxlSUtwuFaCrlZy+i/E2BEJn7Z1/pc4tV7OKkOchrYSRQyCX4AwQM/EDcaZuymToC
-         DXG/fkpsMQzTASPsIdFbIxFwoFoNWaVidFME94zdbazdS8oD7j9Vs7IVQCwWeLYcEM/t
-         rorQ==
+        d=googlemail.com; s=20230601; t=1744781503; x=1745386303; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
+        b=MpxdVaqdXj5g8q0GmbI5fzRBreYWI5YvxZNwLc/ahtuTXyiCJMHYhLr37scBkgfJ2V
+         I2Og8pUR9zB/oTQxxMYKpnv49xkpR6aC/aKEBZJybdHlAYQxTKP47O50zaGf18cOEl/I
+         eB/wnYuGMeH/ozQIj/amPSKzM6d/hL47SuFNQC1M/yNoFItWJcwm7AQKv8VOO6rUjY3K
+         qfnZEc45j6iysVKfsfi4sVKAZz9iMKI/c7n+wvmtcIMuWTCb8Ljdusb+ibOcx7Vqbkfp
+         Jf8JLo+NXKTXajhh0gV5K34sWV+XSXHn2G2d65G62ZwSWa9s3+HwUUuTEMd5b0zFhNgP
+         3pCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744781493; x=1745386293;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=00U42ZzUOxNRO4D8XKQxhoyIsJ3n5fks4Eku3muMMVM=;
-        b=lyrUPm5U0ne7UfEyCaRJ8U01t7JNTsPzPy4Q3IV+CH2basKYOu+yhrjAEEKptPGQf5
-         i2ah7+C0cFYAxpRxZt6R0JTg7dM2iglm7KLDa4qJb9AeVrJNcHA10phCNIBSGk2wNgzI
-         Uaz3zom5JCJPDS07sMqG40hhfGjDMZp0kBDaHZ7pBJb58ocPD6wuuOquf3RhHNvMCWe6
-         bjPmFkZDJQS6WqXy5SMCLnZ4OoVBL2ud/XhkNPDcxPGVOLb87WvMVDtQBKqwj9TK70Wz
-         aSa/eDHutdiY5+NdaGyp9x5SMWAa2EyqRupUGJNAbZytpJKA7Fgm92gHOqvWd8M4oCky
-         APnw==
-X-Gm-Message-State: AOJu0Yx/9Z7wUAzxUKB8TcW+VyOtvbpyb8MmCGrmtVX087hAgfQwgwrV
-	KoWiQzck2wgdk1D9CAiO4FE9B0aanp8u2BjXqzDwwxi6Hjj4p0IcdgHHrmQf
-X-Gm-Gg: ASbGncvL1fMx6hrk913COMTIaCUKkxJyTetRfX5CFMa18ilkhW+ZJzEy7enOEXXfBHH
-	jr5NwUt17Q6hWxMgEEMVOCIe9VmbEtM25zWq+TN+bqeiRt502yazb/abwGmuPUdtrnXXRWE9Y8E
-	jrLhliQRrlIoCthz0GnXAbDHt0euaRfrUbBmzg4H/OCWQGI4IM/Vc90Pdp7Xl3fuF8sYJAzt0Dh
-	MLDy4Eilp9H7vphkXQyeM5xLrokLWerZWb1YVFblFJYVMDY0ICtaApzkaowiFSSj+vSrlVJ6V2e
-	/+XlhW7RnJz4RavTlfMBGbaqB628V1c1PTut1yiZOYDw7FnNEM1MtzN7
-X-Google-Smtp-Source: AGHT+IGzBezkIxVCJzUUB+qdYid6a8gIORMDZApggDa4nKeAbIQxX3qnx8Tko90P0qOPsoR+muKfZA==
-X-Received: by 2002:a17:902:ea04:b0:223:5ada:88ff with SMTP id d9443c01a7336-22c3590cd65mr11156435ad.24.1744781492715;
-        Tue, 15 Apr 2025 22:31:32 -0700 (PDT)
-Received: from shankari-IdeaPad.. ([103.24.60.250])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1bceasm5212715ad.62.2025.04.15.22.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 22:31:32 -0700 (PDT)
-From: Shankari02 <shankari.ak0208@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-m68k@lists.linux-m68k.org,
-	skhan@linuxfoundation.org,
-	Shankari02 <shankari.ak0208@gmail.com>
-Subject: [PATCH] m68k: replace deprecated strncpy with strscpy
-Date: Wed, 16 Apr 2025 11:01:14 +0530
-Message-Id: <20250416053114.693917-1-shankari.ak0208@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1744781503; x=1745386303;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
+        b=q3dEh7EyTtmJaCRzdjCqYjjlEnbUJd+f1DnIEmhUHeCXI19WTT33PMzX5zd1xSNqyY
+         Q6E8OPtwYaBJr2n4JcYsphBGSaEWkf150j5/2gfDwS/d03vSi+oOaXNFJuNO+Nu8a9sF
+         x/A49UwDo3OXRXenxaHKq7QRuGOjxYHaDbAPOxY/9MWcbvpabo6wbNJldOUA7imU4d6Y
+         HY/X3W8KaEbsEULnMrpIHaCouDgi1cWk4imC/N9CsEG/epPUdKpRPhwwS3Kq3dRBlrsv
+         gQGPoLGvdWMEEeiNZbYXW8+nVngEudzqJZgoq3dKk2k6d0L/UcEeHw5TYNwTndSmWJgd
+         xaHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUMV/3PmHNZenyC5FBhqOu/zL70XRsPAYPOYBOd9alP21h1bKjg7nq2G9llUW9Mqp2dnk7fd3TMiINmZG4=@vger.kernel.org, AJvYcCUU8PH3q7cncvNDZh9D+IVfvGnYhAqqekyrNWopp8nfoSiLv012StADW4M28+0A3gqE+toqiYu1U0eP2++Ab7A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+ChUoS63fg/LpYk8q1UoDx+oveaQz3WK36sn7TqozcIY9DCcv
+	ycvc3jWFOilVnSVU/7lCs5yay/6d1tfa6yVs9Gy8y2jFD1LNfEupVu80nao5r+gsozeQ8dUk01d
+	l8MQcV2h2HmmXv/QZD3RRaUVyHXM=
+X-Gm-Gg: ASbGncv1N+CrrAveu5+xQTEYwRWLRUnFTYOdHw+xnGw4SMWqUW85kc8QjqGnwhcynHX
+	ZX7NOWdsz0aVr2ND4X1jkCiymymplhwh+E76o3bE2wKudzPn7CjEn74KASnEuwlbaXeA4MMoE7A
+	q1vQ2sWvgL2QRrbC00Bsoyk2yTg92SKQzmtRTEust3tYFiFj1Fijls0A==
+X-Google-Smtp-Source: AGHT+IEPRZ/Kqr+BZHd5ZCJrkWtPZ23MNPQpFqzeh4U2oyRC4w09qvIjZ7iq6t1Ss8As9iAro/tsKHru/2H653Ym2vc=
+X-Received: by 2002:a17:903:98b:b0:223:3630:cd32 with SMTP id
+ d9443c01a7336-22c35990bfbmr10472895ad.53.1744781503491; Tue, 15 Apr 2025
+ 22:31:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
+ <20250410154217.1849977-3-zhen.xin@nokia-sbell.com> <CAFBinCDVd6eVFcDzP1N8ayS6OmVZng5ti2jrHfYkbqFY4BdfLQ@mail.gmail.com>
+ <74fe1fe102324d809d7f23b14d335bac@realtek.com>
+In-Reply-To: <74fe1fe102324d809d7f23b14d335bac@realtek.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 16 Apr 2025 07:31:31 +0200
+X-Gm-Features: ATxdqUFleBpb2JKR5GRg5H8JGcWGCVOQSsFCXGaB_UcMWtWF0HnEEzlD34OjM1o
+Message-ID: <CAFBinCBzwiCBzfT9g4XqH-fBkMyh-D6039U_mtxqAipSsh66Yw@mail.gmail.com>
+Subject: Re: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Zhen XIN <zhen.xin@nokia-sbell.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The use of strncpy() does not guarantee NUL-termination and is deprecated
-in the Linux kernel. This code manually terminates the buffer afterward,
-but using strscpy() is simpler and safer.
+On Wed, Apr 16, 2025 at 2:33=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.com> w=
+rote:
+>
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > On Thu, Apr 10, 2025 at 5:46=E2=80=AFPM Zhen XIN <zhen.xin@nokia-sbell.=
+com> wrote:
+> > >
+> > > Rtw88-sdio do not work in AP mode due to the lack of tx status report=
+ for
+> > Ping-Ke, in case you want to keep the spelling of rtw88 consistent:
+> > can you update it while applying the patch (or do we need a v3)?
+> > Same question for the other patch in this series.
+>
+> I can update commit messages while applying patches. But not sure what yo=
+u
+> mentioned. Did you mean to change 'Rtw88-sdio' to 'rtw88-sdio'?
+Indeed, I meant changing Rtw88-sdio to rtw88-sdio
 
-This change replaces the strncpy() + NUL termination pattern with strscpy().
-
-Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
----
- arch/m68k/kernel/setup_mm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/m68k/kernel/setup_mm.c b/arch/m68k/kernel/setup_mm.c
-index 15c1a595a1de..48ce67947678 100644
---- a/arch/m68k/kernel/setup_mm.c
-+++ b/arch/m68k/kernel/setup_mm.c
-@@ -243,8 +243,7 @@ void __init setup_arch(char **cmdline_p)
- 	setup_initial_init_mm((void *)PAGE_OFFSET, _etext, _edata, _end);
- 
- #if defined(CONFIG_BOOTPARAM)
--	strncpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
--	m68k_command_line[CL_SIZE - 1] = 0;
-+	strscpy(m68k_command_line, CONFIG_BOOTPARAM_STRING, CL_SIZE);
- #endif /* CONFIG_BOOTPARAM */
- 	process_uboot_commandline(&m68k_command_line[0], CL_SIZE);
- 	*cmdline_p = m68k_command_line;
--- 
-2.34.1
-
+Thank you!
