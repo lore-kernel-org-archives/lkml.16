@@ -1,137 +1,111 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B371A315F;
-	Wed, 16 Apr 2025 15:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5ED43ADA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818627; cv=none; b=fuXusxpWvfS/5+lfGDVSyyOWxvHQ7nD+tv+7GM4QUT3OBRQgvkS2o0nOJq9BYnt89FqqcQR8Ug6MoCq4ozz3G7KzcbnSUuurLv7oBcKKmGMjlRKwL14E7Kbp0hb4D2Nyjqnh6TB8iKqqhw3X00EZQFVe0G8IVRlQCjZVwpjd+ms=
+	t=1744818699; cv=none; b=Cvnnul3mzIt5TIOx1GOUO6Mc2/B+gKoOiXjPY8j4rGe1TR5ElvxYw6dhWlbMSrENdqhxd3gKUTFvCPaHdFvYmGzxXlIurQAeC7/DvJEV4mLnsQzThpPKcA8rQ8Uc+IsJ4n1T0sQXsIOSwcw+1vdmudczGawgh+3rU8NV6YB0apA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818627; c=relaxed/simple;
-	bh=VbPAX242xVEoTJ4PYSaK4QQjLQw0PBsChBU7Pk7xBwc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=oTHMLUYv/DyKQSv2aDn082ZwUp0mqjKS7OlkyhnaqPpOtT3jcd7D/sRS4cF7pDY89Zzov1q/pQIoJwe0Isfa1kCyWiDFZwwN7IMvDDVd/ed06hnVXJYNuU3FRhuVzpKr8UlCMi1v1zB00WKXJeZ6+vkDCj3RxQSnOlZ62twKdZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Z1+w6gVX; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744818699; c=relaxed/simple;
+	bh=SXcGhAs+b3v9Y233MrSAopuLgFSZM3Rj8bpgVplYCiM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qR5rJp7ZcfQKU8X65GI6tCbKspVHY4No0K+GVyIQKUjkkMZRM7YBD/haeZzoB5m3LFB8CjjzCytwkYH7RBh71YMalhu76vXy1rJLr9YSyuv9kg+Hndsp44i6YYPkxcWdHTzfc14391t0CtGFBvoL+5rSevpPgHWVW/iT35m07uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wRY5L8Iz; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Z1+w6gVX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744818617; x=1745423417; i=markus.elfring@web.de;
-	bh=NYYsAFSk4SPL13LOyi6D3exP9IGS0u1UBBNKtssYwHE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Z1+w6gVXOebfm0i2U7g1EesZ3ixgFZeCdXVSyPPHv2QZeCLKi6gBc8wr5M8wYsRb
-	 7xArNAstabMmAoHp/iqoh77g+9/wxm1gkFRiAiKYH6zY4ztzoFB613Qqxu17FZthd
-	 A/R6UusZJkTw6UYU9wkqviU1uwhl14m6ewX1RxmjZXoDTO5AjZhlyaf0SbSZKCDug
-	 lm3yQAF/Pld+Ov0jgQQkoszU+agnuw+rji0wkYw/7ThT4T5iNtHa+lm6/zUDjDsUj
-	 5MziiycfD2mhtxnOXwxzuXjazwXNi/3jbZDd7ZL8qmdVMLIzwOKtaZ9vp/e93ZG9z
-	 3ELlQabga3n9HfBXHQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MREzA-1thts508g8-00Rtse; Wed, 16
- Apr 2025 17:50:17 +0200
-Message-ID: <93bac949-9356-4819-b0e9-3463056e799c@web.de>
-Date: Wed, 16 Apr 2025 17:50:16 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wRY5L8Iz"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54954fa61c9so8428355e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744818694; x=1745423494; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EZQFkTG+TE9XyLSvBWPzBX545sfzGUulEWKqLFKYrkU=;
+        b=wRY5L8IzP5EeCq8SvKBALDHi7fk6iL6+meK6UWbzP34WY8cphCLk6hSSkbGEifhIR6
+         cadAFZTT/Tal2vIC3ZQHVe3xdUjGMLV1jl7IWKio4rygFk4bc901UZUaVqEOiVhmnQbq
+         swOA8u63LouhCAaXW99KZUuy/88SstIFZrvm3OiJPnHcW4ZCdjtbYFNs1pc57cDtcjf/
+         f6fCj6IrCMTEz4Tb/oqINYxDZoFl6ID1+JbE+P2VDGgCKBDFHvTUHvXapEhAlHs+/5ul
+         FpgvXO4rOH3lE1DjGKjF8K7uMi+89bGysfUeY01zwJa/MTgrDbQB32gT/751KI/cZyb/
+         IRPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744818694; x=1745423494;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EZQFkTG+TE9XyLSvBWPzBX545sfzGUulEWKqLFKYrkU=;
+        b=T9lsPcPeku3kVe5xfElT/Fj5xO0+BBnpjLXy+tmHf9+//mzE1lNgDFGNwJJHSoZ2Mu
+         MCH9T9pTguqJP0u9y7sc3QXUTD3MFwImHdpI01ojPXFgCwUd5c9VrNZNF/3GcsYeGCWD
+         ID3Xoh889sIf83Or5HVurFca9nMYWM3BaD1flUPOzvqSG2gXtNgW6UFlU4nGxSy/jB5y
+         AOg0/lwul9IGuEOuFID4Y7MP/ldZM3/+FY9ArIPzdINmVyWwp2JGXOzjuY02i0YQqVwx
+         A2IuM5l79WE8DLeLynGRYUEbzC3SPncSnXfPIAZicvif6qIQ2VyCi+bgLRSI6bh4G/oH
+         5fSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8C5noKJk5KvlqyHMBzwZJyMWNW7rQdFPOQqDC9RzNXKyr1fOHqE4UvctexiKFr8ZNecferYbFQWOnlJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh5l7hK0xLFdvBpqD8+PqvE2R1+90AO7JvqZTVyOtZ/SROrceY
+	SGBqIy9OvofulWJ9lcnrpClG8DiobsRSb4DIJzZmktLT5IegNOa1LH8TD1pJLv+4odo9d2jm0F0
+	GvEtyia9q+Sjzp/8LJixmpIyXenyhBhf/4yOL6A==
+X-Gm-Gg: ASbGncs4p936gMVLlI9SRyC3erOAQlt94ss61hKbQgIkT8o/SKkv31zc7A4VukK4ALQ
+	lqqSYuEoU2UWXPiVOTCVGZ4aI7q8IweD9RmdM0kdc4GiztZAycVZN5kuYKHlYWhq6ouFyEOoCeI
+	0E/jQszoc4Tb3CFD23ZN7ZnbPo+2h/VcJjEipJ/uOt6knKMDY3qQtbNFU=
+X-Google-Smtp-Source: AGHT+IEOA9pETzEiwUlfAn6Sgi+fzg/ihyH1PJsUp8cWH2CmtJSYAu8VpLrjwtghIihEu2y05c8/xl7tyUGx2qaGSuU=
+X-Received: by 2002:a05:6512:304f:b0:546:2fde:d2d9 with SMTP id
+ 2adb3069b0e04-54d64aa9f74mr849955e87.28.1744818694067; Wed, 16 Apr 2025
+ 08:51:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Cristian Marussi <cristian.marussi@arm.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Sudeep Holla <sudeep.holla@arm.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Chenyuan Yang
- <chenyuan0y@gmail.com>, Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] regulator: scmi: Replace devm_kasprintf() call by
- devm_kstrdup() in scmi_regulator_common_init()
-Content-Type: text/plain; charset=UTF-8
+References: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
+ <20250407-gpiochip-set-rv-arm-v1-4-9e4a914c7fd4@linaro.org> <075b347d-dac4-4b75-9c97-f2578bbfd279@kernel.org>
+In-Reply-To: <075b347d-dac4-4b75-9c97-f2578bbfd279@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 16 Apr 2025 17:51:21 +0200
+X-Gm-Features: ATxdqUFAaEqfpWy-Gz1MlrWfTBrFjpknqD-4vV0rj7YLmXL5PjV9ze05bHY7Jgw
+Message-ID: <CAMRc=McFDhTRV9Zgdu80u+O30pADNRTQEsM79XOPndyGEk6GOw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: s3c/gpio: use new line value setter callbacks
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, 
+	Gregory Clement <gregory.clement@bootlin.com>, Russell King <linux@armlinux.org.uk>, 
+	Linus Walleij <linus.walleij@linaro.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:dYBj2KWx0G8HSFAktsr3w1LGkI1knCTFkFXfp8ifYqYTFIU4e73
- 4mYZB1o2JEZDhvB0E+/o2t1QzxRc/zJCkBYConfdLPWDWzsqAHtTDS9t8QR9Kvff6GOKDgY
- YnQD971/45QzN6VCT5x6kKyRydmj5eL1j2QKhX4LP4mR6Ps0Y7hDVXV6hqrDIts+94okzrW
- PSTCStZFIiS6X4B2zz5Lg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:kaeKT8pXSfs=;qNL2+lwWG1bWQYIrYAVYJYH6R9Q
- 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
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 16 Apr 2025 17:38:11 +0200
+On Tue, Apr 15, 2025 at 8:23=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 07/04/2025 09:09, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > struct gpio_chip now has callbacks for setting line values that return
+> > an integer, allowing to indicate failures. Convert the driver to using
+> > them.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >  arch/arm/mach-s3c/gpio-samsung.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> This was applied a week ago, but it is not in the next (next-20250414).
+> Are you sure you feed linux-next with all your patches?
+>
+> Best regards,
+> Krzysztof
 
-Use a devm_kstrdup() call instead of a devm_kasprintf() call
-in this function implementation because only a single string
-should be copied.
+Hi!
 
-The source code was transformed by using the Coccinelle software.
+This is a bit of an exception for me. As discussed with Arnd[1] I
+picked the patches up into a new branch and sent out a PR to
+arm-soc[2]. Once Arnd merges the PR, the patches will appear in next,
+I don't have any ARM branch to feed into linux-next.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/regulator/scmi-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Bartosz
 
-diff --git a/drivers/regulator/scmi-regulator.c b/drivers/regulator/scmi-r=
-egulator.c
-index 9df726f10ad1..a0b39c83deb6 100644
-=2D-- a/drivers/regulator/scmi-regulator.c
-+++ b/drivers/regulator/scmi-regulator.c
-@@ -223,7 +223,7 @@ static int scmi_regulator_common_init(struct scmi_regu=
-lator *sreg)
- 		return -EOPNOTSUPP;
- 	}
-=20
--	sreg->desc.name =3D devm_kasprintf(dev, GFP_KERNEL, "%s", vinfo->name);
-+	sreg->desc.name =3D devm_kstrdup(dev, vinfo->name, GFP_KERNEL);
- 	if (!sreg->desc.name)
- 		return -ENOMEM;
-=20
-=2D-=20
-2.49.0
-
+[1] https://lore.kernel.org/all/18d59ff1-a357-413c-bde2-961ae0c9b5f2@app.fa=
+stmail.com/
+[2] https://lore.kernel.org/all/20250409083513.21115-1-brgl@bgdev.pl/
