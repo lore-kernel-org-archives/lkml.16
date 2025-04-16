@@ -1,262 +1,154 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BEC1A8F94
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A661A76BC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812900; cv=none; b=J8K9Bhq2uxE75m1dQ4tnAmpiJo7WNY/1wn1Nyg92I17bx7vNITZw73axmawUXHF3Do5ZiPLFHjmRXZ8u+JLP/LOuof7nPFxfkGWHFUjoVkJX2//v9S/MkEydE8DOFpPVbxZw4iIh09Ozivj7G15gL/Np7/rKyr+zBfttWuccUpU=
+	t=1744812940; cv=none; b=H57XCwNrDyJie2pnTFUHsxIhliYwzUYuq9cR8NaR5VSLP5zn2tGCZp289oAUS6cr0DYuTA9/wD0+oP1gkqQODUfvEdeb4oXu9ORCRV0W3xN4ycfR6jAHgdGn5+DqeRRstTmAjPaqUL1FaoAEWuGIgURvld3N47H1Qq8yz7BvTiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812900; c=relaxed/simple;
-	bh=3x5OaYQDwIeAIXvSiLkHybStHbAsU4aIhwnAD3hO8Os=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L+rW0yCC+OlWIy0G48H8GpS3G5ErNjV6e6vJH4QPhkdH65szuZgRyb8e1MWxvwr9R454dAWeyBDu53oQevkw+/IeEtltwb/26eFt1NZRFSIeMnUIxzgmDJXhbfYnps8EBM5tRyJqzsv0lUNHm1RC5HH/qvtUD+/Yb8vT6Qp1p40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Q76sJtIO; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744812940; c=relaxed/simple;
+	bh=AE17+lGajlVNkMivht2iQBeMrcmdEkLw98UVOWG9Wdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e+dCQUwCepFoEJeAKw/o0bAmr3wHlBwQIs6nDjA60+4ZH7sU4OeQevNkorVuzgQn+ErOYBdXW1WPhtN6/N+QOP0cjATbkZtWDgW0nDnHQIQmyMNhD33i1hwJRPT+bNaRySxFMc02Fhx2Vez8/XuWq3OJFGLBcAIYVWJEBtzg0ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=bAkEX7aU; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Q76sJtIO"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAPjeJ019213;
-	Wed, 16 Apr 2025 14:14:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=fw+4qA
-	IeH8GppoB3Dpdxl65rHsOdNDXHqXD7J2qvEck=; b=Q76sJtIO5hJCE5U0y8uqBY
-	oFDv/Vi0+LdIJEkYSDBrp/LkxxTTWlaoCu1O7FqO0rHfxIxW83Y+/PIx/9FzRggn
-	r8GK13tbepbT8JtK3XOVjWhO+Kvefwm+liuV3kLnoyaa3MXAig7lxLxj2G5fIFgg
-	kVAB2iYcjFhg1imnwOXL9VvT2bIUaL/hAPM17qTPh/fktWz4UfCQlVcW0S4LdJYT
-	LMW8Z4do6ZW8IGQizwadSiQb1Jl5N6x9hg9ZrTZnMajkIQcRQ0cvyoyhFq4Ww98C
-	DJU0aWLSESFnAV+f32RxPvlgRyrzlWqgU1igy7hDR2AaWRARVUisOHbod70YTDTA
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461yj545ck-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 14:14:51 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GB987b017199;
-	Wed, 16 Apr 2025 14:14:50 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040m0h9y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 14:14:50 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GEElDt58720610
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 14:14:47 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 94C1120043;
-	Wed, 16 Apr 2025 14:14:47 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DF8F620040;
-	Wed, 16 Apr 2025 14:14:45 +0000 (GMT)
-Received: from [9.124.210.196] (unknown [9.124.210.196])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 14:14:45 +0000 (GMT)
-Message-ID: <6fe46df2-2c80-4e2f-89a4-43f79e554f65@linux.ibm.com>
-Date: Wed, 16 Apr 2025 19:44:45 +0530
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="bAkEX7aU"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c59e7039eeso937674685a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744812936; x=1745417736; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/cKdHsgr+iFIgXoIw8sEEZtMyA3jDEAoy2LzI3UQ5/s=;
+        b=bAkEX7aUdIriHkCTS+kqeGPRVHm3UT5AELFvhXmQF99xS1Se9XyrB4dL07QTuDmGt9
+         EXEZ/WdQ6zPL+zYRB9xRwizLATweC81dmLS/EeNGV69Jrr+xKdB0jckfJWedFfV+a4cD
+         oZkr0MuoSHtx/6iPqeVqCemzKTLqcxCp0E3sha5udVoDFfYNsbxp2nphh7RMXn4FEP1X
+         7pZRCDdKt/Wg6qErPtBuhLnsNt0kJj5DucfOAEYA8Uv9TTVE/vB7x9oC8K6ZQF4yw6jS
+         yNL+ComotqysYrhREil6Zz9KBWYa2jGPY0xxE7L7+jV41Cep3KT7zQJSwM7S2/C8BhFM
+         Aiuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744812936; x=1745417736;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/cKdHsgr+iFIgXoIw8sEEZtMyA3jDEAoy2LzI3UQ5/s=;
+        b=NMFe6KUevjK5gt2Nd4HV/rStODZCE/XAFAD43/AZ3ZMe1NiLGEVcgaDMW0HptbKtV5
+         deM6hoougDTdW7ZrNnlSp6kpBn1DKYyStOR5iZ2x5LmYAH650eicoSTZUt4KysO9qV1X
+         aeo1GUEbgB8SXTyIGJSQ7HwlLbgdayFBpIeLa+y2LDpCiFM6uk6m9Nkt0yECjxlMZPrW
+         MEk7xAOJpqOC1SH8PF0B+dw+ZBlfz/64RUYgi4JsqxLjTaPnLjcKSGiGj36TkRgmTjp4
+         uU6kwpKTr4drkxjnsSuVtnAMk/KObE2sTTw2in2tdzOjouH5URyHhr9sm4xZezxdM8Z6
+         Qruw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwbyTAV8q7hI4hvIHaDGdCVpxY8xWpdDX2LYuUopy7MHQNlxegCY/OPIMmjyoXAMZ42Xx/2BunC72JuUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi0UBbIuUyoyu6xjbzzwMR2DP6wQI9DNrwN4WZFFK8ouVjdRJK
+	mXj1yR35JmGnfnBpP8LFcI+8yvUuynujMaFcZKfQBFp+REbcWFR64WMkbVZmPsY=
+X-Gm-Gg: ASbGncuESMUtIWxXzWJL2sDELM3HOqEq9bIKTVg9QISuioiA8DrkD9cJFwHvlPE7CoI
+	XOWZw9RE1PgQ/O3qmth4ZZc9HlestM1qwoxJEtDRhk6GmebHEIPb73fVv5qQDANDwzh82cwJC3M
+	8mMoT/Ug55wsl+NUCe11K51LiRmFUIPjWNc5mjfmyVIpzk9uHpFYK96BHuHcWp0MMfEWX/z+eiH
+	iwOW3FEWf74BAEML2HQvkoQzmTYwdUCFkuSloyOaySHZOy40t0cqfIyEwOygNglaW09DYqLw3cL
+	+78eU+gImntkrX9dICPeDLBxwv3OnYdypbI4rvk=
+X-Google-Smtp-Source: AGHT+IH3UFcDDuJqR4l0+gbFXCOuCElF8Kzn3pslBk7S1KZFd6OX/vWed0KC6MFjnEGqKBsXsum02A==
+X-Received: by 2002:a05:620a:468c:b0:7c5:61b2:b84 with SMTP id af79cd13be357-7c918fed5afmr265722985a.19.1744812935816;
+        Wed, 16 Apr 2025 07:15:35 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8969cdasm1063935085a.57.2025.04.16.07.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 07:15:35 -0700 (PDT)
+Date: Wed, 16 Apr 2025 10:15:31 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
+ processes
+Message-ID: <20250416141531.GD741145@cmpxchg.org>
+References: <20250412085852.48524-1-21cnbao@gmail.com>
+ <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
+ <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
+ <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
+ <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
+ <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
- load balance is not due
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: "Chen, Yu C" <yu.c.chen@intel.com>, Tim Chen
- <tim.c.chen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Doug Nelson <doug.nelson@intel.com>,
-        Mohini Narkhede <mohini.narkhede@intel.com>,
-        linux-kernel@vger.kernel.org
-References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
- <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
- <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
- <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
- <517b6aac-7fbb-4c28-a0c4-086797f5c2eb@linux.ibm.com>
- <CAKfTPtBF353mFXrqdm9_QbfhDJKsvOpjvER+p+X61XEeAd=URA@mail.gmail.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <CAKfTPtBF353mFXrqdm9_QbfhDJKsvOpjvER+p+X61XEeAd=URA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: -t1FaXVzCoHKNwnSILZpg_OYQMiSIEdE
-X-Proofpoint-ORIG-GUID: -t1FaXVzCoHKNwnSILZpg_OYQMiSIEdE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 bulkscore=0 phishscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160115
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com>
 
-
-
-On 4/16/25 15:17, Vincent Guittot wrote:
-> On Wed, 16 Apr 2025 at 11:29, Shrikanth Hegde <sshegde@linux.ibm.com> wrote:
->>
->>
->>
->> On 4/16/25 14:46, Shrikanth Hegde wrote:
->>>
->>>
->>> On 4/16/25 11:58, Chen, Yu C wrote:
->>>> Hi Shrikanth,
->>>>
->>>> On 4/16/2025 1:30 PM, Shrikanth Hegde wrote:
->>>>>
->>>>>
->>>>> On 4/16/25 09:28, Tim Chen wrote:
->>>>>> At load balance time, balance of last level cache domains and
->>>>>> above needs to be serialized. The scheduler checks the atomic var
->>>>>> sched_balance_running first and then see if time is due for a load
->>>>>> balance. This is an expensive operation as multiple CPUs can attempt
->>>>>> sched_balance_running acquisition at the same time.
->>>>>>
->>>>>> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
->>>>>> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
->>>>>> sched_balance_running.  Most of the time, a balance attempt is aborted
->>>>>> immediately after acquiring sched_balance_running as load balance time
->>>>>> is not due.
->>>>>>
->>>>>> Instead, check balance due time first before acquiring
->>>>>> sched_balance_running. This skips many useless acquisitions
->>>>>> of sched_balance_running and knocks the 7.6% CPU overhead on
->>>>>> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
->>>>>> improved by 11%.
->>>>>>
->>>>>
->>>>> Hi Tim.
->>>>>
->>>>> Time check makes sense specially on large systems mainly due to
->>>>> NEWIDLE balance.
->>>
->>> scratch the NEWLY_IDLE part from that comment.
->>>
->>>>>
->>>>
->>>> Could you elaborate a little on this statement? There is no timeout
->>>> mechanism like periodic load balancer for the NEWLY_IDLE, right?
->>>
->>> Yes. NEWLY_IDLE is very opportunistic.
->>>
->>>>
->>>>> One more point to add, A lot of time, the CPU which acquired
->>>>> sched_balance_running,
->>>>> need not end up doing the load balance, since it not the CPU meant to
->>>>> do the load balance.
->>>>>
->>>>> This thread.
->>>>> https://lore.kernel.org/all/1e43e783-55e7-417f-
->>>>> a1a7-503229eb163a@linux.ibm.com/
->>>>>
->>>>>
->>>>> Best thing probably is to acquire it if this CPU has passed the time
->>>>> check and as well it is
->>>>> actually going to do load balance.
->>>>>
->>>>>
->>>>
->>>> This is a good point, and we might only want to deal with periodic load
->>>> balancer rather than NEWLY_IDLE balance. Because the latter is too
->>>> frequent and contention on the sched_balance_running might introduce
->>>> high cache contention.
->>>>
->>>
->>> But NEWLY_IDLE doesn't serialize using sched_balance_running and can
->>> endup consuming a lot of cycles. But if we serialize using
->>> sched_balance_running, it would definitely cause a lot contention as is.
->>>
->>>
->>> The point was, before acquiring it, it would be better if this CPU is
->>> definite to do the load balance. Else there are chances to miss the
->>> actual load balance.
->>>
->>>
->>
->> Sorry, forgot to add.
->>
->> Do we really need newidle running all the way till NUMA? or if it runs till PKG is it enough?
->> the regular (idle) can take care for NUMA by serializing it?
->>
->> -               if (sd->flags & SD_BALANCE_NEWIDLE) {
->> +               if (sd->flags & SD_BALANCE_NEWIDLE && !(sd->flags & SD_SERIALIZE)) {
+On Wed, Apr 16, 2025 at 11:40:31AM +0200, David Hildenbrand wrote:
+> On 16.04.25 11:38, Barry Song wrote:
+> > On Wed, Apr 16, 2025 at 5:32 PM David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 16.04.25 11:24, Barry Song wrote:
+> >>> On Wed, Apr 16, 2025 at 4:32 PM David Hildenbrand <david@redhat.com> wrote:
+> >>>>
+> >>>> On 12.04.25 10:58, Barry Song wrote:
+> >>>>> From: Barry Song <v-songbaohua@oppo.com>
+> >>>>>
+> >>>>> Promoting exclusive file folios of a dying process is unnecessary and
+> >>>>> harmful. For example, while Firefox is killed and LibreOffice is
+> >>>>> launched, activating Firefox's young file-backed folios makes it
+> >>>>> harder to reclaim memory that LibreOffice doesn't use at all.
+> >>>>
+> >>>> Do we know when it is reasonable to promote any folios of a dying process?
+> >>>>
+> >>>
+> >>> I don't know. It seems not reasonable at all. if one service crashes due to
+> >>> SW bug, systemd will restart it immediately. this might be the case promoting
+> >>> folios might be good. but it is really a bug of the service, not a normal case.
+> >>>
+> >>>> Assume you restart Firefox, would it really matter to promote them when
+> >>>> unmapping? New Firefox would fault-in / touch the ones it really needs
+> >>>> immediately afterwards?
+> >>>
+> >>> Usually users kill firefox to start other applications (users intend
+> >>> to free memory
+> >>> for new applications). For Android, an app might be killed because it has been
+> >>> staying in the background inactively for a while.
+> >>
+> >>> On the other hand, even if users restart firefox immediately, their folios are
+> >>> probably still in LRU to hit.
+> >>
+> >> Right, that's what I'm thinking.
+> >>
+> >> So I wonder if we could just say "the whole process is going down; even
+> >> if we had some recency information, that could only affect some other
+> >> process, where we would have to guess if it really matters".
+> >>
+> >> If the data is important, one would assume that another process would
+> >> soon access it either way, and as you say, likely it will still be on
+> >> the LRU to hit.
+> > 
+> > I'll include this additional information in the v2 version of the patch since
+> > you think it would be helpful.
+> > 
+> > Regarding the exclusive flag - I'm wondering whether we actually need to
+> > distinguish between exclusive and shared folios in this case. The current
+> > patch uses the exclusive flag mainly to reduce controversy, but even for
+> > shared folios: does the recency from a dying process matter? The
+> > recency information only reflects the dying process's usage pattern, which
+> > will soon be irrelevant.
 > 
-> Why not just clearing SD_BALANCE_NEWIDLE in your sched domain when you
-> set SD_SERIALIZE
+> Exactly my thoughts. So if we can simplify -- ignore it completely -- 
+> that would certainly be nice.
 
-Hi Vincent.
+This doesn't sound right to me.
 
-There is even kernel parameter "relax_domain_level" which one can make use of.
-concern was newidle does this without acquiring the sched_balance_running,
-while busy,idle try to acquire this for NUMA.
+Remembering the accesses of an exiting task is very much the point of
+this. Consider executables and shared libraries repeatedly referenced
+by short-lived jobs, like shell scripts, compiles etc.
 
-
-
-Slightly different topic: It(kernel parameter) also resets SHCED_BALANCE_WAKE. But is it being used?
-I couldn't find out how it is used.
-
-> 
->>
->>                           pulled_task = sched_balance_rq(this_cpu, this_rq,
->>                                                      sd, CPU_NEWLY_IDLE,
->>
->>
->> Anyways, having a policy around this SD_SERIALIZE would be a good thing.
->>
->>>> thanks,
->>>> Chenyu
->>>>
->>>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
->>>>>> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
->>>>>> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
->>>>>> ---
->>>>>>    kernel/sched/fair.c | 16 ++++++++--------
->>>>>>    1 file changed, 8 insertions(+), 8 deletions(-)
->>>>>>
->>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>>>>> index e43993a4e580..5e5f7a770b2f 100644
->>>>>> --- a/kernel/sched/fair.c
->>>>>> +++ b/kernel/sched/fair.c
->>>>>> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct
->>>>>> rq *rq, enum cpu_idle_type idle)
->>>>>>            interval = get_sd_balance_interval(sd, busy);
->>>>>> -        need_serialize = sd->flags & SD_SERIALIZE;
->>>>>> -        if (need_serialize) {
->>>>>> -            if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
->>>>>> -                goto out;
->>>>>> -        }
->>>>>> -
->>>>>>            if (time_after_eq(jiffies, sd->last_balance + interval)) {
->>>>>> +            need_serialize = sd->flags & SD_SERIALIZE;
->>>>>> +            if (need_serialize) {
->>>>>> +                if (atomic_cmpxchg_acquire(&sched_balance_running,
->>>>>> 0, 1))
->>>>>> +                    goto out;
->>>>>> +            }
->>>>>> +
->>>>>>                if (sched_balance_rq(cpu, rq, sd, idle,
->>>>>> &continue_balancing)) {
->>>>>>                    /*
->>>>>>                     * The LBF_DST_PINNED logic could have changed
->>>>>> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq
->>>>>> *rq, enum cpu_idle_type idle)
->>>>>>                }
->>>>>>                sd->last_balance = jiffies;
->>>>>>                interval = get_sd_balance_interval(sd, busy);
->>>>>> +            if (need_serialize)
->>>>>> +                atomic_set_release(&sched_balance_running, 0);
->>>>>>            }
->>>>>> -        if (need_serialize)
->>>>>> -            atomic_set_release(&sched_balance_running, 0);
->>>>>>    out:
->>>>>>            if (time_after(next_balance, sd->last_balance + interval)) {
->>>>>>                next_balance = sd->last_balance + interval;
->>>>>
->>>
->>
-
+MADV_COLD and MADV_PAGEOUT where specifically added for this Android
+usecase - the rare situation where you *know* those pages are done.
