@@ -1,64 +1,60 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5872F1A0730
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357071AA782
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813179; cv=none; b=RW0w01Kyi2puqsjBqDVTKh50BEkkBhNEZVh23UOEFakxXH8sKNvtFuWkamJtxM6otSNV/iXNyPsxEnOgwYCuzO2YHoqjTvV5w6gZnthpJi9iOkk0TyA20nDtvaELjaXS3kJEyjAJXoivOggqlrgUmyUu3rjre6zDb0gnLUMa6Yo=
+	t=1744813194; cv=none; b=nNhOlXJj3JLUCGdQZES4Wlrsc/icWMaEYCYM7aZVm9s5asMIn9WWV91hax/u3YpBtLHemrd4MPNEO4glMkYF44fO+XqGOZVAR6IldPBRxaFsZPgjHjLcI0aKZ4Z3vAj+hhPOq2bdP80bf3I/qpX+fz7SQM+X6e+Pc7B9mEqH0Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813179; c=relaxed/simple;
-	bh=Kn8GewQMCt837Ur72dVjEJ2agTaNH8ObgZooVxRffzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A0J6yq6WFHQSzpo0bKDhRFv/IdiOhgDJP7l61INZOZ+pCzs2+0NlvkXnpNW6v6FtVQOF4pH4yNooMfzuhJS3GNP0Nzed2MOQlR6E5DQDlTK0XdNQ2r3eRJcIGEle0uw9uC8JYNUvei6B+y3Z6K5CAonvwP0kZWKPV5s1afPLHkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=kOERifFJ; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1744813194; c=relaxed/simple;
+	bh=HfrPiWru8k8p6DPiavzJB6DAONCMI2/gXm28JKBOR18=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Gpoa21Y36w3d6YL7DzS+cLE5uBs3PPjOvXWxU/NeQrHdg2kUUySSe6+kelcNF7LcbRCguO2hvoYAblWe9/HRi44YOaU9VGDwEXnuN/WXrDPIeJET/RL/wK5ysGFbhFj/L2Mn46I/OwnteDqpXlD3tekqWnuyTs3NVddqwrgk3SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CMfa5YQN; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="kOERifFJ"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3cfce97a3d9so22418655ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744813174; x=1745417974; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JfAIOkjpjHNO0hyMEWOpAcY/kPLoFg/oJV0w72D5OhM=;
-        b=kOERifFJh8ziaJ++/8whrC2ge3CsitIgzvRSCjp93VBt6W0Ju5GqEQALNzu/LSys29
-         RSlriFQHx/MC1hobARzUQxI/GBg7l/7g2F1rjUP95LGoS7xhnO/VJiy4vIfbTEE22KHY
-         DGdHEjEHPROc1s3zPq81K/Xrs8XfOHKtUvVHAeifhg9ZUFFfFuc5LfEOhQni6f1inube
-         PaDLvHoM6s4iyvT9qwcJO2mnV7Xx6hzIKlLOoCuHYPjXEvMgtO9fOsNtYfi0uhx5YjrE
-         uRD3jrEXwiUoOFTTVfqcc5MZpfsRGx0H3tiVqtpC+WqB+ZY3qisnI/Kbhi5R7DWXCgVS
-         sIdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744813174; x=1745417974;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JfAIOkjpjHNO0hyMEWOpAcY/kPLoFg/oJV0w72D5OhM=;
-        b=SHVkHieS+UdANmf/Ria4BrABJYzT+hbCRdd3dOBI7ROq0ExwHrCCEE72bi+WrZqKvz
-         OWZh/p0Fj7mcuj3Xt6vAF3jf4/GloVW+cVDPHAInwXhegR1I4LrivnFUlVpGOwI+xebs
-         lHt7Wu96G0/gyJSd5jNBL4R5qeOHITXDe3tBJegq+BwF3j0wkFYEfr94ybx6Ct7Oi1w8
-         QNaCt8ed0xiHZMbjT8L4lIMqnGn0UJXho2pH4OSikWibKCzW3iUXrB5iLedQ1aqOus+Q
-         obCoAgkERZknBWKck513Anl3ThbnE0XkotM5a7vYmOqJpZj2MPMyULxDEdlaBnhXY5YP
-         55dA==
-X-Forwarded-Encrypted: i=1; AJvYcCUng1d4tdwEPcxLrO4Onakq4AsWyOwMjt1Pzwg1HItwk7sWEpdVSNUFvebob1MFgSbegmeHk+iU9pIdmFI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywn/y7+1VpqZeCpy4UUK9XhXcp5gCbZRgH9ndpAfCMdpXYVN+NL
-	gCK64bcXIscjGNknYBLv626Wbs+mhYPn+1b5dClUc636FoAC6HLZ2c73ZWKLEpA=
-X-Gm-Gg: ASbGncs62l104nNl7Yj8GNNqoPdZdWVhJ3nx+1StQB5v9I8b99nlUloS9SXiGbJf7cu
-	7Oz4nG2EVpshXomzexQShmW5P2mRjVGApVjFPiH0agGZLemSd7ppiPceIjI/u0QF7TVLjDipkJI
-	LKHF1BWh8uKZ5xmTsL6s+vys9WMAkurGkIEwhM81Wud2z1Qs227ZTLueaF7RebUkO4nZBlUTYTt
-	7W2LCyZPgT2dPqilX7qhnTZbsW4xE2KpbzhfVvJSsWbrea8nPDXXbRFAuJta3hosAZ4JY8HXbte
-	+S5RUCOY8VWOpz8PNIAhN7EYRGHqmsm4obIO
-X-Google-Smtp-Source: AGHT+IGBCs0Me+0RwnGVpKzHyE47gG1pmgiY5tpO5HWyRZrDQVdE05b859sEUsSWFeKLZBWcIkayEA==
-X-Received: by 2002:a05:6e02:1487:b0:3d6:d162:be12 with SMTP id e9e14a558f8ab-3d815b6a8bbmr20961975ab.21.1744813174354;
-        Wed, 16 Apr 2025 07:19:34 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e6ed19sm3647778173.133.2025.04.16.07.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 07:19:33 -0700 (PDT)
-Message-ID: <4ed32b40-47ee-43f8-b3e3-88fdc6ca60fa@kernel.dk>
-Date: Wed, 16 Apr 2025 08:19:33 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CMfa5YQN"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GA4LVI030084;
+	Wed, 16 Apr 2025 14:19:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=E6X3bH
+	XkjfioHKJdqS9ZwJDDLbXEQrJOvdoxcCQdXDM=; b=CMfa5YQN+rVqdCvU1ZpIso
+	qhzLKix+qgcIoSSWxZk9cYaCLNRRalUMnrgRRZfJ0G5tnPs4odTK56L2TCNX5Xz1
+	8RC0MVawd3I6jIEkHDXCj94XSDH4nAwTA5Un9IDlonTbsnO4WUXt3cF6d7rgkW3b
+	G/gWnvaZmga1F2ki03mBLhG2u3jkSv1GDuvkazKmZNTWde3u4MqgVpVAFdC86zfe
+	4Op1mb1CrOVDGLgxf71s6UG/09aoG8CkeViRD1hkSgk8+WAFFaDiPMg2DJgTIhAx
+	TnMOy1TiPohfjGt9DJ/m34h0N0dToPdvi0ugJEglB1ijkoFvQMRjcxjrcSBx7LSQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462aff9b88-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 14:19:45 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GDR3oa024888;
+	Wed, 16 Apr 2025 14:19:44 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gth0wa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 14:19:44 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GEJg4W21365354
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 14:19:42 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 687055805D;
+	Wed, 16 Apr 2025 14:19:42 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2652C58055;
+	Wed, 16 Apr 2025 14:19:40 +0000 (GMT)
+Received: from [9.61.241.145] (unknown [9.61.241.145])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 14:19:39 +0000 (GMT)
+Message-ID: <99a06f56-08cf-42ce-a231-f9a38c6ece9a@linux.ibm.com>
+Date: Wed, 16 Apr 2025 19:49:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,59 +62,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring/rsrc: send exact nr_segs for fixed buffer
-To: Nitesh Shetty <nj.shetty@samsung.com>,
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: gost.dev@samsung.com, nitheshshetty@gmail.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CGME20250416055250epcas5p25fa8223a1bfeea5583ad8ba88c881a05@epcas5p2.samsung.com>
- <20250416054413.10431-1-nj.shetty@samsung.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250416054413.10431-1-nj.shetty@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [mainline]tools/perf build warnings
+Content-Language: en-GB
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, jiang.peng9@zte.com.cn,
+        shao.mingyin@zte.com.cn, Thomas Gleixner <tglx@linutronix.de>
+References: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+ <B34E8075-7F38-4E30-9E51-23E43DDDF06F@linux.ibm.com>
+ <1ec497ed-b98c-46aa-a9c2-5fa906790298@linux.ibm.com>
+In-Reply-To: <1ec497ed-b98c-46aa-a9c2-5fa906790298@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: MANUmOX_47QreoPsuuhU2vmLvicelOuF
+X-Proofpoint-GUID: MANUmOX_47QreoPsuuhU2vmLvicelOuF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504160115
 
-On 4/15/25 11:44 PM, Nitesh Shetty wrote:
-> Sending exact nr_segs, avoids bio split check and processing in
-> block layer, which takes around 5%[1] of overall CPU utilization.
-> 
-> In our setup, we see overall improvement of IOPS from 7.15M to 7.65M [2]
-> and 5% less CPU utilization.
-> 
-> [1]
->      3.52%  io_uring         [kernel.kallsyms]     [k] bio_split_rw_at
->      1.42%  io_uring         [kernel.kallsyms]     [k] bio_split_rw
->      0.62%  io_uring         [kernel.kallsyms]     [k] bio_submit_split
-> 
-> [2]
-> sudo taskset -c 0,1 ./t/io_uring -b512 -d128 -c32 -s32 -p1 -F1 -B1 -n2
-> -r4 /dev/nvme0n1 /dev/nvme1n1
 
-This must be a regression, do you know which block/io_uring side commit
-caused the splits to be done for fixed buffers?
+On 16/04/25 7:33 pm, Venkat Rao Bagalkote wrote:
+>
+> On 16/04/25 6:41 pm, Athira Rajeev wrote:
+>>
+>>> On 16 Apr 2025, at 5:12 PM, Venkat Rao Bagalkote 
+>>> <venkat88@linux.ibm.com> wrote:
+>>>
+>>> Hello,
+>>>
+>>>
+>>> I am observing a new build warning on today mainline kernel, with 
+>>> head commit: g834a4a689699
+>>>
+>>> Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>
+>>>
+>>> Warnings:
+>>>
+>>> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>>>
+>>>
+>>> If you happen to fix this, please add below tag.
+>>>
+>>>
+>>> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+>> Hi Venkat
+>>
+>> Can you please check with 
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/?h=tmp.perf-tools-next
+>> with the tmp.perf-tools-next branch..
+>
+>
+> I verified with perf-tools-next repo on both branches namely 
+> tmp.perf-tools-next and perf-tools-next, and I think this warning got 
+> recently introduced.
 
-> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
-> ---
->  io_uring/rsrc.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-> index b36c8825550e..6fd3a4a85a9c 100644
-> --- a/io_uring/rsrc.c
-> +++ b/io_uring/rsrc.c
-> @@ -1096,6 +1096,9 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
->  			iter->iov_offset = offset & ((1UL << imu->folio_shift) - 1);
->  		}
->  	}
-> +	iter->nr_segs = (iter->bvec->bv_offset + iter->iov_offset +
-> +		iter->count + ((1UL << imu->folio_shift) - 1)) /
-> +		(1UL << imu->folio_shift);
+/Typo in the last mail, please refer to below update./
 
-	iter->nr_segs = (iter->bvec->bv_offset + iter->iov_offset +
-		iter->count + ((1UL << imu->folio_shift) - 1)) >> imu->folio_shift;
+I verified with perf-tools-next repo on both branches namely 
+tmp.perf-tools-next and perf-tools-next, and issue is not seen there. 
+And I think this warning got recently introduced.
 
-to avoid a division, seems worthwhile?
-
--- 
-Jens Axboe
+>
+> Git Bisect is pointing to acea9943271b62905033f2f8ca571cdd52d6ea7b as 
+> first bad commit.
+>
+>
+> Below is the bisect log:
+>
+> git bisect log
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [834a4a689699090a406d1662b03affa8b155d025] Merge tag 
+> 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma
+> git bisect bad 834a4a689699090a406d1662b03affa8b155d025
+> # status: waiting for good commit(s), bad commit known
+> # good: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
+> git bisect good 0af2f6be1b4281385b618cb86ad946eded089ac8
+> # bad: [ef7785882672e73847fb80f6c39e76998d4db57b] Merge tag 
+> 'bcachefs-2025-04-10' of git://evilpiepirate.org/bcachefs
+> git bisect bad ef7785882672e73847fb80f6c39e76998d4db57b
+> # good: [e4742a89cfaced383db758bef94037637899487a] Merge tag 
+> 'block-6.15-20250410' of git://git.kernel.dk/linux
+> git bisect good e4742a89cfaced383db758bef94037637899487a
+> # good: [eaa517b77e63442260640d875f824d1111ca6569] ethtool: cmis_cdb: 
+> Fix incorrect read / write length extension
+> git bisect good eaa517b77e63442260640d875f824d1111ca6569
+> # good: [ac253a537da3b210fa4b65d522d5533fc68f9515] Merge tag 
+> 'perf-urgent-2025-04-10' of 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect good ac253a537da3b210fa4b65d522d5533fc68f9515
+> # good: [3c9de67dd37029cca1d0f391ff565b3809b40a1f] Merge tag 
+> 'x86-urgent-2025-04-10' of 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect good 3c9de67dd37029cca1d0f391ff565b3809b40a1f
+> # bad: [0c7cae12f67c4c5fd232cffb27023deb409e1e20] Merge tag 
+> 'irq-urgent-2025-04-10' of 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 0c7cae12f67c4c5fd232cffb27023deb409e1e20
+> # bad: [34833819d2270ef96fa98fe3c1d3d297b5dec986] Merge tag 
+> 'timers-urgent-2025-04-10' of 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 34833819d2270ef96fa98fe3c1d3d297b5dec986
+> # good: [92e250c624ea37fde64bfd624fd2556f0d846f18] timekeeping: Add a 
+> lockdep override in tick_freeze()
+> git bisect good 92e250c624ea37fde64bfd624fd2556f0d846f18
+> # bad: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: Address 
+> variable shadowing in macros
+> git bisect bad acea9943271b62905033f2f8ca571cdd52d6ea7b
+> # first bad commit: [acea9943271b62905033f2f8ca571cdd52d6ea7b] vdso: 
+> Address variable shadowing in macros
+>
+>
+> Regards,
+>
+> Venkat.
+>
+>>
+>> Also there is a patchset here:
+>> https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F916@linux.ibm.com/T/#m3e9d6aac4c34ebf42f18f3c213b7dff8f8c70d9d 
+>>
+>>
+>> Which I think you have already tested..
+>>
+>> Thanks
+>> Athira
+>>>
+>>> Regards,
+>>>
+>>> Venkat.
+>>>
+>>>
+>>>
