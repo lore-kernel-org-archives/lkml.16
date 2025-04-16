@@ -1,47 +1,56 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ADC617A2E0;
-	Wed, 16 Apr 2025 07:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A9521D3F4;
+	Wed, 16 Apr 2025 07:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790287; cv=none; b=ORVghMoJ6PKfShljUn4n9BjsOD47HUrR5HDyL7mJWcvov7WHX7Qh3SB4/p49yj09mnvgJeCwRwGHXkQomNqJcDdZ6Q61lKzHJNqrX1V5kYP6JNijbr7nnJhRS8/sQr9SzYrh4HmGlZv9DCYBacdAyd2i29EKkWgU1Ed/8j+0uRg=
+	t=1744790307; cv=none; b=qbJhPdVk02EZwzmmM3hYzS/BHMMwlswNy6vqeHdIuxzKo6HVG4VEdp2vHEsAiXG1TY0w5uOtLVR5WSYO9xJgZXGVIuc+cAMHTisfGW3ipRkaO4grsTsLynt19fuC5CwCOYPG8CjwZy+wA1tHh5J5Pzn1kcY+yER2aKSQG7ILmKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790287; c=relaxed/simple;
-	bh=uP2QUktcuMnIwHeWtqkVJCqIHzMHvjMl4VU1q0BxTuY=;
+	s=arc-20240116; t=1744790307; c=relaxed/simple;
+	bh=g8YPW39hxmx5YvNcbfIuiJT1dut85FSOVUEZdSWmv5Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n2sesSGpORPomg1KpACjZQTI384WFA650NmDehDX2Bzj2TFnB1mxetwo8C0Dofmzvz2yOGmMjVb6JYXYp7io9aIRCxrA4131e98F+cNu3iRIF5AYwjw0JXximkgDgFDDPcXVxCab4v5oxNsUl0IyZFsIx+h2FUoWEvH7em6oEh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Bn0gXelO; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOLKeqrpDzfRGLEaUfa7pRQDRUHVh4e6ca65wwn+Rfr2bTD1i1nROlxWAkXBVMZ0tRGslxODsvw2OfbdkHm+iRrlR6Vav/8ZXAg0gEzjG/LlwL2LLi9pwp5YKnwl5A0i26MB/nIPSqmHksSBRyT7B1Yq4NIjE63lHjzcgawQVEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AxUdxyRr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Bn0gXelO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=0lZOoJFvr1n/x73N+eL2qI8RtydiULjbS/3B456AGJg=; b=Bn0gXelOKb/+lmIQekagbZ3My3
-	tFVCfJ2FVpnz8Nlg6cfjOwoj0hn0bDPThjTPZRAZ9hbDi9uw3hDUQSLunz+9ZNJAn7tGVZZ5KWml2
-	lHtR6jNB49ow8NGcr2TWDFDYh4DSC4hMX18Ck6kJ3msga0nkzY778S2fOf8pM5fmSUluiRvSseMrr
-	a7SrIqf+P0BVnim14guBiEKUEHWxNypGp7B/+CTPSOijgfC79p8/XYXwIGTSK3ZpADHdnmXRS1vDH
-	8w8era46jzYL5BHpwpsVq8882ahHqY7R939dYhPbNkciI8ERgtCJZgUTux7lFy+fkHEDGe+r+Njvj
-	r6MzLZSQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u4xeg-00G7t2-1e;
-	Wed, 16 Apr 2025 15:57:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Apr 2025 15:57:58 +0800
-Date: Wed, 16 Apr 2025 15:57:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: dan.carpenter@linaro.org, thomas.lendacky@amd.com, john.allen@amd.com,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: ccp: Fix __sev_snp_shutdown_locked()
-Message-ID: <Z_9jBrd4o6-Xp42_@gondor.apana.org.au>
-References: <20250409193429.346501-1-Ashish.Kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AxUdxyRr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA2DC4CEE2;
+	Wed, 16 Apr 2025 07:58:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744790306;
+	bh=g8YPW39hxmx5YvNcbfIuiJT1dut85FSOVUEZdSWmv5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AxUdxyRr+0hwSePWXRQg5uJqs1WDb20uf76494nsnCj+SUjMJiZ7ntGelXhOqX0TJ
+	 cHHuJ+LrlQVB7xPfdqMD+LhYExgPondKE7L+fn3oJXQfUJUq0rRJ95WxSmQ5W1f0Cw
+	 OxZ2PFpK6WqXaUHfz94IKBCUCt5FOWv366Wba2ALriB1H/bdwapOhX076N9hCD+iab
+	 i2jMditYsnNLPgxXvH3u32wZXdtIDIjq+EUUt0eQR3t5hnJLQ+pZ0z2TjvVs6VSx70
+	 ZQgy4w3bszc0ZbepNphCNR9JwUh8VvKZZQPPcq0gJuyx61jSVxUbFOr/4oWyWii0yf
+	 tn9AWX93yb+yQ==
+Date: Wed, 16 Apr 2025 09:58:20 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Jean Delvare <jdelvare@suse.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
+	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v4 4/5] platform/x86/amd: pmc: use FCH_PM_BASE definition
+Message-ID: <Z_9jHCpbTciJ8d2_@gmail.com>
+References: <20250415002658.1320419-1-superm1@kernel.org>
+ <20250415002658.1320419-5-superm1@kernel.org>
+ <20250415151326.GA624550@yaz-khff2.amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,25 +59,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409193429.346501-1-Ashish.Kalra@amd.com>
+In-Reply-To: <20250415151326.GA624550@yaz-khff2.amd.com>
 
-On Wed, Apr 09, 2025 at 07:34:29PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> Fix smatch warning:
-> 	drivers/crypto/ccp/sev-dev.c:1755 __sev_snp_shutdown_locked()
-> 	error: uninitialized symbol 'dfflush_error'.
-> 
-> Fixes: 9770b428b1a2 ("crypto: ccp - Move dev_info/err messages for SEV/SNP init and shutdown")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-crypto/d9c2e79c-e26e-47b7-8243-ff6e7b101ec3@stanley.mountain/
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  drivers/crypto/ccp/sev-dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+* Yazen Ghannam <yazen.ghannam@amd.com> wrote:
+
+> On Mon, Apr 14, 2025 at 07:26:57PM -0500, Mario Limonciello wrote:
+> > From: Mario Limonciello <mario.limonciello@amd.com>
+> > 
+> > The s2idle mmio quirk uses a scratch register in the FCH.
+> > Adjust the code to clarify that.
+> > 
+> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > ---
+> > v4:
+> >  * Use fch.h instead
+> > ---
+> >  arch/x86/include/asm/amd/fch.h            | 1 +
+> >  drivers/platform/x86/amd/pmc/pmc-quirks.c | 3 ++-
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/amd/fch.h b/arch/x86/include/asm/amd/fch.h
+> > index a5fd91ff92df3..9b32e8a03193e 100644
+> > --- a/arch/x86/include/asm/amd/fch.h
+> > +++ b/arch/x86/include/asm/amd/fch.h
+> > @@ -8,5 +8,6 @@
+> >  /* register offsets from PM base */
+> >  #define FCH_PM_DECODEEN			0x00
+> >  #define FCH_PM_DECODEEN_SMBUS0SEL	GENMASK(20, 19)
+> > +#define FCH_PM_SCRATCH			0x80
+> >  
+> >  #endif
+> > diff --git a/drivers/platform/x86/amd/pmc/pmc-quirks.c b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> > index b4f49720c87f6..3c680d2029f62 100644
+> > --- a/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> > +++ b/drivers/platform/x86/amd/pmc/pmc-quirks.c
+> > @@ -8,6 +8,7 @@
+> >   * Author: Mario Limonciello <mario.limonciello@amd.com>
+> >   */
+> >  
+> > +#include <asm/amd/fch.h>
+> 
+> Arch headers should go after linux headers, I think.
+
+That's true, but it's a mostly stylistic requirement these days.
+
+> So that arch stuff can override generic stuff.
+
+Arch headers that override generic stuff are very much supposed to be 
+able to build stand-alone and in pretty much any order with other 
+headers, with very few exceptions. Ordering dependencies are very much 
+frowned upon, because if they don't trigger build failures they can 
+result in subtle breakages.
+
+Thanks,
+
+	Ingo
