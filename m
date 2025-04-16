@@ -1,81 +1,56 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB161FECA1
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F811DC993;
+	Wed, 16 Apr 2025 13:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811992; cv=none; b=pXhA3kUbLTGakyvxo2o8YEujInea8J8Pt7Lc7fqmlwRz4IzFYPvH2LNJ1X+Tmvvb6BwAF3wV9r8KPgHhvY3AQVGAyb74WLPkJy7tRo507C3FpjqTMrbClJe9yS+YfjWQtPnWKn6h1gVwBhN6rfjY0zAIuO4m4SdNQWmqP2gSo6g=
+	t=1744811998; cv=none; b=ElLzvThjHNwM85IQwhnDkVjBopWc8OpWxIqwL+rJkDOW1ec0jG1uBuswCRIgRylmfv/dmWFM/W9pYsil4mJoM4zu1HQJEqPskGBHVGeWiVe+NyuQGMtDzTZX1wC6ubcXmn7MDElTA5YxAHp/J8C5lIv4qEnS4WvbwIm1aN/ddEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811992; c=relaxed/simple;
-	bh=ZKeTJcAQauX3ZYJ9A0tSCcUAXdPNVOFW8a3KPutKB+4=;
+	s=arc-20240116; t=1744811998; c=relaxed/simple;
+	bh=93Uol4HY+e4bLu/S0Vc2E9tIOWiiPPs3FKuHcrh+xKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bTnAtYOPyIAH/dr7XaEy4ntB2Ea/+0Rnzn8hkvwjAM3McxnV4l7BPiDhiN87e3LfcA0sYqEBiPQhigcmTYxgfjhb3WaL/es/1HkWCQOqrNvT1O/13fNK9we2bOlwIoQYbkB5n9oGZNAf3eJvxBSuFZqdHqbo2syngpiQUSa0m3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pVZ/OeOO; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cHRriyKR; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Dz74m58J; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=X2tKJKup; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=XH6dY+MKqxPTo1LrhFcDDvLILeF6txNe924i2bArRtTQ/5wyomuhKSxsYgRdon11RhkYrnTcXDo57kxO2vXBlHN7KPehPHQ1D0+arJw6WhkVS8oWqhV9l9BdnVTAvNNt1EG1G7dgPMsGAr2gorRaX96XECyW+coaVftPzeNOYtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqLyD8mM; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pVZ/OeOO";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cHRriyKR";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Dz74m58J";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="X2tKJKup"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqLyD8mM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744811997; x=1776347997;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=93Uol4HY+e4bLu/S0Vc2E9tIOWiiPPs3FKuHcrh+xKk=;
+  b=CqLyD8mMJSvKlKuovQJPqc6HasCe2za15HZUnM+aXSCInarkkJeV/47P
+   yNdSRlYBO9bLy2nuxZ8MiAapdW1rwqDD8CgEiKm5UGf4rgzCay1tCuYdH
+   AdlxzKViXEUBX/WiekgXHQ/8fiopdCaK8PBcT9oarZmb5vzN74q2BPte1
+   hZ/wSduZf6gAXUYSq4v4xzPO5pd0+FAQ6HYHogsga74HTJjIaSKK11965
+   8hcT0eUP4nQvNNB4FlXr/t5iwgUgG0/G2dhYvyo7H5iVdFNGF+zarySG2
+   stnYNSUnyOd/jBkKV3WV+GPN2cFv+PN31UTafFiEgbVdWBuiOPSUWtRZV
+   g==;
+X-CSE-ConnectionGUID: YTGgphlOTL+Vpvv8+AiizA==
+X-CSE-MsgGUID: 2fwrHDGcSOO0apV7biFPGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57027294"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="57027294"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:54 -0700
+X-CSE-ConnectionGUID: HT7ItroSTnOpop/CPNvwRg==
+X-CSE-MsgGUID: Bs/22orTTfSZjMOPklpgdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="130447041"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:54 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EF1111F6E6;
-	Wed, 16 Apr 2025 13:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744811989; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHDGqv1OI4hhRkxVWXmrGgx5NhWsftkMacf1qKgIh2s=;
-	b=pVZ/OeOOdXhU+wnjHKkkD5W74KIquyrykoGjfGYZ9WcByjBzG1pCQIbdArcKyO8ZLqf8vX
-	avVlEpV6pn5yJPu3sO7HDD349KAAqrZxYnwqgUoT60LMCGm6aiBS5TeVyHQaN9FOWFX5ZI
-	fcioTTxhJrGdYVJVAOj5yBi/VGpEw3I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744811989;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHDGqv1OI4hhRkxVWXmrGgx5NhWsftkMacf1qKgIh2s=;
-	b=cHRriyKR/G6B41GRd1te+FRpCN3xuNFMrY8j6XXXXO9/xDuLc/JXDy9GLFD8f//wqG6jMJ
-	++ap8Y+CNyddPhDA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Dz74m58J;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=X2tKJKup
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744811987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHDGqv1OI4hhRkxVWXmrGgx5NhWsftkMacf1qKgIh2s=;
-	b=Dz74m58Jl9nUq4tHLzV0Ee37iKD2j5ZyE2cU5PQEaYk7m7801yPuQ65qmEt2Xou7L+l3FF
-	v7MBS9TUFNXJm2BmAy71aVXj4FOP8CXS3fyrZlh9SBQsCkl8PN1mlHjybRQYRnfWUL4YT2
-	vlNtuUAl/AebqsYQapcRVUB/rYJ9i/k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744811987;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SHDGqv1OI4hhRkxVWXmrGgx5NhWsftkMacf1qKgIh2s=;
-	b=X2tKJKupHyJTVqRlwhCfvPzAo6iZo6nWuG/ZWaoywCEAS92Jgb7nOT2gm/jK6YXrTgWoMf
-	tNqYcqdcACvkscBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DD618139A1;
-	Wed, 16 Apr 2025 13:59:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JPizNdO3/2f+RQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 16 Apr 2025 13:59:47 +0000
-Message-ID: <869da814-9219-4c5c-803c-e0fd3405246b@suse.cz>
-Date: Wed, 16 Apr 2025 15:59:47 +0200
+	by linux.intel.com (Postfix) with ESMTPS id B731820B5736;
+	Wed, 16 Apr 2025 06:59:52 -0700 (PDT)
+Message-ID: <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
+Date: Wed, 16 Apr 2025 09:59:51 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,77 +58,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add Pedro as reviewer to the MEMORY MAPPING
- section
+Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
+ PEBS event precise level
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
+ <20250415135323.GC4031@noisy.programming.kicks-ass.net>
+ <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+ <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Pedro Falcato <pfalcato@suse.de>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jann Horn <jannh@google.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250416135301.43513-1-lorenzo.stoakes@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250416135301.43513-1-lorenzo.stoakes@oracle.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EF1111F6E6
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,linux-mm.org:url,suse.cz:dkim,suse.cz:mid,suse.cz:email,kvack.org:email];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
 
-On 4/16/25 15:53, Lorenzo Stoakes wrote:
-> Pedro has offered to review memory mapping code. He has good experience in
-> this area and has provided excellent feedback on memory mapping series in
-> the past so I feel he'll be a great addition.
+
+
+On 2025-04-15 9:46 p.m., Mi, Dapeng wrote:
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Thanks!
-
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> On 4/16/2025 12:31 AM, Liang, Kan wrote:
+>>
+>> On 2025-04-15 9:53 a.m., Peter Zijlstra wrote:
+>>> On Tue, Apr 15, 2025 at 11:44:18AM +0000, Dapeng Mi wrote:
+>>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
+>>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
+>>>> should be dynamically configured base on these counter and precise
+>>>> distribution bitmap instead of defining them statically.
+>>>>
+>>>> Update event dyn_constraint base on PEBS event precise level.
+>>> What if any constraints are there on this? 
+>> Do you mean the static constraints defined in the
+>> event_constraints/pebs_constraints?
+>>
+>>> CPUID is virt host
+>>> controlled, right, so these could be the most horrible masks ever.
+>>>
+>> Yes, it could be changed by VMM. A sanity check should be required if
+>> abad mask is given.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8d834514a047..ecbf9bcc7b57 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15579,6 +15579,7 @@ M:	Liam R. Howlett <Liam.Howlett@oracle.com>
->  M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->  R:	Vlastimil Babka <vbabka@suse.cz>
->  R:	Jann Horn <jannh@google.com>
-> +R:	Pedro Falcato <pfalcato@suse.de>
->  L:	linux-mm@kvack.org
->  S:	Maintained
->  W:	http://www.linux-mm.org
+> Yes, we need a check to restrict the PEBS counter mask into the valid
+> counter mask, and just realized that we can't use hybrid(event->pmu,
+> intel_ctrl) to check counter mask and need a minor tweak since it includes
+> the GLOBAL_CTRL_EN_PERF_METRICS bit.
+> 
+> How about this?
+> 
+>         if (x86_pmu.arch_pebs) {
+>             u64 cntr_mask = hybrid(event->pmu, intel_ctrl) &
+>                         ~GLOBAL_CTRL_EN_PERF_METRICS;
+>             u64 pebs_mask = event->attr.precise_ip >= 3 ?
+>                         pebs_cap.pdists : pebs_cap.counters;
+>             if (pebs_mask != cntr_mask)
+>                 event->hw.dyn_constraint = pebs_mask & cntr_mask;
+>         }
+> 
+
+The mask isn't changed after boot. The sanity check should only be done
+once. I think it can be done in the update_pmu_cap() when perf retrieves
+the value. If a bad mask is detected, the PEBS should be disabled.
+
+Thanks,
+Kan>
+>>
+>>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?The dyn_constraint is a supplement of the static constraints. It doesn't
+>> overwrite the static constraints.
+>>
+>> In the intel_get_event_constraints(), perf always gets the static
+>> constraints first. If the dyn_constraint is defined, it gets the common
+>> mask of the static constraints and the dynamic constraints. All
+>> constraint rules will be complied.
+>>
+>> 	if (event->hw.dyn_constraint != ~0ULL) {
+>> 		c2 = dyn_constraint(cpuc, c2, idx);
+>> 		c2->idxmsk64 &= event->hw.dyn_constraint;
+>> 		c2->weight = hweight64(c2->idxmsk64);
+>> 	}
+>>
+>> Thanks,
+>> Kan
+>>
+> 
 
