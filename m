@@ -1,221 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A02A11CA0;
-	Wed, 16 Apr 2025 12:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E808A134A8;
+	Wed, 16 Apr 2025 12:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807622; cv=none; b=iNJv4X0lFKAiQ+Mxmk23cKpfmfmPuZipnBEnVrkmwveUUjE7pyvE4B4rCvLE0mw9FjLSze17fVuCvaZ+PYUJCSWjZul39m5EUbn6ZXE9J0zL2fOel8B7kTFSz3+vQEvnE4ZHiwYQZ2DH4WZqtSlyv7/o6aHK29JHkNsfhHCrGQw=
+	t=1744807651; cv=none; b=eIIATBuv+PIk7q7i2f6nb9oA7DhfL0EB6KMuZw1+eHe4OMioKgrFUgXzTm9uUNYVNoE0snkhkrm/Fni7SwRo1y/yhEt2FKE3AN31kNZXT75c0iDgdr+X5xKinmo+g8eJTrBdLYVqbv2ROWiMyqPSvwWa4USEUR5iTwuArKd9bZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807622; c=relaxed/simple;
-	bh=LvJ12tKplLNrFrTCz4Wzqin22ujyIlOPSdlj12fSrN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6c79JPwKqtOXmXDgcvRVoLY1XWr//82EF+0FRHX9E3pzXx0p6WkkqrSKfNQ1O0HpZPoWyENHVgaMFXykUfup+XXs6nZIFdMJ8DrmKxkKpERFWykekfTxKodQlYSyxKXRv2je2bW2vWcYcqmEQUp1SEqRurm/qDSnmSITzBNuvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufMbBZza; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744807651; c=relaxed/simple;
+	bh=tRK7Mw6CYOBN/JnDtQqLu4sNQOY4stUMtei2t4MDVO4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BtnLM2vIEqW3eD12hnRF9L75ofCfzTqbgAAsIwOWqHS4Mg3WUHXc7R02b60+iHPG/lyPy1/Hr1aZ7QDay3KbxmlE1a62L8xVNWQBMizap9gIkvb506SYQ7Ew6ULF4WXXUp91jp2Cq9aVHPoqccpIAdAYDtQBnHV6BDI1II4CC5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=UBaGp2CD; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufMbBZza"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 705C6C4CEE2;
-	Wed, 16 Apr 2025 12:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744807620;
-	bh=LvJ12tKplLNrFrTCz4Wzqin22ujyIlOPSdlj12fSrN8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ufMbBZzaEUx30bSlUVP3sqOw//LJN3SAfJPd8tH3iTGtQ3tjSddJ5/M0RLqX4FSjT
-	 DhP7cnt0EWXxkA/8Xe3QuweEZl2iPLQwz6oQOWsWT0E+8G6+WOT5BUJP2zbTTKM91B
-	 xRY7Iu1ZfJ9LUnAMbZSLMQ51o3pObzL+uA/dz6TMyI1gIOh9d4PlQQ8s/CQFeGvX0t
-	 2Hf6RY7hq4jpgCpTCXEOjdIZk1FW+lQ/uS3Q36RpTrWzyM0EqTyZbanAomZaa+0LGs
-	 /m8dehnanFXVpzxyiJEZ6W89mnjJoTSwHGbF8OlQR0qI96XD99ls5QaMKTYVX6Fsqf
-	 sZOUnS9t3bOaA==
-Date: Wed, 16 Apr 2025 14:46:52 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V10 14/15] rust: opp: Extend OPP abstractions with
- cpufreq support
-Message-ID: <Z_-mvB7hibFD4Q34@pollux>
-References: <cover.1744783509.git.viresh.kumar@linaro.org>
- <a940d1b1a02d99fdc80ba8d0526c35a776854cb3.1744783509.git.viresh.kumar@linaro.org>
- <Z_9v24SghlIhT62r@pollux>
- <20250416095943.f3jxy55bamekscst@vireshk-i7>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="UBaGp2CD"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53GClCnH53270950, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744807632; bh=tRK7Mw6CYOBN/JnDtQqLu4sNQOY4stUMtei2t4MDVO4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Transfer-Encoding:Content-Type;
+	b=UBaGp2CDM5/v/ORRvvAAbpFG19IlHrjt2rpJBJjWM20zpc1tlLkj6sLuaTNsY6vXk
+	 f4RGAgp5XVkD/JI3jalu3jx7X7AUyxVa+FjebkXqhVhIB7/FX0y2+luWuAAZxu2FgU
+	 5+81oG//VzGtXLONTpTbRv+MddiCEaB2m9vnhINJgarR2m2EUgqbnxMLn34SpV8Mqh
+	 lWI1WQlUGxufnMd0+AHKtdT5ZvublriHv6R0D9P343tUPTg4h+g7ncbeRgdyRTKcEp
+	 39a6b+5ZmKy2bilNkczMPnK3VjjXMx/+mtgIWi/IxIXZk97j3AoNg0kg1eLIL/gArn
+	 8Ciai/fMO0ogA==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53GClCnH53270950
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 20:47:12 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 16 Apr 2025 20:47:13 +0800
+Received: from RTDOMAIN (172.21.210.70) by RTEXDAG02.realtek.com.tw
+ (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 16 Apr
+ 2025 20:47:12 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net v2 3/3] rtase: Fix a type error in min_t
+Date: Wed, 16 Apr 2025 20:45:34 +0800
+Message-ID: <20250416124534.30167-4-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250416124534.30167-1-justinlai0215@realtek.com>
+References: <20250416124534.30167-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416095943.f3jxy55bamekscst@vireshk-i7>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXDAG02.realtek.com.tw (172.21.6.101)
 
-On Wed, Apr 16, 2025 at 03:29:43PM +0530, Viresh Kumar wrote:
-> On 16-04-25, 10:52, Danilo Krummrich wrote:
-> > This config is needed quite often, it probably makes sense to move this code in
-> > its own Rust module, i.e.:
-> > 
-> > 	#[cfg(CONFIG_CPU_FREQ)]
-> > 	pub mod freq;
-> 
-> Like this ?
+Fix a type error in min_t.
 
-Yes, I thought of a separate file, but I that should work as well.
+Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
-> index 734be8b6d0ef..f4cabe859c43 100644
-> --- a/rust/kernel/opp.rs
-> +++ b/rust/kernel/opp.rs
-> @@ -20,10 +20,67 @@
->  };
-> 
->  #[cfg(CONFIG_CPU_FREQ)]
-> -use crate::cpufreq;
-> +// Frequency table implementation.
-> +mod freq {
-> +    use crate::cpufreq;
-> +    use core::ops::Deref;
-> +    use super::*;
-> +
-> +    /// OPP frequency table.
-> +    ///
-> +    /// A [`cpufreq::Table`] created from [`Table`].
-> +    pub struct FreqTable {
-> +        dev: ARef<Device>,
-> +        ptr: *mut bindings::cpufreq_frequency_table,
-> +    }
-> +
-> +    impl FreqTable {
-> +        /// Creates a new instance of [`FreqTable`] from [`Table`].
-> +        pub(crate) fn new(table: &Table) -> Result<Self> {
-> +            let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
-> +
-> +            // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
-> +            // requirements.
-> +            to_result(unsafe {
-> +                bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
-> +            })?;
-> +
-> +            Ok(Self {
-> +                dev: table.dev.clone(),
-> +                ptr,
-> +            })
-> +        }
-> +
-> +        // Returns a reference to the underlying [`cpufreq::Table`].
-> +        #[inline]
-> +        fn table(&self) -> &cpufreq::Table {
-> +            // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-> +            unsafe { cpufreq::Table::from_raw(self.ptr) }
-> +        }
-> +    }
-> +
-> +    impl Deref for FreqTable {
-> +        type Target = cpufreq::Table;
-> +
-> +        #[inline]
-> +        fn deref(&self) -> &Self::Target {
-> +            self.table()
-> +        }
-> +    }
-> +
-> +    impl Drop for FreqTable {
-> +        fn drop(&mut self) {
-> +            // SAFETY: The pointer was created via `dev_pm_opp_init_cpufreq_table`, and is only
-> +            // freed here.
-> +            unsafe {
-> +                bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw())
-> +            };
-> +        }
-> +    }
-> +}
-> 
->  #[cfg(CONFIG_CPU_FREQ)]
-> -use core::ops::Deref;
-> +pub use freq::FreqTable;
-> 
->  use core::{marker::PhantomData, ptr};
-> 
-> @@ -502,60 +559,6 @@ extern "C" fn config_regulators(
->      }
->  }
-> 
-> -/// OPP frequency table.
-> -///
-> -/// A [`cpufreq::Table`] created from [`Table`].
-> -#[cfg(CONFIG_CPU_FREQ)]
-> -pub struct FreqTable {
-> -    dev: ARef<Device>,
-> -    ptr: *mut bindings::cpufreq_frequency_table,
-> -}
-> -
-> -#[cfg(CONFIG_CPU_FREQ)]
-> -impl FreqTable {
-> -    /// Creates a new instance of [`FreqTable`] from [`Table`].
-> -    fn new(table: &Table) -> Result<Self> {
-> -        let mut ptr: *mut bindings::cpufreq_frequency_table = ptr::null_mut();
-> -
-> -        // SAFETY: The requirements are satisfied by the existence of [`Device`] and its safety
-> -        // requirements.
-> -        to_result(unsafe {
-> -            bindings::dev_pm_opp_init_cpufreq_table(table.dev.as_raw(), &mut ptr)
-> -        })?;
-> -
-> -        Ok(Self {
-> -            dev: table.dev.clone(),
-> -            ptr,
-> -        })
-> -    }
-> -
-> -    // Returns a reference to the underlying [`cpufreq::Table`].
-> -    #[inline]
-> -    fn table(&self) -> &cpufreq::Table {
-> -        // SAFETY: The `ptr` is guaranteed by the C code to be valid.
-> -        unsafe { cpufreq::Table::from_raw(self.ptr) }
-> -    }
-> -}
-> -
-> -#[cfg(CONFIG_CPU_FREQ)]
-> -impl Deref for FreqTable {
-> -    type Target = cpufreq::Table;
-> -
-> -    #[inline]
-> -    fn deref(&self) -> &Self::Target {
-> -        self.table()
-> -    }
-> -}
-> -
-> -#[cfg(CONFIG_CPU_FREQ)]
-> -impl Drop for FreqTable {
-> -    fn drop(&mut self) {
-> -        // SAFETY: The pointer was created via `dev_pm_opp_init_cpufreq_table`, and is only freed
-> -        // here.
-> -        unsafe { bindings::dev_pm_opp_free_cpufreq_table(self.dev.as_raw(), &mut self.as_raw()) };
-> -    }
-> -}
-> -
->  /// A reference-counted OPP table.
->  ///
->  /// Rust abstraction for the C `struct opp_table`.
-> 
-> -- 
-> viresh
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 55b8d3666153..bc856fb3d6f3 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
+ 	u8 msb, time_count, time_unit;
+ 	u16 int_miti;
+ 
+-	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
++	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
+ 
+ 	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
+ 		msb = fls(time_us);
+@@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
+ 	u8 msb, pkt_num_count, pkt_num_unit;
+ 	u16 int_miti;
+ 
+-	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
++	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+ 
+ 	if (pkt_num > 60) {
+ 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+-- 
+2.34.1
+
