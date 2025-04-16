@@ -1,251 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63340154423
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5955D4B5AE
 	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781548; cv=none; b=LlF8aGTFbZ2sx/2HTX73uS2o77RVWlkzlVIIg3lA0z0TVoXdWmsfQvndwtTtsJJqTthlF/eqDlHBrXdlN7NmsrcIA83SvdrCHLQpoy8Uu/Edlna6rVX5YKyalFv1mjSQVICQsF3uYLUNFbcN/4pfXkyHjeIFEAaKYi54ui/3j7E=
+	t=1744781550; cv=none; b=adxUA7vll/Riqrou13JOH9KK2XqpptM+I3KcQqNmH1lzApATz0YFIJqxD7Vt2gOQEjbPZQtDC7aNgNTZxWnPlVP5+YTOdAZK1Eg0asizfglFKJjy2XXHfRw6z7csTZE1+R0vgPWWF50GaCf4/QQBB4ha62TZElUW9rNlWeQv4ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781548; c=relaxed/simple;
-	bh=QOu9vI2dumfba/O/jFcBMaqEag+WvaQ7EqmF4C9gQ6k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OfCjY4MWKF9ARC5XjvPj6K0U9bcmvfXDRgro0PI6L1uMeXcIW+nswUGlcAloRb/m1+Urayl/HPBsjIccb70+Wz9pKMY2I2O5x4EjOTuMC8tE7H0ADAOM3Gljp6d/tXwSRv9kdqcZV+Jjyi/ySH+sFesw7bqlHsn0cw3hiQ+eE/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDQpvzqm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744781550; c=relaxed/simple;
+	bh=2AX8eHN304eez/lPBhrNmSK3jADYbtAxlj1qGYGX+Rw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a2N8kmEItxpuZIC/NahVim8OXjQXoFKEr3UL2ScDWH31nAKDxbe79Lx2CToVQQlFBsnckBmPbGo5Re5dFVovNjwRNTas1oSVzSaGtbgWZ2hqWjf+fPMtnyfFfmpCauzLXyuilGQmJXJ1ztmUE8tQxA4LB9nUr7//byyqabwpRCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R31m9JQn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDQpvzqm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A88C4CEE2;
-	Wed, 16 Apr 2025 05:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744781547;
-	bh=QOu9vI2dumfba/O/jFcBMaqEag+WvaQ7EqmF4C9gQ6k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LDQpvzqm3cmpe3T2DtyMRGHjfDJbqD2cvNagRixOHn2K84T1LM1MED28SO4o6choC
-	 KmOw2bIjgBN9roWW4i/SyK9/5k042vXnG/+7r6N1jEEuPekrI918uNrMMwFYoNQ8sP
-	 w0H9MxxG2F74u89R2Rzfp0rN1AJFC8u/4kpIfuOGkGWBwbadGh/2bGzreU5OymwyOl
-	 W8CUIsSPZeRbN5ro5vSEuiDfv5YLm1loYPrhCEODeV4ut3H8Ijbs7GykTAX4rMjA8d
-	 ehAhSigTIZiBSIGTukvi2slslPhNnTGDhQTAJvardom8nTNj87RkneX3AU2os99ZbA
-	 miF27sG3XHXGw==
-Date: Wed, 16 Apr 2025 07:32:22 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
-Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
-Message-ID: <Z_9A5tXUjVkHZFQX@gmail.com>
-References: <20250414102301.332225-1-mingo@kernel.org>
- <20250414102301.332225-3-mingo@kernel.org>
- <87lds2sjse.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R31m9JQn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744781546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7DUKNPYms5ndImHtnx/7SOlMI/tokulKdqziuD6CP6w=;
+	b=R31m9JQnTe/4hwagd6j1AKN3LeGhAUUFTFW0eBkZ2JBuRdi4KVZA9cZD/t0n9GQ7crU4iU
+	u/UmH/wh6Fiyt9bmdwzphhF5LpH4KJ3XjWOJ5kJKeSW6fGQQCUlmgJh78MTnAqWspaYlsF
+	a8TYY/G2Aynyct1/AX7pCOYKqhAeWYw=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-353-RhVyARJNPf-xg6PHs6x0xw-1; Wed, 16 Apr 2025 01:32:25 -0400
+X-MC-Unique: RhVyARJNPf-xg6PHs6x0xw-1
+X-Mimecast-MFC-AGG-ID: RhVyARJNPf-xg6PHs6x0xw_1744781544
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-30bf554ea7bso1646161fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:32:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744781543; x=1745386343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7DUKNPYms5ndImHtnx/7SOlMI/tokulKdqziuD6CP6w=;
+        b=D6W4mEzqD3ME2A62Gh1JUqokc4YgvSiywy8VOdFV22Ey2OfWXi2xNc2CPeTsS9xHKN
+         gQJ/8dTedDalmAiOAVRVHDWG/YUyrLKw3TC2fN75qcSMjAYv3K32CAgfRL3e9xUMQaBs
+         O+PCwykrvzNShhq8DJUYclE6nfzG7l4jFCDluHCsxP8td8aherT+erhUpOgDLAIdvHNH
+         91IEhpufyCsfb/yAJUshpzq+RaymXGULxduXlYju+SKZo/jQeBp1mr1ByBc9I34o4/P3
+         WKc4R6sR/yxqcPIYY7H/KEAw0PhM7Uz9v/9srSEPtS69MIswoppakFNx24JbffjYIIKp
+         Hs2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ErC4F0FQ6JhiQzX4cSE3F/ZoDjlVLSohbzsR+r5RU7rNP4jminALb6X03egv31BH6W7GsOjhxdAyZ5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGPdO1tx4+0WOskdxcf+NsdxaUri27yAeJQGsK+uhF5NFRds1M
+	QPCduGhzflcDPtlF/JZJKvQUAYVsnoA6gVZFaXRHV83rspFrRJPFMiLQUM7WcK4H/zzMoY3oIHv
+	nG9XbnU8RW0zAAGee6HNpX9t+8baUD1WDL52PHDIZ9zcF9ulbdMM3X3PYcpJUUOmMvpOUL9V88n
+	gCTiPHBCzjCGR/Nm1sth+QKiNqKycB+NRZdGlL/XSMFVRUVcw=
+X-Gm-Gg: ASbGnctgX4xjKYQ4uKa538u8f74stbjXXJC76DtBBQ0MAyzKoBT16kHIJyUxo2CIwNh
+	+UXAdN5mDOK5cIl0n9LO752INxRFyXkXJaPtZMZfiNe2r64ZZ5N8PJqbaiEWJjJC++EV9ag==
+X-Received: by 2002:a2e:9d95:0:b0:30b:e73e:e472 with SMTP id 38308e7fff4ca-3107f7315afmr968701fa.14.1744781543173;
+        Tue, 15 Apr 2025 22:32:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGLbi6QE/QRI84aIym068DYXE/CVVg2Kz3XVfyKFMsraJnM2JWNTAROz5tOhUqbo4yNhATTZ04nqK5gh+t16qk=
+X-Received: by 2002:a2e:9d95:0:b0:30b:e73e:e472 with SMTP id
+ 38308e7fff4ca-3107f7315afmr968541fa.14.1744781542747; Tue, 15 Apr 2025
+ 22:32:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87lds2sjse.ffs@tglx>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com> <20250412073202.3085138-3-yukuai1@huaweicloud.com>
+In-Reply-To: <20250412073202.3085138-3-yukuai1@huaweicloud.com>
+From: Xiao Ni <xni@redhat.com>
+Date: Wed, 16 Apr 2025 13:32:10 +0800
+X-Gm-Features: ATxdqUFy4q7mCNpWVDO9Q5MlVBJY6husumN8-kP6cD49hX_vFh_TaZt2rTI8_kE
+Message-ID: <CALTww29xMyNq0SpPGvVqp6YPmCVu+N+d_neeJD_mogiviiZpYw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] md: add a new api sync_io_depth
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, 
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Apr 12, 2025 at 3:39=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
+rote:
+>
+> From: Yu Kuai <yukuai3@huawei.com>
+>
+> Currently if sync speed is above speed_min and below speed_max,
+> md_do_sync() will wait for all sync IOs to be done before issuing new
+> sync IO, means sync IO depth is limited to just 1.
+>
+> This limit is too low, in order to prevent sync speed drop conspicuously
+> after fixing is_mddev_idle() in the next patch, add a new api for
+> limiting sync IO depth, the default value is 32.
+>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>  drivers/md/md.c | 103 +++++++++++++++++++++++++++++++++++++++---------
+>  drivers/md/md.h |   1 +
+>  2 files changed, 85 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/md/md.c b/drivers/md/md.c
+> index 438e71e45c16..8966c4afc62a 100644
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@ -111,32 +111,42 @@ static void md_wakeup_thread_directly(struct md_thr=
+ead __rcu *thread);
+>  /* Default safemode delay: 200 msec */
+>  #define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
+>  /*
+> - * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
+> - * is 1000 KB/sec, so the extra system load does not show up that much.
+> - * Increase it if you want to have more _guaranteed_ speed. Note that
+> - * the RAID driver will use the maximum available bandwidth if the IO
+> - * subsystem is idle. There is also an 'absolute maximum' reconstruction
+> - * speed limit - in case reconstruction slows down your system despite
+> - * idle IO detection.
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+These comments are useful. They only describe the meaning of those
+control values. Is it good to keep them?
 
-> >  #ifdef CONFIG_OMAP_DM_TIMER
-> > -	use_idlect1 = omap_dm_timer_modify_idlect_mask(use_idlect1);
-> > +	use_idlect1 = omap_dm_timer_moduleify_idlect_mask(use_idlect1);
-> 
-> I have no idea how this is related to the subject or the change log of
-> this patch.
+> + * Background sync IO speed control:
+>   *
+> - * you can change it via /proc/sys/dev/raid/speed_limit_min and _max.
+> - * or /sys/block/mdX/md/sync_speed_{min,max}
+> + * - below speed min:
+> + *   no limit;
+> + * - above speed min and below speed max:
+> + *   a) if mddev is idle, then no limit;
+> + *   b) if mddev is busy handling normal IO, then limit inflight sync IO
+> + *   to sync_io_depth;
+> + * - above speed max:
+> + *   sync IO can't be issued;
+> + *
+> + * Following configurations can be changed via /proc/sys/dev/raid/ for s=
+ystem
+> + * or /sys/block/mdX/md/ for one array.
+>   */
+> -
+>  static int sysctl_speed_limit_min =3D 1000;
+>  static int sysctl_speed_limit_max =3D 200000;
+> -static inline int speed_min(struct mddev *mddev)
+> +static int sysctl_sync_io_depth =3D 32;
+> +
+> +static int speed_min(struct mddev *mddev)
+>  {
+>         return mddev->sync_speed_min ?
+>                 mddev->sync_speed_min : sysctl_speed_limit_min;
+>  }
+>
+> -static inline int speed_max(struct mddev *mddev)
+> +static int speed_max(struct mddev *mddev)
+>  {
+>         return mddev->sync_speed_max ?
+>                 mddev->sync_speed_max : sysctl_speed_limit_max;
+>  }
+>
+> +static int sync_io_depth(struct mddev *mddev)
+> +{
+> +       return mddev->sync_io_depth ?
+> +               mddev->sync_io_depth : sysctl_sync_io_depth;
+> +}
+> +
+>  static void rdev_uninit_serial(struct md_rdev *rdev)
+>  {
+>         if (!test_and_clear_bit(CollisionCheck, &rdev->flags))
+> @@ -293,14 +303,21 @@ static const struct ctl_table raid_table[] =3D {
+>                 .procname       =3D "speed_limit_min",
+>                 .data           =3D &sysctl_speed_limit_min,
+>                 .maxlen         =3D sizeof(int),
+> -               .mode           =3D S_IRUGO|S_IWUSR,
+> +               .mode           =3D 0644,
 
-That was a horrible script fail, but I wrote the changelog for the 
-right patch, which is the reason for the dissonance. I sent the updated 
--v2 patch 2 days ago already (and it was updated in the Git tree then 
-too):
+Is it better to use macro rather than number directly here?
 
-  https://lore.kernel.org/all/Z_0oWnbcjsekHXJd@gmail.com/
+>                 .proc_handler   =3D proc_dointvec,
+>         },
+>         {
+>                 .procname       =3D "speed_limit_max",
+>                 .data           =3D &sysctl_speed_limit_max,
+>                 .maxlen         =3D sizeof(int),
+> -               .mode           =3D S_IRUGO|S_IWUSR,
+> +               .mode           =3D 0644,
+> +               .proc_handler   =3D proc_dointvec,
+> +       },
+> +       {
+> +               .procname       =3D "sync_io_depth",
+> +               .data           =3D &sysctl_sync_io_depth,
+> +               .maxlen         =3D sizeof(int),
+> +               .mode           =3D 0644,
+>                 .proc_handler   =3D proc_dointvec,
+>         },
+>  };
+> @@ -5091,7 +5108,7 @@ static ssize_t
+>  sync_min_show(struct mddev *mddev, char *page)
+>  {
+>         return sprintf(page, "%d (%s)\n", speed_min(mddev),
+> -                      mddev->sync_speed_min ? "local": "system");
+> +                      mddev->sync_speed_min ? "local" : "system");
+>  }
+>
+>  static ssize_t
+> @@ -5100,7 +5117,7 @@ sync_min_store(struct mddev *mddev, const char *buf=
+, size_t len)
+>         unsigned int min;
+>         int rv;
+>
+> -       if (strncmp(buf, "system", 6)=3D=3D0) {
+> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
+>                 min =3D 0;
+>         } else {
+>                 rv =3D kstrtouint(buf, 10, &min);
+> @@ -5120,7 +5137,7 @@ static ssize_t
+>  sync_max_show(struct mddev *mddev, char *page)
+>  {
+>         return sprintf(page, "%d (%s)\n", speed_max(mddev),
+> -                      mddev->sync_speed_max ? "local": "system");
+> +                      mddev->sync_speed_max ? "local" : "system");
+>  }
+>
+>  static ssize_t
+> @@ -5129,7 +5146,7 @@ sync_max_store(struct mddev *mddev, const char *buf=
+, size_t len)
+>         unsigned int max;
+>         int rv;
+>
+> -       if (strncmp(buf, "system", 6)=3D=3D0) {
+> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
+>                 max =3D 0;
+>         } else {
+>                 rv =3D kstrtouint(buf, 10, &max);
+> @@ -5145,6 +5162,35 @@ sync_max_store(struct mddev *mddev, const char *bu=
+f, size_t len)
+>  static struct md_sysfs_entry md_sync_max =3D
+>  __ATTR(sync_speed_max, S_IRUGO|S_IWUSR, sync_max_show, sync_max_store);
+>
+> +static ssize_t
+> +sync_io_depth_show(struct mddev *mddev, char *page)
+> +{
+> +       return sprintf(page, "%d (%s)\n", sync_io_depth(mddev),
+> +                      mddev->sync_io_depth ? "local" : "system");
+> +}
+> +
+> +static ssize_t
+> +sync_io_depth_store(struct mddev *mddev, const char *buf, size_t len)
+> +{
+> +       unsigned int max;
+> +       int rv;
+> +
+> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
+> +               max =3D 0;
+> +       } else {
+> +               rv =3D kstrtouint(buf, 10, &max);
+> +               if (rv < 0)
+> +                       return rv;
+> +               if (max =3D=3D 0)
+> +                       return -EINVAL;
+> +       }
+> +       mddev->sync_io_depth =3D max;
+> +       return len;
+> +}
+> +
+> +static struct md_sysfs_entry md_sync_io_depth =3D
+> +__ATTR_RW(sync_io_depth);
+> +
+>  static ssize_t
+>  degraded_show(struct mddev *mddev, char *page)
+>  {
+> @@ -5671,6 +5717,7 @@ static struct attribute *md_redundancy_attrs[] =3D =
+{
+>         &md_mismatches.attr,
+>         &md_sync_min.attr,
+>         &md_sync_max.attr,
+> +       &md_sync_io_depth.attr,
+>         &md_sync_speed.attr,
+>         &md_sync_force_parallel.attr,
+>         &md_sync_completed.attr,
+> @@ -8927,6 +8974,23 @@ static sector_t md_sync_position(struct mddev *mdd=
+ev, enum sync_action action)
+>         }
+>  }
+>
+> +static bool sync_io_within_limit(struct mddev *mddev)
+> +{
+> +       int io_sectors;
+> +
+> +       /*
+> +        * For raid456, sync IO is stripe(4k) per IO, for other levels, i=
+t's
+> +        * RESYNC_PAGES(64k) per IO.
+> +        */
+> +       if (mddev->level =3D=3D 4 || mddev->level =3D=3D 5 || mddev->leve=
+l =3D=3D 6)
+> +               io_sectors =3D 8;
+> +       else
+> +               io_sectors =3D 128;
+> +
+> +       return atomic_read(&mddev->recovery_active) <
+> +               io_sectors * sync_io_depth(mddev);
+> +}
+> +
+>  #define SYNC_MARKS     10
+>  #define        SYNC_MARK_STEP  (3*HZ)
+>  #define UPDATE_FREQUENCY (5*60*HZ)
+> @@ -9195,7 +9259,8 @@ void md_do_sync(struct md_thread *thread)
+>                                 msleep(500);
+>                                 goto repeat;
+>                         }
+> -                       if (!is_mddev_idle(mddev, 0)) {
+> +                       if (!sync_io_within_limit(mddev) &&
+> +                           !is_mddev_idle(mddev, 0)) {
+>                                 /*
+>                                  * Give other IO more of a chance.
+>                                  * The faster the devices, the less we wa=
+it.
+> diff --git a/drivers/md/md.h b/drivers/md/md.h
+> index 1cf00a04bcdd..63be622467c6 100644
+> --- a/drivers/md/md.h
+> +++ b/drivers/md/md.h
+> @@ -483,6 +483,7 @@ struct mddev {
+>         /* if zero, use the system-wide default */
+>         int                             sync_speed_min;
+>         int                             sync_speed_max;
+> +       int                             sync_io_depth;
+>
+>         /* resync even though the same disks are shared among md-devices =
+*/
+>         int                             parallel_resync;
+> --
+> 2.39.2
+>
 
-Unfortunately you weren't Cc:-ed for Thomas Weißschuh's reply, so you 
-probably didn't see the fixed patch. :-/
+This part looks good to me.
 
-> Has AI gone wild or what?
+Acked-by: Xiao Ni <xni@redhat.com>
 
-Simple sed pattern mistake doing s/timer_mod/timer_module instead of 
-the s/\<timer_mod\>/timer_module change I wrote the changelog for.
-
-Thanks,
-
-	Ingo
-
-=============>
-From 48f2aff7501a6dd1154297b7a00e0f2fbea36e24 Mon Sep 17 00:00:00 2001
-From: Ingo Molnar <mingo@kernel.org>
-Date: Mon, 14 Apr 2025 11:23:06 +0200
-Subject: [PATCH] scsi: bfa: Rename 'timer_mod' to 'timer_module'
-
-We'd like to introduce timer_mod() in the kernel, so make
-sure the namespace is clear.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
----
- drivers/scsi/bfa/bfa.h         |  2 +-
- drivers/scsi/bfa/bfa_core.c    |  4 ++--
- drivers/scsi/bfa/bfa_ioc.c     | 16 ++++++++--------
- drivers/scsi/bfa/bfa_ioc.h     |  4 ++--
- drivers/scsi/bfa/bfa_modules.h |  2 +-
- drivers/scsi/bfa/bfad.c        |  2 +-
- 6 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
-index a6b8c4ddea19..80b75669fc50 100644
---- a/drivers/scsi/bfa/bfa.h
-+++ b/drivers/scsi/bfa/bfa.h
-@@ -429,7 +429,7 @@ bfa_status_t bfa_iocfc_israttr_set(struct bfa_s *bfa,
- void bfa_iocfc_enable(struct bfa_s *bfa);
- void bfa_iocfc_disable(struct bfa_s *bfa);
- #define bfa_timer_start(_bfa, _timer, _timercb, _arg, _timeout)		\
--	bfa_timer_begin(&(_bfa)->timer_mod, _timer, _timercb, _arg, _timeout)
-+	bfa_timer_begin(&(_bfa)->timer_module, _timer, _timercb, _arg, _timeout)
- 
- struct bfa_cb_pending_q_s {
- 	struct bfa_cb_qe_s	hcb_qe;
-diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
-index a99a101b95ef..667a631a2abc 100644
---- a/drivers/scsi/bfa/bfa_core.c
-+++ b/drivers/scsi/bfa/bfa_core.c
-@@ -1526,14 +1526,14 @@ bfa_iocfc_attach(struct bfa_s *bfa, void *bfad, struct bfa_iocfc_cfg_s *cfg,
- 	bfa_iocfc_cbfn.reset_cbfn = bfa_iocfc_reset_cbfn;
- 
- 	ioc->trcmod = bfa->trcmod;
--	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_mod);
-+	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_module);
- 
- 	bfa_ioc_pci_init(&bfa->ioc, pcidev, BFI_PCIFN_CLASS_FC);
- 	bfa_ioc_mbox_register(&bfa->ioc, bfa_mbox_isrs);
- 
- 	bfa_iocfc_init_mem(bfa, bfad, cfg, pcidev);
- 	bfa_iocfc_mem_claim(bfa, cfg);
--	INIT_LIST_HEAD(&bfa->timer_mod.timer_q);
-+	INIT_LIST_HEAD(&bfa->timer_module.timer_q);
- 
- 	INIT_LIST_HEAD(&bfa->comp_q);
- 	for (i = 0; i < BFI_IOC_MAX_CQS; i++)
-diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
-index aa68d61a2d0d..4a9bd084cd5d 100644
---- a/drivers/scsi/bfa/bfa_ioc.c
-+++ b/drivers/scsi/bfa/bfa_ioc.c
-@@ -28,12 +28,12 @@ BFA_TRC_FILE(CNA, IOC);
- #define BFA_IOC_POLL_TOV	BFA_TIMER_FREQ
- 
- #define bfa_ioc_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_ioc_timeout, (__ioc), BFA_IOC_TOV)
- #define bfa_ioc_timer_stop(__ioc)   bfa_timer_stop(&(__ioc)->ioc_timer)
- 
- #define bfa_hb_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->hb_timer,		\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->hb_timer,		\
- 			bfa_ioc_hb_check, (__ioc), BFA_IOC_HB_TOV)
- #define bfa_hb_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->hb_timer)
- 
-@@ -159,16 +159,16 @@ bfa_ioc_sm_to_state(struct bfa_ioc_sm_table *smt, bfa_ioc_sm_t sm)
-  */
- 
- #define bfa_iocpf_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_iocpf_timeout, (__ioc), BFA_IOC_TOV)
- #define bfa_iocpf_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->ioc_timer)
- 
- #define bfa_iocpf_poll_timer_start(__ioc)				\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
- 			bfa_iocpf_poll_timeout, (__ioc), BFA_IOC_POLL_TOV)
- 
- #define bfa_sem_timer_start(__ioc)					\
--	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->sem_timer,	\
-+	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->sem_timer,	\
- 			bfa_iocpf_sem_timeout, (__ioc), BFA_IOC_HWSEM_TOV)
- #define bfa_sem_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->sem_timer)
- 
-@@ -2333,11 +2333,11 @@ bfa_ioc_isr(struct bfa_ioc_s *ioc, struct bfi_mbmsg_s *m)
-  */
- void
- bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa, struct bfa_ioc_cbfn_s *cbfn,
--	       struct bfa_timer_mod_s *timer_mod)
-+	       struct bfa_timer_mod_s *timer_module)
- {
- 	ioc->bfa	= bfa;
- 	ioc->cbfn	= cbfn;
--	ioc->timer_mod	= timer_mod;
-+	ioc->timer_module	= timer_module;
- 	ioc->fcmode	= BFA_FALSE;
- 	ioc->pllinit	= BFA_FALSE;
- 	ioc->dbg_fwsave_once = BFA_TRUE;
-@@ -5062,7 +5062,7 @@ bfa_diag_memtest(struct bfa_diag_s *diag, struct bfa_diag_memtest_s *memtest,
- 
- 	memtest_tov = (bfa_ioc_asic_gen(diag->ioc) == BFI_ASIC_GEN_CT2) ?
- 		       CT2_BFA_DIAG_MEMTEST_TOV : BFA_DIAG_MEMTEST_TOV;
--	bfa_timer_begin(diag->ioc->timer_mod, &diag->timer,
-+	bfa_timer_begin(diag->ioc->timer_module, &diag->timer,
- 			bfa_diag_memtest_done, diag, memtest_tov);
- 	diag->timer_active = 1;
- 	return BFA_STATUS_OK;
-diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
-index d70332e9ad6d..3fa8a65bf067 100644
---- a/drivers/scsi/bfa/bfa_ioc.h
-+++ b/drivers/scsi/bfa/bfa_ioc.h
-@@ -333,7 +333,7 @@ struct bfa_ioc_s {
- 	bfa_ioc_sm_t		fsm;
- 	struct bfa_s		*bfa;
- 	struct bfa_pcidev_s	pcidev;
--	struct bfa_timer_mod_s	*timer_mod;
-+	struct bfa_timer_mod_s	*timer_module;
- 	struct bfa_timer_s	ioc_timer;
- 	struct bfa_timer_s	sem_timer;
- 	struct bfa_timer_s	hb_timer;
-@@ -918,7 +918,7 @@ void bfa_ioc_set_ct2_hwif(struct bfa_ioc_s *ioc);
- void bfa_ioc_ct2_poweron(struct bfa_ioc_s *ioc);
- 
- void bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa,
--		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_mod);
-+		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_module);
- void bfa_ioc_detach(struct bfa_ioc_s *ioc);
- void bfa_ioc_suspend(struct bfa_ioc_s *ioc);
- void bfa_ioc_pci_init(struct bfa_ioc_s *ioc, struct bfa_pcidev_s *pcidev,
-diff --git a/drivers/scsi/bfa/bfa_modules.h b/drivers/scsi/bfa/bfa_modules.h
-index ed29ebda30da..9911794286cc 100644
---- a/drivers/scsi/bfa/bfa_modules.h
-+++ b/drivers/scsi/bfa/bfa_modules.h
-@@ -61,7 +61,7 @@ struct bfa_s {
- 	struct bfa_trc_mod_s	*trcmod;	/*  driver tracing	    */
- 	struct bfa_ioc_s	ioc;		/*  IOC module		    */
- 	struct bfa_iocfc_s	iocfc;		/*  IOCFC module	    */
--	struct bfa_timer_mod_s	timer_mod;	/*  timer module	    */
-+	struct bfa_timer_mod_s	timer_module;	/*  timer module	    */
- 	struct bfa_modules_s	modules;	/*  BFA modules	    */
- 	struct list_head	comp_q;		/*  pending completions     */
- 	bfa_boolean_t		queue_process;	/*  queue processing enabled */
-diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
-index 598f2fc93ef2..695c77c5275d 100644
---- a/drivers/scsi/bfa/bfad.c
-+++ b/drivers/scsi/bfa/bfad.c
-@@ -691,7 +691,7 @@ bfad_bfa_tmo(struct timer_list *t)
- 
- 	spin_lock_irqsave(&bfad->bfad_lock, flags);
- 
--	bfa_timer_beat(&bfad->bfa.timer_mod);
-+	bfa_timer_beat(&bfad->bfa.timer_module);
- 
- 	bfa_comp_deq(&bfad->bfa, &doneq);
- 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
