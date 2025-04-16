@@ -1,306 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761EE23957D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 23:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC2E235BFF;
+	Wed, 16 Apr 2025 23:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744844594; cv=none; b=mABDpTGZwhXDXe74HOPEFCD739KGepogcZDkzBhpFqi4uifl8kUbqrmy87gs1x7AVZ+CCYpeiApWvLpgM0TbVKPHnQr4pkalCVgdqFrndVb5OjPnlT0lQcnX5Z9YTr/c4PF4Er5k5/t9sH6mlWze6W3CHkD5Z+GqLhAlxXVaRuA=
+	t=1744844624; cv=none; b=KA4ZMFMLN8pplOiMH7y+WsYRrwIRblvAbkF+xhlUmRIyHppIBo550/LmNdnmqXYBQL8Qw3hfCfab/TGBreVMf3XGBvXV3C2zyXa4QSLMkO0DtS837vR6DDj4TMrtV5WDNl2yYUMXL1wyyPXweYDs75eIC9LWUcA7MN6k6AN2ars=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744844594; c=relaxed/simple;
-	bh=CDaHkJWbcHlaEu6LaRkt23ndm2T752ww9iA7Ud9Q50k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=piBUlT+8eE4C3tGHOmeg5r5RpvGKf4YzWy6YZlZyH+rsKNR9fRPLave1cX13LYyFE9KtjhVEfjKk7bVhd3aXCD/OKhXSZr0uzpaw15mCg1WX52x6810jYDx98CDp7FUjX0dMUskxkoqRcZKI14NddGXY5txEH2SRH5Pz1ztEChY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epbaMj4i; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744844624; c=relaxed/simple;
+	bh=VNFvhKhXN0Qvn+A8bsvpYKT3FduSF9/QTAv5zTXfLcg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXklZ8hTcljHl7LKjEYu+79t28AChCZ8ezYon4UozxEBBbzkHNGIkAPqUiBZpawVv1Zn/6ewB4h+lpE9sORpSR8WzIrR39IxgFXqnVS8Of/7RQk63g+wqPdYunuFGBELG+uLBRvdYfXq8tZbLXfcrqchPiW8M8L3rpjTQwlaWnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i00SQ7R0; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epbaMj4i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744844592; x=1776380592;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CDaHkJWbcHlaEu6LaRkt23ndm2T752ww9iA7Ud9Q50k=;
-  b=epbaMj4imKDbbHOgdfjQ8GBPrWMoh75mOkp8S5KcLgl+cETxWw873CiI
-   jxOqTwwtT1gwKWvc61iw3LxfHD4o0RfxcQBD04LxWKdUMr0m2YOfuK0G/
-   2F734PPVAwF0N+HdgmkCnDJ8qrtpNnlJU68pMG1VWAyOBV7kjK/vp1jji
-   40IXFls8gQ3fa7xBr0dFz+gpD66Yxjz0Wg/DpURD2G3zPcbOiSgwwZYrP
-   fmm4deK5Hs2qcCFV3DvCPh9PNjjBcZRP5/Ard7ocOis5qDuTtF5F6bCWz
-   S2h9zl+hgoBJvqMkBEqDzEsd3cu1Kx2l8wZQzC7Yo7inuL0z+5blri+aO
-   A==;
-X-CSE-ConnectionGUID: Y5wI+uqqQFiD9DY6UMSuvw==
-X-CSE-MsgGUID: NmZgp/BpT3OgwyMKqEA6IA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="56596540"
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="56596540"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 16:03:12 -0700
-X-CSE-ConnectionGUID: 5dRHfwF9Q/u+kp89jEC37Q==
-X-CSE-MsgGUID: aGvPkOh1RZ6WJHOeNljoFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="130384683"
-Received: from gpacheco-mobl.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.223.98])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 16:03:07 -0700
-From: Kai Huang <kai.huang@intel.com>
-To: dave.hansen@intel.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	mingo@redhat.com
-Cc: kirill.shutemov@linux.intel.com,
-	hpa@zytor.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	rick.p.edgecombe@intel.com,
-	reinette.chatre@intel.com,
-	isaku.yamahata@intel.com,
-	dan.j.williams@intel.com,
-	thomas.lendacky@amd.com,
-	ashish.kalra@amd.com,
-	nik.borisov@suse.com,
-	sagis@google.com
-Subject: [PATCH] x86/virt/tdx: Make TDX and kexec mutually exclusive at runtime
-Date: Thu, 17 Apr 2025 11:02:59 +1200
-Message-ID: <20250416230259.97989-1-kai.huang@intel.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i00SQ7R0"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7366d0f3231so23286b3a.1;
+        Wed, 16 Apr 2025 16:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744844621; x=1745449421; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7Ostym3POn+tDwNxEX6WFaI9UEXuL1OpvkJqy+12mMU=;
+        b=i00SQ7R0Z3K1JDwwgXmrhNxoAN2JyXK24VuCAYLBu1OrkQ0xMMW30wNG9GCg8+95lq
+         utKbUGvZvI7XfibYEKNggkf/u6lwO8i6oaVwqPRZ3U86geNqnjR+cFU3YaOnXiwN+IK/
+         how9i00Kx9zcETYO4d7hoe3ziytj1BwFcEe/i1mxI4odpna7gy98zgWle975MMjjjXwv
+         kSfKDwx9zrcGyTKQO26N2602pbnOrrsfbeMxlmG2zDrxJrgVtzUhr2FeMF3eanhaDwqz
+         x+NrnVb0IsP2rAMdaermLpoIa11ufL26VYL49216ZOlXMmJ/mXzw7sVWZZp1A6yVpLuT
+         kW1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744844621; x=1745449421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7Ostym3POn+tDwNxEX6WFaI9UEXuL1OpvkJqy+12mMU=;
+        b=oqX6ZzLcNQP/fC5ldqOv4SsPVvBas5O3rtGjoUlz5eJBn7osDrEqXFWYBHPdAYerIq
+         /8XQ0yMlhhZAmeRS0XpdcwKrO/PfGb7HB56anlk/nkm0wCmP1lw9/AEDhLsukktGZL2k
+         uxNOjcKclZ6/luc77CRXxWRX4e8okHUuix6mkXH31iSsuKPKJq5zMrjmRc/2XJubpnMX
+         HqeU1QKPrLV25h9rgMjuWJgG6NsbTmvjD7bgsrtdJodxgqv+lUh7I1kxtbJ5JswAz/J7
+         Mus+98zFhoCre7bTUVCn7D6MNy9G6plpoPjFZ24BTL7mjEinSJDx/oWbqy3u6MYTnjXG
+         Yi3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWUbgFuTxhGw9vgqCcwPQ8dr54w17OxxrZ7I3YjyqOVmvtlr7bouHwQV12dKKSGwn03GNicm56w@vger.kernel.org, AJvYcCXLs8b/mxbNYMWVWw6K5Zn0rLSS0VG4K+4NaRXzrAve9wvcIBHJaPHnPAN90EyfwaUemROe7fp4VOHME6c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/0aTc+gImihmKVLffULvNaSIdGjxjA4BgBLUFRbftxeYdcSWx
+	qq1XW2CPCYpaKixtEJVjQJrP/NOxt9yxcPG0kbg4v0WuQPGGk66M8IokLrXWjn6Adc0p9tEWj2b
+	8dd55eRYGwnhjce+Gx6uSa3+2O1E=
+X-Gm-Gg: ASbGnctsDYFlOP6xgFt2MjySv4JVKCqVRtu0tSqBMGmWszSeNC71tVCMsYUfiBF1vg5
+	iCgsNo6UdA3u9FGxJlgzLugYJrb0pOepMdSfQdY3XF677+Q0utVan2o5j5rGL6CcDDAEvHvCxc2
+	PJkylZVyh2RGPu1/nji45u5w==
+X-Google-Smtp-Source: AGHT+IGOa4ocvRVCkDGhjbMq5SnR6XGbXrF8fWNqy1Gcvl7Bod2DV/rnRUCjS0bbLl2ieDH4Z8PBfpXOigf0ACktqxw=
+X-Received: by 2002:a17:90b:4d10:b0:301:ba2b:3bc6 with SMTP id
+ 98e67ed59e1d1-3086eff2e34mr352727a91.7.1744844620624; Wed, 16 Apr 2025
+ 16:03:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250415100813.3071-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250415100813.3071-1-vulab@iscas.ac.cn>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 16 Apr 2025 19:03:28 -0400
+X-Gm-Features: ATxdqUEd4OqKI8joWPatylhXv_zR-usWlc3-Ve2lxUTvKTVa6YjnRqrkdZVOOlE
+Message-ID: <CADnq5_NiW9EmhEDCC1R=g7Q+DjjRxQGmQv6rLPk_9RZo3O=pfw@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/amd/pm/powerplay/smumgr/fiji_smumgr: Add error
+ check in fiji_populate_smc_boot_level()
+To: Wentao Liang <vulab@iscas.ac.cn>
+Cc: kenneth.feng@amd.com, alexander.deucher@amd.com, christian.koenig@amd.com, 
+	Xinhui.Pan@amd.com, airlied@gmail.com, simona@ffwll.ch, 
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, kexec doesn't work well with TDX host support, and only one
-of them can be enabled in Kconfig.  However, distributions typically
-prefer to use a unified Kconfig with all features enabled.  Therefore,
-it would be very useful if both TDX host and kexec could be enabled in
-Kconfig simultaneously.
+On Tue, Apr 15, 2025 at 6:23=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wr=
+ote:
+>
+> The return value of fiji_populate_smc_boot_level() is needs to be checked=
+.
+> An error handling is also needed to phm_find_boot_level() to reset the
+> boot level when the function fails. A proper implementation can be found
+> in tonga_populate_smc_boot_level().
+>
+> Fixes: dcaf3483ae46 ("drm/amd/pm/powerplay/smumgr/fiji_smumgr: Remove unu=
+sed variable 'result'")
+> Cc: stable@vger.kernel.org # v5.11+
 
-Full support for kexec on a TDX host would require complex work.  The
-cache flushing required would need to happen while stopping remote CPUs,
-which would require changes to a fragile area of the kernel.  It would
-also require resetting TDX private pages, which is non-trivial since the
-core kernel does not track them.  Lastly, it would have to rely on a
-yet-to-be documented behavior around the TME key (KeyID 0).
+I don't know that this is a fix per se so I don't think stable is appropria=
+te.
 
-Leave the full support and the documentation clarification for future
-work, but start with a simple solution: change to make them mutually
-exclusive at runtime so that they can be both enabled in the Kconfig.
-
-While there is a little bit of TDX setup at boot, the kexec sensitive
-parts of the initialization are enabled when KVM is loaded with a
-specific non-default kernel parameter (kvm_intel.tdx=Y).  Use a simple
-policy to decide which to run: whichever gets run first disables the
-other.  This effectively makes kexec race with TDX when KVM module is
-loaded.
-
-Kexec has two phases: the kernel image loading phase and the actual
-execution phase.  Specifically, try to disable TDX permanently during
-the kernel image loading phase by leveraging the x86 version of
-machine_kexec_prepare().  If TDX has already been enabled (thus cannot
-be disabled), fail the kexec.
-
-The lock that the TDX disabling operation takes is not held during the
-TDX per-CPU initialization, which happens before the main TDX
-initialization.  The consequence is that while kexec can't race with
-TDX initialization in a way that would leave private memory in a state
-that could corrupt the second kernel, it won't exclude the case of the
-TDX module being partially initialized.  In this rare scenario, TDX
-initialization would simply fail in the second kernel.  Keep the simple
-solution simple, and just document the race.
-
-Another option could be to handle this when the kernel actually does
-kexec, but this would require adding an arch callout for the operation.
-Don't pursue this option to avoid complicating the kexec code.
-
-If TDX cannot be disabled, the users will get an error:
-
-  kexec_load failed: Operation not supported
-
-This could be confusing to the users, thus also tell the reason in the
-dmesg:
-
-  [..] kexec: Disabled: TDX is enabled
-
-If TDX can be disabled, also print a message to let users know:
-
-  [..] virt/tdx: explicitly disabled
-
-The reason why this wasn't done earlier was the Kconfig option was just
-a bit simpler and the TDX code was large.  Moving to mutual exclusion at
-runtime is an incremental improvement that better meets the needs of
-distributions.
-
-Signed-off-by: Kai Huang <kai.huang@intel.com>
----
-
-Hi Dave,
-
-So far there have been a couple of attempts to resolve the kexec/TDX
-incompatibilities, but they have met complications.
-
-The initial attempt was to support kexec on all TDX host platforms.
-It had patches to reset TDX private pages on TDX "partial write #MC"
-erratum platforms but they had complexity, especially since a KVM
-patch was also needed.
-
-The second attempt was to fail kexec on those erratum platforms to
-remove the code to reset TDX private pages, but we found more general
-issues that will take time to work through.
-
-Next we looked at disabling kexec whenever TDX was supporting,
-effectively making kexec or TDX dependent on the BIOS configuration.
-But we thought better of this from a UX perspective, which led to the
-solution in this patch.
-
-In the meantime, I'd prefer to go with this simpler solution.  I think
-this is a good first step. Please consider it for merging.
+This is probably ok, but TBH, I don't really remember how the pptables
+were set up on these old chips and whether changing the current
+behavior would actually fix or break anything.  I'd be more inclined
+to just leave the logic as is lest something break.
 
 
----
- Documentation/arch/x86/tdx.rst     | 10 ++++++++--
- arch/x86/Kconfig                   |  1 -
- arch/x86/include/asm/tdx.h         |  2 ++
- arch/x86/kernel/machine_kexec_64.c | 14 ++++++++++++++
- arch/x86/virt/vmx/tdx/tdx.c        | 26 ++++++++++++++++++++++++++
- arch/x86/virt/vmx/tdx/tdx.h        |  3 ++-
- 6 files changed, 52 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/arch/x86/tdx.rst b/Documentation/arch/x86/tdx.rst
-index 719043cd8b46..646b6475a90d 100644
---- a/Documentation/arch/x86/tdx.rst
-+++ b/Documentation/arch/x86/tdx.rst
-@@ -146,8 +146,14 @@ Kexec()
- ~~~~~~~
- 
- TDX host support currently lacks the ability to handle kexec.  For
--simplicity only one of them can be enabled in the Kconfig.  This will be
--fixed in the future.
-+simplicity, whichever gets run first disables the other.  I.e., loading
-+kexec kernel image tries to disable TDX permanently, otherwise it fails
-+due to that TDX has already been enabled.  This will be fixed in the
-+future.
-+
-+It is possible that kexec can race with the per-cpu initialization of
-+TDX.  In the case of losing this race, TDX will not be usable in the
-+second kernel, but otherwise kexec will happen normally.
- 
- Erratum
- ~~~~~~~
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index aeac63b11fc2..be0a41cfcf74 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1924,7 +1924,6 @@ config INTEL_TDX_HOST
- 	depends on X86_X2APIC
- 	select ARCH_KEEP_MEMBLOCK
- 	depends on CONTIG_ALLOC
--	depends on !KEXEC_CORE
- 	depends on X86_MCE
- 	help
- 	  Intel Trust Domain Extensions (TDX) protects guest VMs from malicious
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 4a1922ec80cf..9f9df689506d 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -119,11 +119,13 @@ static inline u64 sc_retry(sc_func_t func, u64 fn,
- int tdx_cpu_enable(void);
- int tdx_enable(void);
- const char *tdx_dump_mce_info(struct mce *m);
-+bool tdx_try_disable(void);
- #else
- static inline void tdx_init(void) { }
- static inline int tdx_cpu_enable(void) { return -ENODEV; }
- static inline int tdx_enable(void)  { return -ENODEV; }
- static inline const char *tdx_dump_mce_info(struct mce *m) { return NULL; }
-+static inline bool tdx_try_disable(void) { return true; }
- #endif	/* CONFIG_INTEL_TDX_HOST */
- 
- #endif /* !__ASSEMBLER__ */
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 949c9e4bfad2..2a66db8c7f94 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -29,6 +29,7 @@
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
- #include <asm/efi.h>
-+#include <asm/tdx.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -346,6 +347,19 @@ int machine_kexec_prepare(struct kimage *image)
- 	unsigned long reloc_end = (unsigned long)__relocate_kernel_end;
- 	int result;
- 
-+	/*
-+	 * Kexec doesn't play nice with TDX because there are issues
-+	 * like needing to flush cache and resetting TDX private memory.
-+	 *
-+	 * The kernel doesn't support those things for TDX.  Try to
-+	 * disable TDX permanently so that kexec can move on.  If TDX
-+	 * has already been enabled, fail kexec.
-+	 */
-+	if (!tdx_try_disable()) {
-+		pr_info_once("Disabled: TDX is enabled");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	/* Setup the identity mapped 64bit page table */
- 	result = init_pgtable(image, __pa(control_page));
- 	if (result)
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 7fdb37387886..bcb2ab7505b0 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1456,3 +1456,29 @@ void __init tdx_init(void)
- 
- 	check_tdx_erratum();
- }
-+
-+/*
-+ * Disable TDX permanently if the module hasn't been initialized
-+ * (otherwise does nothing).  Return whether TDX is disabled.
-+ *
-+ * This function only prevents running concurrently with tdx_enable().
-+ * tdx_cpu_enable() can still run successfully even this function
-+ * disables TDX successfully.
-+ */
-+bool tdx_try_disable(void)
-+{
-+	bool disabled;
-+
-+	mutex_lock(&tdx_module_lock);
-+
-+	if (tdx_module_status == TDX_MODULE_UNINITIALIZED) {
-+		pr_info("explicitly disabled\n");
-+		tdx_module_status = TDX_MODULE_DISABLED;
-+	}
-+
-+	disabled = (tdx_module_status != TDX_MODULE_INITIALIZED);
-+
-+	mutex_unlock(&tdx_module_lock);
-+
-+	return disabled;
-+}
-diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-index 4e3d533cdd61..83ec5fe59f22 100644
---- a/arch/x86/virt/vmx/tdx/tdx.h
-+++ b/arch/x86/virt/vmx/tdx/tdx.h
-@@ -64,7 +64,8 @@ struct tdmr_info {
- enum tdx_module_status_t {
- 	TDX_MODULE_UNINITIALIZED,
- 	TDX_MODULE_INITIALIZED,
--	TDX_MODULE_ERROR
-+	TDX_MODULE_ERROR,
-+	TDX_MODULE_DISABLED
- };
- 
- struct tdx_memblock {
--- 
-2.49.0
-
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+> v2: Fix error code.
+>
+>  .../drm/amd/pm/powerplay/smumgr/fiji_smumgr.c | 23 ++++++++++++++-----
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c b/driv=
+ers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
+> index 5e43ad2b2956..78ba22f249b2 100644
+> --- a/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
+> +++ b/drivers/gpu/drm/amd/pm/powerplay/smumgr/fiji_smumgr.c
+> @@ -1600,19 +1600,30 @@ static int fiji_populate_smc_uvd_level(struct pp_=
+hwmgr *hwmgr,
+>  static int fiji_populate_smc_boot_level(struct pp_hwmgr *hwmgr,
+>                 struct SMU73_Discrete_DpmTable *table)
+>  {
+> +       int result =3D 0;
+>         struct smu7_hwmgr *data =3D (struct smu7_hwmgr *)(hwmgr->backend)=
+;
+>
+>         table->GraphicsBootLevel =3D 0;
+>         table->MemoryBootLevel =3D 0;
+>
+>         /* find boot level from dpm table */
+> -       phm_find_boot_level(&(data->dpm_table.sclk_table),
+> -                           data->vbios_boot_state.sclk_bootup_value,
+> -                           (uint32_t *)&(table->GraphicsBootLevel));
+> +       result =3D phm_find_boot_level(&(data->dpm_table.sclk_table),
+> +                                    data->vbios_boot_state.sclk_bootup_v=
+alue,
+> +                                    (uint32_t *)&(table->GraphicsBootLev=
+el));
+> +       if (result !=3D 0) {
+> +               table->GraphicsBootLevel =3D 0;
+> +               pr_err("VBIOS did not find boot engine clock value in dep=
+endency table. Using Graphics DPM level 0!\n");
+> +               result =3D 0;
+> +       }
+>
+> -       phm_find_boot_level(&(data->dpm_table.mclk_table),
+> -                           data->vbios_boot_state.mclk_bootup_value,
+> -                           (uint32_t *)&(table->MemoryBootLevel));
+> +       result =3D phm_find_boot_level(&(data->dpm_table.mclk_table),
+> +                                    data->vbios_boot_state.mclk_bootup_v=
+alue,
+> +                                    (uint32_t *)&(table->MemoryBootLevel=
+));
+> +       if (result !=3D 0) {
+> +               table->MemoryBootLevel =3D 0;
+> +               pr_err("VBIOS did not find boot engine clock value in dep=
+endency table. Using Memory DPM level 0!\n");
+> +               result =3D 0;
+> +       }
+>
+>         table->BootVddc  =3D data->vbios_boot_state.vddc_bootup_value *
+>                         VOLTAGE_SCALE;
+> --
+> 2.42.0.windows.2
+>
