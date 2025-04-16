@@ -1,241 +1,156 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0418F19E999
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:49:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744832953; cv=none; b=A4dUY98lNJhxWAocyRb1tQ6VBKliI/oBhjsqyfSji8V9yQvfqzHzlmhxEnjmDMYZ7olGgyM+ARz1v3EHJ1BaiKoQTlmpY1JepgrEfXTir3CwVKy/6Js+YBMHQcaZK6sv/f2P6ID0yjWLXPK4svupNLvCoF327Ttd5HTZRf8ll/g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744832953; c=relaxed/simple;
-	bh=0QtCXBFLssMe6mP3r7XXqmWHMBiSSUr/S1vpa0rbx+4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WO1RVEmLfl5K+4+H09YUK0qUskF8B8ms8kCeaOoUg3yF7/fIMSpHM4YdDzVZlMSwRYZY4I0qEwuegLqk875iWXs0SjZFuxNCFuSU1wBRvdeLiMUdtwA6XM5hw8eXntUxaf9hJs4g60A4pa6OOjJut5zGemPhh2sJ8kNZWaq4MH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MekUp0bZ; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED16F1547C0;
+	Wed, 16 Apr 2025 19:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744833132; cv=pass; b=d9V4ZAGBS+izdUlX3U7Ojo7knVrD4asVUgCKIzZvSPM4wzbzIIsA6/Sn28gkWDk9McozU3ztye+b8DIPjZgLJ64MpkfoepPzv+RmMt8vTwAGfV0L1rY8liA4eDJfiCTPtbQeV0K19YjdcfFT79pZS8Yq+ega4fL48dyKIqBlwts=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744833132; c=relaxed/simple;
+	bh=H37bXWkBY8CtSRf5TosO7vFaBoMtKion2iisV7LN0fc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WKSxpMqZu9C3sShKu1DjiG8+doO1WsCcqLBrXcJpZ/HwNtMRjciBIzaMbbP+1JahgnFoIgosDMnGw3bUXTXll6djhGJrHY0ywNRksZsXcwEGjtyqrE/VVFWsPavfAyLO37+UTTQ9cAgS3U0nBb9algUydOQuaXzIXgRkc0tGiVQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=VrIlqo3C; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MekUp0bZ"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-549b116321aso30290e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744832948; x=1745437748; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3TC4Zrs0RXqB1dUPW23QEFn3OTq38f66De7spKPbcIQ=;
-        b=MekUp0bZtlT7Z+u6+g906dR/t8xLENRp0bF2171q+nDQeDIAWxsPCotStZFNHzfeYa
-         At0rgILsyR1MGxkXrnHEKqQpitGoN+MF0blPZ5ptheimNhDX7cER3Una7//i9mIXLC9D
-         U1KIENUNl/iOngX89M4sJDjP66+BSeckgiBSuP+LZwSdflwn7Ds/n3Z387CptMxICuqg
-         lEoGCuFREa9Rs47gp4GeUFfyuQ7fQXGzZujc90FlN3sE+vWQzHNyVO4eRTmncKUudiLp
-         CAvhySUMZwMm/bj3RgI7JXOGDKNaEcUzODt3miAOuLN++w30nW2zAj1WFAKulNuCsGWF
-         bVhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744832948; x=1745437748;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3TC4Zrs0RXqB1dUPW23QEFn3OTq38f66De7spKPbcIQ=;
-        b=EGN9OtIMkdHyFuidjVh+eihFYTMNg0Gu/XUKVs5dcxG/GeOgrlvZPGN3GgjK8KgD0n
-         7QoDYNUmse3pNLwKTYKOPC7vzTBVmq4j3/vvw/d/8CkNaVJAQiJMkNs8eeMnS5kLBbUN
-         vKZwJVNdvM4dL/SIba+7AG2BphjemtPYyoevw7C+byZPU9QNrWnol/nB7zkwrOM0FwEI
-         jqr4qEHyWJG37N58iH/MVFA2AhH2/VAp7Q9e56n6I/AcDT0o8zgDoC0SvOQZybWrijG1
-         bykCA++5tQGHJr5RuxxWd2nf9E0q4iXfzQvsotbcw4pUziQh723Qeh9Tnwz7CU0Ya6BG
-         BSRA==
-X-Forwarded-Encrypted: i=1; AJvYcCXbciuNruwefqZaZkp+kjz1aByTEGjL+mtZ0Rt1SimjlWihoFdB+TwhgTA+xfUho+IeuUmnh4KomteG4Cs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiotqbS7TFpYo4x1HL9dfgXX3Bxyp4BSf+WDPqvwqNmWSs2X9l
-	EnFIgg38VuQPkHThrQDxjBJjjou24nrRD851+Zs94z+Q5rqPQwkfRhOqilIOMFMsf7M6QMugU18
-	ESFKsPeXfSD/1BDaJY/534JzAeChZo86TxW8=
-X-Gm-Gg: ASbGnctzuxi3DRXcMt/2/vBC2hd8lcO9taq2sARsysFCt+KfqLo8CWlKHciKoOCn+dt
-	sDj3UEIUv/HVdCJzxXNILEeotkNiYwuGk3hTzys4P6rWVRauj44a39Um6hvXjDTIMc66M0vpwUq
-	40C2qwHqDx0bohsXSK1O+Pn8bGgIEu2fM9a1gknRWXBTZyJyiZZp0=
-X-Google-Smtp-Source: AGHT+IENZff/EwFgqH5CaojFFud4BOKJc5fnWdYHR640ZJfapthbsLkQ3339oAJkdcXWdGqjdKbkWAeQlGaLeHlHPtI=
-X-Received: by 2002:a05:6512:686:b0:54a:cc25:dbe9 with SMTP id
- 2adb3069b0e04-54d64aa9f25mr1006781e87.26.1744832947769; Wed, 16 Apr 2025
- 12:49:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="VrIlqo3C"
+ARC-Seal: i=1; a=rsa-sha256; t=1744833065; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iIjK98sxkynmff0y9oMplzffXbtE6Nc3uESpZz/KiihpFRzt261y4QXeXsv7Fdq/SgR1dd8ZK40e1tA96jY4M6dMKaMilMu+7ivGLwJExUINoJ/5ggE5ulEV/Mm8r38zfdLflEPdr3NsEZ2boExoAXBfH8cWRRq2WZMiK08TbBY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744833065; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=QQnMgSN3RMHftVhAZYOIOMgtEA4ud0N6wZt7HLG7xN0=; 
+	b=PHWqcG/6l1wCuYU9C2MxnTE+kaiWKUq+t3M1ak1J9DV8HSIQ2tp95jVEl0xYjVoXTG9ncAz6TxKzmzeJcK98KXs4b2AGYWBo9LbQIca1TiiHRZtboKeo5w7PsjR45hU7ep7Bvfkx4J6dNiSF+YfNbtCF7VaH8QZh0TMFyAfpdog=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744833065;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=QQnMgSN3RMHftVhAZYOIOMgtEA4ud0N6wZt7HLG7xN0=;
+	b=VrIlqo3CHxeq2BeVRuDRR2dUSjFQMtn0rqowxJQJBE6m183lMnDvmzrJ68zx5PA0
+	hS1YrFwmnzfmip4Nr7aK6NLKIhYV7MuQeKrDZnvGAeTEoqM8S71bhDKxfSHRFWqM/zk
+	z4wj6uCmsaKt7Q005bhSX3Z9e/cq9JN07NsjGA6s=
+Received: by mx.zohomail.com with SMTPS id 17448330628774.730471333362061;
+	Wed, 16 Apr 2025 12:51:02 -0700 (PDT)
+Message-ID: <b82ae3ed-442c-4a87-82be-a973cd333287@collabora.com>
+Date: Wed, 16 Apr 2025 16:50:51 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402233407.2452429-1-willmcvicker@google.com>
- <20250402233407.2452429-7-willmcvicker@google.com> <Z_6OZHYfC0bC5289@mai.linaro.org>
- <CANDhNCodHATboF2=U2tTwdEkEJ+PsfB2F=fbBrs=J1UzZTEX8g@mail.gmail.com> <Z_-0nX3Z-DLPjL_j@mai.linaro.org>
-In-Reply-To: <Z_-0nX3Z-DLPjL_j@mai.linaro.org>
-From: John Stultz <jstultz@google.com>
-Date: Wed, 16 Apr 2025 12:48:56 -0700
-X-Gm-Features: ATxdqUGIHpJvogsXv77cbd-uWZLFBRe1FimucafM0Ov8s0XThKAvFusqPM44Q1k
-Message-ID: <CANDhNCr5n+HtHQEqCq0ZxbvX-nC3u9ewJ1_fj0h1gFQZ3nB8iA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] clocksource/drivers/exynos_mct: Add module support
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Will McVicker <willmcvicker@google.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, 
-	=?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Donghoon Yu <hoony.yu@samsung.com>, Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Youngmin Nam <youngmin.nam@samsung.com>, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/10] riscv: dts: eswin: add HiFive Premier P550 board
+ device tree
+To: Sjoerd Simons <sjoerd@collabora.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Min Lin <linmin@eswincomputing.com>,
+ Pritesh Patel <pritesh.patel@einfochips.com>, Yangyu Chen
+ <cyy@cyyself.name>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Yu Chien Peter Lin <peterlin@andestech.com>,
+ Charlie Jenkins <charlie@rivosinc.com>,
+ Kanak Shilledar <kanakshilledar@gmail.com>,
+ Darshan Prajapati <darshan.prajapati@einfochips.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, Aradhya Bhatia <a-bhatia1@ti.com>, rafal@milecki.pl,
+ Anup Patel <anup@brainfault.org>, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "kernel@collabora.com" <kernel@collabora.com>
+References: <20250410152519.1358964-1-pinkesh.vaghela@einfochips.com>
+ <20250410152519.1358964-11-pinkesh.vaghela@einfochips.com>
+ <956d76b0-4f82-4f95-8f70-70896d488bd3@collabora.com>
+ <0dc3bb03-3708-4134-96bf-d5f95187e8bb@sifive.com>
+ <096a8318629dea9073ad6c4807a2f1dedc6b0cd6.camel@collabora.com>
+Content-Language: en-US
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+In-Reply-To: <096a8318629dea9073ad6c4807a2f1dedc6b0cd6.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Wed, Apr 16, 2025 at 6:46=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
-> On Tue, Apr 15, 2025 at 05:48:41PM -0700, John Stultz wrote:
-> > On Tue, Apr 15, 2025 at 9:50=E2=80=AFAM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> > > I have some concerns about this kind of changes:
-> > >
-> > >   * the core code may not be prepared for that, so loading / unloadin=
-g
-> > > the modules with active timers may result into some issues
-> >
-> > That's a fair concern, but permanent modules (which are loaded but not
-> > unloaded) shouldn't suffer this issue. I recognize having modules be
-> > fully unloadable is generally cleaner and preferred, but I also see
-> > the benefit of allowing permanent modules to be one-way loaded so a
-> > generic/distro kernel shared between lots of different platforms
-> > doesn't need to be bloated with drivers that aren't used everywhere.
-> > Obviously any single driver doesn't make a huge difference, but all
-> > the small drivers together does add up.
->
-> Yes, I agree.
->
-> So the whole clockevent / clocksource drivers policy would have to be mak=
-ing
-> impossible to unload a module once it is loaded.
->
-> Do you have any ideas how to ensure that the converted drivers follow thi=
-s
-> rule without putting more burden on the maintainer?
+Samuel, Sjoerd,
 
-Permanent modules just don't have a module_exit() hook, so that is
-pretty easy to look for.
-Obviously, I don't want to add more burden to the maintainership.
+On 4/15/25 4:39 AM, Sjoerd Simons wrote:
+> Hey,
+> 
+> On Mon, 2025-04-14 at 11:00 -0500, Samuel Holland wrote:
+>> Hi Ariel,
+>>
+>> On 2025-04-14 7:55 AM, Ariel D'Alessandro wrote:
+>>> Hi Pinkesh,
+>>>
+>>> On 4/10/25 12:25 PM, Pinkesh Vaghela wrote:
+>>>> From: Min Lin <linmin@eswincomputing.com>
+>>>
+> <snip>
+> 
+>>> Although commit log says that this includes DRAM configuration, looks like
+>>> it's
+>>> missing? In order to test this patchset, had to add this following memory
+>>> definition (picked from vendor kernel repository):
+>>>
+>>>      L50: memory@80000000 {
+>>>              compatible = "sifive,axi4-mem-port", "sifive,axi4-port",
+>>> "sifive,mem-port";
+>>>              device_type = "memory";
+>>>              reg = <0x0 0x80000000 0x7f 0x80000000>;
+>>>              sifive,port-width-bytes = <32>;
+>>>      };
+>>
+>> That is a misstatement in the commit message. The memory node is not included
+>> in
+>> the static devicetree because the amount of RAM installed on the board is
+>> variable. It is the responsibility of firmware to provide the memory map,
+>> either
+>> through EFI or by patching the memory node into the DT at runtime. I believe
+>> the
+>> current BSP U-Boot does the former but not the latter.
+> 
+> Amount of RAM being variable is pretty common on devices using FDT these days;
+> Typically the dts still gets a memory node that's a reasonable default, with the
+> expectation that e.g. u-boot will fix it up. If you look at other risc-v
+> devicetrees in upstream they (almost?) all come with a pre-defined memory node.
+> For the P550 board a default memory node for 16G ram seems reasonable (as that
+> seems the minimal SKU?)
+> 
+> That all being said. Indeed the sifive BSP u-boot doesn't seem to call the
+> relevant `fdt_fixup_memory` to fixup the memory node, hence us having issues
+> booting with u-boot directly (without going through EFI). Honestly this was a
+> bit of a surprise to me as only most other architectures that's just done by
+> common code, but that doesn't seem to be the case for risc-v (either upstream or
+> downstream)
 
-From a given clockevent driver (or maybe a function pointer), we could
-check on the registration by calling __module_address(addr) [thanks to
-Sami Tolvanen for pointing that function out to me] on one of the
-function pointers provided, and check that there isn't a module->exit
-pointer.
+As Samuel mentioned, the latest BSP U-Boot is now patching/populating 
+the DT memory node at runtime, after commit [0]. And this indeed ends up 
+calling `fdt_fixup_memory()` as Sjoerd pointed out.
 
-For clocksources we already have an owner pointer in the clocksource
-struct that the driver is supposed to set if it's a module, but
-clocksources already handle the get/puts needed to prevent modules
-unloading under us.
+In conclusion, this is working properly with the current BSP U-Boot. 
+Feel free to add:
 
-> > > * the timekeeping may do jump in the past [if and] when switching the
-> > > clocksource
-> >
-> > ? It shouldn't. We've had tests in kselftest that switch between
-> > clocksources checking for inconsistencies for awhile, so if such a
-> > jump occurred it would be considered a bug.
->
-> But in the context of modules, the current clocksource counter is running=
- but
-> what about the clocksource's counter related to the module which will be
-> started when the driver is loaded and then switches to the new clocksourc=
-e. Is
-> it possible in this case there is a time drift between the clocksource wh=
-ich
-> was started at boot time and the one started later when the module is loa=
-ded ?
+   Tested-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 
-The clocksource code already has support for modules, and will do the
-module_get and call enable hooks before switching to the new
-clocksource. So the clocksource from the module has to be functioning
-and running before timekeeping switches to using it.
+Thanks!
 
-By drift, its true changing clocksources can change the underlying
-crystal so NTP has to begin again to determine any long-term frequency
-adjustment needed, but we signal that properly.  And there should be
-no time inconsistency during the switch as we accumulate everything
-from the current clocksource and read a new base value from the new
-clocksource. If there is, it's a bug.
+[0] 
+https://github.com/eswincomputing/u-boot/commit/7fab50468f19efea72ff27ac08cb388fbf5be307
 
-> > >  * the GKI approach is to have an update for the 'mainline' kernel an=
-d
-> > > let the different SoC vendors deal with their drivers. I'm afraid thi=
-s
-> > > will prevent driver fixes to be carry on upstream because they will s=
-tay
-> > > in the OoT kernels
-> >
-> > I'm not sure I understand this point?  Could you expand on it a bit?
-> > While I very much can understand concerns and potential downsides of
-> > the GKI approach, I'm not sure how that applies to the submission
-> > here, as the benefit would apply to classic distro kernels as much as
-> > GKI.
->
-> Ok let's consider my comment as out of the technical aspects of the chang=
-es. I
-> can clarify it but it does not enter into consideration for the module
-> conversion. It is an overall feeling about the direction of all in module=
-s for
-> GKI policy. I'm a little worried about changes not carried on mainline be=
-cause
-> it is no longer an obstacle to keep OoT drivers. The core kernel is mainl=
-ine
-> but the drivers can be vendor provided as module. I understand it is alre=
-ady
-> the case but the time framework is the base brick of the system, so there=
- is
-> the risk a platform is supported with less than the minimum functionality=
-.
+-- 
+Ariel D'Alessandro
+Software Engineer
 
-So separately from this patch submission, I agree that the GKI
-approach does not enforce vendor participation upstream. But there is
-no rule *anywhere* that makes folks participate, and with the old
-vendor trees it was definitely worse.
+Collabora Ltd.
+Platinum Building, St John's Innovation Park, Cambridge CB4 0DS, UK 
+Registered in England & Wales, no. 5513718
 
-The GKI does result in vendors having a common interest in the
-*actual* common portions of the kernel to be working well, so we can
-make sure things like bug fixes, etc are submitted upstream first.
-That is a clear benefit over separate vendor trees, but it's not a
-magic tool to get everyone submitting all of their code upstream.
-
-Trying to cajole upstream participation via barriers (not supporting
-modular drivers upstream to try to enforce vendors submit patches to
-add built in drivers for support) won't really work because they will
-just be enabled as modules anyway out of tree. And it's hard to argue
-against, as there isn't really a technical benefit to the GKI
-requiring lots of SoC specific hardware support be built in.  So it
-only ends up being another reason to not bother with upstream.
-
-<Sorry, I'm getting a bit soap-boxy here>
-I personally think the best tool we have to improve participation and
-collaboration with the community is to do what we can to make it a
-positive/beneficial/worthwhile experience. Every time I've submitted
-patches and had bugs pointed out or fixes suggested, is a huge value
-to me, and I have tremendous appreciation for folks sharing their
-knowledge and expertise. And every time a patch I send gets merged or
-a bug I reported ends up being fixed, there is a real sense of pride
-in the contribution made to such an important project. Then, to get to
-a point of a maintainership, and to be able to consider these amazing
-influential developers as (relative)peers feels like such a career
-accomplishment!  As an individual, those moments feel awesome and
-motivate me over and over to want to reach out and share patches or
-issues or thoughts.
-
-And yes, there are organizations that focus more on how to exploit the
-community for their benefit without contributing, and I get the
-protective reaction that maintainers have to that. But I also know
-there is *a lot* of amazing expertise inside the heads of
-*individuals* who don't participate because they don't feel the "us vs
-them" combative interactions are worth it. I think we/the community
-are missing out, and those folks are the ones we should be trying to
-welcome and include in order to build up our community.
-
-Maintainers and the community need to keep high technical standards
-and make the right long term choices, and developers won't agree all
-the time on what those are, and I think that's all fine! But I think
-if we want to grow the community and have more participation (as well
-as growing folks into maintainers), I think we'll have more success
-focusing on the honey than the vinegar.
-
-thanks
--john
