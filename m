@@ -1,158 +1,109 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A601DDDC;
-	Wed, 16 Apr 2025 21:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF6ADDDC;
+	Wed, 16 Apr 2025 21:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840265; cv=none; b=liyI+5g6IB7xcsjITqvNB2hfb3ez3zLYTQzuVR6wmu7JRmWdrCIL6wXN33RSukL5rREPaPlj8p4h5rZcrElaj3G9v+r9PdS2PoV+wTfjcemJNBXx9Z8MwGqV9rQoQwI+zEgYketrOjLUCnmZdRyTqeV5AFxufFfO3Ro4IESP9bw=
+	t=1744840319; cv=none; b=O715mcMh9MWQTC2DxeKI7hwcnLG2ryzDTY+Cbe8e7JSeKHd7zdEZhLqBaq8vsxpH5cxVGSlX/DxGe/x74LJ7mMcqoJbusvM4c3C8FHzhkaaB9ac9GIxhPpVQlrN9kKemmF69AiY5DScux+75RT2/aUAEGrU5eEtAvLWPExOA6MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840265; c=relaxed/simple;
-	bh=ml9afDM/3Yzyfwll0P+8N2de4+3ysKmPCf/iDrKlRCM=;
+	s=arc-20240116; t=1744840319; c=relaxed/simple;
+	bh=41OMhVN3An+hHekXXsR4xAJaKfMiYVVQ6T1BBojs4e4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pqQYstfbz37/x53+ES6vAMOtf2pYx9ZxEOA46+reb9YTuckjmcpGMQbU30N5TNOf1YiHXTnr8+nNZx4+UkxQGUSotLSmUZ4LW/G/zGGsggNdmArP/beDGKgQmyw5BHwMwuYccEcLhYHr6nOppv1UB2W2gefqEsniwnbfAKAwGWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dnKtegqF; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pa4vnF4UOMScFnyqaRM6r4M9F59ygGc4lVndT1KuEdjp/LmER6bSLSlNY+SeasvtKwWwYpt0lhtLqydlbka1LbN/b+9QozHbaBpWWs9mY1DcDxcpx3WHkZ2GlkeBAtQNDi3s05jWG0IzJfosb7NRWmctNde4O5G+iP/ooAGsKBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXMDbb7z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnKtegqF"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so20519866b.1;
-        Wed, 16 Apr 2025 14:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744840262; x=1745445062; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UJdJaIYbEx3ZRtOqC4BE7tYp0utl0F2tybjya7bRNag=;
-        b=dnKtegqF0nShYol7EoGMd+jNgx7k4Jv76YRWQKiQQ7Fn73XNnpTJth8zdWaDq/6Uzl
-         siX/3W3xrixVBySRK0z6F67B8/diTRuZM+sdE8UPb+tw9/CEEBKvTBHvZOXJNiNV8dRS
-         dnIZ+zD8WmAJmPpdlje9GP0PXslNnYDl2wcCqLW34qTVbSzTiXFBN0dbWwFd4kuONnTW
-         9WS78dLT0GDdGTATOD4a6ykgO7MIm+qwzwG2+XxSz5PXCCpw4vsCNjJjZilrDcLdZxZT
-         j6pvdx3GfeiX547jxaVu/Ef8X0gHntOMfp1VKfoS5RAUKikkNMf7OEyM6nb+Pe5gSi7j
-         UNzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744840262; x=1745445062;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UJdJaIYbEx3ZRtOqC4BE7tYp0utl0F2tybjya7bRNag=;
-        b=XuddnNi7Ymf0hdPsNTjBCe8yAp4ALO2WGxw8iq24NsmsI+MHKU3k51hhd3M6UjLuj4
-         x0tOZcsfjFPUDUPMKrYITmNFH14alCnkRLzz0hwfmdZD8QMlc4+eeLIh9wVEF09q4Rf8
-         9qUkY+VxE8HqFXsljLtbfjWOnrrwIyzqvELvNtp6Fnhfph1ve9x1YThyPzud5R1Dlr6N
-         ETbkl6PBv4cgVMtUMg1w/5TasB+uzRec1mSlXCKjXSgYvP1sd/zW5I4oOW3qCkiwa00h
-         xbe9rRCGXR1z5K1ydIlX8WkEat2CY5oSg+eZ93BqODmSyzVYJWtOWfyJIUzubbhKv2GS
-         OmqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgppGHn4kvheA8GnwWSne7uyEs4OLbRdF/Unt7Uw4Is8QF8x8Yb76+DCMdM4UcQl5/e6LFcieECHBm/Q==@vger.kernel.org, AJvYcCXpsFtsCIHvfMBZTM7kmp8sE2nahdHCj1F/LK1YStnJUrEP5VkXuRCRcS1+D1XZW+IXm6QQafaMlysYeVIP0g==@vger.kernel.org, AJvYcCXvyM6HQHIHL91huSuE/ZK90bFeqiHLNhljEDJqoDohihG7Er2mygQjBahPn2XhAJ8o1AMRp6E3gWvYu9yO@vger.kernel.org
-X-Gm-Message-State: AOJu0YydtQO1QvfPHGTLc8a2u7VlMfpAjzJkV6hMI7S+JkEW0aM4Ogn0
-	V2GGt0dryX50+yfBamIK7VJNiN120j30QuZY6mDMM1ZNmnXkKyTS
-X-Gm-Gg: ASbGncvp/B8EASerGItDDO+XccBFehz7GPREsZWUQOPsRD/hisOPfqqsTfXBK22Wf32
-	IHyyO124lPjRFLOeJrUBUwUT4xaYg6f12SHapDSVZcRMY4ht/1UwgCclRRBAFtB813sKpN7mljC
-	rOxZvB6sI6LWzv3+ynEwX8+FTay/lsiTeV0fkmB6zWgzRst2FldC9iZOKdhV9IjC7v5LjB4mrZ9
-	oOJvfgkUJY6HgdyP+8SghRavTQWM+Ncr+gheJISpD1so2+4QlNM5ZszG3OYeLqHMeWX/wYlklAy
-	KURQBvDXSHl3d6oXb+9T3PkrzWgIjRYOCqVoSg7gxywiBfWacvaev9HFDNqepTYbJIk9dWgFZxo
-	svC78Zor0
-X-Google-Smtp-Source: AGHT+IFK4dqVh9IwS7sEmyZQt6Kkrhj7u3AOMF7Z1XeZVWstA/f0rOPaMBIQ6cg6ig8xLchc+kWfkw==
-X-Received: by 2002:a17:906:d542:b0:aca:e0b7:de03 with SMTP id a640c23a62f3a-acb428f20d5mr382338566b.16.1744840261325;
-        Wed, 16 Apr 2025 14:51:01 -0700 (PDT)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f527ee8sm9378835a12.73.2025.04.16.14.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 14:51:00 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id CBD3ABE2DE0; Wed, 16 Apr 2025 23:50:59 +0200 (CEST)
-Date: Wed, 16 Apr 2025 23:50:59 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: David Howells <dhowells@redhat.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Jeff Layton <jlayton@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Hillf Danton <hdanton@sina.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	regressions@lists.linux.dev,
-	"stable@vger.kernel.org Bernd Rinn" <bb@rinn.ch>,
-	Karri =?iso-8859-1?Q?H=E4m=E4l=E4inen?= <kh.bugreport@outlook.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Cameron Davidson <bugs@davidsoncj.id.au>, Markus <markus@fritz.box>
-Subject: Re: [regression 6.1.y] Regression from 476c1dfefab8 ("mm: Don't pin
- ZERO_PAGE in pin_user_pages()") with pci-passthrough for both KVM VMs and
- booting in xen DomU
-Message-ID: <aAAmQ-sRQhejItzQ@eldamar.lan>
-References: <Z_6sh7Byddqdk1Z-@eldamar.lan>
- <20250416142645.4392a644.alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXMDbb7z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CC1C4CEE2;
+	Wed, 16 Apr 2025 21:51:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744840318;
+	bh=41OMhVN3An+hHekXXsR4xAJaKfMiYVVQ6T1BBojs4e4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KXMDbb7zq3A2BRkkETWJcA5VlnQYC0I6DhaD5oCEQhe2CfFrbYyQKTz7QoDOyaosO
+	 4jUrilKE+4L5+jW6Uu+snPbBTpq3AX5S4IqCHNQo4xyj2v9PMc0n4XsKEUC118vY8W
+	 Sbedy+Q+fV+SdbCJLV9KCjQo/WZGaw9SHkQCSHgyjpUZvD38fVinvuUljgvWOqoOD2
+	 +sFM6rdNZar3NEknmV6T6qqAU6XJaIE7Ks7HCPTqJVE0Do5O9oXzPls/pWz5ZAmhec
+	 0wPP943m3fgVvCqle3jmID66ZW0FJUh5lqf9y6PhNlR575cdazW44zKInCW/x32Z/H
+	 CQw+mtP0g4huQ==
+Date: Wed, 16 Apr 2025 14:51:55 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	=?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Matthew Maurer <mmaurer@google.com>,
+	Ramon de C Valle <rcvalle@google.com>
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+Message-ID: <202504161442.66CE2596@keescook>
+References: <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
+ <20250410124526.GB9833@noisy.programming.kicks-ass.net>
+ <20250410130944.GA9003@noisy.programming.kicks-ass.net>
+ <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
+ <20250410132649.GE9833@noisy.programming.kicks-ass.net>
+ <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
+ <20250410133446.GF9833@noisy.programming.kicks-ass.net>
+ <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
+ <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
+ <20250416202040.GD38216@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250416142645.4392a644.alex.williamson@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416202040.GD38216@noisy.programming.kicks-ass.net>
 
-Hi Alex,
+On Wed, Apr 16, 2025 at 10:20:40PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 05:15:31PM +0200, Miguel Ojeda wrote:
+> > On Thu, Apr 10, 2025 at 4:00 PM Alice Ryhl <aliceryhl@google.com> wrote:
+> > >
+> > > I submitted a PR that I believe should fix it:
+> > > https://github.com/rust-lang/rust/pull/139632
+> > 
+> > This landed, scheduled for Rust 1.88 (2025-06-26) if all goes well.
+> > 
+> > Peter: are you OK with landing a patch like this? Well, modified to
+> > look like this now that we know the version:
+> > 
+> >     depends on FINEIBT
+> >     depends on !RUST || RUSTC_VERSION >= 108800
+> > 
+> > (assuming we confirm the nightly build works properly)
+> 
+> I don't much like it -- disabling FineIBT at config time like this also
+> kills the CFI type rehash.
 
-On Wed, Apr 16, 2025 at 02:26:45PM -0600, Alex Williamson wrote:
-> On Tue, 15 Apr 2025 20:59:19 +0200
-> Salvatore Bonaccorso <carnil@debian.org> wrote:
-> 
-> > Hi
-> > 
-> > [Apologies if this has been reported already but I have not found an
-> > already filled corresponding report]
-> > 
-> > After updating from the 6.1.129 based version to 6.1.133, various
-> > users have reported that their VMs do not boot anymore up (both KVM
-> > and under Xen) if pci-passthrough is involved. The reports are at:
-> > 
-> > https://bugs.debian.org/1102889
-> > https://bugs.debian.org/1102914
-> > https://bugs.debian.org/1103153
-> > 
-> > Milan Broz bisected the issues and found that the commit introducing
-> > the problems can be tracked down to backport of c8070b787519 ("mm:
-> > Don't pin ZERO_PAGE in pin_user_pages()") from 6.5-rc1 which got
-> > backported as 476c1dfefab8 ("mm: Don't pin ZERO_PAGE in
-> > pin_user_pages()") in 6.1.130. See https://bugs.debian.org/1102914#60
-> > 
-> > #regzbot introduced: 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
-> > 
-> > 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774 is the first bad commit
-> > commit 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
-> > Author: David Howells <dhowells@redhat.com>
-> > Date:   Fri May 26 22:41:40 2023 +0100
-> > 
-> >     mm: Don't pin ZERO_PAGE in pin_user_pages()
-> > 
-> >     [ Upstream commit c8070b78751955e59b42457b974bea4a4fe00187 ]
-> 
-> It's a bad backport, I've debugged and posted the fix for stable here:
-> 
-> https://lore.kernel.org/all/20250416202441.3911142-1-alex.williamson@redhat.com/
+This isn't disabling CONFIG_FINEIBT (which gates cfi_rand), it's making
+FineIBT not enabled by default at boot time. This is actually when I
+created CONFIG_CFI_AUTO_DEFAULT: to be able to have kCFI _with_ type
+rehashing still enabled.
 
-Thank you, that worked (replying here as well mainly to fix my mistake
-in the CC to stable@vger.kernel.org, which got truncated to
-table@vger.kernel.org in my initial submission).
+> Not to mention that FineIBT is a Spectre-BHI
+> mitigation, esp. with that arity thing on top.
 
+That's certainly true, but the needed overlapping corner cases seem to
+make this tolerable?
 
-> 
-> Thanks,
-> Alex
-> 
+> I don't suppose we can simply mandate this rust version?
+
+Perhaps capture the needed version in the Kconfig change at least, so it
+becomes self-documenting.
+
+-Kees
 
 -- 
-  .-.  Salvatore Bonaccorso --------------- Debian GNU/Linux Developer
-  oo|  ----------------------------------------- http://www.debian.org
- /`'\  GPG key ID: 0x789D6F057FD863FE --------------------------------
-(\_;/) Fingerprint: 04A4 407C B914 2C23 030C  17AE 789D 6F05 7FD8 63FE
+Kees Cook
