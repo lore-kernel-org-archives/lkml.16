@@ -1,229 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f98.google.com (mail-qv1-f98.google.com [209.85.219.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9181547C0;
-	Wed, 16 Apr 2025 19:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2561DF260
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744832729; cv=none; b=f0lf6xaMHfk803v+VXEbS75NsCb2dch/dtez0oVp6i+Ox5ZzG7bbWybi6IgUmlGvsL/2BAZC78eO2qd3KGBs30jaPS5LSIGu9NfVCOyJnA5KYcLoFlo4LNQOqnuPzZu04cBzcSc+FeTxzA867Tgic0e43HIHBBK12rLa0noi+s4=
+	t=1744832780; cv=none; b=qOid0FPgH/5K4HqkDz6qca+Am9DooJHaw9xFF54NolX1kao/GDqKmVFyu9l+DQVJKXybr8gysWn1r74kvptTh7rGmIpwHHWKndtKXxBwEaWLw16j8xc3AoJ+joCH8yj2XzQEEpSfY6YewjhwmCej0JEQQwYq7xi8U1U5wlrIdCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744832729; c=relaxed/simple;
-	bh=SnOLQuJuhzY6tBls03Lca2ZUkw8w57uXybR6W83oisU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jk4yzYfArrGDBxys+FTAMPxGH0QPvhYlniddUhetgbKeMirPdDJaTjGW7yiC8kcXBd2S9wNRYb99KCRhkYfGK3p+/ayCZ6gyVQemQoDoHJEVpXmaigYZg+7f/Gt5LgluUk5uWKfXh9/7vkfbLosUKbXMcR06Dz4QP+UDGBEyl2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUua5sa/; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744832780; c=relaxed/simple;
+	bh=KZyqYa2QO8C5zOaR5Qlffvttg9elvID00aTwi/drGnQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ECdoJds/NNPD6r7vvkxbBINWDGS0fVtq9635qS9U9Rqih8HgTzPSbSnuKFOWXBbj3HnJ7FtE2nTu16e+Kd9L1wwKIvjYH5PcR1GHcXdeDZFg53dhaWV9vM/bnCflwQS5tqTOj2Ze5qPbakStxHvDhT0KldjibOt4zEs+YN0d/Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=HL1tspZ7; arc=none smtp.client-ip=209.85.219.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUua5sa/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744832727; x=1776368727;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SnOLQuJuhzY6tBls03Lca2ZUkw8w57uXybR6W83oisU=;
-  b=aUua5sa/ciY5I+//RtS5+KwhaQXdJIGdrKe1tM96dPDd0FdcqKdLLgEP
-   +439nAaUDhz0F+4hIU8edLgFLoLapdZOOHbKE26x0VpFLo5jqseMpR4e5
-   FbkV/VeL5dFVYtltW28KXQ1ntitdo0CyT3IUqUtIeNbk3/UW4JXMiyEVp
-   xGCopDOePL8eT9g20wGugXimgK2kyBziw19qwYsdvUabevwQNPDiaqhZF
-   Np2ZNRAcZafR2tTv3FBvJ+5uTxaIjWtHhFTzVpAAj8yncCFeBZPK4xcUT
-   ozylP8psD8063zURXBbVXep97IdGyEkgtSIh5ayYPC+sJJ/HGtufz7rkR
-   A==;
-X-CSE-ConnectionGUID: H58EIM/dTCugcF2KPdQDdg==
-X-CSE-MsgGUID: ER0K8C2VTu6XOp1uM81P/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46323156"
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="46323156"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 12:45:27 -0700
-X-CSE-ConnectionGUID: 8Fv0wGWhRs6lr3TTHEXLlQ==
-X-CSE-MsgGUID: JhoB8xUjTSqFVOyAPEJuwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
-   d="scan'208";a="130535123"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 12:45:27 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 5387120B5736;
-	Wed, 16 Apr 2025 12:45:25 -0700 (PDT)
-Message-ID: <e0b25b3e-aec0-4c43-9ab2-907186b56c71@linux.intel.com>
-Date: Wed, 16 Apr 2025 15:45:24 -0400
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="HL1tspZ7"
+Received: by mail-qv1-f98.google.com with SMTP id 6a1803df08f44-6f0cfbe2042so650636d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744832778; x=1745437578; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5FSkTMVQKVF8+T3ftLHZwHo1bf1YTsSlwi8hM6dxAd4=;
+        b=HL1tspZ7i2igxAAb8JPRRjmOoVYQki5/VkK8e37jI5nm734wAlXG2AdJSGuc8sTLw/
+         4+g2MFlNxFBth1Ic3y/dHajDdmLRZfXqQnib4xhPSqXdu3RmFcfjfBXJine2WcXYI4FH
+         7pdQCGtpqCCdRzFUgcQxMxUxig7yF8ncqAs0NGuQVFSELoRpJeUc4q4XzkXPuYyoIYpo
+         HKfZCSWjhrAfoQzjX1gbnzP2mJmqTECdy95h/hmxfLqfiJrW/54VAM/V6cOGw6F66xiv
+         5ooeSa+3fhXmfHmh3zymeP0RuAShO1bT7SStQnXKevTMsKBSpzbLFFMbMH28dteSWYRH
+         xPLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744832778; x=1745437578;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5FSkTMVQKVF8+T3ftLHZwHo1bf1YTsSlwi8hM6dxAd4=;
+        b=r1WEJPhlkXqGWRq9Ndd3DwRvBkXCYir1iBW217u4nMcwQJHyN+qQQ7qFL1na0At7d2
+         UfyPNiaJR5RCpZ9Zq+dcvqslGz8kXfA+9NNwc0elsA3GTJD3NzvaGrOOoND5bED/J3aa
+         Uoei+miQ+dqbE7+e3u5j0LxMEEZS11urTUxQ29fGQzzthGjjzYVTedP/BrvMT/yDgJFI
+         oB5PIWfEdkwa4RKP5bIWvHnrkhvFovlZGgxGJWyfQIzh3H87q9dRLZq3l5EUl8EbToJm
+         DJrNQ0JaYZvR2x4LVaNqPZ2oJlBo1hRd8Tnm3Ph80YdEmN6O6EYEMnYOu9GQquC50M2A
+         gepg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIZB6m4D3e7cxyWeC4vmQfoZ0/tpqSkMoHX8U/RoFpmdwds1Q5rkzLyd0oFxD9XD7slYy6QZlJ18DwBrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVRgXLHAXzFd/amZC5HwYUHnZ4K0/0i2FeBK60Znf7TC2aNODp
+	y1WusqGgZkSCY2Qjq6P6t3JmBTI6lxBrubvDatMD5brqjZHsdp2Ct8xejGRlA0IKS/01awT8Nru
+	pPIrCJNhr2VmsnnyOmrCWa3j8rjefIVyvkX0d+8p4Fq3kS+m+
+X-Gm-Gg: ASbGnct6OHd8dZPYBxH7c3gWc6fXTno+NP8qsWz7Orj3p/WyugGvqdLvmJtq58i/Lzm
+	goT7K/mt4i/+lxX2BX8I2/sUU1S1n4AYFNwc2wE1fFl7cUNyZjAV3QkcQaZaHstbn6uwlOVE28y
+	/NHwPvNaS7ZL8k1jLF/Tzl2me1DQYfrPrv6tTkhszaUXxrIwZXePQVwA6icggJvQGGGDGJ6BRtE
+	zpLuQBLd1bTK8cfOpRK9+lWI7aHqQm6u+xUXr+ZlAribO0tbO1hsDj/XmNEfVl/Atel3XZM9Yvs
+	t6NegJ0W14SQpOzjblBFcO6+jc4PHmM=
+X-Google-Smtp-Source: AGHT+IEdAOO/a/NWoIVz4hFvCWYt1cOs67Bo6EUpAOIqrH3uPHmMDf4q+6XjtQIc4pDUHkA3q+f3b3HhDEiG
+X-Received: by 2002:a05:6214:cae:b0:6e2:485d:fddd with SMTP id 6a1803df08f44-6f2ba8dd00cmr2037156d6.1.1744832777729;
+        Wed, 16 Apr 2025 12:46:17 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f0dea12d3dsm8179116d6.59.2025.04.16.12.46.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 12:46:17 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 9849F34067F;
+	Wed, 16 Apr 2025 13:46:16 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 95775E407EC; Wed, 16 Apr 2025 13:46:16 -0600 (MDT)
+From: Uday Shankar <ushankar@purestorage.com>
+Date: Wed, 16 Apr 2025 13:46:08 -0600
+Subject: [PATCH v5 4/4] ublk: mark ublk_queue as const for
+ ublk_handle_need_get_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
- <20250416153226.GC17910@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250416153226.GC17910@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-ublk_task_per_io-v5-4-9261ad7bff20@purestorage.com>
+References: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
+In-Reply-To: <20250416-ublk_task_per_io-v5-0-9261ad7bff20@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+ Caleb Sander Mateos <csander@purestorage.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Uday Shankar <ushankar@purestorage.com>
+X-Mailer: b4 0.14.2
 
+We now allow multiple tasks to operate on I/Os belonging to the same
+queue concurrently. This means that any writes to ublk_queue in the I/O
+path are potential sources of data races. Try to prevent these by
+marking ublk_queue pointers as const in ublk_handle_need_get_data. Also
+move a bit more of the NEED_GET_DATA-specific logic into
+ublk_handle_need_get_data, to make the pattern in __ublk_ch_uring_cmd
+more uniform.
 
+Suggested-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+---
+ drivers/block/ublk_drv.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-On 2025-04-16 11:32 a.m., Peter Zijlstra wrote:
-> On Tue, Apr 15, 2025 at 12:31:03PM -0400, Liang, Kan wrote:
-> 
->>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?
-> 
->> The dyn_constraint is a supplement of the static constraints. It doesn't
->> overwrite the static constraints.
-> 
-> That doesn't matter.
-> 
->> In the intel_get_event_constraints(), perf always gets the static
->> constraints first. If the dyn_constraint is defined, it gets the common
->> mask of the static constraints and the dynamic constraints. All
->> constraint rules will be complied.
->>
->> 	if (event->hw.dyn_constraint != ~0ULL) {
->> 		c2 = dyn_constraint(cpuc, c2, idx);
->> 		c2->idxmsk64 &= event->hw.dyn_constraint;
->> 		c2->weight = hweight64(c2->idxmsk64);
->> 	}
-> 
-> Read the comment that goes with EVENT_CONSTRAINT_OVERLAP().
-> 
-> Suppose we have (from intel_lnc_event_constraints[]):
-> 
->   INTEL_UEVENT_CONSTRAINT(0x012a, 0xf)
->   INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff)
-> 
-> Then since the first is fully contained in the latter, there is no
-> problem.
-> 
-> Now imagine PEBS gets a dynamic constraint of 0x3c (just because), and
-> then you try and create a PEBS event along with the above two events,
-> and all of a sudden you have:
-> 
-> 	0x000f
-> 	0x003c
-> 	0x03ff
-> 
-> And that is exactly the problem case.
-> 
-> Also, looking at that LNC table, please explain:
-> 
->   INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc)
-> 
-> that looks like the exact thing I've asked to never do, exactly because
-> of the above problem :-(
-
-I see. I think we can check the constraint table and update the overlap
-bit accordingly. Similar to what we did in the
-intel_pmu_check_event_constraints() for the fixed counters.
-
-I'm thinking something as below (Just a POC, not tested.)
-
-For the static table, set the overlap for the events that may trigger
-the issue at init time.
-For the dynamic constraint, add a dyn_overlap_mask to track if overlap
-is required for the feature (The below only supports the branch
-counters. The ACR and ARCH PEBS can be added later.) If it's required,
-set a flag PERF_X86_EVENT_OVERLAP for the event when the dyn_constraint
-is applied. The overlap bit will be set at runtime.
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 16f8aea33243..76a03a0c28e9 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3825,6 +3825,8 @@ intel_get_event_constraints(struct cpu_hw_events
-*cpuc, int idx,
- 		c2 = dyn_constraint(cpuc, c2, idx);
- 		c2->idxmsk64 &= event->hw.dyn_constraint;
- 		c2->weight = hweight64(c2->idxmsk64);+		if (event->hw.flags &
-PERF_X86_EVENT_OVERLAP)
-+			c2->overlap = 1;
- 	}
-
- 	return c2;
-@@ -4197,6 +4199,12 @@ static inline void
-intel_pmu_set_acr_caused_constr(struct perf_event *event,
- 		event->hw.dyn_constraint &= hybrid(event->pmu, acr_cause_mask64);
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 215ab45b00e10150e58d7f5ea5b5d13e40a1aa79..5f9679c03305576bee586388cab82a6ea5472f8b 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1291,7 +1291,7 @@ static void ublk_cmd_tw_cb(struct io_uring_cmd *cmd,
+ 	ublk_dispatch_req(ubq, pdu->req, issue_flags);
  }
-
-+enum dyn_overlap_bits {
-+       DYN_OVERLAP_BRANCH_CNTR
-+};
-+
-+static unsigned long dyn_overlap_mask;
-+
- static int intel_pmu_hw_config(struct perf_event *event)
+ 
+-static void ublk_queue_cmd(struct ublk_queue *ubq, struct request *rq)
++static void ublk_queue_cmd(const struct ublk_queue *ubq, struct request *rq)
  {
- 	int ret = x86_pmu_hw_config(event);
-@@ -4261,6 +4269,8 @@ static int intel_pmu_hw_config(struct perf_event
-*event)
- 		if (branch_sample_counters(leader)) {
- 			num++;
- 			leader->hw.dyn_constraint &= x86_pmu.lbr_counters;
-+			if (test_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
-+				leader->hw.flags |= PERF_X86_EVENT_OVERLAP;
- 		}
- 		leader->hw.flags |= PERF_X86_EVENT_BRANCH_COUNTERS;
-
-@@ -4270,6 +4280,8 @@ static int intel_pmu_hw_config(struct perf_event
-*event)
- 			if (branch_sample_counters(sibling)) {
- 				num++;
- 				sibling->hw.dyn_constraint &= x86_pmu.lbr_counters;
-+				if (test_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
-+					sibling->hw.flags |= PERF_X86_EVENT_OVERLAP;
- 			}
- 		}
-
-@@ -6638,6 +6650,29 @@ static void
-intel_pmu_check_event_constraints(struct event_constraint *event_con
- 	if (!event_constraints)
- 		return;
-
-+	for_each_event_constraint(c, event_constraints) {
-+		if (c->weight == 1 || c->overlap)
-+			continue;
+ 	struct io_uring_cmd *cmd = ubq->ios[rq->tag].cmd;
+ 	struct ublk_uring_cmd_pdu *pdu = ublk_get_uring_cmd_pdu(cmd);
+@@ -1813,15 +1813,6 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
+ 	mutex_unlock(&ub->mutex);
+ }
+ 
+-static void ublk_handle_need_get_data(struct ublk_device *ub, int q_id,
+-		int tag)
+-{
+-	struct ublk_queue *ubq = ublk_get_queue(ub, q_id);
+-	struct request *req = blk_mq_tag_to_rq(ub->tag_set.tags[q_id], tag);
+-
+-	ublk_queue_cmd(ubq, req);
+-}
+-
+ static inline int ublk_check_cmd_op(u32 cmd_op)
+ {
+ 	u32 ioc_type = _IOC_TYPE(cmd_op);
+@@ -1933,6 +1924,20 @@ static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
+ 	return 0;
+ }
+ 
++static int ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io,
++			 struct io_uring_cmd *cmd,
++			 const struct ublksrv_io_cmd *ub_cmd,
++			 struct request *req)
++{
++	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
++		return -EINVAL;
 +
-+		/*
-+		 * The counter mask of an event is not a subset of
-+		 * the counter mask of a constraint with an equal
-+		 * or higher weight. The overlap flag must be set.
-+		 */
-+		for_each_event_constraint(c2, event_constraints) {
-+			if ((c2->weight >= c->weight) &&
-+			    (c2->idxmsk64 | c->idxmsk64) != c2->idxmsk64) {
-+				c->overlap = 1;
-+				break;
-+			}
-+		}
++	ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
++	ublk_queue_cmd(ubq, req);
 +
-+		/* Check for the dynamic constraint */
-+		if (c->weight >= HWEIGHT(x86_pmu.lbr_counters) &&
-+		    (c->idxmsk64 | x86_pmu.lbr_counters) != c->idxmsk64)
-+ 			__set_bit(DYN_OVERLAP_BRANCH_CNTR, &dyn_overlap_mask);
-+	}
++	return 0;
++}
 +
- 	/*
- 	 * event on fixed counter2 (REF_CYCLES) only works on this
- 	 * counter, so do not extend mask to generic counters
+ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 			       unsigned int issue_flags,
+ 			       const struct ublksrv_io_cmd *ub_cmd)
+@@ -2026,10 +2031,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 			goto out;
+ 		break;
+ 	case UBLK_IO_NEED_GET_DATA:
+-		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
++		ret = ublk_get_data(
++			ubq, io, cmd, ub_cmd,
++			blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag));
++		if (ret)
+ 			goto out;
+-		ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
+-		ublk_handle_need_get_data(ub, ub_cmd->q_id, ub_cmd->tag);
+ 		break;
+ 	default:
+ 		goto out;
 
+-- 
+2.34.1
 
-Thanks,
-Kan
