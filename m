@@ -1,133 +1,106 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CD6217663
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26F81DC04A;
+	Wed, 16 Apr 2025 16:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744822691; cv=none; b=OEVZn+qvjGTwk2LppPYYMbS76hFFiug4B5HHVaD5Idv9YFjbSeVoO6cAczpNgxG3ZrKcEr8sn5NN9ZZEJr0v/ccSDWncdxD2ClrH3S/+VeQt4XIGc8mgIsDphIVWy7RM2XdWYAlQXOJKd+aM8kEVpfpFeH6v6x7g+Lcj70kXpfU=
+	t=1744822775; cv=none; b=Oh3F2csvBOVgbb8p3sHwQygt7NvZI2q922Jfy9o7dk6YWGQ2dHzT4r3NgVO7uTNROs40c/QzsJt0H22HPM5lrqw2awqQk/meMORIzMKS9AHSaEhx8Qzpgk46sbatjabAWDuZMh3fmv/RAqLUTVoIrRAVfocScHzQ8kSFfOk/3+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744822691; c=relaxed/simple;
-	bh=XBtyQHzEjNNgjgTe/YKXlSvf7rqCznV9aavmpW/Wb6k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=fGsF8phGJT/AkcZTcD6au0ys58bBAxP62KrD4/WFkzgAF2048vZhbakSJJjOMd2gpczSfySN9ggAS4zA1gDNhCwufjkdhdL92m4smOdKjSFAKY4ZGzGT0EW19+QNysIpTnhk8RoG1V7PKaTKBJ+5A+bx0u+7nrXIHIJ+tDqQHqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1sppd8vZ; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1744822775; c=relaxed/simple;
+	bh=GqYHw0v/gtP59M6Lf3YVXV6rLfdQbRV82DntEGZnLQM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=OSh6F00sPLhzZcdjUsJU++/wkn1ZBgKondp4IN28PHGnzfIZwoGIUbQOpES3+9ml3UPntWQ6NXAstBJg64F1j1pOt+TIk0f0rxpjIv3SN3EPpB3FartKckzf6M6ggxb3T78vUwz6Zk60IBg7VEcn77v6cRITeUdM9UBaQIuVGhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sYx0ANO4; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1sppd8vZ"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43cec217977so41817545e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744822688; x=1745427488; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WnocHU1mfccFDedSoFZAIkdUs0QWEX0U3+1AYetVeiI=;
-        b=1sppd8vZQuzWrmvn3nt85kx1a8OdOFmXcL1W7Sd7g9jZbwRP7/x9h9MlzybonQVl37
-         X2kByUNAViUL5dZFEc1PwxIZut6YaxpilddRYpEqv+dOUZy8l1xyNUf6M/7vU2m1xclB
-         WiUekdrOyxMsoqXfS+gZHiDbdQSnia0aw4ClF6ppNrc87YOzQs5w0O7kh/Am4IdbR1Mq
-         Za7C0Gw9aQH1Up5dMg4T98FWTJLnNWbg4T3cMg3mWmaSdSJkBU8HBELbJX2hQ3uPoMqb
-         5vQhPU7WpkpsAVpKForMMcNzHyu6KoioVFKsUMhz6e6BJ2xWz5KgrI9CrlNkFIJkqZyG
-         /9Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744822688; x=1745427488;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WnocHU1mfccFDedSoFZAIkdUs0QWEX0U3+1AYetVeiI=;
-        b=chFifKOTpoS54THyAdvUKANVQ+EBZuFRlwtqLm8afPc0wOwcwMe21QbelAYglmoxDA
-         ztvHNYZM1jV1j+qaPFUvg90XnHOU+NWvHcdKFPb0/aXCgPvgX20w+btFAGJMf9aOGGZJ
-         SUnY+24xK+cHQJdVYHPBSxOP9DcMHxkOZeuFNVcRTlCTBZHZAV2mEC/sox7jb0P/Fyv1
-         qjoZHxppwkr/Thoy+qPR2ML00fX22JaagWfjf8zGUhSWMtq6KA4+fs3wo7GcoSc/Ac1j
-         q9DvLQSTRYY+/tZFJ4oxrnc3Pm/W66AWzXB3ss2hXEi7C59PDBgeGn6tUAnQr++wIuFC
-         vpTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEdtMKFYFJALGxpsKk5YiDrHe9fMN/yp9x0U3jN4HeBmY1E6xZBAbKVhnyIZfSmaARrEGfGty9/LCYa8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwudyJZ4uT/CI5FmwgiA3F6Pjwj4SOOUllq2w0FG+jj7Ul4KoII
-	p1MGpAE2qArnNkJcg4SoXGLd7hF7z+APZaKwvL2z3F8U9kwj3NdTzxGX/ZSbpIdHZIvr3w==
-X-Google-Smtp-Source: AGHT+IHDioEa0asrZ6ktU/OURO4/16oUCUp0FKLWlZ90m8fNpNQzxk3VCdHZXCpqHBL07mSKMbNi7FOR
-X-Received: from wmbg21.prod.google.com ([2002:a05:600c:a415:b0:43d:1f28:b8bf])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a5d:64c8:0:b0:391:43cb:43fa
- with SMTP id ffacd0b85a97d-39ee5badbdemr2741778f8f.51.1744822688464; Wed, 16
- Apr 2025 09:58:08 -0700 (PDT)
-Date: Wed, 16 Apr 2025 18:57:48 +0200
-In-Reply-To: <20250416165743.4080995-6-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sYx0ANO4"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53GGxGlt406925
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 11:59:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744822757;
+	bh=LBDgSFCK3SAhha4nzURy7p7QwmnfoixA9SlLrNVbvS0=;
+	h=Date:Subject:From:To:CC:References:In-Reply-To;
+	b=sYx0ANO4aIsQhL9y4OdgJM9Foaq1DmeMHvdSGp8Pvpb8NhfmzwHvjuuFdxRXUgZV9
+	 rdH6il6NOaLYoosMlKsR/U3YV41bhRYzBg/Qy5d8zJmCSnQ+Z3FpUMJzgdOlXzG6b8
+	 thc2Pjq3wstyEqH8UoZYKyNwMmhKS8v8dxPl9FqI=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53GGxGQW122656
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 16 Apr 2025 11:59:16 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
+ Apr 2025 11:59:16 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 16 Apr 2025 11:59:16 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53GGxGPu105224;
+	Wed, 16 Apr 2025 11:59:16 -0500
+Message-ID: <3f31eded-4a7b-43f0-819f-a3be48cffc7b@ti.com>
+Date: Wed, 16 Apr 2025 11:59:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416165743.4080995-6-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2272; i=ardb@kernel.org;
- h=from:subject; bh=rtVhNZoNBTlEaY8pB6Ac8e2FfcEyp0oDiXBE2BvNGnU=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3/w17N3x0v3PYc+yD95L9E/l2/F7cjXzz+afd1nsbJR
- K0Pv+b1dJSyMIhxMMiKKbIIzP77bufpiVK1zrNkYeawMoEMYeDiFICLpDH8ZmEsPj3jjWjTgsRL
- +hXdz02sSrbVyyaZLCxX5vs7zczVgpFh5p2lfRf3hPO/vj3j71OtPZcnczp2aC4MdvufLLUvYms LBwA=
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250416165743.4080995-10-ardb+git@google.com>
-Subject: [PATCH v2 4/4] x86/efistub: Don't bother enabling SEV in the EFI stub
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-efi@vger.kernel.org
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org, 
-	Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Borislav Petkov <bp@alien8.de>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
-	Kevin Loughlin <kevinloughlin@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix V1P8_SIGNAL_ENA and HIGH_SPEED_ENA
+From: Judith Mendez <jm@ti.com>
+To: Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>
+CC: <linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Josua Mayer
+	<josua@solid-run.com>, Moteen Shah <m-shah@ti.com>,
+        Hiago De Franco
+	<hiago.franco@toradex.com>
+References: <20250407222702.2199047-1-jm@ti.com>
+Content-Language: en-US
+In-Reply-To: <20250407222702.2199047-1-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Ard Biesheuvel <ardb@kernel.org>
+Hello Adrian,
 
-One of the last things the EFI stub does before handing over to the core
-kernel when booting as a SEV guest is enabling SEV, even though this is
-mostly redundant: one of the first things the core kernel does is
-calling sme_enable(), after setting up the early GDT and IDT but before
-even setting up the kernel page tables.
+On 4/7/25 5:27 PM, Judith Mendez wrote:
+> For all TI devices, timing was closed For Legacy and HS modes in
+> half cycle timing, where data is launched on the negative edge of
+> clock and latched on the following positive edge of clock. The
+> switch to full cycle timing happens when any of HIGH_SPEED_ENA,
+> V1P8_SIGNAL_ENA, or UHS_MODE_SELECT is set.
+> 
+> Currently HIGH_SPEED_ENA is set for HS modes and violates timing
+> requirements for TI devices so add a .set_hs_ena callback in
+> sdhci_am654 driver so that HIGH_SPEED_ENA is not set for this mode.
+> 
+> There are eMMC boot failures seen with V1P8_SIGNAL_ENA with a
+> specific Kingston eMMC due to the sequencing when enumerating to
+> HS200 mode. Since V1P8_SIGNAL_ENA is optional for eMMC, do not
+> set V1P8_SIGNAL_ENA be default. This fix was previously merged in
+> the kernel, but was reverted due to the "heuristics for enabling
+> the quirk"[0]. The new implementation applies the quirk based-off of
+> bus width, which should not be an issue since there is no internal
+> LDO for MMC0 8bit wide interface and hence V1P8_SIGNAL_ENA should only
+> effect timing for MMC0 interface.
 
-So let's just drop this call to sev_enable(), and rely on the core
-kernel to initiaize SEV correctly.
 
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- arch/x86/include/asm/sev.h              | 2 --
- drivers/firmware/efi/libstub/x86-stub.c | 6 ------
- 2 files changed, 8 deletions(-)
+On this patch series, I am bringing back the fix for V1P8_SIGNAL_ENA,
+Ulf requested a change [0] which I am planning to do for v2. But I was
+hoping to get your opinion on whether Hiago's suggestion [1] is doable
+so I can add that as well to v2. Thanks for your attention.
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 8637a65973ef..d762cc0fd47e 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -443,7 +443,6 @@ static __always_inline void sev_es_nmi_complete(void)
- 		__sev_es_nmi_complete();
- }
- extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
--extern void sev_enable(struct boot_params *bp);
- 
- /*
-  * RMPADJUST modifies the RMP permissions of a page of a lesser-
-@@ -531,7 +530,6 @@ static inline void sev_es_ist_exit(void) { }
- static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
- static inline void sev_es_nmi_complete(void) { }
- static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
--static inline void sev_enable(struct boot_params *bp) { }
- static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
- static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
- static inline void setup_ghcb(void) { }
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index d9ae1a230d39..6b4f5ac91e7f 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -936,12 +936,6 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
- 		goto fail;
- 	}
- 
--	/*
--	 * Call the SEV init code while still running with the firmware's
--	 * GDT/IDT, so #VC exceptions will be handled by EFI.
--	 */
--	sev_enable(boot_params);
--
- 	efi_5level_switch();
- 
- 	enter_kernel(kernel_entry, boot_params);
--- 
-2.49.0.805.g082f7c87e0-goog
 
+[0] 
+https://lore.kernel.org/linux-mmc/CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com/
+[1] 
+https://lore.kernel.org/linux-mmc/20250412132012.xpjywokcpztb4jg4@hiago-nb/
+
+~ Judith
