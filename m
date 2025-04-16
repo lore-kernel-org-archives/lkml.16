@@ -1,105 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9E0156F20;
-	Wed, 16 Apr 2025 15:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EC7208979
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818261; cv=none; b=cGgeU8/FqUy8+/+RlAq5f0Ah1kUkfDiBSKofOZvy9am56zlH/HF2FaR2VVzCBsvaefo/WWQPKW06Z1w6JE3QmQ278Uq039LzSbzlgGAWvz5R3lUqIJHq0UgtHYiijMn6MlBRbHVhrjaALmFI3sRMMZ+t/c8EN6N7JI0WEac/aAA=
+	t=1744818309; cv=none; b=jOf9cyd2Cho1i2JmifME9IVzTe77jxyV6XImTpoH/xM9UgFTbWkNZRZbucuCoS2Sbi8YH+SzBU3uPKllpTukUZ/ddrbLhFWTjxECg8SIeV+J/73NA9Fr8fXNAu8mJU/ku0Ls6/Jt+iD1P+AHJ+lBO3W0mI2qicUIYIZNOYzDyQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818261; c=relaxed/simple;
-	bh=DrlCq7H4f/BhvKoNnp89QVYukAc+8CBamz/LOL0QU24=;
+	s=arc-20240116; t=1744818309; c=relaxed/simple;
+	bh=fAZO7Fa7jV+kYREsmNuqdJYFtwNwzzT0nKy+oP+3Fno=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OMDp+x47qf6TiabTLK6GFwSf+vFAc7njw8lSYkMiz+JHW+KymEZ6ROFAH+EV7T++f6klsrGEkTsQ3JWVq/H+/id7+UwLqpAMwjjtsOJ7uuJxvL1xdvJCgLvCXt6HPYA2j1lE8/WmyG+66pHSkc0iOQnyFTus39X9Y8xANci8m5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEveKZhC; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNZvOYbkUHEzCOMtFys2F7DxhWT+tVjsa8+qL4JooutYcMSLzXIAmQPXq5Xm2TuLBL0pBnodHXHXI4Ck/w4Eq5OjSOT8ABRR8U852HTBKesq0HFB7tdIiw6HCxA4n6R/doJO/2hrhIuVVCNIeJkg60SciWAmoS+B/r1/uZM0rYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CPx3J8+r; arc=none smtp.client-ip=45.157.188.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEveKZhC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744818260; x=1776354260;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DrlCq7H4f/BhvKoNnp89QVYukAc+8CBamz/LOL0QU24=;
-  b=cEveKZhCh5kQ82YguAFQpNw1bVN4TCgGpX/hqpcVNHgx4P3lPg6m6N5E
-   UD353cZhh5vp8wnMKBhac7gyFmHy72aBBVgSp9qQM7qHXIOkghL7wARCj
-   i4D+yqD8nZs/ywLhKvpdwQvwAIpccU01IPOTFRyhTKihhkmVXD64MVm1B
-   hfXEb4SRerH3WwH1fqyMsbVsS/5/HwZik9LdflfnZgHMpjVUXOb2f7Kjc
-   /clp1LzPgidOxFsMe1MGiPVHGTIK0K0cqUZnrXhXKSZKccg197dVh8leD
-   77RaXkqm1JIyKfO7oHOnQNpyO1foBKhO1jiAZk1D0nz3LTzGQFVs0HvvL
-   w==;
-X-CSE-ConnectionGUID: qDQFF9XJSxeY8WyiJWAYjQ==
-X-CSE-MsgGUID: 3Cutb464SiaceBJ7bsz4Zw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46502077"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46502077"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:44:19 -0700
-X-CSE-ConnectionGUID: vl5eVdnbSVeNKgTS7iiEMg==
-X-CSE-MsgGUID: JEjETB80Q4Od2ZkKQAt2rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="167693119"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 16 Apr 2025 08:44:16 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u54vs-000JzQ-2v;
-	Wed, 16 Apr 2025 15:44:12 +0000
-Date: Wed, 16 Apr 2025 23:43:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	vidyas@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <202504162332.fwaFxVrL-lkp@intel.com>
-References: <20250410194552.944818-1-vidyas@nvidia.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CPx3J8+r"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zd51z0MMBzXQr;
+	Wed, 16 Apr 2025 17:44:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1744818294;
+	bh=VNzT8ZztgMzMVgyJuMBomyM+QeQmnFJJGsXoHwrUSGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CPx3J8+rRA5zOicU2627y0zUqiODQSi85at4aUcNZ/Pn7TrJRrNsx2zwWkedu6yUq
+	 aa5lmFcD23/vQeyPQDhXVvxLOx74R3c1oGaBjB9z48rhCj89uQ7NhX6SO2oDVRSmfb
+	 UnBP/RPas3jAYxGs6Ef4d282gK6fV8X3mchSXgMI=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zd51x4myzzm99;
+	Wed, 16 Apr 2025 17:44:53 +0200 (CEST)
+Date: Wed, 16 Apr 2025 17:44:52 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Jon Kohler <jon@nutanix.com>
+Cc: Sean Christopherson <seanjc@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexander Grest <Alexander.Grest@microsoft.com>, 
+	Nicolas Saenz Julienne <nsaenz@amazon.es>, "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>, 
+	Tao Su <tao1.su@linux.intel.com>, Xiaoyao Li <xiaoyao.li@intel.com>, 
+	Zhao Liu <zhao1.liu@intel.com>
+Subject: Re: [RFC PATCH 00/18] KVM: VMX: Introduce Intel Mode-Based Execute
+ Control (MBEC)
+Message-ID: <20250416.peYa4autei9u@digikod.net>
+References: <20250313203702.575156-1-jon@nutanix.com>
+ <20250415.AegioKi3ioda@digikod.net>
+ <A32D3985-4F3E-4839-BF1D-5674DE372741@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250410194552.944818-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <A32D3985-4F3E-4839-BF1D-5674DE372741@nutanix.com>
+X-Infomaniak-Routing: alpha
 
-Hi Vidya,
+On Tue, Apr 15, 2025 at 02:43:57PM +0000, Jon Kohler wrote:
+> 
+> 
+> > On Apr 15, 2025, at 5:29 AM, Mickaël Salaün <mic@digikod.net> wrote:
+> > 
+> > !-------------------------------------------------------------------|
+> >  CAUTION: External Email
+> > 
+> > |-------------------------------------------------------------------!
+> > 
+> > Hi,
+> > 
+> > This series looks good, just some inlined questions.
+> 
+> RE Inlined questions - Did you send those elsewhere? I didn’t
+> see any others in my inbox, nor on lore.
 
-kernel test robot noticed the following build warnings:
+No, I just wanted to highlight that you inserted questions in several
+patches. :)
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.15-rc2 next-20250416]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> > Sean, Paolo, what do you think?
+> > 
+> > Jon, what is the status of the QEMU patches?
+> 
+> I was waiting for comments here before sending to mailing list, but
+> I did post a link to the tree in the cover letter. The actual commit itself
+> is wicked trivial, so knock on wood, I’d imagine that would be the easiest
+> part of this endeavor.
+> 
+> Would you suggest I sent those to QEMU mailing list now, while kernel side
+> is still in RFC? Happy to do so if that makes sense.
+> 
+> https://github.com/JonKohler/qemu/commit/7a245414a0138b83cabcb809f5585ef8b5f78553
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vidya-Sagar/PCI-dwc-tegra194-Broaden-architecture-dependency/20250411-035134
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250410194552.944818-1-vidyas%40nvidia.com
-patch subject: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
-config: arm64-kismet-CONFIG_PHY_TEGRA194_P2U-CONFIG_PCIE_TEGRA194_EP-0-0 (https://download.01.org/0day-ci/archive/20250416/202504162332.fwaFxVrL-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250416/202504162332.fwaFxVrL-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504162332.fwaFxVrL-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U when selected by PCIE_TEGRA194_EP
-   WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U
-     Depends on [n]: ARCH_TEGRA_194_SOC [=n] || ARCH_TEGRA_234_SOC [=n] || COMPILE_TEST [=n]
-     Selected by [y]:
-     - PCIE_TEGRA194_EP [=y] && PCI [=y] && ARCH_TEGRA [=y] && (ARM64 [=y] || COMPILE_TEST [=n]) && PCI_ENDPOINT [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You can wait until Sean gets a look at this series, but you don't need
+to wait for it to be merged before starting a discussion with QEMU
+developers.
