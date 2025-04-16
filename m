@@ -1,219 +1,361 @@
-Received: from gmmr-4.centrum.cz (gmmr-4.centrum.cz [46.255.227.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75CEA247299;
-	Wed, 16 Apr 2025 12:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A14924BD1F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805361; cv=none; b=ioL0lB8aWw0c/zeSczSIgX1ZZMyJVpgfl1CdhaG6ccWtbMKazToL+CnLHN3cbtgkOgvS5EvKnuWyByWSbuLdehjRFUERLDP1lkYppakik/n2uRzAoXVkPlRmW6WqsGG8JaMjcbVCP8ik1ZtywkR/MMlC8iGgDQlZIoML4iCW0RI=
+	t=1744805364; cv=none; b=TeVnIFRNOTNp5CVfxAlC8da8UdSQp96TVVfaK7xHrDyrs6ctyziu0AJwIn1mHSCY5TOkfI292Rinp/cyuxd5vWcP/pkw0OZdY01HTISmnSewdX+qRcCnrYS3rMjZX7cH8Pzp0QvzBn01+qYe7HyohxhCtCwgreW+Ohmcx05m3ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805361; c=relaxed/simple;
-	bh=bC+wM2T34xrbS+z7qOGcYi41w2WvMWPbKGOecdh/KE4=;
+	s=arc-20240116; t=1744805364; c=relaxed/simple;
+	bh=OknMfO3aKiUjtkajySAtrg6Y0jLNpEmOZeb8MuO61D0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=EfulK9CxYqnDnrJM/QWXGWzjFRHz0/kD3Hb6Z115x7L0LYwqv0fsn1O0egj7yp7PQmsayn14rwcEFPPbvU9YPP/xXtkNOh1TLAUNCL7JrpP59MarxjQGrCU8vc2xY6t/QefzXemblWpQdqqt0azNGeI4mNllUuXVpyIqlIDGdVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=ffXnmbnp; arc=none smtp.client-ip=46.255.227.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
+	 Content-Disposition; b=lcdFqWsdmE53EqG8MP99Wlay4fstwZvMBtIKu8z2FfoIrS2CytvlI1yp2lJXC8Ev6ul8+w3jZhylKXQRGwBrf4rSV3VE/ciWff83M7xnf/+Qc+kJMTPiCuNXajiAyLZYqTXqIUDHF+Rgp9MOmxRdK1P3WCjOz5hY2903n4g+HL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=KHZHQh7t; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="ffXnmbnp"
-Received: from gmmr-4.centrum.cz (localhost [127.0.0.1])
-	by gmmr-4.centrum.cz (Postfix) with ESMTP id CF7F4DD84;
-	Wed, 16 Apr 2025 14:07:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1744805243; bh=hMk+qfxHbBWbPWBjMAT1Mzk1thocsa4qoSF/uO2OysQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ffXnmbnpKMY9AI69+AWKnXsTfApq8fHgh6lvKENvC3ZVYsaVkG7SnLN2F5ccgLhAi
-	 +qLajXe2Rfrbd/A22glhqgW5fMw4QQjpTVwKUj3AdNgiOG3V2AMzUsFgZLExQ0Do04
-	 AgJZ62+JXJ27IeLXcEhkGs9AkieHEy92A/K7v4K0=
-Received: from antispam27.centrum.cz (antispam27.cent [10.30.208.27])
-	by gmmr-4.centrum.cz (Postfix) with ESMTP id B1EBC201C973;
-	Wed, 16 Apr 2025 14:07:23 +0200 (CEST)
-X-CSE-ConnectionGUID: 5uW907vFTYuypfPIRE964Q==
-X-CSE-MsgGUID: gD2ADJ/PSN2HBoS5sauQbg==
-X-ThreatScanner-Verdict: Negative
-X-IPAS-Result: =?us-ascii?q?A2EHAAAFnP9n/0vj/y5aGgEBAQEBAQEBAQEDAQEBARIBA?=
- =?us-ascii?q?QEBAgIBAQEBQAmBOAMBAQEBCwGDQIFkhFWRcYoniAWGDoVbgX4PAQEBAQEBA?=
- =?us-ascii?q?QEBCTsJBAEBAwQ3AYFUgnSLLic2Bw4BAgQBAQEBAwIDAQEBAQEBAQEBDQEBB?=
- =?us-ascii?q?gEBAQEBAQYGAQKBHYU1Rg2CYgGBJIEmAQEBAQEBAQEBAQEBHQINgSdWKA0CH?=
- =?us-ascii?q?wcCcYMCAYIvATQUBrIlgTIaAmXccAKBI2OBJAaBGi4BiE8BhWyFOYINgRWDK?=
- =?us-ascii?q?j6BBQGHGIJpBIItgReQa4VrinKBTRwDWSwBVRMXCwcFgWwDgQ9xNR2BeoNzh?=
- =?us-ascii?q?TaCEYIEiROEVi1PhRsdQAMLbT03FBsGmGeEFnsnGBcJgSUVLpNgkAWjJoMcg?=
- =?us-ascii?q?QkFhEmHS5VKM5dwA5JkLodlj3J5jAyBeZVaKoUqgVAeDYICMyIwgyITPxmOP?=
- =?us-ascii?q?AQHCxaIVcNZdgIBATgCBwsBAQMJgjuNYYFLAQE?=
-IronPort-PHdr: A9a23:GRsetBwIpJQwf37XCzL1zFBlVkEcU1XcAAcZ59Idhq5Udez7ptK+Z
- xaZva0m1gWXBtyTwskHotSVmpioYXYH75eFvSJKW713fDhBpOMo2icNO4q7M3D9N+PgdCcgH
- c5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFRrhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTezf79+N
- gm6oRneusUIn4dvK6g8xgbUqXZUZupawn9lKl2Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElR
- rFGDzooLn446tTzuRfMVQWA6WIQX3sZnBRVGwTK4w30UZn3sivhq+pywzKaMtHsTbA1Qjut8
- aFmQwL1hSgdNj459GbXitFsjK9evRmsqQBzz5LSbYqIL/d1YL/Tcs0GSmpARsZRVjJOAoWgb
- 4sUEuENOf9Uo5Thq1cSqBezAxSnCuHyxT9SnnL406003fo/HA/b3wIvEM4Bv2nPodXpKKsfS
- /y5wLXUwTjBaf5dxDfz6JLPchAkufyCR6x/cdbLyUIyGAzKlFOQrJLmPziI0ekCqXKb7+l6W
- uKqkWEnsRp8rSKzxscokIbJnZgZxUzF9Chgxos+ONK3RlJhb9G+DJtQqz+VN5FwQs46TWxlu
- yc3x6EItJC0YSQHxpQpyhreZvKIb4WF/wzvWeePLTl2mX5od6+zihSy/0Wk1+HxWcm53VJXo
- yZYnNfBuHYA3AHd5MiAT/ty5Eah2TCX2gDQ9O5EO0Y0mrTfK5I7xb4wjJUTvELeFSH1gEX7l
- KCbe0Q+9uS26+nqYq/qqoGCO4J2kA3zMKQjltShDeglPAUCRXaX9fqg2LH540H0T6lGgucyn
- 6TYtp3RON4VqbSjAwBP14Yu8xO/DzC739sGhXQHN1dFeA6fj4juJlHOPOj0DfehjFSolzdm3
- //GPrj4DpXWK3jDjK/hcatg50JG1AU809Zf545OCrEcJfL/QFP+td3AAh84NQy73frnBc1y2
- 44fQ26DHK+UPaPIvVOW+O4iIfOAaY0VtTrlLvgq/f/ujXs3mV8Heqmp2IMaZ2qiHvRlOUqZZ
- GDjgs0aHGgQogo+SPbliEaYXTFPZne+R7g86S0jCIK6EYfDQZiggL+f0yelH51WYHpKBUuWE
- XfvaoqEQPQMaSKJL8B7iDwEUKKtRJMm1RGrrAP60aZoLvLI+i0EspLuzNd06u7SmBwp9jx7E
- d6d02eTQGFwhG8IQCU23K9nrUxn1liDybR4g+BfFdFL4/NJUwE6NYPTzuBjDtDyXxnMftSXS
- Fm8XtqmAis9TtUrw98Be0p9Acmtjgjf3yq2BL8Yj6aEBJ8s8qLZxHXxI8d9y3Db1KgullUmT
- MxPNXCghqFi7QfTG4/Jk0Kfl6qwcqQcxiHN+H+ZzWWSpEFYTBJwUaLdUHEQeETWq8316V7cQ
- L+wF7snNhBMycqDKqtRdt3plk9KRfj9N9TYe2KxgWCwBRSWybyQcIrmYWId3D/SCEQciQAc4
- W6GNRQiBiemu2/eCD1uFVTyY0Lj6OVxsmm7QVM0zwyRcU1h2KS6+gQPifyfVfwTxLQEtzklq
- zluG1a9xd3WB8KapwV9ZKVcfc894FBf2GLdtgx9OIGgLq97il4dbQt3pUXu2AtzCohbj8gqo
- 20lzBBoJaKbzlxBbTWY0o70OrHNLWny5h+vZ7bQ2l7FyNmW4LsA6Owkq1X/uwGkDkgvoD1b1
- IxR0n2B9tDJARAUXJbZTEk67V55qqvcby174JnbhlN2NqzhijLewZoXDe2GyV70ds1cOaaND
- if7D8kTHI6lOrp5yBCSchsYMbUKp+YPNMS8eq7DgfbzVNs=
-IronPort-Data: A9a23:QP9PJq71x5ZGZTL7JkMB1wxRtOjGchMFZxGqfqrLsTDasY5as4F+v
- msfCmmBOqrZNGGmKNslO43noUsAuMLcn4VrGwE9+S49Zn8b8sCt6fZ1j6vT04F+CuWZESqLO
- u1HMoGowPgcFyKa+1H0dOC88BGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYHR7zil5
- 5Wr/qUzBHf/g2Qpaj5NtfrZwP9SlK2aVA0w7wFWic9j4we2e0k9VPo3Oay3Jn3kdYhYdsbSb
- /rD1ryw4lTC9B4rDN6/+p6jGqHdauO60aCm0xK6aoD66vRwjnVaPpUTaJLwXXxqZwChxLid/
- v0W7MDtFl15VkH7sL91vxFwS0mSNEDdkVPNCSDXXce7lyUqf5ZwqhnH4Y5f0YAwo45K7W9yG
- fMwdS0yP0jcmcyK8a+qUudUp/4OfZe3BdZK0p1g5Wmx4fcOTpWGWKDW/YYBmjw9gNxUAPOYb
- NhxhThHMEqGOUASfA1NV9RhwY9EhVGmG9FcgFuPpqMy6nL7xRB12aOrO8i9ltmiHpwJzh3B/
- T+Xl4j/Kh42bvWz6329yVT2psXIpn7gUZ8rHrLto5aGh3XWnAT/EiY+VlaloP//gFS5V8lcO
- mQd4C9opq83nGS7HofVXBCipnOA+BkGVLJ4F+w89RHIz6/84BiQDWtCSSROAPQvt9czbTgr0
- EKZ2t3uGDpjuaGUTnTb8a2bxRuiNC5QIWIcaCssSQoe/8KlsIw1lgjITNtoDOiylNKdMTXxx
- S2a6SEkjLU7k8EGzeO48ErBjjbqoYLGJiYx5wPKTiem4xl/aYqNeYOl8x7Y4OxGIYLfSUOO1
- EXogODCsqZUUMzLznbSBrpQdF2028u43PTnqQYHN/EcG/6FoiXLkVx4iN2mGHpUDw==
-IronPort-HdrOrdr: A9a23:DOnhbKuMeEAHweiXCbPzomM+7skDbdV00zEX/kB9WHVpmwKj+P
- xGuM5rtyMc6QxhO03I9urrBEDtex7hHP1OgbX5X43CYOCOggLBR72KhrGN/9SPIUHDytI=
-X-Talos-CUID: =?us-ascii?q?9a23=3AorHX+Wl3yHejUmrLBF+mHlpYsorXOSDA8yaIfFG?=
- =?us-ascii?q?WNVd0WaWbcX6q1fI6z/M7zg=3D=3D?=
-X-Talos-MUID: 9a23:Gb5AwAYMihoUEeBTuBO2rR1Ac/9Txf6OIkc2zI4PpvCOOnkl
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.15,216,1739833200"; 
-   d="scan'208";a="314831359"
-Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
-  by antispam27.centrum.cz with ESMTP; 16 Apr 2025 14:07:22 +0200
-Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id A05CB100AE2A3;
-	Wed, 16 Apr 2025 14:07:22 +0200 (CEST)
-Date: Wed, 16 Apr 2025 14:07:20 +0200
-From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-To: linux-kernel@vger.kernel.org
-Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org,
-	linux-arch@vger.kernel.org
-Subject: Regression from a9b3c355c2e6 ("asm-generic: pgalloc: provide generic
- __pgd_{alloc,free}") with CONFIG_DEBUG_VM_PGFLAGS=y and Xen
-Message-ID: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="KHZHQh7t"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f8d2f8d890so3559438b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1744805360; x=1745410160; darn=vger.kernel.org;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+yl0cAZ2AoM6yswmjaXzrQ8iZqsWJ8zVT6FZkjKDdrM=;
+        b=KHZHQh7tYtHgRexNW8Eu43px6E6AsfsO/E6lNqpVkgoCnCtRKRUipbLzQtIXfvFST2
+         rqgM3iUdLwTlqxS4CW+ZzZ6xt6Ej7Tbzt3sZ56JiYqNK1h+6Xp6VOk8eqErBycugoILr
+         BYxWvGRTULi01CUkiDAvseUQd6ZhgJkOtIyma+/u5r8eqNNb1AR/zM+kZm5KDpFDPPqf
+         VzyAD6zXX+RsZWLY25DQFop42kRE2u0NwZ6jplvPLAhLc0kYR1dTq9s4UdTP886gdRx1
+         bgYS1kE0ECPbY3/5gpTS6ltE65nJes4ViiMcb8UIBZDxlwZwdRWZOkKUOveMYWzb16gs
+         SNIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744805360; x=1745410160;
+        h=content-disposition:mime-version:reply-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+yl0cAZ2AoM6yswmjaXzrQ8iZqsWJ8zVT6FZkjKDdrM=;
+        b=evfPcgWNJ9JUh01YyZlo6eb3kKP8M3E3j+i/c+LEFLcdw+iiaPpU367rduqxX0IyBC
+         AkjJNMvjp7Ldd/JR5KHYcBb009O+M7iun46PPyCIXbgdQYBY7Y0XbUot0yKI+myIBmo9
+         BEXDOFR5Y3iC2fu0v3VSlIgLHmXOkNVNWBjgHPshDIsdxb5/0BNre6dBLmhUIdCF9Cd3
+         YeKnPZKe0GMhxnsUkynfYvzYv78n9M8lOyUiKlCS4/YVW6jLI2P/73OGbUNstNMT9ZtB
+         MTtxlVZI9vqJHbidY7I71OADNI6OIE7jGq7Ve96LCU3EJaQGzVpcLbWJJ7Dhrli3u6FG
+         O8lw==
+X-Gm-Message-State: AOJu0Yx282/6SXmaopZiIFfc8RV3IN11VaSdnHhR6gJuiM6bNTmmmh+W
+	ngAh3qCv3GsK27ZUFPaoSx6ca2ZgUJmCJOL6GLzAD5Vscf0Op/3vOcgUcrOeKAqbjMR9fBn4F51
+	Z
+X-Gm-Gg: ASbGncuQVh1dQRQh3jAEFl0Vu4tGEbrZC/sJrzSrZmDSpAjSjHK/H9R9yck3OaoTQc8
+	3WGLWCYQKIjNZXVE4/CyazgUlvgOmKVG68w2swM/jQfldcqwYYIrbmkqDUfMs8gJdNmWnrL4Qbr
+	lHtqeE92yAIXZ+p1LKkYiYvWWaVHpjRdA8XNvOHcyqJTfOgue2PjEw4o+mGL4Vegm1RrGgWPk3i
+	0Kre9HHVHMMhZNr2kYGJGzMLp/MxNycEjtcUYUAsytR8VYRS/qsT2I41RkVOfY34odnfM2sX0pd
+	Bqk4ucW5Y+osBxNoraha/3pbIu6lBzgj+d8HO2+m1+w=
+X-Google-Smtp-Source: AGHT+IHnjhyXrjGAYt5UpueUXnmaVnICj1WMDNUQyBXGxLg8zivgRP+07rpiqAYou6WrjTxm7FHRCg==
+X-Received: by 2002:a05:6808:bc7:b0:3fb:a7d0:3b55 with SMTP id 5614622812f47-400b044b4e2mr877553b6e.35.1744805359472;
+        Wed, 16 Apr 2025 05:09:19 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:1e17:765:833b:6e44])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282d00sm2699761b6e.4.2025.04.16.05.09.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 05:09:18 -0700 (PDT)
+Date: Wed, 16 Apr 2025 07:09:12 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Linux Kernel <linux-kernel@vger.kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: OpenIPMI Developers <openipmi-developer@lists.sourceforge.net>
+Subject: [PATCH] ipmi:si: Move SI type information into an info structure
+Message-ID: <Z_-d6Pj7ZFuG9gNA@mail.minyard.net>
+Reply-To: Z_6uzH9DsWIh-hIz@mail.minyard.net
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi all,
+Andy reported:
 
-I have discovered a regression introduced in commit a9b3c355c2e6
-("asm-generic: pgalloc: provide generic __pgd_{alloc,free}") [1,2] in
-kernel version 6.14. The problem occurs when the x86 kernel is
-configured with CONFIG_DEBUG_VM_PGFLAGS=y and is run as a PV Dom0 in Xen
-4.19.1. During the startup, the kernel panics with the error log below.
+Debian clang version 19.1.7 is not happy when compiled with
+`make W=1` (note, CONFIG_WERROR=y is the default):
 
-The commit changed PGD allocation path.  In the new implementation
-_pgd_alloc allocates memory with __pgd_alloc, which indirectly calls 
+ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type'
++from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+  268 |         io.si_type      = (enum
++si_type)device_get_match_data(&pdev->dev);
 
-  alloc_pages_noprof(gfp | __GFP_COMP, order);
+The IPMI SI type is an enum that was cast into a pointer that was
+then cast into an enum again.  That's not the greatest style, so
+instead create an info structure to hold the data and use that.
 
-This is in contrast to the old behavior, where __get_free_pages was
-used, which indirectly called
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Corey Minyard <corey@minyard.net>
+---
+ drivers/char/ipmi/ipmi_si.h          |  6 +++++-
+ drivers/char/ipmi/ipmi_si_intf.c     | 30 ++++++++++++++--------------
+ drivers/char/ipmi/ipmi_si_pci.c      |  8 ++++----
+ drivers/char/ipmi/ipmi_si_platform.c | 26 +++++++++++++-----------
+ 4 files changed, 38 insertions(+), 32 deletions(-)
 
-  alloc_pages_noprof(gfp_mask & ~__GFP_HIGHMEM, order);
-
-The key difference is that the new allocator can return a compound page.
-When xen_pin_page is later called on such a page, it call
-TestSetPagePinned function, which internally uses the PF_NO_COMPOUND
-macro. This macro enforces VM_BUG_ON_PGFLAGS if PageCompound is true,
-triggering the panic when CONFIG_DEBUG_VM_PGFLAGS is enabled.
-
-I am reporting this issue without a patch as I am not sure which part of
-the code should be adapted to resolve the regression.
-
-Let me know if I forgot to mention something important.
-
-Cheers,
-Petr
-
-[1] a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}")
-[2] https://lkml.kernel.org/r/20250103184415.2744423-6-kevin.brodsky@arm.com
-
-[    0.396244] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
-[    0.398164] software IO TLB: area num 2.
-[    0.449383] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=2, Nodes=1
-[    0.452043] page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888003450000 pfn:0x344e
-[    0.454715] head: order:1 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-[    0.456908] flags: 0x10000000000040(head|node=0|zone=1)
-[    0.458390] raw: 0010000000000040 ffffffff82850ed0 ffffffff82850ed0 0000000000000000
-[    0.460621] raw: ffff888003450000 ffff888003454000 00000001ffffffff 0000000000000000
-[    0.462807] head: 0010000000000040 ffffffff82850ed0 ffffffff82850ed0 0000000000000000
-[    0.464928] head: ffff888003450000 ffff888003454000 00000001ffffffff 0000000000000000
-[    0.467106] head: 0010000000000001 ffffea00000d1381 ffffffffffffffff 0000000000000000
-[    0.469263] head: 0000000000000002 0000000000000000 00000000ffffffff 0000000000000000
-[    0.471430] page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
-[    0.473338] ------------[ cut here ]------------
-[    0.474764] kernel BUG at include/linux/page-flags.h:527!
-[    0.476473] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
-[    0.478294] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.13.0-rc6-00187-ga9b3c355c2e6 #41
-[    0.480971] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-20240910_120124-localhost 04/01/2014
-[    0.484218] RIP: e030:xen_pin_page+0x5e/0x180
-[    0.485580] Code: f0 48 0f ba 2e 0a 73 24 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 a1 75 e1 00 48 c7 c6 68 70 58 82 48 89 df e8 c2 da 30 00 <0f> 0b 49 bd 00 00 00 00 00 16 00 00 31 ff 41 89 d4 48 b8 00 00 00
-[    0.491414] RSP: e02b:ffffffff82803d18 EFLAGS: 00010046
-[    0.493064] RAX: 000000000000003c RBX: ffffea00000d1380 RCX: 0000000000000000
-[    0.495294] RDX: 0000000000000000 RSI: ffffffff82803b68 RDI: 00000000ffffffff
-[    0.497513] RBP: ffffffff82803d48 R08: 00000000ffffdfff R09: ffffffff82925148
-[    0.499723] R10: ffffffff828751a0 R11: ffffffff82803a88 R12: ffff88800344e000
-[    0.501940] R13: ffff88808344e000 R14: ffff88800344e000 R15: 0000000000000100
-[    0.504180] FS:  0000000000000000(0000) GS:ffff88803aa00000(0000) knlGS:0000000000000000
-[    0.506699] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.508485] CR2: ffffc90000a00000 CR3: 0000000002842000 CR4: 0000000000000660
-[    0.510648] Call Trace:
-[    0.511420]  <TASK>
-[    0.512071]  ? show_regs.part.0+0x1d/0x30
-[    0.513315]  ? __die+0x52/0x90
-[    0.514282]  ? die+0x2a/0x50
-[    0.515189]  ? do_trap+0x10e/0x120
-[    0.516255]  ? do_error_trap+0x6e/0xa0
-[    0.517453]  ? xen_pin_page+0x5e/0x180
-[    0.518611]  ? exc_invalid_op+0x52/0x70
-[    0.519805]  ? xen_pin_page+0x5e/0x180
-[    0.520936]  ? asm_exc_invalid_op+0x1b/0x20
-[    0.522245]  ? xen_pin_page+0x5e/0x180
-[    0.523424]  ? xen_pin_page+0x5e/0x180
-[    0.524596]  __xen_pgd_walk+0x2a0/0x2d0
-[    0.525816]  ? __pfx_xen_pin_page+0x10/0x10
-[    0.527116]  __xen_pgd_pin+0x4d/0x180
-[    0.528288]  xen_enter_mmap+0x25/0x40
-[    0.529431]  poking_init+0x53/0x130
-[    0.530558]  start_kernel+0x4a7/0x6f0
-[    0.531726]  x86_64_start_reservations+0x29/0x30
-[    0.533197]  xen_start_kernel+0x6cf/0x6e0
-[    0.534466]  startup_xen+0x1f/0x20
-[    0.535497]  </TASK>
-[    0.536193] ---[ end trace 0000000000000000 ]---
-[    0.537676] RIP: e030:xen_pin_page+0x5e/0x180
-[    0.539049] Code: f0 48 0f ba 2e 0a 73 24 48 83 c4 08 5b 41 5c 41 5d 41 5e 41 5f 5d e9 a1 75 e1 00 48 c7 c6 68 70 58 82 48 89 df e8 c2 da 30 00 <0f> 0b 49 bd 00 00 00 00 00 16 00 00 31 ff 41 89 d4 48 b8 00 00 00
-[    0.544954] RSP: e02b:ffffffff82803d18 EFLAGS: 00010046
-[    0.546553] RAX: 000000000000003c RBX: ffffea00000d1380 RCX: 0000000000000000
-[    0.548821] RDX: 0000000000000000 RSI: ffffffff82803b68 RDI: 00000000ffffffff
-[    0.551022] RBP: ffffffff82803d48 R08: 00000000ffffdfff R09: ffffffff82925148
-[    0.553233] R10: ffffffff828751a0 R11: ffffffff82803a88 R12: ffff88800344e000
-[    0.555420] R13: ffff88808344e000 R14: ffff88800344e000 R15: 0000000000000100
-[    0.557365] FS:  0000000000000000(0000) GS:ffff88803aa00000(0000) knlGS:0000000000000000
-[    0.559528] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.561050] CR2: ffffc90000a00000 CR3: 0000000002842000 CR4: 0000000000000660
-[    0.562970] Kernel panic - not syncing: Attempted to kill the idle task!
-(XEN) Hardware Dom0 crashed: rebooting machine in 5 seconds.
-QEMU: Terminated
-
+diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
+index a7ead2a4c753..30b5e5f54172 100644
+--- a/drivers/char/ipmi/ipmi_si.h
++++ b/drivers/char/ipmi/ipmi_si.h
+@@ -23,6 +23,10 @@ enum si_type {
+ 	SI_TYPE_INVALID, SI_KCS, SI_SMIC, SI_BT, SI_TYPE_MAX
+ };
+ 
++struct ipmi_match_info {
++    enum si_type type;
++};
++
+ /* Array is defined in the ipmi_si_intf.c */
+ extern const char *const si_to_str[];
+ 
+@@ -64,7 +68,7 @@ struct si_sm_io {
+ 	void (*irq_cleanup)(struct si_sm_io *io);
+ 
+ 	u8 slave_addr;
+-	enum si_type si_type;
++	struct ipmi_match_info si_info;
+ 	struct device *dev;
+ };
+ 
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index 7dcf934d5902..21a2c2998a3d 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -692,7 +692,7 @@ static void handle_transaction_done(struct smi_info *smi_info)
+ 			break;
+ 		}
+ 		enables = current_global_enables(smi_info, 0, &irq_on);
+-		if (smi_info->io.si_type == SI_BT)
++		if (smi_info->io.si_info.type == SI_BT)
+ 			/* BT has its own interrupt enable bit. */
+ 			check_bt_irq(smi_info, irq_on);
+ 		if (enables != (msg[3] & GLOBAL_ENABLES_MASK)) {
+@@ -1119,7 +1119,7 @@ irqreturn_t ipmi_si_irq_handler(int irq, void *data)
+ 	struct smi_info *smi_info = data;
+ 	unsigned long   flags;
+ 
+-	if (smi_info->io.si_type == SI_BT)
++	if (smi_info->io.si_info.type == SI_BT)
+ 		/* We need to clear the IRQ flag for the BT interface. */
+ 		smi_info->io.outputb(&smi_info->io, IPMI_BT_INTMASK_REG,
+ 				     IPMI_BT_INTMASK_CLEAR_IRQ_BIT
+@@ -1164,7 +1164,7 @@ static int smi_start_processing(void            *send_info,
+ 	 * The BT interface is efficient enough to not need a thread,
+ 	 * and there is no need for a thread if we have interrupts.
+ 	 */
+-	else if ((new_smi->io.si_type != SI_BT) && (!new_smi->io.irq))
++	else if ((new_smi->io.si_info.type != SI_BT) && (!new_smi->io.irq))
+ 		enable = 1;
+ 
+ 	if (enable) {
+@@ -1235,7 +1235,7 @@ MODULE_PARM_DESC(kipmid_max_busy_us,
+ 
+ void ipmi_irq_finish_setup(struct si_sm_io *io)
+ {
+-	if (io->si_type == SI_BT)
++	if (io->si_info.type == SI_BT)
+ 		/* Enable the interrupt in the BT interface. */
+ 		io->outputb(io, IPMI_BT_INTMASK_REG,
+ 			    IPMI_BT_INTMASK_ENABLE_IRQ_BIT);
+@@ -1243,7 +1243,7 @@ void ipmi_irq_finish_setup(struct si_sm_io *io)
+ 
+ void ipmi_irq_start_cleanup(struct si_sm_io *io)
+ {
+-	if (io->si_type == SI_BT)
++	if (io->si_info.type == SI_BT)
+ 		/* Disable the interrupt in the BT interface. */
+ 		io->outputb(io, IPMI_BT_INTMASK_REG, 0);
+ }
+@@ -1614,7 +1614,7 @@ static ssize_t type_show(struct device *dev,
+ {
+ 	struct smi_info *smi_info = dev_get_drvdata(dev);
+ 
+-	return sysfs_emit(buf, "%s\n", si_to_str[smi_info->io.si_type]);
++	return sysfs_emit(buf, "%s\n", si_to_str[smi_info->io.si_info.type]);
+ }
+ static DEVICE_ATTR_RO(type);
+ 
+@@ -1649,7 +1649,7 @@ static ssize_t params_show(struct device *dev,
+ 
+ 	return sysfs_emit(buf,
+ 			"%s,%s,0x%lx,rsp=%d,rsi=%d,rsh=%d,irq=%d,ipmb=%d\n",
+-			si_to_str[smi_info->io.si_type],
++			si_to_str[smi_info->io.si_info.type],
+ 			addr_space_to_str[smi_info->io.addr_space],
+ 			smi_info->io.addr_data,
+ 			smi_info->io.regspacing,
+@@ -1803,7 +1803,7 @@ setup_dell_poweredge_bt_xaction_handler(struct smi_info *smi_info)
+ {
+ 	struct ipmi_device_id *id = &smi_info->device_id;
+ 	if (id->manufacturer_id == DELL_IANA_MFR_ID &&
+-	    smi_info->io.si_type == SI_BT)
++	    smi_info->io.si_info.type == SI_BT)
+ 		register_xaction_notifier(&dell_poweredge_bt_xaction_notifier);
+ }
+ 
+@@ -1907,13 +1907,13 @@ int ipmi_si_add_smi(struct si_sm_io *io)
+ 			/* We prefer ACPI over SMBIOS. */
+ 			dev_info(dup->io.dev,
+ 				 "Removing SMBIOS-specified %s state machine in favor of ACPI\n",
+-				 si_to_str[new_smi->io.si_type]);
++				 si_to_str[new_smi->io.si_info.type]);
+ 			cleanup_one_si(dup);
+ 		} else {
+ 			dev_info(new_smi->io.dev,
+ 				 "%s-specified %s state machine: duplicate\n",
+ 				 ipmi_addr_src_to_str(new_smi->io.addr_source),
+-				 si_to_str[new_smi->io.si_type]);
++				 si_to_str[new_smi->io.si_info.type]);
+ 			rv = -EBUSY;
+ 			kfree(new_smi);
+ 			goto out_err;
+@@ -1922,7 +1922,7 @@ int ipmi_si_add_smi(struct si_sm_io *io)
+ 
+ 	pr_info("Adding %s-specified %s state machine\n",
+ 		ipmi_addr_src_to_str(new_smi->io.addr_source),
+-		si_to_str[new_smi->io.si_type]);
++		si_to_str[new_smi->io.si_info.type]);
+ 
+ 	list_add_tail(&new_smi->link, &smi_infos);
+ 
+@@ -1945,12 +1945,12 @@ static int try_smi_init(struct smi_info *new_smi)
+ 
+ 	pr_info("Trying %s-specified %s state machine at %s address 0x%lx, slave address 0x%x, irq %d\n",
+ 		ipmi_addr_src_to_str(new_smi->io.addr_source),
+-		si_to_str[new_smi->io.si_type],
++		si_to_str[new_smi->io.si_info.type],
+ 		addr_space_to_str[new_smi->io.addr_space],
+ 		new_smi->io.addr_data,
+ 		new_smi->io.slave_addr, new_smi->io.irq);
+ 
+-	switch (new_smi->io.si_type) {
++	switch (new_smi->io.si_info.type) {
+ 	case SI_KCS:
+ 		new_smi->handlers = &kcs_smi_handlers;
+ 		break;
+@@ -2073,7 +2073,7 @@ static int try_smi_init(struct smi_info *new_smi)
+ 	smi_num++;
+ 
+ 	dev_info(new_smi->io.dev, "IPMI %s interface initialized\n",
+-		 si_to_str[new_smi->io.si_type]);
++		 si_to_str[new_smi->io.si_info.type]);
+ 
+ 	WARN_ON(new_smi->io.dev->init_name != NULL);
+ 
+@@ -2309,7 +2309,7 @@ struct device *ipmi_si_remove_by_data(int addr_space, enum si_type si_type,
+ 	list_for_each_entry_safe(e, tmp_e, &smi_infos, link) {
+ 		if (e->io.addr_space != addr_space)
+ 			continue;
+-		if (e->io.si_type != si_type)
++		if (e->io.si_info.type != si_type)
+ 			continue;
+ 		if (e->io.addr_data == addr) {
+ 			dev = get_device(e->io.dev);
+diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
+index 8c0ea637aba0..1f4bdb3bbdd4 100644
+--- a/drivers/char/ipmi/ipmi_si_pci.c
++++ b/drivers/char/ipmi/ipmi_si_pci.c
+@@ -23,7 +23,7 @@ MODULE_PARM_DESC(trypci,
+ 
+ static int ipmi_pci_probe_regspacing(struct si_sm_io *io)
+ {
+-	if (io->si_type == SI_KCS) {
++	if (io->si_info.type == SI_KCS) {
+ 		unsigned char	status;
+ 		int		regspacing;
+ 
+@@ -74,15 +74,15 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
+ 
+ 	switch (pdev->class) {
+ 	case PCI_CLASS_SERIAL_IPMI_SMIC:
+-		io.si_type = SI_SMIC;
++		io.si_info.type = SI_SMIC;
+ 		break;
+ 
+ 	case PCI_CLASS_SERIAL_IPMI_KCS:
+-		io.si_type = SI_KCS;
++		io.si_info.type = SI_KCS;
+ 		break;
+ 
+ 	case PCI_CLASS_SERIAL_IPMI_BT:
+-		io.si_type = SI_BT;
++		io.si_info.type = SI_BT;
+ 		break;
+ 
+ 	default:
+diff --git a/drivers/char/ipmi/ipmi_si_platform.c b/drivers/char/ipmi/ipmi_si_platform.c
+index 550cabd43ae6..53066713f8e4 100644
+--- a/drivers/char/ipmi/ipmi_si_platform.c
++++ b/drivers/char/ipmi/ipmi_si_platform.c
+@@ -165,7 +165,7 @@ static int platform_ipmi_probe(struct platform_device *pdev)
+ 	case SI_KCS:
+ 	case SI_SMIC:
+ 	case SI_BT:
+-		io.si_type = type;
++		io.si_info.type = type;
+ 		break;
+ 	case SI_TYPE_INVALID: /* User disabled this in hardcode. */
+ 		return -ENODEV;
+@@ -212,13 +212,14 @@ static int platform_ipmi_probe(struct platform_device *pdev)
+ }
+ 
+ #ifdef CONFIG_OF
++static struct ipmi_match_info kcs_info = { .type = SI_KCS };
++static struct ipmi_match_info smic_info = { .type = SI_SMIC };
++static struct ipmi_match_info bt_info = { .type = SI_BT };
++
+ static const struct of_device_id of_ipmi_match[] = {
+-	{ .type = "ipmi", .compatible = "ipmi-kcs",
+-	  .data = (void *)(unsigned long) SI_KCS },
+-	{ .type = "ipmi", .compatible = "ipmi-smic",
+-	  .data = (void *)(unsigned long) SI_SMIC },
+-	{ .type = "ipmi", .compatible = "ipmi-bt",
+-	  .data = (void *)(unsigned long) SI_BT },
++	{ .type = "ipmi", .compatible = "ipmi-kcs", .data = &kcs_info },
++	{ .type = "ipmi", .compatible = "ipmi-smic", .data = &smic_info },
++	{ .type = "ipmi", .compatible = "ipmi-bt", .data = &bt_info },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, of_ipmi_match);
+@@ -265,7 +266,8 @@ static int of_ipmi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	memset(&io, 0, sizeof(io));
+-	io.si_type	= (enum si_type)device_get_match_data(&pdev->dev);
++	io.si_info	= *((struct ipmi_match_info *)
++			    device_get_match_data(&pdev->dev));
+ 	io.addr_source	= SI_DEVICETREE;
+ 	io.irq_setup	= ipmi_std_irq_setup;
+ 
+@@ -296,7 +298,7 @@ static int find_slave_address(struct si_sm_io *io, int slave_addr)
+ {
+ #ifdef CONFIG_IPMI_DMI_DECODE
+ 	if (!slave_addr)
+-		slave_addr = ipmi_dmi_get_slave_addr(io->si_type,
++		slave_addr = ipmi_dmi_get_slave_addr(io->si_info.type,
+ 						     io->addr_space,
+ 						     io->addr_data);
+ #endif
+@@ -335,13 +337,13 @@ static int acpi_ipmi_probe(struct platform_device *pdev)
+ 
+ 	switch (tmp) {
+ 	case 1:
+-		io.si_type = SI_KCS;
++		io.si_info.type = SI_KCS;
+ 		break;
+ 	case 2:
+-		io.si_type = SI_SMIC;
++		io.si_info.type = SI_SMIC;
+ 		break;
+ 	case 3:
+-		io.si_type = SI_BT;
++		io.si_info.type = SI_BT;
+ 		break;
+ 	case 4: /* SSIF, just ignore */
+ 		return -ENODEV;
+-- 
+2.43.0
