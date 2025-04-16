@@ -1,142 +1,251 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1CB11CA0
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2524D184E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808246; cv=none; b=HdIXzzalBRrRMHvwspnRUhNe0hVE3MISuqKjJJDakx+4ANlTeh0Dy+Pq1FJDwbpClX/TvhuZCnAI1qKmOzfSVMRCxwWaf2PvQcfG9KbHVu/L5CmluTMs5+5ITiJUKEwS1jkvzA0HpjyxvS8oXnHx6kQBud9MU7JO795YIo4xSww=
+	t=1744808275; cv=none; b=mJdC0+PeE7/T7fqb9OvnM+a9JcsviyznHuV8c8+b1L+4SDSfvrJB1Oh8aargtnp3JtRKLiaed3I3cKaqYWT2WLzOXjmFJx38ezpDoNVfIotMR20Kiv5AwsURYA4BuPp+2iApCW9sxuaYvY3YBN7cCtfiRhPMWDr7E5zoC/w11s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808246; c=relaxed/simple;
-	bh=hMbhS79Mfn3XqB2vVxZ9w/HPqdOZ3hTT8ZETPJC/w5k=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TvjFJl16D/1SmEHc8oIQClJl1zaRag+abT8Unu3C7RZtuEd3/z7AxxYqXYR9caHF4drZ0tDIDOyatkfbkkeBWXCSQYpbHKvr3o+6xyPQM9fJcbhKvKulYtv4xLbbxGAZMDIrIa2dDwKiCy7RQYDCsg8s6Nj98RNfHMf5VvxrhpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d586b968cfso89370485ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:57:24 -0700 (PDT)
+	s=arc-20240116; t=1744808275; c=relaxed/simple;
+	bh=5cCGj03zxFug0iIEMHG2sx3yR7VAi0V2fLRSZQmpBj4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SlO4J3h06PhvilHjevURwxrb4K/rKmvRFuwZlqSmaAdwKYPARfcxA7p1Zjk7/lTU3IqUlb39zB6/94S9wYj1riDUMXj9tXXKo+iIIQsNb5HZu3To3x1rjzz8B+Gp+dY2E8IarFjJBpRt/Ub0a+fp9UcBer1qRFSDlZL35W5BfTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CtiEEoap; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CtiEEoap"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913d129c1aso520481f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:57:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744808271; x=1745413071; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=5cCGj03zxFug0iIEMHG2sx3yR7VAi0V2fLRSZQmpBj4=;
+        b=CtiEEoapsiGxB5os05JR56OniWMiUL5Qz3966kAagF1J1Jepzm5kWwd2Z3rpBZlO6g
+         QtvpYjiRD0SAeU26iIzPCeXedpct1xf9h3zFY5S1kijVVW71LLHOi9ttkopa8qoSgsFw
+         oL+iLuATIGhWBgxfa77dpWzcuf7hdybb2atDMWAlljuKfCnClHzc5R76RyM61R8BaRDo
+         Y8iZWi8UZO8udvxYgaDDNEwsduVurp65UWV9GxEFZ8i2KCjIz8vvVRUK6/TKNjROmnAR
+         mlJcufCqTiD8zM2rOcgN54DnVWCvjITB6kquk22vre12CkKE3DoNQtT+OQVO8QXTjeac
+         G15Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744808243; x=1745413043;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+        d=1e100.net; s=20230601; t=1744808271; x=1745413071;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YNAm+gwGmliDc62AX9Wt9ewTcdS/eTMF5peaZWNPeKU=;
-        b=ZOaa+dn7xHbyossJPMlEiqPzAZGeXjgxtry0t7NyICHYwkqHyAOcVG1EIZFRXO7+nQ
-         2jbl6lliaLptWWxNre+Cl31R5uTAWzqyXBqm8cotuCLHMBL+xLPzSnN4nhTPu+E1faN9
-         kFxComGyutJBlbhiiZ0hQGAMvv9tDKdnsuRuNTnPXZQJIWhHvx9vUONTCHihFAgldCXy
-         YsXgo+sZT9mqoX5SuJMTsdpdm/7VVpmWMzvmqdajBpacYS2M9eJCnRuQyc8TEoO0lr+H
-         RfLMN0iM09V1ZmZ/FYsp13RkvxokHx9rXW4SppNx/khLzCj0/0qPSkAoww7UwZ4SzDSB
-         6CxA==
-X-Gm-Message-State: AOJu0Yw1ePGb9rvW97r7QfzPTxF9JiXlxJ0/CBWcz7+O28w3kWx6Sf13
-	z36NMiDcM7c3x4zZ+Z4pqhBvmAsvMgm7QqtoXVG28H49MBKEmaczRrZzCNJ83mweXRXn8erGI3O
-	S9DjMotE1CruzTYUSJ2r1K0nquTzKxV0z5ubX07r3RDUiz0pZR6n+9fpCgg==
-X-Google-Smtp-Source: AGHT+IEY2/JxH5fF9jbc8XKb8qFntQdM+RGVVdkkk+xhSLw6bFB9Mo2uLJDTvXw8tFH9bxn5OkJODujswRD5/C6zaaoaTVLbx77z
+        bh=5cCGj03zxFug0iIEMHG2sx3yR7VAi0V2fLRSZQmpBj4=;
+        b=sUaRnV3ic7dlUGjbyhgcW2jspFyYmPuFUXZrQ80w3BB8jCztGePKrMKmbNAoCMaA+y
+         OLXEGX1ipCviZDtXUlZAXGflv57Bx0WYiOG8AEwIbJuaP1gAiy1JlSA+Eyi2/yTWJl1z
+         BLL2OSTr9rRrQbegw+pvjqH5kxy8MxTHI5d0L39M4lXpT98DXBtYCjIXwaoUn8PNw0oO
+         iRX9NUPZZDTYOWhEzf0RyGK3nj3xlDbV21Odl5Ztv1JtzlpItx+ti99JOXdkA+PtKiQ6
+         MuqhVipJSdZaMl8EaZTm5q4AzYopUD7zvYxCFMbUMTc/DHyz/3XqOVNJ842AZiFw9Mou
+         249A==
+X-Forwarded-Encrypted: i=1; AJvYcCWWBbhq6TE+4qnnTL9KG771Dvw97IkOS0aGSfX3+itbl/4ZJRqNnQCoyQodvYbvlbV50bg1VPf282UiN8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR8jygV/pN3rekoyfNKJu76ai9dVxsOiMdSzcMYe3gKmNpKc36
+	fb8zy6U4h2gS4iQ/2pRitOLW7IISgRM2+wTjzoxE3ZcraXE+ruv9XLVH44Z3zEU=
+X-Gm-Gg: ASbGncs1QsK26uxrazH9TCggdpeSZMKXhkaFjYSJJ86vhpE1vSYThsIoMin/ZmIRPkF
+	FOXHklKRAheuB/M/aokZc3F/Of5otHtTNUYkiTkmcyAG27M/YklHItMiaP7Kzmp/6qnMEIp1q+f
+	k4VfZHW2yUY2jOVR5JSRiE4hcGov+xELIlT3qwTeauWCzng1DWtyQvl7sp+M0bfQAy2+ownLZzi
+	0YGsNJYfhzbydkyptgmlCwUcA733FAITRklx7MPRqdo425sbzF68OWEytpSMkPT9uJpqEKGUnNY
+	/yu3GaTZ6LWUd1b2M1ab549auju/vqx70DAIq4pPjk2gWtT12t5ozfMlWrPVz9gfAQm1m/Iq/0I
+	4Mb5evXf84uCVEQ2UPAw08XL9Fe+Ttvi21A1RBAAjxGACNAxhwdg35bdhsSq+uaOHmg==
+X-Google-Smtp-Source: AGHT+IF47B4KfVM/cwCTnnUM3ht6L09Y6U+lo0E3E7g2X6pTzedt+j1hhkAgz5MB9+v+BnBH/qFZKA==
+X-Received: by 2002:a05:6000:248a:b0:39e:cbca:8a72 with SMTP id ffacd0b85a97d-39ee5e9da0bmr1316967f8f.12.1744808271277;
+        Wed, 16 Apr 2025 05:57:51 -0700 (PDT)
+Received: from ?IPV6:2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b? (p200300e5873d1a008e99ce06aa4a2e7b.dip0.t-ipconnect.de. [2003:e5:873d:1a00:8e99:ce06:aa4a:2e7b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c8216sm20881075e9.7.2025.04.16.05.57.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 05:57:50 -0700 (PDT)
+Message-ID: <4347cd96-52c8-4bfc-b383-6fea1554fd4a@suse.com>
+Date: Wed, 16 Apr 2025 14:57:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:148b:b0:3d5:df21:8481 with SMTP id
- e9e14a558f8ab-3d81598394fmr18668225ab.0.1744808243706; Wed, 16 Apr 2025
- 05:57:23 -0700 (PDT)
-Date: Wed, 16 Apr 2025 05:57:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ffa933.050a0220.243d89.0004.GAE@google.com>
-Subject: [syzbot] [media?] WARNING: refcount bug in dvb_device_open
-From: syzbot <syzbot+0aea3ca127fe06c384f7@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Regression from a9b3c355c2e6 ("asm-generic: pgalloc: provide
+ generic __pgd_{alloc,free}") with CONFIG_DEBUG_VM_PGFLAGS=y and Xen
+To: =?UTF-8?Q?Petr_Van=C4=9Bk?= <arkamar@atlas.cz>,
+ linux-kernel@vger.kernel.org
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org, linux-arch@vger.kernel.org
+References: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------FkQJsDW1mYmCm5DnOnkQkf9p"
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------FkQJsDW1mYmCm5DnOnkQkf9p
+Content-Type: multipart/mixed; boundary="------------3Dk2044X09sxTqsUX7Bzjp0o";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: =?UTF-8?Q?Petr_Van=C4=9Bk?= <arkamar@atlas.cz>,
+ linux-kernel@vger.kernel.org
+Cc: Kevin Brodsky <kevin.brodsky@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, xen-devel@lists.xenproject.org, linux-arch@vger.kernel.org
+Message-ID: <4347cd96-52c8-4bfc-b383-6fea1554fd4a@suse.com>
+Subject: Re: Regression from a9b3c355c2e6 ("asm-generic: pgalloc: provide
+ generic __pgd_{alloc,free}") with CONFIG_DEBUG_VM_PGFLAGS=y and Xen
+References: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
+In-Reply-To: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
 
-syzbot found the following issue on:
+--------------3Dk2044X09sxTqsUX7Bzjp0o
+Content-Type: multipart/mixed; boundary="------------Nyzw2RMk0HI00TkZe46BthW0"
 
-HEAD commit:    e618ee89561b Merge tag 'spi-fix-v6.15-rc1' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=109b8a3f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a4e108575159039
-dashboard link: https://syzkaller.appspot.com/bug?extid=0aea3ca127fe06c384f7
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+--------------Nyzw2RMk0HI00TkZe46BthW0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Unfortunately, I don't have any reproducer for this issue yet.
+T24gMTYuMDQuMjUgMTQ6MDcsIFBldHIgVmFuxJtrIHdyb3RlOg0KPiBIaSBhbGwsDQo+IA0K
+PiBJIGhhdmUgZGlzY292ZXJlZCBhIHJlZ3Jlc3Npb24gaW50cm9kdWNlZCBpbiBjb21taXQg
+YTliM2MzNTVjMmU2DQo+ICgiYXNtLWdlbmVyaWM6IHBnYWxsb2M6IHByb3ZpZGUgZ2VuZXJp
+YyBfX3BnZF97YWxsb2MsZnJlZX0iKSBbMSwyXSBpbg0KPiBrZXJuZWwgdmVyc2lvbiA2LjE0
+LiBUaGUgcHJvYmxlbSBvY2N1cnMgd2hlbiB0aGUgeDg2IGtlcm5lbCBpcw0KPiBjb25maWd1
+cmVkIHdpdGggQ09ORklHX0RFQlVHX1ZNX1BHRkxBR1M9eSBhbmQgaXMgcnVuIGFzIGEgUFYg
+RG9tMCBpbiBYZW4NCj4gNC4xOS4xLiBEdXJpbmcgdGhlIHN0YXJ0dXAsIHRoZSBrZXJuZWwg
+cGFuaWNzIHdpdGggdGhlIGVycm9yIGxvZyBiZWxvdy4NCj4gDQo+IFRoZSBjb21taXQgY2hh
+bmdlZCBQR0QgYWxsb2NhdGlvbiBwYXRoLiAgSW4gdGhlIG5ldyBpbXBsZW1lbnRhdGlvbg0K
+PiBfcGdkX2FsbG9jIGFsbG9jYXRlcyBtZW1vcnkgd2l0aCBfX3BnZF9hbGxvYywgd2hpY2gg
+aW5kaXJlY3RseSBjYWxscw0KPiANCj4gICAgYWxsb2NfcGFnZXNfbm9wcm9mKGdmcCB8IF9f
+R0ZQX0NPTVAsIG9yZGVyKTsNCj4gDQo+IFRoaXMgaXMgaW4gY29udHJhc3QgdG8gdGhlIG9s
+ZCBiZWhhdmlvciwgd2hlcmUgX19nZXRfZnJlZV9wYWdlcyB3YXMNCj4gdXNlZCwgd2hpY2gg
+aW5kaXJlY3RseSBjYWxsZWQNCj4gDQo+ICAgIGFsbG9jX3BhZ2VzX25vcHJvZihnZnBfbWFz
+ayAmIH5fX0dGUF9ISUdITUVNLCBvcmRlcik7DQo+IA0KPiBUaGUga2V5IGRpZmZlcmVuY2Ug
+aXMgdGhhdCB0aGUgbmV3IGFsbG9jYXRvciBjYW4gcmV0dXJuIGEgY29tcG91bmQgcGFnZS4N
+Cj4gV2hlbiB4ZW5fcGluX3BhZ2UgaXMgbGF0ZXIgY2FsbGVkIG9uIHN1Y2ggYSBwYWdlLCBp
+dCBjYWxsDQo+IFRlc3RTZXRQYWdlUGlubmVkIGZ1bmN0aW9uLCB3aGljaCBpbnRlcm5hbGx5
+IHVzZXMgdGhlIFBGX05PX0NPTVBPVU5EDQo+IG1hY3JvLiBUaGlzIG1hY3JvIGVuZm9yY2Vz
+IFZNX0JVR19PTl9QR0ZMQUdTIGlmIFBhZ2VDb21wb3VuZCBpcyB0cnVlLA0KPiB0cmlnZ2Vy
+aW5nIHRoZSBwYW5pYyB3aGVuIENPTkZJR19ERUJVR19WTV9QR0ZMQUdTIGlzIGVuYWJsZWQu
+DQo+IA0KPiBJIGFtIHJlcG9ydGluZyB0aGlzIGlzc3VlIHdpdGhvdXQgYSBwYXRjaCBhcyBJ
+IGFtIG5vdCBzdXJlIHdoaWNoIHBhcnQgb2YNCj4gdGhlIGNvZGUgc2hvdWxkIGJlIGFkYXB0
+ZWQgdG8gcmVzb2x2ZSB0aGUgcmVncmVzc2lvbi4NCg0KVGhhbmtzIGZvciB0aGUgcmVwb3J0
+IEFORCB0aGUgYW5hbHlzaXMuDQoNCkkgYmVsaWV2ZSBQTURfQUxMT0NBVElPTl9PUkRFUiBu
+ZWVkcyB0byBiZSBjaGFuZ2VkOiBpbiBjYXNlIHRoZSBzeXN0ZW0gaXMNCnJ1bm5pbmcgYXMg
+YSBYZW4gUFYgZG9tYWluIChvciB3aXRoIFBUSSBkaXNhYmxlZCksIFBNRF9BTExPQ0FUSU9O
+X09SREVSDQpzaG91bGQgYmUgMC4NCg0KU28gSSdkIHN1Z2dlc3QgdG8gc3dpdGNoIFBHRF9B
+TExPQ0FUSU9OX09SREVSIHRvIGJlIGRlZmluZWQgZWl0aGVyIGFzIDANCihpbiBjYXNlIFBU
+SSBpcyBub3QgY29uZmlndXJlZCksIG9yIHBnZF9hbGxvY2F0aW9uX29yZGVyIChhIG5ldyBn
+bG9iYWwNCnZhcmlhYmxlIGhhdmluZyB0aGUgdmFsdWUgMCBvciAxLCBkZXBlbmRpbmcgb24g
+UFRJIGFjdGl2ZSBvciBub3QpLg0KDQpJJ2xsIHNlbmQgYSBwYXRjaC4NCg0KDQpKdWVyZ2Vu
+DQo=
+--------------Nyzw2RMk0HI00TkZe46BthW0
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6e9ff64c0a63/disk-e618ee89.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5a0301cd26c2/vmlinux-e618ee89.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d51cf55acedf/bzImage-e618ee89.xz
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0aea3ca127fe06c384f7@syzkaller.appspotmail.com
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-------------[ cut here ]------------
-refcount_t: saturated; leaking memory.
-WARNING: CPU: 1 PID: 9920 at lib/refcount.c:22 refcount_warn_saturate+0xd4/0x210 lib/refcount.c:22
-Modules linked in:
-CPU: 1 UID: 0 PID: 9920 Comm: syz.5.1429 Not tainted 6.15.0-rc1-syzkaller-00288-ge618ee89561b #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:refcount_warn_saturate+0xd4/0x210 lib/refcount.c:22
-Code: 7d a1 0b 31 ff 89 de e8 4a e5 ed fc 84 db 75 dc e8 61 ea ed fc c6 05 2f 7d a1 0b 01 90 48 c7 c7 40 fa f3 8b e8 ed 7b ad fc 90 <0f> 0b 90 90 eb bc e8 41 ea ed fc 0f b6 1d 10 7d a1 0b 31 ff 89 de
-RSP: 0018:ffffc90002ee7908 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffc9000cd2b000
-RDX: 0000000000080000 RSI: ffffffff817ad005 RDI: 0000000000000001
-RBP: ffff88802a664210 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff888033636a80
-R13: ffffffff9afc7fa0 R14: ffff88802a2f28b0 R15: ffff88802a664210
-FS:  00007f9f6790e6c0(0000) GS:ffff888124ab9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32715ff8 CR3: 0000000039f06000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- __refcount_add include/linux/refcount.h:291 [inline]
- __refcount_inc include/linux/refcount.h:366 [inline]
- refcount_inc include/linux/refcount.h:383 [inline]
- kref_get include/linux/kref.h:45 [inline]
- dvb_device_get drivers/media/dvb-core/dvbdev.c:624 [inline]
- dvb_device_open+0x2ed/0x3b0 drivers/media/dvb-core/dvbdev.c:106
- chrdev_open+0x231/0x6a0 fs/char_dev.c:414
- do_dentry_open+0x741/0x1c10 fs/open.c:956
- vfs_open+0x82/0x3f0 fs/open.c:1086
- do_open fs/namei.c:3845 [inline]
- path_openat+0x1e5e/0x2d40 fs/namei.c:4004
- do_filp_open+0x20b/0x470 fs/namei.c:4031
- do_sys_openat2+0x11b/0x1d0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x174/0x210 fs/open.c:1455
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f9f66b8d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f9f6790e038 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
-RAX: ffffffffffffffda RBX: 00007f9f66da5fa0 RCX: 00007f9f66b8d169
-RDX: 0000000000000001 RSI: 0000200000000000 RDI: ffffffffffffff9c
-RBP: 00007f9f66c0e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f9f66da5fa0 R15: 00007ffdfcf6c128
- </TASK>
+--------------Nyzw2RMk0HI00TkZe46BthW0--
 
+--------------3Dk2044X09sxTqsUX7Bzjp0o--
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--------------FkQJsDW1mYmCm5DnOnkQkf9p
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-----BEGIN PGP SIGNATURE-----
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmf/qU0FAwAAAAAACgkQsN6d1ii/Ey8/
+ZAf9HWoQ82HR5WwM41WwT44QBbTpPb6JDwcmr4yI1UsNkg5aSIoXkjDegTSHCuL0hiAeJcCBtP5J
+RZjTIKgQb+Yi4ADWgPpLXsfIh55Vwp3axwOuciCPIF+X+Ndn6NhLoIfNxsLKFGqP0RpEbynPgIZd
+/yBAH18bSesW9PvIh3lFH+4aWKnk/6c5LwqFuzYP23bxSsjO/5msvJSCcwm3j6VCTByhfKXJHmuJ
+AP4SMUXmjmQcM3cSJ3r5nWT+AyznGl1l0bwtuEobuJRLCy6pwUpBYSUkelP+VUdYb8X9PiHcXCjM
+1S5Wix4HXMXXsXhAvEzFjvtTjzJLGKvjIgwud23oew==
+=R+Sn
+-----END PGP SIGNATURE-----
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+--------------FkQJsDW1mYmCm5DnOnkQkf9p--
