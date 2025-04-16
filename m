@@ -1,115 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047F189902;
-	Wed, 16 Apr 2025 15:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60376189902;
+	Wed, 16 Apr 2025 15:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817687; cv=none; b=c2qaB3TZI/fwe4Iam+87gJlPkjSu4A/MM1QQO/6fR6q9IDyFj/ax9UGv0MmGHUJ2ETVFKlnDvt4ZWk+3280d+k/aZZ6dgvjlRqMENUuNuitgHF7AM0nmuWtwUkL9SKkBfynkW1Hm6UTY6J9xC2wDqYz4FMo5Odb0PrR8RJ5Wf/E=
+	t=1744817757; cv=none; b=Th99U2ezDpkov50QUjRBo/TapyCC/oi+nk+iuoa4B4BjKhhnHQSgMMEvAm0il4EAGnf+fiGed/Ds7WuOyzhr0CTU2a0EUyIJRj8P5cLIiTzuXTgs1pnzBXoxWKg7+dKe29AVjGHGege1/qSmO8+ZFWWepHRlnobXvSO8F/8otVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817687; c=relaxed/simple;
-	bh=zaxzbwyWlfatE3+ds3WIVorARk4YttMEnVcT+1WJOyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SUVf5zKqTXVBcuscHCcgMM86iW5xRetOaqwSsmyztZicwx2li7fTX9js+gJqrXPl3RdjyykVWnDd/DLlmiCwh+tFNjZktXndDpGJ/CD1w5vi9IsfmI68WRNeK00/l/G3CRdPGisGncJS+IpD8YpzzYDLdkpUUlp3TOlSJbvJRwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gBQ2hyXH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744817757; c=relaxed/simple;
+	bh=JuEVssO1nsnSG71fT+jjxB8w61QctSPWv+X+S7oa01A=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=VHifu5FZpZyGqNfc+QRDMXBpFiBA/rYEVfE3WJsvOpO72hWaDYWYBCM1zfF2+ybu7IXiK5Xpp2ZUwQi9pjAUvQBC14Xw7yh8tMZyQArNkKdzZrXjBA6awvWJeIrTFJq20u9hS7Lv0GEx7FtYQbYsXRYRkVcTCsS9sOmtDBkohg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jtGNqh76; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBQ2hyXH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744817687; x=1776353687;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zaxzbwyWlfatE3+ds3WIVorARk4YttMEnVcT+1WJOyE=;
-  b=gBQ2hyXHNUrmjUHI9VRANjX23M0DP7iQ8KdhHIfqAXfsUNdleYsXvPNI
-   ScupKZGCGBUX02Za0C2wLVpLQ1d3weVTOGsECMA0SRDmAqdvr4maMxCcT
-   qadetQbbQ+9UkXy5GRQoLRqUG6d1VqsANbJcA7206CyQB5NC4BwxTtyGE
-   WHfFldzKDwHVLsCIy+mr9xFk/XPg75NX1ls9qwRBvGiUHW9xWDBG0a0o9
-   FEHvplYBx/C7f/WkTGJM/yz6Td8SkIjbDwQNdO+58MkSmtr45vy0AFw2T
-   ODSt3jkADmGdJ+V0mFrHBdhV2/tdq2xUPzO1z4sxJ23aBaY3gY5Nm+VrT
-   A==;
-X-CSE-ConnectionGUID: Sf0gqoTaQ66XTKAUaRg6ZQ==
-X-CSE-MsgGUID: HGnF49keQPSjmpK120nkTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46500544"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46500544"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:34:46 -0700
-X-CSE-ConnectionGUID: DP2yLZsJQEGCNjUl65uggQ==
-X-CSE-MsgGUID: NfM7S+4qRD6jNOXjquFnzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="167688528"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:34:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u54mZ-0000000Ctqa-1NKX;
-	Wed, 16 Apr 2025 18:34:35 +0300
-Date: Wed, 16 Apr 2025 18:34:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Jaya Kumar <jayakumar.alsa@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	David Rhodes <drhodes@opensource.cirrus.com>,
-	liujing <liujing@cmss.chinamobile.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Andres Urian Florez <andres.emb.sys@gmail.com>,
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jtGNqh76"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 7C07E2052505; Wed, 16 Apr 2025 08:35:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7C07E2052505
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744817750;
+	bh=lPCxQ8v6UmwaVy+HeTlmUTdMwGvPgruYycjzZSiroFo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jtGNqh76jbdSDUmZ8slcNzOY2TbqEd6MhszwTr0tAOYaj+3Sq6sPO39UGkKUTEQ9h
+	 uAT+pPIRxFbBttcytPj5ZHNxE1tmmtaKDAMtdGTvYXlYNfzgjSRPpqveWV750U+RPE
+	 /PutSWbwwQQ5ZJvGqs/ONqYnXZKO+8ecih6ZLZ2g=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: linux-hyperv@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Long Li <longli@microsoft.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	sound-open-firmware@alsa-project.org
-Subject: Re: [PATCH 00/31] sound: Phase out hybrid PCI devres API
-Message-ID: <Z__OC5NDkQYIHNmL@smile.fi.intel.com>
-References: <20250416131241.107903-1-phasta@kernel.org>
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	Paul Rosswurm <paulros@microsoft.com>
+Cc: Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH 0/2] Allow dyn pci vector allocation of MANA
+Date: Wed, 16 Apr 2025 08:35:47 -0700
+Message-Id: <1744817747-2920-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416131241.107903-1-phasta@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 03:12:10PM +0200, Philipp Stanner wrote:
-> Hi,
-> 
-> a year ago we spent quite some work trying to get PCI into better shape.
-> Some pci_ functions can be sometimes managed with devres, which is
-> obviously bad. We want to provide an obvious API, where pci_ functions
-> are never, and pcim_ functions are always managed.
-> 
-> Thus, everyone enabling his device with pcim_enable_device() must be
-> ported to pcim_ functions. Porting all users will later enable us to
-> significantly simplify parts of the PCI subsystem. See here [1] for
-> details.
-> 
-> This patch series does that for sound.
+In this patchset we want to enable the MANA driver to be able to
+allocate MSI vectors in PCI dynamically
 
-AFAIK the ASoC and ALSA maintained by different people and perhaps you would
-need to split, but I'm not the guy in charge, so wait for them to tell you
-their preferences.
+The first patch targets the changes required for enabling the support
+of dyn vector allocation in pci-hyperv PCI controller. It also consists
+of changes in the PCI tree to allow clean support for dynamic allocation
+of IRQ vectors for PCI controllers.
+
+The second patch has the changes in MANA driver to be able to allocate
+pci vectors dynamically if it is supported by the infra. If the support
+does not exist it defaults to older behavior.
+
+For this submission, I wasn't sure if we should specify net-next or pci
+tree. Please let me know what the recommendation is.
+
+Shradha Gupta (2):
+  PCI: hv: enable pci_hyperv to allow dynamic vector allocation
+  net: mana: Allow MANA driver to allocate PCI vector dynamically
+
+ .../net/ethernet/microsoft/mana/gdma_main.c   | 306 ++++++++++++++----
+ drivers/pci/controller/pci-hyperv.c           |   7 +-
+ drivers/pci/msi/irqdomain.c                   |   5 +-
+ include/linux/msi.h                           |   2 +
+ include/net/mana/gdma.h                       |   5 +-
+ 5 files changed, 260 insertions(+), 65 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
