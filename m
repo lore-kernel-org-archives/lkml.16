@@ -1,117 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441491494BB;
-	Wed, 16 Apr 2025 12:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08902DFA49;
+	Wed, 16 Apr 2025 12:44:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807423; cv=none; b=XXcRRqJuPRH+BBqQxw4/64KDzNYaW1bA8NQt8kyCkTfs2mtyG6XZgZpglTzbFy085YQZR2Z9nYMJ2rqj9fHBhx6nyeVuS5ZyphRTChMSTzDclLUUjOquVgGAmL1a0+pI/js25rIRP715oRk5FUnjvY58Zirv9OiDyrwuF5x/Hdw=
+	t=1744807495; cv=none; b=QRhhOQOuP+cGsqEc94gqNbsJ8prV82exRpdjsEmIj8KTtBCDhYME1VYQRChmp0NgVS01OIA9K75iqTm+oLG12cIcWyJAiDMAfw/wBPgWn4r2OB9NNmhCwHJSajV9JkK1CbZQEKBGNDHz5MNZNnWnj9YXCB2t7ax0YESomuZ95h8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807423; c=relaxed/simple;
-	bh=EptSh/Z5xPJhA1aDHMn9nfTawQKCHKc+FCmO0lVffUQ=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=f8jMxRsQWiGCsgRTDM2+n6aUiMQK8+K8c+/OPx9Whw1N2+NLrg8d3da8YpOZvGF2H72VBaQvKLVKZiSlCMnW4f364z/R3gQpJc2TfL9ny2iSA7VQ1KYeS1fpGDmfNbRBPhNv2OwPMWMEGIApFBo0kblCkmtk1ff40Gd3iNqJZ7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXcfBdH9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744807495; c=relaxed/simple;
+	bh=PnVxcRWARIPdy3zD0wzUXGo7haIXrfNVtzFl9rL6PHg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b4E/D5Pc8rhoHJIt/jg0I3OTolSfZJDhwf+ciWALsDbsp3/5pxZrMF/efpet6TroQwEOB40PSB2X137Ptr1aFp6atYv0nFPrT7aYjwhE50pwh95zs2dol/EGDjofPazmGmHIHU+Ys4AFlvnbCS/+BxBmMCzToSWYYUsmHTJJcHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fn6Gr3YR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CqpTkjC6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXcfBdH9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7849DC4CEE2;
-	Wed, 16 Apr 2025 12:43:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744807421;
-	bh=EptSh/Z5xPJhA1aDHMn9nfTawQKCHKc+FCmO0lVffUQ=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=QXcfBdH9jEPiCjRYz89ioGIpTxNnOCwd0yHyigjxmBqmMyYOPp3L1BXcotqhjbsRt
-	 F+dl72ZdNGecgFs45ASxQfhrnfP/X/itLyOY+j3G7WYPjuFq1mQW0JT5IuiGIJhvDU
-	 UwDQiUc6eGUO0tmIkL1pkZGHoL2dB4DEgLJJQgz+kLvHZLHlW+LOV9zYQEUfGUasCC
-	 DorokKdm8Q9/Js4FKAj8K3aBk0h5FSS70LCw34YxTAGzviwkoSjse5GbSZ4IY9+FEC
-	 hoks8NPyQB+e0nEEoNuac8F8BvdtTFnpy88u5gr/Qx/WCVpq3WE9D8Ya/L55gd8BG+
-	 +JAdIlrS8GLaA==
-Date: Wed, 16 Apr 2025 07:43:39 -0500
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fn6Gr3YR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CqpTkjC6"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744807491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0V2tltp7rLoJJI5D+sEpJCOe8NF2uU3qehp4Rd/tkvk=;
+	b=fn6Gr3YRcGoz4EadUMjr/47qOVtQEYivNqqxhqBlXsnaMbjGvF6EaWU3+ERmBxYszL4jKB
+	EKLnrMbML277hS9oAoxAC1cRjwagexrsC0kPlXUAA/D687UZ6mAse+OF/8iAg6EHbc9KCY
+	s5Z56NLYJXzWs1hWBzVtoF2pwyxjy8KIi7c+mx8je1K9bvtTSLTFBwXTWFVvT6ws1kbks/
+	rOiYO5tNj5M1scDOR/nnZqtIMuHOvioynRlRDVA7vSIdS7smyD4tgrnylgEux5OyuhCJAh
+	yJ7s4X9OtHjQsl0atCAdEDuFprtVHwcpgNCH8EHlZ7w5JuQ0HFwfPIHdPv8wUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744807491;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0V2tltp7rLoJJI5D+sEpJCOe8NF2uU3qehp4Rd/tkvk=;
+	b=CqpTkjC6WVXhzuAWgRFEURp/8zZINmmLZL3aIpG2BT79CPP5H0UMuRoVl+gMRNaCsQCVDA
+	+wd1TuktMTgq8HCQ==
+Date: Wed, 16 Apr 2025 14:44:19 +0200
+Subject: [PATCH] kunit/usercopy: Disable u64 test on 32-bit SPARC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-tegra@vger.kernel.org, smangipudi@nvidia.com, 
- linux-spi@vger.kernel.org, skomatineni@nvidia.com, thierry.reding@gmail.com, 
- kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-kernel@vger.kernel.org, 
- broonie@kernel.org, jonathanh@nvidia.com
-To: Vishwaroop A <va@nvidia.com>
-In-Reply-To: <20250416110606.2737315-1-va@nvidia.com>
-References: <20250416110606.2737315-1-va@nvidia.com>
-Message-Id: <174480737097.2514153.5351260600015584210.robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] Configure Clocks, Add Internal DMA support
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250416-kunit-sparc-usercopy-v1-1-a772054db3af@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIACKm/2cC/x3MTQqAIBBA4avErBvoxyK6SrSQaawhMNGKQrx70
+ vItvhchsBcOMBYRPN8S5LA56rIA2rRdGWXJDU3VdJWqe9wvKycGpz3hlTEd7kVq+4Vb0orNAJk
+ 6z0aefzvNKX1FB4EYZgAAAA==
+X-Change-ID: 20250416-kunit-sparc-usercopy-c36de3ca4ef8
+To: Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Gow <davidgow@google.com>, "David S. Miller" <davem@davemloft.net>, 
+ Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744807489; l=1347;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=PnVxcRWARIPdy3zD0wzUXGo7haIXrfNVtzFl9rL6PHg=;
+ b=hbTu3XkiauW7qvM9lT33V8rEaBO+LzJYP9U7fAzLZdtF5l/eJzGOIxeyVWfPzEsKlRoKvnqYG
+ MnTeF7MuDpIBXgPEiKMGbz7Wv7vhv0Bo2Fryrz7yoEsq2oOpP11Noie
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
+usercopy of 64 bit values does not work on 32-bit SPARC:
 
-On Wed, 16 Apr 2025 11:06:00 +0000, Vishwaroop A wrote:
-> This series introduces QSPI clock configuration and internal DMA
-> support for Quad SPI controller. The patches have been reorganized
-> for better logical flow and review comments from v2 have been addressed.
-> 
-> Vishwaroop A (6):
->   spi: tegra210-quad: Fix X1_X2_X4 encoding and support x4 transfers
->   spi: tegra210-quad: remove redundant error handling code
->   spi: tegra210-quad: modify chip select (CS) deactivation
->   arm64: tegra: Configure QSPI clocks and add DMA
->   spi: tegra210-quad: Update dummy sequence configuration
->   spi: tegra210-quad: Add support for internal DMA
-> 
->  arch/arm64/boot/dts/nvidia/tegra234.dtsi |  10 +
->  drivers/spi/spi-tegra210-quad.c          | 282 +++++++++++++----------
->  2 files changed, 176 insertions(+), 116 deletions(-)
-> 
-> ---
-> v2 -> v3:
->         * Reorganized the patches.
->         * Addressed review comments received on the patches.
-> ---
-> 
-> --
-> 2.17.1
-> 
-> 
-> 
+    # usercopy_test_valid: EXPECTATION FAILED at lib/tests/usercopy_kunit.c:209
+    Expected val_u64 == 0x5a5b5c5d6a6b6c6d, but
+        val_u64 == 1515936861 (0x5a5b5c5d)
+        0x5a5b5c5d6a6b6c6d == 6510899242581322861 (0x5a5b5c5d6a6b6c6d)
 
+Disable the test.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Fixes: 4c5d7bc63775 ("usercopy: Add tests for all get_user() sizes")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+To be honest I think sparc32 wants to support usercopy of 64 bit values.
+But it does seem to be broken.
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+(+Cc SPARC maintainers)
+---
+ lib/tests/usercopy_kunit.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+diff --git a/lib/tests/usercopy_kunit.c b/lib/tests/usercopy_kunit.c
+index 77fa00a13df775074a19772bfbc9120ef33634bb..80f8abe10968c1d91c61006f1eaa63858c633872 100644
+--- a/lib/tests/usercopy_kunit.c
++++ b/lib/tests/usercopy_kunit.c
+@@ -27,6 +27,7 @@
+ 			    !defined(CONFIG_MICROBLAZE) &&	\
+ 			    !defined(CONFIG_NIOS2) &&		\
+ 			    !defined(CONFIG_PPC32) &&		\
++			    !defined(CONFIG_SPARC32) &&		\
+ 			    !defined(CONFIG_SUPERH))
+ # define TEST_U64
+ #endif
 
-  pip3 install dtschema --upgrade
+---
+base-commit: 1a1d569a75f3ab2923cb62daf356d102e4df2b86
+change-id: 20250416-kunit-sparc-usercopy-c36de3ca4ef8
 
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/v6.15-rc2-1-g36ff6c3f5084 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/nvidia/' for 20250416110606.2737315-1-va@nvidia.com:
-
-arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0008.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
-arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0000.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
-arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0005.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
-arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
-arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
-	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
-
-
-
-
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
