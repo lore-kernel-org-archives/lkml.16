@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038AA227EA3;
-	Wed, 16 Apr 2025 05:12:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B2222A1CA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744780369; cv=none; b=ITJgJheS09n6DhXrYETZNgF66HGhJqpvEn4mCY3FyQKbGncOi/44aykc9dpx6v17CAhp7FHJ+AwiZAk7D1MhADygcd3PZ3bEExAlv2GTsXMmSElJSF7h+Ui/RJE68AoqRWqiCSrWoATLQwxSJwpvfZeJwdDzug6duNjyZa+nGtU=
+	t=1744780503; cv=none; b=aLnRvt592yGWifl8AbLbvhgm/Myp4lkoQ1AzV6QXtaTqeQkZMpKIyM2UvzsaWm/m8vGU60jpzQy0aduvHYmTuf9hwIEUWXoHCSlLGNXQEWqxoeaoVrPVI/I+i9LMPmYIGwmWY4eVHxY+cH8pKLzEp+EgGyUHuNdi/iVs2jwDoyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744780369; c=relaxed/simple;
-	bh=ij9XjdydKKO6ktZLw6ssy/nlg/yKlvbqYhKUcIK/9MA=;
+	s=arc-20240116; t=1744780503; c=relaxed/simple;
+	bh=1H6wRrY/8Ivsaw2xJs6tWW14WF+v3NNV35qwD9c0Q78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V5gywUc1U7I15UxOay/MjxmrVEoih3znwpt0tMTZySqCadH4ej/OpNuUin1CsI/i3Z6ukgLWaeUK/SeK8ljsJksNnxxA9p4Rh1jGCzBcQQdaK6S56+T+KZ0s7kZeWSh7qH5Uojihzz1b4nFcbIPBWyDW5Ka+lglf25B85mcUnz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LapQuHbN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EJ1h/4oPxsBsG+6RsPAz9zZX2Mgygw6TefKrMJL193RlXQDlOwUdecxfHRaGxZMBWmC9fw/pvhXDnCoW093DGYLz8qtloOyIMPf0Mu3cNA7PmgSn+llu064dnKJ0H+rLedJIzuIv4agRth1HuxONJ5T5JrZHsHvNmnNHl/31zO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QhDSbbBO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LapQuHbN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 502D1C4CEE2;
-	Wed, 16 Apr 2025 05:12:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QhDSbbBO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD58C4CEE2;
+	Wed, 16 Apr 2025 05:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744780368;
-	bh=ij9XjdydKKO6ktZLw6ssy/nlg/yKlvbqYhKUcIK/9MA=;
+	s=k20201202; t=1744780502;
+	bh=1H6wRrY/8Ivsaw2xJs6tWW14WF+v3NNV35qwD9c0Q78=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LapQuHbNnlzcKoktq190TJRqeOAOL+KVwbA2/b7M/MlrM354K5h2fIDXqCSMxtX6Y
-	 N3RwEGMKsMeJ1RvBXe8iZ232tFmAhNis6wQga1T6FV7RmOLVuEaAL3tCZOD41XdU7W
-	 y9dY/o3mjOINj/wozCZwn5BqC13JSOXKdts2HfRZTaPCiSlbaqP7SbsvS3ZeMWkthD
-	 rJo8kGrwEfXBG6t+acCwvtrtOlpKqC1aZQVlWhyyl/7xEpCBwqWVsKT/vE/sfSesbu
-	 Fk8DuRD+YUKLuOnH33nVIl65Yc9xeVhwvyLRaRWL1hzwPw86JTmCj6CWYBl9u5GU44
-	 N15ZYwzGg31Kg==
-Message-ID: <7c3a13ce-c5df-4ea7-a3b1-32a13ab95274@kernel.org>
-Date: Wed, 16 Apr 2025 07:12:45 +0200
+	b=QhDSbbBOWhOpH/orA6V+5EM752INNKhmLW9YdYisO/rW2kVEwyv5eqbZ7cdhf4vnS
+	 PvnPFNR986qQ9+NEemZPJfaQjvWGyieHnRdZELawUORNsK4qEXUcr/sf6Db5M8PA0r
+	 6KnvOF4gPKZvjl33tvHpDUyVzGIUrZ28sqjkC5I6dEGcSK31Rt7OZA+MScLu5g2vHq
+	 uCY9UfFy1Ahj9Q0PxNGOS+HEZtN7GVOiDFsdh8KdXWhIvTzyP39nJ11X5EaXJIVyV2
+	 9K8I84twn0qjE17v7unpV2nQhNDib/4rSSZ1AXpXhvM1hixztH20sW99NfKkR5RwRN
+	 vaV3UUXYfMsZw==
+Message-ID: <3bd616cf-1655-4700-8c84-e26e71c43edf@kernel.org>
+Date: Wed, 16 Apr 2025 07:14:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/13] vt: refresh ucs_width_table.h and adjust code in
- ucs.c accordingly
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415192212.33949-1-nico@fluxnic.net>
- <20250415192212.33949-14-nico@fluxnic.net>
+Subject: Re: [PATCH] irqdomain: cdx: Switch to of_fwnode_handle()
+To: "Gupta, Nipun" <nipun.gupta@amd.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
+ Nikhil Agarwal <nikhil.agarwal@amd.com>
+References: <20250415104734.106849-1-jirislaby@kernel.org>
+ <51bea79a-31ac-4ee1-e646-2af138017ff4@amd.com>
+ <120b0320-b5d2-4fb0-bcd4-68a767a51a8b@kernel.org>
+ <929198a2-6b3b-0f1b-3f36-cd8955ca6f19@amd.com>
 Content-Language: en-US
 From: Jiri Slaby <jirislaby@kernel.org>
 Autocrypt: addr=jirislaby@kernel.org; keydata=
@@ -87,48 +87,33 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <20250415192212.33949-14-nico@fluxnic.net>
+In-Reply-To: <929198a2-6b3b-0f1b-3f36-cd8955ca6f19@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15. 04. 25, 21:18, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
+On 16. 04. 25, 7:06, Gupta, Nipun wrote:
 > 
-> Width tables are now split into BMP (16-bit) and non-BMP (above 16-bit).
-> This reduces the corresponding text size by 20-25%.
 > 
-> Note: scripts/checkpatch.pl complains about "... exceeds 100 columns".
->        Please ignore.
-...
-> --- a/drivers/tty/vt/ucs.c
-> +++ b/drivers/tty/vt/ucs.c
-> @@ -5,17 +5,34 @@
-...
-> -static int interval_cmp(const void *key, const void *element)
-> +static int interval16_cmp(const void *key, const void *element)
-> +{
-> +	u16 cp = *(u16 *)key;
+> On 16-04-2025 10:28, Jiri Slaby wrote:
+>> On 16. 04. 25, 6:30, Gupta, Nipun wrote:
+>>> This will go via Greg's char-misc tree.
+>>
+>> Ah, then I should've sent this to him in the first place :). Uhm, but 
+>> MAINTAINERS says:
+>> AMD CDX BUS DRIVER
+>> M:      Nipun Gupta <nipun.gupta@amd.com>
+>> M:      Nikhil Agarwal <nikhil.agarwal@amd.com>
+>> S:      Maintained
+>> F:      Documentation/devicetree/bindings/bus/xlnx,versal-net-cdx.yaml
+>> F:      drivers/cdx/*
+>> F:      include/linux/cdx/*
+> 
+> As a MAINTAINER, I/Nikhil need to review. We do not maintain a tree and 
+> patches go via Greg's tree.
 
-You cast away const. Does the compiler not complain?
-
-> +	const struct ucs_interval16 *entry = element;
-> +
-> +	if (cp < entry->first)
-> +		return -1;
-> +	if (cp > entry->last)
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +static int interval32_cmp(const void *key, const void *element)
->   {
->   	u32 cp = *(u32 *)key;
-
-Apparently not, given we do this for ages. I wonder why?
-
-Anyway:
-
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+Yes, I understand, but how are patches supposed to reach him? If he 
+maintains this in his tree, perhaps drivers/cdx/* deserves an entry in 
+the MISC entry too?
 
 -- 
 js
