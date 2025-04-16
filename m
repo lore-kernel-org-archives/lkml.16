@@ -1,233 +1,516 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC652222AC;
-	Wed, 16 Apr 2025 11:57:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B8E221FCD;
+	Wed, 16 Apr 2025 11:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804624; cv=none; b=lcxoJgutJ/IkbQnyhMfE1Aa/rpdbDHnIPjrptzZGa8o4oKmGi6TcliIVfUfQtTpOXrBOICtQoYf73COysOnYOoYKDZif5nvU0DaYP00e4XsHszM62eVMfXtvVpproPhOyjZIcnjR2Ns03psh1zB5+qUBUPSCvc7q2gBvtPSnZu0=
+	t=1744804683; cv=none; b=BYD0V+HvpHgA+HM803dbCDC1liIuTYlXGzngiNMpyMYY3fwS2CY16HCY/Iy+eKNFYYxwyX33xbcAL7ApvzF4AOPU2EuV8gMYmpjHuvjUptANfkdIfg28BdH8Gb7SGLId//XL/AvsuHoGWBL2ZjjdiUH28icK7JsEPjRnwTGkCuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804624; c=relaxed/simple;
-	bh=DBHd+n1xvpx0LD/RgJDY+JYvv1dy95CSWgQOK70yanM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qk6LE0TEEr+NpBAkpp5ei4LZiSu/46PjHnr4pIk4XcphQOpfdraFjQCZ+/vWmZDn6wJjam54cEar1US3bRpKbYmH5fi24x6vx6+/dPJIV3KZ74qtIHoBw03Y4RFHMv+rxUopaRGH3qynLlQ9s5QdqeosD4Y1hq7uup92zfdwjK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nk8VrfjG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5uI8YFSp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744804683; c=relaxed/simple;
+	bh=B4N/tVyDJZIpSunM0HgjujjZhDnUnz3Z/M5m8KGpvGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=EbmaCKDUifWjJ6rLvlAKA950R0uYutGiLKSmHpFgNfdOxktg1aQU8e/zmjG3zjDQqxf8k/UlzXeZvdiUsKXeLY6fxeW5N0NPizglI1/IrmGitMBXpSZs4NRcGSHq1NrbLH4FUi00kj4x0wEcE7N2LYvYdnVPDUx+jm+wIw902SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o49WG1wb; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nk8VrfjG";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5uI8YFSp"
-Date: Wed, 16 Apr 2025 13:56:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744804619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIIyuonDNoGtEXjJpWrXHyZnPS1l4K/5Xgfv/afWSJw=;
-	b=Nk8VrfjG182gR9y5Ry8riE2xzrpd9q8Rg42ca78vNcCES4Yfv0MlnIrbDhtuIOoqxn3jpz
-	cFM9ruyVVjUjoFiNz9MITgIUfKKVXSHG5ywN4GE6m4cstbH3Clt4PBnS5p6oXFV89BV0Gd
-	X2SJ7K647MDGCp+JUof8tvR+4MRpK+mr+KANVX1KoUKKQrt1SZZrjRotcAJHFdpiOnD+29
-	VxrOZ/FBUmzZXU4/gIqxSkd71gx/VJutgtpsJa8VwQWlR4EYnfLHiKxB04m/Oy188w4I6F
-	CzCzHgWn5ggmVq/+nbg5QYanAcI4fArt0duQlLD3Oj/sSvj94AL9gHllVIWegw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744804619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIIyuonDNoGtEXjJpWrXHyZnPS1l4K/5Xgfv/afWSJw=;
-	b=5uI8YFSpf0zv8SvPq/Sub/c9KwB4t/GgYP2EDLXxgeVtEiidjiP7FD6PLDlmm1bNFzHPAN
-	TEkBCNNj4tN03OCQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v3 13/22] rv: Add support for LTL monitors
-Message-ID: <20250416115658.AkFAts-B@linutronix.de>
-References: <cover.1744785335.git.namcao@linutronix.de>
- <19f424c910bfa0f4854117e3f8771aeb6e98a9d2.1744785335.git.namcao@linutronix.de>
- <4edad1940b2d05f1997895d4bbc11f02a921e8e5.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o49WG1wb"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mFZE000407;
+	Wed, 16 Apr 2025 11:57:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	gszDPz4kmoG6mwezXb3AVBzlGyrfhY/LvDie3L4uuT8=; b=o49WG1wbntmiKS6z
+	ViYtNSxG/PCPcJnMrMOGSKIe00q8c2o9/We3QRObhliqcKOrn3xuILkPwnGJvCpz
+	ABgJsDVYTzSgHlJUY2PMxvT/ZMURDi+TiH+sClIiCt+6jGF+DmlqxqXoUFN0gC0q
+	tdq1zNUHuTHousNvEymtDStrxcY+eDYo4KRLD8u2nlTRG/cdPBxxLai96Ag0y+4Y
+	lUOhgEoy2vsmc4e+Td6fWQ8CEQJQPj0umxjuTJyioCkpOktOMitcjYl7oGziW1ds
+	KQxleBK1Fr5VqQhEWeilqy57LGrVwTXQawjtGWOLhBCKq/J6RU+VWqxKsmVLZRlY
+	EYP21Q==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vkghj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 11:57:54 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GBvr9S006784
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 11:57:53 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
+ 2025 04:57:50 -0700
+Message-ID: <1484e250-bbb6-4d1e-9285-2ccf1b8215fd@quicinc.com>
+Date: Wed, 16 Apr 2025 17:27:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4edad1940b2d05f1997895d4bbc11f02a921e8e5.camel@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] spi: tegra210-quad: Add support for internal DMA
+To: Vishwaroop A <va@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <skomatineni@nvidia.com>,
+        <ldewangan@nvidia.com>, <broonie@kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kyarlagadda@nvidia.com>,
+        <smangipudi@nvidia.com>
+References: <20250416110606.2737315-1-va@nvidia.com>
+ <20250416110606.2737315-7-va@nvidia.com>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250416110606.2737315-7-va@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 3MmwpKv-YqHWv0IngfpUtXajtM3mxQin
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67ff9b42 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=Ikd4Dj_1AAAA:8 a=1jq-n9C2WfOyWCMQ9YgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 3MmwpKv-YqHWv0IngfpUtXajtM3mxQin
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160098
 
-On Wed, Apr 16, 2025 at 11:34:53AM +0200, Gabriele Monaco wrote:
-> On Wed, 2025-04-16 at 08:51 +0200, Nam Cao wrote:
-> >  #endif /* CONFIG_DA_MON_EVENTS_ID */
-> > +#if CONFIG_LTL_MON_EVENTS_ID
-> > +TRACE_EVENT(event_ltl_monitor_id,
-> > +
-> > +	TP_PROTO(struct task_struct *task, char *states, char
-> > *atoms, char *next),
-> > +
-> > +	TP_ARGS(task, states, atoms, next),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__string(comm, task->comm)
-> > +		__field(pid_t, pid)
-> > +		__string(states, states)
-> > +		__string(atoms, atoms)
-> > +		__string(next, next)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__assign_str(comm);
-> > +		__entry->pid = task->pid;
-> > +		__assign_str(states);
-> > +		__assign_str(atoms);
-> > +		__assign_str(next);
-> > +	),
-> > +
-> > +	TP_printk("%s[%d]: (%s) x (%s) -> (%s)", __get_str(comm),
-> > __entry->pid, __get_str(states),
-> > +		  __get_str(atoms), __get_str(next))
-> > +);
-> > +
-> > +TRACE_EVENT(error_ltl_monitor_id,
-> > +
-> > +	TP_PROTO(struct task_struct *task),
-> > +
-> > +	TP_ARGS(task),
-> > +
-> > +	TP_STRUCT__entry(
-> > +		__string(comm, task->comm)
-> > +		__field(pid_t, pid)
-> > +	),
-> > +
-> > +	TP_fast_assign(
-> > +		__assign_str(comm);
-> > +		__entry->pid = task->pid;
-> > +	),
-> > +
-> > +	TP_printk("%s[%d]: violation detected", __get_str(comm),
-> 
-> In your workflow you're probably using events and errors together, but
-> wouldn't it help printing the atoms together with the violation
-> detected?
-> At least to give a clue on the error in case the user doesn't want to
-> see the entire trace (which might be needed for a full debug though).
-> 
-> The same could be said from reactors, the user doesn't have much
-> information to infer what went wrong.
 
-Actually my intention for the "event" tracepoints are only for debugging
-the monitor itself. I don't want to bother users with the Büchi automaton,
-because that's implementation details.
 
-The "error" tracepoints should be enough for identifying problems with
-realtime applications. Because errors from the monitors are unambiguous:
+On 4/16/2025 4:36 PM, Vishwaroop A wrote:
+> Previous generations of Tegra supported DMA operations by an external
+> DMA controller, but the QSPI on Tegra234 devices now have an internal
+> DMA controller.
+> 
+> Introduce routines to initialize and configure internal DMA channels
+> for both transmit and receive paths. Set up DMA mapping functions to
+> manage buffer addresses effectively.
+> 
+> The variable err is changed to num_errors to more accurately represent
+> its purpose in the code. The updated name clarifies that the variable
+> tracks the number of errors encountered during execution, rather than
+> serving as a generic error flag or code.
+> 
+> Tegra241 device supports DMA via an external DMA controller (GPCDMA), so
+> enable this.
+> 
+> Signed-off-by: Vishwaroop A <va@nvidia.com>
+> ---
+>   drivers/spi/spi-tegra210-quad.c | 227 +++++++++++++++++++-------------
+>   1 file changed, 132 insertions(+), 95 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-tegra210-quad.c b/drivers/spi/spi-tegra210-quad.c
+> index 04f41e92c1e2..e80a0850d07e 100644
+> --- a/drivers/spi/spi-tegra210-quad.c
+> +++ b/drivers/spi/spi-tegra210-quad.c
+> @@ -111,6 +111,9 @@
+>   #define QSPI_DMA_BLK				0x024
+>   #define QSPI_DMA_BLK_SET(x)			(((x) & 0xffff) << 0)
+>   
+> +#define QSPI_DMA_MEM_ADDRESS			0x028
+> +#define QSPI_DMA_HI_ADDRESS			0x02c
+> +
+>   #define QSPI_TX_FIFO				0x108
+>   #define QSPI_RX_FIFO				0x188
+>   
+> @@ -167,9 +170,9 @@ enum tegra_qspi_transfer_type {
+>   };
+>   
+>   struct tegra_qspi_soc_data {
+> -	bool has_dma;
+>   	bool cmb_xfer_capable;
+>   	bool supports_tpm;
+> +	bool has_ext_dma;
+>   	unsigned int cs_count;
+>   };
+>   
+> @@ -605,17 +608,21 @@ static void tegra_qspi_dma_unmap_xfer(struct tegra_qspi *tqspi, struct spi_trans
+>   
+>   	len = DIV_ROUND_UP(tqspi->curr_dma_words * tqspi->bytes_per_word, 4) * 4;
+>   
+> -	dma_unmap_single(tqspi->dev, t->tx_dma, len, DMA_TO_DEVICE);
+> -	dma_unmap_single(tqspi->dev, t->rx_dma, len, DMA_FROM_DEVICE);
+> +	if (t->tx_buf)
+> +		dma_unmap_single(tqspi->dev, t->tx_dma, len, DMA_TO_DEVICE);
+> +	if (t->rx_buf)
+> +		dma_unmap_single(tqspi->dev, t->rx_dma, len, DMA_FROM_DEVICE);
+>   }
+>   
+>   static int tegra_qspi_start_dma_based_transfer(struct tegra_qspi *tqspi, struct spi_transfer *t)
+>   {
+>   	struct dma_slave_config dma_sconfig = { 0 };
+> +	dma_addr_t rx_dma_phys, tx_dma_phys;
+>   	unsigned int len;
+>   	u8 dma_burst;
+>   	int ret = 0;
+>   	u32 val;
+> +	bool has_ext_dma = tqspi->soc_data->has_ext_dma;
+>   
+>   	if (tqspi->is_packed) {
+>   		ret = tegra_qspi_dma_map_xfer(tqspi, t);
+> @@ -634,60 +641,86 @@ static int tegra_qspi_start_dma_based_transfer(struct tegra_qspi *tqspi, struct
+>   		len = tqspi->curr_dma_words * 4;
+>   
+>   	/* set attention level based on length of transfer */
+> -	val = 0;
+> -	if (len & 0xf) {
+> -		val |= QSPI_TX_TRIG_1 | QSPI_RX_TRIG_1;
+> -		dma_burst = 1;
+> -	} else if (((len) >> 4) & 0x1) {
+> -		val |= QSPI_TX_TRIG_4 | QSPI_RX_TRIG_4;
+> -		dma_burst = 4;
+> -	} else {
+> -		val |= QSPI_TX_TRIG_8 | QSPI_RX_TRIG_8;
+> -		dma_burst = 8;
+> +	if (has_ext_dma) {
+> +		val = 0;
+> +		if (len & 0xf) {
+> +			val |= QSPI_TX_TRIG_1 | QSPI_RX_TRIG_1;
+> +			dma_burst = 1;
+> +		} else if (((len) >> 4) & 0x1) {
+> +			val |= QSPI_TX_TRIG_4 | QSPI_RX_TRIG_4;
+> +			dma_burst = 4;
+> +		} else {
+> +			val |= QSPI_TX_TRIG_8 | QSPI_RX_TRIG_8;
+> +			dma_burst = 8;
+> +		}
+> +
+> +		tegra_qspi_writel(tqspi, val, QSPI_DMA_CTL);
+>   	}
+>   
+> -	tegra_qspi_writel(tqspi, val, QSPI_DMA_CTL);
+>   	tqspi->dma_control_reg = val;
+>   
+>   	dma_sconfig.device_fc = true;
+> -	if (tqspi->cur_direction & DATA_DIR_TX) {
+> -		dma_sconfig.dst_addr = tqspi->phys + QSPI_TX_FIFO;
+> -		dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> -		dma_sconfig.dst_maxburst = dma_burst;
+> -		ret = dmaengine_slave_config(tqspi->tx_dma_chan, &dma_sconfig);
+> -		if (ret < 0) {
+> -			dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
+> -			return ret;
+> -		}
+>   
+> -		tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
+> -		ret = tegra_qspi_start_tx_dma(tqspi, t, len);
+> -		if (ret < 0) {
+> -			dev_err(tqspi->dev, "failed to starting TX DMA: %d\n", ret);
+> -			return ret;
+> +	if ((tqspi->cur_direction & DATA_DIR_TX)) {
+> +		if (tqspi->tx_dma_chan) {
+> +			dma_sconfig.dst_addr = tqspi->phys + QSPI_TX_FIFO;
+> +			dma_sconfig.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +			dma_sconfig.dst_maxburst = dma_burst;
+> +			ret = dmaengine_slave_config(tqspi->tx_dma_chan, &dma_sconfig);
+> +			if (ret < 0) {
+> +				dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
+> +				return ret;
+> +			}
+> +
+> +			tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
+> +			ret = tegra_qspi_start_tx_dma(tqspi, t, len);
+> +			if (ret < 0) {
+> +				dev_err(tqspi->dev, "failed to starting TX DMA: %d\n", ret);
+> +				return ret;
+> +			}
+> +		} else {
+> +			if (tqspi->is_packed)
+> +				tx_dma_phys = t->tx_dma;
+> +			else
+> +				tx_dma_phys = tqspi->tx_dma_phys;
+> +			tegra_qspi_copy_client_txbuf_to_qspi_txbuf(tqspi, t);
+> +			tegra_qspi_writel(tqspi, lower_32_bits(tx_dma_phys),
+> +					  QSPI_DMA_MEM_ADDRESS);
+> +			tegra_qspi_writel(tqspi, (upper_32_bits(tx_dma_phys) & 0xff),
+> +					  QSPI_DMA_HI_ADDRESS);
+>   		}
+>   	}
+>   
+>   	if (tqspi->cur_direction & DATA_DIR_RX) {
+> -		dma_sconfig.src_addr = tqspi->phys + QSPI_RX_FIFO;
+> -		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> -		dma_sconfig.src_maxburst = dma_burst;
+> -		ret = dmaengine_slave_config(tqspi->rx_dma_chan, &dma_sconfig);
+> -		if (ret < 0) {
+> -			dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
+> -			return ret;
+> -		}
+> -
+> -		dma_sync_single_for_device(tqspi->dev, tqspi->rx_dma_phys,
+> -					   tqspi->dma_buf_size,
+> -					   DMA_FROM_DEVICE);
+> +		if (tqspi->rx_dma_chan) {
+> +			dma_sconfig.src_addr = tqspi->phys + QSPI_RX_FIFO;
+> +			dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +			dma_sconfig.src_maxburst = dma_burst;
+> +			ret = dmaengine_slave_config(tqspi->rx_dma_chan, &dma_sconfig);
+> +			if (ret < 0) {
+> +				dev_err(tqspi->dev, "failed DMA slave config: %d\n", ret);
+> +				return ret;
+> +			}
+> +			dma_sync_single_for_device(tqspi->dev, tqspi->rx_dma_phys,
+> +						   tqspi->dma_buf_size, DMA_FROM_DEVICE);
+> +			ret = tegra_qspi_start_rx_dma(tqspi, t, len);
+> +			if (ret < 0) {
+> +				dev_err(tqspi->dev, "failed to start RX DMA: %d\n", ret);
+> +				if (tqspi->cur_direction & DATA_DIR_TX)
+> +					dmaengine_terminate_all(tqspi->tx_dma_chan);
+> +				return ret;
+> +			}
+>   
+> -		ret = tegra_qspi_start_rx_dma(tqspi, t, len);
+> -		if (ret < 0) {
+> -			dev_err(tqspi->dev, "failed to start RX DMA: %d\n", ret);
+> -			if (tqspi->cur_direction & DATA_DIR_TX)
+> -				dmaengine_terminate_all(tqspi->tx_dma_chan);
+> -			return ret;
+> +		} else {
+> +			if (tqspi->is_packed)
+> +				rx_dma_phys = t->rx_dma;
+> +			else
+> +				rx_dma_phys = tqspi->rx_dma_phys;
+> +
+> +			tegra_qspi_writel(tqspi, lower_32_bits(rx_dma_phys),
+> +					  QSPI_DMA_MEM_ADDRESS);
+> +			tegra_qspi_writel(tqspi, (upper_32_bits(rx_dma_phys) & 0xff),
+> +					  QSPI_DMA_HI_ADDRESS);
+>   		}
+>   	}
+>   
+> @@ -726,9 +759,6 @@ static int tegra_qspi_start_cpu_based_transfer(struct tegra_qspi *qspi, struct s
+>   
+>   static void tegra_qspi_deinit_dma(struct tegra_qspi *tqspi)
+>   {
+> -	if (!tqspi->soc_data->has_dma)
+> -		return;
+> -
+>   	if (tqspi->tx_dma_buf) {
+>   		dma_free_coherent(tqspi->dev, tqspi->dma_buf_size,
+>   				  tqspi->tx_dma_buf, tqspi->tx_dma_phys);
+> @@ -759,16 +789,26 @@ static int tegra_qspi_init_dma(struct tegra_qspi *tqspi)
+>   	u32 *dma_buf;
+>   	int err;
+>   
+> -	if (!tqspi->soc_data->has_dma)
+> -		return 0;
+> +	if (tqspi->soc_data->has_ext_dma) {
+> +		dma_chan = dma_request_chan(tqspi->dev, "rx");
+> +		if (IS_ERR(dma_chan)) {
+> +			err = PTR_ERR(dma_chan);
+> +			goto err_out;
+> +		}
+>   
+> -	dma_chan = dma_request_chan(tqspi->dev, "rx");
+> -	if (IS_ERR(dma_chan)) {
+> -		err = PTR_ERR(dma_chan);
+> -		goto err_out;
+> -	}
+> +		tqspi->rx_dma_chan = dma_chan;
+>   
+> -	tqspi->rx_dma_chan = dma_chan;
+> +		dma_chan = dma_request_chan(tqspi->dev, "tx");
+> +		if (IS_ERR(dma_chan)) {
+> +			err = PTR_ERR(dma_chan);
+> +			goto err_out;
+> +		}
+> +
+> +		tqspi->tx_dma_chan = dma_chan;
+> +	} else {
+> +		tqspi->rx_dma_chan = NULL;
+> +		tqspi->tx_dma_chan = NULL;
+> +	}
+>   
+>   	dma_buf = dma_alloc_coherent(tqspi->dev, tqspi->dma_buf_size, &dma_phys, GFP_KERNEL);
+>   	if (!dma_buf) {
+> @@ -779,14 +819,6 @@ static int tegra_qspi_init_dma(struct tegra_qspi *tqspi)
+>   	tqspi->rx_dma_buf = dma_buf;
+>   	tqspi->rx_dma_phys = dma_phys;
+>   
+> -	dma_chan = dma_request_chan(tqspi->dev, "tx");
+> -	if (IS_ERR(dma_chan)) {
+> -		err = PTR_ERR(dma_chan);
+> -		goto err_out;
+> -	}
+> -
+> -	tqspi->tx_dma_chan = dma_chan;
+> -
+>   	dma_buf = dma_alloc_coherent(tqspi->dev, tqspi->dma_buf_size, &dma_phys, GFP_KERNEL);
+>   	if (!dma_buf) {
+>   		err = -ENOMEM;
+> @@ -1056,6 +1088,7 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
+>   					struct spi_message *msg)
+>   {
+>   	bool is_first_msg = true;
+> +	bool has_ext_dma = tqspi->soc_data->has_ext_dma;
+>   	struct spi_transfer *xfer;
+>   	struct spi_device *spi = msg->spi;
+>   	u8 transfer_phase = 0;
+> @@ -1128,15 +1161,14 @@ static int tegra_qspi_combined_seq_xfer(struct tegra_qspi *tqspi,
+>   			if (WARN_ON(ret == 0)) {
+>   				dev_err(tqspi->dev, "QSPI Transfer failed with timeout: %d\n",
+>   					ret);
+> -				if (tqspi->is_curr_dma_xfer &&
+> -				    (tqspi->cur_direction & DATA_DIR_TX))
+> -					dmaengine_terminate_all
+> -						(tqspi->tx_dma_chan);
+> -
+> -				if (tqspi->is_curr_dma_xfer &&
+> -				    (tqspi->cur_direction & DATA_DIR_RX))
+> -					dmaengine_terminate_all
+> -						(tqspi->rx_dma_chan);
+> +				if (tqspi->is_curr_dma_xfer) {
+> +					if ((tqspi->cur_direction & DATA_DIR_TX) &&
+> +					    tqspi->tx_dma_chan)
+> +						dmaengine_terminate_all(tqspi->tx_dma_chan);
+> +					if ((tqspi->cur_direction & DATA_DIR_RX) &&
+> +					    tqspi->rx_dma_chan)
+> +						dmaengine_terminate_all(tqspi->rx_dma_chan);
+> +				}
+>   
+>   				/* Abort transfer by resetting pio/dma bit */
+>   				if (!tqspi->is_curr_dma_xfer) {
+> @@ -1197,6 +1229,7 @@ static int tegra_qspi_non_combined_seq_xfer(struct tegra_qspi *tqspi,
+>   	struct spi_device *spi = msg->spi;
+>   	struct spi_transfer *transfer;
+>   	bool is_first_msg = true;
+> +	bool has_ext_dma = tqspi->soc_data->has_ext_dma;
+>   	int ret = 0, val = 0;
+>   
+>   	msg->status = 0;
+> @@ -1251,10 +1284,12 @@ static int tegra_qspi_non_combined_seq_xfer(struct tegra_qspi *tqspi,
+>   						  QSPI_DMA_TIMEOUT);
+>   		if (WARN_ON(ret == 0)) {
+>   			dev_err(tqspi->dev, "transfer timeout\n");
+> -			if (tqspi->is_curr_dma_xfer && (tqspi->cur_direction & DATA_DIR_TX))
+> -				dmaengine_terminate_all(tqspi->tx_dma_chan);
+> -			if (tqspi->is_curr_dma_xfer && (tqspi->cur_direction & DATA_DIR_RX))
+> -				dmaengine_terminate_all(tqspi->rx_dma_chan);
+> +			if (tqspi->is_curr_dma_xfer) {
+> +				if ((tqspi->cur_direction & DATA_DIR_TX) && tqspi->tx_dma_chan)
+> +					dmaengine_terminate_all(tqspi->tx_dma_chan);
+> +				if ((tqspi->cur_direction & DATA_DIR_RX) && tqspi->rx_dma_chan)
+> +					dmaengine_terminate_all(tqspi->rx_dma_chan);
+> +			}
+>   			tegra_qspi_handle_error(tqspi);
+>   			ret = -EIO;
+>   			goto complete_xfer;
+> @@ -1323,7 +1358,7 @@ static bool tegra_qspi_validate_cmb_seq(struct tegra_qspi *tqspi,
+>   			return false;
+>   		xfer = list_next_entry(xfer, transfer_list);
+>   	}
+> -	if (!tqspi->soc_data->has_dma && xfer->len > (QSPI_FIFO_DEPTH << 2))
+> +	if (!tqspi->soc_data->has_ext_dma && xfer->len > (QSPI_FIFO_DEPTH << 2))
+>   		return false;
+>   
+>   	return true;
+> @@ -1384,41 +1419,43 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_qspi *tqspi)
+>   	unsigned int total_fifo_words;
+>   	unsigned long flags;
+>   	long wait_status;
+> -	int err = 0;
+> +	int num_errors = 0;
+>   
+>   	if (tqspi->cur_direction & DATA_DIR_TX) {
+>   		if (tqspi->tx_status) {
+> -			dmaengine_terminate_all(tqspi->tx_dma_chan);
+> -			err += 1;
+> -		} else {
+> +			if (tqspi->tx_dma_chan)
+> +				dmaengine_terminate_all(tqspi->tx_dma_chan);
+> +			num_errors++;
+> +		} else if (tqspi->tx_dma_chan) {
+>   			wait_status = wait_for_completion_interruptible_timeout(
+>   				&tqspi->tx_dma_complete, QSPI_DMA_TIMEOUT);
+>   			if (wait_status <= 0) {
+>   				dmaengine_terminate_all(tqspi->tx_dma_chan);
+>   				dev_err(tqspi->dev, "failed TX DMA transfer\n");
+> -				err += 1;
+> +				num_errors++;
+what do you do with incrementing this local num_errors ?
+I don't see any post processing .
+Also all are are mutually exclusive due to if/else, not sequential. So 
+could not get any specific usage.
+>   			}
+>   		}
+>   	}
+>   
+>   	if (tqspi->cur_direction & DATA_DIR_RX) {
+>   		if (tqspi->rx_status) {
+> -			dmaengine_terminate_all(tqspi->rx_dma_chan);
+> -			err += 2;
+> -		} else {
+> +			if (tqspi->rx_dma_chan)
+> +				dmaengine_terminate_all(tqspi->rx_dma_chan);
+> +			num_errors++;
+> +		} else if (tqspi->rx_dma_chan) {
+>   			wait_status = wait_for_completion_interruptible_timeout(
+>   				&tqspi->rx_dma_complete, QSPI_DMA_TIMEOUT);
+>   			if (wait_status <= 0) {
+>   				dmaengine_terminate_all(tqspi->rx_dma_chan);
+>   				dev_err(tqspi->dev, "failed RX DMA transfer\n");
+> -				err += 2;
+> +				num_errors++;
+>   			}
+>   		}
+>   	}
+>   
+>   	spin_lock_irqsave(&tqspi->lock, flags);
+>   
+> -	if (err) {
+> +	if (num_errors) {
+>   		tegra_qspi_dma_unmap_xfer(tqspi, t);
+>   		tegra_qspi_handle_error(tqspi);
+>   		complete(&tqspi->xfer_completion);
+> @@ -1444,9 +1481,9 @@ static irqreturn_t handle_dma_based_xfer(struct tegra_qspi *tqspi)
+>   	/* continue transfer in current message */
+>   	total_fifo_words = tegra_qspi_calculate_curr_xfer_param(tqspi, t);
+>   	if (total_fifo_words > QSPI_FIFO_DEPTH)
+> -		err = tegra_qspi_start_dma_based_transfer(tqspi, t);
+> +		num_errors = tegra_qspi_start_dma_based_transfer(tqspi, t);
+>   	else
+> -		err = tegra_qspi_start_cpu_based_transfer(tqspi, t);
+> +		num_errors = tegra_qspi_start_cpu_based_transfer(tqspi, t);
+>   
+>   exit:
+>   	spin_unlock_irqrestore(&tqspi->lock, flags);
+> @@ -1474,28 +1511,28 @@ static irqreturn_t tegra_qspi_isr_thread(int irq, void *context_data)
+>   }
+>   
+>   static struct tegra_qspi_soc_data tegra210_qspi_soc_data = {
+> -	.has_dma = true,
+> +	.has_ext_dma = true,
+>   	.cmb_xfer_capable = false,
+>   	.supports_tpm = false,
+>   	.cs_count = 1,
+>   };
+>   
+>   static struct tegra_qspi_soc_data tegra186_qspi_soc_data = {
+> -	.has_dma = true,
+> +	.has_ext_dma = true,
+>   	.cmb_xfer_capable = true,
+>   	.supports_tpm = false,
+>   	.cs_count = 1,
+>   };
+>   
+>   static struct tegra_qspi_soc_data tegra234_qspi_soc_data = {
+> -	.has_dma = false,
+> +	.has_ext_dma = false,
+>   	.cmb_xfer_capable = true,
+>   	.supports_tpm = true,
+>   	.cs_count = 1,
+>   };
+>   
+>   static struct tegra_qspi_soc_data tegra241_qspi_soc_data = {
+> -	.has_dma = false,
+> +	.has_ext_dma = true,
+>   	.cmb_xfer_capable = true,
+>   	.supports_tpm = true,
+>   	.cs_count = 4,
 
-  - pagefault monitor: error means an RT task is raising pagefault
-  - sleep monitor: error means an RT task is delayed unboundedly
-
-That and a stacktrace (e.g. from perf) is enough to understand the problem.
-That was all I need to identifying problems with pipewire using the
-monitors.
-
-In the future, we can have other monitors whose warnings are ambiguous, and
-a more detailed error message will be necessary. But for now, I think we
-can keep it simple.
-
-> > +def abbreviate_atoms(atoms: list[str]) -> list[str]:
-> > +    abbrs = list()
-> > +    for atom in atoms:
-> > +        size = 1
-> > +        while True:
-> > +            abbr = atom[:size]
-> > +            if sum(a.startswith(abbr) for a in atoms) == 1:
-> > +                break
-> > +            size += 1
-> > +        abbrs.append(abbr.lower())
-> > +    return abbrs
-> 
-> I get this is just a matter of preference, so feel free to ignore my
-> suggestion.
-> This abbreviation algorithm doesn't work too well with atoms starting
-> with the same substring and can produce some unexpected result:
-> 
-> LTL_BLOCK_ON_RT_MUTEX:                b,
-> LTL_KERNEL_THREAD:                    ke,
-> LTL_KTHREAD_SHOULD_STOP:              kt,
-> LTL_NANOSLEEP:                        n,
-> LTL_PI_FUTEX:                         p,
-> LTL_RT:                               r,
-> LTL_SLEEP:                            s,
-> LTL_TASK_IS_MIGRATION:                task_is_m,
-> LTL_TASK_IS_RCU:                      task_is_r,
-> LTL_WAKE:                             wa,
-> LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    woken_by_e,
-> LTL_WOKEN_BY_HARDIRQ:                 woken_by_h,
-> LTL_WOKEN_BY_NMI:                     woken_by_n,
-> 
-> "woken_by_*" and "task_is_*" atom can get unnecessarily long and
-> while reading "kt" I might think about kernel_thread.
-> 
-> I was thinking about something like:
-> 
-> LTL_BLOCK_ON_RT_MUTEX:                b_o_r_m
-> LTL_KERNEL_THREAD:                    k_t
-> LTL_KTHREAD_SHOULD_STOP:              k_s_s
-> LTL_NANOSLEEP:                        n
-> LTL_PI_FUTEX:                         p_f
-> LTL_RT:                               r
-> LTL_SLEEP:                            s
-> LTL_TASK_IS_MIGRATION:                t_i_m
-> LTL_TASK_IS_RCU:                      t_i_r
-> LTL_WAKE:                             w
-> LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    w_b_e_o_h_p
-> LTL_WOKEN_BY_HARDIRQ:                 w_b_h
-> LTL_WOKEN_BY_NMI:                     w_b_n
-> 
-> or even
-> 
-> LTL_BLOCK_ON_RT_MUTEX:                b_m
-> LTL_KERNEL_THREAD:                    k_t
-> LTL_KTHREAD_SHOULD_STOP:              k_s_s
-> LTL_NANOSLEEP:                        n
-> LTL_PI_FUTEX:                         p_f
-> LTL_RT:                               r
-> LTL_SLEEP:                            s
-> LTL_TASK_IS_MIGRATION:                t_m
-> LTL_TASK_IS_RCU:                      t_r
-> LTL_WAKE:                             w
-> LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO:    w_e_h_p
-> LTL_WOKEN_BY_HARDIRQ:                 w_h
-> LTL_WOKEN_BY_NMI:                     w_n
-> 
-> I used the following code to come up with this:
-> 
-> def abbreviate_atoms(atoms: list[str]) -> list[str]:
->     # completely arbitrary..
->     skip = [ "is", "by", "or", "and" ]
->     def abbr (n, s):
->         return '_'.join(word[:n] for word in s.lower().split('_') if word not in skip)
->     for n in range(1, 32):
->         abbrs = [abbr(n, a) for a in atoms]
->         if len(abbrs) == len(set(abbrs)):
->             return abbrs
-> 
-> Which could even be tuned to use 2 letters per block instead of 1
-> (improving readability by a lot actually)..
-> 'bl_on_rt_mu', 'ke_th', 'kt_sh_st', 'na', 'pi_fu', 'rt', 'sl', 'ta_mi',
-> 'ta_rc', 'wa', 'wo_eq_hi_pr', 'wo_ha', 'wo_nm'
-> 
-> What do you think?
-
-Yes, this would be very nice. But as mentioned, this is mainly for
-debugging the monitors, not for end users. Therefore I don't want to spend
-too much energy on it.
-
-Let me see how "nice" we can make it without spending too many hours.
-Thanks for the suggestion!
-
-Best regards,
-Nam
