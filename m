@@ -1,72 +1,71 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C4922C336;
-	Wed, 16 Apr 2025 07:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFE922ACF3;
+	Wed, 16 Apr 2025 07:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788139; cv=none; b=tCz4XCTYu2tt7HN+41/ns90oCjymgVDYJtaxkFZZ2Ki+7S1RW391tq7FQtnZ+SlE3aXU4q/UFPDQ4oLuDw82kNMeSB09xzAXscwtacQr13ZSTcVFJD1aWD8j6pEv9I7ODDEiTi7wGLvJ5WaR770HPV4un6yab+K/tYYyg2f6ALc=
+	t=1744788154; cv=none; b=qLX6BBwO6p+UkvLRUG95q0QPJjCtaM/X6DgE2uX7s/qh7tniSoZOaoVoriM8z/elV2huuW+n8yld517c1Wq4G0HzS45t+9hsLrIvByGRWKIBIzWjhAIv8LdZ64NRH5YOOfh9GMw/AqYutNQFWHUEV4yYMdNVo+i4tKI8CDfYfss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788139; c=relaxed/simple;
-	bh=pq9E7g2iPBPNHP3j9zLHxqTxjogm10Qq37msVgpxYTg=;
+	s=arc-20240116; t=1744788154; c=relaxed/simple;
+	bh=/+76O0p30P1UAQDTVz3yx7Z9his4b8KH+O/iSg2KWms=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h2Udq8lxJkARrrK5U6fuJ9fbLWpv3/LuPRK6hpwz7LqDUPLUvV+w1xYxZTowCq2tAYZxTNrxbVkR9m09pNqSA6C9YDUeJGczzCB2obU7nyRFfkGdUGFGBbSuBfutg1luh07FCwRV0fRjnpQlG6Hw0gP9t4wbRZ0SaQEGUmNWHHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D/ByJwt7; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=di3CiYuKwZlA1H0C7Kw1h9vMxfVUvQXvbS+wlKqGhHfgJAA07fzpK/D9wRkfMN6yxwwfTDAdz9ky3yANELrM37YQzefEW0ZYHqwnt/iBvyR0wKaZ+dKKWFQSx8IHrKf8FJ+yb/klkQxUFM6NKSvZxyPEEjjRGnSymD6Rld6gEwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F9XdFd4E; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D/ByJwt7"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FJbme3021767;
-	Wed, 16 Apr 2025 07:22:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=BMzl79yb8d1fDamDeMLAWNQP69WWyr
-	XmT0w7knPA3X8=; b=D/ByJwt7LsJ5/vmf1pFn6/pl/Oa9EOUpqvXDRtDy5E4T24
-	JmD7LqNGIRXhxGsQTB1LmgZWvT9RIRwCeqPEbswBYa2GjDviaZUryAdoVsibo9zN
-	2r0hwkqXt3GLn17eQWFSRqXznMXvJl58DpiD/WGQV6i0tpKzuc+xiaLTddmp79ol
-	pmq2hpguR4lwHH8KcJ8u6N3Ff5O2INT38CfnX89TRxl2aq1ouKeGkmzWSnJiZley
-	ILzUdtXX1VULU7JEo9zP6bXP0/7wUy1yvTPaARo8NGqQF7J/ADkewcSGRXQxm3VM
-	zurFEjRNOcK58fd7tJf7MPJ16ERLOt+Hhp1ykbmg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq5054-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:22:02 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G3Fr4t010467;
-	Wed, 16 Apr 2025 07:22:01 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qk6ted-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:22:01 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G7LvQo33096442
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 07:21:58 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D01792004B;
-	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 85B1A20043;
-	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
-Date: Wed, 16 Apr 2025 09:21:55 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH] watchdog: diag288_wdt: Implement module autoload
-Message-ID: <20250416072155.7284A2f-hca@linux.ibm.com>
-References: <20250410095036.1525057-1-hca@linux.ibm.com>
- <abe3b3f3-0c9d-4ac2-af1f-59aa186c723c@roeck-us.net>
- <20250415162440.7369A19-hca@linux.ibm.com>
- <bd9de770-7e51-4ed9-bbef-2a11ad7eb1b3@roeck-us.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F9XdFd4E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744788153; x=1776324153;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/+76O0p30P1UAQDTVz3yx7Z9his4b8KH+O/iSg2KWms=;
+  b=F9XdFd4EW4IoI77EHGPnxje6YxcvuGYwL76qQ0RPIisvn1MqrB3r12rp
+   HX//qN9yU6BQPxslaNQbrEWIfAwl+ivY2KbwY7Ow7JMPrlpsG8n4FK1mb
+   pPOgDkpjMZhewZ7r7VwqDe5W7LI78zXRF54uGE1kW4z3TDLa417E+nig1
+   au4/ijknsw/Nqt+VIysPkG7MRY4p9Fj7PmmHBL2mshZuON/U+yJJYKgJ7
+   oFQzKL6vZf1hNVZHvGYLc9ZZTatXOTjslL5eND+mXWoaMk6mlScMSGMg4
+   sYZcN0S35wUVnUCFhQ176ihqD4bkr+sfJds8GEZjidH2JLOdUbyvB+Zny
+   w==;
+X-CSE-ConnectionGUID: +YAxXFWgR/OA6cehkS2PBA==
+X-CSE-MsgGUID: smEyaUO6RPWbOV8x+40XRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46244255"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46244255"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:32 -0700
+X-CSE-ConnectionGUID: KNTk/iHST3i+bMKCHUl/5Q==
+X-CSE-MsgGUID: LOvJ1h0/RHmkPCnEsygtgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130306215"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4x6G-0000000CmNa-3IaH;
+	Wed, 16 Apr 2025 10:22:24 +0300
+Date: Wed, 16 Apr 2025 10:22:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@gmail.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <Z_9asBKQ_9DGOH2g@smile.fi.intel.com>
+References: <cover.1744786420.git.mchehab+huawei@kernel.org>
+ <432f17b785d35122753d4b210874d78ee84e1bb5.1744786420.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,43 +74,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd9de770-7e51-4ed9-bbef-2a11ad7eb1b3@roeck-us.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QRDgFfAulZlAFvGHKdAoIObescVAngzu
-X-Proofpoint-GUID: QRDgFfAulZlAFvGHKdAoIObescVAngzu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 malwarescore=0 mlxlogscore=559 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504160056
+In-Reply-To: <432f17b785d35122753d4b210874d78ee84e1bb5.1744786420.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 15, 2025 at 09:51:35AM -0700, Guenter Roeck wrote:
-> On 4/15/25 09:24, Heiko Carstens wrote:
-> > On Thu, Apr 10, 2025 at 05:10:50AM -0700, Guenter Roeck wrote:
-> > > On 4/10/25 02:50, Heiko Carstens wrote:
-> > > > The s390 specific diag288_wdt watchdog driver makes use of the virtual
-> > > > watchdog timer, which is available in most machine configurations.
-> > > > If executing the diagnose instruction with subcode 0x288 results in an
-> > > > exception the watchdog timer is not available, otherwise it is available.
-> > > > ---
-> > > >    arch/s390/boot/startup.c           | 17 ++++++++++
-> > > >    arch/s390/include/asm/cpufeature.h |  1 +
-> > > >    arch/s390/include/asm/diag288.h    | 41 +++++++++++++++++++++++
-> > > >    arch/s390/include/asm/machine.h    |  1 +
-> > > >    arch/s390/kernel/cpufeature.c      |  5 +++
-> > > >    drivers/watchdog/diag288_wdt.c     | 53 ++----------------------------
-> > > >    6 files changed, 68 insertions(+), 50 deletions(-)
-> > > >    create mode 100644 arch/s390/include/asm/diag288.h
-> > 
-> > Guenter, Wim, I assume this can/should go upstream via the s390 tree?
+On Wed, Apr 16, 2025 at 02:57:38PM +0800, Mauro Carvalho Chehab wrote:
+> As reported by Andy, kernel-doc.py is creating a __pycache__
+> directory at build time.
 > 
-> It touches s390 core code, and you did not suggest otherwise when submitting
-> the patch, so that was my assumption.
+> Disable creation of __pycache__ for the libraries used by
+> kernel-doc.py, when excecuted via the build system or via
+> scripts/find-unused-docs.sh.
 
-Sure, just wanted to check that everybody is fine with this.
-Will apply this later to the s390 tree.
+Nope, still have it.
 
-Thanks!
+I used today's Linux Next with some local code patches (unrelated
+to any scripts or kernel doc or python).
+
+To confirm, I even done again a clean build.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
