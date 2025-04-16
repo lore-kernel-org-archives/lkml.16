@@ -1,149 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F811DC993;
-	Wed, 16 Apr 2025 13:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEF71FF1C7;
+	Wed, 16 Apr 2025 14:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811998; cv=none; b=ElLzvThjHNwM85IQwhnDkVjBopWc8OpWxIqwL+rJkDOW1ec0jG1uBuswCRIgRylmfv/dmWFM/W9pYsil4mJoM4zu1HQJEqPskGBHVGeWiVe+NyuQGMtDzTZX1wC6ubcXmn7MDElTA5YxAHp/J8C5lIv4qEnS4WvbwIm1aN/ddEU=
+	t=1744812006; cv=none; b=TdoVWMcuLu528EeDdCJ8CKom1XNOIfi9ATt5X1ll+GFHbj9IoVs530BKR76yS5FaBezRUolrk8mK+lnzi+2FbltNFkNVtKXGGQYJ8OKJ4IQO7revJ3RxOy3BOL771Qjpr8maSGiaNLCcU7K4e4lZHozO7Roe+E1Flp0n95sodT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811998; c=relaxed/simple;
-	bh=93Uol4HY+e4bLu/S0Vc2E9tIOWiiPPs3FKuHcrh+xKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XH6dY+MKqxPTo1LrhFcDDvLILeF6txNe924i2bArRtTQ/5wyomuhKSxsYgRdon11RhkYrnTcXDo57kxO2vXBlHN7KPehPHQ1D0+arJw6WhkVS8oWqhV9l9BdnVTAvNNt1EG1G7dgPMsGAr2gorRaX96XECyW+coaVftPzeNOYtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CqLyD8mM; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744812006; c=relaxed/simple;
+	bh=luuZwnA57py/IT0wbmPZ1ZWYUmQInFWtDeYolOtf3Do=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NnOOq9qrPizMPl4MgpDNadxUi+ktoCMRe6Mqmi4PKO/yvI+VKQhUUfues+o1ogb8YGO0VnIGobhYMw8bDwijmdbHHHrj2sT9ADAGsUt19ZZLr3k4L82Uq8sP1ziCiQMZNV5uj6XEJ0K/EZJ9goO+yF835RiALMxNZOZttmTm12c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZdym7W6; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CqLyD8mM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744811997; x=1776347997;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=93Uol4HY+e4bLu/S0Vc2E9tIOWiiPPs3FKuHcrh+xKk=;
-  b=CqLyD8mMJSvKlKuovQJPqc6HasCe2za15HZUnM+aXSCInarkkJeV/47P
-   yNdSRlYBO9bLy2nuxZ8MiAapdW1rwqDD8CgEiKm5UGf4rgzCay1tCuYdH
-   AdlxzKViXEUBX/WiekgXHQ/8fiopdCaK8PBcT9oarZmb5vzN74q2BPte1
-   hZ/wSduZf6gAXUYSq4v4xzPO5pd0+FAQ6HYHogsga74HTJjIaSKK11965
-   8hcT0eUP4nQvNNB4FlXr/t5iwgUgG0/G2dhYvyo7H5iVdFNGF+zarySG2
-   stnYNSUnyOd/jBkKV3WV+GPN2cFv+PN31UTafFiEgbVdWBuiOPSUWtRZV
-   g==;
-X-CSE-ConnectionGUID: YTGgphlOTL+Vpvv8+AiizA==
-X-CSE-MsgGUID: 2fwrHDGcSOO0apV7biFPGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57027294"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57027294"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:54 -0700
-X-CSE-ConnectionGUID: HT7ItroSTnOpop/CPNvwRg==
-X-CSE-MsgGUID: Bs/22orTTfSZjMOPklpgdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130447041"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:54 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B731820B5736;
-	Wed, 16 Apr 2025 06:59:52 -0700 (PDT)
-Message-ID: <a998c0c3-1ec5-4dbe-95fa-fd37648de96a@linux.intel.com>
-Date: Wed, 16 Apr 2025 09:59:51 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZdym7W6"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so11825691a12.0;
+        Wed, 16 Apr 2025 07:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744812002; x=1745416802; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IUgvm+DiPpmDjC2mORrvt+5jPl+d2nrcr0fpozEFS0o=;
+        b=AZdym7W6Je0cYSGQ5CDVv9gjbcqfNwb/w8VNxxPhsYpi8o9t68xIDw5ya2xFpCcw8v
+         llUEMIweqKhqAVNr47RQkOxhuCokp0UwOu8Z3EdffpsVbgK3Xb0scaQHHkAqVQ9YkCkM
+         ESY70AxFIRJwns4HorI9ju8GYoalH0+ytjNfQP5FVZEwrAR0fok9fEeiOWbG6GsXzw4l
+         eQB92/2P2AtlkY/h6z3OCKrrduOo24nEN/UVHhYldnDBvTzMswym2TeWy2Hi1z1zG6NY
+         frBKlBf8uhAjiUfsdctssdk1Db+3LsqayXhpiZzbNBWyHxezp+VSsIuoKSTFBJdCrE3T
+         iZrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744812002; x=1745416802;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IUgvm+DiPpmDjC2mORrvt+5jPl+d2nrcr0fpozEFS0o=;
+        b=vu/lJQaPJOTbyfm58LEImWy5aNDNU6JjpZO/MIIA5g+lcb2yK71i6NjCEgHc/+0P1v
+         SdCZnuSnGpBKA1GIdnaFCyZY8vemotwlfdtFlK9YkFZpY/S4FyBVRyxEOb2uAHGXGuV8
+         VtOjLYUHHKRcE/SyyRpxz2JyJXwPakqjMW1UQI02EqWAI8OG9RkF3vIFH1wM5cC7OqTk
+         wY8KOc3nNG4AFDzZb2LafOAvXmrttyz7nTqLWL5mUAiCNX3xYxaIiaZVNll/33dlxVFB
+         lGtIL6fb6u7Im2xJ/Yc6WpEi2jdfdDaQ1CJ+tdTNX/I4AacyxHYWr9m0bKLdWayB+J4a
+         9nAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUdvaObVQB8qbqUIw5i6LvOncKL6XGZ2ApkuzVcHimIM6OIBryF1vSNkm4y22vShEmWR9NxkSHn@vger.kernel.org, AJvYcCXgCmqk3hjNM6nxJ30QnfyYhJgN97pUwy9yewOCepTMxZuwCs1YnLTWbrRRgSoIdO6s8j8j1ooo50bubeM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyISnh+pJEdNWqukeapcxHT8pRqLtO71jkDoDIS4IEUjwolIvjS
+	Oeg2cwlu9+tk7igpsjfMM+NJp1QNtbG9qSFWx5UCwRzSOUBO428GB24P9TDp/SHDAYKCTSbSr69
+	p4+JMapfqHlSIeuetNW2eatYoUIs=
+X-Gm-Gg: ASbGncv5Rg2aNzOlD6RV5d76hVhQ2tTUNlWpICmd0EexmmA+sONxQAM9NivzZ/wRfHW
+	IQvFkiH2Wr1McwYGepGAf+zm3usgCKnheidCTsm3AJ78CcSPp00xTqT/Xjoa/bgZKRbMEJhNWkV
+	Fi7I8KVjDfGwwVmxXoS2HA
+X-Google-Smtp-Source: AGHT+IFybF67oGA69tGhjx227ggX9ZUR73/3iBTjwBDtuR4eg/2zNDJZjb1T1t5XXyD0pv+unM3x1++ujHfZ4rHc6yY=
+X-Received: by 2002:a17:907:7b87:b0:ac7:f2b9:ec3b with SMTP id
+ a640c23a62f3a-acb428748d0mr160511966b.4.1744812002038; Wed, 16 Apr 2025
+ 07:00:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
- <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <a3269f8a-aff3-4f9e-8f43-b00fee03121a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev> <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev> <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+ <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev> <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
+ <44b67f86-ed27-49e8-9e15-917fa2b75a60@linux.dev> <CAMuE1bFk=LFTWfu8RFJeSoPtjO8ieJDdEHhHpKYr4QxqB-7BBg@mail.gmail.com>
+ <507eb775-d7df-4dd2-a7d1-626d5a51c1de@linux.dev>
+In-Reply-To: <507eb775-d7df-4dd2-a7d1-626d5a51c1de@linux.dev>
+From: Sagi Maimon <maimon.sagi@gmail.com>
+Date: Wed, 16 Apr 2025 16:59:33 +0300
+X-Gm-Features: ATxdqUFIjnpeuKHyLdCEt5PwV7Ym-YP21Nq8a5H3aqMI-LdF0ngvFWyHmxIZvzM
+Message-ID: <CAMuE1bFLB24ELFOSG=v+0hxJ+a+KGNWc8=Z3=kbXOs03PtLFOA@mail.gmail.com>
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 2025-04-15 9:46 p.m., Mi, Dapeng wrote:
-> 
-> On 4/16/2025 12:31 AM, Liang, Kan wrote:
->>
->> On 2025-04-15 9:53 a.m., Peter Zijlstra wrote:
->>> On Tue, Apr 15, 2025 at 11:44:18AM +0000, Dapeng Mi wrote:
->>>> arch-PEBS provides CPUIDs to enumerate which counters support PEBS
->>>> sampling and precise distribution PEBS sampling. Thus PEBS constraints
->>>> should be dynamically configured base on these counter and precise
->>>> distribution bitmap instead of defining them statically.
->>>>
->>>> Update event dyn_constraint base on PEBS event precise level.
->>> What if any constraints are there on this? 
->> Do you mean the static constraints defined in the
->> event_constraints/pebs_constraints?
->>
->>> CPUID is virt host
->>> controlled, right, so these could be the most horrible masks ever.
->>>
->> Yes, it could be changed by VMM. A sanity check should be required if
->> abad mask is given.
-> 
-> Yes, we need a check to restrict the PEBS counter mask into the valid
-> counter mask, and just realized that we can't use hybrid(event->pmu,
-> intel_ctrl) to check counter mask and need a minor tweak since it includes
-> the GLOBAL_CTRL_EN_PERF_METRICS bit.
-> 
-> How about this?
-> 
->         if (x86_pmu.arch_pebs) {
->             u64 cntr_mask = hybrid(event->pmu, intel_ctrl) &
->                         ~GLOBAL_CTRL_EN_PERF_METRICS;
->             u64 pebs_mask = event->attr.precise_ip >= 3 ?
->                         pebs_cap.pdists : pebs_cap.counters;
->             if (pebs_mask != cntr_mask)
->                 event->hw.dyn_constraint = pebs_mask & cntr_mask;
->         }
-> 
-
-The mask isn't changed after boot. The sanity check should only be done
-once. I think it can be done in the update_pmu_cap() when perf retrieves
-the value. If a bad mask is detected, the PEBS should be disabled.
-
-Thanks,
-Kan>
->>
->>> This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?The dyn_constraint is a supplement of the static constraints. It doesn't
->> overwrite the static constraints.
->>
->> In the intel_get_event_constraints(), perf always gets the static
->> constraints first. If the dyn_constraint is defined, it gets the common
->> mask of the static constraints and the dynamic constraints. All
->> constraint rules will be complied.
->>
->> 	if (event->hw.dyn_constraint != ~0ULL) {
->> 		c2 = dyn_constraint(cpuc, c2, idx);
->> 		c2->idxmsk64 &= event->hw.dyn_constraint;
->> 		c2->weight = hweight64(c2->idxmsk64);
->> 	}
->>
->> Thanks,
->> Kan
->>
-> 
-
+On Wed, Apr 16, 2025 at 1:35=E2=80=AFPM Vadim Fedorenko
+<vadim.fedorenko@linux.dev> wrote:
+>
+> On 16/04/2025 07:33, Sagi Maimon wrote:
+> > On Mon, Apr 14, 2025 at 4:55=E2=80=AFPM Vadim Fedorenko
+> > <vadim.fedorenko@linux.dev> wrote:
+> >>
+> >> On 14/04/2025 14:43, Sagi Maimon wrote:
+> >>> On Mon, Apr 14, 2025 at 4:01=E2=80=AFPM Vadim Fedorenko
+> >>> <vadim.fedorenko@linux.dev> wrote:
+> >>>>
+> >>>> On 14/04/2025 12:38, Sagi Maimon wrote:
+> >>>>> On Mon, Apr 14, 2025 at 2:09=E2=80=AFPM Vadim Fedorenko
+> >>>>> <vadim.fedorenko@linux.dev> wrote:
+> >>>>>>
+> >>>>>> On 14/04/2025 11:56, Sagi Maimon wrote:
+> >>>>>>> On Mon, Apr 14, 2025 at 12:37=E2=80=AFPM Vadim Fedorenko
+> >>>>>>> <vadim.fedorenko@linux.dev> wrote:
+> >>>>>>>>
+> >>>>>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
+> >>>>>>>>> Sysfs signal show operations can invoke _signal_summary_show be=
+fore
+> >>>>>>>>> signal_out array elements are initialized, causing a NULL point=
+er
+> >>>>>>>>> dereference. Add NULL checks for signal_out elements to prevent=
+ kernel
+> >>>>>>>>> crashes.
+> >>>>>>>>>
+> >>>>>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and updat=
+e sysfs nodes")
+> >>>>>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> >>>>>>>>> ---
+> >>>>>>>>>       drivers/ptp/ptp_ocp.c | 3 +++
+> >>>>>>>>>       1 file changed, 3 insertions(+)
+> >>>>>>>>>
+> >>>>>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+> >>>>>>>>> index 7945c6be1f7c..4c7893539cec 100644
+> >>>>>>>>> --- a/drivers/ptp/ptp_ocp.c
+> >>>>>>>>> +++ b/drivers/ptp/ptp_ocp.c
+> >>>>>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, =
+struct ptp_ocp *bp, int nr)
+> >>>>>>>>>           bool on;
+> >>>>>>>>>           u32 val;
+> >>>>>>>>>
+> >>>>>>>>> +     if (!bp->signal_out[nr])
+> >>>>>>>>> +             return;
+> >>>>>>>>> +
+> >>>>>>>>>           on =3D signal->running;
+> >>>>>>>>>           sprintf(label, "GEN%d", nr + 1);
+> >>>>>>>>>           seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%=
+llu pol:%d",
+> >>>>>>>>
+> >>>>>>>> That's not correct, the dereference of bp->signal_out[nr] happen=
+s before
+> >>>>>>>> the check. But I just wonder how can that even happen?
+> >>>>>>>>
+> >>>>>>> The scenario (our case): on ptp_ocp_adva_board_init we
+> >>>>>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
+> >>>>>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signa=
+l_summary_show
+> >>>>>>> when calling signal 2 or 3  the dereference occurs.
+> >>>>>>> can you please explain: " the dereference of bp->signal_out[nr] h=
+appens before
+> >>>>>>> the check", where exactly? do you mean in those lines:
+> >>>>>>> struct signal_reg __iomem *reg =3D bp->signal_out[nr]->mem;
+> >>>>>>        ^^^
+> >>>>>> yes, this is the line which dereferences the pointer.
+> >>>>>>
+> >>>>>> but in case you have only 2 pins to configure, why the driver expo=
+ses 4
+> >>>>>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+> >>>>>>
+> >>>>> I can (and will) expose only 2 sma in adva_timecard_attrs, but stil=
+l
+> >>>>> ptp_ocp_summary_show runs
+> >>>>> on all 4 signals and not only on the on that exposed, is it not a b=
+ug?
+> >>>>
+> >>>> Yeah, it's a bug, but different one, and we have to fix it other way=
+.
+> >>>>
+> >>> Do you want to instruct me how to fix it , or will you fix it?
+> >>
+> >> well, the original device structure was not designed to have the amoun=
+t
+> >> of SMAs less than 4. We have to introduce another field to store actua=
+l
+> >> amount of SMAs to work with, and adjust the code to check the value. T=
+he
+> >> best solution would be to keep maximum amount of 4 SMAs in the structu=
+re
+> >> but create a helper which will init new field and will have
+> >> BUILD_BUG_ON() to prevent having more SMAs than fixed size array for
+> >> them. That will solve your problem, but I will need to check it on the
+> >> HW we run.
+> >>
+> > just to be clear you will write the fix and test it on your HW, so you
+> > don't want me to write the fix?
+>
+> Well, it would be great if you can write the code which will make SMA
+> functions flexible to the amount of pin the HW has. All our HW has fixed
+> amount of 4 pins that's why the driver was coded with constants. Now
+> your hardware has slightly different amount of pins, so it needs
+> adjustments to the driver to work properly. I just want to be sure that
+> any adjustments will not break my HW - that's what I meant saying I'll
+> test it.
+>
+Just to be clear (correct me please if I am wrong):
+I will write the code, then create a patch and upstream to the vanilla
+you will test my change on your HW and only then approve the patch
+> >>>>>>> struct ptp_ocp_signal *signal =3D &bp->signal[nr];
+> >>>>>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() clo=
+ser to
+> >>>>>>>> the end of ptp_ocp_adva_board_init() like it's done for other bo=
+ards.
+> >>>>>>>>
+> >>>>>>>> --
+> >>>>>>>> pw-bot: cr
+> >>>>>>
+> >>>>
+> >>
+>
