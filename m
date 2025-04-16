@@ -1,54 +1,54 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5002153C9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE422215F6C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744822687; cv=none; b=SIjWLLKjFWuDgvtN6lzi7qkm16MSvmScLumY33G1ut2EfpuQLL1yIa2801bPPbkr6Vqbwjv/QfOQXSuLzauCO3IIir61A0Q4cPUaV1DLjkH70ogdU9gbbF4xnx0b0ph9KoTLxC638bNot2NdiVY7N1lKIPZOtuYOtMx0uUIJYEk=
+	t=1744822689; cv=none; b=qYhjLyYOsznqsE8rtvdferO2v86LiSs8UtU6OM61o+cjtgb6RkXi/baqLYdCFRtTPydk19t6OvgHCpkTogLY2k2jrNUrFNM6n9A6mrBjeyxsERnllri9GSkg0gXVS8E9l7BAEejNrldfSEa7X9rKiqBMZO3/yaWa4o4ZVlwGixI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744822687; c=relaxed/simple;
-	bh=lRe9hLNbP/OaX7MwertBxcNmClmRysFfc7d6hRijpLE=;
+	s=arc-20240116; t=1744822689; c=relaxed/simple;
+	bh=PgEJaJgE0LXiQJDQNeoBnr/Xemmrs41II8OE/SAPKgE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ZzvrKuQ1qFvAcIVrzJ+74vNKbhszB8Sbb+yo14LJG+RM/minsHh0Bm431I3DccCUIkimn07+fs21zjf/8QyVz9QL7VRBjGs/mc40VQtJJhhTUYJHD6gegC5END1NPzYrIvuve5GJAqCIkdBtAnoxSWa7KRd93w46vhJHePsUu+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bhVv7x/C; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=j0Att3m0BrIMXRDuyzWJc59z/ZLvKqpvY9qqkAfdXLu6N4ckFLoC7yg4fcR10nZBxb+LoV+7+dwEe88iFvPMnzaPLmJ4LZE6shPGcK95x/F7K57C9LWOTri8OuNUWxrYkvT0cwCWdqiSqALKfFV3chqdPLhSoxV5F4bg4bpxjns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AfEvETeU; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bhVv7x/C"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39141ffa913so4050755f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:58:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AfEvETeU"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so53372825e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744822684; x=1745427484; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744822686; x=1745427486; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTCjlI4jRJCYXW8u75vTgWDWUcDqLf34EMngrdWGbjQ=;
-        b=bhVv7x/CKWnip8gzLTXFXVbMDBHkBKO+3wvFYzFi9uM7cEyLO7pzPo71Ys6Dff28OG
-         flXBbV6lKJ9puiotuxVpBaW+d0oIknxoqFN0fuJydB97FxYwlGsl1S6gKwy5Llggmpdf
-         p6GKI4/wcBBOvWpZa8yx6X6S/G6ADpHoHE96pEH2A/0WrkBVlO3YdjYbMSq+UHpeTu8v
-         FBS3XAGHcAVTc9yI7cMByemb/U9OUblELetW16LCm6gZOIuaIdfeRiyCTM6WHi1d9jsP
-         phHpRXSN9/7Y8O1kAqnXMSg39ocGwv/mpFS/ETjco7UDcIm++nO47vxZ36WRQOmWzLSP
-         L0Xw==
+        bh=+AXQAr6DEdb53aAovtH1m4o5iLjqGheV49k9eDzwzjU=;
+        b=AfEvETeUuP+uvuWet7jyjKtftUuQ5Oe1E5JYDytxCC2eMArX2OWgCrhcZqPH2+R2CP
+         rH04rRmankp0H6lQx0AzMbDWi9wgugbO75F67Z9xOLqVzTGXdDyiWn70fQF3yeaVluOZ
+         ox56j/s8HLd+wMD9QinApsZakoOToMxjAa7js2TciLfW0xdvJj/TsFurgiaTVO+DUBVA
+         EeE6F8Zxqt9wQIylQ5h4/Vh/w/kjZIcaceMqV60a1ZQVO/xW7jG/OMBeRcT0UvldD8W5
+         9OFLfdPrgZXidRQZG4UrFY80HKPGmdF82iZgm5zkJDZg0+Gq6YmQHruIiVc8cHzUHuTb
+         hJCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744822684; x=1745427484;
+        d=1e100.net; s=20230601; t=1744822686; x=1745427486;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tTCjlI4jRJCYXW8u75vTgWDWUcDqLf34EMngrdWGbjQ=;
-        b=c8OemniScfT0blWxvQcsBql5k/hg4u6rnObqyQZygofjru7BNJBUrKmfjLE3T8u1rj
-         o3s366uA8BdfEAuU9Oo1zUTmFgKSK3qmVw9D8lmT/C2eu9HaRDPrTuHHSF/dYbOGJbVX
-         H80U9Qeod1ejapc+Ha26/0+7suCjJGTY9bmyORJqIZG43/g2VJDZWHwBpTc1JjNP0kpp
-         ubcnDO85QsoEM0D0yxzanVZXR8l4w+K1/edOXLyKxdEqkpqP/+8gz8jQojOaNR81/20o
-         /xaVk6oo1IrGEyz0nRNQOFP1v9/tlXzjEY2FmL/eC5CB8DBAQQp/dLcwEujTr1ZIVjkk
-         uZLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWheilmqf5ob/OXePam960PuOIR+ofyTEDRxrR0EaWL5ydMgPjrnQQhR1pRlBYsCjX8AasnuISJWL2Km9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjRn5Qpj/xVZacgbVkYKu4XBtdsBmY0Dg+UZ56tsNdw966Xm7U
-	/t7UdbbE8sFU6Z1uEzRR9WwxYlLLky5tAkjLqK4w6DnXS4/qz3a/Ip0vGAztVRcNTW2AuA==
-X-Google-Smtp-Source: AGHT+IFjJecSiikc6rQEhoneDuSkFJVjN+/qGiEBByEyYjO0q6UyVDW7J9WRNaZ2JfT+PQvbqLm0Nn/D
-X-Received: from wmqd11.prod.google.com ([2002:a05:600c:34cb:b0:43d:58c9:bb51])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4308:b0:391:45e9:face
- with SMTP id ffacd0b85a97d-39ee5bafdf9mr2248386f8f.54.1744822684335; Wed, 16
- Apr 2025 09:58:04 -0700 (PDT)
-Date: Wed, 16 Apr 2025 18:57:46 +0200
+        bh=+AXQAr6DEdb53aAovtH1m4o5iLjqGheV49k9eDzwzjU=;
+        b=SUBGOGphc54cJ+0f9Y8+sH3Im9iqhvVI4PJubhtNRc23FXJAUZnGH4J1zNPZpA7YLM
+         ZDAB0NILW74ryDpXscDJOB9AzIzCMdPiAfG/63RKF5pFvvJ1tKwPJ52slm/vh+B/68tc
+         P/IoNHPZASdhL2GHnt4X1fVEkIsbaOtQxItoHOgujqsNGx3KEBS6mNdgV9srO6Axyjey
+         K0jbB1XYw3E1DgqnELx2AuaP82LxlXS+2dJTb80Ndo2m409mEIYnVbkzpRIdpjKHqfkt
+         BgAi286kGKiOobGjQQGXWt3CRuuiYUfxuw6g9KQCSLHLUkyBttCyuiLh6J8yspwdPLLk
+         Vplw==
+X-Forwarded-Encrypted: i=1; AJvYcCWsWUXIv1EYU6byZFwXCQs1QLnv9663W6YHk6Ojb1pOPq2tRfDSolpYVlJ6iexju8NcyzY1Du5wlOcOaJs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXWyS4dcdtzTe7TsUk48ILspPB+rBA8OyiC2KVUCinMkN5DKz6
+	ZkPXeafpjDemuhC9kBxTG0PmOvL4wH+suP7PWslaOnWGtlwZc5S5dGIFnfgYF6I3krY2MA==
+X-Google-Smtp-Source: AGHT+IHTV/3RUCyKhwGqdBj/wC/EfEt6jOyqE3Rh/VKi0y7pMFXpDis+ib55sXylrUCf9El9T3zmxV+y
+X-Received: from wmbh25.prod.google.com ([2002:a05:600c:a119:b0:43d:586a:9bcb])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5020:b0:43d:83a:417d
+ with SMTP id 5b1f17b1804b1-4405d625d68mr28618735e9.12.1744822686421; Wed, 16
+ Apr 2025 09:58:06 -0700 (PDT)
+Date: Wed, 16 Apr 2025 18:57:47 +0200
 In-Reply-To: <20250416165743.4080995-6-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,15 +58,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250416165743.4080995-6-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2029; i=ardb@kernel.org;
- h=from:subject; bh=10Qa3f8wkjUVpqoovejQoxb1J4k9EmK+vNsm5yY59B0=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3/w66LT23T1O/2bvrhs2baJ5v3zy792NWsNPVOYMiss
- EU3/TPCOkpZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBE5PQZGd6nL8+J2Hy3tj3D
- bPL2xxKn7T54+YdKrZmrZc95k3tbvx4jw8atcg277qvr7nvT8fb7DlYp54xtVVarzBg85B1O1LU 9ZQQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6446; i=ardb@kernel.org;
+ h=from:subject; bh=aJ31HuwoQHpuIXtoeQRHoQQiwMzqJa0G33NiTtuOfdc=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3/w57UIk4xtjCBaC7XkvoO3VPzv06dEFqe+EK8wW975
+ lW52R4dpSwMYhwMsmKKLAKz/77beXqiVK3zLFmYOaxMIEMYuDgFYCJckQz/c+s/6/e6357yw/+t
+ +8V/NWd90ttm1zt7Xrnz37TUJHjpJkaGYxPMcrQ4f6vO3dwW+1Xh+uPSL3G8SotNv1vwTd+lnr6 MEQA=
 X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-Message-ID: <20250416165743.4080995-8-ardb+git@google.com>
-Subject: [PATCH v2 2/4] x86/boot: Drop redundant RMPADJUST in SEV SVSM
- presence check
+Message-ID: <20250416165743.4080995-9-ardb+git@google.com>
+Subject: [PATCH v2 3/4] x86/sev: Unify SEV-SNP hypervisor feature check
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-efi@vger.kernel.org
 Cc: x86@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org, 
@@ -77,56 +76,187 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-snp_vmpl will be assigned a non-zero value when executing at a VMPL
-other than 0, and this is inferred from a call to RMPADJUST, which only
-works when running at VMPL0.
+The decompressor and the core kernel both check the hypervisor feature
+mask exposed by the hypervisor, but test it in slightly different ways.
 
-This means that testing snp_vmpl is sufficient, and there is no need to
-perform the same check again.
+This disparity seems unintentional, and simply a result of the fact that
+the decompressor and the core kernel evolve differently over time when
+it comes to setting up the SEV-SNP execution context.
+
+So move the HV feature check into a helper function and call that
+instead. For the core kernel, move the check to an earlier boot stage,
+right after the point where it is established that the guest is
+executing in SEV-SNP mode.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/compressed/sev.c | 20 +++-----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
+ arch/x86/boot/compressed/sev.c      | 19 +----------
+ arch/x86/boot/startup/sme.c         |  2 ++
+ arch/x86/coco/sev/core.c            | 11 -------
+ arch/x86/coco/sev/shared.c          | 33 +++++++++++++++-----
+ arch/x86/include/asm/sev-internal.h |  3 +-
+ arch/x86/include/asm/sev.h          |  2 ++
+ 6 files changed, 32 insertions(+), 38 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 6eadd790f4e5..26ba997c45fa 100644
+index 26ba997c45fa..aeee011a6486 100644
 --- a/arch/x86/boot/compressed/sev.c
 +++ b/arch/x86/boot/compressed/sev.c
-@@ -617,30 +617,16 @@ void sev_enable(struct boot_params *bp)
- 	 */
- 	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
- 		u64 hv_features;
--		int ret;
- 
- 		hv_features = get_hv_features();
- 		if (!(hv_features & GHCB_HV_FT_SNP))
- 			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
- 
- 		/*
--		 * Enforce running at VMPL0 or with an SVSM.
--		 *
--		 * Use RMPADJUST (see the rmpadjust() function for a description of
--		 * what the instruction does) to update the VMPL1 permissions of a
--		 * page. If the guest is running at VMPL0, this will succeed. If the
--		 * guest is running at any other VMPL, this will fail. Linux SNP guests
--		 * only ever run at a single VMPL level so permission mask changes of a
--		 * lesser-privileged VMPL are a don't-care.
-+		 * Running at VMPL0 is required unless an SVSM is present and
-+		 * the hypervisor supports the required SVSM GHCB events.
- 		 */
--		ret = rmpadjust((unsigned long)&boot_ghcb_page, RMP_PG_SIZE_4K, 1);
--
--		/*
--		 * Running at VMPL0 is not required if an SVSM is present and the hypervisor
--		 * supports the required SVSM GHCB events.
--		 */
--		if (ret &&
--		    !(snp_vmpl && (hv_features & GHCB_HV_FT_SNP_MULTI_VMPL)))
-+		if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
- 			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
+@@ -611,24 +611,7 @@ void sev_enable(struct boot_params *bp)
+ 			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SEV_ES_PROT_UNSUPPORTED);
  	}
  
+-	/*
+-	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
+-	 * features.
+-	 */
+-	if (sev_status & MSR_AMD64_SEV_SNP_ENABLED) {
+-		u64 hv_features;
+-
+-		hv_features = get_hv_features();
+-		if (!(hv_features & GHCB_HV_FT_SNP))
+-			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+-
+-		/*
+-		 * Running at VMPL0 is required unless an SVSM is present and
+-		 * the hypervisor supports the required SVSM GHCB events.
+-		 */
+-		if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
+-			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
+-	}
++	snp_check_hv_features();
+ 
+ 	if (snp && !(sev_status & MSR_AMD64_SEV_SNP_ENABLED))
+ 		error("SEV-SNP supported indicated by CC blob, but not SEV status MSR.");
+diff --git a/arch/x86/boot/startup/sme.c b/arch/x86/boot/startup/sme.c
+index 5738b31c8e60..11caa343790d 100644
+--- a/arch/x86/boot/startup/sme.c
++++ b/arch/x86/boot/startup/sme.c
+@@ -533,6 +533,8 @@ void __head sme_enable(struct boot_params *bp)
+ 	if (snp_en ^ !!(msr & MSR_AMD64_SEV_SNP_ENABLED))
+ 		snp_abort();
+ 
++	sev_hv_features = snp_check_hv_features();
++
+ 	/* Check if memory encryption is enabled */
+ 	if (feature_mask == AMD_SME_BIT) {
+ 		if (!(bp->hdr.xloadflags & XLF_MEM_ENCRYPTION))
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index aeb7731862c0..4618ab64c767 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1582,17 +1582,6 @@ void __init sev_es_init_vc_handling(void)
+ 	if (!sev_es_check_cpu_features())
+ 		panic("SEV-ES CPU Features missing");
+ 
+-	/*
+-	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
+-	 * features.
+-	 */
+-	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP)) {
+-		sev_hv_features = get_hv_features();
+-
+-		if (!(sev_hv_features & GHCB_HV_FT_SNP))
+-			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+-	}
+-
+ 	/* Initialize per-cpu GHCB pages */
+ 	for_each_possible_cpu(cpu) {
+ 		alloc_runtime_data(cpu);
+diff --git a/arch/x86/coco/sev/shared.c b/arch/x86/coco/sev/shared.c
+index a7c94020e384..514e2d42700b 100644
+--- a/arch/x86/coco/sev/shared.c
++++ b/arch/x86/coco/sev/shared.c
+@@ -99,16 +99,10 @@ sev_es_terminate(unsigned int set, unsigned int reason)
+ 		asm volatile("hlt\n" : : : "memory");
+ }
+ 
+-/*
+- * The hypervisor features are available from GHCB version 2 onward.
+- */
+-u64 get_hv_features(void)
++static u64 __head get_hv_features(void)
+ {
+ 	u64 val;
+ 
+-	if (ghcb_version < 2)
+-		return 0;
+-
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
+ 	VMGEXIT();
+ 
+@@ -119,6 +113,31 @@ u64 get_hv_features(void)
+ 	return GHCB_MSR_HV_FT_RESP_VAL(val);
+ }
+ 
++u64 __head snp_check_hv_features(void)
++{
++	/*
++	 * SNP is supported in v2 of the GHCB spec which mandates support for HV
++	 * features.
++	 */
++	if (RIP_REL_REF(sev_status) & MSR_AMD64_SEV_SNP_ENABLED) {
++		u64 hv_features;
++
++		hv_features = get_hv_features();
++		if (!(hv_features & GHCB_HV_FT_SNP))
++			sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
++
++		/*
++		 * Running at VMPL0 is required unless an SVSM is present and
++		 * the hypervisor supports the required SVSM GHCB events.
++		 */
++		if (snp_vmpl > 0 && !(hv_features & GHCB_HV_FT_SNP_MULTI_VMPL))
++			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_NOT_VMPL0);
++
++		return hv_features;
++	}
++	return 0;
++}
++
+ void snp_register_ghcb_early(unsigned long paddr)
+ {
+ 	unsigned long pfn = paddr >> PAGE_SHIFT;
+diff --git a/arch/x86/include/asm/sev-internal.h b/arch/x86/include/asm/sev-internal.h
+index 73cb774c3639..81abef86b1d0 100644
+--- a/arch/x86/include/asm/sev-internal.h
++++ b/arch/x86/include/asm/sev-internal.h
+@@ -4,7 +4,6 @@
+ 
+ extern struct ghcb boot_ghcb_page;
+ extern struct ghcb *boot_ghcb;
+-extern u64 sev_hv_features;
+ 
+ /* #VC handler runtime per-CPU data */
+ struct sev_es_runtime_data {
+@@ -117,6 +116,6 @@ enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+ void snp_register_ghcb_early(unsigned long paddr);
+ bool sev_es_negotiate_protocol(void);
+ bool sev_es_check_cpu_features(void);
+-u64 get_hv_features(void);
++void check_hv_features(void);
+ 
+ const struct snp_cpuid_table *snp_cpuid_get_table(void);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index a8661dfc9a9a..8637a65973ef 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -418,6 +418,7 @@ struct svsm_call {
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ 
+ extern u8 snp_vmpl;
++extern u64 sev_hv_features;
+ 
+ extern void __sev_es_ist_enter(struct pt_regs *regs);
+ extern void __sev_es_ist_exit(void);
+@@ -494,6 +495,7 @@ void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
+ void snp_set_wakeup_secondary_cpu(void);
+ bool snp_init(struct boot_params *bp);
+ void __noreturn snp_abort(void);
++u64 snp_check_hv_features(void);
+ void snp_dmi_setup(void);
+ int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call, struct svsm_attest_call *input);
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
 -- 
 2.49.0.805.g082f7c87e0-goog
 
