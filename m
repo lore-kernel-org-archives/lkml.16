@@ -1,152 +1,158 @@
-Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4981DA31F;
-	Wed, 16 Apr 2025 01:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175691E3DC4
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765714; cv=none; b=EIb4Q/ZAEz4HZ/TJTs5A8olQ9zRTyoJ1f9bT6ff5R0WPDou6uiTkVL3GH/CwB+YJHvTAs7qGZWrGji55bgkoEKhKxEQ8kkO0TWJooUrlcWtOXFHvmZPI/8m24wr8jph2sOfFj6vw37VFBGmQ+GfbJmNEZntLYdcjNwwcg4G0r4c=
+	t=1744765751; cv=none; b=VEjAT0HOsz973/916sbHJ2yyLPD5mxRm/kkQocSCencFvxlCBjy3SwY9LYl4wY8yRPweYJBVsBdvlIAKk6dpxtroTI9CazuZqTHhznIH8epwfRLxXei1w9SM6E/K6h6wGmuTfLaNk++PrJSnSAoShxsurPLITzzu6TmwCz9dNo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765714; c=relaxed/simple;
-	bh=24Pj5QnVkkLGfnJr0G5AfJt9DVnlfVPreKS2E55Q0Eo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sjd2vSF+4X1MR6nnFI4cdU5mNkWa3IxlQwXuJQZrcF6P3LDFsKnFE3G5mNR8H8fxcWjaXgN3okDX7VUkj1l3W28oyw4N/3OhU+eJMop6sCWmYiL/MmGkrxHg3X1PUuuirDhGE2JEEJyrhDClkl9Iu7ynq2fDuV+RXPhvob0i3zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gx8bp6/Q; arc=none smtp.client-ip=209.85.128.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744765751; c=relaxed/simple;
+	bh=90GOVhsjwFiXYK/QyRkXWYdRMy6wyktuaZoBVjZFbdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CjlCRr14vkjFJKCzIIKP7xDyOPH7I0q/wf+1skVZBovati9P1jBDDWr+Q//KNf1bJdOFMJYNLgpI/+gp5YP0ldyOm3NSTwwxMnnlqNSKoU/BdpGckyaN+YdbMqjqLKkt0JxO1bDjPYIwRksaUEMwliAn8cv6FJY6u4Lp/2twNTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gb5cyd+I; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx8bp6/Q"
-Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6f6ca9a3425so73139727b3.2;
-        Tue, 15 Apr 2025 18:08:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gb5cyd+I"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d46fddf43aso45272215ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744765711; x=1745370511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nae8iA9Q44bLOPIklEeda/m4+BCHuPMc/pHieS0xpfQ=;
-        b=Gx8bp6/QMJPBH+3bbM4rXpV8wp+gI0HJbjQ8u2vsxX0yuwHMfNzLcqDo/up84Llord
-         p6imXBAdLyNmWTrZXrrVQVp6XdSbb+FxJRcvxYvj/ss1qfbWu0ZkEEWwZ7J2YzMNylrx
-         Fgj+VUMXj/XzewdtNCkFzBCjuLN2lOufcao8AyKdJEfcZfba1Ugl9FMGS+f5mEVqnFaf
-         5uVen5BFXhxH+qfv14cjDPI9aYGpjytFWG/KryYEK2EoMTwFk7asOZmfLvlkbNfuC9MC
-         HhWNBHwPSJS1GQtshKcuU5fEkUrqT85qNav0phfOJvZmDdTdoyp48Kzh9LZYslau3Wsi
-         8Nhw==
+        d=linuxfoundation.org; s=google; t=1744765748; x=1745370548; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yHH7/J+j5oNxpctk0DsReMy2glTgCxz7YjjDhBFapIU=;
+        b=gb5cyd+IXHv5Ep+DnjFjKOt97GUICa88/OiJWLK7KVdXahFC0LQwnp3l5QoGHFz/D+
+         V25U/Qh3L8fwKszxdkhMZfzw9/jAYbypTxeFkQqgElzn+GRw9Bm2rnzmwIgqKLuq9U3N
+         vVz910zeNcYZVOYMnrSWM/lcyVCQsvRz4r8w0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765711; x=1745370511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nae8iA9Q44bLOPIklEeda/m4+BCHuPMc/pHieS0xpfQ=;
-        b=mUMHwSE2TWJwB3koR2f4vwiVbZRiqLkQaXNHhVUCRN4TLaBJ4lDAPYlIq//OF7FBKD
-         bWFb52RH9v6mrg4zxOBcR7GrhvG2sw1/+Pta044viLl1AdcYJoQc3lJcZbdkx4ANYzBw
-         w1KVKEn55YJ7LiCBQH0GPNGyP2RmFF8ccqQyFNLLn+DMtGiAemfNosMPv5KNHiR9AU/X
-         g6eHOg/JQJdOt8jU4XL8Ds/Y+8YK8AvHeZ8mvF2lQjf/Sy+HoiSNKruarPVKiiqFJI/y
-         8GvZoNXL+RIBzL1KfQrnQTrIKws67PZGyvrzAzPjNy7hQf/fB4WLUAfbnTZ/cBbXN1DI
-         j2Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUciDjY3kM08AtSNpkewYTocjRpxT+PmYpBlVrISNeHC0VsQAlfPfvv8N4+vxkGUQeh1NNcj8zhBzmSBmUT@vger.kernel.org, AJvYcCWbnflrfeUs57lLKB0mYR+p29sA7y0CQUNefA+EYma/62UN62WDkwabaZpNG5i0FLX3Ix+a80bdBvq/K3fcwpUX7TlM@vger.kernel.org, AJvYcCXFsksgehe579tQXkm0bkxmitRpLQwMYgPbTdRPEEjsDu3Tps9lZehhiSElRoDv8IqIQ6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp2VBMBjsi47Jn6VRHXwXulrePbIm6u7VHD2klojuSNkFNHfz5
-	Ef9DxMTAbbn2sSc53zXQPtutZ+QyNEhJwET5R5wCAvywSbvu5R/Cekj3B0Ed0xSJ6DJlTLMj7WM
-	9Rs4B8ZtlMWu17SQOOSnJtV1o6E0=
-X-Gm-Gg: ASbGncvY7WQaPn6cZrwUQqcOqAlwQQqLsyONrcrrBMwyY8TtKI5pO0DbGecy6R4pRUK
-	z2eGBwiGxw5qHqRwmrd3G/JZ9Kawkcvm9rnyAFEWa2Cf4sfCb41/SDKUHH789yHK/2OHsCUWbxk
-	Sy6G+esgHzckttULq84XC7fA==
-X-Google-Smtp-Source: AGHT+IErozDlBEtdi3kw+kK2RMiMLcVJupyXpukTsMbcRfzHTw8qXYapvuK6UCyQRpv5sk9NgzQQexQH7kAbCBffMJQ=
-X-Received: by 2002:a05:690c:6009:b0:6f9:af1f:fdd0 with SMTP id
- 00721157ae682-706ad1d8a76mr23158377b3.31.1744765710804; Tue, 15 Apr 2025
- 18:08:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744765748; x=1745370548;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yHH7/J+j5oNxpctk0DsReMy2glTgCxz7YjjDhBFapIU=;
+        b=KBLVNlOKJawrI1/qT50QxGPbh3ZxCCOLmprcsB39k+oGvgxSLOE6coyw/YDzVQbMif
+         G9KrRTuY1oSy3Pe8aAjePj+CA2UenuxHApQpvLl7jjiI6LRRNFqzcHjriLovxUPBRucL
+         TGb2/U2kAL3rCIFc7Cjo3CpUZ9mugpJzJRmJnfGChjE1UM9+vYkSCFQZLbmoJxz0c59h
+         n4HRZ2qSYLFkem72whzR+LZg2wVNQW1gnti2pUdTaUsqnB2sdncDC3Q3Upmz6jKfa24k
+         tr4b0gj9lpPZhyGX7La2kUVBYnglrqsj10Xb1gaATW6AsTfVnCiGhpXv7Q0P5rMmWhaM
+         hD/g==
+X-Forwarded-Encrypted: i=1; AJvYcCW4k9EKHf0OsbZWkl03A9AC6Do1DaDH8IsQWSCGvdGcphqxqLJgqi6n0b3+MxDmUhM/szOsRiVI5gvyrd8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+50YlbfK5AC9VswGQ82PzCH6rS73cVgahWytzIkRD5To4b5sf
+	h3ppl8A6uWo2B+uen1eSVgnSSMH0fvjodmzyRUA+b2i1qgrB0kL7Kb+eIFV2pfk=
+X-Gm-Gg: ASbGnct6Ki0IBFE5n9oApEXbOGltHHuRCI+6xVaj2AsoYUYRa/cy+aITFZA3roEfN98
+	FQgZdnbZWFcllQWpX/fqsZvFj1GXegzA2Ly7jrjCQBf9vOpELzDlwbDCKcDBbLb211DXjgtdJrc
+	LE0tZIakGeL1hmi3lJc5sQOgOG+43YKzzSBFVEndZJJ24WN3mKeme2aqazTElJVtjymCbif7Ki+
+	7fsrxVqJn8hvgkK3k61nFE0fIy0xOtzi38b8/wggP5nkjGLrQTagCxw8I7gFdPasdPfaKVDdFs7
+	CQTEy+ycr9/Thnx/NkNQ84+bsLWTIialb2nGzrTds6EptuC/gs0=
+X-Google-Smtp-Source: AGHT+IF+8G6LNZgvGtT9E/XTGEpuSUvuxgkYRbTxEhcuzH6CxHEUsEBBzVYErI3v884mpv1TxMSTXw==
+X-Received: by 2002:a05:6e02:1806:b0:3d4:2409:ce6 with SMTP id e9e14a558f8ab-3d8124e2600mr18521955ab.5.1744765747926;
+        Tue, 15 Apr 2025 18:09:07 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc591b9bsm35565255ab.60.2025.04.15.18.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 18:09:07 -0700 (PDT)
+Message-ID: <6775da23-c596-44e4-a7f3-64c602b2609b@linuxfoundation.org>
+Date: Tue, 15 Apr 2025 19:09:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413014444.36724-1-dongml2@chinatelecom.cn>
- <20250414160528.3fd76062ad194bdffff515b5@kernel.org> <CAEf4BzbyqNAPrOR7cR+2PKCy+cXoEftWufFbhMv73QPFZM+ysw@mail.gmail.com>
-In-Reply-To: <CAEf4BzbyqNAPrOR7cR+2PKCy+cXoEftWufFbhMv73QPFZM+ysw@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 16 Apr 2025 09:06:14 +0800
-X-Gm-Features: ATxdqUH3BxeiuPSItNg15YgITrPiruh7-ARebQqerIosErclXgD5_4u5RLQsuuI
-Message-ID: <CADxym3a2sr-CB=G-ryew+LV3tcbZ1EZ6kzbAPDyQmV=xbaF4bQ@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] ftrace: fix incorrect hash size in register_ftrace_direct()
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Menglong Dong <dongml2@chinatelecom.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
+ kunit run
+To: David Gow <davidgow@google.com>
+Cc: Borislav Petkov <bp@alien8.de>, thomas.lendacky@amd.com,
+ "x86@kernel.org" <x86@kernel.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
+ <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+ <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+ <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
+ <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
+ <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
+ <88a4052c-ac37-4958-af2a-a3066e8b82bd@linuxfoundation.org>
+ <CABVgOSmXfoEonJ6w33sj1sb5F2Ak5Kek0AxskSmjq=d=D=PiVw@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CABVgOSmXfoEonJ6w33sj1sb5F2Ak5Kek0AxskSmjq=d=D=PiVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 7:14=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Mon, Apr 14, 2025 at 12:05=E2=80=AFAM Masami Hiramatsu <mhiramat@kerne=
-l.org> wrote:
-> >
-> > On Sun, 13 Apr 2025 09:44:44 +0800
-> > Menglong Dong <menglong8.dong@gmail.com> wrote:
-> >
-> > > The maximum of the ftrace hash bits is made fls(32) in
-> > > register_ftrace_direct(), which seems illogical. So, we fix it by mak=
-ing
-> > > the max hash bits FTRACE_HASH_MAX_BITS instead.
-> > >
-> >
-> > Loogs good to me.
-> >
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Thanks!
-> >
->
-> I'm a bit confused by the "[PATCH bpf]" prefix... This fix doesn't
-> seem to be BPF-related, so I'm not sure why it would go through the
-> bpf tree. I presume Masami or Steven will route it through their tree,
-> is that right?
->
+On 4/15/25 18:32, David Gow wrote:
+> On Wed, 16 Apr 2025 at 06:30, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 4/15/25 16:17, Borislav Petkov wrote:
+>>> On Tue, Apr 15, 2025 at 01:06:49PM -0600, Shuah Khan wrote:
+>>>> Does your arch/x86/realmode/rm/pasyms.h has reference to sev_es_trampoline_start?
+>>>>
+>>>> The one in my tree has it.
+>>>>
+>>>> arch/x86/realmode/rm/pasyms.h:pa_sev_es_trampoline_start = sev_es_trampoline_start
+>>>
+>>>
+>>> # ./tools/testing/kunit/kunit.py run --arch x86_64
+>>> ...
+>>>
+>>> [00:15:36] Elapsed time: 58.840s total, 2.096s configuring, 53.170s building, 3.487s running
+>>>
+>>> # cat arch/x86/realmode/rm/pasyms.h
+>>> cat: arch/x86/realmode/rm/pasyms.h: No such file or directory
+>>>
+>>> Could explain why I don't see the issue...
+>>>
+>>
+>> I see arch/x86/realmode/rm/pasyms.h on my system. It is a generated
+>> file from arch/x86/realmode/rm Makefile
+>>
+> 
+> Aha: I've been able to reproduce this, albeit by not cleaning the tree properly.
+> 
+> - make ARCH=x86_64 # Build an x86_64 kernel in-tree, with
+> CONFIG_AMD_MEM_ENCRYPT=y
+> - ./tools/testing/kunit/kunit.py run # Attempt to build and run KUnit
+> on a UML kernel (built out-of-tree in the .kunit directory)
+> # This will fail, telling you to clean the tree with 'make ARCH=um mrproper'
+> - make ARCH=um mrproper # Clean the source tree, but incompletely, as
+> the original kernel was built with ARCH=x86_64, not ARCH=um
+> # As a result, the pasyms.h file will be left in the tree, as it's not
+> part of the UML build
+> - ./tools/testing/kunit/kunit.py run --arch x86_64 # Attempt to
+> build/run an out-of-tree x86_64 kernel.
+> # This will not tell you to clean the source tree, as it was
+> (incorrectly) cleaned for the wrong architecture, but will fail due to
+> the wrong pasyms.h still being present.
+> 
+> I'm not sure if this is the same cause as what you're seeing, Shuah,
+> but it seems plausible enough. If so, this is really an issue with the
+> Makefiles suggesting the wrong make mrproper command (assuming that
+> the architecture hasn't changed), or failing to detect that the source
+> tree still isn't clean. Maybe that's something we could work around in
+> either the arch/um makefiles or in kunit.py (or at least the
+> documentation), if we don't want to rework how dirty trees are
+> detected.
+> 
 
-Sorry about the confusing......I throught the register_ftrace_direct()
-is mainly used by BPF, and it should go to the ftrace tree :/
+Yes I am seeing the same thing. However, it doesn't even ask you
+to run mrproper because it doesn't seem to think the tree is dirty.
 
-Thanks!
-Menglong Dong
+So the fix would be to detect that the tree is dirty?
 
->
-> > > Fixes: d05cb470663a ("ftrace: Fix modification of direct_function has=
-h while in use")
-> > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > ---
-> > > v2:
-> > > - thanks for Steven's advice, we fix the problem by making the max ha=
-sh
-> > >   bits FTRACE_HASH_MAX_BITS instead.
-> > > ---
-> > >  kernel/trace/ftrace.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > > index 1a48aedb5255..d153ad13e0e0 100644
-> > > --- a/kernel/trace/ftrace.c
-> > > +++ b/kernel/trace/ftrace.c
-> > > @@ -5914,9 +5914,10 @@ int register_ftrace_direct(struct ftrace_ops *=
-ops, unsigned long addr)
-> > >
-> > >       /* Make a copy hash to place the new and the old entries in */
-> > >       size =3D hash->count + direct_functions->count;
-> > > -     if (size > 32)
-> > > -             size =3D 32;
-> > > -     new_hash =3D alloc_ftrace_hash(fls(size));
-> > > +     size =3D fls(size);
-> > > +     if (size > FTRACE_HASH_MAX_BITS)
-> > > +             size =3D FTRACE_HASH_MAX_BITS;
-> > > +     new_hash =3D alloc_ftrace_hash(size);
-> > >       if (!new_hash)
-> > >               goto out_unlock;
-> > >
-> > > --
-> > > 2.39.5
-> > >
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
+I just tried make ARCH=x86_64 mrproper and then ran
+kunit.py run --arch x86_64
+
+
+> Either way, this should work after running `make ARCH=x86_64
+> mrproper`. Does that work for you?
+
+I just tried make ARCH=x86_64 mrproper and then ran
+kunit.py run --arch x86_64
+
+thanks,
+-- Shuah
