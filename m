@@ -1,122 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359C1F2BB8;
-	Wed, 16 Apr 2025 15:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018CD1C7015;
+	Wed, 16 Apr 2025 15:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817143; cv=none; b=Df9ZA6jFjaZ4vSYgY6TvHbgZBzMDgsGUPuHrIR+O2aEN8RMFhK59cwWHh3ptArnvexFxgBt7L0KTgqBiDrPpM+F1Yv6G799PdQJ+47UQCd8/3cbriXmEE2l0tum/Q7D0QJme7QG9SinG3HcbVTjPwQ5v81ZhXKs6CkXr9NuLx0g=
+	t=1744817168; cv=none; b=BeHLO/RdVrVQwRX3vSMYJCK0HE1YrtoByd7nuGKS9DdvfYk0HOHAn4XA7on/r+NQURkbAF4PNujbgqKtjLflJ4eqIhRUHSPDal/4qjHAZ/v1nz+rTsL++ORMLAvHvMHF9AdiBzVWiWAEfG2W1kO3eKlwWfw8Eb0ye70j2cRt6MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817143; c=relaxed/simple;
-	bh=O5FMiRNmXONBj5vEoQeS1NbCje5WLfuFhlB24NHiGQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bs89LAM45oa6Agcx+ozkpEM85qjQMeRAPivdR0IJd0ToXVk0VH+dChrx1gKtz2Ipr6PQB2+9ID/1sfSHgDQcMw6d4MDgeiI8p5HH9jWOcrZYA658IrKrWccIbfh6zebIQsk/gImTN68F1kEQ4iUi93PaRI7Qjk3PzbQCZABPex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: T8h3y34CQ0Kef6Te0F2NmA==
-X-CSE-MsgGUID: TBb9XAL/RV66VOZu/ahaKQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="33991791"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="33991791"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:25:41 -0700
-X-CSE-ConnectionGUID: kyEB3oc4ScS6ug5XPSkAsQ==
-X-CSE-MsgGUID: D8o68JBeR0OJKKTKIBdG9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="161544205"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:25:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u54do-0000000CtiF-3vqA;
-	Wed, 16 Apr 2025 18:25:32 +0300
-Date: Wed, 16 Apr 2025 18:25:32 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-Message-ID: <Z__L7DHHvMdmH4bk@smile.fi.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
- <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
- <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
- <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
- <7f0d376c-2d03-8e09-5d85-e53b0bce0cc5@linux.intel.com>
+	s=arc-20240116; t=1744817168; c=relaxed/simple;
+	bh=xuApqJIpg/A6yzMAM3bP2JnbdsNFyPu87tU3HFOJVPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k3xKm7R5IO4+lRfEufFI5LJbxphnshFIP4JuYj3ToKlEfyzPZeAv2EkZFg1vqNKszODgtHsLwn7fcU/4U8nAu2mc4yIJvrjittz5Z6v6VigyzD6OSreNuPEkHdzkcYPyUSe26keQrPfrbnSe6L4P/oRo1iHNDuSo36ZiHgbySW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1347A1595;
+	Wed, 16 Apr 2025 08:26:04 -0700 (PDT)
+Received: from [10.57.71.18] (unknown [10.57.71.18])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C57C3F66E;
+	Wed, 16 Apr 2025 08:26:05 -0700 (PDT)
+Message-ID: <df494648-b0c1-402b-8644-b50f20011c5f@arm.com>
+Date: Wed, 16 Apr 2025 16:26:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] PM: EM: Fix potential division-by-zero error in
+ em_compute_costs()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yaxiong Tian <tianyaxiong@kylinos.cn>, Yaxiong Tian <iambestgod@qq.com>
+References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
+ <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com>
+ <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
+ <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
+ <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7f0d376c-2d03-8e09-5d85-e53b0bce0cc5@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 03:18:56PM +0300, Ilpo Järvinen wrote:
-> On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-> > On Wed, Apr 16, 2025 at 02:53:51PM +0300, Ilpo Järvinen wrote:
-> > > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-> > > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
 
-...
 
-> > > > > +			resource_set_range(res, 0xC0000, SZ_128K);
-> > > > >  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-> > > > >  				     IORESOURCE_PCI_FIXED;
-> > > > 
-> > > > I'm wondering why not DEFINE_RES_MEM() in such cases?
-> > > 
-> > > I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
-> > > However, DEFINE_RES*() will overwrite ->name which seems something that 
-> > > ought to not be done here.
-> > 
-> > Okay, I haven't checked the initial state of name field here, so then
-> > DEFINE_RES_MEM_NAMED()?  Or don't we have one?
+On 4/16/25 12:58, Rafael J. Wysocki wrote:
+> On Wed, Apr 16, 2025 at 4:57â€¯AM Yaxiong Tian <iambestgod@qq.com> wrote:
+>>
+>> åœ¨ 2025/4/16 01:17, Rafael J. Wysocki å†™é“:
+>>> On Mon, Apr 14, 2025 at 11:09â€¯AM Yaxiong Tian <iambestgod@qq.com> wrote:
+>>>>
+>>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>>>
+>>>> When the device is of a non-CPU type, table[i].performance won't be
+>>>> initialized in the previous em_init_performance(), resulting in division
+>>>> by zero when calculating costs in em_compute_costs().
+>>>>
+>>>> Since the 'cost' algorithm is only used for EAS energy efficiency
+>>>> calculations and is currently not utilized by other device drivers, we
+>>>> should add the _is_cpu_device(dev) check to prevent this division-by-zero
+>>>> issue.
+>>>>
+>>>> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove division")
+>>>
+>>> Please look at the Fixes: tags in the kernel git history.  They don't
+>>> look like the one above.
+>>>
+>> Yes, there's an extra '<>' here.
+>>
+>>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
+>>>> ---
+>>>>    kernel/power/energy_model.c | 4 ++--
+>>>>    1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
+>>>> index d9b7e2b38c7a..fc972cc1fc12 100644
+>>>> --- a/kernel/power/energy_model.c
+>>>> +++ b/kernel/power/energy_model.c
+>>>> @@ -235,7 +235,7 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
+>>>>
+>>>>           /* Compute the cost of each performance state. */
+>>>>           for (i = nr_states - 1; i >= 0; i--) {
+>>>> -               unsigned long power_res, cost;
+>>>> +               unsigned long power_res, cost = 0;
+>>>>
+>>>>                   if ((flags & EM_PERF_DOMAIN_ARTIFICIAL) && cb->get_cost) {
+>>>>                           ret = cb->get_cost(dev, table[i].frequency, &cost);
+>>>> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
+>>>>                                           cost, ret);
+>>>>                                   return -EINVAL;
+>>>>                           }
+>>>> -               } else {
+>>>> +               } else if (_is_cpu_device(dev)) {
+>>>
+>>> Can't you just check this upfront at the beginning of the function and
+>>> make it bail out if dev is not a CPU device?
+>>>
+>> Sure, But the current implementation applies em_compute_costs() to both
+>> non-CPU devices and CPU devices.
 > 
-> There's pre-existing res->name on it and your suggestion would have 
-> resulted in overwriting it with NULL. res->name seems to be filled earlier 
-> by PCI probe code.
+> Maybe it shouldn't do that for non-CPU ones?
 
-Okay, then the resource_*() may make more sense, indeed.
-
-> > In any case I would rather see a one assignment for these cases than something
-> > hidden behind proposed conversions.
-> 
-> TBH, these DEFINE_RES*() helpers are doing hidden things such as 
-> blantantly overwriting ->name which I only realized after I had already 
-> converted to it as per your suggestion.
-
-They are specifically named in  capital letters, so main use is in static
-assignments, but they are made compound literals, so it's possible to
-initialise the on-stack or on-heap at run-time with this be kept in mind.
-That's why there is nothing hidden, it implies that the struct is fully
-assigned (with the provided fields and some defaults).
-
-> And yes, it is possible to pass the pre-existing res->name to 
-> DEFINE_RES_NAMED() if that what you insist, though it seems doing it for 
-> the sake of DEFINE_RES*() interface rather than this code wanting to 
-> really define the resource from scratch.
-> 
-> Given the hidden overwriting, please be careful on suggesting 
-> DEFINE_RES*() conversions as it's not as trivial as it seems.
-
-Yeah, seems not everybody aware of the difference with
-foo_init_something() vs. FOO_INIT_SOMETHING() :-)
-
-> > > I found one other case from the same file though which is truly defines
-> > > a resource from scratch.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+It shouldn't call this cost computation for non-CPU devices.
+Let me check that.
