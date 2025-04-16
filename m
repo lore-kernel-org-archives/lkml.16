@@ -1,90 +1,93 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08DB4BA49
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D0DBA49;
+	Wed, 16 Apr 2025 03:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744773566; cv=none; b=A/eh50Ms8pkOMwQMONWFS7iVKOiySymhv05RS+9ICQsENJzrH1c02sHeXo49uSWb871PD3Rb0nufNvIRNjrUs2PMmkhfju62Tllr0RB4O1R0cYuVuMHjBeJXC0dq9ys/EcYSyqTs3eM2HuVf4ERHdd2SebYfY6mcQ1VX1juYpWM=
+	t=1744773730; cv=none; b=hqy0x2++ynIuE1+h4HbiIV+VpPygMBPWJiGaWB06Qa0REHC1Wap2ErruGiL/8MpiOYW6HYH7Bu/TrU1IknCC7Z3jMR9ExzIvtWYZPS25nV/xZw9BwC1HrrRWvrjlF9dZi5KMq4RZaj0VbV7QKtbM/yGyPEp7zA+jFrRedsXXpJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744773566; c=relaxed/simple;
-	bh=Uzmnhpdcrd9Puf0yi9dhnQyqgEDH12k5dAXkPj3g2/M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GDzt/Ijg2HlaFk5uXQJVOfNXQ+2Tu0mdrRiTjMPvgGsW31QnIxrgjg5stT7b4YW7epco8SaWJswe8TpSCPQtCkHnSOOUq3dAe1twpBvP/lChIVOPn9HuZzO40biRJuHjEXFFn4VLzl2tKMwm2Z8aWBdRzTwby/w3f/gghhgj+2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=h4Og2aKV; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744773730; c=relaxed/simple;
+	bh=YU8td45G+lxM08Vy+vmuKgn2Mf6Vb/hhYM+zTwENdeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nRzv5NxXMTQy3u8mOBC84P14mOai/OCiGwsWlV9qHWg/GK0qiZeCoXgvpy6eqHK9xuBVCglxDa/eNyI7Doox1YVNjUXVhYORvU634fCyKzzHDW24e6QztU9jIV2QWO3o6CHTH8l7S4tyt7dVARrzwxJYX9SRFWSl0I68/9IG9+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=e3aNNheh; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="h4Og2aKV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=+wt5v
-	UURw/DJFACEu90b7DaEI9UOLsDCNGeNcQkfaso=; b=h4Og2aKVvvye/QijPGoPF
-	qRAuh31T+X/0a9xnYCk00o03Q/4p520avaT7t2Ql/WTJJ1OKuTBPMs7a/8tg/GHd
-	qLU9sQjZeW/zmXhTBXJSx6KhWDgthFXDgFfuS+1e+WpjTQ1BhGOv/yToU6NjKVDM
-	o6pyAjFGW7h/aDop539HS4=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wBXLQ+PIf9nqs2SAA--.2509S2;
-	Wed, 16 Apr 2025 11:18:40 +0800 (CST)
-From: chenchangcheng <ccc194101@163.com>
-To: laurent.pinchart@ideasonboard.com,
-	ribalda@chromium.org
-Cc: hdegoede@redhat.com,
-	mchehab@kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenchangcheng <chenchangcheng@kylinos.cn>
-Subject: [PATCH v7] media: uvcvideo: Fix bandwidth issue
-Date: Wed, 16 Apr 2025 11:18:38 +0800
-Message-Id: <20250416031838.254061-1-ccc194101@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e3aNNheh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744773715;
+	bh=u8Yr7W7zjn3+a4fG0VOgSW0XqeXmxgR5zUYlFB0fKwY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=e3aNNhehxvBF4HmUhC49smK/29jjhkMF0YOQLhNtg+vbeASbkLBLZRRkdlUgWjfmm
+	 kd0E3XEHq0uDugqYYuJfISx1Zwfxb14yY0Pv/qQFs7rYydlG4hNGo5XU8y8GukpoIh
+	 1Uv5dVkwtenpLt4JyxNitoXoJziOnrzENOqYpm3uue4vg5NHyL1CwytngcMX4NGg88
+	 DtdVhUDWlyVcs7RmtCnb3CcLA6xBAbb03BqeI6qjWR3pKjl8s33vD2bKm/K87aw1i9
+	 JJ3ZejYW+Nm6QdAi2XVSzBWuQT5DSmRr9xwGF5fevcnxkT4QeEONj0HFXuerGjS6ot
+	 MY1XMobgw8bYw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZcmXd4b8xz4xQ0;
+	Wed, 16 Apr 2025 13:21:53 +1000 (AEST)
+Date: Wed, 16 Apr 2025 13:21:51 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory
+ Clement <gregory.clement@bootlin.com>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the tip tree
+Message-ID: <20250416132151.3b0448d0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXLQ+PIf9nqs2SAA--.2509S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWDKry5WFWfKF1xAr4UCFg_yoW8Xw1rpa
-	1ruayFyry7JrWFganrJa1rKa1rJanakw4fKFW3u34qvr15JryxZFy3G340q34qyan3Aw1a
-	vF1qqrnF939Yvr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UmhF3UUUUU=
-X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiwgkx3mf-H9pArgAAsX
+Content-Type: multipart/signed; boundary="Sig_/ryBkb_rNx0A+3VyA/jxugVB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: chenchangcheng <chenchangcheng@kylinos.cn>
+--Sig_/ryBkb_rNx0A+3VyA/jxugVB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Some broken device return wrong dwMaxPayloadTransferSize fields
-as follows:
-    [  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
-    [  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
+Hi all,
 
-When dwMaxPayloadTransferSize is greater than maxpsize,
-it will prevent the camera from starting.
-So use the bandwidth of maxpsize.
+The following commit is also in the mvebu tree as a different commit
+(but the same patch):
 
-Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
----
- drivers/media/usb/uvc/uvc_video.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+  73989a38268d ("ARM: orion/gpio:: Convert generic irqchip locking to guard=
+()")
 
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index e3567aeb0007..9b7e34e38b61 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -262,6 +262,15 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
- 
- 		ctrl->dwMaxPayloadTransferSize = bandwidth;
- 	}
-+
-+	if (stream->intf->num_altsetting > 1 &&
-+	    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
-+		dev_warn_ratelimit(&stream->intf->dev,
-+				   "the max payload transmission size (%d) exceededs the size of the ep max packet (%d). Using the max size.\n",
-+				   ctrl->dwMaxPayloadTransferSize,
-+				   stream->maxpsize);
-+		ctrl->dwMaxPayloadTransferSize = stream->maxpsize;
-+	}
- }
- 
- static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
+This is commit
 
-base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
--- 
-2.25.1
+  5b49e7ff76b7 ("ARM: orion/gpio:: Convert generic irqchip locking to guard=
+()")
 
+in the mvebu tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ryBkb_rNx0A+3VyA/jxugVB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf/Ik8ACgkQAVBC80lX
+0Gw76Qf9Fqrygq6M3Sxri8WTn28i2TqtA2jr7dAXwdiSWXE2aGSKekya7uuQu1mo
+bqARYF4aDFXGAcSuc7oEHnZ1dNWbKfXaRH3pCbk3ovZeP/bEGH/RzbeS0jo2IPLH
+/F/0tyFgwgfieGmKN9fJ+0J2ayTciZnGkoyueCNjMwErXztGBQhvoAa1WqnUOHIs
++7uOmfvjXPYcqmv7nK7EG8dPausqu4VwwXVIqMDIwTso+uKBQUSH/8XuEPlx8rVc
+RkK42KC9YzgX/yOCp9hWYn5+su4aXR2QN+IOeb0IdDQukOc1ECfno84nSiE33wRE
+xKDoOzUmmEJ5VovykiatQQmfb2I9SA==
+=mll4
+-----END PGP SIGNATURE-----
+
+--Sig_/ryBkb_rNx0A+3VyA/jxugVB--
