@@ -1,150 +1,119 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6566E23E229;
-	Wed, 16 Apr 2025 08:22:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA9921CC61
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:24:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791771; cv=none; b=YC6UlaszRUxsaRBmtA1SO7uT5QSRa8fc4W8DAylslCFv8tq7s/EBkL8B170I0IyqT7swDelNYCBkMGNN9CfWXEWSz+MUBT5wCo4oGDEtJpfsd/705tlT0yQdfmAZZblShu/IP7LJDoHpKZHhPsZPA5BeBuzx7fA/y7UwPfNXmXs=
+	t=1744791867; cv=none; b=fjCEZhWnAeMvmVbufP3gukM1NElbapObweKt6fbRYhg3I1V2/pS0IWtYtuzcXMtzbmGo2JOToTnQ+FyxoEVKzzeTz/0Nl0Yb+aiEA+bzbedsY2W8kezK7SCiZ0XqKiQwAFWArFINuwlav8jryG128mGDWfVTM1u44yFLgPAYoA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791771; c=relaxed/simple;
-	bh=cwXMxbJL24jYAsCezvOT4x+AE9GW0GoMa7cMoc0+DnI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=meuuOzw4dQQdgTtS9KgVd3R4rFDH4GuPNtOaiv5JGVrGcXitRv2bnLwAAYt5oayCxXvOkfiSiST+LT5EBTWhEFuhd1naLttechz8MUMPQOcuowJh/xABKX0cqCeeDnxwOEUfkTVc8g+mK57oWwAVvsU5JUl7tKJBpWMEwwTI7zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AuCYlE0+; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuCYlE0+"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bef9b04adso66814861fa.1;
-        Wed, 16 Apr 2025 01:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744791767; x=1745396567; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+3LVTpn0Xg5k9Tehr7H1EBP9tClnp6JDsKrJApop4TI=;
-        b=AuCYlE0+1b8ZVN5NkLn1o9OCr7bP3wKd0svObdTuUwLDJDhhyWLvZRCZq8fvyN4dls
-         ZXaiYCQ9FEzpB8Mos5ZWmJ1ZNslLl/iZseVPgsh+U65ovOlujiGHQ9Cu+ZNWFb7Ax6hL
-         Byv4tX9Q1NvlTfr+ZvV4PVgPtRmXNN4Y1k0LJILcyzdTo/wNJGByw66Byy/jBhelBoHY
-         MJiayN0uBHWyzeZPomhtuy1JdR3QmYDmMBigYqQlFv2TPbAfw9N7Hn5QGuF+79331YuC
-         8j+pSKzvEfS5p7HB/NREG6FLnP2v3aKS03RX6xCthPxRBb5bhkPyiJc8CeG57Jaen42y
-         B1pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744791767; x=1745396567;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+3LVTpn0Xg5k9Tehr7H1EBP9tClnp6JDsKrJApop4TI=;
-        b=ohhCNkvAMC4Ud6AJ51nOrXRJcvYV+CikKdtWK5MNbTxrx2b+BItBRfGD8lKthp9B/P
-         ef2rEbv0gjR/kz9TaPg/Uing6db+cydhUx87C4GCXkVn7VH+MZB384R8Gy5e4sUwfEBl
-         t2S9a97iCjxniiGENAXeWW+vkaqkAycZ+gHukwhra56cxLz7zAcKuM2VftVEuS9Fln2y
-         uK4ud2e1VZxLy552vTJy0C7JiWpGxs7rByLJ1DKizB1/0RWoyuyc7Y8worMTXPfc7c4u
-         80S/Q0dW6rfBpOYw87I50lHy+kUCAanf2L8zbEa+5W5vpcSo8HUUQhRhrj0Qo9kRuiLj
-         gvAA==
-X-Forwarded-Encrypted: i=1; AJvYcCULp6QUn5CIwDeXrffAl8UR+9CukuYBerhTuIiLPF7ETCIEzP7T/69oJSXS/ZXqM4b2hYmcN8uqG/kb@vger.kernel.org, AJvYcCUPMeTu34NZVZYVsnUY+hhpPgvqZo/5MG4x51wRMWvOdtNaZAM3gt7tpkRHMZASkEmkKW8b2ja84hko@vger.kernel.org, AJvYcCVK+BWqxFBs/W1Jrxk3IDPCf3pfAbnl/GlQeAWxEvphgYj4P3lKrrDkJbNVjHSLcVD4bsLHt7GIx6dj@vger.kernel.org, AJvYcCVogm97FDhvi/i2HN9nULH0IdXKLxlCIS6+UL3IDEysLx/D9HvwpC5+XD+8ejuGfaoOU247SjFJl1/e@vger.kernel.org, AJvYcCVstm1E2HkBFt8eh4hQSKJTiWvNVelkLUO51iTxYK5OBwG7j5tG0DCmejQ7xFjUatZkl6iluaCi@vger.kernel.org, AJvYcCXUj8mLb8NV9YVGfa3uBXSEOGgIO5hEgYENc0d3Kk363ZRyYObeBcf6svmKAEDeK/WvuXEPcK4aUgiJCKNa@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvQ4jmxag8WATy2NogCNyQlFq/YqE2nYPE5ZgRPlDpH85Impk5
-	HVsoc2CG2xyrCPZyyldwbd5gaoHUXYEe1D0+G0Z34rEnzpY8wMrK
-X-Gm-Gg: ASbGncujGjNMs2Rb3HKAnIHSik2nDPCv0Y7sXwHLJtH1OePiZiYLLyrd9JgiF2xiKSH
-	CfXxlM/tuOK1nVW0dZVOcGiDOVhaU/vsvlm01xdEY9kIPMOrPjDrk4SDXHoeL9fe5qhNDcZlXNj
-	LPhGkhEDxQRQ1AhKR73u/9fKcU/hxX5pQ9spMS/U8wiRf4JxBP/Rzy4SJBl940r03uItFWhe0Y8
-	tnnK0hzfY0cCHUyFDTBt0z+WDj9nSOQZLkBp9XSzvh0QMpKBfQZDZVFSGL2CJiCnEocrBXKozXo
-	rcENqTEhQgbhfhSyVJhrOxhU5rYVFrMdcc8j+9zFbw/Hn6T/kk9m
-X-Google-Smtp-Source: AGHT+IHqcPN9o0/2W+ihJOoL8R+C0j9ItIkZ3xAgrlrtLNcdSKg3RGRu1iorfo2w+SRNd3v44qbbRQ==
-X-Received: by 2002:a05:651c:1988:b0:30d:b89d:aafd with SMTP id 38308e7fff4ca-3107f7168bamr2633401fa.31.1744791767234;
-        Wed, 16 Apr 2025 01:22:47 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f7b20sm23025391fa.97.2025.04.16.01.22.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:22:46 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 16 Apr 2025 12:21:38 +0400
-Subject: [PATCH 13/13] ARM: dts: vt8500: Add L2 cache controller on
- WM8850/WM8950
+	s=arc-20240116; t=1744791867; c=relaxed/simple;
+	bh=L9YwAFAD1rWeRtpyAMh7VdF3dVJ3Da3UkVOIXu09S3s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hmjK857eNZdwgc+wBepKBgbbLiE3KFkl8lcqvAJ3946YPEikyQXWVBhQeCeJYseCKsxOHnZODUi42wF7OLUr1NWFuKMTBLLLNlYxok+lLcNeMMlyvp/BQbR8Rkf+/kWdZpRviy/ogJEMfHYcsc28Lg77uxKMBr2CMQxzTdpijrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8BxXWssaf9njYm_AA--.55313S3;
+	Wed, 16 Apr 2025 16:24:12 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBxLscmaf9nfZ+FAA--.6358S2;
+	Wed, 16 Apr 2025 16:24:07 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by cpuset race
+Date: Wed, 16 Apr 2025 16:24:05 +0800
+Message-Id: <20250416082405.20988-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-wmt-updates-v1-13-f9af689cdfc2@gmail.com>
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
-In-Reply-To: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
- linux-pwm@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744791712; l=1582;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=cwXMxbJL24jYAsCezvOT4x+AE9GW0GoMa7cMoc0+DnI=;
- b=zNlgXlbjTA/8oLRF/la27qlvLFN+mq15FgWHalIAboJ5Rc0SQ5ohznWcA0ndpi8Xffn25dAwF
- VMGz2yvXW2mBR4Ak2oml/1A0L6geaDMoSzUi03H78YHdpMDuX54g+/e
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMBxLscmaf9nfZ+FAA--.6358S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7KrW8Aw1ftr1xCr47AF1xtFc_yoW8ur15pF
+	WfuF17Ka1rA3W8Cws2yaykuryUZ3yDJF4fGr4UKr1xZwnxGr4Ikr17Gr90vFWUArsxZF1U
+	tr45A3y8WFW5Z3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
 
-WonderMedia WM8850/WM8950 uses an ARM PL310 cache controller for its
-L2 cache, add it.
+__alloc_pages_slowpath has no change detection for ac->nodemask
+in the part of retry path, while cpuset can modify it in parallel.
+For some processes that set mempolicy as MPOL_BIND, this results
+ac->nodemask changes, and then the should_reclaim_retry will
+judge based on the latest nodemask and jump to retry, while the
+get_page_from_freelist only traverses the zonelist from
+ac->preferred_zoneref, which selected by a expired nodemask
+and may cause infinite retries in some cases
 
-The parameters have been deduced from vendor's U-boot environment
-variables, which the downstream code uses to initialize the
-controller. They set the following register values:
+cpu 64:
+__alloc_pages_slowpath {
+        /* ..... */
+retry:
+        /* ac->nodemask = 0x1, ac->preferred->zone->nid = 1 */
+        if (alloc_flags & ALLOC_KSWAPD)
+                wake_all_kswapds(order, gfp_mask, ac);
+        /* cpu 1:
+        cpuset_write_resmask
+            update_nodemask
+                update_nodemasks_hier
+                    update_tasks_nodemask
+                        mpol_rebind_task
+                         mpol_rebind_policy
+                          mpol_rebind_nodemask
+		// mempolicy->nodes has been modified,
+		// which ac->nodemask point to
 
-aux = 0x3e440000
-prefetch_ctrl = 0x70000007
+        */
+        /* ac->nodemask = 0x3, ac->preferred->zone->nid = 1 */
+        if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
+                                 did_some_progress > 0, &no_progress_loops))
+                goto retry;
+}
 
-Their initialization code also unconditionally sets the flags
-L2X0_DYNAMIC_CLK_GATING_EN | L2X0_STNDBY_MODE_EN, so encode those too
+Simultaneously starting multiple cpuset01 from LTP can quickly
+reproduce this issue on a multi node server when the maximum
+memory pressure is reached and the swap is enabled
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
 ---
- arch/arm/boot/dts/vt8500/wm8850.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ mm/page_alloc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vt8500/wm8850.dtsi b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-index 55de8d439688c5710d1e9a37890bbd274895be42..f2fb2e0b04c31dbdf320387f24c3b09d231d90b8 100644
---- a/arch/arm/boot/dts/vt8500/wm8850.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-@@ -18,6 +18,7 @@ cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x0>;
-+			next-level-cache = <&l2_cache>;
- 		};
- 	};
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index fd6b865cb1ab..1e82f5214a42 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4530,6 +4530,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+ 	}
  
-@@ -35,6 +36,19 @@ soc {
- 		ranges;
- 		interrupt-parent = <&intc0>;
- 
-+		l2_cache: cache-controller@d9000000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0xd9000000 0x1000>;
-+			arm,double-linefill = <1>;
-+			arm,dynamic-clock-gating = <1>;
-+			arm,shared-override;
-+			arm,standby-mode = <1>;
-+			cache-level = <2>;
-+			cache-unified;
-+			prefetch-data = <1>;
-+			prefetch-instr = <1>;
-+		};
+ retry:
++	/*
++	 * Deal with possible cpuset update races or zonelist updates to avoid
++	 * infinite retries.
++	 */
++	if (check_retry_cpuset(cpuset_mems_cookie, ac) ||
++	    check_retry_zonelist(zonelist_iter_cookie))
++		goto restart;
 +
- 		intc0: interrupt-controller@d8140000 {
- 			compatible = "via,vt8500-intc";
- 			interrupt-controller;
-
+ 	/* Ensure kswapd doesn't accidentally go to sleep as long as we loop */
+ 	if (alloc_flags & ALLOC_KSWAPD)
+ 		wake_all_kswapds(order, gfp_mask, ac);
 -- 
-2.49.0
+2.20.1
 
