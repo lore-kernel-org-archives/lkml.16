@@ -1,145 +1,156 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D694A927;
-	Wed, 16 Apr 2025 13:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8219250BF8
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811113; cv=none; b=KoUJuvlhL46wKgV2x3F1n5YBNISdG7DMUmABYI0V2XDB7YIIwH4R5unSrq7V0E7uj9Q9jaOQ99ngAQtlEBQfC0HU+MxPzD1jWku/3t7ohn90K7E+LyDZRIYyzdoKk+mPkS840S/y9qM6BEZf2JhPPomET7F0uns4DlngIkcpy8Y=
+	t=1744811112; cv=none; b=N83CzPsaueMn8eKqepeE7g2ZKFSnsBs7ZAMVySXdlKz3n+Uz46fpGhYKZeilH13f11CoMpWdvs5NeEvg+HLVG+DexHb6GH7YKYPnjL+/rTMuSvnx2NEO4WR1Aenw9YpisYFDMrrWf1zahLOw736Wq9nR5g5EulD1IbPWq4/BE6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811113; c=relaxed/simple;
-	bh=LILhcnmPfibpd5TkaiWXTpX+6Saabmklb7TA8pgJzgQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YXwsYG4TZmSygo1Gg+Y5LV7m8Zg5aoEs8TSOjL8Lr9x4rh1j5t+epJD/RdnX76uyHY1/ZK/bB9auReWa1xId5o02SL6GTwDAi66EH3sVSBut8V+ijNhyulaWsxlSpa7kPLPXtURPehe/lAcJBdqM5yVYCWUY1z9qo35iQY9SeNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D89051692;
-	Wed, 16 Apr 2025 06:45:08 -0700 (PDT)
-Received: from e122027.arm.com (unknown [10.57.90.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D09F3F59E;
-	Wed, 16 Apr 2025 06:45:05 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Alper Gun <alpergun@google.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: [PATCH v8 22/43] KVM: arm64: Validate register access for a Realm VM
-Date: Wed, 16 Apr 2025 14:41:44 +0100
-Message-ID: <20250416134208.383984-23-steven.price@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416134208.383984-1-steven.price@arm.com>
-References: <20250416134208.383984-1-steven.price@arm.com>
+	s=arc-20240116; t=1744811112; c=relaxed/simple;
+	bh=SSGumOPO7KarJQZoMZ0YMRQJ+OOUafoEC97qoNhTAS4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=G0Va+JWQX542JbMlcfVv7upXQ5e3HlTxr/dJ2qgB84TVg5p7iYZ2ixzv0weRRAZ/V3lpLUeU1gzEkvUsAycYvmabhoRN74pH7/8zb+kAbI2ir8AT1qPSVXkqEhRXRPHZ9US0mXWwP6YbchuYyj5cT+A/aQfWDSjWFblzNUUI1i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=DIqVPSEp; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="DIqVPSEp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Sse+MWmWlUd4okV9BvuTdMxj6pvfwR3JRfox5MJ9mM4=;
+  b=DIqVPSEpeLCVXm75PNoQiMZRvdri/xgpKOU7Ynad6EhLnwMuj1gOw5cd
+   n9ppAAvhr8GLhMDrR5ZYn+tucmhiIpQW0AJ4Ju63tf6GpX6Hg0itN83Bc
+   UWhgPHNNvcYa6TGD95MKDwHAny4suflBow3WZLRjTYqgDp9fR3ac026Qi
+   U=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,216,1739833200"; 
+   d="scan'208";a="218156110"
+Received: from dt-lawall.paris.inria.fr ([128.93.67.65])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 15:45:01 +0200
+Date: Wed, 16 Apr 2025 15:45:00 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+To: Ayush Singh <ayushdevel1325@gmail.com>
+cc: rujra <braker.noob.kernel@gmail.com>, johan@kernel.org, elder@kernel.org, 
+    gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org, 
+    outreachy@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [FIRST-PATCH] staging : greybus : gb-beagleplay.c : fixing the
+ checks as first-patch
+In-Reply-To: <490ab216-982e-4707-abe4-a5b8d0444458@gmail.com>
+Message-ID: <eec572fd-3074-8f2c-f978-94841edf7a6@inria.fr>
+References: <CAG+54DbvpWHyX8+ucEQpg2B6rNTJP11CRpYxcYVrKpKehzrK-A@mail.gmail.com> <490ab216-982e-4707-abe4-a5b8d0444458@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-The RMM only allows setting the GPRS (x0-x30) and PC for a realm
-guest. Check this in kvm_arm_set_reg() so that the VMM can receive a
-suitable error return if other registers are written to.
 
-The RMM makes similar restrictions for reading of the guest's registers
-(this is *confidential* compute after all), however we don't impose the
-restriction here. This allows the VMM to read (stale) values from the
-registers which might be useful to read back the initial values even if
-the RMM doesn't provide the latest version. For migration of a realm VM,
-a new interface will be needed so that the VMM can receive an
-(encrypted) blob of the VM's state.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
-Changes since v5:
- * Upper GPRS can be set as part of a HOST_CALL return, so fix up the
-   test to allow them.
----
- arch/arm64/kvm/guest.c | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+On Wed, 16 Apr 2025, Ayush Singh wrote:
 
-diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
-index 2196979a24a3..ff0306650b39 100644
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -73,6 +73,24 @@ static u64 core_reg_offset_from_id(u64 id)
- 	return id & ~(KVM_REG_ARCH_MASK | KVM_REG_SIZE_MASK | KVM_REG_ARM_CORE);
- }
- 
-+static bool kvm_realm_validate_core_reg(u64 off)
-+{
-+	/*
-+	 * Note that GPRs can only sometimes be controlled by the VMM.
-+	 * For PSCI only X0-X6 are used, higher registers are ignored (restored
-+	 * from the REC).
-+	 * For HOST_CALL all of X0-X30 are copied to the RsiHostCall structure.
-+	 * For emulated MMIO X0 is always used.
-+	 */
-+	switch (off) {
-+	case KVM_REG_ARM_CORE_REG(regs.regs[0]) ...
-+	     KVM_REG_ARM_CORE_REG(regs.regs[30]):
-+	case KVM_REG_ARM_CORE_REG(regs.pc):
-+		return true;
-+	}
-+	return false;
-+}
-+
- static int core_reg_size_from_offset(const struct kvm_vcpu *vcpu, u64 off)
- {
- 	int size;
-@@ -783,12 +801,34 @@ int kvm_arm_get_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- 	return kvm_arm_sys_reg_get_reg(vcpu, reg);
- }
- 
-+/*
-+ * The RMI ABI only enables setting some GPRs and PC. The selection of GPRs
-+ * that are available depends on the Realm state and the reason for the last
-+ * exit.  All other registers are reset to architectural or otherwise defined
-+ * reset values by the RMM, except for a few configuration fields that
-+ * correspond to Realm parameters.
-+ */
-+static bool validate_realm_set_reg(struct kvm_vcpu *vcpu,
-+				   const struct kvm_one_reg *reg)
-+{
-+	if ((reg->id & KVM_REG_ARM_COPROC_MASK) == KVM_REG_ARM_CORE) {
-+		u64 off = core_reg_offset_from_id(reg->id);
-+
-+		return kvm_realm_validate_core_reg(off);
-+	}
-+
-+	return false;
-+}
-+
- int kvm_arm_set_reg(struct kvm_vcpu *vcpu, const struct kvm_one_reg *reg)
- {
- 	/* We currently use nothing arch-specific in upper 32 bits */
- 	if ((reg->id & ~KVM_REG_SIZE_MASK) >> 32 != KVM_REG_ARM64 >> 32)
- 		return -EINVAL;
- 
-+	if (kvm_is_realm(vcpu->kvm) && !validate_realm_set_reg(vcpu, reg))
-+		return -EINVAL;
-+
- 	switch (reg->id & KVM_REG_ARM_COPROC_MASK) {
- 	case KVM_REG_ARM_CORE:	return set_core_reg(vcpu, reg);
- 	case KVM_REG_ARM_FW:
--- 
-2.43.0
+> On 4/16/25 17:47, rujra wrote:
+>
+> > added comments on spinlocks for producer-consumer model, rearranged the
+> > lines on function calls where it should not end with "(" this bracket,
+> > also removed white-spaces and aligned the arguments of function calls.
+>
+> Are these manual adjustments, or using clang-format?
+>
+> I do not care about formatting being "readable". As long as it can be done by
+> a tool like clang-format, that's fine with me.
+>
+> Of course if you are fixing some checkpatch error, that is okay, but if now,
+> please avoid formatting changes.
+>
+> The comments are fine. Although you probably want to add a space between `//`
+> and the sentence start.
 
+I don't think the kernel commonly uses // for comments.
+
+julia
+
+>
+>
+> >
+> > Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+> >
+> > > 8------------------------------------------------------8<
+> >   drivers/greybus/gb-beagleplay.c | 16 ++++++++--------
+> >   1 file changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/greybus/gb-beagleplay.c
+> > b/drivers/greybus/gb-beagleplay.c
+> > index 473ac3f2d382..fa1c3a40dd0b 100644
+> > --- a/drivers/greybus/gb-beagleplay.c
+> > +++ b/drivers/greybus/gb-beagleplay.c
+> > @@ -73,7 +73,9 @@ struct gb_beagleplay {
+> >          struct gb_host_device *gb_hd;
+> >
+> >          struct work_struct tx_work;
+> > +       //used to ensure that only one producer can access the shared
+> > resource at a time.
+> >          spinlock_t tx_producer_lock;
+> > +       //used to ensure that only one consumer can access the shared
+> > resource at a time.
+> >          spinlock_t tx_consumer_lock;
+> >          struct circ_buf tx_circ_buf;
+> >          u16 tx_crc;
+> > @@ -642,8 +644,8 @@ static int cc1352_bootloader_wait_for_ack(struct
+> > gb_beagleplay *bg)
+> >   {
+> >          int ret;
+> >
+> > -       ret = wait_for_completion_timeout(
+> > -               &bg->fwl_ack_com,
+> > msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> > +       ret = wait_for_completion_timeout(&bg->fwl_ack_com,
+> > +
+> > msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> >          if (ret < 0)
+> >                  return dev_err_probe(&bg->sd->dev, ret,
+> >                                       "Failed to acquire ack semaphore");
+> > @@ -680,9 +682,8 @@ static int cc1352_bootloader_get_status(struct
+> > gb_beagleplay *bg)
+> >          if (ret < 0)
+> >                  return ret;
+> >
+> > -       ret = wait_for_completion_timeout(
+> > -               &bg->fwl_cmd_response_com,
+> > -               msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> > +       ret = wait_for_completion_timeout(&bg->fwl_cmd_response_com,
+> > +
+> > msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> >          if (ret < 0)
+> >                  return dev_err_probe(&bg->sd->dev, ret,
+> >                                       "Failed to acquire last status
+> > semaphore");
+> > @@ -765,9 +766,8 @@ static int cc1352_bootloader_crc32(struct
+> > gb_beagleplay *bg, u32 *crc32)
+> >          if (ret < 0)
+> >                  return ret;
+> >
+> > -       ret = wait_for_completion_timeout(
+> > -               &bg->fwl_cmd_response_com,
+> > -               msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> > +       ret = wait_for_completion_timeout(&bg->fwl_cmd_response_com,
+> > +
+> > msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
+> >          if (ret < 0)
+> >                  return dev_err_probe(&bg->sd->dev, ret,
+> >                                       "Failed to acquire last status
+> > semaphore");
+> > --
+> > 2.43.0
+>
+>
+> Best Regards,
+>
+> Ayush Singh
+>
+>
+>
