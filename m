@@ -1,86 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08FD154C17;
-	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E8A154C17
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825521; cv=none; b=m3cLa/OVoVUNddwMeDW7ikewV0kGchHbEklOAHs7+gP1MH4u1gt4DCl9Ilt0sCcJGAmGJFCg/h0QA40C+/itKTvMQapvFSTy3hsMmhiP1Jtxm5QGAK1JYqcso9zcdiqvjcZctp7Perm0PnxWBAhlV/yfDOUFGeOwixJCT1qnmkQ=
+	t=1744825562; cv=none; b=gHjtsp0Z+cBSdpemkouQEBwTALCcgPQgo37P4tO46/yh35qnby0utHRGgu/pFLLQGX71Ca6I0a2qUdTcRdZWAml71kqJ2cNOaIwY5f5BI6i4rGc+Y/WZGT+6RVAH51w4/pKMTLPSuqZudmPtxJLuNdkqhYzKQ3K9IWU16TvO4wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825521; c=relaxed/simple;
-	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WALEuYm0Ob+Kcc/EPAlp73B6ygXUpfhmhsBNHLFL/2u+V3yitXLU/U7ojknTj4vIJgW9gJ1a9As7HEaooJVnx/P0HhuYDlpJ+fikzvSMKOkAgdN5kUPWTj4OKswTITEtnAcpQPDS5h07nWhNMHjs3OHe7uTXkSRWwmwZjV5sfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=poVs4j1q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744825562; c=relaxed/simple;
+	bh=5kHFo+V9DJIddaMgMFYm4EJg+ZcCk/tBSs8csBR+egs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVdb6AQbaxdR2F4sKiaCV7v75dEEzkGtXB0qB0vYy+mNylS6zZ60HDjJQY3UYmuSE9Xz/nJDw1eLZO2NVz0LMS5NcxzzG6akTZvW29tDWgC58ymF9irnT+CLe7ked6prbyG3Ohz/xdfcqfOPh10kihigQusrQ8RWy4PIUWvvQGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cFm4sFGp; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="poVs4j1q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44402C4CEE2;
-	Wed, 16 Apr 2025 17:45:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744825521;
-	bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=poVs4j1qzHaSgPNBoCaQY9VleGrtK4KIDHxrF6jDFV7guhXfUwtBKNgFVC6Cp02qX
-	 jfi+S7SUHj03VvAO1of9wiNMODEwfSbra9N6Q5hj25QxFiZpYq3MBvQXZ8yMU4vyyG
-	 REtrao/EpwYsQiwVi8NSaJaIBXSHu+HtTmE4ySOsglj/7lYyD0CLnApZrOBcDdHEM7
-	 3gXfZnF4V+TxWBQLq6Ei/Lqp+1jlRgRjodIIgV4ghW+vaYUjQgvGIuaFz5fRTAC6gv
-	 AWGwheJPReFqrCotJa+w/BD7bVd9H/YXdQXE70uM6DmAmSu5YQLG2eI7L1OvIV1RLT
-	 TKoiuzYPGu1Qw==
-From: Kees Cook <kees@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Erick Archer <erick.archer@outlook.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] input/joystick: magellan: Mark __nonstring look-up table
-Date: Wed, 16 Apr 2025 10:45:17 -0700
-Message-Id: <20250416174513.work.662-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cFm4sFGp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744825561; x=1776361561;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5kHFo+V9DJIddaMgMFYm4EJg+ZcCk/tBSs8csBR+egs=;
+  b=cFm4sFGp1A+IZvoLv9zBG0wB0DAMCwDLv+8dl5guuB206UIixrlKPOEi
+   QMHw7dTuygBG9lBWJdcWzEyTDoKUDeJdYt9p0mGFUhlv2E3qnZ+4DJG8P
+   9URqRy5cneMjFs4Lh72ffBb9JTdEjgkPm0170bKBiBAdWSPUuSRsTJkNr
+   4/4SgCLmEZM/phBdoklA6s4o1ZsMtOFzFX/2wi04g3xByPpu8rtTzJHXk
+   qC6FGlLBFnUdAE1lWpQ6kscBhsCMgFbNhsXPzgj6+su7w84ITAq0r+oor
+   5NgoXZn4MjpGu6ohJZHj0slXapxv0mLm1SdcdRmTfvAGANL8yyV8PQqAx
+   w==;
+X-CSE-ConnectionGUID: jWaro73HRGiYm2Z6r5GWRg==
+X-CSE-MsgGUID: iwjp56ARSgquK5cFGU/rWw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46517466"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46517466"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:45:56 -0700
+X-CSE-ConnectionGUID: VpcMh4JERfyv0DJt4f8EcA==
+X-CSE-MsgGUID: PFvb/YazQaOppcESy+/Smw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="161589079"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:45:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u56pb-0000000Cvdi-1oVM;
+	Wed, 16 Apr 2025 20:45:51 +0300
+Date: Wed, 16 Apr 2025 20:45:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Z_6uzH9DsWIh-hIz@mail.minyard.net
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>,
+	OpenIPMI Developers <openipmi-developer@lists.sourceforge.net>
+Subject: Re: [PATCH] ipmi:si: Move SI type information into an info structure
+Message-ID: <Z__sz8BvIvdyF4dN@smile.fi.intel.com>
+References: <Z_-d6Pj7ZFuG9gNA@mail.minyard.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1560; i=kees@kernel.org; h=from:subject:message-id; bh=INhAtgzTbo+H9P90iWeVT1I+06inDlWJEEG+41qUq1c=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/36x5tEVfWlVaPPLcvdbjK+TuXFZzNdtyacfem9cSG i7e0fgwraOUhUGMi0FWTJElyM49zsXjbXu4+1xFmDmsTCBDGLg4BWAiQV8Z/vBaZcebzA5JE793 oPLCjGNLs48HHziXvWjF/+cJaxNrdYoZ/tmrSHxObAn8lnLodIpyYuPpjEP61xLfGBzfGqrZdfX dRSYA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_-d6Pj7ZFuG9gNA@mail.minyard.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-GCC 15's new -Wunterminated-string-initialization notices that the
-16 character lookup table "nibbles" (which is not used as a C-String)
-needs to be marked as "nonstring":
+On Wed, Apr 16, 2025 at 07:09:12AM -0500, Corey Minyard wrote:
+> Andy reported:
+> 
+> Debian clang version 19.1.7 is not happy when compiled with
+> `make W=1` (note, CONFIG_WERROR=y is the default):
+> 
+> ipmi_si_platform.c:268:15: error: cast to smaller integer type 'enum si_type'
+> +from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+>   268 |         io.si_type      = (enum
+> +si_type)device_get_match_data(&pdev->dev);
+> 
+> The IPMI SI type is an enum that was cast into a pointer that was
+> then cast into an enum again.  That's not the greatest style, so
+> instead create an info structure to hold the data and use that.
 
-drivers/input/joystick/magellan.c: In function 'magellan_crunch_nibbles':
-drivers/input/joystick/magellan.c:51:44: warning: initializer-string for array of 'unsigned char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
-   51 |         static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
-      |                                            ^~~~~~~~~~~~~~~~~~
+I'm going to test this today or latest tomorrow, below some comments.
 
-Add the annotation and While at it, mark the table as const too.
+...
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Erick Archer <erick.archer@outlook.com>
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-input@vger.kernel.org
----
- drivers/input/joystick/magellan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  	u8 slave_addr;
+> -	enum si_type si_type;
+> +	struct ipmi_match_info si_info;
 
-diff --git a/drivers/input/joystick/magellan.c b/drivers/input/joystick/magellan.c
-index 2eaa25c9c68c..7622638e5bb8 100644
---- a/drivers/input/joystick/magellan.c
-+++ b/drivers/input/joystick/magellan.c
-@@ -48,7 +48,7 @@ struct magellan {
- 
- static int magellan_crunch_nibbles(unsigned char *data, int count)
- {
--	static unsigned char nibbles[16] = "0AB3D56GH9:K<MN?";
-+	static const unsigned char nibbles[16] __nonstring = "0AB3D56GH9:K<MN?";
- 
- 	do {
- 		if (data[count] == nibbles[data[count] & 0xf])
+	const struct ipmi_match_info *si_info;
+
+?
+
+I understand that right now there is no benefit, but my suggestion is scalable
+and prevents from sudden values rewrites. Also that's how other drivers do, but
+of course not all of them.
+
+>  	struct device *dev;
+
+...
+
+> -	else if ((new_smi->io.si_type != SI_BT) && (!new_smi->io.irq))
+> +	else if ((new_smi->io.si_info.type != SI_BT) && (!new_smi->io.irq))
+
+While at it, drop unneeded parentheses (at least in the second part).
+
+>  		enable = 1;
+
+...
+
+>  static int ipmi_pci_probe_regspacing(struct si_sm_io *io)
+>  {
+> -	if (io->si_type == SI_KCS) {
+> +	if (io->si_info.type == SI_KCS) {
+>  		unsigned char	status;
+>  		int		regspacing;
+
+It looks like the above conditional is for the whole function, if this is
+the case, I would go with an additional patch to drop the indentation level.
+
+	unsigned char	status;
+	int		regspacing;
+	...
+	if (io->si_info.type != SI_KCS)
+		return ...
+
+...
+
+>  #ifdef CONFIG_OF
+
+I would clean up this ugly ifdeffery as well, but it can be done after this
+patch.
+
+> +static struct ipmi_match_info kcs_info = { .type = SI_KCS };
+> +static struct ipmi_match_info smic_info = { .type = SI_SMIC };
+> +static struct ipmi_match_info bt_info = { .type = SI_BT };
+> +
+>  static const struct of_device_id of_ipmi_match[] = {
+> -	{ .type = "ipmi", .compatible = "ipmi-kcs",
+> -	  .data = (void *)(unsigned long) SI_KCS },
+> -	{ .type = "ipmi", .compatible = "ipmi-smic",
+> -	  .data = (void *)(unsigned long) SI_SMIC },
+> -	{ .type = "ipmi", .compatible = "ipmi-bt",
+> -	  .data = (void *)(unsigned long) SI_BT },
+> +	{ .type = "ipmi", .compatible = "ipmi-kcs", .data = &kcs_info },
+> +	{ .type = "ipmi", .compatible = "ipmi-smic", .data = &smic_info },
+> +	{ .type = "ipmi", .compatible = "ipmi-bt", .data = &bt_info },
+>  	{},
+
+...and this line should not have a trailing comma.
+
+>  };
+>  MODULE_DEVICE_TABLE(of, of_ipmi_match);
+
+...
+
+> +	io.si_info	= *((struct ipmi_match_info *)
+> +			    device_get_match_data(&pdev->dev));
+
+This ugly casting won't be needed if you use const pointer as suggested above.
+
+	io.si_info	= *((struct ipmi_match_info *)
+			    device_get_match_data(&pdev->dev));
+
+...
+
+>  	switch (tmp) {
+>  	case 1:
+> -		io.si_type = SI_KCS;
+> +		io.si_info.type = SI_KCS;
+>  		break;
+>  	case 2:
+> -		io.si_type = SI_SMIC;
+> +		io.si_info.type = SI_SMIC;
+>  		break;
+>  	case 3:
+> -		io.si_type = SI_BT;
+> +		io.si_info.type = SI_BT;
+>  		break;
+>  	case 4: /* SSIF, just ignore */
+>  		return -ENODEV;
+
+I haven't looked where tmp comes from, but maybe that's a candidate to be in
+the info structure to begin with?
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
