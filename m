@@ -1,138 +1,106 @@
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBD32135B7;
-	Wed, 16 Apr 2025 16:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50342144C7
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744822642; cv=none; b=GNGo7LdR6u7dB9+GekoAY9CHZbZId2AfQJobkAtJazN+c87Irf1T47WdK4cic0pO9pefLPcRrvJlxxYVhFXsi98t52fLmjGKb29f4xuUR6OX7xWpRbGtGvm7CgzcNNFZbTr7WRVHLtM4MvBI9T+olwNFWv6Fd5IbyI9Gu393JYs=
+	t=1744822683; cv=none; b=dGBDfGL2B0hIA59J61Zk/Z2MAJpi+w+U7A0t3JGkYXkkIxpPmhDhCTS9ntaZyhWDWUIK5MoaEJ4paaF99j6oraXy0FdRykiw2ClwqY/Wd0Fh76TRqNIeJAKtyj9NJyB39EZDTGTF0E/66DAMGKbjWDYL2Eb+kYZ+wU9RsJ6WrZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744822642; c=relaxed/simple;
-	bh=Zt/tQFUbpSmz7S4t/UplGM4xSmdA/oN6XTSYkpTWm80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U8ODgZiL4gnsKgvh5PxtEtRHaIcEC+4h4EEZL1RHSE/pKhfl++osiIdd/2OQLR+vsnle3UyieMC/Wx3TcX1qKf+zFMwTBhU0l5+z1iYOZSAMnZGKzIsCPSZMdAkBMKuxa8GdLJRF7ZWJB7aZzSYwKTOJwdCua5z4HM9aCDhopY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 2807E200A2AD;
-	Wed, 16 Apr 2025 18:57:05 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 674D217601D; Wed, 16 Apr 2025 18:57:11 +0200 (CEST)
-Date: Wed, 16 Apr 2025 18:57:11 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: manivannan.sadhasivam@linaro.org
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	dingwei@marvell.com, cassel@kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] PCI: Add link down handling for host bridges
-Message-ID: <Z__hZ2M8wDHn2XSn@wunner.de>
-References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
- <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
+	s=arc-20240116; t=1744822683; c=relaxed/simple;
+	bh=K6pLnfWwXU9CUrSrZB7vxbnKjaj5uNFAr9G2599uI4Y=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T27rZcKkV2B5yntEVDWyyniItPNmBTLGIedi8DWEu71g1/qIg+Hx/jLDtr9iy9pTpenKNRWJDg7bIeKWciXKC2vV1aEj00ZHbRG22O6ufSIBt7G3l7AX0AviMocu8vdBc11UlY1XOcLJf1YAh5ad3f7ikWPtvY1bbcVx7EMc/xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SStQOg4X; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SStQOg4X"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39c30f26e31so4725697f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:58:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744822680; x=1745427480; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dmdBoA6zz78+xOLW9xsC44zh3bW6ooVzFnjRvgSK8Hw=;
+        b=SStQOg4XjPpD9E9kjRv45wZDJbglf2KWAnEO3apsUqojSCNKUZp3p6fra1ZFWaX5LW
+         6UvBD3hEna4otZ6s/KJfObAAaO2G6bQzHggb/SHRq+tOraspvmkb1+PJTEnkAF254l9s
+         Q4D+spD6d563AT7pKmJhS6ih6wkrB359ZoccqlbLrDXJRmtkCg12t7NO5SgVRIfpPVMI
+         K7vyzoxE+u+ybobKXoJhscgdyloMM02yIYf47f1Hy143L2NDJ8Iz9FjUF9MgjbEQbU1W
+         cvjaUZFsOVbT7atffyH+xmQqgP6ScSnF9kU0pRrB0z7d4mXVC08BFUSaYtAVLuS6J/vf
+         Aq3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744822680; x=1745427480;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dmdBoA6zz78+xOLW9xsC44zh3bW6ooVzFnjRvgSK8Hw=;
+        b=lQ/KJ89VKvPhY86VYqfKJ3fyDvfIO+/I11+qgnTGwUTaXOyUJyYWrjhJyZImSHRocT
+         rR8IHO7kRBmPgmw3wKPfddng4j47Hh2Yql+1ITVAiUWWmCIu1bywLZJx1f5fqYwSqp1P
+         DV8aDSXFViYNUKM7YaL0bJC7w4elfGIEmT9vnuLtz86gsaSpwYhLuDb5qCtIhshNaU4o
+         +0WVj9pqOYKnHgciKmFJGgRTq4qMyVjS+Ob5XP8/YPKFBixqHs7dqaxOohDjkYKeyESA
+         fbdErgDF6SKqBlrQAIELHTZB9C6m1X44UmgI+m3li1KPbwx/xKuBAS20XmhAUihZJKDd
+         UC2g==
+X-Forwarded-Encrypted: i=1; AJvYcCV3j8P7K6eCcQ6wJVsAX6HkvfZwN+NQGh61+uAJuJRLYR2VTkZpj7CyhmmNgpa3o8FkLaB0aBfgAs7zcDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrsk3ychvUmvHCl7clDtF5g2mUYxpvGTv7YNcC941Pw4JgiG28
+	Acp0wqSW8FVBm6W8F0xjNUfWagNDn8VQutgwtpfCYeN4RNPnSYY2D8cpA0o8udbZ6eicBw==
+X-Google-Smtp-Source: AGHT+IFPFFb1EniwwTjYw4OJuOpLJGMjTOv5HhlzQpBXQ+xCVbnT4IKosegkJyCI/sHUbC8u1XWfVfsL
+X-Received: from wmqd19.prod.google.com ([2002:a05:600c:34d3:b0:43e:9aac:5a49])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:4201:b0:39c:1f10:c74c
+ with SMTP id ffacd0b85a97d-39ee5b37021mr2691786f8f.35.1744822680255; Wed, 16
+ Apr 2025 09:58:00 -0700 (PDT)
+Date: Wed, 16 Apr 2025 18:57:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1224; i=ardb@kernel.org;
+ h=from:subject; bh=N+fKRIG32MGIDHSfCLW8zpajv2xa0m+Wt5yRK9xdwD8=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIf3/ww77Y6YHuNIePlGd7KElHDCvi3lD2qsAtpj45qrH7
+ 56HBud3lLIwiHEwyIopsgjM/vtu5+mJUrXOs2Rh5rAygQxh4OIUgIl0eDMyPHNiXH7v5e+Azruu
+ 9wO4kltvM/h9eaLBvrh7uxrvrV+L9zIyzH+5INhg2wrFs2vtdp9gexzbPvl658S7t113yi6S0z5 UxQgA
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250416165743.4080995-6-ardb+git@google.com>
+Subject: [PATCH v2 0/4] efi: Don't initalize SEV-SNP from the EFI stub
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-efi@vger.kernel.org
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, mingo@kernel.org, 
+	Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Borislav Petkov <bp@alien8.de>, Dionna Amalie Glaze <dionnaglaze@google.com>, 
+	Kevin Loughlin <kevinloughlin@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 16, 2025 at 09:59:05PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -270,3 +270,30 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  
->  	return status;
->  }
-> +
-> +static pci_ers_result_t pcie_do_slot_reset(struct pci_dev *dev)
-> +{
-> +	int ret;
-> +
-> +	ret = pci_bus_error_reset(dev);
-> +	if (ret) {
-> +		pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +		return PCI_ERS_RESULT_DISCONNECT;
-> +	}
-> +
-> +	pci_info(dev, "Slot has been reset\n");
-> +
-> +	return PCI_ERS_RESULT_RECOVERED;
-> +}
-> +
-> +void pcie_do_recover_slots(struct pci_host_bridge *host)
-> +{
-> +	struct pci_bus *bus = host->bus;
-> +	struct pci_dev *dev;
-> +
-> +	for_each_pci_bridge(dev, bus) {
-> +		if (pci_is_root_bus(bus))
-> +			pcie_do_recovery(dev, pci_channel_io_frozen,
-> +					 pcie_do_slot_reset);
-> +	}
-> +}
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Since pcie_do_slot_reset(), pcie_do_recover_slots() and
-pcie_do_recover_slots() are only needed on platforms with a
-specific host controller (and not, say, on x86), it would be good
-if they could be kept e.g. in a library in drivers/pci/controller/
-to avoid unnecessarily enlarging the .text section for everyone else.
+Changes since v1: [0]
+- address shortcomings pointed out by Tom, related to missing checks and
+  to discovery of the CC blob table from the EFI stub
 
-One option would be the existing pci-host-common.c, another a
-completely new file.
+[0] https://lore.kernel.org/all/20250414130417.1486395-2-ardb+git@google.com/T/#u
 
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -966,6 +966,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
->  int pci_aer_raw_clear_status(struct pci_dev *dev);
->  void pci_save_aer_state(struct pci_dev *dev);
->  void pci_restore_aer_state(struct pci_dev *dev);
-> +void pcie_do_recover_slots(struct pci_host_bridge *host);
->  #else
->  static inline void pci_no_aer(void) { }
->  static inline void pci_aer_init(struct pci_dev *d) { }
-> @@ -975,6 +976,26 @@ static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
->  static inline void pci_save_aer_state(struct pci_dev *dev) { }
->  static inline void pci_restore_aer_state(struct pci_dev *dev) { }
-> +static inline void pcie_do_recover_slots(struct pci_host_bridge *host)
-> +{
-> +	struct pci_bus *bus = host->bus;
-> +	struct pci_dev *dev;
-> +	int ret;
-> +
-> +	if (!host->reset_slot)
-> +		dev_warn(&host->dev, "Missing reset_slot() callback\n");
-> +
-> +	for_each_pci_bridge(dev, bus) {
-> +		if (!pci_is_root_bus(bus))
-> +			continue;
-> +
-> +		ret = pci_bus_error_reset(dev);
-> +		if (ret)
-> +			pci_err(dev, "Failed to reset slot: %d\n", ret);
-> +		else
-> +			pci_info(dev, "Slot has been reset\n");
-> +	}
-> +}
->  #endif
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
 
-Unusual to have such a large inline function in a header.
-Can this likewise be moved to some library file and separated
-from the other version via #ifdef please?
+Ard Biesheuvel (4):
+  x86/efistub: Obtain SEV CC blob address from the stub
+  x86/boot: Drop redundant RMPADJUST in SEV SVSM presence check
+  x86/sev: Unify SEV-SNP hypervisor feature check
+  x86/efistub: Don't bother enabling SEV in the EFI stub
 
-Thanks,
+ arch/x86/boot/compressed/sev.c          | 33 +-------------------
+ arch/x86/boot/startup/sme.c             |  2 ++
+ arch/x86/coco/sev/core.c                | 11 -------
+ arch/x86/coco/sev/shared.c              | 33 +++++++++++++++-----
+ arch/x86/include/asm/sev-internal.h     |  3 +-
+ arch/x86/include/asm/sev.h              |  4 +--
+ drivers/firmware/efi/libstub/x86-stub.c | 27 +++++++++-------
+ 7 files changed, 48 insertions(+), 65 deletions(-)
 
-Lukas
+
+base-commit: 221df25fdf827b1fe5b904c6a396af06461a32f6
+-- 
+2.49.0.805.g082f7c87e0-goog
+
