@@ -1,127 +1,222 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD49F221F01;
-	Wed, 16 Apr 2025 01:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C114B950
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744766304; cv=none; b=mgxgE+ocg7mbm+QwRNoxi8igIPHGp5jRCl+pZtTTJshOZe5NcmqX7KJ8BF0hkY5Q2A4ZEQDZKt/tEZijuDm2/8lXGQXyrxRfsqL0nFFBnAL0DpDkWnl9wPhk3cIMN1WV72RVSchgJ2ykd9jA52PdUJKQUMjMwRKUN2a/CdlOTr8=
+	t=1744766541; cv=none; b=F5pHGcSysGgqaHZAcxnbJy18xEh6f9giNOp0Fu9mo3YVe1KtKdbHlEShpK+cIEGbGeBDk00DQ5aX2/T0Ihh7XfH2XrXBtnJkEzmU+7eps+CiO4zvWjkkD+3nGF6ml4kCfZT7MOAHnWcy87ZrYImh9Ac5SeDklpvq51A2tKl8TB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744766304; c=relaxed/simple;
-	bh=UuAO4fXQ4yds6ZdpXFhnTJZP3zIEQdUITBaJRPlz6Cg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LWJHdQ3TAzBwPKnxX3+CHgipmLeJkPgpb5f4Fg9orn6O6FUiGTY6+u9Ihuetgsj8x3VE71qKl2mj+k/gloFSopVclP/4jigtKN07M8/OBAk+BCbJ5EhxI5cRU9SD0ORZJHmLQMe8X3PnKbdPVRAuP8s4AUxqCwtC/KYrYYuPjkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G00VhQ012373;
-	Tue, 15 Apr 2025 18:18:15 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yqpkkw4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 15 Apr 2025 18:18:15 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 15 Apr 2025 18:18:14 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 18:18:09 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <harry.wentland@amd.com>,
-        <sunpeng.li@amd.com>, <Rodrigo.Siqueira@amd.com>,
-        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <Xinhui.Pan@amd.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <sashal@kernel.org>, <chiahsuan.chung@amd.com>, <alex.hung@amd.com>,
-        <mario.limonciello@amd.com>, <hersenxs.wu@amd.com>,
-        <Wayne.Lin@amd.com>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <daniel.wheeler@amd.com>
-Subject: [PATCH 5.10.y] drm/amd/display: Stop amdgpu_dm initialize when link nums greater than max_links
-Date: Wed, 16 Apr 2025 09:18:08 +0800
-Message-ID: <20250416011808.388698-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744766541; c=relaxed/simple;
+	bh=AMWQxp2pL96fP/AbKLFV7G4sCV0QYAkLQfIyL+jVfW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LsQAMIXVAtFuffQ3uoMHCqI+CcZLeY7O8JLUsE2sCi9OgXVd8oPV5+V5uDV/pR38q9uNLysh9SezCKU30mIzvSkcuWTA2fqOSzj2FAi6Shv6bZD+f+elPGAzAr1S7m1jiNnaSIRfalnajQuHsL9uGw8/JGJwaNtfxyLyaOZrIo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gouRYW3e; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gouRYW3e"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744766528; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
+	b=gouRYW3eaLXC6zT/J8d2R70PHTbSH4jnu0djuAqRju4bWHIQI1b760BJ0swypvKWNUQ1P57y0a/rKehZxtx3N/m2cPX1oFPQLIFCnhXX9Ct39CRUmMie+1gDlbQViUyOz/9qaEQkh9ad0JBbKDlDCFYOh5ZIxcA5E7u/P9Ptiz4=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WX6j.0Y_1744766526 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 16 Apr 2025 09:22:07 +0800
+Message-ID: <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
+Date: Wed, 16 Apr 2025 09:22:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: lGjMQycpew1QElTfJ0BFCJ1-sXLc6BR-
-X-Proofpoint-GUID: lGjMQycpew1QElTfJ0BFCJ1-sXLc6BR-
-X-Authority-Analysis: v=2.4 cv=UZBRSLSN c=1 sm=1 tr=0 ts=67ff0557 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=V2FjD2v6pYOrjI9wGFEA:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-15_09,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0
- spamscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504160008
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+References: <20250402202728.2157627-1-dhavale@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250402202728.2157627-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Hersen Wu <hersenxs.wu@amd.com>
+Hi,
 
-[ Upstream commit cf8b16857db702ceb8d52f9219a4613363e2b1cf ]
+On 2025/4/3 04:27, Sandeep Dhavale wrote:
+> Currently, when EROFS is built with per-CPU workers, the workers are
+> started and CPU hotplug hooks are registered during module initialization.
+> This leads to unnecessary worker start/stop cycles during CPU hotplug
+> events, particularly on Android devices that frequently suspend and resume.
+> 
+> This change defers the initialization of per-CPU workers and the
+> registration of CPU hotplug hooks until the first EROFS mount. This
+> ensures that these resources are only allocated and managed when EROFS is
+> actually in use.
+> 
+> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
+> still occurs during z_erofs_exit_subsystem(), but only if they were
+> initialized.
+> 
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+> v1: https://lore.kernel.org/linux-erofs/20250331022011.645533-2-dhavale@google.com/
+> Changes since v1:
+> - Get rid of erofs_mount_count based init and tear down of resources
+> - Initialize resource in z_erofs_init_super() as suggested by Gao
+> - Introduce z_erofs_init_workers_once() and track it using atomic bool
+> - Improve commit message
+> 
+>   fs/erofs/internal.h |  2 ++
+>   fs/erofs/zdata.c    | 57 ++++++++++++++++++++++++++++++++++-----------
+>   2 files changed, 46 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 4ac188d5d894..bbc92ee41846 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -450,6 +450,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages);
+>   int __init z_erofs_gbuf_init(void);
+>   void z_erofs_gbuf_exit(void);
+>   int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+> +int z_erofs_init_workers_once(void);
+>   #else
+>   static inline void erofs_shrinker_register(struct super_block *sb) {}
+>   static inline void erofs_shrinker_unregister(struct super_block *sb) {}
+> @@ -458,6 +459,7 @@ static inline void erofs_exit_shrinker(void) {}
+>   static inline int z_erofs_init_subsystem(void) { return 0; }
+>   static inline void z_erofs_exit_subsystem(void) {}
+>   static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
+> +static inline int z_erofs_init_workers_once(void) { return 0; };
 
-[Why]
-Coverity report OVERRUN warning. There are
-only max_links elements within dc->links. link
-count could up to AMDGPU_DM_MAX_DISPLAY_INDEX 31.
+Why we need this? I think it's unused if decompression
+subsystem is disabled.
 
-[How]
-Make sure link count less than max_links.
+>   #endif	/* !CONFIG_EROFS_FS_ZIP */
+>   
+>   #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..75f0adcff97b 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -11,6 +11,7 @@
+>   
+>   #define Z_EROFS_PCLUSTER_MAX_PAGES	(Z_EROFS_PCLUSTER_MAX_SIZE / PAGE_SIZE)
+>   #define Z_EROFS_INLINE_BVECS		2
+> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
+>   
+>   struct z_erofs_bvec {
+>   	struct page *page;
+> @@ -403,10 +404,44 @@ static inline int erofs_cpu_hotplug_init(void) { return 0; }
+>   static inline void erofs_cpu_hotplug_destroy(void) {}
 
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
-Acked-by: Tom Chung <chiahsuan.chung@amd.com>
-Signed-off-by: Hersen Wu <hersenxs.wu@amd.com>
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-[Minor conflict resolved due to code context change. And the macro MAX_LINKS
- is introduced by Commit 60df5628144b ("drm/amd/display: handle invalid
- connector indices") after 6.10. So here we still use the original array
- length MAX_PIPES * 2]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+I wonder those helpers are still needed since we have
+z_erofs_init_pcpu_workers().
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 50921b340b88..69b3f1dc43e5 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -3397,17 +3397,17 @@ static int amdgpu_dm_initialize_drm_device(struct amdgpu_device *adev)
- 			goto fail;
- 		}
- 
-+	if (link_cnt > (MAX_PIPES * 2)) {
-+		DRM_ERROR(
-+			"KMS: Cannot support more than %d display indexes\n",
-+				MAX_PIPES * 2);
-+		goto fail;
-+	}
-+
- 	/* loops over all connectors on the board */
- 	for (i = 0; i < link_cnt; i++) {
- 		struct dc_link *link = NULL;
- 
--		if (i > AMDGPU_DM_MAX_DISPLAY_INDEX) {
--			DRM_ERROR(
--				"KMS: Cannot support more than %d display indexes\n",
--					AMDGPU_DM_MAX_DISPLAY_INDEX);
--			continue;
--		}
--
- 		aconnector = kzalloc(sizeof(*aconnector), GFP_KERNEL);
- 		if (!aconnector)
- 			goto fail;
--- 
-2.34.1
+>   #endif
+>   
+> -void z_erofs_exit_subsystem(void)
+> +static int z_erofs_init_workers(void)
 
+I think we need to rename it as
+`static int z_erofs_init_pcpu_workers(void)`
+
+>   {
+> -	erofs_cpu_hotplug_destroy();
+> +	int err;
+> +
+> +	err = erofs_init_percpu_workers();
+> +	if (err)
+> +		goto err_init_percpu_workers;
+> +
+> +	err = erofs_cpu_hotplug_init();
+> +	if (err < 0)
+> +		goto err_cpuhp_init;
+> +	return err;
+> +
+> +err_cpuhp_init:
+>   	erofs_destroy_percpu_workers();
+> +err_init_percpu_workers:
+> +	atomic_set(&erofs_percpu_workers_initialized, 0);
+> +	return err;
+> +}
+> +
+> +int z_erofs_init_workers_once(void)
+
+I'd like to inline them into z_erofs_init_super().
+
+> +{
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
+> +		return 0;
+> +	return z_erofs_init_workers();
+> +}
+> +
+> +static void z_erofs_destroy_workers(void)
+
+z_erofs_destroy_pcpu_workers()
+
+> +{
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 0)) {
+
+	if (atomic_xchg(&erofs_percpu_workers_initialized, 0))
+		return;
+
+> +		erofs_cpu_hotplug_destroy();
+> +		erofs_destroy_percpu_workers();
+> +	}
+> +}
+> +
+> +void z_erofs_exit_subsystem(void)
+> +{
+> +	z_erofs_destroy_workers();
+>   	destroy_workqueue(z_erofs_workqueue);
+>   	z_erofs_destroy_pcluster_pool();
+>   	z_erofs_exit_decompressor();
+> @@ -430,19 +465,8 @@ int __init z_erofs_init_subsystem(void)
+>   		goto err_workqueue_init;
+>   	}
+>   
+> -	err = erofs_init_percpu_workers();
+> -	if (err)
+> -		goto err_pcpu_worker;
+> -
+> -	err = erofs_cpu_hotplug_init();
+> -	if (err < 0)
+> -		goto err_cpuhp_init;
+>   	return err;
+>   
+> -err_cpuhp_init:
+> -	erofs_destroy_percpu_workers();
+> -err_pcpu_worker:
+> -	destroy_workqueue(z_erofs_workqueue);
+>   err_workqueue_init:
+>   	z_erofs_destroy_pcluster_pool();
+>   err_pcluster_pool:
+> @@ -645,6 +669,13 @@ static const struct address_space_operations z_erofs_cache_aops = {
+>   int z_erofs_init_super(struct super_block *sb)
+>   {
+>   	struct inode *const inode = new_inode(sb);
+> +	int err;
+
+	struct inode *inode;
+	int err;
+
+	err = z_erofs_init_workers_once();
+	if (err)
+		return err;
+	inode = new_inode(sb);
+	...
+
+> +
+> +	err = z_erofs_init_workers_once();
+> +	if (err) {
+> +		iput(inode);
+
+To avoid such unnecessary iput() here...
+
+Thanks,
+Gao Xiang
