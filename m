@@ -1,92 +1,119 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B771B808;
-	Wed, 16 Apr 2025 04:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E8915B543;
+	Wed, 16 Apr 2025 04:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744776923; cv=none; b=RvLsPlN+SKDrRdChpc8QivszsgDRpYjozSgakcspUUF9+I4KcOjjdDC9xNhG22+3Ka5p93Gq9iJNty5VlMVh/PXdW3azR5lsEYGoCHV4dMC0+NBW46F3EPxEskb5Aa6XaRpKqaWCzT+ok2498ncPjoiKgbhTXCsj9yPSy+FQ33Q=
+	t=1744777185; cv=none; b=IC+et/UiZtw7VDaqfXD525cfBrxuReCeiH9rw2/axK714GwbqKio0zwdtOfdxd+/1uFB4mux+aSiOqCxNsEVdn7fcf2TECfkuKSdT/gYWvmtlxx8IjhcsujDwbfg3BQ8K4pX536e7llWsP17v9Y+JvOxg3amkb2NauT9505bT2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744776923; c=relaxed/simple;
-	bh=DhIJdKETu2svIn7GUJc3RqlkweRMS9CsMO84APKw/t4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dYxHv+3DX9bsyA3Moe5ZidRxF2YMatAcDqddnYSIuIuNgMk6oIeriOm++DhLkOLn78mU16gUAoe/B/tNZFJaHOiiG2dT2kUdM5q6ByfeC0KRfbadVpvJpNGJtjbPqqvF9VxtTMFiym3uSNg/ias1rzAQCJ1r18bJpqfb1J9d2yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-01 (Coremail) with SMTP id qwCowABXAgPQLv9nRi8uCQ--.13988S2;
-	Wed, 16 Apr 2025 12:15:12 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ASoC: fsl_rpmsg: Remove useless return variable
-Date: Wed, 16 Apr 2025 12:14:31 +0800
-Message-Id: <20250416041431.546370-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744777185; c=relaxed/simple;
+	bh=dL0ftOeU+Gn5/pUNrn8WVxfUVIkFLu7EG/cVeRMczIM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=q1bZMJkzWm61fr+2h+QpgCHCIdzpzaWzKHWWEp++PusSGiDBfYZPz0XjjLjeg28wIuoZVMANbGSlMsvcQ1a31GRi16Mt/mPmBGNS8wK61W5j4xB+adyw5btuWgmlOkBnmQSt+SSnt5DXvL331oFX64cbkAC33YkDwP1xBPjIrHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtzmWNim; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtzmWNim"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B64C4CEE2;
+	Wed, 16 Apr 2025 04:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744777185;
+	bh=dL0ftOeU+Gn5/pUNrn8WVxfUVIkFLu7EG/cVeRMczIM=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=rtzmWNim52T0Gjk0fCMUwQz6IXw2VXHGU+YW37NHZ7bTdDWdN0jK2m/ObScK+q2Yh
+	 LKw0q7xJKTHx/NFksdiMezDFC7mBo/pqe5caGHO2Jlr0tZU5NGuIQq6EIAQ9DwmN6k
+	 6Zu5AwuSNj2hZf3hanLdybweMWQA1lumczzCcQPNr1G1dFJ9rQIh+HaqbV94e//cXD
+	 nru81e5mL8rdxpzCRAxMBCnWOBbUiEhtLS8RD2mUQRQhKopDOLialr0iZHGN+6jcFf
+	 YKMrS0AQyBXBzhCvSqJwWZb8yPJ737r13VA+Eu7B2fPg40pL06PmQj0bcWKT4HNYZ1
+	 VxuosCn3Kv0Kg==
+Message-ID: <c3c20d22-4755-4335-a600-4966dd50ad7a@kernel.org>
+Date: Wed, 16 Apr 2025 06:19:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABXAgPQLv9nRi8uCQ--.13988S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFW8Cw47WryxJF4rGw1kGrg_yoWDJrg_Gw
-	4FgrWYqFWj939YyF1DCw47JFWY9FsFyw4qqrsFqanxG398tr4rXr9rtrs3u3s5Wr1rJ3yr
-	GwsIqr93AFyxXjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb6xFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
-	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72
-	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
-	M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8Xw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUcvtZUUUUU=
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 04/13] vt: introduce gen_ucs_width_table.py to create
+ ucs_width_table.h
+From: Jiri Slaby <jirislaby@kernel.org>
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250415192212.33949-1-nico@fluxnic.net>
+ <20250415192212.33949-5-nico@fluxnic.net>
+ <11e8bb4a-24e0-4347-abea-e200a59a744b@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <11e8bb4a-24e0-4347-abea-e200a59a744b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Remove unnecessary return variable and compress the return logic.
+On 16. 04. 25, 6:14, Jiri Slaby wrote:
+> On 15. 04. 25, 21:17, Nicolas Pitre wrote:
+>> From: Nicolas Pitre <npitre@baylibre.com>
+>>
+>> The table in ucs.c is terribly out of date and incomplete. We also need a
+>> second table to store zero-width code points. Properly maintaining those
+>> tables manually is impossible. So here's a script to generate them.
+>>
+>> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> 
+> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- sound/soc/fsl/fsl_rpmsg.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Actually, could you create a makefile rule for this too?
 
-diff --git a/sound/soc/fsl/fsl_rpmsg.c b/sound/soc/fsl/fsl_rpmsg.c
-index 0a551be3053b..6d67db4e0581 100644
---- a/sound/soc/fsl/fsl_rpmsg.c
-+++ b/sound/soc/fsl/fsl_rpmsg.c
-@@ -97,13 +97,9 @@ static int fsl_rpmsg_hw_free(struct snd_pcm_substream *substream,
- static int fsl_rpmsg_startup(struct snd_pcm_substream *substream,
- 			     struct snd_soc_dai *cpu_dai)
- {
--	int ret;
--
--	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
--					 SNDRV_PCM_HW_PARAM_RATE,
--					 &fsl_rpmsg_rate_constraints);
--
--	return ret;
-+	return snd_pcm_hw_constraint_list(substream->runtime, 0,
-+					  SNDRV_PCM_HW_PARAM_RATE,
-+					  &fsl_rpmsg_rate_constraints);
- }
- 
- static const struct snd_soc_dai_ops fsl_rpmsg_dai_ops = {
+Similar to what GENERATE_KEYMAP does in vt/Makefile.
+
+So that you would do:
+   make GENERATE_UCS_WIDTH_TABLE=1 drivers/tty/vt/
+to let the script generate it on the fly?
+
+thanks,
 -- 
-2.25.1
+js
+suse labs
 
