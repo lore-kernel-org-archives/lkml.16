@@ -1,118 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D832459DF;
-	Wed, 16 Apr 2025 11:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F1F24728F;
+	Wed, 16 Apr 2025 11:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804442; cv=none; b=teIQI8wdv5grJnGUMeIMj37fgZd36G1AhLJweGuuhPeSALRTCG6P0Ga74DgGmbkYasuNstfR+p3uskTBg+gEduJaWTJgtSppwtReS/IiHP/nebtK1aYlOTREHza6Qd6XSSsJsVtBfDj/vb1pf/ZbEe2giXFf6bIKQFJ+6nKhOjI=
+	t=1744804448; cv=none; b=Ty1PYAqQwl1AwNEo5Z/Db34RwURpWcVQa3wUTSE0eLVry08PZEBRc8f6FVXvMQyBPHUfUO/8Hd5ccUr5+8At1vifh0aSMa9++ZyrN9wWdIKMHuXKMUPYfrPcELWXYBP/omtZkHPQrfPJp6vtNf/4rffZQq6Aqu8ablLNx5vl3ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804442; c=relaxed/simple;
-	bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ZzrcQ3kQogm+WkDwJC9yQOTyRx7s9kNpZLslOdPpruU9cwO5olNser36CaKMrUNf2KJccD4WsDcVXYLZwRZx1wMhev9HczRkxLirz0U09znSsAvtR7Fk74nMg240QsGtAv47qJij05jNuzi23ubSSkB5Xb/ONN2TiautDlboz1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mEtJiAJE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744804448; c=relaxed/simple;
+	bh=Kx9vZ2nOZKWmMvSzfG5+ZeIJH2O5fKX/k65+E4EY3Zo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mQu6qrJGrFcnUvvR/4ZUYbT7TRaWIhAPDjzUoRU15nJIb9bi3bpJ8FYYOpLuWDa2NHAGnZrwszNAE4f0Bgff7fc8pqKuoeviC54kbVwnS0aPlPK0ZPIKRN9ypne6IS9TKRC5eS8r8SmjDBrDCYRBRZovL2K2kbRCWMFdXEjo7Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=JjfcIS8D; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Ms/MGLW9 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mEtJiAJE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744804441; x=1776340441;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=7qRIbmiS09zuebkIhFNeAIS85Mr+wGvkcDi7aBOIq4w=;
-  b=mEtJiAJEoOJoz5NHxd+eMe8UnE7RxjdszMe95fEo7tvK4JoXT+ot/d1B
-   RT63nZdwAaFt8BLQw2bKL8vCJJNE3UDgzv6BquRcLQU3fFoDDyLQgjQfd
-   kcnXzH4ptsQJZ5zgF+m9Ync8hcKDMYbjODiuFNjoqSPH/UnB3M2ySWcbl
-   ECO383Uu9EgLTVJLabua+6+Tu9W0ZSkAA4iNVE94dgNR+SrUO5vrrg1/V
-   mPd15/SOKPtWdKFiqPxwuP++bAuPDOovvFewvHYE6n8+7bGTu9rdCzsLH
-   eD86/5dV6hLBQ1KwdT2iRHmHXbzuQ7QETVKyTTljedY5yiANTMSBFyu+C
-   A==;
-X-CSE-ConnectionGUID: 6vaO3GaaQhCbD0HmgWTYEQ==
-X-CSE-MsgGUID: EWjSetY6SZqWCXVYhgWjwA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63753828"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="63753828"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:54:00 -0700
-X-CSE-ConnectionGUID: U0GvJdoERtK0/oYmQ01AEQ==
-X-CSE-MsgGUID: CTzwN4b6S16MzzsgE131bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130403134"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:53:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 16 Apr 2025 14:53:51 +0300 (EEST)
-To: Andy Shevchenko <andy@kernel.org>
-cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-In-Reply-To: <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
-Message-ID: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="JjfcIS8D";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Ms/MGLW9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744804445; x=1776340445;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=m+AwIw+jiqBoahqy5bMs4qA16bD3AY0+KgeeCB5/7BE=;
+  b=JjfcIS8DBKbzlV6G2rlhxAKrdvQbr/Tj4/8JJUgmCBH9mQKCsFv5XyZ4
+   VWnTUHJH6doYJTNCQO9Z4DNYbxiNZFTeFsrlz4YMDAn4e+sjE5Bmr7DG1
+   V0emNcOItA+VlTLZRJtcy9KuTWqVXGkyA1lnko8/cGxMLPSmslOmqog57
+   WWZ7AY3w0EVMBky70yHv57PZvXdbj5UvqUyp6j7UmXPoE4+eFjxv3cPeu
+   Pyx25gyoxnUWETbwQnDZq2M3+7Lj/+M5AblrOVL9dNw8HKxf3P4D+BwYe
+   ZCkEZxeaPYzMqLiFzoJKKXKuXKo5M0m1roVR6L9apBthzM80o8I/waFnj
+   w==;
+X-CSE-ConnectionGUID: ylHedra1QWKFeZvyz3KQ9A==
+X-CSE-MsgGUID: /0P0VCQATqu5/tkUK4dy+w==
+X-IronPort-AV: E=Sophos;i="6.15,216,1739833200"; 
+   d="scan'208";a="43567665"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 16 Apr 2025 13:54:01 +0200
+X-CheckPoint: {67FF9A58-43-DC4DC9A0-F4F29281}
+X-MAIL-CPID: 13CF670CCFADCC07300DFA99EC2DE8BF_0
+X-Control-Analysis: str=0001.0A006396.67FF9A55.000D,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 412DA16B203;
+	Wed, 16 Apr 2025 13:53:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744804436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=m+AwIw+jiqBoahqy5bMs4qA16bD3AY0+KgeeCB5/7BE=;
+	b=Ms/MGLW954pIAQt0KFwUZmPM7HVemUqZtJhiEGJKcsy1qOf+b5UXcqWjQZc60JnHqW9QB+
+	QzXdK0hVd8ipAiVOLv3ubGPC11lAuGLtTOIHQxScE6hdNkqXUczd1o1Lt4eMc7L9yFA599
+	m1Jl+wOWPsRsmRFDzMG0TLL0MySqHMMD9VAbgJZ4zbtHS2m+fWti7qHSwY2UPwGgOPcfoU
+	IT/mF2x+Lfeer3fCYXllTtj5/Ql3srf88doRFDs46AcXnyq5zpOhDf/DX81pg4ZZHdjI7L
+	TtBiLXKCggYNppeZdGeF9rfZfkvsc8+1MYLprQ4u/pUffLyKqSqYhfdnQvma9A==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com,
+ linux-renesas-soc@vger.kernel.org
+Subject:
+ Re: [PATCH 2/2] arm64: dts: freescale: add initial device tree for TQMa8XxS
+Date: Wed, 16 Apr 2025 13:53:52 +0200
+Message-ID: <4975795.GXAFRqVoOG@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <aa21556c-8c79-4d03-b6db-3b4cf450fc3a@lunn.ch>
+References:
+ <20250415133301.443511-1-alexander.stein@ew.tq-group.com>
+ <20250415133301.443511-2-alexander.stein@ew.tq-group.com>
+ <aa21556c-8c79-4d03-b6db-3b4cf450fc3a@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-255701998-1744804431=:991"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Andrew,
 
---8323328-255701998-1744804431=:991
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-
-> On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
-> > Convert open coded resource size calculations to use
-> > resource_set_{range,size}() helpers.
-> >=20
-> > While at it, use SZ_* for size parameter which makes the intent of code
-> > more obvious.
+Am Dienstag, 15. April 2025, 17:27:37 CEST schrieb Andrew Lunn:
+> > +&fec1 {
+> > +	pinctrl-names =3D "default";
+> > +	pinctrl-0 =3D <&pinctrl_fec1>;
+> > +	phy-mode =3D "rgmii-id";
+> > +	phy-handle =3D <&ethphy0>;
+> > +	fsl,magic-packet;
+> > +	mac-address =3D [ 00 00 00 00 00 00 ];
+> > +
+> > +	mdio {
+> > +		#address-cells =3D <1>;
+> > +		#size-cells =3D <0>;
+> > +
+> > +		ethphy0: ethernet-phy@0 {
+> > +			compatible =3D "ethernet-phy-ieee802.3-c22";
+> > +			reg =3D <0>;
+> > +			pinctrl-names =3D "default";
+> > +			pinctrl-0 =3D <&pinctrl_ethphy0>;
+> > +			ti,rx-internal-delay =3D <DP83867_RGMIIDCTL_2_50_NS>;
+> > +			ti,tx-internal-delay =3D <DP83867_RGMIIDCTL_2_50_NS>;
+> > +			ti,fifo-depth =3D <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+> > +			ti,dp83867-rxctrl-strap-quirk;
+> > +			ti,clk-output-sel =3D <DP83867_CLK_O_SEL_OFF>;
+> > +			reset-gpios =3D <&lsio_gpio3 22 GPIO_ACTIVE_LOW>;
+> > +			reset-assert-us =3D <500000>;
+> > +			reset-deassert-us =3D <50000>;
+> > +			enet-phy-lane-no-swap;
+> > +			interrupt-parent =3D <&lsio_gpio1>;
+> > +			interrupts =3D <30 IRQ_TYPE_EDGE_FALLING>;
 >=20
-> ...
->=20
-> > +=09resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
->=20
-> Then probably
->=20
-> =09resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
->=20
-> to follow the same "While at it"?
+> EDGE_FALLING is very likely to be wrong. PHYs are generally level
+> triggered, not edge.
 
-I'll change that now since you brought it up. It did cross my mind to=20
-convert that to * SZ_1M but it seemed to go farther than I wanted with a=20
-simple conversion patch.
+Thanks for that comment. I checked with my colleagues and it is
+indeed level-low. Will fix in v2.
 
-I've never liked the abuse of BIT*() for size related shifts though, I=20
-recall I saw somewhere a helper that was better named for size related=20
-operations but I just cannot recall its name and seem to not find that=20
-anymore :-(. But until I come across it once again, I guess I'll have to=20
-settle to BIT*().
+Thanks
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-> > +=09=09=09resource_set_range(res, 0xC0000, SZ_128K);
-> >  =09=09=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-> >  =09=09=09=09     IORESOURCE_PCI_FIXED;
->=20
-> I'm wondering why not DEFINE_RES_MEM() in such cases?
 
-I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
-However, DEFINE_RES*() will overwrite ->name which seems something that=20
-ought to not be done here.
-
-I found one other case from the same file though which is truly defines
-a resource from scratch.
-
---=20
- i.
---8323328-255701998-1744804431=:991--
