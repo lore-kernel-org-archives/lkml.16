@@ -1,118 +1,119 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0C0EEBA;
-	Wed, 16 Apr 2025 13:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB1C12C544;
+	Wed, 16 Apr 2025 13:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809559; cv=none; b=pNi71BiO+InVZP5O7+hcm67HsUacSUbz9xhje/9HX0Qm3YdDztlJLo5RMc+ialFmflp1j8ZC+LsuKjpA5q24gUc8TMIj31Aeg9lU0zykNRlnW9784CVaOH/jK/V59U5wN5Egrj9odA+nsVDpTSoDcaQaZsS+ymUxGeuv5et5za8=
+	t=1744809673; cv=none; b=bJh1a2r0cWIazaXr4dozEDkuMQ7T3rw5DZy3IMHfifpAWtY6bVtGCl2vQp5/RpZ/6FgF8J8g4kJHsBxSGwLAum6yVZ1PtgfNg7R4XfS+8rJIMTkzpZaTGg7Rf8rK0gF7a1HvuvjM9NhfWo3w5rI6d4Cn82XIXZOzNdih5N0MAzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809559; c=relaxed/simple;
-	bh=d/udd2B7Y0VI191ExR+1L3W7+gceLLv+un2vjEbyfl4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ecZQ53iBwQzmv4bZwXlQyivDg6US5R26VleVbm9BDXFdYYuHN9MZUlwypqwNAIV8KObF1LLvrIGr1mwfwH3Tp0wISluyJdlfAIE9h209D015nz4sKfcvtjPnMyCMr7bIMGHSUxa7Y7CbEWpsduEEeQ9YFhdvUcHLtDJ4wfmeAx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMJSzGBv; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744809673; c=relaxed/simple;
+	bh=9OGU00BuIg2xSrPOGkuQ/5fwpOBB91JmL8ragcmbNAk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lsc1x+gpDc3RoIdYUORjpVM1L8almSZITm65oa0y33GS1p6ima0kZ7ZmdZqKXgmjeAIEnwyUYC60bYg3iI3YGFdOy14kBDNQnIHy24SrDHqJruWufaR+ckhU+l9RoUqrYkRhuCYEGyCG1KRyI9ynfGEhbSQ7V87KFxZsmSQZCHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=cS4FSn7y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MBWPrqJJ; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMJSzGBv"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ac56756f6so5953641f8f.2;
-        Wed, 16 Apr 2025 06:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744809556; x=1745414356; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ftO6UvkbAtkC5RGcnJVJ0q5Bo/l6aGEAvocwriFHJeA=;
-        b=jMJSzGBvWpJjjVK5isiMlUxvutyZL8CJiYGVGGE4z7zneiCtb+qivgB4ki9xBnMnEm
-         UfajVhDpeYV4cntrwutjZsIJ1LU1tS9xHx+tGQeF8h7jx8jQag0OrQ4GbFp5J0HgBquq
-         YyG2X3sLRfikr8efIJQwinissrrndeHjcO4IB6T5VyRLajeP2+Z/RN6SbM1QcwWlM366
-         ors2cQjFazKDERz/bd3HFMzcjUz64zHUurE7vgijUZZZ9DHZBnWnVBNEOiWXTrK4k+Ux
-         /rx7K42SIyVGdI4Tlq1iQaFETFH8wXaZKkx6Ic03L8LEulcXTz7+RqyTl7cWm4jYrmwt
-         BCpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744809556; x=1745414356;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ftO6UvkbAtkC5RGcnJVJ0q5Bo/l6aGEAvocwriFHJeA=;
-        b=oNl6yRzxExlsm2hSVocyMvhMA+ihr2fHMe6Qc/qaWyNFYJEN2ODV0u6xMc6VqLLY2N
-         WkhJQEE2jwSJJmBY2NwLQg0H6bL2byKeXdW7Rv2vE6rxDeqHLxHYe5QWnNnKt/vs70Al
-         4i1/Q9u6o7tfMRXOnYwVUz4CM9CWEYQoWbdH8aXrCJldUZf7uf7+d8yG0iXkqmkmYI5T
-         7Iwppuw2yVkpiDxhLmtCvDw+XcJf6Y6cOgLOI2YIFSM9qYOfIQwvWVRumagaXE0X17nj
-         l4YRNHvuC6MJgZ/pZRt9V5UXBAV/Sdm2Ur0tHX6+6OaFef6V+3YM89p5NbAfBYIBISgd
-         ILAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmmS3RvIrN3xYza4PnF3JHWG4kbwHBnB+OGDC1RqNDM6Sb2zbgB0rkRRPYfvO4NNt+rhpjH0a76UJih3jz@vger.kernel.org, AJvYcCWgvZqtxtDw1p2CPnfckhySfJAathJXOfXYScwCuB42TKLKCdGKK6Bd/H7QMs/NGi9zL7LHmPsOjijs@vger.kernel.org, AJvYcCXY0Lx56o+59unIgFQ2/QhZNdaTefVcTBzLh2AaKNTe82xJa0R6ydv7n4FDyRZkPSq5VIBDMp/8BJmfVlCNA0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZD51ccb8cLpam/A4k+ZyUdf5kSmK+AyKkct/1bs+x6ABAkmt5
-	PBwXuYU0qEOGPLzYgA0oaoyYwKNSr0vgi1xTxPoQL/SLP846QP4W
-X-Gm-Gg: ASbGncvoGKzrpexM1g2HE4FvOdQYRByVXU2AuVnCBSGHaVfxUs8UZPgHuhBvlQ1dQG1
-	6I+XwI5wjxVQlCIW0kvv703iNlAWer3SSqySqyaZGKCpgDbWhFOLysxW2uMCpRTTeuYKBl9FIT0
-	QIlS9HgTSsbyT5A1HNYf7uasyi0a8o+3aX9ePlH3AO9+TzrAImNknhv72CXtJpuoGkZdQ9HC9D8
-	5xlAX+wuzz2HxjVhEU6mKGL/EabLPeq8KZmP59+jMB/Xzmq5/MGejGnzAGlpVSrveDGh+dZb3CC
-	6QwUEl3+aYEkBs1uxkKQuEgPmHnAA96d6OICQXSgALBlTsGQ/TQGWgA7PE3tctvPG8eadCfKfVw
-	cDRe5qcCEDEFP
-X-Google-Smtp-Source: AGHT+IH0YNS152XSmvc0NDtCYX1PqZ27HFQpgBWaXw22TiKmFDLkknNZQOvna5H3DWTECUh12wEskw==
-X-Received: by 2002:a05:6000:400b:b0:39c:2665:2c13 with SMTP id ffacd0b85a97d-39ee5bada76mr1708063f8f.54.1744809556201;
-        Wed, 16 Apr 2025 06:19:16 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee411dd02sm1937677f8f.55.2025.04.16.06.19.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 06:19:15 -0700 (PDT)
-Message-ID: <1bd49e142bdfd6faa246dbbd208cd7d2e01d4857.camel@gmail.com>
-Subject: Re: [PATCH next] iio: dac: ad5592r: Delete stray unlock in
- ad5592r_write_raw()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Bartosz Golaszewski
-	 <bartosz.golaszewski@linaro.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich	
- <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, David
- Lechner <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Andy Shevchenko	 <andy@kernel.org>,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Date: Wed, 16 Apr 2025 14:19:18 +0100
-In-Reply-To: <Z_-P7bsD3KL5K25R@stanley.mountain>
-References: <Z_-P7bsD3KL5K25R@stanley.mountain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.0 
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="cS4FSn7y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MBWPrqJJ"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 0EE65114022B;
+	Wed, 16 Apr 2025 09:21:10 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-04.internal (MEProxy); Wed, 16 Apr 2025 09:21:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744809670; x=1744896070; bh=bmiFHdp0aC
+	GUl/sjxmes/f8L4X0PLmmwhNMPyBk+fWY=; b=cS4FSn7ytXTmYOsMtyLsHvTW/5
+	7ZZjhwCJPIodTnz01jpQe3RPs0T8zO+kmV7yx04Ov2KIm9TmcanWMS2f/s64x6zC
+	rZC1nwNFgAmVqpSJTPYTKlXC5TF3/c+iRSJ71ZaiQYb9eNz2nv1Jn4BizwSrZ/ZJ
+	kMsam5C64zdpkNAPNeFOBXW7JaYHzxOCH78Js1BOi2d7N2C59ifdLnMYXvIL3gzh
+	sCLinynby8CvmqJ5InFua9c6N8B5glYcT3ncxrxwQrZyODHybcysJDAwslavQq8l
+	Gk81NKQUSLdvZz/E2vYCUYdHe426/Ysiq7eYlNdkLZ+v6h6hwRfNfy7y0Zdg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744809670; x=1744896070; bh=bmiFHdp0aCGUl/sjxmes/f8L4X0PLmmwhNM
+	PyBk+fWY=; b=MBWPrqJJS+tIirxwFTcfcjaldeOKJ1uBB+fO4daSJWRXNJPtTkK
+	KD+ARoAE/b5IS6wMD4h4Rq6KwFDWsp2cKVbPcEMHqA8IMFfdGv99t2yV9lGO5WFe
+	cHMO2WR5vrAJrUHAsWaAeJQEBUnQa+9FCmVOTr9PGcWzKJhNb4/FUq6QgJQPIhme
+	zt0hmBHHeCsIS6Il5Mp74fRYBmszsB7fLrnHLLI7Wt7anUS7NxGt2Cr9fpzil8Xb
+	5aGAehBBYtM9eaAkk1s5/kO63yqPr8O8EBZDHdRwnEGx5ob3FGwiMX1TnHvbMWsR
+	QSXyQvw4Jr95mMthFzoQ9TbT5UJM7P6jeTg==
+X-ME-Sender: <xms:xa7_Z2MKa5iZBQyty_JD8mQ9djpg9ldyMRzj6cCPO1TkarmOiKISiQ>
+    <xme:xa7_Z096IsZBrj9zMRLJ_sCgfs7RFkOM4n3mxb9HHxj6cGiLRgxpalzJUGGy2aIuy
+    VanKkfrNcXHjRq3t2g>
+X-ME-Received: <xmr:xa7_Z9RlxZB6pg1imZ2bZF2h1UdGdGP7cGbG1zds2JlB_gs4_aeL3glmNrS9vPjrkWspbtBXDMXIamWG84u7Ue0sP8L3-ep_T-nGbJ5dfa0iTQpbsw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
+    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
+    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
+    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
+    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhirhhishhlrggshieskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:xa7_Z2s_3PkruazCt2a5khmKN5mBbFrQcLziTTbURS0csReHobA6Zg>
+    <xmx:xa7_Z-fmqMBglc-bPkEfwVnfL_1CsJpVfO3Yq8yVhqWuFO_8pC8c1A>
+    <xmx:xa7_Z612OHeYGa1RZ8TDJoQUoGMm6o7wfN5qYdzJzapfJThxFPqyWw>
+    <xmx:xa7_Zy-Hw11kaCYoGNafC0jP7tsll4XsHmsVnTR5kUUoFex65MRddw>
+    <xmx:xq7_Z4wgf5sL-mJ_CtzO-49r8vgj09tLYQuJv6OnXeVVRaFD4gNcvhbd>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 16 Apr 2025 09:21:09 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 2D294111859A;
+	Wed, 16 Apr 2025 09:21:09 -0400 (EDT)
+Date: Wed, 16 Apr 2025 09:21:09 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Jiri Slaby <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/13] vt: introduce gen_ucs_width_table.py to create
+ ucs_width_table.h
+In-Reply-To: <c3c20d22-4755-4335-a600-4966dd50ad7a@kernel.org>
+Message-ID: <qp97so2o-ps44-rr09-46os-148r3pr104ro@syhkavp.arg>
+References: <20250415192212.33949-1-nico@fluxnic.net> <20250415192212.33949-5-nico@fluxnic.net> <11e8bb4a-24e0-4347-abea-e200a59a744b@kernel.org> <c3c20d22-4755-4335-a600-4966dd50ad7a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 2025-04-16 at 14:09 +0300, Dan Carpenter wrote:
-> This code was converted to use guard locks but one of the unlocks was
-> accidentally overlooked.=C2=A0 Delete it.
->=20
-> Fixes: f8fedb167ba4 ("iio: dac: ad5592r: use lock guards")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
+On Wed, 16 Apr 2025, Jiri Slaby wrote:
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> On 16. 04. 25, 6:14, Jiri Slaby wrote:
+> > On 15. 04. 25, 21:17, Nicolas Pitre wrote:
+> >> From: Nicolas Pitre <npitre@baylibre.com>
+> >>
+> >> The table in ucs.c is terribly out of date and incomplete. We also need a
+> >> second table to store zero-width code points. Properly maintaining those
+> >> tables manually is impossible. So here's a script to generate them.
+> >>
+> >> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> > 
+> > Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+> 
+> Actually, could you create a makefile rule for this too?
+> 
+> Similar to what GENERATE_KEYMAP does in vt/Makefile.
+> 
+> So that you would do:
+>   make GENERATE_UCS_WIDTH_TABLE=1 drivers/tty/vt/
+> to let the script generate it on the fly?
 
-Thx!
-- Nuno S=C3=A1
-> =C2=A0drivers/iio/dac/ad5592r-base.c | 4 +---
-> =C2=A01 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-bas=
-e.c
-> index 217a8a88818d..5f2cd51723f6 100644
-> --- a/drivers/iio/dac/ad5592r-base.c
-> +++ b/drivers/iio/dac/ad5592r-base.c
-> @@ -324,10 +324,8 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev=
-,
-> =C2=A0
-> =C2=A0			ret =3D st->ops->reg_read(st, AD5592R_REG_CTRL,
-> =C2=A0						&st->cached_gp_ctrl);
-> -			if (ret < 0) {
-> -				mutex_unlock(&st->lock);
-> +			if (ret < 0)
-> =C2=A0				return ret;
-> -			}
-> =C2=A0
-> =C2=A0			if (chan->output) {
-> =C2=A0				if (gain)
+Sure. I have more patches coming up so I'll bundle that change with 
+them.
+
+
+Nicolas
