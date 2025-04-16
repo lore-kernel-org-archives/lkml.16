@@ -1,438 +1,451 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dd44826.kasserver.com (dd44826.kasserver.com [85.13.151.91])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965651AB6C8;
-	Wed, 16 Apr 2025 21:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E8A91ACEBE;
+	Wed, 16 Apr 2025 21:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.13.151.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744839764; cv=none; b=OmRdCfezGe8kb/O/UzyfG9kZfYmAxHpl6fulnzZEJkI0IswunfHbiVjteI4R2s8RYRCBOSoW4Z/Nuk7jM5hasHleiWMM51vWKZydwdsBpWh+tvWTHg0GK6ebc/gz5+GN8o8hWXrRGFGEHYUes9JY+4hOapzia5ra+7bKr5aTuAE=
+	t=1744839791; cv=none; b=HBrfgRrPgYSpESK75wfrQCPgc+FCpa/KVdRIdFmPEjCrZYG7ldya7qiJ8v9/BpBlZEZPLUyMGaHnL2aiQdU5maToZOgalGsdU+qkn0lRCUuM+ROvGHGupEPLoRDE4lx5XedSf44Eg/b8pZ0dLUm7Fp2N8YPu4RmFr1LdYEzbq9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744839764; c=relaxed/simple;
-	bh=S0MFkebcrhkrfj7OzEebtBywdhUEY4up/iqhbOZ7Z1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CtlTxPH8CLO6fFwHpfw0SvKwD7MNEApogJp4jb1ZIpeJ4xoKSMi1Qsa/1l8SgZ3xc46u5p0LM54muiIObe2uJxrOGvaIMStmpNueAtUXeg5lKQ3SeYJYrL/KseDjjoPLcQg4D6HQ3986eXVlXXYNEbhk+VWYAQHDCY1tWZsiufI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=A2nL5674; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744839791; c=relaxed/simple;
+	bh=PBqiWEdLgsZlfNsIAcuOiw5QGPBpPjG2W/1wwqS2BKQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zfw5AjtLokUXRlo1RQMhUAMoDj4OIWqigk1kIhdbhMVUsOpmMCL9ouKl5XX0D+pOBJj7KgrU2TG2XL1Qwnic+MGdnYR0W0f8dL9N5boqmLXhjAHW2TWBnnERNhtSPXTtWKPw7OJ99kN5KA8WkBbHQTaEZ2rdOkxpZGdpoLLQWtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=o1oo11oo.de; spf=pass smtp.mailfrom=o1oo11oo.de; dkim=pass (2048-bit key) header.d=o1oo11oo.de header.i=@o1oo11oo.de header.b=cDUtIEXM; arc=none smtp.client-ip=85.13.151.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=o1oo11oo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o1oo11oo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="A2nL5674"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744839752; x=1745444552; i=w_armin@gmx.de;
-	bh=V0uPkdlLD0oy+by5MXA0qaYEV2bXSTaIo+mydwPDJPA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=A2nL5674dBh0TZxQHqEZvzUsa8bo960VgFjU622zcp9oXxCF3yds83p5pFdpzRzH
-	 9cwcg36u8K9NWzyrCQAlmfUoDhtVjmMNN+EsYWY38+y85hGr/PG2etE/eDuITdBjM
-	 FcavYnR+/C6WBApZlRw5H9GJvtowmkeI/VERYz/jrgFlsV1DBFCwNrczepUsmxzKK
-	 JlRMkfrqdRCh/HmhdkfskJ5uzULymPS2+ImpmO6azjYemHO8KxmWdYiYaXpWA2/73
-	 oAfclStc3xn7SFlm7fe229b+wQjzPt4DZGR86KKngtz8DpmClSBXgRmViZaFd7z/k
-	 m/jYFz5cU1NAZK65+Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MWASe-1ucmLt3H5O-00IJUE; Wed, 16
- Apr 2025 23:42:31 +0200
-Message-ID: <75e41f6b-db39-4437-bee6-9898e784f20a@gmx.de>
-Date: Wed, 16 Apr 2025 23:42:30 +0200
+	dkim=pass (2048-bit key) header.d=o1oo11oo.de header.i=@o1oo11oo.de header.b="cDUtIEXM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o1oo11oo.de;
+	s=kas202503061048; t=1744839401;
+	bh=7pIJZupzbBZ9CRQk9SjNQxa6dL77BWVKSe4GGYrR6HU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cDUtIEXMjyylEOV7bYGQORB8KRuV9EPuwieHX4EX6TtbkGnULOSLAQT98rHp17QDz
+	 NtHRl6TxwInrw7w2aDUoLLyJ8ff7+en+ngYmWI27LF0k9f7HrGJ0hABRtRlhtWRKm/
+	 TTWVHUQhRm0yshAF7V1ocFUpeb1XtwWeu+8Np+EWrPcLpgDpwoLA35wSxY1nOKZEHq
+	 qy44x5CdKhg0M9/1jMri+VxEJOArt2lGH/L/6g0voh8hWPc8BPrWcpgnvdi84Ih8LQ
+	 NXqGAFUmxbDzOATLbFBqgp+KFzWTixGnrWfLWG5oTJ4SVKfHoNOdrxXi3aDwrbn6aW
+	 5KogAcgzmnN8A==
+Received: from MBP-von-Lukas.fritz.box (p5dd100e0.dip0.t-ipconnect.de [93.209.0.224])
+	by dd44826.kasserver.com (Postfix) with ESMTPSA id 485DDB6E01B7;
+	Wed, 16 Apr 2025 23:36:41 +0200 (CEST)
+From: Lukas Fischer <kernel@o1oo11oo.de>
+To: Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Lukas Fischer <kernel@o1oo11oo.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [RFC PATCH] lsm: Add Rust bindings with example LSM
+Date: Wed, 16 Apr 2025 23:32:04 +0200
+Message-ID: <20250416213206.26060-2-kernel@o1oo11oo.de>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/6] platform/x86: Add Lenovo Capability Data 01 WMI
- Driver
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
- <20250408012815.1032357-5-derekjohn.clark@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250408012815.1032357-5-derekjohn.clark@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pHgFkuIpqHST0Hfj6qqbjeZLnLGwZuVmfl09EqbywznwjvkmAwm
- eBQHJ3+cDhy6btBZNGSXM1QTx6OZcZkLLGh7XH1T87o/cTlO4OORMlXn/wLHzUj8YeTTJut
- 2igOZ537o10HrFQUJ/kv6N/YV7Y9pEO2pJazJF0XDycwkgKU2VOk752goY3tMyn59qRWBGR
- eKu8DtzQPJ0gQYYkwrMPQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:3YuyfiLZxhA=;SV+DwvtPLW9Jq2mq1WhEISsmiSF
- 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
- JAOk7L5CXEnUw=
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++
 
-Am 08.04.25 um 03:28 schrieb Derek J. Clark:
+These are the bare necessities to implement an LSM in Rust. They are in
+an early WIP state intended to gather feedback, mainly for the use of
+unsafe.
 
-> Adds lenovo-wmi-capdata01 driver which provides the
-> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
-> enabled hardware. Provides an interface for querying if a given
-> attribute is supported by the hardware, as well as its default_value,
-> max_value, min_value, and step increment.
->
-> Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
-> ---
-> v5:
->   - Return to cache at device initialization. On component bind, pass a
->     pointer to lenovo-wmi-other.
->   - Fixes from v4 review.
-> v4:
->   - Make driver data a private struct, remove references from Other Mode
->     driver.
->   - Don't cache data at device initialization. Instead, on component bin=
-d,
->     cache the data on a member variable of the Other Mode driver data
->     passed as a void pointer.
->   - Add header file for capdata01 structs.
->   - Add new struct to pass capdata01 array data and array length to Othe=
-r
->     Mode.
-> v3:
-> - Add as component to lenovo-wmi-other driver.
-> v2:
-> - Use devm_kmalloc to ensure driver can be instanced, remove global
->    reference.
-> - Ensure reverse Christmas tree for all variable declarations.
-> - Remove extra whitespace.
-> - Use guard(mutex) in all mutex instances, global mutex.
-> - Use pr_fmt instead of adding the driver name to each pr_err.
-> - Remove noisy pr_info usage.
-> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
-> - Use list to get the lenovo_wmi_cd01_priv instance in
->    lenovo_wmi_capdata01_get as none of the data provided by the macros
->    that will use it can pass a member of the struct for use in
->    container_of.
-> ---
->   MAINTAINERS                                 |   2 +
->   drivers/platform/x86/Kconfig                |   4 +
->   drivers/platform/x86/Makefile               |   1 +
->   drivers/platform/x86/lenovo-wmi-capdata01.c | 168 ++++++++++++++++++++
->   drivers/platform/x86/lenovo-wmi-capdata01.h |  28 ++++
->   5 files changed, 203 insertions(+)
->   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
->   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6dde75922aaf..56ead241a053 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13164,6 +13164,8 @@ L:	platform-driver-x86@vger.kernel.org
->   S:	Maintained
->   F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
->   F:	Documentation/wmi/devices/lenovo-wmi-other.rst
-> +F:	drivers/platform/x86/lenovo-wmi-capdata01.c
-> +F:	drivers/platform/x86/lenovo-wmi-capdata01.h
->   F:	drivers/platform/x86/lenovo-wmi-events.c
->   F:	drivers/platform/x86/lenovo-wmi-events.h
->   F:	drivers/platform/x86/lenovo-wmi-helpers.c
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 13b8f4ac5dc5..64663667f0cb 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
->   	tristate
->   	depends on ACPI_WMI
->  =20
-> +config LENOVO_WMI_DATA01
-> +	tristate
-> +	depends on ACPI_WMI
-> +
->   config IDEAPAD_LAPTOP
->   	tristate "Lenovo IdeaPad Laptop Extras"
->   	depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
-le
-> index fc039839286a..7a35c77221b7 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi.o
->   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook.o
->   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger.o
->   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera.o
-> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+=3D lenovo-wmi-capdata01.o
->   obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events.o
->   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers.o
->  =20
-> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/platf=
-orm/x86/lenovo-wmi-capdata01.c
-> new file mode 100644
-> index 000000000000..a5255e080e87
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
-> @@ -0,0 +1,168 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Lenovo Capability Data 01 WMI Data Block driver.
-> + *
-> + * Lenovo Capability Data 01 provides information on tunable attributes=
- used by
-> + * the "Other Mode" WMI interface. The data includes if the attribute i=
-s
-> + * supported by the hardware, the default_value, max_value, min_value, =
-and step
-> + * increment. Each attibute has multiple pages, one for each of the the=
-rmal
-> + * modes managed by the Gamezone interface.
-> + *
-> + * Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/component.h>
-> +#include <linux/container_of.h>
-> +#include <linux/device.h>
-> +#include <linux/export.h>
-> +#include <linux/gfp_types.h>
-> +#include <linux/module.h>
-> +#include <linux/overflow.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
-> +
-> +#include "lenovo-wmi-capdata01.h"
-> +
-> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE0=
-18154"
-> +
-> +struct lwmi_cd01_priv {
-> +	struct wmi_device *wdev;
-> +	struct cd01_list *list;
-> +};
-> +
-> +/**
-> + * lwmi_cd01_component_bind() - Bind component to master device.
-> + * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device.
-> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
-> + * @data: capdata01_list object pointer used to return the capability d=
-ata.
-> + *
-> + * On lenovo-wmi-other's master bind, provide a pointer to the local ca=
-pdata01
-> + * list. This is used to look up attribute data by the lenovo-wmi-other=
- driver.
-> + *
-> + * Return: 0 on success, or on error.
-> + */
-> +static int lwmi_cd01_component_bind(struct device *cd01_dev,
-> +				    struct device *om_dev, void *data)
-> +{
-> +	struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
-> +	struct cd01_list **cd01_list =3D data;
-> +
-> +	if (!priv->list)
-> +		return -ENODEV;
-> +
-> +	*cd01_list =3D priv->list;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct component_ops lwmi_cd01_component_ops =3D {
-> +	.bind =3D lwmi_cd01_component_bind,
-> +};
-> +
-> +/**
-> + * lwmi_cd01_setup() - Cache all WMI data block information
-> + * @priv: lenovo-wmi-capdata01 driver data.
-> + *
-> + * Allocate a cd01_list struct large enough to contain data from all WM=
-I data
-> + * blocks provided by the interface. Then loop through each data block =
-and
-> + * cache the data.
-> + *
-> + * Return: 0 on success, or on error.
-> + */
-> +static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
-> +{
-> +	struct cd01_list *list;
-> +	size_t list_size;
-> +	int count, idx;
-> +
-> +	count =3D wmidev_instance_count(priv->wdev);
-> +	list_size =3D struct_size(list, data, count);
-> +
-> +	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
-> +	if (!list)
-> +		return -ENOMEM;
-> +
-> +	list->count =3D count;
-> +
-> +	for (idx =3D 0; idx < count; idx++) {
-> +		union acpi_object *ret_obj __free(kfree) =3D NULL;
-> +
-> +		ret_obj =3D wmidev_block_query(priv->wdev, idx);
-> +		if (!ret_obj)
-> +			return -ENODEV;
-> +
-> +		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
-> +		    ret_obj->buffer.length < sizeof(struct capdata01))
+The LSM is implemented in security/rust_lsm/lsm.rs and uses the bindings
+to the C side directly to set itself up. This is of course not
+production ready, but enough to set up a minimal example of an LSM.
 
-I would prefer if you use sizeof(list->data[idx]) instead of sizeof(struct=
- capdata01).
-This way the code will automatically adapt should the type of list->data[i=
-dx] change.
+The `lsm_info` struct technically needs to be aligned to
+`size_of::<kernel::ffi::c_ulong>()`, but Rust does not allow this in
+combination with `repr(transparent)`. So far this works, but it seems
+brittle.
 
-With this minor thing being addressed:
+To limit the scope of the implementation, the example and bindings only
+cover the `file_permission` hook.
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+Signed-off-by: Lukas Fischer <kernel@o1oo11oo.de>
+---
+As part of my master's thesis, I am developing a Rust-based LSM. These
+are the bindings I have created for that, so that I can register and
+implement an LSM in Rust.
 
-> +			continue;
-> +
-> +		memcpy(&list->data[idx], ret_obj->buffer.pointer,
-> +		       ret_obj->buffer.length);
-> +	}
-> +
-> +	priv->list =3D list;
-> +
-> +	return 0;
-> +}
-> +
-> +static int lwmi_cd01_probe(struct wmi_device *wdev, const void *context=
-)
-> +
-> +{
-> +	struct lwmi_cd01_priv *priv;
-> +	int ret;
-> +
-> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->wdev =3D wdev;
-> +	dev_set_drvdata(&wdev->dev, priv);
-> +
-> +	ret =3D lwmi_cd01_setup(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
-> +}
-> +
-> +static void lwmi_cd01_remove(struct wmi_device *wdev)
-> +{
-> +	component_del(&wdev->dev, &lwmi_cd01_component_ops);
-> +}
-> +
-> +static const struct wmi_device_id lwmi_cd01_id_table[] =3D {
-> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
-> +	{}
-> +};
-> +
-> +static struct wmi_driver lwmi_cd01_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "lenovo_wmi_cd01",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +	.id_table =3D lwmi_cd01_id_table,
-> +	.probe =3D lwmi_cd01_probe,
-> +	.remove =3D lwmi_cd01_remove,
-> +	.no_singleton =3D true,
-> +};
-> +
-> +/**
-> + * lwmi_cd01_match() - Match rule for the master driver.
-> + * @dev: Pointer to the capability data 01 parent device.
-> + * @data: Unused void pointer for passing match criteria.
-> + *
-> + * Return: bool.
-> + */
-> +int lwmi_cd01_match(struct device *dev, void *data)
-> +{
-> +	return dev->driver =3D=3D &lwmi_cd01_driver.driver;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
-> +
-> +module_wmi_driver(lwmi_cd01_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
-> +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.h b/drivers/platf=
-orm/x86/lenovo-wmi-capdata01.h
-> new file mode 100644
-> index 000000000000..15974ce5e008
-> --- /dev/null
-> +++ b/drivers/platform/x86/lenovo-wmi-capdata01.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +
-> +/* Copyright(C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
-> +
-> +#ifndef _LENOVO_WMI_CAPDATA01_H_
-> +#define _LENOVO_WMI_CAPDATA01_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +
-> +struct capdata01 {
-> +	u32 id;
-> +	u32 supported;
-> +	u32 default_value;
-> +	u32 step;
-> +	u32 min_value;
-> +	u32 max_value;
-> +};
-> +
-> +struct cd01_list {
-> +	u8 count;
-> +	struct capdata01 data[];
-> +};
-> +
-> +int lwmi_cd01_match(struct device *dev, void *data);
-> +
-> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
+At the moment, the bindings are a pretty direct C to Rust translation
+and only allow registering a single LSM. Because of this, they are part
+of the example LSM code and not the `kernel` crate. During my thesis I
+will unfortunately not have the time to polish them enough to be
+upstreamable, and since there is likely no user for them, upstreaming
+seems unlikely in the first place.
+
+To me it seems like Rust bindings usually involve a trait or struct
+defined for the abstraction, so that the lifetime of the struct can be
+tied to the data/object/hardware it represents (please correct me on
+this). For LSMs, which are loaded once duing boot and cannot be
+unloaded, this seems not as relevent to me, but for consistency the
+final bindings should probably look similar to other existing ones.
+
+The intent of sending the bindings is to gather feedback on the current
+implementation, mainly whether my use of unsafe is correct. Kind of as a
+review, but more as a sanity check.
+
+I have previously asked about Rust-based LSMs and about this RFC in the
+Rust for Linux Zulip [1][2].
+
+Thanks,
+Lukas
+
+[1]: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/Rust-based.20LSMs
+[2]: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/topic/.22Review.22.20of.20LSM.20bindings
+---
+ include/linux/lsm_count.h         |   9 +-
+ include/uapi/linux/lsm.h          |   1 +
+ rust/bindings/bindings_helper.h   |   1 +
+ scripts/generate_rust_analyzer.py |   2 +-
+ security/Kconfig                  |   1 +
+ security/Makefile                 |   1 +
+ security/rust_lsm/Kconfig         |  10 ++
+ security/rust_lsm/Makefile        |   4 +
+ security/rust_lsm/bindings.rs     | 161 ++++++++++++++++++++++++++++++
+ security/rust_lsm/lsm.rs          |  33 ++++++
+ 10 files changed, 221 insertions(+), 2 deletions(-)
+ create mode 100644 security/rust_lsm/Kconfig
+ create mode 100644 security/rust_lsm/Makefile
+ create mode 100644 security/rust_lsm/bindings.rs
+ create mode 100644 security/rust_lsm/lsm.rs
+
+diff --git a/include/linux/lsm_count.h b/include/linux/lsm_count.h
+index 16eb49761b25..e6cc2f6d6f0c 100644
+--- a/include/linux/lsm_count.h
++++ b/include/linux/lsm_count.h
+@@ -102,6 +102,12 @@
+ #define IPE_ENABLED
+ #endif
+ 
++#if IS_ENABLED(CONFIG_SECURITY_RUST_LSM)
++#define RUST_LSM_ENABLED 1,
++#else
++#define RUST_LSM_ENABLED
++#endif
++
+ /*
+  *  There is a trailing comma that we need to be accounted for. This is done by
+  *  using a skipped argument in __COUNT_LSMS
+@@ -124,7 +130,8 @@
+ 		LANDLOCK_ENABLED	\
+ 		IMA_ENABLED		\
+ 		EVM_ENABLED		\
+-		IPE_ENABLED)
++		IPE_ENABLED		\
++		RUST_LSM_ENABLED)
+ 
+ #else
+ 
+diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
+index 938593dfd5da..938f7694e6ed 100644
+--- a/include/uapi/linux/lsm.h
++++ b/include/uapi/linux/lsm.h
+@@ -65,6 +65,7 @@ struct lsm_ctx {
+ #define LSM_ID_IMA		111
+ #define LSM_ID_EVM		112
+ #define LSM_ID_IPE		113
++#define LSM_ID_RUST_LSM		114
+ 
+ /*
+  * LSM_ATTR_XXX definitions identify different LSM attributes
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index ab37e1d35c70..f941a1caf141 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -21,6 +21,7 @@
+ #include <linux/fs.h>
+ #include <linux/jiffies.h>
+ #include <linux/jump_label.h>
++#include <linux/lsm_hooks.h>
+ #include <linux/mdio.h>
+ #include <linux/miscdevice.h>
+ #include <linux/of_device.h>
+diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
+index cd41bc906fbd..204bc144a0ab 100755
+--- a/scripts/generate_rust_analyzer.py
++++ b/scripts/generate_rust_analyzer.py
+@@ -144,7 +144,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
+     # Then, the rest outside of `rust/`.
+     #
+     # We explicitly mention the top-level folders we want to cover.
+-    extra_dirs = map(lambda dir: srctree / dir, ("samples", "drivers"))
++    extra_dirs = map(lambda dir: srctree / dir, ("samples", "drivers", "security"))
+     if external_src is not None:
+         extra_dirs = [external_src]
+     for folder in extra_dirs:
+diff --git a/security/Kconfig b/security/Kconfig
+index 4816fc74f81e..7f8707e7f80b 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -230,6 +230,7 @@ source "security/safesetid/Kconfig"
+ source "security/lockdown/Kconfig"
+ source "security/landlock/Kconfig"
+ source "security/ipe/Kconfig"
++source "security/rust_lsm/Kconfig"
+ 
+ source "security/integrity/Kconfig"
+ 
+diff --git a/security/Makefile b/security/Makefile
+index 22ff4c8bd8ce..ba482f051511 100644
+--- a/security/Makefile
++++ b/security/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_CGROUPS)			+= device_cgroup.o
+ obj-$(CONFIG_BPF_LSM)			+= bpf/
+ obj-$(CONFIG_SECURITY_LANDLOCK)		+= landlock/
+ obj-$(CONFIG_SECURITY_IPE)		+= ipe/
++obj-$(CONFIG_SECURITY_RUST_LSM)		+= rust_lsm/
+ 
+ # Object integrity file lists
+ obj-$(CONFIG_INTEGRITY)			+= integrity/
+diff --git a/security/rust_lsm/Kconfig b/security/rust_lsm/Kconfig
+new file mode 100644
+index 000000000000..d3e8bc2907f2
+--- /dev/null
++++ b/security/rust_lsm/Kconfig
+@@ -0,0 +1,10 @@
++# SPDX-License-Identifier: GPL-2.0
++
++config SECURITY_RUST_LSM
++	bool "Rust example LSM Support"
++	depends on RUST && SECURITY
++	default n
++	help
++	  Enable the Rust example LSM.
++
++	  If you are unsure how to answer this question, answer N.
+diff --git a/security/rust_lsm/Makefile b/security/rust_lsm/Makefile
+new file mode 100644
+index 000000000000..14b651a82ca6
+--- /dev/null
++++ b/security/rust_lsm/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++ccflags-y += -I$(src)			# needed for trace events
++
++obj-$(CONFIG_SECURITY_RUST_LSM)		+= lsm.o
+diff --git a/security/rust_lsm/bindings.rs b/security/rust_lsm/bindings.rs
+new file mode 100644
+index 000000000000..d69ccc4187ed
+--- /dev/null
++++ b/security/rust_lsm/bindings.rs
+@@ -0,0 +1,161 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Bindings for Rust example LSM.
++//!
++//! Implements the bare necessities to implement an LSM in Rust and register it, using the bindings
++//! to C. Long term this should move to the kernel crate, but since these bindings are currently
++//! specific to a single LSM, instead of allowing arbitrary LSMs to get registered, they live here
++//! for now.
++
++use kernel::{bindings, c_str, ffi::*, fs::LocalFile, prelude::*, types::Opaque};
++
++/// The name the LSM gets registered under.
++const NAME: &CStr = c_str!("rust_lsm");
++
++/// The amount of hooks that get registered by this LSM.
++///
++/// This could be automatically calculated from the length of the array, but would then still need
++/// to manually be adjusted there. Having it as a separate constant simplifies access for calling
++/// [`security_add_hooks`] though.
++///
++/// This value is `usize` so that it can be used in the array directly, but [`security_add_hooks`]
++/// requires `i32`, which is why [`SECURITY_HOOK_LIST_COUNT`] exists.
++///
++/// [`security_add_hooks`]: bindings::security_add_hooks
++const SECURITY_HOOK_LIST_LEN: usize = 1;
++
++/// The amount of hooks that get registered by this LSM.
++///
++/// This time as `i32`, because that's what [`security_add_hooks`] requires. Const-converting this
++/// makes sure an overflow results in a compiler error, although having that many hooks is unlikely.
++///
++/// [`security_add_hooks`]: bindings::security_add_hooks
++const SECURITY_HOOK_LIST_COUNT: i32 = {
++    // Manually implement i32::try_from(...).unwrap() here because it is not const
++    if SECURITY_HOOK_LIST_LEN > (i32::MAX as usize) {
++        panic!("Cannot register more than i32::MAX LSM hooks!")
++    } else {
++        SECURITY_HOOK_LIST_LEN as i32
++    }
++};
++
++/// Wrapper to be able to use `lsm_id` in a static context.
++#[repr(transparent)]
++struct LsmId(Opaque<bindings::lsm_id>);
++
++// SAFETY: There is only a static instance and in that one the pointer field points to an immutable
++// C string.
++unsafe impl Sync for LsmId {}
++
++/// Wrapper to be able to use `lsm_info` in a static context.
++// Needs to be aligned to `size_of::<kernel::ffi::c_ulong>()`, but Rust attributes cannot express
++// this and even statically setting it to 8 cannot be combined with `repr(transparent)`.
++#[repr(transparent)]
++struct LsmInfo(Opaque<bindings::lsm_info>);
++
++// SAFETY: There is only a static instance and in that one the pointer fields point to an immutable
++// C string and the init function defined here.
++unsafe impl Sync for LsmInfo {}
++
++/// Wrapper to be able to use `security_hook_list` in a static context.
++///
++/// This is `Opaque<[...]>` instead of `[Opaque<...>]` because it simplifies the call to
++/// [`bindings::security_add_hooks`] a lot.
++#[repr(transparent)]
++struct SecurityHookList(Opaque<[bindings::security_hook_list; SECURITY_HOOK_LIST_LEN]>);
++
++// SAFETY: There is only a static instance, which is only modified from C during LSM initialization
++// using the interior mutability of `Opaque`.
++unsafe impl Sync for SecurityHookList {}
++
++/// Static information about the LSM.
++static LSM_ID: LsmId = LsmId(Opaque::new(bindings::lsm_id {
++    name: NAME.as_char_ptr(),
++    id: bindings::LSM_ID_RUST_LSM as _,
++}));
++
++/// Register the LSM in the kernel.
++///
++/// This is achieved by placing it in the `.lsm_info.init` linker section.
++///
++/// Everything but `name` and `init` is optional, but [`Default::default()`] cannot be used in a
++/// const context.
++#[used]
++#[link_section = ".lsm_info.init"]
++static LSM_INFO: LsmInfo = LsmInfo(Opaque::new(bindings::lsm_info {
++    name: NAME.as_char_ptr(),
++    init: Some(init),
++    order: bindings::lsm_order_LSM_ORDER_MUTABLE,
++    flags: 0,
++    enabled: core::ptr::null_mut(),
++    blobs: core::ptr::null_mut(),
++}));
++
++/// List of hooks to register callbacks for.
++///
++/// The data stored here is updated by the LSM code during LSM initialization using the interior
++/// mutability of [`Opaque`].
++#[used]
++#[link_section = ".data..ro_after_init"]
++static HOOKS: SecurityHookList = SecurityHookList(Opaque::new([bindings::security_hook_list {
++    // SAFETY: Creates an unaligned pointer to the mutable static since the
++    // `static_calls_table` is `repr(packed)`. The pointers are only used
++    // from C code.
++    scalls: unsafe { &raw mut bindings::static_calls_table.file_permission }.cast(),
++    hook: bindings::security_list_options {
++        file_permission: Some(file_permission),
++    },
++    lsmid: LSM_ID.0.get(),
++}]));
++
++/// Init function for the LSM
++///
++/// Gets called from the C side through the pointer stored in [`LSM_INFO`].
++///
++/// # Safety
++///
++/// This function must only be called once from the C LSM initialization code.
++#[link_section = ".init.text"]
++unsafe extern "C" fn init() -> c_int {
++    pr_info!("Rust example LSM is starting...\n");
++
++    // Register the hooks
++    // SAFETY: FFI call to register the hooks for the LSM. All pointers point to statics which are
++    // only accessed from this init and are therefore valid for the call. The hook list is modified
++    // using the interior mutability of `Opaque`.
++    unsafe {
++        bindings::security_add_hooks(
++            HOOKS.0.get().cast(),
++            SECURITY_HOOK_LIST_COUNT,
++            LSM_ID.0.get(),
++        );
++    }
++
++    // Call the Rust side init function for further initialization
++    if let Err(e) = super::init() {
++        return e.to_errno();
++    }
++
++    pr_info!("Rust example LSM is initialized!\n");
++
++    0
++}
++
++/// Callback for the `file_permission` hook.
++///
++/// This gets called every time an already opened file is read or written.
++///
++/// # Safety
++///
++/// May only be called by the LSM framework as `file_permission` hook with a file pointer valid for
++/// the duration of the call.
++unsafe extern "C" fn file_permission(file: *mut bindings::file, mask: c_int) -> c_int {
++    // SAFETY: `file` is valid for the duration of this call
++    let file = unsafe { LocalFile::from_raw_file(file) };
++
++    match super::file_permission(file, mask) {
++        Ok(true) => 0,
++        Ok(false) => EPERM.to_errno(),
++        Err(e) => e.to_errno(),
++    }
++}
+diff --git a/security/rust_lsm/lsm.rs b/security/rust_lsm/lsm.rs
+new file mode 100644
+index 000000000000..9ac777d5a168
+--- /dev/null
++++ b/security/rust_lsm/lsm.rs
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Rust example LSM.
++//!
++//! Rust-based example LSM to demonstrate an initial version of bindings to C.
++
++mod bindings;
++
++use kernel::{fs::LocalFile, prelude::*};
++
++/// Prefix to appear before log messages printed from within this crate.
++const __LOG_PREFIX: &[u8] = b"rust_lsm\0";
++
++/// LSM init function.
++///
++/// Called exactly once from `init()` in [`bindings`] when the LSM is registered.
++fn init() -> Result {
++    // Custom init logic could go here
++    Ok(())
++}
++
++/// `file_permission` hook implementation.
++///
++/// Gets called for every file access that needs to be checked.
++fn file_permission(_file: &LocalFile, _mask: i32) -> Result<bool> {
++    // Arbitrary policy logic could go here
++    let resolution = true;
++
++    // Uncomment this for lots of spam in dmesg
++    // pr_info!("file_permission hook called");
++
++    Ok(resolution)
++}
+
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
+-- 
+2.49.0
+
