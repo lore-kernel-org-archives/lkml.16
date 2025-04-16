@@ -1,140 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2863E22ACCE
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57761FF1B0;
+	Wed, 16 Apr 2025 20:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744835214; cv=none; b=cdAVWs8FbADwBKzxRPDMl10QVMHXS5JsZXMrv6fmyJWZfhHVcz/9S/yo588SlolYLc9cHovYg14feZd1teyixvJh1Hmg8rqqFEx9+XcWME/RTlua77pucPixnwUbXCt5MUHlSgvMgKbvaEtuO8bIBQXjKnwev8eMy3GwDC06ADI=
+	t=1744835292; cv=none; b=lOKd+tmg4juKoT+xiD7qKq6QZ4Zd67JPhDBHTB2+LrKH95OjzFuwuvW2eZiMASscc6QVnzsVqKsFyiP1LmMI1h1G1zleFQNwhn4uCPnT4uIRCHibe/iUVIm3Y41x3USE/fvbFgYEwOelXx8LCb4d3va28nUJ/mWh5ULcqAktIB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744835214; c=relaxed/simple;
-	bh=+NVEIDajjOa6S0mwO8uDhLAW9+C2KQqJgF0nDKTn3hM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TDQpSzVeipS9pSDSLcap2yVxFPhuKClWlBN81XxK1mgs636c9A0WIddNV4zkQfmY++YQgbOzklGzBlp8kjs5xGl4m5dJ5t6XV+5VgTxjeE6OUk0bMeTKDQp74drZINy6ardAolZEPyIHmXYmLgWVH9/MPWk4nljsqUFN1tftUdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RCYhSEOE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744835292; c=relaxed/simple;
+	bh=oGv60f88wFOMZ8nbxRh++k35avlKCZ2ONgVPHUl3THw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kqq4nXjhlUdMkHkegLyiMKXUJtrfrRq8hjcFbWLcW74l5xYhN5DSOA0ef10NHn6Tup6f73Sy0yYcAairAtVo/GClZhtIoy1wSkRcDozqBMhC26s+3Let9IeeJizz+5v3tgK2l7+sPjdc7QgkO9b02loWWo51Im5XSt5bXBdAJ0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dlCst096; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RCYhSEOE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744835211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d6AVDplNPTi289CSbOZ9ARQJAN0z0vy8/1A9VIws9D4=;
-	b=RCYhSEOE5TW5+f/LnBvQMv6DknVVz8scVPOgDyL8qgEneaZfPvLcfQE4sLJ7lqCcl2QAfy
-	JxJXkL014ODn+fCdDFI291Twh12llkrYsY6U9Xg6qWFiKme3hPI/FZcLLPsytnM33fpy0C
-	ehraFsC5kg6xf4e3o9MeNcEEYpJq8Oo=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-224-nzEbTNQ0OzKTGsPaBIevZQ-1; Wed, 16 Apr 2025 16:26:50 -0400
-X-MC-Unique: nzEbTNQ0OzKTGsPaBIevZQ-1
-X-Mimecast-MFC-AGG-ID: nzEbTNQ0OzKTGsPaBIevZQ_1744835210
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b46c0e605so842439f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:26:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlCst096"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso4518966b.1;
+        Wed, 16 Apr 2025 13:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744835289; x=1745440089; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AaXprle6cDrXGsY2dHuqdD9XHEmXdd8E5y6ZiFhnbm0=;
+        b=dlCst096+aRON8AIMvt1+TmsCxwFs+Pza71VhK1ubuH8IKuIu9zvqskJc8w38aUuar
+         TaOwjgybpF+1L1CzXqcc1zEpMCfT8Awsj4pwdjvbmPxB62jZEH+l532AGV5AMW8HnFe2
+         ZBA1tajMAeVX6rRwocwtCzJSoZ7PIvfZgQBKphnmp7lwhdc0XNNBcqIRQbPwHcP1qVDD
+         VmQCYuwtVaHmPPnM4ry3OLjDfWKz4cHEM58LbJiALF4ppPbz/xbcQHH4Dx0Beq6kW+c8
+         b4XbsOE4t88/SZkPebXDFlQrwT9JEokrQS6uDJf0WyVqLg6fTUMrjsQcKgzTXUW6MmjW
+         lTUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744835210; x=1745440010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=d6AVDplNPTi289CSbOZ9ARQJAN0z0vy8/1A9VIws9D4=;
-        b=A2AJfRbcCN6NnEZBLFh/Z6Rb93lamjOgh/sN43+GHVkSX3CMkAofgQfmW1lpFAlwEX
-         i+afEQpboFBC+9p9rlQZ7eqoSZrLyHFO8F192X9OCHyY2vQY1GHWvUAqHfheLwDWSV/m
-         kmz/lYepwHUtLvtb5YLcEUf6JwyIgTifG/r+mxIJs309cqwyIPrxZvjqlPgzdTuca02H
-         LIghnvlffrzDMQKsQqyFZcE2hHKXUvWpSeU2ZaZ9HcNFrPA1bLu2hUje5NObJbgz1eQQ
-         57iCStvEb7I5bLFVbbau6hPUv1+QCawMIncvvpcYSTpzv+mlKv+lcZhR2VFQ6t1OppkA
-         gtFA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAq2s6l165vjXRtoBJgJD8Y03P/s/QcKcn/HmDDgquYtC5GJtDxhnYSPnlU5fkrmg0wNMDD/wgNtxw+cU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH9/guvcTYekfxq+Txr86qYo9hjcPIzMkhjmXEisvAp9ZDeyue
-	ZWUNxqhUBLh8F8yYA6KSl9fSSD8T5Iroryry0s7I9W/3NIJ0lsPKvDBKa5vrLkyXak5YiKz2Fh4
-	hU89gZmekHYxjAR4qEKwMHb1nl6Ri+pQ/7kNsTS9oFdmzFHe9K7Cj85EkmyRpVg==
-X-Gm-Gg: ASbGncum+ULxqfmJ7t4zyMQ+OwCOdxBM1lSp6BidtwNyq9kXty9Uuu/tWasWtZH3xf8
-	FNo1bW+4MmofMbG7hw3Uuh1fNCD5wco7cwXc3XE2hby0DJRl0BF47gJD6xEX9Fi9lnOvn91Ygse
-	hF06Qr+8RsKT8Rv2TsJi6HBDFlAHvnlvOHeP8NKtR/gerfHMdV2UAxDNS09TQXJUKoAZTpSIdI7
-	6/6G5ULfg4gazwy0QaJsmKQQEQaJqtimLoh6/j/9cUyv++YfkSkjJa9DfLo4miYcOMPlEG9DYsl
-	TNSh3ub8z20ByCo=
-X-Received: by 2002:a05:6602:1583:b0:856:2a52:ea02 with SMTP id ca18e2360f4ac-861cc5cfb48mr34533939f.5.1744835209678;
-        Wed, 16 Apr 2025 13:26:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHdbc3yXRCu1SxHof01X2wIaipkMkSkrZJncD3XrTLmdj2ulJ1ktFsxzmI+33GyeGFuM7i9VQ==
-X-Received: by 2002:a05:6602:1583:b0:856:2a52:ea02 with SMTP id ca18e2360f4ac-861cc5cfb48mr34532239f.5.1744835209342;
-        Wed, 16 Apr 2025 13:26:49 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8616522d048sm306863539f.1.2025.04.16.13.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 13:26:48 -0700 (PDT)
-Date: Wed, 16 Apr 2025 14:26:45 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: David Howells <dhowells@redhat.com>, Christoph Hellwig
- <hch@infradead.org>, David Hildenbrand <david@redhat.com>, Lorenzo Stoakes
- <lstoakes@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jens Axboe
- <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jeff Layton
- <jlayton@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>, Logan Gunthorpe
- <logang@deltatee.com>, Hillf Danton <hdanton@sina.com>, Christian Brauner
- <brauner@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Sasha
- Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- regressions@lists.linux.dev, table@vger.kernel.org, Bernd Rinn
- <bb@rinn.ch>, Karri =?UTF-8?B?SMOkbcOkbMOkaW5lbg==?=
- <kh.bugreport@outlook.com>, Milan Broz <gmazyland@gmail.com>, Cameron
- Davidson <bugs@davidsoncj.id.au>, Markus <markus@fritz.box>
-Subject: Re: [regression 6.1.y] Regression from 476c1dfefab8 ("mm: Don't pin
- ZERO_PAGE in pin_user_pages()") with pci-passthrough for both KVM VMs and
- booting in xen DomU
-Message-ID: <20250416142645.4392a644.alex.williamson@redhat.com>
-In-Reply-To: <Z_6sh7Byddqdk1Z-@eldamar.lan>
-References: <Z_6sh7Byddqdk1Z-@eldamar.lan>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+        d=1e100.net; s=20230601; t=1744835289; x=1745440089;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AaXprle6cDrXGsY2dHuqdD9XHEmXdd8E5y6ZiFhnbm0=;
+        b=Xd9Cgt8/YoPXTDyvpP2mDnhyHf57sa3pSGo2Ey+lmyeN82yKnbUmaZLJIOie8/d6PT
+         nRqtRk8wC/gqbOBKNuCvqljDuSmjo7GyY1ZhmUe/Y7eAxZIGEy4vFWRD1VaoTnuIPqJH
+         VFCugjyYKhRohaNPe/Eamsl8eLu24DDZv1mph3vWdOq+mnfUfHd0x8QCr6/EHHDIzEN2
+         Us9s9as/d5VXnZGRbFl8uKuyb+eqZo6ue99zzXrJ6ctI85wPr3Zp02U+zazznxAu5aVI
+         rNfV7a2AmXr//CFwjhTUbHESs6nh8mBkPOUbZNAwcSHQErLQBTv3y+QM2YkU5UKUl5i/
+         00Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCW2u1RwtYeTdrzPprwZ0RKM2+46rO62XIz8d7dX7rD6ggibcdyBfzzngyz3SshsQ308oLXbqxZNmjLZ2yOa@vger.kernel.org, AJvYcCWbt3jrYvQC2m/XXk6ePGiJItNadjbJwAZtJIkLf3uLcjc4Nt1ucRw47GIhV47oCMtPdafCFr8BiA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxg4PDmSVhibOwiSiAt4GTdlKkexEtflEJMMXd6ke+j1M+yh1WS
+	TTBDylF8Qn7u5vRTCqp0OXMNz3Cz16vpsQLLUMaLlbZ6vZCYu106AS7Ej14d
+X-Gm-Gg: ASbGnctn7qqFg0mCrdF6hbODiWgg0lpxJFVRuXt/ziz80dPc/Ud3BJRIMHU0ZIcreiH
+	pUO9gs6kq/axdIaCH1tNmqdzpjpC0AOb/fKdTSMYx+WUXRyXYujEDz56E4IrO82CRPIbthFqUeV
+	xsejpopaoXN9FdsSrGynOTkAfoJKW5uVhx6szt8uYlxEnfYRKFfCkxhdNYUW8eYYzc5Nql4pPL0
+	W9fOeWQqB2hHBYucupSWKXeUoWce6MPZifIvVU9cwWRSHghrNtEle/jaM2ITp3z2xOnDGRdm+1w
+	s/wezOlwJB8PHqGD5OKK8SQFDvmn1amjo7mYmRiJ3xk2UavceA==
+X-Google-Smtp-Source: AGHT+IENzUuPLYa3T4jTgKGONr2A15tgd31IupZrgfyaBSFxIJd6iJ6DrWOYR25eddvvykjtjq/H6A==
+X-Received: by 2002:a17:907:7fa7:b0:ac7:95b3:fbe2 with SMTP id a640c23a62f3a-acb42c5a12fmr244345566b.56.1744835288836;
+        Wed, 16 Apr 2025 13:28:08 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.144.40])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d34a20csm180355366b.181.2025.04.16.13.28.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 13:28:08 -0700 (PDT)
+Message-ID: <a2e8ba49-7d6f-4619-81a8-5a00b9352e9a@gmail.com>
+Date: Wed, 16 Apr 2025 21:29:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring/rsrc: send exact nr_segs for fixed buffer
+To: Jens Axboe <axboe@kernel.dk>, Nitesh Shetty <nitheshshetty@gmail.com>
+Cc: Nitesh Shetty <nj.shetty@samsung.com>, gost.dev@samsung.com,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20250416055250epcas5p25fa8223a1bfeea5583ad8ba88c881a05@epcas5p2.samsung.com>
+ <20250416054413.10431-1-nj.shetty@samsung.com>
+ <98f08b07-c8de-4489-9686-241c0aab6acc@gmail.com>
+ <37c982b5-92e1-4253-b8ac-d446a9a7d932@kernel.dk>
+ <40a0bbd6-10c7-45bd-9129-51c1ea99a063@kernel.dk>
+ <CAOSviJ3MNDOYJzJFjQDCjc04pGsktQ5vjQvDotqYoRwC2Wf=HQ@mail.gmail.com>
+ <c9838a68-7443-40d8-a1b7-492a12e6f9dc@kernel.dk>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <c9838a68-7443-40d8-a1b7-492a12e6f9dc@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 15 Apr 2025 20:59:19 +0200
-Salvatore Bonaccorso <carnil@debian.org> wrote:
+On 4/16/25 21:01, Jens Axboe wrote:
+> On 4/16/25 1:57 PM, Nitesh Shetty wrote:
+...
+>>>                  /*
+>>> @@ -1073,7 +1075,6 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+>>>                   * since we can just skip the first segment, which may not
+>>>                   * be folio_size aligned.
+>>>                   */
+>>> -               const struct bio_vec *bvec = imu->bvec;
+>>>
+>>>                  /*
+>>>                   * Kernel buffer bvecs, on the other hand, don't necessarily
+>>> @@ -1099,6 +1100,27 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+>>>                  }
+>>>          }
+>>>
+>>> +       /*
+>>> +        * Offset trimmed front segments too, if any, now trim the tail.
+>>> +        * For is_kbuf we'll iterate them as they may be different sizes,
+>>> +        * otherwise we can just do straight up math.
+>>> +        */
+>>> +       if (len + offset < imu->len) {
+>>> +               bvec = iter->bvec;
+>>> +               if (imu->is_kbuf) {
+>>> +                       while (len > bvec->bv_len) {
+>>> +                               len -= bvec->bv_len;
+>>> +                               bvec++;
+>>> +                       }
+>>> +                       iter->nr_segs = bvec - iter->bvec;
+>>> +               } else {
+>>> +                       size_t vec_len;
+>>> +
+>>> +                       vec_len = bvec->bv_offset + iter->iov_offset +
+>>> +                                       iter->count + ((1UL << folio_shift) - 1);
+>>> +                       iter->nr_segs = vec_len >> folio_shift;
+>>> +               }
+>>> +       }
+>>>          return 0;
+>>>   }
+>> This might not be needed for is_kbuf , as they already update nr_seg
+>> inside iov_iter_advance.
+> 
+> How so? If 'offset' is true, then yes it'd skip the front, but it
+> doesn't skip the end part. And if 'offset' is 0, then no advancing is
+> done in the first place - which does make sense, as it's just advancing
+> from the front.
+> 
+>> How about changing something like this ?
+> 
+> You can't hide this in the if (offset) section...
 
-> Hi
-> 
-> [Apologies if this has been reported already but I have not found an
-> already filled corresponding report]
-> 
-> After updating from the 6.1.129 based version to 6.1.133, various
-> users have reported that their VMs do not boot anymore up (both KVM
-> and under Xen) if pci-passthrough is involved. The reports are at:
-> 
-> https://bugs.debian.org/1102889
-> https://bugs.debian.org/1102914
-> https://bugs.debian.org/1103153
-> 
-> Milan Broz bisected the issues and found that the commit introducing
-> the problems can be tracked down to backport of c8070b787519 ("mm:
-> Don't pin ZERO_PAGE in pin_user_pages()") from 6.5-rc1 which got
-> backported as 476c1dfefab8 ("mm: Don't pin ZERO_PAGE in
-> pin_user_pages()") in 6.1.130. See https://bugs.debian.org/1102914#60
-> 
-> #regzbot introduced: 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
-> 
-> 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774 is the first bad commit
-> commit 476c1dfefab8b98ae9c3e3ad283c2ac10d30c774
-> Author: David Howells <dhowells@redhat.com>
-> Date:   Fri May 26 22:41:40 2023 +0100
-> 
->     mm: Don't pin ZERO_PAGE in pin_user_pages()
-> 
->     [ Upstream commit c8070b78751955e59b42457b974bea4a4fe00187 ]
+Should we just make it saner first? Sth like these 3 completely
+untested commits
 
-It's a bad backport, I've debugged and posted the fix for stable here:
+https://github.com/isilence/linux/commits/rsrc-import-cleanup/
 
-https://lore.kernel.org/all/20250416202441.3911142-1-alex.williamson@redhat.com/
+And then it'll become
 
-Thanks,
-Alex
+nr_segs = ALIGN(offset + len, 1UL << folio_shift);
+
+-- 
+Pavel Begunkov
 
