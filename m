@@ -1,44 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D894C22FF2D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313FE233716;
+	Wed, 16 Apr 2025 09:04:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794249; cv=none; b=WBmuOrkvNVPOv2ksUUFdBaIFbXHOPjtWORxL3Zu2DzeSAeXU/aKE3VvDCB9qXEiLKGPXL8c04AaWbGm1FuzwsqUZZkxbbIGLEpkzCk05a4QXuK09GggZPJR5gx43Jcp4Dwt9q8n3BFarJUHxF4vmSAuhUbdLbMn1H1L1fjmihrY=
+	t=1744794297; cv=none; b=uaxGC15FoPLmWkKh6/FZsQeuJWNcma+uPN3LbkU4Fbxb76YT1dIrvmEYCNlGk+J61x1hPXT1ew3wITtYRSGCvGBW+TFR3YmX5TRhahmF8KdKxe5ZmsulE7CbsQ7QFw5pBtZ22pOTjxKsARuUmgkOO/EC/zycLalCehQ1tdYLOVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794249; c=relaxed/simple;
-	bh=PSfnDNYEjx66NVJjtF/+2uo/VnfpmqOUhsEwOYjV+kc=;
+	s=arc-20240116; t=1744794297; c=relaxed/simple;
+	bh=A6WZgNiIb4syhwkDfNA9r5Yvwb5kihYCAGvRmu8Yqb4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxjL8oVtzsF7NJ2zKxXXZu4oxkbcndheuXhCdF9cb4qG6eQNIDS+bqO/irAa/E48fCbFrzhuIQkIw3pOhgHVNJRjCdZWO1izF1MYX4yilujD9KD1i3X0SbbRIGli822pU9y9VOB6gsEMNHe68xKceLsGH4hfqtAkmoEJIyKuJ28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QI33byDz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Heu6o5BlI3xsqyUrlMY5RRHnmlHqYJAw2YbNhePE7G+brsJdVLHGrjS0ZONF9R7ug7q3kwVX2VOMeBicrI11vi/XnLSL2VTT+j50FEL4XzfUZPN4IlOHMH1T+/HClyv3Skrw8K6tSd+wrD8XVpIhTrYz18eXd8y6dwTJi579oXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0IC2f4t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QI33byDz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A34CC4CEE2;
-	Wed, 16 Apr 2025 09:04:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0IC2f4t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F26B4C4CEE2;
+	Wed, 16 Apr 2025 09:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744794249;
-	bh=PSfnDNYEjx66NVJjtF/+2uo/VnfpmqOUhsEwOYjV+kc=;
+	s=k20201202; t=1744794296;
+	bh=A6WZgNiIb4syhwkDfNA9r5Yvwb5kihYCAGvRmu8Yqb4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QI33byDzwItOGfThyRuUoxFQ471AclScJ0q485jNZGvGvGXTFx9zPAfzRuIZ3FQD1
-	 flb2zVCHU/50AIHJauGinYlG0F8DR5BP2gPxFo3Df1HHE6r9cnK6gEai/bh4EUMxsA
-	 QA3rSNaT/IQfIIANXvwdiS0XsGyP44j+PpCYy3IijeGCFKBFItTF45H7cwqiW15/5N
-	 VqVWNDEju4vKisijbXItxfrRYvUss86gdLm/w0dCoZt+megQF4CGCHPiE2xpylAUq+
-	 KKEA2qqyUjlY4cmjjYid8PCd/Zb9XozgHvtiZWFbPISHeVJt03bSu58tJHR/ZRELPg
-	 KrpAPw9coiNgw==
-Date: Wed, 16 Apr 2025 11:04:05 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 00/17] timers: Complete the timer_*() API renames
-Message-ID: <Z_9yhQg_jlbIkxHf@gmail.com>
-References: <20250414102301.332225-1-mingo@kernel.org>
- <Z_zk94RFo2bK85iJ@gmail.com>
- <87ikn6sibi.ffs@tglx>
+	b=r0IC2f4tQsNz/MeXnNyyuBK9Kgucvlr9GWSVK8wnmRtdXWCKRWXRXcayeSjHhhIb0
+	 vchPb0hjZgQFvGyzJv4GqtkKZ8YwfSGLs8F4nUvd/2FQfwCRwjQyxUWmif4pE8Seke
+	 Lc1uJOnKUK8GIi90IaFcMR7GkWds2O+HWTKKFvMjF+xS21NPCD/+TxzMHsJIaotZbd
+	 nI+YS6Hpaq5vZHXVHIGWhBxp1/cU19KdFkN7epFWsPcSxXaxPNbj6LH7hbhVlUFtdC
+	 YgGp4BG6m3Gzk6bUf8/JPEG/ewMslZRujuthfBNO1HABy9DWf8as4SV/YnPZXRk4nU
+	 8DFPqShRn0mFA==
+Date: Wed, 16 Apr 2025 11:04:48 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 13/15] rust: cpufreq: Extend abstractions for driver
+ registration
+Message-ID: <Z_9ysHFmvZvaoe8H@pollux>
+References: <cover.1744783509.git.viresh.kumar@linaro.org>
+ <8d04ef19d7a16610dbf0dfb5c9a611c6e1e3e318.1744783509.git.viresh.kumar@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,101 +63,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87ikn6sibi.ffs@tglx>
+In-Reply-To: <8d04ef19d7a16610dbf0dfb5c9a611c6e1e3e318.1744783509.git.viresh.kumar@linaro.org>
 
+On Wed, Apr 16, 2025 at 12:09:30PM +0530, Viresh Kumar wrote:
+> +    /// Registers a CPU frequency driver with the cpufreq core.
+> +    pub fn new() -> Result<Self> {
+> +        let drv: *const bindings::cpufreq_driver = &Self::VTABLE;
+> +        let drv = drv.cast_mut();
+> +
+> +        // SAFETY: It is safe to register the driver with the cpufreq core in the kernel C code.
+> +        to_result(unsafe { bindings::cpufreq_register_driver(drv) })?;
 
-* Thomas Gleixner <tglx@linutronix.de> wrote:
+You need to justify why drv is a valid pointer to be passed to
+cpufreq_register_driver(), i.e. something like
 
-> While I appreciate proper namespace prefixes, this series is just a
-> mechanical conversion without any additional value.
+	// SAFETY:
+	// - `drv` comes from Self::VTABLE and hence is a valid pointer to a `struct cpufreq_driver`,
+	// - `cpufreq_register_driver()` never attempts to modify the data `drv` points to
 
-Yes, intentionally so, as mentioned I didn't even rename any of the 
-APIs beyond the trivial conversion, because I wanted to gather feedback 
-first:
+> +
+> +        Ok(Self(
+> +            NonNull::new(drv.cast()).ok_or(AllocError)?,
 
-> > I didn't want to make bigger, discretionary changes in the first 
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > iteration, but I can easily propagate any such suggestions into 
-    ^^^^^^^^^
-> > future versions of this series.
+We know `drv` can't be NULL, hence it's better to use NonNull::new_unchecked().
 
-    https://lore.kernel.org/all/Z_zk94RFo2bK85iJ@gmail.com/
+> +            PhantomData,
+> +        ))
+> +    }
+> +
+> +    /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
+> +    ///
+> +    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
+> +    /// device is detached.
+> +    pub fn new_foreign_owned(dev: &Device) -> Result<()> {
+> +        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)?;
 
-Can you please acknowledge this clearly declared, intentionally limited 
-scope of the -v1 series, instead of deriding it as 'mindless'? :-)
+If you remove the question mark operator and the semicolon, you can remove the
+below.
 
-> [...] Some of the conversions like try_to_del_timer_sync() are 
-> obviously fine and can't provide moar than a namespace consolidation.
-> 
-> But if you look at the actual functions and their usage all over the
-> place then you can see that there is way more cleanup and consolidation
-> potential especially for those functions which add or modify timers.
-> 
-> First of all the question is whether add() and mod() are really valuable
-> distinctions. I'm not convinced at all. Back then, when we introduced
-> hrtimers, we came to the conclusion that hrtimer_start() is sufficient.
+> +        Ok(())
+> +    }
+> +}
 
-I didn't want to mix namespace cleanups with functional cleanups, but 
-sure, I'd be glad to do that too.
+<snip>
 
-> But that aside there is a major cleanup potential for this stuff. The
-> vast majority of add/mod_timer() sites uses:
-> 
->     - Precomputed timeout values derived from a timeout provided in SE
->       units
-> 
->     - Instant conversions of SE unit based timeouts to jiffies
-> 
->           msec/usec/sec_to_jiffies()
-> 
->     - All variants of HZ, HZ * N, HZ / N ....
-> 
-> This is lots of duplicated and copy and pasted code. So instead of
-> blindly renaming things, we can be smarter and provide sensible
-> functions:
-> 
-> mod_timer() takes an absolute expiry value, but most places use
-> 
->     mod_timer(t, jiffies + $timeout);
-> 
-> So the obvious first step is to provide:
-> 
->     timer_start_rel(t, $timeout);
-> 
-> which does the addition of jiffies under the hood.
-> 
-> And because $timeout is some of the above calculations, we can be
-> smart and provide:
-> 
->    timer_start_rel_secs(t, timeout_in_seconds);
->    timer_start_rel_msecs(t, timeout_in_milliseconds);
->    timer_start_rel_usecs(t, timeout_in_microseconds);
-> 
-> This all can be sensibly converted with coccinelle, which even can
-> handle the cases where $timeout is calculated from HZ / N.
-> 
-> I have a pile of half finished coccinelle scripts somewhere, which do
-> exactly such a conversion. I just ran out of time to play with that, as
-> I ran into a few things which need more thoughts about proper
-> interfaces. I'm happy to share them.
+> +impl<T: Driver> Drop for Registration<T> {
+> +    // Removes the `Registration` from the kernel, if it has initialized successfully earlier.
+> +    fn drop(&mut self) {
+> +        // SAFETY: The driver was earlier registered from `new`.
 
-Please do!
+Should be similar to the safety comment in Self::new().
 
-See why I sent the simple approach first? :-)
+> +        unsafe { bindings::cpufreq_unregister_driver(self.0.as_ptr()) };
+> +    }
+> +}
 
-> Converting the whole timer arming to use SE unit based timeouts makes 
-> a lot of sense in general and also paves the way to boot-time 
-> controlled HZ, which is something distros and others are asking for 
-> since years (of course nobody wants to sit down and do the actual 
-> work as usual...)
-> 
-> That said, I'm fine to convert the obvious things, like 
-> try_timer_del*(), where there is no other consolidation value, but 
-> for everything else we better sit down and think about proper 
-> interfaces and large scale consolidation.
+With those fixed,
 
-No arguments from me! :-)
-
-Thanks,
-
-	Ingo
+	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
