@@ -1,238 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958A11B87E9;
-	Wed, 16 Apr 2025 17:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823035; cv=fail; b=t4LwEySpvj9nBnZonj1ekkLjgOWk1JuGwHJCkbvipUKvrxCoFzM8vjtwzGBXqqfi/daKPAdtkiJhj7i8vtXbwm+yvQRPJMSeVc+LynTl5je61OutvkTpIPI226oi3SM/vY112ASvaPMjm0r4JucbDzFr2cnrKTamCdDu91uwoYg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823035; c=relaxed/simple;
-	bh=yXQF/mLfntrA7qoeK2QV9peJQ2o7DtrTJ2Tz6YVNvss=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ul3DdfaxEdxAkjE+CM4Mutj9a8EeurRaW95M7BAUIz67IYRNQWtrHKdnOCRNpRSIMRzLmO0LYa0/ZROgiv/CtanX03HRmBDW5UJlyqK4Kfx6RD5pn/7RMESTyKALkZCywwA2Yi1wO4C13NYpgIuWrpXCJ2vX7RuaJLpbQ6moGMM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PT3tND11; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9A212F89;
+	Wed, 16 Apr 2025 17:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744823047; cv=none; b=la1vXOpjSNEWU5w4jOnVSsk74NSdzTrRCdjYkg5j1jKke/4S0Ief2tTUSHbDXXnngOD871L+HT/4DXKicfkdDT+SsW8JJy+Z7NH+2gu4ug7PG0jcLZzz2zityUL7uQz86Asw6VAMnRgae7979MUodu70pCb28rY9b+kNdbF5fVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744823047; c=relaxed/simple;
+	bh=wgCJ0YY6y5mc3MKbBmKW0mnPzzpGjhPUNF1lKUnvhjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKAPH1aEWzSkLLqjKnbQviSc1esvf7yEuoax/B//7t/m7PeMgwpqSdoufzNQeLeP+ioDd4Ex8QZrHOwUwaGIheCQ8kODQrWD7fEhxN5sBQGzo+ITSBKdgRFevzBnkTnODrqnJmFse8JuabDIEyspQ5okRuVjhQ6uIcnTtWsUPz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JM8UVWCL; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PT3tND11"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744823033; x=1776359033;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yXQF/mLfntrA7qoeK2QV9peJQ2o7DtrTJ2Tz6YVNvss=;
-  b=PT3tND115fBuj/jOGgKNMI5BiCEzvjBOohaTiBb/R5P+xGDMc+7XvtSl
-   a+Q6co8qNZiNle8aUR+Ti9XqwDMATtMugVr3aeiSY3cbHVji91djWzVX0
-   PEtOzp7+LZxgcXSItPJVX6pvRmuNITxMIKnx8TDzqmXkjbmFXvaXxeO6Z
-   xyzTqsz6fkSff6irr50bj1ul4qIDajmNOfi5LJOM+6qKpEDtS8WMo90zD
-   TCbxqGXv8qMkreOjxlwHqlbuSet5IzY5qK7jF7RddqE+72sMn3GVDy620
-   DJ7SvR9dbN4or+gsa05+JPxLPGOvMtke5L5bC/Qxd6W+twUPth1SygZGM
-   A==;
-X-CSE-ConnectionGUID: G0tvk4diTiG8XTHZ6ojyXw==
-X-CSE-MsgGUID: 664QfBubSgSw2tqwMTkSVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57380495"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57380495"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:03:53 -0700
-X-CSE-ConnectionGUID: MY7RM7VMQKSsAyoKBLuCWA==
-X-CSE-MsgGUID: xwsg4ZGiTNiPXdhihXqD5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130509776"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:03:53 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 16 Apr 2025 10:03:52 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 16 Apr 2025 10:03:52 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.47) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 16 Apr 2025 10:03:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RlQRHn/Y1TvOMbMh4jJGlL4xD+JeAXp6JtMRIf5ojq3JBuWWBkoMSAX2zkuacDLjD3Evc5yfLO9ipmjz7zoznsAyQyBNtnqFav5Tajqp76uCGYUbmC/InQsTDghdfuDCSVIAStOu1isCawsRHjnHFC4CHdIO6O0IRWWhubeF8ojB/l58FOuUoCSOWw2VUI1SZrZQ66v82530jWE/XASQyMkn+hPoAQlmLnNPi3efitXRZuAA4zkiJVZI7uJrU8/sMYF0dqqXnITFb5WMf6sHdrm5Pc7FIEQc3jPTB7jaU5LWHt9jaH/7a0dj6mOSFvHanglT12m+EH14buDc/Ww2dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9vDnVYEQcqQ8Hd5qrkRCEW2Q/DQlyDzHU7zLEgD6x2I=;
- b=h24KmxQc2Ugo7N02Nxg0dRbf7Zm5cPd1f3WQp60RMRemTvddK+3ztNDO4Kf5c411rRRt47JtpO0Hn+yyp/n+O4RRwCZe+C6Wk6eAcE97dNkBC/NK3HWMvyvhePoZW8j2HxNWJAGGMroojdg3qNLnZCfeYDWYtME1K9ZS6TSSPcelW8qGgtmSNG7IuXJAe/D4RsjSJpgO79lbOHHpg0eOmDHsB6cOvZ/KmV63iiCFxsPkE6v67ayH+SKwi9bOSlNsi1Amf3WeGJGGMgcZ4aFXVohxJSP2GVtdgE9sbgvhJG3LNvKIxvHoxx+yB9EI20dM4hyBpE7/cp4hXKjCib0xwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MW3PR11MB4538.namprd11.prod.outlook.com (2603:10b6:303:57::12)
- by DM4PR11MB5279.namprd11.prod.outlook.com (2603:10b6:5:38a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Wed, 16 Apr
- 2025 17:03:49 +0000
-Received: from MW3PR11MB4538.namprd11.prod.outlook.com
- ([fe80::e117:2595:337:e067]) by MW3PR11MB4538.namprd11.prod.outlook.com
- ([fe80::e117:2595:337:e067%3]) with mapi id 15.20.8632.035; Wed, 16 Apr 2025
- 17:03:49 +0000
-Message-ID: <a83efcaa-9b01-4efb-9ac0-42f5db42a576@intel.com>
-Date: Wed, 16 Apr 2025 10:03:45 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iwl-net] idpf: protect shutdown from reset
-To: Larysa Zaremba <larysa.zaremba@intel.com>,
-	<intel-wired-lan@lists.osuosl.org>, Tony Nguyen <anthony.l.nguyen@intel.com>
-CC: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>, Madhu Chittim
-	<madhu.chittim@intel.com>, Josh Hay <joshua.a.hay@intel.com>, Michal Kubiak
-	<michal.kubiak@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250410115225.59462-1-larysa.zaremba@intel.com>
-Content-Language: en-US
-From: "Tantilov, Emil S" <emil.s.tantilov@intel.com>
-In-Reply-To: <20250410115225.59462-1-larysa.zaremba@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0225.namprd04.prod.outlook.com
- (2603:10b6:303:87::20) To MW3PR11MB4538.namprd11.prod.outlook.com
- (2603:10b6:303:57::12)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JM8UVWCL"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C28D5965;
+	Wed, 16 Apr 2025 19:01:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744822919;
+	bh=wgCJ0YY6y5mc3MKbBmKW0mnPzzpGjhPUNF1lKUnvhjo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JM8UVWCLlEpsxKhuY7rly7xb7D3TdDAMaJbLfQjeOOGpSoJZ6mV0Ae5/c9lXz0qRg
+	 jaE0dvXZr+Fha3XA0vUNPWfTUWm9KG0rke7gzhAiTBg9vPm3GY2VFsFgGgYoq4MftH
+	 Pmg24l3gVJDl2mmIFY69NRjMmHcgPQ+MB6z7lQgk=
+Date: Wed, 16 Apr 2025 20:04:00 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
+Cc: Jai Luthra <jai.luthra@ideasonboard.com>,
+	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>,
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
+	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
+Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
+Message-ID: <20250416170400.GK9439@pendragon.ideasonboard.com>
+References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
+ <ZxYiCv6SpLq9uh08@dragon>
+ <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
+ <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
+ <20250415154724.GG9439@pendragon.ideasonboard.com>
+ <20250415155239.GH9439@pendragon.ideasonboard.com>
+ <49a83fe4-863d-4f84-912c-cf58dc22ede6@leica-geosystems.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR11MB4538:EE_|DM4PR11MB5279:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27fb7889-c268-40f7-fe55-08dd7d08a831
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?SGJWQUhaTFRVRVU3SDJqSndCU1QzUWNyVjZQYkl6Z2NSOVljbUltTE1jTVVm?=
- =?utf-8?B?UVk1V1FPNnV3R21qZUI5NnAvdGhRR1pHRklCb1lmb1dZWFlLa3h3Q3B6NU9x?=
- =?utf-8?B?NWNFWk1uNDFraVRwa1VrU1Z2WVczeGZQUk8wamx4OHVQbUpmVVh1Skt6NVNQ?=
- =?utf-8?B?dXpzWmlBajF0cWdtNlc4NTdHZUpmc3IwNmQyTFNTR1kzWFBpTlRPaWJ1Z1Jm?=
- =?utf-8?B?dWh4TTRuN2ZFRG12RG9IUmZoNWxvYmRJSXZFNlRsZ0VPUkp6OG1RNFNJUVA3?=
- =?utf-8?B?SEtQZUJ4T01sZmZYQWV5SS9FK05TYjVyM1dzeGtsS2xjMnZMeDlhZ0dlUHhy?=
- =?utf-8?B?RFRvczNxYlcxelZlcElySGxDSDJPWUVhNXRJcXlRaTZzMXJHR2ZXTVJlUmVu?=
- =?utf-8?B?OEkyN3FNaU5uMXljMzR0UnNsZzFUbzRwTUJkMlQ5azc2dEk2cmpBZkxOR0gr?=
- =?utf-8?B?ZURwYkUvZFhyZ2x1WUFOQzdwUXExNjh1dUNtemJ2TGhBcXNhWkwxR0IvVEJT?=
- =?utf-8?B?dFNIa0VLUWpKSGp6UmRDeisrR2o2NEM1UXh2Y3dVa2JuREhBSC90VDdyaUd1?=
- =?utf-8?B?dE84ZXBvbll1VTNoUkxLTDJoOW5VWGY5cXpxZnh6Z21pQUNZZTZCTHVBMWJQ?=
- =?utf-8?B?U1BPNXM3aHJiSjhjem50T2VnbjNaOVZPeHdEaldkdGllZmR6dTdFcVg2VnI4?=
- =?utf-8?B?ZGRzWWxseFFEZU5EL204T0lQYitiR2k0YTNrK2ZpRXhYQmJIME5lUTF6VWw3?=
- =?utf-8?B?dlV5Sy9WcEhkeDlJU2VpNWpucktRYjZZZ0JVdzQvc0oxbFVQcXpucHN4ZDdj?=
- =?utf-8?B?d2sycytBVVRPeE5Xckk3U2FhZWpsS1IrdWdDMzRCcVJhakVqRVV0dmdLdHNO?=
- =?utf-8?B?S0puelpQdWRmME05Slk5dmc2My82MlpUbGZUaXo0ait5TEk0VVVyd0NaNE81?=
- =?utf-8?B?VnIrek5iRVJLNk1JdkNVUlFZcTloUTJWb2xyM2lVSDU0L1BVRkV2MS94RTJp?=
- =?utf-8?B?c1lyanovZ2VtK3dJZGNzdE41Q2FwOTZhRFpuNWtVam9ieTFFRWwvVk8rOHJn?=
- =?utf-8?B?ZmtsUytvTldqZlV3cWhPOU50UHR2ZHhqb1lxUXNoS0Q4YjB4RFVpMXRHeFJk?=
- =?utf-8?B?cnZ6bzJmMXByYno5bkNVS3Vncll3UVhmRXZsVG9IeFNvL1poekJXdDFaMWJ5?=
- =?utf-8?B?SjJLMlVySEZFNHpSMFh1cldaR3Rwd0llT2JKajVsOHpTSFIvOHVpVk80blpB?=
- =?utf-8?B?eHd3WlV5dnAwdWY2dUZHYm5sWHhaSy9vSEVPVC9LdkkyY0pOTlpYeVl5S05S?=
- =?utf-8?B?V3hPS3ZiRmo2QzFESGd6SEZHVmlGRFFJRWJFYmdEOU9BTXhiS2ZUc3F6bU1j?=
- =?utf-8?B?eSsyTXpuREUyRmhXSDhxaU9qMjJiTzlqRFJhcExtVEw2dlQzQUtZRU80VC9p?=
- =?utf-8?B?cTRuc0tQUGdXM2JnK3hKSEVpQmdKSFdPWXFkcWF3YTdOMzVFT05Ybjg4V25S?=
- =?utf-8?B?aytGUUhGRVdxMjBFbHM0cXV5Sy9SK0J0R1BTbUFReGF1ZVFEOW56SGp4TjIw?=
- =?utf-8?B?QXQ0WmV4KzVoN3VSVlg1bnIvamt6R3F0UmdWZFcrWlBtODQ2L3JIQnpmajNH?=
- =?utf-8?B?WjZCK3FNRXNHVDJMTHkySDNiNEw2V044clVVT1krRkhyTENXck13L1F4amJN?=
- =?utf-8?B?Vy9ac2wzYnF6T3pJcFJUekZoV0Jtc1ZSNGJGZTRzL0NLTGdwenlMWTI3RUcy?=
- =?utf-8?B?MUtsUSs0QkRMVXhDTnI0KzQwZEZQMVN4QlIzU2R1RnB3eXArVkI0NmZmTHV5?=
- =?utf-8?B?WnBhSUZKcUZ0eDlQekZSek1ic2EyTGRtVDF1TGx3L0I1OU1WUWx2bHZpMWwz?=
- =?utf-8?B?emJHcGVJSFRodjhYWDdpcUdGUmV0TjVWb0I3MVNmNEVqTDNuRlFmY0gzUWgy?=
- =?utf-8?Q?H+soQ7QUS3c=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR11MB4538.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bVlNRm1wdDNON1VZYUZHLzlCeUFGMHduNmlHOXBzdDlaeTMrNFpoSndrWm4x?=
- =?utf-8?B?QTJTQ2hkSmNsMkFpMWFoZXJ6SVYrOGJqdldTZStDUGhHUERRQmtUY1pKL29s?=
- =?utf-8?B?b2QwWnNsMUxJMkRyaFNNMHZYY21QMFdCQjNGblc2eWdIMVdvZjYxbFVOYzNZ?=
- =?utf-8?B?M2NuaHVBMTY1Z01hVHIvaWxjZytLbUpRK2hnOUd4eVpoaVNSbWtTZDJSV2dV?=
- =?utf-8?B?ZC92R21hZ2lOc25FQXUvbElCRU1vNEUwc2NCQnArTSs4d0NEbGpHSFphQXpM?=
- =?utf-8?B?cVdsc3A5VnZKZy81RkNWNWRnVndxMnFYZE5TMEtqdTlGSHkvSi9yZW5hT3hv?=
- =?utf-8?B?aWZ0clR1dExLcXNEejF4L1drS2htWldnSTVPSjlYNnZtNHIycGhSSWM1L0Ju?=
- =?utf-8?B?UW5QeFJlamJiNkU2SStpNjJJbnQ0VkFRVmJlME43Wm1CSjYrMVVLVXVVQ1FC?=
- =?utf-8?B?aDhiWTZ3VUkrTlo2bFgwNDh0MkhEcFdvd3FMSUFUaVNES29SZGdaVGlQeG5u?=
- =?utf-8?B?dXIzRGxZTk5Yb3ByOFBOZXZKZVJ3eklXaUdrT1FSV3RhMWVjT3RMS2lSdmh6?=
- =?utf-8?B?bVJjbkJadzNRTm1BeVB0Q0NmVkF5ODZSeHEvQTI1K2RlZnhrS2kwK05RZUpa?=
- =?utf-8?B?MEYwazlKWE1SM001VDlwUWZNU2k4eXdKN0hjTHlrTlRHVUt4b2tWVjFka1Q1?=
- =?utf-8?B?TnQvK0pFaUJ2MTdFRDR3MXNPSmdaUnhIdjBadTEwNkxFNE5TVW04c2NXMUli?=
- =?utf-8?B?emdqazEvUkRXZnV4Tm9OMEhjNmo4alNLTjliNW5mbFVIQ1h0UG5OVVMvazhB?=
- =?utf-8?B?VmVzSVBzakZHb3FoVUdqS2hHT1VLeEVCNzhCRXZmbFVNcTBZbUpWUVBYL2p4?=
- =?utf-8?B?RmVuSXBOZytraFJKWWpuT3RuSHFaSTVpWTFiZlJvaGs0Uk9uY3NNaWU3NEQ3?=
- =?utf-8?B?RjNXWHpWOWp2bFQvRk1meDlNTHNwN0hEamczSjB5SGxlcU9Nbk0vdHJSQzA4?=
- =?utf-8?B?ZmozRjBhZE5jWC9sQzllT1FkM2Z1anR2U2VxV0dUUTFUVi8za3lHelRCUjJv?=
- =?utf-8?B?bGhhdktYaFFUK0kwOGxiNmJyZ1NJdXJkYWhmcU5naFRmditLd2VnSWdIU2hM?=
- =?utf-8?B?QWpqTjdSMEMyajk5bFZjM05DUENqRzRJV0VRNnFnTFJIVWhGV2ZJTno2K1Rt?=
- =?utf-8?B?WXpFc1lFTFNyOG5KdVVtYkJEL3JFUDBaemUycms2cGhKeGROc2piekdMd1g3?=
- =?utf-8?B?ckFpTW5sb2djTHBRcDVaQXUzRUxxQURkSndyMG5LN3JINHE2bGR1YXFENnFZ?=
- =?utf-8?B?bGVtZ1AvVDhqT042aGZPeTZnT0xvczR5SWw1OEFmaTd3U0sxSkIweVhROURN?=
- =?utf-8?B?WUVOeE5qUFo4d2RUejZuQ0RhdjdjVkVmZXRFZ25pSk1jS2RsY3JmM3Z2alVa?=
- =?utf-8?B?b2srVjlKWnU0NjNxeU1Od1VTNmpma01xbWMvMTU4a040eFBmaCs1Q1ZoUFQv?=
- =?utf-8?B?aGU5S2lqc0NPSmhrQ0MxdXBRZEJKdGl1YVMyV1FST2VOR1BTTEdMVFhheHpY?=
- =?utf-8?B?eExHWTZQQmR5STdaVlpFaEpVZHhrWHFhVyt0ZlJsRFFCU0l3amdQZS9tZUdo?=
- =?utf-8?B?eWtMVkJnbnhXZ200T2MxbjR2R0wyZlMwSEkwK2xCblRKL1cyaStlaDFwOER3?=
- =?utf-8?B?dnd5K3JDVUNxV0hrb0hjTW1ocXNVRG04dGUvRnk5NUE1NkRzdW5qUm1EK25W?=
- =?utf-8?B?OVZzYzloRStDUUp6Um5zQVpkc3U3Q0VtQW1QaFlvRDlTM2tpbXhWNkUvamVU?=
- =?utf-8?B?KzZnZXM1VWltamFnd2dlcHExRk10UnM1OWd6OUpMSDc4TjhRSktxMVNXTi9Y?=
- =?utf-8?B?aThPMDhwbVpSTy9VcXVsNTczc3Y1L0RibERpSXFrMEVCTXB3em9NdGVuS0E2?=
- =?utf-8?B?MVdDV25GTnhnOTA1Z3lRQ0U1TjIxdHc0STdxSC9VeDFGNmJMYlcyeXkrbDRF?=
- =?utf-8?B?Q3FWYzFCWW5nVWxyWFp2TTZsTVdwL1RZZGVTMGdpbkNia3FqN013bDcvUnVD?=
- =?utf-8?B?RlNvYUN0L2VTSUxNd1R1SlZGbjFyT0E4ejlXd0p1UEdRdVR6SDJ3N21FWmg0?=
- =?utf-8?B?S0NqQm9KSHo4S0pxM3RBRVB6UmlQaUFsenJFbTJ2Nk53MHhXU0VPc0tHajFE?=
- =?utf-8?B?enc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27fb7889-c268-40f7-fe55-08dd7d08a831
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR11MB4538.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 17:03:49.4312
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: URA+x3xcngbMHT7C/IIJxQ4Us8O46KsIOdIpFy7L69lYNqGqJ7mX//wzm8KhIAryd5ljIp9nks6tWetCwg4hbQzg9gw+RX9XmV5mCjwYWC0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5279
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <49a83fe4-863d-4f84-912c-cf58dc22ede6@leica-geosystems.com>
 
+Hi Catalin,
 
+On Wed, Apr 16, 2025 at 06:57:35AM +0000, POPESCU Catalin wrote:
+> On 15/04/2025 17:52, Laurent Pinchart wrote:
+> > On Tue, Apr 15, 2025 at 06:47:26PM +0300, Laurent Pinchart wrote:
+> >> On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
+> >>> Hi Jai,
+> >>>
+> >>> This issue was already reported by Stefan. The problem is that I don't
+> >>> have a Debix board to investigate.
+> >>> The main difference b/w WFI and cpu-pd-wait is that the first doesn't
+> >>> call PSCI/TF-A. So, the issue looks to be related to some settings in
+> >>> the TF-A.
+> >>
+> >> Jai, are you using mainline U-Boot and TF-A, or a downstream version of
+> >> either (or both) ?
+> >
+> > Actually, same question for Calatin :-)
+> 
+> Bonjour Laurent,
+> 
+> I'm running a yocto scarthgap custom build :
+> 
+> - barebox : http://barebox.org/download/barebox-2024.05.0.tar.bz2 _with_
+> custom patches
+> - kernel : 6.12.16 _with_ custom patches
+> - TF-A :
+> git://github.com/hexagon-geo-surv/trusted-firmware-a;protocol=https;branch=leica/v2.12
+> / SRCREV=46c962c654de4ab734f936f472508edf20c6c049 (_no_ custom patches)
 
-On 4/10/2025 4:52 AM, Larysa Zaremba wrote:
-> Before the referenced commit, the shutdown just called idpf_remove(),
-> this way IDPF_REMOVE_IN_PROG was protecting us from the serv_task
-> rescheduling reset. Without this flag set the shutdown process is
-> vulnerable to HW reset or any other triggering conditions (such as
-> default mailbox being destroyed).
-> 
-> When one of conditions checked in idpf_service_task becomes true,
-> vc_event_task can be rescheduled during shutdown, this leads to accessing
-> freed memory e.g. idpf_req_rel_vector_indexes() trying to read
-> vport->q_vector_idxs. This in turn causes the system to become defunct
-> during e.g. systemctl kexec.
-> 
-> Considering using IDPF_REMOVE_IN_PROG would lead to more heavy shutdown
-> process, instead just cancel the serv_task before cancelling
-> adapter->serv_task before cancelling adapter->vc_event_task to ensure that
-> reset will not be scheduled while we are doing a shutdown.
-> 
-> Fixes: 4c9106f4906a ("idpf: fix adapter NULL pointer dereference on reboot")
-> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> ---
->   drivers/net/ethernet/intel/idpf/idpf_main.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/idpf/idpf_main.c b/drivers/net/ethernet/intel/idpf/idpf_main.c
-> index bec4a02c5373..b35713036a54 100644
-> --- a/drivers/net/ethernet/intel/idpf/idpf_main.c
-> +++ b/drivers/net/ethernet/intel/idpf/idpf_main.c
-> @@ -89,6 +89,7 @@ static void idpf_shutdown(struct pci_dev *pdev)
->   {
->   	struct idpf_adapter *adapter = pci_get_drvdata(pdev);
->   
-> +	cancel_delayed_work_sync(&adapter->serv_task);
->   	cancel_delayed_work_sync(&adapter->vc_event_task);
->   	idpf_vc_core_deinit(adapter);
->   	idpf_deinit_dflt_mbx(adapter);
+Could you please run tests with the latest mainline kernel ?
 
-Reviewed-by: Emil Tantilov <emil.s.tantilov@intel.com>
+> > I'm running mainline U-Boot 2025.01 and TF-A rel_imx_5.4.70_2.3.6 (from
+> > https://github.com/nxp-imx/imx-atf) and don't seem to experience the
+> > issue:
+> >
+> > # cat /sys/devices/system/cpu/cpu*/cpuidle/state1/disable
+> > 0
+> > 0
+> > 0
+> > 0
+> >
+> > $ ping debix
+> > PING debix.farm.ideasonboard.com (192.168.2.230) 56(84) bytes of data.
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=1 ttl=64 time=1.03 ms
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=2 ttl=64 time=0.800 ms
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=3 ttl=64 time=0.935 ms
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=4 ttl=64 time=0.902 ms
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=5 ttl=64 time=0.738 ms
+> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=6 ttl=64 time=0.939 ms
+> >
+> >>> What I don't get is why I don't see this issue neither on our IMX8MP
+> >>> specific design nor on the EVK, which uses the same PHY as the Debix board.
+> >>>
+> >>> On 14/04/2025 14:07, Jai Luthra wrote:
+> >>>> On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
+> >>>>> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
+> >>>>>> So far, only WFI is supported on i.MX8mp platform. Add support for
+> >>>>>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
+> >>>>>> usage during runtime. This is a port from NXP downstream kernel.
+> >>>>>>
+> >>>> Since the introduction of this patch in mainline, I am facing sluggish
+> >>>> network performance with my Debix Model-A board with i.MX8mp SoC.
+> >>>>
+> >>>> The network latency jumps to >1s after almost every other packet:
+> >>>>
+> >>>> PING debix (10.0.42.5) 56(84) bytes of data.
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
+> >>>> ^C
+> >>>> --- debix ping statistics ---
+> >>>> 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
+> >>>> rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
+> >>>> darkapex at freya in ~
+> >>>>
+> >>>> If I revert the patch, or disable the deeper cpuidle state through
+> >>>> sysfs, the issue goes away.
+> >>>>
+> >>>> # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
+> >>>>
+> >>>> PING debix (10.0.42.5) 56(84) bytes of data.
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
+> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
+> >>>> ^C
+> >>>> --- debix ping statistics ---
+> >>>> 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
+> >>>> rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
+> >>>>
+> >>>>>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
+> >>>>> Applied, thanks!
+
+-- 
+Regards,
+
+Laurent Pinchart
