@@ -1,134 +1,93 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A15C1632D9;
-	Wed, 16 Apr 2025 13:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DC616F265;
+	Wed, 16 Apr 2025 13:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811720; cv=none; b=rxSL4tx+xt8J77qn7w2bcyqIHmPTM1Za1BrNPcksL8hf7J/wZyzRwniel2HPq0LRW9St4DuNfoGcAFlHhupNCkSMZeLlWVTf3JSGzNXTjNU9sHTpuyTNMZ3K5fTeX8J97tib2eRwDJBM46UX2QixSY/cfjKgnhC0fNuBI6LX3bU=
+	t=1744811747; cv=none; b=dwqsx9DsKOG782VaD40q065XVAOYhXHIUsV+FriXsqqqP0i+1somjnIB1rmxZ8GE1Hzrqj9IIPCa8g6eQy0PfhpVl+UElEjkDo9c/PH/E35+tXeXso9QlJx6YgkTAUZMo8Gus/jXE3OiPaIcPcHj8HMj1k7JZX0IsC9Ur6Z3lII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811720; c=relaxed/simple;
-	bh=qiiPvQ61c24fg6gBHjzzz6h25Gsizp7JLH/JcH8CRkE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ALfrvFrYO11VdBbhbMPzEKRVX+gdw7DDwjcQtWhLzbT1XxdQJxEYM4Etm2xTOPh2M+OB6cp4w83nruHBLnIK/t1B3NFWB4wOk6lhbEMHrEXZX8Zqu21lKM5QtV3yj7FGTO80y6plqjJ1QCjYmafsjWDTqUEPqSjzm0VaHTe/0mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=hUeoYsD4; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="hUeoYsD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744811708; x=1745416508; i=markus.elfring@web.de;
-	bh=eC/SvlKaPq929tASfXDXWJPFipkuKbLgk927TAfU1lE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hUeoYsD4WrHWeqb9nlNpT1YI9rtZCR+Yr+lzpTox1B4vGiL0yLMejlYUON32yQBA
-	 JDmx3WWRWJNJmB67M/M/2Ag+PPNOqe9mv8RN6dkTTRi33Tb+tfS0Uv/chJBzABL1o
-	 CRcyebprVOVM/p0v3il9eOkld2iili+0XIio2TJYeJ7ZAIWpvipSavU7Iv3MmpWjm
-	 lWRfw5XUQ9LHpcweD7IXBoL6XxWJHcGJiVeT7QFxyY8li7IVJd5wL1BuQcdUAUEEl
-	 fxuTxWSCAlW+bqmPOo5zvCOhxjLDjg6qkozDI/BB+FhGqg6XW566abZFsHoQmTbV4
-	 OBzTizD7yhVDjBD2kg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mv3US-1tEBYp3KEa-014W1o; Wed, 16
- Apr 2025 15:55:07 +0200
-Message-ID: <1145f48a-658b-4745-a8b3-724f33c3f1ee@web.de>
-Date: Wed, 16 Apr 2025 15:55:06 +0200
+	s=arc-20240116; t=1744811747; c=relaxed/simple;
+	bh=7B4oB8tjso21ENSWHB/6vN1Jc1J7bNNQAnO6yXLsnTY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e7sVeze/3cV/A2HJTSGtbJ+Fo01qkFGF6hIrBZwQNH/s+Czng93tTUMFYCvP3zGleIIqsmaub/dC+SizUqlCvRTufw4ztaRivx4lpngJEW1k+Cn4jVIWiDj1QNDjGcVhTpFVdsd2PODAuHMK5G53gRXdLyL7StofwWjfw+hCoTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac339f53df9so53304066b.1;
+        Wed, 16 Apr 2025 06:55:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744811743; x=1745416543;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LJ3OD0eEokrpT3DVWyVtLnlo06W7u4wDjvTtFKjh6BU=;
+        b=bz16fkuSCtziKo0lOqsBCsRcMkZzMRNWuL7631QC4pBi2j7YWAxH2W9OClHdwYmvJJ
+         wZ7hUwZoVYY5U0ssrtt3US2BWnsopb9CRvh+xgEqx7frhAC2Ue3e+qA9nQmTVIpM3Daz
+         oaQW0z08OHMQ4Vm+1WIxETsAimXHw7NUcwZpuP3VuNpLJQOhd5KKvyFbTC5qHTyvCr5a
+         iSppvY6Tpd6MFlUhTVjFwRD6/zByCyMqRHIq3HnsxldRVjjSSLesQnzUKBHVhodcq7tG
+         JzYz0CHWMiBMHZTBIUd2G3D/hL5ehJX3tgC6ufsrucmSwHhl8aG7o4+OUwu7HyAMk8JA
+         WpyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4WZb3eLGKE09703kezKSsGfs9FDkbFwr8zaR2WAZMo+17ZFufu+xg8IDgQD/200qaLlzBJk7LbkTaYlg=@vger.kernel.org, AJvYcCXmC74voe45dXn+QhZ7EQsLJEVu+qHDypEiVdA4gUq6dubpeAZpPmtBdcx1w8KYVXxI+AHREZwC@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyQg5I4SCdr7+Dt2JNvy2eCdxwRyqPrMJR+PAMmFb8GNzdmcSb
+	KH08rVIy2zxmSace+kayheBdvUYM9uXNgjFMSah9sFJ0rDxfBX65
+X-Gm-Gg: ASbGncuolvy/6O2i1r6fRer856OHy4Z+3se0lxFr+JuXP2EZD+ckmmIWsGcreh9hNKH
+	aHp1AdgW8N4fDbwPETAwAubOHFpFbAdTksKMSEf0JWzdtJeeUIThDjiKyQlF71BiReQKJjWpiOv
+	SEsODzg+njM3gZ0HWwvL5Y7yYCB+LLhTEwrkrqUs4kJExDQpmzps5wkTi3TMvtBh9YazGDRHw2S
+	ZZd4BqxrGTtpblLFljDBPb4e5chBzQ/zSf+lLuGKmt/6xljaPcXA6TLGiE4fVd5s1gTgtQ6ucyd
+	VYS8cuBMzIQXcmxszlt6cLS9QewNCoHK
+X-Google-Smtp-Source: AGHT+IEsSVFrqE1JUbYuGRAO3u1RK4EvR2OsGoHndeBmeeumP4xmTGJOk3uhEAl9bpJy/GcnXHWmvg==
+X-Received: by 2002:a17:906:da8c:b0:ac3:c020:25e9 with SMTP id a640c23a62f3a-acb42a6452bmr138302966b.34.1744811742671;
+        Wed, 16 Apr 2025 06:55:42 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1a948dsm128178866b.126.2025.04.16.06.55.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 06:55:42 -0700 (PDT)
+Date: Wed, 16 Apr 2025 06:55:39 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, dsahern@kernel.org,
+	edumazet@google.com, horms@kernel.org, kernel-team@meta.com,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com
+Subject: Re: [PATCH net-next 8/8] vxlan: Use nlmsg_payload in
+ vxlan_vnifilter_dump
+Message-ID: <Z/+227rt0CfqZP9k@gmail.com>
+References: <20250415-nlmsg_v2-v1-8-a1c75d493fd7@debian.org>
+ <20250416011333.25090-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: kernel-janitors@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
- Shawn Guo <shawn.guo@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Chenyuan Yang <chenyuan0y@gmail.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] irqchip/qcom-mpm: Replace devm_kasprintf() call by
- devm_kstrdup() in qcom_mpm_init()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:INKt8jcYG20W0shtP2ChpmFpFIdIPjQqMchHMamk80DQkbVO7/t
- UhtTxsN6OKVCGk/mWprmPeL2VO4y0lU2qKilCgpYVDJuQ+QuVPL2bkcsRcsFprS5Zd5kP3l
- A7ppaurbSYmw2l04GmL/fMiVfH/6O3EBhDyJawcaH36oUw4AxhE7g0/p4Q3+GiL7SDxOs14
- /bY0mEutYb0iln4/NtQCA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Y7CfnHNsijE=;liOPZVzq3SFbfQcXZbd7WYjeHxF
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416011333.25090-1-kuniyu@amazon.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 16 Apr 2025 15:43:46 +0200
+Hello Kuniyuki,
 
-Use a devm_kstrdup() call instead of a devm_kasprintf() call
-in this function implementation because only a single string
-should be copied.
+On Tue, Apr 15, 2025 at 06:13:23PM -0700, Kuniyuki Iwashima wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Tue, 15 Apr 2025 12:28:59 -0700
+> > Leverage the new nlmsg_payload() helper to avoid checking for message
+> > size and then reading the nlmsg data.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+>
+> Just grepped nlmsg_msg_size() and looks like the next series is last :)
+> 
+> neigh_valid_dump_req
+> rtnl_valid_dump_ifinfo_req
+> rtnl_valid_getlink_req
+> valid_fdb_get_strict
+> valid_bridge_getlink_req
+> rtnl_valid_stats_req
+> rtnl_mdb_valid_dump_req
 
-The source code was transformed by using the Coccinelle software.
+Right, that matches my list as well.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/irqchip/irq-qcom-mpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-qcom-mpm.c b/drivers/irqchip/irq-qcom-mpm=
-.c
-index 7942d8eb3d00..d3e398e03d3f 100644
-=2D-- a/drivers/irqchip/irq-qcom-mpm.c
-+++ b/drivers/irqchip/irq-qcom-mpm.c
-@@ -414,7 +414,7 @@ static int qcom_mpm_init(struct device_node *np, struc=
-t device_node *parent)
- 	genpd->flags =3D GENPD_FLAG_IRQ_SAFE;
- 	genpd->power_off =3D mpm_pd_power_off;
-=20
--	genpd->name =3D devm_kasprintf(dev, GFP_KERNEL, "%s", dev_name(dev));
-+	genpd->name =3D devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
- 	if (!genpd->name)
- 		return -ENOMEM;
-=20
-=2D-=20
-2.49.0
-
+Thanks for all this review,
+--breno
