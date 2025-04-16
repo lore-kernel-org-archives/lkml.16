@@ -1,218 +1,268 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118BB22FDF2;
-	Wed, 16 Apr 2025 08:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5C222FE06
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791728; cv=none; b=NgJU5n4boHV2yhxHLIkO3QZb1V9G1KUPtGqFNPhUNo66XADgZ4mc+Y4QlLNsQ+TzGY4GIPy+l/9lfscDhDuZSV/zS4j90mitNJ/65tuShIvxXaSHsuuLp35FUhYfpc0JjqgHhBP0dT9pR5/xuyK5h8bRQnkw3tWHCxpg3Y8Evsw=
+	t=1744791729; cv=none; b=uh9zAaY5A/LTyQqYusVZtrjgHrvzjM+/ORReaYxobpGiZwJ/q34nS1ly1XcLWteg6EY0yxoHsnyTYdL6s+YCwj9o7zxZFuUjvUKgCbFpinOTNxz9jLgOYhLNi3NtgOG+KFnpOyTtphV5ZUuz7AGL9Nj+zvh/irQ1pqkKaXslL6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791728; c=relaxed/simple;
-	bh=GDEv30ykcwNrp+ITbOwo9y2a8t6U4fArDqmF8aS5Xdk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=So7Xh3tGoJ/Vrw2vboj699wpYv8xg+BcgvEqXg1jf5G3Y54EAWPYH/CPcooFxhdisTc7vV8jsyIeNmAgbk8UkJ0crer3FoKKU2M6zdJolfQDDErKbs31MPz31dKcakpJYC1qX0BOTAyUaLXF23SlkmJYtw1MbH3c2s8/GUHM/lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5Vsvsdb; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744791729; c=relaxed/simple;
+	bh=XKAkFuzBJeeHp5QV1xX9F1kczu/Gm1lIr2ml2pa9NSM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lwoDLin+iIcFpt25mm1QEBDgasV9oBtfpeAY3W5fsgmruQ/BRoeV2/nfwkAcCfj6+AVyODgvZvCz0+bAqHYlCGUnaYykTLv9vFOEqzE1yewlkLiBES7Kk7M26lQS+CSwKvd/ve+l1De/GGRnJrnlye4jYYFn0lGhWTIQf4voi4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M2BAdjQh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5Vsvsdb"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-548409cd2a8so8473239e87.3;
-        Wed, 16 Apr 2025 01:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744791724; x=1745396524; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hz3xMnjSXc8Vbo6UN6ksVtAm9/A6drzyntoCMibD+UY=;
-        b=j5VsvsdbcgxD5ywKDT7raR4kAralZD/IrvwUv6fR68BbkResrrqXL/DJhr+EBWiMwD
-         xW76Ot7ryiOkGZM0V/1jI3plAx9JlRvG+N5j2ZGNqFLqwW0GTFMow0DF7pNDiIcbPZmS
-         aCU0f05Z4JO7CQRmaVF1JVCWB5RJDf6Rf8b+ZcWfN45blWtFqy0lxEgrv0RqxFDeLfDw
-         laCQYlyL5yey5+LsgpLIHzeNy5xx7nCnIa5KMdE451g9wJpOmkDhObP+tXVHCPHrmCyn
-         aigAOHqPV6Wku26Xf4AKZ/Lcb6mYfadhveieJ3oA3kn+nYYhnMhoFHaZcvz87nO4i15v
-         PHDQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M2BAdjQh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744791726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=vvyL9QEbAWCIfE4WOtTlgl7z3JtYo/Z+xwt/Xc2hkOw=;
+	b=M2BAdjQh35+JMwEPMkAz/gd2dVXNIyS62rp+Y8na35vnVoNhfI3roaLiD8Un5GQ4Ze8WxX
+	cRpNyui/TB8tBi1kt3IXDY74cyXTYIeYqv2yMB+UYrUN25Y7oFNZWR3op1NENK5lI2uHiS
+	4nrv43/bxhY+aboeFnS3NjzGAR27xIM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-403-Eyw1BQxwPQ-49pmxcxR8Fg-1; Wed, 16 Apr 2025 04:22:05 -0400
+X-MC-Unique: Eyw1BQxwPQ-49pmxcxR8Fg-1
+X-Mimecast-MFC-AGG-ID: Eyw1BQxwPQ-49pmxcxR8Fg_1744791724
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3912e4e2033so2888738f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:22:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744791724; x=1745396524;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hz3xMnjSXc8Vbo6UN6ksVtAm9/A6drzyntoCMibD+UY=;
-        b=NdsCz4LF7KR/nQa3hKbqhrhwAL4M618ZBLW5PEdLHAgfharITNSyoxZ+oERcGxYMIL
-         b5mKAaOJyLPDgKfloB5imigGw7a+7oe3YmW/4vL6yBVmS4MJmw6c09U+b+Mo4IVzkcj9
-         Q+ogqxy5vdUNKh5UNlZCTzbDuVSX25ombnGqpT2GgDrkhhlCNiLnrje75Ufz12Y0WE8x
-         kPhQQOWtSey86Rp3tKPRbO5YiP/wRfl/p+0RkCMnkdnGqGTwaEAaFpKpPfeTJWMu6EYb
-         SNd1UdD2o8/tKPj7l9oqs3DsYy5wToQqDh2lEPy61ZOvuGYFrYG2TBjn7JWsd18FrvTM
-         1RiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBoKtEYnFJpmTokmkVXjb/cLDWetPHgxL1qnA427X1xMKrS1ZBIg0eHtNJ7gH5ckLAX471fF9IJgr6@vger.kernel.org, AJvYcCUo9AYkFMlAO4qLgqlJEoMOT/2lnnFMg++SAGKUBpKvJ0b63Ou2IK6Ig/z3vtBi4Tukz2/U71liofOt@vger.kernel.org, AJvYcCUqyDFIoGCQZcLB2lsk0e/YdqcmvBVJJxX5KfYRqfaewaIq8zbdtS1/xLwIsu/Z00QOXzkN9WXT@vger.kernel.org, AJvYcCUtfyBilEDmo7ZFCWWfneKdwz0bmTl2Om4ejtvZb7CSMz8+xuqJABOXPKsKPHgh/8niQ4tGrzYzdUUIOwkz@vger.kernel.org, AJvYcCVkci/17Jls8b/MDK0SBy/AfNVLPxD7DkgDYLbnHbTUwWQsGKeN6e71s6LHmyzW+RYy52KNbAvy9k69@vger.kernel.org, AJvYcCWq4ooCqp8lfQztRXVUqf3VYbP0J5KaNf2AWxeTQ9cD6LId/JY7NaCdUnSwk6Vw9dV1Q20J7FuycxYt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHXe95a9Jc6cvwf+y9AAuSxMeUMuFyBQdOK2pM79dCm80jEejo
-	29MuiiM117bUP1mbF5IHF3kB0LNCIYXJUPx8E9k2XhyGpPAXhnN8
-X-Gm-Gg: ASbGncvL7R09QC7cORMtlCpkdZzdJ4SZmaFqbFMproYIKA0FvGI1dTz51lezVTFV307
-	c48nd+ZCEZ5KuikMvTp7bIgIGdFKJk6HHzQnp6JYSJfm5Bvfqr98LNoKuF2QB22JIXCWxoglH5p
-	IqOgZYPCu+BIfCkccMu5+gVsVQtRmssMq5x6Yo2zf8YtMMF0v946SZua2Fa+a1y+pQMSQteyFYM
-	ZJEYazOJqmB33Sv66yDqjHjWjynXLAR3vUre4V79vj7N5WKCFBx8PMB+DJOE73pyXVoimINzqLs
-	K4Yq86ynrNm8ksxVHjDtjIHLe0he2h4aZpUL0xiXVx5IeTLCdx+w
-X-Google-Smtp-Source: AGHT+IEuJuLfFCt+9GyN1idWy06ZmoWNGkSGMSxNf750gdW+sq3Ker5OqE2naLWKfRaLvI2raaZoxQ==
-X-Received: by 2002:a05:6512:1041:b0:54c:a49:d3e4 with SMTP id 2adb3069b0e04-54d64a7b65cmr279874e87.9.1744791723651;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=vvyL9QEbAWCIfE4WOtTlgl7z3JtYo/Z+xwt/Xc2hkOw=;
+        b=pZOSagvMEVgITrQMXv59rLj3JNa5i1PQlQu6PIdDysm9aupcElhuSLMSHvGghXVqUI
+         By1wwk4q8/OTa3jXJJuxZLif6T6Ft5xgAC+HkI8jTHj0/6oOswbX03sisSm/qKpHEsAO
+         xxBCEFSAHZnPzPnCG944ajYwNH/XAgff0e0l5VXc0lrbBOFI95od+CM1xqBBONKTt1gk
+         5BFdA5J4gT0swPH5Vv7fF53L43Ef9SKkxYC8XxyUL5/JUggZnVMfxdm89/LbU9znAr4A
+         hpoyuSvtHlbr7czjDOq7h0Z4CeX36u+UuUSjvDqSCRj3I/U+iUPCqUdDST5IleamH5Ym
+         Oyhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVZyHMOAyMIVxq6Ok33DZLNJy8QBYIVK/bXKsZPA1YOSi9UPOATd5V5inRIzdNxjAx7bWmS3YqrlHblwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJTvuDNyQa6UaHFG64UXpHpd6zYqu2xFzEikoJnxBXISoHkeWv
+	5bDfEuS3TdwMuwjDWQdckcBo1ZTJpS8Uxk4LrqAaP1hhcsVAdKdqcsPe5bxp1YYN/4B/TLWlLHm
+	7PmcYw+QctPlnmW7+sUQ7SslnhkXv7tDtt1fLIPt8qbqvyVvfxTBo1qxFmcabmA==
+X-Gm-Gg: ASbGncvR6FzWjG1QqHuV0ZyMatApQSI8P4U8uzOn9whz+UrsoJE/age0i4D81K4duBH
+	mp+5Wxdz1BgkmVJubmw7BDwy94SsjnHIlsjOk0Uc0E5F5VEQWGgc8AI6MPj7B7OeFxoIrzEdegM
+	xezNYmlGHGiJ3bINI+GPwEF2W4GMMUU6H6bSAbJZUmdhrmSQR0ioL//wyU6Lzg3mhb4HPo995X6
+	uj6LhcEl2km+Barm5JxDSzjzwlh0/bforqBLDuu5H1cI619NoDbzHCGb9H1FjilDTQVtCkZ3Zdu
+	VaX+WIWDAH32n+v1/IcHVCfBussGqRA05mxnr5+3swVQbyL9ClnqJT63HOfeddcwZ/SQVIF/bcy
+	UEnbdvCYKhfCa5OQCB3XRpFw5PhUMapueFLA7dA==
+X-Received: by 2002:a5d:5985:0:b0:391:2df9:772d with SMTP id ffacd0b85a97d-39ee5b16e16mr726240f8f.13.1744791723936;
         Wed, 16 Apr 2025 01:22:03 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f7b20sm23025391fa.97.2025.04.16.01.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+X-Google-Smtp-Source: AGHT+IFgzQDtE+12iKbE4/DCmivduwNYqxbp+evRvagl2uSM8ACsKrJnhuymuDi4xOI62HWy8DfzWA==
+X-Received: by 2002:a5d:5985:0:b0:391:2df9:772d with SMTP id ffacd0b85a97d-39ee5b16e16mr726222f8f.13.1744791723453;
         Wed, 16 Apr 2025 01:22:03 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 16 Apr 2025 12:21:28 +0400
-Subject: [PATCH 03/13] dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
+Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae963f2bsm16809290f8f.18.2025.04.16.01.22.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 01:22:02 -0700 (PDT)
+Message-ID: <019d1c4a-ffd0-4602-b2ba-cf07379dab17@redhat.com>
+Date: Wed, 16 Apr 2025 10:22:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] mempolicy: Optimize queue_folios_pte_range by PTE
+ batching
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, Dev Jain <dev.jain@arm.com>,
+ akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250416053048.96479-1-dev.jain@arm.com>
+ <7f96283b-11b3-49ee-9d2d-5ad977325cb0@linux.alibaba.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <7f96283b-11b3-49ee-9d2d-5ad977325cb0@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-wmt-updates-v1-3-f9af689cdfc2@gmail.com>
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
-In-Reply-To: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, netdev@vger.kernel.org, 
- linux-pwm@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744791712; l=3702;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=GDEv30ykcwNrp+ITbOwo9y2a8t6U4fArDqmF8aS5Xdk=;
- b=GCpdFEkoTHE9ybEwUmMP3zyIuVwotvOJHUhwhdPuS+K23AdgM+TEtrCEsV9kNiqMrLEc7Go9c
- pPuHSamLO18BrZxR9rp9FI8e2Nx/MOHbD9zNhPB3twsFUREVO16jeWc
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-Rewrite the textual description for the WonderMedia SDMMC controller
-as YAML schema, and switch the filename to follow the compatible
-string.
+On 16.04.25 08:32, Baolin Wang wrote:
+> 
+> 
+> On 2025/4/16 13:30, Dev Jain wrote:
+>> After the check for queue_folio_required(), the code only cares about the
+>> folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
+>> this loop by skipping over a PTE batch mapping the same folio.
+>>
+>> With a test program migrating pages of the calling process, which includes
+>> a mapped VMA of size 4GB with pte-mapped large folios of order-9, and
+>> migrating once back and forth node-0 and node-1, the average execution
+>> time reduces from 7.5 to 4 seconds, giving an approx 47% speedup.
+>>
+>> v2->v3:
+>>    - Don't use assignment in if condition
+>>
+>> v1->v2:
+>>    - Follow reverse xmas tree declarations
+>>    - Don't initialize nr
+>>    - Move folio_pte_batch() immediately after retrieving a normal folio
+>>    - increment nr_failed in one shot
+>>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>    mm/mempolicy.c | 12 ++++++++++--
+>>    1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index b28a1e6ae096..4d2dc8b63965 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -566,6 +566,7 @@ static void queue_folios_pmd(pmd_t *pmd, struct mm_walk *walk)
+>>    static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+>>    			unsigned long end, struct mm_walk *walk)
+>>    {
+>> +	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>    	struct vm_area_struct *vma = walk->vma;
+>>    	struct folio *folio;
+>>    	struct queue_pages *qp = walk->private;
+>> @@ -573,6 +574,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+>>    	pte_t *pte, *mapped_pte;
+>>    	pte_t ptent;
+>>    	spinlock_t *ptl;
+>> +	int max_nr, nr;
+>>    
+>>    	ptl = pmd_trans_huge_lock(pmd, vma);
+>>    	if (ptl) {
+>> @@ -586,7 +588,9 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+>>    		walk->action = ACTION_AGAIN;
+>>    		return 0;
+>>    	}
+>> -	for (; addr != end; pte++, addr += PAGE_SIZE) {
+>> +	for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
+>> +		max_nr = (end - addr) >> PAGE_SHIFT;
+>> +		nr = 1;
+>>    		ptent = ptep_get(pte);
+>>    		if (pte_none(ptent))
+>>    			continue;
+>> @@ -598,6 +602,10 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+>>    		folio = vm_normal_folio(vma, addr, ptent);
+>>    		if (!folio || folio_is_zone_device(folio))
+>>    			continue;
+>> +		if (folio_test_large(folio) && max_nr != 1)
+>> +			nr = folio_pte_batch(folio, addr, pte, ptent,
+>> +					     max_nr, fpb_flags,
+>> +					     NULL, NULL, NULL);
+>>    		/*
+>>    		 * vm_normal_folio() filters out zero pages, but there might
+>>    		 * still be reserved folios to skip, perhaps in a VDSO.
+>> @@ -630,7 +638,7 @@ static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
+>>    		if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
+>>    		    !vma_migratable(vma) ||
+>>    		    !migrate_folio_add(folio, qp->pagelist, flags)) {
+>> -			qp->nr_failed++;
+>> +			qp->nr_failed += nr;
+> 
+> Sorry for chiming in late, but I am not convinced that 'qp->nr_failed'
+> should add 'nr' when isolation fails.
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
- .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 61 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 3 files changed, 62 insertions(+), 23 deletions(-)
+This patch does not change the existing behavior. But I stumbled over 
+that as well ... and scratched my head.
 
-diff --git a/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt b/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt
-deleted file mode 100644
-index d7fb6abb3eb8c87e698ca4f30270c949878f3cbf..0000000000000000000000000000000000000000
---- a/Documentation/devicetree/bindings/mmc/vt8500-sdmmc.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--* Wondermedia WM8505/WM8650 SD/MMC Host Controller
--
--This file documents differences between the core properties described
--by mmc.txt and the properties used by the wmt-sdmmc driver.
--
--Required properties:
--- compatible: Should be "wm,wm8505-sdhc".
--- interrupts: Two interrupts are required - regular irq and dma irq.
--
--Optional properties:
--- sdon-inverted: SD_ON bit is inverted on the controller
--
--Examples:
--
--sdhc@d800a000 {
--	compatible = "wm,wm8505-sdhc";
--	reg = <0xd800a000 0x1000>;
--	interrupts = <20 21>;
--	clocks = <&sdhc>;
--	bus-width = <4>;
--	sdon-inverted;
--};
--
-diff --git a/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml b/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..a7d962bc13c7ff70b50448201b0416efc7f787af
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mmc/wm,wm8505-sdhc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: WonderMedia SOC SoC SDHCI Controller
-+
-+maintainers:
-+  - Alexey Charkov <alchark@gmail.com>
-+
-+allOf:
-+  - $ref: mmc-controller.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: wm,wm8505-sdhc
-+      - items:
-+          - const: wm,wm8650-sdhc
-+          - const: wm,wm8505-sdhc
-+      - items:
-+          - const: wm,wm8750-sdhc
-+          - const: wm,wm8505-sdhc
-+      - items:
-+          - const: wm,wm8850-sdhc
-+          - const: wm,wm8505-sdhc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: SDMMC controller interrupt
-+      - description: SDMMC controller DMA interrupt
-+
-+  sdon-inverted:
-+    type: boolean
-+    description: SD_ON bit is inverted on the controller
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    mmc@d800a000 {
-+        compatible = "wm,wm8505-sdhc";
-+        reg = <0xd800a000 0x1000>;
-+        interrupts = <20>, <21>;
-+        clocks = <&sdhc>;
-+        bus-width = <4>;
-+        sdon-inverted;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2444282096e03b301ed0e3209b4de7a114709764..f106850b9d3d349d82953b672588b967a37ea27b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3429,6 +3429,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Odd Fixes
- F:	Documentation/devicetree/bindings/i2c/wm,wm8505-i2c.yaml
- F:	Documentation/devicetree/bindings/interrupt-controller/via,vt8500-intc.yaml
-+F:	Documentation/devicetree/bindings/mmc/wm,wm8505-sdhc.yaml
- F:	arch/arm/boot/dts/vt8500/
- F:	arch/arm/mach-vt8500/
- F:	drivers/clocksource/timer-vt8500.c
+> 
+>   From the comments of queue_pages_range():
+> "
+> * >0 - this number of misplaced folios could not be queued for moving
+>    *      (a hugetlbfs page or a transparent huge page being counted as 1).
+> "
+> 
+> That means if a large folio is failed to isolate, we should only add '1'
+> for qp->nr_failed instead of the number of pages in this large folio. Right?
+
+I think what the doc really meant is "PMD-mapped THP". PTE-mapped THPs 
+always had the same behavior: per PTE of the THP we would increment 
+nr_failed by 1.
+
+I assume returning "1" for PMD-mapped THPs was wrong from the beginning; 
+it might only have been right for hugetlb pages.
+
+With COW and similar things (VMA splits), achieving "count each folio 
+only once" reliably is a very hard thing to achieve.
+
+
+Let's explore how "nr_failed" will get used.
+
+1) do_mbind()
+
+Only cares if "any failed", not the exact number.
+
+
+2) migrate_pages()
+
+Will return the number to user space, where documentation says:
+
+"On success migrate_pages() returns the number of pages that could not 
+be moved (i.e., a return of zero means that all pages were successfully 
+moved)."
+
+man-page does not document THP specifics AFAIKs. I would assume most 
+users care about "all migrated vs. any not migrated".
+
+
+I would even feel confident to change the THP PMD-handling to return the 
+actual *pages*.
 
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
