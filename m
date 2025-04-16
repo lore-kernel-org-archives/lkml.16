@@ -1,123 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9001F193D;
-	Wed, 16 Apr 2025 15:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AABA50;
+	Wed, 16 Apr 2025 15:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818885; cv=none; b=YBUVOpp6Otg1poRmAGFikienfeA0t9yxMlzoyKyr/wsQ2sVxylEfFkapMDjF7PJX4Ik8EOAGoz/1hzIII+RX2vKsWEmpYJllUsi5NqwAC+YRULS2OTQWAeNNJVRmvuMyx2q5GT8MMLcDvfMhuwp7A3NjR2AMeyBtXtzw8SUdqnU=
+	t=1744818948; cv=none; b=Na24k6jXO1ME7M9A1bHXNFShgLLAX+ljFoRGRmbIXpgqxS8uUndPLUizarvhZ6E9PZtIZgR9uXljX+9rkO1hikmzj46A4B3ggyeQWdBhI/aOkdo90XAl/sc3YMSAPDC9319Bi1Pk9vAwac+vEcK000K+oqGueOxKstRat2zbpBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818885; c=relaxed/simple;
-	bh=BK6yw88CCQMOuS+aZ2Cf0kz3xcaYu31IAHaHB7+z3cw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4oZu9xVFXBRgOKJcFHrXbI7dDzqqWc46H3ZlgFA5NBZfJTQbxGvJzKMpAUL0ha0BHGs8dC2yjnark5FtC4L4+Dm8vES+YFefV0gFoF886YGjTjbyxztcKEwaV9hmsao+bQ+b5QzRVnJejT9UGaopLM/gbhoBiU53SKnzez/ebE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYsB7iLF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744818948; c=relaxed/simple;
+	bh=9pbg4C0z8sXp7KkEc5RFY+hZQ1L/rGu7X3Ow2EVMjqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LhswA8SbBJgH3zxu1QQlEe4guEJmwOUbpmdVVdh68PR8thXaYM2bdHkzVqAtaAAfVca0u6vvjQT+rglZkRryvmcwx3JACvFhwnirSEH51VhqNJGFTE65XNBxvjUwPke0bOZwAz22ZqS1G+6Vw0I8Jce15Ph8Lfcd9UIWShvfC6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=Q3aiAyJs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ape697iD; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYsB7iLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF83C4CEE2;
-	Wed, 16 Apr 2025 15:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744818883;
-	bh=BK6yw88CCQMOuS+aZ2Cf0kz3xcaYu31IAHaHB7+z3cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CYsB7iLFu7CRO3Le0pvmC1k268EFLWH7CYrVAhgxHXz/hQKlGrhkytRRyfxhrFRLa
-	 kLWtrgRIFCVezFrhVYZi/slKn9mmAhE5BNzwbioipRzXvxBRe20qSGWRYEoBVVOn4C
-	 EHs3j8eTEtQA7Y1GrcktDJQf0XFLzKInpzctB45OjBhPa2rSJmMnw1aUcZjTSYAK6s
-	 CiSdKNvuxd/I+GZEiYg3us08A1t4SeJm1Z+KQq8BkAxgxhMAYAFQZ/tbuLHPWbWvlI
-	 i4d9EwJSJCI4WiRJ34sJF0ZXuEn3EmuFUh8xOpPzpJWwrT7Oh77TTOUTXNZWnb8eyN
-	 kDLHP3E9Of9dA==
-Date: Wed, 16 Apr 2025 10:54:42 -0500
-From: Rob Herring <robh@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 00/13] ARM: vt8500: DT bindings and dts updates
-Message-ID: <20250416155442.GA3255418-robh@kernel.org>
-References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="Q3aiAyJs";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ape697iD"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 2B70A1140293;
+	Wed, 16 Apr 2025 11:55:44 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 16 Apr 2025 11:55:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744818944;
+	 x=1744905344; bh=EVsUq8vIHVHSJ8OpZq0XMo4UVFNqeRv0Sm7W7t18X/s=; b=
+	Q3aiAyJsevWE/ISVeky1rPGQZFQI8JAxruyp32pE43BHMbnOi8EUxnrQU4HWg8CG
+	QmRb0xNvOgk9MFQQZ5Ah5HMN0LjyQpYDmZ7ydY4rHKmyxl0iH1WTw/eBssZk02VL
+	+8y53bKuP+BJhMTieMK7u7TRUyZWbCfTbJjuOucek3z9kMTEHBWwbhAu10XvCoF5
+	iu+wX2zHaQpHbozF0GzbPz7X6B+y3CKdEahr5/GYyPLT0vKyc+Bh4L2NhkJBgIqB
+	poFY3OCN+QjR/Mefy67IFwkr7hr6nek9MgLwUD/5+o51ysCPAteJXH2c1INubG1E
+	bDCX6nyWGi7C6KBP0+v5VQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744818944; x=
+	1744905344; bh=EVsUq8vIHVHSJ8OpZq0XMo4UVFNqeRv0Sm7W7t18X/s=; b=A
+	pe697iDAH3rFm+RhD2cv8csyY/ecTvQOGunw0sH11LheoKs9EVCJgiwKKeXneP4S
+	ACbCpWWhacDZ4juyUDt3YvUvDSJNEY7a7Xbe3BbQOHQfBt5/SL6+UhoNTjK1mSHq
+	1ICm4Y7Tk344V7WJtxqH+9oT8SJulM/DYVH7A2ZBninXcxQV6VV1Ml8+PXbPlfTv
+	/puKBiEbjK6AkAYKGqLiAr5RoOqLk+inCHunenrSefG3chI02lPf0bekagOgc+iG
+	G7LjE1G2HqY5BSpAD0js0vPC7KsLea70WQiQsX7UfACuw23NdFNF2mTTF3c+iJWv
+	gxDpw8AWHZgW1oVdD2ceg==
+X-ME-Sender: <xms:_9L_ZymCMPyx3sQqJ8O0VYwakETCEdUWOeazsvE2I2At18aj8ULrVA>
+    <xme:_9L_Z51dWsmSL8qEx4kkDeoXGlSzpVleUBkyzgEL6UlWBiYh-M1VLGyssNxPpXdHd
+    kGT387b5GdWALM7>
+X-ME-Received: <xmr:_9L_ZwpCsVXXJQWDewPEPA6W3mnkh8QMZPEgCeyQlyt3u7FSJenIVQhB4br7HT-c0w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeijeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgusegsshgsvg
+    hrnhgurdgtohhmqeenucggtffrrghtthgvrhhnpeehhfejueejleehtdehteefvdfgtdel
+    ffeuudejhfehgedufedvhfehueevudeugeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegsvghrnhgusegsshgsvghrnhgurdgtohhmpdhnsggp
+    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehluhhishesih
+    hgrghlihgrrdgtohhmpdhrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuhdp
+    rhgtphhtthhopehlrghurhgrrdhprhhomhgsvghrghgvrhestggvrhhnrdgthhdprhgtph
+    htthhopegurghvihgusehfrhhomhhorhgsihhtrdgtohhmpdhrtghpthhtohepmhhhrghr
+    vhgvhiesjhhumhhpthhrrgguihhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhfsh
+    guvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvg
+    hlqdguvghvsehighgrlhhirgdrtghomh
+X-ME-Proxy: <xmx:_9L_Z2mG6Y8EWSakQ2eOTPLXAbZ2wkjoCTV6Senykb8dNzK0X7tVng>
+    <xmx:_9L_Zw1VQEhPa7Id0NAYVP6oajSI_YnaZZaeT5X9uuEx62bfY12_9g>
+    <xmx:_9L_Z9uAsL5nDn0rKRJf0avlsMo76RCvm4dlJuhq_APW7ZVPpHpG4g>
+    <xmx:_9L_Z8UwbessxYtPJdcW_Q6Ni3wBzqMAzR2c7Vue4pkIdZgjcV5jjQ>
+    <xmx:ANP_Z4YbEQpKEhs-w3vEhYs18WpKis_HJ_65h8Dk_U3ltomd_8ueLXyb>
+Feedback-ID: i5c2e48a5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 16 Apr 2025 11:55:42 -0400 (EDT)
+Message-ID: <89257861-9f17-4c07-8358-f90392032983@bsbernd.com>
+Date: Wed, 16 Apr 2025 17:55:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] fuse: add optional workqueue to periodically
+ invalidate expired dentries
+To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: Laura Promberger <laura.promberger@cern.ch>,
+ Dave Chinner <david@fromorbit.com>, Matt Harvey <mharvey@jumptrading.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com
+References: <20250415133801.28923-1-luis@igalia.com>
+From: Bernd Schubert <bernd@bsbernd.com>
+Content-Language: en-US
+In-Reply-To: <20250415133801.28923-1-luis@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 12:21:25PM +0400, Alexey Charkov wrote:
-> Convert some more VT8500 related textual DT binding descriptions to
-> YAML schema, do minor dts correctness fixes, and add a DT for the
-> board I'm actually testing those on (VIA APC Rock).
-> 
-> While at that, also describe the PL310 L2 cache controller present on
-> WM8850/WM8950.
-> 
-> Note that this series is based upon Krzysztof's linux-dt/for-next
-> 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
-> Alexey Charkov (13):
->       dt-bindings: i2c: i2c-wmt: Convert to YAML
->       dt-bindings: interrupt-controller: via,vt8500-intc: Convert to YAML
->       dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
->       dt-bindings: net: via-rhine: Convert to YAML
->       dt-bindings: pwm: vt8500-pwm: Convert to YAML
->       dt-bindings: timer: via,vt8500-timer: Convert to YAML
->       dt-bindings: arm: vt8500: Add VIA APC Rock/Paper boards
->       ARM: dts: vt8500: Add node address and reg in CPU nodes
->       ARM: dts: vt8500: Move memory nodes to board dts and fix addr/size
->       ARM: dts: vt8500: Use generic compatibles for EHCI
->       ARM: dts: vt8500: Use generic node name for the SD/MMC controller
->       ARM: dts: vt8500: Add VIA APC Rock/Paper board
->       ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
-> 
->  Documentation/devicetree/bindings/arm/vt8500.yaml  | 19 ++++---
->  Documentation/devicetree/bindings/i2c/i2c-wmt.txt  | 24 ---------
->  .../devicetree/bindings/i2c/wm,wm8505-i2c.yaml     | 47 +++++++++++++++++
->  .../interrupt-controller/via,vt8500-intc.txt       | 16 ------
->  .../interrupt-controller/via,vt8500-intc.yaml      | 47 +++++++++++++++++
->  .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
->  .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 61 ++++++++++++++++++++++
->  .../devicetree/bindings/net/via,vt8500-rhine.yaml  | 41 +++++++++++++++
->  .../devicetree/bindings/net/via-rhine.txt          | 17 ------
->  .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 +++++++++++++++
->  .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 -------
->  .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 ------
->  .../bindings/timer/via,vt8500-timer.yaml           | 36 +++++++++++++
->  MAINTAINERS                                        |  7 ++-
->  arch/arm/boot/dts/vt8500/Makefile                  |  3 +-
->  arch/arm/boot/dts/vt8500/vt8500-bv07.dts           |  5 ++
->  arch/arm/boot/dts/vt8500/vt8500.dtsi               | 12 ++---
->  arch/arm/boot/dts/vt8500/wm8505-ref.dts            |  5 ++
->  arch/arm/boot/dts/vt8500/wm8505.dtsi               | 14 ++---
->  arch/arm/boot/dts/vt8500/wm8650-mid.dts            |  5 ++
->  arch/arm/boot/dts/vt8500/wm8650.dtsi               | 14 ++---
->  arch/arm/boot/dts/vt8500/wm8750-apc8750.dts        |  5 ++
->  arch/arm/boot/dts/vt8500/wm8750.dtsi               | 14 ++---
->  arch/arm/boot/dts/vt8500/wm8850-w70v2.dts          |  5 ++
->  arch/arm/boot/dts/vt8500/wm8850.dtsi               | 23 +++++---
->  arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts       | 21 ++++++++
->  arch/arm/boot/dts/vt8500/wm8950.dtsi               | 11 ++++
->  27 files changed, 386 insertions(+), 165 deletions(-)
-> ---
-> base-commit: 62db22c2af6ce306943df5de6f5198ea9bd3d47b
+Hi Luis
 
-I could not apply this series for testing. What base is this? It is 
-unknown to anything I have. Please use most recent rc1 unless you have 
-a dependency then use recent linux-next or a branch in it.
+On 4/15/25 15:38, Luis Henriques wrote:
+> This patch adds a new mount option that will allow to set a workqueue to
+> periodically invalidate expired dentries.  When this parameter is set,
+> every new (or revalidated) dentry will be added to a tree, sorted by
+> expiry time.  The workqueue period is set when a filesystem is mounted
+> using this new parameter, and can not be less than 5 seconds.
 
-Rob
+
+I will look into it tomorrow. I wonder a bit if we can extend it to 
+provide an LRU and to limit max cached dentries without a timeout. Need 
+to think about details.
+
+
+Thanks,
+Bernd
