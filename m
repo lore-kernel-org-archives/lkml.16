@@ -1,145 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED08A22D4E0
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F3C236422;
+	Wed, 16 Apr 2025 09:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796700; cv=none; b=CkS2mbluZmQQgtcj42290xlu/fkaZcL8czxcyvdrF6DHkOp1SNbkDBpYkw7/aRDfK6n7FSz00ieNHS64i/F645kzSS/WB7c/JoncTJlzoOgjfWVC1PhfuMIkh1u9Pxt9dGUCmcKWJS4LHboswOgZ1KADWZs92pIG/M3ppZkdtVk=
+	t=1744796701; cv=none; b=KCdEajRZ2l/IpUNu+KzH/aYgwp8SbwoTwnu2kN9QhP5sulus3qIFIH0PLV3F5vl/7FINp2fhSCQAxbIs2/szbFRhKfoapnzMEO2n9xtUEyxdCX5Hg/RFQEXb/iVNeA9qne95orFyG+A7gEG2xZiwvuOAMYGpThTVlsXjZ6qV8x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796700; c=relaxed/simple;
-	bh=P/IAP9ppJ+wI+UW0/pPZVK00Gb1oA6dLumwXgWcZ47U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hDtoFbVb52SwzsoR+9JXT2k5/8+pbC77GPhfC3bRMzUq3gxc2GKQM/C/wOEaL4trrrcQGCIjRk6SDjHZyYjUYcmlGU1SSlLUgtWAWRcpW0z6riOxvVA2SnFrFxuNhtCc/CXAi4EmnlW06Eu2c2nBhb9HRNI+1y7xg5Fmk0yE5oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXhyy6Gm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744796701; c=relaxed/simple;
+	bh=eILsz6Mvrmj8Hn9PGeOEedbRB8s5mmbt0mI6LYUa9jc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZmCTpEN1gvIjP4r66OQzabCmbfPF3jFpj5aNmXJbF1yIPDIgKLHF41WFuLQryVfpRA6pHHPSlbXr/EHnWMG0fefm1Bf2r8zAp3xdxSxbqOVjao4rf3F/Ycls86oXgw0iEX/sYlRCn6Gy92ELUL+KaXwhIgbNZ1v8OAAI6WO7cwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqlxv3VV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXhyy6Gm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744796697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gskYLr/QaTBbTuNof8D0HyAgwjJAjf9jLJVV5gqwqdg=;
-	b=cXhyy6GmTmAWxjbV91Y9kJdlDdxZbRXjzYLC1uRi1L/q24Mvnhk9qMtg2gk2Hn9H0z1xhB
-	8BZlV7+HXZSQoOBGrTgjjv6uCOrSqz5KQRhvOyHp8Tt5NEbW6XBld4L+1P20vrWH6VACdm
-	uB5aJqcXbww4cAIquQ5985TMH2nLM7o=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-386-chyHsRNoNrq66xLxtUZNGg-1; Wed, 16 Apr 2025 05:44:56 -0400
-X-MC-Unique: chyHsRNoNrq66xLxtUZNGg-1
-X-Mimecast-MFC-AGG-ID: chyHsRNoNrq66xLxtUZNGg_1744796695
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-30bf67adf33so2897671fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:44:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796694; x=1745401494;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gskYLr/QaTBbTuNof8D0HyAgwjJAjf9jLJVV5gqwqdg=;
-        b=bG/7+YeCYYe2ZuUn4briVFSFn/CEepR+WsfmLzWDrsMsqURhSEUCdbn8RgYexPWfrQ
-         vMA53T+5sxRPf0dfe0jHcFQmKxCEnYebZR/05VwbvxalXLS56Kmkp5ztZLZZkDlBQt6Y
-         aD5xyi6qfzu4AFbSsxJ14WRfWZeGJUZsQK1ZMEoGeS20IGZ3OPiETkUNeOeySkLC1kp6
-         ZllXHzx2JMiYP3PUvnNBl8heaQA1CJjKFfbj7J3giOXrO0PjvZZjOhEC3t5pbV6sb7i5
-         DI6j+ww7sK9TgUCUl8gbH0G0j0K2dLrcS13yjTva2De8PQM3UrEmEzMfN5wiyiBeNi8s
-         kfQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEaN5zOqOrAfHT+AYRbLi+QqV2mt7B1di3bM9MyhynNP/+WtqEGeUTJ15vmDyweN+VbMJ8AnEibsYvavo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu8iqJf/BjWUb4vvmmj+EYPUnmztW89G13eCZWlmadlvYyZlSy
-	Mu0pDvozpUajus9ixRLOF3wa5Xr6AkiHXOwJ0I+AgHwXOJW4Gp7aXF6NT/pYvrEtM7WX4yK7/PU
-	21gnMzfAdbQ3fU31BXUd6gW90d/n/EDH1uaCkvSaK9gCXS8Xi8NbS0WUBj43DXEs+x9e7pPWt5w
-	YJzDe/vA0rRO3LfJIbS73YaCAL67Qv/tfoIZ8V
-X-Gm-Gg: ASbGncszGVzOoQpQxiJaIe7nsYCoDidNnvuWE3qpBr0CtQH2KDkBGIsj3A1xEAFSnZ0
-	nzK8qlvkReS0XXZTpubJg7BULGqNbaGJx43Ute5JDgId4ORyVYAYATwG+YNvDPcWaZVkNLg==
-X-Received: by 2002:a05:6512:3d0d:b0:545:a70:74c5 with SMTP id 2adb3069b0e04-54d64bb5661mr314710e87.13.1744796694565;
-        Wed, 16 Apr 2025 02:44:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3iD3erof/D4AltR/ZJO+47LisYb8GczASHrURBKfRPlHZRbsc9oJ0j+AGICW9CuL2ndpu0r+X9rPI9KjPLks=
-X-Received: by 2002:a05:6512:3d0d:b0:545:a70:74c5 with SMTP id
- 2adb3069b0e04-54d64bb5661mr314699e87.13.1744796694088; Wed, 16 Apr 2025
- 02:44:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqlxv3VV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 83E44C4CEE9;
+	Wed, 16 Apr 2025 09:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744796700;
+	bh=eILsz6Mvrmj8Hn9PGeOEedbRB8s5mmbt0mI6LYUa9jc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=eqlxv3VVX/gz8dtqFH0K3dvSfr8pt/GS18Zs9YOgIVyMDZmzt+L7KmBU9HvyCVW6y
+	 uPxec1qXJCxN+16s5pQ3Yfh8/ysMylUF3FHC7xifXlRy2vypv6Y7N/8ggmmMC0BUrw
+	 f0D0N8ZN8IQFbRgKeBn+nOSt4nJWKjtX0kE3TbbmKP1xXDGNbRNI5wsN+PBDOuDPkQ
+	 EXgDIA0xjlBAzYDXc8m+KPHw9pdNUsXS3Vm8Ls91K9JK+65bfDmjq8dIAsvlv4rtl3
+	 euHR88AdOgcNq4b6QgOQmrKnDmKOMKbji9zqncimVbq30YHk4s8QVBsLLaS7/30i+6
+	 x/7wpAV3fr3+w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6FEC369B1;
+	Wed, 16 Apr 2025 09:45:00 +0000 (UTC)
+From: Chen Linxuan via B4 Relay <devnull+chenlinxuan.uniontech.com@kernel.org>
+Subject: [PATCH RFC v2 0/5] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
+Date: Wed, 16 Apr 2025 17:44:46 +0800
+Message-Id: <20250416-noautoinline-v2-0-e69a2717530f@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
- <20250412073202.3085138-4-yukuai1@huaweicloud.com> <c085664e-3a52-4a1c-b973-8d2ba6e5d509@redhat.com>
- <42cbe72e-1db5-1723-789d-a93b5dc95f8f@huaweicloud.com> <4358e07e-f78b-cd32-bbed-c597b8bb4c19@huaweicloud.com>
-In-Reply-To: <4358e07e-f78b-cd32-bbed-c597b8bb4c19@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Wed, 16 Apr 2025 17:44:42 +0800
-X-Gm-Features: ATxdqUGzrNLBpL-dz1zfHGEHz0hR9MOGiWoHxUZ54L4k63Bj0jKuOX2_xfQAo3o
-Message-ID: <CALTww294r=ZFrmyK4=s8NMs4MZfdvZ-m6cLTQqXy+b+tW7gkBA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] md: fix is_mddev_idle()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, yi.zhang@huawei.com, 
-	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA58/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Mz3bz8xNKS/My8nMy8VF2LVMsky1RTY1MTUyMloJaCotS0zAqwcdF
+ KQW7OSrG1tQDz/agbYwAAAA==
+X-Change-ID: 20250416-noautoinline-8e9b9e535452
+To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
+ Kevin Tian <kevin.tian@intel.com>, 
+ Alex Williamson <alex.williamson@redhat.com>, 
+ Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Nathan Chancellor <nathan@kernel.org>, 
+ Nicolas Schier <nicolas.schier@linux.dev>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+Cc: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+ linux-integrity@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+ llvm@lists.linux.dev, Winston Wen <wentao@uniontech.com>, 
+ Chen Linxuan <chenlinxuan@uniontech.com>, 
+ Changbin Du <changbin.du@intel.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1888;
+ i=chenlinxuan@uniontech.com; h=from:subject:message-id;
+ bh=eILsz6Mvrmj8Hn9PGeOEedbRB8s5mmbt0mI6LYUa9jc=;
+ b=owEBbQKS/ZANAwAKAXYe5hQ5ma6LAcsmYgBn/3wUalbw8YXxAK7xQpV223bnIA+u37hAQ7ZbP
+ 31Is5clK5GJAjMEAAEKAB0WIQTO1VElAk6xdvy0ZVp2HuYUOZmuiwUCZ/98FAAKCRB2HuYUOZmu
+ i9AeD/4wyk7nT6JRtlKjfD/Ab1kLjJs3+99RNJxrdX+R8/G6iGoSQiWkxbQdltaqfw0oUPjwNYy
+ XaGfqHhF455pzePiShPnA+iV39rxbOvn6GsFxHBVnBWlkuz00alqPc0k0wR+bnczsEtCco81lBW
+ lQ5aEcBWmiza5jTuGvBmbzDhuf9P+4kzJpnpgzCzCuhYm8mlGOxuNpy/mYtB/qBpEC7HD2bOzno
+ GuP2z2xSgPutEE3BfGPcn5zP/4ijt5eOLmnP+1mXNNruEcsH32NlzUGgvGTxEKp2nD7LbD61/lD
+ aroqwImEljsIQLTw6B/cIDJcADaaCbizNlSvIZqypUFY2eq3R/So/PaJ9QNAvFJzFAcgQnpooco
+ 8GZX6ycNSfjtBDTLtJv1A+SPqrybdP2439iBePQ8VcyWdTTuruQXPyDdn2f9TP7/S8g0hcPCSAP
+ ennnvjtytcTGq2596hGubcC1z4thbLcYjqfHgzdnObIft+MOWtAu2MW7Z/Lgw4P95M/Pr594l+9
+ ubrfuV+7sZ3gGfh54WBaWb95+RYn7Mqj2tD6/gYAfwZX+zv79yXt/lwQgyRE0Ca6BXzADjGnUm7
+ J9FRNt7+juTONUEp8tp50NLRoa6zep6L3AvlkpcCm64pIEHIl3fPmONhEmU0KFIjc6FBDyR5X+J
+ eTQCOlTIbGmy3TA==
+X-Developer-Key: i=chenlinxuan@uniontech.com; a=openpgp;
+ fpr=D818ACDD385CAE92D4BAC01A6269794D24791D21
+X-Endpoint-Received: by B4 Relay for chenlinxuan@uniontech.com/default with
+ auth_id=380
+X-Original-From: Chen Linxuan <chenlinxuan@uniontech.com>
+Reply-To: chenlinxuan@uniontech.com
 
-On Wed, Apr 16, 2025 at 5:29=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> Hi,
->
-> =E5=9C=A8 2025/04/16 15:42, Yu Kuai =E5=86=99=E9=81=93:
-> > Hi,
-> >
-> > =E5=9C=A8 2025/04/16 14:20, Xiao Ni =E5=86=99=E9=81=93:
-> >>> +static bool is_rdev_idle(struct md_rdev *rdev, bool init)
-> >>> +{
-> >>> +    unsigned long last_events =3D rdev->last_events;
-> >>> +
-> >>> +    if (!bdev_is_partition(rdev->bdev))
-> >>> +        return true;
-> >>
-> >>
-> >> For md array, I think is_rdev_idle is not useful. Because
-> >> mddev->last_events must be increased while upper ios come in and idle
-> >> will be set to false. For dm array, mddev->last_events can't work. So
-> >> is_rdev_idle is for dm array. If member disk is one partition,
-> >> is_rdev_idle alwasy returns true, and is_mddev_idle always return
-> >> true. It's a bug here. Do we need to check bdev_is_partition here?
-> >
-> > is_rdev_idle() is not used for current array, for example:
-> >
-> > sda1 is used for array md0, and user doesn't issue IO to md0, while
-> > user issues IO to sda2. In this case, is_mddev_idle() still fail for
-> > array md0 because is_rdev_idle() fail.
+This series introduces a new kernel configuration option NO_AUTO_INLINE,
+which can be used to disable the automatic inlining of functions.
 
-Thanks very much for the explanation. It makes sense :)
+This will allow the function tracer to trace more functions
+because it only traces functions that the compiler has not inlined.
 
->
-> Perhaps the name is_rdev_holder_idle() is better.
+Previous discussions can be found at
 
-Your suggestion is better. And it's better to add some comments before
-this function.
+Link: https://lore.kernel.org/all/20181028130945.23581-3-changbin.du@gmail.com/
 
-But how about dm-raid? Can this patch work for dm-raid?
+And v1 of this series can be found at
 
-Regards
-Xiao
+Link: https://lore.kernel.org/all/31F42D8141CDD2D0+20250411105142.89296-1-chenlinxuan@uniontech.com/
 
->
-> Thanks,
-> Kuai
->
-> >
-> > This is just inherited from the old behaviour.
-> >
-> > Thanks,
-> > Kuai
-> >
-> >>
-> >> Best Regards
-> >>
-> >> Xiao
-> >
-> > .
-> >
->
+This patch depends on
+
+  [PATCH] drm/i915/pxp: fix undefined reference to
+          `intel_pxp_gsccs_is_ready_for_sessions'
+
+which can be found at
+
+  https://lore.kernel.org/all/20250415090616.2649889-1-jani.nikula@intel.com/
+
+as well as
+
+  [RFC PATCH 5/7] RDMA/hns: initialize db in update_srq_db()
+
+which can be found at
+
+  https://lore.kernel.org/all/FF922C77946229B6+20250411105459.90782-5-chenlinxuan@uniontech.com/
+
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+Winston Wen (5):
+      nvme: add __always_inline for nvme_pci_npages_prp
+      mm: add __always_inline for page_contains_unaccepted
+      vfio/virtio: add __always_inline for virtiovf_get_device_config_size
+      tpm: add __always_inline for tpm_is_hwrng_enabled
+      lib/Kconfig.debug: introduce CONFIG_NO_AUTO_INLINE
+
+ Makefile                            |  6 ++++++
+ drivers/char/tpm/tpm-chip.c         |  2 +-
+ drivers/nvme/host/pci.c             |  2 +-
+ drivers/vfio/pci/virtio/legacy_io.c |  2 +-
+ lib/Kconfig.debug                   | 15 +++++++++++++++
+ mm/page_alloc.c                     |  2 +-
+ 6 files changed, 25 insertions(+), 4 deletions(-)
+---
+base-commit: 1a1d569a75f3ab2923cb62daf356d102e4df2b86
+change-id: 20250416-noautoinline-8e9b9e535452
+
+Best regards,
+-- 
+Chen Linxuan <chenlinxuan@uniontech.com>
+
 
