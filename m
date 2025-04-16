@@ -1,142 +1,221 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6C189B9D;
-	Wed, 16 Apr 2025 07:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D258018C03F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789707; cv=none; b=WuGDo26QrRglT3tTP7LVS4uyDSPnLBlV185bCd8rkfG+v9Xcqysj2FzKPsXYhuHxWIwAsR/xK5ZIEqUv1n1jvX5CaCuOl0a4IbfI4jI0j6OLf2HZrXby8FT7Ozc4m3nJmZKuKVZJo9kJw2m6j8zG/Hp3u6FBF0Rc1z9tbFCZ9p0=
+	t=1744789734; cv=none; b=aDjWMZULTUsdX3C6ytOZmiqPMCrb396bYoZvHjuSu2lz46xj6TGUvwcORBzdFOTNqdxwRiTwv2zggYUHNyp8rLGuJIPepR3af/Ak4m8SIBLBABhKoiNrnEcV73cLKZz9wo5DZTC8xYW9rJ5Gg4K54exPSjyYbjKl0R/MLmLuB5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789707; c=relaxed/simple;
-	bh=7ojNLd35IL8BUl4r4U4KZaN3qMYHai0mzwkmUTNzQcY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SrIzFRHwL3ChRSt5c/71rICnirvNe802s5BdOHSJubWlX71Rvik7syA49v1kn1cxaNz8NjqDm1tmhl58Bnc4crbW/7uQ0dSpYJJuca1go2T8401ROsNLQvCHkzvjXmGxYA1VURbT5idOpf3WP/cMcCd07vfMK2XcjhVzhR/u7X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=jtdo3bTQ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Utg1IVm2 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744789734; c=relaxed/simple;
+	bh=iVqagJr9aJ+HclUicbnRR1i4oxRuH6YtLWi3eX2VXC4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HFdW4geQsh0qXl7suJ4jsPr86Ctfiio9nOyucVjACDGQc8c3SlDP2kiAVHDQgrxWauVDztUDXqkwtSwnpK5eiR71g+HJXyxW48fSUWQ7r8s/7RPoTukBCieECPFHHrPdjqhHJnmAt8wFi0wJF6SUZ1shyJSOw+tJIROGlS/gK8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LyASfKfD; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="jtdo3bTQ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Utg1IVm2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyASfKfD"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d6fd581f4so481484241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:48:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744789704; x=1776325704;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=7aW7Z4UKbxktPS4MaepHxqf+DbrSQTTsdz9FCAgfvEQ=;
-  b=jtdo3bTQBowiOkDN60u8K9OjEHn7led25Oh1sxGRZS57JL58crpURSkv
-   RJIQprEe0fvuUFCZoxr63o1G921tEUxqU1YhUoimilwNjwQ+7hSPjYt8N
-   bUgTBnQqfVUmIDRmfZCpqw69ciDMfcw+wCUvssLQdgGRXlEtytcVFatql
-   SHvbJ62NQzkPtY1uO0QBMqqQ2r8dDbU5SnOtp67+TknpddKTwU5XducXw
-   ENFqfySUBPQiZbFdOLudaUZbV0p01mdyHzdjFLMvXaFqc5X5ncvr0loFj
-   AxG/l7mgRCabwyggDiu5X4IITYJEIPCQcMioXPEN56x5bK64bkcijf3ev
-   Q==;
-X-CSE-ConnectionGUID: 40LsbEOEQRiOB0DgIF7Vtw==
-X-CSE-MsgGUID: zhfq6v8tSkSbamkypAuoSA==
-X-IronPort-AV: E=Sophos;i="6.15,215,1739833200"; 
-   d="scan'208";a="43559241"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 16 Apr 2025 09:48:19 +0200
-X-CheckPoint: {67FF60C3-51-2417938-F0170C2B}
-X-MAIL-CPID: C1F86517FBCAB0ED58083B4ED47BF749_2
-X-Control-Analysis: str=0001.0A006396.67FF60C0.0053,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BEFE7167BA8;
-	Wed, 16 Apr 2025 09:48:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744789695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7aW7Z4UKbxktPS4MaepHxqf+DbrSQTTsdz9FCAgfvEQ=;
-	b=Utg1IVm2aLPjKEu3z8TbqZySUXUoHt++UW7xuELrTvjAmmm9tIhos26SKan/GalSkemTOL
-	Fk9h5nsoD/wH6jMTzwCBPmqzpNExikWK2RnVW9kY6WXcvvZALAu7F+ptEo5JCMJsdiFGUO
-	++Lfssy63Fl7cWgW8vnwmvJZzKjwYdcW9WwigXvLWmVeB+sdZXSdwZgMD4cpBN6L59xJEX
-	ZbJ0ISdTOXsQwmCd4jKnVU1LdVA0qHUePTEHqY2UtJo352NuL7OrOGsnoCKmTtRw2rd7aT
-	S3Jc6lbVm4iQjHSQYdOhg0RhSmEw/DwIsqKXtp2ePRx1Ez47eixZgLikWDKj8Q==
-Message-ID: <800a61d80a2c6cfa4a5a64d904a2127e60eafc29.camel@ew.tq-group.com>
-Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
- rgmii(|-rxid|-txid) PHY modes
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Joe Perches <joe@perches.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
- <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>, Vignesh
- Raghavendra <vigneshr@ti.com>,  Siddharth Vadapalli <s-vadapalli@ti.com>,
- Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com, Andrew Lunn
- <andrew@lunn.ch>
-Date: Wed, 16 Apr 2025 09:48:12 +0200
-In-Reply-To: <f3acd53796a44576408a2a14aa5baaed@perches.com>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <f3acd53796a44576408a2a14aa5baaed@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+        d=gmail.com; s=20230601; t=1744789731; x=1745394531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RyV7NSNEAVoyLMhl/ZYfvyA50ZgGTsXuVFPalj5U1c8=;
+        b=LyASfKfD2nu3Ca1IU7pQ9kfew5IWcFq0IMzP6sAyM9OibHWz+lESAnSn1m7GJcFBaJ
+         aPJcOWlBRRoLLYoexIgKMyZLXBu7+rIklqGKikHko21qWoSBc35wH7LG726ymanMenMs
+         Unwt8e9TOvG9YuC05NbePaBoeN0a5H7+uC7sv5QAyDBAeeUekJ5MY6Z9zgcd3vV9QA8c
+         xexBVg4aBgfFbDnXIXXx5ndQVkGqvQqzPcnqemSjO0xBt+CrseJMuoEGI6seL1aFWxVQ
+         wGmHZm/b/KAEt8qGhjPnejKt4xbgNY+6gY6d/PU3HsJGG7HtouFXe4W+Nx8+jMXNVmZD
+         lSoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789731; x=1745394531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RyV7NSNEAVoyLMhl/ZYfvyA50ZgGTsXuVFPalj5U1c8=;
+        b=v5WO672ay1CmWgqus0qEv8camL8GqoeTvhOy0E7x6X/4+A1DA6TeRrskW0Y5qSPnLI
+         Do39sStUzWZHkC+mobC+gqTUNzaa7iVrKJ+kABc0Zwxv6fOzPI1V6n36aA3tmBvb3LTz
+         Lbsq2ruVPa61Y4fFDW+geW+7OH+tIL2WlOsN7Y0YDM1x0m9/XBjhzd+sPBgt5gUPh4/L
+         AudjLSs2mhQcLPvYDl9aRtJh2LJG+0seh8qUpuJWdaltO4CkovmbnTxoFPr6vbm4YBz9
+         SZ8owz/B3BewAAFxjBKEq4m1Jmzo4gUvh4eMsinUH+O48IIJ+cvJGU+8cn4aQdxShETB
+         VGvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgelhZwckcMDmfeYtYk4Ccogw3kMZKkasLpazsNnMiT8/JajAavTFoeZJ/ZlGSVt26XzpPzw1A2Ipvx8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR3+aqXmiSc8ZBdrsDge+/T59mlnHkojV4gt+ADu5kAhVKgtDN
+	W0Lo39RcGiaxZggtaK9psc7C7AFjuBS/qJpM+4CVfrBlYX6iwfaw974krGVA3kxLmakDPEL2Kul
+	+PlHOmcM+HSSyI+5Dnd3uMKhJHB0=
+X-Gm-Gg: ASbGncvc/jaOVOIdxRzrElsQFJWgO7skTHK0AA+XWyF9JQ2GtjQjRq+coHICzEnDvv5
+	r1T+20WNty14hVkKVsN0f02dBeO5NOLunAlhBOgG7AgRwGanpBTjpc/jhd7D7k3Z2+8QcUI7nCC
+	diCIVKq3FOMIUCSwSQaEra7w==
+X-Google-Smtp-Source: AGHT+IHJV5MIND7VjTur2PvUkLR7tbC0UWfpgC5/T6rBoCvXM9oiPQLPWmmLQgIyQdB+KzSfS0m8wEw7Rnf5i7m4woI=
+X-Received: by 2002:a05:6102:3101:b0:4c3:346:29ef with SMTP id
+ ada2fe7eead31-4cb597d1cf8mr222369137.11.1744789731571; Wed, 16 Apr 2025
+ 00:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250412085852.48524-1-21cnbao@gmail.com> <F7DF65A3-ABF1-43C0-B4F2-DC0EBB2B1668@nvidia.com>
+In-Reply-To: <F7DF65A3-ABF1-43C0-B4F2-DC0EBB2B1668@nvidia.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 16 Apr 2025 15:48:40 +0800
+X-Gm-Features: ATxdqUEBfwrh1CuxGybuxs6d2Tz8XKF3y1m1Q4prVjmiNEfg70ItcMYK-EHHnjA
+Message-ID: <CAGsJ_4yRq6iBPpWLdbcknGLGUCEBDsc05rAeMuK8HRAwnpg2Zg@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
+To: Zi Yan <ziy@nvidia.com>, Tangquan Zheng <zhengtangquan@oppo.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, David Hildenbrand <david@redhat.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Matthew Wilcox <willy@infradead.org>, 
+	Oscar Salvador <osalvador@suse.de>, Ryan Roberts <ryan.roberts@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-15 at 09:11 -0700, Joe Perches wrote:
->=20
-> On 2025-04-15 03:18, Matthias Schiffer wrote:
-> > Historially, the RGMII PHY modes specified in Device Trees have been
-> > used inconsistently, often referring to the usage of delays on the PHY
-> > side rather than describing the board; many drivers still implement=20
-> > this
-> > incorrectly.
-> >=20
-> > Require a comment in Devices Trees using these modes (usually=20
-> > mentioning
-> > that the delay is relalized
->=20
-> realized
->=20
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index 784912f570e9d..57fcbd4b63ede 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -3735,6 +3735,17 @@ sub process {
-> >  			}
-> >  		}
-> >=20
-> > +# Check for RGMII phy-mode with delay on PCB
-> > +		if ($realfile =3D~ /\.dtsi?$/ && $line =3D~=20
-> > /^\+\s*(phy-mode|phy-connection-type)\s*=3D\s*"/ &&
-> > +		    !ctx_has_comment($first_line, $linenr)) {
->=20
-> Not sure where $first_line comes from and unsure if this works on=20
-> patches rather than complete files.
->=20
-> Does it?
+On Sun, Apr 13, 2025 at 12:31=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
+>
+> On 12 Apr 2025, at 4:58, Barry Song wrote:
+>
+> > From: Barry Song <v-songbaohua@oppo.com>
+> >
+> > Promoting exclusive file folios of a dying process is unnecessary and
+> > harmful. For example, while Firefox is killed and LibreOffice is
+> > launched, activating Firefox's young file-backed folios makes it
+> > harder to reclaim memory that LibreOffice doesn't use at all.
+> >
+> > An exiting process is unlikely to be restarted right away=E2=80=94it's
+> > either terminated by the user or killed by the OOM handler.
+>
+> The proposal looks reasonable to me. Do you have any performance number
+> about the improvement?
 
-Yes, it works both with patches and full files. I'm using ctx_has_comment()=
- the
-same way existing checks do - I think $first_line refers to the start of th=
-e
-current context for patch files. I have also verified that it only matches =
-on
-comments directly above the phy-mode line in question.
+Tangquan ran the test on Android phones and saw 3% improvement on
+refault/thrashing things:
+                                                   w/o patch           w/pa=
+tch
+workingset_refault_anon    2215933          2146602            3.13%
+workingset_refault_file       9859208          9646518             2.16%
+pswpin                                2411086          2337790             =
+3.04%
+pswpout                              6482838          6264865             3=
+.36%
 
-Best,
-Matthias
+A further demotion of exclusive file folios can improvement more, but
+might be controversial. it could be a separate patch later.
 
+>
+> >
+> > Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > Cc: Oscar Salvador <osalvador@suse.de>
+> > Cc: Ryan Roberts <ryan.roberts@arm.com>
+> > Cc: Zi Yan <ziy@nvidia.com>
+> > Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> > ---
+> >  mm/huge_memory.c |  4 ++--
+> >  mm/internal.h    | 19 +++++++++++++++++++
+> >  mm/memory.c      |  9 ++++++++-
+> >  3 files changed, 29 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > index e97a97586478..05b83d2fcbb6 100644
+> > --- a/mm/huge_memory.c
+> > +++ b/mm/huge_memory.c
+> > @@ -2264,8 +2264,8 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct v=
+m_area_struct *vma,
+> >                        * Use flush_needed to indicate whether the PMD e=
+ntry
+> >                        * is present, instead of checking pmd_present() =
+again.
+> >                        */
+> > -                     if (flush_needed && pmd_young(orig_pmd) &&
+> > -                         likely(vma_has_recency(vma)))
+> > +                     if (!exclusive_folio_of_dying_process(folio, vma)=
+ && flush_needed &&
+> > +                         pmd_young(orig_pmd) && likely(vma_has_recency=
+(vma)))
+> >                               folio_mark_accessed(folio);
+> >               }
+> >
+> > diff --git a/mm/internal.h b/mm/internal.h
+> > index 4e0ea83aaf1c..666de96a293d 100644
+> > --- a/mm/internal.h
+> > +++ b/mm/internal.h
+> > @@ -11,6 +11,7 @@
+> >  #include <linux/khugepaged.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/mm_inline.h>
+> > +#include <linux/oom.h>
+> >  #include <linux/pagemap.h>
+> >  #include <linux/pagewalk.h>
+> >  #include <linux/rmap.h>
+> > @@ -130,6 +131,24 @@ static inline int folio_nr_pages_mapped(const stru=
+ct folio *folio)
+> >       return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED=
+;
+> >  }
+> >
+> > +/*
+> > + * Return true if a folio is exclusive and belongs to an exiting or
+> > + * oom-reaped process; otherwise, return false.
+> > + */
+> > +static inline bool exclusive_folio_of_dying_process(struct folio *foli=
+o,
+> > +             struct vm_area_struct *vma)
+> > +{
+> > +     if (folio_maybe_mapped_shared(folio))
+> > +             return false;
+> > +
+> > +     if (!atomic_read(&vma->vm_mm->mm_users))
+> > +             return true;
+> > +     if (check_stable_address_space(vma->vm_mm))
+> > +             return true;
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  /*
+> >   * Retrieve the first entry of a folio based on a provided entry withi=
+n the
+> >   * folio. We cannot rely on folio->swap as there is no guarantee that =
+it has
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index b9e8443aaa86..cab69275e473 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -1515,7 +1515,14 @@ static __always_inline void zap_present_folio_pt=
+es(struct mmu_gather *tlb,
+> >                               *force_flush =3D true;
+> >                       }
+> >               }
+> > -             if (pte_young(ptent) && likely(vma_has_recency(vma)))
+> > +
+> > +             /*
+> > +              * Skip marking exclusive file folios as accessed for pro=
+cesses that are
+> > +              * exiting or have been reaped due to OOM. This prevents =
+unnecessary
+> > +              * promotion of folios that won't benefit the new process=
+ being launched.
+> > +              */
+> > +             if (!exclusive_folio_of_dying_process(folio, vma) && pte_=
+young(ptent) &&
+> > +                             likely(vma_has_recency(vma)))
+> >                       folio_mark_accessed(folio);
+> >               rss[mm_counter(folio)] -=3D nr;
+> >       } else {
+> > --
+> > 2.39.3 (Apple Git-146)
+>
+>
+> --
+> Best Regards,
+> Yan, Zi
 
-
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+Thanks
+Barry
