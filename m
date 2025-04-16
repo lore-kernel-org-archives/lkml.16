@@ -1,90 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9691DDC1B;
-	Wed, 16 Apr 2025 06:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A77221572;
+	Wed, 16 Apr 2025 06:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786291; cv=none; b=Pk5ugtDaCSEBIjopowoBNmE0LJ313FTih42vd1BUEBGnNpdg1G0BrYwjfafPzwgzeJQFaXwW73VqABsGygapcXtR5jbJGVyNNM7TmTKAH+eVmadQn7Dox4frkvD1GCWqT3rvaf6BdIp1zberNy5UF1862F4UnQQRs6LGmjHQeBQ=
+	t=1744786318; cv=none; b=FDpZy2dx5jVP1ecBlb7st52snzKZHN00iDYm9uZA975W/HQghdl9JSso7Z0I4vBWF7xzelMRnzTwbH+bjU/ah4P5E6nVnqnJsP4/xKJlk1vZqRk05UiJOfECQvcje6+DaAyI1R7ARupNctpX26MtjpRXkqYuG2chPRLy/cvpRBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786291; c=relaxed/simple;
-	bh=FGgt10fsKaB31v9J8sD2pS75CuOzx1QkbiWqKQvt16E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z4tnjoFfc0CaBwEu91V0AeO4zedClQP4Y41g3BNCb6yGfB1j/6oR3Uia67wYfTx0HCnzPBHk1PWK5ZayXFskovkRjPSNgs34xWfBP3SKPox1AagzF6NOPZcrDRXniapgdLdV3iGEXdVnFc4qNp/oqp2LeObAJ19dB9u5ZB1XJuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5ynJXuq; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744786318; c=relaxed/simple;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SW/qHaWuD2GERmMgVMbFdSpNc/xTvUQ03YRM8Vwm7Fqsyg0cwc9Siqkhoj6jHQKTHzDWY3ivh6o/oYiqTrnteU/Dttr10eikYOP7pweK+ZflXyKrbDRuYSySbmwPlPv2MLcYnmiwcFDw96FYgR5yA2LdOyh1EDUEOiHWTHC+Ch0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Dojs6mFo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zwToH/EQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5ynJXuq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744786289; x=1776322289;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FGgt10fsKaB31v9J8sD2pS75CuOzx1QkbiWqKQvt16E=;
-  b=l5ynJXuqvAMM/oup95FEqccXRl4gqIDRaxtoFunjICxhYDH6C0Chm4Pj
-   LkLOQi5+Uvdn1WrYdi2CwzeuDae43fCSbkNuf6gHSQw+xGy2+y8XcS6Z7
-   /OqNe3b6aKwx79rhxnOTzX1C6Ayopj33biud7AwIwa6WyEi1heg0jQ6ME
-   wps1kND1BUR7J19ljX9mZDnZ4KIagFDnnNX/pjqfjROwTg7uRbaiwL+1+
-   uLK+QbDBOtqRTuSBvxMAa91tewy2wsw7KJ0OvHjZbTLEhx31Lj9VUh5F9
-   MMFbwvMDFuuqrwYT64x1DpQYM4YZ+Il67nkjFE57t0APsrNQswGOKWtH/
-   Q==;
-X-CSE-ConnectionGUID: yjTEW/roQMetWuUoQSwEUQ==
-X-CSE-MsgGUID: tpEhxyQzT3Su+5eRlivl4g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46035146"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46035146"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:51:29 -0700
-X-CSE-ConnectionGUID: kVR8noIGRCis9km2Bq+BGQ==
-X-CSE-MsgGUID: VevFSuRVT06zP80/VHmn3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="130301713"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:51:27 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u4wcF-0000000Clqu-4Ap9;
-	Wed, 16 Apr 2025 09:51:23 +0300
-Date: Wed, 16 Apr 2025 09:51:23 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v4 2/7] i2c: core: Unify the firmware node type check
-Message-ID: <Z_9Ta5CpplHUTK_X@smile.fi.intel.com>
-References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
- <20250414100409.3910312-3-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Dojs6mFo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zwToH/EQ"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744786315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=Dojs6mFo4Mzf4JUfi5u3DVgoAdF72WD4+ZS8pehKh3pTtj3lF4X3KSRnLPY0Uh1UpBxJz8
+	RE0IQiisGDaJUhHvh7JyWi26bvz4T/HpEsRKkCk6wduWwSsEoPUAvPNrgBTA2+MfO0SuoO
+	o/zhA+4agt15j7l9cVV0xLaUiFYuLphL+t4Jvj6x4MLOxNe942c3ij5PFTLgDZ05K47Cq0
+	SZ8YgPZ2qevf3WlBo6l6kd8X/pcZ9K69pjHaJHn4vW2W9mcwFi9Lv97kWilQ8QRgFfRYsM
+	mrR/Tjy2I4ignUWS7VTCF8LWPJm9L70ajtLaTdyCaUiCd6umb1z7uGCtCo4Daw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744786315;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=zwToH/EQNVW6TbBnvlq3sYXoZ7BDjyd66fiDrwauZsKzPa6cIssmu68lwUkE6f06HveQL+
+	rgfgUkXpgQyS1fAw==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v3 01/22] rv: Add #undef TRACE_INCLUDE_FILE
+Date: Wed, 16 Apr 2025 08:51:07 +0200
+Message-Id: <206700fffd52b4565228f4c6185bb56269e63618.1744785335.git.namcao@linutronix.de>
+In-Reply-To: <cover.1744785335.git.namcao@linutronix.de>
+References: <cover.1744785335.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414100409.3910312-3-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2025 at 01:01:52PM +0300, Andy Shevchenko wrote:
-> OF and ACPI currently are using asymmetrical APIs to check
-> for the firmware node type. Unify them by using is_*_node()
-> against struct fwnode_handle pointer.
+Without "#undef TRACE_INCLUDE_FILE", there could be a build error due to
+TRACE_INCLUDE_FILE being redefined. Therefore add it.
 
-Note, media CI complains on wrong {} style, but
-1) it was in the original code;
-2) it is gone after the whole series applied.
+Also fix a typo while at it.
 
-I suggest to ignore that report based on the above.
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/rv_trace.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 422b75f58891..99c3801616d4 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -129,8 +129,9 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+=20
+-/* This part ust be outside protection */
++/* This part must be outside protection */
+ #undef TRACE_INCLUDE_PATH
+ #define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE rv_trace
+ #include <trace/define_trace.h>
+--=20
+2.39.5
 
