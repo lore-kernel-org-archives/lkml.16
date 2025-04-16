@@ -1,104 +1,80 @@
-Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023FE2356C3;
-	Wed, 16 Apr 2025 10:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DAC7230BD6;
+	Wed, 16 Apr 2025 10:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798194; cv=none; b=mBZBKxZ90Htgly/BWlOJyNbkxd22ZAzNX3WsD7nZF5ZHHKz0aN6Qc6DXoFAp8WtjkrRLNwLlje1Lk2KYuNSQ9Hd7qdAVp/fCe9UaRAhUjqAZkHkYmSQ4sm/uN2W00JRQoftR3iF4UR33lqlenEbZ9Mx/xxDxRp32qmXXxp+qqZo=
+	t=1744798288; cv=none; b=tt7HJYVlfl1+Kgk/HhFOGhyEgQHlYSNtlpa2HUc5YTk24V6V0PycOjhCvOhG3xz8HVLtsZAbD388E0/ohk2nmQ2ucZPxsaVB7w+OtnfjceaP6ijQ5DK75nSrhLOV8zkXkcg9NnUfBsc4NKyyDiezRhQKXKGOgb/E7VRhJdiQKE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798194; c=relaxed/simple;
-	bh=K5EIWptPNf+bD6TCzDb13Bmy9OoJJigove2+9RXxBVM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pc9MTVycW1JqBQKQqdcw//aLpNM6wY6Gl+O5ReRCSFcJoFh0PeFEsSIRXzsA8BsHGw5Wux2NYdnmriK6KkOjlNkit169QJ8TT2AmLWpzxts/OV0+Mfs+ama19es8WY40XZqqDRM0KXR8Oo02si5wEaXx+u+1001pSGweI48usDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WZm3GADV; arc=none smtp.client-ip=54.207.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WZm3GADV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744798183;
-	bh=K5EIWptPNf+bD6TCzDb13Bmy9OoJJigove2+9RXxBVM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=WZm3GADVESCnAroIeYZi/nahlkQFax41qiE4mcZ6xMLfvyr4jmGCEpWkn78ok6u/j
-	 rhZC/DKRCmqUfZMC4Pxuuyeg/WJnpzzkJHPwyLtkPNzhTRit7JXcH/hW+vGCd0tHbI
-	 sC2fHwcLZa0B1SeoTmN41ZOwlqUiJhW0G7fmvV8U=
-X-QQ-mid: izesmtp89t1744798177tddffd40c
-X-QQ-Originating-IP: IAw1cIU82zcANWNqP9cwnXdyjXOMwHhFQGwmSZFWUH4=
-Received: from mail-yb1-f178.google.com ( [209.85.219.178])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 16 Apr 2025 18:09:35 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 11619989835513742780
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so5004404276.2;
-        Wed, 16 Apr 2025 03:09:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUDssVnHXTmTKE76dF+ycPeT2C1n0lWYyuKMsJ6Zopu6JMmx3lEZu4qgY/Gvr1BxP1MtIO2iEF1/b7eUg==@vger.kernel.org, AJvYcCUVYiDE+f7EJohP0Cr50H2psJzqaa9zecSa1UCOmqsOOcBJn5rl4jrtvve67YVTbUyxHftXQ4BZI4/WSNGG0RRw@vger.kernel.org, AJvYcCUzTGDRBIeJgEfn4EWlehaJ9uaorx9uEj+qe+hTsxMrhP/O7nEctjFR3JoLHMk/1qsf4rA=@vger.kernel.org, AJvYcCVX3wYdV/83TDnW3npDxdAlvKd9cNTo88QrUWLqnk7fvkBWVK2pf4VAna+2zy78+BMzANTdxjt6KX23G3IR@vger.kernel.org, AJvYcCW6vuKnAIf4hcUPxARsn5Wfdhoj41HNYr65MOKTgKEuGeq5WM3WjuxiLMczTrqk6Woh21Jdp0fH4XEMhWoR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcvIREjmhYSjoUfAdhYHLxezMnlg1QXV8BTY7NUBtV3Wl9Je+c
-	+r+bFR8azXex1PkElhhJYQH8j70n2wITtFk6b1bloX7XTFHs6BdUpOU+C0Rr1AfN92Vzhjv1wT7
-	asVrgHTDHyvL9cx0QMXbjscx0tSg=
-X-Google-Smtp-Source: AGHT+IFxOQerwyXR4s01cKj1FQCmW5mZBGS8EUkxg2eBy2yn8PQm4fMpJOhxMxu+WrXOTx3w5ulHOeUcX04b8xnFFTA=
-X-Received: by 2002:a05:6902:2b8a:b0:e6d:eb74:272 with SMTP id
- 3f1490d57ef6-e7275967af8mr1257382276.22.1744798174393; Wed, 16 Apr 2025
- 03:09:34 -0700 (PDT)
+	s=arc-20240116; t=1744798288; c=relaxed/simple;
+	bh=bPoeZDmonHWLDSTPwGCwozvXf49O//btsCfxc1EAQs4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g9chNWSfCWcm/FgGnDJ+7eO1mdAiyzoDat24F/K4Zbfp2U1xpog3BkrCBjU0VeAl5YGVCHqRyvH9AaVZp2HrvQYeHEJLOBwk6bd0lAuQPxZEPfHWJJWgGxqg3iI/yxN9kaT/omN26oRUgxFTQmIB/ohi8Oavv/lSPW5HqLsiRuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DA5D152B;
+	Wed, 16 Apr 2025 03:11:23 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 867EE3F694;
+	Wed, 16 Apr 2025 03:11:23 -0700 (PDT)
+Date: Wed, 16 Apr 2025 11:11:18 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Chukun Pan <amadeus@jmu.edu.cn>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Samuel Holland <samuel@sholland.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>, <linux-sunxi@lists.linux.dev>,
+ <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/1] arm64: dts: allwinner: correct the model name for
+ Radxa Cubie A5E
+Message-ID: <20250416111118.2afd8f89@donnerap.manchester.arm.com>
+In-Reply-To: <20250416100006.82920-1-amadeus@jmu.edu.cn>
+References: <20250416100006.82920-1-amadeus@jmu.edu.cn>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <E9B8B40E39453E89+20250411105306.89756-1-chenlinxuan@uniontech.com>
- <20250416044827.GA24153@lst.de>
-In-Reply-To: <20250416044827.GA24153@lst.de>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Wed, 16 Apr 2025 18:09:22 +0800
-X-Gmail-Original-Message-ID: <45D187D71349584D+CAC1kPDPYiUKqRmqW=hzOyGudvUXcwxo0kgDU_j40+t7rYHsU-g@mail.gmail.com>
-X-Gm-Features: ATxdqUHphIIrq227AoMvNzUOdxFn7upg3kfvytoiynDmEPipLLJsDaFiQeVe_To
-Message-ID: <CAC1kPDPYiUKqRmqW=hzOyGudvUXcwxo0kgDU_j40+t7rYHsU-g@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
-To: Christoph Hellwig <hch@lst.de>
-Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Chengchang Tang <tangchengchang@huawei.com>, 
-	Junxian Huang <huangjunxian6@hisilicon.com>, Leon Romanovsky <leon@kernel.org>, 
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
-	Yishai Hadas <yishaih@nvidia.com>, 
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>, 
-	Alex Williamson <alex.williamson@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-QQ-SENDSIZE: 520
-Feedback-ID: izesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: MMkVjSP788VvLbybX6NpprCLcQm8mjDJIS8k878BicYIRvKMIDe/VTDc
-	iEpiPOOa9xcLEBj1SJPG4bYpWVQZTHk7cjwvvv6SVEjicZmBxG/GBdPXd4u3SoTRip0JWp/
-	KU3tZwSmB4IwQDD8AZYBnOnzDQO8vljy62RTQqhgK2Btl/Nh7BambwRS7VrjWgnGrAIXFrw
-	cM9pRcUXaChbxDJO6XBkHeZ4xM84nGdVfLN6GB/DhryioTZZHqg67s0n/TvZsAZaljDcUbL
-	ZmNj6MUqS33rBTuIATwMGt0+lJQEko4QRqwWbcf5YzMj5o+wR1vDK2vY3WauKzsEI58GhR/
-	b2mIYcBhyVZouv0rcCJuslQ5IpPZLNCYwPZdsfkfCRPjyfCTNdUbseu6WFnJXXI2dxcn+UC
-	hsQZTPPKX0hIynPouR+pm9or537nHmII9ROVtnAxOYSG4tNVn4UtFJVdXxVcFhHuHJ/JITM
-	SmPA4yrg4oroBQK9ZmX8FlV+Jo85y2BVJbTVnqRQkzRK+OOb7/oYcF3yy1AR2NYFVPaP2Ta
-	FRcrzcnXWockyTCPUjT1dqDZPK/UIFGwq04BH8G2lT3G5066Ma0577TCfn2qKX/2hGJPAIZ
-	HmaXejIa1N1hQ+LVlbCT6DssUCiMtl3SHe5v4h7zB44OiS/+Wk7j/EPF9QULWBGcAB87/Sq
-	QsyrREB1zNhZH65anAy+3H3Q6x1NGUVl3q9kHN8/cdv/BbQ51CfpNc5c75Pyx+2LYthN5hg
-	mlxog3tIeBXrERIwi1t2AaZTtmFVUQDGDRkzbu8zUmJWNU5gSO/THHhjzicEL+i0bYMk2uO
-	EHQ5K4lFW5iSLVr1M9ilwwYu7tSDLX7myE5gL56l4HY7BM5Y9sOfJDuJjCTofHhdm6kKDAl
-	xdwUuC3XD/PG1/iOn5ok+BqdN/BMS3aYCQ4PS2rUSVHD93ft22OYVeQkcELHT6UqBW4ZNn7
-	VIIPt9LNuhNxBlHqGWTcrHDWHsyGtWBZXCX3vfsVG6Y7a1MIiEqm0LrXUfEtByfeLLJYak0
-	RrPnoTzPYnablhrE+87u7mquNIvo3f0lT8pW8yoLNPgVhDkYxnHYtHo67zob0tTnEOijS4n
-	LgWvsHPuaj1
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Sorry for the mistake, v2 has been send:
+On Wed, 16 Apr 2025 18:00:06 +0800
+Chukun Pan <amadeus@jmu.edu.cn> wrote:
 
-https://lore.kernel.org/all/20250416-noautoinline-v2-0-e69a2717530f@uniontech.com/
+> According to https://radxa.com/products/cubie/a5e,
+> the name of this board should be "Radxa Cubie A5E".
+> This is also consistent with the dt-bindings.
+> 
+> Fixes: 80e0fb4e491b ("arm64: dts: allwinner: a523: add Radxa A5E support")
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+
+Indeed, thanks for sending a patch!
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
+> ---
+>  arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
+> index 912e1bda974c..03c9a9ef5adc 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
+> @@ -8,7 +8,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+>  / {
+> -	model = "Radxa A5E";
+> +	model = "Radxa Cubie A5E";
+>  	compatible = "radxa,cubie-a5e", "allwinner,sun55i-a527";
+>  
+>  	aliases {
+
