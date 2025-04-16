@@ -1,104 +1,115 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453962459F5
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFC5221567;
+	Wed, 16 Apr 2025 10:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798906; cv=none; b=lR/E3FYQo8X+Y4tHEK38FsMuV8+RcBw1lZiqVs90GnXj891OyqSd4Ft2M6TAANIG1+diELhmr2pSqea1k+yqt/I5pS+KWdxw9pO12FAFA5ttYPWg6b/ZyxZOUjcJTQKICRB6yLW4vls8baDMdTOXgm1a81ZSWoTBj8V6UwQv/i4=
+	t=1744798925; cv=none; b=fXojDvoao+zbTeQ61U4jsEpYgl3nrEb3q+DpdpGUL+lz8UBBzzenU+sSsHRcbf3vbFFFnPaV1P4Ev4PTZaBlTLfI73NF9smMvnR1+VkGmOuGhRUvUVfLi1BMFBIwqtWIq15qbDFZqxs0sJ2IUHgQp6TBef4HRHTUpyixSKO6YIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798906; c=relaxed/simple;
-	bh=GzLpijeCN/xnc0MpcoS27D9qekhAtoTNeNrAopBITXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WnZnV5/pzZqtnG/IVCCRKvk2tHQFmR5nBTXNug7NqT8UxRV5uq3rK/j1+aA3pffKUEeKShXwuMVgikXWMDhLr7PUm4hZ5cD1MZ5ojhuBE6pETbpS+juIJBpfUmRf1l/QIoR1VHbsY18YFORXx0i6FFAgxev8p5dklGARJvZ4I7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VQPdSe7s; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744798925; c=relaxed/simple;
+	bh=IQpMGOF83TYK+ICeBAr/Du4u99XVKcwdq7lFyw1+9XI=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uyxk2zWxOjpPqpZQt7u0xYfGR9ZsNUwm8sTa4/w06gNSMX/Yrud+NZM+0sj5TAsqQwyAqB9yTgtY1qZdOia4Wp5BQMKC0UMr7OGjWeEGrX5fvxni5IdQQMPUvD2ZKiqKDS4pwbRv2UsCFJyr2BDTH9ig9JAJ4WuHu1vPiH/5zRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPcfby3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VQPdSe7s"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f09f2b3959so9602a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744798902; x=1745403702; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gI/k9ZhlZw1nLIMCv8sLSEHLegOn6Koki046UAaZhLo=;
-        b=VQPdSe7s3XPRRIatL/vuIpF0gatOl6byF0DEdjLjRJh12vEaMay7M0Bu9vGRDp/vUL
-         Ixv9/LROG2lJikblql+I559f1vHm0cb9xaCx/tSAKFWDzbwGfIALR1+s5Lh+Ge8bjDgW
-         aoQe06cimOz31neSTApal1zsQBFB//wNc0M3G1y6hsY7Av8BuhFHAjqcOiUhEspuyNMH
-         AgghzFk6F2Ra8iZJCz1j1ZSdpvOyhv2KSuHg8AhLC+RBUx+dzgBpAUzOUKJ/ZFdn2cUj
-         EUYPJK9qsiKzB/YPRqVRi/xX5TC4jkcIFDJhQ11gpVtMGRNGV6Kvf1dfUC+jhmaScZ2p
-         UhpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744798902; x=1745403702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gI/k9ZhlZw1nLIMCv8sLSEHLegOn6Koki046UAaZhLo=;
-        b=YBzzSTH909I2izvoYh0do4uwceFYsl/fmPCSM9qjz1LrvKd7uRsfHLckiIDpjlxcUu
-         Y/4rU+ZYt8miTVDkSbwy2MDVIKnVlmoWie08jReez8rVGAz8EOOp6PjfD29FTEEvudoh
-         qrEbhfBChz5Y56oNml7xY6V5iqJv6qA4jOl0J+afZ/fLc8q9SF8cZlsua3lCSjbik4GY
-         0hA1W132qiGwz4XLBL3ThocSX+Mou9nSwIWCODT72QZTXzrTe8ZVdTu2f4/6TDISIMqP
-         iU1hxtCafBiRWd6T79wljbHJ04L3UXv7orjjFsB6spNMQKoCxoOW6Dxm0cw6lV4eYWgv
-         sIeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXifb4GXzUMLBbb6e8ixPWXnFYScWGwSCFJ8hxSwFN0Zj0bWibk1gyRzu/zMP+qoZt5P2OQp4SJbApx9KA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWfbX/zZWSpEu14+V5a3VL8NMMoNxNSONLN5lLYDpUsw86hPDs
-	aqoBKVDukDSKHeIvquq7dUsvPIzTFptlnQOIt4WioaX5dLWUq+QyQce/6787PwKoPoaxmXJrpxF
-	gNZ4r7ZN2B0/Zg+sBr70czr4TJjfXmTQjw6HZ
-X-Gm-Gg: ASbGncvMeAD01J3Fih91X9xZVUjNUmwt4UIawQW+yD5zR2BAE3QloS3gI/3XihlbvnR
-	lGWL1F9w1L2g2QeSiIdjNyfpMYYsBy5TC3CHOnSMUjOW5Nz2/OtPTMzUp27Eqno1ASVWSqvWJle
-	HGIyJjEbTLXQkwKE3QtxKHxFojdLYMcARzfWiolbLFHQlilh8heZd3
-X-Google-Smtp-Source: AGHT+IG0YsgU3ftiWo0K6lBwOj8sW/iLoTyVfIdyazBDTtja0alyxnkkoDAOkqtdSVB+I4ZxcIm+Daz0cCs9UTP+gPs=
-X-Received: by 2002:a50:870e:0:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-5f4b6df5699mr35534a12.7.1744798902226; Wed, 16 Apr 2025
- 03:21:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPcfby3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C978C4CEE2;
+	Wed, 16 Apr 2025 10:22:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744798925;
+	bh=IQpMGOF83TYK+ICeBAr/Du4u99XVKcwdq7lFyw1+9XI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jPcfby3XXuhu8ih8BvdhdweEIfDqRjX6JU2S1GrPie/yEfEd8QXf2gzSzBrjQ9OpU
+	 F3WjYvWjYQOZpQk2VZcl0a46lKEc4CknmCRUPQgyfL32ZSdDpmIT6mvDJ+KoIxtgFU
+	 KuphqcTvGrzE1rbMqRgwCHeq+HzabXwTjlUZ5Ridu63En+pT5dh4MpBgCwuPNGtiyg
+	 MqQCcfW8O36bRM84zIOwM7bohRG3ba7QS8bMmSguHww+XetKBO2QrzPMOVMlXOOJIN
+	 Eb3fdWrnI1UDll2e/JkLJ93CY+f6ijU2x8eIwT/4dsYviYzDDoFaI1ImPaE99sDDn8
+	 Ljjcms6OOd91A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1u4zu6-0060vo-LT;
+	Wed, 16 Apr 2025 11:22:02 +0100
+Date: Wed, 16 Apr 2025 11:22:01 +0100
+Message-ID: <86v7r4jtiu.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rafael@kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>,
+	sven@svenpeter.dev,
+	j@jannau.net,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	marcan@marcan.st,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: apple-soc: Fix possible null pointer dereference
+In-Reply-To: <20250416073420.xrhwnzy22zf6yltm@vireshk-i7>
+References: <20250412160518.1824538-1-chenyuan0y@gmail.com>
+	<86bjt0l6q4.wl-maz@kernel.org>
+	<20250416073420.xrhwnzy22zf6yltm@vireshk-i7>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250408035833.844821-1-guanyulin@google.com> <20250408035833.844821-3-guanyulin@google.com>
- <2025041107-guru-epilogue-a4b6@gregkh>
-In-Reply-To: <2025041107-guru-epilogue-a4b6@gregkh>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Wed, 16 Apr 2025 18:21:00 +0800
-X-Gm-Features: ATxdqUF7ff6_Wg9zdoYu9aYlwaX5VUj6KNg2hBrNvQ6G3MnjCzU81IwJo-w1lB4
-Message-ID: <CAOuDEK2av=TmLu5L5xMryh9jCu0hsXNwcC=ZJjnjrtkwG0+bPQ@mail.gmail.com>
-Subject: Re: [PATCH v11 2/4] usb: add apis for offload usage tracking
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu, gargaditya08@live.com, 
-	kekrby@gmail.com, jeff.johnson@oss.qualcomm.com, elder@kernel.org, 
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: viresh.kumar@linaro.org, rafael@kernel.org, chenyuan0y@gmail.com, sven@svenpeter.dev, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev, marcan@marcan.st, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, Apr 11, 2025 at 10:01=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> On Tue, Apr 08, 2025 at 03:57:22AM +0000, Guan-Yu Lin wrote:
-> > @@ -733,6 +734,8 @@ struct usb_device {
-> >
-> >       u16 hub_delay;
-> >       unsigned use_generic_driver:1;
-> > +
-> > +     refcount_t offload_usage;
->
-> You now have 2 different "refcounts" for the same structure, which of
-> course is crazy and will do nothing but cause massive problems.
->
-> I know this isn't going to be used to "reference count" the structure,
-> and surely you don't need/want the atomic properties of a "real"
-> reference count, so why isn't this a simple integer?
->
-> thanks,
->
-> greg k-h
+On Wed, 16 Apr 2025 08:34:20 +0100,
+Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> 
+> On 13-04-25, 11:02, Marc Zyngier wrote:
+> > Irrespective of this, it would be good to describe under which
+> > circumstances this can occur, because I can't see *how* this can
+> > trigger. The policy is directly provided by the core code and provide
+> > its association with a cpu, and is never NULL at the point of init.
+> > 
+> > And if it can trigger, why only fix this one particular case?
+> > Dereferences of policy are all over the map, and would be just as
+> > wrong.
+> > 
+> > So while this is not wrong, I don't think this serves any real
+> > purpose.
+> 
+> I have applied such patches in the past, considering the same as good
+> practice. But I do understand your inputs.
+> 
+> And so I tried to see if there is actually a way to trigger this.
+> 
+> - Platform with two cpufreq policies (freq domains) with one CPU in
+>   each of them.
+> - Boot the kernel, policies will initialize for both the domains.
+> - Hotplug out CPU1, that will remove the policy as well.
+> - Call cpufreq_quick_get(1), this will call the ->get() callback for
+>   CPU1, for which there is no policy available.
+> 
+> But this is the case only for drivers with `setpolicy` callback, this
+> shouldn't happen on apple-soc.
+> 
+> I am not sure now if we should just apply this patch to be safe, or
+> leave it as is. The cpufreq core may change in the future and call the
+> `get` callback for all drivers.
 
-Thanks for pointing out the blind spots. I'll change it to an integer
-in the next version.
+If that's the case, I'd suggest adding a __must_check annotation to
+cpufreq_cpu_get_raw() and co. At least we'll get a warning on all
+missing uses, fix them in one go, and avoid the constant churn of more
+or less correct patches.
 
-Regards,
-Guan-Yu
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
