@@ -1,335 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5955D4B5AE
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6179910E9;
+	Wed, 16 Apr 2025 05:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781550; cv=none; b=adxUA7vll/Riqrou13JOH9KK2XqpptM+I3KcQqNmH1lzApATz0YFIJqxD7Vt2gOQEjbPZQtDC7aNgNTZxWnPlVP5+YTOdAZK1Eg0asizfglFKJjy2XXHfRw6z7csTZE1+R0vgPWWF50GaCf4/QQBB4ha62TZElUW9rNlWeQv4ys=
+	t=1744781701; cv=none; b=hy7SA6iXwtBDXoI6dgaIvP+VTqZ7hhugzWvAfr2Zal+Z6BGGG4DD/DRqhtXXFK+xuOEckauziqlO/OiBup5VAkZPtXaCu2I88oPkyHv2axQLbo09vYzRnff8nptO5T3DYyYqXF8XaGfwxCKyN4a0nR3tFqK/qwMASLjqPi2l/SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781550; c=relaxed/simple;
-	bh=2AX8eHN304eez/lPBhrNmSK3jADYbtAxlj1qGYGX+Rw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a2N8kmEItxpuZIC/NahVim8OXjQXoFKEr3UL2ScDWH31nAKDxbe79Lx2CToVQQlFBsnckBmPbGo5Re5dFVovNjwRNTas1oSVzSaGtbgWZ2hqWjf+fPMtnyfFfmpCauzLXyuilGQmJXJ1ztmUE8tQxA4LB9nUr7//byyqabwpRCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R31m9JQn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R31m9JQn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744781546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7DUKNPYms5ndImHtnx/7SOlMI/tokulKdqziuD6CP6w=;
-	b=R31m9JQnTe/4hwagd6j1AKN3LeGhAUUFTFW0eBkZ2JBuRdi4KVZA9cZD/t0n9GQ7crU4iU
-	u/UmH/wh6Fiyt9bmdwzphhF5LpH4KJ3XjWOJ5kJKeSW6fGQQCUlmgJh78MTnAqWspaYlsF
-	a8TYY/G2Aynyct1/AX7pCOYKqhAeWYw=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-353-RhVyARJNPf-xg6PHs6x0xw-1; Wed, 16 Apr 2025 01:32:25 -0400
-X-MC-Unique: RhVyARJNPf-xg6PHs6x0xw-1
-X-Mimecast-MFC-AGG-ID: RhVyARJNPf-xg6PHs6x0xw_1744781544
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-30bf554ea7bso1646161fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:32:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744781543; x=1745386343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7DUKNPYms5ndImHtnx/7SOlMI/tokulKdqziuD6CP6w=;
-        b=D6W4mEzqD3ME2A62Gh1JUqokc4YgvSiywy8VOdFV22Ey2OfWXi2xNc2CPeTsS9xHKN
-         gQJ/8dTedDalmAiOAVRVHDWG/YUyrLKw3TC2fN75qcSMjAYv3K32CAgfRL3e9xUMQaBs
-         O+PCwykrvzNShhq8DJUYclE6nfzG7l4jFCDluHCsxP8td8aherT+erhUpOgDLAIdvHNH
-         91IEhpufyCsfb/yAJUshpzq+RaymXGULxduXlYju+SKZo/jQeBp1mr1ByBc9I34o4/P3
-         WKc4R6sR/yxqcPIYY7H/KEAw0PhM7Uz9v/9srSEPtS69MIswoppakFNx24JbffjYIIKp
-         Hs2w==
-X-Forwarded-Encrypted: i=1; AJvYcCW3ErC4F0FQ6JhiQzX4cSE3F/ZoDjlVLSohbzsR+r5RU7rNP4jminALb6X03egv31BH6W7GsOjhxdAyZ5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGPdO1tx4+0WOskdxcf+NsdxaUri27yAeJQGsK+uhF5NFRds1M
-	QPCduGhzflcDPtlF/JZJKvQUAYVsnoA6gVZFaXRHV83rspFrRJPFMiLQUM7WcK4H/zzMoY3oIHv
-	nG9XbnU8RW0zAAGee6HNpX9t+8baUD1WDL52PHDIZ9zcF9ulbdMM3X3PYcpJUUOmMvpOUL9V88n
-	gCTiPHBCzjCGR/Nm1sth+QKiNqKycB+NRZdGlL/XSMFVRUVcw=
-X-Gm-Gg: ASbGnctgX4xjKYQ4uKa538u8f74stbjXXJC76DtBBQ0MAyzKoBT16kHIJyUxo2CIwNh
-	+UXAdN5mDOK5cIl0n9LO752INxRFyXkXJaPtZMZfiNe2r64ZZ5N8PJqbaiEWJjJC++EV9ag==
-X-Received: by 2002:a2e:9d95:0:b0:30b:e73e:e472 with SMTP id 38308e7fff4ca-3107f7315afmr968701fa.14.1744781543173;
-        Tue, 15 Apr 2025 22:32:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLbi6QE/QRI84aIym068DYXE/CVVg2Kz3XVfyKFMsraJnM2JWNTAROz5tOhUqbo4yNhATTZ04nqK5gh+t16qk=
-X-Received: by 2002:a2e:9d95:0:b0:30b:e73e:e472 with SMTP id
- 38308e7fff4ca-3107f7315afmr968541fa.14.1744781542747; Tue, 15 Apr 2025
- 22:32:22 -0700 (PDT)
+	s=arc-20240116; t=1744781701; c=relaxed/simple;
+	bh=qJ0eWAfZQvMKC14qaN5C2gsiSBtw8LBERrVoH+b2buU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BqCFFKfNJuF4czE/Xj4JNm7YbhStzIo+hrZIjrKvfXLUHvSUvmJ563uVIwJYoQEWP6om537sEhQ9LjZLq5nvUBsoISrO1AOFn6Dt0yAWCrjWIQo0w1p01M1ZdVDgAZGm3xmlgt5UzqFy7u8LqzbI4gbPqhWqMqArwTPNwLbP8Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G3bihf026759;
+	Wed, 16 Apr 2025 05:34:31 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ydd1md40-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 16 Apr 2025 05:34:31 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 15 Apr 2025 22:34:30 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 22:34:27 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <hch@infradead.org>
+CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
+        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <ntfs3@lists.linux.dev>,
+        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Date: Wed, 16 Apr 2025 13:34:26 +0800
+Message-ID: <20250416053426.2931176-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_8z8CD4FKlxw5Vm@infradead.org>
+References: <Z_8z8CD4FKlxw5Vm@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412073202.3085138-1-yukuai1@huaweicloud.com> <20250412073202.3085138-3-yukuai1@huaweicloud.com>
-In-Reply-To: <20250412073202.3085138-3-yukuai1@huaweicloud.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Wed, 16 Apr 2025 13:32:10 +0800
-X-Gm-Features: ATxdqUFy4q7mCNpWVDO9Q5MlVBJY6husumN8-kP6cD49hX_vFh_TaZt2rTI8_kE
-Message-ID: <CALTww29xMyNq0SpPGvVqp6YPmCVu+N+d_neeJD_mogiviiZpYw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] md: add a new api sync_io_depth
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, yukuai3@huawei.com, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: Rao5gv14PV8_wt8iKtHyAHgOBfN6ksym
+X-Proofpoint-GUID: Rao5gv14PV8_wt8iKtHyAHgOBfN6ksym
+X-Authority-Analysis: v=2.4 cv=HecUTjE8 c=1 sm=1 tr=0 ts=67ff4167 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8 a=haV94hm0_3eM6ig1Zd8A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ adultscore=0 mlxlogscore=521 impostorscore=0 suspectscore=0 clxscore=1015
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504160044
 
-On Sat, Apr 12, 2025 at 3:39=E2=80=AFPM Yu Kuai <yukuai1@huaweicloud.com> w=
-rote:
->
-> From: Yu Kuai <yukuai3@huawei.com>
->
-> Currently if sync speed is above speed_min and below speed_max,
-> md_do_sync() will wait for all sync IOs to be done before issuing new
-> sync IO, means sync IO depth is limited to just 1.
->
-> This limit is too low, in order to prevent sync speed drop conspicuously
-> after fixing is_mddev_idle() in the next patch, add a new api for
-> limiting sync IO depth, the default value is 32.
->
-> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-> ---
->  drivers/md/md.c | 103 +++++++++++++++++++++++++++++++++++++++---------
->  drivers/md/md.h |   1 +
->  2 files changed, 85 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/md/md.c b/drivers/md/md.c
-> index 438e71e45c16..8966c4afc62a 100644
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@ -111,32 +111,42 @@ static void md_wakeup_thread_directly(struct md_thr=
-ead __rcu *thread);
->  /* Default safemode delay: 200 msec */
->  #define DEFAULT_SAFEMODE_DELAY ((200 * HZ)/1000 +1)
->  /*
-> - * Current RAID-1,4,5 parallel reconstruction 'guaranteed speed limit'
-> - * is 1000 KB/sec, so the extra system load does not show up that much.
-> - * Increase it if you want to have more _guaranteed_ speed. Note that
-> - * the RAID driver will use the maximum available bandwidth if the IO
-> - * subsystem is idle. There is also an 'absolute maximum' reconstruction
-> - * speed limit - in case reconstruction slows down your system despite
-> - * idle IO detection.
-
-These comments are useful. They only describe the meaning of those
-control values. Is it good to keep them?
-
-> + * Background sync IO speed control:
->   *
-> - * you can change it via /proc/sys/dev/raid/speed_limit_min and _max.
-> - * or /sys/block/mdX/md/sync_speed_{min,max}
-> + * - below speed min:
-> + *   no limit;
-> + * - above speed min and below speed max:
-> + *   a) if mddev is idle, then no limit;
-> + *   b) if mddev is busy handling normal IO, then limit inflight sync IO
-> + *   to sync_io_depth;
-> + * - above speed max:
-> + *   sync IO can't be issued;
-> + *
-> + * Following configurations can be changed via /proc/sys/dev/raid/ for s=
-ystem
-> + * or /sys/block/mdX/md/ for one array.
->   */
-> -
->  static int sysctl_speed_limit_min =3D 1000;
->  static int sysctl_speed_limit_max =3D 200000;
-> -static inline int speed_min(struct mddev *mddev)
-> +static int sysctl_sync_io_depth =3D 32;
-> +
-> +static int speed_min(struct mddev *mddev)
->  {
->         return mddev->sync_speed_min ?
->                 mddev->sync_speed_min : sysctl_speed_limit_min;
->  }
->
-> -static inline int speed_max(struct mddev *mddev)
-> +static int speed_max(struct mddev *mddev)
->  {
->         return mddev->sync_speed_max ?
->                 mddev->sync_speed_max : sysctl_speed_limit_max;
->  }
->
-> +static int sync_io_depth(struct mddev *mddev)
-> +{
-> +       return mddev->sync_io_depth ?
-> +               mddev->sync_io_depth : sysctl_sync_io_depth;
-> +}
-> +
->  static void rdev_uninit_serial(struct md_rdev *rdev)
->  {
->         if (!test_and_clear_bit(CollisionCheck, &rdev->flags))
-> @@ -293,14 +303,21 @@ static const struct ctl_table raid_table[] =3D {
->                 .procname       =3D "speed_limit_min",
->                 .data           =3D &sysctl_speed_limit_min,
->                 .maxlen         =3D sizeof(int),
-> -               .mode           =3D S_IRUGO|S_IWUSR,
-> +               .mode           =3D 0644,
-
-Is it better to use macro rather than number directly here?
-
->                 .proc_handler   =3D proc_dointvec,
->         },
->         {
->                 .procname       =3D "speed_limit_max",
->                 .data           =3D &sysctl_speed_limit_max,
->                 .maxlen         =3D sizeof(int),
-> -               .mode           =3D S_IRUGO|S_IWUSR,
-> +               .mode           =3D 0644,
-> +               .proc_handler   =3D proc_dointvec,
-> +       },
-> +       {
-> +               .procname       =3D "sync_io_depth",
-> +               .data           =3D &sysctl_sync_io_depth,
-> +               .maxlen         =3D sizeof(int),
-> +               .mode           =3D 0644,
->                 .proc_handler   =3D proc_dointvec,
->         },
->  };
-> @@ -5091,7 +5108,7 @@ static ssize_t
->  sync_min_show(struct mddev *mddev, char *page)
->  {
->         return sprintf(page, "%d (%s)\n", speed_min(mddev),
-> -                      mddev->sync_speed_min ? "local": "system");
-> +                      mddev->sync_speed_min ? "local" : "system");
->  }
->
->  static ssize_t
-> @@ -5100,7 +5117,7 @@ sync_min_store(struct mddev *mddev, const char *buf=
-, size_t len)
->         unsigned int min;
->         int rv;
->
-> -       if (strncmp(buf, "system", 6)=3D=3D0) {
-> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
->                 min =3D 0;
->         } else {
->                 rv =3D kstrtouint(buf, 10, &min);
-> @@ -5120,7 +5137,7 @@ static ssize_t
->  sync_max_show(struct mddev *mddev, char *page)
->  {
->         return sprintf(page, "%d (%s)\n", speed_max(mddev),
-> -                      mddev->sync_speed_max ? "local": "system");
-> +                      mddev->sync_speed_max ? "local" : "system");
->  }
->
->  static ssize_t
-> @@ -5129,7 +5146,7 @@ sync_max_store(struct mddev *mddev, const char *buf=
-, size_t len)
->         unsigned int max;
->         int rv;
->
-> -       if (strncmp(buf, "system", 6)=3D=3D0) {
-> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
->                 max =3D 0;
->         } else {
->                 rv =3D kstrtouint(buf, 10, &max);
-> @@ -5145,6 +5162,35 @@ sync_max_store(struct mddev *mddev, const char *bu=
-f, size_t len)
->  static struct md_sysfs_entry md_sync_max =3D
->  __ATTR(sync_speed_max, S_IRUGO|S_IWUSR, sync_max_show, sync_max_store);
->
-> +static ssize_t
-> +sync_io_depth_show(struct mddev *mddev, char *page)
-> +{
-> +       return sprintf(page, "%d (%s)\n", sync_io_depth(mddev),
-> +                      mddev->sync_io_depth ? "local" : "system");
-> +}
-> +
-> +static ssize_t
-> +sync_io_depth_store(struct mddev *mddev, const char *buf, size_t len)
-> +{
-> +       unsigned int max;
-> +       int rv;
-> +
-> +       if (strncmp(buf, "system", 6) =3D=3D 0) {
-> +               max =3D 0;
-> +       } else {
-> +               rv =3D kstrtouint(buf, 10, &max);
-> +               if (rv < 0)
-> +                       return rv;
-> +               if (max =3D=3D 0)
-> +                       return -EINVAL;
-> +       }
-> +       mddev->sync_io_depth =3D max;
-> +       return len;
-> +}
-> +
-> +static struct md_sysfs_entry md_sync_io_depth =3D
-> +__ATTR_RW(sync_io_depth);
-> +
->  static ssize_t
->  degraded_show(struct mddev *mddev, char *page)
->  {
-> @@ -5671,6 +5717,7 @@ static struct attribute *md_redundancy_attrs[] =3D =
-{
->         &md_mismatches.attr,
->         &md_sync_min.attr,
->         &md_sync_max.attr,
-> +       &md_sync_io_depth.attr,
->         &md_sync_speed.attr,
->         &md_sync_force_parallel.attr,
->         &md_sync_completed.attr,
-> @@ -8927,6 +8974,23 @@ static sector_t md_sync_position(struct mddev *mdd=
-ev, enum sync_action action)
->         }
->  }
->
-> +static bool sync_io_within_limit(struct mddev *mddev)
-> +{
-> +       int io_sectors;
-> +
-> +       /*
-> +        * For raid456, sync IO is stripe(4k) per IO, for other levels, i=
-t's
-> +        * RESYNC_PAGES(64k) per IO.
-> +        */
-> +       if (mddev->level =3D=3D 4 || mddev->level =3D=3D 5 || mddev->leve=
-l =3D=3D 6)
-> +               io_sectors =3D 8;
-> +       else
-> +               io_sectors =3D 128;
-> +
-> +       return atomic_read(&mddev->recovery_active) <
-> +               io_sectors * sync_io_depth(mddev);
-> +}
-> +
->  #define SYNC_MARKS     10
->  #define        SYNC_MARK_STEP  (3*HZ)
->  #define UPDATE_FREQUENCY (5*60*HZ)
-> @@ -9195,7 +9259,8 @@ void md_do_sync(struct md_thread *thread)
->                                 msleep(500);
->                                 goto repeat;
->                         }
-> -                       if (!is_mddev_idle(mddev, 0)) {
-> +                       if (!sync_io_within_limit(mddev) &&
-> +                           !is_mddev_idle(mddev, 0)) {
->                                 /*
->                                  * Give other IO more of a chance.
->                                  * The faster the devices, the less we wa=
-it.
-> diff --git a/drivers/md/md.h b/drivers/md/md.h
-> index 1cf00a04bcdd..63be622467c6 100644
-> --- a/drivers/md/md.h
-> +++ b/drivers/md/md.h
-> @@ -483,6 +483,7 @@ struct mddev {
->         /* if zero, use the system-wide default */
->         int                             sync_speed_min;
->         int                             sync_speed_max;
-> +       int                             sync_io_depth;
->
->         /* resync even though the same disks are shared among md-devices =
-*/
->         int                             parallel_resync;
-> --
-> 2.39.2
->
-
-This part looks good to me.
-
-Acked-by: Xiao Ni <xni@redhat.com>
-
+On Tue, 15 Apr 2025 21:37:04 -0700, Christoph Hellwig wrote:
+> > The ntfs3 can use the page cache directly, so its address_space_operations
+> > need direct_IO.
+> 
+> This sentence still does not make any sense.
+Did you see the following comments?
+https://lore.kernel.org/all/20250415010518.2008216-1-lizhi.xu@windriver.com/
