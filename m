@@ -1,133 +1,105 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C1623D28D;
-	Wed, 16 Apr 2025 11:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055DC23F40D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803756; cv=none; b=VXqT3+xm7uT9PIMxirTuhjkJ1e+Q8ilHHZiy/TWs0a5gW6HWypkaUf67pli2smhBurA0stYekB+Dssd9HvaVk6XquhvIAU+DQMOBhAR/neelVdECtegfs+sSDyU3kVQIRU7eFH93EqeyTTyZpmbAce2C11UTBEdUoIp7mxgjM6w=
+	t=1744803770; cv=none; b=YweA4RZuhVIFQVBywSgkGanZXKqebYTzlgeSErQAdRu3e89K0L5bubT3kHgLmLDFTvUYUe0rS/jdFo1fmZGrI5ITP0km6YJhm1Xryfx9Nyi0jvXq4kaUoc+Nri6s0xyIlZjH6GSSjWu4HIclotoyJOk9bYQW0revIaNCCIbzdQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803756; c=relaxed/simple;
-	bh=HBGvo012+BGFr9nvHjQHT6H9De4JWPSkQ588tDhUUP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AVKtEssLF8/KXC5dK7IX8M0ULcXgPkaiEpR8aiZRxjdcdlDjw/WoCKBMa1wlccIS92Z5dEjM388kj/Vn9aigXE62fbWw8sIkK4Bo0Ts+4gT/C0sUlvOi8QBXKf6FiFEtdPVxQTNSi5ccl6JMK2oJbGGlNZQrlgurexIFruHujH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XOPsyO8j; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744803770; c=relaxed/simple;
+	bh=2LhwZRPX3le1pcDWgaebmjYcBMNO+zwSm1AT5T+GXjQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DZ0viv5Jhf50IY7jGe+tiFLuP23hCm+XwWCS1hUXHbAXsTiJNWQjIw/JIf6PjJ99VEhkx20H+RQxfhIEBRmsxymvK/CiBCSG9Raesl7eZ46YVR6/eZQ9yPLgRTudF/wpz+T9HsHpHaG48sbnWVoJHrKqBDTSw0B/mhmjsvZXxBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com; spf=pass smtp.mailfrom=0x0f.com; dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b=M5ABpexV; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0x0f.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x0f.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XOPsyO8j"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B952965;
-	Wed, 16 Apr 2025 13:40:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744803629;
-	bh=HBGvo012+BGFr9nvHjQHT6H9De4JWPSkQ588tDhUUP8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XOPsyO8jF/whvHmxf1uFMzcDt2Nyl3GHZwcfxCy234hIc9zia1bhaUYztQUDlOGw5
-	 H/rvz+42jI5/KEvemd3e0xYHZrmuqH1hhahnTMi/4F4yT8vG4FqZnVdtSsN2pQaXEx
-	 5vgxEw3RG2RVH6hJQ3fvOgaMgtLcCLlUHHtngZSw=
-Message-ID: <5309bf68-fc86-4cd9-91b7-ed367793836d@ideasonboard.com>
-Date: Wed, 16 Apr 2025 14:42:27 +0300
+	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="M5ABpexV"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399838db7fso631337b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google; t=1744803766; x=1745408566; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QZ1kKIALmvRJch4ZVaRl0p94OzYXnQT7EpkhRUXULZI=;
+        b=M5ABpexV0t3NWImzykatOHEKZylbdyBfhHScB01FzNgbOoyCWwBL9Xlz4D/DB8fSny
+         EeupraSBJdxp4fCZyx6zBDYxwGjDyTXgfN0LXT1DyEEqRNJMCLIL3LqW5aanBDezUbiv
+         IehoFfpmsE3k1j7RbEd/pv8hl5/EHs3N6N168=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744803766; x=1745408566;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QZ1kKIALmvRJch4ZVaRl0p94OzYXnQT7EpkhRUXULZI=;
+        b=UJpx2y1Tmv2WIKrcbdTcP2DJpz9Y8GdgEkK3vbANjey6XyudgaYm/cwRX6+KBA5VBB
+         zHInVFxp/RwMPCNnvwToS2G+kpLG4y8++da28NPnzFi1FADx3oqgzyeSMRXOaRvp/BoM
+         OqoTUZYWdffx5vvtf0K/DE2XjRn7zi0XTJmf8RVCxzPt8J93sUa023fLqRxFRVrvo/+g
+         S0hzpgz9TweILeAsey0sHPqgrZKBmp965HoQwO3BR7MziUHAHWwVPdqtsDO/rR2yMVjJ
+         0rWLAblDk0pnI8C9tOQaZM6Fc49VBrHjthFYFcHoU2wrNSRyCG25iX9+H1PPopeX4kdz
+         /vdg==
+X-Gm-Message-State: AOJu0YyRrxMfqN3fr3RLde5g7PUTzudvKtr1VhwNtu3lLea5rTw7ksGf
+	KV8rUWKdD8AhWnq5KwCSdoCgYjwuIHQe0DNBfNk/XDb2wcUXVwotiSwgUyX5eJo=
+X-Gm-Gg: ASbGncutpwb/xO6sEtt+KKSllRURXy4Au0Lpf7G+KG+1jWeWzj86nGYv44hljGoYdAs
+	GfipVKSbDkG0XHel9FmVDdqF2l44tK+GR2TBv6HN6u58SuWUX3X3rdGruIj+nQ4ReezR9gajXqu
+	KJOzGtDGakU9j82A7MeXCpJJ8LJe80tOzpAyDKypmysy/Z133CxvNNSD6mXSspbpljRgoMMfimX
+	kZQoIUm+Ze8l3QGEnGi7PZvNPEVCmneQkf+uWcUzHUd+iOXeAzPOo/Rl4sWPxvd4hxkTstCeYTr
+	9tuXTZcngYvzvRoJeq65E0TuUksw3OvG5DKfftIYxQLXR0LCrNRMNEqZF4icX1EW
+X-Google-Smtp-Source: AGHT+IESZmQwnLlyeDHw9qMDSKTCYjAyPNnhbiBsQon2uT22cUwcOGjEHw6IbbM4+RMjOBEJeKwL7A==
+X-Received: by 2002:a05:6a00:3b8b:b0:732:56a7:a935 with SMTP id d2e1a72fcca58-73c26e42522mr1976219b3a.12.1744803765956;
+        Wed, 16 Apr 2025 04:42:45 -0700 (PDT)
+Received: from shiro.work.home.arpa. ([2400:4162:2428:2ffe:79a9:b58a:259c:e1fa])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bd21e14e9sm10171722b3a.77.2025.04.16.04.42.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 04:42:45 -0700 (PDT)
+From: Daniel Palmer <daniel@0x0f.com>
+To: geert@linux-m68k.org,
+	linux-m68k@lists.linux-m68k.org
+Cc: linux-kernel@vger.kernel.org,
+	Daniel Palmer <daniel@0x0f.com>
+Subject: [PATCH] m68k: Enable dead code elimination
+Date: Wed, 16 Apr 2025 20:42:40 +0900
+Message-ID: <20250416114240.2929832-1-daniel@0x0f.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next 2/2] gpu: drm: xlnx: zynqmp_dp: Use
- dev_err_probe()
-To: shao.mingyin@zte.com.cn, thierry.reding@gmail.com,
- laurent.pinchart@ideasonboard.com
-Cc: mperttunen@nvidia.com, airlied@gmail.com, simona@ffwll.ch,
- jonathanh@nvidia.com, dri-devel@lists.freedesktop.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
- yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn,
- zhang.enpei@zte.com.cn, "Sagar, Vishal" <vishal.sagar@amd.com>
-References: <20250402193852834atJ7eho66TlnKOIMSvpfr@zte.com.cn>
-Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250402193852834atJ7eho66TlnKOIMSvpfr@zte.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Allow the experimental dead code elimination config to be enabled.
 
-On 02/04/2025 14:38, shao.mingyin@zte.com.cn wrote:
-> From: Zhang Enpei <zhang.enpei@zte.com.cn>
-> 
-> Replace the open-code with dev_err_probe() to simplify the code.
-> 
-> Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
-> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
-> ---
->   drivers/gpu/drm/xlnx/zynqmp_dp.c | 6 ++----
->   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index a6a4a871f197..28efa4c7ec8e 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -2466,10 +2466,8 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
-> 
->   	dp->reset = devm_reset_control_get(dp->dev, NULL);
->   	if (IS_ERR(dp->reset)) {
-> -		if (PTR_ERR(dp->reset) != -EPROBE_DEFER)
-> -			dev_err(dp->dev, "failed to get reset: %ld\n",
-> -				PTR_ERR(dp->reset));
-> -		ret = PTR_ERR(dp->reset);
-> +		ret = dev_err_probe(dp->dev, PTR_ERR(dp->reset),
-> +				    "failed to get reset\n");
->   		goto err_free;
->   	}
-> 
+For my 68000 nommu config this frees up a few hundred K of memory
+so seems worth while.
 
-Thanks. I can pick this up via drm-misc.
+Boot and build tested on nommu and mmu enabled configs.
 
-  Tomi
+Before:
+Memory: 5388K/8192K available (1986K kernel code, 114K rwdata,
+244K rodata, 92K init, 41K bss, 2624K reserved, 0K cma-reserved)
+
+After
+Memory: 5684K/8192K available (1714K kernel code, 112K rwdata,
+228K rodata, 92K init, 37K bss, 2328K reserved, 0K cma-reserved)
+
+Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+---
+ arch/m68k/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
+index eb5bb6d36899..11835eb59d94 100644
+--- a/arch/m68k/Kconfig
++++ b/arch/m68k/Kconfig
+@@ -32,6 +32,7 @@ config M68K
+ 	select HAVE_ASM_MODVERSIONS
+ 	select HAVE_DEBUG_BUGVERBOSE
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !CPU_HAS_NO_UNALIGNED
++	select HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+ 	select HAVE_MOD_ARCH_SPECIFIC
+ 	select HAVE_UID16
+ 	select MMU_GATHER_NO_RANGE if MMU
+-- 
+2.47.2
 
