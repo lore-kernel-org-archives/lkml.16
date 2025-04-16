@@ -1,94 +1,114 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961F91EA7DE;
-	Wed, 16 Apr 2025 10:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC28207643;
+	Wed, 16 Apr 2025 10:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744801059; cv=none; b=DgG0g6aQcBkYpX4mp/QA09/7fSI2ieVEhNwWoMTjcGPOQKdN7hAK6rzasKMFnqotl827a1Ze1gMSHOCHa/2hgrIsnKfj+uobo2hjwh87tytfrdUuyC45XKr/wgAU04zaeLC+HAm+J4CzISQ1n3hj6m8TOEyzoFeL1k7+hIVgkFQ=
+	t=1744801081; cv=none; b=cT+cwt398KbWfezlBWQTZqRiaLDTtmme/ssdUhtxQLrGiDXs6sq0ftR0hqFsu3jQKNPOX8/TK9QjyKapLMK39yCWkSAnaM7dWXg2EPoJk5iobvIBhTeNyNNWDPqo0zsGqiF854I55FnxSm8wtiXPz9xAyCRPCfZt51t17Rz71Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744801059; c=relaxed/simple;
-	bh=n5OD57ByKsMWMZb31j1vI0m/8FYMXvRw6Qzyl+XNJwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HqVGP+YLOh2iPbnKNIS/Fwnj2Ns9Q/X+EkF4zCSX73reZfZAa8QKqdom+6qhXMqMJfreOH/xZnrfHa8ajheGMbQyekVGFSMnd87ZBrsu/V/hT6aOtTAiQeaqOVZ/qVEm7vH9Rv4/EaHGnShK+4z1TuQBaZ8Z9oIupMAhCqUgtBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SmbF3wXG; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744801081; c=relaxed/simple;
+	bh=HznOvf2q9H/C46tfchJ/aD5F5paEir7+2Bx1MbpEdgI=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Zg2CJWbMOt+8/cQ1/Ixgs3k/VpCrPO+VGsMIiK84LMBm0f0R3APKheT/AaEeXcwwHs7J/emDKvruoLdj20g6dLLPkwPuxpO2yTtSo3OghYICrS0qB65eIed062aDz1n9cUWqXg417e2jLPWh5GtNjTQ/e0B37iqjVs5YdiBbjTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=NVEFSfYY; arc=none smtp.client-ip=91.236.205.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SmbF3wXG"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54acc0cd458so7589279e87.0;
-        Wed, 16 Apr 2025 03:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744801055; x=1745405855; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mi2CnsLZ4oCaH+9zge2bT1EWpw3tv543EYCISAVMhSo=;
-        b=SmbF3wXGT76Ng8G9sUnrk1BlQ0QbzSwa4/m5lfoXdMGG4/rKP6ke58gddsoMWSaRGM
-         7Jsd5a09JZUNqJPvki4ATz9/1qylyiNoZMS9UFUdc15MyxdaW9QuVX1nQurXQCAW1u2y
-         nZv2FNIq4U6gDsiBk4iulSIRcKS7s+6I4wOwzf+2r7WvsUBVdR0PNTZeMTpvxtJNXDMu
-         4byTPEsJWAhfO2qNJqNhIpY/X7x66Ybkit5XnGYwLbM2OsGXzDNrbNIAlcEGsjGlaXjY
-         i7ZID4Sbw9WgcKPKLfiY3/eFkTn/ZamZ/RKdOy7a2vc2nf7yaw273vu88eO+rBev9VbD
-         tNIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744801055; x=1745405855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mi2CnsLZ4oCaH+9zge2bT1EWpw3tv543EYCISAVMhSo=;
-        b=okk9axfNseiHhzNigXXd1wgN+1zyVhZ1/ICySzyH0dNWuDLLGXkLLbL/7xHGoR4PxD
-         vi+IMA4TlyajkhOzzc3pZoZRv3ySolw4M9knVIT7L3D4XUojQf7dn1AT3BXvyr33B+Qe
-         6e+jZhRvZdKttrmXcM+NqPc/rTrjd/EU6B/JQ6N/XVlz7F7Pp9SF7CufLsJUrWctOTZ/
-         +TtJHgF2X0+jQxZ7VgYJ/Q7HbKm2oh870SWsvS6KbdUoDR35ng4HdTI/9N4enVqA/XyN
-         zOUwnnhRJNSx686XjtCVLpdeYD5fv1qP1d+7xiwDtyABWyrVSy+erhL59Pk6VpmBmGlP
-         pRLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+uod46N2pVz2jDA3f0Nkv27jdZ7NOYtdA4Hzje5nTyC0IHmWxpEYdNaltw4OBqYOJPSBwj559o4TjvBo=@vger.kernel.org, AJvYcCXK5pte/fGXPo3iDlZ1ia3k/dA8qsGlIpEtTfbnp61gdCsplpsCyDPKvEft5VS+1xSrdHgX5+3QJbNkgwVf1bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMNpAHe7LKwzoXUBglDwa5RlR6GMnrP3vGvkyKKqAB1OH8wEsY
-	M8G1Fiz76Bz8zpSKR9O7ohwnuO8gT1hK1KTothQwL+RhNL3xa06LOEJLvg==
-X-Gm-Gg: ASbGncsPkrwbpFOAX4+GYWFnPOxAxwtnMPP/lJ6UpBMGXuA+RBMS6M+e91VODoSmRRP
-	r3Ur9T7yWFs0VBvEwc0dmdf0yOe2HerWiyQsZVRXqZciqAMnUiG/n6P5p4KcVatKGEKrEtGKmKs
-	qrLiH3IcKcbhkl0syc4ymj6nd6LKlTgaI3kTIphSpxTH0Hqf8G/ZbkqkDgWW64HhUFdXqfkPuZL
-	/L3Kd4nLs5LbGR8bZ3okptr/sx1F9nz7/DGev7hYAyejSzv9Us/8xHYAyWDNk0yfbGwtn2xxN5+
-	lpqLyDrgteUUg6QqeLgvV23lV1PzAP4JGqWD
-X-Google-Smtp-Source: AGHT+IFkYIn0SpLD9wW9p3ju9cW5nmJZDsRM2Bu/b2eAN0jB2Zx7uVRCirtc/l5OFprDkIXaxte3Vg==
-X-Received: by 2002:a05:6512:118a:b0:540:2da2:f282 with SMTP id 2adb3069b0e04-54d64aee099mr451692e87.42.1744801055037;
-        Wed, 16 Apr 2025 03:57:35 -0700 (PDT)
-Received: from localhost ([83.149.199.15])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d5201bfsm1610103e87.240.2025.04.16.03.57.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 03:57:34 -0700 (PDT)
-Date: Wed, 16 Apr 2025 13:57:33 +0300
-From: Fedor Pchelkin <boddah8794@gmail.com>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Bernie Huang <phhuang@realtek.com>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
- feature enabled
-Message-ID: <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
-References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
- <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="NVEFSfYY"
+Received: from mail.crpt.ru ([192.168.60.4])
+	by mail.crpt.ru  with ESMTP id 53GAtloh003741-53GAtloj003741
+	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
+	Wed, 16 Apr 2025 13:55:47 +0300
+Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 16 Apr
+ 2025 13:55:47 +0300
+Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
+ ([192.168.60.4]) with mapi id 15.01.2507.044; Wed, 16 Apr 2025 13:55:47 +0300
+From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
+To: Ajit Khaparde <ajit.khaparde@broadcom.com>
+CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, "Sriharsha
+ Basavapatna" <sriharsha.basavapatna@broadcom.com>, Somnath Kotur
+	<somnath.kotur@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Padmanabh
+ Ratnakar" <padmanabh.ratnakar@emulex.com>, Mammatha Edhala
+	<mammatha.edhala@emulex.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "lvc-project@linuxtesting.org"
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] be2net: Remove potential access to the zero address
+Thread-Topic: [PATCH] be2net: Remove potential access to the zero address
+Thread-Index: AQHbrr4bomvL6pb+ekyghxTxcqhCrw==
+Date: Wed, 16 Apr 2025 10:55:47 +0000
+Message-ID: <20250416105542.118371-1-a.vatoropin@crpt.ru>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-kse-serverinfo: EX2.crpt.local, 9
+x-kse-antivirus-interceptor-info: scan successful
+x-kse-antivirus-info: Clean, bases: 4/15/2025 10:00:00 PM
+x-kse-attachment-filter-triggered-rules: Clean
+x-kse-attachment-filter-triggered-filters: Clean
+x-kse-bulkmessagesfiltering-scan-result: protection disabled
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+X-FEAS-Client-IP: 192.168.60.4
+X-FE-Policy-ID: 2:4:0:SYSTEM
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
+ h=from:to:cc:subject:date:message-id:content-type:mime-version;
+ bh=LVTDQyH7Qyb01X8CRX4auq695ATpkQuo7XLe5Vt7aQ8=;
+ b=NVEFSfYYWNrpEPwYTySZyWzg5qUA0VmnWQ9yJfMhTv9pCgV31jmzu0a99dBM0FlJ4JYO7fVmrJ11
+	Dmh+iS3Ew+BCXbzPmXGnR01DCOjSLBj6kAZu46e1iGmryIHT3TlRld3qVw1Y+vKdqmK1B5VjMW2s
+	UqDvf31ONW5k+TJHj1ACGft3vv1ujgVuyRjtnzh0XvWXRFhtRazls7BRD7YjmaqXfAGAvSTYEl7v
+	xqSLxGPp26xLY+US/H95YVCbpZQ+y1CaRHYNcqhPkxAPPUUz/yucDuUY8ah5gACEfbrTG+Bo+boG
+	fvZD/ZMTtfv+aD77NxrP5HZnSTAyl8epyBow4Q==
 
-On Wed, 16. Apr 00:49, Ping-Ke Shih wrote:
-> As bisection, can I summarize as below table?
-> 
->     d56c261e52           firmware             IO_PAGE_FAULT
->    (CQM support)
->   ---------------      -----------          -----------------
->       o                 0.29.29.7                  yes
->       o                 0.29.29.5                  no
->       x                 0.29.29.7                  no
->       x                 0.29.29.5                  no
-> 
-> If this table is correct, we will check the beacon filter feature in firmware. 
-> 
+From: Andrey Vatoropin <a.vatoropin@crpt.ru>
 
-Yes, it correctly describes the situation. My suspicion currently falls on
-the beacon filter feature in firmware, too.
+At the moment of calling the function be_cmd_get_mac_from_list() with the
+following parameters:
+be_cmd_get_mac_from_list(adapter, mac, &pmac_valid, NULL,=20
+					adapter->if_handle, 0);
+
+The parameter "pmac_id" equals NULL.
+
+Then, if "mac_addr_size" equals four bytes, there is a possibility of
+accessing the zero address via the pointer "pmac_id".
+
+Add an extra check for the pointer "pmac_id" to avoid accessing the zero
+address.
+
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+      =20
+Fixes: e5e1ee894615 ("be2net: Use new implementation of get mac list comman=
+d")
+Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
+---
+ drivers/net/ethernet/emulex/benet/be_cmds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/emulex/benet/be_cmds.c b/drivers/net/ethe=
+rnet/emulex/benet/be_cmds.c
+index 51b8377edd1d..be5bbf6881b8 100644
+--- a/drivers/net/ethernet/emulex/benet/be_cmds.c
++++ b/drivers/net/ethernet/emulex/benet/be_cmds.c
+@@ -3757,7 +3757,7 @@ int be_cmd_get_mac_from_list(struct be_adapter *adapt=
+er, u8 *mac,
+ 			/* mac_id is a 32 bit value and mac_addr size
+ 			 * is 6 bytes
+ 			 */
+-			if (mac_addr_size =3D=3D sizeof(u32)) {
++			if (pmac_id && mac_addr_size =3D=3D sizeof(u32)) {
+ 				*pmac_id_valid =3D true;
+ 				mac_id =3D mac_entry->mac_addr_id.s_mac_id.mac_id;
+ 				*pmac_id =3D le32_to_cpu(mac_id);
+--=20
+2.43.0
