@@ -1,52 +1,46 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A041D90A5;
-	Wed, 16 Apr 2025 13:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0D71FF1DA;
+	Wed, 16 Apr 2025 13:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811054; cv=none; b=Phgj9srBDagZcxM/4UARXo1Qb+5u9RpOk+WdB6goKSbDmV1gdc4MKmkqZQ/675FH8rVwrqTgi9GzlSSaQEVQOJ4aN9v5cf55XI1DiRoPrOaYc3L1PjPPBiol250wuNxVgD48TJRfirJA2xOOrcwP6vNwV92FNx76DIURFNWCfyE=
+	t=1744811062; cv=none; b=TKnhdA27/NP2nvjXJLGa7IQxWiq88RWMDDdhPL0Bbg08I8tqOLKKyKiT1VG+kJFoSMWzn5hjRu21yGQvjbs4R6TtMlEdPhEmLy8qQOYDSnbd7cI7mBvpVMzuGlGMoWTytJ0kfO/RwZDcrFPnPW0DjElBP7BAR+4XvtzkzIFIwxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811054; c=relaxed/simple;
-	bh=Hqb3KOnGUJwdkOZyfHD7UJP02qj31yDtC+K2vfgt+qg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o49s3S/CMnI3BHBylMEU8bC3ZOHW8ULbf6nEbVNBc2C1OVigrqoTKLTg63K83AFRLDAqxf1beLTeb6LL0ZxSRSofngPgbdHGtbVGdHRMfPCIcll8vh8SGP+6ku9uPbTn15TpW3W0cmLXXO+r0NXIcwGoCI4WXq7mLU3I0NinRE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DF5C1692;
-	Wed, 16 Apr 2025 06:44:10 -0700 (PDT)
-Received: from e122027.arm.com (unknown [10.57.90.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E76133F59E;
-	Wed, 16 Apr 2025 06:44:07 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1744811062; c=relaxed/simple;
+	bh=llhbpgSWI+xUYrKnvFoHYfdLjRKqCYZ9cBfBE8mukT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=okG/I0GMpmxyuI2GWY9zoG0+9AqbZxDp7aCNlesd4JWWxw6iOU4870fY9UBTBJgaPFwtFHtNvqfT0vyO1d45ON8SgQX/I29MbnzddDisvsh8D40BekzwM2O6k1iA2l0zWTTyC03OU1nUskam3t6huZc9zV8i+l75GbqQrHyb8AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMUIM62A; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMUIM62A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8BA0C4CEE2;
+	Wed, 16 Apr 2025 13:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744811062;
+	bh=llhbpgSWI+xUYrKnvFoHYfdLjRKqCYZ9cBfBE8mukT0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gMUIM62A5bs+x1Dbr4SWdFRhY4UZhj4cMJ66VmYwEwz54JfQLupunypzlLoiXkd4Y
+	 wpLrZFELfnikVzkZLQBb8/HEqXNY+0zjqKKdgO9NdfV6hSWsuOc4G58eBUpgW6JJcL
+	 jVwkzlzTnTNuxANTaLnKWusVkdPNUJMMwvnuRE0m0fsG7gNeUcYh6Fxc6scfKN90eK
+	 67JIpcuOiKQJJ3sHLxjATo4QYwECjDBH1AghIKfa6JgsRkaXj1znUfcCyrKojnAgMU
+	 09N5lv/a2uSnWQbRQ1QR4Jfzbw81ipsX+DXq9R+inHk5QunQfFcxRD1fpiewN2GBTe
+	 EWmdk8w2qX8Zw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1u533r-000000001zg-45M3;
+	Wed, 16 Apr 2025 15:44:20 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+	linux-pm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Alper Gun <alpergun@google.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: [PATCH v8 10/43] arm64: RME: RTT tear down
-Date: Wed, 16 Apr 2025 14:41:32 +0100
-Message-ID: <20250416134208.383984-11-steven.price@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416134208.383984-1-steven.price@arm.com>
-References: <20250416134208.383984-1-steven.price@arm.com>
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] cpufreq: fix compile-test defaults
+Date: Wed, 16 Apr 2025 15:43:31 +0200
+Message-ID: <20250416134331.7604-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,231 +49,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The RMM owns the stage 2 page tables for a realm, and KVM must request
-that the RMM creates/destroys entries as necessary. The physical pages
-to store the page tables are delegated to the realm as required, and can
-be undelegated when no longer used.
+Commit 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+enabled compile testing of most Arm CPUFreq drivers but left the
+existing default values unchanged so that many drivers are enabled by
+default whenever COMPILE_TEST is selected.
 
-Creating new RTTs is the easy part, tearing down is a little more
-tricky. The result of realm_rtt_destroy() can be used to effectively
-walk the tree and destroy the entries (undelegating pages that were
-given to the realm).
+This specifically results in the S3C64XX CPUFreq driver being enabled
+and initialised during boot of non-S3C64XX platforms with the following
+error logged:
 
-Signed-off-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+	cpufreq: Unable to obtain ARMCLK: -2
+
+Fix the default values for drivers that can be compile tested and that
+should be enabled by default when not compile testing.
+
+Fixes: 3f66425a4fc8 ("cpufreq: Enable COMPILE_TEST on Arm drivers")
+Cc: stable@vger.kernel.org	# 6.12
+Cc: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
-Changes since v6:
- * Move rme_rtt_level_mapsize() and supporting defines from kvm_rme.h
-   into rme.c as they are only used in that file.
-Changes since v5:
- * Rename some RME_xxx defines to do with page sizes as RMM_xxx - they are
-   a property of the RMM specification not the RME architecture.
-Changes since v2:
- * Moved {alloc,free}_delegated_page() and ensure_spare_page() to a
-   later patch when they are actually used.
- * Some simplifications now rmi_xxx() functions allow NULL as an output
-   parameter.
- * Improved comments and code layout.
----
- arch/arm64/include/asm/kvm_rme.h |   7 ++
- arch/arm64/kvm/mmu.c             |   6 +-
- arch/arm64/kvm/rme.c             | 128 +++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+), 3 deletions(-)
+ drivers/cpufreq/Kconfig.arm | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-index 5dc1915de891..5f0de9a6d339 100644
---- a/arch/arm64/include/asm/kvm_rme.h
-+++ b/arch/arm64/include/asm/kvm_rme.h
-@@ -71,5 +71,12 @@ u32 kvm_realm_ipa_limit(void);
- int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
- int kvm_init_realm_vm(struct kvm *kvm);
- void kvm_destroy_realm(struct kvm *kvm);
-+void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
-+
-+static inline bool kvm_realm_is_private_address(struct realm *realm,
-+						unsigned long addr)
-+{
-+	return !(addr & BIT(realm->ia_bits - 1));
-+}
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 4f9cb943d945..0d46402e3094 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -76,7 +76,7 @@ config ARM_VEXPRESS_SPC_CPUFREQ
+ config ARM_BRCMSTB_AVS_CPUFREQ
+ 	tristate "Broadcom STB AVS CPUfreq driver"
+ 	depends on (ARCH_BRCMSTB && !ARM_SCMI_CPUFREQ) || COMPILE_TEST
+-	default y
++	default y if ARCH_BRCMSTB && !ARM_SCMI_CPUFREQ
+ 	help
+ 	  Some Broadcom STB SoCs use a co-processor running proprietary firmware
+ 	  ("AVS") to handle voltage and frequency scaling. This driver provides
+@@ -88,7 +88,7 @@ config ARM_HIGHBANK_CPUFREQ
+ 	tristate "Calxeda Highbank-based"
+ 	depends on ARCH_HIGHBANK || COMPILE_TEST
+ 	depends on CPUFREQ_DT && REGULATOR && PL320_MBOX
+-	default m
++	default m if ARCH_HIGHBANK
+ 	help
+ 	  This adds the CPUFreq driver for Calxeda Highbank SoC
+ 	  based boards.
+@@ -133,7 +133,7 @@ config ARM_MEDIATEK_CPUFREQ
+ config ARM_MEDIATEK_CPUFREQ_HW
+ 	tristate "MediaTek CPUFreq HW driver"
+ 	depends on ARCH_MEDIATEK || COMPILE_TEST
+-	default m
++	default m if ARCH_MEDIATEK
+ 	help
+ 	  Support for the CPUFreq HW driver.
+ 	  Some MediaTek chipsets have a HW engine to offload the steps
+@@ -181,7 +181,7 @@ config ARM_RASPBERRYPI_CPUFREQ
+ config ARM_S3C64XX_CPUFREQ
+ 	bool "Samsung S3C64XX"
+ 	depends on CPU_S3C6410 || COMPILE_TEST
+-	default y
++	default CPU_S3C6410
+ 	help
+ 	  This adds the CPUFreq driver for Samsung S3C6410 SoC.
  
- #endif /* __ASM_KVM_RME_H */
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 7531211f7e25..d80a9d408f71 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1070,14 +1070,15 @@ void stage2_unmap_vm(struct kvm *kvm)
- void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
- {
- 	struct kvm *kvm = kvm_s2_mmu_to_kvm(mmu);
--	struct kvm_pgtable *pgt = NULL;
-+	struct kvm_pgtable *pgt;
+@@ -190,7 +190,7 @@ config ARM_S3C64XX_CPUFREQ
+ config ARM_S5PV210_CPUFREQ
+ 	bool "Samsung S5PV210 and S5PC110"
+ 	depends on CPU_S5PV210 || COMPILE_TEST
+-	default y
++	default CPU_S5PV210
+ 	help
+ 	  This adds the CPUFreq driver for Samsung S5PV210 and
+ 	  S5PC110 SoCs.
+@@ -214,7 +214,7 @@ config ARM_SCMI_CPUFREQ
+ config ARM_SPEAR_CPUFREQ
+ 	bool "SPEAr CPUFreq support"
+ 	depends on PLAT_SPEAR || COMPILE_TEST
+-	default y
++	default PLAT_SPEAR
+ 	help
+ 	  This adds the CPUFreq driver support for SPEAr SOCs.
  
- 	write_lock(&kvm->mmu_lock);
-+	pgt = mmu->pgt;
- 	if (kvm_is_realm(kvm) &&
- 	    (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
- 	     kvm_realm_state(kvm) != REALM_STATE_NONE)) {
--		/* Tearing down RTTs will be added in a later patch */
- 		write_unlock(&kvm->mmu_lock);
-+		kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+@@ -233,7 +233,7 @@ config ARM_TEGRA20_CPUFREQ
+ 	tristate "Tegra20/30 CPUFreq support"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	depends on CPUFREQ_DT
+-	default y
++	default ARCH_TEGRA
+ 	help
+ 	  This adds the CPUFreq driver support for Tegra20/30 SOCs.
  
- 		/*
- 		 * The physical PGD pages are delegated to the RMM, so cannot
-@@ -1087,7 +1088,6 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
- 		 */
- 		return;
- 	}
--	pgt = mmu->pgt;
- 	if (pgt) {
- 		mmu->pgd_phys = 0;
- 		mmu->pgt = NULL;
-diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-index dbb6521fe380..3053261c3b52 100644
---- a/arch/arm64/kvm/rme.c
-+++ b/arch/arm64/kvm/rme.c
-@@ -17,6 +17,22 @@ static unsigned long rmm_feat_reg0;
- #define RMM_PAGE_SHIFT		12
- #define RMM_PAGE_SIZE		BIT(RMM_PAGE_SHIFT)
+@@ -241,7 +241,7 @@ config ARM_TEGRA124_CPUFREQ
+ 	bool "Tegra124 CPUFreq support"
+ 	depends on ARCH_TEGRA || COMPILE_TEST
+ 	depends on CPUFREQ_DT
+-	default y
++	default ARCH_TEGRA
+ 	help
+ 	  This adds the CPUFreq driver support for Tegra124 SOCs.
  
-+#define RMM_RTT_BLOCK_LEVEL	2
-+#define RMM_RTT_MAX_LEVEL	3
-+
-+/* See ARM64_HW_PGTABLE_LEVEL_SHIFT() */
-+#define RMM_RTT_LEVEL_SHIFT(l)	\
-+	((RMM_PAGE_SHIFT - 3) * (4 - (l)) + 3)
-+#define RMM_L2_BLOCK_SIZE	BIT(RMM_RTT_LEVEL_SHIFT(2))
-+
-+static inline unsigned long rme_rtt_level_mapsize(int level)
-+{
-+	if (WARN_ON(level > RMM_RTT_MAX_LEVEL))
-+		return RMM_PAGE_SIZE;
-+
-+	return (1UL << RMM_RTT_LEVEL_SHIFT(level));
-+}
-+
- static bool rme_has_feature(unsigned long feature)
- {
- 	return !!u64_get_bits(rmm_feat_reg0, feature);
-@@ -173,6 +189,118 @@ static int realm_create_rd(struct kvm *kvm)
- 	return r;
- }
+@@ -256,14 +256,14 @@ config ARM_TEGRA194_CPUFREQ
+ 	tristate "Tegra194 CPUFreq support"
+ 	depends on ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC || (64BIT && COMPILE_TEST)
+ 	depends on TEGRA_BPMP
+-	default y
++	default ARCH_TEGRA_194_SOC || ARCH_TEGRA_234_SOC
+ 	help
+ 	  This adds CPU frequency driver support for Tegra194 SOCs.
  
-+static int realm_rtt_destroy(struct realm *realm, unsigned long addr,
-+			     int level, phys_addr_t *rtt_granule,
-+			     unsigned long *next_addr)
-+{
-+	unsigned long out_rtt;
-+	int ret;
-+
-+	ret = rmi_rtt_destroy(virt_to_phys(realm->rd), addr, level,
-+			      &out_rtt, next_addr);
-+
-+	*rtt_granule = out_rtt;
-+
-+	return ret;
-+}
-+
-+static int realm_tear_down_rtt_level(struct realm *realm, int level,
-+				     unsigned long start, unsigned long end)
-+{
-+	ssize_t map_size;
-+	unsigned long addr, next_addr;
-+
-+	if (WARN_ON(level > RMM_RTT_MAX_LEVEL))
-+		return -EINVAL;
-+
-+	map_size = rme_rtt_level_mapsize(level - 1);
-+
-+	for (addr = start; addr < end; addr = next_addr) {
-+		phys_addr_t rtt_granule;
-+		int ret;
-+		unsigned long align_addr = ALIGN(addr, map_size);
-+
-+		next_addr = ALIGN(addr + 1, map_size);
-+
-+		if (next_addr > end || align_addr != addr) {
-+			/*
-+			 * The target range is smaller than what this level
-+			 * covers, recurse deeper.
-+			 */
-+			ret = realm_tear_down_rtt_level(realm,
-+							level + 1,
-+							addr,
-+							min(next_addr, end));
-+			if (ret)
-+				return ret;
-+			continue;
-+		}
-+
-+		ret = realm_rtt_destroy(realm, addr, level,
-+					&rtt_granule, &next_addr);
-+
-+		switch (RMI_RETURN_STATUS(ret)) {
-+		case RMI_SUCCESS:
-+			free_delegated_granule(rtt_granule);
-+			break;
-+		case RMI_ERROR_RTT:
-+			if (next_addr > addr) {
-+				/* Missing RTT, skip */
-+				break;
-+			}
-+			/*
-+			 * We tear down the RTT range for the full IPA
-+			 * space, after everything is unmapped. Also we
-+			 * descend down only if we cannot tear down a
-+			 * top level RTT. Thus RMM must be able to walk
-+			 * to the requested level. e.g., a block mapping
-+			 * exists at L1 or L2.
-+			 */
-+			if (WARN_ON(RMI_RETURN_INDEX(ret) != level))
-+				return -EBUSY;
-+			if (WARN_ON(level == RMM_RTT_MAX_LEVEL))
-+				return -EBUSY;
-+
-+			/*
-+			 * The table has active entries in it, recurse deeper
-+			 * and tear down the RTTs.
-+			 */
-+			next_addr = ALIGN(addr + 1, map_size);
-+			ret = realm_tear_down_rtt_level(realm,
-+							level + 1,
-+							addr,
-+							next_addr);
-+			if (ret)
-+				return ret;
-+			/*
-+			 * Now that the child RTTs are destroyed,
-+			 * retry at this level.
-+			 */
-+			next_addr = addr;
-+			break;
-+		default:
-+			WARN_ON(1);
-+			return -ENXIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int realm_tear_down_rtt_range(struct realm *realm,
-+				     unsigned long start, unsigned long end)
-+{
-+	return realm_tear_down_rtt_level(realm, get_start_level(realm) + 1,
-+					 start, end);
-+}
-+
-+void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits)
-+{
-+	struct realm *realm = &kvm->arch.realm;
-+
-+	WARN_ON(realm_tear_down_rtt_range(realm, 0, (1UL << ia_bits)));
-+}
-+
- /* Protects access to rme_vmid_bitmap */
- static DEFINE_SPINLOCK(rme_vmid_lock);
- static unsigned long *rme_vmid_bitmap;
+ config ARM_TI_CPUFREQ
+ 	bool "Texas Instruments CPUFreq support"
+ 	depends on ARCH_OMAP2PLUS || ARCH_K3 || COMPILE_TEST
+-	default y
++	default ARCH_OMAP2PLUS || ARCH_K3
+ 	help
+ 	  This driver enables valid OPPs on the running platform based on
+ 	  values contained within the SoC in use. Enable this in order to
 -- 
-2.43.0
+2.49.0
 
