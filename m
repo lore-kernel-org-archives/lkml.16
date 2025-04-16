@@ -1,201 +1,174 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485412B73
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F1A1EA73;
+	Wed, 16 Apr 2025 12:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807039; cv=none; b=JiXwENa3PQVKSJ9PJ2TF1xtuV7H5xeI1irD541dZihaGZLcWjT0fAZZ0ZBfqfzlejIJX2f/54blFM3bBiqhqHMLrKLlnlzwojXhLNs5iRzoAyTvnI/JOekULVwS0QdwXrGPb+TZtUwAdxJlBgtFumc4pC4o0E/ccHYG2PfaTGJk=
+	t=1744807107; cv=none; b=PXCLZpyEVENNNzUSAczgZ8lEgpmnP4wucMgUoyVDhgZhHht7VvDhQMRQrM36HJ3mDAecT8vjh0BjFwOsATSi2FdByFLYj25WusypoSUXMt0iza5XoOcVsTTZjVvYLxplAdR2dudkBkYc3SmtzyoQQyX3DPczjuc4aAL/VQYHTtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807039; c=relaxed/simple;
-	bh=G6Aw0GICv5oMW55Cm1YQ+MFNLT9Tm9L5xy3os3sr6Z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a3FWRuQT02hOuutiahYDPVqAR+6V+fuZTVmLvmlkf0xk8jzwakvz8m1t0yZ/ByO8/mOA4SSq6Gq0ykpZP2/D91jd32XYwfFtrT0qilandYa5eN6ykigVO6SG3xtHANMSiyjheDsZE+QCz+5k0Wgg0yf1Er+j/d+/QCbUA5Xnlok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j63+8iy5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lAxOynw+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=j63+8iy5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lAxOynw+; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744807107; c=relaxed/simple;
+	bh=e2jsaT9Hpx0nLzusrdALRb7qSNpHZu74C3f13s3ykLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fY8LLCRPbi40Fa3unDk76TSyrAd/YdUWNIMhDP+YN3zh43y7qCwjT6pv4YkhgEJyXcFuu8o0PDmIK7OYGAcW1hY7eHxxmVaf9wC8mv9CIW9mF8+1DESziBAl8ZR/7kvOTJeOAc7yUAGwTaBCrBL/2V6lU0WIs7F5P917JMfOiWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cxpyoaPp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j63+8iy5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lAxOynw+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="j63+8iy5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lAxOynw+"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1289A21190;
-	Wed, 16 Apr 2025 12:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744807034; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=imDqb6FdPl9NyDhmjZJsTReD78sub4j6/DimaVfnzYQ=;
-	b=j63+8iy5IWWiLTUurfQmZr6Yu91UCtxFXywcEnpFh9vVQ+vA4LULhzIQ4ODykEsjMZNjtQ
-	GrfymvpVIQNE5mHLT214gt4/Dm14DhkN3xdDJVMt7jdspbPR6tTpPEdhhliV9PNYmHe5JJ
-	2f1V3SQnlLSn6bQQCmCZZmbZLjIpXjs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744807034;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=imDqb6FdPl9NyDhmjZJsTReD78sub4j6/DimaVfnzYQ=;
-	b=lAxOynw+mXcxvIobfBLV/Q2cZLiPG8z8p4m1QgRRDMWNNMiRh6r1QdRL0qxjsCSpWRwvHt
-	CTjZU/nyRnP7BcBw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=j63+8iy5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lAxOynw+
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744807034; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=imDqb6FdPl9NyDhmjZJsTReD78sub4j6/DimaVfnzYQ=;
-	b=j63+8iy5IWWiLTUurfQmZr6Yu91UCtxFXywcEnpFh9vVQ+vA4LULhzIQ4ODykEsjMZNjtQ
-	GrfymvpVIQNE5mHLT214gt4/Dm14DhkN3xdDJVMt7jdspbPR6tTpPEdhhliV9PNYmHe5JJ
-	2f1V3SQnlLSn6bQQCmCZZmbZLjIpXjs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744807034;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=imDqb6FdPl9NyDhmjZJsTReD78sub4j6/DimaVfnzYQ=;
-	b=lAxOynw+mXcxvIobfBLV/Q2cZLiPG8z8p4m1QgRRDMWNNMiRh6r1QdRL0qxjsCSpWRwvHt
-	CTjZU/nyRnP7BcBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A8C55139A1;
-	Wed, 16 Apr 2025 12:37:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vRk3J3mk/2f3KwAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Wed, 16 Apr 2025 12:37:13 +0000
-Date: Wed, 16 Apr 2025 14:37:12 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
- Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
- <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
- Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] soc: aspeed: lpc-snoop: Constrain parameters in
- channel paths
-Message-ID: <20250416143712.4e4666f4@endymion>
-In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-4-64f522e3ad6f@codeconstruct.com.au>
-References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
-	<20250411-aspeed-lpc-snoop-fixes-v1-4-64f522e3ad6f@codeconstruct.com.au>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cxpyoaPp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6582C4CEEF;
+	Wed, 16 Apr 2025 12:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744807106;
+	bh=e2jsaT9Hpx0nLzusrdALRb7qSNpHZu74C3f13s3ykLk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cxpyoaPpswv+BBYg3BTNt4paSHZdX/y6zXjZtyIGBur8/Ypkomz0LvFQbDFxhLSSE
+	 qe4SxOaphJ0zJNN87RO/mXhokTfwADcE4CccP55ug5fDKUnx6tER5rZ9A4oAsiaBtP
+	 jvuPQAIGir1UuGyBa0JVFzP3+GRnTHbhtOF++yRHJ05pgwU8NaKd9PCqDMwXLn62wO
+	 RH4f972Bbz5adjFVCzyHQhLYGBplvu3vq8MK337ly7DnNMR/34sWVUl/RRp2ZS0aR2
+	 6OQJIrllBts1j+pxJ0hk6II1CZ2AnzXpHxNJ9Ct9lOxfcQRk8Bn4fV5R9ooCFd2gKU
+	 mGzDk4HIepQNA==
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-601b1132110so3562379eaf.3;
+        Wed, 16 Apr 2025 05:38:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX7GZhYU40VYOnEUxy63vpaXFmpB8CPegB0hsDahTtnSflW5zQu8H5oOe+YJz31Jbcvp734S615Vu8us4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+FhHVl7yNg3FTQYt9PotXEUo9juirMYy3AiyQQzsCCm441O1J
+	u1IAO0R9E56HQDyX89xril3hn1LUqBZl01koEmzL+oyAoAOklfdyRVHHKmyP0T8sj8OyiCb/jTb
+	Oovw1oSvh+paOwknSqZIOi0hkj6g=
+X-Google-Smtp-Source: AGHT+IETwOeJKz8MffKyQGEt2IOXMo8vtNSMoKWv3rj/PSxaMq7FzWI9nfEI/3xMAt9AmXnXzn5/bmwZx/ENmiFpgEw=
+X-Received: by 2002:a05:6870:469f:b0:2c8:34df:8c4f with SMTP id
+ 586e51a60fabf-2d4d2d58f1dmr851905fac.37.1744807106079; Wed, 16 Apr 2025
+ 05:38:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1289A21190
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[codeconstruct.com.au:email,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+ <87665307-1be3-465b-ab7c-3bf908b45217@huawei.com>
+In-Reply-To: <87665307-1be3-465b-ab7c-3bf908b45217@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 16 Apr 2025 14:38:14 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g2+Eu9Nv0gha-806_wOiPQCrtLJikNmMoCo48tt4QvsQ@mail.gmail.com>
+X-Gm-Features: ATxdqUHkPG7KKcYS4BVGlyiYX4Y-Ib4zlyoNnChSd6W3xOgeASruxAbVaS7enXo
+Message-ID: <CAJZ5v0g2+Eu9Nv0gha-806_wOiPQCrtLJikNmMoCo48tt4QvsQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
+To: "zhenglifeng (A)" <zhenglifeng1@huawei.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Nicholas Chin <nic.c3.14@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 11 Apr 2025 10:38:34 +0930, Andrew Jeffery wrote:
-> Ensure pointers and the channel index are valid before use.
-> 
-> Fixes: 9f4f9ae81d0a ("drivers/misc: add Aspeed LPC snoop driver")
+On Wed, Apr 16, 2025 at 10:47=E2=80=AFAM zhenglifeng (A)
+<zhenglifeng1@huawei.com> wrote:
+>
+> On 2025/4/16 13:29, Viresh Kumar wrote:
+>
+> > The boost-related code in cpufreq has undergone several changes over th=
+e
+> > years, but this particular piece remained unchanged and is now outdated=
+.
+> >
+> > The cpufreq core currently manages boost settings during initialization=
+,
+> > and only when necessary. As such, there's no longer a need to enable
+> > boost explicitly when entering system suspend.
+> >
+> > Previously, this wasn=E2=80=99t causing issues because boost settings w=
+ere
+> > force-updated during policy initialization. However, commit 2b16c631832=
+d
+> > ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
+> > that behavior=E2=80=94correctly=E2=80=94by avoiding unnecessary updates=
+.
+> >
+> > As a result of this change, if boost was disabled prior to suspend, it
+> > remains disabled on resume=E2=80=94as expected. But due to the current =
+code
+> > forcibly enabling boost at suspend time, the system ends up with boost
+> > frequencies enabled after resume, even if the global boost flag was
+> > disabled. This contradicts the intended behavior.
+> >
+> > Fix this by not enabling boost on policy exit.
+> >
+> > Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_c=
+pu_init()")
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220013
+> > Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
+> >  1 file changed, 3 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpuf=
+req.c
+> > index 924314cdeebc..85b5a88f723f 100644
+> > --- a/drivers/cpufreq/acpi-cpufreq.c
+> > +++ b/drivers/cpufreq/acpi-cpufreq.c
+> > @@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
+> >       return false;
+> >  }
+> >
+> > -static int boost_set_msr(bool enable)
+> > +static void boost_set_msr_each(void *p_en)
+> >  {
+> > +     bool enable =3D (bool) p_en;
+> >       u32 msr_addr;
+> >       u64 msr_mask, val;
+> >
+> > @@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
+> >               msr_mask =3D MSR_K7_HWCR_CPB_DIS;
+> >               break;
+> >       default:
+> > -             return -EINVAL;
+> > +             return;
+> >       }
+> >
+> >       rdmsrl(msr_addr, val);
+> > @@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
+> >               val |=3D msr_mask;
+> >
+> >       wrmsrl(msr_addr, val);
+> > -     return 0;
+> > -}
+> > -
+> > -static void boost_set_msr_each(void *p_en)
+> > -{
+> > -     bool enable =3D (bool) p_en;
+> > -
+> > -     boost_set_msr(enable);
+> >  }
+> >
+> >  static int set_boost(struct cpufreq_policy *policy, int val)
+> > @@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
+> >       free_percpu(acpi_perf_data);
+> >  }
+> >
+> > -static int cpufreq_boost_down_prep(unsigned int cpu)
+> > -{
+> > -     /*
+> > -      * Clear the boost-disable bit on the CPU_DOWN path so that
+> > -      * this cpu cannot block the remaining ones from boosting.
+> > -      */
+> > -     return boost_set_msr(1);
+> > -}
+> > -
+> >  /*
+> >   * acpi_cpufreq_early_init - initialize ACPI P-States library
+> >   *
+> > @@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_po=
+licy *policy)
+> >
+> >       pr_debug("%s\n", __func__);
+> >
+> > -     cpufreq_boost_down_prep(policy->cpu);
+> >       policy->fast_switch_possible =3D false;
+> >       policy->driver_data =3D NULL;
+> >       acpi_processor_unregister_performance(data->acpi_perf_cpu);
+>
+> Nice!
+>
+> I wonder why this cpufreq_boost_down_prep() was needed at the beginning.
+>
+> Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 
-Please don't abuse Fixes tags. Here you are hardening the code just in
-case, but this isn't fixing any actual bug, as functions
-aspeed_lpc_enable_snoop() and aspeed_lpc_disable_snoop() were never
-called with an incorrect channel index.
-
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  drivers/soc/aspeed/aspeed-lpc-snoop.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> index 28f034b8a3b7226efe20cbe30a7da0c2b49fbd96..6ab362aeb180c8ad356422d8257717f41a232b3c 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> @@ -182,6 +182,7 @@ static int aspeed_lpc_snoop_config_irq(struct aspeed_lpc_snoop *lpc_snoop,
->  	return 0;
->  }
->  
-> +__attribute__((nonnull))
->  static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  				   struct device *dev,
->  				   int channel, u16 lpc_port)
-> @@ -190,6 +191,8 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	u32 hicr5_en, snpwadr_mask, snpwadr_shift, hicrb_en;
->  	int rc = 0;
->  
-> +	if (channel < 0 || channel >= ARRAY_SIZE(lpc_snoop->chan))
-> +		return -EINVAL;
->  
->  	if (lpc_snoop->chan[channel].enabled)
->  		return -EBUSY;
-> @@ -252,9 +255,13 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  	return rc;
->  }
->  
-> +__attribute__((nonnull))
->  static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  				     int channel)
->  {
-> +	if (channel < 0 || channel >= ARRAY_SIZE(lpc_snoop->chan))
-> +		return;
-> +
->  	if (!lpc_snoop->chan[channel].enabled)
->  		return;
->  
-> 
-
-TBH I'm not sure if this has much value, as any error in the channel
-index (or passing NULL pointers for lpc_snoop or dev) would likely be
-caught very early during driver development or update. And silently
-returning early is not going to fix the problem if this ever happens.
-
-But well, I'm not much into defensive programming anyway, so maybe this
-is just me. As I'm not maintaining this driver, this ain't my decision.
-
-Acked-by: Jean Delvare <jdelvare@suse.de>
-
--- 
-Jean Delvare
-SUSE L3 Support
+Applied as 6.15-rc material, thanks!
