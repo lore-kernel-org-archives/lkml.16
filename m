@@ -1,132 +1,182 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AF4221F13;
-	Wed, 16 Apr 2025 07:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E8D13AF2
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788873; cv=none; b=RHxnhwPhVgyJUOWx3j4sjR/ku5o/w/xxDayFVORrUZreaYrisZfbyA3Sh9oBaq8lWKXbz4KQatF6c0OKeX9433Ry299hSeTf/6dtoY7MTIzkHtuMrNVfeU8LfQ/dT+jPVdrzsH6oQlKRhS9kW1bA7d5R5BC18Y2vE59offk4vaY=
+	t=1744788943; cv=none; b=BlT64JqNCPpakgo+nzxeh/epdQgx/6BFKNIHVnCvWmjDtNWud/0fogl7sOPBlK0/k5XvNigcVjPE2bd8iCCQ9Y5iZ9Twmyaf9R3elvdAPj/2sN3wmALSj2jFRG7b8+PFJ3aID+zg6BKVetEYLDFJG7VSk2XcyGW8tJ3DUfBUc1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788873; c=relaxed/simple;
-	bh=IIr/CJfIHxtPuwbupHvi4tuIt1QmK/DNk5uo9RXwJtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Ojq0SxB7zB4wDxruTv3TiRDkMMssES4vzcHXuRAs1+4HU29Iqk1L9Y2PK0byfFil3SRLyaf4P6Db6KLjpI+VHHZ2O55D2pewzA13BALmGNl0y3r55J09WYAx0V0bmtdx9cixVV62CmXN9HXCo7X/UWD0a02mfe2jVTUYNBVWWRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KsXJmrz8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744788943; c=relaxed/simple;
+	bh=+H9GX5y26Nfo2MH/KkOqaPDNpwN4wm07XI8ZoMfksT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p43m7vUJo6WlF2HmjMpRNi0v9WZYSNbNL2u8BXZFiWDHAQwFy+erFJk1dWYQZIGpKLywYkZsJskRhMl3L40k0XW9cX/Fdj2dh0gfT5fkC9JMj87EvMawD+52YTjt0eF0XOOIdV6Zk2FJHEca4+cqA6Mq+5Hv6L4IxM0mjRyEWrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DB+VRTiy; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KsXJmrz8"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7Jtcv003492;
-	Wed, 16 Apr 2025 07:34:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GUcdvfwZrnNZuV2T27/n0P6rv0AUJGdNVs2JM7mtqa0=; b=KsXJmrz8NW0iFw6l
-	lFrg/RVIzvNpX4vYe/ZOkbT6WiLPDUm1hKVi3dybF+wCMK+U4Rix5eJ9fXtN36Bc
-	biSKHo89pewJseDp0xtcgpm5l6iReJKRllSm9Wejh5ctfkzJetdZj+tTG2PCqHfC
-	OH3FMrsgrFQ2/9vXUEKcWgZqudPN7E73TrLbcyT3019u11VC0sZuIgnyhqJoeJDk
-	iSYb3Ey6dGmqeTL+Ag87ARD55nVWv+SYM//m7oC3jEz9Lfb57Mwsl9qhubAUzpd/
-	eyg5j3Dmbzar0iexe6SWdqzfg3bkkIo2syWVQZLG8ShnxwWziBFc7vpqJ6JcKqJJ
-	kBkHYQ==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wjq3r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:34:25 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53G7YOwD030646
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:34:24 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 00:34:22 -0700
-Message-ID: <c806bd59-9c16-4a19-83a6-c3b395a77925@quicinc.com>
-Date: Wed, 16 Apr 2025 13:04:19 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DB+VRTiy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744788942; x=1776324942;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+H9GX5y26Nfo2MH/KkOqaPDNpwN4wm07XI8ZoMfksT0=;
+  b=DB+VRTiy+b20NSMQL2Kki1IVvRzy3O+uWflTgbG2j9mlFZD8/z2kj2TZ
+   4K3IjKfFrQIoGgvycZ0fYGkj5GyAQRr9vMrSAByKBK2I8a2aok9Fy3qVb
+   8z0082i/Qa+KUzRfg1L6B+yq6/FhnlHmoVhxgqzUjrh6YttgUIJTOm/Z4
+   s0MPws0tFAGFq3n9kFJwHmdeDP3nNLm0QGW6rs/gn0TEe0gCdkNVMjpSU
+   cHrIfNP4uJjplKrXE/T6CU73nceHQCAY6F9MbxbZaV/9ianv6lY0uycou
+   khhwuUeJVx7jA3/vWTBjHN34h+1v7TwZJ9Fvuth0G7inINBwZWjeetcLf
+   g==;
+X-CSE-ConnectionGUID: b7BSulabR0e7wArtE3y7lg==
+X-CSE-MsgGUID: sltVvaYJSN6iQYN8QdovPg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56958602"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="56958602"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:35:41 -0700
+X-CSE-ConnectionGUID: C8PDJANBTxKKjBGNJq+46g==
+X-CSE-MsgGUID: hdf1rhpcSiazkD8+FhZLIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="135205715"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa003.jf.intel.com with ESMTP; 16 Apr 2025 00:35:39 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/1] iommu/vt-d: Revert ATS timing change to fix boot failure
+Date: Wed, 16 Apr 2025 15:36:08 +0800
+Message-ID: <20250416073608.1799578-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] spi: Add spi_bpw_to_bytes() helper and use it
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC: Mark Brown <broonie@kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, David Lechner <dlechner@baylibre.com>
-References: <20250416062013.1826421-1-andriy.shevchenko@linux.intel.com>
- <20250416062013.1826421-2-andriy.shevchenko@linux.intel.com>
- <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
- <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67ff5d81 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=kZJ_y26kylx110OhOT8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: AGYd2QMrjDtgv4pV23m3nsUG3a2AFxro
-X-Proofpoint-GUID: AGYd2QMrjDtgv4pV23m3nsUG3a2AFxro
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160060
+Content-Transfer-Encoding: 8bit
 
-Thanks Andy !
+Commit <5518f239aff1> ("iommu/vt-d: Move scalable mode ATS enablement to
+probe path") changed the PCI ATS enablement logic to run earlier,
+specifically before the default domain attachment.
 
-On 4/16/2025 12:39 PM, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 12:33:24PM +0530, Mukesh Kumar Savaliya wrote:
->> On 4/16/2025 11:46 AM, Andy Shevchenko wrote:
-> 
-> Thanks for the prompt review, my answers below.
-> 
-> ...
-> 
->>> +/**
->>> + * spi_bpw_to_bytes - Covert bits per word to bytes
->>> + * @bpw: Bits per word
->>> + *
->>> + * This function converts the given @bpw to bytes. The result is always
->>> + * power-of-two (e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
->> Would it be good to say in 4 byte aligned /Multiples ?
-> 
-> It's not correct. The said wording describes the current behaviour.
-> 
-Sure.
->>> + * Returns:
->>> + * Bytes for the given @bpw.
->> Returns: Bytes for the given @bpw.
->> Good to keep in one line.
-> 
-> Aligned with the style of the other function in the same header, so I prefer to
-> leave the style the same.
-> 
-Yes, i see.
->>> + */> +static inline u32 spi_bpw_to_bytes(u32 bpw)
->> u8 bpw ?
-> 
-> Nope. See below why.
-> 
->> struct spi_device {
->> u8 bits_per_word;
->> }
-> 
->> so arg should be u8.
-> 
-> It's aligned with the above bpw related function.
-> Also note, that this helper might be moved to the global header at some point
-> as some other subsystems may utilise it, so I don't want to limit this to u8.
-> 
-Okay, if plan to move to global header then it's fine.
+On some client platforms, this change resulted in boot failures, causing
+the kernel to panic with the following message and call trace:
 
+ Kernel panic - not syncing: DMAR hardware is malfunctioning
+ CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.14.0-rc3+ #175
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x6f/0xb0
+  dump_stack+0x10/0x16
+  panic+0x10a/0x2b7
+  iommu_enable_translation.cold+0xc/0xc
+  intel_iommu_init+0xe39/0xec0
+  ? trace_hardirqs_on+0x1e/0xd0
+  ? __pfx_pci_iommu_init+0x10/0x10
+  pci_iommu_init+0xd/0x40
+  do_one_initcall+0x5b/0x390
+  kernel_init_freeable+0x26d/0x2b0
+  ? __pfx_kernel_init+0x10/0x10
+  kernel_init+0x15/0x120
+  ret_from_fork+0x35/0x60
+  ? __pfx_kernel_init+0x10/0x10
+  ret_from_fork_asm+0x1a/0x30
+ RIP: 1f0f:0x0
+ Code: Unable to access opcode bytes at 0xffffffffffffffd6.
+ RSP: 0000:0000000000000000 EFLAGS: 841f0f2e66 ORIG_RAX:
+      1f0f2e6600000000
+ RAX: 0000000000000000 RBX: 1f0f2e6600000000 RCX:
+      2e66000000000084
+ RDX: 0000000000841f0f RSI: 000000841f0f2e66 RDI:
+      00841f0f2e660000
+ RBP: 00841f0f2e660000 R08: 00841f0f2e660000 R09:
+      000000841f0f2e66
+ R10: 0000000000841f0f R11: 2e66000000000084 R12:
+      000000841f0f2e66
+ R13: 0000000000841f0f R14: 2e66000000000084 R15:
+      1f0f2e6600000000
+  </TASK>
+ ---[ end Kernel panic - not syncing: DMAR hardware is malfunctioning ]---
 
+Fix this by reverting the timing change for ATS enablement introduced by
+the offending commit and restoring the previous behavior.
 
+Fixes: 5518f239aff1 ("iommu/vt-d: Move scalable mode ATS enablement to probe path")
+Reported-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Closes: https://lore.kernel.org/linux-iommu/01b9c72f-460d-4f77-b696-54c6825babc9@linux.intel.com/
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ drivers/iommu/intel/iommu.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index b29da2d96d0b..e60b699e7b8c 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3785,6 +3785,22 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
+ 
+ 	intel_iommu_debugfs_create_dev(info);
+ 
++	return &iommu->iommu;
++free_table:
++	intel_pasid_free_table(dev);
++clear_rbtree:
++	device_rbtree_remove(info);
++free:
++	kfree(info);
++
++	return ERR_PTR(ret);
++}
++
++static void intel_iommu_probe_finalize(struct device *dev)
++{
++	struct device_domain_info *info = dev_iommu_priv_get(dev);
++	struct intel_iommu *iommu = info->iommu;
++
+ 	/*
+ 	 * The PCIe spec, in its wisdom, declares that the behaviour of the
+ 	 * device is undefined if you enable PASID support after ATS support.
+@@ -3792,22 +3808,12 @@ static struct iommu_device *intel_iommu_probe_device(struct device *dev)
+ 	 * we can't yet know if we're ever going to use it.
+ 	 */
+ 	if (info->pasid_supported &&
+-	    !pci_enable_pasid(pdev, info->pasid_supported & ~1))
++	    !pci_enable_pasid(to_pci_dev(dev), info->pasid_supported & ~1))
+ 		info->pasid_enabled = 1;
+ 
+-	if (sm_supported(iommu))
++	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev))
+ 		iommu_enable_pci_ats(info);
+ 	iommu_enable_pci_pri(info);
+-
+-	return &iommu->iommu;
+-free_table:
+-	intel_pasid_free_table(dev);
+-clear_rbtree:
+-	device_rbtree_remove(info);
+-free:
+-	kfree(info);
+-
+-	return ERR_PTR(ret);
+ }
+ 
+ static void intel_iommu_release_device(struct device *dev)
+@@ -4391,6 +4397,7 @@ const struct iommu_ops intel_iommu_ops = {
+ 	.domain_alloc_sva	= intel_svm_domain_alloc,
+ 	.domain_alloc_nested	= intel_iommu_domain_alloc_nested,
+ 	.probe_device		= intel_iommu_probe_device,
++	.probe_finalize		= intel_iommu_probe_finalize,
+ 	.release_device		= intel_iommu_release_device,
+ 	.get_resv_regions	= intel_iommu_get_resv_regions,
+ 	.device_group		= intel_iommu_device_group,
+-- 
+2.43.0
 
