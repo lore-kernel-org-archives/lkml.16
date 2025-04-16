@@ -1,41 +1,72 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C9B149C4D;
-	Wed, 16 Apr 2025 20:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D9E233152
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744835952; cv=none; b=myJ39YSYgR3s6kzPZD/WOq+3mMc2QoMwn3sLtHw/G56bRWEE9b/ecRmjfpW2ggrmlm2JJn7XWNIDPd7hQRO7EwuretRiLNMx0G2oXQkmIB2btK8dTSqqEWXXDNDEaGrIWOSFnVrsBUoPzYPESLMjNvXxnL22wuKMO2vpm+tgGy0=
+	t=1744836003; cv=none; b=hCs0Y1CGh2/4wCBerKDdeFqIeviUVh+4VwPN7TdGUYhy8Zl+9oImv6xg1a3E/K2ChyeVk9ir/MQwx5tvqdovCL6hfizQdbockPwEErSNx8bM/zwpKD2//QuzADwxRm8TdSCrU5oGk87JwC857sLc9J4rBNlLdUkt8cQLsyRvKK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744835952; c=relaxed/simple;
-	bh=SQnpKsVTAslP/pVBVHbskA02jCkfIjEfr6bRJYfzzIs=;
+	s=arc-20240116; t=1744836003; c=relaxed/simple;
+	bh=kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fLtoi1EoC2G4x/peDPNq7y8ipyp2WasV0WFdytCzKaTSBWh2PeSOi2+GQKZfxTOfxt3QxG4W2g+jyqO6xoOLX7BXoNBNiHkLfhXJ2ZaEfNRe4drP2fa9OeEvcf/fuvhnFc+o+KjmIEcKTwWRJpKAWL7SAK6deWF5ygYGrLtg/2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=eDdfM/bw; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=hH+Wi9kprOn9T/7FVcVt4Qy6KldNoeZ59Q9+4CoECLYxwUxoI/uO3WHldKHXs/DKbLhBV7VX/wMys2a24FHcU2jkggMzDKgWgGgxqQqvO+9UIVxQv0e4wzVRKse9yvzwiadNOC4JNxG6X1MOFir/6WlukEOSliQSmQztcGca7kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DpwLEau3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="eDdfM/bw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744835947; x=1745440747; i=w_armin@gmx.de;
-	bh=WfogSFU24b8xe6x+JAzbnFxBkRpVCUwlSaN3Hsz84+I=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=eDdfM/bw1SikXtTIXGjaUvDKQ+8UMajAdG5HpRce52QEj8+cQeJdBnjYzmOSgNVg
-	 0twVRzCACr4UoWZWnTXurSha9UQ3RPvitS5dfTYN8oZvU7wfDW1Mbm8KQsNEdw+FW
-	 6AINdSWyE/6LJHgjFOnWqjacZfgQM/r4EJ/SysDc3zTiueQoZwjXJxwqjWyUn598T
-	 gNgp0AecYavuzF/oMCzwQOcgXQ8bK4jrEidPmptHmpxO0H96Pw1HPIwcQWf1+9lDg
-	 EebumW536arOmWdBc1fIlcsCild6eEhXBfG3F2/BHOlMb/ehqQko8VEaxQjhKPZ63
-	 FVbPhZ+O4ZLEZ4PY6Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MpUZ4-1uv0cB1jP2-00aOgs; Wed, 16
- Apr 2025 22:39:07 +0200
-Message-ID: <7bb43fb5-83dd-4531-b835-77a8e937f54b@gmx.de>
-Date: Wed, 16 Apr 2025 22:39:05 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DpwLEau3"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mFi1007029
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=; b=DpwLEau3Y+2DkDDL
+	ps32G63sJlVwJ+6ZIG1FsHA4/Lf9gvmuju9s2ftVVke9aTTJgbxdMGcEqNlRdyrm
+	JuCidCMnz+IxQbVu0b8ol00Bcg+vXY4HBmC5rpBoUtSJmd9eRETmMJsfPug5UTRl
+	DDo5pzRE4mVhbHhfuJLtL5SWfzgi/T0Zy9GLlVSBS9EgFZm1iaceMOTwlY37RjGc
+	RtsBJNsOLdFaF9xhCGMP7a2hv+OtYDB67xR8aSejmYLhnom4kyKRbTsk/OIDy9yx
+	1vuYV8eyNzjmAEW/d+CeDkWn+8DlUF3z+jEZsliRiy69HgGzz2F1ndr6wfqXv5Uk
+	ZDudgw==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjmpn3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:00 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5530c2e01so476385a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:40:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744835999; x=1745440799;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=;
+        b=AaHmYerqXop+8zokHZaweIQrcDen3KJ27QOBJPngimOhr7HMZj1ZluPj8KFvu6Osh7
+         0kbfGCOYaxEndp/kcygYwMjXjvxxns7zyOSBhFJ/6NTD9UUVV9lHNF4c5ev/0bHQUDuZ
+         oJkGOwH+CXqsZ+IEPrXmUEHpQTzvhEavzGuPbnGq06bnIneSy1Igpvr1kYwnY/NPtiBs
+         9Oj+mrlOUC4BS3ZtQPSWWzRwfqeqn96K5gAn4Ef2Y+7haJ1oNhvKCYZZ9/2SXlf1i3Q4
+         Y/kvBXgvZqg/kQnoN6c4ZttRXdo8pRoRZKNZ8ItPGxut9/W4Wvi3+4i3F5HB31D76awJ
+         I4DQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS3bkY04QV/dpGf8ANZqlIqV12pXUQA5wVy5oq5tkMD/GbTlSIROVzQ3Fv2dPZRBBJAfF/wI4adUUnLWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4riQcSAMePAJeB11dTyjKFkamsIP2XY8dwFamP35/lLnT9ZYG
+	Vmm+RkQeeD5lEyQGN572GjDWKmXaNiOLOdJJOALYm8G0EC6nmqQXVsSy4R21MgRSitjJjU/Yvcr
+	0XYKJYEJaIVYzQy9EG2yIJTAvSEDjekJnTY53JJg2xW2L/ThK62dKlsvtPJBMn1E=
+X-Gm-Gg: ASbGncsTsASU8Hr93sxxdRujGmXNmeHYe/k6KHWP626+xq02e9o3GnGSfKHr3fx/25w
+	6RQZVFCaJHfoFrA/+DxyZ5l/ot86Nw7M1AYiJXMpOtzKiBwHg3CTfX8jcUlRYEjZbL+aqwMYh4H
+	AtYuteo8OzyOw1pJi7DyRfMOemJ8pnODVVZA3X+nZjW+7yHwqBD234KPeRmtlzUiHhV2K2tKtB5
+	nPBYFR+QJYSUIRWpKPdv19mf8EPXqFzxDlRpF73gxCoEAZCOBkTM4oesLYWTo/F5hINkoJ2l0+m
+	zu3RBc/0HfAkGPCjXMy2DpFuzV+knjNNzntq6acZkrBMXrd/bVaVBApCvi0lhLkDW8U=
+X-Received: by 2002:a05:620a:288d:b0:7c3:dd6d:54e4 with SMTP id af79cd13be357-7c91d0602ebmr62127385a.10.1744835999386;
+        Wed, 16 Apr 2025 13:39:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGzgDHx0UMfpo23gp5XKth2J0840BeS/rB+zsXeevtnGVzubmJ5n0ka+mRD1Wk7yKLA+/G4gQ==
+X-Received: by 2002:a05:620a:288d:b0:7c3:dd6d:54e4 with SMTP id af79cd13be357-7c91d0602ebmr62122985a.10.1744835998836;
+        Wed, 16 Apr 2025 13:39:58 -0700 (PDT)
+Received: from [192.168.65.126] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd618ebsm186163466b.16.2025.04.16.13.39.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 13:39:58 -0700 (PDT)
+Message-ID: <b9fd463b-5a34-4c3b-a6e8-7432e1a0f2c6@oss.qualcomm.com>
+Date: Wed, 16 Apr 2025 22:39:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,156 +74,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Input: Add a helper for reporting a screen lock key
- sequence
-To: Mario Limonciello <superm1@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250407152705.1222469-1-superm1@kernel.org>
+Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
+To: barnabas.czeman@mainlining.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
+        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org,
+        Dang Huynh <danct12@riseup.net>
+References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
+ <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
+ <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+ <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
 Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250407152705.1222469-1-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eLnQlBHdBnpKae7yqzZe6xkXXaqSh2Mcc+a5NIbrcQ3mJZU3V84
- Kb/Jq1eoT4lmr/LePfVB7R1m6Yx/1XjNRfuWJ+/+r8dBNXLRs2qIxNisuuw5Rh6YI9C57oR
- a0I20+BXPlc4dCGr9zcopnWWYjjH5mxDTXG33ZQEBMMph/sqtB/PZGhpjFUZIkNSKyon9EN
- pWkHYooakq2q1s+bzg0bw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:oqhprfp/pPA=;HKZPWWW97BGpMeR6WpS/AuBs+X3
- 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
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 2crNTgKlylQCP672zVcB4Wo46NOuNSSN
+X-Proofpoint-ORIG-GUID: 2crNTgKlylQCP672zVcB4Wo46NOuNSSN
+X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=680015a0 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=OuZLqq7tAAAA:8 a=bBqXziUQAAAA:8 a=KIKYxIlc2-mGyxiTgOQA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=AKGiAy9iJ-JzxKVHQNES:22 a=BjKv_IHbNJvPKzgot4uq:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_08,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=852 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160168
 
-Am 07.04.25 um 17:27 schrieb Mario Limonciello:
+On 4/16/25 10:33 PM, barnabas.czeman@mainlining.org wrote:
+> On 2025-04-14 22:55, Konrad Dybcio wrote:
+>> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
+>>> From: Dang Huynh <danct12@riseup.net>
+>>>
+>>> Add initial support for MSM8937 SoC.
+>>>
+>>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>>> ---
 
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
-> to be. Modern versions of Windows [1], GNOME and KDE support "META" + "L=
-"
-> to lock the screen. Modern hardware [2] also sends this sequence of
-> events for keys with a silkscreen for screen lock.
->
-> Introduced a helper input_report_lock_sequence() for drivers to utilize
-> if they want to send this sequence.
->
-> Link: https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-=
-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
-> Link: https://www.logitech.com/en-us/shop/p/k860-split-ergonomic.920-009=
-166 [2]
-> Suggested-by: Armin Wolf <W_Armin@gmx.de>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/input/input.c | 20 ++++++++++++++++++++
->   include/linux/input.h |  2 ++
->   2 files changed, 22 insertions(+)
->
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index ec4346f20efdd..dfeace85c4710 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -508,6 +508,26 @@ void input_copy_abs(struct input_dev *dst, unsigned=
- int dst_axis,
->   }
->   EXPORT_SYMBOL(input_copy_abs);
->  =20
-> +/**
-> + * input_report_lock_sequence - Report key combination to lock the scre=
-en
-> + * @dev: input device
-> + *
-> + * Key combination used in the PC industry since Windows 7 for locking =
-display
-> + * is META + L. This is also used in GNOME and KDE by default.
-> + * See https://support.microsoft.com/en-us/windows/keyboard-shortcuts-i=
-n-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
-> + */
+[...]
 
-Hi,
+>>> +    thermal_zones: thermal-zones {
+>>> +        aoss-thermal {
+>>> +            polling-delay-passive = <250>;
+>>
+>> There are no passive trip points> +
+> Should i remove polling-delay-passive?
 
-maybe it would make more sense to have the input subsystem transparently t=
-ranslate between KEY_SCREENLOCK and this
-special screen lock sequence. This way there would be no room for regressi=
-ons as people could enable/disable this
-behavior via Kconfig.
+yes, please do
 
-Thanks,
-Armin Wolf
+>>> +            thermal-sensors = <&tsens 0>;
+>>> +
+>>> +            trips {
+>>> +                aoss_alert0: trip-point0 {
+>>> +                    temperature = <85000>;
+>>> +                    hysteresis = <2000>;
+>>> +                    type = "hot";
+>>> +                };
+>>
+>> Please convert these to 'critical' instead
+>>
+>> [...]
+>>
+>>> +        cpuss1-thermal {
+>>> +            polling-delay-passive = <250>;
+>>
+>> You can drop polling-delay-passive under CPU tzones, as threshold
+>> crossing is interrupt-driven
+> Should I remove polling-delay-passive then?
 
-> +void input_report_lock_sequence(struct input_dev *dev)
-> +{
-> +	input_report_key(dev, KEY_LEFTMETA, 1);
-> +	input_report_key(dev, KEY_L, 1);
-> +	input_sync(dev);
-> +	input_report_key(dev, KEY_L, 0);
-> +	input_sync(dev);
-> +	input_report_key(dev, KEY_LEFTMETA, 0);
-> +	input_sync(dev);
-> +}
-> +EXPORT_SYMBOL(input_report_lock_sequence);
-> +
->   /**
->    * input_grab_device - grabs device for exclusive use
->    * @handle: input handle that wants to own the device
-> diff --git a/include/linux/input.h b/include/linux/input.h
-> index 7d7cb0593a63e..16f7bef12f1c1 100644
-> --- a/include/linux/input.h
-> +++ b/include/linux/input.h
-> @@ -492,6 +492,8 @@ void input_set_abs_params(struct input_dev *dev, uns=
-igned int axis,
->   void input_copy_abs(struct input_dev *dst, unsigned int dst_axis,
->   		    const struct input_dev *src, unsigned int src_axis);
->  =20
-> +void input_report_lock_sequence(struct input_dev *dev);
-> +
->   #define INPUT_GENERATE_ABS_ACCESSORS(_suffix, _item)			\
->   static inline int input_abs_get_##_suffix(struct input_dev *dev,	\
->   					  unsigned int axis)		\
+yeah
+
+Konrad
