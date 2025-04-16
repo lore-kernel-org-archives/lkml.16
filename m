@@ -1,114 +1,199 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44D8212D8D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEC21552E3;
+	Wed, 16 Apr 2025 16:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744821184; cv=none; b=d9c7PtwVinl6htyqbvqJmcxjTNIu/C3+JcQ8gVtnS+iyuZMn7oKOpuWMWGwzN7tG4LRF5QeUe9FE+88C3s7+M7+HrB9crtqAoZeAnMLx8tX8eB8P/esHxYeU6HBbtD5E4zB6WXyri/WYbsoEuyTEMe3lxTNokvh1CcDDUt/U2es=
+	t=1744821441; cv=none; b=LWMxuxLxNN7jmn8Qq5cwlMQkeFGVynyP60rFrgfQoekldPdkAAuDe9f5Ru2KypO8Y6Xs6np3wx/pGAomi/G3F23ZK5HJqgfPOrwUWwTapNa97dE8nZTU/xrswNPon0//zQ4b44KCEjHTevEbnK05PB71QA5lzU1eOKRdkiVxQps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744821184; c=relaxed/simple;
-	bh=z4sYUnk3RVn3eT8s9+D0SbpGl6UdSZQtvkzjKzBRH80=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZbW9RMw1IyAh/Bra6wDD/22dZAr1A7IAruaQNh8x6u3KWUgHfuJc49KvKoBW2CL97IeE7Ll/m9jddTgE1Td9URotJ9ki7QpKXcTyX0eP1xLVJ32eFA4oLfugNrAUdZhhLd7PMEjYclFraHnIZ07GGnNnix7keeMS53iaFQfYTnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VAQc+QN3; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VAQc+QN3"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47666573242so1741cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744821182; x=1745425982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z4sYUnk3RVn3eT8s9+D0SbpGl6UdSZQtvkzjKzBRH80=;
-        b=VAQc+QN3v6DhncnBAB0nmgaB8YbIE/e50TgZRrT6rM1uwsYdKpXFC7a4Utz6wh12yZ
-         gC6ZaEKHky2efz8ec82hAyOk1bugM6M8ao1fYI7lyiKuYW8Dd7Ibo7jK8IL+hGoNpmqx
-         6vMqH2XkWXrtXAoITO3gEA4yyZKksPzWqYQX/5RaWOUpjVaoIdFSyD4u3bSGg6pbXqwc
-         gtMkhgGFH6qbqovexCT2NE4W77lAEk/GGTMadH0GNUlEU1cL5nC44PftzL8ipfeMdMwa
-         r90r4Ed+13yTpr8rGaQLk93Uy/pL4XxY9J9FlqC6M1Kj/gH5yKIiYRI9LGXvskLxR/5j
-         26tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744821182; x=1745425982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z4sYUnk3RVn3eT8s9+D0SbpGl6UdSZQtvkzjKzBRH80=;
-        b=Qz1fF2U8amoMl8uq4cJw3teRAWqxQWEjrGl+Bll7ygOT6F4QHbMWGNGXttGnkX/Nsz
-         WC8+UMowzekII0fTiboZFHkdRQq1AvkL32zGlcGqo0RCxrHQgvtqH6Js6Ea5rZNgaIAQ
-         KePggWnuDDGHgEp95VrlcTuRQsWzJwNXAPfo3W7fppng4S9p9HfIkPe351F3xecy6JPp
-         /BVMjK2QLmh5wdl15/5ipr9+HaeO9LtMKh7/O3EtDD7YKQbbQ6nOK4c5pWoj/mxwVdtj
-         tD6/ls0UF3ylUd97Fskz6IoVdWt0XI+B+P9HJyBBAjqkzY7XFFUxm+MoN8x7Ll/5sPYD
-         YEGw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVe7vphC5ri61IB/vqthCN6hYg3v8itdH7G3i3yNf/aJic6UT49JHwJFaHprI/+mqe58ZYOQbew1O9z10=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQZlH4xoTDCE3sPkg4Kz1aeZl7qe/Kz4ZNm6LQsBSlZj479eo7
-	/lUyezLYYq1MO2FQFB4GzQuxztWzPanSHCUCxQW/AI8p5sgpdO34E8agZemewcYXiBmVk5/2XUn
-	sem0VEK9oOQSxfQD6u11BAdzHvEXe+3Fun+Aa/lT0qwTetvQv+De8
-X-Gm-Gg: ASbGnctOJ32MrqAjsRRVVL2FcR6J9/0IOHijx6KsJiGlRajQLT5LoUa6rKe7nN4v2ZD
-	4J5JGc9AEoeO+aiAdNniyfNSXr2wjpcCp4pFmp55Zeodq+5U4n/xTBdkf0neVL68ZVpS1kwSr94
-	lb6rRz49noJQEYgYZYGgs=
-X-Google-Smtp-Source: AGHT+IFGLnrLi/pwVwS4hx+CL/KHOR7ZtP9NwSL0/fGZLW+5ujtOUmbOivnbfb8MDwVDtXWQCQTdIlvr99JtHYGtvDg=
-X-Received: by 2002:ac8:5d41:0:b0:46c:7cf2:d7b2 with SMTP id
- d75a77b69052e-47ad7b5f143mr3120371cf.18.1744821181350; Wed, 16 Apr 2025
- 09:33:01 -0700 (PDT)
+	s=arc-20240116; t=1744821441; c=relaxed/simple;
+	bh=dmumJvcAe8xZxu0Kwdb+Yv7Y0M9OsVE29nIkU0vF/zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PtkxCyCf93dv5rMcowLbokTLNyANrGH27kPIPqnbonW03gMBor4up9s0WcMmylv/fruzE+3t8KIOJUm2fGJCMU3lMg48CgJSyYxiVclnKahUmPwKOc3JRwEer6SJrbie4RKMYjT11eLZzFYm1Kv9dTGL/hXrhs/1AFSUYqI6OAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41F38339;
+	Wed, 16 Apr 2025 09:37:15 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ADF403F59E;
+	Wed, 16 Apr 2025 09:37:15 -0700 (PDT)
+Date: Wed, 16 Apr 2025 17:37:13 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Johan Hovold <johan@kernel.org>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [PATCH 2/4] firmware: arm_scmi: Add Quirks framework
+Message-ID: <Z__cuT5IW0Sbjqpg@pluto>
+References: <20250415142933.1746249-1-cristian.marussi@arm.com>
+ <20250415142933.1746249-3-cristian.marussi@arm.com>
+ <Z__UJUKaMRoFLYLc@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402205613.3086864-1-fvdl@google.com> <a7f5a4f7-1ec6-42dc-a93d-af043a01044f@redhat.com>
-In-Reply-To: <a7f5a4f7-1ec6-42dc-a93d-af043a01044f@redhat.com>
-From: Frank van der Linden <fvdl@google.com>
-Date: Wed, 16 Apr 2025 09:32:50 -0700
-X-Gm-Features: ATxdqUGiWah_jJFCkaeSjW57PdesJqsrGy_N98VG-_dxVs0MnOaWnZcw0S6lIuA
-Message-ID: <CAPTztWa4Q+E7ytKyorP1wg8Cq02_PWiKW1w+AHXZ_XzL4D5TNg@mail.gmail.com>
-Subject: Re: [PATCH] mm/hugetlb: use separate nodemask for bootmem allocations
-To: Luiz Capitulino <luizcap@redhat.com>
-Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z__UJUKaMRoFLYLc@hovoldconsulting.com>
 
-On Tue, Apr 15, 2025 at 6:08=E2=80=AFPM Luiz Capitulino <luizcap@redhat.com=
-> wrote:
->
-> On 2025-04-02 16:56, Frank van der Linden wrote:
-> > Hugetlb boot allocation has used online nodes for allocation since
-> > commit de55996d7188 ("mm/hugetlb: use online nodes for bootmem
-> > allocation"). This was needed to be able to do the allocations
-> > earlier in boot, before N_MEMORY was set.
->
-> Honest question: I imagine there's a reason why we can't move
-> x86's hugetlb_cma_reserve() and hugetlb_bootmem_alloc() calls
-> in setup_arch() to after x86_init.paging.pagetable_init() (which
-> seems to be where we call zone_sizes_init())? This way we could
-> go back to using N_MEMORY and avoid this dance.
->
-> I'm not familiar with vmemmap if that's the reason...
->
+On Wed, Apr 16, 2025 at 06:00:37PM +0200, Johan Hovold wrote:
+> On Tue, Apr 15, 2025 at 03:29:31PM +0100, Cristian Marussi wrote:
+> > Add a common framework to describe SCMI quirks and associate them with a
+> > specific platform or a specific set of SCMI firmware versions.
+> > 
 
-Yeah, vmemmap is the reason. pre-HVO (setting up vmemmap HVO-style)
-requires the hugetlb bootmem allocations to be done before
-sparse_init(), so the ordering you propose wouldn't work.
+Hi Johan,
 
-I originally looked at explicitly initializing N_MEMORY earlier,
-figuring that all that was needed was having memblock node information
-available. But there seems to be a history there - N_MEMORY indicates
-that buddy allocator memory is available on the node, and several
-comments referenced the fact that zone init and rounding may end up
-not setting N_MEMORY on NUMA nodes with a tiny amount of memory. There
-is also code that sets N_MEMORY temporarily in
-find_zone_movable_pfns_for_nodes().
+thanks for having a look..
 
-Some of the commits went back a long time ago, and I can't quite judge
-if the comments still apply without looking at the code more. So, I
-chickened out, and did a hugetlb only change to fix the hugetlb
-issues.
+> > All the matching SCMI quirks will be enabled when the SCMI core stack
+> > probes and after all the needed SCMI firmware versioning information was
+> > retrieved using Base protocol.
+> > 
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ---
+> > RFC->V1
+> > - added handling of impl_ver ranges in quirk definition
+> > - make Quirks Framework default-y
+> > - match on all NULL/0 too..these are quirks that apply always anywhere !
+> > - depends on COMPILE_TEST too
+> > - move quirk enable calling logic out of Base protocol init (triggers a
+> >   LOCKDEP issues around cpu locks (cpufreq, static_branch_enable interactions..)
+> 
+> > +static void scmi_enable_matching_quirks(struct scmi_info *info)
+> > +{
+> > +	struct scmi_revision_info *rev = &info->version;
+> > +	const char *compatible = NULL;
+> > +	struct device_node *root;
+> > +
+> > +	root = of_find_node_by_path("/");
+> > +	if (root) {
+> > +		of_property_read_string(root, "compatible", &compatible);
+> 
+> Looks like you still only allow matching on the most specific compatible
+> string.
+> 
+> As we discussed in the RFC thread, this will result in one quirk entry
+> for each machine in a SoC family in case the issue is not machine
+> specific.
+> 
 
-But it does seem like setting N_MEMORY can be cleaned up a bit, it's
-definitely something to follow up on.
+Well, yes but the solution would be to add multiple compatible on the
+same quirk line, which is definitely less cumbersome than adding
+multiple quirk defs for the same quirk but does NOT scale anyway....
 
-- Frank
+...anyway I will add that possibility..or I am missing something more ?
+
+> > +		of_node_put(root);
+> > +	}
+> > +
+> > +	/* Enable applicable quirks */
+> > +	scmi_quirks_enable(info->dev, compatible,
+> > +			   rev->vendor_id, rev->sub_vendor_id, rev->impl_ver);
+> > +}
+> 
+> > +static int scmi_quirk_range_parse(struct scmi_quirk *quirk)
+> > +{
+> > +	const char *last, *first = quirk->impl_ver_range;
+> > +	size_t len;
+> > +	char *sep;
+> > +	int ret;
+> > +
+> > +	quirk->start_range = 0;
+> > +	quirk->end_range = 0xFFFFFFFF;
+> > +	len = quirk->impl_ver_range ? strlen(quirk->impl_ver_range) : 0;
+> > +	if (!len)
+> > +		return 0;
+> > +
+> > +	last = first + len - 1;
+> > +	sep = strchr(quirk->impl_ver_range, '-');
+> > +	if (sep)
+> > +		*sep = '\0';
+> > +
+> > +	if (sep == first) // -X
+> > +		ret = kstrtouint(first + 1, 0, &quirk->end_range);
+> > +	else // X OR X- OR X-y
+> > +		ret = kstrtouint(first, 0, &quirk->start_range);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (!sep)
+> > +		quirk->end_range = quirk->start_range;
+> > +	else if (sep != last) //x-Y
+> 
+> nit: space after // (if you insist on using c99 comments)
+> 
+
+..leftover...I'll remove C99
+
+> > +		ret = kstrtouint(sep + 1, 0, &quirk->end_range);
+> > +
+> > +	if (quirk->start_range > quirk->end_range)
+> > +		return -EINVAL;
+> > +
+> > +	return ret;
+> > +}
+> 
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * System Control and Management Interface (SCMI) Message Protocol Quirks
+> > + *
+> > + * Copyright (C) 2025 ARM Ltd.
+> > + */
+> > +#ifndef _SCMI_QUIRKS_H
+> > +#define _SCMI_QUIRKS_H
+> > +
+> > +#include <linux/static_key.h>
+> > +#include <linux/types.h>
+> > +
+> > +#ifdef CONFIG_ARM_SCMI_QUIRKS
+> > +
+> > +#define DECLARE_SCMI_QUIRK(_qn)						\
+> > +	DECLARE_STATIC_KEY_FALSE(scmi_quirk_ ## _qn)
+> > +
+> > +#define SCMI_QUIRK(_qn, _blk)						\
+> > +	do {								\
+> > +		if (static_branch_unlikely(&(scmi_quirk_ ## _qn)))	\
+> > +			(_blk);						\
+> > +	} while (0)
+> > +
+> > +void scmi_quirks_initialize(void);
+> > +void scmi_quirks_enable(struct device *dev, const char *compat,
+> > +			const char *vend, const char *subv, const u32 impl);
+> > +
+> > +#else
+> > +
+> > +#define DECLARE_SCMI_QUIRK(_qn)
+> > +#define SCMI_QUIRK(_qn, _blk)
+> 
+> As I mentioned earlier, wouldn't it be useful to always compile the
+> quirk code in order to make sure changes to surrounding code does not
+> break builds where the quirks are enabled?
+> 
+> For example, by adding something like
+> 
+> #define SCMI_QUIRK(_qn, _blk)						\
+> 	do {								\
+> 		if (0)							\
+> 			(_blk);						\
+> 	} while (0)
+> 
+> here?
+> 
+
+Yes I will do.
+
+> I didn't really review this in detail, but it seems to work as intended
+> when matching on vendor and version:
+> 
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+Thanks,
+Cristian
