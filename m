@@ -1,72 +1,73 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E9624E4A9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06A024CEEB
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836150; cv=none; b=cUkcs4MTDLYnwhjdcqFft59+KmqDWvvFnXdHl574xY0MhvmJQYAKjvs68cwJPdlHYLXqssqTOv0jv5RCX7drNLoej3MTICzPk5j16oXLYlXbA9C178U1FouMShqw/+zX4Kpv981MgI7koPubmGYFKorpz8gGodEVbHye8Qmhwmk=
+	t=1744836151; cv=none; b=BxS569a48jiGpIZhArzhEs4UoRWJTK6VOESwYVW9YlWlWETlUtPohM3qqDVA0/VVXtd3i8bFQomChqJy8NcB7MQqnz8/e4PzjhJkmCGnLEtSP4M8A3nqi4DaWUpqA78BSDJIcOO4aj1xN2TzPjP7j7xCbAIVcmya3pvIe/UNbSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836150; c=relaxed/simple;
-	bh=1+tRRy/nL01MPl0+5FS05H/L2lfuD8Vmz0fi46Q1xuA=;
+	s=arc-20240116; t=1744836151; c=relaxed/simple;
+	bh=W7NKhnTpUeOCGlpiS2roAP2cc1f4BGRsQOUiHrDOA1M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gnFL40LeHqK9R4bs4Wfkr9DmfQtTyiWAjVRZYohLB/L+s+RGHgi7t54aZhuS46oQzmIAiFKOPd8ekr2pYCJovfyK5xR7iUV85JgSJweGlTUSuPYbxOSdcNrGoh0zKlXE4fIXt8KrUf6c1jYOeblikGM0k6ehuKHthsXmM4qEY84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=Ap9GVbsW; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=Iroivun+4wMOTN0/tdyqLD8hQjKaaLtmXWM+6DiZXccn4bRwakSyLqIOAWOfwtZleT7OnVMhNfzc3AIHdTNdq+W8m4MaINfuvI4xnkzpfqo4xc/+91/GNbm5SrVstrsaqKOUiJmvgd37yx8fDKkh7CAbA9UM6HTF3deGvAbnpPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=k29uOiZ6; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="Ap9GVbsW"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso33631b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="k29uOiZ6"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so14810b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744836148; x=1745440948; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744836149; x=1745440949; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TjTAiMO1GxG/PObrFdD9u5YrnCsI7HGevSexjRmDxRA=;
-        b=Ap9GVbsWVbEwMm0Sgi8qI6MEiKXrdUUqyX+t2M8HmHTD93+khDB9pi9FtkycY+X4+m
-         PwY9c4GzGBuS2X7kkmUapSK01zLGyDXgVlIpWjqlGM9a3FttFWfq/5hXUTuYONXGuBGi
-         VDLh2tfthNrFZtzqdPB6BrKUR8WyWcvImrHeT2RecTv7Lc2IKUpHAyUjE2f8DnRq4TEy
-         mia5mh+0TlvdkxI+K5knujm+CVw93UaOAFu6mULPf/vvjNel4cxG7MGWv134iKovPxgp
-         7kynVG3fcKQ0ReGXvKS/gooXrws72eAgSCsR0JKNg9l/NIBvYHzovReFJrI1mut+euIt
-         dqRQ==
+        bh=HUDIvKIBsD4gxpULDKxinqYIlQSnX87hM/ddYNKNziQ=;
+        b=k29uOiZ6VyaBVQiDDXpUkrNvF7xIL5114BEmfbsky1VnvzTgRpgNt5cd7+VZgS1gDW
+         n4tUo55naND8mkOdXxkpcfJc2l+k8EmyWy30YJ5PEpBxtDlB5ZqYfqOfz807/NxXp0kg
+         xJTGiVCjeVb4U9wxf47d7Cm+fEo4Cz0euo2vEsGz0aI8S+aKlrDk28tdm6XlL9FKgtqP
+         ZTQWp9AL6ic//be8bN7yC7FSEvWj/UE2LO4eF0CjXCNJ5p33+Lvtk8qBL4nHD2GxqkK6
+         rpOzHI3QThoZwc7OuZtPUhoP8E3B74hd6vNP9BJk7Ts/GCKJJQsFfIqmHsWZoDvD9+aV
+         HVoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744836148; x=1745440948;
+        d=1e100.net; s=20230601; t=1744836149; x=1745440949;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TjTAiMO1GxG/PObrFdD9u5YrnCsI7HGevSexjRmDxRA=;
-        b=RS559CUH+s8t3MftRRRH4OOGVcqEsNkphHWNg49Dntz5kjxZKcX/0Ztb2mWGx5jrqf
-         /xGJQpou2sawQdeFfoKmJUf03LRakXyWpSgTBurd0SgMS+DPm+o7SBFuoVJRF+ncLCc2
-         xbIzWeoJ28JibpHyX+/YxMcuz8mhUWToLOR1EXjujXnIY+I6iynZfePboWkAIEgBPS7o
-         P7hBpXKL6HBILCO5FQKdrZAjQ2Fg4WEmXG5YLJJ8J5orladtBDUWEKOX0t9s2DhiZAbr
-         qMr/UWdrzvymIFkN3Rs+5k/UqJJDKTl3SD6XuSXCIKxUzTbGFgtrq3N8rp2VCBj2lVLI
-         X21g==
-X-Forwarded-Encrypted: i=1; AJvYcCU2wIODyVwyFRFe2F5K2oQtpJTimLCX4XBltSHjZivcuA3yGoHc2z+y58Q/c6hc5Ygcjw2rpCAqB79TbcQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAIa33or4rUUGGtI0BnsTXXSF0O+Z+z0n4gpHc33MABuOsXcuT
-	JGfj/gI8shfQDgvQm8oJCTs1dZiG4dnGjml0t4sbs5tu4SFHRqLedfiVduIwNg==
-X-Gm-Gg: ASbGncsRCzVru64pF4b9XqwvNtkslzNEIp3th1tw04jrMBQe0SCZzos/U2ECUDg+A01
-	GDo6eAfTkEK5KGw0Lvh0z/kl+7uI8ZzYqFFY5IjmzpQAqawE51peNxrGAAbHJ3ibKc/sVPRgcBW
-	uHdnpwFqkg4NvZsk0t2KoV+jycYkU7rUDyc9dYnIFt2JzmDwb7vMne6/l0usZfJDYqRSrwzuDOL
-	tPYyB1fMSl299fyQG6ovdO4DVt5T876+sLEEyxcP63Jt82mil21jcdVtCyAyuFQtXHuyXzmUExb
-	m9ooS/BEXYpuBXg1WkFGIxD5fHGnu07J+xLLGEmkRqc0gFQY7bml+ja8rl0XGZge+WnfiNZi4/u
-	49ZikWC+ii8UaNWC5
-X-Google-Smtp-Source: AGHT+IHpNWh/TvCbMhLIoPioSeKOQ3n/NrD1YbIxs/DRLH0xJAqpSQFycneeGM0Ao3h91UMlT6xyXg==
-X-Received: by 2002:a05:6a00:3920:b0:736:3c77:31fd with SMTP id d2e1a72fcca58-73c267ecd0bmr4332352b3a.23.1744836147688;
-        Wed, 16 Apr 2025 13:42:27 -0700 (PDT)
+        bh=HUDIvKIBsD4gxpULDKxinqYIlQSnX87hM/ddYNKNziQ=;
+        b=bhtArdkF+rmq5uxZj7iyjYxXuQaREweiBT2A2qUi72pzp/0dRkL0JlAED9iYH/wvQY
+         /2DGVCCEFqwsHDjCyfh12dLXZl41eNlelPp0T/P7WHAFHezgqpkn0YMFziEEJByz2ovP
+         OH/Jxe0AVSHD3yZj6EgzEyH9Jm+JybLSvA16FpE4fdi5uxyq54qif5uUPFGWPMyPiKe2
+         zoJrRvNBJPLT7iqp7jBLlEEvi1XV4QAy/CAcm6oyUgJZxfnYeZONfm+w+Q5rVSGhrcm0
+         y2TgUfmcQx0GZwKIEv8XoZybwFBoLCBr1+hpAEEihX9F5DdWdxcZPS8fsvhoL475vuXz
+         o7KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWReo6TOpJh81bACS5O5omVQeCt+TbClXVlsOz9xJZ1z/dZorBpEzFmGG6Oxf6rnvCw0SK80DnVVJ/XRT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl+JIwlSuS44RZDGK2zVnBfyFFNKQLI3aa4y0PnqSqBx8pGxSd
+	LusDGZ8bi4ZwvtlyNmE2vxif1/VhEj7hDv8rQabW0MVDdv7yMmRHwZ8iWQsJOHCL4Hjr662Gv34
+	=
+X-Gm-Gg: ASbGncuP6oxjS4w49TE0mamIE6mgYlkzL0n9Z7mtFMTLaQQ7DND+LTWOqnBfzWNm1Nl
+	Iw4PdrKsbD2gtreuF9ClZAgLfDX2iLZ7gXvdCpS7uqtSGohJPI9HGN027TwdPLeLQAaopisrDCP
+	wQ2L+a3ApqavJTLsicHoG1BbVvknHfmrfQ9mEfOkhVFywUqiKr13nJNlUcrVt03yuxY+buh8UGW
+	PxztzPoPKM5pr0nZ0ps5h5BGKOBe0IPM6GBr/34u0/ZqjQ0WrvHRbmYouPiNlNAPha1Sgxl8HWI
+	E7OVc3VL2BFpOII0nAaMPoJt+Y5xgGDY+cDb6A3rKFnAAK3mg8OIRhGidtP1Ih+OnKW50VJ4xSK
+	TBpvDEA==
+X-Google-Smtp-Source: AGHT+IEX4eXsP44VjunXaWcttdOrgPWfZ/OAkwqbXiSZcKyF1PkjkyDAsrb9kEIF5F6lmw4jiz197Q==
+X-Received: by 2002:aa7:888d:0:b0:736:476b:fcd3 with SMTP id d2e1a72fcca58-73c267f174dmr5267257b3a.24.1744836148828;
+        Wed, 16 Apr 2025 13:42:28 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c2119sm10778264b3a.40.2025.04.16.13.42.27
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f0fc5sm11202994b3a.91.2025.04.16.13.42.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 13:42:27 -0700 (PDT)
+        Wed, 16 Apr 2025 13:42:28 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v2 17/18] staging: gpib: tnt4882: struct gpib_interface
-Date: Wed, 16 Apr 2025 20:42:03 +0000
-Message-ID: <20250416204204.8009-18-matchstick@neverthere.org>
+Subject: [PATCH v2 18/18] staging: gpib: Removing typedef gpib_interface_t
+Date: Wed, 16 Apr 2025 20:42:04 +0000
+Message-ID: <20250416204204.8009-19-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250416204204.8009-1-matchstick@neverthere.org>
 References: <20250416204204.8009-1-matchstick@neverthere.org>
@@ -78,9 +79,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using Linux code style for struct gpib_interface.
-
-Adhering to Linux code style.
+Removing gpib_interface_t to adhere to Linux code style.
 
 Reported by checkpatch.pl
 
@@ -89,114 +88,48 @@ directly accessed should never be a typedef.
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 24 ++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/staging/gpib/include/gpib_types.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-index da13d11c20bd..d26a388912c9 100644
---- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-+++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-@@ -1122,7 +1122,7 @@ static int tnt4882_pci_probe(struct pci_dev *dev, const struct pci_device_id *id
- 	return 0;
- }
+diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
+index 16aaade310fd..62ce174add85 100644
+--- a/drivers/staging/gpib/include/gpib_types.h
++++ b/drivers/staging/gpib/include/gpib_types.h
+@@ -8,7 +8,7 @@
+ #define _GPIB_TYPES_H
  
--static gpib_interface_t ni_pci_interface = {
-+static struct gpib_interface ni_pci_interface = {
- 	.name = "ni_pci",
- 	.attach = ni_pci_attach,
- 	.detach = ni_pci_detach,
-@@ -1150,7 +1150,7 @@ static gpib_interface_t ni_pci_interface = {
- 	.return_to_local = tnt4882_return_to_local,
+ #ifdef __KERNEL__
+-/* gpib_interface_t defines the interface
++/* gpib_interface defines the interface
+  * between the board-specific details dealt with in the drivers
+  * and generic interface provided by gpib-common.
+  * This really should be in a different header file.
+@@ -22,7 +22,6 @@
+ #include <linux/timer.h>
+ #include <linux/interrupt.h>
+ 
+-typedef struct gpib_interface gpib_interface_t;
+ struct gpib_board;
+ 
+ /* config parameters that are only used by driver attach functions */
+@@ -212,7 +211,7 @@ static inline void init_gpib_pseudo_irq(struct gpib_pseudo_irq *pseudo_irq)
+ /* list so we can make a linked list of drivers */
+ struct gpib_interface_list {
+ 	struct list_head list;
+-	gpib_interface_t *interface;
++	struct gpib_interface *interface;
+ 	struct module *module;
  };
  
--static gpib_interface_t ni_pci_accel_interface = {
-+static struct gpib_interface ni_pci_accel_interface = {
- 	.name = "ni_pci_accel",
- 	.attach = ni_pci_attach,
- 	.detach = ni_pci_detach,
-@@ -1178,7 +1178,7 @@ static gpib_interface_t ni_pci_accel_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_isa_interface = {
-+static struct gpib_interface ni_isa_interface = {
- 	.name = "ni_isa",
- 	.attach = ni_tnt_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1206,7 +1206,7 @@ static gpib_interface_t ni_isa_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_nat4882_isa_interface = {
-+static struct gpib_interface ni_nat4882_isa_interface = {
- 	.name = "ni_nat4882_isa",
- 	.attach = ni_nat4882_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1234,7 +1234,7 @@ static gpib_interface_t ni_nat4882_isa_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_nec_isa_interface = {
-+static struct gpib_interface ni_nec_isa_interface = {
- 	.name = "ni_nec_isa",
- 	.attach = ni_nec_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1262,7 +1262,7 @@ static gpib_interface_t ni_nec_isa_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_isa_accel_interface = {
-+static struct gpib_interface ni_isa_accel_interface = {
- 	.name = "ni_isa_accel",
- 	.attach = ni_tnt_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1290,7 +1290,7 @@ static gpib_interface_t ni_isa_accel_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_nat4882_isa_accel_interface = {
-+static struct gpib_interface ni_nat4882_isa_accel_interface = {
- 	.name = "ni_nat4882_isa_accel",
- 	.attach = ni_nat4882_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1318,7 +1318,7 @@ static gpib_interface_t ni_nat4882_isa_accel_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_nec_isa_accel_interface = {
-+static struct gpib_interface ni_nec_isa_accel_interface = {
- 	.name = "ni_nec_isa_accel",
- 	.attach = ni_nec_isa_attach,
- 	.detach = ni_isa_detach,
-@@ -1377,8 +1377,8 @@ MODULE_DEVICE_TABLE(pnp, tnt4882_pnp_table);
- #endif
- 
- #ifdef CONFIG_GPIB_PCMCIA
--static gpib_interface_t ni_pcmcia_interface;
--static gpib_interface_t ni_pcmcia_accel_interface;
-+static struct gpib_interface ni_pcmcia_interface;
-+static struct gpib_interface ni_pcmcia_accel_interface;
- static int __init init_ni_gpib_cs(void);
- static void __exit exit_ni_gpib_cs(void);
- #endif
-@@ -1775,7 +1775,7 @@ static void ni_pcmcia_detach(struct gpib_board *board)
- 	tnt4882_free_private(board);
- }
- 
--static gpib_interface_t ni_pcmcia_interface = {
-+static struct gpib_interface ni_pcmcia_interface = {
- 	.name = "ni_pcmcia",
- 	.attach = ni_pcmcia_attach,
- 	.detach = ni_pcmcia_detach,
-@@ -1803,7 +1803,7 @@ static gpib_interface_t ni_pcmcia_interface = {
- 	.return_to_local = tnt4882_return_to_local,
- };
- 
--static gpib_interface_t ni_pcmcia_accel_interface = {
-+static struct gpib_interface ni_pcmcia_accel_interface = {
- 	.name = "ni_pcmcia_accel",
- 	.attach = ni_pcmcia_attach,
- 	.detach = ni_pcmcia_detach,
+@@ -222,7 +221,7 @@ struct gpib_interface_list {
+  */
+ struct gpib_board {
+ 	/* functions used by this board */
+-	gpib_interface_t *interface;
++	struct gpib_interface *interface;
+ 	/* Pointer to module whose use count we should increment when
+ 	 * interface is in use
+ 	 */
 -- 
 2.43.0
 
