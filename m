@@ -1,131 +1,137 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6A1A2658;
-	Wed, 16 Apr 2025 01:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DEB226D13
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744767553; cv=none; b=nNLyayMDDabuOXbwGoL6xqCoOAmbgd6PE7zASTvks6As7HREEC80BbuUioB8YfVjCFjCgWIJTatlb1xVAXCDu4kF/6wwtf7WDqb5GOc/F7UaMRohxye8KMG1jb1kShsRq6zi6OMFsCI2g10g1eevSy2PaEj8tKYDtOZxy7EtpRA=
+	t=1744767573; cv=none; b=J5nDudapcSNNZjHWfy1YWT/IzkFNJ5ay2mHZfWbcBcwksrHKfsBHaUyTdfsNZcAOqHsZrNj6eiDWyW8I7atBuaTmAZ6c/tUWsLRmjkWXIE1Ea/iyBmptWZti8gv8y+bMAcrQz8tdm8JyVG+zX+6NJsk7flFeU3IgHxD9QhIDwas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744767553; c=relaxed/simple;
-	bh=splohQJw8U1XANtyUsXhKKF8Cy9tRT9Bwe2SzN0BEbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S2A6Aq6j++MSsGD/eEe393o5NCTS0w9yzUbU95mazJDBQE5r8Eel1wxV+LCBEGAVwekjE8wPGTFAQIrP8va1Jp4vRrK7Mp5dTIBP55+gHKnG1clAT0kUfrIYmeQTuhrVMUHjwtI4Jb5w0RNhIcJsymU+lOIjUq75bFhe9OxmPLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so1232528866b.3;
-        Tue, 15 Apr 2025 18:39:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744767549; x=1745372349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+	s=arc-20240116; t=1744767573; c=relaxed/simple;
+	bh=dTnq697UHqs4Zk+ACZjnV/VcHC+rw4zE0mnepumyuk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AR6WEylruhAVjQBU22cdKPWF9PG0FHYQr17J/vR3tN0Qj8LAP9BK9rH/HxV8Ddp5L19fOSM238GpYM3iCk2dqytgsLq8qQGI8wl5gbdTsjwDIM2e9RHKcAdI19xwXCIuyPHBMbrUB8i6wD89FuD+xbV6cq2VP4SWiSQtvKrQ6rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Rd3j35hj; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Rd3j35hj"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22928d629faso60846665ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1744767571; x=1745372371; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V1HXQ+Xi113ayzUNabjj8NTshwQmo5mZvOv0N53Neb4=;
-        b=lPQ3rHdCNWMHKTTnhsyr9fS7wdwlWVywIOFL56A/N8Cu1/gYuNCwLrhIoHEIFsqhlT
-         SYq+hleAsBnBeQc46oJTVc8Q2Byd0FiC8mfWoeVEAoFNuJdJ7ieq9chRTXo/xD0aSriP
-         kielyulv4q2wJAzjtQ+w58LLvr3HwAQ1+oTnidteckRSuQx+2aYcc10A3joiNAlqBqgE
-         XDLjhcvQw4puIHbXNFNLShqCvSquAbkld7P7fZ68EMQDOl+OIhj9NaA+gbrdEabq8g76
-         xgKcrhK4nHu64n+oNcr22w5g+1QuRO52X+fxFLW7ROxYsQx5p+8KGPpnPg06ankoX/AO
-         iSSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjRs01epEeNSPkExnt7kqlcRdgxuJHOeUr9A/VemkNJ0MqU4m3npz0XP23ZYiXXjISYENPE9yHN0U=@vger.kernel.org, AJvYcCXyJSBRDtiSdFSfaOgjCcyS+uDg2cpM3SgCUQ6KkA5ET1b5tmD/2UE5bjlztmJMglrlXU+V6563pXacGzhK@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrGbJbGERD9cNKFOpOoEZWXWfXqVJ+VqVq9eY78/eFcRZZspK1
-	igk5CEUNYRwpu7ADZoaLZ0h5J+8KZIcINCVR0ESlHClm40mVPmSNVua5bXs0/hg=
-X-Gm-Gg: ASbGncu7pj2z1x11wPDHy1NoxyY8+Mh4aNlA+Ni+7DxqRAK27/Kk7DG8LFEHoPaFHzv
-	wp97U/BfKyLZLThftqYaZj0LJWm2Gtn28+VX5Rpl7fco5/DK1rWzTXB8vLXgAVTDwRn9UmCoA/J
-	vXUwiZWquFQrDNv6MY5uQRbgZnvWBISDKCC883a0mWNw8BHUw1qcyShE39NdiOWholgDY9Qcpxb
-	IwUosN+vkU4Ba05cCpFky2BgLEst3xhxvdvNK1TVkmxsQGZ08b2aYxO8NZN7aLxm28kVZRZ3Hra
-	uYfXH3IeyPA0EzxEPXk58TLNjPTBhrbpBciFRmvGQJgcl5wrU3DevwavhyJypbCiHTpjGJM=
-X-Google-Smtp-Source: AGHT+IHgHIJADHseDzKH72XvS0TxfebXufKy/lOPcvTeaf6MAdKq0tS9P7LMI703Bf7LGTq+x3OIaQ==
-X-Received: by 2002:a17:907:2d27:b0:ac8:179a:42f5 with SMTP id a640c23a62f3a-acb38222672mr89261966b.14.1744767549076;
-        Tue, 15 Apr 2025 18:39:09 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d349d24sm27776466b.182.2025.04.15.18.39.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 18:39:08 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so1232522866b.3;
-        Tue, 15 Apr 2025 18:39:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIH/UAmESSo2GHgUqjkmj8/H0dMxDN6uJ3IOQrd8D0Fz6er1ycu9H/SRNwAGrxwtkvKl7wy3XPm/YspbSV@vger.kernel.org, AJvYcCXEe+TMjDitnQu6ZB5VEEbFXJE4tPRUsq3+/R0LL/neN6qyovaUHo7tiuxI3q0bxWicHl9t40VdXDc=@vger.kernel.org
-X-Received: by 2002:a17:907:6ea1:b0:ac6:e327:8de7 with SMTP id
- a640c23a62f3a-acb3849df86mr88724666b.42.1744767548484; Tue, 15 Apr 2025
- 18:39:08 -0700 (PDT)
+        bh=RJHYVgEVoY4PsMLuoYWXVUdOXZM3Dp29HRy62pgdjTw=;
+        b=Rd3j35hj2xWKtfhMqhHMNAyTmBxwCMjG38v86slF2193sI6XYQ3R7BZzGIkyyrrXvw
+         KjPujaFoaPJTfcIaC3qSvqccdLRhnVOTT42VgJIzOiAsY2n0CX07lkUG4OIOSiDZBPYi
+         kkPXVxdfAOOWh1OCAi9L0DdNGQvztq6IDnciM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744767571; x=1745372371;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJHYVgEVoY4PsMLuoYWXVUdOXZM3Dp29HRy62pgdjTw=;
+        b=nKRr0BWAa/icbKthEICkLb86JUJEhK9DlpVOt4ikUQsXWPZuNRGty3odLB4kSmAW2m
+         mtoDyLvaaMETn0ukoTDqtGrnnzgsBuP1996CcvjLSbOJ6ChG6Qfbr3eOEiM6y1HCE3pd
+         97O/fUfMaJqLhAevamtKqB0mdSQ/AOX/1QADB72BcKvWORjOsE4BGtmB66+shHn6O2oX
+         jTVHEEI/GFRG5xZ+xWLvR5SCrCeqw0kJbntOszPHlXAzSpFa55PpEXc7oq2LaFUIWW2q
+         98BuaV6IY5/NWac7qPGTfqawppKWnwnP7X6MxrrlPAft0t7gAFSRaCc2Em0tYTbC361F
+         A8fw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYxueZErX4qpXrwwLXA/fbIrgyChq0RZ+6nxUwDXNZzxqkG8ogjrtuq+aTD5+IracL6xmvtPkgx5WAZA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyt/PdD9EgkoGyEOQh0lwMsrSll7+rQOPAForJRm2IC7hRx/Psh
+	ydtkr8lmKOSRm6C/p9clcLhaqymu7p+XXL56lie3v5KXHnsa/xYmr3Nh136tOE0=
+X-Gm-Gg: ASbGncsvp6MGpVXvsws06Xs3BOfdaqrBpCE2b4w4akc2/O77tjWvnzsQWKT/JQA4r/5
+	Opkoj6DxD05oNeGbyZ3I28/llwAwxBWeoIiTGOy8r4sMZC5Go6UGLXtZhKlXS/SZO21VYx5O7PN
+	dd2vUUkymmU/2Ty5cjJ8Co8RJqq2ea1TnLK6VC8nJohNRwZDu1ue7DzZYQzMN9U+k+6YWndRUrY
+	bxkidNGXUBG+BQGXPjw6BGrOryQJCSRXwwzxyLEvJjXVf42UM6Z1TI10tsWGMbhDW9I86TofVot
+	fcw2acHQc1XXwrBMNZ7o0HESinz10a790aFTxFwaRGLztbov2buJcmcPS5x2swh6AsgWWbnS4VV
+	v/WUg1KxgVAU/
+X-Google-Smtp-Source: AGHT+IGal5XUm/5ZjIJym+rt2yFc1Nr3o7jD6J3I/S17PgjABrDnWFW2YF0A1YKdPmsdX90xjsLVeQ==
+X-Received: by 2002:a17:902:db05:b0:224:160d:3f54 with SMTP id d9443c01a7336-22c31a84ec4mr19284785ad.31.1744767570671;
+        Tue, 15 Apr 2025 18:39:30 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe4de0sm2097415ad.212.2025.04.15.18.39.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 18:39:30 -0700 (PDT)
+Date: Tue, 15 Apr 2025 18:39:27 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [RFC net 0/1] Fix netdevim to correctly mark NAPI IDs
+Message-ID: <Z_8KT7LYUgyZQhI-@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+References: <20250329000030.39543-1-jdamato@fastly.com>
+ <20250331133615.32bd59b8@kernel.org>
+ <Z-sX6cNBb-mFMhBx@LQ3V64L9R2>
+ <20250331163917.4204f85d@kernel.org>
+ <Z_613wmrKRu4R-IP@LQ3V64L9R2>
+ <20250415171154.0382c7f7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-pasemi-fixes-v2-0-c543bf53151a@svenpeter.dev>
-In-Reply-To: <20250415-pasemi-fixes-v2-0-c543bf53151a@svenpeter.dev>
-From: Neal Gompa <neal@gompa.dev>
-Date: Tue, 15 Apr 2025 21:38:32 -0400
-X-Gmail-Original-Message-ID: <CAEg-Je9vfqKe8tThUNxy2hKGGMYR4F2RJaKXqaXJx8f856Oncg@mail.gmail.com>
-X-Gm-Features: ATxdqUGM2YL7UPwB2q8EHrpPvcO9cfPSM4k-2kB4UVuY2Jof3nZs232BzqVAc98
-Message-ID: <CAEg-Je9vfqKe8tThUNxy2hKGGMYR4F2RJaKXqaXJx8f856Oncg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] Apple/PASemi i2c error recovery fixes
-To: Sven Peter <sven@svenpeter.dev>
-Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, linuxppc-dev@lists.ozlabs.org, asahi@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415171154.0382c7f7@kernel.org>
 
-On Tue, Apr 15, 2025 at 11:37=E2=80=AFAM Sven Peter via B4 Relay
-<devnull+sven.svenpeter.dev@kernel.org> wrote:
->
-> Hi,
->
-> This series adds a few fixes/improvements to the error recovery for
-> Apple/PASemi i2c controllers.
-> The patches have been in our downstream tree and were originally used
-> to debug a rare glitch caused by clock strechting but are useful in
-> general. We haven't seen the controller misbehave since adding these.
->
-> Best,
->
-> Sven
->
-> Signed-off-by: Sven Peter <sven@svenpeter.dev>
-> ---
-> Changes in v2:
-> - Added commit to use the correct include (bits.h instead of bitfield.h)
-> - Added commit to sort includes
-> - Moved timeout explanations to code instead of just the commit log
-> - Made timeout recovery also work correctly in the interrupt case when
->   waiting for the condition failed
-> - Used readx_poll_timeout instead of open-coded alternative
-> - Link to v1: https://lore.kernel.org/r/20250222-pasemi-fixes-v1-0-d7ea33=
-d50c5e@svenpeter.dev
->
-> ---
-> Hector Martin (3):
->       i2c: pasemi: Improve error recovery
->       i2c: pasemi: Enable the unjam machine
->       i2c: pasemi: Log bus reset causes
->
-> Sven Peter (3):
->       i2c: pasemi: Use correct bits.h include
->       i2c: pasemi: Sort includes alphabetically
->       i2c: pasemi: Improve timeout handling
->
->  drivers/i2c/busses/i2c-pasemi-core.c | 114 ++++++++++++++++++++++++++++-=
-------
->  drivers/i2c/busses/i2c-pasemi-pci.c  |  10 +--
->  2 files changed, 96 insertions(+), 28 deletions(-)
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250220-pasemi-fixes-916cb77404ba
->
+On Tue, Apr 15, 2025 at 05:11:54PM -0700, Jakub Kicinski wrote:
+> On Tue, 15 Apr 2025 12:39:11 -0700 Joe Damato wrote:
+> > On Mon, Mar 31, 2025 at 04:39:17PM -0700, Jakub Kicinski wrote:
+> > > Up to you. The patch make me wonder how many other corner cases / bugs
+> > > we may be missing in drivers. And therefore if we shouldn't flesh out
+> > > more device-related tests. But exercising the core code makes sense
+> > > in itself so no strong feelings.  
+> > 
+> > Sorry to revive this old thread, but I have a bit of time to get
+> > this fixed now. I have a patch for netdevsim but am trying to figure
+> > out what the best way to write a test for this is.
+> > 
+> > Locally, I've hacked up a tools/testing/selftests/drivers/net/napi_id.py
+> > 
+> > I'm using NetDrvEpEnv, but am not sure: is there an easy way in
+> > Python to run stuff in a network namespace? Is there an example I
+> > can look at?
+> > 
+> > In my Python code, I was thinking that I'd call fork and have each
+> > python process (client and server) set their network namespace
+> > according to the NetDrvEpEnv cfg... but wasn't sure if there was a
+> > better/easier way ?
+> > 
+> > It looks like tools/testing/selftests/net/rds/test.py uses
+> > LoadLibrary to call setns before creating a socket.
+> > 
+> > Should I go in that direction too?
+> 
+> Why do you need a netns? The NetDrvEpEnv will create one for you
+> automatically and put one side of the netdevsim into it.
+> Do you mean that you need to adjust that other endpoint?
+> It's done the same way as if it was a remote machine:
+> 
+> 	cmd(..., host=cfg.remote)
 
-The series looks good to me, especially the new patches.
+Maybe I'm just thinking about it wrong and/or describing it poorly.
 
-Reviewed-by: Neal Gompa <neal@gompa.dev>
+The idea was that napi_id.py test forks. One process does a
+listen()/accept() and the other does a connect(). The accept side
+checks that the napi ID is non-zero. For that to work, both
+processes need their netdevsims to be able to talk to each other.
 
+> If you really need a netnes check out
+> tools/testing/selftests/net/lib/py/netns.py
 
---=20
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+I'll take a look, but I'm probably just missing something about how
+to properly use NetDrvEpEnv.
