@@ -1,76 +1,48 @@
-Received: from mail-io1-f101.google.com (mail-io1-f101.google.com [209.85.166.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812F018870C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6B8219A8B
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:09:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826920; cv=none; b=BYRxCMx5JJC2YwfhQJ9eyCfC422x9C3W5X15UDL7YSUPrecaXMx3ngXl9HJvzE4+6kU3CfRsE28CKImpBUKtDElpNGXRuSlgdu5qw43yvUM1BmJv512cpLYmNdxnysyf/zblaMXenLSCRr07n+X58vpVZR8Unu+Ll3rEJ/jZ3x0=
+	t=1744826951; cv=none; b=khUOLjTlJNvHS0H5peXthhY3aFAIw33yjHttL80skI0p/WF2/XwCOxOq4kPZqeqXYDgk6AaRsU7L6DpA7H3v5AqtzUzgEhIfwUHcYC9L6TbEAUMSNuFFgQl+r0WSovsZUCAGbxCG+JWWot6/8FMMSe2jJHVqyE6t6CZZJWluxMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826920; c=relaxed/simple;
-	bh=8OyViLUCHII16I1nEOvw8VBmdRPbm9PLpU/EteHs0ns=;
+	s=arc-20240116; t=1744826951; c=relaxed/simple;
+	bh=Tofc44tRyxEKXnUa2bwDyx3eVUfRCpuW6m9vhkYuuCw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PIUUrtAg1O9y+vSHbYcuAQj6XE/LAFIExUWP3Ug81eDUWtkAj+g20bbvXjB1YT4BQ0lOxDRoHj5WKIccMat03FT9Y1uQQJ2NoC2pggeiE2zzcUvkNhuxu5KwGzVHhHDRMmLst7iLpkJzFL95RYVGVtfdIieT/8JMHK7qG7RxeHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=M59+Bezv; arc=none smtp.client-ip=209.85.166.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMZr86IXIFi6dBYwzrCIWhuObqC7otiRfZCUvaxZyk6JsRQ/TrFhtaSQ4suzoBB0sPNS4VRJV56qd5pVTj3Z6/zK36k/p6VXSot/62Htue0CWBF7qTqCZk4tg4li9Y6NchD85chjEBS4akHte7QhsIvUpPKbG8yiSd/03T9v2D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=DnrhDyEK; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="M59+Bezv"
-Received: by mail-io1-f101.google.com with SMTP id ca18e2360f4ac-85b3f92c866so172304439f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:08:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744826917; x=1745431717; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8OyViLUCHII16I1nEOvw8VBmdRPbm9PLpU/EteHs0ns=;
-        b=M59+BezvZC4gDaLIcyIBZM4u8H+AGGT3MejdM6xRyKsRkHDHkn9PFB5h5ajInmOKkP
-         dRDN2UF7DwiZvGv9rmflzrsbX/usY6Oi333rCH4meMkdxwVQnrUM3NKBNi1eLLAIl+Dm
-         KjYDpMIz7Zot0ZA8T8P/0wmz4dRLKmfFE1K8IFot+4dko4XA9NF0GxXGnmTltNAcpx/T
-         yU9ftSqj9PSJexAnUNaXOK2IsXw9e8uLncGb9W6i41GugjOSZcgXI7vqGIIsOxwrsLtC
-         Sil3dK8Z517bF8gjUlp2UQLJv5Pg7c0NrLYRqamUPUqbOV4B65BFDCaVOoBNRk+heIYs
-         OTaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744826917; x=1745431717;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8OyViLUCHII16I1nEOvw8VBmdRPbm9PLpU/EteHs0ns=;
-        b=ox6etNMc8Zui5W1L0/6iA5i6Cv1KCcxhcBYZ95B+uAqtnjZldnVUpxAgndwDWWi5oj
-         DnW07if326+hYXlwJdIJmNI7LRHQ3fMbdgnfX8RHP4lLv7U7fDpM/5Vu9lD/cJG3wiBK
-         M0vLm/ASs5+qR2x0noqOi+UeemJLQfqBFSV9KQkei+D4Udtvg3QaMloEkdC2myfdxL8f
-         VMZczfcaKT6+LWOM5VBGsFYks9HfCps6E8uX53BKvyCtJF7blgCajDvDmp2+nv/Zz3hV
-         RxvVoxz8yKVJ71a3+iIjMfm3bi4NEN/+nEQ2Ivn3s2e1XcwheRA806YKNLCB4ZRz5NYN
-         M0hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZHzZ1xd4poimRcfWJVZYLEWhA7OIckjNEwrbdZy0qRTOINxGKfXvxi5KAt/W6sQZiKNwB+NkZh2Aj16U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVW6hyKaQB45yARdEitma7mC3YqIY7x9mr4pmgKVYYQ+Ol3a+2
-	zguMR32gMZVMOXW98S4obxKV+LHfptvwX2DGwWkDhUIxBpx8iNwF1eI97z5ryDISVuJ+1wh2Ao3
-	/VIyIGoeMw4Bt9nuS/YibRQbsRH8Caolad4BQckeFZ7o0radA
-X-Gm-Gg: ASbGnctso9MxLL1piCNSqKkYic8IXos9RTsKnKfXJn+RAj7YHhsnPk2BQa7WuqCpzru
-	d2EuvG7oVWQh3B8y3EU5rGyGhmOxKtQVs3XURzIShi5rjH9kch4ToqenOCthvdJNzREbiHcyxxt
-	cB16axQmCgfFxkpCmsdqkRICX4tlHLF1vzfXuAxIMBvclvXEvehitU7RQ47yUlqBjRLBImypRN/
-	XuDy5tD9AjB7aFFwq4mu67oAystFO+HFMB0ybl3pRGcXKjO3KLmvg7I7YMfXUY1yanFnOzhQgfo
-	q06MXMPb1BI9uTdRi3OWWoG1KZa8WCg=
-X-Google-Smtp-Source: AGHT+IHubmPMI3D+iMP9Z4MxiqL5kz//to5CHZZ6BvyWbGkfWWYz2Hn9RKWknQzdAstPB9lXS32dUwQB8QlU
-X-Received: by 2002:a05:6e02:4904:b0:3d8:18f8:fae9 with SMTP id e9e14a558f8ab-3d818f8fd17mr16407925ab.6.1744826917459;
-        Wed, 16 Apr 2025 11:08:37 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 8926c6da1cb9f-4f505d18f83sm761090173.25.2025.04.16.11.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 11:08:37 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 41E4C34035E;
-	Wed, 16 Apr 2025 12:08:36 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id 357AFE40318; Wed, 16 Apr 2025 12:08:36 -0600 (MDT)
-Date: Wed, 16 Apr 2025 12:08:36 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: pass ubq, req, and io to ublk_commit_completion()
-Message-ID: <Z//yJApTjXvfVnga@dev-ushankar.dev.purestorage.com>
-References: <20250416171934.3632673-1-csander@purestorage.com>
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="DnrhDyEK"
+Date: Wed, 16 Apr 2025 14:09:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1744826946;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1Z/ycPhzFOp7kqim8jOWP2MgWDZ24W6IrXcEl8cuJ58=;
+	b=DnrhDyEKSAHD2fzWhfxYKAMLqUZToFlUYZMgSO+5+GZ3c4t3esiForHeklefv6nSkYv15V
+	f1840w5Kopq2OZImcX4hNi7zsQ1tdLtx5/iNlV9Dl0zFAlOoPFCYjPGhxcW2jjG9FFXvpr
+	Rdy2YeX/ZKLv84JBoidMlckAU+DZoGYGvvoCAy7UWyzxQCF3qP6bZy2NvOyXQkKTbN+ms7
+	olCblvgUlVdi9MICJo+Ln+3BI6Hezht9UN5N7tiEyFbQIdJyzWITTElI6ppeNLhMlYUNQe
+	DN+7NAzASQnQroPDyeTYWCS+XcIoE5hPGkUyCWpWkfNv6O0puB+LKcUqc8Dpuw==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: fnkl.kernel@gmail.com
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
+	Neal Gompa <neal@gompa.dev>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
+Message-ID: <Z__yPpi43VdDqPYM@blossom>
+References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com>
+ <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,12 +51,146 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416171934.3632673-1-csander@purestorage.com>
+In-Reply-To: <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 16, 2025 at 11:19:33AM -0600, Caleb Sander Mateos wrote:
-> __ublk_ch_uring_cmd() already computes struct ublk_queue *ubq,
-> struct request *req, and struct ublk_io *io. Pass them to
-> ublk_commit_completion() to avoid repeating the lookups.
+This should have a Co-developed-by tag in addition to the two sign-offs,
+given you've made significant changes.
 
-I think this is rolled into https://lore.kernel.org/linux-block/20250415-ublk_task_per_io-v4-2-54210b91a46f@purestorage.com/
-
+> This driver exposes a SPMI device as an NVMEM device.
+> It is intended to be used with e.g. PMUs/PMICs that are used to
+> hold power management configuration, such as used on Apple Silicon
+> Macs.
+> 
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
+>  MAINTAINERS                |  1 +
+>  drivers/nvmem/Kconfig      | 14 +++++++++++
+>  drivers/nvmem/Makefile     |  2 ++
+>  drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 79 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e7b2d0df81b387ba5398957131971588dc7b89dc..63c12f901aed1f3e6de8227d6db34af1bd046fe6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2298,6 +2298,7 @@ F:	drivers/iommu/io-pgtable-dart.c
+>  F:	drivers/irqchip/irq-apple-aic.c
+>  F:	drivers/nvme/host/apple.c
+>  F:	drivers/nvmem/apple-efuses.c
+> +F:	drivers/nvmem/spmi-nvmem.c
+>  F:	drivers/pinctrl/pinctrl-apple-gpio.c
+>  F:	drivers/pwm/pwm-apple.c
+>  F:	drivers/soc/apple/*
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index 8671b7c974b933e147154bb40b5d41b5730518d2..9ec907d8aa6ef7df0ea45cc35e92d8239d2705ee 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -310,6 +310,20 @@ config NVMEM_SNVS_LPGPR
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called nvmem-snvs-lpgpr.
+>  
+> +config NVMEM_SPMI
+> +	tristate "Generic SPMI NVMEM"
+> +	default ARCH_APPLE
+> +	depends on SPMI
+> +	select REGMAP_SPMI
+> +	help
+> +	  Say y here to build a generic driver to expose a SPMI device
+> +	  as a NVMEM provider. This can be used for PMIC/PMU devices which
+> +	  are used to store power and RTC-related settings on certain
+> +	  platforms, such as Apple Silicon Macs.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called nvmem-spmi.
+> +
+>  config NVMEM_SPMI_SDAM
+>  	tristate "SPMI SDAM Support"
+>  	depends on SPMI
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index 5b77bbb6488bf89bfb305750a1cbf4a6731a0a58..b639f4284184db026bb27b11e04d54b8f7ff166f 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -64,6 +64,8 @@ obj-$(CONFIG_NVMEM_SC27XX_EFUSE)	+= nvmem-sc27xx-efuse.o
+>  nvmem-sc27xx-efuse-y			:= sc27xx-efuse.o
+>  obj-$(CONFIG_NVMEM_SNVS_LPGPR)		+= nvmem_snvs_lpgpr.o
+>  nvmem_snvs_lpgpr-y			:= snvs_lpgpr.o
+> +obj-$(CONFIG_NVMEM_SPMI)		+= nvmem_spmi.o
+> +nvmem_spmi-y				:= spmi-nvmem.o
+>  obj-$(CONFIG_NVMEM_SPMI_SDAM)		+= nvmem_qcom-spmi-sdam.o
+>  nvmem_qcom-spmi-sdam-y			+= qcom-spmi-sdam.o
+>  obj-$(CONFIG_NVMEM_SPRD_EFUSE)		+= nvmem_sprd_efuse.o
+> diff --git a/drivers/nvmem/spmi-nvmem.c b/drivers/nvmem/spmi-nvmem.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fff6162cb22dd7ab45883f004f5b63ebae014698
+> --- /dev/null
+> +++ b/drivers/nvmem/spmi-nvmem.c
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Generic SPMI NVMEM driver
+> + *
+> + * Copyright The Asahi Linux Contributors
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/spmi.h>
+> +#include <linux/regmap.h>
+> +
+> +static const struct regmap_config spmi_regmap_config = {
+> +	.reg_bits	= 16,
+> +	.val_bits	= 8,
+> +	.max_register	= 0xffff,
+> +};
+> +
+> +static int spmi_nvmem_probe(struct spmi_device *sdev)
+> +{
+> +	struct regmap *regmap;
+> +	struct nvmem_config nvmem_cfg = {
+> +		.dev = &sdev->dev,
+> +		.name = "spmi_nvmem",
+> +		.id = NVMEM_DEVID_AUTO,
+> +		.word_size = 1,
+> +		.stride = 1,
+> +		.size = 0xffff,
+> +		.reg_read = (void *)regmap_bulk_read,
+> +		.reg_write = (void *)regmap_bulk_write,
+> +	};
+> +
+> +	regmap = devm_regmap_init_spmi_ext(sdev, &spmi_regmap_config);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	nvmem_cfg.priv = regmap;
+> +
+> +	return PTR_ERR_OR_ZERO(devm_nvmem_register(&sdev->dev, &nvmem_cfg));
+> +}
+> +
+> +static const struct of_device_id spmi_nvmem_id_table[] = {
+> +	{ .compatible = "spmi-nvmem" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, spmi_nvmem_id_table);
+> +
+> +static struct spmi_driver spmi_nvmem_driver = {
+> +	.probe = spmi_nvmem_probe,
+> +	.driver = {
+> +		.name = "spmi-nvmem",
+> +		.of_match_table	= spmi_nvmem_id_table,
+> +	},
+> +};
+> +
+> +module_spmi_driver(spmi_nvmem_driver);
+> +
+> +MODULE_LICENSE("Dual MIT/GPL");
+> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+> +MODULE_DESCRIPTION("SPMI NVMEM driver");
+> 
+> -- 
+> 2.49.0
+> 
+> 
