@@ -1,709 +1,152 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90ADE3010C;
-	Wed, 16 Apr 2025 14:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735F8145355
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813226; cv=none; b=u9iDAFQmaCo4khC1dxGCxvUWmoYZG0gAdEf1LOL7emnBWj3aEHPZzZP6rZ873g0aneJwIdbnJEfW8LyDgbr6Z2Uo+cKHSMXLmWbl/ZZptlA+BTd/1DQf+bC2la4I+tx32ypAfIDerFvH+wVjAFWxc6EOw80l6FwJZ377K8JGFoI=
+	t=1744813273; cv=none; b=a7GQUU31at+1PGG57vJ95M2XLo8nMCYsSb/Su70eLjtQW6LEIB6rRTy+6tnOfggYevGEvlsQGJlBLBtQmTq0uk+SZKvi/CL/zSbB77zRNt4hsgdvD9KyCDDXlAk9BGk7O4H9R2gZA2BYQqmxTDdWIDHZyaRagMN8wmVbo/udN8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813226; c=relaxed/simple;
-	bh=1C8G3Pm9jAq7Fwm55YMSYwYz10MFq17lawTizC45DpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p9TbEbV7L87kdK4jBlV7FRNg+5XfXxpo3pYbkYlyqYzSKP2CNqzGDBSKj/ch8JF66cfJmB3qy34X/BK8QwPrVXe5O5pDNJ48yl/quL5lnoNxk/0htT37ooz90KjfD4nw69C0PzsX+VjFOp/yEzVFDmJDUcMvlPfgMzsJM2uu2L8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dJS5aYEY; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744813273; c=relaxed/simple;
+	bh=eFyFyO+XYfj88o6DdnN3CjU/LPr5Dvhoivob0SdoP7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ToYGlevFRL8pJ+EimSigl989bkhU+EBeL3np9+xT+SXXh5nqPK8TrCo3vA7dcpNX8rStm6CCskJ397aXpKV4yn4ytIpbJ2ZUDcztqd4/OVQA8o8TUFPUGgr/QKCCHyme/Bui2h6m4dvqEBHyuZYg5vqlb+6S1QnJZ6P0bYEiH7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrHSGMYk; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dJS5aYEY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A770E43A1D;
-	Wed, 16 Apr 2025 14:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744813216;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=95G2prtoXMAoiwp7P6wUh0gLXo1yX9c+y7W0MTBG0f4=;
-	b=dJS5aYEY/R/qjojDqI9zy1X8ZzdhpAuWnBiyX5Lpz5Ohdcrs7HXpfxXqXUXhOMNDReJ6o9
-	v3VpXOmSJHiUwNgLDhSz6sNV8jYfzh+HQa1tgUgUiSoIOsg61pdTQkJW8RvAxbjn4Ck/bz
-	2yjbkSX1v5SGFGrJcUihLgPvrYbU3efrxyCEL5GI7ozQqCaFY5m8WWb8Pm47rms92U41eE
-	vbAKPpwvz2iN94Fl9ygdnCzOIbuK1fx34rLGy3SLAejgmWlSwp/ONRQA0S6qup3wntGoVC
-	z8c0AGc98kN0K+6icq9zFIF18PEGKWmDQZBjwncNuNXp88InJ4TVO/r04JuISA==
-Date: Wed, 16 Apr 2025 16:20:13 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Shubhi Garg <shgarg@nvidia.com>
-Cc: lee@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 4/5] rtc: nvvrs: add NVIDIA VRS PSEQ RTC device driver
-Message-ID: <2025041613211528675cb8@mail.local>
-References: <20250416120619.483793-1-shgarg@nvidia.com>
- <20250416120619.483793-5-shgarg@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrHSGMYk"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso8661572a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744813269; x=1745418069; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vXnvk8XQNhx0TXzhv37WADjp3Ermfxa39z+e6RYkwbc=;
+        b=GrHSGMYk5N+v9YrJ7UsV/tpQRjzTyaLNdW2roDBUreaRSd44rM0moLl/2QLpTLPVkK
+         esfIgXVs0M37OQJbjI7AIGyP0ktGIEdWtDEQTMO0kqFq9VPIk3GpAinDxFmPcJTk7Pna
+         GRAQpnlcvfWvS3AcK2fJOD28SooX5fU/xTvH3Kq4SwOqts04Pj3r0nhaTQEV7EhfU2OL
+         dprik0/AMwo2nBqa8A4XsxPC90ZMNT9cEiPVWq1gPacisTib+XZYV7Qb+VMePlFXKMHD
+         WnjgghDc6aR2rJMWbmqnMduKV8FonnYqJ5YotAkI3n9L0UbvNbzyvLsQZTxEsOUUzzjk
+         zL3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744813269; x=1745418069;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vXnvk8XQNhx0TXzhv37WADjp3Ermfxa39z+e6RYkwbc=;
+        b=AgxkT6ax0M2QLAcpb6RkSCKJeX8rGK4p3PhL1yuXRLnwihdCqOfyw9yWs07wfOmevj
+         5XLMrOjfU3G9h8U3NFVbrP+XZGaHvK0gc7FQMa+VTXD7bgqYMvzihWtxsTS3iOG3JcZg
+         cKs+xT1CKwV1eUcVhpWLPcDE/xuja565Toucv6P6PxbIiAQ2ecJWXssfNxAuwol7xADt
+         g+PQ6DilCwz4LpeH88OIYA4WynLF+xCYqNhfFCRoOzsvuOzw2aPI08IrN9mId0Nr7cxL
+         +jFKhA7ctmVgV6999aLhSqAU8pza38pQVKI7/qiF7L8q4dqKrWoHY+N16QorKSKZ4f+T
+         owhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMBOgbs0/u6Dzw8toUFw39ITyx9njzKqRrvefBq0dmXalNiE2bdje1CPkh/BPuW3DrdtI8CKfyM92DJJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9t6lGVe2H24k2faUl1aEs6UrOn3koDK26he3b6cFJECSNSwyC
+	Sp4tTelpcOsqLZMsVvbI6L88OhNx6D/ZSTTtCmV2hKtdyHcyFSEU
+X-Gm-Gg: ASbGncvJLmxlWaj4Ap72F86BDg+gJ7vrFj4ytB2gQnjQqhYXVr/wuF+ds42XjWsPo0A
+	gFdri3P+1K4vblzHwx8DBm7puMn2+ETOvhRn9ruXo7OST9ZFPOaVnTrSvX8W+9Ep87752rgNImt
+	b4d5+5Mci1upG5x9OJbyh6XNI5C5OCHid/ctHdclkjhZsyjO4CajRUiGpZ4rhwHDCboWP6eiu2o
+	mUuBU99/AoCR4hCYypkjRSid3xuRPjd7kEPxRz/uvAzWciSyyyMi6yyTGaqeoVvHauyVfhZ5epU
+	d1Tkz9pLqTQZ09cu3Qy4LRr74AMKpoijScTyFPgE3XAApHWwPBQL
+X-Google-Smtp-Source: AGHT+IEys/Oramf0RFC3AI2fDdY2kIk48KqU/dF51mFhcVKpFTd5zTnQnZYHaGnoEijXiX2xL0d5+g==
+X-Received: by 2002:a05:6402:4017:b0:5e6:17d7:9a32 with SMTP id 4fb4d7f45d1cf-5f4b746d191mr1948775a12.18.1744813269430;
+        Wed, 16 Apr 2025 07:21:09 -0700 (PDT)
+Received: from [192.168.1.100] ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef56ea4sm8877286a12.25.2025.04.16.07.21.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 07:21:09 -0700 (PDT)
+Message-ID: <cb6d98dc-49e9-2d3b-1acc-f208e4fd13fc@gmail.com>
+Date: Wed, 16 Apr 2025 16:21:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416120619.483793-5-shgarg@nvidia.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtugemvgegkeejmedvuddvfhemfheiiedvmedvtdgttgemugehtgegmeefgeeksgemvgehugdunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtdgumegvgeekjeemvdduvdhfmehfieeivdemvddttggtmeguhegtgeemfeegkegsmegvheguuddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepjedprhgtphhtthhopehshhhgrghrghesnhhvihguihgrrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhihgvrhhrhidrrhgvughin
- hhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhonhgrthhhrghnhhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqthgvghhrrgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alexandre.belloni@bootlin.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 6/7] x86: objtool: add support for R_X86_64_REX_GOTPCRELX
+To: Alexander Potapenko <glider@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
+ kasan-dev@googlegroups.com, x86@kernel.org,
+ Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov
+ <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov
+ <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+References: <20250416085446.480069-1-glider@google.com>
+ <20250416085446.480069-7-glider@google.com>
+Content-Language: en-US
+From: Uros Bizjak <ubizjak@gmail.com>
+In-Reply-To: <20250416085446.480069-7-glider@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On 16/04/2025 12:06:18+0000, Shubhi Garg wrote:
-> Add support for NVIDIA VRS (Voltage Regulator Specification) Power
-> Sequencer RTC device driver. This RTC can be used to get/set system
-> time, retain system time across boot, wake system from suspend and
-> shutdown state.
+
+On 16. 04. 25 10:54, Alexander Potapenko wrote:
+> When compiling modules with -fsanitize-coverage=trace-pc-guard, Clang
+> will emit R_X86_64_REX_GOTPCRELX relocations for the
+> __start___sancov_guards and __stop___sancov_guards symbols. Although
+> these relocations can be resolved within the same binary, they are left
+> over by the linker because of the --emit-relocs flag.
 > 
-> Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
+> This patch makes it possible to resolve the R_X86_64_REX_GOTPCRELX
+> relocations at runtime, as doing so does not require a .got section.
+> In addition, add a missing overflow check to R_X86_64_PC32/R_X86_64_PLT32.
+> 
+> Cc: x86@kernel.org
+> Signed-off-by: Alexander Potapenko <glider@google.com>
 > ---
->  drivers/rtc/Kconfig               |  10 +
->  drivers/rtc/Makefile              |   1 +
->  drivers/rtc/rtc-nvidia-vrs-pseq.c | 559 ++++++++++++++++++++++++++++++
->  3 files changed, 570 insertions(+)
->  create mode 100644 drivers/rtc/rtc-nvidia-vrs-pseq.c
+>   arch/x86/include/asm/elf.h      | 1 +
+>   arch/x86/kernel/module.c        | 8 ++++++++
+>   arch/x86/um/asm/elf.h           | 1 +
+>   tools/objtool/arch/x86/decode.c | 1 +
+>   4 files changed, 11 insertions(+)
 > 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 838bdc138ffe..3b6dc27a50af 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -406,6 +406,16 @@ config RTC_DRV_MAX77686
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-max77686.
->  
-> +config RTC_DRV_NVVRS_PSEQ
-> +	tristate "NVIDIA VRS Power Sequencer RTC device"
-> +	depends on MFD_NVVRS_PSEQ
-> +	help
-> +	  If you say yes here you will get support for the battery backed RTC device
-> +	  of NVIDIA VRS Power Sequencer. The RTC is connected via I2C interface and
-> +	  supports alarm functionality.
-> +	  This driver can also be built as a module. If so, the module will be called
-> +	  rtc-nvidia-vrs-pseq.
-> +
->  config RTC_DRV_NCT3018Y
->  	tristate "Nuvoton NCT3018Y"
->  	depends on OF
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 31473b3276d9..543c5a9fe851 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -119,6 +119,7 @@ obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
->  obj-$(CONFIG_RTC_DRV_GAMECUBE)	+= rtc-gamecube.o
->  obj-$(CONFIG_RTC_DRV_NCT3018Y)	+= rtc-nct3018y.o
->  obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
-> +obj-$(CONFIG_RTC_DRV_NVVRS_PSEQ)+= rtc-nvidia-vrs-pseq.o
->  obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
->  obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
->  obj-$(CONFIG_RTC_DRV_OPTEE)	+= rtc-optee.o
-> diff --git a/drivers/rtc/rtc-nvidia-vrs-pseq.c b/drivers/rtc/rtc-nvidia-vrs-pseq.c
-> new file mode 100644
-> index 000000000000..1a4194e4edf4
-> --- /dev/null
-> +++ b/drivers/rtc/rtc-nvidia-vrs-pseq.c
-> @@ -0,0 +1,559 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+> index 1fb83d47711f9..15d0438467e94 100644
+> --- a/arch/x86/include/asm/elf.h
+> +++ b/arch/x86/include/asm/elf.h
+> @@ -63,6 +63,7 @@ typedef struct user_i387_struct elf_fpregset_t;
+>   #define R_X86_64_8		14	/* Direct 8 bit sign extended  */
+>   #define R_X86_64_PC8		15	/* 8 bit sign extended pc relative */
+>   #define R_X86_64_PC64		24	/* Place relative 64-bit signed */
+> +#define R_X86_64_REX_GOTPCRELX	42	/* R_X86_64_GOTPCREL with optimizations */
+>   
+>   /*
+>    * These are used to set parameters in the core dumps.
+> diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
+> index 8984abd91c001..6c8b524bfbe3b 100644
+> --- a/arch/x86/kernel/module.c
+> +++ b/arch/x86/kernel/module.c
+> @@ -133,6 +133,14 @@ static int __write_relocate_add(Elf64_Shdr *sechdrs,
+>   		case R_X86_64_PC32:
+>   		case R_X86_64_PLT32:
+>   			val -= (u64)loc;
+> +			if ((s64)val != *(s32 *)&val)
+> +				goto overflow;
+> +			size = 4;
+> +			break;
+> +		case R_X86_64_REX_GOTPCRELX:
+> +			val -= (u64)loc;
+> +			if ((s64)val != *(s32 *)&val)
+> +				goto overflow;
+>   			size = 4;
+>   			break;
 
-How old is this driver actually, it uses decades old APIs :)
+These two cases are the same. You probably want:
 
-> + *
-> + * RTC driver for NVIDIA Voltage Regulator Power Sequencer
-> + *
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/rtc.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/mfd/nvidia-vrs-pseq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/regmap.h>
-> +#include <linux/bits.h>
-> +
-> +#define ALARM_RESET_VAL		0xFFFFFFFF /* Alarm reset/disable value */
-> +#define NVVRS_INT_RTC_INDEX	0	   /* Only one RTC interrupt register */
-> +#define	REG_LEN_IN_BYTES	4
-> +
-> +struct nvvrs_rtc_info {
-> +	struct device          *dev;
-> +	struct i2c_client      *client;
-> +	struct rtc_device      *rtc_dev;
-> +	struct regmap          *regmap;
+		case R_X86_64_PC32:
+		case R_X86_64_PLT32:
+		case R_X86_64_REX_GOTPCRELX:
+			val -= (u64)loc;
+			if ((s64)val != *(s32 *)&val)
+				goto overflow;
+			size = 4;
+			break;
 
-So you have a regmap but never use it?
-
-> +	struct regmap_irq_chip_data *rtc_irq_data;
-> +	/* Mutex to protect RTC operations */
-> +	struct mutex           lock;
-
-This lock is useless, simply use rtc_lock/rtc_unlock in your irq handler
-
-> +	unsigned int           rtc_irq;
-> +	/* Registers offset to I2C addresses map */
-> +	const u8               *map;
-
-I don't get how this indirection is useful
-
-> +	/* RTC IRQ CHIP */
-> +	const struct regmap_irq_chip *rtc_irq_chip;
-> +};
-> +
-> +/* RTC Registers offsets */
-> +enum nvvrs_rtc_reg_offset {
-> +	RTC_T3 = 0,
-> +	RTC_T2,
-> +	RTC_T1,
-> +	RTC_T0,
-> +	RTC_A3,
-> +	RTC_A2,
-> +	RTC_A1,
-> +	RTC_A0,
-> +	CTL1_REG,
-> +	CTL2_REG,
-> +	RTC_END,
-> +};
-> +
-> +static const struct regmap_irq nvvrs_rtc_irq[] = {
-> +	REGMAP_IRQ_REG(NVVRS_INT_RTC_INDEX, 0, NVVRS_PSEQ_INT_SRC1_RTC_MASK),
-> +};
-> +
-> +static const struct regmap_irq_chip nvvrs_rtc_irq_chip = {
-> +	.name	   = "nvvrs-rtc",
-> +	.status_base    = NVVRS_PSEQ_REG_INT_SRC1,
-> +	.num_regs       = 1,
-> +	.irqs	   = nvvrs_rtc_irq,
-> +	.num_irqs       = ARRAY_SIZE(nvvrs_rtc_irq),
-> +};
-> +
-> +static const u8 rtc_map[RTC_END] = {
-> +	[RTC_T3] = NVVRS_PSEQ_REG_RTC_T3,
-> +	[RTC_T2] = NVVRS_PSEQ_REG_RTC_T2,
-> +	[RTC_T1] = NVVRS_PSEQ_REG_RTC_T1,
-> +	[RTC_T0] = NVVRS_PSEQ_REG_RTC_T0,
-> +	[RTC_A3] = NVVRS_PSEQ_REG_RTC_A3,
-> +	[RTC_A2] = NVVRS_PSEQ_REG_RTC_A2,
-> +	[RTC_A1] = NVVRS_PSEQ_REG_RTC_A1,
-> +	[RTC_A0] = NVVRS_PSEQ_REG_RTC_A0,
-> +	[CTL1_REG]  = NVVRS_PSEQ_REG_CTL_1,
-> +	[CTL2_REG]  = NVVRS_PSEQ_REG_CTL_2,
-> +};
-> +
-> +static int nvvrs_update_bits(struct nvvrs_rtc_info *info, u8 reg,
-> +			     u8 mask, u8 value)
-> +{
-> +	int ret;
-> +	u8 val;
-> +
-> +	ret = i2c_smbus_read_byte_data(info->client, reg);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read reg:0x%02x ret:(%d)\n",
-> +			reg, ret);
-
-The driver is too verbose, you have plenty of dev_err that are very
-unlikely to happen and that have no impact on the user actions but those
-strings will always be bloating the kernel.
-
-> +		return ret;
-> +	}
-> +	val = (u8)ret;
-> +	val &= ~mask;
-> +	val |= (value & mask);
-> +
-> +	ret = i2c_smbus_write_byte_data(info->client, reg, val);
-> +	if (ret < 0)
-> +		dev_err(info->dev, "Failed to write reg:0x%02x val:0x%02x ret:(%d)\n",
-> +			reg, val, ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_update_alarm_reg(struct i2c_client *client,
-> +				      struct nvvrs_rtc_info *info, u8 *time)
-> +{
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A3], time[3]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_A3], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A2], time[2]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_A2], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A1], time[1]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_A1], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A0], time[0]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_A0], ret);
-> +		goto out;
-> +	}
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_enable_alarm(struct nvvrs_rtc_info *info)
-> +{
-> +	int ret;
-> +
-> +	/* Set RTC_WAKE bit for autonomous wake from sleep */
-> +	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE,
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to set RTC_WAKE bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Set RTC_PU bit for autonomous wake from shutdown */
-> +	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_PU,
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_PU);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to set RTC_PU bit (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_disable_alarm(struct nvvrs_rtc_info *info)
-> +{
-> +	struct i2c_client *client = info->client;
-> +	u8 val[REG_LEN_IN_BYTES];
-> +	int ret;
-> +
-> +	/* Clear RTC_WAKE bit */
-> +	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE, 0);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to clear RTC_WAKE bit (%d)\n", ret);
-> +		goto out;
-> +	}
-> +
-> +	/* Clear RTC_PU bit */
-> +	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
-> +				NVVRS_PSEQ_REG_CTL_2_RTC_PU, 0);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to clear RTC_PU bit (%d)\n", ret);
-> +		goto out;
-> +	}
-> +
-> +	/* Write ALARM_RESET_VAL in RTC Alarm register to disable alarm */
-> +	val[0] = 0xff;
-> +	val[1] = 0xff;
-> +	val[2] = 0xff;
-> +	val[3] = 0xff;
-> +
-> +	ret = nvvrs_rtc_update_alarm_reg(client, info, val);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to disable Alarm (%d)\n", ret);
-> +		goto out;
-> +	}
-> +out:
-> +	return ret;
-> +}
-> +
-> +static irqreturn_t nvvrs_rtc_irq_handler(int irq, void *data)
-> +{
-> +	struct nvvrs_rtc_info *info = data;
-> +
-> +	dev_dbg(info->dev, "RTC alarm IRQ: %d\n", irq);
-> +
-> +	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int nvvrs_rtc_read_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	struct i2c_client *client = info->client;
-> +	time64_t secs = 0;
-> +	int ret;
-> +	u8 val;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	/* Multi-byte transfers are not supported with PEC enabled */
-> +	/* Read MSB first to avoid coherency issues */
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T3]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_T3], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	secs |= (time64_t)val << 24;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T2]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_T2], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	secs |= (time64_t)val << 16;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T1]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_T1], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	secs |= (time64_t)val << 8;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T0]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_T0], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	secs |= val;
-> +
-> +	rtc_time64_to_tm(secs, tm);
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	struct i2c_client *client = info->client;
-> +	u8 time[REG_LEN_IN_BYTES];
-> +	time64_t secs;
-> +	int ret;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	secs = rtc_tm_to_time64(tm);
-> +	time[0] = secs & 0xff;
-> +	time[1] = (secs >> 8) & 0xff;
-> +	time[2] = (secs >> 16) & 0xff;
-> +	time[3] = (secs >> 24) & 0xff;
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T3], time[3]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_T3], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T2], time[2]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_T2], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T1], time[1]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_T1], ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T0], time[0]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
-> +			info->map[RTC_T0], ret);
-> +		goto out;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	struct i2c_client *client = info->client;
-> +	time64_t alarm_val = 0;
-> +	int ret;
-> +	u8 val;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	/* Multi-byte transfers are not supported with PEC enabled */
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A3]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_A3], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	alarm_val |= (time64_t)val << 24;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A2]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_A2], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	alarm_val |= (time64_t)val << 16;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A1]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_A1], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	alarm_val |= (time64_t)val << 8;
-> +
-> +	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A0]);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
-> +			info->map[RTC_A0], ret);
-> +		goto out;
-> +	}
-> +	val = (u8)ret;
-> +	alarm_val |= val;
-> +
-> +	if (alarm_val == ALARM_RESET_VAL)
-> +		alrm->enabled = 0;
-> +	else
-> +		alrm->enabled = 1;
-> +
-> +	rtc_time64_to_tm(alarm_val, &alrm->time);
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	struct i2c_client *client = info->client;
-> +	u8 time[REG_LEN_IN_BYTES];
-> +	time64_t secs;
-> +	int ret;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	ret = nvvrs_rtc_enable_alarm(info);
-> +	if (ret < 0) {
-> +		dev_err(info->dev, "Failed to enable alarm! (%d)\n", ret);
-> +		goto out;
-> +	}
-> +
-> +	secs = rtc_tm_to_time64(&alrm->time);
-> +	time[0] = secs & 0xff;
-> +	time[1] = (secs >> 8) & 0xff;
-> +	time[2] = (secs >> 16) & 0xff;
-> +	time[3] = (secs >> 24) & 0xff;
-> +
-> +	ret = nvvrs_rtc_update_alarm_reg(client, info, time);
-> +
-> +	alrm->enabled = 1;
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +
-> +	mutex_lock(&info->lock);
-> +	if (enabled)
-> +		ret = nvvrs_rtc_enable_alarm(info);
-> +	else
-> +		ret = nvvrs_rtc_disable_alarm(info);
-> +
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static const struct rtc_class_ops nvvrs_rtc_ops = {
-> +	.read_time = nvvrs_rtc_read_time,
-> +	.set_time = nvvrs_rtc_set_time,
-> +	.read_alarm = nvvrs_rtc_read_alarm,
-> +	.set_alarm = nvvrs_rtc_set_alarm,
-> +	.alarm_irq_enable = nvvrs_rtc_alarm_irq_enable,
-> +};
-> +
-> +static int nvvrs_rtc_probe(struct platform_device *pdev)
-> +{
-> +	struct nvvrs_rtc_info *info;
-> +	struct device *parent;
-> +	struct i2c_client *client;
-> +	int ret;
-> +
-> +	info = devm_kzalloc(&pdev->dev, sizeof(struct nvvrs_rtc_info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	ret = platform_get_irq(pdev, 0);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to get irq\n");
-> +		return ret;
-> +	}
-> +	info->rtc_irq = ret;
-> +
-> +	mutex_init(&info->lock);
-> +	info->dev = &pdev->dev;
-> +	parent = info->dev->parent;
-> +	client = to_i2c_client(parent);
-> +	client->flags |= I2C_CLIENT_PEC;
-> +	i2c_set_clientdata(client, info);
-> +	info->client = client;
-> +	info->map = rtc_map;
-> +	info->rtc_irq_chip = &nvvrs_rtc_irq_chip;
-> +	platform_set_drvdata(pdev, info);
-> +
-> +	/* Initialize regmap */
-> +	info->regmap = dev_get_regmap(parent, NULL);
-> +	if (!info->regmap) {
-> +		dev_err(info->dev, "Failed to get RTC regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* RTC as a wakeup source */
-> +	device_init_wakeup(info->dev, 1);
-> +
-> +	/* Register RTC device */
-> +	info->rtc_dev = devm_rtc_device_register(info->dev, "nvvrs-rtc",
-> +						 &nvvrs_rtc_ops, THIS_MODULE);
-
-
-You must use devm_rtc_allocate_device and devm_rtc_register_device,
-devm_rtc_allocate_device is deprecated.
-
-You must also set range_min and range_max.
-
-
-> +
-> +	if (IS_ERR(info->rtc_dev)) {
-> +		ret = PTR_ERR(info->rtc_dev);
-> +		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = request_threaded_irq(info->rtc_irq, NULL, nvvrs_rtc_irq_handler, 0,
-> +				   "rtc-alarm", info);
-
-Why don't you use the devm_ version and drop nvvrs_rtc_remove() ?
-
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
-> +			info->rtc_irq, ret);
-
-It is not allowed to fail after registering an rtc_device
-
-> +
-> +	return ret;
-> +}
-> +
-> +static void nvvrs_rtc_remove(struct platform_device *pdev)
-> +{
-> +	struct nvvrs_rtc_info *info = platform_get_drvdata(pdev);
-> +
-> +	free_irq(info->rtc_irq, info);
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int nvvrs_rtc_suspend(struct device *dev)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	int ret = 0;
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		/* Set RTC_WAKE bit for auto wake system from suspend state */
-> +		ret = nvvrs_update_bits(info, info->map[CTL2_REG],
-> +					NVVRS_PSEQ_REG_CTL_2_RTC_WAKE,
-> +					NVVRS_PSEQ_REG_CTL_2_RTC_WAKE);
-> +		if (ret < 0) {
-> +			dev_err(info->dev, "Failed to set RTC_WAKE bit (%d)\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		ret = enable_irq_wake(info->rtc_irq);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int nvvrs_rtc_resume(struct device *dev)
-> +{
-> +	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		/* Clear FORCE_ACT bit */
-> +		ret = nvvrs_update_bits(info, info->map[CTL1_REG],
-> +					NVVRS_PSEQ_REG_CTL_1_FORCE_ACT, 0);
-> +		if (ret < 0) {
-> +			dev_err(info->dev, "Failed to clear FORCE_ACT bit (%d)\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		return disable_irq_wake(info->rtc_irq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#endif
-> +static SIMPLE_DEV_PM_OPS(nvvrs_rtc_pm_ops, nvvrs_rtc_suspend, nvvrs_rtc_resume);
-> +
-> +static const struct platform_device_id nvvrs_rtc_id[] = {
-> +	{ "nvvrs-pseq-rtc", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, nvvrs_rtc_id);
-> +
-> +static struct platform_driver nvvrs_rtc_driver = {
-> +	.driver		= {
-> +		.name   = "nvvrs-pseq-rtc",
-> +		.pm     = &nvvrs_rtc_pm_ops,
-> +	},
-> +	.probe		= nvvrs_rtc_probe,
-> +	.remove	        = nvvrs_rtc_remove,
-> +	.id_table       = nvvrs_rtc_id,
-> +};
-> +
-> +module_platform_driver(nvvrs_rtc_driver);
-> +
-> +MODULE_AUTHOR("Shubhi Garg <shgarg@nvidia.com>");
-> +MODULE_DESCRIPTION("NVVRS PSEQ RTC driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.25.1
-> 
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Uros.
