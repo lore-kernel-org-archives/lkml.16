@@ -1,124 +1,90 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-76.smtpout.orange.fr [80.12.242.76])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44026241CBA
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E863223E337;
+	Wed, 16 Apr 2025 22:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841573; cv=none; b=DxhTSI+r91plPzjHPMZl3hZC8gMHlE6q6XMqySOla7zsIAmR6yH+DPQcMOuppv+M05hQufh0Dm40o8iNdf/d6E2wTGQe6YPBR7he1vsp4NIIK1dVT0/3FaCHORTrKWWV4f3reT6mnX8PKjj8fW/28qPbzSnY0aDGNRvcCnydS1k=
+	t=1744841593; cv=none; b=qn+LvRPXIUNAWVEF9X8qc0YJ+Gv+A6UaJb6a+qBd4Jkg+zVuaK1QPvIyMAKnCJsDxFtCI2WP0kggoIO/pueUR5mIQSPVFPIYjNEr5F08OYwWSVdxNwJdGPKiIX8b8hqM9wVuY4psIlUX0OPmUK/CIH+yP0Dv8B5N+sMYuByKABQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841573; c=relaxed/simple;
-	bh=qyZE63j0d2voV/G7WS3qaxVb9wlgL4RcIeSQSdW2Ax4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMEu7OLvhTlNrbEkWySLir21PrJFijTS2aHF21AObPQ+fWPYVp9FLsjgjOqjxd6/gq8Av9pnmU1tDwqk4T1pENaWFx23S4ul03zQxIj+tcVnWm7ci0PoDkAN3xX0KxgKdbicwf+9OYDweRR1SSMwvwubZjmlTUjkcKY5WAF6vxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=DZy4ur4X; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1744841593; c=relaxed/simple;
+	bh=3bKyZYWUalNrwQszDcOUxuHDdhvZgg/fHH3jT5lMJc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YQex/BgEYwBBku+xLh2rlYni6onLLCrdjl/nnSSVpeDocu81BYwW1SlcRgudRgbXOY+KMrVRhR4nIsu4ft67C3V2tc+K/6lpX6w7gClJtrP4e9vSKRGUSHOQsKwBAfssrWZP6ZZ75sJ1DA9U/0KFq5HBPQaFrvy/0dKmn7lR/n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=cW1jJYDP; arc=none smtp.client-ip=80.12.242.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DZy4ur4X"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3771B2C030A;
-	Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1744841562;
-	bh=zAjFq0x7xF/IjFaQL1u6DO3Ifg7t+tCKOWceVPvynI8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DZy4ur4XcsjoL13gV0HLq47lWFFRJR2LSWsZYrLX2MbIE/eZ9Hai5cIs0fOaNXmkn
-	 hzJ1rJMyd1e2zmHTe0TtGgUWGxd6Y5E03opAVUPIl9I/SBZXikOtmnE0/KU0pFYBFk
-	 78XM6lbEfYJ9mKhTg2f4pdmyqDOM0OYvokvyArKITlVFAPWpND1+UqKdMKrkzofPdF
-	 Idzu9kTqjs/29bhc859kjn2SHOtH0grqyVQG+tRQFRfn/nz+jGqPKU/ywcZzS1PNcK
-	 5+2kX+rOsSTXiCrlxbWUR9BTVmYr0kwbiLfZ+RFeKSOU63Uv47YxhCX5j4loN61dpx
-	 9JZHlC+31tXhA==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B68002b5a0000>; Thu, 17 Apr 2025 10:12:42 +1200
-Received: from rutgerk-dl.ws.atlnz.lc (rutgerk-dl.ws.atlnz.lc [10.33.23.32])
-	by pat.atlnz.lc (Postfix) with ESMTP id 149AE13EDA9;
-	Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
-Received: by rutgerk-dl.ws.atlnz.lc (Postfix, from userid 1868)
-	id 093D33C0671; Thu, 17 Apr 2025 10:12:42 +1200 (NZST)
-From: Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.co.nz>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.co.nz>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
-Date: Thu, 17 Apr 2025 10:12:30 +1200
-Message-ID: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="cW1jJYDP"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id 5Az3ua0kIGpxt5Az7uBigD; Thu, 17 Apr 2025 00:11:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1744841517;
+	bh=SjrNmlRrkGDIQEmcssUoZOv3MOsPjmBKRLcUPgyGHhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=cW1jJYDPKWw12QGyMUYkRY2pm9O5E96diRTHIjM04AJY7rvn4jkcD6nFPDv1/tcz/
+	 smZnekfvEQuasuXGjF5oRPxOy3ZYGzp2lFV80lBBjYXw0gVOeg2g9E8ZLbyHqTBKqO
+	 TixXXmfedo9zn8kURpjj75VmYXqqsbj7+NV1UoEhYB6AkVHXk2xzoNk/5XvRdP0eHJ
+	 73TrAC2Ln4NDLpbDBNwJE2/qetoc10BaboQePhbOcXAdlZs5brc6HtsF6/SzwaUj/5
+	 iz3WHY/vZMPb+S0DR7lew0VisfrIsBd5qgqExmrMqPCLDav72PpK9j7fwc0ZNqy4DI
+	 ixR7c0BGBXOsQ==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Thu, 17 Apr 2025 00:11:57 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <f4742d44-0ea3-4af1-91ab-8bb5af6d781b@wanadoo.fr>
+Date: Thu, 17 Apr 2025 00:11:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=68002b5a a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=XR8D0OoHHMoA:10 a=hMUjD3Yoj6wRdRaDZV0A:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] i2c: Fix reference leak in of_i2c_register_devices
+To: Sunny Patel <nueralspacetech@gmail.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1dacfce7-c66d-44c6-9a0c-2dd00bc24ffc@wanadoo.fr>
+ <20250414154224.27836-1-nueralspacetech@gmail.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250414154224.27836-1-nueralspacetech@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Originally all ethtool eee setting updates were attempted even if the
-settings were not supplied, causing a null pointer crash.
+Le 14/04/2025 à 17:42, Sunny Patel a écrit :
+> Fix a potential reference leak in of_i2c_register_devices where the
+> reference to the node is not released if device registration fails.
+> This ensures proper reference management and avoids memory leaks.
+> 
+> Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
+> ---
+>   drivers/i2c/i2c-core-of.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+> index 02feee6c9ba9..7c50905de8f1 100644
+> --- a/drivers/i2c/i2c-core-of.c
+> +++ b/drivers/i2c/i2c-core-of.c
+> @@ -107,6 +107,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+>   				 "Failed to create I2C device for %pOF\n",
+>   				 node);
+>   			of_node_clear_flag(node, OF_POPULATED);
+> +			of_node_put(node);
+>   		}
+>   	}
+>   
 
-Add check for each eee setting and only update if it exists.
+Hi,
 
-Signed-off-by: Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.=
-co.nz>
----
- net/ethtool/eee.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+Why resending this patch?
+it is the same has before,, so my understanding is still the same and I 
+still think that it is just wrong.
 
-diff --git a/net/ethtool/eee.c b/net/ethtool/eee.c
-index bf398973eb8a..1b4831ff9a75 100644
---- a/net/ethtool/eee.c
-+++ b/net/ethtool/eee.c
-@@ -137,17 +137,26 @@ ethnl_set_eee(struct ethnl_req_info *req_info, stru=
-ct genl_info *info)
- 	if (ret < 0)
- 		return ret;
-=20
--	ret =3D ethnl_update_bitset(eee.advertised,
--				  __ETHTOOL_LINK_MODE_MASK_NBITS,
--				  tb[ETHTOOL_A_EEE_MODES_OURS],
--				  link_mode_names, info->extack, &mod);
--	if (ret < 0)
--		return ret;
--	ethnl_update_bool(&eee.eee_enabled, tb[ETHTOOL_A_EEE_ENABLED], &mod);
--	ethnl_update_bool(&eee.tx_lpi_enabled, tb[ETHTOOL_A_EEE_TX_LPI_ENABLED]=
-,
--			  &mod);
--	ethnl_update_u32(&eee.tx_lpi_timer, tb[ETHTOOL_A_EEE_TX_LPI_TIMER],
--			 &mod);
-+	if (tb[ETHTOOL_A_EEE_MODES_OURS]) {
-+		ret =3D ethnl_update_bitset(eee.advertised,
-+					  __ETHTOOL_LINK_MODE_MASK_NBITS,
-+					  tb[ETHTOOL_A_EEE_MODES_OURS],
-+					  link_mode_names, info->extack, &mod);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	if (tb[ETHTOOL_A_EEE_ENABLED])
-+		ethnl_update_bool(&eee.eee_enabled, tb[ETHTOOL_A_EEE_ENABLED], &mod);
-+
-+	if (tb[ETHTOOL_A_EEE_TX_LPI_ENABLED])
-+		ethnl_update_bool(&eee.tx_lpi_enabled, tb[ETHTOOL_A_EEE_TX_LPI_ENABLED=
-],
-+				  &mod);
-+
-+	if (tb[ETHTOOL_A_EEE_TX_LPI_TIMER])
-+		ethnl_update_u32(&eee.tx_lpi_timer, tb[ETHTOOL_A_EEE_TX_LPI_TIMER],
-+				 &mod);
-+
- 	if (!mod)
- 		return 0;
-=20
---=20
-2.49.0
+See [1].
 
+CJ
+
+[1]: 
+https://lore.kernel.org/all/1dacfce7-c66d-44c6-9a0c-2dd00bc24ffc@wanadoo.fr/
