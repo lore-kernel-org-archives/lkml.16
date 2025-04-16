@@ -1,15 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4662080DC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45FF209F53
 	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820090; cv=none; b=T1Sl0tIGu4HYEvOwIqh3W5KlWEkkDLqutjX3RJmrGxxrXMovEBi/UdU0/XLnKy2ejm5hALQWluGYcRuCRBV1br7nXhp3qgML1AnlSgTkb0d853uYGMq3SYjn9HuZbhzL/ptwhxCRfEfBJuE+Il40jAJSsTGEoVwG3ISBjCDeV2A=
+	t=1744820090; cv=none; b=DTdJ23Uwvfoe64dqO1lrZ3n3or4zsUZWuw8rtYACiqyC0beMI1bVggfe/AHJb/EvLvvi3+jOJCXWWmqliggVDfZaQx7ISBqGd9lIzDi+h8ffBnXrh/AGmp3tl+gq3IT/ru4kdAXlCXporPtylRvmUkSt3pArZmIL61f+vsqa7Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744820090; c=relaxed/simple;
-	bh=8EofjnALU1aphS3lTh1VvkVFJxt8Z2SpLNqKU5ee8Y0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UsbOA4S9LjuiIWXV5JLm0aeHPXcOm8WjuLDVH+zV5tFe9c4XcVPsO6Ucaiw5/nT+a4Oga5SwCUrG5sayJUZNRBkTJv9IY9D0+Z3t4KF7NRsDXLW+O7ak3YKK8F27TFYeZyIRCPwK89TojvVTlRKfQLhpFcN6xOpJPhgkt7A1oQE=
+	bh=5/b0fdmjcYFYBChxB9yhX8Hr5ATMJeAQw5pX8rQ4bXg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=u2qZWGcRxuYUGYy4RSSPKLn78Zm9mBqMLzjKMWJ1qfCTNUyliDjbabP+9bMRKgzhhb1YHuzl7KwG6CV4x9txF9jYMG0hrav4EbAKtREsTj769BzCXcOlU7iZfP27YQoUadFD1JXqmzxfZDnCdfevbXAvu4NJtUlylEOAazsQm28=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -17,17 +18,17 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u55PN-0002Fz-D7; Wed, 16 Apr 2025 18:14:41 +0200
+	id 1u55PN-0002G0-D7; Wed, 16 Apr 2025 18:14:41 +0200
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u55PN-000c9E-0D;
+	id 1u55PN-000c9F-0L;
 	Wed, 16 Apr 2025 18:14:41 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1u55PM-00CGQ8-3D;
-	Wed, 16 Apr 2025 18:14:40 +0200
+	id 1u55PN-00CGQI-06;
+	Wed, 16 Apr 2025 18:14:41 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -39,10 +40,12 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH net-next v1 0/4] net: selftest: improve test string formatting and checksum handling
-Date: Wed, 16 Apr 2025 18:14:35 +0200
-Message-Id: <20250416161439.2922994-1-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 1/4] net: selftests: drop test index from net_selftest_get_strings()
+Date: Wed, 16 Apr 2025 18:14:36 +0200
+Message-Id: <20250416161439.2922994-2-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250416161439.2922994-1-o.rempel@pengutronix.de>
+References: <20250416161439.2922994-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,30 +58,38 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-This patchset addresses two issues in the current net selftest
-framework:
+The test index is redundant and reduces available space for test names,
+which are already limited to ETH_GSTRING_LEN (32 bytes). Removing the
+index improves readability in tools like `ethtool -t`, especially when
+longer test names are used.
 
-- Truncated test names: Existing test names are prefixed with an index,
-  reducing the available space within the ETH_GSTRING_LEN limit.  This
-  patch removes the index to allow more descriptive names.
+Before this change:
+  3. PHY internal loopback, enab
+  7. PHY internal loopback, disa
 
-- Inconsistent checksum behavior: On DSA setups and similar
-  environments, checksum offloading is not always available or
-  appropriate. The previous selftests did not distinguish between software
-  and hardware checksum modes, leading to unreliable results. This
-  patchset introduces explicit csum_mode handling and adds separate tests
-  for both software and hardware checksum validation.
+After this change:
+  PHY internal loopback, enable
+  PHY internal loopback, disable
 
-Oleksij Rempel (4):
-  net: selftests: drop test index from net_selftest_get_strings()
-  net: selftest: prepare for detailed error handling in
-    net_test_get_skb()
-  net: selftest: add checksum mode support and SW checksum handling
-  net: selftest: add PHY loopback tests with HW checksum offload
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ net/core/selftests.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- net/core/selftests.c | 307 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 290 insertions(+), 17 deletions(-)
-
---
+diff --git a/net/core/selftests.c b/net/core/selftests.c
+index 35f807ea9952..3c3e2b2a22c9 100644
+--- a/net/core/selftests.c
++++ b/net/core/selftests.c
+@@ -408,8 +408,7 @@ void net_selftest_get_strings(u8 *data)
+ 	int i;
+ 
+ 	for (i = 0; i < net_selftest_get_count(); i++)
+-		ethtool_sprintf(&data, "%2d. %s", i + 1,
+-				net_selftests[i].name);
++		ethtool_sprintf(&data, "%s", net_selftests[i].name);
+ }
+ EXPORT_SYMBOL_GPL(net_selftest_get_strings);
+ 
+-- 
 2.39.5
 
