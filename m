@@ -1,92 +1,92 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6B81C27;
-	Wed, 16 Apr 2025 12:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E97C8F6E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744806773; cv=none; b=Dl2pwStq7QF/i31cAUlxy55VJmdmGKuTtybrQURM4cnEjbQQSk3pl0S2ej3tZgCAfBCtEdntTOSjJYKDaCUiUy8RgMkR7m4Tcjqph5wRgIE3I84rYYjwARftVVAV5B6VHHiI0T2i03KnCoE5Sn4MgHFq8R+XStXPxfGvPfP/7GI=
+	t=1744806814; cv=none; b=MU7gR2uyp64FBXFdxvd5EMRVC+W8DA0Pt6xvHMPmZgvwZiWNielQS6xKKQJUQtJ8EWB9AXTsBXQhiNMzRikBtEbow25/BOuFy7mkWE/sY4qzYZSrOl/ECH2g+Aghr52Ur7I+/uX6ydw+uvQEcO0bWotngmJrk87lhxw+nwrqYQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744806773; c=relaxed/simple;
-	bh=JXDUrWe6C6Wi7c1BLnRrBpSEUxUExiEHYNdRjhOLyYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I2g3doeL9rmfAXUKfjYhEZqcKRPVRCdasm7llhT4NkrsvTLMg74ERBkteqgzr5tmmGm7qn/bHdBF/iZ4SM0D8YNfdGG41M5FkQ3eJXbK7Y1EO/c9eP7b2Q+40fYrzdlqOHtIWfje+DUAZUTIFhRvx0fj1Sut2zuCoAmb8agjj1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TblbM3nU; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744806814; c=relaxed/simple;
+	bh=4qIM6NDApAy+iQcMJjhG+V5szdj3jxVPua3mI1f89bw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=i2F607859Bs70nN1poE6FJ/RzRPhGLms2Oj4QIhqFEK76980AH7tExLPusTaWz8VJKnNZv12kSW/oXOd/Rpsm1BIu9p4/YSBb5AIhNV4W6PDZkRBqC0+XRomtakogr2J9TZE30OvFIa05+W2rZfi3iPF18jk+2ajvpdgFvpvSuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=OqXc+HW5; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TblbM3nU"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AA4C84384B;
-	Wed, 16 Apr 2025 12:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744806763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JXDUrWe6C6Wi7c1BLnRrBpSEUxUExiEHYNdRjhOLyYs=;
-	b=TblbM3nUsgBxfYT/rGq/Izxvi6ro4NRDxEGvcDzs08TxhIa2+BEklnkTrBQRE7Smp5tO+P
-	T8GytToun3CVArGQ/7yiP8+FAsYsB1iFqbBebTUGczu7Awfssie5TWoaQOdcuEW86dEtaR
-	y8Ve9CUkaKYl0OEJmmavbqPMJGWPuXoER0DiGlSvARhIx9IiPiC/34CoiWYtYtn70l/dyG
-	PfSrEzdAIao31KhcAGxuVNojaIjqGjFv5bicsRdw7YP9SX7vQtBltthqLZeaUw9jMncgfp
-	FT3L7IddfXF3Z0yS94rJGkmdbRMU1eACX3pi/eoHRgatZH1mb3tmc2GeZjCsYQ==
-Date: Wed, 16 Apr 2025 14:32:41 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Add Si3474 PSE controller driver
-Message-ID: <20250416143241.73418fc6@kmaincent-XPS-13-7390>
-In-Reply-To: <a92be603-7ad4-4dd3-b083-548658a4448a@adtran.com>
-References: <a92be603-7ad4-4dd3-b083-548658a4448a@adtran.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="OqXc+HW5"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1u51wt-002cjh-Oa; Wed, 16 Apr 2025 14:33:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
+	bh=crDf7Ip/1JD64ubcfZIDIgxNvqURgDue9Ofx9nsrBaE=; b=OqXc+HW5jOJBt0DSI9pRew7obI
+	G7v9uG4x6ZoWt4/198n7KvxuaCpNA1yS9JcyU3t7ZeVCt5wOMto1r8UD2vNTxPN68vHWMsWm0Q43T
+	3KGjJuuKRRsamJDnZGpy9bkFLcNkXQ1pxGCqesZB5zxvtA9Zni+HasGbF9EeY989VSB03aNtRaG43
+	CfMMhlEzKm4eVHpePIEh1PIiAfjvJtcELz07/KMNKc+pfZL+R2LzpzzcGIcF0SveV7oPHG1x/RyKS
+	ZyrY0K+utd4JgJ4Q0znHzX2ag3Go2L/h0i5i0mXEfWuBEeuDXVMQSNGcRue3t8bkY3DZsQ+7O7fpU
+	MduH9caQ==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1u51ws-0000hV-I2; Wed, 16 Apr 2025 14:33:02 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1u51wc-008Du8-Be; Wed, 16 Apr 2025 14:32:46 +0200
+Message-ID: <d81e3e32-55f7-4764-aac8-ec959ae87175@rbox.co>
+Date: Wed, 16 Apr 2025 14:32:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Michal Luczaj <mhal@rbox.co>
+Subject: Re: [PATCH bpf-next v2 5/9] selftests/bpf: Add selftest for
+ sockmap/hashmap redirection
+To: Jiayuan Chen <mrpre@163.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>
+References: <20250411-selftests-sockmap-redir-v2-0-5f9b018d6704@rbox.co>
+ <20250411-selftests-sockmap-redir-v2-5-5f9b018d6704@rbox.co>
+ <ckmjezlvp565ndplzmjmezvh6yc5enlxjgzcyd6uhn7trbuyxn@x56gl73w3mfm>
+Content-Language: pl-PL, en-GB
+In-Reply-To: <ckmjezlvp565ndplzmjmezvh6yc5enlxjgzcyd6uhn7trbuyxn@x56gl73w3mfm>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeifeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepphhiohhtrhdrkhhusghikhesrgguthhrrghnrdgtohhmpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvt
- hdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Wed, 16 Apr 2025 10:47:12 +0000
-Piotr Kubik <piotr.kubik@adtran.com> wrote:
+On 4/11/25 15:17, Jiayuan Chen wrote:
+> On Fri, Apr 11, 2025 at 01:32:41PM +0200, Michal Luczaj wrote:
+>> Test redirection logic. All supported and unsupported redirect combinations
+>> are tested for success and failure respectively.
+>> ...
+>> +	for (r = redirs; r < redirs + ARRAY_SIZE(redirs); r++) {
+>> +		enum bpf_attach_type attach_type;
+>> +		struct test_sockmap_listen *skel;
+> 
+> Could we create a new BPF program file, such as test_sockmap_redir.c,
+> instead of reusing existing ones? This file would be specifically
+> dedicated to serving the sockmap_redir.c functionality.
+> 
+> I understand there are already some duplicate programs, but isn’t this
+> exactly the goal of our current work—to make the test examples more
+> comprehensive and cleaner?
 
-> From: Piotr Kubik <piotr.kubik@adtran.com>
->=20
-> These patch series provide support for Skyworks Si3474 I2C Power
-> Sourcing Equipment controller.
->=20
-> Based on the TPS23881 driver code.
->=20
-> Supported features of Si3474:
-> - get port status,
-> - get port power,
-> - get port voltage,
-> - enable/disable port power
+Sure, I get your point. I'll do that.
 
-Nice to see a new PSE driver!
-
-In net subsystem we add the "net-next" prefix to the subject when it is not=
- a
-fix. Please see
-https://elixir.bootlin.com/linux/v6.14-rc6/source/Documentation/process/mai=
-ntainer-netdev.rst#L61
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Thanks,
+Michal
