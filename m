@@ -1,82 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B10184E;
-	Wed, 16 Apr 2025 12:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE14184E;
+	Wed, 16 Apr 2025 12:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744806947; cv=none; b=ou3wDc1REYWuX72wLQVwPUEa2Ez0vdllK8cjTmulofdfKIOGpoJ/ZtqXc46Ghdbhms0OieChRX4SaRvxMssSaM+dIAsZEaqOw5zrmIKTfEL6NRqIzQ45Dvyjxv+HeC3w7pv+NGiWno3cWKHZEnbpVGLWRmUQBVWCSGvTpiGsrC8=
+	t=1744806967; cv=none; b=LpniWbdg68DIG4YEpp4EZKukoDTLwUH+RbvNhFbVDzc4rPgo6FBc5/Iq9EpHof0AD42qf9N4bSheBvru+SfsxjCM7ihBmomhsRHgGYGJIHSmDA5wO1RnMPcfQkFXa8FiICpVSv49xuXrpI2CuUbyNAST4asDyEAB2j1ZABc6CiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744806947; c=relaxed/simple;
-	bh=cGbYrDypZIXD1Iyx6gn7NMdklUEpAlhTMM2TWrA08ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9kJ/qWHAKRKknMBr+6FgbFVIEqthnAc+kdUPfehqj0c9Eyh4FJChbRb/5gmdCnhl5yFce2gaDWrHvDWik6TnhfvMpprxqjVZNVwn1Ef4qddVP25qWwV8QjgzFiGwZFf/fmIWlM6o90p9exutI3AvSKdYg1hAfXgxnBDAObDYOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izS7D6Jh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744806967; c=relaxed/simple;
+	bh=TvApC/5l6pvC2pPspRF9sQoG0e7peI7KGS8JNhU2UvI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DLUnwXzt403YeZ87liyBAoyzRpniqu7BLSwk+CT5hGslWNqsbdfGA6RpASWeM/j5RgMLJzAUuSCs7uimt4euINIULN+Vl2AtOnWsbBb2jRR+DrBCEk8YxEpCq6aJKf9/Pp0AvHhLvPPGlt5OHjZOb104jEyyDDyStBp2Um00kCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pICX4YUP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SbS1iyD9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izS7D6Jh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A656C4CEE2;
-	Wed, 16 Apr 2025 12:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744806946;
-	bh=cGbYrDypZIXD1Iyx6gn7NMdklUEpAlhTMM2TWrA08ig=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=izS7D6JhJB8WrMHqsK4OCqdE5EQXrndb28B9CCtpDEAPBvSNUpAp5AlympvIFSkMa
-	 zC5ns0sXJnwDtvn1Htr4C9WdRLc1b9fQXzyavSMzwOOJtguPxImtl3K1xvu8N7BURP
-	 cCvFxLgOdZdjkg7x3eyut9ZqKNr1olu3CnxdNHUOT7WLoV9cqNvZehx5nc9icz4OoH
-	 Tc9E4xL8AkuJUszE8OaMZFbe4qLHdSZjFGuQLU3t172YLHd8kjjbDuu/Xk7b0ueuSe
-	 kd1hxOHPKgLrd7PlyBOK0P27fC5+p7kvc9bxdTBbLpJbdMkoA9Ip8yGT6TAGcVzgDA
-	 wmQPyNuXez67w==
-Date: Wed, 16 Apr 2025 07:35:44 -0500
-From: Rob Herring <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP S32 Linux Team <s32@nxp.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: convert fsl,vf610-pinctrl.txt
- to yaml format
-Message-ID: <20250416123544.GA2469371-robh@kernel.org>
-References: <20250414192606.3349661-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pICX4YUP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SbS1iyD9"
+Date: Wed, 16 Apr 2025 12:35:48 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744806963;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bk49rUt7CkKcnkTbwudAjUaLlrsAnz4lqjKfpIS5jIM=;
+	b=pICX4YUP9WT+wARtfvI9jHwpmTPYLhe6c0TG5qQpcewqByyLDMgHJ2OMolsIXsVlfAruHi
+	OaFsgYJuYHIWCxYYhRmE4W5umhW7po+cattAalotZYlva6VbSIowDyB+RRD9OADmH5iPWc
+	T+ux7/FcSsiQIXrQDWJh/URGSHfjYcVchilwZQR2IxkdTe5OxJmmcdPgAFL7muyokp9ti4
+	hc2cHc4QgClB5SIvBkAzVDGn3xWeTcS9NL85m+q36N+JDBgQEIA0qCBhk+c1SFRE1T7Hdi
+	FVLd3N7t2aDnw7PpxlqMcKWaX6guQLKx2yzhKCulBPZJtcpMVjk0G8WFflDVlQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744806963;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bk49rUt7CkKcnkTbwudAjUaLlrsAnz4lqjKfpIS5jIM=;
+	b=SbS1iyD9BbU8ccOAfdQ0OZg/8f2Bjwq9xBakS7iEWMmLrj4yXG3/IVrI4Q528RoGDGapPR
+	TUt790tqVvjNE4DQ==
+From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/core] genirq/irqdesc: Use sysfs_emit() to instead of s*printf()
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250416101651.2128688-1-andriy.shevchenko@linux.intel.com>
+References: <20250416101651.2128688-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414192606.3349661-1-Frank.Li@nxp.com>
+Message-ID: <174480694878.31282.6575062256835790467.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 14, 2025 at 03:26:05PM -0400, Frank Li wrote:
-> Convert fsl,vf610-pinctrl.txt to yaml format.
-> 
-> Additional changes:
-> - subnode name force pattern to 'grp$' to align other imx chips.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../bindings/pinctrl/fsl,vf610-iomuxc.yaml    | 83 +++++++++++++++++++
->  .../bindings/pinctrl/fsl,vf610-pinctrl.txt    | 41 ---------
->  2 files changed, 83 insertions(+), 41 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,vf610-iomuxc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,vf610-pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,vf610-iomuxc.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,vf610-iomuxc.yaml
-> new file mode 100644
-> index 0000000000000..c201a3daf2a30
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,vf610-iomuxc.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0
+The following commit has been merged into the irq/core branch of tip:
 
-Dual license. Freescale was the only author on original binding.
+Commit-ID:     41c95ac4839401cb15e6c9a7756226f6af52ea49
+Gitweb:        https://git.kernel.org/tip/41c95ac4839401cb15e6c9a7756226f6af52ea49
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Wed, 16 Apr 2025 13:16:51 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 16 Apr 2025 14:25:41 +02:00
 
-Otherwise,
+genirq/irqdesc: Use sysfs_emit() to instead of s*printf()
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Follow the advice of the Documentation/filesystems/sysfs.rst that show()
+should only use sysfs_emit() or sysfs_emit_at() when formatting the value
+to be returned to user space.
+
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250416101651.2128688-1-andriy.shevchenko@linux.intel.com
+
+---
+ kernel/irq/irqdesc.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 4258cd6..4bcc6ff 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -257,11 +257,11 @@ static ssize_t per_cpu_count_show(struct kobject *kobj,
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int c = irq_desc_kstat_cpu(desc, cpu);
+ 
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%u", p, c);
++		ret += sysfs_emit_at(buf, ret, "%s%u", p, c);
+ 		p = ",";
+ 	}
+ 
+-	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
++	ret += sysfs_emit_at(buf, ret, "\n");
+ 	return ret;
+ }
+ IRQ_ATTR_RO(per_cpu_count);
+@@ -273,10 +273,8 @@ static ssize_t chip_name_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	if (desc->irq_data.chip && desc->irq_data.chip->name) {
+-		ret = scnprintf(buf, PAGE_SIZE, "%s\n",
+-				desc->irq_data.chip->name);
+-	}
++	if (desc->irq_data.chip && desc->irq_data.chip->name)
++		ret = sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -291,7 +289,7 @@ static ssize_t hwirq_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->irq_data.domain)
+-		ret = sprintf(buf, "%lu\n", desc->irq_data.hwirq);
++		ret = sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -305,8 +303,7 @@ static ssize_t type_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	ret = sprintf(buf, "%s\n",
+-		      irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
++	ret = sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -321,7 +318,7 @@ static ssize_t wakeup_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	ret = sprintf(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
++	ret = sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -337,7 +334,7 @@ static ssize_t name_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->name)
+-		ret = scnprintf(buf, PAGE_SIZE, "%s\n", desc->name);
++		ret = sysfs_emit(buf, "%s\n", desc->name);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -354,14 +351,13 @@ static ssize_t actions_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	for_each_action_of_desc(desc, action) {
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%s",
+-				 p, action->name);
++		ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
+ 		p = ",";
+ 	}
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	if (ret)
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
++		ret += sysfs_emit_at(buf, ret, "\n");
+ 
+ 	return ret;
+ }
