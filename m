@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAFB24BBE8
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBD724C069
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805188; cv=none; b=sCcr2rkxPUZTWeE8h10AoKZiM5iHfK0jKdwCmlMGiv52G+Dejkb8C5nFtc8Z2e2WN6PSMUxviKHR0eF4xjDgZMz0yE8Ct76pKciFhuYjqhU+zloKYGPltChSnEMG1RNJMldI/rZcxBX6gUP0vQlvtBl1AdBm9o+oQ2rbYnwswU0=
+	t=1744805189; cv=none; b=b1EhS9rL2UruCyYfJ4nHPmb5GuERAL9xb421aUk1JFxrc96ntXQKMVp3uSi9nI6obMadeqQ5nuizF2l6JQ4Um7o4Pf9MptQgWqljhht1k4Xv1lQ75wh6uDCLL9xvDcV1wKdAKvmeA2P3xRwzeYF3bDC3wcCDjkm3H9olLNdECVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805188; c=relaxed/simple;
-	bh=f7J3bfWoyvlM97cQCSmrDgCuvCxwgYPCmYmCfAG0YyM=;
+	s=arc-20240116; t=1744805189; c=relaxed/simple;
+	bh=bUqetqfqugUph9SnRQpvh9vvZUw+iWnE9v6heKbB7vU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XAS9fq5KowHFEs+PV9m6fObFm+hg+284vIOasevp5325pStoJnBt4ayKlkck2k7WemWEW4PNkdFS2/AL4O6o5mnsxjMkRoz1UG/WqDI/PdfApMD3ST2XejQy+M/tjpqfeGTCSTZqtYiiOBU0q3t3dFgbu85+F2FYHZkr3Q58br4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dlavbNfE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SKk4BNiT; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=f3kiuvunjS5Xooh/3TtHAzkNDfabtmoYIu1rX1SRTaqt3c0+UWer25gBi7dMcCB7d99F2FcUFAoQVHWYYVXwEYjDHrdJcz+G9yIr/HUAoog5Chv6UHtaqGf1VWnf3htCSNp1Wo4HFM+7Wng++DQjUB7EjOdezI/AmiMDNFodPoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h8bL7wpO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N7SzhCyM; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dlavbNfE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SKk4BNiT"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h8bL7wpO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N7SzhCyM"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744805183;
+	s=2020; t=1744805185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aoGf611ZvRtfc18ew3SA5tA32H9JNlt/cfHJAKwalvQ=;
-	b=dlavbNfExsmj+Hkbh14tAsQv1YURES8zQXWpsiC6pWSyC0bJjAlHwiIGz8F5tgi5h/ccKL
-	ZxtYt+x10KWnMS3hCwLdwca5bGQReLoKmbns9DNoLJlu3ZdH9wFDp3bmLqd1+m4lUh1sHN
-	aT938br7hAUe8A0V4cWMf2QUYri8BJqMFr/pwll5c12Q2ZwX5Mp1dCVhHhBBN2erSSDM/B
-	cTSqJgYL2aNHRm5oSo9R10Rw01wwggbSvUoOWKikbFkVlDODnLNCdU1KzHzRT1QkCNeKZC
-	7hv/cemMkHozbwYVF+LAoNJ0RdmSWAgitSxBCcFvUH4DPAlo3aAenXZZWCAZPA==
+	bh=6Td79ungl+z18GYzQJHk6JryrllOjSBev7euiR9Nk08=;
+	b=h8bL7wpOJdCbMf8fezgd5NRVd1Dx+sVH9JtQfUTgwwkzQBHYavLhe8D+Nx53robHIMuDAW
+	eHB4q0Soyb9HicJ4mkVmimP2NF9gKIycmD+PYUZ0dkHa0ldD8jsGV/zApGhA5xYxB4FwRE
+	kZChxXtXoc+YmBrNuur8Nj51ABnpxGICCqp0KYFaYn+1l1EMyKAG7ZiEq7UhNgwzAURZpb
+	7XqAxCUqmO7vh6uUBKPMwbrL6Gs1rK9QeZNzDFROOgUm3C7+C5hFZKdve3lyPaLqCCYIfT
+	1UTD/ndqRzjjRk2/0Cs8DkvShHiGrS8c8m27u9I7BRbF5furFAZsHzNCBlNwig==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744805183;
+	s=2020e; t=1744805185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aoGf611ZvRtfc18ew3SA5tA32H9JNlt/cfHJAKwalvQ=;
-	b=SKk4BNiT5lu4LOkrIH7LB+uxiFxq2yzM0C3lB9BJXZRix2aPpFDTt//jlpVt8rFUfEXU0U
-	nrRiGM0HKUouAIBA==
-Date: Wed, 16 Apr 2025 14:06:21 +0200
-Subject: [PATCH 06/10] tools/nolibc: move stat() and friends to sys/stat.h
+	bh=6Td79ungl+z18GYzQJHk6JryrllOjSBev7euiR9Nk08=;
+	b=N7SzhCyMAe9uZDpQ9U4lf9F0mK+50HVIT4P/pRG3X3jQdoXdzCDAHr/lUaQCzrk65SkmaQ
+	r6NLVJnQv04uTgCQ==
+Date: Wed, 16 Apr 2025 14:06:25 +0200
+Subject: [PATCH 10/10] tools/nolibc: move wait() and friends to sys/wait.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,18 +49,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250416-nolibc-split-sys-v1-6-a069a3f1d145@linutronix.de>
+Message-Id: <20250416-nolibc-split-sys-v1-10-a069a3f1d145@linutronix.de>
 References: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
 In-Reply-To: <20250416-nolibc-split-sys-v1-0-a069a3f1d145@linutronix.de>
 To: Willy Tarreau <w@1wt.eu>, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 Cc: linux-kernel@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744805177; l=6025;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744805177; l=5115;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=f7J3bfWoyvlM97cQCSmrDgCuvCxwgYPCmYmCfAG0YyM=;
- b=5xuEiTku8nx3EX4vF/qDjsrTFxXZLixMffWjJ17lbihOL2ufqg2I7FDbYXjxpYwshdpz3S201
- yghMA2H4VG/DDYry97yXRVKRWiVkoUlnRMf6pn46BhVdIhWZQJhVUps
+ bh=bUqetqfqugUph9SnRQpvh9vvZUw+iWnE9v6heKbB7vU=;
+ b=PYrGK/0nggOcCYqTqtBGP0f1FpbkkLemmGfpnxDMJNnOseK5KQ4FGmFATxHT13jf+FBcNZ/04
+ wyS9zA3FxntDMb/see64Hv88GBvmWm2fjEpnt0il4uh3TJzfaK5Sris
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -70,181 +70,175 @@ Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
  tools/include/nolibc/Makefile   |  1 +
  tools/include/nolibc/nolibc.h   |  1 +
- tools/include/nolibc/sys.h      | 56 -------------------------------
- tools/include/nolibc/sys/stat.h | 74 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 76 insertions(+), 56 deletions(-)
+ tools/include/nolibc/sys.h      | 53 ------------------------------
+ tools/include/nolibc/sys/wait.h | 71 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 73 insertions(+), 53 deletions(-)
 
 diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index ca8817e84c3a5b4df3d373e60a956945d2665b94..747d73b453680a32d1b8748640f2ebd1ae9b1fb4 100644
+index fec0d4eb2119c8ad2bf65d386b8b5799adf0be5c..b5d4479abc3b727b6260b9c6ecd34d2b25906c2b 100644
 --- a/tools/include/nolibc/Makefile
 +++ b/tools/include/nolibc/Makefile
-@@ -46,6 +46,7 @@ all_files := \
- 		sys.h \
- 		sys/auxv.h \
- 		sys/mman.h \
-+		sys/stat.h \
+@@ -50,6 +50,7 @@ all_files := \
+ 		sys/syscall.h \
+ 		sys/time.h \
+ 		sys/types.h \
++		sys/wait.h \
  		time.h \
  		types.h \
  		unistd.h \
 diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index ffdf501db1b6faebe2f0d5f56bd3c31c1a8ec164..8296cbbeebe994aa335b561a2d9986e529e001a6 100644
+index d84e8610bf1081bc92d969ab760d8277e25a5174..e8843880e4dfca54dcd3f2aec33dab83cb25c17c 100644
 --- a/tools/include/nolibc/nolibc.h
 +++ b/tools/include/nolibc/nolibc.h
-@@ -98,6 +98,7 @@
- #include "sys.h"
- #include "sys/auxv.h"
- #include "sys/mman.h"
-+#include "sys/stat.h"
+@@ -101,6 +101,7 @@
+ #include "sys/stat.h"
+ #include "sys/syscall.h"
+ #include "sys/time.h"
++#include "sys/wait.h"
  #include "ctype.h"
  #include "elf.h"
  #include "signal.h"
 diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index 13e6b2479fbf8bcb36843072665e50046c5f41eb..c76dc80147281041afa1cb443d01897d186f7168 100644
+index aab0685af84f46298aae37e5a1bfecb07861db33..d07456d6e5727cdcb2d4f49c0de73568207a6331 100644
 --- a/tools/include/nolibc/sys.h
 +++ b/tools/include/nolibc/sys.h
-@@ -968,62 +968,6 @@ pid_t setsid(void)
- 	return __sysret(sys_setsid());
+@@ -1054,59 +1054,6 @@ int unlink(const char *path)
  }
  
+ 
 -/*
-- * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
-- * int stat(const char *path, struct stat *buf);
+- * pid_t wait(int *status);
+- * pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
+- * pid_t waitpid(pid_t pid, int *status, int options);
 - */
 -
 -static __attribute__((unused))
--int sys_statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
+-pid_t sys_wait4(pid_t pid, int *status, int options, struct rusage *rusage)
 -{
--#ifdef __NR_statx
--	return my_syscall5(__NR_statx, fd, path, flags, mask, buf);
+-#ifdef __NR_wait4
+-	return my_syscall4(__NR_wait4, pid, status, options, rusage);
 -#else
--	return __nolibc_enosys(__func__, fd, path, flags, mask, buf);
+-	return __nolibc_enosys(__func__, pid, status, options, rusage);
 -#endif
 -}
 -
 -static __attribute__((unused))
--int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
+-pid_t wait(int *status)
 -{
--	return __sysret(sys_statx(fd, path, flags, mask, buf));
+-	return __sysret(sys_wait4(-1, status, 0, NULL));
+-}
+-
+-static __attribute__((unused))
+-pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage)
+-{
+-	return __sysret(sys_wait4(pid, status, options, rusage));
 -}
 -
 -
 -static __attribute__((unused))
--int stat(const char *path, struct stat *buf)
+-pid_t waitpid(pid_t pid, int *status, int options)
 -{
--	struct statx statx;
--	long ret;
--
--	ret = __sysret(sys_statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &statx));
--	if (ret == -1)
--		return ret;
--
--	buf->st_dev          = ((statx.stx_dev_minor & 0xff)
--			       | (statx.stx_dev_major << 8)
--			       | ((statx.stx_dev_minor & ~0xff) << 12));
--	buf->st_ino          = statx.stx_ino;
--	buf->st_mode         = statx.stx_mode;
--	buf->st_nlink        = statx.stx_nlink;
--	buf->st_uid          = statx.stx_uid;
--	buf->st_gid          = statx.stx_gid;
--	buf->st_rdev         = ((statx.stx_rdev_minor & 0xff)
--			       | (statx.stx_rdev_major << 8)
--			       | ((statx.stx_rdev_minor & ~0xff) << 12));
--	buf->st_size         = statx.stx_size;
--	buf->st_blksize      = statx.stx_blksize;
--	buf->st_blocks       = statx.stx_blocks;
--	buf->st_atim.tv_sec  = statx.stx_atime.tv_sec;
--	buf->st_atim.tv_nsec = statx.stx_atime.tv_nsec;
--	buf->st_mtim.tv_sec  = statx.stx_mtime.tv_sec;
--	buf->st_mtim.tv_nsec = statx.stx_mtime.tv_nsec;
--	buf->st_ctim.tv_sec  = statx.stx_ctime.tv_sec;
--	buf->st_ctim.tv_nsec = statx.stx_ctime.tv_nsec;
--
--	return 0;
+-	return __sysret(sys_wait4(pid, status, options, NULL));
 -}
 -
- 
+-
+-/*
+- * int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+- */
+-
+-static __attribute__((unused))
+-int sys_waitid(int which, pid_t pid, siginfo_t *infop, int options, struct rusage *rusage)
+-{
+-	return my_syscall5(__NR_waitid, which, pid, infop, options, rusage);
+-}
+-
+-static __attribute__((unused))
+-int waitid(int which, pid_t pid, siginfo_t *infop, int options)
+-{
+-	return __sysret(sys_waitid(which, pid, infop, options, NULL));
+-}
+-
+-
  /*
-  * int symlink(const char *old, const char *new);
-diff --git a/tools/include/nolibc/sys/stat.h b/tools/include/nolibc/sys/stat.h
+  * ssize_t write(int fd, const void *buf, size_t count);
+  */
+diff --git a/tools/include/nolibc/sys/wait.h b/tools/include/nolibc/sys/wait.h
 new file mode 100644
-index 0000000000000000000000000000000000000000..0eaf5496ce233a4d8b5a239eef5ecefe05a39dd6
+index 0000000000000000000000000000000000000000..1af366a63f2079af587d74389530dbcc9cfb588a
 --- /dev/null
-+++ b/tools/include/nolibc/sys/stat.h
-@@ -0,0 +1,74 @@
++++ b/tools/include/nolibc/sys/wait.h
+@@ -0,0 +1,71 @@
 +/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
 +/*
-+ * stat definition for NOLIBC
++ * wait definitions for NOLIBC
 + * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
 + */
 +
-+#ifndef _NOLIBC_SYS_STAT_H
-+#define _NOLIBC_SYS_STAT_H
++#ifndef _NOLIBC_SYS_WAIT_H
++#define _NOLIBC_SYS_WAIT_H
 +
 +#include "../arch.h"
++#include "../std.h"
 +#include "../types.h"
-+#include "../sys.h"
 +
 +/*
-+ * int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf);
-+ * int stat(const char *path, struct stat *buf);
++ * pid_t wait(int *status);
++ * pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
++ * pid_t waitpid(pid_t pid, int *status, int options);
 + */
 +
 +static __attribute__((unused))
-+int sys_statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
++pid_t sys_wait4(pid_t pid, int *status, int options, struct rusage *rusage)
 +{
-+#ifdef __NR_statx
-+	return my_syscall5(__NR_statx, fd, path, flags, mask, buf);
++#ifdef __NR_wait4
++	return my_syscall4(__NR_wait4, pid, status, options, rusage);
 +#else
-+	return __nolibc_enosys(__func__, fd, path, flags, mask, buf);
++	return __nolibc_enosys(__func__, pid, status, options, rusage);
 +#endif
 +}
 +
 +static __attribute__((unused))
-+int statx(int fd, const char *path, int flags, unsigned int mask, struct statx *buf)
++pid_t wait(int *status)
 +{
-+	return __sysret(sys_statx(fd, path, flags, mask, buf));
++	return __sysret(sys_wait4(-1, status, 0, NULL));
++}
++
++static __attribute__((unused))
++pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage)
++{
++	return __sysret(sys_wait4(pid, status, options, rusage));
 +}
 +
 +
 +static __attribute__((unused))
-+int stat(const char *path, struct stat *buf)
++pid_t waitpid(pid_t pid, int *status, int options)
 +{
-+	struct statx statx;
-+	long ret;
-+
-+	ret = __sysret(sys_statx(AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &statx));
-+	if (ret == -1)
-+		return ret;
-+
-+	buf->st_dev          = ((statx.stx_dev_minor & 0xff)
-+			       | (statx.stx_dev_major << 8)
-+			       | ((statx.stx_dev_minor & ~0xff) << 12));
-+	buf->st_ino          = statx.stx_ino;
-+	buf->st_mode         = statx.stx_mode;
-+	buf->st_nlink        = statx.stx_nlink;
-+	buf->st_uid          = statx.stx_uid;
-+	buf->st_gid          = statx.stx_gid;
-+	buf->st_rdev         = ((statx.stx_rdev_minor & 0xff)
-+			       | (statx.stx_rdev_major << 8)
-+			       | ((statx.stx_rdev_minor & ~0xff) << 12));
-+	buf->st_size         = statx.stx_size;
-+	buf->st_blksize      = statx.stx_blksize;
-+	buf->st_blocks       = statx.stx_blocks;
-+	buf->st_atim.tv_sec  = statx.stx_atime.tv_sec;
-+	buf->st_atim.tv_nsec = statx.stx_atime.tv_nsec;
-+	buf->st_mtim.tv_sec  = statx.stx_mtime.tv_sec;
-+	buf->st_mtim.tv_nsec = statx.stx_mtime.tv_nsec;
-+	buf->st_ctim.tv_sec  = statx.stx_ctime.tv_sec;
-+	buf->st_ctim.tv_nsec = statx.stx_ctime.tv_nsec;
-+
-+	return 0;
++	return __sysret(sys_wait4(pid, status, options, NULL));
 +}
++
++
++/*
++ * int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
++ */
++
++static __attribute__((unused))
++int sys_waitid(int which, pid_t pid, siginfo_t *infop, int options, struct rusage *rusage)
++{
++	return my_syscall5(__NR_waitid, which, pid, infop, options, rusage);
++}
++
++static __attribute__((unused))
++int waitid(int which, pid_t pid, siginfo_t *infop, int options)
++{
++	return __sysret(sys_waitid(which, pid, infop, options, NULL));
++}
++
 +
 +
 +/* make sure to include all global symbols */
 +#include "../nolibc.h"
 +
-+#endif /* _NOLIBC_SYS_STAT_H */
++#endif /* _NOLIBC_SYS_WAIT_H */
 
 -- 
 2.49.0
