@@ -1,84 +1,131 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF361487F6
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC6A1A2658;
+	Wed, 16 Apr 2025 01:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744767288; cv=none; b=BffOdlDyIAQC9pB6K99pNOZJqYx4sWsWG76zXKCOHxM6FEEIu0uHt6S3oHGn/s2k9qB6VefTYOVOwqHnwOeO07TrsVmid+7Lsz8PH2I1cTlUtt91iiNzuTPmp6n0KToB+vf53+9kn5bQuHZE7IyaaxWZ2/DrCqw7XiBF6bWX660=
+	t=1744767553; cv=none; b=nNLyayMDDabuOXbwGoL6xqCoOAmbgd6PE7zASTvks6As7HREEC80BbuUioB8YfVjCFjCgWIJTatlb1xVAXCDu4kF/6wwtf7WDqb5GOc/F7UaMRohxye8KMG1jb1kShsRq6zi6OMFsCI2g10g1eevSy2PaEj8tKYDtOZxy7EtpRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744767288; c=relaxed/simple;
-	bh=G7qJ+O6AudU15nAQNGAyxHo/Rn7ubP77f07kony7XBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c6WIPkI8ODvvehgh76X30nrpUwVQRwTj9SnsuTEh8mvHo8PLkCgzo9v8YTqxlLOliCqImfc6Q8zjdsTNX0OG4CVuVibDzntAD7tV4jGdGKmZrtI3+5LHiW6bRf976J2wpVdW+7XgEaRzWniNpOmbXFbNkDyFGjoGIb57WWk89e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q2Y4RuaI; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q2Y4RuaI"
-Message-ID: <0696eaac-943f-4116-b682-f9b15de6aeaf@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744767283;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G7qJ+O6AudU15nAQNGAyxHo/Rn7ubP77f07kony7XBE=;
-	b=q2Y4RuaI3nFA3ccoh2YiR/vE3O+lp7fMvmRU+IQuehiurj350KmQnc7L7x5TmIWyOiJwH6
-	ia1SczifUTw+LEi2T8vdfPJSn72x+Dc80MWoTwzrgJo9I5LG491N6/mjbGyUl6wke32sYJ
-	xmKCTr1lfqi0lp2cJhwYJsweIUqeQTE=
-Date: Wed, 16 Apr 2025 09:34:30 +0800
+	s=arc-20240116; t=1744767553; c=relaxed/simple;
+	bh=splohQJw8U1XANtyUsXhKKF8Cy9tRT9Bwe2SzN0BEbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S2A6Aq6j++MSsGD/eEe393o5NCTS0w9yzUbU95mazJDBQE5r8Eel1wxV+LCBEGAVwekjE8wPGTFAQIrP8va1Jp4vRrK7Mp5dTIBP55+gHKnG1clAT0kUfrIYmeQTuhrVMUHjwtI4Jb5w0RNhIcJsymU+lOIjUq75bFhe9OxmPLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so1232528866b.3;
+        Tue, 15 Apr 2025 18:39:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744767549; x=1745372349;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V1HXQ+Xi113ayzUNabjj8NTshwQmo5mZvOv0N53Neb4=;
+        b=lPQ3rHdCNWMHKTTnhsyr9fS7wdwlWVywIOFL56A/N8Cu1/gYuNCwLrhIoHEIFsqhlT
+         SYq+hleAsBnBeQc46oJTVc8Q2Byd0FiC8mfWoeVEAoFNuJdJ7ieq9chRTXo/xD0aSriP
+         kielyulv4q2wJAzjtQ+w58LLvr3HwAQ1+oTnidteckRSuQx+2aYcc10A3joiNAlqBqgE
+         XDLjhcvQw4puIHbXNFNLShqCvSquAbkld7P7fZ68EMQDOl+OIhj9NaA+gbrdEabq8g76
+         xgKcrhK4nHu64n+oNcr22w5g+1QuRO52X+fxFLW7ROxYsQx5p+8KGPpnPg06ankoX/AO
+         iSSw==
+X-Forwarded-Encrypted: i=1; AJvYcCXjRs01epEeNSPkExnt7kqlcRdgxuJHOeUr9A/VemkNJ0MqU4m3npz0XP23ZYiXXjISYENPE9yHN0U=@vger.kernel.org, AJvYcCXyJSBRDtiSdFSfaOgjCcyS+uDg2cpM3SgCUQ6KkA5ET1b5tmD/2UE5bjlztmJMglrlXU+V6563pXacGzhK@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrGbJbGERD9cNKFOpOoEZWXWfXqVJ+VqVq9eY78/eFcRZZspK1
+	igk5CEUNYRwpu7ADZoaLZ0h5J+8KZIcINCVR0ESlHClm40mVPmSNVua5bXs0/hg=
+X-Gm-Gg: ASbGncu7pj2z1x11wPDHy1NoxyY8+Mh4aNlA+Ni+7DxqRAK27/Kk7DG8LFEHoPaFHzv
+	wp97U/BfKyLZLThftqYaZj0LJWm2Gtn28+VX5Rpl7fco5/DK1rWzTXB8vLXgAVTDwRn9UmCoA/J
+	vXUwiZWquFQrDNv6MY5uQRbgZnvWBISDKCC883a0mWNw8BHUw1qcyShE39NdiOWholgDY9Qcpxb
+	IwUosN+vkU4Ba05cCpFky2BgLEst3xhxvdvNK1TVkmxsQGZ08b2aYxO8NZN7aLxm28kVZRZ3Hra
+	uYfXH3IeyPA0EzxEPXk58TLNjPTBhrbpBciFRmvGQJgcl5wrU3DevwavhyJypbCiHTpjGJM=
+X-Google-Smtp-Source: AGHT+IHgHIJADHseDzKH72XvS0TxfebXufKy/lOPcvTeaf6MAdKq0tS9P7LMI703Bf7LGTq+x3OIaQ==
+X-Received: by 2002:a17:907:2d27:b0:ac8:179a:42f5 with SMTP id a640c23a62f3a-acb38222672mr89261966b.14.1744767549076;
+        Tue, 15 Apr 2025 18:39:09 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d349d24sm27776466b.182.2025.04.15.18.39.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 18:39:08 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac73723b2d5so1232522866b.3;
+        Tue, 15 Apr 2025 18:39:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUIH/UAmESSo2GHgUqjkmj8/H0dMxDN6uJ3IOQrd8D0Fz6er1ycu9H/SRNwAGrxwtkvKl7wy3XPm/YspbSV@vger.kernel.org, AJvYcCXEe+TMjDitnQu6ZB5VEEbFXJE4tPRUsq3+/R0LL/neN6qyovaUHo7tiuxI3q0bxWicHl9t40VdXDc=@vger.kernel.org
+X-Received: by 2002:a17:907:6ea1:b0:ac6:e327:8de7 with SMTP id
+ a640c23a62f3a-acb3849df86mr88724666b.42.1744767548484; Tue, 15 Apr 2025
+ 18:39:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/rmap: Move anon_vma initialization to anon_vma_ctor()
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Ye Liu <liuye@kylinos.cn>
-References: <20250415092548.271718-1-ye.liu@linux.dev>
- <Z_5C7YNDwZ4pdwQn@harry>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ye Liu <ye.liu@linux.dev>
-In-Reply-To: <Z_5C7YNDwZ4pdwQn@harry>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250415-pasemi-fixes-v2-0-c543bf53151a@svenpeter.dev>
+In-Reply-To: <20250415-pasemi-fixes-v2-0-c543bf53151a@svenpeter.dev>
+From: Neal Gompa <neal@gompa.dev>
+Date: Tue, 15 Apr 2025 21:38:32 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je9vfqKe8tThUNxy2hKGGMYR4F2RJaKXqaXJx8f856Oncg@mail.gmail.com>
+X-Gm-Features: ATxdqUGM2YL7UPwB2q8EHrpPvcO9cfPSM4k-2kB4UVuY2Jof3nZs232BzqVAc98
+Message-ID: <CAEg-Je9vfqKe8tThUNxy2hKGGMYR4F2RJaKXqaXJx8f856Oncg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] Apple/PASemi i2c error recovery fixes
+To: Sven Peter <sven@svenpeter.dev>
+Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, linuxppc-dev@lists.ozlabs.org, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-在 2025/4/15 19:28, Harry Yoo 写道:
-> On Tue, Apr 15, 2025 at 05:25:48PM +0800, Ye Liu wrote:
->> From: Ye Liu <liuye@kylinos.cn>
->>
->> Currently, some initialization of anon_vma is performed in
->> anon_vma_alloc(). Move the initialization to anon_vma_ctor()
->> so that all object setup is handled in one place.
->>
->> Signed-off-by: Ye Liu <liuye@kylinos.cn>
->> ---
-> NACK unless the patch explains how the object's initial state
-> ('constructed state') is preserved between uses.
+On Tue, Apr 15, 2025 at 11:37=E2=80=AFAM Sven Peter via B4 Relay
+<devnull+sven.svenpeter.dev@kernel.org> wrote:
 >
-> anon_vma_ctor() is a slab constructor. That means it is called only once
-> when a slab (folio) is allocated, and not called again when an anon_vma
-> is allocated from an existing slab (folio). In other words it is not called
-> everytime an object allocated via kmem_cache_alloc() interface.
-Thank you for the feedback. You're absolutely right — I misunderstood
-how the slab constructor (ctor) works. I had assumed it would be called
-every time an object is allocated via kmem_cache_alloc(), but I now
-realize it is only called once when a new slab is initialized, not on
-every object allocation.
-> This patch looks very dangerous to me and makes me question whether you
-> tested it before submission.
+> Hi,
 >
-Appreciate you catching this — and yes, I'll test it more thoroughly
-before submitting other patches.
+> This series adds a few fixes/improvements to the error recovery for
+> Apple/PASemi i2c controllers.
+> The patches have been in our downstream tree and were originally used
+> to debug a rare glitch caused by clock strechting but are useful in
+> general. We haven't seen the controller misbehave since adding these.
+>
+> Best,
+>
+> Sven
+>
+> Signed-off-by: Sven Peter <sven@svenpeter.dev>
+> ---
+> Changes in v2:
+> - Added commit to use the correct include (bits.h instead of bitfield.h)
+> - Added commit to sort includes
+> - Moved timeout explanations to code instead of just the commit log
+> - Made timeout recovery also work correctly in the interrupt case when
+>   waiting for the condition failed
+> - Used readx_poll_timeout instead of open-coded alternative
+> - Link to v1: https://lore.kernel.org/r/20250222-pasemi-fixes-v1-0-d7ea33=
+d50c5e@svenpeter.dev
+>
+> ---
+> Hector Martin (3):
+>       i2c: pasemi: Improve error recovery
+>       i2c: pasemi: Enable the unjam machine
+>       i2c: pasemi: Log bus reset causes
+>
+> Sven Peter (3):
+>       i2c: pasemi: Use correct bits.h include
+>       i2c: pasemi: Sort includes alphabetically
+>       i2c: pasemi: Improve timeout handling
+>
+>  drivers/i2c/busses/i2c-pasemi-core.c | 114 ++++++++++++++++++++++++++++-=
+------
+>  drivers/i2c/busses/i2c-pasemi-pci.c  |  10 +--
+>  2 files changed, 96 insertions(+), 28 deletions(-)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250220-pasemi-fixes-916cb77404ba
+>
 
-Drop it.
+The series looks good to me, especially the new patches.
 
-Thanks,
-Ye                                                                     
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
+
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
