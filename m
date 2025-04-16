@@ -1,89 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3BC2356C3
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023FE2356C3;
+	Wed, 16 Apr 2025 10:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798185; cv=none; b=XOuQ6z6ceNP1266ZTHMg2zT4WGw6lJGL1xto4V+jcdBBwwe3qZD/X1WEtIoudDXw0jAd8xwUskuqMotgYxcbA/fGMiS9ld1spaECOTgcL8UziBATF9QHd2PdkDfrozgVPLi1SGCPZda+N4Rcb7Zv8FOUN+njTL4ZU6ZSilSYI6A=
+	t=1744798194; cv=none; b=mBZBKxZ90Htgly/BWlOJyNbkxd22ZAzNX3WsD7nZF5ZHHKz0aN6Qc6DXoFAp8WtjkrRLNwLlje1Lk2KYuNSQ9Hd7qdAVp/fCe9UaRAhUjqAZkHkYmSQ4sm/uN2W00JRQoftR3iF4UR33lqlenEbZ9Mx/xxDxRp32qmXXxp+qqZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798185; c=relaxed/simple;
-	bh=7F3RTIY0HnFFVdJogRDV6fzFIiE9f8lOEJ5iXhX4fnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DBRg/I658FgNOxIFxK8hojuXLDnl9iSuZOrSgUJ30hbzfH8hy09b1g9hPSaTGYtNleA6TacN1hd0nDD3cEddBUUW0zSdyhfg1ndmlw4Imy7b+XJCb6f74htht3rRZhtFLS07Iz+flbNVjN/QOsOZtv+tTQL29W1/oR0dZjCoUaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9D0C4CEE2;
-	Wed, 16 Apr 2025 10:09:43 +0000 (UTC)
-Date: Wed, 16 Apr 2025 11:09:41 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Ross Stutterheim <ross.stutterheim@garmin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>,
-	Mike Rapoport <rppt@linux.ibm.com>, ross.sweng@gmail.com,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] arm/memremap: fix arch_memremap_can_ram_remap()
-Message-ID: <Z_-B5fAhZzShX34I@arm.com>
-References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
- <20250414142140.131756-1-ross.stutterheim@garmin.com>
+	s=arc-20240116; t=1744798194; c=relaxed/simple;
+	bh=K5EIWptPNf+bD6TCzDb13Bmy9OoJJigove2+9RXxBVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pc9MTVycW1JqBQKQqdcw//aLpNM6wY6Gl+O5ReRCSFcJoFh0PeFEsSIRXzsA8BsHGw5Wux2NYdnmriK6KkOjlNkit169QJ8TT2AmLWpzxts/OV0+Mfs+ama19es8WY40XZqqDRM0KXR8Oo02si5wEaXx+u+1001pSGweI48usDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=WZm3GADV; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="WZm3GADV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744798183;
+	bh=K5EIWptPNf+bD6TCzDb13Bmy9OoJJigove2+9RXxBVM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=WZm3GADVESCnAroIeYZi/nahlkQFax41qiE4mcZ6xMLfvyr4jmGCEpWkn78ok6u/j
+	 rhZC/DKRCmqUfZMC4Pxuuyeg/WJnpzzkJHPwyLtkPNzhTRit7JXcH/hW+vGCd0tHbI
+	 sC2fHwcLZa0B1SeoTmN41ZOwlqUiJhW0G7fmvV8U=
+X-QQ-mid: izesmtp89t1744798177tddffd40c
+X-QQ-Originating-IP: IAw1cIU82zcANWNqP9cwnXdyjXOMwHhFQGwmSZFWUH4=
+Received: from mail-yb1-f178.google.com ( [209.85.219.178])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 16 Apr 2025 18:09:35 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 11619989835513742780
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e455bf1f4d3so5004404276.2;
+        Wed, 16 Apr 2025 03:09:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUDssVnHXTmTKE76dF+ycPeT2C1n0lWYyuKMsJ6Zopu6JMmx3lEZu4qgY/Gvr1BxP1MtIO2iEF1/b7eUg==@vger.kernel.org, AJvYcCUVYiDE+f7EJohP0Cr50H2psJzqaa9zecSa1UCOmqsOOcBJn5rl4jrtvve67YVTbUyxHftXQ4BZI4/WSNGG0RRw@vger.kernel.org, AJvYcCUzTGDRBIeJgEfn4EWlehaJ9uaorx9uEj+qe+hTsxMrhP/O7nEctjFR3JoLHMk/1qsf4rA=@vger.kernel.org, AJvYcCVX3wYdV/83TDnW3npDxdAlvKd9cNTo88QrUWLqnk7fvkBWVK2pf4VAna+2zy78+BMzANTdxjt6KX23G3IR@vger.kernel.org, AJvYcCW6vuKnAIf4hcUPxARsn5Wfdhoj41HNYr65MOKTgKEuGeq5WM3WjuxiLMczTrqk6Woh21Jdp0fH4XEMhWoR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcvIREjmhYSjoUfAdhYHLxezMnlg1QXV8BTY7NUBtV3Wl9Je+c
+	+r+bFR8azXex1PkElhhJYQH8j70n2wITtFk6b1bloX7XTFHs6BdUpOU+C0Rr1AfN92Vzhjv1wT7
+	asVrgHTDHyvL9cx0QMXbjscx0tSg=
+X-Google-Smtp-Source: AGHT+IFxOQerwyXR4s01cKj1FQCmW5mZBGS8EUkxg2eBy2yn8PQm4fMpJOhxMxu+WrXOTx3w5ulHOeUcX04b8xnFFTA=
+X-Received: by 2002:a05:6902:2b8a:b0:e6d:eb74:272 with SMTP id
+ 3f1490d57ef6-e7275967af8mr1257382276.22.1744798174393; Wed, 16 Apr 2025
+ 03:09:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414142140.131756-1-ross.stutterheim@garmin.com>
+References: <E9B8B40E39453E89+20250411105306.89756-1-chenlinxuan@uniontech.com>
+ <20250416044827.GA24153@lst.de>
+In-Reply-To: <20250416044827.GA24153@lst.de>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Wed, 16 Apr 2025 18:09:22 +0800
+X-Gmail-Original-Message-ID: <45D187D71349584D+CAC1kPDPYiUKqRmqW=hzOyGudvUXcwxo0kgDU_j40+t7rYHsU-g@mail.gmail.com>
+X-Gm-Features: ATxdqUHphIIrq227AoMvNzUOdxFn7upg3kfvytoiynDmEPipLLJsDaFiQeVe_To
+Message-ID: <CAC1kPDPYiUKqRmqW=hzOyGudvUXcwxo0kgDU_j40+t7rYHsU-g@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
+To: Christoph Hellwig <hch@lst.de>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Chengchang Tang <tangchengchang@huawei.com>, 
+	Junxian Huang <huangjunxian6@hisilicon.com>, Leon Romanovsky <leon@kernel.org>, 
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
+	Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Alex Williamson <alex.williamson@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, 
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, linux-mm@kvack.org, 
+	llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+X-QQ-SENDSIZE: 520
+Feedback-ID: izesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: MMkVjSP788VvLbybX6NpprCLcQm8mjDJIS8k878BicYIRvKMIDe/VTDc
+	iEpiPOOa9xcLEBj1SJPG4bYpWVQZTHk7cjwvvv6SVEjicZmBxG/GBdPXd4u3SoTRip0JWp/
+	KU3tZwSmB4IwQDD8AZYBnOnzDQO8vljy62RTQqhgK2Btl/Nh7BambwRS7VrjWgnGrAIXFrw
+	cM9pRcUXaChbxDJO6XBkHeZ4xM84nGdVfLN6GB/DhryioTZZHqg67s0n/TvZsAZaljDcUbL
+	ZmNj6MUqS33rBTuIATwMGt0+lJQEko4QRqwWbcf5YzMj5o+wR1vDK2vY3WauKzsEI58GhR/
+	b2mIYcBhyVZouv0rcCJuslQ5IpPZLNCYwPZdsfkfCRPjyfCTNdUbseu6WFnJXXI2dxcn+UC
+	hsQZTPPKX0hIynPouR+pm9or537nHmII9ROVtnAxOYSG4tNVn4UtFJVdXxVcFhHuHJ/JITM
+	SmPA4yrg4oroBQK9ZmX8FlV+Jo85y2BVJbTVnqRQkzRK+OOb7/oYcF3yy1AR2NYFVPaP2Ta
+	FRcrzcnXWockyTCPUjT1dqDZPK/UIFGwq04BH8G2lT3G5066Ma0577TCfn2qKX/2hGJPAIZ
+	HmaXejIa1N1hQ+LVlbCT6DssUCiMtl3SHe5v4h7zB44OiS/+Wk7j/EPF9QULWBGcAB87/Sq
+	QsyrREB1zNhZH65anAy+3H3Q6x1NGUVl3q9kHN8/cdv/BbQ51CfpNc5c75Pyx+2LYthN5hg
+	mlxog3tIeBXrERIwi1t2AaZTtmFVUQDGDRkzbu8zUmJWNU5gSO/THHhjzicEL+i0bYMk2uO
+	EHQ5K4lFW5iSLVr1M9ilwwYu7tSDLX7myE5gL56l4HY7BM5Y9sOfJDuJjCTofHhdm6kKDAl
+	xdwUuC3XD/PG1/iOn5ok+BqdN/BMS3aYCQ4PS2rUSVHD93ft22OYVeQkcELHT6UqBW4ZNn7
+	VIIPt9LNuhNxBlHqGWTcrHDWHsyGtWBZXCX3vfsVG6Y7a1MIiEqm0LrXUfEtByfeLLJYak0
+	RrPnoTzPYnablhrE+87u7mquNIvo3f0lT8pW8yoLNPgVhDkYxnHYtHo67zob0tTnEOijS4n
+	LgWvsHPuaj1
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-On Mon, Apr 14, 2025 at 09:21:40AM -0500, Ross Stutterheim wrote:
-> commit 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure
-> presence of linear map") added the definition of
-> arch_memremap_can_ram_remap() for arm[64] specific filtering of what pages
-> can be used from the linear mapping. memblock_is_map_memory() was called
-> with the pfn of the address given to arch_memremap_can_ram_remap();
-> however, memblock_is_map_memory() expects to be given an address for arm,
-> not a pfn.
-> 
-> This results in calls to memremap() returning a newly mapped area when
-> it should return an address in the existing linear mapping.
-> 
-> Fix this by removing the address to pfn translation and pass the
-> address directly.
-> 
-> Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
-> Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
+Sorry for the mistake, v2 has been send:
 
-I think you could also add:
-
-Cc: <stable@vger.kernel.org>
-
-> ---
->  arch/arm/mm/ioremap.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-> index 748698e91a4b..27e64f782cb3 100644
-> --- a/arch/arm/mm/ioremap.c
-> +++ b/arch/arm/mm/ioremap.c
-> @@ -515,7 +515,5 @@ void __init early_ioremap_init(void)
->  bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
->  				 unsigned long flags)
->  {
-> -	unsigned long pfn = PHYS_PFN(offset);
-> -
-> -	return memblock_is_map_memory(pfn);
-> +	return memblock_is_map_memory(offset);
->  }
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
-Not sure how Russell picks patches up these days (I used to send them to
-the patch system -
-https://www.arm.linux.org.uk/developer/patches/info.php).
-
-It might be simpler with git send-email (that's the alias I had):
-
-  git send-email --add-header="KernelVersion: $(git describe --abbrev=0)" --no-thread --suppress-cc=all --to="patches@armlinux.org.uk"
-
--- 
-Catalin
+https://lore.kernel.org/all/20250416-noautoinline-v2-0-e69a2717530f@uniontech.com/
