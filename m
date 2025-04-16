@@ -1,76 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189EA21B9DE;
-	Wed, 16 Apr 2025 10:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B02E1990A7;
+	Wed, 16 Apr 2025 10:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798320; cv=none; b=aK5sljJX+ombUoCwyPzxeFe8yEG5xpQYq6lcK52GjajVSYNmc5dIc7UkQBUQSj6KGNG3J5FudP6ih0zHpIoctMGikQmssrjkLWdZCmlpVsTgXln4QncOmFIlND7hdaRyauiouTSi/JlViOAxLHDaQO3rkP/fJQgCKOLRVWEBV8w=
+	t=1744798373; cv=none; b=jd/kFY5qbZVXIMYaZMK/vJBnIFgJqV4Acs59NSQdhbtP+KXR9RIZsEsNpyeN8gCJUCeUInN9WSR0lNYe6+YOIGSmuNs7rPgNsMMyKTmHVHVkbHULESt0I8uuwkzjrY3C8GaPqow8oIwG9cEr4011OFopqeQlgT0R4NqdiNjhHtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798320; c=relaxed/simple;
-	bh=sMOm/Ug7DGLCAyPc/DeuHOwZPq41wEA6GsniVW1seLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yi+o6YKZWUkebgAOcZljLPjEKg29OrEjBjBD8OZhjnuibfgQShCiBLc6jMEj4JYSIVuqGcr2ZGdt8c9EVkNYeMTFiBCobiX8H0UurqwZRWk/4vO9bN+aiK1cX+FcKc2yIBgEWOl1LvWjVwmFJIZ9lAl2fsEh2ixvM5MK9Ea8LA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m47wcpp3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744798373; c=relaxed/simple;
+	bh=1r+Isg8f/c2kqwIlg8Ba9Y4smt7tLmBuV62Bq/vYutk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bG5Rtscre29hpgEmISG/+3d4d3q+U6w9eDqD7BlTD+xVUdZhEUbEAGe0aP4mv9qHk6RIEB71FJVBCjMG6tlylTEJfkpNrfhnr1gqYgNyLUP/asCjRYCMH4JcoAaKBMCWS2lIHJEU7OTj91hGAu4LH9hGLak5KkBRtKnMEVRWU9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QJ9aS4zl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m47wcpp3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6014BC4CEE2;
-	Wed, 16 Apr 2025 10:11:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QJ9aS4zl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D649C4AF09;
+	Wed, 16 Apr 2025 10:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744798319;
-	bh=sMOm/Ug7DGLCAyPc/DeuHOwZPq41wEA6GsniVW1seLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m47wcpp35Wjj8X0JVajKjrLGZ5iICpGfq0lDHCvuInLAGqqk2BCB7GPLfkoxKdWyY
-	 zP5BUvN7oEZShx49us+YRl7YPYLSccDjpgT4fX9uB5bYLVXmOhdAPN8WhLl21IsQRd
-	 K+qlLh+AHguAczi1qrdQ9xfx9c3muNoQiZhWWM1twwZPsfmIyitgD+oCT0wn8Hue5H
-	 NVpZmwMcPZtP6vYRt1hU8EuuDyn0rvk+LCJskWiRxLZUWOMtFEHnQE3bKsu8L/390k
-	 x2Zv9kXeXwa8SOtczEa6o/Z26sQmpfrF+0HJBxrqyxVi6eZwpRkxYdq81H0tCHRUnR
-	 PbXPNdiVwVIHg==
-Date: Wed, 16 Apr 2025 12:11:55 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI: Use PCI_STD_NUM_BARS instead of 6
-Message-ID: <Z_-Caya2spaSV8f4@ryzen>
-References: <20250416100239.6958-1-ilpo.jarvinen@linux.intel.com>
+	s=k20201202; t=1744798372;
+	bh=1r+Isg8f/c2kqwIlg8Ba9Y4smt7tLmBuV62Bq/vYutk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QJ9aS4zl2LqwkemHoYAzso857fBzAUNSaE8KeJUmdBmKMhXqQENmNmucsumJuPjHO
+	 dgRAgpQx83FNn5qvPDEpmmsaNZbOs0ur977Y2uItIpvabg7IVjIDCkmfNglP/VMP3q
+	 b0e+2JZCbmaC6bby2Ze4n0Wa2iKuZfMaaccxVNfikkBJ+J8qoDJtlFZuNwOSzSV+MZ
+	 NIU323FH0ro4Hubfc+sPgvqbbQe24x18n6hQGbNv1skUcE6xZpnwO6LyKMXPQ4L8XF
+	 lHv5F6E2EoR8plNFKSl6UpYQtO4fItIVkHlA/Z64XzSUJWYXfkbU7emnskSEgmOxwZ
+	 5HaOz6wWXZbtw==
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2963dc379so1090618366b.2;
+        Wed, 16 Apr 2025 03:12:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVHAMsb00pWL/hVERLDr7nAwQwY0dQlf9ZEMhBdNWtqN65VP/Q5GwGQBSrFV/SKYHLjqzIF7VEGFJvgYFM=@vger.kernel.org, AJvYcCXSw5p7dA6I+RZhOB1Nl2uuuutgC3hbWh19JdDuuOH/VOI2XW3chON5dAeQYkdSX+QvhSaMbxh3@vger.kernel.org
+X-Gm-Message-State: AOJu0YziFsTnw64I/UM5qi0Bk6S7kwhYngTWpGuN3MJiK/GAXukMtYFs
+	9Av2edokbtRbcmKVh+vjinKN9LzNwPQ+RN9dRwwxywQ2PyeU/X+zHbBLUO4xr2J45aHJU9n8EC0
+	TIX7gV28mUwR+T/48eY/EKM+b7Jk=
+X-Google-Smtp-Source: AGHT+IFnykHuewB9jGPC8MTy0mT3ysEpGVlhBELN6aRyj+xNO4JcPP7XeoygaEGYkcdnPIyODv4sTvH79N/xLBixU6s=
+X-Received: by 2002:a17:907:940c:b0:aca:e1ea:c5fc with SMTP id
+ a640c23a62f3a-acb429dfb90mr103508966b.26.1744798371058; Wed, 16 Apr 2025
+ 03:12:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416100239.6958-1-ilpo.jarvinen@linux.intel.com>
+References: <20250415071128.3774235-1-chenhuacai@loongson.cn>
+ <20250415071128.3774235-2-chenhuacai@loongson.cn> <62da41f9-2891-4c63-94b4-83230cd7ddae@lunn.ch>
+In-Reply-To: <62da41f9-2891-4c63-94b4-83230cd7ddae@lunn.ch>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 16 Apr 2025 18:12:41 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6QEBvQWDkJHxba=TRr_Y7L57gqcZYWE9p-SHkyX0S3kg@mail.gmail.com>
+X-Gm-Features: ATxdqUHnZAVh76tz72EUYHX5B7mJ4VwADdODGjp8gFkVGJIDENyVL5GqxaiOAWA
+Message-ID: <CAAhV-H6QEBvQWDkJHxba=TRr_Y7L57gqcZYWE9p-SHkyX0S3kg@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/3] net: stmmac: dwmac-loongson: Move queue
+ number init to common function
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Yanteng Si <si.yanteng@linux.dev>, 
+	Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 01:02:39PM +0300, Ilpo Järvinen wrote:
-> pci_read_bases() is given literal 6 that means PCI_STD_NUM_BARS.
-> Replace the literal with the define to annotate the code better.
-> 
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Tue, Apr 15, 2025 at 10:49=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote=
+:
+>
+> On Tue, Apr 15, 2025 at 03:11:26PM +0800, Huacai Chen wrote:
+> > Currently, the tx and rx queue number initialization is duplicated in
+> > loongson_gmac_data() and loongson_gnet_data(), so move it to the common
+> > function loongson_default_data().
+> >
+> > This is a preparation for later patches.
+> >
+> > Tested-by: Biao Dong <dongbiao@loongson.cn>
+> > Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+> > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  .../ethernet/stmicro/stmmac/dwmac-loongson.c  | 39 +++++--------------
+> >  1 file changed, 9 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/dri=
+vers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > index 1a93787056a7..f5fdef56da2c 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > @@ -83,6 +83,9 @@ struct stmmac_pci_info {
+> >  static void loongson_default_data(struct pci_dev *pdev,
+> >                                 struct plat_stmmacenet_data *plat)
+> >  {
+> > +     int i;
+> > +     struct loongson_data *ld =3D plat->bsp_priv;
+>
+> Reverse Christmas tree please. Longest first, shortest last.
+OK, I think it is better to move "int i" to the for-loop.
+
+Huacai
+
+>
+>     Andrew
+>
 > ---
->  drivers/pci/probe.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 364fa2a514f8..08971fca0819 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2058,7 +2058,7 @@ int pci_setup_device(struct pci_dev *dev)
->  		if (class == PCI_CLASS_BRIDGE_PCI)
->  			goto bad;
->  		pci_read_irq(dev);
-> -		pci_read_bases(dev, 6, PCI_ROM_ADDRESS);
-> +		pci_read_bases(dev, PCI_STD_NUM_BARS, PCI_ROM_ADDRESS);
->  
->  		pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
->  
-> 
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> -- 
-> 2.39.5
-> 
-
-Reviewed-by: Niklas Cassel <cassel@kernel.org>
+> pw-bot: cr
+>
+>
