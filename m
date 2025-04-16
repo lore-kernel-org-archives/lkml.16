@@ -1,182 +1,309 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A6321E9B06;
-	Wed, 16 Apr 2025 13:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C9520FAB3;
+	Wed, 16 Apr 2025 13:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811093; cv=none; b=cTHOxewpP8UxTWHlOpOON81DugATtl/O982AuHiNxRoZEdAFMfDOntUcbV6NcXz1qa8oavuu7pAYtNqDrnIDiI4b+/msaHtHdkmRhBkmOEWRtJtrcWkAnwNXKnFy5jo7ELJpc7C8U/EnsFsOTm4Vx/5t2aajYAUkTB5huYEkJcc=
+	t=1744811095; cv=none; b=XvBgxYsGqwXhLlQw24JC6kZBT+43cx9vQySxXVMzD1Nz6aKh7KYj3fk+mpEZzM2zsXgtD9Xwb+1bN+q9PWhc0h3/+i1MWLDA/xij19UtlIiQvtfJLQxAymJElsshYrtNhyOkZfVvNf2Uaj1qaXAtBFSzw2L/vVQ/KJb6okoo074=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811093; c=relaxed/simple;
-	bh=pIt95ZIA1OMYui3lIC0A+SFncr6adnPxnqKXwGMhxEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d2sftXQUBNHhEKxalIJ0xTOYHWgG9JgdTnRgDQIzEh7YHIUw1aOzoyRaWBJ7t+pPzLj9w/Wns6eVXV0gyoX8zwkvTQkZZq3rcGCOo6uRghzdHOdJJHuiQUrBoLLIV8hWREqs2J4+S7yeK2JSNaqIUNnosh81kQohFr+vvRGovB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC11B1692;
-	Wed, 16 Apr 2025 06:44:48 -0700 (PDT)
-Received: from e122027.arm.com (unknown [10.57.90.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6CA73F59E;
-	Wed, 16 Apr 2025 06:44:46 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Gavin Shan <gshan@redhat.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	Alper Gun <alpergun@google.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-Subject: [PATCH v8 18/43] KVM: arm64: Handle realm MMIO emulation
-Date: Wed, 16 Apr 2025 14:41:40 +0100
-Message-ID: <20250416134208.383984-19-steven.price@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416134208.383984-1-steven.price@arm.com>
-References: <20250416134208.383984-1-steven.price@arm.com>
+	s=arc-20240116; t=1744811095; c=relaxed/simple;
+	bh=Wjjk84mYVVEGEyfkFT0FHSVi/SyGHbn82K0gy33AhnI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p1vyOx+smakuaJ3czM3Eaq1uZ4BZwPOdNjeyJayNvPthgrGm8yhYSk8MzqiCQ9cn3FFhen30FgS5T8cMxbrhutR50HwWv8ajg5tZL+iv5zVmx6TuU0/dT1LmU2m/QIFJIiCAZgc1W98WzrHWNlTfaDya/sQ8vWcM0cmY/Cf5GWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qm41dug0; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qm41dug0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 92D0E43924;
+	Wed, 16 Apr 2025 13:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744811090;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aA2LUjHXJ1t2EPpMddyKio7ZvvlafiyxPiAfJOMw+jo=;
+	b=Qm41dug0sWGKLPkLtQa7U0SpBPEpxkcWCwUkJGB2w3rfU+dtQOBlai0ADp+/fqeQP6KPJN
+	2M5q+msu9X5EOneIhhtt3pvRTJwUc537Q3r8B0/yqJCffaUQyxVh9uKbMtNUBNSb9jC/ew
+	L13LyxH3Vy2b/d9Zj8JASrdrJ/oyVOdw5tddT9rTA8UFjwHAZmcdRBXTMniue5DecCC4O/
+	th6B5JsoK4JIHnvlwg7UTwgE1C087U3bNwEcUXyClEtJhjB8AwTl8aEV/K1z8Ke3SCx2sW
+	Wy544PSjKt7XZIDnVwBS2vCuJBiXODb4sCxTPDrBz48n7bUZs1zmcmf/ClRBXQ==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Wed, 16 Apr 2025 15:44:19 +0200
+Subject: [PATCH net-next v8 04/13] net: pse-pd: Add support for PSE power
+ domains
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-feature_poe_port_prio-v8-4-446c39dc3738@bootlin.com>
+References: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
+In-Reply-To: <20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com>
+To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Jonathan Corbet <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, 
+ Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Simon Horman <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, 
+ Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+X-Mailer: b4 0.15-dev-8cb71
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehhohhrmhhssehkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-MMIO emulation for a realm cannot be done directly with the VM's
-registers as they are protected from the host. However, for emulatable
-data aborts, the RMM uses GPRS[0] to provide the read/written value.
-We can transfer this from/to the equivalent VCPU's register entry and
-then depend on the generic MMIO handling code in KVM.
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-For a MMIO read, the value is placed in the shared RecExit structure
-during kvm_handle_mmio_return() rather than in the VCPU's register
-entry.
+Introduce PSE power domain support as groundwork for upcoming port
+priority features. Multiple PSE PIs can now be grouped under a single
+PSE power domain, enabling future enhancements like defining available
+power budgets, port priority modes, and disconnection policies. This
+setup will allow the system to assess whether activating a port would
+exceed the available power budget, preventing over-budget states
+proactively.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 ---
-Changes since v7:
- * New comment for rec_exit_sync_dabt() explaining the call to
-   vcpu_set_reg().
-Changes since v5:
- * Inject SEA to the guest is an emulatable MMIO access triggers a data
-   abort.
- * kvm_handle_mmio_return() - disable kvm_incr_pc() for a REC (as the PC
-   isn't under the host's control) and move the REC_ENTER_EMULATED_MMIO
-   flag setting to this location (as that tells the RMM to skip the
-   instruction).
----
- arch/arm64/kvm/inject_fault.c |  4 +++-
- arch/arm64/kvm/mmio.c         | 16 ++++++++++++----
- arch/arm64/kvm/rme-exit.c     | 14 ++++++++++++++
- 3 files changed, 29 insertions(+), 5 deletions(-)
+Changes in v8:
+- Add missing kref_init and an wrong error check condition.
 
-diff --git a/arch/arm64/kvm/inject_fault.c b/arch/arm64/kvm/inject_fault.c
-index a640e839848e..2a9682b9834f 100644
---- a/arch/arm64/kvm/inject_fault.c
-+++ b/arch/arm64/kvm/inject_fault.c
-@@ -165,7 +165,9 @@ static void inject_abt32(struct kvm_vcpu *vcpu, bool is_pabt, u32 addr)
-  */
- void kvm_inject_dabt(struct kvm_vcpu *vcpu, unsigned long addr)
- {
--	if (vcpu_el1_is_32bit(vcpu))
-+	if (unlikely(vcpu_is_rec(vcpu)))
-+		vcpu->arch.rec.run->enter.flags |= REC_ENTER_FLAG_INJECT_SEA;
-+	else if (vcpu_el1_is_32bit(vcpu))
- 		inject_abt32(vcpu, false, addr);
- 	else
- 		inject_abt64(vcpu, false, addr);
-diff --git a/arch/arm64/kvm/mmio.c b/arch/arm64/kvm/mmio.c
-index ab365e839874..bff89d47a4d5 100644
---- a/arch/arm64/kvm/mmio.c
-+++ b/arch/arm64/kvm/mmio.c
-@@ -6,6 +6,7 @@
+Changes in v7:
+- Add reference count and mutex lock for PSE power domain in case of PSE
+  from different controllers want to register the same PSE power domain.
+
+Changes in v6:
+- nitpick change.
+
+Changes in v4:
+- Add kdoc.
+- Fix null dereference in pse_flush_pw_ds function.
+
+Changes in v3:
+- Remove pw_budget variable.
+
+Changes in v2:
+- new patch.
+---
+ drivers/net/pse-pd/pse_core.c | 139 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pse-pd/pse.h    |   2 +
+ 2 files changed, 141 insertions(+)
+
+diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+index 8755c2e00b6a..30d043af5b3f 100644
+--- a/drivers/net/pse-pd/pse_core.c
++++ b/drivers/net/pse-pd/pse_core.c
+@@ -13,8 +13,12 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
  
- #include <linux/kvm_host.h>
- #include <asm/kvm_emulate.h>
-+#include <asm/rmi_smc.h>
- #include <trace/events/kvm.h>
- 
- #include "trace.h"
-@@ -136,14 +137,21 @@ int kvm_handle_mmio_return(struct kvm_vcpu *vcpu)
- 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
- 			       &data);
- 		data = vcpu_data_host_to_guest(vcpu, data, len);
--		vcpu_set_reg(vcpu, kvm_vcpu_dabt_get_rd(vcpu), data);
++#define PSE_PW_D_LIMIT INT_MAX
 +
-+		if (vcpu_is_rec(vcpu))
-+			vcpu->arch.rec.run->enter.gprs[0] = data;
-+		else
-+			vcpu_set_reg(vcpu, kvm_vcpu_dabt_get_rd(vcpu), data);
+ static DEFINE_MUTEX(pse_list_mutex);
+ static LIST_HEAD(pse_controller_list);
++static DEFINE_XARRAY_ALLOC(pse_pw_d_map);
++static DEFINE_MUTEX(pse_pw_d_mutex);
+ 
+ /**
+  * struct pse_control - a PSE control
+@@ -35,6 +39,18 @@ struct pse_control {
+ 	struct phy_device *attached_phydev;
+ };
+ 
++/**
++ * struct pse_power_domain - a PSE power domain
++ * @id: ID of the power domain
++ * @supply: Power supply the Power Domain
++ * @refcnt: Number of gets of this pse_power_domain
++ */
++struct pse_power_domain {
++	int id;
++	struct regulator *supply;
++	struct kref refcnt;
++};
++
+ static int of_load_single_pse_pi_pairset(struct device_node *node,
+ 					 struct pse_pi *pi,
+ 					 int pairset_num)
+@@ -440,6 +456,124 @@ devm_pse_pi_regulator_register(struct pse_controller_dev *pcdev,
+ 	return 0;
+ }
+ 
++static void __pse_pw_d_release(struct kref *kref)
++{
++	struct pse_power_domain *pw_d = container_of(kref,
++						     struct pse_power_domain,
++						     refcnt);
++
++	regulator_put(pw_d->supply);
++	xa_erase(&pse_pw_d_map, pw_d->id);
++}
++
++/**
++ * pse_flush_pw_ds - flush all PSE power domains of a PSE
++ * @pcdev: a pointer to the initialized PSE controller device
++ */
++static void pse_flush_pw_ds(struct pse_controller_dev *pcdev)
++{
++	struct pse_power_domain *pw_d;
++	int i;
++
++	for (i = 0; i < pcdev->nr_lines; i++) {
++		if (!pcdev->pi[i].pw_d)
++			continue;
++
++		pw_d = xa_load(&pse_pw_d_map, pcdev->pi[i].pw_d->id);
++		if (!pw_d)
++			continue;
++
++		kref_put_mutex(&pw_d->refcnt, __pse_pw_d_release,
++			       &pse_pw_d_mutex);
++	}
++}
++
++/**
++ * devm_pse_alloc_pw_d - allocate a new PSE power domain for a device
++ * @dev: device that is registering this PSE power domain
++ *
++ * Return: Pointer to the newly allocated PSE power domain or error pointers
++ */
++static struct pse_power_domain *devm_pse_alloc_pw_d(struct device *dev)
++{
++	struct pse_power_domain *pw_d;
++	int index, ret;
++
++	pw_d = devm_kzalloc(dev, sizeof(*pw_d), GFP_KERNEL);
++	if (!pw_d)
++		return ERR_PTR(-ENOMEM);
++
++	ret = xa_alloc(&pse_pw_d_map, &index, pw_d, XA_LIMIT(1, PSE_PW_D_LIMIT),
++		       GFP_KERNEL);
++	if (ret)
++		return ERR_PTR(ret);
++
++	kref_init(&pw_d->refcnt);
++	pw_d->id = index;
++	return pw_d;
++}
++
++/**
++ * pse_register_pw_ds - register the PSE power domains for a PSE
++ * @pcdev: a pointer to the PSE controller device
++ *
++ * Return: 0 on success and failure value on error
++ */
++static int pse_register_pw_ds(struct pse_controller_dev *pcdev)
++{
++	int i, ret = 0;
++
++	mutex_lock(&pse_pw_d_mutex);
++	for (i = 0; i < pcdev->nr_lines; i++) {
++		struct regulator_dev *rdev = pcdev->pi[i].rdev;
++		struct pse_power_domain *pw_d;
++		struct regulator *supply;
++		bool present = false;
++		unsigned long index;
++
++		/* No regulator or regulator parent supply registered.
++		 * We need a regulator parent to register a PSE power domain
++		 */
++		if (!rdev || !rdev->supply)
++			continue;
++
++		xa_for_each(&pse_pw_d_map, index, pw_d) {
++			/* Power supply already registered as a PSE power
++			 * domain.
++			 */
++			if (regulator_is_equal(pw_d->supply, rdev->supply)) {
++				present = true;
++				pcdev->pi[i].pw_d = pw_d;
++				break;
++			}
++		}
++		if (present) {
++			kref_get(&pw_d->refcnt);
++			continue;
++		}
++
++		pw_d = devm_pse_alloc_pw_d(pcdev->dev);
++		if (IS_ERR(pw_d)) {
++			ret = PTR_ERR(pw_d);
++			goto out;
++		}
++
++		supply = regulator_get(&rdev->dev, rdev->supply_name);
++		if (IS_ERR(supply)) {
++			xa_erase(&pse_pw_d_map, pw_d->id);
++			ret = PTR_ERR(supply);
++			goto out;
++		}
++
++		pw_d->supply = supply;
++		pcdev->pi[i].pw_d = pw_d;
++	}
++
++out:
++	mutex_unlock(&pse_pw_d_mutex);
++	return ret;
++}
++
+ /**
+  * pse_controller_register - register a PSE controller device
+  * @pcdev: a pointer to the initialized PSE controller device
+@@ -499,6 +633,10 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
+ 			return ret;
  	}
  
- 	/*
- 	 * The MMIO instruction is emulated and should not be re-executed
- 	 * in the guest.
- 	 */
--	kvm_incr_pc(vcpu);
-+	if (vcpu_is_rec(vcpu))
-+		vcpu->arch.rec.run->enter.flags |= REC_ENTER_FLAG_EMULATED_MMIO;
-+	else
-+		kvm_incr_pc(vcpu);
- 
- 	return 1;
- }
-@@ -162,14 +170,14 @@ int io_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa)
- 	 * No valid syndrome? Ask userspace for help if it has
- 	 * volunteered to do so, and bail out otherwise.
- 	 *
--	 * In the protected VM case, there isn't much userspace can do
-+	 * In the protected/realm VM case, there isn't much userspace can do
- 	 * though, so directly deliver an exception to the guest.
- 	 */
- 	if (!kvm_vcpu_dabt_isvalid(vcpu)) {
- 		trace_kvm_mmio_nisv(*vcpu_pc(vcpu), kvm_vcpu_get_esr(vcpu),
- 				    kvm_vcpu_get_hfar(vcpu), fault_ipa);
- 
--		if (vcpu_is_protected(vcpu)) {
-+		if (vcpu_is_protected(vcpu) || vcpu_is_rec(vcpu)) {
- 			kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
- 			return 1;
- 		}
-diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
-index a1adf5610455..6830dc080610 100644
---- a/arch/arm64/kvm/rme-exit.c
-+++ b/arch/arm64/kvm/rme-exit.c
-@@ -25,6 +25,20 @@ static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
- 
- static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
++	ret = pse_register_pw_ds(pcdev);
++	if (ret)
++		return ret;
++
+ 	mutex_lock(&pse_list_mutex);
+ 	list_add(&pcdev->list, &pse_controller_list);
+ 	mutex_unlock(&pse_list_mutex);
+@@ -513,6 +651,7 @@ EXPORT_SYMBOL_GPL(pse_controller_register);
+  */
+ void pse_controller_unregister(struct pse_controller_dev *pcdev)
  {
-+	struct realm_rec *rec = &vcpu->arch.rec;
-+
-+	/*
-+	 * In the case of a write, copy over gprs[0] to the target GPR,
-+	 * preparing to handle MMIO write fault. The content to be written has
-+	 * been saved to gprs[0] by the RMM (even if another register was used
-+	 * by the guest). In the case of normal memory access this is redundant
-+	 * (the guest will replay the instruction), but the overhead is
-+	 * minimal.
-+	 */
-+	if (kvm_vcpu_dabt_iswrite(vcpu) && kvm_vcpu_dabt_isvalid(vcpu))
-+		vcpu_set_reg(vcpu, kvm_vcpu_dabt_get_rd(vcpu),
-+			     rec->run->exit.gprs[0]);
-+
- 	return kvm_handle_guest_abort(vcpu);
- }
++	pse_flush_pw_ds(pcdev);
+ 	pse_release_pis(pcdev);
+ 	mutex_lock(&pse_list_mutex);
+ 	list_del(&pcdev->list);
+diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
+index 5d41a1c984bd..5201a0fb3d74 100644
+--- a/include/linux/pse-pd/pse.h
++++ b/include/linux/pse-pd/pse.h
+@@ -220,12 +220,14 @@ struct pse_pi_pairset {
+  * @np: device node pointer of the PSE PI node
+  * @rdev: regulator represented by the PSE PI
+  * @admin_state_enabled: PI enabled state
++ * @pw_d: Power domain of the PSE PI
+  */
+ struct pse_pi {
+ 	struct pse_pi_pairset pairset[2];
+ 	struct device_node *np;
+ 	struct regulator_dev *rdev;
+ 	bool admin_state_enabled;
++	struct pse_power_domain *pw_d;
+ };
  
+ /**
+
 -- 
-2.43.0
+2.34.1
 
