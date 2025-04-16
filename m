@@ -1,85 +1,125 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53651C27
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BE11C27;
+	Wed, 16 Apr 2025 16:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820191; cv=none; b=HmfPyKCMP8V8vW8IoV0+6Issylz6Ih+wlgZNoOW0mMDrgeqymE51fGUoA6+1CE1BcRaEGg+2O1SLAXZ3kvjQo3LD1jJhbqxbovuA1Sveb3QxaGQZytLVBDj33/uMPaQKajFwER/JBSMs8ReXWdufP6tFYnwjC+sPzW3YJrQ7miQ=
+	t=1744820290; cv=none; b=lhu3WQLMXj+5sfahVEhVLTNApSnjNFnhtJVQtTE/kLrikKM708tIkFKIUuWF94s+Jdn2nMo/CX5jP1NWb3hjONFmjiS1hG60Elt3In7Kd9wI5aKiUffvL96L1Mu8KU095wZouP9fNYdQwehYgfSX+An7kM9H3oMaGqvIrTQ63s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820191; c=relaxed/simple;
-	bh=47+gJAncXgsW/UcXh8b5zJQvQEDM/97e78NneI/DLfs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=ibsaMT18b+aHZLyMGP3FHhtU+3TU64SyjDZV8DPmJ/sb29gvHiSX2B7rPgUIHF8u+6Xk0T/eVLh1NTmR6Ny9HGC2bheZU7cVhQwdTUd8hBRUEahUcxl6XTe/4aOjHCBdUI/eXwHsZiPFJ03nmT/593QR9OakjGIdsoLmV1dwEaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=DzRM4zOz reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744820290; c=relaxed/simple;
+	bh=RBLa0r4h+YxQRFk+SoGNqLqtEBKlPOcAQAm96XMWW28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tztt6nujLUT/hTFMxxdAqfocvMK51czMMc0+AOZINELh/8YFa2xhMR4EOSyc5G1ie1tMK/yFGDdsWk21xms96/RGzk0hj9CcM85QxiBuYF4YTY1/Lxwl7hwsdzL3z/AdzTffdiauNhIvfvS/0jXBJWskVDOzvYBOqSY7VuBoLzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKyeDiFK; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="DzRM4zOz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=E2lpbnQnbBedyoi0B/LK+sQPIFtcBCPeDplGCecK+HA=; b=D
-	zRM4zOztmBCkE7fFty+203GCYYVh4T4AfQCmyzCP+csHf6fIZAwY20mMjpmieEkz
-	u0RaTcR3a8jQ/C3pxJYBO8J82jRYZrXxN1U8ZWMHY2dR+vMgI0YVKrhYoekX7XDe
-	jibYLu2Pdil4TNv/jOWXWc+OIdcXbo6aEFlYCzRXeM=
-Received: from xavier_qy$163.com ( [2408:820c:3408:68f0:2136:e7d4:a861:aae3]
- ) by ajax-webmail-wmsvr-40-102 (Coremail) ; Thu, 17 Apr 2025 00:15:37 +0800
- (CST)
-Date: Thu, 17 Apr 2025 00:15:37 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: "David Laight" <david.laight.linux@gmail.com>
-Cc: ryan.roberts@arm.com, dev.jain@arm.com, ioworker0@gmail.com,
-	21cnbao@gmail.com, akpm@linux-foundation.org,
-	catalin.marinas@arm.com, david@redhat.com, gshan@redhat.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, willy@infradead.org, ziy@nvidia.com
-Subject: Re: [mm/contpte v3 1/1] mm/contpte: Optimize loop to reduce
- redundant operations
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20250416095706.47a8afa2@pumpkin>
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
- <20250415082205.2249918-1-xavier_qy@163.com>
- <20250415082205.2249918-2-xavier_qy@163.com>
- <20250416095706.47a8afa2@pumpkin>
-X-NTES-SC: AL_Qu2fBvSZv0ko4SaQZekfmk4QgeY+WMW1vP4m34NSN5FwjCzp0ysiZlJTIXjNyvCDLzqKkAiHVTRiy9ZZf7hifrkoAhZ95jwxhkNyTfgk8IjyDQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKyeDiFK"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73712952e1cso6837408b3a.1;
+        Wed, 16 Apr 2025 09:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744820288; x=1745425088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t9ugrg/YNvUcO+CbH7JWt9oRFLNuuyWcJoELkFvViL4=;
+        b=RKyeDiFKtW6Rvr5QlgRVlP9JWjHEI4EYadikI93YrNblW5xz7QCuOB4GUv9mt6hCin
+         GZCvc2b6GN+7Asar88iZo5dDEtCqE/+O1nOobfq3Ka1NDcaAEYw6gTuSzSG5BvLRlTyZ
+         YJF4n6XBaQmjQ/YkZqVmef1lHjVtgfppINBzd0g+wj2bynt9JlRTcakjKnEB6cRZ2Vqy
+         se8M0CQ2XPcm587oTDcC4ptYJQFTIFB3ELTUlIfZDOVBLAdywT2iqI6M0+iWRGvfB8s2
+         /2i9uPb/Qb21CFs08pc+nmSNmxvzyq2tWhCzffP0jBnIpYHOxjeG9UZJQ7ffV0YCGCDq
+         PFlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744820288; x=1745425088;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t9ugrg/YNvUcO+CbH7JWt9oRFLNuuyWcJoELkFvViL4=;
+        b=Ao5MjLcGkMf4vjRlbJ63rPMQRVqYL8+H7wPQSs6bcPVWIUNLwEYH8rXIBFIv/VHdVG
+         YNbCNZ3yfLrc+CFxyf7cBhh0SPm6Wi3P8/zSQD7EjL8eRJWFDQHYukPHCtefGFlcgiAV
+         NzP+OnYyBiqS6xE7IJDrp9sucKm8DStx2gHV+VGZ6mVhjSSCjSSeUSM+BoA48K0/AgMF
+         xBqjVprJ5zGjEEaqpyC5XuaROSBW+FexKJN4XmKPXkWn9vX7Ro8L4nmPqOV20pxz+l2z
+         ejVpZ2rXDLjsDwF+6E+I61N324MTJPIQgveTmItSKTWWsVoQ1IVRB0HNzBfu1D+3eQCS
+         0tag==
+X-Forwarded-Encrypted: i=1; AJvYcCUK/VpFfXsgEv18NwHZLbgXb3E866A1eqk1MiaXIoqnE2L6fjsB4MQjGhn9vseUlAyAUAJ7jzHXcKMUgNA=@vger.kernel.org, AJvYcCWco7NV8D9JnT8KnItLqrbu1KzuN7wUKqaiMakBdrAXp30+0DviqPkdm01R2fBOS7eOby+Y7x+K9XwhWj3dJxTk@vger.kernel.org
+X-Gm-Message-State: AOJu0YwklyYDMpUxOpG9u9B8YyF0IiyEDiLGt9OeZp9mVHqWst77JzyW
+	XxulflluY+fy1hlaWSY6RQ8ybSfmKl4Wqv43eYC5b3j04gQNmcIbQ1YhxQ/8HBoOHw==
+X-Gm-Gg: ASbGncsGiI+El8vg7iP07P4sNvGZItxWcQM3uG9G/9WMdyPK4jo276CHhfjex2cs85T
+	eeHHOzYC9wzJ+RFLdvrDsb1KJfjycPzwwyXEOO5q3mPyd7zQfVNML6AEQPCis41iIvfblzbbdtK
+	sY9pQt7u7oszvT3Y6Ggrm249mmxKETGI4Zpk/9cy0exJXhQ7cwnZFwH/e0SRVE9kX54WSnFQ8RJ
+	LeIa3tHPZCbWBPXLMZMGWs/VKxxgWbGTmovVSxJWtaoI6z28QakN7XqRKCd7OxPk1x/YGl3+BIZ
+	gdM9Y2KQBFJwJkxFFzWu07gH59IGPShe1a66vTC19Ss3
+X-Google-Smtp-Source: AGHT+IHdi331Qj4y04I3CoH3mvPZ1E2R5zjIQJHGA4eVn/BqBV+tt1HSsuLaFPlmii//fADPV049ig==
+X-Received: by 2002:a05:6a00:4ac6:b0:736:9f20:a175 with SMTP id d2e1a72fcca58-73c266b5fecmr2898501b3a.2.1744820288343;
+        Wed, 16 Apr 2025 09:18:08 -0700 (PDT)
+Received: from ubuntu2404.. ([125.121.98.233])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230e355sm10921939b3a.139.2025.04.16.09.18.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 09:18:07 -0700 (PDT)
+From: KaFai Wan <mannkafai@gmail.com>
+X-Google-Original-From: KaFai Wan <kafai.wan@hotmail.com>
+To: martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	memxor@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	kafai.wan@hotmail.com,
+	leon.hwang@linux.dev
+Subject: [PATCH bpf-next v2 0/2] bpf: Allow access to const void pointer arguments in tracing programs
+Date: Thu, 17 Apr 2025 00:17:54 +0800
+Message-ID: <20250416161756.1079178-1-kafai.wan@hotmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <2b02076d.b3d5.1963f626edb.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZigvCgD3H+mp1_9noeSXAA--.33084W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiwhExEGf-pJJ9EwAOs8
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-CgoKQXQgMjAyNS0wNC0xNiAxNjo1NzowNiwgIkRhdmlkIExhaWdodCIgPGRhdmlkLmxhaWdodC5s
-aW51eEBnbWFpbC5jb20+IHdyb3RlOgo+T24gVHVlLCAxNSBBcHIgMjAyNSAxNjoyMjowNSArMDgw
-MAo+WGF2aWVyIDx4YXZpZXJfcXlAMTYzLmNvbT4gd3JvdGU6Cj4KPj4gVGhpcyBjb21taXQgb3B0
-aW1pemVzIHRoZSBjb250cHRlX3B0ZXBfZ2V0IGZ1bmN0aW9uIGJ5IGFkZGluZyBlYXJseQo+PiAg
-dGVybWluYXRpb24gbG9naWMuIEl0IGNoZWNrcyBpZiB0aGUgZGlydHkgYW5kIHlvdW5nIGJpdHMg
-b2Ygb3JpZ19wdGUKPj4gIGFyZSBhbHJlYWR5IHNldCBhbmQgc2tpcHMgcmVkdW5kYW50IGJpdC1z
-ZXR0aW5nIG9wZXJhdGlvbnMgZHVyaW5nCj4+ICB0aGUgbG9vcC4gVGhpcyByZWR1Y2VzIHVubmVj
-ZXNzYXJ5IGl0ZXJhdGlvbnMgYW5kIGltcHJvdmVzIHBlcmZvcm1hbmNlLgo+Cj5CZW5jaG1hcmtz
-Pwo+Cj5BcyBoYXMgYmVlbiBwb2ludGVkIG91dCBiZWZvcmUgQ09OVF9QVEVTIGlzIHNtYWxsIGFu
-ZCBJSVJDIGRpcnR5K3lvdW5nCj5pcyB1bnVzdWFsLgoKSSBoYXZlbid0IGZvdW5kIHNvbWUgc3Vp
-dGFibGUgYmVuY2htYXJrIHRlc3RzIHlldC4gSSB3aWxsIHdyaXRlIHNvbWUgbW9yZQpnZW5lcmFs
-IHRlc3Qgc2NlbmFyaW9zLiBQbGVhc2UgcGF5IGF0dGVudGlvbiB0byB0aGUgc3Vic2VxdWVudCBl
-bWFpbHMuCgo+Cj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBYYXZpZXIgPHhhdmllcl9xeUAxNjMuY29t
-Pgo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvbW0vY29udHB0ZS5jIHwgMjAgKysrKysrKysrKysrKysr
-KysrLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygt
-KQo+PiAKPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jIGIvYXJjaC9hcm02
-NC9tbS9jb250cHRlLmMKPj4gaW5kZXggYmNhYzRmNTVmOWMxLi4wYWNmZWU2MDQ5NDcgMTAwNjQ0
-Cj4+IC0tLSBhL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jCj4+ICsrKyBiL2FyY2gvYXJtNjQvbW0v
-Y29udHB0ZS5jCj4+IEBAIC0xNTIsNiArMTUyLDE2IEBAIHZvaWQgX19jb250cHRlX3RyeV91bmZv
-bGQoc3RydWN0IG1tX3N0cnVjdCAqbW0sIHVuc2lnbmVkIGxvbmcgYWRkciwKPj4gIH0KPj4gIEVY
-UE9SVF9TWU1CT0xfR1BMKF9fY29udHB0ZV90cnlfdW5mb2xkKTsKPj4gIAo+PiArLyogTm90ZTog
-aW4gb3JkZXIgdG8gaW1wcm92ZSBlZmZpY2llbmN5LCB1c2luZyB0aGlzIG1hY3JvIHdpbGwgbW9k
-aWZ5IHRoZQo+PiArICogcGFzc2VkLWluIHBhcmFtZXRlcnMuKi8KPgo+Li4uIHRoaXMgbWFjcm8g
-bW9kaWZpZXMgLi4uCj4KPkJ1dCB5b3UgY2FuIG1ha2UgaXQgb2J2aW91cyBteSBwYXNzaW5nIGJ5
-IHJlZmVyZW5jZS4KPlRoZSBjb21waWxlciB3aWxsIGdlbmVyYXRlIHRoZSBzYW1lIGNvZGUuCj4K
-ClRoaXMgcGFydCBtYXkgYWxzbyBiZSBmdXJ0aGVyIHJlZmluZWQuCgotLQpUaGFua3MsClhhdmll
-cgo=
+If we try to access argument which is pointer to const void, it's an 
+UNKNOWN type, verifier will fail to load.
+
+Use is_void_or_int_ptr to check if type is void or int pointer. 
+And fix selftests. 
+
+---
+KaFai Wan (2):
+  bpf: Allow access to const void pointer arguments in tracing programs
+  selftests/bpf: Add test to access const void pointer argument in
+    tracing program
+
+ kernel/bpf/btf.c                                     |  6 +++---
+ net/bpf/test_run.c                                   |  8 +++++++-
+ .../selftests/bpf/progs/verifier_btf_ctx_access.c    | 12 ++++++++++++
+ 3 files changed, 22 insertions(+), 4 deletions(-)
+
+Changelog:
+v1->v2: Addressed comments from jirka
+- use btf_type_is_void to check if type is void
+- merge is_void_ptr and is_int_ptr to is_void_or_int_ptr
+- fix selftests
+
+Some details in here:
+https://lore.kernel.org/all/20250412170626.3638516-1-kafai.wan@hotmail.com/
+
+-- 
+2.43.0
+
