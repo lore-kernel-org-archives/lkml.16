@@ -1,234 +1,123 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38FFC20CCC8
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706211F09AF
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811552; cv=none; b=FDbvUQjn2pyjPjJyFITC0Q9gwzu90m9sAuW9o7yxyw69XSs9Aj8Vk2BIra/MWzK8c4Sld0BTuQ4wZcO93n2VDsKHoWoweI47F8nzKpAQYcyHM1mizQkpp7AD4bE1WIjWMrKjVDZahH587lkPpiKtHKbDbKUr2cwW/l+2xRcvAVc=
+	t=1744811603; cv=none; b=jrQu1tCuM+7NLoygot6Mf5cGGw2fNa57Lo0TJx+68aqoJcxo3Aq2XZMcI6te3JZ2MSjmP9T/O8TY1vcqwX/8hBrviN9eUFulCJFBSlFZpd0phoiEiBdZ722+wmDATDnQKwibODTmTNw6sEPRWUfYzy9bPjDNUglbpmTwu68cz2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811552; c=relaxed/simple;
-	bh=9T12ypzSMqqkaRnljD4Era6+8uN21IJZ7xzgaypJBOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JadIafAEqN4FVOHtyViv5Yt0SQFmhah4momfTGZHG0t+h6R2pFatlaeOzhsmW7x/p8zk2HM1QduBhnTvRIa7HHvYVEBPfX1pc2PsARi9CqqUuHz7KDT6hcQjbu5Spzm/4+VOVsTVzQ6fM2gO5B5ErptsjdbHB5jt51DqZ17YDbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50B071595;
-	Wed, 16 Apr 2025 06:52:28 -0700 (PDT)
-Received: from [10.1.35.42] (e127648.arm.com [10.1.35.42])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB91C3F66E;
-	Wed, 16 Apr 2025 06:52:26 -0700 (PDT)
-Message-ID: <f3082b1b-1634-42da-835e-0a1c94343ad7@arm.com>
-Date: Wed, 16 Apr 2025 14:52:24 +0100
+	s=arc-20240116; t=1744811603; c=relaxed/simple;
+	bh=c3iouo++elzhU5kLFJNofCSl943fAkEehYhJJtecVxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ILFp1O8bT2h+rODx8moC7DmGCQon6gkWjJUHP/vrL2pXDLliw76Thk1wMrGnZSx9jaWcBkhG9dZMZIyvSmrT9DX8GKUVXslv2jB443e2fs6nh2xyVil2rY+KjLvKR+HsWWFIIuBCDELSZrCZkYNsiWd9fkEz83Kq+qGZc1v1sVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=BUD2wyAD; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="BUD2wyAD"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-301e05b90caso6591659a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744811600; x=1745416400; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9gcrtZdemerL6aQk6jw2p5xNDI9nJ1A11Kxs8TNl/+g=;
+        b=BUD2wyADgrr42g9VEbsYouF4CSrO0QqN4BWLlKvpD59k4QtqHiuLDhbv75RNinN7pX
+         5fwnPlmB7b6qgd/RFd3oJ4oG6riP+8DIuR4Si6YuQPBnfb4QqGpjmcwXyPqpuyioBUUM
+         Q4mlLWFS1iFVhbxobzipobO/VCbkqaKDb5VJrV73zd5TfqwOKKk83/x2bRDtJKU3wQW4
+         PRiw/EixAAvcrcnH0baogb40fLn5yd5tsOdCw1WDyi+gxAesUd2WNAlzm1toSyZK5HKT
+         pSMwulzcurRkjF/oZcV4TGRP/NEuGjrei5YYUEt9hdc/NLi/+ddCyczvosQ4Kbv2CfRn
+         TkvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744811600; x=1745416400;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9gcrtZdemerL6aQk6jw2p5xNDI9nJ1A11Kxs8TNl/+g=;
+        b=feO6O3+uOnI7fijrHBiWB2QWMNhDQu+IHTaUmEnkUJaoEf23iljTWpf2ccuKrFhfJ+
+         /c3RHA6eTvV3qT2AWCCfj//BYwWI8uvQFzRBcFMo9kEV1NKzViRoUk0WuRbc7JP0Ngc2
+         oC8nL5Xsai2Z+ul9UCGCAHs4Rox3GtItHhn0wjQUgB1BmXEXIImQJU5AsrYTzWj/TiPm
+         P1c750B1OSQ8RD59bdSU2aB2QS9/C8ICY0xH7Ex0/1H60FzRl61Com+AS6OTWk8RtW9H
+         oqfE6qacDiq6x4OIiKztDlhTW2dUjKe1hloFU+PpFZ0tXqA9H8bl4p48u2mrIHbWXJ7Q
+         k2iw==
+X-Forwarded-Encrypted: i=1; AJvYcCXXy7U0mEtsQrbLg7CAfYkHQCzhuWmd23AEmOOPFJcQjvop/pWdxZ8Mi4wyAX/zGELvYmVy6EWbCRuHmwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTaMz9N1hELqzYkdxsF03gdAr+IwGSAfIJ5iA9D7hwY31ecmmR
+	znwuyJTwh09UbO/0TX5GnUXTfD+hwdxxLwn9iQw8yeIMFDgKgdiCtdif5Xxo+a4=
+X-Gm-Gg: ASbGncvCrnGo1QKUh6jlHzzo9DcS9kf2Zshd34bWIq24Dnr737YTCtHJ70GAMCn8Rur
+	9gDrLoWYD1G8wXPj2oOWCA24GIRPBw1/2P6dPhMU9MqzsHfswhyt0HSK0Os2XqloW3wDb/Ek0MJ
+	WybRYidWPo8vWaNuVRozRJpru8H74uH1ogCcqyxIMi5JGC0IItswKVP4xcEC68bxgm0GOxn4MgM
+	Cvzz3M6bVyjMYyxpyGJ2gHTGlI6lNRvP71Dfof/fFw4xb9Sd3SBrXLVSZv5DdIhGFPL1JCP/+VE
+	mmx+xvmWwwFqt3sSHrMK78Ycj4b3vwv39T4WgudY1aak8PM=
+X-Google-Smtp-Source: AGHT+IH2odz4MFUc8fi8peGC8XeupX73csOpmsRiYA+TNcVlda9dlCfptbzJAjHUUoSNYQRcyiH6+w==
+X-Received: by 2002:a17:90b:17c2:b0:2ff:6af3:b5fa with SMTP id 98e67ed59e1d1-3086415dde8mr2433910a91.22.1744811600569;
+        Wed, 16 Apr 2025 06:53:20 -0700 (PDT)
+Received: from medusa.lab.kspace.sh ([2601:640:8900:32c0::c137])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-30861212fffsm1568898a91.25.2025.04.16.06.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 06:53:19 -0700 (PDT)
+Date: Wed, 16 Apr 2025 06:53:18 -0700
+From: Mohamed Khalfella <mkhalfella@purestorage.com>
+To: Daniel Wagner <dwagner@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>,
+	Hannes Reinecke <hare@suse.de>,
+	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <20250416135318.GI1868505-mkhalfella@purestorage.com>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <20250410085137.GE1868505-mkhalfella@purestorage.com>
+ <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
+ <20250416004016.GC78596-mkhalfella@purestorage.com>
+ <3dad09ce-151d-41fc-8137-56a931c4c224@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7 v5] sched/fair: Add push task mechanism for EAS
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, lukasz.luba@arm.com,
- rafael.j.wysocki@intel.com, pierre.gondois@arm.com,
- linux-kernel@vger.kernel.org, qyousef@layalina.io, hongyan.xia2@arm.com,
- luis.machado@arm.com, qperret@google.com
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
- <20250302210539.1563190-6-vincent.guittot@linaro.org>
- <b19a857c-4c01-471b-94be-c465de636cd9@arm.com>
- <CAKfTPtCr0BRFwc2z0EGVNSyKSfKWqrOfeiZLNigzxEY2W6Bocw@mail.gmail.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <CAKfTPtCr0BRFwc2z0EGVNSyKSfKWqrOfeiZLNigzxEY2W6Bocw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dad09ce-151d-41fc-8137-56a931c4c224@flourine.local>
 
-On 4/15/25 14:52, Vincent Guittot wrote:
-> On Tue, 25 Mar 2025 at 12:16, Christian Loehle <christian.loehle@arm.com> wrote:
->>
->> On 3/2/25 21:05, Vincent Guittot wrote:
->>> EAS is based on wakeup events to efficiently place tasks on the system, but
->>> there are cases where a task doesn't have wakeup events anymore or at a far
->>> too low pace. For such situation, we can take advantage of the task being
->>> put back in the enqueued list to check if it should be pushed on another
->>> CPU. When the task is alone on the CPU, it's never put back in the enqueued
->>> list; In this special case, we use the tick to run the check.
->>>
->>> Wake up events remain the main way to migrate tasks but we now detect
->>> situation where a task is stuck on a CPU by checking that its utilization
->>> is larger than the max available compute capacity (max cpu capacity or
->>> uclamp max setting)
->>>
->>> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->>> ---
->>>  kernel/sched/fair.c  | 220 +++++++++++++++++++++++++++++++++++++++++++
->>>  kernel/sched/sched.h |   2 +
->>>  2 files changed, 222 insertions(+)
->>>
->>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->>> index a9b97bbc085f..c3e383b86808 100644
->>> --- a/kernel/sched/fair.c
->>> +++ b/kernel/sched/fair.c
->>> @@ -7051,6 +7051,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->>>       hrtick_update(rq);
->>>  }
->>>
->>> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
->>>  static void set_next_buddy(struct sched_entity *se);
->>>
->>>  /*
->>> @@ -7081,6 +7082,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->>>               h_nr_idle = task_has_idle_policy(p);
->>>               if (task_sleep || task_delayed || !se->sched_delayed)
->>>                       h_nr_runnable = 1;
->>> +
->>> +             fair_remove_pushable_task(rq, p);
->>>       } else {
->>>               cfs_rq = group_cfs_rq(se);
->>>               slice = cfs_rq_min_slice(cfs_rq);
->>> @@ -8589,6 +8592,197 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->>>       return target;
->>>  }
->>>
->>> +static inline bool task_stuck_on_cpu(struct task_struct *p, int cpu)
->>> +{
->>> +     unsigned long max_capa, util;
->>> +
->>> +     max_capa = min(get_actual_cpu_capacity(cpu),
->>> +                    uclamp_eff_value(p, UCLAMP_MAX));
->>> +     util = max(task_util_est(p), task_runnable(p));
->>> +
->>> +     /*
->>> +      * Return true only if the task might not sleep/wakeup because of a low
->>> +      * compute capacity. Tasks, which wake up regularly, will be handled by
->>> +      * feec().
->>> +      */
->>> +     return (util > max_capa);
->>> +}
->>> +
->>> +static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
->>> +{
->>> +     if (p->nr_cpus_allowed == 1)
->>> +             return false;
->>> +
->>> +     if (is_rd_overutilized(rq->rd))
->>> +             return false;
->>> +
->>> +     if (task_stuck_on_cpu(p, cpu_of(rq)))
->>> +             return true;
->>> +
->>> +     return false;
->>> +}
->>> +
->>> +static int active_load_balance_cpu_stop(void *data);
->>> +
->>> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
->>> +{
->>> +     int new_cpu, cpu = cpu_of(rq);
->>> +
->>> +     if (!sched_energy_enabled())
->>> +             return;
->>> +
->>> +     if (WARN_ON(!p))
->>> +             return;
->>> +
->>> +     if (WARN_ON(!task_current(rq, p)))
->>> +             return;
->>> +
->>> +     if (is_migration_disabled(p))
->>> +             return;
->>> +
->>> +     /* If there are several task, wait for being put back */
->>> +     if (rq->nr_running > 1)
->>> +             return;
->>> +
->>> +     if (!sched_energy_push_task(p, rq))
->>> +             return;
->>> +
->>> +     new_cpu = find_energy_efficient_cpu(p, cpu);
->>> +
->>> +     if (new_cpu == cpu)
->>> +             return;
->>> +
->>> +     /*
->>> +      * ->active_balance synchronizes accesses to
->>> +      * ->active_balance_work.  Once set, it's cleared
->>> +      * only after active load balance is finished.
->>> +      */
->>> +     if (!rq->active_balance) {
->>> +             rq->active_balance = 1;
->>> +             rq->push_cpu = new_cpu;
->>> +     } else
->>> +             return;
->>> +
->>> +     raw_spin_rq_unlock(rq);
->>> +     stop_one_cpu_nowait(cpu,
->>> +             active_load_balance_cpu_stop, rq,
->>> +             &rq->active_balance_work);
->>> +     raw_spin_rq_lock(rq);
->>> +}
->>> +
->>> +static inline int has_pushable_tasks(struct rq *rq)
->>> +{
->>> +     return !plist_head_empty(&rq->cfs.pushable_tasks);
->>> +}
->>> +
->>> +static struct task_struct *pick_next_pushable_fair_task(struct rq *rq)
->>> +{
->>> +     struct task_struct *p;
->>> +
->>> +     if (!has_pushable_tasks(rq))
->>> +             return NULL;
->>> +
->>> +     p = plist_first_entry(&rq->cfs.pushable_tasks,
->>> +                           struct task_struct, pushable_tasks);
->>> +
->>> +     WARN_ON_ONCE(rq->cpu != task_cpu(p));
->>> +     WARN_ON_ONCE(task_current(rq, p));
->>> +     WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
->>> +     WARN_ON_ONCE(!task_on_rq_queued(p));
->>> +
->>> +     /*
->>> +      * Remove task from the pushable list as we try only once after that
->>> +      * the task has been put back in enqueued list.
->>> +      */
->>> +     plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
->>> +
->>> +     return p;
->>> +}
->>> +
->>> +/*
->>> + * See if the non running fair tasks on this rq can be sent on other CPUs
->>> + * that fits better with their profile.
->>> + */
->>> +static bool push_fair_task(struct rq *rq)
->>> +{
->>> +     struct task_struct *next_task;
->>> +     int prev_cpu, new_cpu;
->>> +     struct rq *new_rq;
->>> +
->>> +     next_task = pick_next_pushable_fair_task(rq);
->>> +     if (!next_task)
->>> +             return false;
->>> +
->>> +     if (is_migration_disabled(next_task))
->>> +             return true;
->>> +
->>> +     /* We might release rq lock */
->>> +     get_task_struct(next_task);
->>> +
->>> +     prev_cpu = rq->cpu;
->>> +
->>> +     new_cpu = find_energy_efficient_cpu(next_task, prev_cpu);
->>
->> We aren't gating this on a overutilized check for both call sites of this patch
+On 2025-04-16 10:30:11 +0200, Daniel Wagner wrote:
+> On Tue, Apr 15, 2025 at 05:40:16PM -0700, Mohamed Khalfella wrote:
+> > On 2025-04-15 14:17:48 +0200, Daniel Wagner wrote:
+> > > Pasthrough commands should fail immediately. Userland is in charge here,
+> > > not the kernel. At least this what should happen here.
+> > 
+> > I see your point. Unless I am missing something these requests should be
+> > held equally to bio requests from multipath layer. Let us say app
+> > submitted write a request that got canceled immediately, how does the app
+> > know when it is safe to retry the write request?
 > 
-> The overutilized check has been done when adding the task to the list.
+> Good question, but nothing new as far I can tell. If the kernel doesn't
+> start to retry passthru IO commands, we have to figure out how to pass
+> additional information to the userland.
 > 
 
-Right, but that was earlier?
-Shouldn't we just clear the list on OU since lb is now active again?
-(I do understand that this impacts the effectiveness here, but it seems
-the correct thing to do?)
+nvme multipath does not retry passthru commands. That is said, there is
+nothing prevents userspace from retrying canceled command immediately
+resulting in the unwanted behavior these very patches try to address.
+
+> > Holding requests like write until it is safe to be retried is the whole
+> > point of this work, right?
+> 
+> My first goal was to address the IO commands submitted via the block
+> layer. I didn't had the IO passthru interface on my radar. I agree,
+> getting the IO passthru path correct is also good idea.
+
+Okay. This will be addressed in the next revision, right?
+
+> 
+> Anyway, I don't have a lot of experience with the IO passthru interface.
+> A quick test to fitgure out what the status quo is: 'nvme read'
+> results in an EINTR or 'Resource temporarily unavailable' (EAGAIN or
+> EWOULDBLOCK) when a tcp connection between host and target is blocked
+> (*), though it comes from an admin command. It looks like I have to dive
+> into this a bit more.
+> 
+> (*) I think this might be the same problem as the systemd folks have
+> reported.
