@@ -1,167 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C0F1C3306;
-	Wed, 16 Apr 2025 14:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CCC1B87E9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813501; cv=none; b=ipg1eUPG37cjChQYtZjdJRgaT153RY32d3o+3HuHm/jVbKcrxLQWhxlNluSu6dXVRY8CwSI4DSSyPXG5TMXWotwRC7bDOVgFEY2Ma9rIuu9H8M+MIEtFolvsA+BnYQGLWjVqFWKIoswQ8aStM5+tIIC68yc1t0pyZG7K4D/jGrc=
+	t=1744813511; cv=none; b=DojatJA5w2584dXc26+yMJNjb7tOIvJyc9RRifRjs8wkDflpkpkaG02I1jhVNx6/jEUItCGKpGs7H5iYRqmdRtwzyWIHkBs+8A/QS0P5ay+2E2nss1yU3oyNl6jm4M6IO4e4y4fkmG2qhH1LK3Ds54e75D5I7ZaPl+fwyJt9XGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813501; c=relaxed/simple;
-	bh=xqXRyOgULnMajaP4A2rC8+QlBaZIK6c9CiY+vsOTu1k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p2NDVmtYFAeOg6nMiESKGk6DBqUxOci/P/iCkf4zbzmz+DBqOweeLYiisuTI7BBN5PIhAPTCXqtdg/X8MQjOeAZqsbsetFYGd8JeRJJC52FIesaLZQ89em6gPlSj3EJeW7ZfbhhsdwCxFe3F9q2DiI0IlHH5Q3YvFi3pmLhvWpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O1gaiKP4; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744813511; c=relaxed/simple;
+	bh=aofn8mOguoH/olcy6EB2Cgtv0peBzYexyfebvYP16xY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=kVAG3VCJDeHpRrQGaG0tXzY9ddFiF7UQUFBecMVMmU3WAKXem/jxxOhwPVJ88iZom7YuwJRg4KLs9IKvtmMulAWmNIYSMZRrGikKDbgviSvoiNkFGUg7IGKV3MQthS3oVECwgv0GusrAeuRRLky03H7nmZiXyuYrrBPwQc8WR8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BpubTfbn; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O1gaiKP4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744813500; x=1776349500;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xqXRyOgULnMajaP4A2rC8+QlBaZIK6c9CiY+vsOTu1k=;
-  b=O1gaiKP4RNAyqkxgQJcCXkNVEz5kKwq6RQisw28YugBa3VHaTY3fuZwP
-   F/HLXIfY+6jHJ5YHZrr6ln2AY6llGUeGW7ammo7UwL7ZZSjlU05GPgSNc
-   8RiPvQwhPWuTas41jICAnarQXBzv2wkRGDnPlY3/xDL0HW7BtLX813Dpj
-   pOMZWq0mvGCHYR6VcLxOR6hxBQ9LQ6qo52TN4OHmpH9MWIkSXYtV7S/Qt
-   cDp3uGH4uteB1kfy/bxBYiCoiLr+pflzDzbThj6novgbbr8rK6FYMZtn2
-   GHnPy8Mjtxjg3erzTbOjyjqoIH9kvQFaaYJ6t92BQ1eh07cFBbz1/srsN
-   A==;
-X-CSE-ConnectionGUID: z4yf2PnnQOKP3nZmoUilHA==
-X-CSE-MsgGUID: +Klfds7qTUC1TUm6m+yvoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46529302"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46529302"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 07:24:57 -0700
-X-CSE-ConnectionGUID: S70D+KlvTjq9TEL6VfMG3g==
-X-CSE-MsgGUID: 6ZdsmjGnS+KRS3MA0eGEog==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="131402420"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2025 07:24:57 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ak@linux.intel.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tang Jun <dukang.tj@alibaba-inc.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 3/3] perf/x86/intel/uncore: Fix the scale of IIO free running counters on SPR
-Date: Wed, 16 Apr 2025 07:24:26 -0700
-Message-Id: <20250416142426.3933977-3-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250416142426.3933977-1-kan.liang@linux.intel.com>
-References: <20250416142426.3933977-1-kan.liang@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BpubTfbn"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250416142506euoutp0220b538876df9940d3766b970b55b65a0~20qPbJO6y2843628436euoutp02I
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:25:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250416142506euoutp0220b538876df9940d3766b970b55b65a0~20qPbJO6y2843628436euoutp02I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744813506;
+	bh=shUz1heMGc/0v/n7nVwvI1VZPkVH2FhMEMQCajNspuE=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=BpubTfbnQgjjSza7H4yjO/XIeP8cXOxKjl0xBMHGiUDLBUbzqldxyeSmsHvLIMiq2
+	 Zstd/bo4e6yO78TwiJ5P+KRPHgxU81vlaVylfS0g/1XaD4Fc1vIpekKmV9s2jXubY5
+	 R2bPCt4tkJHYCvgSjOoQH78oAb3MAAOxCqagHmTA=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250416142506eucas1p19fe6562f1fa472d4cdf730e6001208f4~20qOyJNCI0172801728eucas1p16;
+	Wed, 16 Apr 2025 14:25:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id C1.88.20409.1CDBFF76; Wed, 16
+	Apr 2025 15:25:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250416142505eucas1p2fffb9ed80d3741d3f8f0c32fa47d1b82~20qOTfI982575125751eucas1p2H;
+	Wed, 16 Apr 2025 14:25:05 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250416142505eusmtrp1a1daf89c1b4ba691b759c376629cb1b0~20qOSm5Po0635206352eusmtrp1r;
+	Wed, 16 Apr 2025 14:25:05 +0000 (GMT)
+X-AuditID: cbfec7f4-c0df970000004fb9-e3-67ffbdc124c3
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id CD.B1.19654.1CDBFF76; Wed, 16
+	Apr 2025 15:25:05 +0100 (BST)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250416142504eusmtip179c28fc737df25cb9be21b56335766a6~20qNAXxzq1603616036eusmtip1y;
+	Wed, 16 Apr 2025 14:25:04 +0000 (GMT)
+Message-ID: <60914de9-f507-4099-be53-ea1fc282c537@samsung.com>
+Date: Wed, 16 Apr 2025 16:25:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 13/21] drm/imagination: Add reset controller support
+ for GPU initialization
+To: frank.binns@imgtec.com, matt.coster@imgtec.com
+Cc: p.zabel@pengutronix.de, m.szyprowski@samsung.com,
+	linux-clk@vger.kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+	mripard@kernel.org, linux-kernel@vger.kernel.org, tzimmermann@suse.de,
+	linux-riscv@lists.infradead.org, airlied@gmail.com, simona@ffwll.ch,
+	aou@eecs.berkeley.edu, dri-devel@lists.freedesktop.org,
+	ulf.hansson@linaro.org, linux-pm@vger.kernel.org, jszhang@kernel.org,
+	palmer@dabbelt.com, guoren@kernel.org, maarten.lankhorst@linux.intel.com,
+	wefu@redhat.com, paul.walmsley@sifive.com, jassisinghbrar@gmail.com,
+	drew@pdp7.com, robh@kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
+	krzk+dt@kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <20250219140239.1378758-14-m.wilczynski@samsung.com>
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUxTVxjHd+69vbd0K7sWNo5MR1K3ZRsTGWHxiMZh4rL7ZTr8AMZl2Gpv
+	KpEW1sLGHAnMAiqUQXEKlg6Yc0IIHeN1wKiM2lHkpYrKi4QWiDVQxstqAccQGOXOjW+/83/+
+	z/k/z8nh46JfyUB+nDKJVSml8WJSQDR2LNl2mk1r8tD7Ghx1Dl7FUMOynkJVJhuGSi02HnLc
+	rcfQ/YU5Ev306A6FJk1fE2ig4jsKaTqqSeTSO0jk1jp46F6LgUSeXAtAjZ4MEhktdgp9724g
+	0LWmFoCyLlznob6uD5Dd0Ukg1z0tjrL0L6K11iYKrQ7UEKh4to1C9dM6HrIaY1BG27dE5HZm
+	biiTYqZdLoK5eX6eYkyLZQTTrLdTjLa5BzC1lRdIZmSglWRKbkUxozlWjKm7lsZkGDswJm8l
+	lJm70U8y39RXAuauZpD6WHRMsE/Gxsd9zqp27ZcITuVop8hE4wspmjs/gnSgE2QDHz6kw6F1
+	ScfzsoiuANDSfiQbCNZ5HsDf+h9TXMEDoLY86lnD5eUiHmcqXzedHQfcYQbAh08XMK9LSO+H
+	cw7DBhP063BqwkZy+hZ464qT8PJLdBAcHS7aSPCjZXBwbRR42Z8OgznpGYT3UpzO5kFTS/VG
+	AacD4LCzdONSct00Vl66Pgaf70MfgFdqYzlLENQ0FOPeXkj3CmDh9Zs8buyD8E+XBnDsB6es
+	9RTH22D3RS3BcQIca3iMc5wKm7XWf3kvHLH9TXqzcPotWN2yi5MPwPTZPswrQ9oXDs1s4Ubw
+	hQWNhTgnC+H5LBHnfgNe0ub+F2qraMTygVi/6VH0m3bUb1pG/39uGSAqQQCbrFbIWXWYkv0i
+	RC1VqJOV8pCTCYpasP6/u1et802gfModYgYYH5gB5ONif6Ft96pcJJRJvzzDqhKOq5LjWbUZ
+	vMInxAHCq22ZchEtlyaxp1k2kVU9q2J8n8B0LLJQKIt+P9gjyOIfeijBHvQk1Sk+2arbcbvb
+	/fS1Avt8TVFY3YSfaWDnZxMpsZRlz+HQ3DbXV2eqfkbsSpDnyavFEl2MIF9RdvbNscXdCrt4
+	bU/CDVnmovFJQ7T9r99jpiMkk+UDNQcvnavk/dI1XoWUXZOBNTNbH7zcviNvqUjtLH5HdzHC
+	VlG3fTjV0Os5asxxrj5K7ZuMPLZymddaGJE1Hjx9Ynnwo5K05xbjJO7Skfay8NgTf5j3OmaP
+	FCQesoQP5UTJbB/6LzkzJUc7e94zLEyc7Ld+6ru2+MO59pLT+Z2hjpZKezRIsVdvG+/1Sdt3
+	2JB3O/J5hcifDQk+3tcfLibUp6Tvvo2r1NJ/AMaqa21OBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf1CTdRjvu71738Gx42WM4z2uRHdy3Vm+bIOx7zwk7drdm16X/lFdFtmE
+	143cGO2HaXclNWbIKEQ9nBMZKJoQk6QxkRzImiCosFSGURteUroFLcLsZMYa23Xx3+eez6/n
+	nnvYTO4YK4tdVq6nteVyFR9NRq4tDvnXDriiCsHlqWx4deIkA3ZHrBjscI0yoM0zyoKBmw4G
+	vP1XGIXnfvFi8IHrEwT6zp7AoHGwE4VBawCFc7UBFrzV24jC+c89ADrnq1Bo9/gx2DLXjcDW
+	nl4A9x84w4Lfj8igP3AVgcFbtUy435oKo5d6MLjoO4/A47/3Y9AxU8+CQ/Y3YFX/EWTDM1T4
+	jgmjZoJBhPqu+iFGuR41I9RFqx+jai9eB1RX+wGU+sl3CaWahrdSU+YhBvVN6z6qyj7IoOr+
+	EVDhvnGU+sLRDqibxglsC3cbWajVGPT0SqVGp1/Pf0sIRaRQCklRvpQU5kmK14nE/NyiwlJa
+	Vbab1uYWvUsqzbUhtMKessfoPQ0qQX1yDUhiE3g+0RCxsGpAMpuLnwZEzY0QSBBPEz5zEEng
+	dOKJrwZNiH4DxLDVHSc4eBERDjQyljCC5xCh+6NoYp5GDB+bjmsy8GxiatKCLeF0vJSYiE7F
+	C3i4iDBXViFLoUy8hkVM986ARMMIIFofm+IqJp5JTE7b4g1ozHH3S1tsVzY7Cd9IHOt6Zwky
+	8WeJziZuQp1NGLuPMw8CrnXZGtZlQdb/HdZljmaAtAMebdCpFWqdiNTJ1TpDuYIs0ai7QOyz
+	nIOPHT2gLTRHugGDDdyAYDP5PM6oZFHB5ZTK935IazXbtQYVrXMDcewU9cysjBJN7DXL9duF
+	BQKxML9AKhBLC/L4mRz09thOLq6Q6+ldNF1Ba//zMdhJWZUMBe/RhRu1Ty1+fXj2R62gEvS5
+	nKslppSo4H2Kfv0DR15K6uTz69X3VXV/SNddf+9BGJmrJv9Ene49TEvftcD5wc41/W92HLqL
+	oNTagVNve3wl3isPF7ZFGzc7J8dsfY0tfnuhbNVXv86zHRRd3XnH/Gqyvvijww2Zr/2wcOiM
+	TGLyXvlsc1rGt+KBFQt9nLKNxgrZuaNP+G2Wv2eP0htcz6168VOTR5W9e4f1ZEPW+I6ijoOp
+	FwwFL4w0paWckpxAc/faxiI5ZBGxRRk5+/J4pE6TuikHbl2Z3nvZ8jMv9NKmthWzO8eR1cWv
+	fHykZVq4Sylr2Fd/L83v9jbfG5FIOWGSj+iUcuEaplYn/xdqyz204gMAAA==
+X-CMS-MailID: 20250416142505eucas1p2fffb9ed80d3741d3f8f0c32fa47d1b82
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250219140306eucas1p19ba425ddb1e499ef1014b1665be9de8e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250219140306eucas1p19ba425ddb1e499ef1014b1665be9de8e
+References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
+	<CGME20250219140306eucas1p19ba425ddb1e499ef1014b1665be9de8e@eucas1p1.samsung.com>
+	<20250219140239.1378758-14-m.wilczynski@samsung.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-The scale of IIO bandwidth in free running counters is inherited from
-the ICX. The counter increments for every 32 bytes rather than 4 bytes.
 
-The IIO bandwidth out free running counters don't increment with a
-consistent size. The increment depends on the requested size. It's
-impossible to find a fixed increment. Remove it from the event_descs.
+On 2/19/25 15:02, Michal Wilczynski wrote:
+> All IMG Rogue GPUs include a reset line that participates in the
+> power-up sequence. On some SoCs (e.g., T-Head TH1520 and Banana Pi
+> BPI-F3), this reset line is exposed and must be driven explicitly to
+> ensure proper initialization.  On others, such as the currently
+> supported TI SoC, the reset logic is handled in hardware or firmware
+> without exposing the line directly. In platforms where the reset line is
+> externally accessible, if it is not driven correctly, the GPU may remain
+> in an undefined state, leading to instability or performance issues.
+> 
+> This commit adds a dedicated reset controller to the drm/imagination
+> driver.  By managing the reset line (where applicable) as part of normal
+> GPU bring-up, the driver ensures reliable initialization across
+> platforms regardless of whether the reset is controlled externally or
+> handled internally.
+> 
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  drivers/gpu/drm/imagination/pvr_device.c | 21 +++++++++++++++++++++
+>  drivers/gpu/drm/imagination/pvr_device.h |  9 +++++++++
+>  drivers/gpu/drm/imagination/pvr_power.c  | 22 +++++++++++++++++++++-
+>  3 files changed, 51 insertions(+), 1 deletion(-)
+> 
 
-Fixes: 0378c93a92e2 ("perf/x86/intel/uncore: Support IIO free-running counters on Sapphire Rapids server")
-Reported-by: Tang Jun <dukang.tj@alibaba-inc.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/uncore_snbep.c | 58 +---------------------------
- 1 file changed, 1 insertion(+), 57 deletions(-)
+Hi Matt,
 
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index fb08911a1cf6..76d96df1475a 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -6289,69 +6289,13 @@ static struct freerunning_counters spr_iio_freerunning[] = {
- 	[SPR_IIO_MSR_BW_OUT]	= { 0x3808, 0x1, 0x10, 8, 48 },
- };
- 
--static struct uncore_event_desc spr_uncore_iio_freerunning_events[] = {
--	/* Free-Running IIO CLOCKS Counter */
--	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
--	/* Free-Running IIO BANDWIDTH IN Counters */
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
--	/* Free-Running IIO BANDWIDTH OUT Counters */
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0,		"event=0xff,umask=0x30"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port0.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1,		"event=0xff,umask=0x31"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port1.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2,		"event=0xff,umask=0x32"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port2.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3,		"event=0xff,umask=0x33"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port3.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4,		"event=0xff,umask=0x34"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port4.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5,		"event=0xff,umask=0x35"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port5.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6,		"event=0xff,umask=0x36"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port6.unit,	"MiB"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7,		"event=0xff,umask=0x37"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7.scale,	"3.814697266e-6"),
--	INTEL_UNCORE_EVENT_DESC(bw_out_port7.unit,	"MiB"),
--	{ /* end: all zeroes */ },
--};
--
- static struct intel_uncore_type spr_uncore_iio_free_running = {
- 	.name			= "iio_free_running",
- 	.num_counters		= 17,
- 	.num_freerunning_types	= SPR_IIO_FREERUNNING_TYPE_MAX,
- 	.freerunning		= spr_iio_freerunning,
- 	.ops			= &skx_uncore_iio_freerunning_ops,
--	.event_descs		= spr_uncore_iio_freerunning_events,
-+	.event_descs		= snr_uncore_iio_freerunning_events,
- 	.format_group		= &skx_uncore_iio_freerunning_format_group,
- };
- 
--- 
-2.38.1
+This commit, along with the corresponding change in the DT bindings,
+doesn’t appear to conflict with the work you're doing for Rogue series
+enablement.
 
+Would you prefer if I re-send them as a mini-series so you can consider
+picking them up for the next kernel release?
+
+Regards,
+Michał
