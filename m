@@ -1,127 +1,80 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E779317BBF;
-	Wed, 16 Apr 2025 06:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48704188733;
+	Wed, 16 Apr 2025 06:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744783302; cv=none; b=j7vAQsyHDNKbzHfnFEpzzt5PYmgpYsUzT3br7EWtJ02PGpG/or7MqwrYVK1oELvbFCyFMypWiqjAv/+zvvbrKK3Rc59IdcK/a179ZWqWiLjAOZ3UFbG0ROnrbNOP9F+ae0Id7t9BBEWKGWXQJeVXz5McyDwPCxmPZdPQfpl2Kmc=
+	t=1744783455; cv=none; b=C9+2lEA5bjZbLHsYU4uKZ4VBbaQ4lDDJUX2dzl3TfMQbS7T9Y2gEGNHw98mA9CI1HyDPOaQ7oTBZs9IqfsLVcXttDZUX96PHgUe3qRItvEr90PEOtHgHSpjcceGvSLNeVWgyFCCJ8iJ7MYMFEisTnWEuUvVZYRnFcr4Qr3Tjn+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744783302; c=relaxed/simple;
-	bh=nw0fYoKBNrGqxhQefdb1OLy2EWV10YlOsKcnVYup9co=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LbSMCf/9fo7HrToQuScVVWjqYGobBdC55SqDTZ1uBf2yr+THXyl4a/1h7FQElTE0FnysS7QXUchaDWec2WjJyOoneZDmDOqriwRkzE7pxVFHkcaX/pHk6RvkoNFnv5qC79MJS5s0YrqmVolBm7leP/XybWJkpoZm1aqYUyTubcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgTuAQcR; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgTuAQcR"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2aeada833so76827266b.0;
-        Tue, 15 Apr 2025 23:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744783299; x=1745388099; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iEMwfYK2Ina1apMEGAXquVJGse8ZNYzgFZuw2g5OCkc=;
-        b=jgTuAQcRGm0ESQIRDqPvrTsteYIVlkW1cTu6F2z7KIiIoj6K46mPaMeiBPojLqPGIP
-         jJu3KBYkaLAEm80n1Wk7bl2ixcF7hKcdgFBOkhs8f6dTJwp090uSgqI9WnpaIrXaCzXk
-         vAeoATXKl/9ToBnUTx/SbB+5tzEHePVAnmewaRxBxpyrVeSc0hMtPJfYTDvfw1Lc6YNJ
-         /EmTHwg9huaSXJ8xvLBTR5FTjH53gr1EPZPr9eJvaOcWOchDHBnjLUFuVPLo2L14fEcP
-         1J3Tcr+f4FWREWzrMvU7suVcILeehnAG4SE8s786kUQ/caQ8MrYoIAtQdsY92PTXELPH
-         8Ptg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744783299; x=1745388099;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iEMwfYK2Ina1apMEGAXquVJGse8ZNYzgFZuw2g5OCkc=;
-        b=BZfW3U6MMnZ+yjeRpSRJenE+X+0vsa6bZ4brwwFH1wUDCXrfZ17KwH0QdLrP/kBa9K
-         sEjFSMvcZljHpfBA/YAbKf2tUnLcuIe8Gu4AwOZXsvE+8UJ+M0c5QBR2Br1svMv+0X/Z
-         QuoFEZpLCMaBCZLHiwP9tDCT3N8P/BVkf4y73YbD3YL6b3e4tG4nilkGt3RLuvR9Ovs1
-         VcR0kdYhCLNQsycfDtHFEMHWy4s3xbZXfqAmAlNd+XGtumW+8Lu/6WWMMLiD1gWCmiQX
-         81xokByuDDCX1LrSZ8P5ibuTmeWrw+ARQXzMc1bxGITT6ZppheTyot1Sen0VIrREq4OK
-         L41A==
-X-Forwarded-Encrypted: i=1; AJvYcCVVkrvszgFUd4NLJKqf7fghEz8cEHo/Ird89DJPEIGO3qdSULGF4UOVhBikEBHT7F3k7wNluqzKEVc=@vger.kernel.org, AJvYcCXVNzGcjpYEiFPBqnlt49SJnXvhONzlAl7eJ/mgPuns2xUKmxTpzu95XMsnbWMSKtBmXsuDqScfkY8sMApW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yws9n1rTGo98USGDtUN0HMiKdmd2LFwga0FYXZ0I7DGCIjpVY/1
-	Cbvhl5I3O9YI3yRxVrwPEXu0Plj96Ny06OIHeRn7YaWSqRhGbePy7I7bPFYkJA+br3GiAmAN8sm
-	2EoZpmMr2eNVcRdaa2k6JlLy5Q/UdWeqaQL0=
-X-Gm-Gg: ASbGnct+JHMJUCwDY+i1JfrxS2uXKwaIm732WAtD5/DKfOCMLB+QlwBbu9/JLahnlhA
-	X0akVUpg0sM4+A/4zdinCHN1nosAe51GQJWa33X43ZJn3raTozrzbMU9ylshrXfUrF3QZBnNgis
-	GxovXlioYh9e5oIBS8MsTzslk8u5T984l1M8w=
-X-Google-Smtp-Source: AGHT+IGUeKC6ldQzvby8Nf7EIpx50LD0DP93zySLyTJQvNKwsZAWdGlamD3fPvt/5+EhZ19lOjY1MyN3zGoM+7S3zaw=
-X-Received: by 2002:a17:907:3d4f:b0:acb:1165:9a93 with SMTP id
- a640c23a62f3a-acb426b5ae3mr39928966b.3.1744783298921; Tue, 15 Apr 2025
- 23:01:38 -0700 (PDT)
+	s=arc-20240116; t=1744783455; c=relaxed/simple;
+	bh=4MDKCGkDUE/VV29m/nvWYOckWsDczyJcPwJQL/LFEGE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bqtaw8wRAwGzlMMY23ZtnbREsyfe/dQs5t7LX9DFJGnpzH0WG6JT9Kcxk/zGixko0Z0fHb8wXrgE7wb/TQLJTyoy9qiN2DRVu3rHqCB7T7qRC1wU5Me5Oiv560qPBJ6j71RaaeqeKEzEDaoOif1VUKxOrk8EeblkI/xnWQy9wyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5T7WW003339;
+	Wed, 16 Apr 2025 06:03:55 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 461u2m8pfc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 16 Apr 2025 06:03:55 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 15 Apr 2025 23:03:54 -0700
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 23:03:51 -0700
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <hch@infradead.org>
+CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
+        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <ntfs3@lists.linux.dev>,
+        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
+Date: Wed, 16 Apr 2025 14:03:51 +0800
+Message-ID: <20250416060351.2971835-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_9Bou858C-pJnmd@infradead.org>
+References: <Z_9Bou858C-pJnmd@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8f765cfd6e93fad4e755dd95d709b7bea2a388e2.1744718916.git.marcelo.schmitt@analog.com>
- <CAHp75VendQGLdpggySS3mX6M2YSeS70bvE8yg7sp_LNGDS-Scg@mail.gmail.com>
- <22858e4f-db8e-4c97-8551-a1934a9f2fe7@baylibre.com> <CAHp75VdKpSnwfKO4GaJmVOs8kHASsZ4V9yNcZ7EF_GVoDNmrfw@mail.gmail.com>
-In-Reply-To: <CAHp75VdKpSnwfKO4GaJmVOs8kHASsZ4V9yNcZ7EF_GVoDNmrfw@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 16 Apr 2025 09:01:02 +0300
-X-Gm-Features: ATxdqUE1ACoc9Bbx7e6SSejR07bifi3qZikc4QQ4cFD1JPE4yJT8opEB8TYHwS8
-Message-ID: <CAHp75VfuCkohVLUJKgcMrgad-fRk4aKx_Ki0gRxxhJP3qgvS1g@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad4000: Avoid potential double data word read
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, nuno.sa@analog.com, andy@kernel.org, 
-	marcelo.schmitt1@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: cH3Omw0ffxpczzBLqApii_YH40AfYMjL
+X-Proofpoint-GUID: cH3Omw0ffxpczzBLqApii_YH40AfYMjL
+X-Authority-Analysis: v=2.4 cv=BaLY0qt2 c=1 sm=1 tr=0 ts=67ff484b cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8 a=b4dnZuen8jT_dhO8QXEA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=758
+ mlxscore=0 bulkscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 spamscore=0 clxscore=1015 malwarescore=0 suspectscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504160048
 
-On Wed, Apr 16, 2025 at 8:59=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Apr 16, 2025 at 12:22=E2=80=AFAM David Lechner <dlechner@baylibre=
-.com> wrote:
-> > On 4/15/25 1:02 PM, Andy Shevchenko wrote:
-> > > On Tue, Apr 15, 2025 at 3:21=E2=80=AFPM Marcelo Schmitt
-> > > <marcelo.schmitt@analog.com> wrote:
-
-...
-
-> > >>         xfers[1].rx_buf =3D &st->scan.data;
-> > >> -       xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.storagebits);
-> > >> +       xfers[1].len =3D chan->scan_type.realbits > 16 ? 4 : 2;
+On Tue, 15 Apr 2025 22:35:30 -0700, Christoph Hellwig wrote:
+> > > > The ntfs3 can use the page cache directly, so its address_space_operations
+> > > > need direct_IO.
 > > >
-> > > But wouldn't be logical to have
-> > >
-> > >        xfers[1].len =3D BITS_TO_BYTES(chan->scan_type.realbits);
-> > >
-> > > ?
-> >
-> > No, SPI expects 1, 2 or 4 bytes, never 3. If realbits is 18, we
-> > need len =3D 4.
-> >
-> > It would have to be:
-> >
-> >         xfers[1].len =3D roundup_pow_of_two(BITS_TO_BYTES(chan->scan_ty=
-pe.realbits));
-> >
-> > But that gets too long for 1 line
->
-> Actually there are a handful of drivers including SPI core that need
-> that helper already, I would prefer to have a helper defined in spi.h.
->
-> , so I prefer what Marcelo wrote.
-> >
-> > Maybe an idea for another day:
-> >
-> > #define SPI_LEN_FOR_BITS(bits) roundup_pow_of_two(BITS_TO_BYTES(bits))
->
-> Right, but as static inline to have stricter types.
->
-> > There are a couple of places in spi/ that could use this and several
-> > iio drivers.
-
-Or even wider, in bitops.h / bit*.h somewhere. Let me craft a patch.
-
---=20
-With Best Regards,
-Andy Shevchenko
+> > > This sentence still does not make any sense.
+> > Did you see the following comments?
+> > https://lore.kernel.org/all/20250415010518.2008216-1-lizhi.xu@windriver.com/
+> 
+> I did, but that changes nothing about the fact that the above sentence
+> doesn't make sense.
+In the reproducer, the second file passed in by the system call sendfile()
+sets the file flag O_DIRECT when opening the file, which bypasses the page
+cache and accesses the direct io interface of the ntfs3 file system.
+However, ntfs3 does not set direct_IO for compressed files in ntfs_aops_cmpr.
