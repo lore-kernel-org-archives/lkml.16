@@ -1,164 +1,298 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2063.outbound.protection.outlook.com [40.107.103.63])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0056221423F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786649; cv=none; b=P95XfkFKsg0gw15U9ALDWH/VG0DI2mwb/bVPIxJg2zLbK5UWn50oSoGa9xbaEkFEEdrcDWoUL42cXqkjs1C4SCw2/zBDo7qd3gg5fd6fyFwKri9IK+gCZBCTf2dQXnS9jgn9YFdHUMpZbjN4d3rADSCrw7wSMcnfI6xn1+gNqh0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786649; c=relaxed/simple;
-	bh=xE4OaP2qS1bIrkmed+eBjXcN49Q0yZ2cCth5OVNDDqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYGXjO4VwX9WjF+cKyO0hke1CJgb4Ovq/c5SM1x0TOzIzIsMZdlhKdiQpW02kRq5FoeKwe4fhZ62syo+IVFywCP2lvqnnb04W9Qw/5Tjf4teUKkYWuynm80+rkHe/OZDYO+aJC08ul1E0cho6kVu/r2UPhahEbk5LT3WmMOj/II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=LV74hYsO; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M3RlYC4Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yLSGObCQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/Wzt9If9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C2822B8AF;
+	Wed, 16 Apr 2025 06:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744786662; cv=fail; b=CaxLDu8aOMOhBrDblBkdQ6FVfNy5K1JRVsv/9NwKz4uZUbXlnHRRBejVGcrBfGEmfYEFouOOb4xjZHofziRdv6a43DubMpyyp8/CQbOsW36hh4BvJ1KfJ8ZVQUH2aPXG4cJrU7a0x7Byl0yx4avv2PY9U8d63NY1Ro6Tmc0d8kg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744786662; c=relaxed/simple;
+	bh=3+YfvC4bO20gt/kY4EU3xzmkfIXmbVNkP8TsP4s+Djw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EZ5g+5hZysYz/GGy3QJPbRonr1jrJxWuDJ8H+7UfdYnliHRIJ2iscSBOPSmNa+z46e8NYUqsx50Dw7ZN2mpqP5t6I6Wc95C92M6uM/zBjttGkK9OxsC5aVZyqtGgJ8iwy3n/ufehoVzptd05a+zPgfoPsr+kFdq+MXGRJB+0EhE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=XvxdneRT; arc=fail smtp.client-ip=40.107.103.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="LV74hYsO";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M3RlYC4Q";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yLSGObCQ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/Wzt9If9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7BA0E211A0;
-	Wed, 16 Apr 2025 06:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744786645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
-	b=LV74hYsOuKHt+xd8wgXDedAvbkHC/CaZXvOU5jUnmO2Uu5uD8JJdbXrh8m9bRgZ1LdWZcq
-	waKpUVisPdlfvmDPFJloCuJ4mN/bwkwGMCRazqbsIrrZMSP8uedhIm87cfjI1HXGg9736e
-	Vdl6AWh5x6YVfelSebh+vLAcrj47U/w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744786645;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
-	b=M3RlYC4QlTqqebPFUJXQqRXB5+53lX3tVI7XQWKv5BkL305wqslv+THoGKqatLtn7EL/PC
-	D02XqqfYKxae44Bg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yLSGObCQ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/Wzt9If9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744786644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
-	b=yLSGObCQ8kOZ49aa3WhYvfUsS6EIDrbNHBGrDQW3K14QaYwWaKSCHEsXmlEeYdbf7kLuCj
-	hGji9OmWllK298DcauoBcKPuW8I6fhxVAgnN3blM1BiOw9h7XkBRPN/QRkQ7fiG45Vvnb5
-	nmtuWyUI8v/dmEfVOGkUygXTRpzZ7PQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744786644;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WMDi4lqZaM/FLt6WWbi8dH1t67+7zfV34pSrKmymEOo=;
-	b=/Wzt9If9RTwj+WG8GtDuokUIFZl6IgsMxI1oTUE32Agxqxt3OteXPKXA9Gh19ebm90RtTA
-	Q/LCHk2eepKZC+Aw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6429D13976;
-	Wed, 16 Apr 2025 06:57:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gUIdGNRU/2ctQwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 16 Apr 2025 06:57:24 +0000
-Date: Wed, 16 Apr 2025 08:57:19 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Mohamed Khalfella <mkhalfella@purestorage.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
-	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
-Message-ID: <22e48664-63f3-4cc0-8b99-f56e98204e5b@flourine.local>
-References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
- <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
- <20250410085137.GE1868505-mkhalfella@purestorage.com>
- <6f0d50b2-7a16-4298-8129-c3a0b1426d26@flourine.local>
- <20250416001738.GA78596-mkhalfella@purestorage.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="XvxdneRT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z2vI9rJz5jQf5fAOBxWGfnKH2WzgJqdjXKXFPm7tbUTjCfWkjQ6Iy3MmG053gI/Vkf2GURKqQrhTR3OCmfR7+y1OFgPflmMelq2rtINTT2KDeX/0zB7mlVdogtBeILA5fXVR12FgNV7voNJl5tXaAikOmdGDufyOqgNyA0zMZhMWRK+s02OE8deri2pnxqW98NLfFrWaZOhhC5725wzZCOuyH4j71MVh+gF65CbIzoZLtV/7UfUjwJ1t1oANOoVXNxevWi0a2Sps05musxNx40DcxC1t3FtU6P97Bj1VzunkXkYWT5Sq/R3wEx7Un55kYpLJclQ/yA3NBQnnZS6pwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GruC462mlBpYM+yn+5hqMvU1FpGowMEkMPkvPS1s6ho=;
+ b=qdEIvF+DfwLJO0/aNyA27LkYmh8criVjTv3NWq7GPGU64Hm+o3yyj8TEhadwdsQjvN8ulgsZPbjPp4hoKDkXJVmTvohU0hx22SDxeB4/JmwDGSFSdaGX8Uyb1rBju87zUxA+KQqTBC7uwpGd5EQYX4NOCH7OdVt3dD0T+djxSnaJv6DhDVTiRgRxRAFyQObfmgrckSAI063dvP5FAuN2zVMt7fNOa9fBZAXnZxceUJ+DFxvKgICSa2jPr03Fm0cUqGqLD9cjzZAV0OvFuBZfv7Rf8KqYj3LoLK+Pgz/T9+tq+0zDmJSbTusE+RFZek3cprEcaBCkMdGEEPSqfXJJSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GruC462mlBpYM+yn+5hqMvU1FpGowMEkMPkvPS1s6ho=;
+ b=XvxdneRTHRS1LXL9zQjmLFthLuhiiwOe+kd3O9DNQgn6oCedEiGgWfcEyzH6c0yVITEUilKNnPsl5/FlQGXLsAY6od0s1NYJJhIKQH4+ecFDrvv98XqIGiVGeFFrfmbfyth1ZfJZ1eGYMndPq/zicO9v/MHFihNt64xgM07EU74iP7L7Yx0xBJj751eIz1TJIaIgggwXZ2e4Lb2LUoimNqwT8pOly1MgjmuC8xkKM6L/cCAjIubKZWbDCFxqYBBNDR6dZtoICPPIktGOwBN5l3+VKi2J+FjnHn2vehGX1vlcDzsh6Jw386KwbZ60l3YZ8T2pEPv4ovW0daSOBR3Otg==
+Received: from AM0PR04MB6515.eurprd04.prod.outlook.com (2603:10a6:208:16f::10)
+ by AM0PR04MB7121.eurprd04.prod.outlook.com (2603:10a6:208:19a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Wed, 16 Apr
+ 2025 06:57:36 +0000
+Received: from AM0PR04MB6515.eurprd04.prod.outlook.com
+ ([fe80::ca11:63b8:aeea:8043]) by AM0PR04MB6515.eurprd04.prod.outlook.com
+ ([fe80::ca11:63b8:aeea:8043%5]) with mapi id 15.20.8655.022; Wed, 16 Apr 2025
+ 06:57:36 +0000
+From: Pankit Garg <pankit.garg@nxp.com>
+To: Rob Herring <robh@kernel.org>
+CC: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "alexandre.belloni@bootlin.com"
+	<alexandre.belloni@bootlin.com>, Vikash Bansal <vikash.bansal@nxp.com>,
+	Priyanka Jain <priyanka.jain@nxp.com>, Daniel Aguirre
+	<daniel.aguirre@nxp.com>, Shashank Rebbapragada
+	<shashank.rebbapragada@nxp.com>, Aman Kumar Pandey <aman.kumarpandey@nxp.com>
+Subject: RE: [EXT] Re: [PATCH 1/2] dt-bindings: rtc: Add pcf85053a support
+Thread-Topic: [EXT] Re: [PATCH 1/2] dt-bindings: rtc: Add pcf85053a support
+Thread-Index: AQHbkYcYcfJUEHgQ+kiMkK7ahPUAsrNsVc8AgDm+1iA=
+Date: Wed, 16 Apr 2025 06:57:36 +0000
+Message-ID:
+ <AM0PR04MB6515F315ABA8374DD864FCFDE7BD2@AM0PR04MB6515.eurprd04.prod.outlook.com>
+References: <20250310063846.1867615-1-pankit.garg@nxp.com>
+ <20250310130044.GA3891357-robh@kernel.org>
+In-Reply-To: <20250310130044.GA3891357-robh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM0PR04MB6515:EE_|AM0PR04MB7121:EE_
+x-ms-office365-filtering-correlation-id: 39d74234-9fb6-4186-da8b-08dd7cb3f853
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|1800799024|366016|7053199007|38070700018|13003099007;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?vBo78EZLsDKD9yCRAux20RjQpRhmtV/FGX3Y0kKB4YA1nUYsSF3oX01AU/CQ?=
+ =?us-ascii?Q?pH1LIxrBqPqRut1j6Qu8kmieEltGxYIHsfzJ8Va+RpcMZwmSM9a1LxNXPmDf?=
+ =?us-ascii?Q?QSriQutyxAxK5JRQnOYMIPTGO8/hePxfddil8GUgOpS0xny6RmlWi3V24veb?=
+ =?us-ascii?Q?ExTjtfSrPog7EvJT3KXILAzQJfBHTX14dUtEGdd2VXwwsSmnAlyqJXLw3/jh?=
+ =?us-ascii?Q?E4iCAyIC0NkBbnYo6+e4eYvtsDiBIyeXjo/WgdlLGxeMxOh41ldYD6DKhl/k?=
+ =?us-ascii?Q?NrAtOb3xskEr5Ca0XVT/f+lY7d0G8nXa2VbLVZv0pGjRoqPzI2Czm/8e0TwD?=
+ =?us-ascii?Q?GgJqBXPCUp6Oujub0Baaxab3nfwr3S5JiVOCV0SvxOmzHbHv7+ED0il1Dhyk?=
+ =?us-ascii?Q?+7KvanGPrljvQVSN/lFihmgb4k1nD4ffCKC/zQXyBCfE0gm2gedxqXvZIwr5?=
+ =?us-ascii?Q?eH6DKzX7dxDxYl1x72iqW4OyjQBlNAqyzpJPHotNnemYaRCsSkDY/zuGH6uO?=
+ =?us-ascii?Q?Y5evJXSMr5Y7J1E+2//bRj7d2hzdbi3X2jzpnccwSPhmBMh4YDsWj6IhVJZj?=
+ =?us-ascii?Q?RZA9eQmwvP5/t12TINAcv3YtLLzNBWL89OI28f6BFBieCH42rnCzm9INVXR9?=
+ =?us-ascii?Q?/SmBe1VLefw9ZHlBqgfo/Oav0TH6SL2H7wIPNibNJa3ORoTH7Anvpu7w3zXC?=
+ =?us-ascii?Q?7m/0xFcBxb30wiou021+Iwrwxa0KG01lJGwNYGbT+NYLZt4KkAmmWs9vVaFS?=
+ =?us-ascii?Q?dodkLkmbeGQqA8pDTpXSAwlE0U6RFvEUt2SMV4ZfMwGYxtZlpVq6mdnniCzr?=
+ =?us-ascii?Q?r53PdVY16k8NC2KTKryEcl5xYgXM/LmBJUBiyCVu7QfPWvuF1buqTozUTnVC?=
+ =?us-ascii?Q?0sWC0MPm92m3P9HCUsu9+XyNV+pM9wYoPP8TxVVIdzV9w1XFcBN7E+ojY8z/?=
+ =?us-ascii?Q?7Hoy8tE4qB4Y/cnOc2qZh2fnPeIDByys19zmxvgzOToCKj2qXjir316kp+GY?=
+ =?us-ascii?Q?7mXHP+FJkUgCPG/xfQ3C8kIkNBxyqGNDRW8DVxlpf6d8AfJzhiOTM4sXwA2h?=
+ =?us-ascii?Q?Y6vVK/WwxUU1GPiyf0juzbt+vjczhpyMtpCRhfvt+r4GT693iOwK77hnba3S?=
+ =?us-ascii?Q?x9rZEHzhykm3eSQ2ubuAWn/9KVddfSSxA7819ZRj8pXmWI49B5RYJh7rE0hI?=
+ =?us-ascii?Q?/nkpEWlYoqtgp62ZpsjsfFObBwt9VHMPojPgLwmJ7tn2Kp0uskG0ZKe3kCZB?=
+ =?us-ascii?Q?f5F2wEO6YjjgBIwWPxumtziXA6M+eAIp9OHBYxF29WoAEpWxgyGfhwWGT1qI?=
+ =?us-ascii?Q?O2aPgqJpZ7pizLbatqLCvr7kzMove/xIxnVpuRyKbL9R1ZmYyTe8GQ6/Amfr?=
+ =?us-ascii?Q?0ed086QwO9nXuw7njWm01ix/zLGBjJapI2j6suaipiOihlr0kKb796EpyonR?=
+ =?us-ascii?Q?qH6UP/u0iX1FlMnJsiK7nbW7e6N+KO5M2d+nWL2tcbsGNj/1R/CeoQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6515.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007)(38070700018)(13003099007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Qgvac0VG6jRR2uiF/X2o0mZpEfaMk36Y1Q4u1b77PuOzh/9l913eTo87qqJj?=
+ =?us-ascii?Q?iYynsq6Ucl1pqXO4zL5p3IZqMa8sfmGJFS1JW2diCvg6qH+/euHo3suTSnZI?=
+ =?us-ascii?Q?Gy5kyoE0SwDzYkSTNKRpX4U3t+izHI4HGwvFawZ2ZHyzPSR/AqNg16DVjSMg?=
+ =?us-ascii?Q?5xoh/Rf5f14CYY8k1eZOhH+TbBegURNJuFz5c9XkHjUwVFcc3nzrNQYqfn8s?=
+ =?us-ascii?Q?iu63JvZCaWMwMOoUGEj0+kWIx+n5TN6175FARFPLqlSZFgrWbCkkioY4YKHZ?=
+ =?us-ascii?Q?XFITv3Y+0mFnc9DymN28GoB5fTlTU4TxG3EXCVTzdfaUn83K8Pisr3jC/NMJ?=
+ =?us-ascii?Q?u33h1cf2dLdk+AwGOp+dXb0I700d839vqTHTrKNm1Sz5Ot1f/KUfwHAKFb+u?=
+ =?us-ascii?Q?4p8SMrbpqXxFMyuCaQ5o/Tl/xLAGOMx1kGmgui5KIViotI62tyFcSi3WqKZK?=
+ =?us-ascii?Q?RMdEySYdaFk1FYhqc0j3MfQVAaAueCOdnPJrPHlblYu0dqNMtucO2Osz2lt+?=
+ =?us-ascii?Q?+xmcBxawVCEiw0HxJdqHo4blHgb65MaTSZSIWcUw7qQYNhpBahU9NcmvG9bq?=
+ =?us-ascii?Q?sw1bNYyiXFPQzWvnqKqh8L+pGltOYGb5rdzdmyqTYYoncn016nhZxX5kx0oL?=
+ =?us-ascii?Q?a7HrVjG2LKe4YOkj5Kf6iDc5dAJYHA1GJRjNAyQRpygfLX1tgmw2ZSOwvXPg?=
+ =?us-ascii?Q?mJXP8ifCYMSVn+tE9L8UP4zkdZbFKCWaLwgojUGJdZjjWsHNZWDOn6E1B0cd?=
+ =?us-ascii?Q?37QotAeZKNsolTRuO8XF57d2ZGMOY2yzVudWIcrLloxltQ+Fz48hIG0KNAfh?=
+ =?us-ascii?Q?3lvrvi2bqcjbxELAk/WX9PRcQ5mGMN7LO9rse3VJCAVblXODBgv15bCOYEC+?=
+ =?us-ascii?Q?Q8VI3VVsWanGbyJercsSaQFIXVOjligjacM7y/LX61wZFYotCkIxe0NFALto?=
+ =?us-ascii?Q?yZrC+2OdoGme0fzwF3zTCXXhXalQih2VvXrSJxzPNB/30ps4LDN/J6XvW9aY?=
+ =?us-ascii?Q?8pwaZTBtlzao5IKNaBS0Qm4ID1a6w8NskGGOhTonceGY5VsUAc2Qv0kwUSiN?=
+ =?us-ascii?Q?U+t1fZGXybYl/04L1Xk22vpo92Oy1mhc72U0GyDt4zQHbz4mvHoh6ekzneGI?=
+ =?us-ascii?Q?AOUGz36EWCsXIU6+PS9ppI3aJjIJdsWWhCJymozTEdztQCjyHfSSfwq3mhOe?=
+ =?us-ascii?Q?LGr5v8odAE54vzuItUvW53WnplCXBrV/8KXesbiwFnW7cclK5rFICtqE7d7L?=
+ =?us-ascii?Q?cUJR3iOJLOK+uRS8Q1+TUJPx6izNE8zDtrtaNyVEgiEQRjrTgN7sKUjlGAwm?=
+ =?us-ascii?Q?P/JTTaHywpmYI/1A3w1IO4GZXLC6YdSfURnBJkOEmTOKY6IuzjdIy9+AtgIw?=
+ =?us-ascii?Q?/G9/NpTGhuHh1SroLdr7ADpt/DP1R/IpWQm95ZN0ntIVYpfwTduANn7XM2WY?=
+ =?us-ascii?Q?VuRxKzPAHNkXTdOromRjGnBi+i4bFr1x2de1p/9SR71zNjwj/LL92Lobcs6m?=
+ =?us-ascii?Q?smAXlcOdh9CSQ9Bk/N3VGbjBviBeho87yBePDNtIpRC9mNBLLzEKvEMaf+0d?=
+ =?us-ascii?Q?Iaf/SezbS5b62zMQcCPuK9B6xp88TwZKRGW/MW6J?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416001738.GA78596-mkhalfella@purestorage.com>
-X-Rspamd-Queue-Id: 7BA0E211A0
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,flourine.local:mid,suse.de:dkim];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6515.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39d74234-9fb6-4186-da8b-08dd7cb3f853
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 06:57:36.3373
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: h2r/8hW5z0q9m8WV6cgpf+hiiytL2DCD85XuqwTOYiK1ECIVMdwve1QLvr9za2K6ibK0aOOm5RuRQZAePMbcLQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7121
 
-On Tue, Apr 15, 2025 at 05:17:38PM -0700, Mohamed Khalfella wrote:
-> Help me see this:
-> 
-> - nvme_failover_req() is the only place reqs are added to failover_list.
-> - nvme_decide_disposition() returns FAILOVER only if req has REQ_NVME_MPATH set.
-> 
-> How/where do admin requests get REQ_NVME_MPATH set?
 
-Admin commands don't set REQ_NVME_MPATH. This is what the current code
-does and I have deliberately decided not to touch this with this RFC.
 
-Given how much discussion the CQT/CCR feature triggers, I don't think
-it's a good idea to add this topic to this discussion.
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Monday, March 10, 2025 6:31 PM
+> To: Pankit Garg <pankit.garg@nxp.com>
+> Cc: linux-rtc@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; conor+dt@kernel.org;
+> alexandre.belloni@bootlin.com; Vikash Bansal <vikash.bansal@nxp.com>;
+> Priyanka Jain <priyanka.jain@nxp.com>; Daniel Aguirre
+> <daniel.aguirre@nxp.com>; Shashank Rebbapragada
+> <shashank.rebbapragada@nxp.com>; Aman Kumar Pandey
+> <aman.kumarpandey@nxp.com>
+> Subject: [EXT] Re: [PATCH 1/2] dt-bindings: rtc: Add pcf85053a support
+>=20
+> [Some people who received this message don't often get email from
+> robh@kernel.org. Learn why this is important at
+> https://aka.ms/LearnAboutSenderIdentification ]
+>=20
+> Caution: This is an external email. Please take care when clicking links =
+or
+> opening attachments. When in doubt, report the message using the 'Report
+> this email' button
+>=20
+>=20
+> On Mon, Mar 10, 2025 at 12:08:45PM +0530, Pankit Garg wrote:
+> > Add device tree bindings for NXP PCF85053a RTC chip.
+>=20
+> Looks fine, but this can be handled by trivial-rtc.yaml.
 
-> > > - What about requests that do not go through nvme_failover_req(), like
-> > >   passthrough requests, do we not want to hold these requests until it
-> > >   is safe for them to be retried?
-> > 
-> > Pasthrough commands should fail immediately. Userland is in charge here,
-> > not the kernel. At least this what should happen here.
-> > 
-> > > - In case of controller reset or delete if nvme_disable_ctrl()
-> > >   successfully disables the controller, then we do not want to add
-> > >   canceled requests to failover_list, right? Does this implementation
-> > >   consider this case?
-> > 
-> > Not sure. I've tested a few things but I am pretty sure this RFC is far
-> > from being complete.
-> 
-> I think it does not, and maybe it should honor this. Otherwise every
-> controller reset/delete will end up holding requests unnecessarily.
+Thanks for reviewing the patch. I will take care this thing for the other r=
+tc drivers.
 
-Yes, this is one of the problems with the failover queue. It could be
-solved by really starting to track the delay timeout for each commands.
-But this is a lot of logic code and complexity. Thus during the
-discussion at LSFMM everyone including me, said failover queue idea
-should not be our first choice.
+>=20
+> >
+> > Signed-off-by: Pankit Garg <pankit.garg@nxp.com>
+> > ---
+> >  .../bindings/rtc/nxp,pcf85053a.yaml           | 44 +++++++++++++++++++
+> >  MAINTAINERS                                   |  6 +++
+> >  2 files changed, 50 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/rtc/nxp,pcf85053a.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85053a.yaml
+> > b/Documentation/devicetree/bindings/rtc/nxp,pcf85053a.yaml
+> > new file mode 100644
+> > index 000000000000..177afbe128d4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85053a.yaml
+> > @@ -0,0 +1,44 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) # Copyright
+> > +2025 NXP %YAML 1.2
+> > +---
+> > +$id:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fschemas%2Frtc%2Fnxp%2Cpcf85053a.yaml%23&data=3D05%7C
+> 02%7Cp
+> >
+> +ankit.garg%40nxp.com%7C32d9900da5904fe7396708dd5fd3946f%7C686ea1
+> d3bc2
+> >
+> +b4c6fa92cd99c5c301635%7C0%7C0%7C638772084538208218%7CUnknown
+> %7CTWFpbG
+> >
+> +Zsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zM
+> iIsIkF
+> >
+> +OIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DyL5SU%2BPRYH
+> AFtSruf4
+> > +b92LlR2ybu%2FeQb5P26ys61OMk%3D&reserved=3D0
+> > +$schema:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> > +cetree.org%2Fmeta-
+> schemas%2Fcore.yaml%23&data=3D05%7C02%7Cpankit.garg%4
+> >
+> +0nxp.com%7C32d9900da5904fe7396708dd5fd3946f%7C686ea1d3bc2b4c6fa
+> 92cd99
+> >
+> +c5c301635%7C0%7C0%7C638772084538226346%7CUnknown%7CTWFpbGZ
+> sb3d8eyJFbX
+> >
+> +B0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWF
+> pbCI
+> >
+> +sIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3DkqAHKLyHEc2A%2B64WxNmE
+> eD3wruOU4F
+> > +JMkkYg9SBiQWk%3D&reserved=3D0
+> > +
+> > +title: NXP PCF85053A Real Time Clock
+> > +
+> > +allOf:
+> > +  - $ref: rtc.yaml#
+> > +
+> > +maintainers:
+> > +  - Pankit Garg <pankit.garg@nxp.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - nxp,pcf85053a
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        rtc@6f {
+> > +          compatible =3D "nxp,pcf85053a";
+> > +          reg =3D <0x6f>;
+> > +        };
+> > +      };
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > 8e0736dc2ee0..21a05e169564 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -17158,6 +17158,12 @@ S:   Maintained
+> >  F:   Documentation/devicetree/bindings/sound/nxp,tfa989x.yaml
+> >  F:   sound/soc/codecs/tfa989x.c
+> >
+> > +NXP RTC PCF85053A DRIVER
+> > +M:   Pankit Garg<pankit.garg@nxp.com>
+> > +L:   linux-kernel@vger.kernel.org
+> > +S:   Maintained
+> > +F:   Documentation/devicetree/bindings/rtc/nxp,pcf85053a.yaml
+> > +
+> >  NZXT-KRAKEN2 HARDWARE MONITORING DRIVER
+> >  M:   Jonas Malaco <jonas@protocubo.io>
+> >  L:   linux-hwmon@vger.kernel.org
+> > --
+> > 2.25.1
+> >
