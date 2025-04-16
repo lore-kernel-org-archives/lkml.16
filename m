@@ -1,47 +1,59 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4DA219A81;
-	Wed, 16 Apr 2025 06:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC83A1F416A;
+	Wed, 16 Apr 2025 06:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744784331; cv=none; b=KzVr3YnyADvvFxL88zy57OnkM32QS5iiCy7k6lPBP2Zmaw8DFwdWHwq37617jYZpRUtzuqROidcm2DGfAiAm7sTaZwqFoUDGuce6DBoXRxZ7qMdG7gz2aKOT94yncSZog+79mFqWoHkZmoZ+y612aOetz4DO1g0soKzIuAu9r9k=
+	t=1744784419; cv=none; b=kC6K0pkNHneYl00gNj71qC3NCS4BK1HzXZL6Uf9JSp0K399LGow4pbh788BWTiyYooLm5I8rN6uy33zzcLc49OWQuoawTn0CLGrKKrqYH/fJZXnwhQlEZzVRQB8yUo/L4nf1wqEYJpvQIhVrvxl/LZ0np+sn2pBrWFJL2dPjdro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744784331; c=relaxed/simple;
-	bh=suSMq9iVHxQM5u7UB4YBN9mUydNJQLH2Jg1AhbkJWHs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TfQCnJLdhcQCp7nYdMDJvgeTrTLj8YXrpWhEOyYuiT0n0S2MVeiPglkJbE8HOAWH5AJKrZlecUI7e+EWAjkCEl1GLfiG8e1lpErP7fmVkfW7Fi8xGdd7zkwFTBRgkSssa7jEZpE4wnZ41/zwDrEWzFIaVEIo7reAh1dUgsHdUis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5thZ9013510;
-	Tue, 15 Apr 2025 23:18:32 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45yqpkm3dd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Tue, 15 Apr 2025 23:18:32 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 15 Apr 2025 23:18:31 -0700
-Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 23:18:28 -0700
-From: Lizhi Xu <lizhi.xu@windriver.com>
-To: <hch@infradead.org>
-CC: <almaz.alexandrovich@paragon-software.com>, <brauner@kernel.org>,
-        <jack@suse.cz>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lizhi.xu@windriver.com>,
-        <ntfs3@lists.linux.dev>,
-        <syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com>,
-        <syzkaller-bugs@googlegroups.com>, <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Date: Wed, 16 Apr 2025 14:18:27 +0800
-Message-ID: <20250416061827.2995095-1-lizhi.xu@windriver.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_9IxOypdO5Ks44N@infradead.org>
-References: <Z_9IxOypdO5Ks44N@infradead.org>
+	s=arc-20240116; t=1744784419; c=relaxed/simple;
+	bh=de7mb9bXqsW8hsV163Pv5fgjPWR8LwlkM2ImhAfhCjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ci0mhKMbApK1DzS1ZXcdnaYq3Sr2/5W3e4mOHGvHlcl/Fz+aiPh4dMb2dH7v49au6/Oto8imyOlqZm19jKlNrskFhJpZPPZT3Q/e7f7QQIuKfTJI0P6pmVIilc/5t5IhbwNkrTs73sj/Ph9eR90vCrEP224HgNzD+rfu+MVwx54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BsVv0/AB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsVv0/AB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744784418; x=1776320418;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=de7mb9bXqsW8hsV163Pv5fgjPWR8LwlkM2ImhAfhCjM=;
+  b=BsVv0/ABWXnC+t97F0BEQ+oCY7GlgiB8igcEPMoh1Iuv5+qbEIVk0sWX
+   XDaBYrvLUppvYQbQRU/FbC6wbY6GRvdN94anIOEH8GIfOcVQZDsxF+C5u
+   DwSjTFatMFtcmNtpzRYd6+NAr2VW8eBuEkBP2mmsZOpC/b2iDqz8HXawZ
+   +0MmMzT35wsd8UtOC+NUAKYeQcL5SO7qLjV0QcyLmHsSGD8d+Nkdc+At8
+   W1w/PI6YSGKoO7dq39jm8h39lL1RHnKiWylVYfYel4LJsII+lUBjXe0Rg
+   s1+FHvv/0aKeQQgI6vdb01jMe/AHrc3kYpYow8xtd+DRGjttVowWgcNI6
+   g==;
+X-CSE-ConnectionGUID: o7w3+lUAQtqBV9AHhzyIIQ==
+X-CSE-MsgGUID: gwEIC6cMT56dciy2MX6L2A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57683526"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="57683526"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:20:17 -0700
+X-CSE-ConnectionGUID: QUzL/qA9Q8+3iHwji36pLg==
+X-CSE-MsgGUID: Au+DYGunT0Ocssxqb9aonQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="167508185"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa001.jf.intel.com with ESMTP; 15 Apr 2025 23:20:15 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 80554221; Wed, 16 Apr 2025 09:20:14 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mark Brown <broonie@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>
+Subject: [PATCH v1 0/2] spi: Introduce and use spi_bpw_to_bytes()
+Date: Wed, 16 Apr 2025 09:16:33 +0300
+Message-ID: <20250416062013.1826421-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,30 +61,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: BnqVxG8VK0WFqjPmkANnMIqWHjR1nEQU
-X-Proofpoint-GUID: BnqVxG8VK0WFqjPmkANnMIqWHjR1nEQU
-X-Authority-Analysis: v=2.4 cv=UZBRSLSN c=1 sm=1 tr=0 ts=67ff4bb8 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=Lu9379bB4VU3hevTGzEA:9
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 impostorscore=0 phishscore=0 malwarescore=0
- spamscore=0 adultscore=0 mlxlogscore=736 lowpriorityscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504160050
 
-On Tue, 15 Apr 2025 23:05:56 -0700, Christoph Hellwig wrote:
-> > In the reproducer, the second file passed in by the system call sendfile()
-> > sets the file flag O_DIRECT when opening the file, which bypasses the page
-> > cache and accesses the direct io interface of the ntfs3 file system.
-> > However, ntfs3 does not set direct_IO for compressed files in ntfs_aops_cmpr.
-> 
-> Not allowing direct I/O is perfectly fine.  If you think you need to
-> support direct I/O for this case it is also fine.  But none of this
-> has anything to do with 'can use the page cache' and there are also
-The "The ntfs3 can use the page cache directly" I mentioned in the patch
-is to explain that the calltrace is the direct I/O of ntfs3 called from
-generic_file_read_iter().
+Recently in the discussion with David the idea of having
+a common helper popped up. The helper converts the given
+bits per word to bytes. The result will always be power-of-two
+(e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
+
+This mini-series introduces it and replaces current users
+under drivers/spi and we expect more (and possibly some lurking
+in other subsystems).
+
+Mark, if you okay with the idea, please, make this to be an immutable
+branch or tag for others to pull.
+
+Andy Shevchenko (2):
+  spi: Add spi_bpw_to_bytes() helper and use it
+  spi: dw: Use spi_bpw_to_bytes() helper
+
+ drivers/spi/spi-dw-core.c |  2 +-
+ drivers/spi/spi.c         |  2 +-
+ include/linux/spi/spi.h   | 15 +++++++++++++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
+
+-- 
+2.47.2
+
