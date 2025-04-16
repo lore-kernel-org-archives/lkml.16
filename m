@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5351A5B9F;
-	Wed, 16 Apr 2025 13:16:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2837A335BA;
+	Wed, 16 Apr 2025 13:16:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809376; cv=none; b=er7Xbu+nlz1W8fdQlpkAKbBxcICFLaf7QQUGDJDEeKU4UDXl9l2OgM3SSsYFBdP4kzTOLhwWrfpxqaiTfZcIhqkZqsVnXg7SKDvOCrvARCMDGLt9zJfUarsCsiMUj1GJ6FN/Q3t2zCAbes6XfH5Cyf0ydq74wQNVXc860NDLFlk=
+	t=1744809383; cv=none; b=pTED81E6MR1g0H7q2Qp0Ns2THhAF0QkH5B/eQv4Z0KsDo/6E5hkfYgGEUu0UxT5Ni2nTRzyMNacblQMT9IGmNp1z0MIE8ajY9MMySwyYHh7YGp5aLU1RRSIdBw92aUNnXTpTY9O6H3VlAYmq4Svfwgcme4/NTEhAbPbLwuQbeJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809376; c=relaxed/simple;
-	bh=oD2DV2ngAGE3L/ba41pDYijN1kN37YqfhkNs/6XEIMw=;
+	s=arc-20240116; t=1744809383; c=relaxed/simple;
+	bh=IexOsqoyajHV7wN/9+GI3Q8eMJhi1xU+7WMbBThMlp0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=baAZltUvA2//MsvZsyHmggz2fVmx7xP4wlOjwLyLgwYRdMACpGdBCs+P9Ljifp3Gu3qpTEn2SjnRtDyE7GYxxowKLI48TE0U3S15A7Gw7N7QLVpm3QkjfDvdoJr1fy8NAI6MHXq5lNm/JF3Uul5tjPskitdVNtabYRqxqSwChD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzFrv4Jn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YtcNHvWHRGfrj1+1aKXZbDJDlUedaU7w1a4cMyLNhdV0hGa1QFrdWcZB4Y1eyOxvd+bhrPTE6CMXh3VYwCzu6EFMuYKjYe8q940RqAHD+/gZQDFbYAwC7GpxkAhg37DufiPTDYI4ZwBW+PAbIXCbokCb0SSHIaejoZ5asmfcnxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdJ9uBW3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzFrv4Jn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D6CC4CEE2;
-	Wed, 16 Apr 2025 13:16:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdJ9uBW3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AE9C4CEE2;
+	Wed, 16 Apr 2025 13:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744809375;
-	bh=oD2DV2ngAGE3L/ba41pDYijN1kN37YqfhkNs/6XEIMw=;
+	s=k20201202; t=1744809382;
+	bh=IexOsqoyajHV7wN/9+GI3Q8eMJhi1xU+7WMbBThMlp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HzFrv4Jn+1pIZq35GPQuUSNQPVNP4UDd2O5Kj7Sei2ROpkBCJMgJt0FaoL58DRnpZ
-	 fSHqeAHqF5rvF+uWxAF/R1QeNIDGeDbf32KMeF/wLoBuSSpyEEia2oc+fA1ac0Ea37
-	 oFlcilyfGEZyTkFpgK6C/VGf5dkLhYyyB4oQP1RzVkvN5HMoU2TTOf9c/3LPZmfYwv
-	 LO7/XMc0PestPSferh0nRMugtNiX5NhJI1egzMk0Q9PSbFPv6hNp3Ix0LfsCdRcZ+X
-	 wZ0AduIQzo63M6xgN0J2vVyBGcQtE2L2H+XDcBYpxvqw4C6flkuyR8h/6UFwDYdk9Q
-	 uXAJ+Y9ia1gqw==
+	b=DdJ9uBW3C0U/szSey6KVf2M9IaaVMsfqcGJ4lqggIKhih7GKuDREEofwzqiuMcgSp
+	 nfplHCeTuF9+ZPDgmGUblvrFaV3gairc3RYlMy8MbBzGKHwXmL+rZZBrDPE7ylEfJ8
+	 tM7VHQikapC9tHtbKxCMqsH++++FR0LeQUj6f7j+8P6HraweAnodyvZ8Ho1v9qv8zu
+	 znCi8hTPspvPHkcclFsMLjpYJBaDCUlpqovYmDT4wp+T6UYa32h3kWZ7zmntOcWvFT
+	 aa7i38pDx4nAlr8IsHe/umxUdedytjJ2Kf3z5S20Ot+OgKSUAcmW8WJodfD4C7CPLj
+	 KVhOKQoVxcYQg==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -56,9 +56,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sound-open-firmware@alsa-project.org
-Subject: [PATCH 29/31] ALSA: ca0106: Use pure devres PCI
-Date: Wed, 16 Apr 2025 15:12:39 +0200
-Message-ID: <20250416131241.107903-30-phasta@kernel.org>
+Subject: [PATCH 30/31] ALSA: ali5451: Use pure devres PCI
+Date: Wed, 16 Apr 2025 15:12:40 +0200
+Message-ID: <20250416131241.107903-31-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250416131241.107903-1-phasta@kernel.org>
 References: <20250416131241.107903-1-phasta@kernel.org>
@@ -79,22 +79,22 @@ pcim_request_all_regions().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- sound/pci/ca0106/ca0106_main.c | 2 +-
+ sound/pci/ali5451/ali5451.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/ca0106/ca0106_main.c b/sound/pci/ca0106/ca0106_main.c
-index cf1bac7a435f..7c7119cad63c 100644
---- a/sound/pci/ca0106/ca0106_main.c
-+++ b/sound/pci/ca0106/ca0106_main.c
-@@ -1593,7 +1593,7 @@ static int snd_ca0106_create(int dev, struct snd_card *card,
+diff --git a/sound/pci/ali5451/ali5451.c b/sound/pci/ali5451/ali5451.c
+index 793d2f13267e..5f38a60467c1 100644
+--- a/sound/pci/ali5451/ali5451.c
++++ b/sound/pci/ali5451/ali5451.c
+@@ -1989,7 +1989,7 @@ static int snd_ali_resources(struct snd_ali *codec)
+ 	int err;
  
- 	spin_lock_init(&chip->emu_lock);
- 
--	err = pci_request_regions(pci, "snd_ca0106");
-+	err = pcim_request_all_regions(pci, "snd_ca0106");
+ 	dev_dbg(codec->card->dev, "resources allocation ...\n");
+-	err = pci_request_regions(codec->pci, "ALI 5451");
++	err = pcim_request_all_regions(codec->pci, "ALI 5451");
  	if (err < 0)
  		return err;
- 	chip->port = pci_resource_start(pci, 0);
+ 	codec->port = pci_resource_start(codec->pci, 0);
 -- 
 2.48.1
 
