@@ -1,110 +1,176 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B21217673
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB051FECA1;
+	Wed, 16 Apr 2025 18:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828202; cv=none; b=clwWBNipvxYXCwT77XZ5UFJahBqJ/Sb4xzGJB1gChYSxG/CDa3Q4YgGN2+OAykW5033x2h80GUbNyrQsjFlH8qus3122kglNuQ7EYOlELTgMaVSKp5wKivJ3d5d5dpPbO/4QeKt1Sc5Ux/vp7MtTprEYSDduhfpOZwsLb1PRvHg=
+	t=1744828244; cv=none; b=WK5CUfRc/o0C0TjCzBlsVDSLMC4cAorGeDb71BMXLk7eO4zqQzQ1sfDym1oJj1TAb27wQpahtKD+ylBQKu9Z/7D/0XShKV/SuGgsAgvRd6XKFg4Wn1d/YNDGgsbvgxWp8N9Bq/fmp/6teLOGwRpwji6HJqtZd9X0Mh9ZkE2cqSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744828202; c=relaxed/simple;
-	bh=VUmzKwxqymgjrVvJrNyATgkctlHUGe1zx9vEwiXNAaY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QcgNAMvdXqFXlKQSMdvZ7fcqE1cW81kwrznG55U1eyXMIBfbLAGj0g7QtXP68YKsccQsr9cd/Xcw3nu16w2D2HYQH5zWJ+ns9z/bazBVw5kRjC08dZqYRvYR/955tpK4JtLwQySi/+yjNaNJdFM0CeUvMY69tykcFUHBZTRYGSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=C8fRAjiD; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744828244; c=relaxed/simple;
+	bh=FtZSOzbuxkOduJR1lakYFkXwUTsnS2uQuQ6BlIYoafM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NanVpM53Qz+h/favyzowllalVOU0aAfGpbazkeEPll+3f/stCBYcfDBkvnbhhVMC9/x5e50ktkVT5aGhiM293su0bLAOPh2ks5D9SxnBMuCEVm5m5GW+c6gw1pQHPt74it6B3M5ggqvzbgjHhfHgUrQ8jEJ7RZ1/bTmd3m0RiZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dkc+DPri; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C8fRAjiD"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53GITWmk424417
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 13:29:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744828173;
-	bh=ohGWWpD116snjUxSs4ZCD48LRlSx0GG5NLOulK124xU=;
-	h=From:To:CC:Subject:Date;
-	b=C8fRAjiDtw0rsM7nktmmuDvBZqdNc3MgfEumLAKf9J8MSRqVaH5r6pWloqooghK85
-	 Tsa1p53Bl2yyvojzvlIhg7CHuujxuVn7KYfvBzfvusUT25Btjy6xuX77KURx5r3KVg
-	 lSfnSidvUOXzz3X+aO7coe/geLvVZKhOEKo4pgvI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53GITWak054757
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 16 Apr 2025 13:29:32 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
- Apr 2025 13:29:32 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 16 Apr 2025 13:29:32 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53GITVlq086303;
-	Wed, 16 Apr 2025 13:29:32 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <nm@ti.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <bjorn.andersson@oss.qualcomm.com>, <krzysztof.kozlowski@linaro.org>,
-        <geert+renesas@glider.be>, <lumag@kernel.org>,
-        <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
-        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
-        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <j-choudhary@ti.com>
-Subject: [PATCH v2] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
-Date: Wed, 16 Apr 2025 23:59:30 +0530
-Message-ID: <20250416182930.32132-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dkc+DPri"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38A1C4CEE2;
+	Wed, 16 Apr 2025 18:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744828244;
+	bh=FtZSOzbuxkOduJR1lakYFkXwUTsnS2uQuQ6BlIYoafM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Dkc+DPribskYpXulLARA2qfxHuOKnPJK522qjkDfC/CvWJYDCSqq2JIQVX6SGeAx5
+	 Od5OH8ivxowsjOo8w7qwHhHndrJk1olCkfwgOlyEgygqOKc5JjlHhhTXiFOKoLFY00
+	 PqjWbZqJl5SktRxWcreUspNGLmdvffIteF3Xc83EbP2DoK09twzCLyF26YckI6HbIH
+	 1EvofkN5gdneQ1L6yvndjw3jOjEab8ReFwlNXKZGZdJXOj9RZ1tlH0UG0qrPntj2LZ
+	 gHCAf1l2lhuo0zxLHC7oYStPBuB8z/xb4wC0ZkkUe1GajfHarPCLBiDkrx7FS57EIV
+	 Qwr4SimLxB3RQ==
+Date: Wed, 16 Apr 2025 13:30:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Shivamurthy Shastri <shivamurthy.shastri@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH 1/2] PCI: hv: enable pci_hyperv to allow dynamic vector
+ allocation
+Message-ID: <20250416183042.GA75515@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1744817766-3134-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-Enable configs for cdns-dsi and cdns-dphy drivers required for DSI
-display on the following TI platforms:
-J721E-EVM, J721E-BeagleBone-AI64, J721S2-EVM, AM68-SK, J722S-EVM,
-BeagleY-AI, AM62P5-SK, J784S4-EVM and J742S2-EVM
+[+to Thomas]
 
-The dsi wrapper driver used by all the above mentioned platforms,
-cdns-dsi-j721e is enabled by default if cdns-dsi config is enabled.
+On Wed, Apr 16, 2025 at 08:36:06AM -0700, Shradha Gupta wrote:
+> For supporting dynamic MSI vector allocation by pci controllers, enabling
+> the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN is not enough, msix_prepare_msi_desc()
+> to prepare the desc is needed. Export pci_msix_prepare_desc() to allow pci
+> controllers like pci-hyperv to support dynamic MSI vector allocation.
+> Also, add the flag MSI_FLAG_PCI_MSIX_ALLOC_DYN and use
+> pci_msix_prepare_desc() in pci_hyperv controller
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
+Follow capitalization convention for subject line.  Probably remove
+"pci_hyperv" since it already contains "PCI: hv" and add something
+about MSI-X.
 
-Changelog v1->v2:
-- Change commit message to add the platforms that needs cadence dsi
-  and dphy driver enabled.
+s/pci/PCI/
 
-Link to v1 patch:
-<https://lore.kernel.org/linux-arm-kernel/20250411095043.272488-1-j-choudhary@ti.com/>
+s/MSI vector/MSI-X vector/ since the context says you're concerned
+with MSI-X.
 
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+This requires an ack from Thomas; moved him to "To:" line.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5c85e5da152f..4c0eb2711bbe 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -938,6 +938,7 @@ CONFIG_DRM_TI_SN65DSI86=m
- CONFIG_DRM_ANALOGIX_ANX7625=m
- CONFIG_DRM_I2C_ADV7511=m
- CONFIG_DRM_I2C_ADV7511_AUDIO=y
-+CONFIG_DRM_CDNS_DSI=m
- CONFIG_DRM_CDNS_MHDP8546=m
- CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
- CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
-@@ -1579,6 +1580,7 @@ CONFIG_PHY_CAN_TRANSCEIVER=m
- CONFIG_PHY_NXP_PTN3222=m
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_PHY_CADENCE_TORRENT=m
-+CONFIG_PHY_CADENCE_DPHY=m
- CONFIG_PHY_CADENCE_DPHY_RX=m
- CONFIG_PHY_CADENCE_SIERRA=m
- CONFIG_PHY_CADENCE_SALVO=m
--- 
-2.34.1
-
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> Reviewed-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/pci/controller/pci-hyperv.c | 7 +++++--
+>  drivers/pci/msi/irqdomain.c         | 5 +++--
+>  include/linux/msi.h                 | 2 ++
+>  3 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index ac27bda5ba26..f2fa6bdb6bb8 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -598,7 +598,8 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
+>  	return cfg->vector;
+>  }
+>  
+> -#define hv_msi_prepare		pci_msi_prepare
+> +#define hv_msi_prepare			pci_msi_prepare
+> +#define hv_msix_prepare_desc		pci_msix_prepare_desc
+>  
+>  /**
+>   * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
+> @@ -727,6 +728,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
+>  #define FLOW_HANDLER		NULL
+>  #define FLOW_NAME		NULL
+>  #define hv_msi_prepare		NULL
+> +#define hv_msix_prepare_desc	NULL
+>  
+>  struct hv_pci_chip_data {
+>  	DECLARE_BITMAP(spi_map, HV_PCI_MSI_SPI_NR);
+> @@ -2063,6 +2065,7 @@ static struct irq_chip hv_msi_irq_chip = {
+>  static struct msi_domain_ops hv_msi_ops = {
+>  	.msi_prepare	= hv_msi_prepare,
+>  	.msi_free	= hv_msi_free,
+> +	.prepare_desc	= hv_msix_prepare_desc,
+>  };
+>  
+>  /**
+> @@ -2084,7 +2087,7 @@ static int hv_pcie_init_irq_domain(struct hv_pcibus_device *hbus)
+>  	hbus->msi_info.ops = &hv_msi_ops;
+>  	hbus->msi_info.flags = (MSI_FLAG_USE_DEF_DOM_OPS |
+>  		MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_MULTI_PCI_MSI |
+> -		MSI_FLAG_PCI_MSIX);
+> +		MSI_FLAG_PCI_MSIX | MSI_FLAG_PCI_MSIX_ALLOC_DYN);
+>  	hbus->msi_info.handler = FLOW_HANDLER;
+>  	hbus->msi_info.handler_name = FLOW_NAME;
+>  	hbus->msi_info.data = hbus;
+> diff --git a/drivers/pci/msi/irqdomain.c b/drivers/pci/msi/irqdomain.c
+> index d7ba8795d60f..43129aa6d6c7 100644
+> --- a/drivers/pci/msi/irqdomain.c
+> +++ b/drivers/pci/msi/irqdomain.c
+> @@ -222,13 +222,14 @@ static void pci_irq_unmask_msix(struct irq_data *data)
+>  	pci_msix_unmask(irq_data_get_msi_desc(data));
+>  }
+>  
+> -static void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> -				  struct msi_desc *desc)
+> +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> +			   struct msi_desc *desc)
+>  {
+>  	/* Don't fiddle with preallocated MSI descriptors */
+>  	if (!desc->pci.mask_base)
+>  		msix_prepare_msi_desc(to_pci_dev(desc->dev), desc);
+>  }
+> +EXPORT_SYMBOL_GPL(pci_msix_prepare_desc);
+>  
+>  static const struct msi_domain_template pci_msix_template = {
+>  	.chip = {
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 86e42742fd0f..d5864d5e75c2 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -691,6 +691,8 @@ struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					     struct irq_domain *parent);
+>  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+>  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
+> +void pci_msix_prepare_desc(struct irq_domain *domain, msi_alloc_info_t *arg,
+> +			   struct msi_desc *desc);
+>  #else /* CONFIG_PCI_MSI */
+>  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
+>  {
+> -- 
+> 2.34.1
+> 
