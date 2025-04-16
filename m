@@ -1,152 +1,122 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735F8145355
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365B8192D68
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813273; cv=none; b=a7GQUU31at+1PGG57vJ95M2XLo8nMCYsSb/Su70eLjtQW6LEIB6rRTy+6tnOfggYevGEvlsQGJlBLBtQmTq0uk+SZKvi/CL/zSbB77zRNt4hsgdvD9KyCDDXlAk9BGk7O4H9R2gZA2BYQqmxTDdWIDHZyaRagMN8wmVbo/udN8E=
+	t=1744813292; cv=none; b=oxbF8Pi3tdSG+jf97Vd2297iP55H8Jb7DvAQnxZcW5LFWdnC6LDkyLrjAJfBUOS5Ohv1kcnPGjv/JkPTTtbHoWlqhY7hC4lmCzEwPOAbQxlKhv096A6rQhDv1wKu/mLpbS8AxKgg9im/LNGVPHbF+jSVi6DKU8K/JDgmrMYu4EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813273; c=relaxed/simple;
-	bh=eFyFyO+XYfj88o6DdnN3CjU/LPr5Dvhoivob0SdoP7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ToYGlevFRL8pJ+EimSigl989bkhU+EBeL3np9+xT+SXXh5nqPK8TrCo3vA7dcpNX8rStm6CCskJ397aXpKV4yn4ytIpbJ2ZUDcztqd4/OVQA8o8TUFPUGgr/QKCCHyme/Bui2h6m4dvqEBHyuZYg5vqlb+6S1QnJZ6P0bYEiH7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrHSGMYk; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrHSGMYk"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso8661572a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744813269; x=1745418069; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vXnvk8XQNhx0TXzhv37WADjp3Ermfxa39z+e6RYkwbc=;
-        b=GrHSGMYk5N+v9YrJ7UsV/tpQRjzTyaLNdW2roDBUreaRSd44rM0moLl/2QLpTLPVkK
-         esfIgXVs0M37OQJbjI7AIGyP0ktGIEdWtDEQTMO0kqFq9VPIk3GpAinDxFmPcJTk7Pna
-         GRAQpnlcvfWvS3AcK2fJOD28SooX5fU/xTvH3Kq4SwOqts04Pj3r0nhaTQEV7EhfU2OL
-         dprik0/AMwo2nBqa8A4XsxPC90ZMNT9cEiPVWq1gPacisTib+XZYV7Qb+VMePlFXKMHD
-         WnjgghDc6aR2rJMWbmqnMduKV8FonnYqJ5YotAkI3n9L0UbvNbzyvLsQZTxEsOUUzzjk
-         zL3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744813269; x=1745418069;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vXnvk8XQNhx0TXzhv37WADjp3Ermfxa39z+e6RYkwbc=;
-        b=AgxkT6ax0M2QLAcpb6RkSCKJeX8rGK4p3PhL1yuXRLnwihdCqOfyw9yWs07wfOmevj
-         5XLMrOjfU3G9h8U3NFVbrP+XZGaHvK0gc7FQMa+VTXD7bgqYMvzihWtxsTS3iOG3JcZg
-         cKs+xT1CKwV1eUcVhpWLPcDE/xuja565Toucv6P6PxbIiAQ2ecJWXssfNxAuwol7xADt
-         g+PQ6DilCwz4LpeH88OIYA4WynLF+xCYqNhfFCRoOzsvuOzw2aPI08IrN9mId0Nr7cxL
-         +jFKhA7ctmVgV6999aLhSqAU8pza38pQVKI7/qiF7L8q4dqKrWoHY+N16QorKSKZ4f+T
-         owhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMBOgbs0/u6Dzw8toUFw39ITyx9njzKqRrvefBq0dmXalNiE2bdje1CPkh/BPuW3DrdtI8CKfyM92DJJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9t6lGVe2H24k2faUl1aEs6UrOn3koDK26he3b6cFJECSNSwyC
-	Sp4tTelpcOsqLZMsVvbI6L88OhNx6D/ZSTTtCmV2hKtdyHcyFSEU
-X-Gm-Gg: ASbGncvJLmxlWaj4Ap72F86BDg+gJ7vrFj4ytB2gQnjQqhYXVr/wuF+ds42XjWsPo0A
-	gFdri3P+1K4vblzHwx8DBm7puMn2+ETOvhRn9ruXo7OST9ZFPOaVnTrSvX8W+9Ep87752rgNImt
-	b4d5+5Mci1upG5x9OJbyh6XNI5C5OCHid/ctHdclkjhZsyjO4CajRUiGpZ4rhwHDCboWP6eiu2o
-	mUuBU99/AoCR4hCYypkjRSid3xuRPjd7kEPxRz/uvAzWciSyyyMi6yyTGaqeoVvHauyVfhZ5epU
-	d1Tkz9pLqTQZ09cu3Qy4LRr74AMKpoijScTyFPgE3XAApHWwPBQL
-X-Google-Smtp-Source: AGHT+IEys/Oramf0RFC3AI2fDdY2kIk48KqU/dF51mFhcVKpFTd5zTnQnZYHaGnoEijXiX2xL0d5+g==
-X-Received: by 2002:a05:6402:4017:b0:5e6:17d7:9a32 with SMTP id 4fb4d7f45d1cf-5f4b746d191mr1948775a12.18.1744813269430;
-        Wed, 16 Apr 2025 07:21:09 -0700 (PDT)
-Received: from [192.168.1.100] ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ef56ea4sm8877286a12.25.2025.04.16.07.21.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 07:21:09 -0700 (PDT)
-Message-ID: <cb6d98dc-49e9-2d3b-1acc-f208e4fd13fc@gmail.com>
-Date: Wed, 16 Apr 2025 16:21:07 +0200
+	s=arc-20240116; t=1744813292; c=relaxed/simple;
+	bh=kwl1ptkCJXWD3ZmvhhxrdXUzTXTVymEdchqvj4VsObE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gxwx+HZECWzpOf++P374UCe16BsvHx9JGHB1NYsy1ZtZG9tcgjugfQ4YikFWjD4CPRAiVBSeAi8mCzHPoWNWu6v35NVCO2tue+CWFM0y7l/+dSbNfUfISfD+dr11m31a95LUn8ohqtpkS83BYx2/Cr77ug+N9i5JeYwY0aRXnCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1u53c6-000000006y0-3OJb;
+	Wed, 16 Apr 2025 10:19:42 -0400
+Message-ID: <abffc286b637060f631925f9b373fad114d667d6.camel@surriel.com>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Mason <clm@meta.com>, Pat Cody <pat@patcody.io>, mingo@redhat.com,
+ 	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ dietmar.eggemann@arm.com, 	rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, 	linux-kernel@vger.kernel.org,
+ patcody@meta.com, kernel-team@meta.com, Breno Leitao	 <leitao@debian.org>
+Date: Wed, 16 Apr 2025 10:19:42 -0400
+In-Reply-To: <20250416124442.GC6580@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+	 <7B2CFC16-1ADE-4565-B555-7525A50494C2@surriel.com>
+	 <20250402082221.GT5880@noisy.programming.kicks-ass.net>
+	 <b378f48593ca7449257a1bb55e78b186d88cd9f1.camel@surriel.com>
+	 <20250415080235.GK5600@noisy.programming.kicks-ass.net>
+	 <20250416124442.GC6580@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 6/7] x86: objtool: add support for R_X86_64_REX_GOTPCRELX
-To: Alexander Potapenko <glider@google.com>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org,
- kasan-dev@googlegroups.com, x86@kernel.org,
- Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov
- <dvyukov@google.com>, Ingo Molnar <mingo@redhat.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <20250416085446.480069-1-glider@google.com>
- <20250416085446.480069-7-glider@google.com>
-Content-Language: en-US
-From: Uros Bizjak <ubizjak@gmail.com>
-In-Reply-To: <20250416085446.480069-7-glider@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Sender: riel@surriel.com
+
+On Wed, 2025-04-16 at 14:44 +0200, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 10:02:35AM +0200, Peter Zijlstra wrote:
+> > On Mon, Apr 14, 2025 at 03:57:42PM -0400, Rik van Riel wrote:
+> > > On Wed, 2025-04-02 at 10:22 +0200, Peter Zijlstra wrote:
+> > > >=20
+> > > > Please confirm what the reason for overflow is.
+> > > >=20
+> > > Running a large enough sample size has its benefits.
+> > >=20
+> > > We have hit 3 out of the 4 warnings below.
+> > >=20
+> > > The only one we did not hit is the cfs_rq->avg_load !=3D avg_load
+> > > warning.
+> >=20
+> > Fair enough, that one really isn't hard.
+> >=20
+> > > Most of the time we seem to hit the warnings from the
+> > > code that removes tasks from the runqueue,=20
+> >=20
+> > *blink*..
+>=20
+> Which warning is getting hit on removal? The avg_vruntime mismatch?
+>=20
+> Also, which removal path? schedule()'s block path, or migration like?
+
+The most common warning by far, hitting
+about 90% of the time we hit anything
+in avg_vruntime_validate is the
+WARN_ON_ONCE(cfs_rq->avg_vruntime !=3D vruntime)
+
+The most common code path to getting there,
+covering about 85% of the cases:
+
+avg_vruntime_validate
+avg_vruntime_sub
+__dequeue_entity
+set_next_entity
+pick_task_fair
+pick_next_task_fair
+__pick_next_task
+pick_next_task
+__schedule
+schedule
 
 
-
-On 16. 04. 25 10:54, Alexander Potapenko wrote:
-> When compiling modules with -fsanitize-coverage=trace-pc-guard, Clang
-> will emit R_X86_64_REX_GOTPCRELX relocations for the
-> __start___sancov_guards and __stop___sancov_guards symbols. Although
-> these relocations can be resolved within the same binary, they are left
-> over by the linker because of the --emit-relocs flag.
-> 
-> This patch makes it possible to resolve the R_X86_64_REX_GOTPCRELX
-> relocations at runtime, as doing so does not require a .got section.
-> In addition, add a missing overflow check to R_X86_64_PC32/R_X86_64_PLT32.
-> 
-> Cc: x86@kernel.org
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-> ---
->   arch/x86/include/asm/elf.h      | 1 +
->   arch/x86/kernel/module.c        | 8 ++++++++
->   arch/x86/um/asm/elf.h           | 1 +
->   tools/objtool/arch/x86/decode.c | 1 +
->   4 files changed, 11 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-> index 1fb83d47711f9..15d0438467e94 100644
-> --- a/arch/x86/include/asm/elf.h
-> +++ b/arch/x86/include/asm/elf.h
-> @@ -63,6 +63,7 @@ typedef struct user_i387_struct elf_fpregset_t;
->   #define R_X86_64_8		14	/* Direct 8 bit sign extended  */
->   #define R_X86_64_PC8		15	/* 8 bit sign extended pc relative */
->   #define R_X86_64_PC64		24	/* Place relative 64-bit signed */
-> +#define R_X86_64_REX_GOTPCRELX	42	/* R_X86_64_GOTPCREL with optimizations */
->   
->   /*
->    * These are used to set parameters in the core dumps.
-> diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-> index 8984abd91c001..6c8b524bfbe3b 100644
-> --- a/arch/x86/kernel/module.c
-> +++ b/arch/x86/kernel/module.c
-> @@ -133,6 +133,14 @@ static int __write_relocate_add(Elf64_Shdr *sechdrs,
->   		case R_X86_64_PC32:
->   		case R_X86_64_PLT32:
->   			val -= (u64)loc;
-> +			if ((s64)val != *(s32 *)&val)
-> +				goto overflow;
-> +			size = 4;
-> +			break;
-> +		case R_X86_64_REX_GOTPCRELX:
-> +			val -= (u64)loc;
-> +			if ((s64)val != *(s32 *)&val)
-> +				goto overflow;
->   			size = 4;
->   			break;
-
-These two cases are the same. You probably want:
-
-		case R_X86_64_PC32:
-		case R_X86_64_PLT32:
-		case R_X86_64_REX_GOTPCRELX:
-			val -= (u64)loc;
-			if ((s64)val != *(s32 *)&val)
-				goto overflow;
-			size = 4;
-			break;
-
-Uros.
+--=20
+All Rights Reversed.
