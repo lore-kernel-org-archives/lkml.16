@@ -1,117 +1,162 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2CB22D7BC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC13C2356CA;
+	Wed, 16 Apr 2025 09:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796173; cv=none; b=uFGJl+h3GaVGQGAq8Z44+jf0+VMod8G3PxqdX8BuBuVTUnu6DShT14KhDNRaXW28xpHAr7ueT9i1JEW+PPigTQV9b+pjutR5Kia/gUMPnnfBexkUqDn1kh2jNsHm67gD6hlCZGjQlYu2D6fs+K6+ZuzUu65Ye3I8HtsN4gwIj80=
+	t=1744796177; cv=none; b=sUwfhuXnapWyj8cG783/WnYFxfNom9MObZikt6WTl5Gupn1fk9AgvMRuPv/2w4Fnn6fonbp9pi0Uvvo4bYVcNPoywfFhWFS7BDyuI3iesg4FteoG+AkGuh9PmlA7XELrCYjrovZe+hY3iWqfMlRNcBwzKRuI/jcOnSSWe7QugFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796173; c=relaxed/simple;
-	bh=Y51/ygmcjFCJX2CIdtlXJM1E8qm6416TfuuMGIA/4Fo=;
-	h=Mime-Version:Subject:From:To:CC:Message-ID:Date:Content-Type:
-	 References; b=hnQtPIHdCSe5CjVVPUJr6TbTHF3/b++3zsoIteBaFU67xZefR5hxjQSZlfEiW01ZnsXWdYIv1nnnDUTLR1ZAINfNwdLU9m+tLJeQwAK3mHxjqYA9ldnunJ3Dukr4APuL5n1Aai17m7cvSFTBXT3O1rIUz7c7eLDwD+oJKDh0148=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=R6pz/zx2; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744796177; c=relaxed/simple;
+	bh=SgispnRGiERs1+W7dul4dADQxU06rFDdSLdU3q+mB2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCwT7l3ljJiEFis6+jIm5bAR6vlXCAVvB5Q7vT6SQelhIFddZM4sbQSePTilw42HGRxksjk/knnqpVOSurt+j5lK7XhvatKxTl/zSTmcmR7v5AiccpISmXoGu4ESlKLYiG2QEEJYORtln8Tj9QPMjQwnTN9vMGosypvDxjSxgzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gxWf1NcZ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="R6pz/zx2"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250416093608epoutp02ec95c5e57d5ea7c762cd94613ac87979~2wt7ouZIa2233822338epoutp02E
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:36:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250416093608epoutp02ec95c5e57d5ea7c762cd94613ac87979~2wt7ouZIa2233822338epoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744796168;
-	bh=QdnL6XR0UVOrOeO0QZOgKOjZM7nJvKwUrWtc5DUomoo=;
-	h=Subject:Reply-To:From:To:CC:Date:References:From;
-	b=R6pz/zx23EihM/W1oWuvLW3ODrSfwxm/ORz5/pprRbT1JGUJH6ehltDS1Lo6Af/MS
-	 LHmRJLf8mL9thkCGXvhI90pRc4B/muh1KinxWet8rMamo0w9CE3jLJKseKEbwibf8I
-	 v7Kd4maIMZJPrbJ+Ssz2TM5pYYCooiiAv/0BN+0A=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250416093607epcas5p2e700aa8c95b46799f4ad94cf2c65c290~2wt7K21q72786127861epcas5p23;
-	Wed, 16 Apr 2025 09:36:07 +0000 (GMT)
-X-AuditID: b6c32a49-b61ff700000027a0-4c-67ff7a07702b
-Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	B1.C9.10144.70A7FF76; Wed, 16 Apr 2025 18:36:07 +0900 (KST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gxWf1NcZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744796176; x=1776332176;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=SgispnRGiERs1+W7dul4dADQxU06rFDdSLdU3q+mB2I=;
+  b=gxWf1NcZwYBCorZ/5yojgSmnFsiDTOlyP3Ed7/eWPoOKlGLUws/x2myH
+   1aFnAV7eGLPusKDL5K8cZjOohr/Oi8vKcEw3PwQ0tp1AD1T3EjMwvwoGC
+   03kpi2JIEKYuzx0o7F9zVlpK22Ew6JZfBuTOVlEvA58I4Bf63m/IO4mhn
+   PVL17QkcA67tpQYarWzyZVtL/GUZuqbmkvkF2JG41kHEXl0EVOQsJFMVe
+   2WPW8LdGGcjyyuRMPidfmPJHGh5wFfFZ98vcTMP2qxVUJL7DLBuUpqSW/
+   Co0+jEtUG5IlEmnV0vTLeOOdxaxQ7tAAHlVNdCsok2EyQJtKV74vGIS/+
+   g==;
+X-CSE-ConnectionGUID: BzSbrL/wReqHp1OqlBzTJQ==
+X-CSE-MsgGUID: G5+SnEPhTam4QStJnj3qwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46496637"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46496637"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:36:15 -0700
+X-CSE-ConnectionGUID: mTkNxxr4Qca0mpnG0U7HTg==
+X-CSE-MsgGUID: pmEeVo+zTE+6jbTbe8oO7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130360013"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:36:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4zBe-0000000CoGG-4B1K;
+	Wed, 16 Apr 2025 12:36:06 +0300
+Date: Wed, 16 Apr 2025 12:36:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@gmail.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <Z_96BpMMOzcotJqI@smile.fi.intel.com>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+ <4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+ <87tt6opks7.fsf@intel.com>
+ <20250416171917.0985c0eb@sal.lan>
+ <20250416172901.60104103@sal.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Subject: [PATCH] drm/edid: fixed the bug that hdr metadata was not cleared
-Reply-To: feijuan.li@samsung.com
-Sender: =?UTF-8?B?5p2O6aOe5aif?= <feijuan.li@samsung.com>
-From: =?UTF-8?B?5p2O6aOe5aif?= <feijuan.li@samsung.com>
-To: "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
-	<tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-CC: =?UTF-8?B?5ZSQ57qi6aOe?= <hongfei.tang@samsung.com>,
-	=?UTF-8?B?5Lil5piO6LS1?= <minggui.yan@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
-Date: Wed, 16 Apr 2025 18:36:07 +0900
-X-CMS-MailID: 20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7bCmli571f90g+s/1C1OXF/EZHHl63s2
-	i039jYwWK77MZLe4vGsOm8XCj1tZLG7/7mCzaOtcxmox+91+dostbyayOnB57P22gMVj56y7
-	7B6bVnWyecw7Gehxv/s4k0ffllWMHptPV3t83iQXwBHFZZOSmpNZllqkb5fAlfHq+QeWgs0c
-	Fe/XbmBuYJzF3sXIySEhYCLx8/c31i5GLg4hgd2MEov2TGLsYuTg4BUQlPi7QxikRljAS+LG
-	+jNg9UICChLrvk1hAikRFrCUeLY1HcRkEzCXWHUxE2SKiMAGZoltu6czgZQzC+RKnP/0iA1i
-	Fa/EjPanLBC2tMT25VsZIWxRiZur37LD2O+PzYeKi0i03jvLDGELSjz4uZsRpnfNnJtQM/Ml
-	nm5ZzQ6yWEKghVHi4NktrBAJc4l9LVfBhvIK+Eoc2jYdbDGLgKrE/YajUINcJF40zmOGOFRe
-	YvvbOcwgzzALaEqs36UPEeaT6P39hAnm/h3zYGwViUNr2qFWSUkc2b0f6n4PifZr25ggQRUo
-	cfPENMYJjHKzEAE6C8myWQjLFjAyr2KUTC0ozk1PLTYtMMxLLdcrTswtLs1L10vOz93ECE42
-	Wp47GO8++KB3iJGJg/EQowQHs5II7znzf+lCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeZt3tqQL
-	CaQnlqRmp6YWpBbBZJk4OKUamBrsF804znP2n9rH2tvKN48dN9Y69fl4i1Ox8UKW56uufDPu
-	rkvvr70X2XTzSn26vO6iqmVFYYoPrTsaN50SeLppWWj991OfJ5ocN3g04b3yZQ/3pM1XxN8v
-	ujB5wZ73vhuiGDf8bzvwWsNyz8LiHZqrWvhzZmkGdIrV9Dyfmby0jufzAp80RcOOC+27VWId
-	JiVEVlretNu7r+H/oeJPTJv/Ry/+1v/6YNfvrIxtH2WDFP9Nf3wqiWGn83GZhAVXzELnfYrl
-	lGST5tffJnw7Vnfqew6Gqz1LP4UqSb7+riRVOHvDdOV71YfzJ+3Pi9WVPbJyQ/9BjtsnhOXj
-	nWONhGunLWFV0WdsP1Kukvzk/jslluKMREMt5qLiRAAMunZgpQMAAA==
-X-CMS-RootMailID: 20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388
-References: <CGME20250416093607epcms5p344bcffd7430fe5e30ef9b73db73f7388@epcms5p3>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416172901.60104103@sal.lan>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From a34a1e2dd7aacd45f18775564fce12b03ae4009c Mon Sep 17 00:00:00 2001
-From: "feijuan.li" <feijuan.li@samsung.com>
-Date: Wed, 16 Apr 2025 11:07:39 +0000
-Subject: [PATCH] drm/edid: fixed the bug that hdr metadata was not cleared
+On Wed, Apr 16, 2025 at 05:29:01PM +0800, Mauro Carvalho Chehab wrote:
+> Em Wed, 16 Apr 2025 17:19:17 +0800
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+> > Em Wed, 16 Apr 2025 11:34:16 +0300
+> > Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+> > > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-When DP connected to a device with HDR capability,
-the hdr structure was filled.Then connected to another
-sink device without hdr capability, but the hdr info
-still exist.
+...
 
-Signed-off-by: feijuan.li <feijuan.li@samsung.com>
----
- drivers/gpu/drm/drm_edid.c | 1 +
- 1 file changed, 1 insertion(+)
+> > > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> > > >        cmd_hdrtest = \
+> > > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
+> > > 
+> > > KERNELDOC is not set here.
+> > 
+> > > 
+> > > /bin/sh: 1: -none: not found
+> > 
+> > Weird. This is set on Documentation/Makefile:
+> > 
+> > 	$ grep KERNELDOC Documentation/Makefile 
+> > 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+> > 	...
+> > 
+> > drivers/gpu/drm/Makefile should be able to see this variable there...
+> 
+> I suspect that the building system tries to confine variables to
+> sub-directories, so maybe one solution would be to move it to the
+> main makefile.
+> 
+> could you please check if this patch solves the issue?
+> 
+> [PATCH] Makefile: move KERNELDOC macro to the main Makefile
+> 
+> As kernel-doc script is used not only on Documentation, but
+> also on scripts and drivers/drm Makefiles, move it to the
+> main makefile, as otherwise sub-makefiles may not have it.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> 
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index c022b97c487e..7a2069e87dbd 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -60,7 +60,6 @@ endif #HAVE_LATEXMK
+>  # Internal variables.
+>  PAPEROPT_a4     = -D latex_paper_size=a4
+>  PAPEROPT_letter = -D latex_paper_size=letter
+> -KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+>  KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 13bc4c290b17..5cf5d30321b6 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -5607,6 +5607,7 @@ static void clear_eld(struct drm_connector *connector)
- {
- 	mutex_lock(&connector->eld_mutex);
- 	memset(connector->eld, 0, sizeof(connector->eld));
-+	memset(&connector->hdr_sink_metadata, 0, sizeof(connector->hdr_sink_metadata));
- 	mutex_unlock(&connector->eld_mutex);
- 
- 	connector->latency_present[0] = false;
+In this case the _CONF makes sense to move together as they are coupled
+semantically.
+
+>  ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
+>  ifneq ($(wildcard $(srctree)/.config),)
+> diff --git a/Makefile b/Makefile
+> index 38689a0c3605..c8e46f0c1f63 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -458,6 +458,8 @@ endif
+>  HOSTRUSTC = rustc
+>  HOSTPKG_CONFIG	= pkg-config
+>  
+> +KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+> +
+>  KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
+>  			 -O2 -fomit-frame-pointer -std=gnu11
+>  KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
