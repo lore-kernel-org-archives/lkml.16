@@ -1,128 +1,131 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B422D4E0
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15261236426
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796301; cv=none; b=YKROzsDcdmHwFfNFjRbC98ozoQ2vjrJ5kKt6tYJxvyrQ+3ech0+5c97FN0fTfEBQ9JEn9cri0STFqRQyS7bWjVIm1jJqVrKH5nO5iHAlxc/xjBcsZGuE3CfJK9cOu/vka88raQMRTnc8FrGXXnfFbqjY/K2ljKp5YfENY8eY71M=
+	t=1744796306; cv=none; b=IdMcr94EBJOeIXLkndx1G8NC+znrS0Oo2Y3QCB09DqGZ2C9LZdTTvAUPX6X1WtRyJinMajMJ774YRedZcLPRe4y6FDuMIvyi/+PAMUMxH1jUqtmJVmJFlRX37DofLnEH4AbS8JNniP+wnRxWN82fIdjMFvC4a0Pb63/rzyJn0a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796301; c=relaxed/simple;
-	bh=lGNwwTYk8nnCOyR8YGaiT+UICO0ts45C0I0m3WHM+/E=;
+	s=arc-20240116; t=1744796306; c=relaxed/simple;
+	bh=ei1zDpJPgnRHet19eC5HTew8EV0D3bETY22gn9aMT0Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qp1l9DFqLfSVZwnjBiwx2Dd7Z3dTynjZYCV0ERH67zEXxS9gnjTn8Wml9rZ4pkdk/sigPvCbNRKNvgqVU4xogdgtYk3q6KLe3G1D1RvobSlBYFYtlTvdG968dEsiXtTjdWXzj7qQ+Uzfb9iBAvhX3E6ZGRf9fMXd8RgedI8sEw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WTFRVOup; arc=none smtp.client-ip=209.85.219.45
+	 To:Cc:Content-Type; b=dJ+zj9vbkM6h8djmVOk77dGOfSm+68MSTJHE0+Vvy/FsyTqKu+CpG0DVZBc4q7hgxn6d+NVdj5WPEQZ367mGZ3hOIltPIQsVD1HVrHFvyAVBSaodn/r8pQPM5pSi293/5CdAzaSKMOpUit1AiWX0u3DlIQwUFSSgqk0Gesd+QQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i62b/4nI; arc=none smtp.client-ip=209.85.219.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTFRVOup"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f2b05f87fdso4467026d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:38:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i62b/4nI"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6eb16dfa988so57587336d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:38:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744796299; x=1745401099; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744796304; x=1745401104; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=olAHicsyVu+LZmCO4WFXBxaFwqqAxc2FAKP7TPUxrPU=;
-        b=WTFRVOupHiHz1phz6kKLt3maV7rJYQw+9dxvXoQRyzNbUbL5OKWYYqyoHcULqkDse2
-         ggZGaHCo1uJ3Xu2wmJmDFx3LXXKMo88t/gl+jZBbfxlxNqYaaNv9QlH7UUWWIa3a2eM9
-         Gp1wT1oRAcJ8E5vYxffUHjtjePqhCo8o3mh7TzGspTjrU9FxjC9BNZ0SzOVCaOjJOls1
-         yr41UJq/D/Vh2K0fe49Y1a9EG85vC3JC2bk9fmkAPMTZ+ERXZbh6TWSYLFeBtjq2KfZS
-         hufRz1zX2GbcLb4lUHhIHgXDEszzc2H6PM6N4t768bOjHL7QlRBoQl4Mk+XFFfGXdIVe
-         Cq2g==
+        bh=OMjnp3KwkkPrkXTls7zgOCWfr5tAjXdEKVZA+pejEDc=;
+        b=i62b/4nIZfI2sU1DuNKXRCTiDefWVQhg5aiJMf3TvbdT7rz/WzTrGp8qWIFB42J4dq
+         moxKAgHnPfAoQviVqMKYwk8zpZDouxHFYE1E9tGfnaXXFxaHwFJnhKJXJw+u82tTLevq
+         pbwiXkASMpONRtrXzqEAcQBfLwTl2OMB8ljBO7bN8N/t9BXV2mr88tV9YTWghxsvZ66A
+         xRkSSx51jVT0Hyd05nMWn61UNl3buViat+jlDT1lCBb8tRX18nj1Hxo7Cdt+Q+xZI79w
+         +GwcV1lc0wqquEAu7D/m9H82f8klcLYBLS4s/0dCGb8A508GrnRUwni+b9Hq7PO1z2HS
+         q+Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796299; x=1745401099;
+        d=1e100.net; s=20230601; t=1744796304; x=1745401104;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=olAHicsyVu+LZmCO4WFXBxaFwqqAxc2FAKP7TPUxrPU=;
-        b=YXcbNSDK7YOu3xZFWbSQgHTZtOfDfkqDByYZF/PkYf8yyCdnIlxAq494PbHn1jxP4S
-         6hxcPHJLmeD6LHCisioduItqB/Xt/IgCKcRdA2CDSejYps+5VFFegASstURyVD26XklU
-         jNZrZ26Ryq+xcOEkL/LgGRpkMqZ3SL4SEE0eO3zR9ASaohH1LuTb8iIpz2VLDOqU6JlF
-         9GzkPVGrn6DkR6NrQ3vIEbXdCTVsITSQMOo6bNVe9Xirxc62uFGKS8xTJDFMHCpg/mof
-         ++sARRt2lDtTjGtcPKdt7YcaFf528Qk9gprA+BVwk3ytkLBGyerybpxN7ErmLVOTqk/u
-         JMJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJo4IOjVDR4lrUtCGM+EhEp/KLf57YxLoOIhhLWxM1KtALRZx2ajGjjQhg8+Oiwn1U3zlzcu+Atoxrxks=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypaxVJO3vjGHU1JkDz9oXXj1mLWUYxwiv8ILzCUq8lhMHY/mcQ
-	z16z93kN95zDMXBYX1+moUGIT6vMqY+evXOUoKo4WZI9slXxEiEhT8GnpBgN7TQKb9Gdpb+DgFY
-	iPimvbSmxjUJPs43nOtFl4Q8x1Njj+Ml8St521fon36zIfyqBsA==
-X-Gm-Gg: ASbGncv4gBqihe6yPCmqkyLKzh6AP4gO+fFKF3q4y9fnZ9wstSGiE4SfEfJ+SQ2Bf7c
-	64vKeGwG2WfHsnI+AsvsFpN3D5VjAxx7d8R171fcgjDvxd60eULvRFz7cLz7ZGVGUpSQjwb2T+o
-	VAt9S+bVrft9quQpGm7uZa6TE=
-X-Google-Smtp-Source: AGHT+IEu8ULAZ3yUx6VErK3ehHrBykkRdgGPuR6aoMNdGmiQ+ScZ4rb6eHNoviBt6gnzqxp63hpgcXMq95eXIwhkwYc=
-X-Received: by 2002:ad4:5f4c:0:b0:6e1:f40c:b558 with SMTP id
- 6a1803df08f44-6f2b30864cdmr14828566d6.44.1744796298528; Wed, 16 Apr 2025
- 02:38:18 -0700 (PDT)
+        bh=OMjnp3KwkkPrkXTls7zgOCWfr5tAjXdEKVZA+pejEDc=;
+        b=nfjEOBWgF0Obb96q9aLGy2LCSXEwYSGRC4oRITgLd0tR6AEpy6XHlSAGoXy7xuoWpv
+         qOd3nDYCL9RxPmWSmEQ5B+zmwoFNlrcwGTm5OO2zG1erLRGmkXf+mOkO7byQ0v0t2uAt
+         wxFcY9WRiUzjLQJCenquxVrm8NScUNx8HaiZbcI2J6KX80sCe1IQ4UBUOxbhfGitQpb8
+         4tvd5pnMBY39exk7ReUC9UnzWBC53ynAfngh3aDcjSQYtbNyHCGbJZdtULVF+psXcW43
+         8O+F5whOxpc2Rz/Wkbvuk1k7lpO4mu93kqmccPb7WDWymkv7sZOMKP+bVP8+cPEj5PSC
+         k2CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULdncrv7SRM6m2esDpJDq5PYo9+BhCZiGSdlyh8Yu7WTew7hjTlfOFqiZM6Hk2m033ba3bfgUndTdj/C4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm7XDjud6BlZa18O51POyPQQQ8ZnCTeav+nzgzucy1802fe7Ar
+	IrdF7Wjmrw+QjdBBZpvJVHcgeWzvK+nsstI796Any9hINtlWotzY9z3slngNx4nqGsCwTH01N9u
+	b/Dd7A2X6OB/ImMJgG0jGlOhRjkzwBOmTNskr
+X-Gm-Gg: ASbGnctywUZ4UpwGLyPgh+noevuSFSxiel8u5L8C5CmOaM35UvpUNwVGNka4FWrVdBR
+	f99uz1U0ox8FFuJXI0YY5iT1gItmMbbv7LEuH5m1tBKgwTh0+Mym3TVeMsgpdedK6a8E6DYJKH7
+	dvy+dJusiKhZ2Z18OxffCOMQw=
+X-Google-Smtp-Source: AGHT+IHczy/h4m6lbM37OMNxNmlnrNveCd35Yhtu9WZpN7aYDKjmiKfCgGqKGTZv1VdnOJ1RL+AmVwqYfj7CbVcO20A=
+X-Received: by 2002:ad4:5965:0:b0:6ed:1651:e8dc with SMTP id
+ 6a1803df08f44-6f2b2f43031mr14628976d6.11.1744796303619; Wed, 16 Apr 2025
+ 02:38:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-kunit-qemu-sparc64-v1-0-253906f61102@linutronix.de> <20250415-kunit-qemu-sparc64-v1-1-253906f61102@linutronix.de>
-In-Reply-To: <20250415-kunit-qemu-sparc64-v1-1-253906f61102@linutronix.de>
+References: <20250415-kunit-qemu-sparc64-v1-0-253906f61102@linutronix.de> <20250415-kunit-qemu-sparc64-v1-2-253906f61102@linutronix.de>
+In-Reply-To: <20250415-kunit-qemu-sparc64-v1-2-253906f61102@linutronix.de>
 From: David Gow <davidgow@google.com>
-Date: Wed, 16 Apr 2025 17:38:03 +0800
-X-Gm-Features: ATxdqUG1whiCyMQsWguffGTwakNWPkf73Zh_ohCkyOjv3230fKDGX5kp7N-DoxM
-Message-ID: <CABVgOS=AQ0XS4DnKxZTZWBLdkg1_kwxusa3fGDe=pSuTFR=5Tw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kunit: qemu_configs: sparc: Explicitly enable CONFIG_SPARC32=y
+Date: Wed, 16 Apr 2025 17:38:09 +0800
+X-Gm-Features: ATxdqUFJg1wnf66yT66yypkr57cAjIIFlAbgSjna9aBUt0buK_u3p0ElTOZP8DE
+Message-ID: <CABVgOS=0b167BRd-gLO4m+yUxjcB0mLjV=7OBMcck-UrmJhiqA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kunit: qemu_configs: Add 64-bit SPARC configuration
 To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
 	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
 	linux-kernel@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000009d28ec0632e20b01"
+	boundary="000000000000eb29140632e20b51"
 
---0000000000009d28ec0632e20b01
+--000000000000eb29140632e20b51
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, 15 Apr 2025 at 21:38, Thomas Wei=C3=9Fschuh
 <thomas.weissschuh@linutronix.de> wrote:
 >
-> The configuration generated by kunit ends up with a 32bit configuration.
-> A new kunit configuration for 64bit is to be added.
-> To make the difference clearer spell out the variant in the kunit
-> reference config.
+> Add a basic config to run kunit tests on 64-bit SPARC.
 >
 > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 > ---
 
-Thanks.
+Thanks!
 
-It looks like the sparc32 configuration can't handle faulting tests,
-so I'll send a follow-up to disable CONFIG_KUNIT_FAULT_TEST here as
-well.
-
-Otherwise,
 Reviewed-by: David Gow <davidgow@google.com>
 
 Cheers,
 -- David
 
 
->  tools/testing/kunit/qemu_configs/sparc.py | 1 +
->  1 file changed, 1 insertion(+)
+>  tools/testing/kunit/qemu_configs/sparc64.py | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 >
-> diff --git a/tools/testing/kunit/qemu_configs/sparc.py b/tools/testing/ku=
-nit/qemu_configs/sparc.py
-> index 256d9573b44646533d1a6f768976628adc87921e..3131dd299a6e34f027402e99e=
-34d85ddcaa359b7 100644
-> --- a/tools/testing/kunit/qemu_configs/sparc.py
-> +++ b/tools/testing/kunit/qemu_configs/sparc.py
-> @@ -2,6 +2,7 @@ from ..qemu_config import QemuArchParams
->
->  QEMU_ARCH =3D QemuArchParams(linux_arch=3D'sparc',
->                            kconfig=3D'''
-> +CONFIG_SPARC32=3Dy
->  CONFIG_SERIAL_SUNZILOG=3Dy
->  CONFIG_SERIAL_SUNZILOG_CONSOLE=3Dy
->  ''',
+> diff --git a/tools/testing/kunit/qemu_configs/sparc64.py b/tools/testing/=
+kunit/qemu_configs/sparc64.py
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..53d4e5a8c972b96efc72f6b69=
+fe83463499ef847
+> --- /dev/null
+> +++ b/tools/testing/kunit/qemu_configs/sparc64.py
+> @@ -0,0 +1,16 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +from ..qemu_config import QemuArchParams
+> +
+> +QEMU_ARCH =3D QemuArchParams(linux_arch=3D'sparc',
+> +                          kconfig=3D'''
+> +CONFIG_64BIT=3Dy
+> +CONFIG_SPARC64=3Dy
+> +CONFIG_PCI=3Dy
+> +CONFIG_SERIAL_SUNSU=3Dy
+> +CONFIG_SERIAL_SUNSU_CONSOLE=3Dy
+> +''',
+> +                          qemu_arch=3D'sparc64',
+> +                          kernel_path=3D'arch/sparc/boot/image',
+> +                          kernel_command_line=3D'console=3DttyS0 kunit_s=
+hutdown=3Dpoweroff',
+> +                          extra_qemu_params=3D[])
 >
 > --
 > 2.49.0
 >
 
---0000000000009d28ec0632e20b01
+--000000000000eb29140632e20b51
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -212,13 +215,13 @@ uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
 PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
 Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
 BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
-pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgwBKFbSLqf0STDdaVv5zogECbKZ9g
-i6r8duVW3DVcRCUwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
-NDE2MDkzODE5WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg6v+LYLQyREezrgB/anCfkkRqOYJT
+oi4VWTQUvjYhvpQwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDE2MDkzODI0WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
 YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
-AQEBBQAEggEAOOTDjWUEBi5TwkL6X4Xqhn/2V4OdFMpJgbyeWm87pXkcNbrNLcf1soZQZB2H1gEx
-Vev3Y+c4pmXeoSwK8tB3VW87JqnJdfOKcS19+vXYAyTTR2M4xxV63uU+u1VwW281RVInyHOvr9v4
-VkqTjV0+V7k8IfLMQQsKvy2cbvDtdomp9vzA/hGzQYZFedo7QRH85sd2lPQYQIRyJldWflsU6PgT
-zXHQEwnB5z5ym0dZryhFl+9mfEaGAjH9xAvlO3luUHlZ4w6XNSOnPrZzXMxRJM8o+MaFcB6TUkHy
-amrapLy4e2C7UBIIzeoAKL4qzUF105HO50v5I3+2bdhRk/bSMw==
---0000000000009d28ec0632e20b01--
+AQEBBQAEggEAGBoqFayl2BrvOOJGDABuorzCDIuJyRW9yFXm6dog6jp5Hj3BM+/Dj5bml6ZhPR/D
+lP4T77HHG15LjlFcV1IEKgYur1wJ1xuCwizJn7JFOOyqiDs3vNRntvb08xjuCBjQXpWBhytJXJcM
+PvuFWhXU8MI6a37/7NWMCI0z0PXoKD7IfP6QgxUooqAxkaoSNkTJ+qTr/Pi87A+U3WktPAGAZhUX
+Sq4WyF5UsPvost8oU4JbvfhzHHA20/u8p0+3Y4YEPCd2mtyZrJdpdQtDLoLybWza05qD1tcyLoes
+0hsJsAsDLnN09NXyigK8SPWEqHkNsoVxihT9SnH50y8bUNIRVQ==
+--000000000000eb29140632e20b51--
