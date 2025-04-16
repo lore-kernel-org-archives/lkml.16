@@ -1,105 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF1B158538;
-	Wed, 16 Apr 2025 13:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6E7A32;
+	Wed, 16 Apr 2025 13:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744810692; cv=none; b=mu5TzuRq7egxT7nUTXtmqpfjHe4g/0CxdNFRq4uDGBbeANwJvzMSNFO6YWejU73NJ3hXeKM0WKpH9qxcTg9lRnGeliXoKFc279qkV0i7sPAPntgHWKhDoR1JHTJXfA9SOrt0Xwl3GtA4akhRt/+bqsAVdfAA6mA9k0L1bSM5ZeE=
+	t=1744810738; cv=none; b=a7KbNw+GO9OuUOfoxquT/qDeQ2PpXT/Sg2gLSzrPuGrjjTY+9R5pbSTSa+xQPrEhMFAFPCpemCXTTtB9VZpltxdQoFVOXJGI/gSz1OlrB3b394rDBPWQVuC9iAy5aFAlynaXVHhx7JCqZ1kAkYLmtUWOx19N2bdaasOecEDn9Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744810692; c=relaxed/simple;
-	bh=xHlwENv1WHd4Cvsnw8N2ZeDhmnmW0Die7bvlYPzo1qY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ut0CeBe6TFyO3VcViPsKc3gXGIF7V7/l/T9GJi2P65aa6TdGQO3czq0IHspL9uGbi+XgvB/AF0mtA6E7r7qQ9cJGJjImYR78MOuz6u+avBe++5LzYbY6QZU4spb/PkoQ8ku/HhHEbneSEGtQeW2qP9OtV3kyXcdkkMauWMnc5do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qIa4u2EX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744810738; c=relaxed/simple;
+	bh=nrrD3/sSaPsl3a1EqfKuMRRLXEiXUHmBEshVkFhljRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FUR3kt+otwWlGmUWFxiIJ7viZnweaYa4sh2zhzsRnoC9l+P5w7FlsxsNfajR7SH6Q28N9N3kbqcWPy8OAuuwd6YPfQnAl0spVveBqWuzhZoPE2lwSxCGDz4dVUZStHEqCQiBXtPFVL2kXnHqpZ0eRDeo63GhA8OikIDgAlaXc9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EI7+v9/T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qIa4u2EX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DA9C4CEEA;
-	Wed, 16 Apr 2025 13:38:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EI7+v9/T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02A17C4CEEA;
+	Wed, 16 Apr 2025 13:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744810691;
-	bh=xHlwENv1WHd4Cvsnw8N2ZeDhmnmW0Die7bvlYPzo1qY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qIa4u2EXgcrPdfL5GHtQ5D/cGiGbQzEGpwRLFlm29h1qTDyLEgmMyhKqFTj11MFcw
-	 xIEe/DFOe4s0fviRo0Zd3NEZcLFQatqNaD8d2WjIEXDm8P2lzxhiU9KMMUtnGSq6LZ
-	 q35X1YT0QTp7/4EPMp6lr9KKAB6kBXDqF8PMZn9bbrYVFqONop8oLCdGPiSswr3N15
-	 ExycomJxalKySAjy2ljJ/KXBHn7TeMXNE5bB0SxtlSVJrwf4E7rIk+BU21FwfNqSK2
-	 CoNsuB3Lqcg75qoc4GuYdG6ZUouRAJ67wIQ8jt4wbN4+ihFxaYBIr8pJsAX1KM8e0J
-	 5+ifwbasy3d4A==
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac339f53df9so48730266b.1;
-        Wed, 16 Apr 2025 06:38:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX9wmcwooJKWy/afT+mGvPBCAJtsdd6MBKAD3ejZh0F5nKnc1Z8fprW5Yjo36QVc099VXfew/hKx0syZ065@vger.kernel.org, AJvYcCXYAMQWs0fTfKIlkVzlxWE+6uLZasS0bj7ZvtXl3kR7dtifcWc4RMYaTvk8jyTjeTFGKEnTTGP9v/TNjw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWC913eMBLJztSbkw0AxyyP6odn4ZWYYUJRy4Gxnc0v0hapaI5
-	hjjfGjBFXmXNap6YwEtOzWxCsTZ8d0F7/Mob1eAHA0k3jojmCK/s3YiV10JPnXeIW+cNT2Nx+F+
-	w5PcMksRnG2+e+baKHQQxzLxZxpQ=
-X-Google-Smtp-Source: AGHT+IHw2vmicFPa0dbQb1PUlildWGu5Q1aMAVDVNU78RfJgUAlRa8VsVKef3OoXEL3rDwCAt1cwtn6xoe90qq7AnJE=
-X-Received: by 2002:a17:907:1c84:b0:ac7:e366:1eab with SMTP id
- a640c23a62f3a-acb42c4f60dmr151505866b.48.1744810690044; Wed, 16 Apr 2025
- 06:38:10 -0700 (PDT)
+	s=k20201202; t=1744810737;
+	bh=nrrD3/sSaPsl3a1EqfKuMRRLXEiXUHmBEshVkFhljRY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EI7+v9/TV3vL8wNZFHf5NwXTl/I+OIoNCxeCgleOMSMSQ2et4YlX2E/CtICiF2aRX
+	 oW/4Id4sKByywPbfG/aMVtG/Yz6mzSPnvXl2qgsmgXLSFguGJM7kQXBF+k8BF1GIN4
+	 ThZ3NCRohH1sv1xyMoYbOtaw0ZOb6F3NrppLlR07Zo+WDcVKWUg5pMJEKTrkuBgExU
+	 gZz5KUkCuI4y1NsrxDznV0Gbp9y/3WlyHjn121kUA2n1+qTCsnrR97CYFi3SpyQJeO
+	 +/nIc8jEkEOxLOCWZx+MQxt08+oXFr7HQg9OEzZXHNTxnFCn+qtGuDHzV8KoVlsfLf
+	 +2x4BlPNPwstA==
+Date: Wed, 16 Apr 2025 06:38:56 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Saeed Mahameed <saeedm@nvidia.com>, Leon
+ Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>, Bryan
+ Whitehead <bryan.whitehead@microchip.com>, UNGLinuxDriver@microchip.com,
+ Horatiu Vultur <horatiu.vultur@microchip.com>, Paul Barker
+ <paul.barker.ct@bp.renesas.com>, Niklas =?UTF-8?B?U8O2ZGVybHVuZA==?=
+ <niklas.soderlund@ragnatech.se>, Richard Cochran
+ <richardcochran@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Russell
+ King <linux@armlinux.org.uk>, Andrei Botila <andrei.botila@oss.nxp.com>,
+ Claudiu Manoil <claudiu.manoil@nxp.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Vadim Fedorenko
+ <vadim.fedorenko@linux.dev>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+ linux-rdma@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/2] net: ptp: driver opt-in for supported
+ PTP ioctl flags
+Message-ID: <20250416063856.3b653d81@kernel.org>
+In-Reply-To: <20250414-jk-supported-perout-flags-v2-0-f6b17d15475c@intel.com>
+References: <20250414-jk-supported-perout-flags-v2-0-f6b17d15475c@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415033854.848776-1-frank.li@vivo.com> <3353953.aeNJFYEL58@saltykitkat>
- <20250415155637.GG16750@suse.cz> <SEZPR06MB5269DCFA737F179B0F552B01E8BD2@SEZPR06MB5269.apcprd06.prod.outlook.com>
-In-Reply-To: <SEZPR06MB5269DCFA737F179B0F552B01E8BD2@SEZPR06MB5269.apcprd06.prod.outlook.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 16 Apr 2025 14:37:33 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H7z_iVmeuRNXQvvZseB9ntSDz9_tUTXB0KvrcsSQVJb9w@mail.gmail.com>
-X-Gm-Features: ATxdqUGVYnTd0DCa5H_2IkT-BknHibe0igsTaNI4ImOV5pSQxcDGOqYeCv20Qm8
-Message-ID: <CAL3q7H7z_iVmeuRNXQvvZseB9ntSDz9_tUTXB0KvrcsSQVJb9w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] btrfs: get rid of path allocation in btrfs_del_inode_extref()
-To: =?UTF-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>
-Cc: "dsterba@suse.cz" <dsterba@suse.cz>, Sun YangKai <sunk67188@gmail.com>, "clm@fb.com" <clm@fb.com>, 
-	"dsterba@suse.com" <dsterba@suse.com>, "josef@toxicpanda.com" <josef@toxicpanda.com>, 
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "neelx@suse.com" <neelx@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 2:24=E2=80=AFPM =E6=9D=8E=E6=89=AC=E9=9F=AC <frank.=
-li@vivo.com> wrote:
->
->
->
-> > Also a good point, the path should be in a pristine state, as if it wer=
-e just allocated. Releasing paths in other functions may want to keep the b=
-its but in this case we're crossing a function boundary and the same assump=
-tions may not be the same.
->
-> > Release resets the ->nodes, so what's left is from ->slots until the th=
-e end of the structure. And a helper for that would be desirable rather tha=
-n opencoding that.
->
-> IIUC, use btrfs_reset_path instead of btrfs_release_path?
->
-> noinline void btrfs_reset_path(struct btrfs_path *p)
-> {
->         int i;
->
->         for (i =3D 0; i < BTRFS_MAX_LEVEL; i++) {
->                 if (!p->nodes[i])
->                         continue;
->                 if (p->locks[i])
->                         btrfs_tree_unlock_rw(p->nodes[i], p->locks[i]);
->                 free_extent_buffer(p->nodes[i]);
->         }
->         memset(p, 0, sizeof(struct btrfs_path));
-> }
->
-> BTW, I have seen released paths being passed across functions in some oth=
-er paths.
->
-> Should these also be changed to reset paths, or should these flags be cle=
-ared in the release path?
+On Mon, 14 Apr 2025 14:26:29 -0700 Jacob Keller wrote:
+> Both the PTP_EXTTS_REQUEST(2) and PTP_PEROUT_REQUEST(2) ioctls take flags
+> from userspace to modify their behavior. Drivers are supposed to check
+> these flags, rejecting requests for flags they do not support.
 
-Please don't complicate things unnecessarily.
-The patch is fine, all that needs to be done is to call
-btrfs_release_path() before passing the path to
-btrfs_del_inode_extref(), which resets nodes, slots and locks.
-
->
-> Thx,
-> Yangtao
+Applied, thanks!
