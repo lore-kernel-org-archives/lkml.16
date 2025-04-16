@@ -1,107 +1,150 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82553236441
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C01F235360;
+	Wed, 16 Apr 2025 09:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795752; cv=none; b=uxAxzoUNSVMySBEC+5G+OG5Ex6RTxJe0Go1l8ttQ0o+XZcRoD0eCQ/6ItTcSxgHiPST11U2i7bxqP/DKv4pRYob4C5nsQerC/s8XWnWRIO6zmLfWPdh/HVou6XSFpKfC8TXis1IrzyRNTi5x2dUDMr51H9eazpoxVO1kDkVP5Ro=
+	t=1744795769; cv=none; b=F+8ufP69nBH2Bb8vaIxQ7eqWPovHOJXi10wPxSnrU1UlXS90BdOWL7NM0MYhGr3n9NucWLvIfw9rnXsoBRAR7m8Xx3XjYqsszG5Foop5KiCHV7cCpEx5bFw7syd+zBliyOyyErTOj+l/0A3U0nkMqir3EuMyYnwv6k2rdLx6JSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795752; c=relaxed/simple;
-	bh=o55GeMY7B+wVncPex3pi9DLfKpWbxRoRoFGIzfLKFO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OA1rGfsn5Qk1Eys32nfPcaCEyDdth71Al5xlHOe+nLcP384aA7CIeAsu6I0afHZE9rWecNZVLmaNkAdkYajTfI0zJGdII8WzYPhuzwk+p2tzPXdfMAovMxRAOpCrQeQiFeTiUhOe1Us1TaKnL5URW3Gyj0+SS7sGHSckxbvuJ9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fapwU1Ms; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744795769; c=relaxed/simple;
+	bh=xKc8QblkN9uJFFCNL6TIKz3YjB59ygJkZnOM9Cdts/Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ng4wPAPPzQAD/vN98Wv9qWizXA/JwS67UfYNOcE9LOzNqlfQYf6gNZL7Vw1l0FWl2inujkAoM0Gf9l1AjCcvk0cdNw6NxQbXvOrZODCW1TPRnXt+tDI8lP3Rglbyu9kXIgv+4OjcK/6Ezvzh9F9gef5dvO1adDFtNYLAb7+jBbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHNJGM1/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fapwU1Ms"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so5245605f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:29:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744795749; x=1745400549; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iwFMU/CIUfhwkOB23SUiFhp0ktZpZfT3Pn6auhe4gJE=;
-        b=fapwU1MsfAEEj81+R76jC2w20mJDlmkAzf4VracvO5A+yRBGJYB6pSH9HH+Wgh7js8
-         mjE7D6fzn2nqyR5DCJu+cVFDsE2fGMYEgTZ4P3lm44oXh+5hxESq/MYvU4k8WZ5MV/jI
-         mzt3hFxOeQvSI7ZxDjqHMGhwDt0XnZ9+A55LWrizZMvE+fa1w7+IdWQrJwO0azZ1eX/L
-         plvR9i0tK7+x62sqFgMDbZB+0T2jRSCuIYOpyuEh0OLAhO5r8il5DKA30ud8sUocn0wj
-         PpbEbQISOGBs7cs329UGOtn3qMnPtPfSNnZ1RkEqF5N2SsqVoA6JXEoL+7qeWAPcx/QE
-         aHxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744795749; x=1745400549;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iwFMU/CIUfhwkOB23SUiFhp0ktZpZfT3Pn6auhe4gJE=;
-        b=gn/aWA0ddBcp1xkMri6AQpwGUMpLebHwOBpPXKOzIMANVH2IxKkDSJqWwdkbUwjwNl
-         2qZ/13hFnVhkc2+eKj2jY4IFmbXhTuhH+wM0WU4rqEUhZOWaegZhHSqZa50oqdpeQ+FN
-         sAUbvzXzF3Vczw7mPSkeZYnr05xP6sdoB72Hga0qtvt/dX4rAI5q3M2rr0oVryb9G9nT
-         sfhW2XcqYX/C5v1EOJDgMBtuglsNLdzDgdqkT5xo5wP01Yv+wttYFsMiURQe5iWlgLjj
-         oZAzfRUDjKIeVnLPv500wu+mM6zSAW+61G9sX9zOTriKYibvBX6VT13e3Ihrkm7QqJiE
-         GYaw==
-X-Forwarded-Encrypted: i=1; AJvYcCXUC4PYq/zaU2wydGJF0PSJxP8y2DVCxNOrxoBAeF6GE6hP4XCthb65AqneHCSBG1vC9qV++rYBxIsD7G4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/T+lzGiRxfK3IHMfJzyj3xvnDQ+dfI4ctgFm+AhIX61VPo8K/
-	fwgBYrEu72NR52Q5jDmqnn87bP+cHAPmfmIMHH6jFf72+TBqoZw9dJpW+oYvtRE=
-X-Gm-Gg: ASbGnct6/DUIueofDTtB0eRVNI9XZtraFfRaYu1RoM90Y/6ogmP83ZhzKHAsKKt29dJ
-	6snZuWOHrjh94z6p0DBvBDb+EZWh7fnBNJiYfKOUMWTezSxOjbRdKIyjAWu4fuZMexxAcPkqHxM
-	oTBySQxEUriC4eknQCzUuwfYI+EhrovsrsvO9YdaNcj4JkIlonmiZ6LYFZNBN3L3cf2HbIBTI0U
-	C/Rj4WjyStvVCuwRXdmDIUecahy0ktJFhx0Y0lUV1rBYfCyuCXBiFaap8NQ8qon4hKxeja22p3v
-	AMy5io3szIeFXuodJ6Z09Pxd46nvTBjIHihzkvZuA64=
-X-Google-Smtp-Source: AGHT+IHG24BI/s6GMoLVsPWuWiDfurxtiJ9IfZU2cz4E6a4f9Ru2A7MtNJxcyIrDsYjvapIyQSdlpg==
-X-Received: by 2002:a5d:47ab:0:b0:391:4889:5045 with SMTP id ffacd0b85a97d-39ee5b8b916mr1140442f8f.36.1744795748587;
-        Wed, 16 Apr 2025 02:29:08 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445315sm16542282f8f.82.2025.04.16.02.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:29:08 -0700 (PDT)
-Date: Wed, 16 Apr 2025 11:29:06 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for
- cpuset_v2_mode
-Message-ID: <575w7vjlpcvh4yfyvmiqnurenzhdcpdfwjwswb4kulbdimxtuy@pzgqw5aqhn3m>
-References: <20250415235308.424643-1-tjmercier@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHNJGM1/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBF2C4CEE2;
+	Wed, 16 Apr 2025 09:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744795768;
+	bh=xKc8QblkN9uJFFCNL6TIKz3YjB59ygJkZnOM9Cdts/Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vHNJGM1//ojqqTbQ3yiTbcMZDv4Ur+nBc2qkNjLe8xRQ4EYJ9LkW9VsCKmY3nlM/q
+	 XBl/0dy2GDg5Qvej2MThYk/7hDAS/cotGKHYpwC4ANvaxkov7B12fAE/GJf3/VgqBs
+	 UO0v4W1HVWqO26xOLT7BQJbSyCT0MihHG3jlPmul2oKOoo2cJ5Or3CrNvjQGd6SgVA
+	 cEyDA3KbYnwdud9rXx5bgNwiP1SGhOmP7n/p22oUVjAHRMX3dmEG63USPagIeZ6e68
+	 PBK2hW+TZzaMrKBnHQ4Jxy8V8hHLF5d0JKYWYaXZf/+n43hq5r/heHpZMjikVUkjFH
+	 MMJSP7sAXZ77A==
+Date: Wed, 16 Apr 2025 17:29:01 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Andy Shevchenko <andriy.shevchenko@intel.com>, David
+ Airlie <airlied@gmail.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <20250416172901.60104103@sal.lan>
+In-Reply-To: <20250416171917.0985c0eb@sal.lan>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+	<4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+	<87tt6opks7.fsf@intel.com>
+	<20250416171917.0985c0eb@sal.lan>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="va3lsphxxw3lwntv"
-Content-Disposition: inline
-In-Reply-To: <20250415235308.424643-1-tjmercier@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+Em Wed, 16 Apr 2025 17:19:17 +0800
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+
+> Em Wed, 16 Apr 2025 11:34:16 +0300
+> Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+> 
+> > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > As reported by Andy, kernel-doc.py is creating a __pycache__
+> > > directory at build time.
+> > >
+> > > Disable creation of __pycache__ for the libraries used by
+> > > kernel-doc.py, when excecuted via the build system or via
+> > > scripts/find-unused-docs.sh.
+> > >
+> > > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > > Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > >  drivers/gpu/drm/Makefile      | 2 +-
+> > >  drivers/gpu/drm/i915/Makefile | 2 +-
+> > >  include/drm/Makefile          | 2 +-
+> > >  scripts/Makefile.build        | 2 +-
+> > >  scripts/find-unused-docs.sh   | 2 +-
+> > >  5 files changed, 5 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> > > index ed54a546bbe2..d21d0cd2c752 100644
+> > > --- a/drivers/gpu/drm/Makefile
+> > > +++ b/drivers/gpu/drm/Makefile
+> > > @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+> > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> > >        cmd_hdrtest = \
+> > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
+> > 
+> > KERNELDOC is not set here.
+> 
+> > 
+> > /bin/sh: 1: -none: not found
+> 
+> Weird. This is set on Documentation/Makefile:
+> 
+> 	$ grep KERNELDOC Documentation/Makefile 
+> 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+> 	...
+> 
+> drivers/gpu/drm/Makefile should be able to see this variable there...
+
+I suspect that the building system tries to confine variables to
+sub-directories, so maybe one solution would be to move it to the
+main makefile.
+
+could you please check if this patch solves the issue?
+
+[PATCH] Makefile: move KERNELDOC macro to the main Makefile
+
+As kernel-doc script is used not only on Documentation, but
+also on scripts and drivers/drm Makefiles, move it to the
+main makefile, as otherwise sub-makefiles may not have it.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index c022b97c487e..7a2069e87dbd 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -60,7 +60,6 @@ endif #HAVE_LATEXMK
+ # Internal variables.
+ PAPEROPT_a4     = -D latex_paper_size=a4
+ PAPEROPT_letter = -D latex_paper_size=letter
+-KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+ KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
+ ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
+ ifneq ($(wildcard $(srctree)/.config),)
+diff --git a/Makefile b/Makefile
+index 38689a0c3605..c8e46f0c1f63 100644
+--- a/Makefile
++++ b/Makefile
+@@ -458,6 +458,8 @@ endif
+ HOSTRUSTC = rustc
+ HOSTPKG_CONFIG	= pkg-config
+ 
++KERNELDOC       = $(srctree)/scripts/kernel-doc.py
++
+ KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
+ 			 -O2 -fomit-frame-pointer -std=gnu11
+ KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
 
 
---va3lsphxxw3lwntv
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for
- cpuset_v2_mode
-MIME-Version: 1.0
-
-On Tue, Apr 15, 2025 at 11:53:07PM +0000, "T.J. Mercier" <tjmercier@google.=
-com> wrote:
-=2E..
->  kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-
-Acked-by: Michal Koutn=FD <mkoutny@suse.com>
-
---va3lsphxxw3lwntv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/94WQAKCRAt3Wney77B
-SbSeAP9JkFLMSl4nksOMab6B62/csP+sac3doIRszWSDmJpZkwEAoCsPrJwLs2W8
-otFloLpMdklEoCUND+I45f0k3ytzcAM=
-=Kbk5
------END PGP SIGNATURE-----
-
---va3lsphxxw3lwntv--
