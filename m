@@ -1,97 +1,105 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A95F9EC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480B72DFA42;
+	Wed, 16 Apr 2025 22:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841721; cv=none; b=runUfEZF/N5y6VBK1OPXKiBl141xtKaZqiWmoT2DVlg/sBQNP6j9KL+AwSpN2grtfM/UBv2fu5qC+761/Ck+CBG0bZqwMszUCFLZU7IdxwHWBkNlpuoxSA/wnP5H67AJDi+p4RuBYRG1qWwBcATOA65GkwxVw8+jrxzWadqIrMk=
+	t=1744841797; cv=none; b=TC4Garms2ufO4jOsa55kBcS6y/qyHeqZdCwOuGc11sIr9cT+9D2pzSWMB6hGPy8KF03tPs6+nrAHrMq7UaWbsalwZbHK0gtGYf76WuHHw2vzhCRsUoE7oF7naJZLRxmCbAkB6FozLoZ9pdJ2wRQkHkGMpQsbZNglYOlwmhCNobk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841721; c=relaxed/simple;
-	bh=QlSh2EDUuFZtk9HviGRqXS3TrEI/ltT37DwtFrF7lcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b/fpXojmFRERwoaKvBu1Vcy/zQYQw0UMaR2aC1UVl3Gxge2LArVFaTEgp2RZCf4rQCpdYAK7F57Ubb8iiRvGI8JJyayWaOiEuR4WIG6FO5tGVTMffeQuVyX+4SmuWY0wk4upoZKflPWMLgpw0eyMkhJcjFTYZKgt73siBAT5y1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
+	s=arc-20240116; t=1744841797; c=relaxed/simple;
+	bh=km03s/ApEuoP+yjZ0S9m4vFeekoANUUOEXarU+bE4II=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FcdBCVUkmdfP6AU/xuiEZ6XzEI/xhWXoU9Tu6mUsvS3p25GXT8kxeRNZi4gasV99rFVp6d3J+T4L9blhGOyWJc5CunS7k6vvcLbn8Z1EcZwOtiiL5tIBD8cziYuhOBPmUO40GGKwPmG1UPq/YOX6uZqzWngnmD7OOtNnmjNpNjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mQGNyZA/; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf257158fso898685e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:15:19 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQGNyZA/"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f4b7211badso246096a12.2;
+        Wed, 16 Apr 2025 15:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744841794; x=1745446594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ViE0qUIBJKKtk7+Z2mdJ4Yl+/Jbq8RUc3f56cxXVUkU=;
+        b=mQGNyZA/3qEeE6Lk3LA/vSEAXnUjvSYZeEnbO8idneGqAlfQL/bJn4IyeBzPOWKWvT
+         i4jyYae49WaPSxqkMbnEPHu6JXAJ5QtcbGDZYlGj+m68VpCcwpx3e8XAx424uRYYd6w2
+         kXCPHpKc2/K4cJSafaCEGjeRLyprzIHyrb63clWK9T7A42ssaGhUzBc392x0y6j0fk3T
+         AQIqRZbMBRIb/yK/qRTxKMocXxN4X6/D/DSQQWoS2FynRcmuh6IqPaCHLFTiInaOsEu4
+         7yekp8JLiv4+1gqtr9QWasskpqAMcOTh+QLeOu7ZEMVpyn8uGb1f6U1FeDI8O0oge3HV
+         IMKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744841718; x=1745446518;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=urTlDNi6wNlnDQZcAqCrbf5dwpRtrlP5FbhK2ehxjWc=;
-        b=dFIEiUmPjBjwGeX4mndP71I+iDk0jaD7kyb9Kjzc9xyITXdfrhRcrPUAoIuDG77I+n
-         +HW39GPeouA0hnkXKs05dJPyeRknYH+Dx+bI47xgR6TNOTOX+8HNBRH0O1wt6nDU1shs
-         Lc+oQPkdV2STvrpJ5D6W7+bctBOf6PXFTunUbvoAM9BcSa6j4wUC4+eh/rXj0LDYZTBA
-         St04pTO+PGsjCMYi7hLacKNiA9GetB9QV8gxeub2ImKrB0ieAQPWwKJB6uEV5p40zG32
-         3+t1lFAuvWdKwdEuwlyJ+NmqnWu3g+ReAuqjp7gbCvGu8nwgQQ6HcwooGPz8Y2OPoK3Z
-         ejaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+jUkb/lNe7mGd4yqs+RK1Cp/2BH6rMqf75DAz0LFeEToj81ockLZD0C/DkYtgg0fHCDaEQlRqqBafzxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxiLalAcDSMkgshhw3oVDtjpdjQ8gfVvyZK//ARuP++UEuipVJ
-	OCqqHo4GSoOT4ZnZCCxOgKNPAH2cQ5HYQbd2T8W4M8QQAUKuP70K
-X-Gm-Gg: ASbGnctX2/1t2w2eFC4rGb18lTF4fFVmBAVjaLf6ewsrLd6PsmVomGYT87oDkeLnLAS
-	HQtlMZoQLVCMOkN/YzWmlEN8NqEB4K4/8vAUXKJkvYyvfAR10KCsps0SHzl0Kqmx9fRzZ37og+r
-	MiTSy0oWB1HlTW0DrCDfue9drZ7gSmP8lp7cX3Y/cvOWv3SGS83TvzfhlHDDnf1uVuJIOugS3MN
-	tqdaWxcQE5sLjSoerXllx8K03y3xCYzn58IQZa+sykB7/osWeXEJcIYvLrIpT77Tp1ueeUatM3E
-	s4kck8mEkItIq9Ciq+u3lJzGv9h96ZHlgOYuFw8M3tgwoeraZahbajYFZKcD6pR58eGhksIqjYQ
-	nFbR83Bw=
-X-Google-Smtp-Source: AGHT+IEouzx8PT34zhwgAamNvnQSIVYaNgoDyTEr2XAiwMCGDWCjNdamH+nXhtp8UCoea2oUza6dmw==
-X-Received: by 2002:a05:600c:384b:b0:43c:f629:66f4 with SMTP id 5b1f17b1804b1-4405d5bdf96mr37147625e9.0.1744841718089;
-        Wed, 16 Apr 2025 15:15:18 -0700 (PDT)
-Received: from [10.10.9.121] (u-1j-178-175-199.4bone.mynet.it. [178.175.199.47])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4f25bbsm33081345e9.17.2025.04.16.15.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 15:15:17 -0700 (PDT)
-Message-ID: <945f4ee5-3d9b-4c4c-8d45-ec493a9dcb4c@grimberg.me>
-Date: Thu, 17 Apr 2025 01:15:16 +0300
+        d=1e100.net; s=20230601; t=1744841794; x=1745446594;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ViE0qUIBJKKtk7+Z2mdJ4Yl+/Jbq8RUc3f56cxXVUkU=;
+        b=VLWv35NOwa0dcY4CvxZ7wIoGlQPGuVLb8hiZI8usmPK3mEIl0aZwVXk0ppvJqf71g6
+         kOXbMa0xHZfW3eDljJMK/iXH+mPNzhjpIeIF63AJaslYL2eRCw0QnLFS2VVYwgGJbHlq
+         JRjJVBqKkyBOJG/YcAeO/XxDyAestcbf9RDvuFKSKmxqXZsrUbSfuSRCgkKBM/46/FtU
+         GQmCIkrT6R5qBS217CB+zhXvMvQ56ArcAghKDrdOkVAKi+RC7hakmEsmAzaNtrz4TQH1
+         kTNjDIOl1wthgbzVfG7a+mu6oBz49MLKeniPnG2YVSLG17YDyXJ+BIWbBLyYXC+3yICa
+         eXBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFK9am8XhjelS4Duw3FhX0cqziJytEDBAQoyd6noNqd8/6wUHighHXfOnXfYVXEFbENmtLBivuBK/4kU04@vger.kernel.org, AJvYcCVRgZFbSObHHI+JqZKSV3UhoFKVVJjn9xrRxbhu943xEdeVEMzxHlJNwv2dSWD+HWGAH7/JJOVGSniS+x4A@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9fQdEJPHzDblypFMxamcEpzZ9/Jqr+cDR/kTIXjL7puq9/X8U
+	aaQaGO07pfvYcr+WArBRdd7qpdzK7GTG6+b1kaRpds4cKCtrvz76
+X-Gm-Gg: ASbGncvXNpkF9TINoYMz7p9Taw9BF9R7xubnrRddZdz8folpY37QZV7a2HEAqr46KBk
+	XkX69zOWbh7WeGM08R6YCL8UYvmb/nBd9x3uG8eTYfTFqCODeRqbXue6ieJCdTQpS6aBNn8XaEM
+	8qQANEgThlmoyiqHcnw2nbodCDNamTfsgwBmqr4w+eLqBoxtp0CEb21Lrl0nG69uDw5q7Wi+wsI
+	RTqxQk2qSrKD5n+idVeBsOHDemgNnpd9pgfnjUR1X0mfmFryy8wShoERh6Xo0kGfVidbNb8zeSM
+	wvMV3biOZhymQFWYV2EEp10it4h5yGiRDZBnRAkplZ6Q1KCc8TONMJCztxY=
+X-Google-Smtp-Source: AGHT+IHsNdJio93TUUQuuVszdKxDBeN+WTH8Nu14hhRcz1T3hDHUrcxy/TLbT3i9z613UzbZ3f7PhA==
+X-Received: by 2002:a17:907:3f1f:b0:ac7:cc21:48f9 with SMTP id a640c23a62f3a-acb4289126amr341414766b.5.1744841794321;
+        Wed, 16 Apr 2025 15:16:34 -0700 (PDT)
+Received: from f.. (cst-prg-69-142.cust.vodafone.cz. [46.135.69.142])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d128c9esm194762866b.108.2025.04.16.15.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 15:16:33 -0700 (PDT)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: torvalds@linux-foundation.org,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH 0/2] two nits for path lookup
+Date: Thu, 17 Apr 2025 00:16:24 +0200
+Message-ID: <20250416221626.2710239-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
-To: Randy Jennings <randyj@purestorage.com>
-Cc: Daniel Wagner <dwagner@suse.de>,
- Mohamed Khalfella <mkhalfella@purestorage.com>,
- Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>,
- John Meneghini <jmeneghi@redhat.com>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
- <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
- <20250410085137.GE1868505-mkhalfella@purestorage.com>
- <738a41ca-3e4a-48df-9424-2950e6efc082@grimberg.me>
- <4cd2cbb4-95ff-4f3b-b33b-9c066147d12b@flourine.local>
- <4c334216-74d7-4a30-add1-67b6e023d8d2@grimberg.me>
- <CAPpK+O0tmewK7pH458TOxjtimjO9on=4YDRFbS=FPTgM+KFTzQ@mail.gmail.com>
- <8ac6cc96-8877-4ddc-b57a-2a096f446a4c@grimberg.me>
- <CAPpK+O2SBm6-zqbiDbUB0yubVTvTrXWn1R+GAPne_+LGvVXp6g@mail.gmail.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <CAPpK+O2SBm6-zqbiDbUB0yubVTvTrXWn1R+GAPne_+LGvVXp6g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+since path looku is being looked at, two extra nits from me:
 
->> CQT comes from the controller, and if it is high, it effectively means
->> that the
->> controller cannot handle faster failover reliably. So I think we should
->> leave it
->> as is. It is the vendor problem.
-> Okay, that is one way to approach it.  However, because of the hung
-> task issue, we would be allowing the vendor to panic the initiator
-> with a hung task.  Until CCR, and without implementing other checks
-> (for events which might not happen), this hung task would happen on
-> every messy disconnect with that vendor/array.
+1. some trivial jump avoidance in inode_permission()
 
-Its kind of pick your poison situation I guess.
-We can log an error for controllers that expose overly long CQT...
+2. but more importantly avoiding a memory access which is most likely a
+cache miss when descending into devcgroup_inode_permission()
 
-Not sure we'll see a hung task here tho, its not like there is a kthread 
-blocking
-on this, its a delayed work so I think the watchdog won't complain about 
-it...
+the file seems to have no maintainer fwiw
+
+anyhow I'm confident the way forward is to add IOP_FAST_MAY_EXEC (or
+similar) to elide inode_permission() in the common case to begin with.
+There are quite a few branches which straight up don't need execute.
+On top of that btrfs has a permission hook only to check for MAY_WRITE,
+which in case of path lookup is not set. With the above flag the call
+will be avoided.
+
+Mateusz Guzik (2):
+  fs: touch up predicts in inode_permission()
+  device_cgroup: avoid access to ->i_rdev in the common case in
+    devcgroup_inode_permission()
+
+ fs/namei.c                    | 10 +++++-----
+ include/linux/device_cgroup.h |  7 ++++---
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+-- 
+2.48.1
+
