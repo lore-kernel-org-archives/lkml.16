@@ -1,116 +1,172 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2058.outbound.protection.outlook.com [40.107.249.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AABA50;
-	Wed, 16 Apr 2025 15:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818948; cv=none; b=Na24k6jXO1ME7M9A1bHXNFShgLLAX+ljFoRGRmbIXpgqxS8uUndPLUizarvhZ6E9PZtIZgR9uXljX+9rkO1hikmzj46A4B3ggyeQWdBhI/aOkdo90XAl/sc3YMSAPDC9319Bi1Pk9vAwac+vEcK000K+oqGueOxKstRat2zbpBk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818948; c=relaxed/simple;
-	bh=9pbg4C0z8sXp7KkEc5RFY+hZQ1L/rGu7X3Ow2EVMjqQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LhswA8SbBJgH3zxu1QQlEe4guEJmwOUbpmdVVdh68PR8thXaYM2bdHkzVqAtaAAfVca0u6vvjQT+rglZkRryvmcwx3JACvFhwnirSEH51VhqNJGFTE65XNBxvjUwPke0bOZwAz22ZqS1G+6Vw0I8Jce15Ph8Lfcd9UIWShvfC6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=Q3aiAyJs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ape697iD; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C711F193D;
+	Wed, 16 Apr 2025 15:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744818972; cv=fail; b=m+4Gi3M3QyBDB+fwPwm2/QyUvErMVO5heD3Uftkhj4YSr/n1sQx25OaMhLGXZJ3pGDiWdiVKCKDDuQzw5ASJrbv7dzKqZ5T5YIbAy5DVa0UIfBDhQcS4TudGmpO55WOoq8BSOeUVb4UqlwdbnIG7cA725Bq/WID2h5BVs0sbVB0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744818972; c=relaxed/simple;
+	bh=SRZ9ueEjHns7fDvPqN7N9+EqSRx7IbgvwZcbTZPrQNw=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=meBM1JielA9ATMnxibTikGLsDHz5eTXld1n646Sf4rYUQS9/XTtpCVccdCCntLMA4XX4dSwAEj5Gd3Zh8b3nwey1YX3EaqW2mmknIiNMXhK8Xlk8wYaExSvXv4v2/eIj0fze5skxYghyk+bhKhY3JqCzktcWhFMZDKPAUTZ7bHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=HftpTnM+; arc=fail smtp.client-ip=40.107.249.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="Q3aiAyJs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ape697iD"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2B70A1140293;
-	Wed, 16 Apr 2025 11:55:44 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 16 Apr 2025 11:55:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744818944;
-	 x=1744905344; bh=EVsUq8vIHVHSJ8OpZq0XMo4UVFNqeRv0Sm7W7t18X/s=; b=
-	Q3aiAyJsevWE/ISVeky1rPGQZFQI8JAxruyp32pE43BHMbnOi8EUxnrQU4HWg8CG
-	QmRb0xNvOgk9MFQQZ5Ah5HMN0LjyQpYDmZ7ydY4rHKmyxl0iH1WTw/eBssZk02VL
-	+8y53bKuP+BJhMTieMK7u7TRUyZWbCfTbJjuOucek3z9kMTEHBWwbhAu10XvCoF5
-	iu+wX2zHaQpHbozF0GzbPz7X6B+y3CKdEahr5/GYyPLT0vKyc+Bh4L2NhkJBgIqB
-	poFY3OCN+QjR/Mefy67IFwkr7hr6nek9MgLwUD/5+o51ysCPAteJXH2c1INubG1E
-	bDCX6nyWGi7C6KBP0+v5VQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744818944; x=
-	1744905344; bh=EVsUq8vIHVHSJ8OpZq0XMo4UVFNqeRv0Sm7W7t18X/s=; b=A
-	pe697iDAH3rFm+RhD2cv8csyY/ecTvQOGunw0sH11LheoKs9EVCJgiwKKeXneP4S
-	ACbCpWWhacDZ4juyUDt3YvUvDSJNEY7a7Xbe3BbQOHQfBt5/SL6+UhoNTjK1mSHq
-	1ICm4Y7Tk344V7WJtxqH+9oT8SJulM/DYVH7A2ZBninXcxQV6VV1Ml8+PXbPlfTv
-	/puKBiEbjK6AkAYKGqLiAr5RoOqLk+inCHunenrSefG3chI02lPf0bekagOgc+iG
-	G7LjE1G2HqY5BSpAD0js0vPC7KsLea70WQiQsX7UfACuw23NdFNF2mTTF3c+iJWv
-	gxDpw8AWHZgW1oVdD2ceg==
-X-ME-Sender: <xms:_9L_ZymCMPyx3sQqJ8O0VYwakETCEdUWOeazsvE2I2At18aj8ULrVA>
-    <xme:_9L_Z51dWsmSL8qEx4kkDeoXGlSzpVleUBkyzgEL6UlWBiYh-M1VLGyssNxPpXdHd
-    kGT387b5GdWALM7>
-X-ME-Received: <xmr:_9L_ZwpCsVXXJQWDewPEPA6W3mnkh8QMZPEgCeyQlyt3u7FSJenIVQhB4br7HT-c0w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeijeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
-    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgusegsshgsvg
-    hrnhgurdgtohhmqeenucggtffrrghtthgvrhhnpeehhfejueejleehtdehteefvdfgtdel
-    ffeuudejhfehgedufedvhfehueevudeugeenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegsvghrnhgusegsshgsvghrnhgurdgtohhmpdhnsggp
-    rhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehluhhishesih
-    hgrghlihgrrdgtohhmpdhrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuhdp
-    rhgtphhtthhopehlrghurhgrrdhprhhomhgsvghrghgvrhestggvrhhnrdgthhdprhgtph
-    htthhopegurghvihgusehfrhhomhhorhgsihhtrdgtohhmpdhrtghpthhtohepmhhhrghr
-    vhgvhiesjhhumhhpthhrrgguihhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhfsh
-    guvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
-    khgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvrhhnvg
-    hlqdguvghvsehighgrlhhirgdrtghomh
-X-ME-Proxy: <xmx:_9L_Z2mG6Y8EWSakQ2eOTPLXAbZ2wkjoCTV6Senykb8dNzK0X7tVng>
-    <xmx:_9L_Zw1VQEhPa7Id0NAYVP6oajSI_YnaZZaeT5X9uuEx62bfY12_9g>
-    <xmx:_9L_Z9uAsL5nDn0rKRJf0avlsMo76RCvm4dlJuhq_APW7ZVPpHpG4g>
-    <xmx:_9L_Z8UwbessxYtPJdcW_Q6Ni3wBzqMAzR2c7Vue4pkIdZgjcV5jjQ>
-    <xmx:ANP_Z4YbEQpKEhs-w3vEhYs18WpKis_HJ_65h8Dk_U3ltomd_8ueLXyb>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Apr 2025 11:55:42 -0400 (EDT)
-Message-ID: <89257861-9f17-4c07-8358-f90392032983@bsbernd.com>
-Date: Wed, 16 Apr 2025 17:55:40 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="HftpTnM+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q4IY+mldLh/8G2FUX5NmsoyiwvGTyiAcw3AAubHkbjADUsR+xD3l28FHXMmbkg4V1unkODNmdq2X3i9rFcH5n7a6nuTcqpaY4jw/v99LEE2qry/MopfZEExgv1NYkeR+sYfu4sUd3SHa9UXjTG+7nXaF2x6WsIZsJeuCXce6m6l6iMu3MAeDQu6gLTHRcfftHGwlznFhKxWajausxYyIy9QXTkZ2Jwj4EqkyvVb35CwF5tqeh5rDvzSnak9VfDCIjIpKejn9x3hNEc1Tp6yw7jMV8D9S/gxsjOHVD8Weze5Ls8W/nPA3zPPe/6BOMJ4ipUIYx+uy/r6NPCsC/Jptew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XIRGuObXU/TCN3nUC78PpMxMrsJvU3BvAJBwH4y/MAw=;
+ b=mUR5ca7tgOZkv4pbGpWTusMd9HJ8RJoTiiOUwpCGpCh8bbFFB24hzKF27vV6MsgICDEwZ6JB1j5KznEagQOEDAmauEPgM4jtTPp8zDWwuDgaBIAYjsbeQEicSpN3VNQTUG+BYkS/5sjYvb3C7SbEjYhiqBRppPkSCG+dK6dqcWdTIXQ3wyzhUeNrbSQLxebzwKNdmXSjii5Und1kJOwJCAITswQgHCsQqc47UKenqjUIVaPAeSUxuiJtWVCGgkLn84MvjEE9FTT4FkN2a1bzcr2YNrsZxbTcuCRDiIgec5XSk8ekszdyQlozBcuYgaqrU6g9T/GClKOM5LyFEZWAew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XIRGuObXU/TCN3nUC78PpMxMrsJvU3BvAJBwH4y/MAw=;
+ b=HftpTnM+Rcdfe9HogBJglljBCPjo4gA1p/KClFm37x9bBzRRQj/NdT7jAWcHDo+C6QgZ6kvoEjAmI3KVC57aNZhNG9ySZQ88gn4dl2ABtM109mGth9biT6Bj5pfcoZEmclED7GXU1SIqfMqqNMMpXK/rPrLUqHy2s7OChEP252lKXatL28G9sK16RJ8C/ha2Zr/jbDQ0IIyEe4l2YFzlK6eREiV0jzsKJSZ8kUwRU0NEowUEvyNE8Sk9dd0gYzd69Uexf0erP40GH57o1FI9bEGjrJBlmDTb79UDSIhHPlZLV+wxtdvVVy5YeE0kk4yW3QXgx8GVL8ncQDicjHFS9Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAWPR04MB9910.eurprd04.prod.outlook.com (2603:10a6:102:380::7)
+ by DB9PR04MB9307.eurprd04.prod.outlook.com (2603:10a6:10:36d::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.31; Wed, 16 Apr
+ 2025 15:56:07 +0000
+Received: from PAWPR04MB9910.eurprd04.prod.outlook.com
+ ([fe80::24b9:b9fd:bcc0:4ee6]) by PAWPR04MB9910.eurprd04.prod.outlook.com
+ ([fe80::24b9:b9fd:bcc0:4ee6%7]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
+ 15:56:07 +0000
+From: Jeff Chen <jeff.chen_1@nxp.com>
+To: linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	briannorris@chromium.org,
+	johannes@sipsolutions.net,
+	francesco@dolcini.it,
+	tsung-hsien.hsieh@nxp.com,
+	s.hauer@pengutronix.de,
+	Jeff Chen <jeff.chen_1@nxp.com>
+Subject: [PATCH] wifi: mwifiex: Use "scan_plans->iterations" for bgscan repeat count
+Date: Wed, 16 Apr 2025 23:54:25 +0800
+Message-Id: <20250416155425.4070888-1-jeff.chen_1@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS4P190CA0026.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d0::13) To PAWPR04MB9910.eurprd04.prod.outlook.com
+ (2603:10a6:102:380::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] fuse: add optional workqueue to periodically
- invalidate expired dentries
-To: Luis Henriques <luis@igalia.com>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: Laura Promberger <laura.promberger@cern.ch>,
- Dave Chinner <david@fromorbit.com>, Matt Harvey <mharvey@jumptrading.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com
-References: <20250415133801.28923-1-luis@igalia.com>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US
-In-Reply-To: <20250415133801.28923-1-luis@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAWPR04MB9910:EE_|DB9PR04MB9307:EE_
+X-MS-Office365-Filtering-Correlation-Id: b8e56b94-da53-4df5-3685-08dd7cff3327
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tvUfAaI0+8nQ4PFdP437KRMuYKh9+a9zB8uDDwzAxY0BHtbbNrt4tXh/IRgd?=
+ =?us-ascii?Q?bHel+K/TqXwElCevpNK63w8KugLXddTB4H8lzBWN7PF7f+Rr2jJ7koF3wy2G?=
+ =?us-ascii?Q?IGnBvE2eom0zone/VwDlZhChbyWmyUDikgsg2cFDxf0fQ/CYTf+etjT1vHDU?=
+ =?us-ascii?Q?DmCITlt5HfNdqQ2fNuU0vgL8OSPgwoUqbPyGmezYR3hKAd+ej4p3h9KSXS7U?=
+ =?us-ascii?Q?dwuabmUycRR2zKleEPK3SNz6EytgKAr/nOgRWRVQHzEX2QK+YQyqRFtLTDNz?=
+ =?us-ascii?Q?H7VbqYEBQcJNnnO6O4XZnYIApblbjD5Nx9GfDwdHGPG+oSAGdh0XW8eQJrlr?=
+ =?us-ascii?Q?3zTTjilWfc3hULs7iXJhuU20Xv/rypB0rVZ+xWJD0cBj3hVdsdLz3dCmdn9T?=
+ =?us-ascii?Q?/7fTx+0MoJNb6RqfX2dZhUThMSPputs8t3Xum+b1cWRLmWsZdY450yDcEBr8?=
+ =?us-ascii?Q?ZQTt7fI3fkLZrucUSCxycUb5lOkiogx9AeDRk5Zp7Orykr7Mm1BwU7LyC8nw?=
+ =?us-ascii?Q?UHvJIWDxbKDDWqLNCz/pBH7ENNlKgp7Orbp2Fsw81Kt7KOinLp5E0d42mQ0I?=
+ =?us-ascii?Q?+HX5ZTegjBKTKayAYqYktvthrFcrVVURzahpvcHmvtbn8Dbsu9vdl9k0iHFo?=
+ =?us-ascii?Q?p9ykQQ0knNqvjM0/o2H/EWjI8PxNjEASWvdvDfjeEic2ghXDUTm8b0QHu9A2?=
+ =?us-ascii?Q?zJJsMvzHBbERD5IH5O0xxI1fqKG3OrkddZYSRq8S9Q+42ojO1MeSmPh3TUCm?=
+ =?us-ascii?Q?CzjTUj6MQPfwO2V6MRoVCevMZq9lnUpAKfLvDjN0Vqk0XwQJwIXAyi+yFLgm?=
+ =?us-ascii?Q?bv6zqX54bOPXB8BnzWqKY5XG5BFpLD8FbRWqUM/PQcmOcQiehipLjXJxM3Qh?=
+ =?us-ascii?Q?AHeD4VBQZSLC3OZbtzxvJJfQpcZ+7Bxxk4mvlUWDlFSuW/33Ly1CqKNbBQC0?=
+ =?us-ascii?Q?NSRAD4q2xERHaYywE/jwHBGJ2pkZOulrdaoPz2fR4Y+9piuA1xpBeCBSXYuP?=
+ =?us-ascii?Q?Z0VefLhh77y4wiUAdUsBTEBOpR2HXIPPVhijXibQxOY0Xt4yHOoBV8piPBxM?=
+ =?us-ascii?Q?DfYpoM3e5Qrmnk8jRija/d+r6BtJ2znX1e6cjhL3I5IrbKcUfDmGaqIJoZAn?=
+ =?us-ascii?Q?pM+q0Im2F8aXEqs0sRVypTbOR0frxr9nyGXTgWpbuFHxjXAvewGpRIlaJfyE?=
+ =?us-ascii?Q?kNpHDQ8x+ProGnFeDT8SCbumwoqL4XKHe2ImkSJWtL1r1INIF3dgJo4Z8K9B?=
+ =?us-ascii?Q?J9hndqdpGf9LJ9rTEKJwQU7RD6epy7B15jFvOL8nnJ/vWKdn2yiR+xQi+By3?=
+ =?us-ascii?Q?facvp+o8iD8EMDDLYd07LdbV1QExX8kr7hL6aZIa3ZC9HUVQd+UQmALKkmj6?=
+ =?us-ascii?Q?2sgcuE2kot5ERvElXatlYt0DetLfUCBZVPo0hHKmpFjeb9JLMctCMQgBXiqI?=
+ =?us-ascii?Q?jfYn8o5Z4H63XSeWDJE+YVh4cUfmEP1aJaGs8bDjfoQEBeVUelkz/w=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR04MB9910.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oovKlksBEIRONkb6eXkfrNEK6UOQjmFleF2sDC1phHb1O1QmyAtzG+03yP4y?=
+ =?us-ascii?Q?J+ul3s0HLvk7ej6yofn0K+pF2vMZTDbTCYFBKp1sYSO1MQFLqV9d2Zi0/02b?=
+ =?us-ascii?Q?26ngISO1pTUu1KbPEGtahhc6izyoeb8OeD80pUehBuytcsJlQmztZODe7MkM?=
+ =?us-ascii?Q?snyxJMNJmM6CdRKaPfzCmky3zcl0XmAlAl/HacS/wMyQeW/GXpgSdf21PXRQ?=
+ =?us-ascii?Q?U8sya4wcBixcun2QcnKuVh8Kd+LDPDlOxmHhq1MrtN+D/Gpgirab1BYn3wUE?=
+ =?us-ascii?Q?bQWyLXCpp/np5Hq5sX7zVJfmKSK/pKB4n6l0vik/iXbqRR8s1bWyYvDVvnfU?=
+ =?us-ascii?Q?96j77nMCDTL84FypPlnQGTq6khHHxOuhQ5k2nPNv9p9HKj7hEiYRQTvSmc7I?=
+ =?us-ascii?Q?N/GF9Xv8+74LTkue0oWPc5uqsC+7krFXfxzN8ahINY1xWMvZA0ztkQnJk45G?=
+ =?us-ascii?Q?PQRSUbFiPtJr5me71MT03tXHI2y5JMm3d3zOHNNAej2KRHBKq7uruxJ+ZCR4?=
+ =?us-ascii?Q?iHB5p5PZGMcmga3kRYeI1ZBFd5C/k6xMidavQhrMjr0xj5p63qF6dLjL7AT7?=
+ =?us-ascii?Q?KgARhfyStkvFmIih58DbskN+uRJpcH7YtQvREHr2TfbrP7r7THXUevcLFXnN?=
+ =?us-ascii?Q?OoylkzFTj0KC+xIgBQMIA7vW3NGvqAtcZ6gW3rs69KfMy3XBgaEwYrnY0edK?=
+ =?us-ascii?Q?L4RK80II83awatTql9KNGF+H/2V9Z/0udUC54a0O/tL6oEtenwepYWbZnPCB?=
+ =?us-ascii?Q?pG27aFWXFT+Gs84yTpLo+zJLZvb7nadgL3E3znC0vQ266AmPwTsCwnvpEavw?=
+ =?us-ascii?Q?eyCfN02n2NsQj6qmb1MqvVUCpeuqllXT3lGJdqlJvn4W1tP8q1Rhgp5gy+Su?=
+ =?us-ascii?Q?EZv/RT9gvPLi1k3TiHE5/ehlQ41dwwhWCQN0i6gFppeXmDMAslUEiqiEbBLL?=
+ =?us-ascii?Q?2asqWk+D/BfDYthCcHOmwdMw1vSJGrwvahGpwuYslmCw0b+h/cfgXvxAXt9a?=
+ =?us-ascii?Q?v7ZGAgYvnsG4NwAeFFdW+9RWOcj3YqwxztKf2BcEN+5JT0fYijz7aQtbEx3M?=
+ =?us-ascii?Q?Uw5XwY6C+y5WrxnPp86L2xg7iOHyxAy2qdxpn5cEg6QQt7wmwV/8eqw8AmDx?=
+ =?us-ascii?Q?lP9tvi9JtWBwp8lXRcC7OcjHKaVH0Dwbv8ENUC9AoefSqtdW1SUPCK9tkQZ0?=
+ =?us-ascii?Q?YkOmw5i7Yk9DtRR/zXVU4gxjNYT1ZtR4WvFJuvSYBQM+zoO+hz440S3VTSeG?=
+ =?us-ascii?Q?hdZCSXj4E5vBW3lOLx/tWyPYDAHqBNd2h189oyDZSluG2Bl0fqfnNZ3Xotnp?=
+ =?us-ascii?Q?6GtEa5gKnwW7yLOOf6FkOTixuqiIeC4NEM9cI1cfNTV1jFKB6O5EG+g8/T+3?=
+ =?us-ascii?Q?jWo4LUFzuwfyA2vcGRHz/KT1NYA5mCGw0qbrWtCME+nIo7AttUE/wmRoPpYR?=
+ =?us-ascii?Q?XJcmQCidh1lLTfFv6X20JkYMzrhJZ8KxSHv2QxK0fyIcFhg4MzDM+aDcADuZ?=
+ =?us-ascii?Q?WvUCX6a3z5oMphlx+ZQbZ4a+DiYZ2eHWXO+/xnpoupatfOURs3TAk91KX0ch?=
+ =?us-ascii?Q?Cfvrp0WhisQHnaSljMz5K1aBDyapxLjppG35fJ2s?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8e56b94-da53-4df5-3685-08dd7cff3327
+X-MS-Exchange-CrossTenant-AuthSource: PAWPR04MB9910.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 15:56:07.6776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qUx+3QLjmvy6RVN7tn8U+5DA7TqTUJVywzIK1qkYYe/PoBnD6tXZ20m0xt7mbwQO/Wsjn3cu8dRFogKsN33acw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9307
 
-Hi Luis
+Updated the "mwifiex_cfg80211_sched_scan_start" function to assign
+"bgscan_cfg->repeat_count" based on "scan_plans->iterations"
+provided in the sched_scan settings instead of the default
+"MWIFIEX_BGSCAN_REPEAT_COUNT". This change ensures that the repeat
+count aligns with the iterations specified in the schedule scan
+plans.
 
-On 4/15/25 15:38, Luis Henriques wrote:
-> This patch adds a new mount option that will allow to set a workqueue to
-> periodically invalidate expired dentries.  When this parameter is set,
-> every new (or revalidated) dentry will be added to a tree, sorted by
-> expiry time.  The workqueue period is set when a filesystem is mounted
-> using this new parameter, and can not be less than 5 seconds.
+Signed-off-by: Jeff Chen <jeff.chen_1@nxp.com>
+---
+ drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+index a099fdaafa45..be28c841c299 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
++++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
+@@ -2833,7 +2833,7 @@ mwifiex_cfg80211_sched_scan_start(struct wiphy *wiphy,
+ 				request->scan_plans->interval :
+ 				MWIFIEX_BGSCAN_INTERVAL;
+ 
+-	bgscan_cfg->repeat_count = MWIFIEX_BGSCAN_REPEAT_COUNT;
++	bgscan_cfg->repeat_count = request->scan_plans->iterations;
+ 	bgscan_cfg->report_condition = MWIFIEX_BGSCAN_SSID_MATCH |
+ 				MWIFIEX_BGSCAN_WAIT_ALL_CHAN_DONE;
+ 	bgscan_cfg->bss_type = MWIFIEX_BSS_MODE_INFRA;
 
-I will look into it tomorrow. I wonder a bit if we can extend it to 
-provide an LRU and to limit max cached dentries without a timeout. Need 
-to think about details.
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.34.1
 
-
-Thanks,
-Bernd
