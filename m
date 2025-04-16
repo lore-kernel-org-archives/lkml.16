@@ -1,768 +1,261 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC91212F8F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820560; cv=none; b=sm1KWSalOtBr0rKh22ZljPENP8csb+nSxRph+GVGrtZql7KmIeVZPO2hlu6lyzPyp+RPGE/3DiKEMi9w5GIYAmn5Gh2DQlNPjUJ95YdsYAoqi0GK05feDHBvIZaK66BKYAgnHFlLPBTSf2pYW6kFW78r6DbUAnO37gK7IxPYYNM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820560; c=relaxed/simple;
-	bh=2xHx+yz3yF8J2zXfHdbMO51YcjlDcHVhF/eIBh1KogU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dt1uWGPf6CsIXMRTREFGZTfc/yarxVPwNGwbfLJd1i8AwgSyr9ZVaUlSrUpX+c+x6tYVi4AzgMXrU1sJgwjxPbgQjO39LtMOobNfPMIhJGZhy5HHqlHKXcn7naf2RclmNjTTksKqKnfDJ+hasT2/88JuJkICjMLBc89AlMTw/g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eF2BJ5DG; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE95211715;
+	Wed, 16 Apr 2025 16:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744820624; cv=fail; b=G6qHrSdrJRW8kJ6XjKds2l9C9KrW9xWDH3xxd0bTexPrH/GH1H0kFTLi4/UHEsaDJC+AsLs5CkCyW1pMyvLbX8gM87FOxAH+j1fH+AHFZ0dcK6rM15klh51pUKiOsrPHs5dz7yNmKo5KWf5vVyl1xaZOvOuCz46AZp/fsxnYVrc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744820624; c=relaxed/simple;
+	bh=Ep/uj7rkgtS/GtRAwl8DzNDxsNItesgP3dv/EKUtYW4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=I2FUWkIDiQQuKRsl2ApWe5NWf7KtDzv93sz6cwGq115spLQRPu+9AAnytZ6evtZ8V5/dL6Zn450I+LGexjSphUUnkXYARkP0PjwLwwArr3WOqQ9cGvQUvFUo3ELQHvgpTAFRrvBM2aWTeE+/aceUdzq+6IJ/dFpEiSWjUBcu5iA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cn7w8I5F; arc=fail smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eF2BJ5DG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744820557;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V0aQVfkk9JI5FdD9Vn4JrLbdLxth97WWpb7cgDFoJ9w=;
-	b=eF2BJ5DGJMTVjwy/Q/ypXtGJwlhP6rkjR9Wmca083qu0XbrHtZN/F/mBxH//VRRZuiPvu0
-	tPHs7iYqozw6tEDQhMBvwb5Zxihb0Yhm7ZdirqVsIIksTuaehb/ThYlxcJ18lllOc8zBFh
-	WFEF4S1yIqqBV8XCnQI6sCq3d+1I9wI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-MTJgngZWP1Ghd5-pcDVCpA-1; Wed,
- 16 Apr 2025 12:22:30 -0400
-X-MC-Unique: MTJgngZWP1Ghd5-pcDVCpA-1
-X-Mimecast-MFC-AGG-ID: MTJgngZWP1Ghd5-pcDVCpA_1744820548
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DFB619560A0;
-	Wed, 16 Apr 2025 16:22:28 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.33.32])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BE9481800352;
-	Wed, 16 Apr 2025 16:22:23 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 net-next 7/8] mfd: zl3073x: Fetch invariants during probe
-Date: Wed, 16 Apr 2025 18:21:43 +0200
-Message-ID: <20250416162144.670760-8-ivecera@redhat.com>
-In-Reply-To: <20250416162144.670760-1-ivecera@redhat.com>
-References: <20250416162144.670760-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cn7w8I5F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744820622; x=1776356622;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ep/uj7rkgtS/GtRAwl8DzNDxsNItesgP3dv/EKUtYW4=;
+  b=cn7w8I5FXPjRyM0ez1379/dpDjGsmLaWmhihrPu6dtVafFWQabQ1W2S4
+   Zo/EN3yAT8ZhF47KgxCTmnrR7HxNYZufdqBunbhfr8kudB0HWoTIZ6H3V
+   FsiX9oSb54mqPk536b9nNlpnr5PC51HelFn0ZledI+DftGWRSzMpqMRRI
+   p7Hce1HWewECmDlwyYrF/qycv06sG8y2OcKJgr68tjiOX1BJ4w4hjWPto
+   YStMyhj9XuTcicVdVhTbkgRQ6V/9Jo4X8GmXplCJfXiShmwd/UINr7Ffs
+   XWk3IbU+OO4RCorQae+frPt+u5nfHGfAxuhlSvwVRJwjPDZpJehlHg7Yr
+   Q==;
+X-CSE-ConnectionGUID: FhkY6sGVSY6ZtzdJpodLNA==
+X-CSE-MsgGUID: kziTQjBMSFiNRHrxeGKqJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46545189"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46545189"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 09:23:41 -0700
+X-CSE-ConnectionGUID: 2A7WpwwuTVO4ijFB32xEAg==
+X-CSE-MsgGUID: 4S+iAr3XS/2cpc3XiwjojQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="153720461"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 09:23:41 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 16 Apr 2025 09:23:40 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 16 Apr 2025 09:23:40 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.45) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 16 Apr 2025 09:23:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wxmx8z6K0SfXI7gHr2zhJS8A89f0kZUvzUk2tu/sV4sS93ulqhhCvCNq0wEb7PM6nPNkXGTJBkc6HUBJfuv4h4LaJeZzSl9377EO09PgCvArzPMG7qFAfv02jT06v+OWfxYSWxxclh0we7y2PyuZyYPjAkMmZ3/6ah43i2yC4HNVl+VE6EMo8inXhIiAECCNMimwUiezrH+sdaxDoBX7a2IW+8BLX2+fv/PiNr1xMeZj5DxL9Rh/eIlc3uw3u2Quur0ssbrbPupcuEFqv544tBMtJnzELKCpjNJfE1e4wCGkz64ac4jdPmCo+rOSZ6bXgDsHaaye+P6XA7sXdd18YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ep/uj7rkgtS/GtRAwl8DzNDxsNItesgP3dv/EKUtYW4=;
+ b=MgJQHpAeTjQ3X+OCbfNWOU4sRU+3xLI6dxQ6UDRBda2g51hpT/XAANuMqIpUUuWgdYpSFQBJuQZfv+AUHxq8CjxGaHDsMvvN1jaKwXYMs4RhBjGjfpr81E71IQuUEyKfKaHkvRyYug3298eSYf5y4+O7S395kt8jLNRpqE0yTmSFpyHIE/hHEHmoQU8JpDoL/lLwEHr2wMlpsALg9Vi/T3u/s0BcizcbKdQ+BwVwXssrA9d5X6mckqe4jFpZ7Z4HO8pzCdZT1Xo/wWsXRKYQARX+O9Qwu/bEnb6CrE+X42EgJIepnI5aLPuUH0bOj6HRp2U9SMAGUnn9d3E5j47s9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+ by SN7PR11MB6601.namprd11.prod.outlook.com (2603:10b6:806:273::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Wed, 16 Apr
+ 2025 16:23:36 +0000
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::7de8:e1b1:a3b:b8a8]) by CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::7de8:e1b1:a3b:b8a8%4]) with mapi id 15.20.8632.025; Wed, 16 Apr 2025
+ 16:23:36 +0000
+From: "Keller, Jacob E" <jacob.e.keller@intel.com>
+To: "Lobakin, Aleksander" <aleksander.lobakin@intel.com>, "Zaremba, Larysa"
+	<larysa.zaremba@intel.com>
+CC: "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "David S. Miller"
+	<davem@davemloft.net>, "Dumazet, Eric" <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "Kitszel, Przemyslaw"
+	<przemyslaw.kitszel@intel.com>, Jiri Pirko <jiri@resnulli.us>, Mustafa Ismail
+	<mustafa.ismail@intel.com>, "Nikolova, Tatyana E"
+	<tatyana.e.nikolova@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Michael
+ Ellerman" <mpe@ellerman.id.au>, "Fijalkowski, Maciej"
+	<maciej.fijalkowski@intel.com>, Lee Trager <lee@trager.us>, "Madhavan
+ Srinivasan" <maddy@linux.ibm.com>, "Samudrala, Sridhar"
+	<sridhar.samudrala@intel.com>, Michal Swiatkowski
+	<michal.swiatkowski@linux.intel.com>, "Polchlopek, Mateusz"
+	<mateusz.polchlopek@intel.com>, Wenjun Wu <wenjun1.wu@intel.com>, "Zaki,
+ Ahmed" <ahmed.zaki@intel.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Karlsson, Magnus"
+	<magnus.karlsson@intel.com>, "Tantilov, Emil S" <emil.s.tantilov@intel.com>,
+	"Chittim, Madhu" <madhu.chittim@intel.com>, "Hay, Joshua A"
+	<joshua.a.hay@intel.com>, "Olech, Milena" <milena.olech@intel.com>, "Linga,
+ Pavan Kumar" <pavan.kumar.linga@intel.com>, "Singhai, Anjali"
+	<anjali.singhai@intel.com>
+Subject: RE: [PATCH iwl-next 00/14] Introduce iXD driver
+Thread-Topic: [PATCH iwl-next 00/14] Introduce iXD driver
+Thread-Index: AQHbqISTdVkEw1XagE+uptmT4Mk817OmfRyAgAAJkDA=
+Date: Wed, 16 Apr 2025 16:23:36 +0000
+Message-ID: <CO1PR11MB5089E496D1A0EA24789A6464D6BD2@CO1PR11MB5089.namprd11.prod.outlook.com>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <66d6dbc1-5829-4097-8b36-c8776c86bce6@intel.com>
+In-Reply-To: <66d6dbc1-5829-4097-8b36-c8776c86bce6@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO1PR11MB5089:EE_|SN7PR11MB6601:EE_
+x-ms-office365-filtering-correlation-id: e5db457d-f95b-41bc-35ed-08dd7d030a32
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?QjdjUUtzbEpXZWY1djR2MFhxL2ZJM0xEK2lwTm81OGFNTUsvS1ZOc081NUVE?=
+ =?utf-8?B?YzFpVUdSMk8wSXRXVVIyYjg1THJHcVNudCs0L213OHVzQ1NMeXZ5WDVrbUJD?=
+ =?utf-8?B?ZmZmbE9GekNkU3JYcVF6Z3N6UUZUT1hHSjB3cytZaWx1M1BQaC9WanJTaWE3?=
+ =?utf-8?B?WW9UL1I1TjB6alB1L2NKaVE1ME54TTR6bUdtQmFYclRuRTg3YXU0SkQ4RC9D?=
+ =?utf-8?B?VDFvZGNxQmJGdHhOOWNvRGsrMGdKTFhtVzNJK1FPRWhjS1B3cmhyTUxYMHgx?=
+ =?utf-8?B?blJnUmptNlg3ZWt5aUR2aVJqd010UjJYZHp1QlQrcTBiamEyNHAybDMrbUt1?=
+ =?utf-8?B?UndFa3FyK3FWVmxucFduVnRxeDdBMUJXcVZOZWVUS3RpQmZKeDY4S0JwMk1l?=
+ =?utf-8?B?LzVZSzlpM1FLalJlekdobUUyWGRjRk5EUUhiS0c2NFR4RzFXTVJoaXB3enl0?=
+ =?utf-8?B?OHlLUWhsQ0VUWXpDeG02T0hpandLbnduaXNwN3ZtWHN2VDRHSkd3U2w4cC80?=
+ =?utf-8?B?T1FxQjdpSGZLVTRJbDZyZFZKdVhUWW9qb3JvaEplTjZSTERzaXhLTE9vdTNj?=
+ =?utf-8?B?c08rV25ncFBOcVQ2Wkg3dTNTYnEvZUpUdEhEL0lLZlZFQm0rQkxScFVNUEYv?=
+ =?utf-8?B?bVVVRlhvdjZ2VktKYlVkbVNaM0szbGN1RUNDRWlRdG1tck9JQTlGMVZLRWlK?=
+ =?utf-8?B?YVNZd25IZVJ6d0JDTGo5NUtJVXlBaXIyLzd5S2YwZEU3TTYzb0xBNjNEb0FX?=
+ =?utf-8?B?K1gvaFhqb2lldFRzSXExeUtQYjZvcndXODN0aElNS3VGUVliVVFtTDAzVTVR?=
+ =?utf-8?B?S3puMUMzSmhJY0xvZWU3cGFhUHRJdFdyajlhOGJYVnZWeVh1OWFYQ1dFYURS?=
+ =?utf-8?B?emowOGVuMVBZazF2NWc2SlhxdXBBeHdlaFVQMmJMVHdiNWJkNUtKMnN4SmtW?=
+ =?utf-8?B?M2d0Z1lUQXpQRkRRdTAyZWNOMUlFRllSbTNOb0k4SVl6a0gvQUNkVHhSU0JT?=
+ =?utf-8?B?TWJia3V3cDkzeDFXNzdBQW1oVzgySWtrMGFqZ3NwcEpNdWRPSDBCeFhBc2o2?=
+ =?utf-8?B?QnFNcjJPVDlYRDYweDZKVGtVb2RHeDdVVDNLQ2J4YlViRThnZVo4ZzIrN0lH?=
+ =?utf-8?B?Q0lEU1c5dzZFQU1TT1Z5am1yMnVrYzhuRjN3VWNpSjBMUjNJM3pWSGFoOVM4?=
+ =?utf-8?B?ZHg4NzdmMnJ6RzBNQTdrMGkvdm9SMWl4UFhmdzAzM3JwVTNqL0p5TjhBRmhE?=
+ =?utf-8?B?RytSOXU2Z2JsMklqWVpETGNTWFhlWHA0dHNMQXFmN3RYL2VGcXBkY1JKWC9Z?=
+ =?utf-8?B?YkYzcUVTQ2NBNnExTVJzandERmVlR0JYSWhjOHgzUjRPbCtWZVBiQ29UZFpt?=
+ =?utf-8?B?T1JwMys1N0t3Rm1uUVl1a0tUcE5GMWdIcWRVR0Vrd043TFR4QzB0em8zbHBt?=
+ =?utf-8?B?Z0h3VVE2MXJyL2VKdEJKMlZrcnNlK1BHNHhwcTNhenhHZllYMEZJYzhWVGVs?=
+ =?utf-8?B?UU0zK1JwM0xBQkxoQzhLZU1pLzRxMWhNR0VTbm01VTVXdXlSa3VLdnU5WFl2?=
+ =?utf-8?B?VjB2em9mU3Y3T3RLaFlueWNGeFZ6S0RFY0swWTh1Nm5kNnVLVGFKTHJLQ0Jh?=
+ =?utf-8?B?Z3BENlNTTG1RNXVUVitmVHVtRmxKbWtudEkyc0lCeHhnY2FiUXQ1K2xTSFo3?=
+ =?utf-8?B?cDVDWmczVHFkK2puTDlKQjlxZWRtUHVjbUtua2V3dllzeTh1b0NYMForS1NG?=
+ =?utf-8?B?VnZwR3lMdjhBQ1lSUVprZi90Qml1Z1Q1eWhDbnFkeit3VUVtaXNEeml3M3pv?=
+ =?utf-8?B?emlVTTNOdWRHUHAzUlN6VmxweGZLc1p6bFNaQ1BwR1NoMnpqeDlkZ05EUmY2?=
+ =?utf-8?B?dXpEWGl3Zjc0ZHF2Vll6ZlVlZ243b1VQdmZIRENGd1o0ZmdMT1RNMFBPOWtH?=
+ =?utf-8?B?b3F0TDRBQ3JUZ2Y0cjRLWXllaHlGbS9TVGI1dnIyYStHVTN4YkpKSVpsSU5T?=
+ =?utf-8?B?Z2EvRTErN2dBPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YXc2MFBTeDhYbHU1cTN3Y1ZzdmU3cElWZjk4QjB3UXZXY2hLbjVDbnZuN24r?=
+ =?utf-8?B?b3RZTUlTdHY0S2NWemJZUWpUWmsyOUVaN2Q1Qm5sR2kwQkJZdmNQZUE0ckNn?=
+ =?utf-8?B?Q0pvSTZUd2p6WXRtOTZOVUdZcXBEaUJYWmJReEp3eXNxc3V3WkxIdjJPRWVF?=
+ =?utf-8?B?bzhJU3JNU3FiMHNpc2dRYWVObDJnMWt2ZmMrbkNYTElPV1B6ODdXWll5UzNZ?=
+ =?utf-8?B?b09LVkYvTmlISWxZb0lmcit4azJ0cVRmWG9SVDJ4R1NFbHdZa3N0WEJWNGpi?=
+ =?utf-8?B?UURsakh5ZHNXLytsd3dqQVJBdndidnVqYk0zdldHSlNlQXk1QlZYMWpuTkY4?=
+ =?utf-8?B?dzFvTVpPc2ZWOVZybGYrTEkwVkZ4ci85TzhydEs4OFFxWFB0MGV0SUVTVy95?=
+ =?utf-8?B?NS9WbGlKZnRwSUVXWVU2eHRkcDNwS2lyTlkzRjE3UGZnL050OVRvVm9YTzZp?=
+ =?utf-8?B?ZEJyWHFPS21MaW1RVU51djNVRGRSQTZjZTJ6VWJ3b1lZa3pEM3k1TFQwRU5X?=
+ =?utf-8?B?Q2dJamJIc0dGYXJFNTBiOStUM1ZuNlBZUzlKZkZFa2s1NWpXR0ZPRzRHNEdN?=
+ =?utf-8?B?QUc3dGYxYy9Hblk2dXNnQ1ZZMlhKVitwWW1VL2ZhdlJtMUllZVlOYjlXallD?=
+ =?utf-8?B?YzlJdEtwbHJZSjRBNHBVdHNTMFIzVVBIUTlhWTdEMVM5MHlnaWw3K2RHbllW?=
+ =?utf-8?B?ekxiNWZueU0wWC9YNlMrZ0lhQzlHU2JLWUI2eWN6ek4rMXAyUXBQREJiT3pP?=
+ =?utf-8?B?NkhGdmh6empmSE1IZFRXTTBxMFBJUVRGejBBbnVBSXJpTzRPSHhwT1VYU21k?=
+ =?utf-8?B?N2pxWHdzVnl0ZGRMNTlxK2ROZ3J6N2pxeEVrbmszMllieDlTdjdLRVEvRk1G?=
+ =?utf-8?B?QXA4aGNaV0trNHVXYThrcUdHWnpoTnRTK2NxNUNiMlE5bHpFTnJMQjhCK2Zy?=
+ =?utf-8?B?OW1OdHNwbURFQmdwbHJhVGlRaXBLRnRFc25IbUYxQ1Fua3JITk16VTUxc3FF?=
+ =?utf-8?B?dGJEbVVFZXRLa2tma0JxUndvUjhQcnRDU1FvaVNQYUV6YXJKQ1p5R3VOOU1D?=
+ =?utf-8?B?Y1RjVUduVUlTRmdmVmVENU1oSEM2T3RQYzMwbGlVQ1BUVFR2U3VILzAwV0xK?=
+ =?utf-8?B?RmFSYXpFNzlFNnUybFJXM3didFBpTlJ3UERPN1JIUnd6bitXb09HL28zYm5X?=
+ =?utf-8?B?MzBmdnFVRVRsZW5mbzRLcCtSbU1IYlNPKy82QmFIRGM4elYvalJLd2prV1lP?=
+ =?utf-8?B?RVRQT082VXNyR3AyajJaOFRYWUtybEIxb0xWZUllcWh0NXNZUWNvZVc4WFdq?=
+ =?utf-8?B?RERuLzVZQ0phNlRRbGozR0JhWFpTV3AzaDRzczlveENuOGZpZ0pUNFBSelpZ?=
+ =?utf-8?B?cEVDS0w4Rnhlbnh1SWE4VmxwM1BCeWpISlhZZUZvai9Db2JFOVBjTStwSytx?=
+ =?utf-8?B?S25ZQkxWUE1JWkZPWGphWjVaUFI0QjhPb2RSNUM1UmJLeVltb0svRTdJTkQ0?=
+ =?utf-8?B?RnJaOVoycVZGTTdqcWw4ZHg0Uklnc09IUys5SW5KYzVjbzhVaDBBR252Nkth?=
+ =?utf-8?B?MWZoQ3BySEdqSkpsOUhtWWgrMnZDRTlBUmJiQVNmbHI5RlJJUkJhVFJvaGtJ?=
+ =?utf-8?B?TkdldS81MThxbXVLZWg1eEVlbzNGd2hhSERDQUlNVTd2enpId0sycU9qQWI5?=
+ =?utf-8?B?SVFJZGlHQnJWM3lXc2dvZkNtYkVSa21XenFteElLSVAyY0ZuQ01GVUZPUmhM?=
+ =?utf-8?B?YWlONERTTnpzSm9YenhVR3ZSS2IvK1hNSGNZeHhwV215V25iSUp5eDJscWxX?=
+ =?utf-8?B?VjdwbDNrcWkrbXRJZG9va0NJV0RERk5hSkZxL2R4QmRoUU5EM1pZTXYzbHph?=
+ =?utf-8?B?aFppSlVvZVB0TXNrdDdxSVNFRmx6Ni9zMjZUdit5ME8xdHdLMHNtQ0w5K3VS?=
+ =?utf-8?B?RjNKUkJoaFliVUJaelNGb21hMEdvWXllWDlTZ2ZBZ3lVSlZoa01TR3g4dEVq?=
+ =?utf-8?B?L0pudTJiallYdVFQZ1J0SGdXa3FTdy9YMlVhTDh3d09WS0JXb2x0MndjcG1j?=
+ =?utf-8?B?NnlEQXdGRUhKY3BuaklPQW9IWm1mai9pVHlmNlkwZFFRZjhuYlBNZDdFZ2R3?=
+ =?utf-8?Q?gV6PXTmB7w856P78jjNpe6uuT?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5db457d-f95b-41bc-35ed-08dd7d030a32
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 16:23:36.5304
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uKIFiwQV/Rt3+uUCuDsTtMalyMQQiDrvbWyBqpGria6Ede5Kk8VfePzp0R+o2zsDOv7ghZ3/rha5gETm5et+NM7DTTmhiqifG97t17S4Ovs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6601
+X-OriginatorOrg: intel.com
 
-Several configuration parameters will not be changed in runtime so we
-can load them during probe to avoid excessive reads from the hardware.
-
-These parameters will be frequently read by the DPLL driver from this
-series and later by PHC/PTP sub-device driver.
-
-Read the following parameters from the device during probe and store
-them for later use:
-
-* synthesizers' frequencies and driving DPLL channel
-* input pins' enablement and type (single-ended or differential)
-* outputs'associated synths, signal format and enablement
-
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
-v2->v3:
-* dropped usage of macros for generating helper functions
-v1->v2:
-* fixed and added inline documentation
----
- drivers/mfd/zl3073x-core.c       | 237 +++++++++++++++++++++++++++++++
- include/linux/mfd/zl3073x.h      | 161 +++++++++++++++++++++
- include/linux/mfd/zl3073x_regs.h | 184 ++++++++++++++++++++++++
- 3 files changed, 582 insertions(+)
-
-diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-index 5a0e2bb1a969f..0bd31591245a2 100644
---- a/drivers/mfd/zl3073x-core.c
-+++ b/drivers/mfd/zl3073x-core.c
-@@ -5,6 +5,7 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/export.h>
-+#include <linux/math64.h>
- #include <linux/mfd/zl3073x.h>
- #include <linux/mfd/zl3073x_regs.h>
- #include <linux/module.h>
-@@ -481,6 +482,237 @@ static void zl3073x_devlink_unregister(void *ptr)
- 	devlink_unregister(ptr);
- }
- 
-+/**
-+ * zl3073x_input_state_fetch - get input state
-+ * @zldev: pointer to zl3073x_dev structure
-+ * @index: input pin index to fetch state for
-+ *
-+ * Function fetches information for the given input reference that are
-+ * invariant and stores them for later use.
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+static int
-+zl3073x_input_state_fetch(struct zl3073x_dev *zldev, u8 index)
-+{
-+	struct zl3073x_input *input;
-+	u8 ref_config;
-+	int rc;
-+
-+	if (index >= ZL3073X_NUM_INPUTS)
-+		return -EINVAL;
-+
-+	input = &zldev->input[index];
-+
-+	/* If the input is differential then the configuration for N-pin
-+	 * reference is ignored and P-pin config is used for both.
-+	 */
-+	if (zl3073x_is_n_pin(index) &&
-+	    zl3073x_input_is_diff(zldev, index - 1)) {
-+		input->enabled = zl3073x_input_is_enabled(zldev, index - 1);
-+		input->diff = true;
-+
-+		return 0;
-+	}
-+
-+	guard(zl3073x_mailbox)(zldev);
-+
-+	/* Read reference configuration into mailbox */
-+	rc = zl3073x_mb_ref_read(zldev, index);
-+	if (rc)
-+		return rc;
-+
-+	/* Read reference config register */
-+	rc = zl3073x_mb_read_ref_config(zldev, &ref_config);
-+	if (rc)
-+		return rc;
-+
-+	/* Store info about input reference enablement and if it is
-+	 * configured in differential mode or not.
-+	 */
-+	input->enabled = FIELD_GET(ZL_REF_CONFIG_ENABLE, ref_config);
-+	input->diff = FIELD_GET(ZL_REF_CONFIG_DIFF_EN, ref_config);
-+
-+	dev_dbg(zldev->dev, "INPUT%u is %sabled and configured as %s\n", index,
-+		input->enabled ? "en" : "dis",
-+		input->diff ? "differential" : "single-ended");
-+
-+	return rc;
-+}
-+
-+/**
-+ * zl3073x_output_state_fetch - get output state
-+ * @zldev: pointer to zl3073x_dev structure
-+ * @index: output index to fetch state for
-+ *
-+ * Function fetches information for the given output (not output pin)
-+ * that are invariant and stores them for later use.
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+static int
-+zl3073x_output_state_fetch(struct zl3073x_dev *zldev, u8 index)
-+{
-+	struct zl3073x_output *output;
-+	u8 output_ctrl, output_mode;
-+	int rc;
-+
-+	if (index >= ZL3073X_NUM_OUTPUTS)
-+		return -EINVAL;
-+
-+	output = &zldev->output[index];
-+
-+	/* Read output control register */
-+	rc = zl3073x_read_output_ctrl(zldev, index, &output_ctrl);
-+	if (rc)
-+		return rc;
-+
-+	/* Store info about output enablement and synthesizer the output
-+	 * is connected to.
-+	 */
-+	output->enabled = FIELD_GET(ZL_OUTPUT_CTRL_EN, output_ctrl);
-+	output->synth = FIELD_GET(ZL_OUTPUT_CTRL_SYNTH_SEL, output_ctrl);
-+
-+	dev_dbg(zldev->dev, "OUTPUT%u is %sabled, connected to SYNTH%u\n",
-+		index, output->enabled ? "en" : "dis", output->synth);
-+
-+	guard(zl3073x_mailbox)(zldev);
-+
-+	/* Load given output config into mailbox */
-+	rc = zl3073x_mb_output_read(zldev, index);
-+	if (rc)
-+		return rc;
-+
-+	/* Read output mode from mailbox */
-+	rc = zl3073x_mb_read_output_mode(zldev, &output_mode);
-+	if (rc)
-+		return rc;
-+
-+	/* Extract and store output signal format */
-+	output->signal_format = FIELD_GET(ZL_OUTPUT_MODE_SIGNAL_FORMAT,
-+					  output_mode);
-+
-+	dev_dbg(zldev->dev, "OUTPUT%u has signal format 0x%02x\n", index,
-+		output->signal_format);
-+
-+	return rc;
-+}
-+
-+/**
-+ * zl3073x_synth_state_fetch - get synth state
-+ * @zldev: pointer to zl3073x_dev structure
-+ * @index: synth index to fetch state for
-+ *
-+ * Function fetches information for the given synthesizer that are
-+ * invariant and stores them for later use.
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+static int
-+zl3073x_synth_state_fetch(struct zl3073x_dev *zldev, u8 index)
-+{
-+	u16 base, numerator, denominator;
-+	u8 synth_ctrl;
-+	u32 mult;
-+	int rc;
-+
-+	/* Read synth control register */
-+	rc = zl3073x_read_synth_ctrl(zldev, index, &synth_ctrl);
-+	if (rc)
-+		return rc;
-+
-+	/* Extract and store DPLL channel the synth is driven by */
-+	zldev->synth[index].dpll = FIELD_GET(ZL_SYNTH_CTRL_DPLL_SEL,
-+					     synth_ctrl);
-+
-+	dev_dbg(zldev->dev, "SYNTH%u is connected to DPLL%u\n", index,
-+		zldev->synth[index].dpll);
-+
-+	guard(zl3073x_mailbox)(zldev);
-+
-+	/* Read synth configuration into mailbox */
-+	rc = zl3073x_mb_synth_read(zldev, index);
-+	if (rc)
-+		return rc;
-+
-+	/* The output frequency is determined by the following formula:
-+	 * base * multiplier * numerator / denominator
-+	 *
-+	 * Therefore get all this number and calculate the output frequency
-+	 */
-+	rc = zl3073x_mb_read_synth_freq_base(zldev, &base);
-+	if (rc)
-+		return rc;
-+
-+	rc = zl3073x_mb_read_synth_freq_mult(zldev, &mult);
-+	if (rc)
-+		return rc;
-+
-+	rc = zl3073x_mb_read_synth_freq_m(zldev, &numerator);
-+	if (rc)
-+		return rc;
-+
-+	rc = zl3073x_mb_read_synth_freq_n(zldev, &denominator);
-+	if (rc)
-+		return rc;
-+
-+	/* Check denominator for zero to avoid div by 0 */
-+	if (!denominator) {
-+		dev_err(zldev->dev,
-+			"Zero divisor for SYNTH%u retrieved from device\n",
-+			index);
-+		return -EINVAL;
-+	}
-+
-+	/* Compute and store synth frequency */
-+	zldev->synth[index].freq = mul_u64_u32_div(mul_u32_u32(base, mult),
-+						   numerator, denominator);
-+
-+	dev_dbg(zldev->dev, "SYNTH%u frequency: %llu Hz\n", index,
-+		zldev->synth[index].freq);
-+
-+	return rc;
-+}
-+
-+static int
-+zl3073x_dev_state_fetch(struct zl3073x_dev *zldev)
-+{
-+	int rc;
-+	u8 i;
-+
-+	for (i = 0; i < ZL3073X_NUM_INPUTS; i++) {
-+		rc = zl3073x_input_state_fetch(zldev, i);
-+		if (rc) {
-+			dev_err(zldev->dev,
-+				"Failed to fetch input state: %pe\n",
-+				ERR_PTR(rc));
-+			return rc;
-+		}
-+	}
-+
-+	for (i = 0; i < ZL3073X_NUM_SYNTHS; i++) {
-+		rc = zl3073x_synth_state_fetch(zldev, i);
-+		if (rc) {
-+			dev_err(zldev->dev,
-+				"Failed to fetch synth state: %pe\n",
-+				ERR_PTR(rc));
-+			return rc;
-+		}
-+	}
-+
-+	for (i = 0; i < ZL3073X_NUM_OUTPUTS; i++) {
-+		rc = zl3073x_output_state_fetch(zldev, i);
-+		if (rc) {
-+			dev_err(zldev->dev,
-+				"Failed to fetch output state: %pe\n",
-+				ERR_PTR(rc));
-+			return rc;
-+		}
-+	}
-+
-+	return rc;
-+}
-+
- /**
-  * zl3073x_dev_probe - initialize zl3073x device
-  * @zldev: pointer to zl3073x device
-@@ -537,6 +769,11 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
- 	/* Use chip ID and given dev ID as clock ID */
- 	zldev->clock_id = ((u64)id << 8) | dev_id;
- 
-+	/* Fetch device state */
-+	rc = zl3073x_dev_state_fetch(zldev);
-+	if (rc)
-+		return rc;
-+
- 	/* Register the device as devlink device */
- 	devlink = priv_to_devlink(zldev);
- 	devlink_register(devlink);
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-index 5074f64a70137..c77d0815b4dfd 100644
---- a/include/linux/mfd/zl3073x.h
-+++ b/include/linux/mfd/zl3073x.h
-@@ -8,18 +8,75 @@
- struct device;
- struct regmap;
- 
-+/*
-+ * Hardware limits for ZL3073x chip family
-+ */
-+#define ZL3073X_NUM_INPUTS	10
-+#define ZL3073X_NUM_OUTPUTS	10
-+#define ZL3073X_NUM_SYNTHS	5
-+
-+/**
-+ * struct zl3073x_input - input invariant info
-+ * @enabled: input is enabled or disabled
-+ * @diff: true if input is differential
-+ */
-+struct zl3073x_input {
-+	bool	enabled;
-+	bool	diff;
-+};
-+
-+/**
-+ * struct zl3073x_output - output invariant info
-+ * @enabled: output is enabled or disabled
-+ * @synth: synthesizer the output is connected to
-+ * @signal_format: output signal format
-+ */
-+struct zl3073x_output {
-+	bool	enabled;
-+	u8	synth;
-+	u8	signal_format;
-+#define ZL_OUTPUT_SIGNAL_FORMAT_DISABLED	0
-+#define ZL_OUTPUT_SIGNAL_FORMAT_LVDS		1
-+#define ZL_OUTPUT_SIGNAL_FORMAT_DIFFERENTIAL	2
-+#define ZL_OUTPUT_SIGNAL_FORMAT_LOWVCM		3
-+#define ZL_OUTPUT_SIGNAL_FORMAT_TWO		4
-+#define ZL_OUTPUT_SIGNAL_FORMAT_ONE_P		5
-+#define ZL_OUTPUT_SIGNAL_FORMAT_ONE_N		6
-+#define ZL_OUTPUT_SIGNAL_FORMAT_TWO_INV		7
-+#define ZL_OUTPUT_SIGNAL_FORMAT_TWO_N_DIV	12
-+#define ZL_OUTPUT_SIGNAL_FORMAT_TWO_N_DIV_INV	15
-+};
-+
-+/**
-+ * struct zl3073x_synth - synthesizer invariant info
-+ * @freq: synthesizer frequency
-+ * @dpll: ID of DPLL the synthesizer is driven by
-+ */
-+struct zl3073x_synth {
-+	u64	freq;
-+	u8	dpll;
-+};
-+
- /**
-  * struct zl3073x_dev - zl3073x device
-  * @dev: pointer to device
-  * @regmap: regmap to access device registers
-  * @mailbox_lock: mutex protecting an access to mailbox registers
-  * @clock_id: clock id of the device
-+ * @input: array of inputs' invariants
-+ * @output: array of outputs' invariants
-+ * @synth: array of synthesizers' invariants
-  */
- struct zl3073x_dev {
- 	struct device		*dev;
- 	struct regmap		*regmap;
- 	struct mutex		mailbox_lock;
- 	u64			clock_id;
-+
-+	/* Invariants */
-+	struct zl3073x_input	input[ZL3073X_NUM_INPUTS];
-+	struct zl3073x_output	output[ZL3073X_NUM_OUTPUTS];
-+	struct zl3073x_synth	synth[ZL3073X_NUM_SYNTHS];
- };
- 
- /**
-@@ -61,4 +118,108 @@ int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
- int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
- int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
- 
-+static inline
-+bool zl3073x_is_n_pin(u8 index)
-+{
-+	/* P-pins indices are even while N-pins are odd */
-+	return index & 1;
-+}
-+
-+static inline
-+bool zl3073x_is_p_pin(u8 index)
-+{
-+	return !zl3073x_is_n_pin(index);
-+}
-+
-+/**
-+ * zl3073x_input_is_diff - check if the given input ref is differential
-+ * @zldev: pointer to zl3073x device
-+ * @index: output index
-+ *
-+ * Return: true if input is differential, false if input is single-ended
-+ */
-+static inline
-+bool zl3073x_input_is_diff(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->input[index].diff;
-+}
-+
-+/**
-+ * zl3073x_input_is_enabled - check if the given input ref is enabled
-+ * @zldev: pointer to zl3073x device
-+ * @index: input index
-+ *
-+ * Return: true if input is enabled, false if input is disabled
-+ */
-+static inline
-+bool zl3073x_input_is_enabled(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->input[index].enabled;
-+}
-+
-+/**
-+ * zl3073x_output_is_enabled - check if the given output is enabled
-+ * @zldev: pointer to zl3073x device
-+ * @index: output index
-+ *
-+ * Return: true if output is enabled, false if output is disabled
-+ */
-+static inline
-+u8 zl3073x_output_is_enabled(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->output[index].enabled;
-+}
-+
-+/**
-+ * zl3073x_output_signal_format_get - get output signal format
-+ * @zldev: pointer to zl3073x device
-+ * @index: output index
-+ *
-+ * Return: signal format of given output
-+ */
-+static inline
-+u8 zl3073x_output_signal_format_get(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->output[index].signal_format;
-+}
-+
-+/**
-+ * zl3073x_output_synth_get - get synth connected to given output
-+ * @zldev: pointer to zl3073x device
-+ * @index: output index
-+ *
-+ * Return: index of synth connected to given output.
-+ */
-+static inline
-+u8 zl3073x_output_synth_get(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->output[index].synth;
-+}
-+
-+/**
-+ * zl3073x_synth_dpll_get - get DPLL ID the synth is driven by
-+ * @zldev: pointer to zl3073x device
-+ * @index: synth index
-+ *
-+ * Return: ID of DPLL the given synthetizer is driven by
-+ */
-+static inline
-+u64 zl3073x_synth_dpll_get(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->synth[index].dpll;
-+}
-+
-+/**
-+ * zl3073x_synth_freq_get - get synth current freq
-+ * @zldev: pointer to zl3073x device
-+ * @index: synth index
-+ *
-+ * Return: frequency of given synthetizer
-+ */
-+static inline
-+u64 zl3073x_synth_freq_get(struct zl3073x_dev *zldev, u8 index)
-+{
-+	return zldev->synth[index].freq;
-+}
-+
- #endif /* __LINUX_MFD_ZL3073X_H */
-diff --git a/include/linux/mfd/zl3073x_regs.h b/include/linux/mfd/zl3073x_regs.h
-index d155650349c97..ff5b2e6fae9d0 100644
---- a/include/linux/mfd/zl3073x_regs.h
-+++ b/include/linux/mfd/zl3073x_regs.h
-@@ -106,6 +106,63 @@ zl3073x_read_custom_config_ver(struct zl3073x_dev *zldev, u32 *value)
- 	return rc;
- }
- 
-+/***********************************
-+ * Register Page 9, Synth and Output
-+ ***********************************/
-+
-+/*
-+ * Register array 'synth_ctrl'
-+ * Page: 9, Offset: 0x00, Size: 8 bits, Items: 5, Stride: 1
-+ */
-+#define ZL_REG_SYNTH_CTRL	 ZL_REG_ADDR(9, 0x00)
-+#define ZL_REG_SYNTH_CTRL_ITEMS	 5
-+#define ZL_REG_SYNTH_CTRL_STRIDE 1
-+#define ZL_SYNTH_CTRL_EN	 BIT(0)
-+#define ZL_SYNTH_CTRL_DPLL_SEL	 GENMASK(6, 4)
-+
-+static inline __maybe_unused int
-+zl3073x_read_synth_ctrl(struct zl3073x_dev *zldev, unsigned int idx, u8 *value)
-+{
-+	unsigned int addr, v;
-+	int rc;
-+
-+	if (idx >= ZL_REG_SYNTH_CTRL_ITEMS)
-+		return -EINVAL;
-+
-+	addr = ZL_REG_SYNTH_CTRL + idx * ZL_REG_SYNTH_CTRL_STRIDE;
-+	rc = regmap_read(zldev->regmap, addr, &v);
-+	*value = v;
-+	return rc;
-+}
-+
-+/*
-+ * Register array 'output_ctrl'
-+ * Page: 9, Offset: 0x28, Size: 8 bits, Items: 10, Stride: 1
-+ */
-+#define ZL_REG_OUTPUT_CTRL	  ZL_REG_ADDR(9, 0x28)
-+#define ZL_REG_OUTPUT_CTRL_ITEMS  10
-+#define ZL_REG_OUTPUT_CTRL_STRIDE 1
-+#define ZL_OUTPUT_CTRL_EN	  BIT(0)
-+#define ZL_OUTPUT_CTRL_STOP	  BIT(1)
-+#define ZL_OUTPUT_CTRL_STOP_HIGH  BIT(2)
-+#define ZL_OUTPUT_CTRL_STOP_HZ	  BIT(3)
-+#define ZL_OUTPUT_CTRL_SYNTH_SEL  GENMASK(6, 4)
-+
-+static inline __maybe_unused int
-+zl3073x_read_output_ctrl(struct zl3073x_dev *zldev, unsigned int idx, u8 *value)
-+{
-+	unsigned int addr, v;
-+	int rc;
-+
-+	if (idx >= ZL_REG_OUTPUT_CTRL_ITEMS)
-+		return -EINVAL;
-+
-+	addr = ZL_REG_OUTPUT_CTRL + idx * ZL_REG_OUTPUT_CTRL_STRIDE;
-+	rc = regmap_read(zldev->regmap, addr, &v);
-+	*value = v;
-+	return rc;
-+}
-+
- /*******************************
-  * Register Page 10, Ref Mailbox
-  *******************************/
-@@ -181,6 +238,26 @@ zl3073x_mb_poll_ref_mb_sem(struct zl3073x_dev *zldev, u8 bitmask)
- 					ZL_POLL_TIMEOUT_US);
- }
- 
-+/*
-+ * Register 'ref_config'
-+ * Page: 10, Offset: 0x0d, Size: 8 bits
-+ */
-+#define ZL_REG_REF_CONFIG     ZL_REG_ADDR(10, 0x0d)
-+#define ZL_REF_CONFIG_ENABLE  BIT(0)
-+#define ZL_REF_CONFIG_DIFF_EN BIT(2)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_ref_config(struct zl3073x_dev *zldev, u8 *value)
-+{
-+	unsigned int v;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_read(zldev->regmap, ZL_REG_REF_CONFIG, &v);
-+	*value = v;
-+	return rc;
-+}
-+
- /********************************
-  * Register Page 12, DPLL Mailbox
-  ********************************/
-@@ -331,6 +408,94 @@ zl3073x_mb_poll_synth_mb_sem(struct zl3073x_dev *zldev, u8 bitmask)
- 					ZL_POLL_TIMEOUT_US);
- }
- 
-+/*
-+ * Register 'synth_freq_base'
-+ * Page: 13, Offset: 0x06, Size: 16 bits
-+ */
-+#define ZL_REG_SYNTH_FREQ_BASE ZL_REG_ADDR(13, 0x06)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_synth_freq_base(struct zl3073x_dev *zldev, u16 *value)
-+{
-+	__be16 temp;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_bulk_read(zldev->regmap, ZL_REG_SYNTH_FREQ_BASE, &temp,
-+			      sizeof(temp));
-+	if (rc)
-+		return rc;
-+
-+	*value = be16_to_cpu(temp);
-+	return rc;
-+}
-+
-+/*
-+ * Register 'synth_freq_mult'
-+ * Page: 13, Offset: 0x08, Size: 32 bits
-+ */
-+#define ZL_REG_SYNTH_FREQ_MULT ZL_REG_ADDR(13, 0x08)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_synth_freq_mult(struct zl3073x_dev *zldev, u32 *value)
-+{
-+	__be32 temp;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_bulk_read(zldev->regmap, ZL_REG_SYNTH_FREQ_MULT, &temp,
-+			      sizeof(temp));
-+	if (rc)
-+		return rc;
-+
-+	*value = be32_to_cpu(temp);
-+	return rc;
-+}
-+
-+/*
-+ * Register 'synth_freq_m'
-+ * Page: 13, Offset: 0x0c, Size: 16 bits
-+ */
-+#define ZL_REG_SYNTH_FREQ_M ZL_REG_ADDR(13, 0x0c)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_synth_freq_m(struct zl3073x_dev *zldev, u16 *value)
-+{
-+	__be16 temp;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_bulk_read(zldev->regmap, ZL_REG_SYNTH_FREQ_M, &temp,
-+			      sizeof(temp));
-+	if (rc)
-+		return rc;
-+
-+	*value = be16_to_cpu(temp);
-+	return rc;
-+}
-+
-+/*
-+ * Register 'synth_freq_n'
-+ * Page: 13, Offset: 0x0e, Size: 16 bits
-+ */
-+#define ZL_REG_SYNTH_FREQ_N ZL_REG_ADDR(13, 0x0e)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_synth_freq_n(struct zl3073x_dev *zldev, u16 *value)
-+{
-+	__be16 temp;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_bulk_read(zldev->regmap, ZL_REG_SYNTH_FREQ_N, &temp,
-+			      sizeof(temp));
-+	if (rc)
-+		return rc;
-+
-+	*value = be16_to_cpu(temp);
-+	return rc;
-+}
-+
- /**********************************
-  * Register Page 14, Output Mailbox
-  **********************************/
-@@ -406,4 +571,23 @@ zl3073x_mb_poll_output_mb_sem(struct zl3073x_dev *zldev, u8 bitmask)
- 					ZL_POLL_TIMEOUT_US);
- }
- 
-+/*
-+ * Register 'output_mode'
-+ * Page: 14, Offset: 0x05, Size: 8 bits
-+ */
-+#define ZL_REG_OUTPUT_MODE	     ZL_REG_ADDR(14, 0x05)
-+#define ZL_OUTPUT_MODE_SIGNAL_FORMAT GENMASK(7, 4)
-+
-+static inline __maybe_unused int
-+zl3073x_mb_read_output_mode(struct zl3073x_dev *zldev, u8 *value)
-+{
-+	unsigned int v;
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->mailbox_lock);
-+	rc = regmap_read(zldev->regmap, ZL_REG_OUTPUT_MODE, &v);
-+	*value = v;
-+	return rc;
-+}
-+
- #endif /* __LINUX_MFD_ZL3073X_REGS_H */
--- 
-2.48.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9iYWtpbiwgQWxla3Nh
+bmRlciA8YWxla3NhbmRlci5sb2Jha2luQGludGVsLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBB
+cHJpbCAxNiwgMjAyNSA4OjQ5IEFNDQo+IFRvOiBaYXJlbWJhLCBMYXJ5c2EgPGxhcnlzYS56YXJl
+bWJhQGludGVsLmNvbT4NCj4gQ2M6IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3JnOyBO
+Z3V5ZW4sIEFudGhvbnkgTA0KPiA8YW50aG9ueS5sLm5ndXllbkBpbnRlbC5jb20+OyBEYXZpZCBT
+LiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+Ow0KPiBEdW1hemV0LCBFcmljIDxlZHVtYXpl
+dEBnb29nbGUuY29tPjsgSmFrdWIgS2ljaW5za2kgPGt1YmFAa2VybmVsLm9yZz47DQo+IFBhb2xv
+IEFiZW5pIDxwYWJlbmlAcmVkaGF0LmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAa2VybmVsLm9y
+Zz47DQo+IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+OyBLaXRzemVsLCBQcnplbXlz
+bGF3DQo+IDxwcnplbXlzbGF3LmtpdHN6ZWxAaW50ZWwuY29tPjsgSmlyaSBQaXJrbyA8amlyaUBy
+ZXNudWxsaS51cz47IE11c3RhZmEgSXNtYWlsDQo+IDxtdXN0YWZhLmlzbWFpbEBpbnRlbC5jb20+
+OyBOaWtvbG92YSwgVGF0eWFuYSBFDQo+IDx0YXR5YW5hLmUubmlrb2xvdmFAaW50ZWwuY29tPjsg
+QW5kcmV3IEx1bm4gPGFuZHJldytuZXRkZXZAbHVubi5jaD47DQo+IE1pY2hhZWwgRWxsZXJtYW4g
+PG1wZUBlbGxlcm1hbi5pZC5hdT47IEZpamFsa293c2tpLCBNYWNpZWoNCj4gPG1hY2llai5maWph
+bGtvd3NraUBpbnRlbC5jb20+OyBMZWUgVHJhZ2VyIDxsZWVAdHJhZ2VyLnVzPjsgTWFkaGF2YW4N
+Cj4gU3Jpbml2YXNhbiA8bWFkZHlAbGludXguaWJtLmNvbT47IFNhbXVkcmFsYSwgU3JpZGhhcg0K
+PiA8c3JpZGhhci5zYW11ZHJhbGFAaW50ZWwuY29tPjsgS2VsbGVyLCBKYWNvYiBFIDxqYWNvYi5l
+LmtlbGxlckBpbnRlbC5jb20+Ow0KPiBNaWNoYWwgU3dpYXRrb3dza2kgPG1pY2hhbC5zd2lhdGtv
+d3NraUBsaW51eC5pbnRlbC5jb20+OyBQb2xjaGxvcGVrLCBNYXRldXN6DQo+IDxtYXRldXN6LnBv
+bGNobG9wZWtAaW50ZWwuY29tPjsgV2VuanVuIFd1IDx3ZW5qdW4xLnd1QGludGVsLmNvbT47IFph
+a2ksDQo+IEFobWVkIDxhaG1lZC56YWtpQGludGVsLmNvbT47IG5ldGRldkB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LQ0KPiBkb2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBLYXJsc3NvbiwgTWFnbnVzDQo+IDxtYWdudXMua2FybHNzb25AaW50ZWwuY29tPjsg
+VGFudGlsb3YsIEVtaWwgUyA8ZW1pbC5zLnRhbnRpbG92QGludGVsLmNvbT47DQo+IENoaXR0aW0s
+IE1hZGh1IDxtYWRodS5jaGl0dGltQGludGVsLmNvbT47IEhheSwgSm9zaHVhIEENCj4gPGpvc2h1
+YS5hLmhheUBpbnRlbC5jb20+OyBPbGVjaCwgTWlsZW5hIDxtaWxlbmEub2xlY2hAaW50ZWwuY29t
+PjsgTGluZ2EsDQo+IFBhdmFuIEt1bWFyIDxwYXZhbi5rdW1hci5saW5nYUBpbnRlbC5jb20+OyBT
+aW5naGFpLCBBbmphbGkNCj4gPGFuamFsaS5zaW5naGFpQGludGVsLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCBpd2wtbmV4dCAwMC8xNF0gSW50cm9kdWNlIGlYRCBkcml2ZXINCj4gDQo+IEZy
+b206IExhcnlzYSBaYXJlbWJhIDxsYXJ5c2EuemFyZW1iYUBpbnRlbC5jb20+DQo+IERhdGU6IFR1
+ZSwgOCBBcHIgMjAyNSAxNDo0Nzo0NiArMDIwMA0KPiANCj4gPiBUaGlzIHBhdGNoIHNlcmllcyBh
+ZGRzIHRoZSBpWEQgZHJpdmVyLCB3aGljaCBzdXBwb3J0cyB0aGUgSW50ZWwoUikNCj4gPiBDb250
+cm9sIFBsYW5lIFBDSSBGdW5jdGlvbiBvbiBJbnRlbCBFMjEwMCBhbmQgbGF0ZXIgSVBVcyBhbmQg
+Rk5JQ3MuDQo+ID4gSXQgZmFjaWxpdGF0ZXMgYSBjZW50cmFsaXplZCBjb250cm9sIG92ZXIgbXVs
+dGlwbGUgSURQRiBQRnMvVkZzL1NGcw0KPiA+IGV4cG9zZWQgYnkgdGhlIHNhbWUgY2FyZC4gVGhl
+IHJlYXNvbiBmb3IgdGhlIHNlcGFyYXRpb24gaXMgdG8gYmUgYWJsZQ0KPiA+IHRvIG9mZmxvYWQg
+dGhlIGNvbnRyb2wgcGxhbmUgdG8gdGhlIGhvc3QgZGlmZmVyZW50IGZyb20gd2hlcmUgdGhlIGRh
+dGENCj4gPiBwbGFuZSBpcyBydW5uaW5nLg0KPiANCj4gQlRXIHBsZWFzZSBtb3ZlIGV2ZXJ5dGhp
+bmcgeW91J3JlIGFkZGluZyB0byBsaWJldGggdG8gbGliaWUgaW5zdGVhZC4NCj4gVGhpcyBQQ0kv
+VkMvQ1AgZnVuY3Rpb25hbGl0eSBpcyB1bmxpa2VseSB0byBiZSB1c2VkIGJ5IG90aGVyIHZlbmRv
+cnMuDQo+IFNpbmNlIGxpYmllX2NwLmtvIG9yIGhvdyB5b3UgbWF5IHdhbnQgdG8gY2FsbCBpdCB3
+b24ndCBsaW5rIHdpdGggYmFzZQ0KPiBsaWJpZS5rbywgaXQgd29uJ3QgaGF2ZSBhbnkgcHJlLWlk
+cGYgSFctc3BlY2lmaWMgc3ltYm9scywgc28gdGhhdCBpZHBmDQo+IGNvdWxkIGxpbmsgd2l0aCBp
+dC4NCj4gbGliZXRoIHN0dWZmIGlzIHB1cmVseSB2ZW5kb3ItYWdub3N0aWMgYW5kIEknZCByZWFs
+bHkgbGlrZSB0byBrZWVwIGl0IHNvLg0KPiANCj4gVGhhbmtzLA0KPiBPbGVrDQoNCkkgYWdyZWUg
+d2l0aCB0aGlzIHRvby4NCg0KVGhhbmtzLA0KSmFrZQ0K
