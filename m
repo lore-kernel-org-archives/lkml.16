@@ -1,127 +1,453 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B769323D299
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2EA248166
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805601; cv=none; b=HPSK8Yvnk1QABwfkHviw+4e9HuRmqRjr07MxQ8/QXFDYAxvbczgtK4tCsR79Tg221xGugVFJF4tI7jbm94Rqv81J1BVSv4ImDWVSIA588R0Ybf7B6uW+/K+DHD7qNn4HQcRNTuaUwpFpxXMDBX+4xvCLXxSto8UWA0NtODNdLKY=
+	t=1744805608; cv=none; b=Bt3bfDssTnbr2bHA5O0N0u396qLKYy+EWPYrgtN4z83wtmb0Mum9/avdX9VIuW6XBeI/fDB030o1OLRqQv9Gh2L2qmfQYX3G8hKM59rD9apnXrlfUkxei8USeh2CHJjTfAnirCJFex1vT2M63pGW10R69F18Jd3O6a7iF02ZxoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805601; c=relaxed/simple;
-	bh=32qcALkhozgdxR8h/D+a3YxcX1eNF2+/cIjLEz1VA90=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=azM/skmR4IobuzhyvhoRupRnLaTxqNWxBIR390oHdS8721FHg0YtTsF4xPlzyZzJjVX34oq8oBOfBncb9jKmpMAn3pnI2oWrN4sYuPxFtqSREG0oBKorm8QuOSHR65hlnFwIxfMTkkUMDAeSMVCWGuMZnJq55CUDHzsP9e7wY68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MEXvYHUy; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744805608; c=relaxed/simple;
+	bh=8ekij44n0ojk4AKTakk0+QuaH9omk+Xao10XFtumOik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p36zdkMCBbDE2hu5s/xpa4zIfNodNUknPO5SfAF7k7Uw8ciEfEBx3oZV6N4+Dhqqp/WpM4NFGZmKOgOkksj+klbxXLhIRSbwLa/l+9WyMP93S8FEREiLu3LHwU8gtgUDlsKO3siChTzhoUy22xN247Cxv52Z/GMckXwRYz41p0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=MRdwkacy; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEXvYHUy"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39149bccb69so6561243f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:13:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="MRdwkacy"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso72227785e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:13:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744805598; x=1745410398; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VSmaqtTVZcdVl/sdGK2L/W4l/Wfzhlhm37QhRpqw2WQ=;
-        b=MEXvYHUy/Pmnuer40GBNuY+onsbiHLGEE89JjUdgZsED9HtsfD05iCh6wGwGG2sUsD
-         blRFa60wLE//Zg35AJyynrx1ZRr8N4ZeAyi7Q3S83SAXcQj52JXj1/+pQl9FyLKI6nqG
-         rCvqFpIk/fnX7Usez8iQfmW+ycfsJDv6uvejtPgBS5NIfWwefEgMJ29+IRT3eVJYjOh6
-         BLPr6eSUFr5g6q10iBafAjdSHdh7sodh+sqvvuBF4xIAfgiPdEiH/Ow9Mk1FZth2T8ji
-         LCZBK0gVMQF7dEoDborh1lWLJIj0zf61AmoAh1ah/1SvPHZNJ8yPz29Vb1GocDvgWB8P
-         tIcw==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1744805604; x=1745410404; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=khDxZ6hWpBjUwpTjRFaeiC6oOjWONkPAJ6IHeIYL/8o=;
+        b=MRdwkacyCi2VwfH6IhAR5QiKmGv8EFDoUfoVj8lLN0dWg06v5/88LUTDcEpOntju6z
+         TmnU9w48oDwQPGQ1S3gOcfN+2fX3Z822Q1LO9enppKc/GGvsrco84c4LlN+hgZ9KL81g
+         xZRQIy/MigLECYP5xjcrYzSkekSTv7xt7RLBrDEkK/F53YwfWdyYNt7PdWzfyBvVG7bl
+         n5yKq/T+4vaLF/OEfA9sbZYQQK403OK+zZaTZXkPh1Zk86F+xLU2zg1jOM139VqT+Sii
+         ucsMSksuRCAVOAqTRd5vz3IX/tvlXVl6XmGIA8TM0YN0ycS8LpmDZ/fimQCAIXVTi+AN
+         AnUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744805598; x=1745410398;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VSmaqtTVZcdVl/sdGK2L/W4l/Wfzhlhm37QhRpqw2WQ=;
-        b=J49vt+By58Ak9Y4wZCeR9lyoRuR/yqdLkLtJ9g2XldArrYVoF8s/vduEOOPHRjC9Ve
-         lO285QYLc0CtTHBMlIBWEqoZ17vLiEBjbspz+LIsHT2TI6XG27CgTErMsh+blrRQ5/lN
-         fcWjWFuEimt2+mCV5L+cZl7B5svWb+j07oUmMi8P/hD0XkVg22sgayO57zRndn1K5S5I
-         cKANbmuYdMlw2vtTTMoKMiiQFQk3I7V3noRuZs+tmxiEUJDL/xxuyzL5pbkrrbn/SSsJ
-         9Pq3M769Mz/FRRA+KBZI9VwuAvG7hNNzJtu20p4AQ8H6BSKElfHTL1Pi/7WQel4fMBEm
-         drDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWerxr/KX25UzLC4zDBvAnbu7nXmIk7KA5qCPAqkRQgLRIw5YNPvueinAGGwDs/zawf0o9TRo5RZUS3NGA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwAK9IZDvywiw1wiy/TElYMe1aoebNid8U++5MmbkDhSO1W3ih
-	1DVy3rdnuW2UjznbWvZc5C5aL2TfeiDvwS8lNe7bzZl7HgvH/FUBTdTv+bLQNDA=
-X-Gm-Gg: ASbGncuIjJQPCmISHk5AaRRJKQZlgGxXnEC8kFmbYjuUr1H20iX+ZvR5uuI/FeE22BF
-	Tfu4IT63/cnzKreqGZZk4F1IGrK19B4AM78izH3whIBNE/szZuQ5Ay3slmA7ANCoUWSosRBGK95
-	X3SaF1QEBfF4XCi0ELzKK5RhdJp9J1ze9wxWSxrnv14xFoRuaSnFFAIFzV5oRU2II/Ag0Em7AoM
-	jEJjuJxhuHrFKjCkAFmqXfY89QuN/WpDxeohAvV3Fxa6m6CcP2ivHXIs44eelBkGsGVxYlUo303
-	35/UEqXU/HmPoZ+E0IQz9sKrY7WI3LXvnwazjPS7rncUlnY=
-X-Google-Smtp-Source: AGHT+IHtIMhNWLVJYxB2YnXeeSb6vHi3amDsuHFe8N+BB3U6tNqVPg8wr4yAeHJMiQyadWdrKNb/ug==
-X-Received: by 2002:a5d:648c:0:b0:390:fbdd:994d with SMTP id ffacd0b85a97d-39ee5b1bcbcmr1785625f8f.27.1744805597389;
-        Wed, 16 Apr 2025 05:13:17 -0700 (PDT)
-Received: from noctura.suse.cz ([103.210.134.105])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce3bsm17327555f8f.66.2025.04.16.05.13.13
+        d=1e100.net; s=20230601; t=1744805604; x=1745410404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=khDxZ6hWpBjUwpTjRFaeiC6oOjWONkPAJ6IHeIYL/8o=;
+        b=tH2aS6B8XFw4EA+ZlvNQ6bDXZPpB+HaDcOJMtWkGE7KF66czYU2L1h8/ebJRnYBbKr
+         WW2P/DkqsutRqaAML+Px3AotSUwKX7FplCYnYbgjX6xy5ImYEJxT2moswr8KcynWJ6hC
+         W1ziIv4ySIO29NtAzxiNW97InN2qV0ZKHs0UFpEQfjjxLPWY6pmiObKrBlzGPAqK6zp2
+         WD9MYu0hKMC2ZtjzyX9AKYp+TbQmDGJ3IWXLncuAimqgGEuHtTRmmhnBHDsKNK3sUgEY
+         q1pizhWr5aACFzYTBY3LeZHs/6pQm2JzPvR/5GzVoDKqcAqKBb4fo02G1KlQRX0OGn3D
+         1EOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoCc54lYQjemyd5uxDPJ/gBNku5DbOpabBQIzNZQNeq0bL9r7d4svRsdloOZOA5Mi+Ow3KXw/RiPU/iqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEP51HFV8McS8A9rDfVLoDjC6TXOBB0IBBB+setpjkp00pktoL
+	9WeTLxgKbFGkLkSWH3fOxuylbQvesJ9z2ZCjMjpBBEW+SBpbAvNY878oNfCrwnI=
+X-Gm-Gg: ASbGncu4uqk9lIKc+JI/QyjX2LTrOovhRNts9AV2jsI4Iv2/haSWOtMwrZKjiG6aTRM
+	51eXWYdPmiqEJ9LW3lUjhhV00xWreVcPtUBeaEOsppILc402yBOs9bLEubVMgSAjfGC/FwLMXK3
+	3LfNqndCyJ6wtWvivI9nK+HyNgp+NX8ayYZqqkKXNgrFTtYM4/kqtoGCaAQmtzGW4AGfh76auXP
+	x8Qu5Vt/6iK7vClxxitmhv3bIpXK0Kz0C7ifSNj9jxcfyWaVxoVp3KEmyZkZfdIXwKqXjKysTNy
+	n7v/B84h4mQKZPMpQ+yWdiMBo1o2cSibdaIF/r4rPWK4Qb1d
+X-Google-Smtp-Source: AGHT+IEMRDe/WIR+fGXC8+rp39ruc19oZu24CB13YFuAre/xl9HbSQRf4cPza9AIeJF5IWD2Vn1IOg==
+X-Received: by 2002:a05:600c:350c:b0:43d:300f:fa1d with SMTP id 5b1f17b1804b1-4405d6ce926mr18485225e9.31.1744805603444;
+        Wed, 16 Apr 2025 05:13:23 -0700 (PDT)
+Received: from jiri-mlt ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b53f29fsm19159505e9.37.2025.04.16.05.13.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 05:13:17 -0700 (PDT)
-From: Brahmajit Das <brahmajit.xyz@gmail.com>
-X-Google-Original-From: Brahmajit Das <listout@listout.xyz>
-To: brahmajit.xyz@gmail.com
-Cc: bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	pawan.kumar.gupta@linux.intel.com,
-	tony.luck@intel.com
-Subject: [PATCH v2 1/1] regulator: hi6421v530: fix building with GCC 15
-Date: Wed, 16 Apr 2025 17:43:05 +0530
-Message-ID: <20250416121305.13469-1-listout@listout.xyz>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415111411.6331-1-listout@listout.xyz>
-References: <20250415111411.6331-1-listout@listout.xyz>
+        Wed, 16 Apr 2025 05:13:23 -0700 (PDT)
+Date: Wed, 16 Apr 2025 14:13:12 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
+	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
+	saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, jonathan.lemon@gmail.com, 
+	richardcochran@gmail.com, aleksandr.loktionov@intel.com, milena.olech@intel.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v2 1/4] dpll: use struct dpll_device_info for
+ dpll registration
+Message-ID: <zurfm4rox22l3dnffbfloax5mu6csiycqqfoyh5nrcsd4ada6h@wmeh5ks4gli6>
+References: <20250415181543.1072342-1-arkadiusz.kubalewski@intel.com>
+ <20250415181543.1072342-2-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415181543.1072342-2-arkadiusz.kubalewski@intel.com>
 
-Since the Linux kernel initializes many non-C-string char arrays with
-literals. While it would be possible to convert initializers from:
-   { "BOOP", ... }
-to something like:
-   { { 'B', 'O', 'O', 'P' }, ... }
-that is annoying.
-Making -Wunterminated-string-initialization stay silent about char
-arrays marked with nonstring would be much better.
+Tue, Apr 15, 2025 at 08:15:40PM +0200, arkadiusz.kubalewski@intel.com wrote:
+>Instead of passing list of properties as arguments to
+>dpll_device_register(..) use a dedicated struct.
+>
+>Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+>---
+>v2:
+>- new commit
+>---
+> drivers/dpll/dpll_core.c                      | 34 ++++++++++++-------
+> drivers/dpll/dpll_core.h                      |  2 +-
+> drivers/dpll/dpll_netlink.c                   |  7 ++--
+> drivers/net/ethernet/intel/ice/ice_dpll.c     | 16 +++++----
+> drivers/net/ethernet/intel/ice/ice_dpll.h     |  1 +
+> .../net/ethernet/mellanox/mlx5/core/dpll.c    | 10 +++---
+> drivers/ptp/ptp_ocp.c                         |  7 ++--
+> include/linux/dpll.h                          | 11 ++++--
+> 8 files changed, 57 insertions(+), 31 deletions(-)
+>
+>diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
+>index 20bdc52f63a5..af9cda45a89c 100644
+>--- a/drivers/dpll/dpll_core.c
+>+++ b/drivers/dpll/dpll_core.c
+>@@ -34,7 +34,7 @@ static u32 dpll_pin_xa_id;
+> 
+> struct dpll_device_registration {
+> 	struct list_head list;
+>-	const struct dpll_device_ops *ops;
+>+	const struct dpll_device_info *info;
+> 	void *priv;
+> };
+> 
+>@@ -327,12 +327,12 @@ EXPORT_SYMBOL_GPL(dpll_device_put);
+> 
+> static struct dpll_device_registration *
+> dpll_device_registration_find(struct dpll_device *dpll,
+>-			      const struct dpll_device_ops *ops, void *priv)
+>+			      const struct dpll_device_info *info, void *priv)
+> {
+> 	struct dpll_device_registration *reg;
+> 
+> 	list_for_each_entry(reg, &dpll->registration_list, list) {
+>-		if (reg->ops == ops && reg->priv == priv)
+>+		if (reg->info == info && reg->priv == priv)
+> 			return reg;
+> 	}
+> 	return NULL;
+>@@ -341,8 +341,7 @@ dpll_device_registration_find(struct dpll_device *dpll,
+> /**
+>  * dpll_device_register - register the dpll device in the subsystem
+>  * @dpll: pointer to a dpll
+>- * @type: type of a dpll
+>- * @ops: ops for a dpll device
+>+ * @info: dpll device information and operations from registerer
+>  * @priv: pointer to private information of owner
+>  *
+>  * Make dpll device available for user space.
+>@@ -352,11 +351,13 @@ dpll_device_registration_find(struct dpll_device *dpll,
+>  * * 0 on success
+>  * * negative - error value
+>  */
+>-int dpll_device_register(struct dpll_device *dpll, enum dpll_type type,
+>-			 const struct dpll_device_ops *ops, void *priv)
+>+int dpll_device_register(struct dpll_device *dpll,
+>+			 const struct dpll_device_info *info, void *priv)
 
-Without the __nonstring we would get the following build error:
-drivers/regulator/hi6421v530-regulator.c:189:19: error: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (21 chars into 20 available) [-Werror=unterminated-string-initialization]
-  189 |         { .name = "hi6421v530-regulator" },
-      |                   ^~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+I don't like this. If you need some capabilities value, put it into ops
+struct.
 
-Upstream GCC has added this commit
-622968990beee7499e951590258363545b4a3b57[0][1] which silences warning
-about truncating NUL char when initializing nonstring arrays.
 
-[0]: https://gcc.gnu.org/cgit/gcc/commit/?id=622968990beee7499e951590258363545b4a3b57
-[1]: https://gcc.gnu.org/cgit/gcc/commit/?id=afb46540d3921e96c4cd7ba8fa2c8b0901759455
+> {
+>+	const struct dpll_device_ops *ops = info->ops;
+> 	struct dpll_device_registration *reg;
+> 	bool first_registration = false;
+>+	enum dpll_type type = info->type;
+> 
+> 	if (WARN_ON(!ops))
+> 		return -EINVAL;
+>@@ -368,7 +369,7 @@ int dpll_device_register(struct dpll_device *dpll, enum dpll_type type,
+> 		return -EINVAL;
+> 
+> 	mutex_lock(&dpll_lock);
+>-	reg = dpll_device_registration_find(dpll, ops, priv);
+>+	reg = dpll_device_registration_find(dpll, info, priv);
+> 	if (reg) {
+> 		mutex_unlock(&dpll_lock);
+> 		return -EEXIST;
+>@@ -379,9 +380,8 @@ int dpll_device_register(struct dpll_device *dpll, enum dpll_type type,
+> 		mutex_unlock(&dpll_lock);
+> 		return -ENOMEM;
+> 	}
+>-	reg->ops = ops;
+>+	reg->info = info;
+> 	reg->priv = priv;
+>-	dpll->type = type;
+> 	first_registration = list_empty(&dpll->registration_list);
+> 	list_add_tail(&reg->list, &dpll->registration_list);
+> 	if (!first_registration) {
+>@@ -408,14 +408,14 @@ EXPORT_SYMBOL_GPL(dpll_device_register);
+>  * Context: Acquires a lock (dpll_lock)
+>  */
+> void dpll_device_unregister(struct dpll_device *dpll,
+>-			    const struct dpll_device_ops *ops, void *priv)
+>+			    const struct dpll_device_info *info, void *priv)
+> {
+> 	struct dpll_device_registration *reg;
+> 
+> 	mutex_lock(&dpll_lock);
+> 	ASSERT_DPLL_REGISTERED(dpll);
+> 	dpll_device_delete_ntf(dpll);
+>-	reg = dpll_device_registration_find(dpll, ops, priv);
+>+	reg = dpll_device_registration_find(dpll, info, priv);
+> 	if (WARN_ON(!reg)) {
+> 		mutex_unlock(&dpll_lock);
+> 		return;
+>@@ -807,7 +807,15 @@ const struct dpll_device_ops *dpll_device_ops(struct dpll_device *dpll)
+> 	struct dpll_device_registration *reg;
+> 
+> 	reg = dpll_device_registration_first(dpll);
+>-	return reg->ops;
+>+	return reg->info->ops;
+>+}
+>+
+>+const struct dpll_device_info *dpll_device_info(struct dpll_device *dpll)
 
-Thanks to Jakub Jelinek <jakub@gcc.gnu.org> for the gcc patch.
+Makes me wonder what you would need this for. I guess "nothing"?
 
-Signed-off-by: Brahmajit Das <listout@listout.xyz>
----
- include/linux/mod_devicetable.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index bd7e60c0b72f..e3c9c427443d 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -605,7 +605,7 @@ struct dmi_system_id {
- #define PLATFORM_MODULE_PREFIX	"platform:"
- 
- struct platform_device_id {
--	char name[PLATFORM_NAME_SIZE];
-+	char name[PLATFORM_NAME_SIZE] __nonstring;
- 	kernel_ulong_t driver_data;
- };
- 
--- 
-2.49.0
-
+>+{
+>+	struct dpll_device_registration *reg;
+>+
+>+	reg = dpll_device_registration_first(dpll);
+>+	return reg->info;
+> }
+> 
+> static struct dpll_pin_registration *
+>diff --git a/drivers/dpll/dpll_core.h b/drivers/dpll/dpll_core.h
+>index 2b6d8ef1cdf3..baeb10d7dc1e 100644
+>--- a/drivers/dpll/dpll_core.h
+>+++ b/drivers/dpll/dpll_core.h
+>@@ -30,7 +30,6 @@ struct dpll_device {
+> 	u32 device_idx;
+> 	u64 clock_id;
+> 	struct module *module;
+>-	enum dpll_type type;
+> 	struct xarray pin_refs;
+> 	refcount_t refcount;
+> 	struct list_head registration_list;
+>@@ -84,6 +83,7 @@ void *dpll_pin_on_pin_priv(struct dpll_pin *parent, struct dpll_pin *pin);
+> const struct dpll_device_ops *dpll_device_ops(struct dpll_device *dpll);
+> struct dpll_device *dpll_device_get_by_id(int id);
+> const struct dpll_pin_ops *dpll_pin_ops(struct dpll_pin_ref *ref);
+>+const struct dpll_device_info *dpll_device_info(struct dpll_device *dpll);
+> struct dpll_pin_ref *dpll_xa_ref_dpll_first(struct xarray *xa_refs);
+> extern struct xarray dpll_device_xa;
+> extern struct xarray dpll_pin_xa;
+>diff --git a/drivers/dpll/dpll_netlink.c b/drivers/dpll/dpll_netlink.c
+>index c130f87147fa..2de9ec08d551 100644
+>--- a/drivers/dpll/dpll_netlink.c
+>+++ b/drivers/dpll/dpll_netlink.c
+>@@ -564,6 +564,7 @@ static int
+> dpll_device_get_one(struct dpll_device *dpll, struct sk_buff *msg,
+> 		    struct netlink_ext_ack *extack)
+> {
+>+	const struct dpll_device_info *info = dpll_device_info(dpll);
+> 	int ret;
+> 
+> 	ret = dpll_msg_add_dev_handle(msg, dpll);
+>@@ -589,7 +590,7 @@ dpll_device_get_one(struct dpll_device *dpll, struct sk_buff *msg,
+> 	ret = dpll_msg_add_mode_supported(msg, dpll, extack);
+> 	if (ret)
+> 		return ret;
+>-	if (nla_put_u32(msg, DPLL_A_TYPE, dpll->type))
+>+	if (nla_put_u32(msg, DPLL_A_TYPE, info->type))
+> 		return -EMSGSIZE;
+> 
+> 	return 0;
+>@@ -1415,11 +1416,13 @@ dpll_device_find(u64 clock_id, struct nlattr *mod_name_attr,
+> 	unsigned long i;
+> 
+> 	xa_for_each_marked(&dpll_device_xa, i, dpll, DPLL_REGISTERED) {
+>+		const struct dpll_device_info *info = dpll_device_info(dpll);
+>+
+> 		cid_match = clock_id ? dpll->clock_id == clock_id : true;
+> 		mod_match = mod_name_attr ? (module_name(dpll->module) ?
+> 			!nla_strcmp(mod_name_attr,
+> 				    module_name(dpll->module)) : false) : true;
+>-		type_match = type ? dpll->type == type : true;
+>+		type_match = type ? info->type == type : true;
+> 		if (cid_match && mod_match && type_match) {
+> 			if (dpll_match) {
+> 				NL_SET_ERR_MSG(extack, "multiple matches");
+>diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.c b/drivers/net/ethernet/intel/ice/ice_dpll.c
+>index bce3ad6ca2a6..0f7440a889ac 100644
+>--- a/drivers/net/ethernet/intel/ice/ice_dpll.c
+>+++ b/drivers/net/ethernet/intel/ice/ice_dpll.c
+>@@ -1977,7 +1977,7 @@ static void
+> ice_dpll_deinit_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu)
+> {
+> 	if (cgu)
+>-		dpll_device_unregister(d->dpll, &ice_dpll_ops, d);
+>+		dpll_device_unregister(d->dpll, &d->info, d);
+> 	dpll_device_put(d->dpll);
+> }
+> 
+>@@ -1996,8 +1996,7 @@ ice_dpll_deinit_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu)
+>  * * negative - initialization failure reason
+>  */
+> static int
+>-ice_dpll_init_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu,
+>-		   enum dpll_type type)
+>+ice_dpll_init_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu)
+> {
+> 	u64 clock_id = pf->dplls.clock_id;
+> 	int ret;
+>@@ -2012,7 +2011,7 @@ ice_dpll_init_dpll(struct ice_pf *pf, struct ice_dpll *d, bool cgu,
+> 	d->pf = pf;
+> 	if (cgu) {
+> 		ice_dpll_update_state(pf, d, true);
+>-		ret = dpll_device_register(d->dpll, type, &ice_dpll_ops, d);
+>+		ret = dpll_device_register(d->dpll, &d->info, d);
+> 		if (ret) {
+> 			dpll_device_put(d->dpll);
+> 			return ret;
+>@@ -2363,7 +2362,12 @@ static int ice_dpll_init_info(struct ice_pf *pf, bool cgu)
+> 	if (ret)
+> 		return ret;
+> 	de->mode = DPLL_MODE_AUTOMATIC;
+>+	de->info.type = DPLL_TYPE_EEC;
+>+	de->info.ops = &ice_dpll_ops;
+>+
+> 	dp->mode = DPLL_MODE_AUTOMATIC;
+>+	dp->info.type = DPLL_TYPE_PPS;
+>+	dp->info.ops = &ice_dpll_ops;
+> 
+> 	dev_dbg(ice_pf_to_dev(pf),
+> 		"%s - success, inputs:%u, outputs:%u rclk-parents:%u\n",
+>@@ -2426,10 +2430,10 @@ void ice_dpll_init(struct ice_pf *pf)
+> 	err = ice_dpll_init_info(pf, cgu);
+> 	if (err)
+> 		goto err_exit;
+>-	err = ice_dpll_init_dpll(pf, &pf->dplls.eec, cgu, DPLL_TYPE_EEC);
+>+	err = ice_dpll_init_dpll(pf, &pf->dplls.eec, cgu);
+> 	if (err)
+> 		goto deinit_info;
+>-	err = ice_dpll_init_dpll(pf, &pf->dplls.pps, cgu, DPLL_TYPE_PPS);
+>+	err = ice_dpll_init_dpll(pf, &pf->dplls.pps, cgu);
+> 	if (err)
+> 		goto deinit_eec;
+> 	err = ice_dpll_init_pins(pf, cgu);
+>diff --git a/drivers/net/ethernet/intel/ice/ice_dpll.h b/drivers/net/ethernet/intel/ice/ice_dpll.h
+>index c320f1bf7d6d..9db7463e293a 100644
+>--- a/drivers/net/ethernet/intel/ice/ice_dpll.h
+>+++ b/drivers/net/ethernet/intel/ice/ice_dpll.h
+>@@ -66,6 +66,7 @@ struct ice_dpll {
+> 	enum dpll_mode mode;
+> 	struct dpll_pin *active_input;
+> 	struct dpll_pin *prev_input;
+>+	struct dpll_device_info info;
+> };
+> 
+> /** ice_dplls - store info required for CCU (clock controlling unit)
+>diff --git a/drivers/net/ethernet/mellanox/mlx5/core/dpll.c b/drivers/net/ethernet/mellanox/mlx5/core/dpll.c
+>index 1e5522a19483..f722b1de0754 100644
+>--- a/drivers/net/ethernet/mellanox/mlx5/core/dpll.c
+>+++ b/drivers/net/ethernet/mellanox/mlx5/core/dpll.c
+>@@ -20,6 +20,7 @@ struct mlx5_dpll {
+> 	} last;
+> 	struct notifier_block mdev_nb;
+> 	struct net_device *tracking_netdev;
+>+	struct dpll_device_info info;
+> };
+> 
+> static int mlx5_dpll_clock_id_get(struct mlx5_core_dev *mdev, u64 *clock_id)
+>@@ -444,8 +445,9 @@ static int mlx5_dpll_probe(struct auxiliary_device *adev,
+> 		goto err_free_mdpll;
+> 	}
+> 
+>-	err = dpll_device_register(mdpll->dpll, DPLL_TYPE_EEC,
+>-				   &mlx5_dpll_device_ops, mdpll);
+>+	mdpll->info.type = DPLL_TYPE_EEC;
+>+	mdpll->info.ops = &mlx5_dpll_device_ops;
+>+	err = dpll_device_register(mdpll->dpll, &mdpll->info, mdpll);
+> 	if (err)
+> 		goto err_put_dpll_device;
+> 
+>@@ -481,7 +483,7 @@ static int mlx5_dpll_probe(struct auxiliary_device *adev,
+> err_put_dpll_pin:
+> 	dpll_pin_put(mdpll->dpll_pin);
+> err_unregister_dpll_device:
+>-	dpll_device_unregister(mdpll->dpll, &mlx5_dpll_device_ops, mdpll);
+>+	dpll_device_unregister(mdpll->dpll, &mdpll->info, mdpll);
+> err_put_dpll_device:
+> 	dpll_device_put(mdpll->dpll);
+> err_free_mdpll:
+>@@ -500,7 +502,7 @@ static void mlx5_dpll_remove(struct auxiliary_device *adev)
+> 	dpll_pin_unregister(mdpll->dpll, mdpll->dpll_pin,
+> 			    &mlx5_dpll_pins_ops, mdpll);
+> 	dpll_pin_put(mdpll->dpll_pin);
+>-	dpll_device_unregister(mdpll->dpll, &mlx5_dpll_device_ops, mdpll);
+>+	dpll_device_unregister(mdpll->dpll, &mdpll->info, mdpll);
+> 	dpll_device_put(mdpll->dpll);
+> 	kfree(mdpll);
+> 
+>diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+>index 7945c6be1f7c..b3c5d294acb4 100644
+>--- a/drivers/ptp/ptp_ocp.c
+>+++ b/drivers/ptp/ptp_ocp.c
+>@@ -382,6 +382,7 @@ struct ptp_ocp {
+> 	struct ptp_ocp_sma_connector sma[OCP_SMA_NUM];
+> 	const struct ocp_sma_op *sma_op;
+> 	struct dpll_device *dpll;
+>+	struct dpll_device_info	dpll_info;
+> };
+> 
+> #define OCP_REQ_TIMESTAMP	BIT(0)
+>@@ -4745,7 +4746,9 @@ ptp_ocp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> 		goto out;
+> 	}
+> 
+>-	err = dpll_device_register(bp->dpll, DPLL_TYPE_PPS, &dpll_ops, bp);
+>+	bp->dpll_info.type = DPLL_TYPE_PPS;
+>+	bp->dpll_info.ops = &dpll_ops;
+>+	err = dpll_device_register(bp->dpll, &bp->dpll_info, bp);
+> 	if (err)
+> 		goto out;
+> 
+>@@ -4796,7 +4799,7 @@ ptp_ocp_remove(struct pci_dev *pdev)
+> 			dpll_pin_put(bp->sma[i].dpll_pin);
+> 		}
+> 	}
+>-	dpll_device_unregister(bp->dpll, &dpll_ops, bp);
+>+	dpll_device_unregister(bp->dpll, &bp->dpll_info, bp);
+> 	dpll_device_put(bp->dpll);
+> 	devlink_unregister(devlink);
+> 	ptp_ocp_detach(bp);
+>diff --git a/include/linux/dpll.h b/include/linux/dpll.h
+>index 5e4f9ab1cf75..0489464af958 100644
+>--- a/include/linux/dpll.h
+>+++ b/include/linux/dpll.h
+>@@ -97,6 +97,11 @@ struct dpll_pin_ops {
+> 			 struct netlink_ext_ack *extack);
+> };
+> 
+>+struct dpll_device_info {
+>+	enum dpll_type type;
+>+	const struct dpll_device_ops *ops;
+>+};
+>+
+> struct dpll_pin_frequency {
+> 	u64 min;
+> 	u64 max;
+>@@ -170,11 +175,11 @@ dpll_device_get(u64 clock_id, u32 dev_driver_id, struct module *module);
+> 
+> void dpll_device_put(struct dpll_device *dpll);
+> 
+>-int dpll_device_register(struct dpll_device *dpll, enum dpll_type type,
+>-			 const struct dpll_device_ops *ops, void *priv);
+>+int dpll_device_register(struct dpll_device *dpll,
+>+			 const struct dpll_device_info *info, void *priv);
+> 
+> void dpll_device_unregister(struct dpll_device *dpll,
+>-			    const struct dpll_device_ops *ops, void *priv);
+>+			    const struct dpll_device_info *info, void *priv);
+> 
+> struct dpll_pin *
+> dpll_pin_get(u64 clock_id, u32 dev_driver_id, struct module *module,
+>-- 
+>2.38.1
+>
