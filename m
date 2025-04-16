@@ -1,95 +1,114 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E32884E1C;
-	Wed, 16 Apr 2025 17:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9C533991;
+	Wed, 16 Apr 2025 17:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744824691; cv=none; b=D112bay0m7XE+Vj/hkzkE9hZPnuUGUwfGZ2xTZipyOp3LYwMVcpZRUH+pnjEbJfZva1suW8uQj6sB94tv2xyZmdnzK711dqhzkNFbLIRmnjhKP/O2uuvv7+r8A20fBHAVw+7S0tUQDUzY4DsfFhN5NLW8VVqp8vKkR6ZAoaOZMI=
+	t=1744824747; cv=none; b=YaytRBBanerMaiqfnC6thbl7seUrrhVeCMZl4zfyVnGgRrhRlgVuWbxo7RmbOFnG125UUY9peXlmqUW7CpPvzFcyu3mhXbkEM9nUXc+jpATfOlf3+LQqrRQWuTED547+oOK6xZp9eidvkOVrLMmleEswSuud1TJ6GvxDGNJ5UIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744824691; c=relaxed/simple;
-	bh=5Pv3Hc0R8ZXL+oH8n2b7z3OtCOacHKIR1ANqXH+K9c0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Z6xAiaGvNQheyQ613Gf8n2WutwhQB4Ggf/OdQ9ZWAejineJRBApQhgWc3kPaOzvAb9+pl5V+zXfDL33JkEkj+Ub/Kwc6kz9o+vEh27VTA5OxVJPRTGd+i46sezK5If3i7vEs8J4bohK+yf8Jje/gFqSX/zb20N+OYJniVzMq8dE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=TJVRAyam; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1744824747; c=relaxed/simple;
+	bh=HK/ACkCSXH9iBavYefiL3UQ3gNZHnIc01A/zo5ZfKmQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=li0tPulUuVoajLzweXoG15BzS+1SwUk+Y9uRx9gdHP7ZI6yvT+WHR7qVz6Wq+4JaPrkrxWAEMGtLtUNIIH5vu2OQM73X5Jhq/7DUSSC5GJsldLIRni1gkUw/oSS0+/OMO/eqcIVRFnFWtj7PmvioD0MWrWQIzOZdjyWWo6OSS+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WVUzN54G; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="TJVRAyam"
-Received: from narnia (unknown [167.220.2.28])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA0032052508;
-	Wed, 16 Apr 2025 10:31:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA0032052508
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744824689;
-	bh=b7cZx62sBqiNAK+Z5g1uUfPSpgmxvu8T11NIoXrTY/o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TJVRAyamNt8PTaChjPR4KaTuMaecAOHx9O2mwAnlkPR9lulk07gjnRGoxXT/5rHwB
-	 ZlrItUV1NU7JpKbyzk/UEEXb1e+ROAv34a6ZYR5OoptpDpkfF+e1fJEz/jPiDVMnTN
-	 ekQqoaiXnzkMd9ip4K/kRhdBVUggBCaWt16+ZVoo=
-From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, David Howells <dhowells@redhat.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
- <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, James Morris
- <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
- Schier <nicolas@fjasle.eu>, Shuah Khan <shuah@kernel.org>, =?utf-8?Q?Mick?=
- =?utf-8?Q?a=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Nick
- Desaulniers
- <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>,
- Justin Stitt <justinstitt@google.com>, Jarkko Sakkinen
- <jarkko@kernel.org>, Jan Stancek <jstancek@redhat.com>, Neal Gompa
- <neal@gompa.dev>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, keyrings@vger.kernel.org, Linux
- Crypto Mailing List <linux-crypto@vger.kernel.org>, LSM List
- <linux-security-module@vger.kernel.org>, Linux Kbuild mailing list
- <linux-kbuild@vger.kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK"
- <linux-kselftest@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- clang-built-linux <llvm@lists.linux.dev>, nkapron@google.com, Matteo Croce
- <teknoraver@meta.com>, Roberto Sassu <roberto.sassu@huawei.com>, Cong Wang
- <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH v2 security-next 1/4] security: Hornet LSM
-In-Reply-To: <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
-References: <20250404215527.1563146-1-bboscaccy@linux.microsoft.com>
- <20250404215527.1563146-2-bboscaccy@linux.microsoft.com>
- <CAADnVQJyNRZVLPj_nzegCyo+BzM1-whbnajotCXu+GW+5-=P6w@mail.gmail.com>
- <87semdjxcp.fsf@microsoft.com>
- <CAADnVQ+JGfwRgsoe2=EHkXdTyQ8ycn0D9nh1k49am++4oXUPHg@mail.gmail.com>
- <87friajmd5.fsf@microsoft.com>
- <CAADnVQKb3gPBFz+n+GoudxaTrugVegwMb8=kUfxOea5r2NNfUA@mail.gmail.com>
- <87a58hjune.fsf@microsoft.com>
- <CAADnVQ+LMAnyT4yV5iuJ=vswgtUu97cHKnvysipc6o7HZfEbUA@mail.gmail.com>
-Date: Wed, 16 Apr 2025 10:31:18 -0700
-Message-ID: <87y0w0hv2x.fsf@microsoft.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WVUzN54G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=5+DmEreLd4tGBrT4AUVKbL/9BUAR7PVq/ro9PvBSOX0=; b=WVUzN54GFucJKC3jngxZF9vCFH
+	PNcDcPqQ7vHirWGZqnYLr6t2ovXiKtRt+J9rSoOm/uCi0TifPVNos7K0ue9oYrjuQEjgTrCcXlQdB
+	8J40V7YNUe7qBnEb7pJ6KSGvtQaqdUnBj+7LhJnfcf+CY3d6W925GtRciteLKgDxl1OI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u56cO-009gHX-JP; Wed, 16 Apr 2025 19:32:12 +0200
+Date: Wed, 16 Apr 2025 19:32:12 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+Message-ID: <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+References: <20250416162144.670760-1-ivecera@redhat.com>
+ <20250416162144.670760-6-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416162144.670760-6-ivecera@redhat.com>
 
-Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> +/**
+> + * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
+> + * @zldev: pointer to device structure
+> + * @index: DPLL index
+> + *
+> + * Reads configuration of given DPLL into DPLL mailbox.
+> + *
+> + * Context: Process context. Expects zldev->regmap_lock to be held by caller.
+> + * Return: 0 on success, <0 on error
+> + */
+> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index)
+> +{
+> +	int rc;
 
-> History repeats itself.
-> 1. the problem is hard.
-> 2. you're only interested in addressing your own use case.
-> There is no end-to-end design here and no attempt to
-> think it through how it will work for others.
->
+lockdep_assert_held(zldev->regmap_lock) is stronger than having a
+comment. When talking about i2c and spi devices, it costs nothing, and
+catches bugs early.
 
-Well, I suppose anything worth doing is going to be hard :)
+> +/*
+> + * Mailbox operations
+> + */
+> +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
 
-The end-to-end design for this is the same end-to-end design that exists
-for signing kernel modules today. We envisioned it working for others
-the same way module signing works for others. 
+I assume these are the only valid ways to access a mailbox?
 
-> Hacking into bpf internal objects like maps is not acceptable.
+If so:
 
-We've heard your concerns about kern_sys_bpf and we agree that the LSM
-should not be calling it. The proposal in this email should meet both of
-our needs
-https://lore.kernel.org/bpf/874iypjl8t.fsf@microsoft.com/
+> +static inline __maybe_unused int
+> +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+> +{
+> +	__be16 temp;
+> +	int rc;
+> +
+> +	lockdep_assert_held(&zldev->mailbox_lock);
+> +	rc = regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+> +			      sizeof(temp));
+> +	if (rc)
+> +		return rc;
+> +
+> +	*value = be16_to_cpu(temp);
+> +	return rc;
+> +}
 
+These helpers can be made local to the core. You can then drop the
+lockdep_assert_held() from here, since the only way to access them is
+via the API you defined above, and add the checks in those API
+functions.
 
--blaise
+	Andrew
