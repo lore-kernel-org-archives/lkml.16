@@ -1,149 +1,128 @@
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3055233D9E
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B122376E9;
+	Wed, 16 Apr 2025 09:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796316; cv=none; b=op76Ks++HM4RZ4UvP2otrRy940S9/vXKGcNd87wagccpzti+edN0ByoPyAwkUO/uUNLrIFG+DUa9O03ZEgTsaG4rOkn13MpIr0Z6NoyWDyGxsNbKvh7MdrzD/Y4G1lPedpKFAxvVUqvKwCfIA2Gs7SrLn4Ceh0/kSLMPNz1FXr8=
+	t=1744796318; cv=none; b=XrHdTXQw0YEVMv2vJud8Eu1R7QizOAPLF2euTj6QRe8ROQvgwzeeyCG93LKtnTgZaZb22uJ6gR2KoM4lD68Yb+fW0AXGMH6QuIZA8X4Sg/4GVYN8y+Dnxmh/E/ZJP+ZPWurLStgKhyhVGUaGrRcNZLNtuKpPeiPRqj0T+NG1bOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796316; c=relaxed/simple;
-	bh=HGNLb7eunt65kyYDY5BhHdHIgNTRP+OEJWJQt1g2nDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CGDzywjlbvbkQik//GWfkN0wUhFTFJcXZ2/pCGsk2NzkDUsrZscsrPlyzrZo2RM5XzjQOL5ZovFfPUJndCoDAJOaquv5cIe8leTtt94HvzrERlpAESSe/oEDbO+kQ2ZILzFSJX6qyvV3ypF+XCeSo25A17kKNmM/XAqaJH+1WXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MU8PgsMb; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744796318; c=relaxed/simple;
+	bh=+ZCWbE1PR1VWajVp5YhiYDBJVfRXd0HwklhLy77IOWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Nu3dwJsuSEajt+dPhHxxtR9wvSS8h2FLNvmGPUn72EQAQt7BARA11yEWpJvFwHqracHKA960nLOU9oRVMizK6fLY1jGelZLBjcWqyzFsxwatynbig03fr9YSwDRI/0hAjZYqCchrtMwZjL1kVk6e8WFhixpUnM9KDsXcGT2KHZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J5eYNU70; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MU8PgsMb"
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86dddba7e0eso2647453241.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:38:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744796314; x=1745401114; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HGNLb7eunt65kyYDY5BhHdHIgNTRP+OEJWJQt1g2nDU=;
-        b=MU8PgsMbWwv0YwiIbdQvH7ultc7M+A4SyEyMsJDMAqIVOMT/ElxC7jgXe5tOm/7LDe
-         4+n2Aeq4Bf8b2M4CrjZyAm7FdLo+ciE3KFgnADy6v+J8WlNL0eHoRKz6vl2iSKeL3lnH
-         vYxFSmlQwFz99dG543WlrdUOwHWnhOHdjp/BSBRV7TnGYmxSq4ZMKqf3zQba8glVc68c
-         qc1+HVo753fh9dMk8OcFt0sYMEfnfoaojFT8JBGJBOoo/3CPhr7/NkBaGQ8gesQ2mwmP
-         Qadq0KrnE5ESKfk9/ANI+7IkWbJEfBnMcSnfYgEbSx4BbEiD9V2ke5kv09tkUrvM1tmY
-         k65A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796314; x=1745401114;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HGNLb7eunt65kyYDY5BhHdHIgNTRP+OEJWJQt1g2nDU=;
-        b=Au92QDx+rxH+7wNGU0odAlPjbo4IdkYMOVejo8Lk4glcPmmYU3dSPjzgReBosISoit
-         fAloTsHA+ZfdGPFtK3H2DYbe1JVGcuy4x6NuwzBY2Dc9QKF4rknaQKQhnfsPStsbX2Rj
-         ln8dE1FyV6C5vw5mOPkmX0jtaP4Bg8kz0ogVx2zZsmWoY4JaZ/l+CKVNFmtPHaNgycNj
-         q+koXHydgu9JoddJFQbjdOFftxG69bSDnWDvQdOd+q9zJa+3P1xO3Ujh6nshCh68+wkF
-         aNxgEvAKG+jxUKSTtl3gX6bD1IFbRyGKCTIa0ek9IMygHkpxnQbDKrbefC+I2n5j6HxC
-         TANg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmwH+fnjOkUdpwB+P05j/uHByBoVeGNjdrxkGsoZkAllSQgUtXCBdDXdj1P9yOsRcqKWZ6BtLHw2MQwcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK85g5ojD8Z1YRBI4BWzcW6CUhT4O/s9U1+PcCUR+23ktlxn8P
-	/W9707yauvBLyNJkrZ+3A5TAR894ChHZoShwrAqPZ+X7emT3V1n5/65Aj68xayes6J0YYj2Xlt8
-	m5SCCYj9pFryp3OjR4i5/eQhittM=
-X-Gm-Gg: ASbGncu8K8c2FPnrmWC+wTTzChJlh1uGaosBo+AWDchw0OwO2aQ+lHJX9OvWFpLo0Zx
-	J96CBEFllzFfsOALyMOHaxNjq4WsZs1jvdxPELRCPRBHoEt6FjKBp7A3emjeSqRXrm6Kvs/4qcY
-	CgpQECLQPtuf07PNTZCjAmrg==
-X-Google-Smtp-Source: AGHT+IELdpibobvtt5Kb86Q7ML3F+ZGjbT+Kep31cg3nW5EqxnxDcUCZlOz8FTxSS8hKaMA5HVwE0kqF0TgLw0+FoZM=
-X-Received: by 2002:a05:6102:53ce:b0:4c1:7ac9:9f67 with SMTP id
- ada2fe7eead31-4cb591bc3b9mr266822137.5.1744796313681; Wed, 16 Apr 2025
- 02:38:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J5eYNU70"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B442C4CEED;
+	Wed, 16 Apr 2025 09:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744796317;
+	bh=+ZCWbE1PR1VWajVp5YhiYDBJVfRXd0HwklhLy77IOWI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J5eYNU70oLJ0F1Q9S/3mFsHhNQ/7mz9Cowdbh+vkRpjA/X57MT+RQ8apm9iZz+2r/
+	 NgeC6JlaQHH26sf3mfYC0lsJKDR8CmG1iwguO7pVLVs+q3ML81C70/y9tON46gHKKR
+	 g3vj31zi6pfp2nWRDrFExRd1pBxQ4bGzDpp4QPb0P93SxWlIp4sHfyMzV57QKDxk3O
+	 DQ8QKj74wOvwEYvbb7hNbbm/bd4/Q+vPEtZg2RtA9nG7ghOPWpXVjIIVCOOCn6/PsY
+	 fYG1LajUfhqaX2GKX3E2OJdSgAwWZz7sa/V43RPpfxaVOU82iLmPNx9k09o+vJ7gFD
+	 1csmdSufPcBRQ==
+Date: Wed, 16 Apr 2025 17:38:11 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, Andy Shevchenko <andriy.shevchenko@intel.com>, David
+ Airlie <airlied@gmail.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <20250416173811.71c3c345@sal.lan>
+In-Reply-To: <20250416172901.60104103@sal.lan>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+	<4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+	<87tt6opks7.fsf@intel.com>
+	<20250416171917.0985c0eb@sal.lan>
+	<20250416172901.60104103@sal.lan>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412085852.48524-1-21cnbao@gmail.com> <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
- <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com> <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
-In-Reply-To: <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 16 Apr 2025 17:38:22 +0800
-X-Gm-Features: ATxdqUHv-sV6W1FvCZuhvrWTo6msnwbYyAFoTYjFi1F0eQxZE1WMVvCxKTYGegk
-Message-ID: <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Matthew Wilcox <willy@infradead.org>, Oscar Salvador <osalvador@suse.de>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 5:32=E2=80=AFPM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 16.04.25 11:24, Barry Song wrote:
-> > On Wed, Apr 16, 2025 at 4:32=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 12.04.25 10:58, Barry Song wrote:
-> >>> From: Barry Song <v-songbaohua@oppo.com>
-> >>>
-> >>> Promoting exclusive file folios of a dying process is unnecessary and
-> >>> harmful. For example, while Firefox is killed and LibreOffice is
-> >>> launched, activating Firefox's young file-backed folios makes it
-> >>> harder to reclaim memory that LibreOffice doesn't use at all.
-> >>
-> >> Do we know when it is reasonable to promote any folios of a dying proc=
-ess?
-> >>
-> >
-> > I don't know. It seems not reasonable at all. if one service crashes du=
-e to
-> > SW bug, systemd will restart it immediately. this might be the case pro=
-moting
-> > folios might be good. but it is really a bug of the service, not a norm=
-al case.
-> >
-> >> Assume you restart Firefox, would it really matter to promote them whe=
-n
-> >> unmapping? New Firefox would fault-in / touch the ones it really needs
-> >> immediately afterwards?
-> >
-> > Usually users kill firefox to start other applications (users intend
-> > to free memory
-> > for new applications). For Android, an app might be killed because it h=
-as been
-> > staying in the background inactively for a while.
->
-> > On the other hand, even if users restart firefox immediately, their fol=
-ios are
-> > probably still in LRU to hit.
->
-> Right, that's what I'm thinking.
->
-> So I wonder if we could just say "the whole process is going down; even
-> if we had some recency information, that could only affect some other
-> process, where we would have to guess if it really matters".
->
-> If the data is important, one would assume that another process would
-> soon access it either way, and as you say, likely it will still be on
-> the LRU to hit.
+Em Wed, 16 Apr 2025 17:29:01 +0800
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-I'll include this additional information in the v2 version of the patch sin=
-ce
-you think it would be helpful.
+> Em Wed, 16 Apr 2025 17:19:17 +0800
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+> 
+> > Em Wed, 16 Apr 2025 11:34:16 +0300
+> > Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+> > 
+> > > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > > As reported by Andy, kernel-doc.py is creating a __pycache__
+> > > > directory at build time.
+> > > >
+> > > > Disable creation of __pycache__ for the libraries used by
+> > > > kernel-doc.py, when excecuted via the build system or via
+> > > > scripts/find-unused-docs.sh.
+> > > >
+> > > > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > > > Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
+> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > > ---
+> > > >  drivers/gpu/drm/Makefile      | 2 +-
+> > > >  drivers/gpu/drm/i915/Makefile | 2 +-
+> > > >  include/drm/Makefile          | 2 +-
+> > > >  scripts/Makefile.build        | 2 +-
+> > > >  scripts/find-unused-docs.sh   | 2 +-
+> > > >  5 files changed, 5 insertions(+), 5 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> > > > index ed54a546bbe2..d21d0cd2c752 100644
+> > > > --- a/drivers/gpu/drm/Makefile
+> > > > +++ b/drivers/gpu/drm/Makefile
+> > > > @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+> > > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> > > >        cmd_hdrtest = \
+> > > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
+> > > 
+> > > KERNELDOC is not set here.
+> > 
+> > > 
+> > > /bin/sh: 1: -none: not found
+> > 
+> > Weird. This is set on Documentation/Makefile:
+> > 
+> > 	$ grep KERNELDOC Documentation/Makefile 
+> > 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+> > 	...
+> > 
+> > drivers/gpu/drm/Makefile should be able to see this variable there...
+> 
+> I suspect that the building system tries to confine variables to
+> sub-directories, so maybe one solution would be to move it to the
+> main makefile.
+> 
+> could you please check if this patch solves the issue?
 
-Regarding the exclusive flag - I'm wondering whether we actually need to
-distinguish between exclusive and shared folios in this case. The current
-patch uses the exclusive flag mainly to reduce controversy, but even for
-shared folios: does the recency from a dying process matter? The
-recency information only reflects the dying process's usage pattern, which
-will soon be irrelevant.
+Answering myself: it doesn't.
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+Heh, trying to quickly write a patch before calling it a day is
+usually not a good idea ;-)
 
-Thanks
-Barry
+I'll send a fix tomorrow.
+
+Regards,
+Mauro
