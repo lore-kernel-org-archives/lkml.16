@@ -1,157 +1,224 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA2A23371E
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29B422D4E0
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796246; cv=none; b=FphhW+2csdTovVFg+33OXLuD5sSIK6ytDmuczdA/d75RUbWYEcm1zK+naZWgwOnKrey4B/KXuG4y1Qy+IxEYBeiqANkuYm6kWJEXq+A42T8zYY2lfa5be7uT2bq7P/TWIQqUn1UptjbBE4blaz/6oPudXFrfYjVGTXbErCep7cs=
+	t=1744796301; cv=none; b=YKROzsDcdmHwFfNFjRbC98ozoQ2vjrJ5kKt6tYJxvyrQ+3ech0+5c97FN0fTfEBQ9JEn9cri0STFqRQyS7bWjVIm1jJqVrKH5nO5iHAlxc/xjBcsZGuE3CfJK9cOu/vka88raQMRTnc8FrGXXnfFbqjY/K2ljKp5YfENY8eY71M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796246; c=relaxed/simple;
-	bh=xDRV50am1uwJ3dYPe1nR1llHcTg9L3o2BG7AtzvBVzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b9BmtQJ8H6ghc52mThkrcKIf21bgCWUhWdqXXYbQTl4/GLWQzdt65H9ZouC29xCfmTZv9oLIHNyyoeSTxHXUxyzMa35vsX9T6emQsTeVeiAAm7MoYmIopKhESX6aDpmULlsgZkYI/g6awsTwGc/WvAIqe7ITDRH2cqz5w2oKXhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p2elSX90; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744796301; c=relaxed/simple;
+	bh=lGNwwTYk8nnCOyR8YGaiT+UICO0ts45C0I0m3WHM+/E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qp1l9DFqLfSVZwnjBiwx2Dd7Z3dTynjZYCV0ERH67zEXxS9gnjTn8Wml9rZ4pkdk/sigPvCbNRKNvgqVU4xogdgtYk3q6KLe3G1D1RvobSlBYFYtlTvdG968dEsiXtTjdWXzj7qQ+Uzfb9iBAvhX3E6ZGRf9fMXd8RgedI8sEw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WTFRVOup; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p2elSX90"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22c33ac23edso5110275ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:37:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTFRVOup"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6f2b05f87fdso4467026d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744796243; x=1745401043; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EuIyIm6sZTMZArdD30j0ddzGV/xgeW5+S45t3DvjQXo=;
-        b=p2elSX90HFZ0pjIQGQoZSW6MRqgjtDmV5TRbyPnn80uA1caj0vIW2FoPNmEyR8az1S
-         5ccPww6scRnBGgkW6nC0iYdO5Xg+nxWxKN3u/7Pw1FPEZD2/MXE7NsOtoUoxPtnlm0N4
-         nkoE+Mw5i5iD62crBVi3lxoreC5HIfCsSE3t2ehpySodxRb9rTHpyWNlDtCrK9TnHInl
-         kK/ARizgpI/BY0M09p+3TGN6aOlWumi/lYFguet3zUa6rFshi2frqcTgOgSD5oNqffpz
-         4457/yVbTGQj8yMZR7QxUkG0r7xFjkcPYKCPfA9XOYKTh5KSzA14zog6qp41ZGUgGFpU
-         zMyA==
+        d=google.com; s=20230601; t=1744796299; x=1745401099; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=olAHicsyVu+LZmCO4WFXBxaFwqqAxc2FAKP7TPUxrPU=;
+        b=WTFRVOupHiHz1phz6kKLt3maV7rJYQw+9dxvXoQRyzNbUbL5OKWYYqyoHcULqkDse2
+         ggZGaHCo1uJ3Xu2wmJmDFx3LXXKMo88t/gl+jZBbfxlxNqYaaNv9QlH7UUWWIa3a2eM9
+         Gp1wT1oRAcJ8E5vYxffUHjtjePqhCo8o3mh7TzGspTjrU9FxjC9BNZ0SzOVCaOjJOls1
+         yr41UJq/D/Vh2K0fe49Y1a9EG85vC3JC2bk9fmkAPMTZ+ERXZbh6TWSYLFeBtjq2KfZS
+         hufRz1zX2GbcLb4lUHhIHgXDEszzc2H6PM6N4t768bOjHL7QlRBoQl4Mk+XFFfGXdIVe
+         Cq2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796243; x=1745401043;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EuIyIm6sZTMZArdD30j0ddzGV/xgeW5+S45t3DvjQXo=;
-        b=I8zQhuHuBmkMR5BmWFjE241AUxLX1HT9qkr0JHi06kJyqZQFSeJf8yTzzGBtclGETu
-         SiDclP8BVaDHv36J3p32ZF67OFc8OGIDhPr8pwwCe7l2HwlLWw2//kDDkms8rXDQen5v
-         Cft0iB/648tzheTdnuBLxK+lMziKwVMo0Vke4d+1KBq4vKxU0cXLAHwvnhQkxA0nYdq8
-         2+jqJET7KyUZPqXbA8ti9HjIXRwIdqFYqVes+pOvzbp94Icgy6XaS/BJivWXnHaavAYT
-         6e5BNtUSMEJ+RchWt6w/Jy4jzP/b3T1xOcmmj3R9TrtLCJNpP45ty6iTJIQ8+k5s92mX
-         e4iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuCGlQGEgqWpF5NNdVj1fwq3c+kX6hqKB2m+ULPeAraVN+p4KUfRs2cUtl4EAbAxiIQH0XwPS7j0e+Wmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxchfrDGIEcQiNPdEoUIsgbUAfRJcxEhMeZ9Qz7euvyIC8tZC/8
-	coH9WumqeGOJie9ETzej5tqqIBlT9Z7hBo1iH5XiWMNQ63BkMZsiICbh4X/D5dc=
-X-Gm-Gg: ASbGncvofMM5eKKSOT21jpb2azVIKpoFD1iMiPKqul+bXxFdlcTY2gatodAz65yM/++
-	lLsVcYPZgcqoi09jsgiDjGMrRB9/08HSt9Fql/a2iSOVacKMaEL0qHANpUKfzkdddjpTfV6Gbl5
-	URMJG+OiM4wrb9zs1ZVr36b+IxUWYHnBxZiQ8HqHmSnpPj1wfg83c6K6wM9oBQHZH+B3yzAU76O
-	Lh0PHScSrTvT6PWDvwqlPG2/H4ONn7SgvWpkv6/WQNyKwv0pZV6I626G4TamfYJGczh8qDR2BG5
-	ucT1nMZGF7fOYgHR6put7wwQApmDmA4flNF7UQ/cQw==
-X-Google-Smtp-Source: AGHT+IGMj4OiKyJmwOzSShOY9H/GEFXprL1SUguzHiNfobC3rdZAN3fM5jCJbJJ86ToDX6h/RmYvCA==
-X-Received: by 2002:a17:90b:2d10:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-30863f18c46mr1987535a91.12.1744796242950;
-        Wed, 16 Apr 2025 02:37:22 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308611d6d2fsm1117988a91.1.2025.04.16.02.37.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:37:22 -0700 (PDT)
-Date: Wed, 16 Apr 2025 15:07:20 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V10 11/15] rust: cpufreq: Add initial abstractions for
- cpufreq framework
-Message-ID: <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
-References: <cover.1744783509.git.viresh.kumar@linaro.org>
- <ac6854885277b23f100c6033fab51a080cdb70eb.1744783509.git.viresh.kumar@linaro.org>
- <Z_904KuBhKbO738_@pollux>
+        d=1e100.net; s=20230601; t=1744796299; x=1745401099;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=olAHicsyVu+LZmCO4WFXBxaFwqqAxc2FAKP7TPUxrPU=;
+        b=YXcbNSDK7YOu3xZFWbSQgHTZtOfDfkqDByYZF/PkYf8yyCdnIlxAq494PbHn1jxP4S
+         6hxcPHJLmeD6LHCisioduItqB/Xt/IgCKcRdA2CDSejYps+5VFFegASstURyVD26XklU
+         jNZrZ26Ryq+xcOEkL/LgGRpkMqZ3SL4SEE0eO3zR9ASaohH1LuTb8iIpz2VLDOqU6JlF
+         9GzkPVGrn6DkR6NrQ3vIEbXdCTVsITSQMOo6bNVe9Xirxc62uFGKS8xTJDFMHCpg/mof
+         ++sARRt2lDtTjGtcPKdt7YcaFf528Qk9gprA+BVwk3ytkLBGyerybpxN7ErmLVOTqk/u
+         JMJg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJo4IOjVDR4lrUtCGM+EhEp/KLf57YxLoOIhhLWxM1KtALRZx2ajGjjQhg8+Oiwn1U3zlzcu+Atoxrxks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypaxVJO3vjGHU1JkDz9oXXj1mLWUYxwiv8ILzCUq8lhMHY/mcQ
+	z16z93kN95zDMXBYX1+moUGIT6vMqY+evXOUoKo4WZI9slXxEiEhT8GnpBgN7TQKb9Gdpb+DgFY
+	iPimvbSmxjUJPs43nOtFl4Q8x1Njj+Ml8St521fon36zIfyqBsA==
+X-Gm-Gg: ASbGncv4gBqihe6yPCmqkyLKzh6AP4gO+fFKF3q4y9fnZ9wstSGiE4SfEfJ+SQ2Bf7c
+	64vKeGwG2WfHsnI+AsvsFpN3D5VjAxx7d8R171fcgjDvxd60eULvRFz7cLz7ZGVGUpSQjwb2T+o
+	VAt9S+bVrft9quQpGm7uZa6TE=
+X-Google-Smtp-Source: AGHT+IEu8ULAZ3yUx6VErK3ehHrBykkRdgGPuR6aoMNdGmiQ+ScZ4rb6eHNoviBt6gnzqxp63hpgcXMq95eXIwhkwYc=
+X-Received: by 2002:ad4:5f4c:0:b0:6e1:f40c:b558 with SMTP id
+ 6a1803df08f44-6f2b30864cdmr14828566d6.44.1744796298528; Wed, 16 Apr 2025
+ 02:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_904KuBhKbO738_@pollux>
+References: <20250415-kunit-qemu-sparc64-v1-0-253906f61102@linutronix.de> <20250415-kunit-qemu-sparc64-v1-1-253906f61102@linutronix.de>
+In-Reply-To: <20250415-kunit-qemu-sparc64-v1-1-253906f61102@linutronix.de>
+From: David Gow <davidgow@google.com>
+Date: Wed, 16 Apr 2025 17:38:03 +0800
+X-Gm-Features: ATxdqUG1whiCyMQsWguffGTwakNWPkf73Zh_ohCkyOjv3230fKDGX5kp7N-DoxM
+Message-ID: <CABVgOS=AQ0XS4DnKxZTZWBLdkg1_kwxusa3fGDe=pSuTFR=5Tw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kunit: qemu_configs: sparc: Explicitly enable CONFIG_SPARC32=y
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000009d28ec0632e20b01"
 
-On 16-04-25, 11:14, Danilo Krummrich wrote:
-> On Wed, Apr 16, 2025 at 12:09:28PM +0530, Viresh Kumar wrote:
-> > +#[allow(dead_code)]
-> 
-> Why is this needed?
+--0000000000009d28ec0632e20b01
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Looks like leftover from a previous version. Same for the other one.
+On Tue, 15 Apr 2025 at 21:38, Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> The configuration generated by kunit ends up with a 32bit configuration.
+> A new kunit configuration for 64bit is to be added.
+> To make the difference clearer spell out the variant in the kunit
+> reference config.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> ---
 
-I have also made a change to the cpufreq driver now to remove
-`dead_code`, hope that is fine:
+Thanks.
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index 81ede13909b7..0d1612ff5677 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -43,12 +43,9 @@ fn find_supply_names(dev: &Device, cpu: u32) -> Option<KVec<CString>> {
- struct CPUFreqDTDevice {
-     opp_table: opp::Table,
-     freq_table: opp::FreqTable,
--    #[allow(dead_code)]
--    mask: CpumaskVar,
--    #[allow(dead_code)]
--    token: Option<opp::ConfigToken>,
--    #[allow(dead_code)]
--    clk: Clk,
-+    _mask: CpumaskVar,
-+    _token: Option<opp::ConfigToken>,
-+    _clk: Clk,
- }
+It looks like the sparc32 configuration can't handle faulting tests,
+so I'll send a follow-up to disable CONFIG_KUNIT_FAULT_TEST here as
+well.
 
-> > +    pub unsafe fn data(&self, index: usize) -> u32 {
-> > +        // SAFETY: By the type invariant, the pointer stored in `self` is valid and `index` is
-> > +        // guaranteed to be valid by the safety requirements of the function.
-> > +        unsafe { (*self.as_raw().add(index)).driver_data }
-> > +    }
-> 
-> Those three functions above look like they're supposed to be used directly by
-> drivers, but are unsafe. :(
-> 
-> It looks like the reason for them being unsafe is that with only the pointer to
-> the struct cpufreq_frequency_table array we don't know the length of the array.
+Otherwise,
+Reviewed-by: David Gow <davidgow@google.com>
 
-Yes.
+Cheers,
+-- David
 
-> However, a Table instance seems to come from TableBox, which *does* know the
-> length of the KVec<bindings::cpufreq_frequency_table>. Why can't we just preserve the
-> length and provide a safe API?
 
-The Table is also created from a raw pointer, when it is received from
-the C callbacks. Also the Table can be created from the OPP table,
-where again we receive a raw pointer from the C code.
+>  tools/testing/kunit/qemu_configs/sparc.py | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/kunit/qemu_configs/sparc.py b/tools/testing/ku=
+nit/qemu_configs/sparc.py
+> index 256d9573b44646533d1a6f768976628adc87921e..3131dd299a6e34f027402e99e=
+34d85ddcaa359b7 100644
+> --- a/tools/testing/kunit/qemu_configs/sparc.py
+> +++ b/tools/testing/kunit/qemu_configs/sparc.py
+> @@ -2,6 +2,7 @@ from ..qemu_config import QemuArchParams
+>
+>  QEMU_ARCH =3D QemuArchParams(linux_arch=3D'sparc',
+>                            kconfig=3D'''
+> +CONFIG_SPARC32=3Dy
+>  CONFIG_SERIAL_SUNZILOG=3Dy
+>  CONFIG_SERIAL_SUNZILOG_CONSOLE=3Dy
+>  ''',
+>
+> --
+> 2.49.0
+>
 
-I tried to do this differently earlier and finalized on current
-version after some discussions on the list:
+--0000000000009d28ec0632e20b01
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-https://lore.kernel.org/all/2025011327-cubbyhole-idealness-d4cc@gregkh/
-
--- 
-viresh
+MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
+4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
+mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
+KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
+VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
+ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
+vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
+BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
+OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
+1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
+ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
+BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
+18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
+bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
+AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
+BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
+A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
+MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
+jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
+0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
+jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
+jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
+C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
+NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
+zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
+A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
+hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
+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
+YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
+/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
+N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
+BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
+MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
+LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
+bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
+FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
+exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
++ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
+XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
+QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
+TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
+oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
+cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
+uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
+PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
+Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
+BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQgwBKFbSLqf0STDdaVv5zogECbKZ9g
+i6r8duVW3DVcRCUwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDE2MDkzODE5WjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
+AQEBBQAEggEAOOTDjWUEBi5TwkL6X4Xqhn/2V4OdFMpJgbyeWm87pXkcNbrNLcf1soZQZB2H1gEx
+Vev3Y+c4pmXeoSwK8tB3VW87JqnJdfOKcS19+vXYAyTTR2M4xxV63uU+u1VwW281RVInyHOvr9v4
+VkqTjV0+V7k8IfLMQQsKvy2cbvDtdomp9vzA/hGzQYZFedo7QRH85sd2lPQYQIRyJldWflsU6PgT
+zXHQEwnB5z5ym0dZryhFl+9mfEaGAjH9xAvlO3luUHlZ4w6XNSOnPrZzXMxRJM8o+MaFcB6TUkHy
+amrapLy4e2C7UBIIzeoAKL4qzUF105HO50v5I3+2bdhRk/bSMw==
+--0000000000009d28ec0632e20b01--
