@@ -1,40 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93122541B;
-	Wed, 16 Apr 2025 19:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274EB224B1A;
+	Wed, 16 Apr 2025 19:57:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744833394; cv=none; b=V/K/NpkXZGzlkJ0j1jNtKACa1bL8sprwsPKCGHCT9sbClHLlqZAc67OqA2RJgPDsG3mLyW/ejgqini2FyPT3Tk8nN1LVkROACdRugTRGilgyL1HLhEvTKOfJZVpmOfzIuHFFm0TbGLNCFLWZBVs9CjxfswDo8eSSdoRBi1daTBA=
+	t=1744833435; cv=none; b=ZZEilNqqs87ikQ/IocMgnOpFEE9CgtyOnWGqTarF9iNrwjEGnhG61UXCx31Ew8i8LiKSzsg2h07DKI+56vYQ5hIroPQ7nj0ST/0JbaH1NzGgcGSsyQfkrHfvVps+M7+rMrm7Bwwupu7wNGBOXo/xTAtY5wDMBcp0StN2itJIpPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744833394; c=relaxed/simple;
-	bh=ECN0mSjvK7nfTsNYW4AN8TA3yaIpru+1H70FaVM3z9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=CtxBFoluI5Mj05dSF7/SgjztrfPBEhSm2p9qqucuvFg+GQ2som22Gh4Fy50sJfp/xVCOjA2RP74ubkK2KPFSZCsb3MPh9fxrKZHHrMlGzkG0Lk9076lTHf4w2zvG/RxyckxZ6ilXvrwbvBsvrsNL/cOF68CnMWrONHZ4nQ2I02s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2B1KDYs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744833435; c=relaxed/simple;
+	bh=Z3z60e9EMfpzK3ewYe4WJO0V5hgCfBQYc+mH4XR92/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r73kCs/ZSqyqnUMZMw5TwHTSxPr7NTTtZYIYj6EpN2mNkM6qqAb8B4dxnzUWV6J8D66Z2YCdiRfNH3RGG1JtduH1kQBTN6gIXrS11uikK/iOaFt6IAIEuwL5YYoUQcpsLo9US28g+pq2F4y1yCJ3lp/C/+TGt7lXjJBc5Xj+QOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O+J2lix6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2B1KDYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A121C4CEE2;
-	Wed, 16 Apr 2025 19:56:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O+J2lix6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D80CC4CEE2;
+	Wed, 16 Apr 2025 19:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744833393;
-	bh=ECN0mSjvK7nfTsNYW4AN8TA3yaIpru+1H70FaVM3z9k=;
-	h=Date:From:To:Cc:Subject:From;
-	b=d2B1KDYs3A2Gp5tV8lUHtlei7281VncOXRu62V2LPyLV8noXMsg9g79lWFVVoF0QM
-	 pOfSu0Q3g4zHlK/c3d0C3WlqzRzZBA469+wSciPKAjW3ctP9aGdNmsgOKrCcqcaUrQ
-	 MESEaw1Y5D4W0kwSDUJC+ulvKqjSIL2mMPzaDBomGT52BYzm0vF5yCQvTjhX8dDPKT
-	 0aVDLV3UPnb1nvrwnFnbqxJCKmll9O+DfF6jhEun3wnPZEfRqnvLtvc+3ZUwXLRv2R
-	 y12btYJEbWmRR5GNHBC5m8pv+ebEEJJL/uAP4qeMDT5Ef0s+f+1Q8vXxaZF3KrhOEB
-	 q0gvKpnNvkG3A==
-Date: Wed, 16 Apr 2025 14:56:31 -0500
-From: Rob Herring <robh@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [GIT PULL] Devicetree fixes for v6.15, part 1
-Message-ID: <20250416195631.GA3799249-robh@kernel.org>
+	s=k20201202; t=1744833434;
+	bh=Z3z60e9EMfpzK3ewYe4WJO0V5hgCfBQYc+mH4XR92/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O+J2lix64WH4jrUXMxmBV5Ks5TcVHJwlqkpcuEUn7oxi+QKHfX4YLdMNJy5xoQ+hG
+	 WZy7J7hEm6pY45nGCVLuENi7INri6hToesxD0x9AoHV2BIG6gWz5/7BRMrFY4Q9HkH
+	 zIHl/umoRg42AfESNsyUXp/5tY9s9c1Pag0mTRuofrzaG9snSfmT0vHYtq4L2KKe26
+	 d4YJJpisSYNEZwhjQZYjN0/3+RI4L+c7NtSGfi6aLrLH5xlfWIhYx4caSxP4X1akmg
+	 rAyTqIYALjT/wjH4O4idATyx7qWzmoDIr7mRjtX56qEXxL55h9byl3e4yq5v4yZhdw
+	 OnEM/stgy0TLg==
+Date: Wed, 16 Apr 2025 09:57:13 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: rust: add creation of workqueues
+Message-ID: <aAALmSjLyWqrcQ45@slm.duckdns.org>
+References: <20250411-create-workqueue-v1-1-f7dbe7f1e05f@google.com>
+ <Z_1QzTdV8mHJYdQ6@cassiopeiae>
+ <Z_4gb8ZAlbfhobgW@google.com>
+ <Z_45kDv_wAHIBNpI@cassiopeiae>
+ <Z_-f7Bgjw35iXkui@google.com>
+ <CAH5fLgiKxDpWg=dDsTJsrB6Kmkw32GZ9WPO-SrpWm4TZDxGVtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,63 +56,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAH5fLgiKxDpWg=dDsTJsrB6Kmkw32GZ9WPO-SrpWm4TZDxGVtg@mail.gmail.com>
 
-Linus,
+Hello, Alice.
 
-Please pull DT fixes for v6.15.
+On Wed, Apr 16, 2025 at 09:41:21PM +0200, Alice Ryhl wrote:
+...
+> I thought about implementation approaches. The first thought that
+> sprang to mind is add a list of all delayed work items, but now I
+> think we can do better. We can have an atomic counter tracking the
+> number of delayed work items, and have destroy_workqueue() do this:
+> 
+> retry:
+> drain_workqueue(wq);
+> if (has_delayed_work_items(wq)) {
+>     wait_for_delayed_to_be_scheduled(wq);
+>     goto retry;
+> }
+> 
+> where wait_for_delayed_to_be_scheduled() either waits for the counter
+> to hit zero, or waits for at least waits for one of them to be
+> scheduled. For example, maybe wait_for_delayed_to_be_scheduled() could
+> add a dummy work item *without* waking up the worker threads, and then
+> wait for that work item to get executed, which would effectively mean
+> that it sleeps until something else wakes up a worker.
 
-Rob
+I suppose that can work too but the delays can be pretty long, so while
+correct, I'm not sure it'd be very pleasant to use. If we per-cpu lists, I
+don't think the overhead would be all that noticeable, so may as well do
+that?
 
+Thanks.
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-6.15-1
-
-for you to fetch changes up to d5f49921707cc73376ad6cf8410218b438fcd233:
-
-  dt-bindings: soc: fsl: fsl,ls1028a-reset: Fix maintainer entry (2025-04-11 12:50:34 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for v6.15, part 1:
-
-- A couple of maintainers updates
-
-- Remove obsolete Renesas TPU timer binding
-
-- Add i.MX94 support to nxp,sysctr-timer and fsl,irqsteer
-
-- Add support for 'data-lanes' property in fsl,imx8mq-nwl-dsi binding
-
-----------------------------------------------------------------
-Frank Li (3):
-      dt-bindings: display: nwl-dsi: Allow 'data-lanes' property for port@1
-      dt-bindings: interrupt-controller: fsl,irqsteer: Add i.MX94 support
-      dt-bindings: timer: nxp,sysctr-timer: Add i.MX94 support
-
-Geert Uytterhoeven (1):
-      dt-bindings: soc: fsl: fsl,ls1028a-reset: Fix maintainer entry
-
-Kuninori Morimoto (1):
-      dt-bindings: timer: renesas,tpu: remove obsolete binding
-
-Mubin Sayyed (1):
-      dt-bindings: xilinx: Remove myself from maintainership
-
- .../devicetree/bindings/ata/ceva,ahci-1v84.yaml    |  1 -
- .../bindings/display/bridge/nwl-dsi.yaml           | 18 ++++++-
- .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    |  1 -
- .../interrupt-controller/fsl,irqsteer.yaml         |  1 +
- .../devicetree/bindings/pwm/renesas,tpu-pwm.yaml   |  9 ----
- .../bindings/reset/xlnx,zynqmp-reset.yaml          |  1 -
- .../bindings/soc/fsl/fsl,ls1028a-reset.yaml        |  2 +-
- .../bindings/timer/nxp,sysctr-timer.yaml           | 11 +++--
- .../devicetree/bindings/timer/renesas,tpu.yaml     | 56 ----------------------
- .../devicetree/bindings/usb/dwc3-xilinx.yaml       |  1 -
- .../devicetree/bindings/usb/microchip,usb5744.yaml |  1 -
- .../devicetree/bindings/usb/xlnx,usb2.yaml         |  1 -
- 12 files changed, 27 insertions(+), 76 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/renesas,tpu.yaml
+-- 
+tejun
