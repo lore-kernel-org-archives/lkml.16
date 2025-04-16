@@ -1,131 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81897229B2A;
-	Wed, 16 Apr 2025 03:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F8B42288EA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744775735; cv=none; b=qgnRkBV1ajtso4d6p+oQDlnm0eixw7DDynRuLjPjIKfe/ED6aI79x5leGn3//TL12VoG5+7xKoZKfK7C/cnuQfgwthhU5Ab5+xOJLzNzWW36J6ce869hM1bW83Hc1SV3H7LLDD0LLkeu8tHB1d6V62kOQLLmjTOiMd9eSLGmxkI=
+	t=1744775775; cv=none; b=LoSrInlVoCkinTDK0kftEu4LohJAhkwRB2TvA34efgCkbMvzvjkIs/RJzXCXg/BFRxc65Hsl56CeeHAYxD7UpP1xT84sgoDc+KvE07YXFnzZKgRsUkyd5CiGAfoK6+40538GMqKlqZABDcVc3RRThdCz5uO9lBfF5Z4skx/huXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744775735; c=relaxed/simple;
-	bh=nNzjl5SNbF7onxqfGPdJL2S1ZRBegf5wL5c+qn9ZhJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KXPgM9WWNRC/6H3778k2xKtaLqU05gJ9zSi5lLDrfibUfQUiOX9Wm83MSYGbQlx+vwq/rSbNeUpNMgUa6MMIp15B1M/5W1BokeGD6sa+/XsTjh4HCq2a1UV99CnRt04kyDHNe/cBQKnvg6pQnN4sbnk8D4SFeiE3zSFsjuldv9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLVawUuE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLVawUuE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B8FC4CEE2;
-	Wed, 16 Apr 2025 03:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744775735;
-	bh=nNzjl5SNbF7onxqfGPdJL2S1ZRBegf5wL5c+qn9ZhJg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=nLVawUuEqTy+WfTd4vRnoa5egffHzLC0WVP4tKcsWyBwyIGGx+6P0QNRiEr7KlHFX
-	 djvnrtewIpXO4jAiHP4IKQ34ggcKKLhgfNkSI/aAcoZ7BDOEnTzev7qT7gWlOs9VF8
-	 ROlWBZ3I0eax2B9sZdRgvlUXP5+wcBsDhYTPz2jE/GDWdPr1pNIh+LHCA9HNgPVfS4
-	 FJzrgnhOEr8dbM3BgSgoug0YJzTsKRXfVrMVHaXLiUYFyWrOs7sPQqqctbpVSKU77k
-	 Vor+PkqM22ZkjXaqPgFTsUrNvwIm+jc95aZDbdHl9o/114q4VRB9iLtKfAqVTpR3vv
-	 UQTS5zPOAeOTw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 9CA40CE06FE; Tue, 15 Apr 2025 20:55:34 -0700 (PDT)
-Date: Tue, 15 Apr 2025 20:55:34 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH v2 05/12] rcutorture: Add tests for SRCU up/down reader
- primitives
-Message-ID: <d4bbae19-065c-47bd-9493-366aa98d4e6f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <eea8d42f-6d2d-485b-9bb9-4eb77a0e1f95@paulmck-laptop>
- <20250331210314.590622-5-paulmck@kernel.org>
- <d40885a0-b0e3-4f13-a2b3-41ee2defbde0@nvidia.com>
- <37400faf-8d31-44ef-b9d1-6c91fa19b4f3@paulmck-laptop>
- <1d60ee60-2924-433d-a9b7-726f82f0e546@paulmck-laptop>
- <553c33d8-2b51-4772-8aef-97b0163bc78e@nvidia.com>
+	s=arc-20240116; t=1744775775; c=relaxed/simple;
+	bh=CG4W3PtCvho6lU3wdJAKWnvax7/2hSUA0GJTXBRzVf0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lsI+uSAxBAC2hkl3BUioreOjwtj72hQhMa2N3nY5XmvM0NTU+HbrlUXdjl880NioxBhSv6KWe9wY+9LiFgqBTaM/+4+5OLF6y32ymyVWBFbh2yazenBXws9o22iY//gsN9g1cKt+5R7UkcD4DTEEDfoqTb39QMtNdJ/I/UWt3kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E9391516;
+	Tue, 15 Apr 2025 20:56:09 -0700 (PDT)
+Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.16.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 339E53F694;
+	Tue, 15 Apr 2025 20:56:08 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
+Date: Wed, 16 Apr 2025 09:26:04 +0530
+Message-Id: <20250416035604.2717188-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <553c33d8-2b51-4772-8aef-97b0163bc78e@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 09:14:36PM -0400, Joel Fernandes wrote:
-> 
-> 
-> On 4/15/2025 5:15 PM, Paul E. McKenney wrote:
-> > On Tue, Apr 15, 2025 at 10:59:36AM -0700, Paul E. McKenney wrote:
-> >> On Tue, Apr 15, 2025 at 01:16:15PM -0400, Joel Fernandes wrote:
-> >>>
-> >>>
-> >>> On 3/31/2025 5:03 PM, Paul E. McKenney wrote:
-> >>>> This commit adds a new rcutorture.n_up_down kernel boot parameter
-> >>>> that specifies the number of outstanding SRCU up/down readers, which
-> >>>> begin in kthread context and end in an hrtimer handler.  There is a new
-> >>>> kthread ("rcu_torture_updown") that scans an per-reader array looking
-> >>>> for elements whose readers have ended.  This kthread sleeps between one
-> >>>> and two milliseconds between consecutive scans.
-> >>>>
-> >>>> [ paulmck: Apply kernel test robot feedback. ]
-> >>>> [ paulmck: Apply Z qiang feedback. ]
-> >>>>
-> >>>> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >>>
-> >>> For completeness, posting our discussion for the archives, an issue exists in
-> >>> this patch causing the following errors on an ARM64 machine with 288 CPUs:
-> >>>
-> >>> When running SRCU-P test, we intermittently see:
-> >>>
-> >>> [ 9500.806108] ??? Writer stall state RTWS_SYNC(21) g18446744073709551218 f0x0
-> >>> ->state 0x2 cpu 4
-> >>> [ 9515.833356] ??? Writer stall state RTWS_SYNC(21) g18446744073709551218 f0x0
-> >>> ->state 0x2 cpu 4
-> >>>
-> >>> It bisected to just this patch.
-> >>
-> >> Looks like your getting rcutorture running on ARM was well timed!
-> 
-> Yes! Glad I could help.
-> 
-> > And could you please send along your dmesg and .config files?
-> 
-> Sure, attached both for one of the failed runs.
+mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+as expected if those macro constants contain some 128 bit layout elements,
+that are required for D128 page tables. The primary issue is that for D128,
+PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+which the assembler can't accommodate.
 
-Thank you!  That did answer at least one of my questions.  It also showed
-the need for the diff below.  :-/
+Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
 
-As in kvm.sh and friends might well be missing failures in your runs.
+While here also move PTE_MAYBE_NG/PTE_MAYBE_SHARED assembly overrides into
+arch/arm64/kernel/asm-offsets.c to ensure PIRE0_EL1/PIR_EL1 are calculated
+in assembly without arm64_use_ng_mappings and lpa2_is_enabled() symbols
+being accessible. Also move the corresponding comment as well.
 
-							Thanx, Paul
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This patch applies on v6.15-rc2
 
-------------------------------------------------------------------------
+Changes in V2:
 
-diff --git a/tools/testing/selftests/rcutorture/bin/console-badness.sh b/tools/testing/selftests/rcutorture/bin/console-badness.sh
-index aad51e7c0183d..991fb11306eb6 100755
---- a/tools/testing/selftests/rcutorture/bin/console-badness.sh
-+++ b/tools/testing/selftests/rcutorture/bin/console-badness.sh
-@@ -10,7 +10,7 @@
- #
- # Authors: Paul E. McKenney <paulmck@kernel.org>
+- Added asm-offsets.c based PIE_E0_ASM and PIE_E1_ASM symbols as per Ard
+- Moved PTE_MAYBE_NG and PTE_MAYBE_SHARED overrides inside asm-offsets.c
+  along with the corresponding comment as per Ard
+
+Changes in V1:
+
+https://lore.kernel.org/linux-arm-kernel/20250410074024.1545768-1-anshuman.khandual@arm.com/
+
+ arch/arm64/kernel/asm-offsets.c | 16 ++++++++++++++++
+ arch/arm64/mm/proc.S            | 19 ++-----------------
+ 2 files changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index eb1a840e4110..5b99a78f6882 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -182,5 +182,21 @@ int main(void)
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+   DEFINE(FTRACE_OPS_DIRECT_CALL,	offsetof(struct ftrace_ops, direct_call));
+ #endif
++	/*
++	 * The PROT_* macros describing the various memory types may resolve to
++	 * C expressions if they include the PTE_MAYBE_* macros, and so they
++	 * can only be used from C code. The PIE_E* constants below are also
++	 * defined in terms of those macros, but will mask out those
++	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
++	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
++	 */
++#undef PTE_MAYBE_NG
++#define PTE_MAYBE_NG		0
++
++#undef PTE_MAYBE_SHARED
++#define PTE_MAYBE_SHARED	0
++
++  DEFINE(PIE_E0_ASM, PIE_E0);
++  DEFINE(PIE_E1_ASM, PIE_E1);
+   return 0;
+ }
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index fb30c8804f87..80d470aa469d 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -512,26 +512,11 @@ alternative_else_nop_endif
+ 	ubfx	x1, x1, #ID_AA64MMFR3_EL1_S1PIE_SHIFT, #4
+ 	cbz	x1, .Lskip_indirection
  
--grep -E 'Badness|WARNING:|Warn|BUG|===========|BUG: KCSAN:|Call Trace:|Oops:|detected stalls on CPUs/tasks:|self-detected stall on CPU|Stall ended before state dump start|\?\?\? Writer stall state|rcu_.*kthread starved for|!!!' |
-+grep -E 'Badness|WARNING:|Warn|BUG|===========|BUG: KCSAN:|Call Trace:|Call trace:|Oops:|detected stalls on CPUs/tasks:|self-detected stall on CPU|Stall ended before state dump start|\?\?\? Writer stall state|rcu_.*kthread starved for|!!!' |
- grep -v 'ODEBUG: ' |
- grep -v 'This means that this is a DEBUG kernel and it is' |
- grep -v 'Warning: unable to open an initial console' |
-diff --git a/tools/testing/selftests/rcutorture/bin/parse-console.sh b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-index b07c11cf6929d..21e6ba3615f6a 100755
---- a/tools/testing/selftests/rcutorture/bin/parse-console.sh
-+++ b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-@@ -148,7 +148,7 @@ then
- 			summary="$summary  KCSAN: $n_kcsan"
- 		fi
- 	fi
--	n_calltrace=`grep -c 'Call Trace:' $file`
-+	n_calltrace=`grep -Ec 'Call Trace:|Call trace:' $file`
- 	if test "$n_calltrace" -ne 0
- 	then
- 		summary="$summary  Call Traces: $n_calltrace"
+-	/*
+-	 * The PROT_* macros describing the various memory types may resolve to
+-	 * C expressions if they include the PTE_MAYBE_* macros, and so they
+-	 * can only be used from C code. The PIE_E* constants below are also
+-	 * defined in terms of those macros, but will mask out those
+-	 * PTE_MAYBE_* constants, whether they are set or not. So #define them
+-	 * as 0x0 here so we can evaluate the PIE_E* constants in asm context.
+-	 */
+-
+-#define PTE_MAYBE_NG		0
+-#define PTE_MAYBE_SHARED	0
+-
+-	mov_q	x0, PIE_E0
++	mov_q	x0, PIE_E0_ASM
+ 	msr	REG_PIRE0_EL1, x0
+-	mov_q	x0, PIE_E1
++	mov_q	x0, PIE_E1_ASM
+ 	msr	REG_PIR_EL1, x0
+ 
+-#undef PTE_MAYBE_NG
+-#undef PTE_MAYBE_SHARED
+-
+ 	orr	tcr2, tcr2, TCR2_EL1_PIE
+ 	msr	REG_TCR2_EL1, x0
+ 
+-- 
+2.25.1
+
