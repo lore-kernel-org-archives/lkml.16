@@ -1,118 +1,167 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC9E1FFC55
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CA022DFB6;
+	Wed, 16 Apr 2025 08:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792452; cv=none; b=pcK6NNQAj7o5iNAHvVJkhKn/0ZuIorEDlq7Ynaj2KcopOmdatrgMKpECDSIvC6o8LY1/mzOn3oGLpAXRmmbnhLp0BN+B5h31N4t8T/lbRkJMrdz9b8nZaRLOdmxcOGnlhvmmO4+L2Z+lqhLDrBOl/p0ROPxNC9PkRU6Q75eUirs=
+	t=1744792469; cv=none; b=CtELXYFp1ONP5kEJoiUFVCPyEiMlVrC2blcR+UwzCqBCIvODz88ILsc9knAIhpuj/2Nn7+b97HUnaRtwOPkKPGnUA+b4Uik6LabS1iwCXCYDrtIiYU0Y/vKT5fwvHsRS8DpoX7JdkO7NmGS2aC3Kqz7GGgYUeOmz/iCcwhrnFvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792452; c=relaxed/simple;
-	bh=p6TnZ/CKicDj5Ksyj8vyeb5NLMWnc0/9QDk6PC8l6Oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aApJ0r0L69nonch9M1Xhs6NNHpK7tL5HD/7OJpElcLuJZwzR5fVXdzE0h/7KK13P9/RwnrtIz/WgC5hcZX7b+cisF4AR5Yv5bQI1bWZ5rznN/akUhd5iet7sInNs2IHDK2zO9VJE57JQ6WvBwqEQIFUFmzaCbt+Fi3NYno8kKTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SWSIttHI; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744792469; c=relaxed/simple;
+	bh=ndLpCVsPDQ53RFlJHDrB2oFUglcdoN6fweLm3J6ZP5k=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hwtaGjkcoE4bUw0fMl3+fFU/DACe+HDEaJzfeiyRd+A/fhTbYdD4O21KSYMtfotRJyAIeow8xTyJgAJT8QdwnMInQT5QIZrCEIWS5OoJ5eFS5/joOeKx/CaNdXlHbtYnfQTkuP/T3wKt7fwTOqYpPwj1ZlI8xMhx7MvqLbqxMhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BPoYFEk0; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SWSIttHI"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so5763583f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744792448; x=1745397248; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lkeRSSXovGINyynGZ8ZsuSX54OiYzhhOx5T2XgU6em0=;
-        b=SWSIttHIgLpSI37EBZ5q6VeV5EjfSopBCFCC7latvx72Acxgfo5oRG7Qu0GJuAcUhw
-         uHDTyKxiyzS5TSMKtu1Eqo4SzoyuapbiJRGG0EBIq39MbqDPYX0CaPt5Mr9erZOWAWuY
-         H0Ib65bgMMgEvfnApvhfi4/2ahoMuUG5u8ASRViCxSj56DvSVXU2s8rrYLgU2h6TKOlZ
-         XvJOTy4c+5ANictR0a2vLo0/rv9/RLYyLflM7Hj2t9sKx0Ct5ep2RW+4w+j4ZXGaLfXr
-         gJEyBURcGolNFLGumrdp/SIYplSbs44kuhendilt+ZdFieUQuxxcpVT1lH1ZAqWj0V4v
-         vivA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792448; x=1745397248;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lkeRSSXovGINyynGZ8ZsuSX54OiYzhhOx5T2XgU6em0=;
-        b=IC59B4DBVKZz6fyJXPi1/LNPF3ZMUnd7I70dXKOCGO0zfMkU/sNmEaWnS9E4hAWYQk
-         7jhfgt2DSTK7i2Hf6zAXBDuIW+N9ak23kn2/7MGgbpvzSoYzEPIjptahdz/rtNFr5l6e
-         7YvXemOjBN4aTCzdTpbxC3+TyrJcYPnSfAEsa352NSktbFXsrrYZolAHE/LEcmS6UuCe
-         fplma1wYZcA8UvaD3+Gc8ung7HiBxuVZi5kG8qwE8cCFdTtHheBlGrBikyuLiGz7NR0o
-         MSkDdX4AJwhrqCFmIjph0I6c7g7ewpSeNI+sy0FCYLLmYCLsY6EPCav4aqh2w/TK3A/a
-         DuZA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0VNq+DLxwHqzCCnZr8IL0Thi4bFINBZQkVKsLVflGXi4aYxA5MM1GnF5kHcNXdYRJcwfaY2Sx351cpjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWEOGfKYyBgaFz7GSk0+8SBukXHIqzPacxhjLDjTzt+F9Wr2SQ
-	9ZBXlxcXOSKpGFZJI6uq7GPkisAPkc9WuUoid5zP3fE3ZDycwr3Le1XjkS8MBxHCbfoAuqz8gC2
-	LDlw=
-X-Gm-Gg: ASbGnctWW9gxBuK2Vz1+beBvWpJ+Ze+FAVl9qqmlDRJgT66XYivM1Jj0L8ws4KIrxMV
-	4kGWyCryeEC+HZD6jlUPdfbz5nVGUOk5BFZ+4ecijFJJM5CRBQOdmriA+wyO3Aq7TTC0Fa1TAwH
-	/B/Hrabq+UifOx/8aVsZrthzkppTx18QQC/WoTPNJ/uABl0Ywo+HOskA6qh/c8r5aLp5DvC96W/
-	hVNNI0+CgmU3nJBlnVVLnyvg5zHfl9KBLXq41o+pOsfcKoZ92kXRjzPHOVWPELWLv54ozQbi2Qo
-	S4Y0qcyAPTzSl8pZdh2DECzx03nWCXybciF5dKSFtfQNaJNbKLN5f1EesSRjvmpB4Lwsl/t9o5H
-	54OjChZk=
-X-Google-Smtp-Source: AGHT+IFk6ffCmveyDFjQEN2c2zgFb5GDDDgKa3HvYYBMlgaFVpLjRQXf8qm2p4Eu7CeJwjMcnw2Fpg==
-X-Received: by 2002:a05:6000:1ac7:b0:391:1923:5a91 with SMTP id ffacd0b85a97d-39ee5b9fa3bmr839877f8f.55.1744792447905;
-        Wed, 16 Apr 2025 01:34:07 -0700 (PDT)
-Received: from localhost (p200300f65f13aa0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:aa04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae963f62sm16216034f8f.5.2025.04.16.01.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:34:07 -0700 (PDT)
-Date: Wed, 16 Apr 2025 10:34:05 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>, 
-	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/2] pwm: pwmchip character device
-Message-ID: <kylbs7sod5xgvhkutxs7mmuxyeww65pcies7ed7lnzuwloym7i@jebshr47dnir>
-References: <cover.1744120697.git.ukleinek@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BPoYFEk0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744792467; x=1776328467;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=ndLpCVsPDQ53RFlJHDrB2oFUglcdoN6fweLm3J6ZP5k=;
+  b=BPoYFEk0e8ffHbG05RvKyMKcuxqUPulXk3kkUn8VDrvYhWaIpfC+F0kR
+   /VPSnJCRUQRjsXkDDjuV0M5DBtxjKH451EFSRbMfEgszk73NH9B9LChbx
+   4Vi07XsFTpmQLjpSq75z8ernBDxGUSj+pcicq8OSKCNTcn4UmC4/sqYkU
+   Hnk7HJe1xDrEc7xjWp8FtX4WvgDgnojtnfFAkCruEFmEBsoDp02SvWuCq
+   9ao6aSvspeTcAjV80LTN2HHj6xcGH3Ec28og1mY/DMtjIup33mXWhLg4q
+   xYRg2aXHLeIr14I3tvsAaXgCP/xVWwrAan3CWUgdzHA669bWAIpn3+YHi
+   g==;
+X-CSE-ConnectionGUID: rw7bEigiRnuDq9Vq8/fLsw==
+X-CSE-MsgGUID: WBzoMjVRSLCTjiAuEWxQIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57322877"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="57322877"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:34:26 -0700
+X-CSE-ConnectionGUID: 44MKtmDVR8GjGPYWbh7Ddg==
+X-CSE-MsgGUID: gO7j7/VySBmt52m/Rwfmug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="153593714"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.246.96])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:34:19 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@intel.com>, David Airlie <airlied@gmail.com>, Joonas
+ Lahtinen <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+In-Reply-To: <4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+ <4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+Date: Wed, 16 Apr 2025 11:34:16 +0300
+Message-ID: <87tt6opks7.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ob5nu2gmojt5e6be"
-Content-Disposition: inline
-In-Reply-To: <cover.1744120697.git.ukleinek@kernel.org>
+Content-Type: text/plain
+
+On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> As reported by Andy, kernel-doc.py is creating a __pycache__
+> directory at build time.
+>
+> Disable creation of __pycache__ for the libraries used by
+> kernel-doc.py, when excecuted via the build system or via
+> scripts/find-unused-docs.sh.
+>
+> Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  drivers/gpu/drm/Makefile      | 2 +-
+>  drivers/gpu/drm/i915/Makefile | 2 +-
+>  include/drm/Makefile          | 2 +-
+>  scripts/Makefile.build        | 2 +-
+>  scripts/find-unused-docs.sh   | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index ed54a546bbe2..d21d0cd2c752 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+>  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+>        cmd_hdrtest = \
+>  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+
+KERNELDOC is not set here.
+
+/bin/sh: 1: -none: not found
 
 
---ob5nu2gmojt5e6be
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 0/2] pwm: pwmchip character device
-MIME-Version: 1.0
+>  		touch $@
+>  
+>  $(obj)/%.hdrtest: $(src)/%.h FORCE
+> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+> index ed05b131ed3a..ab6b89a163e7 100644
+> --- a/drivers/gpu/drm/i915/Makefile
+> +++ b/drivers/gpu/drm/i915/Makefile
+> @@ -408,7 +408,7 @@ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
+>  #
+>  # Enable locally for CONFIG_DRM_I915_WERROR=y. See also scripts/Makefile.build
+>  ifdef CONFIG_DRM_I915_WERROR
+> -    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none -Werror $<
+> +    cmd_checkdoc = PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none -Werror $<
+>  endif
+>  
+>  # header test
+> diff --git a/include/drm/Makefile b/include/drm/Makefile
+> index a7bd15d2803e..1df6962556ef 100644
+> --- a/include/drm/Makefile
+> +++ b/include/drm/Makefile
+> @@ -11,7 +11,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
+>  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+>        cmd_hdrtest = \
+>  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> +		PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+>  		touch $@
+>  
+>  $(obj)/%.hdrtest: $(src)/%.h FORCE
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 13dcd86e74ca..884dc86ce04e 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -83,7 +83,7 @@ else ifeq ($(KBUILD_CHECKSRC),2)
+>  endif
+>  
+>  ifneq ($(KBUILD_EXTRA_WARN),)
+> -  cmd_checkdoc = $(srctree)/scripts/kernel-doc -none $(KDOCFLAGS) \
+> +  cmd_checkdoc = PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(KDOCFLAGS) \
+>          $(if $(findstring 2, $(KBUILD_EXTRA_WARN)), -Wall) \
+>          $<
+>  endif
+> diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
+> index ee6a50e33aba..d6d397fbf917 100755
+> --- a/scripts/find-unused-docs.sh
+> +++ b/scripts/find-unused-docs.sh
+> @@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
+>  	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
+>  	continue;
+>  	fi
+> -	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
+> +	str=$(PYTHONDONTWRITEBYTECODE=1 scripts/kernel-doc -export "$file" 2>/dev/null)
+>  	if [[ -n "$str" ]]; then
+>  	echo "$file"
+>  	fi
 
-Hello,
-
-On Tue, Apr 08, 2025 at 04:23:53PM +0200, Uwe Kleine-K=F6nig wrote:
-> Uwe Kleine-K=F6nig (2):
->   pwm: Better document return value of pwm_round_waveform_might_sleep()
->   pwm: Add support for pwmchip devices for faster and easier userspace
->     access
-
-I applied the first patch to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git
-pwm/for-next. Will respin the 2nd.
-
-Best regards
-Uwe
-
---ob5nu2gmojt5e6be
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/a3oACgkQj4D7WH0S
-/k40Hwf+LU10B2plsdQKrs7KHKR42UFnBjLi6eotHQ4xH8xEBlOMa3z56E/D93tA
-xXkQmn0KJckkkiWQ1ol5Y9MeNeNF9Dm5EDM4FWY21UvK33xwjBuFjbi7Fv9ivtNF
-FIpCVpZPd/Fpuo/ZhU4GnUYPk+9QBvIk5hXqsYcxd6Hm5MFMcbbtCYSkUHlo6OT8
-V2vCn543NCUmLXL0BZ6ZO//9KncLhMRKT0tASvmiLJveVt+hl1OhfdwI7M0i2tqz
-mLe4fbNBDmveKnzIqwNErfGuwytfaXocoxZjrItqMcZ6V/RfjJHI+g9QYoBvHwpN
-/MTpfMAx94+ax9ixnHJhx7rby0Fp6Q==
-=lYsT
------END PGP SIGNATURE-----
-
---ob5nu2gmojt5e6be--
+-- 
+Jani Nikula, Intel
