@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06486233D9E
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:05:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE68235368
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794354; cv=none; b=P338drlWaFIqmmXEF1oAi/92M2/gMKhdlQKLKP/oRdQfjItgvEdIFPhHIiFo8QNc0IlvVTXQEFfeV01nzhUpLRcMA3I3PJ+gehl44vAumdJJ2698/N8cFxTm2mm3gQOyZDwxJPdFthmLLP3aHaqnAUJ0vHNip94gOdWpyz1whmI=
+	t=1744794359; cv=none; b=Qv/7rhL6fBlUhZdhZxaijQYzrjKk40r6UMYvW3Jdu0ZZoQ06oOcYFsGc2J+pQ4T+wOFPXLgHCDFqTFks/jgBvMRNAkaQJPeFkgMdjLUzubUNC2fJ0zeTVhY6016XYkcWWvrLKxQub2RuzUwTjJLFzFzyEKPH4cOpHR01EB2SP6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794354; c=relaxed/simple;
-	bh=kihrXIMr9hHWLXef1Tj3ZL14rz9bX1cM8nUf+E9jFa8=;
+	s=arc-20240116; t=1744794359; c=relaxed/simple;
+	bh=GM2lvG63aDQnKhf5nvfBhExF/cBPzxtOrz+DdyFBirY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rfwr7l8viBIr22ZmE7Y+qQD1OIm8cLOm289s+TAx6Qu2iN9srD7Lplyk7ZDGua+xnYaat/BEZgd9wGLXB94A3AvGi91gB8n5GkcgrW837gjkPsCoczCr0YwbK7ZbpSwDDPVnrQn4sFO0iccVc9T4PpCsytsrr/L4HgiP2vduYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3w7xUGi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ElZ92pMLgTs2NUtAYi1SXg1FjUUB31JB4P/BQt/d4ehjTFeNbpwnY0vbubMdXsumNpdYWwfaWbPSIHyISSWoWRIBJl8F+yU6kEoE/pPa0DkHxxNKNj8yBLOZOkeq5S/LTgzvS/oM6A06TjLWLqkOtHPOgwEudCjsMDulDyqAUlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZHRrteu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3w7xUGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C3DC4CEEE;
-	Wed, 16 Apr 2025 09:05:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZHRrteu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C169BC4CEEE;
+	Wed, 16 Apr 2025 09:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744794353;
-	bh=kihrXIMr9hHWLXef1Tj3ZL14rz9bX1cM8nUf+E9jFa8=;
+	s=k20201202; t=1744794358;
+	bh=GM2lvG63aDQnKhf5nvfBhExF/cBPzxtOrz+DdyFBirY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q3w7xUGiHhSZiElj3m2yvdeWq2R8qmTFcTjFLp20T/zRpolN/ciIAa7y8g3QniYeU
-	 ydokFmNM0x3iU5kiBcyavkK1XRu/T1T1O7i9s8Fr9UsRxCNZGMrXfegyq1nGmeUhrw
-	 6ujySICE+h1s4UMd/hi1H0QQy/vCH7C2zp/uZxYYjgB0/9HYlqbZydCc9+C87xLgZK
-	 iIAEe45PN2yVdnMM9J4HpKXct17HTQZyeYoSjEjw1uYCX9d9OhVnfxk9VqNyraNMr2
-	 KcMODhLvmwO0+GcvWocKAc22djR2qo7wf4bEAjeWJoCuCgHvT5zNtwDKbKlQfD15DA
-	 lKYraxA5Rzyew==
+	b=mZHRrteuSF24WlSCPjyPsVqS14o8gU7r5rL/p8upc64DrqLIzGmZ4c0oGrHdYs9bl
+	 oK+6EW0n5UxohxILbvSoVmGC6WMqEuEYeH9ci/ICRQ7T2RdgE0OwbqEMH9aRda1+22
+	 FkG/B8h0r+HmRDqDzG3oKcvC/EP8pLYnJln5NcHTDNzUSwlvM9b4sr4K+yZdc7Omfw
+	 DDHBvHiRmMnoZKYqv4NbwiHvsAG/vOXSbB8e3QGB6vtRFx31ARkFB753GE8yM133yi
+	 KgAUI3vWYvbRCvvU4cvyigGx12SNDyZZ2qJIWn8cmQuhkpuUhCItgk2Q00at4lqR6l
+	 calcC3Cxf9PNw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -33,16 +33,10 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	"H . Peter Anvin" <hpa@zytor.com>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Lyude Paul <lyude@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: [PATCH 01/10] rust: Rename timer_container_of() to hrtimer_container_of()
-Date: Wed, 16 Apr 2025 11:05:35 +0200
-Message-ID: <20250416090544.3311613-2-mingo@kernel.org>
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 03/10] treewide, timers: Rename try_to_del_timer_sync() => timer_delete_sync_try()
+Date: Wed, 16 Apr 2025 11:05:37 +0200
+Message-ID: <20250416090544.3311613-4-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250416090544.3311613-1-mingo@kernel.org>
 References: <20250416090544.3311613-1-mingo@kernel.org>
@@ -54,104 +48,190 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This primitive is dealing with 'struct hrtimer' objects, not
-'struct timer_list' objects - so clarify the name.
-
-We want to introduce the timer_container_of() symbol in the kernel
-for timer_list, make sure there's no clash of namespaces, at least
-on the conceptual plane.
+Move this API to the canonical timer_*() namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- rust/kernel/time/hrtimer.rs         | 4 ++--
- rust/kernel/time/hrtimer/arc.rs     | 2 +-
- rust/kernel/time/hrtimer/pin.rs     | 2 +-
- rust/kernel/time/hrtimer/pin_mut.rs | 2 +-
- rust/kernel/time/hrtimer/tbox.rs    | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/apic/vector.c           |  2 +-
+ drivers/char/random.c                   |  4 ++--
+ drivers/irqchip/irq-riscv-imsic-state.c |  2 +-
+ include/linux/timer.h                   |  2 +-
+ kernel/time/timer.c                     |  6 +++---
+ net/bridge/br_multicast.c               | 16 ++++++++--------
+ sound/pci/ctxfi/cttimer.c               |  2 +-
+ 7 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index ce53f8579d18..f3fb7a0caf2f 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -338,7 +338,7 @@ pub unsafe trait HasHrTimer<T> {
-     /// # Safety
-     ///
-     /// `ptr` must point to a [`HrTimer<T>`] field in a struct of type `Self`.
--    unsafe fn timer_container_of(ptr: *mut HrTimer<T>) -> *mut Self
-+    unsafe fn hrtimer_container_of(ptr: *mut HrTimer<T>) -> *mut Self
-     where
-         Self: Sized;
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index fee42a73d64a..93069b13d3af 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -864,7 +864,7 @@ void lapic_offline(void)
+ 	__vector_cleanup(cl, false);
  
-@@ -498,7 +498,7 @@ unsafe fn raw_get_timer(
-             }
+ 	irq_matrix_offline(vector_matrix);
+-	WARN_ON_ONCE(try_to_del_timer_sync(&cl->timer) < 0);
++	WARN_ON_ONCE(timer_delete_sync_try(&cl->timer) < 0);
+ 	WARN_ON_ONCE(!hlist_empty(&cl->head));
  
-             #[inline]
--            unsafe fn timer_container_of(
-+            unsafe fn hrtimer_container_of(
-                 ptr: *mut $crate::time::hrtimer::HrTimer<$timer_type>,
-             ) -> *mut Self {
-                 // SAFETY: As per the safety requirement of this function, `ptr`
-diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
-index 4a984d85b4a1..5cfe6c27795f 100644
---- a/rust/kernel/time/hrtimer/arc.rs
-+++ b/rust/kernel/time/hrtimer/arc.rs
-@@ -80,7 +80,7 @@ impl<T> RawHrTimerCallback for Arc<T>
+ 	unlock_vector_lock();
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38f2fab29c56..4ea4dccc7c46 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1311,9 +1311,9 @@ static void __cold try_to_generate_entropy(void)
+ 	while (!crng_ready() && !signal_pending(current)) {
+ 		/*
+ 		 * Check !timer_pending() and then ensure that any previous callback has finished
+-		 * executing by checking try_to_del_timer_sync(), before queueing the next one.
++		 * executing by checking timer_delete_sync_try(), before queueing the next one.
+ 		 */
+-		if (!timer_pending(&stack->timer) && try_to_del_timer_sync(&stack->timer) >= 0) {
++		if (!timer_pending(&stack->timer) && timer_delete_sync_try(&stack->timer) >= 0) {
+ 			struct cpumask timer_cpus;
+ 			unsigned int num_cpus;
  
-         // SAFETY: By C API contract `ptr` is the pointer we passed when
-         // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
--        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+        let data_ptr = unsafe { T::hrtimer_container_of(timer_ptr) };
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
+index bdf5cd2037f2..c39e573825d4 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.c
++++ b/drivers/irqchip/irq-riscv-imsic-state.c
+@@ -564,7 +564,7 @@ void imsic_state_offline(void)
+ 	struct imsic_local_priv *lpriv = this_cpu_ptr(imsic->lpriv);
  
-         // SAFETY:
-         //  - `data_ptr` is derived form the pointer to the `T` that was used to
-diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
-index f760db265c7b..d16a676b0639 100644
---- a/rust/kernel/time/hrtimer/pin.rs
-+++ b/rust/kernel/time/hrtimer/pin.rs
-@@ -83,7 +83,7 @@ impl<'a, T> RawHrTimerCallback for Pin<&'a T>
+ 	raw_spin_lock_irqsave(&lpriv->lock, flags);
+-	WARN_ON_ONCE(try_to_del_timer_sync(&lpriv->timer) < 0);
++	WARN_ON_ONCE(timer_delete_sync_try(&lpriv->timer) < 0);
+ 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+ #endif
+ }
+diff --git a/include/linux/timer.h b/include/linux/timer.h
+index 8ead870b57d0..6e249ef81e59 100644
+--- a/include/linux/timer.h
++++ b/include/linux/timer.h
+@@ -162,7 +162,7 @@ extern void add_timer(struct timer_list *timer);
+ extern void add_timer_local(struct timer_list *timer);
+ extern void add_timer_global(struct timer_list *timer);
  
-         // SAFETY: By the safety requirement of this function, `timer_ptr`
-         // points to a `HrTimer<T>` contained in an `T`.
--        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+        let receiver_ptr = unsafe { T::hrtimer_container_of(timer_ptr) };
+-extern int try_to_del_timer_sync(struct timer_list *timer);
++extern int timer_delete_sync_try(struct timer_list *timer);
+ extern int timer_delete_sync(struct timer_list *timer);
+ extern int timer_delete(struct timer_list *timer);
+ extern int timer_shutdown_sync(struct timer_list *timer);
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4d915c0a263c..827fa262093f 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1511,7 +1511,7 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
+ }
  
-         // SAFETY:
-         //  - By the safety requirement of this function, `timer_ptr`
-diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
-index 90c0351d62e4..17c68f8fbb37 100644
---- a/rust/kernel/time/hrtimer/pin_mut.rs
-+++ b/rust/kernel/time/hrtimer/pin_mut.rs
-@@ -87,7 +87,7 @@ impl<'a, T> RawHrTimerCallback for Pin<&'a mut T>
+ /**
+- * try_to_del_timer_sync - Try to deactivate a timer
++ * timer_delete_sync_try - Try to deactivate a timer
+  * @timer:	Timer to deactivate
+  *
+  * This function tries to deactivate a timer. On success the timer is not
+@@ -1526,11 +1526,11 @@ static int __try_to_del_timer_sync(struct timer_list *timer, bool shutdown)
+  * * %1  - The timer was pending and deactivated
+  * * %-1 - The timer callback function is running on a different CPU
+  */
+-int try_to_del_timer_sync(struct timer_list *timer)
++int timer_delete_sync_try(struct timer_list *timer)
+ {
+ 	return __try_to_del_timer_sync(timer, false);
+ }
+-EXPORT_SYMBOL(try_to_del_timer_sync);
++EXPORT_SYMBOL(timer_delete_sync_try);
  
-         // SAFETY: By the safety requirement of this function, `timer_ptr`
-         // points to a `HrTimer<T>` contained in an `T`.
--        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+        let receiver_ptr = unsafe { T::hrtimer_container_of(timer_ptr) };
+ #ifdef CONFIG_PREEMPT_RT
+ static __init void timer_base_init_expiry_lock(struct timer_base *base)
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index 3e61a2798d63..bf7e52b2bb13 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -2061,7 +2061,7 @@ static void br_multicast_enable(struct bridge_mcast_own_query *query)
+ {
+ 	query->startup_sent = 0;
  
-         // SAFETY:
-         //  - By the safety requirement of this function, `timer_ptr`
-diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
-index 2071cae07234..9dace895ce58 100644
---- a/rust/kernel/time/hrtimer/tbox.rs
-+++ b/rust/kernel/time/hrtimer/tbox.rs
-@@ -103,7 +103,7 @@ impl<T, A> RawHrTimerCallback for Pin<Box<T, A>>
+-	if (try_to_del_timer_sync(&query->timer) >= 0 ||
++	if (timer_delete_sync_try(&query->timer) >= 0 ||
+ 	    timer_delete(&query->timer))
+ 		mod_timer(&query->timer, jiffies);
+ }
+@@ -3480,7 +3480,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
+ 	if (mp->host_joined &&
+ 	    (timer_pending(&mp->timer) ?
+ 	     time_after(mp->timer.expires, now + max_delay) :
+-	     try_to_del_timer_sync(&mp->timer) >= 0))
++	     timer_delete_sync_try(&mp->timer) >= 0))
+ 		mod_timer(&mp->timer, now + max_delay);
  
-         // SAFETY: By C API contract `ptr` is the pointer we passed when
-         // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
--        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+        let data_ptr = unsafe { T::hrtimer_container_of(timer_ptr) };
+ 	for (pp = &mp->ports;
+@@ -3488,7 +3488,7 @@ static void br_ip4_multicast_query(struct net_bridge_mcast *brmctx,
+ 	     pp = &p->next) {
+ 		if (timer_pending(&p->timer) ?
+ 		    time_after(p->timer.expires, now + max_delay) :
+-		    try_to_del_timer_sync(&p->timer) >= 0 &&
++		    timer_delete_sync_try(&p->timer) >= 0 &&
+ 		    (brmctx->multicast_igmp_version == 2 ||
+ 		     p->filter_mode == MCAST_EXCLUDE))
+ 			mod_timer(&p->timer, now + max_delay);
+@@ -3569,7 +3569,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
+ 	if (mp->host_joined &&
+ 	    (timer_pending(&mp->timer) ?
+ 	     time_after(mp->timer.expires, now + max_delay) :
+-	     try_to_del_timer_sync(&mp->timer) >= 0))
++	     timer_delete_sync_try(&mp->timer) >= 0))
+ 		mod_timer(&mp->timer, now + max_delay);
  
-         // SAFETY:
-         //  - As per the safety requirements of the trait `HrTimerHandle`, the
+ 	for (pp = &mp->ports;
+@@ -3577,7 +3577,7 @@ static int br_ip6_multicast_query(struct net_bridge_mcast *brmctx,
+ 	     pp = &p->next) {
+ 		if (timer_pending(&p->timer) ?
+ 		    time_after(p->timer.expires, now + max_delay) :
+-		    try_to_del_timer_sync(&p->timer) >= 0 &&
++		    timer_delete_sync_try(&p->timer) >= 0 &&
+ 		    (brmctx->multicast_mld_version == 1 ||
+ 		     p->filter_mode == MCAST_EXCLUDE))
+ 			mod_timer(&p->timer, now + max_delay);
+@@ -3649,7 +3649,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
+ 			if (!hlist_unhashed(&p->mglist) &&
+ 			    (timer_pending(&p->timer) ?
+ 			     time_after(p->timer.expires, time) :
+-			     try_to_del_timer_sync(&p->timer) >= 0)) {
++			     timer_delete_sync_try(&p->timer) >= 0)) {
+ 				mod_timer(&p->timer, time);
+ 			}
+ 
+@@ -3665,7 +3665,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
+ 		if (mp->host_joined &&
+ 		    (timer_pending(&mp->timer) ?
+ 		     time_after(mp->timer.expires, time) :
+-		     try_to_del_timer_sync(&mp->timer) >= 0)) {
++		     timer_delete_sync_try(&mp->timer) >= 0)) {
+ 			mod_timer(&mp->timer, time);
+ 		}
+ 
+@@ -3681,7 +3681,7 @@ br_multicast_leave_group(struct net_bridge_mcast *brmctx,
+ 		if (!hlist_unhashed(&p->mglist) &&
+ 		    (timer_pending(&p->timer) ?
+ 		     time_after(p->timer.expires, time) :
+-		     try_to_del_timer_sync(&p->timer) >= 0)) {
++		     timer_delete_sync_try(&p->timer) >= 0)) {
+ 			mod_timer(&p->timer, time);
+ 		}
+ 
+diff --git a/sound/pci/ctxfi/cttimer.c b/sound/pci/ctxfi/cttimer.c
+index 56bf567d98b1..fa6867adb42b 100644
+--- a/sound/pci/ctxfi/cttimer.c
++++ b/sound/pci/ctxfi/cttimer.c
+@@ -119,7 +119,7 @@ static void ct_systimer_stop(struct ct_timer_instance *ti)
+ static void ct_systimer_prepare(struct ct_timer_instance *ti)
+ {
+ 	ct_systimer_stop(ti);
+-	try_to_del_timer_sync(&ti->timer);
++	timer_delete_sync_try(&ti->timer);
+ }
+ 
+ #define ct_systimer_free	ct_systimer_prepare
 -- 
 2.45.2
 
