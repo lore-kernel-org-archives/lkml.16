@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D7819ABAB;
-	Wed, 16 Apr 2025 13:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AE71B6D08;
+	Wed, 16 Apr 2025 13:15:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809334; cv=none; b=f5ugCcb/+mX+v40tMKj7l603Uc80+kKFWUh3SKLmCct8VVL3wICusg5m/7HM3zUQgkJYvn5ir5WqaojHuz1Wk/oiY2ozjoXcUwxD6qIHpZKYUOcMn07Xz4FWI16TZTlYgl3VmUTGdTLSN/InrfkPJozhu9QUIyDQh7bN+hEMJAo=
+	t=1744809343; cv=none; b=ZGOWv8SGmDL+XFlvME084eIRbLypF4TdUCXvnrGLTgSb0YPnHRGlxh9JOfd4ZKL5i50zDOJfwYF85Hi/vwfFxNAridgn35cLvS02MdakhfEim4UJ3n1ZmECwwJUSGKRgIpNK+ZCRw+F04h70b5+Qgc/kHIyy+xgGQXNtKd71jWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809334; c=relaxed/simple;
-	bh=UksMB/TSljPXbwmxfQmIH/846gqV+jBpHPGQhk3lL0M=;
+	s=arc-20240116; t=1744809343; c=relaxed/simple;
+	bh=nDLCOf0Qx8OCk6bvF8FEbrcg4lHtvsGudmJTJAPMq1A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=moCSR3Y1NnO3+BdnvnGT0hiMsxQx5xqM3DTyCNqb6Vs1kzzNPz6t/ME0ivMOCXIe41nTvyrvJn6awI0M9hQMfNZ0tEs3WsOj4BZv+YnXOZBFQ50Vxn6+PxW+X0giPV+uXP3K94tQACJCrMthfwqvZ779YMQ79SZl4KuA4dQVDIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjmCn/v9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=tddtlCgaOzuysAPVXnEsNMdcwGc97zVwxMnRPxK+twTkX2y+Jgpr8s8A2SmWRKAKYYb3Xh3RaIl2ZhV4ym7ifKLWvOl0TxvDqNwEkIv6OMSEoNpoqUp7s9tZbg6x3d6P1iGEjSU3IdslPfcd3nL4+TO3pooPbFxNOskY4Lp9mkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHN+4HO1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjmCn/v9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D5DC4CEE2;
-	Wed, 16 Apr 2025 13:15:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHN+4HO1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B092C4CEEA;
+	Wed, 16 Apr 2025 13:15:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744809334;
-	bh=UksMB/TSljPXbwmxfQmIH/846gqV+jBpHPGQhk3lL0M=;
+	s=k20201202; t=1744809340;
+	bh=nDLCOf0Qx8OCk6bvF8FEbrcg4lHtvsGudmJTJAPMq1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PjmCn/v9d2bED4k86oAyNP4W971WEYhoZkH3JwzixTviMHrSf0yFuy9m6wXBMRvpu
-	 +rn2cqV3eL14XASaz4rW/dCFBqCRCVaY11CrxcmCSL5SppCoeZmwNcr2WG1iA9bye6
-	 BLiR9T9eKXGx8SyFzz0NnubKsbnXAkGCILRpKfhoeY6tz7rmLtLFDJBR6EiTX25NAW
-	 2wPN852aqXkwWAJngECTWnC3Hm8tgPM0WbGMzF+OX2+V8IsHbwZorPU/o21oJ/PI7b
-	 4RHC7TZdoXFjrtF+Wt6cAuYFeJa8/4+/ZuAFPPJn5iQB42AEegabelsZbxfOQXFNCj
-	 tAbPHexOfT0HA==
+	b=sHN+4HO1S0AjJv+plZTb8631dyelM7n0XZJpKnIXz4YHEjwe0CnHrzso9Rm5v+M84
+	 9gqfOKy2mg0zY+ZX/DWFXw4vWzn76sbp3YhpvA2FPjLPA9ql/37mKHP3X0I8QxUjYV
+	 Sb3mJR1BX5Um36x/+e61oXcl9LhxP4dqg4Uae2ySnTY1fHY7L7krMgIwofYU97YusY
+	 qDUf+MBwTWfSeyG0HjdCKhTFrsPj6E4rvJacWs1ABXpoXpx5KpVhsjTGu3bIq4VZNr
+	 vnDF4WmKH4wWA0mzGdOGPFQ15fIOabF1HOpDR3yJZbJ/Pu5thksYySNqcIFD1H+w8+
+	 JJ66kxGJOTEAw==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -56,9 +56,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sound-open-firmware@alsa-project.org
-Subject: [PATCH 23/31] ALSA: nm256: Use pure devres PCI
-Date: Wed, 16 Apr 2025 15:12:33 +0200
-Message-ID: <20250416131241.107903-24-phasta@kernel.org>
+Subject: [PATCH 24/31] ALSA: ice: Use pure devres PCI
+Date: Wed, 16 Apr 2025 15:12:34 +0200
+Message-ID: <20250416131241.107903-25-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250416131241.107903-1-phasta@kernel.org>
 References: <20250416131241.107903-1-phasta@kernel.org>
@@ -79,22 +79,36 @@ pcim_request_all_regions().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- sound/pci/nm256/nm256.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/ice1712/ice1712.c | 2 +-
+ sound/pci/ice1712/ice1724.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/nm256/nm256.c b/sound/pci/nm256/nm256.c
-index 44085237fb44..cd4dc43dbff1 100644
---- a/sound/pci/nm256/nm256.c
-+++ b/sound/pci/nm256/nm256.c
-@@ -1447,7 +1447,7 @@ snd_nm256_create(struct snd_card *card, struct pci_dev *pci)
- 	chip->buffer_addr = pci_resource_start(pci, 0);
- 	chip->cport_addr = pci_resource_start(pci, 1);
+diff --git a/sound/pci/ice1712/ice1712.c b/sound/pci/ice1712/ice1712.c
+index 3b0c3e70987b..a8ac14887676 100644
+--- a/sound/pci/ice1712/ice1712.c
++++ b/sound/pci/ice1712/ice1712.c
+@@ -2502,7 +2502,7 @@ static int snd_ice1712_create(struct snd_card *card,
+ 	pci_write_config_word(ice->pci, 0x42, 0x0006);
+ 	snd_ice1712_proc_init(ice);
  
--	err = pci_request_regions(pci, card->driver);
-+	err = pcim_request_all_regions(pci, card->driver);
+-	err = pci_request_regions(pci, "ICE1712");
++	err = pcim_request_all_regions(pci, "ICE1712");
  	if (err < 0)
  		return err;
+ 	ice->port = pci_resource_start(pci, 0);
+diff --git a/sound/pci/ice1712/ice1724.c b/sound/pci/ice1712/ice1724.c
+index 1dc776acd637..be22b159e65a 100644
+--- a/sound/pci/ice1712/ice1724.c
++++ b/sound/pci/ice1712/ice1724.c
+@@ -2491,7 +2491,7 @@ static int snd_vt1724_create(struct snd_card *card,
+ 	pci_set_master(pci);
+ 	snd_vt1724_proc_init(ice);
  
+-	err = pci_request_regions(pci, "ICE1724");
++	err = pcim_request_all_regions(pci, "ICE1724");
+ 	if (err < 0)
+ 		return err;
+ 	ice->port = pci_resource_start(pci, 0);
 -- 
 2.48.1
 
