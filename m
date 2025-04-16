@@ -1,180 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA84243947;
-	Wed, 16 Apr 2025 11:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95882241664
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:59:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804750; cv=none; b=DwXuhyWGTOvAOYLgO0Jb55xu67okxRqJe/MJQ7XhJwU33se18rbJjd/qjL0yZcQPfz5mkBDbXP322PMU3wWi/bAeOUvxQw0eMs6+AsyldEfGeXADOrfYgx62gc7wR8Y3P0Ct57wiABbb1AlpkWz/05T59VraCAmepRQFjj14Obw=
+	t=1744804769; cv=none; b=NNmvRxNodmlATOBSbNjGnKfiAqo53eOVLqXGYLyzMz59Z6/HJ6uyCYXmA9lgLh5tOrAz4TrIDui5e3RnVGT/FrhpfL/Uhmzc/uZ3Q1REmZJRn5llqPrPwIj+sWR2o1GlxPR7TtjZjdh90i79a7vBwDVt8XnpbPdo4c2AHGdPk0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804750; c=relaxed/simple;
-	bh=ALtJQWXgZ6dN7/4UoANBpoZDVZTBpnr7WjxXKFApxyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mP1DfNKFPQSyO8aRMyVqU12h5ojrDNpOMDXhc1tgvKXMm8nE5K5EpC1Ms/j7ewrEK5jG/PRGx74mEDPqJsmHMVY9uib6AD1/yUtROqjzjN4iTpLIsCuy/D0jGSjZ5GJJ4b4bJfBv23JrvCTFSx2lNu0x3W7nyaBG2N9cqKwtOXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb9+z3he; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744804769; c=relaxed/simple;
+	bh=/uKCmU1Vz1ywvlNixmev4FFs84ywfczXR3E4cW/SJ1I=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
+	 In-Reply-To; b=VLxbgo75OcOGIbGYR3aOW17ykKWHPmARv10DLEyGCAYr39a4JhbHuqbKsCRTpBQnYl3KjZFOmiidPaC3HkhCvfKh1pcgox8sk4P2zbDj44+uloBK21uAXt0dC7p9kDz+KA8asjnFjQkzw6qwGBys+5IPLp/+lSMAYDyXFQctXlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndE0hFjI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb9+z3he"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC571C4AF0B;
-	Wed, 16 Apr 2025 11:59:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndE0hFjI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60881C4CEED;
+	Wed, 16 Apr 2025 11:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744804748;
-	bh=ALtJQWXgZ6dN7/4UoANBpoZDVZTBpnr7WjxXKFApxyc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Hb9+z3heJulB223YkFfTYprUoXmfjh1/NpF+gh80Ps9qeEfzFVmn79lu8eLWRhIQS
-	 w9ISqlHxsRCPf+Mg1F7PtVduS632OV/90K+mGzEHV/+4oYAt5EAhvQJo7HCk2JMn9s
-	 IIPiUecrzG0i586fNUL0hBde4A5HWuqajs76qiQsdTXbloZLTv4Yxg4CxaLEiXWhDD
-	 Od9h+oQLNCsyK4M9lAQANvfB6Qwep1fKgUnnojJe5iN59mP7EhCmUWgcFpsHVex4jn
-	 9Q3nfbQA3LSvrBWuYr/F9LctHu9xMr8GRggXzXRV6wpbucMXYGC+xz/NYOggSbOHxS
-	 agronkrJ78Flw==
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2c7b2c14455so4296331fac.2;
-        Wed, 16 Apr 2025 04:59:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUQ3xnT+V9odSHj2JlQdUvNLv3r2ycbcH8Hubb59eCWXTUpIIgEClOLb8k75J0LRjjZ188tVXBchXiUPuU=@vger.kernel.org, AJvYcCWmdKQGnHjqS6QX6wu9yG6hyIKAFGPM3Y1JibUAKvYQXBQHNvFJC/E1hJASwbQvPdmeCoKPpZ4TtuA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5z9nKX4df7Enlp6NcxwCo2SIvl8cfV36V7upMBe1XlH8mjrTe
-	v+1ApFKdoa1LK6SrVs8r9pXp4dzBl7TLdEHlcFf4M5mNcwCJ8KBZN+KCZX29Z1EjgfSzJOIMLx6
-	tg/eyBeWM68hkeYYba4sqy8PAWZM=
-X-Google-Smtp-Source: AGHT+IEOcIVMxPhD85Zgkg4nhoiGIkKp4+2/bsREymu1TNHKVG4+1Cg/k72QVd3D1cutVfhQ21BsE0D/9orPt13jsKQ=
-X-Received: by 2002:a05:6870:596:b0:2d4:e101:13dd with SMTP id
- 586e51a60fabf-2d4e1011ad8mr225979fac.1.1744804748169; Wed, 16 Apr 2025
- 04:59:08 -0700 (PDT)
+	s=k20201202; t=1744804769;
+	bh=/uKCmU1Vz1ywvlNixmev4FFs84ywfczXR3E4cW/SJ1I=;
+	h=Date:Subject:Cc:From:To:References:In-Reply-To:From;
+	b=ndE0hFjIfjZCKt/yrOn7BG2U2o4sTYSH4eSrFUwtspESakdH2in0pJVMarfwzWGxn
+	 HukFRizMFg5mTKzxSCobGgs5+gmS3RSJJ4N9k+ylMrtBr43BdlOITZjj6F2mWVJQye
+	 7wQGh57tX5OuPBzMFetrexFV97YCAwvitGv6USczYDmu47T5athiVlB0DiO60PZ94S
+	 SFHD4n/AOQARE7u7GrzymnJdJFcY3vNnWR4TBTFYcFxsNZABwC/YZgfV1klw3fwDza
+	 m0hKMuSZNBFhZXKBTnOVdQWDwhI3cxZ2kowGd+z9wbcUU6z1/XNZUrMIJjowlio3S+
+	 CucKuujE0a7tw==
+Content-Type: multipart/signed;
+ boundary=6af618ae81b496f90345a50d55f9963d965d2fb226cee0b7dd26dd3b6e33;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Wed, 16 Apr 2025 13:59:24 +0200
+Message-Id: <D981O3AA6NK9.2EEVUPM62EV6S@kernel.org>
+Subject: Re: [PATCH] spi-nor: Verify written data in paranoid mode
+Cc: =?utf-8?b?U3plbnRlbmRyZWksIFRhbcOhcw==?= <szentendrei.tamas@prolan.hu>,
+ "Tudor Ambarus" <tudor.ambarus@linaro.org>, "Pratyush Yadav"
+ <pratyush@kernel.org>, "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>, "Vignesh Raghavendra"
+ <vigneshr@ti.com>
+From: "Michael Walle" <mwalle@kernel.org>
+To: =?utf-8?q?Bence_Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>,
+ <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20250415180434.513405-1-csokas.bence@prolan.hu>
+In-Reply-To: <20250415180434.513405-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com> <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
- <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
-In-Reply-To: <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 16 Apr 2025 13:58:55 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
-X-Gm-Features: ATxdqUE-tmeeHAEfid9e8PoBcQlKbHjRF175tpJhnR3Wn_yFirnDS7kDRNAlGeA
-Message-ID: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
-Subject: Re: [PATCH v3] PM: EM: Fix potential division-by-zero error in em_compute_costs()
-To: Yaxiong Tian <iambestgod@qq.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, lukasz.luba@arm.com, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yaxiong Tian <tianyaxiong@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
+
+--6af618ae81b496f90345a50d55f9963d965d2fb226cee0b7dd26dd3b6e33
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Wed, Apr 16, 2025 at 4:57=E2=80=AFAM Yaxiong Tian <iambestgod@qq.com> wr=
-ote:
->
-> =E5=9C=A8 2025/4/16 01:17, Rafael J. Wysocki =E5=86=99=E9=81=93:
-> > On Mon, Apr 14, 2025 at 11:09=E2=80=AFAM Yaxiong Tian <iambestgod@qq.co=
-m> wrote:
-> >>
-> >> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> >>
-> >> When the device is of a non-CPU type, table[i].performance won't be
-> >> initialized in the previous em_init_performance(), resulting in divisi=
-on
-> >> by zero when calculating costs in em_compute_costs().
-> >>
-> >> Since the 'cost' algorithm is only used for EAS energy efficiency
-> >> calculations and is currently not utilized by other device drivers, we
-> >> should add the _is_cpu_device(dev) check to prevent this division-by-z=
-ero
-> >> issue.
-> >>
-> >> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove di=
-vision")
-> >
-> > Please look at the Fixes: tags in the kernel git history.  They don't
-> > look like the one above.
-> >
-> Yes, there's an extra '<>' here.
->
-> >> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
-> >> ---
-> >>   kernel/power/energy_model.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-> >> index d9b7e2b38c7a..fc972cc1fc12 100644
-> >> --- a/kernel/power/energy_model.c
-> >> +++ b/kernel/power/energy_model.c
-> >> @@ -235,7 +235,7 @@ static int em_compute_costs(struct device *dev, st=
-ruct em_perf_state *table,
-> >>
-> >>          /* Compute the cost of each performance state. */
-> >>          for (i =3D nr_states - 1; i >=3D 0; i--) {
-> >> -               unsigned long power_res, cost;
-> >> +               unsigned long power_res, cost =3D 0;
-> >>
-> >>                  if ((flags & EM_PERF_DOMAIN_ARTIFICIAL) && cb->get_co=
-st) {
-> >>                          ret =3D cb->get_cost(dev, table[i].frequency,=
- &cost);
-> >> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, st=
-ruct em_perf_state *table,
-> >>                                          cost, ret);
-> >>                                  return -EINVAL;
-> >>                          }
-> >> -               } else {
-> >> +               } else if (_is_cpu_device(dev)) {
-> >
-> > Can't you just check this upfront at the beginning of the function and
-> > make it bail out if dev is not a CPU device?
-> >
-> Sure, But the current implementation applies em_compute_costs() to both
-> non-CPU devices and CPU devices.
+Hi,
 
-Maybe it shouldn't do that for non-CPU ones?
+> Add MTD_SPI_NOR_PARANOID config option for verifying all written data to
+> prevent silent bit errors to be undetected, at the cost of halving SPI
+> bandwidth.
 
-> After carefully reviewing the latest code,
-> I've found this issue has expanded in scope.
->
-> There are currently three call paths for invoking em_compute_costs():
->
-> 1) Registering performance domains (for both non-CPU and CPU devices)
-> em_dev_register_perf_domain() =E2=86=92 em_create_pd() =E2=86=92
-> em_create_perf_table() =E2=86=92 em_compute_costs()
->
-> 2)EM update paths (CPU devices only)
->
-> Periodic 1000ms update check via em_update_work work item:
-> em_check_capacity_update() =E2=86=92 em_adjust_new_capacity() =E2=86=92
-> em_recalc_and_update() =E2=86=92 em_compute_costs()
->
-> Exynos-chip initialization:
-> em_dev_update_chip_binning() =E2=86=92 em_recalc_and_update() =E2=86=92 e=
-m_compute_costs()
->
-> 3) Device cost computation (non-CPU devices only - currently unused)
-> em_dev_compute_costs() =E2=86=92 em_compute_costs()
+What is the use case for this? Why is it specific to SPI-NOR
+flashes? Or should it rather be an MTD "feature". I'm not sure
+whether this is the right way to do it, thus I'd love to hear more
+about the background story to this.
 
-So because this one is unused and AFAICS the cost values are never
-used for non-CPU devices, it's better to just avoid computing them at
-all.
-
-> Note: In em_dev_compute_costs(), when calling em_compute_costs(),
-> neither the callback (cb) nor flags are set.In fact, it either does
-> nothing at all or performs incorrect operations.
+> Co-developed-by: Szentendrei, Tam=C3=A1s <szentendrei.tamas@prolan.hu>
+> Signed-off-by: Szentendrei, Tam=C3=A1s <szentendrei.tamas@prolan.hu>
+> Signed-off-by: Cs=C3=B3k=C3=A1s, Bence <csokas.bence@prolan.hu>
+> ---
+>  drivers/mtd/spi-nor/Kconfig | 10 ++++++++++
+>  drivers/mtd/spi-nor/core.c  | 33 +++++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
 >
-> Therefore, should we mandate that non-CPU devices must provide a
-> get_cost callback?
+> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+> index 24cd25de2b8b..425ea9a22424 100644
+> --- a/drivers/mtd/spi-nor/Kconfig
+> +++ b/drivers/mtd/spi-nor/Kconfig
+> @@ -68,6 +68,16 @@ config MTD_SPI_NOR_SWP_KEEP
+> =20
+>  endchoice
+> =20
+> +config MTD_SPI_NOR_PARANOID
+> +	bool "Read back written data (paranoid mode)"
 
-Why would that be an improvement?
+No kernel configs please. This doesn't scale. What if you have two
+flashes and one should have this and one does not?
 
-> So Should we add a check at the beginning of the em_compute_costs() to:
+-michael
+
+> +	help
+> +	  This option makes the SPI NOR core read back all data on a write
+> +	  and report an error if it doesn't match the written data. This can
+> +	  safeguard against silent bit errors resulting from a faulty Flash,
+> +	  controller oddities, bus noise etc.
+> +
+> +	  If you are unsure, select 'n'.
+> +
+>  source "drivers/mtd/spi-nor/controllers/Kconfig"
+> =20
+>  endif # MTD_SPI_NOR
+> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
+> index ac4b960101cc..ca05a6ec8afe 100644
+> --- a/drivers/mtd/spi-nor/core.c
+> +++ b/drivers/mtd/spi-nor/core.c
+> @@ -2063,6 +2063,7 @@ static int spi_nor_write(struct mtd_info *mtd, loff=
+_t to, size_t len,
+>  	size_t *retlen, const u_char *buf)
+>  {
+>  	struct spi_nor *nor =3D mtd_to_spi_nor(mtd);
+> +	u_char *verify_buf =3D NULL;
+>  	size_t i;
+>  	ssize_t ret;
+>  	u32 page_size =3D nor->params->page_size;
+> @@ -2073,6 +2074,14 @@ static int spi_nor_write(struct mtd_info *mtd, lof=
+f_t to, size_t len,
+>  	if (ret)
+>  		return ret;
+> =20
+> +#if IS_ENABLED(CONFIG_MTD_SPI_NOR_PARANOID)
+> +	verify_buf =3D devm_kmalloc(nor->dev, page_size, GFP_KERNEL);
+> +	if (!verify_buf) {
+> +		ret =3D -ENOMEM;
+> +		goto write_err;
+> +	}
+> +#endif
+> +
+>  	for (i =3D 0; i < len; ) {
+>  		ssize_t written;
+>  		loff_t addr =3D to + i;
+> @@ -2099,11 +2108,35 @@ static int spi_nor_write(struct mtd_info *mtd, lo=
+ff_t to, size_t len,
+>  		ret =3D spi_nor_wait_till_ready(nor);
+>  		if (ret)
+>  			goto write_err;
+> +
+> +#if IS_ENABLED(CONFIG_MTD_SPI_NOR_PARANOID)
+> +		/* read back to make sure it's correct */
+> +		ret =3D spi_nor_read_data(nor, addr, written, verify_buf);
+> +		if (ret < 0)
+> +			goto write_err;
+> +		if (ret !=3D written) {
+> +			/* We shouldn't see short reads */
+> +			dev_err(nor->dev, "Verify failed, written %zd but only read %zd",
+> +				written, ret);
+> +			ret =3D -EIO;
+> +			goto write_err;
+> +		}
+> +
+> +		if (memcmp(verify_buf, buf + i, written)) {
+> +			dev_err(nor->dev, "Verify failed, compare mismatch!");
+> +			ret =3D -EIO;
+> +			goto write_err;
+> +		}
+> +#endif
+> +
+> +		ret =3D 0;
+> +
+>  		*retlen +=3D written;
+>  		i +=3D written;
+>  	}
+> =20
+>  write_err:
+> +	devm_kfree(nor->dev, verify_buf);
+>  	spi_nor_unlock_and_unprep_pe(nor, to, len);
+> =20
+>  	return ret;
 >
->         if (!_is_cpu_device(dev) && !cb->get_cost) {
->                 dev_dbg(dev, "EM: No get_cost provided, cost unset.\n");
->                 return 0;
->         }
-> And Modify em_dev_compute_costs() to require callers to provide the cb
-> callback function,Also need to update its corresponding comments.
->
->
-> >>                          /* increase resolution of 'cost' precision */
-> >>                          power_res =3D table[i].power * 10;
-> >>                          cost =3D power_res / table[i].performance;
-> >> --
+> base-commit: 834a4a689699090a406d1662b03affa8b155d025
 
-I think until there is a user of em_dev_compute_costs() this is all
-moot and hard to figure out.
 
-I would drop em_dev_compute_costs() altogether for now and put a
-_is_cpu_device(dev) upfront check into em_compute_costs().
+--6af618ae81b496f90345a50d55f9963d965d2fb226cee0b7dd26dd3b6e33
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ/+bnRIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/gTIwF/Zk06SOzJFI02yhhZml0QcjqB1i/yNmx8
+NmXcG6KCP2Oayi6LOFM7AtPSviWNrXLJAX4jVdIcXHyWBxFPT6Qmq5LeBLUEVGqd
+8BdHT9XbSYGQjyGRQH6vcXreRHcqoNT9wio=
+=Dz4e
+-----END PGP SIGNATURE-----
+
+--6af618ae81b496f90345a50d55f9963d965d2fb226cee0b7dd26dd3b6e33--
