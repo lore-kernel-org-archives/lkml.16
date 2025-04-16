@@ -1,60 +1,59 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEAD2AE66
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C066F30C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744761737; cv=none; b=huObGO1xWeCO65kWlGX7bDRiMZ2btO8Fzzb0o2DbUjBT5xn87ePDI2HxW4X+m6cegfxg2TQWClL8p8aB3wJSCMR826L9Lq9YeUoCJdTkqrD79hSH1EwfuUf4VmEhHVT4x96s0tX8xHHudYLcKEAN9MWHzjb6SAGMmXFoZiKER3s=
+	t=1744761739; cv=none; b=KlHvzH/3rdhIJcoZJvm8xDaL+etVj57+OiJjYSvZnXuaUaeTefflLjpuVZODaP5RyZqHxO3YmSXXln4zH+yOG1RsGuH3b7Am5KVydsmLbQDM1Tudu/IASyx9GWEh98aKEEOv9fuccQuvIL85QUSG8+XS1x776dCklLYv8qcG8N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744761737; c=relaxed/simple;
-	bh=X73kg4tdW06GAOX2zu95FNoOmd3sHwKiCictodfiuao=;
+	s=arc-20240116; t=1744761739; c=relaxed/simple;
+	bh=GwnkAZU+uW9fAkCDWWme3oB1O6PxoBs+pYMPoHkdFMQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EOKC4uuzdOgC9KZZS/v5yA0q/KwelhBIKxWzDwVVE2S03eEe5Xv9t3Gd1BY9BxZpIl4mKJ5EWoC8JHN6eUSHBLQxlTmJ6XmPKa9Hv88UT4smhV4FosG1cvpUKnpER69dfJAIClv/B6BezC12XoIMB209AXZxG91e/S815nA/QU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Iip1LbTe; arc=none smtp.client-ip=209.85.210.172
+	 MIME-Version:Content-Type; b=aYHJDwgUecFp/raF+GoVkOOnALrHZwVPe8i3qqO+EU4c1heFEyjLzevJUL73Gu4UowBoCsMZZJPUsq5//r4Tf7V8HxkJabdevv9N/MryVNqX+HeCEiUeGL1e3opWRWxkI2F/Zs1ExKCHqq4Ja+zSjupimNCYPt1o9LwNUxXfRvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jDxg0ZmW; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iip1LbTe"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso8172041b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:02:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jDxg0ZmW"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2254e0b4b79so84045125ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:02:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744761735; x=1745366535; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1744761737; x=1745366537; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ztpfrrq65RboKoVCNPKCaSBonp9V4OT02BBtVtoD/uU=;
-        b=Iip1LbTelo/dFDgaCB7aH39IJa2T0r6QRpjefrchYJ2GLfppOm6HEMBe/MCpIQBe7t
-         sgs7w01FbVfctXxeqzUhERu4j5c/EzQl2TTMIMQ0C0ddjZj/mtVZrO+ICFyDhPyDUWjT
-         fNT1AxGGmQtyzC6AGcMUt87HtO004pxKLkcFw=
+        bh=pLpTjFW7p6ghiYRblP02dy0kbs1t/nRG9KfdA64BMng=;
+        b=jDxg0ZmWXkY7/crCU4dh2s0ImdvGa3j7mKy8npK2BmZp6SxxErN+YJw5TL8PoSxTc6
+         9G5uulvzJU1bR9eFHsBjgU2rEnJAtHWJb+7b+QmwwZqZ0JTBhAlU/34sZDLC6DnJjlNo
+         J3DrfSpyMsN9ZDzq2VZpjr4riVdV+FqZlWbLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744761735; x=1745366535;
+        d=1e100.net; s=20230601; t=1744761737; x=1745366537;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ztpfrrq65RboKoVCNPKCaSBonp9V4OT02BBtVtoD/uU=;
-        b=eXaYVLgbUHC2ZdZn6FpXKrX3xklOoxdtVvXBoQykUHclYw6/QD3pcIU8d5JiS/eq8R
-         vPfRLbeGgbqg5L5lxEbd0J/6kSXmk2PYAxXCvb7ELgr5JBAJchs5b3eHSWEjvVmhxPgs
-         aQT68t35m/XnKdKKAfejyF7tDlxnEfFHUW/el9uj+pkDzF1zM87we3hXMlp2TcghLOKq
-         SYIYa3GAhjI+FJ8QBZx8FEjzbLeD3+XwiooBCf1Uexf6Q27zgNLfIHungOxJIpiI1HKe
-         2xF5WQCV+bDn+7HDgbx+kAboxW0kJwlbGYRajd8+I6Wn4eAx1lrS8ZFrbs481XOVNh74
-         1YxQ==
-X-Gm-Message-State: AOJu0YxSgH3UgtIfaLi1i9LjKst9RWHMwVBqi80ATDHQewCMB4EUL5ne
-	wMEGzuKljWXiLVHnroGcUSZ7RlxsIfsLboYvXbjoyCYrjsys4S36bc42HnYP9KPHeQZBheRDPTE
-	=
-X-Gm-Gg: ASbGncscBrwYoo59LEoLTpIDzQbf61BDQkUdMSI/t7mHYYnr8YQ4i7pzF/dkPRIAYIS
-	MEHefwkyE3q7u5SdHm7eq9GPRXus57LiSCoEZjus/C5/hqieTniEiy8S7/evWWa2oyw4a0VfBZK
-	HFB41BA/fncmrkyzLkimee+sQYoYXfOltTZkN5C+KXSNQ3VQy7WVV2pFSnyIoYcCfz/vy5CIBnu
-	ePw75nDoQ+vpPgimU+hhgy2Nv3x4457PhXszfB0jWRLKeNDNWcpyETBP5O5Z9gGFJpWWzdA6oCk
-	jy5arEOkagk/IeqzKHjdCQSc+fhyd0CQrIzkQ98Z3KTfwJhWRfM1U5vbBzjCc/y8GDwTEzI8c77
-	6SA==
-X-Google-Smtp-Source: AGHT+IHkUQNhj55ArcxMsqdZ9goNzK1iX/oCF1gdLXwsnONXGZV+o45RA+2MeBctZXHEWSSuaXlJnA==
-X-Received: by 2002:a05:6a00:2e29:b0:736:48d1:57f7 with SMTP id d2e1a72fcca58-73c1f90d688mr1947843b3a.7.1744761735002;
-        Tue, 15 Apr 2025 17:02:15 -0700 (PDT)
+        bh=pLpTjFW7p6ghiYRblP02dy0kbs1t/nRG9KfdA64BMng=;
+        b=ViQ1fGtVGU0vr9mv+tkX8zlYPdDa5ShIs6FQ9ugejW8B6dl0mh/9KMLgqqwJlgoiIM
+         F49Uddn6tC0gcFrz4pdK4jjCg9HXSk2SUzVk20mIrh+a7tJ8bkc+N7EZ2Z07rPT9nCZf
+         OuX0MMa8xpja53ysLKNS9iZsE63qCMSouNZ4wmi2OiWAZc5TbWhJesr3iLz7+W+t1Fkt
+         t12Po31pbGskHjU+ly4FnTymo5+ZprVCeVHa+QM4YiJpXzo0zTSOMiwZg9ZeLk30u8lJ
+         uOUAhbx75r2gQZ6BajFg8TVyTDhKZIJau2iqjbwLs+LLQC2N8d91E9Usg+E2QCG1V1aQ
+         rjPw==
+X-Gm-Message-State: AOJu0Yw7e/uFwWtXoyyRwWA6qdzH7CVorfsaU4sWSi4IDy27dZ1EMF11
+	HGmdgqazgvYoCu//tNBrc5/YadRQtBKcbIi8vCnmUizeodP1CGNnLH8qE+9lFw==
+X-Gm-Gg: ASbGncvKXzxyryjKvJ12JJE/LdiJ/XpXBI4EOUgx8p8vxa/hh/uVuk7pPBvC9eDta7L
+	q5x2Lf2Y/1rIaYTTycY4NYxNx9bX+q1reDBWRdvICm0LI79ioHF3DaoEJAPgTp47Szjpe1MrC7h
+	7QIrrXTZmZuWATD6sztYFiQ01djjd442D1UsjPV3YeACiKRbZ9XrtcEgOq2xzYa/dKL8TH+2380
+	IxHopSplUOMcnNi9G59i3igIbPdJj3z2Wpze690sSf7Xkyf/TwF66MulFoehFex3ujsW3kY/T1q
+	GZaVhFLupX2thfs1Ka0V9AkwoEdGt2NLKPH3wrQldb3xgPLgjhczHxGAAUoYgdSw1qPeOpkkreZ
+	NOw==
+X-Google-Smtp-Source: AGHT+IFgDSfSzHJQGblYKtBgX+uGjROsnXUma1oaTnVLcJEUU+QM71Xipmk/uC+evcJTJfTYjoWWzQ==
+X-Received: by 2002:a17:902:d585:b0:223:536d:f67b with SMTP id d9443c01a7336-22c31a86b22mr19203715ad.38.1744761736701;
+        Tue, 15 Apr 2025 17:02:16 -0700 (PDT)
 Received: from localhost (199.24.125.34.bc.googleusercontent.com. [34.125.24.199])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73bd21c3216sm9157830b3a.49.2025.04.15.17.02.14
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-308613b3849sm196331a91.38.2025.04.15.17.02.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 17:02:14 -0700 (PDT)
+        Tue, 15 Apr 2025 17:02:16 -0700 (PDT)
 From: Stephen Boyd <swboyd@chromium.org>
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: linux-kernel@vger.kernel.org,
@@ -75,9 +74,9 @@ Cc: linux-kernel@vger.kernel.org,
 	=?UTF-8?q?=C5=81ukasz=20Bartosik?= <ukaszb@chromium.org>,
 	Jameson Thies <jthies@google.com>,
 	Andrei Kuchynski <akuchynski@chromium.org>
-Subject: [PATCH 2/7] platform/chrome: cros_ec_typec: Allow DP configure to work
-Date: Tue, 15 Apr 2025 17:02:02 -0700
-Message-ID: <20250416000208.3568635-3-swboyd@chromium.org>
+Subject: [PATCH 3/7] platform/chrome: cros_ec_typec: Support EC mode entry
+Date: Tue, 15 Apr 2025 17:02:03 -0700
+Message-ID: <20250416000208.3568635-4-swboyd@chromium.org>
 X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
 In-Reply-To: <20250416000208.3568635-1-swboyd@chromium.org>
 References: <20250416000208.3568635-1-swboyd@chromium.org>
@@ -90,11 +89,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The DP altmode driver fails the configure stage because the status VDO
-that is spoofed in cros_typec_enable_dp() is missing a couple flags. Add
-them so that the configure succeeds. This has the nice side effect of
-properly reflecting the pin assignment and configuration of the DP
-altmode in sysfs.
+Support ChromeOS EC firmwares that don't support AP mode entry. Check
+that the mode has been entered by querying the EC and reject mode entry
+attempts if the EC hasn't already entered the mode requested. This
+allows us to bind the DP altmode driver on devices that don't support AP
+mode entry, i.e. most ChromeOS devices where the EC controls mode entry.
 
 Cc: Benson Leung <bleung@chromium.org>
 Cc: Tzung-Bi Shih <tzungbi@kernel.org>
@@ -106,22 +105,170 @@ Cc: Jameson Thies <jthies@google.com>
 Cc: Andrei Kuchynski <akuchynski@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/platform/chrome/cros_ec_typec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/chrome/cros_typec_altmode.c | 112 +++++++++++++------
+ 1 file changed, 75 insertions(+), 37 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 6ee182101bc9..2cbe29f08064 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -531,7 +531,7 @@ static int cros_typec_enable_dp(struct cros_typec_data *typec,
+diff --git a/drivers/platform/chrome/cros_typec_altmode.c b/drivers/platform/chrome/cros_typec_altmode.c
+index c2d9c548b5e8..97ca4cfabbc0 100644
+--- a/drivers/platform/chrome/cros_typec_altmode.c
++++ b/drivers/platform/chrome/cros_typec_altmode.c
+@@ -58,31 +58,50 @@ static void cros_typec_altmode_work(struct work_struct *work)
+ static int cros_typec_altmode_enter(struct typec_altmode *alt, u32 *vdo)
+ {
+ 	struct cros_typec_altmode_data *adata = typec_altmode_get_drvdata(alt);
+-	struct ec_params_typec_control req = {
+-		.port = adata->port->port_num,
+-		.command = TYPEC_CONTROL_COMMAND_ENTER_MODE,
+-	};
++	struct cros_ec_device *ec = adata->port->typec_data->ec;
++	unsigned int port = adata->port->port_num;
+ 	int svdm_version;
+ 	int ret;
+ 
+ 	if (!adata->ap_mode_entry) {
+-		dev_warn(&alt->dev,
+-			 "EC does not support AP driven mode entry\n");
+-		return -EOPNOTSUPP;
++		struct ec_response_usb_pd_mux_info resp;
++		struct ec_params_usb_pd_mux_info req = {
++			.port = port,
++		};
++		uint8_t flags;
++
++		if (adata->sid == USB_TYPEC_DP_SID)
++			flags = USB_PD_MUX_DP_ENABLED;
++		else if (adata->sid == USB_TYPEC_TBT_SID)
++			flags = USB_PD_MUX_TBT_COMPAT_ENABLED;
++		else
++			return -EOPNOTSUPP;
++
++		ret = cros_ec_cmd(ec, 0, EC_CMD_USB_PD_MUX_INFO,
++				  &req, sizeof(req), &resp, sizeof(resp));
++		if (ret < 0)
++			return ret;
++
++		if (!(resp.flags & flags))
++			return -EINVAL;
++	} else {
++		struct ec_params_typec_control req = {
++			.port = port,
++			.command = TYPEC_CONTROL_COMMAND_ENTER_MODE,
++		};
++
++		if (adata->sid == USB_TYPEC_DP_SID)
++			req.mode_to_enter = CROS_EC_ALTMODE_DP;
++		else if (adata->sid == USB_TYPEC_TBT_SID)
++			req.mode_to_enter = CROS_EC_ALTMODE_TBT;
++		else
++			return -EOPNOTSUPP;
++
++		ret = cros_ec_cmd(ec, 0, EC_CMD_TYPEC_CONTROL, &req, sizeof(req), NULL, 0);
++		if (ret < 0)
++			return ret;
  	}
  
- 	/* Status VDO. */
--	dp_data.status = DP_STATUS_ENABLED;
-+	dp_data.status = DP_STATUS_ENABLED | DP_STATUS_CON_UFP_D | DP_STATUS_PREFER_MULTI_FUNC;
- 	if (port->mux_flags & USB_PD_MUX_HPD_IRQ)
- 		dp_data.status |= DP_STATUS_IRQ_HPD;
- 	if (port->mux_flags & USB_PD_MUX_HPD_LVL)
+-	if (adata->sid == USB_TYPEC_DP_SID)
+-		req.mode_to_enter = CROS_EC_ALTMODE_DP;
+-	else if (adata->sid == USB_TYPEC_TBT_SID)
+-		req.mode_to_enter = CROS_EC_ALTMODE_TBT;
+-	else
+-		return -EOPNOTSUPP;
+-
+-	ret = cros_ec_cmd(adata->port->typec_data->ec, 0, EC_CMD_TYPEC_CONTROL,
+-			  &req, sizeof(req), NULL, 0);
+-	if (ret < 0)
+-		return ret;
+-
+ 	svdm_version = typec_altmode_get_svdm_version(alt);
+ 	if (svdm_version < 0)
+ 		return svdm_version;
+@@ -97,31 +116,52 @@ static int cros_typec_altmode_enter(struct typec_altmode *alt, u32 *vdo)
+ 	schedule_work(&adata->work);
+ 
+ 	mutex_unlock(&adata->lock);
+-	return ret;
++
++	return 0;
+ }
+ 
+ static int cros_typec_altmode_exit(struct typec_altmode *alt)
+ {
+ 	struct cros_typec_altmode_data *adata = typec_altmode_get_drvdata(alt);
+-	struct ec_params_typec_control req = {
+-		.port = adata->port->port_num,
+-		.command = TYPEC_CONTROL_COMMAND_EXIT_MODES,
+-	};
++	struct cros_ec_device *ec = adata->port->typec_data->ec;
++	unsigned int port = adata->port->port_num;
+ 	int svdm_version;
+ 	int ret;
+ 
+ 	if (!adata->ap_mode_entry) {
+-		dev_warn(&alt->dev,
+-			 "EC does not support AP driven mode exit\n");
+-		return -EOPNOTSUPP;
++		struct ec_response_usb_pd_mux_info resp;
++		struct ec_params_usb_pd_mux_info req = {
++			.port = port,
++		};
++		uint8_t flags;
++
++		if (adata->sid == USB_TYPEC_DP_SID)
++			flags = USB_PD_MUX_DP_ENABLED;
++		else if (adata->sid == USB_TYPEC_TBT_SID)
++			flags = USB_PD_MUX_TBT_COMPAT_ENABLED;
++		else
++			return -EOPNOTSUPP;
++
++		ret = cros_ec_cmd(ec, 0, EC_CMD_USB_PD_MUX_INFO,
++				  &req, sizeof(req), &resp, sizeof(resp));
++		if (ret < 0)
++			return ret;
++
++		if (resp.flags & flags)
++			return -EINVAL;
++	} else {
++		struct ec_params_typec_control req = {
++			.port = port,
++			.command = TYPEC_CONTROL_COMMAND_EXIT_MODES,
++		};
++
++		ret = cros_ec_cmd(adata->port->typec_data->ec, 0, EC_CMD_TYPEC_CONTROL,
++				  &req, sizeof(req), NULL, 0);
++
++		if (ret < 0)
++			return ret;
+ 	}
+ 
+-	ret = cros_ec_cmd(adata->port->typec_data->ec, 0, EC_CMD_TYPEC_CONTROL,
+-			  &req, sizeof(req), NULL, 0);
+-
+-	if (ret < 0)
+-		return ret;
+-
+ 	svdm_version = typec_altmode_get_svdm_version(alt);
+ 	if (svdm_version < 0)
+ 		return svdm_version;
+@@ -136,7 +176,8 @@ static int cros_typec_altmode_exit(struct typec_altmode *alt)
+ 	schedule_work(&adata->work);
+ 
+ 	mutex_unlock(&adata->lock);
+-	return ret;
++
++	return 0;
+ }
+ 
+ static int cros_typec_displayport_vdm(struct typec_altmode *alt, u32 header,
+@@ -254,9 +295,6 @@ static int cros_typec_altmode_vdm(struct typec_altmode *alt, u32 header,
+ {
+ 	struct cros_typec_altmode_data *adata = typec_altmode_get_drvdata(alt);
+ 
+-	if (!adata->ap_mode_entry)
+-		return -EOPNOTSUPP;
+-
+ 	if (adata->sid == USB_TYPEC_DP_SID)
+ 		return cros_typec_displayport_vdm(alt, header, data, count);
+ 
 -- 
 https://chromeos.dev
 
