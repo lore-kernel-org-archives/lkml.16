@@ -1,225 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC37822B8D7;
-	Wed, 16 Apr 2025 05:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CA6224B05
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744782804; cv=none; b=r6a6zNHwOldDQKMvPyxpdffwNgROfIT7Vn+vrHUYaBiwRj0H5p2DnOXW1D5fnOjsiKxoUMp+hCyvxcGBhXq6Vo2kTdt/2wTqpEgLMaIvADAOWjgDfkxAZ6gRGQiKXNw51iPfMABaOzTvbl+6v7vxXJ0GFv+j4RaY9hNXahZI2V4=
+	t=1744782853; cv=none; b=OyR/Pgw5sLJBHiaLXuYTpRzmkhn3UAYbYqazoR9kClEJ1ktpqIZE21MO9DJ54GVttosgE7TdczGoMkA3yYmh8q9oV/3NBGc3y5eLhhir4uPndsuClfXskMmu1mTEmsK5DDRbK1/X5L6UhsGCUEKydZWpTj3A/xtT0Fb6YxP4zhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744782804; c=relaxed/simple;
-	bh=ejt+nS1wSG4vWxoe/PG5+T8CTmyW86TLrKcEjqB3uCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fijVkrQGD4KnFLhZ8Ng+zWE8oVD/V+pxMWbVmI6qqUfCt/4craTOTa3gOaUzrRQ1Qa7adlAM/dS3+BS+aD6Coj2nsc3xdONznVT1UW6p8uNMhZmPOdlLuqW1qJWAzLPyJIw+RsusKgNYl5jDFOorTN3P6KHF+mfXLX35Tdv9Spk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AV1eE/J/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744782853; c=relaxed/simple;
+	bh=239UQEfkZYAKSBMhKmP9uLLuYFgWkkQrNgSjEh3EfTE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KLrYQBwaj1pVV0/jHpS5l17WyNsBCIta6dMSLuCZZHTjdl1gn/FIZwfcfe02nmRB2aFQ5qmXDYoSFJgZETZembDfSacK/PoHNIlx77hQkWiULtuOibr5lNTA/1U9AAwTxZ4AbtP+TCesYGQa0XJVLOs/jsIZ3mLZrmSNdrYot/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wn7Pc0B6; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AV1eE/J/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744782803; x=1776318803;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ejt+nS1wSG4vWxoe/PG5+T8CTmyW86TLrKcEjqB3uCs=;
-  b=AV1eE/J/O4Ulw4M0zlC/CfkEoQNvJ1QINWMC2OtIKtoB58Db7Tg1NGqr
-   Q7fUX9HMN8YgSapuplvA3yYjAX9e318O9akkJiqnUArGjQDk2OvKFCfKT
-   LeNNac5rsTer6W6+/OWMX0Y8IGYa7X1KlkBrCKBLfEn5eTW+BagfIi9YP
-   wpTEFTouQartR+yuOO5RdikU1Fp+HrQdBROZVFelXYTDnphsCuyk9VfK9
-   0w0THYoTc6/YdTQmsxyL0VENpxmE32hGx+D8tCPEC9KTQW3TwYlYzdfCE
-   mYv6xO7L9DzN8MyQS0tk+QwmuZRIM1+U5a7kQLn8Dz9g+ZEcPkN96GiW/
-   Q==;
-X-CSE-ConnectionGUID: E6fdQzEMQpWHfHLPn33XHg==
-X-CSE-MsgGUID: U4U78e6WQsi50j091u9xpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="45449743"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="45449743"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:53:23 -0700
-X-CSE-ConnectionGUID: izGk+V++QI6znKZzvNN9DQ==
-X-CSE-MsgGUID: 971l92/lS0y5I68wKU73eg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="130874828"
-Received: from litbin-desktop.sh.intel.com ([10.239.156.93])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:53:19 -0700
-From: Binbin Wu <binbin.wu@linux.intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org
-Cc: rick.p.edgecombe@intel.com,
-	kai.huang@intel.com,
-	adrian.hunter@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	chao.gao@intel.com,
-	mikko.ylinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	binbin.wu@linux.intel.com
-Subject: [PATCH v2 1/1] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
-Date: Wed, 16 Apr 2025 13:54:32 +0800
-Message-ID: <20250416055433.2980510-2-binbin.wu@linux.intel.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250416055433.2980510-1-binbin.wu@linux.intel.com>
-References: <20250416055433.2980510-1-binbin.wu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn7Pc0B6"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5497590ffbbso6685435e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:54:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744782849; x=1745387649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ma56JdV1nhumd2hIrzxNZCq7YqsIb2ro3nhXeH33szk=;
+        b=Wn7Pc0B66/iF+eipEIxO7Dy+iplQxRLd3ocMBEyX6PtSgSpJVAj0xc4wm0rzVMD49+
+         r9H164Je3MbGoWIl2AHyQMnaQlSWSoAQg1EnZhnuEg91QrteaBmNgLmpXY7WBOm3/q6U
+         c5rxfSdgSssSEJxoi1IWSZhzWRYpcxMikQYCePGNr2ksaBBXF93szBtBFbqqmPeVUbvT
+         vj9l04Nut7ELylYuFZy4t+MMJZwSCWbzf0IsDimSKaGmaAn9Czv4l0UIz67HaDdtHbNh
+         qlFInQx3gCsa2fVrCw7EZTDgxGWDgiaGWvK3KlF8wnmYA+/snxQSIfjQKEiADcpO0PQW
+         WJ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744782849; x=1745387649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ma56JdV1nhumd2hIrzxNZCq7YqsIb2ro3nhXeH33szk=;
+        b=aBrkIb/q/HRkEeT2C2fQwyRjfPFk9Gpqng0T/MlJ+1K08S2iT6L5QD443J6fRFGIAZ
+         5gSqukgvjyuSOqIu9FTDLm4H4UO/SMqR6PAYkdfY93X9h/DocgbpzbLB8WNdI1cZRf1q
+         wGNZ4ApkD6eRFq1GiR94epLEbjx9Mzd1XfundNuRI2SUDyTm6kdTlL5bibFAJ7k3V5GS
+         YpXSRau0mIy2sYoHq2kz6ojqYdhdGHX3MOlzwH6p4sK+vJ5d0Q58CHKSN3vUFO2R1xna
+         57VTR7/uf/mP4nhW4bAqEtHLXiEBo6ChpZ2QXXScfUTlEq3GDXzGHnK/JSKUvxXd5xe7
+         W39A==
+X-Forwarded-Encrypted: i=1; AJvYcCXK9J5yfnvXbkXjRepqR82sIMImQOfsdpEKb1m3H8K9W3Z42IFDEfzbyN1TqwU2PUgPAfLKMZUFEHFwwdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0eicVq1GG/CfnlYiRjD6nuTst0cPLbT4YI3xquWlAc6omJ8mO
+	VnSdu+AnSJc4ok5ZvPu8IZNBkqIxsVrSIidqVYLt5vy/VdsK6HSuTHVWP7HwfUPuE03+aJQckxk
+	XfRPsSO7QtziuFUKJI/3apcilsmjQzHUelc8PFA==
+X-Gm-Gg: ASbGncvZb7t7q3tEBRZnGiZlgYmBRSCT6pTjz2/JauWUSUK5vBCSNRc72iHwb1e29Pt
+	ZfxBDoxULQGqpo575y6q6O79gwYcBQIXudi1BibaQAUQUEenKqCytITQNTBQbUeQ21taYdD/Q3L
+	jhdV2hz07KIsQdjxDfMSrKCA==
+X-Google-Smtp-Source: AGHT+IFKNOvvk/guKx+5UUNDUQ3VjKqbOOR/YrgZhnhd/s/Jt7rhsOWn5n+XMebPpbtROoWDcm4vmhTDkFWPo7tjwhg=
+X-Received: by 2002:a2e:bea5:0:b0:30c:6f38:f675 with SMTP id
+ 38308e7fff4ca-3107f718b32mr1334801fa.31.1744782848194; Tue, 15 Apr 2025
+ 22:54:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250414145650.10776-1-ubizjak@gmail.com> <20250415185558.112621df@pumpkin>
+In-Reply-To: <20250415185558.112621df@pumpkin>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 16 Apr 2025 07:53:56 +0200
+X-Gm-Features: ATxdqUELBsckZ2mk1WsCsKoeAANw0iyzdNyTWIq2U13CXOfTkWqT8UIebtQcx5w
+Message-ID: <CAFULd4YV0yKTULPM-+Y0b72EJ48tqfW_ni8RjHsQTULT8TGaTQ@mail.gmail.com>
+Subject: Re: [PATCH] um/asm: Replace "REP; NOP" with PAUSE mnemonic
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-um@lists.infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Handle TDVMCALL for GetQuote to generate a TD-Quote.
+On Tue, Apr 15, 2025 at 7:56=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Mon, 14 Apr 2025 16:55:57 +0200
+> Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > Current minimum required version of binutils is 2.25,
+> > which supports PAUSE instruction mnemonic.
+> >
+> > Replace "REP; NOP" with this proper mnemonic.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > Cc: Richard Weinberger <richard@nod.at>
+> > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+> > Cc: Johannes Berg <johannes@sipsolutions.net>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > ---
+> >  arch/x86/um/asm/processor.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/um/asm/processor.h b/arch/x86/um/asm/processor.h
+> > index 478710384b34..233a7a0d29c9 100644
+> > --- a/arch/x86/um/asm/processor.h
+> > +++ b/arch/x86/um/asm/processor.h
+> > @@ -24,7 +24,7 @@
+> >  /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+> >  static __always_inline void rep_nop(void)
+> >  {
+> > -     __asm__ __volatile__("rep;nop": : :"memory");
+> > +     __asm__ __volatile__("pause": : :"memory");
+> >  }
+> >
+>
+> That only makes sense if you also change the function name.
 
-GetQuote is a doorbell-like interface used by TDX guests to request VMM
-to generate a TD-Quote signed by a service hosting TD-Quoting Enclave
-operating on the host.  A TDX guest passes a TD Report (TDREPORT_STRUCT) in
-a shared-memory area as parameter.  Host VMM can access it and queue the
-operation for a service hosting TD-Quoting enclave.  When completed, the
-Quote is returned via the same shared-memory area.
+This function is used in several places, and is also defined for x86
+in arch/x86/include/asm/vdso/processor.h. The renaming should be
+coordinated with x86 and should definitely be a separate patch.
 
-KVM only checks the GPA from the TDX guest has the shared-bit set and drops
-the shared-bit before exiting to userspace to avoid bleeding the shared-bit
-into KVM's exit ABI.  KVM forwards the request to userspace VMM (e.g. QEMU)
-and userspace VMM queues the operation asynchronously.  KVM sets the return
-code according to the 'ret' field set by userspace to notify the TDX guest
-whether the request has been queued successfully or not.  When the request
-has been queued successfully, the TDX guest can poll the status field in
-the shared-memory area to check whether the Quote generation is completed
-or not.  When completed, the generated Quote is returned via the same
-buffer.
-
-Add KVM_EXIT_TDX_GET_QUOTE as a new exit reason to userspace.
-
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
-Tested-by: Mikko Ylinen <mikko.ylinen@linux.intel.com>
----
-v2:
-- Skip sanity checks except for the check of the shared-bit. (Rick, Sean)
-- Drop the shared-bit of the GPA before exiting to userspace. (Sean)
-- Improve the description of 'ret' field in the document. (Kai)
-- Use number 40 for KVM_EXIT_TDX_GET_QUOTE. (Xiaoyao, Rick)
-- Update the changelog and the description of KVM_EXIT_TDX_GET_QUOTE in the
-  document according to the code changes.
----
- Documentation/virt/kvm/api.rst | 25 +++++++++++++++++++++++++
- arch/x86/kvm/vmx/tdx.c         | 30 ++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h       |  7 +++++++
- 3 files changed, 62 insertions(+)
-
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index ad1859f4699e..b2192d2983fe 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7162,6 +7162,31 @@ The valid value for 'flags' is:
-   - KVM_NOTIFY_CONTEXT_INVALID -- the VM context is corrupted and not valid
-     in VMCS. It would run into unknown result if resume the target VM.
- 
-+::
-+
-+		/* KVM_EXIT_TDX_GET_QUOTE */
-+		struct tdx_get_quote {
-+			__u64 ret;
-+			__u64 gpa;
-+			__u64 size;
-+		};
-+
-+If the exit reason is KVM_EXIT_TDX_GET_QUOTE, then it indicates that a TDX
-+guest has requested to generate a TD-Quote signed by a service hosting
-+TD-Quoting Enclave operating on the host. The 'gpa' field and 'size' specify
-+the guest physical address and size of a shared-memory buffer, in which the
-+TDX guest passes a TD Report. KVM checks the GPA from the TDX guest has the
-+shared-bit set and drops the shared-bit in 'gpa' field before exiting to
-+userspace. KVM doesn't do other sanity checks. The 'ret' field represents the
-+return value of the GetQuote request. KVM only bridges the request to the
-+userspace VMM, and the userspace VMM is responsible for setting up the return
-+value since only userspace knows whether the request has been queued
-+successfully or not. KVM sets the return code according to the 'ret' field
-+before returning back to the TDX guest. When the request has been queued
-+successfully, the TDX guest can poll the status field in the shared-memory area
-+to check whether the Quote generation is completed or not. When completed, the
-+generated Quote is returned via the same buffer.
-+
- ::
- 
- 		/* Fix the size of the union. */
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index b952bc673271..cd1e9a1c040e 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1463,6 +1463,34 @@ static int tdx_get_td_vm_call_info(struct kvm_vcpu *vcpu)
- 	return 1;
- }
- 
-+static int tdx_complete_get_quote(struct kvm_vcpu *vcpu)
-+{
-+	tdvmcall_set_return_code(vcpu, vcpu->run->tdx_get_quote.ret);
-+	return 1;
-+}
-+
-+static int tdx_get_quote(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_tdx *tdx = to_tdx(vcpu);
-+
-+	u64 gpa = tdx->vp_enter_args.r12;
-+	u64 size = tdx->vp_enter_args.r13;
-+
-+	/* The gpa of buffer must have shared bit set. */
-+	if (vt_is_tdx_private_gpa(vcpu->kvm, gpa)) {
-+		tdvmcall_set_return_code(vcpu, TDVMCALL_STATUS_INVALID_OPERAND);
-+		return 1;
-+	}
-+
-+	vcpu->run->exit_reason = KVM_EXIT_TDX_GET_QUOTE;
-+	vcpu->run->tdx_get_quote.gpa = gpa & ~gfn_to_gpa(kvm_gfn_direct_bits(tdx->vcpu.kvm));
-+	vcpu->run->tdx_get_quote.size = size;
-+
-+	vcpu->arch.complete_userspace_io = tdx_complete_get_quote;
-+
-+	return 0;
-+}
-+
- static int handle_tdvmcall(struct kvm_vcpu *vcpu)
- {
- 	switch (tdvmcall_leaf(vcpu)) {
-@@ -1472,6 +1500,8 @@ static int handle_tdvmcall(struct kvm_vcpu *vcpu)
- 		return tdx_report_fatal_error(vcpu);
- 	case TDVMCALL_GET_TD_VM_CALL_INFO:
- 		return tdx_get_td_vm_call_info(vcpu);
-+	case TDVMCALL_GET_QUOTE:
-+		return tdx_get_quote(vcpu);
- 	default:
- 		break;
- 	}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index c6988e2c68d5..4d7e8e88bcc3 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -178,6 +178,7 @@ struct kvm_xen_exit {
- #define KVM_EXIT_NOTIFY           37
- #define KVM_EXIT_LOONGARCH_IOCSR  38
- #define KVM_EXIT_MEMORY_FAULT     39
-+#define KVM_EXIT_TDX_GET_QUOTE    40
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -447,6 +448,12 @@ struct kvm_run {
- 			__u64 gpa;
- 			__u64 size;
- 		} memory_fault;
-+		/* KVM_EXIT_TDX_GET_QUOTE */
-+		struct {
-+			__u64 ret;
-+			__u64 gpa;
-+			__u64 size;
-+		} tdx_get_quote;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
--- 
-2.46.0
-
+Uros.
