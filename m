@@ -1,103 +1,150 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FDC347B4;
-	Wed, 16 Apr 2025 08:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072AC22F15C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:12:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791133; cv=none; b=gNxdaVoCaRq2dB3HZwW/P7OdKUhEl/Q7xL9W6PrbxNnh4MZkaA9o/+No/k9l1EMQa8zdGKhWqmjl6fVCB9J9dmwaQ/7jyxYttmT8ybqgcsZaF1oYVNM2o8G6dw9WOuI1bIsEpFpHEzfgYguAdXyQEQUozyhM67A2PTaF6pz/dps=
+	t=1744791156; cv=none; b=kumSCsYOHzGJdXvGlkDVqwJxXkx2rNpLUB3HWRbS+R6m20YoKhIby/uMOR+iTuFxpVQHm3Y0oeTNPuB8NH0T//dYvVed9CI5//ICahxnSek9s3Xdj/otaDpYau0PuXhUmNe8cdQs8NvIYojFr5/Og7qwZpHi8gubK++ZiEUD43M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791133; c=relaxed/simple;
-	bh=Jc22Eo0VO10sOvqqMAho7ArsbLj2o1xB+/q3mFoXE5I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RE/umGDhuH+Zo2O58fM7drpGN02Wa6IjNzP/UsHPslZMlmOn+owKf5I/HBaL7XL/C4AVHhO6Ikg6VeBzoHKkcqmf2Oon9CGlOeItNF6wZoB5k9b/gxIv1jTD7lYja6kC2as3BDt3UFh9pDAlrwvlJTRqcIxBoRnoIuxwXGUfeCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wlg43VpF; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744791156; c=relaxed/simple;
+	bh=UqpYDKEGBNrCP4IDpHxnNSRgmJd86ZMFLlHPoSsuwB0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZRO+4Hk3N5j92z2mR9sENmkm5BGAW1erw99vVXT9HrUjEa7Zftkw7XrI89jvfKHgPn0sn91Bf3MWCda1njNs7PPqjoUVQk2nrxsrYwXfLxkzB5ieexxMjEcNS2ba8XNUDb/aU020WLULHWBCJpQcxBJpiqLX6o6KcWK41//zPUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=a4k/I7Nx; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wlg43VpF"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-391342fc0b5so4823426f8f.3;
-        Wed, 16 Apr 2025 01:12:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="a4k/I7Nx"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee623fe64so128590f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:12:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744791130; x=1745395930; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7xbSwOnHJcl5ihilpvmWsdE0abLroLqOUSXNDhR1Fz0=;
-        b=Wlg43VpFcWtKxVjoww5c9JPAhYyrCNo13TO2iXQ5jznCXz7W/gJ59fIfM1kzCb8sgs
-         SpE4pm/rwaLlj89/BRWVRW5RAOv3cwQYdGp7p8IgWj4qSjtObwq4XlAxkOGpy6dHbbq+
-         zGb+Sufd9JNOzrEwJu1+u68CNQHQmRvJf7Okt2fuP9AtRlQUNOAhaj7XFudil52D+PZC
-         O6Nf7OOX0PsZt5mJX/EmjV6IYS4lHrp5kp2hyBArJ8Wittl36kP8C7Qiwg6Py/huj3ZT
-         +cc+oqLGqFZhLWZPz7OOIPAwx9pKIzVnYMHP/TPRd4wbCXBpiCwrEF8+w2DpKmABG/ii
-         8UOQ==
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1744791152; x=1745395952; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H/4bHaraL4n/P0iTE+QqqFajLDyDWyG2jsQgWhbDjMQ=;
+        b=a4k/I7NxfE+MLqX6uttNSUyfNND1IYa04gaTanD+jFTxoEmHv1Pny+Kk8nnpZwJuFw
+         wfYL0AIECiNy0eiv4FiYtI/a36+rwPoIV/n1iQco6OH8YbpXkdcB/7Kgiv6lePpvb7Qv
+         IkhEEMDfgT8+3/MquUa/UR8RgyrBLKhoV6XOil5C7lWa9MqOAthzBKNZONwtY+RW12wz
+         47P8ZGGy+BSY1Pl1LSkvdGkRe0ssXeFm4keYjgCQfGf6QDsJJSWS4tY6oLhwSGUdu9NZ
+         XPAnpqsFsy1pd2uxdamq9FkT/XfDqtUIOiAgbkjEgdUxG+AQBlyE1ww+Azfi21Rx9oD1
+         xQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744791130; x=1745395930;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7xbSwOnHJcl5ihilpvmWsdE0abLroLqOUSXNDhR1Fz0=;
-        b=Q78+Ccjj4MempSxk/KZMbKbhjmqB9r0jsDTr9Gmsdky0POnEKTnOp2hpgO7HrPQr7J
-         Vvym/GeZeT3SBAKHQIwUgP+caIH82XYR8/LxmNCehyPame9CGz3qvwXDChkyC/m8ktkv
-         EN5NR6iR4TbPoq3S7OepWe+cg66kk2bMsgliDUn0t9QfGXOhJbwLikQqgN2axs1dP2V9
-         jCONgRGy5VRRuzUBfmSfxqILJAIVLaOkny97Yfsk4EX08V8g9O/RPYJ0gLtRMO2kdgyc
-         kGBwA+PqW+fiUvreD+4IPe+b3xUCOwe9SxHLKz3EBov02CUFL8o4xc47gJblW5BZiOeT
-         WhVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDlNBTI0hgjTgBVOYpzMBZ8L7nlHMB6rsXyJHGVpq2w5untT6NZt4depe4ER5ZyRlIXh2hsdO/jtXUTCc=@vger.kernel.org, AJvYcCUVfiNZWmlt/w2Jfn156INONIB9wx+2surWlLD2jUlew3io+UIxeh/1E0YhnLAqXMjS5cPdRWC0zpSAciE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzyu2lQLtFnxKp+n+O4y547PRHRAvI77yZBsEn+U6AqYOGOTHl4
-	HFJfs+7Mh6jRL8aH+H1NcDIPi8WT5BCWr1eHhjgMfDcuOvBXY1K8
-X-Gm-Gg: ASbGncuHVf92QT4+8uk0lzxObuqyLCFBLqmrNLqfM3OPg8olrVmUq3M7RXw1c+lJ0Da
-	4JpN63IDbA71ardQq3MNMj1E4XHOnYrvxvvxd3DvGXD0zYVVjRY0LiCNQEUS+dpy0bKX0oYUzKn
-	qZ6RLYoOpK+WrquavcpyDgJbTbt8dgbb1/naF0PH2wI63KipwhQD7aB81zJtSouYC7cvmXSftIe
-	nSnyO18KKVMIMdeVqe7MPZkp7kM4RNjr0eDyLw9XLDMLXYutNLg1pNKnp6N98Z6uEIDDDQJUs6g
-	1dbqyzAUE7vcHZ1JbrebjbAo8brIp4xZXRUNHbx6+YdaDueCfWCP
-X-Google-Smtp-Source: AGHT+IEDl5aW4j2p/KlZbpeZlOW6+VxaFPlwv9s2ZrvxmOyoPDUS0nugUIKBDD6JvePtOuISefvMqg==
-X-Received: by 2002:a05:6000:2911:b0:399:6dc0:f134 with SMTP id ffacd0b85a97d-39ee5bad76emr774209f8f.51.1744791130000;
-        Wed, 16 Apr 2025 01:12:10 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eae9640a9sm16555399f8f.10.2025.04.16.01.12.09
+        d=1e100.net; s=20230601; t=1744791152; x=1745395952;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H/4bHaraL4n/P0iTE+QqqFajLDyDWyG2jsQgWhbDjMQ=;
+        b=KqFTjSJvikod0maLgHOxBMTDeKJiKWnyeMYtuebGz5mPcUAiI9LEf/MwskcG7aEv43
+         ywlccAAI5t6N4jvT1FooRwZh1IMPwLubMDUdS6PrzeDNlnlhTGMbP0QdpY2zaB55bl7v
+         51g/wfLCY1aSPSqs0Jb8GNscT5pbTjw44+VSL15gg4EwYnsg1/P12oJw9RoInhCDIngJ
+         DaA0K24a8Li9LEsAGRrO8pfXgnVRP+pvt1C8HofKmpZTjApAWhFznvOLPFhjOrnJzWj/
+         9MJvmtJoZKIBr7aHlwk3X9FrHPQU1+zz4OXJdZZ5K24P5rjCl70287Yx8tGaBDSRQG96
+         kDXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXqf2D6uFRCL+MufAs0v/aFJ50oyLUx5LRLz/Q3gO5QHyglXkP6Pq1vwnh+K577u71FJXbTaGI5FrAxXfk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxezwNn1D93jjeaYkdy1f4otaRNrAEyxsXFKKLOz4K0zQn5KHW5
+	Mmkl0kiNTOCy/a5DU8yDFYT1UZNPRoPdhlqUD65IGGFIgbnURWpYdxzxbuAo06g=
+X-Gm-Gg: ASbGncvzJ+EqXFDdBuZ7bAHi9aCair/vFbQbwaK/bbEmY8kdDkd50w7yt1HkSGtdf/G
+	VVKw8lghOJQVVG1GowwXfUiw1H6yn9Lo+EEO8963EpA4ArTlVAOcF5ll2064od7IeiYsvFd9ciY
+	Vic3IwQ9Wb96DeGLZYeIO8lBL35mYATn2WIjdA3xqqkm4ywGoz6CSQJpA/yB7UukSd4xrjSg4RC
+	M3eKszCOM2bylZq0GTHPnCc5sK3KziRh56I2qOSoBDBFxvNMRWJLo3LWtxP468w+EmBLdNvOfq3
+	dX2jtsK+ZBdw/y7iNw3Ijk6++sM3AXnvFYTgYS3pi/rUTpKqQiJXKg==
+X-Google-Smtp-Source: AGHT+IGxaQcIkGTI0aBQCrdg5Mdz1bajPY1DljdFhlFnwzhWRIuUx+MIrx6GZMLHMpwt9t1FLRkhxA==
+X-Received: by 2002:a05:6000:18a7:b0:39c:2c38:4599 with SMTP id ffacd0b85a97d-39ee5b9ee51mr819435f8f.48.1744791151941;
+        Wed, 16 Apr 2025 01:12:31 -0700 (PDT)
+Received: from jiri-mlt ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee6010449sm515446f8f.9.2025.04.16.01.12.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:12:09 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ASoC: cs48l32: Fix spelling mistake "exceeeds" -> "exceeds"
-Date: Wed, 16 Apr 2025 09:12:04 +0100
-Message-ID: <20250416081204.36851-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Wed, 16 Apr 2025 01:12:31 -0700 (PDT)
+Date: Wed, 16 Apr 2025 10:12:21 +0200
+From: Jiri Pirko <jiri@resnulli.us>
+To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
+	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
+	aleksandr.loktionov@intel.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v1 0/3] dpll: add ref-sync pins feature
+Message-ID: <6ss5qghishcbbbmj6ifitafl6fnbfhnw6crrkitgunays4qtqv@ixvlqemyij6x>
+References: <20250415175115.1066641-1-arkadiusz.kubalewski@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415175115.1066641-1-arkadiusz.kubalewski@intel.com>
 
-There is a spelling mistake in a cs48l32_fll_err message. Fix it.
+Tue, Apr 15, 2025 at 07:51:12PM +0200, arkadiusz.kubalewski@intel.com wrote:
+>Allow to bind two pins and become a single source of clock signal, where
+>first of the pins is carring the base frequency and second provides SYNC
+>pulses.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- sound/soc/codecs/cs48l32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is not enough. Could you please provide more details about this.
+Motivation is needed. Also, from the examples below looks like you allow
+to bind 2 pins, in async way. Would make sense to bind more than 2 pins
+together?
 
-diff --git a/sound/soc/codecs/cs48l32.c b/sound/soc/codecs/cs48l32.c
-index 4e2bc09773cb..8fd0df671730 100644
---- a/sound/soc/codecs/cs48l32.c
-+++ b/sound/soc/codecs/cs48l32.c
-@@ -1802,7 +1802,7 @@ static int cs48l32_fllhj_validate(struct cs48l32_fll *fll,
- 	}
- 
- 	if (fout > CS48L32_FLL_MAX_FOUT) {
--		cs48l32_fll_err(fll, "Fout=%dMHz exceeeds maximum %dMHz\n",
-+		cs48l32_fll_err(fll, "Fout=%dMHz exceeds maximum %dMHz\n",
- 				fout, CS48L32_FLL_MAX_FOUT);
- 		return -EINVAL;
- 	}
--- 
-2.49.0
+Honestly, I don't understand what this is about.
 
+
+>
+>Verify pins bind state/capabilities:
+>$ ./tools/net/ynl/pyynl/cli.py \
+> --spec Documentation/netlink/specs/dpll.yaml \
+> --do pin-get \
+> --json '{"id":0}'
+>{'board-label': 'CVL-SDP22',
+> 'id': 0,
+> [...]
+> 'reference-sync': [{'id': 1, 'state': 'disconnected'}],
+> [...]}
+>
+>Bind the pins by setting connected state between them:
+>$ ./tools/net/ynl/pyynl/cli.py \
+> --spec Documentation/netlink/specs/dpll.yaml \
+> --do pin-set \
+> --json '{"id":0, "reference-sync":{"id":1, "state":"connected"}}'
+>
+>Verify pins bind state:
+>$ ./tools/net/ynl/pyynl/cli.py \
+> --spec Documentation/netlink/specs/dpll.yaml \
+> --do pin-get \
+> --json '{"id":0}'
+>{'board-label': 'CVL-SDP22',
+> 'id': 0,
+> [...]
+> 'reference-sync': [{'id': 1, 'state': 'connected'}],
+> [...]}
+>
+>Unbind the pins by setting disconnected state between them:
+>$ ./tools/net/ynl/pyynl/cli.py \
+> --spec Documentation/netlink/specs/dpll.yaml \
+> --do pin-set \
+> --json '{"id":0, "reference-sync":{"id":1, "state":"disconnected"}}'
+>
+>
+>Arkadiusz Kubalewski (3):
+>  dpll: add reference-sync netlink attribute
+>  dpll: add reference sync get/set
+>  ice: add ref-sync dpll pins
+>
+> Documentation/netlink/specs/dpll.yaml         |  19 ++
+> drivers/dpll/dpll_core.c                      |  27 +++
+> drivers/dpll/dpll_core.h                      |   1 +
+> drivers/dpll/dpll_netlink.c                   | 188 ++++++++++++++++--
+> drivers/dpll/dpll_nl.c                        |  10 +-
+> drivers/dpll/dpll_nl.h                        |   1 +
+> .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
+> drivers/net/ethernet/intel/ice/ice_dpll.c     | 186 +++++++++++++++++
+> include/linux/dpll.h                          |  10 +
+> include/uapi/linux/dpll.h                     |   1 +
+> 10 files changed, 425 insertions(+), 20 deletions(-)
+>
+>
+>base-commit: 420aabef3ab5fa743afb4d3d391f03ef0e777ca8
+>-- 
+>2.38.1
+>
