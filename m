@@ -1,251 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193323594B;
-	Wed, 16 Apr 2025 12:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8422335959
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808057; cv=none; b=VFCkDRXBuo3Dtfymk1HxX/aIHi5LE0tYQmeHy3W9rncP1s9+VcnI/3mnxmGGpVSU7IysVhBEiismAhBP8Yz9Td5nC9PYPzzZkgKWwwlaku4HTSzc/tp/cGLA1FsTugYnWd9V+q57EjIDiHdfBf40N2gLayj2O9sysuE2++A0KwQ=
+	t=1744808093; cv=none; b=JsUuTCm1/0y8jZ11cWnSBWrisLO4ZP6qYfOHsyDtHLBAdBWmuv4Fww2zyM8u+eZ5TwgSiDAb5FEv0t0X9Kn165SoZ1K7hKeMxQDbd0GN5P8hM69W+v9MwR3fLMbrmFpoe0IIzealCBBDua8RXRRu43WO0pCs+gwV2zioit3cxKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808057; c=relaxed/simple;
-	bh=comiGzp0yJ4uJILmejSmpCuv8WNkCrKJ9fiuAA5Eobw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RLg1lHRTkkeHfsc4vWfP0guHOZwiTLr6PFhRvwrNehf9UOIR6xQSY8o3l4qGTLKwJTBHYxliMHF0fASqt2dBcHJnwYzUrBVOblBZvOoKwS6NSoULgpWHa7fqP5U1WYnI0i0Lxi0CjEqiRJaDXfqgcrbPbKUcTEN1uHuXe8l7JGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgxN7RF6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgxN7RF6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F38C4CEF3;
-	Wed, 16 Apr 2025 12:54:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744808056;
-	bh=comiGzp0yJ4uJILmejSmpCuv8WNkCrKJ9fiuAA5Eobw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XgxN7RF6ckFVEbhTn4I+sUZDqecs+mp3hGbLLci+Upkk2MPH7CIQvlQFKOyjI4/3P
-	 nGB24udzu5O62ORPQlrRwyyGveOHGDOrMF38yJfdtVsFhOZ8wLNu7luUFZqyLvsVOU
-	 6lkI1ew3WMP9j5VUysZEDaKWSUyImO63a14HdAbC+GHfk49ZspnHGRcdMvil/jTsjP
-	 AZ7OhS/a8bSP43LawW46zSOqSlkawiBkad4nxwPsBjJNhSIhgv5X0vLfdE2iz3QE7X
-	 NxVajwcnP/1YaLNgnD5Yuc9Y3/EqUo2z2Mp5X+QRlMaVXqeEVUsZwUaB+eRqr6L+Lv
-	 P8iQx/wPt2Kow==
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1162111666b.3;
-        Wed, 16 Apr 2025 05:54:16 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjvTsWqXHZXB8OxUtYz4j7ZiAkXgku9iKze99HwrAIMbjt2ySUROyLRJ6Ej0JJ5XlZXR/kUWYvAix0@vger.kernel.org, AJvYcCVN1DvIGHxvad+wQPGtGQM1Dog0c1RONV8iO/24XHZT+EuTCnmrAtZtH7OZRkBH3hV0UA8vqnTyAPMhbZM=@vger.kernel.org, AJvYcCXHJj7bkvI9GcqFt6YbtlF+UnPk7bR5z1+SXHQeG8ljtOJN6XMu7e3sqLB9/wcaFBOlZQGRggTTLZ2FiIrT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVk89ANCCfQvIxBdYy6+zkOErXXsL9MKxkp6l2zbUtfhQr8zhF
-	lwZUY6GOH/n9A/3Ua3NIofEEV4bfTIeoH5EDbrUzPnZRNa5PEsrAOcDhWhm/YdS91CR4VfFgnDM
-	dwBgMc0ot06kUXoCkVc6w/8oCSQ==
-X-Google-Smtp-Source: AGHT+IHKUgTFGckVUkYUIXHvq2dBr0rCYxoZR8dZi86QjoaRiJl8+SbX5WOjSc7+LpPbHbXBjdpbz7ajUIvfSATF50o=
-X-Received: by 2002:a17:907:2da5:b0:ac4:751:5f16 with SMTP id
- a640c23a62f3a-acb429e409fmr172840366b.30.1744808055323; Wed, 16 Apr 2025
- 05:54:15 -0700 (PDT)
+	s=arc-20240116; t=1744808093; c=relaxed/simple;
+	bh=WXzw6p+u6/DnMYfn+ol6EJ/65UVX3dnVImk1w5OZOkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U/ZXdpndh6vVWHMX4/cQtpued0WtI6Nv1j88vysvDjfkwm1Fo2KHzLOyaXBsC9hWxnsuCIrENHXMtM02bg4TNYlMpP6+koCX8VYKETiCxBDtpu6TlDqbuGY7tZoiT14w7edyZ/uGM96Dndvs7r+FPhcOlRjkE8VGEU6QxFXgSr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA3B01595;
+	Wed, 16 Apr 2025 05:54:48 -0700 (PDT)
+Received: from [10.57.90.106] (unknown [10.57.90.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B04573F694;
+	Wed, 16 Apr 2025 05:54:48 -0700 (PDT)
+Message-ID: <eba7a8fa-0b85-4b30-ab3e-9c0a65b7dc80@arm.com>
+Date: Wed, 16 Apr 2025 13:54:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241218105320.38980-1-angelogioacchino.delregno@collabora.com> <174470268964.14740.2655102858243748239.b4-ty@collabora.com>
-In-Reply-To: <174470268964.14740.2655102858243748239.b4-ty@collabora.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 16 Apr 2025 07:54:03 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKZN6PxsThZtcCBLaLKgC2Dd1kxfgWhK6RK8DxY6_2X0g@mail.gmail.com>
-X-Gm-Features: ATxdqUFMIZ7R44fK-lMlhaa-MPGGZB7R6M_caVCgAn6SeZBUMV0t64nOdSZ5Dr4
-Message-ID: <CAL_JsqKZN6PxsThZtcCBLaLKgC2Dd1kxfgWhK6RK8DxY6_2X0g@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] MediaTek MT8188 MDP3 Enablement
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
-	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mchehab@kernel.org, matthias.bgg@gmail.com, moudy.ho@mediatek.com, 
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com, sebastian.fricke@collabora.com, 
-	macpaul.lin@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [mm/contpte v3 1/1] mm/contpte: Optimize loop to reduce redundant
+ operations
+Content-Language: en-GB
+To: Xavier <xavier_qy@163.com>, dev.jain@arm.com, ioworker0@gmail.com,
+ 21cnbao@gmail.com
+Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
+ ziy@nvidia.com
+References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
+ <20250415082205.2249918-1-xavier_qy@163.com>
+ <20250415082205.2249918-2-xavier_qy@163.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250415082205.2249918-2-xavier_qy@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 2:38=E2=80=AFAM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> On Wed, 18 Dec 2024 11:53:17 +0100, AngeloGioacchino Del Regno wrote:
-> > This series adds the necessary bindings and devicetree nodes to enable
-> > the entire Multimedia Data Path 3 (MDP3) macro-block, found in MediaTek=
-'s
-> > MT8188 SoC.
-> >
-> > This was tested on a MediaTek Genio 700 EVK board.
-> >
-> > AngeloGioacchino Del Regno (3):
-> >   dt-bindings: display: mediatek: Add compatibles for MT8188 MDP3
-> >   dt-bindings: media: mediatek: mdp3: Add compatibles for MT8188 MDP3
-> >   arm64: dts: mediatek: mt8188: Add all Multimedia Data Path 3 nodes
-> >
-> > [...]
->
-> Applied to v6.15-next/dts64, thanks!
->
-> [1/3] dt-bindings: display: mediatek: Add compatibles for MT8188 MDP3
->       commit: 2971de063fa56c18b2720ab19bdebca23cd96471
-> [2/3] dt-bindings: media: mediatek: mdp3: Add compatibles for MT8188 MDP3
->       commit: cfb00dfa1b778a8037faf6973cca226e5ad4f45a
-> [3/3] arm64: dts: mediatek: mt8188: Add all Multimedia Data Path 3 nodes
->       commit: f0935480253ede5405045a4e733f4476343cbb91
+On 15/04/2025 09:22, Xavier wrote:
+> This commit optimizes the contpte_ptep_get function by adding early
+>  termination logic. It checks if the dirty and young bits of orig_pte
+>  are already set and skips redundant bit-setting operations during
+>  the loop. This reduces unnecessary iterations and improves performance.
+> 
+> Signed-off-by: Xavier <xavier_qy@163.com>
+> ---
+>  arch/arm64/mm/contpte.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
+> index bcac4f55f9c1..0acfee604947 100644
+> --- a/arch/arm64/mm/contpte.c
+> +++ b/arch/arm64/mm/contpte.c
+> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
+>  }
+>  EXPORT_SYMBOL_GPL(__contpte_try_unfold);
+>  
+> +/* Note: in order to improve efficiency, using this macro will modify the
+> + * passed-in parameters.*/
+> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
+> +    for (; (start) < CONT_PTES; (start)++, (ptep)++) { \
+> +		if (pte_##flag(__ptep_get(ptep))) { \
+> +				orig_pte = pte_mk##flag(orig_pte); \
+> +				break; \
+> +		} \
+> +    }
 
-A couple of warnings added with this:
+I'm really not a fan of this macro, it just obfuscates what is going on. I'd
+personally prefer to see the 2 extra loops open coded below.
 
-     33 (mediatek,mt8188-mdp3-wrot): '#dma-cells' is a required property
-     33 (mediatek,mt8188-mdp3-tdshp): 'power-domains' does not match
-any of the regexes: 'pinctrl-[0-9]+'
-     33 (mediatek,mt8188-mdp3-rsz): 'power-domains' does not match any
-of the regexes: 'pinctrl-[0-9]+'
-     33 (mediatek,mt8188-mdp3-rsz): 'mediatek,gce-events' is a required pro=
-perty
-     33 (mediatek,mt8188-mdp3-rdma): compatible: 'oneOf' conditional
-failed, one must be fixed:
-     33 (mediatek,mt8188-mdp3-hdr): 'power-domains' does not match any
-of the regexes: 'pinctrl-[0-9]+'
-     33 (mediatek,mt8188-mdp3-fg): 'power-domains' does not match any
-of the regexes: 'pinctrl-[0-9]+'
-     33 (mediatek,mt8188-mdp3-color): 'oneOf' conditional failed, one
-must be fixed:
-     33 (mediatek,mt8188-mdp3-aal): 'oneOf' conditional failed, one
-must be fixed:
-     11 (mediatek,mt8188-mdp3-tcc): 'power-domains' does not match any
-of the regexes: 'pinctrl-[0-9]+'
-     11 (mediatek,mt8188-mdp3-ovl): 'oneOf' conditional failed, one
-must be fixed:
-     11 (mediatek,mt8188-mdp3-ovl): 'iommus' is a required property
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[51, 12], [46, 186],
-[46, 191]] is too long
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[51, 10], [46, 186],
-[46, 191]] is too long
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[50, 12], [45, 186],
-[45, 191]] is too long
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[50, 10], [45, 186],
-[45, 191]] is too long
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[49, 24], [46, 185],
-[46, 190], [49, 4], [49, 41], [49, 42], [49, 7], [51, 41], [51, 42],
-[49, 8]] is too long
-      8 (mediatek,mt8188-mdp3-rdma): clocks: [[48, 24], [45, 185],
-[45, 190], [48, 4], [48, 41], [48, 42], [48, 7], [50, 41], [50, 42],
-[48, 8]] is too long
-      4 (mediatek,mt8188-mdp3-rsz): clocks: [[51, 24], [51, 25]] is too lon=
-g
-      4 (mediatek,mt8188-mdp3-rsz): clocks: [[51, 20], [51, 21]] is too lon=
-g
-      4 (mediatek,mt8188-mdp3-rsz): clocks: [[50, 24], [50, 25]] is too lon=
-g
-      4 (mediatek,mt8188-mdp3-rsz): clocks: [[50, 20], [50, 21]] is too lon=
-g
-      4 (mediatek,mt8188-mdp3-rdma): power-domains: [[67, 15], [67,
-20]] is too long
-      4 (mediatek,mt8188-mdp3-rdma): power-domains: [[66, 15], [66,
-20]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[121, 13, 1], [121, 14,
-1], [121, 16, 1], [121, 21, 1]] is too short
-      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[120, 13, 1], [120, 14,
-1], [120, 16, 1], [120, 21, 1]] is too short
-      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[119, 13, 1], [119, 14,
-1], [119, 16, 1], [119, 21, 1]] is too short
-      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[118, 13, 1], [118, 14,
-1], [118, 16, 1], [118, 21, 1]] is too short
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[132, 164], [132, 166]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 164], [131, 166]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[130, 164], [130, 166]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 164], [129, 166]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[122, 192], [122, 194]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[122, 128], [122, 131]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[121, 192], [121, 194]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[121, 128], [121, 131]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[120, 192], [120, 194]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[120, 128], [120, 131]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[119, 192], [119, 194]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): iommus: [[119, 128], [119, 131]]
-is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[44, 12], [39, 186],
-[39, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[44, 10], [39, 186],
-[39, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 24], [39, 185],
-[39, 190], [42, 4], [42, 41], [42, 42], [42, 7], [44, 41], [44, 42],
-[42, 8]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 12], [37, 186],
-[37, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 10], [37, 186],
-[37, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[40, 24], [37, 185],
-[37, 190], [40, 4], [40, 41], [40, 42], [40, 7], [42, 41], [42, 42],
-[40, 8]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 12], [34, 186],
-[34, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 10], [34, 186],
-[34, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 24], [39, 185],
-[39, 190], [42, 4], [42, 41], [42, 42], [42, 7], [44, 41], [44, 42],
-[42, 8]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 12], [37, 186],
-[37, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 10], [37, 186],
-[37, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[40, 24], [37, 185],
-[37, 190], [40, 4], [40, 41], [40, 42], [40, 7], [42, 41], [42, 42],
-[40, 8]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 12], [34, 186],
-[34, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 10], [34, 186],
-[34, 191]] is too long
-      2 (mediatek,mt8188-mdp3-rdma): clocks: [[36, 24], [34, 185],
-[34, 190], [36, 4], [36, 41], [36, 42], [36, 7], [38, 41], [38, 42],
-[36, 8]] is too long
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[44, 24], [44, 25]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[44, 20], [44, 21]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[42, 24], [42, 25]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[42, 20], [42, 21]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[38, 24], [38, 25]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rsz): clocks: [[38, 20], [38, 21]] is too lon=
-g
-      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[60, 15], [60,
-20]] is too long
-      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[58, 15], [58,
-20]] is too long
-      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[54, 15], [54,
-20]] is too long
-      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[92, 13, 1], [92, 14,
-1], [92, 16, 1], [92, 21, 1]] is too short
-      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[130, 13, 1], [130, 14,
-1], [130, 16, 1], [130, 21, 1]] is too short
-      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[128, 13, 1], [128, 14,
-1], [128, 16, 1], [128, 21, 1]] is too short
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[93, 192], [93, 194]] is too =
-long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[93, 128], [93, 131]] is too =
-long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[141, 164], [141, 166]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[139, 164], [139, 166]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 192], [131, 194]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 128], [131, 131]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 192], [129, 194]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 128], [129, 131]]
-is too long
-      1 (mediatek,mt8188-mdp3-rdma): iommus: [[103, 164], [103, 166]]
-is too long
+Or even better, could you provide results comparing this 3 loop version to the
+simpler approach I suggested previously? If the performance is similar (which I
+expect it will be, especially given Barry's point that your test always ensures
+the first PTE is both young and dirty) then I'd prefer to go with the simpler code.
+
+
+> +
+>  pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>  {
+>  	/*
+> @@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
+>  	for (i = 0; i < CONT_PTES; i++, ptep++) {
+>  		pte = __ptep_get(ptep);
+>  
+> -		if (pte_dirty(pte))
+> +		if (pte_dirty(pte)) {
+>  			orig_pte = pte_mkdirty(orig_pte);
+> +			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
+> +			break;
+> +		}
+>  
+> -		if (pte_young(pte))
+> +		if (pte_young(pte)) {
+>  			orig_pte = pte_mkyoung(orig_pte);
+> +			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
+> +			break;
+> +		}
+>  	}
+>  
+>  	return orig_pte;
+
+If we decide this is all worth the trouble, then I think we can (and *should*,
+in order to be consistent) pull a similar stunt in contpte_ptep_get_lockless().
+
+Thanks,
+Ryan
+
