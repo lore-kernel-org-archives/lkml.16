@@ -1,178 +1,134 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB539215F53
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60341214235;
+	Wed, 16 Apr 2025 18:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744827526; cv=none; b=fo46PRZtWz0kid2BriudIi2LzkfQzq2QJ5DIoH61t+ABaC26xJzekUFHmJu1NTlKk40SQcbcdaq2EFmQq9tWs5uoP3ZCvYYr045F27k7BBwqsjhPdCnaJ7mCH2MggGVAfm11Bl72zs2JOfnZT9Soxg97FKYNFyh2FRkK1nP4/Lo=
+	t=1744827633; cv=none; b=lkCS2YS7euxBFQLsbnMjFldvqa1JT3zkO0FrBBiPyX/QpgToCcKn0fIC5dPuym+c/EjiAhcJYvovrqI5u03WEnQDSYiNNkiHdEFnjZHfBb+BfOU2Qo2YOdXMUAHaG1qrXwt2iy9TNCSH00h3sAFGY9gxZga0IiqXyzu4XFXM2QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744827526; c=relaxed/simple;
-	bh=4t8NbsINpNM6drNqUUvmX+z/2Bau0sdeRnLycTjxyU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPeAAJdfGjIlPqqpIo7s12CjZdh3K4zuXWF3IOHYRhVHgjynqxBqP5+qfwqIoe7LTyJUEGvCsw9UD90hXu1/pQ9u4Y1w2jP964NOfSBXdvS0eHa6D0ivTRfH3nbeqEXFJQk4qvdLQKUkMzivtbGdqAvlmV4fnnGVyTmzZm30h3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=ebOALU6N; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1744827633; c=relaxed/simple;
+	bh=9fZVP5qCPqf8i6yiN38lT2yxDswfPqHd9OevWflFDHw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SdUakaw73HiNVcqipoVn+RraaM0xR2lo51MsVF7OMeTAfMyqk88GXiy+Zq9CHhRHzkXWqnq7sNzGQ3xPtpza5rcNMCB77+eWzLaSkDSGlnsl6RbSWgUrEkbM2C/p2EM0twt7k9kgf1al/IT43oV3AqHvGpyNBrqX3aLIaek3ro8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Y60CK3H7; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="ebOALU6N"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6ecf0e07947so44026d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744827520; x=1745432320; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yTtBLueY5bwgui78rPC30wk/ROsoLoNLC0+wzfuiQvA=;
-        b=ebOALU6Nqxxx42nW010qJ3aIYKXd+zJEU0Bk8HflDajO0Z75DTkDT6MYBX4vn8K+xo
-         Buv3uYcfb9GOLPVnLxC/4WL717BlxwA0qgTHI8sHDaLc6E4dy6tHMqBc6aj3HZX70EHh
-         iXFUUqVdrsM03YHX7GGmwbwf5NPqRHXM7VLo9lr/LfHCnkrK9mII5FZ7EtZbN7ukLMja
-         GzhCaIU4qtocTv4dkVinhYkQdWn3OKUqYLkGJuXy4MOEgCrCBpMvK40koMvecuoRJ936
-         fRBxYI+dx6uQ0lxIjpe+pUbeo5o7N0gnite4fnemJT+nizfdzrHQ2vQuKjbztI6KQPur
-         O4Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744827520; x=1745432320;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yTtBLueY5bwgui78rPC30wk/ROsoLoNLC0+wzfuiQvA=;
-        b=ukET4BqqY0SrUyBmc9+IvpiHg3LZhB1aEZktoSPOYffFnUnkGfiNIM/B5jUw9zHpKP
-         +ZfSl3jkgHhr+ZxHqK4fBWzZIPO2eKaINczqQGmGjOlfZEpzn3nV9gld5CIdU9oQm3cz
-         Z4sjvYJ7fPw/fA5hwXLJ3fBrUALAtU3QPGLjdsB21l1d4w8NQebZ1I3RvcOzJ4M+rzl4
-         9XFPyln+v6Wh1nmyhFTa2TzuwcmJnDfFzDc4pe1ZeAMXGJePWuSbb8qQMH9OxTkholJR
-         siJWM5LjBUACKqu851jdq6VTx4zBBEDIMNTMiOv0hgTBCxArKV/1G7lFwyLyXclMQabi
-         AczA==
-X-Forwarded-Encrypted: i=1; AJvYcCW67pkZsgWgDY6fqSZhrLOBuCZKZlchnLozY5fEtl62FwpKwYdjMb0Ys0HakGpSrFXJGGnlIdBfUjzCqRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4b0N8SWubSp8amcuVB6GnX+sdHhb4NVsc+umd5ADFI3u5FSWs
-	9+hi2o5kfJGvNPYOZN+NAIcEtrhPauCD++RUeW18oxqlsPm2Z9FSa97kDybtbSE=
-X-Gm-Gg: ASbGncvm2RoXVa6uYpupRq2M/dgBshoP0GuOAoNxmng3UE2zjMZmXKCJDVUkVIq+St+
-	H/BjxNmvVHLoy29GqLoTUtelXW5WbSBK7nV05gtTKPNX/dz3x2Q3koCmOoHtI0Hg2+/0VDQeKQS
-	16zYELM46NLiWNe5391ZPmgM6hb66/b7xCOj5HxQHOE2y4QgPuTFIgWk3uc9lb1fpq789uwyzL8
-	ZX3txymSUCz7btYPQnsj5O3V5M2XKdbxKGtOyeOTy/CP71ym7odBHUdNstI/RRcwt0HohuU7tMY
-	jKguCXLsbJ7/ERzrpEhNQgsFE+YvELBZpvRG+zs=
-X-Google-Smtp-Source: AGHT+IH0qED+R09C6b7ocjI3EjgEpmYkEhrRRozeDgmmA7lPl24YxEoaAiknkftJ1gzVOeCdug812g==
-X-Received: by 2002:a05:6214:b69:b0:6e4:540b:5352 with SMTP id 6a1803df08f44-6f2b9a20088mr8087586d6.16.1744827520320;
-        Wed, 16 Apr 2025 11:18:40 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0de95f99bsm120292406d6.25.2025.04.16.11.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 11:18:39 -0700 (PDT)
-Date: Wed, 16 Apr 2025 14:18:35 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
-Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
- processes
-Message-ID: <20250416181835.GA779666@cmpxchg.org>
-References: <20250412085852.48524-1-21cnbao@gmail.com>
- <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
- <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
- <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com>
- <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
- <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com>
- <20250416141531.GD741145@cmpxchg.org>
- <239cfe47-9826-402b-8008-de707faa160e@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Y60CK3H7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744827618; x=1745432418; i=wahrenst@gmx.net;
+	bh=9fZVP5qCPqf8i6yiN38lT2yxDswfPqHd9OevWflFDHw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Y60CK3H7q9OGnAnxt+/RrcUlduWqiw0cQ33LDtl9vuidJztuhmxRRBg7eeFGO5qN
+	 +1ejkoo1Y6t9CebgZ7YXhycQR9fd0+cB09A7JckLrXAIjyMJvKnlNjQUF0STUdfWG
+	 C7OMrNAMmoASXMp1XwGMy+tYsbgjSjElp3oxi6ijrlRaG4paRZJpHUkeSGImQKj6J
+	 Q3jWRwi0yAGPOlRmIMs3a9RAhRlD26lo2APlhdaxxkrXHQU0iAiGixgngncsjEXVu
+	 dZ8qUmnqvuXSwf1zC38OyX83iot76h1V0/ftPgGzcdMlbMFvZgQtD2kyFW1Rczw+j
+	 90v0Q8iCRMl0nkZRRA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Ml6qM-1tJeWs14hw-00emAH; Wed, 16
+ Apr 2025 20:20:18 +0200
+Message-ID: <0c854b7f-190c-4477-a3ff-007427442fcb@gmx.net>
+Date: Wed, 16 Apr 2025 20:20:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <239cfe47-9826-402b-8008-de707faa160e@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v5 6/6] ARM: mxs_defconfig: Enable CONFIG_FEC_MTIP_L2SW
+ to support MTIP L2 switch
+To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Simon Horman <horms@kernel.org>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-7-lukma@denx.de>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250414140128.390400-7-lukma@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:itvxO48mTZnNJc/gAjoCazoEY4fXOsoGFv9Kn8f5bTQ48pcsNb8
+ gpp7h9agbLzTu1gDahSA4I4D7uK3okJ7747WGuiWHTI2yKuE6atR+Wp9Z+TKsAADT+9QphZ
+ FhWMkbesJ4hsO7hwaL5KKuMBVDxDoo5yyJs1T3QaGQmlbseuYMG4VoJbQpoMyDPv4wQIdBd
+ SsH/2RbUyPYk2a5rqRbpA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:GWURujK0+Mc=;JMwYsdP1UXrq9lQFjwpfBw/80eX
+ 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
+ w==
 
-On Wed, Apr 16, 2025 at 05:59:12PM +0200, David Hildenbrand wrote:
-> On 16.04.25 16:15, Johannes Weiner wrote:
-> > On Wed, Apr 16, 2025 at 11:40:31AM +0200, David Hildenbrand wrote:
-> >> On 16.04.25 11:38, Barry Song wrote:
-> >>> On Wed, Apr 16, 2025 at 5:32 PM David Hildenbrand <david@redhat.com> wrote:
-> >>>>
-> >>>> On 16.04.25 11:24, Barry Song wrote:
-> >>>>> On Wed, Apr 16, 2025 at 4:32 PM David Hildenbrand <david@redhat.com> wrote:
-> >>>>>>
-> >>>>>> On 12.04.25 10:58, Barry Song wrote:
-> >>>>>>> From: Barry Song <v-songbaohua@oppo.com>
-> >>>>>>>
-> >>>>>>> Promoting exclusive file folios of a dying process is unnecessary and
-> >>>>>>> harmful. For example, while Firefox is killed and LibreOffice is
-> >>>>>>> launched, activating Firefox's young file-backed folios makes it
-> >>>>>>> harder to reclaim memory that LibreOffice doesn't use at all.
-> >>>>>>
-> >>>>>> Do we know when it is reasonable to promote any folios of a dying process?
-> >>>>>>
-> >>>>>
-> >>>>> I don't know. It seems not reasonable at all. if one service crashes due to
-> >>>>> SW bug, systemd will restart it immediately. this might be the case promoting
-> >>>>> folios might be good. but it is really a bug of the service, not a normal case.
-> >>>>>
-> >>>>>> Assume you restart Firefox, would it really matter to promote them when
-> >>>>>> unmapping? New Firefox would fault-in / touch the ones it really needs
-> >>>>>> immediately afterwards?
-> >>>>>
-> >>>>> Usually users kill firefox to start other applications (users intend
-> >>>>> to free memory
-> >>>>> for new applications). For Android, an app might be killed because it has been
-> >>>>> staying in the background inactively for a while.
-> >>>>
-> >>>>> On the other hand, even if users restart firefox immediately, their folios are
-> >>>>> probably still in LRU to hit.
-> >>>>
-> >>>> Right, that's what I'm thinking.
-> >>>>
-> >>>> So I wonder if we could just say "the whole process is going down; even
-> >>>> if we had some recency information, that could only affect some other
-> >>>> process, where we would have to guess if it really matters".
-> >>>>
-> >>>> If the data is important, one would assume that another process would
-> >>>> soon access it either way, and as you say, likely it will still be on
-> >>>> the LRU to hit.
-> >>>
-> >>> I'll include this additional information in the v2 version of the patch since
-> >>> you think it would be helpful.
-> >>>
-> >>> Regarding the exclusive flag - I'm wondering whether we actually need to
-> >>> distinguish between exclusive and shared folios in this case. The current
-> >>> patch uses the exclusive flag mainly to reduce controversy, but even for
-> >>> shared folios: does the recency from a dying process matter? The
-> >>> recency information only reflects the dying process's usage pattern, which
-> >>> will soon be irrelevant.
-> >>
-> >> Exactly my thoughts. So if we can simplify -- ignore it completely --
-> >> that would certainly be nice.
-> > 
-> > This doesn't sound right to me.
-> > 
-> > Remembering the accesses of an exiting task is very much the point of
-> > this. Consider executables and shared libraries repeatedly referenced
-> > by short-lived jobs, like shell scripts, compiles etc.
-> 
-> For these always-mmaped / never read/write files I tend to agree.
-> 
-> But, is it really a good indication whether a folio is exclusive to this 
-> process or not?
+Am 14.04.25 um 16:01 schrieb Lukasz Majewski:
+> This patch enables support for More Than IP L2 switch available on some
+> imx28[7] devices.
 >
-> I mean, if a bash scripts executes the same executable repeatedly, but 
-> never multiple copies at the same time, we would also not tracking the 
-> access with this patch.
-> 
-> Similarly with an app that mmaps() a large data set (DB, VM, ML, ..) 
-> exclusively. Re-starting the app would not track recency with this patch.
-> 
-> But I guess there is no right or wrong ...
-
-Right, I'm more broadly objecting to the patch and its premise, but
-thought the exclusive filtering would at least mitigate its downsides
-somewhat. You raise good points that it's not as clear cut.
-
-IMO this is too subtle and unpredictable for everybody else. The
-kernel can't see the future, but access locality and recent use is a
-proven predictor. We generally don't discard access information,
-unless the user asks us to, and that's what the madvise calls are for.
+> Moreover, it also enables CONFIG_SWITCHDEV and CONFIG_BRIDGE required
+> by this driver for correct operation.
+>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
