@@ -1,61 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9B41AA1FE;
-	Wed, 16 Apr 2025 13:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53240201266
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811274; cv=none; b=fPtr3cQ6fYYmMrHqHx5r+vwrhsyuSdnS6xixzu8yusE5y9XfeEmwWBLE687tP4b7qGYfSwEKJloYHfStq/HPQFKaKRnEPvgWccI7QnwSqvqyFefGpVg3UF/ganru/b4m+kKgt0NYp/eMphPI9c0MIAKyT/haTCnc1j8atcNdFAk=
+	t=1744811285; cv=none; b=PSn9EgaZX+F2T/FWwGWMNGtEx1OSUPUT9vArkizV8ya53i9WfT1G7USaV/8Fe4KH4ORKP1gR+Z/eGrlu+2DXJF8WOwcLhkAkq8c2l1GuWygzUxO35MGIXN7hwQYaKoAma8+axxigsb7lIIhPtFFGN4JtzXs1dwvGrbewD89B1eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811274; c=relaxed/simple;
-	bh=aZZ8ryF9EMbL1ZSnq1IfvBgrOmIuVFi9WpHYiEmRUoY=;
+	s=arc-20240116; t=1744811285; c=relaxed/simple;
+	bh=+swuqaf0lJxZrTM35AiSOW0sWIVEV0cXKaMle4kmxI8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oHvLLm3fF+XwzBxMErAUMc+psgtG80ZIqVea+t9tmyvlDWKu5zexOVrkEBDghNFWzSYQwAYnJpoVRRnuVLNqTKXyC8EcF37m5tLB2qnI4TBeiA76FvZA1SAuY3z0Urh10DWiPLgO6SDyGy+gLHamWjdGngu/6JHqTizxgNA4LdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KBYClgcI; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Disposition; b=UwyctU6kOujNipeuKw6gPmFXDoqQDpFIy+oyOgPFv4Iyn7ucF9FRGpCDYN53SAMXkic2cswwuq8pU98x2NfMbmXP4ofHXX2kwwGWHVE1/zKw7bY4oCxQ25PzJH8fOjdZ3WT8I6o5ndYicGyY111b8XpbcwMQUSlPvNM4JMJlPKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhjX5arh; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KBYClgcI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhjX5arh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744811273; x=1776347273;
+  t=1744811283; x=1776347283;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=aZZ8ryF9EMbL1ZSnq1IfvBgrOmIuVFi9WpHYiEmRUoY=;
-  b=KBYClgcIv+akc+fByVCMRk77KvkxLFVOqkcTXhhubr+S1cZ3Fr4V774J
-   aHG8/r7kJi8PQpPzhL15AazLMF5Z46fmXpLdAkFSFU/y7+PD4BsIZU3Gb
-   ECJ9GVBxXMnDn6aFwFd97ajoIW0x8rWf2hR/iLCN3YYzS7V6p/XlF5it7
-   FXx1BFDjJsVQ8VFnGcC52rqXHqWElO0UBsOMqGHVM7l5P7VEd4h0Qt9X3
-   JEEQhne/PnSMaBx6+uFKatAyEWsGmWFdWFp7Xmfb8Pp9U1yKFWhYgC5Ps
-   b/E+jW6zqxhr5qzzpe7Nmf0l5iGV0R9BNwfSWqISARRyvsgdWJIWD8qY6
-   g==;
-X-CSE-ConnectionGUID: XKmx2O/YSk+eavydhsRqPA==
-X-CSE-MsgGUID: Xn7TpeRHSpWCvNuxsdnJOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46250960"
+  bh=+swuqaf0lJxZrTM35AiSOW0sWIVEV0cXKaMle4kmxI8=;
+  b=bhjX5arhtspaPEVDY50EF/fkI9SLW+2bsB7lnR+jIHnDr5yFdIjjCE1O
+   VioH+hHnwPHWL+A313ju5ooC12HTVX8f0zBmS0nrU0LwfcQ4kqRQxMRYn
+   IN8DDEWb+HLGlLdyTkvNIFHm0C38RTVHzxJX06+FXUc1706HR/0ppezHz
+   txlr62wl2b0kst77G6qSEqV9GXN2T9eEYCfrafvxrgFe7Yw4oy/dwY/p+
+   1w5y7Ie/JdKYP4WP4wF1/zvKByeQmjust6z4fWCXsULxvNa9HVth2a/GB
+   XhdkX5B5lbSHsBOheyOAHRnvuyY0k47I61cKL5emf/zq55zUSlkIovu8c
+   Q==;
+X-CSE-ConnectionGUID: sw5pUjRrTy6Lhbyaavipdw==
+X-CSE-MsgGUID: RL7G9wToRaicOoiIfrXwLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="71750795"
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46250960"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:47:52 -0700
-X-CSE-ConnectionGUID: UTVCo3N7Q+eL8DVLGRAnkQ==
-X-CSE-MsgGUID: asjFQW9UTvK8JR2fUfd/bA==
+   d="scan'208";a="71750795"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:48:02 -0700
+X-CSE-ConnectionGUID: g4x2vE8nSjKDwzCsoo6QPA==
+X-CSE-MsgGUID: MDTMqWFARk+Ynu1oj+Qk1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130245510"
-Received: from aktunmor-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.226])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:47:52 -0700
-Date: Wed, 16 Apr 2025 06:47:51 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH v2] x86/bugs/mmio: Rename mmio_stale_data_clear to
- cpu_buf_vm_clear
-Message-ID: <20250416-mmio-rename-v2-1-ad1f5488767c@linux.intel.com>
-X-B4-Tracking: v=1; b=H4sIADK0/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
- vPSU3UzU4B8JSMDI1MDE0MD3dzczHzdotS8xNxU3eQ0i8Tk1OQkUzPjVCWgjoKi1LTMCrBp0bG
- 1tQD45Nh8XQAAAA==
-X-Change-ID: 20250410-mmio-rename-cf8acecb563e
-X-Mailer: b4 0.14.2
+   d="scan'208";a="167657845"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 16 Apr 2025 06:48:01 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u537P-000Jp2-0H;
+	Wed, 16 Apr 2025 13:47:59 +0000
+Date: Wed, 16 Apr 2025 21:47:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baisong Zhong <zhongbaisong@huawei.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Luis Chamberlain <mcgrof@kernel.org>
+Subject: kernel/sched/rt.c:9:18: warning: 'max_rt_runtime' defined but not
+ used
+Message-ID: <202504162121.Q3qxvByw-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,103 +63,54 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-The static key mmio_stale_data_clear controls the KVM-only mitigation for
-MMIO Stale Data vulnerability. Rename it to reflect its purpose.
+Hi Baisong,
 
-No functional change.
+FYI, the error/warning still remains.
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
----
-v2:
-- Clarify the case when cpu_buf_vm_clear is used. (Sean)
----
- arch/x86/include/asm/nospec-branch.h |  2 +-
- arch/x86/kernel/cpu/bugs.c           | 16 ++++++++++------
- arch/x86/kvm/vmx/vmx.c               |  6 +++++-
- 3 files changed, 16 insertions(+), 8 deletions(-)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   1a1d569a75f3ab2923cb62daf356d102e4df2b86
+commit: 28f152cd0926596e69d412467b11b6fe6fe4e864 sched/rt: fix build error when CONFIG_SYSCTL is disable
+date:   3 years ago
+config: csky-randconfig-r001-20230826 (https://download.01.org/0day-ci/archive/20250416/202504162121.Q3qxvByw-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250416/202504162121.Q3qxvByw-lkp@intel.com/reproduce)
 
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index 5c43f145454ddda781e21806752737b42789c86d..81c4a13e4c0d4ace02b0948eef79377a68252e63 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -561,7 +561,7 @@ DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
- 
- DECLARE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
- 
--DECLARE_STATIC_KEY_FALSE(mmio_stale_data_clear);
-+DECLARE_STATIC_KEY_FALSE(cpu_buf_vm_clear);
- 
- extern u16 mds_verw_sel;
- 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 362602b705cc43bd5e9df7c2157f44e7bfb304b9..9131e612de170a6b2bf27c35651f8e824f3d016c 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -127,9 +127,13 @@ EXPORT_SYMBOL_GPL(mds_idle_clear);
-  */
- DEFINE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
- 
--/* Controls CPU Fill buffer clear before KVM guest MMIO accesses */
--DEFINE_STATIC_KEY_FALSE(mmio_stale_data_clear);
--EXPORT_SYMBOL_GPL(mmio_stale_data_clear);
-+/*
-+ * Controls CPU Fill buffer clear before VMenter. This is a subset of
-+ * X86_FEATURE_CLEAR_CPU_BUF, and should only be enabled when KVM-only
-+ * mitigation is required.
-+ */
-+DEFINE_STATIC_KEY_FALSE(cpu_buf_vm_clear);
-+EXPORT_SYMBOL_GPL(cpu_buf_vm_clear);
- 
- void __init cpu_select_mitigations(void)
- {
-@@ -449,9 +453,9 @@ static void __init mmio_select_mitigation(void)
- 	 * mitigations, disable KVM-only mitigation in that case.
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_CLEAR_CPU_BUF))
--		static_branch_disable(&mmio_stale_data_clear);
-+		static_branch_disable(&cpu_buf_vm_clear);
- 	else
--		static_branch_enable(&mmio_stale_data_clear);
-+		static_branch_enable(&cpu_buf_vm_clear);
- 
- 	/*
- 	 * If Processor-MMIO-Stale-Data bug is present and Fill Buffer data can
-@@ -571,7 +575,7 @@ static void __init md_clear_update_mitigation(void)
- 		taa_select_mitigation();
- 	}
- 	/*
--	 * MMIO_MITIGATION_OFF is not checked here so that mmio_stale_data_clear
-+	 * MMIO_MITIGATION_OFF is not checked here so that cpu_buf_vm_clear
- 	 * gets updated correctly as per X86_FEATURE_CLEAR_CPU_BUF state.
- 	 */
- 	if (boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA)) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 5c5766467a61d434ba2baa79a5faba99bcbd9997..a1754f7ba889853eca919f090794b0dc54229a1a 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7358,10 +7358,14 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	 * mitigation for MDS is done late in VMentry and is still
- 	 * executed in spite of L1D Flush. This is because an extra VERW
- 	 * should not matter much after the big hammer L1D Flush.
-+	 *
-+	 * cpu_buf_vm_clear is used when system is not vulnerable to MDS/TAA,
-+	 * and is affected by MMIO Stale Data. In such cases mitigation in only
-+	 * needed against an MMIO capable guest.
- 	 */
- 	if (static_branch_unlikely(&vmx_l1d_should_flush))
- 		vmx_l1d_flush(vcpu);
--	else if (static_branch_unlikely(&mmio_stale_data_clear) &&
-+	else if (static_branch_unlikely(&cpu_buf_vm_clear) &&
- 		 kvm_arch_has_assigned_device(vcpu->kvm))
- 		mds_clear_cpu_buffers();
- 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504162121.Q3qxvByw-lkp@intel.com/
 
----
-base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
-change-id: 20250410-mmio-rename-cf8acecb563e
+All warnings (new ones prefixed by >>):
 
-Best regards,
+   In file included from kernel/sched/build_policy.c:43:
+   kernel/sched/rt.c:309:6: warning: no previous prototype for 'unregister_rt_sched_group' [-Wmissing-prototypes]
+     309 | void unregister_rt_sched_group(struct task_group *tg) { }
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/sched/rt.c:311:6: warning: no previous prototype for 'free_rt_sched_group' [-Wmissing-prototypes]
+     311 | void free_rt_sched_group(struct task_group *tg) { }
+         |      ^~~~~~~~~~~~~~~~~~~
+   kernel/sched/rt.c:313:5: warning: no previous prototype for 'alloc_rt_sched_group' [-Wmissing-prototypes]
+     313 | int alloc_rt_sched_group(struct task_group *tg, struct task_group *parent)
+         |     ^~~~~~~~~~~~~~~~~~~~
+   kernel/sched/rt.c:716:6: warning: no previous prototype for 'sched_rt_bandwidth_account' [-Wmissing-prototypes]
+     716 | bool sched_rt_bandwidth_account(struct rt_rq *rt_rq)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>> kernel/sched/rt.c:9:18: warning: 'max_rt_runtime' defined but not used [-Wunused-const-variable=]
+       9 | static const u64 max_rt_runtime = MAX_BW;
+         |                  ^~~~~~~~~~~~~~
+
+
+vim +/max_rt_runtime +9 kernel/sched/rt.c
+
+d505b8af58912a Huaixin Chang  2020-04-25  @9  static const u64 max_rt_runtime = MAX_BW;
+ce0dbbbb30aee6 Clark Williams 2013-02-07  10  
+
+:::::: The code at line 9 was first introduced by commit
+:::::: d505b8af58912ae1e1a211fabc9995b19bd40828 sched: Defend cfs and rt bandwidth quota against overflow
+
+:::::: TO: Huaixin Chang <changhuaixin@linux.alibaba.com>
+:::::: CC: Peter Zijlstra <peterz@infradead.org>
+
 -- 
-Pawan
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
