@@ -1,225 +1,271 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B8221B9E1;
-	Wed, 16 Apr 2025 23:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744844791; cv=none; b=Mxk3cL5P7KVI9lpZvsBP/0leuIPC7tUd2v9MfxU9kOYsNYglSicBNvm9IXTjBNiW6d9kHGsVtQl54RUXS8uBZ7DwijFFUkkdq5H8zCMKofP6MBDbRAjeYu2khM2FRzyM5jWvMmNOiH4ZavJgPnFld63hoqVL9jwa5VCx9cu2jjU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744844791; c=relaxed/simple;
-	bh=yxkomdsLfy5unhX48embS1AoHidUAG1I51bZRO6evCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uu0AUHg5f4NFtviKAocEy5WmVZFVhxkCv84x+SsRCm+sLYu+5Ra8W+lBtW5baxpRc5/XU7uCMBHN6Ihqra9Lqu5Rh+J/2AiWMfhhQtcVjwdF0jaZfxSd7hOLJnOt3M/qLRL7yo8bKrj/X0MeiBD198dolbX5hwKrTK2QbqDciVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=ntAWTydm; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8AB21B9E1;
+	Wed, 16 Apr 2025 23:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744844894; cv=fail; b=dWcaj5FKC0HgtLMElAZdvojXOKv4/pyDyyr0J5y+R2xwJiWF/cFQQkXGvH128zaJk9V21+13gBX5BCr2Tk7AT+YTY+ILQAeFid3Ae9F5gt614mvUYgqWVjZGYGK376lYUo1K942ihtOpb+DxUeBiI8x2vS/+URRhCmebHhOp/KU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744844894; c=relaxed/simple;
+	bh=hZZqp7jFsmbmdhLBD6oRUI0meK0ffkouI2NLfV0kMkA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=DsLq+bI+v4sbbvarLlqMIY9EG5R8Eehyi/pxhelIVzvcSKEfEYu+1aKEtM0O1vISICemmkw3GOB/cZwkr4hxB1+D7GrIDXKS09VVVESfzaAowlKXEQ7YvjmrY+I3Nnh3vmmgMYL6QbF77E6kNu+sDOIOU0lnikZcyXF+uC9k7qA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kVaOVVvg; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="ntAWTydm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744844774; x=1745449574; i=w_armin@gmx.de;
-	bh=yxkomdsLfy5unhX48embS1AoHidUAG1I51bZRO6evCc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ntAWTydmUOcDuj0Gu8h1ZY1cch0YIqEeXGYFQRssLXg7GgrY7HaztyzafPWb+7o1
-	 60ybVHsFb1/c9Dk0/cdNVEz8OfiFWYJgC4bcJAhuygw9L7CumnWOJbpq5KcjTLSKe
-	 1GVaEK5/E7dtvWHsN4GruNrz4AmdDixf40l49mrmpr/RUsKIsMA0AaP4y1PSDyc/t
-	 xeaA821Yh1nS4pzMjTbm6dwTlP3uDofBmyAUThMmsTSQioOtKi7rXQ0WwfEd2SQxU
-	 7/FSFUaQXnqBi+HwC078UB+NWnAETjXgimW4fot616UwtajQnz3sYYQJTvSW73P42
-	 QYRVUu41u8Rhc+6I2g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M5fIW-1uCKRY1wXy-009VKw; Thu, 17
- Apr 2025 01:06:14 +0200
-Message-ID: <951d3144-1141-4cb8-b86a-1ade764c6e79@gmx.de>
-Date: Thu, 17 Apr 2025 01:06:12 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kVaOVVvg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744844892; x=1776380892;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=hZZqp7jFsmbmdhLBD6oRUI0meK0ffkouI2NLfV0kMkA=;
+  b=kVaOVVvgolfpUZ4uo5/7bixSZf/ANeiuzV44oPzZnQrg5/fqkypmIx+X
+   NGT1COw4+jNSkugqqt0QhkQQrqdrzbkQrJzkgjYazarFlBgcKshg2E3jV
+   CVIzOhWV2oQklst1B3uuviI8Il1PUvsuTGsk0euM4uZkHowe72KVdxyRa
+   lO91S9eOE8L5rb/FwXg9KcMGuS1b0TAq4caxEV1CPdUKdQV2NenDbPbkl
+   hJEV2ecmJmycWEDD5+MBhS069gJhPAbTZ2b/Od48diQpqLET2A+YRYQlM
+   kL0e5vqzM4RQmSJSsCpOCeCVTQt187sPoI781JWEX1Iq+wwg4RdJTJAS/
+   Q==;
+X-CSE-ConnectionGUID: oS0zI8ilQ32tEg1ncasXZQ==
+X-CSE-MsgGUID: 8jZfY+fiSLOHOjiA0c0NmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46546031"
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="46546031"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 16:08:11 -0700
+X-CSE-ConnectionGUID: ASBQNVrHTL+DLksevAFX1Q==
+X-CSE-MsgGUID: aBvf35tJS8CruGtomEscqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="130485335"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 16:08:11 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 16 Apr 2025 16:08:10 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 16 Apr 2025 16:08:10 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 16 Apr 2025 16:08:05 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QoSylCnp26SSkb4nZCLSRTxaMrLJjiMDcp644ImCaiHnjAQagT/06aCwNz8p/TsxAewIJV7c0NNrzmwNWOoNMBKnaYRhUChcFLHCRh2uHuZeUNsRJGJ5O3BMsLHr81zvBuMfhFK2QX7zuWFiWB5qfEbMTevjaEOiS58V2/u6oDVoKyRNUPfiDYBZv5twx+X4atop7XDjlCXoS9PJ/NgoDqQeQfzJhfsrsqFJeiJvLCjkZQIHolpPjeZm/xMR+mHy4MeXFJuMj+6sgxUOONZd+pI6RRIWJaIR9wBK+IrZZ9Av6j5wMhzxV294jlMAnPJPJ5KqofEAdwBSew8b5lq8sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gsbGBqHOU95eCmDtkGpNXgkJjJ2r8csOb+OOG+ZfxHk=;
+ b=InT3tbdgRgM1tiJXeKrYB2bfYZjLkh23mpMVuRPzUc0hicL3bQQ0ZSSsYirZ6xzjVgzKuGkzfsJzgbJcZ0q72JLa/w3dWP6OW1MeDfAILBaExH4o9+8DQj7anq7D5j47rT2FV0XzvNFc6xgWiqPkMiYfXN+aRQDlr9o3fLV+CZCfEtkFJQomEKv0D9cv2kbVW3n8TgYH9zMG1GLHSopP7LS7iNF4G+Susc/w/b9mYUzQOU+mHjQrgm6yfrAfk5aR7x1lbKm9uCORrrq/yUhCMiCaxP0ZBFMzTJk+Ejgb+kQYM8GJ8wrnoVL8jFVtelldUZx84T+C129HKCPwlHvQzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB6601.namprd11.prod.outlook.com (2603:10b6:806:273::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Wed, 16 Apr
+ 2025 23:07:23 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
+ 23:07:23 +0000
+Date: Wed, 16 Apr 2025 16:07:18 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Rakie Kim <rakie.kim@sk.com>, <akpm@linux-foundation.org>
+CC: <gourry@gourry.net>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <joshua.hahnjy@gmail.com>,
+	<dan.j.williams@intel.com>, <ying.huang@linux.alibaba.com>,
+	<david@redhat.com>, <Jonathan.Cameron@huawei.com>, <osalvador@suse.de>,
+	<kernel_team@skhynix.com>, <honggyu.kim@sk.com>, <yunjeong.mun@sk.com>,
+	<rakie.kim@sk.com>
+Subject: Re: [PATCH v8 2/3] mm/mempolicy: Prepare weighted interleave sysfs
+ for memory hotplug
+Message-ID: <68003826cb17d_1302d294e@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250416113123.629-1-rakie.kim@sk.com>
+ <20250416113123.629-3-rakie.kim@sk.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250416113123.629-3-rakie.kim@sk.com>
+X-ClientProxiedBy: MW4PR04CA0261.namprd04.prod.outlook.com
+ (2603:10b6:303:88::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Input: Add a helper for reporting a screen lock key
- sequence
-To: Mario Limonciello <superm1@kernel.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "open list:AMD PMF DRIVER" <platform-driver-x86@vger.kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250407152705.1222469-1-superm1@kernel.org>
- <7bb43fb5-83dd-4531-b835-77a8e937f54b@gmx.de>
- <cebf59f2-5d81-41f9-8c4f-d51fcb514f86@kernel.org>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <cebf59f2-5d81-41f9-8c4f-d51fcb514f86@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ZQC0MlBfymIz4z1ZYVea5zO1/0zWJJTHFBDutn2aEGVRhZ3dUR/
- Jcunl0yGcIaVFw9YuXpdciahr3mMhjqG7+UGqAAd+tYq9bVTJmmhnqa5lxypEJpXPi1nbKt
- 3BefPazVXBy+yzBzBuk+WYwrfXDFw/1OzPyM3CD5/r5FXDN4Sme8+S9KnTLeEXVqmn2Wxct
- TSvZMcn+ymZWy4mbnTNyA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mhTVUpXpOxk=;TWriY19oXIz027eHrhpcvqYeDCd
- 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
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB6601:EE_
+X-MS-Office365-Filtering-Correlation-Id: aecd80e1-68eb-4edb-ceae-08dd7d3b7228
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?3wBJ8+WqWzFuiVEKbXfrlQz8rmVe5gDkEUtPV/CmvMVU8U3kemcUG8n0T1OB?=
+ =?us-ascii?Q?f2yJhIwc+oWsxXGvYFXixOjJ5RGp1t39JhWOThaBzSmSGzv//25uZlcUtJhy?=
+ =?us-ascii?Q?eE01FHmLeTU6u1zFzybWUDxchcLNbBCKppfN5zcWglezDbnYly3demnthKVS?=
+ =?us-ascii?Q?P0/98Jyi11e0F0sR8Q61HB90UfeCgUEpf9alsGqTj7qsoDp7/wmWuTCBETti?=
+ =?us-ascii?Q?Mzn9VkmHEBCXlBw5zUJS0+SVqAtXHNweRX0BMAdroOh0N4N14FPJYT1yItc3?=
+ =?us-ascii?Q?E8OOlphCpWS5VFl5IVVCE1eYCHHv+D/Wm5OO+DzwOukTMkw8Z2chTIHWzplT?=
+ =?us-ascii?Q?bJbyzLjiwCXf1+C6yE18Kq68ABrn77KyPZVPfklnEIqLP86w3zFzwLUdSPBi?=
+ =?us-ascii?Q?GcSXFooc7j38H5HbChBnepX2Khp6aTrYowMiInMWBHQvovesMk5H2cQgQWjg?=
+ =?us-ascii?Q?NEjBCHVxjBEGves1MWi2BHHzQObUGJRrGuJ/SQi3vY5DWpOTeA4HAZ4WyUji?=
+ =?us-ascii?Q?MW3QY7t5dTb3vSeuV4wR4G3NRtK8Qbo6I+HfPR1V/qxU9jTpy9Fmu0V9Mp6e?=
+ =?us-ascii?Q?ilWVvw9Yi70ND4aAaOp8n9Etjv2z42iS1A73f/7baL3x3qZmxlExVpOQ3kbz?=
+ =?us-ascii?Q?q1C+JNUiGeSv1lQPTRL+KSStEc6BNbqeDegmFH5KAygC/0PSBTl3/9ucxzmm?=
+ =?us-ascii?Q?LA4HS9RZnDGvd9QLWOQviykae0F6nu8PXtDlSM+kwM5agpC9hFiXEZSA9ehb?=
+ =?us-ascii?Q?duUJxh56UFsCquJnwtCAI897EWRVzdgnI5H7hhd/89EfryHSxyanaiN3tWvo?=
+ =?us-ascii?Q?1wzmcrP2CC2UoOOdz5vHHkL3t/T7/01EhhAVGGytbn+lnX0P1TzaXTfdNO2+?=
+ =?us-ascii?Q?FwBUYHXhwG5LgO2pvXZEOaEGJnHuJE2tOZ1JDGCxIQj7qF/4bMEoe4HXHbRi?=
+ =?us-ascii?Q?uPiBOCtKHzgBrWqoRnFKPA9V1icHmavlzeyihvKgrm6akSKX45IXZPCR83XA?=
+ =?us-ascii?Q?C2L7m//LD1tOicXqCKNU4c2uWUZzTSkMNAIbTb4ESyD516vMQck+OC9Jmebi?=
+ =?us-ascii?Q?iDNpSUZBsAKSXYsDtf+/a4nJYt5N5zihcsvPw+7CLIeimquCfzGarm5qgGlT?=
+ =?us-ascii?Q?nCSXbWLaunhv1kKtYu4sbWAMrcthSXnOFvIDN1/sGjQK+O/L+Es1lCPMtjgI?=
+ =?us-ascii?Q?0ijWk9RPZBvJ4H8+Kg9L/4ToFugU2RVqCD63Lv95S548j+q4uQN7TL1puep9?=
+ =?us-ascii?Q?XZWmucMOVOhoin0HsgzGCd/uCByfT4qo4iB0p2WTCGi8HQWi+lAwFLb+Zy4h?=
+ =?us-ascii?Q?xV6IIhGuw5XZvxjoQPXgiHKO9/nCfD+1rts6aHELynrMSlzR+51NxtPGaJBG?=
+ =?us-ascii?Q?h3m7ZXHSnPvZzHbZo9scOxunpDXB4aeN53n2AKZFcMClG7byjXLE2M483+ZU?=
+ =?us-ascii?Q?EpNQuH5xrNU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QRiaGZ9nwDIS6ZBPOTCgdYcBRjMS+S1J85VLreIWPd1LUokDPv2Ls9wIwJ7c?=
+ =?us-ascii?Q?NkJSyhVSkN6DI5epVKmLr981MR3U552cyqg7tdbfRlm4OmHKzxRP7JANeMbh?=
+ =?us-ascii?Q?l7p+jPE5zYr7ZJLtJJZ00/pR7PMmKi0aZb4sYiwrzwRTAjc+QRs9SzkL8HDd?=
+ =?us-ascii?Q?5/bexlKu0FodcEPVYesP6TLc+YsVJvGwJL0ntITO+6R+3hAs0Sv4NhgTRREY?=
+ =?us-ascii?Q?rnq52LZRbebaowZ2aqZTzTcrLbHylIL7g+I1RGwk0wLX4/L+etg5gBcBF7ZC?=
+ =?us-ascii?Q?OPB+i3pLRQaxpnTtTrQuhoW0d8TIdA2ODhhrMhRcfhTr1ggsZEtdYemineaz?=
+ =?us-ascii?Q?O/OorPVI8UcoCKBN6xBCl9+oqlrZpLug7fJzl6pM/ntf9PiazPMvI48Ab38N?=
+ =?us-ascii?Q?vAiUzfPXW0dpr6VtWrOu4kffGscnlAY5HGsxOrEfAGcEwjnLCiCxxNyQ1PK/?=
+ =?us-ascii?Q?4wcqn0SLxt2gTPzwVZiLEm7pdlWmvHOPJbdXGE7qAa0hXr7oRySc1y/kViO9?=
+ =?us-ascii?Q?MUJUC/jpJQzQTSph+offi+/YkV/Li1XeP54bLokFVDMxYBFiaN019WxXlWfD?=
+ =?us-ascii?Q?U4LhQ8HYtkaTdGt6BFFASQmZGmWSL8u1Y8uhmeQrGLvElM/AmGvXQ1uj76Fs?=
+ =?us-ascii?Q?TBBiITJQ9pKRSBO9ilAlVPlgkFQzAqGUOgU6v6jKvJvoPHio3qnNtVK/OOxt?=
+ =?us-ascii?Q?T7pTzhhSoykEs1o1QHJSJI0lDPSwoNBUQ8JNK3Zg/KtnkxV07vldnXy9Kfdx?=
+ =?us-ascii?Q?dqqESyrdeRGL3uuGgelVo3R2omy9sRON4UBo73bDrg2m43GSmWZDImQtiePe?=
+ =?us-ascii?Q?XGjh3wkS5Y00anJQYSwSM6z4Altj3mPUFDTxjBHn4B2KMp1BnYXEporrs2kN?=
+ =?us-ascii?Q?jCWA74cv4F1SkmA0drGyxQF9w5GuOaQryHmMzZ5qy4+B/NWavhFrjEM3J27c?=
+ =?us-ascii?Q?osFaUXI1cExgSOQQGJzZwYrsMKRxhrlJiKsrAKsmpYY0lqshnVezv6NR3Ac/?=
+ =?us-ascii?Q?gv9+dEndoJww3tLh3EaDLiGeUcIgH4kIScPThqm1k22xFs/ap/ERi4ocjsou?=
+ =?us-ascii?Q?MMfEcVCLap6fQNyLmTZgNsz/2SjREcPCsq6WZRJxKegSqbLihcR6h525L6ou?=
+ =?us-ascii?Q?PLpWz9OO08IKxHBb1Dga+ZhAWGR+XzHrwphjHn/ttUpP1iWBdMMeUwswJstn?=
+ =?us-ascii?Q?em4R8gel5fVWAa/S3qvCXFPt17wEdPwOubN9/iI/NmeNYMme8OggNIftzuAC?=
+ =?us-ascii?Q?9a4M5Wi9DgJV2AJQ8R26j7vkT7CXDHFXjoorw+YWIErPK18grDHOBW5NQ5df?=
+ =?us-ascii?Q?u5A1n0KrYz6gj68GlplwdcP+xplNiWNcW/Yf5c3EVJaMuuAzHbq69SJgJHaY?=
+ =?us-ascii?Q?M22QNflaMnDa3UYmoArIhOWxmlcq2bcY5Z8U/Z7K+lDWavqudcd9jTbb5z9d?=
+ =?us-ascii?Q?X4K1wwBSWP+meyOs6bdPdrg3yqObxX64P/BNs4Dyg5TTnOIFGVu4L8uUs6oM?=
+ =?us-ascii?Q?EWvqeDi1DMusRFE8RMtfXuNtS+Fkd5Gono6tUQtMFT/N2L9mCsxoAlEdSNe2?=
+ =?us-ascii?Q?4xv6PWwwflZQIEjtWDg19MpImVWo2qyQeOrvZ0yY2vpy5mNZVPheKAkllN0P?=
+ =?us-ascii?Q?2Q=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aecd80e1-68eb-4edb-ceae-08dd7d3b7228
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 23:07:23.0316
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BMzvjSt3ei0pAL5Tc7NxARgaEV8ia47mvb0DSpTw0QMT4ZEvqITi3Jy78ZVvLCqP8nuKM2DspCXZL/40OvBVeJXjYHPUYCH09kNgsn57eKY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6601
+X-OriginatorOrg: intel.com
 
-Am 16.04.25 um 22:43 schrieb Mario Limonciello:
+Rakie Kim wrote:
+> Previously, the weighted interleave sysfs structure was statically
+> managed during initialization. This prevented new nodes from being
+> recognized when memory hotplug events occurred, limiting the ability
+> to update or extend sysfs entries dynamically at runtime.
+> 
+> To address this, this patch refactors the sysfs infrastructure and
+> encapsulates it within a new structure, `sysfs_wi_group`, which holds
+> both the kobject and an array of node attribute pointers.
+> 
+> By allocating this group structure globally, the per-node sysfs
+> attributes can be managed beyond initialization time, enabling
+> external modules to insert or remove node entries in response to
+> events such as memory hotplug or node online/offline transitions.
+> 
+> Instead of allocating all per-node sysfs attributes at once, the
+> initialization path now uses the existing sysfs_wi_node_add() and
+> sysfs_wi_node_delete() helpers. This refactoring makes it possible
+> to modularly manage per-node sysfs entries and ensures the
+> infrastructure is ready for runtime extension.
+> 
+> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+> ---
+>  mm/mempolicy.c | 60 ++++++++++++++++++++++++--------------------------
+>  1 file changed, 29 insertions(+), 31 deletions(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index dcf03c389b51..998635127e9d 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3419,6 +3419,13 @@ struct iw_node_attr {
+>  	int nid;
+>  };
+>  
+> +struct sysfs_wi_group {
+> +	struct kobject wi_kobj;
+> +	struct iw_node_attr *nattrs[];
+> +};
+> +
+> +static struct sysfs_wi_group *wi_group;
+> +
+>  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
+>  			 char *buf)
+>  {
+> @@ -3461,24 +3468,23 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
+>  	return count;
+>  }
+>  
+> -static struct iw_node_attr **node_attrs;
+> -
+> -static void sysfs_wi_node_delete(struct iw_node_attr *node_attr,
+> -				 struct kobject *parent)
+> +static void sysfs_wi_node_delete(int nid)
+>  {
+> -	if (!node_attr)
+> +	if (!wi_group->nattrs[nid])
+>  		return;
+> -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
+> -	kfree(node_attr->kobj_attr.attr.name);
+> -	kfree(node_attr);
+> +
+> +	sysfs_remove_file(&wi_group->wi_kobj,
+> +			  &wi_group->nattrs[nid]->kobj_attr.attr);
+> +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
+> +	kfree(wi_group->nattrs[nid]);
+>  }
+>  
+> -static void sysfs_wi_node_delete_all(struct kobject *wi_kobj)
+> +static void sysfs_wi_node_delete_all(void)
+>  {
+>  	int nid;
+>  
+>  	for (nid = 0; nid < nr_node_ids; nid++)
+> -		sysfs_wi_node_delete(node_attrs[nid], wi_kobj);
+> +		sysfs_wi_node_delete(nid);
+>  }
+>  
+>  static void iw_table_free(void)
+> @@ -3501,8 +3507,7 @@ static void iw_table_free(void)
+>  static void wi_kobj_release(struct kobject *wi_kobj)
+>  {
+>  	iw_table_free();
+> -	kfree(node_attrs);
+> -	kfree(wi_kobj);
+> +	kfree(wi_group);
 
-> On 4/16/2025 3:39 PM, Armin Wolf wrote:
->> Am 07.04.25 um 17:27 schrieb Mario Limonciello:
->>
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> In the PC industry KEY_SCREENLOCK isn't used as frequently as it used
->>> to be. Modern versions of Windows [1], GNOME and KDE support "META"=20
->>> + "L"
->>> to lock the screen. Modern hardware [2] also sends this sequence of
->>> events for keys with a silkscreen for screen lock.
->>>
->>> Introduced a helper input_report_lock_sequence() for drivers to utiliz=
-e
->>> if they want to send this sequence.
->>>
->>> Link:=20
->>> https://support.microsoft.com/en-us/windows/keyboard-shortcuts-=20
->>> in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec [1]
->>> Link: https://www.logitech.com/en-us/shop/p/k860-split-=20
->>> ergonomic.920-009166 [2]
->>> Suggested-by: Armin Wolf <W_Armin@gmx.de>
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>> ---
->>> =C2=A0 drivers/input/input.c | 20 ++++++++++++++++++++
->>> =C2=A0 include/linux/input.h |=C2=A0 2 ++
->>> =C2=A0 2 files changed, 22 insertions(+)
->>>
->>> diff --git a/drivers/input/input.c b/drivers/input/input.c
->>> index ec4346f20efdd..dfeace85c4710 100644
->>> --- a/drivers/input/input.c
->>> +++ b/drivers/input/input.c
->>> @@ -508,6 +508,26 @@ void input_copy_abs(struct input_dev *dst,=20
->>> unsigned int dst_axis,
->>> =C2=A0 }
->>> =C2=A0 EXPORT_SYMBOL(input_copy_abs);
->>> +/**
->>> + * input_report_lock_sequence - Report key combination to lock the=20
->>> screen
->>> + * @dev: input device
->>> + *
->>> + * Key combination used in the PC industry since Windows 7 for=20
->>> locking display
->>> + * is META + L. This is also used in GNOME and KDE by default.
->>> + * See https://support.microsoft.com/en-us/windows/keyboard-=20
->>> shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
->>> + */
->>
->> Hi,
->>
->> maybe it would make more sense to have the input subsystem=20
->> transparently translate between KEY_SCREENLOCK and this
->> special screen lock sequence. This way there would be no room for=20
->> regressions as people could enable/disable this
->> behavior via Kconfig.
->
-> Wouldn't all drivers that emit KEY_SCREENLOCK still need to be=20
-> modified to have support to emit KEY_LEFTMETA and KEY_L?
->
-> Wouldn't that mean conditional code in every single driver based on=20
-> the Kconfig?
->
-> Is that worth it?
->
-This translation code could live inside the input code itself. This way al=
-l drivers would benefit from it.
+Ah, look just one more iw_table_free() deletion to be able to switch to
+kobject_create_and_add() flow.
 
-Thanks,
-Armin Wolf
+For what this patch is though you can add:
 
->>
->> Thanks,
->> Armin Wolf
->>
->>> +void input_report_lock_sequence(struct input_dev *dev)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0 input_report_key(dev, KEY_LEFTMETA, 1);
->>> +=C2=A0=C2=A0=C2=A0 input_report_key(dev, KEY_L, 1);
->>> +=C2=A0=C2=A0=C2=A0 input_sync(dev);
->>> +=C2=A0=C2=A0=C2=A0 input_report_key(dev, KEY_L, 0);
->>> +=C2=A0=C2=A0=C2=A0 input_sync(dev);
->>> +=C2=A0=C2=A0=C2=A0 input_report_key(dev, KEY_LEFTMETA, 0);
->>> +=C2=A0=C2=A0=C2=A0 input_sync(dev);
->>> +}
->>> +EXPORT_SYMBOL(input_report_lock_sequence);
->>> +
->>> =C2=A0 /**
->>> =C2=A0=C2=A0 * input_grab_device - grabs device for exclusive use
->>> =C2=A0=C2=A0 * @handle: input handle that wants to own the device
->>> diff --git a/include/linux/input.h b/include/linux/input.h
->>> index 7d7cb0593a63e..16f7bef12f1c1 100644
->>> --- a/include/linux/input.h
->>> +++ b/include/linux/input.h
->>> @@ -492,6 +492,8 @@ void input_set_abs_params(struct input_dev *dev,=
-=20
->>> unsigned int axis,
->>> =C2=A0 void input_copy_abs(struct input_dev *dst, unsigned int dst_axi=
-s,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 const struct input_dev *src, unsigned int src_axis);
->>> +void input_report_lock_sequence(struct input_dev *dev);
->>> +
->>> =C2=A0 #define INPUT_GENERATE_ABS_ACCESSORS(_suffix, _item)=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
->>> =C2=A0 static inline int input_abs_get_##_suffix(struct input_dev *dev=
-,=C2=A0=C2=A0=C2=A0 \
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsi=
-gned int axis)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
->
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
