@@ -1,83 +1,112 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328CE2DFA4E;
-	Wed, 16 Apr 2025 07:28:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788516; cv=none; b=hrQX71fehU8UrNxIXJaoIsUpqiv0lQBVvbFjsvvrg83WSdNYgyj+GDd1Qgjc7jPLWl+BF7PUUs/+8fmOZxOKYkojMmxVUUCtSo/vcvrapfYXiNjXgpEFB9xDuCWt3kDi9XYdyy6gtI335c2p81WflVcD86rkpBEI642LcnLTYOg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788516; c=relaxed/simple;
-	bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N44dh45z01RARGj9OvlCRc+Tav6XRkQLLzqoqw0xpZMEpXaDjzaBt214QOBkUC/216wYYPSpnOP9gOyZN9Z+wYhlnBLdslK+ps8ygGRUc8o0usYO95zH0SirlcLwd6ePV5jjpvwFOGyL0LnFnDIIXAmgaBcN3R5UJavEsIS418Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGk9j0m6; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0212DFA4E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744788574; cv=pass; b=GqQ0ahuTj16EyFiTwGaxrxwn3sLzGz24nsrOFsx78dbLR23FLea1Ti3IaunAtVPWqUqDxrhdGi59UdXRrXcsM7G830OrfUzK8b9Hx2XpCcljDEYyy/cqR3eklu66NZp3YU7dVypxFESHHxPYpmrVQ7dB3NN05irXSvNcEoFfm/k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744788574; c=relaxed/simple;
+	bh=z15lyLnxg9/V2EfHigBqjb8bejX9Y6AnQ2hc3y4917s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rk/HjIK3q89p3WF5tFS+hF5YXKkpCy274a1lSueTEqlj4yHyiIOSECjjDptHXnjYr+HqojHwu4ftKRL4NYmXWwkzf+R41aB66T3uNOO5W15102bAhNaN71sUR6j8hLavjJe9+seT4esqRVPb46r4UmVfmKWe5bFBDs8Q1zUNtcY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=HqrJaexa; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGk9j0m6"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-301302a328bso6347438a91.2;
-        Wed, 16 Apr 2025 00:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744788514; x=1745393314; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
-        b=BGk9j0m6EdxamlnlmFeiadhCgDJQrwkXz3AXyoyDd1aSGtdiMeWgM5CjTiZrg2Gv8Y
-         NdR0dPXXDpJfJUzqpDqrsBo6ZDCyGEHsidsEE6MveiX2QEwld1REmXisOt7ewSxGMOrq
-         H/W/mVoFWF873UEBzl8BVDbvzxFlLFe8eDnBTlZblQzcMIGh6u5zV/lbNLSw6zgU5RAZ
-         Met/Xm9tTeCOIn+6m9DrHk4IVZsHhF1rbeno4zoSVVBt/IrraPhKBsX75hejy7RU+5KL
-         h168Jnps1T8cy0egZ4v1YV6FwBAdzi0MBy7Y4EJFmHApW0hkhrxLgeufqGa6kXs3HLqO
-         S48A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744788514; x=1745393314;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
-        b=fMTkrhvCna4zHenj+yoQbjsT1w4CoZyw8JZP1N3p7viiGOqYt5V3WkiCJMuKy5LLcm
-         RrqxLJNRvTC9CMEaiYk51brcBYk2wBeM3cMiWbcqkNtWXMVjtmw9MDUea3sH1tjS6v6C
-         iwDZ1P6VtbDh7AaSXFO4W4diwzvhm/Nkkirv7ugN1854lVuOOukOje/MV4WULecwjSEZ
-         9esmq4p00CSfDBbz3+gBqVGg5Gpdw8LPOo+lNOnow882CdYccmrHGVVpyY2bRVs16XL4
-         ABssVN2j73tg49yJYM4ZkkkFsdZU43FSAxpePWmHAYQPC56BHARjXNa8XlZqInJ/KVFI
-         34Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKER31F5l0UrRVTuR/B8IE8oFGaVAZoI+RFuOzetvD+KPsc8h9PU21wTqJce29MKE+vwWyjh1PpX7dwTs=@vger.kernel.org, AJvYcCXvkee/ULCLw2ojgT2B7ANpswfdVU+Z5k3Xa00jSwtf+VxpA50A6NjO0c5nHyj59EfmTj+CzOGn65LHF7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyeqpeFQTpRtxGq/tSy+gUU2ktIKx1bpa1K8+YvfoR3gkFD5R3
-	gdyrB91MLkjz/uuT08nsJI1CWjI33tnfnlxK9tHftgmlyTVAr5T7KsSor1q/Q43lCndyj7Ifrnl
-	CMZvMBq3KfT6ylXh6MD/sKltrNxM=
-X-Gm-Gg: ASbGnctb/HoI7oTfNO6unl361mHdfZaBUEfJgGc46D0h57cs9YVbxRW9OLcO13o4M4v
-	snunoT9aZhcpsVB2MtH4XXvbZw6BAOHVUJxIyreYJq3KZUOAbnycHwVBrwE8h3oz3pj5oxgcJ5c
-	EQ4MIvAp4OZVoEgXAlxg==
-X-Google-Smtp-Source: AGHT+IGW5zcCmv3b7BVm4A40QK0n9oi/g9NFeFg+vQtedK+zMuIzEBKZNFZcJGBHY+4JsYxPwA1hTYFwiZZ7HXKb0a8=
-X-Received: by 2002:a17:90b:574c:b0:2ee:edae:75e with SMTP id
- 98e67ed59e1d1-30863f1c831mr1185370a91.13.1744788514329; Wed, 16 Apr 2025
- 00:28:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="HqrJaexa"
+ARC-Seal: i=1; a=rsa-sha256; t=1744788555; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=APaSB62EEZIT1HWumU4kzfmkspUWrlnz/Awae+k8Pwgrd2dEIH9F+Uj43oDBfOql4neIKA7BADILAPF6xC7DsxrRtZFRSYvVj/01pR3FQNJfEx2sxMyCv5yPpWcSXXMdaVx70iUy3qDp5nY31xjeuUPrt2Nr66/t33S4pP4J1dE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744788555; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=PUkANMCN8iIkMKObPT/LBcWsJXo1g4Bf7rqvaDJs4NM=; 
+	b=L2DgJX8naGiCehpemZ0uL+giOd9jeHr4lpkwXSL0Vhnmt4jpeSi80Xk3+bdrwX/7jdCQ/CKkb/4uCwm5XF/qRatagfD2B65BJRIY9oDuVtXN0DsJrrSUf5b1TpmoVcsKX0JsBR3kbBVBsRWLUKgFXMIeaza1cvD6RtfzF78/wtM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744788555;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=PUkANMCN8iIkMKObPT/LBcWsJXo1g4Bf7rqvaDJs4NM=;
+	b=HqrJaexa50S+DeYKYufChcDxobhDsrXp3jB6QQAugQjgXadgJALFjlZ06IF/Hl/0
+	cyjnOLkhCdHle/vvFUyo+xx7nheWySK9tANgqaE6/NsZ5Q7yBzbdIcEHr3z76Z7MkYk
+	atMbT3Bf7FIp1Bur5mceheeprcOtKXbPA22kP4Po=
+Received: by mx.zohomail.com with SMTPS id 1744788552850792.253352752949;
+	Wed, 16 Apr 2025 00:29:12 -0700 (PDT)
+Message-ID: <d36c2ba7-52b6-4688-bb2b-70b8bd4d33c0@collabora.com>
+Date: Wed, 16 Apr 2025 10:29:08 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416041431.546370-1-nichen@iscas.ac.cn>
-In-Reply-To: <20250416041431.546370-1-nichen@iscas.ac.cn>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Wed, 16 Apr 2025 10:30:19 +0300
-X-Gm-Features: ATxdqUEL8u77ss7dHQffyWPdVCGHmFsnGmhGr0uT_PfqkPxcRAmmZB4Ahi-EWlY
-Message-ID: <CAEnQRZBb=E75DPn=siqvhAqFas6Lt-++0Ka9W6gY0fbQgHBcrg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_rpmsg: Remove useless return variable
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
-	nicoleotsuka@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, 
-	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/virtio: Support drm_panic with non-vmapped shmem BO
+To: Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
+ kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ simona@ffwll.ch, jfalempe@redhat.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250412132012.291837-1-ryasuoka@redhat.com>
+Content-Language: en-US
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <20250412132012.291837-1-ryasuoka@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-On Wed, Apr 16, 2025 at 7:15=E2=80=AFAM Chen Ni <nichen@iscas.ac.cn> wrote:
->
-> Remove unnecessary return variable and compress the return logic.
->
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+On 4/12/25 16:20, Ryosuke Yasuoka wrote:
+> Pass array of pages of the scanout buffer [1] to shmem BO, allowing
+> drm_panic to work even if the BO is not vmapped.
+> 
+> [1] https://lore.kernel.org/all/20250407140138.162383-3-jfalempe@redhat.com/
+> 
+> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
+> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_plane.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index a6f5a78f436a..2ff57d559c86 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -500,11 +500,19 @@ static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
+>  
+>  	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
+>  
+> -	/* Only support mapped shmem bo */
+> -	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vaddr)
+> +	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
+>  		return -ENODEV;
+>  
+> -	iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
+> +	if (bo->base.vaddr)
+> +		iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
+> +	else {
+> +		struct drm_gem_shmem_object *shmem = &bo->base;
+> +
+> +		if (!shmem->pages)
+> +			return -ENODEV;
+> +		/* map scanout buffer later */
+> +		sb->pages = shmem->pages;
+> +	}
+>  
+>  	sb->format = plane->state->fb->format;
+>  	sb->height = plane->state->fb->height;
+> 
+> base-commit: e7bb7d44c3b97aea1f0e354c6499900154ac67f2
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Rebased on top of [1], fixed checkpatch warning about braces and applied
+to misc-next. Thanks!
+
+[1] https://lore.kernel.org/all/20250414131507.566072-1-tzimmermann@suse.de/
+
+-- 
+Best regards,
+Dmitry
