@@ -1,214 +1,124 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CEF622DF99;
-	Wed, 16 Apr 2025 09:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796516; cv=fail; b=abtLkUTvrCaei0XD/Y4tn8SRoz3P3smEeH2j5gjQ/L4oqzxbZtLLBq04XOxMeXkeqosXg+rOUcZVL5CiIGrngFOQew26WwTeY3GJyT/c7hLo//P9RZR0h//Vx3Zeo/96ix6oLCteZ+J/BlcUwwWhTa3brzb/d0YYZyr78gamIaI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796516; c=relaxed/simple;
-	bh=yGc1iMouanE+sFuFu4lJ0PmbLPs/ewqxcfZpeT1d5dE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcPCfpxsm3XVkHK9krfGp3L05sy6Ap3zDk6GHfnIsoA8VUNTg9o+RLHI5F2hI048N8JWYiDSB+koSWTImNOSl/fNjmUmU4SQVWCXGFqlilOFXpMflVPFtjtQPxm3DpwAop8VAiCk7qfgTb55M8Vrw6U7wf444vH23ArbOFyVjrM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=aD4hhdyX; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=pzhuUfnv; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D302356BC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744796570; cv=none; b=rKYb+WfMI1nY6QLnfRDYilxUd0IBfi/g2ZchPZklibnXURh2aaaacqsNb8QpLb5ju118umWNduye9SrfnA9t68P7Rc3y8MsP6i0W9iq+JuperV3/lKP3axup0ipfF+ZONi6fofEBOVE5LWirpm15ncqupuR8qh2aYd2wphsSnas=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744796570; c=relaxed/simple;
+	bh=v6n7jILdjhbGKHuKJjta2U75MS/4ZHmGbjks7d8eyvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PCBQJc6JDfPtG2REdiJx05ZG3gTrJn4Sun5/N7nZQg1Mgaz/dvVv/0pBZTf0mud5Xg8p+ZbORI5vJf36OKbX6IalGzGWjNcuboKKNFWCUxhGEnjbGKM2tbZ3mqkd5V3OuXbFCWxgzNO062mxSFi/qzPXnWN/4070rdIDg8MU2BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=fy2/TuT8; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="aD4hhdyX";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="pzhuUfnv"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G1uGXc019409;
-	Wed, 16 Apr 2025 04:41:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=PODMain02222019; bh=tA4TRGBVwFrVexxXcR
-	7ZDRwMe5zKWjPTFxLhIn7+tyA=; b=aD4hhdyXpKs5uCXesrz8AFJRwDBAc2dbk/
-	OSvD5m/Z0Km4iRSBOTfcC8bmw1cytCZExEN5yIE7TGBTHorzCUwvWUOaIpCVJkdp
-	WE5lCNxISuq5KGNEQj3jlMNF8Kh5wY1Z7Q2pne6vYY+UBr74+fce3D8PUprOUhSn
-	Q641HKziVSWWmfgAi4sS2xw4Bk097VOKUplbl5tF24LIibCcjCw9i67fqRKf03Se
-	T9v1/U5VCPFFM9r10XFYDzgbUOZ6a/Zbs6qb5C4pPVd1bqh78+fa6D2WvkPRg4S7
-	OP5LZI4NVfa9nan3immx5jxi40gJwKtxsKjFPdZenT+EznaWbQGg==
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4615wt2emp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 04:41:40 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I6EtDbBz8etPtljvmtLFu6XOmCpuVsnFtHmSJAFXwE1fjGkNu52KhIVhdDAXzden6uKyl/hht2QyJL75ydADODcj4FG7L9+Runt+ZrTMBbQa3Dl3nD/ugGs8rrj7PxNYl2kmJtTKY/JJRUUClf0MfIVjgpj7qBHC0opZd3g7J8DpetwnBQeesdw6icfenuLOHS6Z6ekOMGJTHvCgQkCsUd8pNZ/oHM//mNtzdYwwZ5aZorADplbT5dU1A9/MrjlEjVpFE/Jk7jQv2WZQvFT5itCIrchUpEyiiyoBDj+WAWlU/gu573HHVQVI0WNbre4dRvHD7+oXR3byqQSBuPQOQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tA4TRGBVwFrVexxXcR7ZDRwMe5zKWjPTFxLhIn7+tyA=;
- b=Bo7vsMnaNPvnGyGRlDwndRaDEdiDpfcR8xP/3PLutPwDGWcTOBVBkwP69DQsV6CkqsDgjKGtkLjffuvtgBIYUqX9uSv1hsI9VHzzHHsC7Rr8mOywNZiInYdOJTBhoxsfYFd8Z/FPe6Z/klER5UP/3Q6wUETGebUmQDuaF3D9jfg2d4yMPDOipMAug3gPLFfGLznhEH1n3eezD8vWFHBRUE2p0D/awKNLa6QaeteEOmfDelKS03ZHb+GszrgQFlKN2NU/SYxhilsocHCAI5Ha6O148+VQfZrywUavBH3KC69tNyTXb2CKagPNzNbAu9YjTNEovBJGJcc4PSnImiyvQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tA4TRGBVwFrVexxXcR7ZDRwMe5zKWjPTFxLhIn7+tyA=;
- b=pzhuUfnv2JrtsfORZDuQk65PVa0GSAuVZXk2jUmCBO3slufLpjPBsmOjyz/mPmyWmV6TZady8xHvhHja1d5oBg4xXL4y315UVF6VcUMAqOns5vqliLvZhOplfq7RCwb9nW+tobXZlBVo/LgNfZb6cIFCaNm5LDdcMEJBeR1Zad4=
-Received: from DM6PR06CA0098.namprd06.prod.outlook.com (2603:10b6:5:336::31)
- by DS7PR19MB8854.namprd19.prod.outlook.com (2603:10b6:8:252::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Wed, 16 Apr
- 2025 09:41:35 +0000
-Received: from DS3PEPF0000C37E.namprd04.prod.outlook.com
- (2603:10b6:5:336:cafe::56) by DM6PR06CA0098.outlook.office365.com
- (2603:10b6:5:336::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.22 via Frontend Transport; Wed,
- 16 Apr 2025 09:41:34 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- DS3PEPF0000C37E.mail.protection.outlook.com (10.167.23.8) with Microsoft SMTP
- Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12 via
- Frontend Transport; Wed, 16 Apr 2025 09:41:33 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 93314406541;
-	Wed, 16 Apr 2025 09:41:32 +0000 (UTC)
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 74C53820244;
-	Wed, 16 Apr 2025 09:41:32 +0000 (UTC)
-Date: Wed, 16 Apr 2025 10:41:31 +0100
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
-        peter.ujfalusi@linux.intel.com, linux-sound@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 1/3] ASoC: SDCA: Create DAPM widgets and routes from DisCo
-Message-ID: <Z/97SwfaLp2VIzf4@opensource.cirrus.com>
-References: <20250321163928.793301-1-ckeepax@opensource.cirrus.com>
- <20250321163928.793301-2-ckeepax@opensource.cirrus.com>
- <2b899796-b9fc-49ef-a4a7-858baa90a36b@linux.dev>
- <Z+KROae2x3nB6Ov8@opensource.cirrus.com>
- <a5aa25de-919f-462c-8aab-996fbc381de9@linux.dev>
- <Z+PTl4fg5tRoXmEE@opensource.cirrus.com>
- <77b8a156-49af-4900-b17a-b2b3fd11eba0@linux.dev>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="fy2/TuT8"
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6D3623F316
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1744796560;
+	bh=i9ixyQFFhUHW4HMFMtkfJpGgEC202KPMs1epsc652uI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+	b=fy2/TuT837D9uOjqwR3OmKK1P1tjZ4VekxtrFdqLFTTn+CgjOIMhju/9uzwvtRI+1
+	 kuvZzPCE/V4Aj1xn+HLjeiJli5JN4SC4ij0xERD00QgxzazXDqU+MvnHqVThmmuzsx
+	 Y7YTSHAQBW0hjNuAfJIO6nsrHiv3P6Gxg+bo1lLIsbCbUhsm5xjgUcTMlAfrZeQomC
+	 zfa1/nOj1YFV9qifJd+srZVDDq/nb64zs/zaWNQBLf7IOkjOUzkZJvleNqkquJeP0c
+	 rZuiBjJuoS49Q4NKCAWdXipWpf76nFm88oNI6HGNCYb+nC6a8w8GaiOs8/9njnewpX
+	 L7Hn4khrwHmXg==
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3db5469fbso590318066b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:42:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744796559; x=1745401359;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i9ixyQFFhUHW4HMFMtkfJpGgEC202KPMs1epsc652uI=;
+        b=Yl0j3Rbrm+nxC5gMk9Hj4Zk+3YAHvUoMs0RUsxDxa89mzr/JDRUVxh1o1IHWRqStMF
+         Rse9dOapPTpPadOs8AyFVFW2T7fbPyQIrMut8GvsrJ+VwNzdGNh6AMLg+wSpSnSey5Nr
+         jQm9naYIFS18zLQYVwLcoNRSpbrAh2Htxxxk31izuBzN98LGgUFy5b9tm2e5PjeOjkUe
+         w+xi4weTPhlesY9xx5nfvkm9dMa6erAkLFenaNTKhN5PqAlW5edfRTRmBV1muiPFNpBE
+         9PBy8JCS8Yp1TBejFxeHu4+WdpgWEf5L5nIgSDez3sXd96nF2epsHzE02CyObXDOeoEj
+         FWMg==
+X-Forwarded-Encrypted: i=1; AJvYcCX1u1PEK5jZgu58lN1z/KuPX1rbEs+aebyq/zHcSnZTvUM+BtFQuaNfX4gXxZT31vZcde6i7HWk0YOTGQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPULXheA85a/lJs4hxc7kFsrSdsI7u8fRX3LeDBYs9oZqs9FF9
+	iMO27bjCaArLNZt1ji9CccX7MIOia1AUrxnFLAeeLuSdUbwfSjkgbxAbOANMBzQavztBsEpLi4D
+	eMSP5MY+KNtx8DiauaX7KZ8wRwUTYplUbU6pAk855cTnZ4h1+IhCrnIL7lYghdd1J1L2KjCRHlB
+	ic7A==
+X-Gm-Gg: ASbGncuF/lj3mL+brKzypWdB6wmmpUjv2/iBOZ1KvCN5p7mrKm/ji5rZzGmuJjpNG6u
+	2K3jGQxaYzTmgxE6/gU+oPlGj1gT0RUyidKyekKWMOm7CTuQEbmufR+gEpLnyNJvc4Ox7/J2EcD
+	1o1HGNG35oCEnL7Vil1WYKdBKNXj5SKlX3sMPquzdRmtxksk5Rn8R3mHvFfskhbEpTfa4OvVZ9A
+	CKquJmqz/8XYUgPO02ksa6E8I2YhDB9kBjz09ngsIpGD6V9hexRVjJXiM2mKs2NPZFEDgC9dbJM
+	kEll9KIEQthR9g4CpJycycGngXxRzzYssE9PvHUs8oGM871X5gHlhEjf
+X-Received: by 2002:a17:907:a42:b0:ac2:842c:8d04 with SMTP id a640c23a62f3a-acb428e0393mr105041166b.17.1744796559214;
+        Wed, 16 Apr 2025 02:42:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH7ls/+zecyrOEaABBTILwE0kIy3epCcGQns9JrjSqagljy01aArWTanNTW2rX4QlZq1npbDQ==
+X-Received: by 2002:a17:907:a42:b0:ac2:842c:8d04 with SMTP id a640c23a62f3a-acb428e0393mr105037766b.17.1744796558467;
+        Wed, 16 Apr 2025 02:42:38 -0700 (PDT)
+Received: from localhost (151-243-191-194.pool.dsl-net.ch. [194.191.243.151])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cde04c7sm95510066b.55.2025.04.16.02.42.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 02:42:38 -0700 (PDT)
+From: Juerg Haefliger <juerg.haefliger@canonical.com>
+To: juerg.haefliger@canonical.com
+Cc: andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org
+Subject: [PATCH v3 0/3] HP EliteBook Ultra G1q support
+Date: Wed, 16 Apr 2025 11:42:33 +0200
+Message-ID: <20250416094236.312079-1-juerg.haefliger@canonical.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250408145252.581060-1-juerg.haefliger@canonical.com>
+References: <20250408145252.581060-1-juerg.haefliger@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77b8a156-49af-4900-b17a-b2b3fd11eba0@linux.dev>
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37E:EE_|DS7PR19MB8854:EE_
-X-MS-Office365-Filtering-Correlation-Id: 90a97e15-fed3-4ebd-e056-08dd7ccae008
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|61400799027|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?owU/xBR90MDO6IVj7YPSn5gnUD853u5aAib0P6MtY9y86+dGAZ5SpJ8PZ5td?=
- =?us-ascii?Q?yJInHtFxSxyZBgqUPnqCL0rtdfxSjsbLpSZpC7aMl+KQF/YYmwH9rf4SOMLY?=
- =?us-ascii?Q?ipKLFI6/ZnPkYe0okSzdRtPRrX7zjaenG+eJx40pW0GTpTCMP/yIpUVQGhgC?=
- =?us-ascii?Q?LaleX99U3DUvZOUf9btAOg1tRLsIkO0kS7G7grRrkNndvmnjIrmm5fE4g4B9?=
- =?us-ascii?Q?fyvJ1RWE7ZtvDWBOuXA9fZQRHNC/k5rHvzyGgmUfkleiyKtHySxqm+sl54+P?=
- =?us-ascii?Q?z020ZR5Nh/Hn5+7XZ/osLOMIL67CkbOvZjHcMtuWjStt1cbyjJ2zMa92sAl8?=
- =?us-ascii?Q?bqAljNeMgyGd+Nh2WcI0if+oLSPCkntAAbAQ7vEKfF3rdxd/BJhw2jcNNk5V?=
- =?us-ascii?Q?duV2Wh1fcg0oFdoaHRgzbek4sK+ShUQCRC+Pkaz6E9dZm8nyXb8SvizFP7Vv?=
- =?us-ascii?Q?TVdOMXutv1bCMJsEFtyK93USUAI5mu9UeQP2LHGMkdbJNi+phZ34yKNWAdJk?=
- =?us-ascii?Q?ZtV8gmRQUkLtu/6Y/SE5IO7Z+XeS+LPNJq31WFHrLXAAqq6QzTWQK1qD0t7V?=
- =?us-ascii?Q?N6M23G3g1XNFFrRJwSzRmUl8BdCrysJxwmL1fneJWcJUzwbeQfEnKDtU/u7N?=
- =?us-ascii?Q?Vo1DG701HHbsX6JBnYxWnjPxtS/zT0mXrSNe1O5rGtRz4W/oDtcD2f4pavg9?=
- =?us-ascii?Q?xkH4PB1kGZdtZ7eklin0JgNutKOMAhHWBE2ruDQibshIJ4eUOiJZmU5AAODP?=
- =?us-ascii?Q?lpvzhSjOVnhVsOl7WQsD03XNYjUKgqzZOG2D4xXHFG8G1QB7eHH3V7trXjW8?=
- =?us-ascii?Q?em/VAWAbB7rmQ9a8cYHzNsOIFNbDeAEJqCH7EibFY88E92L2cJqQRY2hfzQl?=
- =?us-ascii?Q?Vw+cFlIZ4/xRwKH1u5m+5Z67dGeM0EKT2duaqzjATnQxcPy6WAHWpNc5BG8x?=
- =?us-ascii?Q?w8ICOU0SGVCHYfgIwQ8KsTnqH6z+9dFxiMT5Gwa4FUuJmBtdYaWsK3zRprCO?=
- =?us-ascii?Q?jxldlfrH915spmByPfJeMK8X5yTnqMqq0CFj2hg77ZAEyT00EzoPbyAtDYV7?=
- =?us-ascii?Q?1peSHotSmOCKflaQ8uTLmcVd50iMFIUn2beuClWzrsvQsSiflnM+O+bP6rFl?=
- =?us-ascii?Q?FMnLEr50QWbiz+CrxnYGz1mWnKnhO4kCQEvRIMUDX+LBRwwFW1J8qRadXhw0?=
- =?us-ascii?Q?oR9Tvmw4bLFlyMAeo3zH1CaFnESeyR6CvlmMtSmkBsDdNcu58uaRN6N3prFB?=
- =?us-ascii?Q?x2ogpTFkawpir/qGgUwqINu9q0Fg4gmkY9VdoTZjj5xNH/IuxgIjcAxvy+Cn?=
- =?us-ascii?Q?0D2Y4hRyYBShAV4jn0ehmeLS3SfsEgxVwxR2a+ElIFFlyp4uA68g/Om32Uhg?=
- =?us-ascii?Q?2aAHPsLeGCmFvmQBifRVS6KNzwOybHduukfJV8fHZF7etk+LHy2BpNOTFUK8?=
- =?us-ascii?Q?9ZX6EX0e/gOsYRum9XvVfAHe2rA4rWZn9C9VDK7p9bsOBW4iA1p6AJfSVQrV?=
- =?us-ascii?Q?1J35I8BouNARzyUuwk1NltfBt3kY43j3+Muz?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(61400799027)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 09:41:33.7582
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90a97e15-fed3-4ebd-e056-08dd7ccae008
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF0000C37E.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR19MB8854
-X-Proofpoint-GUID: YuGBC_zUff9_EmWT5o7mvdL-_DcYVC9g
-X-Proofpoint-ORIG-GUID: YuGBC_zUff9_EmWT5o7mvdL-_DcYVC9g
-X-Authority-Analysis: v=2.4 cv=OeuYDgTY c=1 sm=1 tr=0 ts=67ff7b54 cx=c_pps a=joO5rFOndlhnht97C4Lqsw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10
- a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=yDhs5JWqyVeKaxjYFQEA:9 a=CjuIK1q_8ugA:10 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 02:43:50PM -0500, Pierre-Louis Bossart wrote:
-> >> How would the state of those DAPM SU widgets be updated
-> >> though? I think we need to 'translate' the GE settings to tell
-> >> DAPM which paths can become active, but the SUs state is set
-> >> by hardware so I could see a possible racy disconnect if we
-> >> make a path activable but hardware hasn't done so yet.
-> > 
-> > All the SU DAPM widgets are linked to the single GE control,
-> > the same ALSA control is shared across all the widgets. So
-> > all the paths are updated in a single DAPM sync, and on the
-> > hardware side with a single write to the GE control.
-> 
-> The race I am concerned about is between SU values
-> represented in DAPM and actual values propagated inside the
-> SDCA device. There could be a delay between writing a GE
-> register and the SU register values changing.
+Add support for the HP EliteBook Ultra G1q 14" AI laptop.
 
-Fair enough, but I don't see why this matters. Those SU registers
-are device level, it is the devices business to manage them. Why
-does it matter if there is a delay updating them? All the widgets
-on the host side are controlled by the GE control.
+Based on HWINFO64 and APCI tables, it seems to be the same HW as the
+HP OmniBook X 14.
 
-> > To put that as a more concrete example this code will create
-> > input widgets for IT 31, 32, 33 (the UAJ mics), however it
-> > would be unusual to hook a pin switch to those. Something
-> > should be creating an actual microphone widget, attaching
-> > that to the input widgets and attaching a pin switch to that.
-> > Typically those actions are handled in the machine driver,
-> > there is possibly an argument for handling them in the codec
-> > driver for SDCA but I felt it would make more sense to progress
-> > things a little further until resolving that one.
-> 
-> The SDCA spec is supposed to describe what's physically
-> connected, so when we parse the DisCo descriptors we should
-> only see the level that is typically present in machine
-> drivers.
+v2->v3:
+  - Drop status properties from nodes in patch 3/3
+  - Add acked-by-krzk to patch 2/3
+v1->v2:
+  - Don't rename the X14 dts to dtsi and directly include the dts
+  - Add a label to the sound node and use that to override the model
+  - Reorder the dt doc patch before the dt usage
 
-That's not entirely true, none of the interconnections between
-codecs are contained. Microsoft invented that composition stuff
-to hold that sort of stuff. Although perhaps there is a strong
-case that the IT/OTs here are defined as having a mic/speaker
-connected so it is the right place to define them?
 
-> The codec descriptors are not generic at all, they
-> should only describe a specific way of how a SDCA codec is
-> used. The traditional split between codec and machine drivers
-> does not really apply for SDCA, the SDCA descriptors represent
-> the *machine* already.
+Juerg Haefliger (3):
+  arm64: dts: qcom: x1e80100-hp-omnibook-x14: add sound label and pull
+    out the model
+  dt-bindings: arm: qcom: Document HP EliteBook Ultra G1q
+  arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q: DT for HP EliteBook
+    Ultra G1q
 
-I guess that makes your opinion very much that we do add the
-mic/speaker widgets at this level. I mean it wouldn't take long
-to add them. I am still not totally as sure, but we can probably
-live with a little more effort to back it out if we need it. I
-will do a v4 and see what adding those in looks like.
+ .../devicetree/bindings/arm/qcom.yaml         |  1 +
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 30 +++++++++++++++++++
+ .../dts/qcom/x1e80100-hp-omnibook-x14.dts     |  7 +++--
+ drivers/firmware/qcom/qcom_scm.c              |  1 +
+ 5 files changed, 38 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
 
-Thanks,
-Charles
+-- 
+2.43.0
+
