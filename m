@@ -1,166 +1,145 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A48207DFC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F8214A7C;
+	Wed, 16 Apr 2025 17:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825655; cv=none; b=jRl9lBsQ3fsbO6oS+uP6TXszT9e8Fr79kARK9CZbTqLqLIp3foCeQYU9UExRw/mYcvv1MfIvVdOhY0aNOcmfov22GbftO/NPtJSpXIp5L9oivBc/Wp8uATZcCHRjGHi0RmbMShrIPbX0IuOetcsv3zU+Y9d/dOJxn/f5w7BfwNI=
+	t=1744825667; cv=none; b=rxGzfc35mJSs0Zqc6gqTpI8z1to0TpQbBeupRA5nNtkOaSYiDpe7tiGeQ6QScQlsv7EvQtmpZOqB97PCbnK8eYPSw5mp3NMDcVIxMWk/AwAor8g8fBfU57fYxnv0kk7RE9GOScH63xT41teGysXDVFE9osckibZGKEzCzH3FYV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825655; c=relaxed/simple;
-	bh=krYe/ACIl1WDWBGw7/244gTQLqinviWRZm+F/EAb3/E=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=hu9E0NK1Kg//zA1UCgVU2qoKsBMGgj9KNwI+U+KvaPJBdh05zKEQvJzMiBSoN0sO9Z4ZxtW7Xjjvuau+4+yPObkUjivh+6gNozKRJnlEmmnQMA+7IbS3GFTOCXUf+pMG1aLGIFq0BKCHRg5gwbKseURpJOYpA8tuY54/Irn0V1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d5b38276deso120403155ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:47:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744825652; x=1745430452;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0rY6iI5XOo0w4pAoyldjWxA/FfsNm/1D7YvJpyzA5g8=;
-        b=DfHp6MzgBmEpHXjJb8kJUFeKGztpm855eNcJCG8b439hklRgPJ9gNPYj2tRRjoB+zG
-         0EtEzelhxYfcKj2/DSo23AAGzqOfI41e10rQd9w2p70uWTsV1ZaotbOoGxDTAPK1lkwP
-         ZUzNfVOins3kET+4CCCuVxR+vK7WRUKvgPAv2d8T3MJMZHkqopXHCVn/aQiC/Q2GCEp0
-         pEJYeZRqYhJVtkiFwYTl/fS8uV2cJV8NiuIVMoGunJ8HzG3GYTdxANYwB+mqc9CTmx2b
-         cNXSWFTBJsV5InJfcjTpyPesNljuPu3ToyjN1mbWnwfrXQ0HzETX8zna/48QHpHKj3ZK
-         Phow==
-X-Forwarded-Encrypted: i=1; AJvYcCX9LdYw5O9w0qm4CSUpGBoFpzkYRpjI/6M2cuZyGhRYrUqII54He48QzAchd0kozWXFbgfIfUqBjwrYlmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnSBAU4QYNsUPmIcanXOXNAGqb68fyQ+pa1CJGXltlJcQWwhyv
-	CucoKRgPwXn/jDFteTZ3YOk1+IYElkTwz8VuyxIFj5P0nKBWOoh50a1HPJF9hNOD/1otrCc0d9q
-	WM3rOrBWM8vuV96M9s0pL7Fhzr11jP3yFmPXzdHlIe6miKf0QlKs7MSc=
-X-Google-Smtp-Source: AGHT+IHIVy19yEIWwoYMuLlDCf8L7Q2KSp0lzhVNmXerZqlYXtAyV1TgD2ycJ5rFb3groK+1M5jeILQEtSU0nboSAja8yObmu0xL
+	s=arc-20240116; t=1744825667; c=relaxed/simple;
+	bh=0xMXmPv9am/4yzAmlbNd701D43MOUvuzuBbid2PYMTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpdBodWfORSZ/zlF23YP7DRKMTX9N/ujjkWl/6LAFGWyJM3nM01Ds54L3rop3eEdKwCBIJTtonZX4mGwG0wxNMsnM5LW8z3D4qV4BjPSLDpg71V2NizAERxgKYHQVgF2aW2WxWsyvPf1FmYntBjGPK2xf/aiQ3m7bA2T2Vcf5fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iskdI9Wf; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iskdI9Wf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3E11540E0200;
+	Wed, 16 Apr 2025 17:47:35 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id F0yZudtRwPqi; Wed, 16 Apr 2025 17:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744825651; bh=k6oIrl/lthiSaffLzih6SQfaq9THlmrqB4n+2W0D0+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iskdI9Wf4NoqrwbLdDcNG3JkNiUVFl9RNIHnGQ5mmkZBYfIhUOMnlOBLHuYxH5rUt
+	 oBiZnDiFvczeuE8sz8jXBJDTJ4Tw3hrILTRgBuwoeZwAyk22i+VSu+zEEZDysfmu8e
+	 KY60ZSg7M7kilFski7lw//XmoWOidxdv3hajf0hvY9vVf9IKOO65J9XHBEGRmqTYYG
+	 QSYMIRDHOIE75VVW0ferdfkvm3CHJIi0FZ+Vn8dswo1NWj/oQwMbw1muJZj01HlfRZ
+	 m3nIC6yQm3w8XBwREeuAxB5ibp9INgn+j+TyDNGZNQheMGjRCQmDNHtKBWFCcVkw4/
+	 h17sKx8uCCm730W4sLbyr9xErNApIuKrUcA1GsFsZZU9nvJdhtEUJJDS7uLPwIcdKx
+	 IzAMB9rfwAs43kB0sAM8g3b4bungROLYQkOtIQ+aq4Xqxb01WVmvWzeArKDAI1+6+F
+	 cNXyN5+nFRO1Q1jmB4dqoMZHtX2dipxKEiKVftYNLQsigv1yHfEQ5KEkY1jpbZ6v8/
+	 /Xc4h5WcSWaSvgGdj/b67cWpzd/zuTCesGud2UwwIL48ofAdvcGiA22cnSYmcNavMI
+	 pgBnQpe6utUyFOMJxvSQVrpd9I6QF1kVsxNWjNmTRH8UB4JNsG3qOVZD/FIXDnyRyB
+	 E6WGCuQABS8dWzu58ifjWZ20=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 79D7040E016E;
+	Wed, 16 Apr 2025 17:47:19 +0000 (UTC)
+Date: Wed, 16 Apr 2025 19:47:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
+ page faults
+Message-ID: <20250416174714.GGZ__tIi3yNzNKoKFE@fat_crate.local>
+References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+ <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
+ <20250414182050.213480aa@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:470d:b0:3d5:8908:92d0 with SMTP id
- e9e14a558f8ab-3d815af8368mr32715445ab.3.1744825652659; Wed, 16 Apr 2025
- 10:47:32 -0700 (PDT)
-Date: Wed, 16 Apr 2025 10:47:32 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67ffed34.050a0220.5cdb3.0007.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_alloc_sectors_start_trans
- (2)
-From: syzbot <syzbot+2caec1f3fc52004d4f3c@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414182050.213480aa@gandalf.local.home>
 
-Hello,
+On Mon, Apr 14, 2025 at 06:20:50PM -0400, Steven Rostedt wrote:
+> It's useful for me ;-)
 
-syzbot found the following issue on:
+That's why I CCed you.
 
-HEAD commit:    1a1d569a75f3 Merge tag 'edac_urgent_for_v6.15_rc3' of git:..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=157c6470580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e30b69a28cc940e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=2caec1f3fc52004d4f3c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+I suspected you'd have "your mustard to share". :-P
 
-Unfortunately, I don't have any reproducer for this issue yet.
+>  # cd /sys/kernel/tracing
+>  # echo 's:user_faults u64 delta;' >> dynamic_events
+>  # echo 'hist:keys=common_pid:ts0=common_timestamp.usecs' >> events/exceptions/page_fault_user_enter/trigger
+>  # echo 'hist:keys=common_pid:delta=common_timestamp.usecs-$ts0:onmatch(exceptions.page_fault_user_enter).trace(user_faults,$delta)' >> events/exceptions/page_fault_user_exit/trigger
+> 
+>  # cd /work/git/trace-cmd.git
+>  # echo 'hist:keys=delta.log2:sort=delta if COMM == "cc1"' > /sys/kernel/tracing/events/synthetic/user_faults/trigger
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/e7fecf1a4718/disk-1a1d569a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7823b994817c/vmlinux-1a1d569a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7ce169c73b39/bzImage-1a1d569a.xz
+OMG, this tracing thing has turned into a language almost. I hope you're
+documenting those fancy use cases...
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2caec1f3fc52004d4f3c@syzkaller.appspotmail.com
+>  # make
+> [..]
+> 
+>  # cat /sys/kernel/tracing/events/synthetic/user_faults/hist
+> # event histogram
+> #
+> # trigger info: hist:keys=delta.log2:vals=hitcount:sort=delta.log2:size=2048 if COMM == "cc1" [active]
+> #
+> 
+> { delta: ~ 2^0  } hitcount:          1
+> { delta: ~ 2^1  } hitcount:        334
+> { delta: ~ 2^2  } hitcount:       4090
+> { delta: ~ 2^3  } hitcount:      86037
+> { delta: ~ 2^4  } hitcount:     108790
+> { delta: ~ 2^5  } hitcount:      27387
+> { delta: ~ 2^6  } hitcount:       6015
+> { delta: ~ 2^7  } hitcount:        481
+> { delta: ~ 2^8  } hitcount:        134
+> { delta: ~ 2^9  } hitcount:         74
+> { delta: ~ 2^10 } hitcount:         54
+> { delta: ~ 2^11 } hitcount:          6
+> 
+> Totals:
+>     Hits: 233403
+>     Entries: 12
+>     Dropped: 0
+> 
+> 
+> The above shows a histogram in microseconds where the buckets increase in a
+> power of two. The biggest bucket is between 2^4 (16) and 2^5 (32) microseconds
+> with 108790 hits.
+> 
+> The longest bucket of 2^11 (2ms) to 2^12 (4ms) had 6 hits.
+> 
+> And when sframes is supported, it will be able to show the user space stack
+> trace of where the longest page faults occur.
 
-=====================================================
-BUG: KMSAN: uninit-value in __writepoint_find include/linux/rcupdate.h:-1 [inline]
-BUG: KMSAN: uninit-value in writepoint_find fs/bcachefs/alloc_foreground.c:1248 [inline]
-BUG: KMSAN: uninit-value in bch2_alloc_sectors_start_trans+0x44a/0x32d0 fs/bcachefs/alloc_foreground.c:1348
- __writepoint_find include/linux/rcupdate.h:-1 [inline]
- writepoint_find fs/bcachefs/alloc_foreground.c:1248 [inline]
- bch2_alloc_sectors_start_trans+0x44a/0x32d0 fs/bcachefs/alloc_foreground.c:1348
- __bch2_write+0x7bd/0x6a10 fs/bcachefs/io_write.c:1494
- bch2_write+0xdfe/0x1b30 fs/bcachefs/io_write.c:1681
- closure_queue include/linux/closure.h:270 [inline]
- closure_call include/linux/closure.h:432 [inline]
- bch2_writepage_do_io fs/bcachefs/fs-io-buffered.c:494 [inline]
- bch2_writepages+0x24a/0x3c0 fs/bcachefs/fs-io-buffered.c:677
- do_writepages+0x427/0xc30 mm/page-writeback.c:2656
- __writeback_single_inode+0x103/0x1290 fs/fs-writeback.c:1680
- writeback_sb_inodes+0xac4/0x1c90 fs/fs-writeback.c:1976
- wb_writeback+0x4df/0xcb0 fs/fs-writeback.c:2156
- wb_do_writeback fs/fs-writeback.c:2303 [inline]
- wb_workfn+0x40b/0x1970 fs/fs-writeback.c:2343
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xc1d/0x1e80 kernel/workqueue.c:3319
- worker_thread+0xea3/0x1500 kernel/workqueue.c:3400
- kthread+0x6ce/0xf10 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Ok, so AFAIU, this gives you how long user page faults take and apparently for
+someone this is important info.
 
-Uninit was stored to memory at:
- bch2_writepage_io_alloc fs/bcachefs/fs-io-buffered.c:522 [inline]
- __bch2_writepage+0x3754/0x3ab0 fs/bcachefs/fs-io-buffered.c:644
- write_cache_pages+0xc9/0x280 mm/page-writeback.c:2613
- bch2_writepages+0x11f/0x3c0 fs/bcachefs/fs-io-buffered.c:675
- do_writepages+0x427/0xc30 mm/page-writeback.c:2656
- __writeback_single_inode+0x103/0x1290 fs/fs-writeback.c:1680
- writeback_sb_inodes+0xac4/0x1c90 fs/fs-writeback.c:1976
- wb_writeback+0x4df/0xcb0 fs/fs-writeback.c:2156
- wb_do_writeback fs/fs-writeback.c:2303 [inline]
- wb_workfn+0x40b/0x1970 fs/fs-writeback.c:2343
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xc1d/0x1e80 kernel/workqueue.c:3319
- worker_thread+0xea3/0x1500 kernel/workqueue.c:3400
- kthread+0x6ce/0xf10 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Now if only that info were in the commit message along with the usage scenario
+so that people can *actually* do what you guys are bragging about...
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4157 [inline]
- slab_alloc_node mm/slub.c:4200 [inline]
- kmem_cache_alloc_lru_noprof+0x92d/0xe30 mm/slub.c:4219
- __bch2_new_inode+0x98/0x450 fs/bcachefs/fs.c:438
- __bch2_create+0x284/0x1700 fs/bcachefs/fs.c:541
- bch2_mknod fs/bcachefs/fs.c:728 [inline]
- bch2_create+0xc0/0x1d0 fs/bcachefs/fs.c:742
- lookup_open fs/namei.c:3666 [inline]
- open_last_lookups fs/namei.c:3765 [inline]
- path_openat+0x2efe/0x6280 fs/namei.c:4001
- do_filp_open+0x26b/0x610 fs/namei.c:4031
- do_sys_openat2+0x1ca/0x300 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_openat fs/open.c:1460 [inline]
- __se_sys_openat fs/open.c:1455 [inline]
- __x64_sys_openat+0x2a1/0x310 fs/open.c:1455
- x64_sys_call+0x1fe/0x3c80 arch/x86/include/generated/asm/syscalls_64.h:258
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+:-P
 
-CPU: 1 UID: 0 PID: 3648 Comm: kworker/u8:11 Not tainted 6.15.0-rc2-syzkaller-00042-g1a1d569a75f3 #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: writeback wb_workfn (flush-bcachefs-66)
-=====================================================
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+https://people.kernel.org/tglx/notes-about-netiquette
