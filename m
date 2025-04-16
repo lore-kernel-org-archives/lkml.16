@@ -1,67 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597621EE032;
-	Wed, 16 Apr 2025 13:51:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B78A185920
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811479; cv=none; b=UjgdO3uofN2zJCKht6V9SM0DZZ01ZYbCUDZ+sEm7m9NMF2e8A+uO0jSElfiuNW0zTz99jBVLcD9yqBpGqOnvfI3Yr7zvnt6wdoJQ4octyTPoCrNI77OowM8BOZTyu/ieg/gwOwsFTGlI435FF0MNXnFmXcaYQWbVQHNStOdPuMQ=
+	t=1744811518; cv=none; b=qLZrsAJJa6YfYBRpcohrx2ZzLs52hIRvKkmz2nTb6x6YuztibsXe7CKyaDZ6IHyI2arFe/Aaogmxb8U6mxY48KS2WwgsrWJbiAFH2dOKMfO6c7ivoZNHentv5Yu8wOwdCFPF5YVIjGvxeagyn8G6mnJpYBZNxmrfjj/X0aWLrwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811479; c=relaxed/simple;
-	bh=+wx2sC6I5mlk2PyZ3qWyksEMyQYV4JAGVPjVJfE7+BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eZS5M/nlDQe4ykhXwBupz0q2kUVQlGj3Ko64bIe+IVRioKg5CpOkb+cwxOEmV7Fq2iosslXys4y/Mo4IcYlA+mStR1E/6ndnHqEY8peUtUifjx+vm/n+/+lrxbx4U6Ka31jUtc6CvJdrQgcSVlehCYVJIIW5Hje+BRkhEzW4y6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MEl9mE9Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744811518; c=relaxed/simple;
+	bh=O652EDl6UwUbsu14UlA+Lv1Ltuil8ye7clm7QQ4ffrk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jq4vp2YSOPpwPYWg88i6d0dmm7Kbd+QrcvIrlpUWQ8pxTP3lzgVzfexuz0V4XAS/LGjiJV/gV2zXtQ8z4yTbdYT0vMRKOSEKOTw/1/f7EbG+KPkebhWkAtGesoHiEhEOC5E0PEWYIplAPwi6lM4yHN1ZWyz+mMqx7en78bzQTAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=tX+Px/kj; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MEl9mE9Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3115C4CEE2;
-	Wed, 16 Apr 2025 13:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744811478;
-	bh=+wx2sC6I5mlk2PyZ3qWyksEMyQYV4JAGVPjVJfE7+BM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MEl9mE9Qz65zZEEe8CDmj9B6yMm90nyYxYB1fVvAbVMgHg0kDt3s6ZyDiANWHezbt
-	 QuNgb+QTfKC5QV2PWG7PDwuJVrBwxACR3GLyHs+c8R0H/gm+x0sRSqRmpzsdW15Zl+
-	 AsiYHsCZfVqMhrdlUYXlcF5H2GMvFlmQ2UvBl5oSKUCFhKs25BvSmTnQ7WlP3Myysd
-	 NU33Wj0GcjPVOLn7WI0VzeQFwnAs5wx7LL3HA3LASrBZ93J/MAWJGmKCtJ58Ux2Sbx
-	 3nykTBsgwSsXb2GJIpPbFlrim4T13lyKzAWQF6XQHfp86awEzmO8QEgkAujQqpSd7+
-	 zhnsyDOllKTFw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1u53Ab-000000002BI-28Ur;
-	Wed, 16 Apr 2025 15:51:17 +0200
-Date: Wed, 16 Apr 2025 15:51:17 +0200
-From: Johan Hovold <johan@kernel.org>
-To: rujra <braker.noob.kernel@gmail.com>
-Cc: ayushdevel1325@gmail.com, elder@kernel.org, gregkh@linuxfoundation.org,
-	greybus-dev@lists.linaro.org, outreachy@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="tX+Px/kj"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c554d7dc2aso1041570585a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744811513; x=1745416313; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tzLhMgMwNH0NH5AOa4O9mcMXGuopza907c5GCi91e+0=;
+        b=tX+Px/kj7Y7fVqT1Cqzx48I93MOo/pWKwdkL+VcMpCH5mgXhT7HaQ2OlDVjsalrdoM
+         svEoPkOapU5Fu5UaqCrQ9jH2aJwTEPxDQjtCkIjfK5t0vopRv/AKqAFQoZ1VhuF42nyv
+         lr2PLmK6tMva0CaL769tZeb1FI1UUJDq/gSQrVJxMrg/UMswwKghf7Uk+dt0LdL0bDMB
+         kOF7zATUeIBi98AaN2y1lUWCzGevvawnto69/NHMnB133MsaiBCrr0pIN5sxDsRlHQL2
+         OIEbBoviHSOoWOpIi7mdlqootrzTeafqhabyxaNOmGVVND/kx7UgHq+G03sK3V+9rbpZ
+         hOcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744811513; x=1745416313;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tzLhMgMwNH0NH5AOa4O9mcMXGuopza907c5GCi91e+0=;
+        b=bRaWegwW+P8jZIdMIh/pClpgMZhvjzVoPPz7O3Rm1laiYDAoa2HVv43UFvk0ALHN+v
+         a7Dzif8DcAluF7i0C1sYgwy4colmVPzM7b38Wpv2Cb3shSidc1h31KNfbumWB0rKIAlv
+         DIvghG5ELwFrVpWSGRs5lPomUESb9sKCLLOHp25khT/vl31jjz++zao/4wkZGDRssOSR
+         lVaOeentrHAV88d58c926iwE3L7ws5hyNy5OUn0lTHgYwVGx2ec2a4B9hvWppvkt2EXk
+         cyYBtjwH+yXVVISLSwYcAPIryUdewJts+JQ8FCUA47uIgIFI1zUEVBkUCwjuuog3DCAw
+         lRYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpDEm4yIXYtgLWrEVX8oFLREgMX/Gx6PU0vqifw808O4p7RLLd834VIaiGwgF7RDvTLRUnfsxGAUHBEP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKSkFTeG6uCAhhF5IQPUZOir4SIIEcm+HV1GZ5P+PczCzqowBt
+	Bebo7907YOHsTWieZ3Xi7sYoQDi8GM3WNrdmJDqd2kzNTzLSm7X1+Liv4jjsL44=
+X-Gm-Gg: ASbGncu9ckS93ZGLNh8752YbTeQwuRiV5YqDI1ANgqQt1fYFUAqragACs5ChO9jGPUZ
+	eXzQcuCUZHXM+YeNuapx7LXGJ6fT7DQFnEy7QMm/ss4m5G8wszKZQc7r+MUyccjc3KThF5QejXS
+	+dyXZoLN7tusqg7R93sk6UhCmvCL8yEJbhSCYq2/rfFdDI+nou1ilzvye78BDNDhhpEPXhNBQ/q
+	py5nK1+REAjxQKrcBxGPneXZXCTOOHk33K/scvweL58XQd/0PmUIY/nnQ/P9svmGBXCVn35RFpx
+	eu9zENcvcI6/3o+6xY9vJJZHBRHGqnyCEMA64EGDZluj5tH6qQ==
+X-Google-Smtp-Source: AGHT+IEK5xcLCTEstx/iGH3+x/DoyF2pbgoR2j9HRIFCwxYq9oqyIz9Gtu4Bo2sL9Ekj03MVC7PbLQ==
+X-Received: by 2002:a05:620a:424b:b0:7c5:d888:7098 with SMTP id af79cd13be357-7c9190642abmr225230285a.44.1744811513336;
+        Wed, 16 Apr 2025 06:51:53 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a89f98eesm1062834085a.83.2025.04.16.06.51.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 06:51:52 -0700 (PDT)
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Brendan Jackman <jackmanb@google.com>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [FIRST-PATCH] staging : greybus : gb-beagleplay.c : fixing the
- checks as first-patch
-Message-ID: <Z_-11fvQJtiwAxaA@hovoldconsulting.com>
-References: <CAG+54DbvpWHyX8+ucEQpg2B6rNTJP11CRpYxcYVrKpKehzrK-A@mail.gmail.com>
+Subject: [PATCH 0/2] mm: two allocator fixes for 6.15
+Date: Wed, 16 Apr 2025 09:45:38 -0400
+Message-ID: <20250416135142.778933-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG+54DbvpWHyX8+ucEQpg2B6rNTJP11CRpYxcYVrKpKehzrK-A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 05:47:41PM +0530, rujra wrote:
-> added comments on spinlocks for producer-consumer model, rearranged the
-> lines on function calls where it should not end with "(" this bracket,
-> also removed white-spaces and aligned the arguments of function calls.
-> 
-> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+Two fixes based on Vlastimil's review of the defrag_mode patches.
 
-You're doing too many things in one patch, the patch is white space
-damaged, and the patch prefix is wrong since this driver does not live
-in staging.
+#1 fixes a bug that can lead to memory deadlocks on high-CPU-count
+machines. This affects not just defrag_mode.
 
-If you want to practise creating patches, please make sure to work in
-drivers/staging where changes like these may be accepted. 
+#2 fixes an overreclaim issue when defrag_mode is enabled.
 
-Johan
+Based on:
+
+  commit 16176182efbf3dfce6dad18dcc8801164329d1c2 (akpm/mm-hotfixes-unstable)
+  Author: Uros Bizjak <ubizjak@gmail.com>
+  Date:   Fri Apr 4 12:24:37 2025 +0200
+
+ include/linux/mmzone.h |  2 --
+ mm/page_alloc.c        | 12 ------------
+ mm/vmscan.c            | 29 ++++++++++++++++++++++++++---
+ 3 files changed, 26 insertions(+), 17 deletions(-)
+
