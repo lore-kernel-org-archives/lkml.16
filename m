@@ -1,188 +1,98 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E8A19DF8D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC732DFA4B;
+	Wed, 16 Apr 2025 04:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744775935; cv=none; b=Ly7yfjtbHF/2XpuN7Yxfhvk6PAIF4mJWVnmqIDzud7MYDDOx/YzBK1OgbTGQ/PyjyBpyv9du4iKBJjM20PWdR/3F3PUgynm+j1sONvj/S4zlHN5mVFu/KWv7kQpyvRPa/9BhSZHXvVbx8FN0zMS2oiYY0DcQ5iTiklu/NHiEGsc=
+	t=1744776133; cv=none; b=SCTWOiinomo2ZGeWrOfnnPmBOj9/92p72hpJBRFOhQqOBd7qs9mv9bX1rfYU2kW3I0FkWlW6/XuFxYwrL5LUsNDa8B9F4X1pwfA3g/jJy/efZvUG96HZAaUf0IY7tsEuKI9cwuLCUH6CtqQ6eZWekvLoLnrTqZ/c0/QTX27zygs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744775935; c=relaxed/simple;
-	bh=/jNHeqelxuQoACbaXmWuUWs85LQe8P+MsreFE3ZURDM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HEPstOxStn16qykyYxkjrAwifFsxsulaVCgRftPiwyjkxUmBjUeE1ps+oId8QzSJQqvVm0sSnWrvtWG98QCqFrAvEPLw6UMxtJlG8W7NI3uZoqbYt8QfnZE9vS3tvWx23np81K6LxvgCgRYOZ50rII1Wq84r7xwsuEwFKNwPGw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jfzy5SBJ; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744776133; c=relaxed/simple;
+	bh=yKu3+0W5p/giE32i5CggvyTCCB+2AuwXMDnAiewOH40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9K++vjciu9VqGStrvHEq1e4F4XtQq01kcAW3ceMZhW1dXUBffqCbSj18ZfOG7BtRfrmjo1K2gPWZJn8Sg4R367dxnIw/Ha0GTK2OzQUQ5kHAmet2R8G07YiBQcGb9T90n3hdFTYeWSeyMhz6ht6Yd21h+EkvrSwYIf91a9gDgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fAvaujJG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jfzy5SBJ"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47666573242so263391cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 20:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744775932; x=1745380732; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TFabfu1YUr8Gpuaxg0bUAkmAqFwkoAZ83WLrOAJAIgA=;
-        b=Jfzy5SBJrm00nzblcsCwOxXwMtqOXCWlfG4ur316TPCDmKp1FjL/QO3xvk+ItWDqJ2
-         ggPQE5IjaraI0SYmXr/IjjlG1rftYvLnj0Qn++JSkiUjkP+QF4a7xwadDqSi3o2rXLwf
-         lm/mONTBtxhH3AhJE+27TRdtIFK0mZuPU2b3iDDRS3JtFJZWX9QLQnxvnXKWTNkD0WHC
-         GLSyWna9OZLv28aNi8XOLo87dcquQ8FUkkoyi1A41I3VMqPvJc/SJB6/BOFQnqxJYyDQ
-         G4SBcRLW9xkSPGZUv2RvTQTRLemrx+qC/GnI54PDeKsQxKFmfnIvnaipYk8KUIfeWz0l
-         6HYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744775932; x=1745380732;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TFabfu1YUr8Gpuaxg0bUAkmAqFwkoAZ83WLrOAJAIgA=;
-        b=d/hdOjoPH9SwIstcmza48Ji9DGj0fAX79EMz/dAYEoJgDpJ3ekRRIcObxSoD0B5o8p
-         5RyUa6RO2/XiMDAT0ZUXxWtwpCfku+mL1ru5AGOQFDImc0tWdHxT5YcxijFB9Vvhbldb
-         InNCC1igVkp1XvU0hwehtREYHfglyiUnn4aILnx/ZT7quxTaTGgPqQ2Tpearv0Qz95+Q
-         UgL89/lh1bDcryE34m71z1hIojWtEPAHyoa2jJ7eUqBkr2bZFyBJPMpVFGEeqNK/UuK1
-         bQUmiXwh7icaVuTh5gLQn7gt8wK9VtoEVWszeasJwhC6/hhiCtO5NsTvnicxgccKHVCK
-         H/2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX36xmT5g9ETPY0usnrv0nDTZnSvJ0bFB35F7yCH69ZU0yYsfZBPE1E+DCNL5pssZ3Uysws7z5Qjb8EufE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeiZvocjBX4OYIjmDXXSFdWnrrwIA1AOwMww1ZPCrsvEyQTAPZ
-	++pR/U3GInQxyYRf82VpVWkpDJy+2v+w3KcYVJBim2VTFsqQvmcI41Y9eXc1FQxM5yYqb0ihmOC
-	UBcKMRCVdgV6KZo4K6H28892L19aoAyLEtbuX
-X-Gm-Gg: ASbGnctUL9HsyfvScj6g1x4YRbIeN1PQLidiubZNA/svxWZ4fAroyd9ElGwfsk9QeFY
-	z4S2Z6pi8Cf/XKfNntI8hvP6heoulqEYhrxeqmAJTMPh20X3HJXqmymcAKnhgQSZtEU3NppTSLv
-	YiSMwkuCzeNFzbhRt+2fhFkL84egY9wy1x0azP0RFoB652ujpug3KUqA0n
-X-Google-Smtp-Source: AGHT+IGeOWFg3oYjRQF/8DYP6nBlgJnhbE7CLdjFrvnB17no8ih232I0TwalyaJOkOjEzNnrhqtwOr+YIgZVqCq+nEI=
-X-Received: by 2002:ac8:7dc1:0:b0:466:8c23:823a with SMTP id
- d75a77b69052e-47ad7ad737cmr339751cf.17.1744775932099; Tue, 15 Apr 2025
- 20:58:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fAvaujJG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE22EC4CEE2;
+	Wed, 16 Apr 2025 04:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744776132;
+	bh=yKu3+0W5p/giE32i5CggvyTCCB+2AuwXMDnAiewOH40=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=fAvaujJGwORcwP7R6qBeHYKxI0ASWsvESDJuXp04DKyftuObqkCRUd51LEJBRL/rm
+	 kPS7zO6IQe7M5Yj6AzY4fz9ShSN7jfkoFs3JGVT0/9iO3BL0Q7PHq3wPdJZ510CuKd
+	 NhWXuo4YpPzvKT2gAqn2ogS9KKmjmQVO0Rmm+XHkQ1t3bIOBaUlHYBxyhnUyW51FMq
+	 xZjq9toDxXpkes6r/ITlEPZeZrA1pPs3hlGHpnbBT70A3lS9Nvv2KXcH9ulkv9rRjq
+	 crqS8wgHZ78toHrWG7HVuC8kaS6yuMLNIywQEf/SldSpxdXR0BwfN84VAvycDqJ7Vo
+	 iUYV9qqTfdK2A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 7A5B3CE06FE; Tue, 15 Apr 2025 21:02:12 -0700 (PDT)
+Date: Tue, 15 Apr 2025 21:02:12 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Ye Liu <ye.liu@linux.dev>, Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
+	linux-mm@kvack.org, Ye Liu <liuye@kylinos.cn>,
+	Omar Sandoval <osandov@osandov.com>
+Subject: Re: [PATCH] tools/drgn: Add script to display page state for a given
+ PID and VADDR
+Message-ID: <7e45afc8-dde0-481a-b0bf-0237f551ebe0@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250415075024.248232-1-ye.liu@linux.dev>
+ <20250415191414.a64de2d228ab5f43a5390acf@linux-foundation.org>
+ <42f50a48-10da-4739-9e51-f865fbf04bdd@linux.dev>
+ <098e977c-55cd-498b-bd36-725333c06210@dorminy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415171954.3970818-1-jyescas@google.com> <CGME20250415205720epcas1p4a8bbb4ff1ad221a72776694d08801368@epcas1p4.samsung.com>
- <CABdmKX3Ht=bCcPFxK5mGX2qD4riXQ7Ucw6H_-+1PupXy-1ABGQ@mail.gmail.com> <106c301dbae77$414454a0$c3ccfde0$@samsung.com>
-In-Reply-To: <106c301dbae77$414454a0$c3ccfde0$@samsung.com>
-From: Juan Yescas <jyescas@google.com>
-Date: Tue, 15 Apr 2025 20:58:40 -0700
-X-Gm-Features: ATxdqUHh7qbmy3C_xdgIq0V1oTSEWDrnu_ijLPdQUZ9_-V5qyO1ldD2Pd_jbOZU
-Message-ID: <CAJDx_riYc2GRpcmf5RH8mwJQ-ehh7+JA+tQ__vX1Qsm1HJo9OQ@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
-To: =?UTF-8?B?6rmA7J6s7JuQ?= <jaewon31.kim@samsung.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org, 
-	baohua@kernel.org, dmitry.osipenko@collabora.com, Guangming.Cao@mediatek.com, 
-	surenb@google.com, kaleshsingh@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <098e977c-55cd-498b-bd36-725333c06210@dorminy.me>
 
-On Tue, Apr 15, 2025 at 7:28=E2=80=AFPM =EA=B9=80=EC=9E=AC=EC=9B=90 <jaewon=
-31.kim@samsung.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: T.J. Mercier [mailto:tjmercier@google.com]
-> > Sent: Wednesday, April 16, 2025 5:57 AM
-> > To: Juan Yescas <jyescas@google.com>
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>; Benjamin Gaignard
-> > <benjamin.gaignard@collabora.com>; Brian Starkey <Brian.Starkey@arm.com=
->;
-> > John Stultz <jstultz@google.com>; Christian K=C3=B6nig
-> > <christian.koenig@amd.com>; linux-media@vger.kernel.org; dri-
-> > devel@lists.freedesktop.org; linaro-mm-sig@lists.linaro.org; linux-
-> > kernel@vger.kernel.org; baohua@kernel.org; dmitry.osipenko@collabora.co=
-m;
-> > jaewon31.kim@samsung.com; Guangming.Cao@mediatek.com; surenb@google.com=
-;
-> > kaleshsingh@google.com
-> > Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger p=
-age
-> > sizes
-> >
-> > On Tue, Apr 15, 2025 at 10:20=E2=80=AFAM Juan Yescas <jyescas@google.co=
-m> wrote:
-> > >
-> > > This change sets the allocation orders for the different page sizes
-> > > (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders fo=
-r
-> > > large page sizes were calculated incorrectly, this caused system heap
-> > > to allocate from 2% to 4% more memory on 16KiB page size kernels.
-> > >
-> > > This change was tested on 4k/16k page size kernels.
-> > >
-> > > Signed-off-by: Juan Yescas <jyescas@google.com>
-> >
-> > I think "dma-buf: system_heap:" would be better for the subject since t=
-his
-> > is specific to the system heap.
-> >
-> > Would you mind cleaning up the extra space on line 321 too?
-> > @@ -318,7 +318,7 @@ static struct page
-> > *alloc_largest_available(unsigned long size,
-> >         int i;
-> >
-> >         for (i =3D 0; i < NUM_ORDERS; i++) {
-> > -               if (size <  (PAGE_SIZE << orders[i]))
-> > +               if (size < (PAGE_SIZE << orders[i]))
-> >
-> > With that,
-> > Reviewed-by: T.J. Mercier <tjmercier@google.com>
-> >
-> > Fixes: d963ab0f15fb ("dma-buf: system_heap: Allocate higher order pages=
- if
-> > available") is also probably a good idea.
-> >
->
->
-> Hi Juan.
->
-> Yes. This system_heap change should be changed for 16KB page. Actually,
-> we may need to check other drivers using page order number. I guess
-> gpu drivers may be one of them.
->
+On Tue, Apr 15, 2025 at 11:28:41PM -0400, Sweet Tea Dorminy wrote:
+> 
+> 
+> On 4/15/25 10:46 PM, Ye Liu wrote:
+> > 
+> > 在 2025/4/16 10:14, Andrew Morton 写道:
+> > > On Tue, 15 Apr 2025 15:50:24 +0800 Ye Liu <ye.liu@linux.dev> wrote:
+> > > 
+> > > > From: Ye Liu <liuye@kylinos.cn>
+> > > > 
+> > > > Introduces a new drgn script, `show_page_info.py`, which allows users
+> > > > to analyze the state of a page given a process ID (PID) and a virtual
+> > > > address (VADDR). This can help kernel developers or debuggers easily
+> > > > inspect page-related information in a live kernel or vmcore.
+> > > > 
+> > > > The script extracts information such as the page flags, mapping, and
+> > > > other metadata relevant to diagnosing memory issues.
+> > > > 
+> > > > Currently, there is no specific maintainer entry for `tools/drgn/` in the
+> > > > MAINTAINERS file. Therefore, this patch is sent to the general kernel and
+> > > > tools mailing lists for review.
+> > > Help.  My copy of linux has no tools/drgn/
+> > I noticed that the current upstream Linux tree doesn't contain a
+> > `tools/drgn/` directory.
+> > 
+> > I'm interested in contributing a drgn script tool as well.
+> > Given that this directory does not yet exist in mainline, where would
+> > be the appropriate place to add new drgn scripts? Would it make sense
+> > to create a new `tools/drgn/` directory, or is there a preferred
+> > location for such debugging scripts?
+> > 
+> > Thanks,
+> > Ye
+> 
+> I believe the traditional thing to do with new drgn scripts is to add them
+> to the contrib directory in drgn via pull request:
+> https://github.com/osandov/drgn/blob/main/contrib/README.rst
 
-Thanks Jaewon for pointing it out. We'll take a look at the GPU drivers to =
-make
-sure that they are using the proper page order.
+I have an RCU-related drgn script in tools/rcu, so maybe this one should
+go in tools/mm.
 
-> > > ---
-> > >  drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
-> > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/dma-buf/heaps/system_heap.c
-> > > b/drivers/dma-buf/heaps/system_heap.c
-> > > index 26d5dc89ea16..54674c02dcb4 100644
-> > > --- a/drivers/dma-buf/heaps/system_heap.c
-> > > +++ b/drivers/dma-buf/heaps/system_heap.c
-> > > @@ -50,8 +50,15 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP,
-> > HIGH_ORDER_GFP, LOW_ORDER_GFP};
-> > >   * to match with the sizes often found in IOMMUs. Using order 4 page=
-s
-> > instead
-> > >   * of order 0 pages can significantly improve the performance of man=
-y
-> > IOMMUs
-> > >   * by reducing TLB pressure and time spent updating page tables.
-> > > + *
-> > > + * Note: When the order is 0, the minimum allocation is PAGE_SIZE.
-> > > + The possible
-> > > + * page sizes for ARM devices could be 4K, 16K and 64K.
-> > >   */
-> > > -static const unsigned int orders[] =3D {8, 4, 0};
-> > > +#define ORDER_1M (20 - PAGE_SHIFT)
-> > > +#define ORDER_64K (16 - PAGE_SHIFT)
-> > > +#define ORDER_FOR_PAGE_SIZE (0)
-> > > +static const unsigned int orders[] =3D {ORDER_1M, ORDER_64K,
-> > > +ORDER_FOR_PAGE_SIZE};
-> > > +
-> > >  #define NUM_ORDERS ARRAY_SIZE(orders)
-> > >
-> > >  static struct sg_table *dup_sg_table(struct sg_table *table)
-> > > --
-> > > 2.49.0.604.gff1f9ca942-goog
-> > >
->
->
+							Thanx, Paul
