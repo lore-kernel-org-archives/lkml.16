@@ -1,127 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E49B2DFA5C;
-	Wed, 16 Apr 2025 07:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DECC18787A;
+	Wed, 16 Apr 2025 07:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787755; cv=none; b=RT4145croSchGFUpGKmRJ6Xp1ZN0bY5Fdv1TEdBSkIVB4Focr7UJ7NNBBIFS4e/r8F+d7dKnUfM0njU/GhD+0V9VZFLA8ZO0gAHfU9SI477tZFvAai9LtxcIxRPbx6dsh4yvQe6gnUHFWBLD4TyjM956Ki9WBuVDrzddNh8Vwx4=
+	t=1744787778; cv=none; b=aKAa4pxYKhohGORnARY3F7fUabBd8npOwzqH+ORfmYJQFD62X8YkY+P4+yxKrsacH1/2KU+1iKwaCM06jXyq7ypqshjsxWNB/HjAd9l+Vt1m+k+gr64C5LmaU5fBTHZGXawJXDf/CkUufZ5KtVisDNHG7jdE6fHUtFTSVO/YEac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787755; c=relaxed/simple;
-	bh=O7NeWb4hRL+v6GegfMRWzmm5CQt/BYUNuJRAt83Zy20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VGbb68AIG28LtXPqIHgnoS103WdtPIefktY/B92dAC46vt7xcLjtXKTTo++WRg5Y0TPQz1tO4mhmpS3uQbsH9Qru27eqmJxW6Zbl19swPRaAgrZ+zIfhIgi8JazCaXl0y7sBJwC5QPApj9k0hZpS7VQLWEiwJoWiLw2drm31UKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQAcbGOX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744787778; c=relaxed/simple;
+	bh=C8myiaFqWsaataown0n2Ge3P0lpZ0VUVE2ROm5FM9BA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uRSPfUOpQabM+GchmCzHLQsEyvTTXpnKfWULhTGaxfM8CfSZJ8DpY2Krk7DUJsRqUR2mtzsIHqaWXFkewRYcQL5D6qztLdxFs7kC3tgEfxBf5cPRUsRuE1yHMPEhMJ+E5FE4uF6XuRzg9H3uXVyOOsTLrTHUD/NFR+5da+SzUsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JmBHSpFp; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQAcbGOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745CBC4CEE2;
-	Wed, 16 Apr 2025 07:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744787754;
-	bh=O7NeWb4hRL+v6GegfMRWzmm5CQt/BYUNuJRAt83Zy20=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WQAcbGOXai0E98KBkRRHrQL9ZEl7JmemAKBVIr/Soakg79DJFfrHc2z6VQKTdEzAt
-	 JekDTI6yCrPYynNGfp7iDYB9V48izGqsDDqgdVL551+JG7hj2yXZwKC4mfzH+eE3o0
-	 hq40pPq9z5G2fZqASmmTkSjMkk6xaCSP5JuTxF3drUfSkSh5CFoxt6Ik4aV75WYzHY
-	 6JgmvefvUXHrNxOUh7vrJL9GMe5Wa8hlWS4mddEzAZ8IasbqdryrehAUv9i08B1X85
-	 f1Ww9ZrEGQTKvMXUUdTrl86d83UdWSMTIp4UZvM1TIq08PtM6oDUXAv8tXN8gdllP7
-	 GFGIP3mwaP5qQ==
-Message-ID: <9362d6b4-890a-4364-8e51-71ad6fc1e107@kernel.org>
-Date: Wed, 16 Apr 2025 09:15:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JmBHSpFp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744787776; x=1776323776;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C8myiaFqWsaataown0n2Ge3P0lpZ0VUVE2ROm5FM9BA=;
+  b=JmBHSpFpgivPBch+6PEQTPkLhBWBqkWT9ZiIMXinu0k5oXcMjA7kixov
+   k3v9tt5kPgRghJwBIncJg28NcY6riIxynifCOUNXkftBeXLUppPUrgksk
+   rdA4FPSUS513UAV71oprsnX7c+5JMbrtgWEXmb4b459Iz7yLPF90VDZCk
+   qJi0BRz6FlaKGQ0NhFWh3y6MO0Pbwk2nHOFEofFV/DvtLYyIdVIbuIlE2
+   WbHeReOp15oAJFO+cUyDvrk7xM1WgpRdLgj8/x3F+PSzvbehX8MqtFAwv
+   kvOul1CLUafez10U6KrWiorq8zLuik16PFMO+Dahw24lva3naRtN+z+mB
+   w==;
+X-CSE-ConnectionGUID: 26gaTOmFRC2LjiZOPnwiYA==
+X-CSE-MsgGUID: AmPxQ38yQjqVUPihAMFoVw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46203189"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46203189"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:16:15 -0700
+X-CSE-ConnectionGUID: GfOwOcv/T0ali2sPfkJ87g==
+X-CSE-MsgGUID: xfKbddfORuCQNpMRi5DhTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="161309830"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:16:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4x0C-0000000CmGV-1O2g;
+	Wed, 16 Apr 2025 10:16:08 +0300
+Date: Wed, 16 Apr 2025 10:16:08 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Kris Van Hees <kris.van.hees@oracle.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] .gitignore: ignore Python compiled bytecode
+Message-ID: <Z_9ZOInQVgx5wtbG@smile.fi.intel.com>
+References: <cover.1744786420.git.mchehab+huawei@kernel.org>
+ <eb7c854d1bddab19ec1105b928463bb1845d4d50.1744786420.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/5] Add support for the Exynos7870 SoC, along with
- three devices
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb7c854d1bddab19ec1105b928463bb1845d4d50.1744786420.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 13/04/2025 20:58, Kaustabh Chakraborty wrote:
-> Samsung Exynos 7870 (codename: Joshua) is an ARM-v8 system-on-chip that was
-> announced in 2016. The chipset was found in several popular mid-range to
-> low-end Samsung phones, released within 2016 to 2019.
+On Wed, Apr 16, 2025 at 02:57:39PM +0800, Mauro Carvalho Chehab wrote:
+> While the building system doesn't create any Python JIT bytecode,
+> if one manually runs kernel-doc.py or get_abi.py, Python will,
+> by default, create a bytecode and store it under scripts/lib/*.
 > 
-> This patch series aims to add support for Exynos 7870, starting with the
-> most basic yet essential components such as CPU, GPU, clock controllers,
-> PMIC, pin controllers, etc.
-> 
-> Moreover, the series also adds support for three Exynos 7870 devices via
-> devicetree. The devices are:
->  * Samsung Galaxy J7 Prime	- released 2016, codename on7xelte
->  * Samsung Galaxy J6		- released 2018, codename j6lte
->  * Samsung Galaxy A2 Core	- released 2019, codename a2corelte
-> 
-> Additional features implemented in this series include:
->  * I2C	- touchscreen, IIO sensors, etc.
->  * UART	- bluetooth and serial debugging
->  * MMC	- eMMC, Wi-Fi SDIO, SDCard
->  * USB	- micro-USB 2.0 interface
-> 
-> Build dependencies are in these sub-series:
->  * pmu-clocks		A https://lore.kernel.org/all/20250301-exynos7870-pmu-clocks-v5-0-715b646d5206@disroot.org/
+> This is normal, and not controlled by the Kernel itself. So,
+> add *.pyc as an extension to be ignored.
 
-So this patchset waits? Ping me or resend when your dependencies are
-merged. If resending then of course explain why and update dependencies
-list.
+...
 
-Best regards,
-Krzysztof
+>  *.mod.c
+>  *.o
+>  *.o.*
+> +*.pyc
+
+Shouldn't we prevent the order? (This should go after the "patch")
+
+>  *.patch
+>  *.rmeta
+>  *.rpm
+
+...
+
+P.S. I'm going to test the first patch (at least) soon.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
