@@ -1,101 +1,242 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBAA2DFA2D;
-	Wed, 16 Apr 2025 05:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C482DFA2D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744780711; cv=none; b=QibJql9VlA8attYgvVIsKBZGxMO8+v/A38dnWC2AzS6/vV8dOPbLtmhvSrhbTJbqg2qzyu7gsYqS6T/zN0AiYidPAkiZxEH0hq8fa3I10Rgw9BLmGHfN9QRRG8UwjyqvLxaVO9dw6JVNEmOZZ4g+GSEhvcn4hboB5xd5Iem5kp8=
+	t=1744780751; cv=none; b=qG7iB1G4uK37KYeg3okK1OtwzNedTirrRnUdDGQgq7mm1L1xFKS5e25DYSMXgmG1Ml8MryP1lmjUxZi0QyT5ckPGu2kStRGXGYd+w/lb4UOUHMd22CJHhB9Z02pUhOoKEYWbRfH4DotbpkuyTr7MNKD8niSdyegmqkcrgGAoscw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744780711; c=relaxed/simple;
-	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqAZiP/DX+SY5+/LWrZX9I8VKraoDb+pbyuXR/ZPxjq2dpch6NEgokil3q7zv0y2TIerAYWuXAPpnsXsoWa5hsn7G8MQSBKjD/hVperNKAe3vJYu63OkQIHQoWFDo2ObE4RsrhexKViDl5rvcYlHG6AsteZlo24K89xcY9T/D9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4YsDyhl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744780751; c=relaxed/simple;
+	bh=voLwMlG2CHMzwgcA2ppkhIz0XAmf9oe0ROwISvWdzJQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MS9CPTyBV9gr8d+kLtxxA1X9lrsZxfsVzRi5RGFDtbTO7ibr4jP4CWE/fd27iepVxmCYImLBl3qwKBo/GPZrqHFBZEzDERYLgrm63qS2pw4xQkqdXM0fFb8ArqEwMlR/Chk8ExV5v3Et8P8NQGn8UCw2FSj5jIU1MepRIkW5uVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rMo4o2fq; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4YsDyhl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A5DC4CEEC;
-	Wed, 16 Apr 2025 05:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744780711;
-	bh=CmNtU/Ng9a+Jh4xKHpsC8mx2FxYmD+EiYZC+QuZh9+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T4YsDyhl2RK//iQoGDJ4oxeuQ2oGCVN46wS8ndM2H1q8BTeAJYZse3I3Hpeb6+MNu
-	 PqY6HWPYLsznjFBt6m8JzrR/fXLChkABbOeyyF9rGB6uco9jqrCgPgnGAGePFdDDfH
-	 2ly5/wQBDFv785hDObgMrmIc59qEosIpIkxaACm3mgk6ZnAo/yI9Y9O2VnT4Z30ZTU
-	 vfQO4X/IPfT+u5J11+3LXI283MB3NthqovTArwv6n/Ohmz6DU2T6BfuQTpv4J8GFW3
-	 rV4VppRCG/NS8cr68X0Kp8MDwEI6Y2ZaNvlqjBQwSFwnGvxC+v7LZsHIScZHcg+T5l
-	 W1z+KsnM770wA==
-Date: Wed, 16 Apr 2025 07:18:27 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Alex Elder <elder@riscstar.com>, Guodong Xu <guodong@riscstar.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor@kernel.org>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, drew@pdp7.com, 
-	inochiama@gmail.com, geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, 
-	hal.feng@starfivetech.com, unicorn_wang@outlook.com, duje.mihanovic@skole.hr, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
- resets
-Message-ID: <hogqotzzpzcow2xjrwh34qcuiu7ooc2qnvlhuvexzvqkrcsfop@mhz26t5vu35p>
-References: <20250411131423.3802611-1-guodong@riscstar.com>
- <20250411131423.3802611-2-guodong@riscstar.com>
- <20250411-confider-spinster-35f23040d188@spud>
- <89b6142bacecd4a7742341b88dc1e28c4454527a.camel@pengutronix.de>
- <CAH1PCMZnJDcYKJR35WirQT95hte0NWvGBe4fjDuyZEgagvunAA@mail.gmail.com>
- <20250415101249-GYA30674@gentoo>
- <0bbd2842-72bc-47a7-832a-fc8833163e32@riscstar.com>
- <20250415122807-GYA30943@gentoo>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rMo4o2fq"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53G5IlWV2564926
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 00:18:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744780727;
+	bh=B9SELt7RxbB4eGa/NKNkpRq4PgXGEXrvy95SM69nqtk=;
+	h=From:To:CC:Subject:Date;
+	b=rMo4o2fqJqynuxiJb2q7w+sJS4dFdu000XJC4epibmQfiGplZVc7Aw6AhmZ04LmXw
+	 fauGGX71K/wyPZ10I4yno3jsW+x6tubRDhiwyTx2MuLC+4vn6K/mVY65YrG0baJnPq
+	 n7D7EFAHwucKLsoknx8nsxbjBALL+EiZHL6jp4DU=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53G5Ilv1050306
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 16 Apr 2025 00:18:47 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
+ Apr 2025 00:18:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 16 Apr 2025 00:18:46 -0500
+Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.84])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53G5Igig016006;
+	Wed, 16 Apr 2025 00:18:43 -0500
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <tiwai@suse.de>
+CC: <broonie@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <13564923607@139.com>, <13916275206@139.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <baojun.xu@ti.com>, <Baojun.Xu@fpt.com>, <robinchen@ti.com>,
+        Shenghao Ding <shenghao-ding@ti.com>
+Subject: [PATCH v3] ALSA: hda/tas2781: Create a common header for both spi and i2c tas2781 hda driver
+Date: Wed, 16 Apr 2025 13:18:38 +0800
+Message-ID: <20250416051838.2001-1-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="drktpjdibffse2jk"
-Content-Disposition: inline
-In-Reply-To: <20250415122807-GYA30943@gentoo>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Move the common macro definition of kcontrols into a common header for code
+cleanup, and create a common header to store the common declaration for
+both spi and i2c hda driver.
 
---drktpjdibffse2jk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 1/9] dt-bindings: pwm: marvell,pxa: add optional property
- resets
-MIME-Version: 1.0
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-Hello,
+---
+v3:
+ - Add the purpose of this patch.
+v2:
+ - Follow IWYU principle, add sound/asound.h into the header file.
+v1:
+ - Revise the year of spi and i2c tas2781 hda drivers.
+ - Create a common header for both spi and i2c tas2781 hda driver to define
+   the common macros and declare the common functions.
+---
+ sound/pci/hda/tas2781_hda.h     | 44 +++++++++++++++++++++++++++++++++
+ sound/pci/hda/tas2781_hda_i2c.c | 29 ++--------------------
+ sound/pci/hda/tas2781_hda_spi.c | 35 ++------------------------
+ 3 files changed, 48 insertions(+), 60 deletions(-)
+ create mode 100644 sound/pci/hda/tas2781_hda.h
 
-On Tue, Apr 15, 2025 at 12:28:07PM +0000, Yixun Lan wrote:
-> maybe there are cases that users don't want to issue a reset..
-> so, want to make it optional.. I can think one example that,
-> display controller is up and working from bootloader to linux,
-> reset it will got a flicker picture..
+diff --git a/sound/pci/hda/tas2781_hda.h b/sound/pci/hda/tas2781_hda.h
+new file mode 100644
+index 000000000000..fc741fac419a
+--- /dev/null
++++ b/sound/pci/hda/tas2781_hda.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0-only
++ *
++ * HDA audio driver for Texas Instruments TAS2781 smart amp
++ *
++ * Copyright (C) 2025 Texas Instruments, Inc.
++ */
++#ifndef __TAS2781_HDA_H__
++#define __TAS2781_HDA_H__
++
++#include <sound/asound.h>
++
++/*
++ * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
++ * Define two controls, one is Volume control callbacks, the other is
++ * flag setting control callbacks.
++ */
++
++/* Volume control callbacks for tas2781 */
++#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
++	xhandler_get, xhandler_put, tlv_array) { \
++	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname), \
++	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
++		SNDRV_CTL_ELEM_ACCESS_READWRITE, \
++	.tlv.p = (tlv_array), \
++	.info = snd_soc_info_volsw, \
++	.get = xhandler_get, .put = xhandler_put, \
++	.private_value = (unsigned long)&(struct soc_mixer_control) { \
++		.reg = xreg, .rreg = xreg, \
++		.shift = xshift, .rshift = xshift,\
++		.min = xmin, .max = xmax, .invert = xinvert, \
++	} \
++}
++
++/* Flag control callbacks for tas2781 */
++#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { \
++	.iface = SNDRV_CTL_ELEM_IFACE_CARD, \
++	.name = xname, \
++	.info = snd_ctl_boolean_mono_info, \
++	.get = xhandler_get, \
++	.put = xhandler_put, \
++	.private_value = xdata, \
++}
++
++#endif
+diff --git a/sound/pci/hda/tas2781_hda_i2c.c b/sound/pci/hda/tas2781_hda_i2c.c
+index 29dc4f500580..9d94ae5fcfe0 100644
+--- a/sound/pci/hda/tas2781_hda_i2c.c
++++ b/sound/pci/hda/tas2781_hda_i2c.c
+@@ -2,7 +2,7 @@
+ //
+ // TAS2781 HDA I2C driver
+ //
+-// Copyright 2023 - 2024 Texas Instruments, Inc.
++// Copyright 2023 - 2025 Texas Instruments, Inc.
+ //
+ // Author: Shenghao Ding <shenghao-ding@ti.com>
+ // Current maintainer: Baojun Xu <baojun.xu@ti.com>
+@@ -30,35 +30,10 @@
+ #include "hda_component.h"
+ #include "hda_jack.h"
+ #include "hda_generic.h"
++#include "tas2781_hda.h"
+ 
+ #define TASDEVICE_SPEAKER_CALIBRATION_SIZE	20
+ 
+-/* No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
+- * Define two controls, one is Volume control callbacks, the other is
+- * flag setting control callbacks.
+- */
+-
+-/* Volume control callbacks for tas2781 */
+-#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
+-	xhandler_get, xhandler_put, tlv_array) \
+-{	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname),\
+-	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
+-		 SNDRV_CTL_ELEM_ACCESS_READWRITE,\
+-	.tlv.p = (tlv_array), \
+-	.info = snd_soc_info_volsw, \
+-	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) \
+-		{.reg = xreg, .rreg = xreg, .shift = xshift, \
+-		 .rshift = xshift, .min = xmin, .max = xmax, \
+-		 .invert = xinvert} }
+-
+-/* Flag control callbacks for tas2781 */
+-#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) \
+-{	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = xname, \
+-	.info = snd_ctl_boolean_mono_info, \
+-	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = xdata }
+-
+ enum calib_data {
+ 	R0_VAL = 0,
+ 	INV_R0,
+diff --git a/sound/pci/hda/tas2781_hda_spi.c b/sound/pci/hda/tas2781_hda_spi.c
+index 399f2e4c3b62..c6be2be1b53e 100644
+--- a/sound/pci/hda/tas2781_hda_spi.c
++++ b/sound/pci/hda/tas2781_hda_spi.c
+@@ -2,7 +2,7 @@
+ //
+ // TAS2781 HDA SPI driver
+ //
+-// Copyright 2024 Texas Instruments, Inc.
++// Copyright 2024 - 2025 Texas Instruments, Inc.
+ //
+ // Author: Baojun Xu <baojun.xu@ti.com>
+ 
+@@ -38,38 +38,7 @@
+ #include "hda_component.h"
+ #include "hda_jack.h"
+ #include "hda_generic.h"
+-
+-/*
+- * No standard control callbacks for SNDRV_CTL_ELEM_IFACE_CARD
+- * Define two controls, one is Volume control callbacks, the other is
+- * flag setting control callbacks.
+- */
+-
+-/* Volume control callbacks for tas2781 */
+-#define ACARD_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
+-	xhandler_get, xhandler_put, tlv_array) { \
+-	.iface = SNDRV_CTL_ELEM_IFACE_CARD, .name = (xname), \
+-	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
+-		SNDRV_CTL_ELEM_ACCESS_READWRITE, \
+-	.tlv.p = (tlv_array), \
+-	.info = snd_soc_info_volsw, \
+-	.get = xhandler_get, .put = xhandler_put, \
+-	.private_value = (unsigned long)&(struct soc_mixer_control) { \
+-		.reg = xreg, .rreg = xreg, \
+-		.shift = xshift, .rshift = xshift,\
+-		.min = xmin, .max = xmax, .invert = xinvert, \
+-	} \
+-}
+-
+-/* Flag control callbacks for tas2781 */
+-#define ACARD_SINGLE_BOOL_EXT(xname, xdata, xhandler_get, xhandler_put) { \
+-	.iface = SNDRV_CTL_ELEM_IFACE_CARD, \
+-	.name = xname, \
+-	.info = snd_ctl_boolean_mono_info, \
+-	.get = xhandler_get, \
+-	.put = xhandler_put, \
+-	.private_value = xdata, \
+-}
++#include "tas2781_hda.h"
+ 
+ struct tas2781_hda {
+ 	struct tasdevice_priv *priv;
+-- 
+2.34.1
 
-Agreed. You can just deassert the reset at probe time. That shouldn't
-interfere with a PWM that is already producing an output.
-
-> GPG Key ID AABEFD55
-
-If you advertise your OpenPGP certificate, I recommend using the long
-id. See for example https://keys.openpgp.org/search?q=AABEFD55.
-
---drktpjdibffse2jk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/PaEACgkQj4D7WH0S
-/k6ooQf/d4DhhdyM4QPOcTmcUpZ8HOxH7CFCD701mRLpmOlq1dz3/Mtz5tO4wLL2
-nvfA4N7zRagUW8grFQIpENy3IFx5DP3Rdg5PtVELqlqPrOW+NqTTJGslRBeIAoQ3
-0rybTAJEutOM0DPeL7Ay6iGy78VV/Qosh7dhFUWmzxeF1IBHry2tm+euAw5wKOzP
-PNPY/S0CfuOhb2G1ivYYVTBV3fsgYT5G+VfTJyR9/Gkf7F9yKMbX0LRYcG1LM8Ox
-0ilgkvwEu9kt2Au+q6PivMLURHJ28CtG1Fl+Qn50PZm0witW6kFfQqSA3WN4z6rz
-ueBYfIz0tcqYQIjClrgXnesRcLI+KA==
-=8FCS
------END PGP SIGNATURE-----
-
---drktpjdibffse2jk--
