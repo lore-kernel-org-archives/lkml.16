@@ -1,349 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E02922A4E5;
-	Wed, 16 Apr 2025 06:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA1422A4E5;
+	Wed, 16 Apr 2025 06:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785943; cv=none; b=W5w3vy/rVCc0V6TDaPbwNvCKL8itc10N+1vTocDWnAUuod+xkwLhWpUSeQbqpPH+Z+Rb+1ipRIlOfMlU66FjSy5I6/PL2wMvNF9OJ/zTOg+wBRxCIrmwjzGVDskoMETUkQZtf3Axeqe7+BUUiCuQOdW8OiFHsIPbCECuzVbjblg=
+	t=1744785961; cv=none; b=sDX9D1GOSr6OMA6TNH2fTukNacjX5QXUKNcHvSp0uzIwidtX4asEcEOeNewflFivbvTdQDcapITqCf17XzWqwtWL0BGjG47mRzAoqYE0108WIs3coFYViTuelN/6ehWkp5jwlSRVj1hUPCwckFJTD4jlM2G63dKcbU0sUuUUCHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785943; c=relaxed/simple;
-	bh=xh72Sbq9MmoTSv2ZjJjuj6ljsAi9tqThZCsBernp5Ew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L9i6wBhxlPJInYd+sjy/dmML9iNZy9QQIJ5VXw7ls6G/pJ3ia5bgwH4Z6DnBgtB45m4THlAL2hepqBdDsKyQ5BI5JqTdB9EwE3zdPyOhpHUq775zOFHqaTQ2NeF6d9A/Gxs6ojC4IUVMdYlqaCYxysb72qffQKRd9IEO2NEfqL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtk2Bf7a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744785961; c=relaxed/simple;
+	bh=jGokpnFOqE6CW4PQnkZgtiGtX+d0K4vFQAPTpPYAqCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhREzrhpBkGyWozoq8kOwXc1vSuIwgev09XUjv6WSqkQQbhhD2sMSDsIyMIkWC4NILPs06+0In2pdEySarRfqGLTitkqDcn/H0ka5zz6WGAAr7WHiv9EuRUsN8X75g7VyEXN5zKYVMWbdMcUQDk4/KJ8C87m7zo7KSYIzeiQUnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+4KlJdn; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtk2Bf7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA0FC4CEE2;
-	Wed, 16 Apr 2025 06:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744785942;
-	bh=xh72Sbq9MmoTSv2ZjJjuj6ljsAi9tqThZCsBernp5Ew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qtk2Bf7a3veT2/4IffpeucE6R8e8kemMRHPWo7967OO9HrTzcdOKIROXb4iH6ikxB
-	 9yxjurdtEtebXXO3lvTBwrZeMCTHsbjU3/o4YpMxFT08ebAkVU1b6UftDmRzqOfv6h
-	 TJb+tNJ1xgZh3eFIdeDPRFdMI87UhsMuIYVk1v44iXhF+EGKiJlclEFDePDQYO9sZz
-	 5wzhIPXkfyUiR9cisJly0kol2XpxEvGXyYeQtjKDU48vb3P2x9H2mvIMvtxjUuP9tK
-	 0DtUeURjkCvaGijlBLpH8owrux6s/iQBmJMGBp73CFUxoQmptnkxb3W9LR+J3YPTHy
-	 z0FoB5Bu7ix7Q==
-Message-ID: <72df35d9-1783-4a9b-8163-43ff3258c3ef@kernel.org>
-Date: Wed, 16 Apr 2025 08:45:37 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+4KlJdn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744785960; x=1776321960;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jGokpnFOqE6CW4PQnkZgtiGtX+d0K4vFQAPTpPYAqCE=;
+  b=n+4KlJdnMOn9y68xAWOM4bDVmGJV7Tk1npwb1ucifzE8b5ynYLnqA6AG
+   o1iSLtpmpCw4MSIhMnLCCkxVGuHKaUgEvSzxLdYLqDBtvfk3elLX13L0d
+   QLOWm+bNDOSZ5gjsxb8Re0TJ3Fu7g+LnXe7sDLf96ebExVmVqZmVv8eaJ
+   FtzxKd47RSKpiNLIyLWgK26G5IXNidxXtcVZucoATrJmeIVJzjV9Hh6qX
+   px+xv5pcwfrBI196BCLP2K77Iqn24Hp6DL0NU3ZUE9yWhtw/8ffsoobeI
+   DxYeqZ4hB/E1HrKSS8TBGO2fRN3vFuwZdDtBPFcqZJCZF+wvp/mL9zljw
+   Q==;
+X-CSE-ConnectionGUID: FQU8xltQS/GVcW2CpXa/iA==
+X-CSE-MsgGUID: skH2XKWlQcmIr5r8jb7Igg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46408901"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46408901"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:45:59 -0700
+X-CSE-ConnectionGUID: 8nE96dtOSQu/lMLES/GcLQ==
+X-CSE-MsgGUID: yciDKKQQRaWVp0Ux3mGmwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130201223"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:45:55 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4wWu-0000000Clkq-33e2;
+	Wed, 16 Apr 2025 09:45:52 +0300
+Date: Wed, 16 Apr 2025 09:45:52 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Pieter Jansen van Vuuren <pieter.jansen-van-vuuren@amd.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mod_devicetable: Enlarge the maximum platform_device_id
+ name length
+Message-ID: <Z_9SIBPsf4_cQ77Y@smile.fi.intel.com>
+References: <20250415231420.work.066-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] dt-bindings: iio: temperature: add support for
- MCP998X
-To: victor.duicu@microchip.com, jic23@kernel.org
-Cc: andy@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- marius.cristea@microchip.com, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
- <20250415132623.14913-2-victor.duicu@microchip.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250415132623.14913-2-victor.duicu@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415231420.work.066-kees@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 15/04/2025 15:26, victor.duicu@microchip.com wrote:
-> From: Victor Duicu <victor.duicu@microchip.com>
+On Tue, Apr 15, 2025 at 04:14:24PM -0700, Kees Cook wrote:
+> The 20 byte length of struct platform_device_id::name is not long enough
+> for many devices (especially regulators), where the string initialization
+> is getting truncated and missing the trailing NUL byte. This is seen
+> with GCC 15's -Wunterminated-string-initialization option:
 > 
-> This is the devicetree schema for Microchip MCP998X/33 and
-> MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
+> drivers/regulator/hi6421v530-regulator.c:189:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   189 |         { .name = "hi6421v530-regulator" },
+>       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/regulator/hi6421v600-regulator.c:278:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   278 |         { .name = "hi6421v600-regulator" },
+>       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/regulator/lp87565-regulator.c:233:11: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   233 |         { "lp87565-q1-regulator", },
+>       |           ^~~~~~~~~~~~~~~~~~~~~~
+> sound/soc/fsl/imx-pcm-rpmsg.c:818:19: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   818 |         { .name = "rpmsg-micfil-channel" },
+>       |                   ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/iio/light/hid-sensor-als.c:457:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   457 |                 .name = "HID-SENSOR-LISS-0041",
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~
+> drivers/iio/light/hid-sensor-prox.c:366:25: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (21 chars into 20 available) [-Wunterminated-string-initialization]
+>   366 |                 .name = "HID-SENSOR-LISS-0226",
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~
 > 
-> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
-
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
-
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
-
-> ---
->  .../iio/temperature/microchip,mcp9982.yaml    | 182 ++++++++++++++++++
->  1 file changed, 182 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+> Increase the length to 24, slightly more than is currently being used by
+> the affected drivers. The string is used in '%s' format strings and via
+> the module code, which appears to do its own length encoding. This size
+> was chosen because there was already a 4 byte hole in the structure:
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-> new file mode 100644
-> index 000000000000..8cbf897d1278
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
-> @@ -0,0 +1,182 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
+> struct platform_device_id {
+>         char                       name[20];             /*     0    20 */
+> 
+>         /* XXX 4 bytes hole, try to pack */
+> 
+>         kernel_ulong_t             driver_data;          /*    24     8 */
+> 
+>         /* size: 32, cachelines: 1, members: 2 */
+>         /* sum members: 28, holes: 1, sum holes: 4 */
+>         /* last cacheline: 32 bytes */
+> };
 
-Wrap according to coding style document.
+Since there is no even potential ABI breakage, I'm fine with the change.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> +
-> +maintainers:
-> +  - Victor Duicu <victor.duicu@microchip.com>
-> +
-> +description: |
-> +  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
-> +  automotive temperature monitor.
-> +  The datasheet can be found here:
-> +    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,mcp9933
-> +      - microchip,mcp9933D
-> +      - microchip,mcp9982
-> +      - microchip,mcp9982D
-> +      - microchip,mcp9983
-> +      - microchip,mcp9983D
-> +      - microchip,mcp9984
-> +      - microchip,mcp9984D
-> +      - microchip,mcp9985
-> +      - microchip,mcp9985D
-> +
-> +  reg:
-> +    maxItems: 1
-> +    
-> +  interrupts:
-> +    maxItems: 2
-> +    
-> +  interrupt-names:
-> +    description: |
-> +      ALERT1 indicates a HIGH or LOW limit was exceeded.
-> +      ALERT2 indicates a THERM limit was exceeded.
-> +    items:
-> +      - const: ALERT1
-
-alert1
-
-> +      - const: ALERT2
-
-alert2
-
-> +    
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  microchip,temp-hysteresis:
-> +    description: |
-> +      Value of temperature limit hysteresis.
-> +      Omit this tag to set the default value.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-temperature is in specific units, see property units in dtschema.
-
-> +    
-> +  microchip,extended-temp-range:
-> +    description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +      Set the chip to work in the extended temperature range -64 degrees C to 191.875 degrees C.
-
-does not look wrapped.
-
-> +      Omit this tag to set the default range 0 degrees C to 127.875 degrees C
-> +    type: boolean
-
-Why is this a property of the board? I imagine someone might want
-different accuracy during runtime.
-
-> +    
-> +  microchip,beta-channel1:
-> +    description: |
-> +      The beta compensation factor for external channel 1 can be set
-> +      by the user, or can be set automatically by the chip.
-> +      If one wants to enable beta autodetection, omit this tag.
-> +      Please consult the documentation if one wants to set a specific beta.
-> +      If anti-parallel diode operation is enabled, the default value is set
-> +      and can't be changed.
-> +    type: boolean
-> +    
-> +  microchip,beta-channel2:
-> +    description: |
-> +      The beta compensation factor for external channel 2 can be set
-> +      by the user, or can be set automatically by the chip.
-> +      If one wants to enable beta autodetection, omit this tag.
-> +      Please consult the documentation if one wants to set a specific beta.
-> +      If anti-parallel diode operation is enabled, the default value is set
-> +      and can't be changed.
-> +    type: boolean
-> +    
-> +  microchip,apdd-state:
-> +    description: |
-> +      Enable anti-parallel diode mode operation.
-> +      Omit this tag to disable anti-parallel diode mode by default.
-> +    type: boolean
-> +    
-> +  microchip,recd12:
-> +    description: |
-> +      Enable resistance error correction for external channels 1 and 2.
-> +      Not all chips support resistance error correction on external
-> +      channels 1 and 2, please consult the documentation.
-> +      Omit this tag to disable REC for channels 1 and 2 by default.
-> +    type: boolean
-> +    
-> +  microchip,recd34:
-> +    description: |
-> +      Enable resistance error correction for external channels 3 and 4.
-> +      Not all chips support resistance error correction on external
-
-Then this should be restricted per compatible in allOf:if:then:.
-
-> +      channels 3 and 4, please consult the documentation.
-> +      Omit this tag to disable REC for channels 3 and 4 by default.
-> +    type: boolean
-> +    
-> +  label:
-> +    description: Unique name to identify which device this is.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> +    
-> +  vdd-supply: true
-> + 
-> +patternProperties:
-> +  "^channel@[1-4]+$":
-
-4 or 44? Drop +
-
-> +    description: |
-
-Do not need '|' unless you need to preserve formatting.
-
-> +      Represents the external temperature channels to which a remote diode is
-> +      connected.
-> +    type: object
-> +
-> +    properties:
-> +      reg:
-> +        items:
-> +          minimum: 1
-> +          maximum: 4
-> +      
-> +      microchip,ideality-factor:
-> +        description: |
-> +          Each channel has an ideality factor.
-> +          Beta compensation and resistance error correction automatically correct
-> +          for most ideality error. So ideality factor does not need to be adjusted in general.
-> +          Omit this tag in order to set the default value.
-
-default: X
-
-> +          Please consult the documentation if one wants to set a specific ideality value.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +      
-> +      label:
-> +        description: Unique name to identify which channel this is.
-> +    
-> +    required:
-> +      - reg
-> +    
-> +    unevaluatedProperties: false
-
-additionalProperties or reference appropriate schema for subnode.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        
-> +        temperature-sensor@4c {
-> +            compatible = "microchip,mcp9985";
-> +            reg = <0x4c>;
-> +            
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            label = "temperature-sensor";
-> +            
-> +            microchip,temp-hysteresis = <10>;
-> +            microchip,extended-temp-range;
-> +            microchip,apdd-state;
-> +            microchip,recd12;
-> +            microchip,recd34;
-> +            vdd-supply = <&vdd>;
-> +            
-> +            channel@1{
-
-Missing spaces. Please see DTS coding style or any DTS style.
-
-
-
-Best regards,
-Krzysztof
