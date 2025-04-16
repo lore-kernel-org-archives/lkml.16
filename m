@@ -1,43 +1,53 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342D62DFA36;
-	Wed, 16 Apr 2025 22:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D085F204F90;
+	Wed, 16 Apr 2025 22:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843001; cv=none; b=p3650x2mj3xVLmlzD0kFnt5PaB+lfkZBwLeepG1mqrxgjcm475zEHY7PuRDDFWOd8/i/gjFB7bV8OEmtwoCg01ORDA7BpO8/I0Ygdh7Hkoi2YJTUcCb4Ewm3N2tKIkx3gVhFas70v5z6dVBdMTFT0PrDHC/0Gfyn5g8hiF/BAsc=
+	t=1744843032; cv=none; b=buQqPGN3dfG+VjY3kTsI/luLztTqo2hdLgXhB3qcR5lSCLLhJ72+ctb1hIb4n4zwScOw/pCk1193GGoQyZ3sJdDDTfmvvkuDobctJ6P0cBFVJZd2HGjROUwSMajFrz2RfL5UqosOeENI5jMDGWjQko/b/MaTLPOE8G1u0Lw6C+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843001; c=relaxed/simple;
-	bh=qWCJpIq5nqC52G7AQRcnhnyie+0Vqzdr28ats0XW6+M=;
+	s=arc-20240116; t=1744843032; c=relaxed/simple;
+	bh=GdvsN1LtIHMY8zJSroI+9TWLVN4zqOg8OLguK4T3YjA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YYrjEpK9OMbAss1hIVds2GLe5ulZudz2TCW1nVUKZucFUsYj9L2IjRUGp00CyQZ5XiF7lqhb3ZFpQaC7p85/wGGaJhyPc41pepy0z/BAU/gEi1Ox1dVyomTdz+NQwYzE0UWgMYRWN6NYejHLVZB8Z/jmS8RpSvIgQJZC9XoJ9CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=425W7OW4; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=kD0AvLmV65d1bhQF7Lk5UCveslQaf10JeA1+8Fyt5N4tsfbMWIbNmW1FTnM5heixpKB7s6+5v5fjEau0u0XjOYu+4nrhVhAzv/1WlfyNKzam0vXdY/uzKEnGEXFTFpym44RUCLenDfBYUeg6rSpSFPuiaYF9C/xjpleBuiknHO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZClOAeIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="425W7OW4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=45AQq6vMfrfPnLYZSkP+KZnlLff3ShTlcMOWgtQUZ6U=; b=425W7OW4jEdG1jYtVbqDt34q00
-	swdvVuT9t4ZjKA87xolZDenRyzmJamztsXIai83+0J9vZT+xgsYnfYRwIig6oAIe1O7i0BhghBL44
-	yuCpRWpdrDDf/lFoRie3xnJsdWKAe1c6jRqAilT1lb5KySB+c1L4MWbS11S1lz6LtWaY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5BMv-009hb0-Ok; Thu, 17 Apr 2025 00:36:33 +0200
-Date: Thu, 17 Apr 2025 00:36:33 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Rutger van Kruiningen <rutger.vankruiningen@alliedtelesis.co.nz>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH v0] net: ethtool: Only set supplied eee ethtool settings
-Message-ID: <6694f2c8-cfc8-41ed-9ceb-3e0b10aec6b9@lunn.ch>
-References: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZClOAeIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36CBCC4CEE2;
+	Wed, 16 Apr 2025 22:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744843032;
+	bh=GdvsN1LtIHMY8zJSroI+9TWLVN4zqOg8OLguK4T3YjA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZClOAeIM863a5cHtZdWqGyG/lFZkKazWfOYJgO2WTst8ltDgkE9vnjhpEYrBZLHIe
+	 C3pO+37q5MOe5PHcz02RW3JmIudnwBydcFQpofXfAhdeU/1yQ7sVWog0OpOIbCXavF
+	 2NmAncXKuOlvIqQ6EHSXOFpbZVeiAEGY92cv6RK6NKNo5VrOWUXtZ8LuZqUm2pe9pp
+	 hwytpPlUSzl/cgKgjiGN//rCk5vjCi6qd7puCiw47a+cR1NiuZ9MXB2F9shwJwsVZT
+	 G99jaqyYHUVZPwSz2sCWrhPMOtPhOMUR6PTdwn2boubTP7LQvijpzr9UBDOerornaZ
+	 VyNtIsoMCcktg==
+Date: Wed, 16 Apr 2025 15:37:06 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xianwei Zhao <xianwei.zhao@amlogic.com>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 07/10] pinctrl: sx150x: enable building modules with
+ COMPILE_TEST=y
+Message-ID: <20250416223706.GA3230303@ax162>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,28 +56,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416221230.1724319-1-rutger.vankruiningen@alliedtelesis.co.nz>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-7-c9d521d7c8c7@linaro.org>
 
-On Thu, Apr 17, 2025 at 10:12:30AM +1200, Rutger van Kruiningen wrote:
-> Originally all ethtool eee setting updates were attempted even if the
-> settings were not supplied, causing a null pointer crash.
+Hi Bartosz,
+
+On Tue, Apr 08, 2025 at 09:17:44AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Add check for each eee setting and only update if it exists.
+> Increase the build coverage by enabling the sx150x modules with
+> COMPILE_TEST=y.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/pinctrl/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 464cc9aca157..94eb41bb9cf2 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -541,7 +541,7 @@ config PINCTRL_STMFX
+>  
+>  config PINCTRL_SX150X
+>  	bool "Semtech SX150x I2C GPIO expander pinctrl driver"
+> -	depends on I2C=y
+> +	depends on I2C=y || COMPILE_TEST
+>  	select PINMUX
+>  	select PINCONF
+>  	select GENERIC_PINCONF
+> 
+> -- 
+> 2.45.2
+> 
 
-I see what you mean, but i'm somewhat surprised we have not seen this
-crash. Do you have a simple reproducer? I just did
+This appears to break allmodconfig with
 
-ethtool --debug 255 --set-eee eth0 eee on
+  ld.lld: error: undefined symbol: i2c_get_match_data
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
 
-and it did not crash, despite:
+  ld.lld: error: undefined symbol: i2c_smbus_write_byte_data
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_probe) in archive vmlinux.a
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_regmap_reg_write) in archive vmlinux.a
 
-sending genetlink packet (44 bytes):
-    msg length 44 ethool ETHTOOL_MSG_EEE_SET
-    ETHTOOL_MSG_EEE_SET
-        ETHTOOL_A_EEE_HEADER
-            ETHTOOL_A_HEADER_DEV_NAME = "eth0"
-        ETHTOOL_A_EEE_ENABLED = on
+  ld.lld: error: undefined symbol: i2c_smbus_read_byte_data
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_regmap_reg_read) in archive vmlinux.a
 
-So it only provided ETHTOOL_A_EEE_ENABLED and none of the others.
+  ld.lld: error: undefined symbol: i2c_register_driver
+  >>> referenced by pinctrl-sx150x.c
+  >>>               drivers/pinctrl/pinctrl-sx150x.o:(sx150x_init) in archive vmlinux.a
+  make[4]: *** [scripts/Makefile.vmlinux:91: vmlinux] Error 1
 
-	Andrew
+I don't think this change makes much sense in light of this error,
+unless the driver was converted to tristate.
+
+Cheers,
+Nathan
