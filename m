@@ -1,105 +1,138 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDF617A2E0
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23A522F3BE;
+	Wed, 16 Apr 2025 06:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786471; cv=none; b=fFU7RZsTBmxEIMNRvP4UJfsnOZ8zz8fG/q93zD6mrkXXOJiEL0oxvswZweJ7Tjh/sz9A2rObCStDxAIrfDcXMTcPOj+nTn8iSPfl0tiMIKhGAz4CbNUDKjWcXYUEwkvbdLKdLEewaJRVo5/Q3HicwAdwbbI64D/izbOWJGmZhEI=
+	t=1744786482; cv=none; b=akvSOeDR64bhgpwjsutuzEJu7Jv6/JdkD9IeoXNrW07mFRAecVhZ7DS71IC/S6wyR1gIZMbruG+yYdnEGDTN50Ec3IU7OQe3xV2N5AwFQfN+tz9/5Lx95IOES6tIhehYYuHo3f6fVOw/0V17rko3Q1xFH7LLvLLolD8U5ORdrd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786471; c=relaxed/simple;
-	bh=6Ccyemn7n/IGopP/M5/PBB8KrR3LgWUjyMhQTKk71ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4l+BCnCpyGmRX/KvvisAl6qsEZhTYjOAgKCpMxFpvEET4hmtyGmdRj3Y06N68BhA3zuorIfEeKhG3FzFQq6NAuJ2WFxyFmkn0STNF/WjyFuriXOprvolq2RPdqfhX+m73kXM8AANzPijty+MWlptCejFceE58AWpBFDhvXHphk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Yi8PPqJu; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1744786482; c=relaxed/simple;
+	bh=eMwxxrI/yqh3c02Xa/Zji/ZDs6jaXH0UXIImJ6rzu0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pZjqAY09ERRBIAyO/khCMbRox8Ysj7faMGMLA/RMeXYp/2wNKa6Sh0yXwIUzfQ4mtC7r6nlJiKCNku7+XguJbLIm7YkTZtlu76+yZH4Zm8Ju9mttQoH10G5gCNEqLo+IkLaZtyp6v+8GfIxZYVloqfvzmRk12gaK8kzmHlpNpAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jRUvoqXr; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Yi8PPqJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=6Ccy
-	emn7n/IGopP/M5/PBB8KrR3LgWUjyMhQTKk71ps=; b=Yi8PPqJuCbHGR6gMxK57
-	fhDycub62seGjI4HDqfNSvSE81uAfw5bqcC3aHRPifOl3IUQd95uvbk2EK0gFGvt
-	OmF0OCNMl9wM3s8B1rayyLHlMcGNNrrz3g1++OqMlslO/xaSkwB3a6Bj7yX/2NlC
-	K7bKr95zYzuRoctOnu7tSG6vZtDQuoCzzJDouXRDC/a/tF/fm6IOJpNBpOSFFtxK
-	woIgJSjy++DLpc8Jtsvl4ac8wCvIDickZWP05K+qe2fvMl2+3/RLUOFUdBh3lSvn
-	+NbZb9J1Hyh0E6kZUfiSXpIoVN3/rsnIf4y19cMcXpDFGoozSNKRypPLL5UPABKA
-	ng==
-Received: (qmail 601105 invoked from network); 16 Apr 2025 08:54:24 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Apr 2025 08:54:24 +0200
-X-UD-Smtp-Session: l3s3148p1@7KFhwd8yYpkujnsq
-Date: Wed, 16 Apr 2025 08:54:22 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v4 6/7] i2c: core: Deprecate of_node in struct
- i2c_board_info
-Message-ID: <Z_9UHrgho0dGoUrG@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
- <20250414100409.3910312-7-andriy.shevchenko@linux.intel.com>
- <Z_69Jml3-CKi13wB@shikoro>
- <Z_9NEK7BDrvAQ0Qo@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRUvoqXr"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af519c159a8so5820423a12.3;
+        Tue, 15 Apr 2025 23:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744786480; x=1745391280; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wwHFx2X+LzqDnaO5ScRT2dnEDpqIh6CuLMeABnbFK/o=;
+        b=jRUvoqXrzbyJW8DlJ/fcYmP8PsQ0XwJf6MhsyzMxm/gyKGiUn3kCQFTj8LOKPNe3Qm
+         ovEkU4v5opK2yfg6RLovIo4RnoO62gQE81a/4L6knBBreGpMdJcBS1JH8p2+rXejHKrN
+         INuGpmvNyaCqEM2K+J/EtwhRM8A7Tv5ss4dJWbjBC6NLNME3mdam0pMqDfxfjbTn21MK
+         pwdsDbXUBt8ZJnlI5TeG9L+I+eQzhrJ2DV4oBiPi6Hb7S+wGf/30wWxr/FM0Y3N/SoeJ
+         pMPTsX00wf4/jqwb4Z+DKeA3vkAOtwVq/TQ12tnMFppFq/9JTjh+n33AH0iAFYkIf9nX
+         /Jog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744786480; x=1745391280;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wwHFx2X+LzqDnaO5ScRT2dnEDpqIh6CuLMeABnbFK/o=;
+        b=Bn7NsGjs7ya80ku8pUEK1wAEnnFAGgF0ZjwWAEmIi2EmCaGVrygNOcDlzkRAdPASQ0
+         coShWohCZICpJ3OtW53N44rkbY3sErhpRWHiAgueZVZfjEdmQ8feoO+U+LyD/cSNF3j9
+         oimbcg1U4z5qnibgV0QZ+Yl3XtXgzlqL4dDMxi96GUSQiJQRmqXbgioP34D1SPob3+nK
+         bBJ4AitK2eJjrKdE0y3DGB1JjbuVaPTyuTHJKwRVunhJ70g7A1yKnTESvE0nvhVBQ1xv
+         ojAV9RW53z9JI82QDB3eA5X6vF4KNmZFUQGNK8bFhwPqBadDwbHkh5RXZ1fKFKXhzvL2
+         8/5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQtz2mOIAdhpHDWUd2CGEtURc8fc+9ugA8vbpIfaTkJmC9HtqyrsAx9QPY/ifVgSkhZSU=@vger.kernel.org, AJvYcCVGDEWiAfqHkDGH4rYD6befZ0owyepljUP6XDhMmeiIWxQRObFqXJ7yMLC7Cm2NC7L2H6vHh2lepeta2CVL@vger.kernel.org, AJvYcCXysh+SkNgsigSQtK0CIkSV6BoKsX5RVgc2ZFvbB6QOPU4QwIDTpHuZE61HcNfQHA3bsmfYg7z2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjYTzmyWxpr73kB7DsW1RUYDAXZjVsLLClYs7jKoXKIcS2dFi6
+	xBiePwRdcV63suiTtK3EmvoS0lJcMel17d37g9WJvsgeoHMWRUuf
+X-Gm-Gg: ASbGncs1xMfPgEwEN/c4WZD4ArCbepiKdqPNX2nWGzhorJ4YUoPdQm7hG70ZHsfvA6t
+	5n2ukm160ckdxuuf+HhydYVNR8WLJLO/htdWwg1zYgk4wy0BdFlv3GO3y5VB9ZEqS2BR6ACFJ3X
+	+DqyJJea9BtMQgULoaaapJtgB+HJBe2psWOxRsCCy2wknwLE9YJkBdpiFETeULYAk2kqb98OS1Q
+	I7owSoPQH42weTNEGvAiwKpTvVVhIlNIYrEvBcxGCiNuI/YgLnPUBQWOkw6DxR7Pl1Mjdr8KLMs
+	CBfQZZRoQk+/xydWALUvOX8TtROCCRcNKc9+Glz77X5uIbyDp81/BLYqyBEJVhxABENl2W9SQRB
+	nMuv/BVdoivGWDSpj8j4=
+X-Google-Smtp-Source: AGHT+IF8/C/bE/M8V11NAS4DjSmBrO99vSahBnCYSkXY7IEd2nQ+G+Lw7PFE5CD5FqU81B6JmzCipg==
+X-Received: by 2002:a17:90b:254d:b0:2ff:6fc3:79c3 with SMTP id 98e67ed59e1d1-30863f1b878mr1169706a91.9.1744786479803;
+        Tue, 15 Apr 2025 23:54:39 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:bc8e:5d77:bf95:efb6? ([2001:ee0:4f0e:fb30:bc8e:5d77:bf95:efb6])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308613b2ff9sm785083a91.30.2025.04.15.23.54.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 23:54:39 -0700 (PDT)
+Message-ID: <1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
+Date: Wed, 16 Apr 2025 13:54:31 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="iRsCyH8BhKmBPv6F"
-Content-Disposition: inline
-In-Reply-To: <Z_9NEK7BDrvAQ0Qo@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock selftest
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: virtualization@lists.linux.dev, "Michael S . Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250415074341.12461-1-minhquangbui99@gmail.com>
+ <20250415074341.12461-4-minhquangbui99@gmail.com>
+ <20250415212709.39eafdb5@kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250415212709.39eafdb5@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 4/16/25 11:27, Jakub Kicinski wrote:
+> On Tue, 15 Apr 2025 14:43:41 +0700 Bui Quang Minh wrote:
+>> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
+>> +    # Probe for support
+>> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
+>> +    if xdp.ret == 255:
+>> +        raise KsftSkipEx('AF_XDP unsupported')
+>> +    elif xdp.ret > 0:
+>> +        raise KsftFailEx('unable to create AF_XDP socket')
+>> +
+>> +    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_queue_id}',
+>> +               ksft_wait=3)
+>> +
+>> +def check_xdp_bind(cfg):
+>> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+>> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+>> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+>> +
+>> +def check_rx_resize(cfg, queue_size = 128):
+>> +    rx_ring = _get_rx_ring_entries(cfg)
+>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+> Unfortunately this doesn't work on a basic QEMU setup:
+>
+> # ethtool -G eth0 rx 128
+> [   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx queue index: 0 err: -2
+> netlink error: No such file or directory
+>
+> Is there a way to enable more capable virtio_net with QEMU?
 
---iRsCyH8BhKmBPv6F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I guess that virtio-pci-legacy is used in your setup.
 
+Here is how I setup virtio-net with Qemu
 
-> > > that Linux kernel supports. Deprecate of_node in struct i2c_board_inf=
-o,
-> > > so users will be warned and in the future remove it completely.
-> >=20
-> > Is there a plan or volunteer to do the conversion?
->=20
-> Yes, long-term as I'm alone for many janitor works.
+     -netdev tap,id=hostnet1,vhost=on,script=$NETWORK_SCRIPT,downscript=no \
+     -device 
+virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on \
 
-I could help here if you are not keen on doing it on your own.
+The iommu_platform=on is necessary to make vring use dma API which is a 
+requirement to enable xsk_pool in virtio-net (XDP socket will be in 
+zerocopy mode for this case). Otherwise, the XDP socket will fallback to 
+copy mode, xsk_pool is not enabled in virtio-net that makes the 
+probability to reproduce bug to be very small. Currently, when you don't 
+have iommu_platform=on, you can pass the test even before the fix, so I 
+think I will try to harden the selftest to make it return skip in this case.
 
-
---iRsCyH8BhKmBPv6F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf/VBsACgkQFA3kzBSg
-KbY1OhAAr1AFwa5djh2CwYoBcbnm3fRtqdnx9velF2OW4wCAM02+qjiwNLHAQjTe
-EiLswXHEkuKaPa7fK3zRk1ZNFdW+HO2aTMsN23NSa7FXx/5mnkD5BRzsasqLOAqL
-deba4iUZ3dTOlcfqsYaVCyp2Z6lXGAqpeFTfjQL6bmt1rzZ4CNeF8ysQpy0ZgZRp
-/ySNVzCumNH1/KE7qBCLXsdmdJKHotKP+WpkdFdQ2liVfrj6bJuBm902cRMcFwcK
-E3fjqjF1zJ5NfeEh8gwBEmUc8f/IOzSk0DcPW727VMmbIedTUFnUi6Y7ynl4QyBX
-a0XeJgvY9Jd1yl7hFrGb0QcCj1Cw2RwoTwaiMJIo+6FXX/9YOFE6mGw1QsOsJ0HN
-GGLYUYen5fKXFguYen3Msurt0O+Bya0EvFnzVSggTNlIqL5Rr41jrfCIJKeuyfo5
-8nbGsS1qpGUt6sihBqt8Db2XUGS0zLOUXDwu5J7miR/rIh+Mpo7AM+PWbgHhtBsN
-Jj+3B72GSoLDLtH7zdqmla3ab1hvvDe4sNooDtexUmrKxwrYQuId5/YvqpPE/Lxt
-LHOVwzdNM4SqHibSts956gn4AXi27Th3EUEl0wO1lSRFm5asHmCl5XCL9Sj3OPAE
-jt6/C7RmagJjS4KHncADzDZwi4rlJu5QHTCYgxn4GX0AyWWtY+o=
-=nWsS
------END PGP SIGNATURE-----
-
---iRsCyH8BhKmBPv6F--
+Thanks,
+Quang Minh.
