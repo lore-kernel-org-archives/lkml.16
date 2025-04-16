@@ -1,106 +1,191 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF32222D4F9;
-	Wed, 16 Apr 2025 08:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5AC227EB9;
+	Wed, 16 Apr 2025 08:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792073; cv=none; b=tjPt3AJ1KE9CqM87iLd5Yskt72zFkFE05mbnzlsTv4L1RSeloByN5p4PP2LE4Fyg+vGY5UA9zT8K3lHmcaWTR7wu3gy2zISTj+Z9LJ4xJKeaNZH7VO8vlLyMP0XRyPedpVxt/2IB7y7THcKLgCSnHnzZVzZ+qqs1WUUfAoP/Jyc=
+	t=1744792167; cv=none; b=TPzk8WKt1x07jg2eEgwVlpAtXauPOiZ02x0z3utZUwat5jof4WPYIqzRuIFr/5DdaRtFt1gB1u5p2xyzrg+l1K0GFKt+BVrrBu/MI2lkSkR2JaIBBtQY57sUqnTFs6+HvcyWHkLCs5w+/P+4DQiiQ6nnZJtpUhFDCQNM4LPudDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792073; c=relaxed/simple;
-	bh=rGLO5eSKzY7pnjLJQrXDr/atFNjayDU/ws12KMgdQ58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cW5VN04sOwwZkpEcnkZo16AasBtbmurlD1S1/Ql7DYJMq0IaC+m1lDyjiVEQ4ndcx1qEpaQhe2r+8IVzN96CsL4xOI6vfz0ENS0AdRx1X2kdbpDNZDs3nvcr0pF+jbD07VEo0ZF4ejp8pQ7+dYaVp0/ZkdS3lTiB1cc2uHHEENI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=UJKp/Xx+; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744792167; c=relaxed/simple;
+	bh=pKkKKqoTEolPnTa/YFx9qPHQlIeHPpzcluXgfKWEFT8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AoFYhgfU/JWokxs7PAgMOQib1L7TTT15bnmShL3F5ikL8qbK8FUB0yl5ELTiXh4O1HyAiPNDvRhSe+ZcDhXxB5VRz0qlgaAtDPoSJSx3iEEZ+rxTmmmZdjQLOrmt1F0Ck9W7alhhwqB1/xxJVI9hsp4c8fjCuXbI40eYePMk8DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhiZO9on; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UJKp/Xx+"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53G8RhEp277893
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 03:27:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744792063;
-	bh=LxIK6NSu3y/xf/BzWSlA1Pf9YKlHf1cDT0+hN9cvPFg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=UJKp/Xx+1vpSv+EUwTVmBh6X/lfT2hCzjh1hDubjiyx1NL4LQXheDnCWYvD6hBMaJ
-	 DKBjvCnoYizfxDVpKiLdiyN8OLkLxmRDhTw4Z5LXSaDV1t3i/bTiyxi+3wKQiwTmJz
-	 o9thBXUuaZ4oswKhU0ZAAB2JLKJ5cvHNNrLxfG0s=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53G8RhZf030220
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 16 Apr 2025 03:27:43 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
- Apr 2025 03:27:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 16 Apr 2025 03:27:43 -0500
-Received: from [172.24.227.40] (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53G8ReMO003541;
-	Wed, 16 Apr 2025 03:27:40 -0500
-Message-ID: <860d48a5-b61f-495f-86e1-ae56187a8dc8@ti.com>
-Date: Wed, 16 Apr 2025 13:57:39 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhiZO9on"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so5671363a12.3;
+        Wed, 16 Apr 2025 01:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744792165; x=1745396965; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ovSlUrKCeKW3pPZbEQAJqu/9QO1u+A25+RyFvDwdr+Y=;
+        b=ZhiZO9onsC56+vjWpPOYm5nhe68RP0Zy6mU1Ww7SS7Z5h/W9iSX0T4zGUSRp5rj6BX
+         VvNW/ns0fiZ8VTKoBQAEiBdj5Vrk9ZtDoxM7aICLg+jmW5yd4nE/P3JHW1NQZ2+IXGLX
+         qvW+MrHlFk6En6893nJ+NMHYMvZkPBaIjiaCILH1Tur4B8bo8fIYjgPerjbtCgxxvosm
+         8pfmdN4qmo0Hr8359JPx0mOypS3iJ1xV2kA62G32ooNUwRLwOixNyTp5UVYMOv/g5xMc
+         apTNiZfALToDwmXXZU+41Roskuk2PVMeVt57SnU1ZGv7H4QHeB6N3wxF/BMPq9h0QbNs
+         m3hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744792165; x=1745396965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ovSlUrKCeKW3pPZbEQAJqu/9QO1u+A25+RyFvDwdr+Y=;
+        b=Z7ogmA0b38OYG210t2Yx8rBPoYDJMyUz8sOxY4fFqrniivKGYT+Cggdg7doOXY1SIo
+         ufllvtjo3p/5a75CJMnLTEQCwv7p7UGjPq2NujddlAjQ+yvrdsoYPoFUVWTjXVrZAfZw
+         9BMsQJHcKlQIa9fgAsxdPW7MJe4PegdQkXmur6nECjuyEV5Q9Y9iTIWLdkZgRuOtAoje
+         etDPY4oqRWf87y64jwNsyDRwLUKUshy5BZWyz16Jc7i9ZOBLgDKpyLdIaj6KCfi5vFD6
+         hBA1qvNA8rKG7GQtV0on78lV2qI4/ulXRetC1oeUACxq4HvWdBqhn1QAUZAnSHZSfr0y
+         XEjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT53g6iVNbWfDlglp3AY9fAUyXLxixEGMMMeK5wEKzdfnQk0mCYT/g4N9kndYQulA3DJArkI6EG14onsiP@vger.kernel.org, AJvYcCWomounWRW7fvkyiFkwsffuJMJFzAgaaK+AMVGF+XYArZ5c0fdm1/RZ9TqizhKcQ/+d4mMfTksV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd0b6NRzu9Ov/84jQ9MyiyupksdPgp8MAygqTY/uiapjfoxqkG
+	xvJa9vCyap4sd7LvANenwqXtZApW2Dutiy/DlZ1pViAJwQB1EHmygATQLcEtUXR4ex3z+X4+Da8
+	+b8ScSRbyCwFSpkuW5+1o65l8zQE=
+X-Gm-Gg: ASbGncuW4vDGIHGQZH1FR+kY0+OQ6WGM5B+oy8+QQiPDYv2aqP97+0GxTAldlJ6ycJ6
+	hNPXzVbgrYENht9asT0yyPiNIlK+iegJUfi7mVN79mAhA8yDua8qAj8W1iSHUO0Rk2d1ANLlS9w
+	SlMoH3UNsZmJVCHNrrsfmpvu3+41NCskWC
+X-Google-Smtp-Source: AGHT+IFPJsWFdxHLRn0A3K3T0Ttkaq59tPju15WeDboMAunp4Fr63JgpoiKfRarAkC7MF0/sucAkaLiHSi1wesRrcUY=
+X-Received: by 2002:a17:90a:d88d:b0:2f7:e201:a8cc with SMTP id
+ 98e67ed59e1d1-30863f2f576mr1493568a91.18.1744792164501; Wed, 16 Apr 2025
+ 01:29:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
- (ECB, CBC)
-To: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S. Miller" <davem@davemloft.net>,
-        Kamlesh Gurudasani
-	<kamlesh@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-crypto@vger.kernel.org>
-References: <20250411091321.2925308-1-t-pratham@ti.com>
- <20250411091321.2925308-3-t-pratham@ti.com>
- <Z_9WPwz-xVdVDMMw@gondor.apana.org.au>
-Content-Language: en-US
-From: T Pratham <t-pratham@ti.com>
-In-Reply-To: <Z_9WPwz-xVdVDMMw@gondor.apana.org.au>
+References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
+ <20250319064148.774406-3-jingxiangzeng.cas@gmail.com> <m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
+ <7ia4tt7ovekj.fsf@castle.c.googlers.com> <20250320142846.GG1876369@cmpxchg.org>
+ <ipskzxjtm656f5srrp42uxemh5e4jdwzsyj2isqlldfaokiyoo@ly4gfvldjc2p>
+ <4lygax4lgpkkmtmpxif6psl7broial2h74lel37faelc3dlsx3@s56hfvqiazgc>
+ <CACSyD1NisD-ZggRz0BaxUdJ9so4j-sKPZi361HJAum3+bHO+tQ@mail.gmail.com>
+ <CAJqJ8ihLfcDROuCjMfoNzOtRRZhVDWEx04ik6cS9NO6hVua0xA@mail.gmail.com> <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
+In-Reply-To: <qfxzzbcfnojz3oz2ackzorwokhmr2dbkxfgbmewd74vtzrzxkh@rlqide3wg2v7>
+From: jingxiang zeng <jingxiangzeng.cas@gmail.com>
+Date: Wed, 16 Apr 2025 16:29:13 +0800
+X-Gm-Features: ATxdqUHMcJS3GpWxSBSZsTcmQzVqWzPzHcmjHLMzsnvNr2EqwFUfW8_JXgsUyHE
+Message-ID: <CAJqJ8iiyVQxf1Kg_UKuRM_Zg6u4Hqb=DwpbOH_7CrAscAonD-g@mail.gmail.com>
+Subject: Re: [External] Re: [RFC 2/5] memcontrol: add boot option to enable
+ memsw account on dfl
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Zhongkun He <hezhongkun.hzk@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Jingxiang Zeng <linuszeng@tencent.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, mhocko@kernel.org, 
+	muchun.song@linux.dev, kasong@tencent.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: quoted-printable
 
-
-On 16/04/25 12:33, Herbert Xu wrote:
-> On Fri, Apr 11, 2025 at 02:43:22PM +0530, T Pratham wrote:
->> +	// Need to do a timeout to ensure mutex gets unlocked if DMA callback fails for any reason
->> +	ret = wait_for_completion_timeout(&actx->aes_compl, msecs_to_jiffies(DTHE_DMA_TIMEOUT_MS));
-> You cannot wait here.  The preferred method of indicating completion
-> is through an interrupt.  If you hardware can't do that, then you need
-> to use crypto_engine and poll in that thread.
-Sure, will change the strategy and update this.
->> +static int dthe_aes_crypt(struct skcipher_request *req, int enc)
->> +{
->> +	struct dthe_tfm_ctx *ctx = crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
->> +
->> +	/*
->> +	 * If data is not a multiple of AES_BLOCK_SIZE, need to return -EINVAL
->> +	 * If data length input is zero, no need to do any operation.
->> +	 */
->> +	if (req->cryptlen % AES_BLOCK_SIZE) {
->> +		skcipher_request_complete(req, -EINVAL);
-> The completion function must not be called unless you first
-> returned EINPROGRESS.
+On Sat, 12 Apr 2025 at 00:57, Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
 >
-> PS Please set the bit KERN_DRIVER_ONLY in cra_flags.
-KERN_DRIVER_ONLY bit is set.
+> On Thu, Apr 03, 2025 at 05:16:45PM +0800, jingxiang zeng <jingxiangzeng.c=
+as@gmail.com> wrote:
+> > > We encountered an issue, which is also a real use case. With memory o=
+ffloading,
+> > > we can move some cold pages to swap. Suppose an application=E2=80=99s=
+ peak memory
+> > > usage at certain times is 10GB, while at other times, it exists in a
+> > > combination of
+> > > memory and swap. If we set limits on memory or swap separately, it wo=
+uld lack
+> > > flexibility=E2=80=94sometimes it needs 1GB memory + 9GB swap, sometim=
+es 5GB
+> > > memory + 5GB swap, or even 10GB memory + 0GB swap. Therefore, we stro=
+ngly
+> > > hope to use the mem+swap charging method in cgroupv2
 >
-> Cheers,
+> App's peak need determines memory.max=3D10G.
+> The apparent flexibility is dependency on how much competitors the app
+> has. It can run 5GB memory + 5GB swap with some competition or 1GB
+> memory + 9 GB with different competition (more memory demanding).
+> If you want to prevent faulty app to eating up all of swap for itself
+> (like it's possible with memsw), you may define some memory.swap.max.
+> (There's no unique correspondence between this and original memsw value
+> since the cost of mem<->swap is variable.)
+>
+>
+> > Yes, in the container scenario, if swap is enabled on the server and
+> > the customer's container requires 10GB of memory, we only need to set
+> > memory.memsw.limit_in_bytes=3D10GB, and the kernel can automatically
+> > swap out part of the business container's memory to swap according to
+> > the server's memory pressure, and it can be fully guaranteed that the
+> > customer's container will not use more memory because swap is enabled
+> > on the server.
+>
+> This made me consider various causes of the pressure:
+>
+> - global pressure
+>   - it doesn't change memcg's total consuption (memsw.usage=3Dconst)
+>   - memsw limit does nothing
+> - self-memcg pressure
+>   - new allocations against own limit and memsw.usage hits memsw.limit
+>   - memsw.limit prevents new allocations that would extend swap
+>   - achievable with memory.swap.max=3D0
+> - ancestral pressure
+>   - when sibling needs to allocate but limit is on ancestor
+>   - similar to global pressure (memsw.usage=3Dconst), self memsw.limit
+>     does nothing
+>
+> - or there is no outer pressure but you want to prevent new allocations
+>   when something has been swapped out already
+>   - swapped out amount is a debt
+>     - memsw.limit behavior is suboptimal until the debt needs to be
+>       repaid
+>       - repay is when someone else needs the swap space
+>
+> The above is a free flow of thoughts but I'd condense such conversions:
+> - memory.max :=3D memory.memsw.limit_in_bytes
+> - memory.swap.max :=3D anything between 0 and memory.memsw.limit_in_bytes
+>
+> Did I fail to capture some mode where memsw limits were superior?
+>
+Hi, Michal
 
-Thanks.
+In fact, the memsw counter is mainly effective in proactive memory offload
+scenarios.
 
-Regards
-T Pratham <t-pratham@ti.com>
+For example, the current container memory usage is as follows:
+memory.limit_in_bytes =3D 10GB
+memory.usage_in_bytes =3D 9GB
 
+Theoretically, through the memory.reclaim proactive reclaim interface, the
+memory usage of [0GB, 9GB] can be reclaimed to the swap, so:
+memory.limit_in_bytes =3D 10GB
+memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+
+In the case of proactive memory offload, the amount of memory that can be
+reclaimed is determined by the container's PSI and other indicators. It is
+difficult to set an accurate memory.swap.max value.
+memory.swap.current =3D [0GB, 9GB]
+memory.swap.max =3D ?
+
+The memory space saved by swapping out to swap can continue to load
+the operation of system components or more workloads.
+memory.limit_in_bytes =3D 10GB
+memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+memory.swap.current =3D [0GB, 9GB]
+
+The memory usage of memory.usage_in_bytes is reduced due to proactive
+offload to swap, which will cause additional problems, such as:
+1. There may be some memory leaks or abnormal imported network traffic
+in the container, which may cause OOM to fail to trigger or be triggered la=
+te;
+2. In the oversold scenario, if the container's memory requirement is 10GB,
+the container's memory+swap should only use 10GB.
+
+In the above scenario, the memsw counter is very useful:
+memory.limit_in_bytes =3D 10GB
+memory.usage_in_bytes =3D 9GB - [0GB, 9GB]
+
+memory.memsw.limit_in_bytes =3D 10GB
+memory.memsw.usage_in_bytes =3D 9GB
+
+Above, thanks.
+> Thanks,
+> Michal
