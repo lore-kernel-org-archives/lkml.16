@@ -1,283 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A382213AF2;
-	Wed, 16 Apr 2025 09:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439EF2356C1;
+	Wed, 16 Apr 2025 09:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795372; cv=none; b=QkYHyXugeGb6pOlIH+mcyGOlxzO+OZueo1AO0tM0nFb3TGiPkIPikIzT7rnGIde9jtJXoXcIbajRpUnl0GedkBgvTT9b5DUJ1XQsLJL7+wqEcyM6bcsKJZ7QD9wUHpE7UwMHElC6m3k0ACn4h8cHMkkWvoWWF4QDaP8FyiLNfmw=
+	t=1744795375; cv=none; b=nLzp7Jmc4uIdmd1kkt2Sz8OBaP1sNWh0NEAapV05n1b+Dr7X8DRloJqP6FSPXVRD6LRQ00slCa7T4PLGqjm0/w+Dd48U94mKqHPWITfOB/KSmXlTj9muKO7APUJgn1Gq/w0R8/jMSVvhg65iUzYqfH8hxzd6Y4eNqzdBJqsp9Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795372; c=relaxed/simple;
-	bh=IRx/AH2hoskPyKrLPJb96Qys5tlP5qPXtsx/2EnOlmE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EqJO2CUlxY3yDtHSYJxJElwT+eDJDK4s2vOnXhcQTsJJXtSb6ojHIEFUeogpz/l2KISTgo26pgFrEmvM/STNJxeUYw42fOFARHRwsEYchdbb4oowouGbeQA7Ryo4pveXWoSRg9Ic/HBuk6KD6OCAjkYpC7pzmKb8dqaghJR+UZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBD21152B;
-	Wed, 16 Apr 2025 02:22:47 -0700 (PDT)
-Received: from [10.57.90.52] (unknown [10.57.90.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9682A3F66E;
-	Wed, 16 Apr 2025 02:22:45 -0700 (PDT)
-Message-ID: <43260764-4940-4faa-ac07-7138f306a062@arm.com>
-Date: Wed, 16 Apr 2025 10:22:43 +0100
+	s=arc-20240116; t=1744795375; c=relaxed/simple;
+	bh=w5RzLksqRnl5QxaAsPgtygvTlr1+V8VM+ufHZCm77QA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iajqmhTdcOV5UeBqU2VvW6a/lNnoU9AUlGsNELuNO/z8uoiwGdfSxoP9lu17V9TqKnR5AR2/HULRXKCjnP9IXbqFkyt4TGpZaOEoVaTny1urnICr0S8nZqvGqRBuf755EP7lVTdUN3qms9d2UgUH1Hx6zlFdlqBbNcJ9dUupQx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaF1NERu; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaF1NERu"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-22c33677183so4526715ad.2;
+        Wed, 16 Apr 2025 02:22:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744795373; x=1745400173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gc9ETUlXAwHL9WYHin7FZ0e7X2RQp7jZ6Z40mw+LncY=;
+        b=jaF1NERu28nQjamxAt3pkKLMpPR6znH6AmyTtfnmd1pzjzyZvC9HZzjQCQ7pOmHa+q
+         /l1A/SH4a6xSrc1374Dq595UaVLCf6JorBudKnJFoUi2gPGk7SYwAhlnIos/LXi819rM
+         Z4VPlGSabX5z4idmDUnU8qn3P+u82UvnnfLGf4saO+Ui1LOOx8MNZ/0EEUMxU0y2gLBN
+         nOP5ah9D/TEHOA+W1RHzCuLBr52eqYfvuqg6vCY8DgUyBzmQ17rFEIvQ1o8YibuuaXyy
+         bGTPfto9ZoPcYIf9W2MX7uaUYCqF+bfEaQ3eBHoKuI34A35xp23Ak9KfMIog+ElTMhiu
+         Uhiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744795373; x=1745400173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gc9ETUlXAwHL9WYHin7FZ0e7X2RQp7jZ6Z40mw+LncY=;
+        b=wGJ7Cqn0PQYWwmd87v/Ss4bv3g+i5eJTxW+enCy8oLtJc+4R7S3GCkgrNZQzdegQpT
+         IDQiK7kcJicqop/CLS+s1fpovq+mRc6JKe3FOcorg9QpmHRPgmqL65dRWEiXlSyaFQJZ
+         hZJ0SdJYl/ScvSgiEoBq/w0OaWvw4nxdocA0qLDtKvjFceR05tm+qjda5e2Di2xC2JiL
+         rc81Va5vJb7vQakPS2TlwmO8iZ65+6m2rdE/L00dBw4/P3zcTqyxwDQ7YH6ixBPod50h
+         YeD16iLAnQOG8MIq7a3Q2vuGTPdcVjH9gCDY+yWVtZYIocTPaD5YGDyNcs0ZsNTY8xxj
+         yI4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUC9g3v9iHdGcykwYB87lFaBa73uE7fftu3hkXUyFekaZTHE0zDrTLIazFndO5N6qROEbkVG1B5AmQ08A==@vger.kernel.org, AJvYcCX1QBhwaXnFaazSjq/T4JYwb2y6k4hab8ZEW9gZbJgAh4eTWqp2phe+dfXkqaGJSsFS5ZVGFBHucq9cy4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVEP3q6RGT88fnpyLgtWS8qR8XsTS9s8UDMxJZGV6fL2OIGOZt
+	Wzoofr4/fLCbdMt4AUp5lM0FH9aH2YsV2BarajRv+RNnQfRvRCNe
+X-Gm-Gg: ASbGncudcZQJ/IXkKpeAy1guTTSVKdXWSa66Sgslx34/e+Z5/WcaeIYAioPtl8jGxer
+	Gaza2G43mbzw58DZWDnXyVcgzud+UTedf9HdfeD6NFtGEHq1ke5W9iRTSvS5UBTcWYQB1jIFpsM
+	4ir4vRH2SMIapArwJj1GBYW1LtNhQZNnGYmolthNRVrMPlGTOQ5AAi/YLEMZ/pYR9TKYtSIug7o
+	V/aOJ4L1DtcpU4GY6TUbqjJ0PAPHbP+Qqp1rlG3jlVNj+ryLK/ZCuf2w25GIY5DdeqIN4HyZvgz
+	4r83vYhstB2iLMIu4sXDRDDRJURpkqiCEIe6OBUsnLS706nUS5PYKiSgQKLy0n8zQA==
+X-Google-Smtp-Source: AGHT+IFqOfykxp4sHmxIpixGdEbhneviQ6R42REOZioYQx7ZqXCFBphO3q/lZ9BkZbR1mmD5mq6zkA==
+X-Received: by 2002:a17:903:3c65:b0:224:255b:c932 with SMTP id d9443c01a7336-22c358c3f5emr19732055ad.3.1744795373339;
+        Wed, 16 Apr 2025 02:22:53 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.49])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1d070sm9369515ad.79.2025.04.16.02.22.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 02:22:52 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	bsdhenrymartin@gmail.com,
+	mbloch@nvidia.com,
+	michal.swiatkowski@linux.intel.com,
+	amirtz@nvidia.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] net/mlx5: Fix NULL dereference and memory leak in ttc_table creation
+Date: Wed, 16 Apr 2025 17:22:41 +0800
+Message-Id: <20250416092243.65573-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/4] drm/panthor: Add driver IOCTL for setting BO
- labels
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linaro-mm-sig@lists.linaro.org
-References: <20250411150357.3308921-1-adrian.larumbe@collabora.com>
- <20250411150357.3308921-3-adrian.larumbe@collabora.com>
- <6d67aff0-7082-4966-acb2-d7985820b3ea@arm.com>
- <oc7nqx5gxrefaphpoyn7tsyhj2zcpbhwuxnhlgxtp6exet2ebz@wve2rz376pf4>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <oc7nqx5gxrefaphpoyn7tsyhj2zcpbhwuxnhlgxtp6exet2ebz@wve2rz376pf4>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 14/04/2025 21:41, Adrián Larumbe wrote:
-> On 14.04.2025 11:01, Steven Price wrote:
->> On 11/04/2025 16:03, Adrián Larumbe wrote:
->>> Allow UM to label a BO for which it possesses a DRM handle.
->>>
->>> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
->>> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
->>> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
->>
->> Reviewed-by: Steven Price <steven.price@arm.com>
->>
->> Although very minor NITs below which you can consider.
->>
->>> ---
->>>  drivers/gpu/drm/panthor/panthor_drv.c | 42 ++++++++++++++++++++++++++-
->>>  drivers/gpu/drm/panthor/panthor_gem.h |  2 ++
->>>  include/uapi/drm/panthor_drm.h        | 23 +++++++++++++++
->>>  3 files changed, 66 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/panthor/panthor_drv.c
->>> index 06fe46e32073..983b24f1236c 100644
->>> --- a/drivers/gpu/drm/panthor/panthor_drv.c
->>> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
->>> @@ -1331,6 +1331,44 @@ static int panthor_ioctl_vm_get_state(struct drm_device *ddev, void *data,
->>>  	return 0;
->>>  }
->>>
->>> +static int panthor_ioctl_bo_set_label(struct drm_device *ddev, void *data,
->>> +				  struct drm_file *file)
->>> +{
->>> +	struct drm_panthor_bo_set_label *args = data;
->>> +	struct drm_gem_object *obj;
->>> +	const char *label;
->>> +	int ret = 0;
->>> +
->>> +	obj = drm_gem_object_lookup(file, args->handle);
->>> +	if (!obj)
->>> +		return -ENOENT;
->>> +
->>> +	if (args->size && args->label) {
->>> +		if (args->size > PANTHOR_BO_LABEL_MAXLEN) {
->>> +			ret = -E2BIG;
->>> +			goto err_label;
->>> +		}
->>> +
->>> +		label = strndup_user(u64_to_user_ptr(args->label), args->size);
->>> +		if (IS_ERR(label)) {
->>> +			ret = PTR_ERR(label);
->>> +			goto err_label;
->>> +		}
->>> +	} else if (args->size && !args->label) {
->>> +		ret = -EINVAL;
->>> +		goto err_label;
->>> +	} else {
->>> +		label = NULL;
->>> +	}
->>> +
->>> +	panthor_gem_bo_set_label(obj, label);
->>> +
->>> +err_label:
->>> +	drm_gem_object_put(obj);
->>> +
->>> +	return ret;
->>> +}
->>> +
->>>  static int
->>>  panthor_open(struct drm_device *ddev, struct drm_file *file)
->>>  {
->>> @@ -1400,6 +1438,7 @@ static const struct drm_ioctl_desc panthor_drm_driver_ioctls[] = {
->>>  	PANTHOR_IOCTL(TILER_HEAP_CREATE, tiler_heap_create, DRM_RENDER_ALLOW),
->>>  	PANTHOR_IOCTL(TILER_HEAP_DESTROY, tiler_heap_destroy, DRM_RENDER_ALLOW),
->>>  	PANTHOR_IOCTL(GROUP_SUBMIT, group_submit, DRM_RENDER_ALLOW),
->>> +	PANTHOR_IOCTL(BO_SET_LABEL, bo_set_label, DRM_RENDER_ALLOW),
->>>  };
->>>
->>>  static int panthor_mmap(struct file *filp, struct vm_area_struct *vma)
->>> @@ -1509,6 +1548,7 @@ static void panthor_debugfs_init(struct drm_minor *minor)
->>>   * - 1.2 - adds DEV_QUERY_GROUP_PRIORITIES_INFO query
->>>   *       - adds PANTHOR_GROUP_PRIORITY_REALTIME priority
->>>   * - 1.3 - adds DRM_PANTHOR_GROUP_STATE_INNOCENT flag
->>> + * - 1.4 - adds DRM_IOCTL_PANTHOR_BO_SET_LABEL ioctl
->>>   */
->>>  static const struct drm_driver panthor_drm_driver = {
->>>  	.driver_features = DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ |
->>> @@ -1522,7 +1562,7 @@ static const struct drm_driver panthor_drm_driver = {
->>>  	.name = "panthor",
->>>  	.desc = "Panthor DRM driver",
->>>  	.major = 1,
->>> -	.minor = 3,
->>> +	.minor = 4,
->>>
->>>  	.gem_create_object = panthor_gem_create_object,
->>>  	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table,
->>> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
->>> index af0d77338860..beba066b4974 100644
->>> --- a/drivers/gpu/drm/panthor/panthor_gem.h
->>> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
->>> @@ -13,6 +13,8 @@
->>>
->>>  struct panthor_vm;
->>>
->>> +#define PANTHOR_BO_LABEL_MAXLEN	PAGE_SIZE
->>> +
->>>  /**
->>>   * struct panthor_gem_object - Driver specific GEM object.
->>>   */
->>> diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_drm.h
->>> index 97e2c4510e69..12b1994499a9 100644
->>> --- a/include/uapi/drm/panthor_drm.h
->>> +++ b/include/uapi/drm/panthor_drm.h
->>> @@ -127,6 +127,9 @@ enum drm_panthor_ioctl_id {
->>>
->>>  	/** @DRM_PANTHOR_TILER_HEAP_DESTROY: Destroy a tiler heap. */
->>>  	DRM_PANTHOR_TILER_HEAP_DESTROY,
->>> +
->>> +	/** @DRM_PANTHOR_BO_SET_LABEL: Label a BO. */
->>> +	DRM_PANTHOR_BO_SET_LABEL,
->>>  };
->>>
->>>  /**
->>> @@ -977,6 +980,24 @@ struct drm_panthor_tiler_heap_destroy {
->>>  	__u32 pad;
->>>  };
->>>
->>> +/**
->>> + * struct drm_panthor_bo_set_label - Arguments passed to DRM_IOCTL_PANTHOR_BO_SET_LABEL
->>> + */
->>> +struct drm_panthor_bo_set_label {
->>> +	/** @handle: Handle of the buffer object to label. */
->>> +	__u32 handle;
->>> +
->>> +	/**
->>> +	 * @size: Length of the label, including the NULL terminator.
->>> +	 *
->>> +	 * Cannot be greater than the OS page size.
->>> +	 */
->>> +	__u32 size;
->>> +
->>> +	/** @label: User pointer to a NULL-terminated string */
->>> +	__u64 label;
->>> +};
->>
->> First very minor NIT:
->>  * NULL is a pointer, i.e. (void*)0
->>  * NUL is the ASCII code point '\0'.
->> So it's a NUL-terminated string.
-> 
-> Fixed
-> 
->> Second NIT: We don't actually need 'size' - since the string is
->> NUL-terminated we can just strndup_user(__user_pointer__, PAGE_SIZE).
->> As things stand we validate that strlen(label) < size <= PAGE_SIZE -
->> which is a little odd (user space might as well just pass PAGE_SIZE
->> rather than calculate the actual length).
-> 
-> The snag I see in this approach is that the only way to make sure
-> strlen(label) + 1 <= PAGE_SIZE would be doing something like
-> 
-> label = strndup_user(u64_to_user_ptr(args->label), args->size);
-> if (strlen(label) + 1 <= PAGE_SIZE) {
->    kfree(label)
->    return -E2BIG;
-> }
+This patch series addresses two issues in the
+mlx5_create_inner_ttc_table() and mlx5_create_ttc_table() functions:
 
-You can just do
+1. A potential NULL pointer dereference if mlx5_get_flow_namespace()
+returns NULL.
 
-  strndup_user(u64_to_user_ptr(args->label), PAGE_SIZE)
+2. A memory leak in the error path when ttc_type is invalid (default:
+switch case).
 
-If you look at the kernel's implementation it handles an overly long
-string by returning an error:
+Henry Martin (2):
+  net/mlx5: Fix null-ptr-deref in mlx5_create_{inner_,}ttc_table()
+  net/mlx5: Move ttc allocation after switch case to prevent leaks
 
-> 	length = strnlen_user(s, n);
-> 
-> 	if (!length)
-> 		return ERR_PTR(-EFAULT);
-> 
-> 	if (length > n)
-> 		return ERR_PTR(-EINVAL);
-> 
-> 	p = memdup_user(s, length);
+ .../ethernet/mellanox/mlx5/core/lib/fs_ttc.c  | 26 +++++++++++++------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-So there's no need to call strlen() on the result.
-
-> In the meantime, we've duplicated the string and traversed a whole page
-> of bytes, all to be discarded at once.
-> 
-> In this case, I think it's alright to expect some cooperation from UM
-> in supplying the actual size, although I'm really not an expert in
-> designing elegant uAPIs, so if you think this looks very odd I'd be
-> glad to replace it with.
-> 
-> Actually, as I was writing this, I realised that strndup_user() calls
-> strnlen_user(), which is publicly available for other drivers, so
-> I might check the length first, and if it falls within bounds, do
-> the actual user stringdup.
-
-Again, no need (and strnlen_user() has a comment basically saying "don't
-call this"). strndup_user() has all the magic we need here.
-
-As I say this is just a 'nit' - so no big deal. But I don't really see
-the point of the size in the uAPI.
-
-Take a look at dma_buf_set_name() for an example which sets the name on
-a dma_buf (and doesn't take a size argument) - although that wasn't an
-example of good uAPI design as the type in the ioctl was botched ;(
-
-Thanks,
-Steve
-
-> I shall also mention the size bound on the uAPI for the 'label' pointer.
-> 
->> Thanks,
->> Steve
->>
->> +
->>  /**
->>   * DRM_IOCTL_PANTHOR() - Build a Panthor IOCTL number
->>   * @__access: Access type. Must be R, W or RW.
->> @@ -1019,6 +1040,8 @@ enum {
->>  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_CREATE, tiler_heap_create),
->>  	DRM_IOCTL_PANTHOR_TILER_HEAP_DESTROY =
->>  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_DESTROY, tiler_heap_destroy),
->> +	DRM_IOCTL_PANTHOR_BO_SET_LABEL =
->> +		DRM_IOCTL_PANTHOR(WR, BO_SET_LABEL, bo_set_label),
->>  };
->>
->>  #if defined(__cplusplus)
-> 
-> 
-> Adrian Larumbe
+-- 
+2.34.1
 
