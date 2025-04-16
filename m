@@ -1,172 +1,209 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0871A2658
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069A1DDDC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840326; cv=none; b=KAq4tINyM5TCj5NA5V8PNPd8Eoe2ql0Y8Twk/ILTpKa5wNARN2PmWyrtN/HILhaM5Fae+SR47tzIL8qbixhsT9gNljwR1BJHsO50otUA0Z4gF9vzTW87tiSOrhNmesHXgrAbXpdPpDqHhWKjH52cQum1Q2VcFkPCQAU1eaTd1gA=
+	t=1744840375; cv=none; b=rm4ON+Fob8GW963MPPCAihXUkQJwgrgpjuSymVpv77BjTcNnrXBVfIURE7YEOEdKdq5dSo9pGVLGLMFIm/bpMfcnBsTFjPm05P8T9ZGVNj2m0BqYG1i3a9pfAaWkuMiixAZpFL2o2mRSBuF2idwB/P/ydY5Qpn1HuTJlTa4kRDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840326; c=relaxed/simple;
-	bh=MJWoXU0g9QnCgNy25yiiQ9RniwDR4fpaHLBO3A30L5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V2jTx1lwbmoJVuO5TgxOzOXcxKm5CUIIdG7YH2GZcIM34HaNVBK9MWlE+c1fGjJlG9SCYlNpqV8E8v9PYW1/R2lRrubWv+JQXACQlIjK/lf0rXt/Gi+uUReKObUiwSUXZ8BIOyBXH97jWFi5tHsaC0Owfpogwx8zIwhuCO1j04s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y4pObPaf; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744840375; c=relaxed/simple;
+	bh=2Qe4vN7izBxKb2DcP2QzQ8ZFDIMNN5ftyI8omk62WNk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a1aOH8iHVctdF7+fOjXDMpDco8+XyNAs6owl4RT5BPhas2hDU474qI90DSw5qFzTQy4gBKxqZtXldJc10wZ+8ThIukEmKCrEQqd2d6zJTLqOaLmMq4xrzY70n5PCNsiopdhyLMCsUYGGyQYWZwE9GWLY+PSkwgTwCgLm82+j3eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTXJLO6s; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y4pObPaf"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-47681dba807so32261cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:52:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTXJLO6s"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so117509f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:52:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744840322; x=1745445122; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vcVDTghmW04E6h1mVPVRbo3+jKHYQBJaKcTlOvLQS3c=;
-        b=y4pObPafrIr5dXNC2Rid+Wr1NPQmu6PqKM7131ddx3AHwyfcU56ocBRp8CN+QR6q+x
-         4MZZxBW5txAgS2J74oOcPwt3zL1NrwKd7W/Yd64J/AQFnsg86H65a+x3yLjwdDV4uPag
-         +W+WK/MQi2tvaZAaFTQiPAOqbUOZWbaGTO4bdEKPF51VcfzbV7FtU0oiptyyVT3LR1A9
-         Nw5ELL7WZ9TtVNaKMnxQS/s1GVCRrBCIWwsKRmQYDmE9HCwThNRi/DcPc1n+4O6tEzGh
-         lR1IcEmeZcqn/NT7nPIDaS76SlDmn6ULgDCY/xtKJS8P32iOCDTs2G0kVVLx57HFZKqO
-         nG4A==
+        d=gmail.com; s=20230601; t=1744840372; x=1745445172; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dvF/qVSL3ELz6eILB+vwpFKw0DXK8I/sRsHQ0VdcGGU=;
+        b=KTXJLO6sXIoxpQVLGG1TJNtGHLUIb9fnBBhPgn6fAoHMPEGbrnpIOuTjINr/Xa/iso
+         CY/bPA7BPTk6Ly+S58JxAthpqwPj31zyjJbwSzTvVv+eD7PvNCfZQ8aD2zF96EfEmD2f
+         oAzhHMZNuxaFg7nOdZL9SqYr8rLeG3NDte+bxNtSn1c33rzzO4Q9H89hPU64oCBj/B1/
+         9QCfQKrgMrnz5MYzcovue+6c8mIJmXRRQmxQVrCnlCoMO2flrMQ9X43yZrDfO9PYU21e
+         tTvOwRgoSoC8zXt7WfR1vqd+KJxLYPahjImCEv6IJEMBwGvxJgcTMIyAcnCk+9NAqL+r
+         wM0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744840322; x=1745445122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vcVDTghmW04E6h1mVPVRbo3+jKHYQBJaKcTlOvLQS3c=;
-        b=jmA+qprr1/8DR0EtGIGvYK3YfM3Bm9CZrdGe15Znc7C1WhU8A+qlxbpXT/AeC2rX7l
-         f70P0gUvVpcO4qTTpwBq66KaFwX+byaFi0HtTSbM4O2TOMcUBHvzTOW365zhw6yMcRug
-         W59CT1eGJL8e8OVqjx8jw4xZFbmvpMOqfYl0472e8QbBTyXO4ospAvNgoyXHYILx/lh9
-         cF1El4dRZcTVyL2YisgxMfTxJRXyevd6R5r4e3RT4yTtbeVW5GbYN5bkHnPLIp5pZjeN
-         zj3h6y4XNjUUcf2qOihl5P5dNwvPKZ1Ei1MfsCy8V2WuTRrYEkXzL6IixkyuFamwHSaL
-         5ZIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgw7hVCtt2UeDpqJamYemtOXe+eh7x7FjCw2CmXKxMqwgatLa3k5tGEdCQsn/cYgYJklNW4yHiGygvF+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4y/l0u2eCjvuQqBZ7NCYAXptd/8ssOtrSBah/4K7rlOhQ5qEm
-	RgA+U37Sb3KcRsxkXryknKX/pDTBSkXG1bEbJr4jrHvgSiRe18mo3H/633TERcfDx6JIQh1ym+s
-	hfpSQpG0ScDaEV8vPetNnIVHkA30pXD1wicAZ
-X-Gm-Gg: ASbGncv+50BluUVxTNoFAGiEI5vMo+QN196r0n9USmCe3ct3wPXGif16rfKE/dK8bEw
-	ceQWi0fHjUxHAUBb0PrwYsItiv8BrSgtW6su9OgM71b4vOruZ7WbWZL2vyIhF9fWzf6MIN2sQ8Z
-	KTBcGlkyGp29N0a8Zr+MHHqmpVtb/nO1M8LEMO49h7d98Q6+KNLfiG
-X-Google-Smtp-Source: AGHT+IHUQzspiUQJB+h7jm1wn/s441E3wihWsN9WRc0OUtNm8hJrE+FZspPEgeONpMrV/FAEudR5KbsUS/x37qcmMAY=
-X-Received: by 2002:a05:622a:1889:b0:477:1f86:178c with SMTP id
- d75a77b69052e-47ade69b055mr1113711cf.26.1744840322252; Wed, 16 Apr 2025
- 14:52:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744840372; x=1745445172;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dvF/qVSL3ELz6eILB+vwpFKw0DXK8I/sRsHQ0VdcGGU=;
+        b=C1LJBNSWLMTqs2WeJnRBUs/CkHTxkCtpAuu8JIHbikuh+x2oNQW8BGv1pb39rBhTtF
+         BN9No6+YGpAdIEemGhZAyg7yqgQyW3+nUvok/ysmujE/Bh9pRY7wI5i4nUbQhZsiPuS9
+         3JnuQYTqbZXotBN2sfj+wXL801Rzo5b2XXS4yjNKbfWFybO7/WCXpnffATRMSCjyFUAU
+         CkULdz2vOepsM4MkMgCzvaiHChoo/WGj1BlHOAB7A2PzpI1d/zoQ1L87zaZAz70Nus0q
+         pWpS8tSF9L3erRHF4JRU75n98+DkUHbKqoiYbc4g6w6oOB4MXGWbVNb7C7Spi/LSobjR
+         YQ7A==
+X-Forwarded-Encrypted: i=1; AJvYcCX+oHkidzMa1KOrpSAIeJ4NXjRtoQ6WAg3WAn0WfvEe65Bdoj+gCs2ghTIHjt7kqLoCN6t9uC6kqnDaZC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYVSlwmfh+UE07bBhvRtLY7HKOUoKicS3rRoOuzEMWpC1g+tCE
+	EH74fF5zlj0/9SpAoZRrsWx5VeNVuQOGTXZa77UKFP1cOVj807w/
+X-Gm-Gg: ASbGnctiRKIUdZ++oa11L+ldJdVWzAgUgxDrevvtpt/ZLLcDxBDklir/KhY8VVpB/Hs
+	eqm4n91Ug40HVQ+twLfCzgZu0lt3p8Ql7e5LFYIJAgcCSqBGcEliPz5ND7KR+0ghguQ7kIkXxff
+	c/XfU2oOsG8QtZlr0ZhNCpyRg9ZpCdVE4TIsRfTjdNk9HloIxTJB73oXlP7FzSx3gFzAYCaVMIY
+	fH+F6G+gbDsGQOaF/SC8OBf3tO+tHySndEmz4zG+mvNizSADaVZq3HpT3vTchHZmxWbs4gYoNuX
+	0TwgYugbAs46oxrh+2NJvs32IHbhjlsJH/eSK25vzT8QAMejNeaJgwQNg2pFRHPGiuBrE6e1tED
+	PzKjjle0oAC7vEVGT1as515F2imf94S0Hnw==
+X-Google-Smtp-Source: AGHT+IE9WpykaPvMsR2/0Zomzczva7TKYcbw2WSn8b+jWFr9iMt9PPapgg8Q0P4BZa275XWqnqEMmQ==
+X-Received: by 2002:a05:6000:1a8c:b0:390:f6aa:4e7c with SMTP id ffacd0b85a97d-39ee5b1cc1dmr3207325f8f.28.1744840371916;
+        Wed, 16 Apr 2025 14:52:51 -0700 (PDT)
+Received: from ?IPV6:2a02:6b67:d752:5f00:c46:86ac:45ea:7590? ([2a02:6b67:d752:5f00:c46:86ac:45ea:7590])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96c05asm17836912f8f.26.2025.04.16.14.52.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 14:52:51 -0700 (PDT)
+Message-ID: <d03e8fbe-516e-40c3-96aa-43f5e51d0c3f@gmail.com>
+Date: Wed, 16 Apr 2025 22:52:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415171954.3970818-1-jyescas@google.com> <536596bf-8f5b-462b-add7-a203b6cd1e46@amd.com>
-In-Reply-To: <536596bf-8f5b-462b-add7-a203b6cd1e46@amd.com>
-From: Juan Yescas <jyescas@google.com>
-Date: Wed, 16 Apr 2025 14:51:50 -0700
-X-Gm-Features: ATxdqUE4qcI7Wp5CpFV-fRsQMsGVa_XUUphYkpYa0zt1M4zmiCfXplv8_xdchy8
-Message-ID: <CAJDx_rjrAgJiyOV2KcTYp574w=9mjNQ5jY3VYdG12mMuroVQ9Q@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: heaps: Set allocation orders for larger page sizes
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-kernel@vger.kernel.org, baohua@kernel.org, 
-	dmitry.osipenko@collabora.com, jaewon31.kim@samsung.com, 
-	Guangming.Cao@mediatek.com, surenb@google.com, kaleshsingh@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] alloc_tag: introduce Kconfig option for default
+ compressed profiling
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ hannes@cmpxchg.org, shakeel.butt@linux.dev, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com
+References: <20250416180653.3438158-1-usamaarif642@gmail.com>
+ <CAJuCfpEKrX+1_SJ5fOyT6JLDSNcDxjcfBMj9_siVZt-rX5WQ=w@mail.gmail.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <CAJuCfpEKrX+1_SJ5fOyT6JLDSNcDxjcfBMj9_siVZt-rX5WQ=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 4:34=E2=80=AFAM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
->
->
-> Am 15.04.25 um 19:19 schrieb Juan Yescas:
-> > This change sets the allocation orders for the different page sizes
-> > (4k, 16k, 64k) based on PAGE_SHIFT. Before this change, the orders
-> > for large page sizes were calculated incorrectly, this caused system
-> > heap to allocate from 2% to 4% more memory on 16KiB page size kernels.
-> >
-> > This change was tested on 4k/16k page size kernels.
-> >
-> > Signed-off-by: Juan Yescas <jyescas@google.com>
-> > ---
-> >  drivers/dma-buf/heaps/system_heap.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heap=
-s/system_heap.c
-> > index 26d5dc89ea16..54674c02dcb4 100644
-> > --- a/drivers/dma-buf/heaps/system_heap.c
-> > +++ b/drivers/dma-buf/heaps/system_heap.c
-> > @@ -50,8 +50,15 @@ static gfp_t order_flags[] =3D {HIGH_ORDER_GFP, HIGH=
-_ORDER_GFP, LOW_ORDER_GFP};
-> >   * to match with the sizes often found in IOMMUs. Using order 4 pages =
-instead
-> >   * of order 0 pages can significantly improve the performance of many =
-IOMMUs
-> >   * by reducing TLB pressure and time spent updating page tables.
-> > + *
-> > + * Note: When the order is 0, the minimum allocation is PAGE_SIZE. The=
- possible
-> > + * page sizes for ARM devices could be 4K, 16K and 64K.
-> >   */
-> > -static const unsigned int orders[] =3D {8, 4, 0};
-> > +#define ORDER_1M (20 - PAGE_SHIFT)
-> > +#define ORDER_64K (16 - PAGE_SHIFT)
-> > +#define ORDER_FOR_PAGE_SIZE (0)
-> > +static const unsigned int orders[] =3D {ORDER_1M, ORDER_64K, ORDER_FOR=
-_PAGE_SIZE};
-> > +#
->
-> Good catch, but I think the defines are just overkill.
->
-> What you should do instead is to subtract page shift when using the array=
-.
->
 
-There are several occurrences of orders in the file and I think it is
-better to do the calculations up front in the array. Would you be ok
-if we get rid of the defines as per your suggestion and make the
-calculations during the definition of the array. Something like this:
 
-static const unsigned int orders[] =3D {20 - PAGE_SHIFT, 16 - PAGE_SHIFT, 0=
-};
+On 16/04/2025 22:08, Suren Baghdasaryan wrote:
+> On Wed, Apr 16, 2025 at 11:06 AM Usama Arif <usamaarif642@gmail.com> wrote:
+>>
+>> With this Kconfig option enabled, the kernel stores allocation tag references
+>> in the page flags by default.
+>>
+>> There are 2 reasons to introduce this:
+>> - As mentioned in [1], compressed tags dont have system memory overhead
+>> and much lower performance overhead. It would be preferrable to have this as
+>> the default option, and to be able to switch it at compile time. Another
+>> option is to just declare the static key as true by default?
+>> - As compressed option is the best one, it doesn't make sense to have to
+>> change both defconfig and command line options to enable memory
+>> allocation profiling. Changing commandline across a large number of services
+>> can result in signifcant work, which shouldn't be needed if the kernel
+>> defconfig needs to be changed anyways.
+> 
+> The reason tag compression is not the default option is because it
+> works only if there are enough free bits in the page flags to store a
+> tag index. If you configure it to use page flags and your build does
+> not have enough free bits, the profiling will be disabled (see
+> alloc_tag_sec_init()). IOW there is no graceful fallback to use page
+> extensions. Therefore, the current default option is not the most
+> performant but the one which works on all builds. Instead of this just
+> set sysctl.vm.mem_profiling boot parameter in your config file.
 
-> Apart from that using 1M, 64K and then falling back to 4K just sounds ran=
-dom to me. We have especially pushed back on 64K more than once because it =
-is actually not beneficial in almost all cases.
->
+Hi Suren,
 
-In the hardware where the driver is used, the 64K is beneficial for:
+Thanks for the review! The main reason is to not have to make a change in
+both defconfig and kernel command line while deploying it. We can ofcourse
+set the commandline as well, but just makes deployment more tedious, and
+adds an extra commandline parameter. In our case, we only want to deploy
+compressed tags, and if there aren't enough free bits, we would prefer to
+disable memory allocation profiling than to take the memory and performance
+hit.
 
-Arm SMMUv3 (4KB granule size):
-           64KB (contiguous bit groups 16 4KB pages)
+Would keeping the default value of this config disabled be an acceptable option?
+i.e. the below diff on top of this patch?
 
-SysMMU benefits from 64KB (=E2=80=9Clarge=E2=80=9D page) on 4k/16k page siz=
-es.
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 66d8995f3514..163ffcece47a 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1030,7 +1030,7 @@ config MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+ 
+ config MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
+        bool "store page allocation tag references in the page flags by default"
+-       default y
++       default n
+        depends on MEM_ALLOC_PROFILING
+ 
+ config MEM_ALLOC_PROFILING_DEBUG
 
-> I suggest to fix the code in system_heap_allocate to not over allocate in=
-stead and just try the available orders like TTM does. This has proven to b=
-e working architecture independent.
->
 
-Do you mean to have an implementation similar to __ttm_pool_alloc()?
+Thanks,
+Usama
+> 
+> Your change effectively changes the default value of
+> mem_profiling_compressed and I don't see why you need to introduce a
+> new config option for that. But that really does not matter because
+> changing default to compressed tags is not the right choice IMO.
+> 
+>>
+>> [1] https://lore.kernel.org/all/20241023170759.999909-7-surenb@google.com/T/#m0da08879435f7673eaa10871a6e9d1be4f605ac8
+>>
+>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+>> ---
+>>  include/linux/pgalloc_tag.h | 4 ++++
+>>  lib/Kconfig.debug           | 5 +++++
+>>  lib/alloc_tag.c             | 4 ++++
+>>  3 files changed, 13 insertions(+)
+>>
+>> diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
+>> index c74077977830..0226059bcf00 100644
+>> --- a/include/linux/pgalloc_tag.h
+>> +++ b/include/linux/pgalloc_tag.h
+>> @@ -16,7 +16,11 @@ extern unsigned long alloc_tag_ref_mask;
+>>  extern int alloc_tag_ref_offs;
+>>  extern struct alloc_tag_kernel_section kernel_tags;
+>>
+>> +#ifdef CONFIG_MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
+>> +DECLARE_STATIC_KEY_TRUE(mem_profiling_compressed);
+>> +#else
+>>  DECLARE_STATIC_KEY_FALSE(mem_profiling_compressed);
+>> +#endif
+>>
+>>  typedef u16    pgalloc_tag_idx;
+>>
+>> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>> index 9fe4d8dfe578..66d8995f3514 100644
+>> --- a/lib/Kconfig.debug
+>> +++ b/lib/Kconfig.debug
+>> @@ -1028,6 +1028,11 @@ config MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+>>         default y
+>>         depends on MEM_ALLOC_PROFILING
+>>
+>> +config MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
+>> +       bool "store page allocation tag references in the page flags by default"
+>> +       default y
+>> +       depends on MEM_ALLOC_PROFILING
+>> +
+>>  config MEM_ALLOC_PROFILING_DEBUG
+>>         bool "Memory allocation profiler debugging"
+>>         default n
+>> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+>> index 25ecc1334b67..30adad5630dd 100644
+>> --- a/lib/alloc_tag.c
+>> +++ b/lib/alloc_tag.c
+>> @@ -31,7 +31,11 @@ DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+>>                         mem_alloc_profiling_key);
+>>  EXPORT_SYMBOL(mem_alloc_profiling_key);
+>>
+>> +#ifdef CONFIG_MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
+>> +DEFINE_STATIC_KEY_TRUE(mem_profiling_compressed);
+>> +#else
+>>  DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
+>> +#endif
+>>
+>>  struct alloc_tag_kernel_section kernel_tags = { NULL, 0 };
+>>  unsigned long alloc_tag_ref_mask;
+>> --
+>> 2.47.1
+>>
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/drivers/gpu/drm/ttm/ttm_pool.c?h=3Dv6.15-rc2#n728
-
-If that is the case, we can try the change, run some benchmarks and
-submit the patch if we see positive results.
-
-Thanks
-Juan
-
-> Regards,
-> Christian.
->
-> >  #define NUM_ORDERS ARRAY_SIZE(orders)
-> >
-> >  static struct sg_table *dup_sg_table(struct sg_table *table)
->
