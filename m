@@ -1,314 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBB82309BD;
-	Wed, 16 Apr 2025 09:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA062557C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795002; cv=none; b=hcIiYLRyxqWZ0PCL9OVWGolBAltgHY1SX1Rgpqd4NGWyXGtwixUDVP3lKhpuSKWUP6bs+eVU8kI5OVOrMEpjfGWLtw0CAzNa0XIQB2+FDpfRxl/o2xmk1IgEWUKkkHrixN7WGkwqu0vayIlliKyO/fr+45+O+pqgEE/+t1ewmq8=
+	t=1744795024; cv=none; b=PXzsagbgJju3h1U3J+sWUQkXIn4pwhMmEWLB6LaLRBgcIasM0HP7S2Ue/J0ogzfOZ6YteJEjPdg3b3HeJ+NkbPctPsKXGtiCt9TS7m/89M2LR8VlvW1qi2cfFcC4Ql1s14Zoz3rAfWxvYBXEEbUADjTQPgy1UUzR/QjIaVYVCkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795002; c=relaxed/simple;
-	bh=hY7p3m5X0OOft3dhhs3uhZGYBnQpfn9DlIDiE50gYNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Srm8CBteIMavxou6y+cJv88fFaCvFeYqSU0rU4g3vLf/rR6F7J/eVTXfv5SW0i4HwWhvBLxhXao2YuK2NOqndDgDAnL2OpE5V/NZ2kpn9eO22eySsSOBjhwLL+8pzZ5Zh/cKKbzjbNZ5o3ja7Z4uq7JBrlbkwbN2wy7NMEw6G0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaUqEwxs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744795024; c=relaxed/simple;
+	bh=F3gyMVudY5nzkMf/WU1z0FQtCegXxMlIC3excB97FxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FEfHM6EEU/4qwWnnwqz1R8imurApB5PIcp5xRr8mLuKTEYLrg/QXejfsr9N6iFeIl4b1jrA1Cb8JBjrnsol0AvWIfR5Bvvxi5SvCOmJ2+FfM6PfUyqWPjh5t7srsxF/+IiCKQfbv8I/r2BA1NHrGiyl5InH6l2eGgjwWb9hwy70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ogAVquxD; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaUqEwxs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DD6C4CEE2;
-	Wed, 16 Apr 2025 09:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744795002;
-	bh=hY7p3m5X0OOft3dhhs3uhZGYBnQpfn9DlIDiE50gYNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uaUqEwxsykjInJ62sBQ3icULCRHLAodwkEXAyOvS613sBBl8V4XwJieKRR70ZNSRo
-	 sORxELLDb1lvsUeUtfYiZkKEe8CY+EAZP06AL9mkCFhE9DoooapeaccHXYZrhHEMsg
-	 qb2P6bHCitt0DwDuimqyL9TQ1C2IswUiSQipaUsZSeazpYM7zplz2muGRbtavhGTco
-	 GG4r96fbMsyV2Jloo+7nHDHbtlSHGjYxG9WY2DBqz56xjOy/miriXUhr9flsjmRUgv
-	 A6JT2MXZ6p8URA+lrTJ1TPTzca+pn4i0Hh2y/Y51506TjfwfJ9kuSRMlICXH6GMTnl
-	 L5UALTB4jBGWQ==
-Date: Wed, 16 Apr 2025 10:16:32 +0100
-From: Simon Horman <horms@kernel.org>
-To: Parvathi Pudi <parvathi@couthit.com>
-Cc: danishanwar@ti.com, rogerq@kernel.org, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-	tony@atomide.com, richardcochran@gmail.com, glaroque@baylibre.com,
-	schnelle@linux.ibm.com, m-karicheri2@ti.com, s.hauer@pengutronix.de,
-	rdunlap@infradead.org, diogo.ivo@siemens.com, basharath@couthit.com,
-	jacob.e.keller@intel.com, m-malladi@ti.com,
-	javier.carrasco.cruz@gmail.com, afd@ti.com, s-anna@ti.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	pratheesh@ti.com, prajith@ti.com, vigneshr@ti.com, praneeth@ti.com,
-	srk@ti.com, rogerq@ti.com, krishna@couthit.com, pmohan@couthit.com,
-	mohan@couthit.com
-Subject: Re: [PATCH net-next v5 02/11] net: ti: prueth: Adds ICSSM Ethernet
- driver
-Message-ID: <20250416091632.GM395307@horms.kernel.org>
-References: <20250414113458.1913823-1-parvathi@couthit.com>
- <20250414113458.1913823-3-parvathi@couthit.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ogAVquxD"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FLh78R028081;
+	Wed, 16 Apr 2025 09:16:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=2fhvbz
+	vlCk3yxHSu/jZXPShZGq2s1FVIdv9WUknRhyI=; b=ogAVquxDGn+eEfJ7iYL9XW
+	rfe1nJjuFsdBA29jDXvKzXU9AfE3xMtG8r7hFUhLC6G/tiYY4TcbONUMLTmhoAP6
+	29jdG3KlFDZdXvL7YsN6KXOoY9yDjfaPGPVbQl0E0alnB55F3s0I/l1RIKEQ53ji
+	c4vJu0LPBK7l1fdnCeDHImbwUyEgtEn9XFIUH4m0mFUlxX2Ec27wa9tWhnebI/yL
+	yhTleNCAP6VKn9Ef/QN4hd2DeOaRV18AIBtpaNbdS057xNTyZ1rl79mIPiBqupdJ
+	WaLV9EsRkoO5Vgyt6m1zXE/8bCwl8EftHMGDNz3S9SzsWqsS5lcURmOowkZX+2NA
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt2ejs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:16:52 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G81BQ5016746;
+	Wed, 16 Apr 2025 09:16:51 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46057276bd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:16:51 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G9GolG39256404
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 09:16:50 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0FFB020040;
+	Wed, 16 Apr 2025 09:16:50 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E1102004B;
+	Wed, 16 Apr 2025 09:16:48 +0000 (GMT)
+Received: from [9.109.215.252] (unknown [9.109.215.252])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 09:16:48 +0000 (GMT)
+Message-ID: <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
+Date: Wed, 16 Apr 2025 14:46:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414113458.1913823-3-parvathi@couthit.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
+ load balance is not due
+To: "Chen, Yu C" <yu.c.chen@intel.com>, Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>,
+        Doug Nelson <doug.nelson@intel.com>,
+        Mohini Narkhede <mohini.narkhede@intel.com>,
+        linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
+ <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
+ <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9ieTpl_4jgjT0OLCtgwc_Ag6CLxIVoYa
+X-Proofpoint-ORIG-GUID: 9ieTpl_4jgjT0OLCtgwc_Ag6CLxIVoYa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160073
 
-On Mon, Apr 14, 2025 at 05:04:49PM +0530, Parvathi Pudi wrote:
-> From: Roger Quadros <rogerq@ti.com>
+
+
+On 4/16/25 11:58, Chen, Yu C wrote:
+> Hi Shrikanth,
 > 
-> Updates Kernel configuration to enable PRUETH driver and its dependencies
-> along with makefile changes to add the new PRUETH driver.
+> On 4/16/2025 1:30 PM, Shrikanth Hegde wrote:
+>>
+>>
+>> On 4/16/25 09:28, Tim Chen wrote:
+>>> At load balance time, balance of last level cache domains and
+>>> above needs to be serialized. The scheduler checks the atomic var
+>>> sched_balance_running first and then see if time is due for a load
+>>> balance. This is an expensive operation as multiple CPUs can attempt
+>>> sched_balance_running acquisition at the same time.
+>>>
+>>> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
+>>> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
+>>> sched_balance_running.  Most of the time, a balance attempt is aborted
+>>> immediately after acquiring sched_balance_running as load balance time
+>>> is not due.
+>>>
+>>> Instead, check balance due time first before acquiring
+>>> sched_balance_running. This skips many useless acquisitions
+>>> of sched_balance_running and knocks the 7.6% CPU overhead on
+>>> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
+>>> improved by 11%.
+>>>
+>>
+>> Hi Tim.
+>>
+>> Time check makes sense specially on large systems mainly due to 
+>> NEWIDLE balance.
+
+scratch the NEWLY_IDLE part from that comment.
+
+>>
 > 
-> Changes includes init and deinit of ICSSM PRU Ethernet driver including
-> net dev registration and firmware loading for DUAL-MAC mode running on
-> PRU-ICSS2 instance.
+> Could you elaborate a little on this statement? There is no timeout 
+> mechanism like periodic load balancer for the NEWLY_IDLE, right?
+
+Yes. NEWLY_IDLE is very opportunistic.
+
 > 
-> Changes also includes link handling, PRU booting, default firmware loading
-> and PRU stopping using existing remoteproc driver APIs.
+>> One more point to add, A lot of time, the CPU which acquired 
+>> sched_balance_running,
+>> need not end up doing the load balance, since it not the CPU meant to 
+>> do the load balance.
+>>
+>> This thread.
+>> https://lore.kernel.org/all/1e43e783-55e7-417f- 
+>> a1a7-503229eb163a@linux.ibm.com/
+>>
+>>
+>> Best thing probably is to acquire it if this CPU has passed the time 
+>> check and as well it is
+>> actually going to do load balance.
+>>
+>>
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
-> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
+> This is a good point, and we might only want to deal with periodic load
+> balancer rather than NEWLY_IDLE balance. Because the latter is too 
+> frequent and contention on the sched_balance_running might introduce
+> high cache contention.
+> 
 
-...
+But NEWLY_IDLE doesn't serialize using sched_balance_running and can 
+endup consuming a lot of cycles. But if we serialize using 
+sched_balance_running, it would definitely cause a lot contention as is.
 
-> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
 
-...
+The point was, before acquiring it, it would be better if this CPU is 
+definite to do the load balance. Else there are chances to miss the 
+actual load balance.
 
-> +static int icssm_prueth_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *eth0_node = NULL, *eth1_node = NULL;
-> +	struct device_node *eth_node, *eth_ports_node;
-> +	enum pruss_pru_id pruss_id0, pruss_id1;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np;
-> +	struct prueth *prueth;
-> +	int i, ret;
-> +
-> +	np = dev->of_node;
-> +	if (!np)
-> +		return -ENODEV; /* we don't support non DT */
-> +
-> +	prueth = devm_kzalloc(dev, sizeof(*prueth), GFP_KERNEL);
-> +	if (!prueth)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, prueth);
-> +	prueth->dev = dev;
-> +	prueth->fw_data = device_get_match_data(dev);
-> +
-> +	eth_ports_node = of_get_child_by_name(np, "ethernet-ports");
-> +	if (!eth_ports_node)
-> +		return -ENOENT;
-> +
-> +	for_each_child_of_node(eth_ports_node, eth_node) {
-> +		u32 reg;
-> +
-> +		if (strcmp(eth_node->name, "ethernet-port"))
-> +			continue;
-> +		ret = of_property_read_u32(eth_node, "reg", &reg);
-> +		if (ret < 0) {
-> +			dev_err(dev, "%pOF error reading port_id %d\n",
-> +				eth_node, ret);
-> +		}
-> +
-> +		of_node_get(eth_node);
 
-Hi Roger, Parvathi, all,
+> thanks,
+> Chenyu
+> 
+>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+>>> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
+>>> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
+>>> ---
+>>>   kernel/sched/fair.c | 16 ++++++++--------
+>>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>> index e43993a4e580..5e5f7a770b2f 100644
+>>> --- a/kernel/sched/fair.c
+>>> +++ b/kernel/sched/fair.c
+>>> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct rq 
+>>> *rq, enum cpu_idle_type idle)
+>>>           interval = get_sd_balance_interval(sd, busy);
+>>> -        need_serialize = sd->flags & SD_SERIALIZE;
+>>> -        if (need_serialize) {
+>>> -            if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
+>>> -                goto out;
+>>> -        }
+>>> -
+>>>           if (time_after_eq(jiffies, sd->last_balance + interval)) {
+>>> +            need_serialize = sd->flags & SD_SERIALIZE;
+>>> +            if (need_serialize) {
+>>> +                if (atomic_cmpxchg_acquire(&sched_balance_running, 
+>>> 0, 1))
+>>> +                    goto out;
+>>> +            }
+>>> +
+>>>               if (sched_balance_rq(cpu, rq, sd, idle, 
+>>> &continue_balancing)) {
+>>>                   /*
+>>>                    * The LBF_DST_PINNED logic could have changed
+>>> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq 
+>>> *rq, enum cpu_idle_type idle)
+>>>               }
+>>>               sd->last_balance = jiffies;
+>>>               interval = get_sd_balance_interval(sd, busy);
+>>> +            if (need_serialize)
+>>> +                atomic_set_release(&sched_balance_running, 0);
+>>>           }
+>>> -        if (need_serialize)
+>>> -            atomic_set_release(&sched_balance_running, 0);
+>>>   out:
+>>>           if (time_after(next_balance, sd->last_balance + interval)) {
+>>>               next_balance = sd->last_balance + interval;
+>>
 
-I feel that I'm missing something obvious here.
-But I have some questions about the reference to eth_node
-taken on the line above.
-
-> +
-> +		if (reg == 0) {
-> +			eth0_node = eth_node;
-
-If, while iterating through the for loop above, we reach this point more
-than once, then will the reference to the previously node assigned to
-eth0_node be leaked?
-
-> +			if (!of_device_is_available(eth0_node)) {
-> +				of_node_put(eth0_node);
-> +				eth0_node = NULL;
-> +			}
-> +		} else if (reg == 1) {
-> +			eth1_node = eth_node;
-
-Likewise here for eth1_node.
-
-> +			if (!of_device_is_available(eth1_node)) {
-> +				of_node_put(eth1_node);
-> +				eth1_node = NULL;
-> +			}
-> +		} else {
-> +			dev_err(dev, "port reg should be 0 or 1\n");
-
-And, perhaps more to the point, is the reference to eth_node leaked if
-we reach this line?
-
-> +		}
-> +	}
-> +
-> +	of_node_put(eth_ports_node);
-> +
-> +	/* At least one node must be present and available else we fail */
-> +	if (!eth0_node && !eth1_node) {
-> +		dev_err(dev, "neither port0 nor port1 node available\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (eth0_node == eth1_node) {
-
-Given the if / else if condition in the for loop above,
-I'm not sure this can ever occur.
-
-> +		dev_err(dev, "port0 and port1 can't have same reg\n");
-> +		of_node_put(eth0_node);
-> +		return -ENODEV;
-> +	}
-> +
-> +	prueth->eth_node[PRUETH_MAC0] = eth0_node;
-> +	prueth->eth_node[PRUETH_MAC1] = eth1_node;
-> +
-> +	if (eth0_node) {
-> +		prueth->pru0 = pru_rproc_get(np, 0, &pruss_id0);
-> +		if (IS_ERR(prueth->pru0)) {
-> +			ret = PTR_ERR(prueth->pru0);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "unable to get PRU0: %d\n", ret);
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	if (eth1_node) {
-> +		prueth->pru1 = pru_rproc_get(np, 1, &pruss_id1);
-> +		if (IS_ERR(prueth->pru1)) {
-> +			ret = PTR_ERR(prueth->pru1);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "unable to get PRU1: %d\n", ret);
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	/* setup netdev interfaces */
-> +	if (eth0_node) {
-> +		ret = icssm_prueth_netdev_init(prueth, eth0_node);
-> +		if (ret) {
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "netdev init %s failed: %d\n",
-> +					eth0_node->name, ret);
-> +			}
-> +			goto put_pru;
-> +		}
-> +	}
-> +
-> +	if (eth1_node) {
-> +		ret = icssm_prueth_netdev_init(prueth, eth1_node);
-> +		if (ret) {
-> +			if (ret != -EPROBE_DEFER) {
-> +				dev_err(dev, "netdev init %s failed: %d\n",
-> +					eth1_node->name, ret);
-> +			}
-> +			goto netdev_exit;
-> +		}
-> +	}
-> +
-> +	/* register the network devices */
-> +	if (eth0_node) {
-> +		ret = register_netdev(prueth->emac[PRUETH_MAC0]->ndev);
-> +		if (ret) {
-> +			dev_err(dev, "can't register netdev for port MII0");
-> +			goto netdev_exit;
-> +		}
-> +
-> +		prueth->registered_netdevs[PRUETH_MAC0] =
-> +			prueth->emac[PRUETH_MAC0]->ndev;
-> +	}
-> +
-> +	if (eth1_node) {
-> +		ret = register_netdev(prueth->emac[PRUETH_MAC1]->ndev);
-> +		if (ret) {
-> +			dev_err(dev, "can't register netdev for port MII1");
-> +			goto netdev_unregister;
-> +		}
-> +
-> +		prueth->registered_netdevs[PRUETH_MAC1] =
-> +			prueth->emac[PRUETH_MAC1]->ndev;
-> +	}
-> +
-> +	if (eth1_node)
-> +		of_node_put(eth1_node);
-> +	if (eth0_node)
-> +		of_node_put(eth0_node);
-> +	return 0;
-> +
-> +netdev_unregister:
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		if (!prueth->registered_netdevs[i])
-> +			continue;
-> +		unregister_netdev(prueth->registered_netdevs[i]);
-> +	}
-> +
-> +netdev_exit:
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		eth_node = prueth->eth_node[i];
-> +		if (!eth_node)
-> +			continue;
-> +
-> +		icssm_prueth_netdev_exit(prueth, eth_node);
-> +	}
-> +
-> +put_pru:
-> +	if (eth1_node) {
-> +		if (prueth->pru1)
-> +			pru_rproc_put(prueth->pru1);
-> +		of_node_put(eth1_node);
-> +	}
-> +
-> +	if (eth0_node) {
-> +		if (prueth->pru0)
-> +			pru_rproc_put(prueth->pru0);
-> +		of_node_put(eth0_node);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void icssm_prueth_remove(struct platform_device *pdev)
-> +{
-> +	struct prueth *prueth = platform_get_drvdata(pdev);
-> +	struct device_node *eth_node;
-> +	int i;
-> +
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		if (!prueth->registered_netdevs[i])
-> +			continue;
-> +		unregister_netdev(prueth->registered_netdevs[i]);
-> +	}
-> +
-> +	for (i = 0; i < PRUETH_NUM_MACS; i++) {
-> +		eth_node = prueth->eth_node[i];
-> +		if (!eth_node)
-> +			continue;
-> +
-> +		icssm_prueth_netdev_exit(prueth, eth_node);
-> +		of_node_put(eth_node);
-> +	}
-> +
-> +	pruss_put(prueth->pruss);
-> +
-> +	if (prueth->eth_node[PRUETH_MAC0])
-> +		pru_rproc_put(prueth->pru0);
-> +	if (prueth->eth_node[PRUETH_MAC1])
-> +		pru_rproc_put(prueth->pru1);
-> +}
-
-...
