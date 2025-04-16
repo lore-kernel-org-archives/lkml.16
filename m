@@ -1,115 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0BF24502C;
-	Wed, 16 Apr 2025 09:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93C7237186;
+	Wed, 16 Apr 2025 09:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797426; cv=none; b=TR3GrGtZLesFvNARk1ssh/bfwmhV5Ey9b27f14cO5sAwwAbZi9JKnBDy7VMUZzzEF5NgU+8rc5qIEsii1MyGTHEdiMjGnnrtD6Le5AyDlGaYBuV7QhrL00EEWC1LKmZeKzUB0NYJMJ5wBeuq8jpuC7MqztdlJNWeOPyjf0d+KAI=
+	t=1744797446; cv=none; b=MuAwidaNVJ5VYnKC61NTQ4/PyM+KhY8NhoK2RKTh8qIyYQi3Vm/MTSQj6rxMjKo0UkodIc1EDx50qe2wyoF60ZuQGjitnQ9XwyF9j7fKiECTa8wxNfQj3NwtIYQlzXV6vG8VZHLv+W9yPPdRlCmteRZrW98CVx5RlP+ou3+iEJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797426; c=relaxed/simple;
-	bh=IhlW6Wu/axGKaX+oNbFSThpIYklJNdJRYZAvQ7gbYRM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S8onnFFZ3pAlumb7ox1zigg5W8irEC9vk0kMH/UNeoAO6DJSJs1whKBrpZ2nngfg/lrAYIodE9sh0jl/4TMWeTiBpy4Drc+3U/W/7YT6dF91a8dboRpt6OaZI3caF4d02mAHCv6NvD7Ea9s0j5zs9zsWc2ivX++3qry1+agF/6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9o4X4tO; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9o4X4tO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744797425; x=1776333425;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=IhlW6Wu/axGKaX+oNbFSThpIYklJNdJRYZAvQ7gbYRM=;
-  b=l9o4X4tOXTd9Gu7J3wK7fRw0IJ/c5buwOAiF/v3GfR8xP9n6z1oBef8j
-   2+CT+D9iUasKh9dG3iH0H0xxfnGOU1huTvqnSDPaMVTYyMecUl9JGiEMQ
-   hnOGynhsibwvRUOl9x2dcTS1O5nrDx0cYIkeDKvD4O7/BdgFZf+s/Mw5o
-   6KN+d8gzUKzBeBjPZwWBUQl0PNrUvlbMVuaL3cM7zCfJniIq6Tdj7MsR1
-   8/r2+ma7oVqCaCkib93phlmbLiUeQFslGQWLAHE741iDTOg9kuoXZKfjm
-   UgcXointAaCGxhmiLiSUMLhRwXJXYRkA3HplZH9fzlBfGiuAT2CLX9nFr
-   Q==;
-X-CSE-ConnectionGUID: xjl9qwioSM+4VJmTS1ubIQ==
-X-CSE-MsgGUID: Ro9Wx6SCQDW6Gge3lJUqIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50144321"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="50144321"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:56:53 -0700
-X-CSE-ConnectionGUID: YnZxj4g0TViZQhQ3EmCFQA==
-X-CSE-MsgGUID: Jm0I/7j+ST+0IbGooQjPCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135259321"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa003.jf.intel.com with ESMTP; 16 Apr 2025 02:56:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 2A409741; Wed, 16 Apr 2025 12:56:47 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 6/8] gpiolib: Call validate_desc() when VALIDATE_DESC() can't be used
-Date: Wed, 16 Apr 2025 12:55:14 +0300
-Message-ID: <20250416095645.2027695-7-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
-References: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1744797446; c=relaxed/simple;
+	bh=l5qNooRCd1W0gmZEHROqQ/K9YjfyyMuDokciVCYCZPY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RfKovRxVWuqjFcMCQeaEm5wRKpwlVs5XNI2j0TGtjTsXJwyRvW167V+3oS2q/b6t6J3WHQg/IWBLbf6FVG2fkXP3A3MHB8t3YPYfZwarLv5frR0wDSDtU5TcE5+WMVPXL5nWjOPYnqAkG84Hivcc/w6cOfSB2p6lPEPSoskjaHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so2504424241.3;
+        Wed, 16 Apr 2025 02:57:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744797443; x=1745402243;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q/AdmEjELs7czLvY/QMPsCiILW5NyytlUoY3Z4E62U4=;
+        b=r/63nL/O2up6DXDe+bMHEVn9k+GNS3zystnFi7ht/ChMAhxaFCmeMLsCqWpCoSwbbi
+         Ba0mUvMeXShuFz3wmgVrFIJvHxCuCukg70GbDWhwidRFdMsx9D1S3aw+Pu2CMH+3ZZQQ
+         SA6I1+SwN+IGwbF7pQvqAyYyLjLrddPDtsfRYBi/GukUj6q6x5RCigSa4JeE7QdT1DUE
+         8ixVWGXwx9Evs1r+uUInG/q9XAMxOUBfn92ei75C/zmuTzqEBjxH+N7nfq0gthKLI3ts
+         RezzLR6DAeqXYtl196H40fTUqwo0Xi/zddXA94clye5CWjWvwOJncZGkgX2XkJOnRVRB
+         FTUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpl2oZvh6MD5LXHFOeQ7ikuMZgOESgv+lUIKv3htvaR1LwK3Rbh0NNyttqwCbvL22UfZ+UbOCZfDgvN8HI@vger.kernel.org, AJvYcCWDkfHXp4VJcz+tBRR383JG/AU3NZ/LRCC3H7qiwhVrc5GBRY5JUSjaNRHAgImmbD+WKAz+YBVoGGc=@vger.kernel.org, AJvYcCWIB7ZOsa501/rZW1d5RJPVJqwdq+gJ7gI02hmNaMIt1SwcZGGdepZUVI0bHI+r1butBrwC3wrp9aLaZCVmoI58B2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbo7R1A89jrhBhWFqLw9+4NfUjTdUURmLuu8SJlC33Z8pxohcn
+	rg3yV0snISZAE4I8R3dMtB5bzA/a/uAG6/az2HT0QIsSxkWG7RQuvvehOCZj
+X-Gm-Gg: ASbGncsaWbKjXnStLWMjL5to1G3FRdfB4UCWrct1B5dtt1PNIpHI+8VdOA7Cn8eaJfs
+	IKjwW8NFwPYezYznErSleAsVN3nJVu9AsBS4kiaQcRu1jfnmO9vzyX99mVyGltaKHATTLyDn+Ns
+	UCJc4nHgzUCxv2QdRH4qu/f63xFP7rscwqBITr7xx2qAPcbdasG46Xk7eYoDxLpkrGsbHW2KuHC
+	icAxpv3ibXnyc5plqAytkR7wA0q9KXgcFRHXbI70zRSErh5ilpe1wm5UKqJnga1+F1f31Z/33oq
+	aJFx82La2Z1559U/zzTnFvutU29Uf535eWseA73FqAgss6QOb/Y+37BECw1Nzy8Sdah0KMAYFP6
+	Dlu9Ot/yjw1758MaqDQ==
+X-Google-Smtp-Source: AGHT+IFueu0WKzu6fAD9i5+srBkaj6K2THHh5pY9dqRFgk7+Q4NTwcL/fbklF0paYVSru0v6Lwz8cQ==
+X-Received: by 2002:a05:6102:3c4f:b0:4c5:1c43:7cb3 with SMTP id ada2fe7eead31-4cb592f5949mr275091137.25.1744797442667;
+        Wed, 16 Apr 2025 02:57:22 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87557280076sm3037576241.21.2025.04.16.02.57.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 02:57:22 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-527b70bd90dso2999035e0c.3;
+        Wed, 16 Apr 2025 02:57:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKT3crQGyLvf3jj0sEZMy0vhUm5iZSUOiC6qS+nkbUZ9xZMad/+PHA9Wuu0THc1tswZLR3RmubhB8=@vger.kernel.org, AJvYcCUvArpgOZYcRs6GY9NMTnEqI0ph+epMXkzrauEeNJlfRHpJoomS9M+nJtSKCrU4U5s42Hr4Fu7BcxwpkY9v@vger.kernel.org, AJvYcCUwroFWJtE13+yBfHZU2AV3LVm02YJZZ/P0bSolDGcA4ldvynGd8rnbnICKM0khW2ZKgJMaoJqFDVrjUT1fn4pMwQo=@vger.kernel.org
+X-Received: by 2002:a05:6122:2a13:b0:518:7ab7:afbb with SMTP id
+ 71dfb90a1353d-5290e1c73damr349467e0c.8.1744797442070; Wed, 16 Apr 2025
+ 02:57:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250402131142.1270701-1-tommaso.merciai.xr@bp.renesas.com> <20250402131142.1270701-2-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250402131142.1270701-2-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 16 Apr 2025 11:57:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVdvcPA_Wsmc6NZ4oQbVoFzHjGCKnZfc5aN4uZjkpYWnw@mail.gmail.com>
+X-Gm-Features: ATxdqUH6i59Gzu7O1mIrIttmGODeb50cvVqQ2I7ZIFCJ1h9bRWKzbfZCBv9pqsk
+Message-ID: <CAMuHMdVdvcPA_Wsmc6NZ4oQbVoFzHjGCKnZfc5aN4uZjkpYWnw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] clk: renesas: r9a09g047: Add clock and reset entries
+ for GE3D
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Call validate_desc() directly when VALIDATE_DESC() can't be used.
-It will print additional information useful for debugging.
+Hi Tommaso,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+On Wed, 2 Apr 2025 at 15:12, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> Add CLK_PLLVDO_GPU along with the necessary clock and reset entries for
+> GE3D.
+>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ad2e68f66500..3f3371e427fd 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -421,11 +421,8 @@ int gpiod_get_direction(struct gpio_desc *desc)
- 	unsigned int offset;
- 	int ret;
- 
--	/*
--	 * We cannot use VALIDATE_DESC() as we must not return 0 for a NULL
--	 * descriptor like we usually do.
--	 */
--	if (IS_ERR_OR_NULL(desc))
-+	ret = validate_desc(desc, __func__);
-+	if (ret <= 0)
- 		return -EINVAL;
- 
- 	CLASS(gpio_chip_guard, guard)(desc);
-@@ -3982,13 +3979,10 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 	struct gpio_device *gdev;
- 	struct gpio_chip *gc;
- 	int offset;
-+	int ret;
- 
--	/*
--	 * Cannot VALIDATE_DESC() here as gpiod_to_irq() consumer semantics
--	 * requires this function to not return zero on an invalid descriptor
--	 * but rather a negative error number.
--	 */
--	if (IS_ERR_OR_NULL(desc))
-+	ret = validate_desc(desc, __func__);
-+	if (ret <= 0)
- 		return -EINVAL;
- 
- 	gdev = desc->gdev;
--- 
-2.47.2
+Thanks for your patch!
 
+> --- a/drivers/clk/renesas/r9a09g047-cpg.c
+> +++ b/drivers/clk/renesas/r9a09g047-cpg.c
+> @@ -185,6 +187,12 @@ static const struct rzv2h_mod_clk r9a09g047_mod_clks[] __initconst = {
+>                                                 BUS_MSTOP(9, BIT(4))),
+>         DEF_MOD("tsu_1_pclk",                   CLK_QEXTAL, 16, 10, 8, 10,
+>                                                 BUS_MSTOP(2, BIT(15))),
+> +       DEF_MOD("ge3d_clk",                     CLK_PLLVDO_GPU, 15, 0, 7, 16,
+> +                                               BUS_MSTOP(3, BIT(4))),
+> +       DEF_MOD("ge3d_axi_clk",                 CLK_PLLDTY_ACPU_DIV2, 15, 1, 7, 17,
+> +                                               BUS_MSTOP(3, BIT(4))),
+> +       DEF_MOD("ge3d_ace_clk",                 CLK_PLLDTY_ACPU_DIV2, 15, 2, 7, 18,
+> +                                               BUS_MSTOP(3, BIT(4))),
+
+Moving up to preserve sort order (by CPG_CLKON module number).
+
+>  };
+>
+>  static const struct rzv2h_reset r9a09g047_resets[] __initconst = {
+> @@ -214,6 +222,9 @@ static const struct rzv2h_reset r9a09g047_resets[] __initconst = {
+>         DEF_RST(12, 6, 5, 23),          /* CRU_0_ARESETN */
+>         DEF_RST(12, 7, 5, 24),          /* CRU_0_S_RESETN */
+>         DEF_RST(15, 8, 7, 9),           /* TSU_1_PRESETN */
+> +       DEF_RST(13, 13, 6, 14),         /* GE3D_0_RESETN */
+> +       DEF_RST(13, 14, 6, 15),         /* GE3D_0_AXI_RESETN */
+> +       DEF_RST(13, 15, 6, 16),         /* GE3D_0_ACE_RESETN */
+
+Moving up to preserve sort order (by CPF_RST module number).
+The documentation does not have the "_0" part in the reset names,
+so I will drop these while applying, too.
+
+>  };
+>
+>  const struct rzv2h_cpg_info r9a09g047_cpg_info __initconst = {
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk for v6.16 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
