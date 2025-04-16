@@ -1,68 +1,122 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB08113B7A3
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359C1F2BB8;
+	Wed, 16 Apr 2025 15:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817119; cv=none; b=gEkkctKXgsuuw5ix3RPDIqbXMxwLCSjLg9AcXhMS6qGgXlAH87jbwMgXOeLGJPIqYSnbx0Ach0j05l0uL/FMwxnlelHYATRN1iA/8RQBbMGdnu0BF1gWnECKQMDay8RX9HDeJ1qcTBnWoHzH6V79lF1jfoMFsAtwg2shX4Xl3AQ=
+	t=1744817143; cv=none; b=Df9ZA6jFjaZ4vSYgY6TvHbgZBzMDgsGUPuHrIR+O2aEN8RMFhK59cwWHh3ptArnvexFxgBt7L0KTgqBiDrPpM+F1Yv6G799PdQJ+47UQCd8/3cbriXmEE2l0tum/Q7D0QJme7QG9SinG3HcbVTjPwQ5v81ZhXKs6CkXr9NuLx0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817119; c=relaxed/simple;
-	bh=t3KWLvp71uDPZ1KX3NJETFxAT9M1lopmzOl4eKzyLg0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=kqY6FS1bj2wJhynzLEkXweM3qbDbHI+eIGfifZL0gPavSrft8ZG2nj8r3vsDKNKnFqriinzkPZb5uTDkSbPqav+VyFbielCjcM9gonLKVw8lGNjSla7KR9aVl3hrjUl7lY+l2TW5HX7tqnluoxzfk+cGfGlgJrGTBTJrXsTsfXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GYef4Q95; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GYef4Q95"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744817114;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KSHBYjNBy77pH+d+njSJhBrbalqBTYpC8jqWG0u26xA=;
-	b=GYef4Q95bwrLRDfhyzZuZzHRzvckzwN5NIefpluKN2P+mamHWWLDrIQ/C+SW15BljO/yZz
-	+PmZSRhcvOVLZot+yGtoG6krsTOuk5KYehJZnhEIRTxRueCFaqUuJ9P8+0xe/LIy681jyC
-	L8kWIe44BHkuH7gsagYFINSHCqTjqcs=
+	s=arc-20240116; t=1744817143; c=relaxed/simple;
+	bh=O5FMiRNmXONBj5vEoQeS1NbCje5WLfuFhlB24NHiGQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bs89LAM45oa6Agcx+ozkpEM85qjQMeRAPivdR0IJd0ToXVk0VH+dChrx1gKtz2Ipr6PQB2+9ID/1sfSHgDQcMw6d4MDgeiI8p5HH9jWOcrZYA658IrKrWccIbfh6zebIQsk/gImTN68F1kEQ4iUi93PaRI7Qjk3PzbQCZABPex8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: T8h3y34CQ0Kef6Te0F2NmA==
+X-CSE-MsgGUID: TBb9XAL/RV66VOZu/ahaKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="33991791"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="33991791"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:25:41 -0700
+X-CSE-ConnectionGUID: kyEB3oc4ScS6ug5XPSkAsQ==
+X-CSE-MsgGUID: D8o68JBeR0OJKKTKIBdG9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="161544205"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:25:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u54do-0000000CtiF-3vqA;
+	Wed, 16 Apr 2025 18:25:32 +0300
+Date: Wed, 16 Apr 2025 18:25:32 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+Message-ID: <Z__L7DHHvMdmH4bk@smile.fi.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
+ <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+ <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+ <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
+ <7f0d376c-2d03-8e09-5d85-e53b0bce0cc5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
-Subject: Re: [PATCH] MIPS: Remove unnecessary zero-length struct member
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
-Date: Wed, 16 Apr 2025 17:25:00 +0200
-Cc: Oleg Nesterov <oleg@redhat.com>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <D91D318D-83C0-46FC-B16A-CDD45FA57B2D@linux.dev>
-References: <20250411090032.7844-1-thorsten.blum@linux.dev>
- <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7f0d376c-2d03-8e09-5d85-e53b0bce0cc5@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 16. Apr 2025, at 04:33, Maciej W. Rozycki wrote:
-> On Fri, 11 Apr 2025, Thorsten Blum wrote:
+On Wed, Apr 16, 2025 at 03:18:56PM +0300, Ilpo Järvinen wrote:
+> On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> > On Wed, Apr 16, 2025 at 02:53:51PM +0300, Ilpo Järvinen wrote:
+> > > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> > > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
+
+...
+
+> > > > > +			resource_set_range(res, 0xC0000, SZ_128K);
+> > > > >  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+> > > > >  				     IORESOURCE_PCI_FIXED;
+> > > > 
+> > > > I'm wondering why not DEFINE_RES_MEM() in such cases?
+> > > 
+> > > I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
+> > > However, DEFINE_RES*() will overwrite ->name which seems something that 
+> > > ought to not be done here.
+> > 
+> > Okay, I haven't checked the initial state of name field here, so then
+> > DEFINE_RES_MEM_NAMED()?  Or don't we have one?
 > 
->> Remove the zero-length struct member '__last' and use sizeof() to
->> calculate the value for MAX_REG_OFFSET.
->> 
->> No functional changes intended.
+> There's pre-existing res->name on it and your suggestion would have 
+> resulted in overwriting it with NULL. res->name seems to be filled earlier 
+> by PCI probe code.
+
+Okay, then the resource_*() may make more sense, indeed.
+
+> > In any case I would rather see a one assignment for these cases than something
+> > hidden behind proposed conversions.
 > 
-> Have you verified that there's no change except for timestamp data in 
-> (non-debug) `vmlinux' produced with and w/o the patch applied?
+> TBH, these DEFINE_RES*() helpers are doing hidden things such as 
+> blantantly overwriting ->name which I only realized after I had already 
+> converted to it as per your suggestion.
 
-Just did - and yes, the binaries are identical.
+They are specifically named in  capital letters, so main use is in static
+assignments, but they are made compound literals, so it's possible to
+initialise the on-stack or on-heap at run-time with this be kept in mind.
+That's why there is nothing hidden, it implies that the struct is fully
+assigned (with the provided fields and some defaults).
 
-Thanks,
-Thorsten
+> And yes, it is possible to pass the pre-existing res->name to 
+> DEFINE_RES_NAMED() if that what you insist, though it seems doing it for 
+> the sake of DEFINE_RES*() interface rather than this code wanting to 
+> really define the resource from scratch.
+> 
+> Given the hidden overwriting, please be careful on suggesting 
+> DEFINE_RES*() conversions as it's not as trivial as it seems.
+
+Yeah, seems not everybody aware of the difference with
+foo_init_something() vs. FOO_INIT_SOMETHING() :-)
+
+> > > I found one other case from the same file though which is truly defines
+> > > a resource from scratch.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
