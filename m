@@ -1,64 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7291D18C32C;
-	Wed, 16 Apr 2025 15:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB08113B7A3
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817042; cv=none; b=Qxee+9URZQxrNjyvd/0WgpPEKPx9MsqKcs4iXHqRU2IgwTncIuzHL6RKOOJXap8GoP/AncCHJZ9SER/b74r2xi6ohf4tWVzJwKDo1bIRXZHxdEgDicucVkStx4j0JBUU+VoqosfPR0arUoI0T2i6BeFlZ2gqWp1obukPitpG0yU=
+	t=1744817119; cv=none; b=gEkkctKXgsuuw5ix3RPDIqbXMxwLCSjLg9AcXhMS6qGgXlAH87jbwMgXOeLGJPIqYSnbx0Ach0j05l0uL/FMwxnlelHYATRN1iA/8RQBbMGdnu0BF1gWnECKQMDay8RX9HDeJ1qcTBnWoHzH6V79lF1jfoMFsAtwg2shX4Xl3AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817042; c=relaxed/simple;
-	bh=pGN2FXf/xEtwV//iodDxkLZW7OxIkiZj+THM/M1JVek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMa4jaE0TTOmxbAHya94pHm+vfXvxCW46ZHmkz0sezdGq3VPqqXG6p/MwGaEuUwTZnPkF4NV7A+/PwRfO/5tgpn3p0b+LTHIilwOuIvIPZu3IC52HON9E3YLMw/yrL00RY/xQZfzUApnaKATgY2dv975H3ulpBww0/C89hyKec0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRPBMaxZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744817119; c=relaxed/simple;
+	bh=t3KWLvp71uDPZ1KX3NJETFxAT9M1lopmzOl4eKzyLg0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=kqY6FS1bj2wJhynzLEkXweM3qbDbHI+eIGfifZL0gPavSrft8ZG2nj8r3vsDKNKnFqriinzkPZb5uTDkSbPqav+VyFbielCjcM9gonLKVw8lGNjSla7KR9aVl3hrjUl7lY+l2TW5HX7tqnluoxzfk+cGfGlgJrGTBTJrXsTsfXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GYef4Q95; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRPBMaxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C46AFC4CEE2;
-	Wed, 16 Apr 2025 15:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744817042;
-	bh=pGN2FXf/xEtwV//iodDxkLZW7OxIkiZj+THM/M1JVek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BRPBMaxZC9H7f4o35IrstTtLsqBUWW3k/4Mrmjl3qoXyvWKjO5oalml9EdnxkxAvW
-	 /XNT1GZ5t40KQ6qTl9J/zTiAgSdg0brYz/whhj7z8CtLo3jpPAJYu0v9s4P1mJq9EO
-	 aEk7QOW7PYd29Bdxk7kF0Q7f6Ni1YuExs21svDjQHNePcqnXwy3fSsE6LNHKOPVdhz
-	 U6tn8hw5V+1GV1i5qlxwgs5Z9cnZKXQMBZpdIV/Z1Mcuv943LXYwBois7+KYL5xfzE
-	 iwMiCiOou9jXYAWbfZWVOv/pnTStmQm8UvBb9v4q/6uAu+AsG1V3GgfHk5CnahVFal
-	 7eAmm/VbGzT9w==
-Date: Wed, 16 Apr 2025 16:23:57 +0100
-From: Simon Horman <horms@kernel.org>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: jiawenwu@trustnetic.com, mengyuanlou@net-swift.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: txgbe: fix memory leak in txgbe_probe() error
- path
-Message-ID: <20250416152357.GS395307@horms.kernel.org>
-References: <20250415032910.13139-1-abdun.nihaal@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GYef4Q95"
+Content-Type: text/plain;
+	charset=us-ascii
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744817114;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KSHBYjNBy77pH+d+njSJhBrbalqBTYpC8jqWG0u26xA=;
+	b=GYef4Q95bwrLRDfhyzZuZzHRzvckzwN5NIefpluKN2P+mamHWWLDrIQ/C+SW15BljO/yZz
+	+PmZSRhcvOVLZot+yGtoG6krsTOuk5KYehJZnhEIRTxRueCFaqUuJ9P8+0xe/LIy681jyC
+	L8kWIe44BHkuH7gsagYFINSHCqTjqcs=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415032910.13139-1-abdun.nihaal@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.2\))
+Subject: Re: [PATCH] MIPS: Remove unnecessary zero-length struct member
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Thorsten Blum <thorsten.blum@linux.dev>
+In-Reply-To: <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
+Date: Wed, 16 Apr 2025 17:25:00 +0200
+Cc: Oleg Nesterov <oleg@redhat.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ linux-mips@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <D91D318D-83C0-46FC-B16A-CDD45FA57B2D@linux.dev>
+References: <20250411090032.7844-1-thorsten.blum@linux.dev>
+ <alpine.DEB.2.21.2504160321210.23090@angie.orcam.me.uk>
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 15, 2025 at 08:59:09AM +0530, Abdun Nihaal wrote:
-> When txgbe_sw_init() is called, memory is allocated for wx->rss_key
-> in wx_init_rss_key(). However, in txgbe_probe() function, the subsequent
-> error paths after txgbe_sw_init() don't free the rss_key. Fix that by
-> freeing it in error path along with wx->mac_table.
+On 16. Apr 2025, at 04:33, Maciej W. Rozycki wrote:
+> On Fri, 11 Apr 2025, Thorsten Blum wrote:
 > 
-> Also change the label to which execution jumps when txgbe_sw_init()
-> fails, because otherwise, it could lead to a double free for rss_key,
-> when the mac_table allocation fails in wx_sw_init().
+>> Remove the zero-length struct member '__last' and use sizeof() to
+>> calculate the value for MAX_REG_OFFSET.
+>> 
+>> No functional changes intended.
 > 
-> Fixes: 937d46ecc5f9 ("net: wangxun: add ethtool_ops for channel number")
-> Reported-by: Jiawen Wu <jiawenwu@trustnetic.com>
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+> Have you verified that there's no change except for timestamp data in 
+> (non-debug) `vmlinux' produced with and w/o the patch applied?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Just did - and yes, the binaries are identical.
+
+Thanks,
+Thorsten
+
