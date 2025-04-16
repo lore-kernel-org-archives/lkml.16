@@ -1,123 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D432163B6;
-	Wed, 16 Apr 2025 16:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53B16F53E;
+	Wed, 16 Apr 2025 16:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744821920; cv=none; b=o9qIEyYArYg4YjUVOP+U2xDpYsVw7rfxK186tNplr234C2dh0LF3punAfscSumlC34Xlzu5nNuqfJAD6WoXf9+RZAMYzjK6W82XTnplQxlqg5wvThgar5XBLqzvSUejuSktJSmicdF0YesPNXDtdQLi9CR648UG+H4nZsuAN18A=
+	t=1744822044; cv=none; b=MAbOPJY5IRoww9Iw0Tg9p84jWrE1B4/lavKg2JgjdAbb3PiA8JAccsSD6aJpK+7UJKS0oXDWPbhwaanCceg+yHG46oXHH5DPdQH+pBBVnlGETLDyivhSHNYo6+70aqIySTxoy9YO2xh6ds99MKc0vLPYGFbhq92GH58daQIZBII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744821920; c=relaxed/simple;
-	bh=NZjOGkOVi+7Jb5XsEcxcNcG9G1OBjaxyKDLMX1iDNwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=APLzcuPDiY7eaxJXUGbJdpk0khqKFYsA1KXUiMpRUoeiTjyrDq8ANguXeWKyNaUFktUkGLu4zSKWYkaGXeH2jdO3dchSSU/Rbe0P/q9bumalcRDWvtANZJQ2sxOMi4Y03Pwi9jiRXJg0zZj50k+nbUSdM/iWzDrcE8DK3ccuHm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBOpy31D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744822044; c=relaxed/simple;
+	bh=39BxbZJxzOc2j51sx2qrVfV5Kq0/9tpMcS2gikzPL8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZColySRT0/QdCwL+jyKqoN6fG5616L77I+3ySUipJCHTfGHsNFdfMQCNtCjnfGUgBgH2bPKy1oOn2l51GMUGe04oZs6HMBzNJfIFcyQyI1wejWWJep5QCse24g7SfEw67EO4oEg/tUGDTVCO9huChglvBO3HlUma67j19CmBQpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f8lzS+S1; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBOpy31D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FB1FC4CEE4;
-	Wed, 16 Apr 2025 16:45:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744821917;
-	bh=NZjOGkOVi+7Jb5XsEcxcNcG9G1OBjaxyKDLMX1iDNwI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bBOpy31DTEtqpmXaAlAh8RgRHpANHVxKHFZIWjkeLoHLMZLHaxr0nPEGAx2hJcYr9
-	 v/W7PP4/MzIWHEnPuCuHMzuWSZupktvfTqlaqzyVID/C3+3pnvMovCKIn1QCffwxeI
-	 QgKIc+GQCGnm5qymBDf57Wk4CWoK/S3R2o6FyMZ61pn+E4bIDKA5D70KG+OmCsgn4P
-	 9RKfzb1ykAQUuTOS6JZXjU+D7QMcDTmGUv/RRa7ns3pURy3uvSZ2y4gIcghq9kViLn
-	 eyqHdOkNNrtRlIDK1uwSvNaIpiRTYJVVfz/w9m+7u3N8l58xzP6TW8PnZ9RrROG4Qv
-	 d9ORT1a60H/wQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: Sunil Goutham <sgoutham@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	hariprasad <hkelam@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Taras Chornyi <taras.chornyi@plvision.eu>,
-	Daniele Venzano <venza@brownhat.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Philipp Stanner <phasta@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Jacob Keller <jacob.e.keller@intel.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org
-Subject: [PATCH 8/8] net: thunder_bgx: Don't disable PCI device manually
-Date: Wed, 16 Apr 2025 18:44:08 +0200
-Message-ID: <20250416164407.127261-10-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250416164407.127261-2-phasta@kernel.org>
-References: <20250416164407.127261-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8lzS+S1"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so7096487e87.1;
+        Wed, 16 Apr 2025 09:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744822041; x=1745426841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=39BxbZJxzOc2j51sx2qrVfV5Kq0/9tpMcS2gikzPL8c=;
+        b=f8lzS+S153v4Ww5MS+50qnQ16wTlWDWA/cph8NT16rmvDzR5pZEuCDVf2CKUh+5sxt
+         rGdm7DHXg9d1fQXDtstcpva+qdszUEPuBNzKy2rC9SzyCj/WBWAZHaa/q1+OLdmfDBJu
+         y0t1fkxNWYcgleKB8+O8QLGHZZzesaEXcn5hW0gXeTNJSavEi8f/G/g4WIvCBRioLSK+
+         0ShZOqvgnq6jVT0bj4X09lpECdMi1rwlnZtrPStrO9TIxpxd4tOl7agks4EMlZQovuip
+         MZbo1/7QPafE7YPbi82QQnA+3EPbMp0e/5H623gfajNTkgBFxLPIf+SOI9vH1nWcd0TG
+         U+1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744822041; x=1745426841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=39BxbZJxzOc2j51sx2qrVfV5Kq0/9tpMcS2gikzPL8c=;
+        b=v6grcK+8BxVuYjbT8Wb621U27xmAyCiogQjflgQcOMMT6i4dLrot1OfD35UoXqmCMH
+         gvb35yo4EoJGMpsVG/yQADzhL6sTcrwnBIgfk4p/1skw+vzxaZMVK1M6Jy4G8oAyHctL
+         czW5TMRM005P6smDcQNuuJDmN2uEEC9QZY9udf/IcwiUBMn92svEEeqVxEE8r2ZNGKs7
+         c1MxysVjgjCjNWEMHhYHiy6SeR6ZpDtv0TDk2mcP8FTUHJ5y3YyQY/Nhgkg+JPk1AQz3
+         q/WJsr8iYO2KcN4ubzfUEKGhoJJSyG9gTzRjuRWzhyqyhKm3S5xme4ytv9il23R1SNK5
+         Zlpw==
+X-Forwarded-Encrypted: i=1; AJvYcCU5Pj9Y7mbCAYqvL1xv8cz65LrVSSppC+SWq5jYSgPpXI8AMoYCBrcGUjT7nEKAku5/8VQRKSJZ@vger.kernel.org, AJvYcCWgbjDRPiZQOndCM+2flTsirpPfSoxqBPhw90+yXB/AIlCKauaRQPPyqWgoHXQ4yumVe1eBWX2sY25U@vger.kernel.org, AJvYcCXk58tdG0AWbCu0rFpVWWLZHQBq7T+mRhBUNduW/A/jQzsaOYj7jmHjhfwU9eKJYpGaZ7U6vv6Km/FbuQan@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNOMLPzm1g0pHNxq8qJ2/t40wI82KKVF3m8UVpDVjP4U0pQuuF
+	tVBhWJluK0z/rPt5sc5Mxsc20dZsr8VsB9hlQZ1st1QKu1+bApmMuX9SecHfLIcCaRrQ3StwYfI
+	jhJVbYWuZjVqskdXYt7LnAfYxi8c=
+X-Gm-Gg: ASbGncvRgJOIAu+wdQWjEPqwKekULy36hgOm5z5POa6z7bgPM1eOMzhr6oVsDptU3YV
+	/Qb2OAkeq8Jvxjy4stlzQaEZyPbzcZy9ZplZbGySHYGV0l0Jy34EkU9nQf6dYVGxiffMe1d/i2p
+	AQJeZvVYhrwIxAVcbI+5S0kOUEXXdlTykUO6HuKGWZwd/g832iCrg+fopqOUWDWRck
+X-Google-Smtp-Source: AGHT+IG8lZZ6TzRpkafiDqZuJb6IdgkKcm718c9RVf9XNRQH9WAewHR/NAdfrRWL4fICzAbGf7ZhyLgzY9E0+gg7jUk=
+X-Received: by 2002:a05:6512:23a8:b0:545:381:71e with SMTP id
+ 2adb3069b0e04-54d64aea47dmr805238e87.40.1744822040616; Wed, 16 Apr 2025
+ 09:47:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250414140128.390400-1-lukma@denx.de> <20250414140128.390400-6-lukma@denx.de>
+ <41ea023e-d19d-40f1-b268-37292c9e15de@gmx.net>
+In-Reply-To: <41ea023e-d19d-40f1-b268-37292c9e15de@gmx.net>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 16 Apr 2025 13:47:08 -0300
+X-Gm-Features: ATxdqUGIOgXds9JKSX6cp4bYSDFF-AKiQ6t09fTbUcUeMyDb0_oZvm6DwfBTF4M
+Message-ID: <CAOMZO5D+OZ6C02n4T3tJnmzJd9hTWtZA9o6-LXcFh-UmTdVb+Q@mail.gmail.com>
+Subject: Re: [net-next v5 5/6] ARM: mxs_defconfig: Update mxs_defconfig to 6.15-rc1
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-thunder_bgx's PCI device is enabled with pcim_enable_device(), a managed
-devres function which ensures that the device gets enabled on driver
-detach automatically.
+Hi Stefan,
 
-Remove the calls to pci_disable_device().
+On Wed, Apr 16, 2025 at 11:41=E2=80=AFAM Stefan Wahren <wahrenst@gmx.net> w=
+rote:
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/net/ethernet/cavium/thunder/thunder_bgx.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> This is unintended, even it's not your fault Lukasz. NETFS_SUPPORT isn't
+> user select-able anymore, so it's dropped. AFAIU this comes from NFS
+> support, so i think we need to enable CONFIG_NFS_FSCACHE here. Otherwise
+> this caching feature get lost. Since this is a bugfix, this should be
+> separate patch before the syncronization.
+>
+> @Shawn @Fabio what's your opinion?
 
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index c9369bdd04e0..3b7ad744b2dd 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -1608,7 +1608,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	err = pcim_request_all_regions(pdev, DRV_NAME);
- 	if (err) {
- 		dev_err(dev, "PCI request regions failed 0x%x\n", err);
--		goto err_disable_device;
-+		goto err_zero_drv_data;
- 	}
- 
- 	/* MAP configuration registers */
-@@ -1616,7 +1616,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (!bgx->reg_base) {
- 		dev_err(dev, "BGX: Cannot map CSR memory space, aborting\n");
- 		err = -ENOMEM;
--		goto err_disable_device;
-+		goto err_zero_drv_data;
- 	}
- 
- 	set_max_bgx_per_node(pdev);
-@@ -1688,8 +1688,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- err_enable:
- 	bgx_vnic[bgx->bgx_id] = NULL;
- 	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
--err_disable_device:
--	pci_disable_device(pdev);
-+err_zero_drv_data:
- 	pci_set_drvdata(pdev, NULL);
- 	return err;
- }
-@@ -1708,7 +1707,6 @@ static void bgx_remove(struct pci_dev *pdev)
- 	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
- 
- 	bgx_vnic[bgx->bgx_id] = NULL;
--	pci_disable_device(pdev);
- 	pci_set_drvdata(pdev, NULL);
- }
- 
--- 
-2.48.1
-
+Agreed, your suggestions are good ones, thanks.
