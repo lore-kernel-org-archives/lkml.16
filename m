@@ -1,103 +1,93 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6913010C;
-	Wed, 16 Apr 2025 14:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA981AE005;
+	Wed, 16 Apr 2025 14:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744814293; cv=none; b=oCknJtX1dPH5a/Tpg0/okE6gaY71g+FfN11eTwsInGVmqZ2onHDLgpjsODJOCwCoHGAN4yFX0TP9+TAlwLcpE53KjO0t9+w40B25WHTChj+QUEf/DprggD1gavXgiuN/cuQh69bWnhMP/vCfoT8w6iVAH73RYm8ryGWZx9GRXtU=
+	t=1744814339; cv=none; b=fB2BYZxqDIVzLNP8ey9S4YqzteTBPVajI/jrvrCxkB4x55BJ5K6sz5lIadaaoDySoiB/2/6ToVyHehWVedh+MdS6pG2L8Y9pfOijX492e8c2ooc+n8BD0LsMWN9Tt8IQwQs7yVybl9NWRGeQyMpsQCKd1e4vGciffUS6qm15H6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744814293; c=relaxed/simple;
-	bh=doVRRvVe6WEmfRp+vwpcnTHqA9pAD2XGe1+hyb7lzFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uMCPXb/+sZjiIwq88AxVGG0wMzCpo+IMJQ/nerwrc7uIep2MUiH3OLnnZ0diGj7L5nH4trFF6GjuAoWbVE4TFfNjsgmdbQuYPQJksmHZXe6HZdcA0I+YH+OdJ0orlUQMJ+JOwdGT3I+unSEr1QUTkWnh+6Rt6w69MvkwLrZ/3+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E372F2C06039;
-	Wed, 16 Apr 2025 16:38:00 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id D4BF0173A2F; Wed, 16 Apr 2025 16:38:01 +0200 (CEST)
-Date: Wed, 16 Apr 2025 16:38:01 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
-	dingwei@marvell.com, cassel@kernel.org,
-	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
- platforms specific way
-Message-ID: <Z__AyQeZmXiNwT7c@wunner.de>
-References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
- <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
- <Z--cY5Uf6JyTYL9y@wunner.de>
- <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+	s=arc-20240116; t=1744814339; c=relaxed/simple;
+	bh=renL6LwoceAbF24fMo71EZU0slhxf/A+Y4NCyzeYny0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gah6jyR1baE9wagh4h4zIzceE7v1U5vRdedNwX3MmyjktsbMMK45OpkljEWxEevKWIfz4LwXIlQt8tuRBm9Z2433p0ELAg/NYkx1MFLdhbXnGn/iA2ArB4bRScCKzsHOlYtelH8BSNRfEK3ecNVAntljU5Ug2CXP2yj88wGnOZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bWZurPw4; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bWZurPw4"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A8FA143992;
+	Wed, 16 Apr 2025 14:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744814334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wp9rOD25RXguEAHoeSU9OVeZEEl5lBTpFq9oWJbz6T4=;
+	b=bWZurPw4ObLFXQWshYgyR4EdyznxKElKhO4BdMzLhSebx/HZKsy1KEr5Fe7OQuHFuJv7c2
+	SHQOUN7mxmaQ9Ai6V0JKsjZbfTVkeMHuzT78A0+LF/zGa5F1KtESX28NYgFST7wzzRf1My
+	Rt1+0jlKrNCGPZLEEbU5M0VpKIsQeg1gkk0t9wBWIaU8RAjtrGgUIFHpcgmgyePFZN+sJK
+	7ydJazwJbCsFq6LeKo3teCUB1UiTWic9zwEbkgSBKT2Gl/uUstVps0JQUE3Omt+xz6BMJp
+	t2f2cyFpcxQwTSFcwBRvPK2IexYS/Q5WdQ9I5JZ1lyuKmT5zOdRLFdsdk/WhkA==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Jason Cooper
+ <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the tip tree
+In-Reply-To: <20250416132151.3b0448d0@canb.auug.org.au>
+References: <20250416132151.3b0448d0@canb.auug.org.au>
+Date: Wed, 16 Apr 2025 16:38:52 +0200
+Message-ID: <87a58ggohv.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgffhgedvhefgtdejvdethfdvieekgfetuefhueekteetgfdvueeutedttdekgeevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemvgdtrgemfegutgemvggvkedtmeejfehfsgemieelkeejmegsieehvdemieguvgeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmeefuggtmegvvgektdemjeeffhgsmeeileekjeemsgeihedvmeeiuggvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgto
+ hhmpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehjrghsohhnsehlrghkvggurggvmhhonhdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-GND-Sasl: gregory.clement@bootlin.com
 
-On Tue, Apr 15, 2025 at 07:03:17PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Apr 04, 2025 at 10:46:27AM +0200, Lukas Wunner wrote:
-> > On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> > > When the PCI error handling requires resetting the slot, reset it
-> > > using the host bridge specific 'reset_slot' callback if available
-> > > before calling the 'slot_reset' callback of the PCI drivers.
-> > > 
-> > > The 'reset_slot' callback is responsible for resetting the given slot
-> > > referenced by the 'pci_dev' pointer in a platform specific way and
-> > > bring it back to the working state if possible. If any error occurs
-> > > during the slot reset operation, relevant errno should be returned.
-> > 
-> > This feels like something that should be plumbed into
-> > pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
-> 
-> I did consider that, but didn't go for it since there was no platform
-> reset code present in that function. But I will try to use it as I
-> don't have a strong preference to do reset slot in pcie_do_recovery().
+Hi Stephen,
 
-The only platform overriding pcibios_reset_secondary_bus() is powerpc,
-and it only does that on PowerNV.
+> Hi all,
+>
+> The following commit is also in the mvebu tree as a different commit
+> (but the same patch):
+>
+>   73989a38268d ("ARM: orion/gpio:: Convert generic irqchip locking to gua=
+rd()")
+>
+> This is commit
+>
+>   5b49e7ff76b7 ("ARM: orion/gpio:: Convert generic irqchip locking to gua=
+rd()")
+>
+> in the mvebu tree.
 
-I think you could continue to stick with the approach of adding a
-->reset_slot() callback to struct pci_host_bridge, but it would
-be good if at the same time you could convert PowerNV to use the
-newly introduced callback as well.  And then remove the way to
-override the reset procedure via pcibios_reset_secondary_bus().
 
-All pci_host_bridge's which do not define a ->reset_slot() could be
-assigned a default callback which just calls pci_reset_secondary_bus().
-
-Alternatively, pcibios_reset_secondary_bus() could be made to invoke the
-pci_host_bridge's ->reset_slot() callback if it's not NULL, else
-pci_reset_secondary_bus().  And in that case, the __weak attribute
-could be removed as well as the powerpc-specific version of
-pcibios_reset_secondary_bus().
-
-I guess what I'm trying to say is, you don't *have* to plumb this
-into pcibios_reset_secondary_bus().  In fact, having a host bridge
-specific callback could be useful if the SoC contains several
-host bridges which require different callbacks to perform a reset.
-
-I just want to make sure that the code remains maintainable,
-i.e. we don't have two separate ways to override how a bus reset
-is performed.
+Thank you for the notice. I will remove the commit from my branch now. I
+didn't realize it had already been merged.
 
 Thanks,
 
-Lukas
+Gregpry
+
+>
+> --=20
+> Cheers,
+> Stephen Rothwell
+
+--=20
+Gr=C3=A9gory CLEMENT, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
