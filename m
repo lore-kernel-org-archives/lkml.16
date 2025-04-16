@@ -1,114 +1,98 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A641EE021
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AAE20F090
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819300; cv=none; b=mRCNDpFC0a0TEfgfAiYhmlwiu9jgK+Tg9/Uvu2PRBfUVJJ+1I7m1BHKw9aLNeiFySsamUhM64Uqdj3MEBiNWtjfhblIFDNeSm/IRnKSrPCHy/LewhWKvQFltOZrOGgagp3ynrTegIditmL6rhgxHJARwGJCEr0N4bCb+UKSmpYo=
+	t=1744819362; cv=none; b=QoX3DjQTvmQIaR4XiEPj4bANV/AkfJ3qHEvnZiTJipWN7nuxmrV3BDS2D3WrIz6aeX6u1zHyFG0w1kXYH/dStOPDZzgvsTNm1A5OtYRcrJgvxxs7QLJtSWMjXS7mmjjO64Al4MvPILhW02TJ6DyaG0yLnKjEkK2Xle2glNxxVyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819300; c=relaxed/simple;
-	bh=zkeuqcHTaXh8e07BhXhQC4nCiGMSr4a3k1xy1bL+/UA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AG7b4Dgudi/SrJoY6fRxsRJuePfqMGFZufydMpZDmLoxjFMHQCqsqMeMsng5YYNiYrx9tvioT0YJLYTaALhwPFuyAWVM9TMVbRsK7/HI2ZfVSNvHp5QaMLWgeKtELth382DA7qk3ZkMnwQkzizbdCR8c97keLAGsIIeHRg2xazo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u55Ca-0005My-6K; Wed, 16 Apr 2025 18:01:28 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u55CY-000bs2-38;
-	Wed, 16 Apr 2025 18:01:26 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1u55CY-00CEFz-2s;
-	Wed, 16 Apr 2025 18:01:26 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	stable@vger.kernel.org,
-	kernel@pengutronix.de,
+	s=arc-20240116; t=1744819362; c=relaxed/simple;
+	bh=gCMKdFmbtFL4og8gAMPxz21Y+e1NPm0DC5q60WujdV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DhFPS0d6iBxh8ORzRFIJsrOPOHvy0wGzXr1YQ+z1sr8njGnb9skoXD0MKy1Ebl5CXciATIwyHIKBq1si2xJrmYNIDEwDKaLBki5yL85NZu2ffYn6bp33CD5n489FsR7qZaZvz0zZuW2VLHUJXFB4YHKwZzwhOe6RAAwbtt1DYOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EmcesSxJ; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EmcesSxJ"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so72133415e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:02:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744819359; x=1745424159; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rsl4CQivw42ufMV+wmde8cweSZMoL18GRDE0n83zCx0=;
+        b=EmcesSxJ0qfeXoW3kqvdEHF2qfDBrPGdmgeZ07XZ0brWejiAQze3OYY7/Plj8KZXj/
+         hvJM3NBQ1UYIO6DKbQtCf+YGwbZS7dlbVfATLwa18Wv4D2D0BvU2UkFGSF1VeRW3vV7H
+         El0jUuGp1xChxNF1X1LlRPtViqxFpRJVhPG596uEx2HNAkgljtuMSp/0gNuMs3VZk7/F
+         HTe8PRmmAlmsCf8YdecTBSKZFte6IL3QoDCkJDRW+P8tDhj3rIooY7kuHufhN6u8gfjD
+         2mAcXJ4DTTHHeCx8WXRMU1wjcFqoBRXHEvTstqzem4L9ORI2kx19iOf9dNw8RoVnStKW
+         dDQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744819359; x=1745424159;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rsl4CQivw42ufMV+wmde8cweSZMoL18GRDE0n83zCx0=;
+        b=g1K14QXzwb7e1dcB+tE7YRQ+z1O1AokLA5QfXsmjHBFm1H9R34+8ZJw4AeozU5h2ed
+         EzeTNQt7jJj7by+qgYGFWYYG1+Bcke6jkDo2cnyO2EH0I0af6pT/P5zCkrXcqtYa2vrU
+         aQzO7UE/37lSp6GF80NKoLT2XXwhzsqda887EmiypszduIcCcw9hqye/Y4lTAy5hwZFq
+         yGpMOFwncAEz/+62zc94ASahAl/yNt4qmorh30onrD0kLw3bg1vkZOXmurPiDg+JFBVZ
+         ibfE+SvO2R87/md+Ovr4yE0+kVzKShw3GU7HB69nEFDofVzpfKatwkzuKdboyZmui8AI
+         Nlyw==
+X-Forwarded-Encrypted: i=1; AJvYcCXxEztLAVr6INFtUAWFNEXgJqGQfPl0Nan5lzffHrxunSmcjWtmnb1BO+0q5hXyj2Uu/gV9GDMYz6LtPCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5OBZG5fOSbQ7rdfoBsrMJ535qK9tOrDoqhIyqMgzVWw+eYwp9
+	qVadCRMO0ydRazaZ3WujsRUaU/eKo7x+WZtN1FY+Vhq4PioQY07Z/VfmY3kU/8M=
+X-Gm-Gg: ASbGncvPuDIHW4KoD4kW872ZMlUXvh6VIQoofEMbPqsa+NlYdQQlEKuHhGZEbBTagu6
+	e7DfkUh3CP0gZsjPWXWxANPNu2ipJCNwXU+Fpq8+bd91EhjiSbgk/Y3aGBi0WfEEVn+g/XPIpB5
+	W8xe1/ra/4UhNGkAjflvaMbScwjE+y/ws/YWcUt8E4dxr7VAc1m4PhkOs/01W/LYJQWVSKdb1T2
+	b83DEToUDCfrNF8dxnWIQs2yBQkTQL9vmFfWoD12CBEpsz3xiUlRv1D9FB7uinl7Mx0uO1Ggsoy
+	7TtFqihK76rct5V2EKMmlU3uXhCUizgaetY19LhH
+X-Google-Smtp-Source: AGHT+IERWikXw+24LHmvUQeLjVP0dfJ2V4PcYTWDy6gAecuT1JiOnCWraX4intzBqGRCRoec/PI5bQ==
+X-Received: by 2002:a05:600c:458c:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-4405d5fd388mr24047595e9.4.1744819357154;
+        Wed, 16 Apr 2025 09:02:37 -0700 (PDT)
+Received: from brgl-pocket.lan ([2001:861:4445:5860:9621:2787:c462:7dd5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c82fesm25069995e9.3.2025.04.16.09.02.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 09:02:36 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Russell King <linux@armlinux.org.uk>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: David Lechner <dlechner@baylibre.com>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Arnd Bergmann <arnd@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH net v1 1/1] net: selftests: initialize TCP header and skb payload with zero
-Date: Wed, 16 Apr 2025 18:01:25 +0200
-Message-Id: <20250416160125.2914724-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] ARM: davinci: remove support for da830
+Date: Wed, 16 Apr 2025 18:02:33 +0200
+Message-ID: <174481934991.14734.3926853082026589830.b4-ty@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
+References: <20250407-davinci-remove-da830-v1-1-39f803dd5a14@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Zero-initialize TCP header via memset() to avoid garbage values that
-may affect checksum or behavior during test transmission.
 
-Also zero-fill allocated payload and padding regions using memset()
-after skb_put(), ensuring deterministic content for all outgoing
-test packets.
+On Mon, 07 Apr 2025 09:50:12 +0200, Bartosz Golaszewski wrote:
+> We no longer support any boards with the da830 SoC in mainline linux.
+> Let's remove all bits and pieces related to it.
+> 
+> 
 
-Fixes: 3e1e58d64c3d ("net: add generic selftest support")
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: stable@vger.kernel.org
----
- net/core/selftests.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Applied, thanks!
 
-diff --git a/net/core/selftests.c b/net/core/selftests.c
-index e99ae983fca9..35f807ea9952 100644
---- a/net/core/selftests.c
-+++ b/net/core/selftests.c
-@@ -100,10 +100,10 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
- 	ehdr->h_proto = htons(ETH_P_IP);
- 
- 	if (attr->tcp) {
-+		memset(thdr, 0, sizeof(*thdr));
- 		thdr->source = htons(attr->sport);
- 		thdr->dest = htons(attr->dport);
- 		thdr->doff = sizeof(struct tcphdr) / 4;
--		thdr->check = 0;
- 	} else {
- 		uhdr->source = htons(attr->sport);
- 		uhdr->dest = htons(attr->dport);
-@@ -144,10 +144,18 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
- 	attr->id = net_test_next_id;
- 	shdr->id = net_test_next_id++;
- 
--	if (attr->size)
--		skb_put(skb, attr->size);
--	if (attr->max_size && attr->max_size > skb->len)
--		skb_put(skb, attr->max_size - skb->len);
-+	if (attr->size) {
-+		void *payload = skb_put(skb, attr->size);
-+
-+		memset(payload, 0, attr->size);
-+	}
-+
-+	if (attr->max_size && attr->max_size > skb->len) {
-+		size_t pad_len = attr->max_size - skb->len;
-+		void *pad = skb_put(skb, pad_len);
-+
-+		memset(pad, 0, pad_len);
-+	}
- 
- 	skb->csum = 0;
- 	skb->ip_summed = CHECKSUM_PARTIAL;
+[1/1] ARM: davinci: remove support for da830
+      https://git.kernel.org/brgl/linux/c/78e6b545e5587ed89b5768a2815861dcfa415101
+
+Best regards,
 -- 
-2.39.5
-
+Bartosz Golaszewski <brgl@bgdev.pl>
