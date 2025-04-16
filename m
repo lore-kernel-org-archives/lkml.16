@@ -1,79 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7B6217712;
-	Wed, 16 Apr 2025 18:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FF3217F35
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826714; cv=none; b=h3Jwm8Y1myW+KB4eYn7dY3INS5YdZ0/SOEMAzchdZ2y6T8ObKuEVvc+LAx6jxX6cNtWhiCcSThu00LX2vhRXS5SC1aNLzC/N8CTwEyQVGqQeof31//cj6BlHHD3Ya9rH9bWDmLn9yrvRAVfwNL8QzqcIg6QGXUwfEp0VQcQ8I1I=
+	t=1744826714; cv=none; b=gIUxlqQQcC98+r7FE6KGo/gudM1fQNmkJIjQWM+66AEC2r3LecFM0sdpTv2sNzDOEV6qErFhGH2qZuFuAie0X/NYX8+yxTQv8R5W0CcZYjZk5sti/mRZiEL+AzFiUsP6+QDFA/TlqnY4f2orrLhmz/mH5vFxEeaOtHZ8+fLp5xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744826714; c=relaxed/simple;
-	bh=utxXC83Mt8uWnMQFYqlctgBj9oEN/njFfKMPjo/tbz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MMMTHyD3NmgrO35m4KutN3459At10zhplbfstwv7f6DbAaDH6rTg+8vRqvx62StpWuEvRnAV0+puwLPXavdRrEPiCD2NQ7EWXAXdwkuTUyZmDPtsNI9XaswbEPvqn1TS78zFwUerPvzdhRqZvhpZRf1II3JJY8fnHVLv8htsObU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: NNhEtVbVRU+qHlvk3rlwkg==
-X-CSE-MsgGUID: ssayU+bpTcaxQuBn39lIbQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="71781787"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="71781787"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 11:05:11 -0700
-X-CSE-ConnectionGUID: R20vEJt3TlmyohtIwNJocg==
-X-CSE-MsgGUID: 33M2/ymAQIeRNRGAvZUUoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="130416755"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 11:05:09 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u578E-0000000CvvZ-1tEa;
-	Wed, 16 Apr 2025 21:05:06 +0300
-Date: Wed, 16 Apr 2025 21:05:06 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Peter Tyser <ptyser@xes-inc.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 00/12] gpio: convert more GPIO chips to using new value
- setters
-Message-ID: <Z__xUsSeYNQAvnNp@smile.fi.intel.com>
-References: <20250407-gpiochip-set-rv-gpio-part1-v1-0-78399683ca38@linaro.org>
- <174481898215.8191.2166208947252160548.b4-ty@bgdev.pl>
+	bh=ZIr5qWePhTTAu6QP9ykCRzp3/zXxyl7rRo50HkLvVzc=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=a8oQtZ8kMCoTMZuzoXwRJHs/SvDyOK4Eq6an4AquPYBDsRyVty5RR33w8sR1DYUG+kbryuMBtkwTLYCEG0q063AbxPcdzjqIPWnh5SaSUPGs3WCEzQQKlzYunezpJqgKcSDJjPQNEpsw6i9eguRH1ldtiZorHmel4ZFGdLwxjGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q1tXpvu6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1tXpvu6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744826711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TvegWG7Gj78xUkKCUKVmQ3vNed+Ayv7sODOOTAUPKj4=;
+	b=Q1tXpvu6k4zw61/5aVV2COVuGr8WKW+Dkl0IEhxM8lJ88dDhvKnx3fXp1albceR12BHPei
+	CBlHEm/9vDPSgaIpFMi3aIyB+nfUyc8O/XUMjspgRK5G/1Og9WCnoBU1MbUp/d4oFDTwGA
+	eQYyLtReEQFMLSqpnfuEUXDf5MmRSS4=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-425-P9G5hST3PnmlHU-e4HRZ-g-1; Wed, 16 Apr 2025 14:05:10 -0400
+X-MC-Unique: P9G5hST3PnmlHU-e4HRZ-g-1
+X-Mimecast-MFC-AGG-ID: P9G5hST3PnmlHU-e4HRZ-g_1744826710
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4768d63b1dcso16070871cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:05:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744826709; x=1745431509;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TvegWG7Gj78xUkKCUKVmQ3vNed+Ayv7sODOOTAUPKj4=;
+        b=vp6cbDOIN54ZAUBxm9R8ouaZJ9gXuf3j2UnxGNpBv0wsM5DePIvyXgT1jtLe6Is16V
+         eVPk4WohYzoCNfa8cx531zx/hoxTHx4tbNBhWMbsKy+miuf8PNtX9rVi/Kcdm3JfB53c
+         s3w8DoCvs1b6/BBZEKUqfqQslN8Q+BwIMyBmzw6O7qj7I8DSVX3owGW9Ym+hzZQK5Cdz
+         RlFIIVrO9+CXZygEtmOfB9hqb0VRC4VOd4EBoVCKCdvQhJ3VZF64WZrFb5ppkws/4jMa
+         1RpxcqQRYOOEyHkiGJF6viWQ027XzYyONO+ipLV3ihczgaNMQh/31Qeeiy5j7fc1ss0o
+         40xA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGQ1P6Tfl65UtyyHegHJoSTGm/f+7zQDmwhq+5EgZtKqLkMt/V/Z3PiFTUf3PeVcUiKVX9H+yTSsBJdFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiWJTDREZl9CDavQb/yxJFEwpApyfaRwv1dvkBzaEMPnKaEtZK
+	AoZa2JH1Z/OnK0OOHyVR8J1mTDXVOZFST/Qpl6go4YhlSTXIXa+oCdze4o9BxGct78QuwWqkTQW
+	OMqUk2fdkbI4DHFFgXWtiBdoFfU5qzI4QKJaDsIBudGhmJ+CBThmGzND9dOP4UQ==
+X-Gm-Gg: ASbGncsj5xbSPbVAo0qZDN31JlIxXnruZaU/w2eeDQqXwqVEgKbFlnz5jJtEp2vAOqj
+	fR6eKa1BYv4QIivrIBmEGTzSesjVzgy+CSe9mqo16SPLoGsEEu9g8LTpiyyPaoEagKaN4m4Cq93
+	pNnPrnszPmcj9tbIlCZrP5qEw8mvCkwCiWRwBpnGhtmFXTKkhO5dZVaQxhC4yuk5t5lw9ZZEYJP
+	FrTIx/oAQ7VuFGhGWdeMIqb3YBog+cSvm/0EPWPFNZhhVHLgtglzRpWRKyv/tHN/PyvZgIO1HUB
+	P9Rje2+aNEfqkHUfxZEUID4dYcJOuCO31b5r54EeOLdoN8ET1oOJjjzVWQ==
+X-Received: by 2002:a05:622a:229e:b0:477:113e:1fb3 with SMTP id d75a77b69052e-47add9b119dmr5840091cf.3.1744826709606;
+        Wed, 16 Apr 2025 11:05:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEpCQG/sH+Ymk/ikKjnKHM6wtmN6xWEToIN33YtXK8oyvo+AxyY+0yFSum8ebtAl603wlPKvA==
+X-Received: by 2002:a05:622a:229e:b0:477:113e:1fb3 with SMTP id d75a77b69052e-47add9b119dmr5839651cf.3.1744826709102;
+        Wed, 16 Apr 2025 11:05:09 -0700 (PDT)
+Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8969242sm1081236285a.49.2025.04.16.11.05.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 11:05:08 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <146ecd0e-7c4c-4c8c-a11f-029fafb1f2e3@redhat.com>
+Date: Wed, 16 Apr 2025 14:05:07 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174481898215.8191.2166208947252160548.b4-ty@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for
+ cpuset_v2_mode
+To: "T.J. Mercier" <tjmercier@google.com>,
+ Kamalesh Babulal <kamalesh.babulal@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250415235308.424643-1-tjmercier@google.com>
+ <46892bf4-006b-4be1-b7ce-d03eb38602b3@oracle.com>
+ <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 05:56:24PM +0200, Bartosz Golaszewski wrote:
-> 
-> On Mon, 07 Apr 2025 09:13:09 +0200, Bartosz Golaszewski wrote:
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. We're in the process of
-> > converting all GPIO drivers to using the new API. This series converts
-> > another round of GPIO controllers.
+On 4/16/25 1:55 PM, T.J. Mercier wrote:
+> On Wed, Apr 16, 2025 at 2:19 AM Kamalesh Babulal
+> <kamalesh.babulal@oracle.com> wrote:
+>> Hi,
+>>
+>> On 4/16/25 5:23 AM, T.J. Mercier wrote:
+>>> Android has mounted the v1 cpuset controller using filesystem type
+>>> "cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
+>>> behavior where the controller name is not added as a prefix for cgroupfs
+>>> files. [2]
+>>>
+>>> Later, a problem was discovered where cpu hotplug onlining did not
+>>> affect the cpuset/cpus files, which Android carried an out-of-tree patch
+>>> to address for a while. An attempt was made to upstream this patch, but
+>>> the recommendation was to use the "cpuset_v2_mode" mount option
+>>> instead. [3]
+>>>
+>>> An effort was made to do so, but this fails with "cgroup: Unknown
+>>> parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
+>>> mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
+>>> update the special cased cpuset_mount(), and only the cgroup (v1)
+>>> filesystem type was updated.
+>>>
+>>> Add parameter parsing to the cpuset filesystem type so that
+>>> cpuset_v2_mode works like the cgroup filesystem type:
+>>>
+>>> $ mkdir /dev/cpuset
+>>> $ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
+>>> $ mount|grep cpuset
+>>> none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_mode,release_agent=/sbin/cpuset_release_agent)
+>>>
+>>> [1] https://cs.android.com/android/_/android/platform/system/core/+/b769c8d24fd7be96f8968aa4c80b669525b930d3
+>>> [2] https://cs.android.com/android/platform/superproject/main/+/main:system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=2dac5d89a0f024a2d0cc46a80ba4ee13472f1681;l=192
+>>> [3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@redhat.com/T/
+>>>
+>>> Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2 behavior in v1 cgroup")
+>>> Signed-off-by: T.J. Mercier <tjmercier@google.com>
+>> The patch looks good to me, please feel free to add
+>>
+>> Reviewed-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
+>>
+>> One nit below:
+>>
+>>> ---
+>>>   kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
+>>>   1 file changed, 29 insertions(+)
+>>>
+>>> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+>>> index 27f08aa17b56..cf30ff2e7d60 100644
+>>> --- a/kernel/cgroup/cgroup.c
+>>> +++ b/kernel/cgroup/cgroup.c
+>>> @@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type = {
+>>>   };
+>>>
+>>>   #ifdef CONFIG_CPUSETS_V1
+>>> +enum cpuset_param {
+>>> +     Opt_cpuset_v2_mode,
+>>> +};
+>>> +
+>>> +const struct fs_parameter_spec cpuset_fs_parameters[] = {
+>>> +     fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
+>>> +     {}
+>>> +};
+>> A minor optimization you may want to convert the cpuset_fs_parameters into
+>> a static const.
+> Thanks, I copied from cgroup1_fs_parameters since that's where
+> cpuset_v2_mode lives, which doesn't have the static currently
+> (cgroup2_fs_parameters does). Let me update cpuset_fs_parameters in
+> v3, and add a second patch for cgroup1_fs_parameters.
 
-> [07/12] gpio: graniterapids: use new line value setter callbacks
+Besides not exposing the structure outside the current file or maybe a 
+tiny bit of linker speedup, is there other performance benefit by adding 
+"static"?
 
-> [12/12] gpio: ich: use new line value setter callbacks
-
-I believe I have taken these two via my tree. Can it be like this?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Regards,
+Longman
 
