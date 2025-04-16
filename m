@@ -1,115 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFC5221567;
-	Wed, 16 Apr 2025 10:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0096D1B6556;
+	Wed, 16 Apr 2025 10:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798925; cv=none; b=fXojDvoao+zbTeQ61U4jsEpYgl3nrEb3q+DpdpGUL+lz8UBBzzenU+sSsHRcbf3vbFFFnPaV1P4Ev4PTZaBlTLfI73NF9smMvnR1+VkGmOuGhRUvUVfLi1BMFBIwqtWIq15qbDFZqxs0sJ2IUHgQp6TBef4HRHTUpyixSKO6YIQ=
+	t=1744798957; cv=none; b=GncUwlxowf/xXys+75sKCIFvNHWQ2vJ4UdgQAS/QTWN2XFz6XwjaOmyuA6S+BY+dyB8RYaM9QFo6glNkTzaHOMJ7yH3NLVrKBqTKd+2t40v+aT2FRjnCRfhym92y0dmb6rOliSWsdakX+TCoigteD+l0hicRIfqQO9w5BEmDo2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798925; c=relaxed/simple;
-	bh=IQpMGOF83TYK+ICeBAr/Du4u99XVKcwdq7lFyw1+9XI=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uyxk2zWxOjpPqpZQt7u0xYfGR9ZsNUwm8sTa4/w06gNSMX/Yrud+NZM+0sj5TAsqQwyAqB9yTgtY1qZdOia4Wp5BQMKC0UMr7OGjWeEGrX5fvxni5IdQQMPUvD2ZKiqKDS4pwbRv2UsCFJyr2BDTH9ig9JAJ4WuHu1vPiH/5zRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPcfby3X; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPcfby3X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C978C4CEE2;
-	Wed, 16 Apr 2025 10:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744798925;
-	bh=IQpMGOF83TYK+ICeBAr/Du4u99XVKcwdq7lFyw1+9XI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jPcfby3XXuhu8ih8BvdhdweEIfDqRjX6JU2S1GrPie/yEfEd8QXf2gzSzBrjQ9OpU
-	 F3WjYvWjYQOZpQk2VZcl0a46lKEc4CknmCRUPQgyfL32ZSdDpmIT6mvDJ+KoIxtgFU
-	 KuphqcTvGrzE1rbMqRgwCHeq+HzabXwTjlUZ5Ridu63En+pT5dh4MpBgCwuPNGtiyg
-	 MqQCcfW8O36bRM84zIOwM7bohRG3ba7QS8bMmSguHww+XetKBO2QrzPMOVMlXOOJIN
-	 Eb3fdWrnI1UDll2e/JkLJ93CY+f6ijU2x8eIwT/4dsYviYzDDoFaI1ImPaE99sDDn8
-	 Ljjcms6OOd91A==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u4zu6-0060vo-LT;
-	Wed, 16 Apr 2025 11:22:02 +0100
-Date: Wed, 16 Apr 2025 11:22:01 +0100
-Message-ID: <86v7r4jtiu.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rafael@kernel.org,
-	Chenyuan Yang <chenyuan0y@gmail.com>,
-	sven@svenpeter.dev,
-	j@jannau.net,
-	alyssa@rosenzweig.io,
-	neal@gompa.dev,
-	marcan@marcan.st,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: apple-soc: Fix possible null pointer dereference
-In-Reply-To: <20250416073420.xrhwnzy22zf6yltm@vireshk-i7>
-References: <20250412160518.1824538-1-chenyuan0y@gmail.com>
-	<86bjt0l6q4.wl-maz@kernel.org>
-	<20250416073420.xrhwnzy22zf6yltm@vireshk-i7>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1744798957; c=relaxed/simple;
+	bh=SryNIjm2WO4TlAZiW3CNp5eTS7NgGyUNgyPARO/mMYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mZXlyJUlX59VJ6hz5reWbzXHhbnJt+sincsPS4A7RDZC5w5OnLPxDIywTqO+gKxbzCmmKVJJ/cZ7ym58iK43ggU26LGcSCORGME7BkKGZS76l9X8ekw1PSPA7Y9HiFzTIIVCWGKccsuOPLyCuTqA0qZKJr7yzr1d9lGwwaBIGhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: //tZsc54RYKdxKjfcH5Fng==
+X-CSE-MsgGUID: bCfLpz2LTU2hyLNKfVOjMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46053848"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46053848"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:22:28 -0700
+X-CSE-ConnectionGUID: wphZqYK4TZ+zZEWHTAf7Kw==
+X-CSE-MsgGUID: QPwEK4DRS0CDo9CRDI+XmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="135270825"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:22:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u4zuP-0000000CozW-1TLO;
+	Wed, 16 Apr 2025 13:22:21 +0300
+Date: Wed, 16 Apr 2025 13:22:21 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+Message-ID: <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: viresh.kumar@linaro.org, rafael@kernel.org, chenyuan0y@gmail.com, sven@svenpeter.dev, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev, marcan@marcan.st, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 16 Apr 2025 08:34:20 +0100,
-Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
+> Convert open coded resource size calculations to use
+> resource_set_{range,size}() helpers.
 > 
-> On 13-04-25, 11:02, Marc Zyngier wrote:
-> > Irrespective of this, it would be good to describe under which
-> > circumstances this can occur, because I can't see *how* this can
-> > trigger. The policy is directly provided by the core code and provide
-> > its association with a cpu, and is never NULL at the point of init.
-> > 
-> > And if it can trigger, why only fix this one particular case?
-> > Dereferences of policy are all over the map, and would be just as
-> > wrong.
-> > 
-> > So while this is not wrong, I don't think this serves any real
-> > purpose.
-> 
-> I have applied such patches in the past, considering the same as good
-> practice. But I do understand your inputs.
-> 
-> And so I tried to see if there is actually a way to trigger this.
-> 
-> - Platform with two cpufreq policies (freq domains) with one CPU in
->   each of them.
-> - Boot the kernel, policies will initialize for both the domains.
-> - Hotplug out CPU1, that will remove the policy as well.
-> - Call cpufreq_quick_get(1), this will call the ->get() callback for
->   CPU1, for which there is no policy available.
-> 
-> But this is the case only for drivers with `setpolicy` callback, this
-> shouldn't happen on apple-soc.
-> 
-> I am not sure now if we should just apply this patch to be safe, or
-> leave it as is. The cpufreq core may change in the future and call the
-> `get` callback for all drivers.
+> While at it, use SZ_* for size parameter which makes the intent of code
+> more obvious.
 
-If that's the case, I'd suggest adding a __must_check annotation to
-cpufreq_cpu_get_raw() and co. At least we'll get a warning on all
-missing uses, fix them in one go, and avoid the constant churn of more
-or less correct patches.
+...
 
-Thanks,
+> +	resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
 
-	M.
+Then probably
+
+	resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
+
+to follow the same "While at it"?
+
+...
+
+> +			resource_set_range(res, 0xC0000, SZ_128K);
+>  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+>  				     IORESOURCE_PCI_FIXED;
+
+I'm wondering why not DEFINE_RES_MEM() in such cases?
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
+
+
