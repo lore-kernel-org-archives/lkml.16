@@ -1,111 +1,218 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44DED21147B
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E804A2080DC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819835; cv=none; b=he5APlAYBYe7cBQGgW69Qbj9JYoYQarq4vN5VG3lem1g+dOW+sYQ/E0ybqP+aAoTMNGGnaBb0vA1w9Giy3AaPA2yI1e9BaXYHBPw1rhdQlMdzGO6jE3lVqkD0p+I6E07s5wcBj0guJZZasuf+JLHDV18Cnkws/WnSXdkTB9lwKE=
+	t=1744819856; cv=none; b=hmQhboMbknOZPaEnwt5Owb6CLAN9fhbL3EeEmjOOfYUnoo94Uzoi1DV1QtKf0Ji0dGk7o7FriR1DSvVuz0hGo5LEBVjbqmlUNPK4bo8fCvdhFJt/LEBEkNrylgVMDHUnGxagdRj/wyIL/04YfB+/BBbOSyEROH8QPE/7rl9B5Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819835; c=relaxed/simple;
-	bh=Vfyrn4sci4VZ12tMwuzEKJhCvHNChdBJTlObtHxjXM4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Mtge7H/KMCdPZrouQpmY3koKHv55iInOuKnsd3XK7RQ+eRiMiWGeJIqjLaa3hvRluHysf+nH8ojAg45XuNXhfcoY00nmiZVUfB8O6etJ+KUmz3Bm5ZIlZJVsi9gnlYrJZElAxPv45/O11e4SmuevS9uR69Etd6YjW3t346a5lVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=LBMazJEH reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744819856; c=relaxed/simple;
+	bh=MESf1vjTuHy3kjhFRgv2yWu96CrENhlNl83PIj2AewE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KaAGVLXI7sdf21UzHAPdaIAVZ9cKG56i8MkIU2NIunQHSQ3S9cIp46Ky2vJWGId7aFOCXje9jx9kTXSUnfM6vxhlId8DLr/h0+rhnmm7rrqIrbMCnFw4SO84hEJq/TRsCRwKHlljIe5WlHAkyF+mbBrTEi5MGJ7Tp9LzYsVDPe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R6BkqG/X; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="LBMazJEH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=d6PzMlsChX8XLKLTAraoErRhLqsSXDpIfKoTtzsgAxo=; b=L
-	BMazJEHSsbW9G6/DUvWedBCUo2CtaamOQrINRFU1n5FMddxiofiem3MjH7DN/PSI
-	0K9LAsTQpSQlO8vjgqOyJQK09g9rlfjYKw7FmNoEIoI0tQjKuUfdbijnWt+m7fAo
-	G+up6ijBmGHL5Fez+VKoLRrgpFVLIztiGnjCd8s8Es=
-Received: from xavier_qy$163.com ( [2408:820c:3408:68f0:2136:e7d4:a861:aae3]
- ) by ajax-webmail-wmsvr-40-102 (Coremail) ; Thu, 17 Apr 2025 00:09:36 +0800
- (CST)
-Date: Thu, 17 Apr 2025 00:09:36 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: "Ryan Roberts" <ryan.roberts@arm.com>
-Cc: dev.jain@arm.com, ioworker0@gmail.com, 21cnbao@gmail.com,
-	akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
-	gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
-	ziy@nvidia.com
-Subject: Re: [mm/contpte v3 1/1] mm/contpte: Optimize loop to reduce
- redundant operations
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <eba7a8fa-0b85-4b30-ab3e-9c0a65b7dc80@arm.com>
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
- <20250415082205.2249918-1-xavier_qy@163.com>
- <20250415082205.2249918-2-xavier_qy@163.com>
- <eba7a8fa-0b85-4b30-ab3e-9c0a65b7dc80@arm.com>
-X-NTES-SC: AL_Qu2fBvSatk8s4CWaZekfmk4QgeY+WMW1vP4m34NSN5FwjCzp0ysiZlJTIXjNyvCDLzqKkAiHVTRiy9ZZf7hifrko7HzbN781LCzEGZh9hD9SQg==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R6BkqG/X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744819851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=o6ARJki+qaXMp4MS04T2ajKyOGVrN2invKy0HZHX3Is=;
+	b=R6BkqG/X3YBd6D5qYpyUqmG55o29Mmg8CtuDjKFunpIZnZALnZ41laPOHD18fad6zDzM4w
+	ok9Wcdn+HGKMh9DlYo3kZujbchdOfnLsq3eSx6wCkmf7COMIOkLDWthTRJtheHtv0jOudj
+	ciM1G20z0yJR3aTf9Y3JkHxLwGI9YBs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-NrWnqa0fM9eQF3LktRxfHw-1; Wed, 16 Apr 2025 12:10:50 -0400
+X-MC-Unique: NrWnqa0fM9eQF3LktRxfHw-1
+X-Mimecast-MFC-AGG-ID: NrWnqa0fM9eQF3LktRxfHw_1744819848
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so42460405e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:10:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744819848; x=1745424648;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o6ARJki+qaXMp4MS04T2ajKyOGVrN2invKy0HZHX3Is=;
+        b=NyEVpDM0AIdhIVWVwY+nFtGFV6Ypq89n53l5r5sVw4TMtgtph+BqrWVN2/3T1AiD4a
+         D+l2ZjyrV12mWVajdnXS4pZiq4mOz8bHzGVOXD6TDY/5ko3dVpVP8rKUuilrQsMsxbH4
+         tstJpL6jZc+zL7idBY3Pf+5oj2jUsVC/m/XanZ1a19wYEHlkONCFD++1pBWmnaks0Wxz
+         YZqK2LxryVtuxeSwbTUtZlE0TXK3lQ48G1igGD+DOsSwyRI8KXrzP+zi1ErBfeB9Jssd
+         EenHcsTjWAbiRDeItTJYy4lpkMcEWy7GF/g9pLiwn9E5minbdLsM4UQ4v9S+tebHHyBI
+         ImlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWHK4hTuSjAErpw2aaI6ImZAy1oy/i+wJIJWRVBJeehMyDDCBq0rEeoMwT4dnWVWAviTOUrDQ+NnPAnZmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJwr9V5Mg6F1hvTkwqLswtPZ5cl9UzP9VEPG28/RrvcZ880arI
+	di+UiDLM2v9tjdpF1mFlYcv4dCZ4dIdiKFmDdm1qHWkoB3HUQ9W7pxIMToAhEA8YtYk3VF7x+wS
+	HnWzFF4EqV4i5y9uc5iXkVJNzkZcX3MtDCDxAT7BmIk+u9XU0f52Y5AtTRMi9Eg==
+X-Gm-Gg: ASbGncvivNkrCvDeUBMC1cR/fTh4V6nedtPu0uFgZmmmm3LQ5hpKLq3Wkf/KB/ff9y8
+	N7k5l8G9Gket7kApxyr+pqoKqs6p4xyzLCXqU21OU8ACHmf4x5LgI6ZgXMO1x7isOZJ7LG4Dw6Z
+	TmTZNR9mGP72pEifruqEGKR6WCn4EJCbMjOfAUk6EbF4CjheeR7ATJU3mFMJDpVQfxpoF9zJmf3
+	embtxHhrtH5uU0H7qyCfc8Y2SgQtsPeavMia7hmVaPgOmQxG3Ie3Nmf4kcZ+FBvLSe1G8mWelD1
+	huyYFaX0qyXPp813yG52oVZSMv9p1M4XzZTCdlDnctU7p1N2Go2hfp9QOq6oMl84RfyKSqaKn+G
+	icxJpcYLUgioAzKdvy5enOtys2gTHHYlvwTAF8g==
+X-Received: by 2002:a05:600c:5494:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-4405d6ae57fmr20633695e9.25.1744819848170;
+        Wed, 16 Apr 2025 09:10:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfLCIMoVAMXKFkQlkSnsh6Z8XgTYyYys8PDrFPT+NPDNYsQ5O8pnSfMYztcFTmVbaTdPycrQ==
+X-Received: by 2002:a05:600c:5494:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-4405d6ae57fmr20633215e9.25.1744819847680;
+        Wed, 16 Apr 2025 09:10:47 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce0asm17572713f8f.70.2025.04.16.09.10.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 09:10:47 -0700 (PDT)
+Message-ID: <27d13454-280f-4966-b694-d7e58d991547@redhat.com>
+Date: Wed, 16 Apr 2025 18:10:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <72ff1deb.b3a7.1963f5cec0c.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:ZigvCgD339ZA1v9nYeSXAA--.45267W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiwhExEGf-pJJ9EwAMs+
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/huge_memory: fix dereferencing invalid pmd migration
+ entry
+To: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+ akpm@linux-foundation.org
+Cc: willy@infradead.org, ziy@nvidia.com, linmiaohe@huawei.com,
+ hughd@google.com, revest@google.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250414072737.1698513-1-gavinguo@igalia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250414072737.1698513-1-gavinguo@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-CgpBdCAyMDI1LTA0LTE2IDIwOjU0OjQ3LCAiUnlhbiBSb2JlcnRzIiA8cnlhbi5yb2JlcnRzQGFy
-bS5jb20+IHdyb3RlOgo+T24gMTUvMDQvMjAyNSAwOToyMiwgWGF2aWVyIHdyb3RlOgo+PiBUaGlz
-IGNvbW1pdCBvcHRpbWl6ZXMgdGhlIGNvbnRwdGVfcHRlcF9nZXQgZnVuY3Rpb24gYnkgYWRkaW5n
-IGVhcmx5Cj4+ICB0ZXJtaW5hdGlvbiBsb2dpYy4gSXQgY2hlY2tzIGlmIHRoZSBkaXJ0eSBhbmQg
-eW91bmcgYml0cyBvZiBvcmlnX3B0ZQo+PiAgYXJlIGFscmVhZHkgc2V0IGFuZCBza2lwcyByZWR1
-bmRhbnQgYml0LXNldHRpbmcgb3BlcmF0aW9ucyBkdXJpbmcKPj4gIHRoZSBsb29wLiBUaGlzIHJl
-ZHVjZXMgdW5uZWNlc3NhcnkgaXRlcmF0aW9ucyBhbmQgaW1wcm92ZXMgcGVyZm9ybWFuY2UuCj4+
-IAo+PiBTaWduZWQtb2ZmLWJ5OiBYYXZpZXIgPHhhdmllcl9xeUAxNjMuY29tPgo+PiAtLS0KPj4g
-IGFyY2gvYXJtNjQvbW0vY29udHB0ZS5jIHwgMjAgKysrKysrKysrKysrKysrKysrLS0KPj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+PiAKPj4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jIGIvYXJjaC9hcm02NC9tbS9jb250cHRl
-LmMKPj4gaW5kZXggYmNhYzRmNTVmOWMxLi4wYWNmZWU2MDQ5NDcgMTAwNjQ0Cj4+IC0tLSBhL2Fy
-Y2gvYXJtNjQvbW0vY29udHB0ZS5jCj4+ICsrKyBiL2FyY2gvYXJtNjQvbW0vY29udHB0ZS5jCj4+
-IEBAIC0xNTIsNiArMTUyLDE2IEBAIHZvaWQgX19jb250cHRlX3RyeV91bmZvbGQoc3RydWN0IG1t
-X3N0cnVjdCAqbW0sIHVuc2lnbmVkIGxvbmcgYWRkciwKPj4gIH0KPj4gIEVYUE9SVF9TWU1CT0xf
-R1BMKF9fY29udHB0ZV90cnlfdW5mb2xkKTsKPj4gIAo+PiArLyogTm90ZTogaW4gb3JkZXIgdG8g
-aW1wcm92ZSBlZmZpY2llbmN5LCB1c2luZyB0aGlzIG1hY3JvIHdpbGwgbW9kaWZ5IHRoZQo+PiAr
-ICogcGFzc2VkLWluIHBhcmFtZXRlcnMuKi8KPj4gKyNkZWZpbmUgQ0hFQ0tfQ09OVFBURV9GTEFH
-KHN0YXJ0LCBwdGVwLCBvcmlnX3B0ZSwgZmxhZykgXAo+PiArICAgIGZvciAoOyAoc3RhcnQpIDwg
-Q09OVF9QVEVTOyAoc3RhcnQpKyssIChwdGVwKSsrKSB7IFwKPj4gKwkJaWYgKHB0ZV8jI2ZsYWco
-X19wdGVwX2dldChwdGVwKSkpIHsgXAo+PiArCQkJCW9yaWdfcHRlID0gcHRlX21rIyNmbGFnKG9y
-aWdfcHRlKTsgXAo+PiArCQkJCWJyZWFrOyBcCj4+ICsJCX0gXAo+PiArICAgIH0KPgo+SSdtIHJl
-YWxseSBub3QgYSBmYW4gb2YgdGhpcyBtYWNybywgaXQganVzdCBvYmZ1c2NhdGVzIHdoYXQgaXMg
-Z29pbmcgb24uIEknZAo+cGVyc29uYWxseSBwcmVmZXIgdG8gc2VlIHRoZSAyIGV4dHJhIGxvb3Bz
-IG9wZW4gY29kZWQgYmVsb3cuCj4KPk9yIGV2ZW4gYmV0dGVyLCBjb3VsZCB5b3UgcHJvdmlkZSBy
-ZXN1bHRzIGNvbXBhcmluZyB0aGlzIDMgbG9vcCB2ZXJzaW9uIHRvIHRoZQo+c2ltcGxlciBhcHBy
-b2FjaCBJIHN1Z2dlc3RlZCBwcmV2aW91c2x5PyBJZiB0aGUgcGVyZm9ybWFuY2UgaXMgc2ltaWxh
-ciAod2hpY2ggSQo+ZXhwZWN0IGl0IHdpbGwgYmUsIGVzcGVjaWFsbHkgZ2l2ZW4gQmFycnkncyBw
-b2ludCB0aGF0IHlvdXIgdGVzdCBhbHdheXMgZW5zdXJlcwo+dGhlIGZpcnN0IFBURSBpcyBib3Ro
-IHlvdW5nIGFuZCBkaXJ0eSkgdGhlbiBJJ2QgcHJlZmVyIHRvIGdvIHdpdGggdGhlIHNpbXBsZXIg
-Y29kZS4KCkkgd2lsbCB0ZXN0IHRoZSBwZXJmb3JtYW5jZSBkaWZmZXJlbmNlcyBhbW9uZyB0aGVz
-ZSBzZXZlcmFsIGltcGxlbWVudGF0aW9ucy4KSWYgdGhlIGRpZmZlcmVuY2VzIGFyZSBub3Qgc2ln
-bmlmaWNhbnQsIEkgd2lsbCB0cnkgdG8gaW1wbGVtZW50IGl0IHdpdGggdGhlIHNpbXBsZXIgbWV0
-aG9kLgoKQXQgdGhlIHNhbWUgdGltZSwgYWNjb3JkaW5nIHRvIEJhcnJ5J3Mgc3VnZ2VzdGlvbiwg
-SSB3aWxsIGFkZCBzb21lIG1vcmUgZ2VuZXJhbAp0ZXN0IGNhc2VzIHRvIHZlcmlmeSB3aGV0aGVy
-IHRoZSBvcHRpbWl6YXRpb24gaXMgZWZmZWN0aXZlLgoKU2luY2UgSSdtIGEgYml0IGJ1c3kgcmVj
-ZW50bHksIGl0IG1heSB0YWtlIG1lIGEgZmV3IGRheXMgdG8gY29tcGxldGUgdGhpcyB0YXNrLgoK
-Pj4gKwo+PiAgcHRlX3QgY29udHB0ZV9wdGVwX2dldChwdGVfdCAqcHRlcCwgcHRlX3Qgb3JpZ19w
-dGUpCj4+ICB7Cj4+ICAJLyoKPj4gQEAgLTE2OSwxMSArMTc5LDE3IEBAIHB0ZV90IGNvbnRwdGVf
-cHRlcF9nZXQocHRlX3QgKnB0ZXAsIHB0ZV90IG9yaWdfcHRlKQo+PiAgCWZvciAoaSA9IDA7IGkg
-PCBDT05UX1BURVM7IGkrKywgcHRlcCsrKSB7Cj4+ICAJCXB0ZSA9IF9fcHRlcF9nZXQocHRlcCk7
-Cj4+ICAKPj4gLQkJaWYgKHB0ZV9kaXJ0eShwdGUpKQo+PiArCQlpZiAocHRlX2RpcnR5KHB0ZSkp
-IHsKPj4gIAkJCW9yaWdfcHRlID0gcHRlX21rZGlydHkob3JpZ19wdGUpOwo+PiArCQkJQ0hFQ0tf
-Q09OVFBURV9GTEFHKGksIHB0ZXAsIG9yaWdfcHRlLCB5b3VuZyk7Cj4+ICsJCQlicmVhazsKPj4g
-KwkJfQo+PiAgCj4+IC0JCWlmIChwdGVfeW91bmcocHRlKSkKPj4gKwkJaWYgKHB0ZV95b3VuZyhw
-dGUpKSB7Cj4+ICAJCQlvcmlnX3B0ZSA9IHB0ZV9ta3lvdW5nKG9yaWdfcHRlKTsKPj4gKwkJCUNI
-RUNLX0NPTlRQVEVfRkxBRyhpLCBwdGVwLCBvcmlnX3B0ZSwgZGlydHkpOwo+PiArCQkJYnJlYWs7
-Cj4+ICsJCX0KPj4gIAl9Cj4+ICAKPj4gIAlyZXR1cm4gb3JpZ19wdGU7Cj4KPklmIHdlIGRlY2lk
-ZSB0aGlzIGlzIGFsbCB3b3J0aCB0aGUgdHJvdWJsZSwgdGhlbiBJIHRoaW5rIHdlIGNhbiAoYW5k
-ICpzaG91bGQqLAo+aW4gb3JkZXIgdG8gYmUgY29uc2lzdGVudCkgcHVsbCBhIHNpbWlsYXIgc3R1
-bnQgaW4gY29udHB0ZV9wdGVwX2dldF9sb2NrbGVzcygpLgoKT0suIFRoaXMgZnVuY3Rpb24gc2Vl
-bXMgdG8gYmUgYSBiaXQgbW9yZSBjb21wbGljYXRlZC4gSSdsbCBnaXZlIGl0IGEgdHJ5IHRvCmZp
-Z3VyZSBvdXQgaG93IHRvIG9wdGltaXplIGl0LgoKLS0KVGhhbmtzLApYYXZpZXIKCg==
+On 14.04.25 09:27, Gavin Guo wrote:
+> When migrating a THP, concurrent access to the PMD migration entry
+> during a deferred split scan can lead to a page fault, as illustrated
+> below. To prevent this page fault, it is necessary to check the PMD
+> migration entry and return early. In this context, there is no need to
+> use pmd_to_swp_entry and pfn_swap_entry_to_page to verify the equality
+> of the target folio. Since the PMD migration entry is locked, it cannot
+> be served as the target.
+> 
+> BUG: unable to handle page fault for address: ffffea60001db008
+> CPU: 0 UID: 0 PID: 2199114 Comm: tee Not tainted 6.14.0+ #4 NONE
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> RIP: 0010:split_huge_pmd_locked+0x3b5/0x2b60
+> Call Trace:
+> <TASK>
+> try_to_migrate_one+0x28c/0x3730
+> rmap_walk_anon+0x4f6/0x770
+> unmap_folio+0x196/0x1f0
+> split_huge_page_to_list_to_order+0x9f6/0x1560
+> deferred_split_scan+0xac5/0x12a0
+> shrinker_debugfs_scan_write+0x376/0x470
+> full_proxy_write+0x15c/0x220
+> vfs_write+0x2fc/0xcb0
+> ksys_write+0x146/0x250
+> do_syscall_64+0x6a/0x120
+> entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> The bug is found by syzkaller on an internal kernel, then confirmed on
+> upstream.
+> 
+> Fixes: 84c3fc4e9c56 ("mm: thp: check pmd migration entry in common path")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+> ---
+>   mm/huge_memory.c | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 2a47682d1ab7..0cb9547dcff2 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -3075,6 +3075,8 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
+>   void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>   			   pmd_t *pmd, bool freeze, struct folio *folio)
+>   {
+> +	bool pmd_migration = is_pmd_migration_entry(*pmd);
+> +
+>   	VM_WARN_ON_ONCE(folio && !folio_test_pmd_mappable(folio));
+>   	VM_WARN_ON_ONCE(!IS_ALIGNED(address, HPAGE_PMD_SIZE));
+>   	VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
+> @@ -3085,10 +3087,18 @@ void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>   	 * require a folio to check the PMD against. Otherwise, there
+>   	 * is a risk of replacing the wrong folio.
+>   	 */
+> -	if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
+> -	    is_pmd_migration_entry(*pmd)) {
+> -		if (folio && folio != pmd_folio(*pmd))
+> -			return;
+
+Why not something like
+
+struct folio *entry_folio;
+
+if (folio) {	
+	if (is_pmd_migration_entry(*pmd))
+		entry_folio = pfn_swap_entry_folio(pmd_to_swp_entry(*pmd)));
+	else
+		entry_folio = pmd_folio(*pmd));
+
+	if (folio != entry_folio)
+		return;
+}
+
+
+(can likely be cleaned up a bit by moving stuff into a separate function)
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
