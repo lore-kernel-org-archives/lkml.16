@@ -1,55 +1,83 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3FF1A0BD6;
-	Wed, 16 Apr 2025 15:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4047F189902;
+	Wed, 16 Apr 2025 15:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817561; cv=none; b=blLtym6srWPhxxVxd65dURknFGJBvtpyOGGakG7AEOifFKGHSezjEt0cnekiBOUxMvLoACUraFweuQ0j57WWY2eyiAcCyrAMWMOuiTKIvyTlbtugpGBY6U08h23m296W/wAcz3Jp6A61d4LMvyuRs+8EpqOmsFBTw92nAjO3Rlc=
+	t=1744817687; cv=none; b=c2qaB3TZI/fwe4Iam+87gJlPkjSu4A/MM1QQO/6fR6q9IDyFj/ax9UGv0MmGHUJ2ETVFKlnDvt4ZWk+3280d+k/aZZ6dgvjlRqMENUuNuitgHF7AM0nmuWtwUkL9SKkBfynkW1Hm6UTY6J9xC2wDqYz4FMo5Odb0PrR8RJ5Wf/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817561; c=relaxed/simple;
-	bh=+DEB4buvUkcr0ScnFRrV+N60OYURSVURedGqXEXvmZA=;
+	s=arc-20240116; t=1744817687; c=relaxed/simple;
+	bh=zaxzbwyWlfatE3+ds3WIVorARk4YttMEnVcT+1WJOyE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FzcP5EjqQwFrMcQsk7SZSF5dGbd9NyfAt57UoAReUTxCTZr9gtGtNsADV682+vGz59ESXJ6YZ5UQLrwA01+/IYAbwbMBTuczuf8SoLD+7sb6PWQjk9f9wsYJHkgGTecBKBcijO8w39XsMsX5SuJi9LB9ank0J5NZirYy4KMZRWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SF/wSLYX; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SUVf5zKqTXVBcuscHCcgMM86iW5xRetOaqwSsmyztZicwx2li7fTX9js+gJqrXPl3RdjyykVWnDd/DLlmiCwh+tFNjZktXndDpGJ/CD1w5vi9IsfmI68WRNeK00/l/G3CRdPGisGncJS+IpD8YpzzYDLdkpUUlp3TOlSJbvJRwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gBQ2hyXH; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SF/wSLYX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=p0m5NUPN9uBa6K88Gs2hZG/MKzDGj93gJd39YPVQ2o4=; b=SF/wSLYXNRxwe1ZhQ2VLRL7n1Y
-	aUEWNvdUyZKp0Pd7BzWtsWHJy9j4J1UDeewpJM6fUiW75xHE7mVVtArwzy8bJET9EV+Mk2D3QuB4C
-	/0YoL46bFNsmQflXiL4fQ2tbufQPqB4tNZd0he+P6W2jy5OWZXCbvSbraB2jxRlOoGNkaIflLM71/
-	k90DR4jqPM8/FS+prXoH8WuX011B4cjIeHH/OODGv7QElz8XA9j0RYztiUm4vDEaqcp5Zxh+1K0sJ
-	R8pr0wQi+uDPJksHVhgNtXjhCdAYUQswYJ86oseslYRZFanO1NlErtSI0onqVE952C1WfBgzcKlG5
-	r4fCqSJg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u54kU-0000000AGWZ-3gIl;
-	Wed, 16 Apr 2025 15:32:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 860553003C4; Wed, 16 Apr 2025 17:32:26 +0200 (CEST)
-Date: Wed, 16 Apr 2025 17:32:26 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v3 12/22] perf/x86/intel: Update dyn_constranit base on
- PEBS event precise level
-Message-ID: <20250416153226.GC17910@noisy.programming.kicks-ass.net>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-13-dapeng1.mi@linux.intel.com>
- <20250415135323.GC4031@noisy.programming.kicks-ass.net>
- <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gBQ2hyXH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744817687; x=1776353687;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zaxzbwyWlfatE3+ds3WIVorARk4YttMEnVcT+1WJOyE=;
+  b=gBQ2hyXHNUrmjUHI9VRANjX23M0DP7iQ8KdhHIfqAXfsUNdleYsXvPNI
+   ScupKZGCGBUX02Za0C2wLVpLQ1d3weVTOGsECMA0SRDmAqdvr4maMxCcT
+   qadetQbbQ+9UkXy5GRQoLRqUG6d1VqsANbJcA7206CyQB5NC4BwxTtyGE
+   WHfFldzKDwHVLsCIy+mr9xFk/XPg75NX1ls9qwRBvGiUHW9xWDBG0a0o9
+   FEHvplYBx/C7f/WkTGJM/yz6Td8SkIjbDwQNdO+58MkSmtr45vy0AFw2T
+   ODSt3jkADmGdJ+V0mFrHBdhV2/tdq2xUPzO1z4sxJ23aBaY3gY5Nm+VrT
+   A==;
+X-CSE-ConnectionGUID: Sf0gqoTaQ66XTKAUaRg6ZQ==
+X-CSE-MsgGUID: HGnF49keQPSjmpK120nkTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46500544"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46500544"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:34:46 -0700
+X-CSE-ConnectionGUID: DP2yLZsJQEGCNjUl65uggQ==
+X-CSE-MsgGUID: NfM7S+4qRD6jNOXjquFnzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="167688528"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:34:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u54mZ-0000000Ctqa-1NKX;
+	Wed, 16 Apr 2025 18:34:35 +0300
+Date: Wed, 16 Apr 2025 18:34:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Jaya Kumar <jayakumar.alsa@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Cezary Rojewski <cezary.rojewski@intel.com>,
+	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Mark Brown <broonie@kernel.org>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	David Rhodes <drhodes@opensource.cirrus.com>,
+	liujing <liujing@cmss.chinamobile.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Andres Urian Florez <andres.emb.sys@gmail.com>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	sound-open-firmware@alsa-project.org
+Subject: Re: [PATCH 00/31] sound: Phase out hybrid PCI devres API
+Message-ID: <Z__OC5NDkQYIHNmL@smile.fi.intel.com>
+References: <20250416131241.107903-1-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,51 +86,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <607b1f13-1d5d-4ea7-b0ab-f4c7f4fa319b@linux.intel.com>
+In-Reply-To: <20250416131241.107903-1-phasta@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 15, 2025 at 12:31:03PM -0400, Liang, Kan wrote:
-
-> > This can land us in EVENT_CONSTRAINT_OVERLAP territory, no?
-
-> The dyn_constraint is a supplement of the static constraints. It doesn't
-> overwrite the static constraints.
-
-That doesn't matter.
-
-> In the intel_get_event_constraints(), perf always gets the static
-> constraints first. If the dyn_constraint is defined, it gets the common
-> mask of the static constraints and the dynamic constraints. All
-> constraint rules will be complied.
+On Wed, Apr 16, 2025 at 03:12:10PM +0200, Philipp Stanner wrote:
+> Hi,
 > 
-> 	if (event->hw.dyn_constraint != ~0ULL) {
-> 		c2 = dyn_constraint(cpuc, c2, idx);
-> 		c2->idxmsk64 &= event->hw.dyn_constraint;
-> 		c2->weight = hweight64(c2->idxmsk64);
-> 	}
+> a year ago we spent quite some work trying to get PCI into better shape.
+> Some pci_ functions can be sometimes managed with devres, which is
+> obviously bad. We want to provide an obvious API, where pci_ functions
+> are never, and pcim_ functions are always managed.
+> 
+> Thus, everyone enabling his device with pcim_enable_device() must be
+> ported to pcim_ functions. Porting all users will later enable us to
+> significantly simplify parts of the PCI subsystem. See here [1] for
+> details.
+> 
+> This patch series does that for sound.
 
-Read the comment that goes with EVENT_CONSTRAINT_OVERLAP().
+AFAIK the ASoC and ALSA maintained by different people and perhaps you would
+need to split, but I'm not the guy in charge, so wait for them to tell you
+their preferences.
 
-Suppose we have (from intel_lnc_event_constraints[]):
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  INTEL_UEVENT_CONSTRAINT(0x012a, 0xf)
-  INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff)
 
-Then since the first is fully contained in the latter, there is no
-problem.
-
-Now imagine PEBS gets a dynamic constraint of 0x3c (just because), and
-then you try and create a PEBS event along with the above two events,
-and all of a sudden you have:
-
-	0x000f
-	0x003c
-	0x03ff
-
-And that is exactly the problem case.
-
-Also, looking at that LNC table, please explain:
-
-  INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc)
-
-that looks like the exact thing I've asked to never do, exactly because
-of the above problem :-(
