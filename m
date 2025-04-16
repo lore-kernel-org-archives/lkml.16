@@ -1,67 +1,58 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79CB13B7A3
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F232DFA49;
+	Wed, 16 Apr 2025 09:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796929; cv=none; b=n/HtshX2t/cRZHSY/TCHDqUNd0ej9Ze0zs6F2ksc+05y02bdR21YBQauenMqTGJ9khIk6NKbHfVHft1Ia4zO+4TY6oYPCAE+6RZgkJToXXYBXxyXjQQjc93XSPbGIEL19CfTJurlDudxMQXfzLkjJ6akJeAdOcx6uHSxy2mqaJM=
+	t=1744797262; cv=none; b=cH1KwNi0Of6hELjYIX1hTt0PyQh97QRwFRAZgzEsNMgrTcDq5ge8MTroL1fYMYdp1IvmHtc8/TIffw8ctDiU0N47/BlD6dLVEzUgcMpvPjuN9CDmEc881pfU5Q4E5Tu1v14Lr4SrxkAZVQP/K3gb+jezhVJsuhT+ivSmk1x+M7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796929; c=relaxed/simple;
-	bh=zie3zQWMYX/bfatuVpQNXBgIGBHJoM36vpK850T7UZk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cTmy4Gi9//x25X0l/BT1pssZa4Xg/zHualHJuJgxxWQ3BuDxkIsJH1zVXhsbpNjxV20Zk+R6LitnBdb4vhtrmrJzyERiR31of9ghVdmxuAXmwhOCWq7KlRtnwt9unFBNFJISD9gIYk25SRM58Zs8qN/iwq1DK8eSCEGcrM/t/gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gms.tku.edu.tw; spf=pass smtp.mailfrom=gms.tku.edu.tw; dkim=pass (2048-bit key) header.d=gms-tku-edu-tw.20230601.gappssmtp.com header.i=@gms-tku-edu-tw.20230601.gappssmtp.com header.b=XPh1HAdv; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gms.tku.edu.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gms.tku.edu.tw
+	s=arc-20240116; t=1744797262; c=relaxed/simple;
+	bh=wfB0jdhQ3bSQt96NUJ74aG7MvrsFAp4cW9qzPJUo+M4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eLczdlNbfa46vKuH3wUZ0IYewlq0TmsWkpStKNic3nGAkw3RldpUZ9lZ8nbEPNu9mQcU/Xb/+5u/o4JEYnnrIARA8vhlA876ziYx0W0poGlQkGGioY9Cr92rwkDcssvW/Fan1hlA7/8PCqVcrBNevZELz/A5JpsG/oi0cknQRAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=RJEb1Cmg; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gms-tku-edu-tw.20230601.gappssmtp.com header.i=@gms-tku-edu-tw.20230601.gappssmtp.com header.b="XPh1HAdv"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c3407a87aso6467295ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:48:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gms-tku-edu-tw.20230601.gappssmtp.com; s=20230601; t=1744796923; x=1745401723; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UcPWKe32VrKv8ERJ7BEIQNO45yX+2Am3YJCim180crY=;
-        b=XPh1HAdvCPLtgX4YzpBgV9xbG3tJgpdDgxrehh1afaNvy662uonbuE+YcdmLWO2tqt
-         pTXFOe0QbwXR30KZ9J5zw6hYbeNRypgbsrzZ0g7gvPBSvaXTk1gHWRdKqb7J1wHH1Txv
-         WKiYG/7BfKn3CDz1PgFV+Trql73p27MaVEvmI/Vitf9OQ/jqv0rjA6d47NDenw0udpOs
-         OZWLfA59bDmlGxgzu/dmkCbnbfn6Cri3jhK3ZhoV4ziXwavUB0zqkj2DBiwoSZn+SZk7
-         eCXekmOSmmhUXEBJq4pM+h9TdZ/anu93wVdppaRx1kS/yh/3OjiWjhWweoD7YCKo/sbj
-         i2Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796923; x=1745401723;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UcPWKe32VrKv8ERJ7BEIQNO45yX+2Am3YJCim180crY=;
-        b=CaO9Z/ERRyodMeOvQwjlF8pwUwtX4TnzTpKaop66Zc0mLeSQe6LZafjhPhK9q/hQzC
-         9Jqz4xJhUxd23u2fP+3awVvkj7/B1M+mDnxbvkuycWIqMA2SI49whKstOOfWggUkkF5P
-         5MhJlDOPS8rT1pJ8sA1J/DbDjSjoegCr6vAWg2FvSJthWQd6wnCmcNFt/0lBx8xGn2OE
-         wMgf/5ZhqO9HlZYwF8KVNl3xqWy2GgB20W53tKWpEnSmXdj42eywAY80XQg+jTA+VsGd
-         lexXIDqJx7wZJnQItZmFFh++s8mnr8P3iMORPNIfhPEgcCmheNBOb7RPfU9GoZxBcsCb
-         6FXA==
-X-Gm-Message-State: AOJu0YzE6UNETp4JjuCDF5cIVJA/vxeZjsoG74eH5EDbwUPFvnd4zQ/d
-	MT546/70k0DOFa96Pq59mxZnj092olWyqNy36VLRl0WSleixGyZhhY/C4Ngbc4s=
-X-Gm-Gg: ASbGnctWv1l7QgoMtW08mUEUYK1exixcS7lJuP6vAL+PRVj6r1HNfthEFd1uQsqt7gC
-	kCddpLJF091IIpvtTlvZN43BDJafs4O1/ShEHq18of5Bl8/9UdMZddAN/xpC4UWKtITK8ATyIPB
-	Z3aB1LyOa2GLJisE8oHgMA7xGVf2J56YBNZNG5ZblV80Y+EnEoO5dfFsj9xBkJP6B4BXow145O1
-	5vZzdPGWx+Uhhf6TkNpF8NP7l+8DnJ5hy6nzSxVQeFgAe3JwBkSPXq3KVcktp/8sU4BoMu09FU8
-	f1b5jtdFesUELGNMvNsVQ35Etyf1SdQbdsCCYm8ylIe85J4GbBfz9DVxlJ6v7jeV+g==
-X-Google-Smtp-Source: AGHT+IFEuefE4OLotxpkt4JMG77OKXwpoGBSBmCqKPO/GHStPXqUbVfdMuVxirheteI+rKCSMjf/HQ==
-X-Received: by 2002:a17:902:d2c7:b0:224:13a4:d61e with SMTP id d9443c01a7336-22c3598fe39mr18448035ad.51.1744796922788;
-        Wed, 16 Apr 2025 02:48:42 -0700 (PDT)
-Received: from wu-Pro-E500-G6-WS720T.. ([2001:288:7001:2703:9227:4745:995c:f07e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1d346sm9813485ad.80.2025.04.16.02.48.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:48:42 -0700 (PDT)
-From: "Guan-Chun.Wu" <409411716@gms.tku.edu.tw>
-To: stefani@seibold.net
-Cc: linux-kernel@vger.kernel.org,
-	"Guan-Chun.Wu" <409411716@gms.tku.edu.tw>
-Subject: [PATCH] kfifo: Fix grammar issues in macro documentation
-Date: Wed, 16 Apr 2025 17:47:16 +0800
-Message-Id: <20250416094716.67584-1-409411716@gms.tku.edu.tw>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="RJEb1Cmg"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout3.routing.net (Postfix) with ESMTP id 9FA1F60F58;
+	Wed, 16 Apr 2025 09:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1744797256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rVB2PVIxoX5y0VwNAUTU6UTUCxBZyuk9nnudYr7DJnI=;
+	b=RJEb1CmgobI1aJLc6mB14rwQZcd0xdKnCoexAjengZud24wB39P5LmWApsdemzxEZHloq3
+	M22aysxnjBCbDzaV4NwnppmVYB/Cr3bxtPzLPc4FxKrDHBsi8qAzNxuAvtse8YinD90a9M
+	J3hIyX8PBYCkra+vLlSpTSBmtVM6H7w=
+Received: from frank-u24.. (fttx-pool-80.245.72.47.bambit.de [80.245.72.47])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 6C124360084;
+	Wed, 16 Apr 2025 09:54:15 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Chunfeng Yun <chunfeng.yun@mediatek.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Sean Wang <sean.wang@mediatek.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-phy@lists.infradead.org
+Subject: [PATCH v3 0/8] Add Bananapi R4 variants and add xsphy
+Date: Wed, 16 Apr 2025 11:53:52 +0200
+Message-ID: <20250416095402.90543-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,66 +60,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Mail-ID: e76a1c3f-a271-4636-9d6e-a4f44f5271a4
 
-Correct minor grammar issues in macro comments in `kfifo.h`, changing
-"numbers of elements" to "number of elements" for clarity and readability.
+From: Frank Wunderlich <frank-w@public-files.de>
 
-This change is non-functional and improves comment quality only.
+With this series i continue the mt7988/bananapi-r4 dts upstream work
 
-Signed-off-by: Guan-Chun.Wu <409411716@gms.tku.edu.tw>
----
- include/linux/kfifo.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=952704
+https://patchwork.kernel.org/project/linux-mediatek/list/?series=952805
 
-diff --git a/include/linux/kfifo.h b/include/linux/kfifo.h
-index fd743d4c4..7077afd37 100644
---- a/include/linux/kfifo.h
-+++ b/include/linux/kfifo.h
-@@ -589,7 +589,7 @@ __kfifo_uint_must_check_helper( \
-  * @buf: pointer to the storage buffer
-  * @n: max. number of elements to get
-  *
-- * This macro gets some data from the fifo and returns the numbers of elements
-+ * This macro gets some data from the fifo and returns the number of elements
-  * copied.
-  *
-  * Note that with only one concurrent reader and one concurrent
-@@ -616,7 +616,7 @@ __kfifo_uint_must_check_helper( \
-  * @n: max. number of elements to get
-  * @lock: pointer to the spinlock to use for locking
-  *
-- * This macro gets the data from the fifo and returns the numbers of elements
-+ * This macro gets the data from the fifo and returns the number of elements
-  * copied.
-  */
- #define	kfifo_out_spinlocked(fifo, buf, n, lock) \
-@@ -822,7 +822,7 @@ __kfifo_int_must_check_helper( \
-  * @buf: pointer to the storage buffer
-  * @n: max. number of elements to get
-  *
-- * This macro gets the data from the fifo and returns the numbers of elements
-+ * This macro gets the data from the fifo and returns the number of elements
-  * copied. The data is not removed from the fifo.
-  *
-  * Note that with only one concurrent reader and one concurrent
-@@ -850,7 +850,7 @@ __kfifo_uint_must_check_helper( \
-  *
-  * This macro obtains the offset (tail) to the available data in the fifo
-  * buffer and returns the
-- * numbers of elements available. It returns the available count till the end
-+ * number of elements available. It returns the available count till the end
-  * of data or till the end of the buffer. So that it can be used for linear
-  * data processing (like memcpy() of (@fifo->data + @tail) with count
-  * returned).
-@@ -879,7 +879,7 @@ __kfifo_uint_must_check_helper( \
-  * @n: max. number of elements to point at
-  *
-  * Similarly to kfifo_out_linear(), this macro obtains the pointer to the
-- * available data in the fifo buffer and returns the numbers of elements
-+ * available data in the fifo buffer and returns the number of elements
-  * available. It returns the available count till the end of available data or
-  * till the end of the buffer. So that it can be used for linear data
-  * processing (like memcpy() of @ptr with count returned).
+- Adding new Hardware Variant for bananapi R4 (1 SFP replaced by RJ45 port with internal phy)
+- Adding XS-phy for pcie2
+
+because of new compatible for 2g5 variant now requires also a series i merged both into one.
+
+Daniel Golle (1):
+  phy: mediatek: xsphy: support type switch by pericfg
+
+Frank Wunderlich (7):
+  dt-bindings: arm: mediatek: add bpi-r4 2g5 phy variant
+  arm64: dts: mediatek: mt7988a-bpi-r4: allow hw variants of bpi-r4
+  dt-bindings: phy: mtk-xs-phy: Add mt7988 compatible
+  dt-bindings: phy: mtk-xs-phy: support type switch by pericfg
+  dt-bindings: mfd: syscon: Add mt7988-topmisc
+  arm64: dts: mediatek: mt7988: Add xsphy for ssusb0/pcie2
+  arm64: dts: mediatek: mt7988a-bpi-r4: enable xsphy
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   4 +
+ .../devicetree/bindings/mfd/syscon.yaml       |   2 +
+ .../bindings/phy/mediatek,xsphy.yaml          |  17 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   2 +
+ .../mediatek/mt7988a-bananapi-bpi-r4-2g5.dts  |  11 +
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dts  | 400 +----------------
+ .../dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi | 403 ++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7988a.dtsi     |  36 ++
+ drivers/phy/mediatek/phy-mtk-xsphy.c          |  85 +++-
+ 9 files changed, 564 insertions(+), 396 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4-2g5.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7988a-bananapi-bpi-r4.dtsi
+
 -- 
-2.34.1
+2.43.0
 
