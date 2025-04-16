@@ -1,235 +1,103 @@
-Received: from mail.fris.de (mail.fris.de [116.203.77.234])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6F918FDD5
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.77.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6913010C;
+	Wed, 16 Apr 2025 14:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744814239; cv=none; b=qqhWZgKU759fvddiTTbxbFM200St0sTFhh4ML+DUH1XxaUb/DwbMZqFJSkHL6txvvbWpa8JdcNil011e+CNvIrVGbX1uMaLlySJRevWQbYRjK85aek/xSdIrgrHh00Fyqx8IAphWERFcnhXD2v7kgOMoKN5J9DQy7SQoBsAdxFA=
+	t=1744814293; cv=none; b=oCknJtX1dPH5a/Tpg0/okE6gaY71g+FfN11eTwsInGVmqZ2onHDLgpjsODJOCwCoHGAN4yFX0TP9+TAlwLcpE53KjO0t9+w40B25WHTChj+QUEf/DprggD1gavXgiuN/cuQh69bWnhMP/vCfoT8w6iVAH73RYm8ryGWZx9GRXtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744814239; c=relaxed/simple;
-	bh=8Kjdn5BbC4mwPz7a+XUvnbjE4mQYNVfpupBgbjpZxdw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c+gSpG3SCj9ZofO74eYk3RbuYXh60+BCc4o+aS9kaIrVeaPrQ6wrNdkaZGCEYwypX5MCTzUv0dSD7T+0pu4V7tJ43f0VaI45QH/vg3fJQPQJ9Y8btGFtbYs7iU3PzK/jfvGHbS1R4EfvzNjazkgm+Ir2wMXvZ54utXd/zCUvnAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de; spf=pass smtp.mailfrom=fris.de; dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b=0OmFYpiI; arc=none smtp.client-ip=116.203.77.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fris.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fris.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fris.de header.i=@fris.de header.b="0OmFYpiI"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4E0E8C9722;
-	Wed, 16 Apr 2025 16:27:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fris.de; s=dkim;
-	t=1744813677; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=gai6Yh0IHeScDh3I4+epSp9DgjIHHr9iXOrYzQ4bXLY=;
-	b=0OmFYpiIJP2WFDK2BvruxJ3L80n1q/S+di7uKdiDH/blcBTPEXVABwwxVuyJDPUSi1WdW7
-	J2Aud53DAQJQ5xTloqmdWE1K2w4245Bt6EPzFcoo64orttlgJEfbPr2+imGybH+LoQhRml
-	24DUSNp7UyZOVqkWVtKo5snWUF/GMP0BHRI5v+H0mu3t56V2+ETEnW9yaHBNrDERMAmcws
-	+l6wdKX5Rv47Lc+WTgC9ASa9XW+J6ezdBVI0x/fH32AwqEmFbHjJqx/OuG/naLNUb4M2c8
-	mRAMWPHMWhicRFj2FGzcthpVKMDNfbJtbnMKYmBDsYKTnw54t4tdzsTRF6Gv5w==
-From: Frieder Schrempf <frieder@fris.de>
-To: Peng Fan <peng.fan@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>
-Cc: Frieder Schrempf <frieder.schrempf@kontron.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: [RFC PATCH 1/5] firmware: imx: ele: Add API functions for OCOTP fuse access
-Date: Wed, 16 Apr 2025 16:26:20 +0200
-Message-ID: <20250416142715.1042363-2-frieder@fris.de>
-In-Reply-To: <20250416142715.1042363-1-frieder@fris.de>
-References: <20250416142715.1042363-1-frieder@fris.de>
+	s=arc-20240116; t=1744814293; c=relaxed/simple;
+	bh=doVRRvVe6WEmfRp+vwpcnTHqA9pAD2XGe1+hyb7lzFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uMCPXb/+sZjiIwq88AxVGG0wMzCpo+IMJQ/nerwrc7uIep2MUiH3OLnnZ0diGj7L5nH4trFF6GjuAoWbVE4TFfNjsgmdbQuYPQJksmHZXe6HZdcA0I+YH+OdJ0orlUQMJ+JOwdGT3I+unSEr1QUTkWnh+6Rt6w69MvkwLrZ/3+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id E372F2C06039;
+	Wed, 16 Apr 2025 16:38:00 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id D4BF0173A2F; Wed, 16 Apr 2025 16:38:01 +0200 (CEST)
+Date: Wed, 16 Apr 2025 16:38:01 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczy??ski <kw@linux.com>, Rob Herring <robh@kernel.org>,
+	dingwei@marvell.com, cassel@kernel.org,
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
+	linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <Z__AyQeZmXiNwT7c@wunner.de>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
+ <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+On Tue, Apr 15, 2025 at 07:03:17PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Apr 04, 2025 at 10:46:27AM +0200, Lukas Wunner wrote:
+> > On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > When the PCI error handling requires resetting the slot, reset it
+> > > using the host bridge specific 'reset_slot' callback if available
+> > > before calling the 'slot_reset' callback of the PCI drivers.
+> > > 
+> > > The 'reset_slot' callback is responsible for resetting the given slot
+> > > referenced by the 'pci_dev' pointer in a platform specific way and
+> > > bring it back to the working state if possible. If any error occurs
+> > > during the slot reset operation, relevant errno should be returned.
+> > 
+> > This feels like something that should be plumbed into
+> > pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
+> 
+> I did consider that, but didn't go for it since there was no platform
+> reset code present in that function. But I will try to use it as I
+> don't have a strong preference to do reset slot in pcie_do_recovery().
 
-The ELE S400 API provides read and write access to the OCOTP fuse
-registers. This adds the necessary API functions imx_se_read_fuse()
-and imx_se_write_fuse() to be used by other drivers such as the
-OCOTP S400 NVMEM driver.
+The only platform overriding pcibios_reset_secondary_bus() is powerpc,
+and it only does that on PowerNV.
 
-This is ported from the downstream vendor kernel.
+I think you could continue to stick with the approach of adding a
+->reset_slot() callback to struct pci_host_bridge, but it would
+be good if at the same time you could convert PowerNV to use the
+newly introduced callback as well.  And then remove the way to
+override the reset procedure via pcibios_reset_secondary_bus().
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
----
- drivers/firmware/imx/ele_base_msg.c | 122 ++++++++++++++++++++++++++++
- drivers/firmware/imx/ele_base_msg.h |   8 ++
- include/linux/firmware/imx/se_api.h |   3 +
- 3 files changed, 133 insertions(+)
+All pci_host_bridge's which do not define a ->reset_slot() could be
+assigned a default callback which just calls pci_reset_secondary_bus().
 
-diff --git a/drivers/firmware/imx/ele_base_msg.c b/drivers/firmware/imx/ele_base_msg.c
-index bed1a0459d8d..0dfd4d2fef5a 100644
---- a/drivers/firmware/imx/ele_base_msg.c
-+++ b/drivers/firmware/imx/ele_base_msg.c
-@@ -311,3 +311,125 @@ int ele_debug_dump(struct se_if_priv *priv)
- 
- 	return ret;
- }
-+
-+static int ele_read_fuse(struct se_if_priv *priv, uint16_t fuse_id, u32 *value)
-+{
-+	struct se_api_msg *tx_msg __free(kfree) = NULL;
-+	struct se_api_msg *rx_msg __free(kfree) = NULL;
-+	int rx_msg_sz = ELE_READ_FUSE_RSP_MSG_SZ;
-+	int ret = 0;
-+
-+	if (!priv)
-+		return -EINVAL;
-+
-+	tx_msg = kzalloc(ELE_READ_FUSE_REQ_MSG_SZ, GFP_KERNEL);
-+	if (!tx_msg)
-+		return -ENOMEM;
-+
-+	rx_msg = kzalloc(rx_msg_sz, GFP_KERNEL);
-+	if (!rx_msg)
-+		return -ENOMEM;
-+
-+	ret = se_fill_cmd_msg_hdr(priv, (struct se_msg_hdr *)&tx_msg->header,
-+				  ELE_READ_FUSE_REQ, ELE_READ_FUSE_REQ_MSG_SZ,
-+				  true);
-+	if (ret)
-+		return ret;
-+
-+	tx_msg->data[0] = fuse_id;
-+
-+	ret = ele_msg_send_rcv(priv->priv_dev_ctx, tx_msg,
-+			       ELE_READ_FUSE_REQ_MSG_SZ, rx_msg, rx_msg_sz);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = se_val_rsp_hdr_n_status(priv, rx_msg, ELE_READ_FUSE_REQ,
-+				      rx_msg_sz, true);
-+	if (ret)
-+		return ret;
-+
-+	*value = rx_msg->data[1];
-+
-+	return 0;
-+}
-+
-+/**
-+ * imx_se_read_fuse() - API to request SE-FW to read the fuse(s) value.
-+ * @void *se_if_data: refs to data attached to the se interface.
-+ * @uint16_t fuse_id: Fuse identifier to read.
-+ * @u32 *value: unsigned integer array to store the fuse values.
-+ *
-+ * Secure enclave like EdgeLock Enclave, manages the fuse. This API
-+ * requests the FW to read the fuses. FW responds with the read
-+ * values.
-+ *
-+ * Context:
-+ *
-+ * Return value:
-+ *   0,   means success.
-+ *   < 0, means failure.
-+ */
-+int imx_se_read_fuse(void *se_if_data, uint16_t fuse_id, u32 *value)
-+{
-+	return ele_read_fuse((struct se_if_priv *)se_if_data, fuse_id, value);
-+}
-+EXPORT_SYMBOL_GPL(imx_se_read_fuse);
-+
-+static int ele_write_fuse(struct se_if_priv *priv, uint16_t fuse_id, u32 value)
-+{
-+	struct se_api_msg *tx_msg __free(kfree) = NULL;
-+	struct se_api_msg *rx_msg __free(kfree) = NULL;
-+	int ret = 0;
-+
-+	if (!priv)
-+		return -EINVAL;
-+
-+	tx_msg = kzalloc(ELE_WRITE_FUSE_REQ_MSG_SZ, GFP_KERNEL);
-+	if (!tx_msg)
-+		return -ENOMEM;
-+
-+	rx_msg = kzalloc(ELE_WRITE_FUSE_RSP_MSG_SZ, GFP_KERNEL);
-+	if (!rx_msg)
-+		return -ENOMEM;
-+
-+	ret = se_fill_cmd_msg_hdr(priv, (struct se_msg_hdr *)&tx_msg->header,
-+				  ELE_WRITE_FUSE, ELE_WRITE_FUSE_REQ_MSG_SZ,
-+				  true);
-+	if (ret)
-+		return ret;
-+
-+	tx_msg->data[0] = (32 << 16) | (fuse_id << 5);
-+	tx_msg->data[1] = value;
-+
-+	ret = ele_msg_send_rcv(priv->priv_dev_ctx, tx_msg,
-+			       ELE_WRITE_FUSE_REQ_MSG_SZ, rx_msg,
-+			       ELE_WRITE_FUSE_RSP_MSG_SZ);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = se_val_rsp_hdr_n_status(priv, rx_msg, ELE_WRITE_FUSE,
-+				      ELE_WRITE_FUSE_RSP_MSG_SZ, true);
-+
-+	return ret;
-+}
-+
-+/**
-+ * imx_se_write_fuse() - API to request SE-FW to write to fuses.
-+ * @void *se_if_data: refs to data attached to the se interface.
-+ * @uint16_t fuse_id: Fuse identifier to write to.
-+ * @u32 value: unsigned integer value that to be written to the fuse.
-+ *
-+ * Secure enclave like EdgeLock Enclave, manages the fuse. This API
-+ * requests the FW to write the fuse with the given value.
-+ *
-+ * Context:
-+ *
-+ * Return value:
-+ *   0,   means success.
-+ *   < 0, means failure.
-+ */
-+int imx_se_write_fuse(void *se_if_data, uint16_t fuse_id, u32 value)
-+{
-+	return ele_write_fuse((struct se_if_priv *)se_if_data, fuse_id, value);
-+}
-+EXPORT_SYMBOL_GPL(imx_se_write_fuse);
-diff --git a/drivers/firmware/imx/ele_base_msg.h b/drivers/firmware/imx/ele_base_msg.h
-index dd89412f485e..22f553cdbc33 100644
---- a/drivers/firmware/imx/ele_base_msg.h
-+++ b/drivers/firmware/imx/ele_base_msg.h
-@@ -19,6 +19,14 @@
- #define ELE_GET_INFO_REQ_MSG_SZ		0x10
- #define ELE_GET_INFO_RSP_MSG_SZ		0x08
- 
-+#define ELE_WRITE_FUSE			0xD6
-+#define ELE_WRITE_FUSE_REQ_MSG_SZ	12
-+#define ELE_WRITE_FUSE_RSP_MSG_SZ	12
-+
-+#define ELE_READ_FUSE_REQ		0x97
-+#define ELE_READ_FUSE_REQ_MSG_SZ	0x08
-+#define ELE_READ_FUSE_RSP_MSG_SZ	0x0C
-+
- #define MAX_UID_SIZE                     (16)
- #define DEV_GETINFO_ROM_PATCH_SHA_SZ     (32)
- #define DEV_GETINFO_FW_SHA_SZ            (32)
-diff --git a/include/linux/firmware/imx/se_api.h b/include/linux/firmware/imx/se_api.h
-index b1c4c9115d7b..9503b9363593 100644
---- a/include/linux/firmware/imx/se_api.h
-+++ b/include/linux/firmware/imx/se_api.h
-@@ -11,4 +11,7 @@
- #define SOC_ID_OF_IMX8ULP		0x084d
- #define SOC_ID_OF_IMX93			0x9300
- 
-+int imx_se_write_fuse(void *se_if_data, uint16_t fuse_id, u32 value);
-+int imx_se_read_fuse(void *se_if_data, uint16_t fuse_id, u32 *value);
-+
- #endif /* __SE_API_H__ */
--- 
-2.49.0
+Alternatively, pcibios_reset_secondary_bus() could be made to invoke the
+pci_host_bridge's ->reset_slot() callback if it's not NULL, else
+pci_reset_secondary_bus().  And in that case, the __weak attribute
+could be removed as well as the powerpc-specific version of
+pcibios_reset_secondary_bus().
 
+I guess what I'm trying to say is, you don't *have* to plumb this
+into pcibios_reset_secondary_bus().  In fact, having a host bridge
+specific callback could be useful if the SoC contains several
+host bridges which require different callbacks to perform a reset.
+
+I just want to make sure that the code remains maintainable,
+i.e. we don't have two separate ways to override how a bus reset
+is performed.
+
+Thanks,
+
+Lukas
