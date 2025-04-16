@@ -1,231 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D451F462D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8628D192D68;
+	Wed, 16 Apr 2025 14:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812807; cv=none; b=MCjfTGABSh2YMo4mTDuXGuJoVtNNmjY2ZsuliQkrzeAxOD/b71RMCgCT9TjqO68hlXDia6kqyOehUNW+nzZR1rCDQd7PaN86W3c2AJL9F5ZfWVJ23sbY4+DWVupgLFgJeFzkn8oODZCSOWTEdHqkgOBbhKchP7GSzx0aI2iY88c=
+	t=1744812852; cv=none; b=W8u9eV/esLiCVMRIl3bphG/3C7qoznDa1dNN6SX0edZ8sQ/DPnYcEJkvd+XMyLE+R2xAWY1oddLzbeLMVZH7o3sf8AhCS+J907CpFXmpjWUYQSwKn/bXU7zQn9xZBrJkBFrk5GfzJfdmoI1/GM6krkwJl5lk0qdgxqNpgNdFp8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812807; c=relaxed/simple;
-	bh=v3SPicp2ZolPD95SPq52xqbsLnE5RBcCIUg5J4PkfHM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=bkGGAaP3u+Rk+6VDN3yfZgLHftdjJarhRX8NBcQ6hMG30jc5fMipo8ZD+DqRyHlmzM31s07RGOWHLXmtmXHpKazTKM7NDdUoX7v4+eW5AD5v1LLHqfE2sBTIcRikGdR1BRj7JCGk6e+VvbwyPNirDf3u62KATp3QozNpVGXk1y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CzN1LvqO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CzN1LvqO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744812804;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=v3SPicp2ZolPD95SPq52xqbsLnE5RBcCIUg5J4PkfHM=;
-	b=CzN1LvqOK3piwQbhhixJ/b9jSS182XJh3uirkHH+5KfyJxNVloh1r8dmun3uAfO1W7lmtL
-	KGhEevkqphCY7e5E6kZDt+Ikl39kRU9pHFXguDjv9Hc+GfqcYjj6yUuyj3OWCLSJPdNhB9
-	CQHkEcQ3m04nwXZBYuIcs1oXX73n9vM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-400-RQySX0pmPkeGxkG4tzLVeA-1; Wed, 16 Apr 2025 10:13:22 -0400
-X-MC-Unique: RQySX0pmPkeGxkG4tzLVeA-1
-X-Mimecast-MFC-AGG-ID: RQySX0pmPkeGxkG4tzLVeA_1744812801
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso53222115e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:13:22 -0700 (PDT)
+	s=arc-20240116; t=1744812852; c=relaxed/simple;
+	bh=P8RyqmbFkaSkJG3Ix7pdpJZrWqUmUydL79exEYIicoM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Iy8XAcCVVqPWJ4LihS9JeyGdPAnFOZORvmOQh4gF/6XehZ+OTX8seC0uvTj+VmlYfSBImYvqX/iD0lboSy6Z/IiBzIdERvn1fzHpgKspFYQqsp4/zHJi7yxrg9eydhLfJR6Q/D/OaAqOqolgYxr0i5QrqivVEn7jk4gl+8Yw9Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so5195726a12.1;
+        Wed, 16 Apr 2025 07:14:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744812801; x=1745417601;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v3SPicp2ZolPD95SPq52xqbsLnE5RBcCIUg5J4PkfHM=;
-        b=udgJUJSw5noVWuTsvmFNcSxgdV/lQCBshi6oRS6oNqvl4bXGZaFGLcq4YLKT05joIc
-         pJ3Rz45gtavs2qBsaQ6lkSo9TO7q+ppJBEWinK5FglKcDSSukbRlYS0oavfYIuWHsNsy
-         S4ENi9SE9iSfdFfqmWrBAV2K7nlUcOljbnKK3WVSH/oTPrx82Xm9KKxOCtBCsetEH7s6
-         JPF0xO9M4o3H8s4OHHm3FVKNT/+EqbY8rm2uYCls8TqoJUR06icofk4n+Gx1gpSK9n0B
-         dVPPL2IGGVNRvZqXgYs2haSr2P0HZDorkFh/aqQxkcKtUOSIBO0ww2twlVn11iRr4pjk
-         5scQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcxURoTF5syxix4EO20vniHnotI1cuIQARbpAL+j+iFcWjqa+rqm3/ntcG94xIj/7+VDDU8LDUmuF6j7c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYBqTtIXk5CM2qZQViR9wkWHKAJFhhdsd58q3TbN0CXz2N9Aeo
-	oRG4JxJAZsYvFboqQn6NfSG14nWm7GqhPprmmMWGjKm5pjNV9ZH3jEzVHN3faijy5zBUC3xbWXY
-	w7TRUJlYSWPxadiFla0fqvk/3nZFMhZEOu5HpZvhIeHYRaVArWoaJveNhqJJ2TqkzOMlmPFeE
-X-Gm-Gg: ASbGncv1XbaqmropL1nwnIVFiJyx7HL9jIUR0hfKXoibnwfY9SicOTinAoGLGz0Dsbw
-	P1kEVlcamyihGOv7OXX6FN/wQPEqH7gE2m19+L/4K4dqi9vMkhRs1LLCJLOtELtS5FGk2E4B5aR
-	nZ+E4wnH+A5v84QsbP2v6HNJutR3howyDtmTv3JVM4x6xKmMRku7cTpt/JWevTJsihnH+rp4P4l
-	JzTbCHs8gYcqe7v/KzAtkHoLhKiOcs4BvJ6jOyLaewcKdhVTYBctfvWGc8H8isA6kCYRrj19QMN
-	9nsaFsEULee9VQILhRcz8IG667KvD/Az2ngWYbo=
-X-Received: by 2002:a05:600c:190c:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-4405d6cd44amr19200255e9.27.1744812801007;
-        Wed, 16 Apr 2025 07:13:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEkwGP2Ne0FoQnAtqTFB59obZTTtVOiLy9i5qi2iMgpZTymokHpIgw2LcqF9baUdCIg8P/pHw==
-X-Received: by 2002:a05:600c:190c:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-4405d6cd44amr19199845e9.27.1744812800577;
-        Wed, 16 Apr 2025 07:13:20 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c7ef9sm22549655e9.6.2025.04.16.07.13.19
+        d=1e100.net; s=20230601; t=1744812848; x=1745417648;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aQgHDDXnnzWRzJaD14GNyp8/kByAyC6tvTlmaDv4JQU=;
+        b=kBU0ozp/u6yQMyHiesVVqPGZcXCmmqcJsS2PttCIqVDFzRrs1YKUG50/CPmnuyO0rt
+         da8iad6DJkkwY6IMq9Zz5C2Oo+y99NWhVAJWtpeXpkxt01IDK05RjXurpbBmEeN/0ARi
+         7Je1aaf7N5bCeBu6aCKNlu3CbST3tr5o/Yesb2voiLb40hLZoVhYjYCeZlKn6x0vpJNI
+         hgx75579qZ9m58dLAnJuuWK37EAeKB/1bt1/oim2hwWdX2y8RjFhYtrf7PMDqwmow5ht
+         z0viyClTo4HAfdoM4xGIsr1xF62F+5hOwZy0YVPru1cb7cbwuO1PjzZgnWe7G7CCGd3m
+         28Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXFUS/kRK1dJeTQps1of4HC/TM6N3zBsc4XAWR49/N+7ImImJuPEjWfrcwrp/cQ+Ov+Uofp3b1@vger.kernel.org, AJvYcCV/k8dOtcNscr50sxDcFwchadBLpWHOXFGX/h93ul873HMk+tgm3jXS1HYHdRHmi3RrnVllyBpgtNYkq0M=@vger.kernel.org, AJvYcCWLD88mM9aAcwnChlnbOgk5sOBlSJG9LcnC4lwwbcK5H201nH+pis1dK9Q/PqBgG49fS9nX@vger.kernel.org
+X-Gm-Message-State: AOJu0YymdQA7Y4rwCUFTS7PZGITPBw2UoyE4olHu4qvo5hwwVpXq8NB/
+	26CwtrwMwtAVV39aEw21fOeAcIXWRL6eXaDeTliV4qKiUsiQW8tt
+X-Gm-Gg: ASbGncuM+mzatgapFxXqvwUP1jrK99O16UTWs1d8wsMKTzSTX5ZrcYqZUKpjWnElLmg
+	pFQCf7yNaDFMgXR3exZ109Wodpxx/JOVLMNUro9MqadG0DgxL3L2MSu6BuTJu/RwTWN/boFnTVI
+	fgJ0crj0AJuwb3Nh2Ga/w0Xof9+tFMnP4adCZcfGIJHPxUDO0K3nKO6WwrUJn1jdGu9NuHbVpM3
+	jd4bUtP4TomDOpscjgnCOSv7y84+MgkIuu3XB6k0MI3ioXR5PrVUv6jMutSC4Q4eSGJbUzel+eE
+	+XaP39AE6Rpmo7D9NERUp7Fe7nsIhmk=
+X-Google-Smtp-Source: AGHT+IF/gy9/45ncvysC9Q/2W6qeo7ZVy26R66Z4JYMUvVjVlHXtwBR64Y2bD+mMPpEWZZIP4NNGtg==
+X-Received: by 2002:a17:906:c108:b0:aca:d4f0:2b9f with SMTP id a640c23a62f3a-acb42875ecbmr212168066b.10.1744812847353;
+        Wed, 16 Apr 2025 07:14:07 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cdeb9f7sm133316866b.58.2025.04.16.07.14.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 07:13:20 -0700 (PDT)
-Message-ID: <48d405e1271ac4a2781df7ddcad443b93365c6ef.camel@redhat.com>
-Subject: Re: [PATCH v3 13/22] rv: Add support for LTL monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Date: Wed, 16 Apr 2025 16:13:18 +0200
-In-Reply-To: <20250416115658.AkFAts-B@linutronix.de>
-References: <cover.1744785335.git.namcao@linutronix.de>
-	 <19f424c910bfa0f4854117e3f8771aeb6e98a9d2.1744785335.git.namcao@linutronix.de>
-	 <4edad1940b2d05f1997895d4bbc11f02a921e8e5.camel@redhat.com>
-	 <20250416115658.AkFAts-B@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        Wed, 16 Apr 2025 07:14:06 -0700 (PDT)
+Date: Wed, 16 Apr 2025 07:14:04 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
+	aeh@meta.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Uladzislau Rezki <urezki@gmail.com>, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH 0/8] Introduce simple hazard pointers for lockdep
+Message-ID: <Z/+7LMnQqtV+mnJ+@gmail.com>
+References: <20250414060055.341516-1-boqun.feng@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414060055.341516-1-boqun.feng@gmail.com>
 
-CgpPbiBXZWQsIDIwMjUtMDQtMTYgYXQgMTM6NTYgKzAyMDAsIE5hbSBDYW8gd3JvdGU6Cj4gT24g
-V2VkLCBBcHIgMTYsIDIwMjUgYXQgMTE6MzQ6NTNBTSArMDIwMCwgR2FicmllbGUgTW9uYWNvIHdy
-b3RlOgo+ID4gT24gV2VkLCAyMDI1LTA0LTE2IGF0IDA4OjUxICswMjAwLCBOYW0gQ2FvIHdyb3Rl
-Ogo+ID4gPiDCoCNlbmRpZiAvKiBDT05GSUdfREFfTU9OX0VWRU5UU19JRCAqLwo+ID4gPiArI2lm
-IENPTkZJR19MVExfTU9OX0VWRU5UU19JRAo+ID4gPiArVFJBQ0VfRVZFTlQoZXZlbnRfbHRsX21v
-bml0b3JfaWQsCj4gPiA+ICsKPiA+ID4gKwlUUF9QUk9UTyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRh
-c2ssIGNoYXIgKnN0YXRlcywgY2hhcgo+ID4gPiAqYXRvbXMsIGNoYXIgKm5leHQpLAo+ID4gPiAr
-Cj4gPiA+ICsJVFBfQVJHUyh0YXNrLCBzdGF0ZXMsIGF0b21zLCBuZXh0KSwKPiA+ID4gKwo+ID4g
-PiArCVRQX1NUUlVDVF9fZW50cnkoCj4gPiA+ICsJCV9fc3RyaW5nKGNvbW0sIHRhc2stPmNvbW0p
-Cj4gPiA+ICsJCV9fZmllbGQocGlkX3QsIHBpZCkKPiA+ID4gKwkJX19zdHJpbmcoc3RhdGVzLCBz
-dGF0ZXMpCj4gPiA+ICsJCV9fc3RyaW5nKGF0b21zLCBhdG9tcykKPiA+ID4gKwkJX19zdHJpbmco
-bmV4dCwgbmV4dCkKPiA+ID4gKwkpLAo+ID4gPiArCj4gPiA+ICsJVFBfZmFzdF9hc3NpZ24oCj4g
-PiA+ICsJCV9fYXNzaWduX3N0cihjb21tKTsKPiA+ID4gKwkJX19lbnRyeS0+cGlkID0gdGFzay0+
-cGlkOwo+ID4gPiArCQlfX2Fzc2lnbl9zdHIoc3RhdGVzKTsKPiA+ID4gKwkJX19hc3NpZ25fc3Ry
-KGF0b21zKTsKPiA+ID4gKwkJX19hc3NpZ25fc3RyKG5leHQpOwo+ID4gPiArCSksCj4gPiA+ICsK
-PiA+ID4gKwlUUF9wcmludGsoIiVzWyVkXTogKCVzKSB4ICglcykgLT4gKCVzKSIsCj4gPiA+IF9f
-Z2V0X3N0cihjb21tKSwKPiA+ID4gX19lbnRyeS0+cGlkLCBfX2dldF9zdHIoc3RhdGVzKSwKPiA+
-ID4gKwkJwqAgX19nZXRfc3RyKGF0b21zKSwgX19nZXRfc3RyKG5leHQpKQo+ID4gPiArKTsKPiA+
-ID4gKwo+ID4gPiArVFJBQ0VfRVZFTlQoZXJyb3JfbHRsX21vbml0b3JfaWQsCj4gPiA+ICsKPiA+
-ID4gKwlUUF9QUk9UTyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spLAo+ID4gPiArCj4gPiA+ICsJ
-VFBfQVJHUyh0YXNrKSwKPiA+ID4gKwo+ID4gPiArCVRQX1NUUlVDVF9fZW50cnkoCj4gPiA+ICsJ
-CV9fc3RyaW5nKGNvbW0sIHRhc2stPmNvbW0pCj4gPiA+ICsJCV9fZmllbGQocGlkX3QsIHBpZCkK
-PiA+ID4gKwkpLAo+ID4gPiArCj4gPiA+ICsJVFBfZmFzdF9hc3NpZ24oCj4gPiA+ICsJCV9fYXNz
-aWduX3N0cihjb21tKTsKPiA+ID4gKwkJX19lbnRyeS0+cGlkID0gdGFzay0+cGlkOwo+ID4gPiAr
-CSksCj4gPiA+ICsKPiA+ID4gKwlUUF9wcmludGsoIiVzWyVkXTogdmlvbGF0aW9uIGRldGVjdGVk
-IiwgX19nZXRfc3RyKGNvbW0pLAo+ID4gCj4gPiBJbiB5b3VyIHdvcmtmbG93IHlvdSdyZSBwcm9i
-YWJseSB1c2luZyBldmVudHMgYW5kIGVycm9ycyB0b2dldGhlciwKPiA+IGJ1dAo+ID4gd291bGRu
-J3QgaXQgaGVscCBwcmludGluZyB0aGUgYXRvbXMgdG9nZXRoZXIgd2l0aCB0aGUgdmlvbGF0aW9u
-Cj4gPiBkZXRlY3RlZD8KPiA+IEF0IGxlYXN0IHRvIGdpdmUgYSBjbHVlIG9uIHRoZSBlcnJvciBp
-biBjYXNlIHRoZSB1c2VyIGRvZXNuJ3Qgd2FudAo+ID4gdG8KPiA+IHNlZSB0aGUgZW50aXJlIHRy
-YWNlICh3aGljaCBtaWdodCBiZSBuZWVkZWQgZm9yIGEgZnVsbCBkZWJ1Zwo+ID4gdGhvdWdoKS4K
-PiA+IAo+ID4gVGhlIHNhbWUgY291bGQgYmUgc2FpZCBmcm9tIHJlYWN0b3JzLCB0aGUgdXNlciBk
-b2Vzbid0IGhhdmUgbXVjaAo+ID4gaW5mb3JtYXRpb24gdG8gaW5mZXIgd2hhdCB3ZW50IHdyb25n
-Lgo+IAo+IEFjdHVhbGx5IG15IGludGVudGlvbiBmb3IgdGhlICJldmVudCIgdHJhY2Vwb2ludHMg
-YXJlIG9ubHkgZm9yCj4gZGVidWdnaW5nCj4gdGhlIG1vbml0b3IgaXRzZWxmLiBJIGRvbid0IHdh
-bnQgdG8gYm90aGVyIHVzZXJzIHdpdGggdGhlIELDvGNoaQo+IGF1dG9tYXRvbiwKPiBiZWNhdXNl
-IHRoYXQncyBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzLgo+IAo+IFRoZSAiZXJyb3IiIHRyYWNlcG9p
-bnRzIHNob3VsZCBiZSBlbm91Z2ggZm9yIGlkZW50aWZ5aW5nIHByb2JsZW1zCj4gd2l0aAo+IHJl
-YWx0aW1lIGFwcGxpY2F0aW9ucy4gQmVjYXVzZSBlcnJvcnMgZnJvbSB0aGUgbW9uaXRvcnMgYXJl
-Cj4gdW5hbWJpZ3VvdXM6Cj4gCj4gwqAgLSBwYWdlZmF1bHQgbW9uaXRvcjogZXJyb3IgbWVhbnMg
-YW4gUlQgdGFzayBpcyByYWlzaW5nIHBhZ2VmYXVsdAo+IMKgIC0gc2xlZXAgbW9uaXRvcjogZXJy
-b3IgbWVhbnMgYW4gUlQgdGFzayBpcyBkZWxheWVkIHVuYm91bmRlZGx5Cj4gCj4gVGhhdCBhbmQg
-YSBzdGFja3RyYWNlIChlLmcuIGZyb20gcGVyZikgaXMgZW5vdWdoIHRvIHVuZGVyc3RhbmQgdGhl
-Cj4gcHJvYmxlbS4KPiBUaGF0IHdhcyBhbGwgSSBuZWVkIHRvIGlkZW50aWZ5aW5nIHByb2JsZW1z
-IHdpdGggcGlwZXdpcmUgdXNpbmcgdGhlCj4gbW9uaXRvcnMuCj4gCj4gSW4gdGhlIGZ1dHVyZSwg
-d2UgY2FuIGhhdmUgb3RoZXIgbW9uaXRvcnMgd2hvc2Ugd2FybmluZ3MgYXJlCj4gYW1iaWd1b3Vz
-LCBhbmQKPiBhIG1vcmUgZGV0YWlsZWQgZXJyb3IgbWVzc2FnZSB3aWxsIGJlIG5lY2Vzc2FyeS4g
-QnV0IGZvciBub3csIEkgdGhpbmsKPiB3ZQo+IGNhbiBrZWVwIGl0IHNpbXBsZS4KPiAKPiA+ID4g
-K2RlZiBhYmJyZXZpYXRlX2F0b21zKGF0b21zOiBsaXN0W3N0cl0pIC0+IGxpc3Rbc3RyXToKPiA+
-ID4gK8KgwqDCoCBhYmJycyA9IGxpc3QoKQo+ID4gPiArwqDCoMKgIGZvciBhdG9tIGluIGF0b21z
-Ogo+ID4gPiArwqDCoMKgwqDCoMKgwqAgc2l6ZSA9IDEKPiA+ID4gK8KgwqDCoMKgwqDCoMKgIHdo
-aWxlIFRydWU6Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFiYnIgPSBhdG9tWzpzaXpl
-XQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiBzdW0oYS5zdGFydHN3aXRoKGFiYnIp
-IGZvciBhIGluIGF0b21zKSA9PSAxOgo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGJyZWFrCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNpemUgKz0gMQo+ID4gPiAr
-wqDCoMKgwqDCoMKgwqAgYWJicnMuYXBwZW5kKGFiYnIubG93ZXIoKSkKPiA+ID4gK8KgwqDCoCBy
-ZXR1cm4gYWJicnMKPiA+IAo+ID4gSSBnZXQgdGhpcyBpcyBqdXN0IGEgbWF0dGVyIG9mIHByZWZl
-cmVuY2UsIHNvIGZlZWwgZnJlZSB0byBpZ25vcmUKPiA+IG15Cj4gPiBzdWdnZXN0aW9uLgo+ID4g
-VGhpcyBhYmJyZXZpYXRpb24gYWxnb3JpdGhtIGRvZXNuJ3Qgd29yayB0b28gd2VsbCB3aXRoIGF0
-b21zCj4gPiBzdGFydGluZwo+ID4gd2l0aCB0aGUgc2FtZSBzdWJzdHJpbmcgYW5kIGNhbiBwcm9k
-dWNlIHNvbWUgdW5leHBlY3RlZCByZXN1bHQ6Cj4gPiAKPiA+IExUTF9CTE9DS19PTl9SVF9NVVRF
-WDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYiwKPiA+IExUTF9LRVJORUxfVEhSRUFE
-OsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtlLAo+ID4gTFRMX0tUSFJF
-QURfU0hPVUxEX1NUT1A6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga3QsCj4gPiBMVExfTkFO
-T1NMRUVQOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbiwK
-PiA+IExUTF9QSV9GVVRFWDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgcCwKPiA+IExUTF9SVDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgciwKPiA+IExUTF9TTEVFUDrCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcywKPiA+IExUTF9UQVNL
-X0lTX01JR1JBVElPTjrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGFza19pc19tLAo+
-ID4gTFRMX1RBU0tfSVNfUkNVOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCB0YXNrX2lzX3IsCj4gPiBMVExfV0FLRTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3YSwKPiA+IExUTF9XT0tFTl9CWV9FUVVBTF9P
-Ul9ISUdIRVJfUFJJTzrCoMKgwqAgd29rZW5fYnlfZSwKPiA+IExUTF9XT0tFTl9CWV9IQVJESVJR
-OsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdva2VuX2J5X2gsCj4gPiBMVExfV09L
-RU5fQllfTk1JOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd29rZW5f
-YnlfbiwKPiA+IAo+ID4gIndva2VuX2J5XyoiIGFuZCAidGFza19pc18qIiBhdG9tIGNhbiBnZXQg
-dW5uZWNlc3NhcmlseSBsb25nIGFuZAo+ID4gd2hpbGUgcmVhZGluZyAia3QiIEkgbWlnaHQgdGhp
-bmsgYWJvdXQga2VybmVsX3RocmVhZC4KPiA+IAo+ID4gSSB3YXMgdGhpbmtpbmcgYWJvdXQgc29t
-ZXRoaW5nIGxpa2U6Cj4gPiAKPiA+IExUTF9CTE9DS19PTl9SVF9NVVRFWDrCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgYl9vX3JfbQo+ID4gTFRMX0tFUk5FTF9USFJFQUQ6wqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga190Cj4gPiBMVExfS1RIUkVBRF9TSE9VTERf
-U1RPUDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrX3Nfcwo+ID4gTFRMX05BTk9TTEVFUDrC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG4KPiA+IExUTF9Q
-SV9GVVRFWDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-cF9mCj4gPiBMVExfUlQ6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHIKPiA+IExUTF9TTEVFUDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcwo+ID4gTFRMX1RBU0tfSVNfTUlHUkFU
-SU9OOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0X2lfbQo+ID4gTFRMX1RBU0tfSVNf
-UkNVOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0X2lfcgo+ID4g
-TFRMX1dBS0U6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgdwo+ID4gTFRMX1dPS0VOX0JZX0VRVUFMX09SX0hJR0hFUl9QUklPOsKgwqDCoCB3
-X2JfZV9vX2hfcAo+ID4gTFRMX1dPS0VOX0JZX0hBUkRJUlE6wqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgd19iX2gKPiA+IExUTF9XT0tFTl9CWV9OTUk6wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3X2Jfbgo+ID4gCj4gPiBvciBldmVuCj4gPiAKPiA+IExU
-TF9CTE9DS19PTl9SVF9NVVRFWDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYl9tCj4g
-PiBMVExfS0VSTkVMX1RIUkVBRDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBrX3QKPiA+IExUTF9LVEhSRUFEX1NIT1VMRF9TVE9QOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGtfc19zCj4gPiBMVExfTkFOT1NMRUVQOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgbgo+ID4gTFRMX1BJX0ZVVEVYOsKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwX2YKPiA+IExUTF9SVDrCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcgo+ID4gTFRM
-X1NMRUVQOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBzCj4gPiBMVExfVEFTS19JU19NSUdSQVRJT046wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHRfbQo+ID4gTFRMX1RBU0tfSVNfUkNVOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB0X3IKPiA+IExUTF9XQUtFOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHcKPiA+IExUTF9XT0tFTl9CWV9FUVVB
-TF9PUl9ISUdIRVJfUFJJTzrCoMKgwqAgd19lX2hfcAo+ID4gTFRMX1dPS0VOX0JZX0hBUkRJUlE6
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd19oCj4gPiBMVExfV09LRU5fQllfTk1J
-OsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd19uCj4gPiAKPiA+IEkg
-dXNlZCB0aGUgZm9sbG93aW5nIGNvZGUgdG8gY29tZSB1cCB3aXRoIHRoaXM6Cj4gPiAKPiA+IGRl
-ZiBhYmJyZXZpYXRlX2F0b21zKGF0b21zOiBsaXN0W3N0cl0pIC0+IGxpc3Rbc3RyXToKPiA+IMKg
-wqDCoCAjIGNvbXBsZXRlbHkgYXJiaXRyYXJ5Li4KPiA+IMKgwqDCoCBza2lwID0gWyAiaXMiLCAi
-YnkiLCAib3IiLCAiYW5kIiBdCj4gPiDCoMKgwqAgZGVmIGFiYnIgKG4sIHMpOgo+ID4gwqDCoMKg
-wqDCoMKgwqAgcmV0dXJuICdfJy5qb2luKHdvcmRbOm5dIGZvciB3b3JkIGluIHMubG93ZXIoKS5z
-cGxpdCgnXycpCj4gPiBpZiB3b3JkIG5vdCBpbiBza2lwKQo+ID4gwqDCoMKgIGZvciBuIGluIHJh
-bmdlKDEsIDMyKToKPiA+IMKgwqDCoMKgwqDCoMKgIGFiYnJzID0gW2FiYnIobiwgYSkgZm9yIGEg
-aW4gYXRvbXNdCj4gPiDCoMKgwqDCoMKgwqDCoCBpZiBsZW4oYWJicnMpID09IGxlbihzZXQoYWJi
-cnMpKToKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIGFiYnJzCj4gPiAKPiA+IFdo
-aWNoIGNvdWxkIGV2ZW4gYmUgdHVuZWQgdG8gdXNlIDIgbGV0dGVycyBwZXIgYmxvY2sgaW5zdGVh
-ZCBvZiAxCj4gPiAoaW1wcm92aW5nIHJlYWRhYmlsaXR5IGJ5IGEgbG90IGFjdHVhbGx5KS4uCj4g
-PiAnYmxfb25fcnRfbXUnLCAna2VfdGgnLCAna3Rfc2hfc3QnLCAnbmEnLCAncGlfZnUnLCAncnQn
-LCAnc2wnLAo+ID4gJ3RhX21pJywKPiA+ICd0YV9yYycsICd3YScsICd3b19lcV9oaV9wcicsICd3
-b19oYScsICd3b19ubScKPiA+IAo+ID4gV2hhdCBkbyB5b3UgdGhpbms/Cj4gCj4gWWVzLCB0aGlz
-IHdvdWxkIGJlIHZlcnkgbmljZS4gQnV0IGFzIG1lbnRpb25lZCwgdGhpcyBpcyBtYWlubHkgZm9y
-Cj4gZGVidWdnaW5nIHRoZSBtb25pdG9ycywgbm90IGZvciBlbmQgdXNlcnMuIFRoZXJlZm9yZSBJ
-IGRvbid0IHdhbnQgdG8KPiBzcGVuZAo+IHRvbyBtdWNoIGVuZXJneSBvbiBpdC4KPiAKPiBMZXQg
-bWUgc2VlIGhvdyAibmljZSIgd2UgY2FuIG1ha2UgaXQgd2l0aG91dCBzcGVuZGluZyB0b28gbWFu
-eSBob3Vycy4KPiBUaGFua3MgZm9yIHRoZSBzdWdnZXN0aW9uIQo+IAoKQnkgdGhlIHdheSwgbm8g
-bWF0dGVyIHdoYXQgeW91IGNob29zZSwganVzdCBtYWtlIHN1cmUgdGhlIGZ1bmN0aW9uCmNhbm5v
-dCBnZXQgc3R1Y2sgaW4gYW4gaW5maW5pdGUgbG9vcCAoYXQgbW9zdCBpdCBjYW4gZmFpbCBhbmQg
-dGVsbCB0aGUKdXNlciB0byBmaW5kIGJldHRlciBuYW1lcykuCgpKdXN0IHRyaWVkIHRoZSBjdXJy
-ZW50IHBhcnNlciB3aXRoIGEgc2ltcGxlIG1vbml0b3Igd2l0aCBzdGF0ZXMgU0xFRVAsClNMRUVQ
-QUJMRSBhbmQgU0xFRVBJTkcsIGFuZCBJIGNvdWxkbid0IGdldCB0aHJvdWdoLgoKQ2hlZXJzLApH
-YWJyaWVsZQo=
+Hi Boqun,
 
+On Sun, Apr 13, 2025 at 11:00:47PM -0700, Boqun Feng wrote:
+
+> Overall it looks promising to me, but I would like to see how it
+> performs in the environment of Breno. Also as Paul always reminds me:
+> buggy code usually run faster, so please take a look in case I'm missing
+> something ;-) Thanks!
+
+Thanks for the patchset. I've confirmed that the wins are large on my
+environment, but, at the same magnitute of synchronize_rcu_expedited().
+
+Here are the numbers I got:
+
+	6.15-rc1 (upstream)
+		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+		real	0m3.986s
+		user	0m0.001s
+		sys	0m0.093s
+
+	Your patchset on top of 6.15-rc1
+		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+		real	0m0.072s
+		user	0m0.001s
+		sys	0m0.070s
+
+
+	My original proposal of using synchronize_rcu_expedited()[1]
+		# time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1234: mq
+		real	0m0.074s
+		user	0m0.001s
+		sys	0m0.061s
+
+Link: https://lore.kernel.org/all/20250321-lockdep-v1-1-78b732d195fb@debian.org/ [1]
+
+Thanks for working on it,
+--breno
