@@ -1,50 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2BE21CA0E;
-	Wed, 16 Apr 2025 18:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F33421ABB0;
+	Wed, 16 Apr 2025 18:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744827053; cv=none; b=djElcWp9pBSpyXePnhiWJFmgahof7hYra7nMh+phVdNKM+xYxNbxiZXloYPcEEulpCGsIlkN7Qyp0lG8/jI76I9U//I9w73i0q65oJ6AfE/DS59vocWHwd+/Ny2aqQgQV7PjOKZX5MY8hZA7CWe9upaYqL/a8QszeJ4tyspEXPA=
+	t=1744827056; cv=none; b=h7Eh4hWaR1ZWstvK1igU05QkJzCT48sXwTRJ+l4ZjvuCTL8IOfgSThoNRJhrQjy7oaxW83L8dC/KnJ3EreYq9I1J+e/W4UmzHkzcCr5gjgRV2HDM79FZsPDycaYPmtL5Qep7j6qQK+/2DYzqm5gSQGAacMZvZ7ujnCr4lVy/s1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744827053; c=relaxed/simple;
-	bh=fUsOYAuDBR+EO6ABz7h1b/IfKhGz0OkzAPybKgDjLvs=;
+	s=arc-20240116; t=1744827056; c=relaxed/simple;
+	bh=vZh3g5tnBCLLM/Z0GHCroziA4tVUB6U+QZ2RQctdI3A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=toK9jB11dNyDVGDsK7EAJ77x73GMUtXx2Q6Nh1Nu84cC0vryXYIO9fRccgE5E7QX5ZRs9pQn8aMdcp29hCobytGlV5sN4KWeW6NjiXzkET9UtQEyipFgl6iv/0B5e6gEI1Q4ZU2gl1s+BMSQTdaNlWRMq+DLOU/Bl2vW1Pm96nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSE38L85; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mqN1P+5HISohp11x+CZ9dXQ6p4GfPU0MacBxbLpxbW2CFBJ7cqIwcol/C+l07tPBtPLKD3TJpAZEwFMc5bpMvn5xgoIs6LhTlqKFfySHMlyfWKDWerqRNEMqu2QKyT07wQtPF9Rp8PUmSfbVVqVSYqz8cOMpKUI6Rac8vKRNlEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fVH68p0V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSE38L85"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1943C4CEF8;
-	Wed, 16 Apr 2025 18:10:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fVH68p0V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05405C4CEE9;
+	Wed, 16 Apr 2025 18:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744827052;
-	bh=fUsOYAuDBR+EO6ABz7h1b/IfKhGz0OkzAPybKgDjLvs=;
+	s=k20201202; t=1744827056;
+	bh=vZh3g5tnBCLLM/Z0GHCroziA4tVUB6U+QZ2RQctdI3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VSE38L85OEDTURdOo2F1iNZhrmVYdBPEHDMIQw7J8T/9OPypKSbGK4UwqBJyMapUO
-	 6yTBd/GQaL3uE/BXTP+sliGhMSNKHbpD/hAYFYZQ388F4E1QPXrP7wREgwHinxxrmP
-	 /gp7SdubCb3+e2wBZ9nqrXGAecEzGczU29RADIc6G6sBcH0a3tji+dROPacqj+w7xv
-	 piA75kkvnLq9qW2djAwkdNGg6pYc+yy/mO6Wn887uHRsy27HzqI/AnIK0j5i2l7/3v
-	 wkuhHkR4Eby1kn6esl+CbbV/LFR3mo/RGvx9EzfqfP3cFxBbLtdTVRa3FO0yS8772O
-	 1jUCPUz/jtdCA==
+	b=fVH68p0VtZpPOQqQ9ieT7DUabCPZaXg7OPqOjGnOSe9WAu/QEeYqSZwYsFKgl7dbn
+	 J4K6bU/9jnGU4782ukRT35ekvBXdY8D8KFPF1yX/fVuna2qZoOKKFHQ1XB0iUfer8V
+	 CnmVZ+kC8i69FVpAGcMg+D7rIeMkxlLbCHXE/t/mTCZz3lGOmIlLhDGC+UmowzXBIQ
+	 0IjLn8x4bMWts4BJDuvYm4UOtcyEDWOAbf7PbElA2b0NEDBmIiLNbusl46nrKiwB9u
+	 glpJcds0YrLLg5h254zCyVoR4Et1evTmyHDDLiIxTmdt0juvyj6dwggkHmiAuZH/ur
+	 vta4fjIW+fqEQ==
 From: Bjorn Andersson <andersson@kernel.org>
-To: konradybcio@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	Ling Xu <quic_lxu5@quicinc.com>
-Cc: quic_kuiw@quicinc.com,
-	quic_ekangupt@quicinc.com,
-	quic_kartsana@quicinc.com,
-	kernel@quicinc.com,
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Taniya Das <quic_tdas@quicinc.com>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
+	Imran Shaik <quic_imrashai@quicinc.com>,
+	Jagadeesh Kona <quic_jkona@quicinc.com>,
 	linux-arm-msm@vger.kernel.org,
+	linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] arm64: dts: qcom: sa8775p: modify compute-cb nodes
-Date: Wed, 16 Apr 2025 13:10:43 -0500
-Message-ID: <174482704420.446874.15288807161367330267.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: (subset) [PATCH v5 0/4] Update LPASS Audio clock driver for QCM6490 board
+Date: Wed, 16 Apr 2025 13:10:45 -0500
+Message-ID: <174482704422.446874.852481372761594404.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1739260973.git.quic_lxu5@quicinc.com>
-References: <cover.1739260973.git.quic_lxu5@quicinc.com>
+In-Reply-To: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
+References: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,24 +58,23 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Tue, 11 Feb 2025 13:44:13 +0530, Ling Xu wrote:
-> This patch series remove extra entries from the iommus property and
-> remove cdsp compute-cb@10.
-> Patch [v2]: https://lore.kernel.org/all/cover.1737615222.git.quic_lxu5@quicinc.com/
+On Fri, 21 Feb 2025 15:04:53 +0530, Taniya Das wrote:
+> This series updates the low pass audio clock controller driver for reset
+> functionality. The patches are split from the below series.
+> https://lore.kernel.org/all/20240318053555.20405-1-quic_tdas@quicinc.com/
 > 
-> Changes in v3:
->   - Update some commit messages.
-> Changes in v2:
->   - Update some commit messages.
+> The QCM6490 board requires only the reset functionality from the LPASS
+> subsystem. Thus separate out the driver probe to provide the same on the
+> QCM6490 boards.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm64: dts: qcom: sa8775p: Remove extra entries from the iommus property
-      commit: eb73f500548a3205741330cbd7d0e209a7a6a9af
-[2/2] arm64: dts: qcom: sa8775p: Remove cdsp compute-cb@10
-      commit: d180c2bd3b43d55f30c9b99de68bc6bb8420d1c1
+[3/4] arm64: dts: qcom: qcm6490-idp: Update the LPASS audio node
+      commit: 9361ee93ac9d1b6730a65fc690e64cffaa41335e
+[4/4] arm64: dts: qcom: qcs6490-rb3gen2: Update the LPASS audio node
+      commit: f716f5dcf5cc40a0e883513b93dfaf35c50e7ead
 
 Best regards,
 -- 
