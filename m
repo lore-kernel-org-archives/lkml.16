@@ -1,168 +1,210 @@
-Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
+Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C302139B5;
-	Wed, 16 Apr 2025 13:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2A52153D8;
+	Wed, 16 Apr 2025 13:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811683; cv=none; b=eUSCIWYZCDfQ3frQtYaqSXbH3cinlFTOnCfvQXKkBayQAAwliQXIj48Kq976xlb3g1uQlDl8rmhG12nROGrezUMU2/Q1bfyQdlIgJ0skgL7C6wKCmwj9t3UNx2owj23/l5s6Rdrzz/agFyO168zu4wxVIeKHvBy23BIhD2JDQaQ=
+	t=1744811689; cv=none; b=nk6Ud5IQng86vmyCzMFKCtu7dsunkE1iIuPMa0GixFo91HN/f18OjDULDhEfEq1Zzmq1MdrzHGlJKKO0p0ZPmRiEpEfoWmlc2fn0KIW8lBKplS8kBHkMCOPywnqEIiT4kYvqVWW9+jgjNHzCrpQ55Hfd3r1dkGTumxNQKdj8DUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811683; c=relaxed/simple;
-	bh=8iPCyBnNECrvFDdWDc3xKa6kubWw6Oh2mtACz/I0iCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OWXRrKXg+gxleH0fyTEiM0vHSI0c5CjtqggqrLPurh/tHiJV2JL/3EQ28ADw65Oc0iTBfcgx0nu6e4ZBL5EZMtXTM5KqBzl5Gj4vbkrtaLbVIckQnz1wtaGwq9mAXI7aEjmKHINCkKCDswVk29WulILpX4rXHFNiT4Rysu0BfTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RaHc1mWK; arc=none smtp.client-ip=46.255.227.203
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
+	s=arc-20240116; t=1744811689; c=relaxed/simple;
+	bh=l2Ew2QaIDw/j/7Ld2pHbLd9snohEK2xnD23UVoTkGf4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tuajGjUslMIb0nHdDjbE0m0I7IFYMfWlFXK8f7zv9gilb7JTfcIyr/YRszIgww7TmcsVcv3N8oO+++wbTBGnmZg3hK9vXf4S93rCbQkUQEWtHUVaIttGUfPMSvB9xR4M1cojmkzzKkRhISWpusY57CFvcAiLOg1p/dIJ4ZFFFJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=Jnjecutk; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=adj2gyPj; arc=none smtp.client-ip=155.254.16.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RaHc1mWK"
-Received: from gmmr-2.centrum.cz (localhost [127.0.0.1])
-	by gmmr-2.centrum.cz (Postfix) with ESMTP id 194BD2160D3C;
-	Wed, 16 Apr 2025 15:53:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1744811608; bh=mOJi3ULIs6S9O57TJ4KmwFOJWvhHrsVQiIfVdvf40wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RaHc1mWKy7sjYT1nowppfylloj95wowcY3xUi1JChHr5bx04qhidWORWHHsFkKB1U
-	 0cJKHHuWcbiS//5UXr/keo+Wjhh6u+DlsKnaSb8zf0Z6zGz1bwkOawADRFYuAIA9Wa
-	 az6jEzrxs5I0r5Ye/kIE/SGhz7lZ6u7XYsbs0UFo=
-Received: from antispam39.centrum.cz (antispam39.cent [10.30.208.39])
-	by gmmr-2.centrum.cz (Postfix) with ESMTP id 167EC211FC88;
-	Wed, 16 Apr 2025 15:53:28 +0200 (CEST)
-X-CSE-ConnectionGUID: Mln02DEDTaycyQEoKV972g==
-X-CSE-MsgGUID: kN5ul4MZQEKiIS9TdEEyWw==
-X-ThreatScanner-Verdict: Negative
-X-IPAS-Result: =?us-ascii?q?A2EHAAAqtf9n/03h/y5aGgEBAQEBAQEBAQEDAQEBARIBA?=
- =?us-ascii?q?QEBAgIBAQEBQAmBOAMBAQEBCwGJeZFxA4t2hjOGDoVbgX4PAQEBAQEBAQEBC?=
- =?us-ascii?q?UQEAQGFBwKLLCc2Bw4BAgQBAQEBAwIDAQEBAQEBAQEBDQEBBgEBAQEBAQYGA?=
- =?us-ascii?q?QKBHYU1U4JiAYN/AQEBAQIBIw8BRhALDQEKAgIfBwICVgaDFYIwAREjsVt6g?=
- =?us-ascii?q?TIaAmXccAKBI2OBKoEaLgGITwGFbIR3QoINhD8+gQUBhxiCaQSCLYEXlBCNO?=
- =?us-ascii?q?FJ7HANZLAFVExcLBwWBKUMDgQ8jTgUwHYF6g3OFNoIRgVwDAyIBgxV1HIRsh?=
- =?us-ascii?q?FYtT4MzgWgdQAMLbT03FBsGnHwBWSInOIElFcc5gxyBCYROnRUzl3ADkmQuh?=
- =?us-ascii?q?2WPcnmpM4FuAoINMyIwgyNRGY5HIctZgTICBwEKAQEDCYI7jWGBSwEB?=
-IronPort-PHdr: A9a23:rB4ocBeT2Fj2wyLStyGyCRB0lGM+5djLVj580XLHo4xHfqnrxZn+J
- kuXvawr0ASTG92DoKge1beM+4nbGkU+or+5+EgYd5JNUxJXwe43pCcHROOjNwjQAcWuURYHG
- t9fXkRu5XCxPBsdMs//Y1rPvi/6tmZKSV3wOgVvO+v6BJPZgdip2OCu4Z3TZBhDiCagbb9oI
- xi7oxvdutMKjYd+Jao91AXFr3pIduhI2GhlOU+dkxHg68i/+5Ju7z5esO87+c5aVqX6caU4T
- bhGAzkjLms4+s7luwTdQAWW/ncSXX0YnRVRDwXb4x/0Q4/9vSTmuOVz3imaJtD2QqsvWTu+9
- adrSQTnhzkBOjUk7WzYkM1wjKZcoBK8uxxyxpPfbY+JOPZieK7WYMgXTnRdUMlPSyNBA5u8b
- 4oRAOoHIeZYtJT2q18XoRejGQWgGObjxzlVjXH0wKI6yfwsHw/G0gI+Ad8ArXfarNv6O6gOT
- O+7w6vHwC7fb/5Vwzrx9JTEfgwjrPyKQLl+cdDRyU4qFw7dlFuft5DlPymI3esCqWeb6fRlV
- eGygGMgsQ5xuDuvyd0piobTnIIY0UrL9Tl9wIkvPt20UlJ0YN+9HZZWqiqVOJd4TNk4TGF0p
- CY11KcGuZijcSUWx5kqyBHRZfKDfoWL4hzuWumfLSl4iX9qZL+zmgu+/0a+x+HiVsS50UhGo
- jZFn9TOqnwByx/e59WHRPZg/kms3yuE2QPL6uxcLk05lLDXJ4Ahz7MwjJYfr1rPEy/slEj0j
- qKablso9vWm5uj9fLnquIOQO5VqhgzxLqgigMiyDOU+PwMTRWaU4/6826fm/UDhRbVKieA5n
- bfBvZDBIMQbura5AwhI0oY/8xq/Dymp0NAfnXQfI1JFfQuLj5PsO1HSOPD0EOuzj06wnzh1w
- fDGIqfhAojILnTZjLjgfK5x609ayAUt0dBS/51ZB7AbLP7tWkL8tMbUAgEnPwG02erqCtdw2
- psbWW2VA6+ZNK3SsUWP5uIqO+SDfpUVuDXnJPgg/fHul2Q0lkUBfamtx5QXc2q0EehnIkmBe
- 3rjns8BEXsWvgo5VOHqi0ONUSBSZ3a0Ra4z/Ss7CIW7AofYRYCsgKeM0z2hHp1TfGxJFleME
- XLwe4WeR/gMcD6SItNmkjEcW7mhSosh1RWutQLhyrpnKOTU+jcCup3+ytd6/fDcmQs19TxuA
- MSRy3uNQH1snmMUWz8227hyoEN+x1qCyqV4gOJXFcZV5/xXVgc2L5ncz/Z1C9zqQALOYs+JS
- Eq6QtWhGTwxStMxw9kTY0dyAtmiixXD0jGpA78LjbOEGJ80/rjb33jrKMZx02zG27U5j1k6X
- stPMnWribR89wjLAo7EiEGZl6esdaQB0y/B7WmDzW2TvEFeTQF/S7nFXXEYZkvQt9j54VnCT
- 7C2BbQ9LgRB0dKCKrdNatDxglRJWvHjNM3DbG2vhWe/GxKIy6iIbIrrYGUdwD7dBFILkg8N+
- 3aGLRI+BiCjo23AEDNuCUjjY0T28elxsH+7VFM7zxmWb0190Lq44hwVhfOGS/MUxbIEozwsq
- y5pHFamwd3aEcaPpw1kfKlEe9My/E9H1X7Ftwx6JpGgK6FihlgDcwV4pk/hzQ93BZlAkcUxs
- nMqwxR9KbiC3FNCaTyYx5bwNaPTKmXo+xCvcaHWiRni14Oz87sT6Pkn42riuAquBgJ27HRj1
- 8h90n2S/JzGAQMeF5XrXRBk2QJ9ouTibzUnr73d095vef29qDzL3tszLOI5zh+7OdxNZvDXX
- DTuGtEXUpD9YNchnEKkO1ddZLg6yQ==
-IronPort-Data: A9a23:pAIPxq2XSE7AvH5IEPbD5Sxwkn2cJEfYwER7XKvMYLTBsI5bpzwOy
- GpJD2nTO/qDMzH9LdlwYNy/8R4PscSAy4I3HQI63Hw8FHgiRegppDi6wuUcGwvIc6UvmWo+t
- 512huHodZ1yEzmF4E/wb9ANlFEkvYmQXL3wFeXYDS54QA5gWU8JhAlq8wIDqtcAbeORXUXU5
- Lsen+WFYAX4g2ItbDpOg06+gEoHUMra6W5wUmMWOqgjUG/2zxE9EJ8ZLKetGHr0KqE8NvK6X
- evK0Iai9Wrf+Ro3Yvv9+losWhBirhb6ZGBiu1IOM0SQqkEqSh8ajs7XAMEhhXJ/0F1lqfgqk
- YkQ6sbgIeseFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpdFLjoH4EweZOUlFuhL7W5m0
- PgecGohQzy/jvO90YuWTcpS15t5I5y+VG8fkikIITDxAvNjWpXfW/ySo9RV2isqm8UIFuS2i
- 8gxNWQpNkmdJUcVZxFIV/rSn8/x7pX7WzRCq1uQrLAf6nTXxRc326qF3N/9I4TVFJwIxRfGz
- o7A12ffXwweaPmt8Bem81OX19PDsA7qZ51HQdVU8dYv2jV/3Fc7CxAIVF39q+O+hlW9SvpWM
- UlS8S0rxYAt9UivX/H8WROiqXKJtxJaXMBfe8UquF+lyafO5QudQG8eQVZpbN0gqd9zQDkC1
- UGAlNCvAiZg2JWcSmqY3rOVqy6ifCYSMGkObDMFSg1D5MPsyKkjgxSKQtt9HaqditzuBSq20
- z2MtDI5hbgYkYgMzarT1VLImTW3vbDSUxU4oA7QWwqN6gJ/eZ7gbpaj6XDF4vtaaoWUVF+Mu
- D4Dgcf2xOQPC4yd0S+AWuMAGJm36Pufdj7Rm1hiG98m7TvFxpK4VdwOpmsjeQEzaJtCJmCBj
- FLvhD69LaR7ZBOCBZKbqarqYyj25cAMzejYa80=
-IronPort-HdrOrdr: A9a23:O5DWYajdvBx/8rMLyYk+pBXutXBQXtcji2hC6mlwRA09TyVXra
- +TddAgpHrJYVEqKRUdcLG7Scu9qBznn6KdjbN9AV7mZniAhILKFvAA0WKB+Vzd8kTFn4Y36U
- 4jSchD4bbLY2SS4/yX3DWF
-X-Talos-CUID: 9a23:fUGq6mCSgmxYPLH6Ewxj8hZONu0JTnTMx2bpDkibNzc2ErLAHA==
-X-Talos-MUID: 9a23:X4pqhQSXDz+mun8oRXTvomx/MJtN0Z2DK0EsqsQ6t+SpJBNvbmI=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.15,216,1739833200"; 
-   d="scan'208";a="107915396"
-Received: from unknown (HELO gm-smtp10.centrum.cz) ([46.255.225.77])
-  by antispam39.centrum.cz with ESMTP; 16 Apr 2025 15:53:27 +0200
-Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="Jnjecutk";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="adj2gyPj"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id 16ADC12FB452;
+	Wed, 16 Apr 2025 06:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1744811687; bh=l2Ew2QaIDw/j/7Ld2pHbLd9snohEK2xnD23UVoTkGf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Jnjecutk7IbbAlg86CJkB7SMwQsvq7qanMRrw7mk2yF8SkU4v9+Kz5dJZ6mlIncBg
+	 7vUh7jwYGRC9r9XleQ/i98kVvqn0r1//YMaEn/uBU+SAo3/JAsIi7+jDvYmKey/4rq
+	 5y+ucpVYmbEigGnxdqBjFpuNCrYvuWf4xCKlIEEWmFFrMUehakP8pkB7E1IB+Mw4jc
+	 7HIAjR5/t2U0Wl+J17ug4VTLU8ZmJf5L0vWwZ1yrXPt6gsYUfpTbPo9V1t4QM+RdIe
+	 FRz3UO3TJss4wQ6LVuyoVp9yIsEo0ttbthMaLolhNjthj43HXvCBAD3CTYud7RB3un
+	 ZlQubfecvCHyg==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Authentication-Results: bayard.4d2.org (amavisd-new); dkim=pass (2048-bit key)
+ header.d=4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id Ia2x2Q0G3J52; Wed, 16 Apr 2025 06:54:45 -0700 (PDT)
+Received: from localhost.localdomain (unknown [183.217.80.190])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	by gm-smtp10.centrum.cz (Postfix) with ESMTPSA id 8550480911AC;
-	Wed, 16 Apr 2025 15:53:27 +0200 (CEST)
-Date: Wed, 16 Apr 2025 15:53:25 +0200
-From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, xen-devel@lists.xenproject.org,
-	linux-arch@vger.kernel.org
-Subject: Re: Regression from a9b3c355c2e6 ("asm-generic: pgalloc: provide
- generic __pgd_{alloc,free}") with CONFIG_DEBUG_VM_PGFLAGS=y and Xen
-Message-ID: <2025416135325-Z_-2VTPsw81jMgCm-arkamar@atlas.cz>
-References: <202541612720-Z_-deOZTOztMXHBh-arkamar@atlas.cz>
- <Z_-lj5kCg084MXRI@casper.infradead.org>
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id 4AB0912FB450;
+	Wed, 16 Apr 2025 06:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1744811685; bh=l2Ew2QaIDw/j/7Ld2pHbLd9snohEK2xnD23UVoTkGf4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=adj2gyPjwKJnEZaMbSNILOgrFARTQB1ixgsPnbYDGYWoVc1wYH/5F4NsFGuhXvEnH
+	 uPhG9+p0DGHASTqDeMllUCcI7jMpeHvoTuv9kNTA6y58LV+eLW8qSGsRpmORaSPoo/
+	 83eviOXhSem/gzYHuqAu/XKXJV8V5nW00hqR3ilPLKsVyZhyDmZPXStyDGNDN9Fz7a
+	 1MB0Yl6BN1SqahwXHKXwS4nY7mDrxQK8taXXDgNP4KX0wIBZUU76xP2x/Rxi+5KgYP
+	 ynNcb4WLFplGI/elx6NfEk/IUDccV/OqZj+hedqwcINk7h76AdJ01f7Zi+QUVU7g/P
+	 MVyCuytqA1o0A==
+From: Haylen Chu <heylenay@4d2.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>,
+	Yixun Lan <dlan@gentoo.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	spacemit@lists.linux.dev,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Haylen Chu <heylenay@4d2.org>,
+	Alex Elder <elder@riscstar.com>
+Subject: [PATCH v8 5/6] riscv: dts: spacemit: Add clock tree for SpacemiT K1
+Date: Wed, 16 Apr 2025 13:54:05 +0000
+Message-ID: <20250416135406.16284-6-heylenay@4d2.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250416135406.16284-1-heylenay@4d2.org>
+References: <20250416135406.16284-1-heylenay@4d2.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_-lj5kCg084MXRI@casper.infradead.org>
 
-On Wed, Apr 16, 2025 at 01:41:51PM +0100, Matthew Wilcox wrote:
-> On Wed, Apr 16, 2025 at 02:07:20PM +0200, Petr Vaněk wrote:
-> > I have discovered a regression introduced in commit a9b3c355c2e6
-> > ("asm-generic: pgalloc: provide generic __pgd_{alloc,free}") [1,2] in
-> > kernel version 6.14. The problem occurs when the x86 kernel is
-> > configured with CONFIG_DEBUG_VM_PGFLAGS=y and is run as a PV Dom0 in Xen
-> > 4.19.1. During the startup, the kernel panics with the error log below.
-> 
-> You also have to have CONFIG_MITIGATION_PAGE_TABLE_ISOLATION enabled
-> to hit this problem, otherwise we allocate an order-0 page.
+Describe the PLL and system controllers that're capable of generating
+clock signals in the devicetree.
 
-Indeed, the issue disappears when I disable
-CONFIG_MITIGATION_PAGE_TABLE_ISOLATION.
+Signed-off-by: Haylen Chu <heylenay@4d2.org>
+Reviewed-by: Alex Elder <elder@riscstar.com>
+Reviewed-by: Yixun Lan <dlan@gentoo.org>
+---
+ arch/riscv/boot/dts/spacemit/k1.dtsi | 75 ++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-> > The commit changed PGD allocation path.  In the new implementation
-> > _pgd_alloc allocates memory with __pgd_alloc, which indirectly calls 
-> > 
-> >   alloc_pages_noprof(gfp | __GFP_COMP, order);
-> > 
-> > This is in contrast to the old behavior, where __get_free_pages was
-> > used, which indirectly called
-> > 
-> >   alloc_pages_noprof(gfp_mask & ~__GFP_HIGHMEM, order);
-> > 
-> > The key difference is that the new allocator can return a compound page.
-> > When xen_pin_page is later called on such a page, it call
-> > TestSetPagePinned function, which internally uses the PF_NO_COMPOUND
-> > macro. This macro enforces VM_BUG_ON_PGFLAGS if PageCompound is true,
-> > triggering the panic when CONFIG_DEBUG_VM_PGFLAGS is enabled.
-> 
-> I suspect the right thing to do here is to change the PF_NO_COMPOUND to
-> PF_HEAD.  Probably for all of these:
-> 
-> /* Xen */
-> PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
->         TESTSCFLAG(Pinned, pinned, PF_NO_COMPOUND)
-> PAGEFLAG(SavePinned, savepinned, PF_NO_COMPOUND);
-> PAGEFLAG(Foreign, foreign, PF_NO_COMPOUND);
-> PAGEFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
->         TESTCLEARFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
-> 
-> Could you give that a try?
+diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
+index c670ebf8fa12..584f0dbc60f5 100644
+--- a/arch/riscv/boot/dts/spacemit/k1.dtsi
++++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
+@@ -3,6 +3,8 @@
+  * Copyright (C) 2024 Yangyu Chen <cyy@cyyself.name>
+  */
+ 
++#include <dt-bindings/clock/spacemit,k1-syscon.h>
++
+ /dts-v1/;
+ / {
+ 	#address-cells = <2>;
+@@ -306,6 +308,36 @@ cluster1_l2_cache: l2-cache1 {
+ 		};
+ 	};
+ 
++	clocks {
++		vctcxo_1m: clock-1m {
++			compatible = "fixed-clock";
++			clock-frequency = <1000000>;
++			clock-output-names = "vctcxo_1m";
++			#clock-cells = <0>;
++		};
++
++		vctcxo_24m: clock-24m {
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "vctcxo_24m";
++			#clock-cells = <0>;
++		};
++
++		vctcxo_3m: clock-3m {
++			compatible = "fixed-clock";
++			clock-frequency = <3000000>;
++			clock-output-names = "vctcxo_3m";
++			#clock-cells = <0>;
++		};
++
++		osc_32k: clock-32k {
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++			clock-output-names = "osc_32k";
++			#clock-cells = <0>;
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&plic>;
+@@ -314,6 +346,17 @@ soc {
+ 		dma-noncoherent;
+ 		ranges;
+ 
++		syscon_apbc: system-control@d4015000 {
++			compatible = "spacemit,k1-syscon-apbc";
++			reg = <0x0 0xd4015000 0x0 0x1000>;
++			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
++				 <&vctcxo_24m>;
++			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
++				      "vctcxo_24m";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
+ 		uart0: serial@d4017000 {
+ 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
+ 			reg = <0x0 0xd4017000 0x0 0x100>;
+@@ -409,6 +452,38 @@ pinctrl: pinctrl@d401e000 {
+ 			reg = <0x0 0xd401e000 0x0 0x400>;
+ 		};
+ 
++		syscon_mpmu: system-controller@d4050000 {
++			compatible = "spacemit,k1-syscon-mpmu";
++			reg = <0x0 0xd4050000 0x0 0x209c>;
++			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
++				 <&vctcxo_24m>;
++			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
++				      "vctcxo_24m";
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
++			#reset-cells = <1>;
++		};
++
++		pll: system-control@d4090000 {
++			compatible = "spacemit,k1-pll";
++			reg = <0x0 0xd4090000 0x0 0x1000>;
++			clocks = <&vctcxo_24m>;
++			spacemit,mpmu = <&syscon_mpmu>;
++			#clock-cells = <1>;
++		};
++
++		syscon_apmu: system-control@d4282800 {
++			compatible = "spacemit,k1-syscon-apmu";
++			reg = <0x0 0xd4282800 0x0 0x400>;
++			clocks = <&osc_32k>, <&vctcxo_1m>, <&vctcxo_3m>,
++				 <&vctcxo_24m>;
++			clock-names = "osc", "vctcxo_1m", "vctcxo_3m",
++				      "vctcxo_24m";
++			#clock-cells = <1>;
++			#power-domain-cells = <1>;
++			#reset-cells = <1>;
++		};
++
+ 		plic: interrupt-controller@e0000000 {
+ 			compatible = "spacemit,k1-plic", "sifive,plic-1.0.0";
+ 			reg = <0x0 0xe0000000 0x0 0x4000000>;
+-- 
+2.49.0
 
-Yes, I could. Changing PF_NO_COMPOUND to PF_HEAD in those lines resolves
-the issue for me.
-
-Petr
