@@ -1,283 +1,240 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3707A225A3C;
-	Wed, 16 Apr 2025 08:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF1E20E003
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793947; cv=none; b=YIwBOjK1++B3i0Pcp3Ma4dmoJs4Oul88MjQmLZFa1vtAjtlyXsn+Lw/7L6uEVxABNv9LnEljdA3voaB/fAzr+0Oo1Ya9U6ezPVnVvaU684vjRizQFr+i3qg6vBNh/rGtrW49OKff2MFCySA/Lh5fMt0czvtuLMZ8PqGnyuDCjC8=
+	t=1744793991; cv=none; b=p9RafsnDN2s2OuXxFvZROKbvosW8+N9o5I9PcSatAiVgl86m0+xbhe/R4DSnq8IWOfzzSwET9ydRidaoY87dqNNUsH01k+sGzVS6HXPK22QVHaXiFoht2aCRwBr3FxwhiAeb0f1aZ6flPFuagCxAc6mAnIyyhq8XqCCKzpF9/10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793947; c=relaxed/simple;
-	bh=77xW6ec/3xetSN3QR6t4CyQOSb2vev0hWUmFBPKE0h0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qHVZjLz3XRwmN+MoFbX5JUNyQAs5NfzsQTvXogx4u4hyK3W0r9hcpO0Zq0lik71OUKU4wvd5/9PoiRg4yonVSIGY8UxTcV4wLnkwjhzAyDfWYOw++I13gTMTJhKo/62owiayDo2h5AQUmnSv7L5cq6TUd9l7XatTK5poDjeza40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRYch43J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744793991; c=relaxed/simple;
+	bh=IK9UyR16MCakiskdgLYvgLg+KiigxiyDPwyZXHoB2FA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UscZLkFEXnsLxB5q5O+sx8MKOUZxuNhGGcNuxW7nCwI4sXW1LW9QPcPUaJv5h9dUQmDigPGAvABegzaclCJJVBdR8rD+L/vuCxXHIuF7IttXKwTxKk1q2za5MdS2rEc2qKksG643gcLIiNWYB/GzjccmrX0z/RLtE6rsQ1cYkXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vatXZo60; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRYch43J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA9B1C4CEE9;
-	Wed, 16 Apr 2025 08:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744793946;
-	bh=77xW6ec/3xetSN3QR6t4CyQOSb2vev0hWUmFBPKE0h0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DRYch43JfrtxLkNNirV3qsCFwtVmH6wq4hQb6gqemVjMiCFrnZD5gKr8wkSK+ZO1r
-	 xIsKHpnpQcJrm2C+18cvV/Wmy1yEo8vROGW6gLGw3FTGxsazg7nAvk58Bx198jNeRh
-	 ro+uat9eroZiwX51hHtnY8xmkOxxxVHBGofVBwdbR2/O0CJKZf1W1QZi0mRUKp3d+9
-	 pEYbtdArN8J7k+mGHCY7C18c90qfhkezcQo+kV5384Q+k9K/ZxJa9yxiVxyQ17dL34
-	 Lf77L5u554W3Shk+ZaSUbOxZxTYcNQ4hpEmHvB6y9OGLuNDrl3fqZBLRva7uoXGRas
-	 FKknFYEdfS7Hw==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac25d2b2354so1016682466b.1;
-        Wed, 16 Apr 2025 01:59:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVb7ygBLc1azSPrx8jzN3ctjULt8TuzieyxljeLxMrO59GPfIVAZcw8oSDbdDTm+FyFfZ/Q6szEnuQD2A==@vger.kernel.org, AJvYcCWv0vISWM/IZy95SdvPzwafQjw1vsTStjbeUOh9+2rz8ptYh85Ts/Kozm9g2R+GTU8bGt0JyxfXXJCwHZqj@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmrFoIOOHQq+ud3lIi2oV7NA5WLv/QCVT5uWKftooZVhlEeX06
-	ZPyHY751BRa7QXa5vlEb/j4CQ2Z4rbs+NgwB2KsMBvwrJXtEVkPQ4EZhUPX9QPyKPiAt5kuRslq
-	jFaQtBtDXH7zbMAT7JIF0F6u77is=
-X-Google-Smtp-Source: AGHT+IGi4ezCFNC3plR942u9UfIy85h5LUDj8N7Ruqh/16Nr4wLj8mZR+xHrC+Fnht5lykqvALoY8MoT+kwHy84EOxo=
-X-Received: by 2002:a17:907:6e87:b0:acb:34b1:4442 with SMTP id
- a640c23a62f3a-acb42b8eb83mr90200666b.48.1744793945147; Wed, 16 Apr 2025
- 01:59:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vatXZo60"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 870DA965;
+	Wed, 16 Apr 2025 10:57:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744793865;
+	bh=IK9UyR16MCakiskdgLYvgLg+KiigxiyDPwyZXHoB2FA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vatXZo60UrHedGeP6O9FWVxOQTiJDS6lAZMxI+nX/m/FwwmBdX30c4RD18ZKfL9eq
+	 qFK9BB8+D9D0x5If8AOC2EzAQQAKtp4vuA6cxsIbJBgZ5bDNfcUtqw1Q9AwgYNHqcj
+	 881aElHAa32eokWKJPUOX5p3ybFQ5tuBnK3S8I0U=
+Message-ID: <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
+Date: Wed, 16 Apr 2025 11:59:43 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67febb14.050a0220.186b78.000a.GAE@google.com>
-In-Reply-To: <67febb14.050a0220.186b78.000a.GAE@google.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 16 Apr 2025 09:58:28 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6DJfaN7iXcT9yuOFWeycRHJHjZhDigFwUALyMXaBjnwg@mail.gmail.com>
-X-Gm-Features: ATxdqUEozPAdF2l_9huJxRbgzTH7OkJJUqZN5jNtqV1JWEIzJpBOo6IrbcsNosQ
-Message-ID: <CAL3q7H6DJfaN7iXcT9yuOFWeycRHJHjZhDigFwUALyMXaBjnwg@mail.gmail.com>
-Subject: Re: [syzbot] [btrfs?] general protection fault in btrfs_relocate_block_group
-To: syzbot <syzbot+9b6689eb2b9692c761ea@syzkaller.appspotmail.com>
-Cc: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
+To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Vishal Sagar <vishal.sagar@amd.com>,
+ Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
+ <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
+ <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
+ <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
+ <20250327112009.6b4dc430@eldfell>
+ <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
+ <20250327175842.130c0386@eldfell>
+ <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
+ <20250331105446.098f0fbe@eldfell>
+ <20250331082135.GB13690@pendragon.ideasonboard.com>
+ <20250331135337.61934003@eldfell> <20250401162732.731ef774@eldfell>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250401162732.731ef774@eldfell>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 9:01=E2=80=AFPM syzbot
-<syzbot+9b6689eb2b9692c761ea@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    1a1d569a75f3 Merge tag 'edac_urgent_for_v6.15_rc3' of git=
-:..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D10f9247058000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da972ee73c2fcf=
-8ca
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D9b6689eb2b9692c=
-761ea
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Deb=
-ian) 2.40
->
-> Unfortunately, I don't have any reproducer for this issue yet.
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7=
-feb34a89c2a/non_bootable_disk-1a1d569a.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/3cbccbd209b5/vmlinu=
-x-1a1d569a.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/2957e37f5adf/b=
-zImage-1a1d569a.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+9b6689eb2b9692c761ea@syzkaller.appspotmail.com
->
-> loop0: detected capacity change from 0 to 32768
-> BTRFS: device fsid e417788f-7a09-42b2-9266-8ddc5d5d35d2 devid 1 transid 8=
- /dev/loop0 (7:0) scanned by syz.0.0 (5328)
-> BTRFS info (device loop0): first mount of filesystem e417788f-7a09-42b2-9=
-266-8ddc5d5d35d2
-> BTRFS info (device loop0): using xxhash64 (xxhash64-generic) checksum alg=
-orithm
-> BTRFS info (device loop0): disk space caching is enabled
-> BTRFS warning (device loop0): space cache v1 is being deprecated and will=
- be removed in a future release, please use -o space_cache=3Dv2
-> BTRFS info (device loop0): rebuilding free space tree
-> BTRFS info (device loop0): disabling free space tree
-> BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE=
-_TREE (0x1)
-> BTRFS info (device loop0): clearing compat-ro feature flag for FREE_SPACE=
-_TREE_VALID (0x2)
-> BTRFS info (device loop0): balance: start -d -m
-> FAULT_INJECTION: forcing a failure.
-> name failslab, interval 1, probability 0, space 0, times 1
-> CPU: 0 UID: 0 PID: 5328 Comm: syz.0.0 Not tainted 6.15.0-rc2-syzkaller-00=
-042-g1a1d569a75f3 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
-16.3-2~bpo12+1 04/01/2014
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->  fail_dump lib/fault-inject.c:73 [inline]
->  should_fail_ex+0x424/0x570 lib/fault-inject.c:174
->  should_failslab+0xac/0x100 mm/failslab.c:46
->  slab_pre_alloc_hook mm/slub.c:4104 [inline]
->  slab_alloc_node mm/slub.c:4180 [inline]
->  kmem_cache_alloc_noprof+0x78/0x390 mm/slub.c:4207
->  add_delayed_ref+0x1a0/0x1e90 fs/btrfs/delayed-ref.c:1007
->  btrfs_free_tree_block+0x361/0xd10 fs/btrfs/extent-tree.c:3434
->  btrfs_force_cow_block+0xf6c/0x2010 fs/btrfs/ctree.c:555
->  btrfs_cow_block+0x377/0x840 fs/btrfs/ctree.c:688
->  btrfs_search_slot+0xc12/0x31c0 fs/btrfs/ctree.c:2088
->  btrfs_insert_empty_items+0x9c/0x1a0 fs/btrfs/ctree.c:4287
->  btrfs_insert_empty_item fs/btrfs/ctree.h:673 [inline]
->  btrfs_insert_empty_inode+0x1de/0x2f0 fs/btrfs/inode-item.c:391
->  __insert_orphan_inode fs/btrfs/relocation.c:3714 [inline]
->  create_reloc_inode+0x408/0xa50 fs/btrfs/relocation.c:3785
->  btrfs_relocate_block_group+0x554/0xd80 fs/btrfs/relocation.c:3991
->  btrfs_relocate_chunk+0x12c/0x3b0 fs/btrfs/volumes.c:3511
->  __btrfs_balance+0x1a93/0x25e0 fs/btrfs/volumes.c:4292
->  btrfs_balance+0xbde/0x10c0 fs/btrfs/volumes.c:4669
->  btrfs_ioctl_balance+0x3f5/0x660 fs/btrfs/ioctl.c:3586
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:906 [inline]
->  __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f830078d169
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f=
-7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
- ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f83016c0038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00007f83009a5fa0 RCX: 00007f830078d169
-> RDX: 0000200000000440 RSI: 00000000c4009420 RDI: 0000000000000003
-> RBP: 00007f83016c0090 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-> R13: 0000000000000000 R14: 00007f83009a5fa0 R15: 00007ffc9409cc88
->  </TASK>
-> BTRFS error (device loop0 state A): Transaction aborted (error -12)
-> BTRFS: error (device loop0 state A) in btrfs_force_cow_block:560: errno=
-=3D-12 Out of memory
-> BTRFS info (device loop0 state EA): forced readonly
-> BTRFS info (device loop0 state EA): relocating block group 6881280 flags =
-data|metadata
-> Oops: general protection fault, probably for non-canonical address 0xdfff=
-fc000000008c: 0000 [#1] SMP KASAN NOPTI
-> KASAN: null-ptr-deref in range [0x0000000000000460-0x0000000000000467]
-> CPU: 0 UID: 0 PID: 5328 Comm: syz.0.0 Not tainted 6.15.0-rc2-syzkaller-00=
-042-g1a1d569a75f3 #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
-16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:iput+0x3b/0xa50 fs/inode.c:1914
-> Code: 38 49 89 fe e8 f6 ef 7b ff 4d 85 f6 0f 84 8c 03 00 00 49 bd 00 00 0=
-0 00 00 fc ff df 4d 8d be d0 00 00 00 4c 89 fb 48 c1 eb 03 <42> 0f b6 04 2b=
- 84 c0 0f 85 c4 08 00 00 48 89 5c 24 10 41 8b 1f bd
-> RSP: 0018:ffffc9000d0879c0 EFLAGS: 00010203
-> RAX: ffffffff8247653a RBX: 000000000000008c RCX: ffff888000cb2440
-> RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000394
-> RBP: ffff888053019010 R08: ffff888052a5a80b R09: 1ffff1100a54b501
-> R10: dffffc0000000000 R11: ffffed100a54b502 R12: ffff888052a4c000
-> R13: dffffc0000000000 R14: 0000000000000394 R15: 0000000000000464
-> FS:  00007f83016c06c0(0000) GS:ffff88808c593000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f830169efd8 CR3: 0000000034ce6000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  btrfs_relocate_block_group+0xb86/0xd80 fs/btrfs/relocation.c:4052
->  btrfs_relocate_chunk+0x12c/0x3b0 fs/btrfs/volumes.c:3511
->  __btrfs_balance+0x1a93/0x25e0 fs/btrfs/volumes.c:4292
->  btrfs_balance+0xbde/0x10c0 fs/btrfs/volumes.c:4669
->  btrfs_ioctl_balance+0x3f5/0x660 fs/btrfs/ioctl.c:3586
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:906 [inline]
->  __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Hi,
 
-This seems to have the same cause as:
+On 01/04/2025 16:27, Pekka Paalanen wrote:
+> On Mon, 31 Mar 2025 13:53:37 +0300
+> Pekka Paalanen <pekka.paalanen@haloniitty.fi> wrote:
+> 
+>> On Mon, 31 Mar 2025 11:21:35 +0300
+>> Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+>>
+>>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
+>>>> On Thu, 27 Mar 2025 17:35:39 +0100
+>>>> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>>>>      
+>>>>> Hi Pekka,
+>>>>>
+>>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
+>>>>> <pekka.paalanen@haloniitty.fi> wrote:
+>>>>>> On Thu, 27 Mar 2025 16:21:16 +0200
+>>>>>> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
+>>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote:
+>>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200
+>>>>>>>> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
+>>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
+>>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
+>>>>>>>>>> <tomi.valkeinen@ideasonboard.com> wrote:
+>>>>>>>>>>> Add greyscale Y8 format.
+>>>>>>>>>>>
+>>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+>>>>>>>>>>
+>>>>>>>>>> Thanks for your patch!
+>>>>>>>>>>       
+>>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
+>>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
+>>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
+>>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
+>>>>>>>>>>>
+>>>>>>>>>>> +/* Greyscale formats */
+>>>>>>>>>>> +
+>>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
+>>>>>>>>>>
+>>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which encodes
+>>>>>>>>>> the number of bits in the FOURCC format. What do you envision
+>>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
+>>>>>>>>>
+>>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
+>>>>>>>>> not required, but different fourccs for the same formats do confuse.
+>>>>>>>>>
+>>>>>>>>> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
+>>>>>>>>> possible, and if not, invent a new one.
+>>>>>>>>
+>>>>>>>> what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
+>>>>>>>>
+>>>>>>>> Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
+>>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
+>>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
+>>>>>>>>
+>>>>>>>> That would be my intuitive assumption following how YCbCr is handled.
+>>>>>>>> Is it obvious enough, or should there be a comment to that effect?
+>>>>>>>
+>>>>>>> You raise an interesting point. Is it defined how a display driver, that
+>>>>>>> supports R8 as a format, shows R8 on screen? I came into this in the
+>>>>>>> context of grayscale formats, so I thought R8 would be handled as (R, R,
+>>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sense.
+>>>>>>
+>>>>>> That is a good question too. I based my assumption on OpenGL behavior
+>>>>>> of R8.
+>>>>>>
+>>>>>> Single channel displays do exist I believe, but being single-channel,
+>>>>>> expansion on the other channels is likely meaningless. Hm, but for the
+>>>>>> KMS color pipeline, it would be meaningful, like with a CTM.
+>>>>>> Interesting.
+>>>>>>
+>>>>>> I don't know. Maybe Geert does?
+>>>>>
+>>>>> I did some digging, and was a bit surprised that it was you who told
+>>>>> me to use R8 instead of Y8?
+>>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
+>>>>
+>>>> Hi Geert,
+>>>>
+>>>> indeed I did. I never thought of the question of expansion to R,G,B
+>>>> before. Maybe that expansion is what spells R8 and Y8 apart?
+>>>>
+>>>> I do think that expansion needs to be specified, so that the KMS color
+>>>> pipeline computations are defined. There is a big difference between
+>>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
+>>>>
+>>>> - (R, 0, 0)
+>>>> - (R, R, R)
+>>>> - (c1 * Y, c2 * Y, c3 * Y)
+>>>
+>>> I'd be very surprised by an YUV to RGB conversion matrix where the first
+>>> column would contain different values. What we need to take into account
+>>> though is quantization (full vs. limited range).
+> 
+> Quantization range is indeed good to note. R8 would be always full
+> range, but Y8 would follow COLOR_RANGE property.
+> 
+>> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
+>> (R, 0, 0), so we have both variants.
+>>
+>> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
+>> in the KMS color processing?
+> 
+> I think this 0.0 - 1.0 nominal range definition for the abstract KMS
+> color processing is necessary.
+> 
+> It also means that limited range Y8 data, when containing values 0-15
+> or 240-255, would produce negative and greater than 1.0 values,
+> respectively. They might get immediately clamped to 0.0 - 1.0 with the
+> first color operation they face, though, but the concept seems
+> important and carrying over to the new color pipelines UAPI which might
+> choose not to clamp.
 
-https://lore.kernel.org/linux-btrfs/67f14ee9.050a0220.0a13.023e.GAE@google.=
-com/
+Is the behavior of values outside the limited range something that needs 
+to be defined? We can't know how each piece of HW behaves with 
+"undefined" input, so should we not just define the behavior as platform 
+specific?
 
-For which there's a fix on the btrfs mailing list and btrfs' github
-repo (for-next branch):
+In any case: I can't say I fully understood all the discussions wrt. 
+color spaces. But my immediate interest is, of course, this series =). 
+So is there something that you think should be improved here?
 
-https://lore.kernel.org/linux-btrfs/9ac220a55a540ad22f7cb198856b689079f3e8c=
-6.1743875430.git.fdmanana@suse.com/
+My understanding is that the Y-only pixel formats behave in a well 
+defined way (or, as well defined as the YUV formats), and there's 
+nothing more to add here. Is that right?
 
+  Tomi
 
-
-> RIP: 0033:0x7f830078d169
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f=
-7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
- ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007f83016c0038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00007f83009a5fa0 RCX: 00007f830078d169
-> RDX: 0000200000000440 RSI: 00000000c4009420 RDI: 0000000000000003
-> RBP: 00007f83016c0090 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000002
-> R13: 0000000000000000 R14: 00007f83009a5fa0 R15: 00007ffc9409cc88
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:iput+0x3b/0xa50 fs/inode.c:1914
-> Code: 38 49 89 fe e8 f6 ef 7b ff 4d 85 f6 0f 84 8c 03 00 00 49 bd 00 00 0=
-0 00 00 fc ff df 4d 8d be d0 00 00 00 4c 89 fb 48 c1 eb 03 <42> 0f b6 04 2b=
- 84 c0 0f 85 c4 08 00 00 48 89 5c 24 10 41 8b 1f bd
-> RSP: 0018:ffffc9000d0879c0 EFLAGS: 00010203
-> RAX: ffffffff8247653a RBX: 000000000000008c RCX: ffff888000cb2440
-> RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000394
-> RBP: ffff888053019010 R08: ffff888052a5a80b R09: 1ffff1100a54b501
-> R10: dffffc0000000000 R11: ffffed100a54b502 R12: ffff888052a4c000
-> R13: dffffc0000000000 R14: 0000000000000394 R15: 0000000000000464
-> FS:  00007f83016c06c0(0000) GS:ffff88808c593000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f830167dfd8 CR3: 0000000034ce6000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> ----------------
-> Code disassembly (best guess), 1 bytes skipped:
->    0:   49 89 fe                mov    %rdi,%r14
->    3:   e8 f6 ef 7b ff          call   0xff7beffe
->    8:   4d 85 f6                test   %r14,%r14
->    b:   0f 84 8c 03 00 00       je     0x39d
->   11:   49 bd 00 00 00 00 00    movabs $0xdffffc0000000000,%r13
->   18:   fc ff df
->   1b:   4d 8d be d0 00 00 00    lea    0xd0(%r14),%r15
->   22:   4c 89 fb                mov    %r15,%rbx
->   25:   48 c1 eb 03             shr    $0x3,%rbx
-> * 29:   42 0f b6 04 2b          movzbl (%rbx,%r13,1),%eax <-- trapping in=
-struction
->   2e:   84 c0                   test   %al,%al
->   30:   0f 85 c4 08 00 00       jne    0x8fa
->   36:   48 89 5c 24 10          mov    %rbx,0x10(%rsp)
->   3b:   41 8b 1f                mov    (%r15),%ebx
->   3e:   bd                      .byte 0xbd
->
->
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
