@@ -1,118 +1,101 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3264F229B2D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3F3946F;
+	Wed, 16 Apr 2025 22:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841053; cv=none; b=imQB2y7BOCaRQzP1VXLNk6D11bz3oWnkDoPYK4dhk8JluVc4HBsl9KeUWP5TRoaKpb+bNlHAuOxv5DssBEd1GR5EW0fJuoTmyv9i/eaa71Frf6audo8fCKiHjSWnX4BUmOdAQ5ixrqqsVMS1ix8g9GCZObdDYghA76ViwWoF+yo=
+	t=1744841108; cv=none; b=mItgLhPgQuwz5cnBAGkInPRskvOIujKVmw8r5nT0o41ktBuWUEiBF/sR+wSKTCEetysFHCl6BF339GKezzvp033eIpo1c99utfEPIlh2UtVWzvhHS56yfbWXJw4cUZ1To7SiaaEkUD8GAoIiSNIgwtPQunqlfuC6Sv1Z6WTMyDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841053; c=relaxed/simple;
-	bh=gSxlhszI66ERCI3nrFsLvE3Q6T6jmOFikPkhA+dNYhM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fw+3O6opONuiWamJcon+ZSKQ0ZxP4gSVsv5jl3NEzRJAopg7tR2oUJ3piIGTJhpSNx5EQTpu+tO6REtRL+l0clakb/H0indVhwIDO6VuTsykmdwK8LqXXbzUkleQH5ecfmBtbsb3eitvwX3AzvXPMi/y8Zi4g2RptAjcXfBZ/rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=YhNK+7/3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nDxjyZmn; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1744841108; c=relaxed/simple;
+	bh=qCD1vFXSI3zBOXBAJ1SOeNHV87e7EHRpPPWphDyj5AM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S48EXaNblCGImDRorfDXLR0V/4oYZtKutkIqOBhx7UhJM7bB57lV6V5TiFkYiFeo1OZujYaVgb8F8VihmaQ9rTJavfB5gJE3kvxIudG0DTy6HO6mkqn/ElLJTf5LEw30vjVGkeYezRD7jN4n5j9MO4qUjGWRy5niCY93fAJKfWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWrqmVrN; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="YhNK+7/3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nDxjyZmn"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 40B0D1380169;
-	Wed, 16 Apr 2025 18:04:10 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Wed, 16 Apr 2025 18:04:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1744841050; x=1744927450; bh=1TWmWr2OgZ
-	PZ1/Z1kcBe1cqlt8sQxsAJX/DKNvgHIF8=; b=YhNK+7/31jCPLpMwG2GPhSrkkX
-	UfB8TxtegRIX3QQeVu9a4WQ+MiwbizDcmOdQtJUBKq2NcQcfllj9hUB7yMPPkUb+
-	/fqnk8hpUVyvV7eX7ZmF8REU9Q3/JsGyp99MlE86YvjYWVHivVYnHIRXET5iKuKZ
-	X5FqN+mrc/7jydWlO5motCPyDLk+2q5cwcrDKPjk/klOqa1LmA1OkvLdDBuLXEya
-	EtuzieVkjftc1F6IL6dbgegjBHuGsgcbXcRMdjdTdZKrdxOYHwZvQGLcyxgBpUZ8
-	f5hlgPC0gHIIk8BWrLB/3RGQBw2HDE1iZP57WLaAAf8u16SjcPlAQoR+Ok6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744841050; x=1744927450; bh=1TWmWr2OgZPZ1/Z1kcBe1cqlt8sQxsAJX/D
-	KNvgHIF8=; b=nDxjyZmnMO5CYBcOVh8rGncN74JXK6Xvf49IG9CcLEp556WNr2d
-	0kRZsqlXv1RxALylXnxhssx3Vs4w1NQHGKeLHVbFTinUKZxhjmKmF65F7kqfWnwa
-	ZlyRaRjcL8xcMcrhsE8/upgK9F2sjVbjrSNc0wJrcFipTV+fJdk6Hb7qFtdWzCw7
-	x4BMhdq++aLn4Nsn0K7oKxJAdFh989Iaq99/zS8TAAJLQ+QkeMWYvSF/g184bWjD
-	grfR30COGOTMuFJT6SZzLbNlXir+A9KwpNU32T88uELVIsYvyfmKoKpZvfIBkk6K
-	i2IRX3/5L9VjY84J5IZWB+CtzhoWI4dzhbw==
-X-ME-Sender: <xms:WCkAaC_ZEUbYS6WnTfkGcrEO0u9Vv8W58_f8GbzvtJyEb4qcd41rZg>
-    <xme:WCkAaCvPAyDD7igpbqNRNB4uxs3X0KPcb3SQGFehoxSFrnk8x5lrARPIvAYxKZaYb
-    JslVdDn-HzsOT9EvgQ>
-X-ME-Received: <xmr:WCkAaIAvxEps5TmMBPq1pl1BhBEPvuNM_heRDwBPbElSU6jEGZbrmorACSmplBvDOcOHLI5vXqtgk0Dzd3oGhuy9T0ORlFNH3A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdejheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    jeenucfhrhhomheplfgrnhhnvgcuifhruhhnrghuuceojhesjhgrnhhnrghurdhnvghtqe
-    enucggtffrrghtthgvrhhnpefgvdffveelgedujeeffeehheekheelheefgfejffeftedu
-    geethfeuudefheefteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehjsehjrghnnhgruhdrnhgvthdpnhgspghrtghpthhtohepuddvpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrd
-    hiohdprhgtphhtthhopehfnhhklhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtg
-    homhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvug
-    esghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhr
-    tghpthhtohepnhgvrghlsehgohhmphgrrdguvghvpdhrtghpthhtoheplhhumhgrgheskh
-    gvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WCkAaKelGCfwGmKHNuC8sn3WnFTFJMlFRN57jrso-jefZE5Y9AHMaA>
-    <xmx:WCkAaHNWio4Bi0XBrc_YBrn6f-2qIMT43aTY3rlfFX8yUjrcRB4nSQ>
-    <xmx:WCkAaEm9fOdzHUNbdbKUdjRZOrs3qWhgkAo29KjB0qQH0Fr7E4B5cA>
-    <xmx:WCkAaJu_FeKFm4aNCikD0YFvriBJsoG_lsjeiyF95HXB4IT0dWycqA>
-    <xmx:WikAaB4YDyaaQmaw0W0C3qa7i7bV_bmsw1tPbkfedwe4m0JZHMMyyM2V>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Apr 2025 18:04:08 -0400 (EDT)
-Date: Thu, 17 Apr 2025 00:04:06 +0200
-From: Janne Grunau <j@jannau.net>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Cc: Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Neal Gompa <neal@gompa.dev>, Dmitry Baryshkov <lumag@kernel.org>,
-	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Apple Display Pipe driver fixes
-Message-ID: <20250416220406.GB8400@robin.jannau.net>
-References: <20250416-drm_adp_fixes-v1-0-772699f13293@jannau.net>
- <aAAZDuuj64iLJevQ@blossom>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWrqmVrN"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf680d351so7439865e9.0;
+        Wed, 16 Apr 2025 15:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744841105; x=1745445905; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oHayVKFFsJNmr2sjJkndFwEOAkhvbxML2QrMhdj9R5Y=;
+        b=YWrqmVrN2DuZVjPDTynWo0W+ej4hqZrevGcqQyOi7faWWlpTYpAzLIUDrWsL56IE5Y
+         jgPrCAD53XNxnucglg2swKjkZnAXMKF3D9F+wM0mFKIBTBuU/EJ8SdjCJEOHFkVhVCYP
+         kkuH6lX/VhQaOi334HcOxJ2ftBMXKkq4Gua5WpfQiZzL7R2MbAhy+4fh5eiar8lBiZUB
+         bPrh0iPtrhEghgAwpJzQWTdVuWbq5Xg7cdXBQHlburpig8n/EHRvqAseYwVXm8Kg2lvi
+         /oSxObMpP3ugjOC1N0qNPj5DFzJl7pIOXARdrpiTMXw8UoWVC0lGkEVQtrXSypSyGbqP
+         K0Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744841105; x=1745445905;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oHayVKFFsJNmr2sjJkndFwEOAkhvbxML2QrMhdj9R5Y=;
+        b=ODHSTZdn4Tb/IE+aFYjL0rMd0RfSiLZLBIT4EiWIVkqG0GaOCrmkbDqygBKrfbCfQ7
+         1qZIZBlAtqxvhgecsuXxukMDlhWDuKS1LN8UyrnJ9ojuqWUXxfn35v3mdNTiKbzxRcdL
+         UC7Nogd8UWFL5ukomn5YK3uglRNu7K7XSVB29gk46zH4tQYEwvW/jGgBasOXEFb0VQx0
+         Z3fg/1i/LzjdKXIadMIp0JB8nmc9M73hWw11wI5Ie5ZwMbDYnZRDY7HnFhchqe99O6QV
+         RtibIs7UKlSZwlaAhAWFKGiY2rifxHmJx7/eL+XzlzItjubCg4sHnZFSItFJsEvtZfth
+         P90Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUBccjJW02zMVr46aZk3lNnK3dKNQdbOzAvXmrM2nv2p5Mlfhm29Qg3qImNvjjrio53GVLJ/uazuSB9mMA=@vger.kernel.org, AJvYcCVyw3z+s9DvJ1clu4TREB/MOevLAxkRl9/udMRl/vTt33LoNLonw7IThSgEN9ZLtQ41iWmW2r/R5cTLRBU1LQY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP6M1IxXmaOijE0HRNR601KOKBQZAPbbsGAHdUPHlLCyMnvVAb
+	tGQPJHxUyuNrZAK+NyUtSgSa6MNHtOX52/KkIKGAKtMOGDqoWrEX
+X-Gm-Gg: ASbGncuN94g11MqsVtT5kKllAeu0IDc7no/u7idwPR20waVX6JG+q5xlROO2FlZcxPD
+	MDvscD+Akigvvu86xHwE4qQkMyF3+awpirn5/hfvgA+vLXLUgOU3AewS2Et37IsZWk8bOKijhv2
+	XmltA68zaxJfm4j4UjTH1097lplatg8yP1q8p3mpTFJ/q4GhV5LTfs+mFim+Y/2rXtJqzIg2hG+
+	8wttBOR5jrWzztqJPT6f4H3KGhAf58oTSKg8sfXD2N/bP0c7OMJ610Yj+7AxX8ufZTgrypSaGvO
+	WlxZoxRd3hxL+dpyNpJxQ9l4AfqRzJKxsCVfMLNGE5IbVv6+asgrdA==
+X-Google-Smtp-Source: AGHT+IGC46S4S5h4Q5ailbC5feqlplYAzWogcdOjZfAGKxveTGmXYrJirUpLbhifwMOyo43pOFOhPw==
+X-Received: by 2002:a05:6000:2509:b0:38d:ba8e:7327 with SMTP id ffacd0b85a97d-39eea37a7b1mr334295f8f.8.1744841105179;
+        Wed, 16 Apr 2025 15:05:05 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce3bsm18546012f8f.66.2025.04.16.15.05.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 15:05:04 -0700 (PDT)
+Message-ID: <f801975c-a796-417c-a7b2-be493b32068f@gmail.com>
+Date: Thu, 17 Apr 2025 00:05:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aAAZDuuj64iLJevQ@blossom>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/panic: use `///` for private items too
+To: Miguel Ojeda <ojeda@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Jocelyn Falempe <jfalempe@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ patches@lists.linux.dev
+References: <20250416122106.2554208-1-ojeda@kernel.org>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250416122106.2554208-1-ojeda@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 04:54:38PM -0400, Alyssa Rosenzweig wrote:
-> > This is preferable to driver changes since keeps the device powered on
-> > if the adpdrm module is not available during boot.
+On 16.04.25 2:21 PM, Miguel Ojeda wrote:
+> `///` should still be used for private items [1]. Some of the items in
+> this file do so already, so do it for a few other clear candidates in
+> the file.
 > 
-> Struggling to parse this sentence, do you mean to say:
+> Link: https://lore.kernel.org/rust-for-linux/20250416112454.2503872-1-ojeda@kernel.org/ [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> ---
+> Not sure if you would consider it a fix, but please feel free to add Fixes: etc.
+> if so. Thanks!
 > 
-> > Driver changes are preferred, since that patch keeps the device
-> > powered on if the adpdrm module is not available during boot.
 
-no. The sentence misses "it" between "since" and "keeps". I meant to say
-that the linked devicetree change is preferable. A hypothetical
-adp_drv.c change to keep the power-domain during s2idle only works if
-the driver is loaded.
-
-The changes in this series (especially Patch 1/4) just prevent the
-soft-locked CPU after resume. The touch bar display won't display
-anything.
-
-Janne
+Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
