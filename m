@@ -1,97 +1,96 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E808A134A8;
-	Wed, 16 Apr 2025 12:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144FC4683
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807651; cv=none; b=eIIATBuv+PIk7q7i2f6nb9oA7DhfL0EB6KMuZw1+eHe4OMioKgrFUgXzTm9uUNYVNoE0snkhkrm/Fni7SwRo1y/yhEt2FKE3AN31kNZXT75c0iDgdr+X5xKinmo+g8eJTrBdLYVqbv2ROWiMyqPSvwWa4USEUR5iTwuArKd9bZQ=
+	t=1744807672; cv=none; b=Oqyp2qZVA26mo+G6mS1QDN0koYgqi4kTaKJbTd3bywC4dWCLws8VS44tt3FLk/RiCzkQ5Jha2X2DejbLXe9pImH/0XiCiU4ERZBx1O9gSReM+pkz1zaB1XilgUrsipNBIZLM8TKu3uHomLKcaQbfZ47d4UiWC5m99DGOKAPwOmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807651; c=relaxed/simple;
-	bh=tRK7Mw6CYOBN/JnDtQqLu4sNQOY4stUMtei2t4MDVO4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BtnLM2vIEqW3eD12hnRF9L75ofCfzTqbgAAsIwOWqHS4Mg3WUHXc7R02b60+iHPG/lyPy1/Hr1aZ7QDay3KbxmlE1a62L8xVNWQBMizap9gIkvb506SYQ7Ew6ULF4WXXUp91jp2Cq9aVHPoqccpIAdAYDtQBnHV6BDI1II4CC5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=UBaGp2CD; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="UBaGp2CD"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53GClCnH53270950, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744807632; bh=tRK7Mw6CYOBN/JnDtQqLu4sNQOY4stUMtei2t4MDVO4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Content-Type;
-	b=UBaGp2CDM5/v/ORRvvAAbpFG19IlHrjt2rpJBJjWM20zpc1tlLkj6sLuaTNsY6vXk
-	 f4RGAgp5XVkD/JI3jalu3jx7X7AUyxVa+FjebkXqhVhIB7/FX0y2+luWuAAZxu2FgU
-	 5+81oG//VzGtXLONTpTbRv+MddiCEaB2m9vnhINJgarR2m2EUgqbnxMLn34SpV8Mqh
-	 lWI1WQlUGxufnMd0+AHKtdT5ZvublriHv6R0D9P343tUPTg4h+g7ncbeRgdyRTKcEp
-	 39a6b+5ZmKy2bilNkczMPnK3VjjXMx/+mtgIWi/IxIXZk97j3AoNg0kg1eLIL/gArn
-	 8Ciai/fMO0ogA==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53GClCnH53270950
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 20:47:12 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 16 Apr 2025 20:47:13 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXDAG02.realtek.com.tw
- (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 16 Apr
- 2025 20:47:12 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
-Subject: [PATCH net v2 3/3] rtase: Fix a type error in min_t
-Date: Wed, 16 Apr 2025 20:45:34 +0800
-Message-ID: <20250416124534.30167-4-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250416124534.30167-1-justinlai0215@realtek.com>
-References: <20250416124534.30167-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1744807672; c=relaxed/simple;
+	bh=MMKg4AQ+6qm3J8umrN0RA1ce1X9q/b3eIAEO/wkwkJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uuCMNVWhvnqNtwewnGnDFxGWF7JQVlogFbydfQMbdbc7fTMRdBNPYomtZkuB9e1Pw+RKArZepoK92U2YwlOEmd0+dWVkPZq87CKHdk1mtXbnI0jbDh2gyG4xMxB1x46X7QYeQmgltmUX54NIXNyedZ4S2uPkihHgdjPOx9fTY/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378CAC4CEE2;
+	Wed, 16 Apr 2025 12:47:49 +0000 (UTC)
+Date: Wed, 16 Apr 2025 13:47:46 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Xavier <xavier_qy@163.com>
+Cc: ryan.roberts@arm.com, dev.jain@arm.com, ioworker0@gmail.com,
+	21cnbao@gmail.com, akpm@linux-foundation.org, david@redhat.com,
+	gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
+	ziy@nvidia.com
+Subject: Re: [mm/contpte v3 0/1] mm/contpte: Optimize loop to reduce
+ redundant operations
+Message-ID: <Z_-m8s5EUrL4DAME@arm.com>
+References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
+ <20250415082205.2249918-1-xavier_qy@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXDAG02.realtek.com.tw (172.21.6.101)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415082205.2249918-1-xavier_qy@163.com>
 
-Fix a type error in min_t.
+On Tue, Apr 15, 2025 at 04:22:04PM +0800, Xavier wrote:
+> Patch V3 has changed the while loop to a for loop according to the suggestions
+> of Dev.
 
-Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For some reason, my email (office365) rejected all these patches (not
+even quarantined), I only got the replies. Anyway, I can get them from
+the lore archive.
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 55b8d3666153..bc856fb3d6f3 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
- 	u8 msb, time_count, time_unit;
- 	u16 int_miti;
- 
--	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-+	time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
- 
- 	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
- 		msb = fls(time_us);
-@@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
- 	u8 msb, pkt_num_count, pkt_num_unit;
- 	u16 int_miti;
- 
--	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-+	pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
- 
- 	if (pkt_num > 60) {
- 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+> Meanwhile, to improve efficiency, the definition of local variables has
+> been removed. This macro is only used within the current function and there
+> will be no additional risks. In order to verify the optimization performance of
+> Patch V3, a test function has been designed. By repeatedly calling mlock in a
+> loop, the kernel is made to call contpte_ptep_get extensively to test the
+> optimization effect of this function.
+> The function's execution time and instruction statistics have been traced using
+> perf, and the following are the operation results on a certain Qualcomm mobile
+> phone chip:
+> 
+> Instruction Statistics - Before Optimization
+> #          count  event_name              # count / runtime
+>       20,814,352  branch-load-misses      # 662.244 K/sec
+>   41,894,986,323  branch-loads            # 1.333 G/sec
+>        1,957,415  iTLB-load-misses        # 62.278 K/sec
+>   49,872,282,100  iTLB-loads              # 1.587 G/sec
+>      302,808,096  L1-icache-load-misses   # 9.634 M/sec
+>   49,872,282,100  L1-icache-loads         # 1.587 G/sec
+> 
+> Total test time: 31.485237 seconds.
+> 
+> Instruction Statistics - After Optimization
+> #          count  event_name              # count / runtime
+>       19,340,524  branch-load-misses      # 688.753 K/sec
+>   38,510,185,183  branch-loads            # 1.371 G/sec
+>        1,812,716  iTLB-load-misses        # 64.554 K/sec
+>   47,673,923,151  iTLB-loads              # 1.698 G/sec
+>      675,853,661  L1-icache-load-misses   # 24.068 M/sec
+>   47,673,923,151  L1-icache-loads         # 1.698 G/sec
+> 
+> Total test time: 28.108048 seconds.
+
+We'd need to reproduce these numbers on other platforms as well and with
+different page sizes. I hope Ryan can do some tests next week.
+
+Purely looking at the patch, I don't like the complexity. I'd rather go
+with your v1 if the numbers are fairly similar (even if slightly slower).
+
+However, I don't trust microbenchmarks like calling mlock() in a loop.
+It was hand-crafted to dirty the whole buffer (making ptes young+dirty)
+before mlock() to make the best out of the rewritten contpte_ptep_get().
+Are there any real world workloads that would benefit from such change?
+
+As it stands, I think this patch needs better justification.
+
+Thanks.
+
 -- 
-2.34.1
-
+Catalin
