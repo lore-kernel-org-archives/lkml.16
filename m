@@ -1,50 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5D618C32C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0361D1C27;
+	Wed, 16 Apr 2025 17:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825041; cv=none; b=LK/VokFqzg5O2FPcBMR/GNb8046thooJGnEXneaYtZWWqTm4/0XXTyYxlHMk6E/h0sphuhXHhlTLxuuwh0hMYOSc3vIt71cOBP/tim8Ur5NyUXQjaxZEPmxv7C4McpLLfVUWkdzrPSByjg3dBtDYDDmVyAjjZMvOqZoudWL+OMw=
+	t=1744825158; cv=none; b=N/WcBGZ2ODWzqPOFIJ+C/4oVg0cYZTY/idCec8d8/nE3EmSUHexBIpfK8/ucsg1cYTE2LCb5lb0abo8YehK3PDfctWtrDS8npNvariLCCm5H5LxhZsyPQTGNvlIsq2LZhrdnXisEzt6G/WmfS3guXVpXG+z+7+qz4OqkFV1XYrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825041; c=relaxed/simple;
-	bh=LiA4Ew9/bslUQ0woQN9yhgqfWbuYxHGY2sxaYeyT8GU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jn7bPwfe4Bk/i3X/qjdntkcIcStyDTZ+Dq3F31gqh11U/X0hFeX4eyIfp9YYNTHi30ntMp4pJ5HsfjXIgdi9GlCZJvUMqgapIbCZOpHjHcV5HeuYoa4iY7PnYoF1gl/K/5x5yT9J2u4RRY3g5eiYKD6enIbGBTgEl2bV5vDdJ14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n1uQgUBD; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744825158; c=relaxed/simple;
+	bh=RqgFmRAZl71WZ17Upn5DESkXbwXGRuxlhqGoVgP4wE8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Hix1YoKwcO2/REPdKO+34r+Ki9ShUeC5axM4PWR4xlc/qnunYNJWY/dWyB1HAxsjh1gLjI6T+JNMgB4kOxIr7TW0JXGa5aikq4OHf8M64x8lP/CflHmYgXC7OCTH6JY2BcA2W6y8jD7SuhROc/iUczgQ+vPU3hiAHOPQh6Z8kIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UJtxB/p3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n1uQgUBD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744825040; x=1776361040;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LiA4Ew9/bslUQ0woQN9yhgqfWbuYxHGY2sxaYeyT8GU=;
-  b=n1uQgUBDGiyOXi6D+aA5c+gQ3gjkdcOxAKuufUPpgkmrYasy0idJWzN7
-   xhcbrUc+tkjDcEUxYZB3Gun+jAzwtJtQdlPXVozv1XUZvNUW+0jbVVj8q
-   Hv7gQNQeb8MTpQAzOBlMW8LlRG1FmQQ2y8eb6xdioPtHWvEHBUBRWiRU2
-   To1jLMm2L1IeL4HD2tZe7HbmfCaZaIZDmlJhDU+I8p+iolb/V2iSI2L2b
-   FKHKIH02WYngdVUcIKXdyyhE+KziTSEcJNojmJNdFaEHaBmYokm/NJC+J
-   ri0Eb5O2AVnwnmzozpJVIMML6cERItqnmwvn5cZjUFvnFgLxmzSr6pltG
-   w==;
-X-CSE-ConnectionGUID: IjwehowNRPqAT+siKnHLUA==
-X-CSE-MsgGUID: BZ7qtOqeQv+FaqZkG53uww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57051927"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57051927"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:37:17 -0700
-X-CSE-ConnectionGUID: RMTCV4fjS/m5+n+uLolu6Q==
-X-CSE-MsgGUID: 5gbTEe3UR8eldM3FeRy2vA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="131105676"
-Received: from spandruv-desk2.amr.corp.intel.com (HELO [10.124.223.6]) ([10.124.223.6])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:37:16 -0700
-Message-ID: <d30ab1d0-e09d-41ba-b98d-9b7d039f6d80@intel.com>
-Date: Wed, 16 Apr 2025 10:37:15 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UJtxB/p3"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mRUG000506;
+	Wed, 16 Apr 2025 17:39:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Ndj8UM+Mxb/ahSkh/PywiZoaQY0N9V5UUi6hzmzB6MI=; b=UJtxB/p3ZxKCbvw8
+	Wctf1WN0sJZm3BIQ0IIFqp0Y783w9nVQdVd1Yxv43SQFviCxyXs4qi9FCggYfrnv
+	0zqtp1SRaev8i7GR8qfr1itx6FiVk7wHc7/4NjWj2m91oPpIsZ4648kGC0D5A9El
+	OCOx+LMv8NORq23icGgEQCHnrzd4hbs7G6lVe3b3+ZkGShAuD8lSqGauiBy3GZWJ
+	1TqvjSZktPF2qkqfR2RoGaxATjqII5RPpnt/WMvsUTHUSAPWB/OwIYSBEFKRcb+C
+	Z3vhZwmelzc4REOyeZBOmNqAGor1KY2TzAphp6En8vGu1OitBejCjiyTAalIfNKW
+	dWY4DQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vmeuj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:39:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GHd3pT025456
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:39:03 GMT
+Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
+ 2025 10:38:58 -0700
+Message-ID: <1d109f0f-e866-4f87-b8f9-06595dbc51ff@quicinc.com>
+Date: Wed, 16 Apr 2025 23:08:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,144 +50,242 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/6] x86/microcode/intel: Support mailbox transfer
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, Chao Gao <chao.gao@intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- colinmitchell@google.com
-References: <20250320234104.8288-1-chang.seok.bae@intel.com>
- <20250409232713.4536-1-chang.seok.bae@intel.com>
- <20250409232713.4536-6-chang.seok.bae@intel.com> <Z/+7O6pYQ8FkD+Xj@intel.com>
- <166b29f2-a178-4d60-8f5d-218bfd7b51ac@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 14/34] drm/msm: Lazily create context VM
+To: Rob Clark <robdclark@gmail.com>, <dri-devel@lists.freedesktop.org>
+CC: <freedreno@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
+        "Rob
+ Clark" <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Dmitry
+ Baryshkov" <lumag@kernel.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20250319145425.51935-1-robdclark@gmail.com>
+ <20250319145425.51935-15-robdclark@gmail.com>
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <166b29f2-a178-4d60-8f5d-218bfd7b51ac@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250319145425.51935-15-robdclark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Byuu8UTKKi04No4T3oDe73UH5v6D9mSa
+X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67ffeb37 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=cm27Pg_UAAAA:8 a=CAjrvC-q03qAXdtm1X8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Byuu8UTKKi04No4T3oDe73UH5v6D9mSa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160144
 
-On 4/16/25 10:22, Chang S. Bae wrote:
-> On 4/16/2025 7:14 AM, Chao Gao wrote:
->>> +/*
->>> + * Wait for the hardware to complete a transaction.
->>> + * Return true on success, false on failure.
->>> + */
->>> +static bool wait_for_transaction(struct staging_state *ss)
->>> +{
->>> +    u32 timeout, status;
->>> +
->>> +    /* Allow time for hardware to complete the operation: */
->>> +    for (timeout = 0; timeout < MBOX_XACTION_TIMEOUT_MS; timeout++) {
->>> +        msleep(1);
->>> +
->>> +        status = readl(ss->mmio_base + MBOX_STATUS_OFFSET);
->>> +        /* Break out early if the hardware is ready: */
->>> +        if (status & MASK_MBOX_STATUS_READY)
->>> +            break;
->>
->> Shouldn't we exit the loop if the MASK_MBOX_STATUS_ERROR is set, or is
->> the
->> ERROR bit always set in conjunction with the READY bit?
->>
->>> +    }
->>> +
->>> +    status = readl(ss->mmio_base + MBOX_STATUS_OFFSET);
->>
->> I still think this read is not needed.
+On 3/19/2025 8:22 PM, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> No, if it times out, it could exit without having read the status.
-
-Can it? There are only two ways out of the loop: the explicit break and
-the implicit break from the 'timeout' check. Both happen at the "end" of
-the loop, unless the timeout< check failed up front:
-
-	for (timeout = 0; timeout < MBOX_XACTION_TIMEOUT_MS; timeout++){
-		msleep(1);
-		status = readl(ss->mmio_base + MBOX_STATUS_OFFSET);
-		if (status & MASK_MBOX_STATUS_READY)
-			break;
-	}
-
-> But this is a slow path — instead of trying to save a few cycles, I
-> wanted to present the logic more clearly:
+> In the next commit, a way for userspace to opt-in to userspace managed
+> VM is added.  For this to work, we need to defer creation of the VM
+> until it is needed.
 > 
->   * Give the hardware enough time, but not forever.
->     * Oh, we don't need to wait anymore if it's done
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  3 ++-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 14 +++++++-----
+>  drivers/gpu/drm/msm/msm_drv.c           | 29 ++++++++++++++++++++-----
+>  drivers/gpu/drm/msm/msm_gem_submit.c    |  2 +-
+>  drivers/gpu/drm/msm/msm_gpu.h           |  9 +++++++-
+>  5 files changed, 43 insertions(+), 14 deletions(-)
 > 
->   * After waiting, check the status and handle it properly.
-> 
-> Isn’t it clearer to read the status after the wait, right before the
-> error handling?
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 4811be5a7c29..0b1e2ba3539e 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -112,6 +112,7 @@ static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
+>  {
+>  	bool sysprof = refcount_read(&a6xx_gpu->base.base.sysprof_active) > 1;
+>  	struct msm_context *ctx = submit->queue->ctx;
+> +	struct drm_gpuvm *vm = msm_context_vm(submit->dev, ctx);
+>  	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
+>  	phys_addr_t ttbr;
+>  	u32 asid;
+> @@ -120,7 +121,7 @@ static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
+>  	if (ctx->seqno == ring->cur_ctx_seqno)
+>  		return;
+>  
+> -	if (msm_iommu_pagetable_params(to_msm_vm(ctx->vm)->mmu, &ttbr, &asid))
+> +	if (msm_iommu_pagetable_params(to_msm_vm(vm)->mmu, &ttbr, &asid))
+>  		return;
+>  
+>  	if (adreno_gpu->info->family >= ADRENO_7XX_GEN1) {
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 0f71703f6ec7..e4d895dda051 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -351,6 +351,8 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
+>  {
+>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>  	struct drm_device *drm = gpu->dev;
+> +	/* Note ctx can be NULL when called from rd_open(): */
+> +	struct drm_gpuvm *vm = ctx ? msm_context_vm(drm, ctx) : NULL;
+>  
+>  	/* No pointer params yet */
+>  	if (*len != 0)
+> @@ -396,8 +398,8 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
+>  		*value = 0;
+>  		return 0;
+>  	case MSM_PARAM_FAULTS:
+> -		if (ctx->vm)
+> -			*value = gpu->global_faults + to_msm_vm(ctx->vm)->faults;
+> +		if (vm)
+> +			*value = gpu->global_faults + to_msm_vm(vm)->faults;
+>  		else
+>  			*value = gpu->global_faults;
+>  		return 0;
+> @@ -405,14 +407,14 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
+>  		*value = gpu->suspend_count;
+>  		return 0;
+>  	case MSM_PARAM_VA_START:
+> -		if (ctx->vm == gpu->vm)
+> +		if (vm == gpu->vm)
+>  			return UERR(EINVAL, drm, "requires per-process pgtables");
+> -		*value = ctx->vm->mm_start;
+> +		*value = vm->mm_start;
+>  		return 0;
+>  	case MSM_PARAM_VA_SIZE:
+> -		if (ctx->vm == gpu->vm)
+> +		if (vm == gpu->vm)
+>  			return UERR(EINVAL, drm, "requires per-process pgtables");
+> -		*value = ctx->vm->mm_range;
+> +		*value = vm->mm_range;
+>  		return 0;
+>  	case MSM_PARAM_HIGHEST_BANK_BIT:
+>  		*value = adreno_gpu->ubwc_config.highest_bank_bit;
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 6ef29bc48bb0..6fd981ee6aee 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -214,10 +214,29 @@ static void load_gpu(struct drm_device *dev)
+>  	mutex_unlock(&init_lock);
+>  }
+>  
+> +/**
+> + * msm_context_vm - lazily create the context's VM
+> + *
+> + * @dev: the drm device
+> + * @ctx: the context
+> + *
+> + * The VM is lazily created, so that userspace has a chance to opt-in to having
+> + * a userspace managed VM before the VM is created.
+> + *
+> + * Note that this does not return a reference to the VM.  Once the VM is created,
+> + * it exists for the lifetime of the context.
+> + */
+> +struct drm_gpuvm *msm_context_vm(struct drm_device *dev, struct msm_context *ctx)
+> +{
+> +	struct msm_drm_private *priv = dev->dev_private;
+> +	if (!ctx->vm)
 
-It's simpler to read the code the way you have it. You don't have to
-consider if 'status' could be uninitialized. It makes the "timeout loop"
-*COMPLETELY* independent from the rest of the function. It could be:
+hmm. This is racy and it is in a userspace accessible path!
 
-foo()
-{
-	spin_until_ready();
+-Akhil
 
-	status = readl(ss->mmio_base + MBOX_STATUS_OFFSET);
+> +		ctx->vm = msm_gpu_create_private_vm(priv->gpu, current);
+> +	return ctx->vm;
+> +}
+> +
+>  static int context_init(struct drm_device *dev, struct drm_file *file)
+>  {
+>  	static atomic_t ident = ATOMIC_INIT(0);
+> -	struct msm_drm_private *priv = dev->dev_private;
+>  	struct msm_context *ctx;
+>  
+>  	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> @@ -230,7 +249,6 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+>  	kref_init(&ctx->ref);
+>  	msm_submitqueue_init(dev, ctx);
+>  
+> -	ctx->vm = msm_gpu_create_private_vm(priv->gpu, current);
+>  	file->driver_priv = ctx;
+>  
+>  	ctx->seqno = atomic_inc_return(&ident);
+> @@ -408,7 +426,7 @@ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+>  	 * Don't pin the memory here - just get an address so that userspace can
+>  	 * be productive
+>  	 */
+> -	return msm_gem_get_iova(obj, ctx->vm, iova);
+> +	return msm_gem_get_iova(obj, msm_context_vm(dev, ctx), iova);
+>  }
+>  
+>  static int msm_ioctl_gem_info_set_iova(struct drm_device *dev,
+> @@ -417,18 +435,19 @@ static int msm_ioctl_gem_info_set_iova(struct drm_device *dev,
+>  {
+>  	struct msm_drm_private *priv = dev->dev_private;
+>  	struct msm_context *ctx = file->driver_priv;
+> +	struct drm_gpuvm *vm = msm_context_vm(dev, ctx);
+>  
+>  	if (!priv->gpu)
+>  		return -EINVAL;
+>  
+>  	/* Only supported if per-process address space is supported: */
+> -	if (priv->gpu->vm == ctx->vm)
+> +	if (priv->gpu->vm == vm)
+>  		return UERR(EOPNOTSUPP, dev, "requires per-process pgtables");
+>  
+>  	if (should_fail(&fail_gem_iova, obj->size))
+>  		return -ENOMEM;
+>  
+> -	return msm_gem_set_iova(obj, ctx->vm, iova);
+> +	return msm_gem_set_iova(obj, vm, iova);
+>  }
+>  
+>  static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
+> diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+> index c65f3a6a5256..9731ad7993cf 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_submit.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+> @@ -63,7 +63,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
+>  
+>  	kref_init(&submit->ref);
+>  	submit->dev = dev;
+> -	submit->vm = queue->ctx->vm;
+> +	submit->vm = msm_context_vm(dev, queue->ctx);
+>  	submit->gpu = gpu;
+>  	submit->cmd = (void *)&submit->bos[nr_bos];
+>  	submit->queue = queue;
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index d8425e6d7f5a..c15aad288552 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -362,7 +362,12 @@ struct msm_context {
+>  	 */
+>  	int queueid;
+>  
+> -	/** @vm: the per-process GPU address-space */
+> +	/**
+> +	 * @vm:
+> +	 *
+> +	 * The per-process GPU address-space.  Do not access directly, use
+> +	 * msm_context_vm().
+> +	 */
+>  	struct drm_gpuvm *vm;
+>  
+>  	/** @kref: the reference count */
+> @@ -447,6 +452,8 @@ struct msm_context {
+>  	atomic64_t ctx_mem;
+>  };
+>  
+> +struct drm_gpuvm *msm_context_vm(struct drm_device *dev, struct msm_context *ctx);
+> +
+>  /**
+>   * msm_gpu_convert_priority - Map userspace priority to ring # and sched priority
+>   *
 
-	...
-}
-
-for example.
-
-It's less likely to break, too. Let's say someone added a new break:
-
-	for (timeout = 0; timeout < MBOX_XACTION_TIMEOUT_MS; timeout++){
-+		if (some_other_condition());
-+			break;
-		msleep(1);
-		status = readl(ss->mmio_base + MBOX_STATUS_OFFSET);
-		if (status & MASK_MBOX_STATUS_READY)
-			break;
-	}
-
-you'd have a bug on your hands.
-
-I'm fine with the way you have it. I probably would have written it that
-way too.
