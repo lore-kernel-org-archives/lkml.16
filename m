@@ -1,106 +1,69 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4882A21ABC5;
-	Wed, 16 Apr 2025 21:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437091DA634;
+	Wed, 16 Apr 2025 21:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840739; cv=none; b=grIo0rkeRPvNUMzWgXnODpBdrc3nvU7cfEvvQcRPboeRdq+wsq8v7f3V40vpL4NO2COjFrU1J+ID2xHlFLWq27w8Wo92B4fmqbmsB/QHabLQCATNkfZ+N9/Kx/elzNylFF/0ND8DipjequucvvRktlBem0qYP/9H/fhokvT97lc=
+	t=1744840760; cv=none; b=FOEfEBDp7MseqAdnX0w8i46Lari5cApIQPxf0xt0MZj7CKpYhAP7v8v56AaSWwPlXIWijer4LxFMjwnXzabyVPiBUW4YKb0agEp8OOAorcKazLqiykVBNhjiJVxmwJp1NrWs5wLXEmRDa7ntvXl8j88cubIkV+BHD3oFCHPJ/1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840739; c=relaxed/simple;
-	bh=up3bjPp0OgCeJJ0w7pPtgoDYLs4d/inRFsmF3gxyFQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LeAdmQp4Qzv9IX/VRS3jw6EDvnYFx9fFldGAaeXrihqhujfhxDeWS0w/xNJn94mwkcmbDawldQxahDuqGLv2t/3UlonFzacJ+sUNk7jqV+HdpD28m6Oj2aN8RjquEh9zIuWEh9Yrhlnzy+d7kon2De3SVfZrDJiolo5jPUbPjIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NT3H4zDA; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744840760; c=relaxed/simple;
+	bh=5Vn9a29xgSJ1Uvk2UvOFEKkCEa6/SHOtxguDtcVd0vY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pKhpZ3N9HSlnVHae3JVhpWPj1Nx9heq8tEQHKdWFctETiU1q6Em9LvNyUN4SrJP/1lEbilgySDXF03W+V/nzZjrCjoR2sV9kcfRu/wTybesZIWvyvldJr3tOus0Am2cu9FjexpyBLvj1uCP7TTyRNdefHO3HBNq5V6do5wZ3+9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=NKZm447N; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NT3H4zDA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=vv7BpdqbrC4MIJGIoyaCveI8US7dxRJU75TQa1FCYWA=; b=NT3H4zDAb3vOVqUUyDgEmkwU9n
-	pvPgcGIqiVzK4o8M5YI4G/C8hwYJPfzV4/S54epdX+OQhaL0Dx2z9T0K64QX0GPD8SHQlsSxh9652
-	pIq8tf5KvaUfHe9ltDsx3EtN31ZmxU8oIatReKyLyh9zdL7xVFN5Nqq2gpjavK+SXyVg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u5AmI-009hQk-EE; Wed, 16 Apr 2025 23:58:42 +0200
-Date: Wed, 16 Apr 2025 23:58:42 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Simon Horman <horms@kernel.org>
-Subject: Re: [net-next v5 2/6] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
- switch description
-Message-ID: <2c9a5438-40f1-4196-ada9-bfb572052122@lunn.ch>
-References: <20250414140128.390400-1-lukma@denx.de>
- <20250414140128.390400-3-lukma@denx.de>
- <06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="NKZm447N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=ud2bmrtxubhfrptd2tpzo7iyy4.protonmail; t=1744840749; x=1745099949;
+	bh=5Vn9a29xgSJ1Uvk2UvOFEKkCEa6/SHOtxguDtcVd0vY=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=NKZm447Nk4llnt1M9AGvNG6ZbYKF36xd+jR7IfzbXx6CmUsV5Fik2sW25mtGocrZN
+	 ugKg1cQPLFq5vY/nV7xW6KfUK4O+0uLFcJARA3VY3hRfKhkCq5V8uwI37U+TejQiaJ
+	 qfml5Ma/m7dHAdk8o/ZftGZWdJj60E5RN0pY0YYPFG5G7kBDAjJV4625sUQrMGquu1
+	 pD94IuaJRNsNzsSjUfBSrsweloOUAC0seWT8nm0R4DUcRayNbwtSY6cQrEHUbskcsP
+	 qdUVl7p6WOeAJwZuNUot40C+hnWK1kD55oKROJvaG6EugENSgvSBWs9ugyTDRZHjfE
+	 XrolqoGgpL7nQ==
+Date: Wed, 16 Apr 2025 21:58:59 +0000
+To: Alice Ryhl <aliceryhl@google.com>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] rust: pin-init: examples: conditionally enable `feature(lint_reasons)`
+Message-ID: <D98EF3MYE7MJ.2B088TMY4FJU2@proton.me>
+In-Reply-To: <Z_4mLRn-piSzuuf6@google.com>
+References: <20250414195928.129040-1-benno.lossin@proton.me> <20250414195928.129040-3-benno.lossin@proton.me> <Z_4mLRn-piSzuuf6@google.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 1d9d31a5a32d218b7ee8f2525cc0bbe57988830d
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> > -		eth_switch: switch@800f8000 {
-> > -			reg = <0x800f8000 0x8000>;
-> > +		eth_switch: switch@800f0000 {
-> > +			compatible = "nxp,imx28-mtip-switch";
-> > +			reg = <0x800f0000 0x20000>;
-> > +			interrupts = <100>, <101>, <102>;
-> > +			clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> > +			clock-names = "ipg", "ahb", "enet_out", "ptp";
-> >   			status = "disabled";
-> from my understanding of device tree this file should describe the hardware,
-> not the software implementation. After this change the switch memory region
-> overlaps the existing mac0 and mac1 nodes.
-> 
-> Definition in the i.MX28 reference manual:
-> ENET MAC0 ENET 0x800F0000 - 0x800F3FFF 16KB
-> ENET MAC1 ENET 0x800F4000 - 0x800F7FFF 16KB
-> ENT Switch SWITCH 0x800F8000 - 0x800FFFFF 32KB
-> 
-> I'm not the expert how to solve this properly. Maybe two node references to
-> mac0 and mac1 under eth_switch in order to allocate the memory regions
-> separately.
+On Tue Apr 15, 2025 at 11:26 AM CEST, Alice Ryhl wrote:
+> On Mon, Apr 14, 2025 at 08:00:20PM +0000, Benno Lossin wrote:
+>> `lint_reasons` is unstable in Rust 1.80 and earlier, enable it
+>> conditionally in the examples to allow compiling them with older
+>> compilers.
+>>=20
+>> Link: https://github.com/Rust-for-Linux/pin-init/pull/33/commits/ec494fe=
+686b0a97d5b59b5be5a42d3858038ea6a
+>> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+>
+> Why not just always use #![feature] together with -Astable_features like
+> the kernel does?
 
-I get what you are saying about describing the hardware, but...
+I'd like to know when a feature becomes stable, since I don't keep track
+of them like Miguel does.
 
-The hardware can be used in two different ways.
+---
+Cheers,
+Benno
 
-1) Two FEC devices, and the switch it left unused.
-
-For this, it makes sense that each FEC has its own memory range, there
-are two entries, and each has a compatible, since there are two
-devices.
-
-2) A switch and MAC conglomerate device, which makes use of all three
-   blocks in a single driver.
-
-The three hardware blocks have to be used as one consistent whole, by
-a single driver. There is one compatible for the whole. Given the
-ranges are contiguous, it makes little sense to map them individually,
-it would just make the driver needlessly more complex.
-
-It should also be noted that 1) and 2) are mutually exclusive, so i
-don't think it matters the address ranges overlap. Bad things are
-going to happen independent of this if you enable both at once.
-
-      Andrew
