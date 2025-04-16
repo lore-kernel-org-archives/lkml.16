@@ -1,129 +1,298 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 585A31552E3;
-	Wed, 16 Apr 2025 16:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7BD1DF744;
+	Wed, 16 Apr 2025 16:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744821629; cv=none; b=N6JK3ASF3k4Xi1Tf28KEuMmSR5PqpC+jDgapsBlAGfAVjb1BNvQbXnJXTFKTEkJbBNspuzeXapVPvbo4glcILQLTRiz2nykOAXLlfz2Syos7QYsIo3GEpj3SACWPROlkP5rIn5eXKJ2zB/d1VbuLIwkrqsuQYjjd6Kzr3q2A+aA=
+	t=1744821760; cv=none; b=SEGLWl/HW7NWmP5Ha1XH7vcVk6WHzl4v36m/PaFBImTlwd+oyg9at0ksW8jnytWofBUgZ6pla47SK6b7tZFfw7QT0ZkkhFKU21A4irWuZZj3XcoTx3H7SWYjn9k+3H35SlOczaocb7AAG0JGcrtPD/7f8bC+vh5Ux4lXh50/UG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744821629; c=relaxed/simple;
-	bh=kdWGzMC4e8Q/F55njWJtcJOc5uDVvyTSX+OFhhLoMs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kCY9WrfRx1c7rvnIHYbWJhK1+GR4pSo2ocnQWXIJ0CdLPiDT2XQnz0PviTeu+4UHCI7pQxwPclv5oBDBES08ufKfbbdECaHQbrdxdz29V76fJybObF8S5CCfXU8dg1ibRm3wsXkK92ma46YAtlOXfMXsIOEsfNPTG57oAZuRqLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=efsHX+Re; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744821760; c=relaxed/simple;
+	bh=Kp96AHMtPFqugTdZl5vsCg/C4gJtHkxGRskQOVqc1lA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VX7dNNnIzeQhbkkb/SfyflaUIUCJt8ma3G/41NmPlE5uC82JmqrZcfFeYamZl0KWOQzxkcVF7J09ZBsy7P694DbQDl90aHGlA9MStwT/+j5hdhgV9hkMuSCgafhJOZOaGnvOrdIzrN0AS5KP3gklk1FNd2rdwk6j6RxmMuuUIIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cTmsOoLG; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="efsHX+Re"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mFPI007029;
-	Wed, 16 Apr 2025 16:40:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	YnCM84KjxzfyDSxb3gt85GemZL1H2aNhnuW7pS5CQkw=; b=efsHX+ReLvKFxozR
-	N4FGKnp3F0eeNoPpxrqt4fc9ZzpVozHxy8mAYMk45aOKaKp8bceBNsK3Ej81F36s
-	9ddC4lG3al5FsvWW19MyqSh1COcyzibaE1wLe1j1qi1pf3wzx48atJTG5IN75iTW
-	4HVh4OU/M++RNCbyXXOi82ru0deY34IRCB0nNsQ+o8IkbKT5hdgiJpMpaxaTXXDy
-	3JZHQddFUSht8hNvbn6UXZbsJ+2oF841hma5u+7v95nZgn6Pa5TcpnRfOl4MYHSK
-	DibFQq3Q8ighMArntczOJm+V1wBAW/VgOkRvnC4qln0o5OC1rLDdDlIbHU57F/tJ
-	u5Od1Q==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjm46e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 16:40:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GGeLh7023006
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 16:40:21 GMT
-Received: from [10.50.19.174] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 09:40:15 -0700
-Message-ID: <30ebc1b7-5746-59a3-0155-7a7870544622@quicinc.com>
-Date: Wed, 16 Apr 2025 22:10:12 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cTmsOoLG"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so6641129b3a.1;
+        Wed, 16 Apr 2025 09:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744821758; x=1745426558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vi3/LsCAglVXlc1y/XElmJxhOC8xVFBVCFELuJBW74U=;
+        b=cTmsOoLGiyNbUNUD55nD092/BTmAej/hcYTmfw11WGDcHBH4s/Zb9PXFkYIYRpvr8s
+         mvGB4z4yvynyVkjBbdcRdcGnegvR0bkFK4HQV1laSow8tmZSy4aH+HlXjWVLdn9hNPya
+         Cr5oxJifi/yPMZE3HBEEQAff5Ik5YrDGUtYN/E5qiXOHVx7IhvBCILBH8L6wjH3R0iJn
+         shPgShiHyef2vPtYtqre87ns55RbE5ac0PDlwUvQ3Eu/126BI07JQlO3qHCsdZxWtdLp
+         0lakIlbcvxP26xXfccXX735e+xbf6K8uCfeYlGlX3CL4qOc14JSk7gY9VbsXLx+NXIlS
+         QAIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744821758; x=1745426558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vi3/LsCAglVXlc1y/XElmJxhOC8xVFBVCFELuJBW74U=;
+        b=BxASdVaTBnu+fUr7EhGxdTdOE7oxu+3JusDBTK3Xy425OmaKvK6dJi4eWA0bFSsW58
+         9D8up/YkVngIgE6MkvoIYD+9FtB7n4KXO6NR1AeWmQWVAafVYTxmug6GP11COIfb1myN
+         Al1qWnHMeOX8/DB4h6aINYtNd5iNor/d97hhA6hJUrO9rW9TUAnQX1K5hwiIkMwBF3K/
+         gSstafqe56e/65ND0HyLj0ltXZdBpGPsJoQpfgJYQF/GfuPzH1SPtH1zUEwP7shC9x5Y
+         vntMHqAuGy2rpa0csxldDJE7nLAQ1BE1f2iBH/M8FZk2hoQ6pCzbpnzgTQrOirvZ5oBF
+         akyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIb20zlJXd7yvFSF+l85IgeCU7ZX8rZbhSmgC2dRD8ud8VTKoIfTDDYknJeIhpHudj+ek=@vger.kernel.org, AJvYcCWgwqzftoeN9Wm2WhSlwOPK71V21Pu5nh070F2SUzxm7eGzhVzOthIVvfqY9JLLV0JCGxYxtHLfY0fB1FxS@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAvHVoFdaxSGTYf+o9s/c5ew4vifmITIDOefj5d+PGTDqKrSgf
+	DE0iAEf2//6g2hP73JGFtukT0dAyMfkqK9JcqWniR9FosZcqMMnHE4vGKjoyfZp8zCUyPMIP8z2
+	O74X0l7hrSzSi47EeT4Df4FrZFLg=
+X-Gm-Gg: ASbGncurGMBbo371EizeiM8qOKEx0YwYRHLBpXNtgfq8bMgczGKeuEfLkxp21pWfjO1
+	ga3k7+UarcMwsp/jR74MwZagzYhmHF109Q6yUgMdn4S0yBNzAvTjW1IFutEEIJ9WSi7PVpOH6cr
+	iVrKTeesYsqkQHF21IBosNJHh/l0mtSRSYejdGdH1NXTIl3oJR
+X-Google-Smtp-Source: AGHT+IGdK6crrHS1+yd3fSVPdpk0V3ZAFbNc+T9D/khg7MZyDS4cCPh5Ipu63sOQeNDp/BRfF5MFoFl9PKkFftITMQ4=
+X-Received: by 2002:a05:6a00:1145:b0:736:546c:eb69 with SMTP id
+ d2e1a72fcca58-73c267003b0mr3397118b3a.9.1744821758061; Wed, 16 Apr 2025
+ 09:42:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 01/20] media: iris: Skip destroying internal buffer if not
- dequeued
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Stefan Schmidt
-	<stefan.schmidt@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
- <20250408-iris-dec-hevc-vp9-v1-1-acd258778bd6@quicinc.com>
- <811cd70e-dc27-4ce0-b7da-296fa5926f90@linaro.org>
- <137c68d5-36c5-4977-921b-e4b07b22113c@linaro.org>
- <96bd9ffa-94f6-0d1f-d050-5bec13b3328f@quicinc.com>
- <70a630cb-06ad-403c-b2e2-ae6d26e0877e@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <70a630cb-06ad-403c-b2e2-ae6d26e0877e@linaro.org>
+References: <20250415093907.280501-1-yangfeng59949@163.com>
+ <20250415093907.280501-2-yangfeng59949@163.com> <CAEf4BzYZpLOOV5MVxaB4+WPZiO3SjSkNCPrNkd67jZ49kUYDZA@mail.gmail.com>
+ <CAEyhmHQG5+F7b2OBUXYHRKqYuQyG3e_MAj9q=fwebHD_uAU9-w@mail.gmail.com>
+In-Reply-To: <CAEyhmHQG5+F7b2OBUXYHRKqYuQyG3e_MAj9q=fwebHD_uAU9-w@mail.gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 16 Apr 2025 09:42:24 -0700
+X-Gm-Features: ATxdqUF_SkHobflZ4JWeCBVB3YaeRB6wH7TVTDkNc1olfadoGJkXvUGukESEMSA
+Message-ID: <CAEf4BzYGf6zp4TXPqrX8P2mUNHo2nQLk0m7x1peRMmWaFphTaw@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 1/3] libbpf: Fix event name too long error
+To: Hengqi Chen <hengqi.chen@gmail.com>
+Cc: Feng Yang <yangfeng59949@163.com>, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, olsajiri@gmail.com, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 3hVtaosg3CGbQh3bTYuTewtgMNNFml9Z
-X-Proofpoint-ORIG-GUID: 3hVtaosg3CGbQh3bTYuTewtgMNNFml9Z
-X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=67ffdd76 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=UQm-4NqDxuu6OjQSYYYA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=917 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160135
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 15, 2025 at 6:44=E2=80=AFPM Hengqi Chen <hengqi.chen@gmail.com>=
+ wrote:
+>
+> Hi Andrii,
+>
+> On Wed, Apr 16, 2025 at 7:05=E2=80=AFAM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Tue, Apr 15, 2025 at 2:40=E2=80=AFAM Feng Yang <yangfeng59949@163.co=
+m> wrote:
+> > >
+> > > From: Feng Yang <yangfeng@kylinos.cn>
+> > >
+> > > When the binary path is excessively long, the generated probe_name in=
+ libbpf
+> > > exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
+> > > This causes legacy uprobe event attachment to fail with error code -2=
+2.
+> > >
+> > > The fix reorders the fields to place the unique ID before the name.
+> > > This ensures that even if truncation occurs via snprintf, the unique =
+ID
+> > > remains intact, preserving event name uniqueness. Additionally, expli=
+cit
+> > > checks with MAX_EVENT_NAME_LEN are added to enforce length constraint=
+s.
+> > >
+> > > Before Fix:
+> > >         ./test_progs -t attach_probe/kprobe-long_name
+> > >         ......
+> > >         libbpf: failed to add legacy kprobe event for 'bpf_testmod_lo=
+oooooooooooooooooooooooooooooong_name+0x0': -EINVAL
+> > >         libbpf: prog 'handle_kprobe': failed to create kprobe 'bpf_te=
+stmod_looooooooooooooooooooooooooooooong_name+0x0' perf event: -EINVAL
+> > >         test_attach_kprobe_long_event_name:FAIL:attach_kprobe_long_ev=
+ent_name unexpected error: -22
+> > >         test_attach_probe:PASS:uprobe_ref_ctr_cleanup 0 nsec
+> > >         #13/11   attach_probe/kprobe-long_name:FAIL
+> > >         #13      attach_probe:FAIL
+> > >
+> > >         ./test_progs -t attach_probe/uprobe-long_name
+> > >         ......
+> > >         libbpf: failed to add legacy uprobe event for /root/linux-bpf=
+/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9: -EINVAL
+> > >         libbpf: prog 'handle_uprobe': failed to create uprobe '/root/=
+linux-bpf/bpf-next/tools/testing/selftests/bpf/test_progs:0x13efd9' perf ev=
+ent: -EINVAL
+> > >         test_attach_uprobe_long_event_name:FAIL:attach_uprobe_long_ev=
+ent_name unexpected error: -22
+> > >         #13/10   attach_probe/uprobe-long_name:FAIL
+> > >         #13      attach_probe:FAIL
+> > > After Fix:
+> > >         ./test_progs -t attach_probe/uprobe-long_name
+> > >         #13/10   attach_probe/uprobe-long_name:OK
+> > >         #13      attach_probe:OK
+> > >         Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+> > >
+> > >         ./test_progs -t attach_probe/kprobe-long_name
+> > >         #13/11   attach_probe/kprobe-long_name:OK
+> > >         #13      attach_probe:OK
+> > >         Summary: 1/1 PASSED, 0 SKIPPED, 0 FAILED
+> > >
+> > > Fixes: 46ed5fc33db9 ("libbpf: Refactor and simplify legacy kprobe cod=
+e")
+> > > Fixes: cc10623c6810 ("libbpf: Add legacy uprobe attaching support")
+> > > Signed-off-by: Hengqi Chen <hengqi.chen@gmail.com>
+> > > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > > ---
+> > >  tools/lib/bpf/libbpf.c | 41 +++++++++++++++-------------------------=
+-
+> > >  1 file changed, 15 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > > index b2591f5cab65..b7fc57ac16a6 100644
+> > > --- a/tools/lib/bpf/libbpf.c
+> > > +++ b/tools/lib/bpf/libbpf.c
+> > > @@ -60,6 +60,8 @@
+> > >  #define BPF_FS_MAGIC           0xcafe4a11
+> > >  #endif
+> > >
+> > > +#define MAX_EVENT_NAME_LEN     64
+> > > +
+> > >  #define BPF_FS_DEFAULT_PATH "/sys/fs/bpf"
+> > >
+> > >  #define BPF_INSN_SZ (sizeof(struct bpf_insn))
+> > > @@ -11136,16 +11138,16 @@ static const char *tracefs_available_filter=
+_functions_addrs(void)
+> > >                              : TRACEFS"/available_filter_functions_ad=
+drs";
+> > >  }
+> > >
+> > > -static void gen_kprobe_legacy_event_name(char *buf, size_t buf_sz,
+> > > -                                        const char *kfunc_name, size=
+_t offset)
+> > > +static void gen_probe_legacy_event_name(char *buf, size_t buf_sz,
+> > > +                                       const char *name, size_t offs=
+et)
+> > >  {
+> > >         static int index =3D 0;
+> > >         int i;
+> > >
+> > > -       snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx_%d", getpid(), kfun=
+c_name, offset,
+> > > -                __sync_fetch_and_add(&index, 1));
+> > > +       snprintf(buf, buf_sz, "libbpf_%u_%d_%s_0x%zx", getpid(),
+> > > +                __sync_fetch_and_add(&index, 1), name, offset);
+> > >
+> > > -       /* sanitize binary_path in the probe name */
+> > > +       /* sanitize name in the probe name */
+> > >         for (i =3D 0; buf[i]; i++) {
+> > >                 if (!isalnum(buf[i]))
+> > >                         buf[i] =3D '_';
+> > > @@ -11270,9 +11272,9 @@ int probe_kern_syscall_wrapper(int token_fd)
+> > >
+> > >                 return pfd >=3D 0 ? 1 : 0;
+> > >         } else { /* legacy mode */
+> > > -               char probe_name[128];
+> > > +               char probe_name[MAX_EVENT_NAME_LEN];
+> > >
+> > > -               gen_kprobe_legacy_event_name(probe_name, sizeof(probe=
+_name), syscall_name, 0);
+> > > +               gen_probe_legacy_event_name(probe_name, sizeof(probe_=
+name), syscall_name, 0);
+> > >                 if (add_kprobe_event_legacy(probe_name, false, syscal=
+l_name, 0) < 0)
+> > >                         return 0;
+> > >
+> > > @@ -11328,9 +11330,9 @@ bpf_program__attach_kprobe_opts(const struct =
+bpf_program *prog,
+> > >                                             func_name, offset,
+> > >                                             -1 /* pid */, 0 /* ref_ct=
+r_off */);
+> > >         } else {
+> > > -               char probe_name[256];
+> > > +               char probe_name[MAX_EVENT_NAME_LEN];
+> > >
+> > > -               gen_kprobe_legacy_event_name(probe_name, sizeof(probe=
+_name),
+> > > +               gen_probe_legacy_event_name(probe_name, sizeof(probe_=
+name),
+> > >                                              func_name, offset);
+> > >
+> > >                 legacy_probe =3D strdup(probe_name);
+> > > @@ -11875,20 +11877,6 @@ static int attach_uprobe_multi(const struct =
+bpf_program *prog, long cookie, stru
+> > >         return ret;
+> > >  }
+> > >
+> > > -static void gen_uprobe_legacy_event_name(char *buf, size_t buf_sz,
+> > > -                                        const char *binary_path, uin=
+t64_t offset)
+> > > -{
+> > > -       int i;
+> > > -
+> > > -       snprintf(buf, buf_sz, "libbpf_%u_%s_0x%zx", getpid(), binary_=
+path, (size_t)offset);
+> > > -
+> > > -       /* sanitize binary_path in the probe name */
+> > > -       for (i =3D 0; buf[i]; i++) {
+> > > -               if (!isalnum(buf[i]))
+> > > -                       buf[i] =3D '_';
+> > > -       }
+> > > -}
+> > > -
+> > >  static inline int add_uprobe_event_legacy(const char *probe_name, bo=
+ol retprobe,
+> > >                                           const char *binary_path, si=
+ze_t offset)
+> > >  {
+> > > @@ -12312,13 +12300,14 @@ bpf_program__attach_uprobe_opts(const struc=
+t bpf_program *prog, pid_t pid,
+> > >                 pfd =3D perf_event_open_probe(true /* uprobe */, retp=
+robe, binary_path,
+> > >                                             func_offset, pid, ref_ctr=
+_off);
+> > >         } else {
+> > > -               char probe_name[PATH_MAX + 64];
+> > > +               char probe_name[MAX_EVENT_NAME_LEN];
+> > >
+> > >                 if (ref_ctr_off)
+> > >                         return libbpf_err_ptr(-EINVAL);
+> > >
+> > > -               gen_uprobe_legacy_event_name(probe_name, sizeof(probe=
+_name),
+> > > -                                            binary_path, func_offset=
+);
+> > > +               gen_probe_legacy_event_name(probe_name, sizeof(probe_=
+name),
+> > > +                                           basename((void *)binary_p=
+ath),
+> >
+> > This patch is a nice refactoring overall and I like it. But this (void
+> > *) cast on binary_path I'm not so fond of. Yes, if you read
+> > smallprint, you'll see that with _GNU_SOURCE basename won't *really*
+> > modify input argument, but meh.
+> >
+>
+> This has been used in bpf_object__new() like:
+>
+>     /* Using basename() GNU version which doesn't modify arg. */
+>     libbpf_strlcpy(obj->name, basename((void *)path), sizeof(obj->name));
 
+yeah, I know, which is why I remembered this semantical quirk. Still,
+in this case we are just adding a hint, so some simple strrchr() seems
+adequate
 
-On 4/16/2025 5:40 PM, Bryan O'Donoghue wrote:
-> On 15/04/2025 05:58, Dikshita Agarwal wrote:
->> Although firmware makes sure that during session close, all buffers are
->> returned to driver and driver will release them but still we shouldn't rely
->> for this on firmware and should handle in driver.
->> Will fix this in next patch set.
-> 
-> Shouldn't we reset iris in this case ?
-> 
-Not required.
-> i.e. its a breaking of the software contract to have failed to have
-> returned a buffer by - close.
-> 
-> Its not enough to free the memory on the APSS side as the remote end could
-> still assume ownership of a buffer... right ?
-> 
-Before close, Stop will be called to firmware and firmware will return all
-the buffers to driver, which will transfer the ownership to driver, so no
-issue with freeing these buffers in close.
-
-Thanks,
-Dikshita
-> ---
-> bod
+>
+> > Let's instead do a simple `strrchr(binary_path, '/') ?: binary_path`?
+> >
+> > pw-bot: cr
+> >
+> >
+> > > +                                           func_offset);
+> > >
+> > >                 legacy_probe =3D strdup(probe_name);
+> > >                 if (!legacy_probe)
+> > > --
+> > > 2.43.0
+> > >
