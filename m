@@ -1,138 +1,138 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418AF205AD2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCC121D5BE
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744768415; cv=none; b=u9FCt0MqjODGxFrfci01Y6i+N3O6+R+mPbGj1/cQWhRpNtpipQNgc1k3E5sEs02HeMvUzEitQqYpV5j77veHAREDd3tV75ftF3EP0L6+kApPvDatlLBTZah52LQ8Fu45ipuEuTQhkawrckxqwnYzX/97+S+gJj4nTmeaao8ymC8=
+	t=1744768608; cv=none; b=iu9J7pws82zK2jGr/RWj6QS5qOhYCyeV6+icMr6FvJTUZf4m+yTgRYnd/OtC43z5Ks632IFomo5yaNm2KbNaWz+naqopv64UE0R7nVR+LZo62lEYF5skMCf57U+8qrc5QfrM43ha9VFpjPW2JQgD0Xhop9scXC5T6WSlk3qw5V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744768415; c=relaxed/simple;
-	bh=e19ozdcE7IbomEf30Wwf0grmgEk+1M/Dzc+QxYejxr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pKv/widwD/USH7q5iXgVksIOdfmbHCSkNLkOWLK2HXwUdQkb3lGexoL9yCZVdP5zSqevVWBaG2pNkn9T8d9e6wce+jb4DLrZW502e7yc0G4ySnCRWrY3uA0gOI8I6Izgnb2nJb7/0zHZMxGtikJTnKnY3m69ikwbnvXi+wZJHBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZUELQYeX; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744768608; c=relaxed/simple;
+	bh=OlQksBI9N8C4io9PPEeKnK0eRnXxJawMD1xEMjk5isY=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OIzzwsfvw1NKKOCg4TgTICpA5nQEDTiiyzKZkKv3eubdHgNcTaSzw8Qfte/zNQ5XYTmCZxAmBYtG2FsL4+d82NCdA/B05rgumqRBzDDr+xU8iAVB0MIO2p6iD1QXF1uU8UHn3CYdI4yjk28wQlWstXoPeazwKfAaLVz/Wom56iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Z0WbJ8qt; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUELQYeX"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so10155235a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:53:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Z0WbJ8qt"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso7735407b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744768411; x=1745373211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e19ozdcE7IbomEf30Wwf0grmgEk+1M/Dzc+QxYejxr8=;
-        b=ZUELQYeXRiEOBrYwOerzKFIcP/Rfd1GNy4j/ZIh94q0t5b+LFAnVbw3Vpd3TUqqt1v
-         +VomHJvQ5j8U4xv+5rys9dBpIaUEOE814HxW4NcmKzm3+oiWYnfiv+6610uWOXC+3WFs
-         EA3o421ilvE1Po6/in2ExbjhB0e6pElWGw3wv0ZODOME3un23wo1a8VYP9CX9uqGfZ/f
-         v18UdZ3FbNz1BeCohIiD0nEehxq02A3slQ5aaW4k/JUGbM6gwhO7hZ9jNhi3jaZe25Y6
-         j3qcDghdr4EpJEiXMYf+QkDgrckmZ8wnFtGJgisvZn21bfRcG3McAUop73fiDMXlAsdI
-         1osg==
+        d=fastly.com; s=google; t=1744768606; x=1745373406; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zH6Lo7K1OSFKp6QNppXRFBk1j0NkAPFfDo3Y+3OHuq8=;
+        b=Z0WbJ8qtEHFtZbdbMWMmwVkhyuCmuG5IWRQVqhHNY8OYbFCQoPgyyD1GutQScXTv6x
+         ccwu0ZXxJIF9PrnAMIaQ/3NTji0dE+FKiRJmWHdH8rRRUDj25YkWbRxXAplVgGFRQ7hI
+         1u+ERAU1wRZbsBAy4j8qSMlibC44oYw3Jg55s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744768411; x=1745373211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e19ozdcE7IbomEf30Wwf0grmgEk+1M/Dzc+QxYejxr8=;
-        b=MSUfJ1fN1xX3NboOR7jBn5NT0EwH/6PSaG4lE9iuFOufquka5ehuIxecPnQspJW3YJ
-         /zwKgtFFtKdv/PqOC+nuedwAmGPb/TJ70V1YansY99OcBPRRNuSrDwi8quP+0yxOJKEE
-         EQH9y+vO3QjyKnrucacpYkjf5bOx1B/WQjCkS8f/wO0oD86hye5WaB3TBLC5KyBu2n6b
-         tZPw2TH1k78x/2drpYOMOxSPr21mEW6e3gDl7lAmkAWn/UwUtFudiertnNhEpt/gFqx5
-         5sP9h7+eIdYT82L2HGU3F3y96Ar7exVMaZvArz8SXn/iCI5KroRj3REFqVP/D1T/26xy
-         KLPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXzYclIz1GM6AAGle9BckVD5ZnNZtnP/aqCP/k3a/BDqm+Hqe5v3TT+jGSPki8CIL3iGJYPpC/xOlHvwoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydQg5eqrmyel4StMObqlax3dcosrpkTZE5611RFC8rv1Ga+srr
-	AAi5Vhf08T2bcK95iaDf9eLSWrAsWb5ygCXlpDw8h530/pFTsxyAKV4gJqkd6cuH7JJXMewdibh
-	jKJPEpuztdwc74ttT058qxOa6gis=
-X-Gm-Gg: ASbGncvN7g11mWTb3lvZgj0H+hW8krQ9y1obHqac2wF/2Cc+VzDfbnJIAv1RLqu7F+c
-	PJIl1TsbjYMeDM1W17c7dPMdUls7YvOBCTJ2WAcdcI0HwVBcuJgzSyfq/6MBVETmRTOoho8eD8Z
-	MDZX0ytkzkx7tlVjYJr8JRCc0=
-X-Google-Smtp-Source: AGHT+IGD3Qp6FIzJC9ll2LBqkwWJICeLoFZCjvLcF/uO1E3BlzXIrfgQuO3jDutGwzfoa8eIeGzozE7QKJP6L09YJ8w=
-X-Received: by 2002:a05:6402:2548:b0:5e7:b092:3114 with SMTP id
- 4fb4d7f45d1cf-5f4b720e400mr12006a12.9.1744768411372; Tue, 15 Apr 2025
- 18:53:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744768606; x=1745373406;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zH6Lo7K1OSFKp6QNppXRFBk1j0NkAPFfDo3Y+3OHuq8=;
+        b=EEi4rXDq+h4vwbqJe+pkPlERLNM7h9LYDVe3iYlASzdEOo22xbXXvy5ilKV+CCb/tl
+         noySWGwZaamugvhl5E/+qgIeyEThVgItwuWhoZlet7y+ThaVAKzeiGqdafDFV5ucviKE
+         ytOuXRnZ30bwmHGG11myybIhzowNgsOXMLQIf5gI1jJWr5djT1HrbNTF/dqB3ig0avBz
+         XZzUijC/B5VY5TdxbfjZXq5nAObFkN9vgUV3NKsgyEfT0LAgVokQGwjdvRWyL7ynl6fw
+         e94ID65Hqg4KmvkabefVW3JQy2RtF8yCAkKH65e99b7xCxDlXsQXrydFBQEGteEN7+oI
+         A8dA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsdEPjGMuvn8Tid1vIcArJkIelhCNafZdiOQy7TDf+AKQP32+zTDXitLDOJH5haM5w9fgTDT1tENumv5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXbTqP5SxrknIxWKMuDHUXY5SqFULfsW1bz4lpjd/TD/UD8WQt
+	KMk6MKHrSthOJVwTKYD8rFNdrX9T43FxTJnflfen2pqcPmhTS1/aN+pKx4oNQJg=
+X-Gm-Gg: ASbGnctYJCkneFSECrjyRL0a+ZJENun73N5YwVX3OXHpPhjfWc1YZVpXc4P65vqoUuC
+	jGM+a0so3Mka1BB5wdds6X1smoOIn4/kBrkIyPwUB8uKqu3t0qo68O5X6GgEHnfx5pnKzqv4a+L
+	J/pS/nlEOpIwqUpvqHT3lvZyeR4phhT8azCcQbQoNId3FvirOk2MJIxS+U2RyM7+XNImlzzvkHf
+	4LyWHI/k+HF10qImdRtqP1lbDJn6ADXW+2qauTvrzWnTaO8WPyr/h1ZdJf8tbVwy9h3UBoP4Ir2
+	mWYdKGEipsABE+4Ky4v2jAs9NL86J0iVsrzYhS5p0DFg/XG8n7ZZcW05kWrhL2pvKiHC5sXwaem
+	U7HXht5y6gTQP
+X-Google-Smtp-Source: AGHT+IGBEFiE7rD3c6yv9qx9mnATnRt4uhP8Ce6xBfMK/meKycVXu5GcBUNZvg9of04s8MQAW/IL2w==
+X-Received: by 2002:a05:6a00:369b:b0:736:3c2b:c38e with SMTP id d2e1a72fcca58-73c26722c8dmr21114b3a.13.1744768606005;
+        Tue, 15 Apr 2025 18:56:46 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd2198e9csm9238144b3a.28.2025.04.15.18.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 18:56:45 -0700 (PDT)
+Date: Tue, 15 Apr 2025 18:56:43 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [RFC net 0/1] Fix netdevim to correctly mark NAPI IDs
+Message-ID: <Z_8OW7PoidxBOgpK@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
+	Eric Dumazet <edumazet@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+References: <20250329000030.39543-1-jdamato@fastly.com>
+ <20250331133615.32bd59b8@kernel.org>
+ <Z-sX6cNBb-mFMhBx@LQ3V64L9R2>
+ <20250331163917.4204f85d@kernel.org>
+ <Z_613wmrKRu4R-IP@LQ3V64L9R2>
+ <20250415171154.0382c7f7@kernel.org>
+ <Z_8KT7LYUgyZQhI-@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408154637.1637082-1-nunes.erico@gmail.com>
- <20250408154637.1637082-2-nunes.erico@gmail.com> <CAKGbVbt-Cfp_D3WH3o1Y=UUQzf-sM0uikZXO1MFRxt2P72gjJg@mail.gmail.com>
- <e24e5e05-5ffd-440f-b9d9-8a0f792cc7c8@amd.com> <CAKGbVbthUxOxtZ+baT=vrNE1u6fzN48K1G5dtZBqfTBc7jEuYA@mail.gmail.com>
- <0f43ad99-27f6-4c1c-915f-2b7163195f07@amd.com> <CAK4VdL38fkraY2sujHCVnuhLJ8pQ4f-MejUcfsFTbdxusys3Kg@mail.gmail.com>
-In-Reply-To: <CAK4VdL38fkraY2sujHCVnuhLJ8pQ4f-MejUcfsFTbdxusys3Kg@mail.gmail.com>
-From: Qiang Yu <yuq825@gmail.com>
-Date: Wed, 16 Apr 2025 09:53:19 +0800
-X-Gm-Features: ATxdqUHz59yqYDYZeJV48fS7GlYJXdTkuU_VYZn0rvFkG6wJAO1neOoLyfWt3zU
-Message-ID: <CAKGbVbttU7Ru7-AuB-+sLCUZRvb8nmGZAE-mwq0WU7-3p=VA=w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] drm/lima: implement the file flush callback
-To: Erico Nunes <nunes.erico@gmail.com>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, lima@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_8KT7LYUgyZQhI-@LQ3V64L9R2>
 
-On Mon, Apr 14, 2025 at 9:19=E2=80=AFPM Erico Nunes <nunes.erico@gmail.com>=
- wrote:
->
-> On Thu, Apr 10, 2025 at 4:04=E2=80=AFPM Christian K=C3=B6nig
-> <christian.koenig@amd.com> wrote:
-> >
-> > Am 10.04.25 um 15:56 schrieb Qiang Yu:
-> > >>>> This prevents applications with multiple contexts from running int=
-o a
-> > >>>> race condition between running tasks and context destroy when
-> > >>>> terminating.
-> > >>>>
-> > > If implementing flush callback fix the problem, it must not be when S=
-IGKILL.
-> >
-> > SIGKILL also calls flush (again eventually), but we can detect that in =
-the scheduler code.
-> >
-> > See the code and comment in drm_sched_entity_flush(). We could potentia=
-lly improve the comment cause it's not 100% correct, but it should work und=
-er all cases.
-> >
-> > > Could you describe the problem and how this fix solves it? As I don't=
- understand
-> > > how the above difference could fix a race bug.
-> >
-> > That was the point I wasn't sure about either. It should *not* fix any =
-race, it's just gives a nicer SIGKILL experience.
->
-> Thanks for this feedback. So as mentioned in the initial letter, I'm
-> also trying to understand if this is the correct fix.
->
-> This problem is unfortunately not trivial to reproduce, there is only
-> one application which can reproduce this so far and it is a
-> complicated one with multiple contexts and relatively lenghty jobs.
-> What I observed so far is that as it is right now, a context might be
-> destroyed while a job is running (e.g. by killing the application at
-> the right time), and a context destroy appears to release buffers that
-> are still being used by the running job which is what causes the read
-> faults.
+On Tue, Apr 15, 2025 at 06:39:27PM -0700, Joe Damato wrote:
+> On Tue, Apr 15, 2025 at 05:11:54PM -0700, Jakub Kicinski wrote:
+> > On Tue, 15 Apr 2025 12:39:11 -0700 Joe Damato wrote:
+> > > On Mon, Mar 31, 2025 at 04:39:17PM -0700, Jakub Kicinski wrote:
+> > > > Up to you. The patch make me wonder how many other corner cases / bugs
+> > > > we may be missing in drivers. And therefore if we shouldn't flesh out
+> > > > more device-related tests. But exercising the core code makes sense
+> > > > in itself so no strong feelings.  
+> > > 
+> > > Sorry to revive this old thread, but I have a bit of time to get
+> > > this fixed now. I have a patch for netdevsim but am trying to figure
+> > > out what the best way to write a test for this is.
+> > > 
+> > > Locally, I've hacked up a tools/testing/selftests/drivers/net/napi_id.py
+> > > 
+> > > I'm using NetDrvEpEnv, but am not sure: is there an easy way in
+> > > Python to run stuff in a network namespace? Is there an example I
+> > > can look at?
+> > > 
+> > > In my Python code, I was thinking that I'd call fork and have each
+> > > python process (client and server) set their network namespace
+> > > according to the NetDrvEpEnv cfg... but wasn't sure if there was a
+> > > better/easier way ?
+> > > 
+> > > It looks like tools/testing/selftests/net/rds/test.py uses
+> > > LoadLibrary to call setns before creating a socket.
+> > > 
+> > > Should I go in that direction too?
+> > 
+> > Why do you need a netns? The NetDrvEpEnv will create one for you
+> > automatically and put one side of the netdevsim into it.
+> > Do you mean that you need to adjust that other endpoint?
+> > It's done the same way as if it was a remote machine:
+> > 
+> > 	cmd(..., host=cfg.remote)
+> 
+> Maybe I'm just thinking about it wrong and/or describing it poorly.
+> 
+> The idea was that napi_id.py test forks. One process does a
+> listen()/accept() and the other does a connect(). The accept side
+> checks that the napi ID is non-zero. For that to work, both
+> processes need their netdevsims to be able to talk to each other.
 
-Free buffer in context destroy when job running is the bug, we should
-dig into it how it happens. And if multiple context play a key role.
+In retrospect, it's probably easier to just have the connect() side
+be socat or something run in the background, like the ncdevmem test.
 
-> This added flush made it so that the jobs always finish before the
-> context destroy gets called, which prevents the issue for this
-> application in my attempts. But I suppose it might also just be that
-> it had some more time to finish now. If this is not the correct fix
-> then there might be some more missing synchronization between running
-> job and context destroy in lima?
->
-I'm afraid this patch does not fix the root cause, we should find out
-the root cause first. This patch could be added as SIGKILL improvement
-later.
-
-> Thanks
->
-> Erico
+Sorry for the noise, I'll mess around a bit more.
