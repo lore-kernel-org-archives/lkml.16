@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8754211A3D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0666211A3E;
 	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820955; cv=none; b=Nkfr7PzhZDyANkzEL2p9vbPxVpKMFsv11GAjiPe7liOc60t6JGx4jdSF+xXxWC8ix7eJMfJtDTEboi5/HwALjzNp0nPDuSzMYgtCc/pF4ZIG7ifcWHOz93BDZ/D1l6ybq0r1ueZcObbwgWMYN1T3Jhl0dbWoYZ9HuNtNlP7n96A=
+	t=1744820956; cv=none; b=DTugjtOn1U3kZ9RMt8u3cOhFqm8X9tFJ3PaksnN4MxqZ96+pf1oNRH1ROhBt7Ne2CxmNj3TDQzmyj5m+VffqhvdahBe7Ay+4yl3SJNj0EPFnHa0IpyZszM8riuqhcTLGXbAhzPuOoz/bfJ8txW9vAPPX12dyxcnlRCGeuAjshD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820955; c=relaxed/simple;
-	bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XCXxP0wPqibYjbzVi1m6RG51gF3DaDAnVse/sOK53jOqkNMFE5EedeMEMJKKDAEL8dGlKI5mrwspakovslpJzNvm03M3+fKki97ROjqM4VZYXrM0SkWJATm4H0YS0zOBKwyZb4pXCNBat8kbtMh9jhiiT/wNP5oFzCUCiKXWi4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1IUL+59; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744820956; c=relaxed/simple;
+	bh=8etcX5m2jbSq0K/R7mPNsIwKXhQl02h3G20oYrpddy8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OWezvsNH3A8ieH00oYhuw+TXmxG2rXvfJ+h0+f+rJL/Tg6vBOU3cgtyBIwfrztXAu8Zttj6EYPRuYQbELQrwZn6NPtEDWHOEfXNLUsMZeGHdSoP3iD5a6NvD1ZdqIL6GASvl4WPj4G2Xoq+uII2wHT1tCC/d95sxhO7gLLuLs2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSbbxdoT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1IUL+59"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2650BC4CEE2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSbbxdoT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 65B4BC4CEE4;
 	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744820955;
-	bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=B1IUL+59kGeD7mqga7bCyxPIxG2tp3cXVrKCvl5dVtHYI0OhB5uCNAOGJiOc0bp+l
-	 HsYGTqjEsLaHjBoX4CofSq+N9qa3eKcmpemd67bkz6OaFrkFLEkyLMD+1OE8YbB0lG
-	 KLv12g/nY3FdONOL1EgWm3Xw4t8o0vKBbJuJSzLNnFufjeaKx3lfX1dZDk6RPSJOng
-	 oAQCbEQd1tTf6NwWRPx5fSaohAq4P5rcqnD3z+EgBYIuR7vOFa6VklFzFzPOJGwxpH
-	 zu86cEMnCqpkacuKS0dZhcYisejR0kc+z2kDbH66j8nILxYuGVpK2rSjNJJQn4MHUN
-	 5SfMBNL6P3Jfg==
+	bh=8etcX5m2jbSq0K/R7mPNsIwKXhQl02h3G20oYrpddy8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=DSbbxdoTngHcPcjdOpqMWsYrTsrTM1IaydKW0w1IJNAHwt22Rd5EtBKyyXy8uESoK
+	 Bhknzq7by4+crREApaITdosNs9j3IvGIvwsjvm1Mw3lLGQAmeEZTtrKs5cZi/Czf5f
+	 iQf/GsiUNVv+ObYzFeOF1WuiAr+9qPvRh3DyR0Kzh8agFiBIl7MAfATSVHZXHVydQ1
+	 iBGNrSteddU1s4TxR34Ehed8ikxJAVRTDMVVc1g61XgIBvRUsjYO5e96une5kOk9EK
+	 JE1dg0EywjDpUAJrnsq/0+bJW+CVg5yOD9Wpyx8PjKL+EEmyHhRL9YnS1KhY2MW8Ls
+	 TFhbjbnTPcGjA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1ECC369BA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578F4C369BA;
 	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Subject: [PATCH v2 0/4] PCI: Add support for resetting the slots in a
- platform specific way
-Date: Wed, 16 Apr 2025 21:59:02 +0530
-Message-Id: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+Date: Wed, 16 Apr 2025 21:59:05 +0530
+Subject: [PATCH v2 3/4] PCI: Add link down handling for host bridges
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAM/a/2cC/3WNwQqDMBBEf0X23C1Jqmh66n8UD9FudEES2UhoE
- f+9qfce3zDzZodEwpTgXu0glDlxDAXMpYJxdmEi5FdhMMo0qlY1riMTCiXaMC1xw/amBu9a7Uo
- DymoV8vw+jc++8Mxpi/I5D7L+pf9dWaNC29nGWN0N3qrHwsFJvEaZoD+O4wsJP+HXrwAAAA==
-X-Change-ID: 20250404-pcie-reset-slot-730bfa71a202
+Message-Id: <20250416-pcie-reset-slot-v2-3-efe76b278c10@linaro.org>
+References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+In-Reply-To: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
 To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
  Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
  Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -56,16 +54,16 @@ Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>,
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3553;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5199;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=qkB19ebsdB7yF8JrqmDzhAIvjQoXMD7T3mmriNCrqxE=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBn/9rVLvxXFkai8cVNkg23+3JBYRdthOY/lxQwa
- fbOegB4XfmJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ//a1QAKCRBVnxHm/pHO
- 9SGRB/40rRHb9fGiMK5kD1aBd/MewJxI5StivHVa5Erzx+HMuFj97jziyHXdpUsz4ffhJ4XQFoQ
- EMKPxKj+ocduRoORbAYIa33SUHBLn9X5/XInHvLBEw/E47p6YBkQDFCSXZOAgZ+9FX0D0Te5tNb
- 2CDt7KVi+T2IKCwkbBX+pLkKJfs0hbfGBijN3F6/qNXG/stthtJKfzrFg9VYRmfOjaLGXksNq1d
- OiiXevAEEKFNC81mjU+Y6fQGpvjisAiglcBeql266ba4ZFT+yV17zxaxnd1oV7XdMRq/Nmthza6
- b/hxtehyr4BdSL0Vhz0u0SENUH1/6Tv88cWuux5Xhjrb+IJ7
+ bh=lEJMTheXv7TkxX7FcSXxWDHTdFlcl4i5pVx1YeWN9fA=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBn/9rXxS8C/6Fb1mSogflJ2GvH10SSe2Bg+GkU9
+ 4/sP5k6EA2JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ//a1wAKCRBVnxHm/pHO
+ 9deGB/0SC83yXRK8fZirz8yjVN0ZOkIq2gfWTRyPBDR3lbS/TtJ7RN2RdTMGJZWi2QmsH9dlpkc
+ eGKL1tllmLi60EyApZlpGqXksaN7OpGLI2pTxoCveILLrzdVhVP4795rU+xuqXwtd7TOGVy9Pey
+ rH4aPWbus6UWsax1CaUClmo+wnmK73R67QIiv/o/Rz/BDXSh6JZ+asx02rDLBN7Wb4JbMvlR8Of
+ sGxktWntkan/7siYofP9FbPU2Bplq+0PNyFNJQrh8CYCs2BvESumMUzJerDqcY++II0w9k6ZndP
+ XGE3WzHMxek22XMzPv+Xh1KIiXBtWVrtZcu8CDBZtoNXnziP
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -73,78 +71,142 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reply-To: manivannan.sadhasivam@linaro.org
 
-Hi,
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Currently, in the event of AER/DPC, PCI core will try to reset the slot and its
-subordinate devices by invoking bridge control reset and FLR. But in some
-cases like AER Fatal error, it might be necessary to reset the slots using the
-PCI host bridge drivers in a platform specific way (as indicated by the TODO in
-the pcie_do_recovery() function in drivers/pci/pcie/err.c). Otherwise, the PCI
-link won't be recovered successfully.
+The PCI link, when down, needs to be recovered to bring it back. But that
+cannot be done in a generic way as link recovery procedure is specific to
+host bridges. So add a new API pci_host_handle_link_down() that could be
+called by the host bridge drivers when the link goes down.
 
-So this series adds a new callback 'pci_host_bridge::reset_slot' for the host
-bridge drivers to reset the slot when a fatal error happens.
+The API will iterate through all the slots and calls the pcie_do_recovery()
+function with 'pci_channel_io_frozen' as the state. This will result in the
+execution of the AER Fatal error handling code. Since the link down
+recovery is pretty much the same as AER Fatal error handling,
+pcie_do_recovery() helper is reused here. First the AER error_detected
+callback will be triggered for the bridge and the downstream devices. Then,
+pcie_do_slot_reset() will be called for each slots, which will reset the
+slots using 'reset_slot' callback to recover the link. Once that's done,
+resume message will be broadcasted to the bridge and the downstream devices
+indicating successful link recovery.
 
-Also, this series allows the host bridge drivers to handle PCI link down event
-by resetting the slots and recovering the bus. This is accomplished by the
-help of a new API 'pci_host_handle_link_down()'. Host bridge drivers are
-expected to call this API (preferrably from a threaded IRQ handler) when a link
-down event is detected. The API will reuse the pcie_do_recovery() function to
-recover the link if AER support is enabled, otherwise it will directly call the
-reset_slot() callback of the host bridge driver (if exists).
-
-For reference, I've modified the pcie-qcom driver to call
-pci_host_handle_link_down() after receiving LINK_DOWN global_irq event and
-populated the 'pci_host_bridge::reset_slot()' callback to reset the controller
-(there by slots). Since the Qcom PCIe controllers support only a single root
-port (slot) per controller instance, reset_slot() callback is going to be
-invoked only once. For multi root port controllers, this callback is supposed to
-identify the slots using the supplied 'pci_dev' pointer and reset them.
-
-NOTE
-====
-
-This series is a reworked version of the earlier series [1] that I submitted for
-handling PCI link down event. In this series, I've made use of the AER helpers
-to recover the link as it allows notifying the device drivers and also
-allows saving/restoring the config space.
-
-Testing
-=======
-
-This series is tested on Qcom RB5 and SA8775p Ride boards by triggering the link
-down event manually by writing to LTSSM register. For the error recovery to
-succeed (if AER is enabled), all the drivers in the bridge hierarchy should have
-the 'err_handlers' populated. Otherwise, the link recovery will fail.
-
-[1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org
+In case if the AER support is not enabled in the kernel, only
+pci_bus_error_reset() will be called for each slots as there is no way we
+could inform the drivers about link recovery.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
-Changes in v2:
-- Moved calling reset_slot() callback from pcie_do_recovery() to pcibios_reset_secondary_bus()
-- Link to v1: https://lore.kernel.org/r/20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org
+ drivers/pci/pci.h      | 21 +++++++++++++++++++++
+ drivers/pci/pcie/err.c | 27 +++++++++++++++++++++++++++
+ drivers/pci/probe.c    |  7 +++++++
+ include/linux/pci.h    |  1 +
+ 4 files changed, 56 insertions(+)
 
----
-Manivannan Sadhasivam (4):
-      PCI/ERR: Remove misleading TODO regarding kernel panic
-      PCI/ERR: Add support for resetting the slots in a platform specific way
-      PCI: Add link down handling for host bridges
-      PCI: qcom: Add support for resetting the slot due to link down event
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index b81e99cd4b62a3022c8b07a09f212f6888674487..6c1d4c5a82d68e5842636ff296a8d3a06487cb11 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -966,6 +966,7 @@ int pci_aer_clear_status(struct pci_dev *dev);
+ int pci_aer_raw_clear_status(struct pci_dev *dev);
+ void pci_save_aer_state(struct pci_dev *dev);
+ void pci_restore_aer_state(struct pci_dev *dev);
++void pcie_do_recover_slots(struct pci_host_bridge *host);
+ #else
+ static inline void pci_no_aer(void) { }
+ static inline void pci_aer_init(struct pci_dev *d) { }
+@@ -975,6 +976,26 @@ static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
+ static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+ static inline void pci_save_aer_state(struct pci_dev *dev) { }
+ static inline void pci_restore_aer_state(struct pci_dev *dev) { }
++static inline void pcie_do_recover_slots(struct pci_host_bridge *host)
++{
++	struct pci_bus *bus = host->bus;
++	struct pci_dev *dev;
++	int ret;
++
++	if (!host->reset_slot)
++		dev_warn(&host->dev, "Missing reset_slot() callback\n");
++
++	for_each_pci_bridge(dev, bus) {
++		if (!pci_is_root_bus(bus))
++			continue;
++
++		ret = pci_bus_error_reset(dev);
++		if (ret)
++			pci_err(dev, "Failed to reset slot: %d\n", ret);
++		else
++			pci_info(dev, "Slot has been reset\n");
++	}
++}
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index b834fc0d705938540d3d7d3d8739770c09fe7cf1..70d8cd37255c5638fddf38e13ea87cb8ebe8553f 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -270,3 +270,30 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 
+ 	return status;
+ }
++
++static pci_ers_result_t pcie_do_slot_reset(struct pci_dev *dev)
++{
++	int ret;
++
++	ret = pci_bus_error_reset(dev);
++	if (ret) {
++		pci_err(dev, "Failed to reset slot: %d\n", ret);
++		return PCI_ERS_RESULT_DISCONNECT;
++	}
++
++	pci_info(dev, "Slot has been reset\n");
++
++	return PCI_ERS_RESULT_RECOVERED;
++}
++
++void pcie_do_recover_slots(struct pci_host_bridge *host)
++{
++	struct pci_bus *bus = host->bus;
++	struct pci_dev *dev;
++
++	for_each_pci_bridge(dev, bus) {
++		if (pci_is_root_bus(bus))
++			pcie_do_recovery(dev, pci_channel_io_frozen,
++					 pcie_do_slot_reset);
++	}
++}
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 364fa2a514f8a68fb18bded3259c6847d3932f8b..60ad20eea0259797e68afa7979bb1fc24b6f213b 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -3249,6 +3249,13 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+ }
+ EXPORT_SYMBOL_GPL(pci_host_probe);
+ 
++void pci_host_handle_link_down(struct pci_host_bridge *bridge)
++{
++	dev_info(&bridge->dev, "Recovering slots due to Link Down\n");
++	pcie_do_recover_slots(bridge);
++}
++EXPORT_SYMBOL_GPL(pci_host_handle_link_down);
++
+ int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
+ {
+ 	struct resource *res = &b->busn_res;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 8d7d2a49b76cf64b4218b179cec495e0d69ddf6f..76e977af2d524200b67f39a6d0417ee565cf5116 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1157,6 +1157,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ 				    struct pci_ops *ops, void *sysdata,
+ 				    struct list_head *resources);
+ int pci_host_probe(struct pci_host_bridge *bridge);
++void pci_host_handle_link_down(struct pci_host_bridge *bridge);
+ int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
+ int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
+ void pci_bus_release_busn_res(struct pci_bus *b);
 
- drivers/pci/controller/dwc/pcie-qcom.c | 89 +++++++++++++++++++++++++++++++++-
- drivers/pci/pci.c                      | 12 +++++
- drivers/pci/pci.h                      | 21 ++++++++
- drivers/pci/pcie/err.c                 | 33 ++++++++++---
- drivers/pci/probe.c                    |  7 +++
- include/linux/pci.h                    |  2 +
- 6 files changed, 156 insertions(+), 8 deletions(-)
----
-base-commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
-change-id: 20250404-pcie-reset-slot-730bfa71a202
-
-Best regards,
 -- 
-Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+2.43.0
 
 
