@@ -1,33 +1,64 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF1E20E003
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90E020E6E4;
+	Wed, 16 Apr 2025 09:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793991; cv=none; b=p9RafsnDN2s2OuXxFvZROKbvosW8+N9o5I9PcSatAiVgl86m0+xbhe/R4DSnq8IWOfzzSwET9ydRidaoY87dqNNUsH01k+sGzVS6HXPK22QVHaXiFoht2aCRwBr3FxwhiAeb0f1aZ6flPFuagCxAc6mAnIyyhq8XqCCKzpF9/10=
+	t=1744794060; cv=none; b=h67ylQRuB8EBueGUVovYKEhPp/nALMOeWvHd/V0nWCBmh7M31EWtmJLajKFb52SJoXlMA/PLpR6pgxvAWRji8Vtqxh1Wz/414kn/jQkMEUoJU0Bb1GP85r+cwFfkPSeRVVszw/h48WYiCnhtB6LxJCnywuPQxITJI4QCnefSsU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793991; c=relaxed/simple;
-	bh=IK9UyR16MCakiskdgLYvgLg+KiigxiyDPwyZXHoB2FA=;
+	s=arc-20240116; t=1744794060; c=relaxed/simple;
+	bh=LkkRxVsKuChlvoYMnjLCZHxahJRvcKvpegCE7X/JCx4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UscZLkFEXnsLxB5q5O+sx8MKOUZxuNhGGcNuxW7nCwI4sXW1LW9QPcPUaJv5h9dUQmDigPGAvABegzaclCJJVBdR8rD+L/vuCxXHIuF7IttXKwTxKk1q2za5MdS2rEc2qKksG643gcLIiNWYB/GzjccmrX0z/RLtE6rsQ1cYkXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=vatXZo60; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=iGzqebanb/Huvp8fHvXszZrpHvFTevuGJAIOnYFjmSNqYeAZRy3+Ee/eDKhCN28IxTKTzHGQMcXPjV+0yjeu54x0EGDl/2Yu4rMIyxYn8UhTqcM+5AV0brM/Jpi7zMF/PXilmsO7qXyZmBwPb08wj7U+Y6In68bUGNNribUSr8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aJbmPB5V; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="vatXZo60"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 870DA965;
-	Wed, 16 Apr 2025 10:57:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744793865;
-	bh=IK9UyR16MCakiskdgLYvgLg+KiigxiyDPwyZXHoB2FA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vatXZo60UrHedGeP6O9FWVxOQTiJDS6lAZMxI+nX/m/FwwmBdX30c4RD18ZKfL9eq
-	 qFK9BB8+D9D0x5If8AOC2EzAQQAKtp4vuA6cxsIbJBgZ5bDNfcUtqw1Q9AwgYNHqcj
-	 881aElHAa32eokWKJPUOX5p3ybFQ5tuBnK3S8I0U=
-Message-ID: <73bd6628-374d-417f-a30f-88a4b1d157bb@ideasonboard.com>
-Date: Wed, 16 Apr 2025 11:59:43 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJbmPB5V"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227b828de00so60574605ad.1;
+        Wed, 16 Apr 2025 02:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744794058; x=1745398858; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MmG5wLnCycwNioKCuXAaZLGjYi/ybga0dH9UjvjLbBQ=;
+        b=aJbmPB5Vncf0a/tUZhWmsq4UGTLJnmKn3/NWRjAz7YvVecQUC4/iQgvypOLZMO8Koi
+         eKazaAILvw/w6rVdOoLU9MTo8p0x11IysAGOEFkERDAvUIZ/YCimHv7pOW2SWyyjFC3U
+         UPeZY8KnftJUbEO81h2MvrBTz2ptJW8umNFFCjnFkzDeRIyuay/ZPCpX1ytBQsljJWEM
+         /jY9YFGE0A7jRYOtLNNHS9rK+4OQI+FDiSDhSHKE31bxxA9fObIEMYdUlp8Wwb8rp8T/
+         AEoBf5Gko6IZ0lMJb9ME8oUcBzBlqbRC72ZpK9Jcv92lH5mZnoCTi0IsC0st4OIDhdwa
+         7QIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744794058; x=1745398858;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MmG5wLnCycwNioKCuXAaZLGjYi/ybga0dH9UjvjLbBQ=;
+        b=QndeAT/mlcGwmYkjF5BwwFV9DVWa2OmB9gaUOEYyWm/AzV3NBChO6CXzhiOSLC2npQ
+         LBw+2+CjTXCoMCbQUCaQL3thrvhYkWT+FWmj+hCadsC6yR8z995uC6IXN1vwjsZ/dpB2
+         9d+KEcl0L9nlBQjB/1yp69IVBXG/inG7RavY8LMMzhJxwd1m49i20elsOBqjb+2H+Fph
+         E1Pqegas0IzgHwM7MUxLK/5JIs5D2G2s8g0RBi73SEEvG73kVWYyD9icXS0qutFqv1O7
+         ff+xGtHqCHTpa2Xl9Fup6wvY/7VMquMkMw8weqBnYk9XAtOSgifPiRmdsYOVO/qMGbPL
+         QMiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBCFlufYl2/qz06ZLUY4DeJs3Hmlr4PWP9msyxU5qFZsWRbL8zAOoWz8P/Bu0twdFWL+y9+IqS@vger.kernel.org, AJvYcCW5RuUmXiCfNXJIlPH9eRhSIstttin/4H1sg4MF0TqSfxgWiaJXCCWNXSwWKZcfAHf4UtQ=@vger.kernel.org, AJvYcCWkg4dW/11ulOxa9qOKgaWqulKPyd+wn+gDLShwzCb6GaTnWDzzxfdbjlZhBgoq1avWsHfLvIIJEGg5SosW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxeM1Q9PcGibpaAs0ye/HBBqp+9n1uVRLjWQJgLiyqKIWYW5W4
+	++uZVqJySu+MLCHp/uqE2NRIoagW/sC70XHVnmU/9pxEVSYk0LoS
+X-Gm-Gg: ASbGncvN3CFeCZ1mTnFOWahuIY6dEk38M/xqCKBP7eY950rCu5KgU+UFOps4n9yQa1S
+	Y8jAgPZH5TpCbtqWTpOmtDYscsfvvIMMbpvBY77RYci9lHAdE/a7265L9EwkbmlgsXgvd0dLh63
+	b7vfR6iyHV1OjQrZLNKrctezCJIcf9GRW2EYwHvfSKwibHuEZ+02zcmMEjZTCTjhrmfVg90TUYF
+	4PU2CJSJdF8UC+DxLF9X6isWHe19dbbg9shPFV/eqLdT6vtYK6RFe4AqwCzV+BSWp8pm8OB4jZe
+	dyKyrH/Li1/0vFVtpi/2x5EftXlNS+Dw/MLGyieFDebP3mUZukXBrN5Q4Ig=
+X-Google-Smtp-Source: AGHT+IFKvp8JSTcKdJ90nG6KVwZddhuAz0H9jshWa+isMyWM0doLGpZ4rJFIqTTHy7XwTHyjEXrxRg==
+X-Received: by 2002:a17:902:ccc8:b0:22c:2492:b96b with SMTP id d9443c01a7336-22c358d9c65mr20545865ad.15.1744794058037;
+        Wed, 16 Apr 2025 02:00:58 -0700 (PDT)
+Received: from [172.16.0.99] ([113.161.92.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f8253sm10208920b3a.93.2025.04.16.02.00.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 02:00:57 -0700 (PDT)
+Message-ID: <e5369006-1439-4936-9193-3f931f8a6f29@gmail.com>
+Date: Wed, 16 Apr 2025 16:00:51 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,206 +66,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/11] drm/fourcc: Add DRM_FORMAT_Y8
-To: Pekka Paalanen <pekka.paalanen@haloniitty.fi>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Vishal Sagar <vishal.sagar@amd.com>,
- Anatoliy Klymenko <anatoliy.klymenko@amd.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250326-xilinx-formats-v4-0-322a300c6d72@ideasonboard.com>
- <20250326-xilinx-formats-v4-3-322a300c6d72@ideasonboard.com>
- <CAMuHMdXM1B1c=62EpcuUdpdpaBRZSJLXb1GBB0egzp7Fyeo5-w@mail.gmail.com>
- <b195971c-52e6-463e-a440-83dde4346e65@ideasonboard.com>
- <20250327112009.6b4dc430@eldfell>
- <b5cf15a4-7c65-4718-9c39-a4c86179ba4c@ideasonboard.com>
- <20250327175842.130c0386@eldfell>
- <CAMuHMdVEpTVWmwrYt+G-QSWucT91goUcFor9qbo5rZ+X2jnRog@mail.gmail.com>
- <20250331105446.098f0fbe@eldfell>
- <20250331082135.GB13690@pendragon.ideasonboard.com>
- <20250331135337.61934003@eldfell> <20250401162732.731ef774@eldfell>
+Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock selftest
+To: Jason Wang <jasowang@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, virtualization@lists.linux.dev,
+ "Michael S . Tsirkin" <mst@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250415074341.12461-1-minhquangbui99@gmail.com>
+ <20250415074341.12461-4-minhquangbui99@gmail.com>
+ <20250415212709.39eafdb5@kernel.org>
+ <1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
+ <CACGkMEvceXT+=HJRRe6D3Zk3k40E2ADJiXNb4qqAYm=PZnxNpQ@mail.gmail.com>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20250401162732.731ef774@eldfell>
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <CACGkMEvceXT+=HJRRe6D3Zk3k40E2ADJiXNb4qqAYm=PZnxNpQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
-
-On 01/04/2025 16:27, Pekka Paalanen wrote:
-> On Mon, 31 Mar 2025 13:53:37 +0300
-> Pekka Paalanen <pekka.paalanen@haloniitty.fi> wrote:
-> 
->> On Mon, 31 Mar 2025 11:21:35 +0300
->> Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
->>
->>> On Mon, Mar 31, 2025 at 10:54:46AM +0300, Pekka Paalanen wrote:
->>>> On Thu, 27 Mar 2025 17:35:39 +0100
->>>> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>>      
->>>>> Hi Pekka,
->>>>>
->>>>> On Thu, 27 Mar 2025 at 16:59, Pekka Paalanen
->>>>> <pekka.paalanen@haloniitty.fi> wrote:
->>>>>> On Thu, 27 Mar 2025 16:21:16 +0200
->>>>>> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
->>>>>>> On 27/03/2025 11:20, Pekka Paalanen wrote:
->>>>>>>> On Wed, 26 Mar 2025 15:55:18 +0200
->>>>>>>> Tomi Valkeinen <tomi.valkeinen@ideasonboard.com> wrote:
->>>>>>>>> On 26/03/2025 15:52, Geert Uytterhoeven wrote:
->>>>>>>>>> On Wed, 26 Mar 2025 at 14:23, Tomi Valkeinen
->>>>>>>>>> <tomi.valkeinen@ideasonboard.com> wrote:
->>>>>>>>>>> Add greyscale Y8 format.
->>>>>>>>>>>
->>>>>>>>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>>>>>>>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>>>>>>>>
->>>>>>>>>> Thanks for your patch!
->>>>>>>>>>       
->>>>>>>>>>> --- a/include/uapi/drm/drm_fourcc.h
->>>>>>>>>>> +++ b/include/uapi/drm/drm_fourcc.h
->>>>>>>>>>> @@ -405,6 +405,9 @@ extern "C" {
->>>>>>>>>>>     #define DRM_FORMAT_YUV444      fourcc_code('Y', 'U', '2', '4') /* non-subsampled Cb (1) and Cr (2) planes */
->>>>>>>>>>>     #define DRM_FORMAT_YVU444      fourcc_code('Y', 'V', '2', '4') /* non-subsampled Cr (1) and Cb (2) planes */
->>>>>>>>>>>
->>>>>>>>>>> +/* Greyscale formats */
->>>>>>>>>>> +
->>>>>>>>>>> +#define DRM_FORMAT_Y8          fourcc_code('G', 'R', 'E', 'Y')  /* 8-bit Y-only */
->>>>>>>>>>
->>>>>>>>>> This format differs from e.g. DRM_FORMAT_R8, which encodes
->>>>>>>>>> the number of bits in the FOURCC format. What do you envision
->>>>>>>>>> for e.g. DRM_FORMAT_Y16? fourcc_code('G', 'R', '1', '6')?
->>>>>>>>>
->>>>>>>>> I wanted to use the same fourcc as on V4L2 side. Strictly speaking it's
->>>>>>>>> not required, but different fourccs for the same formats do confuse.
->>>>>>>>>
->>>>>>>>> So, generally speaking, I'd pick an existing fourcc from v4l2 side if
->>>>>>>>> possible, and if not, invent a new one.
->>>>>>>>
->>>>>>>> what's the actual difference between DRM_FORMAT_R8 and DRM_FORMAT_Y8?
->>>>>>>>
->>>>>>>> Is the difference that when R8 gets expanded to RGB, it becomes (R, 0,
->>>>>>>> 0), but Y8 gets expanded to (c1 * Y, c2 * Y, c3 * Y) where c1..c3 are
->>>>>>>> defined by MatrixCoefficients (H.273 terminology)?
->>>>>>>>
->>>>>>>> That would be my intuitive assumption following how YCbCr is handled.
->>>>>>>> Is it obvious enough, or should there be a comment to that effect?
->>>>>>>
->>>>>>> You raise an interesting point. Is it defined how a display driver, that
->>>>>>> supports R8 as a format, shows R8 on screen? I came into this in the
->>>>>>> context of grayscale formats, so I thought R8 would be handled as (R, R,
->>>>>>> R) in RGB. But you say (R, 0, 0), which... also makes sense.
->>>>>>
->>>>>> That is a good question too. I based my assumption on OpenGL behavior
->>>>>> of R8.
->>>>>>
->>>>>> Single channel displays do exist I believe, but being single-channel,
->>>>>> expansion on the other channels is likely meaningless. Hm, but for the
->>>>>> KMS color pipeline, it would be meaningful, like with a CTM.
->>>>>> Interesting.
->>>>>>
->>>>>> I don't know. Maybe Geert does?
->>>>>
->>>>> I did some digging, and was a bit surprised that it was you who told
->>>>> me to use R8 instead of Y8?
->>>>> https://lore.kernel.org/all/20220202111954.6ee9a10c@eldfell
->>>>
->>>> Hi Geert,
->>>>
->>>> indeed I did. I never thought of the question of expansion to R,G,B
->>>> before. Maybe that expansion is what spells R8 and Y8 apart?
->>>>
->>>> I do think that expansion needs to be specified, so that the KMS color
->>>> pipeline computations are defined. There is a big difference between
->>>> multiplying these with an arbitrary 3x3 matrix (e.g. CTM):
->>>>
->>>> - (R, 0, 0)
->>>> - (R, R, R)
->>>> - (c1 * Y, c2 * Y, c3 * Y)
+On 4/16/25 14:46, Jason Wang wrote:
+> On Wed, Apr 16, 2025 at 2:54 PM Bui Quang Minh <minhquangbui99@gmail.com> wrote:
+>> On 4/16/25 11:27, Jakub Kicinski wrote:
+>>> On Tue, 15 Apr 2025 14:43:41 +0700 Bui Quang Minh wrote:
+>>>> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
+>>>> +    # Probe for support
+>>>> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
+>>>> +    if xdp.ret == 255:
+>>>> +        raise KsftSkipEx('AF_XDP unsupported')
+>>>> +    elif xdp.ret > 0:
+>>>> +        raise KsftFailEx('unable to create AF_XDP socket')
+>>>> +
+>>>> +    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_queue_id}',
+>>>> +               ksft_wait=3)
+>>>> +
+>>>> +def check_xdp_bind(cfg):
+>>>> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+>>>> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+>>>> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+>>>> +
+>>>> +def check_rx_resize(cfg, queue_size = 128):
+>>>> +    rx_ring = _get_rx_ring_entries(cfg)
+>>>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+>>>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+>>> Unfortunately this doesn't work on a basic QEMU setup:
 >>>
->>> I'd be very surprised by an YUV to RGB conversion matrix where the first
->>> column would contain different values. What we need to take into account
->>> though is quantization (full vs. limited range).
-> 
-> Quantization range is indeed good to note. R8 would be always full
-> range, but Y8 would follow COLOR_RANGE property.
-> 
->> That makes Y8 produce (Y, Y, Y), and we have our answer: R8 should be
->> (R, 0, 0), so we have both variants.
+>>> # ethtool -G eth0 rx 128
+>>> [   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx queue index: 0 err: -2
+>>> netlink error: No such file or directory
+>>>
+>>> Is there a way to enable more capable virtio_net with QEMU?
+> What's the qemu command line and version?
+>
+> Resize depends on queue_reset which should be supported from Qemu 7.2
+>
+>> I guess that virtio-pci-legacy is used in your setup.
+> Note that modern devices are used by default.
+>
+>> Here is how I setup virtio-net with Qemu
 >>
->> Can we specify Y, R, G and B be nominal values in the range 0.0 - 1.0
->> in the KMS color processing?
-> 
-> I think this 0.0 - 1.0 nominal range definition for the abstract KMS
-> color processing is necessary.
-> 
-> It also means that limited range Y8 data, when containing values 0-15
-> or 240-255, would produce negative and greater than 1.0 values,
-> respectively. They might get immediately clamped to 0.0 - 1.0 with the
-> first color operation they face, though, but the concept seems
-> important and carrying over to the new color pipelines UAPI which might
-> choose not to clamp.
+>>       -netdev tap,id=hostnet1,vhost=on,script=$NETWORK_SCRIPT,downscript=no \
+>>       -device
+>> virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on \
+>>
+>> The iommu_platform=on is necessary to make vring use dma API which is a
+>> requirement to enable xsk_pool in virtio-net (XDP socket will be in
+>> zerocopy mode for this case). Otherwise, the XDP socket will fallback to
+>> copy mode, xsk_pool is not enabled in virtio-net that makes the
+>> probability to reproduce bug to be very small. Currently, when you don't
+>> have iommu_platform=on, you can pass the test even before the fix, so I
+>> think I will try to harden the selftest to make it return skip in this case.
+> I would like to keep the resize test as it doesn't require iommu_platform.
 
-Is the behavior of values outside the limited range something that needs 
-to be defined? We can't know how each piece of HW behaves with 
-"undefined" input, so should we not just define the behavior as platform 
-specific?
+Okay, in next version I will force the XDP socket binding to zerocopy to 
+setup xsk_pool. When the binding fails, 2 tests still run but I will 
+print a warning message.
 
-In any case: I can't say I fully understood all the discussions wrt. 
-color spaces. But my immediate interest is, of course, this series =). 
-So is there something that you think should be improved here?
-
-My understanding is that the Y-only pixel formats behave in a well 
-defined way (or, as well defined as the YUV formats), and there's 
-nothing more to add here. Is that right?
-
-  Tomi
-
+Thanks,
+Quang Minh.
