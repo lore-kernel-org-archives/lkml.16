@@ -1,86 +1,109 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AD917A304;
-	Wed, 16 Apr 2025 19:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3285317A304;
+	Wed, 16 Apr 2025 19:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744831547; cv=none; b=OQ3JUEoHBGkA2T4/GCf26LAw28rIRAb69zLdV4KEWs+nbSdfa62fF18uelAxNe8WjWQ8Ajd9BygMxEyks7kMLnoQJb+9Huu6NvSA3/2EexQHvq4kXYKTMFcULX081kJjl4huNRQTZeoHndpWKH7ysj74uy6ywPEslqgSNz//61k=
+	t=1744831551; cv=none; b=goXZN/eNKle8SJF0BhCDfy3kOLUlr1UM6DMk64re0BfwdeLyBvEQnVN7Q/eYuEV+Htz0LbyI1+Z/hmN84L2O74sobdtm16t14XnT3lcD33EFjmuQ6363RO8gxULWEUkb5rVLN50/UF/yqnri3/37NsIqj5oXJIYF5jjqaqCuEvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744831547; c=relaxed/simple;
-	bh=Bs45nEODho+pI/T1U6UUY0QVDRpNhgGMGKekJK77+kk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2ABPWQ6FyQ7lc9/cZ2SBH+2J/6s10kQc2oB7CBcr4Tv9lVycjljag7gdTD3KemgAwOwBN8WfdNc29xo8jleANmkXZRKhziqcCuh3/Zl17VaYsJ4HvIQ/7wMPursEZrdEnQRJvbLRuoes2reRUXsp3Ra9PS4/RtOfHQdyfFKsz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=P6oP3OUN; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1744831551; c=relaxed/simple;
+	bh=GoKF/LHpNhib2a1akfwq5UC5HXAUAFvsZueILxTSKdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JWoCOK3jyB/TU9xZgxDyywpBfv6VpbO48Ft2f2J+dkdhmwc6vXwewaCiIRqOg3pifLiwoMd2JS87mK8cxuogA7f2St0+L5myVUSR+rjoDIS1HzN1xYIlyYPN65K2AzSOCYoYG8MONybBNzM5OkLx5zOP1HoeokY3BXOplbbuSKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKLbGIU+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="P6oP3OUN"
-Received: from [10.6.0.9] (host-88-217-226-44.customer.m-online.net [88.217.226.44])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id E227E2FC0083;
-	Wed, 16 Apr 2025 21:25:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1744831541;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=07vSjkZ3A/mQ6sdXkiMc76J/P/Ko3PLURA5O6XlVMn8=;
-	b=P6oP3OUNycvvHHfATuucK23rf+RGNy83Z18TyrXbFgYvVbBoG4AKPkfBTQazjzDFHPUBW4
-	o3Yr0t2YtAGrEyDia/ZJBgFNUi55g4WxQ2KZ0yq7FFpGf0KQEjZNRfU2EAcqF1yMqoYk0Q
-	UTk/tl9yxzaIYAa8jnw8xgcsyWJwHPc=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <21a33381-5bb1-456e-b03f-90cfbf1abee9@tuxedocomputers.com>
-Date: Wed, 16 Apr 2025 21:25:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKLbGIU+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12B2C4CEE4;
+	Wed, 16 Apr 2025 19:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744831550;
+	bh=GoKF/LHpNhib2a1akfwq5UC5HXAUAFvsZueILxTSKdw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sKLbGIU+HO9oZU+O5p9XTmPx+Nqcai3OsVsKBiUp0z5zjXGCTlcI9vYM8cMDoNYWb
+	 5qMKvsSGucyMcBNpnxubc95XB/wmy4ZiqWkRoc/6fS8HXEmT4fgCfmgF9O/tEBhBo8
+	 at397kBMTIdPbsAVZt3Wqv0q9YU3R6VFhzMQTIYbi5e8dVPAa+l63MCVRH9pFNFHLl
+	 BMQ2r/aPJUacA6zKOfU228AFH+4Fc3MxriRxuy2zvfho7ZqTUgiD513BNmxx/9Wz7f
+	 Kzpw1dhOh/LM8ERdDbiIB91jMvHhPiV7n74jGk+lS3jQ1YIOdh49SGalirewopj5RA
+	 murx2vyirJNGA==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac34257295dso1333767966b.2;
+        Wed, 16 Apr 2025 12:25:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWxGZ6wFUzH1KOT5RM0gXMrvj2ecwuRelug9wODkF2Wsy44c2FvZY5kRbzas5siTm0MS+5dfHIQsNMERTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfbhrNkG7wZYMUwFHUs7DnaRfzAZAB6xbhTjXN5VjOMGF37kid
+	/7zzB8wW7JSFtbVbBnDq8zeo1Kx/CNhMmeyMYhGWyoLlPsp8rU1F28ZxvfAV5S351qrOmO4bg9/
+	YiLA2S3RscZXx0T3toxpwtO5JqQ==
+X-Google-Smtp-Source: AGHT+IFh1JR5Z0LAxnoYuZevCEEpxkJH9c1vzPj8jxuIXtqnUi8yKHEwDF59bxVh8xYkFd1igpWXehoXB7ESE8EBUos=
+X-Received: by 2002:a17:907:720c:b0:ac7:4d45:f13e with SMTP id
+ a640c23a62f3a-acb428d3a04mr335420066b.13.1744831549136; Wed, 16 Apr 2025
+ 12:25:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/1] platform/x86/tuxedo: Add virtual LampArray for
- TUXEDO NB04 devices
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, hdegoede@redhat.com,
- ilpo.jarvinen@linux.intel.com, bentiss@kernel.org
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250416171809.557674-1-wse@tuxedocomputers.com>
- <20250416171809.557674-2-wse@tuxedocomputers.com>
- <a03efee0-3470-4d7f-9a63-3ec9f1ae4f3a@oracle.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <a03efee0-3470-4d7f-9a63-3ec9f1ae4f3a@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CAL_Jsq++MbY=s5t1hmE0AhcmFA14t3fxLM1xPFZAA0ETX_ee-g@mail.gmail.com>
+ <tencent_607C227A96060DD8EC83C78184305D264109@qq.com>
+In-Reply-To: <tencent_607C227A96060DD8EC83C78184305D264109@qq.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 16 Apr 2025 14:25:37 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqK733Q9bbxC0Wz5uxyZ9m7bs+bci5kUJF9GJMv73-dO4w@mail.gmail.com>
+X-Gm-Features: ATxdqUFF9-IUSq1djrMpuWjuhr9hIZbcSKeFY8qPTBYsU0Aj7DIvMGHJilsZfgc
+Message-ID: <CAL_JsqK733Q9bbxC0Wz5uxyZ9m7bs+bci5kUJF9GJMv73-dO4w@mail.gmail.com>
+Subject: Re: [PATCH] of: reserved-mem: Warn for missing initfn in __reservedmem_of_table
+To: 1425075683@qq.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	m.szyprowski@samsung.com, saravanak@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 15, 2025 at 9:02=E2=80=AFPM <1425075683@qq.com> wrote:
+>
+> > On Tue, Apr 15, 2025 at 9:16=E2=80=AFAM Liya Huang <1425075683@qq.com> =
+wrote:
+> > >
+> > > For the data in __reservedmem_of_table, its function pointer initfn m=
+ight
+> > > be NULL. However, __reserved_mem_init_node() only considers non-NULL =
+cases
+> > > and ignores NULL function pointers.
+> >
+> > If initfn is NULL, there's no point to the entry and that's a bug.
+> > Unless you have a build time check, there's no point to add this.
+> >
+> > Rob
+>
+> Thank you for your response. Based on your suggestion, I have made the
+> modifications and used static_assert() to perform the check at compile
+> time. The specific code is as follows. Could you please review whether
+> this modification is reasonable? If it is acceptable, I will proceed with
+> submitting the patch.
+>
+> I did not find any usage of static_assert() for null pointer checks in th=
+e
+> kernel code.
 
-Am 16.04.25 um 21:13 schrieb ALOK TIWARI:
+That's a bit strange, but the use of static_assert() is a bit new.
+
+> Additionally, BUILD_BUG_ON() cannot be used globally.
 >
+> ---
+> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_=
+mem.h
+> index e338282da652..87446ad2deb2 100644
+> --- a/include/linux/of_reserved_mem.h
+> +++ b/include/linux/of_reserved_mem.h
+> @@ -29,6 +29,7 @@ typedef int (*reservedmem_of_init_fn)(struct reserved_m=
+em *rmem);
+>  #ifdef CONFIG_OF_RESERVED_MEM
 >
-> On 16-04-2025 22:41, Werner Sembach wrote:
->> +    for (unsigned int i = 0; i < rep->lamp_count; ++i) {
->> +        if (rep->lamp_id[i] > driver_data->lamp_count) {
->> +            hid_dbg(hdev, "Out of bounds lamp_id in 
->> lamp_multi_update_report. Skippng whole report!\n");
->> +            return sizeof(*rep);
->> +        }
->
-> typo -Skippng
-thx for spotting
->
->> +
->> +        for (unsigned int j = i + 1; j < rep->lamp_count; ++j) {
->> +            if (rep->lamp_id[i] == rep->lamp_id[j]) {
->> +                hid_dbg(hdev, "Duplicate lamp_id in 
->> lamp_multi_update_report. Skippng whole report!\n");
->> +                return sizeof(*rep);
->> +            }
->> +        }
->> +    }
->
->
-> Thanks,
-> Alok
+>  #define RESERVEDMEM_OF_DECLARE(name, compat, init)                     \
+> +       static_assert((init) !=3D NULL);  \
+>         _OF_DECLARE(reservedmem, name, compat, init, reservedmem_of_init_=
+fn)
+
+I'm pretty sure we can apply this globally in _OF_DECLARE() as any
+NULL init function would be useless. The special case is
+CLK_OF_DECLARE which wraps the init function.
+
+Rob
