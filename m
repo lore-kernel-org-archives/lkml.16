@@ -1,113 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023110.outbound.protection.outlook.com [40.107.44.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0622231A2D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:56:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793803; cv=none; b=UR/tKCajq8pWnDUDTGqIf4zJxfUSHV2mNma7RGFFVWgN0Y0iywG66F5j9SGAGDA4xSYb5mttND8hwciiTyuyOk+RJpy3rivoys58B5DJXObPeUbv7+QODQPIPalMIesEdfM5/x7SUIdDgmorIJGfTyHf2LEdghbVoRVs5pKWGSc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793803; c=relaxed/simple;
-	bh=q+FWIo5cQ2XMQv5SOsjmuvZf1xhMIdGuo1Ssz/xAWXw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AwZZl2S2XjRn0PQj86p8Bs8DFHiJusfq9KcFn66S0hDztc6JZCZQx0HVFv12zrfwyIsQpcqwwruUa3y2j5ab8CdHg3y/sknw7mkC/VfR68J6SKSPKXm1IwKEPqtrMOhNPIGTUHRsBCzu4d5JayrKNxO0c5OZPJBWIksk8A5oYj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QAOi2iIy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QAOi2iIy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744793800;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=q+FWIo5cQ2XMQv5SOsjmuvZf1xhMIdGuo1Ssz/xAWXw=;
-	b=QAOi2iIysExOYezbnC8Oh69Nx+3foPdKujs7FYqT1ix/VoTXK0WcakjbW3BOnDLXthprFG
-	Lf+BBS2tvpbyXnN0HOG2HhIR8kLOzhopWNuBCiILBvxxj0XO/g4TkZOax6fu2c1NRgbFH3
-	FnuX/8OXmCrF/Hshy7u3L2B7K6ymPeI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-664-4RtbBenOMqykvnI7catq-Q-1; Wed, 16 Apr 2025 04:56:25 -0400
-X-MC-Unique: 4RtbBenOMqykvnI7catq-Q-1
-X-Mimecast-MFC-AGG-ID: 4RtbBenOMqykvnI7catq-Q_1744793784
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39ee54d5a00so218907f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744793784; x=1745398584;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q+FWIo5cQ2XMQv5SOsjmuvZf1xhMIdGuo1Ssz/xAWXw=;
-        b=Qwo5nq5HC/Kl2vOaemRB7yq1aCce0icVOx++FN251T8nd40hL3roHCNxnTeScOWwgW
-         gHHlcm+XPMh0aDXwwV+0DwP8LVxDckroofFVuiJhrU8pZmWxbDPwH2jHIWWzQ6FWIYxg
-         YEMJ6Ecc0/7OrWtHIJZ/IBnFC15ig2mDcJCAvl03XzfCKY1wg4exhN8FC3qLO1++ueZH
-         6hS+eVKIucRQ9H6RIgz6wA30w5y6zopjzDNHq+S8v3ai1ErV0kHcAjAfK2jgQVr/dx7P
-         u9ltnx4m2R8S3mehrfFoiw0fOLdgVzyHAeqWNgayJEcKxNjmvxw90+nR69R5BnzddfJK
-         kiXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMYcgy71UHeThMwzKoxOpxX5Htlg0x3RfVu8sl4OeyHYe7ly2cQt+V7Khq6ybiBuKIJ9//BhbdTV5VYks=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy0cD7UiTNT1n3JaZYEAVSwEGikZ4dgRfDr9a1OkiLkgLmH0Fa
-	OdpfQoGTh9HQwo/IcP2BPGLNEbttMs/U5xTTCLG4+9GwfAZspSBohtT188kIs1QaQCMsTnv7r6k
-	eviIEoC9JdAeh7GASt2c2hQz9OCXg6HrS12AHIgMZqxISIGSH3bw/8VbVpP9AMw==
-X-Gm-Gg: ASbGncsfW77OHSrdTrttLeuAeayPGNhw2SYPks+AOaorhDF1MYYTZ0XsCeuygTTJNPu
-	XxIvgCj5N5ux/hE2aOAPXunBlDIndGJjp4PPd141oja+mCh/jzK8G5MfDFsowRWiaDbN1jnWtVn
-	rJOhzYOcHJyGYCpyo+OysOJL1FTTVOi9MJNj1bEtvGNj8yZfQKbtya140yug8ETmVnxyEz2lWdN
-	SJsaS4LLClSiuC/nadrfSMUCNijNprC0atQiJH8w6bbpnQI1lQYfmCHxsM4ZnzpsnqiDNLA69jf
-	oW8WGs6OX2Fl7XpiH2XDYadm0CnmRYRYoX38KFk=
-X-Received: by 2002:a5d:5f82:0:b0:39c:1f02:449f with SMTP id ffacd0b85a97d-39ee5b11211mr1082763f8f.2.1744793783862;
-        Wed, 16 Apr 2025 01:56:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEL1qnnZyEc17y5GlPdSxW/6hCGr29jeLtRFM8D1Bd0LeBYgj2P+87yDlHJjQ0t2h0EmudnQw==
-X-Received: by 2002:a5d:5f82:0:b0:39c:1f02:449f with SMTP id ffacd0b85a97d-39ee5b11211mr1082742f8f.2.1744793783543;
-        Wed, 16 Apr 2025 01:56:23 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b590255sm14607635e9.28.2025.04.16.01.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:56:23 -0700 (PDT)
-Message-ID: <db410a0036a7603262217a2e60a2fa14b1f1dcf4.camel@redhat.com>
-Subject: Re: [PATCH v3 21/22] rv: Add documentation for rtapp monitor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Date: Wed, 16 Apr 2025 10:56:21 +0200
-In-Reply-To: <5236862a1dc65592caf0529922aa33c42b8aa3e8.1744785335.git.namcao@linutronix.de>
-References: <cover.1744785335.git.namcao@linutronix.de>
-	 <5236862a1dc65592caf0529922aa33c42b8aa3e8.1744785335.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F668231A42;
+	Wed, 16 Apr 2025 08:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.110
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744793818; cv=fail; b=kdU/SCM+0I/69mOiVUqipBPPdBvSNIbss77C8xv/phPwg0lmcBkD2WVEu2UDNHyvNN0juCvDj83XDVvvNapSNUZeDpl6NhhvJLpedj2+37KIzUymvnRZY0HWWmKAP6/OdTp36fm2bFLK+m7qmsnWdQBG+kmV3YuYmwZd9ERJtZw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744793818; c=relaxed/simple;
+	bh=dIaOUS5hgFQzYEkRoq0l+DtLH1ScR3KfrqkCZpQhyKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RhsfrfnpHXp8MBuQXqNmRn6d6jtbFXicXVGxBBiYsIYCKWDBT96fG375YErahP/27WqZj6t3AxI7HSEJyrjfFa7aPLGzWateWI09LB3TOM1Llw5JK2NZ4BtSRahZgdHEtBNGn4ZoxfOxWjAYYP9sWIlc3rDWqxDQaxp8I02HK/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.44.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nrt9/bbCJO3GP8nFSWI6ATAnEoutkWg8GeXEoou3eEzeAdTZJ6XyB5GGK8UsMrdowTSBaIvR2q6k29sZYpd3kQ/tJtkS1zKvbizy/6XA62AiS0fV8uL8CBC9TsyocSG7dEO7iRzkRCx5jTPGB3kuGMVsaswIqqQ0OAzAYOxWZm10DVH8CZgwm61YTiV1ZoecQjkeHSCpaRvn3p4bj0LTI6JmUQyOS//DntFYUcf3ajd7DZnSFss28d1UiYA6OpDLV24cPKGQA/MxHFg2DB8R0j4WiWv3dTGsWzyTzvqnwx7UHUlu9opUJuUKQXLM97Z5NuBWIvlCI7scuU6kF1hb1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GRuNs6o4pbJSm7saA6PqUWaSA6t8cuGOSodWyWa0pHA=;
+ b=oHXSOx3ysK+fQNUIFAAkVpJGGOvVIxVLYQQOUNKna7p+MApofTMJdVUQAFhTlZ2jJy3VXGzbvSAgzu1KupdzQyrcLS8NaRMNGjPV/O9gpIVbF28jL3ynariY76QE8LNb8/rSef9HmmsnIVX166KL7m66hrqEi2NojDEDIADgJwsW6g8NtjLU39N26NRuRSVBnNwVr5HNkPlpQLu2Vina0QMJJ2QIejOHD3m/tYIBm5M+5zbJt2bnv0tZ+eSwVRHC8U8wIi/Fp/u2EhJ9XZsUG/+WMNd06qhGyaQSHnWd/46ks0+PsnYLl9E1pHzl0DtE2N/w7jEJj+YAn7q/LqOTzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from TYCP286CA0356.JPNP286.PROD.OUTLOOK.COM (2603:1096:405:7c::8) by
+ SEYPR06MB6373.apcprd06.prod.outlook.com (2603:1096:101:145::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.38; Wed, 16 Apr 2025 08:56:51 +0000
+Received: from OSA0EPF000000C7.apcprd02.prod.outlook.com
+ (2603:1096:405:7c:cafe::79) by TYCP286CA0356.outlook.office365.com
+ (2603:1096:405:7c::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.29 via Frontend Transport; Wed,
+ 16 Apr 2025 08:56:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C7.mail.protection.outlook.com (10.167.240.53) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Wed, 16 Apr 2025 08:56:50 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id E11E340A5A01;
+	Wed, 16 Apr 2025 16:56:49 +0800 (CST)
+Date: Wed, 16 Apr 2025 16:56:48 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+	arnd@arndb.de, jassisinghbrar@gmail.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+	maz@kernel.org, kajetan.puchalski@arm.com
+Subject: Re: [PATCH v6 07/10] arm64: defconfig: enable CIX mailbox
+Message-ID: <Z_9w0MlUlOUy9kHE@nchen-desktop>
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+ <20250415072724.3565533-8-peter.chen@cixtech.com>
+ <954d6efb-b660-450e-974f-dc89d777bb45@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <954d6efb-b660-450e-974f-dc89d777bb45@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C7:EE_|SEYPR06MB6373:EE_
+X-MS-Office365-Filtering-Correlation-Id: cbe64607-dd42-4f95-c3ff-08dd7cc4a0d1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mZ/xIkod/DXRUEvbVqKjmaNV5l+P4qXuJZeW/qlo4RP4ZpQ35p8rAg0iVU39?=
+ =?us-ascii?Q?dBC+HbyrpuaJMzowT5kXfvMGmO45vaWgM5o432/ONVcw4ovgLQSWWtQ2Q0A5?=
+ =?us-ascii?Q?IPqghs3b9Z4sqYYC06UazFSRh8cE1KyoEW3fW5h9zTGJKpCn5k+9PsSthSI6?=
+ =?us-ascii?Q?n1B6+9lHcJdjem1fARr/zn8l7vv6/7UzctZXgVleTEWwaem/j+k+1sJF5JbY?=
+ =?us-ascii?Q?nZPm1qFuiniJZB8/HJ2f2eqJcLeCD7UP3gyHTZU+uM3bGyNJNY+n7WJX+H68?=
+ =?us-ascii?Q?9+lzQ+LG8SzP9H/QO3lzO/xAklHWYT1/SygOUkhUdwM836emPYamH/A6EYyc?=
+ =?us-ascii?Q?8N5JHw7temGSk91vlsJR3bBV8sHux1tMYpy6lZvB/MJhr1uGRlWrr08Tiz2F?=
+ =?us-ascii?Q?CEWHyo4gcxGS0nob25Xvxf/dam+cyhsF+396XaGbsco+8I7GjBSfEFdZg7iB?=
+ =?us-ascii?Q?B5XSJXvY7f5YuKMSvI8wZQ/RIGwBq9ii5Xjp6qtT+tTsyS/tMCaN/DVs1AA+?=
+ =?us-ascii?Q?NYW5lDoQsGy/xAyKDNy9DrdtmzcpJBEyhnFagIR42uSKl8xChuM+T8tTwpkx?=
+ =?us-ascii?Q?4CLhb5myseGlJ0WuInUnb+rqIf6dMRE25RrIClK7n+Ji26AExguSBwVuVeTp?=
+ =?us-ascii?Q?RNrEC5W+7NPJQS9irSvIK9vIIZ9hIxh/+MDMIAheQU01a/+MgGQ3eaTD9p/B?=
+ =?us-ascii?Q?kEjPW0cKlS4OSmMj/rJOjnID8JXmuw7QNYFTW19SiqwG+QfCB/TI312c/9I9?=
+ =?us-ascii?Q?3q94oPlfatswitv7ACjz/iEoOLaaBakbafkgt6JxflswaQeK0mQDeAkEWQgQ?=
+ =?us-ascii?Q?aY/jA6T/6KS/fwfG2RhzN6TE5NEa+8ohLEnFhSr7PPWwBzs1eKuY6TUMwh0m?=
+ =?us-ascii?Q?QUXqb8e5z8VeJQahivnV0QDRe7Tv9uYqxdgv5Nuj6OpCdfdP9Sdxl6k4QDZ1?=
+ =?us-ascii?Q?tjF1X19OJROxEhulvdigtzgRpX3qF56T4wwMqhhmLZ6cZBIlpPmwZ7v8BjsN?=
+ =?us-ascii?Q?xty4da21Tn9XL63dO0HCUhPchcyhvHouDi6ZugT39cVp8eGLZQg6zMAdoN6Z?=
+ =?us-ascii?Q?gtYfwS9Mzt+bsavGqdw9HEz5/iWbXnJ0KLAMv+D4ACa3OWN3/9xTgUtZLeMb?=
+ =?us-ascii?Q?IxMbEqFKN4FinY0VTD+MATHg/0ZdocVfjrw3OeQ0E6rq7BROTnM73eL2xYiN?=
+ =?us-ascii?Q?J/P13FReOgL1EW4uXg5ECNbJlds+8i78gas6iat1xg4dsE6Fk64rFrh2ect8?=
+ =?us-ascii?Q?o591nm59lXzIyVzQZJnLO4OaGbamwC5HQ60Lc3sQ2m7XRxxmM9V3nLNvtfCK?=
+ =?us-ascii?Q?nJ6AfHy8t5cdb8QOXV7WX8v4VU2r6I4jwSM6tCHtipcslHg3BrfRcqVHzit8?=
+ =?us-ascii?Q?mkU2mMGk2oAoVKSTPeh4yMfFo5h1oBNPCNL0XuKOhWRip6YwAPXlsEyUb+Q7?=
+ =?us-ascii?Q?vFkQ0rPz+JI6gBmd+s5+j9ztupalYXvFvwcIBOTqx9xM96LxdOGb2BK2u5rM?=
+ =?us-ascii?Q?UojsTaKDbHAjqK+0d+HrkugLJI2yl39RYceT?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 08:56:50.7825
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbe64607-dd42-4f95-c3ff-08dd7cc4a0d1
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C7.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6373
 
-On Wed, 2025-04-16 at 08:51 +0200, Nam Cao wrote:
-> Add documentation describing the rtapp monitor.
->=20
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
-> =C2=A0Documentation/trace/rv/monitor_rtapp.rst | 107
-> +++++++++++++++++++++++
-> =C2=A01 file changed, 107 insertions(+)
-> =C2=A0create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
->=20
+On 25-04-16 08:35:03, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On 15/04/2025 09:27, Peter Chen wrote:
+> > At CIX SoC platforms, the clock handling uses Arm SCMI protocol,
+> > the physical clock access is at sub processor, so it needs to enable
+> > mailbox by default.
+> >
+> > Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index c8a8fdb0bedb..4e9805c5bcc3 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -1424,6 +1424,7 @@ CONFIG_BCM2835_MBOX=y
+> >  CONFIG_QCOM_APCS_IPC=y
+> >  CONFIG_MTK_ADSP_MBOX=m
+> >  CONFIG_QCOM_IPCC=y
+> > +CONFIG_CIX_MBOX=y
+> Squash the patch. Don't create one patch per one config change.
+> 
 
-Documentation/trace/rv/monitor_rtapp.rst: WARNING: document isn't
-included in any toctree
+Even for two different configurations?
+One for SoC, and the another is for device driver.
 
-You forgot adding this document to the index (and I forgot while
-reviewing ;) )
+-- 
 
-Thanks,
-Gabriele
-
+Best regards,
+Peter
