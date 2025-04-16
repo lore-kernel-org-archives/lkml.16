@@ -1,341 +1,157 @@
-Received: from mail-ej1-f73.google.com (mail-ej1-f73.google.com [209.85.218.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01on2136.outbound.protection.outlook.com [40.107.215.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2257231A37
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793708; cv=none; b=e89IjHLPlUFiOKmdhmL5vaFCCpLgb9ZJAeJa+swAVG1WpfbbJCzxwGYvLd+EDl12d+/kn9YvdiNEA9NZfd8T8V7Phg/HIqyhmUFZhc+LXhK0nAeJ+k40oscp6le7GOU//k5LLqBbi/OD1AUbgaf1J6uv7vqfiCBKDrShqhb8xoU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793708; c=relaxed/simple;
-	bh=wf+7s96UajTNndiXoBnU62ZqCuQvpKeDgATZuDbUUsQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MEQG5FFDBw+N0fkCnbMeZeJriOVbZ0vEqKWilFOBPaAM1xVnfq3/1XngNgz43cfX5mGSTHEKuCkCOCSiydfkRzHOmiEQM9oMfM8UP5HplhEtNsIvH6bOHz0Hx/O+sA7tUYR3gujH/61MRceBXxGjhIBj9BH9VfrYOHZWm67O4JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--glider.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C5SxFASg; arc=none smtp.client-ip=209.85.218.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--glider.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5SxFASg"
-Received: by mail-ej1-f73.google.com with SMTP id a640c23a62f3a-ac293748694so622874766b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744793705; x=1745398505; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hH2r0HpjHA+TAtMnP8ob7jw0ZAHM0/6/eJ5rdM10bGc=;
-        b=C5SxFASgdj7i4JLmrFR5a36tHrrFiVoUqeMpXLP5fyuAAC3uerysrBV8niZkd6+vuc
-         b5O+oGp7LN13J4nyq0dH8/Zuw10y0FYLioJEbMMKIpK5kcFnjx7ZPQ/Hfuc81+5n0IPp
-         J7Qs2LrrN3tyCAqzhkJ7I5Lp8xwjW4WlmqDPuJJ42aIzMxmvInZ0h31Op85HkHIapNyM
-         hvC04nKyR0ElymT+tBOIyUhkdx/J2i0dmLNS092AhynN315gfsW4vmMj+LJbRiwRwVn7
-         c8BUqkiGSSnQSsHSAcfi7rgIsn+8SWZQETpnDbB+tHsBWoLNc5MKzY7gvUHNGwpg/IRn
-         FglA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744793705; x=1745398505;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hH2r0HpjHA+TAtMnP8ob7jw0ZAHM0/6/eJ5rdM10bGc=;
-        b=emyxsGaie70ETFrqQuP9iKRRDKv+AwJrUaT6ZXlMaiVAyjfPriJacbV3qmLhRLzjcC
-         9r1zNUDBLJG2ajs8Em0rgZ97v5TMP/zjsCJ0qPlPX+hD24+rBiPNQqc88W6FIfXlaG1x
-         7XBr4llKa2QotA42a9cr649V+NiDwF9Hx3hqBIHyBVxbvHcBxuQQEq3Lr1KBowS6yGmn
-         pka3BzWHeRYP/KwZC7bm87l/Sbz8hEO+QCKGYsWznq4cRAuzedAwlwSbX1/Nao9hHzvZ
-         XImnFvwzbTTgB1jLh2B1yxUd+n4GgGC+5UdqY97FFhfs9TdlQ2DsdzOZcCFVA9KbR7WH
-         wmag==
-X-Forwarded-Encrypted: i=1; AJvYcCXyoKbTyXvoODU2YDD9scyQlMHNRU0SU5enkU1dfqXG+w9iscGIhKsK0X14NZxlWVXdx8Lgd+JhXp+7TTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7zWhUI459CeSq7WT62Wxndq+xCGeszfoIii9LmWIDes8oIFrc
-	Gk/W//eYXw4cpQHecuuF5KwhxI64w2PzPy0FljQ1cubHAeDW0QFcEmx8hABPKSqMfUcxMgmAYRO
-	IyQ==
-X-Google-Smtp-Source: AGHT+IHLysqpTjLpAqWg5WxyJTA9vRLgfkOcTMsAwCG2Ki/9QmdowjbxmDNblFkznXklYcgsxssJPtj0TZ0=
-X-Received: from ejkh19.prod.google.com ([2002:a17:906:7193:b0:aca:c1c0:e337])
- (user=glider job=prod-delivery.src-stubby-dispatcher) by 2002:a17:907:9494:b0:acb:349d:f909
- with SMTP id a640c23a62f3a-acb42a50028mr74361466b.31.1744793705000; Wed, 16
- Apr 2025 01:55:05 -0700 (PDT)
-Date: Wed, 16 Apr 2025 10:54:41 +0200
-In-Reply-To: <20250416085446.480069-1-glider@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B080B233732;
+	Wed, 16 Apr 2025 08:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.136
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744793712; cv=fail; b=n++1hdPAjpOXxU8iM7axSNC5DXl6vAOOaPrkht9Hub+4lq+TbK2doknVaIJ+4LiXG+MeSt1Rmt11n3Yt4m/g3+JYfQ8ZWuopBV1Jh8WB1ceN6EroDKAq7HRshtjF20ZeouYf+d8EaeQgyTVirAAvoyf+teC6VGO2zmoB3ffNHdk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744793712; c=relaxed/simple;
+	bh=j2eATLBFzXSVtq78YOVNvjy1qscWa2U2JMYv/eC7Sxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JgzvBLFM4k3cEDmNCu4E/WLgl0ThAp0f1SDW3SBn6D1AlFWoCNFDDJtCD9bLhq7Hj6Kil07CroRIgAFqKTEmycnRBRKwPNctsIjwhYwUDK5KEUoyDlPGjk/j40mdBgO4ZDnpCwOpG7KFs6SCA6ZAcUOPfpDy/XFQq9nx6sNmps4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.215.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kt41NwnblJ7mq7WCSLadUHtl+RpBNarIj53cubIovEYxxY3/UAKNK6ENtk2Evv3K9vjRj54mKLU3iHTWpJIE5mLy+e0/VGzbfm58NCLlTV1wQlbj4hXsJ0m6D6Lh9K1+Zp6Q4xqrzJA4F+1U/TGaeLgovC0kkIsPhGaI1PErEuuzJ7tOGsGugaBTJIVtbf+wexdijUM7GpZkOClmGNKTBqyMYdraJD/ON4O9WIO/cnZGioK9Nt77hrCqMFzdBH99nA9Z65MGwF2x2xdQi67N+uFXLqIQAtoztTVzRXKHzvS3VWCJ90aBm97A7T89FyaLtMxesrX1vkIpJAJML4HkUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zyWQd9RirQuvWOMoRUPdR5G6DNJV40Tjnu/eR5qttPk=;
+ b=LsKQtXVK5XIXBg6I/8Q0BQmn5abPnY0c/yf5NaCxPBLbGstzK2hYJnoEo++e9murRsqq84uTbKTNjEV/alyXHklgENcclQXZo0oc51qBwPoT5xtdjZkoy9Q/uPCSFPR75RyxwHEzt8a+L1PTOHwe1Tu/FmP0QwYfRcvX/ZfVezEKP6u3uartoyq89Yc7A3485zwYgvXNhqwz4MynpFNSEWcFZAUb+ghHqBBscYuGYP+aBUuIe38TLk04sV53D50274aScLpJdHod3ya/DW+2EgGRc+ZYHWjLh6uSAoO6cha0o6vDf3Y/UJUp3+T8BKcH6OzSCfC4YWS+/nInNOjXIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from KL1PR0401CA0030.apcprd04.prod.outlook.com (2603:1096:820:e::17)
+ by KL1PR06MB7010.apcprd06.prod.outlook.com (2603:1096:820:11e::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Wed, 16 Apr
+ 2025 08:55:06 +0000
+Received: from HK2PEPF00006FB1.apcprd02.prod.outlook.com
+ (2603:1096:820:e:cafe::20) by KL1PR0401CA0030.outlook.office365.com
+ (2603:1096:820:e::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.33 via Frontend Transport; Wed,
+ 16 Apr 2025 08:55:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ HK2PEPF00006FB1.mail.protection.outlook.com (10.167.8.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Wed, 16 Apr 2025 08:55:05 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 0631E40A5A01;
+	Wed, 16 Apr 2025 16:55:05 +0800 (CST)
+Date: Wed, 16 Apr 2025 16:55:03 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org,
+	arnd@arndb.de, jassisinghbrar@gmail.com,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+	maz@kernel.org, kajetan.puchalski@arm.com,
+	Gary Yang <gary.yang@cixtech.com>
+Subject: Re: [PATCH v6 08/10] dt-bindings: clock: cix: Add CIX sky1 scmi
+ clock id
+Message-ID: <Z_9wZ74-cqqVTPD7@nchen-desktop>
+References: <20250415072724.3565533-1-peter.chen@cixtech.com>
+ <20250415072724.3565533-9-peter.chen@cixtech.com>
+ <bdfe0108-7ac3-4f2c-b7f2-97943ee85235@kernel.org>
+ <2f05420b-0c6f-4336-9854-036edf8d28fa@kernel.org>
+ <Z_9pvs-YKLwFal90@nchen-desktop>
+ <99e3b06a-f612-4f22-ae5f-43a3d618b06d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250416085446.480069-1-glider@google.com>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-Message-ID: <20250416085446.480069-4-glider@google.com>
-Subject: [PATCH 3/7] kcov: x86: introduce CONFIG_KCOV_ENABLE_GUARDS
-From: Alexander Potapenko <glider@google.com>
-To: glider@google.com
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, x86@kernel.org, 
-	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99e3b06a-f612-4f22-ae5f-43a3d618b06d@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB1:EE_|KL1PR06MB7010:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7f056cc-ea34-49d6-9ffe-08dd7cc46255
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GFkFxYO5hFlrGNrA3GHd+Z+wrF4qhTicyGF3YuEAvF4pM6MWHfd9iOH9ajQf?=
+ =?us-ascii?Q?GE/zLDpHm6JtnCGAG2wpotSH3xfEKjmJKGT2xPQLzlVbQvrF8WS/Poh03WLw?=
+ =?us-ascii?Q?w2OU5gMeZIgwwE4l6lGQzCQ3fPJ2/xHpN4s5zFV6N6rHvgMhJ+oq4TeydlQq?=
+ =?us-ascii?Q?Qf12wrVWB2TpaK5/NjPSJvMwepyC34JS02MgT2sD0LLEQ7EADI9dwmbllGnV?=
+ =?us-ascii?Q?DwMuaUZ21+04JEi+7LcXS3PZlN+t+IW51vJyun9PUIo5rJNsjLXqFxXZCD4H?=
+ =?us-ascii?Q?WioTErNjBnHfslrCZB7NPbJ6KZsMPGyxBG4C5EZrwwtjDlmptjAWZfupdjte?=
+ =?us-ascii?Q?CKNucWAgBCM6boFvSWJrP8jApe/ZaPnQiBqG8Ckg8mNIYOuRfKqPKQ55b0gf?=
+ =?us-ascii?Q?vlG3ZY0Umj8vZq7aewOkJTZZ88V9JTcluvY0S1QVuJekMfzdqe9L8udLbSG7?=
+ =?us-ascii?Q?BOanpA9H0CyKn3G/ZwAK28B6Jo03gyY5G9sW0gaC2svQd2liE3deFFx3C7BO?=
+ =?us-ascii?Q?F3I4EZ+swU3+yqPcZ9LPEL23cWz2z1xdJD9NB+uDIHmsuqWgc6VuWWacqFua?=
+ =?us-ascii?Q?TTTRzab9I3zjYqvoItT9HB8nanJxIkBTVJeFtnt4LmA0B3GMhse5tgxJJohR?=
+ =?us-ascii?Q?nyQFdDA174BEz9rVGthy7VAmfAp8MrnIB2ilZ8YfvOsaFCiqmLVsNGKGvRan?=
+ =?us-ascii?Q?wS1zF8ZIwHITBupL+z4l69oNcS2VzVL0P6ECa1QSJkyqhKQ+PYk1guuOwobv?=
+ =?us-ascii?Q?TNwIPAT17DoV6cvz0nmU1OimODihgB5MDAJXXDFnbARQhIhi0plmK5ZNXgJV?=
+ =?us-ascii?Q?9iD6pVJcj/pkJmIgEzb6WtZsEvfhTBaeQxB2woQ5S4HNgIpW3xNtmtq1/gzP?=
+ =?us-ascii?Q?E5MF1htaqkRpJlN/tovgaZ0iO+yy7MWBtL5hoOw4OTp2vPgmu9MMm3WCLOMW?=
+ =?us-ascii?Q?QAfCw/vbtAroY3+64GYngaUKmQFikgdjr6V1UK5eObk8YsbDkdKiw3b4GrdJ?=
+ =?us-ascii?Q?BmKI2qR7oQq0NQGJUB7wHGx3aBecgwTt/eC0bjKCUT+VHrDacaQaOBYAxt2N?=
+ =?us-ascii?Q?MRZcmcBX0Tkp+F3ptXutz+T3g1jBRxMYD4W3Xb9tVnJZu/RTlg5I3fvKg9nD?=
+ =?us-ascii?Q?Rz1Y/sjMz75RoLp1ZmAO3J2rz8RaZnsfCZW58KzXvM1DYSUr0UKBngzXYy1M?=
+ =?us-ascii?Q?iP9JzfOfIEavX2dd1VdkEyiqfqC7rr+RdlrNGVtZcPFYBqEes518xoC2vyfP?=
+ =?us-ascii?Q?wNEafNG1Pdojvw7Irs5SyYhdCJTpAiAS9FyXSINeBCJt+ayYpBrFFaCU+ONQ?=
+ =?us-ascii?Q?oBmCw0iDglAH+mLpS2iVV1B70f8ruAE6kE02V+b7H9m1qeSgMO3Yc1Rs9uMp?=
+ =?us-ascii?Q?IQ4/UrFhxgwbnJRp5Kt0GdsgMNHCaAxwmYTo0K2/5lVcZT7p/oAArXLG3rAt?=
+ =?us-ascii?Q?9Qw/vz0nCL2fpFY46pDquxkDE3HPIFKCx2HnU8c7gwmtr0HAXpf4wCZR6A9S?=
+ =?us-ascii?Q?fNdyeflAsDAUJJdKKRdbvunYtD4IjyBijndY?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 08:55:05.9191
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7f056cc-ea34-49d6-9ffe-08dd7cc46255
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: HK2PEPF00006FB1.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB7010
 
-The new config switches coverage instrumentation to using
-  __sanitizer_cov_trace_pc_guard(u32 *guard)
-instead of
-  __sanitizer_cov_trace_pc(void)
+On 25-04-16 10:29:45, Krzysztof Kozlowski wrote:
+> EXTERNAL EMAIL
+> 
+> On 16/04/2025 10:26, Peter Chen wrote:
+> > On 25-04-16 08:38:55, Krzysztof Kozlowski wrote:
+> >> EXTERNAL EMAIL
+> >>
+> >> On 16/04/2025 08:35, Krzysztof Kozlowski wrote:
+> >>> On 15/04/2025 09:27, Peter Chen wrote:
+> >>>> From: Gary Yang <gary.yang@cixtech.com>
+> >>>>
+> >>>> Add device tree bindings for the scmi clock id on
+> >>>> Cix sky1 platform.
+> >>>>
+> >>>> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
+> >>>> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> >>>
+> >>> Incomplete SoB chain.
+> >
+> > Sorry? What do you mean?
+> 
+> Your SoB is missing. Please read DCO part and actually everything around
+> authorship in submitting patches.
+> 
 
-Each callback receives a unique 32-bit guard variable residing in the
-__sancov_guards section. Those guards can be used by kcov to deduplicate
-the coverage on the fly.
+Thanks, will add my SoB at the Tag list.
 
-As a first step, we make the new instrumentation mode 1:1 compatible with
-the old one.
-
-Cc: x86@kernel.org
-Signed-off-by: Alexander Potapenko <glider@google.com>
----
- arch/x86/kernel/vmlinux.lds.S     |  1 +
- include/asm-generic/vmlinux.lds.h | 14 ++++++-
- include/linux/kcov.h              |  2 +
- kernel/kcov.c                     | 61 +++++++++++++++++++++----------
- lib/Kconfig.debug                 | 16 ++++++++
- scripts/Makefile.kcov             |  4 ++
- scripts/module.lds.S              | 23 ++++++++++++
- tools/objtool/check.c             |  1 +
- 8 files changed, 101 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 0deb4887d6e96..2acfbbde33820 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -390,6 +390,7 @@ SECTIONS
- 		. = ALIGN(PAGE_SIZE);
- 		__bss_stop = .;
- 	}
-+	SANCOV_GUARDS_BSS
- 
- 	/*
- 	 * The memory occupied from _text to here, __end_of_kernel_reserve, is
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 0d5b186abee86..3ff150f152737 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -102,7 +102,8 @@
-  * sections to be brought in with rodata.
-  */
- #if defined(CONFIG_LD_DEAD_CODE_DATA_ELIMINATION) || defined(CONFIG_LTO_CLANG) || \
--defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
-+	defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG) || \
-+	defined(CONFIG_KCOV_ENABLE_GUARDS)
- #define TEXT_MAIN .text .text.[0-9a-zA-Z_]*
- #else
- #define TEXT_MAIN .text
-@@ -121,6 +122,17 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- #define SBSS_MAIN .sbss
- #endif
- 
-+#if defined(CONFIG_KCOV_ENABLE_GUARDS)
-+#define SANCOV_GUARDS_BSS			\
-+	__sancov_guards(NOLOAD) : {		\
-+		__start___sancov_guards = .;	\
-+		*(__sancov_guards);		\
-+		__stop___sancov_guards = .;	\
-+	}
-+#else
-+#define SANCOV_GUARDS_BSS
-+#endif
-+
- /*
-  * GCC 4.5 and later have a 32 bytes section alignment for structures.
-  * Except GCC 4.9, that feels the need to align on 64 bytes.
-diff --git a/include/linux/kcov.h b/include/linux/kcov.h
-index e1f7d793c1cb3..7ec2669362fd1 100644
---- a/include/linux/kcov.h
-+++ b/include/linux/kcov.h
-@@ -107,6 +107,8 @@ typedef unsigned long long kcov_u64;
- #endif
- 
- void __sanitizer_cov_trace_pc(void);
-+void __sanitizer_cov_trace_pc_guard(u32 *guard);
-+void __sanitizer_cov_trace_pc_guard_init(uint32_t *start, uint32_t *stop);
- void __sanitizer_cov_trace_cmp1(u8 arg1, u8 arg2);
- void __sanitizer_cov_trace_cmp2(u16 arg1, u16 arg2);
- void __sanitizer_cov_trace_cmp4(u32 arg1, u32 arg2);
-diff --git a/kernel/kcov.c b/kernel/kcov.c
-index 8fcbca236bec5..b97f429d17436 100644
---- a/kernel/kcov.c
-+++ b/kernel/kcov.c
-@@ -193,27 +193,15 @@ static notrace unsigned long canonicalize_ip(unsigned long ip)
- 	return ip;
- }
- 
--/*
-- * Entry point from instrumented code.
-- * This is called once per basic-block/edge.
-- */
--void notrace __sanitizer_cov_trace_pc(void)
-+static void sanitizer_cov_write_subsequent(unsigned long *area, int size,
-+					   unsigned long ip)
- {
--	struct task_struct *t;
--	unsigned long *area;
--	unsigned long ip = canonicalize_ip(_RET_IP_);
--	unsigned long pos;
--
--	t = current;
--	if (!check_kcov_mode(KCOV_MODE_TRACE_PC, t))
--		return;
--
--	area = t->kcov_state.s.area;
- 	/* The first 64-bit word is the number of subsequent PCs. */
--	pos = READ_ONCE(area[0]) + 1;
--	if (likely(pos < t->kcov_state.s.size)) {
--		/* Previously we write pc before updating pos. However, some
--		 * early interrupt code could bypass check_kcov_mode() check
-+	unsigned long pos = READ_ONCE(area[0]) + 1;
-+
-+	if (likely(pos < size)) {
-+		/*
-+		 * Some early interrupt code could bypass check_kcov_mode() check
- 		 * and invoke __sanitizer_cov_trace_pc(). If such interrupt is
- 		 * raised between writing pc and updating pos, the pc could be
- 		 * overitten by the recursive __sanitizer_cov_trace_pc().
-@@ -224,7 +212,40 @@ void notrace __sanitizer_cov_trace_pc(void)
- 		area[pos] = ip;
- 	}
- }
-+
-+/*
-+ * Entry point from instrumented code.
-+ * This is called once per basic-block/edge.
-+ */
-+#ifndef CONFIG_KCOV_ENABLE_GUARDS
-+void notrace __sanitizer_cov_trace_pc(void)
-+{
-+	if (!check_kcov_mode(KCOV_MODE_TRACE_PC, current))
-+		return;
-+
-+	sanitizer_cov_write_subsequent(current->kcov_state.s.area,
-+				       current->kcov_state.s.size,
-+				       canonicalize_ip(_RET_IP_));
-+}
- EXPORT_SYMBOL(__sanitizer_cov_trace_pc);
-+#else
-+void notrace __sanitizer_cov_trace_pc_guard(u32 *guard)
-+{
-+	if (!check_kcov_mode(KCOV_MODE_TRACE_PC, current))
-+		return;
-+
-+	sanitizer_cov_write_subsequent(current->kcov_state.s.area,
-+				       current->kcov_state.s.size,
-+				       canonicalize_ip(_RET_IP_));
-+}
-+EXPORT_SYMBOL(__sanitizer_cov_trace_pc_guard);
-+
-+void notrace __sanitizer_cov_trace_pc_guard_init(uint32_t *start,
-+						 uint32_t *stop)
-+{
-+}
-+EXPORT_SYMBOL(__sanitizer_cov_trace_pc_guard_init);
-+#endif
- 
- #ifdef CONFIG_KCOV_ENABLE_COMPARISONS
- static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
-@@ -252,7 +273,7 @@ static void notrace write_comp_data(u64 type, u64 arg1, u64 arg2, u64 ip)
- 	start_index = 1 + count * KCOV_WORDS_PER_CMP;
- 	end_pos = (start_index + KCOV_WORDS_PER_CMP) * sizeof(u64);
- 	if (likely(end_pos <= max_pos)) {
--		/* See comment in __sanitizer_cov_trace_pc(). */
-+		/* See comment in sanitizer_cov_write_subsequent(). */
- 		WRITE_ONCE(area[0], count + 1);
- 		barrier();
- 		area[start_index] = type;
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 35796c290ca35..a81d086b8e1ff 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2135,6 +2135,8 @@ config ARCH_HAS_KCOV
- config CC_HAS_SANCOV_TRACE_PC
- 	def_bool $(cc-option,-fsanitize-coverage=trace-pc)
- 
-+config CC_HAS_SANCOV_TRACE_PC_GUARD
-+	def_bool $(cc-option,-fsanitize-coverage=trace-pc-guard)
- 
- config KCOV
- 	bool "Code coverage for fuzzing"
-@@ -2151,6 +2153,20 @@ config KCOV
- 
- 	  For more details, see Documentation/dev-tools/kcov.rst.
- 
-+config KCOV_ENABLE_GUARDS
-+	depends on KCOV
-+	depends on CC_HAS_SANCOV_TRACE_PC_GUARD
-+	bool "Use fsanitize-coverage=trace-pc-guard for kcov"
-+	help
-+	  Use coverage guards instrumentation for kcov, passing
-+	  -fsanitize-coverage=trace-pc-guard to the compiler.
-+
-+	  Every coverage callback is associated with a global variable that
-+	  allows to efficiently deduplicate coverage at collection time.
-+
-+	  This comes at a cost of increased binary size (4 bytes of .bss
-+	  per basic block, plus 1-2 instructions to pass an extra parameter).
-+
- config KCOV_ENABLE_COMPARISONS
- 	bool "Enable comparison operands collection by KCOV"
- 	depends on KCOV
-diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
-index 67e8cfe3474b7..ec63d471d5773 100644
---- a/scripts/Makefile.kcov
-+++ b/scripts/Makefile.kcov
-@@ -1,5 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+ifeq ($(CONFIG_KCOV_ENABLE_GUARDS),y)
-+kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC_GUARD) += -fsanitize-coverage=trace-pc-guard
-+else
- kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)	+= -fsanitize-coverage=trace-pc
-+endif
- kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -fsanitize-coverage=trace-cmp
- kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)		+= -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
- 
-diff --git a/scripts/module.lds.S b/scripts/module.lds.S
-index 450f1088d5fd3..ec7e9247f8de6 100644
---- a/scripts/module.lds.S
-+++ b/scripts/module.lds.S
-@@ -64,6 +64,29 @@ SECTIONS {
- 		MOD_CODETAG_SECTIONS()
- 	}
- #endif
-+
-+#ifdef CONFIG_KCOV_ENABLE_GUARDS
-+	__sancov_guards(NOLOAD) : {
-+		__start___sancov_guards = .;
-+		*(__sancov_guards);
-+		__stop___sancov_guards = .;
-+	}
-+
-+	.text : {
-+		*(.text .text.[0-9a-zA-Z_]*)
-+		*(.text..L*)
-+	}
-+
-+	.init.text : {
-+		*(.init.text .init.text.[0-9a-zA-Z_]*)
-+		*(.init.text..L*)
-+	}
-+	.exit.text : {
-+		*(.exit.text .exit.text.[0-9a-zA-Z_]*)
-+		*(.exit.text..L*)
-+	}
-+#endif
-+
- 	MOD_SEPARATE_CODETAG_SECTIONS()
- }
- 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index ce973d9d8e6d8..a5db690dd2def 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1149,6 +1149,7 @@ static const char *uaccess_safe_builtin[] = {
- 	"write_comp_data",
- 	"check_kcov_mode",
- 	"__sanitizer_cov_trace_pc",
-+	"__sanitizer_cov_trace_pc_guard",
- 	"__sanitizer_cov_trace_const_cmp1",
- 	"__sanitizer_cov_trace_const_cmp2",
- 	"__sanitizer_cov_trace_const_cmp4",
 -- 
-2.49.0.604.gff1f9ca942-goog
 
+Best regards,
+Peter
