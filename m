@@ -1,308 +1,219 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0201E7C24;
-	Wed, 16 Apr 2025 10:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE87A2356DC;
+	Wed, 16 Apr 2025 10:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744800898; cv=none; b=d9WJhSGoJixkyhIO9HzdpUkR5U2VYNx3EIJUJ9F14qHRSS1pQVxRX1xJzuXNcbcjONJ/HSTzCZytKI5kuoLesWzpVTnOoTIdSymihI/TJoViQbrabAZgPyuIDPePxHs2AqKAQ8rpWy1g7oB3HmWXhkLaSP1c1BokzNUZ0v3ZmsA=
+	t=1744800924; cv=none; b=LSkKcGt1WmmVYQcxSEi+YBGJ7ceypI8jqVhwDTTXWsbxTUtzcY4Uf2lOl/dGisuI/r9rGixX4qgTLTPJlisfThyWxqQna5ObN7fc9NhygXk5y0DYUNCMUmsOjXWZoTe3HrdVQyTmhlKktHVUxsVkKwUe4mxTCIKI2kb+6HEIKFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744800898; c=relaxed/simple;
-	bh=7JN6snAw2lrK/X6VkKve41wf57owbc2L0SobKwitddE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=N6YFAUjOn/apXCDw5NtoSFiqa00WLH6y8dfyG+dKTMTlXZACiHnrJd2EJVkY9P+fBDnlcOE5DBuP0BkwLHEKeCBqs9dhI/wFdQXnblLvdlY7rGKY+cBgEPDgDWFX0bNylsYDUtAeODGLw8tNFLzuSaiHTJV1++YmQfaVhGQFmHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cj/BDpNY; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cj/BDpNY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801BEC4CEE2;
-	Wed, 16 Apr 2025 10:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744800897;
-	bh=7JN6snAw2lrK/X6VkKve41wf57owbc2L0SobKwitddE=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=cj/BDpNYbphHzJEiLNFlvYm/GFcN98+FI2ZMAotiQ+7iud0nIMOvFnIxmc0pwY1gA
-	 jVLzyaSW9VJq6/x1pXj1QwlOluMrDtVvGJOrTWGXHd+qKgAvOKc6N8aVB3jDLW4YoM
-	 vTBoLZ9KX8lE0PttueVMsJVjoWmFmOcCElXGkatr31RC41/lY5fTwIQWylqNU7dP62
-	 vbgFzIh2gJmY75eSU7i8/CfD5hDJcH4ibpUGi4t8beoGygnT/CmsXAZfB1fqs5mhpA
-	 +2gLEfipmQ3BzLEdaeJJ/EucRiUlHTSB3FK9rb2FyKsHrhxWip2oQTGpV2s9CODEe5
-	 STEzAfRW2LSug==
-Message-ID: <6ee047d4-f3de-4c25-aaae-721221dc3003@kernel.org>
-Date: Wed, 16 Apr 2025 12:54:51 +0200
+	s=arc-20240116; t=1744800924; c=relaxed/simple;
+	bh=tqJqFIE1T+kTlNY9bfQiUE33Vv4WO3vQtJdDUu1iyY8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ph73kqn+TlqPqG3dz4QiEwJxUXR183HcAf3xjAY87buS+Ys+0eRSZyuSmQuY6ylAY/EeKRL6lW0Pf8Xjf0//JIPZyIsZIaXRWxc6tOF7r/Sa2COhbPcZWFOzAthBf8ZEtTe7RndCseXQIg6DvyWPfes+jpGTja4GMO7NFAUg5e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.92.39.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpsz2t1744800883ta33297fe
+X-QQ-Originating-IP: iTLQjDQAIaI4xnuMOQgJReKtXdpzN9jKj9Ql7mESqS4=
+Received: from [192.168.30.36] ( [116.234.96.50])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 16 Apr 2025 18:54:41 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 8155109911631512638
+EX-QQ-RecipientCnt: 10
+From: Xilin Wu <sophon@radxa.com>
+Date: Wed, 16 Apr 2025 18:54:18 +0800
+Subject: [PATCH] arm64: dts: qcom: sc7280: Mark FastRPC context banks as
+ dma-coherent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] net: pse-pd: Add Si3474 PSE controller driver
-To: Piotr Kubik <piotr.kubik@adtran.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>,
- Kory Maincent <kory.maincent@bootlin.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <a92be603-7ad4-4dd3-b083-548658a4448a@adtran.com>
- <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-sc7280-fastrpc-dma-v1-1-60ca91116b1e@radxa.com>
+X-B4-Tracking: v=1; b=H4sIAFmM/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Mz3eJkcyMLA920xOKSooJk3ZTcRF0LizRjE3PDRBNDQ2MloMaCotS
+ 0zAqwodGxtbUAJwkTzGQAAAA=
+X-Change-ID: 20250416-sc7280-fastrpc-dma-88f3471a4113
+To: cros-qcom-dts-watchers@chromium.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Xilin Wu <sophon@radxa.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744800882; l=3697;
+ i=sophon@radxa.com; s=20240424; h=from:subject:message-id;
+ bh=tqJqFIE1T+kTlNY9bfQiUE33Vv4WO3vQtJdDUu1iyY8=;
+ b=kti0l6NZjikO+LCzT7UT8cSInLNABxO0QD+3/1hilVlpmEOHantorIiPkSQI9goXzLpZWPXBN
+ V4uAxh2VrIiBcXb72BwWu0goyoK+vCSdYFMeJgu/pItdMPJrBRHalEy
+X-Developer-Key: i=sophon@radxa.com; a=ed25519;
+ pk=vPnxeJnlD/PfEbyQPZzaay5ezxI/lMrke7qXy31lSM8=
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: OFht7H3FD1FnP+kk9wX05mc9f/VC9/v8eO5pU20rC+OuVnHiptVzvcVj
+	RPmMmZkpe0DDgK0c05B0+yjtjhEV7g5Z7897ux/ffrvbp11ijRc4yubKoPTavmHNIgvtFUg
+	D+fq9vQnyL7/hCnLU3ejQN7Ho2fsxcFWgfYyMbmd+3a/rYM/5rmRths4G+SUzzi7nZ5vsaJ
+	SJGHOpsYvyK2iEl4o9DzafsHYdWOIL7GZWnIMjt3vqRjDmkvv59fwMLI8wOXxilPrwjCfoK
+	gISIV7dfVPLpTmW6cFlO4EdIq5qSWPryTvCtOz9jfk4jm9CxIGRWZ1qOVxs74l4DhC6CLmc
+	db6OmW+yWkrLW7ds4fTUbTAnvTt8ZZWnwRnFuBK/vhF+6o2pw/O6ex+P54V4wq5Tya0uqLa
+	z52JThtgiDfEojKU1kWO2m52ufBViIjQxA7Pgha0EpqN9R7UHYU95/vEDxTZlZln/RX5s2S
+	fGtcuaqr3JSPJestt59tavNUJX6+XT7HY4g2j7CXWq1QQ1yk0k5+XdYdCg4wNFrs6KOtV7u
+	rtmvylGv2D2yvAxENv+zy8JTUrKxHbk1Wr+FUxVeSx700kqLPytyRbB8S3bkh8X6ebSqylz
+	nsb6gTj3R4tmwHGH+Eh3bpUcqASswol354rYpj1zjMAbYh/CaIA3LzCg6w7tZ0X0LeoTbW7
+	4672UHFm151W5nuvCpX3A2FrynZeiEC3R6Qfu4Picep+y5pvhrukG779C3A1ZHfIDped+mO
+	XclQ6fumAqChcp1w4GWdWpNdBF6yURFrXP+qmWUdVCL6H3FZJz5cA6F0+5EPPKDj09CFhth
+	vvNNVWavB87ZPWxLdp7XARkd/x5xU6re7jEBurPlpqaFFS7ttizCPucmG8kk5m+V6bLLuJd
+	PjAaGQZS36QLPomAnL5+hb6dhVSmGwFBXFx4J9dsuec8D3bmmS/jhIk3cmhGGJNXnLFwCdv
+	WcJwhw2I72gt6fZQoSKC4EFAB/3CAJWhig3FxJouTNqjr8LxRBr+0gVTRjm8wGTRkAFMkpa
+	ebnAlpPpzHHNLRpXS8MPEwrAtiJGWUKX5HRBZLrg==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-RECHKSPAM: 0
 
-On 16/04/2025 12:47, Piotr Kubik wrote:
-> From: Piotr Kubik <piotr.kubik@adtran.com>
-> 
-> Add a driver for the Skyworks Si3474 I2C Power Sourcing Equipment
-> controller.
-> 
-> Based on the TPS23881 driver code.
-> 
-> Driver supports basic features of Si3474 IC:
-> - get port status,
-> - get port power,
-> - get port voltage,
-> - enable/disable port power.
-> 
-> Only 4p configurations are supported at this moment.
-> 
-> Signed-off-by: Piotr Kubik <piotr.kubik@adtran.com>
-> ---
->  drivers/net/pse-pd/Kconfig  |  10 +
->  drivers/net/pse-pd/Makefile |   1 +
->  drivers/net/pse-pd/si3474.c | 477 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 488 insertions(+)
->  create mode 100644 drivers/net/pse-pd/si3474.c
+The FastRPC context banks are DMA-coherent on sc7280 platform. Mark them
+as such.
 
-Please put bindings before their user (see DT submitting patches)
+This allows LLM inferencing on the CDSP using Qualcomm AI Engine Direct
+SDK on the qcs6490 platform.
 
-> 
-> diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
-> index 7fab916a7f46..6d2fef6c2602 100644
-> --- a/drivers/net/pse-pd/Kconfig
-> +++ b/drivers/net/pse-pd/Kconfig
-> @@ -41,4 +41,14 @@ config PSE_TPS23881
-> 
->           To compile this driver as a module, choose M here: the
->           module will be called tps23881.
-> +
-> +config PSE_SI3474
-> +       tristate "Si3474 PSE controller"
-> +       depends on I2C
-> +       help
-> +         This module provides support for Si3474 regulator based Ethernet
-> +         Power Sourcing Equipment.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called si3474.
->  endif
-> diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
-> index 9d2898b36737..b33b4d905cd5 100644
-> --- a/drivers/net/pse-pd/Makefile
-> +++ b/drivers/net/pse-pd/Makefile
-> @@ -6,3 +6,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
->  obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
->  obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
->  obj-$(CONFIG_PSE_TPS23881) += tps23881.o
-> +obj-$(CONFIG_PSE_SI3474) += si3474.o
-> \ No newline at end of file
+Signed-off-by: Xilin Wu <sophon@radxa.com>
+---
+ arch/arm64/boot/dts/qcom/sc7280.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-1. Warnin ghere
-2. Don't add your entries to the end but in more-or-less alphabetically
-sorted place.
+diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+index ec96c917b56b4a077b45ac0186da6aaedb899dbe..bb5092bc2bbe97ece31ad84a22f87738b1289682 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+@@ -3869,18 +3869,21 @@ compute-cb@3 {
+ 						compatible = "qcom,fastrpc-compute-cb";
+ 						reg = <3>;
+ 						iommus = <&apps_smmu 0x1803 0x0>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@4 {
+ 						compatible = "qcom,fastrpc-compute-cb";
+ 						reg = <4>;
+ 						iommus = <&apps_smmu 0x1804 0x0>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@5 {
+ 						compatible = "qcom,fastrpc-compute-cb";
+ 						reg = <5>;
+ 						iommus = <&apps_smmu 0x1805 0x0>;
++						dma-coherent;
+ 					};
+ 				};
+ 			};
+@@ -4108,6 +4111,7 @@ compute-cb@1 {
+ 						reg = <1>;
+ 						iommus = <&apps_smmu 0x11a1 0x0420>,
+ 							 <&apps_smmu 0x1181 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@2 {
+@@ -4115,6 +4119,7 @@ compute-cb@2 {
+ 						reg = <2>;
+ 						iommus = <&apps_smmu 0x11a2 0x0420>,
+ 							 <&apps_smmu 0x1182 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@3 {
+@@ -4122,6 +4127,7 @@ compute-cb@3 {
+ 						reg = <3>;
+ 						iommus = <&apps_smmu 0x11a3 0x0420>,
+ 							 <&apps_smmu 0x1183 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@4 {
+@@ -4129,6 +4135,7 @@ compute-cb@4 {
+ 						reg = <4>;
+ 						iommus = <&apps_smmu 0x11a4 0x0420>,
+ 							 <&apps_smmu 0x1184 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@5 {
+@@ -4136,6 +4143,7 @@ compute-cb@5 {
+ 						reg = <5>;
+ 						iommus = <&apps_smmu 0x11a5 0x0420>,
+ 							 <&apps_smmu 0x1185 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@6 {
+@@ -4143,6 +4151,7 @@ compute-cb@6 {
+ 						reg = <6>;
+ 						iommus = <&apps_smmu 0x11a6 0x0420>,
+ 							 <&apps_smmu 0x1186 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@7 {
+@@ -4150,6 +4159,7 @@ compute-cb@7 {
+ 						reg = <7>;
+ 						iommus = <&apps_smmu 0x11a7 0x0420>,
+ 							 <&apps_smmu 0x1187 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@8 {
+@@ -4157,6 +4167,7 @@ compute-cb@8 {
+ 						reg = <8>;
+ 						iommus = <&apps_smmu 0x11a8 0x0420>,
+ 							 <&apps_smmu 0x1188 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					/* note: secure cb9 in downstream */
+@@ -4166,6 +4177,7 @@ compute-cb@11 {
+ 						reg = <11>;
+ 						iommus = <&apps_smmu 0x11ab 0x0420>,
+ 							 <&apps_smmu 0x118b 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@12 {
+@@ -4173,6 +4185,7 @@ compute-cb@12 {
+ 						reg = <12>;
+ 						iommus = <&apps_smmu 0x11ac 0x0420>,
+ 							 <&apps_smmu 0x118c 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@13 {
+@@ -4180,6 +4193,7 @@ compute-cb@13 {
+ 						reg = <13>;
+ 						iommus = <&apps_smmu 0x11ad 0x0420>,
+ 							 <&apps_smmu 0x118d 0x0420>;
++						dma-coherent;
+ 					};
+ 
+ 					compute-cb@14 {
+@@ -4187,6 +4201,7 @@ compute-cb@14 {
+ 						reg = <14>;
+ 						iommus = <&apps_smmu 0x11ae 0x0420>,
+ 							 <&apps_smmu 0x118e 0x0420>;
++						dma-coherent;
+ 					};
+ 				};
+ 			};
 
-> diff --git a/drivers/net/pse-pd/si3474.c b/drivers/net/pse-pd/si3474.c
-> new file mode 100644
-> index 000000000000..a2b4b8bff393
-> --- /dev/null
-> +++ b/drivers/net/pse-pd/si3474.c
-> @@ -0,0 +1,477 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for the Skyworks Si3474 PoE PSE Controller
-> + *
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pse-pd/pse.h>
-> +
-> +#define SI3474_MAX_CHANS 8
-> +
-> +#define MANUFACTURER_ID 0x08
-> +#define IC_ID 0x05
-> +#define SI3474_DEVICE_ID (MANUFACTURER_ID << 3 | IC_ID)
-> +
-> +/* Misc registers */
-> +#define VENDOR_IC_ID_REG 0x1B
-> +#define TEMPERATURE_REG 0x2C
-> +#define FIRMWARE_REVISION_REG 0x41
-> +#define CHIP_REVISION_REG 0x43
-> +
-> +/* Main status registers */
-> +#define POWER_STATUS_REG 0x10
-> +#define PB_POWER_ENABLE_REG 0x19
-> +
-> +/* PORTn Current */
-> +#define PORT1_CURRENT_LSB_REG 0x30
-> +
-> +/* PORTn Current [mA], return in [nA] */
-> +/* 1000 * ((PORTn_CURRENT_MSB << 8) + PORTn_CURRENT_LSB) / 16384 */
-> +#define SI3474_NA_STEP (1000 * 1000 * 1000 / 16384)
-> +
-> +/* VPWR Voltage */
-> +#define VPWR_LSB_REG 0x2E
-> +#define VPWR_MSB_REG 0x2F
-> +
-> +/* PORTn Voltage */
-> +#define PORT1_VOLTAGE_LSB_REG 0x32
-> +
-> +/* VPWR Voltage [V], return in [uV] */
-> +/* 60 * (( VPWR_MSB << 8) + VPWR_LSB) / 16384 */
-> +#define SI3474_UV_STEP (1000 * 1000 * 60 / 16384)
-> +
-> +struct si3474_port_desc {
-> +       u8 chan[2];
-> +       bool is_4p;
-> +};
-> +
-> +struct si3474_priv {
-> +       struct i2c_client *client;
-> +       struct pse_controller_dev pcdev;
-> +       struct device_node *np;
-> +       struct si3474_port_desc port[SI3474_MAX_CHANS];
-> +};
-> +
-> +static struct si3474_priv *to_si3474_priv(struct pse_controller_dev *pcdev)
-> +{
-> +       return container_of(pcdev, struct si3474_priv, pcdev);
-> +}
-> +
-> +static int si3474_pi_get_admin_state(struct pse_controller_dev *pcdev,
-> int id,
-
-Your patchset is corrupted
-
-> +                                    struct pse_admin_state *admin_state)
-> +{
-> +       struct si3474_priv *priv = to_si3474_priv(pcdev);
-> +       struct i2c_client *client = priv->client;
-> +       bool enabled = FALSE;
-
-I believe it is "false", not FALSE.
-
-
-...
-
-> +
-> +       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-> +               dev_err(dev, "i2c check functionality failed\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       ret = i2c_smbus_read_byte_data(client, VENDOR_IC_ID_REG);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (ret != SI3474_DEVICE_ID) {
-> +               dev_err(dev, "Wrong device ID: 0x%x\n", ret);
-> +               return -ENXIO;
-> +       }
-> +
-> +       ret = i2c_smbus_read_byte_data(client, FIRMWARE_REVISION_REG);
-> +       if (ret < 0)
-> +               return ret;
-> +       fw_version = ret;
-> +
-> +       ret = i2c_smbus_read_byte_data(client, CHIP_REVISION_REG);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       dev_info(&client->dev, "Chip revision: 0x%x, firmware version: 0x%x\n",
-> +                ret, fw_version);
-
-dev_dbg, don't pollute dmesg on success.
-
-> +
-> +       priv->client = client;
-> +       i2c_set_clientdata(client, priv);
-> +       priv->np = dev->of_node;
-> +
-> +       priv->pcdev.owner = THIS_MODULE;
-> +       priv->pcdev.ops = &si3474_ops;
-> +       priv->pcdev.dev = dev;
-> +       priv->pcdev.types = ETHTOOL_PSE_C33;
-> +       priv->pcdev.nr_lines = SI3474_MAX_CHANS;
-> +       ret = devm_pse_controller_register(dev, &priv->pcdev);
-> +       if (ret) {
-> +               return dev_err_probe(dev, ret,
-> +                                    "Failed to register PSE controller\n");
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct i2c_device_id si3474_id[] = {{"si3474"}, {}};
-
-Use existing kernel style for such arrays.
-
-
+---
+base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
+change-id: 20250416-sc7280-fastrpc-dma-88f3471a4113
 
 Best regards,
-Krzysztof
+-- 
+Xilin Wu <sophon@radxa.com>
+
