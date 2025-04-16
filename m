@@ -1,120 +1,162 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BE914B950;
-	Wed, 16 Apr 2025 17:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249E6189B8C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826054; cv=none; b=YIkNNsOH45rklUE1xKTCiv9UNvj0BhQeBD+XMc5cuRxEZS9g7Rbg8bftEFDAWkykhJzd2zoGbFbsjQj79c4pr+XpnX7xN77iFbF8lqiE/1JxM1YZGD9H1CNTnOiYiMlI7x07xW0IbI5lhxIn4rZSMsaCsweq8EYrSUU+o2/+rO0=
+	t=1744826137; cv=none; b=evgSQ842HBFjkag1gE+p7pNPtTPBQxFAGnyXz7n2BNrfbhYufw1J3VjHBOxlshzfKUhRP7o4K2YJnR35YHJY3XhEdAk7K8CvmSVehEONK6uOwxhm2AG5+uHkxga9SGlJzn1Z4A6ephyNh5XgPmsJwmX/V3vCSvRAQVig43q0hLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826054; c=relaxed/simple;
-	bh=nKxl5bmdwZ5tuRiu8ZS60/CQ5k3vguUWcj6RiGe38WQ=;
+	s=arc-20240116; t=1744826137; c=relaxed/simple;
+	bh=2CfjplX8zscpXUoal04dv9hwYU8t1NGe72Imp4iy5fc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=goXdGVekb07KLtOE70y9hQz/nza48hoJ45rK9Ac7B5fvbZea8oiM+L6DZ59mtpMNWyTaAhMrGfg+s+CMJTd9gIPGNg4ow3bEhSkbKLvvWLvDwJFayAuBfPFgoPcqZIfCvjZnGUjKOW8IymRVixEnRQLBGx3cyPQsfmrx8QMcHKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3ZwGJfJ; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=oZoimKQHN8QtA+/0+v+KUW9WY0vwAajo8O7bEoMfFKH5f3GSH3E3fyKKNmXE/Y13HBylQ96LZv0hKx+SEwRAouvTElI+Ieh+jyojhz5XZaunkaS7oeYY1VyrQHZ5KE0O48lJtje6e/hhMXg0DnqkC4NVDGIHS9jRyyXUMZDOEZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nrF6BGcQ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3ZwGJfJ"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so11470271fa.1;
-        Wed, 16 Apr 2025 10:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nrF6BGcQ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe808908so7215e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744826051; x=1745430851; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744826134; x=1745430934; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hlh2fjr1p5zOr1jLNmoVy5ueVHw8TQ5D92sVTob9JxA=;
-        b=G3ZwGJfJdHZP1rGv9HDcz85mphqppAXvUAvQBv4QlUjvReSqj9KLrQK1LwpN5DPRND
-         KndTVGjbw4TYB+068T4tADHpv6MFLwzoNNebDSqfVxHTYw7+m3TmzWezrV+/PM2qNdey
-         72zAV1hM6XJVFq4S02J5O+TXHtMFnMb52y4OyRypme1dGMaUx8CCawABgdmu4YoTNBTm
-         pnCDGQbierQaxObtHTdX982F5nlhIdqjGAixds9aXB7JQZ7/8+xhzHSpe2NhIJmLmp2N
-         kLCvich0xVrafmBnR0OnC/P6yEC8EPaRZaVi4dZ1Uc2TiIVSCjbz4g515LQEVa6dwr65
-         plSg==
+        bh=/tO3E3xALB/t7rctpx9zy1Q881g7OQ2piRAkNHbzMn8=;
+        b=nrF6BGcQmW0K3vznUjHilJ1OTF0iDniW6uCHjcGtnIe53FOjQ6bQXUbNIegdH8g4BM
+         rx79IS5Pjzn6xZJCecb/N1XzM7Nk1zEdlV2bdL3G3tZFRShDWHwxr2ToT8cxsBlFcc64
+         TrbVtn76n8bkaKpK1lBzG8zegQqHZLF7f4KOQYLQ7PhsC2JrM2H+HwaMBhfNSDb0B/Ls
+         /iOS/Sb8UmnbUh4vjaSOSWHlIYMhIB8XeObdXkT3oA9Tdkei8DTU+RvjC9a0zMyYB2pt
+         +bbd/qs2/VNvsyp+c8Z/QpJOT5wc1AMGyhXe2QHS2Rlot+CxWgqFSIMtIBPW/RTdqKp7
+         wKcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744826051; x=1745430851;
+        d=1e100.net; s=20230601; t=1744826134; x=1745430934;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hlh2fjr1p5zOr1jLNmoVy5ueVHw8TQ5D92sVTob9JxA=;
-        b=DZPrJN0tFIeJf0SjqkRg0Jk85Di9cQOwoyr4G9lXVZO8f8MyVoquCxJAZlBSjmiB85
-         dXCiRIgTniSMxkD5joS8f858cqfLZjxM0D6jua4l4c72UNj+8p1hpS92aKX4enzxglQ4
-         TrlgvgmmOLAxDPA1SnL8MgGmUVJy49LO22QCHsbzNRPfJzpEvE65PSsX9mbiB79bhDNJ
-         eefDsU4+QTre/OqKanpFob1Dk9sx35BL3Gz+hIm3S8/FaGlPf0imJdmpR5KtgpA5QCHI
-         N50T1HM6bngL7FJ7PA1hKj8kEkO13DpVJwyGfjoojXoDTB83oi6SIaEKBZwNL6VDYbsz
-         NjSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+sLSi3TDrUxYQvykAxPJ03lwlwtnac60PNFT7hV+XDD0e9dy67A+RVa3iR5wdqgkmvIHPpMkfcqE/@vger.kernel.org, AJvYcCUZG3PXbDU/a14y7hsTaQqfljAAzCCTMACU//i/PEv4FAMjBkVNfFBTA90tfEjXObFPMgGiKOr1aYLsSvLmpuY=@vger.kernel.org, AJvYcCUeMT/7mV2PDOQOCqSErdQ3DWC6OQWeIdQ7Nqgf92GihA6Daq/O3l3geoVsuq6XefrwfTitssY+80lS@vger.kernel.org, AJvYcCUoHWvP4c7aA9MlZTJ9vTUgnmuJ53BS/AgBxWX81satJNMhBCjP4qNiXphlIX5jZdEfdKQAM3IyMC1lwqlN@vger.kernel.org, AJvYcCVf8NS/ceimTBrYsUuitnVNbKCXslvUuKuAdrl2zsePMnSJySKuo6mTmsfkX0648CmVcx4zGQAMT2JXt8hM@vger.kernel.org, AJvYcCW5MjgD6dmLRHw6D2Z1MeW/tvc5nuZfpdLXthGctMr+fbGEknfRF3//ToR5pctEskl4Jjoa5Sz0@vger.kernel.org, AJvYcCWZ5NSqNZHj2gxFmGUcUXJveYA7F2LMpfIGAkhuzE4FYJReWplgn7NwuAfcgHL2EjDhClUabZhya+WqdXw=@vger.kernel.org, AJvYcCXeWdTwwOGB6ImdvDUAyoU90YQ1yxCa7sFtGIIBAIqA/3/MfQ4g4q6+HQiQSLGqA4Cr0JTaDFpvlkjW0S5tKIqL@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd3DaiHOv2kamiqFV9p9F6OH0n2rwD2iqSjmzzqL0uPlxo9Gkt
-	CXp8Cu+HFhycz/JhqMRIThM4Ixsg+VHtUg+jjKMUkdFyVExQKDLohDMwgBOLNkzsslj1Zie7bwM
-	z10FE3WZ5Vo82d8KAzHCuv4xVQP4=
-X-Gm-Gg: ASbGncvwwMO2h89HnZZvYxPlZ008+L6+GaDLlHDw621BG7OTqejXFWbEu1G1YqsMpxq
-	GBHLw8up0ay6Q/CiQ72HjQsbdqcxyFwzBP0JWNrwTXyA23iMfxPeiCEFZltBk/79gMj3dYjuiPw
-	Ui6CvQ407Y04gScJ0jTvowV9JAht0rDUcWIGHX5w==
-X-Google-Smtp-Source: AGHT+IHdVZCfT1hHQSRWgqhTI/bFks+re46BrEdji8oUTIIg3UUsqBCnhQautOPIEbcY+jJYHZHUq4U0ygS+69zWTu0=
-X-Received: by 2002:a2e:9247:0:b0:30b:eb0a:ed63 with SMTP id
- 38308e7fff4ca-3108574e780mr829931fa.18.1744826050903; Wed, 16 Apr 2025
- 10:54:10 -0700 (PDT)
+        bh=/tO3E3xALB/t7rctpx9zy1Q881g7OQ2piRAkNHbzMn8=;
+        b=CEauPVV1RaK30/AcfxLFuz05u7nccqziy7ywGtr2oHmSWU6bo24TDktO5ghKCG2VCU
+         RLRwf67JrnPCcU+dmVIDJit/5RHT+eOGHz3c3/CUHJe90rX9T7hG5OghOgrqlsb2TYqw
+         OEq2TvwE/q83SuvyABTDkPX6i5Y2rrD/6px7s625phYq+1FQ4tqo363/DX0yafSMt5JK
+         0f+oztV/sEiMCfz1OB7A3YWIipQRLP9oB3WfrVFeOsA4MwtjR836yekacEo9bXDfKwcG
+         dwAmOs63mOscV+FWkwuhNKvOt83K8yBtc5x8+y2YNI0eYs8f/0x5Pe1NvpEpXNGRzgS9
+         I6Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoUIIbOam8c0JdkYJ2Al4ynE5pJsSy7lgGb6c7g7c702C4MUO7vmNUVsqWY9HI9/1q9Yy/13QgfkZ/SEQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyut+tHaSWksnQyCL2AGYckBgzQ7Uz3OLtbwmukcGB3gMGF/fkX
+	PxSN4ZLaZ9p4xowcI018yDywMoWHfukAKXzObrmgV5cbVygG5y9/onyTHO/AI5kFu1xxYb3B71Z
+	yu76OuLWcBIZFLIJWFHQGTwlJvL4868rdzL/Nu90dMXtP0WHLU5UQooUbKA==
+X-Gm-Gg: ASbGncvUIoE8bEy3iN4tfOyg47mGhCIT5zOklJTu0B9xrCK/tSyFj3a5cs802C1T0p7
+	IiB4mqKZcJIFiWEkv8Kwy/kblA4xQReCynX5d3fNdEb8+HZSVlSOS/wlxSL2jRU5lVJFqhiUL/N
+	7zYD9iT0R4G+vqPgJQMpEhgEPEETg5mrxNQDeuHXyy6+Sjvtl+cqLF
+X-Google-Smtp-Source: AGHT+IFj3pE5zdkYxEZY4aBG+o6bCeM3IfRKyL3i3Kw46tKIu/J5VpCIswp+cj2mEYBuvzx+IfzLj6h4UxCBN0hfGPw=
+X-Received: by 2002:a05:600c:358e:b0:439:8f59:2c56 with SMTP id
+ 5b1f17b1804b1-44062a912f8mr34195e9.2.1744826134040; Wed, 16 Apr 2025 10:55:34
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-ptr-as-ptr-v9-0-18ec29b1b1f3@gmail.com>
- <20250416-ptr-as-ptr-v9-6-18ec29b1b1f3@gmail.com> <67ffee16.c80a0220.1dbd15.c3ad@mx.google.com>
-In-Reply-To: <67ffee16.c80a0220.1dbd15.c3ad@mx.google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 16 Apr 2025 13:53:34 -0400
-X-Gm-Features: ATxdqUHSRnIpPPQBV0jkAOVSIHT_IhSMCpuq3at5fw7oWfF51dZkACZO8GK6lVs
-Message-ID: <CAJ-ks9n-5Gkp61ODfBbf3==fYp1AbexANLZaQpsGj_mj1WRfkA@mail.gmail.com>
-Subject: Re: [PATCH v9 6/6] rust: enable `clippy::ref_as_ptr` lint
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
-	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org
+References: <20250415235308.424643-1-tjmercier@google.com> <46892bf4-006b-4be1-b7ce-d03eb38602b3@oracle.com>
+In-Reply-To: <46892bf4-006b-4be1-b7ce-d03eb38602b3@oracle.com>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Wed, 16 Apr 2025 10:55:22 -0700
+X-Gm-Features: ATxdqUFGVI9JR-cfNSa7cIRPm3k9k6vDZ64btl4ethiLao_mMPbM-xa3GVv2MjA
+Message-ID: <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com>
+Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
+To: Kamalesh Babulal <kamalesh.babulal@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	=?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
+	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 1:51=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
+On Wed, Apr 16, 2025 at 2:19=E2=80=AFAM Kamalesh Babulal
+<kamalesh.babulal@oracle.com> wrote:
 >
-> On Wed, Apr 16, 2025 at 01:36:10PM -0400, Tamir Duberstein wrote:
-> > In Rust 1.78.0, Clippy introduced the `ref_as_ptr` lint [1]:
-> >
-> > > Using `as` casts may result in silently changing mutability or type.
-> >
-> > While this doesn't eliminate unchecked `as` conversions, it makes such
-> > conversions easier to scrutinize.  It also has the slight benefit of
-> > removing a degree of freedom on which to bikeshed. Thus apply the
-> > changes and enable the lint -- no functional change intended.
-> >
-> > Link: https://rust-lang.github.io/rust-clippy/master/index.html#ref_as_=
-ptr [1]
-> > Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> > Link: https://lore.kernel.org/all/D8PGG7NTWB6U.3SS3A5LN4XWMN@proton.me/
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> Hi,
 >
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> On 4/16/25 5:23 AM, T.J. Mercier wrote:
+> > Android has mounted the v1 cpuset controller using filesystem type
+> > "cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
+> > behavior where the controller name is not added as a prefix for cgroupf=
+s
+> > files. [2]
+> >
+> > Later, a problem was discovered where cpu hotplug onlining did not
+> > affect the cpuset/cpus files, which Android carried an out-of-tree patc=
+h
+> > to address for a while. An attempt was made to upstream this patch, but
+> > the recommendation was to use the "cpuset_v2_mode" mount option
+> > instead. [3]
+> >
+> > An effort was made to do so, but this fails with "cgroup: Unknown
+> > parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
+> > mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
+> > update the special cased cpuset_mount(), and only the cgroup (v1)
+> > filesystem type was updated.
+> >
+> > Add parameter parsing to the cpuset filesystem type so that
+> > cpuset_v2_mode works like the cgroup filesystem type:
+> >
+> > $ mkdir /dev/cpuset
+> > $ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
+> > $ mount|grep cpuset
+> > none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v2_=
+mode,release_agent=3D/sbin/cpuset_release_agent)
+> >
+> > [1] https://cs.android.com/android/_/android/platform/system/core/+/b76=
+9c8d24fd7be96f8968aa4c80b669525b930d3
+> > [2] https://cs.android.com/android/platform/superproject/main/+/main:sy=
+stem/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=3D2dac5d89a0f024a2=
+d0cc46a80ba4ee13472f1681;l=3D192
+> > [3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385@r=
+edhat.com/T/
+> >
+> > Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use v2=
+ behavior in v1 cgroup")
+> > Signed-off-by: T.J. Mercier <tjmercier@google.com>
 >
-> Thanks!
+> The patch looks good to me, please feel free to add
+>
+> Reviewed-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
+>
+> One nit below:
+>
+> > ---
+> >  kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
+> >  1 file changed, 29 insertions(+)
+> >
+> > diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> > index 27f08aa17b56..cf30ff2e7d60 100644
+> > --- a/kernel/cgroup/cgroup.c
+> > +++ b/kernel/cgroup/cgroup.c
+> > @@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type =
+=3D {
+> >  };
+> >
+> >  #ifdef CONFIG_CPUSETS_V1
+> > +enum cpuset_param {
+> > +     Opt_cpuset_v2_mode,
+> > +};
+> > +
+> > +const struct fs_parameter_spec cpuset_fs_parameters[] =3D {
+> > +     fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
+> > +     {}
+> > +};
+>
+> A minor optimization you may want to convert the cpuset_fs_parameters int=
+o
+> a static const.
 
-Thank you! I updated the earlier patches as well.
+Thanks, I copied from cgroup1_fs_parameters since that's where
+cpuset_v2_mode lives, which doesn't have the static currently
+(cgroup2_fs_parameters does). Let me update cpuset_fs_parameters in
+v3, and add a second patch for cgroup1_fs_parameters.
+
+> --
+> Cheers,
+> Kamalesh
+>
