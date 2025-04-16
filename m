@@ -1,222 +1,111 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C114B950
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FFB19F40A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744766541; cv=none; b=F5pHGcSysGgqaHZAcxnbJy18xEh6f9giNOp0Fu9mo3YVe1KtKdbHlEShpK+cIEGbGeBDk00DQ5aX2/T0Ihh7XfH2XrXBtnJkEzmU+7eps+CiO4zvWjkkD+3nGF6ml4kCfZT7MOAHnWcy87ZrYImh9Ac5SeDklpvq51A2tKl8TB4=
+	t=1744766686; cv=none; b=ZgKT89GZxazcZ1jeYV9VwjwLixWkzsbooO3QAXeoF3GtFeVdSL/uKJD8QglGh/simwCNGGo4QeH1yBhP4uTlG/cJjKOEAdqxoix1p70KpdnEylfZf5InSRX6XbLOA1tPp7VyJ2qgbMo6XYFLXQG3n7ahhgyjNODVthw0u/og0rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744766541; c=relaxed/simple;
-	bh=AMWQxp2pL96fP/AbKLFV7G4sCV0QYAkLQfIyL+jVfW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LsQAMIXVAtFuffQ3uoMHCqI+CcZLeY7O8JLUsE2sCi9OgXVd8oPV5+V5uDV/pR38q9uNLysh9SezCKU30mIzvSkcuWTA2fqOSzj2FAi6Shv6bZD+f+elPGAzAr1S7m1jiNnaSIRfalnajQuHsL9uGw8/JGJwaNtfxyLyaOZrIo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gouRYW3e; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744766686; c=relaxed/simple;
+	bh=hLwnONbgkXs3AQfY2NdUdEHG/Y3d2eZ1tECEUayKyTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hc3uKC2dUAQKo1CABdGiQ0qhAL1Enb63iLTaW6+/U8q8DIQMykWixrPSSkXvbiiuAez8+0tps+6SL5iLhobY/7tnUS8hNBl+W50aAheCfmmXcXx1dDhKu4wqJo+m0ZeaeWdq80wHn36lNlGN2KPOShjsSjfoXniQzqB/K8noizw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWys1/ig; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gouRYW3e"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744766528; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
-	b=gouRYW3eaLXC6zT/J8d2R70PHTbSH4jnu0djuAqRju4bWHIQI1b760BJ0swypvKWNUQ1P57y0a/rKehZxtx3N/m2cPX1oFPQLIFCnhXX9Ct39CRUmMie+1gDlbQViUyOz/9qaEQkh9ad0JBbKDlDCFYOh5ZIxcA5E7u/P9Ptiz4=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WX6j.0Y_1744766526 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 16 Apr 2025 09:22:07 +0800
-Message-ID: <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
-Date: Wed, 16 Apr 2025 09:22:06 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWys1/ig"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52446b21cfdso2550436e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744766682; x=1745371482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sdKdn70M1WrWKq5CkuLZtZt10QyYO6gcPi3ytovJxXI=;
+        b=NWys1/igvW3j/K7xK9mNNfm9KYypZLS7rn1QaFbsv1fSQnoIdVZG4AkfGND8RqJh/h
+         O79P4WOcDEUY6GmLRbMerG2ZjAzSQB0AN+HJuecaDp4N7TaHEwxlyfKIHfSnu2fbF88N
+         EYy4Jukeu/8Jh5Oal8qpHSuXKbCwandzJSTs2fkTXlOdZFGnySIzoyfGrF5afqW1j4dF
+         oyiIo6u+2+qGDTZdDe2/MzgjCXN4U7Gcz/5TbDgM5U/BfCmwJshLiKkRj076UwwQb4Fa
+         N9d+PZmLp2NUD3jYYgwxVKafH1Y25q33yelnz7JAvc8Za6Dc62Jm6UaplecZdOJjLuOH
+         XgxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744766682; x=1745371482;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sdKdn70M1WrWKq5CkuLZtZt10QyYO6gcPi3ytovJxXI=;
+        b=Mn+RLZ+6+6Aj8Nwyt1k74wInAjFCt+n6TJSLqmZITl/f0YU8Mc7t7rVvrtRhGqIiXC
+         6Y3Hvs3wwPaQuAQJX6nuf9kkEfBFppBmSQzIw3RpCjHdPaMkQLhVf0zn571IFNpaGiZE
+         YVxC+jUvmE2n17s2uhGTcxpRPGrN78ktXyCsQHQNPt2I0ekoaciV433D7RYqi0HudYQR
+         f/UjXIVqxbyMEx5diDaG91UkXuNsPvuweMrvlNOlggd11t/ZR3q9AOawXLJkxjQUfi/o
+         BwAXefsn9WXP8VzOA8+ode8wRk8/M7nLDyftzA2v2oUTBPSrKC8A4kZdQzogTubUrC96
+         vRQw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVeIQJPgbRWHIGAjfvMYHjsz0FHYHFHcIKJDxpl87Vrc989Zp2dLnx68xKxTu3zbZuIu453l3rK3cTEPo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdhWknRhxW2wL5QnkFXUJCBZcPSBWLuhA6PHEIRRZeEX4U/Wjm
+	eLEWNoiaE/4YC/f2442E/zL8P6IDad14uAAg5RnelHWVAhPGTgWSPuAZEYH0s+McPTmLpS+thRr
+	Isco4iWefNfizcvQHwLA2IqM7Sty/i4DQtno=
+X-Gm-Gg: ASbGncstilo+mZSRIdPDHl4IYsAzKmgfmL4EPRJkSxXGQNEtc6OuwiWc9PVAEv1P9on
+	ORnmcAOos4qLBkCu3NIPOs/LXYMfyJfErS2sgmZNVzAgMJ2N+MAfOhoTtBL632qwqnfJCbhakLV
+	220ek+cgaFuf6h8AH31jP1g6o=
+X-Google-Smtp-Source: AGHT+IGeLcLTAsrZtctAj5QLxbbexgEQXdYtXdXzBjzYtCJMyNimzzzwHUHM95R2TCxETocIlsSNLzu363yOPtxXT5E=
+X-Received: by 2002:a05:6122:319f:b0:520:6773:e5bf with SMTP id
+ 71dfb90a1353d-52909111d6cmr1167731e0c.1.1744766682434; Tue, 15 Apr 2025
+ 18:24:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
-References: <20250402202728.2157627-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250402202728.2157627-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250415054642.3878839-1-yangsonghua@lixiang.com> <Z_5z0phM6h73EGci@slm.duckdns.org>
+In-Reply-To: <Z_5z0phM6h73EGci@slm.duckdns.org>
+From: Eric yang <jluyangsonghua@gmail.com>
+Date: Wed, 16 Apr 2025 09:24:31 +0800
+X-Gm-Features: ATxdqUGd8qLBVovYvn5vaAowjTfa953T69lHhmAIGUfSiSyhYjlfXvhRUCJkOPE
+Message-ID: <CA+P2CkZ3c6MvaX7RDy_0x9VuXDqKPisOPdW1rndrgwJoPCkjwg@mail.gmail.com>
+Subject: Re: [PATCH v2] tools/sched_ext: Improve cross-compilation support in Makefile
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, changwoo@igalia.com, 
+	linux-kernel@vger.kernel.org, sched-ext@meta.com, 
+	yangsonghua <yangsonghua@lixiang.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Okay, v1 works well. I misunderstood your intentions last time. Please
+disregard v2.
 
-On 2025/4/3 04:27, Sandeep Dhavale wrote:
-> Currently, when EROFS is built with per-CPU workers, the workers are
-> started and CPU hotplug hooks are registered during module initialization.
-> This leads to unnecessary worker start/stop cycles during CPU hotplug
-> events, particularly on Android devices that frequently suspend and resume.
-> 
-> This change defers the initialization of per-CPU workers and the
-> registration of CPU hotplug hooks until the first EROFS mount. This
-> ensures that these resources are only allocated and managed when EROFS is
-> actually in use.
-> 
-> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-> still occurs during z_erofs_exit_subsystem(), but only if they were
-> initialized.
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
-> ---
-> v1: https://lore.kernel.org/linux-erofs/20250331022011.645533-2-dhavale@google.com/
-> Changes since v1:
-> - Get rid of erofs_mount_count based init and tear down of resources
-> - Initialize resource in z_erofs_init_super() as suggested by Gao
-> - Introduce z_erofs_init_workers_once() and track it using atomic bool
-> - Improve commit message
-> 
->   fs/erofs/internal.h |  2 ++
->   fs/erofs/zdata.c    | 57 ++++++++++++++++++++++++++++++++++-----------
->   2 files changed, 46 insertions(+), 13 deletions(-)
-> 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 4ac188d5d894..bbc92ee41846 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -450,6 +450,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages);
->   int __init z_erofs_gbuf_init(void);
->   void z_erofs_gbuf_exit(void);
->   int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
-> +int z_erofs_init_workers_once(void);
->   #else
->   static inline void erofs_shrinker_register(struct super_block *sb) {}
->   static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-> @@ -458,6 +459,7 @@ static inline void erofs_exit_shrinker(void) {}
->   static inline int z_erofs_init_subsystem(void) { return 0; }
->   static inline void z_erofs_exit_subsystem(void) {}
->   static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
-> +static inline int z_erofs_init_workers_once(void) { return 0; };
+Thanks
+Eric
 
-Why we need this? I think it's unused if decompression
-subsystem is disabled.
-
->   #endif	/* !CONFIG_EROFS_FS_ZIP */
->   
->   #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 0671184d9cf1..75f0adcff97b 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -11,6 +11,7 @@
->   
->   #define Z_EROFS_PCLUSTER_MAX_PAGES	(Z_EROFS_PCLUSTER_MAX_SIZE / PAGE_SIZE)
->   #define Z_EROFS_INLINE_BVECS		2
-> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
->   
->   struct z_erofs_bvec {
->   	struct page *page;
-> @@ -403,10 +404,44 @@ static inline int erofs_cpu_hotplug_init(void) { return 0; }
->   static inline void erofs_cpu_hotplug_destroy(void) {}
-
-I wonder those helpers are still needed since we have
-z_erofs_init_pcpu_workers().
-
->   #endif
->   
-> -void z_erofs_exit_subsystem(void)
-> +static int z_erofs_init_workers(void)
-
-I think we need to rename it as
-`static int z_erofs_init_pcpu_workers(void)`
-
->   {
-> -	erofs_cpu_hotplug_destroy();
-> +	int err;
-> +
-> +	err = erofs_init_percpu_workers();
-> +	if (err)
-> +		goto err_init_percpu_workers;
-> +
-> +	err = erofs_cpu_hotplug_init();
-> +	if (err < 0)
-> +		goto err_cpuhp_init;
-> +	return err;
-> +
-> +err_cpuhp_init:
->   	erofs_destroy_percpu_workers();
-> +err_init_percpu_workers:
-> +	atomic_set(&erofs_percpu_workers_initialized, 0);
-> +	return err;
-> +}
-> +
-> +int z_erofs_init_workers_once(void)
-
-I'd like to inline them into z_erofs_init_super().
-
-> +{
-> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
-> +		return 0;
-> +	return z_erofs_init_workers();
-> +}
-> +
-> +static void z_erofs_destroy_workers(void)
-
-z_erofs_destroy_pcpu_workers()
-
-> +{
-> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 0)) {
-
-	if (atomic_xchg(&erofs_percpu_workers_initialized, 0))
-		return;
-
-> +		erofs_cpu_hotplug_destroy();
-> +		erofs_destroy_percpu_workers();
-> +	}
-> +}
-> +
-> +void z_erofs_exit_subsystem(void)
-> +{
-> +	z_erofs_destroy_workers();
->   	destroy_workqueue(z_erofs_workqueue);
->   	z_erofs_destroy_pcluster_pool();
->   	z_erofs_exit_decompressor();
-> @@ -430,19 +465,8 @@ int __init z_erofs_init_subsystem(void)
->   		goto err_workqueue_init;
->   	}
->   
-> -	err = erofs_init_percpu_workers();
-> -	if (err)
-> -		goto err_pcpu_worker;
-> -
-> -	err = erofs_cpu_hotplug_init();
-> -	if (err < 0)
-> -		goto err_cpuhp_init;
->   	return err;
->   
-> -err_cpuhp_init:
-> -	erofs_destroy_percpu_workers();
-> -err_pcpu_worker:
-> -	destroy_workqueue(z_erofs_workqueue);
->   err_workqueue_init:
->   	z_erofs_destroy_pcluster_pool();
->   err_pcluster_pool:
-> @@ -645,6 +669,13 @@ static const struct address_space_operations z_erofs_cache_aops = {
->   int z_erofs_init_super(struct super_block *sb)
->   {
->   	struct inode *const inode = new_inode(sb);
-> +	int err;
-
-	struct inode *inode;
-	int err;
-
-	err = z_erofs_init_workers_once();
-	if (err)
-		return err;
-	inode = new_inode(sb);
-	...
-
-> +
-> +	err = z_erofs_init_workers_once();
-> +	if (err) {
-> +		iput(inode);
-
-To avoid such unnecessary iput() here...
-
-Thanks,
-Gao Xiang
+Tejun Heo <tj@kernel.org> =E4=BA=8E2025=E5=B9=B44=E6=9C=8815=E6=97=A5=E5=91=
+=A8=E4=BA=8C 22:57=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Apr 15, 2025 at 01:46:42PM +0800, yangsonghua wrote:
+> > Modify the tools/sched_ext/Makefile to better handle cross-compilation
+> > environments by:
+> >
+> > 1. Adjusted `HOST_OUTPUT_DIR` to be relative to `$(OBJ_DIR)`, ensuring
+> >    correct path handling during host tool building when cross-compile
+> >    (HOST_OUTPUT_DIR now points to $(OBJ_DIR)/host-tools)
+> > 2. Properly propagate CROSS_COMPILE to libbpf sub-make invocation
+> > 3. Add missing $(HOST_BPFOBJ) build rule with proper host toolchain fla=
+gs
+> >    (ARCH=3D, CROSS_COMPILE=3D, explicit HOSTCC/HOSTLD)
+> > 4. Consistently quote $(HOSTCC) in bpftool build rule
+> >
+> > The changes ensure proper cross-compilation behavior while maintaining
+> > backward compatibility with native builds. Host tools are now correctly
+> > built with the host toolchain while target binaries use the cross-toolc=
+hain.
+> >
+> > Signed-off-by: yangsonghua <yangsonghua@lixiang.com>
+>
+> I already applied v1, so please send the updates as incremental changes
+> atop.
+>
+> Thanks.
+>
+> --
+> tejun
