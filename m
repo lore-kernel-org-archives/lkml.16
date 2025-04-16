@@ -1,114 +1,101 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68EC8F7D;
-	Wed, 16 Apr 2025 07:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A922B8C2
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789064; cv=none; b=V0rhhpRneovA7NVk3u80DII5iSJ8i4n7Ha2XANHQApEzzm28qUC+yeS9Mo3c9uEbMULL82XQ48lddczMnR1DSKkBVLssfzI4r07DPEUoKG1PVCx2puKIP/SDHZtyd3gtHaevvZkrW0eGk/IHFwrFJpFA1uio1GkqjyfM+tcdeWI=
+	t=1744789074; cv=none; b=Z+0trATDbXT7VzJ+frZ6huLB7bEk24dXgI34br04ug4f+rhkvmW5YT4PoKTcpe6dw27YONeB0tpBVHIuJhUZzBXy/uL5/tfX82FR+R+zH7oZFnHBRqKSYsB5birhsxS3wRn2ZENoA/PL98dQtEnBMlfKU6aPz3+DAfQjjeKSEoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789064; c=relaxed/simple;
-	bh=A2zdC+VzZXUkztMafHM4wvtTwwSA7mHk2q5XfHtZX1k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o9PKP5zDinNBKs/ZNWA7ryhM8TWZBIc9f/wwBbrY4V/0u1wSB/lCTvs/CVYdTbFXCLT9Rsjbi2/yPwrI93x+8W1Mux9ZtSfgg5eZiMmPcenYr6z2/TurvI41E9w+TyvHz59Jeg8VEEWri74Nj/jR2JOsn4uJpGkO+sC3CHMa19o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZctBn03cVz1cyT0;
-	Wed, 16 Apr 2025 15:36:49 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id AAC77180080;
-	Wed, 16 Apr 2025 15:37:38 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 16 Apr 2025 15:37:38 +0800
-Message-ID: <d06a75d7-c503-4aa1-a846-d23ef5c48d3c@huawei.com>
-Date: Wed, 16 Apr 2025 15:37:38 +0800
+	s=arc-20240116; t=1744789074; c=relaxed/simple;
+	bh=/dHTnIqKv1XUtEnnIqSrU6JfGL02W+RqBJVzPOERN8c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=hUeNgxFskwsYJzhYZ/YWSSWUecZoowlqQ5XLTLSfjVZ3AI3UFc6ttCPvimDMftbCgb/crxCpVrHcPnohlZA0PFcpM8cZZ4OJc8fsjUH5/Z/lNxa2g166hQesFYEjX5FBr0S4DmZPY6opB4qwECURZnBuR6BoTctEYcOinb1L9sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edj2n6gq; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edj2n6gq"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac3123c0ef9so80497566b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744789070; x=1745393870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
+        b=edj2n6gqCJS9T3K0oXcdFhpiPIngSGM7tur1SQw569jiQaoG1CKU3Y6BqeoaoTAJK2
+         P1AGfGBwH+hOBJgDaf8/TF6jYQqCeVUBR2ixlR9GLa8fFwZat+m/7WjZkh1BNHD9Dnzb
+         dKlPuLUAxN8XsHEPa2JR6UsETg/RAsHnQlpoStDb++XSTfPv5yJ8TI8R1IiqAC6O4UuN
+         dGeWDWhFfd6Pc43ROLY3d+/BMAFOpQi+qGYiGabHUOqMvmzIRZA/YQrMsH7ZXBpJlV/r
+         iV4jqZ4iDYudLsMCQEpRCfysxXZ8aNc3hGY09Yqz8mxQ905xzDVlqVI/OiCOiD4NKFmF
+         jpOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789070; x=1745393870;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
+        b=fK8MqdkFhoF/o1fBFEsd750HiK9iBE/3UxJA0S1QoFVotw9Z7ThutENtzKsI7IrE9k
+         Fy0cDMCdUKBDM2CS/KpJGpZIrysdMl9M2rb3JYEBdevu5+xNhyPpDgG0m4GhOe70m8Tq
+         YgxdiBK920sRvhCyFzBotJZvW7XI4cwMWpIIxkBsOkjYdwpxcLBLxqIR5kjrSX8X0p0L
+         Cs8UH+dbFUNUjblxp3S/OprXukD7diGnUWdg1bqpA6V+mSVpFMVb4vn2Q/HScPlyvFh4
+         NEG2mBik15BTQrymRIZObHlz6HRgS3Lq2sqrnYstWwjxqM7i0ZKgzeAm/85rt1bpyBy3
+         nSyA==
+X-Gm-Message-State: AOJu0YztZY8dgsOZl1X5NYX+2vMaPJZ2OyVdmsTBkRDrxNfp1dmW83TD
+	DdYgHOdWK+K/Fyqg2Co2iYdm//GG5p12j8KbeJuyj4DxPTWWR4eCm+ONk+vi1ssnMJvOrN79/d8
+	j
+X-Gm-Gg: ASbGncsbx2FDEEi9hPXvAh8gEwczfGcPbylVj5vkJ6MwvSfigYvtAQXWeNTjrfJIKMg
+	7br/GTlLepLCauwz3K94fyWCROr99hmUZbjJ6/s/ptCu5Zdn4ibnz6ZCH4WAORlRexH/5i6KEU1
+	BwcepuCTxqWBk49Q11VrlkebA7RvimOVL+9lGAgV/uF3rLhS/ZLfOTecYshRGnYJmhXNT/t5QLy
+	rCzJkYfNFUBXb+A6jVuOZtatiqcyjTVbbRgvrtZzZ8hJ6kzT/cdKdfx14tr87aepc2szeYxh1rq
+	1EVIn0KRpKMRtULy5tOO4WNinxa/uckZgnRMJT4uMB7YmTWyjgJkErwI5z+GE2GBjuvl0wSO3/I
+	liLCu3Qfipkh9zWs=
+X-Google-Smtp-Source: AGHT+IGGDPu8p/m7Rp/p9mRRBOni1XiQkV2RaJnHLAJhksBbAx8CjdUPnxxzVfx8pJ0atl4HAQG9Tw==
+X-Received: by 2002:a17:907:86a3:b0:ac2:1d34:44ff with SMTP id a640c23a62f3a-acb428ef998mr22714466b.4.1744789070418;
+        Wed, 16 Apr 2025 00:37:50 -0700 (PDT)
+Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1c849dsm75324966b.147.2025.04.16.00.37.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 00:37:49 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <Z_RflBe5iDGTMFjV@kspp>
+References: <Z_RflBe5iDGTMFjV@kspp>
+Subject: Re: [PATCH v3][next] w1: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-Id: <174478906927.19176.15442189860155457011.b4-ty@linaro.org>
+Date: Wed, 16 Apr 2025 09:37:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: page_frag: Check fragsz at the beginning of
- __page_frag_alloc_align()
-To: Haiyang Zhang <haiyangz@microsoft.com>, <linux-hyperv@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <corbet@lwn.net>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>
-CC: <decui@microsoft.com>, <kys@microsoft.com>, <paulros@microsoft.com>,
-	<olaf@aepfle.de>, <vkuznets@redhat.com>, <davem@davemloft.net>,
-	<wei.liu@kernel.org>, <longli@microsoft.com>, <linux-kernel@vger.kernel.org>
-References: <1743715309-318-1-git-send-email-haiyangz@microsoft.com>
- <1743715309-318-2-git-send-email-haiyangz@microsoft.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <1743715309-318-2-git-send-email-haiyangz@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
+X-Mailer: b4 0.14.2
 
-On 2025/4/4 5:21, Haiyang Zhang wrote:
-> Frag allocator is not designed for fragsz > PAGE_SIZE. So, check and return
-> the error at the beginning of __page_frag_alloc_align(), instead of
-> succeed for a few times, then fail due to not refilling the cache.
+
+On Mon, 07 Apr 2025 17:28:20 -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  mm/page_frag_cache.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
 > 
-> diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-> index d2423f30577e..d6bf022087e7 100644
-> --- a/mm/page_frag_cache.c
-> +++ b/mm/page_frag_cache.c
-> @@ -98,6 +98,15 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
->  	unsigned int size, offset;
->  	struct page *page;
->  
-> +	if (unlikely(fragsz > PAGE_SIZE)) {
-> +		/*
-> +		 * The caller is trying to allocate a fragment
-> +		 * with fragsz > PAGE_SIZE which is not supported
-> +		 * by design. So we simply return NULL here.
-> +		 */
-> +		return NULL;
-> +	}
+> [...]
 
-The checking is done at below to avoid doing the checking for the
-likely case of cache being enough as the frag API is mostly used
-to allocate small memory.
+Applied, thanks!
 
-And it seems my recent refactoring to frag API have made two
-frag API misuse more obvious if I recalled it correctly. If more
-explicit about that for all the codepath is really helpful, perhaps
-VM_BUG_ON() is an option to make it more explicit while avoiding
-the checking as much as possible.
+[1/1] w1: Avoid -Wflex-array-member-not-at-end warnings
+      https://git.kernel.org/krzk/linux-w1/c/a9b3ecc7bcf6cb8d3c4947a7ae260f508c4c5fd1
 
-> +
->  	if (unlikely(!encoded_page)) {
->  refill:
->  		page = __page_frag_cache_refill(nc, gfp_mask);
-> @@ -119,19 +128,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
->  	size = PAGE_SIZE << encoded_page_decode_order(encoded_page);
->  	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
->  	if (unlikely(offset + fragsz > size)) {
-> -		if (unlikely(fragsz > PAGE_SIZE)) {
-> -			/*
-> -			 * The caller is trying to allocate a fragment
-> -			 * with fragsz > PAGE_SIZE but the cache isn't big
-> -			 * enough to satisfy the request, this may
-> -			 * happen in low memory conditions.
-> -			 * We don't release the cache page because
-> -			 * it could make memory pressure worse
-> -			 * so we simply return NULL here.
-> -			 */
-> -			return NULL;
-> -		}
-> -
->  		page = encoded_page_decode_page(encoded_page);
->  
->  		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
