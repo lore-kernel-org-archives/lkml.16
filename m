@@ -1,30 +1,33 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25175230985
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E02922A4E5;
+	Wed, 16 Apr 2025 06:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785908; cv=none; b=prmW5AvcLt93E57r4DTPTTUc0z9VLYDaTCbMgHq3RRcGI+N1xSrMV81Bkpct/fv86m9i5FzbbXbXCw1VezOjvRGYsT/jjjABHe0ZNaDaGwKcL0Gl6QPnWbD2//VCt6GxhWvcjQREh6tPpoz3i17QJ1mTmhJEf6lLsRIPt5gFqLU=
+	t=1744785943; cv=none; b=W5w3vy/rVCc0V6TDaPbwNvCKL8itc10N+1vTocDWnAUuod+xkwLhWpUSeQbqpPH+Z+Rb+1ipRIlOfMlU66FjSy5I6/PL2wMvNF9OJ/zTOg+wBRxCIrmwjzGVDskoMETUkQZtf3Axeqe7+BUUiCuQOdW8OiFHsIPbCECuzVbjblg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785908; c=relaxed/simple;
-	bh=WfzOLZUW8jGBu5YKDQaVhtqhXW2tRz23DmS9gS7hSBA=;
+	s=arc-20240116; t=1744785943; c=relaxed/simple;
+	bh=xh72Sbq9MmoTSv2ZjJjuj6ljsAi9tqThZCsBernp5Ew=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f4AKi/2OQnqF8nkbzk3+SqZt0wjd7wtSGPYj/7oQBOvDxAsgMycULh9mGkEZKgaNRbSBpTk/xmMiN2zzIgseT7rKTR3UhpLZSjV0BbMjVB6ilbeGAFa2lhbNFcKE4JXSS9v2iwDzrNgOLwbVaDY5qvB79WG7CuntMzY8OK/mUSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zcs2Q6WTgz4f3jYS
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:44:30 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 992ED1A0359
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:44:54 +0800 (CST)
-Received: from [10.67.108.244] (unknown [10.67.108.244])
-	by APP4 (Coremail) with SMTP id gCh0CgDHK2DlUf9nxFOHJg--.59961S3;
-	Wed, 16 Apr 2025 14:44:53 +0800 (CST)
-Message-ID: <a56803dd-0e38-4edc-b1a1-f850246f210b@huaweicloud.com>
-Date: Wed, 16 Apr 2025 14:44:52 +0800
+	 In-Reply-To:Content-Type; b=L9i6wBhxlPJInYd+sjy/dmML9iNZy9QQIJ5VXw7ls6G/pJ3ia5bgwH4Z6DnBgtB45m4THlAL2hepqBdDsKyQ5BI5JqTdB9EwE3zdPyOhpHUq775zOFHqaTQ2NeF6d9A/Gxs6ojC4IUVMdYlqaCYxysb72qffQKRd9IEO2NEfqL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qtk2Bf7a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qtk2Bf7a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA0FC4CEE2;
+	Wed, 16 Apr 2025 06:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744785942;
+	bh=xh72Sbq9MmoTSv2ZjJjuj6ljsAi9tqThZCsBernp5Ew=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qtk2Bf7a3veT2/4IffpeucE6R8e8kemMRHPWo7967OO9HrTzcdOKIROXb4iH6ikxB
+	 9yxjurdtEtebXXO3lvTBwrZeMCTHsbjU3/o4YpMxFT08ebAkVU1b6UftDmRzqOfv6h
+	 TJb+tNJ1xgZh3eFIdeDPRFdMI87UhsMuIYVk1v44iXhF+EGKiJlclEFDePDQYO9sZz
+	 5wzhIPXkfyUiR9cisJly0kol2XpxEvGXyYeQtjKDU48vb3P2x9H2mvIMvtxjUuP9tK
+	 0DtUeURjkCvaGijlBLpH8owrux6s/iQBmJMGBp73CFUxoQmptnkxb3W9LR+J3YPTHy
+	 z0FoB5Bu7ix7Q==
+Message-ID: <72df35d9-1783-4a9b-8163-43ff3258c3ef@kernel.org>
+Date: Wed, 16 Apr 2025 08:45:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,143 +35,315 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] watchdog: Fix watchdog may detect false positive of
- softlockup
+Subject: Re: [PATCH v1 1/2] dt-bindings: iio: temperature: add support for
+ MCP998X
+To: victor.duicu@microchip.com, jic23@kernel.org
+Cc: andy@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ marius.cristea@microchip.com, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250415132623.14913-1-victor.duicu@microchip.com>
+ <20250415132623.14913-2-victor.duicu@microchip.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: joel.granados@kernel.org, song@kernel.org, dianders@chromium.org,
- tglx@linutronix.de, linux-kernel@vger.kernel.org
-References: <20250416013922.2905051-1-luogengkun@huaweicloud.com>
- <20250415193100.562d55b34851e8c9058c5658@linux-foundation.org>
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-In-Reply-To: <20250415193100.562d55b34851e8c9058c5658@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250415132623.14913-2-victor.duicu@microchip.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgDHK2DlUf9nxFOHJg--.59961S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw1xGw15tw1UWry8Wr1UAwb_yoWrZw45pa
-	ySyFyayw4Utr18XrW3Jas7XFy8W348Xr45ta4DGw1rC3Z0kr1rJr1SkF4rKa9rurZxJr1Y
-	qFWYqrZ7JayUtF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyGb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-	I48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1aZX5UUUUU==
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+
+On 15/04/2025 15:26, victor.duicu@microchip.com wrote:
+> From: Victor Duicu <victor.duicu@microchip.com>
+> 
+> This is the devicetree schema for Microchip MCP998X/33 and
+> MCP998XD/33D Multichannel Automotive Temperature Monitor Family.
+> 
+> Signed-off-by: Victor Duicu <victor.duicu@microchip.com>
+
+<form letter>
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+</form letter>
+
+> ---
+>  .../iio/temperature/microchip,mcp9982.yaml    | 182 ++++++++++++++++++
+>  1 file changed, 182 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+> new file mode 100644
+> index 000000000000..8cbf897d1278
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/temperature/microchip,mcp9982.yaml
+> @@ -0,0 +1,182 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/temperature/microchip,mcp9982.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip MCP998X/33 and MCP998XD/33D Multichannel Automotive Temperature Monitor Family
+
+Wrap according to coding style document.
+
+> +
+> +maintainers:
+> +  - Victor Duicu <victor.duicu@microchip.com>
+> +
+> +description: |
+> +  The MCP998X/33 and MCP998XD/33D family is a high-accuracy 2-wire multichannel
+> +  automotive temperature monitor.
+> +  The datasheet can be found here:
+> +    https://ww1.microchip.com/downloads/aemDocuments/documents/MSLD/ProductDocuments/DataSheets/MCP998X-Family-Data-Sheet-DS20006827.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,mcp9933
+> +      - microchip,mcp9933D
+> +      - microchip,mcp9982
+> +      - microchip,mcp9982D
+> +      - microchip,mcp9983
+> +      - microchip,mcp9983D
+> +      - microchip,mcp9984
+> +      - microchip,mcp9984D
+> +      - microchip,mcp9985
+> +      - microchip,mcp9985D
+> +
+> +  reg:
+> +    maxItems: 1
+> +    
+> +  interrupts:
+> +    maxItems: 2
+> +    
+> +  interrupt-names:
+> +    description: |
+> +      ALERT1 indicates a HIGH or LOW limit was exceeded.
+> +      ALERT2 indicates a THERM limit was exceeded.
+> +    items:
+> +      - const: ALERT1
+
+alert1
+
+> +      - const: ALERT2
+
+alert2
+
+> +    
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  microchip,temp-hysteresis:
+> +    description: |
+> +      Value of temperature limit hysteresis.
+> +      Omit this tag to set the default value.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+
+temperature is in specific units, see property units in dtschema.
+
+> +    
+> +  microchip,extended-temp-range:
+> +    description: |
+
+Do not need '|' unless you need to preserve formatting.
+
+> +      Set the chip to work in the extended temperature range -64 degrees C to 191.875 degrees C.
+
+does not look wrapped.
+
+> +      Omit this tag to set the default range 0 degrees C to 127.875 degrees C
+> +    type: boolean
+
+Why is this a property of the board? I imagine someone might want
+different accuracy during runtime.
+
+> +    
+> +  microchip,beta-channel1:
+> +    description: |
+> +      The beta compensation factor for external channel 1 can be set
+> +      by the user, or can be set automatically by the chip.
+> +      If one wants to enable beta autodetection, omit this tag.
+> +      Please consult the documentation if one wants to set a specific beta.
+> +      If anti-parallel diode operation is enabled, the default value is set
+> +      and can't be changed.
+> +    type: boolean
+> +    
+> +  microchip,beta-channel2:
+> +    description: |
+> +      The beta compensation factor for external channel 2 can be set
+> +      by the user, or can be set automatically by the chip.
+> +      If one wants to enable beta autodetection, omit this tag.
+> +      Please consult the documentation if one wants to set a specific beta.
+> +      If anti-parallel diode operation is enabled, the default value is set
+> +      and can't be changed.
+> +    type: boolean
+> +    
+> +  microchip,apdd-state:
+> +    description: |
+> +      Enable anti-parallel diode mode operation.
+> +      Omit this tag to disable anti-parallel diode mode by default.
+> +    type: boolean
+> +    
+> +  microchip,recd12:
+> +    description: |
+> +      Enable resistance error correction for external channels 1 and 2.
+> +      Not all chips support resistance error correction on external
+> +      channels 1 and 2, please consult the documentation.
+> +      Omit this tag to disable REC for channels 1 and 2 by default.
+> +    type: boolean
+> +    
+> +  microchip,recd34:
+> +    description: |
+> +      Enable resistance error correction for external channels 3 and 4.
+> +      Not all chips support resistance error correction on external
+
+Then this should be restricted per compatible in allOf:if:then:.
+
+> +      channels 3 and 4, please consult the documentation.
+> +      Omit this tag to disable REC for channels 3 and 4 by default.
+> +    type: boolean
+> +    
+> +  label:
+> +    description: Unique name to identify which device this is.
 
 
-On 2025/4/16 10:31, Andrew Morton wrote:
-> On Wed, 16 Apr 2025 01:39:22 +0000 Luo Gengkun <luogengkun@huaweicloud.com> wrote:
->
->> The watchdog may dectect false positive of softlockup because of stop
->> softlockup after update watchdog_thresh. The problem can be described as
->> follow:
->>
->>   # We asuume previous watchdog_thresh is 60, so the timer is coming every
->>   # 24s.
->> echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
->> |
->> +------>+ update watchdog_thresh (We are in kernel now)
->> 	|
->> 	|
->> 	+------>+ watchdog hrtimer (irq context: detect softlockup)
->> 		|
->> 		|
->> 	+-------+
->> 	|
->> 	|
->> 	+ softlockup_stop_all
->>
->> As showed above, there is a window between update watchdog_thresh and
->> softlockup_stop_all. During this window, if a timer is coming, a false
->> positive of softlockup will happen. To fix this problem, use a shadow
->> variable to store the new value and write back to watchdog_thresh after
->> softlockup_stop_all.
->>
-> Changelog is a bit hard to follow.  I asked gemini.google.com to clean
-> it up and it produced this:
->
-> : The watchdog may detect a false positive softlockup due to stopping the
-> : softlockup detection after updating `watchdog_thresh`.  The problem can
-> : be described as follows:
-> :
-> : ```
-> : # Assume the previous watchdog_thresh is 60, so the timer triggers every 24 seconds.
-> : echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
-> : |
-> : +------>+ Update watchdog_thresh (Kernel space)
-> : 	|
-> : 	|
-> : 	+------>+ Watchdog hrtimer (irq context: detect softlockup)
-> : 		|
-> : 		|
-> : 	+-------+
-> : 	|
-> : 	|
-> : 	+ softlockup_stop_all
-> : ```
-> :
-> : As shown above, there is a window between updating `watchdog_thresh`
-> : and `softlockup_stop_all`.  During this window, if a timer triggers, a
-> : false positive softlockup can occur.  To fix this problem, a shadow
-> : variable should be used to store the new value, and this value should
-> : be written back to `watchdog_thresh` only after `softlockup_stop_all`
-> : has completed.
->
-> I don't know how accurate this is - please check&fix it and consider
-> incorporating the result?
->
->> --- a/kernel/watchdog.c
->> +++ b/kernel/watchdog.c
->> @@ -47,6 +47,7 @@ int __read_mostly watchdog_user_enabled = 1;
->>   static int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
->>   static int __read_mostly watchdog_softlockup_user_enabled = 1;
->>   int __read_mostly watchdog_thresh = 10;
->> +static int __read_mostly watchdog_thresh_shadow;
->>   static int __read_mostly watchdog_hardlockup_available;
->>   
->>   struct cpumask watchdog_cpumask __read_mostly;
->> @@ -876,6 +877,7 @@ static void __lockup_detector_reconfigure(void)
->>   	watchdog_hardlockup_stop();
->>   
->>   	softlockup_stop_all();
->> +	watchdog_thresh = READ_ONCE(watchdog_thresh_shadow);
-> I expect a reader of this code will wonder "what's all this
-> watchdog_thresh_shadow stuff".  Can you please add a few small comments
-> to explain why we're doing this?
+> +    
+> +  vdd-supply: true
+> + 
+> +patternProperties:
+> +  "^channel@[1-4]+$":
 
-The following testcase may help to understand this problem.
----------------------------------------------
-echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched/features
-echo -1 > /proc/sys/kernel/sched_rt_runtime_us
-echo 0 > /sys/kernel/debug/sched/fair_server/cpu3/runtime
-echo 60 > /proc/sys/kernel/watchdog_thresh
-taskset -c 3 chrt -r 99 ./test &
-echo 10 > /proc/sys/kernel/watchdog_thresh &
----------------------------------------------
-This testcase first cancels the throttle rt task. Change the value of
-watchdog_thresh to 60, and run a rt task on cpu3. The final command will
-be blocked because the kworker:3, smp_call_on_cpu will put work on it,
-cannot be selected by the scheduler due to the existence of real-time
-threads. A softlockup will be detected on cpu3 after a while. The
-reason is the watchdog_thresh is changed to 10, but the watchdog_timer_fn
-still runs every 24 seconds, because the kworker:3
-has not chance to stop previous hrtimer on cpu3.
+4 or 44? Drop +
 
-The above case indicates that updating watchdog_thresh before doing
-softlockup_stop_all is insecure, although there is not rt task on cpu3,
-once the timer irq arrives, a false positive of softlockup is reported.
+> +    description: |
 
-What this patch does, is first update the new thresh to
-watchdog_thresh_shadow, which acts like a temporary variable, and write
-back to watchdog_thresh after softlockup_stop_all is finished. By this way,
-no more false positive case will be reported.
+Do not need '|' unless you need to preserve formatting.
 
->
+> +      Represents the external temperature channels to which a remote diode is
+> +      connected.
+> +    type: object
+> +
+> +    properties:
+> +      reg:
+> +        items:
+> +          minimum: 1
+> +          maximum: 4
+> +      
+> +      microchip,ideality-factor:
+> +        description: |
+> +          Each channel has an ideality factor.
+> +          Beta compensation and resistance error correction automatically correct
+> +          for most ideality error. So ideality factor does not need to be adjusted in general.
+> +          Omit this tag in order to set the default value.
 
+default: X
+
+> +          Please consult the documentation if one wants to set a specific ideality value.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +      
+> +      label:
+> +        description: Unique name to identify which channel this is.
+> +    
+> +    required:
+> +      - reg
+> +    
+> +    unevaluatedProperties: false
+
+additionalProperties or reference appropriate schema for subnode.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - vdd-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        
+> +        temperature-sensor@4c {
+> +            compatible = "microchip,mcp9985";
+> +            reg = <0x4c>;
+> +            
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            label = "temperature-sensor";
+> +            
+> +            microchip,temp-hysteresis = <10>;
+> +            microchip,extended-temp-range;
+> +            microchip,apdd-state;
+> +            microchip,recd12;
+> +            microchip,recd34;
+> +            vdd-supply = <&vdd>;
+> +            
+> +            channel@1{
+
+Missing spaces. Please see DTS coding style or any DTS style.
+
+
+
+Best regards,
+Krzysztof
