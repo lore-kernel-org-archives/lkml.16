@@ -1,84 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C0E2236F8;
-	Wed, 16 Apr 2025 22:01:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 195AC2BAF4;
+	Wed, 16 Apr 2025 22:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840900; cv=none; b=AZAE9fVDKrtXTUbHO2sUWmbL5RUuyctXbH+P6YaZG0q20ftsO26/QFkB+foaWzWirZJd7w8n/oT0tYjdsjpy7wYsnbla4phHfK9suq7vfh0mvHifTofJnVqQjkgjkXLoM3KQm/1etZQH8kydiJ8QgTEWr6KFSlDoBXoA16lLuVA=
+	t=1744840960; cv=none; b=GxoyeE+bIr49MbYKoami9lGfecx/W64LKLtI6Ubh+mtJJR/LEKHxHLu2YVwRvdOvzCbxf8aTncvGv1eQq7PgmkRMje7+JZdteBJK7L4H35+dZm12sdpT+jMq5KP97yphMee6ohQfKD+EnrkJ0DpFdYhHzr+srrtKQKqwS56j/5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840900; c=relaxed/simple;
-	bh=GKy1K6eDKAaPaa5kKmwg7ZIYcTdUhp7FDnOYinSy8EQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b6wHBtegNYjpynLLSH/CRq9en2hOVKhc8JpYhRCXJugG6PS9xXt6/yHjh9o1xS4DI8Q6ZdvckWXz+rTzltXpIRe7qw0K2kFgvjKN8QHW3SLQ31W9lQelfLJUP65n2MJAFbtKmelED3LkQxsk3kN/dTZ9JZ9DmR9MF6/3AZ2O3gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZcFbSWtI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744840960; c=relaxed/simple;
+	bh=pEWNCN4ZX0qZhZ3W3spaJM2B3e1c6C6EMR/RLHg+n0Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aA23Ju6yyjM7IBOVDhldkFRwLuv2sboEFewCNsEeDMmXzqaNZwPzXEDe3XI8d8bvBd2wpVcXYiaTMPuTnIfGnjxyU15JYXf26yT9GUFjEF3qCghfTdLYUFk3B1QpzmzxO36rz1PY+59gZh/b6kFhmfQ/RhSJKtfF2q05j7W+sqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQVw8gfh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZcFbSWtI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF38C4CEE4;
-	Wed, 16 Apr 2025 22:01:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQVw8gfh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C860C4AF09;
+	Wed, 16 Apr 2025 22:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744840899;
-	bh=GKy1K6eDKAaPaa5kKmwg7ZIYcTdUhp7FDnOYinSy8EQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZcFbSWtISa1Wzxw4kPKrtcyvhn0fnbRrUEBjMrTLV/vST7ilLL9RawCBdg0i+gXF4
-	 nTGwFhOqmMOBDyNrpmcx6vLpj6Bvvncx+GV1nTgw9TiedOhqq+TNTy3EwdoYI0cAhl
-	 Tzf9belqrfrhix6MfDN5KGGtsgLAESW+xAlhJ2g1K3RH+YetSfhT70BQjEtQ+mymfo
-	 RwpW2SGpK0TCbj5xMRao4KmkX3XFkKdRZ22vvZ5/0P6YBdfIQHfIDl5rBQwqkAaVih
-	 xpwxPStEbaymyGZBxlP8mpw4nLaYSkQDNTYxMAcSAaxPhjP3NvatLyG7gk2x3+HVJ9
-	 v1QNw5cTybJ1g==
-From: Kees Cook <kees@kernel.org>
-To: Coly Li <colyli@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] md/bcache: Mark __nonstring look-up table
-Date: Wed, 16 Apr 2025 15:01:36 -0700
-Message-Id: <20250416220135.work.394-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=k20201202; t=1744840959;
+	bh=pEWNCN4ZX0qZhZ3W3spaJM2B3e1c6C6EMR/RLHg+n0Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vQVw8gfhLmq41PEpDf+Q7IZasp8I0ezszztme0m2nyMwSrwmGiOpTfjcJno7WFCSP
+	 ludJQwFLaJ4mhVZW/r3hr/3LqCmU/MbA8enWGWm0GL6AvPWtI6p/EvecpXrxmAPEwg
+	 VRfxGaNiqL9fv1RnLj35RKE/eKf9p3EK6xr0H3ig8zgkMGSEfgEChvAkIHdja/txaQ
+	 6vwyNe+6US6vqHLHII4v8QZHtTmVvaxJ4Tt8VMgzKD5Uo6T6cCDYnPZib8KUhyp2AH
+	 XMzn1d6oaHYcCGCemtinLafjQs+NPu0aVbehMJxABNLxxi4ezUUbGqBxWNEifd37Kw
+	 pXsI6xtPiHaSA==
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4775ccf3e56so12725961cf.0;
+        Wed, 16 Apr 2025 15:02:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUtQpOWUFM2x2srL3umuTyjDtKEbjzwDbV54zrrjg4WOyVe4UsxtatX6TpIJbOY05bIpi87/qVlqrobegHX@vger.kernel.org, AJvYcCVD2sYuyppLR/r0GFe+weo0mOqYomUpEr6CSvjXqL2P140SLLIpNfWWPIzISxh80e+kzZAVf6hY0STQ@vger.kernel.org, AJvYcCVLIQHl6SGc0DxcTrzNW0Wm5yr6J864uv/t10+jm/bCtEtcOmr3VrtZlbSRgb9vJnNuaoc=@vger.kernel.org, AJvYcCXTfMZ5LAaxVCENKpUmyYKNvzGJshMlozTXXx1GNYndHOQYsGPBSjpjOvgEb66uun8adKsCKQi6ZGGlz2dTB29S@vger.kernel.org, AJvYcCXWAmWFp1zH12qVdvZHp6RIrffYSJSbc168LXSazJJN4GDiPevYxTaZ2OGMs9kLJUx4B+cPcUT7b4YbSqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzoTHQqvct9WU/yFzzNcNP7RHztzUw9S/eiYfRsGxgGP7rkr7f
+	IR3wxTyI5GB8DTz2manf3ldg6qUWUGgmex8RVpKdosy9ZoqMKwJbZOwRIzLtBB2X/j+GEEmNMyn
+	11oliFnxL/MpDJJ8reeaNhwNleE4=
+X-Google-Smtp-Source: AGHT+IH2FW3F7i+zlhWoFLsnu5ZjPE99AtfOVpaO0+OP0tveE8dajNhBdza9/ZM6TT0O9R83dKaY9ZEW3XMZcAC8g6E=
+X-Received: by 2002:a05:622a:5147:b0:475:19cc:a81a with SMTP id
+ d75a77b69052e-47adf238197mr10613471cf.21.1744840958640; Wed, 16 Apr 2025
+ 15:02:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1492; i=kees@kernel.org; h=from:subject:message-id; bh=GKy1K6eDKAaPaa5kKmwg7ZIYcTdUhp7FDnOYinSy8EQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDBkMGvs5qgM9k90DpvYKfZMPUpqXYXj0TdMz5z2TV0xaq L2jgPl8RykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER6XjD8LxNsjz7kJD+d0/5A itCnvdJOXBd8uc1uun6yfPfzVDD3H4Z/RvX33u5PmsDnso6F8cKr7YlRHZoNGWzRqy+8mnhRnN2 DGQA=
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20250414225227.3642618-1-tjmercier@google.com> <20250414225227.3642618-3-tjmercier@google.com>
+In-Reply-To: <20250414225227.3642618-3-tjmercier@google.com>
+From: Song Liu <song@kernel.org>
+Date: Wed, 16 Apr 2025 15:02:27 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
+X-Gm-Features: ATxdqUG8pASefvj0hrBbKUPzLq8VtsN3bPrVvtjdcRijfVngZmMaVn9SzVG5PSo
+Message-ID: <CAPhsuW6sgGvjeAcciskmGO7r6+eeDo_KVS3y7C8fCDPptzCebw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
+	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, yonghong.song@linux.dev, 
+	john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me, 
+	jolsa@kernel.org, mykolal@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-GCC 15's new -Wunterminated-string-initialization notices that the 16
-character lookup table "zero_uuid" (which is not used as a C-String)
-needs to be marked as "nonstring":
+On Mon, Apr 14, 2025 at 3:53=E2=80=AFPM T.J. Mercier <tjmercier@google.com>=
+ wrote:
+[...]
+> +
+> +BTF_ID_LIST_GLOBAL_SINGLE(bpf_dmabuf_btf_id, struct, dma_buf)
+> +DEFINE_BPF_ITER_FUNC(dmabuf, struct bpf_iter_meta *meta, struct dma_buf =
+*dmabuf)
+> +
+> +static void *dmabuf_iter_seq_start(struct seq_file *seq, loff_t *pos)
+> +{
+> +       struct dma_buf *dmabuf, *ret =3D NULL;
+> +
+> +       if (*pos) {
+> +               *pos =3D 0;
+> +               return NULL;
+> +       }
+> +       /* Look for the first buffer we can obtain a reference to.
+> +        * The list mutex does not protect a dmabuf's refcount, so it can=
+ be
+> +        * zeroed while we are iterating. Therefore we cannot call get_dm=
+a_buf()
+> +        * since the caller of this program may not already own a referen=
+ce to
+> +        * the buffer.
+> +        */
+> +       mutex_lock(&dmabuf_debugfs_list_mutex);
+> +       list_for_each_entry(dmabuf, &dmabuf_debugfs_list, list_node) {
+> +               if (file_ref_get(&dmabuf->file->f_ref)) {
+> +                       ret =3D dmabuf;
+> +                       break;
+> +               }
+> +       }
+> +       mutex_unlock(&dmabuf_debugfs_list_mutex);
 
-drivers/md/bcache/super.c: In function 'uuid_find_empty':
-drivers/md/bcache/super.c:549:43: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (17 chars into 16 available) [-Wunterminated-string-initialization]
-  549 |         static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IIUC, the iterator simply traverses elements in a linked list. I feel it is
+an overkill to implement a new BPF iterator for it. Maybe we simply
+use debugging tools like crash or drgn for this? The access with
+these tools will not be protected by the mutex. But from my personal
+experience, this is not a big issue for user space debugging tools.
 
-Add the annotation to silence the GCC warning.
+Thanks,
+Song
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Coly Li <colyli@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcache@vger.kernel.org
----
- drivers/md/bcache/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index e42f1400cea9..577d048170fe 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -546,7 +546,7 @@ static struct uuid_entry *uuid_find(struct cache_set *c, const char *uuid)
- 
- static struct uuid_entry *uuid_find_empty(struct cache_set *c)
- {
--	static const char zero_uuid[16] = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
-+	static const char zero_uuid[] __nonstring = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
- 
- 	return uuid_find(c, zero_uuid);
- }
--- 
-2.34.1
-
+> +
+> +       return ret;
+> +}
