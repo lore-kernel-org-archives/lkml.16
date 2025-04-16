@@ -1,121 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D96E571;
-	Wed, 16 Apr 2025 06:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB82BE571;
+	Wed, 16 Apr 2025 06:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785366; cv=none; b=EMvEpDbRMxZHjgwLCwnRz7Mknl3EAap/9eXBBvnDSSffok1RP3FzOMX7HRE9ahdmzsyUIQE0FN5unzabxbsvnlKduJwGeSbG9fl/k9ALELYTTEVdnp2CI7lRX8KTxRg3qCYusqn2awrKni1WGv79o11d2kAeHjxSYaW+oInSlK8=
+	t=1744785486; cv=none; b=MgZ2sU9jZVo5rvQuUC5UmcBR7fvVC2nQ4pUXw+w1eZxKjOeHbeLRSc6kaPDsV6hODUtbA6w1JFbn1inlNGhM45hWUWL94LskksHX6fVsLp6pPWEw5qLCwzzLRxq3WMUEohzEWGUxpKdVcWlQVNIZXdju2AXGPPJ3TPS+MShx2aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785366; c=relaxed/simple;
-	bh=Mr6Zpb9zcG0OVnCwKGCHTpusBfiHnAqZ4PqIGzO8FB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CnieNvJPu2ZzWutrtnZeveiqYF/Q3YGZhEZpr/ZCl034V+l+c7HCH4H1MoTunBmJQLVJucYon/IMTr1DAl42SHfhfzsJ7dbkBxUxAQOZMtg1tqqlkLBpxhrQUK6xl/Bq/NmOL6pO3YfGTQJczbTXGVV+VAiBrlcfiEJAHGagn4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2c2T/rV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744785486; c=relaxed/simple;
+	bh=HpgZIplj4QnQrznqe1CKE4kzLuHSZXrzDHut5bpN9kA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYsIIZfafTNLj+55Zy5dZmaPvDFLIqJlYIrhjIzpD5KmNRmAgsteTg5I3JEr4QCrjoyLeEWC4rBc9CIj2e9XtymzYLhBURqWvXTGVLE//eGkujKgJUYAPgHEJBygFSFqj0arytETTP5Tpt6AfQeIj3m5UO3kz32zQ8BXt5T6xGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5VTRIpe; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2c2T/rV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B35DC4CEE2;
-	Wed, 16 Apr 2025 06:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744785365;
-	bh=Mr6Zpb9zcG0OVnCwKGCHTpusBfiHnAqZ4PqIGzO8FB0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M2c2T/rV1WpJls8mY2WiS06WJ3CbdfassisBM8F8oFz+YOl7xnKaMBW1Faq2GvLFD
-	 j43gbDMnkDGl90ODJJl/abwi3XUR0ZEj4z/3JYkyDN0OyZynnc0oSrkNS0LLd3Qx+6
-	 M1zymk54/0SG6OLsvS389CYUzUJb/OAUI3Bis50xRhLsJYqFNDIH83DydG7rkrZ7uO
-	 lX65zZK2whmhH8CSocv7kpl8BdH/WYpkSXI/ps3NWfQ8IF6dGnmyLu4iUTLk/K7HK+
-	 TMvkDCS5O3Vc6Ir+EhpiMfb0nQ5jPf9gNNpk0q+breOivzhXgwZfNZlr/r+Ch/2P9o
-	 Ix+G+fQLCwIAg==
-Message-ID: <bdfe0108-7ac3-4f2c-b7f2-97943ee85235@kernel.org>
-Date: Wed, 16 Apr 2025 08:35:58 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5VTRIpe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744785485; x=1776321485;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HpgZIplj4QnQrznqe1CKE4kzLuHSZXrzDHut5bpN9kA=;
+  b=l5VTRIpeHYfEit28+LTFMFbqKI5fgDX70jjCqCL32vCnSpTaKDWyTRT3
+   qd7sUwJNmZLptm0LdhQWRftsUFR5okkAJvdIugvPkfuE9ENg9zlnBR52y
+   hcSCTKTdihGn++MLC+xfEPOyJWU1HNhQZOUvhsv0tEzloAFRn3c7aY+lb
+   BXiX7G7F9BDVs6wfkd6TkXwiM3zz4Dlsjf3jenbGBNShQbDTKBAERwWyo
+   pPcQYqGTRnYZzwoPbPRf9IKQ5TMgKskOUWtPPXJw790NvzCxyWzsdT/vR
+   00fglneuIZHgT4GJI9w4IMttl9k33zcS+YidbUKwW795xopHaY4qQrkPy
+   w==;
+X-CSE-ConnectionGUID: CPPfJ/ZmSSWRF+JttTa1uQ==
+X-CSE-MsgGUID: d1DTMTwwSzSWuvSDvSW4gA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57705668"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="57705668"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:38:04 -0700
+X-CSE-ConnectionGUID: 0lxYUVZSTryiOhaMh0wcNg==
+X-CSE-MsgGUID: ovcF78FOQse1vrQIc7Vv1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="167510603"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:38:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4wPG-0000000Clcl-38Hv;
+	Wed, 16 Apr 2025 09:37:58 +0300
+Date: Wed, 16 Apr 2025 09:37:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: Luis Oliveira <lolivei@synopsys.com>,
+	Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Jan Dabros <jsd@semihalf.com>, Andi Shyti <andi.shyti@kernel.org>,
+	linux-i2c@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Hitting WARN_ON_ONCE in i2c-designware-common.c
+Message-ID: <Z_9QRqk_8rTkQVpx@smile.fi.intel.com>
+References: <20c191d9-5f7a-4ec6-a663-dcc8d0b54c18@kernel.org>
+ <Z_5OYSxZS05LO7cE@smile.fi.intel.com>
+ <Z_5Ov9j-tF8rABDZ@smile.fi.intel.com>
+ <36736a3d-9ba1-43d7-ac52-d0f2f8a36bec@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 08/10] dt-bindings: clock: cix: Add CIX sky1 scmi clock
- id
-To: Peter Chen <peter.chen@cixtech.com>, soc@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com,
- will@kernel.org, arnd@arndb.de, jassisinghbrar@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- maz@kernel.org, kajetan.puchalski@arm.com, Gary Yang <gary.yang@cixtech.com>
-References: <20250415072724.3565533-1-peter.chen@cixtech.com>
- <20250415072724.3565533-9-peter.chen@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250415072724.3565533-9-peter.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36736a3d-9ba1-43d7-ac52-d0f2f8a36bec@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 15/04/2025 09:27, Peter Chen wrote:
-> From: Gary Yang <gary.yang@cixtech.com>
+On Tue, Apr 15, 2025 at 02:30:10PM +0200, Jesper Dangaard Brouer wrote:
+> On 15/04/2025 14.19, Andy Shevchenko wrote:
+> > On Tue, Apr 15, 2025 at 03:17:37PM +0300, Andy Shevchenko wrote:
+> > > On Tue, Apr 15, 2025 at 02:03:26PM +0200, Jesper Dangaard Brouer wrote:
+> > > > 
+> > > > I'm hitting a WARN_ON_ONCE in drivers/i2c/busses/i2c-designware-common.c
+> > > > when booting the kernel on our Gen12 hardware.
+> > > > 
+> > > > I'm using devel kernel net-next at commit 1a9239bb425 (merge tag
+> > > > 'net-next-6.15').
+> > > > 
+> > > > I assume you want this report.
+> > > > 
+> > > > Maybe it is not a critical error(?)
+> > > > ... looking the comment in the function:
+> > > 
+> > > Have you forgotten to compile in the drivers/acpi/acpi_apd.c?
 > 
-> Add device tree bindings for the scmi clock id on
-> Cix sky1 platform.
+> I have double checked that drivers/acpi/acpi_apd.o is compiled.
+
+Hmm... But is the function that creates clock is compiled? And does it succeed
+(see also my comment about missing error check which you probably want to
+ address independently on the affection on this issue).
+
+> > Also that driver has the missing error check in acpi_apd_setup() for
+> > clk_register_clkdev().
 > 
-> Reviewed-by: Peter Chen <peter.chen@cixtech.com>
-> Signed-off-by: Gary Yang <gary.yang@cixtech.com>
+> Are you saying I'm missing a .config option?
 
-Incomplete SoB chain.
+I'm saying that please double check that the clock is provided and AFAICT it
+has to be created by the above mentioned module.
 
-> ---
->  include/dt-bindings/clock/sky1-clk.h | 279 +++++++++++++++++++++++++++
-
-Filename matching compatible.
-
-
->  1 file changed, 279 insertions(+)
->  create mode 100644 include/dt-bindings/clock/sky1-clk.h
-
-Missing actual bindings.
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Best regards,
-Krzysztof
