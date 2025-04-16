@@ -1,98 +1,191 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f74.google.com (mail-oa1-f74.google.com [209.85.160.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A7B1CEAD6;
-	Wed, 16 Apr 2025 04:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5752288F4
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744779083; cv=none; b=uCS2N0RNsJt87r9eMrC7sng/5MUVtKwPK6aNfpid9lrmUl6Jy4dZTRhF0gx16PNaMzYX/WT63hYpOj6g1PVVfVtPc15aXrmnBRDZ3k6YrVMS6/V1DSDmnCRWebWhy/T4dxYOz8Wz/HmVtjbo1xfz5zvD+dM3l3qT1q+HJKO+j2E=
+	t=1744779091; cv=none; b=TwDbYdT/dT+DSMunZr96GvDRce8Bh41S00YZVE7v98GJvEx6dT8vMqWozgI7CZvP/oZOHrgJ28Cnt7hPdniP7psSSWWoqY+U9H2n22D3LEYpVxymO2+l7nutJx1tjPiSwJNfpxmFLXclVE+T2MIXmApfdhcQAND6mI3fMuibJUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744779083; c=relaxed/simple;
-	bh=I4SqPCbBRwxBloQYmrlhM613RmZ1/cfh+y6/8vA3wn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BykRTA6S0l0SzyXuaaWDg5WC2QXWiztzg5NF3BOCr7aRvnw0OsyZIi8783I7h26V96O/Dhl5viOpZAOCTe/rkHbI7FBC4GfXK5r4/VALlALWqiSpadikXFzjETOjs4pXFdVj2NKDGuBRM5D9cIM2aff3h6QiKPV1xckCDRA5QGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AMDgOKIR; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744779091; c=relaxed/simple;
+	bh=WX0S1cbXsx+DeJk9hkHln37+mf5sEji+VyjkKbCTpLY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=spmmPXql7yNNhDEAFv6k/DRR6IUYThjEb0toW9yTeAF6lFt3nU5GdvI9IpGQ+vohU8kKRXmAF+XbzXOppduKNNyV1BRBtNy/tb73mDuhQZuEoZdcJesWWZhoHgGyHlcdYqleZ6SCfXxU4+XXtdwzGr+LCplXGCQLcAtLc+FmaJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCjVl8x/; arc=none smtp.client-ip=209.85.160.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AMDgOKIR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744779075;
-	bh=tUrnqWwQSU5Yio5OYvPEauEBcGNjVZukfjCcoV+Lij4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=AMDgOKIR1IA+qO3njwOOyfvLtR/iHyRlHSHYqVqPQceIV/jYiimDSqLXriNKacJ8Z
-	 Pfa2ydIcUvUwvgLtupJnOVGsu+US+NRVuDNO0GOVOR1+2rmjbjY+RbkVUeyRHP3eSw
-	 8vTo+MjdLBvG7FNTGwsd2qFI81Wizvx4TaseosWuI9nWaYuL26exgD8MmJeWyupgDW
-	 KwgjB/Wj4STuB7i2IG635NX3c/fl7bszloyzC+e3F0aKevNNZ2u82forjzc+155Fs0
-	 XTJdWUXjlswz/osh4S236DNK/PIBCDBIVOX2WU3Nd6fopna6xC7ruzhdzztBDC2i2s
-	 MFIKIJNpTmPaQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZcpWk4g2qz4x2c;
-	Wed, 16 Apr 2025 14:51:14 +1000 (AEST)
-Date: Wed, 16 Apr 2025 14:51:13 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Mostafa Saleh
- <smostafa@google.com>
-Subject: linux-next: manual merge of the kspp tree with the mm-hotfixes tree
-Message-ID: <20250416145113.221617c5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCjVl8x/"
+Received: by mail-oa1-f74.google.com with SMTP id 586e51a60fabf-2d102cccb8aso2959547fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744779088; x=1745383888; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LiL9dWGwg8zqcLQ2yDvfK2EAWVYqud9JwKQuTd0tBE4=;
+        b=SCjVl8x/D3/3jVUE5ZlnnDhM6hAPPn48iJxQ9ifBRYmDtI4Bv2hhRqQw3/eAKwRYeL
+         5ZS3ZdvKhhZFDNsWxL+/jd8Alqs7qzFwxRvuIbhJGlEfKT2SDvipiDrNEUxInRjAlTTV
+         K6XeKou+tgBnn9a8WVvIMbLSyJOR0MwQXDt/mexi8mQtJCplhkmJrfd0A8047PV1yWHd
+         jRqrKnyzK5G5Ll5hIeT8N3HqlBAiDbjT9MxsiJ5WD9/Sqwpe/VTgyWP5Tw/UCZAHhn4A
+         DG1SZPuFN388S1g2yvOlhNRrFdj0DK4W6jOD0RY5olUcNNgMqEgV2TTexKnY7Sd22lwR
+         9NyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744779088; x=1745383888;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LiL9dWGwg8zqcLQ2yDvfK2EAWVYqud9JwKQuTd0tBE4=;
+        b=inJy6jsTJvdnNYxwFky2L8KwGVkUcA1ctpDU5L3fXJx+9Kt+odhzyL2PHAtgxxa4e0
+         mhk9EaVeNIjm/TO1FqAc+4/2+rkgNSBMUSnmsQ2i9eN4NnkVJKYdwlTV/lx2A48XhdQc
+         PSy0yYgM2qhklVL0c26gDqlilhj6O0vnmJK2OLu3+96MZCzIIcJu+NHrbgzEvlyUGMPJ
+         D9J6Hahj6+x9ZDaZGP1XRBUBInC2KHpCFGS/FGLflY2wAB+2Vnlo627PMhUWY6IxlAYR
+         Lfl8iMprzE1kI1I68SGNIsd4r4vG5DNAQE2ssfNZ+XiDr/pxsbotWtNMxhSBJv+2c3uv
+         oZVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbUQKl7ncl/KxAjhWvpRw46nB0+Go/O1x0tMPQbz78mCe3xH0ET0QG3Lz21DiHqKlYNKgwkDU/9rm4slU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeCKxjXuhCqaV91VZ6NsVfVzM583bkHXll4radTHiAw6ye5A5v
+	UPb/ANJhsyjUxMGagnopl3n8VsCy96YaOwDRE9yuKaoadNw91CVC3ciELCcSIS1sL1th0uMjP+/
+	Fb6UAOg==
+X-Google-Smtp-Source: AGHT+IFl03PSz4Ap26oYDFjTlnffyjudvw4kIb3j9j4GpKvAvogJYsA/BL9ehHZmVxdZVjmkT6xg8u/2bkkO
+X-Received: from oabwh14.prod.google.com ([2002:a05:6871:a68e:b0:2c1:1eb1:aacf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:71cd:b0:29e:290f:7af4
+ with SMTP id 586e51a60fabf-2d4d2d7c4bbmr144978fac.34.1744779088590; Tue, 15
+ Apr 2025 21:51:28 -0700 (PDT)
+Date: Tue, 15 Apr 2025 21:51:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3qQhWKIuWHaxYIhyUMvSqeU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
+Message-ID: <20250416045117.876775-1-irogers@google.com>
+Subject: [PATCH v8 0/4] Prefer sysfs/JSON events also when no PMU is provided
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Ze Gao <zegao2021@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, 
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, Junhao He <hejunhao3@huawei.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>, Leo Yan <leo.yan@arm.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Atish Patra <atishp@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/3qQhWKIuWHaxYIhyUMvSqeU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+At the RISC-V summit the topic of avoiding event data being in the
+RISC-V PMU kernel driver came up. There is a preference for sysfs/JSON
+events being the priority when no PMU is provided so that legacy
+events maybe supported via json. Originally Mark Rutland also
+expressed at LPC 2023 that doing this would resolve bugs on ARM Apple
+M? processors, but James Clark more recently tested this and believes
+the driver issues there may not have existed or have been resolved. In
+any case, it is inconsistent that with a PMU event names avoid legacy
+encodings, but when wildcarding PMUs (ie without a PMU with the event
+name) the legacy encodings have priority.
 
-Hi all,
+The situation is further inconsistent as legacy events are case
+sensitive, so on Intel that provides a sysfs instructions event, the
+instructions event without a PMU and lowercase is legacy while with
+uppercase letters it matches with sysfs which is case insensitive. Are
+there legacy events with upper case letters? Yes there are, the cache
+ones mix case freely:
 
-Today's linux-next merge of the kspp tree got a conflict in:
+L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node
 
-  lib/test_ubsan.c
+meaning LLC that means L2 (which is wrong) both match as part of a
+legacy cache name but llc and l2 would only match sysfs/json
+events. The whole thing just points at the ridiculous nature of legacy
+events and why we'd want them to be preffered I don't know. Why should
+case of a letter or having a PMU prefix impact the encoding in the
+perf_event_attr?
 
-between commit:
+The patch doing this work was reverted in a v6.10 release candidate
+as, even though the patch was posted for weeks and had been on
+linux-next for weeks without issue, Linus was in the habit of using
+explicit legacy events with unsupported precision options on his
+Neoverse-N1. This machine has SLC PMU events for bus and CPU cycles
+where ARM decided to call the events bus_cycles and cycles, the latter
+being also a legacy event name. ARM haven't renamed the cycles event
+to a more consistent cpu_cycles and avoided the problem. With these
+changes the problematic event will now be skipped, a large warning
+produced, and perf record will continue for the other PMU events. This
+solution was proposed by Arnaldo.
 
-  22dd91185686 ("lib/test_ubsan.c: fix panic from test_ubsan_out_of_bounds")
+v8: Change removing of failed to open events that are tracking so that
+    the tracking moves to the next event. Make software events able to
+    specified with a PMU. Change the perf_api_probe to not load all
+    PMUs through scanning, specify a PMU when parsing events.
 
-from the mm-hotfixes-unstable branch of the mm-hotfixes tree and commit:
+v7: Expand cover letter, fix a missed core_ok check in the v6
+    rebase. Note, as with v6 there is an alternate series that
+    prioritizes legacy events but that is silly and I'd prefer we
+    didn't do it.
 
-  9b044614be12 ("ubsan: Fix panic from test_ubsan_out_of_bounds")
+v6: Rebase of v5 (dropping already merged patches):
+    https://lore.kernel.org/lkml/20250109222109.567031-1-irogers@google.com/
+    that unusually had an RFC posted for it:
+    https://lore.kernel.org/lkml/Z7Z5kv75BMML2A1q@google.com/
+    Note, this patch conflicts/contradicts:
+    https://lore.kernel.org/lkml/20250312211623.2495798-1-irogers@google.com/
+    that I posted so that we could either consistently prioritize
+    sysfs/json (these patches) or legacy events (the other
+    patches). That lack of event printing and encoding inconsistency
+    is most prominent in the encoding of events like "instructions"
+    which on hybrid are reported as "cpu_core/instructions/" but
+    "instructions" before these patches gets a legacy encoding while
+    "cpu_core/instructions/" gets a sysfs/json encoding. These patches
+    make "instructions" always get a sysfs/json encoding while the
+    alternate patches make it always get a legacy encoding.
 
-from the kspp tree.
+v5: Follow Namhyung's suggestion and ignore the case where command
+    line dummy events fail to open alongside other events that all
+    fail to open. Note, the Tested-by tags are left on the series as
+    v4 and v5 were changing an error case that doesn't occur in
+    testing but was manually tested by myself.
 
-I fixed it up (I just used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
+v4: Rework the no events opening change from v3 to make it handle
+    multiple dummy events. Sadly an evlist isn't empty if it just
+    contains dummy events as the dummy event may be used with "perf
+    record -e dummy .." as a way to determine whether permission
+    issues exist. Other software events like cpu-clock would suffice
+    for this, but the using dummy genie has left the bottle.
 
---=20
-Cheers,
-Stephen Rothwell
+    Another problem is that we appear to have an excessive number of
+    dummy events added, for example, we can likely avoid a dummy event
+    and add sideband data to the original event. For auxtrace more
+    dummy events may be opened too. Anyway, this has led to the
+    approach taken in patch 3 where the number of dummy parsed events
+    is computed. If the number of removed/failing-to-open non-dummy
+    events matches the number of non-dummy events then we want to
+    fail, but only if there are no parsed dummy events or if there was
+    one then it must have opened. The math here is hard to read, but
+    passes my manual testing.
 
---Sig_/3qQhWKIuWHaxYIhyUMvSqeU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+v3: Make no events opening for perf record a failure as suggested by
+    James Clark and Aditya Bodkhe <Aditya.Bodkhe1@ibm.com>. Also,
+    rebase.
 
------BEGIN PGP SIGNATURE-----
+v2: Rebase and add tested-by tags from James Clark, Leo Yan and Atish
+    Patra who have tested on RISC-V and ARM CPUs, including the
+    problem case from before.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf/N0EACgkQAVBC80lX
-0GzzQgf9F+errwCQ/s83jZyE2cRdkdPnvYVCIUtKCycTiH6a9Yhn1d1qzxfLlryS
-VqnqCJ3DOLf100jQ9/cy1ZtBl1TR7ozfqEpWi+XGZV5B9CXDy9p4Ctn8lNFHjrk0
-rCYvfY1AYwPKOdq/9uIXJHOOjHLutuf8N7Ci9T+h7qqzxnd9nN66dBTYENERPS6i
-osE9vbx84Hkxw0UJAImIFhIPx/6lQjxIjhs5uLBq7IzNbshkqJqdM+lgllzu69Ef
-CT+I9wnmCZ9Eqby/bOsMEV1MDP1w8yaLsTA+OFQfyYHciyknhSrcAH97JUSW5D32
-3UPjLhvWlJt9kH1/X/hoEty/RH0GLg==
-=LhGM
------END PGP SIGNATURE-----
+Ian Rogers (4):
+  perf record: Skip don't fail for events that don't open
+  perf parse-events: Reapply "Prefer sysfs/JSON hardware events over
+    legacy"
+  perf parse-events: Allow software events to be terms
+  perf perf_api_probe: Avoid scanning all PMUs, try software PMU first
 
---Sig_/3qQhWKIuWHaxYIhyUMvSqeU--
+ tools/perf/builtin-record.c      | 63 +++++++++++++++++++---
+ tools/perf/util/parse-events.c   | 47 +++++++++++++----
+ tools/perf/util/parse-events.h   |  3 +-
+ tools/perf/util/parse-events.l   | 90 ++++++++++++++++++--------------
+ tools/perf/util/parse-events.y   | 85 ++++++++++++++++++++++--------
+ tools/perf/util/perf_api_probe.c | 27 +++++++---
+ tools/perf/util/pmu.c            |  9 ++--
+ 7 files changed, 235 insertions(+), 89 deletions(-)
+
+-- 
+2.49.0.777.g153de2bbd5-goog
+
