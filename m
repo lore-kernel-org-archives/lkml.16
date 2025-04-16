@@ -1,171 +1,191 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD9723F422
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB0A238179;
+	Wed, 16 Apr 2025 12:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805043; cv=none; b=aPtTMRBAGfnsSi3HwWSqCWhmST2LQZ7q8J0sGv1Ip63Jmyn/NXsdvPMu77yCT/hAYUkFqDenG4H4oJoE64QhVe8c3fMBFDlNmxMZbfijW1coxwEW16R2cUKwyusC5NWKoUc2mcrE05R+5LrQWMDeWwKt0BFFu2wLEr4Bim1ovvM=
+	t=1744805046; cv=none; b=aYiYE45YPJJShL6wqvZwEIT2taSnatFo78uCkPpCDwJ7gpZvxgjT6x+rx4ALD6+RukrTfXWGHdly/v81+2IlsEqzbfjOplIPGIh9p6cMxszSb2tXBbIABoM0Iq/i3D0Q/pKdt+YyVbm3Z1v3gW5eNyXu+cAkvzH1cECN2cCwKP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805043; c=relaxed/simple;
-	bh=HWqh+T9xGdXr2x2ptTrd4xSwZnxgWGd8mannk8BWyqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ECqvvhxzZGENNwuaMnc1N8QTIus/tTpBU7dye8TvHpmlaiKEIB63KGyPgxUeKPLBJt5FPXwyhma+C8dNjZVKWTe2wRwQiaoZcA0akpiUMaf1ERvmdh5e2+kJN4DwufL8fH96a4ll5YZHL5pX/LWPSDGoGiD1HRcdKzWvEhGziWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wTNuD1qF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VCd2cnKN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wTNuD1qF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VCd2cnKN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744805046; c=relaxed/simple;
+	bh=PFGhtR7a+Zp8eMU6Syuc2ZJohDPwScExVH8rQ3xxB48=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=N3w4Kx3WeQzt/IDKbkqzqzgPDl6ItJzuDiXYGk19ATL9EtCfT8T6Rd8Fr89VTXVeiLppiuUN4UVb3r2fO/4byizDycBMON8wJBFcGF2n6ZCZ/y2npAU+Xwadn3dL+HwAkyzZpgf4HD8qHlgniPzdO63ucFTrxQux5A2xWLOTQTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=S0yXEdAx; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wTNuD1qF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VCd2cnKN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wTNuD1qF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VCd2cnKN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 40E251F461;
-	Wed, 16 Apr 2025 12:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744805040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
-	b=wTNuD1qFq7CpHVbaPYS5ikEd8Ug18IiRlzmytANVXa8eCWUoQow7jVqF8kAQHOdZZp3Li3
-	LuptuBaPXBBoedRL225XO11ZsW0ZA1WPp/SJ/qAd0V0kQkEI0fx/gZt8NGC6B2cUi1FmdQ
-	If2I8onvLAdU+ozbKglX4mIXCAXF+1s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744805040;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
-	b=VCd2cnKN1Q9Z6AEH+q1H7FVL6fV1wujdhCJmLDVFhNgsuMSUYmg8TpuS9kr6HpBY4WaWcX
-	hwlVAra6sxoZ/QCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=wTNuD1qF;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VCd2cnKN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744805040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
-	b=wTNuD1qFq7CpHVbaPYS5ikEd8Ug18IiRlzmytANVXa8eCWUoQow7jVqF8kAQHOdZZp3Li3
-	LuptuBaPXBBoedRL225XO11ZsW0ZA1WPp/SJ/qAd0V0kQkEI0fx/gZt8NGC6B2cUi1FmdQ
-	If2I8onvLAdU+ozbKglX4mIXCAXF+1s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744805040;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
-	b=VCd2cnKN1Q9Z6AEH+q1H7FVL6fV1wujdhCJmLDVFhNgsuMSUYmg8TpuS9kr6HpBY4WaWcX
-	hwlVAra6sxoZ/QCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCFF2139A1;
-	Wed, 16 Apr 2025 12:03:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yXsHMK+c/2d8IQAAD6G6ig
-	(envelope-from <jdelvare@suse.de>); Wed, 16 Apr 2025 12:03:59 +0000
-Date: Wed, 16 Apr 2025 14:03:49 +0200
-From: Jean Delvare <jdelvare@suse.de>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
- Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
- <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
- Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/7] soc: aspeed: lpc-snoop: Cleanup resources in
- stack-order
-Message-ID: <20250416140349.52bffcf6@endymion>
-In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-1-64f522e3ad6f@codeconstruct.com.au>
-References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
-	<20250411-aspeed-lpc-snoop-fixes-v1-1-64f522e3ad6f@codeconstruct.com.au>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="S0yXEdAx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=C+BUdbNu2ogqSwBdGvb9VogReaCcne2HM3cP2/uSto4=; b=S0yXEdAx0AP0GBpAOdQQlzocSe
+	SvaO2kc48XVnolknlLgy5oAUdFWGtCIrYMLcY6JpXIJX1N8TyNE6RpUTnGDwfm63v2rw4HcLdFjvk
+	GT5vbmVIaebvybTuLeHWhHyvZYLIc8xqwGGbw4KeDPwEk8ibctxSBv3UpU/TMTxQRBRkfOj16GAfO
+	yKk6BAG5HDRvLX3thFqAgMQKGU6MhqaoL7WudEOrl86zpMYyGmJoLNqUxpX+cMMZxGsvB8vA4ebpz
+	5y11F7gEhtldOhFmU8112tT7pQLmkWkphdhE0KrC9F4cW0TrIvbWZtOADnf2rE0e6khKH9KUX+/XN
+	4YYz+/xQ==;
+Received: from [122.175.9.182] (port=43055 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u51Uk-000000006vU-2zvY;
+	Wed, 16 Apr 2025 17:33:59 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id 5A4611781A82;
+	Wed, 16 Apr 2025 17:33:51 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id 3A604178247C;
+	Wed, 16 Apr 2025 17:33:51 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id hCcSTaFJEKlc; Wed, 16 Apr 2025 17:33:51 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 0520E1781A82;
+	Wed, 16 Apr 2025 17:33:51 +0530 (IST)
+Date: Wed, 16 Apr 2025 17:33:50 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: horms <horms@kernel.org>
+Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
+	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
+	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
+	kuba <kuba@kernel.org>, pabeni <pabeni@redhat.com>, 
+	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
+	conor+dt <conor+dt@kernel.org>, nm <nm@ti.com>, 
+	ssantosh <ssantosh@kernel.org>, tony <tony@atomide.com>, 
+	richardcochran <richardcochran@gmail.com>, 
+	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
+	m-karicheri2 <m-karicheri2@ti.com>, s hauer <s.hauer@pengutronix.de>, 
+	rdunlap <rdunlap@infradead.org>, diogo ivo <diogo.ivo@siemens.com>, 
+	basharath <basharath@couthit.com>, 
+	jacob e keller <jacob.e.keller@intel.com>, 
+	m-malladi <m-malladi@ti.com>, 
+	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
+	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	netdev <netdev@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	mohan <mohan@couthit.com>
+Message-ID: <2114025245.1081083.1744805030927.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250415201552.GJ395307@horms.kernel.org>
+References: <20250414113458.1913823-1-parvathi@couthit.com> <20250414140751.1916719-12-parvathi@couthit.com> <20250415201552.GJ395307@horms.kernel.org>
+Subject: Re: [PATCH net-next v5 11/11] net: ti: prueth: Adds PTP OC Support
+ for AM335x and AM437x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 40E251F461
-X-Spam-Score: -4.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
-	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: prueth: Adds PTP OC Support for AM335x and AM437x
+Thread-Index: nmUgxGmbBkjbq4ZS0FAvjySn6J19/A==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Fri, 11 Apr 2025 10:38:31 +0930, Andrew Jeffery wrote:
-> Free the kfifo after unregistering the miscdev in
-> aspeed_lpc_disable_snoop() as the kfifo is initialised before the
-> miscdev in aspeed_lpc_enable_snoop().
+Hi,
+
+> On Mon, Apr 14, 2025 at 07:37:51PM +0530, Parvathi Pudi wrote:
+>> From: Roger Quadros <rogerq@ti.com>
+>> 
+>> PRU-ICSS IEP module, which is capable of timestamping RX and
+>> TX packets at HW level, is used for time synchronization by PTP4L.
+>> 
+>> This change includes interaction between firmware/driver and user
+>> application (ptp4l) with required packet timestamps.
+>> 
+>> RX SOF timestamp comes along with packet and firmware will rise
+>> interrupt with TX SOF timestamp after pushing the packet on to the wire.
+>> 
+>> IEP driver available in upstream linux as part of ICSSG assumes 64-bit
+>> timestamp value from firmware.
+>> 
+>> Enhanced the IEP driver to support the legacy 32-bit timestamp
+>> conversion to 64-bit timestamp by using 2 fields as below:
+>> - 32-bit HW timestamp from SOF event in ns
+>> - Seconds value maintained in driver.
+>> 
+>> Currently ordinary clock (OC) configuration has been validated with
+>> Linux ptp4l.
+>> 
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> Signed-off-by: Andrew F. Davis <afd@ti.com>
+>> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+>> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
 > 
-> Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc chardev")
-> Cc: stable@vger.kernel.org
-> Cc: Jean Delvare <jdelvare@suse.de>
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
->  drivers/soc/aspeed/aspeed-lpc-snoop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> ...
 > 
-> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> index 3e3f178b122615b33e10ff25a0b0fe7b40a0b667..bfa770ec51a889260d11c26e675f3320bf710a54 100644
-> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
-> @@ -263,8 +263,8 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
->  		return;
->  	}
->  
-> -	kfifo_free(&lpc_snoop->chan[channel].fifo);
->  	misc_deregister(&lpc_snoop->chan[channel].miscdev);
-> +	kfifo_free(&lpc_snoop->chan[channel].fifo);
->  }
->  
->  static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+>> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h
+>> b/drivers/net/ethernet/ti/icssg/icss_iep.h
+>> index 0bdca0155abd..437153350197 100644
+>> --- a/drivers/net/ethernet/ti/icssg/icss_iep.h
+>> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
+>> @@ -47,6 +47,11 @@ enum {
+>>  	ICSS_IEP_MAX_REGS,
+>>  };
+>>  
+>> +enum iep_revision {
+>> +	IEP_REV_V1_0 = 0,
+>> +	IEP_REV_V2_1
+>> +};
+>> +
+>>  /**
+>>   * struct icss_iep_plat_data - Plat data to handle SoC variants
+>>   * @config: Regmap configuration data
+>> @@ -57,11 +62,13 @@ struct icss_iep_plat_data {
+>>  	const struct regmap_config *config;
+>>  	u32 reg_offs[ICSS_IEP_MAX_REGS];
+>>  	u32 flags;
+>> +	enum iep_revision iep_rev;
+>>  };
+> 
+> Please add iep_rev to the Kernel doc for struct icss_iep_plat_data.
+> 
+> Flagged by ./scripts/kernel-doc -none
 > 
 
-Acked-by: Jean Delvare <jdelvare@suse.de>
+Sure, we will update the documentation in the next version.
 
--- 
-Jean Delvare
-SUSE L3 Support
+> ...
+> 
+>> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+>> b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+> 
+> ...
+> 
+>> @@ -337,6 +343,7 @@ enum pruss_device {
+>>  struct prueth_private_data {
+>>  	enum pruss_device driver_data;
+>>  	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
+>> +	enum fw_revision fw_rev;
+>>  	bool support_lre;
+>>  	bool support_switch;
+>>  };
+> 
+> And, likewise, please add fw_rev to the Kernel doc for struct
+> prueth_private_data.
+> 
+
+Sure, we will add fw_rev to the Kernel doc in the next version.
+
+
+Thanks and Regards,
+Parvathi.
