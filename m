@@ -1,70 +1,75 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B78A185920
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5021F1DE4CE
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811518; cv=none; b=qLZrsAJJa6YfYBRpcohrx2ZzLs52hIRvKkmz2nTb6x6YuztibsXe7CKyaDZ6IHyI2arFe/Aaogmxb8U6mxY48KS2WwgsrWJbiAFH2dOKMfO6c7ivoZNHentv5Yu8wOwdCFPF5YVIjGvxeagyn8G6mnJpYBZNxmrfjj/X0aWLrwQ=
+	t=1744811519; cv=none; b=h7UEiAQOW4EIjZvgyMSGJkyHBhD4+KMHeTHhaX21d+YdFMPOcPvWUZVFOGlZS6wLiSby7HwYZ3QWpXR6ZPZxvixJL9G3/Gz/1P0R6I6dS8EwkC3YnaK5EPclncjTkZGWJcKVcXtJ6p98ufpb9eYNTCH9ph1q57m0imPQ0j2oElE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811518; c=relaxed/simple;
-	bh=O652EDl6UwUbsu14UlA+Lv1Ltuil8ye7clm7QQ4ffrk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jq4vp2YSOPpwPYWg88i6d0dmm7Kbd+QrcvIrlpUWQ8pxTP3lzgVzfexuz0V4XAS/LGjiJV/gV2zXtQ8z4yTbdYT0vMRKOSEKOTw/1/f7EbG+KPkebhWkAtGesoHiEhEOC5E0PEWYIplAPwi6lM4yHN1ZWyz+mMqx7en78bzQTAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=tX+Px/kj; arc=none smtp.client-ip=209.85.222.171
+	s=arc-20240116; t=1744811519; c=relaxed/simple;
+	bh=QzLXGKN1qZ+mBSCYiutyeuYDvZHhAcPyMYsPDC1APA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FeI94Dtb9JiwqJ5L38t1a+BAG/L1xQI0Hy8XBj8fljGRU/Srp/DXk//ST7VDmfPMX07pIdS0NlTaS6ZYpqnP2lC8AjqFn42u5GKiD/PzEPgE19y6mxY+Ldyvxlu5dTRB3CWTKh5bCXRAATB1hyQdIaaFIImuSl/MlyzJ8eHiBCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=Eo05iwr7; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="tX+Px/kj"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c554d7dc2aso1041570585a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:51:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="Eo05iwr7"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c55500d08cso596514885a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744811513; x=1745416313; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tzLhMgMwNH0NH5AOa4O9mcMXGuopza907c5GCi91e+0=;
-        b=tX+Px/kj7Y7fVqT1Cqzx48I93MOo/pWKwdkL+VcMpCH5mgXhT7HaQ2OlDVjsalrdoM
-         svEoPkOapU5Fu5UaqCrQ9jH2aJwTEPxDQjtCkIjfK5t0vopRv/AKqAFQoZ1VhuF42nyv
-         lr2PLmK6tMva0CaL769tZeb1FI1UUJDq/gSQrVJxMrg/UMswwKghf7Uk+dt0LdL0bDMB
-         kOF7zATUeIBi98AaN2y1lUWCzGevvawnto69/NHMnB133MsaiBCrr0pIN5sxDsRlHQL2
-         OIEbBoviHSOoWOpIi7mdlqootrzTeafqhabyxaNOmGVVND/kx7UgHq+G03sK3V+9rbpZ
-         hOcg==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744811515; x=1745416315; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wj3NrniHNZn/X8o5tdAU6UD1m+UiZoBgpGIel9S7xk4=;
+        b=Eo05iwr7maAXL2f1PeaUuKXyYE52+l5T7C1a/6Lo5euwCB7gT3bFoJaP7XTFMePbfZ
+         FhIyCokDCPCTu1HJBQyQ9wB3H46ciapv6B+6Wdv2nsecBQdwFpe6Tq0N4DBXA26govNG
+         6yq49gEAa0Kxm4zkz4POPja1fekwid12gFqCIkoolquRCMES9ef1td7VPqvmgc5pcCQ7
+         OijAOGUO1nMtS7ZM+bVaA8MNnffNuQ30nIMv4Fp+zNjZoZ1ifW2OklcE9N4j2rkOFEum
+         Dl7qI5Zr8VXW4VvBxSHtV+uCdudQxn/f7BLv0TQIvLbQHY7sKv2jRbYi9ateb+EV6vaF
+         TYXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744811513; x=1745416313;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tzLhMgMwNH0NH5AOa4O9mcMXGuopza907c5GCi91e+0=;
-        b=bRaWegwW+P8jZIdMIh/pClpgMZhvjzVoPPz7O3Rm1laiYDAoa2HVv43UFvk0ALHN+v
-         a7Dzif8DcAluF7i0C1sYgwy4colmVPzM7b38Wpv2Cb3shSidc1h31KNfbumWB0rKIAlv
-         DIvghG5ELwFrVpWSGRs5lPomUESb9sKCLLOHp25khT/vl31jjz++zao/4wkZGDRssOSR
-         lVaOeentrHAV88d58c926iwE3L7ws5hyNy5OUn0lTHgYwVGx2ec2a4B9hvWppvkt2EXk
-         cyYBtjwH+yXVVISLSwYcAPIryUdewJts+JQ8FCUA47uIgIFI1zUEVBkUCwjuuog3DCAw
-         lRYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpDEm4yIXYtgLWrEVX8oFLREgMX/Gx6PU0vqifw808O4p7RLLd834VIaiGwgF7RDvTLRUnfsxGAUHBEP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKSkFTeG6uCAhhF5IQPUZOir4SIIEcm+HV1GZ5P+PczCzqowBt
-	Bebo7907YOHsTWieZ3Xi7sYoQDi8GM3WNrdmJDqd2kzNTzLSm7X1+Liv4jjsL44=
-X-Gm-Gg: ASbGncu9ckS93ZGLNh8752YbTeQwuRiV5YqDI1ANgqQt1fYFUAqragACs5ChO9jGPUZ
-	eXzQcuCUZHXM+YeNuapx7LXGJ6fT7DQFnEy7QMm/ss4m5G8wszKZQc7r+MUyccjc3KThF5QejXS
-	+dyXZoLN7tusqg7R93sk6UhCmvCL8yEJbhSCYq2/rfFdDI+nou1ilzvye78BDNDhhpEPXhNBQ/q
-	py5nK1+REAjxQKrcBxGPneXZXCTOOHk33K/scvweL58XQd/0PmUIY/nnQ/P9svmGBXCVn35RFpx
-	eu9zENcvcI6/3o+6xY9vJJZHBRHGqnyCEMA64EGDZluj5tH6qQ==
-X-Google-Smtp-Source: AGHT+IEK5xcLCTEstx/iGH3+x/DoyF2pbgoR2j9HRIFCwxYq9oqyIz9Gtu4Bo2sL9Ekj03MVC7PbLQ==
-X-Received: by 2002:a05:620a:424b:b0:7c5:d888:7098 with SMTP id af79cd13be357-7c9190642abmr225230285a.44.1744811513336;
-        Wed, 16 Apr 2025 06:51:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744811515; x=1745416315;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wj3NrniHNZn/X8o5tdAU6UD1m+UiZoBgpGIel9S7xk4=;
+        b=c3uCG28+3j2ZLQE/hEKGJnJR2EGGx0Kt8POt4MKCJE9Eio3HG8FzP/TAm33EXMQyDC
+         TwfLt8UIiRYtfmySGfomq5qzBi5tN24O0JeibVkudWCHRugRjJwOEhi2kdV2ponQDreF
+         UwdbTT3OFVQrymSCWZNUi6wFjuYO2iURbP5Tim68yS+jwLEM3wJpLXCNlcoy8BjCcOhh
+         snBwAbSXDWp8o6/fBpVCChBW5qpexHpiNaA2FBgZqM3htnHHXD6qq+TKf4pHrR/hCxRl
+         rFBNdaeVURyoUjZLgSLCjFIJ5zcIC6ZxYy4AXbOv039qXx9zQ+iJMkjl7jH8oLsEYNtl
+         cBjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK0VfMNRHFGECxEuiTutHp99t+avG8a/iUJoi4Fx4T3D5jKxYnaP2x6p0WwvgBBJ+2w8LQFfII0GoKvpE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvr/2cYf/GJhW1/abALnzebl7oDlzByl/cMUYqQacZScNzwAMC
+	WIto9d28t8ZFezw3+7z6rU6Wt34OIDFy5TO42R/6Rk2Xh8JnEArB7+E1PN5V/htcZsmcj4WK4fS
+	7
+X-Gm-Gg: ASbGncva4hw1TmIRKrKCGVeHziubSFZLw8m3Z0Y5iWW9gqKLBtIYGksnfEBXEG9EufG
+	6LRH/raun4g2giXvmOomYxIcPxSOzbqOacfv+9SVdCjYoif02LAXULhIAHf29EP5o/ylhIK0L/N
+	nYMQrbWdecHzVgPn70UXNsmOleG1blW3sjYuh8xnQg/qBJXhjzN4LD6MV/1005LmKxv4pNbv7ME
+	Zm3SQmr3DbzpjOIPHQ4okkhu4l5vmubORb0+r1cLCRgp1nNy1ZGZBCmtkltf4+bgru7glB/Cnps
+	SJR6+nDt24nIVqY2SZfvYSWW8BDKkTwg7nPoyGIMrX80lmEo2A==
+X-Google-Smtp-Source: AGHT+IGmuTUyCI94ZLmAFrRh2xfR+geJlI+XCIVaAF1HfCP+icwZogiLKrredbMjVg402ILAUyjhvQ==
+X-Received: by 2002:a05:620a:4890:b0:7c5:a513:1ff0 with SMTP id af79cd13be357-7c919002f41mr255476485a.34.1744811514898;
+        Wed, 16 Apr 2025 06:51:54 -0700 (PDT)
 Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a89f98eesm1062834085a.83.2025.04.16.06.51.52
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a89f9943sm1059867585a.82.2025.04.16.06.51.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 06:51:52 -0700 (PDT)
+        Wed, 16 Apr 2025 06:51:54 -0700 (PDT)
 From: Johannes Weiner <hannes@cmpxchg.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>,
 	Brendan Jackman <jackmanb@google.com>,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] mm: two allocator fixes for 6.15
-Date: Wed, 16 Apr 2025 09:45:38 -0400
-Message-ID: <20250416135142.778933-1-hannes@cmpxchg.org>
+Subject: [PATCH 1/2] mm: vmscan: restore high-cpu watermark safety in kswapd
+Date: Wed, 16 Apr 2025 09:45:39 -0400
+Message-ID: <20250416135142.778933-2-hannes@cmpxchg.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250416135142.778933-1-hannes@cmpxchg.org>
+References: <20250416135142.778933-1-hannes@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,21 +78,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Two fixes based on Vlastimil's review of the defrag_mode patches.
+Vlastimil points out that commit a211c6550efc ("mm: page_alloc:
+defrag_mode kswapd/kcompactd watermarks") switched kswapd from
+zone_watermark_ok_safe() to the standard, percpu-cached version of
+reading free pages, thus dropping the watermark safety precautions for
+systems with high CPU counts (e.g. >212 cpus on 64G). Restore them.
 
-#1 fixes a bug that can lead to memory deadlocks on high-CPU-count
-machines. This affects not just defrag_mode.
+Since zone_watermark_ok_safe() is no longer the right interface, and
+this was the last caller of the function anyway, open-code the
+zone_page_state_snapshot() conditional and delete the function.
 
-#2 fixes an overreclaim issue when defrag_mode is enabled.
-
-Based on:
-
-  commit 16176182efbf3dfce6dad18dcc8801164329d1c2 (akpm/mm-hotfixes-unstable)
-  Author: Uros Bizjak <ubizjak@gmail.com>
-  Date:   Fri Apr 4 12:24:37 2025 +0200
-
+Reported-by: Vlastimil Babka <vbabka@suse.cz>
+Fixes: a211c6550efc ("mm: page_alloc: defrag_mode kswapd/kcompactd watermarks")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
  include/linux/mmzone.h |  2 --
  mm/page_alloc.c        | 12 ------------
- mm/vmscan.c            | 29 ++++++++++++++++++++++++++---
- 3 files changed, 26 insertions(+), 17 deletions(-)
+ mm/vmscan.c            | 21 +++++++++++++++++++--
+ 3 files changed, 19 insertions(+), 16 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 4c95fcc9e9df..6ccec1bf2896 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -1502,8 +1502,6 @@ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+ bool zone_watermark_ok(struct zone *z, unsigned int order,
+ 		unsigned long mark, int highest_zoneidx,
+ 		unsigned int alloc_flags);
+-bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
+-		unsigned long mark, int highest_zoneidx);
+ /*
+  * Memory initialization context, use to differentiate memory added by
+  * the platform statically or via memory hotplug interface.
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d7cfcfa2b077..928a81f67326 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3470,18 +3470,6 @@ static inline bool zone_watermark_fast(struct zone *z, unsigned int order,
+ 	return false;
+ }
+ 
+-bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
+-			unsigned long mark, int highest_zoneidx)
+-{
+-	long free_pages = zone_page_state(z, NR_FREE_PAGES);
+-
+-	if (z->percpu_drift_mark && free_pages < z->percpu_drift_mark)
+-		free_pages = zone_page_state_snapshot(z, NR_FREE_PAGES);
+-
+-	return __zone_watermark_ok(z, order, mark, highest_zoneidx, 0,
+-								free_pages);
+-}
+-
+ #ifdef CONFIG_NUMA
+ int __read_mostly node_reclaim_distance = RECLAIM_DISTANCE;
+ 
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index b620d74b0f66..cc422ad830d6 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -6736,6 +6736,7 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 	 * meet watermarks.
+ 	 */
+ 	for_each_managed_zone_pgdat(zone, pgdat, i, highest_zoneidx) {
++		enum zone_stat_item item;
+ 		unsigned long free_pages;
+ 
+ 		if (sysctl_numa_balancing_mode & NUMA_BALANCING_MEMORY_TIERING)
+@@ -6748,9 +6749,25 @@ static bool pgdat_balanced(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 		 * blocks to avoid polluting allocator fallbacks.
+ 		 */
+ 		if (defrag_mode)
+-			free_pages = zone_page_state(zone, NR_FREE_PAGES_BLOCKS);
++			item = NR_FREE_PAGES_BLOCKS;
+ 		else
+-			free_pages = zone_page_state(zone, NR_FREE_PAGES);
++			item = NR_FREE_PAGES;
++
++		/*
++		 * When there is a high number of CPUs in the system,
++		 * the cumulative error from the vmstat per-cpu cache
++		 * can blur the line between the watermarks. In that
++		 * case, be safe and get an accurate snapshot.
++		 *
++		 * TODO: NR_FREE_PAGES_BLOCKS moves in steps of
++		 * pageblock_nr_pages, while the vmstat pcp threshold
++		 * is limited to 125. On many configurations that
++		 * counter won't actually be per-cpu cached. But keep
++		 * things simple for now; revisit when somebody cares.
++		 */
++		free_pages = zone_page_state(zone, item);
++		if (zone->percpu_drift_mark && free_pages < zone->percpu_drift_mark)
++			free_pages = zone_page_state_snapshot(zone, item);
+ 
+ 		if (__zone_watermark_ok(zone, order, mark, highest_zoneidx,
+ 					0, free_pages))
+-- 
+2.49.0
 
