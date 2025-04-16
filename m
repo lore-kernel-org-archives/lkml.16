@@ -1,150 +1,202 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2085.outbound.protection.outlook.com [40.107.21.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072AC22F15C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791156; cv=none; b=kumSCsYOHzGJdXvGlkDVqwJxXkx2rNpLUB3HWRbS+R6m20YoKhIby/uMOR+iTuFxpVQHm3Y0oeTNPuB8NH0T//dYvVed9CI5//ICahxnSek9s3Xdj/otaDpYau0PuXhUmNe8cdQs8NvIYojFr5/Og7qwZpHi8gubK++ZiEUD43M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791156; c=relaxed/simple;
-	bh=UqpYDKEGBNrCP4IDpHxnNSRgmJd86ZMFLlHPoSsuwB0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZRO+4Hk3N5j92z2mR9sENmkm5BGAW1erw99vVXT9HrUjEa7Zftkw7XrI89jvfKHgPn0sn91Bf3MWCda1njNs7PPqjoUVQk2nrxsrYwXfLxkzB5ieexxMjEcNS2ba8XNUDb/aU020WLULHWBCJpQcxBJpiqLX6o6KcWK41//zPUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=a4k/I7Nx; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE3C158520;
+	Wed, 16 Apr 2025 08:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744791285; cv=fail; b=A3ypbCaIjxOsVr9fWLSyGCtA02xtopTqwSQGgh+t5nfLz4/Xm6vIIaFvHFE4NczZdsrIZDDdxryGXEeUuy0J7m9E3AsvaENGZhLjXVSyU2lfpAFpyn6g5Ex/OE0rj8wjdYy9JOpSQult0CESM7bCG7N+SpEOnN5GfblkPV8TITc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744791285; c=relaxed/simple;
+	bh=Q+7aj89sP0BEmGHS9YXA+++Al9pMuTGaiBGV3A7vJ7Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=BMYFf+IqqFAPZGZejiFgSmQnV9EUoqzrGSNDzd0zbT0Yri/qeuA6GRVI7u7OcGb2Iis5ydvBENNK1aoPFJunrBQZNFnvQQ/5h5KSwmsxh4NmoY3WJ3AppcEmGYOsdQY5eio3Bot6K7KPJXmwI+Kegr1u+ajMmwdvA3oKWv+xi14=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JU8eyqG5; arc=fail smtp.client-ip=40.107.21.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="a4k/I7Nx"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee623fe64so128590f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1744791152; x=1745395952; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H/4bHaraL4n/P0iTE+QqqFajLDyDWyG2jsQgWhbDjMQ=;
-        b=a4k/I7NxfE+MLqX6uttNSUyfNND1IYa04gaTanD+jFTxoEmHv1Pny+Kk8nnpZwJuFw
-         wfYL0AIECiNy0eiv4FiYtI/a36+rwPoIV/n1iQco6OH8YbpXkdcB/7Kgiv6lePpvb7Qv
-         IkhEEMDfgT8+3/MquUa/UR8RgyrBLKhoV6XOil5C7lWa9MqOAthzBKNZONwtY+RW12wz
-         47P8ZGGy+BSY1Pl1LSkvdGkRe0ssXeFm4keYjgCQfGf6QDsJJSWS4tY6oLhwSGUdu9NZ
-         XPAnpqsFsy1pd2uxdamq9FkT/XfDqtUIOiAgbkjEgdUxG+AQBlyE1ww+Azfi21Rx9oD1
-         xQSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744791152; x=1745395952;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H/4bHaraL4n/P0iTE+QqqFajLDyDWyG2jsQgWhbDjMQ=;
-        b=KqFTjSJvikod0maLgHOxBMTDeKJiKWnyeMYtuebGz5mPcUAiI9LEf/MwskcG7aEv43
-         ywlccAAI5t6N4jvT1FooRwZh1IMPwLubMDUdS6PrzeDNlnlhTGMbP0QdpY2zaB55bl7v
-         51g/wfLCY1aSPSqs0Jb8GNscT5pbTjw44+VSL15gg4EwYnsg1/P12oJw9RoInhCDIngJ
-         DaA0K24a8Li9LEsAGRrO8pfXgnVRP+pvt1C8HofKmpZTjApAWhFznvOLPFhjOrnJzWj/
-         9MJvmtJoZKIBr7aHlwk3X9FrHPQU1+zz4OXJdZZ5K24P5rjCl70287Yx8tGaBDSRQG96
-         kDXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXqf2D6uFRCL+MufAs0v/aFJ50oyLUx5LRLz/Q3gO5QHyglXkP6Pq1vwnh+K577u71FJXbTaGI5FrAxXfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxezwNn1D93jjeaYkdy1f4otaRNrAEyxsXFKKLOz4K0zQn5KHW5
-	Mmkl0kiNTOCy/a5DU8yDFYT1UZNPRoPdhlqUD65IGGFIgbnURWpYdxzxbuAo06g=
-X-Gm-Gg: ASbGncvzJ+EqXFDdBuZ7bAHi9aCair/vFbQbwaK/bbEmY8kdDkd50w7yt1HkSGtdf/G
-	VVKw8lghOJQVVG1GowwXfUiw1H6yn9Lo+EEO8963EpA4ArTlVAOcF5ll2064od7IeiYsvFd9ciY
-	Vic3IwQ9Wb96DeGLZYeIO8lBL35mYATn2WIjdA3xqqkm4ywGoz6CSQJpA/yB7UukSd4xrjSg4RC
-	M3eKszCOM2bylZq0GTHPnCc5sK3KziRh56I2qOSoBDBFxvNMRWJLo3LWtxP468w+EmBLdNvOfq3
-	dX2jtsK+ZBdw/y7iNw3Ijk6++sM3AXnvFYTgYS3pi/rUTpKqQiJXKg==
-X-Google-Smtp-Source: AGHT+IGxaQcIkGTI0aBQCrdg5Mdz1bajPY1DljdFhlFnwzhWRIuUx+MIrx6GZMLHMpwt9t1FLRkhxA==
-X-Received: by 2002:a05:6000:18a7:b0:39c:2c38:4599 with SMTP id ffacd0b85a97d-39ee5b9ee51mr819435f8f.48.1744791151941;
-        Wed, 16 Apr 2025 01:12:31 -0700 (PDT)
-Received: from jiri-mlt ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39ee6010449sm515446f8f.9.2025.04.16.01.12.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:12:31 -0700 (PDT)
-Date: Wed, 16 Apr 2025 10:12:21 +0200
-From: Jiri Pirko <jiri@resnulli.us>
-To: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Cc: donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net, 
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org, vadim.fedorenko@linux.dev, 
-	anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com, andrew+netdev@lunn.ch, 
-	aleksandr.loktionov@intel.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next v1 0/3] dpll: add ref-sync pins feature
-Message-ID: <6ss5qghishcbbbmj6ifitafl6fnbfhnw6crrkitgunays4qtqv@ixvlqemyij6x>
-References: <20250415175115.1066641-1-arkadiusz.kubalewski@intel.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JU8eyqG5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pMRA2jLL+5V/BzwuiKsoF9ylgrGCAfpwISNvzkPMlWyk26HgMwMwNwTAxiWVwTESn6lJX2xhXL1fArBsUjZYYpf1XjDQ0RwIszJh9Cjlnp0u5K+c8gBhd3bVDfQ6YdERcrX8l7iteEV80ddVqg+Wik8UUYQrmjtsXo6kwlqEaDr5PNfj3zedDx1TMgtf8Hnj//YgW7HA7tErSOj8+S+NM2j5hK3eE9Ql/qnmxSvFIGvaBq0rKiEGd761gB39MGDc2lQrkDKFypdNq3nr6saCMyGV8zoJDDiMXu0Fnu4toGAKWe9NOLz6u61DeLVuzll5At/MDowaTj/LuR4Ixu/AxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9zEWZQN+n4oZe8uJZywWn6S5+wYmTl0ZjXEmh28ODIo=;
+ b=Qwpn1TXZyy3V2NCJzVa8quNXHAyjVGdWNnYG3lmEbzQXN4jzWTLDcwFaHlmU7TEQcFzCHWkRG9hJqREgIFNIUhlqTP4kBTH+l8+Gl74jkRIqGp1XaXJqqffR7Xpc8xejdW1+NfAhMp+U7wIPRYt+nU+Mf0gnVEhR14VOxRmzBLcbDwxmQwjcGFUbvhoz76bzvF27LuCkFRt/NTYhoiUDT5nUd8HczVszVv7Wmt14X8cPeLARLOgV4Z+ese9bjDypIt8rNpHwX+WrT1M4Q+sHuwXIJprpMTpey7v3MLSiF6ixynw7kWMngKpx5YcMU0W9yGMzWBy/nMD5mXuJIVqyKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9zEWZQN+n4oZe8uJZywWn6S5+wYmTl0ZjXEmh28ODIo=;
+ b=JU8eyqG5OZLvW+ayREg652L7raZ+ZYStbDQ2P7pYZLH8WnJzn/7XRHOGjlEm7tm4wtdSJkKfp8sLXL4Vbhdj6bikDnKb+1TFe+PonxUlziL/SI+m2pHKASlU6DNhRRqocQqv+CaWzC2Afhn3/AOH4M+sSQXU0YTaH6fvpTHSBNB3nC7hKz7cYqiuLxD0s0x+LmD7du/j8d7ejnuUNMdhBhqvpO6SLChvwhdj83WYTCUw8BcUFoVmPlNqGG0zB5Yinbdf0AbcrMo40Hkg2dEmKNU/olLqxlHDE0eaY6qGeOZcVyNtbP1iTtDiQ7KQpb/K6pPOeRvm3QVhpdQ5IXoPZg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com (2603:10a6:20b:42b::10)
+ by VI1PR04MB7103.eurprd04.prod.outlook.com (2603:10a6:800:123::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Wed, 16 Apr
+ 2025 08:14:40 +0000
+Received: from AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93]) by AS8PR04MB8676.eurprd04.prod.outlook.com
+ ([fe80::28b2:de72:ad25:5d93%4]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
+ 08:14:40 +0000
+From: Richard Zhu <hongxing.zhu@nxp.com>
+To: frank.li@nxp.com,
+	l.stach@pengutronix.de,
+	lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND v6 0/7] Add some enhancements for i.MX95 PCIe
+Date: Wed, 16 Apr 2025 16:13:07 +0800
+Message-Id: <20250416081314.3929794-1-hongxing.zhu@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::8) To AS8PR04MB8676.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42b::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415175115.1066641-1-arkadiusz.kubalewski@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8676:EE_|VI1PR04MB7103:EE_
+X-MS-Office365-Filtering-Correlation-Id: aef97e71-a5f1-4d07-a698-08dd7cbebc30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Nhi4kka4PnPsZZ4tfp2tla4mPl2HfsF9qpIkg8zKzDipdgemJRs8s8fZd1nv?=
+ =?us-ascii?Q?qf/urItjKhXcUAvUe2CuqK87jxYN6pV3VNS2uw3ixkla1ygfsqYv5l2T/y7u?=
+ =?us-ascii?Q?JCe34+EmYssePs6mbTzWUq9QuBE/7NoHwf+kd5pMyhpLxM5lxREiCHh3hees?=
+ =?us-ascii?Q?U4i+Za3f3XOIab8EIb3tU5VKCCFo4+TKpRT9qDC5vD3WYOKiOHDZEdY4RqnZ?=
+ =?us-ascii?Q?x/NCVEblh7K1PdQCxtsJtsbXszlQXw/Ru96Q59/nMyx2BJ7R1PBhKR9eLjHk?=
+ =?us-ascii?Q?Qak05MpRUVvttM6vs7ba1ltmPwB0ZIcajOEqWYkGF6zGhM5vNX8F2Sr9X1Id?=
+ =?us-ascii?Q?uVjfmPzqecRyNuCiCVzttdurfdqVDSxKTDajzZmA0F/8M3DduInYicUD9B9/?=
+ =?us-ascii?Q?o8Fmg17QXZzTyYJQKiLuL2vZR2yUKrvwsuNQI8+zh2sicYAB+hxIY2rEHxxP?=
+ =?us-ascii?Q?dS0c3hGD8+uFbmlyfVs+kEDjS9bb3v07qjwkKD7c6lCcUncpsKqhMn81KrUd?=
+ =?us-ascii?Q?ILxp5MJTk1yFe/8a82x8IFtqV+AKrOPLnD4i2OGvpz6a/HLX+URSQsgQjfn2?=
+ =?us-ascii?Q?Rd6rATsylZm1tO+ottVnu/cwBbf030YrU/5C6n74TZqY8sD+U6kLRAbJ5AB7?=
+ =?us-ascii?Q?ZF+RwXYrC429w2FBHtwflkug4FphBo7yExDSPH7jPZXpUMJRA+sYuI/ZuqQj?=
+ =?us-ascii?Q?LYDB4+BMCo6ESCInja+iqtX+F60FwmXVY6rF4SLfVUVYnvdMtUmuetyCrV8N?=
+ =?us-ascii?Q?9c33iLhKYgQMnAL5B+dXmzzp+SufP4GH0u4XIa9kfbTobYwqJgddLNWBOJna?=
+ =?us-ascii?Q?r/d2SHEUeqzR+G6f2QCMDE+t5eZz2xZx8ffB0Y4pPQtC1EPxVDw122nsOVPX?=
+ =?us-ascii?Q?sroh+EQyNakn/lTjmS4jIenh8rBxVegtirF/1mSg99Sl70jO4q3riBcgIQEl?=
+ =?us-ascii?Q?tmVE8MLrhAN70/6g/0+PujH6keOkDnlvvWFBr4UDxiZky0d1KC/cP6VQFkT0?=
+ =?us-ascii?Q?GRM5vTaxJaYgGrGewLQfM1uZrrYY0l60gj92SPiSVf+2wWxkDZOwynoyl+ZO?=
+ =?us-ascii?Q?HS1fM+iowDHihAoEaLGqSGUiD8ODSIPmaIyGcxYKxIyzuHga7YJci5UnXd17?=
+ =?us-ascii?Q?olz4SoD64y0/lbAqTq0vjbCSBLOEb1AHwsJYeTgM6CQOXtVzYGZsFoNEVtiv?=
+ =?us-ascii?Q?a6PY0BO7ro0zCpqjo5+Z7mPPfq/o+6BOGIeVa/4IJUY0MUQcPBkss4eeAlb6?=
+ =?us-ascii?Q?5ERTOsgDeMFqF3sMgRm6pt0ikAetX+BNCiOzG+bTcEL0+LgDqJ4pmxkx/edj?=
+ =?us-ascii?Q?V8DMO5GoKkP0SDlhmvzFcoBqbuA8/n0sm6vMU+WecH+V757Pp8Q4rQ7FlPi/?=
+ =?us-ascii?Q?fVT3TdXHsv+6OOIo9tFV2P3Qo6sujoQ47SD3cLXf8cX56aDaFh3l6vLEAQ/w?=
+ =?us-ascii?Q?8MPEYcaGo1k5NKLHC+3hCGHeABvw8noby0//pyj3bVETiXUtzTbqhWqQz9kL?=
+ =?us-ascii?Q?b362qKurIF1f0nE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8676.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?131EIMS+ugIjvM/S+QohK0zTroDQe2R/COP959UyCeTDVy0Ch8xUGj7sQ1sd?=
+ =?us-ascii?Q?P2xfoaj/7qIhs48xh1+shSE+TbV6RtGYu9LTnv9JwjKRaoupCuOEd1pKNm+a?=
+ =?us-ascii?Q?BnUPnS8ayJmm7KGCMGcDJJ0EDN5BNMdOkFWcmhWgFi0dn/8hngoR65jXc+kM?=
+ =?us-ascii?Q?MZ6fFbQwAOnoOSwoYo9sM7nsHkYDqQqQ/YIXvgzKuvloXfFYOwcsIayqUthb?=
+ =?us-ascii?Q?EXK+RPq/xM0udbJ88zwgUB28sRyUeHandscqqDOf+I1S/so/e/sgdeoRfcwb?=
+ =?us-ascii?Q?OVYMFRdaY7AELD/sZOzREbkA6L7/ofd3+lHPaJ2oBd20hijIncdYnjpA/GpD?=
+ =?us-ascii?Q?tUVYulRqEDuhdrE0Bkql+x8U6d4m721MoJ4uDDhX8R2n4S3oOt7atX1cr2bP?=
+ =?us-ascii?Q?ZmuuUOwUSdd6rl6WSbEJ9LrUtKjOv8kcsWqvgyPH26MnqM7Fu6Z6YGEvJkK0?=
+ =?us-ascii?Q?X31wBgtOgVstFb6MWc+k6SGtnMWSsVkOfckeP+p9EPYvjkRVgYRXx/tBzLIp?=
+ =?us-ascii?Q?l073euY78rQpDary06rgKMLagA7Ta1Y8g8/2BlVOn7y8+2ifMFHF7bjFhCQq?=
+ =?us-ascii?Q?F2TM41L5R71L0Lcd0aP3D7fTDlyTHEZcWkeKu2BDDQYte+VdDpWL3mcRCfsG?=
+ =?us-ascii?Q?DVdjAEiYCZ+ekwjDaKsNw1vt71+8uXk2or26RMCNxSb95YOunmDRwp2s3W2f?=
+ =?us-ascii?Q?Swv9ZhXeG2C7df+5+mNILl0Rag6rK3GTl7yKh9/qXrxfZwd2KOWJAecCXQqN?=
+ =?us-ascii?Q?Ic+1JspUPnXUTDey697K/HyOpyxsvJguqbK6V3nh/btTzFD/Yq01SNivxXo9?=
+ =?us-ascii?Q?owmYv8w22L7732iatJC22AzvNfXo6t8I4uJuNpwJGHoX3V/maeCcai6bijVW?=
+ =?us-ascii?Q?0HNkTuWeb6QL9YCQsbumVfGJhabV3y2LiyiYt8ivoYzXyMGqqHP6VG9adFyb?=
+ =?us-ascii?Q?IlYwOXIgH91NzQzXKU5t+Ny5Kw5s09xS8Sii5SZEfR8c6AaCDX0V60J2RFVM?=
+ =?us-ascii?Q?3i/JGbSWjDD1TKdj9z15CWWA00ORJuPQUIn3mfHgbcD+xT/OjYbukgACBIWf?=
+ =?us-ascii?Q?0CPLFeeJGc17zDSrVk+hwe2e8lJaKu1fxaGqJYD6Yiu+uwgt0k7c+nCmDEM7?=
+ =?us-ascii?Q?DSAeaxq3r55NFcWtOZbBAnPyUjafbzTn8pr1LuXs5Nif9eQHHDVQNEMIxoOI?=
+ =?us-ascii?Q?szfzQGurlAcTeb2GjVqfNfmdhE38v3BwT8KtY/MT60g89PH0QWLDdpikozw6?=
+ =?us-ascii?Q?I+vTjQRo8PLsnVKJ2HK1jV3ra6b30HeaKv7/i1G2K08uj2DoBaxqt6TUyDul?=
+ =?us-ascii?Q?Z4LXrJch9Mbh/u3zRjVQI+0oWcxzkoFFvsQSbOSIBH6q9rjrrS1IkAlIn6JD?=
+ =?us-ascii?Q?2taUmlWVBqmCtw4RFZooUjfWY6XUtW3/26+2+YUpJBEeg8OoTNbbiSLFUCK+?=
+ =?us-ascii?Q?BcisyCwLW0IzUEQ9eQ6X4eg8q6JsreveERy3pBKOvsr+DmpUaaV+Pcsi0aid?=
+ =?us-ascii?Q?L7fm76OtBArMO++7WuRSlxUc77Fs9kaDjbEDVnfKiBTCZwn86D2Dc7OX3DPL?=
+ =?us-ascii?Q?AW58ZN9DYMltuoOasFhXd1CkVt9wW/tK1RQFa+a3?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aef97e71-a5f1-4d07-a698-08dd7cbebc30
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8676.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 08:14:40.2452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lysmbeJcVh5YMem/d6B1n52p2MYRAas+Dftm/1ECiWX3Y7JQmJNRbE0SDPzXMiPl18Sr0lNiMvifVNsBrH2ytA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7103
 
-Tue, Apr 15, 2025 at 07:51:12PM +0200, arkadiusz.kubalewski@intel.com wrote:
->Allow to bind two pins and become a single source of clock signal, where
->first of the pins is carring the base frequency and second provides SYNC
->pulses.
+Add some enhancements for i.MX95 PCIe.
+- Refine the link procedure to speed up link training.
+- Add two ERRATA SW workarounds.
+- To align PHY's power on sequency, add COLD reset.
+- Add PLL clock lock check.
+- Save/retore the LUT table in supend/resume callbacks.
+- 3/7 relies on "arm64: dts: imx95: Correct the range of PCIe app-reg region"
+  https://lore.kernel.org/imx/20250314060104.390065-1-hongxing.zhu@nxp.com/
 
-This is not enough. Could you please provide more details about this.
-Motivation is needed. Also, from the examples below looks like you allow
-to bind 2 pins, in async way. Would make sense to bind more than 2 pins
-together?
+v6 changes:
+- Move the PLL clock lock check out of core_reset, and collect to a new
+  callback function.
+- Update the commit message of 4/7.
+- Correct the typo errors in the commit messgage of 2/7 patch refer to
+  Alok's comments. Thanks.
+- Add the dependecy of 3/7 into the cover letter refer to Alexander'
+  comments.
 
-Honestly, I don't understand what this is about.
+v5 changes:
+- Rebase to v6.15-rc1
+- Update the commit message of "PCI: imx6: Skip one dw_pcie_wait_for_link() in"
 
+v4 changes:
+- Add another patch to skip one dw_pcie_wait_for_link() in the workaround link
+  training refer to Mani' suggestion.
+- Rephrase the comments in "PCI: imx6: Toggle the cold reset for i.MX95 PCIe".
+- Correct the error return in "PCI: imx6: Add PLL clock lock check for i.MX95 PCIe".
+- Collect and add the Reviewd-by tags.
 
->
->Verify pins bind state/capabilities:
->$ ./tools/net/ynl/pyynl/cli.py \
-> --spec Documentation/netlink/specs/dpll.yaml \
-> --do pin-get \
-> --json '{"id":0}'
->{'board-label': 'CVL-SDP22',
-> 'id': 0,
-> [...]
-> 'reference-sync': [{'id': 1, 'state': 'disconnected'}],
-> [...]}
->
->Bind the pins by setting connected state between them:
->$ ./tools/net/ynl/pyynl/cli.py \
-> --spec Documentation/netlink/specs/dpll.yaml \
-> --do pin-set \
-> --json '{"id":0, "reference-sync":{"id":1, "state":"connected"}}'
->
->Verify pins bind state:
->$ ./tools/net/ynl/pyynl/cli.py \
-> --spec Documentation/netlink/specs/dpll.yaml \
-> --do pin-get \
-> --json '{"id":0}'
->{'board-label': 'CVL-SDP22',
-> 'id': 0,
-> [...]
-> 'reference-sync': [{'id': 1, 'state': 'connected'}],
-> [...]}
->
->Unbind the pins by setting disconnected state between them:
->$ ./tools/net/ynl/pyynl/cli.py \
-> --spec Documentation/netlink/specs/dpll.yaml \
-> --do pin-set \
-> --json '{"id":0, "reference-sync":{"id":1, "state":"disconnected"}}'
->
->
->Arkadiusz Kubalewski (3):
->  dpll: add reference-sync netlink attribute
->  dpll: add reference sync get/set
->  ice: add ref-sync dpll pins
->
-> Documentation/netlink/specs/dpll.yaml         |  19 ++
-> drivers/dpll/dpll_core.c                      |  27 +++
-> drivers/dpll/dpll_core.h                      |   1 +
-> drivers/dpll/dpll_netlink.c                   | 188 ++++++++++++++++--
-> drivers/dpll/dpll_nl.c                        |  10 +-
-> drivers/dpll/dpll_nl.h                        |   1 +
-> .../net/ethernet/intel/ice/ice_adminq_cmd.h   |   2 +
-> drivers/net/ethernet/intel/ice/ice_dpll.c     | 186 +++++++++++++++++
-> include/linux/dpll.h                          |  10 +
-> include/uapi/linux/dpll.h                     |   1 +
-> 10 files changed, 425 insertions(+), 20 deletions(-)
->
->
->base-commit: 420aabef3ab5fa743afb4d3d391f03ef0e777ca8
->-- 
->2.38.1
->
+v3 changes:
+- Correct the typo error in first patch, and update the commit message of
+  #1 and #6 pathes.
+- Use a quirk flag to specify the errata workaround contained in post_init.
+
+v2 changes:
+- Correct typo error, and update commit message.
+- Replace regmap_update_bits() by regmap_set_bits/regmap_clear_bits.
+- Use post_init callback of dw_pcie_host_ops.
+- Add one more PLL lock check patch.
+- Reformat LUT save and restore functions.
+
+[PATCH RESEND v6 1/7] PCI: imx6: Start link directly when workaround
+[PATCH RESEND v6 2/7] PCI: imx6: Skip one dw_pcie_wait_for_link() in
+[PATCH RESEND v6 3/7] PCI: imx6: Toggle the cold reset for i.MX95
+[PATCH RESEND v6 4/7] PCI: imx6: Workaround i.MX95 PCIe may not exit
+[PATCH RESEND v6 5/7] PCI: imx6: Let i.MX95 PCIe compliance with
+[PATCH RESEND v6 6/7] PCI: imx6: Add PLL clock lock check for i.MX95
+[PATCH RESEND v6 7/7] PCI: imx6: Save and restore the LUT setting for
+
+drivers/pci/controller/dwc/pci-imx6.c | 213 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+1 file changed, 182 insertions(+), 31 deletions(-)
+
