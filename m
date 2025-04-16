@@ -1,89 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0096D1B6556;
-	Wed, 16 Apr 2025 10:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E3A1990A7;
+	Wed, 16 Apr 2025 10:23:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798957; cv=none; b=GncUwlxowf/xXys+75sKCIFvNHWQ2vJ4UdgQAS/QTWN2XFz6XwjaOmyuA6S+BY+dyB8RYaM9QFo6glNkTzaHOMJ7yH3NLVrKBqTKd+2t40v+aT2FRjnCRfhym92y0dmb6rOliSWsdakX+TCoigteD+l0hicRIfqQO9w5BEmDo2s=
+	t=1744799005; cv=none; b=NV0ns+tdbOgBc31i8O9GOOQicASSIMv5uo6tqP+8u7zw/wRJs2qT7zH4jhd4ct/qqNzAC3JxE1WE5rqqjRxub43YvAiTHgfAfiT+frPmSKqyGN+g/ZtLMfwkpU8eEQ/Ia4QdSJgVYzCORFR/jC8Oi43oIXvKGVnw+M07GoOkcq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798957; c=relaxed/simple;
-	bh=SryNIjm2WO4TlAZiW3CNp5eTS7NgGyUNgyPARO/mMYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZXlyJUlX59VJ6hz5reWbzXHhbnJt+sincsPS4A7RDZC5w5OnLPxDIywTqO+gKxbzCmmKVJJ/cZ7ym58iK43ggU26LGcSCORGME7BkKGZS76l9X8ekw1PSPA7Y9HiFzTIIVCWGKccsuOPLyCuTqA0qZKJr7yzr1d9lGwwaBIGhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: //tZsc54RYKdxKjfcH5Fng==
-X-CSE-MsgGUID: bCfLpz2LTU2hyLNKfVOjMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46053848"
+	s=arc-20240116; t=1744799005; c=relaxed/simple;
+	bh=4APCstta6NRtcMMvDAtx6LE+2Lkns4hBIWpJsmxYQSM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Auao7xcSKWB3TkDqMNMrfdrHEY6lxusmNAOAbmdaN2iVysUQ8SStpAdjqPxfLSoW0b5+9qxxvJ1M1mj5CZcAC3vWgmseQ8NjW5rMt7WtItnjeA/VUXMMhTR6kGAP/C68DN5Ap8OrTNAn/l+iGDjx9muk+7XS7evzV2ukRaxiy7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Es1uKfvH; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Es1uKfvH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744799004; x=1776335004;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4APCstta6NRtcMMvDAtx6LE+2Lkns4hBIWpJsmxYQSM=;
+  b=Es1uKfvHMyucyeu90+1bspI50Y0nE5OnRDBXkTPJb4FmMNZjF3tHh+2K
+   4qBfkHzRipprdSlGlAx2OCIqj4r/XEC9bSUlWIRwJmXyxPxsnpVehD6ho
+   8VQUHSiH4HQzWqmf4nGiVmRQaSWzkVl5nKJtEJbMsb5xBr+ScvkoSxMHm
+   MAxPwaKNWIN/wbmWW4y51pkiKrYoJD3saeBuWZiV2DFDxmlZOUZW9R5hU
+   Jsrg0nkHLmzdCRBbZUCs6W6SF8FdwYGYEEza09BP+0Ua5ilLcSqDiI9L4
+   lQPymmMqc+1sXS06+sJCDfICWrlgTaBzcKKO9JkrClkn+W9XQRsshhdro
+   Q==;
+X-CSE-ConnectionGUID: pmG9odfxT92+aJ91aYqt/g==
+X-CSE-MsgGUID: LvQW9xT3QBOABBU/L4jyzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46354831"
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46053848"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:22:28 -0700
-X-CSE-ConnectionGUID: wphZqYK4TZ+zZEWHTAf7Kw==
-X-CSE-MsgGUID: QPwEK4DRS0CDo9CRDI+XmA==
+   d="scan'208";a="46354831"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:23:23 -0700
+X-CSE-ConnectionGUID: vTFjc6JBTBCMdEew9m68NA==
+X-CSE-MsgGUID: LP0ubWXwSXmigGSk3yFZmw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135270825"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:22:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u4zuP-0000000CozW-1TLO;
-	Wed, 16 Apr 2025 13:22:21 +0300
-Date: Wed, 16 Apr 2025 13:22:21 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-Message-ID: <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
+   d="scan'208";a="161378579"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:23:21 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	linux-alpha@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] alpha: Use resource_set_range() helper
+Date: Wed, 16 Apr 2025 13:22:59 +0300
+Message-Id: <20250416102259.7802-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
-> Convert open coded resource size calculations to use
-> resource_set_{range,size}() helpers.
-> 
-> While at it, use SZ_* for size parameter which makes the intent of code
-> more obvious.
+Convert open coded resource size calculations to use
+resource_set_range() helper.
 
-...
+Signed-off-by: Ilpo JÃ¤rvinen <ilpo.jarvinen@linux.intel.com>
+---
+ arch/alpha/kernel/core_marvel.c   | 10 ++++++----
+ arch/alpha/kernel/core_titan.c    |  4 ++--
+ arch/alpha/kernel/core_tsunami.c  |  5 +++--
+ arch/alpha/kernel/core_wildfire.c |  5 +++--
+ 4 files changed, 14 insertions(+), 10 deletions(-)
 
-> +	resource_set_range(res, base, 1ULL << (segn_busn_bits + 20));
-
-Then probably
-
-	resource_set_range(res, base, BIT_ULL(segn_busn_bits) * SZ_1M);
-
-to follow the same "While at it"?
-
-...
-
-> +			resource_set_range(res, 0xC0000, SZ_128K);
->  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
->  				     IORESOURCE_PCI_FIXED;
-
-I'm wondering why not DEFINE_RES_MEM() in such cases?
-
+diff --git a/arch/alpha/kernel/core_marvel.c b/arch/alpha/kernel/core_marvel.c
+index b1bfbd11980d..c75cd4c68258 100644
+--- a/arch/alpha/kernel/core_marvel.c
++++ b/arch/alpha/kernel/core_marvel.c
+@@ -238,13 +238,15 @@ io7_init_hose(struct io7 *io7, int port)
+ 	 */
+ 	hose->config_space_base = (unsigned long)IO7_CONF_KERN(io7->pe, port);
+ 
+-	hose->io_space->start = (unsigned long)IO7_IO_KERN(io7->pe, port);
+-	hose->io_space->end = hose->io_space->start + IO7_IO_SPACE - 1;
++	resource_set_range(hose->io_space,
++			   (unsigned long)IO7_IO_KERN(io7->pe, port),
++			   IO7_IO_SPACE);
+ 	hose->io_space->name = mk_resource_name(io7->pe, port, "IO");
+ 	hose->io_space->flags = IORESOURCE_IO;
+ 
+-	hose->mem_space->start = (unsigned long)IO7_MEM_KERN(io7->pe, port);
+-	hose->mem_space->end = hose->mem_space->start + IO7_MEM_SPACE - 1;
++	resource_set_range(hose->mem_space,
++			   (unsigned long)IO7_MEM_KERN(io7->pe, port),
++			   IO7_MEM_SPACE);
+ 	hose->mem_space->name = mk_resource_name(io7->pe, port, "MEM");
+ 	hose->mem_space->flags = IORESOURCE_MEM;
+ 
+diff --git a/arch/alpha/kernel/core_titan.c b/arch/alpha/kernel/core_titan.c
+index 77f5d68ed04b..c115bbee2e94 100644
+--- a/arch/alpha/kernel/core_titan.c
++++ b/arch/alpha/kernel/core_titan.c
+@@ -271,8 +271,8 @@ titan_init_one_pachip_port(titan_pachip_port *port, int index)
+ 	hose->config_space_base = TITAN_CONF(index);
+ 	hose->index = index;
+ 
+-	hose->io_space->start = TITAN_IO(index) - TITAN_IO_BIAS;
+-	hose->io_space->end = hose->io_space->start + TITAN_IO_SPACE - 1;
++	resource_set_range(hose->io_space, TITAN_IO(index) - TITAN_IO_BIAS,
++			   TITAN_IO_SPACE);
+ 	hose->io_space->name = pci_io_names[index];
+ 	hose->io_space->flags = IORESOURCE_IO;
+ 
+diff --git a/arch/alpha/kernel/core_tsunami.c b/arch/alpha/kernel/core_tsunami.c
+index fc1ab73f23de..3e4d3a845e55 100644
+--- a/arch/alpha/kernel/core_tsunami.c
++++ b/arch/alpha/kernel/core_tsunami.c
+@@ -271,8 +271,9 @@ tsunami_init_one_pchip(tsunami_pchip *pchip, int index)
+ 	hose->config_space_base = TSUNAMI_CONF(index);
+ 	hose->index = index;
+ 
+-	hose->io_space->start = TSUNAMI_IO(index) - TSUNAMI_IO_BIAS;
+-	hose->io_space->end = hose->io_space->start + TSUNAMI_IO_SPACE - 1;
++	resource_set_range(hose->io_space,
++			   TSUNAMI_IO(index) - TSUNAMI_IO_BIAS,
++			   TSUNAMI_IO_SPACE);
+ 	hose->io_space->name = pci_io_names[index];
+ 	hose->io_space->flags = IORESOURCE_IO;
+ 
+diff --git a/arch/alpha/kernel/core_wildfire.c b/arch/alpha/kernel/core_wildfire.c
+index 8dd08c5e4270..00d63fc29caa 100644
+--- a/arch/alpha/kernel/core_wildfire.c
++++ b/arch/alpha/kernel/core_wildfire.c
+@@ -78,8 +78,9 @@ wildfire_init_hose(int qbbno, int hoseno)
+ 	hose->config_space_base = WILDFIRE_CONF(qbbno, hoseno);
+ 	hose->index = (qbbno << 3) + hoseno;
+ 
+-	hose->io_space->start = WILDFIRE_IO(qbbno, hoseno) - WILDFIRE_IO_BIAS;
+-	hose->io_space->end = hose->io_space->start + WILDFIRE_IO_SPACE - 1;
++	resource_set_range(hose->io_space,
++			   WILDFIRE_IO(qbbno, hoseno) - WILDFIRE_IO_BIAS,
++			   WILDFIRE_IO_SPACE);
+ 	hose->io_space->name = pci_io_names[hoseno];
+ 	hose->io_space->flags = IORESOURCE_IO;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
