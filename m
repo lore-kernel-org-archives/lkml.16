@@ -1,102 +1,116 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008061F94C;
-	Wed, 16 Apr 2025 08:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from m16.mail.126.com (m16.mail.126.com [117.135.210.7])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D891A1F94C
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790444; cv=none; b=QMT5cZy+Gvk5p4voLBwErTze+z0Lm/5vZCb7ZWe3Q4ilFDMe5KGbT+4YyX2Y4xKq/8q13k1nwFgkMTQuHRFNk6CDYqAzztl6ULqNrg9Jr3gmtko07ZXatDoiwy2po+Es6FgovOFfiwh8bnT8tTSYh1vzp62294QnlxMKF/89nio=
+	t=1744790547; cv=none; b=lqm8DoQ7jg9ITXTGO066PShWEEiR85Lk4Ou4LoZGoVFtZlb1JOz9SLBH82oJBSrEKxs1SNN4PrdcZ5nJgr4dPGKVdI43caBAygyRRQq1pkbxABK5HZFyXUx36lF4wu8tf16m/iFBuuDxPFwRdr8flM4vB+A/5wT0lCkoBorAQEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790444; c=relaxed/simple;
-	bh=f+0G+mfCas1lJBR/6RHW1V+Gavmz5DoO4HGg92lelWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=m6d+xmFHEQCTQ2l2gjCG1GUEqKZS00hayy6+M6h9902M2x1o8fVNKDTGm6/uv1uQe9n/1Do/dq/KfmGDby5znA9S61RzdLBHsImYjn+05gBvLcY1kRbwqcQNfiuvXCuFQnsNuKUHqZgh27QzIGGW7MfmKOTmNOX45lNE3LlTL/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=p6rOFRuB; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744790547; c=relaxed/simple;
+	bh=uqVW/gYL/AfSkfqT2SQ8URY9xseAJkm/A88KX9WkWZ8=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=E36JBKWQbEnO3TtyMR/zjMKmAqQfKNmqXcjmoJSiJrUnI5iba+JO2x5YkDBYXTdT71eiH9seeRl/yJEURye9AnsTCOqcJ7Enik1849O9sNeVPsIPartVLhVh7ROta40WDeQTixauXuAr6BDkM01bKk4YMPliIjWjZdOP4PSW/34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=qRRG88RA; arc=none smtp.client-ip=117.135.210.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="p6rOFRuB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=CxllXsS7oZKhmgl74o8BLeNmMQKxBZycllNwlO7QoVM=; b=p6rOFRuBNqBL9Vs+KMLwfIwpaW
-	yz/TUWI06KiYLjDOWRkW1thUO1NCa0FsczE1IdP8yWQJuNPoj7zLoeTV/bcNnNzwnrrQZxCAF6hWN
-	rR3nya2bEWTJ06hsRLUYISaUNvMGmmJL2xQjFg9UXnzbuNs+F3O8tZDTNTPjcwkWcdfZbNyJ4y44h
-	MNkHBN0Q6sxrv8XtbZop2V1nmDZtMJY4YBCj2ZV5ufdu+NQuPvRjnUCx6msKVoK7FpDyGaHfZtkeJ
-	fVmHWHaHPram2mO/vEo3QW8W7xM+RzwRRrwC4Eq7LpM/nK/62FTZQlA3nyOmTRNvV4g+dWKgbKTzE
-	D7ct5GZA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u4xhH-00G7yK-1U;
-	Wed, 16 Apr 2025 16:00:40 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Apr 2025 16:00:39 +0800
-Date: Wed, 16 Apr 2025 16:00:39 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: Re: [PATCH 0/9] Remove per-architecture poly1305 shash glue code
-Message-ID: <Z_9jp6J6YKImbzyg@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="qRRG88RA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=zbUQzwnf3Lh6GvyJBx
+	Lm8uq590tIbXVITPEobS110pE=; b=qRRG88RArkBy/Zq71aSqTYxtjLc7+Tm+N+
+	ZBIV54ngD17yvUXrsaVKt0nGEnuFAmpCgT3ReoC5If/H0rDMi19B2G7n/ORTUysW
+	XsXlFGhOC51dci/9ji8CuEPLJH3j4AWz8Cq3XWxFvJhRWrQibp9TC/IThcoupSjZ
+	V/SQ6KBPI=
+Received: from tst4-maikun-dev-1.prod.yiran.com (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnN0FUYP9nDbzrAw--.58958S2;
+	Wed, 16 Apr 2025 15:46:32 +0800 (CST)
+From: lwk <lwk111111@126.com>
+To: davem@davemloft.net
+Cc: edumazet@google.com,
+	dsahern@kernel.org,
+	linux-kernel@vger.kernel.org,
+	lwk <lwk111111@126.com>
+Subject: [PATCH] net: add synsend and synrecv statistics
+Date: Wed, 16 Apr 2025 15:46:26 +0800
+Message-Id: <1744789586-4488-1-git-send-email-lwk111111@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID:_____wDnN0FUYP9nDbzrAw--.58958S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar18Ww1fCw1xZrW8Ar4Dtwb_yoW5Jr1UpF
+	Zxtr4fGr4UG3s7C3s2yFyxXr17Xw48CF1293yUurZI93Z8Gr47Xrs7KryavF10vrsrtr45
+	WF9rWrW5G34FvFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zizwZxUUUUU=
+X-CM-SenderInfo: 5ozniiirrriqqrswhudrp/1tbiFhoxSmf-Tl2NJAABsU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250413045421.55100-1-ebiggers@kernel.org>
-X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-Eric Biggers <ebiggers@kernel.org> wrote:
-> This series removes the per-architecture poly1305 shash glue code and
-> re-implements the poly1305 shashes on top of the Poly1305 library
-> functions.  This ends up being much simpler, and it is how it should
-> have been done originally.  This follows similar changes to crc32,
-> crc32c, and chacha20.
-> 
-> This series also makes the Poly1305 library be optimized on PowerPC.
-> Previously the PowerPC-optimized Poly1305 code only supported shash.
-> 
-> Eric Biggers (9):
->  crypto: powerpc/poly1305 - implement library instead of shash
->  crypto: poly1305 - centralize the shash wrappers for arch code
->  crypto: arm/poly1305 - remove redundant shash algorithm
->  crypto: arm64/poly1305 - remove redundant shash algorithm
->  crypto: mips/poly1305 - drop redundant dependency on CONFIG_MIPS
->  crypto: mips/poly1305 - remove redundant shash algorithm
->  crypto: x86/poly1305 - remove redundant shash algorithm
->  crypto: x86/poly1305 - don't select CRYPTO_LIB_POLY1305_GENERIC
->  crypto: poly1305 - remove rset and sset fields of poly1305_desc_ctx
-> 
-> arch/arm/crypto/Kconfig                 |   6 -
-> arch/arm/crypto/poly1305-glue.c         | 170 ++----------------------
-> arch/arm64/crypto/Kconfig               |   6 -
-> arch/arm64/crypto/poly1305-glue.c       | 143 ++------------------
-> arch/mips/crypto/Kconfig                |   6 -
-> arch/mips/crypto/poly1305-glue.c        | 120 +----------------
-> arch/powerpc/crypto/Kconfig             |  11 +-
-> arch/powerpc/crypto/poly1305-p10-glue.c | 134 ++++++-------------
-> arch/x86/crypto/Kconfig                 |   8 --
-> arch/x86/crypto/poly1305_glue.c         |  99 ++------------
-> crypto/Makefile                         |   3 +-
-> crypto/poly1305.c                       | 153 +++++++++++++++++++++
-> crypto/poly1305_generic.c               | 149 ---------------------
-> include/crypto/poly1305.h               |  13 +-
-> lib/crypto/poly1305.c                   |   2 -
-> 15 files changed, 242 insertions(+), 781 deletions(-)
-> create mode 100644 crypto/poly1305.c
-> delete mode 100644 crypto/poly1305_generic.c
-> 
-> 
-> base-commit: 3be3f70ee95da03a87d94c4a714ee679a5c7b34d
+In some scenarios, it is necessary to know the count of syn
+packages sent and syn packages received in order to assist in
+troubleshooting issues.
 
-All applied.  Thanks.
+Signed-off-by: lwk <lwk111111@126.com>
+
+	modified:   include/uapi/linux/snmp.h
+	modified:   net/ipv4/proc.c
+	modified:   net/ipv4/tcp_input.c
+	modified:   net/ipv4/tcp_output.c
+---
+ include/uapi/linux/snmp.h | 2 ++
+ net/ipv4/proc.c           | 2 ++
+ net/ipv4/tcp_input.c      | 1 +
+ net/ipv4/tcp_output.c     | 1 +
+ 4 files changed, 6 insertions(+)
+
+diff --git a/include/uapi/linux/snmp.h b/include/uapi/linux/snmp.h
+index 848c778..3ebf80d 100644
+--- a/include/uapi/linux/snmp.h
++++ b/include/uapi/linux/snmp.h
+@@ -303,6 +303,8 @@ enum
+ 	LINUX_MIB_TCPAOKEYNOTFOUND,		/* TCPAOKeyNotFound */
+ 	LINUX_MIB_TCPAOGOOD,			/* TCPAOGood */
+ 	LINUX_MIB_TCPAODROPPEDICMPS,		/* TCPAODroppedIcmps */
++	LINUX_MIB_TCPSYNSEND,   /* TCPSynSend */
++	LINUX_MIB_TCPSYNRECV,   /* TCPSynRecv */
+ 	__LINUX_MIB_MAX
+ };
+ 
+diff --git a/net/ipv4/proc.c b/net/ipv4/proc.c
+index affd21a..1fb7755 100644
+--- a/net/ipv4/proc.c
++++ b/net/ipv4/proc.c
+@@ -306,6 +306,8 @@ static int sockstat_seq_show(struct seq_file *seq, void *v)
+ 	SNMP_MIB_ITEM("TCPAOKeyNotFound", LINUX_MIB_TCPAOKEYNOTFOUND),
+ 	SNMP_MIB_ITEM("TCPAOGood", LINUX_MIB_TCPAOGOOD),
+ 	SNMP_MIB_ITEM("TCPAODroppedIcmps", LINUX_MIB_TCPAODROPPEDICMPS),
++	SNMP_MIB_ITEM("TCPSynSend", LINUX_MIB_TCPSYNSEND),
++	SNMP_MIB_ITEM("TCPSynRecv", LINUX_MIB_TCPSYNRECV),
+ 	SNMP_MIB_SENTINEL
+ };
+ 
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 0cbf81b..a77bf35 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6781,6 +6781,7 @@ enum skb_drop_reason
+ 			icsk->icsk_af_ops->conn_request(sk, skb);
+ 			local_bh_enable();
+ 			rcu_read_unlock();
++			NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPSYNRECV);
+ 
+ 			consume_skb(skb);
+ 			return 0;
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index bc95d2a..821aa63 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -4143,6 +4143,7 @@ int tcp_connect(struct sock *sk)
+ 	tcp_connect_queue_skb(sk, buff);
+ 	tcp_ecn_send_syn(sk, buff);
+ 	tcp_rbtree_insert(&sk->tcp_rtx_queue, buff);
++	NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPSYNSEND);
+ 
+ 	/* Send off SYN; include data in Fast Open. */
+ 	err = tp->fastopen_req ? tcp_send_syn_data(sk, buff) :
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.8.3.1
+
