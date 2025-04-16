@@ -1,150 +1,112 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA8222D4E9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE7822B8A4
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789388; cv=none; b=noOYWcdZQK81g0rfEbfsi7DVzghDv4V8v+o5HmreuvJeJqX81HOCvfn6wfr06wsiz3TRuyIywItvGrCRjKiP7DWRFYCwKFlREaz5tSbUK2c4NT4VL6jdaEpfUkhnUn+iYluTJnNVGu1F/I0wvf0GOweAMxtqlI6c3I3rGhHUt9Q=
+	t=1744789453; cv=none; b=FIEpUXtReSDha/SnzYGSt2gSXufOdPTK351hsbTKHnuubbvD2LwdZsqytTEB8NL140XHrYQvqCpOW4v6IvaoIESAG1Qa7e5twFGqhWvEz37h+53r3HzdLWhJDF+znT8jeFbY5DhQ/yjjQfovbHg3FodiRFiGUiQAKNjDqYlDGNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789388; c=relaxed/simple;
-	bh=W7RjF650Hww4phW6Jao4G0MIVaVTwIdOqM03zj51tfY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWYyUtzrnDTmVf0O55N02gsDUEqfDTHl23wywRuZqBPTPGkHvHLa9HRCro9hwMmys986iAsxCJZDHfuKv0wWZYbaGiAGRmfUk9xQMlD0CR3zuNXXumUG3hcsZW53WQskOhkNBI4V5CpaY/3/WvtlWlWJr2uAE/wIvXVTXxQtme8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TUakBY6z; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1744789453; c=relaxed/simple;
+	bh=w7BUvBYqTMm1Ze0afEibdThADpsOyoFKneytr7BCkqU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XQfUrEYhrv2YBXkvnibMFkY0U4nDZ/clxOi9lhDRyzajZzVU5wPposT49hW3JNJtO0FkjjyMJDv/fVFALp5ngkLCFIm5LSiiV+Wh6s+RuLQhKtTURKAnae84IxDmmAIMgHhi+7HFXcksh9HoKRO51p4j6t8lCS04RUPTms9Fb8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iw9rziFQ; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TUakBY6z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=+IW6
-	5bGR736uruXZFGxU8tn6ykQrJqn+sd1HNhK4aE4=; b=TUakBY6zfxRPRE0UctHq
-	dqNUm33Zz5F8alNlgnW6R/gdOKeKeT7E0/k4nja8GMOzkzwXgjxvveV5H4pmFGOX
-	0xJ3ZF/2D8mpynDRs1abnL1GMk5ahylvhnYyxA4vfVOWPHx5GL7iVTVUuhg9Ycc2
-	VYGfkF5eL65HRjcTJunKDxd55XLUui45KIysH+d4vO6/anzgJZ+fZXxHWADZVES+
-	IZLDpjRfb3SZobdWrmz1jM3XfXB3LUUYT33+7XcoZquZDskZYFagrXPG++RnskHJ
-	lUsYf4kXTQrZUD4hOFHXOR0iZO94p4hJ1wsyuMvps1d7nWLrWlBkYhoxRmNvQUbM
-	2Q==
-Received: (qmail 619537 invoked from network); 16 Apr 2025 09:43:04 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Apr 2025 09:43:04 +0200
-X-UD-Smtp-Session: l3s3148p1@usVtb+AyBO0ujnsq
-Date: Wed, 16 Apr 2025 09:43:03 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v2 9/9] i2c: riic: Implement bus recovery
-Message-ID: <Z_9fh2nfwAaUnhVV@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20241218001618.488946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20241218001618.488946-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <Z2XewglpALJFE1Ay@ninjato>
- <CA+V-a8vB1c8Zp+zzoHp0zFpW8fjw-xq2=KPr=dyBUUZbOhBxJQ@mail.gmail.com>
- <Z2gJtlb5Sc9esEba@ninjato>
- <CA+V-a8s4-g9vxyfYMgnKMK=Oej9kDBwWsWehWLYTkxw-06w-2g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iw9rziFQ"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5499d2134e8so7759642e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744789449; x=1745394249; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w7BUvBYqTMm1Ze0afEibdThADpsOyoFKneytr7BCkqU=;
+        b=Iw9rziFQ0zflq0thJE07XZeRtG5fvZ/UHqo7sL7GBaNh2gWnF/3MHaGz5+4ixr6pk7
+         V/lAf/TNIXxPlzuBL7+uhsdWqGzWGj7dwoqFVbnrMFQkCdgF4tI+lx0ay5Nv0HdfTtDw
+         IgM1sFW6iPaEc89Yr3Lvnus9Qb7n33KGMypsVe+P4GyClXjIeNd1O/WfNBG/nroXjPjn
+         hn69/rtZhnOSiBg5G5lv+cL+yi7nOjttmz01oO0VGhGF2fkXXj2k4D1SJxveuHxvt6hr
+         owg1y23r5FbLoiRiMFV48r048dIcmIc8SfiRqGQ8KCxFcDxZGW5bJZbjWeoNbSpHUeQp
+         U60A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789449; x=1745394249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w7BUvBYqTMm1Ze0afEibdThADpsOyoFKneytr7BCkqU=;
+        b=UAqYF5TKSPT93ks79gJFovUN+xltHDWIatM331RjonFcceWF7uRkfbZgDI589xoB+d
+         SyEYHSp7QQTiENeuVS62mpOuqQiOSgKe9E+M55n0DmwyY/XeckkJ4HFZQ6sQDvB7jZ1H
+         v0ikXUteUwEaDO1z6Gy3SSgM4INZZEXqFCXJka3W4mZ3IOFYJRrrBu1jwSEeTqoHOywW
+         KWSehIXnNx2DPs40XiJaXNHu0ab1kxMrA+RuAj0z8zaG89xg6t/hM/oxXIb7eYSmhvj6
+         UFBxeE9zmGG8fWQTpG7zumdx10NULNuu1Pk51U57o0luGkZ0qkBZkr68YR75+27YrJ+q
+         WuwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXR0CuUEvoqSxUjltjzFYD9LRDAiT4B6w3FG4Rsywng54HdH/JbZKIpy0c7aKA+r7aCVyPbkNspjSVIwM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweRzlmAG/Av5M6PmHnm2KiaYU40ey/Kk+rWB+yYAfh1DPomASF
+	iexGKMgyAIBjU+lp9/MspozFpkJ0cFp1ycALigF/HaOxqwhlaAHXxdYBsSmfKiyj5AT6AQoPM0S
+	6+gjzOYsUrXlTbBd2r42/ahvfRib9iJ7wm1arxw==
+X-Gm-Gg: ASbGncv4K9oT12VHuD8cC4uhmRRqRSf/cypjLcLcqdiiURp1IVE8sN9wuUKAOCxUswp
+	TITrC2TZWkt63BOvdEfcSPXg02OBuC5gcfGMPivK47SqsaPBNfJzxnAlhGm+3lmjTRNt0GrG664
+	5Li7DUHqonRdg6QI7nfoGqjQ==
+X-Google-Smtp-Source: AGHT+IG0Lwyub0udHPr2t5fpOsIZ2RLg7Lkae30HWcbs+tlOsVB08fWQavStEVsRHF6ju8VE3aya9e5Yj0LjLkUgobg=
+X-Received: by 2002:a05:6512:118e:b0:546:2f4c:7f4f with SMTP id
+ 2adb3069b0e04-54d64ab0b47mr201581e87.28.1744789449414; Wed, 16 Apr 2025
+ 00:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="K5vpMRnXuq3n+WSd"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8s4-g9vxyfYMgnKMK=Oej9kDBwWsWehWLYTkxw-06w-2g@mail.gmail.com>
+References: <cover.1744325346.git.Jonathan.Santos@analog.com> <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
+In-Reply-To: <414f5b60b81f87f99b4e18b9a55eb51f29d2225a.1744325346.git.Jonathan.Santos@analog.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 09:43:58 +0200
+X-Gm-Features: ATxdqUFrHLfUgDMhA2bIeO0emn67mugRA29Aq8hS3KKX_3FOQ4i_PWerQ3Zb48o
+Message-ID: <CACRpkdauyPb3bhgK4MTYN4Xq0cM80vwT8i_jcKoQcicpvMo7yg@mail.gmail.com>
+Subject: Re: [PATCH v5 01/14] dt-bindings: trigger-source: add generic GPIO
+ trigger source
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com, jic23@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	marcelo.schmitt1@gmail.com, brgl@bgdev.pl, lgirdwood@gmail.com, 
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Jonathan,
 
---K5vpMRnXuq3n+WSd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+thanks for your patch!
 
-Hi Prabhakar,
+On Fri, Apr 11, 2025 at 5:56=E2=80=AFPM Jonathan Santos
+<Jonathan.Santos@analog.com> wrote:
 
-finally some time for this!
+> Inspired by pwn-trigger, create a new binding for using a GPIO
+> pin as a trigger source.
+>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
 
-> Based on the feedback from the HW engineer the restriction is valid
-> see attached image (i2c-pullup.png). The SCL and SDA are Schmitt
-> input/open-drain output pins for both master and slave operations.
-> Because the output is open drain, an external pull-up resistor is
-> required.
+Is this actually documenting the trigger sources I implemented for LED
+here?
+https://lore.kernel.org/all/20230926-gpio-led-trigger-dt-v2-0-e06e458b788e@=
+linaro.org/
 
-That confirms what I was saying. It is required. There is no difference
-between setting the bit manually and the IP core doing it internally.
+Then maybe put this in as Link:
 
-> Assuming there is an external pull-up resistor for all the platforms I
-> implemented the I2C bus recovery using the generic recovery algorithm
-> and I'm seeing issues, as the required number of clock pulses are not
-> being triggered (Note, the i2c clock frequency is 400000Hz where the
-> below tests are run).
+I tried to figure out how to properly document it but I think it was part o=
+f
+dtsschema and that may have confused me.
 
-So, my take is to check further why this is the case. The code looks
-mostly good, except for bus_free:
-
-> +static int riic_get_bus_free(struct i2c_adapter *adap)
-> +{
-> +       struct riic_dev *riic = i2c_get_adapdata(adap);
+> +title: Generic trigger source using GPIO
 > +
-> +       udelay(5);
+> +description: Remaps a GPIO pin as a trigger source.
 
-I wonder about the udelay here. Both, why this is necessary and where
-the value comes from.
+Please write "GPIO line" instead of "GPIO pin".
 
-> +
-> +       /* Check if the bus is busy or SDA is not high */
-> +       if ((riic_readb(riic, RIIC_ICCR2) & ICCR2_BBSY) ||
-> +           !(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI))
+The reason is that not all GPIOs are pins. Some are other stuff.
 
-And maybe if we can't skip reading SDAI here?
-
-> +               return -EBUSY;
-> +
-> +       return 1;
-> +}
-
-Have you already played with these options? If you didn't and don't have
-time to do so, I can also check it. I luckily got a G3S meanwhile.
-
-Happy hacking,
-
-   Wolfram
-
-
---K5vpMRnXuq3n+WSd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf/X4MACgkQFA3kzBSg
-KbYQog/+MzMB5MNGTKUZRZK6nzVl3KnzBf5pjrz68biiT5lJOt/0OqsQeIWgDo5/
-2GwZ7HCXaisDGd/l6Tw/7uDHsl0MFwU/4xWwEdVsdyn25jwKHibYyCC8495q5N2n
-W4aIYU7DPkDlWZ8txSpefu8W3IKdezFh6Sx331zGnEmILPwIhd4qE1wChe+dK0xe
-A97Jpg3eKZqozLNocoD849LtRcufeRYGT1IioypleoTJpGpep1/eZwkdyKYd3JNb
-3BBAMlkFDbRrEfCeOwqc3Aun6JWelft5/tklQjXFj2ib1n+vgP2ZcIItyTB2jyWE
-Z5aDeDcXN8SBZ6uRloTSHj+OyKI9mcqg0/SqFRnndV9nlEeKcM5lM7oH4AOIsb96
-65oQZL8opbCpyRnzhQANf94I/bZlpjZPfpdo27jItidVJ5LRoCV6dbbBhqPpc+Fd
-BcY7ERnXTiQ6tB9EmE8kVh05twfqvDvjuvxvBda9qBaSVnvWcNpDlp1c5c8ef6/7
-Yms+SYx3ysSVijFZAyFdmyBMEB6WLvdoKw6c5nNW9LamWbLRC/4hZGKZeCxIE0oW
-/h7gRGyW9+GRZPkmrnXSAWgN4qIOlZIxaHIPDoC3xmLE2lc4eF0klARyJ2s4sdHg
-24aXzuHiALoRjyN4fKo7hNzfAOcHhsHiPQDMi8YM43AjMyuPjY4=
-=aviI
------END PGP SIGNATURE-----
-
---K5vpMRnXuq3n+WSd--
+Yours,
+Linus Walleij
