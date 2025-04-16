@@ -1,114 +1,147 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB3922FF2D;
-	Wed, 16 Apr 2025 09:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D894C22FF2D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794240; cv=none; b=Lt+6EAiMiKG2jRy3IJJA1zVandUpFzi1R7ofo7YjXD/r9A8A9mBqMpi3LYUnCiqqaqTQ5h5eBriAMI9PrTBnPbW2d0FCKTTwxVvJWxM0trykbQw00xKNpK4MVDxyOPrNoKlbYIesXf5JQfOy8WtrpwXEBTc0wr/xVwoJEEdNLuA=
+	t=1744794249; cv=none; b=WBmuOrkvNVPOv2ksUUFdBaIFbXHOPjtWORxL3Zu2DzeSAeXU/aKE3VvDCB9qXEiLKGPXL8c04AaWbGm1FuzwsqUZZkxbbIGLEpkzCk05a4QXuK09GggZPJR5gx43Jcp4Dwt9q8n3BFarJUHxF4vmSAuhUbdLbMn1H1L1fjmihrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794240; c=relaxed/simple;
-	bh=xWX56MLkHZw/GZNOTxJ7M6xTx+/WmLb4gwBvJUYftZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L6W3OHVeSmVr5EAKZ30ooNFj6r25J/blnpAXXhCIaz0uRzbdx32cmB6mAi+BX63Mykdm5TSWrcbrTd/4c6b3vnWlXBP78UOT/1DjZKwUSZp24hsTdtvxkQLJJCYqOh73sdy//dFksFeUUuwnF0DziuE8c11ScIczI+O4CvebpNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ae6wIsrj; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744794249; c=relaxed/simple;
+	bh=PSfnDNYEjx66NVJjtF/+2uo/VnfpmqOUhsEwOYjV+kc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sxjL8oVtzsF7NJ2zKxXXZu4oxkbcndheuXhCdF9cb4qG6eQNIDS+bqO/irAa/E48fCbFrzhuIQkIw3pOhgHVNJRjCdZWO1izF1MYX4yilujD9KD1i3X0SbbRIGli822pU9y9VOB6gsEMNHe68xKceLsGH4hfqtAkmoEJIyKuJ28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QI33byDz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ae6wIsrj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 87F754327A;
-	Wed, 16 Apr 2025 09:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744794235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xWX56MLkHZw/GZNOTxJ7M6xTx+/WmLb4gwBvJUYftZo=;
-	b=Ae6wIsrj0/PLU4ol8EMC2g4AnIqshb3tRqVygY3H+leCF7pJwG/0XjRA8JvcGzoWhYdlBo
-	kQpK7h+ZQVtnTQulWBk2+leKK9kCbYQQQmP7KBNwONPicRAqnIWKLXtbSHaeSbQVKo5aqd
-	s6C0krPwfmcWlN/KDakkOItbDInATBSW5v1oQl3Ovc26dpJDL7Dq3O9bf2PPEnZohFHjFf
-	jHaQ3W/qZKjmhwRVtwG6N5B8/dFUywB+ZV1Krtk+qWMSo0D2cRHqBvcd5U8606wu/i2YGB
-	y0/dPy8cSarGEiXif9YexL7Z7wB8H1bqRqi/25m69TMPLou0A9DbD8tphNNZ0Q==
-Date: Wed, 16 Apr 2025 11:03:51 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Claudiu Manoil
- <claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Wei
- Fang <wei.fang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>, Jeroen de
- Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
- Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>, Maxime
- Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Simon Horman <horms@kernel.org>, Geoff
- Levand <geoff@infradead.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Alexander Lobakin
- <aleksander.lobakin@intel.com>, Praveen Kaligineedi
- <pkaligineedi@google.com>, Willem de Bruijn <willemb@google.com>, Joshua
- Washington <joshwash@google.com>, Furong Xu <0x1207@gmail.com>, "Russell
- King (Oracle)" <rmk+kernel@armlinux.org.uk>, Jisheng Zhang
- <jszhang@kernel.org>, Petr Tesarik <petr@tesarici.cz>,
- netdev@vger.kernel.org, imx@lists.linux.dev,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, Richard Cochran
- <richardcochran@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>,
- Shannon Nelson <shannon.nelson@amd.com>, Ziwei Xiao <ziweixiao@google.com>,
- Shailend Chand <shailend@google.com>, Choong Yong Liang
- <yong.liang.choong@linux.intel.com>, Andrew Halaney <ahalaney@redhat.com>,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: ethtool: Adjust exactly ETH_GSTRING_LEN-long stats
- to use memcpy
-Message-ID: <20250416110351.1dbb7173@kmaincent-XPS-13-7390>
-In-Reply-To: <20250416010210.work.904-kees@kernel.org>
-References: <20250416010210.work.904-kees@kernel.org>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QI33byDz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A34CC4CEE2;
+	Wed, 16 Apr 2025 09:04:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744794249;
+	bh=PSfnDNYEjx66NVJjtF/+2uo/VnfpmqOUhsEwOYjV+kc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QI33byDzwItOGfThyRuUoxFQ471AclScJ0q485jNZGvGvGXTFx9zPAfzRuIZ3FQD1
+	 flb2zVCHU/50AIHJauGinYlG0F8DR5BP2gPxFo3Df1HHE6r9cnK6gEai/bh4EUMxsA
+	 QA3rSNaT/IQfIIANXvwdiS0XsGyP44j+PpCYy3IijeGCFKBFItTF45H7cwqiW15/5N
+	 VqVWNDEju4vKisijbXItxfrRYvUss86gdLm/w0dCoZt+megQF4CGCHPiE2xpylAUq+
+	 KKEA2qqyUjlY4cmjjYid8PCd/Zb9XozgHvtiZWFbPISHeVJt03bSu58tJHR/ZRELPg
+	 KrpAPw9coiNgw==
+Date: Wed, 16 Apr 2025 11:04:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 00/17] timers: Complete the timer_*() API renames
+Message-ID: <Z_9yhQg_jlbIkxHf@gmail.com>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <Z_zk94RFo2bK85iJ@gmail.com>
+ <87ikn6sibi.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdehleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedupdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiiv
- ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghlrghuughiuhdrmhgrnhhoihhlsehngihprdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdholhhtvggrnhesnhigphdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ikn6sibi.ffs@tglx>
 
-On Tue, 15 Apr 2025 18:02:15 -0700
-Kees Cook <kees@kernel.org> wrote:
 
-> Many drivers populate the stats buffer using C-String based APIs (e.g.
-> ethtool_sprintf() and ethtool_puts()), usually when building up the
-> list of stats individually (i.e. with a for() loop). This, however,
-> requires that the source strings be populated in such a way as to have
-> a terminating NUL byte in the source.
->=20
-> Other drivers populate the stats buffer directly using one big memcpy()
-> of an entire array of strings. No NUL termination is needed here, as the
-> bytes are being directly passed through. Yet others will build up the
-> stats buffer individually, but also use memcpy(). This, too, does not
-> need NUL termination of the source strings.
->=20
-> However, there are cases where the strings that populate the
-> source stats strings are exactly ETH_GSTRING_LEN long, and GCC
-> 15's -Wunterminated-string-initialization option complains that the
-> trailing NUL byte has been truncated. This situation is fine only if the
-> driver is using the memcpy() approach. If the C-String APIs are used,
-> the destination string name will have its final byte truncated by the
-> required trailing NUL byte applied by the C-string API.
->=20
-> For drivers that are already using memcpy() but have initializers that
-> truncate the NUL terminator, mark their source strings as __nonstring to
-> silence the GCC warnings.
+* Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Shouldn't we move on to ethtool_cpy in these drivers too to unify the code?
+> While I appreciate proper namespace prefixes, this series is just a
+> mechanical conversion without any additional value.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Yes, intentionally so, as mentioned I didn't even rename any of the 
+APIs beyond the trivial conversion, because I wanted to gather feedback 
+first:
+
+> > I didn't want to make bigger, discretionary changes in the first 
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > iteration, but I can easily propagate any such suggestions into 
+    ^^^^^^^^^
+> > future versions of this series.
+
+    https://lore.kernel.org/all/Z_zk94RFo2bK85iJ@gmail.com/
+
+Can you please acknowledge this clearly declared, intentionally limited 
+scope of the -v1 series, instead of deriding it as 'mindless'? :-)
+
+> [...] Some of the conversions like try_to_del_timer_sync() are 
+> obviously fine and can't provide moar than a namespace consolidation.
+> 
+> But if you look at the actual functions and their usage all over the
+> place then you can see that there is way more cleanup and consolidation
+> potential especially for those functions which add or modify timers.
+> 
+> First of all the question is whether add() and mod() are really valuable
+> distinctions. I'm not convinced at all. Back then, when we introduced
+> hrtimers, we came to the conclusion that hrtimer_start() is sufficient.
+
+I didn't want to mix namespace cleanups with functional cleanups, but 
+sure, I'd be glad to do that too.
+
+> But that aside there is a major cleanup potential for this stuff. The
+> vast majority of add/mod_timer() sites uses:
+> 
+>     - Precomputed timeout values derived from a timeout provided in SE
+>       units
+> 
+>     - Instant conversions of SE unit based timeouts to jiffies
+> 
+>           msec/usec/sec_to_jiffies()
+> 
+>     - All variants of HZ, HZ * N, HZ / N ....
+> 
+> This is lots of duplicated and copy and pasted code. So instead of
+> blindly renaming things, we can be smarter and provide sensible
+> functions:
+> 
+> mod_timer() takes an absolute expiry value, but most places use
+> 
+>     mod_timer(t, jiffies + $timeout);
+> 
+> So the obvious first step is to provide:
+> 
+>     timer_start_rel(t, $timeout);
+> 
+> which does the addition of jiffies under the hood.
+> 
+> And because $timeout is some of the above calculations, we can be
+> smart and provide:
+> 
+>    timer_start_rel_secs(t, timeout_in_seconds);
+>    timer_start_rel_msecs(t, timeout_in_milliseconds);
+>    timer_start_rel_usecs(t, timeout_in_microseconds);
+> 
+> This all can be sensibly converted with coccinelle, which even can
+> handle the cases where $timeout is calculated from HZ / N.
+> 
+> I have a pile of half finished coccinelle scripts somewhere, which do
+> exactly such a conversion. I just ran out of time to play with that, as
+> I ran into a few things which need more thoughts about proper
+> interfaces. I'm happy to share them.
+
+Please do!
+
+See why I sent the simple approach first? :-)
+
+> Converting the whole timer arming to use SE unit based timeouts makes 
+> a lot of sense in general and also paves the way to boot-time 
+> controlled HZ, which is something distros and others are asking for 
+> since years (of course nobody wants to sit down and do the actual 
+> work as usual...)
+> 
+> That said, I'm fine to convert the obvious things, like 
+> try_timer_del*(), where there is no other consolidation value, but 
+> for everything else we better sit down and think about proper 
+> interfaces and large scale consolidation.
+
+No arguments from me! :-)
+
+Thanks,
+
+	Ingo
