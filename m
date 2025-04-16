@@ -1,64 +1,37 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4DD23A9A6
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C6522DFA20;
+	Wed, 16 Apr 2025 11:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803005; cv=none; b=StyKWqGg/xPdpyx3PZJrY5IJVSyegAUfJ5I/yPb0+uygvkJ4IMXrXcSf8bKvvxvEaVP+QIy5BxuOQ0CZfxCnY6o80LGUCl39EAygUM/7LR6zewXHo2DjvisCwDPr5AcjdU3rOQDc3xCQnevSbAYC/3VpowZJfyZHBezoas1QvDA=
+	t=1744803099; cv=none; b=G3474i07oCWPYRR1A1qFbbKBpBGsE4NNwwmhBtTUZ0jxKPZDj9x4P3U1hxW9H3zYJMhxjtvkGTMcmG1+kR1JOCiKdehqRRdrcu/IscQRu3dF28JjCAHVdcDv3qv8DiCS84ab63IpRASlKs+v4Wix6MTZ7b7EqhSWDxrZYBEgCJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803005; c=relaxed/simple;
-	bh=OjGOcMClYqNlLex2fBnE6FzvSS+RJVTgH2eVGsrOqjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=USvQInuvfGHG+E6yLP7Lhgd60VS1W6jQlcb4E3xefE7L6LEthOBzE/p/J2voAV0dUbOzyre5Rp3fveFKc26kvmyu/QYQ9lX/16HoK2uhNCI52lXrhkBjDgdSMHLf+lRmCO38OaTKKGkfk8y6vKr4G1ON3c+L1aqLyRC4i5IwaqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QxFpLY36; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QxFpLY36"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250416112958euoutp0283d46fdf67ef74552c6ef172ec63af33~2yRVKjN7t2536725367euoutp02L
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:29:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250416112958euoutp0283d46fdf67ef74552c6ef172ec63af33~2yRVKjN7t2536725367euoutp02L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744802998;
-	bh=+rfveBj9GE4cfZwlls5aVeex988AmgxoRWVksvLkYnY=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=QxFpLY36CVkUv8XaBxwCZbsU2WwmCg4glbeVDTLsxxqu0g/nBSL8pw3kuMvcBP0FE
-	 gjKt87kp/8oLjNeP7tzFZDfKw2EBW+XgK7Kh4EOQT4hp3z3wYOsVnqnu4gg/HvklKP
-	 vjK52A0H3OOHHxPh0ZPZkCH1Ocghgc2HAWctkUs4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250416112957eucas1p2ce83ea39dd70f7e1c02c7c8472f821b6~2yRTxydEW0440004400eucas1p2v;
-	Wed, 16 Apr 2025 11:29:57 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id E7.18.20821.5B49FF76; Wed, 16
-	Apr 2025 12:29:57 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250416112956eucas1p1977ffda6af7fa81c3e46cadc93c30de3~2yRTOGMi61410114101eucas1p1s;
-	Wed, 16 Apr 2025 11:29:56 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250416112956eusmtrp2cbd3c9539b11e9d2f8ab61ba62d284f5~2yRTNjBYb0434704347eusmtrp2S;
-	Wed, 16 Apr 2025 11:29:56 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-44-67ff94b50700
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id F4.74.19654.4B49FF76; Wed, 16
-	Apr 2025 12:29:56 +0100 (BST)
-Received: from panorka.. (unknown [106.210.135.126]) by eusmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250416112955eusmtip230ef002cc48935b9994d9fe67c9d3190~2yRSSCajO0284402844eusmtip27;
-	Wed, 16 Apr 2025 11:29:55 +0000 (GMT)
-From: "e.kubanski" <e.kubanski@partner.samsung.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, "e.kubanski"
-	<e.kubanski@partner.samsung.com>
-Subject: [PATCH v2 bpf] xsk: Fix offset calculation in unaligned mode
-Date: Wed, 16 Apr 2025 13:29:25 +0200
-Message-Id: <20250416112925.7501-1-e.kubanski@partner.samsung.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744803099; c=relaxed/simple;
+	bh=wm870a3wsMD4nHmN10jklz1xbL+ruVCnXMK7TwOfYCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WrxunUukW+S2YLl92Bigf6I0CvjBD67H8bcosly2NiL+BYM6FGQsizSHS00/1du62wXw0vnqeT6rPHsuInSGryUgEGc0pOJKB8KDvSEZfSc3lH4ax7D6aQU0C6+4tjVdR2rIucplISJMKdSZf3W5Z8Q38W22+4KQbHN0lpui278=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-06-67ff9511f475
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v8 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Wed, 16 Apr 2025 20:31:18 +0900
+Message-ID: <20250416113123.629-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,74 +39,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjleLIzCtJLcpLzFFi42LZduznOd2tU/6nGxxdLWax9f0qFosHs5cy
-	W+xaN5PZ4vKuOWwWN48/Z7FYcegEu8WxBWIO7B47Z91l91i85yWTx6ZVnWweB9/tYfL4vEku
-	gDWKyyYlNSezLLVI3y6BK2PJ8atMBZ/YK84/XcPYwHierYuRk0NCwETix45Z7F2MXBxCAisY
-	JX7c6WGFcL4wSqzeeA/K+cwocW9nGzNMy+/LIO0gieWMEn1zpkE5Lxkl7hzdwQRSxSZgLNH0
-	fT8LiC0iYCGxadE3sFHMArMYJZbs2QWU4OAQFnCVuPAxGaSGRUBVYt+/mUAb2Dl4BZwkdsVC
-	7JKX2H/wLNheXgFBiZMzn4BNZAaKN2+dzQwyUUJgIYfE4m1zWCEaXCTuzbsD9ZuwxKvjW9gh
-	bBmJ/zvnM0E0NDNKzJrZyQ7h9DBKrLl6hRHkHgkBa4m1J21BTGYBTYn1u/Qhoo4SW68VQ5h8
-	EjfeCkKcwCcxadt0Zogwr0RHmxDEIh2JGxefQy2Vkvg+czMLhO0h8eXcZrBPhARiJaYcnMg6
-	gVFhFpLHZiF5bBbCCQsYmVcxiqeWFuempxYb5qWW6xUn5haX5qXrJefnbmIEJpnT/45/2sE4
-	99VHvUOMTByMhxglOJiVRHjPmf9LF+JNSaysSi3Kjy8qzUktPsQozcGiJM67aH9rupBAemJJ
-	anZqakFqEUyWiYNTqoHJ0+PgnyV75Y24TgfnHPotxZVcL3NJ/n9rpYrUx8NfVBViK06lzdOO
-	Uj/DrnWEp45n08VzByYmr/692GBJfPSvD84Fllqrn79+d3HbRX6tzU5ewbu2skyd26XWbvjt
-	Wvxabe+Qap+1n7cFm343fs1UsdJW7lfiCtv5TAJPt9pLW2f7V2qmcBiss7TJMPxwdO+j5kj7
-	GfHrlqzl2Ko2UUxv8bf2nRX7Cg/IRN/YfaaurSxfs6Vpi5yIvML+vNVaGtPvzvp4emtU+olf
-	dgEsqi/szjz7k/nSbvvjHc23d6xI4nj/s3bJNvatR98rL5tR+Wmdg8+uLw4SnqHsfz9ONqt7
-	6vI3/t+Gz64pD8KPPrH/p8RSnJFoqMVcVJwIACUrs+6hAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKLMWRmVeSWpSXmKPExsVy+t/xe7pbpvxPN1gwQ9ti6/tVLBYPZi9l
-	tti1biazxeVdc9gsbh5/zmKx4tAJdotjC8Qc2D12zrrL7rF4z0smj02rOtk8Dr7bw+TxeZNc
-	AGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5rJWRqZK+nU1Kak5mWWqRvl2CXsaS
-	41eZCj6xV5x/uoaxgfE8WxcjJ4eEgInE78sgNheHkMBSRonLk14yQiSkJP6s+8MMYQtL/LnW
-	BVX0nFHi7ssJTCAJNgFjiabv+1lAbBEBK4kHt/8xgxQxC8xjlJizaz1rFyMHh7CAq8SFj8kg
-	NSwCqhL7/s0EqmHn4BVwktgVCzFeXmL/wbNgq3gFBCVOznwCNpEZKN68dTbzBEa+WUhSs5Ck
-	FjAyrWIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAgM723Hfm7Zwbjy1Ue9Q4xMHIyHGCU4mJVE
-	eM+Z/0sX4k1JrKxKLcqPLyrNSS0+xGgKdN1EZinR5HxghOWVxBuaGZgamphZGphamhkrifOy
-	XTmfJiSQnliSmp2aWpBaBNPHxMEp1cDUI7nl08WZp2ZaZj1RTCmeOen993Kf7DcMCnHb1fPq
-	0mVKQxfv3NEn8lmUr/jDViXhG/v/xE/4zdxyfNFjmy1Wcy54LJn6V1Gk/ovGFbaZq6IWrvj3
-	dn9X4OzUXXHGnn8Fem/frBGxXqPbGHcyJaZ+3hKdRQ0BrcFsYouS/7wxUrD8p/Vy3zqhzTXy
-	t36/YLJJ+apYExJi6DXLULaxbeOlxmsfdv2cLnSppP9R57Zlsv7POufcKjOzW9Pm/vHRWrn0
-	S2GrdGbeSlP4IMJzZ46G9QvJG+KRXnt4F8cxsXMc3t4cKsxj0VHMUaZrN0HmvnuVT9tRJT0+
-	lk9SkpaS19SqHxsf2lIc8u+1wbHL1wuVWIozEg21mIuKEwE9HsxB+AIAAA==
-X-CMS-MailID: 20250416112956eucas1p1977ffda6af7fa81c3e46cadc93c30de3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250416112956eucas1p1977ffda6af7fa81c3e46cadc93c30de3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250416112956eucas1p1977ffda6af7fa81c3e46cadc93c30de3
-References: <CGME20250416112956eucas1p1977ffda6af7fa81c3e46cadc93c30de3@eucas1p1.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsXC9ZZnka7g1P/pBlsOyFrMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
+	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
+	Uov07RK4MnYtmMBa0CdfMefNPZYGxnlSXYycHBICJhLPet+xwdjbV+xm7WLk4GATUJI4tjcG
+	JCwiICsx9e95li5GLg5mgcdMEo+ev2AESQgLREg0LF7ACmKzCKhKfN67hAnE5hUwllhzbyPU
+	TE2Jhkv3oOKCEidnPmEBsZkF5CWat85mBhkqIXCbTeLKplnMEA2SEgdX3GCZwMg7C0nPLCQ9
+	CxiZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIEBvSy2j/ROxg/XQg+xCjAwajEwxsR/y9diDWx
+	rLgy9xCjBAezkgjvOXOgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6jb+UpQgLpiSWp2ampBalF
+	MFkmDk6pBkZ+PaNw87qyyRufbpj1/N88A6MIsZAbPrplM/xOrv4TwmfYXdkrsY9p9vz1y8LN
+	fjuKpP3vY3+89aRtwD3eqNke+l85RIIaz/adTtQWuip1IfjgSfUvXCzi8havRK3PXz2eLHAx
+	hNtno2BA460zXEfu3BVdzpi1mOmUU41AhOerPQ0TO+ZcfKHEUpyRaKjFXFScCAD/F2QBZAIA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXCNUNNS1dw6v90g3d9ghZz1q9hs5g+9QKj
+	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLc5MK7I4
+	dO05q8XqNRkWv7etYHPg99g56y67R3fbZXaPliNvWT0W73nJ5LHp0yR2jxMzfrN47Hxo6fF+
+	31U2j2+3PTwWv/jA5LH5dLXH501yATxRXDYpqTmZZalF+nYJXBm7FkxgLeiTr5jz5h5LA+M8
+	qS5GTg4JAROJ7St2s3YxcnCwCShJHNsbAxIWEZCVmPr3PEsXIxcHs8BjJolHz18wgiSEBSIk
+	GhYvYAWxWQRUJT7vXcIEYvMKGEusubeRDWKmpkTDpXtQcUGJkzOfsIDYzALyEs1bZzNPYOSa
+	hSQ1C0lqASPTKkaRzLyy3MTMHFO94uyMyrzMCr3k/NxNjMAgXlb7Z+IOxi+X3Q8xCnAwKvHw
+	RsT/SxdiTSwrrsw9xCjBwawkwnvOHCjEm5JYWZValB9fVJqTWnyIUZqDRUmc1ys8NUFIID2x
+	JDU7NbUgtQgmy8TBKdXAuFhx+aaHC5L3CkTLpvV3Cjnqi985q88VVXzyGNO3TX8ueN305zK1
+	+xGp2Pc0/L9A1aHCDtvvq7onnFRtjzr2zv1Yc67Ij3WHmbcWVQYlbp/wRU/LZs31RxzP4v6n
+	9DgVXdr2V/U7y7s4f6FY6Sl2u76+TWh4aPUkgrH/52futtzdWpzTy6KvKLEUZyQaajEXFScC
+	AO1xIyNeAgAA
+X-CFilter-Loop: Reflected
 
-Bring back previous offset calculation behaviour
-in AF_XDP unaligned umem mode.
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
 
-In unaligned mode, upper 16 bits should contain
-data offset, lower 48 bits should contain
-only specific chunk location without offset.
+Changes from v7:
+https://lore.kernel.org/all/20250408073243.488-1-rakie.kim@sk.com/
+- Refactored error handling paths to remove unnecessary `goto` usage
+- Renamed unclear variables and functions for better readability
 
-Remove pool->headroom duplication into 48bit address.
+Changes from v6:
+https://lore.kernel.org/all/20250404074623.1179-1-rakie.kim@sk.com/
+- Removed redundant error handling in MEM_OFFLINE case
 
-Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
-Fixes: bea14124bacb ("xsk: Get rid of xdp_buff_xsk::orig_addr")
----
- include/net/xsk_buff_pool.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes from v5:
+https://lore.kernel.org/all/20250402014906.1086-1-rakie.kim@sk.com/
+- Added lock protection to sensitive sections
 
-diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
-index 7f0a75d6563d..b3699a848844 100644
---- a/include/net/xsk_buff_pool.h
-+++ b/include/net/xsk_buff_pool.h
-@@ -232,8 +232,8 @@ static inline u64 xp_get_handle(struct xdp_buff_xsk *xskb,
- 		return orig_addr;
- 
- 	offset = xskb->xdp.data - xskb->xdp.data_hard_start;
--	orig_addr -= offset;
- 	offset += pool->headroom;
-+	orig_addr -= offset;
- 	return orig_addr + (offset << XSK_UNALIGNED_BUF_OFFSET_SHIFT);
- }
- 
+Changes from v4:
+https://lore.kernel.org/all/20250401090901.1050-1-rakie.kim@sk.com/
+- Added missing `kobject_del()` when removing a kobject
+- Extended locking coverage to protect shared state
+
+Changes from v3:
+https://lore.kernel.org/all/20250320041749.881-1-rakie.kim@sk.com/
+- Added error handling for allocation and cleanup paths
+- Replaced static node attribute list with flexible array
+- Reorganized four patches into three based on their functional scope
+
+Changes from v2:
+https://lore.kernel.org/all/20250312075628.648-1-rakie.kim@sk.com/
+- Clarified commit messages
+- Refactored to avoid passing the global structure as a parameter
+
+Changes from v1:
+https://lore.kernel.org/all/20250307063534.540-1-rakie.kim@sk.com/
+- Fixed memory leaks related to `kobject` lifecycle
+- Refactored sysfs layout for hotplug readiness
+- Introduced initial memory hotplug support for weighted interleave
+
+### Introduction
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
+
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` teardown caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to sysfs entries for unusable nodes and potential
+  misconfigurations.
+
+### Patch Overview
+1. [PATCH 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Adds `kobject_del()` before `kobject_put()` to clean up sysfs state correctly.
+   - Prevents memory/resource leaks and improves teardown behavior.
+   - Ensures that `sysfs_remove_file()` is not called from the release path
+     after `kobject_del()` has cleared sysfs state, to avoid potential
+     inconsistencies and warnings in the kernfs subsystem.
+
+2. [PATCH 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+   - Refactors static sysfs layout into a new `sysfs_wi_group` structure.
+   - Makes per-node sysfs attributes accessible to external modules.
+   - Lays groundwork for future hotplug support by enabling runtime modification.
+
+3. [PATCH 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+   - Dynamically adds/removes sysfs entries when nodes are online/offline.
+   - Limits sysfs creation to nodes with memory, avoiding unusable node entries.
+   - Hooks into memory hotplug notifier for runtime updates.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 230 ++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 150 insertions(+), 80 deletions(-)
+
+
+base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
 -- 
 2.34.1
 
