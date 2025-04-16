@@ -1,135 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7555C217F35;
-	Wed, 16 Apr 2025 18:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582C6219A8B
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744826783; cv=none; b=UWGLc+ZbOdOz6UWKntaMW4NgMyDGcuBP0rVukV00Jcu7TFr2uPPHmHuLDMEAQPGMuBTIDsYrmvLUtstPobb3AQ1e79d9Kj1gASVdu/E9DwaOnOgkpSQXGwvTfGAlfDUn0si0TLFhZ3bgYJkfQMz73J5D5XvQG9JBrJ9fO99ckk4=
+	t=1744826818; cv=none; b=c//LYzInZ7tnlOJGpviheYiY17/aWKnPXSuEg7vBzINQtO6Hc4VagIq6F1e60KjCSSGASEdHZ8+pKdHdJPLc6FEZMO7ycCRPTNnKOUs6MWAEpwru8cR5sFq0iA0mrxVUjkk9iwdMrwC9tN7oZi5ECNCc2bYMshUwfpxXj1pwKgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744826783; c=relaxed/simple;
-	bh=PVkhubuFxAaW2HEyB3Yl5c1VtK6NW7DIrcdAG8enNZc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jg5TJXFyEoEf0RmmeAOOstcmaf/WAtOyMXRNx20PdpXvfDMipYuJ0kXg4vi+LcnlP9yWY1K5jaG/P1cmM3YXZDDOgRFixrUnz9V/UQ/uFunKkF7/AXoXnzOcptVXiHUC980aD6Za3zks8HUPppj8N87DksDKiyv2NNhsufH9Vhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Im2xwCnb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744826818; c=relaxed/simple;
+	bh=hAFt1oizTf5k+/v9qVEpriM/awR6FGjPo3lNDCu5siQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fw8EPJv+kn8XciNyBhjhP4keKKJoYiIndrX0uIfcpFlhPfBTKxB8kDzfOmwGz85irhsAj8LXcMAfBpbyJH+ovb+EQ7W8eBd9AV8+344fEw81L/LtEKnPfcS2IqK9e15D1tKM67QmluoObcf2M1rVXTgX5dQbwa4L7HnB5pAkkV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cKs9goAm; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Im2xwCnb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CF97AC4CEE2;
-	Wed, 16 Apr 2025 18:06:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744826782;
-	bh=PVkhubuFxAaW2HEyB3Yl5c1VtK6NW7DIrcdAG8enNZc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Im2xwCnbuWvXprxRMFN95uCNBl4XFTCLZC5G3/pNuuqiITId0KO4AYAhS49Bfljri
-	 U3+tG0xNx4jDl4XH/iM6UUCVlV/QE378Y4zhkcHMv0raFO6cVuOg1CAw8ZyaGYCYiU
-	 glfjWAcaNQt0/RdqWGH6PC22Y6LKk3c3uCUlUvVUzLQefupDJt8/5s0pb/Q0OFnLt9
-	 AhdNdrvB5fmJqlAQRGLgYuOqCk0uLsPrTxtKChK+MQd7cNN8W6gTCMejvWIDmsdzte
-	 NoLOAMUZE4jqdJlnyJNc0uQF2HAvaP4Wwao26xK1iBQbJkRThTR9CaRo/l8jmJYnCZ
-	 IrTQrCVfVhUTw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D7C369BA;
-	Wed, 16 Apr 2025 18:06:22 +0000 (UTC)
-From: Janne Grunau via B4 Relay <devnull+j.jannau.net@kernel.org>
-Date: Wed, 16 Apr 2025 20:06:18 +0200
-Subject: [PATCH] arm64: dts: apple: touchbar: Mark ps_dispdfr_be as
- always-on
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKs9goAm"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c58974ed57so660885185a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:06:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744826816; x=1745431616; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5bBGNDXHf0wcTGsAhP/84UjjUq9vBjHxLqzgERfSJkQ=;
+        b=cKs9goAmCKY49I5Mgvw43EQSYdeg/DWiunVPZVew6QZkZBHRUzm98dd7ueHO+k1qPK
+         VgddACTjar/ZpPqCK8eTEFtGNOTc8gwr3HEavRZNYeBEyMqmzTHiwagE+D0oRr+86C1w
+         sLYqxe/NYDwtRgs+/i1rXy3Zz9xrj9vuOtYSiAKeluEfrlxvb9gurnt4VIsmLZbWzVNG
+         jBX3s/PzadYFA38l4XarsTFhPnHZhMwDh4wxh8GXB9NWZnyLqwRX1Vj8js8tJ9IElADc
+         shAuG9wCHRmmdS3alYW6vdly//+QvNi+3oXSAyHfJgBYIcmyR1+Z90OE0GySqJnV9qw2
+         6WrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744826816; x=1745431616;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5bBGNDXHf0wcTGsAhP/84UjjUq9vBjHxLqzgERfSJkQ=;
+        b=WiglU4pGYf7OaBCiytduPS4I/thRtQCa7nVPn0jpdVungIxkrpKr2DetlfTpbZlc+T
+         rkw6IxYG9tpLk3e42GhhiFzZB0xyF5og9gvj1Cb417/iOFsjMR4y9KyAw5okIrfRj970
+         cO1qdmD6EET3YWogq2yt6D3Q+bqsl6rokI/Y8qlSP5MIeuaFsg6Z6UvFj3O88SOY1qO9
+         mGl9BoN4wSe+KkU64cF8x7n5Uj1wpi+QMwamwQUZDWLziSJ/8JcvBTmT3NmG6JceegY+
+         sAxwUx60kRbukdnRNpbvx1fZw3kiCYB1C1AgLTOMId0lXCV0z+rbMpArIR5JgYZH04Zv
+         LFpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW/eSL7qV96WpZy86XEHLc4IPYdEd07XgtdHouw0deOYvLHlvMBMRXw+UZr0POcNa5pghJ6vw5HgUPCkzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/5IK3vJeMqW7Y2a0QYAOo552Tv/fzhV0NzirRQDlfc/Y5dNB4
+	LH4RKI7nyepoayfY8vwlizd03BS+e0slUZazRtTkSpjuFutjYaKj
+X-Gm-Gg: ASbGncvSSoJljeBSp9DcDLYHeZ4jsTcetMpAU1CQggaNXIKFf6lj/GSUJOoAphNoxMy
+	rVw+npIQkuavl/cp+P/GJaCWmog4Oj2bdYs9jUJWz8caVqfm4P7xvOTPwbFSBz2iebDU0roCM34
+	WHEMOmvCHXZ9J0JU7v8I6zCF7Zq0A3dndeMvR7Nhv3PXNIWtqqHyKvk3fys5ZCciUYO/U33nXaw
+	RJEeQA8bvOGU8ieSLywradkrwOXouOXK0UtrmH/NjZq1iUt5W5BhBETVbV6vk4VqXqaYQaK/s5k
+	vQuF6AJEF9QBh/Pku1G+p1USmiDf/tFutE6NnQ==
+X-Google-Smtp-Source: AGHT+IF8GjF861ZlG5eJfPMP6n3Yo9HbzAs3F1ABqQuYTpMtFeymvRZMNgLh1ooSe/pUOJlw11fzCw==
+X-Received: by 2002:a05:620a:40c8:b0:7c7:b5d0:da63 with SMTP id af79cd13be357-7c91900180emr451290585a.25.1744826816061;
+        Wed, 16 Apr 2025 11:06:56 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:6::])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a88b6b0asm1096843585a.0.2025.04.16.11.06.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 11:06:55 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	surenb@google.com,
+	linux-mm@kvack.org
+Cc: hannes@cmpxchg.org,
+	shakeel.butt@linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH] alloc_tag: introduce Kconfig option for default compressed profiling
+Date: Wed, 16 Apr 2025 19:06:52 +0100
+Message-ID: <20250416180653.3438158-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-arm64_dts_apple_touchbar-v1-1-e1c0b53b9125@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAJnx/2cC/x3MywqAIBBA0V+JWSdUmD1+JUJMpxroIWNFEP170
- vIs7n0gIBMGaJMHGC8KtG8ReZqAnc02oSAXDUVWlJnMlTC8KqndEbTxfkF97KedB8NClbV1TSU
- dNhXE3DOOdP/rrn/fD/MfiopqAAAA
-X-Change-ID: 20250416-arm64_dts_apple_touchbar-658cd974de97
-To: Sven Peter <sven@svenpeter.dev>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Nick Chan <towinchenmi@gmail.com>, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2090; i=j@jannau.net;
- s=yk2024; h=from:subject:message-id;
- bh=vW+HnwVsI6HKFCWS8Ni6G5ezcLgPyLTobLTnqE3VCiY=;
- b=owGbwMvMwCW2UNrmdq9+ahrjabUkhvT/H+dWvp50jXemd5qQ38RFF3hTijMsYu7mde2Ydziu+
- KpFdK5BRykLgxgXg6yYIkuS9ssOhtU1ijG1D8Jg5rAygQxh4OIUgIkY+zH8z965537Wq0sasRts
- wlRYNmew7NDQK/Cxvlme92LpL6YWXoY/PILfNx+xaZGRT/UpC81uWrzrNUvCNpd5TLmLLgRUvLj
- MAQA=
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Endpoint-Received: by B4 Relay for j@jannau.net/yk2024 with auth_id=264
-X-Original-From: Janne Grunau <j@jannau.net>
-Reply-To: j@jannau.net
+Content-Transfer-Encoding: 8bit
 
-From: Janne Grunau <j@jannau.net>
+With this Kconfig option enabled, the kernel stores allocation tag references
+in the page flags by default.
 
-The driver depends on boot loader initialized state which resets when the
-ps_dispdfr_be power-domain is powered off. This happens on suspend or
-when the driver is missing during boot.
-Mark the domain as always on until the driver can handle this.
+There are 2 reasons to introduce this:
+- As mentioned in [1], compressed tags dont have system memory overhead
+and much lower performance overhead. It would be preferrable to have this as
+the default option, and to be able to switch it at compile time. Another
+option is to just declare the static key as true by default?
+- As compressed option is the best one, it doesn't make sense to have to
+change both defconfig and command line options to enable memory
+allocation profiling. Changing commandline across a large number of services
+can result in signifcant work, which shouldn't be needed if the kernel
+defconfig needs to be changed anyways.
 
-Fixes: 7275e795e520 ("arm64: dts: apple: Add touchbar screen nodes")
-Signed-off-by: Janne Grunau <j@jannau.net>
+[1] https://lore.kernel.org/all/20241023170759.999909-7-surenb@google.com/T/#m0da08879435f7673eaa10871a6e9d1be4f605ac8
+
+Signed-off-by: Usama Arif <usamaarif642@gmail.com>
 ---
- arch/arm64/boot/dts/apple/t8103-j293.dts | 10 ++++++++++
- arch/arm64/boot/dts/apple/t8112-j493.dts | 10 ++++++++++
- 2 files changed, 20 insertions(+)
+ include/linux/pgalloc_tag.h | 4 ++++
+ lib/Kconfig.debug           | 5 +++++
+ lib/alloc_tag.c             | 4 ++++
+ 3 files changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/apple/t8103-j293.dts b/arch/arm64/boot/dts/apple/t8103-j293.dts
-index 2dfe7b895b2bc0a913e73141e558fa5124a13b2e..e2d9439397f71a93c28b75a7eea589f4bcb3e374 100644
---- a/arch/arm64/boot/dts/apple/t8103-j293.dts
-+++ b/arch/arm64/boot/dts/apple/t8103-j293.dts
-@@ -77,6 +77,16 @@ touchbar0: touchbar@0 {
- 	};
- };
+diff --git a/include/linux/pgalloc_tag.h b/include/linux/pgalloc_tag.h
+index c74077977830..0226059bcf00 100644
+--- a/include/linux/pgalloc_tag.h
++++ b/include/linux/pgalloc_tag.h
+@@ -16,7 +16,11 @@ extern unsigned long alloc_tag_ref_mask;
+ extern int alloc_tag_ref_offs;
+ extern struct alloc_tag_kernel_section kernel_tags;
  
-+/*
-+ * The driver depends on boot loader initialized state which resets when this
-+ * power-domain is powered off. This happens on suspend or when the driver is
-+ * missing during boot. Mark the domain as always on until the driver can
-+ * handle this.
-+ */
-+&ps_dispdfr_be {
-+	apple,always-on;
-+};
-+
- &display_dfr {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/apple/t8112-j493.dts b/arch/arm64/boot/dts/apple/t8112-j493.dts
-index 3d73f9ee2f46a35a3b23da5b233ef316c7372ef7..be86d34c6696cb47d31696541266e504cee8ce10 100644
---- a/arch/arm64/boot/dts/apple/t8112-j493.dts
-+++ b/arch/arm64/boot/dts/apple/t8112-j493.dts
-@@ -40,6 +40,16 @@ led-0 {
- 	};
- };
++#ifdef CONFIG_MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
++DECLARE_STATIC_KEY_TRUE(mem_profiling_compressed);
++#else
+ DECLARE_STATIC_KEY_FALSE(mem_profiling_compressed);
++#endif
  
-+/*
-+ * The driver depends on boot loader initialized state which resets when this
-+ * power-domain is powered off. This happens on suspend or when the driver is
-+ * missing during boot. Mark the domain as always on until the driver can
-+ * handle this.
-+ */
-+&ps_dispdfr_be {
-+	apple,always-on;
-+};
+ typedef u16	pgalloc_tag_idx;
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 9fe4d8dfe578..66d8995f3514 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1028,6 +1028,11 @@ config MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT
+ 	default y
+ 	depends on MEM_ALLOC_PROFILING
+ 
++config MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
++	bool "store page allocation tag references in the page flags by default"
++	default y
++	depends on MEM_ALLOC_PROFILING
 +
- &display_dfr {
- 	status = "okay";
- };
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250416-arm64_dts_apple_touchbar-658cd974de97
-
-Best regards,
+ config MEM_ALLOC_PROFILING_DEBUG
+ 	bool "Memory allocation profiler debugging"
+ 	default n
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 25ecc1334b67..30adad5630dd 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -31,7 +31,11 @@ DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+ 			mem_alloc_profiling_key);
+ EXPORT_SYMBOL(mem_alloc_profiling_key);
+ 
++#ifdef CONFIG_MEM_ALLOC_PROFILING_COMPRESSED_ENABLED_BY_DEFAULT
++DEFINE_STATIC_KEY_TRUE(mem_profiling_compressed);
++#else
+ DEFINE_STATIC_KEY_FALSE(mem_profiling_compressed);
++#endif
+ 
+ struct alloc_tag_kernel_section kernel_tags = { NULL, 0 };
+ unsigned long alloc_tag_ref_mask;
 -- 
-Janne Grunau <j@jannau.net>
-
+2.47.1
 
