@@ -1,73 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C18A221F25
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BF424A042
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744844052; cv=none; b=f/EkzpevLOz66u5fKGZ38V8VAV6PF8/RVLH9jAAMLGmDadPRarSV9Wm0GBmnyeF+Ee+YnW+XUvln9S9+xixTYF3iAwIHEjvK86ZGlZUYSXW4pY8wUkMK7LoH0XFf4U/+Fs4ycdypnekzBSegzqt1Q2SMDUfANIVvROzNSI8rPfs=
+	t=1744844059; cv=none; b=m3xLLeQ/71TjE3Wt4WJIThEcQXJKmub+QNRoDmCoNPnX7kA8kVBQAtZiUJxRoylgVaD6Cn5y6ZuWi/knkh5db9ibnqR2zBjk0QukoQ6pKaYXtiKFmenHNciNHuzu+6CVqOGzV4ZiSImu+ww9p8p6qpOhM17yez/IVYiORXi5Hcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744844052; c=relaxed/simple;
-	bh=+AuiwU9uG7b94jvOOiaauqwi+BDUKTtM7QT1BeW5Tyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IHk72Eg36YX6aPzBi2FUtNSnU2jpTz4Lr3oHbuZVtOvVNkePNz8w54wuOaCaOT0myjaIbCuJPfxizrtlajNh9anGWA7f7E/c8FKD53bUs2zQtZvcl35sVSI0mbtVThIzfz85cf3H6d5/S1sQauA5Vgtj1XypjAHj+gyUF7VHqKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F256C4CEE2;
-	Wed, 16 Apr 2025 22:54:10 +0000 (UTC)
-Date: Wed, 16 Apr 2025 23:54:08 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Ross Stutterheim <ross.sweng@gmail.com>,
-	Ross Stutterheim <ross.stutterheim@garmin.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Linus Walleij <linus.walleij@linaro.org>, rppt@kernel.org
-Subject: Re: [PATCH v2] arm/memremap: fix arch_memremap_can_ram_remap()
-Message-ID: <aAA1EHMzoHOTpv-l@arm.com>
-References: <20250414133219.107455-1-ross.stutterheim@garmin.com>
- <20250414142140.131756-1-ross.stutterheim@garmin.com>
- <Z_-B5fAhZzShX34I@arm.com>
- <c7db6fda-bf4e-4d6b-8cca-db82c40ce1b6@gmail.com>
- <Z__RNhf5CJrbv5yb@shell.armlinux.org.uk>
+	s=arc-20240116; t=1744844059; c=relaxed/simple;
+	bh=xH3lhJi1xTJv/A92jkdgVUHaGo0cZIKK/YnO663brp4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ohcZZOHVChy+WJbV0LvgZ70B3VojDkYgIjFO8v1gC/SwHhl0UtXgtslWwMm8VuNiEGet0qERjtjTADqbNg7LsoeQgJI7+59rS0yXG/f1/iUbV+ffb8viY1dU9RpYYnTsApNB9vn9+RWMCxUsTd7X6KGQTbsZg0GQZKBvS7dGXhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=np0Ezbwa; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="np0Ezbwa"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 44D4E2C03DC;
+	Thu, 17 Apr 2025 10:54:14 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1744844054;
+	bh=xH3lhJi1xTJv/A92jkdgVUHaGo0cZIKK/YnO663brp4=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=np0Ezbwak1pNA1zl4FcdjeQaiTfB0VEzmABPOL8AV6qPp3mWArsVeKWwfvKWBFPLB
+	 zH/cVM4sMeDiTgxc7jczGyYX7x1R+oDGY/TgieLlSlHrMCC5Sic0AbHrJghhq4Ey7t
+	 JXmvBH6tWxmSsTwQSyML+UOFG0/DI2wTNx2lvMg1BkVPyT15xyNTjCfC0QzybyjLVy
+	 SJtTFqGuJZeSLjAC5QCifNxnUUbIm8tPMlpIi+cwDMbfywCZe9KH9dJh6pBQemZB65
+	 KbIr6igzJB3a8stK3V45NrFaWuZXj6a541JX6A6yPscznBb5wbXax3Uko2yJaASk3Q
+	 gWbx36Rzx3TnQ==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B680035160001>; Thu, 17 Apr 2025 10:54:14 +1200
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 17 Apr 2025 10:54:13 +1200
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Thu, 17 Apr 2025 10:54:13 +1200
+From: Aryan Srivastava <Aryan.Srivastava@alliedtelesis.co.nz>
+To: "andi.shyti@kernel.org" <andi.shyti@kernel.org>
+CC: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+	"wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+	"Markus.Elfring@web.de" <Markus.Elfring@web.de>, "linux-i2c@vger.kernel.org"
+	<linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "rric@kernel.org" <rric@kernel.org>
+Subject: Re: [PATCH v14 1/1] i2c: octeon: add block-mode i2c operations
+Thread-Topic: [PATCH v14 1/1] i2c: octeon: add block-mode i2c operations
+Thread-Index: AQHbnPMbfNxK7MTC8UuzggnLBpR1ibOmQeGA
+Date: Wed, 16 Apr 2025 22:54:13 +0000
+Message-ID: <3a02a3711cfb105921c2cf672a32ef96864ff0fb.camel@alliedtelesis.co.nz>
+References: <20250324192946.3078712-1-aryan.srivastava@alliedtelesis.co.nz>
+	 <20250324192946.3078712-2-aryan.srivastava@alliedtelesis.co.nz>
+In-Reply-To: <20250324192946.3078712-2-aryan.srivastava@alliedtelesis.co.nz>
+Accept-Language: en-US, en-NZ
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DF9BAC5E1277B6468ED06A9E78FA1AE2@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z__RNhf5CJrbv5yb@shell.armlinux.org.uk>
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=W+WbVgWk c=1 sm=1 tr=0 ts=68003516 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=w1vUsAckAk8A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=lBS4choEUxMPvCBz5qMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-On Wed, Apr 16, 2025 at 04:48:06PM +0100, Russell King wrote:
-> On Wed, Apr 16, 2025 at 08:57:09AM -0500, Ross Stutterheim wrote:
-> > On 4/16/25 05:09, Catalin Marinas wrote:
-> > > > Fixes: 260364d112bc ("arm[64]/memremap: don't abuse pfn_valid() to ensure presence of linear map")
-> > > > Signed-off-by: Ross Stutterheim <ross.stutterheim@garmin.com>
-> > > 
-> > > I think you could also add:
-> > > 
-> > > Cc: <stable@vger.kernel.org>
-> > Done. I also added some other Cc: entries on V3 along with Reviewed-by:
-> > lines . I'm new here, so I'm not sure I've used those 100% properly.
-> > 
-> > > Not sure how Russell picks patches up these days (I used to send them to
-> > > the patch system -
-> > > https://www.arm.linux.org.uk/developer/patches/info.php).
-> > > 
-> > > It might be simpler with git send-email (that's the alias I had):
-> > > 
-> > >    git send-email --add-header="KernelVersion: $(git describe --abbrev=0)" --no-thread --suppress-cc=all --to="patches@armlinux.org.uk"
-> > > 
-> > Thanks. I created an account there and submitted V3 through the web
-> > interface (to avoid my SMTP server appending more stuff on the end).
-> 
-> Thanks, seems all good, applied and pushed out. I'll send it to Linus
-> tomorrow as it's certainly a serious regression.
-> 
-> I'm surprised Mike hasn't responded...
-
-Ah, I think he joined Microsoft. Adding his kernel.org address.
-
--- 
-Catalin
+SGkgQW5kaSwNCg0KRGlkIHlvdSBoYXZlIGFueSBtb3JlIGNvbW1lbnRzIG9uIHRoaXMgcGF0Y2g/
+DQoNClRoYW5rcywNCkFyeWFuLg0K
