@@ -1,198 +1,196 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD06C224AED
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0EC18DB05;
+	Wed, 16 Apr 2025 19:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830939; cv=none; b=tXFdqh/EIhOH/9BMYlUZVjj7fMbwmghUAoi4cmL1uG3oKUA4JmlA5QmiEZLvXHkm47p4X6j4CaK7AVRe9f05+Wbgv7mf+SS3AnMI+rr7gj0w30zwpZsuEKsZJwS6dtJtI/Nj9TMVIrDjvcvy6cEBVWPXIc7jrGqlhSkhsVG2W9E=
+	t=1744830972; cv=none; b=k5oLwMxUWjGod/FlU2cKWL7ZsG/lra+uA7oAjUmuj2D7IdaM9YPz+BAgqC2oZC3yTNurYyv9MyINu1BKeB2mhoLn7W01zmeMucUXgnRGw2211yWIEw4xyHsupK5/qK0ap4O+a08DoivLZdNzMTfJHHqoRBLAGEsVTHt0fKETNPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830939; c=relaxed/simple;
-	bh=q553TEd7R9yQBjrZT6YjB0vHC9w9jhtO5GUiE3dhpJE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Q3vFu3NtiWX0DEquFV9q8NFQDXi+BBFwCBEz4LQM/FJMX2HXLe/ONL+xbOdUkdTEIT8nB473QW1rtOouKUmRMrxdKkk82I4ZFxWgw+YFD+xm5eJsjsOsxIfmym9eNuIPo93RhQXrqkmxB6c6pFx7gyQuIY9vXYBBQeEjfFgl2+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b53875729so1561251239f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:15:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744830937; x=1745435737;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/ilGkIWrm8F9IkU3lmN+jkExtONmYjoDsbGEG/YMG2c=;
-        b=e5vUB1TYCRIm+Dz2PgUluuozNZP+ULOxASfQ2yjit7w9hQIe8ME+ciWeFdfRe2kwm7
-         IJz8c0bPuu/QEIC4H/F0iUkUFY99X+5kF3Bg7lF93BZ6G73V7wrbwPhWr3Oq/+NpmW2m
-         wV6gF7y51s/8x7OLcR/K7xGBEWUHsg+1trr2F9eEeGewFaSEXFvmodK0Pcg80I5EsyQG
-         qiAbl47shp30IwDM6ruv7HCQnmTMxOFdB66DhglenCbJbfcSdPctRT2tk6ZRxwxfZuvL
-         Hnck2AezoVsmo+71FuyUMUhsf9OaIrCzrZAXajkI5+hFrQGf86h9VkJbNB4deYRSo7L8
-         KFtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWkC3wx/j3MG1QwMytgdi9VJ+bq2YH4Ui1yoHeECVtw7rehR80+Lko7y/UqXPvxWqLQbeCeYqAKTjpuhLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxnq98aqqmd/7XsVIzZHdhz92HaHmS5+OVTZx6C9lHUcqInQX4n
-	uKTjTjK2Bgk1N8xfEar3AwSEPZSz8UAOvNGm6QUcJXMb6eZMhnn7RLtZqORlZnmV3j8+dafqJGH
-	AkSDWwp4EWwwk38Pqt6/2isMj1zVT6gtfdH+9JRaSYwQkhTs9cbNEpKI=
-X-Google-Smtp-Source: AGHT+IGbeYfjsyEqD9ZZPU0XQFuJBFnr7Skzqjq9KiBjQK4hvKS3D5izyNg4VNIF9EHbI4Jdv09d0mY9WQzoSyf3lcWf0RNrHg3P
+	s=arc-20240116; t=1744830972; c=relaxed/simple;
+	bh=eZDCeJusl4YvbrBel3CeklONB/zaP1h9uSVKYJI0z14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hy/Qf9VocfX3eTXWpjCs+kl8XALmgPiMy1FLt3ItOoqr2owrO/Hc7Na9MPH9tD7HOQZUUgEVB2OnfCrHZxIPZJWm2gOOSKkNCZ9boQZ+6MQVnf3s1gh74KKaaWIoqIveTXNZ4dbOpPQ4f/g9MObnVaRjg/Z/tzKyPOgg768j4jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=eP4xPZhw; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="eP4xPZhw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744830959; x=1745435759; i=wahrenst@gmx.net;
+	bh=0Fyt/wURX/mltb2vqUsAYfg/uzruTniev2Ppmgs5KiI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=eP4xPZhwayV0qRsC4b25Q49LyEmZGMIlxbn9IzUHLF43ECpS5F3GNPWeuVaBalLY
+	 Pkum6P20lJTMECwXPfP+T5h7/Jxml7vLwhSRkYN2S7uLZ6LUg+U/doWhJJpjUJ4Iz
+	 lT6+DhibvxkeaBtgLoiNyRZcsWut24xOaqVgFsKSV4QfQKJcN/zPPjsr7EOCYT+C0
+	 PsJv0RPrzPWB02AQPugJfT/bXXFLXc3deonlEfAqDFXE4OkZUTPRJeHiC2tJFuoQ4
+	 mvwOgPZjyMpXuYLqBk3Kj6gI1zDbaI7EgXVtWXRWhFSlIfiLi6Xcr1BZbTaN+gXux
+	 ugH1G0Ag3bUFajgGIQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MOREi-1uV54z2DPi-00SFjX; Wed, 16
+ Apr 2025 21:15:59 +0200
+Message-ID: <06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
+Date: Wed, 16 Apr 2025 21:15:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4415:10b0:3d5:eb10:1c3b with SMTP id
- e9e14a558f8ab-3d815af440bmr26176255ab.5.1744830936847; Wed, 16 Apr 2025
- 12:15:36 -0700 (PDT)
-Date: Wed, 16 Apr 2025 12:15:36 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680001d8.050a0220.5cdb3.0008.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in bch2_inode_update_after_write (2)
-From: syzbot <syzbot+af878a66b6ed801e9515@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v5 2/6] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
+ switch description
+To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-3-lukma@denx.de>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250414140128.390400-3-lukma@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:BhR9yFAQqeXq7tpo+BVlY5V6At1F7eSbQwtC+8DLgGgYcEvaPHB
+ YvRBP+brt1418Jxot0UdwrAqCK2iHeWbVVeu/W+QF1JjsSKAUQdASGGg2F7wPIJ2gjJ6bpV
+ 1Tw1MMpTcSqqOIRQXRMEUSfAXjDDhHOl0Wx6y1gtomCstmu2i1ezvWAJie7VDPvLPZALLUf
+ UygcwzAsl6PjV/KG51dUQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XlsGXYRQO+Q=;Kai+BO1wU8iAl1JoOXLDwr47/iz
+ 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
 
-Hello,
+Hi Lukasz,
 
-syzbot found the following issue on:
+Am 14.04.25 um 16:01 schrieb Lukasz Majewski:
+> The current range of 'reg' property is too small to allow full control
+> of the L2 switch on imx287.
+>
+> As this IP block also uses ENET-MAC blocks for its operation, the addres=
+s
+> range for it must be included as well.
+>
+> Moreover, some SoC common properties (like compatible, clocks, interrupt=
+s
+> numbers) have been moved to this node.
+>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>
+> ---
+> Changes for v2:
+> - adding extra properties (like compatible, clocks, interupts)
+>
+> Changes for v3:
+> - None
+>
+> Changes for v4:
+> - Rename imx287 with imx28 (as the former is not used in kernel anymore)
+>
+> Changes for v5:
+> - None
+> ---
+>   arch/arm/boot/dts/nxp/mxs/imx28.dtsi | 8 ++++++--
+>   1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi b/arch/arm/boot/dts/nx=
+p/mxs/imx28.dtsi
+> index bbea8b77386f..a0b565ffc83d 100644
+> --- a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
+> +++ b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
+> @@ -1321,8 +1321,12 @@ mac1: ethernet@800f4000 {
+>   			status =3D "disabled";
+>   		};
+>  =20
+> -		eth_switch: switch@800f8000 {
+> -			reg =3D <0x800f8000 0x8000>;
+> +		eth_switch: switch@800f0000 {
+> +			compatible =3D "nxp,imx28-mtip-switch";
+> +			reg =3D <0x800f0000 0x20000>;
+> +			interrupts =3D <100>, <101>, <102>;
+> +			clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+> +			clock-names =3D "ipg", "ahb", "enet_out", "ptp";
+>   			status =3D "disabled";
+from my understanding of device tree this file should describe the=20
+hardware, not the software implementation. After this change the switch=20
+memory region overlaps the existing mac0 and mac1 nodes.
 
-HEAD commit:    834a4a689699 Merge tag 'for-linus' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1757c470580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a972ee73c2fcf8ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=af878a66b6ed801e9515
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Definition in the i.MX28 reference manual:
+ENET MAC0 ENET 0x800F0000 - 0x800F3FFF 16KB
+ENET MAC1 ENET 0x800F4000 - 0x800F7FFF 16KB
+ENT Switch SWITCH 0x800F8000 - 0x800FFFFF 32KB
 
-Unfortunately, I don't have any reproducer for this issue yet.
+I'm not the expert how to solve this properly. Maybe two node references=
+=20
+to mac0 and mac1 under eth_switch in order to allocate the memory=20
+regions separately.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-834a4a68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/4454365a3050/vmlinux-834a4a68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2d99dbd9f6f4/bzImage-834a4a68.xz
+Sorry, if i missed a possible discussion about this before.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+af878a66b6ed801e9515@syzkaller.appspotmail.com
+Regards
+>   		};
+>   	};
 
-bcachefs (loop0): accounting_read... done
-bcachefs (loop0): alloc_read... done
-bcachefs (loop0): snapshots_read...
-bcachefs (loop0): running explicit recovery pass reconstruct_snapshots (21), currently at snapshots_read (7)
- done
-bcachefs (loop0): check_allocations...
-bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
-  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ac62141f8dc7e261 written 24 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0, fixing
-bcachefs (loop0): bucket 0:26 data type btree ptr gen 0 missing in alloc btree
-  while marking u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq ac62141f8dc7e261 written 24 min_key POS_MIN durability: 1 ptr: 0:26:0 gen 0, fixing
-bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
-  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 7589ab5e0c11cc7a written 24 min_key POS_MIN durability: 1 ptr: 0:38:0 gen 0, fixing
-bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
-  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq 9aa2895aefce4bdf written 24 min_key POS_MIN durability: 1 ptr: 0:41:0 gen 0, fixing
-bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
-  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq c0bef60d07ceb940 written 16 min_key POS_MIN durability: 1 ptr: 0:35:0 gen 0, fixing
-bcachefs (loop0): btree ptr not marked in member info btree allocated bitmap
-  u64s 11 type btree_ptr_v2 SPOS_MAX len 0 ver 0: seq e81e1ed936acf3df written 32 min_key POS_MIN durability: 1 ptr: 0:29:0 gen 0, fixing
-bcachefs (loop0): bucket 0:15 gen 0 has wrong data_type: got free, should be journal, fixing
-bcachefs (loop0): bucket 0:15 gen 0 data type journal has wrong dirty_sectors: got 0, should be 256, fixing
-bcachefs (loop0): bucket 0:26 gen 0 has wrong data_type: got free, should be btree, fixing
-bcachefs (loop0): bucket 0:26 gen 0 data type btree has wrong dirty_sectors: got 0, should be 256, fixing
-bcachefs (loop0): bucket 0:32 gen 0 has wrong data_type: got btree, should be need_discard, fixing
-bcachefs (loop0): bucket 0:32 gen 0 data type need_discard has wrong dirty_sectors: got 256, should be 0, fixing
- done
-bcachefs (loop0): going read-write
-bcachefs (loop0): journal_replay... done
-bcachefs (loop0): check_lrus... done
-bcachefs (loop0): check_backpointers_to_extents... done
-bcachefs (loop0): check_extents_to_backpointers...
-bcachefs (loop0): scanning for missing backpointers in 4/128 buckets
- done
-bcachefs (loop0): reconstruct_snapshots...
-bcachefs (loop0): snapshot node 4294967295 from tree 4294967295 missing, recreating
- done
-bcachefs (loop0): check_inodes... done
-bcachefs (loop0): resume_logged_ops... done
-bcachefs (loop0): delete_dead_inodes... done
-bcachefs (loop0): Fixed errors, running fsck a second time to verify fs is clean
-bcachefs (loop0): check_lrus... done
-bcachefs (loop0): check_backpointers_to_extents... done
-bcachefs (loop0): check_extents_to_backpointers...
-bcachefs (loop0): scanning for missing backpointers in 1/128 buckets
- done
-bcachefs (loop0): reconstruct_snapshots... done
-bcachefs (loop0): check_inodes... done
-bcachefs (loop0): resume_logged_ops... done
-bcachefs (loop0): delete_dead_inodes... done
-bcachefs (loop0): done starting filesystem
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/fs.c:61!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 0 UID: 0 PID: 5325 Comm: syz.0.0 Not tainted 6.15.0-rc2-syzkaller-00037-g834a4a689699 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:bch2_inode_update_after_write+0xc89/0xc90 fs/bcachefs/fs.c:61
-Code: ff 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c cc fb ff ff 48 89 f7 49 89 f6 e8 25 5c bc fd 4c 89 f6 e9 b9 fb ff ff e8 08 23 52 fd 90 <0f> 0b e8 d0 8e bf 07 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc9000d4d78c0 EFLAGS: 00010293
-RAX: ffffffff84713228 RBX: 000000000000100c RCX: ffff888000e1c880
-RDX: 0000000000000000 RSI: 000000000000100c RDI: 0000000000001002
-RBP: ffffc9000d4d7a10 R08: ffffffff847126c2 R09: 00000000ffffffff
-R10: 0000000000001000 R11: 00000000ffffffff R12: 0000000000001002
-R13: ffff888043ff9e60 R14: ffff888043ff9e60 R15: ffffc9000d4d7b90
-FS:  00007f76e17e76c0(0000) GS:ffff88808c593000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000002bc0 CR3: 0000000041356000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __bch2_unlink+0x459/0x520 fs/bcachefs/fs.c:818
- bch2_unlink+0xac/0xf0 fs/bcachefs/fs.c:841
- vfs_unlink+0x365/0x650 fs/namei.c:4544
- do_unlinkat+0x442/0x7b0 fs/namei.c:4608
- __do_sys_unlink fs/namei.c:4654 [inline]
- __se_sys_unlink fs/namei.c:4652 [inline]
- __x64_sys_unlink+0x47/0x50 fs/namei.c:4652
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f76e098d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f76e17e7038 EFLAGS: 00000246 ORIG_RAX: 0000000000000057
-RAX: ffffffffffffffda RBX: 00007f76e0ba5fa0 RCX: 00007f76e098d169
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000200000000500
-RBP: 00007f76e0a0e990 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f76e0ba5fa0 R15: 00007fff9e387278
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:bch2_inode_update_after_write+0xc89/0xc90 fs/bcachefs/fs.c:61
-Code: ff 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c cc fb ff ff 48 89 f7 49 89 f6 e8 25 5c bc fd 4c 89 f6 e9 b9 fb ff ff e8 08 23 52 fd 90 <0f> 0b e8 d0 8e bf 07 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc9000d4d78c0 EFLAGS: 00010293
-RAX: ffffffff84713228 RBX: 000000000000100c RCX: ffff888000e1c880
-RDX: 0000000000000000 RSI: 000000000000100c RDI: 0000000000001002
-RBP: ffffc9000d4d7a10 R08: ffffffff847126c2 R09: 00000000ffffffff
-R10: 0000000000001000 R11: 00000000ffffffff R12: 0000000000001002
-R13: ffff888043ff9e60 R14: ffff888043ff9e60 R15: ffffc9000d4d7b90
-FS:  00007f76e17e76c0(0000) GS:ffff88808c593000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000200000002bc0 CR3: 0000000041356000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
