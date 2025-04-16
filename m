@@ -1,133 +1,175 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B009A18870C;
-	Wed, 16 Apr 2025 16:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEDF41B415F;
+	Wed, 16 Apr 2025 16:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744822237; cv=none; b=TtuhnJcCegnSflNpfd+Qxu63N1faYX9xOLVeT1GYlFBorEm17xxd+4Px9qcl3YooMvRAK0HMDUNgS1rbmSnBzzODgNTLAEr/JYYLhthmmsbBEgfhIuyBKPZPfA3Nzg8UiJuxV75NdD2LiGsMeg44Utpo1+jMDf/JWJyQ2kNuYhE=
+	t=1744822354; cv=none; b=ig9ugrKxgKDcl+J8ndHbUjt7Z4X91FyA/YALzHQ8z8FSTEUzNxwrpSszqFzjEun8/hSEEXvR9160H76koNGwKS5cAKoAImY6raYv4mgVBrJnOLAY8bVvc5/JWvX9lV+0t2XvIxxN7PAAVODgAmuxK+NQN/tFNa+Av9AkTfmjVQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744822237; c=relaxed/simple;
-	bh=drLBaRFnFtcJhEny1EwRWnZIgPcfpUuBFPn/1ApNR1c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WGAoH1dz8vaHGMzmkxpElK3p+LmKmgWk4FLv0UUWkvRvY8QMeFl4+NSb+phH5GFkelX7IJpraJ+bS9wGULn5gMCiBMx9llUwHeVXGwi1AnCsz8TcVk25T+jMw5vqtdoouHs0fR/3zapZaqN+3MDXGkIAw3O9BDtpZda+0upF1xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JisnQYZg; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744822354; c=relaxed/simple;
+	bh=IdK2+5qGsdGM3SO0IxHfMg481X+Kuem/Une0Z8qbCYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bfTeARWNaJSvRxKDRrgHsSETeQjgg3gqq9EzaIm00ydUqhRXSF9bq+/W96JPU/3N7OMZqdE9nbqXNamL0uZYYxAuDAn6NboUkR/eZvKZV6EWPq0i9HQ0j4EPzEwVvns4d6a4uqhAVxBxG4qYG8qrl2gFNa6+99WHZ2Md4nTqBM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWy3iDmi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JisnQYZg"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso4840716a12.2;
-        Wed, 16 Apr 2025 09:50:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744822235; x=1745427035; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dUAg0J+l++2Y5zlL+T7iinGyhfwVzZV6/36A6xZzl+g=;
-        b=JisnQYZgh4H00ld4Vl4HkPZVgr7BvFI4jkknyGio9EvbMYMq9eCd2KYXhM8Yhpa4WH
-         mTbnWwz03JwKMfGLVMdjisdq19bDi1rMHJXRPK1Pr2vsDtGLJFe7+F5hSSpMqJcpdvzK
-         23b5D8Mq0lIUsqvXvIq/JBiVu61W4a7vxQTUGw+NvnIhhDYkLuyoQY/J59/yEnZj41F2
-         ie0+lq46bx7PYynU9iCJeZkNbeKX+iMgtc4Y6Q5SoJPimUOCjLrZvKQnVamNypiL6GyJ
-         fs/hcgeDJeczQp/d1KZRpBHyVhwbMarDR3YtzJj+fL7Anh3UBJX15sTRC3k0TtJGUMFC
-         j1cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744822235; x=1745427035;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dUAg0J+l++2Y5zlL+T7iinGyhfwVzZV6/36A6xZzl+g=;
-        b=Z2zP5DUWjj7iQWZNxRT3UJggX5xDyQpIUrvYpUnB5z/eU4RZeK+KROYnpJq+BGOUio
-         D0PtYHulM9ZwjRduvbs4e63GW2hmnWBYRjNTtgf3/wADoQpXlkNJchLIY6pwWXoEQRaR
-         tddgYWwsoc35ZWmqsuU6ZF5GlAewnYLWZttAI+2iMD4hxldG5WLOjQUkbLsNYbXYfUjz
-         t5fBquIf9QDPpC8UPkxD2X0eEZ5rUv233VjwYdhbs0PiOLI21bQ10gU9wT2ol1T++iQy
-         lQk70Iq7Hiu7MbDZdT2fXN9hWDnhdzoWA2GIsCfIt78+BM6U4Gv7tLLQfgAOB84tWJKp
-         jBdg==
-X-Forwarded-Encrypted: i=1; AJvYcCUbIjk4DqfKmKNeTFA5MnoeJoF2KcEJxjewXhL2uKBDn/6bbdNMTE24Er4ip347+kGLeqd8S2S3wVUMScc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx5c4oxwEbWR0BZ4njyLAWXc4E9MoEBGR+R+n8aTIa6p628gti
-	DH7d3P8yOk6BSbM74TMBWhh0Qw0zCl5g6FiePKD45EuTI+zIHKS9
-X-Gm-Gg: ASbGncvntanJ/0Q1+2XpOZZ9+/GxndJq2PO1f5a2jpCuUTJ/n54yHHrP0Zya3DDDVb0
-	AxT/RvV+UCUgb8NQ7QyoYbFGvIQtWYcTR6oGIjgAoYqDdiJ2I0vf7/2MyKRkZdh+UD/cGDXx+bO
-	1grxgkc+aHLdRCS3KsnoQ9Ej20RPPkma3ccJm+XWnnsZlTjLdvEmNyJqNGFoLJ+ttwYDkasaQ0n
-	Nbr8qBSg9P8ZyZ5vpXD1iGpMAx1fj73LhOe/jfAUsOlOepfya6COI9EhU+3mIhu5Egg9VhsTGbr
-	oI8+oOd2DP0g9GCr/2yUxShCWrqBa8SnEExeQHp+
-X-Google-Smtp-Source: AGHT+IElw45iHj9nPhEEs3jbU49ufzc0abu2uuzdfe/aqY/D3rP2f9Fxo7i6iTeXTnB5vsO/FcR9ZA==
-X-Received: by 2002:a17:90b:5824:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-30863f1a0b8mr4481406a91.14.1744822234822;
-        Wed, 16 Apr 2025 09:50:34 -0700 (PDT)
-Received: from [192.168.1.26] ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fcc178sm16562975ad.204.2025.04.16.09.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 09:50:34 -0700 (PDT)
-From: Kurt Borja <kuurtb@gmail.com>
-Date: Wed, 16 Apr 2025 13:50:23 -0300
-Subject: [PATCH] platform/x86: alienware-wmi-wmax: Fix uninitialized
- variable due to bad error handling
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWy3iDmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206F0C4CEE2;
+	Wed, 16 Apr 2025 16:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744822354;
+	bh=IdK2+5qGsdGM3SO0IxHfMg481X+Kuem/Une0Z8qbCYk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kWy3iDmi5zxRVqVY1CSrvNB+TjWKOGlPqwMfwWak+L2NEqK6fvp9vxuZT4+v0sPER
+	 ZursCOt15TYcH+xEUdbfLFfQo0OG1jt1zEHNIYRDgIJ9wmD3Qns/BaprJphgRj8n/q
+	 qJAfKteYISoQQex2rc/wYOhTZxvKl/vg1wT9xmc1nZMMaeOSIRF5G3jSFOqfOZyg/C
+	 msJ1KlAkEW1+QL+ay1gjs8qFIKdwiD932NN/5mOVYwMtwBlsyi3WZm2WIPlXXMjTe+
+	 gCrq0Q6c1VVe/olfv/jhKJ7/bXAu8Xd2b5gsps5t/R4u6EaePGeThcb3DcFC8G7QF9
+	 8VkCXVsRhKxww==
+Date: Wed, 16 Apr 2025 11:52:32 -0500
+From: Rob Herring <robh@kernel.org>
+To: Pin-yen Lin <treapking@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Kaehlcke <mka@chromium.org>,
+	Stephen Boyd <swboyd@chromium.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: usb: Introduce usb-hub.yaml
+Message-ID: <20250416165232.GA3327258-robh@kernel.org>
+References: <20250415094227.3629916-1-treapking@chromium.org>
+ <20250415094227.3629916-2-treapking@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-smatch-fix-v1-1-35491b462d8f@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAM7f/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0Mz3eLcxJLkDN20zArdFENDS8NUI1NDkzRTJaCGgqJUoDDYsOjY2lo
- AV9QCDlwAAAA=
-X-Change-ID: 20250416-smatch-fix-d1191e2514f5
-To: Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Armin Wolf <W_Armin@gmx.de>, Mario Limonciello <mario.limonciello@amd.com>
-Cc: platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
- linux-kernel@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>, 
- Kurt Borja <kuurtb@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415094227.3629916-2-treapking@chromium.org>
 
-wmax_thermal_information() may also return -ENOMSG, which would leave
-`id` uninitialized in thermal_profile_probe.
+On Tue, Apr 15, 2025 at 05:41:58PM +0800, Pin-yen Lin wrote:
+> Introduce a general USB hub binding that describes downstream ports
+> and hard wired USB devices for on-board USB hubs.
+> 
+> Signed-off-by: Pin-yen Lin <treapking@chromium.org>
+> 
+> ---
+> 
+> Changes in v2:
+> - New in v2
+> 
+>  .../devicetree/bindings/usb/usb-hub.yaml      | 91 +++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-hub.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-hub.yaml b/Documentation/devicetree/bindings/usb/usb-hub.yaml
+> new file mode 100644
+> index 00000000000000..34cd248fa43c2d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-hub.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/usb-hub.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Generic USB Hub
+> +
+> +maintainers:
+> +  - Pin-yen Lin <treapking@chromium.org>
+> +
+> +allOf:
+> +  - $ref: usb-device.yaml#
+> +
+> +properties:
+> +  compatible: true
+> +
+> +  reg: true
 
-Reorder and modify logic to catch all errors.
+Drop these 2, already covered by usb-device.yaml.
 
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/r/Z_-KVqNbD9ygvE2X@stanley.mountain
-Fixes: 27e9e6339896 ("platform/x86: alienware-wmi: Refactor thermal control methods")
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
----
-Hi all,
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
 
-@Ilpo: This will definitely conflict with the for-next branch when
-merging.
+Drop this, already covered by usb-device.yaml.
 
-Also, the fixes tag references a commit from before the split (same
-series though), but ofc this fix is meant to be applied on top of it
-(fixes branch). Is this ok or would it be better to change the fixes
-tag to the "split" commit?
----
- drivers/platform/x86/dell/alienware-wmi-wmax.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> +
+> +  peer-hub:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      phandle to the peer hub on the controller.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +    description:
+> +      The downstream facing USB ports
+> +
+> +    patternProperties:
+> +      "^port@[1-9]$":
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 3d3014b5adf046c94c1ebf39a0e28a92622b40d6..b8e71f06fdde347573bff5c27a9ba53a0efcacae 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -607,12 +607,10 @@ static int thermal_profile_probe(void *drvdata, unsigned long *choices)
- 	for (u32 i = 0; i < sys_desc[3]; i++) {
- 		ret = wmax_thermal_information(priv->wdev, WMAX_OPERATION_LIST_IDS,
- 					       i + first_mode, &out_data);
--
--		if (ret == -EIO)
--			return ret;
--
- 		if (ret == -EBADRQC)
- 			break;
-+		if (ret)
-+			return ret;
- 
- 		if (!is_wmax_thermal_code(out_data))
- 			continue;
+Only 9 ports possible? Should be '^port@[1-9a-f][0-9a-f]*$'
 
----
-base-commit: fcf27a6a926fd9eeba39e9c3fde43c9298fe284e
-change-id: 20250416-smatch-fix-d1191e2514f5
-
-Best regards,
--- 
- ~ Kurt
-
+> +        $ref: /schemas/graph.yaml#/properties/port
+> +
+> +patternProperties:
+> +  '^.*@[1-9]$':
+> +    description: The hard wired USB devices
+> +    type: object
+> +    $ref: /schemas/usb/usb-device.yaml
+> +    additionalProperties: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    usb {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* 2.0 hub on port 1 */
+> +        hub_2_0: hub@1 {
+> +            compatible = "usb123,4567";
+> +            reg = <1>;
+> +            peer-hub = <&hub_3_0>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            /* USB 2.0 device on port 5 */
+> +            device@5 {
+> +                reg = <5>;
+> +                compatible = "usb765,4321";
+> +            };
+> +        };
+> +
+> +        /* 3.0 hub on port 2 */
+> +        hub_3_0: hub@2 {
+> +            compatible = "usb123,abcd";
+> +            reg = <2>;
+> +            peer-hub = <&hub_2_0>;
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +                /* Type-A connector on port 3 */
+> +                port@3 {
+> +                    reg = <3>;
+> +                    endpoint {
+> +                        remote-endpoint = <&usb_a0_ss>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> -- 
+> 2.49.0.777.g153de2bbd5-goog
+> 
