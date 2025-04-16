@@ -1,170 +1,273 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C29D24729A;
-	Wed, 16 Apr 2025 10:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6291E189B80;
+	Wed, 16 Apr 2025 10:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744799084; cv=none; b=FGf6KvaMprfQV7/X02mTI1HdoPyViELOSuf8y5hUEriU/41t+zXGXg4ta2Sw6yNVAHZR6FpJjiZbBMpxDb77BoB34tUn8sVbQ9nm/YL3Gl2K59hj6TZR3Yuc5BICuxXwSuHbags0UVt7ZrmgUWJmbotHJ+IHBfAQHje/VFiqBjc=
+	t=1744799153; cv=none; b=DjnIJZ9gdTk+blAycm8USSjFMdTL9Bm0w2e1r8TLxPAbjnCY28itsp+BQ7LDBiD6ZBK7dIvyASmkzvil+hR7M/qmq6axMPJJS7+d7e13gERYXwv77VnGdKvIi/IWb1mgAcv0YvYdxHjfQf0X0Z1m8W6eb4YIlY75Aazz9FkXV20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744799084; c=relaxed/simple;
-	bh=F1cfkVME9g4l1SiglzOmf/7l3tvFBiMdFHUrX9+ZuYY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NzQF/JvIZMzoU8RUcU7fb6UEjsHYLT4JwBbimylIEuz2nTr3uMNNcPTZhaUqzDQ/2HS7xa68Cf58j2g+kdb0rG1oJpiCkqecLKt+MbaznxW3x2kCwBOdoCCtFSbxOK2ZIvonArf5pv1hNejOxQYBsBW5dE3LEZFKRic8enkRL5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b=hyR+jb4V; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744799153; c=relaxed/simple;
+	bh=k4uXcr67bnoskcnXxnc68mVBi8onuMwuyFAi7eqHGSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TfqieS6UQkRlK1QsDjQT9vY8Z564kj9C3wIReSB9j0iIw8bew0AMezDqYw7Gn33xKcrG/mwpbZ2KGvud0pj2qzIcyESC3EzCFUB9fMhmycN9fPn5HxH6sxvdUAg+ZkpO0FgJlhWZmgUh89u5LtI7CqUGVqRVh6EhnJN3bBosfqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oB2aECXa; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=fiona.klute@gmx.de header.b="hyR+jb4V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744799063; x=1745403863; i=fiona.klute@gmx.de;
-	bh=F1cfkVME9g4l1SiglzOmf/7l3tvFBiMdFHUrX9+ZuYY=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:
-	 MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=hyR+jb4VC++rQ8EjbTAN4bYe1D7h1IqssziTnVJRhaa4dFRffsDPj63EXgVQviUm
-	 wKYk9Z7xEkfNB9FPReOdHTlr+AvGDAuxJeHNr/zAtqYL2jla1PgPl+DZSgt7XmQrD
-	 PN8KbfJWPo/g8zJQjc3lFw0UGzF3/XgK/7Cy5UKxOZN1pgAzhGCjY+LziUmNzbqpZ
-	 aC4J+Xm2KI9V5nFJ1ZYXMYjza3a2rtZDWHMk+4NRHyjT+V6LPJfOYcrijZD1gLtar
-	 HFpSs13p7+NMwuQAR1bGkrrC5FXhunO6LEbJC313hC7YE3izaxEpBCXFGgi6ySpCE
-	 ceoF0dkcTO4MxlaFfg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from haruka.home.arpa ([85.22.113.159]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mnpnm-1tFmDk4AuY-00nWAL; Wed, 16
- Apr 2025 12:24:23 +0200
-From: Fiona Klute <fiona.klute@gmx.de>
-To: netdev@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-list@raspberrypi.com,
-	Fiona Klute <fiona.klute@gmx.de>
-Subject: [PATCH net v2] net: phy: microchip: force IRQ polling mode for lan88xx
-Date: Wed, 16 Apr 2025 12:24:13 +0200
-Message-ID: <20250416102413.30654-1-fiona.klute@gmx.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oB2aECXa"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mGAB026240;
+	Wed, 16 Apr 2025 10:25:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	tosGnh8EBnlgy26nh8G2U0lNm7SGxpR7123YyGwbwsE=; b=oB2aECXaEQ8F2o0S
+	Sr9tKMFWrKP5gqwKJdA8B/kvQdelxkZvHCirumE/nvkk3ebLjJEQv1xlXJK8IT8H
+	SjkrryedtQliAjgZyI7MVl5u1XfnO30S3Bnqv11YFRxeldoqPaNEprIMyiSXVlDu
+	cLs4xvZZcWHv7P/upXZNFdDTwKLNS+0wXgh1WtjV8bcYLEcrvaHDdFpv3Zyqyq2f
+	3a2ldX0kLu5Fm5xm60w4EiG8l6ckMww/xpAtb6diHCNZ4uiZ5URaWNmFivgHxiAK
+	m1OtCcks19TgXE6k3fmpzzmAGr90EnttHC62NycJrYfzakqKEYKqx3vpXQd4KehY
+	Mv4ipQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfs1b4jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 10:25:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GAPgI9031115
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 10:25:42 GMT
+Received: from [10.206.107.210] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
+ 2025 03:25:38 -0700
+Message-ID: <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
+Date: Wed, 16 Apr 2025 15:55:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:K11aug/rBQsdo745LCFBdVhspCcbf/XlKyyietnwyNGMUzNbyLO
- wD28x74Vao5dMq4Y3kzANLrMtv+zmIR1FghOm3BbXFiv34lGjHcjrQnsW0GBsBnqkBIGJKy
- xdaf6zlPNDnXIE6yTIJkOYjQpalMHN3UAINawdDvEOBiAX0FfdYhyxoMxZ4UIg/OMn4R2xR
- Uxqic1IaxfgmDz0meUR1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:sdNxHQs2iVk=;h1sr932vX5NifI2SN8Oii8jC0cM
- 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
- EZ/Y4D9CyrByQ=
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v6 7/7] media: platform: qcom/iris: add sm8650 support
+Content-Language: en-US
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
+ <20250415-topic-sm8x50-iris-v10-v6-7-8ad319094055@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20250415-topic-sm8x50-iris-v10-v6-7-8ad319094055@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=P9I6hjAu c=1 sm=1 tr=0 ts=67ff85a7 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=fSBdF3kddFNCyDQZ7vYA:9 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: oEnfsXEXiS7h1MoU8oS29fqpLCBpuzmx
+X-Proofpoint-ORIG-GUID: oEnfsXEXiS7h1MoU8oS29fqpLCBpuzmx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 impostorscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160085
 
-V2l0aCBsYW44OHh4IGJhc2VkIGRldmljZXMgdGhlIGxhbjc4eHggZHJpdmVyIGNhbiBnZXQgc3R1
-Y2sgaW4gYW4KaW50ZXJydXB0IGxvb3Agd2hpbGUgYnJpbmdpbmcgdGhlIGRldmljZSB1cCwgZmxv
-b2RpbmcgdGhlIGtlcm5lbCBsb2cKd2l0aCBtZXNzYWdlcyBsaWtlIHRoZSBmb2xsb3dpbmc6Cgps
-YW43OHh4IDItMzoxLjAgZW5wMXMwdTM6IGtldmVudCA0IG1heSBoYXZlIGJlZW4gZHJvcHBlZAoK
-UmVtb3ZpbmcgaW50ZXJydXB0IHN1cHBvcnQgZnJvbSB0aGUgbGFuODh4eCBQSFkgZHJpdmVyIGZv
-cmNlcyB0aGUKZHJpdmVyIHRvIHVzZSBwb2xsaW5nIGluc3RlYWQsIHdoaWNoIGF2b2lkcyB0aGUg
-cHJvYmxlbS4KClRoZSBpc3N1ZSBoYXMgYmVlbiBvYnNlcnZlZCB3aXRoIFJhc3BiZXJyeSBQaSBk
-ZXZpY2VzIGF0IGxlYXN0IHNpbmNlCjQuMTQgKHNlZSBbMV0sIGJ1ZyByZXBvcnQgZm9yIHRoZWly
-IGRvd25zdHJlYW0ga2VybmVsKSwgYXMgd2VsbCBhcwp3aXRoIE52aWRpYSBkZXZpY2VzIFsyXSBp
-biAyMDIwLCB3aGVyZSBkaXNhYmxpbmcgcG9sbGluZyB3YXMgdGhlCnZlbmRvci1zdWdnZXN0ZWQg
-d29ya2Fyb3VuZCAodG9nZXRoZXIgd2l0aCB0aGUgY2xhaW0gdGhhdCBwaHlsaWIKY2hhbmdlcyBp
-biA0LjkgbWFkZSB0aGUgaW50ZXJydXB0IGhhbmRsaW5nIGluIGxhbjc4eHggaW5jb21wYXRpYmxl
-KS4KCklwZXJmIHJlcG9ydHMgd2VsbCBvdmVyIDkwME1iaXRzL3NlYyBwZXIgZGlyZWN0aW9uIHdp
-dGggY2xpZW50IGluCi0tZHVhbHRlc3QgbW9kZSwgc28gdGhlcmUgZG9lcyBub3Qgc2VlbSB0byBi
-ZSBhIHNpZ25pZmljYW50IGltcGFjdCBvbgp0aHJvdWdocHV0IChsYW44OHh4IGRldmljZSBjb25u
-ZWN0ZWQgdmlhIHN3aXRjaCB0byB0aGUgcGVlcikuCgpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3Jh
-c3BiZXJyeXBpL2xpbnV4L2lzc3Vlcy8yNDQ3ClsyXSBodHRwczovL2ZvcnVtcy5kZXZlbG9wZXIu
-bnZpZGlhLmNvbS90L2pldHNvbi14YXZpZXItYW5kLWxhbjc4MDAtcHJvYmxlbS8xNDIxMzQvMTEK
-Ckxpbms6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnLzA5MDFkOTBkLTNmMjAtNGExMC1iNjgwLTlj
-OTc4ZTA0ZGRkYUBsdW5uLmNoCkZpeGVzOiA3OTJhZWM0N2Q1OWQgKCJhZGQgbWljcm9jaGlwIExB
-Tjg4eHggcGh5IGRyaXZlciIpClNpZ25lZC1vZmYtYnk6IEZpb25hIEtsdXRlIDxmaW9uYS5rbHV0
-ZUBnbXguZGU+CkNjOiBrZXJuZWwtbGlzdEByYXNwYmVycnlwaS5jb20KQ2M6IHN0YWJsZUB2Z2Vy
-Lmtlcm5lbC5vcmcKLS0tCnYyOgotIGFkZCBjb21tZW50IHdoeSBpbnRlcnJ1cHQgZnVuY3Rpb25z
-IGFyZSBtaXNzaW5nCi0gYWRkIEZpeGVzIHJlZmVyZW5jZQp2MTogaHR0cHM6Ly9sb3JlLmtlcm5l
-bC5vcmcvbmV0ZGV2LzIwMjUwNDE0MTUyNjM0LjI3ODY0NDctMS1maW9uYS5rbHV0ZUBnbXguZGUv
-CgogZHJpdmVycy9uZXQvcGh5L21pY3JvY2hpcC5jIHwgNDYgKysrLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgNDMgZGVs
-ZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvcGh5L21pY3JvY2hpcC5jIGIvZHJp
-dmVycy9uZXQvcGh5L21pY3JvY2hpcC5jCmluZGV4IDBlMTdjYzQ1OGVmZGMuLjkzZGU4OGMxYzhm
-ZDUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L3BoeS9taWNyb2NoaXAuYworKysgYi9kcml2ZXJz
-L25ldC9waHkvbWljcm9jaGlwLmMKQEAgLTM3LDQ3ICszNyw2IEBAIHN0YXRpYyBpbnQgbGFuODh4
-eF93cml0ZV9wYWdlKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYsIGludCBwYWdlKQogCXJldHVy
-biBfX3BoeV93cml0ZShwaHlkZXYsIExBTjg4WFhfRVhUX1BBR0VfQUNDRVNTLCBwYWdlKTsKIH0K
-IAotc3RhdGljIGludCBsYW44OHh4X3BoeV9jb25maWdfaW50cihzdHJ1Y3QgcGh5X2RldmljZSAq
-cGh5ZGV2KQotewotCWludCByYzsKLQotCWlmIChwaHlkZXYtPmludGVycnVwdHMgPT0gUEhZX0lO
-VEVSUlVQVF9FTkFCTEVEKSB7Ci0JCS8qIHVubWFzayBhbGwgc291cmNlIGFuZCBjbGVhciB0aGVt
-IGJlZm9yZSBlbmFibGUgKi8KLQkJcmMgPSBwaHlfd3JpdGUocGh5ZGV2LCBMQU44OFhYX0lOVF9N
-QVNLLCAweDdGRkYpOwotCQlyYyA9IHBoeV9yZWFkKHBoeWRldiwgTEFOODhYWF9JTlRfU1RTKTsK
-LQkJcmMgPSBwaHlfd3JpdGUocGh5ZGV2LCBMQU44OFhYX0lOVF9NQVNLLAotCQkJICAgICAgIExB
-Tjg4WFhfSU5UX01BU0tfTURJTlRQSU5fRU5fIHwKLQkJCSAgICAgICBMQU44OFhYX0lOVF9NQVNL
-X0xJTktfQ0hBTkdFXyk7Ci0JfSBlbHNlIHsKLQkJcmMgPSBwaHlfd3JpdGUocGh5ZGV2LCBMQU44
-OFhYX0lOVF9NQVNLLCAwKTsKLQkJaWYgKHJjKQotCQkJcmV0dXJuIHJjOwotCi0JCS8qIEFjayBp
-bnRlcnJ1cHRzIGFmdGVyIHRoZXkgaGF2ZSBiZWVuIGRpc2FibGVkICovCi0JCXJjID0gcGh5X3Jl
-YWQocGh5ZGV2LCBMQU44OFhYX0lOVF9TVFMpOwotCX0KLQotCXJldHVybiByYyA8IDAgPyByYyA6
-IDA7Ci19Ci0KLXN0YXRpYyBpcnFyZXR1cm5fdCBsYW44OHh4X2hhbmRsZV9pbnRlcnJ1cHQoc3Ry
-dWN0IHBoeV9kZXZpY2UgKnBoeWRldikKLXsKLQlpbnQgaXJxX3N0YXR1czsKLQotCWlycV9zdGF0
-dXMgPSBwaHlfcmVhZChwaHlkZXYsIExBTjg4WFhfSU5UX1NUUyk7Ci0JaWYgKGlycV9zdGF0dXMg
-PCAwKSB7Ci0JCXBoeV9lcnJvcihwaHlkZXYpOwotCQlyZXR1cm4gSVJRX05PTkU7Ci0JfQotCi0J
-aWYgKCEoaXJxX3N0YXR1cyAmIExBTjg4WFhfSU5UX1NUU19MSU5LX0NIQU5HRV8pKQotCQlyZXR1
-cm4gSVJRX05PTkU7Ci0KLQlwaHlfdHJpZ2dlcl9tYWNoaW5lKHBoeWRldik7Ci0KLQlyZXR1cm4g
-SVJRX0hBTkRMRUQ7Ci19Ci0KIHN0YXRpYyBpbnQgbGFuODh4eF9zdXNwZW5kKHN0cnVjdCBwaHlf
-ZGV2aWNlICpwaHlkZXYpCiB7CiAJc3RydWN0IGxhbjg4eHhfcHJpdiAqcHJpdiA9IHBoeWRldi0+
-cHJpdjsKQEAgLTUyOCw4ICs0ODcsOSBAQCBzdGF0aWMgc3RydWN0IHBoeV9kcml2ZXIgbWljcm9j
-aGlwX3BoeV9kcml2ZXJbXSA9IHsKIAkuY29uZmlnX2FuZWcJPSBsYW44OHh4X2NvbmZpZ19hbmVn
-LAogCS5saW5rX2NoYW5nZV9ub3RpZnkgPSBsYW44OHh4X2xpbmtfY2hhbmdlX25vdGlmeSwKIAot
-CS5jb25maWdfaW50cgk9IGxhbjg4eHhfcGh5X2NvbmZpZ19pbnRyLAotCS5oYW5kbGVfaW50ZXJy
-dXB0ID0gbGFuODh4eF9oYW5kbGVfaW50ZXJydXB0LAorCS8qIEludGVycnVwdCBoYW5kbGluZyBp
-cyBicm9rZW4sIGRvIG5vdCBkZWZpbmUgcmVsYXRlZAorCSAqIGZ1bmN0aW9ucyB0byBmb3JjZSBw
-b2xsaW5nLgorCSAqLwogCiAJLnN1c3BlbmQJPSBsYW44OHh4X3N1c3BlbmQsCiAJLnJlc3VtZQkJ
-PSBnZW5waHlfcmVzdW1lLAotLSAKMi40OS4wCgo=
+
+
+On 4/15/2025 7:17 PM, Neil Armstrong wrote:
+> Add support for the SM8650 platform by re-using the SM8550
+> definitions and using the vpu33 ops.
+> 
+> Move the reset tables that diffes in a per-SoC platform
+> header, that will contain mode SoC specific data when
+> more codecs are introduced.
+> 
+> The SM8650/vpu33 requires more reset lines, but the H.264
+> decoder capabilities are identical.
+> 
+> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  .../platform/qcom/iris/iris_platform_common.h      |  1 +
+>  .../media/platform/qcom/iris/iris_platform_gen2.c  | 65 +++++++++++++++++++++-
+>  .../platform/qcom/iris/iris_platform_sm8550.h      | 11 ++++
+>  .../platform/qcom/iris/iris_platform_sm8650.h      | 13 +++++
+>  drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+>  5 files changed, 92 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> @@ -35,6 +35,7 @@ enum pipe_type {
+>  
+>  extern struct iris_platform_data sm8250_data;
+>  extern struct iris_platform_data sm8550_data;
+> +extern struct iris_platform_data sm8650_data;
+>  
+>  enum platform_clk_type {
+>  	IRIS_AXI_CLK,
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> index 35d278996c430f2856d0fe59586930061a271c3e..6d1771bd68689d96b5b9087b0ad32b934f7295ee 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> @@ -10,6 +10,9 @@
+>  #include "iris_platform_common.h"
+>  #include "iris_vpu_common.h"
+>  
+> +#include "iris_platform_sm8550.h"
+> +#include "iris_platform_sm8650.h"
+> +
+>  #define VIDEO_ARCH_LX 1
+>  
+>  static struct platform_inst_fw_cap inst_fw_cap_sm8550[] = {
+> @@ -142,8 +145,6 @@ static const struct icc_info sm8550_icc_table[] = {
+>  	{ "video-mem",  1000, 15000000 },
+>  };
+>  
+> -static const char * const sm8550_clk_reset_table[] = { "bus" };
+> -
+>  static const struct bw_info sm8550_bw_table_dec[] = {
+>  	{ ((4096 * 2160) / 256) * 60, 1608000 },
+>  	{ ((4096 * 2160) / 256) * 30,  826000 },
+> @@ -264,3 +265,63 @@ struct iris_platform_data sm8550_data = {
+>  	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>  	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>  };
+> +
+> +/*
+> + * Shares most of SM8550 data except:
+> + * - vpu_ops to iris_vpu33_ops
+> + * - clk_rst_tbl to sm8650_clk_reset_table
+> + * - controller_rst_tbl to sm8650_controller_reset_table
+> + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+> + */
+> +struct iris_platform_data sm8650_data = {
+> +	.get_instance = iris_hfi_gen2_get_instance,
+> +	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+> +	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+> +	.vpu_ops = &iris_vpu33_ops,
+> +	.set_preset_registers = iris_set_sm8550_preset_registers,
+> +	.icc_tbl = sm8550_icc_table,
+> +	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+> +	.clk_rst_tbl = sm8650_clk_reset_table,
+> +	.clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+> +	.controller_rst_tbl = sm8650_controller_reset_table,
+> +	.controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+> +	.bw_tbl_dec = sm8550_bw_table_dec,
+> +	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+> +	.pmdomain_tbl = sm8550_pmdomain_table,
+> +	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+> +	.opp_pd_tbl = sm8550_opp_pd_table,
+> +	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+> +	.clk_tbl = sm8550_clk_table,
+> +	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+> +	/* Upper bound of DMA address range */
+> +	.dma_mask = 0xe0000000 - 1,
+> +	.fwname = "qcom/vpu/vpu33_p4.mbn",
+> +	.pas_id = IRIS_PAS_ID,
+> +	.inst_caps = &platform_inst_cap_sm8550,
+> +	.inst_fw_caps = inst_fw_cap_sm8550,
+> +	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+> +	.tz_cp_config_data = &tz_cp_config_sm8550,
+> +	.core_arch = VIDEO_ARCH_LX,
+> +	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+> +	.ubwc_config = &ubwc_config_sm8550,
+> +	.num_vpp_pipe = 4,
+> +	.max_session_count = 16,
+> +	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+> +	.input_config_params =
+> +		sm8550_vdec_input_config_params,
+> +	.input_config_params_size =
+> +		ARRAY_SIZE(sm8550_vdec_input_config_params),
+> +	.output_config_params =
+> +		sm8550_vdec_output_config_params,
+> +	.output_config_params_size =
+> +		ARRAY_SIZE(sm8550_vdec_output_config_params),
+> +	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+> +	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+> +	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+> +	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+> +
+> +	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+> +	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+> +	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+> +	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+> +};
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.h b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ac8847edb585e4a9ce6b669a3a5988e7809972af
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __IRIS_PLATFORM_SM8550_H__
+> +#define __IRIS_PLATFORM_SM8550_H__
+> +
+> +static const char * const sm8550_clk_reset_table[] = { "bus" };
+> +
+> +#endif
+There is no need of iris_platform_sm8550.h, you can keep this entry in
+gen2.c file itself. As we are making that our base.
+You can just have iris_platform_sm8650.h which overrides this entry with
+SOC specific reset requirements for SM8650.
+
+Thanks,
+Dikshita
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8650.h b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..75e9d572e788de043a56cf85a4cb634bd02226b9
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef __IRIS_PLATFORM_SM8650_H__
+> +#define __IRIS_PLATFORM_SM8650_H__
+> +
+> +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+> +
+> +static const char * const sm8650_controller_reset_table[] = { "xo" };
+> +
+> +#endif
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+>  			.data = &sm8250_data,
+>  		},
+>  #endif
+> +	{
+> +		.compatible = "qcom,sm8650-iris",
+> +		.data = &sm8650_data,
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, iris_dt_match);
+> 
