@@ -1,115 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8422335959
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C654651C5A;
+	Wed, 16 Apr 2025 12:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808093; cv=none; b=JsUuTCm1/0y8jZ11cWnSBWrisLO4ZP6qYfOHsyDtHLBAdBWmuv4Fww2zyM8u+eZ5TwgSiDAb5FEv0t0X9Kn165SoZ1K7hKeMxQDbd0GN5P8hM69W+v9MwR3fLMbrmFpoe0IIzealCBBDua8RXRRu43WO0pCs+gwV2zioit3cxKk=
+	t=1744808107; cv=none; b=dgoFXwhAqWes/JWovCM2JpkJs74lULEY8x1w3xtxsM6IMG1/oMUKTpbYruy0hLHWlTWIS81mj6fxOEdOnogmrgDjI51Om/dkBk3KOfAflCFaX6yLjejSDfKkSORQdHcYPtnaqed0ie7l3LxwosyDvY6pH2mZVlZpnSOt7fg2wlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808093; c=relaxed/simple;
-	bh=WXzw6p+u6/DnMYfn+ol6EJ/65UVX3dnVImk1w5OZOkQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/ZXdpndh6vVWHMX4/cQtpued0WtI6Nv1j88vysvDjfkwm1Fo2KHzLOyaXBsC9hWxnsuCIrENHXMtM02bg4TNYlMpP6+koCX8VYKETiCxBDtpu6TlDqbuGY7tZoiT14w7edyZ/uGM96Dndvs7r+FPhcOlRjkE8VGEU6QxFXgSr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA3B01595;
-	Wed, 16 Apr 2025 05:54:48 -0700 (PDT)
-Received: from [10.57.90.106] (unknown [10.57.90.106])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B04573F694;
-	Wed, 16 Apr 2025 05:54:48 -0700 (PDT)
-Message-ID: <eba7a8fa-0b85-4b30-ab3e-9c0a65b7dc80@arm.com>
-Date: Wed, 16 Apr 2025 13:54:47 +0100
+	s=arc-20240116; t=1744808107; c=relaxed/simple;
+	bh=J3UlWU4kVp1jeLMLUUcSRNVHxNYnSaTzuq9vMvYpi9k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=naseTvRrfjH297+CkYNkXlPCfm5MWH41627txvb4YVdfP/N7zZafirzpYhn8Rv/RQaTkWgg0P6efyXFib7BHVi6kyvgvbY0f5H+sBtwLUiMUUNJY3K5WaCNBC970ymkvTWPtlaWmsnIVwODAHXcpz093GZwnFDtltkdRZh/lip8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Blxg+T3i; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Blxg+T3i"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A725543B1C;
+	Wed, 16 Apr 2025 12:54:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744808097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WByd2mJP1+KNt1V0a0T6t7/su5eUb2ZhTX1kkFHvsPE=;
+	b=Blxg+T3iMKuswhkX7sv8uL4jGQsbtOzWUdfe6DqzanNWLfyfssnGokOBOrwCKGFmUeZTtS
+	Zd3Vd1PnLvZOs54Vcms5+g1UwqoPE9CNg+v78ZAbbsqlz5FXr5fWtaoWwksedK0QnVNyRN
+	fim2PIaicLyP3Omk5AZBAMRf/YrjiL38yCMsbJHQyuoLdfwsrAEcoQ/rD+wJpfRFT43Ngc
+	+NiKyfCfqehG+UKYXR5j1cj3hYzrkScmuxJnhErPm+npa3zF9qFoWHiTCcs9uaDdr/mjdQ
+	xd2bRRMinXJKCDGOI4OapoVsPgvNKFzeblhhLOFLP3SPCTzEWdbSRIKzZY6tPQ==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Russell King <linux@armlinux.org.uk>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Simon Horman <horms@kernel.org>,
+	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCH net] MAINTAINERS: Add entry for Socfpga DWMAC ethernet glue driver
+Date: Wed, 16 Apr 2025 14:54:48 +0200
+Message-ID: <20250416125453.306029-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [mm/contpte v3 1/1] mm/contpte: Optimize loop to reduce redundant
- operations
-Content-Language: en-GB
-To: Xavier <xavier_qy@163.com>, dev.jain@arm.com, ioworker0@gmail.com,
- 21cnbao@gmail.com
-Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
- gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
- ziy@nvidia.com
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
- <20250415082205.2249918-1-xavier_qy@163.com>
- <20250415082205.2249918-2-xavier_qy@163.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250415082205.2249918-2-xavier_qy@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepk
+ hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On 15/04/2025 09:22, Xavier wrote:
-> This commit optimizes the contpte_ptep_get function by adding early
->  termination logic. It checks if the dirty and young bits of orig_pte
->  are already set and skips redundant bit-setting operations during
->  the loop. This reduces unnecessary iterations and improves performance.
-> 
-> Signed-off-by: Xavier <xavier_qy@163.com>
-> ---
->  arch/arm64/mm/contpte.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> index bcac4f55f9c1..0acfee604947 100644
-> --- a/arch/arm64/mm/contpte.c
-> +++ b/arch/arm64/mm/contpte.c
-> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm, unsigned long addr,
->  }
->  EXPORT_SYMBOL_GPL(__contpte_try_unfold);
->  
-> +/* Note: in order to improve efficiency, using this macro will modify the
-> + * passed-in parameters.*/
-> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
-> +    for (; (start) < CONT_PTES; (start)++, (ptep)++) { \
-> +		if (pte_##flag(__ptep_get(ptep))) { \
-> +				orig_pte = pte_mk##flag(orig_pte); \
-> +				break; \
-> +		} \
-> +    }
+Socfpga's DWMAC glue comes in a variety of flavours with multiple
+options when it comes to physical interfaces, making it not so easy to
+test. Having access to a Cyclone5 with RGMII as well as Lynx PCS
+variants, add myself as a maintainer to help with reviews and testing.
 
-I'm really not a fan of this macro, it just obfuscates what is going on. I'd
-personally prefer to see the 2 extra loops open coded below.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+Hopefully I'll get the chance to convert the binding to .yaml at some
+point, but I don't have the bandwith for that yet...
 
-Or even better, could you provide results comparing this 3 loop version to the
-simpler approach I suggested previously? If the performance is similar (which I
-expect it will be, especially given Barry's point that your test always ensures
-the first PTE is both young and dirty) then I'd prefer to go with the simpler code.
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-
-> +
->  pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->  {
->  	/*
-> @@ -169,11 +179,17 @@ pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
->  	for (i = 0; i < CONT_PTES; i++, ptep++) {
->  		pte = __ptep_get(ptep);
->  
-> -		if (pte_dirty(pte))
-> +		if (pte_dirty(pte)) {
->  			orig_pte = pte_mkdirty(orig_pte);
-> +			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, young);
-> +			break;
-> +		}
->  
-> -		if (pte_young(pte))
-> +		if (pte_young(pte)) {
->  			orig_pte = pte_mkyoung(orig_pte);
-> +			CHECK_CONTPTE_FLAG(i, ptep, orig_pte, dirty);
-> +			break;
-> +		}
->  	}
->  
->  	return orig_pte;
-
-If we decide this is all worth the trouble, then I think we can (and *should*,
-in order to be consistent) pull a similar stunt in contpte_ptep_get_lockless().
-
-Thanks,
-Ryan
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c409f504e94b..50524d16abff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3191,6 +3191,12 @@ M:	Dinh Nguyen <dinguyen@kernel.org>
+ S:	Maintained
+ F:	drivers/clk/socfpga/
+ 
++ARM/SOCFPGA DWMAC GLUE LAYER
++M:	Maxime Chevallier <maxime.chevallier@bootlin.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/net/socfpga-dwmac.txt
++F:	drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++
+ ARM/SOCFPGA EDAC BINDINGS
+ M:	Matthew Gerlach <matthew.gerlach@altera.com>
+ S:	Maintained
+-- 
+2.49.0
 
