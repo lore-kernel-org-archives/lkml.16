@@ -1,150 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C01F235360;
-	Wed, 16 Apr 2025 09:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CFF235355
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795769; cv=none; b=F+8ufP69nBH2Bb8vaIxQ7eqWPovHOJXi10wPxSnrU1UlXS90BdOWL7NM0MYhGr3n9NucWLvIfw9rnXsoBRAR7m8Xx3XjYqsszG5Foop5KiCHV7cCpEx5bFw7syd+zBliyOyyErTOj+l/0A3U0nkMqir3EuMyYnwv6k2rdLx6JSw=
+	t=1744795789; cv=none; b=CGMe5RAEEz15LlRwHuhji92oUNbbJIwrZ5YhP1sOm6wkhg15dyt2hCNJpXX1Xmlr6TKxl1a/ifsyDUBGiUppR9pUS6eZiAcUOTYIVLllhwwf5OQawpzx1iCEXBCq0zd7RhAEx8JeNeoqoo13aAC2FCDcWbfa/fVIvSRYexiP1D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795769; c=relaxed/simple;
-	bh=xKc8QblkN9uJFFCNL6TIKz3YjB59ygJkZnOM9Cdts/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ng4wPAPPzQAD/vN98Wv9qWizXA/JwS67UfYNOcE9LOzNqlfQYf6gNZL7Vw1l0FWl2inujkAoM0Gf9l1AjCcvk0cdNw6NxQbXvOrZODCW1TPRnXt+tDI8lP3Rglbyu9kXIgv+4OjcK/6Ezvzh9F9gef5dvO1adDFtNYLAb7+jBbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHNJGM1/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744795789; c=relaxed/simple;
+	bh=yDi9auieVQtc3jrxyxriM2T9kENhPJAGsVBIFjqV5hI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YD1IKgL7sZYT0cf3TyL6IX2wKLXhATZiBUSUbqhfnHplxq5L3lVcUuhuSNL768VkkBx9ZxBkik7PE5652LzQBIBfLKTdIJbh431QYPMWI/VSw9cR7QiLehDccgi78lziY+zyZiKQHkXzwj1wN3028KkNA+XOfQR/m+3XO9atfbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AtQnKvus; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHNJGM1/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBF2C4CEE2;
-	Wed, 16 Apr 2025 09:29:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744795768;
-	bh=xKc8QblkN9uJFFCNL6TIKz3YjB59ygJkZnOM9Cdts/Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vHNJGM1//ojqqTbQ3yiTbcMZDv4Ur+nBc2qkNjLe8xRQ4EYJ9LkW9VsCKmY3nlM/q
-	 XBl/0dy2GDg5Qvej2MThYk/7hDAS/cotGKHYpwC4ANvaxkov7B12fAE/GJf3/VgqBs
-	 UO0v4W1HVWqO26xOLT7BQJbSyCT0MihHG3jlPmul2oKOoo2cJ5Or3CrNvjQGd6SgVA
-	 cEyDA3KbYnwdud9rXx5bgNwiP1SGhOmP7n/p22oUVjAHRMX3dmEG63USPagIeZ6e68
-	 PBK2hW+TZzaMrKBnHQ4Jxy8V8hHLF5d0JKYWYaXZf/+n43hq5r/heHpZMjikVUkjFH
-	 MMJSP7sAXZ77A==
-Date: Wed, 16 Apr 2025 17:29:01 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Andy Shevchenko <andriy.shevchenko@intel.com>, David
- Airlie <airlied@gmail.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
- <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
-Message-ID: <20250416172901.60104103@sal.lan>
-In-Reply-To: <20250416171917.0985c0eb@sal.lan>
-References: <cover.1744789777.git.mchehab+huawei@kernel.org>
-	<4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
-	<87tt6opks7.fsf@intel.com>
-	<20250416171917.0985c0eb@sal.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AtQnKvus"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FLdAxI018943;
+	Wed, 16 Apr 2025 09:29:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=pAvvbi
+	8S6se/LeeMTQ0Vq6LN1pMjptJnujRCxUR6ONU=; b=AtQnKvus5PEGokH5IANVmN
+	mSJc2GGNW+eDhlju/Cl9Q1vcBeI894/ZVFekc6Af3OhPTcVQusTogI4UvCCh/TY2
+	O9Y1uN2KW8ymeJhritQlHZeEZnQbkSBKQU0VyOZYj+xVz/qoYA0McMteL816IaYC
+	tVRujdv7OocYgJhix3y5SdiwQULc2gzQDG1jyMPCX12dP148bG4+CaNxKPJh5qjT
+	n5ZyOEawiSjzouFdV5/rrGSqOz5rTN8amp3r3FxmFP/zMDXIkk4NoLdnm3q4B/Gy
+	tdtaD2LoHsVhUAOd5OCSaF5TnbIgOs2QeHBNB0228/hKYFc/5/MVRNsD8p4mu+wQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461yj52p0k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:29:40 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G81Uf3016703;
+	Wed, 16 Apr 2025 09:29:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46057277s8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 09:29:39 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G9TcQ656623552
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 09:29:38 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2F39320043;
+	Wed, 16 Apr 2025 09:29:38 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB9862004B;
+	Wed, 16 Apr 2025 09:29:36 +0000 (GMT)
+Received: from [9.109.215.252] (unknown [9.109.215.252])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 09:29:36 +0000 (GMT)
+Message-ID: <517b6aac-7fbb-4c28-a0c4-086797f5c2eb@linux.ibm.com>
+Date: Wed, 16 Apr 2025 14:59:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Skip useless sched_balance_running acquisition if
+ load balance is not due
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+To: "Chen, Yu C" <yu.c.chen@intel.com>, Tim Chen
+ <tim.c.chen@linux.intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>
+Cc: Doug Nelson <doug.nelson@intel.com>,
+        Mohini Narkhede <mohini.narkhede@intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20250416035823.1846307-1-tim.c.chen@linux.intel.com>
+ <fbe29b49-92af-4b8c-b7c8-3c15405e5f15@linux.ibm.com>
+ <667f2076-fbcd-4da7-8e4b-a8190a673355@intel.com>
+ <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <5e191de4-f580-462d-8f93-707addafb9a2@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: XaUa7pGJgHJ9od2izhWMQQsTdAo1EIGg
+X-Proofpoint-ORIG-GUID: XaUa7pGJgHJ9od2izhWMQQsTdAo1EIGg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 bulkscore=0 phishscore=0
+ adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160073
 
-Em Wed, 16 Apr 2025 17:19:17 +0800
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-> Em Wed, 16 Apr 2025 11:34:16 +0300
-> Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+
+On 4/16/25 14:46, Shrikanth Hegde wrote:
 > 
-> > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> > > As reported by Andy, kernel-doc.py is creating a __pycache__
-> > > directory at build time.
-> > >
-> > > Disable creation of __pycache__ for the libraries used by
-> > > kernel-doc.py, when excecuted via the build system or via
-> > > scripts/find-unused-docs.sh.
-> > >
-> > > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > ---
-> > >  drivers/gpu/drm/Makefile      | 2 +-
-> > >  drivers/gpu/drm/i915/Makefile | 2 +-
-> > >  include/drm/Makefile          | 2 +-
-> > >  scripts/Makefile.build        | 2 +-
-> > >  scripts/find-unused-docs.sh   | 2 +-
-> > >  5 files changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> > > index ed54a546bbe2..d21d0cd2c752 100644
-> > > --- a/drivers/gpu/drm/Makefile
-> > > +++ b/drivers/gpu/drm/Makefile
-> > > @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
-> > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
-> > >        cmd_hdrtest = \
-> > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
-> > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-> > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
-> > 
-> > KERNELDOC is not set here.
 > 
-> > 
-> > /bin/sh: 1: -none: not found
+> On 4/16/25 11:58, Chen, Yu C wrote:
+>> Hi Shrikanth,
+>>
+>> On 4/16/2025 1:30 PM, Shrikanth Hegde wrote:
+>>>
+>>>
+>>> On 4/16/25 09:28, Tim Chen wrote:
+>>>> At load balance time, balance of last level cache domains and
+>>>> above needs to be serialized. The scheduler checks the atomic var
+>>>> sched_balance_running first and then see if time is due for a load
+>>>> balance. This is an expensive operation as multiple CPUs can attempt
+>>>> sched_balance_running acquisition at the same time.
+>>>>
+>>>> On a 2 socket Granite Rapid systems enabling sub-numa cluster and
+>>>> running OLTP workloads, 7.6% of cpu cycles are spent on cmpxchg of
+>>>> sched_balance_running.  Most of the time, a balance attempt is aborted
+>>>> immediately after acquiring sched_balance_running as load balance time
+>>>> is not due.
+>>>>
+>>>> Instead, check balance due time first before acquiring
+>>>> sched_balance_running. This skips many useless acquisitions
+>>>> of sched_balance_running and knocks the 7.6% CPU overhead on
+>>>> sched_balance_domain() down to 0.05%.  Throughput of the OLTP workload
+>>>> improved by 11%.
+>>>>
+>>>
+>>> Hi Tim.
+>>>
+>>> Time check makes sense specially on large systems mainly due to 
+>>> NEWIDLE balance.
 > 
-> Weird. This is set on Documentation/Makefile:
+> scratch the NEWLY_IDLE part from that comment.
 > 
-> 	$ grep KERNELDOC Documentation/Makefile 
-> 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
-> 	...
+>>>
+>>
+>> Could you elaborate a little on this statement? There is no timeout 
+>> mechanism like periodic load balancer for the NEWLY_IDLE, right?
 > 
-> drivers/gpu/drm/Makefile should be able to see this variable there...
+> Yes. NEWLY_IDLE is very opportunistic.
+> 
+>>
+>>> One more point to add, A lot of time, the CPU which acquired 
+>>> sched_balance_running,
+>>> need not end up doing the load balance, since it not the CPU meant to 
+>>> do the load balance.
+>>>
+>>> This thread.
+>>> https://lore.kernel.org/all/1e43e783-55e7-417f- 
+>>> a1a7-503229eb163a@linux.ibm.com/
+>>>
+>>>
+>>> Best thing probably is to acquire it if this CPU has passed the time 
+>>> check and as well it is
+>>> actually going to do load balance.
+>>>
+>>>
+>>
+>> This is a good point, and we might only want to deal with periodic load
+>> balancer rather than NEWLY_IDLE balance. Because the latter is too 
+>> frequent and contention on the sched_balance_running might introduce
+>> high cache contention.
+>>
+> 
+> But NEWLY_IDLE doesn't serialize using sched_balance_running and can 
+> endup consuming a lot of cycles. But if we serialize using 
+> sched_balance_running, it would definitely cause a lot contention as is.
+> 
+> 
+> The point was, before acquiring it, it would be better if this CPU is 
+> definite to do the load balance. Else there are chances to miss the 
+> actual load balance.
+> 
+> 
 
-I suspect that the building system tries to confine variables to
-sub-directories, so maybe one solution would be to move it to the
-main makefile.
+Sorry, forgot to add.
 
-could you please check if this patch solves the issue?
+Do we really need newidle running all the way till NUMA? or if it runs till PKG is it enough?
+the regular (idle) can take care for NUMA by serializing it?
 
-[PATCH] Makefile: move KERNELDOC macro to the main Makefile
+-               if (sd->flags & SD_BALANCE_NEWIDLE) {
++               if (sd->flags & SD_BALANCE_NEWIDLE && !(sd->flags & SD_SERIALIZE)) {
+  
+                         pulled_task = sched_balance_rq(this_cpu, this_rq,
+                                                    sd, CPU_NEWLY_IDLE,
 
-As kernel-doc script is used not only on Documentation, but
-also on scripts and drivers/drm Makefiles, move it to the
-main makefile, as otherwise sub-makefiles may not have it.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Anyways, having a policy around this SD_SERIALIZE would be a good thing.
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index c022b97c487e..7a2069e87dbd 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -60,7 +60,6 @@ endif #HAVE_LATEXMK
- # Internal variables.
- PAPEROPT_a4     = -D latex_paper_size=a4
- PAPEROPT_letter = -D latex_paper_size=letter
--KERNELDOC       = $(srctree)/scripts/kernel-doc.py
- KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
- ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
- ifneq ($(wildcard $(srctree)/.config),)
-diff --git a/Makefile b/Makefile
-index 38689a0c3605..c8e46f0c1f63 100644
---- a/Makefile
-+++ b/Makefile
-@@ -458,6 +458,8 @@ endif
- HOSTRUSTC = rustc
- HOSTPKG_CONFIG	= pkg-config
- 
-+KERNELDOC       = $(srctree)/scripts/kernel-doc.py
-+
- KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
- 			 -O2 -fomit-frame-pointer -std=gnu11
- KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
-
+>> thanks,
+>> Chenyu
+>>
+>>>> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+>>>> Reported-by: Mohini Narkhede <mohini.narkhede@intel.com>
+>>>> Tested-by: Mohini Narkhede <mohini.narkhede@intel.com>
+>>>> ---
+>>>>   kernel/sched/fair.c | 16 ++++++++--------
+>>>>   1 file changed, 8 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>>> index e43993a4e580..5e5f7a770b2f 100644
+>>>> --- a/kernel/sched/fair.c
+>>>> +++ b/kernel/sched/fair.c
+>>>> @@ -12220,13 +12220,13 @@ static void sched_balance_domains(struct 
+>>>> rq *rq, enum cpu_idle_type idle)
+>>>>           interval = get_sd_balance_interval(sd, busy);
+>>>> -        need_serialize = sd->flags & SD_SERIALIZE;
+>>>> -        if (need_serialize) {
+>>>> -            if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
+>>>> -                goto out;
+>>>> -        }
+>>>> -
+>>>>           if (time_after_eq(jiffies, sd->last_balance + interval)) {
+>>>> +            need_serialize = sd->flags & SD_SERIALIZE;
+>>>> +            if (need_serialize) {
+>>>> +                if (atomic_cmpxchg_acquire(&sched_balance_running, 
+>>>> 0, 1))
+>>>> +                    goto out;
+>>>> +            }
+>>>> +
+>>>>               if (sched_balance_rq(cpu, rq, sd, idle, 
+>>>> &continue_balancing)) {
+>>>>                   /*
+>>>>                    * The LBF_DST_PINNED logic could have changed
+>>>> @@ -12238,9 +12238,9 @@ static void sched_balance_domains(struct rq 
+>>>> *rq, enum cpu_idle_type idle)
+>>>>               }
+>>>>               sd->last_balance = jiffies;
+>>>>               interval = get_sd_balance_interval(sd, busy);
+>>>> +            if (need_serialize)
+>>>> +                atomic_set_release(&sched_balance_running, 0);
+>>>>           }
+>>>> -        if (need_serialize)
+>>>> -            atomic_set_release(&sched_balance_running, 0);
+>>>>   out:
+>>>>           if (time_after(next_balance, sd->last_balance + interval)) {
+>>>>               next_balance = sd->last_balance + interval;
+>>>
+> 
 
