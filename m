@@ -1,110 +1,244 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337E6E571;
-	Wed, 16 Apr 2025 05:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10E922837F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:28:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781062; cv=none; b=FC+2FT9zAI8Wo+makn7rGgQ8UAI0/yAHfL3C230l0uaSGJ4E28139fwfgFkARURAghJcbBmo3mVoZEvrjPacKhrhpRNULAZXjlIEtkCZo0ZOZB2+6KX9hdZXTWfur4uYvD82xoeJFrFJHOet0a8WczOD3+bgDB3xPhOzYjn+b/g=
+	t=1744781335; cv=none; b=dTVlb+LcBg1Ik/5T/U4zSD4DzmUXO2hXCzBS9hDSVXyPVgNgXUg61vvhxHU3Iymsf6s3Iw39qkvqot8ZHPg5rSnjBmnWSbweeyjMdPn1M+TZAPymBrSpMZCwXxrnIddLAKnijFS7EYq7m7V7KOag8w87acTXQCBDuf/3v/CxAEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781062; c=relaxed/simple;
-	bh=cKllk8vD4eaxEJ2Tc4nn29nj7GJhMYpArHkxkZWFHqc=;
+	s=arc-20240116; t=1744781335; c=relaxed/simple;
+	bh=HUDRZvq5FdPxLGNy2+hnBvl4Z1n0T7sjEmHE2wsxyD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQh22BMUeOZlTy6BQ7xe1e4/wtXfZ7519tpPuRpPrXUNmSNWymAiyuBXEpBBXH3I0B6RjHLH3SP85iTy2mEjDX5IqNkGzT+W8OMUdClkyNlV7R27aR3Okg0FWpIajCQhi6lQlhxk3PV3dwxKmSUvIS2Rljwp0Qu1J6B7U3siUO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/Aih0xs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nYX67nCu9k+LhetQK2kJGpNZIh6TjLNh1LjgGMnElOe9YfLFXjWA37Jzq+YKPcGcA5jFq0oVBC1fkbgBUNDBBpvH+up+PupRq/cE6b3BSokgiSMvmvwjSLcEVWqA4Tt3ybsngJhhwN0JeLUnlPeHAVBbhl3XgaHTuKP5NCO5YVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=raP/Jepy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/Aih0xs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52F7BC4CEE2;
-	Wed, 16 Apr 2025 05:24:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="raP/Jepy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A07D7C4CEE2;
+	Wed, 16 Apr 2025 05:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744781062;
-	bh=cKllk8vD4eaxEJ2Tc4nn29nj7GJhMYpArHkxkZWFHqc=;
+	s=k20201202; t=1744781335;
+	bh=HUDRZvq5FdPxLGNy2+hnBvl4Z1n0T7sjEmHE2wsxyD4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J/Aih0xsdUZ4w+dvVu9dR2anmJdnujUqE99aZDXHW6BnTkzeTq9+FvKzD5j0+lR0C
-	 HrXlYpyi+3sySf+rmNZ2igqpL+lDyGH4W34iq7OgUFzw0cDOn19V8zr+dp3YN4sJDT
-	 GmOvftUtjP+rk3qTHexjHMqLzR6gdeSLtzcBWysiFDBbZ5k/Kfrh8Ocu4Yhvjh4mWT
-	 DS1/Zkjn79eGrcq6cCTO/xLi2V8TW/aiSxdySu9QfxFD8g1znpLhUgOzyLL5PcUydm
-	 kqLjAmQdVxhftdj8KGmsxwxIxh42cpHBXMQtYYhf5McBqLEdtY2pEp76VWRplBJXzs
-	 YoO3IHD6kcLBQ==
-Date: Wed, 16 Apr 2025 07:24:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Juxin Gao <gaojuxin@loongson.cn>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] pwm: loongson: Fix an error code in probe()
-Message-ID: <7apoevpcxrsi7u345otb6cna3k3khhiwlmoitgilu6f3bv6mtb@jdvlox57u3cu>
-References: <6965a480-745c-426f-b17b-e96af532578f@stanley.mountain>
+	b=raP/JepyCV7bUkmDEuQ2IFlscYdMHjgwTtl1K5x1AwzXcR0VpnPRxXl2d0zI/7GKm
+	 T2ocsDbKd+3PDtTbPAWKORVyc4593qrwbmgWwzWIbiqsnZ4GrXnA0YQplpxSvvWS/Q
+	 3hyAnKlhOoclumtLmMD2mldl/gv16sK3EcTqBw8LHyh4vpeR2oRynJLABqzY+P2Xj6
+	 4xSJr0SDSkcaL1PUF1W9parKZ8+kMWnFVkhprHiTQLS4cg5IYW0WxWaobCD4Y6QMHO
+	 jkzafoPxMKJH5zp5O0HVDdtlVQ5V1L+7bgBTgzpnJo+HYOqoPTc/vGmPL6eIqmWuJi
+	 06FOjoxJ66lpA==
+Date: Wed, 16 Apr 2025 07:28:49 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
+Message-ID: <Z_9AEaeUIdWi2vLS@gmail.com>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <20250414102301.332225-3-mingo@kernel.org>
+ <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mqula3fkor7hottj"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <6965a480-745c-426f-b17b-e96af532578f@stanley.mountain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
 
 
---mqula3fkor7hottj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH next] pwm: loongson: Fix an error code in probe()
-MIME-Version: 1.0
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Hello Dan,
+> On Mon, 14 Apr 2025 at 03:23, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > We'd like to introduce timer_mod() in the kernel, so make
+> > sure the namespace is clear.
+> 
+> No no, this is horribly wrong.
 
-On Wed, Apr 09, 2025 at 02:00:20PM +0300, Dan Carpenter wrote:
-> There is a copy and paste bug so we accidentally returned
-> PTR_ERR(ddata->clk) instead of "ret".
->=20
-> Fixes: 322fc380cea1 ("pwm: Add Loongson PWM controller support")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  drivers/pwm/pwm-loongson.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-> index 412c67739ef9..e31afb11ddd7 100644
-> --- a/drivers/pwm/pwm-loongson.c
-> +++ b/drivers/pwm/pwm-loongson.c
-> @@ -211,7 +211,7 @@ static int pwm_loongson_probe(struct platform_device =
-*pdev)
->  	if (ddata->clk) {
->  		ret =3D devm_clk_rate_exclusive_get(dev, ddata->clk);
->  		if (ret)
-> -			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-> +			return dev_err_probe(dev, ret,
->  					     "Failed to get exclusive rate\n");
-> =20
->  		ddata->clk_rate =3D clk_get_rate(ddata->clk);
+Yeah, that was a horrible script fail, I sent the updated -v2 patch 2 
+days ago (and it was updated in the Git tree then too):
 
-How embarrassing that I didn't spot that during review. Thanks for the
-fix!
+  https://lore.kernel.org/all/Z_0oWnbcjsekHXJd@gmail.com/
 
-Applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-with Binbin's Reviewed-by tag.
+Unfortunately you weren't Cc:-ed for Thomas Weißschuh's reply, so you 
+probably didn't see the fixed patch.
 
-Best regards
-Uwe
+Thanks,
 
---mqula3fkor7hottj
-Content-Type: application/pgp-signature; name="signature.asc"
+	Ingo
 
------BEGIN PGP SIGNATURE-----
+=============>
+From 48f2aff7501a6dd1154297b7a00e0f2fbea36e24 Mon Sep 17 00:00:00 2001
+From: Ingo Molnar <mingo@kernel.org>
+Date: Mon, 14 Apr 2025 11:23:06 +0200
+Subject: [PATCH] scsi: bfa: Rename 'timer_mod' to 'timer_module'
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmf/Pv8ACgkQj4D7WH0S
-/k4RNQf8Cc3mcurLaW/Yv9UGm/iXtfVECvExlonj8/rQA0LyWM4zuns7YsA0olfZ
-uJhCsED71FCS6yfbh2lplRjK8Znh241XQg/A5WoUW4/KIV7iUX4DlU+bkLofYvE4
-A0xtgtId1t6q/C5xuiweOBJjIT+kzn6fJpiKlQ6O2cZTSnPO7hi8NK1dPi2Z4DLb
-AIN6gIrq0/uhGJd6SST2m8/9+6YJ8tKSXSH+/XUuDjloHoE11d8C+d5xOE4b3mTM
-9va96XUQAP6ky3XtExiHadlosqpnYxZ7iOWZrARYmAkHLBREpwjmnKWQ1cb5OatY
-VLE9FsdIE31LqaxRjknt9lZOQjBnJw==
-=aE/z
------END PGP SIGNATURE-----
+We'd like to introduce timer_mod() in the kernel, so make
+sure the namespace is clear.
 
---mqula3fkor7hottj--
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+---
+ drivers/scsi/bfa/bfa.h         |  2 +-
+ drivers/scsi/bfa/bfa_core.c    |  4 ++--
+ drivers/scsi/bfa/bfa_ioc.c     | 16 ++++++++--------
+ drivers/scsi/bfa/bfa_ioc.h     |  4 ++--
+ drivers/scsi/bfa/bfa_modules.h |  2 +-
+ drivers/scsi/bfa/bfad.c        |  2 +-
+ 6 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index a6b8c4ddea19..80b75669fc50 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -429,7 +429,7 @@ bfa_status_t bfa_iocfc_israttr_set(struct bfa_s *bfa,
+ void bfa_iocfc_enable(struct bfa_s *bfa);
+ void bfa_iocfc_disable(struct bfa_s *bfa);
+ #define bfa_timer_start(_bfa, _timer, _timercb, _arg, _timeout)		\
+-	bfa_timer_begin(&(_bfa)->timer_mod, _timer, _timercb, _arg, _timeout)
++	bfa_timer_begin(&(_bfa)->timer_module, _timer, _timercb, _arg, _timeout)
+ 
+ struct bfa_cb_pending_q_s {
+ 	struct bfa_cb_qe_s	hcb_qe;
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index a99a101b95ef..667a631a2abc 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1526,14 +1526,14 @@ bfa_iocfc_attach(struct bfa_s *bfa, void *bfad, struct bfa_iocfc_cfg_s *cfg,
+ 	bfa_iocfc_cbfn.reset_cbfn = bfa_iocfc_reset_cbfn;
+ 
+ 	ioc->trcmod = bfa->trcmod;
+-	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_mod);
++	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_module);
+ 
+ 	bfa_ioc_pci_init(&bfa->ioc, pcidev, BFI_PCIFN_CLASS_FC);
+ 	bfa_ioc_mbox_register(&bfa->ioc, bfa_mbox_isrs);
+ 
+ 	bfa_iocfc_init_mem(bfa, bfad, cfg, pcidev);
+ 	bfa_iocfc_mem_claim(bfa, cfg);
+-	INIT_LIST_HEAD(&bfa->timer_mod.timer_q);
++	INIT_LIST_HEAD(&bfa->timer_module.timer_q);
+ 
+ 	INIT_LIST_HEAD(&bfa->comp_q);
+ 	for (i = 0; i < BFI_IOC_MAX_CQS; i++)
+diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
+index aa68d61a2d0d..4a9bd084cd5d 100644
+--- a/drivers/scsi/bfa/bfa_ioc.c
++++ b/drivers/scsi/bfa/bfa_ioc.c
+@@ -28,12 +28,12 @@ BFA_TRC_FILE(CNA, IOC);
+ #define BFA_IOC_POLL_TOV	BFA_TIMER_FREQ
+ 
+ #define bfa_ioc_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_ioc_timeout, (__ioc), BFA_IOC_TOV)
+ #define bfa_ioc_timer_stop(__ioc)   bfa_timer_stop(&(__ioc)->ioc_timer)
+ 
+ #define bfa_hb_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->hb_timer,		\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->hb_timer,		\
+ 			bfa_ioc_hb_check, (__ioc), BFA_IOC_HB_TOV)
+ #define bfa_hb_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->hb_timer)
+ 
+@@ -159,16 +159,16 @@ bfa_ioc_sm_to_state(struct bfa_ioc_sm_table *smt, bfa_ioc_sm_t sm)
+  */
+ 
+ #define bfa_iocpf_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_iocpf_timeout, (__ioc), BFA_IOC_TOV)
+ #define bfa_iocpf_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->ioc_timer)
+ 
+ #define bfa_iocpf_poll_timer_start(__ioc)				\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_iocpf_poll_timeout, (__ioc), BFA_IOC_POLL_TOV)
+ 
+ #define bfa_sem_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->sem_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->sem_timer,	\
+ 			bfa_iocpf_sem_timeout, (__ioc), BFA_IOC_HWSEM_TOV)
+ #define bfa_sem_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->sem_timer)
+ 
+@@ -2333,11 +2333,11 @@ bfa_ioc_isr(struct bfa_ioc_s *ioc, struct bfi_mbmsg_s *m)
+  */
+ void
+ bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa, struct bfa_ioc_cbfn_s *cbfn,
+-	       struct bfa_timer_mod_s *timer_mod)
++	       struct bfa_timer_mod_s *timer_module)
+ {
+ 	ioc->bfa	= bfa;
+ 	ioc->cbfn	= cbfn;
+-	ioc->timer_mod	= timer_mod;
++	ioc->timer_module	= timer_module;
+ 	ioc->fcmode	= BFA_FALSE;
+ 	ioc->pllinit	= BFA_FALSE;
+ 	ioc->dbg_fwsave_once = BFA_TRUE;
+@@ -5062,7 +5062,7 @@ bfa_diag_memtest(struct bfa_diag_s *diag, struct bfa_diag_memtest_s *memtest,
+ 
+ 	memtest_tov = (bfa_ioc_asic_gen(diag->ioc) == BFI_ASIC_GEN_CT2) ?
+ 		       CT2_BFA_DIAG_MEMTEST_TOV : BFA_DIAG_MEMTEST_TOV;
+-	bfa_timer_begin(diag->ioc->timer_mod, &diag->timer,
++	bfa_timer_begin(diag->ioc->timer_module, &diag->timer,
+ 			bfa_diag_memtest_done, diag, memtest_tov);
+ 	diag->timer_active = 1;
+ 	return BFA_STATUS_OK;
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index d70332e9ad6d..3fa8a65bf067 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -333,7 +333,7 @@ struct bfa_ioc_s {
+ 	bfa_ioc_sm_t		fsm;
+ 	struct bfa_s		*bfa;
+ 	struct bfa_pcidev_s	pcidev;
+-	struct bfa_timer_mod_s	*timer_mod;
++	struct bfa_timer_mod_s	*timer_module;
+ 	struct bfa_timer_s	ioc_timer;
+ 	struct bfa_timer_s	sem_timer;
+ 	struct bfa_timer_s	hb_timer;
+@@ -918,7 +918,7 @@ void bfa_ioc_set_ct2_hwif(struct bfa_ioc_s *ioc);
+ void bfa_ioc_ct2_poweron(struct bfa_ioc_s *ioc);
+ 
+ void bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa,
+-		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_mod);
++		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_module);
+ void bfa_ioc_detach(struct bfa_ioc_s *ioc);
+ void bfa_ioc_suspend(struct bfa_ioc_s *ioc);
+ void bfa_ioc_pci_init(struct bfa_ioc_s *ioc, struct bfa_pcidev_s *pcidev,
+diff --git a/drivers/scsi/bfa/bfa_modules.h b/drivers/scsi/bfa/bfa_modules.h
+index ed29ebda30da..9911794286cc 100644
+--- a/drivers/scsi/bfa/bfa_modules.h
++++ b/drivers/scsi/bfa/bfa_modules.h
+@@ -61,7 +61,7 @@ struct bfa_s {
+ 	struct bfa_trc_mod_s	*trcmod;	/*  driver tracing	    */
+ 	struct bfa_ioc_s	ioc;		/*  IOC module		    */
+ 	struct bfa_iocfc_s	iocfc;		/*  IOCFC module	    */
+-	struct bfa_timer_mod_s	timer_mod;	/*  timer module	    */
++	struct bfa_timer_mod_s	timer_module;	/*  timer module	    */
+ 	struct bfa_modules_s	modules;	/*  BFA modules	    */
+ 	struct list_head	comp_q;		/*  pending completions     */
+ 	bfa_boolean_t		queue_process;	/*  queue processing enabled */
+diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
+index 598f2fc93ef2..695c77c5275d 100644
+--- a/drivers/scsi/bfa/bfad.c
++++ b/drivers/scsi/bfa/bfad.c
+@@ -691,7 +691,7 @@ bfad_bfa_tmo(struct timer_list *t)
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 
+-	bfa_timer_beat(&bfad->bfa.timer_mod);
++	bfa_timer_beat(&bfad->bfa.timer_module);
+ 
+ 	bfa_comp_deq(&bfad->bfa, &doneq);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
