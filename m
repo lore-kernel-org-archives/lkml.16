@@ -1,196 +1,137 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0EC18DB05;
-	Wed, 16 Apr 2025 19:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0722222B0;
+	Wed, 16 Apr 2025 19:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830972; cv=none; b=k5oLwMxUWjGod/FlU2cKWL7ZsG/lra+uA7oAjUmuj2D7IdaM9YPz+BAgqC2oZC3yTNurYyv9MyINu1BKeB2mhoLn7W01zmeMucUXgnRGw2211yWIEw4xyHsupK5/qK0ap4O+a08DoivLZdNzMTfJHHqoRBLAGEsVTHt0fKETNPs=
+	t=1744830999; cv=none; b=NZH4q9vcvBjvwHbgTPAV6+2E+hTr1Kj0BKYIz0gW6th4H6YfZ/JyUTAd/Z7L89Yk/CHn1dUQOvAUtULHFVqeZIcU3qwAr445Ps10NQiiujkpwsDJnl1bvjl/8IQlZVtPa3llfzaX859CUTKFJDqEPu1jkVVTO/L//P0hOwlzLoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830972; c=relaxed/simple;
-	bh=eZDCeJusl4YvbrBel3CeklONB/zaP1h9uSVKYJI0z14=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hy/Qf9VocfX3eTXWpjCs+kl8XALmgPiMy1FLt3ItOoqr2owrO/Hc7Na9MPH9tD7HOQZUUgEVB2OnfCrHZxIPZJWm2gOOSKkNCZ9boQZ+6MQVnf3s1gh74KKaaWIoqIveTXNZ4dbOpPQ4f/g9MObnVaRjg/Z/tzKyPOgg768j4jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=eP4xPZhw; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744830999; c=relaxed/simple;
+	bh=y8EOh2IdpQ87rvbk7rRX/EubUhmNFfJVyiYaxHETmIc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=ed3KhQQFQsW0a4duUGeP1snsDX8kY8Ojl5Zcpfrk6gYlXfY0yzXmt+vwftW8oNOIdB7cQ2iPGLwFVaL+HRw/bkejhjBb7GKepmJjxapiqyn1nNRR3Au0EchBeROvOWqHStxgwf94jOf/DsVi6fXCPuVvK04mU1EYMkqpHvIf79M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KFZkJa/R; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4ZLfOZk8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="eP4xPZhw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744830959; x=1745435759; i=wahrenst@gmx.net;
-	bh=0Fyt/wURX/mltb2vqUsAYfg/uzruTniev2Ppmgs5KiI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=eP4xPZhwayV0qRsC4b25Q49LyEmZGMIlxbn9IzUHLF43ECpS5F3GNPWeuVaBalLY
-	 Pkum6P20lJTMECwXPfP+T5h7/Jxml7vLwhSRkYN2S7uLZ6LUg+U/doWhJJpjUJ4Iz
-	 lT6+DhibvxkeaBtgLoiNyRZcsWut24xOaqVgFsKSV4QfQKJcN/zPPjsr7EOCYT+C0
-	 PsJv0RPrzPWB02AQPugJfT/bXXFLXc3deonlEfAqDFXE4OkZUTPRJeHiC2tJFuoQ4
-	 mvwOgPZjyMpXuYLqBk3Kj6gI1zDbaI7EgXVtWXRWhFSlIfiLi6Xcr1BZbTaN+gXux
-	 ugH1G0Ag3bUFajgGIQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MOREi-1uV54z2DPi-00SFjX; Wed, 16
- Apr 2025 21:15:59 +0200
-Message-ID: <06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
-Date: Wed, 16 Apr 2025 21:15:58 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KFZkJa/R";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ZLfOZk8"
+Date: Wed, 16 Apr 2025 19:16:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744830995;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dhAbYJ1PgRLBViX+3M7BU4iyIZEx4zWLuUMil1spSoA=;
+	b=KFZkJa/Ru350YaFaUbC6xAEeKYugb48wdMfiHmyjfPrGaNCWM8UT4dv9d482ojktbgpKjB
+	vdwvd9GGXZrmuyCOrqw9lmuxKB7MqjdNTix+eaRu9VHwxN1vCwx+uWLB00m2k7rPudCANr
+	NTGrU3XyhIEmhmYmOi3BHOYHRr4oXgtwzZSUA3qeR9ZEx9KfeZy0fUCshlIDH3ERdKp8/F
+	IQWhOztlCg5QBmPlClfWlTo+EeSNqRoMj8rV6xvGFpH3hvz4Ox+yxXtup/yXl9hI7nonvc
+	hpR+2sVpScQXj9mB4pDTNzUgOR9hQfXWwjASBEnWqJOkyJUgEBmLw8w4ChM2xg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744830995;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dhAbYJ1PgRLBViX+3M7BU4iyIZEx4zWLuUMil1spSoA=;
+	b=4ZLfOZk8j3NxDKqGszV1MJrjsDosAaCsGixs1+NUlIwhuXvASr3mX3s+D1V5RGmbZZ2X3U
+	IhM7yTeqaXVLcEBw==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/fair: Adhere to place_entity() constraints
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Mike Galbraith <efault@gmx.de>, stable@vger.kernel.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <c216eb4ef0e0e0029c600aefc69d56681cee5581.camel@gmx.de>
+References: <c216eb4ef0e0e0029c600aefc69d56681cee5581.camel@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v5 2/6] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
- switch description
-To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-References: <20250414140128.390400-1-lukma@denx.de>
- <20250414140128.390400-3-lukma@denx.de>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250414140128.390400-3-lukma@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BhR9yFAQqeXq7tpo+BVlY5V6At1F7eSbQwtC+8DLgGgYcEvaPHB
- YvRBP+brt1418Jxot0UdwrAqCK2iHeWbVVeu/W+QF1JjsSKAUQdASGGg2F7wPIJ2gjJ6bpV
- 1Tw1MMpTcSqqOIRQXRMEUSfAXjDDhHOl0Wx6y1gtomCstmu2i1ezvWAJie7VDPvLPZALLUf
- UygcwzAsl6PjV/KG51dUQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XlsGXYRQO+Q=;Kai+BO1wU8iAl1JoOXLDwr47/iz
- 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
+Message-ID: <174483098990.31282.10026690550502878428.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Lukasz,
+The following commit has been merged into the sched/core branch of tip:
 
-Am 14.04.25 um 16:01 schrieb Lukasz Majewski:
-> The current range of 'reg' property is too small to allow full control
-> of the L2 switch on imx287.
->
-> As this IP block also uses ENET-MAC blocks for its operation, the addres=
-s
-> range for it must be included as well.
->
-> Moreover, some SoC common properties (like compatible, clocks, interrupt=
-s
-> numbers) have been moved to this node.
->
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
->
-> ---
-> Changes for v2:
-> - adding extra properties (like compatible, clocks, interupts)
->
-> Changes for v3:
-> - None
->
-> Changes for v4:
-> - Rename imx287 with imx28 (as the former is not used in kernel anymore)
->
-> Changes for v5:
-> - None
-> ---
->   arch/arm/boot/dts/nxp/mxs/imx28.dtsi | 8 ++++++--
->   1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi b/arch/arm/boot/dts/nx=
-p/mxs/imx28.dtsi
-> index bbea8b77386f..a0b565ffc83d 100644
-> --- a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-> +++ b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
-> @@ -1321,8 +1321,12 @@ mac1: ethernet@800f4000 {
->   			status =3D "disabled";
->   		};
->  =20
-> -		eth_switch: switch@800f8000 {
-> -			reg =3D <0x800f8000 0x8000>;
-> +		eth_switch: switch@800f0000 {
-> +			compatible =3D "nxp,imx28-mtip-switch";
-> +			reg =3D <0x800f0000 0x20000>;
-> +			interrupts =3D <100>, <101>, <102>;
-> +			clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
-> +			clock-names =3D "ipg", "ahb", "enet_out", "ptp";
->   			status =3D "disabled";
-from my understanding of device tree this file should describe the=20
-hardware, not the software implementation. After this change the switch=20
-memory region overlaps the existing mac0 and mac1 nodes.
+Commit-ID:     c70fc32f44431bb30f9025ce753ba8be25acbba3
+Gitweb:        https://git.kernel.org/tip/c70fc32f44431bb30f9025ce753ba8be25acbba3
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 28 Jan 2025 15:39:49 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 16 Apr 2025 21:09:12 +02:00
 
-Definition in the i.MX28 reference manual:
-ENET MAC0 ENET 0x800F0000 - 0x800F3FFF 16KB
-ENET MAC1 ENET 0x800F4000 - 0x800F7FFF 16KB
-ENT Switch SWITCH 0x800F8000 - 0x800FFFFF 32KB
+sched/fair: Adhere to place_entity() constraints
 
-I'm not the expert how to solve this properly. Maybe two node references=
-=20
-to mac0 and mac1 under eth_switch in order to allocate the memory=20
-regions separately.
+Mike reports that commit 6d71a9c61604 ("sched/fair: Fix EEVDF entity
+placement bug causing scheduling lag") relies on commit 4423af84b297
+("sched/fair: optimize the PLACE_LAG when se->vlag is zero") to not
+trip a WARN in place_entity().
 
-Sorry, if i missed a possible discussion about this before.
+What happens is that the lag of the very last entity is 0 per
+definition -- the average of one element matches the value of that
+element. Therefore place_entity() will match the condition skipping
+the lag adjustment:
 
-Regards
->   		};
->   	};
+  if (sched_feat(PLACE_LAG) && cfs_rq->nr_queued && se->vlag) {
 
+Without the 'se->vlag' condition -- it will attempt to adjust the zero
+lag even though we're inserting into an empty tree.
+
+Notably, we should have failed the 'cfs_rq->nr_queued' condition, but
+don't because they didn't get updated.
+
+Additionally, move update_load_add() after placement() as is
+consistent with other place_entity() users -- this change is
+non-functional, place_entity() does not use cfs_rq->load.
+
+Fixes: 6d71a9c61604 ("sched/fair: Fix EEVDF entity placement bug causing scheduling lag")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: Mike Galbraith <efault@gmx.de>
+Signed-off-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Signed-off-by: Mike Galbraith <efault@gmx.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/c216eb4ef0e0e0029c600aefc69d56681cee5581.camel@gmx.de
+---
+ kernel/sched/fair.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 5e1bd9e..eb5a257 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3795,6 +3795,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 		update_entity_lag(cfs_rq, se);
+ 		se->deadline -= se->vruntime;
+ 		se->rel_deadline = 1;
++		cfs_rq->nr_queued--;
+ 		if (!curr)
+ 			__dequeue_entity(cfs_rq, se);
+ 		update_load_sub(&cfs_rq->load, se->load.weight);
+@@ -3821,10 +3822,11 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 
+ 	enqueue_load_avg(cfs_rq, se);
+ 	if (se->on_rq) {
+-		update_load_add(&cfs_rq->load, se->load.weight);
+ 		place_entity(cfs_rq, se, 0);
++		update_load_add(&cfs_rq->load, se->load.weight);
+ 		if (!curr)
+ 			__enqueue_entity(cfs_rq, se);
++		cfs_rq->nr_queued++;
+ 
+ 		/*
+ 		 * The entity's vruntime has been adjusted, so let's check
