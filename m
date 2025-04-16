@@ -1,59 +1,44 @@
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232552C859;
-	Wed, 16 Apr 2025 01:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57B61DFF0;
+	Wed, 16 Apr 2025 01:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765400; cv=none; b=oWo+dNLV2yxS2p2uWcHNZGU1zfjjqkf7iDfE7GwySdq/MbUQ1CGcUegNhFT6sTp3GrbkHRY2sykzKtMJ1Us9V2qX/08K6r2VyIy/W3iCVntD0m8VilHqtIIFb+p6blWuaU6e8MKYl5h9AvEhERy/1olBjBSmeqrKlOaAN0frSCg=
+	t=1744765420; cv=none; b=Vlnnioja1bESKgNBKGE0XWtDxjKhLKZy1dJwGR0PIMXE4HUmU0b1DWDC3/zetBYAayazIv/j7dvnrN/M3XwxxwUczXPxr1xxNAdiZ3ONjWjD7Koc40vhcHoDHps3+MxZ30Lnrkq/veJWAMPhnIep+IXe+aNoPlrYWsJw+4xFdYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765400; c=relaxed/simple;
-	bh=RvIvw1baOtKFUbdj/r8jXJMMMvL9X954wdybrDaTzm0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a/u8q9cYj+1BSeGPN9eduV25jsn8EdZf+kXeZ2QJrhyoZL4ulz6V3wYMkfqfJYqK4Jz9HkeLbIcKofRxKLHDZVzAnTBPo5VhuvChz3YHY/4F0yDXcu/VQzT+Ua5sljAcUIsOSrsn6tPeBAFgjLXJADPmwRKimsuV3MTb20mp1ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=G4aYUmGD; arc=none smtp.client-ip=52.95.48.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G4aYUmGD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744765399; x=1776301399;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GGnNNXM1Px+CfW0IznRviikPq3m3ytR6/Sbfff9L1uQ=;
-  b=G4aYUmGDXbZyu4CcO+TqI3i84kjzskL81xySzl0e55flXAzFm0h95xVl
-   UJ+UW2WPt9N7nLbmMn/Mpw8TfDW4pkBFrawq/aauJN9MhRUbFogloI/Cz
-   0XhBSD+QL7TRKhE5598m3GFe0MAfgYGtusr3zo+lM0ZHmx/nZXYPPpzTQ
-   I=;
-X-IronPort-AV: E=Sophos;i="6.15,214,1739836800"; 
-   d="scan'208";a="480740641"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 01:03:17 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:45153]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.14.132:2525] with esmtp (Farcaster)
- id 1401027b-4679-4367-833c-9f46bb5bcbbe; Wed, 16 Apr 2025 01:03:15 +0000 (UTC)
-X-Farcaster-Flow-ID: 1401027b-4679-4367-833c-9f46bb5bcbbe
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 01:03:14 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.88.149.87) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 01:03:10 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kernel-team@meta.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>
-Subject: Re: [PATCH net-next 5/8] ipv4: Use nlmsg_payload in fib_frontend file
-Date: Tue, 15 Apr 2025 18:03:01 -0700
-Message-ID: <20250416010302.23388-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415-nlmsg_v2-v1-5-a1c75d493fd7@debian.org>
-References: <20250415-nlmsg_v2-v1-5-a1c75d493fd7@debian.org>
+	s=arc-20240116; t=1744765420; c=relaxed/simple;
+	bh=lxyuH2X+QrN69sG9sxQAyhR4CnxidVuoSmTUqIuey+8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JpC81mbWV6muCEXnS/fhWqXIfSovR5Trw7H5RLCFM+qP5G+WZ51hXSmt/c5P7TCgW68EQEDti3avrNwVO3x/nuPJpKtOP3RV+1mTqUdkPBkjFK3aVInrxm6bKSu1lkJCK5jMoJ2tFFaIwvmZOykD3yftXdt+EYYZXPL7r7Wm3QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FLTtJh026884;
+	Tue, 15 Apr 2025 18:02:57 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45ykf3m1nq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 15 Apr 2025 18:02:56 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 15 Apr 2025 18:02:56 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 15 Apr 2025 18:02:53 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <chenxiaosong@kylinos.cn>, <stfrench@microsoft.com>,
+        <linkinjeon@kernel.org>, <sfrench@samba.org>,
+        <senozhatsky@chromium.org>, <tom@talpey.com>,
+        <linux-cifs@vger.kernel.org>
+Subject: [PATCH 6.1.y] smb/server: fix potential null-ptr-deref of lease_ctx_info in smb2_open()
+Date: Wed, 16 Apr 2025 09:02:52 +0800
+Message-ID: <20250416010252.388173-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,14 +47,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D037UWC002.ant.amazon.com (10.13.139.250) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+X-Proofpoint-ORIG-GUID: EcdEvtXe86mEZEQLPT-ZqLkngM1F3jhd
+X-Authority-Analysis: v=2.4 cv=Wd0Ma1hX c=1 sm=1 tr=0 ts=67ff01c0 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=4MEYoKLddpgQIFStAo8A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: EcdEvtXe86mEZEQLPT-ZqLkngM1F3jhd
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-15_09,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1011
+ impostorscore=0 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504160006
 
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 15 Apr 2025 12:28:56 -0700
-> Leverage the new nlmsg_payload() helper to avoid checking for message
-> size and then reading the nlmsg data.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+[ Upstream commit 4e8771a3666c8f216eefd6bd2fd50121c6c437db ]
+
+null-ptr-deref will occur when (req_op_level == SMB2_OPLOCK_LEVEL_LEASE)
+and parse_lease_state() return NULL.
+
+Fix this by check if 'lease_ctx_info' is NULL.
+
+Additionally, remove the redundant parentheses in
+parse_durable_handle_context().
+
+Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+[Drop the parentheses clean-up since the parentheses was introduced by
+c8efcc786146 ("ksmbd: add support for durable handles v1/v2") in v6.9
+ Minor context change fixed]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ fs/smb/server/oplock.c  | 2 +-
+ fs/smb/server/smb2pdu.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/smb/server/oplock.c b/fs/smb/server/oplock.c
+index a3c016a11e27..2fcfabc35b06 100644
+--- a/fs/smb/server/oplock.c
++++ b/fs/smb/server/oplock.c
+@@ -1515,7 +1515,7 @@ void create_lease_buf(u8 *rbuf, struct lease *lease)
+  * @open_req:	buffer containing smb2 file open(create) request
+  * @is_dir:	whether leasing file is directory
+  *
+- * Return:  oplock state, -ENOENT if create lease context not found
++ * Return: allocated lease context object on success, otherwise NULL
+  */
+ struct lease_ctx_info *parse_lease_state(void *open_req, bool is_dir)
+ {
+diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
+index dbe272970c25..937c1cd2284e 100644
+--- a/fs/smb/server/smb2pdu.c
++++ b/fs/smb/server/smb2pdu.c
+@@ -3241,7 +3241,7 @@ int smb2_open(struct ksmbd_work *work)
+ 			goto err_out1;
+ 		}
+ 	} else {
+-		if (req_op_level == SMB2_OPLOCK_LEVEL_LEASE) {
++		if (req_op_level == SMB2_OPLOCK_LEVEL_LEASE && lc) {
+ 			/*
+ 			 * Compare parent lease using parent key. If there is no
+ 			 * a lease that has same parent key, Send lease break
+-- 
+2.34.1
+
