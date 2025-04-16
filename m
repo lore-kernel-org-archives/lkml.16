@@ -1,87 +1,113 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878812472B0;
-	Wed, 16 Apr 2025 12:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9366E221272;
+	Wed, 16 Apr 2025 12:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744806471; cv=none; b=qZBlT0oNGyGPiXNljfDMLal2mQwfhFQbs2kumjGFQ0pK8LWsTrUpgR660xe8Jkrll57wdVADIAyEUZl65oZVaRuc5m+syPbyRhdrF8N+EBRYGqFhfbE/XU659cacB37cx8eB2dcoAzr86zJ+OU0LrNagAInV0/A51vDUVcL9Dr4=
+	t=1744806517; cv=none; b=Ri8jq69Kt5oKGTCb1q/9ScOM0VrxzUblS0sI8bLlwg80HBT1UpSmjRMvPGbTkzSkFrBEi3ofJ0yiFYq/SiArLbh0yHXcnTVKrHN9u9ir5rrgeuQdlcHq3oJR51Je0nGszc+i3cfLyLKl2F9iJH8cq2Bnk9csRuNcvWhFeDbb9/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744806471; c=relaxed/simple;
-	bh=2Z9dMh3cUftNywdxpqLdiZhzIykbnecaYABQWReuukc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PpSSYJ+jFqLB6EE1QdOzOgboez8k5eggUDsFGGGKt9hECi6trLjespJ7nJUkJ5LdiwI1QGIcdqo2Zx7PLBoMrZ0RIaptV91VxLPd+IEGvimzjkELAMvhZgTCrvXo2FMKtOYsC/ezoDNqa/1CXqJnUw3kOn/cae3ddJvn9IC82EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=glWcQhDU; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744806517; c=relaxed/simple;
+	bh=isH+/GLjm96yE33ush2efbXsDtXy/PzEAVhFahYOoUM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K/3RHuouMPzJjJpGlB6K9d8Rzc8T/FmCXiwA/fNE4l0Qu/OAmaOdetq51/EHjmLWedxksN59TgxDFJX9dnLY2QYGtWaTJSh7Fu8HBaU5RWQzj441a4uaG4yhlW+mO3FgSsHfHOYzV+KfSJBMeEqCQzZQg5PIa5a46Q58rWCcdzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFiYD0Jt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="glWcQhDU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=M6LZ4xvneSkqTz22l3dMKDkqWPVz423Fwa7KsioWGuA=; b=glWcQhDU7brC7S3hO/V50YBI06
-	VnjiupGMv6jbZ+aQIKjz2lzfyyldKifS+Dohd+2omPCSVsilyPi0iHjFgp/qCIXeqg4Z57ONQ1u0v
-	bcRxmL2mht1t1baiQinA8cC1MwRbseAE5DxgbA6Tp14Aelkj4ugbrgOkPYsAWhON1S28=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u51rc-009cKD-AE; Wed, 16 Apr 2025 14:27:36 +0200
-Date: Wed, 16 Apr 2025 14:27:36 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Fiona Klute <fiona.klute@gmx.de>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
-	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH net v2] net: phy: microchip: force IRQ polling mode for
- lan88xx
-Message-ID: <89826aa3-adc6-4278-a85a-b72ba8132add@lunn.ch>
-References: <20250416102413.30654-1-fiona.klute@gmx.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFiYD0Jt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C093C4AF09;
+	Wed, 16 Apr 2025 12:28:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744806517;
+	bh=isH+/GLjm96yE33ush2efbXsDtXy/PzEAVhFahYOoUM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VFiYD0Jt/MKrIM0O//OrfmAdWr2spMP+s6SohLzUc7eyC7YiTFpHRWoNdmSrh9bTi
+	 Ycwf9Y0B1cQb8W4KGT1amdpcGFItaszDb0ntMQYtmLTI/2uccUzy91qgdC5sPJ0ZKJ
+	 aRr9H++OvXjRfPTM5mIVkmN5dbsvDn0nYzH7k6IKrEpwS1qnmr2JeCQJokdZ7DPdlK
+	 V5D/4DHKZkbuWZLZMi0FaMncqpQ1RvXAlYm9QktFWvzwmWNLyduyWsPZdOQaV+/DsN
+	 TW4t326oI1dGC9nnAQtBgXmFYoWWGWVwQurddBQ3Ek3vxQOmyO5FCyjOySGZ69GEkC
+	 m4aZVLSYY7tIA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60402c94319so3140886eaf.1;
+        Wed, 16 Apr 2025 05:28:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1GAIX5t+M0Yo/eCkvN0YxDr5kzirC6ueTnpf/DGiS90iY0nI2IUTWTQBm5Pr3OihtNFJn5UZekG3BkQo=@vger.kernel.org, AJvYcCVAOPNSuuRbmFu7smCMgFxGh5lVyvUTjs+u0WM79NsSsVh49En26vejRDnrJZSh0cOqjoAXH8Kyl3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcXqXLX+hSxmr0bRj9DNw6eoj7S66MqEqk7uVOANLTA3MWOEjz
+	MnNQL3dZQAlu3385nxmohNh14ljbeB5wfrdkIhplwS8hdPz/QM/J7ermh0YtcF7V51A0vZDfBtW
+	vA60HCuPliOHT5PLb2iOJliHyXJk=
+X-Google-Smtp-Source: AGHT+IFrO74weq/vUqQ4mNSCLwxe3ubAkgSLFMvBBYG4HOr4lzKB6U2U2DBNC9LcVYVOoqEPARxRVv1bLZCgJEVbeN8=
+X-Received: by 2002:a05:6871:9e11:b0:29e:5297:a2a7 with SMTP id
+ 586e51a60fabf-2d4d2d124a9mr911568fac.30.1744806516430; Wed, 16 Apr 2025
+ 05:28:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416102413.30654-1-fiona.klute@gmx.de>
+References: <6171293.lOV4Wx5bFT@rjwysocki.net> <3376719.44csPzL39Z@rjwysocki.net>
+ <b0c863d8-b1bd-4b69-b5ec-18544608448c@arm.com>
+In-Reply-To: <b0c863d8-b1bd-4b69-b5ec-18544608448c@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 16 Apr 2025 14:28:25 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i3OBrhbXTpRAo3R3mrpjn8OJu874LtFAysAvziXmLxEA@mail.gmail.com>
+X-Gm-Features: ATxdqUFyjxDWWtShbfENUw8wSykV7527_6SbJLtcjDALUF9zyWpjAnpQ0gxZBFY
+Message-ID: <CAJZ5v0i3OBrhbXTpRAo3R3mrpjn8OJu874LtFAysAvziXmLxEA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] cpufreq/sched: Explicitly synchronize
+ limits_changed flag handling
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Sultan Alsawaf <sultan@kerneltoast.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 12:24:13PM +0200, Fiona Klute wrote:
-> With lan88xx based devices the lan78xx driver can get stuck in an
-> interrupt loop while bringing the device up, flooding the kernel log
-> with messages like the following:
-> 
-> lan78xx 2-3:1.0 enp1s0u3: kevent 4 may have been dropped
-> 
-> Removing interrupt support from the lan88xx PHY driver forces the
-> driver to use polling instead, which avoids the problem.
-> 
-> The issue has been observed with Raspberry Pi devices at least since
-> 4.14 (see [1], bug report for their downstream kernel), as well as
-> with Nvidia devices [2] in 2020, where disabling polling was the
-> vendor-suggested workaround (together with the claim that phylib
-> changes in 4.9 made the interrupt handling in lan78xx incompatible).
-> 
-> Iperf reports well over 900Mbits/sec per direction with client in
-> --dualtest mode, so there does not seem to be a significant impact on
-> throughput (lan88xx device connected via switch to the peer).
-> 
-> [1] https://github.com/raspberrypi/linux/issues/2447
-> [2] https://forums.developer.nvidia.com/t/jetson-xavier-and-lan7800-problem/142134/11
-> 
-> Link: https://lore.kernel.org/0901d90d-3f20-4a10-b680-9c978e04ddda@lunn.ch
-> Fixes: 792aec47d59d ("add microchip LAN88xx phy driver")
-> Signed-off-by: Fiona Klute <fiona.klute@gmx.de>
-> Cc: kernel-list@raspberrypi.com
-> Cc: stable@vger.kernel.org
+On Wed, Apr 16, 2025 at 2:01=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> On 4/15/25 10:59, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > The handling of the limits_changed flag in struct sugov_policy needs to
+> > be explicitly synchronized to ensure that cpufreq policy limits updates
+> > will not be missed in some cases.
+> >
+> > Without that synchronization it is theoretically possible that
+> > the limits_changed update in sugov_should_update_freq() will be
+> > reordered with respect to the reads of the policy limits in
+> > cpufreq_driver_resolve_freq() and in that case, if the limits_changed
+> > update in sugov_limits() clobbers the one in sugov_should_update_freq()=
+,
+> > the new policy limits may not take effect for a long time.
+> >
+> > Likewise, the limits_changed update in sugov_limits() may theoretically
+> > get reordered with respect to the updates of the policy limits in
+> > cpufreq_set_policy() and if sugov_should_update_freq() runs between
+> > them, the policy limits change may be missed.
+> >
+> > To ensure that the above situations will not take place, add memory
+> > barriers preventing the reordering in question from taking place and
+> > add READ_ONCE() and WRITE_ONCE() annotations around all of the
+> > limits_changed flag updates to prevent the compiler from messing up
+> > with that code.
+> >
+> > Fixes: 600f5badb78c ("cpufreq: schedutil: Don't skip freq update when l=
+imits change")
+> > Cc: 5.3+ <stable@vger.nernel.org> # 5.3+
+>
+> typo in the address here.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Yup, thanks!
 
-    Andrew
+> I don't fully understand why we wouldn't want this in 6.15-rc already,
+> even if the actual impact may be limited?
+
+I wanted it to get some coverage in linux-next before it hits
+mainline, but then it's -rc3 time frame, so there will still be 4
+weeks of testing before the final release.
+
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+
+Thanks!
