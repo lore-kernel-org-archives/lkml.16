@@ -1,127 +1,75 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590641A0BD6
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792CE1A0BD6
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744815766; cv=none; b=gobP2WgV2s5fTpupfIzUC3uNqAyKq4rA6r1KqBxKzH0sHjUc5dZ5UGl+Wifi/nEWdIRZuOkcMrqUGjDmoLyhP0azB5GrLjhxLhjInpV72Bghk2by2wkxdM0HWU5vpYDgfISkIZIpmJBZ3LEHhqA4j8iXeScDxs4CXinDPTg9mcE=
+	t=1744815775; cv=none; b=Ijg/Suzmb9TP8Lz17Yds+4Uve8E7lJUJ42BvTk6w4Io7bHGj4UYbWjrUr63kOhtE3HMglNz9x0bey/YDLEYnOWvzB1NH1K3Er5WLrFtRbdfjzvBlbIHmUyB4Bxc9DjC4vJTqj41ch2s4X/DrtX/AwCBWvD/Ndf5iIoDaA84CQwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744815766; c=relaxed/simple;
-	bh=hFInTPyPvh6zLbC5lO5GPnnZNjactOaCyq570A7yph0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snoGvxWq3I5UOwlvkglBoXwLkyqGuurnBwLqQpe31/ldCpLQ42nQLFoaPE47rpq/loSTvn23mb4w6Lr+r22c28/VOksg7iS4Z4ktv5Rk+UfVEWAi4+10oPoxJJvCFYE5T/zaLHfqJ1LW/A+lZ1eSiwzov/FrO2Uo8aNEjrXDqRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FysPZ0vM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BaoNRmfN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FysPZ0vM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BaoNRmfN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FysPZ0vM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BaoNRmfN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FysPZ0vM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BaoNRmfN"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 9332421166;
-	Wed, 16 Apr 2025 15:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744815762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ahv3TYc2cxIq9Eg3I4DDvVGa/uh3TWWdZ6evB2FK8W4=;
-	b=FysPZ0vM8ATkeqo8UVO0ush0elgKrFSsyZI+wZ50g6bMPSFrdCizpm99mLkNjG/2TOZHW5
-	UR2fkcxVKQ/mkA/5rO82oD8LmZU0zelM1x7lwACeAbdqNd8K6tCacNFHzUJSbBwwKdE9FB
-	N7esezONbFVK34H7Epg5BUhfj075I7A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744815762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ahv3TYc2cxIq9Eg3I4DDvVGa/uh3TWWdZ6evB2FK8W4=;
-	b=BaoNRmfNhvBiXhuMm0rilF//r2dBzZIE3lMZbeGpL0aFSGQQX+b9qsgV5qVEuUpK07w/tn
-	jNUyt6/DXav6dGBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744815762; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ahv3TYc2cxIq9Eg3I4DDvVGa/uh3TWWdZ6evB2FK8W4=;
-	b=FysPZ0vM8ATkeqo8UVO0ush0elgKrFSsyZI+wZ50g6bMPSFrdCizpm99mLkNjG/2TOZHW5
-	UR2fkcxVKQ/mkA/5rO82oD8LmZU0zelM1x7lwACeAbdqNd8K6tCacNFHzUJSbBwwKdE9FB
-	N7esezONbFVK34H7Epg5BUhfj075I7A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744815762;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ahv3TYc2cxIq9Eg3I4DDvVGa/uh3TWWdZ6evB2FK8W4=;
-	b=BaoNRmfNhvBiXhuMm0rilF//r2dBzZIE3lMZbeGpL0aFSGQQX+b9qsgV5qVEuUpK07w/tn
-	jNUyt6/DXav6dGBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 05F4D13976;
-	Wed, 16 Apr 2025 15:02:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Gc65OZHG/2eIWAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 16 Apr 2025 15:02:41 +0000
-Date: Wed, 16 Apr 2025 16:02:36 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] MAINTAINERS: Add Pedro as reviewer to the MEMORY MAPPING
- section
-Message-ID: <g6udo4tvchrav3sr7kzov4xnvu6d6v5iq6elwmdhccsaab3tdi@pto36cgvlyyb>
-References: <20250416135301.43513-1-lorenzo.stoakes@oracle.com>
+	s=arc-20240116; t=1744815775; c=relaxed/simple;
+	bh=IQQMr++ejsZw0KfhanTU/+IFMKcwynCPQ7jx1iWxd2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bAd33mQ0l4ZUXVXXI7R9+QDntYjKkzpZrtoqbPs9nn+ZWZC5yjHl5RTywO1Hg1krLQAeUTgzb2dgLiqkT/8DqpBQTPOB7t7W8STulAEtCSwi08S+q+yA1ST1t2DWB9Ky56E8OjlulfGBorQFx5u+1TokyrBHy6SD4YnWkIqniX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A4AEC4CEE2;
+	Wed, 16 Apr 2025 15:02:54 +0000 (UTC)
+Date: Wed, 16 Apr 2025 11:02:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [mainline]Kernel crash while running ftrace selftest
+Message-ID: <20250416110253.62056f4f@batman.local.home>
+In-Reply-To: <1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com>
+References: <1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416135301.43513-1-lorenzo.stoakes@oracle.com>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 02:53:01PM +0100, Lorenzo Stoakes wrote:
-> Pedro has offered to review memory mapping code. He has good experience in
-> this area and has provided excellent feedback on memory mapping series in
-> the past so I feel he'll be a great addition.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Wed, 16 Apr 2025 12:37:15 +0530
+Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
 
-Thanks for sending the patch!
 
-Acked-by: Pedro Falcato <pfalcato@suse.de>
+Thanks for the bug report!
 
--- 
-Pedro
+> [15137.589546] NIP [c0000000003e4738] ops_equal+0x8/0x170
+> [15137.589553] LR [c0000000003ec708] ftrace_update_ops+0x78/0xe0
+
+Hmm, I'm guessing that you hit a path where the filter_hash or
+notrace_hash never was initialized.
+
+> [15137.589561] Call Trace:
+> [15137.589564] [c00000001473f9c0] [c0000000003ec6ec] 
+> ftrace_update_ops+0x5c/0xe0 (unreliable)
+> [15137.589575] [c00000001473fa00] [c0000000003f31b4] 
+> ftrace_startup_subops+0x124/0x5c0
+> [15137.589583] [c00000001473faa0] [c
+
+Can you see if this fixes the issue for you?
+
+Thanks!
+
+-- Steve
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a8a02868b435..777574fa3095 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3625,8 +3625,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
+  */
+ int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+ {
+-	struct ftrace_hash *filter_hash;
+-	struct ftrace_hash *notrace_hash;
++	struct ftrace_hash *filter_hash = EMPTY_HASH;
++	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+ 	int ret;
+ 
+ 	if (unlikely(ftrace_disabled))
