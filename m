@@ -1,234 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A6521348;
-	Wed, 16 Apr 2025 09:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E623F230D0D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794692; cv=none; b=YhCFMyRxj6iXdItpMaRU27rV7B3U+6wSgVb7qsC9U3AqejoutFDH5eFtqZ12x55+kLamFqHIG8VYqk40+EReHu18ZbvWdPx2gVcWHemlAqjkTgKZ3OBXwxsTgkftEuv+wcAYHdXQamM+FZRv0pUj9vvAB+JJx1BeQ/Elq4K60b4=
+	t=1744794712; cv=none; b=XkUgkiTbXJTlkTWviWwynPEN4TtIKUy4CGFQqTzV+I/EY7vBDtF1HZE/3d2pu2XcjjgRV8ANvvY0SxF2SxMVDZFCJMUoo53xBOO+HgosUeosaTLjmfYf8Gcr2LfeCs3axcdvDio1mi2xfBnWi0xs7ROJSSSzGwfdH5et/Oa3Uik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794692; c=relaxed/simple;
-	bh=wLGyV7a5Hi5V/ypISDeER+L01AquM3uY/6AU53q2l2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I3S4CJIRVAxBUc8T1m9dCRnY/H/yKEGhyVR/Ne/tqUrFH8MVknkql8BHhUVRRpZI2tZB4Uma+5sF301Hk/BABFIPM5YwmIgThIuThZ7NQe0j2hR4fYQqpdqJMb0EfuaTKzuMoRNo3pj0/yBy68Kwng8/Hc68vVHUxlsHAEh0QZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MfxuEtrV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744794712; c=relaxed/simple;
+	bh=gkAo5MIFO8GbCVIJ5pFW/+k7mTGtz2ehPwg7DRupRkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ia26a+68h7Q5+fFe/jH5dpGBjhElK56dWzGTdRoqWP9H2x7teWdnIffZJ/9A7ryCHyeuuIAM4gyOpJYSFx7gCh1T25mWgUYLJi9JvzU31QWnZsYpWiyd8wLqVS25i+J6NqCp5Bz52heL6Yfwzo2ijk01my/mkayA2aebMWkIHi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PC84Y8HX; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MfxuEtrV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA887C4AF0B;
-	Wed, 16 Apr 2025 09:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744794691;
-	bh=wLGyV7a5Hi5V/ypISDeER+L01AquM3uY/6AU53q2l2c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MfxuEtrV4pQ4NrnOa3qbttAMo0ALwQNZ5svwI798DU1HrVSMYaiOLjgZ05z6yOZp3
-	 5X1Bfzl7xdXgLAbkz0JswfhA/pjaSIn9t89s4ycEJOu87anF4pnM5vH2iY0RqhbsM1
-	 AcUsWuRf4TTznKndf3DfvgFWOhJxxSEDZYsddq2iOgl59egkEh0PWckLODrxMOcT54
-	 9lzsuUVhJamBnRQmIVdyQ1w+OEA4X0skAcA7K5c2MQs1UF6Ig3eCFibyT2/C0iadJA
-	 s+icRZYNxVzPwJVaH7HcZmHlaDUQp7TGMy9ZguLaIhTCPcGLUpO0CqLpKHUkQad3rS
-	 RbqJ/yrxj9vHw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so11153723a12.3;
-        Wed, 16 Apr 2025 02:11:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUIpvIHsTAd5wt32/X3zWFVT6EottJG0fy0zwDCgPvt1Yexqye/0a+5Og91AzKkB6OuBqH7vwRFEn8=@vger.kernel.org, AJvYcCVzQ9jqg13PjL9h9DILwSrYSD3+XZL0XtJVCpV0PjDkFt8EDbHWe0bhh4Sh65YMBsJ2WJ0hXYyPfAo/FijS@vger.kernel.org
-X-Gm-Message-State: AOJu0YygdM2VUvlaSZ9eOqOefJyu76rOwWjlICnRj+5YHYNKHO3RP/2Q
-	9M+fEwIusd9YTRzuOLZm18ldUcgJiKVcx7SrOj6h2zA+irjE7YDNuLotEMOBoBN28MBzGO81AY/
-	F+nrZfQU/WVZI6gTsoFSy+29B26c=
-X-Google-Smtp-Source: AGHT+IFllZ5Kx0iUUBPCKH3xoyv1uWsRhM8YwgKhk4S8jfxxet3Q82qVDmmKZGzLfml1RmyISqEzurefebCprAPLHQc=
-X-Received: by 2002:a17:907:788:b0:aca:cb18:9ad0 with SMTP id
- a640c23a62f3a-acb42aeda26mr90165266b.45.1744794690057; Wed, 16 Apr 2025
- 02:11:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PC84Y8HX"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22622ddcc35so87960415ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744794710; x=1745399510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ijzgK4iv6W9/SkZI5SFAq7Ny3NSkdxIDk62807ZYl0=;
+        b=PC84Y8HX7tDE0yvcNpA+TjXUZkf2zZ2J5LZz3OmbfCS3m/efaFa5JqKlZflOnvO06t
+         e8xVLra/BYaBF4XhiEl6w6ouBZ3A5Wj9serf4PcT0zOVYCy6XtwDjKf7lxE6QYTPdKXL
+         RSbu2Yj2I33efR0C4BB49NI5pbeRMF1hfWSIVObMBGif0hOY/SGd84/klJrRp5iNaFmb
+         tDnKC2JCqIRDkOStyhKG4B0ylq7G+1F4xb8X+XDL+ZTFN82iXc3P64DluHGL8wWcNhXE
+         2sB9727YdSoZAhByhaHaVPB3MuzT2KS7loESt478XbClpFKcujIWtp4T68EaB5ppz4VD
+         uo4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744794710; x=1745399510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ijzgK4iv6W9/SkZI5SFAq7Ny3NSkdxIDk62807ZYl0=;
+        b=ciec6aJOBZKXBtRpb3ONlqvychZ/zXr47nWDvqJfq0DRvq44O8v6Jv3jOIpEcnl+Pp
+         q/sQjzR+2jo6g/JiAc0ar203cdI3MBuAPWSfLwSXEDmCX0bde9wPZVgQTV94rJUXOmj0
+         D6QyOLZlc3nG1mgEee+MH/ufQpIKwCmWuXFWARdUQF7Femo+hVSXOb4Np3PI8623rkGp
+         ZGkDWnY3S02rj9uFXj6gY2zdBPRmBFiMTkWGHWT+RjR7qVgh44zGTIGtcCYmLgG+K5RJ
+         pizExq0Mo4sqQ8SUgCJmEgY4phFLhxy4XKRieBLIdrMv7E3n9TgPH/GBb3Tl+G1eqiYa
+         QX5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdqcrPw5RB38qF1TV9M+WtdV09tn49s6Fb5H5S+8ifNHJcKVrBiiOxQ6h+ybVxtgT+xRegVq7SqqSD5UQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVpe05xRA/2TPVoPrEy5LIlvWrjE2C86miHE9f9NWB99GKRlqT
+	/Li7WDAGYY2HJs451qBvgs7eLeFdu+FKAaKTjK/VPH1ZaynMU50=
+X-Gm-Gg: ASbGncurngKtrPwIHUQ0b3uA6SYa3lSukjkXubqdGZ0a1gKZ5crgFkawk9a0SzvlTXV
+	mw8B+F4tjZRJtmA0CONEw1V1yft9MWhQV6V0XzuaRkGgQZmQq9hIKGmKgLKr9nXBvRqx+a0WUdL
+	tNn2MRotulJNnvd5Xd67scvkqlRAkEgEk54V8iLgVek+m51f6qKcCm42KRngNl2MhMkEXj2K1hC
+	nK7jPl9iuskxeWKot/bK34YmCgW/dE7SQ5q9k2lA3P2GjrRTIt5k8Cme7XRsVO5AohVKdu0Wo0M
+	bTHgIcswYCkPc/Zjedfbf3u6rd0oLN7eoRmpfcQhbRz/A5h/5QVY4okp4iwLKXN5mEzXuib2TP5
+	8HI3UjohH2wtN
+X-Google-Smtp-Source: AGHT+IHDqfPMPJDX6LvxJT/QXWmU2cwXxlIuD/lorTF2upHPyZaXQWfeUnGYg7CHwP7bV4uUaeb+XA==
+X-Received: by 2002:a17:902:d2c7:b0:220:ff3f:6cba with SMTP id d9443c01a7336-22c3596b9dcmr21242515ad.38.1744794709972;
+        Wed, 16 Apr 2025 02:11:49 -0700 (PDT)
+Received: from mac.lan (syn-066-215-112-203.res.spectrum.com. [66.215.112.203])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0f41sm9185545ad.41.2025.04.16.02.11.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 02:11:49 -0700 (PDT)
+From: Luke Hofstetter <ldhofstetter@gmail.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sunil Khatri <sunil.khatri@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	Boyuan Zhang <boyuan.zhang@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Dominik Kaszewski <dominik.kaszewski@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Luke Hofstetter <ldhofstetter@gmail.com>
+Subject: [PATCH] drm/amd/include: fix kernel-doc formatting in amd_shared.h
+Date: Wed, 16 Apr 2025 02:11:40 -0700
+Message-ID: <20250416091143.67704-1-ldhofstetter@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com>
- <6954e026-94d2-4d96-a8f6-eddf0353598b@lucifer.local> <CAAhV-H4=SZrJjVwVv6fqxTZn9ODP-s1ZEgYKTmHMPH7aoJuvng@mail.gmail.com>
- <21558466-962c-4fb9-953b-911d2a586cbc@lucifer.local>
-In-Reply-To: <21558466-962c-4fb9-953b-911d2a586cbc@lucifer.local>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 16 Apr 2025 17:11:20 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5mMFVbhuLD9FmarZs9x_gxGrFViw92-wkUmoX2AzMGHA@mail.gmail.com>
-X-Gm-Features: ATxdqUHCx64vrBm-0pWo4Dh-VGlZFHhZaT6WIWJAFkJbRuWHB19TIvWTSVKZFdQ
-Message-ID: <CAAhV-H5mMFVbhuLD9FmarZs9x_gxGrFViw92-wkUmoX2AzMGHA@mail.gmail.com>
-Subject: Re: [PATCH v2] mseal sysmap: enable LoongArch
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: WangYuli <wangyuli@uniontech.com>, corbet@lwn.net, kernel@xen0n.name, 
-	akpm@linux-foundation.org, jeffxu@chromium.org, Liam.Howlett@oracle.com, 
-	kees@kernel.org, hca@linux.ibm.com, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, xry111@xry111.site, 
-	tglx@linutronix.de, thomas.weissschuh@linutronix.de, Jason@zx2c4.com, 
-	zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 4:03=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Apr 16, 2025 at 03:53:51PM +0800, Huacai Chen wrote:
-> > Hi, Lorenzo,
-> >
-> > On Tue, Apr 15, 2025 at 11:53=E2=80=AFPM Lorenzo Stoakes
-> > <lorenzo.stoakes@oracle.com> wrote:
-> > >
-> > > On Tue, Apr 15, 2025 at 11:39:03PM +0800, WangYuli wrote:
-> > > > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on LoongArch,
-> > > > covering the vdso.
-> > >
-> > > I've also checked and determined that, as far as I can tell, the loon=
-garch
-> > > arch-specific doe don't appear at any point to rely upon remapping th=
-e VDSO
-> > > or VVAR areas so sealing these should not be problematic.
-> > What does "remapping the VDSO" mean here? There is a function
-> > vdso_mremap() in arch/loongarch/kernel/vdso.c.
->
-> It means remapping the VDSO (and VVAR) since VMA sealing prevents this. V=
-MA
-> sealing means that you map, and that's it until process tear down, more o=
-r
-> less...
->
-> I mean this is the thing, in my view, anybody enabling a feature that
-> prevents you from doing X with Y should understand that this is the case,
-> and explicitly state that no - it appears that we don't need to do X with
-> Y - in any legitimate operation.
->
-> It seems that so far, I am yet to encounter anybody enabling this feature
-> who does. Which is concerning. But by the by. I guess I will continue to
-> have to say the same thing to everybody and then go check it myself each
-> time :)
->
-> Anyway, what you're referring to is a hook that is invoked when _userland=
-_
-> tries to remap the VDSO, which will now be prevented, if the user enables
-> this feature.
->
-> So those using this feature will break a bunch of userspace, namely anybo=
-dy
-> who wants/needs to remap the VDSO/VVAR etc. examples are CRIU, rr, etc.
->
-> So this is fine.
->
-> The problem would be if the _arch_ code itself needed to remap or move th=
-e
-> VDSO or VVAR around. This would be odd, and I think we know of only one
-> case (and even then it's uncertain), but it's important that people
-> explicitly check this.
->
-> _As far as I can tell_, loongarch doesn't need to do this so it is safe t=
-o
-> enable this there, given the feature is opt-in.
->
-> But this kind of concern is precisely why we need arch maintainers to che=
-ck
-> this.
->
-> I did insist on these limitations and concerns being placed in the
-> documentation and Kconfig entries so people are aware on review.
-OK, I know.
+when doing make htmldocs, Sphinx complained about in-line documentation
+in enum DC_DEBUG_MASK, so reformatted documentation to define each
+member in kernel-doc comment above the enum instead.
 
-In V1 you suggested this patch to go through the arch tree. But I saw
-Andrew has already taken it, what should I do now?
+Signed-off-by: Luke Hofstetter <ldhofstetter@gmail.com>
+---
+ drivers/gpu/drm/amd/include/amd_shared.h | 124 ++++++-----------------
+ 1 file changed, 32 insertions(+), 92 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/include/amd_shared.h b/drivers/gpu/drm/amd/include/amd_shared.h
+index 4c95b885d1d0..7074ec3b467f 100644
+--- a/drivers/gpu/drm/amd/include/amd_shared.h
++++ b/drivers/gpu/drm/amd/include/amd_shared.h
+@@ -255,120 +255,60 @@ enum DC_FEATURE_MASK {
+ 
+ /**
+  * enum DC_DEBUG_MASK - Bits that are useful for debugging the Display Core IP
++ * @DC_DISABLE_PIPE_SPLIT: If set, disable pipe-splitting
++ * @DC_DISABLE_STUTTER: If set, disable memory stutter mode
++ * @DC_DISABLE_DSC: If set, disable display stream compression
++ * @DC_DISABLE_CLOCK_GATING: If set, disable clock gating optimizations
++ * @DC_DISABLE_PSR: If set, disable Panel self refresh v1 and PSR-SU
++ * @DC_FORCE_SUBVP_MCLK_SWITCH: If set, force mclk switch in subvp, even
++ *	 							if mclk switch in vblank is possible
++ * @DC_DISABLE_MPO: If set, disable multi-plane offloading
++ * @DC_ENABLE_DPIA_TRACE: If set, enable trace logging for DPIA
++ * @DC_ENABLE_DML2: If set, force usage of DML2, even if the DCN version
++ *	 				does not default to it.
++ * @DC_DISABLE_PSR_SU: If set, disable PSR SU
++ * @DC_DISABLE_REPLAY: If set, disable Panel Replay
++ * @DC_DISABLE_IPS: If set, disable all Idle Power States, all the time.
++ *	 				If more than one IPS debug bit is set, the lowest bit takes
++ *	 				precedence. For example, if DC_FORCE_IPS_ENABLE and
++ *	 				DC_DISABLE_IPS_DYNAMIC are set, then DC_DISABLE_IPS_DYNAMIC takes
++ *	 				precedence.
++ * @DC_DISABLE_IPS_DYNAMIC: If set, disable all IPS, all the time,
++ *	 						*except* when driver goes into suspend.
++ * @DC_DISABLE_IPS2_DYNAMIC: If set, disable IPS2 (IPS1 allowed) if
++ *	 						there is an enabled display. Otherwise, enable all IPS.
++ * @DC_FORCE_IPS_ENABLE: If set, force enable all IPS, all the time.
++ * @DC_DISABLE_ACPI_EDID: If set, don't attempt to fetch EDID for
++ *	 					  eDP display from ACPI _DDC method.
++ * @DC_DISABLE_HDMI_CEC: If set, disable HDMI-CEC feature in amdgpu driver.
++ * @DC_DISABLE_SUBVP: If set, disable DCN Sub-Viewport feature in amdgpu driver.
++ * @DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE: If set, disable support for custom brightness curves
++ * @DC_HDCP_LC_FORCE_FW_ENABLE: If set, use HDCP Locality Check FW
++ *	 					        path regardless of reported HW capabilities.
++ * @DC_HDCP_LC_ENABLE_SW_FALLBACK: If set, upon HDCP Locality Check FW
++ *	                              path failure, retry using legacy SW path.
+  */
+ enum DC_DEBUG_MASK {
+-	/**
+-	 * @DC_DISABLE_PIPE_SPLIT: If set, disable pipe-splitting
+-	 */
+ 	DC_DISABLE_PIPE_SPLIT = 0x1,
+-
+-	/**
+-	 * @DC_DISABLE_STUTTER: If set, disable memory stutter mode
+-	 */
+ 	DC_DISABLE_STUTTER = 0x2,
+-
+-	/**
+-	 * @DC_DISABLE_DSC: If set, disable display stream compression
+-	 */
+ 	DC_DISABLE_DSC = 0x4,
+-
+-	/**
+-	 * @DC_DISABLE_CLOCK_GATING: If set, disable clock gating optimizations
+-	 */
+ 	DC_DISABLE_CLOCK_GATING = 0x8,
+-
+-	/**
+-	 * @DC_DISABLE_PSR: If set, disable Panel self refresh v1 and PSR-SU
+-	 */
+ 	DC_DISABLE_PSR = 0x10,
+-
+-	/**
+-	 * @DC_FORCE_SUBVP_MCLK_SWITCH: If set, force mclk switch in subvp, even
+-	 * if mclk switch in vblank is possible
+-	 */
+ 	DC_FORCE_SUBVP_MCLK_SWITCH = 0x20,
+-
+-	/**
+-	 * @DC_DISABLE_MPO: If set, disable multi-plane offloading
+-	 */
+ 	DC_DISABLE_MPO = 0x40,
+-
+-	/**
+-	 * @DC_ENABLE_DPIA_TRACE: If set, enable trace logging for DPIA
+-	 */
+ 	DC_ENABLE_DPIA_TRACE = 0x80,
+-
+-	/**
+-	 * @DC_ENABLE_DML2: If set, force usage of DML2, even if the DCN version
+-	 * does not default to it.
+-	 */
+ 	DC_ENABLE_DML2 = 0x100,
+-
+-	/**
+-	 * @DC_DISABLE_PSR_SU: If set, disable PSR SU
+-	 */
+ 	DC_DISABLE_PSR_SU = 0x200,
+-
+-	/**
+-	 * @DC_DISABLE_REPLAY: If set, disable Panel Replay
+-	 */
+ 	DC_DISABLE_REPLAY = 0x400,
+-
+-	/**
+-	 * @DC_DISABLE_IPS: If set, disable all Idle Power States, all the time.
+-	 * If more than one IPS debug bit is set, the lowest bit takes
+-	 * precedence. For example, if DC_FORCE_IPS_ENABLE and
+-	 * DC_DISABLE_IPS_DYNAMIC are set, then DC_DISABLE_IPS_DYNAMIC takes
+-	 * precedence.
+-	 */
+ 	DC_DISABLE_IPS = 0x800,
+-
+-	/**
+-	 * @DC_DISABLE_IPS_DYNAMIC: If set, disable all IPS, all the time,
+-	 * *except* when driver goes into suspend.
+-	 */
+ 	DC_DISABLE_IPS_DYNAMIC = 0x1000,
+-
+-	/**
+-	 * @DC_DISABLE_IPS2_DYNAMIC: If set, disable IPS2 (IPS1 allowed) if
+-	 * there is an enabled display. Otherwise, enable all IPS.
+-	 */
+ 	DC_DISABLE_IPS2_DYNAMIC = 0x2000,
+-
+-	/**
+-	 * @DC_FORCE_IPS_ENABLE: If set, force enable all IPS, all the time.
+-	 */
+ 	DC_FORCE_IPS_ENABLE = 0x4000,
+-	/**
+-	 * @DC_DISABLE_ACPI_EDID: If set, don't attempt to fetch EDID for
+-	 * eDP display from ACPI _DDC method.
+-	 */
+ 	DC_DISABLE_ACPI_EDID = 0x8000,
+-
+-	/**
+-	 * @DC_DISABLE_HDMI_CEC: If set, disable HDMI-CEC feature in amdgpu driver.
+-	 */
+ 	DC_DISABLE_HDMI_CEC = 0x10000,
+-
+-	/**
+-	 * @DC_DISABLE_SUBVP: If set, disable DCN Sub-Viewport feature in amdgpu driver.
+-	 */
+ 	DC_DISABLE_SUBVP = 0x20000,
+-	/**
+-	 * @DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE: If set, disable support for custom brightness curves
+-	 */
+ 	DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE = 0x40000,
+-
+-	/**
+-	 * @DC_HDCP_LC_FORCE_FW_ENABLE: If set, use HDCP Locality Check FW
+-	 * path regardless of reported HW capabilities.
+-	 */
+ 	DC_HDCP_LC_FORCE_FW_ENABLE = 0x80000,
+-
+-	/**
+-	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
+-	 * path failure, retry using legacy SW path.
+-	 */
+ 	DC_HDCP_LC_ENABLE_SW_FALLBACK = 0x100000,
+ };
+ 
+-- 
+2.49.0
 
-Huacai
-
->
-> Thanks, Lorenzo
->
-> >
-> > Huacai
-> >
-> > >
-> > > >
-> > > > Link: https://lore.kernel.org/all/25bad37f-273e-4626-999c-e1890be96=
-182@lucifer.local/
-> > > > Tested-by: Yuli Wang <wangyuli@uniontech.com>
-> > > > Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
-> > >
-> > > LGTM,
-> > >
-> > > Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > >
-> > > But let's get some R-b's from the arch people please!
-> > >
-> > > > ---
-> > > > Changelog:
-> > > >  *v1->v2: Modify mseal_sys_mappings/arch-support.txt.
-> > > > ---
-> > > >  .../features/core/mseal_sys_mappings/arch-support.txt         | 2 =
-+-
-> > > >  Documentation/userspace-api/mseal.rst                         | 2 =
-+-
-> > > >  arch/loongarch/Kconfig                                        | 1 =
-+
-> > > >  arch/loongarch/kernel/vdso.c                                  | 4 =
-+++-
-> > > >  4 files changed, 6 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/features/core/mseal_sys_mappings/arch-su=
-pport.txt b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
-> > > > index c6cab9760d57..a3c24233eb9b 100644
-> > > > --- a/Documentation/features/core/mseal_sys_mappings/arch-support.t=
-xt
-> > > > +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.t=
-xt
-> > > > @@ -12,7 +12,7 @@
-> > > >      |       arm64: |  ok  |
-> > > >      |        csky: |  N/A |
-> > > >      |     hexagon: |  N/A |
-> > > > -    |   loongarch: | TODO |
-> > > > +    |   loongarch: |  ok  |
-> > > >      |        m68k: |  N/A |
-> > > >      |  microblaze: |  N/A |
-> > > >      |        mips: | TODO |
-> > > > diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/=
-userspace-api/mseal.rst
-> > > > index 1dabfc29be0d..ef733f69003d 100644
-> > > > --- a/Documentation/userspace-api/mseal.rst
-> > > > +++ b/Documentation/userspace-api/mseal.rst
-> > > > @@ -144,7 +144,7 @@ Use cases
-> > > >    architecture.
-> > > >
-> > > >    The following architectures currently support this feature: x86-=
-64, arm64,
-> > > > -  and s390.
-> > > > +  loongarch and s390.
-> > > >
-> > > >    WARNING: This feature breaks programs which rely on relocating
-> > > >    or unmapping system mappings. Known broken software at the time
-> > > > diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > > > index 067c0b994648..54ed5b59a690 100644
-> > > > --- a/arch/loongarch/Kconfig
-> > > > +++ b/arch/loongarch/Kconfig
-> > > > @@ -69,6 +69,7 @@ config LOONGARCH
-> > > >       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
-> > > >       select ARCH_SUPPORTS_LTO_CLANG
-> > > >       select ARCH_SUPPORTS_LTO_CLANG_THIN
-> > > > +     select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
-> > > >       select ARCH_SUPPORTS_NUMA_BALANCING
-> > > >       select ARCH_SUPPORTS_RT
-> > > >       select ARCH_USE_BUILTIN_BSWAP
-> > > > diff --git a/arch/loongarch/kernel/vdso.c b/arch/loongarch/kernel/v=
-dso.c
-> > > > index 10cf1608c7b3..7b888d9085a0 100644
-> > > > --- a/arch/loongarch/kernel/vdso.c
-> > > > +++ b/arch/loongarch/kernel/vdso.c
-> > > > @@ -105,7 +105,9 @@ int arch_setup_additional_pages(struct linux_bi=
-nprm *bprm, int uses_interp)
-> > > >
-> > > >       vdso_addr =3D data_addr + VVAR_SIZE;
-> > > >       vma =3D _install_special_mapping(mm, vdso_addr, info->size,
-> > > > -                                    VM_READ | VM_EXEC | VM_MAYREAD=
- | VM_MAYWRITE | VM_MAYEXEC,
-> > > > +                                    VM_READ | VM_EXEC |
-> > > > +                                    VM_MAYREAD | VM_MAYWRITE | VM_=
-MAYEXEC |
-> > > > +                                    VM_SEALED_SYSMAP,
-> > > >                                      &info->code_mapping);
-> > > >       if (IS_ERR(vma)) {
-> > > >               ret =3D PTR_ERR(vma);
-> > > > --
-> > > > 2.49.0
-> > > >
