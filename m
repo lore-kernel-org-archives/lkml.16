@@ -1,145 +1,91 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F8214A7C;
-	Wed, 16 Apr 2025 17:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AD921518B
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825667; cv=none; b=rxGzfc35mJSs0Zqc6gqTpI8z1to0TpQbBeupRA5nNtkOaSYiDpe7tiGeQ6QScQlsv7EvQtmpZOqB97PCbnK8eYPSw5mp3NMDcVIxMWk/AwAor8g8fBfU57fYxnv0kk7RE9GOScH63xT41teGysXDVFE9osckibZGKEzCzH3FYV8=
+	t=1744825670; cv=none; b=tJlKJAy6DgHZDweIU215HaG34vkfHMdkrWmfAj4k1RhQe3KRgZtJY3deaAlPL1XdUiaVuorkO7WyCgN/57TEQ9fk9cf9yyLzGRziKEec85kuhg0K/IU9Ewwh2JYIVsRFCDO09CbpLc1zmnyuAzveiOz/RanFy+8Qomb+orhHCDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825667; c=relaxed/simple;
-	bh=0xMXmPv9am/4yzAmlbNd701D43MOUvuzuBbid2PYMTE=;
+	s=arc-20240116; t=1744825670; c=relaxed/simple;
+	bh=mKk4Koe3jfmmyrx7m6tl+Zwk2YWydwWrWQ8sMVsQhpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KpdBodWfORSZ/zlF23YP7DRKMTX9N/ujjkWl/6LAFGWyJM3nM01Ds54L3rop3eEdKwCBIJTtonZX4mGwG0wxNMsnM5LW8z3D4qV4BjPSLDpg71V2NizAERxgKYHQVgF2aW2WxWsyvPf1FmYntBjGPK2xf/aiQ3m7bA2T2Vcf5fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iskdI9Wf; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=WRUHDBo+UanftmRQtvW/kY3XXpv5GvjPZnGUtbsYNhaTvYW+ORfDkL4K7G+t7jPt0THRXCGHUMZqD8Jp/Xb7bWqCc1U5Du4Lg9duahiomt00K4zuwjlpMBvK8P0gSLEzT5QGPwr2pT2kCmj7dCKrbTdi41T61OBHK+tT8TfRRAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YzuWVlwg; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iskdI9Wf"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3E11540E0200;
-	Wed, 16 Apr 2025 17:47:35 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id F0yZudtRwPqi; Wed, 16 Apr 2025 17:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744825651; bh=k6oIrl/lthiSaffLzih6SQfaq9THlmrqB4n+2W0D0+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iskdI9Wf4NoqrwbLdDcNG3JkNiUVFl9RNIHnGQ5mmkZBYfIhUOMnlOBLHuYxH5rUt
-	 oBiZnDiFvczeuE8sz8jXBJDTJ4Tw3hrILTRgBuwoeZwAyk22i+VSu+zEEZDysfmu8e
-	 KY60ZSg7M7kilFski7lw//XmoWOidxdv3hajf0hvY9vVf9IKOO65J9XHBEGRmqTYYG
-	 QSYMIRDHOIE75VVW0ferdfkvm3CHJIi0FZ+Vn8dswo1NWj/oQwMbw1muJZj01HlfRZ
-	 m3nIC6yQm3w8XBwREeuAxB5ibp9INgn+j+TyDNGZNQheMGjRCQmDNHtKBWFCcVkw4/
-	 h17sKx8uCCm730W4sLbyr9xErNApIuKrUcA1GsFsZZU9nvJdhtEUJJDS7uLPwIcdKx
-	 IzAMB9rfwAs43kB0sAM8g3b4bungROLYQkOtIQ+aq4Xqxb01WVmvWzeArKDAI1+6+F
-	 cNXyN5+nFRO1Q1jmB4dqoMZHtX2dipxKEiKVftYNLQsigv1yHfEQ5KEkY1jpbZ6v8/
-	 /Xc4h5WcSWaSvgGdj/b67cWpzd/zuTCesGud2UwwIL48ofAdvcGiA22cnSYmcNavMI
-	 pgBnQpe6utUyFOMJxvSQVrpd9I6QF1kVsxNWjNmTRH8UB4JNsG3qOVZD/FIXDnyRyB
-	 E6WGCuQABS8dWzu58ifjWZ20=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 79D7040E016E;
-	Wed, 16 Apr 2025 17:47:19 +0000 (UTC)
-Date: Wed, 16 Apr 2025 19:47:14 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
- page faults
-Message-ID: <20250416174714.GGZ__tIi3yNzNKoKFE@fat_crate.local>
-References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
- <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
- <20250414182050.213480aa@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YzuWVlwg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744825669; x=1776361669;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mKk4Koe3jfmmyrx7m6tl+Zwk2YWydwWrWQ8sMVsQhpg=;
+  b=YzuWVlwg/SyCnszSkA/pv++W5UL99n2YaMgL+q1Hi0aGgz/DHuoinhfZ
+   7IJGlGMN+2/70bYMRMtCF77s7VF4/dBTQBtQpPtG8JwWSf8tlWDYV/OWd
+   HmilfDtij7fCbwjRlA5WJJNFyO0q5RhMCXkr91TI9vyGd1y/No/V+68km
+   A/NVxl3vWI9xzbQywkgYv0b6r67WY5bN7aWfx04/Rwvd0LjBM7+9n9M/B
+   zxZeuctx5T+dcCm+ou4o/gl1qJcwRN+nJrz2QiVUvj2pSggN9AdzIclX/
+   MKf9rFbhOKvKY23ddyJtdMIJVpeNuKKZeG8NdSc/gjNMattwE3mz32yXZ
+   w==;
+X-CSE-ConnectionGUID: DlWKeRpGSs27d/GhaI9iDQ==
+X-CSE-MsgGUID: yxAqS0B4SNuirfiuiITl9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50212697"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="50212697"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:47:48 -0700
+X-CSE-ConnectionGUID: FmQmhJt3T96sEKluHoyFGQ==
+X-CSE-MsgGUID: ZLVi52R0R1SU7j0M35+F+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="131463693"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:47:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u56rQ-0000000Cvfl-39A9;
+	Wed, 16 Apr 2025 20:47:44 +0300
+Date: Wed, 16 Apr 2025 20:47:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: [PATCH v2 2/2] bitmap-str: Add missing header(s)
+Message-ID: <Z__tQJeyKmbQkwDT@smile.fi.intel.com>
+References: <20250416063248.1864059-1-andriy.shevchenko@linux.intel.com>
+ <20250416063248.1864059-3-andriy.shevchenko@linux.intel.com>
+ <Z__hKFYI5wowbZPx@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250414182050.213480aa@gandalf.local.home>
+In-Reply-To: <Z__hKFYI5wowbZPx@yury>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Apr 14, 2025 at 06:20:50PM -0400, Steven Rostedt wrote:
-> It's useful for me ;-)
-
-That's why I CCed you.
-
-I suspected you'd have "your mustard to share". :-P
-
->  # cd /sys/kernel/tracing
->  # echo 's:user_faults u64 delta;' >> dynamic_events
->  # echo 'hist:keys=common_pid:ts0=common_timestamp.usecs' >> events/exceptions/page_fault_user_enter/trigger
->  # echo 'hist:keys=common_pid:delta=common_timestamp.usecs-$ts0:onmatch(exceptions.page_fault_user_enter).trace(user_faults,$delta)' >> events/exceptions/page_fault_user_exit/trigger
+On Wed, Apr 16, 2025 at 12:56:08PM -0400, Yury Norov wrote:
+> On Wed, Apr 16, 2025 at 09:32:11AM +0300, Andy Shevchenko wrote:
+> > bitmap-str.h is not self-contained, it uses something that is provided
+> > elsewhere, add missing header(s).
 > 
->  # cd /work/git/trace-cmd.git
->  # echo 'hist:keys=delta.log2:sort=delta if COMM == "cc1"' > /sys/kernel/tracing/events/synthetic/user_faults/trigger
+> Can you be more specific? Is 'something' means the __user? If so, it's
+> provided in linux/compiler_types.h.
 
-OMG, this tracing thing has turned into a language almost. I hope you're
-documenting those fancy use cases...
+bool, __user is defined in compiler_*.h which is guaranteed to be included by
+types.h
 
->  # make
-> [..]
-> 
->  # cat /sys/kernel/tracing/events/synthetic/user_faults/hist
-> # event histogram
-> #
-> # trigger info: hist:keys=delta.log2:vals=hitcount:sort=delta.log2:size=2048 if COMM == "cc1" [active]
-> #
-> 
-> { delta: ~ 2^0  } hitcount:          1
-> { delta: ~ 2^1  } hitcount:        334
-> { delta: ~ 2^2  } hitcount:       4090
-> { delta: ~ 2^3  } hitcount:      86037
-> { delta: ~ 2^4  } hitcount:     108790
-> { delta: ~ 2^5  } hitcount:      27387
-> { delta: ~ 2^6  } hitcount:       6015
-> { delta: ~ 2^7  } hitcount:        481
-> { delta: ~ 2^8  } hitcount:        134
-> { delta: ~ 2^9  } hitcount:         74
-> { delta: ~ 2^10 } hitcount:         54
-> { delta: ~ 2^11 } hitcount:          6
-> 
-> Totals:
->     Hits: 233403
->     Entries: 12
->     Dropped: 0
-> 
-> 
-> The above shows a histogram in microseconds where the buckets increase in a
-> power of two. The biggest bucket is between 2^4 (16) and 2^5 (32) microseconds
-> with 108790 hits.
-> 
-> The longest bucket of 2^11 (2ms) to 2^12 (4ms) had 6 hits.
-> 
-> And when sframes is supported, it will be able to show the user space stack
-> trace of where the longest page faults occur.
+> Can you add the compiler error you're trying to fix, or how did you
+> caught it?
 
-Ok, so AFAIU, this gives you how long user page faults take and apparently for
-someone this is important info.
-
-Now if only that info were in the commit message along with the usage scenario
-so that people can *actually* do what you guys are bragging about...
-
-:-P
-
-Thx.
+It's by reading the code.
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
