@@ -1,254 +1,212 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E623F230D0D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3020227E88
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794712; cv=none; b=XkUgkiTbXJTlkTWviWwynPEN4TtIKUy4CGFQqTzV+I/EY7vBDtF1HZE/3d2pu2XcjjgRV8ANvvY0SxF2SxMVDZFCJMUoo53xBOO+HgosUeosaTLjmfYf8Gcr2LfeCs3axcdvDio1mi2xfBnWi0xs7ROJSSSzGwfdH5et/Oa3Uik=
+	t=1744794739; cv=none; b=HcJZRdZUDgC90Vg8fUURZPb+IU+7jWLjYExnT9ECMLtGvrjiez2kBHFKCzkE27ZUkm4fqRhWB0w4QKGa8yNcaUEY0VO8bYyvg/1IHJAYIjLd2xmMu2dsXJTRf6Ztcc1xwDum5G6BX+kWjJIpqua4mIj2+XgShBf3dVfbRi385Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794712; c=relaxed/simple;
-	bh=gkAo5MIFO8GbCVIJ5pFW/+k7mTGtz2ehPwg7DRupRkg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ia26a+68h7Q5+fFe/jH5dpGBjhElK56dWzGTdRoqWP9H2x7teWdnIffZJ/9A7ryCHyeuuIAM4gyOpJYSFx7gCh1T25mWgUYLJi9JvzU31QWnZsYpWiyd8wLqVS25i+J6NqCp5Bz52heL6Yfwzo2ijk01my/mkayA2aebMWkIHi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PC84Y8HX; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744794739; c=relaxed/simple;
+	bh=GodOAskcLtHSu7odIU0A3MJHpsDVwKYa4n5215XdlhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jTfXr5+zoxdttfUKloIbzgpPlhpIhZF2jl2IvOwwQNVETH3eLWw/yJCvsKY04F8qkKjsN2erOyl/2w6YP/z9+hukxpBB65K96qUO65M0EU94/I29PREbWrGYk2L1z/wEDW1ZsX2rmeWagywQxCMP3+gg/wqnnDqUM9huuHtKz94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2XkdRc3k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xCFye5Wh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RCVgMjdh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H8ghe5UZ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PC84Y8HX"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22622ddcc35so87960415ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744794710; x=1745399510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ijzgK4iv6W9/SkZI5SFAq7Ny3NSkdxIDk62807ZYl0=;
-        b=PC84Y8HX7tDE0yvcNpA+TjXUZkf2zZ2J5LZz3OmbfCS3m/efaFa5JqKlZflOnvO06t
-         e8xVLra/BYaBF4XhiEl6w6ouBZ3A5Wj9serf4PcT0zOVYCy6XtwDjKf7lxE6QYTPdKXL
-         RSbu2Yj2I33efR0C4BB49NI5pbeRMF1hfWSIVObMBGif0hOY/SGd84/klJrRp5iNaFmb
-         tDnKC2JCqIRDkOStyhKG4B0ylq7G+1F4xb8X+XDL+ZTFN82iXc3P64DluHGL8wWcNhXE
-         2sB9727YdSoZAhByhaHaVPB3MuzT2KS7loESt478XbClpFKcujIWtp4T68EaB5ppz4VD
-         uo4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744794710; x=1745399510;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ijzgK4iv6W9/SkZI5SFAq7Ny3NSkdxIDk62807ZYl0=;
-        b=ciec6aJOBZKXBtRpb3ONlqvychZ/zXr47nWDvqJfq0DRvq44O8v6Jv3jOIpEcnl+Pp
-         q/sQjzR+2jo6g/JiAc0ar203cdI3MBuAPWSfLwSXEDmCX0bde9wPZVgQTV94rJUXOmj0
-         D6QyOLZlc3nG1mgEee+MH/ufQpIKwCmWuXFWARdUQF7Femo+hVSXOb4Np3PI8623rkGp
-         ZGkDWnY3S02rj9uFXj6gY2zdBPRmBFiMTkWGHWT+RjR7qVgh44zGTIGtcCYmLgG+K5RJ
-         pizExq0Mo4sqQ8SUgCJmEgY4phFLhxy4XKRieBLIdrMv7E3n9TgPH/GBb3Tl+G1eqiYa
-         QX5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWdqcrPw5RB38qF1TV9M+WtdV09tn49s6Fb5H5S+8ifNHJcKVrBiiOxQ6h+ybVxtgT+xRegVq7SqqSD5UQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVpe05xRA/2TPVoPrEy5LIlvWrjE2C86miHE9f9NWB99GKRlqT
-	/Li7WDAGYY2HJs451qBvgs7eLeFdu+FKAaKTjK/VPH1ZaynMU50=
-X-Gm-Gg: ASbGncurngKtrPwIHUQ0b3uA6SYa3lSukjkXubqdGZ0a1gKZ5crgFkawk9a0SzvlTXV
-	mw8B+F4tjZRJtmA0CONEw1V1yft9MWhQV6V0XzuaRkGgQZmQq9hIKGmKgLKr9nXBvRqx+a0WUdL
-	tNn2MRotulJNnvd5Xd67scvkqlRAkEgEk54V8iLgVek+m51f6qKcCm42KRngNl2MhMkEXj2K1hC
-	nK7jPl9iuskxeWKot/bK34YmCgW/dE7SQ5q9k2lA3P2GjrRTIt5k8Cme7XRsVO5AohVKdu0Wo0M
-	bTHgIcswYCkPc/Zjedfbf3u6rd0oLN7eoRmpfcQhbRz/A5h/5QVY4okp4iwLKXN5mEzXuib2TP5
-	8HI3UjohH2wtN
-X-Google-Smtp-Source: AGHT+IHDqfPMPJDX6LvxJT/QXWmU2cwXxlIuD/lorTF2upHPyZaXQWfeUnGYg7CHwP7bV4uUaeb+XA==
-X-Received: by 2002:a17:902:d2c7:b0:220:ff3f:6cba with SMTP id d9443c01a7336-22c3596b9dcmr21242515ad.38.1744794709972;
-        Wed, 16 Apr 2025 02:11:49 -0700 (PDT)
-Received: from mac.lan (syn-066-215-112-203.res.spectrum.com. [66.215.112.203])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0f41sm9185545ad.41.2025.04.16.02.11.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:11:49 -0700 (PDT)
-From: Luke Hofstetter <ldhofstetter@gmail.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sunil Khatri <sunil.khatri@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Boyuan Zhang <boyuan.zhang@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Dominik Kaszewski <dominik.kaszewski@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Luke Hofstetter <ldhofstetter@gmail.com>
-Subject: [PATCH] drm/amd/include: fix kernel-doc formatting in amd_shared.h
-Date: Wed, 16 Apr 2025 02:11:40 -0700
-Message-ID: <20250416091143.67704-1-ldhofstetter@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2XkdRc3k";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xCFye5Wh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RCVgMjdh";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H8ghe5UZ"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF90421185;
+	Wed, 16 Apr 2025 09:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744794735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
+	b=2XkdRc3kL3UqZjBIux9plckJYbVfQV9fTUf+0LMOgvo7nviOHqW43TbP9gCoM4m7OZfLMz
+	AdljKVZgtGmWvJTpW/xMC1R9FCZ25zxIelHGrJDMkcTrd9kQ2kRCQNnje7XwWeb52aOTf8
+	D/DnYkReel3vf2l+lcKddmhnrcehqrA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744794735;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
+	b=xCFye5WhIs+HV2+c1y/qS5DBjdwiitZPKOVB5ZW667Xzej1idHcC0sKYuqSm9LUuS+h08j
+	KAGQtsN+KHc0pBAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744794734; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
+	b=RCVgMjdhCOJToqSg/ZMSUOHBCF39zA/I2XlZX6IXbPfrQoGdaPu71VMxAANeuoSZr7uQJY
+	o9ZZ+MSCYXqkdsEIOC+b2KY7uvz5GnUImhYZL7MPv9VYFS9BgymwswDEcmiBfJ/yTxOj1X
+	34W2BbxmG8/jDkLuBlPNHSjn9GIWzOg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744794734;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
+	b=H8ghe5UZoW6YNP6MFlh44jhwuDMhdA3uaONdtD67O4TyJqQ5Y+2hTSrmXjpARZF1Z++RvH
+	x+gKIdtjCaZ74nAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C35E613976;
+	Wed, 16 Apr 2025 09:12:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gSSuL250/2d6bQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 16 Apr 2025 09:12:14 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 701CFA0947; Wed, 16 Apr 2025 11:12:10 +0200 (CEST)
+Date: Wed, 16 Apr 2025 11:12:10 +0200
+From: Jan Kara <jack@suse.cz>
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-fsdevel@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC vfs/for-next 1/1] eventpoll: Set epoll timeout if it's in
+ the future
+Message-ID: <qg2whv57hpyiw66ocb6zuhcus5yajqm3gypau3p655hp53pwnj@vxdhp2m7d5qg>
+References: <20250415184346.39229-1-jdamato@fastly.com>
+ <20250415184346.39229-2-jdamato@fastly.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415184346.39229-2-jdamato@fastly.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-when doing make htmldocs, Sphinx complained about in-line documentation
-in enum DC_DEBUG_MASK, so reformatted documentation to define each
-member in kernel-doc comment above the enum instead.
+On Tue 15-04-25 18:43:46, Joe Damato wrote:
+> Avoid an edge case where epoll_wait arms a timer and calls schedule()
+> even if the timer will expire immediately.
+> 
+> For example: if the user has specified an epoll busy poll usecs which is
+> equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
+> unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
+> consumed the entire timeout duration so it is unnecessary to induce
+> scheduling latency by calling schedule() (via schedule_hrtimeout_range).
+> 
+> This can be measured using a simple bpftrace script:
+> 
+> tracepoint:sched:sched_switch
+> / args->prev_pid == $1 /
+> {
+>   print(kstack());
+>   print(ustack());
+> }
+> 
+> Before this patch is applied:
+> 
+>   Testing an epoll_wait app with busy poll usecs set to 1000, and
+>   epoll_wait timeout set to 1ms using the script above shows:
+> 
+>      __traceiter_sched_switch+69
+>      __schedule+1495
+>      schedule+32
+>      schedule_hrtimeout_range+159
+>      do_epoll_wait+1424
+>      __x64_sys_epoll_wait+97
+>      do_syscall_64+95
+>      entry_SYSCALL_64_after_hwframe+118
+> 
+>      epoll_wait+82
+> 
+>   Which is unexpected; the busy poll usecs should have consumed the
+>   entire timeout and there should be no reason to arm a timer.
+> 
+> After this patch is applied: the same test scenario does not generate a
+> call to schedule() in the above edge case. If the busy poll usecs are
+> reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
+> armed as expected.
+> 
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
 
-Signed-off-by: Luke Hofstetter <ldhofstetter@gmail.com>
----
- drivers/gpu/drm/amd/include/amd_shared.h | 124 ++++++-----------------
- 1 file changed, 32 insertions(+), 92 deletions(-)
+Hum, I guess this is about the interpretation of the 'timeout' value of
+epoll_pwait2() and friends. Does the runtime of the system call itself
+(including possible polling) count into the timeout or does timeout mean
+how long we should sleep after we've done all our work? The manpage says
+"The timeout argument specifies the number of milliseconds that
+epoll_wait() will block." which I guess can be understood both ways. Seeing
+the epoll code it seems the author's intention was indeed rather the former.
+So I guess feel free to add:
 
-diff --git a/drivers/gpu/drm/amd/include/amd_shared.h b/drivers/gpu/drm/amd/include/amd_shared.h
-index 4c95b885d1d0..7074ec3b467f 100644
---- a/drivers/gpu/drm/amd/include/amd_shared.h
-+++ b/drivers/gpu/drm/amd/include/amd_shared.h
-@@ -255,120 +255,60 @@ enum DC_FEATURE_MASK {
- 
- /**
-  * enum DC_DEBUG_MASK - Bits that are useful for debugging the Display Core IP
-+ * @DC_DISABLE_PIPE_SPLIT: If set, disable pipe-splitting
-+ * @DC_DISABLE_STUTTER: If set, disable memory stutter mode
-+ * @DC_DISABLE_DSC: If set, disable display stream compression
-+ * @DC_DISABLE_CLOCK_GATING: If set, disable clock gating optimizations
-+ * @DC_DISABLE_PSR: If set, disable Panel self refresh v1 and PSR-SU
-+ * @DC_FORCE_SUBVP_MCLK_SWITCH: If set, force mclk switch in subvp, even
-+ *	 							if mclk switch in vblank is possible
-+ * @DC_DISABLE_MPO: If set, disable multi-plane offloading
-+ * @DC_ENABLE_DPIA_TRACE: If set, enable trace logging for DPIA
-+ * @DC_ENABLE_DML2: If set, force usage of DML2, even if the DCN version
-+ *	 				does not default to it.
-+ * @DC_DISABLE_PSR_SU: If set, disable PSR SU
-+ * @DC_DISABLE_REPLAY: If set, disable Panel Replay
-+ * @DC_DISABLE_IPS: If set, disable all Idle Power States, all the time.
-+ *	 				If more than one IPS debug bit is set, the lowest bit takes
-+ *	 				precedence. For example, if DC_FORCE_IPS_ENABLE and
-+ *	 				DC_DISABLE_IPS_DYNAMIC are set, then DC_DISABLE_IPS_DYNAMIC takes
-+ *	 				precedence.
-+ * @DC_DISABLE_IPS_DYNAMIC: If set, disable all IPS, all the time,
-+ *	 						*except* when driver goes into suspend.
-+ * @DC_DISABLE_IPS2_DYNAMIC: If set, disable IPS2 (IPS1 allowed) if
-+ *	 						there is an enabled display. Otherwise, enable all IPS.
-+ * @DC_FORCE_IPS_ENABLE: If set, force enable all IPS, all the time.
-+ * @DC_DISABLE_ACPI_EDID: If set, don't attempt to fetch EDID for
-+ *	 					  eDP display from ACPI _DDC method.
-+ * @DC_DISABLE_HDMI_CEC: If set, disable HDMI-CEC feature in amdgpu driver.
-+ * @DC_DISABLE_SUBVP: If set, disable DCN Sub-Viewport feature in amdgpu driver.
-+ * @DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE: If set, disable support for custom brightness curves
-+ * @DC_HDCP_LC_FORCE_FW_ENABLE: If set, use HDCP Locality Check FW
-+ *	 					        path regardless of reported HW capabilities.
-+ * @DC_HDCP_LC_ENABLE_SW_FALLBACK: If set, upon HDCP Locality Check FW
-+ *	                              path failure, retry using legacy SW path.
-  */
- enum DC_DEBUG_MASK {
--	/**
--	 * @DC_DISABLE_PIPE_SPLIT: If set, disable pipe-splitting
--	 */
- 	DC_DISABLE_PIPE_SPLIT = 0x1,
--
--	/**
--	 * @DC_DISABLE_STUTTER: If set, disable memory stutter mode
--	 */
- 	DC_DISABLE_STUTTER = 0x2,
--
--	/**
--	 * @DC_DISABLE_DSC: If set, disable display stream compression
--	 */
- 	DC_DISABLE_DSC = 0x4,
--
--	/**
--	 * @DC_DISABLE_CLOCK_GATING: If set, disable clock gating optimizations
--	 */
- 	DC_DISABLE_CLOCK_GATING = 0x8,
--
--	/**
--	 * @DC_DISABLE_PSR: If set, disable Panel self refresh v1 and PSR-SU
--	 */
- 	DC_DISABLE_PSR = 0x10,
--
--	/**
--	 * @DC_FORCE_SUBVP_MCLK_SWITCH: If set, force mclk switch in subvp, even
--	 * if mclk switch in vblank is possible
--	 */
- 	DC_FORCE_SUBVP_MCLK_SWITCH = 0x20,
--
--	/**
--	 * @DC_DISABLE_MPO: If set, disable multi-plane offloading
--	 */
- 	DC_DISABLE_MPO = 0x40,
--
--	/**
--	 * @DC_ENABLE_DPIA_TRACE: If set, enable trace logging for DPIA
--	 */
- 	DC_ENABLE_DPIA_TRACE = 0x80,
--
--	/**
--	 * @DC_ENABLE_DML2: If set, force usage of DML2, even if the DCN version
--	 * does not default to it.
--	 */
- 	DC_ENABLE_DML2 = 0x100,
--
--	/**
--	 * @DC_DISABLE_PSR_SU: If set, disable PSR SU
--	 */
- 	DC_DISABLE_PSR_SU = 0x200,
--
--	/**
--	 * @DC_DISABLE_REPLAY: If set, disable Panel Replay
--	 */
- 	DC_DISABLE_REPLAY = 0x400,
--
--	/**
--	 * @DC_DISABLE_IPS: If set, disable all Idle Power States, all the time.
--	 * If more than one IPS debug bit is set, the lowest bit takes
--	 * precedence. For example, if DC_FORCE_IPS_ENABLE and
--	 * DC_DISABLE_IPS_DYNAMIC are set, then DC_DISABLE_IPS_DYNAMIC takes
--	 * precedence.
--	 */
- 	DC_DISABLE_IPS = 0x800,
--
--	/**
--	 * @DC_DISABLE_IPS_DYNAMIC: If set, disable all IPS, all the time,
--	 * *except* when driver goes into suspend.
--	 */
- 	DC_DISABLE_IPS_DYNAMIC = 0x1000,
--
--	/**
--	 * @DC_DISABLE_IPS2_DYNAMIC: If set, disable IPS2 (IPS1 allowed) if
--	 * there is an enabled display. Otherwise, enable all IPS.
--	 */
- 	DC_DISABLE_IPS2_DYNAMIC = 0x2000,
--
--	/**
--	 * @DC_FORCE_IPS_ENABLE: If set, force enable all IPS, all the time.
--	 */
- 	DC_FORCE_IPS_ENABLE = 0x4000,
--	/**
--	 * @DC_DISABLE_ACPI_EDID: If set, don't attempt to fetch EDID for
--	 * eDP display from ACPI _DDC method.
--	 */
- 	DC_DISABLE_ACPI_EDID = 0x8000,
--
--	/**
--	 * @DC_DISABLE_HDMI_CEC: If set, disable HDMI-CEC feature in amdgpu driver.
--	 */
- 	DC_DISABLE_HDMI_CEC = 0x10000,
--
--	/**
--	 * @DC_DISABLE_SUBVP: If set, disable DCN Sub-Viewport feature in amdgpu driver.
--	 */
- 	DC_DISABLE_SUBVP = 0x20000,
--	/**
--	 * @DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE: If set, disable support for custom brightness curves
--	 */
- 	DC_DISABLE_CUSTOM_BRIGHTNESS_CURVE = 0x40000,
--
--	/**
--	 * @DC_HDCP_LC_FORCE_FW_ENABLE: If set, use HDCP Locality Check FW
--	 * path regardless of reported HW capabilities.
--	 */
- 	DC_HDCP_LC_FORCE_FW_ENABLE = 0x80000,
--
--	/**
--	 * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
--	 * path failure, retry using legacy SW path.
--	 */
- 	DC_HDCP_LC_ENABLE_SW_FALLBACK = 0x100000,
- };
- 
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+> ---
+>  fs/eventpoll.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index f9898e60dd8b..ca0c7e843da7 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1980,6 +1980,14 @@ static int ep_autoremove_wake_function(struct wait_queue_entry *wq_entry,
+>  	return ret;
+>  }
+>  
+> +static int ep_schedule_timeout(ktime_t *to)
+> +{
+> +	if (to)
+> +		return ktime_after(*to, ktime_get());
+> +	else
+> +		return 1;
+> +}
+> +
+>  /**
+>   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
+>   *           event buffer.
+> @@ -2095,7 +2103,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
+>  
+>  		write_unlock_irq(&ep->lock);
+>  
+> -		if (!eavail)
+> +		if (!eavail && ep_schedule_timeout(to))
+>  			timed_out = !schedule_hrtimeout_range(to, slack,
+>  							      HRTIMER_MODE_ABS);
+>  		__set_current_state(TASK_RUNNING);
+> -- 
+> 2.43.0
+> 
 -- 
-2.49.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
