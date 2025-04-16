@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF2D21147C;
-	Wed, 16 Apr 2025 18:54:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B45E224227;
+	Wed, 16 Apr 2025 18:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744829678; cv=none; b=ZRasr1dRvlPQAKwXTJq+XhMSRLplKgnmK4c0bmaF/ynFm8YbxHXEgDZ9l2Y2gDBrEEn5bTVCqSR5VIV8Z+21Yjr7iqruPietNeF6epSaWeGaV9MTos0BvB0nUsTdZUDexBLsAtoGuFXUhfwK52+3Xg6kxs4t9f88dFYfsA7D+vc=
+	t=1744829680; cv=none; b=KWrK2wlbceJW4L7k12xuhLgCsCfXWuGwlX8iaBIXl4uC0jtTtBUVSZDGeVd6+NgytgRBoAxhIdyY5JL+xMebEBJnnyOpgEHw73U9JgsjrsLObCM/Whu+DdOSLInFASIGnnZq93RZXxGiPRwnl1qQyPbLwqaL0Wk3hRJRpJsFbMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744829678; c=relaxed/simple;
-	bh=G2fP1NQyrEKCqjPffo7p61378KeApix2SGdw4O3QqAI=;
+	s=arc-20240116; t=1744829680; c=relaxed/simple;
+	bh=xni/UIFwrUe9Y19o+gZ/eMRivYlOScEne4PQfxNvlyQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eGZ1b+pWzSjy9dMIwYGuJh1sEWBTA0AM0FdLXmuwPEFu+i/q8ey5YFx2GGcMwAslO8h28hZ+SwhUkXBFeHHQc2qka9xo5QSCGT1V+XNdBUXkS0kQcnD8J/Tddt8I/dPzruJMdeP1qiLHPLcliHGDgFXcHP8K/MmkFZmxBIQkxX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eZYq6sRt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=T5gg9JQLLb3MQbmFgOCURL4X0h26eKmDuSoMZiRNFIVBaRUh7aKTLJuPBU9ZjN0PCMsyPUIvmlCy7GfPUVPwfcmVKgGA0uOtPHMN2gEDaC+S9QsArLQLtGHTOYjWkqstIjOsARhXWd2MM5DGfcnF/atzfkJ9sEjRbqXjeOrUW3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQoUPfdV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eZYq6sRt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330FAC4CEE2;
-	Wed, 16 Apr 2025 18:54:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQoUPfdV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733A7C4CEE4;
+	Wed, 16 Apr 2025 18:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744829678;
-	bh=G2fP1NQyrEKCqjPffo7p61378KeApix2SGdw4O3QqAI=;
+	s=k20201202; t=1744829680;
+	bh=xni/UIFwrUe9Y19o+gZ/eMRivYlOScEne4PQfxNvlyQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=eZYq6sRtHaLUXIJ41kjAAKqOaiPFLPBCwmlXIgc1cTE15/x5V75/NtWLoAU8qTGjA
-	 B1OLtFiVr6D8gGZRbHCo3vOPweB/9v7hH6AA4A1+68yb2jngJuKgs7SoPXn+lYVJyx
-	 yUYv523e66qwoCa1AJdaloeILFrhsSFaH/c5gSi6AwRS5yR40mOrZOn9gkXpk4ydO0
-	 PCgjaApLZXXrTZoUOABO+Kp7R6QBIxcpE8klJwPq42n9FNaCp67dR6q/Zi7SZsEokH
-	 Se9Dk08T/1skMRe15NjmlmGExXc4c20Mm5dTo8Lq37CgSDF/eMsI+MIm2V4JtnBojX
-	 uWUiIgqhzoVlA==
+	b=rQoUPfdV8hfrtYef8/CK1sbMD8jmhfqlApmVr4rcczz1brQaWLBTb0UKXOr3UHPAF
+	 EOu0sryReti2zzxA5KwyymRzZUyYVQr4wC+VoN4wWMYqsm+18d4tWPXsK2zKKgaVsz
+	 8N5wY32ZjxdSATJwe30a2+3YKxLYyo/SMeiyEjQ6D4aokSMH36te31bt2aoROGwSjb
+	 tnISNRLPlZHUNZ+OuWHgEaQvwRJXi26F+tYfQ3rntWIqH6+SQ4EHcAMUv7QwBfMrA0
+	 noL+nY9NsxARN/3dsXMmNObOcbgBLV704TyNCWB2vKZcPrwf6Ve14s2aHjIldF5vRZ
+	 UqyuqgGhR2iBQ==
 From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250416121604.780220-1-rf@opensource.cirrus.com>
-References: <20250416121604.780220-1-rf@opensource.cirrus.com>
-Subject: Re: [PATCH] ASoC: cs-amp-lib-test: Use faux bus instead of
- creating a dummy platform device
-Message-Id: <174482967693.823707.10000203565483930453.b4-ty@kernel.org>
-Date: Wed, 16 Apr 2025 19:54:36 +0100
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ ckeepax@opensource.cirrus.com, andriy.shevchenko@linux.intel.com, 
+ heiko@sntech.de, shengjiu.wang@nxp.com, Chen Ni <nichen@iscas.ac.cn>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250416041023.546311-1-nichen@iscas.ac.cn>
+References: <20250416041023.546311-1-nichen@iscas.ac.cn>
+Subject: Re: [PATCH] ASoC: ak4458: Remove useless return variable
+Message-Id: <174482967822.823707.3884563966780253563.b4-ty@kernel.org>
+Date: Wed, 16 Apr 2025 19:54:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,11 +46,8 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, 16 Apr 2025 13:16:04 +0100, Richard Fitzgerald wrote:
-> Change the code to use faux bus for the dummy codec driver device instead
-> of creating a platform device. Also use KUnit automatic resource cleanup to
-> destroy the device instead of doing it "manually" in a test case exit()
-> function.
+On Wed, 16 Apr 2025 12:10:23 +0800, Chen Ni wrote:
+> Remove unnecessary return variable and compress the return logic.
 > 
 > 
 
@@ -60,8 +57,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: cs-amp-lib-test: Use faux bus instead of creating a dummy platform device
-      commit: d1965f008f224a775eac2aa021a1fbbf4bca96cb
+[1/1] ASoC: ak4458: Remove useless return variable
+      commit: 65bd426bace60540c5b6710890800abb1accc5ce
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
