@@ -1,167 +1,139 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC9A212F89;
-	Wed, 16 Apr 2025 17:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA89421147A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823047; cv=none; b=la1vXOpjSNEWU5w4jOnVSsk74NSdzTrRCdjYkg5j1jKke/4S0Ief2tTUSHbDXXnngOD871L+HT/4DXKicfkdDT+SsW8JJy+Z7NH+2gu4ug7PG0jcLZzz2zityUL7uQz86Asw6VAMnRgae7979MUodu70pCb28rY9b+kNdbF5fVU=
+	t=1744823181; cv=none; b=eCiEYtg8ZXYnnCYxwslbq9WNt5je3ssf/0ImRqF3krPXeL90GGfJruPCNaa+qkhQqZwD2JLXxELZA2o6bCv5LIB/g82o8U2bA0K1GZV8La7A0frFlsbLaNboaWJYuekyGE1nta0FiCU94f9PaZ++RryQH6ktFRW7dNk3ydxuwA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823047; c=relaxed/simple;
-	bh=wgCJ0YY6y5mc3MKbBmKW0mnPzzpGjhPUNF1lKUnvhjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKAPH1aEWzSkLLqjKnbQviSc1esvf7yEuoax/B//7t/m7PeMgwpqSdoufzNQeLeP+ioDd4Ex8QZrHOwUwaGIheCQ8kODQrWD7fEhxN5sBQGzo+ITSBKdgRFevzBnkTnODrqnJmFse8JuabDIEyspQ5okRuVjhQ6uIcnTtWsUPz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JM8UVWCL; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744823181; c=relaxed/simple;
+	bh=BwsN16YKHONPHxzjU/SbOMb+EVmGjdBp4T7oyG4QakE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mL6mBT8UfgtB0GP6n/o6fVDI7L7inrH25aGAGes+YdIKoQGc1/gnl88EYKAl0kobhG91cyI2GipWJTaw4p51ek3aqEWMHNHmghrG4MTfdMIjPj9R57T8UTk2kiHEfwVL+sMSGRwAquGiVeGUMhnNsZ1jYw2ArFcIKm+1X7Z7vhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IAoOe2e9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JM8UVWCL"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C28D5965;
-	Wed, 16 Apr 2025 19:01:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744822919;
-	bh=wgCJ0YY6y5mc3MKbBmKW0mnPzzpGjhPUNF1lKUnvhjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JM8UVWCLlEpsxKhuY7rly7xb7D3TdDAMaJbLfQjeOOGpSoJZ6mV0Ae5/c9lXz0qRg
-	 jaE0dvXZr+Fha3XA0vUNPWfTUWm9KG0rke7gzhAiTBg9vPm3GY2VFsFgGgYoq4MftH
-	 Pmg24l3gVJDl2mmIFY69NRjMmHcgPQ+MB6z7lQgk=
-Date: Wed, 16 Apr 2025 20:04:00 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: POPESCU Catalin <catalin.popescu@leica-geosystems.com>
-Cc: Jai Luthra <jai.luthra@ideasonboard.com>,
-	Shawn Guo <shawnguo2@yeah.net>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
-	GEO-CHHER-bsp-development <bsp-development.geo@leica-geosystems.com>,
-	"stefan.klug@ideasonboard.com" <stefan.klug@ideasonboard.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp: add cpuidle state "cpu-pd-wait"
-Message-ID: <20250416170400.GK9439@pendragon.ideasonboard.com>
-References: <20241007134424.859467-1-catalin.popescu@leica-geosystems.com>
- <ZxYiCv6SpLq9uh08@dragon>
- <qqi2z7wutuy7e6o5fhpzsgfwkyn4quqmdeftl24meld72sudpg@lo3qpk4x7lbv>
- <d6852cf6-e8a0-49b8-a565-2d94eeef67d9@leica-geosystems.com>
- <20250415154724.GG9439@pendragon.ideasonboard.com>
- <20250415155239.GH9439@pendragon.ideasonboard.com>
- <49a83fe4-863d-4f84-912c-cf58dc22ede6@leica-geosystems.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IAoOe2e9"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GA3uUV028965;
+	Wed, 16 Apr 2025 17:06:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Th2C89
+	4XU0h6B9ZLA23yfpKllnyFrNpJuzHNK5ofMyw=; b=IAoOe2e9lHGkwC3t3QXql/
+	52zouzWdQJW5GGSarNiN1W9sv6CwaoYgjmgOos8/yBbuJllWMP66Pd0o7Y0Pl4h+
+	jStIp0tQAzLAgiBWrJKYnJcq6SZDhpfYl8edh77C/QNWymxJ4eeMwjJQCResseiE
+	8pGxPqjareYUeJipfcbeDN6vZA0rDr27meQohCEC2BLBim5e+qqggLlvuEKLXg+X
+	bPYqeyM3iw/RG30PECZOls8tFKs3cF2nvuucMWRtAL3by0fmjqegecN4RTBvN4TI
+	BnNxXFBLZMuf/B5HhORtr+6/B3yMw+aaT1JQW8o3enBnCu1rkcLR0SKbUrCnkMbw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462affa990-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:06:15 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GF8pfB010467;
+	Wed, 16 Apr 2025 17:06:14 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qk93h4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 17:06:14 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GH6DV030868066
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 17:06:14 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CFD315805D;
+	Wed, 16 Apr 2025 17:06:13 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5774758043;
+	Wed, 16 Apr 2025 17:06:12 +0000 (GMT)
+Received: from [9.61.241.145] (unknown [9.61.241.145])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 17:06:12 +0000 (GMT)
+Message-ID: <aeeb5e4e-7dd0-41a9-85d6-8fd415746595@linux.ibm.com>
+Date: Wed, 16 Apr 2025 22:36:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <49a83fe4-863d-4f84-912c-cf58dc22ede6@leica-geosystems.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [mainline]Kernel crash while running ftrace selftest
+Content-Language: en-GB
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>
+References: <1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com>
+ <20250416110253.62056f4f@batman.local.home>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250416110253.62056f4f@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WpllPNGKeMYlQGGkASMfjIX8lXzeX1P9
+X-Proofpoint-GUID: WpllPNGKeMYlQGGkASMfjIX8lXzeX1P9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
+ suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504160139
 
-Hi Catalin,
 
-On Wed, Apr 16, 2025 at 06:57:35AM +0000, POPESCU Catalin wrote:
-> On 15/04/2025 17:52, Laurent Pinchart wrote:
-> > On Tue, Apr 15, 2025 at 06:47:26PM +0300, Laurent Pinchart wrote:
-> >> On Tue, Apr 15, 2025 at 03:42:22PM +0000, POPESCU Catalin wrote:
-> >>> Hi Jai,
-> >>>
-> >>> This issue was already reported by Stefan. The problem is that I don't
-> >>> have a Debix board to investigate.
-> >>> The main difference b/w WFI and cpu-pd-wait is that the first doesn't
-> >>> call PSCI/TF-A. So, the issue looks to be related to some settings in
-> >>> the TF-A.
-> >>
-> >> Jai, are you using mainline U-Boot and TF-A, or a downstream version of
-> >> either (or both) ?
-> >
-> > Actually, same question for Calatin :-)
-> 
-> Bonjour Laurent,
-> 
-> I'm running a yocto scarthgap custom build :
-> 
-> - barebox : http://barebox.org/download/barebox-2024.05.0.tar.bz2 _with_
-> custom patches
-> - kernel : 6.12.16 _with_ custom patches
-> - TF-A :
-> git://github.com/hexagon-geo-surv/trusted-firmware-a;protocol=https;branch=leica/v2.12
-> / SRCREV=46c962c654de4ab734f936f472508edf20c6c049 (_no_ custom patches)
+On 16/04/25 8:32 pm, Steven Rostedt wrote:
+> On Wed, 16 Apr 2025 12:37:15 +0530
+> Venkat Rao Bagalkote <venkat88@linux.ibm.com> wrote:
+>
+>
+> Thanks for the bug report!
+>
+>> [15137.589546] NIP [c0000000003e4738] ops_equal+0x8/0x170
+>> [15137.589553] LR [c0000000003ec708] ftrace_update_ops+0x78/0xe0
+> Hmm, I'm guessing that you hit a path where the filter_hash or
+> notrace_hash never was initialized.
+>
+>> [15137.589561] Call Trace:
+>> [15137.589564] [c00000001473f9c0] [c0000000003ec6ec]
+>> ftrace_update_ops+0x5c/0xe0 (unreliable)
+>> [15137.589575] [c00000001473fa00] [c0000000003f31b4]
+>> ftrace_startup_subops+0x124/0x5c0
+>> [15137.589583] [c00000001473faa0] [c
+> Can you see if this fixes the issue for you?
+>
+> Thanks!
+>
+> -- Steve
+>
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a8a02868b435..777574fa3095 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3625,8 +3625,8 @@ static int rebuild_hashes(struct ftrace_hash **filter_hash, struct ftrace_hash *
+>    */
+>   int ftrace_shutdown_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int command)
+>   {
+> -	struct ftrace_hash *filter_hash;
+> -	struct ftrace_hash *notrace_hash;
+> +	struct ftrace_hash *filter_hash = EMPTY_HASH;
+> +	struct ftrace_hash *notrace_hash = EMPTY_HASH;
+>   	int ret;
+>   
+>   	if (unlikely(ftrace_disabled))
 
-Could you please run tests with the latest mainline kernel ?
 
-> > I'm running mainline U-Boot 2025.01 and TF-A rel_imx_5.4.70_2.3.6 (from
-> > https://github.com/nxp-imx/imx-atf) and don't seem to experience the
-> > issue:
-> >
-> > # cat /sys/devices/system/cpu/cpu*/cpuidle/state1/disable
-> > 0
-> > 0
-> > 0
-> > 0
-> >
-> > $ ping debix
-> > PING debix.farm.ideasonboard.com (192.168.2.230) 56(84) bytes of data.
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=1 ttl=64 time=1.03 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=2 ttl=64 time=0.800 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=3 ttl=64 time=0.935 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=4 ttl=64 time=0.902 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=5 ttl=64 time=0.738 ms
-> > 64 bytes from debix.farm.ideasonboard.com (192.168.2.230): icmp_seq=6 ttl=64 time=0.939 ms
-> >
-> >>> What I don't get is why I don't see this issue neither on our IMX8MP
-> >>> specific design nor on the EVK, which uses the same PHY as the Debix board.
-> >>>
-> >>> On 14/04/2025 14:07, Jai Luthra wrote:
-> >>>> On Oct 21, 2024 at 17:42:34 +0800, Shawn Guo wrote:
-> >>>>> On Mon, Oct 07, 2024 at 03:44:24PM +0200, Catalin Popescu wrote:
-> >>>>>> So far, only WFI is supported on i.MX8mp platform. Add support for
-> >>>>>> deeper cpuidle state "cpu-pd-wait" that would allow for better power
-> >>>>>> usage during runtime. This is a port from NXP downstream kernel.
-> >>>>>>
-> >>>> Since the introduction of this patch in mainline, I am facing sluggish
-> >>>> network performance with my Debix Model-A board with i.MX8mp SoC.
-> >>>>
-> >>>> The network latency jumps to >1s after almost every other packet:
-> >>>>
-> >>>> PING debix (10.0.42.5) 56(84) bytes of data.
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=1008 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=0.488 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=1025 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.810 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=590 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=6 ttl=64 time=0.351 ms
-> >>>> ^C
-> >>>> --- debix ping statistics ---
-> >>>> 7 packets transmitted, 6 received, 14.2857% packet loss, time 6126ms
-> >>>> rtt min/avg/max/mdev = 0.351/437.416/1024.755/459.370 ms, pipe 2
-> >>>> darkapex at freya in ~
-> >>>>
-> >>>> If I revert the patch, or disable the deeper cpuidle state through
-> >>>> sysfs, the issue goes away.
-> >>>>
-> >>>> # echo 1 > /sys/devices/system/cpu/cpu$i/cpuidle/state1/disable
-> >>>>
-> >>>> PING debix (10.0.42.5) 56(84) bytes of data.
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=1 ttl=64 time=0.482 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=2 ttl=64 time=2.28 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=3 ttl=64 time=2.26 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=4 ttl=64 time=0.848 ms
-> >>>> 64 bytes from debix (10.0.42.5): icmp_seq=5 ttl=64 time=0.406 ms
-> >>>> ^C
-> >>>> --- debix ping statistics ---
-> >>>> 5 packets transmitted, 5 received, 0% packet loss, time 4051ms
-> >>>> rtt min/avg/max/mdev = 0.406/1.255/2.280/0.842 ms
-> >>>>
-> >>>>>> Signed-off-by: Catalin Popescu <catalin.popescu@leica-geosystems.com>
-> >>>>> Applied, thanks!
+Hello Steve,
 
--- 
+Issue still persists with the above patch.
+
+
 Regards,
 
-Laurent Pinchart
+Venkat.
+
