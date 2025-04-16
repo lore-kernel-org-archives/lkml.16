@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A021A22E3E1;
-	Wed, 16 Apr 2025 06:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1235E22FE0E;
+	Wed, 16 Apr 2025 06:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786690; cv=none; b=BTaHIESXCProQrGDmF6AjKHkbg7IysIvxE0oNikhh6ADuZm1A+Wu2V6evmIf+nVDTC/w8UVdt6fB1vdkvc64ofvJfYcSsuC4lTMT7n61DM2wcPDuGkFdtfBHg0/G7xCadkN3hz7b7LtGlJ+JvYrBJr+H7qYIZzy6OaPBTXtvWLE=
+	t=1744786695; cv=none; b=fC3CRow1jNmiVzJN+QZlBNAbs4LG9UoO93fYkGw6XYhrd9CZka2orncS3Sm51ITdDmyPdHJbFhw+XMkj2jYWLSbrKYLnIqGn2EO6Pcat0wSxI1rfKT2cUrxeSr4zyv+eJbob9/ivVv+0DspSU/Gstu42uSji+JGEJjZoZNBubmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786690; c=relaxed/simple;
-	bh=3fxTh2/IW45q1FIh85eFha6W/n2T/3ziJzmCR16YX+c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pUGZDt+b20CdBwtGmxbQpUtd7HJZ//v4Gs5YqABLedEASYBbK2t2NKL7q+3G2tgKeBZrT1hGikmUEoJkUzUPHe/b4G/Kxh7ZQyQNI1+J5LXiHbDnHSZi1Zkl7bXV191WQYD15lk6mkLlLfK8TLjamNPvL4A56Wi97jVapwqHui0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KR5iz3Ok; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744786695; c=relaxed/simple;
+	bh=jpugi8e27Z/kdIEtebaij6yO6Fpa6Eww1j0SfpkAUFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P0TcFhSNbWGpLZVsTXqzSyeiy/UVqrj3l7VlxPebHAik+WiIT/aGsH+3/oFq3+iRjUoMSxPcjBnvfopkiSOsy5gJmZIHJpxojTMuaVZMIHcZDDHjQqCehmfjgvZDqWvcFeZPCNGEavNkMSXNiHqEI32JWTG3SoIqfjwUkExjHMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s15bmqiw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KR5iz3Ok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C7BC4CEE2;
-	Wed, 16 Apr 2025 06:58:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s15bmqiw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AABC4CEED;
+	Wed, 16 Apr 2025 06:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786690;
-	bh=3fxTh2/IW45q1FIh85eFha6W/n2T/3ziJzmCR16YX+c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KR5iz3OkRj/HF/0CV0eegpRC/1qTNO+x7CEi1U5oBIwZEhvtcxRbpBGeEVUxzdyX7
-	 avbsVLc+WxYrzalTV+s06o52ZenJ0NW77eajiIik0Nxr5WRS14lcJPmvtadkjagmug
-	 Ndw3U0Sa9hKx3D9/GAwwPIPUVXztZfJYjbxSxbTN+4sKQlgw5yrAF4kl6HDVqi85aW
-	 f9T0Y45LZeSGntLpVcHiz3ELTd6RXCClrs9lpBPUi5tPwTgq694MNsp2CexlsVRpHB
-	 dIhed6nCR/wu6Wk2ryEcSpjKJ0RDOsTOZtTFEYYlMaQ/86clcoxvLNF5l5HTtsdD6C
-	 Lxm8MypBz5Aow==
+	s=k20201202; t=1744786694;
+	bh=jpugi8e27Z/kdIEtebaij6yO6Fpa6Eww1j0SfpkAUFA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=s15bmqiwV28PXAkmAdxRYYpOba7jNZNHomcWboPJgJ47Ay0PZHKlY2+BmRa0sidKz
+	 ri9fduJ8afASG5nenH++l2F49AWz5I1yQ5HJswxpDIF5zvXiq/ASMvxgPibJ8O23qa
+	 SlDoK6gqU2cXIMMB6Ghmm2U8gT4M7bnF4872kLNN541tpwPXHS7skFkI/vuPjPjNDq
+	 3ynPezXKX6eYFXQm252rE6UWUpGmr7hvUcBO4QLS64b0VVaZ8pjFWtJdqdvjS8MQrc
+	 Vv4zwFX2rdMaK1Er6QUvq93G3xT30xop33JlM8VkvLhIsmHG71FlBzSKAY5k9w5aMB
+	 oJLGpCKDmECYg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u4wiN-00000002kO6-41Ns;
+	id 1u4wiN-00000002kO3-3smf;
 	Wed, 16 Apr 2025 14:57:43 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Andy Shevchenko" <andriy.shevchenko@intel.com>,
+	linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
 	David Airlie <airlied@gmail.com>,
 	Jani Nikula <jani.nikula@linux.intel.com>,
 	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
@@ -45,14 +45,11 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	Tvrtko Ursulin <tursulin@ursulin.net>,
 	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] scripts/kernel-doc.py: don't create *.pyc files
-Date: Wed, 16 Apr 2025 14:57:38 +0800
-Message-ID: <432f17b785d35122753d4b210874d78ee84e1bb5.1744786420.git.mchehab+huawei@kernel.org>
+	intel-gfx@lists.freedesktop.org
+Subject: [PATCH v2 0/2] Don't create Python bytecode when building the kernel
+Date: Wed, 16 Apr 2025 14:57:37 +0800
+Message-ID: <cover.1744786420.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1744786420.git.mchehab+huawei@kernel.org>
-References: <cover.1744786420.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,75 +59,30 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-As reported by Andy, kernel-doc.py is creating a __pycache__
-directory at build time.
+As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
+when W=1. Due to Python's normal behavior, its JIT compiler will create
+a bytecode and store it under scripts/lib/*/__pycache__. 
 
-Disable creation of __pycache__ for the libraries used by
-kernel-doc.py, when excecuted via the build system or via
-scripts/find-unused-docs.sh.
+As one may be using O= and even having the sources on a read-only mount
+point, disable its creation during build time.
 
-Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
+This only solves half of the issue though, as one may be manually running
+the script by hand, without asking Python to not store any bytecode.
+This should be OK, but afterwards, git status will list the __pycache__ as
+not committed. To prevent that, add *.pyc to .gitignore.
+
+Mauro Carvalho Chehab (2):
+  scripts/kernel-doc.py: don't create *.pyc files
+  .gitignore: ignore Python compiled bytecode
+
+ .gitignore                    | 1 +
  drivers/gpu/drm/Makefile      | 2 +-
  drivers/gpu/drm/i915/Makefile | 2 +-
  include/drm/Makefile          | 2 +-
  scripts/find-unused-docs.sh   | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ 5 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index ed54a546bbe2..1469d64f8783 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
- quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
-       cmd_hdrtest = \
- 		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
--		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-+		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
- 		touch $@
- 
- $(obj)/%.hdrtest: $(src)/%.h FORCE
-diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
-index ed05b131ed3a..bb873f9cc2aa 100644
---- a/drivers/gpu/drm/i915/Makefile
-+++ b/drivers/gpu/drm/i915/Makefile
-@@ -408,7 +408,7 @@ obj-$(CONFIG_DRM_I915_GVT_KVMGT) += kvmgt.o
- #
- # Enable locally for CONFIG_DRM_I915_WERROR=y. See also scripts/Makefile.build
- ifdef CONFIG_DRM_I915_WERROR
--    cmd_checkdoc = $(srctree)/scripts/kernel-doc -none -Werror $<
-+    cmd_checkdoc = $(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none -Werror $<
- endif
- 
- # header test
-diff --git a/include/drm/Makefile b/include/drm/Makefile
-index a7bd15d2803e..6088ea458f44 100644
---- a/include/drm/Makefile
-+++ b/include/drm/Makefile
-@@ -11,7 +11,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
- quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
-       cmd_hdrtest = \
- 		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
--		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-+		$(KERNELDOC) PYTHONDONTWRITEBYTECODE=1 -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
- 		touch $@
- 
- $(obj)/%.hdrtest: $(src)/%.h FORCE
-diff --git a/scripts/find-unused-docs.sh b/scripts/find-unused-docs.sh
-index ee6a50e33aba..d6d397fbf917 100755
---- a/scripts/find-unused-docs.sh
-+++ b/scripts/find-unused-docs.sh
-@@ -54,7 +54,7 @@ for file in `find $1 -name '*.c'`; do
- 	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
- 	continue;
- 	fi
--	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
-+	str=$(PYTHONDONTWRITEBYTECODE=1 scripts/kernel-doc -export "$file" 2>/dev/null)
- 	if [[ -n "$str" ]]; then
- 	echo "$file"
- 	fi
 -- 
 2.49.0
+
 
