@@ -1,109 +1,100 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B2322CBF4;
-	Wed, 16 Apr 2025 07:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42E622DF96
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789082; cv=none; b=rQoBMA7ydBEpX40qjw7Jf+oCF0IIlaubSlPUdx385PiNdvP7rxuU2z6XI6BMmVua4OOCzyOSIV+bS2ZhA+uvTBho5TEpo4loAKmXIuFymDrTiS1Hg0oP8AbDBwW7Pqe/Ww59hznRNUD5TqXkC2SIo6XwxeN4ccotige0AGqy0eI=
+	t=1744789085; cv=none; b=gch8EZIhp+i+WBcgG21t0EowFffKru01QmaDduhFrt0F8gRZt6wTONfDb6+k/TPpZF6RO493yH6+W/XtCi7F2Y62Q7u7cbUNHnD4i4wTehJh4cLWTwS1k2zNdeqax00lKbXxBZuAs7qDRTa7oIlamlGF/ExHgbvuaO3tTCJAEZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789082; c=relaxed/simple;
-	bh=Fybx3Iz/wMarHtOZGnakusCk5Rq7cupipk5q2F325aE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=AE8kJl4iCjAXP47T8+xCNHytuY33PdIgmIzQoPexUyqDmYZkmooDJ6Z4edfQXQHYDq+lmEQb/M3mGHzjMjDhB+FyMmtXdh3GfNGYSLnqEjQIRV2RX0DV5TiC8BkRckAjeaAz4EPeLOqk3d5D/oFcRt124lr+BpgDE1FrDjI/410=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-42-67ff5e51dff5
-Message-ID: <00619904-9111-4e75-9ff7-1494ed299f9b@sk.com>
-Date: Wed, 16 Apr 2025 16:37:52 +0900
+	s=arc-20240116; t=1744789085; c=relaxed/simple;
+	bh=amwpGB6oc0xTwWvNaOzEUQb14IdSrSFjaAUq2KqYyhM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=LngOnPHhSLrneEiMKveeZRb34Mgq8wNjG/6wG7yQLTwtRyCvWDyWJD39RFSK5Bb+8zizAThArtZZ3ZzAiOk8k/N0o2mROMkzppXBBzZNuiwFJBz9VEhI4RmDTBf+uiQ1aQLUJJiSxsWRCTT4ZTHkU9p4Iz8mC/J++mVbveIJMUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V5p4Mu4N; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V5p4Mu4N"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ded500589aso870808a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:38:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744789082; x=1745393882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eg4oqpJxNbQphE8w3P09Er5v6v1HmNB/fe4vd0yZ3wY=;
+        b=V5p4Mu4NllIYn9ecmJ/1HsSdhJZeKRD0xBEcFkuGPKDmiDjEHu59u4tLMAwfW1GA+w
+         sZ2DzXnCTibO5o8fa9FsiRvT7JbC6QKcIhQ7pe1PlCszz4et6rXm+a9TfG5lBZ4ELq1O
+         +P8XpJo5UT9rBRyi/4K0bhv+IE7cPMOfDlitgSUvaqyKPfphmgT/ZwwIMPZ+l0ntjb27
+         riZlhaEYk4YM0gbp7oE4AbT+REyi+TUu8ruxeDTpXE7eUmvAdivVnqE5YV5tMOmlCyqQ
+         QEvRUeNuV4/lVk5Fza75s14Cl5zQXaZVNzNXTC21XYeHT85lPuDL+sXYeD7m/7fOHKqq
+         ufDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789082; x=1745393882;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Eg4oqpJxNbQphE8w3P09Er5v6v1HmNB/fe4vd0yZ3wY=;
+        b=qW60NtrhLf8GvL31CqDLbI4bbj2S88uLiCzDQEjkUswGJy1EiM23uALkekialeMTB7
+         +4NZ6OWEDRKZQfHHpvzI+Gy+x0bwnx/67d60Ka25cUqrbbh7QA0C0nW+frbr0GE+ZBjA
+         R5EiUtLubjk5mm+skyMCDRqIuSFh4r3RF4QvPIDC4g8uNFq2XAm52N1ukiOy0M3GLZmb
+         cEzXISf4IVMtUtqRleijLrdkyrhjECdSWrTRAuNAi/q97ZrS8XaN5/+bGILcA/DuE4m8
+         RY24ejmVh0wtxGupyhj+n5GV28lcTzChfD3oMVl+2zJWQh8F9mrfrJjzu1EW4DJ1wfxq
+         32wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJRJDoqK8wY0yjvTADtzTZ7O3rjL+KKw/Ox29BrRKBBI1qgnZQKHJRJjqJyfXobbvtlxWM4iZatPZKvIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6QmDbu/nP4ZGuPtHM4BR8lrfnas1725OlrNMtqDIP3WAYiYD7
+	h/i+jPePiFQx+LdSgetsi14NajOOyH6q+Djc7kmtFLyHWVeSE6QR94ixczThEK8=
+X-Gm-Gg: ASbGnctWCN6b3kdo0n3RLsFdPxNL6FlJqiXRc3duZCXfSglxOpdDPnIaBtTlU3CbqLt
+	/YnLsA8scjPwxYs0c1Oy3uPlNdZ2v44zcrIMDgnmV2rQ5QLjknccP6X7k+eO/3aP9I03v7Jvkut
+	/H0oV3YwL7fR8YQaHVhb+Q76e+zRWwSu41cfFbrJ3Js8vwUM/85Hz6niK5PV7BkCJ0MGfDafr3A
+	qdqEZk5uZb1f/2W6CIQk7QftRtvuwgpgkg3/EgSo2ZUQo4lfGJhgRLO89g/zcEWWRxMB0h3CAo0
+	Ip33MRfDsjM/sxE3qgymngOL7fmZYPcebzjFow11uxAMWjVuQ064Ly6NG2vcx6VL90iKtaZsznW
+	7Hb4FaBgejBNGaCI=
+X-Google-Smtp-Source: AGHT+IFCwzD1uLGHlpgBLDXgOr28Wi28CRrVeE8s5ucDmzLKsmEThGiTFjedg4pD9VW4nX/azD+msA==
+X-Received: by 2002:a17:907:2da5:b0:ac3:f6c9:4856 with SMTP id a640c23a62f3a-acb42573791mr22447266b.0.1744789081517;
+        Wed, 16 Apr 2025 00:38:01 -0700 (PDT)
+Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd63f12sm75397066b.32.2025.04.16.00.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 00:38:00 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: krzk@kernel.org, aswani.reddy@samsung.com, pankaj.dubey@samsung.com, 
+ s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+ mturquette@baylibre.com, sboyd@kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Varada Pavani <v.pavani@samsung.com>
+Cc: gost.dev@samsung.com
+In-Reply-To: <20250307092403.19742-1-v.pavani@samsung.com>
+References: <CGME20250307093024epcas5p1e0be921d3f3445c67daf399e451bb203@epcas5p1.samsung.com>
+ <20250307092403.19742-1-v.pavani@samsung.com>
+Subject: Re: [PATCH v3] clk: samsung: Use samsung CCF common function
+Message-Id: <174478907989.19245.4738835908469009809.b4-ty@linaro.org>
+Date: Wed, 16 Apr 2025 09:37:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, akpm@linux-foundation.org, gourry@gourry.net,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
- ying.huang@linux.alibaba.com, david@redhat.com, osalvador@suse.de,
- yunjeong.mun@sk.com
-Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Content-Language: ko
-From: Honggyu Kim <honggyu.kim@sk.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Rakie Kim <rakie.kim@sk.com>
-References: <20250408073243.488-1-rakie.kim@sk.com>
- <20250408073243.488-4-rakie.kim@sk.com> <20250415170031.0000372b@huawei.com>
- <6a651c16-7ffc-42a5-8c98-95949073c804@sk.com>
-In-Reply-To: <6a651c16-7ffc-42a5-8c98-95949073c804@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXC9ZZnoW5g3P90g5UtUhZz1q9hs5g+9QKj
-	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
-	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
-	1CJ9uwSujK87trAVvOeoWHDgGXMD4z+2LkZODgkBE4m/r5exw9jbZi1hAbF5BSwl/iy4CxZn
-	EVCV2He7FyouKHFy5hMwW1RAXuL+rRlANVwczAIrmSQ+3P8H5HBwCAtESvzsdwapYRYQkZjd
-	2cYMYrMJqElceTmJCcQWEQiSeDrjKTNIr5DAJkaJn5MOgx3EKWAlMfXpJTaIZjOJrq1djBC2
-	vETz1tlgDRIC/ewSnf23GSGulpQ4uOIGywRGwVlIDpyFZPksJLNmIZm1gJFlFaNQZl5ZbmJm
-	joleRmVeZoVecn7uJkZgjC2r/RO9g/HTheBDjAIcjEo8vBHx/9KFWBPLiitzDzFKcDArifCe
-	MwcK8aYkVlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYBR9l/hl
-	jufqmU8mm3fWfVjvIxZ9f1Jck983L3FFv0nL2Of63Ih7e+T7tdj67GbPsiWWLBJXor92Nqvp
-	2Tu77SzivfR/UWGOw4el2qHfzQQTaudpsc2udJrDvuwFw0wbF0EThhde7FvWx3BO2eX/luPY
-	ebODXyW4RWM02Jfc2nflYtufeaeY2ZVYijMSDbWYi4oTAfM9NQqtAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LhmqGlpxsY9z/dYNNvbos569ewWUyfeoHR
-	4uv6X8wWP+8eZ7dYtfAam8XxrfPYLQ7PPclqcX7WKRaLy7vmsFncW/Of1eLMtCKLQ9ees1qs
-	XpNh8XvbCjYHPo+ds+6ye3S3XWb3aDnyltVj8Z6XTB6bPk1i9zgx4zeLx86Hlh7v911l8/h2
-	28Nj8YsPTB6bT1d7fN4kF8ATxWWTkpqTWZZapG+XwJXxdccWtoL3HBULDjxjbmD8x9bFyMkh
-	IWAisW3WEhYQm1fAUuLPgrvsIDaLgKrEvtu9UHFBiZMzn4DZogLyEvdvzQCq4eJgFljJJPHh
-	/j8gh4NDWCBS4me/M0gNs4CIxOzONmYQm01ATeLKy0lMILaIQJDE0xlPmUF6hQQ2MUr8nHQY
-	7AhOASuJqU8vsUE0m0l0be1ihLDlJZq3zmaewMg3C8kds5DsmIWkZRaSlgWMLKsYRTLzynIT
-	M3NM9YqzMyrzMiv0kvNzNzECo2lZ7Z+JOxi/XHY/xCjAwajEwxsR/y9diDWxrLgy9xCjBAez
-	kgjvOXOgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA2NE
-	s82F/w1Nv2fYSJzK/iGeYvA/Wez3vHw7gx+iuzmWL5pbIvr8q2jwgsJ9paFvHGUs5KYaBSVc
-	0np4+rqiuuuOKTK1zWZPP79L0f/JGL/2regTiXl5u+xMP5qmpOU3FgjLr595O3bx5JmqL8oM
-	M5a1Pjteuat49kPrX9NidG0s9K6yijM4VCuxFGckGmoxFxUnAgAA0KX2ogIAAA==
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
 
-
-On 4/16/2025 1:04 PM, Honggyu Kim wrote:
-> Hi Jonathan,
+On Fri, 07 Mar 2025 14:54:03 +0530, Varada Pavani wrote:
+> Use samsung CCF function which registers multiple clock providers using
+> single function call samsung_cmu_register_clocks().
 > 
-> Thanks for reviewing our patches.
 > 
-> I have a few comments and the rest will be addressed by Rakie.
-> 
-> On 4/16/2025 1:00 AM, Jonathan Cameron wrote:
->> On Tue, 8 Apr 2025 16:32:42 +0900
->> Rakie Kim <rakie.kim@sk.com> wrote:
-[...snip...]
->>> @@ -3495,35 +3508,77 @@ static const struct kobj_type wi_ktype = {
->>>   static int sysfs_wi_node_add(int nid)
->>>   {
->>> -    struct iw_node_attr *node_attr;
->>> +    int ret = 0;
->>
->> Trivial but isn't ret always set when it is used? So no need to initialize
->> here.
-> 
-> If we don't initialize it, then this kind of trivial fixup might be needed later
-> so I think there is no reason not to initialize it.
-> https://lore.kernel.org/mm-commits/20240705010631.46743C4AF07@smtp.kernel.org
 
-Ah.  This is a different case.  Please ignore this.
+Applied, thanks!
 
-> 
->>
->>>       char *name;
->>> +    struct iw_node_attr *new_attr = NULL;
->>
->> This is also always set before use so I'm not seeing a
->> reason to initialize it to NULL.
-> 
-> Ditto.
+[1/1] clk: samsung: Use samsung CCF common function
+      https://git.kernel.org/krzk/linux/c/62120d819f5b5818fa07d3121f7693f6bf18d18b
 
-Please ignore this too.
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks,
-Honggyu
