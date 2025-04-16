@@ -1,105 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4887F21C162;
-	Wed, 16 Apr 2025 17:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF01D17A304;
+	Wed, 16 Apr 2025 17:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823793; cv=none; b=thyhWpkVlsvpgCQp2FBNzIy9+lj9xfXsM5snImOwDLdaBJk4ZYJniqrcE4YG9e0zVuHjb8KqrTbS+g5sOS4N4B63KlMyDYBxUQCzMeazb+EXjdfIk88CU9Jst6DUEpVFqFXyb0zWdE7R9IOGa3HOy+vs6goHitFp8uocQXgZu9g=
+	t=1744823904; cv=none; b=hjSkLKhRDOq0brkFsYW/nZCNQ1MiPz2o3lvoz5XpiVF0iEjXOzl8fzhbcSV5WKmvltia1NxmsiyIOzw8aIX1CFedQLhj7nAArE3vH7mJ2NLoYnWyU6IEoItb0kjGTC8XxcEUTNa6AbJa0MGhRsVyhzKSNPkfcAWWJcb0f8RhwLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823793; c=relaxed/simple;
-	bh=taVQQkw3FOUMcF5ublnCq+0dNIVsAf3UO57Pec7tlNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j38tgMFOSauB876b7gABuFqEsDD0JUC1Ib6kT/mzEytjDw1YwmEUH8SsFWsuBaVDXfwe0cL/PEdar1HZGeyffb8QXcQQ/1ryO5m5It0PbR1rGBAiLaFl5MUdP+W8klwy1iPuAS3EkVqfJZ8RUWzotrnWqQYasXc74myE0SaK608=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZMtpy1oe; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744823904; c=relaxed/simple;
+	bh=+YBuFYAR6x4FRDUwZCODxnhFFMcfji9j4F97sKMfm8o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GLyb62wmFWDMKJjVqunIVAflpeL/VqGx54Hu2ZDpPfDOGV7qu5Gb9wYKJ+NUghnBrJs1VL4rQ0QHG5DiHv5Z89AM3ihR2vK4eNz+5XAasspG3J67AW0p55egk70c4tskHDG2B4gBsrX0Hp8mtZfsc/u15H/kN4N/+1Ju84Ptfyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=YVdlkZq5; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZMtpy1oe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744823791; x=1776359791;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=taVQQkw3FOUMcF5ublnCq+0dNIVsAf3UO57Pec7tlNk=;
-  b=ZMtpy1oeSJhwIjMGUmi+/m5MKmPw/ek7Byi+DAnlb7iZgHSm5Jyi5JuG
-   pOBd9AK5GFnupxm+8R5AJTBXx+Aq5aEQF+qtL5tsWSnMjQAztJQtjLqGI
-   9BBA2O7ZrUpuDprWRUFmCGUG8lqsZggEKBP7cVtCeMlOS9ZFcfKnbEkyj
-   z+TuwZ9ANefstpA6Nwva2ocpRelsmdHhHc/JvccxRMd5pK080fpSl3H36
-   guBHtQ4hjP0WqKxy3h0g4UkOlTuelA+jjFP4Wx4ZDsFjBR8vOho+X8f4u
-   0Xw8zT64bgSHizVItp7CVf/UNZNQEPz03Kxvr20Ynpq9ehP3oPECwP/sz
-   Q==;
-X-CSE-ConnectionGUID: znjelGkQQAS3Jw27i5uLIQ==
-X-CSE-MsgGUID: RfMyVkB0REKq3xFNo+SHLQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="57382077"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57382077"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 10:16:30 -0700
-X-CSE-ConnectionGUID: NaxrGpnzSm+nJ/yHWfN4Jw==
-X-CSE-MsgGUID: y9ug51VPSkWZljs3fe6zUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="131524887"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 16 Apr 2025 10:16:27 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u56N6-000K76-1r;
-	Wed, 16 Apr 2025 17:16:24 +0000
-Date: Thu, 17 Apr 2025 01:15:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, treding@nvidia.com,
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-	vidyas@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <202504170034.ZUFz0z7Z-lkp@intel.com>
-References: <20250410194552.944818-1-vidyas@nvidia.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="YVdlkZq5"
+Received: from wse-pc.fritz.box (host-88-217-226-44.customer.m-online.net [88.217.226.44])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 02EEA2FC0083;
+	Wed, 16 Apr 2025 19:18:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1744823892;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lzbjAoW7HYLXRRfm3mYcgt67Tuq6NhBWMJxWpaxLorQ=;
+	b=YVdlkZq5hk9v1ggqKxTYenrHHQCez1gD44YQjtpd969EQ86CIkD65GyMZZQvhzdehMf5Uv
+	sdWeLUWEmcJ8vcPnt7OnxqxuypiyHfIwv0Slvwm0XwaD61H0T7MWGfEjxV8uIKElQAtWuY
+	XDdLCxJlAxC87aa+iMzL2gnN3WIShR8=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH v7 0/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
+Date: Wed, 16 Apr 2025 19:11:35 +0200
+Message-ID: <20250416171809.557674-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410194552.944818-1-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Vidya,
+Cover-letter to include this list:
 
-kernel test robot noticed the following build warnings:
+v2: - Integrated Armins feedback and fixed kernel test robot warnings.
+v3: - Fixed borked subject line of v2.
+v4: - Remove unrequired WMI mutex.
+    - Move device checking from probe to init.
+    - Fix device checking working exactly reverse as it should.
+    - Fix null pointer dereference because,
+        hdev->driver_data != hdev->dev.driver_data.
+v5: - Move everything to subfolder nb04 in preparation for the eventual
+        upstreaming of other tuxedo-driver parts.
+    - Integrated Ilpos coding style feedback.
+    - Use dev_set/get_drvdata() based on Armins feedback.
+v6: - Integrated more of Ilpo coding style feedback from a different LKML
+        patch-thread (less files, local functions prefixed with a short
+        string).
+v7: - Integrated more of Ilpos feedback e.g.:
+        - Use cleanup.h
+        - replace some if cases with a pointer in driver_data
+        - coding style oversights
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.15-rc2 next-20250416]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Werner Sembach (1):
+  platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vidya-Sagar/PCI-dwc-tegra194-Broaden-architecture-dependency/20250411-035134
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250410194552.944818-1-vidyas%40nvidia.com
-patch subject: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
-config: arm64-kismet-CONFIG_PHY_TEGRA194_P2U-CONFIG_PCIE_TEGRA194_HOST-0-0 (https://download.01.org/0day-ci/archive/20250417/202504170034.ZUFz0z7Z-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250417/202504170034.ZUFz0z7Z-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504170034.ZUFz0z7Z-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U when selected by PCIE_TEGRA194_HOST
-   WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U
-     Depends on [n]: ARCH_TEGRA_194_SOC [=n] || ARCH_TEGRA_234_SOC [=n] || COMPILE_TEST [=n]
-     Selected by [y]:
-     - PCIE_TEGRA194_HOST [=y] && PCI [=y] && ARCH_TEGRA [=y] && (ARM64 [=y] || COMPILE_TEST [=n]) && PCI_MSI [=y]
+ MAINTAINERS                                 |   6 +
+ drivers/platform/x86/Kconfig                |   2 +
+ drivers/platform/x86/Makefile               |   3 +
+ drivers/platform/x86/tuxedo/Kconfig         |   8 +
+ drivers/platform/x86/tuxedo/Makefile        |   8 +
+ drivers/platform/x86/tuxedo/nb04/Kconfig    |  15 +
+ drivers/platform/x86/tuxedo/nb04/Makefile   |  10 +
+ drivers/platform/x86/tuxedo/nb04/wmi_ab.c   | 919 ++++++++++++++++++++
+ drivers/platform/x86/tuxedo/nb04/wmi_util.c |  91 ++
+ drivers/platform/x86/tuxedo/nb04/wmi_util.h | 109 +++
+ 10 files changed, 1171 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/Makefile
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/Makefile
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.c
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
