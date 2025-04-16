@@ -1,39 +1,57 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F3664A98;
-	Wed, 16 Apr 2025 13:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAC2F9D9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744810345; cv=none; b=kxENzqmkGOn2Tt6h6XNmg6sOlx9ElW+RchcDqQGXiLc1ZgRqbkADDUQlpR+PKFTdm4f32OhK5Zo1Pf/e1EsR625VyTOnGWrrLwZHYqOUkklaKIaEArzJXswsDiS4tLoFtqE8xBDItsxCL4oieDec7roJao4gw9D8BBFUy3wsw3c=
+	t=1744810362; cv=none; b=s+1DEaImTdl3BZuRPXVKCSxT8mj131jwdNH1pQUG6PaRiIeP8Qgo3BP+OdGneQAZogPvoDoi9g1T0Iq49MEMDTTrs/SGGZQ9bGB+DXIyqQmIGz8Esm3uYzwlZDUZ4c3abbK2TdJklFgVr8btIvbMm0h077N/LQZyCeZBmLMN0BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744810345; c=relaxed/simple;
-	bh=GYl+cOi7Hm/A4FYPFJHfCgValqrvdD0WgXA3Ec/yJBQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=V9vKl/ucXq8hMi2Xj2LgTUklr08OAwc93a0NQ2QMlTTmXyDOQySrT4EdhV/l1RTYN/ouXXM61D6oEe9jX2+u/KSShWA8ihOCMysfkQZZe5V4fSLcmkQbGPmK791+xmjRYdfqTY2R3TSUcUYgsPKl3NJz+LlZZdAZaM7HYxxhlLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sdmQk+p7; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744810362; c=relaxed/simple;
+	bh=9M2u6+1YTXcbHw1ORgX1nlnouUJ7odDXUxSaPckr8ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=FiR1sLNYnEjYHPGLMIcw1O6m31pjPh2Pf2wvYG/q36kwfPRYZB08Rm9DXnM/ewW2UjyMXYPfy0T5aY8PkTgNel6zWwStCnPdmN/j/Pnsy0g+RzdfSEIfeHLL7N1/YGuDhI6WByNhGV8jTspfzgX1e4X/88a+qnuuOWWeUq+QKZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=mupRYoNx; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sdmQk+p7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744810329; x=1745415129; i=markus.elfring@web.de;
-	bh=Dn8xuaSrDHADMxryfuksnXO0OdZ0u3w/+mZ++AFocgs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=sdmQk+p7oiGATfCy29PPKK/xGkxlpnetRo/teAjeQX2wN2CZfpkWc9qvnAGxL6WY
-	 C8TT6HjMlu1JikuqstfdPL2CE19gEzIsRqkIMcFRCAp9yxSbVdk7kBBdxnfQ2Q7aP
-	 +Jlo2q5S4/jnFWYnLBC7M8JAbuVWKBRkTTtLLP8a7Qrf8fvCAFNNYDql/RbsADPyH
-	 238RCtrUtttoqBwd2Q5xDZ0eW/8SXe5e93B4QMfoZatljZ1fstloAoFSTB63Xi6gU
-	 brCcNw9m0kBpqpAJHH2mQMezFpEGD7l2P6RjD9Wiym7SSc0/fq/lKbwUtmIcJYFyd
-	 5tn8VZt7/NxwXrtXCg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MkEhR-1tKPSK2JA1-00cbAF; Wed, 16
- Apr 2025 15:32:09 +0200
-Message-ID: <99e0a0e0-1b21-4e94-a9ff-2dc5715d676d@web.de>
-Date: Wed, 16 Apr 2025 15:32:07 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mupRYoNx"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250416133237euoutp01a400cf0963915fa57fc75976ff66ae32~2z8at0KHl2422724227euoutp01c
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:32:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250416133237euoutp01a400cf0963915fa57fc75976ff66ae32~2z8at0KHl2422724227euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744810357;
+	bh=kUFo/wLgztnLDigBiEFrgBwls65G+AeX0yLfanf6yv0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=mupRYoNxftSMT8sljLcHjRIHg/DDpOP+gsLFvSjf9+5Bgs70dDQkmYBXLHJuQgRxg
+	 OdvJ/8xSH6MfwDiTbjFB8xHD6oH8LCggTBg1VYNWyU7v6yOAZV2a3ApUUm5r5Hc/A9
+	 QMDcDrk2jzNVgWggOw68D5TfhAHU/k0Qs10Hq6zI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250416133237eucas1p1db9410bcc5acc1b3167bb93a320f6030~2z8aPC9Ga0435904359eucas1p1N;
+	Wed, 16 Apr 2025 13:32:37 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id EE.C7.20397.571BFF76; Wed, 16
+	Apr 2025 14:32:37 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250416133236eucas1p1d8f879ffa1724d77d3f8cdcefde84535~2z8ZttCPT0165501655eucas1p1o;
+	Wed, 16 Apr 2025 13:32:36 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250416133236eusmtrp1b0d189806d8483166b7cd28317c2a477~2z8Zs0mqn0448804488eusmtrp1W;
+	Wed, 16 Apr 2025 13:32:36 +0000 (GMT)
+X-AuditID: cbfec7f5-e59c770000004fad-4e-67ffb1759f3c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 0D.D8.19654.471BFF76; Wed, 16
+	Apr 2025 14:32:36 +0100 (BST)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250416133235eusmtip2b6501e479374913edd639f525f91f50e~2z8YmWHan0900709007eusmtip2v;
+	Wed, 16 Apr 2025 13:32:35 +0000 (GMT)
+Message-ID: <b9c4182d-38c2-4173-a35a-0e1773c8f2ed@samsung.com>
+Date: Wed, 16 Apr 2025 15:32:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,98 +59,198 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-input@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
- Benjamin Tissoires <bentiss@kernel.org>, =?UTF-8?Q?Filipe_La=C3=ADns?=
- <lains@riseup.net>, Jiri Kosina <jikos@kernel.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Chenyuan Yang
- <chenyuan0y@gmail.com>, Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] HID: logitech-hidpp: Replace devm_kasprintf() call by
- devm_kstrdup() in hidpp_connect_event()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:p0Gcn/xDyd5bYhM6L0T5fXSG4T6gFZJvHcW4YdN9JMQystv7jEN
- eRgR4/qeZIslSdBclxpTgNsjmZuqzxG9Cgb4PNgc01QsDUILCD1oapkzA/eo3vNjz6L1yxq
- M/9TFDuf+vvWsB8xrZrMKGDhSbUQY+DhG/dtCkNJIo3XXTa86/FGx6bGV2ymurnQ9+iEkXr
- fj+vVKAYFs6erB9y3LbEg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:EwgZgdyj4bA=;NOXxqttxTUYMG0HAcx+4MD8/Uxf
- bEV80CO994pIf6T5PLZpbdd6Au+FAT9nIRhdOPEOu5QhkXC/flUSuLf9aLEAoJ91ExeLVXBma
- AS+8ww/0iVDv6b7/Lt/Iw7FWjRFzYhNxVnzf5LUWBH3FDEfFYnNOeDcg1W+3JwYf+t8zcltJn
- +vj7MDog4WHK7OKFYKwBWJo7scbJbYqzJDZHRozATxjq9fclR4XcXnZpIgKisUy2o27qePsUy
- 1sWeRSzqAhP7OsTC7qUznZY4fpDVb62VR1zM+42NkdekANsBnbEAFlMbITk0+kJZfGW138Xn0
- eusTVssMFV/dIfgKAn+isNtdbI65ptrKSEspef8G5MguAv0O5vo69rYfGr3EGOiaIv4m/N31a
- hRTpDT84yvqCRNW83vI4EcGrOGlbqAfQR8US2MEjvC/O4AnlL0h/bARh1TLs1TA2XuoHnSKl3
- IlwPlZFrQ1mK7U+t8sAecaIzX9sk2cft/xgb1XbFlC38OE34x8dZekRPTSArSJDv2Diz1nA3n
- Jdrx8MtYvUrcHLfeFgtwki+2WoaZS1q8OkMvlaadGikLpxlzOslOJmUwQoTWwJJti0bJ2tni8
- McUPfnuGwfWAOJTpRovn+LNX2Q2RARa4GzKksQpPLdIONkmdM3znsENJc6B0pXFyiM1WiGbY9
- H3eyXwJBC8bZA+5N1K1IHLHRg9GDMfLVX0rWRCodXUuXJ6J6bdGwGcichhx2MlGtgB2nOkIPv
- Pnrp+kiKdOqWp+38fAmaMZotj4dZQzCqup+VTTKUfUboZWjEKufILQQzEKSJefptga/SU+gRG
- yLLQEvlzuALqEioxyx/Z7nT3LARrQTzQY21Zntzr64dH6p405GMH/ppMSIDp19TTpq2SR8eQZ
- kfbWigqRVKiatGrNenXz2eXCFLeHV5iq6++eLqPkONI5nK8lsPKMBB6RCwmtP9js/2whG5kmF
- lPCYQ0b2gZysqvPYNg7d+t0zav/d37LG9rhmFuTOHkSGoHTaUc2iAUT81uO4LNBpgRIEKa8kJ
- dm+8eVLrwJbyjHHhhBKCL2Z0uK3GxzQXFLHpxVaE66jU4+qpoGrJglG/hkyAhBR+C+PHB75nQ
- zLdXJVWxb4eluneGB6d3vKBJ/KLW28ZJ3OsX+CPWKzf1yDnPCr0LvGK+iUbkIhtRDijCSH3oW
- SqXXeI7NgbB3lweJ7eCbf3AafgP6GhwYZ9Rt6CyMuLUcckegNsPQ/NeIa0qeCsS8MewoD3LB0
- 6BaJFjk53gfJIQzfUdmwMPfkuS7XRj3x5/ijthbvkAY9RsBrMpQ0lvR8QPfghLiMnx8NZvzTQ
- exVUSVPkAKioOKqyJ7uGEjrBrZUYVk9gOOnkKIGJrLcgpVOqwWxAuzMAeWC8yWmWH5zRR4Dh6
- 6F3G3SvLVSGXOtOi9F70Ra112Z5oKsPl4GAhaCPdEy6t0tlJKITLglN2fnL1vp/APU2Vf/xWu
- 8I/XFkU1mEQyjV6bhysdKBwRZOBoaaOW9Xb4Zg2mF/XoD6u3P37QCrqojtRrd5z4lHrWN6DwC
- xczOH3c1DaARAayr9adcJZpv1TEqojWg5/uBDkeuDTGDcxNzFBFgnY4Y4wUxsZO5HRDZgqZgQ
- J3/FRr4ImwqR15Xr8HqNtKTInzP6pVR49Y3GtwUIcmWO3ukOW6RGTluCUxDW5KedL46/orsOf
- lJibep8HMQN6zSafYcOI44gyL9PfW9+9ZChADAgTAUzUV/Ne650m95EK9Qp9uFmPU3ZcfzycF
- u98UNKiVaxogZZmXGG5UrkAei7NrOa9LYOqPqj628VFKBV35vNkXYQqym36KjFdqviuvzSZeS
- Zrf9ggZF5UD/z2LHlB8jf30ETiF55hg6Nrl2iVfyqiC8YykoRatY5JA33fX2LYnsZtAn9S9m7
- m7zqxNUrh/zlif9nzJEVXLJ8u+ia30C5OqouaHoiD4IuvcjEfQXJRpRUs5o+Afs693g1BJoMg
- R2GwPccUNKxsNY+C46OePRZOFAv7B+KfJsJ2iz9jidkMI8Tvy71JeQjl4ktHUaqz3YS77oLrt
- ha5CvoZU/DJPTJKzNPIl6UPR+JHFkVNoky32sk2NodQQz46vQe4DKG/mxefisYq3dFxZDqcdi
- JsRfRF0BCFjtvoJqSWr1PW15b6RWLVRV3CL1Zi35BKKGBkRgXFkoo2A8PWokdlU5sMHQwfaMh
- he599BBTTD3nhHBKbGgyK8iY/SfM6WGdD0avEo7jlvEvjRVA6/o6I4D+woCzf+BXAHcpDVI6S
- 9ov4KavpDHuWKYaUuOJqtq6hzrBVjBjOJ1WoDctqzYrHVl7oRmGpXI+V7+UR3zgPvOBmh6b+e
- 25PUWd5QhPTjf8BM0yP0DZG3rENaZlpnWXNHEu/BrcezbIX+tzFSsQ6Y7q9No2yuO2pD9nDY5
- oUb53EKnnEunhAoqGjdqw13teJoSCbggjyxfJGgYUi+fvBrHwJ4U7z3PIx4SGwJp1bJ/4Ydnq
- /SNfmtLwglN4Vn1Gb0KVVtDj/edCN4GK+IY4qQ8kLTt58f8SHhOoQy9Ktc5y0Zqea/aCx+se3
- GzgJXBic9PXX5qB6KkotVcQjLyUaxTUxX6SOSIY5NZwdUoyZ6Ms7+hyeF+qC4BxqOPC75ODok
- NTul/mdh2EMmjem9yTDFsIosrUWXzeUx21UT0/0ngL27XBkZJgcnuDfJktpVaCLu1VzDoVrRW
- Wewggh/2rmugHfDHHLFxy15edN4jyeJwSEivwtpoV8VMnsGEVehFjgvVmobKJpg1e5ygnyxVd
- t9RluvFf7kuLt3zxSypbYz+M2spBZQRdB7Wo+P8WGdzWG2GXiE8SNKG7T0jxbfD45fNxdYkhU
- DbJI4A1Qb/jXSeIH3n2gbIX8dqPiEKr32ru0BDBpAZJRykHS1SBzprPwDwoFzb7AFDeCjlN0I
- bkRKVGYkYopvbvOxsf6mU0cZRddcU/kVj2qo4esQOCIAr7tHYl0Ea62Vw5jSOCPAuhq5LJLPP
- TFG+6giVplqtnpushm6lAO/nvYSiUzCt19obo9Fz3JZ9k9/19gme9ymfHPmKsxqkfkWkMmhkq
- 3/+fseZj7yMmUbmF9X8pTyaaDiywu8T727j0upQdBxckK/v/NQWfT70DNDQ4fdSoTiaA+9wpY
- FdbIPLoZJ8CFLHjx8xmxHyEzZF2yUDaT9vR3XFmF2HLMDfS8g5OX0dIw==
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed
+ flag
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Ulf Hansson
+	<ulf.hansson@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
+	Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTdxTH+d3e3l7Qkmu14RexY6tOGQ7Eucdvm+AeLrkJcRNdYjRZZpWb
+	6gQKfTidMwMGtkJhFsbUClIYAdLwKo+uEKALsrYE1ugGk2kLZoAUpAKr4MStznJx47/P+Z5z
+	ft9zTn4kR6An1pPHU5WMPFWSLCZCcLPtkTNaZXoijR0tWo0cNyswVNvpxNC972YJVNbj5KLh
+	X1owNDA/Q6D68es85OnMxNGkfphAv7aXEMiX3wOQ2ZdNoLoeNw+Vz7XiqNLSDtC581Vc5B52
+	4Egzk8FBpQ+KOehJh4WHrty38lDLtI6L7HUHULb1W/wdSHcuGHC6Te/m0dq2fkA3Gc8TtOu3
+	DoK+2ptIj+TZMbq58is6u86G0d/8E0vPdA0SdEGLEdDNfWdoX9Nze0MPhexMYpKPn2Tk2+IP
+	hxyb7vdy02ybTrUPNWMZ4OaGXBBMQupVOFDagOWCEFJA1QB49Z5uOXgA4MSoD2cDH4D1ngbu
+	s5au2UqCTVQDWKr5CwskBJQXQPWiLMB8Kh66PBUgwDj1Ihy+3U+w+hrYe3kMD7CQioAjty7x
+	AryW2g8bHy4s1ayjtsLKikFOwIBDNRKwMLNqyZlDhcFbY2VLZgT1CrxTXbakB1OJsN+Yx2Nr
+	IuDXrVeWmiFVGgJvqBcJduzd8HKhncfyWjhlb1nmDbCvSIuzLIN3Wv/ksPwlbNPal/lt6HIG
+	3iGfGrwEG9q3sfK7cDJzghuQIRUKh7xr2BFCYaH5IoeV+VBzTsBWb4bF2vz/TJ01ZuwCEOtX
+	XEW/Ykn9imX0//saAG4EYYxKkSJlFDtSmc9jFJIUhSpVGnNUltIEnn7fPr993gJqpuZiugFG
+	gm4ASY54Hd/5hl8q4CdJTn/ByGWfylXJjKIbhJO4OIxfYc2RCiipRMmcYJg0Rv4si5HB6zOw
+	s/HvRYrUo5GrErHJl8PTB+XuIIyOO/nT0EePwk18/R9B2k/ix5Jrd1mu/RAFRBPbs5raHx+M
+	UZZcX6zy/N5x/8iHyqCsCI3j7KGChQ+irEKl7uPdTt2N1+27asvjeI/HX8iNpfzizP0pp7mr
+	VUIyp1Oo/zl6QH0gwRpJ70kTWcZH1bb8aVtc9JYzJ/blVLWmN0s/2/qjbqffEHo7rHHzNUPe
+	hXnj7N33TcNHs++6RM2hGz0JsrGRfTsONg2SRy5lac3lRYZZh//Nt9Amnnmq4LBX4Y3fonn4
+	vXDKSrkTxmzpLv2qkkRH/ZCbfH7uNcPemlp6wHSqq1hUfTEp6u9ekxhXHJNsj+LIFZJ/Ae0k
+	Y0QtBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsVy+t/xe7olG/+nG2x/p2lx4voiJos1e88x
+	Wbye9oHNYv6Rc6wW9y5tYbK48vU9m8W6pxfYLV7sbWSxeDnrHpvF5V1z2Cw+9x5htNj2uYXN
+	Yu2Ru+wWCz9uZbFYsmMXo0Vb5zJWi7v3TrBYdLxvYLaY+2Uqs8X/PTvYLWa/289useXNRFaL
+	42vDLVr2T2FxkPDY+20Bi8fOWXfZPXp2nmH02LSqk83jzrU9bB7zTgZ63O8+zuSxeUm9R8va
+	Y0we/X8NPN7vu8rm0bdlFaPH5tPVHp83yQXwRenZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY
+	6hkam8daGZkq6dvZpKTmZJalFunbJehlvDnzlrXgmErFrhubmRoYr8t0MXJySAiYSOz7sISt
+	i5GLQ0hgKaNEx/XpbBAJGYlr3S9ZIGxhiT/XuqCKXjNKPNuynRUkwStgJ3HnxSJGEJtFQFXi
+	3u0zbBBxQYmTM5+ANYsKyEvcvzWDHcQWFgiW2PD9G1iNiIC2xJJFV5lBhjILbGKTWLVyPjvE
+	hgVMEu9WHwKbyiwgLnHryXwmEJtNwEjiwfL5YJs5BQIlzqzqBmrgAKpRl1g/TwiiXF6ieets
+	5gmMQrOQ3DELyaRZCB2zkHQsYGRZxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJEZhuth37uWUH
+	48pXH/UOMTJxMB5ilOBgVhLhPWf+L12INyWxsiq1KD++qDQntfgQoykwLCYyS4km5wMTXl5J
+	vKGZgamhiZmlgamlmbGSOC/blfNpQgLpiSWp2ampBalFMH1MHJxSDUzcGy7sjDoYbr79X0vd
+	wRkHsvjkNQ6rJvkcZy30+/7P0mI385ZJp6w4NvT9mXNy0u7m5J8vvsZrex2eeGbzxIIjM6TC
+	3PYL6QkF/XqjnLtN+nlNwDxWr3abn7y3hWsyrn+2nROxNsPm6aVZa+bYtipXOKfpvNq77Mob
+	pZ7D0ut1fzH8KSrpcVrgIO67X8dw6h63hxVyycWPQk5xHUisOP1tWsS/be+v1D07U+q3zULZ
+	qPm101Up/vMGG36/iztygO3U58uuW3T4zj1aWDzBM3f9rH1hbfcsy4SZDnftPeP/+t/a6Ct/
+	pIOq/T2OaskfXhwt48rcN8lkTdAUn2232o4XrdrXGWua+dk/5p27UPxDJZbijERDLeai4kQA
+	hHVuJcADAAA=
+X-CMS-MailID: 20250416133236eucas1p1d8f879ffa1724d77d3f8cdcefde84535
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028
+References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
+	<20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
+	<20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+	<CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 16 Apr 2025 15:25:05 +0200
 
-Use a devm_kstrdup() call instead of a devm_kasprintf() call
-in this function implementation because only a single string
-should be copied.
 
-The source code was transformed by using the Coccinelle software.
+On 4/15/25 18:42, Rafael J. Wysocki wrote:
+> On Mon, Apr 14, 2025 at 8:53 PM Michal Wilczynski
+> <m.wilczynski@samsung.com> wrote:
+>>
+>> Introduce a new dev_pm_info flag - platform_resources_managed, to
+>> indicate whether platform PM resources such as clocks or resets are
+>> managed externally (e.g. by a generic power domain driver) instead of
+>> directly by the consumer device driver.
+> 
+> I think that this is genpd-specific and so I don't think it belongs in
+> struct dev_pm_info.
+> 
+> There is dev->power.subsys_data->domain_data, why not use it for this?
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/hid/hid-logitech-hidpp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Hi Rafael,
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-h=
-idpp.c
-index 10a3bc5f931b..c1a9ecde57c6 100644
-=2D-- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -4216,8 +4216,7 @@ static void hidpp_connect_event(struct work_struct *=
-work)
- 	if (hidpp->name =3D=3D hdev->name && hidpp->protocol_major >=3D 2) {
- 		name =3D hidpp_get_device_name(hidpp);
- 		if (name) {
--			devm_name =3D devm_kasprintf(&hdev->dev, GFP_KERNEL,
--						   "%s", name);
-+			devm_name =3D devm_kstrdup(&hdev->dev, name, GFP_KERNEL);
- 			kfree(name);
- 			if (!devm_name)
- 				return;
-=2D-=20
-2.49.0
+Thanks for the feedback.
 
+You're right — this behavior is specific to genpd, so embedding the flag
+directly in struct dev_pm_info may not be the best choice. Using
+dev->power.subsys_data->domain_data makes more sense and avoids bloating
+the core PM structure.
+
+> 
+> Also, it should be documented way more comprehensively IMV.
+> 
+> Who is supposed to set it and when?  What does it mean when it is set?
+
+To clarify the intended usage, I would propose adding the following
+explanation to the commit message:
+
+"This flag is intended to be set by a generic PM domain driver (e.g.,
+from within its attach_dev callback) to indicate that it will manage
+platform specific runtime power management resources — such as clocks
+and resets — on behalf of the consumer device. This implies a delegation
+of runtime PM control to the PM domain, typically implemented through
+its start and stop callbacks. 
+
+When this flag is set, the consumer driver (e.g., drm/imagination) can
+check it and skip managing such resources in its runtime PM callbacks
+(runtime_suspend, runtime_resume), avoiding conflicts or redundant
+operations."
+
+This could also be included as a code comment near the flag definition
+if you think that’s appropriate.
+
+Also, as discussed earlier with Maxime and Matt [1], this is not about
+full "resource ownership," but more about delegating runtime control of
+PM resources like clocks/resets to the genpd. That nuance may be worth
+reflecting in the flag name as well, I would rename it to let's say
+'runtime_pm_platform_res_delegated', or more concise
+'runtime_pm_delegated'.
+
+[1] - https://lore.kernel.org/all/a3142259-1c72-45b9-b148-5e5e6bef87f9@samsung.com/
+
+> 
+>> This flag enables device drivers to cooperate with SoC-specific PM
+>> domains by conditionally skipping management of clocks and resets when
+>> the platform owns them.
+>>
+>> This idea was discussed on the mailing list [1].
+>>
+>> [1] - https://lore.kernel.org/all/CAPDyKFq=BF5f2i_Sr1cmVqtVAMgr=0FqsksL7RHZLKn++y0uwg@mail.gmail.com/
+>>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+>>  include/linux/device.h | 11 +++++++++++
+>>  include/linux/pm.h     |  1 +
+>>  2 files changed, 12 insertions(+)
+>>
+>> diff --git a/include/linux/device.h b/include/linux/device.h
+>> index 79e49fe494b7c4c70d902886db63c4cfe5b4de4f..3e7a36dd874cfb6b98e2451c7a876989aa9f1913 100644
+>> --- a/include/linux/device.h
+>> +++ b/include/linux/device.h
+>> @@ -881,6 +881,17 @@ static inline bool device_async_suspend_enabled(struct device *dev)
+>>         return !!dev->power.async_suspend;
+>>  }
+>>
+>> +static inline bool device_platform_resources_pm_managed(struct device *dev)
+> 
+> Could this function name be shorter?
+
+Maybe:
+
+static inline bool dev_is_runtime_pm_delegated(struct device *dev);
+static inline void dev_set_runtime_pm_delegated(struct device *dev, bool val);
+
+Regards,
+Michał
+
+> 
+>> +{
+>> +       return dev->power.platform_resources_managed;
+>> +}
+>> +
+>> +static inline void device_platform_resources_set_pm_managed(struct device *dev,
+>> +                                                           bool val)
+> 
+> Ditto?
+> 
+>> +{
+>> +       dev->power.platform_resources_managed = val;
+>> +}
+>> +
+>>  static inline bool device_pm_not_required(struct device *dev)
+>>  {
+>>         return dev->power.no_pm;
+>> diff --git a/include/linux/pm.h b/include/linux/pm.h
+>> index f0bd8fbae4f2c09c63d780bb2528693acf2d2da1..cd6cb59686e4a5e9eaa2701d1e44af2abbfd88d1 100644
+>> --- a/include/linux/pm.h
+>> +++ b/include/linux/pm.h
+>> @@ -670,6 +670,7 @@ struct dev_pm_info {
+>>         bool                    no_pm:1;
+>>         bool                    early_init:1;   /* Owned by the PM core */
+>>         bool                    direct_complete:1;      /* Owned by the PM core */
+>> +       bool                    platform_resources_managed:1;
+>>         u32                     driver_flags;
+>>         spinlock_t              lock;
+>>  #ifdef CONFIG_PM_SLEEP
+>>
+>> --
+>> 2.34.1
+>>
+>>
+> 
