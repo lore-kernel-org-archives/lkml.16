@@ -1,132 +1,92 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2C61A840D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDE41ADC78;
+	Wed, 16 Apr 2025 16:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744819869; cv=none; b=ThHQthaH442hVY5SSVr42A+TrLzAweu9TLjVnNi7G4WmbMuzx2kkpab+omCpmbXMrDnNv+K8nYUUe7BwdNY/PaoQwyPigyJfLc43MbxILcAo3C2zQIfErctgG6XyznO7uNdtivR2g2XGxgxvR3ZjSY5Y9JlZNMLyETeibnKChkQ=
+	t=1744819916; cv=none; b=HQkZrNEWsmLk20NhO4/FC9lbUa86+sM7Kvf1dhQs5YLpAI9NwQyvQJw694Xd6EChgFynLodI+VHtMJg5GQLsjpdBcXshujeQ6Yh1+Dq+/FO4YUKzxJoobiR+BqT4ld9Biv0Qvqb8Z8gUWwHvYzkj97X55s3DOcVbq5qNxBlcBLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744819869; c=relaxed/simple;
-	bh=r7nXonSwEu68bLebps2Xf8cTuO1u5ko/8r+nHwK3ugI=;
+	s=arc-20240116; t=1744819916; c=relaxed/simple;
+	bh=sWaORZRshemWzFZsKcditOWZrjblebMb5oMGJ741IuE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NFrH9RguQQm0JTzlN8adUwdmaxhub9N15VgDZicqc2SPcuqz7Q8PKobLCGn+4f+njTrtpqTKMasckkbZ/L4RACP8qEZgEZ/nuTNiF2FkI3ru4qHGDVdLd0Qxa1DeAJL3U+a3KOtrCPT3WqC5joygi1f1CJnN/9HqZVfBptm30mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=AlGYOEU9; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ntoRcM1uWTB2AxhkaLk7GWdp1nKqAW7QAdS9sFOh03OVwk1yY5v/HYuiI9He6m7iitk3ewpb6RU9Zds5yf4TJZRwx67A83GNoD8gvXKeYW6h/Qs/TmSuQrEyeg4oFYM8vdFWQ1BAOlsvn0kV6HunmlF6+60nDFByTQpURRA78rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WJOu70q+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="AlGYOEU9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=CD82
-	aaEtrX3qt91NG+am4gW8qYGsJOF0kgldIcobva0=; b=AlGYOEU95X51qyDBtNSD
-	XeCXS8XfmIMqq9TzOUX1X5igA0XFmf6tUEbjDLh+Ir2KWErKTQYwb69waitO7+Wc
-	ZIFDWF4Fd6njngLAk10PNBRG7fheyq0ndi/hACFMFhS/1Ou2kJBV7Ebvj+f7FYXX
-	vYnsz/FsTxmj2sWhDDrFkEnVHEoCgo4Pi5a0vdmiAiIjcuws9NcxmmIc7lPvUe5V
-	JNUyoa4odK9W3KcxtcNhzLe+MxGlcTiS6yISso60ShbqDxJCr7mBGUYWuMztBN6o
-	28dTHPmKEZvn3Kfa3GQ3lGP15xSSiJ1/Pb887oShWiFk+oSsQkhZlstLwW5OoBqd
-	dQ==
-Received: (qmail 786598 invoked from network); 16 Apr 2025 18:11:02 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Apr 2025 18:11:02 +0200
-X-UD-Smtp-Session: l3s3148p1@ZPkViOcyruAujnsq
-Date: Wed, 16 Apr 2025 18:11:02 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v5 0/7] i2c: core: Move client towards fwnode
-Message-ID: <Z__Wlri8-tjuctsa@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-References: <20250416070409.1867862-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WJOu70q+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4031C4CEE2;
+	Wed, 16 Apr 2025 16:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744819915;
+	bh=sWaORZRshemWzFZsKcditOWZrjblebMb5oMGJ741IuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WJOu70q+hUr+FrrsYKfyAYk2FRTygiV3pqZrHh3duEgpxfDeMCiEocwS3ZzGbpGzB
+	 ttvf24I0+PRyGcvM2vRAcvD1Fy9qGq1nLXAeTlhDAtFgpvT44uqsuEJSksnk1RL83l
+	 YgkEBNcTXkJpDG/O7YEtDJy08ieOYkYqraRntir8y+ApmSslGrTFUTKZaTyqkJToq4
+	 50sadUVwjRZkjILE3URn1slF4omwTnJP1B1kkQ6ZOpeSbMs4IOvgZKpjoJ5+p5Ewzo
+	 aVYvKIeUVuXCiMRpTSh0etKXMR+R4CVR77h0/PxxzdNaK98otjOxFSO4S3XyFdH7a8
+	 3whu3KtDMiJAA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u55Mf-000000007Pv-3BLb;
+	Wed, 16 Apr 2025 18:11:54 +0200
+Date: Wed, 16 Apr 2025 18:11:53 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, peng.fan@oss.nxp.com,
+	michal.simek@amd.com, quic_sibis@quicinc.com,
+	dan.carpenter@linaro.org, maz@kernel.org
+Subject: Re: [PATCH 4/4] [NOT FOR UPSTREAM] firmware: arm_scmi: quirk: Ignore
+ FC bit in attributes
+Message-ID: <Z__WyYWhelFwt-rQ@hovoldconsulting.com>
+References: <20250415142933.1746249-1-cristian.marussi@arm.com>
+ <20250415142933.1746249-5-cristian.marussi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3liHQc8JqCGglSNk"
-Content-Disposition: inline
-In-Reply-To: <20250416070409.1867862-1-andriy.shevchenko@linux.intel.com>
-
-
---3liHQc8JqCGglSNk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250415142933.1746249-5-cristian.marussi@arm.com>
 
-On Wed, Apr 16, 2025 at 10:01:30AM +0300, Andy Shevchenko wrote:
-> The struct i2c_board_info has of_node and fwnode members. This is quite
-> confusing as they are of the same semantics and it's tend to have an issue
-> if user assigns both. Luckily there is only a single driver that does this
-> and fix is provided in the last patch. Nevertheless the series moves
-> the client handling code to use fwnode and deprecates the of_node member
-> in the respective documentation.
->=20
-> In v5:
-> - reformatted conditionals to make media CI happy (media CI)
-> - updated commit messages in patches 3 & 6 to make it more clear (Wolfram)
->=20
-> In v4:
-> - fixed spelling in the first patch commit message (Sakari)
-> - wrapped the commit message in the patch before the last (Sakari)
-> - added tag to the last patch (Tomi)
->=20
-> In v3:
-> - fixed compile issues with i2c-core-slave.c (LKP)
-> - fixed compile issues with IRQ APIs, i.e. missing header (LKP)
-> - added patch for the only user which assigns two fields (Tomi)
-> - added tags (Tomi)
->=20
-> In v2:
-> - covered i2c-core-slave.c where it makes sense
-> - covered i2c-core-of.c where it makes sense
-> - rebased on top of the latest code base
->=20
-> Andy Shevchenko (7):
->   i2c: core: Drop duplicate check before calling OF APIs
->   i2c: core: Unify the firmware node type check
->   i2c: core: Switch to fwnode APIs to get IRQ
->   i2c: core: Reuse fwnode variable where it makes sense
->   i2c: core: Do not dereference fwnode in struct device
->   i2c: core: Deprecate of_node in struct i2c_board_info
->   media: i2c: ds90ub960: Remove of_node assignment
->=20
+On Tue, Apr 15, 2025 at 03:29:33PM +0100, Cristian Marussi wrote:
+> Some platform misreported the support of FastChannel when queried: ignore
+> that bit on selected platforms.
+> 
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ---
+> Match features has to be set-up properly before upstreaming this.
+> Ideally the out-of-spec firmware should be matched with a quirk matching
+> pattern based on Vendor/SubVendor/ImplVersion....but it is NOT clear if the
+> platform at hand will ship with future fixed firmwares where the ImplVersion
+> field is properly handled.
+> If we cannot be sure about that, we should fallback to a compatible match.
+> 
+> RFC->V1
+> - fix QUIRKS conditions
 
-Works at least on my OF-based platform. Let's go CI.
+This looks good to me now and works as intended after updating the
+vendor name:
 
-Applied to for-next, thanks!
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
 
+Interestingly, I'm no longer seeing the crash on x1e without the quirk
+enabled with 6.14 and 6.15-rc2.
 
---3liHQc8JqCGglSNk
-Content-Type: application/pgp-signature; name="signature.asc"
+I still hit it immediately with 6.12 and 6.13 when accessing the cpufreq
+sysfs attributes (with patch 1/4 applied):
 
------BEGIN PGP SIGNATURE-----
+	[   30.663577] arm-scmi arm-scmi.0.auto: timed out in resp(caller: do_xfer+0x164/0x564)
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf/1pIACgkQFA3kzBSg
-Kbb8Pw/+IszgCGVXNlw6c/miI0lJl/qMnSp912U1Cbr8dtrVMBR8KQB+67dNMVJU
-D2t2bNHaOkYgv7E4uaBQNeo6NzTjCTOnjaN3BFWZKcCG6a9E7knKKYJ6V12ywNuV
-xrGp6IRLj6zTubXIP2n56s1d+toB1YsIqYlMKeJYgS0Cw8A4o6hChEFLYfG8nqRZ
-Tj3qRMk1I+KA3RtnAC+7e8/X+qJQYPmQYa13inuFTWmGVQxohae3Rjk8Hu4A+31V
-tTzF232MCktI2CGS59fH5FSdAirYdBkoi+/icGFfSO4QCuBkPD44FnzlW06PnRSa
-rXjYt+h9Cvh6IHTlQik24+2jdV9vEZLs2zwa2PqDygbrX9OAzf+HC5WoRG7aPIgv
-Ur69M4d5cYnOPg1yH3NvkXDOnsXaf5Xuzmg65P1gofMfeEVvysmXaJXuQ5AsvvQi
-CovIOoYxVu+BWaC4Y9gSsDQE6ba2V+PEA5BnxHdIOnMA4FPSPxgZk9F5Jn0ka+TX
-gWOiT0OuVcibb/peK7IEvy1a6UZWmkONhbIuOFV/8NNNeptW1OkFVGysb77IeVaM
-0V0L1i2qN6ENAUfskSahh5Bux0eq2Qf1jzUulBvMkUn9p1r9lQlyKbKgQPhEkSsx
-va+/hTJMyzk2IBpzGZfl1hWC22ELTEMH9UgVqB26K43C167/xI4=
-=6xgd
------END PGP SIGNATURE-----
+So presumably something changed in 6.14 that masks the earlier issue
+when falling back to regular messaging.
 
---3liHQc8JqCGglSNk--
+Any ideas what could have caused this, Sibi?
+
+Johan
