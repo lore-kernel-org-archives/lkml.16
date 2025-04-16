@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4104D20DD65
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AA5211A20
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820970; cv=none; b=tquh4KRU2KOPRu5tMTU8uEN8lcbn3e0iEWWYg3aqbquPh/0HLdqDVjtAI/iHVaC0BNr7LipjeM7kUSJJ1MiLpg/iQ27iep3E6/rXldoxwNAqcbkeR4fNxQK3LY2FZ9wWVf1cXjm619z2n9uaKVBOd10oIl1NVrNFrnXhP3Z59gk=
+	t=1744820971; cv=none; b=RSLFUfbWRASNcSBvAHzqHBYCwG5Yqfu8phm7INSOhShduFA4Twa0vUPt32M8m2BeLdIF/NVtYuMmUlzuuy5aV2DfvBg2khCVhAeLGUleN2/1WF2piORvrJTXtMv5/uH3zgOR5nhWM21HpcL6UhxvGlghMVSH0TcmIp6u2mVMegI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820970; c=relaxed/simple;
-	bh=PB6XcSCYfNJQdGCAKXhDm2oNQcbS8M1HTYiw7vECgEE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OD6HGuB4DsxK99Tae/xPWsoNrv5sQsmbT9RmjQSENFpDxib+6T2M3C9vh0hRRP5Js8gBBFEDln18TF9srTHFrV2W+C2Zd2jdDTmBg0C8peTU3Bnjl0NHSfhohCv7gi7rhKyTkrrnzSNi29hmGjP90V/n7tkkrYghk4H9i13nAIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N9eSl3jX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7bqALs5B; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1744820971; c=relaxed/simple;
+	bh=J7Rw6oa+pfRjHdnXIoQpoGhEQa4N4WAwyscpVCMVhDQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pMPDUGRR8e7u6HHcKDBbjMtT7lSwba1mydb4XaHr5Kjd0g4cG1S/i2nmxiVAtpBKLyf/NbDjGSQayT2PaJV2cCgTXuv+mcU5Wl/Seo/Rww0y0uo3N3jxU1Q7BImTTNYzNlzirvcFBiKNwOGAG2QU8vMwtDKsOZseLTP80YV2Ex4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vhkZpaVo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r1gVmyB/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N9eSl3jX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7bqALs5B"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vhkZpaVo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r1gVmyB/"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744820966;
+	s=2020; t=1744820967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=spD35W96nKD49Crow6RpCiupvQnh/aVqf2XKsPESEx8=;
-	b=N9eSl3jXl+mhHtn9QoXk5YFCw6fZRqeEYUwJ/o1L5reCSm2IyZMbCw0w25AV7od28lLNPi
-	O2ck6XWhOKRGcfzKx0O0TtNmq+7mYXzwIxSXVrI13l33aVoQw7GwbELYlBSQn7TWhoi9Cm
-	/Doe330tQm/J2FpyCfCVtg3jG5Gw+nbsdp/GhE/Apkgz/Dkmc9NzONYhjsV015rA5zEuo/
-	oKbvNOmHN23jC6PzFu4yWjPqmmyb33sdMGHh0+YdvCKK0xgc/fsJfgjsmwXeDCGgOhNwAi
-	cE+yYO5pxP0HXJ8oOsP5onZ1C7XUtMBZ7vmXJa1EpsXaRl5Z79K6etkaBkz+yQ==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=25PGFNpJOMtXBIfN34NjCp5fH0Pnte3nKjsGM5dkrpk=;
+	b=vhkZpaVo/9BvkkN9+0o6qqZDahj45QXJu2BqMguSRKUda7TixbDP46bzbS+hQAAnfZFsdA
+	9xPICuIDfpqvKE0fNAaQFzFKQNoqVqlB6wY6CoKdb6XHtoh8f/NOZQb1I6LG4FiHCvj9E1
+	VOjMuomqDAylOGkMfIb7Pxa+xpNfwmUNINjsT9EBUpM7KstvIO0ydZdMnlN2VRuvyCQ26f
+	5pENJW2cFYWPsauVWL5PFiK6cmGOF+0AfrSX4zCTEQLfXy2q12EizhVwgle/UbpAWtJroe
+	uKhtI6NRNmevjF5P3GPuSJTLPVwQ+SsuR3o6KPIbKr8LoqiCCOrIiwBUMYNnCg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744820966;
+	s=2020e; t=1744820967;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=spD35W96nKD49Crow6RpCiupvQnh/aVqf2XKsPESEx8=;
-	b=7bqALs5B0gU5ZGQ30pEEDczfnW8jdmJpDBWua5DFhjS2Yh7mSijX4M+kzfOurG9rj5x40q
-	195nFAhgeynDRUCg==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=25PGFNpJOMtXBIfN34NjCp5fH0Pnte3nKjsGM5dkrpk=;
+	b=r1gVmyB/WZ0T7wTHy4AJIhbfQEJ55t2Vqlapqyw7gzg3vSKcB36GvCMbsE9TqZRj2w7kMg
+	XdJP/qq/Sy+9LiDg==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -47,157 +50,262 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v12 00/21] futex: Add support task local hash maps, FUTEX2_NUMA and FUTEX2_MPOL
-Date: Wed, 16 Apr 2025 18:29:00 +0200
-Message-ID: <20250416162921.513656-1-bigeasy@linutronix.de>
+Subject: [PATCH v12 03/21] futex: Move futex_queue() into futex_wait_setup()
+Date: Wed, 16 Apr 2025 18:29:03 +0200
+Message-ID: <20250416162921.513656-4-bigeasy@linutronix.de>
+In-Reply-To: <20250416162921.513656-1-bigeasy@linutronix.de>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-this is a follow up on
-        https://lore.kernel.org/ZwVOMgBMxrw7BU9A@jlelli-thinkpadt14gen4.rem=
-ote.csb
+From: Peter Zijlstra <peterz@infradead.org>
 
-and adds support for task local futex_hash_bucket.
+futex_wait_setup() has a weird calling convention in order to return
+hb to use as an argument to futex_queue().
 
-This is the local hash map series with PeterZ FUTEX2_NUMA and
-FUTEX2_MPOL. This went through some testing now with the selftests=E2=80=A6
+Mostly such that requeue can have an extra test in between.
 
-The complete tree is at
-        https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git=
-/log/?h=3Dfutex_local_v12
-        https://git.kernel.org/pub/scm/linux/kernel/git/bigeasy/staging.git=
- futex_local_v12
+Reorder code a little to get rid of this and keep the hb usage inside
+futex_wait_setup().
 
-v11=E2=80=A6v12: https://lore.kernel.org/all/20250407155742.968816-1-bigeas=
-y@linutronix.de
-  - Moved futex_hash_put() in futex_lock_pi() before
-    rt_mutex_pre_schedule() for obvious reasons.
-=20=20
-  - Use __GFP_NOWARN while allocating the local hash to supress warnings
-    about failures especially if huge values were used and vmalloc
-    refuses.
+[bigeasy: fixes]
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ io_uring/futex.c        |  4 +---
+ kernel/futex/futex.h    |  6 +++---
+ kernel/futex/requeue.c  | 28 ++++++++++--------------
+ kernel/futex/waitwake.c | 47 +++++++++++++++++++++++------------------
+ 4 files changed, 42 insertions(+), 43 deletions(-)
 
-  - The "immutable" mode is its own patch. The basic infrastructure patch
-    enforces a "0" for prctl()'s arg4. The "immutable mode" allows only 0
-    (disabled) or 1 (enabled) as argument.
-    The "perf bench" bench adds the "bucket" and "immutable" support.
-=20=20
-  - The position of node member after the uaddr is computed in units of
-    u32. Added a cast to (void *) to get the math in right.
-=20=20
-  - Added FUTEX2_MPOL to FUTEX2_VALID_MASK assuming that we want to expose
-    it. However the mpol seems not to work here but it is likely that my
-    setup is proper.
-=20=20
-  - If the user specified FUTEX_NO_NODE as node then the node is updated
-    to a valid node number. The node value is only written back to the
-    user if it has been changed.
-    While this only avoids the unnecessary write back if the user supplied
-    a valid node number the whole interface is slighly race if
-    FUTEX_NO_NODE is supplied and two futex_wait() invocations are invoked
-    on parallel then the first invocation can set node to 0 and the send
-    to 1. The following callers will stick to node 1 but the first one
-    will remain waiting on the wrong node.
-=20=20
-  - Added selftests for private hash and the NUMA bits.
-
-v10=E2=80=A6v11: https://lore.kernel.org/all/20250312151634.2183278-1-bigea=
-sy@linutronix.de
-  - PeterZ' fixups, changes to the local hash series have been folded
-    into the earlier patches so things are not added and renamed later
-    and the functionality is changed.
-
-  - vmalloc_huge() has been implemented on top of vmalloc_huge_node()
-    and the NOMMU bots have been adjusted. akpm asked for this.
-
-  - wake_up_var() has been removed from __futex_pivot_hash(). It is
-    enough to wake the userspace waiter after the final put so it can
-    perform the resize itself.
-
-  - Changed to logic in futex_pivot_pending() so it does not block for
-    the user. It waits for __futex_pivot_hash() which follows the logic
-    in __futex_pivot_hash().
-
-  - Updated kernel doc for __futex_hash().
-
-  - Patches 17+ are new:
-    - Wire up PR_FUTEX_HASH_SET_SLOTS in "perf bench futex"
-    - Add "immutable" mode to PR_FUTEX_HASH_SET_SLOTS to avoid resizing
-      the local hash any further. This avoids rcuref usage which is
-      noticeable in "perf bench futex hash"
-
-
-Peter Zijlstra (8):
-  mm: Add vmalloc_huge_node()
-  futex: Move futex_queue() into futex_wait_setup()
-  futex: Pull futex_hash() out of futex_q_lock()
-  futex: Create hb scopes
-  futex: Create futex_hash() get/put class
-  futex: Create private_hash() get/put class
-  futex: Implement FUTEX2_NUMA
-  futex: Implement FUTEX2_MPOL
-
-Sebastian Andrzej Siewior (13):
-  rcuref: Provide rcuref_is_dead()
-  futex: Acquire a hash reference in futex_wait_multiple_setup()
-  futex: Decrease the waiter count before the unlock operation
-  futex: Introduce futex_q_lockptr_lock()
-  futex: Create helper function to initialize a hash slot
-  futex: Add basic infrastructure for local task local hash
-  futex: Allow automatic allocation of process wide futex hash
-  futex: Allow to resize the private local hash
-  futex: Allow to make the private hash immutable
-  tools headers: Synchronize prctl.h ABI header
-  tools/perf: Allow to select the number of hash buckets
-  selftests/futex: Add futex_priv_hash
-  selftests/futex: Add futex_numa_mpol
-
- include/linux/futex.h                         |  36 +-
- include/linux/mm_types.h                      |   7 +-
- include/linux/mmap_lock.h                     |   4 +
- include/linux/rcuref.h                        |  22 +-
- include/linux/vmalloc.h                       |   9 +-
- include/uapi/linux/futex.h                    |  10 +-
- include/uapi/linux/prctl.h                    |   6 +
- init/Kconfig                                  |  10 +
- io_uring/futex.c                              |   4 +-
- kernel/fork.c                                 |  24 +
- kernel/futex/core.c                           | 802 ++++++++++++++++--
- kernel/futex/futex.h                          |  73 +-
- kernel/futex/pi.c                             | 306 ++++---
- kernel/futex/requeue.c                        | 480 +++++------
- kernel/futex/waitwake.c                       | 201 +++--
- kernel/sys.c                                  |   4 +
- mm/nommu.c                                    |  18 +-
- mm/vmalloc.c                                  |  11 +-
- tools/include/uapi/linux/prctl.h              |  44 +-
- tools/perf/bench/Build                        |   1 +
- tools/perf/bench/futex-hash.c                 |   7 +
- tools/perf/bench/futex-lock-pi.c              |   5 +
- tools/perf/bench/futex-requeue.c              |   6 +
- tools/perf/bench/futex-wake-parallel.c        |   9 +-
- tools/perf/bench/futex-wake.c                 |   4 +
- tools/perf/bench/futex.c                      |  65 ++
- tools/perf/bench/futex.h                      |   5 +
- .../selftests/futex/functional/.gitignore     |   6 +-
- .../selftests/futex/functional/Makefile       |   4 +-
- .../futex/functional/futex_numa_mpol.c        | 232 +++++
- .../futex/functional/futex_priv_hash.c        | 315 +++++++
- .../testing/selftests/futex/functional/run.sh |   7 +
- .../selftests/futex/include/futex2test.h      |  34 +
- 33 files changed, 2199 insertions(+), 572 deletions(-)
- create mode 100644 tools/perf/bench/futex.c
- create mode 100644 tools/testing/selftests/futex/functional/futex_numa_mpo=
-l.c
- create mode 100644 tools/testing/selftests/futex/functional/futex_priv_has=
-h.c
-
+diff --git a/io_uring/futex.c b/io_uring/futex.c
+index 0ea4820cd8ff8..e89c0897117ae 100644
+--- a/io_uring/futex.c
++++ b/io_uring/futex.c
+@@ -273,7 +273,6 @@ int io_futex_wait(struct io_kiocb *req, unsigned int is=
+sue_flags)
+ 	struct io_futex *iof =3D io_kiocb_to_cmd(req, struct io_futex);
+ 	struct io_ring_ctx *ctx =3D req->ctx;
+ 	struct io_futex_data *ifd =3D NULL;
+-	struct futex_hash_bucket *hb;
+ 	int ret;
+=20
+ 	if (!iof->futex_mask) {
+@@ -295,12 +294,11 @@ int io_futex_wait(struct io_kiocb *req, unsigned int =
+issue_flags)
+ 	ifd->req =3D req;
+=20
+ 	ret =3D futex_wait_setup(iof->uaddr, iof->futex_val, iof->futex_flags,
+-			       &ifd->q, &hb);
++			       &ifd->q, NULL, NULL);
+ 	if (!ret) {
+ 		hlist_add_head(&req->hash_node, &ctx->futex_list);
+ 		io_ring_submit_unlock(ctx, issue_flags);
+=20
+-		futex_queue(&ifd->q, hb, NULL);
+ 		return IOU_ISSUE_SKIP_COMPLETE;
+ 	}
+=20
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index 6b2f4c7eb720f..16aafd0113442 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -219,9 +219,9 @@ static inline int futex_match(union futex_key *key1, un=
+ion futex_key *key2)
+ }
+=20
+ extern int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
+-			    struct futex_q *q, struct futex_hash_bucket **hb);
+-extern void futex_wait_queue(struct futex_hash_bucket *hb, struct futex_q =
+*q,
+-				   struct hrtimer_sleeper *timeout);
++			    struct futex_q *q, union futex_key *key2,
++			    struct task_struct *task);
++extern void futex_do_wait(struct futex_q *q, struct hrtimer_sleeper *timeo=
+ut);
+ extern bool __futex_wake_mark(struct futex_q *q);
+ extern void futex_wake_mark(struct wake_q_head *wake_q, struct futex_q *q);
+=20
+diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
+index b47bb764b3520..0e55975af515c 100644
+--- a/kernel/futex/requeue.c
++++ b/kernel/futex/requeue.c
+@@ -769,7 +769,6 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned i=
+nt flags,
+ {
+ 	struct hrtimer_sleeper timeout, *to;
+ 	struct rt_mutex_waiter rt_waiter;
+-	struct futex_hash_bucket *hb;
+ 	union futex_key key2 =3D FUTEX_KEY_INIT;
+ 	struct futex_q q =3D futex_q_init;
+ 	struct rt_mutex_base *pi_mutex;
+@@ -805,29 +804,24 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned=
+ int flags,
+ 	 * Prepare to wait on uaddr. On success, it holds hb->lock and q
+ 	 * is initialized.
+ 	 */
+-	ret =3D futex_wait_setup(uaddr, val, flags, &q, &hb);
++	ret =3D futex_wait_setup(uaddr, val, flags, &q, &key2, current);
+ 	if (ret)
+ 		goto out;
+=20
+-	/*
+-	 * The check above which compares uaddrs is not sufficient for
+-	 * shared futexes. We need to compare the keys:
+-	 */
+-	if (futex_match(&q.key, &key2)) {
+-		futex_q_unlock(hb);
+-		ret =3D -EINVAL;
+-		goto out;
+-	}
+-
+ 	/* Queue the futex_q, drop the hb lock, wait for wakeup. */
+-	futex_wait_queue(hb, &q, to);
++	futex_do_wait(&q, to);
+=20
+ 	switch (futex_requeue_pi_wakeup_sync(&q)) {
+ 	case Q_REQUEUE_PI_IGNORE:
+-		/* The waiter is still on uaddr1 */
+-		spin_lock(&hb->lock);
+-		ret =3D handle_early_requeue_pi_wakeup(hb, &q, to);
+-		spin_unlock(&hb->lock);
++		{
++			struct futex_hash_bucket *hb;
++
++			hb =3D futex_hash(&q.key);
++			/* The waiter is still on uaddr1 */
++			spin_lock(&hb->lock);
++			ret =3D handle_early_requeue_pi_wakeup(hb, &q, to);
++			spin_unlock(&hb->lock);
++		}
+ 		break;
+=20
+ 	case Q_REQUEUE_PI_LOCKED:
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index 25877d4f2f8f3..6cf10701294b4 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -339,18 +339,8 @@ static long futex_wait_restart(struct restart_block *r=
+estart);
+  * @q:		the futex_q to queue up on
+  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
+  */
+-void futex_wait_queue(struct futex_hash_bucket *hb, struct futex_q *q,
+-			    struct hrtimer_sleeper *timeout)
++void futex_do_wait(struct futex_q *q, struct hrtimer_sleeper *timeout)
+ {
+-	/*
+-	 * The task state is guaranteed to be set before another task can
+-	 * wake it. set_current_state() is implemented using smp_store_mb() and
+-	 * futex_queue() calls spin_unlock() upon completion, both serializing
+-	 * access to the hash list and forcing another memory barrier.
+-	 */
+-	set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
+-	futex_queue(q, hb, current);
+-
+ 	/* Arm the timer */
+ 	if (timeout)
+ 		hrtimer_sleeper_start_expires(timeout, HRTIMER_MODE_ABS);
+@@ -578,7 +568,8 @@ int futex_wait_multiple(struct futex_vector *vs, unsign=
+ed int count,
+  * @val:	the expected value
+  * @flags:	futex flags (FLAGS_SHARED, etc.)
+  * @q:		the associated futex_q
+- * @hb:		storage for hash_bucket pointer to be returned to caller
++ * @key2:	the second futex_key if used for requeue PI
++ * task:	Task queueing this futex
+  *
+  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
+  * compare it with the expected value.  Handle atomic faults internally.
+@@ -589,8 +580,10 @@ int futex_wait_multiple(struct futex_vector *vs, unsig=
+ned int count,
+  *  - <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is =
+unlocked
+  */
+ int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
+-		     struct futex_q *q, struct futex_hash_bucket **hb)
++		     struct futex_q *q, union futex_key *key2,
++		     struct task_struct *task)
+ {
++	struct futex_hash_bucket *hb;
+ 	u32 uval;
+ 	int ret;
+=20
+@@ -618,12 +611,12 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsi=
+gned int flags,
+ 		return ret;
+=20
+ retry_private:
+-	*hb =3D futex_q_lock(q);
++	hb =3D futex_q_lock(q);
+=20
+ 	ret =3D futex_get_value_locked(&uval, uaddr);
+=20
+ 	if (ret) {
+-		futex_q_unlock(*hb);
++		futex_q_unlock(hb);
+=20
+ 		ret =3D get_user(uval, uaddr);
+ 		if (ret)
+@@ -636,10 +629,25 @@ int futex_wait_setup(u32 __user *uaddr, u32 val, unsi=
+gned int flags,
+ 	}
+=20
+ 	if (uval !=3D val) {
+-		futex_q_unlock(*hb);
+-		ret =3D -EWOULDBLOCK;
++		futex_q_unlock(hb);
++		return -EWOULDBLOCK;
+ 	}
+=20
++	if (key2 && futex_match(&q->key, key2)) {
++		futex_q_unlock(hb);
++		return -EINVAL;
++	}
++
++	/*
++	 * The task state is guaranteed to be set before another task can
++	 * wake it. set_current_state() is implemented using smp_store_mb() and
++	 * futex_queue() calls spin_unlock() upon completion, both serializing
++	 * access to the hash list and forcing another memory barrier.
++	 */
++	if (task =3D=3D current)
++		set_current_state(TASK_INTERRUPTIBLE|TASK_FREEZABLE);
++	futex_queue(q, hb, task);
++
+ 	return ret;
+ }
+=20
+@@ -647,7 +655,6 @@ int __futex_wait(u32 __user *uaddr, unsigned int flags,=
+ u32 val,
+ 		 struct hrtimer_sleeper *to, u32 bitset)
+ {
+ 	struct futex_q q =3D futex_q_init;
+-	struct futex_hash_bucket *hb;
+ 	int ret;
+=20
+ 	if (!bitset)
+@@ -660,12 +667,12 @@ int __futex_wait(u32 __user *uaddr, unsigned int flag=
+s, u32 val,
+ 	 * Prepare to wait on uaddr. On success, it holds hb->lock and q
+ 	 * is initialized.
+ 	 */
+-	ret =3D futex_wait_setup(uaddr, val, flags, &q, &hb);
++	ret =3D futex_wait_setup(uaddr, val, flags, &q, NULL, current);
+ 	if (ret)
+ 		return ret;
+=20
+ 	/* futex_queue and wait for wakeup, timeout, or a signal. */
+-	futex_wait_queue(hb, &q, to);
++	futex_do_wait(&q, to);
+=20
+ 	/* If we were woken (and unqueued), we succeeded, whatever. */
+ 	if (!futex_unqueue(&q))
 --=20
 2.49.0
 
