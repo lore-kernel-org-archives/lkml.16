@@ -1,114 +1,169 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DA11FF1C9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97511F2BB8
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744814707; cv=none; b=HsI9N0QVEsTJcIABg4kfIDRASnL/ZZZ2pvemjdEnf9seD3v3Z2GMpP5x9wPND9L5fYHG3mT0GWvgBKEDboOGiFiComRlixnZmcca7hSq+0EMTUOIxI/v0geJT2rdXS/lptqV4e3BnRm6qgjdzNPl6piM1hMO+4fTTgty0pOUc9o=
+	t=1744814719; cv=none; b=kdTN9T2mpbfcatg4TIOhnuz+WouY2IFsduaijNkCOtZz/tCnhw036gb92todJltsdiUhrUl8EQqqguSxK4x1d5IWiS5uxHvsUospsr0AlUX87/jL62aEvkcTMSTg+7TtpnKcpD4DsL47kXPL0EgE7EQoV7x5wo5fLR0XWruwuXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744814707; c=relaxed/simple;
-	bh=rjMftAYCPN5ACCWoXek1N3fvkFUnIGaDkrb0U1rSsMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BTUV/sk+ascTUiIDkVoOEaLz5yy3Nism/+Hd2o0wT/lTwEOxBxyMC0+hIneiA0lkvXdXJPX60CeTSA5mzqY2PMePj691SObSbBc76uJsHvriLqrGX/4riF0VKCbnpsLc7D0SZU+cHEduk3JoDzmyETEM6undpui7WRJkjav1/G4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=OmuQI8F8; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1744814719; c=relaxed/simple;
+	bh=AeLQqC3vX9HTHgUv20ss7rdlMBXzVBXV7nleNxqH11Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NgbuZfduGimrJP9EWJKuKSeM9EwQFpOwg5kqk119BH1biiYfum+aLDAr0giSexDVpv45Egvcbjgr8n9lBNO8mqHLDvSpQQpZsFsl3EiQi/uSaUFyApSfd6YwX0Nkek8M/PulgChlKmHw0O9hxRYNCNZW9xFIDGC1qt8TLW4N/jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=amv0mO7m; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="OmuQI8F8"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 8C527A043A;
-	Wed, 16 Apr 2025 16:45:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=wFlL4KarMxsmLqV1w7R0
-	LsLYAx1qNHc06GmS7Bj9QUk=; b=OmuQI8F8KMvtkDJldQhE18/bshVriV8cyxk1
-	/pwejPGI9fBRCs+etuap7iO7jDAYGwyuvE6LYKN8UPK9PQCb6KW+hjAzZCn4qPMP
-	Lx4SqgEnub/cENFPHlGzDM9gzNkWNGuyHpDG6+iQs5iia4qBu/C4C8EKk5BhiI9I
-	YsIU78NQd+h23S3yapOYQDVS/nPYb4iLNM7PvWVqrzdPs1jCR1GIwucaPX/l4cdA
-	Y9IUolu567Miqn3ylgKDY2cFDDOj8p7QdYtd9Rkex5BHQFPUNSVvy+3yr+1JFQgL
-	8uZw70xORd/xStGC78KKoDqkeC4Zu8BdlXosRVUiWhosD8wH2sqr+avkYQO9wQBv
-	Nngs2USiIH1wLHas8dRKSO8zveNay4pmENjkBQ1hN05T6bNrxM2T0i0MS56tD5ko
-	WU4qJ122Y8cVcef63AzdNnVjlO86x9Q9+hmaSHCqvSffLoPt/TAuFihyM5kimrUy
-	242HKbEUSB7A0Aj8JgPz/VJHg9/CR+OlZC4FOUIA3yJApOVYqVl6uG4sf1A8K9pi
-	scSaSgoDtT4EDcUZAl7AT1OsEVE/b15/cl+KPWTox4IBzYyFFLhLem609CBdVLX6
-	/72k/0tDnNZr2kBaIetGQ9BPaKDt3F+e+74mCVMkQzHkSNko2UiSm5t3XB4c0YQH
-	IfEq9hw=
-Message-ID: <c56c52c0-a824-4ad7-9847-e0e973f811ed@prolan.hu>
-Date: Wed, 16 Apr 2025 16:44:59 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="amv0mO7m"
+Message-ID: <fd813f14-ea75-4f5a-a99e-d2925c25ccd2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744814712;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PFPVQCglhZ98jAXl7RgPw5PgOsI9U57zfBeHJT8Bs3Y=;
+	b=amv0mO7m1+UkcEv1qboZNMN40LyJrq744QcjNqaEktEl+1mPe04uhoEPACcqr/PN9W+laC
+	0/nZwp1RMeePZcpXprvHwys8fxHRjDu8yjxjOvTW6VZNBcfuszm0Bq2BR/+A+ucxlntenx
+	F0V3kR8S65/0KOUEPLrtPg+KXoRMOvs=
+Date: Wed, 16 Apr 2025 15:45:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi-nor: Verify written data in paranoid mode
-To: Richard Weinberger <richard@nod.at>
-CC: Michael Walle <mwalle@kernel.org>, linux-mtd
-	<linux-mtd@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>,
-	=?UTF-8?Q?Szentendrei=2C_Tam=C3=A1s?= <szentendrei.tamas@prolan.hu>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>, pratyush <pratyush@kernel.org>, "Miquel
- Raynal" <miquel.raynal@bootlin.com>, Vignesh Raghavendra <vigneshr@ti.com>
-References: <20250415180434.513405-1-csokas.bence@prolan.hu>
- <D981O3AA6NK9.2EEVUPM62EV6S@kernel.org>
- <dd3c7cc0-a568-4046-b105-e6786b5c80f8@prolan.hu>
- <373620122.295980015.1744808943985.JavaMail.zimbra@nod.at>
-Content-Language: en-US, hu-HU
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-In-Reply-To: <373620122.295980015.1744808943985.JavaMail.zimbra@nod.at>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
+ <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+ <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+ <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev>
+ <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
+ <44b67f86-ed27-49e8-9e15-917fa2b75a60@linux.dev>
+ <CAMuE1bFk=LFTWfu8RFJeSoPtjO8ieJDdEHhHpKYr4QxqB-7BBg@mail.gmail.com>
+ <507eb775-d7df-4dd2-a7d1-626d5a51c1de@linux.dev>
+ <CAMuE1bFLB24ELFOSG=v+0hxJ+a+KGNWc8=Z3=kbXOs03PtLFOA@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAMuE1bFLB24ELFOSG=v+0hxJ+a+KGNWc8=Z3=kbXOs03PtLFOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ATLAS.intranet.prolan.hu (10.254.0.229) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A2980D94853647664
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
-
-On 2025. 04. 16. 15:09, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
->> Von: "Csókás Bence" <csokas.bence@prolan.hu>
->>>> Add MTD_SPI_NOR_PARANOID config option for verifying all written data to
->>>> prevent silent bit errors to be undetected, at the cost of halving SPI
->>>> bandwidth.
->>>
->>> What is the use case for this? Why is it specific to SPI-NOR
->>> flashes? Or should it rather be an MTD "feature". I'm not sure
->>> whether this is the right way to do it, thus I'd love to hear more
->>> about the background story to this.
+On 16/04/2025 14:59, Sagi Maimon wrote:
+> On Wed, Apr 16, 2025 at 1:35 PM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
 >>
->> Well, our case is quite specific, but we wanted to provide a general
->> solution for upstream. In our case we have a component in the data path
->> that can cause a burst bit error, on average after about a hundred
->> megabytes written.
-> 
-> Hmm. So, there is a serve hardware issue you're working around.
-> 
->> We _could_ make it MTD-wide, in our case we only have a NOR Flash
->> onboard so this is where we added it. If it were in the MTD core, where
->> would it make sense?
-> 
-> I'm not so sure whether it makes sense at all.
-> In it's current form, there is no recovery. So anything non-trivial
-> on top of the MTD will just see an -EIO and has to give up.
-> E.g. a filesystem will remount read-only.
+>> On 16/04/2025 07:33, Sagi Maimon wrote:
+>>> On Mon, Apr 14, 2025 at 4:55 PM Vadim Fedorenko
+>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>
+>>>> On 14/04/2025 14:43, Sagi Maimon wrote:
+>>>>> On Mon, Apr 14, 2025 at 4:01 PM Vadim Fedorenko
+>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>
+>>>>>> On 14/04/2025 12:38, Sagi Maimon wrote:
+>>>>>>> On Mon, Apr 14, 2025 at 2:09 PM Vadim Fedorenko
+>>>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>>>
+>>>>>>>> On 14/04/2025 11:56, Sagi Maimon wrote:
+>>>>>>>>> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
+>>>>>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
+>>>>>>>>>>> Sysfs signal show operations can invoke _signal_summary_show before
+>>>>>>>>>>> signal_out array elements are initialized, causing a NULL pointer
+>>>>>>>>>>> dereference. Add NULL checks for signal_out elements to prevent kernel
+>>>>>>>>>>> crashes.
+>>>>>>>>>>>
+>>>>>>>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
+>>>>>>>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+>>>>>>>>>>> ---
+>>>>>>>>>>>        drivers/ptp/ptp_ocp.c | 3 +++
+>>>>>>>>>>>        1 file changed, 3 insertions(+)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>> index 7945c6be1f7c..4c7893539cec 100644
+>>>>>>>>>>> --- a/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>> +++ b/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+>>>>>>>>>>>            bool on;
+>>>>>>>>>>>            u32 val;
+>>>>>>>>>>>
+>>>>>>>>>>> +     if (!bp->signal_out[nr])
+>>>>>>>>>>> +             return;
+>>>>>>>>>>> +
+>>>>>>>>>>>            on = signal->running;
+>>>>>>>>>>>            sprintf(label, "GEN%d", nr + 1);
+>>>>>>>>>>>            seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
+>>>>>>>>>>
+>>>>>>>>>> That's not correct, the dereference of bp->signal_out[nr] happens before
+>>>>>>>>>> the check. But I just wonder how can that even happen?
+>>>>>>>>>>
+>>>>>>>>> The scenario (our case): on ptp_ocp_adva_board_init we
+>>>>>>>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
+>>>>>>>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
+>>>>>>>>> when calling signal 2 or 3  the dereference occurs.
+>>>>>>>>> can you please explain: " the dereference of bp->signal_out[nr] happens before
+>>>>>>>>> the check", where exactly? do you mean in those lines:
+>>>>>>>>> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+>>>>>>>>         ^^^
+>>>>>>>> yes, this is the line which dereferences the pointer.
+>>>>>>>>
+>>>>>>>> but in case you have only 2 pins to configure, why the driver exposes 4
+>>>>>>>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+>>>>>>>>
+>>>>>>> I can (and will) expose only 2 sma in adva_timecard_attrs, but still
+>>>>>>> ptp_ocp_summary_show runs
+>>>>>>> on all 4 signals and not only on the on that exposed, is it not a bug?
+>>>>>>
+>>>>>> Yeah, it's a bug, but different one, and we have to fix it other way.
+>>>>>>
+>>>>> Do you want to instruct me how to fix it , or will you fix it?
+>>>>
+>>>> well, the original device structure was not designed to have the amount
+>>>> of SMAs less than 4. We have to introduce another field to store actual
+>>>> amount of SMAs to work with, and adjust the code to check the value. The
+>>>> best solution would be to keep maximum amount of 4 SMAs in the structure
+>>>> but create a helper which will init new field and will have
+>>>> BUILD_BUG_ON() to prevent having more SMAs than fixed size array for
+>>>> them. That will solve your problem, but I will need to check it on the
+>>>> HW we run.
+>>>>
+>>> just to be clear you will write the fix and test it on your HW, so you
+>>> don't want me to write the fix?
+>>
+>> Well, it would be great if you can write the code which will make SMA
+>> functions flexible to the amount of pin the HW has. All our HW has fixed
+>> amount of 4 pins that's why the driver was coded with constants. Now
+>> your hardware has slightly different amount of pins, so it needs
+>> adjustments to the driver to work properly. I just want to be sure that
+>> any adjustments will not break my HW - that's what I meant saying I'll
+>> test it.
+>>
+> Just to be clear (correct me please if I am wrong):
+> I will write the code, then create a patch and upstream to the vanilla
+> you will test my change on your HW and only then approve the patch
 
-In our case, we use UBIFS on top of UBI, which in this case chooses 
-another eraseblock to hold the data instead, then re-tests (erase+write 
-cycles) the one which gave -EIO. Since the bus error is only transient, 
-it goes away by this time, and thus UBIFS will recover from this cleanly.
+Yes, that's correct
 
-So yes, it is up to the FS/upper layers to handle the error. If it can't 
-recover from this, then yes, it will give up and enter some 'safe mode' 
-(e.g. remount ro). But at least it *does* get notified that there is 
-something up, and has a chance to react. Before it just thought 
-everything was written with no errors, and then there would be data 
-corruption *on the next read*.
-
-> Thanks,
-> //richard
-
-Bence
+>>>>>>>>> struct ptp_ocp_signal *signal = &bp->signal[nr];
+>>>>>>>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
+>>>>>>>>>> the end of ptp_ocp_adva_board_init() like it's done for other boards.
+>>>>>>>>>>
+>>>>>>>>>> --
+>>>>>>>>>> pw-bot: cr
+>>>>>>>>
+>>>>>>
+>>>>
+>>
 
