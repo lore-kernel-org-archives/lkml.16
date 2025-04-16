@@ -1,133 +1,123 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B7420CCC8
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9001F193D;
+	Wed, 16 Apr 2025 15:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818865; cv=none; b=sQIC9VVRlQm2UIoBWtxOa6aGi++uBO/ohEvLc/dw2Tbwf25aRWzlnhCOU4qfzIe4L2UMUSeWNOc54d3Hc1Gno0+t56C3wcikjJRlKzlSEFX3xlYeoddhHLiMZNrQ5SHgjy2+KgU3P2YgtTXe34fBZrzFMpWZU4WzVo6W1OIpECo=
+	t=1744818885; cv=none; b=YBUVOpp6Otg1poRmAGFikienfeA0t9yxMlzoyKyr/wsQ2sVxylEfFkapMDjF7PJX4Ik8EOAGoz/1hzIII+RX2vKsWEmpYJllUsi5NqwAC+YRULS2OTQWAeNNJVRmvuMyx2q5GT8MMLcDvfMhuwp7A3NjR2AMeyBtXtzw8SUdqnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818865; c=relaxed/simple;
-	bh=SPaowd3M9aDqKiZKIBNnytaz2NDh9ecsBk9EiQI6dBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iFdHpJxC0h0MQyp5A3D8/YnU3wTREPR+MHVt+MvE8aEZBlZ31N7Ae6fJvObp5xf3s6uUAIZ9S6Cev6730N0SnojvdybLJAdsEtOJpOj7s3/42oJKoZvEXH7EiCErjOEoveHhCtoPYgBpicnn53CeSsKCppGEIgOGv0FOp3YeurQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=wgwhIN+O; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1744818885; c=relaxed/simple;
+	bh=BK6yw88CCQMOuS+aZ2Cf0kz3xcaYu31IAHaHB7+z3cw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4oZu9xVFXBRgOKJcFHrXbI7dDzqqWc46H3ZlgFA5NBZfJTQbxGvJzKMpAUL0ha0BHGs8dC2yjnark5FtC4L4+Dm8vES+YFefV0gFoF886YGjTjbyxztcKEwaV9hmsao+bQ+b5QzRVnJejT9UGaopLM/gbhoBiU53SKnzez/ebE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYsB7iLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="wgwhIN+O"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Zd54t2pwdz4qL;
-	Wed, 16 Apr 2025 17:47:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1744818446;
-	bh=1IakuJWFboristJ2VRu+w4JaTAaJExvweOFRahrjCIc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=wgwhIN+OO4VHCeiAphfE5zWHH3mQGy0liyRaOcvVTU1QWZcLIWgMn5sLJngUWsSXD
-	 9dLWMaWK91RNnrn8bl9T6yT2l/tGSrTKlhcmPZqVM3gY/6C9DwUeeuxMQpNdfIe0ii
-	 xv1THFE1J3O+YBZ7xgIPbNdSVRg969raQTeO2B14=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Zd54s6DH1zQXK;
-	Wed, 16 Apr 2025 17:47:25 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Moore <paul@paul-moore.com>
-Subject: [PATCH v1 1/3] landlock: Fix documentation for landlock_create_ruleset(2)
-Date: Wed, 16 Apr 2025 17:47:11 +0200
-Message-ID: <20250416154716.1799902-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYsB7iLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF83C4CEE2;
+	Wed, 16 Apr 2025 15:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744818883;
+	bh=BK6yw88CCQMOuS+aZ2Cf0kz3xcaYu31IAHaHB7+z3cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CYsB7iLFu7CRO3Le0pvmC1k268EFLWH7CYrVAhgxHXz/hQKlGrhkytRRyfxhrFRLa
+	 kLWtrgRIFCVezFrhVYZi/slKn9mmAhE5BNzwbioipRzXvxBRe20qSGWRYEoBVVOn4C
+	 EHs3j8eTEtQA7Y1GrcktDJQf0XFLzKInpzctB45OjBhPa2rSJmMnw1aUcZjTSYAK6s
+	 CiSdKNvuxd/I+GZEiYg3us08A1t4SeJm1Z+KQq8BkAxgxhMAYAFQZ/tbuLHPWbWvlI
+	 i4d9EwJSJCI4WiRJ34sJF0ZXuEn3EmuFUh8xOpPzpJWwrT7Oh77TTOUTXNZWnb8eyN
+	 kDLHP3E9Of9dA==
+Date: Wed, 16 Apr 2025 10:54:42 -0500
+From: Rob Herring <robh@kernel.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 00/13] ARM: vt8500: DT bindings and dts updates
+Message-ID: <20250416155442.GA3255418-robh@kernel.org>
+References: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-wmt-updates-v1-0-f9af689cdfc2@gmail.com>
 
-Move and fix the flags documentation, and improve formatting.
+On Wed, Apr 16, 2025 at 12:21:25PM +0400, Alexey Charkov wrote:
+> Convert some more VT8500 related textual DT binding descriptions to
+> YAML schema, do minor dts correctness fixes, and add a DT for the
+> board I'm actually testing those on (VIA APC Rock).
+> 
+> While at that, also describe the PL310 L2 cache controller present on
+> WM8850/WM8950.
+> 
+> Note that this series is based upon Krzysztof's linux-dt/for-next
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Alexey Charkov (13):
+>       dt-bindings: i2c: i2c-wmt: Convert to YAML
+>       dt-bindings: interrupt-controller: via,vt8500-intc: Convert to YAML
+>       dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
+>       dt-bindings: net: via-rhine: Convert to YAML
+>       dt-bindings: pwm: vt8500-pwm: Convert to YAML
+>       dt-bindings: timer: via,vt8500-timer: Convert to YAML
+>       dt-bindings: arm: vt8500: Add VIA APC Rock/Paper boards
+>       ARM: dts: vt8500: Add node address and reg in CPU nodes
+>       ARM: dts: vt8500: Move memory nodes to board dts and fix addr/size
+>       ARM: dts: vt8500: Use generic compatibles for EHCI
+>       ARM: dts: vt8500: Use generic node name for the SD/MMC controller
+>       ARM: dts: vt8500: Add VIA APC Rock/Paper board
+>       ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
+> 
+>  Documentation/devicetree/bindings/arm/vt8500.yaml  | 19 ++++---
+>  Documentation/devicetree/bindings/i2c/i2c-wmt.txt  | 24 ---------
+>  .../devicetree/bindings/i2c/wm,wm8505-i2c.yaml     | 47 +++++++++++++++++
+>  .../interrupt-controller/via,vt8500-intc.txt       | 16 ------
+>  .../interrupt-controller/via,vt8500-intc.yaml      | 47 +++++++++++++++++
+>  .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
+>  .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 61 ++++++++++++++++++++++
+>  .../devicetree/bindings/net/via,vt8500-rhine.yaml  | 41 +++++++++++++++
+>  .../devicetree/bindings/net/via-rhine.txt          | 17 ------
+>  .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 +++++++++++++++
+>  .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 -------
+>  .../devicetree/bindings/timer/via,vt8500-timer.txt | 15 ------
+>  .../bindings/timer/via,vt8500-timer.yaml           | 36 +++++++++++++
+>  MAINTAINERS                                        |  7 ++-
+>  arch/arm/boot/dts/vt8500/Makefile                  |  3 +-
+>  arch/arm/boot/dts/vt8500/vt8500-bv07.dts           |  5 ++
+>  arch/arm/boot/dts/vt8500/vt8500.dtsi               | 12 ++---
+>  arch/arm/boot/dts/vt8500/wm8505-ref.dts            |  5 ++
+>  arch/arm/boot/dts/vt8500/wm8505.dtsi               | 14 ++---
+>  arch/arm/boot/dts/vt8500/wm8650-mid.dts            |  5 ++
+>  arch/arm/boot/dts/vt8500/wm8650.dtsi               | 14 ++---
+>  arch/arm/boot/dts/vt8500/wm8750-apc8750.dts        |  5 ++
+>  arch/arm/boot/dts/vt8500/wm8750.dtsi               | 14 ++---
+>  arch/arm/boot/dts/vt8500/wm8850-w70v2.dts          |  5 ++
+>  arch/arm/boot/dts/vt8500/wm8850.dtsi               | 23 +++++---
+>  arch/arm/boot/dts/vt8500/wm8950-apc-rock.dts       | 21 ++++++++
+>  arch/arm/boot/dts/vt8500/wm8950.dtsi               | 11 ++++
+>  27 files changed, 386 insertions(+), 165 deletions(-)
+> ---
+> base-commit: 62db22c2af6ce306943df5de6f5198ea9bd3d47b
 
-It makes more sense and it eases maintenance to document syscall flags
-in landlock.h, where they are defined.  This is already the case for
-landlock_restrict_self(2)'s flags.
+I could not apply this series for testing. What base is this? It is 
+unknown to anything I have. Please use most recent rc1 unless you have 
+a dependency then use recent linux-next or a branch in it.
 
-The flags are now rendered like the syscall's parameters and
-description.
-
-Cc: Günther Noack <gnoack@google.com>
-Cc: Paul Moore <paul@paul-moore.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
- include/uapi/linux/landlock.h | 14 +++++++++-----
- security/landlock/syscalls.c  | 15 +++++++--------
- 2 files changed, 16 insertions(+), 13 deletions(-)
-
-diff --git a/include/uapi/linux/landlock.h b/include/uapi/linux/landlock.h
-index d9d0cb827117..9a4b64be9869 100644
---- a/include/uapi/linux/landlock.h
-+++ b/include/uapi/linux/landlock.h
-@@ -53,12 +53,16 @@ struct landlock_ruleset_attr {
- 	__u64 scoped;
- };
- 
--/*
-- * sys_landlock_create_ruleset() flags:
-+/**
-+ * DOC: landlock_create_ruleset_flags
-+ *
-+ * **Flags**
-+ *
-+ * %LANDLOCK_CREATE_RULESET_VERSION
-+ *     Get the highest supported Landlock ABI version (starting at 1).
-  *
-- * - %LANDLOCK_CREATE_RULESET_VERSION: Get the highest supported Landlock ABI
-- *   version.
-- * - %LANDLOCK_CREATE_RULESET_ERRATA: Get a bitmask of fixed issues.
-+ * %LANDLOCK_CREATE_RULESET_ERRATA
-+ *     Get a bitmask of fixed issues for the current Landlock ABI version.
-  */
- /* clang-format off */
- #define LANDLOCK_CREATE_RULESET_VERSION			(1U << 0)
-diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-index 54a9f29e6ebb..9515dc92b99f 100644
---- a/security/landlock/syscalls.c
-+++ b/security/landlock/syscalls.c
-@@ -169,20 +169,16 @@ const int landlock_abi_version = 7;
-  *        the new ruleset.
-  * @size: Size of the pointed &struct landlock_ruleset_attr (needed for
-  *        backward and forward compatibility).
-- * @flags: Supported value:
-+ * @flags: Supported values:
-+ *
-  *         - %LANDLOCK_CREATE_RULESET_VERSION
-  *         - %LANDLOCK_CREATE_RULESET_ERRATA
-  *
-  * This system call enables to create a new Landlock ruleset, and returns the
-  * related file descriptor on success.
-  *
-- * If @flags is %LANDLOCK_CREATE_RULESET_VERSION and @attr is NULL and @size is
-- * 0, then the returned value is the highest supported Landlock ABI version
-- * (starting at 1).
-- *
-- * If @flags is %LANDLOCK_CREATE_RULESET_ERRATA and @attr is NULL and @size is
-- * 0, then the returned value is a bitmask of fixed issues for the current
-- * Landlock ABI version.
-+ * If %LANDLOCK_CREATE_RULESET_VERSION or %LANDLOCK_CREATE_RULESET_ERRATA is
-+ * set, then @attr must be NULL and @size must be 0.
-  *
-  * Possible returned errors are:
-  *
-@@ -191,6 +187,9 @@ const int landlock_abi_version = 7;
-  * - %E2BIG: @attr or @size inconsistencies;
-  * - %EFAULT: @attr or @size inconsistencies;
-  * - %ENOMSG: empty &landlock_ruleset_attr.handled_access_fs.
-+ *
-+ * .. kernel-doc:: include/uapi/linux/landlock.h
-+ *     :identifiers: landlock_create_ruleset_flags
-  */
- SYSCALL_DEFINE3(landlock_create_ruleset,
- 		const struct landlock_ruleset_attr __user *const, attr,
--- 
-2.49.0
-
+Rob
