@@ -1,212 +1,127 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3020227E88
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10CD22FF39;
+	Wed, 16 Apr 2025 09:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794739; cv=none; b=HcJZRdZUDgC90Vg8fUURZPb+IU+7jWLjYExnT9ECMLtGvrjiez2kBHFKCzkE27ZUkm4fqRhWB0w4QKGa8yNcaUEY0VO8bYyvg/1IHJAYIjLd2xmMu2dsXJTRf6Ztcc1xwDum5G6BX+kWjJIpqua4mIj2+XgShBf3dVfbRi385Ck=
+	t=1744794834; cv=none; b=VKPQ4CzHhhbP84dMAhSBZmbZXJ2C/iPAQSV/KB6kTeN0GgWpivyxyHjyqCajXAddNfuv4ZdnavUf5n1i0mkhh4lFMxWNyolkTyNWP5nEUGqAjVwowWSsNx86uScm3oTmeDZ/c2oWIuKrgxy08bmVp74reSBRT38GLDQbPSI4geU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794739; c=relaxed/simple;
-	bh=GodOAskcLtHSu7odIU0A3MJHpsDVwKYa4n5215XdlhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTfXr5+zoxdttfUKloIbzgpPlhpIhZF2jl2IvOwwQNVETH3eLWw/yJCvsKY04F8qkKjsN2erOyl/2w6YP/z9+hukxpBB65K96qUO65M0EU94/I29PREbWrGYk2L1z/wEDW1ZsX2rmeWagywQxCMP3+gg/wqnnDqUM9huuHtKz94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2XkdRc3k; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xCFye5Wh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RCVgMjdh; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H8ghe5UZ; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744794834; c=relaxed/simple;
+	bh=G0pJXcxyvKvuX1LUdA5knQfDY/cT7eAL7Lg5VL7BCpY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VIQsjTKxdY7MCNh064nhvRaw5o8NESMLFr681SSnPU5lgUdwC1ERv/YkxOvC6iJpbr68R7CXQbRr8bbjBpJ/U4wf0Egna8TIjtb1ou8RAs6R4Hsy1G7/LaBrbD9/0AC9qaFsNQ1lOXtlVOJSe95nvgXJkpTQMCKAxMvcd1PwWvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7USmwKg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2XkdRc3k";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xCFye5Wh";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RCVgMjdh";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H8ghe5UZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id CF90421185;
-	Wed, 16 Apr 2025 09:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744794735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
-	b=2XkdRc3kL3UqZjBIux9plckJYbVfQV9fTUf+0LMOgvo7nviOHqW43TbP9gCoM4m7OZfLMz
-	AdljKVZgtGmWvJTpW/xMC1R9FCZ25zxIelHGrJDMkcTrd9kQ2kRCQNnje7XwWeb52aOTf8
-	D/DnYkReel3vf2l+lcKddmhnrcehqrA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744794735;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
-	b=xCFye5WhIs+HV2+c1y/qS5DBjdwiitZPKOVB5ZW667Xzej1idHcC0sKYuqSm9LUuS+h08j
-	KAGQtsN+KHc0pBAg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744794734; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
-	b=RCVgMjdhCOJToqSg/ZMSUOHBCF39zA/I2XlZX6IXbPfrQoGdaPu71VMxAANeuoSZr7uQJY
-	o9ZZ+MSCYXqkdsEIOC+b2KY7uvz5GnUImhYZL7MPv9VYFS9BgymwswDEcmiBfJ/yTxOj1X
-	34W2BbxmG8/jDkLuBlPNHSjn9GIWzOg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744794734;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WQZ2eeaBtxrHbP9Px/mU/fgWsqj/ogBc9ZP61o6M+JQ=;
-	b=H8ghe5UZoW6YNP6MFlh44jhwuDMhdA3uaONdtD67O4TyJqQ5Y+2hTSrmXjpARZF1Z++RvH
-	x+gKIdtjCaZ74nAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C35E613976;
-	Wed, 16 Apr 2025 09:12:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gSSuL250/2d6bQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 16 Apr 2025 09:12:14 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 701CFA0947; Wed, 16 Apr 2025 11:12:10 +0200 (CEST)
-Date: Wed, 16 Apr 2025 11:12:10 +0200
-From: Jan Kara <jack@suse.cz>
-To: Joe Damato <jdamato@fastly.com>
-Cc: linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC vfs/for-next 1/1] eventpoll: Set epoll timeout if it's in
- the future
-Message-ID: <qg2whv57hpyiw66ocb6zuhcus5yajqm3gypau3p655hp53pwnj@vxdhp2m7d5qg>
-References: <20250415184346.39229-1-jdamato@fastly.com>
- <20250415184346.39229-2-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7USmwKg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 32B50C4CEE2;
+	Wed, 16 Apr 2025 09:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744794834;
+	bh=G0pJXcxyvKvuX1LUdA5knQfDY/cT7eAL7Lg5VL7BCpY=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=j7USmwKgRYbK8H92Ld8zTuevoFMrCS0yz4Geut3KXUftvEo9AnyJ/TbSdjq4yTnhu
+	 XxVbYJQu63DxuOFbBJJabADV6qaJTCZIGzHgrvrlROG9O676JV8l6Isrv4JCejbkhY
+	 TnoQx2NZlzybzoNxntJfJM1zS5zSXC7ZcgsXjPRVqlpNcDDH/eI39Tn3J4v8t4G/8a
+	 VBF0lP8aO/5Q490rqV+2Lll/gw7exkolbzZ1265UkE6w9gvxGOtC4xM6qzfrY9MP4J
+	 Pm43/S+m9m9l3v+V6jRlVlBmGlhlEWSac12AqtQw8U8ckEnE1qi6dDaMr3jR7l2djH
+	 At31ei5dsJAow==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276BBC369B1;
+	Wed, 16 Apr 2025 09:13:54 +0000 (UTC)
+From: Juerg Haefliger via B4 Relay <devnull+juerg.haefliger.canonical.com@kernel.org>
+Date: Wed, 16 Apr 2025 11:13:35 +0200
+Subject: [PATCH] arm64: dts: qcom: x1e80100-hp-omnibook-x14: Remove invalid
+ bt-en-sleep node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415184346.39229-2-jdamato@fastly.com>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-fix-omnibook-dts-v1-1-2409220a7c6f@canonical.com>
+X-B4-Tracking: v=1; b=H4sIAL50/2cC/x2MQQqAIBAAvyJ7bkHFpPpKdLDaaok0NCII/550H
+ JiZFxJFpgSdeCHSzYmDL6AqAdPm/ErIc2HQUtfSKIsLPxgOz2MIO85XwtZM2rXamsbWULIzUnH
+ +ZT/k/AFPOfxUYgAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Juerg Haefliger <juerg.haefliger@canonical.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1564;
+ i=juerg.haefliger@canonical.com; h=from:subject:message-id;
+ bh=ghuP4WA9I34RJPerKbhGPvLIaYpn+6TGHXDyTAaAGtI=;
+ b=owEBbQKS/ZANAwAKAQ/TiwkLpkK3AcsmYgBn/3TQMO+HEhY/5tu1QCR/ulQ3RWR1SmWv5FAFy
+ 8RdKsTNzJyJAjMEAAEKAB0WIQSFl9T3oi6mu+It14sP04sJC6ZCtwUCZ/900AAKCRAP04sJC6ZC
+ tyZnEACvj5pe+h/WGp0qT12bYG9YMSWrjbdU8Jx1AGK1ZbbVmyqpDlE15/R1zvZLskuliMowKv2
+ Zv76nCWn7UML5e0miuYKwe+dhyreHi3ufBpuMdJAKkBSYyMQhpr96dg0oVnQGJs1j8mDiAY/Ujs
+ uv6+TbqiSqrB0xumlfj9UdICUsquVcdL/t2VtgmHpD/Jg/DLXI00wFJlbmpTDs2ltyDaHffqMTv
+ LYErbOQjHaQmfwhwAzd4e/2rX/x6YWOyfiv4UbTVfXMjEOVsdwPXM9dZPohirqzmmjfWCU36cv9
+ AfXkvor0OyyvPcySMtwmWy2HHElwTENgc8LMNNDZk+AcpQTGQ2Pf8FRqTzTe1HkXo5qZ3pbLekA
+ 2O+PE0l6Ut/Ugb2gDGlWRTdKF2YNXVDkq0wmC2OYvkDxy4/Vm1okVQJsczAJ4A7O28Iw1c2tybu
+ Ld8R2nFT4zdryKb0wNRZdUJcwvNR9POnDXnNo5oX4GWhri4YlVMKcaOL2e2PHFpbRsVrV4uedet
+ hseWMNQIbz0w+d/sQ1ZtNGeqx8Utb71G6fU1QvMCqD9v1VxLctCa5Fdo3xAo58qj3phDVwz42L5
+ 0rN9HVNcBYCoHnkl7agsKX6jX6qs1FTwukrSVBbYivX9fYP5fB7B7Tm3jAjvU4zNwlUgYbIR12A
+ KIG9ELv5CIUh/5g==
+X-Developer-Key: i=juerg.haefliger@canonical.com; a=openpgp;
+ fpr=52B5BDD2A6EDC76A0FE0AB4A754C3A96F9F8B48C
+X-Endpoint-Received: by B4 Relay for juerg.haefliger@canonical.com/default
+ with auth_id=381
+X-Original-From: Juerg Haefliger <juerg.haefliger@canonical.com>
+Reply-To: juerg.haefliger@canonical.com
 
-On Tue 15-04-25 18:43:46, Joe Damato wrote:
-> Avoid an edge case where epoll_wait arms a timer and calls schedule()
-> even if the timer will expire immediately.
-> 
-> For example: if the user has specified an epoll busy poll usecs which is
-> equal or larger than the epoll_wait/epoll_pwait2 timeout, it is
-> unnecessary to call schedule_hrtimeout_range; the busy poll usecs have
-> consumed the entire timeout duration so it is unnecessary to induce
-> scheduling latency by calling schedule() (via schedule_hrtimeout_range).
-> 
-> This can be measured using a simple bpftrace script:
-> 
-> tracepoint:sched:sched_switch
-> / args->prev_pid == $1 /
-> {
->   print(kstack());
->   print(ustack());
-> }
-> 
-> Before this patch is applied:
-> 
->   Testing an epoll_wait app with busy poll usecs set to 1000, and
->   epoll_wait timeout set to 1ms using the script above shows:
-> 
->      __traceiter_sched_switch+69
->      __schedule+1495
->      schedule+32
->      schedule_hrtimeout_range+159
->      do_epoll_wait+1424
->      __x64_sys_epoll_wait+97
->      do_syscall_64+95
->      entry_SYSCALL_64_after_hwframe+118
-> 
->      epoll_wait+82
-> 
->   Which is unexpected; the busy poll usecs should have consumed the
->   entire timeout and there should be no reason to arm a timer.
-> 
-> After this patch is applied: the same test scenario does not generate a
-> call to schedule() in the above edge case. If the busy poll usecs are
-> reduced (for example usecs: 100, epoll_wait timeout 1ms) the timer is
-> armed as expected.
-> 
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
+From: Juerg Haefliger <juerg.haefliger@canonical.com>
 
-Hum, I guess this is about the interpretation of the 'timeout' value of
-epoll_pwait2() and friends. Does the runtime of the system call itself
-(including possible polling) count into the timeout or does timeout mean
-how long we should sleep after we've done all our work? The manpage says
-"The timeout argument specifies the number of milliseconds that
-epoll_wait() will block." which I guess can be understood both ways. Seeing
-the epoll code it seems the author's intention was indeed rather the former.
-So I guess feel free to add:
+Remove the invalid bt-en-sleep node. Not sure how it came into existence
+but it seems the functionality is covered by the wcn-wlan-bt-en-state node:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+	wcn_wlan_bt_en: wcn-wlan-bt-en-state {
+		pins = "gpio116", "gpio117";
+		function = "gpio";
+		drive-strength = <2>;
+		bias-disable;
+	};
 
-								Honza
-> ---
->  fs/eventpoll.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index f9898e60dd8b..ca0c7e843da7 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1980,6 +1980,14 @@ static int ep_autoremove_wake_function(struct wait_queue_entry *wq_entry,
->  	return ret;
->  }
->  
-> +static int ep_schedule_timeout(ktime_t *to)
-> +{
-> +	if (to)
-> +		return ktime_after(*to, ktime_get());
-> +	else
-> +		return 1;
-> +}
-> +
->  /**
->   * ep_poll - Retrieves ready events, and delivers them to the caller-supplied
->   *           event buffer.
-> @@ -2095,7 +2103,7 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
->  
->  		write_unlock_irq(&ep->lock);
->  
-> -		if (!eavail)
-> +		if (!eavail && ep_schedule_timeout(to))
->  			timed_out = !schedule_hrtimeout_range(to, slack,
->  							      HRTIMER_MODE_ABS);
->  		__set_current_state(TASK_RUNNING);
-> -- 
-> 2.43.0
-> 
+This fixes the following warning:
+
+arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dtb: pinctrl@f100000: Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
+        from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
+
+Signed-off-by: Juerg Haefliger <juerg.haefliger@canonical.com>
+---
+ arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+index cd860a246c45..2203abef36b5 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
++++ b/arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts
+@@ -1425,14 +1425,6 @@ &tlmm {
+ 			       <72 2>, /* Secure EC I2C connection (?) */
+ 			       <238 1>; /* UFS Reset */
+ 
+-	bt_en_default: bt-en-sleep {
+-		pins = "gpio116";
+-		function = "gpio";
+-		output-low;
+-		bias-disable;
+-		drive-strength = <16>;
+-	};
+-
+ 	edp_reg_en: edp-reg-en-state {
+ 		pins = "gpio70";
+ 		function = "gpio";
+
+---
+base-commit: 1a1d569a75f3ab2923cb62daf356d102e4df2b86
+change-id: 20250416-fix-omnibook-dts-94c2a9264865
+
+Best regards,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Juerg Haefliger <juerg.haefliger@canonical.com>
+
+
