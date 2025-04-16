@@ -1,173 +1,109 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AFD1F4289;
-	Wed, 16 Apr 2025 14:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B2A1F55F8
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812769; cv=none; b=N+S49iF2YpNGVuzs/qk5PlxxilWd7cfqL5uYFMGI6/YjNL97se8XvbOTkr43peyF0yMF/lK/m334Z8tt8EtANCDKdhuLt0yl9XkZONASNkyfoR5peAMkPB1lW95ECIR77k0jpUl5Dt+RGj90fbzE2Ap3EvSTftLiDbHg41zAqYY=
+	t=1744812773; cv=none; b=C7RawCf0BJjddp7Zz/yoNBamWOepBcP1tNDBKNyfWsbuTO8uZog05crh2DHHzd8+fMp0W9MnCkLmSt2GZVNNMywcrbeLBfslFLfTt3l21icQcvLGNTsbE5wppKdnQIGcYxdNLOJlmLmBn7Kjr5Tvl1cYLOLBT53N9710ofEhw2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812769; c=relaxed/simple;
-	bh=KotPUopKxcGbf+KA04P6eWybcs6CE4c0CchTd06wOMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kbtoAw2G3Vzmix/DCoR7RY8qiGvbKqHZTVJujehdEW4424ip2JPY/r2I4JTwUTxXkREdzTDTM3V0CkGD0OACbp1v8Z2qhJxKG+lYorYDesiMa731sm9FGUwN68vrTAhij6HcaNoqJOcG+fmLTVEOq+t3FOzEnXwIP6VqrESubHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=ah/bMtUE; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1744812773; c=relaxed/simple;
+	bh=XTkntqDwePYCb0luiS2lGmMOslSaMPOKVqshcejczDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PFHPvAYq7rsMjrsuej1Wa35Z7GyrQAmswsQ8MK5H76wqH1ziUiuXe/pg5OObNcU/6AgRKvuvgzM2woSPyZwvcvbyUtCr0UZd9G8OO9g4ubIAu548hzX9btOl/ple+Gyv+varlG8wZfBuV4jhrG9tthFQzMEIJo3DRl7thqMaguU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TY4PgM1K; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="ah/bMtUE"
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id C479A662710;
-	Wed, 16 Apr 2025 16:12:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1744812758;
-	bh=KotPUopKxcGbf+KA04P6eWybcs6CE4c0CchTd06wOMM=;
-	h=From:Subject:Date;
-	b=ah/bMtUE3VwO4HUM2oWQIjcHci2YGl5czsYNjRMbM8UZRR7RC6WYZJooCO493D1JN
-	 lYDQJHnM985tYy1+DCQJlV/hxpPi4eqYVlGpjIdCQRS9h5qEc9K8mMUtldyYCXpHg/
-	 0zcF5e6cysWrXAvOmeq9pUmyRhf/QOZHcybsAnRwAXsDXFk0+cqkqUpnTFsem2AjqI
-	 PW+dhgdNFoiys3Esiu6GUB3CtxAQuaUyg8SdB8qOCWpDfLp8qpBqxCNxmuuLrbjgPu
-	 kQdLTmeM1d2AEA9kwEUXQ/hxZHSgz/KZUm6qaw/Sl3ZNUAm5QJSquAJo0HEm2JVUqN
-	 fttvboINyatZw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>,
- Christian Loehle <christian.loehle@arm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Sultan Alsawaf <sultan@kerneltoast.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>
-Subject:
- [PATCH v3] cpufreq: Avoid using inconsistent policy->min and policy->max
-Date: Wed, 16 Apr 2025 16:12:37 +0200
-Message-ID: <5907080.DvuYhMxLoT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TY4PgM1K"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso1005815766b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744812769; x=1745417569; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=TZMTVb3pZE6oHhA0d7W1SxUDzw2vnyZ2X+M+C9eM56o=;
+        b=TY4PgM1KfaShKUCbyX8HFFo774fz2AkxuG6Jju0esbmx2rV51BlG9AZD4JKuo+xeBR
+         MDpv0aYKAOwI+5RHBE5OI8E0rElv/hL6Nn6UJx+PZs63A2m+j1dW2FiC0GtPD49GY+qG
+         xVgBSbCCNdn3O8N315LimcJLVIKai4VlzBFhWVwvhQfUqgfPS8DMqB7B5kL3vDwSADo5
+         tsBW5n8rWH7xrwcuW5m+7TN1irh1fBObtNEiAcimR8+vXXKjUEhN7nrtdoWQh6ndwfkX
+         kqqSf5vfB6jEkun/pLOGMrY6glyZTEFBt7b9pON5h2qnIzlonZIOWKPJQNyg5GVl3DI3
+         DkeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744812769; x=1745417569;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TZMTVb3pZE6oHhA0d7W1SxUDzw2vnyZ2X+M+C9eM56o=;
+        b=VaFgJhKF/Baa6RIxf13vMf/8CRCj5nBhzaXYFxeFENe5C09cRHHFdT1pV3YACohFjX
+         k6aCxPGa//vbISSJfgaDvoUlB+AaVtsUyKjU8rhlkpPx/Z8RoupYtHOUnHJiCmcfq+/A
+         tvN4dXXor0w0x6MR/ZpqHYFCN6LWnhp/++3y1VEzE+IhXihiCaGoBFX4yWtPuF6z5fkO
+         EMyWoNfMiYSoYaOQvLhC6jGMcK4pKCJKrhs3olCJeucWdhxHnBYthgIOfzxEj7lMEyCW
+         ecZm2Rdxk1ulnZ/mJOMCIfGYFqYDVc7XpfNTA0s0hGJCoD6Ii85BWsq+E7B9sNd1HtqD
+         VLbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWjckm+cycb8zL1gMYyhlH3YDIE2p0Z7kFyrBIN/Eueen167pCv97v9I/7sT46fUeSN5H/WKaajdG7bnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr0HuQlyyWDFyjOz0aRNzsyFkGpQ8wY5A6aoINryEokEGq7Rw3
+	ecVjMpkESj4na+sW07FPQ3y6Y0G+75Uovz1nhkPs3obR63RGo8hz+pX/nNND6ravlZRIEIkdfRT
+	+zHOHeQMuhAKYCy313NGcBolrgoCPgJVl7UagKw==
+X-Gm-Gg: ASbGncttPX1IU2RfO6ToRLXEjx7CNZA0P9OG9M090ZVZbHY4bkHUgn8Jz8hPz5nMYzg
+	x+ULIFnUEFqx09GVjH5XnpAtEXc5t47wJzkSYgcV/ZOrA+42Gljzqsu5o4VO924JKkx7KdMaB3t
+	p+XRJjgCHeUD9pT7J1tedC1cDd//CIdhTabM43OjwjUpu0ZMHrZSjBGXA=
+X-Google-Smtp-Source: AGHT+IFKh78VHVMJondHG+OsJwidPfNrFauRyCcIsVgg2sFjRBzYe5AIwmVRBEBBtiTUMeOMLDkaj0i2I1JGEUQ+Qgk=
+X-Received: by 2002:a17:907:3d9f:b0:ac2:cdcb:6a85 with SMTP id
+ a640c23a62f3a-acb429839b2mr140366666b.22.1744812769573; Wed, 16 Apr 2025
+ 07:12:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
+References: <Z_-P7bsD3KL5K25R@stanley.mountain>
+In-Reply-To: <Z_-P7bsD3KL5K25R@stanley.mountain>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 16 Apr 2025 16:12:37 +0200
+X-Gm-Features: ATxdqUGQSIwu5i_6p0YPHLy3HbMNhNvwue3TIyNU5eKcYhwj52asxFGUhRcPQLE
+Message-ID: <CACMJSesQ1NZZ5jHy=h6eaRyV+-FaRpzVKtfnycv_5Z4YXJ+o-Q@mail.gmail.com>
+Subject: Re: [PATCH next] iio: dac: ad5592r: Delete stray unlock in ad5592r_write_raw()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhlohgvhhhlvgesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed, 16 Apr 2025 at 13:09, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+>
+> This code was converted to use guard locks but one of the unlocks was
+> accidentally overlooked.  Delete it.
+>
+> Fixes: f8fedb167ba4 ("iio: dac: ad5592r: use lock guards")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/iio/dac/ad5592r-base.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+> index 217a8a88818d..5f2cd51723f6 100644
+> --- a/drivers/iio/dac/ad5592r-base.c
+> +++ b/drivers/iio/dac/ad5592r-base.c
+> @@ -324,10 +324,8 @@ static int ad5592r_write_raw(struct iio_dev *iio_dev,
+>
+>                         ret = st->ops->reg_read(st, AD5592R_REG_CTRL,
+>                                                 &st->cached_gp_ctrl);
+> -                       if (ret < 0) {
+> -                               mutex_unlock(&st->lock);
+> +                       if (ret < 0)
+>                                 return ret;
+> -                       }
+>
+>                         if (chan->output) {
+>                                 if (gain)
+> --
+> 2.47.2
+>
 
-Since cpufreq_driver_resolve_freq() can run in parallel with
-cpufreq_set_policy() and there is no synchronization between them,
-the former may access policy->min and policy->max while the latter
-is updating them and it may see intermediate values of them due
-to the way the update is carried out.  Also the compiler is free
-to apply any optimizations it wants both to the stores in
-cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
-which may result in additional inconsistencies.
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-To address this, use WRITE_ONCE() when updating policy->min and
-policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
-them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
-in cpufreq_set_policy() to avoid storing intermediate values in
-policy->min and policy->max with the help of the observation that
-their new values are expected to be properly ordered upfront.
-
-Also modify cpufreq_driver_resolve_freq() to take the possible reverse
-ordering of policy->min and policy->max, which may happen depending on
-the ordering of operations when this function and cpufreq_set_policy()
-run concurrently, into account by always honoring the max when it
-turns out to be less than the min (in case it comes from thermal
-throttling or similar).
-
-Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
-Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-This replaces the last 3 patches in
-
-https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
-
-v2 -> v3:
-   * Fold 3 patches into one.
-   * Drop an unrelated white space fixup change.
-   * Fix a typo in a comment (Christian).
-
-v1 -> v2: Cosmetic changes
-
----
- drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
-
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -495,8 +495,6 @@
- {
- 	unsigned int idx;
- 
--	target_freq = clamp_val(target_freq, policy->min, policy->max);
--
- 	if (!policy->freq_table)
- 		return target_freq;
- 
-@@ -520,7 +518,22 @@
- unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
- 					 unsigned int target_freq)
- {
--	return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
-+	unsigned int min = READ_ONCE(policy->min);
-+	unsigned int max = READ_ONCE(policy->max);
-+
-+	/*
-+	 * If this function runs in parallel with cpufreq_set_policy(), it may
-+	 * read policy->min before the update and policy->max after the update
-+	 * or the other way around, so there is no ordering guarantee.
-+	 *
-+	 * Resolve this by always honoring the max (in case it comes from
-+	 * thermal throttling or similar).
-+	 */
-+	if (unlikely(min > max))
-+		min = max;
-+
-+	return __resolve_freq(policy, clamp_val(target_freq, min, max),
-+			      CPUFREQ_RELATION_LE);
- }
- EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
- 
-@@ -2338,6 +2351,7 @@
- 	if (cpufreq_disabled())
- 		return -ENODEV;
- 
-+	target_freq = clamp_val(target_freq, policy->min, policy->max);
- 	target_freq = __resolve_freq(policy, target_freq, relation);
- 
- 	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
-@@ -2631,11 +2645,15 @@
- 	 * Resolve policy min/max to available frequencies. It ensures
- 	 * no frequency resolution will neither overshoot the requested maximum
- 	 * nor undershoot the requested minimum.
-+	 *
-+	 * Avoid storing intermediate values in policy->max or policy->min and
-+	 * compiler optimizations around them because they may be accessed
-+	 * concurrently by cpufreq_driver_resolve_freq() during the update.
- 	 */
--	policy->min = new_data.min;
--	policy->max = new_data.max;
--	policy->min = __resolve_freq(policy, policy->min, CPUFREQ_RELATION_L);
--	policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
-+	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
-+	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
-+	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
-+
- 	trace_cpu_frequency_limits(policy);
- 
- 	cpufreq_update_pressure(policy);
-
-
-
+Thanks for spotting it.
