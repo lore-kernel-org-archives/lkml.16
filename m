@@ -1,224 +1,155 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2A3221DA5
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0E221DA5;
+	Wed, 16 Apr 2025 21:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744840514; cv=none; b=Zx+dFBZcOl5UstGMljBun2h58nuiU1zvlxxY36JnB5Vq61HxZddLYPgCXpi727ZsVWX/xNEs4Qmd7nw5eOgYKmiREnu34apCcpBWDfAemg+A1d/iFtcJl3wwo5QuholhhX8ZPZypIKw5r1kBwHobkSilTXB+eAuG8PDNYCwXQLA=
+	t=1744840560; cv=none; b=Tr6S7OSW9znjsU4YWOYhR/5MaG0vnPPz/uxFjyC6YhKBEKYZ3kA8ECJbcEZbq9sXHf38BoDw0juvi86m1P95SaYSk2Sk7uaouqRdmZDB4c5QEE8U0j4/pS8lj89puaiG7fMSIC3x4yUWpXqdAxc/gZ0rd4usbpD4uimnTFb0PZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744840514; c=relaxed/simple;
-	bh=gVER7zFphER4OkVnBS5MekREoV4CJLEbjizJ+lC7dlY=;
+	s=arc-20240116; t=1744840560; c=relaxed/simple;
+	bh=lhcwbKPVRhdT6kYZMbI6MCrEmej6mQZJQIMAK/iLsaQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GnO7qU3V3Gcls7iuPi5E8jsCk9vTjVm3aU6VUZPQILTuWK9MCWlfShg1ENslyc3jk6vmsF02fOUGDim426WrfEmlSi4WtLoMtnVchgxKO7n2e8cWcXMnUESOp+Ii93u+j1ao+Ctt8j9moczWnjlMkHbrJGMCxZT0BvK4gCDDa8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SUnyu0ft; arc=none smtp.client-ip=209.85.222.54
+	 To:Cc:Content-Type; b=B2g3z/Cjkh4BTyxf999RCI55Jsl67cee5TnydrVBcrvWNk/bTIo71ueImvpJ8H+f4Ygw+8dOn3fffIKBJdBYqp00GleEw3ZxanTaynrgqwFbI44/nQkcQWwo9EqPEzgd+6DWF1rO3XELearuQJOzCWGV2FG5ufeVR6NWKE4mI+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNptsbOK; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SUnyu0ft"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso65804241.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:55:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNptsbOK"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399838db7fso160774b3a.0;
+        Wed, 16 Apr 2025 14:55:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744840509; x=1745445309; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744840556; x=1745445356; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1gPIruv8+DPJVykMvHBCcurRjzdOaLaF+ig/nmZ+rgk=;
-        b=SUnyu0ftFUHeTlSnSQC1ESFhWULM8Ylh66dQhnsmP/zmUUoFG2t65PnF0PxL2Ftx7s
-         JqbZPayaQwvzdPZ08Z8vWNTVgHF3Ub4AwexLc+9ulSQj7NSYgVeNXTOzLNDiykDYiS8Z
-         f/EqFYEm38tGIZXSSE2g0xbu72BRdZQImCVWnmC0cGtgenxni2YYdMY+wnQlF8ngY6PI
-         Ujrn0ApcyoTYA+BmgzMXHePqZMfbWcWMfjbD0YpEo//M8Vuq/nfGL+oWETS3jcBCiaFq
-         CsAqgbb9zTZAgPnOfhRMB8+zkep/C8iZGeX5tFW5N7Jc+9LyCTwTpvhZtYgSprpuSCM7
-         2tTg==
+        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
+        b=KNptsbOKsYCMGMlV2Yp+fhWpI9vvmHurRB+pV07gE/Iw+CxJjM7dcE8CJD8LJJu0Ci
+         9tMWZsFUBacReanciMO8qFepa0bvK81h5t/hpLgZnKT73Rv5TgTwmLcDYSM+6G8PRHZc
+         u96z5zGGecgf53XnVT3rG8zCHuZB7X/zDy39RTf+xxpEtEDbdDzGFt/QbQ9hsjIGOLfn
+         dU1iUd0pzapdYS5XwoT4bxaR9Vj6pHi1nHV5xJgnszmbpSy/mIx7xAQrecO/VSzqYrmF
+         sOTwZUDMq5D2WSKq2cubVI9ovGjRu5oveABC9bOVf5KJOoGxdL4KZKcTVn1XQW7Fyf1E
+         qJSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744840509; x=1745445309;
+        d=1e100.net; s=20230601; t=1744840556; x=1745445356;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1gPIruv8+DPJVykMvHBCcurRjzdOaLaF+ig/nmZ+rgk=;
-        b=CBz2zNUQNog/fcPDIx6daPBn9dcee1IuE9ziwcOnIlJONE0tCpvDfg6hcWA4tcFEac
-         XB/8yUm/Ywfnh6bkcT37EBB2w4qIc8quawtnR4nxxKjZqhQ2Q53+sgOOhNMq0GouvoAm
-         E/kBD9efo6hwVxFUH6icz+pJc11sFUSrJc6pD/KAPxooKsqZVTGyPHSt0Rkh2g6ruLbw
-         c7Xnv2P2s1/9zcfqquOOgx1nA7B4/I7hp30R/OQiMje2wS2vBfHXnN9jAOevWvIkJ8b+
-         QfYymSkwr69K9CW2P23E/WNOk93GEMNzPX+h3tTb+ZGTs1vF9z6pDywVb804IochdBTY
-         GY0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUVD1duHjADz8jP8lH+roeai04EuXb7pn+w07wygk5uqEtxwxsck5DwMPnTXg+ZKmgQ0OZPWLW8zUNIiII=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2RUMHEvp7vAbplO7O/iOM0+u8voFLsnMTX1ntBCHzjkn2Y3oG
-	sHuCKzLtGnLfCTqbzFzgpoCDDY81j+MVveByc5nWOjj6S8/FDFTzQ+FZdOd9UhDvTGIGwpsO5Vm
-	Y/UHi0mPNjJhWRcL7GF4/VriovsQ=
-X-Gm-Gg: ASbGnctwjE/72rGYDlSjt3Fh6iYCoRGdWkP9YYvkuuCIu5dpRL2PVY/fGpeq3MvxO10
-	TmeLXH67gt3NI9VWZy756dRs5abn3CojTcs9i6aKDO4ftsKXnXiHa/5ezfmryENWODvb5P4MzYU
-	bnAs0dW7BSYRuHqnegl42IRNcjDN5RH3FE
-X-Google-Smtp-Source: AGHT+IHkhF3xA4kAK/73tbGfvqZ44vjh+5kEBCPCGUNimklPYdFojptj/e2Keh6E46G5fdSlA7LLY3y9cJGfpCumpq8=
-X-Received: by 2002:a05:6102:5616:b0:4cb:5e41:5bf3 with SMTP id
- ada2fe7eead31-4cb5e415c8fmr2014388137.20.1744840508906; Wed, 16 Apr 2025
- 14:55:08 -0700 (PDT)
+        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
+        b=Yb92iexwJkQwjwxg+UtmFA0UqFwB2qsqsAyG3kIu6GGDXd116C2FUBk7AurK/kQZb5
+         3j7xBeslbgvBIWAB8coHaK9uU1NHsUJzzpBY3a0/ZAQOCLHgTaNfe8hJbGrHntDdT7TR
+         YDYM/QwcUxJp8d0J0QmiXLzrhsr81J76yY3D/hkj5G2V2xukcd/+yFCLnUgmS11t7gkX
+         RDmgD7Wm9EqBaLLZpHuK8aftfdHyoJMvQ7RzBYAI9mpVNIwL+TzsL1lmZ8QNJTSBPMDd
+         TW9F35MpLp/faeWAjfNfDvbKqAwQ8kuxfdOOEJKFNIrnT7DrHi7B673d8TgNroJ2GUvJ
+         36+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVRWoBGilHhFPbFn+7F73L3q4/skgLbSSNAdiX5+YrUHtZe+7W3Eev+KlZycPexrjce0AuWZuHVLfOOqj7Y@vger.kernel.org, AJvYcCVevcOy5NnC+aFvKuxvXoVj2390lW3mk/a17fH6w+nYScUIy+sBhU3AYmuvvY/tb4a+ZQAmeNl/xPRznW4/je0kpAnc@vger.kernel.org, AJvYcCVh6q+SEo7qZNgnzIEc8GU96cDDdIE5xL4O88dCAlRkXccJPs3yjbn0MG/PO5TS9uohHFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4wyPfUUUYQhdgamXc+Xu3CUXgzr/ELd15iC16OIyTdLDfhXQM
+	nwpR1bKsjgLNJu9o6cTn5XP3U6wCUeHz2Q8NtS98FFH2qoR+aBw9R/WcQiYz8gx35f/3yOnTbir
+	WE0LmtVQ9d6Gqh4y+psEaHw0CiM0=
+X-Gm-Gg: ASbGncvBT3wmBIiXGa9/TvDf8SvBt2uKqVCjU5D+uHxbElebQLQcklC0wwz5KWX5KpH
+	eUihz4QreXEAHpQu1ValI9Q02MB6dcvfAA9bWKvLIuhSeL5akNiAeJGUDtCSl1+GrovZUPZ748K
+	LKyuKb0cakMTswC7wMbQA62R4yXetmo5tPSenzgA==
+X-Google-Smtp-Source: AGHT+IHvIQixrAQdwsCTdh1GAxix6g9Del+gDgRZCEmjPlvhovZqA/cUFeAPLqBhVqXk0OeKqvy7+iSvRcbZ/ddq5Co=
+X-Received: by 2002:a05:6a00:35ca:b0:736:476b:fccc with SMTP id
+ d2e1a72fcca58-73cf2a7466bmr675709b3a.8.1744840556239; Wed, 16 Apr 2025
+ 14:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412085852.48524-1-21cnbao@gmail.com> <34c54df6-9a7c-475d-9b91-0f8acb118231@redhat.com>
- <CAGsJ_4yUUK8LoejaUrXWscpPSQevq8jB4eFwpd6+Gw3T5JxdNg@mail.gmail.com>
- <6259cc1d-93a8-4293-9009-a6119166f023@redhat.com> <CAGsJ_4wnqyaZntmtOvtTZRq2XuKsKRTokwf1GeX91FpfqW_nzw@mail.gmail.com>
- <d5cd2055-62ea-4534-b5e2-c6a5bfa9b1c4@redhat.com> <20250416141531.GD741145@cmpxchg.org>
- <239cfe47-9826-402b-8008-de707faa160e@redhat.com> <20250416181835.GA779666@cmpxchg.org>
-In-Reply-To: <20250416181835.GA779666@cmpxchg.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 17 Apr 2025 05:54:57 +0800
-X-Gm-Features: ATxdqUFYN_CYfqcQtP8IpKf_FzoMqyFGwslI7cr67PZkLqgnF4wMCUnOUFTB2Xc
-Message-ID: <CAGsJ_4zt2Yuornri1bO=3o7myey1Q2dmvtjn2baD0ahxOyoNjw@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying processes
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Matthew Wilcox <willy@infradead.org>, 
-	Oscar Salvador <osalvador@suse.de>, Ryan Roberts <ryan.roberts@arm.com>, Zi Yan <ziy@nvidia.com>
+References: <20250410070258.276759-1-yangfeng59949@163.com>
+In-Reply-To: <20250410070258.276759-1-yangfeng59949@163.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 16 Apr 2025 14:55:43 -0700
+X-Gm-Features: ATxdqUEri2B4k1JC2L-7cp9JCUkFXx4Zbp6ziY-0nhDjM4z8AgOOsHlwGfpeeCA
+Message-ID: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
+To: Feng Yang <yangfeng59949@163.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2025 at 2:18=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
+On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
+wrote:
 >
-> On Wed, Apr 16, 2025 at 05:59:12PM +0200, David Hildenbrand wrote:
-> > On 16.04.25 16:15, Johannes Weiner wrote:
-> > > On Wed, Apr 16, 2025 at 11:40:31AM +0200, David Hildenbrand wrote:
-> > >> On 16.04.25 11:38, Barry Song wrote:
-> > >>> On Wed, Apr 16, 2025 at 5:32=E2=80=AFPM David Hildenbrand <david@re=
-dhat.com> wrote:
-> > >>>>
-> > >>>> On 16.04.25 11:24, Barry Song wrote:
-> > >>>>> On Wed, Apr 16, 2025 at 4:32=E2=80=AFPM David Hildenbrand <david@=
-redhat.com> wrote:
-> > >>>>>>
-> > >>>>>> On 12.04.25 10:58, Barry Song wrote:
-> > >>>>>>> From: Barry Song <v-songbaohua@oppo.com>
-> > >>>>>>>
-> > >>>>>>> Promoting exclusive file folios of a dying process is unnecessa=
-ry and
-> > >>>>>>> harmful. For example, while Firefox is killed and LibreOffice i=
-s
-> > >>>>>>> launched, activating Firefox's young file-backed folios makes i=
-t
-> > >>>>>>> harder to reclaim memory that LibreOffice doesn't use at all.
-> > >>>>>>
-> > >>>>>> Do we know when it is reasonable to promote any folios of a dyin=
-g process?
-> > >>>>>>
-> > >>>>>
-> > >>>>> I don't know. It seems not reasonable at all. if one service cras=
-hes due to
-> > >>>>> SW bug, systemd will restart it immediately. this might be the ca=
-se promoting
-> > >>>>> folios might be good. but it is really a bug of the service, not =
-a normal case.
-> > >>>>>
-> > >>>>>> Assume you restart Firefox, would it really matter to promote th=
-em when
-> > >>>>>> unmapping? New Firefox would fault-in / touch the ones it really=
- needs
-> > >>>>>> immediately afterwards?
-> > >>>>>
-> > >>>>> Usually users kill firefox to start other applications (users int=
-end
-> > >>>>> to free memory
-> > >>>>> for new applications). For Android, an app might be killed becaus=
-e it has been
-> > >>>>> staying in the background inactively for a while.
-> > >>>>
-> > >>>>> On the other hand, even if users restart firefox immediately, the=
-ir folios are
-> > >>>>> probably still in LRU to hit.
-> > >>>>
-> > >>>> Right, that's what I'm thinking.
-> > >>>>
-> > >>>> So I wonder if we could just say "the whole process is going down;=
- even
-> > >>>> if we had some recency information, that could only affect some ot=
-her
-> > >>>> process, where we would have to guess if it really matters".
-> > >>>>
-> > >>>> If the data is important, one would assume that another process wo=
-uld
-> > >>>> soon access it either way, and as you say, likely it will still be=
- on
-> > >>>> the LRU to hit.
-> > >>>
-> > >>> I'll include this additional information in the v2 version of the p=
-atch since
-> > >>> you think it would be helpful.
-> > >>>
-> > >>> Regarding the exclusive flag - I'm wondering whether we actually ne=
-ed to
-> > >>> distinguish between exclusive and shared folios in this case. The c=
-urrent
-> > >>> patch uses the exclusive flag mainly to reduce controversy, but eve=
-n for
-> > >>> shared folios: does the recency from a dying process matter? The
-> > >>> recency information only reflects the dying process's usage pattern=
-, which
-> > >>> will soon be irrelevant.
-> > >>
-> > >> Exactly my thoughts. So if we can simplify -- ignore it completely -=
--
-> > >> that would certainly be nice.
-> > >
-> > > This doesn't sound right to me.
-> > >
-> > > Remembering the accesses of an exiting task is very much the point of
-> > > this. Consider executables and shared libraries repeatedly referenced
-> > > by short-lived jobs, like shell scripts, compiles etc.
-> >
-> > For these always-mmaped / never read/write files I tend to agree.
-> >
-> > But, is it really a good indication whether a folio is exclusive to thi=
-s
-> > process or not?
-> >
-> > I mean, if a bash scripts executes the same executable repeatedly, but
-> > never multiple copies at the same time, we would also not tracking the
-> > access with this patch.
-> >
-> > Similarly with an app that mmaps() a large data set (DB, VM, ML, ..)
-> > exclusively. Re-starting the app would not track recency with this patc=
-h.
-> >
-> > But I guess there is no right or wrong ...
+> From: Feng Yang <yangfeng@kylinos.cn>
 >
-> Right, I'm more broadly objecting to the patch and its premise, but
-> thought the exclusive filtering would at least mitigate its downsides
-> somewhat. You raise good points that it's not as clear cut.
+> Many conditional checks in switch-case are redundant
+> with bpf_base_func_proto and should be removed.
 >
-> IMO this is too subtle and unpredictable for everybody else. The
-> kernel can't see the future, but access locality and recent use is a
-> proven predictor. We generally don't discard access information,
-> unless the user asks us to, and that's what the madvise calls are for.
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> Acked-by: Song Liu <song@kernel.org>
+> ---
+> Changes in v3:
+> - Only modify patch description information.
+> - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfen=
+g59949@163.com/
+>
+> Changes in v2:
+> - Only modify patch description information.
+> - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfen=
+g59949@163.com/
+> ---
+>  kernel/trace/bpf_trace.c | 72 ----------------------------------------
+>  1 file changed, 72 deletions(-)
+>
 
-David pointed out some exceptions - the recency of dying processes might
-still be useful to new processes, particularly in cases like:
+All this looks good, I checked that those functions indeed are allowed
+in bpf_base_func_proto. The only (minor) differences are capabilities,
+bpf_base_func_proto() correctly guards some of the helpers with
+CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
+doesn't seem to bother (which is either a bug or any tracing prog
+implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
 
-  while true; do app; done
+But I think we can take it further and remove even more stuff from
+bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
+(perhaps as a few patches in a series, so it's easier to review and
+validate).
 
-Here, 'app' is repeatedly restarted but always maintains a single running
-instance. I agree this seems correct.
+Basically, except for a few custom implementations that depend on
+tracing program type (like get_stack and others like that), if
+something is OK to call from a tracing program it should be ok to call
+from any program type. And as such it can (should?) be added to
+bpf_base_func_proto, IMO.
 
-However, we can also find many cases where a dying process means its folios
-instantly become cold. For example:
-- If someone enjoys watching his/her TV (not shared with family) and then
-  passes away, the TV's folios become instantly cold.
-- Even if the TV is shared with family but only that person actively used
-  it, the folios still become cold.  If other users access this TV
-too, shouldn't
-  their PTEs reflect that it's still young?
+P.S. I'd name the patch/series as "bpf: streamline allowed helpers
+between tracing and base sets" or something like that to make the
+purpose clearer
 
-I agree that "access locality and recent use" is generally a good heuristic=
-,
-but it must have some correlation (strong or weak) with the process lifecyc=
-le.
-Implementing 'madv_cold' on a dying process seems impractical as dying
-means 'cold' for many cases. Also, It is really not doable to execute
-madv_cold on a dying process.
+[...]
 
-Thanks
-Barry
+>         case BPF_FUNC_get_current_uid_gid:
+>                 return &bpf_get_current_uid_gid_proto;
+>         case BPF_FUNC_get_current_comm:
+>                 return &bpf_get_current_comm_proto;
+
+I'm surprised these two are not part of bpf_base_func_proto, tbh...
+maybe let's move them there while we are cleaning all this up?
+
+pw-bot: cr
+
+> -       case BPF_FUNC_trace_printk:
+> -               return bpf_get_trace_printk_proto();
+>         case BPF_FUNC_get_smp_processor_id:
+>                 return &bpf_get_smp_processor_id_proto;
+
+this one should be cleaned up as well and
+bpf_get_smp_processor_id_proto removed. All BPF programs either
+disable CPU preemption or CPU migration, so bpf_base_func_proto's
+implementation should work just fine (but please do it as a separate
+patch)
+
+> -       case BPF_FUNC_get_numa_node_id:
+> -               return &bpf_get_numa_node_id_proto;
+>         case BPF_FUNC_perf_event_read:
+>                 return &bpf_perf_event_read_proto;
+
+[...]
