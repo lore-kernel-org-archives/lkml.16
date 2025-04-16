@@ -1,148 +1,108 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45D4238C3D;
-	Wed, 16 Apr 2025 09:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84D62376EA;
+	Wed, 16 Apr 2025 09:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797273; cv=none; b=E1xXGXZs1dRF08ucNwlzYhblBe+hpom3z+FFvjSOzFVtEKfguCbrt5uY8hVEQFUlCGOR4gdxVxJRzdhgagecRbLK31P2/3LNjrFosGk7bXGJMF4CsJrOMmPcafsE35l9fZvbzLj4UWJlnDXQdbHwxTwpheBbCS5kmEhzVQc0Ggg=
+	t=1744797287; cv=none; b=XJ4TLA3kX76hZD/eqPFFrWK8+L0tI8mPY/8U4e9dTX7S0O7wmlDd0ZwbfzjGGCcMiu1WAX7A3QOkJKysn1fCcaEMJ6fMy4hDXuFzNuJ2lid7/WFHvBTelvhrE2mtAhSqXMDgGEHdo031bVUj2Eb/07dBzoWtvdPubCZHcPTVgB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797273; c=relaxed/simple;
-	bh=EIjfIIDMZuy6D3afDVQ6I3oo5oj4d1yCHcRgD3GQdfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BbPIYank90OdcXa8jHo4JsSgCqKMKWF6/dADwT4W7umm8aeRUUtFkONfU/QCIQ4vIjpXyeLQcAXQ2uvCtKwmSmuKuSAbG/AqzbTXavGmZnJo60JMxYiRqNsVgMke5L97yBInG1CoD5EV5XYF366mx7EcXnDH82ZACW+GfxaR5kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=oEMXnpNJ; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1744797287; c=relaxed/simple;
+	bh=zuCOpoMhBHDDmAEItGzQrZWytrwV0y3ptTaaTtwmkXs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0OVsAvItaBYw8Ko7twLZ0Uku+1mRfQ5Fas15Rlga1uf1JVBL6I0nnCaVajzlprw1F44qk8skmgJVWllyJAzknZElYUQeQhCi4Gai7ILm4iLtoIG4ugwKQ+I9gysuTTkPJWkK99vdllNVQq4nMpFs+f966kGRtK9whDOQQMkze0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAKKmEDx; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="oEMXnpNJ"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout4.routing.net (Postfix) with ESMTP id 29098101211;
-	Wed, 16 Apr 2025 09:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1744797263;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/1encuTVAcrrucgWTZkTd+WBasAHgfxaRmuM38brREg=;
-	b=oEMXnpNJiECwDtBUataqIbbBkdC8VpsV5TaLlhjUiBR29Zo0llf+CHRkYR+wzsHChOqYJo
-	vTOmJZtONjz6HNTxipujEWWorwBISef7Nro01YDdRnFCg5AMPwnjlIfuOiXBhGVWwg5MBQ
-	NdadIfHxPL7DO3x5eWPGojcCp8o0Gyk=
-Received: from frank-u24.. (fttx-pool-80.245.72.47.bambit.de [80.245.72.47])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 4905D360084;
-	Wed, 16 Apr 2025 09:54:22 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Chunfeng Yun <chunfeng.yun@mediatek.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Sean Wang <sean.wang@mediatek.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-phy@lists.infradead.org
-Subject: [PATCH v3 7/8] arm64: dts: mediatek: mt7988: Add xsphy for ssusb0/pcie2
-Date: Wed, 16 Apr 2025 11:53:59 +0200
-Message-ID: <20250416095402.90543-8-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250416095402.90543-1-linux@fw-web.de>
-References: <20250416095402.90543-1-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAKKmEDx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744797286; x=1776333286;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=zuCOpoMhBHDDmAEItGzQrZWytrwV0y3ptTaaTtwmkXs=;
+  b=BAKKmEDxW3QcPzGGa4PgNUom6XQdHa9t7xd04eLhlCQmW1bkmGPkF4ws
+   fZ2o7JIiROr5VFre8QV7BkceoTAjOfLAoZYY8QoIyLsK3QfdB3D1qZan3
+   84LToT7GSe0wOZSGSA8Z2zTU5F+/O6lYOA1vQRu/+goPhI9iKckASA78X
+   3bs97NX6v41tDeFGJ6u6xen+Ba4PJy4DC+q5Atv/Gtw8HrTaojR7kMreG
+   dum1WyfzYXq8mUzHAJBtN5w5NvzEFJ2IiHzRSe0V2v2JF6DBW88Jxa6tR
+   14KHU9LFFocqjKZ9re5X4U+pSYp6RbY7fnoGkwVCkgjTs/QU6m3amAZl8
+   Q==;
+X-CSE-ConnectionGUID: /MxTHnDdQW22jXjAO32Xqg==
+X-CSE-MsgGUID: zVyga45aSqG2xS3u2/cQkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56513884"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="56513884"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:54:45 -0700
+X-CSE-ConnectionGUID: AGtOoZZFQ7S4U48FU/btPw==
+X-CSE-MsgGUID: hzKtPsBqRlqwdm7oO3jLMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="167582962"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:54:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4zTd-0000000CoZB-0po7;
+	Wed, 16 Apr 2025 12:54:41 +0300
+Date: Wed, 16 Apr 2025 12:54:40 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 4/7] gpiolib: Call validate_desc() when
+ VALIDATE_DESC() can't be used
+Message-ID: <Z_9-YCWKVaXqsJ2N@smile.fi.intel.com>
+References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com>
+ <20250415111124.1539366-5-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbvnL0z1x0An2Bhv1TdQxaz4vtBpVBDXUe+LCK68FM=dA@mail.gmail.com>
+ <Z_91lpPIjtXvYbap@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: ddb25738-050a-4fc7-8795-db407a6b1ea9
+In-Reply-To: <Z_91lpPIjtXvYbap@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Wed, Apr 16, 2025 at 12:17:11PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 16, 2025 at 10:44:18AM +0200, Linus Walleij wrote:
+> > On Tue, Apr 15, 2025 at 1:11 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 
-First usb and third pcie controller on mt7988 need a xs-phy to work
-properly.
+...
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-v3:
-- drop unneeded properties and compatibles from topmisc
-- xsphy unit name not changed because binding requires this name (not only phy)
-- also not changed port names to be clear abour which phy is used (mt7988 also have tphy)
-- change offset to have clean syscon (without power controller)
----
- arch/arm64/boot/dts/mediatek/mt7988a.dtsi | 36 +++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+> > >         if (gc->to_irq) {
+> > > -               int retirq = gc->to_irq(gc, offset);
+> > > +               ret = gc->to_irq(gc, offset);
+> > > +               if (ret)
+> > > +                       return ret;
+> > >
+> > >                 /* Zero means NO_IRQ */
+> > > -               if (!retirq)
+> > > -                       return -ENXIO;
+> > > -
+> > > -               return retirq;
+> > > +               return -ENXIO;
+> > 
+> > Totally unrelated change - but I'm fine with that :D
+> 
+> It's not totally (it's a reuse of the same variable), but I can split it.
+> Bart, what do you prefer?
+Never mind, I will send a v2 soon.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-index 88b56a24efca..72792f4ccde3 100644
---- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
-@@ -334,6 +334,8 @@ usb@11190000 {
- 				 <&infracfg CLK_INFRA_133M_USB_HCK>,
- 				 <&infracfg CLK_INFRA_USB_XHCI>;
- 			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck", "xhci_ck";
-+			phys = <&xphyu2port0 PHY_TYPE_USB2>,
-+			       <&xphyu3port0 PHY_TYPE_USB3>;
- 			status = "disabled";
- 		};
- 
-@@ -398,6 +400,9 @@ pcie2: pcie@11280000 {
- 			pinctrl-0 = <&pcie2_pins>;
- 			status = "disabled";
- 
-+			phys = <&xphyu3port0 PHY_TYPE_PCIE>;
-+			phy-names = "pcie-phy";
-+
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &pcie_intc2 0>,
-@@ -548,6 +553,37 @@ tphyu3port0: usb-phy@11c50700 {
- 			};
- 		};
- 
-+
-+		topmisc: system-controller@11d10000 {
-+			compatible = "mediatek,mt7988-topmisc",
-+				     "syscon";
-+			reg = <0 0x11d10084 0 0xff80>;
-+		};
-+
-+		xs-phy@11e10000 {
-+			compatible = "mediatek,mt7988-xsphy",
-+				     "mediatek,xsphy";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			xphyu2port0: usb-phy@11e10000 {
-+				reg = <0 0x11e10000 0 0x400>;
-+				clocks = <&infracfg CLK_INFRA_USB_UTMI>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+			};
-+
-+			xphyu3port0: usb-phy@11e13000 {
-+				reg = <0 0x11e13400 0 0x500>;
-+				clocks = <&infracfg CLK_INFRA_USB_PIPE>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				mediatek,syscon-type = <&topmisc 0x194 0>;
-+			};
-+		};
-+
- 		clock-controller@11f40000 {
- 			compatible = "mediatek,mt7988-xfi-pll";
- 			reg = <0 0x11f40000 0 0x1000>;
+Linus, I will leave your Rb tag in a split patch as it seems you've reviewed it
+as a whole already.
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
