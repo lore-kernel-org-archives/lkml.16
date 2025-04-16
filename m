@@ -1,142 +1,157 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8855226534;
-	Wed, 16 Apr 2025 09:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA2A23371E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796216; cv=none; b=Ky1T5ANV3V1WiT0srNdarUtEQIr/TFuj1OzIpPWOyhNe9m7ex6CrqsVbFnZdHLH/9EZgfck18XbY9f4EKgClplnwrT4Ij9xIgCqZ087icQSfhe93/KdIQERF0x/AkAKLPqW480Lu3v/ylS8NASKPNKCaVXD38Pq0kYS6yQio7R4=
+	t=1744796246; cv=none; b=FphhW+2csdTovVFg+33OXLuD5sSIK6ytDmuczdA/d75RUbWYEcm1zK+naZWgwOnKrey4B/KXuG4y1Qy+IxEYBeiqANkuYm6kWJEXq+A42T8zYY2lfa5be7uT2bq7P/TWIQqUn1UptjbBE4blaz/6oPudXFrfYjVGTXbErCep7cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796216; c=relaxed/simple;
-	bh=uIA3K0MeOb1Bomfk5fOF6JnwI90dqqcVTNFxHua7Kaw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FkWh2fX6y4m1RTq3wrdtlNOEL5ZwdfY2X20S5wxFci41NJhyZr8/wXBUTJG9sIpdN3Y70lKBt8q6MWLGNbBiru6pE7JHdwf7Q/yKh39whSZWFwtELxffWLxMIk6jCjZHlptVNhjrelahuRpNcloW87cm2Rv3ehwcE8ECDe4Q+BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so6017275b3a.1;
-        Wed, 16 Apr 2025 02:36:54 -0700 (PDT)
+	s=arc-20240116; t=1744796246; c=relaxed/simple;
+	bh=xDRV50am1uwJ3dYPe1nR1llHcTg9L3o2BG7AtzvBVzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b9BmtQJ8H6ghc52mThkrcKIf21bgCWUhWdqXXYbQTl4/GLWQzdt65H9ZouC29xCfmTZv9oLIHNyyoeSTxHXUxyzMa35vsX9T6emQsTeVeiAAm7MoYmIopKhESX6aDpmULlsgZkYI/g6awsTwGc/WvAIqe7ITDRH2cqz5w2oKXhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p2elSX90; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p2elSX90"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22c33ac23edso5110275ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744796243; x=1745401043; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EuIyIm6sZTMZArdD30j0ddzGV/xgeW5+S45t3DvjQXo=;
+        b=p2elSX90HFZ0pjIQGQoZSW6MRqgjtDmV5TRbyPnn80uA1caj0vIW2FoPNmEyR8az1S
+         5ccPww6scRnBGgkW6nC0iYdO5Xg+nxWxKN3u/7Pw1FPEZD2/MXE7NsOtoUoxPtnlm0N4
+         nkoE+Mw5i5iD62crBVi3lxoreC5HIfCsSE3t2ehpySodxRb9rTHpyWNlDtCrK9TnHInl
+         kK/ARizgpI/BY0M09p+3TGN6aOlWumi/lYFguet3zUa6rFshi2frqcTgOgSD5oNqffpz
+         4457/yVbTGQj8yMZR7QxUkG0r7xFjkcPYKCPfA9XOYKTh5KSzA14zog6qp41ZGUgGFpU
+         zMyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796214; x=1745401014;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g4vscTFMlRO2bqnOkEDCqxlIR5FOdxqQklMvAsU4H6Q=;
-        b=QBJooOwN6pyjsSA6WWao+K7/0kXewNHI1PAC/VZ1Zu1ESmSPX2ej2XgqnveF2YRBgL
-         NtrcZESOitddsXLoXyrWH1X8bEJuef1BKxZY4NQjCjZateFnJ9/6s7CNi+/1haozpBR4
-         xxjUWo29j2BCB4RyzShJqyfczbfdWvMUxPtwFqt1DtPIUGYTP3s78iUe4+kfW2i4AKGx
-         7TamIGPKeNK3BL5DH3nCC0S/3bb8gc6j2Srz3iTLidMvZxGbhUEy97/GbeSZw1Sp2nTh
-         QG3TWffqR53rMqo1HwnLbBFLAcHaJmLnuY7Js73GvIYU4XjJx2h6cvWWTomMxueNL8te
-         bOvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHP7KYc5qF/n9thy87kDratGsZBp49mfsZ/v0W4XxdB+kmoPbRkl3b8GpeNDwavKsSvaVLoVGusHeb@vger.kernel.org, AJvYcCULe2nEsYgWNFskRc3ktSey9riG1GYC0yMertg6uWd3uItwRn4ZytIi/3/v4SkDlyF13MhKszUa93oH@vger.kernel.org, AJvYcCWqftt379oiqGWGRqnsYFRq6h5hKGaBl2j2dNIwADL3+XqaDBCRUVz1rotgeQ8Qhp/LN4EkO41s1AxV/sQe78wHDA4=@vger.kernel.org, AJvYcCXuR2HYIrlylZun0hgccZKpamYSsiwUJn+HEUHnemwQ04rPvH1GmKDfYrQ0fX+EGto7InRFyMwiw1cei6ko@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxAqo/x6cpNDjVPqJt3uIBShnD4lOse4BQtBpuLPy8DDBQzUwi
-	j3HrmT4cBXtk+ouAmN+XRTSq8asiuabmzkhbPx2Zf4gzLawmBgBX1yHTXNSw
-X-Gm-Gg: ASbGncsG0LzLCvjPy3tCQ5ZiluUlp27xVzLyCQudDdYhiQ7KObVlkx/hTQy5Sdm4gPS
-	YNgUSq46oDbtjgnZdb13aEKq0GqnsN5D8qsYhlmihi51eBI/QK09TZrHKYIbtsipegkiY0lrdjx
-	HzmqHzPbzlBIl48PkI4milBf7bA07RI9SVQolnu+xGs1ewFkRfU3BOymWc2EX7Zk1X4My/IXHSe
-	QYkinYaUGpFdJous8AFLsac4hi+pmIGd7HP6KFQ/c6Nx8vGP1PJSJsWUf4z6a821Al56VFUMHR6
-	HAX/i6kO70JJyYuQjGvEYoEzStHQpXP6SyxdUJVV8MptyIiBk6XIXGvDNwy0FnRAgxR6DPDzTES
-	hw5Woy1I=
-X-Google-Smtp-Source: AGHT+IGW2+fiUrKZeiXbU56f0QPRPnabRsjJi9W1LwmCES7JgeQyUBtcxuQ6Gqsa/zk9mMxWOoFM4Q==
-X-Received: by 2002:aa7:9308:0:b0:736:53f2:87bc with SMTP id d2e1a72fcca58-73c26736782mr1671623b3a.13.1744796213793;
-        Wed, 16 Apr 2025 02:36:53 -0700 (PDT)
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com. [209.85.210.173])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f1071sm9886294b3a.120.2025.04.16.02.36.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 02:36:53 -0700 (PDT)
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso8644058b3a.2;
-        Wed, 16 Apr 2025 02:36:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVByTlhdB8twfLnuaPHotjowaQeIic2srEfxxQyiHtEfyNkpBTQkF+T80PvXmNLdcPWaap8VOwDpZ7Q@vger.kernel.org, AJvYcCWAox92aQt40M0zZtFPvuXAbz5hZxhh0q03YoTrhg0FbAsySglXKbXVqNjGVTDeVpT/FYJQ7Xl2FTBIEgaarHfcAn4=@vger.kernel.org, AJvYcCWjs0FzVtHUt0/t67U5tbqi+gVQndrdZE6DLZ6py84srdhzdCyDBPFFgVEP5FkxD9YpCrVg9aA4FMTnGdAM@vger.kernel.org, AJvYcCXXgfFhs40FjVvUMeImdBqsqWZ4DksWgWM/VVm4yHOJCcxxfKjnOy4y1nYkwkS33aygrE96qW2/lN8x@vger.kernel.org
-X-Received: by 2002:a05:6102:5e8:b0:4c1:c10d:cf65 with SMTP id
- ada2fe7eead31-4cb592f320amr282769137.25.1744795714375; Wed, 16 Apr 2025
- 02:28:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744796243; x=1745401043;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EuIyIm6sZTMZArdD30j0ddzGV/xgeW5+S45t3DvjQXo=;
+        b=I8zQhuHuBmkMR5BmWFjE241AUxLX1HT9qkr0JHi06kJyqZQFSeJf8yTzzGBtclGETu
+         SiDclP8BVaDHv36J3p32ZF67OFc8OGIDhPr8pwwCe7l2HwlLWw2//kDDkms8rXDQen5v
+         Cft0iB/648tzheTdnuBLxK+lMziKwVMo0Vke4d+1KBq4vKxU0cXLAHwvnhQkxA0nYdq8
+         2+jqJET7KyUZPqXbA8ti9HjIXRwIdqFYqVes+pOvzbp94Icgy6XaS/BJivWXnHaavAYT
+         6e5BNtUSMEJ+RchWt6w/Jy4jzP/b3T1xOcmmj3R9TrtLCJNpP45ty6iTJIQ8+k5s92mX
+         e4iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVuCGlQGEgqWpF5NNdVj1fwq3c+kX6hqKB2m+ULPeAraVN+p4KUfRs2cUtl4EAbAxiIQH0XwPS7j0e+Wmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxchfrDGIEcQiNPdEoUIsgbUAfRJcxEhMeZ9Qz7euvyIC8tZC/8
+	coH9WumqeGOJie9ETzej5tqqIBlT9Z7hBo1iH5XiWMNQ63BkMZsiICbh4X/D5dc=
+X-Gm-Gg: ASbGncvofMM5eKKSOT21jpb2azVIKpoFD1iMiPKqul+bXxFdlcTY2gatodAz65yM/++
+	lLsVcYPZgcqoi09jsgiDjGMrRB9/08HSt9Fql/a2iSOVacKMaEL0qHANpUKfzkdddjpTfV6Gbl5
+	URMJG+OiM4wrb9zs1ZVr36b+IxUWYHnBxZiQ8HqHmSnpPj1wfg83c6K6wM9oBQHZH+B3yzAU76O
+	Lh0PHScSrTvT6PWDvwqlPG2/H4ONn7SgvWpkv6/WQNyKwv0pZV6I626G4TamfYJGczh8qDR2BG5
+	ucT1nMZGF7fOYgHR6put7wwQApmDmA4flNF7UQ/cQw==
+X-Google-Smtp-Source: AGHT+IGMj4OiKyJmwOzSShOY9H/GEFXprL1SUguzHiNfobC3rdZAN3fM5jCJbJJ86ToDX6h/RmYvCA==
+X-Received: by 2002:a17:90b:2d10:b0:2ee:dd9b:e402 with SMTP id 98e67ed59e1d1-30863f18c46mr1987535a91.12.1744796242950;
+        Wed, 16 Apr 2025 02:37:22 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308611d6d2fsm1117988a91.1.2025.04.16.02.37.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 02:37:22 -0700 (PDT)
+Date: Wed, 16 Apr 2025 15:07:20 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 11/15] rust: cpufreq: Add initial abstractions for
+ cpufreq framework
+Message-ID: <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
+References: <cover.1744783509.git.viresh.kumar@linaro.org>
+ <ac6854885277b23f100c6033fab51a080cdb70eb.1744783509.git.viresh.kumar@linaro.org>
+ <Z_904KuBhKbO738_@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250408200916.93793-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250408200916.93793-16-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 16 Apr 2025 11:28:22 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVbcOvfW6YqW6S77J7htaJqWkeoGEhjkAWXvG5Fo1FMhA@mail.gmail.com>
-X-Gm-Features: ATxdqUHCOHToO8zh97LKtpyDEutN_FL_Sxg_dBqYsVTr46pKfBBTHGJphFzPmgw
-Message-ID: <CAMuHMdVbcOvfW6YqW6S77J7htaJqWkeoGEhjkAWXvG5Fo1FMhA@mail.gmail.com>
-Subject: Re: [PATCH v2 15/15] drm: renesas: rz-du: mipi_dsi: Add support for
- RZ/V2H(P) SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_904KuBhKbO738_@pollux>
 
-Hi Prabhakar, Fabrizio,
+On 16-04-25, 11:14, Danilo Krummrich wrote:
+> On Wed, Apr 16, 2025 at 12:09:28PM +0530, Viresh Kumar wrote:
+> > +#[allow(dead_code)]
+> 
+> Why is this needed?
 
-On Tue, 8 Apr 2025 at 22:09, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add DSI support for Renesas RZ/V2H(P) SoC.
->
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Looks like leftover from a previous version. Same for the other one.
 
-Thanks for your patch!
+I have also made a change to the cpufreq driver now to remove
+`dead_code`, hope that is fine:
 
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -70,6 +80,18 @@ struct rzg2l_mipi_dsi {
->         unsigned int num_data_lanes;
->         unsigned int lanes;
->         unsigned long mode_flags;
-> +
-> +       struct rzv2h_dsi_mode_calc mode_calc;
-> +       struct rzv2h_plldsi_parameters dsi_parameters;
-> +};
-> +
-> +static const struct rzv2h_plldsi_div_limits rzv2h_plldsi_div_limits = {
-> +       .m = { .min = 64, .max = 1023 },
+diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
+index 81ede13909b7..0d1612ff5677 100644
+--- a/drivers/cpufreq/rcpufreq_dt.rs
++++ b/drivers/cpufreq/rcpufreq_dt.rs
+@@ -43,12 +43,9 @@ fn find_supply_names(dev: &Device, cpu: u32) -> Option<KVec<CString>> {
+ struct CPUFreqDTDevice {
+     opp_table: opp::Table,
+     freq_table: opp::FreqTable,
+-    #[allow(dead_code)]
+-    mask: CpumaskVar,
+-    #[allow(dead_code)]
+-    token: Option<opp::ConfigToken>,
+-    #[allow(dead_code)]
+-    clk: Clk,
++    _mask: CpumaskVar,
++    _token: Option<opp::ConfigToken>,
++    _clk: Clk,
+ }
 
-.max = 533?
+> > +    pub unsafe fn data(&self, index: usize) -> u32 {
+> > +        // SAFETY: By the type invariant, the pointer stored in `self` is valid and `index` is
+> > +        // guaranteed to be valid by the safety requirements of the function.
+> > +        unsafe { (*self.as_raw().add(index)).driver_data }
+> > +    }
+> 
+> Those three functions above look like they're supposed to be used directly by
+> drivers, but are unsafe. :(
+> 
+> It looks like the reason for them being unsafe is that with only the pointer to
+> the struct cpufreq_frequency_table array we don't know the length of the array.
 
-> +       .p = { .min = 1, .max = 4 },
-> +       .s = { .min = 0, .max = 5 },
+Yes.
 
-.max = 6?
+> However, a Table instance seems to come from TableBox, which *does* know the
+> length of the KVec<bindings::cpufreq_frequency_table>. Why can't we just preserve the
+> length and provide a safe API?
 
-> +       .k = { .min = -32768, .max = 32767 },
-> +       .csdiv = { .min = 1, .max = 1 },
-> +       .fvco = { .min = 1050 * MEGA, .max = 2100 * MEGA }
->  };
+The Table is also created from a raw pointer, when it is received from
+the C callbacks. Also the Table can be created from the OPP table,
+where again we receive a raw pointer from the C code.
 
-Summarized: why do these values differ from the ones in the declaration
-macro RZV2H_CPG_PLL_DSI_LIMITS(), i.e. why can't you use the latter?
+I tried to do this differently earlier and finalized on current
+version after some discussions on the list:
 
->
->  static inline struct rzg2l_mipi_dsi *
+https://lore.kernel.org/all/2025011327-cubbyhole-idealness-d4cc@gregkh/
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+viresh
