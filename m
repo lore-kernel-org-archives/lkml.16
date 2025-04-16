@@ -1,289 +1,271 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EB524BC07;
-	Wed, 16 Apr 2025 12:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E07724BC07;
+	Wed, 16 Apr 2025 12:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805080; cv=none; b=GQHVUAjVxVS5nT2LdLuJK3H+Rev40+kDBylsrmQSmR2QUYw+GRRmpHANEKOE2QHixWHOyWZToLi4ShHfxE038LVqTxp25kNZUnFtVQPTJYK/EsBKof6iy3ieFlJS/lVCFP8AbsTMNubPydIbeYtyR6NWMk4Utybfb2xvfMd9dvg=
+	t=1744805086; cv=none; b=Gk/quiBddYo7ewPA/zr/98WN0Q7j3L8TU5vlxMftYf2SgudZhq1k2/K5R1UizfU7teeg5mmy8T0Y255a3YhDGptAlukGhFUMHe3uKonQrw5TLAv5AXTOw35zb9uICDb4HMlcC1rymSHeAccs2zLv8wB/HZMor5xz5kBWClYDYyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805080; c=relaxed/simple;
-	bh=dt2pl/21XRjfjBSr9SoElSDtuTvPIB2ynsRrkiCn1mM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CVd5SthaZSUyz7cx/oSCc9AAdKILT4nTDnReaMe5JuDE4XOvo+d614qmjbIM1+cyFXWc3rjLZz6pmkYIbUg1iSJwKessRJGXbXyCC7WjqXLrXt23xcFok1z/JXOJcwss0CmrGgYwRpRPe8pKbHIpQynHWtfFl+lKq8BSamymqrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F3j/TddK; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744805086; c=relaxed/simple;
+	bh=0eqbW/ADX0/3OFgPSkh+pNLMavSwHy31i9yMWuD4ffI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TvVk36+fdxZ9AxmRnuXLsC066dZyecFShXclIrSUHSJFc3zhMbWVXcs5E67L5kWGwsuvu+sfrwB9V2M0mpLDZYXPc1aqGeUfkBDFtDMeBZQLbozsAlNSaxM5tvmXAuQG0P+SztSmmSjU/jAiON/Y8unkSdYwqZ2SPmzJvFZxF6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZbWGhzD; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F3j/TddK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744805078; x=1776341078;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=dt2pl/21XRjfjBSr9SoElSDtuTvPIB2ynsRrkiCn1mM=;
-  b=F3j/TddKj7z3fRH6vzjuJL8Hrtz4PkiVfM3CN7T5sZUFTm9/Yl52jS2W
-   1OdKO71tDZkmxI5+CkD8FXfE1lPdMgtC/JDDAuk0Cr6q3pxxTOmOVs/so
-   usCQ7Ha0Ben+jO0CS3Qc1PkEji6kvL1lThCdSq9fJggQ2y8UjenPu/oIi
-   0smqQEAdEn0uBtB/PNPBXRAvlj441Ww274MHwgOTUz3KDKq7WiDSSIel/
-   SlCvg37y6UTJm+QeSWySAmqOL6AFBHAPqheZLXKGEJksOsIyQkDWnNHtu
-   oTKfONB8gHSjHy+yNHkNDxdVzKwLnDpcyNlsrFExcEfLffgVAhiwaZLA/
-   A==;
-X-CSE-ConnectionGUID: hBjtIx6+TNKJvrV5wVj24w==
-X-CSE-MsgGUID: p6XsZkwhSOyXOdjirAop8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50169671"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="50169671"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:04:37 -0700
-X-CSE-ConnectionGUID: DU29bHeIQLedJe1U/CMbgA==
-X-CSE-MsgGUID: ZHkiVqJCROGHHUS6kGoLAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="153654670"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:04:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 16 Apr 2025 15:04:27 +0300 (EEST)
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, john.ogness@linutronix.de, 
-    pmladek@suse.com, arnd@arndb.de, namcao@linutronix.de, 
-    benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, 
-    heikki.krogerus@linux.intel.com, markus.mayer@linaro.org, 
-    tim.kryger@linaro.org, matt.porter@linaro.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    linux-serial <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v3] serial: 8250: fix panic due to PSLVERR
-In-Reply-To: <079c8fe6-9ce4-fa59-4b44-93e27dd376d6@linux.intel.com>
-Message-ID: <6f4ed9f5-a6c7-e690-98e2-2d18ed20cc22@linux.intel.com>
-References: <20250414031450.42237-1-cuiyunhui@bytedance.com> <079c8fe6-9ce4-fa59-4b44-93e27dd376d6@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZbWGhzD"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so5411635ad.0;
+        Wed, 16 Apr 2025 05:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744805084; x=1745409884; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ie7hREUa4SMJAa/pZTbegFZ7KD0h8GRA9ZCVQg1tUQo=;
+        b=eZbWGhzDJhSPdJpzPPslkfmlwPP7KaRcuE/uH38hn4P4XDNRrztdjko/SRd/ySGHt0
+         YuHPrGEF3EXkQTHUyBWvGecoBqXKzmYwlCmmqVwtkFid5jeMommqYIOmwdTg+hREVRF3
+         Q9Zo7djlAxxAAGK1NBo8vS5PBz3Tm59hEitcxnFWQyd46bU7GaM3aRLuJtixuq7LDa00
+         ASRc+NgYcO2nINdZqOh7xCXzENeDnp/XD+0aCxuakxF+Iajz+KgPZGRMyepuLx34F8KF
+         KcXc0hdY3l8q1AlwB/R8qTDWoMBsCsTez/QOp9naTbW9DoaySTr78+ko3kz/wzvlX3RJ
+         R+mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744805084; x=1745409884;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ie7hREUa4SMJAa/pZTbegFZ7KD0h8GRA9ZCVQg1tUQo=;
+        b=Ya2XW/D35Yidhj79U/AUjgDa8USZDZR71C7YJHTFlgwAsR95xbm2F7ivFIrSBTN5me
+         /E5PUbmTg1dOlCxrZP02LzetTxOH6wAMW2ADupZfgWV0/J1cJ/R6hsUVpRkNvWuBmzyK
+         MaH7SZ3M39/YFjSo4T/ijd4wk8WtFrOaf8zR9xG16Knsk9W24oEEst3upnfWf+vBKgRF
+         6xnbxhLshArZRdq50OhPF7cf4rCEgeNjjPfI7GSPgDZ96HQaJDrf/xBOdsIY/iFQCH+r
+         CWbvtqEWr84FkUoDFi/RTDPhpBB1/FZevzxM6paAtMgKgibshm/SQ7EnngV+ykR2CNEl
+         napw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpyBl7X8pAX0ImUim0aEXIPP34vq5yGgl5kl5Rkx3uidcDX1t0nPh/rnDuGr5/GcPS2CIHdaYMxe2I@vger.kernel.org, AJvYcCWE1pUD/ekGwg28z6phdjbk7dhVT0ind6u4LxeToCPZyWtZ1b/IXRHbslf3L49zd98SpMOGAY9Z28xyoQFz@vger.kernel.org
+X-Gm-Message-State: AOJu0YznXpuKbcLaPnOI2wD7xv/thUa7SRUh+0PKAVgYZok7Vs3bsupY
+	d3bbIDMyRTNLZdtSFcMyIQu/047cQpUxCr/fmnbMiOW6iJ1fLVHh
+X-Gm-Gg: ASbGncvVoblRBylfdcLsPpEiT9MoCeCIUzDw3ac1oIOLJPNNqqB1GeRCR7K8HPu3lVx
+	/i16zMGMAFlntAvpqNPNgjVxYN1EJO8J9gTLUGGcJIIaV5I0EBl29+nK4dxG3NQPrpTMNFkA1Bd
+	jN0533f79Fn98Ztt5R3NJbonc2WyY11HVOxJ4qyl6+D3qteGLWwUJW+Ew1uMH7XOV+lK4dMSK07
+	IUijLSWkI/bIZma3OrNR3e8WfweBuvXvMuwdq8NmcfJ53fyTzVkuJ5+rTDtLwsduH+3kR7fldTk
+	dJupP7S5hbfCYZcG15Y+BTkIbd14gCz9z+pqu/2NahBysYIq4A==
+X-Google-Smtp-Source: AGHT+IF3c77cgFMGhot+IttF6abeW9f9RiIxUS3EHqsIYXeT4jB4a6Vdk4WPQdSgQAWsR+Iaultg5w==
+X-Received: by 2002:a17:903:188:b0:220:cfb7:56eb with SMTP id d9443c01a7336-22c35f1cd23mr19478865ad.26.1744805083546;
+        Wed, 16 Apr 2025 05:04:43 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33febfb3sm12033385ad.259.2025.04.16.05.04.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 05:04:43 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pengyu Luo <mitltlatltl@gmail.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: rework reg override handler
+Date: Wed, 16 Apr 2025 20:02:01 +0800
+Message-ID: <20250416120201.244133-3-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250416120201.244133-1-mitltlatltl@gmail.com>
+References: <20250416120201.244133-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1067653622-1744805067=:991"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+In downstream tree, many registers need to be overridden, it varies
+from devices and platforms, with these registers getting more, adding
+a handler for this is helpful.
 
---8323328-1067653622-1744805067=:991
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+ .../phy/qualcomm/phy-qcom-eusb2-repeater.c    | 105 +++++++++++++++---
+ 1 file changed, 92 insertions(+), 13 deletions(-)
 
-On Mon, 14 Apr 2025, Ilpo J=E4rvinen wrote:
+diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+index 6bd1b3c75..a4b75e70e 100644
+--- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
++++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
+@@ -68,12 +68,27 @@ struct eusb2_repeater_cfg {
+ 	int num_vregs;
+ };
+ 
++struct tune {
++	const char * const tune_name;
++	const char * const host_tune_name;
++	enum eusb2_reg_layout init_tbl_idx;
++	u8 tune_reg;
++	u8 tune;
++	u8 host_tune;
++};
++
++struct tune_cfg {
++	struct tune *tune_tbl;
++	int tune_tbl_size;
++};
++
+ struct eusb2_repeater {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	struct phy *phy;
+ 	struct regulator_bulk_data *vregs;
+ 	const struct eusb2_repeater_cfg *cfg;
++	struct tune_cfg *tune_cfg;
+ 	u32 base;
+ 	enum phy_mode mode;
+ };
+@@ -108,6 +123,79 @@ static const struct eusb2_repeater_cfg smb2360_eusb2_cfg = {
+ 	.num_vregs	= ARRAY_SIZE(pm8550b_vreg_l),
+ };
+ 
++static struct tune tune_tbl[] = {
++	{
++		.tune_name = "qcom,tune-usb2-amplitude",
++		.host_tune_name = "qcom,tune-usb2-amplitude-host",
++		.init_tbl_idx = TUNE_IUSB2,
++		.tune_reg = EUSB2_TUNE_IUSB2,
++	},
++	{
++		.tune_name = "qcom,tune-usb2-disc-thres",
++		.host_tune_name = "qcom,tune-usb2-disc-thres-host",
++		.init_tbl_idx = TUNE_HSDISC,
++		.tune_reg = EUSB2_TUNE_HSDISC,
++
++	},
++	{
++		.tune_name = "qcom,tune-usb2-squelch",
++		.host_tune_name = "qcom,tune-usb2-squelch-host",
++		.init_tbl_idx = TUNE_SQUELCH_U,
++		.tune_reg = EUSB2_TUNE_SQUELCH_U,
++	},
++	{
++		.tune_name = "qcom,tune-usb2-preem",
++		.host_tune_name = "qcom,tune-usb2-preem-host",
++		.init_tbl_idx = TUNE_USB2_PREEM,
++		.tune_reg = EUSB2_TUNE_USB2_PREEM,
++	},
++};
++
++static struct tune_cfg tune_cfg = {
++	.tune_tbl	= tune_tbl,
++	.tune_tbl_size	= ARRAY_SIZE(tune_tbl),
++};
++
++static void eusb2_repeater_write_overrides(struct eusb2_repeater *rptr,
++					   bool is_host_mode)
++{
++	struct tune *tune_tbl;
++	int size, i;
++
++	tune_tbl = rptr->tune_cfg->tune_tbl;
++	size = rptr->tune_cfg->tune_tbl_size;
++
++	for (i = 0; i < size; ++i)
++		regmap_write(rptr->regmap, rptr->base + tune_tbl[i].tune_reg,
++			     is_host_mode ? tune_tbl[i].host_tune : tune_tbl[i].tune);
++}
++
++static void eusb2_repeater_parse_dt(struct eusb2_repeater *rptr)
++{
++	struct device_node *np = rptr->dev->of_node;
++	const u32 *init_tbl = rptr->cfg->init_tbl;
++	struct tune *tune_tbl;
++	int size, i, idx;
++
++	tune_tbl = tune_cfg.tune_tbl;
++	size = tune_cfg.tune_tbl_size;
++
++	for (i = 0; i < size; ++i) {
++		/* set default values from init_tbl */
++		idx = tune_tbl[i].init_tbl_idx;
++		tune_tbl[i].tune = init_tbl[idx];
++		tune_tbl[i].host_tune = init_tbl[idx];
++
++		/* update values from dt */
++		of_property_read_u8(np, tune_tbl[i].tune_name,
++				    &tune_tbl[i].tune);
++		of_property_read_u8(np, tune_tbl[i].host_tune_name,
++				    &tune_tbl[i].host_tune);
++	}
++
++	rptr->tune_cfg = &tune_cfg;
++}
++
+ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+ {
+ 	int num = rptr->cfg->num_vregs;
+@@ -127,20 +215,12 @@ static int eusb2_repeater_init_vregs(struct eusb2_repeater *rptr)
+ static int eusb2_repeater_init(struct phy *phy)
+ {
+ 	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
+-	struct device_node *np = rptr->dev->of_node;
+ 	struct regmap *regmap = rptr->regmap;
+ 	const u32 *init_tbl = rptr->cfg->init_tbl;
+-	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
+-	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
+-	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
+ 	u32 base = rptr->base;
+ 	u32 val;
+ 	int ret;
+ 
+-	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
+-	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
+-	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
+-
+ 	ret = regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
+ 	if (ret)
+ 		return ret;
+@@ -153,14 +233,9 @@ static int eusb2_repeater_init(struct phy *phy)
+ 	regmap_write(regmap, base + EUSB2_TUNE_USB2_HS_COMP_CUR, init_tbl[TUNE_USB2_HS_COMP_CUR]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_USB2_EQU, init_tbl[TUNE_USB2_EQU]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_USB2_SLEW, init_tbl[TUNE_USB2_SLEW]);
+-	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELCH_U]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FSDIF]);
+ 	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_USB2_CROSSOVER]);
+ 
+-	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
+-	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
+-	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
+-
+ 	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val, val & RPTR_OK, 10, 5);
+ 	if (ret)
+ 		dev_err(rptr->dev, "initialization timed-out\n");
+@@ -177,6 +252,7 @@ static int eusb2_repeater_set_mode(struct phy *phy,
+ 
+ 	switch (mode) {
+ 	case PHY_MODE_USB_HOST:
++		eusb2_repeater_write_overrides(rptr, true);
+ 		/*
+ 		 * CM.Lx is prohibited when repeater is already into Lx state as
+ 		 * per eUSB 1.2 Spec. Below implement software workaround until
+@@ -186,6 +262,7 @@ static int eusb2_repeater_set_mode(struct phy *phy,
+ 		regmap_write(regmap, base + EUSB2_FORCE_VAL_5, V_CLK_19P2M_EN);
+ 		break;
+ 	case PHY_MODE_USB_DEVICE:
++		eusb2_repeater_write_overrides(rptr, false);
+ 		/*
+ 		 * In device mode clear host mode related workaround as there
+ 		 * is no repeater reset available, and enable/disable of
+@@ -252,6 +329,8 @@ static int eusb2_repeater_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	eusb2_repeater_parse_dt(rptr);
++
+ 	rptr->phy = devm_phy_create(dev, np, &eusb2_repeater_ops);
+ 	if (IS_ERR(rptr->phy)) {
+ 		dev_err(dev, "failed to create PHY: %d\n", ret);
+-- 
+2.49.0
 
-> On Mon, 14 Apr 2025, Yunhui Cui wrote:
->=20
-> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> > an error response if an attempt is made to read an empty RBR (Receive
-> > Buffer Register) while the FIFO is enabled.
-> >=20
-> > In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> > Execution proceeds to the dont_test_tx_en label:
-> > ...
-> > serial_port_in(port, UART_RX);
-> > This satisfies the PSLVERR trigger condition.
-> >=20
-> > Because another CPU(e.g., using printk()) is accessing the UART (UART
-> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=
-=3D
-> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
-> >=20
-> > To fix this, all calls to serial_out(UART_LCR) and serial_in(UART_RX)
-> > should be executed under port->lock. Additionally, checking the readine=
-ss
-> > via UART_LSR should also be done under port->lock.
-> >=20
-> > Panic backtrace:
-> > [    0.442336] Oops - unknown exception [#1]
-> > [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
-> > [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
-> > ...
-> > [    0.442416] console_on_rootfs+0x26/0x70
-> >=20
-> > Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaroun=
-d")
-> > Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/=
-T/
-> > Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
->=20
-> As Andy mentioned, this change looks it would benefit from splitting to=
-=20
-> multiple parts.
->=20
-> However, this change brings back some memories from a few years back.
-> Back then, there was a reporter who had issues issues related to=20
-> dw8250_force_idle() or writing some of the registers (IIRC). I ended up=
-=20
-> looking into finding a better solution to the write-while-BUSY problem=20
-> which entirely replaced dw8250_force_idle() that is quite hacky and seems=
-=20
-> unreliable on fundamendal level.
->=20
-> Sadly, once I had posted a patch for testing, the reporter went dead=20
-> silent so the patch was left rotting as I had no time to try to reproduce=
-=2E
->=20
-> Perhaps the patch I created back then would be useful for addressing this=
-=20
-> problem you're facing (the patch is attached). I've rebased the patch on=
-=20
-> top of the tty-next now (but I did no testing beyond compiling). There ar=
-e=20
-> a few further thoughts / missing bits mentioned in the comments within th=
-e=20
-> patch itself (I did not try to updated them now, so the comments may have=
-=20
-> rotten too).
-
-After some further thinking. I realized you're interested in the opposite=
-=20
-case (empty rx), whereas my patch focused on addressing (rx getting=20
-refilled constantly) so it doesn't seem that useful for your case. The=20
-patch shows though the direction I'd like to head with idle forcing=20
-approach.
-
---
- i.
-
-> > ---
-> >  drivers/tty/serial/8250/8250_dw.c   |  8 +++++
-> >  drivers/tty/serial/8250/8250_port.c | 46 ++++++++++++++++++-----------
-> >  2 files changed, 36 insertions(+), 18 deletions(-)
-> >=20
-> > diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/825=
-0/8250_dw.c
-> > index af24ec25d976..e97200ff30e3 100644
-> > --- a/drivers/tty/serial/8250/8250_dw.c
-> > +++ b/drivers/tty/serial/8250/8250_dw.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/delay.h>
-> >  #include <linux/device.h>
-> >  #include <linux/io.h>
-> > +#include <linux/lockdep.h>
-> >  #include <linux/mod_devicetable.h>
-> >  #include <linux/module.h>
-> >  #include <linux/notifier.h>
-> > @@ -112,6 +113,13 @@ static void dw8250_force_idle(struct uart_port *p)
-> >  =09struct uart_8250_port *up =3D up_to_u8250p(p);
-> >  =09unsigned int lsr;
-> > =20
-> > +=09/*
-> > +=09 * Serial_in(p, UART_RX) should be under port->lock, but we can't a=
-dd
-> > +=09 * it to avoid AA deadlock as we're unsure if serial_out*(...UART_L=
-CR)
-> > +=09 * is under port->lock.
-> > +=09 */
-> > +=09lockdep_assert_held_once(&p->lock);
-> > +
-> >  =09serial8250_clear_and_reinit_fifos(up);
-> > =20
-> >  =09/*
-> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8=
-250/8250_port.c
-> > index 3f256e96c722..21bbd18195f5 100644
-> > --- a/drivers/tty/serial/8250/8250_port.c
-> > +++ b/drivers/tty/serial/8250/8250_port.c
-> > @@ -1328,6 +1328,7 @@ static void autoconfig_irq(struct uart_8250_port =
-*up)
-> >  =09unsigned int ICP =3D 0;
-> >  =09unsigned long irqs;
-> >  =09int irq;
-> > +=09u16 lsr;
-> > =20
-> >  =09if (port->flags & UPF_FOURPORT) {
-> >  =09=09ICP =3D (port->iobase & 0xfe0) | 0x1f;
-> > @@ -1357,9 +1358,10 @@ static void autoconfig_irq(struct uart_8250_port=
- *up)
-> >  =09/* Synchronize UART_IER access against the console. */
-> >  =09uart_port_lock_irq(port);
-> >  =09serial_out(up, UART_IER, UART_IER_ALL_INTR);
-> > +=09lsr =3D serial_in(up, UART_LSR);
-> > +=09if (lsr & UART_LSR_DR)
-> > +=09=09serial_port_in(port, UART_RX);
-> >  =09uart_port_unlock_irq(port);
-> > -=09serial_in(up, UART_LSR);
-> > -=09serial_in(up, UART_RX);
-> >  =09serial_in(up, UART_IIR);
-> >  =09serial_in(up, UART_MSR);
-> >  =09serial_out(up, UART_TX, 0xFF);
-> > @@ -2137,19 +2139,16 @@ static void wait_for_xmitr(struct uart_8250_por=
-t *up, int bits)
-> >  static int serial8250_get_poll_char(struct uart_port *port)
-> >  {
-> >  =09struct uart_8250_port *up =3D up_to_u8250p(port);
-> > -=09int status;
-> > +=09int status =3D NO_POLL_CHAR;
-> >  =09u16 lsr;
-> > =20
-> >  =09serial8250_rpm_get(up);
-> > =20
-> > +=09uart_port_lock_irqsave(port, &flags);
-> >  =09lsr =3D serial_port_in(port, UART_LSR);
-> > -
-> > -=09if (!(lsr & UART_LSR_DR)) {
-> > -=09=09status =3D NO_POLL_CHAR;
-> > -=09=09goto out;
-> > -=09}
-> > -
-> > -=09status =3D serial_port_in(port, UART_RX);
-> > +=09if ((lsr & UART_LSR_DR))
-> > +=09=09status =3D serial_port_in(port, UART_RX);
-> > +=09uart_port_unlock_irqrestore(port, flags);
-> >  out:
-> >  =09serial8250_rpm_put(up);
-> >  =09return status;
-> > @@ -2264,13 +2263,16 @@ int serial8250_do_startup(struct uart_port *por=
-t)
-> >  =09 * Clear the FIFO buffers and disable them.
-> >  =09 * (they will be reenabled in set_termios())
-> >  =09 */
-> > +=09uart_port_lock_irqsave(port, &flags);
-> >  =09serial8250_clear_fifos(up);
-> > =20
-> >  =09/*
-> >  =09 * Clear the interrupt registers.
-> >  =09 */
-> > -=09serial_port_in(port, UART_LSR);
-> > -=09serial_port_in(port, UART_RX);
-> > +=09lsr =3D serial_port_in(port, UART_LSR);
-> > +=09if (lsr & UART_LSR_DR)
-> > +=09=09serial_port_in(port, UART_RX);
-> > +=09uart_port_unlock_irqrestore(port, flags);
-> >  =09serial_port_in(port, UART_IIR);
-> >  =09serial_port_in(port, UART_MSR);
-> > =20
-> > @@ -2380,9 +2382,10 @@ int serial8250_do_startup(struct uart_port *port=
-)
-> >  =09/*
-> >  =09 * Now, initialize the UART
-> >  =09 */
-> > -=09serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> > =20
-> >  =09uart_port_lock_irqsave(port, &flags);
-> > +=09serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
-> > +
-> >  =09if (up->port.flags & UPF_FOURPORT) {
-> >  =09=09if (!up->port.irq)
-> >  =09=09=09up->port.mctrl |=3D TIOCM_OUT1;
-> > @@ -2428,15 +2431,16 @@ int serial8250_do_startup(struct uart_port *por=
-t)
-> >  =09}
-> > =20
-> >  dont_test_tx_en:
->=20
-> I don't see this in the tty-next branch?
->=20
-> ~/linux/tty-next$ git grep dont_test_tx_en | cat -
-> ~/linux/tty-next$=20
->=20
->=20
---8323328-1067653622-1744805067=:991--
