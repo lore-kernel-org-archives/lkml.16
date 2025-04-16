@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCD1184E;
-	Wed, 16 Apr 2025 12:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441491494BB;
+	Wed, 16 Apr 2025 12:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807421; cv=none; b=X+dzG3BXeYALUccHmBOAAEd0LwNA2XmLAVrVr9F74TdupPDWvLhnhR8a3/b7DOQBaQ9fYJelfSvOMhGaqNRwSs9Wd7oZ7yJa1xuAAaGKcbjIlkr8rQagRahr33MMsaAxHpLyQ0xeXOOIfLtoR2eyuDpp5NUPy7XTv6qm2RTqylo=
+	t=1744807423; cv=none; b=XXcRRqJuPRH+BBqQxw4/64KDzNYaW1bA8NQt8kyCkTfs2mtyG6XZgZpglTzbFy085YQZR2Z9nYMJ2rqj9fHBhx6nyeVuS5ZyphRTChMSTzDclLUUjOquVgGAmL1a0+pI/js25rIRP715oRk5FUnjvY58Zirv9OiDyrwuF5x/Hdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807421; c=relaxed/simple;
-	bh=b74enOt/8kznwZO0MSlQeEP1+BRD+1EnL46fdp1IFlQ=;
+	s=arc-20240116; t=1744807423; c=relaxed/simple;
+	bh=EptSh/Z5xPJhA1aDHMn9nfTawQKCHKc+FCmO0lVffUQ=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=knZIvzF/U1n3O9P+nhIsvyLrTb+rcAkB2zgqQukvc3SmDGi3xLp9gerpm/zkGC5ufrb/hhQ4Ewbz97vc+h44PQhmbXXmp6+LQ4sPx1JQZ19XhFwkjl3hwQfhekKclgRFGDtnDRFdggb75w0UWHgbm7kIQV7CtPVLPSsID0UnpFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHcUDCQ2; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=f8jMxRsQWiGCsgRTDM2+n6aUiMQK8+K8c+/OPx9Whw1N2+NLrg8d3da8YpOZvGF2H72VBaQvKLVKZiSlCMnW4f364z/R3gQpJc2TfL9ny2iSA7VQ1KYeS1fpGDmfNbRBPhNv2OwPMWMEGIApFBo0kblCkmtk1ff40Gd3iNqJZ7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXcfBdH9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHcUDCQ2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85C09C4CEE2;
-	Wed, 16 Apr 2025 12:43:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXcfBdH9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7849DC4CEE2;
+	Wed, 16 Apr 2025 12:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744807419;
-	bh=b74enOt/8kznwZO0MSlQeEP1+BRD+1EnL46fdp1IFlQ=;
+	s=k20201202; t=1744807421;
+	bh=EptSh/Z5xPJhA1aDHMn9nfTawQKCHKc+FCmO0lVffUQ=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=vHcUDCQ2vx9qadNCM0RzfCbuUsPonoSdS1B2m0MZfphss0lEKvQ1CmFF9tWebWL0g
-	 9WXXBh9JFUGl053WM5onCi+Tokff+X3XrMtfiSp0Ozieas4lBumMYQfrbHQEOw3KHr
-	 Dvru4Dz7ndcW4NfffEkZNdu0D3mBH0SxMx0esTb5Mw407rBxYKYMq5q2HU3SgT0NH/
-	 cFosCSVQ+sPRxrJ+Bvo8YPuZ6r18bcorh9GeCn/x/WGmPkHaDDRAssbOzoQo9dUO8Q
-	 kkWNj44RYtl+CqdpJSR/44mufjdk0PdRGfM3EPIxuzPh3WCqFhjwhYZgVUXBFZR/NX
-	 bA2m5Hj1oCRig==
-Date: Wed, 16 Apr 2025 07:43:37 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	b=QXcfBdH9jEPiCjRYz89ioGIpTxNnOCwd0yHyigjxmBqmMyYOPp3L1BXcotqhjbsRt
+	 F+dl72ZdNGecgFs45ASxQfhrnfP/X/itLyOY+j3G7WYPjuFq1mQW0JT5IuiGIJhvDU
+	 UwDQiUc6eGUO0tmIkL1pkZGHoL2dB4DEgLJJQgz+kLvHZLHlW+LOV9zYQEUfGUasCC
+	 DorokKdm8Q9/Js4FKAj8K3aBk0h5FSS70LCw34YxTAGzviwkoSjse5GbSZ4IY9+FEC
+	 hoks8NPyQB+e0nEEoNuac8F8BvdtTFnpy88u5gr/Qx/WCVpq3WE9D8Ya/L55gd8BG+
+	 +JAdIlrS8GLaA==
+Date: Wed, 16 Apr 2025 07:43:39 -0500
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,49 +36,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, krzk+dt@kernel.org, 
- linux-kernel@vger.kernel.org, andersson@kernel.org, conor+dt@kernel.org, 
- linux-arm-msm@vger.kernel.org, konradybcio@kernel.org
-To: Juerg Haefliger <juerg.haefliger@canonical.com>
-In-Reply-To: <20250416094236.312079-1-juerg.haefliger@canonical.com>
-References: <20250408145252.581060-1-juerg.haefliger@canonical.com>
- <20250416094236.312079-1-juerg.haefliger@canonical.com>
-Message-Id: <174480737033.2514134.17619906882414938312.robh@kernel.org>
-Subject: Re: [PATCH v3 0/3] HP EliteBook Ultra G1q support
+Cc: linux-tegra@vger.kernel.org, smangipudi@nvidia.com, 
+ linux-spi@vger.kernel.org, skomatineni@nvidia.com, thierry.reding@gmail.com, 
+ kyarlagadda@nvidia.com, ldewangan@nvidia.com, linux-kernel@vger.kernel.org, 
+ broonie@kernel.org, jonathanh@nvidia.com
+To: Vishwaroop A <va@nvidia.com>
+In-Reply-To: <20250416110606.2737315-1-va@nvidia.com>
+References: <20250416110606.2737315-1-va@nvidia.com>
+Message-Id: <174480737097.2514153.5351260600015584210.robh@kernel.org>
+Subject: Re: [PATCH v3 0/6] Configure Clocks, Add Internal DMA support
 
 
-On Wed, 16 Apr 2025 11:42:33 +0200, Juerg Haefliger wrote:
-> Add support for the HP EliteBook Ultra G1q 14" AI laptop.
+On Wed, 16 Apr 2025 11:06:00 +0000, Vishwaroop A wrote:
+> This series introduces QSPI clock configuration and internal DMA
+> support for Quad SPI controller. The patches have been reorganized
+> for better logical flow and review comments from v2 have been addressed.
 > 
-> Based on HWINFO64 and APCI tables, it seems to be the same HW as the
-> HP OmniBook X 14.
+> Vishwaroop A (6):
+>   spi: tegra210-quad: Fix X1_X2_X4 encoding and support x4 transfers
+>   spi: tegra210-quad: remove redundant error handling code
+>   spi: tegra210-quad: modify chip select (CS) deactivation
+>   arm64: tegra: Configure QSPI clocks and add DMA
+>   spi: tegra210-quad: Update dummy sequence configuration
+>   spi: tegra210-quad: Add support for internal DMA
 > 
-> v2->v3:
->   - Drop status properties from nodes in patch 3/3
->   - Add acked-by-krzk to patch 2/3
-> v1->v2:
->   - Don't rename the X14 dts to dtsi and directly include the dts
->   - Add a label to the sound node and use that to override the model
->   - Reorder the dt doc patch before the dt usage
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi |  10 +
+>  drivers/spi/spi-tegra210-quad.c          | 282 +++++++++++++----------
+>  2 files changed, 176 insertions(+), 116 deletions(-)
 > 
-> 
-> Juerg Haefliger (3):
->   arm64: dts: qcom: x1e80100-hp-omnibook-x14: add sound label and pull
->     out the model
->   dt-bindings: arm: qcom: Document HP EliteBook Ultra G1q
->   arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q: DT for HP EliteBook
->     Ultra G1q
-> 
->  .../devicetree/bindings/arm/qcom.yaml         |  1 +
->  arch/arm64/boot/dts/qcom/Makefile             |  1 +
->  .../qcom/x1e80100-hp-elitebook-ultra-g1q.dts  | 30 +++++++++++++++++++
->  .../dts/qcom/x1e80100-hp-omnibook-x14.dts     |  7 +++--
->  drivers/firmware/qcom/qcom_scm.c              |  1 +
->  5 files changed, 38 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dts
+> ---
+> v2 -> v3:
+>         * Reorganized the patches.
+>         * Addressed review comments received on the patches.
+> ---
 > 
 > --
-> 2.43.0
+> 2.17.1
 > 
 > 
 > 
@@ -100,15 +93,23 @@ make sure dt-schema is up to date:
 
 This patch series was applied (using b4) to base:
  Base: attempting to guess base-commit...
- Base: tags/next-20250416 (best guess, 1/4 blobs matched)
+ Base: tags/v6.15-rc2-1-g36ff6c3f5084 (exact match)
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250416094236.312079-1-juerg.haefliger@canonical.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/nvidia/' for 20250416110606.2737315-1-va@nvidia.com:
 
-arch/arm64/boot/dts/qcom/x1e80100-hp-elitebook-ultra-g1q.dtb: pinctrl@f100000 (qcom,x1e80100-tlmm): Unevaluated properties are not allowed ('bt-en-sleep' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pinctrl/qcom,x1e80100-tlmm.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0008.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0000.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3768-0000+p3767-0005.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
+arch/arm64/boot/dts/nvidia/tegra234-p3740-0002+p3701-0008.dtb: spi@3270000 (nvidia,tegra234-qspi): Unevaluated properties are not allowed ('iommus' was unexpected)
+	from schema $id: http://devicetree.org/schemas/spi/nvidia,tegra210-quad.yaml#
 
 
 
