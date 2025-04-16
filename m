@@ -1,190 +1,282 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8BC214235;
-	Wed, 16 Apr 2025 21:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744838679; cv=none; b=FSHsfy8VU6U1DX6lNUl0mmzHBgQfJwDZUbtxylxbky/waclaID1akKBvD0/VfmGecrKeDYacHSx7p1ALa8IXRs0CYr/leGkiEv/EAF3iIfQYM38jD+vaCHhP2h9RCvgNM9xOM4BP8awFk+1oM+mfzpELYOTE7HOH0Kspq90mua4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744838679; c=relaxed/simple;
-	bh=ZbU5fzt0/AJB5zorsnKBlFwoeqC1M5ychog/yn4bL34=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kF92PBdaYziRjVhD5jpNOM6VNSNVrzKb9cBl2We3sCK6zSRIcAnx0IgoSgXW9ciSf5i0pWwMIkQkAZKhi6DJ/kRLjJX2YuEPfX5/ALhblkbI+msB4L49oH0Y8KnBIubRG2MtC73o620PrS5XDVzbRRCpT8wVU4YRX7A5IMcSFmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CCkZ8aMI; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D58528E3F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 21:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744838789; cv=fail; b=oVRDN2rWHhCI1TRrptHXcUfLRYCt9suRNYF2znRQYVyenXuj2yqXqYkpWw6HlbOQ1k91lUbL+nfzMPFLDnWGwzZYdSp7DdrtwGY2AdksbVqvF1l+Z0NOBd1g4MZqix0dwXFifFGQYhlXbIv05l9Nzc6p8Lnl2zpZtyZ3iz9z3l8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744838789; c=relaxed/simple;
+	bh=atpiAeX7l1Dy8C0XwCgirNl/049JoI41S2HkS9LIbrQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pUEEpU+HsBbSrhuRa8NLJ35UYi4TQmaM7lEDxa4Ctfcb3jRhk9xzBNsBH/S2lR1UPR6OzJdZ2fXQLp9dA53YlNq+Vpc5u6iOJsH1S/qS6hNkOIGclzoWfgZMEjfLFcpoO4yVXDFF5v5lP2MU0ZpZT/Qe1HnpdYYtgrOwME6LmPE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fmCFcv+o; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCkZ8aMI"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso67675b3a.2;
-        Wed, 16 Apr 2025 14:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744838676; x=1745443476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4jVAyA2MpizhxtQwsOdID7gg2xhGq08cVN7SZQ9jXqk=;
-        b=CCkZ8aMIhpyAG7jLKCxaF7MEutEYVNIRj7Lr2FXP4SgQs5mOfO5OBo+R2vJgj1UfWC
-         G2sN6t5XYIqa48J2SR7ssTvIUoCGlF0by6sN9Bhwi2oONvl5mlmaoK9c/iDsuznRBHaR
-         kuaFLC0z7K0xiXkD4uYswTG1GotKNV0GPGVov8CU32lzt7E4SMjQbzVGLwHuC96ZY0Ka
-         dLKKW6uzLdiRRj/Vdk57EakObcDI1ZUF93UlxTq2A/KpiOoZhs/j20vrzWCgrUAgBsKk
-         ArTrbczVLVIsNbyBwAilMrVp0rKXwJGRmEM6bnT/QPRXCfLnYClt37pRHI9Oand8OpwJ
-         MpPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744838676; x=1745443476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4jVAyA2MpizhxtQwsOdID7gg2xhGq08cVN7SZQ9jXqk=;
-        b=tR3ijv+7ta3hmXZzyfp5t47NcUepfaeBbc9/MySJBfZKpFzzGf8IZouCfM7wbSKrFc
-         lc62dhtUDOP184q/IN6eLwordZMyQlxgCS2p0D7mSPBgbJiCh0qqOxR/rhifN0mftSwp
-         M3emehvwK8vRFU4mGuZ888lFdTceqUf/LwqOy1Qi6qsZJcmpsNf6Hz0mzxIOokxzx/Dg
-         8XJ//XWbASUSQuWWPV4PqJRMCoghuhwzUnxzzzT4ZwBdakhYWxYTugEgtHTbUEmVcoO8
-         KnUXBArfTJu+ZshVlQ1EFO9SThiSel5u8M+vmaC3+dqGZr5fU3AvwfrZcwGy1dJHD3vm
-         2dCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUMB3fFq6CgteFNDRI8REVmyYMzDEFNEjt9AJb0uFOj+jDqikcpbnP5wQ0z5uknpJWAL/5RA/XwYpmh2SBIJugx@vger.kernel.org, AJvYcCV9Oa9S0Wkx8hoVOk+bTNG+i6jfn6HN1ydV+OUwTBn3uZPxxnJsuaMtaj4gUSJsfdP+f0KrN1oq557U39Cd@vger.kernel.org, AJvYcCXEawT4tO723illNgVbhUOof70OVg2F71j+k6VCWmRB7lYjNWx0Q9imZ0kP89hECQ+EL3Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3JuWmx1nfP+vOEncUwq8ef06tsynbT6UAuLZZkJcR6dm9Z0e2
-	5kbVCIyzPnWyi3l17N/MOvuayy8l2OHnuRJsXiJv2Pn7IHX/OayNkVwZfmgWIljDFDGtJzdex3Y
-	X9ZoRtial2rSKW2P33oH3gG7MIoc=
-X-Gm-Gg: ASbGncuY27lckYoDuvcWhVNG2WVjuZ2189atKplirWfdwvxyNziqKC+gLLEiHMpXtjg
-	TMBwuDUDDfGYF5RkVZdUKMMjVlaTMA929vEzDqEwJ1c8jUW1XfVWR6mmjj++dITXBGJQkY4yVZZ
-	UWl0N5x0SWY9ME5nAVDj1cBcGWYh/kcxKdeA3d5w==
-X-Google-Smtp-Source: AGHT+IGP0KP8Iix57A7pNCwQp1k9B+JFkxfWiQwRVI0u7EuoGlinHX/1dVpIRADFn6P7r1WHtj3Ss+TZRQvR2I4Bbg8=
-X-Received: by 2002:a05:6a00:aa8d:b0:736:a973:748 with SMTP id
- d2e1a72fcca58-73c267f8ba4mr4955120b3a.22.1744838675753; Wed, 16 Apr 2025
- 14:24:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fmCFcv+o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744838786; x=1776374786;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=atpiAeX7l1Dy8C0XwCgirNl/049JoI41S2HkS9LIbrQ=;
+  b=fmCFcv+onNn3459ElajmE2Rs2lRxr2QSvcqZzYJbjH1P2csKKaZKVeka
+   ApQT+Y6eSN/0A5754yEltPO8+CDvOBuHhiWg6xs05Pmi1titejq7Qw66o
+   O7NiJfSlHgfAEXDQ1X/yD3KK3NtTpCmSI+AkAV5k7tGq5j+5qVtlzvvGp
+   zKJ2pwMqbp0N+IaJCZL4PhE9wHm+yKzeroAtsfvPobaC34+phWDh5h1n9
+   +o46aHP2nScNE/dpNALQyeTNJlxS9fOxJjGyMHRdXV/BukuZW57GEo6FW
+   Ann4k0lex0YFeLH++4eVnM/yjHrZUmqQkJQBTK33s2S+bX5IO3fPV0BJR
+   g==;
+X-CSE-ConnectionGUID: +wonokD6QUiqjSIi2rGCeg==
+X-CSE-MsgGUID: JVbM1/azQMqIBznBFn3a5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50055955"
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="50055955"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 14:26:26 -0700
+X-CSE-ConnectionGUID: zKVJRdfFRhmeUfPOP0ZMPA==
+X-CSE-MsgGUID: JfulVe8KRUeEWmbDNf1Wow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="161562393"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 14:26:25 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 16 Apr 2025 14:26:25 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 16 Apr 2025 14:26:25 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 16 Apr 2025 14:26:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=F/oFRHiFiNXop1xLbKIOFYrhq+zBuGlJKqlwJznzpS0wys5oO2IC7Oi8XeSPcqEKePBA92ZND0FvDHmxcYHoXskt5MqsEll7G9PY8AKofVNno5E1m9ryphPRzIsaYRlQz2SYffyF4f0jXvkk0YZUk1WEMRplb3EBPALtw7YrnrF1MtOs/Lokna7jQap0aV7lT0CBc6BVMw6ECEoki+RM7wD8wVCZ0JWq8gaBHpRzePkK9mbK5GXGnFg7vczjPl6hN+gp7NMkDln1cz/ZVNMsmLo6q/ADO4rTjOMK00+6Km08eyNEJhxewrb0C/Stq2wgsTohx3lfqqTotasvNr+Xwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AboQuMj9SI/2QOmr5Xai7b1gvDPM9emp2eWPnDOH+1A=;
+ b=W5V8Qj5YHc3eWbxU1znJCrydlLpGRKxYseRf/mVXOzFCDufspTwKGzWJEMRLBChWnsEcSeIBinsukK+fyJzZvjVo7B9UrIjiR4jzQRxPCMby4sJFGgUz0vadssqFZFyV9rx4ZRtAHB3N52XbYZJCEVwNvpowqdGxVt+y6EWe0GLpWB42hnVleGkwAf5E0Zd51UrKwWRMJw0tZeiJl2KFlttMVehHHbEbrXmhhGCYnYHcHmNhzbgpA5XBwAjigq04yGyjHy9dXOxKFl0p2s/f+4zPKgydW3rQowvB3R+9LEgzstoloDykgGcnTZcyhscN1cjsvwi1+ngy8ADw2OWiIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by BY1PR11MB7982.namprd11.prod.outlook.com (2603:10b6:a03:530::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Wed, 16 Apr
+ 2025 21:25:52 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8632.030; Wed, 16 Apr 2025
+ 21:25:52 +0000
+Date: Wed, 16 Apr 2025 14:25:49 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Naveen N Rao <naveen@kernel.org>, Dan Williams <dan.j.williams@intel.com>
+CC: <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] x86/devmem: Remove duplicate range_is_allowed()
+ definition
+Message-ID: <6800205d86e73_71fe294e4@dwillia2-xfh.jf.intel.com.notmuch>
+References: <174433453526.924142.15494575917593543330.stgit@dwillia2-xfh.jf.intel.com>
+ <174433454327.924142.13014632539194148381.stgit@dwillia2-xfh.jf.intel.com>
+ <s6fek3k3zsgf74yuppzckhcnud67pgfitz66n6uwkky7gvjcpc@rp4pxvie2dpb>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <s6fek3k3zsgf74yuppzckhcnud67pgfitz66n6uwkky7gvjcpc@rp4pxvie2dpb>
+X-ClientProxiedBy: MW4PR04CA0216.namprd04.prod.outlook.com
+ (2603:10b6:303:87::11) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com> <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
-In-Reply-To: <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 16 Apr 2025 14:24:23 -0700
-X-Gm-Features: ATxdqUE6pVn0ZTMRWW3NJojzYizvIX7ZuQkUbJrKxsRI8DDdQqgnpzQYLgypGws
-Message-ID: <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Florent Revest <revest@chromium.org>, Bastien Curutchet <bastien.curutchet@bootlin.com>, 
-	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BY1PR11MB7982:EE_
+X-MS-Office365-Filtering-Correlation-Id: 487b67ec-d42d-4b74-11ce-08dd7d2d442d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?d5VPxOu01025lidPqDXBN4E3tREmSV2phjFattLZhsNs52SQNa0Vrfo87F4s?=
+ =?us-ascii?Q?NKv+CpcWW4YhISRdyu+I2J28tfARMAb4u0BAUgwsH/ZfGlr4Y9ZPjn0uB+t7?=
+ =?us-ascii?Q?fUmROR1Gb8tiOZ/4v23BhxyfWybyhGCGChCvHtr6PudEpfwSJ0JiUSl9j2Eb?=
+ =?us-ascii?Q?z7t6Bt9O28Bo+r2k0mXpqpokp+7T9Sh3vT+hn1Y945lpwm7nMHxpggi7xmkI?=
+ =?us-ascii?Q?99Kx7EhQH1Js19u6//guU3egXM8zs20e8u3pZCkTjwa9lHLtyH+N2VkblnZN?=
+ =?us-ascii?Q?DgsY4uIwXKC6xNogSw1iSxtWbjTooGIKvCfv4/+OHXtoHvE//GI2ygQbDVRs?=
+ =?us-ascii?Q?/N1zUd2riiO2QsW85nUpbKzFv6n1eid635CoXuR1LjF/pWNNUeb6KlXHi2n+?=
+ =?us-ascii?Q?hvr9CpSpKqmX3vUcr2ZiVVkGBNvDfFdaL+5FbROW5eCRGiOOBd/N1mBZybDl?=
+ =?us-ascii?Q?vyfAhmovFqtGs4/QahhNplKVLkpvvza0+Bx3t6sUuoGmP9eRUTVfLhpI7Koe?=
+ =?us-ascii?Q?tWUiErj4HtncnJu2Wv2yZNbV0qjPcFKkjBbXqcSyXX07+w1Tj1uqzw/fnVnx?=
+ =?us-ascii?Q?V+CDrWOm+peDpyJgpsEiynjs5j5/TsVpzry0IU1ORfNN2fRfat6de2shFUFZ?=
+ =?us-ascii?Q?b0S6cnKS4s37hxnPj4enVm0jVnyp3+aXtP2cHZU3aLmDPjh6SeHW56Duhg8f?=
+ =?us-ascii?Q?zTrPVkaAiqDzCB7ZfPs+90erWL9cEIhE8vy5j8pH9DlMxHSQpRTm+fZl/ex4?=
+ =?us-ascii?Q?bHtlvLAY3u2wmn3GQZnZmzQtmBrPFhiTt2MnRKleXffXcMscbmCCuN+N1xGd?=
+ =?us-ascii?Q?CGs/JjCvXN+OrLzQ1WEhHBfo3MMGzqNnne88Vy5mhyRNyLiYInDAa8e+3fbG?=
+ =?us-ascii?Q?6/46Nn/wnAVw9U3el9loCG9rgFJounpRPiORry1p6Sx/D36yKaw+b+1OsEVM?=
+ =?us-ascii?Q?HeLbJPhjtsht/+UOQAz+hZWOgfcF1hwNfU0GLO6fvqvZkJe4gVFVxCyVqvm5?=
+ =?us-ascii?Q?npYEhiGRri9Oq64OfUGR6/7MY36RIxuh7ZnHdRQE/rLm/P9guooj7O/pYZQn?=
+ =?us-ascii?Q?5rLxLAQvOStRjjOkKi7e5TBtCdUDsI23FvB9+Vj05PDu9Ia8bpNrLgS3FVK8?=
+ =?us-ascii?Q?TBIGATbaRl13UK2MHW7RKcDCgGZ6cHvoOQdNxzsrbMt7T8YVif1hCQricnco?=
+ =?us-ascii?Q?zgX9ykPG20pZdtBud7gEELGBuAXhsQh6kWHpp/zxmUPwqj8kHVHC+u82cQKE?=
+ =?us-ascii?Q?EjP/IYNdxgwTAyL4OUUXdPfT2giq35W6WowZ8JodaFHeLQBRv7LpX283C+YB?=
+ =?us-ascii?Q?rGMEhoFjRqx/6DfH+OhL7AnF76M48SEcRozUP/4k+HiGzQmxu5dBC9IitiKK?=
+ =?us-ascii?Q?4trTbGhGQGhHlOpR2BTdC19F8No5W4rST7pSvnlaM7rPIi7ewfm7SM7W+1Di?=
+ =?us-ascii?Q?wIKuCJdnsok=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?u8rSLaHGNxT3LFsYUbOJ7A3BJGY5EsEgLGelZ/fIoUVNDbUUkbNL3ihUNPx0?=
+ =?us-ascii?Q?1Yr4gLmoGi2R6dR5J5zh0fdlHydjBBWNz2hRfXRLOImmJQNKLYp7V1SEun/R?=
+ =?us-ascii?Q?5qxaEagX08Ku9CmA3eNaujTvhi/RNfun/x0bJmfKOYfdbIpskSJ5b1qaY8EX?=
+ =?us-ascii?Q?b0hL9r/Lvqm3CDMAOSo1YjVA4hrPGBsZ0DuW+ok0Et6NBoza8luIbsSo1oIV?=
+ =?us-ascii?Q?P+qUQ/RcRgbMjdBkoM+ugbr8J9mbxfKUHvQ74SOp59MzZWK5juGZOzyEd+c3?=
+ =?us-ascii?Q?lMIVhg626+gNf8Fjg4gm7CuJflmQ0yMFe7dhYBGRL3BktYFBi6npMAqRVURT?=
+ =?us-ascii?Q?bYzJCso0rdC9vE3vGigqjNz8a6ax/SVKbBoE0/Y5Bobc1L0vjY/Ds3wNQ8Qt?=
+ =?us-ascii?Q?F7cMlzCRQJsufC0ews+rTO4OIXaJIr9Et1GfwaiMgAAVbDW2oaaPxj0BNLOA?=
+ =?us-ascii?Q?yvaZbd/WNLBNWn7i+N/9uCaJYCdUpXjr4xjwOpOxFG01fxmxterKhJqozenP?=
+ =?us-ascii?Q?n5VXSbbXP1YWvz4TEb6VcCUZH5C/UqaEpAZnEUMyfeANP7HnRkhT4yR5O6hs?=
+ =?us-ascii?Q?Z53YjNUT0ze73qTADK2OI3yTurAl/HvfwPjIqKrwXX3Zokia25XC229O4KMp?=
+ =?us-ascii?Q?3QezGAHEbCL09vdfjvA4gcLLxOhVK57dgT0AdMwbkAXCkHGSmqooG/6qICbl?=
+ =?us-ascii?Q?PgKF8fTdXAKA9h6YcjuBOu8BCIDk81pqztIGlMNDfWYdXEjqQe0S+nq4jL9r?=
+ =?us-ascii?Q?Tti/jnXOShjpk1LeRbCjFfVaCSyIQj0A6We8Pd7PaV/BanfYeiAKFgpgHfyF?=
+ =?us-ascii?Q?HwB7wUVm+NMXKTp97ugZWgVwm0UBr17kD1L5Ei/0yfuw9Y18BieV/8qQ9GBF?=
+ =?us-ascii?Q?LC0Fv5XWaM575ZoP8o5VK0ELG13MQEkBgCK3YLefeNLZCmLhCa70X1F3+tDW?=
+ =?us-ascii?Q?ij86wKB1iDuTdCm6YiH8VeGwcDs/3cTwcZPHVl/6EUp6DkkO/2i5tELS7b+X?=
+ =?us-ascii?Q?YZpQelCyJoffiB4FnMp57M2KqNwVNFw3VqHPb+jLNHLYZIIIMyraMQaczOHT?=
+ =?us-ascii?Q?ezSL3Ecjig3UVnCaYinQMEOdLhBB/joerD15Al/8owQQfIMhJ9aVWdryZrQt?=
+ =?us-ascii?Q?jIAzU2SSv37dj/EdlLZCvY+/UKpddaO40YmcVy+Sdusz//0JR+ZBT5QMgglT?=
+ =?us-ascii?Q?UAFWOVxZCLRUCIBIJlTozz8N474FUWdrrsUxsf0esjUVRpqb2pwGfYKKynjv?=
+ =?us-ascii?Q?tNrkD6ULqTVaMiHaeAUWV+rnfHM1AxC3P2MBRz20J5OH3oit9q6x2+m/P3pW?=
+ =?us-ascii?Q?IohjEc3+XlVS8X0yJcNBj05o5xi9u+6lDawj6CtkivNzxDoGYLsq+xT+qP2R?=
+ =?us-ascii?Q?INVSf97zg60fRVu+/CNpuLusHMgeunmx+DwiV9vJprkBSGbXkEUT4OqAZILg?=
+ =?us-ascii?Q?jsQ6drH9ZvwiUEf04pqg01XddvfxMvyLMMuWYcTnl8R0NBiI0K75FSrzJA7t?=
+ =?us-ascii?Q?x0E6nb509OszvPM0CETWM6tGajihzpt1JxeC3W/D6kRlSnMJA+zKyE+TF/3N?=
+ =?us-ascii?Q?2wkQslORfr8EqRL+yh/z13Cn2qo+UNqtTmhhxu/+luz2b7+vC+31ZKlKrGjP?=
+ =?us-ascii?Q?OA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 487b67ec-d42d-4b74-11ce-08dd7d2d442d
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 21:25:52.8519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: c/yD//tV2YOtDcETSQgo2NZjrYjsWEX7K31TzsgWBbeZPRA0ao22hkV4qL4YcBNplayEbYiTGuaQ2y9q5sc3clMl1wIALkglFeA4guGbIAw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR11MB7982
+X-OriginatorOrg: intel.com
 
-On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Foundatio=
-n)
-<alexis.lothore@bootlin.com> wrote:
->
-> In order to properly JIT the trampolines needed to attach BPF programs
-> to functions, some architectures like ARM64 need to know about the
-> alignment needed for the function arguments. Such alignment can
-> generally be deduced from the argument size, but that's not completely
-> true for composite types. In the specific case of ARM64, the AAPCS64 ABI
-> defines that a composite type which needs to be passed through stack
-> must be aligned on the maximum between 8 and the largest alignment
-> constraint of its first-level members. So the JIT compiler needs more
-> information about the arguments to make sure to generate code that
-> respects those alignment constraints.
->
-> For struct arguments, add information about the size of the largest
-> first-level member in the struct btf_func_model to allow the JIT
-> compiler to guess the needed alignment. The information is quite
+Naveen N Rao wrote:
+> On Thu, Apr 10, 2025 at 06:22:23PM -0700, Dan Williams wrote:
+> > It looks like x86 has a local re-implementation of range_is_allowed()
+> > just to add a pat_enabled() check for the strong symbol override of
+> > phys_mem_access_prot_allowed() from drivers/char/mem.c.
+> > 
+> > In preparation for updating range_is_allowed() logic, arrange for there
+> > to be only one shared instance of "range_is_allowed()" in the kernel by
+> > moving a common helper to include/linux/io.h.
+> > 
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  arch/x86/mm/pat/memtype.c |   31 ++++---------------------------
+> >  drivers/char/mem.c        |   18 ------------------
+> >  include/linux/io.h        |   21 +++++++++++++++++++++
+> >  3 files changed, 25 insertions(+), 45 deletions(-)
+> > 
+> > diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+> > index 72d8cbc61158..c97b6598f187 100644
+> > --- a/arch/x86/mm/pat/memtype.c
+> > +++ b/arch/x86/mm/pat/memtype.c
+> > @@ -38,6 +38,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/pfn_t.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/io.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/highmem.h>
+> >  #include <linux/fs.h>
+> > @@ -773,38 +774,14 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+> >  	return vma_prot;
+> >  }
+> >  
+> > -#ifdef CONFIG_STRICT_DEVMEM
+> > -/* This check is done in drivers/char/mem.c in case of STRICT_DEVMEM */
+> > -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
+> > -{
+> > -	return 1;
+> > -}
+> 
+> It looks like no checks were done here if CONFIG_STRICT_DEVMEM was set, 
+> so this patch changes that.
 
-I might be missing something, but how can the *size* of the field be
-used to calculate that argument's *alignment*? i.e., I don't
-understand why arg_largest_member_size needs to be calculated instead
-of arg_largest_member_alignment...
+Yes, but this still matches the historical intent, and the historical
+intent is a tad messy.
 
-> specific, but it allows to keep arch-specific concerns (ie: guessing the
-> final needed alignment for an argument) isolated in each JIT compiler.
+The pat_enabled check was originally added as a *bypass* of additional
+logic in phys_mem_access_prot_allowed() [1] to validate that /dev/mem was
+establishing compatible mappings of "System-RAM" via /dev/mem. This
+patch maintains that expectation that phys_mem_access_prot_allowed()
+returns immediately when there is no potential cache conflict.
 
-couldn't all this information be calculated in the JIT compiler (if
-JIT needs that) from BTF?
+However, the point is moot in current code because [2] and [3] removed
+all cache type validation from phys_mem_access_prot_allowed() in favor
+track_pfn_remap().
 
->
-> Signed-off-by: Alexis Lothor=C3=A9 (eBPF Foundation) <alexis.lothore@boot=
-lin.com>
-> ---
->  include/linux/bpf.h |  1 +
->  kernel/bpf/btf.c    | 25 +++++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index 3f0cc89c0622cb1a097999afb78c17102593b6bb..8b34dcf60a0ce09228ff761b9=
-62ab67b6a3e2263 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -1106,6 +1106,7 @@ struct btf_func_model {
->         u8 nr_args;
->         u8 arg_size[MAX_BPF_FUNC_ARGS];
->         u8 arg_flags[MAX_BPF_FUNC_ARGS];
-> +       u8 arg_largest_member_size[MAX_BPF_FUNC_ARGS];
->  };
->
->  /* Restore arguments before returning from trampoline to let original fu=
-nction
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 16ba36f34dfab7531babf5753cab9f368cddefa3..5d40911ec90210086a6175d56=
-9abb6e52d75ad17 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -7318,6 +7318,29 @@ static int __get_type_size(struct btf *btf, u32 bt=
-f_id,
->         return -EINVAL;
->  }
->
-> +static u8 __get_largest_member_size(struct btf *btf, const struct btf_ty=
-pe *t)
-> +{
-> +       const struct btf_member *member;
-> +       const struct btf_type *mtype;
-> +       u8 largest_member_size =3D 0;
-> +       int i;
-> +
-> +       if (!__btf_type_is_struct(t))
-> +               return largest_member_size;
-> +
-> +       for_each_member(i, t, member) {
-> +               mtype =3D btf_type_by_id(btf, member->type);
-> +               while (mtype && btf_type_is_modifier(mtype))
-> +                       mtype =3D btf_type_by_id(btf, mtype->type);
-> +               if (!mtype)
-> +                       return -EINVAL;
-> +               if (mtype->size > largest_member_size)
-> +                       largest_member_size =3D mtype->size;
-> +       }
-> +
-> +       return largest_member_size;
-> +}
-> +
->  static u8 __get_type_fmodel_flags(const struct btf_type *t)
->  {
->         u8 flags =3D 0;
-> @@ -7396,6 +7419,8 @@ int btf_distill_func_proto(struct bpf_verifier_log =
-*log,
->                 }
->                 m->arg_size[i] =3D ret;
->                 m->arg_flags[i] =3D __get_type_fmodel_flags(t);
-> +               m->arg_largest_member_size[i] =3D
-> +                       __get_largest_member_size(btf, t);
->         }
->         m->nr_args =3D nargs;
->         return 0;
->
-> --
-> 2.49.0
->
+According to:
+Commit 9e41bff2708e ("x86: fix /dev/mem mmap breakage when PAT is disabled") [1]
+Commit 1886297ce0c8 ("x86/mm/pat: Fix BUG_ON() in mmap_mem() on QEMU/i386") [2]
+Commit 0c3c8a18361a ("x86, PAT: Remove duplicate memtype reserve in devmem mmap") [3]
+
+> > -#else
+> > -/* This check is needed to avoid cache aliasing when PAT is enabled */
+> > -static inline int range_is_allowed(unsigned long pfn, unsigned long size)
+> > -{
+> > -	u64 from = ((u64)pfn) << PAGE_SHIFT;
+> > -	u64 to = from + size;
+> > -	u64 cursor = from;
+> > -
+> > -	if (!pat_enabled())
+> > -		return 1;
+> > -
+> > -	while (cursor < to) {
+> > -		if (!devmem_is_allowed(pfn))
+> > -			return 0;
+> > -		cursor += PAGE_SIZE;
+> > -		pfn++;
+> > -	}
+> > -	return 1;
+> > -}
+> > -#endif /* CONFIG_STRICT_DEVMEM */
+> > -
+> >  int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
+> >  				unsigned long size, pgprot_t *vma_prot)
+> >  {
+> >  	enum page_cache_mode pcm = _PAGE_CACHE_MODE_WB;
+> >  
+> > +	if (!pat_enabled())
+> > +		return 1;
+> > +
+> 
+> Shouldn't this test for pat_enabled() (perhaps only if 
+> CONFIG_STRICT_DEVMEM is set) and continue with the rest of the function 
+> otherwise?
+
+No because, per above, the check is here to short-circuit the rest of
+phys_mem_access_prot_allowed() when PAT is disabled.
+
+I will add some notes to the changelog to save the next person from
+needing to find the history here.
+
+I found it interesting that Venki suggested that the duplicated
+"range_is_allowed()" be cleaned up back in 2008 [4], so this is a
+cleanup 17 years (almost to the day) in the making:
+
+Commit 0124cecfc85a ("x86, PAT: disable /dev/mem mmap RAM with PAT") [4]
