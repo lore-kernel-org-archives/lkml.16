@@ -1,106 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 018CD1C7015;
-	Wed, 16 Apr 2025 15:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DFE2080DC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744817168; cv=none; b=BeHLO/RdVrVQwRX3vSMYJCK0HE1YrtoByd7nuGKS9DdvfYk0HOHAn4XA7on/r+NQURkbAF4PNujbgqKtjLflJ4eqIhRUHSPDal/4qjHAZ/v1nz+rTsL++ORMLAvHvMHF9AdiBzVWiWAEfG2W1kO3eKlwWfw8Eb0ye70j2cRt6MQ=
+	t=1744817201; cv=none; b=auA83FdPVWXTDnCZM8H+Q52U+tcA8+VdOU1SWyY3tbs569GyK6dfS80dk1Gu6mNAlcW7+YHB47+UEqIO72ZM+Il2O16/fmUY8ksXvXoRB3lv/yV6YNZAq3B/ydmW36+fAGzOY03YuLv9JnTGcT7maL+dB0DnBaNMxrzm4az8p1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744817168; c=relaxed/simple;
-	bh=xuApqJIpg/A6yzMAM3bP2JnbdsNFyPu87tU3HFOJVPw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k3xKm7R5IO4+lRfEufFI5LJbxphnshFIP4JuYj3ToKlEfyzPZeAv2EkZFg1vqNKszODgtHsLwn7fcU/4U8nAu2mc4yIJvrjittz5Z6v6VigyzD6OSreNuPEkHdzkcYPyUSe26keQrPfrbnSe6L4P/oRo1iHNDuSo36ZiHgbySW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1347A1595;
-	Wed, 16 Apr 2025 08:26:04 -0700 (PDT)
-Received: from [10.57.71.18] (unknown [10.57.71.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C57C3F66E;
-	Wed, 16 Apr 2025 08:26:05 -0700 (PDT)
-Message-ID: <df494648-b0c1-402b-8644-b50f20011c5f@arm.com>
-Date: Wed, 16 Apr 2025 16:26:03 +0100
+	s=arc-20240116; t=1744817201; c=relaxed/simple;
+	bh=KHtSgO/TzKZZlMoL+dywjnaruMiJ//uEmODExUUP4yA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PiC5DQIA8ibxCBlDiyx76VYjRMH9BMlD8J9062qPqsp5iIKMVsNjhL8oaUzDofPe9WZjFma478DVHv9VE/SSI9DbyKPM3ipxRQGwG9+avX6/kaYGvFE89mF31pbAEEGpXcslzO3S5sys7dqiFJjMnQm8a6Yeu69HXZd1LLV7iKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u54ea-0001Dd-Cb; Wed, 16 Apr 2025 17:26:20 +0200
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u54eZ-000bl3-3C;
+	Wed, 16 Apr 2025 17:26:20 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1u54eZ-000CSL-2v;
+	Wed, 16 Apr 2025 17:26:19 +0200
+Message-ID: <14f2bfcd4604c5cf8b92a7d0dfc685e1f56b768b.camel@pengutronix.de>
+Subject: Re: [PATCH 1/1] dt-bindings: media: convert imx.txt to yaml format
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Steve Longerbeam <slongerbeam@gmail.com>, "open list:MEDIA INPUT
+ INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>, "open list:OPEN
+ FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+  "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>, open list
+ <linux-kernel@vger.kernel.org>
+Date: Wed, 16 Apr 2025 17:26:19 +0200
+In-Reply-To: <Z//KCLUWlTMdsyd3@lizhi-Precision-Tower-5810>
+References: <20250414210720.3359301-1-Frank.Li@nxp.com>
+	 <20250416124226.GA2498696-robh@kernel.org>
+	 <Z//KCLUWlTMdsyd3@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PM: EM: Fix potential division-by-zero error in
- em_compute_costs()
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yaxiong Tian <tianyaxiong@kylinos.cn>, Yaxiong Tian <iambestgod@qq.com>
-References: <tencent_EE27C7D1D6BDB3EE57A2C467CC59A866C405@qq.com>
- <tencent_6D2374392DB66C9D23BF6E2546638A42EC08@qq.com>
- <CAJZ5v0iE_iw+pSBppEWnJw=2=DFNa-J2VPDorTNF=Mve+0PNCg@mail.gmail.com>
- <tencent_8E3A87C6D6A193F757BA846F0C41887CC405@qq.com>
- <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0iq4bw3WAk1yQRP=B3zk-rRYwibKNRjSfu=PGqTt6RNYw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+On Mi, 2025-04-16 at 11:17 -0400, Frank Li wrote:
+> On Wed, Apr 16, 2025 at 07:42:26AM -0500, Rob Herring wrote:
+> > On Mon, Apr 14, 2025 at 05:07:18PM -0400, Frank Li wrote:
+> > > Convert binding doc imx.txt to yaml format. Create two yaml files:
+> > > fsl,imx6-mipi-csi2.yaml and fsl,imx-capture-subsystem.yaml.
+> > >=20
+> > > Additional changes:
+> > > - add example for fsl,imx6-mipi-csi2
+> > >=20
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../media/fsl,imx-capture-subsystem.yaml      |  38 ++++++
+> > >  .../bindings/media/fsl,imx6-mipi-csi2.yaml    | 126 ++++++++++++++++=
+++
+> > >  .../devicetree/bindings/media/imx.txt         |  53 --------
+> > >  3 files changed, 164 insertions(+), 53 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/fsl,imx-c=
+apture-subsystem.yaml
+> > >  create mode 100644 Documentation/devicetree/bindings/media/fsl,imx6-=
+mipi-csi2.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/media/imx.txt
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/media/fsl,imx-capture-=
+subsystem.yaml b/Documentation/devicetree/bindings/media/fsl,imx-capture-su=
+bsystem.yaml
+> > > new file mode 100644
+> > > index 0000000000000..77be3c1f37c5b
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/fsl,imx-capture-subsyst=
+em.yaml
+> > > @@ -0,0 +1,38 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/fsl,imx-capture-subsystem.y=
+aml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Freescale i.MX Media Video Device
+> > > +
+> ...
+> > > +        reg =3D <0x021dc000 0x4000>;
+> > > +        #address-cells =3D <1>;
+> > > +        #size-cells =3D <0>;
+> > > +        clocks =3D <&clks IMX6QDL_CLK_HSI_TX>,
+> > > +                 <&clks IMX6QDL_CLK_VIDEO_27M>,
+> > > +                 <&clks IMX6QDL_CLK_EIM_PODF>;
+> > > +        clock-names =3D "dphy", "ref", "pix";
+> > > +
+> > > +        port@0 {
+> > > +            reg =3D <0>;
+> > > +
+> > > +            endpoint {
+> > > +                remote-endpoint =3D <&ov5640_to_mipi_csi2>;
+> > > +                clock-lanes =3D <0>;
+> > > +                data-lanes =3D <1 2>;
+> > > +            };
+> > > +        };
+> >=20
+> > I would think at least 1 output port is required?
+>=20
+> I checked dts file, only input port. I think old csi2 only need get data
+> from camera. csi's dma should save to memory.
 
+There are no ports in imx6qdl.dtsi, but there's a &mipi_csi with four
+output ports in imx6q.dtsi and imx6dl.dtsi each, because whether data
+flows through a mux or directly into the IPU CSI ports differs between
+the two platforms.
 
-On 4/16/25 12:58, Rafael J. Wysocki wrote:
-> On Wed, Apr 16, 2025 at 4:57 AM Yaxiong Tian <iambestgod@qq.com> wrote:
->>
->> 在 2025/4/16 01:17, Rafael J. Wysocki 写道:
->>> On Mon, Apr 14, 2025 at 11:09 AM Yaxiong Tian <iambestgod@qq.com> wrote:
->>>>
->>>> From: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>>
->>>> When the device is of a non-CPU type, table[i].performance won't be
->>>> initialized in the previous em_init_performance(), resulting in division
->>>> by zero when calculating costs in em_compute_costs().
->>>>
->>>> Since the 'cost' algorithm is only used for EAS energy efficiency
->>>> calculations and is currently not utilized by other device drivers, we
->>>> should add the _is_cpu_device(dev) check to prevent this division-by-zero
->>>> issue.
->>>>
->>>> Fixes: <1b600da51073> ("PM: EM: Optimize em_cpu_energy() and remove division")
->>>
->>> Please look at the Fixes: tags in the kernel git history.  They don't
->>> look like the one above.
->>>
->> Yes, there's an extra '<>' here.
->>
->>>> Signed-off-by: Yaxiong Tian <tianyaxiong@kylinos.cn>
->>>> ---
->>>>    kernel/power/energy_model.c | 4 ++--
->>>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
->>>> index d9b7e2b38c7a..fc972cc1fc12 100644
->>>> --- a/kernel/power/energy_model.c
->>>> +++ b/kernel/power/energy_model.c
->>>> @@ -235,7 +235,7 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
->>>>
->>>>           /* Compute the cost of each performance state. */
->>>>           for (i = nr_states - 1; i >= 0; i--) {
->>>> -               unsigned long power_res, cost;
->>>> +               unsigned long power_res, cost = 0;
->>>>
->>>>                   if ((flags & EM_PERF_DOMAIN_ARTIFICIAL) && cb->get_cost) {
->>>>                           ret = cb->get_cost(dev, table[i].frequency, &cost);
->>>> @@ -244,7 +244,7 @@ static int em_compute_costs(struct device *dev, struct em_perf_state *table,
->>>>                                           cost, ret);
->>>>                                   return -EINVAL;
->>>>                           }
->>>> -               } else {
->>>> +               } else if (_is_cpu_device(dev)) {
->>>
->>> Can't you just check this upfront at the beginning of the function and
->>> make it bail out if dev is not a CPU device?
->>>
->> Sure, But the current implementation applies em_compute_costs() to both
->> non-CPU devices and CPU devices.
-> 
-> Maybe it shouldn't do that for non-CPU ones?
+regards
+Philipp
 
-It shouldn't call this cost computation for non-CPU devices.
-Let me check that.
