@@ -1,376 +1,749 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2078.outbound.protection.outlook.com [40.107.93.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A6D2505BD;
-	Wed, 16 Apr 2025 12:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0BE23FC42;
+	Wed, 16 Apr 2025 12:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805223; cv=fail; b=AWQhlozM3L00gRAlsBB9nYcgKGu25RwefeL4LgNjH6EY/SS6J0BAFhVc0TVHrEEqgB57lktUWp2+NrkJOtqrtbCymtxm2qGUNCeN1TLDhVWo/FhVveaQedClEo29BbWzW6ax5FnRCq1IRjxtT+R31OXu3mu6BNEnPhT6M0sD3Gw=
+	t=1744805224; cv=fail; b=CB4BH+6xeUSHssFafq5Yv1yry960P3JMyl2vM6+fBTULiBckrWIQ06P4aT3USOZNPxnYWvZ+7E+LqsxQyRxiysuTAUpDK4vuoU4ATD3VLnxIGUcJXCnKTZg/2mD0L6un8EVDKsVlapEUfo/GeOk3y8CokJ2eb+oX6CilVKB0r2A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805223; c=relaxed/simple;
-	bh=9NMKZJ+rO1KD8JMxNDv9hWZ7E9zfuqcnOa05Ju9hsHM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=pedqya7pFeZ2ld4RKWShnYO0P5rJ/pSr/YHGh/SY2O2ytiB96hWbD+QcESVdonLTN7NHUyMNZ+1Zey4TLXayYjosPhreueRHR3xunmfvSgDithZdIGpJ0ukKQPhxCIV642iKn65EDg2Vh9YSOld/5u2F7Js4cBMYR0BvjGYfTm4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dtL6BW/g; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744805224; c=relaxed/simple;
+	bh=bISWoKMwKGmjKiPgKZH7yUcpLlCN4niwhFsQg0amCpk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OXVa6ltuwHch6Xr00y3W1lmbC/lc/ssrnVnaGvWeB9xKaDLuE0Z94gG93Cnj+dhvCPSLQJ19LGPpF4hiUCFN0FL7+iohUz2q1ztxo/2DnNUqXq2yuBhqBKgK9aadLpkzQ1bQbllPPJ937tfmZemuTsnaYv3PzH4cH0pudSNOph4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Yr3b4Zsc; arc=fail smtp.client-ip=40.107.93.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dtL6BW/g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744805220; x=1776341220;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=9NMKZJ+rO1KD8JMxNDv9hWZ7E9zfuqcnOa05Ju9hsHM=;
-  b=dtL6BW/gyxL7lrghJyDAjvyZaK4Wa/xHVnrZq2fu8EEtNH63PRG7F+hQ
-   Nh08xUg8c3/+SkpHonXnZZRZAi/ZjzoCnOhuIhogvNUEWsd0CoyGQDUSK
-   8KUF/AJAuaXlBm4Xxmcjra462AkCi/X1NfmlWHVXnkL+De5l25MLjzxIW
-   Bq68UBdEw3YQ1tj+XJ4NpIckkJrjc8WYn6U+5zPCKOvvvujWcWN1YE+U8
-   XuX7iyyFtHyWUTLT0jb1jjyxM+S9KlatDWh8CpiOTDl81lEWJwzBFW0AE
-   GZOrglZ8A3gAxBtSvY+mg1IaauoOv2GHzOawXTrvH/KUH42NC0d4XLPfL
-   g==;
-X-CSE-ConnectionGUID: tOS5Y855SHqihHov3IfhSQ==
-X-CSE-MsgGUID: e3DDpUlHQHayoxDCqLBZMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="49043362"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="49043362"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:06:59 -0700
-X-CSE-ConnectionGUID: T4eougDARX2NIPyLMXiXNQ==
-X-CSE-MsgGUID: wcnW0yJnQN+6C09n102ukw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="167625093"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:07:00 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 16 Apr 2025 05:06:59 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 16 Apr 2025 05:06:59 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 16 Apr 2025 05:06:58 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Yr3b4Zsc"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lh92+IjV0JXnblGUZvqaXeFuUEc2GfAgd2FuAzLKwTtZkBVe3olu9yDjdJ8gfOV3eM7ciP6QSoeHL6sD58DSpFkudzXBgC/hqBXfuJdRSpf3+bL4NFFdeZmR46w+qbCBRXGu1HUWIsWVCOHrjYdk0SdsgovJKm9JWOpPrRiipYRRAo3hCXgEl+65FZu/Zf24EhIagzHlVcvaptfOBPvW5DE1gDi6Oxe7iHIpXAxzChqwZu5wqE+S591cwsD/Sm6kFSwoImTj4kIAql/9N9v0B4cKCoQ3J2PRTHNOzXo4iFODh/zUU0HrmtEKPv+sIL8D1rV4QADUdXL9HhdpPoGtSA==
+ b=LtXjSeqM3hucWIMNT3gTVoNU+tQjNQCv5HNGlwxf0ImgE6sgD2V9VR+wfApgWidW6jX1s8wc5w5gbMMVIaIkaHIynn5x79s3M5UaNBdDAb3PuJ15QzG5cHDwp1YkTioGA7dPIHlwZKj61uCn2WrmIeq1PT/TBcUOQ0HqR+4ySPpnoyQw26rbzOnt166t1O7tPxHMP1FHkio48KnUq6ZykOLL+qwHCIcVfSiVY1QKGWf/DULgt65AiPmI5TMVTWbQpipShBJnHGDPZtKeH6cP17ihysyK94bEK9B7liWc6Te6tBdL1wtyDaMTVizcOvGDRBMyGmlPn3TGCVCnF00UbQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9NMKZJ+rO1KD8JMxNDv9hWZ7E9zfuqcnOa05Ju9hsHM=;
- b=nMQFvbomfXKrI3VuqoVaPJdwuQl+EDpFuFryc1ZvaCW3acuC86q4kVmk2Xtv33xm1S+qvfMHeGMkOVYT70yNqytBbjAGYyb9nfqc1xRxDVTyw8Xxv04Te+SmqM9pPlEEPx+FA25mGS+DqN39r+TiD4XZvadWHzbSeQggCvsQ8sxIb8szh/wTTa4IrUm67zw7qZ75pzpWM3qQlf35ogLCEXFxW9knQVkimU46wB3l8eZkXIgqztoTARINb+1V7TsJDT2gdSgk4CgdoEzw1e5kfisvTWMeZttS0+TT2mneztwynYBnnPqNigsJ5fPTqUMx0Bq3WHy2eG/bIEPQpOXgQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
- DS0PR11MB7335.namprd11.prod.outlook.com (2603:10b6:8:11e::9) with Microsoft
+ bh=/x8Jy99AfVXYtFUR2l5irowyZWG22V9hvAeO8/sonZY=;
+ b=b+zQXFh93P/sw7r7ir8SfoKkwp6iXhixj+z4n5TsUE2xSc34bBtR3ObF0PWxliHiywzDzCHZ4yEDQHlVrDCldMUfWyMhf5uaCtzxWi1kKCNPVDl2hj3p8G7m0tX+mMwRPCt/Vm54jwvQ2Kf4lPJ0InRMudv+cpx5Fqe7WfciQ2AT9zrdz+VY66AI9sziy248tfaW8ipKGxI0zifsEfacTQBw4eX6lj0EMnucIORYxeqnGNUOhRcJ1O2umt+aUYn1uTAfpnFXMQVb/dXnluSl0GqFF7UZoyOQ2ceg9EbdDjfQNFk+50/wmzhmFeDyDIHTb+GberqJ7APUb+34I1aKew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/x8Jy99AfVXYtFUR2l5irowyZWG22V9hvAeO8/sonZY=;
+ b=Yr3b4ZscPBPcZT9pwgl0k4QU5ZhUsbZRYs8KNwCdw/AOqW8wt1LHbDTq6FSEIY4NAQ69M0WWTZ9MV018gb8bxbyEzL5v94NZnFJyB/HdBvpKnvkpnJ9l15IMU6pn8BdSsfy8pzbn5YJ9SigSuIVWJ42lhRJuiFLA91hXbTg+cQZDaUghohhIBtYJ0mrhbp8r2R+8UidK79MQZZTxxTrT66Q2zrLczWVEcL1gbCLEgAPWsNQhxRXxrhkZQ9iPz1aBZaze4tFpHLVZfU+ozxhLbsR4DnoWcXJoygua9S9s3XQ4Exhny1fdEAJDnI5OPz9xVfH2ygaBp5wExBMDcNt6rA==
+Received: from BN8PR15CA0017.namprd15.prod.outlook.com (2603:10b6:408:c0::30)
+ by DS5PPFC9877909A.namprd12.prod.outlook.com (2603:10b6:f:fc00::661) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
+ 2025 12:06:57 +0000
+Received: from BN2PEPF000044A1.namprd02.prod.outlook.com
+ (2603:10b6:408:c0:cafe::dd) by BN8PR15CA0017.outlook.office365.com
+ (2603:10b6:408:c0::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.34 via Frontend Transport; Wed,
+ 16 Apr 2025 12:06:57 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN2PEPF000044A1.mail.protection.outlook.com (10.167.243.152) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8632.32; Wed, 16 Apr 2025 12:06:56 +0000
-Received: from DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
- ([fe80::4df9:c236:8b64:403a%7]) with mapi id 15.20.8632.036; Wed, 16 Apr 2025
- 12:06:56 +0000
-From: "Reshetova, Elena" <elena.reshetova@intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>
-CC: "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Scarlata,
- Vincent R" <vincent.r.scarlata@intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"jarkko@kernel.org" <jarkko@kernel.org>, "Annapurve, Vishal"
-	<vannapurve@google.com>, "Cai, Chong" <chongc@google.com>, "Mallick, Asit K"
-	<asit.k.mallick@intel.com>, "Aktas, Erdem" <erdemaktas@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bondarn@google.com" <bondarn@google.com>, "dionnaglaze@google.com"
-	<dionnaglaze@google.com>, "Raynor, Scott" <scott.raynor@intel.com>
-Subject: RE: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Topic: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Thread-Index: AQHbrfzujDHiSNozs0m8Z6fqnS5FZ7Ol6JiAgABHaSA=
-Date: Wed, 16 Apr 2025 12:06:56 +0000
-Message-ID: <DM8PR11MB5750C80ED4AB80C696F581EFE7BD2@DM8PR11MB5750.namprd11.prod.outlook.com>
-References: <20250415115213.291449-1-elena.reshetova@intel.com>
-	 <20250415115213.291449-3-elena.reshetova@intel.com>
- <11f7e006073d2a4fa8fd6c609024a69ed40af9d6.camel@intel.com>
-In-Reply-To: <11f7e006073d2a4fa8fd6c609024a69ed40af9d6.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|DS0PR11MB7335:EE_
-x-ms-office365-filtering-correlation-id: a2388e8d-4bb1-4b96-d88e-08dd7cdf2efa
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?RHpRRnQvclNwcXFTUkxiclN1QWlCd253eUdHbk91d3QxYlJJTG1ZdDU3d3VK?=
- =?utf-8?B?dGNSVVk5Yk84cUtJNjJkTms5emViT0hNR2JhcEJYbXNENTB6TjR2RVdqdWcy?=
- =?utf-8?B?Q0VoQ3AvR2M5QlduNEdrTHlmQ1RaUFpZbEt5NFc3MGVweXhLK2Vuem1JOUM0?=
- =?utf-8?B?YWZMeG02QkNtTnVvbG1mSjZMOXFPTGhGME1LVUdlNUdVbEVtcFFzRGUvVy9u?=
- =?utf-8?B?cjN1UUFGTmRPSUZvWWtEMTFCdEZiRlFzWXRVRUE5MHdrOXl3L1VhTjhSSmpi?=
- =?utf-8?B?eU5zdksxM0hCVTlaS1VkMkpIWTI5SVBva0hLakpOSkZwRG8wbC9UNHdOTkRk?=
- =?utf-8?B?TThzTUdIVysvdVVSeW1XUktvR1NqQzY2UExWdW44dDVsQTJDU0NIM0hOSWR5?=
- =?utf-8?B?N1hlLzRBTkRzdzMxNlUrRXluWUhSLytydCtLNzhqZ2owd1F3c2dyVXJDS01n?=
- =?utf-8?B?RWFLcmdiaVNrTFRHaWVFbjk2QzlBazhNRUpSZzhPK0VNNG4xcExNdHAxSzMy?=
- =?utf-8?B?VnhTTWo1ODF0NkNuWXVrZktZbkNFOWJjR3NlTHNIbkkxTlJ3V2JRSVl6d1Jl?=
- =?utf-8?B?bjNKVENRV2JyMTJLeUZpN250aXhrM3FPQkwvcmswTzdkYys5VXpvbVhsTkYv?=
- =?utf-8?B?NWQ1ZWs0b0ZJYW5kdklad2tQd2I3dmVaTGdzQTB0T0VHN3FNeWdBT0JTZVQr?=
- =?utf-8?B?WGdSUENxMlhNNmVIT2dqRlM1Nmw4dzdrTnlVemI1ell4Y1pvb3FteFVLaWll?=
- =?utf-8?B?ZGFXazBONittcFpJVEdkdFdjZURsdGU2L05UbzZUdk9nTlo3SlExWVVnbHFl?=
- =?utf-8?B?SGM0REZCT08wTDdFcnZKSklyWTAyc0tyN25MZ2xNcTYwWm1wTUdBVXV6NDFG?=
- =?utf-8?B?WmlzT1pFMk4vSWtoaS9yd2RtenFzVkZob0tpWDBiOEdqUGU1OFpZTkgyZS94?=
- =?utf-8?B?dzE1VHdSdmo1cWpRVmV2V1oyalVWK21zM3BGWkNTbldOY0Y5NFZNWFBaSlky?=
- =?utf-8?B?RGZodzVnQTQ0QS9kckpzMUp6TUZrVWhSOUpBeCtiSG1JaTVYblZvbWpwZFNs?=
- =?utf-8?B?ZTB5Tjd2cHJQbWtVK1Fkb0R1WktJaGJKb0ZWMmdyUVIxeDdUY08wL3BhVkwr?=
- =?utf-8?B?c1EzY3d6RDNuUm5YMkdpUzI0QjhVbTlNaHZwSmdNVWdRaDJaelNTaTlQeVBR?=
- =?utf-8?B?WHJFWVpEZm5tV1RHMmRzb3lqeWplWCtCajRoRFFlL01ydmhmRTNwNjBPR3Vw?=
- =?utf-8?B?dkVldk5CZlFid0xQSU9DSmpxOGpsenppalZQS0R4djRVTkFYSDI3ajU0YTBE?=
- =?utf-8?B?ZUg0cXdyZ3V0bDZtUUFNL21NdlpHRnBaL1lyT2JLRUhoSUlacnVpOUFhUnJ4?=
- =?utf-8?B?MjhyOEtJY0kwTWdPOXFoZko1a0EyYTNKMGMza2E4YU85dUJlYmZjRlJpZ2xE?=
- =?utf-8?B?eGN4b3NpTXJBRWYrb0hQcGNFd01OSGNLRzhzRkwvc2dMSDVwNjZSVHlxV1JB?=
- =?utf-8?B?SnhCQWwxeGg2QTFpenBrT2IrS3dqVy9aMWJCV1ViRk45ZlRXdzBuQmd1YlNr?=
- =?utf-8?B?QUVvdmRxY1ZndlI2NElKeHNKU3VNMkhudi94c3FRTlFlUFZVRHkxZ0UrdEU2?=
- =?utf-8?B?czEzenZOUFpJVHB5MzFCOFY5ZGdnUlRkY1pTT2RZcHI4dklwaFZvaEh3bVNZ?=
- =?utf-8?B?NmxNeWEzQkxwdXhGelRTNFlSUmY2aU16b2QyZW1vMVJ0b3FXK1lHVm02UkJM?=
- =?utf-8?B?cFQxSG9BY0JaeVg1Z1pxQVQvN0dKa1dUQW9VUEtQUEdGREtldlBQUzdiU0dP?=
- =?utf-8?B?V2twOUxEaFp0bnhRQTNaT2VmMGMxdTg0ck5Pc0l1RFIzUjRkVHM4RTg1OFgz?=
- =?utf-8?B?aEE0L0kySTJUckJxYThiUnBWbDNZWHJ1dmRzVFd6d0NrY2R2Y1lFNktNNUk3?=
- =?utf-8?B?a3hPNUl1VzFGVXhQd0J5WmFDWndWdVlqb0xpYmFWV1ZDcGRHNVh3dTBXc283?=
- =?utf-8?Q?wyEZqo2iX15eOO8gbEiTfE9qcFnPpE=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NVNGV25kNm1INCtzaUVoMTN5M1V5OGdONytCbTBlTSt5a1Z3UHowZi9jemF0?=
- =?utf-8?B?WHFiOW12clgyZE9JRjZ2M0Z6VlZzUDlUTjc4Q1MrWmFTQ2dtaTJsbWFWWW5u?=
- =?utf-8?B?UkdDYjlxZWZuU1NEaU1Ba2FTR3VSQm9YTUZlUEFOU3RIS010ZFQwdmFFdEJR?=
- =?utf-8?B?ZnhmRThQcWEvWEVvZldQbWxFWHZ5ZGdvdHJWNG5YZDl0S1FROVVVdE9oSFpq?=
- =?utf-8?B?S2N2aThWWHhyVDVibktzY0pFZm5EeTlNcDd4Wlg5M3V5SWh4TjhRUnpJWUpN?=
- =?utf-8?B?ZlErOWhrUEhWUGw2RVBzYllETC9RVzFYNjlZVFNLSWFjalBjcCtwU0NzVWFm?=
- =?utf-8?B?aEMzYVR2V2VJd2UycElSYlFCOWpxYU1vUjY2TXNRQk1SRDlJOE5vOC8vY1Bt?=
- =?utf-8?B?UnR4OWx2QzJzeC9vOXRtc1FZZkNhUXJVVUFmczhjcnpUdHNCWHluQzM5YXFj?=
- =?utf-8?B?YnA1WnJhaWZsc2hlbFJpY21LL0E2TWpyL0NIVERkMkF6amFDdkpMT1ZjRlpp?=
- =?utf-8?B?YzVpTCtwOEFXd1BmYnEyWEYrT1V1OEdoM3dXL1ZZeEZyR0RVYmtWb2I5TUIw?=
- =?utf-8?B?TXZNWnFNL1hKMXMzUy8vem1UYldWV3REV0lFT043U1F1QlBCMDhnZGl0cklX?=
- =?utf-8?B?MFBzS1V4Ly9MRTRjZTJVZW5iNDZlMFZ2b1k4YUhIZTJxaExlQXYzajVrOU9h?=
- =?utf-8?B?VHFGWHlHaFphQ056eXphSWN4VFk3UDRxZWZBSEt5WW5uVURSQmo0cUZXUFRs?=
- =?utf-8?B?MFBzWVd3UmFPY3FpZ2VXZmdwQjJqaHlTcmVNZ3BzR3h3WHFWanBQQXBUNDRW?=
- =?utf-8?B?Mm9QaDVGbTVwcmFvRlFSL3EvaTZHRHNaWGlvc3BYcGhyVUl4aXU5YVZYR2Zh?=
- =?utf-8?B?UW5wZTREUXdlZ3ZRdWNjZTRxTU8zWS9CcVphSHAxZUU0ajd3RVhndlcvcUoz?=
- =?utf-8?B?ckxqNkNiOXIwSzNjVjBjdHB3bXExSXJNYS9EbStvMWszZFQ4THRESmhEVHg0?=
- =?utf-8?B?LzEzNVJHWWN2S2trOTlOMXFzcGEyVWljd0RSN1ozdXJMdGZhbnhqUjJRZ1BL?=
- =?utf-8?B?QVlBbFhERERnNVAweVhyN3RienY0RjA4SHV1dWFYUU9tbmFkMnROK0FCdmpw?=
- =?utf-8?B?WXppSEx6SUx6aXFzbHcydlFtQjYwTXZsQmhIOXl1VFFaQU13MDRFYXVQU2tD?=
- =?utf-8?B?b3dGTytmZkw1Ti9LQk5iUGtCMTIzd3NmYXU5UzJzUk9VTy95cFJnY0Z2SVZW?=
- =?utf-8?B?OE1DczlQa2R0cUdVMzZ2SjBYS0xsVmtRczUyS0lHbEdVeHk2bCtpRUdaekQy?=
- =?utf-8?B?Rm5yYlRTQ3I1R1pjUWVzL0MrZzIrV1FmQmlCSUR1ajBSVmlodGNEQUw0QjBW?=
- =?utf-8?B?Z3JFM0JTRlQ1Rks1ZUsvREExK1BJNUpMVUVsNVA1bEk3N3MzdGRkTHRQeFdC?=
- =?utf-8?B?TDd3Z28xUXlLZUM2NVdzVEdFcGo2bUxUNVJOL3hFRWpSWW5yM3Z2cGVUalhp?=
- =?utf-8?B?NjYwR0tEVFFTbzNvTzJZUnFiN2V6aGJRK0s3dUR2a0F3V2NSZ1FyV21mNVVy?=
- =?utf-8?B?QVRFanlMdEdwdWlXcmpheWhxdE1xbU5uMlFQWWFQcUlRYjZsbWFPNkVNeGRz?=
- =?utf-8?B?MVlWbHNvaHF2T1NZSm1TTWQwYUJFd3Nja1pSaldUUEEzZjJ6WW1Vc1RqSHFM?=
- =?utf-8?B?Y0hwZUpSZ1NhS3RMcWgvdmRTZTRLdzFKMForcHNmNmUxOTRYcENPUTRmTkly?=
- =?utf-8?B?SnRiVTM5bnNLblM3TlRCRGJQNmI4d3cvRE4zUm1ReFpsQTZjRm96LzNlYTVL?=
- =?utf-8?B?YzVyelRuSUoxZE8vNXdOdFlnNUdEV2hrYytzQzdVQWtNUGw4UW1qOWVWNlZx?=
- =?utf-8?B?S0doeXhzMjhKUkdKdUpPYUR5TjQvc0tHc1UybEV4TGcrOThWZzNMc1ZpNTVz?=
- =?utf-8?B?dDFCS1NIbk1JeWhGMVRtdnRjUTZuUnllTmM3a3pYNlBHU2luSklmYzhlVTIw?=
- =?utf-8?B?WUtkY3ZuUThnMzk2MURwQmdQcGpoTVpGV1ViaFNIem5pL2RWVkRYbFFndmFi?=
- =?utf-8?B?dytVeXl5RU1EUlJjdnRiU1JsUzVKNExUVWhWbXliKzF4MXp0bnVxRGVXM1hy?=
- =?utf-8?B?N1NyU2lLUjNiM1dGM05VdSt3MHdhNTM1d0xTVFpjREt6R3RrallRUzFBWHNk?=
- =?utf-8?B?MHc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.20.8655.12 via Frontend Transport; Wed, 16 Apr 2025 12:06:57 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 16 Apr
+ 2025 05:06:32 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 16 Apr
+ 2025 05:06:32 -0700
+Received: from build-shgarg-focal-20241118.internal (10.127.8.11) by
+ mail.nvidia.com (10.129.68.6) with Microsoft SMTP Server id 15.2.1544.14 via
+ Frontend Transport; Wed, 16 Apr 2025 05:06:32 -0700
+From: Shubhi Garg <shgarg@nvidia.com>
+To: <lee@kernel.org>, <alexandre.belloni@bootlin.com>,
+	<thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>
+CC: <shgarg@nvidia.com>
+Subject: [PATCH 4/5] rtc: nvvrs: add NVIDIA VRS PSEQ RTC device driver
+Date: Wed, 16 Apr 2025 12:06:18 +0000
+Message-ID: <20250416120619.483793-5-shgarg@nvidia.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250416120619.483793-1-shgarg@nvidia.com>
+References: <20250416120619.483793-1-shgarg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2388e8d-4bb1-4b96-d88e-08dd7cdf2efa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 12:06:56.3614
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044A1:EE_|DS5PPFC9877909A:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5838f0e9-6a9c-4585-8622-08dd7cdf2f82
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?R+NTdpHbugsNkarL1cJz+7qIo8vDnVvjBE6wtD1LO43TdbLN84sNNPod/QLn?=
+ =?us-ascii?Q?oJ/R/fjjUsW7YbekEXGbaULJfziabatWNDEVmWhv+aj86kiJbROf4UvvARs2?=
+ =?us-ascii?Q?GrjttVvM623P2rsisQdk8JdPrhZXKADRjBXN8oGkfShtfBpUkjl9S8vFYnhG?=
+ =?us-ascii?Q?V9VejwfuO/FoqxBiCDeZIxKsK05BaITTb8O6gFSpUPoZarTjwhCGpNa8xXyJ?=
+ =?us-ascii?Q?AuIgFuQuusQEtvIeTzSuhndvZMEHGYIW2A1CpleVvY7JVmSHiT+Yfs/tnzY0?=
+ =?us-ascii?Q?7ldmlPeapsO1V05qgiOQalrAHtbuV399sZnbYAc1vS+HKok7Q16Drf8iNp0j?=
+ =?us-ascii?Q?QkREINJyBInTG4yLD7LNE/LBiznhVMFobOYF+ngNnQ67+vHo8QQrvxxiWoZx?=
+ =?us-ascii?Q?FyH9JhkRVoo+D7KMVwhMGkQk5Sk7H/DmsfTEcMG4z1r1DGom+iSrkA7SBFZm?=
+ =?us-ascii?Q?U3qcKUOU/qsFK+YWrLRr/jpgNqUCAAJAx9lv9jVirUQUIPbRFboXqnqLbyym?=
+ =?us-ascii?Q?IcPMy1pa6yGcb0ouTrA5bb4mdRawgA5Sd7nkOdqFDWF7MrAMxGJW/C9ZBm/z?=
+ =?us-ascii?Q?3MEb+29DQvyqqg4bflF5Z6UsZLuiAdPX3wsDEIWgnPc5bRr/0uLrOs4QuBle?=
+ =?us-ascii?Q?FZN44/D7ASmA6gsUSb2p2gpSOjKomxlg9BSpHKuVUABZiCKUT+SLSiz9b95Z?=
+ =?us-ascii?Q?pwLqPRUaH0QDQddBwnhuHaGwK7PE3eie0yykjMx+SqpuPrT3MNOCG0F8OJXh?=
+ =?us-ascii?Q?Nqz/P7asnl9F+54b+WdYgWMvQaj8MMCLHzMkAMeVgNZjTJ+CqBVB69yszZNI?=
+ =?us-ascii?Q?17dZlT4C4NhQ0Xnqz79FLCufY7LRLQtUHro8kVDWye2nT/muVEY6iRrjU2qm?=
+ =?us-ascii?Q?ig7iPDpjrenNSlopVjK5Zw7uxgMD3htn0NKXKNeF96coD2xIN/JL6cUkw/EJ?=
+ =?us-ascii?Q?vvEZdORLJHxkvj7tYqKJ1BlGI8v8GEN6Re7vkrLOxtHAU6YG5CnyyU9pmH+S?=
+ =?us-ascii?Q?HysPdI/dqRGg5yV14UPxlyFaALt4+YPBblrhHfC9eMFaoW3mOriFiaqy/e+9?=
+ =?us-ascii?Q?Z7uMmfVCDsHENRYcifXX/Zv/rRK5zRY1oVmPaiTEVc8cgQn64ZDCIt6DIAni?=
+ =?us-ascii?Q?WjkwGW5Yab71IwxIi0Q2HvcSCWhRC7OftpryRLerrkf829f4aNsbgt1Mu6ws?=
+ =?us-ascii?Q?jqZ4pYtIgdXxW8DfKDr/POMl1fQ20ixW7DXRaUK2F3oFf6b1N4O8147ioI0G?=
+ =?us-ascii?Q?wYDent2bmXOsgVknhbPAd7S2rXk+xXV4IgYWcEutMuMx/m3NVb85RLeFpzCk?=
+ =?us-ascii?Q?MBB1mKbV2C/HeHsLGPsgOXqDwHIkK7a6RV/LlXstmTG2e0bXwHG3hjkUrdlx?=
+ =?us-ascii?Q?IAy3QAv2vgBplcgFjQaAVVYi+4FRAxMzVQ25W8BQXZEH31zJkQFah24+gliC?=
+ =?us-ascii?Q?lj0V6a8smowgY+RN7N66xQDluYPMfVxuSJFl7bFvIjQ4nVpsVhG5EvrnYxBY?=
+ =?us-ascii?Q?qTQdXCQPeipA9l3BKBAoa1oCI9LWaubkGTQC?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 12:06:57.1394
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HrsNf/3VdfC8DnCG2D91BagIyFZVn1oMI+JVp46TExLN91pLL0s9bXblBlTTY2j+As29I31iehirsEsCcCzHDvPW7TZLNUnqlyfy/aXaQ9Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7335
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5838f0e9-6a9c-4585-8622-08dd7cdf2f82
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044A1.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFC9877909A
 
-DQo+IE9uIFR1ZSwgMjAyNS0wNC0xNSBhdCAxNDo1MSArMDMwMCwgRWxlbmEgUmVzaGV0b3ZhIHdy
-b3RlOg0KPiA+IFNHWCBhcmNoaXRlY3R1cmUgaW50cm9kdWNlZCBhIG5ldyBpbnN0cnVjdGlvbiBj
-YWxsZWQgRVVQREFURVNWTg0KPiANCj4gImEgbmV3IEVOQ0xTIGxlYWYgZnVuY3Rpb24gRVVQREFU
-RVNWTiI/DQoNClllcywgeW91IGFyZSByaWdodCwgYmV0dGVyIHdvcmRpbmcsIHdpbGwgZml4LiAN
-Cg0KPiANCj4gPiB0byBJY2UgTGFrZS4gSXQgYWxsb3dzIHVwZGF0aW5nIHNlY3VyaXR5IFNWTiB2
-ZXJzaW9uLCBnaXZlbiB0aGF0IEVQQw0KPiA+IGlzIGNvbXBsZXRlbHkgZW1wdHkuIFRoZSBsYXR0
-ZXIgaXMgcmVxdWlyZWQgZm9yIHNlY3VyaXR5IHJlYXNvbnMNCj4gPiBpbiBvcmRlciB0byByZWFz
-b24gdGhhdCBlbmNsYXZlIHNlY3VyaXR5IHBvc3R1cmUgaXMgYXMgc2VjdXJlIGFzIHRoZQ0KPiA+
-IHNlY3VyaXR5IFNWTiB2ZXJzaW9uIG9mIHRoZSBUQ0IgdGhhdCBjcmVhdGVkIGl0Lg0KPiA+DQo+
-ID4gQWRkaXRpb25hbGx5IGl0IGlzIGltcG9ydGFudCB0byBlbnN1cmUgdGhhdCB3aGlsZSBFTkNM
-U1tFVVBEQVRFU1ZOXQ0KPiA+IHJ1bnMsIG5vIGNvbmN1cnJlbnQgcGFnZSBjcmVhdGlvbiBoYXBw
-ZW5zIGluIEVQQywgYmVjYXVzZSBpdCBtaWdodA0KPiA+IHJlc3VsdCBpbiAjR1AgZGVsaXZlcmVk
-IHRvIHRoZSBjcmVhdG9yLiBMZWdhY3kgU1cgbWlnaHQgbm90IGJlIHByZXBhcmVkDQo+ID4gdG8g
-aGFuZGxlIHN1Y2ggdW5leHBlY3RlZCAjR1BzIGFuZCB0aGVyZWZvcmUgdGhpcyBwYXRjaCBpbnRy
-b2R1Y2VzDQo+ID4gYSBsb2NraW5nIG1lY2hhbmlzbSB0byBlbnN1cmUgbm8gY29uY3VycmVudCBF
-UEMgYWxsb2NhdGlvbnMgY2FuIGhhcHBlbi4NCj4gPg0KPiA+IEl0IGlzIGFsc28gZW5zdXJlZCB0
-aGF0IEVOQ0xTW0VVUERBVEVTVk5dIGlzIG5vdCBjYWxsZWQgd2hlbiBydW5uaW5nDQo+ID4gaW4g
-YSBWTSBzaW5jZSBpdCBkb2VzIG5vdCBoYXZlIGEgbWVhbmluZyBpbiB0aGlzIGNvbnRleHQgKG1p
-Y3JvY29kZQ0KPiA+IHVwZGF0ZXMgYXBwbGljYXRpb24gaXMgbGltaXRlZCB0byB0aGUgaG9zdCBP
-UykgYW5kIHdpbGwgY3JlYXRlDQo+ID4gdW5uZWNlc3NhcnkgbG9hZC4NCj4gPg0KPiA+IFRoaXMg
-cGF0Y2ggaXMgYmFzZWQgb24gcHJldmlvdXMgc3VibWlzaW9uIGJ5IENhdGh5IFpoYW5nDQo+ID4g
-aHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsLzIwMjIwNTIwMTAzOTA0LjEyMTYtMS1jYXRoeS56
-aGFuZ0BpbnRlbC5jb20vDQo+IA0KPiBXaGVuIEphcmtrbyBzdWdnZXN0ZWQgdG8gdXNlICJMaW5r
-IiBoZXJlOg0KPiANCj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC9aOTgzWmFUYVdOcUZV
-cFlTQGtlcm5lbC5vcmcvDQo+IA0KPiBJIHRoaW5rIGhlIG1lYW50IHNvbWV0aGluZyBsaWtlIGJl
-bG93Og0KPiANCj4gVGhpcyBwYXRjaCBpcyBiYXNlZCBvbiAuLi4gWzFdDQo+IA0KPiBMaW5rOiBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyMjA1MjAxMDM5MDQuMTIxNi0xLQ0KPiBjYXRo
-eS56aGFuZ0BpbnRlbC5jb20vDQo+IFsxXQ0KDQpPaCwgSSBzZWUsIEkgZGlkbuKAmXQgdW5kZXJz
-dGFuZCB0aGlzLiBDYW4gZml4IGluIHRoZSBuZXh0IHZlcnNpb24uIA0KDQo+IA0KPiA+DQo+ID4g
-U2lnbmVkLW9mZi1ieTogRWxlbmEgUmVzaGV0b3ZhIDxlbGVuYS5yZXNoZXRvdmFAaW50ZWwuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9zZ3guaCAgICAgIHwgNDEgKysr
-KysrKysrKystLS0tLS0NCj4gPiAgYXJjaC94ODYva2VybmVsL2NwdS9zZ3gvZW5jbHMuaCB8ICA2
-ICsrKw0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9tYWluLmMgIHwgODINCj4gKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ID4gIGFyY2gveDg2L2tlcm5lbC9jcHUvc2d4
-L3NneC5oICAgfCAgMSArDQo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMoKyks
-IDE2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUv
-YXNtL3NneC5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vc2d4LmgNCj4gPiBpbmRleCA2YTAwNjk3
-NjE1MDguLjVjYWY1YzMxZWJjNiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9zZ3guaA0KPiA+ICsrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3NneC5oDQo+ID4gQEAgLTI2
-LDIzICsyNiwyNiBAQA0KPiA+ICAjZGVmaW5lIFNHWF9DUFVJRF9FUENfU0VDVElPTgkweDENCj4g
-PiAgLyogVGhlIGJpdG1hc2sgZm9yIHRoZSBFUEMgc2VjdGlvbiB0eXBlLiAqLw0KPiA+ICAjZGVm
-aW5lIFNHWF9DUFVJRF9FUENfTUFTSwlHRU5NQVNLKDMsIDApDQo+ID4gKy8qIEVVUERBVEVTVk4g
-cHJlc2VuY2UgaW5kaWNhdGlvbiAqLw0KPiA+ICsjZGVmaW5lIFNHWF9DUFVJRF9FVVBEQVRFU1ZO
-CUJJVCgxMCkNCj4gDQo+IEkgYW0gbm90IHN1cmUgd2hldGhlciB0aGlzIHNob3VsZCBiZSBhIG5l
-dyBYODZfRkVBVFVSRSBiaXQsIGp1c3QgbGlrZSBvdGhlcg0KPiBTR1gNCj4gYml0czoNCj4gDQo+
-ICAgWDg2X0ZFQVRVUkVfU0dYMQ0KPiAgIFg4Nl9GRUFUVVJFX1NHWDINCj4gICBYODZfRkVBVFVS
-RV9TR1hfRURFQ0NTU0ENCj4gDQo+IC4uIHJlcG9ydGVkIGluIENQVUlELjB4MTIuMHgwOkVBWC4N
-Cj4gDQo+IEJ1dCB0aGlzIGlzIG5ldmVyIGdvaW5nIHRvIGJlIGV4cG9zZWQgdG8gVk1zLCBpLmUu
-LCBLVk0gc2hvdWxkIG5ldmVyIG5lZWQgdG8NCj4gdXNlDQo+IGl0LCBzbyBwZXJoYXBzIGZpbmUg
-dG8ganVzdCBwdXQgaXQgaGVyZS4NCg0KSSBhbSBmaW5lIGVpdGhlciB3YXkuIEkgY2FuIGNoYW5n
-ZSB0aGlzIGlmIHBlb3BsZSBjb25zaWRlciBpdCBpcyBhIGJldHRlciBmaXQuIA0KDQo+IA0KPiBb
-Li4uXQ0KPiANCj4gDQo+ID4NCj4gPiArLyogVGhpcyBsb2NrIGlzIGhlbGQgdG8gcHJldmVudCBu
-ZXcgRVBDIHBhZ2VzIGZyb20gYmVpbmcgY3JlYXRlZA0KPiA+ICsgKiBkdXJpbmcgdGhlIGV4ZWN1
-dGlvbiBvZiBFTkNMU1tFVVBEQVRFU1ZOXS4NCj4gPiArICovDQo+IA0KPiAvKg0KPiAgKiBUaGlz
-IGxvY2sgLi4uDQo+ICAqIC4uLg0KPiAgKi8NCg0KVGhhbmsgeW91IGZvciBjYXRjaGluZyB0aGlz
-ISBJIHRob3VnaHQgdGhhdCBJIGZpeGVkIGFsbCBjb21tZW50cyB0byB0aGlzDQpGb3JtYXQgYnV0
-IG9idmlvdXMgSSBtaXNzZWQgdGhpcyBvbmUuIFNhZCB0aGF0IGNoZWNrcGF0Y2ggZG9lc27igJl0
-DQpjb21wbGFpbiBvbiB0aGlzICgNCg0KPiANCj4gPiArc3RhdGljIERFRklORV9TUElOTE9DSyhz
-Z3hfZXBjX2V1cGRhdGVzdm5fbG9jayk7DQo+ID4gKw0KPiA+ICBzdGF0aWMgYXRvbWljX2xvbmdf
-dCBzZ3hfbnJfdXNlZF9wYWdlcyA9IEFUT01JQ19MT05HX0lOSVQoMCk7DQo+ID4gIHN0YXRpYyB1
-bnNpZ25lZCBsb25nIHNneF9ucl90b3RhbF9wYWdlczsNCj4gPg0KPiA+IEBAIC00NDQsNiArNDQ5
-LDcgQEAgc3RhdGljIHN0cnVjdCBzZ3hfZXBjX3BhZ2UNCj4gKl9fc2d4X2FsbG9jX2VwY19wYWdl
-X2Zyb21fbm9kZShpbnQgbmlkKQ0KPiA+ICB7DQo+ID4gIAlzdHJ1Y3Qgc2d4X251bWFfbm9kZSAq
-bm9kZSA9ICZzZ3hfbnVtYV9ub2Rlc1tuaWRdOw0KPiA+ICAJc3RydWN0IHNneF9lcGNfcGFnZSAq
-cGFnZSA9IE5VTEw7DQo+ID4gKwlib29sIHJldDsNCj4gPg0KPiA+ICAJc3Bpbl9sb2NrKCZub2Rl
-LT5sb2NrKTsNCj4gPg0KPiA+IEBAIC00NTIsMTIgKzQ1OCwzMyBAQCBzdGF0aWMgc3RydWN0IHNn
-eF9lcGNfcGFnZQ0KPiAqX19zZ3hfYWxsb2NfZXBjX3BhZ2VfZnJvbV9ub2RlKGludCBuaWQpDQo+
-ID4gIAkJcmV0dXJuIE5VTEw7DQo+ID4gIAl9DQo+ID4NCj4gPiArCWlmICghYXRvbWljX2xvbmdf
-aW5jX25vdF96ZXJvKCZzZ3hfbnJfdXNlZF9wYWdlcykpIHsNCj4gPiArCQlzcGluX2xvY2soJnNn
-eF9lcGNfZXVwZGF0ZXN2bl9sb2NrKTsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIE9ubHkgY2FsbCBz
-Z3hfdXBkYXRlc3ZuKCkgb25jZSB0aGUgZmlyc3QgZW5jbGF2ZSdzDQo+ID4gKwkJICogcGFnZSBp
-cyBhbGxvY2F0ZWQgZnJvbSBFUEMNCj4gPiArCQkgKi8NCj4gDQo+IFRoZSBWTXMgY2FuIHByZS1w
-b3B1bGF0ZSBFUEMgdy9vIGhhdmluZyBhbnkgZW5jbGF2ZSBiZWluZyBjcmVhdGVkIGluc2lkZS4N
-Cj4gSG93DQo+IGFib3V0IGp1c3Q6DQo+IA0KPiAJCS8qDQo+IAkJICogTWFrZSBzdXJlIFNWTiBp
-cyB1cC10by1kYXRlIGJlZm9yZSBhbnkgRVBDIHBhZ2UgaXMNCj4gCQkgKiBhbGxvY2F0ZWQgZm9y
-IGFueSBlbmNsYXZlLg0KPiAJCSAqLw0KPiANCg0KUmlnaHQsIGFncmVlIHdpdGggdGhpcyB3b3Jk
-aW5nIGNoYW5nZSwgZ29vZCBwb2ludCENCg0KPiA+ICsJCWlmIChhdG9taWNfbG9uZ19yZWFkKCZz
-Z3hfbnJfdXNlZF9wYWdlcykgPT0gMCkgew0KPiA+ICsJCQlyZXQgPSBzZ3hfdXBkYXRlc3ZuKCk7
-DQo+ID4gKwkJCWlmICghcmV0KSB7DQo+ID4gKwkJCQkvKg0KPiA+ICsJCQkJICogc2d4X3VwZGF0
-ZXN2bigpIHJldHVybmVkIHVua25vd24gZXJyb3IsDQo+IHNtdGgNCj4gPiArCQkJCSAqIG11c3Qg
-YmUgYnJva2VuLCBkbyBub3QgYWxsb2NhdGUgYSBwYWdlDQo+IGZyb20gRVBDDQo+ID4gKwkJCQkg
-Ki8NCj4gDQo+IFN0cmljdGx5IHNwZWFraW5nLCBzZ3hfdXBkYXRlc3ZuKCkgcmV0dXJucyB0cnVl
-IG9yIGZhbHNlLCBidXQgbm90ICJ1bmtub3duDQo+IGVycm9yIi4NCg0KWWVzLCB3aWxsIGZpeCB0
-aGUgd29yZGluZy4gDQoNCj4gDQo+IFJlYWRpbmcgYmVsb3csIGl0IGNvdWxkIGFsc28gZmFpbCBk
-dWUgdG8gcnVubmluZyBvdXQgb2YgZW50cm9weSwgd2hpY2ggaXMgc3RpbGwNCj4gbGVnYWxseSBw
-b3NzaWJsZSB0byBoYXBwZW4gSU1ITy4NCg0KQWN0dWFsbHksIG5vIGluIHRoaXMgY2FzZSwgd2Ug
-b25seSByZXR1cm4gZmFsc2UgZnJvbSBzZ3hfdXBkYXRlc3ZuIGluIGNhc2UgdW5rbm93bg0KZXJy
-b3IgaGFwcGVucyBhcyBhZ3JlZWQgcHJldmlvdXNseS4gSW4gY2FzZSB3ZSBydW4gb3V0IG9mIGVu
-dHJvcHkgaXQgc2hvdWxkIGJlIHNhZmUNCnRvIHJldHJ5IGxhdGVyIGFuZCB3ZSBkb250IHByZXZl
-bnQgcGVyIGN1cnJlbnQgY29kZSBFUEMgcGFnZSBhbGxvY2F0aW9uLiANCg0KPiANCj4gTWF5YmUg
-anVzdDoNCj4gCQkJCS8qDQo+IAkJCQkgKiBVcGRhdGluZyBTVk4gZmFpbGVkLiAgU0dYIG1pZ2h0
-IGJlIGJyb2tlbiwNCj4gCQkJCSAqIG9yIHJ1bm5pbmcgb3V0IG9mIGVudHJvcHkgaGFwcGVuZWQu
-ICBEbw0KPiBub3QNCj4gCQkJCSAqIGFsbG9jYXRlIEVQQyBwYWdlIHNpbmNlIGl0IGlzIG5vdCBz
-YWZlIHRvDQo+IHVzZQ0KPiAJCQkJICogU0dYIGFueW1vcmUgaWYgaXQgd2FzIHRoZSBmb3JtZXIu
-ICBJZiBpdCB3YXMNCj4gCQkJCSAqIGR1ZSB0byBydW5uaW5nIG91dCBvZiBlbnRyb3B5LCB0aGUg
-ZnVydGhlcg0KPiAJCQkJICogY2FsbCBvZiBFUEMgYWxsb2NhdGlvbiB3aWxsIHRyeQ0KPiAJCQkJ
-ICogc2d4X3VwZGF0ZXN2bigpIGFnYWluLg0KPiAJCQkJICovDQoNCkkgYWdyZWUgd2l0aCB0aGlz
-IGV4Y2VwdCB0aGF0IHRoZSBjdXJyZW50IGNvZGUgZG9lc27igJl0IHByZXZlbnQgRVBDIGFsbG9j
-YXRpb24gb24gYW55DQpvdGhlciBlcnJvciByZXR1cm4gdGhhbiB1bmtub3duIGVycm9yLiBUaGUg
-cXVlc3Rpb24gaXMgd2hlbmV2ZXIgd2Ugd2FudCB0bw0KY2hhbmdlIHRoZSBiZWhhdmlvdXIgdG8g
-cmVxdWlyZSBpdD8gDQoNCj4gDQo+ID4gKwkJCQlzcGluX3VubG9jaygmc2d4X2VwY19ldXBkYXRl
-c3ZuX2xvY2spOw0KPiA+ICsJCQkJc3Bpbl91bmxvY2soJm5vZGUtPmxvY2spOw0KPiA+ICsJCQkJ
-cmV0dXJuIE5VTEw7DQo+ID4gKwkJCX0NCj4gPiArCQl9DQo+ID4gKwkJYXRvbWljX2xvbmdfaW5j
-KCZzZ3hfbnJfdXNlZF9wYWdlcyk7DQo+ID4gKwkJc3Bpbl91bmxvY2soJnNneF9lcGNfZXVwZGF0
-ZXN2bl9sb2NrKTsNCj4gPiArCX0NCj4gPiArDQo+ID4gIAlwYWdlID0gbGlzdF9maXJzdF9lbnRy
-eSgmbm9kZS0+ZnJlZV9wYWdlX2xpc3QsIHN0cnVjdCBzZ3hfZXBjX3BhZ2UsDQo+IGxpc3QpOw0K
-PiA+ICAJbGlzdF9kZWxfaW5pdCgmcGFnZS0+bGlzdCk7DQo+ID4gIAlwYWdlLT5mbGFncyA9IDA7
-DQo+ID4NCj4gPiAgCXNwaW5fdW5sb2NrKCZub2RlLT5sb2NrKTsNCj4gPiAtCWF0b21pY19sb25n
-X2luYygmc2d4X25yX3VzZWRfcGFnZXMpOw0KPiA+DQo+ID4gIAlyZXR1cm4gcGFnZTsNCj4gPiAg
-fQ0KPiA+IEBAIC05NzAsMyArOTk3LDU2IEBAIHN0YXRpYyBpbnQgX19pbml0IHNneF9pbml0KHZv
-aWQpDQo+ID4gIH0NCj4gPg0KPiA+ICBkZXZpY2VfaW5pdGNhbGwoc2d4X2luaXQpOw0KPiA+ICsN
-Cj4gPiArLyoqDQo+ID4gKyAqIHNneF91cGRhdGVzdm4oKSAtIElzc3VlIEVOQ0xTW0VVUERBVEVT
-Vk5dDQo+ID4gKyAqIElmIEVQQyBpcyByZWFkeSwgdGhpcyBpbnN0cnVjdGlvbiB3aWxsIHVwZGF0
-ZSBDUFVTVk4gdG8gdGhlIGN1cnJlbnRseQ0KPiANCj4gTm90IHN1cmUgaG93IHRvIGludGVycHJl
-dCAiRVBDIGlzIHJlYWR5Ii4gIEFzc3VtZSBpdCBtZWFucyAiRVBDIGlzIGVtcHR5IiwgaW4NCj4g
-d2hpY2ggY2FzZSBzaG91bGQgd2UganVzdCBzYXkgc28/DQoNClllcywgY29ycmVjdCwgaXQgbWVh
-bnMgRVBDIGlzIGVtcHR5LCB3aWxsIGZpeC4gDQoNCj4gDQo+IEl0IGlzIGNvbnNpc3RlbnQgd2l0
-aCB3aGF0IHNhaWQgaW4gdGhlIGNoYW5nZWxvZyBhbnl3YXkuDQo+IA0KPiA+ICsgKiBsb2FkZWQg
-bWljcm9jb2RlIHVwZGF0ZSBTVk4gYW5kIGdlbmVyYXRlIG5ldyBjcnlwdG9ncmFwaGljIGFzc2V0
-cy4NCj4gPiArICoNCj4gPiArICogUmV0dXJuOg0KPiA+ICsgKiBUcnVlOiBzdWNjZXNzIG9yIEVV
-UERBVEVTVk4gY2FuIGJlIHNhZmVseSByZXRyaWVkIG5leHQgdGltZQ0KPiA+ICsgKiBGYWxzZTog
-VW5leHBlY3RlZCBlcnJvciBvY2N1cnJlZA0KPiANCj4gSG1tLi4gSUlVQyBpdCBjb3VsZCBmYWls
-IHdpdGggcnVubmluZyBvdXQgb2YgZW50cm9weSBidXQgdGhpcyBpcyBzdGlsbCBsZWdhbGx5DQo+
-IHBvc3NpYmxlIHRvIGhhcHBlbi4gIEFuZCBpdCBpcyBzYWZlIHRvIHJldHJ5Lg0KDQpZZXMsIGlu
-IHRoaXMgY2FzZSB3ZSBnZXQgYmFjayBTR1hfSU5TVUZGSUNJRU5UX0VOVFJPUFkgY3VycmVudGx5
-IHdlDQpyZXR1cm4gInRydWUiIGhlcmUgYW5kIGRvIG5vdCBwcmV2ZW50IEVQQyBhbGxvY2F0aW9u
-cyBvZiB0aGUgcGFnZSBpbiB0aGlzDQpjYXNlLCB3aGljaCBtZWFucyB3ZSB3aWxsIHN0YXJ0IHBv
-cHVsYXRlIEVQQyBhbmQgY2FuIG5leHQgdGltZSByZXRyeSBvbmx5DQp3aGVuIEVQQyBpcyBlbXB0
-eSBhZ2Fpbi4gDQoNCj4gDQo+ID4gKyAqLw0KPiA+ICtib29sIHNneF91cGRhdGVzdm4odm9pZCkN
-Cj4gPiArew0KPiA+ICsJaW50IHJldHJ5ID0gMTA7DQo+IA0KPiAiMTAiIGlzIGEgYml0IG91dCBv
-ZiBibHVlLg0KPiANCj4gV2UgY2FuIHVzZSBSRFJBTkRfUkVUUllfTE9PUFMgaW4gPGFzbS9hcmNo
-cmFuZG9tLmg+IGluc3RlYWQ6DQo+IA0KPiAgICNkZWZpbmUgUkRSQU5EX1JFVFJZX0xPT1BTICAg
-ICAgMTANCg0KSSBjYW4gY2hhbmdlIGl0IHRvIHRoaXMgdmFsdWUuIA0KDQo+IA0KPiA+ICsJaW50
-IHJldDsNCj4gPiArDQo+ID4gKwlsb2NrZGVwX2Fzc2VydF9oZWxkKCZzZ3hfZXBjX2V1cGRhdGVz
-dm5fbG9jayk7DQo+ID4gKw0KPiA+ICsJaWYgKCEoY3B1aWRfZWF4KFNHWF9DUFVJRCkgJiBTR1hf
-Q1BVSURfRVVQREFURVNWTikpDQo+ID4gKwkJcmV0dXJuIHRydWU7DQo+ID4gKw0KPiA+ICsJLyoN
-Cj4gPiArCSAqIERvIG5vdCBleGVjdXRlIEVOQ0xTW0VVUERBVEVTVk5dIGlmIHJ1bm5pbmcgaW4g
-YSBWTSBzaW5jZQ0KPiA+ICsJICogbWljcm9jb2RlIHVwZGF0ZXMgYXJlIG9ubHkgbWVhbmluZ2Z1
-bCB0byBiZSBhcHBsaWVkIG9uIHRoZSBob3N0Lg0KPiA+ICsJICovDQo+ID4gKwlpZiAoYm9vdF9j
-cHVfaGFzKFg4Nl9GRUFUVVJFX0hZUEVSVklTT1IpKQ0KPiA+ICsJCXJldHVybiB0cnVlOw0KPiA+
-ICsNCj4gPiArCWRvIHsNCj4gPiArCQlyZXQgPSBfX2V1cGRhdGVzdm4oKTsNCj4gPiArCQlpZiAo
-cmV0ICE9IFNHWF9JTlNVRkZJQ0lFTlRfRU5UUk9QWSkNCj4gPiArCQkJYnJlYWs7DQo+ID4gKw0K
-PiANCj4gVGhlIGJsYW5rIGxpbmUgaGVyZSBpcyBub3QgbmVlZGVkLg0KDQpXaWxsIGZpeA0KDQo+
-IA0KPiA+ICsJfSB3aGlsZSAoLS1yZXRyeSk7DQo+ID4gKw0KPiA+ICsJc3dpdGNoIChyZXQpIHsN
-Cj4gPiArCWNhc2UgMDoNCj4gPiArCQlwcl9pbmZvKCJFVVBEQVRFU1ZOOiBzdWNjZXNzXG4iKTsN
-Cj4gPiArCQlicmVhazsNCj4gPiArCWNhc2UgU0dYX0VQQ19OT1RfUkVBRFk6DQo+ID4gKwljYXNl
-IFNHWF9JTlNVRkZJQ0lFTlRfRU5UUk9QWToNCj4gPiArCWNhc2UgU0dYX0VQQ19QQUdFX0NPTkZM
-SUNUOg0KPiA+ICsJCUVOQ0xTX1dBUk4ocmV0LCAiRVVQREFURVNWTiIpOw0KPiA+ICsJCWJyZWFr
-Ow0KPiANCj4gSSBkb24ndCB0aGluayB3ZSBzaG91bGQgdXNlIEVOQ0xTX1dBUk4oKSBmb3IgU0dY
-X0lOU1VGRklDSUVOVF9FTlRST1BZLA0KPiBzaW5jZQ0KPiBJSVVDIGl0IGlzIHN0aWxsIGxlZ2Fs
-bHkgcG9zc2libGUgdG8gaGFwcGVuIGFmdGVyIHRoZSBhYm92ZSByZXRyeS4NCj4gDQo+IEFsc28s
-IGl0IGRvZXNuJ3Qgc2VlbSBTR1hfRVBDX05PVF9SRUFEWSBhbmQgU0dYX0VQQ19QQUdFX0NPTkZM
-SUNUDQo+IGFyZSBuZWVkZWQNCj4gc2luY2UgSUlVQyB0aGUgb25seSBwb3NzaWJsZSBlcnJvciBp
-cyBvdXQgb2YgZW50cm9weS4NCg0KV2VsbCwgaW4gY2FzZSB3ZSBoYXZlIGEga2VybmVsIGJ1Zywg
-YW5kIHdlIHRoaW5rIEVQQyBpcyBlbXB0eSBhbmQgaXQgaXMgc2FmZQ0KdG8gZXhlY3V0ZSBFVVBE
-QVRFU1ZOLCB3aGlsZSBpdCBpcyBub3QgdGhlIGNhc2UsIHdlIGNhbiBzdGlsbCBnZXQgYmFjayB0
-aGUgDQpTR1hfRVBDX05PVF9SRUFEWSBhbmQgU0dYX0VQQ19QQUdFX0NPTkZMSUNUIGZyb20gSFcs
-IHJpZ2h0PyANCldoaWNoIG1lYW5zIHdlIHByb2JhYmx5IHNob3VsZCB3YXJuIGFib3V0IHN1Y2gg
-YnVnZ3kgY2FzZXMuIA0KQW5kIG1heWJlIHdlIHNob3VsZCBhbHNvIHByZXZlbnQgcGFnZSBhbGxv
-Y2F0aW9uIGZyb20gRVBDIGluIHRoaXMgY2FzZSBhbHNvDQpzaW1pbGFybHkgYXMgZm9yIHVua25v
-d24gZXJyb3I/IA0KDQo+IA0KPiA+ICsJY2FzZSBTR1hfTk9fVVBEQVRFOg0KPiA+ICsJCWJyZWFr
-Ow0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQlFTkNMU19XQVJOKHJldCwgIkVVUERBVEVTVk4iKTsN
-Cj4gPiArCQlyZXR1cm4gZmFsc2U7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIHRydWU7
-DQo+ID4gKw0KPiANCj4gUGxlYXNlIHJlbW92ZSB0aGlzIGJsYW5rIGxpbmUuDQoNClN1cmUsIHRo
-YW5rcyBmb3IgY2F0Y2hpbmchDQoNCj4gDQo+ID4gK30NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94
-ODYva2VybmVsL2NwdS9zZ3gvc2d4LmggYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L3NneC9zZ3guaA0K
-PiA+IGluZGV4IGQyZGFkMjEyNTlhOC4uZDdkNjMxYzk3M2QwIDEwMDY0NA0KPiA+IC0tLSBhL2Fy
-Y2gveDg2L2tlcm5lbC9jcHUvc2d4L3NneC5oDQo+ID4gKysrIGIvYXJjaC94ODYva2VybmVsL2Nw
-dS9zZ3gvc2d4LmgNCj4gPiBAQCAtMTAzLDUgKzEwMyw2IEBAIHN0YXRpYyBpbmxpbmUgaW50IF9f
-aW5pdCBzZ3hfdmVwY19pbml0KHZvaWQpDQo+ID4gICNlbmRpZg0KPiA+DQo+ID4gIHZvaWQgc2d4
-X3VwZGF0ZV9sZXB1YmtleWhhc2godTY0ICpsZXB1YmtleWhhc2gpOw0KPiA+ICtib29sIHNneF91
-cGRhdGVzdm4odm9pZCk7DQo+IA0KPiBTZWVtcyBzZ3hfdXBkYXRlc3ZuKCkgaXMgb25seSBjYWxs
-ZWQgYnkgX19zZ3hfYWxsb2NfZXBjX3BhZ2VfZnJvbV9ub2RlKCkuDQo+IENhbg0KPiBpdCBiZSBt
-YWRlIHN0YXRpYz8NCg0KWWVzLCB3aWxsIGRvLiANCg0K
+Add support for NVIDIA VRS (Voltage Regulator Specification) Power
+Sequencer RTC device driver. This RTC can be used to get/set system
+time, retain system time across boot, wake system from suspend and
+shutdown state.
+
+Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
+---
+ drivers/rtc/Kconfig               |  10 +
+ drivers/rtc/Makefile              |   1 +
+ drivers/rtc/rtc-nvidia-vrs-pseq.c | 559 ++++++++++++++++++++++++++++++
+ 3 files changed, 570 insertions(+)
+ create mode 100644 drivers/rtc/rtc-nvidia-vrs-pseq.c
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 838bdc138ffe..3b6dc27a50af 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -406,6 +406,16 @@ config RTC_DRV_MAX77686
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-max77686.
+ 
++config RTC_DRV_NVVRS_PSEQ
++	tristate "NVIDIA VRS Power Sequencer RTC device"
++	depends on MFD_NVVRS_PSEQ
++	help
++	  If you say yes here you will get support for the battery backed RTC device
++	  of NVIDIA VRS Power Sequencer. The RTC is connected via I2C interface and
++	  supports alarm functionality.
++	  This driver can also be built as a module. If so, the module will be called
++	  rtc-nvidia-vrs-pseq.
++
+ config RTC_DRV_NCT3018Y
+ 	tristate "Nuvoton NCT3018Y"
+ 	depends on OF
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 31473b3276d9..543c5a9fe851 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -119,6 +119,7 @@ obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
+ obj-$(CONFIG_RTC_DRV_GAMECUBE)	+= rtc-gamecube.o
+ obj-$(CONFIG_RTC_DRV_NCT3018Y)	+= rtc-nct3018y.o
+ obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
++obj-$(CONFIG_RTC_DRV_NVVRS_PSEQ)+= rtc-nvidia-vrs-pseq.o
+ obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
+ obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
+ obj-$(CONFIG_RTC_DRV_OPTEE)	+= rtc-optee.o
+diff --git a/drivers/rtc/rtc-nvidia-vrs-pseq.c b/drivers/rtc/rtc-nvidia-vrs-pseq.c
+new file mode 100644
+index 000000000000..1a4194e4edf4
+--- /dev/null
++++ b/drivers/rtc/rtc-nvidia-vrs-pseq.c
+@@ -0,0 +1,559 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++ *
++ * RTC driver for NVIDIA Voltage Regulator Power Sequencer
++ *
++ */
++
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/rtc.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include <linux/of_device.h>
++#include <linux/mfd/nvidia-vrs-pseq.h>
++#include <linux/irqdomain.h>
++#include <linux/regmap.h>
++#include <linux/bits.h>
++
++#define ALARM_RESET_VAL		0xFFFFFFFF /* Alarm reset/disable value */
++#define NVVRS_INT_RTC_INDEX	0	   /* Only one RTC interrupt register */
++#define	REG_LEN_IN_BYTES	4
++
++struct nvvrs_rtc_info {
++	struct device          *dev;
++	struct i2c_client      *client;
++	struct rtc_device      *rtc_dev;
++	struct regmap          *regmap;
++	struct regmap_irq_chip_data *rtc_irq_data;
++	/* Mutex to protect RTC operations */
++	struct mutex           lock;
++	unsigned int           rtc_irq;
++	/* Registers offset to I2C addresses map */
++	const u8               *map;
++	/* RTC IRQ CHIP */
++	const struct regmap_irq_chip *rtc_irq_chip;
++};
++
++/* RTC Registers offsets */
++enum nvvrs_rtc_reg_offset {
++	RTC_T3 = 0,
++	RTC_T2,
++	RTC_T1,
++	RTC_T0,
++	RTC_A3,
++	RTC_A2,
++	RTC_A1,
++	RTC_A0,
++	CTL1_REG,
++	CTL2_REG,
++	RTC_END,
++};
++
++static const struct regmap_irq nvvrs_rtc_irq[] = {
++	REGMAP_IRQ_REG(NVVRS_INT_RTC_INDEX, 0, NVVRS_PSEQ_INT_SRC1_RTC_MASK),
++};
++
++static const struct regmap_irq_chip nvvrs_rtc_irq_chip = {
++	.name	   = "nvvrs-rtc",
++	.status_base    = NVVRS_PSEQ_REG_INT_SRC1,
++	.num_regs       = 1,
++	.irqs	   = nvvrs_rtc_irq,
++	.num_irqs       = ARRAY_SIZE(nvvrs_rtc_irq),
++};
++
++static const u8 rtc_map[RTC_END] = {
++	[RTC_T3] = NVVRS_PSEQ_REG_RTC_T3,
++	[RTC_T2] = NVVRS_PSEQ_REG_RTC_T2,
++	[RTC_T1] = NVVRS_PSEQ_REG_RTC_T1,
++	[RTC_T0] = NVVRS_PSEQ_REG_RTC_T0,
++	[RTC_A3] = NVVRS_PSEQ_REG_RTC_A3,
++	[RTC_A2] = NVVRS_PSEQ_REG_RTC_A2,
++	[RTC_A1] = NVVRS_PSEQ_REG_RTC_A1,
++	[RTC_A0] = NVVRS_PSEQ_REG_RTC_A0,
++	[CTL1_REG]  = NVVRS_PSEQ_REG_CTL_1,
++	[CTL2_REG]  = NVVRS_PSEQ_REG_CTL_2,
++};
++
++static int nvvrs_update_bits(struct nvvrs_rtc_info *info, u8 reg,
++			     u8 mask, u8 value)
++{
++	int ret;
++	u8 val;
++
++	ret = i2c_smbus_read_byte_data(info->client, reg);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read reg:0x%02x ret:(%d)\n",
++			reg, ret);
++		return ret;
++	}
++	val = (u8)ret;
++	val &= ~mask;
++	val |= (value & mask);
++
++	ret = i2c_smbus_write_byte_data(info->client, reg, val);
++	if (ret < 0)
++		dev_err(info->dev, "Failed to write reg:0x%02x val:0x%02x ret:(%d)\n",
++			reg, val, ret);
++
++	return ret;
++}
++
++static int nvvrs_rtc_update_alarm_reg(struct i2c_client *client,
++				      struct nvvrs_rtc_info *info, u8 *time)
++{
++	int ret;
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A3], time[3]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_A3], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A2], time[2]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_A2], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A1], time[1]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_A1], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_A0], time[0]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write alarm reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_A0], ret);
++		goto out;
++	}
++
++out:
++	return ret;
++}
++
++static int nvvrs_rtc_enable_alarm(struct nvvrs_rtc_info *info)
++{
++	int ret;
++
++	/* Set RTC_WAKE bit for autonomous wake from sleep */
++	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
++				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE,
++				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to set RTC_WAKE bit (%d)\n", ret);
++		return ret;
++	}
++
++	/* Set RTC_PU bit for autonomous wake from shutdown */
++	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
++				NVVRS_PSEQ_REG_CTL_2_RTC_PU,
++				NVVRS_PSEQ_REG_CTL_2_RTC_PU);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to set RTC_PU bit (%d)\n", ret);
++		return ret;
++	}
++
++	return ret;
++}
++
++static int nvvrs_rtc_disable_alarm(struct nvvrs_rtc_info *info)
++{
++	struct i2c_client *client = info->client;
++	u8 val[REG_LEN_IN_BYTES];
++	int ret;
++
++	/* Clear RTC_WAKE bit */
++	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
++				NVVRS_PSEQ_REG_CTL_2_RTC_WAKE, 0);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to clear RTC_WAKE bit (%d)\n", ret);
++		goto out;
++	}
++
++	/* Clear RTC_PU bit */
++	ret = nvvrs_update_bits(info, info->map[CTL2_REG],
++				NVVRS_PSEQ_REG_CTL_2_RTC_PU, 0);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to clear RTC_PU bit (%d)\n", ret);
++		goto out;
++	}
++
++	/* Write ALARM_RESET_VAL in RTC Alarm register to disable alarm */
++	val[0] = 0xff;
++	val[1] = 0xff;
++	val[2] = 0xff;
++	val[3] = 0xff;
++
++	ret = nvvrs_rtc_update_alarm_reg(client, info, val);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to disable Alarm (%d)\n", ret);
++		goto out;
++	}
++out:
++	return ret;
++}
++
++static irqreturn_t nvvrs_rtc_irq_handler(int irq, void *data)
++{
++	struct nvvrs_rtc_info *info = data;
++
++	dev_dbg(info->dev, "RTC alarm IRQ: %d\n", irq);
++
++	rtc_update_irq(info->rtc_dev, 1, RTC_IRQF | RTC_AF);
++
++	return IRQ_HANDLED;
++}
++
++static int nvvrs_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	struct i2c_client *client = info->client;
++	time64_t secs = 0;
++	int ret;
++	u8 val;
++
++	mutex_lock(&info->lock);
++
++	/* Multi-byte transfers are not supported with PEC enabled */
++	/* Read MSB first to avoid coherency issues */
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T3]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
++			info->map[RTC_T3], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	secs |= (time64_t)val << 24;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T2]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
++			info->map[RTC_T2], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	secs |= (time64_t)val << 16;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T1]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
++			info->map[RTC_T1], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	secs |= (time64_t)val << 8;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_T0]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read time reg:0x%02x ret:(%d)\n",
++			info->map[RTC_T0], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	secs |= val;
++
++	rtc_time64_to_tm(secs, tm);
++out:
++	mutex_unlock(&info->lock);
++	return ret;
++}
++
++static int nvvrs_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	struct i2c_client *client = info->client;
++	u8 time[REG_LEN_IN_BYTES];
++	time64_t secs;
++	int ret;
++
++	mutex_lock(&info->lock);
++
++	secs = rtc_tm_to_time64(tm);
++	time[0] = secs & 0xff;
++	time[1] = (secs >> 8) & 0xff;
++	time[2] = (secs >> 16) & 0xff;
++	time[3] = (secs >> 24) & 0xff;
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T3], time[3]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_T3], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T2], time[2]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_T2], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T1], time[1]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_T1], ret);
++		goto out;
++	}
++
++	ret = i2c_smbus_write_byte_data(client, info->map[RTC_T0], time[0]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to write time reg: 0x%02x ret:(%d)\n",
++			info->map[RTC_T0], ret);
++		goto out;
++	}
++
++out:
++	mutex_unlock(&info->lock);
++	return ret;
++}
++
++static int nvvrs_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	struct i2c_client *client = info->client;
++	time64_t alarm_val = 0;
++	int ret;
++	u8 val;
++
++	mutex_lock(&info->lock);
++
++	/* Multi-byte transfers are not supported with PEC enabled */
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A3]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
++			info->map[RTC_A3], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	alarm_val |= (time64_t)val << 24;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A2]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
++			info->map[RTC_A2], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	alarm_val |= (time64_t)val << 16;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A1]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
++			info->map[RTC_A1], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	alarm_val |= (time64_t)val << 8;
++
++	ret = i2c_smbus_read_byte_data(client, info->map[RTC_A0]);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to read alarm reg:0x%02x ret:(%d)\n",
++			info->map[RTC_A0], ret);
++		goto out;
++	}
++	val = (u8)ret;
++	alarm_val |= val;
++
++	if (alarm_val == ALARM_RESET_VAL)
++		alrm->enabled = 0;
++	else
++		alrm->enabled = 1;
++
++	rtc_time64_to_tm(alarm_val, &alrm->time);
++out:
++	mutex_unlock(&info->lock);
++	return ret;
++}
++
++static int nvvrs_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	struct i2c_client *client = info->client;
++	u8 time[REG_LEN_IN_BYTES];
++	time64_t secs;
++	int ret;
++
++	mutex_lock(&info->lock);
++
++	ret = nvvrs_rtc_enable_alarm(info);
++	if (ret < 0) {
++		dev_err(info->dev, "Failed to enable alarm! (%d)\n", ret);
++		goto out;
++	}
++
++	secs = rtc_tm_to_time64(&alrm->time);
++	time[0] = secs & 0xff;
++	time[1] = (secs >> 8) & 0xff;
++	time[2] = (secs >> 16) & 0xff;
++	time[3] = (secs >> 24) & 0xff;
++
++	ret = nvvrs_rtc_update_alarm_reg(client, info, time);
++
++	alrm->enabled = 1;
++out:
++	mutex_unlock(&info->lock);
++	return ret;
++}
++
++static int nvvrs_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	int ret = 0;
++
++	mutex_lock(&info->lock);
++	if (enabled)
++		ret = nvvrs_rtc_enable_alarm(info);
++	else
++		ret = nvvrs_rtc_disable_alarm(info);
++
++	mutex_unlock(&info->lock);
++	return ret;
++}
++
++static const struct rtc_class_ops nvvrs_rtc_ops = {
++	.read_time = nvvrs_rtc_read_time,
++	.set_time = nvvrs_rtc_set_time,
++	.read_alarm = nvvrs_rtc_read_alarm,
++	.set_alarm = nvvrs_rtc_set_alarm,
++	.alarm_irq_enable = nvvrs_rtc_alarm_irq_enable,
++};
++
++static int nvvrs_rtc_probe(struct platform_device *pdev)
++{
++	struct nvvrs_rtc_info *info;
++	struct device *parent;
++	struct i2c_client *client;
++	int ret;
++
++	info = devm_kzalloc(&pdev->dev, sizeof(struct nvvrs_rtc_info), GFP_KERNEL);
++	if (!info)
++		return -ENOMEM;
++
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to get irq\n");
++		return ret;
++	}
++	info->rtc_irq = ret;
++
++	mutex_init(&info->lock);
++	info->dev = &pdev->dev;
++	parent = info->dev->parent;
++	client = to_i2c_client(parent);
++	client->flags |= I2C_CLIENT_PEC;
++	i2c_set_clientdata(client, info);
++	info->client = client;
++	info->map = rtc_map;
++	info->rtc_irq_chip = &nvvrs_rtc_irq_chip;
++	platform_set_drvdata(pdev, info);
++
++	/* Initialize regmap */
++	info->regmap = dev_get_regmap(parent, NULL);
++	if (!info->regmap) {
++		dev_err(info->dev, "Failed to get RTC regmap\n");
++		return -ENODEV;
++	}
++
++	/* RTC as a wakeup source */
++	device_init_wakeup(info->dev, 1);
++
++	/* Register RTC device */
++	info->rtc_dev = devm_rtc_device_register(info->dev, "nvvrs-rtc",
++						 &nvvrs_rtc_ops, THIS_MODULE);
++
++	if (IS_ERR(info->rtc_dev)) {
++		ret = PTR_ERR(info->rtc_dev);
++		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
++		return ret;
++	}
++
++	ret = request_threaded_irq(info->rtc_irq, NULL, nvvrs_rtc_irq_handler, 0,
++				   "rtc-alarm", info);
++	if (ret < 0)
++		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
++			info->rtc_irq, ret);
++
++	return ret;
++}
++
++static void nvvrs_rtc_remove(struct platform_device *pdev)
++{
++	struct nvvrs_rtc_info *info = platform_get_drvdata(pdev);
++
++	free_irq(info->rtc_irq, info);
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int nvvrs_rtc_suspend(struct device *dev)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	int ret = 0;
++
++	if (device_may_wakeup(dev)) {
++		/* Set RTC_WAKE bit for auto wake system from suspend state */
++		ret = nvvrs_update_bits(info, info->map[CTL2_REG],
++					NVVRS_PSEQ_REG_CTL_2_RTC_WAKE,
++					NVVRS_PSEQ_REG_CTL_2_RTC_WAKE);
++		if (ret < 0) {
++			dev_err(info->dev, "Failed to set RTC_WAKE bit (%d)\n", ret);
++			return ret;
++		}
++
++		ret = enable_irq_wake(info->rtc_irq);
++	}
++
++	return ret;
++}
++
++static int nvvrs_rtc_resume(struct device *dev)
++{
++	struct nvvrs_rtc_info *info = dev_get_drvdata(dev);
++	int ret;
++
++	if (device_may_wakeup(dev)) {
++		/* Clear FORCE_ACT bit */
++		ret = nvvrs_update_bits(info, info->map[CTL1_REG],
++					NVVRS_PSEQ_REG_CTL_1_FORCE_ACT, 0);
++		if (ret < 0) {
++			dev_err(info->dev, "Failed to clear FORCE_ACT bit (%d)\n", ret);
++			return ret;
++		}
++
++		return disable_irq_wake(info->rtc_irq);
++	}
++
++	return 0;
++}
++
++#endif
++static SIMPLE_DEV_PM_OPS(nvvrs_rtc_pm_ops, nvvrs_rtc_suspend, nvvrs_rtc_resume);
++
++static const struct platform_device_id nvvrs_rtc_id[] = {
++	{ "nvvrs-pseq-rtc", },
++	{ },
++};
++MODULE_DEVICE_TABLE(platform, nvvrs_rtc_id);
++
++static struct platform_driver nvvrs_rtc_driver = {
++	.driver		= {
++		.name   = "nvvrs-pseq-rtc",
++		.pm     = &nvvrs_rtc_pm_ops,
++	},
++	.probe		= nvvrs_rtc_probe,
++	.remove	        = nvvrs_rtc_remove,
++	.id_table       = nvvrs_rtc_id,
++};
++
++module_platform_driver(nvvrs_rtc_driver);
++
++MODULE_AUTHOR("Shubhi Garg <shgarg@nvidia.com>");
++MODULE_DESCRIPTION("NVVRS PSEQ RTC driver");
++MODULE_LICENSE("GPL");
+-- 
+2.25.1
+
