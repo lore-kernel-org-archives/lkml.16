@@ -1,108 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABF63770B;
-	Wed, 16 Apr 2025 04:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1D419F438;
+	Wed, 16 Apr 2025 04:25:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744777368; cv=none; b=LRCViPQ301qVvYd3mP6qJK3+bWELsP2k//D6ZBn4K+7JW/NWUIrBQZM5AEthg+vi8OSqqhEDfTewZySsQAnNRekmdjZGImYMpANAOmJmHVsrgM7sAQcJnzt7DI5cU3O7n6lQ0x4V0ejgiNyreBtYC4Dr9w3ZnbWS6jq6p4KIpZA=
+	t=1744777557; cv=none; b=W1+MLLCcb5Xe5MMui41kO8gxrNQP+DaBYwCN3GTXV2TkibvFZ8UmxgpYWCmFrTSPszrvaFy1gSPhie+tsZ7rNB6yWMHjarwLgYO1U0hUO2CLfQ37mmNjaCpVmO2C1ci+LMWS1/PCYbMc7YhcMbKuaURCZb6rqDSyC79Ozyme1Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744777368; c=relaxed/simple;
-	bh=3RmdSg1acgBWHcthy8B5t5dbHXmX/REZag6c65kMXW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LhcbPYu096QLuiBiRmqKLswuFQBMKa+4FUFmmDa2yj8+MjKRrRpjWJulm/lT7GpQlnBlTYr0NKiQkCCChUMX0Oiur3MWjo+hCfADZ2um/Kw1m8YoC2ybkVCAPv10/nNQcaA8ehv/zwwSLYPwc7yybC/iSw1mfLbxFuQob4yVyXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkdQwc1F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744777557; c=relaxed/simple;
+	bh=mYG/+R348tZd+dJ2HFrDs46wncUZ9D5vvhSOn3amrJw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PDZ+6FEw+I5URc44Top35V2FtBFgIO1WaKXOxVfZy1rbJZyq9h+wxgYZICQ6UUACD+sLnb22Hh3hfFvrp+6i0UBX5kpsyMf9KZA/QUmpzXN+QTdDstqzLxSSZttQ58AlJ5qCc/U1T5Rxufb21lQH3QAeRQ+V3UKHEWt8Ipe3F2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peMo47u0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkdQwc1F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA28FC4CEE2;
-	Wed, 16 Apr 2025 04:22:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peMo47u0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3643FC4CEE2;
+	Wed, 16 Apr 2025 04:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744777368;
-	bh=3RmdSg1acgBWHcthy8B5t5dbHXmX/REZag6c65kMXW4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UkdQwc1Fmvba1Wspd9jdzQ2KmDelPjQWhkmjyxUmnOco58avHSKVM//mq0oyUQVGa
-	 I3AvPpyntF4thadK61prSqJLoS48f/7bHQS91xC4PaGEfAeuFtMAW2py6BIeOvtzU1
-	 z+WXkJ3ZKjLpN5VhcCVhln9/Yc/7KxYZndQqWV031pE4WruGvbLDYJw9MrF3rJBBs8
-	 iNExIFCFhHG5Ufc1Dqak56ssMlviFVv3ubuhcRW6F7Oin8BiWvwFiH7Bas7ujdOPlA
-	 /82UcJ8vm47OYTABaUbqoxxyu6reU1hmpqf4vyXr4OWgFx5PFimeSeUZuh6PVoFufL
-	 Vut2aDp1ibVBA==
-Message-ID: <bef003a2-1a20-4d4e-8ae8-31a38b5799b1@kernel.org>
-Date: Wed, 16 Apr 2025 06:22:45 +0200
+	s=k20201202; t=1744777556;
+	bh=mYG/+R348tZd+dJ2HFrDs46wncUZ9D5vvhSOn3amrJw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=peMo47u0ongXhI2+Hi541Qw7tSxccSBkOVAeh67fLXCVzr/iNluYMxIZGJz/iVFCu
+	 Si+QN4paJgvp/bEYcGiq7N/ceZFKuCL0DACO1UgSgoHl/NkJZBjGJw12tiq4IgJKMS
+	 IUg+1kt1lSRocJ4lyuuNTSeNiAMb80bVpLWHWxgF1Qbclp555WZyrF5ts/nxiGxkGR
+	 eudUeXvyRSnCXf+pF/8j2iF2yrB71Vhqq8DDxZFpuba0Vt3VAc013AkEAvZwAaITqQ
+	 sgW1GuPN3P0rcou8PF3Sph83uqR4IvU2f9SIa/Me6wXIenq+qg6p4YwykWYcIlXMcW
+	 t5RjkSfNoV6hQ==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Ze Zuo <zuoze1@huawei.com>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH 00/10] mm/damon: support address space larger than damon-core address space
+Date: Tue, 15 Apr 2025 21:25:41 -0700
+Message-Id: <20250416042551.158131-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/13] vt: use new tables in ucs.c
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415192212.33949-1-nico@fluxnic.net>
- <20250415192212.33949-7-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250415192212.33949-7-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15. 04. 25, 21:17, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
-> 
-> This removes the table from ucs.c and substitutes the generated tables
-> from ucs_width_table.h providing comprehensive ranges for double-width
-> and zero-width Unicode code points.
-> 
-> Also implements ucs_is_zero_width() to query the new zero-width table.
-> 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+DAMON core layer has its own address space that uses 'unsigned long' for
+handling addresses.  The underlying DAMON operations set implementation
+translates the core layer address to the real address space that it is
+working for.   For example, vaddr and fvaddr translates the core layer
+addresses to virtual addresses.
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+However, all operations set layer simply assumes the core layer address
+will be same to those for the given address space.  Since the core layer
+address uses 'unsigned long', it is ok for virtual addresses.  In case
+of physical address space, however, there can be some cases where
+'unsigned long' cannot handle whole address.  For example, 32bit arm
+machines with large physical address extension (LPAE) is such a case[1].
+Arm with LPAE is the only reported use case, but similar cases could
+happen in future.
 
+Add a new core layer parameter called 'addr_unit'.  Operations set layer
+can translate a core layer address to the real address by multiplying
+the parameter value to the core layer address.  Support of the parameter
+is up to each operations layer implementation, though.  For example,
+operations set implementations for virtual address space can simply
+ignore the parameter.  Add the support on paddr, which is the DAMON
+operations set implementation for the physical address space, as we have
+a clear use case for that.
+
+Patches Sequence
+================
+
+The first patch implements the new parameter on DAMON kernel API.
+
+Following five patches (patch 2-6) incrementally add support of the new
+parameter on paddr operations set, for monitoring operations and DAMOS
+operations for each DAMOS actions.
+
+The seventh patch implements DAMON sysfs ABI for letting users control
+the parameter.
+
+Final three patches (patches 8-10) documents the new ABI on design,
+usage, and ABI documents, respectively.
+
+[1] https://lore.kernel.org/20250408075553.959388-1-zuoze1@huawei.com
+
+SeongJae Park (10):
+  mm/damon/core: add damon_ctx->addr_unit
+  mm/damon/paddr: support addr_unit for access monitoring
+  mm/damon/paddr: support addr_unit for DAMOS_PAGEOUT
+  mm/damon/paddr: support addr_unit for DAMOS_LRU_[DE]PRIO
+  mm/damon/paddr: support addr_unit for MIGRATE_{HOT,COLD}
+  mm/damon/paddr: support addr_unit for DAMOS_STAT
+  mm/damon/sysfs: implement addr_unit file under context dir
+  Docs/mm/damon/design: document 'address unit' parameter
+  Docs/admin-guide/mm/damon/usage: document addr_unit file
+  Docs/ABI/damon: document addr_unit file
+
+ .../ABI/testing/sysfs-kernel-mm-damon         |  7 ++
+ Documentation/admin-guide/mm/damon/usage.rst  | 11 ++-
+ Documentation/mm/damon/design.rst             | 16 +++-
+ include/linux/damon.h                         |  2 +
+ mm/damon/core.c                               |  3 +
+ mm/damon/paddr.c                              | 95 ++++++++++++-------
+ mm/damon/sysfs.c                              | 26 +++++
+ 7 files changed, 119 insertions(+), 41 deletions(-)
+
+
+base-commit: b32e0b4ccfbe176a541e7feee0cdaebb957738e7
 -- 
-js
-suse labs
+2.39.5
