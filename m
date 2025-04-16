@@ -1,123 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9726C189B9D;
-	Wed, 16 Apr 2025 07:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2648E22F384;
+	Wed, 16 Apr 2025 07:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789919; cv=none; b=Nkl8+HoFcB8bMqDo0iS+It4gIAgoebvBOEK9ST3KpsLZAdeO95GkWfrsQlgrKN7L43wtO34mQgmVdG8sWqj8OBaz2upxBpi/7S2o0r1Gq7nlQzkMLibBhQBnkfz/Ns7r+YlvwW3BAaakYknZFUnw0vWj7Srzt1pUnIBDz9koZt0=
+	t=1744789921; cv=none; b=bJSm8MHRcDD9BSsh5K7hJ2Tor9JJkK/rswkIvVzVDn5Oqie1Zkm1GvUZPP0ST0aAHIF8XTKany5q3sj0j/brolggo3Gb7j9XWFdjK5rL3YzEqjYyoraJ76/WciGK6nPgen5WUr642B9V6AQkf91FUN1x3TKakGF56nu44aLiO6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789919; c=relaxed/simple;
-	bh=iLOvCfHAlkl2qqlJ2x0ADYafFrSh4AKEbA4z06zylDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JT2SlWTkFl+7Z0e1tsU29H9NyjwxLvJLCzq1TiB0cptbf0RTKxE09tUtoQ7jhigW2vrYYcLicjN1cXq2dqRCnXtsbFRTTwMYgodeIMKILxQ3eZSI8cgdzavrHeqSHhYuDIzFbq1VxsKZgfVnadni693y0qrm1Lz/rBj4WKrU9gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6ESEMQL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744789921; c=relaxed/simple;
+	bh=uCBqYnlccBn6kD323ztcCaCIgVoqGL0ZzE2xDvyMfVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s9tPXLfd6kBaL3+c6BsRW69ilaZvAmyHolCbdMasueJbqyid0CNSqRFkIoH1Z0bnrMC1v5SssMb4l3lGwPcJVH/Ok8ogJ/j+N+CsfHqvGq6lIV9zcLPULGtDzT9LApfXQPEVh+TwlnnwhClR/xvSgf07Rb4yJ2FNC4A13eUuJ5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyV9XH/9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6ESEMQL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D5EC4CEE9;
-	Wed, 16 Apr 2025 07:51:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyV9XH/9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 368E2C4CEE2;
+	Wed, 16 Apr 2025 07:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744789919;
-	bh=iLOvCfHAlkl2qqlJ2x0ADYafFrSh4AKEbA4z06zylDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V6ESEMQLt+0taO4/Ie3NZ0+cQyX6mhGocswhyaFyACEDvXDIzhQGzVKIZFdWfr+54
-	 AJYH/jMu7t1K5H1Ajgo7XDOjV/lITEXcrzttJagShpyrQSXK4ZkH2XZDcAX5SFOcbU
-	 2+HZpqxN9gyfWKnxqyS6+7H3XwjPSQOTHcpa87GFIoFaCgBO5t3UDuUdouG3REE93g
-	 x+cd/NSh3FQAFdx4K+xqqj7syyG9js7QC2QUmmeH1eAus8LE3JGvICdMkZ6W5vQt+y
-	 ztoellq8oR4pUh2xuhvYn0MGroaTPgpbRoUbvmnlNkxrJAO4m1bZL+hcOFv8rfGIVQ
-	 2PAw602YCZq7w==
-Date: Wed, 16 Apr 2025 09:51:53 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-tip-commits@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Davide Ciminaghi <ciminaghi@gnudd.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [tip: x86/urgent] x86/e820: Discard high memory that can't be
- addressed by 32-bit systems
-Message-ID: <Z_9hmdMTP3wpB3Cc@gmail.com>
-References: <20250413080858.743221-1-rppt@kernel.org>
- <174453620439.31282.5525507256376485910.tip-bot2@tip-bot2>
- <a641e123-be70-41ab-b0ce-6710d7fd0c2d@intel.com>
- <Z_4ISTuGo8VmZt9X@kernel.org>
- <c811f662-79fd-4db1-b4e1-74a869d9a4f1@intel.com>
- <Z_9ZblhCgEeTgGQ8@gmail.com>
+	s=k20201202; t=1744789920;
+	bh=uCBqYnlccBn6kD323ztcCaCIgVoqGL0ZzE2xDvyMfVY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pyV9XH/929pKCUtu/jzo5+kbsxbegrQPoHoJP9O88jdotRKNaWxzO7m2X2oWUUnl5
+	 YjXPNJsV1ZINr+le6HrIAFssc3MvMMmR6HUbk/dxFIZ34iS9fg7GE5N4XwHrBxypZy
+	 OJ8KmruYUYNwuMAndxSlUIpk8zaahjjfcNQL/oTwW6VkvutoPHLLbaN6fKg4tOB+TH
+	 zLVEySWQ+erOoB+bzKjf53wuI5BV0FCBpgft6oQ2LxV3BguSSPv7TTaQIi3mGCJf+V
+	 R2l18Py0xg/PTe7jly2q2Z6dpfNpBgb+HjUxzxVTLQDLciecbf0QIoQZqpUaT1ZC2n
+	 Jh6BPglevroqQ==
+Date: Wed, 16 Apr 2025 15:51:41 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
+ <corbet@lwn.net>, David Airlie <airlied@gmail.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <20250416155141.7aa05bb8@sal.lan>
+In-Reply-To: <Z_9asBKQ_9DGOH2g@smile.fi.intel.com>
+References: <cover.1744786420.git.mchehab+huawei@kernel.org>
+	<432f17b785d35122753d4b210874d78ee84e1bb5.1744786420.git.mchehab+huawei@kernel.org>
+	<Z_9asBKQ_9DGOH2g@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_9ZblhCgEeTgGQ8@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Em Wed, 16 Apr 2025 10:22:24 +0300
+Andy Shevchenko <andriy.shevchenko@intel.com> escreveu:
 
-* Ingo Molnar <mingo@kernel.org> wrote:
-
-> 
-> * Dave Hansen <dave.hansen@intel.com> wrote:
-> 
-> > On 4/15/25 00:18, Mike Rapoport wrote:
-> > >> How about we reuse 'MAX_NONPAE_PFN' like this:
-> > >>
-> > >> 	if (IS_ENABLED(CONFIG_X86_32))
-> > >> 		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
-> > >>
-> > >> Would that make the connection more obvious?
-> > > Yes, that's better. Here's the updated patch:
+> On Wed, Apr 16, 2025 at 02:57:38PM +0800, Mauro Carvalho Chehab wrote:
+> > As reported by Andy, kernel-doc.py is creating a __pycache__
+> > directory at build time.
 > > 
-> > Looks, great. Thanks for the update and the quick turnaround on the
-> > first one after the bug report!
-> > 
-> > Tested-by: Dave Hansen <dave.hansen@intel.com>
-> > Acked-by: Dave Hansen <dave.hansen@intel.com>
+> > Disable creation of __pycache__ for the libraries used by
+> > kernel-doc.py, when excecuted via the build system or via
+> > scripts/find-unused-docs.sh.  
 > 
-> I've amended the fix in tip:x86/urgent accordingly and added your tags, 
-> thanks!
+> Nope, still have it.
+> 
+> I used today's Linux Next with some local code patches (unrelated
+> to any scripts or kernel doc or python).
+> 
+> To confirm, I even done again a clean build.
+> 
 
-So I had to apply the fix below as well, due to this build failure on 
-x86-defconfig:
+There were one missing place.
 
-  arch/x86/kernel/e820.c:1307:42: error: ‘MAX_NONPAE_PFN’ undeclared (first use in this function); did you mean ‘MAX_DMA_PFN’?
+Sent a v3. Please test.
 
-IS_ENABLED(CONFIG_X86_32) can only be used when the code is 
-syntactically correct on !CONFIG_X86_32 kernels too - which it wasn't.
-
-So I went for the straightforward #ifdef block instead.
-
-Thanks,
-
-	Ingo
-
-===========>
- arch/x86/kernel/e820.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index de6238886cb2..c984be8ee060 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1299,13 +1299,14 @@ void __init e820__memblock_setup(void)
- 		memblock_add(entry->addr, entry->size);
- 	}
- 
-+#ifdef CONFIG_X86_32
- 	/*
- 	 * Discard memory above 4GB because 32-bit systems are limited to 4GB
- 	 * of memory even with HIGHMEM.
- 	 */
--	if (IS_ENABLED(CONFIG_X86_32))
--		memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
-+	memblock_remove(PFN_PHYS(MAX_NONPAE_PFN), -1);
-+#endif
- 
- 	/* Throw away partial pages: */
- 	memblock_trim_memory(PAGE_SIZE);
+Regards,
+Mauro
