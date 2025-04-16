@@ -1,94 +1,114 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C654651C5A;
-	Wed, 16 Apr 2025 12:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1502184E;
+	Wed, 16 Apr 2025 12:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808107; cv=none; b=dgoFXwhAqWes/JWovCM2JpkJs74lULEY8x1w3xtxsM6IMG1/oMUKTpbYruy0hLHWlTWIS81mj6fxOEdOnogmrgDjI51Om/dkBk3KOfAflCFaX6yLjejSDfKkSORQdHcYPtnaqed0ie7l3LxwosyDvY6pH2mZVlZpnSOt7fg2wlU=
+	t=1744808200; cv=none; b=o10pV+mcBeH8P8GxE8T2AB9gHntnY7E0NuoHsjQ//DWTWkv/1+La8krIZP6pQo5v3NJElNSbHX1n29J4Rc4qNKhE8oJMJv1rDuT8fLvjGT2EYU7wvhXPXw5qkB9OuEW6qXA5UcZ3kLYD/d+xar1At2ntx/pHtHczoHLjstTdeR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808107; c=relaxed/simple;
-	bh=J3UlWU4kVp1jeLMLUUcSRNVHxNYnSaTzuq9vMvYpi9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=naseTvRrfjH297+CkYNkXlPCfm5MWH41627txvb4YVdfP/N7zZafirzpYhn8Rv/RQaTkWgg0P6efyXFib7BHVi6kyvgvbY0f5H+sBtwLUiMUUNJY3K5WaCNBC970ymkvTWPtlaWmsnIVwODAHXcpz093GZwnFDtltkdRZh/lip8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Blxg+T3i; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744808200; c=relaxed/simple;
+	bh=uX3O87AWZPxfZkORO3W8nePdskRN+Rjv+6WspIrqadg=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=sbvCzbI3slP1mYTuPmm2xv91QeWfnKVe2qTY2y/rGX+LV4YVWPoxpTvSg3aL+P7TXThjNjD3YiPwHfwwmOJRcjhaX5yW3PcpG3TOo+VrC++iPlRYuB2ikyhmwiUbhlWQ/UxJKVsPr8CSCXPpOZKZZrJ/oeFYsdcVftF6xJ4GhmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HSjPNwEZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aHwSIA/m; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Blxg+T3i"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A725543B1C;
-	Wed, 16 Apr 2025 12:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744808097;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WByd2mJP1+KNt1V0a0T6t7/su5eUb2ZhTX1kkFHvsPE=;
-	b=Blxg+T3iMKuswhkX7sv8uL4jGQsbtOzWUdfe6DqzanNWLfyfssnGokOBOrwCKGFmUeZTtS
-	Zd3Vd1PnLvZOs54Vcms5+g1UwqoPE9CNg+v78ZAbbsqlz5FXr5fWtaoWwksedK0QnVNyRN
-	fim2PIaicLyP3Omk5AZBAMRf/YrjiL38yCMsbJHQyuoLdfwsrAEcoQ/rD+wJpfRFT43Ngc
-	+NiKyfCfqehG+UKYXR5j1cj3hYzrkScmuxJnhErPm+npa3zF9qFoWHiTCcs9uaDdr/mjdQ
-	xd2bRRMinXJKCDGOI4OapoVsPgvNKFzeblhhLOFLP3SPCTzEWdbSRIKzZY6tPQ==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Russell King <linux@armlinux.org.uk>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCH net] MAINTAINERS: Add entry for Socfpga DWMAC ethernet glue driver
-Date: Wed, 16 Apr 2025 14:54:48 +0200
-Message-ID: <20250416125453.306029-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HSjPNwEZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aHwSIA/m"
+Date: Wed, 16 Apr 2025 12:56:32 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744808197;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2dWZBf1NHWVJPeEDkpar49IOCkSHszrPGKrNxrFs4o=;
+	b=HSjPNwEZL26KED+0zayVcbOPthKjiVqxtYAFNzWmjHQgFMCLR+xy81EQFPilliUZX8BNE8
+	ORU7K/sjhNDnd6bJdxCK2Wd/T+xoKHFCcOUSLKvGUWrxtoiqcNQwJV4ONBe+OZQQNxAMBO
+	/gD/OLysfXJTtTv2Y47BtxLVjeZx7VIcDOJrlpFu+Fnt++ykLxx5UkfqBoCNK81M6GRkKQ
+	KrN75kYVdkC0K0he3xzPfeaVqLhTabfDUldJHtmwQuK+/a/fkORA2cO654cAwEAYwQRtYc
+	vZ+p/rDmFjBUXNYvbV4vBJZxAb82IboO9Gsh3muujG7B57HeDPv23iy0ylurMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744808197;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A2dWZBf1NHWVJPeEDkpar49IOCkSHszrPGKrNxrFs4o=;
+	b=aHwSIA/mfEgVl1TUHHGOGdNtlFtWnLYjgb0ifs0B87OyQCuPBUP2nkQkFpfn9qwjdRftUk
+	IGU+j3CSsBmH6hAA==
+From: "tip-bot2 for Peter Robinson" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/irq-bcm2712-mip: Enable driver when
+ ARCH_BCM2835 is enabled
+Cc: Peter Robinson <pbrobinson@gmail.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250416082523.179507-1-pbrobinson@gmail.com>
+References: <20250416082523.179507-1-pbrobinson@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepk
- hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Message-ID: <174480819279.31282.1393797277803876115.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Socfpga's DWMAC glue comes in a variety of flavours with multiple
-options when it comes to physical interfaces, making it not so easy to
-test. Having access to a Cyclone5 with RGMII as well as Lynx PCS
-variants, add myself as a maintainer to help with reviews and testing.
+The following commit has been merged into the irq/urgent branch of tip:
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Commit-ID:     9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24
+Gitweb:        https://git.kernel.org/tip/9b3ae50cb902322a2b5922b9fcf8132d9b4c2a24
+Author:        Peter Robinson <pbrobinson@gmail.com>
+AuthorDate:    Wed, 16 Apr 2025 09:25:17 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 16 Apr 2025 14:39:25 +02:00
+
+irqchip/irq-bcm2712-mip: Enable driver when ARCH_BCM2835 is enabled
+
+The BCM2712 MIP driver is required for Raspberry PI5, but it's not
+automatically enabled when ARCH_BCM2835 is enabled and depends on
+ARCH_BRCMSTB.
+
+ARCH_BCM2835 shares drivers with ARCH_BRCMSTB platforms, but Raspberry PI5
+does not require the BRCMSTB specific drivers, which are selected via
+ARCH_BRCMSTB.
+
+Enable the interrupt controller for both ARCH_BRCMSTB and ARCH_BCM2835.
+
+[ tglx: Massage changelog ]
+
+Fixes: 32c6c054661a ("irqchip: Add Broadcom BCM2712 MSI-X interrupt controller")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250416082523.179507-1-pbrobinson@gmail.com
 ---
-Hopefully I'll get the chance to convert the binding to .yaml at some
-point, but I don't have the bandwith for that yet...
+ drivers/irqchip/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c409f504e94b..50524d16abff 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3191,6 +3191,12 @@ M:	Dinh Nguyen <dinguyen@kernel.org>
- S:	Maintained
- F:	drivers/clk/socfpga/
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index cec05e4..08bb3b0 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -114,8 +114,8 @@ config I8259
  
-+ARM/SOCFPGA DWMAC GLUE LAYER
-+M:	Maxime Chevallier <maxime.chevallier@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+F:	drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+
- ARM/SOCFPGA EDAC BINDINGS
- M:	Matthew Gerlach <matthew.gerlach@altera.com>
- S:	Maintained
--- 
-2.49.0
-
+ config BCM2712_MIP
+ 	tristate "Broadcom BCM2712 MSI-X Interrupt Peripheral support"
+-	depends on ARCH_BRCMSTB || COMPILE_TEST
+-	default m if ARCH_BRCMSTB
++	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
++	default m if ARCH_BRCMSTB || ARCH_BCM2835
+ 	depends on ARM_GIC
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN_HIERARCHY
