@@ -1,81 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8A81C4A10
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE491DDC1A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744814394; cv=none; b=rt1n2GHtZ3IeN8dcn1ZMnxa6SFuLmi5FsUMBh7xVRtEkMqtrHQ+6nvHyW5XDlsaaGkM9yGmM/XFeZJb2QCdmNVrdfQRZIL5gD0dQVDItfZ1xv9SUgs9il2Hjb5vbl0BRt/jSMYs3+3OOZOY3WjTZ+fUMxwySGRmxkJCN0O0Fs8Q=
+	t=1744814448; cv=none; b=G6q1DKW9dKV7Lx67Cdfn6eJH+dVCkVCuaLbLDVy6nYepxziwkUebxr9mA3IgRguGSxcY3LmHPYZe/LQ1x2eAzvjJKSzMgWJsU1aky4CKDJrBnpOrXzKGJEnq/88Oo6rXhG9MG1kGgnq47ZQ4/vvf7BC9gnhOAAWXLoF81V8ALik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744814394; c=relaxed/simple;
-	bh=NyZp/p3u2cqQ86sFlG7CkAc5YLzn/UsQ8tCS7qoyq5Y=;
+	s=arc-20240116; t=1744814448; c=relaxed/simple;
+	bh=LlSof9T7ik9gf9n0oMjYZlsp6af6FKP0YulqfG9qtzU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K7jsiARA3NnedpZ4x+SOVcpN1OjU5AgL5cN4Y90YWSrbJTnvD3zeSb6e772DxMDPuMaP8ymzuTJPMqlwqw+HrO019r23BWYNNZPGDp2SapuKnnuXoEcMPeiA4LOOXtGVrx0S0CyIiQhs61vsa7chEzoK3PfrSRM0PqYWbnhqKJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AryvKFhi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Dpf65gFj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=AryvKFhi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Dpf65gFj; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:Content-Type; b=sgZbP6o1aLv9ZFSEQvmsd47TA0fRtJFDhIHt3wttCE3VyGDQswfCtNcmVWBHMrvCRCb6d+TuC6V0Vol9iSp92nskhJGUNbc27va0NR7BfjLi1e27ZcoKQO5ETGVW7/hDtemV+JjbiNg/RscAFOc5/DWIxtgZ8rZQEqzxGx/ryK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OHhcSz9G; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IO7xzOke; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OHhcSz9G; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=IO7xzOke; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AryvKFhi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Dpf65gFj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="AryvKFhi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Dpf65gFj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OHhcSz9G";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IO7xzOke";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OHhcSz9G";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="IO7xzOke"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C47941F6E6;
-	Wed, 16 Apr 2025 14:39:50 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6D04A21134;
+	Wed, 16 Apr 2025 14:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744814390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1744814444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RLi331sN5ip6RGEh/ki6qgktOXffAwJ91DpfOXL038w=;
-	b=AryvKFhitmo9kIsFuEaJ+YZkL3oFlpwFgazpBWpuW25HgCApUNGbdNoLpsQfI7CWgv5Tk3
-	lXtqjTWMBRQ94eD27QgQRX09Mrezbfxqe97WvWvgirlkr6NiVj/Vjmp6eoxAKmvyhGikJ/
-	QqcNKQzUeas2j8cAnzoyTKqZuD+zru0=
+	bh=+HWystX7c8kYn5ynSfBxkhfZbbNgIK7hEFRP0uVGa2s=;
+	b=OHhcSz9GO5BZbX4a673DLXKlfs8XN2SYWa5JZcADTJdWjPhR462cKS2cRuc2l93OQ3deVU
+	5+rJl3Pyl/h8q2JwbfQJoBUqCkT8pKybFaef/45IwWCHLcGqZSRV1j5frkjJ/2qsLBdwb8
+	oAnQDkkSx4vaBQXtAd4sSCnAXycino4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744814390;
+	s=susede2_ed25519; t=1744814444;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RLi331sN5ip6RGEh/ki6qgktOXffAwJ91DpfOXL038w=;
-	b=Dpf65gFj15PgpFO3N3gkjTIErz92k9TrTi5aM5179k0Th0QDJnBbDvxLRHKeqJs6SVtl37
-	gp5XsqiJ+AXwauCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=AryvKFhi;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=Dpf65gFj
+	bh=+HWystX7c8kYn5ynSfBxkhfZbbNgIK7hEFRP0uVGa2s=;
+	b=IO7xzOkem5IGLr6h8EmL8wAtElo+fVqZhUROYJ4JOZQ+NyZhoYXmVMQmTZGGJCo0SVe4/n
+	wOguomPfgeMGHnAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744814390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1744814444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RLi331sN5ip6RGEh/ki6qgktOXffAwJ91DpfOXL038w=;
-	b=AryvKFhitmo9kIsFuEaJ+YZkL3oFlpwFgazpBWpuW25HgCApUNGbdNoLpsQfI7CWgv5Tk3
-	lXtqjTWMBRQ94eD27QgQRX09Mrezbfxqe97WvWvgirlkr6NiVj/Vjmp6eoxAKmvyhGikJ/
-	QqcNKQzUeas2j8cAnzoyTKqZuD+zru0=
+	bh=+HWystX7c8kYn5ynSfBxkhfZbbNgIK7hEFRP0uVGa2s=;
+	b=OHhcSz9GO5BZbX4a673DLXKlfs8XN2SYWa5JZcADTJdWjPhR462cKS2cRuc2l93OQ3deVU
+	5+rJl3Pyl/h8q2JwbfQJoBUqCkT8pKybFaef/45IwWCHLcGqZSRV1j5frkjJ/2qsLBdwb8
+	oAnQDkkSx4vaBQXtAd4sSCnAXycino4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744814390;
+	s=susede2_ed25519; t=1744814444;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RLi331sN5ip6RGEh/ki6qgktOXffAwJ91DpfOXL038w=;
-	b=Dpf65gFj15PgpFO3N3gkjTIErz92k9TrTi5aM5179k0Th0QDJnBbDvxLRHKeqJs6SVtl37
-	gp5XsqiJ+AXwauCQ==
+	bh=+HWystX7c8kYn5ynSfBxkhfZbbNgIK7hEFRP0uVGa2s=;
+	b=IO7xzOkem5IGLr6h8EmL8wAtElo+fVqZhUROYJ4JOZQ+NyZhoYXmVMQmTZGGJCo0SVe4/n
+	wOguomPfgeMGHnAg==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ADB39139A1;
-	Wed, 16 Apr 2025 14:39:50 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 57CAA139A1;
+	Wed, 16 Apr 2025 14:40:44 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id BcsVKjbB/2e5UQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 16 Apr 2025 14:39:50 +0000
-Message-ID: <4782b071-6008-4fd1-b762-65a575dc333a@suse.cz>
-Date: Wed, 16 Apr 2025 16:39:50 +0200
+	id l+sYFWzB/2cCUgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 16 Apr 2025 14:40:44 +0000
+Message-ID: <23311d9f-ca6f-4dbe-a24d-a5ef244173d2@suse.cz>
+Date: Wed, 16 Apr 2025 16:40:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,8 +82,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm: move mmap/vma locking logic into specific
- files
+Subject: Re: [PATCH v2 2/2] MAINTAINERS: add section for locking of mm's and
+ VMAs
 Content-Language: en-US
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
  Andrew Morton <akpm@linux-foundation.org>
@@ -95,76 +94,82 @@ Cc: Suren Baghdasaryan <surenb@google.com>,
  Shakeel Butt <shakeel.butt@linux.dev>, David Hildenbrand <david@redhat.com>,
  linux-kernel@vger.kernel.org, linux-mm@kvack.org
 References: <cover.1744799282.git.lorenzo.stoakes@oracle.com>
- <bec6c8e29fa8de9267a811a10b1bdae355d67ed4.1744799282.git.lorenzo.stoakes@oracle.com>
+ <e6ed679a184ca444b20dfa77af96913fd8b5efa0.1744799282.git.lorenzo.stoakes@oracle.com>
 From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <bec6c8e29fa8de9267a811a10b1bdae355d67ed4.1744799282.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <e6ed679a184ca444b20dfa77af96913fd8b5efa0.1744799282.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C47941F6E6
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
 	RCPT_COUNT_SEVEN(0.00)[11];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:email,linux.dev:email]
 X-Spam-Flag: NO
+X-Spam-Level: 
 
 On 4/16/25 12:38, Lorenzo Stoakes wrote:
-> Currently the VMA and mmap locking logic is entangled in two of the most
-> overwrought files in mm - include/linux/mm.h and mm/memory.c. Separate this
-> logic out so we can more easily make changes and create an appropriate
-> MAINTAINERS entry that spans only the logic relating to locking.
+> We place this under memory mapping as related to memory mapping
+> abstractions in the form of mm_struct and vm_area_struct (VMA). Now we have
+> separated out mmap/vma locking logic into the mmap_lock.c and mmap_lock.h
+> files, so this should encapsulate the majority of the mm locking logic in
+> the kernel.
 > 
-> This should have no functional change. Care is taken to avoid dependency
-> loops, we must regrettably keep release_fault_lock() and
-> assert_fault_locked() in mm.h as a result due to the dependence on the
-> vm_fault type.
-> 
-> Additionally we must declare rcuwait_wake_up() manually to avoid a
-> dependency cycle on linux/rcuwait.h.
-> 
-> Additionally move the nommu implementatino of lock_mm_and_find_vma() to
-> mmap_lock.c so everything lock-related is in one place.
+> Suren is best placed to maintain this logic as the core architect of VMA
+> locking as a whole.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-> diff --git a/mm/mmap_lock.c b/mm/mmap_lock.c
-> index e7dbaf96aa17..5f725cc67334 100644
-> --- a/mm/mmap_lock.c
-> +++ b/mm/mmap_lock.c
-> @@ -42,3 +42,276 @@ void __mmap_lock_do_trace_released(struct mm_struct *mm, bool write)
->  }
->  EXPORT_SYMBOL(__mmap_lock_do_trace_released);
->  #endif /* CONFIG_TRACING */
+Thanks!
+
+> ---
+>  MAINTAINERS | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8d834514a047..03bbc41138c9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15595,6 +15595,22 @@ F:	mm/vma_internal.h
+>  F:	tools/testing/selftests/mm/merge.c
+>  F:	tools/testing/vma/
+>  
+> +MEMORY MAPPING - LOCKING
+> +M:	Andrew Morton <akpm@linux-foundation.org>
+> +M:	Suren Baghdasaryan <surenb@google.com>
+> +M:	Liam R. Howlett <Liam.Howlett@oracle.com>
+> +M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> +R:	Vlastimil Babka <vbabka@suse.cz>
+> +R:	Shakeel Butt <shakeel.butt@linux.dev>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +W:	http://www.linux-mm.org
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	Documentation/mm/process_addrs.rst
+> +F:	include/linux/mmap_lock.h
+> +F:	include/trace/events/mmap_lock.h
+> +F:	mm/mmap_lock.c
 > +
-> +#ifdef CONFIG_MMU
-> +#ifdef CONFIG_PER_VMA_LOCK
-
-CONFIG_MMU is implied by CONFIG_PER_VMA_LOCK so you could move the first
-#ifdef later to make only #ifdef CONFIG_LOCK_MM_AND_FIND_VMA nested in it.
-But doesn't matter that much.
+>  MEMORY MAPPING - MADVISE (MEMORY ADVICE)
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	Liam R. Howlett <Liam.Howlett@oracle.com>
 
