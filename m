@@ -1,64 +1,25 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59491FAC34;
-	Wed, 16 Apr 2025 15:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65704207673;
+	Wed, 16 Apr 2025 15:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744816730; cv=none; b=fGb/IISaC8rTEO4I317EP97EHVe8NSETB1gr8jyvNQaa+mBNV7osgE8v/4smzRwbM7FlB3/QcK88yIsPxDjckz+M81PLgBhnlqpPH2Tq+n6iFVjaxt4RJVUmO0/nDJT6G8NYtGkQ1nz6NHCU6v8Nc6+nX37YLRSwb4sc5eDZKNQ=
+	t=1744816759; cv=none; b=QKIF1e0tXohbybjfd/5bboslM5iwT6d3ouDHr/JWtBdsE1ThO1q7RBr+yNFHh7LLHx89ANIr3A81Wilx0j5DZraIB7/EP0EXTOh2fnKbjCsIrAGMuw1ZETrYxkUVRu9p95fKtbKH9cee8Kl0mg/TBd3i//3jU2OEHNPYZRcM23g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744816730; c=relaxed/simple;
-	bh=6C7b5ACUZiIoTFMKXIfTccrPKsvx/hrV2PGQgT+DTn8=;
+	s=arc-20240116; t=1744816759; c=relaxed/simple;
+	bh=FotjLCtH909KmRe7dnW4c9ApzGddHscsXDIL7+9hWbY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P6yrPLCrt8QqX33qOuOp9pjprmXcGu3tGuNj3OD3yV1x5031V5MQqJ/lGk0cQCs7S1tMfnq3o3WL5eW+LJEW9JolDCsjIN+/hZLgSvyN6LPai9G9mQWkNEOUvpKHPFcOaE/wewYOyQtD/54XKYUxGkQmrmJhnqSzh9o/sdoIgZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WJKazprt; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJKazprt"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aca99fc253bso1078385366b.0;
-        Wed, 16 Apr 2025 08:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744816727; x=1745421527; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jVstj4x0ZOBrjL3wG2i16/BbBDpIxTJzZQ+Ch9ET5uY=;
-        b=WJKazprtllrGTjbxQVYvWIv0d7XQz1HVK5nANO9oQXgpHX5dh2myL4JKQokNucwWXr
-         +aMV7QcwNcuoBiMlk1nmaA7LEBF60t/GCcrDjkxxSolU46eW7prAe4UgTQ+yw8x0tPhG
-         JNnoaChGednPBfcixi5m0kuPFweYedVENDdV/MGZa2SVw9/MoHATvXeCK5Mdy1Mhds+K
-         JbJyB6h1OL77OL5aqpkHhfCG3XVyvXhpfnRMbdYTICro7NDDgFJjGRNqhb1MVqc2ugZO
-         vBi24p1z6oc8vVj1YyhUL2d443pc8irgI4GehXLGJjxMFz+cRY41o8XE9gd2g85QWzw3
-         45WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744816727; x=1745421527;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jVstj4x0ZOBrjL3wG2i16/BbBDpIxTJzZQ+Ch9ET5uY=;
-        b=Y8BVcqo9WoomSKOyIGpFcGjbjNmhpIhqtZzYy7A2Z4TMXbdJVkJhga44X8k/5QUuDH
-         epSCUVoz/5E9th8mI0kyi/zIirbBZUA92vbLz0qZRSpRR29gmZgLIdLJMyXsvx/r0c++
-         5CALOH0kbweD88jqr/nU0JHjZPz/hLCsgrqpU1FxawyPOgLbqt8RCZ6zIvCJ7GNem4KV
-         VBjJbydeQFydnen6BDzH2GWgNHg2RMKEIjbiL7MbFIPO1RKcr9AjTln6C4PgxX/arm/7
-         zyYkpFczfKC893P/XHtRdsAO3q6Fhmgr6Zmc62DbT8E9bwenYj5eKZmpnZdry5+WC5xC
-         DVOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVtqRuP/VgfXneiGMAP4F/3Ne8m8F0vtzRRBf8qBWLw6bo+KICBscg+v5cvfsOu9w8pn/kpZes+hd8B@vger.kernel.org, AJvYcCXlMHGLAvrwl2wgU6pucv5UmNz0IYIQcfGWykKr3e3y8ziDYKc61xrYwQZoDuKEMSLeyCiAUkg7r9iQ6mw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo/Dv9Ie11Vnd1b4OlUGS+03WBHnlqW4g3+NYl5QxSsCm1a8Xg
-	xLeFtOX2jF3+3y4nGQOIrpIhhk47WLARmIqte3vhZ3cnQg6dH+FJ
-X-Gm-Gg: ASbGncuTc+E8nWlX71unwxNWQjb9666WxR17mLja5K0Tk36r9LVoJdyNWZTvvY4MIg1
-	R1w9hE7Hzy6ckpu18pEG9C8BDaz1TVF/1qIc6yEhlY7BeTXzFTJYON7qlYhJmNtCWAAU6LEAoiO
-	L0sZBaqX1kAJ4BXG03MUejNXgLXIB8lfd533KO880+esfWILtKmKSrXEKzoc3mGr8Pj8KVpID3j
-	twejP0G1Tp5zRndPz9ZNzLO0HUNAbuxccZ6WAnYnAe0fu7yjJBEMQV9uwNjcLy34cFHyUNW6jXz
-	59hOQF+60hrfGRnKUzUlthaz1IpDHsyrpe1FUCtz/FTtvI35ymNMlw==
-X-Google-Smtp-Source: AGHT+IF3W0YsWOP3f1NrLdQIf+NO+rd5/vh7OwCAQPDINantGO4SyAPbbFuT4fgM4GCMyE5Owv6RWg==
-X-Received: by 2002:a17:907:3fa6:b0:ab7:6606:a8b9 with SMTP id a640c23a62f3a-acb42b5717dmr191948466b.42.1744816726791;
-        Wed, 16 Apr 2025 08:18:46 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd61f80sm142866466b.20.2025.04.16.08.18.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 08:18:46 -0700 (PDT)
-Message-ID: <99dfba6a-d73d-4243-926d-c473868cbcaf@gmail.com>
-Date: Wed, 16 Apr 2025 17:18:45 +0200
+	 In-Reply-To:Content-Type; b=unxhwNR3bGWM5b17UzhG3HoZL2T0yQWDW+z+1EcHkFOwlYnIXVIlAyC9mP4fcCJ+z7anydNueckPOBgaUXdFh4fHO/Narze+vqCByN755E8/Dy5qOpLof85jKzlcFpsxsND1SFv6+21+Zp3QIGDUM+Mhi8vRt95R6KsVsZ5c/Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BE401595;
+	Wed, 16 Apr 2025 08:19:12 -0700 (PDT)
+Received: from [10.1.35.42] (e127648.arm.com [10.1.35.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B305A3F66E;
+	Wed, 16 Apr 2025 08:19:12 -0700 (PDT)
+Message-ID: <ad74a241-391c-4d1b-8b42-665cb4be3d2a@arm.com>
+Date: Wed, 16 Apr 2025 16:19:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,33 +27,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] rust: list: use consistent type parameter style
-To: Tamir Duberstein <tamird@gmail.com>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
- <20250409-list-no-offset-v2-2-0bab7e3c9fd8@gmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <20250409-list-no-offset-v2-2-0bab7e3c9fd8@gmail.com>
+Subject: Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and
+ policy->max
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Sultan Alsawaf <sultan@kerneltoast.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>
+References: <5907080.DvuYhMxLoT@rjwysocki.net>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <5907080.DvuYhMxLoT@rjwysocki.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09.04.25 4:51 PM, Tamir Duberstein wrote:
-> Refer to the type parameters of `impl_has_list_links{,_self_ptr}!` by
-> the same name used in `impl_list_item!`. Capture type parameters of
-> `impl_list_item!` as `tt` using `{}` to match the style of all other
-> macros that work with generics.
+On 4/16/25 15:12, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
+> Since cpufreq_driver_resolve_freq() can run in parallel with
+> cpufreq_set_policy() and there is no synchronization between them,
+> the former may access policy->min and policy->max while the latter
+> is updating them and it may see intermediate values of them due
+> to the way the update is carried out.  Also the compiler is free
+> to apply any optimizations it wants both to the stores in
+> cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+> which may result in additional inconsistencies.
+> 
+> To address this, use WRITE_ONCE() when updating policy->min and
+> policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+> them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+> in cpufreq_set_policy() to avoid storing intermediate values in
+> policy->min and policy->max with the help of the observation that
+> their new values are expected to be properly ordered upfront.
+> 
+> Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+> ordering of policy->min and policy->max, which may happen depending on
+> the ordering of operations when this function and cpufreq_set_policy()
+> run concurrently, into account by always honoring the max when it
+> turns out to be less than the min (in case it comes from thermal
+> throttling or similar).
+> 
+> Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+> Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+Reviewed-by: Christian Loehle <christian.loehle@arm.com>
+
+> ---
+> 
+> This replaces the last 3 patches in
+> 
+> https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
+> 
+> v2 -> v3:
+>    * Fold 3 patches into one.
+>    * Drop an unrelated white space fixup change.
+>    * Fix a typo in a comment (Christian).
+> 
+> v1 -> v2: Cosmetic changes
+> 
+> ---
+>  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
+>  1 file changed, 25 insertions(+), 7 deletions(-)
+> 
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -495,8 +495,6 @@
+>  {
+>  	unsigned int idx;
+>  
+> -	target_freq = clamp_val(target_freq, policy->min, policy->max);
+> -
+>  	if (!policy->freq_table)
+>  		return target_freq;
+>  
+> @@ -520,7 +518,22 @@
+>  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
+>  					 unsigned int target_freq)
+>  {
+> -	return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
+> +	unsigned int min = READ_ONCE(policy->min);
+> +	unsigned int max = READ_ONCE(policy->max);
+> +
+> +	/*
+> +	 * If this function runs in parallel with cpufreq_set_policy(), it may
+> +	 * read policy->min before the update and policy->max after the update
+> +	 * or the other way around, so there is no ordering guarantee.
+> +	 *
+> +	 * Resolve this by always honoring the max (in case it comes from
+> +	 * thermal throttling or similar).
+> +	 */
+> +	if (unlikely(min > max))
+> +		min = max;
+> +
+> +	return __resolve_freq(policy, clamp_val(target_freq, min, max),
+> +			      CPUFREQ_RELATION_LE);
+>  }
+>  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+>  
+> @@ -2338,6 +2351,7 @@
+>  	if (cpufreq_disabled())
+>  		return -ENODEV;
+>  
+> +	target_freq = clamp_val(target_freq, policy->min, policy->max);
+>  	target_freq = __resolve_freq(policy, target_freq, relation);
+>  
+>  	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+> @@ -2631,11 +2645,15 @@
+>  	 * Resolve policy min/max to available frequencies. It ensures
+>  	 * no frequency resolution will neither overshoot the requested maximum
+>  	 * nor undershoot the requested minimum.
+> +	 *
+> +	 * Avoid storing intermediate values in policy->max or policy->min and
+> +	 * compiler optimizations around them because they may be accessed
+> +	 * concurrently by cpufreq_driver_resolve_freq() during the update.
+>  	 */
+> -	policy->min = new_data.min;
+> -	policy->max = new_data.max;
+> -	policy->min = __resolve_freq(policy, policy->min, CPUFREQ_RELATION_L);
+> -	policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
+> +	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
+> +	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
+> +	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
+> +
+>  	trace_cpu_frequency_limits(policy);
+>  
+>  	cpufreq_update_pressure(policy);
+> 
+> 
+> 
+
