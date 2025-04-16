@@ -1,426 +1,209 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2070.outbound.protection.outlook.com [40.107.93.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097A61FF610;
-	Wed, 16 Apr 2025 14:08:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812504; cv=none; b=PC+Z0CSYWcDRbzBmGEdjl5YYH4qvw67aJNWsKr71yaRM04jblAZ/1p5NQn15zm3RdxS/xdKhtCoSOLJpV1Qg3oc5xGyATfJK0w+HAaSG9TPkc0bO4cN1Fi/KaoYQc86cowOIoLYgWNZ7XRQUgXY3e2MjAly50AO2Fdo0TjJ4y/0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812504; c=relaxed/simple;
-	bh=h3PmyUV6UKgJWmJ3x2auZJOhAr78fY+AdTmRjGfTX/c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eySQnGcI195JWx182dWsB3RglnkdktIpvVO3wUtn8/m1Zw09WKzEVUaoZror6zMwteEX0YjSyo2aS/tgY+OMCH/UJ3NimeWETfRHPJRbjNTBcppPguhd0N3zztJjPLkAiXrECqAXudN+IwNf2sKEX2DdvzKz/Xrp9mJoRZh8jjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LLxtHQz9; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E662B207DEE;
+	Wed, 16 Apr 2025 14:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744812508; cv=fail; b=pdrW2BhmZh4iXOy+KjOT/7VkjqfcyzxDbybBXzH/CXaC7FfAGr5LaNJLCNMVoTd/7w8yJu8TwDszpqu5uJQVgvGmt8A49u4XLDnM7bQPkkaU9ZvuwDa1vW+n7EnV8KcRZ0pilglCQmZupy1N4m8Ukp9u6Xy+uYp38DLjWlhdC5A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744812508; c=relaxed/simple;
+	bh=cEgw+u1+jV6BdxCSVwvbbvrsqW2fftZaGbN2ltmyNE4=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tlbYVEOqDFOrEPvHZ5BQycRiUsfx4EyZIF37nA9Z2oFRvLRDFlra38IGZWrisA1kFz/lJLKJueOzpfxttm98TyR7ySppyaw+h2kVdnSCO5NkI2oAmSpGBn/DOlpLVZRy9afTKydznJrpnc8HSMraXReG1IWEQc5DOO7asiT7OeI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=m6qr66/L; arc=fail smtp.client-ip=40.107.93.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LLxtHQz9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 870C941A8C;
-	Wed, 16 Apr 2025 14:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744812500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5Q6lf2AkKJHTcCF3tWMeQNqsbEbMgSyPSCIrnjuqMvg=;
-	b=LLxtHQz9qFJuFBH2PJYBa9Lk75vrkqKePt3/SiUiBvYTB8YlKvGdipbAfAvu4GJVZUS++j
-	pjudVfERNxr93bifMwvm4TeTQ7LdIF9QEMQu7LdkaOz+LtZptUYe9/p/1hxyMml03BuAao
-	/A891QkgcTgHUaCbuIfZq1LqKYK5lYbOXifrmAUZ+viefXYx2JHAfJdDYGgDjZcG/hJyHJ
-	5+HsOZ6fjLuuorbk2hTA4jOzPAcoBl6ytBWlG5rBKCffXlyBLFxHiOUI3veJmfTbTEVBfe
-	tAKU0mfP989ZoZ66p1IgmNGgnRAAcCIXB/3v1v3PV67joaKhTSH9VRSlP5JQ0w==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Wed, 16 Apr 2025 16:08:15 +0200
-Subject: [PATCH v3 07/10] gpio: aggregator: export symbols of the GPIO
- forwarder library
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="m6qr66/L"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YF4b9S1QRrdwYDB0KrsKE88PB4o7jQ1nwjICBcLAdalP2cwbWtzvbHJqcgbgX/ITQdbJdWI6DexsLYzPN4qptMYnxu0gJTqnYIlthNkw9TeLzVlBPuwrfsc43c0bGbXpFdty38DTDHL2sZn6mI2whyds2xHFyvHoDa3Zw2Ez40C59APowzPpnyqLwTUWLwX2FgySfOQBk3ujUAFDpuTEQ+gmK2py0ViQ4ErpjpKua5/UYDDKGtrMRhc7Ug/FUHVYcNUmyegLV3VKZN5CHTOFm60nO9V7y3dtj4/LsW6u5ElM2AJdWjJdwK9GYtzYU765P8wLkyYhxmTN5iLiivixpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y7THzq6SDOLDeo3RWsYmNYOFCEncEn2WKRgNRJWty0M=;
+ b=EHYNIhoEi/DU/0CQpoVzBrt9KvaqPh+0SbxnKG/4HIJXYbd99iXkf2H8jKrVmXp4RXT9XEtXVmIi3qvsuQ5KGlmHi6a/2ASQv/Xq/RuAF/sWzMlh/tAvqfepdhgMABLntiWnbZk2MQSLHtI0TBkcsLJKP4OuwOlOdNxetQtwub+nJedwCG1tOceFn9LDsGHbT7qSWGTwk5WzuLZ8JbOcvH2vvXikne9HHRv9zX/xgQTB8FT2jpQfg+7oFXzW2bBu7f5Fh822ZApYwVJbAdb5L4W7tCXuVuu9jRX0uJpnYpf1kk435aQFVKdT0U6nqZdyvyLHfOjy65wLBbqQWHGhMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y7THzq6SDOLDeo3RWsYmNYOFCEncEn2WKRgNRJWty0M=;
+ b=m6qr66/L11VJhRWLBrTRIssIOEXC4faje/iQvnvkQa27tYEYsG21OXbpIxqoCSOAissoBhotXJnPqSlQALMHRhGw7YGRmD3zV8PU/neSi2NY9DhqpKGN97nSQtfw1nOGaQb4M8ZNQvuefyYzJScUD07WsIvvzsHq39Bu1Bqd3pTzLOsLVQl38K+D2/gHI4ZzkOK4izKxoRXXx8DZ18VryP+JZpMB1wUYJlEQaMaaSf7j7MmkqlwnsfEufpeU4MwZfqdET7ljhm2DPk25gn+IQt78HW45/oCEAVlR5Fa2wgEypoJNgWCoxuzEEB2o1K5maq6urG+HFo02gBj6NJudrw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by PH7PR12MB6665.namprd12.prod.outlook.com (2603:10b6:510:1a7::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.35; Wed, 16 Apr
+ 2025 14:08:23 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8655.022; Wed, 16 Apr 2025
+ 14:08:23 +0000
+Message-ID: <05e4997c-631f-4906-9422-5af257c153e8@nvidia.com>
+Date: Wed, 16 Apr 2025 15:08:17 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/6] spi: tegra210-quad: Add support for internal DMA
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>,
+ Vishwaroop A <va@nvidia.com>, thierry.reding@gmail.com,
+ skomatineni@nvidia.com, ldewangan@nvidia.com, broonie@kernel.org,
+ linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kyarlagadda@nvidia.com, smangipudi@nvidia.com
+References: <20250416110606.2737315-1-va@nvidia.com>
+ <20250416110606.2737315-7-va@nvidia.com>
+ <1484e250-bbb6-4d1e-9285-2ccf1b8215fd@quicinc.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <1484e250-bbb6-4d1e-9285-2ccf1b8215fd@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P265CA0153.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c7::16) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-aaeon-up-board-pinctrl-support-v3-7-f40776bd06ee@bootlin.com>
-References: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
-In-Reply-To: <20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.14.1
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeektdehvdeiteehtdelteffheduveelgeelvdetgedvueejgefhhfekgefgfeduveenucfkphepvdgrtddumegtsgdtleemugdtgeejmeelieefrgemvdgvfhdumedujeeimeejsgegudemudhffheknecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdtleemugdtgeejmeelieefrgemvdgvfhdumedujeeimeejsgegudemudhffhekpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopefirghrhighrghnghesrggrvghonhdrtghomhdrthifpdhrt
- ghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: thomas.richard@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|PH7PR12MB6665:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23ba469a-27b0-4666-f867-08dd7cf02611
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|376014|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bk00bXdVRkRMVWZmakQ4VUJFSXl1NzVpdHRuQ1p6SUFmUjJ3Q2Q4UjFtN1dq?=
+ =?utf-8?B?OUhQZXdTZTM1aXZ6Y2VJU3dCQTA2Y0x5eWJBWFA2Y2kvYWRqN25jM3JrMzFP?=
+ =?utf-8?B?bmZwamdVUlYxdzVZY3dDZm1JVURRMGpvR2hKbUhPTW9JRm9Ra0h4UVU4eWFD?=
+ =?utf-8?B?bFJtN0J2R2FBRDhkYVdqeERlbk9jUjNPdldIeTl4dTQwYUsrQXFRcVZmaGRM?=
+ =?utf-8?B?VkxsaUdSMXFwRU0rWlRHUzNDNUtLN0o0cnpzUWo4OUxBaTNDNTcwQ1BKRlNI?=
+ =?utf-8?B?WDZCb2FmdUZ0cEpJdENzSzFlQVBwOWhQTk12MTdpRllQU0hxSHRRaXRDYi8z?=
+ =?utf-8?B?N015NnVRWFBUL0JSTG5VZ1dtMkpCOUVwOVdjVEpFZ1djd0pOUnZ0L0lNc2Rn?=
+ =?utf-8?B?aDhlQk9PQ21vdFdKcUN2OU4zVXBRMEE4ZFBOUnprWFJwMlVQVVQ1bWdxNXUv?=
+ =?utf-8?B?Y2crZE5LNVRNNGlGRXRsTG9TOERvYTFnMDdEUkZ5aVBZb1dheU84SWh5WC9k?=
+ =?utf-8?B?T2JTaHY5cURDR0lyc09EQ215SzVmWk16Ym9TUTVqd24xV1ZsWG53dmhtQjh1?=
+ =?utf-8?B?aHRIdXBvWmlMNmx6R2J4ckZvV1R2MXdRVno5eEd2WFVmbmJaakt6T0ppRVdt?=
+ =?utf-8?B?ZndkR3UrcFVOUHVyM2tDRjIxbTZ3S0lIY21IVXphZ0FSeXBaRzJoMmdtaW9V?=
+ =?utf-8?B?ajdic2EzZzRwakFsZmtYa3ZSUkNaaXdzZ3JzWngxY0MzWFZLZi9KZGZSdUFX?=
+ =?utf-8?B?alJ2WXNGcDhLY1F5Um1VRkQ0Y0ZEOERwa1VjSzFMQXVnTnNiZjJpUDVudHN3?=
+ =?utf-8?B?ZVk3MUQxdHFNZWdyaVFlaWprSUVsUU9xb05OY1o3eThhMXVqbWZrVGZiaDFD?=
+ =?utf-8?B?dGo3OFRSbmtBOGQ1SitzTllxcWloNFZKMkZkQUR2azBzeHdBazhJR2pnQWMy?=
+ =?utf-8?B?WjE1Vis3MWhYR1dac1NyTVljVVB6UVNkRDZwRHF0R0J6dGllbHZjM0xKMWVU?=
+ =?utf-8?B?Q0RQNEVqQnloSk04TUE1VjY0TTEvUFRaSU83aGJaNWEwWWtsL3EzSEoxOUps?=
+ =?utf-8?B?dHVuMlM0K0FPbXJaMHZGUUJjMXJ3TURYNUFWN3VXdXdaOTlKNXhBelFyWVc2?=
+ =?utf-8?B?RHdxMi84T2tyc1R2b2FvK2hBQi9TSHVTdUY1UHdoRHhOOWdSSDh0RTk4cTk1?=
+ =?utf-8?B?QU9wWWhMM2JoZ1RFZDROQlhWaEFTTU9XVG1sclNhSUFYOFZkQXAxRk5DMXVi?=
+ =?utf-8?B?REpQYXZpa2xQeENQS0lXN0wvRzlWa2ZjV0U1VE5BRklaWkRBQzhoUEp5QURy?=
+ =?utf-8?B?Tkt2a3RtUW1XMzQrYWlPa1lzT2Mrd2s1RVQzQzNVQmxDa29hTnJEdlNZcVZT?=
+ =?utf-8?B?cG0rQnN3MldiT3dMaWNLb1F6dFhGY0dpTStpMWxQeHBsVmw0VUxSMlZOQ3FC?=
+ =?utf-8?B?WlduTUNzM3lHTXQwYkk5eUhDcEFlcG9uc3RaZDNSZHJLUmlnajUxbWRlM2Rv?=
+ =?utf-8?B?dkNDQldUWnlhRTk5eUFwZm9NZnMxdVNsdnM1WEEvbzExNUxSWkJtQTlWaW9q?=
+ =?utf-8?B?VEtLZnMxSUZoUExQbTVESVBNcnB3bkpMaEM4N0VKZVhUNVNtbUNLRW45TUFt?=
+ =?utf-8?B?NmRRU052SUNpUy9tNXFpQnpPRkpLdnp3eU0wSVRKUmQ5ZGYwaGNOQkdFMzR4?=
+ =?utf-8?B?TGg3cjBnZzZybkdrY1U3Nk9Dd3phMDJGRkdmM2FIaTRITE9lZDd3UHd2bDJm?=
+ =?utf-8?B?blIxSm9USlM5VGI1QUswU25sVGF5OGJrcUhxQk1rVjVWd2JET1U5TG9JYTRa?=
+ =?utf-8?B?ejNiOWJNUFFpSTdCZnlueEltUUJ6Vnlad3BGTFZENnBaUlBJbjFjTmsybWR1?=
+ =?utf-8?B?bFZVVCtCOGdMZXhqclBXRDVJbERiTTdvUDEwZGkycWFJRHVKNkdoVU5NaUlR?=
+ =?utf-8?B?VWcxNW9HV1g5VWJCOTlXWU1nZ2JsK29Td2pvZUVETk0rY29Gc0h0Umw2SVlE?=
+ =?utf-8?B?bjdaWXhmOTNnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WjJIdFZ1U0FtS2ozS08zb2d4YnpwZnU5YTY4dzZpbXZ4Z2d5aWJtZ0NTcjFT?=
+ =?utf-8?B?MCtoaEJjc3lMYThGT3ZKNWdrU05MbDgzQU83UjBLcTdEdnBKaXFFNU84Yzha?=
+ =?utf-8?B?QkFGWXFMaTRFSmVFcjhsV2grazNhNUEyVWZRdlJtNTVXVy9QZHMxaWpVUXpj?=
+ =?utf-8?B?ek5teEdOVE1wNW1WNEk3VEI4M3p2Z1lQeWhyczV1aW00Z3NWdFlURzQ3THJU?=
+ =?utf-8?B?Vk05MTM1ZzJmd0FFOTlhU0ZqSHBLYzcyYmdKSUhmcnIya3o0eXdyUDZUWjdn?=
+ =?utf-8?B?UVFsMkpSZXlSVXdGM2JNcndGZUhKNGM1S1RoQjhVd3lRRG5DWXNqRnFmNTRO?=
+ =?utf-8?B?c054K2Zac2haWkRRZnR0dVc1WFpJRGczeDRzNlo3NmQ2Wm5QLzdXSHRWNzFF?=
+ =?utf-8?B?OHA0Y01JQXJXc3REcG9pckQ3Z2VzQzk5WWxUNndVbVBSL3F4UUFrSWFmVDZF?=
+ =?utf-8?B?Rzk1OEdnUFptZXgySDlrYWFDNWpmTUM5MGtnUUFrRXhHTFIrNXNuZEdKK25z?=
+ =?utf-8?B?bTl0V1ZsM0dyWDZHMUxjR2I5V1gyRlZlVTJWcXpSYUxvREg0VElFbG15OXhP?=
+ =?utf-8?B?U2MxdGpjMnpuVFQ2c0tMaHJFbnE4dFN2dkFzMmRFbmEzL0xmN3lBcERHc3RX?=
+ =?utf-8?B?TXE0aDEyVVlIdUJScUFnc0t1eUlQckx0MjJxWCs2d3A4aUVjMWJrK3U3em1Y?=
+ =?utf-8?B?TGwxMUxyei9pQ085TXZYUGlpOW9HKzRXWUs4ZlhrS2VJRHl3dS9hTnhyOEMz?=
+ =?utf-8?B?M3hDMlZReFVlMU93Rk00ZDVoOXlrMUpydit3ZEZxclVSNmJMR2NmdGdlcWI2?=
+ =?utf-8?B?TVhkbHIzd3FlMW1kR1N4c2wwbkxEdTRWSmdXUURMZmlDNm9ydzgyYUpkcXBa?=
+ =?utf-8?B?SGpQM2FIaUZxWDQzOG5yZnpWVmNJZmVwVWRMVlNseDN5eTBQNzd0ZUttMXRs?=
+ =?utf-8?B?bkFrUVJxRDJnRXlVdzFQUmF5WWZsU3JOSUtNRCs4NHVPYzZJNkF4Z1p3eVVn?=
+ =?utf-8?B?bHlxNzJjb3M5ZWQzVWRBUVNvQms3T2xCTW5ISGxhMzVUL1R4S0VBWXVtSUxs?=
+ =?utf-8?B?Q0w2bm91SzZxUjNXNlRaS2lRYmJIaVROWElqUUVTQU1TUDMyNlV4NjlPQXNw?=
+ =?utf-8?B?N2RSTUhiRnVlS1FPbC92aGVYNXJRbXcxYWtQMGRxc21Ic0p1U050YzhxeWxE?=
+ =?utf-8?B?TEtld0JCUS9Ha2dXc242L29BMVB0akZUSEVoMVVVWThOWXl1aVAwQXJhdnYz?=
+ =?utf-8?B?Qm83RWVydzg0ck1FeVlkVVh5cmFsR3ptT2NZdHQvQytXcWFsTzdoVnAxU1VX?=
+ =?utf-8?B?b2diY0RqOEFPc0RsVjYrTEIwdFB3WUhFYzBEcUNJdWlxUXMwYUZWTnV4OVNm?=
+ =?utf-8?B?ejdHQU1hZXF1MHVyVWlTTGM4dERoN3JiWnJaZitybi9oRVJaTFdnMU90MUdB?=
+ =?utf-8?B?dGlBSEsrNXF4SHNiRTJ2bWRpOGNnZXlUVlA2bGlGeHdrenpaQUx2eHNlR2s4?=
+ =?utf-8?B?ZHVpZkZaWVJhQ2h0ZlNXZWlneTFrcTExSEtId1pWN1NhOFhOVlpRcHRoek9N?=
+ =?utf-8?B?NnN5N0tjWllKVmp1dzQ0eURtYWZtNUdPa3ZlTmVjYWNUcXE4NzBXdmI3YlA1?=
+ =?utf-8?B?U1ZURCtJWEI3MW5kSmFSNHZvcmx2Rlg0bG4raFhPSHNRbWpOMmI2U1hTQ281?=
+ =?utf-8?B?RHVUR213VlhBdVh5bWc5Q2daTHFIYzhzdTlRUU9zQVFNYjFOakZ4OEZxZ0tS?=
+ =?utf-8?B?eEd0UWdKWWJqeEJ5YlVFM2pUcEdhTDFMRTFyMVpFSjN4ZXhVU0VQbTM5c1Fn?=
+ =?utf-8?B?WmFEdnYydXFYb0JwZ2xNUEZ0U0kvMCt0ODF2Q09pempSQk5WNUpndVluMmJG?=
+ =?utf-8?B?bVRlejgvYURQdDc1d1VNLzBjdFRzcm5TZ1I3azQ0b3NtMkpOM3Vmd1Vjc3F4?=
+ =?utf-8?B?MzRCRzR4KzZleHJyNGVVdTRjaDdTdVFjY28xdnBoeHU0ZFQ1UXMrQTdjWnFU?=
+ =?utf-8?B?TGlLU3I0MG5qZFhyRlhSbXREWmNZVXZTMGU5dWQrTGNFbFBpYU5xK05kaFlB?=
+ =?utf-8?B?WFlsWncreWVvdFp2d04zZTdBay9HSnd5UDJNTHZNQWhqbW4wdXI2NEZ6Y0hI?=
+ =?utf-8?B?K2RLanlGRXAvR1N4eDE3K09vREVzVzhxTDFIVFc0RHFZL2hGdDN1WXBPZzZF?=
+ =?utf-8?B?aU8wMG9WVExleTJpVFBBQ2N0UEYyNmZuMFFCOVEzdnY5S3F0a01tMnZ3eG5l?=
+ =?utf-8?B?eDFUUDlSUUZBTzU0cm9rWjlHbUd3PT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23ba469a-27b0-4666-f867-08dd7cf02611
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 14:08:23.2981
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0i65mTXsj3hjCOzUcvuUjRpf43BvVMTb3GTzkeBfqfYN2Xp8wyGTy3+ALmqdMJnfe0EksB+jv5KjkqdyJRrtDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6665
 
-Export all symbols and create header file for the GPIO forwarder library.
 
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/gpio/gpio-aggregator.c | 98 ++++++++++++++++++++----------------------
- include/linux/gpio/forwarder.h | 60 ++++++++++++++++++++++++++
- 2 files changed, 107 insertions(+), 51 deletions(-)
+On 16/04/2025 12:57, Mukesh Kumar Savaliya wrote:
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 96b82974969d..5743f84e1310 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -25,6 +25,7 @@
- 
- #include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
-+#include <linux/gpio/forwarder.h>
- #include <linux/gpio/machine.h>
- 
- #define AGGREGATOR_MAX_GPIOS 512
-@@ -254,56 +255,44 @@ static void __exit gpio_aggregator_remove_all(void)
-  *  GPIO Forwarder
-  */
- 
--struct gpiochip_fwd_timing {
--	u32 ramp_up_us;
--	u32 ramp_down_us;
--};
--
--struct gpiochip_fwd {
--	struct gpio_chip chip;
--	struct gpio_desc **descs;
--	union {
--		struct mutex mlock;	/* protects tmp[] if can_sleep */
--		spinlock_t slock;	/* protects tmp[] if !can_sleep */
--	};
--	struct gpiochip_fwd_timing *delay_timings;
--	unsigned long tmp[];		/* values and descs for multiple ops */
--};
--
- #define fwd_tmp_values(fwd)	&(fwd)->tmp[0]
- #define fwd_tmp_descs(fwd)	(void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
- 
- #define fwd_tmp_size(ngpios)	(BITS_TO_LONGS((ngpios)) + (ngpios))
- 
--static int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
-+int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return gpiod_get_direction(fwd->descs[offset]);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_get_direction, "GPIO_FORWARDER");
- 
--static int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset)
-+int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return gpiod_direction_input(fwd->descs[offset]);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_direction_input, "GPIO_FORWARDER");
- 
--static int gpio_fwd_direction_output(struct gpio_chip *chip,
--				     unsigned int offset, int value)
-+int gpio_fwd_direction_output(struct gpio_chip *chip,
-+			      unsigned int offset, int value)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return gpiod_direction_output(fwd->descs[offset], value);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_direction_output, "GPIO_FORWARDER");
- 
--static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
-+int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return chip->can_sleep ? gpiod_get_value_cansleep(fwd->descs[offset])
- 			       : gpiod_get_value(fwd->descs[offset]);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_get, "GPIO_FORWARDER");
- 
- static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 				 unsigned long *bits)
-@@ -331,8 +320,8 @@ static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 	return 0;
- }
- 
--static int gpio_fwd_get_multiple_locked(struct gpio_chip *chip,
--					unsigned long *mask, unsigned long *bits)
-+int gpio_fwd_get_multiple_locked(struct gpio_chip *chip, unsigned long *mask,
-+			  unsigned long *bits)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 	unsigned long flags;
-@@ -350,6 +339,7 @@ static int gpio_fwd_get_multiple_locked(struct gpio_chip *chip,
- 
- 	return error;
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_get_multiple_locked, "GPIO_FORWARDER");
- 
- static void gpio_fwd_delay(struct gpio_chip *chip, unsigned int offset, int value)
- {
-@@ -372,7 +362,7 @@ static void gpio_fwd_delay(struct gpio_chip *chip, unsigned int offset, int valu
- 		udelay(delay_us);
- }
- 
--static int gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
-+int gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 	int ret;
-@@ -389,6 +379,7 @@ static int gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_set, "GPIO_FORWARDER");
- 
- static int gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 				 unsigned long *bits)
-@@ -410,8 +401,8 @@ static int gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 	return ret;
- }
- 
--static int gpio_fwd_set_multiple_locked(struct gpio_chip *chip,
--					unsigned long *mask, unsigned long *bits)
-+int gpio_fwd_set_multiple_locked(struct gpio_chip *chip,
-+				 unsigned long *mask, unsigned long *bits)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 	unsigned long flags;
-@@ -429,21 +420,24 @@ static int gpio_fwd_set_multiple_locked(struct gpio_chip *chip,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_set_multiple_locked, "GPIO_FORWARDER");
- 
--static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
--			       unsigned long config)
-+int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-+			unsigned long config)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return gpiod_set_config(fwd->descs[offset], config);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_set_config, "GPIO_FORWARDER");
- 
--static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
-+int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 
- 	return gpiod_to_irq(fwd->descs[offset]);
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_to_irq, "GPIO_FORWARDER");
- 
- /*
-  * The GPIO delay provides a way to configure platform specific delays
-@@ -454,9 +448,9 @@ static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
- #define FWD_FEATURE_DELAY		BIT(0)
- 
- #ifdef CONFIG_OF_GPIO
--static int gpiochip_fwd_delay_of_xlate(struct gpio_chip *chip,
--				       const struct of_phandle_args *gpiospec,
--				       u32 *flags)
-+static int gpio_fwd_delay_of_xlate(struct gpio_chip *chip,
-+				   const struct of_phandle_args *gpiospec,
-+				   u32 *flags)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
- 	struct gpiochip_fwd_timing *timings;
-@@ -476,7 +470,7 @@ static int gpiochip_fwd_delay_of_xlate(struct gpio_chip *chip,
- 	return line;
- }
- 
--static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
-+static int gpio_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
- {
- 	struct gpio_chip *chip = &fwd->chip;
- 
-@@ -486,20 +480,20 @@ static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
- 	if (!fwd->delay_timings)
- 		return -ENOMEM;
- 
--	chip->of_xlate = gpiochip_fwd_delay_of_xlate;
-+	chip->of_xlate = gpio_fwd_delay_of_xlate;
- 	chip->of_gpio_n_cells = 3;
- 
- 	return 0;
- }
- #else
--static int gpiochip_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
-+static int gpio_fwd_setup_delay_line(struct gpiochip_fwd *fwd)
- {
- 	return 0;
- }
- #endif	/* !CONFIG_OF_GPIO */
- 
--static struct gpiochip_fwd *
--devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
-+struct gpiochip_fwd *
-+devm_gpio_fwd_alloc(struct device *dev, unsigned int ngpios)
- {
- 	const char *label = dev_name(dev);
- 	struct gpiochip_fwd *fwd;
-@@ -532,10 +526,10 @@ devm_gpiochip_fwd_alloc(struct device *dev, unsigned int ngpios)
- 
- 	return fwd;
- }
-+EXPORT_SYMBOL_NS_GPL(devm_gpio_fwd_alloc, "GPIO_FORWARDER");
- 
--static int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
--				      struct gpio_desc *desc,
--				      unsigned int offset)
-+int gpio_fwd_add_gpio_desc(struct gpiochip_fwd *fwd, struct gpio_desc *desc,
-+			   unsigned int offset)
- {
- 	struct gpio_chip *parent = gpiod_to_chip(desc);
- 	struct gpio_chip *chip = &fwd->chip;
-@@ -565,8 +559,9 @@ static int gpiochip_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_add_gpio_desc, "GPIO_FORWARDER");
- 
--static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-+int gpio_fwd_register(struct gpiochip_fwd *fwd)
- {
- 	struct gpio_chip *chip = &fwd->chip;
- 	int error;
-@@ -580,9 +575,10 @@ static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
- 
- 	return error;
- }
-+EXPORT_SYMBOL_NS_GPL(gpio_fwd_register, "GPIO_FORWARDER");
- 
- /**
-- * gpiochip_fwd_create() - Create a new GPIO forwarder
-+ * gpio_fwd_create() - Create a new GPIO forwarder
-  * @dev: Parent device pointer
-  * @ngpios: Number of GPIOs in the forwarder.
-  * @descs: Array containing the GPIO descriptors to forward to.
-@@ -596,32 +592,32 @@ static int gpiochip_fwd_register(struct gpiochip_fwd *fwd)
-  * Return: An opaque object pointer, or an ERR_PTR()-encoded negative error
-  *         code on failure.
-  */
--static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
--						unsigned int ngpios,
--						struct gpio_desc *descs[],
--						unsigned long features)
-+static struct gpiochip_fwd *gpio_fwd_create(struct device *dev,
-+					    unsigned int ngpios,
-+					    struct gpio_desc *descs[],
-+					    unsigned long features)
- {
- 	struct gpiochip_fwd *fwd;
- 	unsigned int i;
- 	int error;
- 
--	fwd = devm_gpiochip_fwd_alloc(dev, ngpios);
-+	fwd = devm_gpio_fwd_alloc(dev, ngpios);
- 	if (!fwd)
- 		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; i < ngpios; i++) {
--		error = gpiochip_fwd_add_gpio_desc(fwd, descs[i], i);
-+		error = gpio_fwd_add_gpio_desc(fwd, descs[i], i);
- 		if (error)
- 			return ERR_PTR(error);
- 	}
- 
- 	if (features & FWD_FEATURE_DELAY) {
--		error = gpiochip_fwd_setup_delay_line(fwd);
-+		error = gpio_fwd_setup_delay_line(fwd);
- 		if (error)
- 			return ERR_PTR(error);
- 	}
- 
--	error = gpiochip_fwd_register(fwd);
-+	error = gpio_fwd_register(fwd);
- 	if (error)
- 		return ERR_PTR(error);
- 
-@@ -656,7 +652,7 @@ static int gpio_aggregator_probe(struct platform_device *pdev)
- 	}
- 
- 	features = (uintptr_t)device_get_match_data(dev);
--	fwd = gpiochip_fwd_create(dev, n, descs, features);
-+	fwd = gpio_fwd_create(dev, n, descs, features);
- 	if (IS_ERR(fwd))
- 		return PTR_ERR(fwd);
- 
-diff --git a/include/linux/gpio/forwarder.h b/include/linux/gpio/forwarder.h
-new file mode 100644
-index 000000000000..78adfe6f162f
---- /dev/null
-+++ b/include/linux/gpio/forwarder.h
-@@ -0,0 +1,60 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_GPIO_FORWARDER_H
-+#define __LINUX_GPIO_FORWARDER_H
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/mutex.h>
-+#include <linux/spinlock_types.h>
-+#include <linux/types.h>
-+
-+struct gpio_chip;
-+struct gpio_desc;
-+
-+struct gpiochip_fwd_timing {
-+	u32 ramp_up_us;
-+	u32 ramp_down_us;
-+};
-+
-+struct gpiochip_fwd {
-+	struct gpio_chip chip;
-+	struct gpio_desc **descs;
-+	union {
-+		struct mutex mlock;	/* protects tmp[] if can_sleep */
-+		spinlock_t slock;	/* protects tmp[] if !can_sleep */
-+	};
-+	struct gpiochip_fwd_timing *delay_timings;
-+	unsigned long tmp[];		/* values and descs for multiple ops */
-+};
-+
-+int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset);
-+
-+int gpio_fwd_direction_input(struct gpio_chip *chip, unsigned int offset);
-+
-+int gpio_fwd_direction_output(struct gpio_chip *chip, unsigned int offset,
-+			      int value);
-+
-+int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset);
-+
-+int gpio_fwd_get_multiple_locked(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits);
-+
-+int gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value);
-+
-+int gpio_fwd_set_multiple_locked(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits);
-+
-+int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-+			unsigned long config);
-+
-+int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset);
-+
-+struct gpiochip_fwd *devm_gpio_fwd_alloc(struct device *dev,
-+					 unsigned int ngpios);
-+
-+int gpio_fwd_add_gpio_desc(struct gpiochip_fwd *fwd,
-+			   struct gpio_desc *desc, unsigned int offset);
-+
-+int gpio_fwd_register(struct gpiochip_fwd *fwd);
-+
-+#endif
+...
+
+>> @@ -1384,41 +1419,43 @@ static irqreturn_t 
+>> handle_dma_based_xfer(struct tegra_qspi *tqspi)
+>>       unsigned int total_fifo_words;
+>>       unsigned long flags;
+>>       long wait_status;
+>> -    int err = 0;
+>> +    int num_errors = 0;
+>>       if (tqspi->cur_direction & DATA_DIR_TX) {
+>>           if (tqspi->tx_status) {
+>> -            dmaengine_terminate_all(tqspi->tx_dma_chan);
+>> -            err += 1;
+>> -        } else {
+>> +            if (tqspi->tx_dma_chan)
+>> +                dmaengine_terminate_all(tqspi->tx_dma_chan);
+>> +            num_errors++;
+>> +        } else if (tqspi->tx_dma_chan) {
+>>               wait_status = wait_for_completion_interruptible_timeout(
+>>                   &tqspi->tx_dma_complete, QSPI_DMA_TIMEOUT);
+>>               if (wait_status <= 0) {
+>>                   dmaengine_terminate_all(tqspi->tx_dma_chan);
+>>                   dev_err(tqspi->dev, "failed TX DMA transfer\n");
+>> -                err += 1;
+>> +                num_errors++;
+> what do you do with incrementing this local num_errors ?
+> I don't see any post processing .
+> Also all are are mutually exclusive due to if/else, not sequential. So 
+> could not get any specific usage.
+
+This is really legacy code and yes I am not too thrilled with it either. 
+At the same time this change is simply making the variable name a bit 
+more clear. It is not critical that this is changed as part of this 
+patch, but does not hurt either. I don't have strong feelings on this.
+
+Jon
 
 -- 
-2.39.5
+nvpublic
 
