@@ -1,123 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363111D6AA;
-	Wed, 16 Apr 2025 05:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE8B2036FE;
+	Wed, 16 Apr 2025 05:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744782598; cv=none; b=Qe1STMLQm7mxcGcwlva0NKP48qUaFqPoPrPmZoHTU2XH16pV96/7i19OervttT2Gl9T5fkLOFm/X0OsUdzQRhb73glinyY8uN8pqv++W4n12SPio8pX35KqEbCJfwfdANRSHHmqETuNGe/GR8bNxyxs8/AOtDDcfHqT7aBPEyrk=
+	t=1744782698; cv=none; b=o4dCa0ksoD4+jaka1/4NvsNcy2JmKm3UXwUfOl9u/aAeg2MHfRNO45LGpTG8j7HAJmf6yw/vgxikhWr6YSrseFeOI0D2zd28k2EcWhr0V8CMNjwjdX57nXgBGEj6gwn/4rTYoQYhaBBcuNpdPSoxtsKqCpxasxyrusasJG8raQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744782598; c=relaxed/simple;
-	bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuCtJ6aVfjBeGGlJAfghmcbvBmz7qY52L3DvheV3wdiSQnUODWicNjshxvFkAZxevVOxcMP7mwFFjC1EJBKoVjjrrhKdrEqruiwirYIT+9AiStu9Bz+8KQgCzBuLQjDgkOwCBT4UoVa8nTELoTomKQayvDUKxYrZf+q+8bMIQ1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npEBFpet; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744782698; c=relaxed/simple;
+	bh=a3jxz39fD3wy1lu3uy7vIwo3YPqJ47vLZqKHe5UkmoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9Ki2XLfYksaL+/Af/tNT+AUEB5pf7yIP0kKrDxMIj4oICMw/kr6W6cq1tWwmfVVCSLVN0zRcBVinvzGAtRWDI5iI6ALoxP60FyerEjshRvFq8YM+8c6hKVLxehobhW4jBp8OMCSawXPzeeIg4BVVFMapIBs1oaxA95D4g6mYwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=epm+x4zr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=YZgRfbp1; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npEBFpet"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744782596; x=1776318596;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
-  b=npEBFpetFL5gHhUwedWPsa6TdH2WUbXwjMACGM3SwLT7tnLEQdbG1OfT
-   13wUi+uv8MYO51wZe6cduQGnv8h78cP32njE8/ezFj4r61O3dEoowYSvd
-   KegG4ukqyk5mKqtQ6L7hAexU6wGBWvj9lH1jA3H+W/TYkAgx6sg+Iz5D4
-   h/6Dv+o3ZB9ho38+kSM57pxS3f4iDR1aSTws3FhbPrxBPKzEQY467cEE5
-   B2ItC0GGOG3KIx8NSlOA4tKh79WXlanZQ2cz3ZzAInf8/5Sh8UhZmHAW+
-   5AgGVoF2Atwrn9nq166nLpxypvXwVnEWgrdTkLwjpptEejeipbfa7nqDt
-   w==;
-X-CSE-ConnectionGUID: eUpU3DdLRHyVjeKAOItFtg==
-X-CSE-MsgGUID: 0gbS0Dl1QdW5R2cf5s0C5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46195701"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="46195701"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:55 -0700
-X-CSE-ConnectionGUID: ooGEVKwBTsCvSgncBiIKSg==
-X-CSE-MsgGUID: C2Tn5zXQQISZ+56tjXk6cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135323808"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:51 -0700
-Message-ID: <c439699c-be19-4dc6-be28-e69e21bbacd4@linux.intel.com>
-Date: Wed, 16 Apr 2025 13:49:48 +0800
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="epm+x4zr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YZgRfbp1"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id D02EE13801E3;
+	Wed, 16 Apr 2025 01:51:34 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Wed, 16 Apr 2025 01:51:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744782694; x=1744869094; bh=AEDh6MCvsE
+	A1PfXpd2mpHSjULH8yOr5QYDym5AMx5Ms=; b=epm+x4zrTWmqhPlC169IGWcmUA
+	VjfGVMoH48DQXiS9xd8yk8Uvib+MPEI2Vy2NspjDVnfYLdrBS4zBQLfR/n7GHqu6
+	PQiUeuBwBCSZnF9Xw3a7W6NtbSM72mY2A00clJ7dKwrHkn33rpkl2TdhTYt4TUWh
+	q1vpaCxW69DNP+SCkAHk5EtgpMFcbGV8GGAhtZLfb+60XzCdU27T0lL8JxmIhRP7
+	VJXlukYFFo2NIpjFabw9skDRNH6OALGpHbsbjMi9berQtNPLAlVo6TpdFkLgsRO8
+	pIzA/BAZkZfZj+c3snT651AwLOwd1DA7VLDNJqUWRUFtvBB2el42AHX805pw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744782694; x=1744869094; bh=AEDh6MCvsEA1PfXpd2mpHSjULH8yOr5QYDy
+	m5AMx5Ms=; b=YZgRfbp14tSI6zR1xnryrVF+UG4BGwthawZ3VUNBD7aCcITzt2j
+	CY2Delw5OWHpwJs6CN/Av4Io1wcN1tWZZNoVDIQovE2QJKoQ3osca8K0xWu+IbaA
+	FnMTsYxNkg5gw9aVGMmEvAjtgY2NNfAjct4Z/A+1s976bA3mDIrVHOT/hn/5epVe
+	kS/B5EYInKmU3fMlXs5r1P2JZSySH2o9R9qnMm2UZyIbf1J2oFGLfaoW7ojQx3UA
+	lhH81T+XhjgGTvta4PsPGtOY38J/Sm86eT5iSvSKJ7hcQmSvQsk8qlVX3oO6ycvq
+	zZyDLG4pCsy39NBMQ6/loPpSmBOdfBT4Xyg==
+X-ME-Sender: <xms:ZkX_Z3huxd9cz4nGim2-PulB6VQ3LSf_3ekqkyj-jlhKeba7A2mL3Q>
+    <xme:ZkX_Z0D15dbm5jKEdg7lHoQTdKQ_CwlTeD3RThpPeKkxkZarHC5ZSHbGxKsqlsD9v
+    Jpn63iTd06FYA>
+X-ME-Received: <xmr:ZkX_Z3FEoaiFekP1CkX8NLNpTP5g9P_ZwFpJsSMLe0GUuU7HAO-0U3gkaRLLf-vA6IpA75kOvqnY6fE-jZ2RpJdF_9GsTZM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdehheejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruh
+    dprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhr
+    tghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:ZkX_Z0QWNwvCboq9vYUnBYQRhnFS1QfkQQijKTKR4RMVyk9VhyMN1w>
+    <xmx:ZkX_Z0xXaf-kQrYzvEKmJq0eSinXr2l_5EizxSU9hSx1_b3MxodVnQ>
+    <xmx:ZkX_Z64PP0f6N1fkPOUa31qCTUHd2kNkgi9QwXnUJj-GR6WpMlgQmg>
+    <xmx:ZkX_Z5yS9chEGRE9EA-9bBtb9bbRrpY6BWFVI29Qpd-HHkayGJ_IWA>
+    <xmx:ZkX_Z4r3Pw4Ujmau0MwX1HQ9DXA5N92ykMDWQ1Smrgfo14EYoKwociay>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 16 Apr 2025 01:51:33 -0400 (EDT)
+Date: Wed, 16 Apr 2025 07:49:58 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the driver-core.current tree
+Message-ID: <2025041646-resubmit-erasable-4386@gregkh>
+References: <20250416094455.55506561@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 15/22] perf/x86/intel: Support SSP register capturing
- for arch-PEBS
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <20250415114428.341182-16-dapeng1.mi@linux.intel.com>
- <20250415140734.GE4031@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250415140734.GE4031@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416094455.55506561@canb.auug.org.au>
 
+On Wed, Apr 16, 2025 at 09:44:55AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The following commit is also in the mm-hotfixes tree as a different commit
+> (but the same patch):
+> 
+>   b9792abb76ae ("drivers/base/memory: Avoid overhead from for_each_present_section_nr()")
+> 
+> This is commit
+> 
+>   ab81406e527d ("drivers/base/memory: avoid overhead from for_each_present_section_nr()")
+> 
+> in the mm-hotfixes-unstable branch of the mm-hotfixes tree.
 
-On 4/15/2025 10:07 PM, Peter Zijlstra wrote:
-> On Tue, Apr 15, 2025 at 11:44:21AM +0000, Dapeng Mi wrote:
->> Arch-PEBS supports to capture shadow stack pointer (SSP) register in GPR
->> group. This patch supports to capture and output SSP register at
->> interrupt or user space, but capturing SSP at user space requires
->> 'exclude_kernel' attribute must be set. That avoids kernel space SSP
->> register is captured unintentionally.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/events/core.c                | 15 +++++++++++++++
->>  arch/x86/events/intel/core.c          |  3 ++-
->>  arch/x86/events/intel/ds.c            |  9 +++++++--
->>  arch/x86/events/perf_event.h          |  4 ++++
->>  arch/x86/include/asm/perf_event.h     |  1 +
->>  arch/x86/include/uapi/asm/perf_regs.h |  4 +++-
->>  arch/x86/kernel/perf_regs.c           |  7 +++++++
->>  7 files changed, 39 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index 9c205a8a4fa6..0ccbe8385c7f 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
->> @@ -650,6 +650,21 @@ int x86_pmu_hw_config(struct perf_event *event)
->>  			return -EINVAL;
->>  	}
->>  
->> +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP))) {
->> +		/* Only arch-PEBS supports to capture SSP register. */
->> +		if (!x86_pmu.arch_pebs || !event->attr.precise_ip)
->> +			return -EINVAL;
->> +		/* Only user space is allowed to capture. */
->> +		if (!event->attr.exclude_kernel)
->> +			return -EINVAL;
->> +	}
-> We should be able to support this for !PEBS samples by reading the MSR
-> just fine, no?
+Looks like Andrew dropped this from his tree now, thanks!
 
-Yes, It can be supported for !PEBS samples. I ever hesitated whether to add
-support to capture SSP for !PEBS. Since there is a latency between counter
-overflowing and SW reading SSP, the captured SSP may be inaccurate for
-!PEBS samples. This makes it not so valuable considering we already support
-it for PEBS sampling.
-
-Anyway, we can support it in next version if it's necessary.
-
-
->
-> ISTR making a similar comment last time.
+greg k-h
