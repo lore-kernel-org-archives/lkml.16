@@ -1,143 +1,137 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A267818A6AE;
-	Wed, 16 Apr 2025 13:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9681C27
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808964; cv=none; b=TtdLf2a2FH4rwyZzUsOHu3VTSEJGhCnz+Fn4SebLkMTBykwWIlrN2Ahiem0EX4goo9iTNamd8MkikYAknCKsvqqsbkCv/mh+hCZq/kgi7UQHTowIIe64RDzVOnM+bI43Nc3cz5q/pN+l9PTzLiUGPC6rHsuPQbSrlCb9yQOoIxE=
+	t=1744809119; cv=none; b=sqdia0vKfIdrUjMn1e03YcG2Sb9GyTNeYgfRbVZM++Nh8DVLvGsVKC5ulrPS7ezcOwtz3rv883p4H0KmEuSgKYZAM513rVS/qfDw7GnzgW18JQ86PW2ROgcB+/QF/xKFHWx4AV8O21I29xgPFuRDhv9v+DwA2j9mLeWqgE1BITo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808964; c=relaxed/simple;
-	bh=gDvLnOvCfVSyAinptyO15tUxBl7lFEc/y0+/dcEFDgo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=jBaSVMEhxvYIKU7C5kS1yHU/oE0CI1/PT4pnoHMZ89pznQQKnDl7axS8ZMMj3+UVhAOC6YXP4nU8YNeNPbIzoZY4axJWNIwngwYldf/QfAcAfR9WKrGOdVZQPlUKKa3EP3qQdQM4djwe+8O5q6HgWEmwE00u7uMRHEx4dlK7nNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=UrtzcOUs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MLggXF0z; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1744809119; c=relaxed/simple;
+	bh=0ZVlAVqY5C6N3XvwX0Zff7ZTMCPqy1TEAiz6UyMnZ60=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=Ymwt5oXvnksNw2NBnNOaYK0PNqZ0BkcvUMMjbpzBzoToiBIKHoRgEgFVCSVdv2XqjNH4dAK4U1D0pgPPulQumoVMNOYTLLICPHyZc+KycOphIlzrtSX26pgcx6Biktfn+cV+xUwTKs1mbBq8cWCsx1A26aFK+x2izh3Uhzanz7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eu2gdHWX; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="UrtzcOUs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MLggXF0z"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 9B81D1140135;
-	Wed, 16 Apr 2025 09:09:19 -0400 (EDT)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-12.internal (MEProxy); Wed, 16 Apr 2025 09:09:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1744808959; x=1744895359; bh=RT0o9ESgA1
-	IOg2dSl39PiMpkDYcmJ8fSsA4gzhvlJ78=; b=UrtzcOUsHD+648RtY30UiBD3e4
-	3PiGpE3rVGuKVQ7KS9GUfuZioM0UclQoEVRNieaa9c3u8nEE2b84ukpn5HMPJXbm
-	Jk9oMlqOAAqM0ah7yGKqlrqdUoegCUCTfL7s2STQSx/cZqQPA+gQ7PxqM65T1b/S
-	UCtheRgdlLBbLZy0XOdZYzyPnhBiNoWp8js0m5IiAz1tvEqtgrp1ZX95GF/jiEw0
-	x0DQIaeJXv6JQ+XBLPRWs8ZAXjfrX8avTaWkt8KrHJQMUwKOmN92JjTCYXCaKV6X
-	9Q9SA534CiqY4X2JdfYayNdOwKvhJAjgBD+MbR+rclHnzZ/OOWdBeTFws4JA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1744808959; x=1744895359; bh=RT0o9ESgA1IOg2dSl39PiMpkDYcmJ8fSsA4
-	gzhvlJ78=; b=MLggXF0zWvc25GHBc+HswrLe7VvoXW86plHGnGw4Ndkcdm+krbX
-	RDpdfkLKbBM925GA3fWO51dK4nwgI/QAZLpI8iEB0KdGPmVJgGMLHT/KAGWOH33S
-	EIXn2eYEd1Sw7Zh6i/2WhQ8nepaY4OoG6TVi0egJa7rk/gxREnLcn1Q4MdMO/sOH
-	yeKFoG1qamkMw0dOeWYW98/U6crdA6wr6vo/XIOd7LC66cSha8YORWlkC/tzBmA4
-	HNVIFb7Z+7My8hDMRErs0b22nf8RW0i7Y9OJeYxLmXYrSV2c1mtbzMjKtMuQoUiX
-	Qq++cAgMo2Eq1+EoPmLrPGP1MvJ8eVKts2w==
-X-ME-Sender: <xms:_6v_Z5X0wtmoeEVMshvwAYjjRJcjRrdbJeL0-bufPnOBmMw4Ykw_lw>
-    <xme:_6v_Z5kdEtdu0_N6569N5rFqaGIxi0EE3zU1wqHUoT2yVpR3KtmJETeEMzIJaqUBj
-    qZAc2QVRk1DhooPwXo>
-X-ME-Received: <xmr:_6v_Z1Zousf7bv9FQUQtBA8OysnrA2nvU-ZMf2KdO9MJvEY2kkSpeWUeJB9GNNf0YbbjmAOwiLwSXLxvoAJ1kju7-OclwAOLRvP3dul8cwKRwSHTjA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
-    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
-    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
-    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
-    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhirhhishhlrggshieskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggr
-    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:_6v_Z8UcR4w1nNcTc-3TrJAN9gxn5n1NwBBxX6UGZKnCmlvMhn79Vw>
-    <xmx:_6v_ZzkCADZ1N4qfMpCZ27f4AtFXzBeVy9hvzH7VNbLH6dpcCAcb5Q>
-    <xmx:_6v_Z5fEcvtmf58ahSKpEmmq9LjwcW4XHvve2u6jL8t7Pm3JOYpVuw>
-    <xmx:_6v_Z9HvTsx4YAV0JKeg00CAYkjyunAQOio_6aWgVw1kkNi0-GG1lg>
-    <xmx:_6v_Z34hJbhSUPUAergXxkQTrNccO0Qf62vyU49RCpxzI_mNTNewmzXy>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 16 Apr 2025 09:09:19 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 7AE45111853E;
-	Wed, 16 Apr 2025 09:09:18 -0400 (EDT)
-Date: Wed, 16 Apr 2025 09:09:18 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: Jiri Slaby <jirislaby@kernel.org>
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 13/13] vt: refresh ucs_width_table.h and adjust code
- in ucs.c accordingly
-In-Reply-To: <7c3a13ce-c5df-4ea7-a3b1-32a13ab95274@kernel.org>
-Message-ID: <9ps0r788-qo06-4893-7753-4n3oo1238q23@syhkavp.arg>
-References: <20250415192212.33949-1-nico@fluxnic.net> <20250415192212.33949-14-nico@fluxnic.net> <7c3a13ce-c5df-4ea7-a3b1-32a13ab95274@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eu2gdHWX"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GAeUqN019696;
+	Wed, 16 Apr 2025 13:11:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0ZVlAV
+	qY5C6N3XvwX0Zff7ZTMCPqy1TEAiz6UyMnZ60=; b=eu2gdHWXf/E/mBt2Q4wmhV
+	rC3clAcjTzsdJxWitseQsi/L4WpxQuLNOfePsUiPQ/nMqSy/OfuwmfK1hFJrQSwj
+	cv4BKBXV05cJO2G7Qqh2n1KRM7bWOrG7oSt67Vk9HXgwBNc6a3ClXvhA2Iwitlol
+	ZuMmqAs/I8O0q204wWLnvDtEjfKPEZfXShZsiCehqzAhLLjjzGvmPdhsUQNoEbZb
+	IKgJNRMwUf1xCxluFZjPhQBZOtcY39QsUJS42tU+KXodz3LTUMoNGpAvedCqgqBE
+	zXCQAcuRxNLycAaTAr7r/kgC+StDh/YXYj1jsKhFuKV7+OhnREzzR3WHHHa7IwIw
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 462b0q0s15-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 13:11:54 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GC66qG010424;
+	Wed, 16 Apr 2025 13:11:53 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qk85n4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 13:11:53 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GDBoHX28836310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 13:11:50 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 516F32004B;
+	Wed, 16 Apr 2025 13:11:50 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A88520040;
+	Wed, 16 Apr 2025 13:11:48 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.249.149])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 16 Apr 2025 13:11:47 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
+Subject: Re: [mainline]tools/perf build warnings
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+Date: Wed, 16 Apr 2025 18:41:34 +0530
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B34E8075-7F38-4E30-9E51-23E43DDDF06F@linux.ibm.com>
+References: <2c04b7ef-dc85-4a40-b0d8-6ae73c20b65d@linux.ibm.com>
+To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+X-Mailer: Apple Mail (2.3776.700.51)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: L0MTqiRRemOV4ej4fQOf_mIEccHSoEcL
+X-Proofpoint-GUID: L0MTqiRRemOV4ej4fQOf_mIEccHSoEcL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2504160107
 
-On Wed, 16 Apr 2025, Jiri Slaby wrote:
 
-> On 15. 04. 25, 21:18, Nicolas Pitre wrote:
-> > From: Nicolas Pitre <npitre@baylibre.com>
-> > 
-> > Width tables are now split into BMP (16-bit) and non-BMP (above 16-bit).
-> > This reduces the corresponding text size by 20-25%.
-> > 
-> > Note: scripts/checkpatch.pl complains about "... exceeds 100 columns".
-> >        Please ignore.
-> ...
-> > --- a/drivers/tty/vt/ucs.c
-> > +++ b/drivers/tty/vt/ucs.c
-> > @@ -5,17 +5,34 @@
-> ...
-> > -static int interval_cmp(const void *key, const void *element)
-> > +static int interval16_cmp(const void *key, const void *element)
-> > +{
-> > +	u16 cp = *(u16 *)key;
-> 
-> You cast away const. Does the compiler not complain?
 
-Nope.
+> On 16 Apr 2025, at 5:12=E2=80=AFPM, Venkat Rao Bagalkote =
+<venkat88@linux.ibm.com> wrote:
+>=20
+> Hello,
+>=20
+>=20
+> I am observing a new build warning on today mainline kernel, with head =
+commit: g834a4a689699
+>=20
+> =
+Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>=20
+>=20
+> Warnings:
+>=20
+> diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>=20
+>=20
+> If you happen to fix this, please add below tag.
+>=20
+>=20
+> Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
 
-> > +	const struct ucs_interval16 *entry = element;
-> > +
-> > +	if (cp < entry->first)
-> > +		return -1;
-> > +	if (cp > entry->last)
-> > +		return 1;
-> > +	return 0;
-> > +}
-> > +
-> > +static int interval32_cmp(const void *key, const void *element)
-> >   {
-> >    u32 cp = *(u32 *)key;
-> 
-> Apparently not, given we do this for ages. I wonder why?
+Hi Venkat
 
-Because we're not creating another pointer that could be used for 
-modifying the referenced memory.
+Can you please check with =
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.g=
+it/?h=3Dtmp.perf-tools-next
+with the tmp.perf-tools-next branch..
 
-> Anyway:
-> 
-> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
-> 
-> -- 
-> js
-> suse labs
-> 
-> 
+Also there is a patchset here:
+=
+https://lore.kernel.org/linux-perf-users/FE96FD04-4396-4C34-A70D-2A592FD5F=
+916@linux.ibm.com/T/#m3e9d6aac4c34ebf42f18f3c213b7dff8f8c70d9d
+
+Which I think you have already tested..
+
+Thanks
+Athira
+>=20
+>=20
+> Regards,
+>=20
+> Venkat.
+>=20
+>=20
+>=20
+
