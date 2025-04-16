@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4831C183CB0;
-	Wed, 16 Apr 2025 13:15:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5578E1DE3A8;
+	Wed, 16 Apr 2025 13:15:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809307; cv=none; b=KnnkrqtGUL0cFiGmRfNl01hZeTLNBWC/kgMFk3FZ9JrSNdsI/QFy4cAhIVgyEn0aY/TrRvJt6LFEYQf+XI7y2DEz7AlECz0HevD/OK74WLKTjM+fAADiTkz19It9w8RToAcBWONTrcYfvjUo68OeZvodh8RIL9L4ZHCj1YcWY0o=
+	t=1744809314; cv=none; b=mt2HsRz2MJE22oCcqwe8GmtUxTmNU3dw3koQP68yth5CwXzLR5WYyAsVFIZyKDrGogYWNsnTk1X9YNGa0aXY9T1n6XSYdCmlo0+pLlAT7nu+CH6L/HC9UoSV8QA/9rGlh68GgvwbexXVjOquS+AMukzg3AcpKmygunAQrDOK6IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809307; c=relaxed/simple;
-	bh=zCl8pSdllL4AI+iRbnlr1wu6Efd+CdIitr2TaNrMXLs=;
+	s=arc-20240116; t=1744809314; c=relaxed/simple;
+	bh=Brxg+ytOSEo39k4gJTMc+X7RGZ1Gfl8o00RDEyoywGM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dewDxmR8Czu6eNIS8eCXYA5Ftq/U3hbBja6LvsYX7DHRw8jCLKYRbO2iYKSvePGy0tnCOCpWP9MKxxU4qCz9dSqwXiL5uKuyvv/YjN4E5wlnuvIijqATAKLiD6XCBSdbqtoQxtjVnQJfkxT+6DRd4C+Tcd56DMe4c9R1Lu/lFD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFtxLT3j; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WrSieZZoE4cC3u1VCa1sO8zprf0+xrdh1dZ0/HCU29kR6csZZjvRdPID3zx8PAQp4y8cmVATzvqlqo14tCPD0ZhbbRdT9tKXBPMyrZgM2igs7c0gFzEjqYw1VZaeHF9I0n6vJKbjShQP4VpEU44KaEnxuaWn4vR+kbFNNNM0ey0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soZWGr9m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFtxLT3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A072C4CEE2;
-	Wed, 16 Apr 2025 13:15:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soZWGr9m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59FA9C4CEEA;
+	Wed, 16 Apr 2025 13:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744809306;
-	bh=zCl8pSdllL4AI+iRbnlr1wu6Efd+CdIitr2TaNrMXLs=;
+	s=k20201202; t=1744809313;
+	bh=Brxg+ytOSEo39k4gJTMc+X7RGZ1Gfl8o00RDEyoywGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vFtxLT3jpEPqkjxvmf6ICJcQC1cadfY+MfKTEJ3ebmJwRltz3NpZZZOSI0uJoRl0P
-	 xALzIb7Ng2V2mhrT7Vii2z5TeZn779PszpTX5RP7zS/pb7wh4AB5PjFHmA1mPUOhcu
-	 S97WOwFdmF9Lc5aVSitDX7sDfSBIyAlxfvp2PqX4uPvbrXfHw2FcVOz/AGOPJvY7NA
-	 VLD/l6hYqGQG2hX7YiwZ8/y17NUrrP6uAlUPNfJ0pWN9R1i1vNB5xUhp2LqlC+oDc8
-	 xKIc9fqDE4vZPe+ZR8Dal8u6XHzsg1pekp4lTkYHU8TULGbC8VqcEmgRdtepFciqEK
-	 NALZf6PvuSd1g==
+	b=soZWGr9m/oUWl5ze0BoYRiImSRSzz6lZC81ra9k1+ZhG2tsFpJgYp5GdDN1t53oa5
+	 gnjSKtFR6GwCv+rxh/xhdh5laygyy8pxxCrLUT/PvW8TKtWu/84zRGoh3JU6ATj18H
+	 9XTHEE31QPBOqcl89z3MaBwnOmGkHwkYgBpIH8JdpmQ5+srnGzm0sZmqTEmXi5LEZ0
+	 fyBCe7hLW6OAQMRsL0rPMtlUnEheTRexp3/d9Y2zho3WSyDGy9wve14tlb5fE816Fz
+	 Lsv+6q3I2IOGk8uBOxEbEbuAvpF6ePmF3HdQ482OcUe6BOg7qPMGygFBJEYQhg7eDK
+	 FDyNi9dkZlZBA==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -56,9 +56,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sound-open-firmware@alsa-project.org
-Subject: [PATCH 19/31] ALSA: trident: Use pure devres PCI
-Date: Wed, 16 Apr 2025 15:12:29 +0200
-Message-ID: <20250416131241.107903-20-phasta@kernel.org>
+Subject: [PATCH 20/31] ALSA: rme9652: Use pure devres PCI
+Date: Wed, 16 Apr 2025 15:12:30 +0200
+Message-ID: <20250416131241.107903-21-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250416131241.107903-1-phasta@kernel.org>
 References: <20250416131241.107903-1-phasta@kernel.org>
@@ -74,30 +74,41 @@ pci_request_regions() is a hybrid function which becomes managed if
 pcim_enable_device() was called before. This hybrid nature is deprecated
 and should not be used anymore.
 
-In addition, the request function's name parameter should describe the
-driver, not the device.
-
 Replace pci_request_regions() with the always-managed function
 pcim_request_all_regions().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- sound/pci/trident/trident_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/rme9652/hdsp.c    | 2 +-
+ sound/pci/rme9652/rme9652.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/trident/trident_main.c b/sound/pci/trident/trident_main.c
-index 8039f445bee2..4e16b79d6584 100644
---- a/sound/pci/trident/trident_main.c
-+++ b/sound/pci/trident/trident_main.c
-@@ -3533,7 +3533,7 @@ int snd_trident_create(struct snd_card *card,
- 	trident->midi_port = TRID_REG(trident, T4D_MPU401_BASE);
- 	pci_set_master(pci);
+diff --git a/sound/pci/rme9652/hdsp.c b/sound/pci/rme9652/hdsp.c
+index dc326face54a..873b7eadfc50 100644
+--- a/sound/pci/rme9652/hdsp.c
++++ b/sound/pci/rme9652/hdsp.c
+@@ -5277,7 +5277,7 @@ static int snd_hdsp_create(struct snd_card *card,
  
--	err = pci_request_regions(pci, "Trident Audio");
-+	err = pcim_request_all_regions(pci, "Trident Audio");
+ 	pci_set_master(hdsp->pci);
+ 
+-	err = pci_request_regions(pci, "hdsp");
++	err = pcim_request_all_regions(pci, "hdsp");
  	if (err < 0)
  		return err;
- 	trident->port = pci_resource_start(pci, 0);
+ 	hdsp->port = pci_resource_start(pci, 0);
+diff --git a/sound/pci/rme9652/rme9652.c b/sound/pci/rme9652/rme9652.c
+index 5b8dd7b0a02c..34d9c7995ddd 100644
+--- a/sound/pci/rme9652/rme9652.c
++++ b/sound/pci/rme9652/rme9652.c
+@@ -2406,7 +2406,7 @@ static int snd_rme9652_create(struct snd_card *card,
+ 
+ 	spin_lock_init(&rme9652->lock);
+ 
+-	err = pci_request_regions(pci, "rme9652");
++	err = pcim_request_all_regions(pci, "rme9652");
+ 	if (err < 0)
+ 		return err;
+ 	rme9652->port = pci_resource_start(pci, 0);
 -- 
 2.48.1
 
