@@ -1,102 +1,115 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E92221572
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787346; cv=pass; b=e15B2abfTRIqvgbWY9lOz5ZpCIlDEkpw90XMhppZ9eoKZfouQti9NOrLT7VczjxgKTbXIA/Ih5McOnm+SD6n3QgBsOpGOh9kZBSECPsJKuBWNwKRvkKQEq0N+qeEhxgB5EoaXiFIJcVy22OmgPTJvaQ0qI/IzpRzZglA4fhnbLU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787346; c=relaxed/simple;
-	bh=3ncHg8KqeUz1vIVKm8juv8oGSQXXnORd6y7pLVlgK70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MrRakaEDu/kJYm7SkRwqmT8+BTypTtnfIcJK4UC+dYyaGP3QLYmJkXVdMy1atB8k7wAE2iQtiDLPKWezC0/eO7l86x2sgy8OvwfZinWczpYQo8K9v6KThYCVVYBzJfM3TyS665EQxjIO8WsMYfMCV2PcFisX0NLEUb/uvJTw0FU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=K3Af9Mcx; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8DC1D8E10;
+	Wed, 16 Apr 2025 07:09:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744787379; cv=none; b=TScOmFQ4Ov9BYWiEWSs0MUqAeyygC3NHdfIxqa3sP+0F9Qcr/rZJkwDvogvLPJuyFD+xaHxOuHoJVNVKVNAvZQ+eh3j2SacbWjjTSBvmO8wHIy3tIW4ymP/lfUMx/SdCo1DPzheMlIRC+jVhBApNqUXcxTqCxMitg1J2c659jLY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744787379; c=relaxed/simple;
+	bh=mreBMLYe0CKLqCE1BsZv7kMlpxdCG883OuYrHI1cFh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Av3BT66AuPJxI9TDcvWmFAC0i/0pGpOHT4Uyvbqm11nb8vdaQmvQIHXI08as78lBSp/sqUjFSJbMs7xTQpqCOMUldsUk7TudqOYs+Mhudx5Ze/33annVg2I7BxGttNT0FiFJ9dAOTaUfRDLQAjTkv5MUhDddbIgzgshFv0NFR3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NfpAEuQJ; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="K3Af9Mcx"
-ARC-Seal: i=1; a=rsa-sha256; t=1744787320; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=HHBvq0NGJ2eF770FU5GG/1dSU+Pp8UiR1V3orbxWCnR456v1wGZdqQPu08DMBYtgXHPZM7KqbIhyF6SpVGfl83XumFeEBW5SMgm+dhKehcMXXHq+KpRtJWmTEw3ZCm5XHCF2Zs3GFXToI8iGjMfOp5wmwwsi+PD5Ryry+v3jFKU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744787320; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/yqJ8y8KREoexVbGgiSv3lKFcw87irrL9VHeHd+VyMs=; 
-	b=KrFL5bLqjy/JjTDRHQ3oMlLx3eX4ydsyXWT4Puew+ooPC7O5/SkNV0t37NyRuLWBzycVU4+YRObTRGS2xRUDE064M1QP5qLMDDge0XcPYLZkZu5a3pLAlLnQHiXzw4jqYlPGJFiG6Ypz/lW/0SgkTnZKqGtls+ixvbEGroMYLQM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744787320;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=/yqJ8y8KREoexVbGgiSv3lKFcw87irrL9VHeHd+VyMs=;
-	b=K3Af9McxCyi8UkTNdrSryMDyNSwYOwjXytmbQqbxoygNoh4Eru+zkoEkV0ZDR8fR
-	6Q2NH2QUyLMxr+vI1E8sEmK4NMhO3Q9Mbd4WYZC/2c/u4kFFc4CqT6pgYxqmItsl6SV
-	kWeLSh6hMa5H3n+pEVnQrYeYmppoAKcFg+DgSnQ0=
-Received: by mx.zohomail.com with SMTPS id 1744787318494319.03897271462245;
-	Wed, 16 Apr 2025 00:08:38 -0700 (PDT)
-Message-ID: <24bc034d-45fd-4d1c-bed7-216a2592f633@collabora.com>
-Date: Wed, 16 Apr 2025 10:08:34 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NfpAEuQJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744787378; x=1776323378;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mreBMLYe0CKLqCE1BsZv7kMlpxdCG883OuYrHI1cFh4=;
+  b=NfpAEuQJgWuyMyXJGTtQVS6uX6RUUSudkTEslsj5ayNOQMMyjdEqqCgO
+   9GVjzdeJRE5/1WrGD9Dgy8mbaX7hxRPPX7hf/FNj8PO5diJ+w4UCEw24+
+   QL7VwTMzOliJHVhgI/L1ZRBJMIKFHQsYYSwIQNR9/k6IZHWp2yfZGXgNB
+   8s+QA016PktE2OsqDXWu+iCy/cviigC8Z3gv/ytMTB+dU6ko7hqfy7/If
+   U6N5ScsXUGBoP6+cy0RNjQTrQFgN7l55dxOTudXiH5k6szcN6yxO5TU91
+   j1Vg14cibGXGb8JO+7rodIZMlRAAXApeaXs9jD02fCtn1IJiO7vvNhYh9
+   g==;
+X-CSE-ConnectionGUID: r3PZHjQhR2Crz8ectXUmKg==
+X-CSE-MsgGUID: MGdbwVmITIq8GzjOAFDyoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63860334"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="63860334"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:09:38 -0700
+X-CSE-ConnectionGUID: 6fwnGrY9QsiRUgthTi8peQ==
+X-CSE-MsgGUID: cuapS7feRGy6doKbTgPOKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="135524565"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:09:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4wtp-0000000CmAs-2GEo;
+	Wed, 16 Apr 2025 10:09:33 +0300
+Date: Wed, 16 Apr 2025 10:09:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v1 1/2] spi: Add spi_bpw_to_bytes() helper and use it
+Message-ID: <Z_9XrXweruMZ1LvE@smile.fi.intel.com>
+References: <20250416062013.1826421-1-andriy.shevchenko@linux.intel.com>
+ <20250416062013.1826421-2-andriy.shevchenko@linux.intel.com>
+ <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/virtio: Support drm_panic with non-vmapped shmem BO
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
- kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, simona@ffwll.ch,
- jfalempe@redhat.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250412132012.291837-1-ryasuoka@redhat.com>
- <82de8253-7be6-40ed-b4a7-c840b3b46362@suse.de>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <82de8253-7be6-40ed-b4a7-c840b3b46362@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <db36c119-c6f6-42e9-b8a0-f09e9e5a2585@quicinc.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 4/16/25 10:05, Thomas Zimmermann wrote:
-> Hi
-> 
-> Am 12.04.25 um 15:20 schrieb Ryosuke Yasuoka:
->> Pass array of pages of the scanout buffer [1] to shmem BO, allowing
->> drm_panic to work even if the BO is not vmapped.
->>
->> [1] https://lore.kernel.org/all/20250407140138.162383-3-
->> jfalempe@redhat.com/
->>
->> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
->> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
->> ---
->>   drivers/gpu/drm/virtio/virtgpu_plane.c | 14 +++++++++++---
->>   1 file changed, 11 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/
->> virtio/virtgpu_plane.c
->> index a6f5a78f436a..2ff57d559c86 100644
->> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
->> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
->> @@ -500,11 +500,19 @@ static int virtio_drm_get_scanout_buffer(struct
->> drm_plane *plane,
->>         bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
->>   -    /* Only support mapped shmem bo */
->> -    if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo-
->> >base.vaddr)
->> +    if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
-> 
-> Please adopt drm_gem_is_imported() instead of testing import_attach
-> directly. The helper is available in v6.15-rc1 and later.
+On Wed, Apr 16, 2025 at 12:33:24PM +0530, Mukesh Kumar Savaliya wrote:
+> On 4/16/2025 11:46 AM, Andy Shevchenko wrote:
 
-Hi, I rebased this patch locally on top of your drm_gem_is_imported()
-changes and will merge it all soon.
+Thanks for the prompt review, my answers below.
+
+...
+
+> > +/**
+> > + * spi_bpw_to_bytes - Covert bits per word to bytes
+> > + * @bpw: Bits per word
+> > + *
+> > + * This function converts the given @bpw to bytes. The result is always
+> > + * power-of-two (e.g. for 37 bits it returns 8 bytes) or 0 for 0 input.
+> Would it be good to say in 4 byte aligned /Multiples ?
+
+It's not correct. The said wording describes the current behaviour.
+
+> > + * Returns:
+> > + * Bytes for the given @bpw.
+> Returns: Bytes for the given @bpw.
+> Good to keep in one line.
+
+Aligned with the style of the other function in the same header, so I prefer to
+leave the style the same.
+
+> > + */> +static inline u32 spi_bpw_to_bytes(u32 bpw)
+> u8 bpw ?
+
+Nope. See below why.
+
+> struct spi_device {
+> u8 bits_per_word;
+> }
+
+> so arg should be u8.
+
+It's aligned with the above bpw related function.
+Also note, that this helper might be moved to the global header at some point
+as some other subsystems may utilise it, so I don't want to limit this to u8.
 
 -- 
-Best regards,
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
