@@ -1,110 +1,116 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FB1BC9E2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81C118CC1D
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:38:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744799896; cv=none; b=uNJm9kl/PNNNyuIxiVo0AViNROkl4Je4F6C8V/K1FF9/qxcg++0ZIApPoGYrKfI01hNFfRhXYq6gcv3rGNREyrupDdQBlfS7KVkTt6YjW0x0bbaIdy8z/ugt+6qid8+sYU3tPtEmdKYCCL5chbmx15qNEA+tIRCQJNzL2BOMUco=
+	t=1744799941; cv=none; b=E/xlSGMvn0V6hBIwlC+WMy5QRwt5pm7iWRNzpTjMQD+yDJCDC7SQQCptuYWfo48Xl8MGC9SJqDuqyQUol81jcPkJEg4fnTMj3kEt7RTEjuCYBIM6dPHhUXAGZTqy1f9MQQoqlLIlbEii8+vLzCq+I1huPq8ioMuVCzo3OMIvSwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744799896; c=relaxed/simple;
-	bh=/498mwjfnYlCU9pyZvO9bEzZdwQsgiwBm51YqjQFjmE=;
+	s=arc-20240116; t=1744799941; c=relaxed/simple;
+	bh=/IeBj9l1DuZvddK9K3ZPSaNn7OyXHfUK2ZfsFM9/Ug4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IisGi3rWFJXSHUkESiKjvPaBdfDTblGbcIZP6e/2CtSlkRjXWPfOcl05DBS0QKqLqjoY2fv/uX+biCfTcy3N8tgrmZRGSb1bcBp1ljTwbUq5kFAukHVg5jUga6HvQip4Z8urUgqYGXWUn3EFlz/D/zFqIfCg9Lk5N+9Vt0DDo4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Iu3rSvub; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=JkDwjnxVsgAWv9KV2P7Q5EgfItCcIXF0tAtnK7KJTvC0vdzS292hMiLmK81B1EYrQS3ySQYFelj+acHeL64eKpWIU2Xhc37Wnz5VgoTbQGoiX0R/yXN3EgqIyskajqe2ZrRTqVOKKuRM+nV2x6SDD5t210v4mGnK/gspfD9O068=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wy3gXymZ; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Iu3rSvub"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso3119615e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:38:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wy3gXymZ"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39ee57e254aso294727f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744799893; x=1745404693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Wj93qOMqFHl3tcMBbmsDJQxqfd74N+Y5rsy/X8u5r9M=;
-        b=Iu3rSvubryFwZ4BMUNDRg5vKnlBAIxIlaEe5qjdNGwfMHpu0EOu4ooF94O5EMz97I9
-         Yhijh3MLa05ZLnMbaY9ZUURhThdNjYdPufVpZMZG/fKn7LOO1v7sUp4aoWlbdN/8H+9O
-         Av6WIafAf+ALhsJ0Rf9zRWnv1cwFtO/jJQqN2vvK1cBqG8IPfIHpPuOoPPiPVDCXDaai
-         Ci3RiL82UwCr4uMzZAZTcueWI1okHh/6FyMoX74uL42eIH344w7bdJqX1WEfPlJ9H+b4
-         GyJcFIBp3WZV0f+9yocIBid+CmpAHTOqJ4gTSAPvEiMGo4jc355gEh0y+gmhLt9yPy4S
-         A2Qg==
+        d=google.com; s=20230601; t=1744799938; x=1745404738; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DzdgsiFLrWJM9v+aW/iqIUvY9sIWu9H1VS9MicD3j+w=;
+        b=Wy3gXymZ9d0o2NqIMK3M+B6r6eeGjQNKvRoQagUg4DRDuC+ipfA9R1GlnW0Q81EniJ
+         VXXMzmMS/pGsB6niUlZ5LBF/PgJWE6dljhrCsCG4gE2FwTU9aLtE1KXdFOGEoB1cwR7l
+         ILewoQ9ITbxFDZ6g8DEG8CXnKfM3SHB0hWZEUWVk/R2mZzLB6FCFjEFpR0yoKXJ14msS
+         avii9qpmSLp3O81Mg0SQAptG7eLLy6tyPsaqwqIpDPC5UcKP1LYizS0ZLVTBcx0V7s8L
+         omNc9ktQ7L4YpsjNfRua0ELneRKh3NG5GfO7jJU3/juQyYpVy++ZtQNZVxp25GMreUtb
+         D7EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744799893; x=1745404693;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Wj93qOMqFHl3tcMBbmsDJQxqfd74N+Y5rsy/X8u5r9M=;
-        b=afC6y3XcQkxjqJ0KXvCLkFZYEQRQHysbX5sVIKu/9ToTmdPzB6r7aFhGP6hMwoYaXI
-         GlgTY3AamXJm/oEKSiH6E7oHyGxd12rIfwBsR4PAIDCDtjv5JoS05WCw7m63IAH6HXYK
-         0JH526wVKOZ5xrRLmrSfNYb8ItFpFqBXOMWpHe7panICBM17uNjgiakib9odE1inBsgZ
-         1lilkohVKbNpqe5ym7Th6xe5KThQFhqwZPw3ya1KogFtGUIyC0RNkexFH98hrCUkJ1wQ
-         X+Vrt22RMrpdwsII+bUpknmPwD7Vh+crVw1O+7EqSxY8E6ZRWdrdOQtmE5nfSu11qLrG
-         679w==
-X-Forwarded-Encrypted: i=1; AJvYcCXO9UdemNktRP44o1VArfXRXIvNuzZzisG1sojyV+68brNkkx0BxO7ZimdVX6kIk+Y8rEO6E7pvptnNMcg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmgN1oyR0KpZJXWvYgs/zk/vHz3LIn8PGjO8XP1hi3e93zEmpC
-	cPrE/SRtlPKR+HLca9yM2CnLAbULqtB730Ae19UxpS+3LKCqFarZmZko2ZGNpdLAtM6ft4VW3f2
-	5pb/oPXUeNhMTdg==
-X-Google-Smtp-Source: AGHT+IH32aeGBvg2luv4gbioBUWBNQHausYBBTdgS9H6mIAClBxo2uw9CdlM5sOoYtH0AQXXEFBt8D2/a5SUY7U=
-X-Received: from wmqb15.prod.google.com ([2002:a05:600c:4e0f:b0:43d:abd:278f])
+        d=1e100.net; s=20230601; t=1744799938; x=1745404738;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DzdgsiFLrWJM9v+aW/iqIUvY9sIWu9H1VS9MicD3j+w=;
+        b=tAChBgvcSmNVLMVqzaMBr+mishP5X4cQXqLMXFtqtRyfEzlHiFPQuF/MDY1mfdWF3U
+         H+TtrIHKjPF2CXpAFpxKvCsxaOWl1nkr4/xDloVqUgOJ+yG/sSDes7ppomE8JM/a6P9N
+         bEwrJ8amN1tL9qlEyycfCwnZZ7HihbI0ps3jWPFl630zkFlvbHZuT8U7oGiY6LppcpLY
+         tlsCilWXrj7xXW16DD7jY3aGctM2zbXApuA5L4q/0LP9wpzciwk0v/a8gOR6gvJ5YChI
+         qv3QxqzExQndUmOA+Sv4+h8ANfM/oC63XpLYLd6A3QaEmjM9E07M8+kkm52DklrYIpbo
+         7P2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXlBZFk/3V5Xt1sqs9MEuBhMv8sfT0+9j4d5+FrQe+UsRpMOPDGO6Nh9zVEeZSLjAFkbeTDnk+NwnbSJuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1IRn1LZ4GpklO/sT3Mql8CNMYWn+nF7q5b0yE/qqiX9V+wJMV
+	kIQbtAY2uZnH398Fs+cPqVoBk4SXeK47/9hrrgs5Bw51P0qEdBhTSHpDSj2ttrJZ87Vfu2kfFut
+	WK+OojMXpTsYkKg==
+X-Google-Smtp-Source: AGHT+IH+MEg796oClEqkHXdBLlFKTQFf4k2OPeeqW54iAz/lXVcUBF8U++to388rj0q379XLpqbkQM648datN08=
+X-Received: from wmgg9.prod.google.com ([2002:a05:600d:9:b0:43d:5264:3cf8])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a7b:cd14:0:b0:43d:fa5f:7d04 with SMTP id 5b1f17b1804b1-4405d7f3ffbmr12296315e9.16.1744799892884;
- Wed, 16 Apr 2025 03:38:12 -0700 (PDT)
-Date: Wed, 16 Apr 2025 10:38:10 +0000
-In-Reply-To: <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
+ 2002:a05:6000:1846:b0:39c:268b:8b66 with SMTP id ffacd0b85a97d-39ee5b8930dmr1273487f8f.43.1744799938290;
+ Wed, 16 Apr 2025 03:38:58 -0700 (PDT)
+Date: Wed, 16 Apr 2025 10:38:56 +0000
+In-Reply-To: <Z_5V-uznqkAvrf9p@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250410115420.366349-1-panikiel@google.com> <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net> <20250410130944.GA9003@noisy.programming.kicks-ass.net>
- <CANiq72=k+tZ3ACEB5k9qwJ8ZYu-dXkA3=Lisg1b8ze-2D0STog@mail.gmail.com>
- <20250410132649.GE9833@noisy.programming.kicks-ass.net> <CANiq72=Q_Z8KfV+n4z9wWVJsZwVevag=Vh3URe71XkUuWuqEDg@mail.gmail.com>
- <20250410133446.GF9833@noisy.programming.kicks-ass.net> <CAH5fLghrcqSYwkqbC4SSp6oYCny0riMRGA6W+oqQ69aA=NwYWw@mail.gmail.com>
- <CANiq72k0AM3v9JZe=8mDN6T1ToiAt1-1e1zJ3z0Oh6ZWfchzag@mail.gmail.com>
-Message-ID: <Z_-IkqzGBg_dWvHm@google.com>
-Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+References: <20250414131934.28418-1-dakr@kernel.org> <20250414131934.28418-5-dakr@kernel.org>
+ <Z_5M5Auqj2KK-rPz@google.com> <Z_5V-uznqkAvrf9p@cassiopeiae>
+Message-ID: <Z_-IwF4hrPUqVqwN@google.com>
+Subject: Re: [PATCH v4 4/5] rust: auxiliary: add auxiliary registration
 From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	"=?utf-8?B?UGF3ZcWC?= Anikiel" <panikiel@google.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Kees Cook <kees@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Matthew Maurer <mmaurer@google.com>, 
-	Ramon de C Valle <rcvalle@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, david.m.ertman@intel.com, 
+	ira.weiny@intel.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu, 
+	airlied@gmail.com, acourbot@nvidia.com, jhubbard@nvidia.com, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 05:15:31PM +0200, Miguel Ojeda wrote:
-> On Thu, Apr 10, 2025 at 4:00=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > I submitted a PR that I believe should fix it:
-> > https://github.com/rust-lang/rust/pull/139632
->=20
-> This landed, scheduled for Rust 1.88 (2025-06-26) if all goes well.
->=20
-> Peter: are you OK with landing a patch like this? Well, modified to
-> look like this now that we know the version:
->=20
->     depends on FINEIBT
->     depends on !RUST || RUSTC_VERSION >=3D 108800
->=20
-> (assuming we confirm the nightly build works properly)
+On Tue, Apr 15, 2025 at 02:50:02PM +0200, Danilo Krummrich wrote:
+> On Tue, Apr 15, 2025 at 12:11:16PM +0000, Alice Ryhl wrote:
+> > On Mon, Apr 14, 2025 at 03:18:07PM +0200, Danilo Krummrich wrote:
+> > > +impl Registration {
+> > > +    /// Create and register a new auxiliary device.
+> > > +    pub fn new(parent: &device::Device, name: &CStr, id: u32, modname: &CStr) -> Result<Self> {
+> > > +        let boxed = KBox::new(Opaque::<bindings::auxiliary_device>::zeroed(), GFP_KERNEL)?;
+> > > +        let adev = boxed.get();
+> > > +
+> > > +        // SAFETY: It's safe to set the fields of `struct auxiliary_device` on initialization.
+> > > +        unsafe {
+> > > +            (*adev).dev.parent = parent.as_raw();
+> > > +            (*adev).dev.release = Some(Device::release);
+> > > +            (*adev).name = name.as_char_ptr();
+> > > +            (*adev).id = id;
+> > > +        }
+> > > +
+> > > +        // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> > > +        // which has not been initialized yet.
+> > > +        unsafe { bindings::auxiliary_device_init(adev) };
+> > > +
+> > > +        // Now that `adev` is initialized, leak the `Box`; the corresponding memory will be freed
+> > > +        // by `Device::release` when the last reference to the `struct auxiliary_device` is dropped.
+> > > +        let _ = KBox::into_raw(boxed);
+> > > +
+> > > +        // SAFETY:
+> > > +        // - `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`, which has
+> > > +        //   been initialialized,
+> > > +        // - `modname.as_char_ptr()` is a NULL terminated string.
+> > > +        let ret = unsafe { bindings::__auxiliary_device_add(adev, modname.as_char_ptr()) };
+> > > +        if ret != 0 {
+> > > +            // SAFETY: `adev` is guaranteed to be a valid pointer to a `struct auxiliary_device`,
+> > > +            // which has been initialialized.
+> > > +            unsafe { bindings::auxiliary_device_uninit(adev) };
+> > 
+> > Does this error-path actually free the box?
+> 
+> Yes, auxiliary_device_uninit() calls put_device() on the underlying struct
+> device, hence the release() callback is called at this point, which frees the
+> Box.
 
-With that change:
+In that case:
 Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-
-I have tested locally that the upstream PR works together with CFI,
-although I did it by backporting the PR to the rustc version I'm using
-rather than by using the latest nightly. Not sure if a Tested-by on
-*this* patch is warranted from that test ... but if you think so feel
-free to add that too.
-
-Alice
