@@ -1,63 +1,63 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115481EDA23;
-	Wed, 16 Apr 2025 01:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7C9205518;
+	Wed, 16 Apr 2025 01:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765314; cv=none; b=exKEad/nA2BmnH1gfnI5Xyhd8WRC/ukrOXBXxiR6UvBJw1jLx9skWJO2VKxIAX7AyUDxRoSq0NkBYSridYMciolR0jrgQ1aIlLYiVmpKLDRYolx28/kXhOaAPf8etXXa9lo11geY7ySFFVcc/PMz752Pz4HOLqTkznwfxoTK16U=
+	t=1744765316; cv=none; b=hk+Ja2eGDkjQTvc0VaFmrDS46kFQ1Az1HfuJPGq8jQ6ZlwQunNVj8dSyQse6Nydo7eF9eg+gZ4yf2s5r/Z6eQ3q5MQzUBbCliHAmsfFKTcH+UGVhHYWktkGzAoYLLmrsdaalMtb+kQ2geOnDu7oBlOBeJA/SWDDpLKPwSuaez4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765314; c=relaxed/simple;
-	bh=fxstSu8qzAdIhLAQYEClN5UN40X87p6oIsu6USwOWBE=;
+	s=arc-20240116; t=1744765316; c=relaxed/simple;
+	bh=2MOzeayWlccfwTqa1FLxEDzAI5cPyKL90aB6hvk5T1s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OJ0fWu9EDBgLy2PdYNsQLFUHvE3NXdCY1/BkU/ZrtxvsWYXqCWX64g4A3HpJM+Sz6oRv6hhEazYUNyuOVsa/aJvWWrdbgYtzLXALVC0ytYoes0wgGYlWgogkENuYyOp1HTFFWiPuCH8pZDgYs1QceI1vagOOkdoQz0Lcts4NRIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F4mGMvxG; arc=none smtp.client-ip=209.85.160.171
+	 MIME-Version; b=hWk2uHtodY8m+PHkef4KSgqP/HhUhRHROc+VkmEAoS+qS+w5+0EN4pKhRASv1lXQCWszLrukxavqGwDuTa1DSq6jiSFLOoX++N4+rYHdEB60fEanZxbxnscSlvWYZUieMFxQ2JCI9Y6AMgwk9lUaUiBfCy+ow0CoXfYhPxHeT8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m3RE+JVa; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4mGMvxG"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4775ccf3e56so2392331cf.0;
-        Tue, 15 Apr 2025 18:01:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3RE+JVa"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c0e135e953so644582685a.2;
+        Tue, 15 Apr 2025 18:01:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744765312; x=1745370112; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744765313; x=1745370113; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0Nq2Ww24LxFVqSq9jn2uyDgDeiQ5tXdDH9PjOgGJn1k=;
-        b=F4mGMvxGUhMjO3FDOWIFDHnW1WA5uoF5zLzDhRTsITStlOeQPWDDiOl4SlM74pz1YC
-         zfuPff5UUH6Wb49y+d8vEo+bGsMLYzfHmthfltbspDELf2oDM88xoOJqGss6AqRkqlXY
-         lZ4CpGraUdTulS+ZGUlClTD4BMlaU7oNdmO/91c/MoT8LiqgRvlsws/KTsUhK1yG+qOQ
-         mEl8O1oWU7mpTUWopo/QNJwCYa2Az7cKdzCeDDEcZyhdT+3Uk1P4vgBP5f5nAx9rJZEE
-         yX7GR75cJ9eNi+ZzvwMyUa/H/McYBJeRvvs4Gak2CUheXlCzG+I8WHdTdbhNaE/QX6AM
-         +puQ==
+        bh=I9rF9Mh0w+Kj+uaO05jBBZXC+GX1PbjeGPNbhu05MfQ=;
+        b=m3RE+JVaKi9fXim3VbjtGPfSHMNKyRP7NW8QJG1DFWhbW32s+Jf0K2A4N9f2jsvt4d
+         1M0qidSPqd5GCOQGVnrc1u114MNpobgrbCCjM394bEGiu6bAC5nJPyj4s9Lyr9LOXeln
+         XZfMxrTIr4xjP6j5PZpXt/PZVd9MdpmiiBp4RgyKarisppR3XthJQ3WSPeNYFB1LrdCs
+         CfayOJP87ctDvdJV4bIwu88RtB1Vj/BG31NoNjurRtrLvZd4aWVFNW5Htns8jA31sjK8
+         ZaH0aXi7854vYguqPDgSTeBGubkOvlhvHoSh9iruBJuMl+UplTDhK/Cfb49thx6HG3gO
+         6AeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765312; x=1745370112;
+        d=1e100.net; s=20230601; t=1744765313; x=1745370113;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0Nq2Ww24LxFVqSq9jn2uyDgDeiQ5tXdDH9PjOgGJn1k=;
-        b=LyzI7xTvaYFFXcq8X1LbRIPDRhd/m0cf3rYeFUs1D6mG1IPJGe5r+MsdNsRV+zuSHx
-         oB8XDdGEHaroNQ2lfsbuHOLQs9KYVr/JKTJe3rbC3ydIpE+Xw8ILhX40XHrxeScVqt25
-         hkyu6uROlraUWxXtm6TdC96J22TsNpbV9ylOzbu0EgkQFw913kCp7OllojgFyGLwKMz0
-         Hfg/ileQFAtFILtwjL/bF3es7w5hlh51H8/Ho/0MtQyzD7nt4dCllWVeZbcDPpNtDlqo
-         bW9knu3O3VHMx7JBevIuntZF8gz1E2aLH1F1Rtf3NasxydHx92gBAjRNCgamjSzuAB+m
-         iL0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUH2Mt6YLzGoTIjPJq+cZ3FKj5qjO+5yp2fv1Pm5QdGdZyKO+6JYHv99QIlzvgZ9WRMZzk9u9F4Zz7Y0lbw@vger.kernel.org, AJvYcCWKef5o3EvChIeSscTS5n0gHZZGxzSNULdBi6eB2u+JzfmnKsofan7zwoxlt8CEknPcWJvqyxnwZ9+m@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxtx/TGmhCNJbHiQuX2KKTo7mLrf8PJPeGJvWhqMP9XBpNfHZwh
-	bkzVf1DXZgi8WbtrutB9vOKzAqs383fb+kMjEREGv1nf1mPRtHar
-X-Gm-Gg: ASbGncsdIaGgMA6TLcXi3dqPvYA63uLKvLir8Yi9fzESRsHxZNuA6jB9k0/EO4ltCUO
-	4FL/sVc3fGHa6QT4jy/U7wlzPc+5C9OPM1se1gTesHr6Q4WprZLVxriv04RPZvh85yA/dii3H0z
-	pF5FB8lxRPZYJ2zEd4DY3gHagZ8+BARMeFxNuSe8uP97BZCGbgyRzGfKrPg07CKqKaNqdz7ZLN4
-	7/vy5x0b2fM0dCksBILIFENoTUa2O09GJ4KSopD1YyOAm2pBjVSm4lKwSnBbWM22wrLtABUuHYG
-	+Z+VgIxx658OY2eRhL7pl8HqUmqR0iAvogbUQQas82HpycFwSSxbYStze3XGo+M7el8RdGK5Rec
-	JJs6tH/a/bq1tBXo=
-X-Google-Smtp-Source: AGHT+IFVbV/PtUyWDy5dJ4ZAzRjnbBQX/ZzVFdzXITZAv6qMqnv4IbtGbczYUR/sIYzqBUBHsjPsVA==
-X-Received: by 2002:a05:622a:355:b0:476:5fd5:4dea with SMTP id d75a77b69052e-479ff080e97mr80895381cf.5.1744765311578;
-        Tue, 15 Apr 2025 18:01:51 -0700 (PDT)
+        bh=I9rF9Mh0w+Kj+uaO05jBBZXC+GX1PbjeGPNbhu05MfQ=;
+        b=cvtmVHQXnglb+XxP2s1r0e4ntjWJMy656o6Oo16m8I7KFuZotR/sfhdFVZeSPWXt8p
+         tkJmdLE3y8YNvOV1M6ilSNpC4W1iofk7RoWw+sQmdebdDcAhd+EnQ63PxPxxa8vh+TKX
+         fuIzLpSgguP+9Oc4K3dDsQwn9yTO/FtnSiF/SCq6SjtvcRBoIeOXx+4JIQPIQsvIDhN9
+         Z6ezRihPT1qQFKz5CRQvxGkKxt/gIXRFqfkIdqZg1Kx4mvWcRVMYkI/c4UYFLPHWUqK8
+         1IebzyhpxCTYblK4Rq/K6Q2CsCkV8btXHPEGlSWYgyrj5YSjY6MGVIrfAdo/TRRpnCyi
+         /5kw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4LOiv7nnbG9uo9/W+p0Ew7LzxSYxh8KQox5DB3v5wnK77bEfpCDSRkfzYhVxkof+qakxp4Thdl35i@vger.kernel.org, AJvYcCXxu23pxUYl98eLVB6mCAT8GumXFOZm6Ll0m60joOi8s/J26DRQQBDk59C4pfkED6Zw7uOtIOkq+d/A7/Mq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DrZMpi3Bi0DeBWw9QXZLwI+tvwJFnHzhEGB75nG/k/zJy228
+	wiL8PUG+6Ffjni+UzhBSu0Nf1uNfMcECJt1kuqzSdnkzqstjbcxCN52tWA==
+X-Gm-Gg: ASbGncvlJs3I4xaZBCnjfLFCeCoR9icwRfv6sWWYXMmTc+sBRePNZovgZwlL8etEsYS
+	B+kXOqaT+x8tDjJls7WqTxntKaLVjwfyBjql1P1+wwmsZc0glK66HkeUvCxe3wP39SCLbBtN28U
+	Xoams/E/xyx0HQ+jeXeeBSARiir9OjStyVxzdnFBjoNh90LGCv+z94/k9cPwVniOHUg3XMNhZbZ
+	svSxJU6OvGJAmqDhB73hrDOwQ3nfZxDYSsgIXAW48rzdE3sP87keg1/2/NhwjT5nYHfIDGLnZg1
+	etMuf/nLyXFpXFppnJVwSJ/nSu6Nx8AdOULAAul6jtCIHuA0eS5Ep1cDo39EX1dtC1EK157fSdE
+	G+Kv6VrtUJ7AsJsQ=
+X-Google-Smtp-Source: AGHT+IHo8LW4/kQU8vbnG4ZIc93Rt6FiRzzyd/pS66bVb4v5nXdfGqbOemh/k9HlpLvqVxNmTUc+Lw==
+X-Received: by 2002:a05:622a:110a:b0:476:afd2:5b60 with SMTP id d75a77b69052e-47ad3a28ed0mr21853591cf.15.1744765313439;
+        Tue, 15 Apr 2025 18:01:53 -0700 (PDT)
 Received: from aford-System-Version.. (c-75-72-162-184.hsd1.mn.comcast.net. [75.72.162.184])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796edc29ccsm99746291cf.77.2025.04.15.18.01.49
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796edc29ccsm99746291cf.77.2025.04.15.18.01.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 18:01:50 -0700 (PDT)
+        Tue, 15 Apr 2025 18:01:52 -0700 (PDT)
 From: Adam Ford <aford173@gmail.com>
 To: linux-arm-kernel@lists.infradead.org
 Cc: aford@beaconembedded.com,
@@ -73,9 +73,9 @@ Cc: aford@beaconembedded.com,
 	devicetree@vger.kernel.org,
 	imx@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 03/10] arm64: dts: imx8mp-beacon: Fix RTC capacitive load
-Date: Tue, 15 Apr 2025 20:01:29 -0500
-Message-ID: <20250416010141.1785841-3-aford173@gmail.com>
+Subject: [PATCH V2 04/10] arm64: dts: imx8mm-beacon: Set SAI5 MCLK direction to output for HDMI audio
+Date: Tue, 15 Apr 2025 20:01:30 -0500
+Message-ID: <20250416010141.1785841-4-aford173@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250416010141.1785841-1-aford173@gmail.com>
 References: <20250416010141.1785841-1-aford173@gmail.com>
@@ -87,29 +87,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Although not noticeable when used every day, the RTC appears to drift when
-left to sit over time.  This is due to the capacitive load not being
-properly set. Fix RTC drift by correcting the capacitive load setting
-from 7000 to 12500, which matches the actual hardware configuration.
+The HDMI bridge chip fails to generate an audio source due to the SAI5
+master clock (MCLK) direction not being set to output. This prevents proper
+clocking of the HDMI audio interface.
 
-Fixes: 25a5ccdce767 ("arm64: dts: freescale: Introduce imx8mp-beacon-kit")
+Add the `fsl,sai-mclk-direction-output` property to the SAI5 node to ensure
+the MCLK is driven by the SoC, resolving the HDMI sound issue.
+
+Fixes: 8ad7d14d99f3 ("arm64: dts: imx8mm-beacon: Add HDMI video with sound")
 Signed-off-by: Adam Ford <aford173@gmail.com>
 ---
 V2:  Change commit message, no active changes.
 
- arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-index 15f7ab58db36..88561df70d03 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-beacon-som.dtsi
-@@ -257,6 +257,7 @@ eeprom@50 {
- 	rtc: rtc@51 {
- 		compatible = "nxp,pcf85263";
- 		reg = <0x51>;
-+		quartz-load-femtofarads = <12500>;
- 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts b/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
+index 97ff1ddd6318..734a75198f06 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
+@@ -124,6 +124,7 @@ &sai5 {
+ 	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
+ 	assigned-clock-rates = <24576000>;
+ 	#sound-dai-cells = <0>;
++	fsl,sai-mclk-direction-output;
+ 	status = "okay";
  };
  
 -- 
