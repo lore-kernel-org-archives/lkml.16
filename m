@@ -1,85 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02552156F20;
-	Wed, 16 Apr 2025 14:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B49156F20;
+	Wed, 16 Apr 2025 14:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744813425; cv=none; b=evycWGFPjb20kUi+sogGa/6iZm9SKAhRWryd3xwYTPXMb4IIN167BkG2zgs+ZLuy6fyankxpsJk1x+lUhnuQmUkmnHSLyN7q4SVkP26Q8JmXoxaQPnLvGtON/tmOXH9pqY/Tzp/fotYKun/HaYm9iFa4cwxoTDRqr7vCZcVXQQE=
+	t=1744813498; cv=none; b=bnV94kBqx8+0I0oQSA24f/P0fm85SrEQoka/iy3U+INCDX7/SvLXx1npZrOkzpxpGMrz3NiKi+g8seNfLPRRT4kW/WbvD6nEFQ3pGrMTsCsWFqQmcB2/mOWrA2uRUQ02a7DepG7BHkAskPq9QKrX1z6fAazEjYgGRz4jRnB1zkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744813425; c=relaxed/simple;
-	bh=lPfRXaDBjyOUAdWEOvH4n8J6zU16376uJs4mOfS7qTQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=TLBKDjwJ8AHdovEM4Es5rjkWq233DOEV7C7QFQBGd/mjTrv06K0BZBuA7xemsowyuOFxh82EEFFJ2SbKPcl7pQ72uLR7spISBLwo72sJgpDSpm4icwhRRbdOHFsHH1OZUg9Kia1LeinI2t3jbA6XRQl5+eI8fpq/OMfAfa4zEG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FeiU5dpp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744813498; c=relaxed/simple;
+	bh=tA8sXd4VE4qWzGSwlTA/nW94dwKfR/DWTKT7Z8ahn1s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SSl3D7LBkGDNgGnPgOwRRSY6q2oNZh6hsh7qS+uMyZzTvV6DwdoLZD92qyemPMXFOv+ReM+0M1sBJ6XEQkuSiIVbDKgoiOv/LqoiWdO25BNBukmL996yrKhrjoUQNqnpJmdMm/WTuuoNgNBAcaGxJAGvJUI1EgbZLqTNA1ACyiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lpLhiQQz; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FeiU5dpp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32269C4CEE2;
-	Wed, 16 Apr 2025 14:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744813422;
-	bh=lPfRXaDBjyOUAdWEOvH4n8J6zU16376uJs4mOfS7qTQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FeiU5dppb3Ae1aIjW6ti9iDLnh4FdcviLcUFbhP1OPhFKdczAWxJ2ZBDiPOhXUH6B
-	 fA2Bw5JD41g7xpRivVi6suVeDxgy/AjNcB7nrP3fMqz01bzMQeFLrENy8+d99XkKea
-	 LC/BuEDJ5EXa5/DrtaLWVvvpXQakLzTrbMe1iSta2zG0E4cmsGDvUWwV7Up5r8xKCd
-	 Kss27aAZ6F3DfBIxuJ5A2LNGYWBHaP6gYPbYzsF+Twz0O70zJz9nlxgv6OSIdqTm1Q
-	 HjPkxNYwtyVoTS+xR2Nnj/u/jRHFvXGku/4ozHc1o3CXtIM09jHMQbBjUzTNw/Ak+o
-	 l+hTYUkXbRGPw==
-From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
- Vijendar.Mukunda@amd.com, peter.ujfalusi@linux.intel.com, 
- peterz@infradead.org, chao.song@linux.intel.com, 
- Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250415194134.292830-1-chenyuan0y@gmail.com>
-References: <20250415194134.292830-1-chenyuan0y@gmail.com>
-Subject: Re: [PATCH] ASoC: Intel: sof_sdw: Add NULL check in
- asoc_sdw_rt_dmic_rtd_init()
-Message-Id: <174481341991.257514.3784884460701270028.b4-ty@kernel.org>
-Date: Wed, 16 Apr 2025 15:23:39 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lpLhiQQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744813497; x=1776349497;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tA8sXd4VE4qWzGSwlTA/nW94dwKfR/DWTKT7Z8ahn1s=;
+  b=lpLhiQQzBIih/o3Lnep7T6JLCQDd0wECeMmLhkTKJji3JtuGlUurJO2B
+   v3WMdZJBU4Pandnbk7UxGwtnDJsbsFTeir1BPLM+iNlO8PbxII+EElBdq
+   Zni9M7Ea4XcvlhxI8nrSg1Y9Ick9hpCZioeEar9chdIYvoISdfH0LqxAr
+   GEZwUlGzRNzgRibswR8fzWhbDY8taFK1BJ0jSk3pui+KpowNKSA6q3oO9
+   zfu7eFvlmSb2IAQYVEn7vz1zVdv+YFdNmEtMXck1KLNJbfxK/3p6wOy3q
+   ZVm6MU8BmDR3xUdpqsaAy3DYHxBb4QOjTjhsuwKbE/0ApM9fsOx8p+hrL
+   g==;
+X-CSE-ConnectionGUID: mcbSyu3bQOWInbuZBESZmA==
+X-CSE-MsgGUID: GhXN/oiYRsKfsvi0vz332Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46529290"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46529290"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 07:24:56 -0700
+X-CSE-ConnectionGUID: BoS7IenlQLqQpcDv6hKlew==
+X-CSE-MsgGUID: WYDzFqC3SqqdEZGlmM4AwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="131402414"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2025 07:24:56 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ak@linux.intel.com,
+	Kan Liang <kan.liang@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/3] perf/x86/intel/uncore: Fix the scale of IIO free running counters on SNR
+Date: Wed, 16 Apr 2025 07:24:24 -0700
+Message-Id: <20250416142426.3933977-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
 
-On Tue, 15 Apr 2025 14:41:34 -0500, Chenyuan Yang wrote:
-> mic_name returned by devm_kasprintf() could be NULL.
-> Add a check for it.
-> 
-> 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Applied to
+There was a mistake in the SNR uncore spec. The counter increments for
+every 32 bytes of data sent from the IO agent to the SOC, not 4 bytes
+which was documented in the spec.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+The event list has been updated.
+"EventName": "UNC_IIO_BANDWIDTH_IN.PART0_FREERUN",
+"BriefDescription": "Free running counter that increments for every 32
+		     bytes of data sent from the IO agent to the SOC",
 
-Thanks!
+Update the scale of the IIO bandwidth in free running counters as well.
 
-[1/1] ASoC: Intel: sof_sdw: Add NULL check in asoc_sdw_rt_dmic_rtd_init()
-      commit: 68715cb5c0e00284d93f976c6368809f64131b0b
+Fixes: 210cc5f9db7a ("perf/x86/intel/uncore: Add uncore support for Snow Ridge server")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/events/intel/uncore_snbep.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 60973c209c0e..35da2c486e8d 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -4891,28 +4891,28 @@ static struct uncore_event_desc snr_uncore_iio_freerunning_events[] = {
+ 	INTEL_UNCORE_EVENT_DESC(ioclk,			"event=0xff,umask=0x10"),
+ 	/* Free-Running IIO BANDWIDTH IN Counters */
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port0,		"event=0xff,umask=0x20"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port0.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port0.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port1,		"event=0xff,umask=0x21"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port1.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port1.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port2,		"event=0xff,umask=0x22"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port2.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port2.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port3,		"event=0xff,umask=0x23"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port3.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port3.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port4,		"event=0xff,umask=0x24"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port4.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port4.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port5,		"event=0xff,umask=0x25"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port5.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port5.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port6,		"event=0xff,umask=0x26"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port6.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port6.unit,	"MiB"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port7,		"event=0xff,umask=0x27"),
+-	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.814697266e-6"),
++	INTEL_UNCORE_EVENT_DESC(bw_in_port7.scale,	"3.0517578125e-5"),
+ 	INTEL_UNCORE_EVENT_DESC(bw_in_port7.unit,	"MiB"),
+ 	{ /* end: all zeroes */ },
+ };
+-- 
+2.38.1
 
