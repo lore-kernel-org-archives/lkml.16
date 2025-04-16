@@ -1,90 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1F5248893;
-	Wed, 16 Apr 2025 12:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD9723F422
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805001; cv=none; b=hsf+uK5m1gtlWDza9kfUKvmXxpM/ma4ZG5/On6PnG0O7PFjnNUMqA1ov40QwrZA6js2hVvNhnsPrvnow28riGsq0W1cybP+3YbGGJP0VDrurGFXH1fYt7tjjcr19HeB/smE3sy3V7jhXm/vU9Sp6VPY4/w/qVVFEYFlqkij/q78=
+	t=1744805043; cv=none; b=aPtTMRBAGfnsSi3HwWSqCWhmST2LQZ7q8J0sGv1Ip63Jmyn/NXsdvPMu77yCT/hAYUkFqDenG4H4oJoE64QhVe8c3fMBFDlNmxMZbfijW1coxwEW16R2cUKwyusC5NWKoUc2mcrE05R+5LrQWMDeWwKt0BFFu2wLEr4Bim1ovvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805001; c=relaxed/simple;
-	bh=Fd+W9CjO5d9kB35ZI0RnHNWj1wpgnArBWJxv+jgCc4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mdWz2aCixJApJQy4xUadOxOVmpA7Eh97e26Zw+boDh19eTz2jb02DvXSBWAdfwsY4LXAewypW5m6JJqZh2bqP10n9pzXg0syDZmNGZgGa6tC81GCg5UspAz5VAef4iZDvWuFND7OIwM4W+lgZiLjMi76/4ZapVApxN1uU+dAdpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: JAcJZtEdTyuFSOW+X8JWYA==
-X-CSE-MsgGUID: pO2iESYQROaO8OlQSOUCzA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46238939"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46238939"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:03:19 -0700
-X-CSE-ConnectionGUID: rZsEcAhtTU+IXw8AkJz4MA==
-X-CSE-MsgGUID: ISgYA7SHRiGfC442U/jbNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="135521346"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:03:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u51U1-0000000CqQW-00w5;
-	Wed, 16 Apr 2025 15:03:13 +0300
-Date: Wed, 16 Apr 2025 15:03:12 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
-Message-ID: <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
-References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com>
- <Z_-E3W8i4EfxdBh3@smile.fi.intel.com>
- <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
+	s=arc-20240116; t=1744805043; c=relaxed/simple;
+	bh=HWqh+T9xGdXr2x2ptTrd4xSwZnxgWGd8mannk8BWyqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ECqvvhxzZGENNwuaMnc1N8QTIus/tTpBU7dye8TvHpmlaiKEIB63KGyPgxUeKPLBJt5FPXwyhma+C8dNjZVKWTe2wRwQiaoZcA0akpiUMaf1ERvmdh5e2+kJN4DwufL8fH96a4ll5YZHL5pX/LWPSDGoGiD1HRcdKzWvEhGziWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wTNuD1qF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VCd2cnKN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=wTNuD1qF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VCd2cnKN; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wTNuD1qF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VCd2cnKN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="wTNuD1qF";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VCd2cnKN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 40E251F461;
+	Wed, 16 Apr 2025 12:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744805040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
+	b=wTNuD1qFq7CpHVbaPYS5ikEd8Ug18IiRlzmytANVXa8eCWUoQow7jVqF8kAQHOdZZp3Li3
+	LuptuBaPXBBoedRL225XO11ZsW0ZA1WPp/SJ/qAd0V0kQkEI0fx/gZt8NGC6B2cUi1FmdQ
+	If2I8onvLAdU+ozbKglX4mIXCAXF+1s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744805040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
+	b=VCd2cnKN1Q9Z6AEH+q1H7FVL6fV1wujdhCJmLDVFhNgsuMSUYmg8TpuS9kr6HpBY4WaWcX
+	hwlVAra6sxoZ/QCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=wTNuD1qF;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VCd2cnKN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744805040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
+	b=wTNuD1qFq7CpHVbaPYS5ikEd8Ug18IiRlzmytANVXa8eCWUoQow7jVqF8kAQHOdZZp3Li3
+	LuptuBaPXBBoedRL225XO11ZsW0ZA1WPp/SJ/qAd0V0kQkEI0fx/gZt8NGC6B2cUi1FmdQ
+	If2I8onvLAdU+ozbKglX4mIXCAXF+1s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744805040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GKmfoej560lM1dq41MrZF/R2J8/pmwdXbyf9GgGgEbE=;
+	b=VCd2cnKN1Q9Z6AEH+q1H7FVL6fV1wujdhCJmLDVFhNgsuMSUYmg8TpuS9kr6HpBY4WaWcX
+	hwlVAra6sxoZ/QCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CCFF2139A1;
+	Wed, 16 Apr 2025 12:03:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yXsHMK+c/2d8IQAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Wed, 16 Apr 2025 12:03:59 +0000
+Date: Wed, 16 Apr 2025 14:03:49 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
+ <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
+ Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/7] soc: aspeed: lpc-snoop: Cleanup resources in
+ stack-order
+Message-ID: <20250416140349.52bffcf6@endymion>
+In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-1-64f522e3ad6f@codeconstruct.com.au>
+References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+	<20250411-aspeed-lpc-snoop-fixes-v1-1-64f522e3ad6f@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 40E251F461
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 16, 2025 at 02:53:51PM +0300, Ilpo Järvinen wrote:
-> On Wed, 16 Apr 2025, Andy Shevchenko wrote:
-> > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo Järvinen wrote:
-
-> > > +			resource_set_range(res, 0xC0000, SZ_128K);
-> > >  			res->flags = IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
-> > >  				     IORESOURCE_PCI_FIXED;
-> > 
-> > I'm wondering why not DEFINE_RES_MEM() in such cases?
+On Fri, 11 Apr 2025 10:38:31 +0930, Andrew Jeffery wrote:
+> Free the kfifo after unregistering the miscdev in
+> aspeed_lpc_disable_snoop() as the kfifo is initialised before the
+> miscdev in aspeed_lpc_enable_snoop().
 > 
-> I guess you meant DEFINE_RES() as that seems to allow giving custom flags.
-> However, DEFINE_RES*() will overwrite ->name which seems something that 
-> ought to not be done here.
+> Fixes: 3772e5da4454 ("drivers/misc: Aspeed LPC snoop output using misc chardev")
+> Cc: stable@vger.kernel.org
+> Cc: Jean Delvare <jdelvare@suse.de>
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index 3e3f178b122615b33e10ff25a0b0fe7b40a0b667..bfa770ec51a889260d11c26e675f3320bf710a54 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -263,8 +263,8 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  		return;
+>  	}
+>  
+> -	kfifo_free(&lpc_snoop->chan[channel].fifo);
+>  	misc_deregister(&lpc_snoop->chan[channel].miscdev);
+> +	kfifo_free(&lpc_snoop->chan[channel].fifo);
+>  }
+>  
+>  static int aspeed_lpc_snoop_probe(struct platform_device *pdev)
+> 
 
-Okay, I haven't checked the initial state of name field here, so then
-DEFINE_RES_MEM_NAMED()?  Or don't we have one?
-
-In any case I would rather see a one assignment for these cases than something
-hidden behind proposed conversions.
-
-> I found one other case from the same file though which is truly defines
-> a resource from scratch.
-
+Acked-by: Jean Delvare <jdelvare@suse.de>
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jean Delvare
+SUSE L3 Support
