@@ -1,141 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.mainlining.org (mail.mainlining.org [5.75.144.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD021F8937;
-	Wed, 16 Apr 2025 20:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B59D21324F;
+	Wed, 16 Apr 2025 20:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.75.144.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836053; cv=none; b=bO1b1xwRD7PJkeLRx5bJG9fP27pXRvSwBIkKeOm0u6UhCtgQM8R8/zUdBx5XAaJdegYHE+gfv/v/XzRGF61+0P/JHGAoQNZqhzI/iSwnJIOgbT4es2A/ipARyYGUg93ACTs70iFRTm6Ll3Tz78tWSoeWeGe29UN+Zww5YTSKjZY=
+	t=1744836068; cv=none; b=Mjvlh94KkGwik11Zwp/rWO+qugCN8su85PbuYctLGAOb2MkIfVXE+o1qDWvwNUoVUNsUwRiPpxkiFCk8x8/6l0dftiV+u7iGF9qPNjIWtBydeSVjSXyh3FkqcL3gnMxai2oUnS0ryT2BvsFHWp1Mj2TXaz2exYevdnR08Z9wF/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836053; c=relaxed/simple;
-	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rUM+oJOCcEDgllGGPXp65PUN8evR8ft1R/Mras3QmJibFTqZBJxVauWki5rX6PyKOJH7EGtwwLnQ3GADLOPIQcGpSD28umBoNETirpOAfwE1g6VilRUlxDfNN67HMbBLYH90gUdDzC+E3YEE/cfbBnNVWHlwXVYCKQ71PgMArv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKd7z5T9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744836068; c=relaxed/simple;
+	bh=v7UN+6CjXz2XLGpkAAt+coSnP+B3OwoBHVUpCmbXSZ4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=eTFeIBIZ+NyoAHp6z3Y4zPcSYBv+IhkTi0DiyDg3+eHkNgkvNvpSwpBX4Jx6De/p9i3g+B/WXAha0FLXx4EjhK39cNw4XJeT9AKueJgz4LPfOEGy6LlsjtBbNyVDFN7XZOLpgBRVWouYd2SMf8CVSOB9fJdm/3VycC7sOWXPzMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org; spf=pass smtp.mailfrom=mainlining.org; dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b=oXDcUd/S; arc=none smtp.client-ip=5.75.144.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mainlining.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mainlining.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKd7z5T9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5B9C4CEE4;
-	Wed, 16 Apr 2025 20:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744836053;
-	bh=EvvTI2dVum18RivfEtnLiFFNULxxc8d7/TvWnBJ57e0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=eKd7z5T9E+knRBpQ3jKb/8ftx91rIF0bQBduS15ZAE2ht6hl19zLfGIL9jHC8vshl
-	 ykdizw73AakIuy3I1ly2//T08eeyRE3ODKNdIFqgSHtB8hcBfBJ4LJzlAXzQu/t7Zm
-	 SxWbJqE5V3eH2DBbGvY8tdy1KPA+cXGIi7fCUQ0pQrR4Qsloroe1ehc3TYdmQyzw9q
-	 N9vYSg1SXVhHXpRvwzpeWwPWveWbjNh0kAPClbvhKFeY/KZ3j7OEnAqbmNQSYWp/AH
-	 pkrq53hr0Xo0jqC6lng23FIZb2jtzv4zasaBJGtDpm9etx3bJvK3BIgUA6SyMXkGwn
-	 T9sqLP0GT211Q==
-Date: Wed, 16 Apr 2025 15:40:51 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
-	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	jingoohan1@gmail.com, thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] PCI: dw-rockchip: Configure max payload size on host init
-Message-ID: <20250416204051.GA78956@bhelgaas>
+	dkim=pass (2048-bit key) header.d=mainlining.org header.i=@mainlining.org header.b="oXDcUd/S"
+Received: from localhost (web.docker-mailserver_default [172.18.0.2])
+	by mail.mainlining.org (Postfix) with ESMTPSA id 69865BBAD2;
+	Wed, 16 Apr 2025 20:33:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mainlining.org;
+	s=psm; t=1744835607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KWNDczDpsZAXQp+kAkO6XxPalFUodMDdefQ7Hqvnp3I=;
+	b=oXDcUd/SrbjUZCVHpXK24ZQmD8eBsHZdttsQMwVDTwpErRn4lZfOJdH1A8oiVepKQPSDqZ
+	zlhtcHxJxDDvgtuNwu0JYAy5U1GvSo79Ey+649CcXxXpIIsyraAVU9Vr3PUPmWGlvRSKO1
+	xvLKpW0+s6nahxy3YDOwEU50jHtD38VCy88Y7xJgheSSEovev889x1DVU+LlGAJM5GUo38
+	P9tScdTlm2HuSd3uMqrUThPEGS4wG9Ma44SnYo2szJaYY3suuCYH78B0NE5BhULGNe21tZ
+	x6h9u4B4Ynv1/7XO73MGACy6WDFSjOXDm641nbh1O2DtAhNmPuNkGfh2aPRg7g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416151926.140202-1-18255117159@163.com>
+Date: Wed, 16 Apr 2025 22:33:27 +0200
+From: barnabas.czeman@mainlining.org
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Michael Turquette
+ <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>,
+ =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, Srinivas Kandagatla
+ <srinivas.kandagatla@linaro.org>, Joerg Roedel <joro@8bytes.org>, Will
+ Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Konrad Dybcio
+ <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, Marijn Suijten
+ <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Dmitry Baryshkov
+ <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
+ ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org, Dang Huynh
+ <danct12@riseup.net>
+Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
+In-Reply-To: <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
+ <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
+ <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
+Message-ID: <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
+X-Sender: barnabas.czeman@mainlining.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 11:19:26PM +0800, Hans Zhang wrote:
-> The RK3588's PCIe controller defaults to a 128-byte max payload size,
-> but its hardware capability actually supports 256 bytes. This results
-> in suboptimal performance with devices that support larger payloads.
+On 2025-04-14 22:55, Konrad Dybcio wrote:
+> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
+>> From: Dang Huynh <danct12@riseup.net>
+>> 
+>> Add initial support for MSM8937 SoC.
+>> 
+>> Signed-off-by: Dang Huynh <danct12@riseup.net>
+>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+>> ---
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
->  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+> [...]
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index c624b7ebd118..5bbb536a2576 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -477,6 +477,22 @@ static irqreturn_t rockchip_pcie_ep_sys_irq_thread(int irq, void *arg)
->  	return IRQ_HANDLED;
->  }
->  
-> +static void rockchip_pcie_set_max_payload(struct rockchip_pcie *rockchip)
-> +{
-> +	struct dw_pcie *pci = &rockchip->pci;
-> +	u32 dev_cap, dev_ctrl;
-> +	u16 offset;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	dev_cap = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCAP);
-> +	dev_cap &= PCI_EXP_DEVCAP_PAYLOAD;
-> +
-> +	dev_ctrl = dw_pcie_readl_dbi(pci, offset + PCI_EXP_DEVCTL);
-> +	dev_ctrl &= ~PCI_EXP_DEVCTL_PAYLOAD;
-> +	dev_ctrl |= dev_cap << 5;
-> +	dw_pcie_writel_dbi(pci, offset + PCI_EXP_DEVCTL, dev_ctrl);
-> +}
-
-I can't really complain too much about this since meson does basically
-the same thing, but there are some things I don't like about this:
-
-  - I don't think it's safe to set MPS higher in all cases.  If we set
-    the Root Port MPS=256, and an Endpoint only supports MPS=128, the
-    Endpoint may do a 256-byte DMA read (assuming its MRRS>=256).  In
-    that case the RP may respond with a 256-byte payload the Endpoint
-    can't handle.  The generic code in pci_configure_mps() might be
-    smart enough to avoid that situation, but I'm not confident about
-    it.  Maybe I could be convinced.
-
-  - There's nothing rockchip-specific about this.
-
-  - It's very similar to meson_set_max_payload(), so it'd be nice to
-    share that code somehow.
-
-  - The commit log is specific about Max_Payload_Size Supported being
-    256 bytes, but the patch actually reads the value from Device
-    Capabilities.
-
-  - I'd like to see FIELD_PREP()/FIELD_GET() used when possible.
-    PCIE_LTSSM_STATUS_MASK is probably the only other place.
-
-These would be material for a separate patch:
-
-  - The #defines for register offsets and bits are kind of a mess,
-    e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
-    PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
-    PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
-    names, and they're not even defined together.
-
-  - Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
-    PCIE_RDLH_LINK_UP_CHGED, which are in
-    PCIE_CLIENT_INTR_STATUS_MISC.
-
-  - PCIE_LTSSM_ENABLE_ENHANCE is apparently in
-    PCIE_CLIENT_HOT_RESET_CTRL?  Sure wouldn't guess that from the
-    names or the order of #defines.
-
-  - PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
-
->  static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  				      struct rockchip_pcie *rockchip)
->  {
-> @@ -511,6 +527,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
->  	pp->ops = &rockchip_pcie_host_ops;
->  	pp->use_linkup_irq = true;
->  
-> +	rockchip_pcie_set_max_payload(rockchip);
-> +
->  	ret = dw_pcie_host_init(pp);
->  	if (ret) {
->  		dev_err(dev, "failed to initialize host\n");
+>> +			power-domains = <&cpu_pd0>;
+>> +			power-domain-names = "psci";
 > 
-> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
-> -- 
-> 2.25.1
+> So CPU4-7 get "nicer" idle, but 0-3 don't?
+I am not sure, i will check.
 > 
+> [...]
+> 
+>> +		cpu-map {
+>> +			/* The MSM8937 has 2 cluster A53 setup. */
+> 
+> This comment seems superfluous
+> 
+> [...]
+> 
+>> +	timer {
+> 
+> 'p' < 't', please sort top-level nodes alphabetically
+> 
+> [...]
+> 
+>> +				wcss-wlan2-pins {
+>> +					pins = "gpio76";
+>> +					function = "wcss_wlan2";
+>> +					drive-strength = <6>;
+> 
+> please unify this order (drive-strength before bias)
+> 
+>> +					bias-pull-up;
+>> +
+>> +				};
+> 
+> Extra newline
+> 
+> [...]
+> 
+>> +		gpu: gpu@1c00000 {
+>> +			compatible = "qcom,adreno-505.0", "qcom,adreno";
+>> +			reg = <0x1c00000 0x40000>;
+>> +			reg-names = "kgsl_3d0_reg_memory";
+>> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+>> +			interrupt-names = "kgsl_3d0_irq";
+>> +			#cooling-cells = <2>;
+>> +			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
+>> +				<&gcc GCC_OXILI_AHB_CLK>,
+>> +				<&gcc GCC_BIMC_GFX_CLK>,
+>> +				<&gcc GCC_BIMC_GPU_CLK>,
+>> +				<&gcc GCC_OXILI_TIMER_CLK>,
+>> +				<&gcc GCC_OXILI_AON_CLK>;
+> 
+> Please align the <s
+> 
+>> +			clock-names = "core",
+>> +				      "iface",
+>> +				      "mem_iface",
+>> +				      "alt_mem_iface",
+>> +				      "rbbmtimer",
+>> +				      "alwayson";
+>> +			operating-points-v2 = <&gpu_opp_table>;
+>> +			power-domains = <&gcc OXILI_GX_GDSC>;
+>> +
+>> +			iommus = <&adreno_smmu 0>;
+>> +
+>> +			status = "disabled";
+>> +
+>> +			gpu_opp_table: opp-table {
+>> +				compatible = "operating-points-v2";
+>> +
+>> +				opp-19200000 {
+>> +					opp-hz = /bits/ 64 <19200000>;
+>> +					opp-supported-hw = <0xFF>;
+> 
+> 0xff is overly broad, please document the existing known speed bins
+> 
+> [...]
+> 
+>> +		adreno_smmu: iommu@1c40000 {
+>> +			compatible = "qcom,msm8996-smmu-v2",
+>> +				     "qcom,adreno-smmu",
+>> +				     "qcom,smmu-v2";
+>> +			reg = <0x1c40000 0x10000>;
+> 
+> Does it work as-is, without iommu changes?
+Yes
+> 
+> [...]
+> 
+>> +	thermal_zones: thermal-zones {
+>> +		aoss-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> There are no passive trip points> +
+Should i remove polling-delay-passive?
+>> +			thermal-sensors = <&tsens 0>;
+>> +
+>> +			trips {
+>> +				aoss_alert0: trip-point0 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> Please convert these to 'critical' instead
+> 
+> [...]
+> 
+>> +		cpuss1-thermal {
+>> +			polling-delay-passive = <250>;
+> 
+> You can drop polling-delay-passive under CPU tzones, as threshold
+> crossing is interrupt-driven
+Should I remove polling-delay-passive then?
+> 
+>> +
+>> +			thermal-sensors = <&tsens 4>;
+>> +
+>> +			cooling-maps {
+>> +				map0 {
+>> +					trip = <&cpuss1_alert0>;
+>> +					cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>> +							 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +				};
+>> +			};
+>> +
+>> +			trips {
+>> +				cpuss1_alert0: trip-point0 {
+>> +					temperature = <75000>;
+>> +					hysteresis = <2000>;
+>> +					type = "passive";
+>> +				};
+>> +
+>> +				cpuss1_alert1: trip-point1 {
+>> +					temperature = <85000>;
+>> +					hysteresis = <2000>;
+>> +					type = "hot";
+>> +				};
+> 
+> On newer platforms we rely on LMH to shut down the device if it
+> were to reach the junction temperature, but let's leave them here
+> as probably no one remembers for sure how reliable that is on these
+> older platforms and you're most likely not willing to test that
+> 
+> Konrad
