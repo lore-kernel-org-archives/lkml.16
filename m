@@ -1,604 +1,182 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9871DDC1B
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744796620; cv=none; b=fivh5OlnGAqhzehRJTGeIZUetEHyrxETyY2BQuuicE3nxaJEv6FEasKApVV6KSrgbgx+bHPGa8MIrk0caTrGduIdXnC4WvmCNYbDzc2xm1yE5GzR9E4l1sYDqKrFpAK9qnSfDHZCrHntOIwDMQy1Bb9Mu60yQBmPBMrQoAewYKg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744796620; c=relaxed/simple;
-	bh=Q49LlS76mWLHtQ3wHw/33L3bXOGBz3gKzqmorggHTRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HqGwuC3F+TXMGSeljHpLjN6VwfLhMO7zesvbh/nP4GKkxlvbDgRIXDaLQF3MClryQuFsNMTnUdWVJlt7gvuPgWWX0cjxCPHaM9bUfhqgiPuNWLRKXvK+R6VDJRRqcuAmkPp/JpIX3C7MiImmTHnRWdhwaY8BqAYXlf2VAYAAlDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=blUwJZhY; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380911DDC1B;
+	Wed, 16 Apr 2025 09:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744796642; cv=fail; b=qAcGJXZjs0TmjTOHVc5t8eXvYisJPCtz1CSLaeGsnn9fDTH332MuS66m4TXeqUomQWPXYNonuadCYlDSZPnSKRKpiD7NfmLS13kFwFtZH26Y3cn3BC4J12qcq7rWvGtz2w201OVTv8dmgQGVAlPSNOoSPyLy9rXIi2AXEcMVxRc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744796642; c=relaxed/simple;
+	bh=fYYy5dVVmAygXjtPXqrhAqVlqO58NbtTX/QCztcGWEw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lHpEjcf/esw4UNFFDcXIoONJAC722eGavR357s3lCaY1Ap8U8ir4H81ikG3zGQrz4Tq36BW4C5TLIdf+mUUpRqKtQbXua20qL7Z7EGR6CcvvSTNtZgv5o5/aKVB8GvdST50Xe9MPOTj8Dsg/RKb86EsE6t3D8epd9PKWnvScDgA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=lELOV+Ma; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=XOi+3RVd; arc=fail smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="blUwJZhY"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39129fc51f8so5698414f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:43:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lELOV+Ma";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="XOi+3RVd"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5wZqP007151;
+	Wed, 16 Apr 2025 04:43:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=PODMain02222019; bh=NNUIt1AWEhMcZp35X8
+	npVOQx9LKBfiSEuSg1YfAeMbs=; b=lELOV+MalYSZh/B+lUB08sO6rftlpzzo30
+	6lK3QYF1evFQkD/j90i8xuUxmOdXBoAQQ/F6kCkY/G7Edea/WavGTxKxpY6bEZgx
+	5F3g4dWOrRopnhCAwenWUgST4OgTSoFYUyOpJZn63iBQNX6ChuEwJPt8i0iyfRzy
+	MQ3sgxCe8S8rmy9EouXgZuj2IK1NsURKE8pzZAlO8cjqZySr7o1KwgAXAs9O2RbL
+	H8JlVdHGcsOdMmOiiwYy091yMpdu66BtjCWlUoGbSMDS4vaa5lDYz5phrh24FyAL
+	lz+0XH2a0xKEDfsvwDI+7elYRCctlMhyDTxF+bcCyuUnfz7fzDqw==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 4615wt2ep5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 04:43:46 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=X4PPxLSSZO9y3QQT8ObaxHUKpFFyzX2TmH64VC/oXCv0Gx6yv+bgD+3wc9pZbZ5ry4EIvwtiwVv+W9vpwfnGwxcvsajiHuXJVToVs1j4E3I9VAFwVHH6/6pD1DLO9VT8fu8mWH+lEfl9dL62o27eaNydxDccuhzBGK6yyDZkHVqJSwcA/8ruskgiuVW2tfJE2gc9iCfKJJ2hBmzDvNOj1EYhn9HPHWgeA1q381O5l1TkF6hlq/IdgaCL+a5eBBGGSKamxTvy/YK+fLEa0h5a5/f0UwpGY9cgYTsQTzCytN8AYSxdEecGM29OTL2bPfSktogg6Kc+D2sIWPwBRjEUoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NNUIt1AWEhMcZp35X8npVOQx9LKBfiSEuSg1YfAeMbs=;
+ b=Bkc5rAwrmj0BxD0PaXK3LPsb4dBtwhTBaOYut0/9Jx94yKrhSl3Gs+HqVZmYtxjPXGNnciXdQeAs3SHia6NcsiZgaH3Uz99cr3xaBPFF9D6WbFsWJLtOsdHaNj7olGZHalZHqdV9Frrmcn7NS38imZLsoMWAhS3FuWoSrjwf7kuSfzGQt7TlbxIMVlaVDIgdnXlCYtVvpOwjoJzPHnm9P3onn/fGZlKVPpM58Uf+y71AVsOKIUGsUEVuR4hunBg4JSppwSC+OA8bnYUHmoYj9neWimEm/Q/q1ZGr8umJWSCiO6eG9CEKGwCXFu6/0sgcM1yI90zstvtl6wTAijS+0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com
+ smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
+ action=oreject header.from=opensource.cirrus.com; dkim=none (message not
+ signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744796614; x=1745401414; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oqvJVyPIMifp+L9Jbkyovbd4b4uf12bZJj7r8aFXPxY=;
-        b=blUwJZhYp7ZU3r7eBvtFPGuy6hn9FpwdmR54zbqdGAu26JMYIJaxXgHnJaXMUW/EPe
-         A+d6vGh7cf3qk3oWPi+tTau/wjuanMe1tsiU8g/UmIcRD+zmob0dfanPy3gOtOKtbknH
-         xi5Nk0JpWfwqY6/EeUTuZPF++P3k0ymyJ3l6Ka5EyoU3DDnxgGnuDc4yqO4XeEkhRjpm
-         eQmXEIcYLMm2B4vLY7D+4CULHBn3N5dMqTHgoFZ1AIX+l5A80AtBYGgAtqn2AcpjD4ak
-         0oCxVxMRMg7M52hGDqeZ87dpoD53IPmYCDR28zkK2ZuqyQVV/g7W4LllL8mv/W+Pkj4w
-         C0Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744796614; x=1745401414;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oqvJVyPIMifp+L9Jbkyovbd4b4uf12bZJj7r8aFXPxY=;
-        b=o9gf4AOpUwfjFoB6z2NHvi1e7LVZ+UI6IrUrh0tnRZZwgtluMcd8IIk1IBwwkLcuha
-         Y8h2LsvQV0Cz/XCLUbotKLrVxBWhW/wu4AtMmS8FzTnZ+kBALBUb+52Eu6+C2p7JgAkl
-         TWT0rJrQitBROI6Ppo/jk1haM5pnDQa/1CAruLgIMzjCmfweXxOAEZnx65zG94u4u9NB
-         oefv3U/NFiI7Emzb0kCb1unI9hyDCjk+kMvfS4JGO9uicXfMiAqXUM2iJVM+zJRjOIDK
-         5aU0gu3KZrEgwbjsq/hZtS/mJMFtkSQP7QYGWAseAsSXrKmbKL3Ft31qu/iEdGWyqsTO
-         +FMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWVtauI9G9u9AEgLk3i3ir+tBrzqMBRMkFvtNTkjA5bk3YLSKXTGcd1VmkM6NbKENVVUn2gNB7OUvzMCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTnheA/iIQQlHQvi15GyeSf0c2e7f/R7xc1ky9z542e6GBTN2z
-	PaAFa4pE0+/cUpODZ13xlfPI6qgVRTJ49Cz3bo89YZBVFu9jtVr6gkiYdvY3k4U=
-X-Gm-Gg: ASbGncuikXg1AaWzD1tAZjSmzVEkO++GStwf2MPbw9XNMjzL5CVgN1ouhfObyya/Ylv
-	3D00HBVZWofaVwALZQzLIGkgltYhziwy1ePo0XD3DBfsFP3SbhHQDfav58DjWiY+zoMQEUq+lIc
-	0gjb9+YyeaOR9r8pr+iqOZGo8pUVu9kSRHC1ckA3GGAj5lSCuN0UmlqZij5OL9rQ+T3KV8JF2Ci
-	WUSXyeQCX9GJ99Rlxp4BjxHfdrGOIP0gHQ5uXo4Rrg3ocOGvvIB1ulfcccTkk/RH5wdQtWGlkct
-	XHcz5dnCw+8gx0lsYg2UyqMfupJxBVpr+D8KBNtGCbQmW8oxJAms3kC4JFUSpTZxlWSmvfW/uYN
-	5D31YIFw=
-X-Google-Smtp-Source: AGHT+IF9VOTbI8rewLsrEIse8WGwEqSVS1VVUWxxEF1JCIjPCuXUwb+2q8TEsZh9/rAoaHWj8fPQkQ==
-X-Received: by 2002:a05:6000:40c7:b0:398:fd9b:b935 with SMTP id ffacd0b85a97d-39ee5b9ff8fmr1150338f8f.53.1744796613718;
-        Wed, 16 Apr 2025 02:43:33 -0700 (PDT)
-Received: from localhost (p200300f65f13aa0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:aa04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39eaf4457a6sm16839825f8f.98.2025.04.16.02.43.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:43:33 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: David Lechner <dlechner@baylibre.com>,
-	Kent Gibson <warthog618@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7] pwm: Add support for pwmchip devices for faster and easier userspace access
-Date: Wed, 16 Apr 2025 11:43:16 +0200
-Message-ID: <20250416094316.2494767-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.2
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NNUIt1AWEhMcZp35X8npVOQx9LKBfiSEuSg1YfAeMbs=;
+ b=XOi+3RVd+/xPXHwGl8TG5zJkWCQJHIxYCEPKQfH42dR1gYO5iTkM9VWSx6KB33BCW/weHr5h0BBM3l7iTdafx2DB6TgPnJzWJN8ZkTE5JH1ptqhpSmYM4QACyjqIuRGnq8qu+E0L+LX/LmerfwJPgnyjtfmTkKaW5e/CkUsuiBo=
+Received: from SA1PR02CA0006.namprd02.prod.outlook.com (2603:10b6:806:2cf::15)
+ by MW4PR19MB5520.namprd19.prod.outlook.com (2603:10b6:303:187::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
+ 2025 09:43:41 +0000
+Received: from SA2PEPF000015C6.namprd03.prod.outlook.com
+ (2603:10b6:806:2cf:cafe::27) by SA1PR02CA0006.outlook.office365.com
+ (2603:10b6:806:2cf::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.35 via Frontend Transport; Wed,
+ 16 Apr 2025 09:43:41 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
+ does not designate 84.19.233.75 as permitted sender)
+ receiver=protection.outlook.com; client-ip=84.19.233.75;
+ helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ SA2PEPF000015C6.mail.protection.outlook.com (10.167.241.196) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12
+ via Frontend Transport; Wed, 16 Apr 2025 09:43:40 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id A0A7A406541;
+	Wed, 16 Apr 2025 09:43:38 +0000 (UTC)
+Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 87479820244;
+	Wed, 16 Apr 2025 09:43:38 +0000 (UTC)
+Date: Wed, 16 Apr 2025 10:43:37 +0100
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
+        pierre-louis.bossart@linux.dev, peter.ujfalusi@linux.intel.com,
+        linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v3 1/3] ASoC: SDCA: Create DAPM widgets and routes from
+ DisCo
+Message-ID: <Z/97yVJMVEdEp1BX@opensource.cirrus.com>
+References: <20250409124941.1447265-1-ckeepax@opensource.cirrus.com>
+ <20250409124941.1447265-2-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13682; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=Q49LlS76mWLHtQ3wHw/33L3bXOGBz3gKzqmorggHTRk=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBn/3u0CCHIxGfO9EHFKqLWqzg6zvMYGUjwED7NY beQMRJODWGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZ/97tAAKCRCPgPtYfRL+ TgQ8B/99hpFbKIXmdUK4W8qQ4vLMH6UboKaLUaUuNRPMyvAj+aEtfJ/lSoW1f0/3ji8h47VqVdn +WurP9NyB9d6CHSSJqbgICKAKigoC7+5LWEMhzUBA4dF5R/wpLRxkW+4N3LddCuel/edtqU64Du KMVtWtUEVkOtGHLDJsdVmCBsfAktRlvycVClw4smhv4qv2N7T2dBHg66mirvTJB43dne1eMcjEZ Sv+XGeXt4hSetfyfJd0uCvP8C0vcU9l5iuuAqWl3aAu+efXMxtCiOCwA4GGzSJ7MbVsrlvnU0+7 5hju2DIYVZdHH41eQ1R5N3amlAu+2xdKduoK84mfpBj3xrIS
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409124941.1447265-2-ckeepax@opensource.cirrus.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C6:EE_|MW4PR19MB5520:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f7650fc-14d5-4611-03b9-08dd7ccb2b51
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700013|61400799027|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?aCZ6pdFJSvPsUJYd/9DIuOI72eTkR3ahWUdv5cYnkEcs/CM5lrkN0P9PatiR?=
+ =?us-ascii?Q?TfSJEG74tEsp77JkjuvBvCDR1fpVRCC6ax55S/+B9eqpvRJ+98me/qd69Nzv?=
+ =?us-ascii?Q?b4xb945pA66CXpBaA1C6TxuoCzF+GYXH3q3S4TWid3a+2cNw4xx7RAzxqMlL?=
+ =?us-ascii?Q?nW9FDrR5dkK1+IIvKdrCCPcFZo5tQA5GHv3dgxN++D5GqLpvqBYXruEmz3aZ?=
+ =?us-ascii?Q?JceLDzyFhYp0qxKJNslMPma0bDU4lD0dfOYIF9TFHuppfYempuLf1M267+JD?=
+ =?us-ascii?Q?j7DF8d7NNkMUJb5/ovUoF5O2O07HOuUlp9n53jd6F0TBs4Xl+piT2XA/CH20?=
+ =?us-ascii?Q?t+xNv3+sgVv2Xcl+yw8pRt2Jx+FkHHouXW8Wq6p01i+xzOvwlVLfR9WcQ4xp?=
+ =?us-ascii?Q?6rOM7Ux4/PGsaWysD4vL907Vu6kXulHM83MmzIe8glsGIAc+chZODOhA6BZ5?=
+ =?us-ascii?Q?U3nH8nuzWINxdkplNQX69gGw7+GrDtTyPUVSUzCiPpyLXuIRmvhRWa55GzfM?=
+ =?us-ascii?Q?zArhmZbNp+Y4sVdbmYf02yvEOBI4Q2kW0q7OaE3NVAnsGtrxDWZh6KgZddVz?=
+ =?us-ascii?Q?dmo3nPQ+NPPJ6jxSjdu6RAe1Of+tWHkrxOGVW7LlSML0aawwqeCdBDoOn6Xx?=
+ =?us-ascii?Q?mt/88tQOx7rlg5HFIJkWgbP1XBmXSsWNWl6TyrWJ5j2p8K+g1RqoJy8vGSj0?=
+ =?us-ascii?Q?4llkqIpZcyEp3vTnwepVlXMY+BgNgFo6iZ5YaLHzAaSxtosU/T6vwqlfUkDO?=
+ =?us-ascii?Q?MLVsqC4CQfn0sX6jOCurchJfjQw4V/sIfNQJe8bXaOC2uf8/R1opimgazojF?=
+ =?us-ascii?Q?NDngK+2KwcjkNaWyGu1A4G+7+nFe5gbmGS3Vx4XXVBBU7PPD8y2kxDHRmfpy?=
+ =?us-ascii?Q?DeLhRAt8xT3D9lz5Ga+TItv5WCQIIS0CaOhSnn+6SgqwI7KkqCX9sdBP9hbF?=
+ =?us-ascii?Q?KG1islyUPCAe+y3HZUO3hVKB6cKPNnOCrEdsVu1lcIxoF3IWp4rgkMJF3da/?=
+ =?us-ascii?Q?c/4d/BScUlCwv7Hsc/bprBwVOHEbqKksRbF4ymNmFIrV4zXoCUYVOD+/wDL8?=
+ =?us-ascii?Q?ipIoPMLMypF8hlQEdT0MKE0ooV55IRJKtd6iPyDvXciAD0lkRFqQ0WDLDWam?=
+ =?us-ascii?Q?viyc8DaQz/16KYB9lcAqdl/LulSEVhKATXT7v65QkMcs95o8JTvxi5UKT0JH?=
+ =?us-ascii?Q?U8YfDMOnXB1X2v1CEnHPZAUa01osbbHKluIf0sI9TttcoWrZcHYhNLa9toMW?=
+ =?us-ascii?Q?vdqkE59WDdLjx10DRxJaFPUiwd8WhnbzUllYEyF2BbJDdNVB2giTUZqS48os?=
+ =?us-ascii?Q?wYSNlTpJq3kjwyU9c35/nfA9dHeSfvhVFrS2DsCoku/sTw9GNQu8SC+pv6vp?=
+ =?us-ascii?Q?9nXuUdpRKKLtbXFEEzATFLyt1gY2qojHmDO11xsP3AK30u7ivuVqz5P5+mIh?=
+ =?us-ascii?Q?k+x8iopUKlWFCwiuLFBpcopugA+PhKQL2hGdYqUu412pDTBOyBkdlhkHN29e?=
+ =?us-ascii?Q?jIukDjTyw0V1d2DoE6qeOCWLGXuhV5jtU8wZ?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(376014)(36860700013)(61400799027)(82310400026);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 09:43:40.0600
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f7650fc-14d5-4611-03b9-08dd7ccb2b51
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015C6.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR19MB5520
+X-Proofpoint-GUID: JDpM-cSAfHxVGYNTdOQR1r1sirSKDoTM
+X-Proofpoint-ORIG-GUID: JDpM-cSAfHxVGYNTdOQR1r1sirSKDoTM
+X-Authority-Analysis: v=2.4 cv=OeuYDgTY c=1 sm=1 tr=0 ts=67ff7bd2 cx=c_pps a=PdgAl9AEy1hEU2ikvxmBtw==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10
+ a=RWc_ulEos4gA:10 a=NnbQKv-ND7Ll8lQcdjIA:9 a=CjuIK1q_8ugA:10 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-With this change each pwmchip defining the new-style waveform callbacks
-can be accessed from userspace via a character device. Compared to the
-sysfs-API this is faster and allows to pass the whole configuration in a
-single ioctl allowing atomic application and thus reducing glitches.
+On Wed, Apr 09, 2025 at 01:49:39PM +0100, Charles Keepax wrote:
+> Use the previously parsed DisCo information from ACPI to create DAPM
+> widgets and routes representing a SDCA Function. For the most part SDCA
+> maps well to the DAPM abstractions.
+> 
+> The primary point of interest is the SDCA Power Domain Entities
+> (PDEs), which actually control the power status of the device. Whilst
+> these PDEs are the primary widgets the other parts of the SDCA graph
+> are added to maintain a consistency with the hardware abstract,
+> and allow routing to take effect. As for the PDEs themselves the
+> code currently only handle PS0 and PS3 (basically on and off),
+> the two intermediate power states are not commonly used and don't
+> map well to ASoC/DAPM.
+> 
+> Other minor points of slightly complexity include, the Group Entities
+> (GEs) these set the value of several other controls, typically
+> Selector Units (SUs) for enabling a cetain jack configuration. Multiple
+> SUs being controlled by a GE are easily modelled creating a single
+> control and sharing it among the controlled muxes.
+> 
 
-On an STM32MP13 I see:
+In case the new discussion on v2 is missed. I am going to do a v4
+(likely early next week as I am on PTO this week), that adds the
+mic/speaker widgets directly from this code and probably some pin
+switches.
 
-	root@DistroKit:~ time pwmtestperf 
-	real	0m 1.27s
-	user	0m 0.02s
-	sys	0m 1.21s
-	root@DistroKit:~ rm /dev/pwmchip0 
-	root@DistroKit:~ time pwmtestperf 
-	real	0m 3.61s
-	user	0m 0.27s
-	sys	0m 3.26s
-
-pwmtestperf does essentially:
-
-	for i in 0 .. 50000:
-		pwm_set_waveform(duty_length_ns=i, period_length_ns=50000, duty_offset_ns=0)
-
-and in the presence of /dev/pwmchip0 is uses the ioctls introduced here,
-without that device it uses /sys/class/pwm/pwmchip0.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
-Changes since v6
-(https://lore.kernel.org/linux-pwm/cover.1744120697.git.ukleinek@kernel.org/):
- - Trivially rebase to current pwm/for-next
- - Improve error handling and reporting for too high pwmchip ids
- - Plug a memory leak
- - Drop unneeded breaks in ioctl function
- - Documentation updates
- - Update commit log with recent performance measurement
- - After some thinking and internal discussion with David, let
-   PWM_IOCTL_SETEXACTWF return 1 instead of a negative errno when the
-   exact waveform cannot be implemented. The motivation is that this
-   situation should be reliably distinguishable from other errors.
-
-Thanks to David for his feedback.
-
-Best regards
-Uwe
-
- drivers/pwm/core.c       | 324 +++++++++++++++++++++++++++++++++++++--
- include/linux/pwm.h      |   3 +
- include/uapi/linux/pwm.h |  53 +++++++
- 3 files changed, 365 insertions(+), 15 deletions(-)
- create mode 100644 include/uapi/linux/pwm.h
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index cec325bdffa5..780f401fe380 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -23,9 +23,13 @@
- 
- #include <dt-bindings/pwm/pwm.h>
- 
-+#include <uapi/linux/pwm.h>
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/pwm.h>
- 
-+#define PWM_MINOR_COUNT 256
-+
- /* protects access to pwm_chips */
- static DEFINE_MUTEX(pwm_lock);
- 
-@@ -1960,20 +1964,9 @@ struct pwm_device *pwm_get(struct device *dev, const char *con_id)
- }
- EXPORT_SYMBOL_GPL(pwm_get);
- 
--/**
-- * pwm_put() - release a PWM device
-- * @pwm: PWM device
-- */
--void pwm_put(struct pwm_device *pwm)
-+static void __pwm_put(struct pwm_device *pwm)
- {
--	struct pwm_chip *chip;
--
--	if (!pwm)
--		return;
--
--	chip = pwm->chip;
--
--	guard(mutex)(&pwm_lock);
-+	struct pwm_chip *chip = pwm->chip;
- 
- 	/*
- 	 * Trigger a warning if a consumer called pwm_put() twice.
-@@ -1994,6 +1987,20 @@ void pwm_put(struct pwm_device *pwm)
- 
- 	module_put(chip->owner);
- }
-+
-+/**
-+ * pwm_put() - release a PWM device
-+ * @pwm: PWM device
-+ */
-+void pwm_put(struct pwm_device *pwm)
-+{
-+	if (!pwm)
-+		return;
-+
-+	guard(mutex)(&pwm_lock);
-+
-+	__pwm_put(pwm);
-+}
- EXPORT_SYMBOL_GPL(pwm_put);
- 
- static void devm_pwm_release(void *pwm)
-@@ -2063,6 +2070,276 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_fwnode_pwm_get);
- 
-+struct pwm_cdev_data {
-+	struct pwm_chip *chip;
-+	struct pwm_device *pwm[];
-+};
-+
-+static int pwm_cdev_open(struct inode *inode, struct file *file)
-+{
-+	struct pwm_chip *chip = container_of(inode->i_cdev, struct pwm_chip, cdev);
-+	struct pwm_cdev_data *cdata;
-+
-+	guard(mutex)(&pwm_lock);
-+
-+	if (!chip->operational)
-+		return -ENXIO;
-+
-+	cdata = kzalloc(struct_size(cdata, pwm, chip->npwm), GFP_KERNEL);
-+	if (!cdata)
-+		return -ENOMEM;
-+
-+	cdata->chip = chip;
-+
-+	file->private_data = cdata;
-+
-+	return nonseekable_open(inode, file);
-+}
-+
-+static int pwm_cdev_release(struct inode *inode, struct file *file)
-+{
-+	struct pwm_cdev_data *cdata = file->private_data;
-+	unsigned int i;
-+
-+	for (i = 0; i < cdata->chip->npwm; ++i) {
-+		struct pwm_device *pwm = cdata->pwm[i];
-+
-+		if (pwm) {
-+			const char *label = pwm->label;
-+
-+			pwm_put(cdata->pwm[i]);
-+			kfree(label);
-+		}
-+	}
-+	kfree(cdata);
-+
-+	return 0;
-+}
-+
-+static int pwm_cdev_request(struct pwm_cdev_data *cdata, unsigned int hwpwm)
-+{
-+	struct pwm_chip *chip = cdata->chip;
-+
-+	if (hwpwm >= chip->npwm)
-+		return -EINVAL;
-+
-+	if (!cdata->pwm[hwpwm]) {
-+		struct pwm_device *pwm = &chip->pwms[hwpwm];
-+		const char *label;
-+		int ret;
-+
-+		label = kasprintf(GFP_KERNEL, "pwm-cdev (pid=%d)", current->pid);
-+		if (!label)
-+			return -ENOMEM;
-+
-+		ret = pwm_device_request(pwm, label);
-+		if (ret < 0) {
-+			kfree(label);
-+			return ret;
-+		}
-+
-+		cdata->pwm[hwpwm] = pwm;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pwm_cdev_free(struct pwm_cdev_data *cdata, unsigned int hwpwm)
-+{
-+	struct pwm_chip *chip = cdata->chip;
-+
-+	if (hwpwm >= chip->npwm)
-+		return -EINVAL;
-+
-+	if (cdata->pwm[hwpwm]) {
-+		struct pwm_device *pwm = cdata->pwm[hwpwm];
-+		const char *label = pwm->label;
-+
-+		__pwm_put(pwm);
-+
-+		kfree(label);
-+
-+		cdata->pwm[hwpwm] = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct pwm_device *pwm_cdev_get_requested_pwm(struct pwm_cdev_data *cdata,
-+						     u32 hwpwm)
-+{
-+	struct pwm_chip *chip = cdata->chip;
-+
-+	if (hwpwm >= chip->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (cdata->pwm[hwpwm])
-+		return cdata->pwm[hwpwm];
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-+{
-+	int ret = 0;
-+	struct pwm_cdev_data *cdata = file->private_data;
-+	struct pwm_chip *chip = cdata->chip;
-+
-+	guard(mutex)(&pwm_lock);
-+
-+	if (!chip->operational)
-+		return -ENODEV;
-+
-+	switch (cmd) {
-+	case PWM_IOCTL_REQUEST:
-+		{
-+			unsigned int hwpwm = arg;
-+
-+			return pwm_cdev_request(cdata, hwpwm);
-+		}
-+
-+	case PWM_IOCTL_FREE:
-+		{
-+			unsigned int hwpwm = arg;
-+
-+			return pwm_cdev_free(cdata, hwpwm);
-+		}
-+
-+	case PWM_IOCTL_ROUNDWF:
-+		{
-+			struct pwmchip_waveform cwf;
-+			struct pwm_waveform wf;
-+			struct pwm_device *pwm;
-+
-+			ret = copy_from_user(&cwf,
-+					     (struct pwmchip_waveform __user *)arg,
-+					     sizeof(cwf));
-+			if (ret)
-+				return -EFAULT;
-+
-+			if (cwf.__pad != 0)
-+				return -EINVAL;
-+
-+			pwm = pwm_cdev_get_requested_pwm(cdata, cwf.hwpwm);
-+			if (IS_ERR(pwm))
-+				return PTR_ERR(pwm);
-+
-+			wf = (struct pwm_waveform) {
-+				.period_length_ns = cwf.period_length_ns,
-+				.duty_length_ns = cwf.duty_length_ns,
-+				.duty_offset_ns = cwf.duty_offset_ns,
-+			};
-+
-+			ret = pwm_round_waveform_might_sleep(pwm, &wf);
-+			if (ret < 0)
-+				return ret;
-+
-+			cwf = (struct pwmchip_waveform) {
-+				.hwpwm = cwf.hwpwm,
-+				.period_length_ns = wf.period_length_ns,
-+				.duty_length_ns = wf.duty_length_ns,
-+				.duty_offset_ns = wf.duty_offset_ns,
-+			};
-+
-+			return copy_to_user((struct pwmchip_waveform __user *)arg,
-+					    &cwf, sizeof(cwf));
-+		}
-+
-+	case PWM_IOCTL_GETWF:
-+		{
-+			struct pwmchip_waveform cwf;
-+			struct pwm_waveform wf;
-+			struct pwm_device *pwm;
-+
-+			ret = copy_from_user(&cwf,
-+					     (struct pwmchip_waveform __user *)arg,
-+					     sizeof(cwf));
-+			if (ret)
-+				return -EFAULT;
-+
-+			if (cwf.__pad != 0)
-+				return -EINVAL;
-+
-+			pwm = pwm_cdev_get_requested_pwm(cdata, cwf.hwpwm);
-+			if (IS_ERR(pwm))
-+				return PTR_ERR(pwm);
-+
-+			ret = pwm_get_waveform_might_sleep(pwm, &wf);
-+			if (ret)
-+				return ret;
-+
-+			cwf = (struct pwmchip_waveform) {
-+				.hwpwm = cwf.hwpwm,
-+				.period_length_ns = wf.period_length_ns,
-+				.duty_length_ns = wf.duty_length_ns,
-+				.duty_offset_ns = wf.duty_offset_ns,
-+			};
-+
-+			return copy_to_user((struct pwmchip_waveform __user *)arg,
-+					    &cwf, sizeof(cwf));
-+		}
-+
-+	case PWM_IOCTL_SETROUNDEDWF:
-+	case PWM_IOCTL_SETEXACTWF:
-+		{
-+			struct pwmchip_waveform cwf;
-+			struct pwm_waveform wf;
-+			struct pwm_device *pwm;
-+
-+			ret = copy_from_user(&cwf,
-+					     (struct pwmchip_waveform __user *)arg,
-+					     sizeof(cwf));
-+			if (ret)
-+				return -EFAULT;
-+
-+			if (cwf.__pad != 0)
-+				return -EINVAL;
-+
-+			wf = (struct pwm_waveform){
-+				.period_length_ns = cwf.period_length_ns,
-+				.duty_length_ns = cwf.duty_length_ns,
-+				.duty_offset_ns = cwf.duty_offset_ns,
-+			};
-+
-+			if (!pwm_wf_valid(&wf))
-+				return -EINVAL;
-+
-+			pwm = pwm_cdev_get_requested_pwm(cdata, cwf.hwpwm);
-+			if (IS_ERR(pwm))
-+				return PTR_ERR(pwm);
-+
-+			ret = pwm_set_waveform_might_sleep(pwm, &wf,
-+							   cmd == PWM_IOCTL_SETEXACTWF);
-+
-+			/*
-+			 * If userspace cares about rounding deviations it has
-+			 * to check the values anyhow, so simplify handling for
-+			 * them and don't signal uprounding. This matches the
-+			 * behaviour of PWM_IOCTL_ROUNDWF which also returns 0
-+			 * in that case.
-+			 * For PWM_IOCTL_SETEXACTWF the return value might be 1
-+			 * to signal failure in a way that is distinguishable
-+			 * from other errors.
-+			 */
-+			if (cmd == PWM_IOCTL_SETROUNDEDWF && ret == 1)
-+				return 0;
-+			return ret;
-+		}
-+
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+static const struct file_operations pwm_cdev_fileops = {
-+	.open = pwm_cdev_open,
-+	.release = pwm_cdev_release,
-+	.owner = THIS_MODULE,
-+	.unlocked_ioctl = pwm_cdev_ioctl,
-+};
-+
-+static dev_t pwm_devt;
-+
- /**
-  * __pwmchip_add() - register a new PWM chip
-  * @chip: the PWM chip to add
-@@ -2115,7 +2392,17 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner)
- 	scoped_guard(pwmchip, chip)
- 		chip->operational = true;
- 
--	ret = device_add(&chip->dev);
-+	if (chip->ops->write_waveform) {
-+		if (chip->id < PWM_MINOR_COUNT)
-+			chip->dev.devt = MKDEV(MAJOR(pwm_devt), chip->id);
-+		else
-+			dev_warn(&chip->dev, "chip id too high to create a chardev\n");
-+	}
-+
-+	cdev_init(&chip->cdev, &pwm_cdev_fileops);
-+	chip->cdev.owner = owner;
-+
-+	ret = cdev_device_add(&chip->cdev, &chip->dev);
- 	if (ret)
- 		goto err_device_add;
- 
-@@ -2166,7 +2453,7 @@ void pwmchip_remove(struct pwm_chip *chip)
- 		idr_remove(&pwm_chips, chip->id);
- 	}
- 
--	device_del(&chip->dev);
-+	cdev_device_del(&chip->cdev, &chip->dev);
- }
- EXPORT_SYMBOL_GPL(pwmchip_remove);
- 
-@@ -2310,9 +2597,16 @@ static int __init pwm_init(void)
- {
- 	int ret;
- 
-+	ret = alloc_chrdev_region(&pwm_devt, 0, PWM_MINOR_COUNT, "pwm");
-+	if (ret) {
-+		pr_err("Failed to initialize chrdev region for PWM usage\n");
-+		return ret;
-+	}
-+
- 	ret = class_register(&pwm_class);
- 	if (ret) {
- 		pr_err("Failed to initialize PWM class (%pe)\n", ERR_PTR(ret));
-+		unregister_chrdev_region(pwm_devt, 256);
- 		return ret;
- 	}
- 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index bf0469b2201d..d8817afe95dc 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -2,6 +2,7 @@
- #ifndef __LINUX_PWM_H
- #define __LINUX_PWM_H
- 
-+#include <linux/cdev.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/module.h>
-@@ -309,6 +310,7 @@ struct pwm_ops {
- /**
-  * struct pwm_chip - abstract a PWM controller
-  * @dev: device providing the PWMs
-+ * @cdev: &struct cdev for this device
-  * @ops: callbacks for this PWM controller
-  * @owner: module providing this chip
-  * @id: unique number of this PWM chip
-@@ -323,6 +325,7 @@ struct pwm_ops {
-  */
- struct pwm_chip {
- 	struct device dev;
-+	struct cdev cdev;
- 	const struct pwm_ops *ops;
- 	struct module *owner;
- 	unsigned int id;
-diff --git a/include/uapi/linux/pwm.h b/include/uapi/linux/pwm.h
-new file mode 100644
-index 000000000000..1c3dc7a32e2e
---- /dev/null
-+++ b/include/uapi/linux/pwm.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
-+
-+#ifndef _UAPI_PWM_H_
-+#define _UAPI_PWM_H_
-+
-+#include <linux/ioctl.h>
-+#include <linux/types.h>
-+
-+/**
-+ * struct pwmchip_waveform - Describe a PWM waveform for a pwm_chip's PWM channel
-+ * @hwpwm: per-chip relative index of the PWM device
-+ * @__pad: padding, must be zero
-+ * @period_length_ns: duration of the repeating period.
-+ *    A value of 0 represents a disabled PWM.
-+ * @duty_length_ns: duration of the active part in each period
-+ * @duty_offset_ns: offset of the rising edge from a period's start
-+ */
-+struct pwmchip_waveform {
-+	__u32 hwpwm;
-+	__u32 __pad;
-+	__u64 period_length_ns;
-+	__u64 duty_length_ns;
-+	__u64 duty_offset_ns;
-+};
-+
-+/* Reserves the passed hwpwm for exclusive control. */
-+#define PWM_IOCTL_REQUEST	_IO(0x75, 1)
-+
-+/* counter part to PWM_IOCTL_REQUEST */
-+#define PWM_IOCTL_FREE		_IO(0x75, 2)
-+
-+/*
-+ * Modifies the passed wf according to hardware constraints. All parameters are
-+ * rounded down to the next possible value, unless there is no such value, then
-+ * values are rounded up. Note that zero isn't considered for rounding down
-+ * period_length_ns.
-+ */
-+#define PWM_IOCTL_ROUNDWF	_IOWR(0x75, 3, struct pwmchip_waveform)
-+
-+/* Get the currently implemented waveform */
-+#define PWM_IOCTL_GETWF		_IOWR(0x75, 4, struct pwmchip_waveform)
-+
-+/* Like PWM_IOCTL_ROUNDWF + PWM_IOCTL_SETEXACTWF in one go. */
-+#define PWM_IOCTL_SETROUNDEDWF	_IOW(0x75, 5, struct pwmchip_waveform)
-+
-+/*
-+ * Program the PWM to emit exactly the passed waveform, subject only to rounding
-+ * down each value less than 1 ns. Returns 0 on success, 1 if the waveform
-+ * cannot be implemented exactly, or other negative error codes.
-+ */
-+#define PWM_IOCTL_SETEXACTWF	_IOW(0x75, 6, struct pwmchip_waveform)
-+
-+#endif /* _UAPI_PWM_H_ */
-
-base-commit: bde5547f2e87e6c71db79dc41e56aff3061e39a9
--- 
-2.47.2
+Thanks,
+Charles
