@@ -1,92 +1,104 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84032220685;
-	Wed, 16 Apr 2025 06:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4A9221F1E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744783685; cv=none; b=ihM6uqCqE6ouA3SrWi665Ik7QfXjDUK//LhdGVu2jQAe9RfvetO6rr50glg81YOrB32Es6bG9ITN8ByW4ISuV8FIcXz4NMz0XVzwG1dCARaqSOlL7axEa/hcLcNpILOoVpjHxUftJHbcpwkN6qZt/3h/GjKahktcmLrkGcR0E7I=
+	t=1744783728; cv=none; b=DM7BDe/BDwbTh8FsWbPCvD77/4Cg4xbaSB4Ak+w8EWU6eb/7nH9DDfFrqpgugFUAdBAAaV2aQlzxZG3uEzAs6E7Fl8k9tfBHULeZYdmkasZL3nrzVtaOKgIqMuCnxVmpPIEkt5q3909VFDRl05unfaXpAFx5f/jLvGrMk1WnXLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744783685; c=relaxed/simple;
-	bh=689DVZAZIVgk+WY6UuyIP7NgWCzPurdNmOXwm/A8ut8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uA4/HchC697OjUDvYGXRyKqfZAzdD6T2Oai26bdiIi23+g8B9vAUxemdJKyyiac82JYHoDwl+tKNam0oNaDBo6wGBJc9/ppERJFD7kPX/nyoQv0DSf+Pi8QyiuKrdmY9zSz3t9KtyAPIbIfa5W14agoPaZ0xWImxIiagwW0xmtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bf+n3m6/; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744783728; c=relaxed/simple;
+	bh=S1hfwxWvddOHrR2LujD9OnylZrLvihKEOzv4l90MvuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ObjSYoiMQ6eMbgxnpiD2Q63+kv15G9DSnoXi/wEYpXz0dLuu0DbHzHxDBh+AgI+0BInIlgrYHwuD7AOhmwOVZ8sktlSAJMLTlMBsZ21BwJT14DS/gP2AKXyQinOANXi8ZaGOhg9jdTckv5qlVmkzhEMaUuaGIiVs1Oj8KG8E0rM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jkHC0Wyt; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bf+n3m6/"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53G67wIU238064
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 01:07:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744783678;
-	bh=Rekte+N3RPXLXmzmpCOaS5XD2YPDyBRYqwD4rqifLzA=;
-	h=From:To:CC:Subject:Date;
-	b=Bf+n3m6/zCwN5QuosMuPbK3KXNNeIsDuvAjo+gbr1l9vPOh8meXpmi6auTsF21rcq
-	 SfGAKu65pxKPtiRU41jWuj0VScpsOIpieOeGweQaLhNPRKM6Ypz7ba80tvKGJMjeJ2
-	 n4C51A99CUV2q0HT8jhhakY5u2lAiLnOIESayUwY=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53G67vsD081089
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 16 Apr 2025 01:07:57 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
- Apr 2025 01:07:57 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 16 Apr 2025 01:07:57 -0500
-Received: from a-dutta.dhcp.ti.com (a-dutta.dhcp.ti.com [172.24.227.92])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53G67tta080937;
-	Wed, 16 Apr 2025 01:07:56 -0500
-From: Anurag Dutta <a-dutta@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] arm64: dts: ti: k3-j721e-som-p0: Add bootph-all to HBMC node
-Date: Wed, 16 Apr 2025 11:37:54 +0530
-Message-ID: <20250416060754.2393701-1-a-dutta@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jkHC0Wyt"
+Message-ID: <07f93a57-6459-46e2-8ee3-e0328dd67967@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744783714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sDlzw9n3dMf2bJtTmXN0wtIQIhVbVUue8+JMQPzg3aY=;
+	b=jkHC0WytKU6OpaEV1nK9F6q3mzOB80piLbfVb3zy+c0gMXjhYmdstAHQZdZWz5aez3KDeT
+	vfxMbnv7mvcZyUVVJIOQJluUNrWcrSy95MZVAs+ZfQzpI2h/yLuPScMA6PJqGlLqDDXBe3
+	pMRgsp5raEOvMdvAvTrDK9ShTl57ODk=
+Date: Wed, 16 Apr 2025 14:08:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [RFC PATCH 00/11] pcache: Persistent Memory Cache for Block
+ Devices
+To: Jens Axboe <axboe@kernel.dk>, Dan Williams <dan.j.williams@intel.com>,
+ hch@lst.de, gregory.price@memverge.com, John@groves.net,
+ Jonathan.Cameron@huawei.com, bbhushan2@marvell.com, chaitanyak@nvidia.com,
+ rdunlap@infradead.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-bcache@vger.kernel.org,
+ nvdimm@lists.linux.dev
+References: <20250414014505.20477-1-dongsheng.yang@linux.dev>
+ <67fe9ea2850bc_71fe294d8@dwillia2-xfh.jf.intel.com.notmuch>
+ <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Dongsheng Yang <dongsheng.yang@linux.dev>
+In-Reply-To: <15e2151a-d788-48eb-8588-1d9a930c64dd@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Migadu-Flow: FLOW_OUT
 
-Add bootph-all to HBMC controller node for successful hyperflash
-boot on j721e-evm
 
-Signed-off-by: Anurag Dutta <a-dutta@ti.com>
----
-Test log : https://gist.github.com/anuragdutta731/103e84e84f013093fa089803719d997d
+On 2025/4/16 9:04, Jens Axboe wrote:
+> On 4/15/25 12:00 PM, Dan Williams wrote:
+>> Thanks for making the comparison chart. The immediate question this
+>> raises is why not add "multi-tree per backend", "log structured
+>> writeback", "readcache", and "CRC" support to dm-writecache?
+>> device-mapper is everywhere, has a long track record, and enhancing it
+>> immediately engages a community of folks in this space.
+> Strongly agree.
 
-Changelog : v1:
-1. Added bootph-all to hbmc node in k3-j721e-som-p0.dtsi
-2. Removed bootph-all from v1 patch from flash@0,0 node
 
-Link to v1 : https://lore.kernel.org/all/20250411082637.2271746-1-a-dutta@ti.com/
+Hi Dan and Jens,
+Thanks for your reply, that's a good question.
 
- arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+     1. Why not optimize within dm-writecache?
+     From my perspective, the design goal of dm-writecache is to be a 
+minimal write cache. It achieves caching by dividing the cache device 
+into n blocks, each managed by a wc_entry, using a very simple 
+management mechanism. On top of this design, it's quite difficult to 
+implement features like multi-tree structures, CRC, or log-structured 
+writeback. Moreover, adding such optimizations—especially a read 
+cache—would deviate from the original semantics of dm-writecache. So, we 
+didn't consider optimizing dm-writecache to meet our goals.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-index 0722f6361cc8..5665b9490003 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
-@@ -440,6 +440,7 @@ &hbmc {
- 	pinctrl-0 = <&mcu_fss0_hpb0_pins_default>;
- 	ranges = <0x00 0x00 0x05 0x00000000 0x4000000>, /* 64MB Flash on CS0 */
- 		 <0x01 0x00 0x05 0x04000000 0x800000>; /* 8MB RAM on CS1 */
-+	bootph-all;
- 
- 	flash@0,0 {
- 		compatible = "cypress,hyperflash", "cfi-flash";
--- 
-2.34.1
+     2. Why not optimize within bcache or dm-cache?
+     As mentioned above, dm-writecache is essentially a minimal write 
+cache. So, why not build on bcache or dm-cache, which are more complete 
+caching systems? The truth is, it's also quite difficult. These systems 
+were designed with traditional SSDs/NVMe in mind, and many of their 
+design assumptions no longer hold true in the context of PMEM. Every 
+design targets a specific scenario, which is why, even with dm-cache 
+available, dm-writecache emerged to support DAX-capable PMEM devices.
 
+     3. Then why not implement a full PMEM cache within the dm framework?
+     In high-performance IO scenarios—especially with PMEM 
+hardware—adding an extra DM layer in the IO stack is often unnecessary. 
+For example, DM performs a bio clone before calling __map_bio(clone) to 
+invoke the target operation, which introduces overhead.
+
+Thank you again for the suggestion. I absolutely agree that leveraging 
+existing frameworks would be helpful in terms of code review, and 
+merging. I, more than anyone, hope more people can help review the code 
+or join in this work. However, I believe that in the long run, building 
+a standalone pcache module is a better choice.
+
+Thanx
+Dongsheng
+
+>
