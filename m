@@ -1,111 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015CF2451F1;
-	Wed, 16 Apr 2025 06:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FCA233702;
+	Wed, 16 Apr 2025 06:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786328; cv=none; b=f0COurrWdNdiIweq9Qc7YhH/tYNFCnJBI8Nq37svtv4mlAY6fphICmj0EFg0kchCaMLh6+JB7bYYsFJdpw1fe3sGJtZ+FfMVB20bQn7anxgz72t22eXZLCvGK91jWeF+7oxgoyXWRaLjGsmCgrSu/KhIMGXEv6Gg7WPSAmSlqrw=
+	t=1744786328; cv=none; b=fOt0vXAHx/3gjuWQBmmPDnxIFTHaX3rroMYRQQrGFlyyHT51gYXwNfQ5dK1TkBWIdadKZCixNicxb2rmBPP9gLjvbFv/y/txx6aPhdxtQix8z3oSodeYWr8mynSG52q95sQGGymV3+mYXNdSuVZZ3RuW8IvrOt3eBc/Oxmlcgtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744786328; c=relaxed/simple;
-	bh=8D9c+befnHt33zm3mTibHfIF8FewIfXRrEv4gm5R/8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rqXxCC9RkV3e33T9Izsqejdw1ilRysGQdGyBg/f35yVUsnQ6M/aIn3NOF/7AG3S+vi8As+xKx554ReUMxFLf0I/i1GtJOpwfxk0JaMMP67II6OTEcjjJ9Ey7M3mIO3gpwC5y5T5Tw87vzZpJGO+FMJD6NupbVGPMWmAiQT2Mddc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBAmxhYU; arc=none smtp.client-ip=10.30.226.201
+	bh=DoBeT3pBaDg0HZ0vLJhaXQ1uNpRO0e6zcI01L0ZU38c=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VWb29QAjSoAnpUdz+HrGqpMlOW/AfDP0MnW3olCYpZOOFyYLy2vqKtOI5q5PuTtDD6agVRrk+TM0D4IfnlTDTwnYKNxGieCjI+eaVCUA57I7CMOd1L47VAYJme1Rg9G5vIRXphKy/sfwmNJWhTEkNC/pnszz2GEOs4we8mHjPLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1uszUQxh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=efZw623S; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBAmxhYU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482A9C4CEE2;
-	Wed, 16 Apr 2025 06:52:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786327;
-	bh=8D9c+befnHt33zm3mTibHfIF8FewIfXRrEv4gm5R/8Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bBAmxhYUlraviI3yi0IxzVz01ee11wH6ZyQ14I806Z4xGXYV2xFhYMoCW54mr9BsD
-	 Ir9SA8O6dqryZLZwVl4j2KDLOd8ePCnmU3UU55P+VXg7LYeBnKL54K2cjMz85ynz53
-	 AJTp8CumZNCtqkYGoJkiz8L8nBSkU7a8mRMH4ZyYvbNd/5AZTF//OxQvxOjUgjJLZl
-	 o44YQQ7Zp1jedXP+gM+/MDy+4dWSWdOfTFrU6n2YtwLSrZFNW0+p24g4fOj5OdOpwY
-	 x94hJAEe/IUbtLC7MBAjSMLRUNkZflSLFy5kX/OIvIIiix3UF7TVUp6Kt8/gzUeRPN
-	 MxrgEsVvrGdUw==
-Message-ID: <2d3d4240-65ab-4fd1-a86a-503bb40f34a6@kernel.org>
-Date: Wed, 16 Apr 2025 08:52:01 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1uszUQxh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="efZw623S"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744786322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0+7bhCgA+oC9ZBDDNwpDBLlIWCbk7xOCScEAcNFKoko=;
+	b=1uszUQxhnfEw6v0By6ymDnMSHx2J3bripMHCzQak3X+li1K3TWVHeyx6WZIWlANaITNkKS
+	Djf8qEDXI1CBjywV6u9KgIDk50g9+7bdGqeS8/LSYICjysprm7FKBM995yxKxkTJul4I4b
+	VnvHb7+m0p5hmBZoxIhF9VReLZO73O45LO5JJPzJMN8twB5A5F33pWix50MbLy+wEak47w
+	urZEhS7XCAcYvQRoba4TUCkMkycGZ9pVJloDlwKvL9lFw6OKR9nz0Zdd133F0sNrbxioF0
+	1sYUEvCBWCaq7fT+iPEpovjjoa+z9DGu+Ft1O9/7kpGGBKEfUg8ek+LrIQEhwg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744786322;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0+7bhCgA+oC9ZBDDNwpDBLlIWCbk7xOCScEAcNFKoko=;
+	b=efZw623SBC3ZQxqaEK5ud11pRotSbiEcCheri8Kqk7oojpF8vouUrKR0JoPksqMUy3UQj/
+	x8lMbiDbOYyxp6CA==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v3 22/22] rv: Allow to configure the number of per-task monitor
+Date: Wed, 16 Apr 2025 08:51:28 +0200
+Message-Id: <a77f2b062f7c51e4d194c6846c3b9ed8d7cf2584.1744785335.git.namcao@linutronix.de>
+In-Reply-To: <cover.1744785335.git.namcao@linutronix.de>
+References: <cover.1744785335.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: nuvoton: Add USB Hosts
-To: "William A. Kennington III" <william@wkennington.com>,
- Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>,
- Tali Perry <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250416001818.2067486-1-william@wkennington.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250416001818.2067486-1-william@wkennington.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 16/04/2025 02:18, William A. Kennington III wrote:
-> The npcm 8xx chip has 2 EHCI and 2 OHCI hosts with driver support
-> already existing in the kernel.
-> 
-> Signed-off-by: William A. Kennington III <william@wkennington.com>
-> ---
->  .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   | 28 +++++++++++++++++++
+Now that there are 2 monitors for real-time applications, users may want to
+enable both of them simultaneously. Make the number of per-task monitor
+configurable. Default it to 2 for now.
 
-Please do not send 10 separate patches, but one patchset for given
-subsystem.
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ include/linux/rv.h      | 9 +--------
+ include/linux/sched.h   | 8 +++-----
+ kernel/trace/rv/Kconfig | 9 +++++++++
+ kernel/trace/rv/rv.c    | 8 ++++----
+ 4 files changed, 17 insertions(+), 17 deletions(-)
 
->  1 file changed, 28 insertions(+)
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 2897aad16883..099b23c14e54 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -74,14 +74,7 @@ struct ltl_monitor {};
+=20
+ #endif /* CONFIG_RV_LTL_MONITOR */
+=20
+-/*
+- * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
+- * If we find justification for more monitors, we can think about
+- * adding more or developing a dynamic method. So far, none of
+- * these are justified.
+- */
+-#define RV_PER_TASK_MONITORS		1
+-#define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
++#define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
+=20
+ union rv_task_monitor {
+ 	struct da_monitor	da_mon;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 45be0fa7a5cc..560782493292 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1623,12 +1623,10 @@ struct task_struct {
+=20
+ #ifdef CONFIG_RV
+ 	/*
+-	 * Per-task RV monitor. Nowadays fixed in RV_PER_TASK_MONITORS.
+-	 * If we find justification for more monitors, we can think
+-	 * about adding more or developing a dynamic method. So far,
+-	 * none of these are justified.
++	 * Per-task RV monitor, fixed in CONFIG_RV_PER_TASK_MONITORS.
++	 * If memory becomes a concern, we can think about a dynamic method.
+ 	 */
+-	union rv_task_monitor		rv[RV_PER_TASK_MONITORS];
++	union rv_task_monitor		rv[CONFIG_RV_PER_TASK_MONITORS];
+ #endif
+=20
+ #ifdef CONFIG_USER_EVENTS
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 942d57575e67..c11bf7e61ebf 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -32,6 +32,15 @@ menuconfig RV
+ 	  For further information, see:
+ 	    Documentation/trace/rv/runtime-verification.rst
+=20
++config RV_PER_TASK_MONITORS
++	int "Maximum number of per-task monitor"
++	depends on RV
++	range 1 8
++	default 2
++	help
++	  This option configures the maximum number of per-task RV monitors that =
+can run
++	  simultaneously.
++
+ source "kernel/trace/rv/monitors/wip/Kconfig"
+ source "kernel/trace/rv/monitors/wwnr/Kconfig"
+ source "kernel/trace/rv/monitors/sched/Kconfig"
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index dae84deb327d..a1b6b3c39eff 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -165,7 +165,7 @@ struct dentry *get_monitors_root(void)
+ LIST_HEAD(rv_monitors_list);
+=20
+ static int task_monitor_count;
+-static bool task_monitor_slots[RV_PER_TASK_MONITORS];
++static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
+=20
+ int rv_get_task_monitor_slot(void)
+ {
+@@ -173,12 +173,12 @@ int rv_get_task_monitor_slot(void)
+=20
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (task_monitor_count =3D=3D RV_PER_TASK_MONITORS)
++	if (task_monitor_count =3D=3D CONFIG_RV_PER_TASK_MONITORS)
+ 		return -EBUSY;
+=20
+ 	task_monitor_count++;
+=20
+-	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++) {
++	for (i =3D 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
+ 		if (task_monitor_slots[i] =3D=3D false) {
+ 			task_monitor_slots[i] =3D true;
+ 			return i;
+@@ -194,7 +194,7 @@ void rv_put_task_monitor_slot(int slot)
+ {
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (slot < 0 || slot >=3D RV_PER_TASK_MONITORS) {
++	if (slot < 0 || slot >=3D CONFIG_RV_PER_TASK_MONITORS) {
+ 		WARN_ONCE(1, "RV releasing an invalid slot!: %d\n", slot);
+ 		return;
+ 	}
+--=20
+2.39.5
 
-
-
-Best regards,
-Krzysztof
