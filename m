@@ -1,156 +1,102 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BC72116ED
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC01211276;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820909; cv=none; b=ReWoBCr+v30c0jfW3GvFNkXEB33xdjcysVru6Ra8AxxgykX+1zFiGFQDkvESjG6Fb4LEkJ0SZsq1wXHD7pQ8plTQjaZzU5ConLcq83ZhUoexfneNDemGtwBu/jq8/l7YCg0TGn9Vg1sJt0tSlQsQjFuR5FxPFqSOCEtfiWN33ak=
+	t=1744820955; cv=none; b=sxYhuXgpzDvLNWiOvEwyU0mOxrkJ8zFIIHdIujJd97VPh0UKLn+RgheLJMqy+mvDry82+LGuDDVuF5bCyMOARZg63UQqdgvE+bevzBzBHhBEBTZRog6Tyy63OKzK49VjYFVfrRcjDRZ0sdY4KjOnhPllb48swr7iiOlbifGLGV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820909; c=relaxed/simple;
-	bh=V5EjEqLAI6VF4m0ym14G0zP2Lk1AAeOTupEjRA2/fhk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QACrgutKr4BjAv8djXAQQ4/CKHkCVzHVAB/WhgRkv+m2b6KHGUtAOkHHLa49McZkiLFj92wKmVgNzWIKbKyOFV+V8DphEfolQWEWKavjyQUJTKZMR/xZutzlbT3jWA3g16ufi+AzhFywVb2LqySIbGyA/4uV3Kw6EBdFK22kQdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DMt5At1z; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744820955; c=relaxed/simple;
+	bh=8w2ql223nYm+BErM3jbKkWekAvb+1IirdxYYwZl8YAY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=DqNmMzA8o25gfJBSQC/xGv7PiiBmxAwt+Vkvdxjlhd/gMbUw15OseCJ6hE1Iauhvb8mWUihS+w+Ul952kzJlHjHWwq8qexqPX3oBhBM0KXQoV/pGPAT1ojyNX+TecoVCgxtD+DSyQHzLfGRBjdS5FsbvfVprlEo6dbE2dUxNmAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVCDUcIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DMt5At1z"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf3192d8bso62935e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744820905; x=1745425705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dcKONrIAwY+Efjpusl4unIszUT6B68ir1oyM8EH1UJY=;
-        b=DMt5At1zuEraXQDFdfoUFyvRo93WxwpM9AIaXjydcUOd8acdr4WnZ6Od9BCDBrfZoS
-         IpXaXURIRkBaAdzsoDppwKFlPtFA597blEBXLIQ1jzW7DAp13/CExsblaURmFHAXV8QS
-         DrO+HYC4JjqVac0hoL4iQ3zlCoSC7/pMpMWwN7GEIIxd3vjAg19/VB4ZS7cQoqOAnw0c
-         MdgvX2MYGIRzNlqFIrtG70316UJiEz5U0phJ7y7ft2ylDXQiMkb6xKPnzp7nbG6cuUbZ
-         1cNgss8+3qC8TmXwbbCnlq9Hi+8kYLMWCI8qfmxw+aLQrm8d020+hs9ra7i1jJ65Vi0x
-         S4dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744820905; x=1745425705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dcKONrIAwY+Efjpusl4unIszUT6B68ir1oyM8EH1UJY=;
-        b=IXuC5BQgqPr2+iflKUqCMwnG7DkV14Uo74Y61dF6JScnJlXkesAnSwugyg/ownpexA
-         iV2zvpLQZ3vbAvB5W0GQmLG2K72BDDaDdmJKX66ULD7ZlFq/NSxcVfo4STmQkPvUyoWx
-         i0RO6TPwbMJvY6f/aJ3JPf8rWhzK3/1qM9dLt5PqxchtYe2dFaZeJQO7pde9nP8jbknr
-         zGkkLW6ILFSvLSSQULa2tm/RgmF1MZn7WTF+twk7whF4WyU0SXmMRxjbPoaWH3t37KWd
-         qrSo3uX97K1OwRknqaC0VQK8kt8YCd4uBW+Rxws5LgYBJL1u6g/HUJySl8/oZxinybe+
-         8XcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVe7mInFgR+2s5wnqeNkIPd/nVVRFNyfiFCvJ+fzqPUHtt60KqJeAtneU5Omxl6X+J92ni5Cqi6AtlHFAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYA4vUrFpPAGG48POUbg2Qll9u8jWk7q6N63l+uaR1Ldac4xer
-	G/pwkExFECWEAVNfEuikACZWpOgEbhUix806TpjXgwPVcsNrd4tBdA4VFef0qZYQyQn7YjPr0uF
-	estSpmyDFufx+Su/ZJbbO5ZqS8fffsoIldLma
-X-Gm-Gg: ASbGnct5yciRFnKv9fWcLdbW/vOyz1/uV0P98i/7S81wnN3iQe+nS+s//G0rucwrvk7
-	7nq8A44fHgwYZ/SC0YyJoMLTv8mY+BUDcmiEDEbMItJ4Qvsdg6hka9kB9qHmGMKxi2UP8jV3Hye
-	laMDejDyyAOM8si5Lw/hX+qvb9Y/tegv+SEw6Va5dGHeWgDqJo/qm8
-X-Google-Smtp-Source: AGHT+IECcvlnv6xPe9UB0/XJHO7q92sQEEqdeeGFlPVCn4BZ/toc+Qo3v9Dc1e4mY/RgIEckbUeu3UbXyA3ppO6oN3o=
-X-Received: by 2002:a05:600c:6a87:b0:439:4a76:c246 with SMTP id
- 5b1f17b1804b1-4405d26eadcmr1009515e9.6.1744820905359; Wed, 16 Apr 2025
- 09:28:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVCDUcIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 407D9C4CEEC;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744820955;
+	bh=8w2ql223nYm+BErM3jbKkWekAvb+1IirdxYYwZl8YAY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=TVCDUcIFSljB2uo+bIYkxk8g/qfuweWjFtazSQOYc45nSoMnNTn8sdlpaXA5DPjrz
+	 /0PkNb4B0GTXyI0VJTswXJMvCvu7h4I/+NZIXrP1L94tz2t92NJoPGM9XO3PLtR2+x
+	 RjlSgcZfN+YtRK2V26yIDks52Edc6OtCaS/NhdpBQOuaHjuGqAlW+uwjMvKLKRBuEh
+	 bbVVM3QcSWobvVaGN1U5P44+nzp79kKQ4plrJF+i6areGvOOv+BBGaHAhAw8GGGpwh
+	 Ud+jpQmAZyBfHbvUrH+ADcTnuUGTQtCTGAA84W7bZIPAfvsl0Nl5jsmnb4Hpq7rt/b
+	 BNl2wdUzX+i3Q==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A80C369C4;
+	Wed, 16 Apr 2025 16:29:15 +0000 (UTC)
+From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
+Date: Wed, 16 Apr 2025 21:59:03 +0530
+Subject: [PATCH v2 1/4] PCI/ERR: Remove misleading TODO regarding kernel
+ panic
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414225227.3642618-3-tjmercier@google.com> <202504161015.x2XLaha2-lkp@intel.com>
-In-Reply-To: <202504161015.x2XLaha2-lkp@intel.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Wed, 16 Apr 2025 09:28:13 -0700
-X-Gm-Features: ATxdqUFoAbnFhGEzvGofJporgvqMuSJROlNX-nlFC0ORBP_b5Axo3RH1otfUvlU
-Message-ID: <CABdmKX16QttfxRYHaq1B92U8nw+S6Gte+mFVhOTnCy4H3cLFcA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
-To: kernel test robot <lkp@intel.com>
-Cc: sumit.semwal@linaro.org, christian.koenig@amd.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	skhan@linuxfoundation.org, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, android-mm@google.com, 
-	simona@ffwll.ch, corbet@lwn.net, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, jolsa@kernel.org, mykolal@fb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-pcie-reset-slot-v2-1-efe76b278c10@linaro.org>
+References: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+In-Reply-To: <20250416-pcie-reset-slot-v2-0-efe76b278c10@linaro.org>
+To: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>
+Cc: dingwei@marvell.com, cassel@kernel.org, Lukas Wunner <lukas@wunner.de>, 
+ Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, 
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=789;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=Aq+BoDTRwjfmiHKRLtODTEbwNFS8yDdFMEIJ4A/Pkz4=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBn/9rWO8MISVR64q676Pw7jrTyh1uamjj6mZUmS
+ YdabH1Y02GJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ//a1gAKCRBVnxHm/pHO
+ 9bWZB/9jx+jNdhWu36G8URNn0X1XjAdW8YyUqH+VMtsKLIuiq09q37tDK/XUpiOURo7qF+/N32t
+ qCsA2CmP5dW5v02FZRBbn1GYvjtaKjsr6BxPmk6rqCJ6LpPOJNQybN+taSVyTVDmmXqfsHf1Ieb
+ fYa3lSy8KDNHy9gkynnX/6RIBwY29NVZH8tLD8xnTW0mcavswjXHpJaiu8Yljb7sNGDteE2t55t
+ p8gZCWK9xdUsjz9vSRfjTHzYqKhMFlzahyrxvV/MEdc8N0rxX6LPT5/PD4VIWBvQK8s3SrUu4pr
+ RB5gc0dqu0u5Wu5AhZYlAGbIbcTWNxKJgmK2EWFlSPd6gyU0
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
+X-Endpoint-Received: by B4 Relay for
+ manivannan.sadhasivam@linaro.org/default with auth_id=185
+X-Original-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reply-To: manivannan.sadhasivam@linaro.org
 
-On Tue, Apr 15, 2025 at 9:43=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Mercier,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on bpf-next/net]
-> [also build test ERROR on bpf-next/master bpf/master linus/master v6.15-r=
-c2 next-20250415]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/T-J-Mercier/dma-bu=
-f-Rename-and-expose-debugfs-symbols/20250415-065354
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git =
-net
-> patch link:    https://lore.kernel.org/r/20250414225227.3642618-3-tjmerci=
-er%40google.com
-> patch subject: [PATCH 2/4] bpf: Add dmabuf iterator
-> config: i386-buildonly-randconfig-005-20250416
-> compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df=
-0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-> reproduce (this is a W=3D1 build):
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202504161015.x2XLaha2-lkp=
-@intel.com/
->
-> All errors (new ones prefixed by >>):
->
-> >> ld.lld: error: undefined symbol: dmabuf_debugfs_list_mutex
->    >>> referenced by dmabuf_iter.c:44 (kernel/bpf/dmabuf_iter.c:44)
->    >>>               vmlinux.o:(dmabuf_iter_seq_next)
->    >>> referenced by dmabuf_iter.c:53 (kernel/bpf/dmabuf_iter.c:53)
->    >>>               vmlinux.o:(dmabuf_iter_seq_next)
->    >>> referenced by dmabuf_iter.c:26 (kernel/bpf/dmabuf_iter.c:26)
->    >>>               vmlinux.o:(dmabuf_iter_seq_start)
->    >>> referenced 1 more times
-> --
-> >> ld.lld: error: undefined symbol: dma_buf_put
->    >>> referenced by dmabuf_iter.c:45 (kernel/bpf/dmabuf_iter.c:45)
->    >>>               vmlinux.o:(dmabuf_iter_seq_next)
->    >>> referenced by dmabuf_iter.c:90 (kernel/bpf/dmabuf_iter.c:90)
->    >>>               vmlinux.o:(dmabuf_iter_seq_stop)
-> --
-> >> ld.lld: error: undefined symbol: dmabuf_debugfs_list
->    >>> referenced by list.h:354 (include/linux/list.h:354)
->    >>>               vmlinux.o:(dmabuf_iter_seq_next)
->    >>> referenced by dmabuf_iter.c:0 (kernel/bpf/dmabuf_iter.c:0)
->    >>>               vmlinux.o:(dmabuf_iter_seq_start)
->    >>> referenced by list.h:364 (include/linux/list.h:364)
->    >>>               vmlinux.o:(dmabuf_iter_seq_start)
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This is due to no CONFIG_DMA_SHARED_BUFFER. Fixed by:
+A PCI device is just another peripheral in a system. So failure to
+recover it, must not result in a kernel panic. So remove the TODO which
+is quite misleading.
 
---- a/kernel/bpf/Makefile
-+++ b/kernel/bpf/Makefile
-@@ -53,7 +53,7 @@ obj-$(CONFIG_BPF_SYSCALL) +=3D relo_core.o
- obj-$(CONFIG_BPF_SYSCALL) +=3D btf_iter.o
- obj-$(CONFIG_BPF_SYSCALL) +=3D btf_relocate.o
- obj-$(CONFIG_BPF_SYSCALL) +=3D kmem_cache_iter.o
--ifeq ($(CONFIG_DEBUG_FS),y)
-+ifeq ($(CONFIG_DMA_SHARED_BUFFER)$(CONFIG_DEBUG_FS),yy)
- obj-$(CONFIG_BPF_SYSCALL) +=3D dmabuf_iter.o
- endif
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/pcie/err.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 31090770fffcc94e15ba6e89f649c6f84bfdf0d5..de6381c690f5c21f00021cdc7bde8d93a5c7db52 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -271,7 +271,6 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 
+ 	pci_uevent_ers(bridge, PCI_ERS_RESULT_DISCONNECT);
+ 
+-	/* TODO: Should kernel panic here? */
+ 	pci_info(bridge, "device recovery failed\n");
+ 
+ 	return status;
+
+-- 
+2.43.0
+
+
