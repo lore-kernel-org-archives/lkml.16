@@ -1,62 +1,62 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E4B22B8BE
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D9E22CBF4
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785609; cv=none; b=fTGEXP1InTH3CVkgOt/XNfPNtLfv+fs1nbzlUhr7XEwvEcjAV57k2kCfRVxXFilC8VSboPaGqsdvjs5s6AG0vD2UgFMNwDhEzri8O1+P8iPgHBabNyZTAXgSVN67HQNggmbJujoChHBB0SQfQPkFtCqFKoA8QLba86PR03x0eyQ=
+	t=1744785616; cv=none; b=Y5iNjZ6j2PeLyI+71QzqVc60Or2sRGK/+QLdKh0/0jvyyA59roRndusYnb9caxag4+A+Xs15r4yMeneg2zmYHMsyWYfl+N54Xkwu48bDv8KSsOh9eHwVfZXtehsNzYIp3HdPrRzuHOcHuHPyk64ztcOZ/NC+a+SLXAvlBSi9kRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785609; c=relaxed/simple;
-	bh=4HWksdgns8ejVb++Q4NJVdKDSuHEDHdMmvi+j+YhGlo=;
+	s=arc-20240116; t=1744785616; c=relaxed/simple;
+	bh=RPs39+G/2/WRBdJP3KwTQnQlR3Lp/kvURzUIgtDgvwA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MGwe0YNSTLg7YxrD1GxxI7Ubyj4q+dGrI0/TUqetS2vaN7CwGzd2+1dQ8e4Y3cV7rhbKL6MfmOhfMUGc6cdBfUo1LcalScKm1uaQHjpbsxZy+E3i2LgvFp96Z1WZIF/LItYoSuoo9tMFBo9H4FTsrnZBRviaKa6kqEsuftVeM/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVkwDNHK; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=p6IaibS6EwM6lsV1b+vlzKeZPbi0x2NCjyRmO0/7QHyIIDcMNWHFk6bltpgsajYbBqqpZlJxXyVHKvlDY9xdTa2D6OaLqthJhGMr0ET7yvhbHgDGLtApHfsOYBKLtfRsJ22ZO4A9BhzYYDNvw3M+6TO9tG+8ULI1yFsqg8PQwK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DroUADkf; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVkwDNHK"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2295d78b433so66567595ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:40:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DroUADkf"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22c336fcdaaso3104385ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 23:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744785607; x=1745390407; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744785614; x=1745390414; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WNsggH78Gujq22EIg5QA+ygoUlPHiqAj8S6vH5ayXvk=;
-        b=yVkwDNHKd773ietJQVhcDSIcPR0scv67jKk94RIHiTDgBIoYEtjWTsxKy0bZdTXtTM
-         oC5bscRTdZ/wLlxMw44OlWfMxBSkug+3RYxl9Xo2sGo0Eg3ipqfWHzJixXZ4jgeegd6D
-         eNpI+xWdRng1ygV35TW3u8QTo9DWfrZTpZavG4gPL8WQrslQkhSNNjsX7XcPDwYwa/2x
-         h4UXgDeZwKGf7JdNIbWfZzHl/T1+L7gcgQ4uTq6ABe8hThJjvhOlqUYPee4Ro8cFBEnh
-         CBTWV3+cMYZyxu1WoRy0r5X064DxNplYitVyvlGFdLEvlMA+Lp7MLbszHgI2jNM8/r8i
-         kF/A==
+        bh=06XWI3zWvI8xB81BSzBcpZnXhq7zBjUBfZT4cp51CDs=;
+        b=DroUADkfGP9ENmXbc0Ucy2ZkNEfwC5hYWmEuM/MFlN9DGve7mzqEKrl6YjeKJLGDzQ
+         M7oEKXY8WkeBgKssiS+4MZJhzL+yMh8+IaNGcreuFFMa+78svFmVlCF3QQOzPUvopZw3
+         n0MX089dXsGmhZDM6prwNGq5XHjcAKt0iAbLGMf74cAQSf8M3K3xkFxqO/32ZVJWTgOS
+         mzE7FmNUj9uJoTJpXn0871RgLg1s5VqOxT7eQVo4ovVJHj1ra7FRrmm4O0HeVPSa7Y1T
+         6dLZiMgTiqDBWt1cHGRHp3JSRVHl8M3IH8EhYDNQUzRFXFNiYKMmSsDf+ol99rlYbK0S
+         lM6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744785607; x=1745390407;
+        d=1e100.net; s=20230601; t=1744785614; x=1745390414;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WNsggH78Gujq22EIg5QA+ygoUlPHiqAj8S6vH5ayXvk=;
-        b=UyigMDdjy+TQsTDvukyISJljj/quIMO0up4S2sYIc2S9bhWxsfH+W8e5y69AkaPNMt
-         UGvxzqNnmPXICevNqym6ACVbGngjMFGpEQ8jV9ntIpvFtm4XYzgYgeH0l60mhzBniAT9
-         HXHSFWOSFFkZyVa1PjcsgWsw326JSMHEMBFofLVHCwvCQMBXk9oovBTxhBzJt+u6TDd3
-         PzyOgrB+LhpOWIPzRsL+eelfWrFECfaWnd6jcbebonF0SnBJUrimW9xa966Ch0AiqK8i
-         O7wX4tBeFnz4LMAcBRySPmsa4bn/3NfO4KO1+7MsZ68AsBOSy+XhNtP6JN5MWTwls1AR
-         90Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSKnzxMmiqNHJrwjaqnvM0aQL59A3GFbHoG5waLu/JZvq2HNuFhtB57GTp2mnNX6Go3UxrOYKcSRkP+PU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV4dDRoaAZpiWFAIJ7R88sFvxrTWZ9uuNiu0B96g1vawbhs/eJ
-	Q6CWwRg5GqfR9h71aTxfxWgpW8KRkih6kqxw42XEmYVou6kmnLUdXDwL7RVoAac=
-X-Gm-Gg: ASbGncvRTtLW0X82s7s3+95K0WW3cFSA3D1R1Hbl0o5ZnO1cZYNRguPllGvT1LhYfcd
-	TTO2twfyBcoIWGc9yd1PNpbwi22E0U5al2+UheC0nc5bywx7Nlscp4ukxFi8S1ibl6CGy/jBhQq
-	81IxjPEmIZY1IlBL3dAQSTYBkSKMOp0fNYnIM+0BzdEhpg9J1Su9R1TGvOmCX7Y02cUAUBLNKPM
-	LEGBVqHU/Vsj6NYFhDgdNkAchDFtAs/8FcfKPWAnMn5GIJEdUGCjQzhTpAy/52QGm8tRgzVB54+
-	GWwi1NttxJka2rYYVgBZvw/NDgGPUF/kCN0/ONZGKw==
-X-Google-Smtp-Source: AGHT+IEjYJIomZsBzT4VP3kt4Qqlp10kJpH2tsSbgblMt/ChgJzb0bcD6XJqL4gtPDZEGDyA54icng==
-X-Received: by 2002:a17:902:fc86:b0:225:adf8:8634 with SMTP id d9443c01a7336-22c359913a1mr10848965ad.51.1744785606709;
-        Tue, 15 Apr 2025 23:40:06 -0700 (PDT)
+        bh=06XWI3zWvI8xB81BSzBcpZnXhq7zBjUBfZT4cp51CDs=;
+        b=QyswOrKXOq30xLugXcFVp/AaOi/Jap/gxMa2V9wXOM4BqoOoOE6r4/JQc75L7NWwc7
+         nlqnZZQwdpfRLfaevjnRKtufDt8ww93feLQ8Ki7wsAIP1DhamrtDiunhJEiCdHR3Xzl9
+         f6u7Bk0k9168HnkjQWS7N1M0hMd6QOmrqdKfVFrSIIFssc++UP/V0HkAquJQMW68qcwt
+         JyZMzGGpQz2LrPSGd4TVMNNsr1QWn5hydSte+idwhjpzESuZbKe7TChDdHuywjqSBSwb
+         KmRjwxCecG5qxkMXj212uOBWLMfOstQlkgPTplQrshJnjgwCLFfI4ePAJsMQ7vhCL6By
+         96JA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxYVDzNoazZV/tsX9o0RVonrk/e6kwIJKgdlP1jMJENZT3LsV5BJtY4sFLY8PojgYCeKfC596IwOErqqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzs+Tn/cIxKH30qO68y7FZViQg4uO44n5+nC6eEh/Z/grHFBlOy
+	X+Iqxh4F0T+o9Bw/JmcCWHvf/shFFWIzy6gCWqQ72aeSpAwWK+bIPSMptr6mrG4=
+X-Gm-Gg: ASbGncuC+VmWd1c3L4ZTRXxoDxTzGbUUI1Tmcvy/icalbbImwF0bjDoYexwLZ3FDjZf
+	dUcR1uYxSX7t9jd+R76dPB+bZpb1IQ12xlZNnv8S69YSatum1LcWpaJn1oRAXYXpArP5auQVzdT
+	P6eOkVdgMgkimqgloL2HZCqOWgN7D+AkRDgw9AK2bqjj0to2YmJy3hBZLwOSi0/yBkdvoIQfcSo
+	XfbZbu252oxSUWadl/SKIoVgVbrvXLCPaZVmm+/SU7kvWcVb4Bds4aan8kSA4hxcNTGQjDkZ983
+	M9qJF77IhEUWU2CCjkmSVIp7p3K2pNejBPk6JMZ7zA==
+X-Google-Smtp-Source: AGHT+IF2Rglo7eHxKgDEgBNsJGaQtvp/oXKgIHcXad7KTacx4TnahZHOzUtBIJLTVG1uvlzQ1gByKw==
+X-Received: by 2002:a17:903:84f:b0:224:122d:d2de with SMTP id d9443c01a7336-22c358ddb96mr9533055ad.16.1744785614335;
+        Tue, 15 Apr 2025 23:40:14 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f1259sm9656834b3a.119.2025.04.15.23.40.05
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef0e83sm6446415ad.35.2025.04.15.23.40.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 23:40:06 -0700 (PDT)
+        Tue, 15 Apr 2025 23:40:13 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
@@ -70,12 +70,11 @@ To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
 	Nishanth Menon <nm@ti.com>,
 	rust-for-linux@vger.kernel.org,
 	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
@@ -87,11 +86,12 @@ Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Russell King <linux@armlinux.org.uk>,
 	linux-clk@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Anisse Astier <anisse@astier.eu>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V10 04/15] rust: clk: Add helpers for Rust code
-Date: Wed, 16 Apr 2025 12:09:21 +0530
-Message-Id: <97741e1c82feecbd650183c6a52d2e8bbafad79f.1744783509.git.viresh.kumar@linaro.org>
+Subject: [PATCH V10 06/15] rust: macros: enable use of hyphens in module names
+Date: Wed, 16 Apr 2025 12:09:23 +0530
+Message-Id: <b7f534dfbb63aa0e8acfe90f122e23ad052d5e19.1744783509.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1744783509.git.viresh.kumar@linaro.org>
 References: <cover.1744783509.git.viresh.kumar@linaro.org>
@@ -103,131 +103,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Non-trivial C macros and inlined C functions cannot be used directly
-in the Rust code and are used via functions ("helpers") that wrap
-those so that they can be called from Rust.
+From: Anisse Astier <anisse@astier.eu>
 
-In order to prepare for adding Rust abstractions for the clock APIs,
-add clock helpers required by the Rust implementation.
+Some modules might need naming that contains hyphens "-" to match the
+auto-probing by name in the platform devices that comes from the device
+tree.
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+But rust identifiers cannot contain hyphens, so replace the module name
+by an underscore anywhere we'd use it as an identifier.
+
+Signed-off-by: Anisse Astier <anisse@astier.eu>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+[Viresh: Replace "-" with '-', and fix line length checkpatch warnings]
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- MAINTAINERS                     |  1 +
- rust/bindings/bindings_helper.h |  1 +
- rust/helpers/clk.c              | 66 +++++++++++++++++++++++++++++++++
- rust/helpers/helpers.c          |  1 +
- 4 files changed, 69 insertions(+)
- create mode 100644 rust/helpers/clk.c
+ rust/macros/module.rs | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd7c54af4fd4..608689342aaf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5883,6 +5883,7 @@ F:	include/dt-bindings/clock/
- F:	include/linux/clk-pr*
- F:	include/linux/clk/
- F:	include/linux/of_clk.h
-+F:	rust/helpers/clk.c
- X:	drivers/clk/clkdev.c
+diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+index a9418fbc9b44..27cc72d474f0 100644
+--- a/rust/macros/module.rs
++++ b/rust/macros/module.rs
+@@ -185,7 +185,9 @@ pub(crate) fn module(ts: TokenStream) -> TokenStream {
  
- COMMON INTERNET FILE SYSTEM CLIENT (CIFS and SMB3)
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70..f53d6e1a21f2 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -10,6 +10,7 @@
- #include <linux/blk-mq.h>
- #include <linux/blk_types.h>
- #include <linux/blkdev.h>
-+#include <linux/clk.h>
- #include <linux/cpumask.h>
- #include <linux/cred.h>
- #include <linux/device/faux.h>
-diff --git a/rust/helpers/clk.c b/rust/helpers/clk.c
-new file mode 100644
-index 000000000000..6d04372c9f3b
---- /dev/null
-+++ b/rust/helpers/clk.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/clk.h>
-+
-+/*
-+ * The "inline" implementation of below helpers are only available when
-+ * CONFIG_HAVE_CLK or CONFIG_HAVE_CLK_PREPARE aren't set.
-+ */
-+#ifndef CONFIG_HAVE_CLK
-+struct clk *rust_helper_clk_get(struct device *dev, const char *id)
-+{
-+	return clk_get(dev, id);
-+}
-+
-+void rust_helper_clk_put(struct clk *clk)
-+{
-+	clk_put(clk);
-+}
-+
-+int rust_helper_clk_enable(struct clk *clk)
-+{
-+	return clk_enable(clk);
-+}
-+
-+void rust_helper_clk_disable(struct clk *clk)
-+{
-+	clk_disable(clk);
-+}
-+
-+unsigned long rust_helper_clk_get_rate(struct clk *clk)
-+{
-+	return clk_get_rate(clk);
-+}
-+
-+int rust_helper_clk_set_rate(struct clk *clk, unsigned long rate)
-+{
-+	return clk_set_rate(clk, rate);
-+}
-+#endif
-+
-+#ifndef CONFIG_HAVE_CLK_PREPARE
-+int rust_helper_clk_prepare(struct clk *clk)
-+{
-+	return clk_prepare(clk);
-+}
-+
-+void rust_helper_clk_unprepare(struct clk *clk)
-+{
-+	clk_unprepare(clk);
-+}
-+#endif
-+
-+struct clk *rust_helper_clk_get_optional(struct device *dev, const char *id)
-+{
-+	return clk_get_optional(dev, id);
-+}
-+
-+int rust_helper_clk_prepare_enable(struct clk *clk)
-+{
-+	return clk_prepare_enable(clk);
-+}
-+
-+void rust_helper_clk_disable_unprepare(struct clk *clk)
-+{
-+	clk_disable_unprepare(clk);
-+}
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index e1c21eba9b15..ae595c9cd91b 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -11,6 +11,7 @@
- #include "bug.c"
- #include "build_assert.c"
- #include "build_bug.c"
-+#include "clk.c"
- #include "cpumask.c"
- #include "cred.c"
- #include "device.c"
+     let info = ModuleInfo::parse(&mut it);
+ 
+-    let mut modinfo = ModInfoBuilder::new(info.name.as_ref());
++    /* Rust does not allow hyphens in identifiers, use underscore instead */
++    let name_identifier = info.name.replace('-', "_");
++    let mut modinfo = ModInfoBuilder::new(name_identifier.as_ref());
+     if let Some(author) = info.author {
+         modinfo.emit("author", &author);
+     }
+@@ -310,14 +312,15 @@ mod __module_init {{
+                     #[doc(hidden)]
+                     #[link_section = \"{initcall_section}\"]
+                     #[used]
+-                    pub static __{name}_initcall: extern \"C\" fn() -> kernel::ffi::c_int = __{name}_init;
++                    pub static __{name_identifier}_initcall: extern \"C\" fn() ->
++                        kernel::ffi::c_int = __{name_identifier}_init;
+ 
+                     #[cfg(not(MODULE))]
+                     #[cfg(CONFIG_HAVE_ARCH_PREL32_RELOCATIONS)]
+                     core::arch::global_asm!(
+                         r#\".section \"{initcall_section}\", \"a\"
+-                        __{name}_initcall:
+-                            .long   __{name}_init - .
++                        __{name_identifier}_initcall:
++                            .long   __{name_identifier}_init - .
+                             .previous
+                         \"#
+                     );
+@@ -325,7 +328,7 @@ mod __module_init {{
+                     #[cfg(not(MODULE))]
+                     #[doc(hidden)]
+                     #[no_mangle]
+-                    pub extern \"C\" fn __{name}_init() -> kernel::ffi::c_int {{
++                    pub extern \"C\" fn __{name_identifier}_init() -> kernel::ffi::c_int {{
+                         // SAFETY: This function is inaccessible to the outside due to the double
+                         // module wrapping it. It is called exactly once by the C side via its
+                         // placement above in the initcall section.
+@@ -335,13 +338,13 @@ mod __module_init {{
+                     #[cfg(not(MODULE))]
+                     #[doc(hidden)]
+                     #[no_mangle]
+-                    pub extern \"C\" fn __{name}_exit() {{
++                    pub extern \"C\" fn __{name_identifier}_exit() {{
+                         // SAFETY:
+                         // - This function is inaccessible to the outside due to the double
+                         //   module wrapping it. It is called exactly once by the C side via its
+                         //   unique name,
+-                        // - furthermore it is only called after `__{name}_init` has returned `0`
+-                        //   (which delegates to `__init`).
++                        // - furthermore it is only called after `__{name_identifier}_init` has
++                        //   returned `0` (which delegates to `__init`).
+                         unsafe {{ __exit() }}
+                     }}
+ 
+@@ -381,6 +384,7 @@ unsafe fn __exit() {{
+         ",
+         type_ = info.type_,
+         name = info.name,
++        name_identifier = name_identifier,
+         modinfo = modinfo.buffer,
+         initcall_section = ".initcall6.init"
+     )
 -- 
 2.31.1.272.g89b43f80a514
 
