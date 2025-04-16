@@ -1,112 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC721A8F9E;
-	Wed, 16 Apr 2025 06:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C064D158520;
+	Wed, 16 Apr 2025 06:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786198; cv=none; b=qVYoxd6lRR7kTgJudvdNUBMFMBiXKdicaoiAMyyM7fyOjjhGwrzy1MkCzFoDffFSjRoXlHl/U4q9LLC02OCfQk1V3bY4/R/uKKYCY4WzB7Nx9dgpLtitJuC9UDjHt5Ia0jsWhp9PZwEcHbCMSIbsKfdkCKFEYoz/alHDMmg+yY4=
+	t=1744786213; cv=none; b=jfOOjiVuFZGliTlDepkwZrfzwX8/lrAVKSbVu8EaisLpaU5ET0HaNxvGy3x7AlFxvAtE3/7KgagjVV2JY1pFvhbPBEYApMTYtbRQvufriBz+6GICPW3G/W/Rbfzr3sURffVpVd9b6fBJaN3IcVXZy5XkqVOaCd5HfcFotKK5mlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786198; c=relaxed/simple;
-	bh=ZgghYAXuPRzB6na0PEJh4NWaeMpWixxoB+4GK0zm6/w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PwDfucr/fibQ79I3XYBFdPdqdBhCkjyWBSVHSwyjtjVZWjJ7lmBVmetTJH4y0mPb2rwyYdmwoFpER+xilR4/aTO42bw9v+rXWDznPDkuj1+IwWOanIVE/ovmlwO5GG7noDRIUfViGN5jlXSSspZWvtEPYd+XdVLDlhMscK4z1jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzu1MXsQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744786213; c=relaxed/simple;
+	bh=asBMeECU2HsBzDeNTI//gVVSxeF5UyT7mE0ZoRLepfA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcmFWbDlrdwn2NHvTUjY3xciveTpUDcyrD+8wLCRsZFBCiUNjE1lErta6TQSBYRQBSnA47y2UG7PEuGFtYyXleV1/eqvlp5EuOIJZ0Y9wTdcdm2HXIsvEQ5bVMq9Dx9dYTbxpHfL8JwovIsTZ4fpjUx6nTf7Ly50yNKwF4ms/LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Mg5//rod; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzu1MXsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80731C4CEE2;
-	Wed, 16 Apr 2025 06:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786197;
-	bh=ZgghYAXuPRzB6na0PEJh4NWaeMpWixxoB+4GK0zm6/w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nzu1MXsQYi/9cbhXPuU0Ghvsv8j6eJiY/35vOmAKXjxvbUSR4hPDUxf/JvCXFEiZe
-	 TlfkHglIccPp1O+6zJ/Z1c3PgL8oQgfS0IPp+E4twzYj2ptE+RiaBkDeK6Xy0ifO4b
-	 QFHvol6LbP8CGN1oDkf+v5wHhITCA4zSt06qY18tXEM7J+VPLqTfUtql3C8Rc5hADU
-	 m97atJ92oYDqK1cFpVN1SeAW/vzgSgBzxIMy+Q4dX/EThmDAn/QsSosPERS0tvr4Ss
-	 pYS34PZJO9TJkZIt7r5Hhp1mpKQJTl2B3vh5gKhhxKxgxSTQnVC5G33Rg1NI6ujR6U
-	 8JcMZe35iHmDQ==
-Message-ID: <8b471f1b-abff-4773-a059-ca8c8d89a2ba@kernel.org>
-Date: Wed, 16 Apr 2025 08:49:50 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Mg5//rod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA623C4CEE2;
+	Wed, 16 Apr 2025 06:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744786213;
+	bh=asBMeECU2HsBzDeNTI//gVVSxeF5UyT7mE0ZoRLepfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mg5//rodLrev1guMYmm3XxtOo2OToMYPwkHuDDBaf5M760qOmptEfMf2n8qZfGSdu
+	 JgzPBb8oD00+Sm5ua3uGbNlLrxshbySrw4Zup5T+0P/6CM8pgnJ+5I8hPBR7lguMJT
+	 gFNXrUAnh0r0sVew+1R3Pg5ZIharP+YaAgd8l0R8=
+Date: Wed, 16 Apr 2025 08:50:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: =?utf-8?Q?Micha=C5=82?= Pecio <michal.pecio@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>,
+	Minas Harutyunyan <hminas@synopsys.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] usb: hcd: Add a usb_device argument to
+ hc_driver.endpoint_reset()
+Message-ID: <2025041628-glacial-mumbling-1fe2@gregkh>
+References: <20250415111003.064e0ab8@foxbook>
+ <2025041508-rockslide-endpoint-a48b@gregkh>
+ <20250416082958.20c34504@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: Add device Trace Network On Chip
- definition
-To: Yuanfang Zhang <quic_yuanfang@quicinc.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: kernel@oss.qualcomm.com, linux-arm-msm@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250415-trace-noc-v4-0-979938fedfd8@quicinc.com>
- <20250415-trace-noc-v4-1-979938fedfd8@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250415-trace-noc-v4-1-979938fedfd8@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250416082958.20c34504@foxbook>
 
-On 15/04/2025 11:25, Yuanfang Zhang wrote:
-> Add a new coresight-tnoc.yaml file to describe the bindings required to
-> define Trace Network On Chip (TNOC) in device trees. TNOC is an
-> integration hierarchy which is a hardware component that integrates the
-> functionalities of TPDA and funnels. It collects trace form subsystems
-> and transfers to coresight sink.
+On Wed, Apr 16, 2025 at 08:29:58AM +0200, Michał Pecio wrote:
+> On Tue, 15 Apr 2025 14:26:26 +0200, Greg Kroah-Hartman wrote:
+> > > This fixes a 6.15-rc1 regression reported by Paul, which I was able
+> > > to reproduce, where xhci_hcd doesn't handle endpoint_reset() after
+> > > endpoint_disable() not followed by add_endpoint(). If a configured
+> > > device is reset, stalling endpoints start to get stuck permanently.
+> >
+> > As this fixes a bug, can you add a Fixes: tag with the needed
+> > information?
 > 
-> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
+> Hi Greg,
+> 
+> Sorry for bothering you, the real bug is that I forgot to carry over
+> the RFC tag from v1.
+> 
+> The 6.15 regression is currently solved by reverts Mathias sent you.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Oh good!
 
-Best regards,
-Krzysztof
+> The underlying bug is much older, I would have to research where it
+> went wrong exactly. It was very obscure; a class driver would need to:
+> 
+> 1. call usb_set_interface(), usb_reset_device() or something like that
+> 2. submit some URBs to make the toggle/sequence state non-zero
+> 3. call usb_clear_halt() on a not yet halted endpoint
+> 
+> Then the host endpoint wouldn't be reset, but the device would.
+> 
+> I know of drivers which do 1 and 2 or even 2 and 3, but I have not
+> yet encountered a driver doing all three in this order.
+
+Ick, I don't think we want the individual drivers to have to do this,
+the host controller _should_ handle it as you are trying to do here.
+
+Anyway, I'll let this one be on the list for now and wait for others to
+review.
+
+thanks,
+
+greg k-h
