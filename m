@@ -1,123 +1,135 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CA6224B05
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2F5227E89;
+	Wed, 16 Apr 2025 05:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744782853; cv=none; b=OyR/Pgw5sLJBHiaLXuYTpRzmkhn3UAYbYqazoR9kClEJ1ktpqIZE21MO9DJ54GVttosgE7TdczGoMkA3yYmh8q9oV/3NBGc3y5eLhhir4uPndsuClfXskMmu1mTEmsK5DDRbK1/X5L6UhsGCUEKydZWpTj3A/xtT0Fb6YxP4zhE=
+	t=1744782919; cv=none; b=d3Z4wJJrZ1dFcI+cf7FgqS8BMTyem3nXV/31fqZ2lw1AJmm86WTo4lFekKSUvv/hr1cFqmZF6MT7WEEIXQgjkFMmc4BuvnYOTU1qWM1Omj/TedPBFMBotl5aRXezTVKX5CiTLwQXOoZQc6ECu6OPv6Bcz2PVZfug7CZjn9+GS4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744782853; c=relaxed/simple;
-	bh=239UQEfkZYAKSBMhKmP9uLLuYFgWkkQrNgSjEh3EfTE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KLrYQBwaj1pVV0/jHpS5l17WyNsBCIta6dMSLuCZZHTjdl1gn/FIZwfcfe02nmRB2aFQ5qmXDYoSFJgZETZembDfSacK/PoHNIlx77hQkWiULtuOibr5lNTA/1U9AAwTxZ4AbtP+TCesYGQa0XJVLOs/jsIZ3mLZrmSNdrYot/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wn7Pc0B6; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1744782919; c=relaxed/simple;
+	bh=leHfCPiWJjR8QJk096GICCgGysb1FJAdLfgctZ3mqU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PNVekE4VPnfmwdIwClyy5FU+qkqiVRQG/qsZzaeKtEgVrVbSqo95ENwXG3UVwb+HHHoeoRd/zCxtHr7hIei1cdDECi3i9wC/yuJ7pqO5/dq+RYeMjDTgcoUO9HMRRbgEZiTXMScTdH0tUMfr1W6FLGQgfntjtq7XpDAezu+XjQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HQ3wkwSE; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn7Pc0B6"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5497590ffbbso6685435e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 22:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQ3wkwSE"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54acc04516fso6109424e87.0;
+        Tue, 15 Apr 2025 22:55:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744782849; x=1745387649; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ma56JdV1nhumd2hIrzxNZCq7YqsIb2ro3nhXeH33szk=;
-        b=Wn7Pc0B66/iF+eipEIxO7Dy+iplQxRLd3ocMBEyX6PtSgSpJVAj0xc4wm0rzVMD49+
-         r9H164Je3MbGoWIl2AHyQMnaQlSWSoAQg1EnZhnuEg91QrteaBmNgLmpXY7WBOm3/q6U
-         c5rxfSdgSssSEJxoi1IWSZhzWRYpcxMikQYCePGNr2ksaBBXF93szBtBFbqqmPeVUbvT
-         vj9l04Nut7ELylYuFZy4t+MMJZwSCWbzf0IsDimSKaGmaAn9Czv4l0UIz67HaDdtHbNh
-         qlFInQx3gCsa2fVrCw7EZTDgxGWDgiaGWvK3KlF8wnmYA+/snxQSIfjQKEiADcpO0PQW
-         WJ1w==
+        d=gmail.com; s=20230601; t=1744782916; x=1745387716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9m2yRU3f+5sO7kMkcMdb1lUeBTJeJ32rqj0qwQeg/yw=;
+        b=HQ3wkwSEgnsdZ8TJ/6yd+ZRj3/wItd10KGFjRV7nIBwGvoseIGXxTSZXkKGa7X/QZq
+         E0W0G2TK0xahfIS+72lbpeJ7WM9QnQwoRY7lezwON8obl6Ujk1TGhL60OAvnCwrSvJyE
+         J9DEwNIN5Wp7F5f8FY2XnvM0IogQn54Aj+IxPf2QPcloBCQVOMj2p/iP7RCw91x7GWm1
+         hT6fd6QFIPKNIo2d1lneBrtg/pr75u5iNf2RheDRqSBqj+gBfLcTwlFNPVE1+tcc2Z6L
+         xowuTdtZToTatrpCEXxXc/UGMlypMxyqEdrlG1wrJNkeSyIN+X3NHJjDrxmFEwJJLnVG
+         feAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744782849; x=1745387649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ma56JdV1nhumd2hIrzxNZCq7YqsIb2ro3nhXeH33szk=;
-        b=aBrkIb/q/HRkEeT2C2fQwyRjfPFk9Gpqng0T/MlJ+1K08S2iT6L5QD443J6fRFGIAZ
-         5gSqukgvjyuSOqIu9FTDLm4H4UO/SMqR6PAYkdfY93X9h/DocgbpzbLB8WNdI1cZRf1q
-         wGNZ4ApkD6eRFq1GiR94epLEbjx9Mzd1XfundNuRI2SUDyTm6kdTlL5bibFAJ7k3V5GS
-         YpXSRau0mIy2sYoHq2kz6ojqYdhdGHX3MOlzwH6p4sK+vJ5d0Q58CHKSN3vUFO2R1xna
-         57VTR7/uf/mP4nhW4bAqEtHLXiEBo6ChpZ2QXXScfUTlEq3GDXzGHnK/JSKUvxXd5xe7
-         W39A==
-X-Forwarded-Encrypted: i=1; AJvYcCXK9J5yfnvXbkXjRepqR82sIMImQOfsdpEKb1m3H8K9W3Z42IFDEfzbyN1TqwU2PUgPAfLKMZUFEHFwwdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0eicVq1GG/CfnlYiRjD6nuTst0cPLbT4YI3xquWlAc6omJ8mO
-	VnSdu+AnSJc4ok5ZvPu8IZNBkqIxsVrSIidqVYLt5vy/VdsK6HSuTHVWP7HwfUPuE03+aJQckxk
-	XfRPsSO7QtziuFUKJI/3apcilsmjQzHUelc8PFA==
-X-Gm-Gg: ASbGncvZb7t7q3tEBRZnGiZlgYmBRSCT6pTjz2/JauWUSUK5vBCSNRc72iHwb1e29Pt
-	ZfxBDoxULQGqpo575y6q6O79gwYcBQIXudi1BibaQAUQUEenKqCytITQNTBQbUeQ21taYdD/Q3L
-	jhdV2hz07KIsQdjxDfMSrKCA==
-X-Google-Smtp-Source: AGHT+IFKNOvvk/guKx+5UUNDUQ3VjKqbOOR/YrgZhnhd/s/Jt7rhsOWn5n+XMebPpbtROoWDcm4vmhTDkFWPo7tjwhg=
-X-Received: by 2002:a2e:bea5:0:b0:30c:6f38:f675 with SMTP id
- 38308e7fff4ca-3107f718b32mr1334801fa.31.1744782848194; Tue, 15 Apr 2025
- 22:54:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744782916; x=1745387716;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9m2yRU3f+5sO7kMkcMdb1lUeBTJeJ32rqj0qwQeg/yw=;
+        b=Uht+VzRMovlifJdVi5LMW4CDQ6GLW7XakOL4E8wXNjO+x/CdzormiK1NLUR5oNjs2F
+         pqHEgcWL1s+mmGEha4V8USHygFZCaDWS5G1JvroP2Dh7e+5WX+UmDth5ETBs6ezwno8u
+         +80BhSoODHYbPMM4TLOZ6MlbpeB6j2Cm2o1+T/VX/X3kpN0qXFlcMox+YTyslVmFCKyP
+         etIMcAC5Df5yxIFnWkjZpmoa8GTA7NqpJk6yk9D0/LRJ4/DOjMAxsWjSPagY1BPf/mRD
+         IweYVlmK0uneose2SeNyNFNt3BmS77plr7J2imuEji4tos18ZQZhgQtJek5NAbal1kbm
+         1jMg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyYUFeUrxBtp9tJN8Yn0UmW77Y2cmM6G+dE0WUoq6LnbUxb90zRLWUHDI2/vyxp9qxRojS3TKObyV8@vger.kernel.org, AJvYcCV9wvmPmbXg8Vv7AJRLNn+VDJ/3Pq/zltQWST7YgrSNUu4hx6fq+SapfZSHCSjizRkcj1ifHDAOZBvhxKWW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBkIuqfw2qUTWAVn2SncjtKiCnM0/rdHUqszMJD+m16njlbEoa
+	NB0VxMTWGHMi6bMAM6moaNQXWhEGsTYDrLYK/q5UxZ5UeupHvNXr
+X-Gm-Gg: ASbGncsulqgQZSGEJePkFEWIKXtY4v4pe9x3yQurX+eS+4vduhvCYa3wXd7qI9yKyYJ
+	18HDv7lMf1Zi3BgCdn+Ibt1pXtXowOJpyKubhkbBl6Ax7aWXYNhrNIOPjKHlBkJgOHHZnbsv4Ri
+	WKt6CrkRA6CE/G6TuWxNHR+sePjQBGSBKFgY9qRXR8afuqysFYIaahROzCCZKmu7zz6P7fvP3e8
+	+8EPpZKxmtISreyQgMA6Ps5+NR90sX+Sl+724JbnOkCK08heE+EH1FrL6jJXzibZ9UhvSNrWEuE
+	A38z4wDhX/Xq4eNuf+I07axyjd1sEvvBffQVG56UZx9jDac2VV4BQm7DYcrzT/ikoWz4TDinIAG
+	U5sKVXRXkDeCpscWg5pRSWA==
+X-Google-Smtp-Source: AGHT+IGWyn3ogmkmaBqKBu1a3wDd6qHnziLYfar+7QtgwPNJpfr1FegmOe/Tec/6oAiaM1iuMK+Rnw==
+X-Received: by 2002:a05:6512:118c:b0:54a:cc75:6a9d with SMTP id 2adb3069b0e04-54d64aea25amr173466e87.42.1744782915422;
+        Tue, 15 Apr 2025 22:55:15 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d502654sm1593845e87.111.2025.04.15.22.55.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 22:55:14 -0700 (PDT)
+Message-ID: <0d470203-fe9c-4bc0-b487-6d638c006232@gmail.com>
+Date: Wed, 16 Apr 2025 08:55:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414145650.10776-1-ubizjak@gmail.com> <20250415185558.112621df@pumpkin>
-In-Reply-To: <20250415185558.112621df@pumpkin>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 16 Apr 2025 07:53:56 +0200
-X-Gm-Features: ATxdqUELBsckZ2mk1WsCsKoeAANw0iyzdNyTWIq2U13CXOfTkWqT8UIebtQcx5w
-Message-ID: <CAFULd4YV0yKTULPM-+Y0b72EJ48tqfW_ni8RjHsQTULT8TGaTQ@mail.gmail.com>
-Subject: Re: [PATCH] um/asm: Replace "REP; NOP" with PAUSE mnemonic
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-um@lists.infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] property: Use tidy for_each_named_* macros
+To: Jonathan Cameron <jic23@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <Z_ew4DN0z71nCX3C@mva-rohm> <Z_yvNl23GcEpOkK1@smile.fi.intel.com>
+ <Z_yvkKTgI4XSlGya@smile.fi.intel.com> <20250414201450.43fb8d9c@jic23-huawei>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250414201450.43fb8d9c@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 7:56=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Mon, 14 Apr 2025 16:55:57 +0200
-> Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> > Current minimum required version of binutils is 2.25,
-> > which supports PAUSE instruction mnemonic.
-> >
-> > Replace "REP; NOP" with this proper mnemonic.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Richard Weinberger <richard@nod.at>
-> > Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-> > Cc: Johannes Berg <johannes@sipsolutions.net>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > ---
-> >  arch/x86/um/asm/processor.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/um/asm/processor.h b/arch/x86/um/asm/processor.h
-> > index 478710384b34..233a7a0d29c9 100644
-> > --- a/arch/x86/um/asm/processor.h
-> > +++ b/arch/x86/um/asm/processor.h
-> > @@ -24,7 +24,7 @@
-> >  /* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
-> >  static __always_inline void rep_nop(void)
-> >  {
-> > -     __asm__ __volatile__("rep;nop": : :"memory");
-> > +     __asm__ __volatile__("pause": : :"memory");
-> >  }
-> >
->
-> That only makes sense if you also change the function name.
+On 14/04/2025 22:14, Jonathan Cameron wrote:
+> On Mon, 14 Apr 2025 09:47:44 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> 
+>> On Mon, Apr 14, 2025 at 09:46:14AM +0300, Andy Shevchenko wrote:
+>>> On Thu, Apr 10, 2025 at 02:52:00PM +0300, Matti Vaittinen wrote:
+>>>> Implementing if-conditions inside for_each_x() macros requires some
+>>>> thinking to avoid side effects in the calling code. Resulting code
+>>>> may look somewhat awkward, and there are couple of different ways it is
+>>>> usually done.
+>>>>
+>>>> Standardizing this to one way can help making it more obvious for a code
+>>>> reader and writer. The newly added for_each_if() is a way to achieve this.
+>>>>
+>>>> Use for_each_if() to make these macros look like many others which
+>>>> should in the long run help reading the code.
+>>>
+>>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>> Thanks for cleaning these up!
+>>>    
+>>>> ---
+>>>> The patch was crafted against the IIO/testing branch, and it depends on
+>>>> the 76125d7801e5 ("property: Add functions to iterate named child").
+>>>> Hence I'd suggest taking this via IIO tree (if this gets accepted).
+>>>
+>>> I'm not sure why. The for_each_if() is part of v6.15-rc1.
+>>
+>> Ah, I see, you are trying to fix newly introduced stuff? I would rather suggest
+>> to make this straightforward against the current upstream and ask Jonathan to
+>> rebase the testing to fold the fixes into a new APIs.
+>>
+> 
+> Or we just do this next cycle maybe. 
 
-This function is used in several places, and is also defined for x86
-in arch/x86/include/asm/vdso/processor.h. The renaming should be
-coordinated with x86 and should definitely be a separate patch.
+I'm not against either of the approaches. I'm (mostly) staying away from 
+the computer for this and the next week, so re-spinning this will in any 
+case get delayed. In that regard, the next cycle won't be that far away.
 
-Uros.
+> Definitely not going to take anything
+> through IIO that hasn't been on the iio list btw.
+
+Ah. Thanks for pointing this out Jonathan! I just used the 
+get_maintainer.pl - and added You. I definitely should have added the 
+IIO-list!
+
+Yours,
+	-- Matti
+
