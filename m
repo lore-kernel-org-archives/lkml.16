@@ -1,110 +1,121 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9D31AD41F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E25822C322;
+	Wed, 16 Apr 2025 07:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788417; cv=none; b=l2NpkzcjsPwQ/bbWN2A+6kw2U4RVNGoxecMe7TyNniNMbe4SW9+SkSQ76cZQmnmgbF1EXgZMcUhYTw0e/pxKmbfcG/lnXsbv38iVG8vNFgNW+LPQsfuqUb4vrU3P2lja02fDhZraMptXgA6pf/QA5ysivgZLfWT4SKzmnewBN1I=
+	t=1744788420; cv=none; b=KVFhwZuvliTbyH22VRSpI3a5frUqrs5V6iIj5HmggBD5Fr+iOwWKF7RIclE2HnVr4GKrTNw9oGdcC8koI4R6nXQuiJBiWdbbkA4DHPfrCIvQFNmH5PueW1rb1Z/xBI8wAAJsbl1sZpksH/nPjTO0HgD50O8jpQw+Yz2huC3V2oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788417; c=relaxed/simple;
-	bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c5WBBUzdEOjKxIEONLKMn7KWKLCeFL/1NpWuMrwLWCN+n0yfLmZ2gcMXFpXHGY+nJNzoSdE7IlhyRILtHPZ3jT/XMc8rOOd+/PUZVcVoVL2WlymC5o3cK6yhM9rRaGzdu8HKcRtQy++cdwpV5LN2aQ5BIk3IJAtpKN75BWDrZS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yTB6YFcA; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744788420; c=relaxed/simple;
+	bh=WHqiBZi04W6j6zlbSJBrICb04K/vv9APlXrF5vaOqVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRMdrH7NlBSAtXm0ZWQp+trGDOZBn44/td8hOVervOMIM1jCx2TxNzNGnD57eJGNpspRNEi1S4wqbAoSzZyPtVQqx5Kj4UiqEgvu+AdAxQm7ct08cIVdBuLiGk0Cc3nOfLEhWuW4ugMt67QTc0tkqq1V5gqsmDW2mjA6RU++vsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b4UYwmfX; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yTB6YFcA"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfed67e08so63906101fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:26:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744788413; x=1745393213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
-        b=yTB6YFcApHyvgS2IzwZM+D1G5zoy8hA+7xM7DZOEQHZPyqOJwH8Qzhz863tVBITzzE
-         xjrxfEh0CkNsfD/F3nhZb+Vs1Nw9Kr9NVksQQgkidYMzJGzzHkyH0HPvIcoXwNm3hqod
-         ZzekxACWvlnaoDN0hLVz6OWe4jsSof19WWsqKIKwkKP0laRP76yGcnah9F/cU4mlW5Hy
-         8i5W6/J0ZXMh1DcvkPtxZhmMiC70J0n3W99hdzjgpFZvYoJWFqqHyfA1Fp6wZF/JJUxw
-         mmfcsmRuBvsqQo7jV3TDDWdJhy/pHe7D1cqy7RNqmInCvm8oTf0+neUBT8S+clcP129u
-         mtjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744788413; x=1745393213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1vaofwfGevdxm4fxBlcFaPcuDKOl1lL/bjN1PokEW5s=;
-        b=tlECVWppDBiipp8/JuJVellVZpuqKMLU5UJLk4ttEJHoNqZfxFe4QTgcWPd2fa8W+w
-         16dirIyeDoVsV48QFfpMH1EjpfTlf+SwpC9uYbAv/GHRywhcXDcp0xDO1C1A9P4OfPcG
-         aI/ANeHsyyAuooizMBn+yTuavNPQu9EYKvs4r/+hW49qqgqF//Nma4uAfol4TsXy8air
-         D67xN1C+1TYdt+sVqJox69c8CZD3pDqPGS5q5h1I6EGOd8pr4+4ulpHhUBL7rBT6tK1T
-         OoKYptqk50NSHWyjwyxBFywWN7F0HRYx06oyfJiLZ3siE0vCQO9c9VQHBGwFO/btCAtr
-         RSZw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVARGit7vE3KAm3T+ZEbLVSCSvfsZ3mqm12JyC//H8CGPrTGpY0ZrqgBSOo6L81jLuehA8p5NnWgfF0Cg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCbprS/+hX43LlYnYLP67sTSXBKrZpfWsHYCU/ZqtlD/im/3ih
-	58c6DeS4osYqBfsVMHNJ7aEnSjbUMwxBAjirx/K/+h3W/tuFCoXTtvxfrc4PcYx4OxhyX675yCS
-	rXhU1bZGAarSl1lF24FBXAH4D438IAFVqZf0LqbFnEs5HSsX6
-X-Gm-Gg: ASbGnct4b+FLQtVlws7NogVu00GvzqsHd/SlYuIsWnDg4sgVlY4Lmvx/mzc69yUGOi3
-	UaYlxDhK7b+0xrN1tUXIWgdSI5AqKOqja6CeujYZJ2sSh0vW7LNeDanZBPE//JCFJFasgEWPJFE
-	Iq1wEwMi7aeboGK3bCK8KGyg==
-X-Google-Smtp-Source: AGHT+IGFJYXFDDo/c9HFNj0hqEBV+yqtCpFXburGgG3GtJzyM/i0Julc0Ne5mNBFD3uMq2MVFDEsN5XeZET5w+5UV6E=
-X-Received: by 2002:a05:651c:220d:b0:30b:b184:a8ef with SMTP id
- 38308e7fff4ca-3107f6bdddamr2202021fa.14.1744788413502; Wed, 16 Apr 2025
- 00:26:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b4UYwmfX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744788419; x=1776324419;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WHqiBZi04W6j6zlbSJBrICb04K/vv9APlXrF5vaOqVw=;
+  b=b4UYwmfXVBJ5B2Xsn9U9U+BUBmfNVswDzOe0MUJrTZeRgYAkIw42G7fy
+   s6MJIDoSMQhtNEbjRSPzxUrvQweuCy5djD2w3L2X79SHu93FsdTPyzApi
+   HLOv9nNmMpekUVuax5S7BYEot5j1raBnPpns5tK0AlAVLWsWjvKS95axV
+   sv4BCRjEZ9DhffGSpVLBpDUjDKj2OMcPETwNp3LhFdM/NLDzWUSQTTJDx
+   QHEc8ksYmGh9VbGqz10IZK1ZvKoRwFG7om9qF7PDszSVsPP78Lev5K8c4
+   VqffDVHd6aImnKZ/zFcxA38Ljt9Uq+ayh9Z2e8lclS9DT/vWNW4IQI16q
+   w==;
+X-CSE-ConnectionGUID: EBwfnQH6QPCEZ4yhykBp2Q==
+X-CSE-MsgGUID: n8jR3PrMSFWuu5gGjm660Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57711289"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="57711289"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:26:58 -0700
+X-CSE-ConnectionGUID: gCYpnm+lR3e/2ZdvcyvmUQ==
+X-CSE-MsgGUID: cMticInwS/qUFu/+xiHg+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130325329"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 16 Apr 2025 00:26:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 6C79BF4; Wed, 16 Apr 2025 10:26:53 +0300 (EEST)
+Date: Wed, 16 Apr 2025 10:26:53 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Chenyuan Yang <chenyuan0y@gmail.com>, lenb@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
+	x86@kernel.org, hpa@zytor.com, bhe@redhat.com, kai.huang@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/acpi: fix potential NULL deref in acpi_wakeup_cpu()
+Message-ID: <yie5ice3gl47ayfbty2oxppu6sp76ho6k5qt4g7jqy3qw5rrx6@s4cc4kyp3dun>
+References: <20250411194820.3976363-1-chenyuan0y@gmail.com>
+ <CAJZ5v0hBfq7rQvNFJevqD3s_cASFT2eBqC0zoDWBT1gAsfqkCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411084159.3307-1-ot_chhao.chang@mediatek.com>
-In-Reply-To: <20250411084159.3307-1-ot_chhao.chang@mediatek.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 09:26:42 +0200
-X-Gm-Features: ATxdqUEqi0bEqmx8YQckOZ12kcmNHaSqcTf6fCpAz3VpdY46Sk3RpC-b3QUf-pw
-Message-ID: <CACRpkdZ63dWzMg0t96zPFL4+4Ewg1nA=utPJ2QUg2DvmFe0_FQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: pinctrl: mediatek: add mt8196 eint pin
-To: Hao Chang <ot_chhao.chang@mediatek.com>, Cathy Xu <ot_cathy.xu@mediatek.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Wenbin Mei <wenbin.mei@mediatek.com>, Axe Yang <axe.yang@mediatek.com>, 
-	Qingliang Li <qingliang.li@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>, 
-	Chunhui Li <chunhui.li@mediatek.com>, linux-mediatek@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0hBfq7rQvNFJevqD3s_cASFT2eBqC0zoDWBT1gAsfqkCg@mail.gmail.com>
 
-On Fri, Apr 11, 2025 at 10:42=E2=80=AFAM Hao Chang <ot_chhao.chang@mediatek=
-.com> wrote:
+On Tue, Apr 15, 2025 at 03:39:24PM +0200, Rafael J. Wysocki wrote:
+> On Fri, Apr 11, 2025 at 9:48 PM Chenyuan Yang <chenyuan0y@gmail.com> wrote:
+> >
+> > The result of memremap() may be NULL on failure, leading to a NULL
+> > dereference. Add explicit checks after memremap() call: if the
+> > MADT mailbox fails to map, return immediately.
+> >
+> > This is similar to the commit 966d47e1f27c
+> > ("efi: fix potential NULL deref in efi_mem_reserve_persistent").
+> >
+> > This is found by our static analysis tool KNighter.
+> >
+> > Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> > Fixes: 2b5e22afae07 ("x86/acpi: Extract ACPI MADT wakeup code into a separate file")
+> 
+> Well, it's good to add the author of the commit you're trying to fix
+> to the CC list.
+> 
+> Kirill, what do you think about this?
 
-> Add eint pin support for MediaTek mt8196 SoC.
->
-> ---
-> This patch depends on
-> [v3,2/2] pinctrl: mediatek: add mt8196 driver
-> [v3,1/2] dt-bindings: pinctrl: mediatek: add support for mt8196
+Looks reasonable to me.
 
-I just merged Cathys patches, can I have a review from Cathy on this
-patch so we are all aligned?
+We fail to remap a single page. It is likely to be fatally broken system
+if we get there. But okay, let's handle it.
 
-> Please also accept this patch together with [1]
-> to avoid build and dt binding check error.
-> [1]https://patchwork.kernel.org/project/linux-mediatek/list/?series=3D&su=
-bmitter=3D215008&state=3D&q=3Dv3&archive=3D&delegate=3D
+Maybe use pr_err_once(). No need to spam an error for every CPU.
 
-I don't see how this patch (which is just code) could cause DT binding
-check errors?
+> > ---
+> >  arch/x86/kernel/acpi/madt_wakeup.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+> > index f36f28405dcc..b386ec4b87c2 100644
+> > --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> > +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> > @@ -143,6 +143,10 @@ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+> >                 acpi_mp_wake_mailbox = memremap(acpi_mp_wake_mailbox_paddr,
+> >                                                 sizeof(*acpi_mp_wake_mailbox),
+> >                                                 MEMREMAP_WB);
+> > +               if (!acpi_mp_wake_mailbox) {
+> > +                       pr_err("Failed to remap MADT mailbox\n");
+> > +                       return -ENOMEM;
+> > +               }
+> >         }
+> >
+> >         /*
+> > --
+> > 2.34.1
+> >
 
-> ---
->
-> Signed-off-by: Hao Chang <ot_chhao.chang@mediatek.com>
-> Signed-off-by: Qingliang Li <qingliang.li@mediatek.com>
-
-This use of --- comments will make stuff disappear when applying the patch
-but I can fix it up I guess.
-
-Yours,
-Linus Walleij
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
