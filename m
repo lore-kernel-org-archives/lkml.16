@@ -1,39 +1,25 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F311B87E2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D41B1B87E2;
+	Wed, 16 Apr 2025 15:00:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744815616; cv=none; b=EraGNsV+7YR6IAmxdlowafL34Vzlay73OpEAZyklcXVv0HzRtBQNY4AQYRjEn7sWwgo0MiH+7QDMVErw0ngxPWfUW6ZGBVqMFBc2sR1gFknS5MW2DzL2h3sAEQtdhhRHOBbNLgTueDpQvFbMegUfuglBFAXdLsl8yUzr4fz6hP0=
+	t=1744815651; cv=none; b=XeBBhX0OqguLOk0KQKeFBIuLgt56w7szpIMs8xzBowqlXeAQSG9Vqi/ArdQuO6jsCFQiroWy9klrK2zWHZuBd96ccuV7kVsO6Atl11MBSmwl2qEaHWsGl3W0n4+cUK+Ym0TYLNic5d9gaLi/M1eoZyEhWQgBOvXxaS4ZCi8LuL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744815616; c=relaxed/simple;
-	bh=8kbxOEODvzFpFE1cl1PwwakG+0bF+4gT1/VdflCZR6U=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=fCbRbwIDEhkE2JKfd8ec4nxwa/vMvPA45PKDLtFMRoF9D+hSuhF+FhmpCaRMFgpxwhNYi+Y6YvKyt+VL7v3ST2Pa2Fv5XK0WGizo1oZjrxITRvJwEIh44B6fhA3hyepR1tyMioiJYevQzzHHDyTB1oxeQDi4f2qwmqD4w/CR9rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=eNP6FUgj; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="eNP6FUgj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744815610; x=1745420410; i=markus.elfring@web.de;
-	bh=JwG+vvXK0gW0CaUyaX5L4N0GIiyWr9E8Vf0rHqz3H7w=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=eNP6FUgjGeC0+axdEPhi6S1ZctcC0oYZ26ptr3S6FFCXUz3Sr2+TcxQgNSVF3Vyz
-	 vK1rYLpbaK8GJ4rNHMVJmpzDbmX9I0PIW2Kp8n0arFp4voBt5mC/bd0rccNf0lKAB
-	 eza3fB6kPr7SHrXMEX82bxVpzXTmHcOoDd5mEiGu3/xa/c1FagQCLT4/MeNNQzrJZ
-	 bMZT7IqwGaj8fkpbfTGKS8yl+zU5NyrArzfDWR4IfpGuidK2dyjlH1uKMTe4NdBZg
-	 OS30xfrRy5DuV0FsMO7eNleXj0Y3jEmxiyxLrSB7FbKbV1SM6YX8VP8HVj4cgxrju
-	 6VlgqQlakSXmqX5oXw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M5Qm1-1u3gfX35XB-0093kY; Wed, 16
- Apr 2025 17:00:10 +0200
-Message-ID: <81979474-04ac-4712-a28b-3d15b697c97e@web.de>
-Date: Wed, 16 Apr 2025 17:00:08 +0200
+	s=arc-20240116; t=1744815651; c=relaxed/simple;
+	bh=PsQV6HzJBQfKm0PbaYU4jGJbSIq3nTtrpbyvcMbd1iA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6UCY33wkdcmdQ7/7oRoWvCeJ/1BFewDTxiOWVzsYMEfqJ2K8qZkWHRnIfkgCAW/zhwulfhBaV5PLIPaZ48EcHYdTEJjtFEmna63+dEgs4Yyd/vkxqpnAUrCMvZlkU39Po5dKtfY2C294Tx41CjrdUyvvSg3R1Xwwb7ew1Bfe5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5111F1692;
+	Wed, 16 Apr 2025 08:00:47 -0700 (PDT)
+Received: from [10.1.35.42] (e127648.arm.com [10.1.35.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 213E73F66E;
+	Wed, 16 Apr 2025 08:00:47 -0700 (PDT)
+Message-ID: <1c0c6caa-e56c-454a-a976-81303dee1852@arm.com>
+Date: Wed, 16 Apr 2025 16:00:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,100 +27,218 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-mtd@lists.infradead.org, Michal Simek <michal.simek@amd.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Chenyuan Yang
- <chenyuan0y@gmail.com>, Michael Walle <michael@walle.cc>,
- Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] mtd: rawnand: pl353: Replace devm_kasprintf() call by
- devm_kstrdup() in pl35x_nand_chip_init()
+Subject: Re: [PATCH v1 2/2] cpuidle: teo: Refine handling of short idle
+ intervals
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+ Doug Smythies <dsmythies@telus.net>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>
+References: <4661520.LvFx2qVVIh@rjwysocki.net>
+ <2239639.irdbgypaU6@rjwysocki.net>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <2239639.irdbgypaU6@rjwysocki.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:GtCprZMrhcdkUfwX51AoGw4EjPScQrmbPVPc33hq8MmD3rlFby9
- Ye50aEmAHcVFdhABGmrWLWuMUhhV6mEH0Q6zP2Q93Jg1rKqV7EJ1bhkamkR2ZpOQFBCAbjA
- u9yBqRAaHH9Sx220Y0VDWxvosFhGJl9W9Z2IR/7b6rKZGBsiGg1oURS0iwwSsd2RQ4wB809
- 8T8v3U+bjMAeMhZbXHaSg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:K/MLVp6BMHo=;nITy5TtiXZJM7oqaDMnbQQOMkD9
- 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
- l4rsg1Kq6PtBDSZcaJ5DNwgZffdUshfqEl
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 16 Apr 2025 16:52:04 +0200
+On 4/3/25 20:18, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Make teo take all recent wakeups (both timer and non-timer) into
+> account when looking for a new candidate idle state in the cases
+> when the majority of recent idle intervals are within the
+> LATENCY_THRESHOLD_NS range or the latency limit is within the
+> LATENCY_THRESHOLD_NS range.
+> 
+> Since the tick_nohz_get_sleep_length() invocation is likely to be
+> skipped in those cases, timer wakeups should arguably be taken into
+> account somehow in case they are significant while the current code
+> mostly looks at non-timer wakeups under the assumption that frequent
+> timer wakeups are unlikely in the given idle duration range which
+> may or may not be accurate.
+> 
+> The most natural way to do that is to add the "hits" metric to the
+> sums used during the new candidate idle state lookup which effectively
+> means the above.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Use a devm_kstrdup() call instead of a devm_kasprintf() call
-in this function implementation because only a single string
-should be copied.
+Hi Rafael,
+I might be missing something so bare with me.
+Quoting the cover-letter too:
+"In those cases, timer wakeups are not taken into account when they are
+within the LATENCY_THRESHOLD_NS range and the idle state selection may
+be based entirely on non-timer wakeups which may be rare.  This causes
+the prediction accuracy to be low and too much energy may be used as
+a result.
 
-The source code was transformed by using the Coccinelle software.
+The first patch is preparatory and it is not expected to make any
+functional difference.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/mtd/nand/raw/pl35x-nand-controller.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The second patch causes teo to take timer wakeups into account if it
+is about to skip the tick_nohz_get_sleep_length() invocation, so they
+get a chance to influence the idle state selection."
 
-diff --git a/drivers/mtd/nand/raw/pl35x-nand-controller.c b/drivers/mtd/na=
-nd/raw/pl35x-nand-controller.c
-index 09440ed4652e..86f684bf8624 100644
-=2D-- a/drivers/mtd/nand/raw/pl35x-nand-controller.c
-+++ b/drivers/mtd/nand/raw/pl35x-nand-controller.c
-@@ -1071,8 +1071,8 @@ static int pl35x_nand_chip_init(struct pl35x_nandc *=
-nfc,
- 	mtd->dev.parent =3D nfc->dev;
- 	nand_set_flash_node(chip, np);
- 	if (!mtd->name) {
--		mtd->name =3D devm_kasprintf(nfc->dev, GFP_KERNEL,
--					   "%s", PL35X_NANDC_DRIVER_NAME);
-+		mtd->name =3D devm_kstrdup(nfc->dev, PL35X_NANDC_DRIVER_NAME,
-+					 GFP_KERNEL);
- 		if (!mtd->name) {
- 			dev_err(nfc->dev, "Failed to allocate mtd->name\n");
- 			return -ENOMEM;
-=2D-=20
-2.49.0
+If the timer wakeups are < LATENCY_THRESHOLD_NS we will not do
+
+cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);                              
+
+but
+
+cpu_data->sleep_length_ns = KTIME_MAX;
+
+therefore
+idx_timer = drv->state_count - 1
+idx_duration = some state with residency < LATENCY_THRESHOLD_NS
+
+For any reasonable system therefore idx_timer != idx_duration
+(i.e. there's an idle state deeper than LATENCY_THRESHOLD_NS).
+So hits will never be incremented?
+How would adding hits then help this case?
+
+> ---
+>  drivers/cpuidle/governors/teo.c |   99 ++++++++++++++++++++++------------------
+>  1 file changed, 55 insertions(+), 44 deletions(-)
+> 
+> --- a/drivers/cpuidle/governors/teo.c
+> +++ b/drivers/cpuidle/governors/teo.c
+> @@ -261,11 +261,12 @@
+>  
+>  static int teo_get_candidate(struct cpuidle_driver *drv,
+>  			     struct cpuidle_device *dev,
+> -			     struct teo_cpu *cpu_data,
+> -			     int idx, unsigned int idx_intercepts)
+> +			     struct teo_cpu *cpu_data, int constraint_idx,
+> +			     int idx, unsigned int idx_events,
+> +			     bool count_all_events)
+>  {
+>  	int first_suitable_idx = idx;
+> -	unsigned int intercepts = 0;
+> +	unsigned int events = 0;
+>  	int i;
+>  
+>  	/*
+> @@ -277,8 +278,11 @@
+>  	 * has been stopped already into account.
+>  	 */
+>  	for (i = idx - 1; i >= 0; i--) {
+> -		intercepts += cpu_data->state_bins[i].intercepts;
+> -		if (2 * intercepts > idx_intercepts) {
+> +		events += cpu_data->state_bins[i].intercepts;
+> +		if (count_all_events)
+> +			events += cpu_data->state_bins[i].hits;
+> +
+> +		if (2 * events > idx_events) {
+>  			/*
+>  			 * Use the current state unless it is too
+>  			 * shallow or disabled, in which case take the
+> @@ -316,6 +320,12 @@
+>  		if (first_suitable_idx == idx)
+>  			break;
+>  	}
+> +	/*
+> +	 * If there is a latency constraint, it may be necessary to select an
+> +	 * idle state shallower than the current candidate one.
+> +	 */
+> +	if (idx > constraint_idx)
+> +		return constraint_idx;
+>  
+>  	return idx;
+>  }
+> @@ -410,49 +420,50 @@
+>  	}
+>  
+>  	/*
+> -	 * If the sum of the intercepts metric for all of the idle states
+> -	 * shallower than the current candidate one (idx) is greater than the
+> -	 * sum of the intercepts and hits metrics for the candidate state and
+> -	 * all of the deeper states, a shallower idle state is likely to be a
+> -	 * better choice.
+> -	 */
+> -	if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum)
+> -		idx = teo_get_candidate(drv, dev, cpu_data, idx, idx_intercept_sum);
+> -
+> -	/*
+> -	 * If there is a latency constraint, it may be necessary to select an
+> -	 * idle state shallower than the current candidate one.
+> -	 */
+> -	if (idx > constraint_idx)
+> -		idx = constraint_idx;
+> -
+> -	/*
+> -	 * If either the candidate state is state 0 or its target residency is
+> -	 * low enough, there is basically nothing more to do, but if the sleep
+> -	 * length is not updated, the subsequent wakeup will be counted as an
+> -	 * "intercept" which may be problematic in the cases when timer wakeups
+> -	 * are dominant.  Namely, it may effectively prevent deeper idle states
+> -	 * from being selected at one point even if no imminent timers are
+> -	 * scheduled.
+> -	 *
+> -	 * However, frequent timers in the RESIDENCY_THRESHOLD_NS range on one
+> -	 * CPU are unlikely (user space has a default 50 us slack value for
+> -	 * hrtimers and there are relatively few timers with a lower deadline
+> -	 * value in the kernel), and even if they did happen, the potential
+> -	 * benefit from using a deep idle state in that case would be
+> -	 * questionable anyway for latency reasons.  Thus if the measured idle
+> -	 * duration falls into that range in the majority of cases, assume
+> -	 * non-timer wakeups to be dominant and skip updating the sleep length
+> -	 * to reduce latency.
+> +	 * If the measured idle duration has fallen into the
+> +	 * RESIDENCY_THRESHOLD_NS range in the majority of recent cases, it is
+> +	 * likely to fall into that range next time, so it is better to avoid
+> +	 * adding latency to the idle state selection path.  Accordingly, aim
+> +	 * for skipping the sleep length update in that case.
+>  	 *
+>  	 * Also, if the latency constraint is sufficiently low, it will force
+>  	 * shallow idle states regardless of the wakeup type, so the sleep
+> -	 * length need not be known in that case.
+> +	 * length need not be known in that case either.
+>  	 */
+> -	if ((!idx || drv->states[idx].target_residency_ns < RESIDENCY_THRESHOLD_NS) &&
+> -	    (2 * cpu_data->short_idles >= cpu_data->total ||
+> -	     latency_req < LATENCY_THRESHOLD_NS))
+> -		goto out_tick;
+> +	if (2 * cpu_data->short_idles >= cpu_data->total ||
+> +	    latency_req < LATENCY_THRESHOLD_NS) {
+> +		/*
+> +		 * Look for a new candidate idle state and use all events (both
+> +		 * "intercepts" and "hits") because the sleep length update is
+> +		 * likely to be skipped and timer wakeups need to be taken into
+> +		 * account in a different way in case they are significant.
+> +		 */
+> +		idx = teo_get_candidate(drv, dev, cpu_data, idx, constraint_idx,
+> +					idx_intercept_sum + idx_hit_sum, true);
+> +		/*
+> +		 * If the new candidate state is state 0 or its target residency
+> +		 * is low enough, return it right away without stopping the
+> +		 * scheduler tick.
+> +		 */
+> +		if (!idx || drv->states[idx].target_residency_ns < RESIDENCY_THRESHOLD_NS)
+> +			goto out_tick;
+> +	} else if (2 * idx_intercept_sum > cpu_data->total - idx_hit_sum) {
+> +		/*
+> +		 * Look for a new candidate state because the current one is
+> +		 * likely too deep, but use the "intercepts" metric only because
+> +		 * the sleep length is going to be determined later and for now
+> +		 * it is only necessary to find a state that will be suitable
+> +		 * in case the CPU is "intercepted".
+> +		 */
+> +		idx = teo_get_candidate(drv, dev, cpu_data, idx, constraint_idx,
+> +					idx_intercept_sum, false);
+> +	} else if (idx > constraint_idx) {
+> +		/*
+> +		 * The current candidate state is too deep for the latency
+> +		 * constraint at hand, so change it to a suitable one.
+> +		 */
+> +		idx = constraint_idx;
+> +	}
+>  
+>  	duration_ns = tick_nohz_get_sleep_length(&delta_tick);
+>  	cpu_data->sleep_length_ns = duration_ns;
+> 
+> 
+> 
 
