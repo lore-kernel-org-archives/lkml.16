@@ -1,87 +1,121 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6F71367
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC491B5EA4;
+	Wed, 16 Apr 2025 13:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744809443; cv=none; b=FcT8zYXpzs1L3twNyMs7EcIMBjRnkPRTKX58sL9gTnbNVLGSwC0AItKuOu/tE2B5yZVklKY+nben98/dzdwnssnumOe06b2mIQZjXSp2gBA6oik1NvWeVV6CI9zvGiln8KqjFpHy2kk1STLhYOylirE0rcfwte9WqLvL9iWS3VM=
+	t=1744809466; cv=none; b=WTyIv3UHnx4YQ/26EVo6RNRkTn7zUActe8cOzoldv7o35rUaL22h12zaItEnjDXHOa0ZJHigkhQ7VUv0oFbyqK3z4b7tKUoLX6cGYm1q9M+ZE99oLPPLwDNXlYmUNTCRxPBa0Yu2j2KYfxGunECvU0rCMZ9fjCkGb0NKEHzTZBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744809443; c=relaxed/simple;
-	bh=eEQyWOwpQcKlBy3G/4Du62DyNtQujjB6ykj5fhh6QwQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=RpNAF4PMyP+6xAX32LEX6Frbi43SP8lGzr6+gxdb3rUjizKxE8wCL+MEVAh+5CJeG090rI1QlkHpKfhYBc8XUUD4UZUp096s0rXLQvc0ISDB5QH7lnzeGounL9oYjWQF60khJp4T/3TRVeOlg5AyuSTCQDzqJOleLaFuIZHVMR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id C482E294730;
-	Wed, 16 Apr 2025 15:09:04 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id vqjfnlm228wd; Wed, 16 Apr 2025 15:09:04 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 67B63298566;
-	Wed, 16 Apr 2025 15:09:04 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id u3ActQa5Oaya; Wed, 16 Apr 2025 15:09:04 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 3E1EB294730;
-	Wed, 16 Apr 2025 15:09:04 +0200 (CEST)
-Date: Wed, 16 Apr 2025 15:09:03 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: =?utf-8?B?Q3PDs2vDoXM=?= Bence <csokas.bence@prolan.hu>
-Cc: Michael Walle <mwalle@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	=?utf-8?Q?Szentendrei=2C_Tam=C3=A1s?= <szentendrei.tamas@prolan.hu>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	pratyush <pratyush@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <373620122.295980015.1744808943985.JavaMail.zimbra@nod.at>
-In-Reply-To: <dd3c7cc0-a568-4046-b105-e6786b5c80f8@prolan.hu>
-References: <20250415180434.513405-1-csokas.bence@prolan.hu> <D981O3AA6NK9.2EEVUPM62EV6S@kernel.org> <dd3c7cc0-a568-4046-b105-e6786b5c80f8@prolan.hu>
-Subject: Re: [PATCH] spi-nor: Verify written data in paranoid mode
+	s=arc-20240116; t=1744809466; c=relaxed/simple;
+	bh=gM+Qt/a7kopGR4V05RRDgd/dcyhhEifAMadfuSwfwGQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=I44N+DomETUeW87nlhAvPP/tq8y2giRrZSwqLhH/OpITEBaYLZi/sLYCAR+aYUpWQ9PNvQlFGe9a1COKD2x7SfE9xC8gmdmn1ddrZOyRl5RMgVy98kcns2Ajdu+2ORvDr50V7FLJYAb4RAWiGKpHAnzgNoCCe4jF//hP3OA2BlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=ngLc9+U8; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VJgaeytE; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="ngLc9+U8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VJgaeytE"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5CF8113801A2;
+	Wed, 16 Apr 2025 09:17:43 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-05.internal (MEProxy); Wed, 16 Apr 2025 09:17:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1744809463; x=1744895863; bh=I+LCZnsoAG
+	cr8Lu8YNiAW3gdtOZDYjGpQICJr5W6auc=; b=ngLc9+U81tNuJI/z3JMRcQQtSL
+	V8qy55M3+IIMoRwxQXrL1DqNmxzuLi3uy7emLnDTxQTCbYx/fKGf0g5pORDn3Wqo
+	XudpUsoU8J9vcWk4Nc5fzjE0jHO248cjM7rZbcLiuY/RK0DKKt8x6KoOHO+vAUSp
+	XqYlwyvNtxgW1qy31C0JPZoXtQAFmyQ0JDO8lNYXAXPdAk5Cr3uA1FZ/tyPObfBq
+	Swq0LYYMcQn6iY58X/i9AiNvmR9WO7Yzsd19Sj7rkmP6jalttidyPg3VkTi0+cuG
+	5w5JUKIQtSQCwFQvFUzDnfdHui7Qf6tOfmO1V1UQ/mDlUc13WZvC2doxUa6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1744809463; x=1744895863; bh=I+LCZnsoAGcr8Lu8YNiAW3gdtOZDYjGpQIC
+	Jr5W6auc=; b=VJgaeytEB9G80kqmB7/ydF8to8pPoPCaIGqXXSVJ/QLf/jQMQ1x
+	G3syT8Q+/AvcM+QtnV6W/AdzboXy5aIE1RsR/BCHd//QpPxlPyNpaS/OgLRj/QtD
+	WgLFNIRQXSVadViZu+mB3ykXK0LENRnwH5/W+vSz70jQPE3qVBuydx/fyZZXHDIW
+	+G+X0mZJjOdlPFx5d+01mOOxZAxDsm70KdBLmscJoeRtgD+JSoV/1SUo+o5fr1lW
+	eXepIGgi67FnRTT8mJ8TgkCOtnKRp1ZBnKaBN6PLgaXgrxI2VdYGQaTK3/LlwACY
+	94sJS97Cd/Rlb5bqlztf6PL1gAG9TMzREXA==
+X-ME-Sender: <xms:963_Z0i7nJj3lY3OgY7UErC4ZVJrKqZuk4HzHcwNSy6aTZ14YakwyA>
+    <xme:963_Z9CJVCm7NrN0-FtF0CWY4qH4Bu-FGGBHZaiPgYPPxU7fszyhlBfxZ0g1BiNIk
+    duVzaCuB4cwZueqC-c>
+X-ME-Received: <xmr:963_Z8Hl7-_HR0AftmAcuTgcUTUeRMkWFwU_YjFZc_RaQN-mAjNRNdFMXS0cOI8-EadPqYKCnB9o1AoeJj-6JQki7cguKyTDfDiqK04AsyYKi-jCCw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeigeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
+    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
+    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
+    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
+    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhhirhhishhlrggshieskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrhhirghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:963_Z1SlXyJ8a7W-zoDnTaB69WCgdlNtndSoe9kuDvkWEljOncOXjQ>
+    <xmx:963_Zxyh9g6AHlBxdUuErbFl3L6Vy5pky1VXaqwCdU6jqPhEn82_PA>
+    <xmx:963_Zz5deEKjh9gmDJlLpj_RmwBvuutxtrwrpDtd398BUoCdeuD5Qw>
+    <xmx:963_Z-z4ypyWJM9bXe7VwelpR1qPl5kx1RkT85WOeHfEY_Beg_Na0Q>
+    <xmx:963_Z419ru_WCSgPUwzDggMGPsLVZNQkZqQP22qwDBw-TxULZsEj-A8o>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 16 Apr 2025 09:17:42 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 576E01118575;
+	Wed, 16 Apr 2025 09:17:42 -0400 (EDT)
+Date: Wed, 16 Apr 2025 09:17:42 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Jiri Slaby <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/13] vt: introduce gen_ucs_recompose_table.py to
+ create ucs_recompose_table.h
+In-Reply-To: <f39d8b9b-c160-40a3-80d0-62f880122f2b@kernel.org>
+Message-ID: <7nr6809r-74n3-6noo-8qos-2o504r3849p3@syhkavp.arg>
+References: <20250415192212.33949-1-nico@fluxnic.net> <20250415192212.33949-8-nico@fluxnic.net> <f39d8b9b-c160-40a3-80d0-62f880122f2b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF136 (Linux)/8.8.12_GA_3809)
-Thread-Topic: spi-nor: Verify written data in paranoid mode
-Thread-Index: 93VulI8MDViHseErL85xPb6FAYhpBQ==
+Content-Type: text/plain; charset=US-ASCII
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Cs=C3=B3k=C3=A1s Bence" <csokas.bence@prolan.hu>
->>> Add MTD_SPI_NOR_PARANOID config option for verifying all written data t=
-o
->>> prevent silent bit errors to be undetected, at the cost of halving SPI
->>> bandwidth.
->>=20
->> What is the use case for this? Why is it specific to SPI-NOR
->> flashes? Or should it rather be an MTD "feature". I'm not sure
->> whether this is the right way to do it, thus I'd love to hear more
->> about the background story to this.
->=20
-> Well, our case is quite specific, but we wanted to provide a general
-> solution for upstream. In our case we have a component in the data path
-> that can cause a burst bit error, on average after about a hundred
-> megabytes written.
+On Wed, 16 Apr 2025, Jiri Slaby wrote:
 
-Hmm. So, there is a serve hardware issue you're working around.
+> On 15. 04. 25, 21:17, Nicolas Pitre wrote:
+> > +/*
+> > + * {out_file} - Unicode character recomposition
+> > + *
+> > + * Auto-generated by {this_file}{generation_mode}
+> > + *
+> > + * Unicode Version: {unicodedata.unidata_version}
+> > + *
+> > +{textwrap.fill(
+> > +    f"This file contains a table with {table_description_detail}. " +
+> > +    f"To generate a table with {alt_description_detail} instead, run:",
+> > +    width=75, initial_indent=" * ", subsequent_indent=" * ")}
+> > + *
+> > + *   python {this_file}{alternative_mode}
+> 
+> This should be python3. Or no 'python' at all -- I assume the script is
+> executable given "new file mode 100755".
 
-> We _could_ make it MTD-wide, in our case we only have a NOR Flash
-> onboard so this is where we added it. If it were in the MTD core, where
-> would it make sense?
+On my system, python == python3 since many years. I think it is safe.
 
-I'm not so sure whether it makes sense at all.
-In it's current form, there is no recovery. So anything non-trivial
-on top of the MTD will just see an -EIO and has to give up.
-E.g. a filesystem will remount read-only.
-
-Thanks,
-//richard
+> Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+> 
+> -- 
+> js
+> suse labs
+> 
+> 
