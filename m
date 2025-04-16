@@ -1,40 +1,33 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EDA2557A;
-	Wed, 16 Apr 2025 07:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE11618D63E;
+	Wed, 16 Apr 2025 07:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788006; cv=none; b=Ht+1BLto3+Fsgl8AwPd1RZHKcPe5L4C1fATbxo8ejLwOJSwQAGec7LPJiMgqUwaPGxuvfOXdgs2GjK0kwbpF7go1KPo3dsspI7pQKbAh4fW0c9j5ycy8QZNOfO53bPx1tBQdWxJOcCCJ+3YHPl36xwXo+CgtAAfBjc5OelgB02U=
+	t=1744788026; cv=none; b=o7qB88CTECYfB9L9BoTePOMlSpsDKwrTGLzSiDF7BjzECY10oS+RtBog5XYiFQ9aT9VkNYFy+BZmJAPB1/HEV7qcAZXkwQ31XInS1Px0e+6M/upWeX5bdEfjIINEOq9WqSPom0TDZb4mAy6RIpT+391CELaB19V1OtUdSc+jVDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788006; c=relaxed/simple;
-	bh=N9Nd+GFvguMrgBicYAWRNtu9jn5oYNS4Uo+vZ1eBTDM=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MoDRiv1WRt3gEd0g7jUN8fRrqnpiYheznhHyktSF26a92YacyczgynAWMbuihkxGqCc6RHd66xYUGvo6MSP1Mh9bHyrlarinkwzPBIEhklej5SQcVRyUjU3m5oeFOMV6bKxv35oPtAaGHKuF9+VCmX7bwA8QK3s5bnHM85KzgUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uQgcndVZ; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744788026; c=relaxed/simple;
+	bh=GJEGgKU6X6Hb+9PlVpjjXZwzlwrwbX8sDV3NX910M5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uefH4HnuRfd495tQM/uRMiXMikYsulzafKba/Kllj0LuZCs+QlCPoSmmsS0wlk1rc+giU7RYesAyGZT1TD6YKOdApruUzbmp1DUwdecSnxw4k6dy0rHtfB+ElTYydifZmaQya7wnVS2TgbkDjFW5eYA/mcxq3v+wszJYoRWknXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK2vyt6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uQgcndVZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744787964; x=1745392764; i=markus.elfring@web.de;
-	bh=G7abM6WGvM4BCa0hkaj/Cdaz0xJIEIaob2oMh7L6/CU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=uQgcndVZEkAxNr/H9sxVaaxAYIHKqdIinwN8Rti6t9ceMy4xtaWO1B6Q734XwUfS
-	 93XYaojmAlF8GpiBmpjzHHRk/bqfp+9WKyxKfzSN2l6oAffqrw1MLqxc2BseWOYzM
-	 +rlV2teXHlcyNf3AKpys7mkmEKscjnYNDsn0l0BPDclacc0/JEGjbtknYtFHxPjO7
-	 3NwcOFk7cygO9jHZ0GR44K2e+rrtPhRlc38tK8pBszvQd8X6Y5zmX1iOhSeUQQWkS
-	 LhMGpsjN8IkMCZVHbZ6wyurvcvCWFG+FhiaKdUdHQInLgyDFWC9evp/Q/J8Xmnjrn
-	 VMmwwZKZxpNw2vaofQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N9cHJ-1szfXF0Stp-00vCN1; Wed, 16
- Apr 2025 09:19:24 +0200
-Message-ID: <e1890bbe-183c-43ee-b866-936f9a7e4801@web.de>
-Date: Wed, 16 Apr 2025 09:19:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK2vyt6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C817EC4CEE2;
+	Wed, 16 Apr 2025 07:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744788026;
+	bh=GJEGgKU6X6Hb+9PlVpjjXZwzlwrwbX8sDV3NX910M5A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YK2vyt6Sotc84JvntPqwjeH4eX67MecNamziufXfcoc0LVefxDpe7dcqYT8oy82BI
+	 IwiAnkrUFkzEF3bG9lof66Hgt5SCjUc8ynAzBA0SDFIosyKF5KNPwNR9D1g3qYvLgA
+	 IpLQ/wPyCneXCKjL3Z9Dt6I9rbFDwJLatPlPCrJkBx2wGvNOmeQYMQLyMGV6wTPc5m
+	 BCo12LhgYnYK5SiIrUDG708JKq0Cm/fqLu7PmBvzI47IznGBdpf3wZDIapJYskWRS6
+	 AIInB6/2J81XqVVYxUdt9Q273ISb7taxaKGBDfK5jZuuLy1zEH1czhWNmHK8fiQJma
+	 cxbjleZvF3ASQ==
+Message-ID: <dda1bb8c-66e7-4398-ae78-c2b21749e5c4@kernel.org>
+Date: Wed, 16 Apr 2025 09:20:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,95 +35,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Chenyuan Yang <chenyuan0y@gmail.com>, linux-sound@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Chao Song <chao.song@linux.intel.com>, Jaroslav Kysela <perex@perex.cz>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Takashi Iwai <tiwai@suse.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-References: <20250415194134.292830-1-chenyuan0y@gmail.com>
-Subject: Re: [PATCH] ASoC: Intel: sof_sdw: Add NULL check in
- asoc_sdw_rt_dmic_rtd_init()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250415194134.292830-1-chenyuan0y@gmail.com>
+Subject: Re: [PATCH v3 0/4] arm64: dts: exynos: add initial support for
+ Samsung Galaxy S22+
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gxVTFOrhrX3qc2WWImINgsAFQFASupj8BvEZ2rDqYVSsNehzAaF
- OPu0rhXR7o9txOylKvgCTD+HAlMpt7qa57bnO2ikfaxv9RAca091jwm4EmVoPR/ZYCr7GJG
- y3wIHWX/VYUi+bhTN89Y5H4wCB61w1WHp4Zs4CvM5MFJDtInNx6m1Ij87+4fPlACPV5Il2B
- TlVFIeWVlErt03vmLOv0g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XnOhZVtlwcU=;afTtJYoc5cHF7mestVa2reZBD8X
- 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
+Content-Transfer-Encoding: 7bit
 
-> mic_name returned by devm_kasprintf() could be NULL.
-> Add a check for it.
+On 21/03/2025 15:55, Ivaylo Ivanov wrote:
+> Hey folks,
+> 
+> This patchset adds device tree files for Exynos 2200 and Samsung
+> Galaxy S22+.
+> 
+> Exynos 2200 SoC is an ARMv8 mobile SoC found in the Samsung Galaxy S22
+> (r0s), S22+ (g0s), S22 Ultra (b0s) Add minimal support for that SoC,
+> including psci, pmu, chipid, architecture timer and mct, pinctrl,
+> clocks and usb.
+> 
+> The devices using this SoC suffer from an issue caused by the stock
+> Samsung bootloader, as it doesn't configure CNTFRQ_EL0. Hence it's
+> needed to hardcode the adequate frequency in the timer node,
+> otherwise the kernel panics.
+> 
+> Another issue is that cpu2 and cpu3 fail to come up consistently, which
+> leads to a hang later in the boot process. As A510 cores are clustered
+> by two, it makes sense for both of these cpus to fail if there is a
+> power issue. Disable them until the problem is figured out.
+> 
+> Samsung Galaxy S22+ (SM-S906B), codenamed g0s, is a mobile phone from
+> 2022. It features 8GB RAM, 128/256GB UFS 3.1, Exynos 2200 SoC and a
+> 1080x2340 Dynamic AMOLED display.
+> 
+> Further platform support will be added over time.
+> 
+> I expect [1], [2] and [3] to be merged in next before this patchset
+> because it depends on the aforementioned series for drivers and device
+> tree bindings.
 
-Was this patch also supported by the source code analysis tool =E2=80=9CKN=
-ighter=E2=80=9D?
+Please document dependencies at the top - this is the most important
+part of cover letter.
 
+Ping me when dependencies get merged.
 
-=E2=80=A6
-> +++ b/sound/soc/sdw_utils/soc_sdw_rt_dmic.c
-> @@ -29,6 +29,8 @@ int asoc_sdw_rt_dmic_rtd_init(struct snd_soc_pcm_runti=
-me *rtd, struct snd_soc_da
->  		mic_name =3D devm_kasprintf(card->dev, GFP_KERNEL, "rt715-sdca");
->  	else
->  		mic_name =3D devm_kasprintf(card->dev, GFP_KERNEL, "%s", component->n=
-ame_prefix);
-=E2=80=A6
-
-How do you think about to use the function =E2=80=9Cdevm_kstrdup=E2=80=9D =
-in one if branch instead
-(by another update step)?
-https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/base/devres.c#L9=
-58-L965
-
-Regards,
-Markus
+Best regards,
+Krzysztof
