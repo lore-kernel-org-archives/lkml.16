@@ -1,153 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CDE15E96;
-	Wed, 16 Apr 2025 02:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43F215E96;
+	Wed, 16 Apr 2025 02:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744768879; cv=none; b=hhRVZ2PbglAPsOiChken3s9LDEeE4MNdr3pA9GXfOS/SjsE7rK8JQ/EXc51y/b5shm9tNXb/G39Oe+JdUfWaF9xehhaeS26PSnZbDDEoUvxxQ2enu7N1VZmG6CaZGMB3RakN7v9ut2RtZXXUYUnVaug3h0CdqGTEr42H50K9F8o=
+	t=1744768957; cv=none; b=u5+VQYjeT06WwLiAeMzJdk1cyKQrEEZdITDIY4WIISMEC9msTubmelRZ7fjNn44fGrknztrTxDncXBH2JFHw7ke6dDauhc5XphgUAiG1GT4f2nUEXTGH9Ky933umKWKWxkW58QRmt86KtLnxZy+JOEnxS0Y3epoHxddtF49/QaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744768879; c=relaxed/simple;
-	bh=nEhH+Ut3F8uAcBTMMylusgUEDdx1R8hJlDxeA1XhERM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZnvVDoCrMCUVuPQW7VbnigxBA2QR3LZ3aBk+O/Czudr77bgMLY5UW63s34JTIzfrPQaa+cwFK/EQFB8rhL5HPDyyw0K8OelztJodH3NglhXvNIq2NyMTEGJvBo0CXWyp07oK0jONlDNaLViM7Fike1QbYv4fp+eQw2mjY8vgdzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNT2UY8M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744768957; c=relaxed/simple;
+	bh=v4/phJQUAPeOK41LzcUnYsiA3yKOssm+W9ZqAkAigfk=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IcCtjsOEa9GTFU/3bmiLplb0uVEgkMqBRXCbMleI5+fmf/I1vO5RQbDAorZKhxHWW5kHEBcD7dTJSkXmYIj4xJXT7QeCvWweDvNYyCmMq3ARDQfXltwfIao5w5vz2iwWJYbfO3V2WRs4QjR9yrG5nWkAgGwMv5ZiF596nfUsCNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Ej2oNmKq; arc=none smtp.client-ip=203.205.221.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNT2UY8M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ACD8C4CEE7;
-	Wed, 16 Apr 2025 02:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744768878;
-	bh=nEhH+Ut3F8uAcBTMMylusgUEDdx1R8hJlDxeA1XhERM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YNT2UY8MJqxDYqUJ5wOVCnB9hVE2OIYoH9ua3Jsl8ikpke4pgXQ/asbzniq2k6BCR
-	 MozP5zzjg8tJbD5mQiFkgMliM7a8W1NLBIsJ9BVmoK4quZx6mXVGWVKinuczh1fuf5
-	 //RyLjUHNwNAmqeJdzZib/Z5iYDBSfW9Mj9JwR4YS528YF9PnuIWzxjpqbULUCZY2p
-	 0bBDRmCaM77RgngvZQ/Hr7DbPjK2GqMv+J8qP0h4/KBm6J4GtrKta9mBr1eyncVhOz
-	 /TM+djOgA65n202CKo2H5z9OVSg6yFi+LEbWAXDUhUJP3zaBafTRwJI0FcvI6z9Xpc
-	 ftGxL9LNkxUgg==
-From: Kees Cook <kees@kernel.org>
-To: Saeed Mahameed <saeedm@nvidia.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Ej2oNmKq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1744768642; bh=KvSaTgFS8WeHQJzlGw/Ub9odmid7Z1N7H4quqWzN/KM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Ej2oNmKqHZ67Gedex9lBRdzlaMtU6fbb/ZGtWGXavGc4M1zV5/0rp0WnkniLrn4Dd
+	 9MrWUAZ0wiaEseQIKi6nMwEbDWav5A5W+qYmeSFG9UchjSgXfSPdBUBMSj0isUYura
+	 IeGYWFsSfMG5NPKef7Jp4PTzu6fShHsqre+1LMTQ=
+Received: from ubuntu.localdomain ([218.104.140.83])
+	by newxmesmtplogicsvrszc11-0.qq.com (NewEsmtp) with SMTP
+	id E53888DF; Wed, 16 Apr 2025 09:57:19 +0800
+X-QQ-mid: xmsmtpt1744768639t22hacpvg
+Message-ID: <tencent_607C227A96060DD8EC83C78184305D264109@qq.com>
+X-QQ-XMAILINFO: N7h1OCCDntuj9RM+yAw0CZYpw+uCKkqPhP58CShgWJ3pZMIQUoXQdBNpE0P0Y5
+	 I/40uwm6/Uggqid2uq66wyBQT3D/ZP43ANKRcULFnBEBFUq23dD5eE5GBWSrglZBANiNDWQ402u/
+	 altPJVOP8Luscihfv40JmXKB24hE6pJkKeaZqukpMauThdb429rnZpoJb2MsaQwwx8YBGPSwTyn+
+	 H6P1rR0Y1wBZdUW6oBw/h1Pn/7DerkgH/Qc3scNlnM6SEVY0zhwhrJ/86vr+JFyD/hNlR+8QAKxh
+	 Txvba5BAFLqjRijf+4cejOV7jE4cZ7yq6U4sQKXmc12fkmOFsIsxBUO6eOWPrUh4dWNwqd7OEPao
+	 cD0XJCGTuo9iUtqbW+aUfESiMkot9+COyxPezhQMhl7nMrXfv2pD/vYwwYVXi7GowLJJXBfLXtog
+	 hFi2ZzMqE8QWSkcxs04IbYCTIfS0aItfDk++HMkE1kKNu06l267A6IzJ68Q4PR0Rg0DOJ1/G4j9D
+	 NW9TpraqOxuTgNRbJn9ypOvBK8WdOwYHNDh738Kj7my2ON5YeJpvUW/CLg3o91JI2N9QnuuD19Fa
+	 40BBxM7nziWBNjPJ37c4iB2d8hzi0qt6gdt4aRq/dEsC5Tx1ksdu4fgMVfmBhdZmTGkOeFZnhHR8
+	 NsdDDf/6qU383/htCJPGsehvQ5P94YCcFc9KidTObcI8VIzPBG/Jkuktc74Mg4hXRHKsSxEXtZoF
+	 DtKWcU5bArEtVzsi+544NirU7bmj/J4BjpzY73VN+yKCGjUd+qlX4fxzWmAAacb/o2NL3x6IY5Uq
+	 ccJTOYQskwQd6PJnMNMLxm88xcF1IIUqJDXlVRQCgvbNMoha/0nCGIgJlOyFk5UNkl++0IusKfwB
+	 WCyAZIfEeuoi0y4pXfY32wOpEwIsyrQ+86x4I7N36CdoSLsGGZKprW48Bh9JtiWjATHqejL1QRr6
+	 J6LZSu4WM=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: 1425075683@qq.com
+To: robh@kernel.org
+Cc: 1425075683@qq.com,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] net/mlx5e: ethtool: Fix formatting of ptp_rq0_csum_complete_tail_slow
-Date: Tue, 15 Apr 2025 19:01:14 -0700
-Message-Id: <20250416020109.work.297-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	m.szyprowski@samsung.com,
+	saravanak@google.com
+Subject: Re: [PATCH] of: reserved-mem: Warn for missing initfn in __reservedmem_of_table
+Date: Wed, 16 Apr 2025 09:57:08 +0800
+X-OQ-MSGID: <20250416015707.11088-1-1425075683@qq.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAL_Jsq++MbY=s5t1hmE0AhcmFA14t3fxLM1xPFZAA0ETX_ee-g@mail.gmail.com>
+References: <CAL_Jsq++MbY=s5t1hmE0AhcmFA14t3fxLM1xPFZAA0ETX_ee-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4652; i=kees@kernel.org; h=from:subject:message-id; bh=nEhH+Ut3F8uAcBTMMylusgUEDdx1R8hJlDxeA1XhERM=; b=owGbwMvMwCVmps19z/KJym7G02pJDOn/+TOF7J6w5O3gP7+K2c3bYuaKKNu1HkY3Dfdr8/6Y+ m5D6BK/jlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIl8v8bIsHCxYeglTgF3DrsT U57ImsS+XahxQJVjfen06b6zZ3rESTD8D874JvKu1Zfx+7S4O3s0ko6uy+1YcPeV1ZLjNyb/dli 7nQcA
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The new GCC 15 warning -Wunterminated-string-initialization reports:
+> On Tue, Apr 15, 2025 at 9:16 AM Liya Huang <1425075683@qq.com> wrote:
+> >
+> > For the data in __reservedmem_of_table, its function pointer initfn might
+> > be NULL. However, __reserved_mem_init_node() only considers non-NULL cases
+> > and ignores NULL function pointers.
+>
+> If initfn is NULL, there's no point to the entry and that's a bug.
+> Unless you have a build time check, there's no point to add this.
+> 
+> Rob
 
-In file included from drivers/net/ethernet/mellanox/mlx5/core/en.h:55,
-                 from drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:34:
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.h:57:46: warning: initializer-string for array of 'char' truncates NUL terminator but destination lacks 'nonstring' attribute (33 chars into 32 available) [-Wunterminated-string-initialization]
-   57 | #define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
-      |                                              ^~~~~~~~~~~
-drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:2279:11: note: in expansion of macro 'MLX5E_DECLARE_PTP_RQ_STAT'
- 2279 |         { MLX5E_DECLARE_PTP_RQ_STAT(struct mlx5e_rq_stats, csum_complete_tail_slow) },
-      |           ^~~~~~~~~~~~~~~~~~~~~~~~~
+Thank you for your response. Based on your suggestion, I have made the 
+modifications and used static_assert() to perform the check at compile 
+time. The specific code is as follows. Could you please review whether 
+this modification is reasonable? If it is acceptable, I will proceed with 
+submitting the patch.
 
-This stat string is being used in ethtool_sprintf(), so it must be a
-valid NUL-terminated string. Currently the string lacks the final NUL
-byte (as GCC warns), but by absolute luck, the next byte in memory is a
-space (decimal 32) followed by a NUL. "format" is immediately followed
-by little-endian size_t:
+I did not find any usage of static_assert() for null pointer checks in the
+kernel code. Additionally, BUILD_BUG_ON() cannot be used globally.
 
-struct counter_desc {
-        char                       format[32];           /*     0    32 */
-        size_t                     offset;               /*    32     8 */
-};
-
-The "offset" member is populated by the stats member offset:
-
- #define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
-
-which for this struct mlx5e_rq_stats member, csum_complete_tail_slow, is
-32, or space, and then the rest of the "offset" bytes are NULs.
-
-struct mlx5e_rq_stats {
-	...
-        u64                        csum_complete_tail_slow; /* 32     8 */
-
-The use of vsnprintf(), within ethtool_sprintf(), reads past the end of
-"format" and sees the format string as "ptp_rq%d_csum_complete_tail_slow ",
-with %d getting resolved by MLX5E_PTP_CHANNEL_IX (value 0):
-
-                       ethtool_sprintf(data, ptp_rq_stats_desc[i].format,
-                                       MLX5E_PTP_CHANNEL_IX);
-
-With an output result of "ptp_rq0_csum_complete_tail_slow", which gets
-precisely truncated to 31 characters with a trailing NUL.
-
-So, instead of accidentally getting this correct due to the NUL bytes
-at the end of the size_t that happens to follow the format string, just
-make the string initializer 1 byte shorter by replacing "%d" with "0",
-since MLX5E_PTP_CHANNEL_IX is already hard-coded. This results in no
-initializer truncation and no need to call sprintf().
-
-Signed-off-by: Kees Cook <kees@kernel.org>
 ---
-Cc: Saeed Mahameed <saeedm@nvidia.com>
-Cc: Tariq Toukan <tariqt@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+index e338282da652..87446ad2deb2 100644
+--- a/include/linux/of_reserved_mem.h
++++ b/include/linux/of_reserved_mem.h
+@@ -29,6 +29,7 @@ typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem);
+ #ifdef CONFIG_OF_RESERVED_MEM
+ 
+ #define RESERVEDMEM_OF_DECLARE(name, compat, init)			\
++	static_assert((init) != NULL);	\
+ 	_OF_DECLARE(reservedmem, name, compat, init, reservedmem_of_init_fn)
+ 
+ int of_reserved_mem_device_init_by_idx(struct device *dev,
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +--
- drivers/net/ethernet/mellanox/mlx5/core/en_stats.h | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-index 1c121b435016..19664fa7f217 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
-@@ -2424,8 +2424,7 @@ static MLX5E_DECLARE_STATS_GRP_OP_FILL_STRS(ptp)
- 	}
- 	if (priv->rx_ptp_opened) {
- 		for (i = 0; i < NUM_PTP_RQ_STATS; i++)
--			ethtool_sprintf(data, ptp_rq_stats_desc[i].format,
--					MLX5E_PTP_CHANNEL_IX);
-+			ethtool_puts(data, ptp_rq_stats_desc[i].format);
- 	}
- }
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-index 8de6fcbd3a03..def5dea1463d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.h
-@@ -54,7 +54,7 @@
- #define MLX5E_DECLARE_PTP_TX_STAT(type, fld) "ptp_tx%d_"#fld, offsetof(type, fld)
- #define MLX5E_DECLARE_PTP_CH_STAT(type, fld) "ptp_ch_"#fld, offsetof(type, fld)
- #define MLX5E_DECLARE_PTP_CQ_STAT(type, fld) "ptp_cq%d_"#fld, offsetof(type, fld)
--#define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq%d_"#fld, offsetof(type, fld)
-+#define MLX5E_DECLARE_PTP_RQ_STAT(type, fld) "ptp_rq0_"#fld, offsetof(type, fld)
- 
- #define MLX5E_DECLARE_QOS_TX_STAT(type, fld) "qos_tx%d_"#fld, offsetof(type, fld)
- 
+Thanks,
 -- 
-2.34.1
+Liya Huang <1425075683@qq.com>
 
