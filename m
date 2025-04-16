@@ -1,58 +1,46 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37BFB22E406;
-	Wed, 16 Apr 2025 07:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008061F94C;
+	Wed, 16 Apr 2025 08:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790380; cv=none; b=Xoj5P9D7xWLMFdF6WK38eIzA9f9gFrMnWXztTZ8GrUZaAOvqABIvRU8kuQTLkqucx0a4sCsDMz5xaBygcH8RiDM5YIFXUPi2bPso1iJzCLEuZEfox+NIvT2OTlSAQ6ppKe0VlNhimKuazcHqMs+EmlRZWJ6ndNRGNbw1UioL2jI=
+	t=1744790444; cv=none; b=QMT5cZy+Gvk5p4voLBwErTze+z0Lm/5vZCb7ZWe3Q4ilFDMe5KGbT+4YyX2Y4xKq/8q13k1nwFgkMTQuHRFNk6CDYqAzztl6ULqNrg9Jr3gmtko07ZXatDoiwy2po+Es6FgovOFfiwh8bnT8tTSYh1vzp62294QnlxMKF/89nio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790380; c=relaxed/simple;
-	bh=MkWy35MldUfbFDDapHrCdQRMkls14h+ATBdsggGtBv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bDZp3XB9QiZd21CWhvCfrP6u8xCNa8OYKe43DtwVFCESMdseIUmUOCFsEZxqPDI76tLxxmRfSDyNYZy+Ji2WowcZo1hfXeghlyVFi1Gx+/QRnqF8aT/rk9K4ikBOpjJ8lJYFO4HhcTELPzZ5Iw5JDfdaIjYFnjpOIgWQ+Te4hhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G7y9R6jB; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744790444; c=relaxed/simple;
+	bh=f+0G+mfCas1lJBR/6RHW1V+Gavmz5DoO4HGg92lelWQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=m6d+xmFHEQCTQ2l2gjCG1GUEqKZS00hayy6+M6h9902M2x1o8fVNKDTGm6/uv1uQe9n/1Do/dq/KfmGDby5znA9S61RzdLBHsImYjn+05gBvLcY1kRbwqcQNfiuvXCuFQnsNuKUHqZgh27QzIGGW7MfmKOTmNOX45lNE3LlTL/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=p6rOFRuB; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G7y9R6jB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=yB4wmD74MiBKWLxUyjjkBFJ9xMt+iqwI8peAkwBlB74=; b=G7y9R6jBnX5I8JvtMu+x4Or/TJ
-	g1Xifo64oGj+hZluL5QLP2UvgBJI8qSSDlV8632AS3xOSiIifL7Qak2aDLyen43Koyo+htLlk1uvc
-	zPioYTpzUdonTeOuMSywXK7GdOwFmHji2GTYQlmWShiLXczJl+3IB9dUtTr2KtAWStN1d19qTHseO
-	w+QsDhma6+j9PSMRuI7txGeGK/huQkj3d1u3YIx2YsOGsJ8fsYD2InGTHXbbBwzYfQhmi8Zjj4Typ
-	9WRiA6PsX8jvqL5DRzrVAck8atFHtgxhVF7Xudm8aq9H2R2A2fW9myfn96Rv22GvFdrBDTh1EGorF
-	rtFWlEag==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u4xg6-0000000A4BX-2FGW;
-	Wed, 16 Apr 2025 07:59:26 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E9F493007A4; Wed, 16 Apr 2025 09:59:25 +0200 (CEST)
-Date: Wed, 16 Apr 2025 09:59:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Chris Mason <clm@meta.com>
-Cc: Rik van Riel <riel@surriel.com>, Pat Cody <pat@patcody.io>,
-	mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org,
-	patcody@meta.com, kernel-team@meta.com, stable@vger.kernel.org,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-Message-ID: <20250416075925.GB6580@noisy.programming.kicks-ass.net>
-References: <20250320205310.779888-1-pat@patcody.io>
- <20250324115613.GD14944@noisy.programming.kicks-ass.net>
- <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
- <20250402180734.GX5880@noisy.programming.kicks-ass.net>
- <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
- <20250409152703.GL9833@noisy.programming.kicks-ass.net>
- <20250411105134.1f316982@fangorn>
- <20250414090823.GB5600@noisy.programming.kicks-ass.net>
- <0049c6a0-8802-416c-9618-9d714c22af49@meta.com>
- <20250415100705.GL5600@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="p6rOFRuB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CxllXsS7oZKhmgl74o8BLeNmMQKxBZycllNwlO7QoVM=; b=p6rOFRuBNqBL9Vs+KMLwfIwpaW
+	yz/TUWI06KiYLjDOWRkW1thUO1NCa0FsczE1IdP8yWQJuNPoj7zLoeTV/bcNnNzwnrrQZxCAF6hWN
+	rR3nya2bEWTJ06hsRLUYISaUNvMGmmJL2xQjFg9UXnzbuNs+F3O8tZDTNTPjcwkWcdfZbNyJ4y44h
+	MNkHBN0Q6sxrv8XtbZop2V1nmDZtMJY4YBCj2ZV5ufdu+NQuPvRjnUCx6msKVoK7FpDyGaHfZtkeJ
+	fVmHWHaHPram2mO/vEo3QW8W7xM+RzwRRrwC4Eq7LpM/nK/62FTZQlA3nyOmTRNvV4g+dWKgbKTzE
+	D7ct5GZA==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u4xhH-00G7yK-1U;
+	Wed, 16 Apr 2025 16:00:40 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Apr 2025 16:00:39 +0800
+Date: Wed, 16 Apr 2025 16:00:39 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: Re: [PATCH 0/9] Remove per-architecture poly1305 shash glue code
+Message-ID: <Z_9jp6J6YKImbzyg@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,65 +49,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415100705.GL5600@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250413045421.55100-1-ebiggers@kernel.org>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
 
-On Tue, Apr 15, 2025 at 12:07:05PM +0200, Peter Zijlstra wrote:
-> On Mon, Apr 14, 2025 at 11:38:15AM -0400, Chris Mason wrote:
-> > 
-> > 
-> > On 4/14/25 5:08 AM, Peter Zijlstra wrote:
-> > 
-> > [ math and such ]
-> > 
-> > 
-> > > The zero_vruntime patch I gave earlier should avoid this particular
-> > > issue.
-> > 
-> > Here's a crash with the zero runtime patch. 
+Eric Biggers <ebiggers@kernel.org> wrote:
+> This series removes the per-architecture poly1305 shash glue code and
+> re-implements the poly1305 shashes on top of the Poly1305 library
+> functions.  This ends up being much simpler, and it is how it should
+> have been done originally.  This follows similar changes to crc32,
+> crc32c, and chacha20.
 > 
-> And indeed it doesn't have these massive (negative) avg_vruntime values.
+> This series also makes the Poly1305 library be optimized on PowerPC.
+> Previously the PowerPC-optimized Poly1305 code only supported shash.
 > 
-> > I'm trying to reproduce
-> > this outside of prod so we can crank up the iteration speed a bit.
+> Eric Biggers (9):
+>  crypto: powerpc/poly1305 - implement library instead of shash
+>  crypto: poly1305 - centralize the shash wrappers for arch code
+>  crypto: arm/poly1305 - remove redundant shash algorithm
+>  crypto: arm64/poly1305 - remove redundant shash algorithm
+>  crypto: mips/poly1305 - drop redundant dependency on CONFIG_MIPS
+>  crypto: mips/poly1305 - remove redundant shash algorithm
+>  crypto: x86/poly1305 - remove redundant shash algorithm
+>  crypto: x86/poly1305 - don't select CRYPTO_LIB_POLY1305_GENERIC
+>  crypto: poly1305 - remove rset and sset fields of poly1305_desc_ctx
 > 
-> Thanks.
+> arch/arm/crypto/Kconfig                 |   6 -
+> arch/arm/crypto/poly1305-glue.c         | 170 ++----------------------
+> arch/arm64/crypto/Kconfig               |   6 -
+> arch/arm64/crypto/poly1305-glue.c       | 143 ++------------------
+> arch/mips/crypto/Kconfig                |   6 -
+> arch/mips/crypto/poly1305-glue.c        | 120 +----------------
+> arch/powerpc/crypto/Kconfig             |  11 +-
+> arch/powerpc/crypto/poly1305-p10-glue.c | 134 ++++++-------------
+> arch/x86/crypto/Kconfig                 |   8 --
+> arch/x86/crypto/poly1305_glue.c         |  99 ++------------
+> crypto/Makefile                         |   3 +-
+> crypto/poly1305.c                       | 153 +++++++++++++++++++++
+> crypto/poly1305_generic.c               | 149 ---------------------
+> include/crypto/poly1305.h               |  13 +-
+> lib/crypto/poly1305.c                   |   2 -
+> 15 files changed, 242 insertions(+), 781 deletions(-)
+> create mode 100644 crypto/poly1305.c
+> delete mode 100644 crypto/poly1305_generic.c
 > 
-> Could you add which pick went boom for the next dump?
 > 
-> 
-> 
-> I am however, slightly confused by this output format.
-> 
-> It looks like it dumps the cfs_rq the first time it encounters it,
-> either through curr or through the tree.
-> 
-> So if I read this correct the root is something like:
-> 
-> > nr_running = 2
-> > zero_vruntime = 19194347104893960
-> > avg_vruntime = 6044054790
-> > avg_load = 2
-> > curr = {
-> >   cgroup urgent
-> >   vruntime = 24498183812106172
-> >   weight = 3561684 => 3478
-> > }
-> > tasks_timeline = [
-> >   {
-> >     cgroup optional
-> >     vruntime = 19194350126921355
-> >     weight = 1168 => 2
-> >   },
-> > ]
-> 
-> group  19194347104893960
-> curr   24498183812106172 3561684
-> entity 19194350126921355 1168
-> 
-> But if I run those numbers, I get avg_load == 1, seeing how 1168/1024 =
-> 1. But the thing says it should be 2.
+> base-commit: 3be3f70ee95da03a87d94c4a714ee679a5c7b34d
 
-N/m, late last night I remembered we have a max(2, ..) in there. So
-yeah, your numbers seem right.
-
-
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
