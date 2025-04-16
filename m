@@ -1,201 +1,139 @@
-Received: from cpanel.siel.si (cpanel.siel.si [46.19.9.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA57C35971;
-	Wed, 16 Apr 2025 12:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.19.9.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319F280BEC
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807325; cv=none; b=LJAvo0YGgQ9f0EUGLkir7Zg2d6u+6RtSwDGJ28M3zX3zJ9Il3edKvTdTG9S1elAxjqDTlSNwOeYnUl9nOkX/U+VwKx/tsVzMsN7q/Jsz8hN5bovYXWmsw8s7XtpM4jIeUSnN7VSm8L1duZCm8iYeEh8IgoVjAdh5hhCoogoDua0=
+	t=1744807327; cv=none; b=eJHwBsM3wgM7S+DmnTnhV099uI+TTycHjxBJQxhhymK54DxnqmPR3NfUzo+D1EbKuiQtlMFUUM0kyiVWgO2qwB8TbRAojmvm44uPeFhv1jFrqkEZLMH5Goc2jx0kJ72Eav9EFp1WEuBYSsTyn3QXShBaGF5/varZHlTaWpuzAtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807325; c=relaxed/simple;
-	bh=l6BkU0WG/PDwwSUx64TnlRvo3wX1D1V2xBkUjIb0FY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYhaOwI3Ej5RAoaIxsdvRzKqR86bKaUER+iDHHWXQR0w2TwsLxWbwJCsANCVBppNxQ7Imhk/n1Ze8Lnd8+O7h0WDfGIG1FJ7SToopp5ApA5GVdKLi0wZ9U0MVad6uZki3r2DTaZ9SnN2+xhAFaT9C/ENlwVTQRCjIsytsOa4Qwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com; spf=pass smtp.mailfrom=norik.com; dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b=YWqeyxmQ; arc=none smtp.client-ip=46.19.9.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=norik.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=norik.com
+	s=arc-20240116; t=1744807327; c=relaxed/simple;
+	bh=gVK1R/KDGz0eC6yz7RNbZ5SwqtGK6yxnWX/mfA30/Xw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Kgk7HHYRcDSjGCOYhgCUGDQyPH7TBpLRHE7OutuXTeAj8qsLVmVOCN6HAO0SiAoNdRBo5e+qEQFYTPg26KlNm3klgcMU6X9yyeENmvnJtzxHCXd1wcs0iCTbehj8ZZI11dzSfyjmxoaedwFtYfoO9gKyWBoIv2DHPHf16nDv1Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yruitDDN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VM7Yf7fv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yruitDDN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VM7Yf7fv; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=norik.com header.i=@norik.com header.b="YWqeyxmQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=norik.com;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=amxK6ouKB1rCSLCDLbv8LpDaz47zy5qHLGTrbw+VYdM=; b=YWqeyxmQyXyzhLd5L6kJlOPOJO
-	LBLBeFqKfRCodOVY+s2EwPOLpw+hKBsVnpNRDDMJXI0Zh2Rn5NShXZVnIYZaaGwMz1tkOK7cadfWb
-	hPx/1ifWOzYIrFhZNNTsrFJ9SfuZb28w32qhyx0CBnLbrsZTk5DHN1gGnFRePEhkBUimySejHXuwf
-	2qoMOu4q/jYA0ocQMICZGs4gvBmZkI9HAuCCjqCN/3lfddL/wxJXKdunfnpwwIxvgD5jjntylytzZ
-	5NoLQ1j4oZ4PD1PieUyrToTMmn0EG9bDnwffFPj4alPrq9q6bh6yhyWkWN4F2zK8xor2R+nVGFbgH
-	kDDGi6ow==;
-Received: from [89.212.21.243] (port=41686 helo=[192.168.69.116])
-	by cpanel.siel.si with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <primoz.fiser@norik.com>)
-	id 1u525Z-003ze3-2Z;
-	Wed, 16 Apr 2025 14:42:01 +0200
-Message-ID: <6839cdfa-3086-459f-b318-4f3f2bbf0a4e@norik.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yruitDDN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VM7Yf7fv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yruitDDN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VM7Yf7fv"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3D637211B1;
+	Wed, 16 Apr 2025 12:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744807323; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kft/l26UMn0qv4IUd1VHWoZxWYC9qYSMKnrYZATelJs=;
+	b=yruitDDNMXa1gJlGbnAjA7sdAll4iGzgaClBmSklc8+1S41wBTvCbhX4Womn/R0PT5tD+K
+	lTKMZAlJ4RL5EzW/sVeIl+FSa8bg00f/MfGaHiKv29xjBVTRlHfqzjfcWlRwVdoStMC9J0
+	rG6o+ODInKNd2dhKqXgr8YVreRMq3kw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744807323;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kft/l26UMn0qv4IUd1VHWoZxWYC9qYSMKnrYZATelJs=;
+	b=VM7Yf7fvOsRupA/LLQw945nUNK2rosUsc7NGOcczhrkeosMFaOzdrzaoxNmv4UVkIlSAcm
+	YeVw0Gn/jByHgGDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744807323; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kft/l26UMn0qv4IUd1VHWoZxWYC9qYSMKnrYZATelJs=;
+	b=yruitDDNMXa1gJlGbnAjA7sdAll4iGzgaClBmSklc8+1S41wBTvCbhX4Womn/R0PT5tD+K
+	lTKMZAlJ4RL5EzW/sVeIl+FSa8bg00f/MfGaHiKv29xjBVTRlHfqzjfcWlRwVdoStMC9J0
+	rG6o+ODInKNd2dhKqXgr8YVreRMq3kw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744807323;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kft/l26UMn0qv4IUd1VHWoZxWYC9qYSMKnrYZATelJs=;
+	b=VM7Yf7fvOsRupA/LLQw945nUNK2rosUsc7NGOcczhrkeosMFaOzdrzaoxNmv4UVkIlSAcm
+	YeVw0Gn/jByHgGDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC5BE139A1;
+	Wed, 16 Apr 2025 12:42:02 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BP8CMJql/2dbLQAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Wed, 16 Apr 2025 12:42:02 +0000
 Date: Wed, 16 Apr 2025 14:42:01 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
+ <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
+ Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/7] soc: aspeed: lpc-snoop: Rename 'channel' to 'index'
+ in channel paths
+Message-ID: <20250416144152.2bb505d6@endymion>
+In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-5-64f522e3ad6f@codeconstruct.com.au>
+References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+	<20250411-aspeed-lpc-snoop-fixes-v1-5-64f522e3ad6f@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 10/15] arm64: dts: freescale: imx93-phyboard-segin: Add
- RTC support
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-References: <20250415043311.3385835-1-primoz.fiser@norik.com>
- <20250415043311.3385835-11-primoz.fiser@norik.com>
- <Z/6pkVPh5Rn9oOPY@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: Primoz Fiser <primoz.fiser@norik.com>
-Autocrypt: addr=primoz.fiser@norik.com; keydata=
- xjMEZrROOxYJKwYBBAHaRw8BAQdAADVOb5tiLVTUAC9nu/FUl4gj/+4fDLqbc3mk0Vz8riTN
- JVByaW1veiBGaXNlciA8cHJpbW96LmZpc2VyQG5vcmlrLmNvbT7CiQQTFggAMRYhBK2YFSAH
- ExsBZLCwJGoLbQEHbnBPBQJmtE47AhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQagttAQducE+T
- gAD+K4fKlIuvH75fAFwGYG/HT3F9mN64majvqJqvp3gTB9YBAL12gu+cm11m9JMyOyN0l6Os
- jStsQFghPkzBSDWSDN0NzjgEZrROPBIKKwYBBAGXVQEFAQEHQP2xtEOhbgA+rfzvvcFkV1zK
- 6ym3/c/OUQObCp50BocdAwEIB8J4BBgWCAAgFiEErZgVIAcTGwFksLAkagttAQducE8FAma0
- TjwCGwwACgkQagttAQducE8ucAD9F1sXtQD4iA7Qu+SwNUAp/9x7Cqr37CSb2p6hbRmPJP8B
- AMYR91JYlFmOJ+ScPhQ8/MgFO+V6pa7K2ebk5xYqsCgA
-Organization: Norik systems d.o.o.
-In-Reply-To: <Z/6pkVPh5Rn9oOPY@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cpanel.siel.si
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - norik.com
-X-Get-Message-Sender-Via: cpanel.siel.si: authenticated_id: primoz.fiser@norik.com
-X-Authenticated-Sender: cpanel.siel.si: primoz.fiser@norik.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[codeconstruct.com.au:email,imap1.dmz-prg2.suse.org:helo,suse.de:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-Hi Frank,
-
-On 15. 04. 25 20:46, Frank Li wrote:
-> On Tue, Apr 15, 2025 at 06:33:06AM +0200, Primoz Fiser wrote:
->> Add support for RTC connected via I2C on phyBOARD-Segin-i.MX93. Set
->> default RTC by configuring the aliases.
->>
->> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
->> ---
->> Changes in v2:
->> - reword commit message
->>
->>  .../dts/freescale/imx93-phyboard-segin.dts    | 36 +++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> index 525f52789f8b..38b89398e646 100644
->> --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->> @@ -17,6 +17,11 @@ /{
->>  	compatible = "phytec,imx93-phyboard-segin", "phytec,imx93-phycore-som",
->>  		     "fsl,imx93";
->>
->> +	aliases {
->> +		rtc0 = &i2c_rtc;
->> +		rtc1 = &bbnsm_rtc;
->> +	};
->> +
->>  	chosen {
->>  		stdout-path = &lpuart1;
->>  	};
->> @@ -33,6 +38,24 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
->>  	};
->>  };
->>
->> +/* I2C2 */
+On Fri, 11 Apr 2025 10:38:35 +0930, Andrew Jeffery wrote:
+> We'll introduce another 'channel' variable shortly
 > 
-> nit: needn't it
-> 
->> +&lpi2c2 {
->> +	clock-frequency = <400000>;
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_lpi2c2>;
->> +	status = "okay";
->> +
->> +	/* RTC */
-> 
-> the same here, not name is rtc.
-> 
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 47 ++++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 23 deletions(-)
+> (...)
 
-I would like to keep the above comments.
-
-This is just helpful for customers using this board as reference when
-designing their own carrier boards.
-
-Thank you for understanding,
-
-BR,
-Primoz
-
-
-> Frank
-> 
->> +	i2c_rtc: rtc@68 {
->> +		compatible = "microcrystal,rv4162";
->> +		reg = <0x68>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_rtc>;
->> +		interrupt-parent = <&gpio4>;
->> +		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
->> +	};
->> +};
->> +
->>  /* Console */
->>  &lpuart1 {
->>  	pinctrl-names = "default";
->> @@ -56,6 +79,13 @@ &usdhc2 {
->>  };
->>
->>  &iomuxc {
->> +	pinctrl_lpi2c2: lpi2c2grp {
->> +		fsl,pins = <
->> +			MX93_PAD_I2C2_SCL__LPI2C2_SCL		0x40000b9e
->> +			MX93_PAD_I2C2_SDA__LPI2C2_SDA		0x40000b9e
->> +		>;
->> +	};
->> +
->>  	pinctrl_uart1: uart1grp {
->>  		fsl,pins = <
->>  			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
->> @@ -69,6 +99,12 @@ MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
->>  		>;
->>  	};
->>
->> +	pinctrl_rtc: rtcgrp {
->> +		fsl,pins = <
->> +			MX93_PAD_ENET2_RD2__GPIO4_IO26		0x31e
->> +		>;
->> +	};
->> +
->>  	pinctrl_usdhc2_cd: usdhc2cdgrp {
->>  		fsl,pins = <
->>  			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
->> --
->> 2.34.1
->>
+Acked-by: Jean Delvare <jdelvare@suse.de>
 
 -- 
-Primoz Fiser
-phone: +386-41-390-545
-email: primoz.fiser@norik.com
---
-Norik systems d.o.o.
-Your embedded software partner
-Slovenia, EU
-phone: +386-41-540-545
-email: info@norik.com
+Jean Delvare
+SUSE L3 Support
