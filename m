@@ -1,216 +1,160 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6152459EA
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B43221567;
+	Wed, 16 Apr 2025 10:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798777; cv=none; b=nqlZg/zvZ93TUtu5M7+w7kGw34AGr+KxNKVlzphiOoOk43vtAgHH2QyKt4B+fc1khnv6Qj/OEBo1gwskYYlHVwGu3H952AtDDWsfUdQBTrWC6dujsw8PDLLC2evucoFSuoSBnzIXrR7rLGFRag+l7Vv9BnKzxO7eqCGngWoSjrA=
+	t=1744798881; cv=none; b=dFw619/hj9tGmwL0RiyBPELfZP5koW0FwalJWcjXsfaZ2yR2x1COU6yVD249/rze+E4wqiNGb+7RtcfUrP9ixgZIRR6rt9sRpeIa3ffoHktg04HOW8DlLdhCpAi1bM+iaWV/06G6gRm37Xn5zkUwOeJ3Wmaexp7nOgSSxWQtorA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798777; c=relaxed/simple;
-	bh=VajtxdZtXPXZJIMdUBloDGEwDgBVx6vtUYVnxS9bPMk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=dvjRR9PuUE3rr53ncE3xdUVPXkksyvoOf+tJPeT2i8jcNtfsGiElbHBKT7sJcA8zLVylid/mbSDwztdz4ae6HeHVuvICpE1hV7bbVpyXg3y28cldff0o9WSQuXb0yl94+R+MNZ7LdXtJeppm7EazgmcQ7lG1I56DBneXrO1CSQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QP15S4T6; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
+	s=arc-20240116; t=1744798881; c=relaxed/simple;
+	bh=yK74k5RUMx7O8nw5wi5mKDUdSdxQ1r0xVixydioGZCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XWjpbNwMRDbMIObDXLEA8S3PSfqEQGXz2vRhTdDYXChqheUJbKeWNC4wIQ5lsA7+S1mvYMt3T7MmVLWwh/Eg2BV4zNhf1BY7+uul3+8eH9BpkKAfWVSFI/nHyxPhVQewj7uU6vV565yLtCiF3tEa4xKzu/csxSR8kG/8QrROS7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHtvcH58; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QP15S4T6"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250416101927euoutp0204ee86eea8d719cbbe0b7a712313e61a~2xTwAC8jB1093010930euoutp02F
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:19:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250416101927euoutp0204ee86eea8d719cbbe0b7a712313e61a~2xTwAC8jB1093010930euoutp02F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744798767;
-	bh=Fnu34OTKoZur1MRsDH3t+4o7UeBrOio4PhVkGpMtUqc=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=QP15S4T6B1Iq85biHOzkGkkGbv7XKKTSra6QMZdRoBfuipojsbeH4pg95Mvu+lGfa
-	 xGsNIaOo7qfRvb3+72NFg8GsESHMB/s+y6nBLYqxlSHc2xaWsIz2yQwnao1A8U76NQ
-	 /fbw5dS6Q21oyqkuZvCr2W9QDHrBoE3Cv1ictRvw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250416101926eucas1p18efc08375e0478c1442f84ef4c4de7c8~2xTvqbTaK1096710967eucas1p1I;
-	Wed, 16 Apr 2025 10:19:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id EF.B8.20821.E248FF76; Wed, 16
-	Apr 2025 11:19:26 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250416101926eucas1p193c52e72b20321605905f1c465c8ac06~2xTvSxVEK1095810958eucas1p1P;
-	Wed, 16 Apr 2025 10:19:26 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250416101926eusmtrp2c2afe5b64e1b5996223adbbb2c7f3e75~2xTvQi6gt2819328193eusmtrp2K;
-	Wed, 16 Apr 2025 10:19:26 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-43-67ff842e7292
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 03.6F.19920.E248FF76; Wed, 16
-	Apr 2025 11:19:26 +0100 (BST)
-Received: from panorka.. (unknown [106.210.135.126]) by eusmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250416101925eusmtip2ee6b878b35adf1a9a51f147fa7f6d3d8~2xTuosv7W2622326223eusmtip2G;
-	Wed, 16 Apr 2025 10:19:25 +0000 (GMT)
-From: "e.kubanski" <e.kubanski@partner.samsung.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, "e.kubanski"
-	<e.kubanski@partner.samsung.com>
-Subject: [PATCH v2 bpf] xsk: Fix race condition in AF_XDP generic RX path
-Date: Wed, 16 Apr 2025 12:19:08 +0200
-Message-Id: <20250416101908.10919-1-e.kubanski@partner.samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHtvcH58"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2156BC4CEE2;
+	Wed, 16 Apr 2025 10:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744798879;
+	bh=yK74k5RUMx7O8nw5wi5mKDUdSdxQ1r0xVixydioGZCQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aHtvcH58Fvm8PkQ8fZU4apWjR5AVGQSBBXdXMXJtEgELsLWu61qJK1Y9HLCDcMrHg
+	 iYfgBDcFhDPxearM+xDc1qSbr0FvIErArMw1RztS35lMF1Xa3tfPwqDqIUO0Zop0a6
+	 GjBzM8YNG7xrLI9M1RKQztW+eWX0HCKVDUYddF4laxMRGhWufZRU1bUc7zsIT5JKyI
+	 LfIMIT+W7IDeN074gXxmWDcNYRf9CNjNZHCu9ScB4uoZQE3QjOtHTd/4HmXZY8AEhQ
+	 Gjd5RunpMUSdFfA8g/F5JtC+f8UngVo6ZVwa7dFeHa58zv82LqG0w6Cwz0HqJcBjmN
+	 HaLaeqUWdb5sA==
+Message-ID: <74ce031c-dcae-4fcb-9598-73ce37e3ee99@kernel.org>
+Date: Wed, 16 Apr 2025 12:21:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduzneV29lv/pBkcadSy2vl/FYvFg9lJm
-	i13rZjJbXN41h83i5vHnLBYrDp1gtzi2QMyB3WPnrLvsHov3vGTy2LSqk83j4Ls9TB6fN8kF
-	sEZx2aSk5mSWpRbp2yVwZWy9upStoEum4kLfecYGxpniXYycHBICJhLvz79n62Lk4hASWMEo
-	seLTV0YI5wujxKeOq6wQzmdGif55S5hhWr6sX8QMkVjOKHF43mqo/peMEpf7zoNVsQkYSzR9
-	388CYosIWEhsWvQNbBSzwCxGiSV7doElhAU8JV5/aGQEsVkEVCWu73/MDmLzCjhLTL2/nQli
-	nbzE/oNnmSHighInZz4B62UGijdvnQ110lwOiUcPlSBsF4mJb25D9QpLvDq+hR3ClpH4v3M+
-	E8gREgLNjBKzZnayQzg9jBJrrl4BuoIDyLGWWHvSFsRkFtCUWL9LHyLqKHF/Kw+EySdx460g
-	xAV8EpO2TWeGCPNKdLQJQSzSkbhx8TnUUimJ7zM3s0DYHhLX+rawgpQLCcRK3DnAMYFRYRaS
-	t2YheWsWwgULGJlXMYqnlhbnpqcWG+allusVJ+YWl+al6yXn525iBKaZ0/+Of9rBOPfVR71D
-	jEwcjIcYJTiYlUR4z5n/SxfiTUmsrEotyo8vKs1JLT7EKM3BoiTOu2h/a7qQQHpiSWp2ampB
-	ahFMlomDU6qByaKct8mi88ebjLztnZbfQqYxzXv4YilHesTZF7XR1iuVgpbM6ng2l3HfxFPb
-	BT3l42Rl3LYz2fM3NhrfVVqw3daPLe1b6RuRkFnFaeJHq76sqWtedvAO+9Xd4bsbGTdk3/WY
-	al++y+NZZ/c07vq/OyUf3rV1sD1bF8xYVqV4objcsaev+sPXx5vaedosbRltTmeGilp2Lk5a
-	9MX+74bq9c98F+ZPnszWfva6p9CKfQ5JZz1WvJ89qXU6w7rsiFI5rs2r41ZrFnY3ps1Oi7l6
-	vTL2/U5jmfRn3W7it+7MKHlhPTcwWTzJ87VzsNV1m5vv5lkuexrSvJFpwd+W3yFTbSKm3vyp
-	Jn7nmVsn24c1SizFGYmGWsxFxYkAKRsdMaIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsVy+t/xe7p6Lf/TDT6cFbTY+n4Vi8WD2UuZ
-	LXatm8lscXnXHDaLm8efs1isOHSC3eLYAjEHdo+ds+6yeyze85LJY9OqTjaPg+/2MHl83iQX
-	wBqlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl7H1
-	6lK2gi6Zigt95xkbGGeKdzFyckgImEh8Wb+IuYuRi0NIYCmjxKnOr8wQCSmJP+v+QNnCEn+u
-	dbFBFD1nlPjU8pAdJMEmYCzR9H0/C4gtImAl8eD2P7BJzALzGCXm7FrPCpIQFvCUeP2hkRHE
-	ZhFQlbi+/zFYM6+As8TU+9uZIDbIS+w/eJYZIi4ocXLmE7ChzEDx5q2zmScw8s1CkpqFJLWA
-	kWkVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYJBvO/Zz8w7Gea8+6h1iZOJgPMQowcGsJMJ7
-	zvxfuhBvSmJlVWpRfnxRaU5q8SFGU6D7JjJLiSbnA+MsryTe0MzA1NDEzNLA1NLMWEmc1+3y
-	+TQhgfTEktTs1NSC1CKYPiYOTqkGJv/Sg8u2KOyrCa8+MHmH6alUe74kxaKMVp6+6iqWGwEe
-	rwUZZZRCJ+/fl8G4vHFB+BrfU0kNEntnqpcbRuklufFc2Hj5XX7roozd344c40i6t1NVVYBH
-	m0nFnvPKeYPLLverNkZyrvg5Z3efj90JTgOvH7Ns8sPSd/Xyc3cr3/zwc2u3m43jHoMc9fJz
-	Wb1mj36l7Uj+4TknPO7v4nVnWbdNrGv+XDzd1+NKW/EslyjJ/OUXLMzcU+e15bi+3rCYu82e
-	cbNy1yMPq5jJwdICP2Q5G64xhC1g/DXb+ZDDD6Vl+h+FC5qNebvTQybZZX75v2Nu5FyPm53v
-	Hn5ZrXzq/uvw29n7n+ns1qnZwR2txFKckWioxVxUnAgAgmxoJvsCAAA=
-X-CMS-MailID: 20250416101926eucas1p193c52e72b20321605905f1c465c8ac06
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250416101926eucas1p193c52e72b20321605905f1c465c8ac06
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250416101926eucas1p193c52e72b20321605905f1c465c8ac06
-References: <CGME20250416101926eucas1p193c52e72b20321605905f1c465c8ac06@eucas1p1.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: leds: add binding for WL-ICLED
+To: Ante Knezic <ante.knezic@helmholz.de>
+Cc: conor+dt@kernel.org, corbet@lwn.net, devicetree@vger.kernel.org,
+ knezic@helmholz.com, krzk+dt@kernel.org, lee@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-leds@vger.kernel.org, pavel@kernel.org, robh@kernel.org
+References: <20250415-dashing-impartial-baboon-70d086@shite>
+ <20250416090645.11123-1-ante.knezic@helmholz.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250416090645.11123-1-ante.knezic@helmholz.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Move rx_lock from xsk_socket to xsk_buff_pool.
-Fix synchronization for shared umem mode in
-generic RX path where multiple sockets share
-single xsk_buff_pool.
+On 16/04/2025 11:06, Ante Knezic wrote:
+> On Tue, Apr 15, 2025 Krzysztof Kozlowski wrote:
+>>>  1 file changed, 88 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+>>> new file mode 100644
+>>> index 000000000000..bf79c7a1719b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/leds/leds-wl-icled.yaml
+>>> @@ -0,0 +1,88 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/leds/leds-wl-icled.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: LED driver for WL-ICLEDs from Wurth Elektronik.
+>>
+>> driver as Linux driver? Then drop and describe hardware.
+> Sorry, I am not sure I quite understand what you mean here? Add "linux LED driver" to
+> title?
 
-RX queue is exclusive to xsk_socket, while FILL
-queue can be shared between multiple sockets.
-This could result in race condition where two
-CPU cores access RX path of two different sockets
-sharing the same umem.
+I am asking to drop it and instead describe the hardware.
 
-Protect both queues by acquiring spinlock in shared
-xsk_buff_pool.
+> 
+>> Also drop full stop
+> Ok, understood.
+> 
+>>> +
+>>> +maintainers:
+>>> +  - Ante Knezic <ante.knezic@helmholz.de>
+>>> +
+>>> +description: |
+>>> +  The WL-ICLEDs are RGB LEDs with integrated controller that can be
+>>> +  daisy-chained to arbitrary number of LEDs. Communication with LEDs is
+>>> +  via SPI interface and can be single or two wire, depending on the model.
+>>> +  For more product information please see the link below:
+>>> +  https://www.we-online.com/en/components/products/WL-ICLED
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - we,1315x246
+>>> +      - we,1315x002
+>>> +      - we,131x000
+>>> +      - we,131161x
+>>> +      - we,131212x
+>>
+>> Is that a wildcard in each compatible?
+> Unfortunatelly, yes. Exact model names are quite elaborate, yet similar enough:
+> 1315050930246   --> we,1315x246
+> 1315050930002   --> we,1315x002
+> 1313210530000   --> we,131x000
+> 1312020030000       we,131x000
+> 1311610030140   --> we,131161x
+> 1312121320437   --> we,131212x
+> 
+> This seemed easier than writing complete model number... You want compatible
+> expanded to full number anyway?
 
-Lock contention may be minimized in the future by some
-per-thread FQ buffering.
+Yes, otherwise git grep for model won't work.
 
-It's safe and necessary to move spin_lock_bh(rx_lock)
-after xsk_rcv_check():
-* xs->pool and spinlock_init is synchronized by
-  xsk_bind() -> xsk_is_bound() memory barriers.
-* xsk_rcv_check() may return true at the moment
-  of xsk_release() or xsk_unbind_dev(),
-  however this will not cause any data races or
-  race conditions. xsk_unbind_dev() removes xdp
-  socket from all maps and waits for completion
-  of all outstanding rx operations. Packets in
-  RX path will either complete safely or drop.
 
-Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
-Fixes: bf0bdd1343efb ("xdp: fix race on generic receive path")
----
- include/net/xdp_sock.h      | 3 ---
- include/net/xsk_buff_pool.h | 2 ++
- net/xdp/xsk.c               | 6 +++---
- net/xdp/xsk_buff_pool.c     | 1 +
- 4 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
-index bfe625b55d55..df3f5f07bc7c 100644
---- a/include/net/xdp_sock.h
-+++ b/include/net/xdp_sock.h
-@@ -71,9 +71,6 @@ struct xdp_sock {
- 	 */
- 	u32 tx_budget_spent;
- 
--	/* Protects generic receive. */
--	spinlock_t rx_lock;
--
- 	/* Statistics */
- 	u64 rx_dropped;
- 	u64 rx_queue_full;
-diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
-index 50779406bc2d..7f0a75d6563d 100644
---- a/include/net/xsk_buff_pool.h
-+++ b/include/net/xsk_buff_pool.h
-@@ -53,6 +53,8 @@ struct xsk_buff_pool {
- 	refcount_t users;
- 	struct xdp_umem *umem;
- 	struct work_struct work;
-+	/* Protects generic receive in shared and non-shared umem mode. */
-+	spinlock_t rx_lock;
- 	struct list_head free_list;
- 	struct list_head xskb_list;
- 	u32 heads_cnt;
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 89d2bef96469..e2a75f3be237 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -337,13 +337,14 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
- 	u32 len = xdp_get_buff_len(xdp);
- 	int err;
- 
--	spin_lock_bh(&xs->rx_lock);
- 	err = xsk_rcv_check(xs, xdp, len);
- 	if (!err) {
-+		spin_lock_bh(&xs->pool->rx_lock);
- 		err = __xsk_rcv(xs, xdp, len);
- 		xsk_flush(xs);
-+		spin_unlock_bh(&xs->pool->rx_lock);
- 	}
--	spin_unlock_bh(&xs->rx_lock);
-+
- 	return err;
- }
- 
-@@ -1724,7 +1725,6 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
- 	xs = xdp_sk(sk);
- 	xs->state = XSK_READY;
- 	mutex_init(&xs->mutex);
--	spin_lock_init(&xs->rx_lock);
- 
- 	INIT_LIST_HEAD(&xs->map_list);
- 	spin_lock_init(&xs->map_list_lock);
-diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
-index 1f7975b49657..3a5f16f53178 100644
---- a/net/xdp/xsk_buff_pool.c
-+++ b/net/xdp/xsk_buff_pool.c
-@@ -87,6 +87,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
- 	pool->addrs = umem->addrs;
- 	pool->tx_metadata_len = umem->tx_metadata_len;
- 	pool->tx_sw_csum = umem->flags & XDP_UMEM_TX_SW_CSUM;
-+	spin_lock_init(&pool->rx_lock);
- 	INIT_LIST_HEAD(&pool->free_list);
- 	INIT_LIST_HEAD(&pool->xskb_list);
- 	INIT_LIST_HEAD(&pool->xsk_tx_list);
--- 
-2.34.1
-
+Best regards,
+Krzysztof
