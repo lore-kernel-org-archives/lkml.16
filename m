@@ -1,58 +1,80 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D16C1FFC55
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E94D1FFC55
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744787245; cv=none; b=vGS0EiuIQ85zzU+GxykNPOw1k6sb1//lscS32zPJIm/TsyYz1gMs51Ib+8+UjTDkpgYhzFOtYO7WdDaOmWDvFKkEIW48wsyzlWme4Pm/xIVir1c22rU9Xf7bsZ4PvpfTOoSbkdBuf/bHru8tD0qneW2HyC0VxISMcxf65LMd5+I=
+	t=1744787313; cv=none; b=SOHdpFOTJrJsCXtFxKJ3qXLvRD/wQL74x2L0uzCjsDLatA5JyU5YnZdLAyAiMb7TXkxFhK/X9UohBhtu4TQBHcX8nMkT5adlrs92R0vSFwc19L2XwKQ1VUDhafxXaHUUnBBxS/jqHE2PfgFy8JJou6hqVtonx2GDYtMQpDKUULo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744787245; c=relaxed/simple;
-	bh=/zdvKzHB12fu3rTqtUzXCN6zERZNsDOYUrwVuVMKnRo=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=HICHuzzkNx/ZSpGMA7KfPvfRCo50UK49aBB9ljaujpYOqqX32h2ZZ/DGwN7sLsuQgzPirHhPWq8V65IeGg09AXyfmf7BAOi4ahIEUg4PkQYVeaJ8c0iQQATWCIusvdq/pLRRN4aWYIsYYxjk8oYQpnVuP28mPEuMN+jOK6rf0/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E9TgXDjw; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744787313; c=relaxed/simple;
+	bh=RdDrEp1YaDrch6xCuBXhV1ZjDR6OxRQB9b88W1eLJX4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IqChF8F0vPxm7DHzekZVx5CmeHJeuRDWZQG9oczt598uEarCWOpYUXUh0ST4nDAYPDnwE6dB5DdNT6u7ZwvFVcUT/Hc0iU+lPDuy1YYo941aK2YYiJIJcz8LcQerWImRzCqBa85yzRsFkiTaenpl0K8HvyjPOMOiVnteSeJJmXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=K9Kay7tF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cv3oDNpU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=K9Kay7tF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cv3oDNpU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E9TgXDjw"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FKV306021409;
-	Wed, 16 Apr 2025 07:07:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=JSqb7AWY/VRKONs9zBchRicpgth9
-	j7FzaFmbnFhNiOQ=; b=E9TgXDjwmEJOGebyeMbHJi0dtbeLpLZ2Bdxf7uYsagFk
-	eikDVGOvd1wfajzynytzokMJ7cNPo9m81jdi4pz++bbmQ569yWnlP+8xfJCtmF1i
-	p4FXTqtoH1Wl0pA1M0oYKJoBoY8FU5rPHEkZNnWU7NiCZsDJEN3sZvnSxtNI3ppN
-	DB2YGUK+nodHFuWfrUWfxtSn8WOtYXxo3KKJdSrYFJLKMyCBZoPfUhFMVflXchEq
-	s/J+5Wl+GdkZBDOvdEhA9aeqQTT7dEJKdIPn7p+I0DxwIou7xLySIvK6JKXzu9B3
-	duGaA+Hs1FpAYd6TLYeYXtG1OD3rfQWyJIs4xyHPKg==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq4xer-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:07:21 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G3SAPX017195;
-	Wed, 16 Apr 2025 07:07:20 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040kxw36-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:07:20 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G77JwY5505554
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 07:07:19 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDBB358054;
-	Wed, 16 Apr 2025 07:07:18 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B40F58052;
-	Wed, 16 Apr 2025 07:07:17 +0000 (GMT)
-Received: from [9.61.241.145] (unknown [9.61.241.145])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 07:07:17 +0000 (GMT)
-Message-ID: <1db64a42-626d-4b3a-be08-c65e47333ce2@linux.ibm.com>
-Date: Wed, 16 Apr 2025 12:37:15 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="K9Kay7tF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cv3oDNpU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="K9Kay7tF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cv3oDNpU"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3DD3B211A0;
+	Wed, 16 Apr 2025 07:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744787310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hkTgZOTiamfrHb9IMLMbFPWdmy++E0DoEdHWknt0ss=;
+	b=K9Kay7tF7WsWBRYANBzMvleoDeU8WyDfwCbx+KLQlmOJjN9RZLOd88cLaljulrnWBdXjwm
+	idloLV1ul+RBHpW/Ls68XUrWJPx6jxFcqnbyYnkHzaGF0VRioBC+dc3P9YhPfdWFMP+WFA
+	zDUhbXYwySXci0Z/oSCwDog3vspSCfc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744787310;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hkTgZOTiamfrHb9IMLMbFPWdmy++E0DoEdHWknt0ss=;
+	b=cv3oDNpU4eF8W8mVVnNZFlPc5ZSX/OqQ9Wj0aOuDtlDovG/YuJAl9Sy/GESD/ksRw/Bmva
+	35HdAlo/Ko8/J6Cw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744787310; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hkTgZOTiamfrHb9IMLMbFPWdmy++E0DoEdHWknt0ss=;
+	b=K9Kay7tF7WsWBRYANBzMvleoDeU8WyDfwCbx+KLQlmOJjN9RZLOd88cLaljulrnWBdXjwm
+	idloLV1ul+RBHpW/Ls68XUrWJPx6jxFcqnbyYnkHzaGF0VRioBC+dc3P9YhPfdWFMP+WFA
+	zDUhbXYwySXci0Z/oSCwDog3vspSCfc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744787310;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0hkTgZOTiamfrHb9IMLMbFPWdmy++E0DoEdHWknt0ss=;
+	b=cv3oDNpU4eF8W8mVVnNZFlPc5ZSX/OqQ9Wj0aOuDtlDovG/YuJAl9Sy/GESD/ksRw/Bmva
+	35HdAlo/Ko8/J6Cw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2BA1813976;
+	Wed, 16 Apr 2025 07:08:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Ue9kB25X/2epRgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 16 Apr 2025 07:08:30 +0000
+Message-ID: <9f5c4c8e-bdb4-433a-8d1b-855cbebfe88d@suse.cz>
+Date: Wed, 16 Apr 2025 09:08:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,145 +82,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-GB
-To: LKML <linux-kernel@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-Subject: [mainline]Kernel crash while running ftrace selftest
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: IcypP3BIs4qVlsnIwj7v5JcpUgHh7_vd
-X-Proofpoint-GUID: IcypP3BIs4qVlsnIwj7v5JcpUgHh7_vd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 malwarescore=0 mlxlogscore=787 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504160056
+Subject: Re: [PATCH] mm, hugetlb: Avoid passing a null nodemask when there is
+ mbind policy
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>, David Hildenbrand
+ <david@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250415121503.376811-1-osalvador@suse.de>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250415121503.376811-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-Hello,
+On 4/15/25 14:15, Oscar Salvador wrote:
+> Before trying to allocate a page, gather_surplus_pages() sets up a nodemask
+> for the nodes we can allocate from, but instead of passing the nodemask
+> down the road to the page allocator, it iterates over the nodes within that
+> nodemask right there, meaning that the page allocator will receive a preferred_nid
+> and a null nodemask.
+> 
+> This is a problem when using a memory policy, because it might be that
+> the page allocator ends up using a node as a fallback which is not
+> represented in the policy.
+> 
+> Avoid that by passing the nodemask directly to the page allocator, so it can
+> filter out fallback nodes that are not part of the nodemask.
 
+It will also try the fallbacks using numa distance and not incrementing nid.
 
-I am seeing kernel crash while running ftrace selftest on today mainline 
-kernel.
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
 
-Head Commit: g1a1d569a75f3.
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-
-After reverting below commit 0ae6b8ce200da00a78f33c055fdc4fe3225d22ec, 
-issue is not seen.
-
-
-Traces:
-
-[15137.589286] Oops: Kernel access of bad area, sig: 11 [#1]
-[15137.589291] LE PAGE_SIZE=64K MMU=Hash  SMP NR_CPUS=8192 NUMA pSeries
-[15137.589298] Modules linked in: nft_compat(E) ext4(E) crc16(E) 
-mbcache(E) jbd2(E) 8021q(E) garp(E) mrp(E) stp(E) llc(E) vrf(E) tun(E) 
-veth(E) bonding(E) tls(E) nft_fib_inet(E) nft_fib_ipv4(E) 
-nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E) 
-nf_reject_ipv6(E) nft_reject(E) nft_ct(E) rfkill(E) nft_chain_nat(E) 
-ip_set(E) bnx2x(E) pseries_rng(E) be2net(E) mdio(E) ibmveth(E) hvcs(E) 
-hvcserver(E) sg(E) vmx_crypto(E) drm(E) dm_mod(E) fuse(E) 
-drm_panel_orientation_quirks(E) xfs(E) lpfc(E) nvmet_fc(E) nvmet(E) 
-sr_mod(E) sd_mod(E) cdrom(E) nvme_fc(E) nvme_fabrics(E) ibmvscsi(E) 
-scsi_transport_srp(E) nvme_core(E) scsi_transport_fc(E) [last unloaded: 
-test_bpf(E)]
-[15137.589400] CPU: 0 UID: 0 PID: 146764 Comm: ftracetest Tainted: 
-G        W  OE       6.15.0-rc2-g1a1d569a75f3 #1 VOLUNTARY
-[15137.589410] Tainted: [W]=WARN, [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-[15137.589415] Hardware name: IBM,8375-42A POWER9 (architected) 0x4e0202 
-0xf000005 of:IBM,FW950.80 (VL950_131) hv:phyp pSeries
-[15137.589422] NIP:  c0000000003e4738 LR: c0000000003ec708 CTR: 
-000000000000a6a4
-[15137.589428] REGS: c00000001473f720 TRAP: 0300   Tainted: G        W  
-OE        (6.15.0-rc2-g1a1d569a75f3)
-[15137.589435] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
-CR: 42228282  XER: 00000000
-[15137.589459] CFAR: c00000000000dbac DAR: 0000000000000014 DSISR: 
-40000000 IRQMASK: 0
-[15137.589459] GPR00: c0000000003ec6ec c00000001473f9c0 c000000001da8100 
-0000000000000004
-[15137.589459] GPR04: c000000001356618 0000000000000001 0000000000000000 
-c000000002ccbb88
-[15137.589459] GPR08: 0000000000002710 0000000000000004 0000000000000000 
-0000000000008000
-[15137.589459] GPR12: c00000001473f6a8 c000000002fd0000 0000000000000000 
-0000000000000000
-[15137.589459] GPR16: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[15137.589459] GPR20: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[15137.589459] GPR24: 0000000000000000 c0000000aeb5b1b0 0000000000000004 
-c000000156bbdd00
-[15137.589459] GPR28: c000000002c24988 0000000000000004 c000000156bbdd00 
-c000000002c24960
-[15137.589546] NIP [c0000000003e4738] ops_equal+0x8/0x170
-[15137.589553] LR [c0000000003ec708] ftrace_update_ops+0x78/0xe0
-[15137.589561] Call Trace:
-[15137.589564] [c00000001473f9c0] [c0000000003ec6ec] 
-ftrace_update_ops+0x5c/0xe0 (unreliable)
-[15137.589575] [c00000001473fa00] [c0000000003f31b4] 
-ftrace_startup_subops+0x124/0x5c0
-[15137.589583] [c00000001473faa0] [c0000000004351fc] 
-register_ftrace_graph+0x2cc/0x550
-[15137.589592] [c00000001473fb80] [c00000000042c374] 
-graph_trace_init+0x74/0xa0
-[15137.589600] [c00000001473fbb0] [c000000000413828] 
-tracing_set_tracer+0x3c8/0x610
-[15137.589609] [c00000001473fc50] [c000000000413b1c] 
-tracing_set_trace_write+0xac/0x120
-[15137.589618] [c00000001473fd10] [c0000000006ecb90] vfs_write+0x160/0x4d0
-[15137.589626] [c00000001473fdc0] [c0000000006ed230] ksys_write+0x80/0x150
-[15137.589635] [c00000001473fe10] [c0000000000325a4] 
-system_call_exception+0x114/0x300
-[15137.589644] [c00000001473fe50] [c00000000000d05c] 
-system_call_vectored_common+0x15c/0x2ec
-[15137.589653] --- interrupt: 3000 at 0x7fff88416234
-[15137.589661] NIP:  00007fff88416234 LR: 00007fff88416234 CTR: 
-0000000000000000
-[15137.589666] REGS: c00000001473fe80 TRAP: 3000   Tainted: G        W  
-OE        (6.15.0-rc2-g1a1d569a75f3)
-[15137.589673] MSR:  800000000280f033 
-<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 4822244e  XER: 00000000
-[15137.589696] IRQMASK: 0
-[15137.589696] GPR00: 0000000000000004 00007fffed647a40 00007fff88527100 
-0000000000000001
-[15137.589696] GPR04: 000001003178d420 000000000000000f 000000006172675f 
-000000000000000e
-[15137.589696] GPR08: 0000000000000000 0000000000000000 0000000000000000 
-0000000000000000
-[15137.589696] GPR12: 0000000000000000 00007fff8868b1c0 0000000124cc005c 
-000001003180ab30
-[15137.589696] GPR16: 0000000124cc9528 000001003180aba0 0000000040000000 
-0000000124bd2f20
-[15137.589696] GPR20: 0000000000000000 00007fffed647c64 0000000000000001 
-0000000124c72d68
-[15137.589696] GPR24: 0000000124cc8bac 0000000124cc8bb8 0000000000000000 
-000001003178d420
-[15137.589696] GPR28: 000000000000000f 00007fff885217f0 000001003178d420 
-000000000000000f
-[15137.589777] NIP [00007fff88416234] 0x7fff88416234
-[15137.589783] LR [00007fff88416234] 0x7fff88416234
-[15137.589788] --- interrupt: 3000
-[15137.589792] Code: 60000000 60000000 e92500d0 2c290000 4d820020 
-f9260110 4e800020 60000000 60000000 60000000 7c691b79 4182011c 
-<e9490010> 2c2a0000 418200d0 2c240000
-[15137.589824] ---[ end trace 0000000000000000 ]---
-
-
-If you happen to fix this issue, please add below tag.
-
-
-Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-
-
-Regards,
-
-Venkat.
+> ---
+>  mm/hugetlb.c | 22 ++++++----------------
+>  1 file changed, 6 insertions(+), 16 deletions(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ccc4f08f8481..5e1cba0f835f 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2419,7 +2419,6 @@ static int gather_surplus_pages(struct hstate *h, long delta)
+>  	long i;
+>  	long needed, allocated;
+>  	bool alloc_ok = true;
+> -	int node;
+>  	nodemask_t *mbind_nodemask, alloc_nodemask;
+>  
+>  	mbind_nodemask = policy_mbind_nodemask(htlb_alloc_mask(h));
+> @@ -2443,21 +2442,12 @@ static int gather_surplus_pages(struct hstate *h, long delta)
+>  	for (i = 0; i < needed; i++) {
+>  		folio = NULL;
+>  
+> -		/* Prioritize current node */
+> -		if (node_isset(numa_mem_id(), alloc_nodemask))
+> -			folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
+> -					numa_mem_id(), NULL);
+> -
+> -		if (!folio) {
+> -			for_each_node_mask(node, alloc_nodemask) {
+> -				if (node == numa_mem_id())
+> -					continue;
+> -				folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
+> -						node, NULL);
+> -				if (folio)
+> -					break;
+> -			}
+> -		}
+> +		/*
+> +		 * It is okay to use NUMA_NO_NODE because we use numa_mem_id()
+> +		 * down the road to pick the current node if that is the case.
+> +		 */
+> +		folio = alloc_surplus_hugetlb_folio(h, htlb_alloc_mask(h),
+> +						    NUMA_NO_NODE, &alloc_nodemask);
+>  		if (!folio) {
+>  			alloc_ok = false;
+>  			break;
 
