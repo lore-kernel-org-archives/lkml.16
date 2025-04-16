@@ -1,149 +1,92 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BAE1B808;
-	Wed, 16 Apr 2025 08:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BEAF17A313
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793243; cv=none; b=Ks0u2fP8/dIa/a7bJn2szFzgnKrLd3Zutkcr7D9Or4+ZohoL+teA6DYwQXkdixQaQlbNJV7Xb4XK2Ula4eAGZO0rajXObYLbRsvu+XsN9wCVENx6jbgIkC1vkbQg5w1XSjcOUi3JgkGhHKlcIWKSdpU28wNx34U8GLNU0QOBbSU=
+	t=1744793243; cv=none; b=HJOPr0u3u1yZEUFqxokc+bNUfZCaHsk/+7jztbdGqTRdH6r4rDhMNAeSVL0Y3dKAzmSV80o3yUTrjEu9rSDg7mcXwNLhsR1beW05QCsbvGds48xj2MjeK97i9c1y5lcQXzMVpgJEg6HPn8ery2yVgLzmzR6OxKzWHweIK2WYmUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744793243; c=relaxed/simple;
-	bh=fLXHMkxoJ8Z1dDK7dL/OMmJXrTAheJQWIFyzqwbg7a0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=edDdvqF8aaHFhuNBwQbTHrXgiE+/NGKDixhwXsIDH2zOUlJlRzICFj/Hvwq6YMfpV89ZrIuCuBzjXR4cne1rE/MV7QiYvRN+tPTGqGvUgd7i4EVuhZcyKsUJt1IqAQyXaDUCnENUbi2KxGRCozp9uS++59844Mk4yj/SPWIhIPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Zcvjk5BfLz1R7Z5;
-	Wed, 16 Apr 2025 16:45:14 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 51FAE1401F3;
-	Wed, 16 Apr 2025 16:47:11 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 16 Apr
- 2025 16:47:10 +0800
-Message-ID: <87665307-1be3-465b-ab7c-3bf908b45217@huawei.com>
-Date: Wed, 16 Apr 2025 16:47:10 +0800
+	bh=DVijI2dxiTZi9DSjzLlQHoIR5BS/mftcsULF5DCiaCk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PjWWIlxH9XpOZJmxN2E+Z7n3i3njxxt6uSloDfiXB23Iugg+TtcBXgoSx8k+HZ1CFY49R+CMc3dcylfcQRR3AkeAApsB56gfCJUgKPCPAmlKQzAt7d8BAeKZd+FMEW2QapdTb8j9XsUP8JxfjKcrtENPiJ0PAcdidmJMoJ3RPRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QaGjG/WL; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QaGjG/WL"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54954fa61c9so7900552e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744793240; x=1745398040; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DVijI2dxiTZi9DSjzLlQHoIR5BS/mftcsULF5DCiaCk=;
+        b=QaGjG/WLT7reWecVBbGUvzQ41xDqv3UYENLHtF3rv30voMVweU0jBOGJbMjXknWPjR
+         Gd4Gc9NtElIbtj0hDLG/dtchFKpQ1dfS3P5I7h48+Ck4pn5YCHjsPM96kSFaEydU/DrB
+         i9W7MlH7MxtfJBxy/2+FlIVZL3Ie2UWO7XPOpT3WdE2UzT4eigpzW3PplSIICf99RLe4
+         aFU8lBCwuLJKUcQnGVLMl4jWkZINgNUz5NoxwcW5mTP5022PVeTH8liYNrx5ezI6KE+G
+         1Vd9+fxyD7iAzc5gbnnX245kZBzqjBDmTSg/uS7RT2IQp6/l/FC9XFRvqHPvHzChI5lE
+         MhKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744793240; x=1745398040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DVijI2dxiTZi9DSjzLlQHoIR5BS/mftcsULF5DCiaCk=;
+        b=kGMUfqZAl+AKS3GRBnoIX3QmwDA9vhowe1KviePKTyFwOw5GwTtIe9BwFjYFZmyHlZ
+         n/HTkYVPmbJE/0bXrjDGDDJv+59vtDnyqX6HPICUvHdKQJfWG5HhzobOghr625ZaMSI7
+         VT/2y2m41aBApV65Eedwe/U7WXQ8hLcAnYUHysPaQDvk81rEqJ7d+1T395Pjeq1cOrt/
+         KTiy8/UMI3fF2+hi1aeeoDngfEAUUKxuxbF99BdHnblNqBA+d9PF8w9NSf33mXo6tY1f
+         bNAMKdO+Q/rRve2kJlM1law1la/+xj8rCISVR96j0XuSNFjhxEqgsznbQur4C5aGM/Dq
+         nmeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIbHYzCnJ1U6LjV+BCJXa5KEgzdPLj8vkahpj2okKX2dUWpo8x3W0YQR3Kw6WRpwd1DEhrHbfYKT6sJBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbUSC9wt04iu8izfG8VtxSEsxKYzV2Dk6Ze0brSCCt5hVf0Kme
+	Ftm3L8crogUBWjN55FbxqI17azD9Tjt4IkWiMXlPi77C2e76ol+Yh3QVAxzKdImU6xR8fJOb62Q
+	kipB+H6GzHY7b8kFwZuw6DC02nUNPpnJ+nECDSA==
+X-Gm-Gg: ASbGncuEC2g4QGqDjRAqpHq3zV9NLmmElG/PfoX5H74Ps5hhs2z0A7Z2HbIGDN7ePfS
+	VzH0e+rB6SPbtQXIrQlDuOFP8uc7NgezK1+DJ4dm1RDbFFTfl3ACyauK028dTUIzrpCu7LvdaT1
+	yT1FtRzFfgysS9hPo4VUO2SQ==
+X-Google-Smtp-Source: AGHT+IGndggoz2F6Itcsl8+fV3DcF5DQivHsEWse1FrEpMgliIiN/YyIss9v6nK+v8EDcLYxaKNk0ELkHKV4PVUZgsI=
+X-Received: by 2002:a2e:bc29:0:b0:30b:f42b:72f6 with SMTP id
+ 38308e7fff4ca-3107f719e11mr3603631fa.32.1744793239503; Wed, 16 Apr 2025
+ 01:47:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: acpi: Don't enable boost on policy exit
-To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>
-CC: <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Nicholas Chin <nic.c3.14@gmail.com>, "Rafael J. Wysocki"
-	<rafael.j.wysocki@intel.com>, <linux-kernel@vger.kernel.org>
-References: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <2c788c2ca0cab09a8ef4e384f272af928a880b0e.1744781329.git.viresh.kumar@linaro.org>
+References: <20250415111124.1539366-1-andriy.shevchenko@linux.intel.com> <20250415111124.1539366-8-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250415111124.1539366-8-andriy.shevchenko@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 16 Apr 2025 10:47:08 +0200
+X-Gm-Features: ATxdqUFc1UKbPNYO7BKvMq1Wj623kn4RUC1cwQ4D_X6YnwRJCLcLeq9fPH1GBYc
+Message-ID: <CACRpkdarwJy9KtuUDJP8TqmKXjrgCC3RxZxRHPQzra37Jo4b_w@mail.gmail.com>
+Subject: Re: [PATCH v1 7/7] gpiolib: Remove redundant assignment of return variable
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemh100008.china.huawei.com (7.202.181.93)
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/4/16 13:29, Viresh Kumar wrote:
+On Tue, Apr 15, 2025 at 1:11=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> The boost-related code in cpufreq has undergone several changes over the
-> years, but this particular piece remained unchanged and is now outdated.
-> 
-> The cpufreq core currently manages boost settings during initialization,
-> and only when necessary. As such, there's no longer a need to enable
-> boost explicitly when entering system suspend.
-> 
-> Previously, this wasn’t causing issues because boost settings were
-> force-updated during policy initialization. However, commit 2b16c631832d
-> ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
-> that behavior—correctly—by avoiding unnecessary updates.
-> 
-> As a result of this change, if boost was disabled prior to suspend, it
-> remains disabled on resume—as expected. But due to the current code
-> forcibly enabling boost at suspend time, the system ends up with boost
-> frequencies enabled after resume, even if the global boost flag was
-> disabled. This contradicts the intended behavior.
-> 
-> Fix this by not enabling boost on policy exit.
-> 
-> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220013
-> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
->  1 file changed, 3 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index 924314cdeebc..85b5a88f723f 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
->  	return false;
->  }
->  
-> -static int boost_set_msr(bool enable)
-> +static void boost_set_msr_each(void *p_en)
->  {
-> +	bool enable = (bool) p_en;
->  	u32 msr_addr;
->  	u64 msr_mask, val;
->  
-> @@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
->  		msr_mask = MSR_K7_HWCR_CPB_DIS;
->  		break;
->  	default:
-> -		return -EINVAL;
-> +		return;
->  	}
->  
->  	rdmsrl(msr_addr, val);
-> @@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
->  		val |= msr_mask;
->  
->  	wrmsrl(msr_addr, val);
-> -	return 0;
-> -}
-> -
-> -static void boost_set_msr_each(void *p_en)
-> -{
-> -	bool enable = (bool) p_en;
-> -
-> -	boost_set_msr(enable);
->  }
->  
->  static int set_boost(struct cpufreq_policy *policy, int val)
-> @@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
->  	free_percpu(acpi_perf_data);
->  }
->  
-> -static int cpufreq_boost_down_prep(unsigned int cpu)
-> -{
-> -	/*
-> -	 * Clear the boost-disable bit on the CPU_DOWN path so that
-> -	 * this cpu cannot block the remaining ones from boosting.
-> -	 */
-> -	return boost_set_msr(1);
-> -}
-> -
->  /*
->   * acpi_cpufreq_early_init - initialize ACPI P-States library
->   *
-> @@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
->  
->  	pr_debug("%s\n", __func__);
->  
-> -	cpufreq_boost_down_prep(policy->cpu);
->  	policy->fast_switch_possible = false;
->  	policy->driver_data = NULL;
->  	acpi_processor_unregister_performance(data->acpi_perf_cpu);
+> In some functions the returned variable is assigned to 0 and then
+> reassigned to the actual value. Remove redundant assignments.
+>
+> In one case make it more clear that the assignment is not needed.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Nice!
+This is actually really good, because if someone goofs up the code
+so that assignment is actually needed then the compiler will
+complain. (Arnd told me this.)
 
-I wonder why this cpufreq_boost_down_prep() was needed at the beginning.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-
+Yours,
+Linus Walleij
