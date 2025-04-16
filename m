@@ -1,138 +1,124 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23A522F3BE;
-	Wed, 16 Apr 2025 06:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5AE231A55;
+	Wed, 16 Apr 2025 06:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786482; cv=none; b=akvSOeDR64bhgpwjsutuzEJu7Jv6/JdkD9IeoXNrW07mFRAecVhZ7DS71IC/S6wyR1gIZMbruG+yYdnEGDTN50Ec3IU7OQe3xV2N5AwFQfN+tz9/5Lx95IOES6tIhehYYuHo3f6fVOw/0V17rko3Q1xFH7LLvLLolD8U5ORdrd0=
+	t=1744786506; cv=none; b=bp/DOgfBtI5YzAAjVrKMbPvm+ch9aqbMfo4C9fuH/8cH9/nzACS5OvHo6j9OqGgFuzA40tUZaO+afLKQ/S3GSlyYcLXDkXV1CpfKF7GBOpLg+XV0EQpTIe/iMA63H7O9rfHHPSzOdSALSUH6ikcqtgC24+ABvjlMyctVIhCZSJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786482; c=relaxed/simple;
-	bh=eMwxxrI/yqh3c02Xa/Zji/ZDs6jaXH0UXIImJ6rzu0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pZjqAY09ERRBIAyO/khCMbRox8Ysj7faMGMLA/RMeXYp/2wNKa6Sh0yXwIUzfQ4mtC7r6nlJiKCNku7+XguJbLIm7YkTZtlu76+yZH4Zm8Ju9mttQoH10G5gCNEqLo+IkLaZtyp6v+8GfIxZYVloqfvzmRk12gaK8kzmHlpNpAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jRUvoqXr; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744786506; c=relaxed/simple;
+	bh=LdqJZkfsrO3LCmSC/7OtcVJEOkHFEt8gdt49MCebZzo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R/ir2dyX+RxrZyaO7brlW0ieEjHLVQS4SmiSsn8DJgDjK3GQ2k0UqikLq+HNtI5PUO2yUsQc86hoOR4LddUN9eZMko5jI7gyepDn7OcteW9K60fQiHyjI0y1O1tSdSl1A6VL76Ej2+XLoFxS+RrUm8Og7Iajdlq/3A0C2/jv/RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Nk5GKatR; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRUvoqXr"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af519c159a8so5820423a12.3;
-        Tue, 15 Apr 2025 23:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744786480; x=1745391280; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wwHFx2X+LzqDnaO5ScRT2dnEDpqIh6CuLMeABnbFK/o=;
-        b=jRUvoqXrzbyJW8DlJ/fcYmP8PsQ0XwJf6MhsyzMxm/gyKGiUn3kCQFTj8LOKPNe3Qm
-         ovEkU4v5opK2yfg6RLovIo4RnoO62gQE81a/4L6knBBreGpMdJcBS1JH8p2+rXejHKrN
-         INuGpmvNyaCqEM2K+J/EtwhRM8A7Tv5ss4dJWbjBC6NLNME3mdam0pMqDfxfjbTn21MK
-         pwdsDbXUBt8ZJnlI5TeG9L+I+eQzhrJ2DV4oBiPi6Hb7S+wGf/30wWxr/FM0Y3N/SoeJ
-         pMPTsX00wf4/jqwb4Z+DKeA3vkAOtwVq/TQ12tnMFppFq/9JTjh+n33AH0iAFYkIf9nX
-         /Jog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744786480; x=1745391280;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wwHFx2X+LzqDnaO5ScRT2dnEDpqIh6CuLMeABnbFK/o=;
-        b=Bn7NsGjs7ya80ku8pUEK1wAEnnFAGgF0ZjwWAEmIi2EmCaGVrygNOcDlzkRAdPASQ0
-         coShWohCZICpJ3OtW53N44rkbY3sErhpRWHiAgueZVZfjEdmQ8feoO+U+LyD/cSNF3j9
-         oimbcg1U4z5qnibgV0QZ+Yl3XtXgzlqL4dDMxi96GUSQiJQRmqXbgioP34D1SPob3+nK
-         bBJ4AitK2eJjrKdE0y3DGB1JjbuVaPTyuTHJKwRVunhJ70g7A1yKnTESvE0nvhVBQ1xv
-         ojAV9RW53z9JI82QDB3eA5X6vF4KNmZFUQGNK8bFhwPqBadDwbHkh5RXZ1fKFKXhzvL2
-         8/5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQtz2mOIAdhpHDWUd2CGEtURc8fc+9ugA8vbpIfaTkJmC9HtqyrsAx9QPY/ifVgSkhZSU=@vger.kernel.org, AJvYcCVGDEWiAfqHkDGH4rYD6befZ0owyepljUP6XDhMmeiIWxQRObFqXJ7yMLC7Cm2NC7L2H6vHh2lepeta2CVL@vger.kernel.org, AJvYcCXysh+SkNgsigSQtK0CIkSV6BoKsX5RVgc2ZFvbB6QOPU4QwIDTpHuZE61HcNfQHA3bsmfYg7z2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjYTzmyWxpr73kB7DsW1RUYDAXZjVsLLClYs7jKoXKIcS2dFi6
-	xBiePwRdcV63suiTtK3EmvoS0lJcMel17d37g9WJvsgeoHMWRUuf
-X-Gm-Gg: ASbGncs1xMfPgEwEN/c4WZD4ArCbepiKdqPNX2nWGzhorJ4YUoPdQm7hG70ZHsfvA6t
-	5n2ukm160ckdxuuf+HhydYVNR8WLJLO/htdWwg1zYgk4wy0BdFlv3GO3y5VB9ZEqS2BR6ACFJ3X
-	+DqyJJea9BtMQgULoaaapJtgB+HJBe2psWOxRsCCy2wknwLE9YJkBdpiFETeULYAk2kqb98OS1Q
-	I7owSoPQH42weTNEGvAiwKpTvVVhIlNIYrEvBcxGCiNuI/YgLnPUBQWOkw6DxR7Pl1Mjdr8KLMs
-	CBfQZZRoQk+/xydWALUvOX8TtROCCRcNKc9+Glz77X5uIbyDp81/BLYqyBEJVhxABENl2W9SQRB
-	nMuv/BVdoivGWDSpj8j4=
-X-Google-Smtp-Source: AGHT+IF8/C/bE/M8V11NAS4DjSmBrO99vSahBnCYSkXY7IEd2nQ+G+Lw7PFE5CD5FqU81B6JmzCipg==
-X-Received: by 2002:a17:90b:254d:b0:2ff:6fc3:79c3 with SMTP id 98e67ed59e1d1-30863f1b878mr1169706a91.9.1744786479803;
-        Tue, 15 Apr 2025 23:54:39 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:bc8e:5d77:bf95:efb6? ([2001:ee0:4f0e:fb30:bc8e:5d77:bf95:efb6])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308613b2ff9sm785083a91.30.2025.04.15.23.54.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 23:54:39 -0700 (PDT)
-Message-ID: <1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
-Date: Wed, 16 Apr 2025 13:54:31 +0700
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Nk5GKatR"
+Received: from 2001-b400-e2a9-54f6-6e67-7778-9cb9-7043.emome-ip6.hinet.net (unknown [10.101.200.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 2A06242463;
+	Wed, 16 Apr 2025 06:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1744786018;
+	bh=sM6chi8lTFnRlrr86zejeakRXpamF60oS2LkgrHrDug=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc;
+	b=Nk5GKatRHD4qM1Pzl/Hj5YyNwjLh6doA8x+xlD4uX8jilA5dbtS9q6oHQ8fr4vRQL
+	 WwfZXJO0syHyGE7LMOavRdCZEUGkMzMK2QmD6S6JTXnTMkgfQmaRH/NBvJ8C8xCIwM
+	 SYSwnwyFvCrIbl189vq/IBvSChoo6Yv0+9qf9dWBqDTh9eYsoOannJMTEgagBXvo5E
+	 xxGXcU4oujOQ3LyJ+2TJKzKrW5gEcsfFpZr7lG2mwCGM/xNbP4lbmdB7WieBpweueS
+	 uUJbA46f5p14R2Ilc9SguDJS9UiQJSX/DonkjCU66YoEtEfOjJ1kH+lCGt5bGdX6fu
+	 l1SGqwvlseqGA==
+From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
+Date: Wed, 16 Apr 2025 14:46:26 +0800
+Subject: [PATCH 1/2] hwmon: (spd5118) pass spd5118_data to hwmon callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock selftest
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: virtualization@lists.linux.dev, "Michael S . Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250415074341.12461-1-minhquangbui99@gmail.com>
- <20250415074341.12461-4-minhquangbui99@gmail.com>
- <20250415212709.39eafdb5@kernel.org>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <20250415212709.39eafdb5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-1-8b3bcafe9dad@canonical.com>
+References: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-0-8b3bcafe9dad@canonical.com>
+In-Reply-To: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-0-8b3bcafe9dad@canonical.com>
+To: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Yo-Jung Lin (Leo)" <leo.lin@canonical.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1876; i=leo.lin@canonical.com;
+ h=from:subject:message-id; bh=LdqJZkfsrO3LCmSC/7OtcVJEOkHFEt8gdt49MCebZzo=;
+ b=owEBbQKS/ZANAwAKAV8XsZZKKe6GAcsmYgBn/1JbyttZ5/3ZC32UnKPNvHukuYm+MvtCw75gT
+ j6Q751LKUWJAjMEAAEKAB0WIQQzqV4kW+yguuqHrw5fF7GWSinuhgUCZ/9SWwAKCRBfF7GWSinu
+ hjnUD/wOB4mCzbrbcgGgMPd7cl5EJ2hUIsNRpALZG6OBW84wgEF4JOzAIPm+MiJLLoZQ9vA0pIq
+ 3tj6QIeqFS8oaAXnvC2lw1hDa89Eewl7cLD2P9nnFzV3GBL8Gw8b66rR4KzGMF62wv3t7Z7cf+q
+ LmN7MgT759T07YWlJCZCqFcXdWm+7gLd+jy6+iUG3DqBot4Yr/XMdiSLeQ2+sRrRL6dg6j+BopK
+ ehhK2K9/C69dFd+jjh9sAX+06ABH2iYBkXTx2QTK8K+kD9ppVIP68g6i46ZpRXsM/iB8VsnBAEe
+ Cjga2s9EnmkLqsBhrkfziRNfHWzzmU7iglHxtZy62ewZfx+TDaHEkEdiJ2COYt+4iAi2vBX4mEi
+ rabXZaWZPDAAgwHnYEpjWHhNPiUYGAUyODLtZLttUyunP4ZCaU35ZuZ0xOMdW+y2bwIzV7E+eb3
+ F0yWXeNMT4L9bATHOSkvXyrRXnBzqs3aSzyKH00zC4juZ41YLOLGVzmpr32InF6h5d5bHhzQCw0
+ DM3u2TYEHl2/VcJm1v++gpVvLSWS1jYosGuPe3COdwwP8+iyFDtfrpGVpfEbFqdtJQqAivdeNc8
+ tyBhjF8/crmA8pp6cToAUa4Nc9r7hsiHi4mpMqAB4gGE71fiX8TDfrToiPMHmIGUuDZdRyKww2d
+ +caeNwBJQgZBH4g==
+X-Developer-Key: i=leo.lin@canonical.com; a=openpgp;
+ fpr=33A95E245BECA0BAEA87AF0E5F17B1964A29EE86
 
-On 4/16/25 11:27, Jakub Kicinski wrote:
-> On Tue, 15 Apr 2025 14:43:41 +0700 Bui Quang Minh wrote:
->> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
->> +    # Probe for support
->> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
->> +    if xdp.ret == 255:
->> +        raise KsftSkipEx('AF_XDP unsupported')
->> +    elif xdp.ret > 0:
->> +        raise KsftFailEx('unable to create AF_XDP socket')
->> +
->> +    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_queue_id}',
->> +               ksft_wait=3)
->> +
->> +def check_xdp_bind(cfg):
->> +    ip(f"link set dev %s xdp obj %s sec xdp" %
->> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
->> +    ip(f"link set dev %s xdp off" % cfg.ifname)
->> +
->> +def check_rx_resize(cfg, queue_size = 128):
->> +    rx_ring = _get_rx_ring_entries(cfg)
->> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
->> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
-> Unfortunately this doesn't work on a basic QEMU setup:
->
-> # ethtool -G eth0 rx 128
-> [   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx queue index: 0 err: -2
-> netlink error: No such file or directory
->
-> Is there a way to enable more capable virtio_net with QEMU?
+Currently only the regcache is passed to the hwmon device. Pass the
+whole spd5118_data for better flexibility.
 
-I guess that virtio-pci-legacy is used in your setup.
+Signed-off-by: Yo-Jung (Leo) Lin <leo.lin@canonical.com>
+---
+ drivers/hwmon/spd5118.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Here is how I setup virtio-net with Qemu
+diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
+index 358152868d96..3cb2eb2e0227 100644
+--- a/drivers/hwmon/spd5118.c
++++ b/drivers/hwmon/spd5118.c
+@@ -174,7 +174,8 @@ static int spd5118_read_enable(struct regmap *regmap, long *val)
+ static int spd5118_read(struct device *dev, enum hwmon_sensor_types type,
+ 			u32 attr, int channel, long *val)
+ {
+-	struct regmap *regmap = dev_get_drvdata(dev);
++	struct spd5118_data *data = dev_get_drvdata(dev);
++	struct regmap *regmap = data->regmap;
+ 
+ 	if (type != hwmon_temp)
+ 		return -EOPNOTSUPP;
+@@ -256,7 +257,8 @@ static int spd5118_temp_write(struct regmap *regmap, u32 attr, long val)
+ static int spd5118_write(struct device *dev, enum hwmon_sensor_types type,
+ 			 u32 attr, int channel, long val)
+ {
+-	struct regmap *regmap = dev_get_drvdata(dev);
++	struct spd5118_data *data = dev_get_drvdata(dev);
++	struct regmap *regmap = data->regmap;
+ 
+ 	switch (type) {
+ 	case hwmon_temp:
+@@ -269,6 +271,8 @@ static int spd5118_write(struct device *dev, enum hwmon_sensor_types type,
+ static umode_t spd5118_is_visible(const void *_data, enum hwmon_sensor_types type,
+ 				  u32 attr, int channel)
+ {
++	struct spd5118_data *data = (struct spd5118_data *)_data;
++
+ 	if (type != hwmon_temp)
+ 		return 0;
+ 
+@@ -611,7 +615,7 @@ static int spd5118_probe(struct i2c_client *client)
+ 	}
+ 
+ 	hwmon_dev = devm_hwmon_device_register_with_info(dev, "spd5118",
+-							 regmap, &spd5118_chip_info,
++							 data, &spd5118_chip_info,
+ 							 NULL);
+ 	if (IS_ERR(hwmon_dev))
+ 		return PTR_ERR(hwmon_dev);
 
-     -netdev tap,id=hostnet1,vhost=on,script=$NETWORK_SCRIPT,downscript=no \
-     -device 
-virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on \
+-- 
+2.43.0
 
-The iommu_platform=on is necessary to make vring use dma API which is a 
-requirement to enable xsk_pool in virtio-net (XDP socket will be in 
-zerocopy mode for this case). Otherwise, the XDP socket will fallback to 
-copy mode, xsk_pool is not enabled in virtio-net that makes the 
-probability to reproduce bug to be very small. Currently, when you don't 
-have iommu_platform=on, you can pass the test even before the fix, so I 
-think I will try to harden the selftest to make it return skip in this case.
-
-Thanks,
-Quang Minh.
