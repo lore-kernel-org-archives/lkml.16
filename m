@@ -1,217 +1,308 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43564221FDC
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0201E7C24;
+	Wed, 16 Apr 2025 10:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744800748; cv=none; b=iqrLEmFb/FOIDqp66Du1HzpieCaAI4zII/r7MkR/Dw593PhsUzAR1ANVO90gvBsWQEBpIBLj/gC+NGJCnxPkqta5fVmGvjDgVw/GNTvLrSgGVgHi1KGfuA5DQipGHyAO1YL5F22NxhAPRcMhj/V7IzVN8CI7M9d+CVNyGx8XAxQ=
+	t=1744800898; cv=none; b=d9WJhSGoJixkyhIO9HzdpUkR5U2VYNx3EIJUJ9F14qHRSS1pQVxRX1xJzuXNcbcjONJ/HSTzCZytKI5kuoLesWzpVTnOoTIdSymihI/TJoViQbrabAZgPyuIDPePxHs2AqKAQ8rpWy1g7oB3HmWXhkLaSP1c1BokzNUZ0v3ZmsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744800748; c=relaxed/simple;
-	bh=iNofOyeBakfiaWETqlU/loWnmHR7CJzqBPwNICLStLg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VzYiXU4aBQZYmD4IgnEyZfDeQxV6JQEJI2dN7I/06FBKQyXTeIFOcRTq1mB9eCoNT9DbnJYLh9mgyq578rM+X/jN5v9uWaymAGHR9Bg665Me1EbugcHvYg6XzxDkrmjLuT15fD1gb5iQg4rPL0ashWeZgyZiBaV+kbLYeTMA3fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N4PwclRr; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744800898; c=relaxed/simple;
+	bh=7JN6snAw2lrK/X6VkKve41wf57owbc2L0SobKwitddE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=N6YFAUjOn/apXCDw5NtoSFiqa00WLH6y8dfyG+dKTMTlXZACiHnrJd2EJVkY9P+fBDnlcOE5DBuP0BkwLHEKeCBqs9dhI/wFdQXnblLvdlY7rGKY+cBgEPDgDWFX0bNylsYDUtAeODGLw8tNFLzuSaiHTJV1++YmQfaVhGQFmHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cj/BDpNY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N4PwclRr"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54998f865b8so1632519e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:52:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744800744; x=1745405544; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ezteQ2riofZ7Hrj5BXFbLyhRNWueJY/Se/hzX4W8NVQ=;
-        b=N4PwclRrbOKdQiyzCuRIhBJEaT9QZZaMbKPGAqloF0hxMpg1Pg7KpBpR1giXgC1IC9
-         wX1aW9YKcNyt8JJKPTq5P/7JAT4rPnKqLVHc9xkQKHkKfE+e6Ke5HzM0ICx6QGQe1yzB
-         T2SjHVAmUPVFLGnxGbXqvar494D2C+4Gj19o9C9d/lBQpj+K17+0vFrlej+FsQOqku++
-         5qR8uRIBBQTUpiOwnYLU5rMv+VOrL5pLVuDcBo92skyJBK30okfTnPMd2AjTLA9wGZeL
-         S5+ktWvOUlJC//BVc51qeVtWsyq5mUy05acQV0ZYzmR3Pvqd1CBDo6DZb0+Vonrj65qD
-         y3vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744800744; x=1745405544;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ezteQ2riofZ7Hrj5BXFbLyhRNWueJY/Se/hzX4W8NVQ=;
-        b=js+zudkBws+pR2Hv8QoZQ2MqHmiRuFyXTzchNovZoE2GPC6gfh/d+fod0cUO+hP/1N
-         ooio4SswpHaIgodAUSPoBip1ExxVAHMeHsRAUGik5xdBBgDtkhBVmZ0FAP2hFB3+xuPO
-         e6OuUVj5PrXp9qeaU6eY4p+3trFNBteMWLSgFv86aC8ZwlZtzfdXwcvAfO4fCEwB8IhW
-         ItmyxtnDP0Gt/Q6JpTdGtaoJ2C3AIjZ7+afO979zXXR1IY9pPm8aROA1mk60wpjzfJMa
-         ecypJtrNbUYSR9+zziG5xko2wMF0BXdaBXghpLsELtaVjXyP7YpIxevYYHTkHOUGCsnm
-         H+qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwWoCapcN+/a02PsJU22zP6H6fOrG6NwrjWia2lUd4g1wcYw/X6GekfkeExEvRPftIMsLir4J+eJTggnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJa3oMNDiQibx+fRndkE7DPrav6Iok6xRIhlYg3631zpeM3M9a
-	vQ4N+SAHM6+wTYLtvCi0FQ77dItY/aoOYEArQ9RsFODPyZQ+nU8cyGQBTbKEisIvL8FxlI06fmX
-	IGn79HixFXNAx3IhGLTGE5to/kFybofcfExEg
-X-Gm-Gg: ASbGncuMDGiHnYTRloepx7Xl4hXGbyTAW27eOieWAwK5a5q9rLO2CpWdPyrW6gr6fxN
-	ZAcr06gpiTt7izwb7OzjazUOmqpyQuvqf1m2VbrnN7ZrTB8A5c1hv+bJ3b4vfReLXXHEju/WG8K
-	/vJSjJfjTdMxd16hQhRZ9OLBT5lu+mYYM2wFwozLT43oGm5x5kiUa4p6E=
-X-Google-Smtp-Source: AGHT+IFVKUVr5njxxlyQ99XNXATvKTMpaL0bme3NPquYmxsdWIkf2jPCZtG5OdgrGsCFMkEw3fWVTW+th5wSbVkT4ms=
-X-Received: by 2002:a05:651c:1988:b0:30c:7a7:e87c with SMTP id
- 38308e7fff4ca-3107f73cfdfmr3673361fa.35.1744800744089; Wed, 16 Apr 2025
- 03:52:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cj/BDpNY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801BEC4CEE2;
+	Wed, 16 Apr 2025 10:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744800897;
+	bh=7JN6snAw2lrK/X6VkKve41wf57owbc2L0SobKwitddE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cj/BDpNYbphHzJEiLNFlvYm/GFcN98+FI2ZMAotiQ+7iud0nIMOvFnIxmc0pwY1gA
+	 jVLzyaSW9VJq6/x1pXj1QwlOluMrDtVvGJOrTWGXHd+qKgAvOKc6N8aVB3jDLW4YoM
+	 vTBoLZ9KX8lE0PttueVMsJVjoWmFmOcCElXGkatr31RC41/lY5fTwIQWylqNU7dP62
+	 vbgFzIh2gJmY75eSU7i8/CfD5hDJcH4ibpUGi4t8beoGygnT/CmsXAZfB1fqs5mhpA
+	 +2gLEfipmQ3BzLEdaeJJ/EucRiUlHTSB3FK9rb2FyKsHrhxWip2oQTGpV2s9CODEe5
+	 STEzAfRW2LSug==
+Message-ID: <6ee047d4-f3de-4c25-aaae-721221dc3003@kernel.org>
+Date: Wed, 16 Apr 2025 12:54:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416085446.480069-1-glider@google.com>
-In-Reply-To: <20250416085446.480069-1-glider@google.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 16 Apr 2025 12:52:12 +0200
-X-Gm-Features: ATxdqUHO84ZMKC02-TwodTZhg_pM7vWiRGycrQw7cTn0S02O05yX6np4vLAohn8
-Message-ID: <CACT4Y+b06RBSgcxooStVLoUVZRR=_L3Pxo6Ozp45s8brw1Ybfg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] RFC: coverage deduplication for KCOV
-To: Alexander Potapenko <glider@google.com>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Marco Elver <elver@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] net: pse-pd: Add Si3474 PSE controller driver
+To: Piotr Kubik <piotr.kubik@adtran.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <a92be603-7ad4-4dd3-b083-548658a4448a@adtran.com>
+ <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <93d3bbf0-742c-41d4-83c6-6d94a0dd779c@adtran.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 16 Apr 2025 at 10:54, Alexander Potapenko <glider@google.com> wrote:
->
-> As mentioned by Joey Jiao in [1], the current kcov implementation may
-> suffer from certain syscalls overflowing the userspace coverage buffer.
->
-> According to our measurements, among 24 syzkaller instances running
-> upstream Linux, 5 had a coverage overflow in at least 50% of executed
-> programs. The median percentage of programs with overflows across those 24
-> instances was 8.8%.
->
-> One way to mitigate this problem is to increase the size of the kcov buffer
-> in the userspace application using kcov. But right now syzkaller already
-> uses 4Mb per each of up to 32 threads to store the coverage, and increasing
-> it further would result in reduction in the number of executors on a single
-> machine.  Replaying the same program with an increased buffer size in the
-> case of overflow would also lead to fewer executions being possible.
->
-> When executing a single system call, excessive coverage usually stems from
-> loops, which write the same PCs into the output buffer repeatedly. Although
-> collecting precise traces may give us some insights into e.g. the number of
-> loop iterations and the branches being taken, the fuzzing engine does not
-> take advantage of these signals, and recording only unique PCs should be
-> just as practical.
->
-> In [1] Joey Jiao suggested using a hash table to deduplicate the coverage
-> signal on the kernel side. While being universally applicable to all types
-> of data collected by kcov, this approach adds another layer of complexity,
-> requiring dynamically growing the map. Another problem is potential hash
-> collisions, which can as well lead to lost coverage. Hash maps are also
-> unavoidably sparse, which potentially requires more memory.
+On 16/04/2025 12:47, Piotr Kubik wrote:
+> From: Piotr Kubik <piotr.kubik@adtran.com>
+> 
+> Add a driver for the Skyworks Si3474 I2C Power Sourcing Equipment
+> controller.
+> 
+> Based on the TPS23881 driver code.
+> 
+> Driver supports basic features of Si3474 IC:
+> - get port status,
+> - get port power,
+> - get port voltage,
+> - enable/disable port power.
+> 
+> Only 4p configurations are supported at this moment.
+> 
+> Signed-off-by: Piotr Kubik <piotr.kubik@adtran.com>
+> ---
+>  drivers/net/pse-pd/Kconfig  |  10 +
+>  drivers/net/pse-pd/Makefile |   1 +
+>  drivers/net/pse-pd/si3474.c | 477 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 488 insertions(+)
+>  create mode 100644 drivers/net/pse-pd/si3474.c
 
-The hashmap probably can compare values for equality to avoid losing
-coverage, but the real problem is that it allocates and can't work in
-interrupts, etc.
+Please put bindings before their user (see DT submitting patches)
 
-> The approach proposed in this patch series is to assign a unique (and
-> almost) sequential ID to each of the coverage callbacks in the kernel. Then
-> we carve out a fixed-sized bitmap from the userspace trace buffer, and on
-> every callback invocation we:
->
-> - obtain the callback_ID;
-> - if bitmap[callback_ID] is set, append the PC to the trace buffer;
-> - set bitmap[callback_ID] to true.
->
-> LLVM's -fsanitize-coverage=trace-pc-guard replaces every coverage callback
-> in the kernel with a call to
-> __sanitizer_cov_trace_pc_guard(&guard_variable) , where guard_variable is a
-> 4-byte global that is unique for the callsite.
->
-> This allows us to lazily allocate sequential numbers just for the callbacks
-> that have actually been executed, using a lock-free algorithm.
->
-> This patch series implements a new config, CONFIG_KCOV_ENABLE_GUARDS, which
-> utilizes the mentioned LLVM flag for coverage instrumentation. In addition
-> to the existing coverage collection modes, it introduces
-> ioctl(KCOV_UNIQUE_ENABLE), which splits the existing kcov buffer into the
-> bitmap and the trace part for a particular fuzzing session, and collects
-> only unique coverage in the trace buffer.
->
-> To reset the coverage between runs, it is now necessary to set trace[0] to
-> 0 AND clear the entire bitmap. This is still considered feasible, based on
-> the experimental results below.
->
-> The current design does not address the deduplication of KCOV_TRACE_CMP
-> comparisons; however, the number of kcov overflows during the hints
-> collection process is insignificant compared to the overflows of
-> KCOV_TRACE_PC.
->
-> In addition to the mentioned changes, this patch adds support for
-> R_X86_64_REX_GOTPCRELX to objtool and arch/x86/kernel/module.c.  It turned
-> out that Clang leaves such relocations in the linked modules for the
-> __start___sancov_guards and __stop___sancov_guards symbols. Because
-> resolving them does not require a .got section, it can be done at module
-> load time.
->
-> Experimental results.
->
-> We've conducted an experiment running syz-testbed [3] on 10 syzkaller
-> instances for 24 hours.  Out of those 10 instances, 5 were enabling the
-> kcov_deduplicate flag from [4], which makes use of the KCOV_UNIQUE_ENABLE
-> ioctl, reserving 4096 words (262144 bits) for the bitmap and leaving 520192
-> words for the trace collection.
->
-> Below are the average stats from the runs.
->
-> kcov_deduplicate=false:
->   corpus: 52176
->   coverage: 302658
->   cover overflows: 225288
->   comps overflows: 491
->   exec total: 1417829
->   max signal: 318894
->
-> kcov_deduplicate=true:
->   corpus: 52581
->   coverage: 304344
->   cover overflows: 986
->   comps overflows: 626
->   exec total: 1484841
->   max signal: 322455
->
-> [1] https://lore.kernel.org/linux-arm-kernel/20250114-kcov-v1-5-004294b931a2@quicinc.com/T/
-> [2] https://clang.llvm.org/docs/SanitizerCoverage.html
-> [3] https://github.com/google/syzkaller/tree/master/tools/syz-testbed
-> [4] https://github.com/ramosian-glider/linux/pull/7
->
->
-> Alexander Potapenko (7):
->   kcov: apply clang-format to kcov code
->   kcov: factor out struct kcov_state
->   kcov: x86: introduce CONFIG_KCOV_ENABLE_GUARDS
->   kcov: add `trace` and `trace_size` to `struct kcov_state`
->   kcov: add ioctl(KCOV_UNIQUE_ENABLE)
->   x86: objtool: add support for R_X86_64_REX_GOTPCRELX
->   mm/kasan: define __asan_before_dynamic_init, __asan_after_dynamic_init
->
->  Documentation/dev-tools/kcov.rst  |  43 +++
->  MAINTAINERS                       |   1 +
->  arch/x86/include/asm/elf.h        |   1 +
->  arch/x86/kernel/module.c          |   8 +
->  arch/x86/kernel/vmlinux.lds.S     |   1 +
->  arch/x86/um/asm/elf.h             |   1 +
->  include/asm-generic/vmlinux.lds.h |  14 +-
->  include/linux/kcov-state.h        |  46 +++
->  include/linux/kcov.h              |  60 ++--
->  include/linux/sched.h             |  16 +-
->  include/uapi/linux/kcov.h         |   1 +
->  kernel/kcov.c                     | 453 +++++++++++++++++++-----------
->  lib/Kconfig.debug                 |  16 ++
->  mm/kasan/generic.c                |  18 ++
->  mm/kasan/kasan.h                  |   2 +
->  scripts/Makefile.kcov             |   4 +
->  scripts/module.lds.S              |  23 ++
->  tools/objtool/arch/x86/decode.c   |   1 +
->  tools/objtool/check.c             |   1 +
->  19 files changed, 508 insertions(+), 202 deletions(-)
->  create mode 100644 include/linux/kcov-state.h
->
-> --
-> 2.49.0.604.gff1f9ca942-goog
->
+> 
+> diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
+> index 7fab916a7f46..6d2fef6c2602 100644
+> --- a/drivers/net/pse-pd/Kconfig
+> +++ b/drivers/net/pse-pd/Kconfig
+> @@ -41,4 +41,14 @@ config PSE_TPS23881
+> 
+>           To compile this driver as a module, choose M here: the
+>           module will be called tps23881.
+> +
+> +config PSE_SI3474
+> +       tristate "Si3474 PSE controller"
+> +       depends on I2C
+> +       help
+> +         This module provides support for Si3474 regulator based Ethernet
+> +         Power Sourcing Equipment.
+> +
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called si3474.
+>  endif
+> diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
+> index 9d2898b36737..b33b4d905cd5 100644
+> --- a/drivers/net/pse-pd/Makefile
+> +++ b/drivers/net/pse-pd/Makefile
+> @@ -6,3 +6,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
+>  obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
+>  obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
+>  obj-$(CONFIG_PSE_TPS23881) += tps23881.o
+> +obj-$(CONFIG_PSE_SI3474) += si3474.o
+> \ No newline at end of file
+
+1. Warnin ghere
+2. Don't add your entries to the end but in more-or-less alphabetically
+sorted place.
+
+> diff --git a/drivers/net/pse-pd/si3474.c b/drivers/net/pse-pd/si3474.c
+> new file mode 100644
+> index 000000000000..a2b4b8bff393
+> --- /dev/null
+> +++ b/drivers/net/pse-pd/si3474.c
+> @@ -0,0 +1,477 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Driver for the Skyworks Si3474 PoE PSE Controller
+> + *
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pse-pd/pse.h>
+> +
+> +#define SI3474_MAX_CHANS 8
+> +
+> +#define MANUFACTURER_ID 0x08
+> +#define IC_ID 0x05
+> +#define SI3474_DEVICE_ID (MANUFACTURER_ID << 3 | IC_ID)
+> +
+> +/* Misc registers */
+> +#define VENDOR_IC_ID_REG 0x1B
+> +#define TEMPERATURE_REG 0x2C
+> +#define FIRMWARE_REVISION_REG 0x41
+> +#define CHIP_REVISION_REG 0x43
+> +
+> +/* Main status registers */
+> +#define POWER_STATUS_REG 0x10
+> +#define PB_POWER_ENABLE_REG 0x19
+> +
+> +/* PORTn Current */
+> +#define PORT1_CURRENT_LSB_REG 0x30
+> +
+> +/* PORTn Current [mA], return in [nA] */
+> +/* 1000 * ((PORTn_CURRENT_MSB << 8) + PORTn_CURRENT_LSB) / 16384 */
+> +#define SI3474_NA_STEP (1000 * 1000 * 1000 / 16384)
+> +
+> +/* VPWR Voltage */
+> +#define VPWR_LSB_REG 0x2E
+> +#define VPWR_MSB_REG 0x2F
+> +
+> +/* PORTn Voltage */
+> +#define PORT1_VOLTAGE_LSB_REG 0x32
+> +
+> +/* VPWR Voltage [V], return in [uV] */
+> +/* 60 * (( VPWR_MSB << 8) + VPWR_LSB) / 16384 */
+> +#define SI3474_UV_STEP (1000 * 1000 * 60 / 16384)
+> +
+> +struct si3474_port_desc {
+> +       u8 chan[2];
+> +       bool is_4p;
+> +};
+> +
+> +struct si3474_priv {
+> +       struct i2c_client *client;
+> +       struct pse_controller_dev pcdev;
+> +       struct device_node *np;
+> +       struct si3474_port_desc port[SI3474_MAX_CHANS];
+> +};
+> +
+> +static struct si3474_priv *to_si3474_priv(struct pse_controller_dev *pcdev)
+> +{
+> +       return container_of(pcdev, struct si3474_priv, pcdev);
+> +}
+> +
+> +static int si3474_pi_get_admin_state(struct pse_controller_dev *pcdev,
+> int id,
+
+Your patchset is corrupted
+
+> +                                    struct pse_admin_state *admin_state)
+> +{
+> +       struct si3474_priv *priv = to_si3474_priv(pcdev);
+> +       struct i2c_client *client = priv->client;
+> +       bool enabled = FALSE;
+
+I believe it is "false", not FALSE.
+
+
+...
+
+> +
+> +       if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+> +               dev_err(dev, "i2c check functionality failed\n");
+> +               return -ENXIO;
+> +       }
+> +
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       ret = i2c_smbus_read_byte_data(client, VENDOR_IC_ID_REG);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (ret != SI3474_DEVICE_ID) {
+> +               dev_err(dev, "Wrong device ID: 0x%x\n", ret);
+> +               return -ENXIO;
+> +       }
+> +
+> +       ret = i2c_smbus_read_byte_data(client, FIRMWARE_REVISION_REG);
+> +       if (ret < 0)
+> +               return ret;
+> +       fw_version = ret;
+> +
+> +       ret = i2c_smbus_read_byte_data(client, CHIP_REVISION_REG);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       dev_info(&client->dev, "Chip revision: 0x%x, firmware version: 0x%x\n",
+> +                ret, fw_version);
+
+dev_dbg, don't pollute dmesg on success.
+
+> +
+> +       priv->client = client;
+> +       i2c_set_clientdata(client, priv);
+> +       priv->np = dev->of_node;
+> +
+> +       priv->pcdev.owner = THIS_MODULE;
+> +       priv->pcdev.ops = &si3474_ops;
+> +       priv->pcdev.dev = dev;
+> +       priv->pcdev.types = ETHTOOL_PSE_C33;
+> +       priv->pcdev.nr_lines = SI3474_MAX_CHANS;
+> +       ret = devm_pse_controller_register(dev, &priv->pcdev);
+> +       if (ret) {
+> +               return dev_err_probe(dev, ret,
+> +                                    "Failed to register PSE controller\n");
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct i2c_device_id si3474_id[] = {{"si3474"}, {}};
+
+Use existing kernel style for such arrays.
+
+
+
+Best regards,
+Krzysztof
