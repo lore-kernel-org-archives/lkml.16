@@ -1,111 +1,139 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FFB19F40A
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:24:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C490C19F40A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744766686; cv=none; b=ZgKT89GZxazcZ1jeYV9VwjwLixWkzsbooO3QAXeoF3GtFeVdSL/uKJD8QglGh/simwCNGGo4QeH1yBhP4uTlG/cJjKOEAdqxoix1p70KpdnEylfZf5InSRX6XbLOA1tPp7VyJ2qgbMo6XYFLXQG3n7ahhgyjNODVthw0u/og0rQ=
+	t=1744766779; cv=none; b=PMFPdTIEt0Xzz+pqAro5UtX05IabeM/gNkuq2teoWnaVA/8oJ+qJIvQidOSkbKA4mMs+jm99DnLYsIEdxHISMaYjYncl8UXK6B+0D1Ev5GMw6oiXcXptYOoRvC2Pc2egCvcD76VF0bMmvqEg1fVDC5N3MTnE7LHuTIq3Q1ppkxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744766686; c=relaxed/simple;
-	bh=hLwnONbgkXs3AQfY2NdUdEHG/Y3d2eZ1tECEUayKyTc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hc3uKC2dUAQKo1CABdGiQ0qhAL1Enb63iLTaW6+/U8q8DIQMykWixrPSSkXvbiiuAez8+0tps+6SL5iLhobY/7tnUS8hNBl+W50aAheCfmmXcXx1dDhKu4wqJo+m0ZeaeWdq80wHn36lNlGN2KPOShjsSjfoXniQzqB/K8noizw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWys1/ig; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWys1/ig"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52446b21cfdso2550436e0c.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744766682; x=1745371482; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sdKdn70M1WrWKq5CkuLZtZt10QyYO6gcPi3ytovJxXI=;
-        b=NWys1/igvW3j/K7xK9mNNfm9KYypZLS7rn1QaFbsv1fSQnoIdVZG4AkfGND8RqJh/h
-         O79P4WOcDEUY6GmLRbMerG2ZjAzSQB0AN+HJuecaDp4N7TaHEwxlyfKIHfSnu2fbF88N
-         EYy4Jukeu/8Jh5Oal8qpHSuXKbCwandzJSTs2fkTXlOdZFGnySIzoyfGrF5afqW1j4dF
-         oyiIo6u+2+qGDTZdDe2/MzgjCXN4U7Gcz/5TbDgM5U/BfCmwJshLiKkRj076UwwQb4Fa
-         N9d+PZmLp2NUD3jYYgwxVKafH1Y25q33yelnz7JAvc8Za6Dc62Jm6UaplecZdOJjLuOH
-         XgxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744766682; x=1745371482;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sdKdn70M1WrWKq5CkuLZtZt10QyYO6gcPi3ytovJxXI=;
-        b=Mn+RLZ+6+6Aj8Nwyt1k74wInAjFCt+n6TJSLqmZITl/f0YU8Mc7t7rVvrtRhGqIiXC
-         6Y3Hvs3wwPaQuAQJX6nuf9kkEfBFppBmSQzIw3RpCjHdPaMkQLhVf0zn571IFNpaGiZE
-         YVxC+jUvmE2n17s2uhGTcxpRPGrN78ktXyCsQHQNPt2I0ekoaciV433D7RYqi0HudYQR
-         f/UjXIVqxbyMEx5diDaG91UkXuNsPvuweMrvlNOlggd11t/ZR3q9AOawXLJkxjQUfi/o
-         BwAXefsn9WXP8VzOA8+ode8wRk8/M7nLDyftzA2v2oUTBPSrKC8A4kZdQzogTubUrC96
-         vRQw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVeIQJPgbRWHIGAjfvMYHjsz0FHYHFHcIKJDxpl87Vrc989Zp2dLnx68xKxTu3zbZuIu453l3rK3cTEPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdhWknRhxW2wL5QnkFXUJCBZcPSBWLuhA6PHEIRRZeEX4U/Wjm
-	eLEWNoiaE/4YC/f2442E/zL8P6IDad14uAAg5RnelHWVAhPGTgWSPuAZEYH0s+McPTmLpS+thRr
-	Isco4iWefNfizcvQHwLA2IqM7Sty/i4DQtno=
-X-Gm-Gg: ASbGncstilo+mZSRIdPDHl4IYsAzKmgfmL4EPRJkSxXGQNEtc6OuwiWc9PVAEv1P9on
-	ORnmcAOos4qLBkCu3NIPOs/LXYMfyJfErS2sgmZNVzAgMJ2N+MAfOhoTtBL632qwqnfJCbhakLV
-	220ek+cgaFuf6h8AH31jP1g6o=
-X-Google-Smtp-Source: AGHT+IGeLcLTAsrZtctAj5QLxbbexgEQXdYtXdXzBjzYtCJMyNimzzzwHUHM95R2TCxETocIlsSNLzu363yOPtxXT5E=
-X-Received: by 2002:a05:6122:319f:b0:520:6773:e5bf with SMTP id
- 71dfb90a1353d-52909111d6cmr1167731e0c.1.1744766682434; Tue, 15 Apr 2025
- 18:24:42 -0700 (PDT)
+	s=arc-20240116; t=1744766779; c=relaxed/simple;
+	bh=CjEssOQtrqoZAS4iZ9mhfuJMxxXSyP8p/PrrzFxcy/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ciKCEojlsm64tca+2KXWtg5Don9tUfDo31lYlJeC2XaPmMlILoDbV1QiNO5cUlzjjbni3oxJfq60FHf9MPuBkj3H+urIQLCW0AiRJfXlYrxSsd2E7+AH72KnFurNr/th2mYytePgujht2RKVixpruO8ds/ef16plDPF4yMA6jHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zcjyl5rWHz4f3jjr
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:25:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 250271A15D5
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:26:10 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgAHa18wB_9ndlJxJg--.51759S4;
+	Wed, 16 Apr 2025 09:26:09 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: joel.granados@kernel.org,
+	song@kernel.org,
+	dianders@chromium.org,
+	tglx@linutronix.de,
+	linux-kernel@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH] watchdog: Fix watchdog may detect false positive of softlockup
+Date: Wed, 16 Apr 2025 01:39:22 +0000
+Message-Id: <20250416013922.2905051-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415054642.3878839-1-yangsonghua@lixiang.com> <Z_5z0phM6h73EGci@slm.duckdns.org>
-In-Reply-To: <Z_5z0phM6h73EGci@slm.duckdns.org>
-From: Eric yang <jluyangsonghua@gmail.com>
-Date: Wed, 16 Apr 2025 09:24:31 +0800
-X-Gm-Features: ATxdqUGd8qLBVovYvn5vaAowjTfa953T69lHhmAIGUfSiSyhYjlfXvhRUCJkOPE
-Message-ID: <CA+P2CkZ3c6MvaX7RDy_0x9VuXDqKPisOPdW1rndrgwJoPCkjwg@mail.gmail.com>
-Subject: Re: [PATCH v2] tools/sched_ext: Improve cross-compilation support in Makefile
-To: Tejun Heo <tj@kernel.org>
-Cc: void@manifault.com, arighi@nvidia.com, changwoo@igalia.com, 
-	linux-kernel@vger.kernel.org, sched-ext@meta.com, 
-	yangsonghua <yangsonghua@lixiang.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHa18wB_9ndlJxJg--.51759S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGF4UXw15Ar47tw1UJw47urg_yoW5GFWxpa
+	yjvFyYyr4Utr4kX3y3J3ZFqF18Ga48XrW5XFnrWw1rKFn8Kr1rtryfCF1fK3yqvFZxXr1j
+	qF4YqrZ7JayUKF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Okay, v1 works well. I misunderstood your intentions last time. Please
-disregard v2.
+The watchdog may dectect false positive of softlockup because of stop
+softlockup after update watchdog_thresh. The problem can be described as
+follow:
 
-Thanks
-Eric
+ # We asuume previous watchdog_thresh is 60, so the timer is coming every
+ # 24s.
+echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
+|
++------>+ update watchdog_thresh (We are in kernel now)
+	|
+	|
+	+------>+ watchdog hrtimer (irq context: detect softlockup)
+		|
+		|
+	+-------+
+	|
+	|
+	+ softlockup_stop_all
 
-Tejun Heo <tj@kernel.org> =E4=BA=8E2025=E5=B9=B44=E6=9C=8815=E6=97=A5=E5=91=
-=A8=E4=BA=8C 22:57=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Tue, Apr 15, 2025 at 01:46:42PM +0800, yangsonghua wrote:
-> > Modify the tools/sched_ext/Makefile to better handle cross-compilation
-> > environments by:
-> >
-> > 1. Adjusted `HOST_OUTPUT_DIR` to be relative to `$(OBJ_DIR)`, ensuring
-> >    correct path handling during host tool building when cross-compile
-> >    (HOST_OUTPUT_DIR now points to $(OBJ_DIR)/host-tools)
-> > 2. Properly propagate CROSS_COMPILE to libbpf sub-make invocation
-> > 3. Add missing $(HOST_BPFOBJ) build rule with proper host toolchain fla=
-gs
-> >    (ARCH=3D, CROSS_COMPILE=3D, explicit HOSTCC/HOSTLD)
-> > 4. Consistently quote $(HOSTCC) in bpftool build rule
-> >
-> > The changes ensure proper cross-compilation behavior while maintaining
-> > backward compatibility with native builds. Host tools are now correctly
-> > built with the host toolchain while target binaries use the cross-toolc=
-hain.
-> >
-> > Signed-off-by: yangsonghua <yangsonghua@lixiang.com>
->
-> I already applied v1, so please send the updates as incremental changes
-> atop.
->
-> Thanks.
->
-> --
-> tejun
+As showed above, there is a window between update watchdog_thresh and
+softlockup_stop_all. During this window, if a timer is coming, a false
+positive of softlockup will happen. To fix this problem, use a shadow
+variable to store the new value and write back to watchdog_thresh after
+softlockup_stop_all.
+
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+---
+ kernel/watchdog.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 9fa2af9dbf2c..80e5a77e92fd 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -47,6 +47,7 @@ int __read_mostly watchdog_user_enabled = 1;
+ static int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
+ static int __read_mostly watchdog_softlockup_user_enabled = 1;
+ int __read_mostly watchdog_thresh = 10;
++static int __read_mostly watchdog_thresh_shadow;
+ static int __read_mostly watchdog_hardlockup_available;
+ 
+ struct cpumask watchdog_cpumask __read_mostly;
+@@ -876,6 +877,7 @@ static void __lockup_detector_reconfigure(void)
+ 	watchdog_hardlockup_stop();
+ 
+ 	softlockup_stop_all();
++	watchdog_thresh = READ_ONCE(watchdog_thresh_shadow);
+ 	set_sample_period();
+ 	lockup_detector_update_enable();
+ 	if (watchdog_enabled && watchdog_thresh)
+@@ -1035,10 +1037,12 @@ static int proc_watchdog_thresh(const struct ctl_table *table, int write,
+ 
+ 	mutex_lock(&watchdog_mutex);
+ 
+-	old = READ_ONCE(watchdog_thresh);
++	watchdog_thresh_shadow = READ_ONCE(watchdog_thresh);
++
++	old = watchdog_thresh_shadow;
+ 	err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ 
+-	if (!err && write && old != READ_ONCE(watchdog_thresh))
++	if (!err && write && old != READ_ONCE(watchdog_thresh_shadow))
+ 		proc_watchdog_update();
+ 
+ 	mutex_unlock(&watchdog_mutex);
+@@ -1080,7 +1084,7 @@ static const struct ctl_table watchdog_sysctls[] = {
+ 	},
+ 	{
+ 		.procname	= "watchdog_thresh",
+-		.data		= &watchdog_thresh,
++		.data		= &watchdog_thresh_shadow,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_watchdog_thresh,
+-- 
+2.34.1
+
