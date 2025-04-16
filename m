@@ -1,108 +1,173 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03E61D07BA
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 14:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AFD1F4289;
+	Wed, 16 Apr 2025 14:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744812756; cv=none; b=FInutZBH/awWv875tBWXsJVxdI/C7GlxNYEg0P6da1dU7r45qhzBfc6psdf7K8/BQl53tdmtY4UxEOKscWir3d/XhzNHYrZi2Srd5YEBCYw19g+sQoP6Y6IrpUaHuX9v2WALCG6wqfEw02v8HgvHLTk8rEKdv05J5vdRM2mXd6k=
+	t=1744812769; cv=none; b=N+S49iF2YpNGVuzs/qk5PlxxilWd7cfqL5uYFMGI6/YjNL97se8XvbOTkr43peyF0yMF/lK/m334Z8tt8EtANCDKdhuLt0yl9XkZONASNkyfoR5peAMkPB1lW95ECIR77k0jpUl5Dt+RGj90fbzE2Ap3EvSTftLiDbHg41zAqYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744812756; c=relaxed/simple;
-	bh=O6zyxYqY9ABY4J5KB2RPicAWgwov0p+XC5dH4lJh6s8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=khfvoWj+EHuegZ+u+/oyHYVAQtbjtq9OEUJk9+ISqAbmIoe6keye6GordKq6BWeS6MZOl6XCsURxTf24F87tpREv7Kk5zuRt0nMGGZFI17MDKHAUhORxoBXm+krS3kXszEqAugDQ67H1jj+flIppTLknFlWjiFyBn9TZX3fK6Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTIPS/ML; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744812769; c=relaxed/simple;
+	bh=KotPUopKxcGbf+KA04P6eWybcs6CE4c0CchTd06wOMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kbtoAw2G3Vzmix/DCoR7RY8qiGvbKqHZTVJujehdEW4424ip2JPY/r2I4JTwUTxXkREdzTDTM3V0CkGD0OACbp1v8Z2qhJxKG+lYorYDesiMa731sm9FGUwN68vrTAhij6HcaNoqJOcG+fmLTVEOq+t3FOzEnXwIP6VqrESubHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=ah/bMtUE; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTIPS/ML"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so12339987a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744812752; x=1745417552; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DDvCm+Mlaej8nwLZ4oHulSSCMq/G+lv697dlOtDNcnE=;
-        b=iTIPS/MLB+r5bvz5QRmxUV9xkEHIUseSuvL4dg2QE5lauU3XzSkRUVhYjTHg1a6O6b
-         pC7wrrMddfOzItpQru0Xrd3GzlctsjWxGZ+VEzMqUY/GB9zl09oOchS/3yxOhwf0nO7r
-         f/Eg42Zd0+/lrzCHf2Xp2osqUT1p64Hvkcth26m6j/x89qupRKJP1y9gjOwZ1pyLuvMw
-         PU6Cw/xsycrP6xgl45kDVt5KsiGzs4oi8l2+gPOP1bHfY0gJXuwQfIDW8wWKwfzlurEr
-         6hvA6/EUt+4tFToA4X+KdGGNeRhKjK9beznGnCMau2mlOwY/42WSlWXwYo7kldwnGeZh
-         moUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744812752; x=1745417552;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DDvCm+Mlaej8nwLZ4oHulSSCMq/G+lv697dlOtDNcnE=;
-        b=hEZM+YnNZ3pRwlB7ZiFt3nAJCVLsM9Eza7IE/LB5aUUTlQ7vOEaGFWjoTA+iJOU909
-         jDVp/PFLlNeOOx51AvlQru+hlv57BI1HIIVagNe07gv1Zik775KD5kdcmmNiLiihbyhh
-         6oSB5xPIqjFcoxkn5ZhKFge51HHzRqK1bXIpt5RbHrOy+9iSLf+2PvPoT1IGunYkCODs
-         8ml/yKBtVrldEmj9rLY/t6y+ct8jLjK1lTXNNQ3Y5HBZHLDv2Tcn5IFJkj1OApOWn8fx
-         BVhugufZxnfUVgMuibph0PtvbM6fzls3KdxaA+5nTTUIfYhgWFDYbifqNuGBIsOql/wE
-         i3NQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURbyFcsPNmJRAY+q3Awv7l8wsFyHYZjmW94E1/YkEgxI/oxn8YEwA5Rw3sU5Z92Occ/ynuJssYqdPFMAo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx269s4wOd80Ggsb+l5Ro5RLhcZL4sUfHwnW2+EjGevda3XiWJv
-	PgU7nsyHsO+vKNylSE9FON1h+WGY3N3jwvDXRMzSMNir+iiV3HrA
-X-Gm-Gg: ASbGncvtvnfEvRfSjCSCf/RZk9znFD2r+Nm9/bGStoq+xfyrZzfJnU+sDwQ4U80/ZSp
-	uAa2TOOsdOn/MkVJRXKno5ywQ6sGDocN60VBktVCidH8y0B8nBCygcqsIgAcNpm2dbj84UlQDVS
-	PPokIkBZtwXAnszrukwNcyCXK9tzBtRtou8ds9uNl10X/B/U514hrO0oNikvI/YkkgLi+LUqacq
-	8rz08OI9+83WreynTE7uOxXKRLUxxoZZTQUKZ1DAie0nbdsqOdN1cz1B0EHdHVlRL8X4IXMOg6A
-	mGnquZ+LSgSIP5hnluF/Ial7JzdLg/AbX9cC4lBUIyHMBqUG/JG/YfGL
-X-Google-Smtp-Source: AGHT+IGTlbsUDIxwR3FnJN+VHJxH2XZ8CyxkRGIafIbQ02s4NvSPzpXYWAuDYU8kMQVWM4cAPTU45g==
-X-Received: by 2002:a05:6402:4602:20b0:5f4:c5bd:90d7 with SMTP id 4fb4d7f45d1cf-5f4c5bd9599mr705364a12.27.1744812751738;
-        Wed, 16 Apr 2025 07:12:31 -0700 (PDT)
-Received: from egonzo (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f52a4aasm8639580a12.78.2025.04.16.07.12.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 07:12:31 -0700 (PDT)
-Date: Wed, 16 Apr 2025 16:12:12 +0200
-From: Dave Penkler <dpenkler@gmail.com>
-To: Rujra Bhatt <braker.noob.kernel@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: Re: [FIRST-PATCH] staging : gpib : agilent_82350b : agilent_82350b.c
- : fixes checks on the file
-Message-ID: <Z_-6vAXbsveDqzKK@egonzo>
-References: <Z_-nR5Vt2A5kvbro@brak3rDesk>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="ah/bMtUE"
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id C479A662710;
+	Wed, 16 Apr 2025 16:12:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1744812758;
+	bh=KotPUopKxcGbf+KA04P6eWybcs6CE4c0CchTd06wOMM=;
+	h=From:Subject:Date;
+	b=ah/bMtUE3VwO4HUM2oWQIjcHci2YGl5czsYNjRMbM8UZRR7RC6WYZJooCO493D1JN
+	 lYDQJHnM985tYy1+DCQJlV/hxpPi4eqYVlGpjIdCQRS9h5qEc9K8mMUtldyYCXpHg/
+	 0zcF5e6cysWrXAvOmeq9pUmyRhf/QOZHcybsAnRwAXsDXFk0+cqkqUpnTFsem2AjqI
+	 PW+dhgdNFoiys3Esiu6GUB3CtxAQuaUyg8SdB8qOCWpDfLp8qpBqxCNxmuuLrbjgPu
+	 kQdLTmeM1d2AEA9kwEUXQ/hxZHSgz/KZUm6qaw/Sl3ZNUAm5QJSquAJo0HEm2JVUqN
+	 fttvboINyatZw==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>,
+ Christian Loehle <christian.loehle@arm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Sultan Alsawaf <sultan@kerneltoast.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>
+Subject:
+ [PATCH v3] cpufreq: Avoid using inconsistent policy->min and policy->max
+Date: Wed, 16 Apr 2025 16:12:37 +0200
+Message-ID: <5907080.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_-nR5Vt2A5kvbro@brak3rDesk>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvvdeiheekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhlohgvhhhlvgesrghrmhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrvghshhdrkhhumhgrrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepshh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=11 Fuz1=11 Fuz2=11
 
-On Wed, Apr 16, 2025 at 06:19:11PM +0530, Rujra Bhatt wrote:
-> It has recommended to
-> Prefer kzalloc(sizeof(*board->private_data)...)
-> over kzalloc(sizeof(struct agilent_82350b_priv)...)
-> 
-> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
-> ---
->  drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> index 445b9380ff98..956e21886eb6 100644
-> --- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> +++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-> @@ -479,7 +479,7 @@ static void agilent_82350b_return_to_local(struct gpib_board *board)
->  
->  static int agilent_82350b_allocate_private(struct gpib_board *board)
->  {
-> -	board->private_data = kzalloc(sizeof(struct agilent_82350b_priv), GFP_KERNEL);
-> +	board->private_data = kzalloc(sizeof(struct * board->private_data), GFP_KERNEL);
->  	if (!board->private_data)
->  		return -ENOMEM;
->  	return 0;
-> -- 
-> 2.43.0
-> 
-This will not work and the recommendation in this case is also wrong:
-kzalloc(sizeof(*board->private_data)...) only allocates space
-for a void *, not enough to hold the agilent_82350b_priv struct.
-cheers,
--dave
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Since cpufreq_driver_resolve_freq() can run in parallel with
+cpufreq_set_policy() and there is no synchronization between them,
+the former may access policy->min and policy->max while the latter
+is updating them and it may see intermediate values of them due
+to the way the update is carried out.  Also the compiler is free
+to apply any optimizations it wants both to the stores in
+cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+which may result in additional inconsistencies.
+
+To address this, use WRITE_ONCE() when updating policy->min and
+policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+in cpufreq_set_policy() to avoid storing intermediate values in
+policy->min and policy->max with the help of the observation that
+their new values are expected to be properly ordered upfront.
+
+Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+ordering of policy->min and policy->max, which may happen depending on
+the ordering of operations when this function and cpufreq_set_policy()
+run concurrently, into account by always honoring the max when it
+turns out to be less than the min (in case it comes from thermal
+throttling or similar).
+
+Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This replaces the last 3 patches in
+
+https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
+
+v2 -> v3:
+   * Fold 3 patches into one.
+   * Drop an unrelated white space fixup change.
+   * Fix a typo in a comment (Christian).
+
+v1 -> v2: Cosmetic changes
+
+---
+ drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -495,8 +495,6 @@
+ {
+ 	unsigned int idx;
+ 
+-	target_freq = clamp_val(target_freq, policy->min, policy->max);
+-
+ 	if (!policy->freq_table)
+ 		return target_freq;
+ 
+@@ -520,7 +518,22 @@
+ unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy,
+ 					 unsigned int target_freq)
+ {
+-	return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
++	unsigned int min = READ_ONCE(policy->min);
++	unsigned int max = READ_ONCE(policy->max);
++
++	/*
++	 * If this function runs in parallel with cpufreq_set_policy(), it may
++	 * read policy->min before the update and policy->max after the update
++	 * or the other way around, so there is no ordering guarantee.
++	 *
++	 * Resolve this by always honoring the max (in case it comes from
++	 * thermal throttling or similar).
++	 */
++	if (unlikely(min > max))
++		min = max;
++
++	return __resolve_freq(policy, clamp_val(target_freq, min, max),
++			      CPUFREQ_RELATION_LE);
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+ 
+@@ -2338,6 +2351,7 @@
+ 	if (cpufreq_disabled())
+ 		return -ENODEV;
+ 
++	target_freq = clamp_val(target_freq, policy->min, policy->max);
+ 	target_freq = __resolve_freq(policy, target_freq, relation);
+ 
+ 	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+@@ -2631,11 +2645,15 @@
+ 	 * Resolve policy min/max to available frequencies. It ensures
+ 	 * no frequency resolution will neither overshoot the requested maximum
+ 	 * nor undershoot the requested minimum.
++	 *
++	 * Avoid storing intermediate values in policy->max or policy->min and
++	 * compiler optimizations around them because they may be accessed
++	 * concurrently by cpufreq_driver_resolve_freq() during the update.
+ 	 */
+-	policy->min = new_data.min;
+-	policy->max = new_data.max;
+-	policy->min = __resolve_freq(policy, policy->min, CPUFREQ_RELATION_L);
+-	policy->max = __resolve_freq(policy, policy->max, CPUFREQ_RELATION_H);
++	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RELATION_H));
++	new_data.min = __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_L);
++	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_data.min);
++
+ 	trace_cpu_frequency_limits(policy);
+ 
+ 	cpufreq_update_pressure(policy);
+
+
+
