@@ -1,101 +1,109 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A922B8C2
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24B2322CBF4;
+	Wed, 16 Apr 2025 07:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789074; cv=none; b=Z+0trATDbXT7VzJ+frZ6huLB7bEk24dXgI34br04ug4f+rhkvmW5YT4PoKTcpe6dw27YONeB0tpBVHIuJhUZzBXy/uL5/tfX82FR+R+zH7oZFnHBRqKSYsB5birhsxS3wRn2ZENoA/PL98dQtEnBMlfKU6aPz3+DAfQjjeKSEoc=
+	t=1744789082; cv=none; b=rQoBMA7ydBEpX40qjw7Jf+oCF0IIlaubSlPUdx385PiNdvP7rxuU2z6XI6BMmVua4OOCzyOSIV+bS2ZhA+uvTBho5TEpo4loAKmXIuFymDrTiS1Hg0oP8AbDBwW7Pqe/Ww59hznRNUD5TqXkC2SIo6XwxeN4ccotige0AGqy0eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789074; c=relaxed/simple;
-	bh=/dHTnIqKv1XUtEnnIqSrU6JfGL02W+RqBJVzPOERN8c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=hUeNgxFskwsYJzhYZ/YWSSWUecZoowlqQ5XLTLSfjVZ3AI3UFc6ttCPvimDMftbCgb/crxCpVrHcPnohlZA0PFcpM8cZZ4OJc8fsjUH5/Z/lNxa2g166hQesFYEjX5FBr0S4DmZPY6opB4qwECURZnBuR6BoTctEYcOinb1L9sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edj2n6gq; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edj2n6gq"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac3123c0ef9so80497566b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:37:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744789070; x=1745393870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
-        b=edj2n6gqCJS9T3K0oXcdFhpiPIngSGM7tur1SQw569jiQaoG1CKU3Y6BqeoaoTAJK2
-         P1AGfGBwH+hOBJgDaf8/TF6jYQqCeVUBR2ixlR9GLa8fFwZat+m/7WjZkh1BNHD9Dnzb
-         dKlPuLUAxN8XsHEPa2JR6UsETg/RAsHnQlpoStDb++XSTfPv5yJ8TI8R1IiqAC6O4UuN
-         dGeWDWhFfd6Pc43ROLY3d+/BMAFOpQi+qGYiGabHUOqMvmzIRZA/YQrMsH7ZXBpJlV/r
-         iV4jqZ4iDYudLsMCQEpRCfysxXZ8aNc3hGY09Yqz8mxQ905xzDVlqVI/OiCOiD4NKFmF
-         jpOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744789070; x=1745393870;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PRYgw5eO5GQxlUJX50lZgpjYD+AakSIe/1el8VkKu44=;
-        b=fK8MqdkFhoF/o1fBFEsd750HiK9iBE/3UxJA0S1QoFVotw9Z7ThutENtzKsI7IrE9k
-         Fy0cDMCdUKBDM2CS/KpJGpZIrysdMl9M2rb3JYEBdevu5+xNhyPpDgG0m4GhOe70m8Tq
-         YgxdiBK920sRvhCyFzBotJZvW7XI4cwMWpIIxkBsOkjYdwpxcLBLxqIR5kjrSX8X0p0L
-         Cs8UH+dbFUNUjblxp3S/OprXukD7diGnUWdg1bqpA6V+mSVpFMVb4vn2Q/HScPlyvFh4
-         NEG2mBik15BTQrymRIZObHlz6HRgS3Lq2sqrnYstWwjxqM7i0ZKgzeAm/85rt1bpyBy3
-         nSyA==
-X-Gm-Message-State: AOJu0YztZY8dgsOZl1X5NYX+2vMaPJZ2OyVdmsTBkRDrxNfp1dmW83TD
-	DdYgHOdWK+K/Fyqg2Co2iYdm//GG5p12j8KbeJuyj4DxPTWWR4eCm+ONk+vi1ssnMJvOrN79/d8
-	j
-X-Gm-Gg: ASbGncsbx2FDEEi9hPXvAh8gEwczfGcPbylVj5vkJ6MwvSfigYvtAQXWeNTjrfJIKMg
-	7br/GTlLepLCauwz3K94fyWCROr99hmUZbjJ6/s/ptCu5Zdn4ibnz6ZCH4WAORlRexH/5i6KEU1
-	BwcepuCTxqWBk49Q11VrlkebA7RvimOVL+9lGAgV/uF3rLhS/ZLfOTecYshRGnYJmhXNT/t5QLy
-	rCzJkYfNFUBXb+A6jVuOZtatiqcyjTVbbRgvrtZzZ8hJ6kzT/cdKdfx14tr87aepc2szeYxh1rq
-	1EVIn0KRpKMRtULy5tOO4WNinxa/uckZgnRMJT4uMB7YmTWyjgJkErwI5z+GE2GBjuvl0wSO3/I
-	liLCu3Qfipkh9zWs=
-X-Google-Smtp-Source: AGHT+IGGDPu8p/m7Rp/p9mRRBOni1XiQkV2RaJnHLAJhksBbAx8CjdUPnxxzVfx8pJ0atl4HAQG9Tw==
-X-Received: by 2002:a17:907:86a3:b0:ac2:1d34:44ff with SMTP id a640c23a62f3a-acb428ef998mr22714466b.4.1744789070418;
-        Wed, 16 Apr 2025 00:37:50 -0700 (PDT)
-Received: from [192.168.1.26] (46.150.74.144.lvv.nat.volia.net. [46.150.74.144])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d1c849dsm75324966b.147.2025.04.16.00.37.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 00:37:49 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-In-Reply-To: <Z_RflBe5iDGTMFjV@kspp>
-References: <Z_RflBe5iDGTMFjV@kspp>
-Subject: Re: [PATCH v3][next] w1: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-Id: <174478906927.19176.15442189860155457011.b4-ty@linaro.org>
-Date: Wed, 16 Apr 2025 09:37:49 +0200
+	s=arc-20240116; t=1744789082; c=relaxed/simple;
+	bh=Fybx3Iz/wMarHtOZGnakusCk5Rq7cupipk5q2F325aE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=AE8kJl4iCjAXP47T8+xCNHytuY33PdIgmIzQoPexUyqDmYZkmooDJ6Z4edfQXQHYDq+lmEQb/M3mGHzjMjDhB+FyMmtXdh3GfNGYSLnqEjQIRV2RX0DV5TiC8BkRckAjeaAz4EPeLOqk3d5D/oFcRt124lr+BpgDE1FrDjI/410=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-42-67ff5e51dff5
+Message-ID: <00619904-9111-4e75-9ff7-1494ed299f9b@sk.com>
+Date: Wed, 16 Apr 2025 16:37:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, akpm@linux-foundation.org, gourry@gourry.net,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
+ ying.huang@linux.alibaba.com, david@redhat.com, osalvador@suse.de,
+ yunjeong.mun@sk.com
+Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted
+ interleave
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Rakie Kim <rakie.kim@sk.com>
+References: <20250408073243.488-1-rakie.kim@sk.com>
+ <20250408073243.488-4-rakie.kim@sk.com> <20250415170031.0000372b@huawei.com>
+ <6a651c16-7ffc-42a5-8c98-95949073c804@sk.com>
+In-Reply-To: <6a651c16-7ffc-42a5-8c98-95949073c804@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXC9ZZnoW5g3P90g5UtUhZz1q9hs5g+9QKj
+	xdf1v5gtft49zm6xauE1NovjW+exW5yfdYrF4vKuOWwW99b8Z7U4M63IYvWaDAduj52z7rJ7
+	dLddZvdoOfKW1WPxnpdMHps+TWL3ODHjN4vHzoeWHu/3XWXz2Hy62uPzJrkArigum5TUnMyy
+	1CJ9uwSujK87trAVvOeoWHDgGXMD4z+2LkZODgkBE4m/r5exw9jbZi1hAbF5BSwl/iy4CxZn
+	EVCV2He7FyouKHFy5hMwW1RAXuL+rRlANVwczAIrmSQ+3P8H5HBwCAtESvzsdwapYRYQkZjd
+	2cYMYrMJqElceTmJCcQWEQiSeDrjKTNIr5DAJkaJn5MOgx3EKWAlMfXpJTaIZjOJrq1djBC2
+	vETz1tlgDRIC/ewSnf23GSGulpQ4uOIGywRGwVlIDpyFZPksJLNmIZm1gJFlFaNQZl5ZbmJm
+	joleRmVeZoVecn7uJkZgjC2r/RO9g/HTheBDjAIcjEo8vBHx/9KFWBPLiitzDzFKcDArifCe
+	MwcK8aYkVlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYBR9l/hl
+	jufqmU8mm3fWfVjvIxZ9f1Jck983L3FFv0nL2Of63Ih7e+T7tdj67GbPsiWWLBJXor92Nqvp
+	2Tu77SzivfR/UWGOw4el2qHfzQQTaudpsc2udJrDvuwFw0wbF0EThhde7FvWx3BO2eX/luPY
+	ebODXyW4RWM02Jfc2nflYtufeaeY2ZVYijMSDbWYi4oTAfM9NQqtAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LhmqGlpxsY9z/dYNNvbos569ewWUyfeoHR
+	4uv6X8wWP+8eZ7dYtfAam8XxrfPYLQ7PPclqcX7WKRaLy7vmsFncW/Of1eLMtCKLQ9ees1qs
+	XpNh8XvbCjYHPo+ds+6ye3S3XWb3aDnyltVj8Z6XTB6bPk1i9zgx4zeLx86Hlh7v911l8/h2
+	28Nj8YsPTB6bT1d7fN4kF8ATxWWTkpqTWZZapG+XwJXxdccWtoL3HBULDjxjbmD8x9bFyMkh
+	IWAisW3WEhYQm1fAUuLPgrvsIDaLgKrEvtu9UHFBiZMzn4DZogLyEvdvzQCq4eJgFljJJPHh
+	/j8gh4NDWCBS4me/M0gNs4CIxOzONmYQm01ATeLKy0lMILaIQJDE0xlPmUF6hQQ2MUr8nHQY
+	7AhOASuJqU8vsUE0m0l0be1ihLDlJZq3zmaewMg3C8kds5DsmIWkZRaSlgWMLKsYRTLzynIT
+	M3NM9YqzMyrzMiv0kvNzNzECo2lZ7Z+JOxi/XHY/xCjAwajEwxsR/y9diDWxrLgy9xCjBAez
+	kgjvOXOgEG9KYmVValF+fFFpTmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA2NE
+	s82F/w1Nv2fYSJzK/iGeYvA/Wez3vHw7gx+iuzmWL5pbIvr8q2jwgsJ9paFvHGUs5KYaBSVc
+	0np4+rqiuuuOKTK1zWZPP79L0f/JGL/2regTiXl5u+xMP5qmpOU3FgjLr595O3bx5JmqL8oM
+	M5a1Pjteuat49kPrX9NidG0s9K6yijM4VCuxFGckGmoxFxUnAgAA0KX2ogIAAA==
+X-CFilter-Loop: Reflected
 
 
-On Mon, 07 Apr 2025 17:28:20 -0600, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
+
+On 4/16/2025 1:04 PM, Honggyu Kim wrote:
+> Hi Jonathan,
 > 
-> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> a flexible structure where the size of the flexible-array member
-> is known at compile-time, and refactor the rest of the code,
-> accordingly.
+> Thanks for reviewing our patches.
 > 
-> [...]
+> I have a few comments and the rest will be addressed by Rakie.
+> 
+> On 4/16/2025 1:00 AM, Jonathan Cameron wrote:
+>> On Tue, 8 Apr 2025 16:32:42 +0900
+>> Rakie Kim <rakie.kim@sk.com> wrote:
+[...snip...]
+>>> @@ -3495,35 +3508,77 @@ static const struct kobj_type wi_ktype = {
+>>>   static int sysfs_wi_node_add(int nid)
+>>>   {
+>>> -    struct iw_node_attr *node_attr;
+>>> +    int ret = 0;
+>>
+>> Trivial but isn't ret always set when it is used? So no need to initialize
+>> here.
+> 
+> If we don't initialize it, then this kind of trivial fixup might be needed later
+> so I think there is no reason not to initialize it.
+> https://lore.kernel.org/mm-commits/20240705010631.46743C4AF07@smtp.kernel.org
 
-Applied, thanks!
+Ah.  This is a different case.  Please ignore this.
 
-[1/1] w1: Avoid -Wflex-array-member-not-at-end warnings
-      https://git.kernel.org/krzk/linux-w1/c/a9b3ecc7bcf6cb8d3c4947a7ae260f508c4c5fd1
+> 
+>>
+>>>       char *name;
+>>> +    struct iw_node_attr *new_attr = NULL;
+>>
+>> This is also always set before use so I'm not seeing a
+>> reason to initialize it to NULL.
+> 
+> Ditto.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Please ignore this too.
 
+Thanks,
+Honggyu
