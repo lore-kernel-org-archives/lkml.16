@@ -1,227 +1,219 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5C4246333;
-	Wed, 16 Apr 2025 06:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6137226D13
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744785656; cv=none; b=MdzMyVGczLSt8g9GaJcw93/nx3zwr/STl4Dp1JGQlawBCxiTTbb6T4nM32me0Kgxy5xjKaTnFD6XcI7Lt0hRmGPBVDc+d1nH2JIvoDz/q25Yx7VheMk4sK2UeNEcBRMBHtwylzAXJnyPbsaQu/uCNYappmTWuq0xIl+oTacCanI=
+	t=1744785699; cv=none; b=ScSSpiZKVohFripSmBBy6pN9nKTwniNtErwX4BNXXLIM9AtJsIOTL8UqwHJPh1Sg/CXBsKb3WHjHQdUr26X+dA3KFdKZGhsQM0VFJEiYQdQLdAUkz+AvSusNgtAfPXkdMNomGDKssftFHJ1YSsUhlgO4VFY183rqduUkn4C0wa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744785656; c=relaxed/simple;
-	bh=1h9y6FTZxarygP0TkXH/vv/4wCGRTme+kpfAOEkeAqI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CH44pFtuhL/AbD2qxP9ao+8xnXyrjZUH5x8pQj4J0IUKDBX3ZfkjOUi4MFgcpBt7L8sxhxr7uymEA2D0T7VhLW10y7AV39LENS4cloGWVZ2+ke4eYE0OkgoNxrZmjpa6ySvTcjL75o+BsHKiZ4ivA857SKy8zzoaaezvAo8NDaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=geyRaYrC; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744785699; c=relaxed/simple;
+	bh=FRtN3A75yMig0N+lsqiv+ceMWtHUrpJHgj4lRV8e+c8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VnDshCccTxpL54zqeGL1coxCG2oYf9w1p3axTF44bcGkyAxtckESgz81Y8GMOCxII2TXEX3bjO9/B4sE0KcKpQFzp0Ysmkvc9tF8urrqxpgTnLf9znwIExob4My7/fp9Bl9jl4ypTEYaZELH5eEQ2/o9B/FT0Ukxq7j832ey+uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=i/FekEqy; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geyRaYrC"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so5127126f8f.2;
-        Tue, 15 Apr 2025 23:40:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744785653; x=1745390453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aEmFT6yWrmKehIQNMRlgRGvQtqeeYxSOMZxf9NCxgf8=;
-        b=geyRaYrC+sXKut9Qm6lHy/h5vKDyswkznp2Y2EvQTXy+o++S1BDp3hQi5EVzU5PScO
-         MCribfA5l5Jt/gln6xHiSX8VRhK2/p008u5eEm3ynenZ0+Q7/aD1gDIzRo3x+JZHRRZi
-         g43nFyzpitYd2Y2EGoRt7WkJDVCCjMMFafg9BwrOydUWvLy5oMjwT++k+11zQ51qqNcx
-         pC2yMrxcVxnzpfq02sBG5XQWcGTei3/rymfPfKwYJI8wm+qWAeZxYtvAXiBcxpD8ipFq
-         YdkInsWZ5LfyUv4l+1OTMlUNmqXMhR2yRJ7mgL0u6fjdvONqHEdHb2pp5eMMk9psz1EB
-         UD+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744785653; x=1745390453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aEmFT6yWrmKehIQNMRlgRGvQtqeeYxSOMZxf9NCxgf8=;
-        b=t2atQwcKPNRBAdqkr6EcBj0Fllg1b658uXzwxb1XY8QYllmlI5o7zhxtMmn57TRI9A
-         vj0KWlXcDF9Whi3zLUPASSE70ii9UNzrWl6d9ZuH8mgh+mxEmsdvNDWsSPVEnwa8sbuH
-         5YAlko6yHUle66W/ngQrS9o5kGYVN9H1FKntMCeJl08uuT212WQMm0mFVw/4pUxqwLw4
-         unH5DOHGcyLg9k+wYQiwNsu0N0XTajbksVcV1nyxGOBnEaAWWTJVA67n8ZOSItvh31lJ
-         wP8flYHPL4xdwGCsWHghWVi73qlWsoFAKQarbloaCRYH5LdPlO2FLgsvlo7a8vhZ9gRU
-         UZLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHHagxSSbcbg6cq0+nuImY4YbDZ/1yACcuSDM+6/k55ueGitw3d8HNYUis31Ez3E47FkMHoOOtCPzs8X4m@vger.kernel.org, AJvYcCUY1AnAw/PtUi4ebs1UC8CMfAVLtlVTRFeMR+bJlkXKS/Q/UYD/TmitsCCw7A82xNGAjAYQeca63Ugy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeXEkB2e4Ykd/AU+TrW7dMPMI0zbvbKSC0ftSq39wjzVX3aCyV
-	AOO98toQtlrLHJUNe3up4EhAqPB3sBeKE5t52OzhGfI+3/A86ISfMN5yFbjDkX1kW+XPHFSzpkQ
-	9N3jFAszh8Z62iNoFuZhrverRJEgwvK+2
-X-Gm-Gg: ASbGncvU7rKXFaURJuRh+WT+8NBXkUTaXT+paNye8+7iPdqtY1ey8a2fiIJP6dZ850e
-	7c+91U0BaW7iNj/sKP7oD+R4SMIa/86yKlPPsIeikcuQRg9Gv9Uim82gXbDUqT6+Jmm5gULk36C
-	ic1JVvEsigL0CwqT1+MNP+R20=
-X-Google-Smtp-Source: AGHT+IG0GGjuLd2A2XpZtlHWtwnocPmbMlMmUK/NP5KwDhbBkAedNMcbby0dBOXrWK5djTbre5W/xlcioRBEZZNuSR4=
-X-Received: by 2002:a05:6000:400d:b0:39c:13f5:dba0 with SMTP id
- ffacd0b85a97d-39ee5b16172mr618349f8f.13.1744785652710; Tue, 15 Apr 2025
- 23:40:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i/FekEqy"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FIdvdP021151;
+	Wed, 16 Apr 2025 06:41:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
+	 bh=CjiUfw8sFjLkVHZFD2DU255iU4N7QuXe4GHriAkYEUY=; b=i/FekEqyvSO6
+	2owF0T24+zqiBofcXJbqEhwrjGRlEk12Vc6t8/pvRyji0Fo4D/XP1JQaS076YY0Z
+	gaFcwm8l6Bj+GdnwtcJegbqQszXHXCOw4RVhCahqzYm2VWMIZMi2eLq4FxicOINo
+	/FxB9hIzJSGrWmndFu50NziKlCx5h7TKn3yv8hMZW/KJ8qmZuJZKJkW1tDn1kzB/
+	PEDQxr/BmmGJ3sx39+LdUWY21vE23zV91+u+salcfA7tW6etUNb62fi5fouvCmeI
+	76Y7ScXpzKBYsyw6XYN4cCak+5HTWvcsAtrprbDgnDxscXxpesgGWsRaxHNz7Zgw
+	JtE2pCW3vw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq4tj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 06:41:02 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53G6V5oa011439;
+	Wed, 16 Apr 2025 06:41:01 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq4tj3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 06:41:01 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5Hvvk024907;
+	Wed, 16 Apr 2025 06:41:00 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtf8be-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 06:41:00 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G6ew0s30147250
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 06:40:59 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DED5D58051;
+	Wed, 16 Apr 2025 06:40:58 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C76C25805A;
+	Wed, 16 Apr 2025 06:40:53 +0000 (GMT)
+Received: from [9.204.206.228] (unknown [9.204.206.228])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 06:40:53 +0000 (GMT)
+Message-ID: <d482d2ff-90e6-4c71-8681-1d9fceeb70f9@linux.ibm.com>
+Date: Wed, 16 Apr 2025 12:10:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413112401.12543-1-clamor95@gmail.com> <20250413112401.12543-2-clamor95@gmail.com>
- <20250415215521.GA885658-robh@kernel.org>
-In-Reply-To: <20250415215521.GA885658-robh@kernel.org>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Wed, 16 Apr 2025 09:40:41 +0300
-X-Gm-Features: ATxdqUFN7UzyJuMMMzD1rwSyh7qBfatQVvF-TSiE9ixKB6cKNshecrhpPqTjrCQ
-Message-ID: <CAPVz0n0qTUqt+JEy0R4-=jJLgVRcNwwe0k2jTd=hcLxSoAFG_g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] dt-bindings: display: panel: Document Renesas
- R61307 based DSI panel
-To: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/defconfigs: Set HZ=1000 on ppc64 and powernv
+ defconfigs
+To: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin
+ <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Eric Biggers <ebiggers@google.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yosry Ahmed <yosry.ahmed@linux.dev>,
+        Tamir Duberstein <tamird@gmail.com>,
+        Srikar Dronamraju <srikar@linux.ibm.com>,
+        Shrikanth Hegde <sshegde@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250330074734.16679-1-vineethr@linux.ibm.com>
+Content-Language: en-US
+Reply-To: 20250330074734.16679-1-vineethr@linux.ibm.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20250330074734.16679-1-vineethr@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: kWUkxHY8twDaPpL0eNjfFgoUhd4rx9Fm
+X-Proofpoint-GUID: HtE-QrCrCo0uoyvGmgm9Bh0Rr0WgE71d
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160052
 
-=D1=81=D1=80, 16 =D0=BA=D0=B2=D1=96=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 00:5=
-5 Rob Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Sun, Apr 13, 2025 at 02:23:58PM +0300, Svyatoslav Ryhel wrote:
-> > R61307 is liquid crystal driver for high-definition amorphous silicon
-> > (a-Si) panels and is ideal for tablets and smartphones.
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >  .../display/panel/renesas,r61307.yaml         | 93 +++++++++++++++++++
-> >  1 file changed, 93 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/ren=
-esas,r61307.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/renesas,r6=
-1307.yaml b/Documentation/devicetree/bindings/display/panel/renesas,r61307.=
-yaml
-> > new file mode 100644
-> > index 000000000000..a98d2d2e02d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/renesas,r61307.ya=
-ml
-> > @@ -0,0 +1,93 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/renesas,r61307.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Renesas R61307 based DSI Display Panel
-> > +
-> > +maintainers:
-> > +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> > +
-> > +description:
-> > +  The Renesas R61307 is a generic DSI Panel IC used to control LCD pan=
-els.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +        # KOE/HITACHI TX13D100VM0EAA 5.0" XGA TFT LCD panel
-> > +      - hit,tx13d100vm0eaa
-> > +      - koe,tx13d100vm0eaa
->
-> Usuually when the display IC is known, there's a fallback compatible for
-> it. Then 'renesas' vendor prefix on the properties makes more sense.
->
+Hi Maddy,
 
-Acknowledged, thank you.
+Ping.
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vcc-supply:
-> > +    description: Regulator for main power supply.
-> > +
-> > +  iovcc-supply:
-> > +    description: Regulator for 1.8V IO power supply.
-> > +
-> > +  backlight: true
-> > +
-> > +  renesas,gamma:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      0 - disabled
-> > +      1-3 - gamma setting A presets
-> > +    enum: [0, 1, 2, 3]
-> > +
-> > +  renesas,inversion:
-> > +    type: boolean
-> > +    description: switch between line and column inversion. The line
-> > +      inversion is set by default.
->
-> The property name is odd since there's always some sort of
-> inversion. Perhaps renesas,column-inversion?
->
+Any thoughts on this? Can it be picked up?
 
-Acknowledged, thank you.
+Thanks,
+Madadi Vineeth Reddy
 
-> > +
-> > +  renesas,contrast:
-> > +    type: boolean
-> > +    description: digital contrast adjustment
->
-> I would have expected contrast to be more than boolean. Is this
-> something any a-Si panel would support or somehow Renesas specific?
->
+On 30/03/25 13:17, Madadi Vineeth Reddy wrote:
+> Commit 030bdc3fd080 ("powerpc/defconfigs: Set HZ=100 on pseries and ppc64
+> defconfigs") lowered CONFIG_HZ from 250 to 100, citing reduced need for a
+> higher tick rate due to high-resolution timers and concerns about timer
+> interrupt overhead and cascading effects in the timer wheel.
+> 
+> However, improvements have been made to the timer wheel algorithm since
+> then, particularly in eliminating cascading effects at the cost of minor
+> timekeeping inaccuracies. More details are available here
+> https://lwn.net/Articles/646950/. This removes the original concern about
+> cascading, and the reliance on high-resolution timers is not applicable
+> to the scheduler, which still depends on periodic ticks set by CONFIG_HZ.
+> 
+> With the introduction of the EEVDF scheduler, users can specify custom
+> slices for workloads. The default base_slice is 3ms, but with CONFIG_HZ=100
+> (10ms tick interval), base_slice is ineffective. Workloads like stress-ng
+> that do not voluntarily yield the CPU run for ~10ms before switching out.
+> Additionally, setting a custom slice below 3ms (e.g., 2ms) should lower
+> task latency, but this effect is lost due to the coarse 10ms tick.
+> 
+> By increasing CONFIG_HZ to 1000 (1ms tick), base_slice is properly honored,
+> and user-defined slices work as expected. Benchmark results support this
+> change:
+> 
+> Latency improvements in schbench with EEVDF under stress-ng-induced noise:
+> 
+> Scheduler       CONFIG_HZ  Custom Slice  99th Percentile Latency (µs)
+> --------------------------------------------------------------------
+> EEVDF           1000       No            0.30x
+> EEVDF           1000       2 ms          0.29x
+> EEVDF (default) 100        No            1.00x
+> 
+> Switching to HZ=1000 reduces the 99th percentile latency in schbench by
+> ~70%. This improvement occurs because, with HZ=1000, stress-ng tasks run
+> for ~3ms before yielding, compared to ~10ms with HZ=100. As a result,
+> schbench gets CPU time sooner, reducing its latency.
+> 
+> Daytrader Performance:
+> 
+> Daytrader results show minor variation within standard deviation,
+> indicating no significant regression.
+> 
+> Workload (Users/Instances)  Throughput 1000HZ vs 100HZ (Std Dev%)
+> --------------------------------------------------------------------------
+> 30 u, 1 i                   +3.01% (1.62%)
+> 60 u, 1 i                   +1.46% (2.69%)
+> 90 u, 1 i                   –1.33% (3.09%)
+> 30 u, 2 i                   -1.20% (1.71%)
+> 30 u, 3 i                   –0.07% (1.33%)
+> 
+> Avg. Response Time: No Change (=)
+> 
+> pgbench select queries:
+> 
+> Metric                         1000HZ vs 100HZ (Std Dev%)
+> ------------------------------------------------------------------
+> Average TPS Change             +2.16% (1.27%)
+> Average Latency Change         –2.21% (1.21%)
+> 
+> Average TPS: Higher the better
+> Average Latency: Lower the better
+> 
+> pgbench shows both throughput and latency improvements beyond standard
+> deviation.
+> 
+> Given these results and the improvements in timer wheel implementation,
+> increasing CONFIG_HZ to 1000 ensures that powerpc benefits from EEVDF’s
+> base_slice and allows fine-tuned scheduling for latency-sensitive
+> workloads.
+> 
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>  arch/powerpc/configs/powernv_defconfig | 2 +-
+>  arch/powerpc/configs/ppc64_defconfig   | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/configs/powernv_defconfig b/arch/powerpc/configs/powernv_defconfig
+> index 6b6d7467fecf..8abf17d26b3a 100644
+> --- a/arch/powerpc/configs/powernv_defconfig
+> +++ b/arch/powerpc/configs/powernv_defconfig
+> @@ -46,7 +46,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+>  CONFIG_CPU_FREQ_GOV_USERSPACE=y
+>  CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+>  CONFIG_CPU_IDLE=y
+> -CONFIG_HZ_100=y
+> +CONFIG_HZ_1000=y
+>  CONFIG_BINFMT_MISC=m
+>  CONFIG_PPC_TRANSACTIONAL_MEM=y
+>  CONFIG_PPC_UV=y
+> diff --git a/arch/powerpc/configs/ppc64_defconfig b/arch/powerpc/configs/ppc64_defconfig
+> index 5fa154185efa..45d437e4c62e 100644
+> --- a/arch/powerpc/configs/ppc64_defconfig
+> +++ b/arch/powerpc/configs/ppc64_defconfig
+> @@ -57,7 +57,7 @@ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+>  CONFIG_CPU_FREQ_GOV_USERSPACE=y
+>  CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+>  CONFIG_CPU_FREQ_PMAC64=y
+> -CONFIG_HZ_100=y
+> +CONFIG_HZ_1000=y
+>  CONFIG_PPC_TRANSACTIONAL_MEM=y
+>  CONFIG_KEXEC=y
+>  CONFIG_KEXEC_FILE=y
 
-ATM there is only one known set of commands regards digital contrast
-adjustment and it application is optional, hence bool. However, panel
-which my device uses refuses to work properly without this
-configuration applied. Since there is no specific programming guide
-regards this IC I cannot say for sure if this is panel specific or a
-Renesas IC feature. When/if there will be any additional data
-available this property can by adjusted or dropped.
-
-> > +
-> > +  reset-gpios: true
-> > +  port: true
-> > +
-> > +required:
-> > +  - compatible
-> > +  - port
-> > +  - backlight
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    dsi {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        panel@1 {
-> > +            compatible =3D "koe,tx13d100vm0eaa";
-> > +            reg =3D <1>;
-> > +
-> > +            reset-gpios =3D <&gpio 176 GPIO_ACTIVE_LOW>;
-> > +
-> > +            renesas,gamma =3D <3>;
-> > +            renesas,inversion;
-> > +            renesas,contrast;
-> > +
-> > +            vcc-supply =3D <&vcc_3v0_lcd>;
-> > +            iovcc-supply =3D <&iovcc_1v8_lcd>;
-> > +
-> > +            backlight =3D <&backlight>;
-> > +
-> > +            port {
-> > +                panel_in: endpoint {
-> > +                    remote-endpoint =3D <&dsi_out>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.43.0
-> >
