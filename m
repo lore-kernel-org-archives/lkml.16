@@ -1,112 +1,100 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0212DFA4E
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788574; cv=pass; b=GqQ0ahuTj16EyFiTwGaxrxwn3sLzGz24nsrOFsx78dbLR23FLea1Ti3IaunAtVPWqUqDxrhdGi59UdXRrXcsM7G830OrfUzK8b9Hx2XpCcljDEYyy/cqR3eklu66NZp3YU7dVypxFESHHxPYpmrVQ7dB3NN05irXSvNcEoFfm/k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788574; c=relaxed/simple;
-	bh=z15lyLnxg9/V2EfHigBqjb8bejX9Y6AnQ2hc3y4917s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rk/HjIK3q89p3WF5tFS+hF5YXKkpCy274a1lSueTEqlj4yHyiIOSECjjDptHXnjYr+HqojHwu4ftKRL4NYmXWwkzf+R41aB66T3uNOO5W15102bAhNaN71sUR6j8hLavjJe9+seT4esqRVPb46r4UmVfmKWe5bFBDs8Q1zUNtcY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=HqrJaexa; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2F822331E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744788583; cv=none; b=AGjdN1S6Yn8xR2y+QLFAKZ3VgAbjITrjsCcU+hi2KQALNFgIiG6LqOoB7ZDXu0zF0pjzuijSKcA4kmHiG5w9CcRgBh9e/ML2PdtdcFTqI4DfFYxQomvMdsDAUtM4J0f98ofOJgXoz9PgTECEZeezqrln+zI0FMhMGXGD3/lyuu8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744788583; c=relaxed/simple;
+	bh=AxrFm7mECps3NAVYQZ/1AtNj2pO+p+u28rcLP7YnJ6M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B4VHkGDx58oazg+aP4hMe2nVa08hpIsS5nkSYnhaol/4kmw2aMC5t1fc2GbnLVthkclKxb5yXqk6f52ba+uKi9oBiaGBO0Q9hvPXmXO0L/HvdiY5+441TbCQbsM0bVv5cpE0kWZZeOFEw+pYdy4wncz/E5t9VLgsuZBbB8HBTxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sS+NpT2Y; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="HqrJaexa"
-ARC-Seal: i=1; a=rsa-sha256; t=1744788555; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=APaSB62EEZIT1HWumU4kzfmkspUWrlnz/Awae+k8Pwgrd2dEIH9F+Uj43oDBfOql4neIKA7BADILAPF6xC7DsxrRtZFRSYvVj/01pR3FQNJfEx2sxMyCv5yPpWcSXXMdaVx70iUy3qDp5nY31xjeuUPrt2Nr66/t33S4pP4J1dE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744788555; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PUkANMCN8iIkMKObPT/LBcWsJXo1g4Bf7rqvaDJs4NM=; 
-	b=L2DgJX8naGiCehpemZ0uL+giOd9jeHr4lpkwXSL0Vhnmt4jpeSi80Xk3+bdrwX/7jdCQ/CKkb/4uCwm5XF/qRatagfD2B65BJRIY9oDuVtXN0DsJrrSUf5b1TpmoVcsKX0JsBR3kbBVBsRWLUKgFXMIeaza1cvD6RtfzF78/wtM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744788555;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=PUkANMCN8iIkMKObPT/LBcWsJXo1g4Bf7rqvaDJs4NM=;
-	b=HqrJaexa50S+DeYKYufChcDxobhDsrXp3jB6QQAugQjgXadgJALFjlZ06IF/Hl/0
-	cyjnOLkhCdHle/vvFUyo+xx7nheWySK9tANgqaE6/NsZ5Q7yBzbdIcEHr3z76Z7MkYk
-	atMbT3Bf7FIp1Bur5mceheeprcOtKXbPA22kP4Po=
-Received: by mx.zohomail.com with SMTPS id 1744788552850792.253352752949;
-	Wed, 16 Apr 2025 00:29:12 -0700 (PDT)
-Message-ID: <d36c2ba7-52b6-4688-bb2b-70b8bd4d33c0@collabora.com>
-Date: Wed, 16 Apr 2025 10:29:08 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sS+NpT2Y"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499e3ec54dso7733157e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744788579; x=1745393379; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AxrFm7mECps3NAVYQZ/1AtNj2pO+p+u28rcLP7YnJ6M=;
+        b=sS+NpT2YiAUNoXZ+3MBsdnovrngBVj7HZkogHrQv9UotMSQbyDPsS6UD/0O320VTcL
+         QeT36cDktaZyQ+5UdONx2u9VgTZrE1LiyaWMzfM8mNjXvA1y1oa1Y6SYtWxfU5nFnnoU
+         nWdtENTFi7VAUXu13XA5Y3M92caiYHe6HKw55hzQkQdDowVs7MI/3SdfpivHVj1xX/1v
+         fEXOLRx7UuGwC14riIqyhlUa8nSKObsZUldttJ3jYyzWjRp2QYyPhc16YSI3ajenaXVi
+         r6uTnYpKzj0Jwx1iQB00wLVTEt1DCR8BRdZ4hM983I8Exz2FDLsO/CcgXPdM428gH2IL
+         6o8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744788579; x=1745393379;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AxrFm7mECps3NAVYQZ/1AtNj2pO+p+u28rcLP7YnJ6M=;
+        b=UwqfuVZIcupI4fgA88VZIltHYbQ4StRAmeP6vbDd3OaaFjqs9tW03oq3mMcesfM1/X
+         r0poVn9gIkav7nwYFDE3WMp+vu9A2AWbYkz6f0fX//UKHG12tfjgD2nH4gQfGYenSmCl
+         5HKteTTKFiaZzYnAloqwkFJasXNjVWc6m0EgVyLESvxv2m/VVRl/L/VsS5Zs3SkyVNe8
+         JSVX1bOM9bi5dq29xxCez8/5Q84tn8jGeBFd08quIyM+9UXObSJUKGqgQx2kU+8yb7kk
+         GccgEGGQictVVlOOyD+ZdM1IkVzAw3VO7TFHliGESkDIxaosTWIlZbCj1y2Dl+jAUY/7
+         zI5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWwbhG94jCJyInqZ4aTH5U+mgADuUyo2Tl3Z7JvYUNgFd51BTrmwLvfoe/C3wy+Ick3oFysEoVR06qH3Yw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhjedY6jnddZFrwDwVuSftrtQ/rjsIFV9cDwnSVZqEjBZvcI9E
+	9gf57rcloBoXOmbOy0gGYHMc5GFj8rs+XE/dzR/QgAItzbZcPUqGTyUDPLL+iB+qHJMfA/h5Arl
+	KRC80lF5aN7mmiZMczPUofuDqKh7+nMVlJ/mUEg==
+X-Gm-Gg: ASbGncvnTvK3LNF7hfvlSn4nC0SQ7hVfGGKJeR/EIh2D8zhTKoVMtFatW7/XXrJwN+i
+	kF6elgPvuFPQFIyxMtsf0qIUUXyRm98ofo0iGtKQjMsZ7FAGlDRDvVKenpMiofFV1mF20qGjQ8w
+	icmRP53UndLhr00S2fzBrFk7MRMsk=
+X-Google-Smtp-Source: AGHT+IGZWFmMw9jMNISg9qXAm/8QxzvIK8y2LFzg8WsosYGLrR2V6y3+hI+Mn7J/kJPCN2eqQC7miGeWstaMkW3JOh0=
+X-Received: by 2002:a05:6512:3d94:b0:549:7330:6a5a with SMTP id
+ 2adb3069b0e04-54d64a9d377mr239109e87.23.1744788579234; Wed, 16 Apr 2025
+ 00:29:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/virtio: Support drm_panic with non-vmapped shmem BO
-To: Ryosuke Yasuoka <ryasuoka@redhat.com>, airlied@redhat.com,
- kraxel@redhat.com, gurchetansingh@chromium.org, olvaffe@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- simona@ffwll.ch, jfalempe@redhat.com
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org
-References: <20250412132012.291837-1-ryasuoka@redhat.com>
-Content-Language: en-US
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20250412132012.291837-1-ryasuoka@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20250313051953.4064532-1-baolu.lu@linux.intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Wed, 16 Apr 2025 15:29:27 +0800
+X-Gm-Features: ATxdqUGYZ1JRHppABWSGDBuq1ICwAaAqDmGhKvQGJ6wZswlbpffJy7z4MGxxX_w
+Message-ID: <CABQgh9HbFOYsVinxr6eY-C-5UACaYeLcX8kU_HG696Wks9wn1Q@mail.gmail.com>
+Subject: Re: [PATCH v4 0/8] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/12/25 16:20, Ryosuke Yasuoka wrote:
-> Pass array of pages of the scanout buffer [1] to shmem BO, allowing
-> drm_panic to work even if the BO is not vmapped.
-> 
-> [1] https://lore.kernel.org/all/20250407140138.162383-3-jfalempe@redhat.com/
-> 
-> Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-> Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_plane.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> index a6f5a78f436a..2ff57d559c86 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> @@ -500,11 +500,19 @@ static int virtio_drm_get_scanout_buffer(struct drm_plane *plane,
->  
->  	bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
->  
-> -	/* Only support mapped shmem bo */
-> -	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach || !bo->base.vaddr)
-> +	if (virtio_gpu_is_vram(bo) || bo->base.base.import_attach)
->  		return -ENODEV;
->  
-> -	iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
-> +	if (bo->base.vaddr)
-> +		iosys_map_set_vaddr(&sb->map[0], bo->base.vaddr);
-> +	else {
-> +		struct drm_gem_shmem_object *shmem = &bo->base;
-> +
-> +		if (!shmem->pages)
-> +			return -ENODEV;
-> +		/* map scanout buffer later */
-> +		sb->pages = shmem->pages;
-> +	}
->  
->  	sb->format = plane->state->fb->format;
->  	sb->height = plane->state->fb->height;
-> 
-> base-commit: e7bb7d44c3b97aea1f0e354c6499900154ac67f2
+Hi, Baolu
 
-Rebased on top of [1], fixed checkpatch warning about braces and applied
-to misc-next. Thanks!
+On Thu, 13 Mar 2025 at 13:19, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> The new method for driver fault reporting support relies on the domain
+> to specify a iopf_handler. The driver should detect this and setup the
+> HW when fault capable domains are attached.
+>
+> Move SMMUv3 to use this method and have VT-D validate support during
+> attach so that all three fault capable drivers have a no-op FEAT_SVA and
+> _IOPF. Then remove them.
+>
+> This was initiated by Jason. I'm following up to remove FEAT_IOPF and
+> further clean up.
+>
+> The whole series is also available at github:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu_no_feat-v4
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>
 
-[1] https://lore.kernel.org/all/20250414131507.566072-1-tzimmermann@suse.de/
+Will you re-spin this patchset, it is not in 6.15-rc.
 
--- 
-Best regards,
-Dmitry
+Thanks
