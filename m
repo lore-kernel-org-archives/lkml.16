@@ -1,219 +1,251 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C8E29B0;
-	Wed, 16 Apr 2025 12:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193323594B;
+	Wed, 16 Apr 2025 12:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807834; cv=none; b=n8bAwV+tx7akEOTrBDZfEuBWLly2IawS3ARZ/vN9X6yglFh7Q67YsAmzBr2r/AGvdmE0i1CeXUtATBZVNnRKGlahA51rZ8OBj+0cvf6zzy1gSL4Q5aefsOe1nCwYH2DTgG9VJI4y6H3C+sHpRKnv56bsRA86l6A3ml1naEJYRuM=
+	t=1744808057; cv=none; b=VFCkDRXBuo3Dtfymk1HxX/aIHi5LE0tYQmeHy3W9rncP1s9+VcnI/3mnxmGGpVSU7IysVhBEiismAhBP8Yz9Td5nC9PYPzzZkgKWwwlaku4HTSzc/tp/cGLA1FsTugYnWd9V+q57EjIDiHdfBf40N2gLayj2O9sysuE2++A0KwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807834; c=relaxed/simple;
-	bh=m85edLrgYOpCuH9RY8jTUlsIABgDyR5sOCgCHHhO2CE=;
+	s=arc-20240116; t=1744808057; c=relaxed/simple;
+	bh=comiGzp0yJ4uJILmejSmpCuv8WNkCrKJ9fiuAA5Eobw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g6HSRMBxeOCuqwEPRFS4gznHp1u/4i8qQ1OnmBqAa8q9ihsjiZ9YtzpBtYCH2PmPkmqA34CJ7KPS4QiXy4TldnZCxgPSRmLbAR8oNprktx4Lj8p6jGmHt93cQHcEGrbaOtdZ+P3X2dZ32JJPNAcDwrZ9iBV/0L1vrZFmCNWqu1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxE1NU6F; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=RLg1lHRTkkeHfsc4vWfP0guHOZwiTLr6PFhRvwrNehf9UOIR6xQSY8o3l4qGTLKwJTBHYxliMHF0fASqt2dBcHJnwYzUrBVOblBZvOoKwS6NSoULgpWHa7fqP5U1WYnI0i0Lxi0CjEqiRJaDXfqgcrbPbKUcTEN1uHuXe8l7JGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XgxN7RF6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxE1NU6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F597C4CEF1;
-	Wed, 16 Apr 2025 12:50:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XgxN7RF6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F38C4CEF3;
+	Wed, 16 Apr 2025 12:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744807833;
-	bh=m85edLrgYOpCuH9RY8jTUlsIABgDyR5sOCgCHHhO2CE=;
+	s=k20201202; t=1744808056;
+	bh=comiGzp0yJ4uJILmejSmpCuv8WNkCrKJ9fiuAA5Eobw=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QxE1NU6FqFFp5y3x4SHXvKrMbm9wCozH52NlQLesG54KRjNJ5tqVuu/tYR4rVV5/1
-	 /t9UnqFASVv5RnRsE64IJMxx1GhUKt6oxvwX50ZJvjkletR1fgBYgWs81XWv2puJpX
-	 tINma92XmHRfxMSLmReqbo+GkBBp4JcIOO9TnvQK298AY+mHh+JYlPlhf1e17VMyfQ
-	 dyLuoxzo5hWYjYcPvU+sKKHjgRg4rApE9meibpLlIFO3CWFCdh/XFxul+5C0W+i5fW
-	 UG7P5KD80utpl5RttzZWShJS7/5u9HgVPyzvh1WFyNeMqd37C75sshhKY1sFRVibX0
-	 u0W/0zhHMTLRQ==
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2d0920ce388so1551561fac.0;
-        Wed, 16 Apr 2025 05:50:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUNjB+BvL8B86ULpakdx/r3negBsI53MrI5RkfQN5hVIHQVN2uH0+lQkOiGHqx+sW7Q/cUmk/TnVac=@vger.kernel.org, AJvYcCWn/YQvbKW6GMinzKZMjgHJu+3B04x6n5F3lX5zz+J/Co7tHbZXtjkFn3kXyzmhBhCCg1Pg/a/0SzylGhQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNGxzvkUNRW6DBkyLXJvl6g6T/Iw4zpD/bxsHpgrKTQWU1kykM
-	PIgHyn+8ROi/71+lsxiI2G7UiY3BB4SS1wrxiff7R09KRDFjeGWRd2YEMEUtpr9vHEIhzmnzUaJ
-	rdmIbH5pWbkDzzBS8ZJymCDcIK6M=
-X-Google-Smtp-Source: AGHT+IFloA20LKesYLmCQHzeShZduxofnSsitaMMsx9pIR3K0v52YtgLr2vyNeDFMenxQjyxofcKN0jjIkH5MCUD1iI=
-X-Received: by 2002:a05:6871:d087:b0:2bc:7342:1a6c with SMTP id
- 586e51a60fabf-2d4d2b37e45mr822829fac.19.1744807832563; Wed, 16 Apr 2025
- 05:50:32 -0700 (PDT)
+	b=XgxN7RF6ckFVEbhTn4I+sUZDqecs+mp3hGbLLci+Upkk2MPH7CIQvlQFKOyjI4/3P
+	 nGB24udzu5O62ORPQlrRwyyGveOHGDOrMF38yJfdtVsFhOZ8wLNu7luUFZqyLvsVOU
+	 6lkI1ew3WMP9j5VUysZEDaKWSUyImO63a14HdAbC+GHfk49ZspnHGRcdMvil/jTsjP
+	 AZ7OhS/a8bSP43LawW46zSOqSlkawiBkad4nxwPsBjJNhSIhgv5X0vLfdE2iz3QE7X
+	 NxVajwcnP/1YaLNgnD5Yuc9Y3/EqUo2z2Mp5X+QRlMaVXqeEVUsZwUaB+eRqr6L+Lv
+	 P8iQx/wPt2Kow==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso1162111666b.3;
+        Wed, 16 Apr 2025 05:54:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjvTsWqXHZXB8OxUtYz4j7ZiAkXgku9iKze99HwrAIMbjt2ySUROyLRJ6Ej0JJ5XlZXR/kUWYvAix0@vger.kernel.org, AJvYcCVN1DvIGHxvad+wQPGtGQM1Dog0c1RONV8iO/24XHZT+EuTCnmrAtZtH7OZRkBH3hV0UA8vqnTyAPMhbZM=@vger.kernel.org, AJvYcCXHJj7bkvI9GcqFt6YbtlF+UnPk7bR5z1+SXHQeG8ljtOJN6XMu7e3sqLB9/wcaFBOlZQGRggTTLZ2FiIrT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVk89ANCCfQvIxBdYy6+zkOErXXsL9MKxkp6l2zbUtfhQr8zhF
+	lwZUY6GOH/n9A/3Ua3NIofEEV4bfTIeoH5EDbrUzPnZRNa5PEsrAOcDhWhm/YdS91CR4VfFgnDM
+	dwBgMc0ot06kUXoCkVc6w/8oCSQ==
+X-Google-Smtp-Source: AGHT+IHKUgTFGckVUkYUIXHvq2dBr0rCYxoZR8dZi86QjoaRiJl8+SbX5WOjSc7+LpPbHbXBjdpbz7ajUIvfSATF50o=
+X-Received: by 2002:a17:907:2da5:b0:ac4:751:5f16 with SMTP id
+ a640c23a62f3a-acb429e409fmr172840366b.30.1744808055323; Wed, 16 Apr 2025
+ 05:54:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6171293.lOV4Wx5bFT@rjwysocki.net> <9458818.CDJkKcVGEf@rjwysocki.net>
- <ce438098-ee9c-4808-b409-bb57b62794f0@arm.com>
-In-Reply-To: <ce438098-ee9c-4808-b409-bb57b62794f0@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 16 Apr 2025 14:50:20 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ihGrXrOhA+1iwwrr6+SzmQ=3xuy5+F+zLgDZdS7brbCQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH2UA1kSoFJSl3o91Sn5JLarYcLvJRtcvNYEorPqaUL6Fe039KBAJBi-2s
-Message-ID: <CAJZ5v0ihGrXrOhA+1iwwrr6+SzmQ=3xuy5+F+zLgDZdS7brbCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] cpufreq: Avoid using inconsistent policy->min and policy->max
-To: Christian Loehle <christian.loehle@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Sultan Alsawaf <sultan@kerneltoast.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>
+References: <20241218105320.38980-1-angelogioacchino.delregno@collabora.com> <174470268964.14740.2655102858243748239.b4-ty@collabora.com>
+In-Reply-To: <174470268964.14740.2655102858243748239.b4-ty@collabora.com>
+From: Rob Herring <robh@kernel.org>
+Date: Wed, 16 Apr 2025 07:54:03 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKZN6PxsThZtcCBLaLKgC2Dd1kxfgWhK6RK8DxY6_2X0g@mail.gmail.com>
+X-Gm-Features: ATxdqUFMIZ7R44fK-lMlhaa-MPGGZB7R6M_caVCgAn6SeZBUMV0t64nOdSZ5Dr4
+Message-ID: <CAL_JsqKZN6PxsThZtcCBLaLKgC2Dd1kxfgWhK6RK8DxY6_2X0g@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] MediaTek MT8188 MDP3 Enablement
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	mchehab@kernel.org, matthias.bgg@gmail.com, moudy.ho@mediatek.com, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@collabora.com, sebastian.fricke@collabora.com, 
+	macpaul.lin@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 2:39=E2=80=AFPM Christian Loehle
-<christian.loehle@arm.com> wrote:
+On Tue, Apr 15, 2025 at 2:38=E2=80=AFAM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
 >
-> On 4/15/25 11:04, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> On Wed, 18 Dec 2024 11:53:17 +0100, AngeloGioacchino Del Regno wrote:
+> > This series adds the necessary bindings and devicetree nodes to enable
+> > the entire Multimedia Data Path 3 (MDP3) macro-block, found in MediaTek=
+'s
+> > MT8188 SoC.
 > >
-> > Since cpufreq_driver_resolve_freq() can run in parallel with
-> > cpufreq_set_policy() and there is no synchronization between them,
-> > the former may access policy->min and policy->max while the latter
-> > is updating them and it may see intermediate values of them due
-> > to the way the update is carried out.  Also the compiler is free
-> > to apply any optimizations it wants both to the stores in
-> > cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
-> > which may result in additional inconsistencies.
+> > This was tested on a MediaTek Genio 700 EVK board.
 > >
-> > To address this, use WRITE_ONCE() when updating policy->min and
-> > policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
-> > them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
-> > in cpufreq_set_policy() to avoid storing intermediate values in
-> > policy->min and policy->max with the help of the observation that
-> > their new values are expected to be properly ordered upfront.
+> > AngeloGioacchino Del Regno (3):
+> >   dt-bindings: display: mediatek: Add compatibles for MT8188 MDP3
+> >   dt-bindings: media: mediatek: mdp3: Add compatibles for MT8188 MDP3
+> >   arm64: dts: mediatek: mt8188: Add all Multimedia Data Path 3 nodes
 > >
-> > Also modify cpufreq_driver_resolve_freq() to take the possible reverse
-> > ordering of policy->min and policy->max, which may happen depending on
-> > the ordering of operations when this function and cpufreq_set_policy()
-> > run concurrently, into account by always honoring the max when it
-> > turns out to be less than the min (in case it comes from thermal
-> > throttling or similar).
-> >
-> > Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
-> > Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > [...]
 >
-> Just so I understand, the reason you don't squish 4-6 into one is
-> because this is the only fix? I do get that, but doesn't the fact
-> that it could easily be picked for backports make up for the additional
-> refactor?
-
-Yeah, I think I'll just merge them together and resend.
-
-> Actual changes from patches 4-6 look good to me.
-
-OK, thanks!
-
-> > ---
-> >
-> > v1 -> v2: Minor edit in the subject
-> >
-> > ---
-> >  drivers/cpufreq/cpufreq.c |   46 ++++++++++++++++++++++++++++++++++++-=
----------
-> >  1 file changed, 36 insertions(+), 10 deletions(-)
-> >
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -490,14 +490,12 @@
-> >  }
-> >  EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
-> >
-> > -static unsigned int clamp_and_resolve_freq(struct cpufreq_policy *poli=
-cy,
-> > -                                        unsigned int target_freq,
-> > -                                        unsigned int relation)
-> > +static unsigned int __resolve_freq(struct cpufreq_policy *policy,
-> > +                                unsigned int target_freq,
-> > +                                unsigned int relation)
-> >  {
-> >       unsigned int idx;
-> >
-> > -     target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-> > -
-> >       if (!policy->freq_table)
-> >               return target_freq;
-> >
-> > @@ -507,6 +505,15 @@
-> >       return policy->freq_table[idx].frequency;
-> >  }
-> >
-> > +static unsigned int clamp_and_resolve_freq(struct cpufreq_policy *poli=
-cy,
-> > +                                        unsigned int target_freq,
-> > +                                        unsigned int relation)
-> > +{
-> > +     target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-> > +
-> > +     return __resolve_freq(policy, target_freq, relation);
-> > +}
-> > +
-> >  /**
-> >   * cpufreq_driver_resolve_freq - Map a target frequency to a driver-su=
-pported
-> >   * one.
-> > @@ -521,7 +528,22 @@
-> >  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy=
-,
-> >                                        unsigned int target_freq)
-> >  {
-> > -     return clamp_and_resolve_freq(policy, target_freq, CPUFREQ_RELATI=
-ON_LE);
-> > +     unsigned int min =3D READ_ONCE(policy->min);
-> > +     unsigned int max =3D READ_ONCE(policy->max);
-> > +
-> > +     /*
-> > +      * If this function runs in parallel with cpufreq_set_policy(), i=
-t may
-> > +      * read policy->min before the update and policy->max after the u=
-pdate
-> > +      * or the other way around, so there is no ordering guarantee.
-> > +      *
-> > +      * Resolve this by always honoring the max (in case it comes from
-> > +      * thermal throttling or similar).
-> > +      */
-> > +     if (unlikely(min > max))
-> > +             min =3D max;
-> > +
-> > +     return __resolve_freq(policy, clamp_val(target_freq, min, max),
-> > +                           CPUFREQ_RELATION_LE);
-> >  }
-> >  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
-> >
-> > @@ -2632,11 +2654,15 @@
-> >        * Resolve policy min/max to available frequencies. It ensures
-> >        * no frequency resolution will neither overshoot the requested m=
-aximum
-> >        * nor undershoot the requested minimum.
-> > +      *
-> > +      * Avoid storing intermediate values in policy->max or policy->mi=
-n and
-> > +      * compiler optimizations around them because them may be accesse=
-d
+> Applied to v6.15-next/dts64, thanks!
 >
-> s/them/they/
+> [1/3] dt-bindings: display: mediatek: Add compatibles for MT8188 MDP3
+>       commit: 2971de063fa56c18b2720ab19bdebca23cd96471
+> [2/3] dt-bindings: media: mediatek: mdp3: Add compatibles for MT8188 MDP3
+>       commit: cfb00dfa1b778a8037faf6973cca226e5ad4f45a
+> [3/3] arm64: dts: mediatek: mt8188: Add all Multimedia Data Path 3 nodes
+>       commit: f0935480253ede5405045a4e733f4476343cbb91
 
-Yup, thanks!
+A couple of warnings added with this:
 
-> > +      * concurrently by cpufreq_driver_resolve_freq() during the updat=
-e.
-> >        */
-> > -     policy->min =3D new_data.min;
-> > -     policy->max =3D new_data.max;
-> > -     policy->min =3D clamp_and_resolve_freq(policy, policy->min, CPUFR=
-EQ_RELATION_L);
-> > -     policy->max =3D clamp_and_resolve_freq(policy, policy->max, CPUFR=
-EQ_RELATION_H);
-> > +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUF=
-REQ_RELATION_H));
-> > +     new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_REL=
-ATION_L);
-> > +     WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max =
-: new_data.min);
-> > +
-> >       trace_cpu_frequency_limits(policy);
-> >
-> >       cpufreq_update_pressure(policy);
-
-Thanks for all the reviews!
+     33 (mediatek,mt8188-mdp3-wrot): '#dma-cells' is a required property
+     33 (mediatek,mt8188-mdp3-tdshp): 'power-domains' does not match
+any of the regexes: 'pinctrl-[0-9]+'
+     33 (mediatek,mt8188-mdp3-rsz): 'power-domains' does not match any
+of the regexes: 'pinctrl-[0-9]+'
+     33 (mediatek,mt8188-mdp3-rsz): 'mediatek,gce-events' is a required pro=
+perty
+     33 (mediatek,mt8188-mdp3-rdma): compatible: 'oneOf' conditional
+failed, one must be fixed:
+     33 (mediatek,mt8188-mdp3-hdr): 'power-domains' does not match any
+of the regexes: 'pinctrl-[0-9]+'
+     33 (mediatek,mt8188-mdp3-fg): 'power-domains' does not match any
+of the regexes: 'pinctrl-[0-9]+'
+     33 (mediatek,mt8188-mdp3-color): 'oneOf' conditional failed, one
+must be fixed:
+     33 (mediatek,mt8188-mdp3-aal): 'oneOf' conditional failed, one
+must be fixed:
+     11 (mediatek,mt8188-mdp3-tcc): 'power-domains' does not match any
+of the regexes: 'pinctrl-[0-9]+'
+     11 (mediatek,mt8188-mdp3-ovl): 'oneOf' conditional failed, one
+must be fixed:
+     11 (mediatek,mt8188-mdp3-ovl): 'iommus' is a required property
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[51, 12], [46, 186],
+[46, 191]] is too long
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[51, 10], [46, 186],
+[46, 191]] is too long
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[50, 12], [45, 186],
+[45, 191]] is too long
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[50, 10], [45, 186],
+[45, 191]] is too long
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[49, 24], [46, 185],
+[46, 190], [49, 4], [49, 41], [49, 42], [49, 7], [51, 41], [51, 42],
+[49, 8]] is too long
+      8 (mediatek,mt8188-mdp3-rdma): clocks: [[48, 24], [45, 185],
+[45, 190], [48, 4], [48, 41], [48, 42], [48, 7], [50, 41], [50, 42],
+[48, 8]] is too long
+      4 (mediatek,mt8188-mdp3-rsz): clocks: [[51, 24], [51, 25]] is too lon=
+g
+      4 (mediatek,mt8188-mdp3-rsz): clocks: [[51, 20], [51, 21]] is too lon=
+g
+      4 (mediatek,mt8188-mdp3-rsz): clocks: [[50, 24], [50, 25]] is too lon=
+g
+      4 (mediatek,mt8188-mdp3-rsz): clocks: [[50, 20], [50, 21]] is too lon=
+g
+      4 (mediatek,mt8188-mdp3-rdma): power-domains: [[67, 15], [67,
+20]] is too long
+      4 (mediatek,mt8188-mdp3-rdma): power-domains: [[66, 15], [66,
+20]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[121, 13, 1], [121, 14,
+1], [121, 16, 1], [121, 21, 1]] is too short
+      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[120, 13, 1], [120, 14,
+1], [120, 16, 1], [120, 21, 1]] is too short
+      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[119, 13, 1], [119, 14,
+1], [119, 16, 1], [119, 21, 1]] is too short
+      2 (mediatek,mt8188-mdp3-rdma): mboxes: [[118, 13, 1], [118, 14,
+1], [118, 16, 1], [118, 21, 1]] is too short
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[132, 164], [132, 166]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 164], [131, 166]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[130, 164], [130, 166]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 164], [129, 166]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[122, 192], [122, 194]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[122, 128], [122, 131]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[121, 192], [121, 194]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[121, 128], [121, 131]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[120, 192], [120, 194]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[120, 128], [120, 131]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[119, 192], [119, 194]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): iommus: [[119, 128], [119, 131]]
+is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[44, 12], [39, 186],
+[39, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[44, 10], [39, 186],
+[39, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 24], [39, 185],
+[39, 190], [42, 4], [42, 41], [42, 42], [42, 7], [44, 41], [44, 42],
+[42, 8]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 12], [37, 186],
+[37, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 10], [37, 186],
+[37, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[40, 24], [37, 185],
+[37, 190], [40, 4], [40, 41], [40, 42], [40, 7], [42, 41], [42, 42],
+[40, 8]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 12], [34, 186],
+[34, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 10], [34, 186],
+[34, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 24], [39, 185],
+[39, 190], [42, 4], [42, 41], [42, 42], [42, 7], [44, 41], [44, 42],
+[42, 8]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 12], [37, 186],
+[37, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[42, 10], [37, 186],
+[37, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[40, 24], [37, 185],
+[37, 190], [40, 4], [40, 41], [40, 42], [40, 7], [42, 41], [42, 42],
+[40, 8]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 12], [34, 186],
+[34, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[38, 10], [34, 186],
+[34, 191]] is too long
+      2 (mediatek,mt8188-mdp3-rdma): clocks: [[36, 24], [34, 185],
+[34, 190], [36, 4], [36, 41], [36, 42], [36, 7], [38, 41], [38, 42],
+[36, 8]] is too long
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[44, 24], [44, 25]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[44, 20], [44, 21]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[42, 24], [42, 25]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[42, 20], [42, 21]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[38, 24], [38, 25]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rsz): clocks: [[38, 20], [38, 21]] is too lon=
+g
+      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[60, 15], [60,
+20]] is too long
+      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[58, 15], [58,
+20]] is too long
+      1 (mediatek,mt8188-mdp3-rdma): power-domains: [[54, 15], [54,
+20]] is too long
+      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[92, 13, 1], [92, 14,
+1], [92, 16, 1], [92, 21, 1]] is too short
+      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[130, 13, 1], [130, 14,
+1], [130, 16, 1], [130, 21, 1]] is too short
+      1 (mediatek,mt8188-mdp3-rdma): mboxes: [[128, 13, 1], [128, 14,
+1], [128, 16, 1], [128, 21, 1]] is too short
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[93, 192], [93, 194]] is too =
+long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[93, 128], [93, 131]] is too =
+long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[141, 164], [141, 166]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[139, 164], [139, 166]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 192], [131, 194]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[131, 128], [131, 131]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 192], [129, 194]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[129, 128], [129, 131]]
+is too long
+      1 (mediatek,mt8188-mdp3-rdma): iommus: [[103, 164], [103, 166]]
+is too long
