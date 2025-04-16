@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF9D237194
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE262238162
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794369; cv=none; b=dRdITUuDFcfETnl4aJvZkAauOCyrBqr18lJdLx0f9LjdSS32HdW2bpwpYmnyF97zgSyodw4AxLABSp6OSoi0/kDwHRtELEVUce9vyibYF0FeCbJ3UnuFbCywaNiDquQMfGUHPWU/B/oALT3iwDCzekF2LJfLnmV51DrRT1hMZCM=
+	t=1744794372; cv=none; b=dtPCQno1a1OstDQVUcttCSPd4g1Y0CQK3wPqD3HGrR6oxWyjz/qV+nHwCfpVDAUXH2bdTGkBpG7g31XbiOP1Njwdh2zQ6FnCJYAfsguah8W4rNWZ0avhfV7OqAh0Yiucbqu+twdTBiHzk+/Sy0XLshD0zlj6jF3nDLWFzGlxIzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794369; c=relaxed/simple;
-	bh=9B5JzTJnRURRtgera9TkmNPYzdsGr4dVs3IXiFL/m50=;
+	s=arc-20240116; t=1744794372; c=relaxed/simple;
+	bh=Oz3Y3nAAMFIppzQALcsjAthE5P2AUJWhvlznY6W2UpE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iwCc4YDyiusyj2v2s//xW274u11YUdQhRKtB8BoNg5B8KG09Ykzzn6Y965LrEtvAYHSN1ts8rieFaPiC8p63R1GHLKcDq9PXhS5iSOepJPhDhRO2rtXcDBi4DQGxDnkFtMjHvsxxht3jQ1AsKieah4AWyzqOB1DjHA2ffSagDPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMz6psoz; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gPmxu/LS3WuEqVFTfntVTbej7JRyQm5mJE+6fJhkFu4P8w7AdRmW04yzxLKRubO04C7on+cKJyybG0/mbpRsi/pnuKsJ0I09W5gPfNHUMh53BQ2eHWh/9REYUKGMrCCS9j5vaUOj5NX6Sex0OEI5jwz2cLTABC7b1lV/Nxi1EFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hl3+WYgm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMz6psoz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82F8C4CEE2;
-	Wed, 16 Apr 2025 09:06:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hl3+WYgm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2DFC4CEE2;
+	Wed, 16 Apr 2025 09:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744794369;
-	bh=9B5JzTJnRURRtgera9TkmNPYzdsGr4dVs3IXiFL/m50=;
+	s=k20201202; t=1744794371;
+	bh=Oz3Y3nAAMFIppzQALcsjAthE5P2AUJWhvlznY6W2UpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sMz6psozFOGAfcM3y/Ke+PbPMjPmjrnT6hwQofkxpyckeSSG51goZOCUmor+fL1om
-	 +M0/pnpmBo0sWbHep6of/bncFPJLO6LpQgcBz8yqkCE08ZeCsLowYWAxYDq5jUiHhj
-	 nbz7vGBN4RgPBPO5CA4SBGkIPp+ILAPu/XV8aS71yFU0bgTZ5QWoQfFrz2CsQGsbwr
-	 oDWFGmjIADgswpKFXAGicGwktk4JqGOQuMv0rHH6fhzQkjm73OHCFjlZ5RvFMwo4B5
-	 oPpI448VX0JqP8NKX6t1n/gAdVjOF5QoybcM0PV7xoelnfFlN+oD+18YAbNn7mXDcl
-	 ekbFTOfMqLUvg==
+	b=hl3+WYgmcg3LYwuOV1ktnrJxsi/AfyLttK2o8RfH/9igCOu7L9Lt89TnkMS7dYusk
+	 UJ4d8D99SLcxCDB2OP+ebqdOg8v+fcsqOQzsByOzWu/0mnYK3hzqa+RICaRDoKYIrP
+	 lMooB3LeJYjEhoyUsTU5W95/a3HkeFXhsfYoQs4/vtZi3cqsb5wuJZLg/ZDnJuFwZR
+	 D3gA2Q1jstph+qryU7OvsK/e2EUHezqLTBw14zvY8R7Jrh88kUPIVt4t/OBpaVm4S4
+	 X6dpsgNozIyqcu192HonX/cB9sLHXTLwhYbdlDHiDxM23oE5XfN9uOPeVDqQOGQQqM
+	 r4oSyTrhy6pNQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -34,9 +34,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Linus Torvalds <torvalds@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 08/10] treewide, timers: Rename __init_timer_on_stack() => __timer_init_on_stack()
-Date: Wed, 16 Apr 2025 11:05:42 +0200
-Message-ID: <20250416090544.3311613-9-mingo@kernel.org>
+Subject: [PATCH 09/10] treewide, timers: Rename NEXT_TIMER_MAX_DELTA => TIMER_NEXT_MAX_DELTA
+Date: Wed, 16 Apr 2025 11:05:43 +0200
+Message-ID: <20250416090544.3311613-10-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250416090544.3311613-1-mingo@kernel.org>
 References: <20250416090544.3311613-1-mingo@kernel.org>
@@ -48,58 +48,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move this API to the canonical __timer_*() namespace.
+Move this macro to the canonical TIMER_* namespace.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/timer.h     | 6 +++---
- include/linux/workqueue.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/booke.c |  8 ++++----
+ include/linux/timer.h    |  2 +-
+ kernel/time/timer.c      | 12 ++++++------
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
+diff --git a/arch/powerpc/kvm/booke.c b/arch/powerpc/kvm/booke.c
+index e56f78b4760a..3401b96be475 100644
+--- a/arch/powerpc/kvm/booke.c
++++ b/arch/powerpc/kvm/booke.c
+@@ -572,7 +572,7 @@ static int kvmppc_booke_irqprio_deliver(struct kvm_vcpu *vcpu,
+ 
+ /*
+  * Return the number of jiffies until the next timeout.  If the timeout is
+- * longer than the NEXT_TIMER_MAX_DELTA, then return NEXT_TIMER_MAX_DELTA
++ * longer than the TIMER_NEXT_MAX_DELTA, then return TIMER_NEXT_MAX_DELTA
+  * because the larger value can break the timer APIs.
+  */
+ static unsigned long watchdog_next_timeout(struct kvm_vcpu *vcpu)
+@@ -598,7 +598,7 @@ static unsigned long watchdog_next_timeout(struct kvm_vcpu *vcpu)
+ 	if (do_div(nr_jiffies, tb_ticks_per_jiffy))
+ 		nr_jiffies++;
+ 
+-	return min_t(unsigned long long, nr_jiffies, NEXT_TIMER_MAX_DELTA);
++	return min_t(unsigned long long, nr_jiffies, TIMER_NEXT_MAX_DELTA);
+ }
+ 
+ static void arm_next_watchdog(struct kvm_vcpu *vcpu)
+@@ -616,10 +616,10 @@ static void arm_next_watchdog(struct kvm_vcpu *vcpu)
+ 	spin_lock_irqsave(&vcpu->arch.wdt_lock, flags);
+ 	nr_jiffies = watchdog_next_timeout(vcpu);
+ 	/*
+-	 * If the number of jiffies of watchdog timer >= NEXT_TIMER_MAX_DELTA
++	 * If the number of jiffies of watchdog timer >= TIMER_NEXT_MAX_DELTA
+ 	 * then do not run the watchdog timer as this can break timer APIs.
+ 	 */
+-	if (nr_jiffies < NEXT_TIMER_MAX_DELTA)
++	if (nr_jiffies < TIMER_NEXT_MAX_DELTA)
+ 		mod_timer(&vcpu->arch.wdt_timer, jiffies + nr_jiffies);
+ 	else
+ 		timer_delete(&vcpu->arch.wdt_timer);
 diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 5fcfeecfbcb2..fedd9f3d5dbc 100644
+index fedd9f3d5dbc..ab025aa7cce1 100644
 --- a/include/linux/timer.h
 +++ b/include/linux/timer.h
-@@ -94,7 +94,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
- 		timer_init_key((_timer), (_fn), (_flags), #_timer, &__key);\
- 	} while (0)
+@@ -156,7 +156,7 @@ extern int timer_reduce(struct timer_list *timer, unsigned long expires);
+  * The jiffies value which is added to now, when there is no timer
+  * in the timer wheel:
+  */
+-#define NEXT_TIMER_MAX_DELTA	((1UL << 30) - 1)
++#define TIMER_NEXT_MAX_DELTA	((1UL << 30) - 1)
  
--#define __init_timer_on_stack(_timer, _fn, _flags)			\
-+#define __timer_init_on_stack(_timer, _fn, _flags)			\
- 	do {								\
- 		static struct lock_class_key __key;			\
- 		timer_init_key_on_stack((_timer), (_fn), (_flags),	\
-@@ -103,7 +103,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
- #else
- #define __timer_init(_timer, _fn, _flags)				\
- 	timer_init_key((_timer), (_fn), (_flags), NULL, NULL)
--#define __init_timer_on_stack(_timer, _fn, _flags)			\
-+#define __timer_init_on_stack(_timer, _fn, _flags)			\
- 	timer_init_key_on_stack((_timer), (_fn), (_flags), NULL, NULL)
- #endif
+ extern void add_timer(struct timer_list *timer);
+ extern void add_timer_local(struct timer_list *timer);
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 9d918c8b4990..fa2782eb6931 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1900,7 +1900,7 @@ static void timer_recalc_next_expiry(struct timer_base *base)
+ 	unsigned long clk, next, adj;
+ 	unsigned lvl, offset = 0;
  
-@@ -121,7 +121,7 @@ static inline void timer_init_key_on_stack(struct timer_list *timer,
- 	__timer_init((timer), (callback), (flags))
+-	next = base->clk + NEXT_TIMER_MAX_DELTA;
++	next = base->clk + TIMER_NEXT_MAX_DELTA;
+ 	clk = base->clk;
+ 	for (lvl = 0; lvl < LVL_DEPTH; lvl++, offset += LVL_SIZE) {
+ 		int pos = next_pending_bucket(base, offset, clk & LVL_MASK);
+@@ -1963,7 +1963,7 @@ static void timer_recalc_next_expiry(struct timer_base *base)
  
- #define timer_setup_on_stack(timer, callback, flags)		\
--	__init_timer_on_stack((timer), (callback), (flags))
-+	__timer_init_on_stack((timer), (callback), (flags))
+ 	WRITE_ONCE(base->next_expiry, next);
+ 	base->next_expiry_recalc = false;
+-	base->timers_pending = !(next == base->clk + NEXT_TIMER_MAX_DELTA);
++	base->timers_pending = !(next == base->clk + TIMER_NEXT_MAX_DELTA);
+ }
  
- #ifdef CONFIG_DEBUG_OBJECTS_TIMERS
- extern void timer_destroy_on_stack(struct timer_list *timer);
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 985f69f8fb99..c84da78878d9 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -324,7 +324,7 @@ static inline unsigned int work_static(struct work_struct *work) { return 0; }
- #define __INIT_DELAYED_WORK_ONSTACK(_work, _func, _tflags)		\
- 	do {								\
- 		INIT_WORK_ONSTACK(&(_work)->work, (_func));		\
--		__init_timer_on_stack(&(_work)->timer,			\
-+		__timer_init_on_stack(&(_work)->timer,			\
- 				      delayed_work_timer_fn,		\
- 				      (_tflags) | TIMER_IRQSAFE);	\
- 	} while (0)
+ #ifdef CONFIG_NO_HZ_COMMON
+@@ -2015,7 +2015,7 @@ static unsigned long next_timer_interrupt(struct timer_base *base,
+ 	 * easy comparable to find out which base holds the first pending timer.
+ 	 */
+ 	if (!base->timers_pending)
+-		WRITE_ONCE(base->next_expiry, basej + NEXT_TIMER_MAX_DELTA);
++		WRITE_ONCE(base->next_expiry, basej + TIMER_NEXT_MAX_DELTA);
+ 
+ 	return base->next_expiry;
+ }
+@@ -2399,7 +2399,7 @@ static inline void __run_timers(struct timer_base *base)
+ 		 * timer at this clk are that all matching timers have been
+ 		 * dequeued or no timer has been queued since
+ 		 * base::next_expiry was set to base::clk +
+-		 * NEXT_TIMER_MAX_DELTA.
++		 * TIMER_NEXT_MAX_DELTA.
+ 		 */
+ 		WARN_ON_ONCE(!levels && !base->next_expiry_recalc
+ 			     && base->timers_pending);
+@@ -2544,7 +2544,7 @@ int timers_prepare_cpu(unsigned int cpu)
+ 	for (b = 0; b < NR_BASES; b++) {
+ 		base = per_cpu_ptr(&timer_bases[b], cpu);
+ 		base->clk = jiffies;
+-		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
++		base->next_expiry = base->clk + TIMER_NEXT_MAX_DELTA;
+ 		base->next_expiry_recalc = false;
+ 		base->timers_pending = false;
+ 		base->is_idle = false;
+@@ -2599,7 +2599,7 @@ static void __init init_timer_cpu(int cpu)
+ 		base->cpu = cpu;
+ 		raw_spin_lock_init(&base->lock);
+ 		base->clk = jiffies;
+-		base->next_expiry = base->clk + NEXT_TIMER_MAX_DELTA;
++		base->next_expiry = base->clk + TIMER_NEXT_MAX_DELTA;
+ 		timer_base_init_expiry_lock(base);
+ 	}
+ }
 -- 
 2.45.2
 
