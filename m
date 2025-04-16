@@ -1,188 +1,108 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1982185BD
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FD822CBC9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744791870; cv=none; b=kDbKJVjLMye0UM/vmRNThYldVu5CHN0N2OcO/8m4w5y7hkdOn8ax8zeXQp4DsR5BtTotPwyy1d3vofiIFAj/sul0rpvyJwEd0QAixCtKXSv4JI2molQ8BSnxz8XPGop/1GfWnA56QAweAAELlfN75cpL5LndB3LBmGIOn1DVgqQ=
+	t=1744791930; cv=none; b=k2vOW2HWhgDG+mdAoL+58v5KIfRZaQjcG9NaNAVq6qj6C/l5wW6zp8DHWt7BGa1HW1LK14yR5Gj+B14QoJCymIJ0Rne/BASr5cm1N09e8c9blLl/P5kRT6UhUZTNXYN/RGb+Jz9kJpSxFqtQegMgnG0EyqoNOgiq2xZJQfPYaCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744791870; c=relaxed/simple;
-	bh=CS9U7z5ZJIE24/CDolxvByB3Pw+A/lHDmlz3BAYrobM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jRCXhYN2Oz/BzYy8NYmt775/PmruJwoTzqMH22Ax0pGoSDFyQvd7X3Z27cLYzm9+PZisrnwL0vwdj0uVJooJCCnWnjKkKAmiS6mLOi3NhJde8TdOz7FNT27oPuChupCKMEpX2LwVqcBaNZ5m9r3b5cxpNNIXDcZuGqZqypltUdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IITAAlvO; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744791930; c=relaxed/simple;
+	bh=3lHVDWOEyHT1qTAD/MvETxqJ0omNB1zKiacxthQfQzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PH3g0IkqrF6MWdlpM1xdn+ho3hTTih9EIy6DMu4CyfYu6q5GJhc1I+UD/3HW00APk92JGCVs3Xu+Ncf5h6fTrp4qeIySesUrpa1DtJuEpNkCUuVJuxwGvWEKE1s/cNw8Kd2P1AcUtzj/J/rdYOlyMqfWnJkNfN06xkLvZITO3ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQVhjU+0; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IITAAlvO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744791858; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=rIlcDIRMM6cPiAZjOOcgdre2kZc+na6UyPKA4wPJ4FI=;
-	b=IITAAlvOK6O+pRUhD/q0a9f0GCUYk+9AuR1u0mAOsI/1EnMHCqCurERhuqwjfYwI8XfKGc+EiAfhN9dttdquzITv+Q9NPm6gnBKS6SoTM4Fli9QUx+mJcmz2XRVR2xGDcCm4KOU0kLs6PUv+bCscDY76AtAiawr+/Y4Hjkxw9L0=
-Received: from 30.74.144.124(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WX8Rb9w_1744791856 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 16 Apr 2025 16:24:16 +0800
-Message-ID: <76e951ec-5043-4e89-8a5f-efdeaec4bb81@linux.alibaba.com>
-Date: Wed, 16 Apr 2025 16:24:15 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQVhjU+0"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0782d787so46631165e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744791927; x=1745396727; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r1uQiRHsShfsnhUou+7H5mwvSopx957gJ4JlVS+ceqk=;
+        b=iQVhjU+0mAZJVsALcTmDOwheLwAwxhLH05RTbaMPpN5fJ43APcg1ZkHs4J73xhcREF
+         wt3kTsE9o//Xgv/wMxYFLkljJq5SpZUmv3vJrXdXy7Dc2rC6GVYRMO7Zsjd5iq5/g14T
+         rjjA+8Di40ZRZeeLWLpJNpTBS7fLuJd5D2L+MoJKJiRzIhQdLZRRcOWdzr6VyXsJ1TBv
+         wDThZYcfvJR9WairVcyFDf9fGpQilL3bT2VfqKVtASJGwroF3pQLUwmjPQBuyxUUkfjn
+         BSN+vHgdcGge702h/Tq8GrOcuKgZLhcdlADTdMC54fAgCp8auNZzfaS13maE3wq6SIX8
+         ibIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744791927; x=1745396727;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r1uQiRHsShfsnhUou+7H5mwvSopx957gJ4JlVS+ceqk=;
+        b=FC7u5RfdNKC3C/eB+dpFg8uwRSO5k/ZJSJ4dgcdCImw6GObCTZ+SIpbzIGNsOT+u2K
+         yRMtgUkRJL9O+xs4ake+Gt8uZx37HokxCFRfcVpZUJkOjDJ8MATD7B8t91BkamBdbdPK
+         n1k+xScB0d6SRvW/wX8FtsNzBZHnZzcoWpkPJTlqKNnC3rCI9+r8OKV2Z1wPzr+xIs2L
+         0tNKsKlSqs59zR0PNC7hlqUOXpeCXEOWA/xG6OkUX94NjhkBb3qcazfA59xuiKX59GM+
+         Y5gUWUJjwDTTOcZTldDJQR2NX2veAqAigYxlXLC2A606QLN9/E6L+Il6mjjRbkYIJGgl
+         bf6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXUgm3vvuwBH0JfE1eAzeCVPfI7uqlXoFZLSzQYBz6oYFf2LNeWbq5veE8gG5KZvJ/Kz/q9oTIyqePNhrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCbRTbFdrayMkfMXkRldG0mXgMbAcd2l9ACss1lymMGW7oFKXm
+	P0lmmWkWqffdcp6nPgQkB6txrlQApPVOGa3WBPtkqwsoJReTDycX
+X-Gm-Gg: ASbGnctrNYeAb4Qxg2ZvvQD4vyIPvVyaHB/nwwWp3Xyq0MgJMW8tIkYP2HZnbMBbLDM
+	qzErGA3XOf92vhNFpdnZ8Mh0jxo/MKbJjxC5xUyxjcyC7CdOstbLDCgBsRhh+97iqPjUIjclrXq
+	/D0dWUpE6iC2/ugVKgfhVSrKH/uLcLR2dIHQ1nUJXq0zLdqhMRTwi+6x1WEoD4hgCGQj/CN/3Oq
+	PPtdbkYQazY/BZjK7rc3FJCHk5IS7LvclYdTby+/NJ94yvq5cprDrji5G7GWmZPWiqug2c/w8oC
+	uTaJBm4AO0TluQ5JMxCSvJPZUTh3LrESSyTbs+V6CQKrgBPbTRKaQV0BGMWq2EQoh3DU5N1l9Oc
+	7Dht4QAlEw72i8wbpIkB68tVb/visJ+cGNuV+GEepy1sZL8G/X3hL1sSi2y/FOrrVFKCXYFE95L
+	M=
+X-Google-Smtp-Source: AGHT+IHDUqi1eQx0/KeIR92bOFcE04EoiMUJKsfmo7Ud6Ppo5FhXkSTld+4PMkD4fwsF+3L01VDAWA==
+X-Received: by 2002:a05:600c:6c98:b0:43d:aed:f7de with SMTP id 5b1f17b1804b1-4405d6ad29amr6520995e9.21.1744791926914;
+        Wed, 16 Apr 2025 01:25:26 -0700 (PDT)
+Received: from cypher.home.roving-it.com (2.c.4.1.7.3.6.4.2.a.a.3.0.f.c.2.1.8.6.2.1.1.b.f.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:fb11:2681:2cf0:3aa2:4637:14c2])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39eae977fc8sm16214745f8f.48.2025.04.16.01.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 01:25:26 -0700 (PDT)
+From: Peter Robinson <pbrobinson@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Peter Robinson <pbrobinson@gmail.com>
+Subject: [PATCH] irqchip/irq-bcm2712-mip: Add ARCH_BCM2835 arch option
+Date: Wed, 16 Apr 2025 09:25:17 +0100
+Message-ID: <20250416082523.179507-1-pbrobinson@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm: don't promote exclusive file folios of dying
- processes
-To: Barry Song <21cnbao@gmail.com>, Zi Yan <ziy@nvidia.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- David Hildenbrand <david@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Matthew Wilcox <willy@infradead.org>, Oscar Salvador <osalvador@suse.de>,
- Ryan Roberts <ryan.roberts@arm.com>
-References: <20250412085852.48524-1-21cnbao@gmail.com>
- <F7DF65A3-ABF1-43C0-B4F2-DC0EBB2B1668@nvidia.com>
- <CAGsJ_4yRq6iBPpWLdbcknGLGUCEBDsc05rAeMuK8HRAwnpg2Zg@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4yRq6iBPpWLdbcknGLGUCEBDsc05rAeMuK8HRAwnpg2Zg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The ARCH_BCM2835 is used widely for platforms enabling
+the Raspberry Pi and some drivers that make use of this
+driver are enabled using this or the BRCMSTB option so
+add this too so the users that want RPi5 without all the
+other STB devices end up with the driver as well.
 
+Fixes: 32c6c054661a ("irqchip: Add Broadcom BCM2712 MSI-X interrupt controller")
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+---
+ drivers/irqchip/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 2025/4/16 15:48, Barry Song wrote:
-> On Sun, Apr 13, 2025 at 12:31 AM Zi Yan <ziy@nvidia.com> wrote:
->>
->> On 12 Apr 2025, at 4:58, Barry Song wrote:
->>
->>> From: Barry Song <v-songbaohua@oppo.com>
->>>
->>> Promoting exclusive file folios of a dying process is unnecessary and
->>> harmful. For example, while Firefox is killed and LibreOffice is
->>> launched, activating Firefox's young file-backed folios makes it
->>> harder to reclaim memory that LibreOffice doesn't use at all.
->>>
->>> An exiting process is unlikely to be restarted right away—it's
->>> either terminated by the user or killed by the OOM handler.
->>
->> The proposal looks reasonable to me. Do you have any performance number
->> about the improvement?
-> 
-> Tangquan ran the test on Android phones and saw 3% improvement on
-> refault/thrashing things:
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index cec05e443083..08bb3b031f23 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -114,8 +114,8 @@ config I8259
+ 
+ config BCM2712_MIP
+ 	tristate "Broadcom BCM2712 MSI-X Interrupt Peripheral support"
+-	depends on ARCH_BRCMSTB || COMPILE_TEST
+-	default m if ARCH_BRCMSTB
++	depends on ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
++	default m if ARCH_BRCMSTB || ARCH_BCM2835
+ 	depends on ARM_GIC
+ 	select GENERIC_IRQ_CHIP
+ 	select IRQ_DOMAIN_HIERARCHY
+-- 
+2.49.0
 
-Good.
-
->                                                     w/o patch           w/patch
-> workingset_refault_anon    2215933          2146602            3.13%
-> workingset_refault_file       9859208          9646518             2.16%
-> pswpin                                2411086          2337790             3.04%
-> pswpout                              6482838          6264865             3.36%
-> 
-> A further demotion of exclusive file folios can improvement more, but
-> might be controversial. it could be a separate patch later.
-> 
->>
->>>
->>> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
->>> Cc: David Hildenbrand <david@redhat.com>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
->>> Cc: Oscar Salvador <osalvador@suse.de>
->>> Cc: Ryan Roberts <ryan.roberts@arm.com>
->>> Cc: Zi Yan <ziy@nvidia.com>
->>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>> ---
->>>   mm/huge_memory.c |  4 ++--
->>>   mm/internal.h    | 19 +++++++++++++++++++
->>>   mm/memory.c      |  9 ++++++++-
->>>   3 files changed, 29 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->>> index e97a97586478..05b83d2fcbb6 100644
->>> --- a/mm/huge_memory.c
->>> +++ b/mm/huge_memory.c
->>> @@ -2264,8 +2264,8 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
->>>                         * Use flush_needed to indicate whether the PMD entry
->>>                         * is present, instead of checking pmd_present() again.
->>>                         */
->>> -                     if (flush_needed && pmd_young(orig_pmd) &&
->>> -                         likely(vma_has_recency(vma)))
->>> +                     if (!exclusive_folio_of_dying_process(folio, vma) && flush_needed &&
-
-Nit: I prefer to check 'flush_needed' first to make sure it is a present 
-pte. Otherwise look good to me.
-
->>> +                         pmd_young(orig_pmd) && likely(vma_has_recency(vma)))
->>>                                folio_mark_accessed(folio);
->>>                }
->>>
->>> diff --git a/mm/internal.h b/mm/internal.h
->>> index 4e0ea83aaf1c..666de96a293d 100644
->>> --- a/mm/internal.h
->>> +++ b/mm/internal.h
->>> @@ -11,6 +11,7 @@
->>>   #include <linux/khugepaged.h>
->>>   #include <linux/mm.h>
->>>   #include <linux/mm_inline.h>
->>> +#include <linux/oom.h>
->>>   #include <linux/pagemap.h>
->>>   #include <linux/pagewalk.h>
->>>   #include <linux/rmap.h>
->>> @@ -130,6 +131,24 @@ static inline int folio_nr_pages_mapped(const struct folio *folio)
->>>        return atomic_read(&folio->_nr_pages_mapped) & FOLIO_PAGES_MAPPED;
->>>   }
->>>
->>> +/*
->>> + * Return true if a folio is exclusive and belongs to an exiting or
->>> + * oom-reaped process; otherwise, return false.
->>> + */
->>> +static inline bool exclusive_folio_of_dying_process(struct folio *folio,
->>> +             struct vm_area_struct *vma)
->>> +{
->>> +     if (folio_maybe_mapped_shared(folio))
->>> +             return false;
->>> +
->>> +     if (!atomic_read(&vma->vm_mm->mm_users))
->>> +             return true;
->>> +     if (check_stable_address_space(vma->vm_mm))
->>> +             return true;
->>> +
->>> +     return false;
->>> +}
->>> +
->>>   /*
->>>    * Retrieve the first entry of a folio based on a provided entry within the
->>>    * folio. We cannot rely on folio->swap as there is no guarantee that it has
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index b9e8443aaa86..cab69275e473 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -1515,7 +1515,14 @@ static __always_inline void zap_present_folio_ptes(struct mmu_gather *tlb,
->>>                                *force_flush = true;
->>>                        }
->>>                }
->>> -             if (pte_young(ptent) && likely(vma_has_recency(vma)))
->>> +
->>> +             /*
->>> +              * Skip marking exclusive file folios as accessed for processes that are
->>> +              * exiting or have been reaped due to OOM. This prevents unnecessary
->>> +              * promotion of folios that won't benefit the new process being launched.
->>> +              */
->>> +             if (!exclusive_folio_of_dying_process(folio, vma) && pte_young(ptent) &&
->>> +                             likely(vma_has_recency(vma)))
->>>                        folio_mark_accessed(folio);
->>>                rss[mm_counter(folio)] -= nr;
->>>        } else {
->>> --
->>> 2.39.3 (Apple Git-146)
->>
->>
->> --
->> Best Regards,
->> Yan, Zi
-> 
-> Thanks
-> Barry
