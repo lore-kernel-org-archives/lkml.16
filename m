@@ -1,46 +1,48 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C33221CA0C;
-	Wed, 16 Apr 2025 05:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62E820C492
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781733; cv=none; b=dgHtouAk3AIO7Y3CZ9bxdzVBm/2zsMQh7jBp111gn8DlT3dhShJpHQC93Ttf+LZQnmIo+cSIb+YbKvIbhMuFnDB4Wxq922h09pIvvTo1eBwtcO5IrUuGjdIxkPGfTtuPzCB93sCvVccCcTnrytX4xlN4T5ByclaQoAzQ+pD1Zd8=
+	t=1744781832; cv=none; b=pOAcKdDS67RxSn8lfyRJS7YExvDn8+OBAIQ+PecpXbRm79ViST3XsGpQXly1+1fv6wxTyKOGlHCCXtc2XGNS8M3r91uONbqsgvk8ZF+24ClRH2yxBN9BWDAmPgCCcYdhudIERXe/JSJeUULhp+4IKwN7SP7Mj7TJaPg8XpBn72A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781733; c=relaxed/simple;
-	bh=iXYAPNbKfKaVDtKw/C18G6/BfkjwbEFYn6q36OxB7LY=;
+	s=arc-20240116; t=1744781832; c=relaxed/simple;
+	bh=waAEppq/JDEifGykp8W3jmBGjomu3kqI+SRnjliLf6k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eC1vrJl8m0y64xaLlf4RAhM6YGkN0kiyWWn43rHd5vSxEMfKAUAvDqaQgG8aOi37o10DTTbWue27LEuPMhUHBjS9f44cexNgERBhWXxxQ9TpbFc5waAQYMHY8JsOVgjq4yQxpQxE+HrtO5ri2NTKaL1gY9DsKB5LcPcFY3dKuh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PhqnqDO5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZdcrkVg0xkBiIB1THhao1aI0cz2LLfivUvXLSc1Zmn+pfVJxXAhtTKvwD0DHoQt+IGuqGwFAzZ4m1mmq5JdBc8kuXEN1yD/15D9GDvQNQ8KVA9pBY+qgqkje+4fXLefQsXUn8etGlEZZg9gARVGmw3NEutfLc7sPvpZZRyiImU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALLLVnOq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PhqnqDO5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WI5r+l1/k0KdndY+13+XDhXR0dP72zFdupm/5x+wSG4=; b=PhqnqDO5qrsVbMGFrJ5S4uwc1k
-	jQiIs9avTslJ8f0phKUfFbgxMflXAEyK5tFrF/zx9LbrShyYz1tXAamEvRkwvPR2hTdNVcEQEpJbL
-	ITA6jMiN0Cs2JKMBX9oftbIGXVkl5bp3+ukiW77rpNQJ4UQ2YA3GnBB0d8CeIWkQKcMdbesghfLYA
-	BKkUF+GQZi43AdRm/dvGnapiaPQEf1yEp8jpd3ZEp2w0FtZXT351QNXpWKgMilsi/SWsZfKLLKAgl
-	oT+l9DVvGHyRyb2YDavcEie4PWUHJm5Z92/NYQTyFpMv3MpXQfJ56YRisUvrX9DW8aDEoZybq7cu/
-	FfAwfuDA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4vQo-00000008IHL-09jG;
-	Wed, 16 Apr 2025 05:35:30 +0000
-Date: Tue, 15 Apr 2025 22:35:30 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: hch@infradead.org, almaz.alexandrovich@paragon-software.com,
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
-	syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Message-ID: <Z_9Bou858C-pJnmd@infradead.org>
-References: <Z_8z8CD4FKlxw5Vm@infradead.org>
- <20250416053426.2931176-1-lizhi.xu@windriver.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALLLVnOq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78D7C4CEE2;
+	Wed, 16 Apr 2025 05:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744781832;
+	bh=waAEppq/JDEifGykp8W3jmBGjomu3kqI+SRnjliLf6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ALLLVnOquNT1Lv2jA+YFURb/34wjyXJfllCHJNye5RbCB5+tb9p2YubbIb7CnIBA2
+	 idyRSF/H/M9Fjo0/mXPzE+XV+nhJ6oGRzONfatRKoyUcvX/ZhCkzwLnyHgfFOTxTjc
+	 m/dPW/e7A1iFijJCyKUhVeX7euhaGr6bWnH+Dw90u7MwzuSacooFC+sNeZDkPQKXJU
+	 rwqEZ0nMDztwIaajNBaQrJAfxDX7AHDYCUTkSstRcy2So60JNSozYdTO2M5Uy12+gY
+	 xYyZHrvlhfVqWvsAJPL8RWY8KZkY/iwWYwZduqFwJtU3U8wJrvVfHTZCSVL7bkNvwT
+	 2kXbBXhDtrvkg==
+Date: Wed, 16 Apr 2025 07:37:06 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
+Message-ID: <Z_9CAqRECcOGTtm2@gmail.com>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <20250414102301.332225-3-mingo@kernel.org>
+ <CAHk-=wgCFJ923gMqPYq5YrqUuLM3He-O7wvLfpvwNrySSK0vMw@mail.gmail.com>
+ <Z_9AEaeUIdWi2vLS@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,17 +51,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250416053426.2931176-1-lizhi.xu@windriver.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <Z_9AEaeUIdWi2vLS@gmail.com>
 
-On Wed, Apr 16, 2025 at 01:34:26PM +0800, Lizhi Xu wrote:
-> On Tue, 15 Apr 2025 21:37:04 -0700, Christoph Hellwig wrote:
-> > > The ntfs3 can use the page cache directly, so its address_space_operations
-> > > need direct_IO.
+
+* Ingo Molnar <mingo@kernel.org> wrote:
+
+> 
+> * Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > On Mon, 14 Apr 2025 at 03:23, Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > > We'd like to introduce timer_mod() in the kernel, so make
+> > > sure the namespace is clear.
 > > 
-> > This sentence still does not make any sense.
-> Did you see the following comments?
-> https://lore.kernel.org/all/20250415010518.2008216-1-lizhi.xu@windriver.com/
+> > No no, this is horribly wrong.
+> 
+> Yeah, that was a horrible script fail, I sent the updated -v2 patch 2 
+> days ago (and it was updated in the Git tree then too):
+> 
+>   https://lore.kernel.org/all/Z_0oWnbcjsekHXJd@gmail.com/
 
-I did, but that changes nothing about the fact that the above sentence
-doesn't make sense.
+Correction, my email reply is:
+
+   https://lore.kernel.org/all/Z_zvpgKNKWVmEIFu@gmail.com/
+
+Thanks,
+
+	Ingo
