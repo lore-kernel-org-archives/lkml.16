@@ -1,64 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D045B1B6D06;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F5422422C;
+	Wed, 16 Apr 2025 19:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744831916; cv=none; b=OQsjKR52oi6pvpr8WLfdz7ycNd/V9o5dHJNXKZuAOBBn13OjAwbyQ7w2TloT1RqSwdtIAvw/t11MrNju6TWFxKeW0+tMyLIqZUAVX7VPNIbWBuK1osbX0iLTdPgNhQOL6dHiFnqbBQME6/ELJDTy6nCcCOzGr2ed+mHfgMVw3vk=
+	t=1744831939; cv=none; b=AL6TPx62NiV5h9BKUkQcMeNMX3UQnM3sjvUB3LjiRfzv6y21sENxNItgiXcZXV83YoUCSTW6hZqKjAlWFBAt/ntaMaUOrBVq6eMUHUV3nF0cpRTQ38soBG+fwrrJ+o1ABrq4ZJcXccefFSTeFifTw7cHZ7B3PeOIOr7chd4D/K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744831916; c=relaxed/simple;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=selu/w4Q4Ok/dVCqGfJUOGxN2rTAx5zNaSa3kByk2sg8N61iQBcaOX/QfWoHKAVaq0BzMSSfW2X6m2FSQdTC0cH3GI+3DarvXcemr/h8xjQ7BRHJScYa6wMFD0T/hGukxR2RwTji5jCMVNphf/Ey6cRrY0HzmV/wcZ9JOHaKb2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIPgOR5M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744831939; c=relaxed/simple;
+	bh=wIyfmB2SiZT2uaYAoj/Kcs4AH555hJ5BbiMEFm1sCqU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2n5XaFjWGDpYlHO8r/Jam6T221UFGfpa1s4/j2joEiEB3Qmyx9mO0U3KY+aBNki3pjw/VjbuB5M5N2wn4KcvqWHmGUyOb1D5JoFy89Qytnk3ZudJa3AG7Kby0Wyx87/ZZ73Ozfb58jiUA8rFalnYDjzPljpfk0a3e0FiN2fyDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFe48IUe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIPgOR5M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057FFC4CEE2;
-	Wed, 16 Apr 2025 19:31:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFe48IUe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C739C4CEE2;
+	Wed, 16 Apr 2025 19:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744831914;
-	bh=vxpDIaAEC9SyCL3ZAht0iZtYPbSSyHUAE7sjCOL8EDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VIPgOR5MNLdSjfdlkkjOwUf7qmUNhO0t4OBBHheK/N7avBHoXTTT2X7PgAWUWSr6U
-	 vf6BnQNC8DMs9hIRLLzpHjG624jNYTy10DS/RSWYn9KZbyn/ivV+rMU/Zd0/BTdyZy
-	 q8XxR9s32JWMSxvMgE+Zh69OKXLDQbl49qB8slxphi+AY5vbUF47wlXp+hZxGiOUKW
-	 WIEdjXDxPt1+xNoBRrafov/YQdPTvhKjikwKTMygIT/l2oH4Wl3YbdDaZ5ZZsceDQP
-	 xkyYbxXs27Dc6CLTp+1j/V3eDxj7j+HG1tH1mOmQRPVUZFeglvnsCDlp7S0xAmJnDT
-	 KtMHgXZ/kR/aA==
-Date: Wed, 16 Apr 2025 14:31:52 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 08/13] misc: rp1: RaspberryPi RP1 misc driver
-Message-ID: <20250416193152.GA78446@bhelgaas>
+	s=k20201202; t=1744831937;
+	bh=wIyfmB2SiZT2uaYAoj/Kcs4AH555hJ5BbiMEFm1sCqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pFe48IUem3T1HWSWfHcAfUXJlyVjzJKf4nxAoCpsWtJF6JkcxMPZ7SngH2W0HCsyz
+	 uM3Eni5npgxd9he+fmdKRZAmLQGej1vtiErj6c4DXhFrx4G8Gfk81iO9MJR1miA39b
+	 vxPjelJpRONiaKFoJdwiElvQQ+oiNA38SsMyUYDqif1NgowxBz7Lc53wIFURRlSLy1
+	 1kI3Pq7TszEZMuXnyEYp9O9CWCDpkGaIj5U+MOvptrTW9WFz0wSQKFqBxAdDew8oyU
+	 phxsjw5c7cct4SpcQaW4W6i2WjV1sD92v5JIXXh1lDndjr0+10wKTpYs8ljjHOFY3w
+	 kP2RE9T4l+ung==
+Date: Wed, 16 Apr 2025 12:32:14 -0700
+From: Kees Cook <kees@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nios2: Replace strcpy() with strscpy() and simplify
+ setup_cpuinfo()
+Message-ID: <202504161232.D4216051@keescook>
+References: <20250416190908.15263-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,84 +43,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3fbc487bc0e4b855ffbee8ed62cfb6bf3b0592e8.1742418429.git.andrea.porta@suse.com>
+In-Reply-To: <20250416190908.15263-2-thorsten.blum@linux.dev>
 
-On Wed, Mar 19, 2025 at 10:52:29PM +0100, Andrea della Porta wrote:
-> The RaspberryPi RP1 is a PCI multi function device containing
-> peripherals ranging from Ethernet to USB controller, I2C, SPI
-> and others.
+On Wed, Apr 16, 2025 at 09:09:07PM +0200, Thorsten Blum wrote:
+> strcpy() is deprecated; use strscpy() instead.
 > 
-> Implement a bare minimum driver to operate the RP1, leveraging
-> actual OF based driver implementations for the on-board peripherals
-> by loading a devicetree overlay during driver probe if the RP1
-> node is not already present in the DT.
+> Since the destination buffer has a fixed length, strscpy() automatically
+> determines its size using sizeof() when the size argument is omitted.
+> This makes the explicit size argument unnecessary - remove it.
 > 
-> The peripherals are accessed by mapping MMIO registers starting
-> from PCI BAR1 region.
+> Now, combine both if-else branches using strscpy() and the same buffer
+> into a single statement to simplify the code.
 > 
-> With the overlay approach we can achieve more generic and agnostic
-> approach to managing this chipset, being that it is a PCI endpoint
-> and could possibly be reused in other hw implementations. The
-> presented approach is also used by Bootlin's Microchip LAN966x
-> patchset (see link) as well, for a similar chipset.
-> In this case, the inclusion tree for the DT overlay is as follow
-> (the arrow points to the includer):
+> No functional changes intended.
 > 
->  rp1-pci.dtso <---- rp1-common.dtsi
-> 
-> On the other hand, to ensure compatibility with downstream, this
-> driver can also work with a DT already comprising the RP1 node, so
-> the dynamically loaded overlay will not be used if the DT is already
-> fully defined.
-> 
-> The reason why this driver is contained in drivers/misc has
-> been paved by Bootlin's LAN966X driver, which first used the
-> overlay approach to implement non discoverable peripherals behind a
-> PCI bus. For RP1, the same arguments apply: it's not used as an SoC
-> since the driver code is not running on-chip and is not like an MFD
-> since it does not really need all the MFD infrastructure (shared regs,
-> etc.). So, for this particular use, misc has been proposed and deemed
-> as a good choice. For further details about that please check the links.
-> 
-> This driver is heavily based on downstream code from RaspberryPi
-> Foundation, and the original author is Phil Elwell.
-> 
-> Link: https://datasheets.raspberrypi.com/rp1/rp1-peripherals.pdf
-> Link: https://lore.kernel.org/all/20240612140208.GC1504919@google.com/
-> Link: https://lore.kernel.org/all/83f7fa09-d0e6-4f36-a27d-cee08979be2a@app.fastmail.com/
-> Link: https://lore.kernel.org/all/2024081356-mutable-everyday-6f9d@gregkh/
-> Link: https://lore.kernel.org/all/20240808154658.247873-1-herve.codina@bootlin.com/
-> 
-> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> Link: https://github.com/KSPP/linux/issues/88
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# quirks.c, pci_ids.h
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b84ff7bade82..4dfda527c76b 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -6283,6 +6283,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5020, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_XILINX, 0x5021, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT, 0x0005, of_pci_make_dev_node);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_EFAR, 0x9660, of_pci_make_dev_node);
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0, of_pci_make_dev_node);
->  
->  /*
->   * Devices known to require a longer delay before first config space access
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index de5deb1a0118..b7a2c0fd589e 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2620,6 +2620,9 @@
->  #define PCI_VENDOR_ID_TEKRAM		0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
->  
-> +#define PCI_VENDOR_ID_RPI		0x1de4
-> +#define PCI_DEVICE_ID_RPI_RP1_C0	0x0001
-> +
->  #define PCI_VENDOR_ID_ALIBABA		0x1ded
->  
->  #define PCI_VENDOR_ID_CXL		0x1e98
-> -- 
-> 2.35.3
-> 
+-- 
+Kees Cook
