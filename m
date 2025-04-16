@@ -1,98 +1,114 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C275B234970
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74CBC146D65;
+	Wed, 16 Apr 2025 09:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795665; cv=none; b=NRWVDS4pb/uehDQsgxGNo4KlnHe4WZwTa7SJB0gjPehS1r9CdqxqaWqH8+nA9MNwjM8WdWCk6+O6EaQgS8Ej0J2iRaNDscsgU2M88F0BMrHXcZtM7VrHBva5HpxObmcSPNplte7q2eeDRbl4l4VPEE+7l0KDklyA7LgVTovMKZA=
+	t=1744795746; cv=none; b=OYICUm7B61YT4d0Jyu/8/U7VRtPdLf5QTjJ/0id4YQ/UIhNDu7Zu2+gGwNEiZ29AHcM6eVVaQ/76kdGbx/CYm8tmFQ78TVOC1yjIkM4b54Mz9g66+qsd/i+tFtTmefmIepFZ4HXdW3AsvqE+kalYHqripbhISOCPU1mRF/OrGbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795665; c=relaxed/simple;
-	bh=ZSAyVPJa+DNSA9XuJEayjEky1UYza5wCLhZqf3SURto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JjUVKQSxiLxENNuC5edmkfrmtDra8uqaSmngRgmBJ9nmq1Igq9myX7hUBhQKt7SbRqwbZUE1ljHH0MYzb3/kqc0hqM8Szk1fTPHSR/Ux76Abni0q8oO3WekpMVyTR2mpFwjV0dM5zIrfYTS2GU/bywWlW7/BFpKNsyxwqe/jeIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fQgfi9WS; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fQgfi9WS"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so9263a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744795662; x=1745400462; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8CrZlkaDKpY03Yt4YkAABkQhHLXVWR6nTz81SYg7uyo=;
-        b=fQgfi9WSBv5VOimBm1X0Jd6TyEIKCu0hRQ6YXlY+jempSqtBK1Xf0/Ig4pQhNbXYF9
-         f0Y+aMukSPAFxfQ354p7VCqzR+FDqSTx23Q1IgBXwqsr0crS0NPmTrw/0lsP7HHPdqhu
-         3wlMOTZlcrfp4/1j7G0M5yPeq/jskhxsZbM1XXJg/OKd/IEOBI8xZ7pAGsJAFLSh6Nie
-         PooHJcwecCQx7zyduL38JmjQ4MOzqWsl53LIs7QJuUvu0Tt3WtrdknI4Y+cgw/bes4v4
-         1TkydHGHYTndvXtVKEpGJyd1ZG8dNgiUHsxGRFggEj03jhd8oltkLp9b4nE2+gooIAzx
-         vCxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744795662; x=1745400462;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8CrZlkaDKpY03Yt4YkAABkQhHLXVWR6nTz81SYg7uyo=;
-        b=GVXz/J6WnQkVIsYubHh8bAZrzJTaRf9KWSOpK60/Ce1unS3sMOEjgOmW13QJdlLwHX
-         uAA1zxGovtwSGsaDywbwPwVp9GtzDkCKtPjq1XZLD5GTXemCHz/khWZnSdX74FMv3mAA
-         UJ4UL5DBo4D/SMM6EN0aBp5W6KsoBftg3e+v8Vs46aqRvMLX6hm5EQSFBiii2qPmvCnW
-         JjIqiWL3f2961H3H+zd+vso9GEgHcbTNiRe/EzOpO2Shz6wNLWN5RlH17pvQExfYEivr
-         1fzxwPW6mYhyioto5dqIW7/WnRSNyoA7gXkRXEh8OCGnjSrFqbg+pyAQ/5J5e7o2UTfi
-         Q57w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOGZqVpVJdsDg0YEtGcDApdHkfpB94HV/yjNU30Yw4Bp6lkAnwGVz5gM+936txOEAHVCzwBF3WcpqHTt4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySyX12Zz/e6SD1gXYqtrtwQ5KBrdgEtHzPW88+7DxCOIXltb94
-	ejIECrMFwt1sj9TndtlNRLqPVtmqzgVPIRqzUtNcu0S0losYrHZSIXp1TgAAl7z9POjcaVr2tnI
-	H6+s5BKSl1xhYRQlJ5ZJgaKVs1K41WwOegytk
-X-Gm-Gg: ASbGnctIdXiG4ftyfOSiWrgHeeuaxKJoNCtePZ9yAWUs6xmIxpdr6JA8J2dAFsS/xrf
-	3JLEycY91dQ/kI1cF/TfzkGpD/Wnv8c+RaJNNuNh8N+pwrsOOATXuvQZNIU6XcDQkqZQyP660Sv
-	4OwhYShqsNMwK3SlLD15R4JgG1JQaicP71oPtCZt4q3IJ33gcXiUPI
-X-Google-Smtp-Source: AGHT+IEvFptH5xHEGdtt4MJIe2+XGOfTwQGM7EUnJ9iIULwbi4T9KbtIIp6jL86bzXtnC//yJXZZbO6taLcyFU8adQ0=
-X-Received: by 2002:aa7:c48a:0:b0:5e4:afad:9a83 with SMTP id
- 4fb4d7f45d1cf-5f4b653c428mr38661a12.2.1744795661783; Wed, 16 Apr 2025
- 02:27:41 -0700 (PDT)
+	s=arc-20240116; t=1744795746; c=relaxed/simple;
+	bh=X5piQBVitXbJPfuWcuJFck+SpJYrrhbh9yYybrinDkk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=SObnPfvWScAsSjNsBeJF5BdWdCeZwbtc1jDP9JFcWX9NCWN4cA5nLNUdODVfGc8xjCbCQChrxUuMPzzEEOkcF+HwKufB3/bq4mF0g30OeKhcvNLtOqbMcc2IvdizeoEP4K4Qd8TqLvIvTQsIjbrFIxRN0Fzp58KTpUd4bQFhO5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Zcwgm5LyDz4f3jdZ;
+	Wed, 16 Apr 2025 17:28:36 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 6EA131A058E;
+	Wed, 16 Apr 2025 17:29:00 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe19aeP9nXXWSJg--.56608S3;
+	Wed, 16 Apr 2025 17:29:00 +0800 (CST)
+Subject: Re: [PATCH 3/4] md: fix is_mddev_idle()
+To: Yu Kuai <yukuai1@huaweicloud.com>, Xiao Ni <xni@redhat.com>,
+ axboe@kernel.dk, song@kernel.org
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250412073202.3085138-1-yukuai1@huaweicloud.com>
+ <20250412073202.3085138-4-yukuai1@huaweicloud.com>
+ <c085664e-3a52-4a1c-b973-8d2ba6e5d509@redhat.com>
+ <42cbe72e-1db5-1723-789d-a93b5dc95f8f@huaweicloud.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <4358e07e-f78b-cd32-bbed-c597b8bb4c19@huaweicloud.com>
+Date: Wed, 16 Apr 2025 17:28:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408035833.844821-1-guanyulin@google.com> <20250408035833.844821-5-guanyulin@google.com>
- <adc03a95-baa0-4a2a-9b00-39a644bab426@rowland.harvard.edu>
-In-Reply-To: <adc03a95-baa0-4a2a-9b00-39a644bab426@rowland.harvard.edu>
-From: Guan-Yu Lin <guanyulin@google.com>
-Date: Wed, 16 Apr 2025 17:26:00 +0800
-X-Gm-Features: ATxdqUEuCCfU8ATcbV828rfpdrpnLClVnv1356aBerj8g_kmnmezO7kTyYNwoag
-Message-ID: <CAOuDEK2g-wejkuXUySJLJTo=S1NS=P-isTUTUaNDgGQeWXsoCA@mail.gmail.com>
-Subject: Re: [PATCH v11 4/4] usb: host: enable USB offload during system sleep
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com, gargaditya08@live.com, 
-	kekrby@gmail.com, jeff.johnson@oss.qualcomm.com, elder@kernel.org, 
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <42cbe72e-1db5-1723-789d-a93b5dc95f8f@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXe19aeP9nXXWSJg--.56608S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFyfuF4DXF1xKF47urW3ZFb_yoWkAFXEvr
+	4FkryDZF48JrWkt34ayF4Fvr9FgF4Fya4DJFZ8JF1Ygry8JF9a9r45X3s3trWkKw43Gr1Y
+	krnYgF17AFW7ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbfAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Wed, Apr 9, 2025 at 11:17=E2=80=AFPM Alan Stern <stern@rowland.harvard.e=
-du> wrote:
->
-> On Tue, Apr 08, 2025 at 03:57:24AM +0000, Guan-Yu Lin wrote:
-> > +                     /*
-> > +                      * Don't suspend interfaces with remote wakeup wh=
-ile the controller is
-> > +                      * active. This preserves pending interrupt urbs,=
- allowing interrupt
-> > +                      * events to be handled during system suspend.
-> > +                      */
->
-> Here and below, please try to limit the line lengths to below 80
-> columns, even in comments.
->
-> Alan Stern
+Hi,
 
-Thanks for the reminder. I'll address it in the next patch.
+在 2025/04/16 15:42, Yu Kuai 写道:
+> Hi,
+> 
+> 在 2025/04/16 14:20, Xiao Ni 写道:
+>>> +static bool is_rdev_idle(struct md_rdev *rdev, bool init)
+>>> +{
+>>> +    unsigned long last_events = rdev->last_events;
+>>> +
+>>> +    if (!bdev_is_partition(rdev->bdev))
+>>> +        return true;
+>>
+>>
+>> For md array, I think is_rdev_idle is not useful. Because 
+>> mddev->last_events must be increased while upper ios come in and idle 
+>> will be set to false. For dm array, mddev->last_events can't work. So 
+>> is_rdev_idle is for dm array. If member disk is one partition, 
+>> is_rdev_idle alwasy returns true, and is_mddev_idle always return 
+>> true. It's a bug here. Do we need to check bdev_is_partition here?
+> 
+> is_rdev_idle() is not used for current array, for example:
+> 
+> sda1 is used for array md0, and user doesn't issue IO to md0, while
+> user issues IO to sda2. In this case, is_mddev_idle() still fail for
+> array md0 because is_rdev_idle() fail.
 
-Regards,
-Guan-Yu
+Perhaps the name is_rdev_holder_idle() is better.
+
+Thanks,
+Kuai
+
+> 
+> This is just inherited from the old behaviour.
+> 
+> Thanks,
+> Kuai
+> 
+>>
+>> Best Regards
+>>
+>> Xiao
+> 
+> .
+> 
+
