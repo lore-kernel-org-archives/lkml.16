@@ -1,253 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEAB1DE3C4;
-	Wed, 16 Apr 2025 07:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C4922C336;
+	Wed, 16 Apr 2025 07:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788135; cv=none; b=uPEug8BF0f4AaCsOVQlPwYWWOuQYsW1c5t+2cpebukT64obAs6GVJkBQ7FAUsNzZR8b8HYBYWuQEqyhgt6WitRqN6Mvx4PRAWax+peT5b0bWvT0Z4zyC/FIKTUlG0/WnmUWMspNxRqtk2FiCQgKpyrxA1Zvv2ChwjEPXfZQatPQ=
+	t=1744788139; cv=none; b=tCz4XCTYu2tt7HN+41/ns90oCjymgVDYJtaxkFZZ2Ki+7S1RW391tq7FQtnZ+SlE3aXU4q/UFPDQ4oLuDw82kNMeSB09xzAXscwtacQr13ZSTcVFJD1aWD8j6pEv9I7ODDEiTi7wGLvJ5WaR770HPV4un6yab+K/tYYyg2f6ALc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788135; c=relaxed/simple;
-	bh=Yjz8JsYe32EI3Zt2DAC8/MNOPU+2dMfZe8dcMdGp8vM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LrkhHQzqXt/bxmkplwTmy3qTgbo5k43yyXz33FA1LXLVzjZJ5lSCypO5K1LUF+s2CoXTCQVjRsWZjhUOftXE3gxzzgW5xRs00FbYBNKIQJU/rO5/XXfnOZelh+pO5oJEIAra62cRHkzlfzYUnLR0VHCGPFsBXR4ZtUcreTPczYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBqV5T7C; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744788139; c=relaxed/simple;
+	bh=pq9E7g2iPBPNHP3j9zLHxqTxjogm10Qq37msVgpxYTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h2Udq8lxJkARrrK5U6fuJ9fbLWpv3/LuPRK6hpwz7LqDUPLUvV+w1xYxZTowCq2tAYZxTNrxbVkR9m09pNqSA6C9YDUeJGczzCB2obU7nyRFfkGdUGFGBbSuBfutg1luh07FCwRV0fRjnpQlG6Hw0gP9t4wbRZ0SaQEGUmNWHHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D/ByJwt7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBqV5T7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744788133; x=1776324133;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Yjz8JsYe32EI3Zt2DAC8/MNOPU+2dMfZe8dcMdGp8vM=;
-  b=BBqV5T7CNXLfgm7fwSZOu4id02RaIjgVm0psgN/L8fWATCjH6zQrndvV
-   mTXK/Yxpc6612aHs8FNtadGkDYJVgrh6Kc/3irs8OfPbGif2c8QKgbTaP
-   9mi4Gx2fJVmN2taNSPWnT7hUtvRI8GsQCY8pboMJ//ZD33JBpR6HNR+kh
-   opkRF2tvFoir/uh87DrgcNdt3gkl7NrQoQ4rDo75EBIyy1z3IIaH4VzM2
-   ryxyfb6yUXHgAIJZ3km06tbZ2WjzBprVDkYW/jY/kpvVOklWo3VLxbOcO
-   qhOOwlNpG+ZQx1TI8xk2Yge1Bq2VrKefAHSI2ENu8DMGcidwci3/RTL+s
-   Q==;
-X-CSE-ConnectionGUID: yo8y/3TGQ4GMvIew8vKtlQ==
-X-CSE-MsgGUID: rgR5ds9uQ3q+v2uXzLeSyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56957176"
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="56957176"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:12 -0700
-X-CSE-ConnectionGUID: qvnogiapSim7Oj08XxbWEw==
-X-CSE-MsgGUID: WWYODVADTzS5gFpT58uSoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="135199152"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:22:05 -0700
-Message-ID: <16d8265b-750d-4e3c-aeb1-772d28b6c79c@linux.intel.com>
-Date: Wed, 16 Apr 2025 15:22:02 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D/ByJwt7"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FJbme3021767;
+	Wed, 16 Apr 2025 07:22:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=BMzl79yb8d1fDamDeMLAWNQP69WWyr
+	XmT0w7knPA3X8=; b=D/ByJwt7LsJ5/vmf1pFn6/pl/Oa9EOUpqvXDRtDy5E4T24
+	JmD7LqNGIRXhxGsQTB1LmgZWvT9RIRwCeqPEbswBYa2GjDviaZUryAdoVsibo9zN
+	2r0hwkqXt3GLn17eQWFSRqXznMXvJl58DpiD/WGQV6i0tpKzuc+xiaLTddmp79ol
+	pmq2hpguR4lwHH8KcJ8u6N3Ff5O2INT38CfnX89TRxl2aq1ouKeGkmzWSnJiZley
+	ILzUdtXX1VULU7JEo9zP6bXP0/7wUy1yvTPaARo8NGqQF7J/ADkewcSGRXQxm3VM
+	zurFEjRNOcK58fd7tJf7MPJ16ERLOt+Hhp1ykbmg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq5054-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:22:02 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G3Fr4t010467;
+	Wed, 16 Apr 2025 07:22:01 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4604qk6ted-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:22:01 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G7LvQo33096442
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 07:21:58 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D01792004B;
+	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 85B1A20043;
+	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 16 Apr 2025 07:21:57 +0000 (GMT)
+Date: Wed, 16 Apr 2025 09:21:55 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] watchdog: diag288_wdt: Implement module autoload
+Message-ID: <20250416072155.7284A2f-hca@linux.ibm.com>
+References: <20250410095036.1525057-1-hca@linux.ibm.com>
+ <abe3b3f3-0c9d-4ac2-af1f-59aa186c723c@roeck-us.net>
+ <20250415162440.7369A19-hca@linux.ibm.com>
+ <bd9de770-7e51-4ed9-bbef-2a11ad7eb1b3@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
-To: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd9de770-7e51-4ed9-bbef-2a11ad7eb1b3@roeck-us.net>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: QRDgFfAulZlAFvGHKdAoIObescVAngzu
+X-Proofpoint-GUID: QRDgFfAulZlAFvGHKdAoIObescVAngzu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 clxscore=1015 bulkscore=0 priorityscore=1501 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=559 impostorscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160056
 
-Kindly ping... Any comments on this patch series? Thanks.
+On Tue, Apr 15, 2025 at 09:51:35AM -0700, Guenter Roeck wrote:
+> On 4/15/25 09:24, Heiko Carstens wrote:
+> > On Thu, Apr 10, 2025 at 05:10:50AM -0700, Guenter Roeck wrote:
+> > > On 4/10/25 02:50, Heiko Carstens wrote:
+> > > > The s390 specific diag288_wdt watchdog driver makes use of the virtual
+> > > > watchdog timer, which is available in most machine configurations.
+> > > > If executing the diagnose instruction with subcode 0x288 results in an
+> > > > exception the watchdog timer is not available, otherwise it is available.
+> > > > ---
+> > > >    arch/s390/boot/startup.c           | 17 ++++++++++
+> > > >    arch/s390/include/asm/cpufeature.h |  1 +
+> > > >    arch/s390/include/asm/diag288.h    | 41 +++++++++++++++++++++++
+> > > >    arch/s390/include/asm/machine.h    |  1 +
+> > > >    arch/s390/kernel/cpufeature.c      |  5 +++
+> > > >    drivers/watchdog/diag288_wdt.c     | 53 ++----------------------------
+> > > >    6 files changed, 68 insertions(+), 50 deletions(-)
+> > > >    create mode 100644 arch/s390/include/asm/diag288.h
+> > 
+> > Guenter, Wim, I assume this can/should go upstream via the s390 tree?
+> 
+> It touches s390 core code, and you did not suggest otherwise when submitting
+> the patch, so that was my assumption.
 
-On 3/25/2025 1:30 AM, Mingwei Zhang wrote:
-> With joint effort from the upstream KVM community, we come up with the
-> 4th version of mediated vPMU for x86. We have made the following changes
-> on top of the previous RFC v3.
->
-> v3 -> v4
->  - Rebase whole patchset on 6.14-rc3 base.
->  - Address Peter's comments on Perf part.
->  - Address Sean's comments on KVM part.
->    * Change key word "passthrough" to "mediated" in all patches
->    * Change static enabling to user space dynamic enabling via KVM_CAP_PMU_CAPABILITY.
->    * Only support GLOBAL_CTRL save/restore with VMCS exec_ctrl, drop the MSR
->      save/retore list support for GLOBAL_CTRL, thus the support of mediated
->      vPMU is constrained to SapphireRapids and later CPUs on Intel side.
->    * Merge some small changes into a single patch.
->  - Address Sandipan's comment on invalid pmu pointer.
->  - Add back "eventsel_hw" and "fixed_ctr_ctrl_hw" to avoid to directly
->    manipulate pmc->eventsel and pmu->fixed_ctr_ctrl.
->
->
-> Testing (Intel side):
->  - Perf-based legacy vPMU (force emulation on/off)
->    * Kselftests pmu_counters_test, pmu_event_filter_test and
->      vmx_pmu_caps_test pass.
->    * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
->    * Basic perf counting/sampling tests in 3 scenarios, guest-only,
->      host-only and host-guest coexistence all pass.
->
->  - Mediated vPMU (force emulation on/off)
->    * Kselftests pmu_counters_test, pmu_event_filter_test and
->      vmx_pmu_caps_test pass.
->    * KUT PMU tests pmu, pmu_lbr, pmu_pebs pass.
->    * Basic perf counting/sampling tests in 3 scenarios, guest-only,
->      host-only and host-guest coexistence all pass.
->
->  - Failures. All above tests passed on Intel Granite Rapids as well
->    except a failure on KUT/pmu_pebs.
->    * GP counter 0 (0xfffffffffffe): PEBS record (written seq 0)
->      is verified (including size, counters and cfg).
->    * The pebs_data_cfg (0xb500000000) doesn't match with the
->      effective MSR_PEBS_DATA_CFG (0x0).
->    * This failure has nothing to do with this mediated vPMU patch set. The
->      failure is caused by Granite Rapids supported timed PEBS which needs
->      extra support on Qemu and KUT/pmu_pebs. These extra support would be
->      sent in separate patches later.
->
->
-> Testing (AMD side):
->  - Kselftests pmu_counters_test, pmu_event_filter_test and
->    vmx_pmu_caps_test all pass
->
->  - legacy guest with KUT/pmu:
->    * qmeu option: -cpu host, -perfctr-core
->    * when set force_emulation_prefix=1, passes
->    * when set force_emulation_prefix=0, passes
->  - perfmon-v1 guest with KUT/pmu:
->    * qmeu option: -cpu host, -perfmon-v2
->    * when set force_emulation_prefix=1, passes
->    * when set force_emulation_prefix=0, passes
->  - perfmon-v2 guest with KUT/pmu:
->    * qmeu option: -cpu host
->    * when set force_emulation_prefix=1, passes
->    * when set force_emulation_prefix=0, passes
->
->  - perf_fuzzer (perfmon-v2):
->    * fails with soft lockup in guest in current version.
->    * culprit could be between 6.13 ~ 6.14-rc3 within KVM
->    * Series tested on 6.12 and 6.13 without issue.
->
-> Note: a QEMU series is needed to run mediated vPMU v4:
->  - https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
->
-> History:
->  - RFC v3: https://lore.kernel.org/all/20240801045907.4010984-1-mizhang@google.com/
->  - RFC v2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com/
->  - RFC v1: https://lore.kernel.org/all/20240126085444.324918-1-xiong.y.zhang@linux.intel.com/
->
->
-> Dapeng Mi (18):
->   KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
->   KVM: x86/pmu: Check PMU cpuid configuration from user space
->   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
->   KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
->   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
->   KVM: VMX: Add macros to wrap around
->     {secondary,tertiary}_exec_controls_changebit()
->   KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
->   KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
->     vm_exit/entry_ctrl
->   KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
->   KVM: x86/pmu: Setup PMU MSRs' interception mode
->   KVM: x86/pmu: Handle PMU MSRs interception and event filtering
->   KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
->   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
->   KVM: nVMX: Add macros to simplify nested MSR interception setting
->   KVM: selftests: Add mediated vPMU supported for pmu tests
->   KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
->   KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
->   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
->
-> Kan Liang (8):
->   perf: Support get/put mediated PMU interfaces
->   perf: Skip pmu_ctx based on event_type
->   perf: Clean up perf ctx time
->   perf: Add a EVENT_GUEST flag
->   perf: Add generic exclude_guest support
->   perf: Add switch_guest_ctx() interface
->   perf/x86: Support switch_guest_ctx interface
->   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
->
-> Mingwei Zhang (5):
->   perf/x86: Forbid PMI handler when guest own PMU
->   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
->     x86_pmu_cap
->   KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
->   KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
->   KVM: nVMX: Add nested virtualization support for mediated PMU
->
-> Sandipan Das (4):
->   perf/x86/core: Do not set bit width for unavailable counters
->   KVM: x86/pmu: Add AMD PMU registers to direct access list
->   KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
->     write to event selectors
->   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
->
-> Xiong Zhang (3):
->   x86/irq: Factor out common code for installing kvm irq handler
->   perf: core/x86: Register a new vector for KVM GUEST PMI
->   KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
->
->  arch/x86/events/amd/core.c                    |   2 +
->  arch/x86/events/core.c                        |  40 +-
->  arch/x86/events/intel/core.c                  |   5 +
->  arch/x86/include/asm/hardirq.h                |   1 +
->  arch/x86/include/asm/idtentry.h               |   1 +
->  arch/x86/include/asm/irq.h                    |   2 +-
->  arch/x86/include/asm/irq_vectors.h            |   5 +-
->  arch/x86/include/asm/kvm-x86-pmu-ops.h        |   2 +
->  arch/x86/include/asm/kvm_host.h               |  10 +
->  arch/x86/include/asm/msr-index.h              |  18 +-
->  arch/x86/include/asm/perf_event.h             |   1 +
->  arch/x86/include/asm/vmx.h                    |   1 +
->  arch/x86/kernel/idt.c                         |   1 +
->  arch/x86/kernel/irq.c                         |  39 +-
->  arch/x86/kvm/cpuid.c                          |  15 +
->  arch/x86/kvm/pmu.c                            | 254 ++++++++-
->  arch/x86/kvm/pmu.h                            |  45 ++
->  arch/x86/kvm/svm/pmu.c                        | 148 ++++-
->  arch/x86/kvm/svm/svm.c                        |  26 +
->  arch/x86/kvm/svm/svm.h                        |   2 +-
->  arch/x86/kvm/vmx/capabilities.h               |  11 +-
->  arch/x86/kvm/vmx/nested.c                     |  68 ++-
->  arch/x86/kvm/vmx/pmu_intel.c                  | 224 ++++++--
->  arch/x86/kvm/vmx/vmx.c                        |  89 +--
->  arch/x86/kvm/vmx/vmx.h                        |  11 +-
->  arch/x86/kvm/x86.c                            |  63 ++-
->  arch/x86/kvm/x86.h                            |   2 +
->  include/linux/perf_event.h                    |  47 +-
->  kernel/events/core.c                          | 519 ++++++++++++++----
->  .../beauty/arch/x86/include/asm/irq_vectors.h |   5 +-
->  .../selftests/kvm/include/kvm_test_harness.h  |  13 +
->  .../testing/selftests/kvm/include/kvm_util.h  |   3 +
->  .../selftests/kvm/include/x86/processor.h     |   8 +
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  23 +
->  .../selftests/kvm/x86/pmu_counters_test.c     |  24 +-
->  .../selftests/kvm/x86/pmu_event_filter_test.c |   8 +-
->  .../selftests/kvm/x86/vmx_pmu_caps_test.c     |   2 +-
->  37 files changed, 1480 insertions(+), 258 deletions(-)
->
->
-> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+Sure, just wanted to check that everybody is fine with this.
+Will apply this later to the s390 tree.
+
+Thanks!
