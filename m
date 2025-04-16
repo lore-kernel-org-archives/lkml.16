@@ -1,48 +1,51 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0361D1C27;
-	Wed, 16 Apr 2025 17:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866BF1DDC3E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 17:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744825158; cv=none; b=N/WcBGZ2ODWzqPOFIJ+C/4oVg0cYZTY/idCec8d8/nE3EmSUHexBIpfK8/ucsg1cYTE2LCb5lb0abo8YehK3PDfctWtrDS8npNvariLCCm5H5LxhZsyPQTGNvlIsq2LZhrdnXisEzt6G/WmfS3guXVpXG+z+7+qz4OqkFV1XYrs=
+	t=1744825172; cv=none; b=Fe2VKfv10FxN/mBIig9AlrkKJn35i1kLAkooCtlHSFuRzPZ2NjwIFRZNi9S8KucT+ew000Q9UoFXbusBxysdk44ycKNgRp4VpEmBpQH+9irAHsevxnZh2Jbn0qDcyw7JmTj8qpCtonVeGL9BqleK8ZOjQLPAmS2dzHjXtBk8q/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744825158; c=relaxed/simple;
-	bh=RqgFmRAZl71WZ17Upn5DESkXbwXGRuxlhqGoVgP4wE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Hix1YoKwcO2/REPdKO+34r+Ki9ShUeC5axM4PWR4xlc/qnunYNJWY/dWyB1HAxsjh1gLjI6T+JNMgB4kOxIr7TW0JXGa5aikq4OHf8M64x8lP/CflHmYgXC7OCTH6JY2BcA2W6y8jD7SuhROc/iUczgQ+vPU3hiAHOPQh6Z8kIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UJtxB/p3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744825172; c=relaxed/simple;
+	bh=BcCjvOgeeU0ATsNlaTQ94OdcTJ9s7OSEwfE4jWKYuxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V60q4TLMFLw+hOKpDo/VZ3h+No3KtXx5XQRBN7EGrKL8Je1vZ7iWu98pCI1w+HhzEVKsMO7Ikamkd21NaeATFtsjpVdhaX7i7gkaL7uRAD0HFUBOBoKoSfM+YMGV7qpbRruqWzYtbzrw8JYzjEAUTjfGVE2M+RabUAugkLQhoPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=nd2o0HoK; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UJtxB/p3"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mRUG000506;
-	Wed, 16 Apr 2025 17:39:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ndj8UM+Mxb/ahSkh/PywiZoaQY0N9V5UUi6hzmzB6MI=; b=UJtxB/p3ZxKCbvw8
-	Wctf1WN0sJZm3BIQ0IIFqp0Y783w9nVQdVd1Yxv43SQFviCxyXs4qi9FCggYfrnv
-	0zqtp1SRaev8i7GR8qfr1itx6FiVk7wHc7/4NjWj2m91oPpIsZ4648kGC0D5A9El
-	OCOx+LMv8NORq23icGgEQCHnrzd4hbs7G6lVe3b3+ZkGShAuD8lSqGauiBy3GZWJ
-	1TqvjSZktPF2qkqfR2RoGaxATjqII5RPpnt/WMvsUTHUSAPWB/OwIYSBEFKRcb+C
-	Z3vhZwmelzc4REOyeZBOmNqAGor1KY2TzAphp6En8vGu1OitBejCjiyTAalIfNKW
-	dWY4DQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vmeuj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 17:39:03 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GHd3pT025456
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 17:39:03 GMT
-Received: from [10.216.6.49] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 10:38:58 -0700
-Message-ID: <1d109f0f-e866-4f87-b8f9-06595dbc51ff@quicinc.com>
-Date: Wed, 16 Apr 2025 23:08:55 +0530
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="nd2o0HoK"
+Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+	by cmsmtp with ESMTPS
+	id 53NOuOphiAfjw56huuJObk; Wed, 16 Apr 2025 17:37:54 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id 56htuJtfeM7Yo56htusH4e; Wed, 16 Apr 2025 17:37:53 +0000
+X-Authority-Analysis: v=2.4 cv=Nejg1XD4 c=1 sm=1 tr=0 ts=67ffeaf1
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=B3fuDwYyW55wTQKIj88FGw==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=BLRy5mX9rXzc9QvDkdkA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=ar/aweR9FQh73z0BhLDPfxHbNifaEbR7MIlAP92gXkM=; b=nd2o0HoKjdABzlrSzyrYVlzbki
+	bWSFjcR+oUssgRLC7gcx3jcuq6+zXAwEa5YwjihZX+pVTIMl3ItGz+7xmWpb1ZnomucSI165sPX/e
+	Jr3xnLlOSNszyI5iBVeYkxbvrZDyuSl+bJsa+ifwfmbrHctj5/zwA/1QPCQETHUfbMEeT2W2Q8Ahs
+	Ux2qokNcMfM+gg6HlfZgmTwOzQ+1ZWQwQ40W3nt/GSFPlN70JBOtcdGniV933k/YnqnT+pYi3+rpy
+	AR8rk2SlnPcx3Ey7OitoOE8VMd3sZEMLz5u2mNlvfwH3HpHx24jAnIhUzQxTeLEvy1LLNyGWFTeBd
+	XYDVHgfQ==;
+Received: from [201.172.174.147] (port=53400 helo=[192.168.15.14])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1u56hs-00000000pNK-1je2;
+	Wed, 16 Apr 2025 12:37:53 -0500
+Message-ID: <658d0535-6842-4515-a888-217cb375968c@embeddedor.com>
+Date: Wed, 16 Apr 2025 11:37:40 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,242 +53,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/34] drm/msm: Lazily create context VM
-To: Rob Clark <robdclark@gmail.com>, <dri-devel@lists.freedesktop.org>
-CC: <freedreno@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>,
-        "Rob
- Clark" <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Dmitry
- Baryshkov" <lumag@kernel.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20250319145425.51935-1-robdclark@gmail.com>
- <20250319145425.51935-15-robdclark@gmail.com>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: Re: [PATCH] overflow: Clarify expectations for getting DEFINE_FLEX
+ variable sizes
+To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250416172911.work.854-kees@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20250319145425.51935-15-robdclark@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250416172911.work.854-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Byuu8UTKKi04No4T3oDe73UH5v6D9mSa
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67ffeb37 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=cm27Pg_UAAAA:8 a=CAjrvC-q03qAXdtm1X8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Byuu8UTKKi04No4T3oDe73UH5v6D9mSa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_06,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160144
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.172.174.147
+X-Source-L: No
+X-Exim-ID: 1u56hs-00000000pNK-1je2
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.15.14]) [201.172.174.147]:53400
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfK4lVgmTAoSlgLgMe3pLDJQ4QntHYQ+BRi7QE9seXVKBuNq6yQkmhAYJYNteY2JpZTkgejNgdqaAUa62lZWynHJPwbYIGd738dHWg4MAL1J3Xqroze2Q
+ wcpWnBbSfTwMbVxIc7zmxOejf/Hi8egnL4gHcy/icPcgSrSZv6Sxggs0STzmA7pgwglyVLY8khYv0qGl5ZepBM5YhPrl0DbBUWjzavL9QEVo/owNTZg3Iw5I
 
-On 3/19/2025 8:22 PM, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+
+
+On 16/04/25 11:29, Kees Cook wrote:
+> Mention the use of __member_size() for DEFINE_FLEX variables as a hint
+> for getting at the compile-time size of the resulting flexible array
+> member.
 > 
-> In the next commit, a way for userspace to opt-in to userspace managed
-> VM is added.  For this to work, we need to defer creation of the VM
-> until it is needed.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
 > ---
->  drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  3 ++-
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 14 +++++++-----
->  drivers/gpu/drm/msm/msm_drv.c           | 29 ++++++++++++++++++++-----
->  drivers/gpu/drm/msm/msm_gem_submit.c    |  2 +-
->  drivers/gpu/drm/msm/msm_gpu.h           |  9 +++++++-
->  5 files changed, 43 insertions(+), 14 deletions(-)
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> ---
+>   include/linux/overflow.h | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> index 4811be5a7c29..0b1e2ba3539e 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -112,6 +112,7 @@ static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
->  {
->  	bool sysprof = refcount_read(&a6xx_gpu->base.base.sysprof_active) > 1;
->  	struct msm_context *ctx = submit->queue->ctx;
-> +	struct drm_gpuvm *vm = msm_context_vm(submit->dev, ctx);
->  	struct adreno_gpu *adreno_gpu = &a6xx_gpu->base;
->  	phys_addr_t ttbr;
->  	u32 asid;
-> @@ -120,7 +121,7 @@ static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
->  	if (ctx->seqno == ring->cur_ctx_seqno)
->  		return;
->  
-> -	if (msm_iommu_pagetable_params(to_msm_vm(ctx->vm)->mmu, &ttbr, &asid))
-> +	if (msm_iommu_pagetable_params(to_msm_vm(vm)->mmu, &ttbr, &asid))
->  		return;
->  
->  	if (adreno_gpu->info->family >= ADRENO_7XX_GEN1) {
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 0f71703f6ec7..e4d895dda051 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -351,6 +351,8 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
->  {
->  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->  	struct drm_device *drm = gpu->dev;
-> +	/* Note ctx can be NULL when called from rd_open(): */
-> +	struct drm_gpuvm *vm = ctx ? msm_context_vm(drm, ctx) : NULL;
->  
->  	/* No pointer params yet */
->  	if (*len != 0)
-> @@ -396,8 +398,8 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
->  		*value = 0;
->  		return 0;
->  	case MSM_PARAM_FAULTS:
-> -		if (ctx->vm)
-> -			*value = gpu->global_faults + to_msm_vm(ctx->vm)->faults;
-> +		if (vm)
-> +			*value = gpu->global_faults + to_msm_vm(vm)->faults;
->  		else
->  			*value = gpu->global_faults;
->  		return 0;
-> @@ -405,14 +407,14 @@ int adreno_get_param(struct msm_gpu *gpu, struct msm_context *ctx,
->  		*value = gpu->suspend_count;
->  		return 0;
->  	case MSM_PARAM_VA_START:
-> -		if (ctx->vm == gpu->vm)
-> +		if (vm == gpu->vm)
->  			return UERR(EINVAL, drm, "requires per-process pgtables");
-> -		*value = ctx->vm->mm_start;
-> +		*value = vm->mm_start;
->  		return 0;
->  	case MSM_PARAM_VA_SIZE:
-> -		if (ctx->vm == gpu->vm)
-> +		if (vm == gpu->vm)
->  			return UERR(EINVAL, drm, "requires per-process pgtables");
-> -		*value = ctx->vm->mm_range;
-> +		*value = vm->mm_range;
->  		return 0;
->  	case MSM_PARAM_HIGHEST_BANK_BIT:
->  		*value = adreno_gpu->ubwc_config.highest_bank_bit;
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 6ef29bc48bb0..6fd981ee6aee 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -214,10 +214,29 @@ static void load_gpu(struct drm_device *dev)
->  	mutex_unlock(&init_lock);
->  }
->  
-> +/**
-> + * msm_context_vm - lazily create the context's VM
-> + *
-> + * @dev: the drm device
-> + * @ctx: the context
-> + *
-> + * The VM is lazily created, so that userspace has a chance to opt-in to having
-> + * a userspace managed VM before the VM is created.
-> + *
-> + * Note that this does not return a reference to the VM.  Once the VM is created,
-> + * it exists for the lifetime of the context.
-> + */
-> +struct drm_gpuvm *msm_context_vm(struct drm_device *dev, struct msm_context *ctx)
-> +{
-> +	struct msm_drm_private *priv = dev->dev_private;
-> +	if (!ctx->vm)
-
-hmm. This is racy and it is in a userspace accessible path!
-
--Akhil
-
-> +		ctx->vm = msm_gpu_create_private_vm(priv->gpu, current);
-> +	return ctx->vm;
-> +}
-> +
->  static int context_init(struct drm_device *dev, struct drm_file *file)
->  {
->  	static atomic_t ident = ATOMIC_INIT(0);
-> -	struct msm_drm_private *priv = dev->dev_private;
->  	struct msm_context *ctx;
->  
->  	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-> @@ -230,7 +249,6 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
->  	kref_init(&ctx->ref);
->  	msm_submitqueue_init(dev, ctx);
->  
-> -	ctx->vm = msm_gpu_create_private_vm(priv->gpu, current);
->  	file->driver_priv = ctx;
->  
->  	ctx->seqno = atomic_inc_return(&ident);
-> @@ -408,7 +426,7 @@ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
->  	 * Don't pin the memory here - just get an address so that userspace can
->  	 * be productive
->  	 */
-> -	return msm_gem_get_iova(obj, ctx->vm, iova);
-> +	return msm_gem_get_iova(obj, msm_context_vm(dev, ctx), iova);
->  }
->  
->  static int msm_ioctl_gem_info_set_iova(struct drm_device *dev,
-> @@ -417,18 +435,19 @@ static int msm_ioctl_gem_info_set_iova(struct drm_device *dev,
->  {
->  	struct msm_drm_private *priv = dev->dev_private;
->  	struct msm_context *ctx = file->driver_priv;
-> +	struct drm_gpuvm *vm = msm_context_vm(dev, ctx);
->  
->  	if (!priv->gpu)
->  		return -EINVAL;
->  
->  	/* Only supported if per-process address space is supported: */
-> -	if (priv->gpu->vm == ctx->vm)
-> +	if (priv->gpu->vm == vm)
->  		return UERR(EOPNOTSUPP, dev, "requires per-process pgtables");
->  
->  	if (should_fail(&fail_gem_iova, obj->size))
->  		return -ENOMEM;
->  
-> -	return msm_gem_set_iova(obj, ctx->vm, iova);
-> +	return msm_gem_set_iova(obj, vm, iova);
->  }
->  
->  static int msm_ioctl_gem_info_set_metadata(struct drm_gem_object *obj,
-> diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-> index c65f3a6a5256..9731ad7993cf 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_submit.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-> @@ -63,7 +63,7 @@ static struct msm_gem_submit *submit_create(struct drm_device *dev,
->  
->  	kref_init(&submit->ref);
->  	submit->dev = dev;
-> -	submit->vm = queue->ctx->vm;
-> +	submit->vm = msm_context_vm(dev, queue->ctx);
->  	submit->gpu = gpu;
->  	submit->cmd = (void *)&submit->bos[nr_bos];
->  	submit->queue = queue;
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index d8425e6d7f5a..c15aad288552 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -362,7 +362,12 @@ struct msm_context {
->  	 */
->  	int queueid;
->  
-> -	/** @vm: the per-process GPU address-space */
-> +	/**
-> +	 * @vm:
-> +	 *
-> +	 * The per-process GPU address-space.  Do not access directly, use
-> +	 * msm_context_vm().
-> +	 */
->  	struct drm_gpuvm *vm;
->  
->  	/** @kref: the reference count */
-> @@ -447,6 +452,8 @@ struct msm_context {
->  	atomic64_t ctx_mem;
->  };
->  
-> +struct drm_gpuvm *msm_context_vm(struct drm_device *dev, struct msm_context *ctx);
-> +
->  /**
->   * msm_gpu_convert_priority - Map userspace priority to ring # and sched priority
->   *
+> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+> index 0c7e3dcfe867..6ee67c20b575 100644
+> --- a/include/linux/overflow.h
+> +++ b/include/linux/overflow.h
+> @@ -419,6 +419,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+>    * Define a zeroed, on-stack, instance of @type structure with a trailing
+>    * flexible array member.
+>    * Use __struct_size(@name) to get compile-time size of it afterwards.
+> + * Use __member_size(@name->member) to get compile-time size of @name members.
+>    */
+>   #define DEFINE_RAW_FLEX(type, name, member, count)	\
+>   	_DEFINE_FLEX(type, name, member, count, = {})
+> @@ -436,6 +437,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+>    * Define a zeroed, on-stack, instance of @TYPE structure with a trailing
+>    * flexible array member.
+>    * Use __struct_size(@NAME) to get compile-time size of it afterwards.
+> + * Use __member_size(@NAME->member) to get compile-time size of @NAME members.
+>    */
+>   #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
+>   	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
 
