@@ -1,151 +1,120 @@
-Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C9F237703;
-	Wed, 16 Apr 2025 09:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D899A2356CA;
+	Wed, 16 Apr 2025 09:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744795390; cv=none; b=ug8vDa3XmH0KRErW+8lfAkE5iuWamQyDrUFUkjlKxmix+4sFiRA1OPQ2uqHCLWvXlRRUy8rvPyMqnoaMQfq54DLbY/ouJYIQKK2lbGS8wCUgYVTUVSFiHSgDPavNMdMqXcwISBK/GT+SbZ0R4+oFGPH3H2AIZ8xn2PwU7ZTX4gg=
+	t=1744795392; cv=none; b=Kl8ROKf7BaVlorYYv/PoVJ8JcPZUIMSr1KbkyyLzWBTDVkHBxVH6jSR+eq0+8gpVUhoJGl3+PpVvLBGBGA0IdY/GlIA0SXSSDn+IOmberv06ndjNpcSCEe5h59THdtwFwBkbiNhPukjxsJpdbKXZm373d3mq5lHLKSnRetd3uXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744795390; c=relaxed/simple;
-	bh=8Sbm2WJBnMka8gIHDWz1DAmTW8vaT8RoqZXaXVRevZE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hMqixANoahgmJSj4Ng3c0AtEFP22rJh3X5IQItP7mY4ipR6OARdlWFwEsXDDvRwVICBUyH2CNrv8dPOy9vJxuT/tJPlTD0KnbJGznMUVwxLBJ588LHfzk44xfcif5mwLMZ3xhmsQzx1acLMku78fr2Vq/hFToTxrkDKgGvyZjbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZGlpTbVD; arc=none smtp.client-ip=209.85.214.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744795392; c=relaxed/simple;
+	bh=/tufIAG+VUZJC7b6YakwZhHyHBhfxxSru8ER1OFHfdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tvd3XG/R4lC2H4zkBHJ4La+pJhcD0U1WMKbgEOGg3o2nYjWGu4wSBuZmU9uh4l8meyTkD/GdZwTG9fDOkDwV6IKXlNNRWjcdJKINLbrm4olkBP0mdExvYNaJv+y02wNNvL95JPk7akZ2shpdZzNpXIx3+RFIToOIvIkEklsVD44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwJTco6I; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGlpTbVD"
-Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-223fb0f619dso71026215ad.1;
-        Wed, 16 Apr 2025 02:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744795388; x=1745400188; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nAMj5NXFmJsdPX9HKV8xXwacekMtszHIC96A7raNIsg=;
-        b=ZGlpTbVDZkENc0Lzsl5pyLEoh9n7USJBoWX3neZQcAUi62a6yX/dRkvXAwXH2UygTb
-         QUkp0hWiVJ/2/FvLJeHq+OSIwz5Q1zaGt0qKIxD/SM4PVEBIFq4VXJldlpmhOWnsFM78
-         llpWN30reUYlhW0XZ/27MkxURJOqSgGK1oScVI+YDeH8QG+63NDbs1071oEBy8SDvvIA
-         M/a/xeV+paqjKD703staFDpBBpSi108lUUWS2DgdQwJQXeikyLZbfc0wm1GJ5rQ9ARf4
-         alpoNzAVl0J1a/20QTXUxlt1UpEzTRU/90wWvqDp462cFnYOEZiQyplPEYi/toKsZ1nV
-         vYVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744795388; x=1745400188;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nAMj5NXFmJsdPX9HKV8xXwacekMtszHIC96A7raNIsg=;
-        b=CQ2NJOZy2naUz3CU92fwQZrP1mi0yvBDSOaHTB/jgidK/jmzAntdi8jZtbkUgctfiK
-         82afQRegmUqFWaDQ07hoWWmeHi6Mb7TdaO8XXM78fOC3DbQnJf52WixkXJletfpP8RZ7
-         lJvPBP8wLQEot62SR/6ZWYFEeLXjbZ+8ZEtToqYSuBtE77LJMbosPygSovc9t/8CIy79
-         kiHLAp7LYmox7U2aM97QKY/XG3g0mYgzqW05Qvhh15o5lb2NZt/wjH9FOWsWhXmp3jnO
-         x00VBw2gNBQENabiIaVIL2GyeVf5M+8aWGH4aJvP8SJPfmfCigpjR+L3sYKKnZ5TASs5
-         Uc5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUmHXpvX7eB3bMtxupnCYImvCup/dPjXBgeTDRGij9XDcvzE7cLyLHyl9hBKypQiYq8c322Br76jzJW/UE=@vger.kernel.org, AJvYcCXu6J9RXSjGztDnWaBGBDVeZxZloKyPotl1RI0qf0VXkpikixqsP17uj2CQ/5KoQQHGflDYS6rVeTT8qg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhKzO+Wio+vtMAJU4GlH6RxtzDjyViiO147YuObQUHXD6UAVYn
-	UCBusWn4IW+GAIA6EZcinRiAtaQTnWi0ZKfq6dzg7yyNF5v7tFTJ
-X-Gm-Gg: ASbGncsg6cbOIA6WE4ilr/Ti8eMkc4LfPtFFI/p6TU6YJKz55KaCE+CaNg+zrZOA1Oo
-	OQIUgZiotUzSUWaJE25PcoQm2RU4tRfpf2TBT3dJdWcUkgHBFrCRGYMcVpdmPM+ShlzRGLbdXLU
-	mKm658sqplLKvJM08RnDxmSEcWh1kFXeNb6W/jVkhK4ySs2WcMQx0nG6QgdDpEHQxk8N+eMSGF4
-	v9bIOJGNm30r1Uizn80eR75hQzZXVdemkQGDwgKwF5YvY/K0rGz61uFgEFX94oqQu+pMjY2oldJ
-	rSjLiEqyBQhy5P6f5HMPH+VcKwdBfTjUROaSypZsiLyRN4j8oTCECilslnQylqXoHA==
-X-Google-Smtp-Source: AGHT+IGxm2qrXgWH8qfKA8Dn9KndUuiY7iZe3I8T2BcnyrCWWj85sZCX9whovlmLV384kSrC5kgocw==
-X-Received: by 2002:a17:902:e806:b0:223:5e6a:57ab with SMTP id d9443c01a7336-22c3597ee39mr16568995ad.39.1744795387838;
-        Wed, 16 Apr 2025 02:23:07 -0700 (PDT)
-Received: from henry.localdomain ([111.202.148.49])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33f1d070sm9369515ad.79.2025.04.16.02.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 02:23:07 -0700 (PDT)
-From: Henry Martin <bsdhenrymartin@gmail.com>
-To: saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	bsdhenrymartin@gmail.com,
-	mbloch@nvidia.com,
-	michal.swiatkowski@linux.intel.com,
-	amirtz@nvidia.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/2] net/mlx5: Move ttc allocation after switch case to prevent leaks
-Date: Wed, 16 Apr 2025 17:22:43 +0800
-Message-Id: <20250416092243.65573-3-bsdhenrymartin@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250416092243.65573-1-bsdhenrymartin@gmail.com>
-References: <20250416092243.65573-1-bsdhenrymartin@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwJTco6I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744795390; x=1776331390;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/tufIAG+VUZJC7b6YakwZhHyHBhfxxSru8ER1OFHfdc=;
+  b=HwJTco6IlTn/EeeWKTLZ/zSeULdXNnJvtItdeVyB/ot9Xrva51uyf1cc
+   iYiD4MSsgZFn8vCuWMjV2hjS2Qg7L8CH9vXvezcOfbJy/DodCsfasuNbs
+   fjywDKJkpN1D1WORQAgnSqcO0SQayeQiMoSxf2c+WgIw0tG4HeD6r5EYb
+   HALkrkdlyB1JP0Eo4boQ7ZCk3tFwP0ys3hGp9umi+nmpP6GpJ0YyAF/T/
+   vgj8/OniLPMUNuDKBNvSPFYjRmj8ytZS7AOTmm1JmBT+oFg8OGOxZxNL0
+   vUEm5I9Gbw2TfWeMTH96yCTdkArcsHiGfDQwcd+E/uuEPeX9TVDnVzqkq
+   w==;
+X-CSE-ConnectionGUID: veMJLjxpSuyo2/W2wBdeKw==
+X-CSE-MsgGUID: sjovWhO4R02+LTomiqncDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46495059"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46495059"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:23:09 -0700
+X-CSE-ConnectionGUID: i+2ZkBenQFK9UjPDvAV82Q==
+X-CSE-MsgGUID: byr1DdO/QXmCIVsDDjNGWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="153605640"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:23:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u4yyz-0000000Co6S-3lv7;
+	Wed, 16 Apr 2025 12:23:01 +0300
+Date: Wed, 16 Apr 2025 12:23:01 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@gmail.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] scripts/kernel-doc.py: don't create *.pyc files
+Message-ID: <Z_929c1XSfeSi3QD@smile.fi.intel.com>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+ <4ad5eb8d4b819997c1615d2401581c22a32bb2c1.1744789777.git.mchehab+huawei@kernel.org>
+ <87tt6opks7.fsf@intel.com>
+ <20250416171917.0985c0eb@sal.lan>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416171917.0985c0eb@sal.lan>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Relocate the memory allocation for ttc table after the switch statement
-that validates params->ns_type in both mlx5_create_inner_ttc_table() and
-mlx5_create_ttc_table(). This ensures memory is only allocated after
-confirming valid input, eliminating potential memory leaks when invalid
-ns_type cases occur.
+On Wed, Apr 16, 2025 at 05:19:17PM +0800, Mauro Carvalho Chehab wrote:
+> Em Wed, 16 Apr 2025 11:34:16 +0300
+> Jani Nikula <jani.nikula@linux.intel.com> escreveu:
+> > On Wed, 16 Apr 2025, Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
----
- .../net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+...
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-index 066121fed718..513dafd5ebf2 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/fs_ttc.c
-@@ -637,10 +637,6 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
- 	bool use_l4_type;
- 	int err;
- 
--	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
--	if (!ttc)
--		return ERR_PTR(-ENOMEM);
--
- 	switch (params->ns_type) {
- 	case MLX5_FLOW_NAMESPACE_PORT_SEL:
- 		use_l4_type = MLX5_CAP_GEN_2(dev, pcc_ifa2) &&
-@@ -654,6 +650,10 @@ struct mlx5_ttc_table *mlx5_create_inner_ttc_table(struct mlx5_core_dev *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
-+	if (!ttc)
-+		return ERR_PTR(-ENOMEM);
-+
- 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
- 	if (!ns) {
- 		kvfree(ttc);
-@@ -715,10 +715,6 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
- 	bool use_l4_type;
- 	int err;
- 
--	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
--	if (!ttc)
--		return ERR_PTR(-ENOMEM);
--
- 	switch (params->ns_type) {
- 	case MLX5_FLOW_NAMESPACE_PORT_SEL:
- 		use_l4_type = MLX5_CAP_GEN_2(dev, pcc_ifa2) &&
-@@ -732,6 +728,10 @@ struct mlx5_ttc_table *mlx5_create_ttc_table(struct mlx5_core_dev *dev,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	ttc = kvzalloc(sizeof(*ttc), GFP_KERNEL);
-+	if (!ttc)
-+		return ERR_PTR(-ENOMEM);
-+
- 	ns = mlx5_get_flow_namespace(dev, params->ns_type);
- 	if (!ns) {
- 		kvfree(ttc);
+> > >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
+> > >        cmd_hdrtest = \
+> > >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
+> > > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
+> > > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
+> > 
+> > KERNELDOC is not set here.
+> 
+> > 
+> > /bin/sh: 1: -none: not found
+> 
+> Weird. This is set on Documentation/Makefile:
+> 
+> 	$ grep KERNELDOC Documentation/Makefile 
+> 	KERNELDOC       = $(srctree)/scripts/kernel-doc.py
+> 	...
+> 
+> drivers/gpu/drm/Makefile should be able to see this variable there...
+
+Does it work in the case of `make drivers/gpu/drm` ? This is probably how Jani
+tried it.
+
+> > >  		touch $@
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
