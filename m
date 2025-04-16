@@ -1,122 +1,148 @@
-Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C9C14AA9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232814AA9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744764814; cv=none; b=Ldt1zfVAzsc0NDnAFkECXrLTDSXPSNKzhmky3x+ri3rpTZUuUlYo/eVCYMh7IB8RQqOOpTUz4bamPJr86ibKr7B9TeEFLZg7e6fJEygq0T86bLINR0xFBVWARjhUCROV4WkjDmw7CDHPpTfDg/Y8svO4ACT2Vrj2tLeyeLklw60=
+	t=1744764868; cv=none; b=b4IxPpaN0tPWs6tlrrxGPKGtkVUXaGHDCjjaSJ9lhFpdXpSp4t68r1YUCNACbumuii5BQUt/hzZ1Th3+FHKXVzDwXqDNFiPz8fEIcShcLJ7pEuoN+FqK1mqbvl5etvAwr2B31mVP+nnfRjuixqRbnFvLNgu9XD9Q9ETTgiMauug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744764814; c=relaxed/simple;
-	bh=96B9PrXJW4G3rI3fvsK1uPWHxbv4fipG+KQ2mMcseBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/ZerQ+BCFS+9U6nGo0xn8wQ9phz4dq41d9PO7R/u1DkyE1sDpnJwROfBVf1yP9fcmUG6diiDHqPjQEwCpiEzKYfbtFNTlwlPz7kc1QNDnrC9b4QQQSMcT32fqYEDbpHBXDljNT9aKQODpOJNAyoGGfQfMk7l95WCAFK0WtqI9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=THPC0do/; arc=none smtp.client-ip=209.85.128.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1744764868; c=relaxed/simple;
+	bh=0DB9C/RmNnOPA8X5ZtAvYqG6oppLD/JPSRzIsHd4FS4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZCIwGURizozsNC9bTprhXi2TNi2VDaFJszaCjOlr/HNkNNvzHp71+Hk8JtnaW/4/0tbJHY9HpZq4xlnnFfV9dBtjGzZYlD4jV67o4om9u4hL7RHmQM56LgzJAvHEFp3vQ4O7mtaaU+VloNtRtUbEw5S5rpTW1Z7wiLhtxG4ml8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fYFpRy3x; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="THPC0do/"
-Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-6feab7c5f96so59061867b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:53:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fYFpRy3x"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-86192b64d0bso266839339f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:54:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744764811; x=1745369611; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ls2b3PcDVLxYWfpvpeygqh0EYCIMqg9tqTsrdLj5Hpo=;
-        b=THPC0do/jbA0gO42HIb3NlAVqfvmnFilceHccEEMxPn6ffKXiA3nAemGbWQQKOWvhm
-         FL1ycjzYkh6eorktDG1dSSfp+Fz5ieU8B32Oe1IIp8l8UYfpLu7zMynjmdFhj1HzjmNj
-         1vigtdsRTmHGv+r2wJ5rq+UThJup1qwuUid89/8cQEvlBuMIWzBUM/5GYof7bfsBkSYR
-         H68lf5iWtpmOQ5sCjIjmSWfRAYeACks7Nrz6CeL0876mWvkROcwHZG4+ZqVMfdbTRFzi
-         cecs1Kmic0ZzE536ZzolBUraDgp88vWtHsaCvFzRuvkrzFDhzTLtQ3FEjBUH2J8kPSOa
-         qSMg==
+        d=linuxfoundation.org; s=google; t=1744764865; x=1745369665; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fJGViJF+uWQRK77e5JjhDezjNBvHH06RYTYwmv8R2G0=;
+        b=fYFpRy3xl3w/LKH9jrffamvKayW4+7L6O+XJeLFhl4BWpZFMyqsM/i0TmUjQS1WTt8
+         IhHmkUsovQttWjHUAbYPCA3DAruZ9BfAar8YCsmhOf0mlpKgBaXYNIuZxuooM8jXpvU2
+         M+JZWjxai4qV5MpaR/edZPbJGTlZIAq/R/h5U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744764811; x=1745369611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ls2b3PcDVLxYWfpvpeygqh0EYCIMqg9tqTsrdLj5Hpo=;
-        b=ZSZg0PWNBD0zQ5LBvOzJ0+uhz0laMSdd301kfkS8DIkf5QUDvR8hPTPxvcAuOz5Zgg
-         388SxMd0ps5EQtjNjAHGeqvjq3zz1HHeXrpSwFKRT7as2N7sXc24fOqcZLjFXrgaOX6/
-         cXHjA0cpdQMlAxomlB0T9A0wz9s2Oa5CrSxIGsNlWLvX1asXc5wnMsK7X2IHQqhr0V++
-         yOzjX51WBRxW4FXlQ7TB7EfO/7y+UNSNOBknM2ZUzs/5D5gTrkreMHeu1KcCUmAP+QCf
-         CWjs3KBxf1lhbM8rleXGD4SBvMIxxOmLsjxNp4m/lyxXKx7LYdJPjZxLBr7pzV5qCg4C
-         90IA==
-X-Forwarded-Encrypted: i=1; AJvYcCVf26OS2qaHl739NUdFY2uc3TwS/sZACyiWXTnYMTiuT6MaJHajLrwGABuqU6v2Cx51K0cJHRuRxP6RfUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwA+H6pZURxuWFO+wrCOH1idPWBIYty3PKCLyhXiSsFr9vc7O2
-	h1il4YkiLXVQ+pOnGbr8q2WzzYGZCD7Z9cRqAQglF//kR8afovlRt1+MVCNHrRh8DAPaZYaZjG2
-	71WkYhYF5UFZo5ThoDFjKsu9XHvVd8B0f
-X-Gm-Gg: ASbGncv0mJegmnmy9XHoeefnxG1sSKVJyobh3VIBr4HE4EqParjulAxNDEciyxA0Cfg
-	P2TThSbx2QfEGLdjqqS7O6+oGfey463b+b8SqFZiISFwdd+frgUv8Aj50lZmbE5ueAGfLa0sEZp
-	ukazyxF40ECt0HY18/X2/P8B8VoYexhlbFjYqJ5SxgZtOmXodWlOzNTtau/beaoONmRtjJBgZ+Y
-	H4l66VIX6foho5eM1DeksmGtbAULDZRkEOC0SFO6Otmgi7bL35BOwakFLHlo8hvdMxDKKdIUVZC
-	RDBCnTL6gU2qqbF5cqTTUEi5w/s7onYyKKsb/wSRajNOFA==
-X-Google-Smtp-Source: AGHT+IHa7i8bVol24qWunlXT4S3rE7nqfEbNrSA6OR95HlTd8daUtz+9iKquVi2+NvgJBKdtQkQEDGk6urqh
-X-Received: by 2002:a05:690c:4907:b0:6d4:4a0c:fcf0 with SMTP id 00721157ae682-706acede1aemr23383707b3.20.1744764811599;
-        Tue, 15 Apr 2025 17:53:31 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-7053e171c20sm6472807b3.31.2025.04.15.17.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 17:53:31 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id A6EBD340237;
-	Tue, 15 Apr 2025 18:53:30 -0600 (MDT)
-Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id A3E47E41931; Tue, 15 Apr 2025 18:53:30 -0600 (MDT)
-Date: Tue, 15 Apr 2025 18:53:30 -0600
-From: Uday Shankar <ushankar@purestorage.com>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: don't suggest CONFIG_BLK_DEV_UBLK=Y
-Message-ID: <Z/7/inRyIxCIDOKz@dev-ushankar.dev.purestorage.com>
-References: <20250416004111.3242817-1-csander@purestorage.com>
+        d=1e100.net; s=20230601; t=1744764865; x=1745369665;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fJGViJF+uWQRK77e5JjhDezjNBvHH06RYTYwmv8R2G0=;
+        b=Mfa5q2zUN9wT/NbgTVYPFyy2Q3mtf4cmuAqfG8FQ08r46gc6WVqIfA3CF409IzlvNq
+         PTK64u0hpDcakj0WfdTa69nFlP0RNarJhygDmrkAptB9fzgiRI8ZHQhzNkIFxklyUDAy
+         xZYqzSMsUBXjnnrqGbZcTpwXUuw8TRwjSgtTP1glFO0fkvBHsXn6+hnIBs3xfKN3+VP8
+         AAqpNVczT942g9J+SFZ6cA21RkR60AjY0SRpXJCR/EVFEKRTtzOlBgxFLZcfVHP+Mgjn
+         ydbhR+qQsMR4CPsSUVMPd4p+5xw7Bh691DtS9j/ybF/K4Ug0ObS+IA7fPGctrYywCuFn
+         IIEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVL2K7AJTUHJSaLIr22kWkx/9pg44dSKT8STazujeCBaBgjBVvglI0S70gpipx+Mn2ercJnAhoMIzPo/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn5dv341OwclaQ92gNkMswrWp8g1jL/igyvXmTAc+pbtPJX72y
+	pRq9JHa1JHQoGnW3NW3ExhE0wtcynQVnd/vgm+fFiO52XtgWCivg+w7xAYQapis=
+X-Gm-Gg: ASbGncsPfkxSbxxhS2MSjEL9IEcSzPHeLME/FBKH4wANSduC2rIYHZORo6PxDJfhixh
+	oHqK5cxnUfevKrxQECt9JjhbXelmoKjRYjzNsBQORmJsv8VfWx/3hzUjaSLXc/Erf1MqDtY+6bb
+	JwOJ7IFWxGOX/rbhNOUYUuEqqxH76bhHgidYxJS8dzfZNnSs3FSc0zny4GC0BojiwoLbHM3MJb4
+	iXD6WdJGk7mWXSXQJ2oJtRPnEgvhBoTV5MkYmVGE0zM03fjRPKbam0ju6hiYJnibe/kWiRb5jMu
+	e6bmtEEkq5NMgO1kguz/XYl0Cv/zv0pjX6wNyqYorERLjcgixCAgjFZYhyd5Sg==
+X-Google-Smtp-Source: AGHT+IGyn1g4+5/Q5ZJ2gIxa8GRVRY+k0REBOWJY1vTxCnuKXgoVUlQNsfa3QeNOcGiovjoUCzceqg==
+X-Received: by 2002:a05:6602:3f03:b0:85b:482b:8530 with SMTP id ca18e2360f4ac-861bfbf4c91mr191977539f.2.1744764865074;
+        Tue, 15 Apr 2025 17:54:25 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8616522ddf4sm273115939f.5.2025.04.15.17.54.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 17:54:24 -0700 (PDT)
+Message-ID: <a640e6f0-075d-4af7-a26f-293c1a9d4ceb@linuxfoundation.org>
+Date: Tue, 15 Apr 2025 18:54:23 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416004111.3242817-1-csander@purestorage.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: sev_es_trampoline_start undefined symbol referenced errors during
+ kunit run
+To: Borislav Petkov <bp@alien8.de>
+Cc: thomas.lendacky@amd.com, David Gow <davidgow@google.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ Brendan Higgins <brendan.higgins@linux.dev>, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <7c5f9e2a-2e9d-46f2-89b2-83e0d68d3113@linuxfoundation.org>
+ <20250414230047.GHZ_2Tnysv9zCD6-tX@fat_crate.local>
+ <995cfca8-c261-4cf0-96f6-b33ca5403ee5@linuxfoundation.org>
+ <20250415180128.GJZ_6e-B3yFuwmqWWS@fat_crate.local>
+ <8b08e040-fee7-4344-8ba6-bbbd4f73e318@linuxfoundation.org>
+ <20250415221702.GMZ_7a3meDh4e0L11s@fat_crate.local>
+ <88a4052c-ac37-4958-af2a-a3066e8b82bd@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <88a4052c-ac37-4958-af2a-a3066e8b82bd@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 06:41:10PM -0600, Caleb Sander Mateos wrote:
-> The CONFIG_BLK_DEV_UBLK help text suggests setting the config option to
-> Y so task_work_add() can be used to dispatch I/O, improving performance.
-> However, this mechanism was removed in commit 29dc5d06613f2 ("ublk: kill
-> queuing request by task_work_add"). So remove this paragraph from the
-> config help text.
+On 4/15/25 16:29, Shuah Khan wrote:
+> On 4/15/25 16:17, Borislav Petkov wrote:
+>> On Tue, Apr 15, 2025 at 01:06:49PM -0600, Shuah Khan wrote:
+>>> Does your arch/x86/realmode/rm/pasyms.h has reference to sev_es_trampoline_start?
+>>>
+>>> The one in my tree has it.
+>>>
+>>> arch/x86/realmode/rm/pasyms.h:pa_sev_es_trampoline_start = sev_es_trampoline_start
+>>
+>>
+>> # ./tools/testing/kunit/kunit.py run --arch x86_64
+>> ...
+>>
+>> [00:15:36] Elapsed time: 58.840s total, 2.096s configuring, 53.170s building, 3.487s running
+>>
+>> # cat arch/x86/realmode/rm/pasyms.h
+>> cat: arch/x86/realmode/rm/pasyms.h: No such file or directory
+>>
+>> Could explain why I don't see the issue...
+>>
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> I see arch/x86/realmode/rm/pasyms.h on my system. It is a generated
+> file from arch/x86/realmode/rm Makefile
+> 
+> Here is the target information.
+> 
+> REALMODE_OBJS = $(addprefix $(obj)/,$(realmode-y))
+> 
+> sed-pasyms := -n -r -e 's/^([0-9a-fA-F]+) [ABCDGRSTVW] (.+)$$/pa_\2 = \2;/p'
+> 
+> quiet_cmd_pasyms = PASYMS  $@
+>        cmd_pasyms = $(NM) $(real-prereqs) | sed $(sed-pasyms) | sort | uniq > $@
+> 
+> targets += pasyms.h
+> $(obj)/pasyms.h: $(REALMODE_OBJS) FORCE
+>          $(call if_changed,pasyms)
+> 
+> The key is how and why this file gets generated and why the reference
+> 
+> pa_sev_es_trampoline_start = sev_es_trampoline_start
+> 
+> is added unconditionally even when  CONFIG_AMD_MEM_ENCRYPT is not
+> enabled. I think the logic should be fixed to take AMD_MEM_ENCRYPT
+> enabled or disabled into account when this pasyms.h file is generated.
+> 
 
-Reviewed-by: Uday Shankar <ushankar@purestorage.com>
+Okay - I think the logic to extract symbols to include in pasyms.h
+will have to take AMD_MEM_ENCRYPT enabled vs. disabled into account.
 
-> ---
->  drivers/block/Kconfig | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-> index 2551ebf88dda..e48b24be45ee 100644
-> --- a/drivers/block/Kconfig
-> +++ b/drivers/block/Kconfig
-> @@ -386,16 +386,10 @@ config BLK_DEV_UBLK
->  	  io_uring based userspace block driver. Together with ublk server, ublk
->  	  has been working well, but interface with userspace or command data
->  	  definition isn't finalized yet, and might change according to future
->  	  requirement, so mark is as experimental now.
->  
-> -	  Say Y if you want to get better performance because task_work_add()
-> -	  can be used in IO path for replacing io_uring cmd, which will become
-> -	  shared between IO tasks and ubq daemon, meantime task_work_add() can
-> -	  can handle batch more effectively, but task_work_add() isn't exported
-> -	  for module, so ublk has to be built to kernel.
-> -
->  config BLKDEV_UBLK_LEGACY_OPCODES
->  	bool "Support legacy command opcode"
->  	depends on BLK_DEV_UBLK
->  	default y
->  	help
-> -- 
-> 2.45.2
-> 
+running git grep sev_es_trampoline_start in arch/x86/realmode/rm shows:
+
+header.S:       .long   pa_sev_es_trampoline_start
+trampoline_64.S:SYM_CODE_START(sev_es_trampoline_start)
+trampoline_64.S:SYM_CODE_END(sev_es_trampoline_start)
+
+All of the above are under ifdef AMD_MEM_ENCRYPT conditional.
+Even if pasyms.h is generated sev_es_trampoline_start should not
+be included in pasyms.h if AMD_MEM_ENCRYPT is disabled.
+
+thanks,
+-- Shuah
+
