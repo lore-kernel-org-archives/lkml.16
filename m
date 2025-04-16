@@ -1,122 +1,148 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A4B2222B0;
-	Wed, 16 Apr 2025 18:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6765322370A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828751; cv=none; b=E4JaEXN0r3fsdfKqQjwrCNxD0sj0CPhRBuvVl4nqu6kUJo6+C86SOw8gziiODN/I4hb+VYZ7T1FBK2/I3nsAE99ET3tFl4KxdKfMY4BADOzVPrEJL00FDyoUnYNcR6vJYBRHQBtSNnZ9hDkVk1+QolxKWr4ONEo1yYnvQl3NMHo=
+	t=1744828820; cv=none; b=QBiPqACt9vzsGP21i+qWftTe6sTFSq9b5cOprLBGUBLWDGC0OszO8cwaLyEc9YkkqpGrYO8A6VkorL6guQ8DhJNVY66PR3yGmHzR8j1nRdkz3x5v0yKfQ6+D4Vsp3ZvasiTFtMsKSVNG27GZ0wrqdS+izQvzMZlJYUBWbofmqUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744828751; c=relaxed/simple;
-	bh=g6p8wSF/Di9t0vl6klobyNO8oa8BX+pSLfq24fDqHcE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=RC3RkXWJUzflOXejGJP/G6xJBU+3Bw0dzjFhSwYkQhcELqkJjIb4pSwUyxB9IpGfeyFWGDV/eMo1dn3daOZGi834kLBt5rIzegJsKCOgZCitsUJzcvJItX/bxsGLszS8OxkGjmrT79G3yP0j5bLORMN4FuZBYNiotxgDTQomBuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Qqo1+7bO; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744828820; c=relaxed/simple;
+	bh=I0EC3INMQjYBg9VGIiLtTG4Lcuu/qjJUk/7T+xVwA2c=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H6DedrR3nqkkG+7BZ3DX7s0k+1N8omtLKxHJJm5Y+Ql0lV369taACabPd5l9K9PoJaZ5A4h/ZJyqY/IkbAjxFOgiT9qz55ciWFUHHGiyLemPcBSIoBUOoPfEwdCtMbQURX2GXj2vvQa2Y6u1hDOiSlfeq/IvSa9W37NFQBfAF7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LD1GMJSQ; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Qqo1+7bO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744828735; x=1745433535; i=markus.elfring@web.de;
-	bh=g6p8wSF/Di9t0vl6klobyNO8oa8BX+pSLfq24fDqHcE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=Qqo1+7bOhEUNCmPWfSJaiYKepVNs2GIP3Gi+3WHkEacsCIBn/wf5uWEO74OQrc9r
-	 3BIFiZTG5c2v/ebtibMG6dGbhERYwhdXbUxx0+80V40RgbxKZhZnfy46a+uJjkzEH
-	 riL3VW490/2G88P8aLksTaIi/XuTjdNxiFBSA4eKzBCq4TA7JG1lZWcifUaGzSKEm
-	 uafnv00wCiyuzy65iFUBst7QdQG4fujjg0sUx8rNYc3wxfkn5fqOEg5/uO+JcObXh
-	 2y9zVI1Ew8KCBLfH0xw6yWjUH+xZE+x7XRXCaogTgBxXwHasqvO5RdiUJZQpfAcvC
-	 2VRIYrh/ndwbPQirFQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.13]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N4vNe-1t4Btj2Xcy-017Qj4; Wed, 16
- Apr 2025 20:38:55 +0200
-Message-ID: <9ae2b1be-0bd7-42f6-b8e3-4786e22cb271@web.de>
-Date: Wed, 16 Apr 2025 20:38:44 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LD1GMJSQ"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso1043327066b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744828815; x=1745433615; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hf73Zqm591Z4cwB1QMdZKpjmrpXWTvATJ+WgcmCQVhs=;
+        b=LD1GMJSQOrBW+IW3DUebNTOeBoNHlzgNfHC6N+Cy/2/K3acmAfdsvgYhMSVUb2TlVe
+         Yk+gUdmx/w/dvO6YltaqRDKqg5FHljjnniE2GorWOmwTLiKVYxj0SVG+NXEpp+JuXkOR
+         uOVGcghvdhcGTzCxXN2i0t48Hwwg08Q3ehyBkLhJdfgbzEQzz23z9qTq2NtepnaN7P13
+         UpYykxGF+EyY50WwA1Q5Vmf7CoR6Uo8dB7mhZbFjataonD8Bg8fxvMB142n54y6RK5+0
+         XTeA/YZbmEfn+3atBwgCnAKmAb7b+veSiNS3H215KE6Yz0R0Nkr+Izd58UCs6N/xNw+3
+         fT3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744828815; x=1745433615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hf73Zqm591Z4cwB1QMdZKpjmrpXWTvATJ+WgcmCQVhs=;
+        b=Fr6KDr7ArHScqVoHrx+Hc7Gp60lRKA/RPdqKQOkJNGPexrS3pC0gyuZ12cjPQMHf2a
+         aGKZeTIz+woGTblJiFu5ntdaF9EyWV/7QAxF8dZCpp+ofeS+EmnKiklNBOQSa+SMVv0l
+         E15RvGgZ4KsNNdIUw27Mh5MqaH5vjwg1dggsj4CELTRdBbe/Mof6G5k+hhir/A5F9gYF
+         9R9R8g6V5vrk/xVJX35DqnpSZgVul9G2s/0peyYpqmKO+ysNdRp3BhYARBTW0qeAmODu
+         StlSg7k9GP8T5ACNL5S7TKYxg5y4p3jX7wASqtISopBQPi7unupNQWKLRfN7DSUpIaXJ
+         8prw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8m5ylbF/Z8rjD8HAW9Ped3PnsDf1X5ff6B0S662hkWqondfoUU2k0cBs3UOOUtQosL5fFCJlCOq5IgQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/fntZs5mEUHaeNbKfFVoK3o35N2RtrA77AGGX7rw4EWruc8qA
+	CTYLHjdACvUUYqq/q6rHjFUnoYUdUQLr/hd1Zh3E48nxQl7eoiRpeZnF59dHeUw=
+X-Gm-Gg: ASbGnct3KY0cIbcD4e+m8gg3o7Sc++5pTcLE8h4/Xhlwz3kCbn5Rlx5jTGRKcJX00AN
+	X195YqifslCAP0tmHncmRqV9lGByA8L7wGDvxc2936woTsQhIk38+9QaS6pcBzluTSa47E3S6Un
+	QaO1EmqxTkbwAAyKxNKN8H9pjCI8KGp+LgHxCZG+AswDa3BBa0L5fovsYeFm0nDmvVsWPOSjQAQ
+	p1X02f12vW2rLf9NErn5HmAGuZzpHms5HGQLiV+nVlQESRQzhJXLhudZJnS4HfJuUjRnrkJP+wn
+	MPcdf3MmuZAs0LAMDaT16JIaKA1i/L73zGSfh08FWwbkufPBB1BFKOH/V8uo88zoiEPNeH0=
+X-Google-Smtp-Source: AGHT+IHvwwjkQBu7DihmtTvqsvfxr52Defd8zqRFD9EThPH0EkutvTV+muEgyvB55Eg0nTCHnjLeIA==
+X-Received: by 2002:a17:906:f5a9:b0:ac2:cf0b:b809 with SMTP id a640c23a62f3a-acb429ed4d2mr324522566b.31.1744828815585;
+        Wed, 16 Apr 2025 11:40:15 -0700 (PDT)
+Received: from localhost (93-44-188-26.ip98.fastwebnet.it. [93.44.188.26])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3d34a5a8sm174672666b.183.2025.04.16.11.40.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 11:40:15 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 16 Apr 2025 20:41:37 +0200
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com
+Subject: Re: [PATCH v8 11/13] arm64: dts: bcm2712: Add external clock for RP1
+ chipset on Rpi5
+Message-ID: <Z__54c628WTjznoG@apocalypse>
+References: <cover.1742418429.git.andrea.porta@suse.com>
+ <7c26a0b52e00a39930ba02f7552abdd1be4c828c.1742418429.git.andrea.porta@suse.com>
+ <45c1a50c-2ecd-4201-85e5-9a0e94f06fa3@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- Mark Bloch <mbloch@nvidia.com>,
- Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>
-References: <20250416092243.65573-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v6 0/2] net/mlx5: Fix NULL dereference and memory leak in
- ttc_table creation
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250416092243.65573-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:mSLhQutZM4kqZTgdGPHo7i+HhbSjqvmSPg7vsFks+Q/ivxn9jKc
- xEf8IatYt/MlmtUZoyy4OxUk2hFPsvzn0fBjQcg9f62/Dr/69z73Zh14kFhrnW0pyk11tGP
- Nv3Rte12nHWDViJ6U+vV55a1cGSRgE1giMop7LyWkoA+VYXL660jfHxd+yrh0dEfGoteS4q
- UtWQ7Gh2s6NLk/ketLuFg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lsMTTt34LZw=;ocFmzeWH/texmyqBHNCWwchc6vd
- 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
- FOqlo52zIIhYY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <45c1a50c-2ecd-4201-85e5-9a0e94f06fa3@gmx.net>
 
-> This patch series addresses two issues in =E2=80=A6
+Hi Stefan,
 
-It would have been helpful to extend patch version descriptions accordingl=
-y.
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc2#n310
+On 13:55 Mon 14 Apr     , Stefan Wahren wrote:
+> Hi Andrea,
+> 
+> Am 19.03.25 um 22:52 schrieb Andrea della Porta:
+> > The RP1 found on Raspberry Pi 5 board needs an external crystal at 50MHz.
+> > Add clk_rp1_xosc node to provide that.
+> > 
+> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+> > Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> i'm fine with the patch content, but I think this is necessary before
+> Patch 9 is applied?
 
-Regards,
-Markus
+True. Thanks for pointing that out.
+
+Cheers,
+Andrea
+
+> > ---
+> >   arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 7 +++++++
+> >   1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > index fbc56309660f..1850a575e708 100644
+> > --- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > +++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
+> > @@ -16,6 +16,13 @@ chosen: chosen {
+> >   		stdout-path = "serial10:115200n8";
+> >   	};
+> > 
+> > +	clk_rp1_xosc: clock-50000000 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-output-names = "rp1-xosc";
+> > +		clock-frequency = <50000000>;
+> > +	};
+> > +
+> >   	/* Will be filled by the bootloader */
+> >   	memory@0 {
+> >   		device_type = "memory";
+> 
