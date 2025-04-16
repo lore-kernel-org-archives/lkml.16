@@ -1,209 +1,299 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99ABD14F9D9
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7596B23BD05
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744802559; cv=none; b=NKBaRfQkOzJwgXTnKG/hWaUJmX+UNmXPWy43N07DOqsaGOyyGTUyz0JAs0EHYyLWEFXlEyRf/Kf3g8SMlr/FkKEDZt6Q/2OitVmRYhj2/MQSA0vrf21IfxlYkBFGfL8ozBv3k1bjpQyNdRYTfTey9HTDnmb4uLS/juDWg/TMEVk=
+	t=1744802647; cv=none; b=QE4Q27v3tP+5ZEbkvg3VflcZFnzN0FODO0rvO+tZY8sNVxGu/ZwLPkn1rs3NHcQ96YdEpUKbS/W1Etbr3W+/z6aSJyKirp9iG1q0MdfSDx20TXuHgOUVfmHbEOybCafPGTJPI17jX2Vh8FDRkc3RT+btfz4sgAIfo/w9vpZ4aD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744802559; c=relaxed/simple;
-	bh=u9+J56ZVO8d3RgBpDR2plZVRI891RyFTxFeHAW8KyPU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=uN5iDa1+SZXhLsKbsCmYYuDt6eeyfc9d12IeJZbbQrBREDBUt1S2wV+z+8Rm9JIIv+01WjE5tmS6E8oHURV+cae9bp3GbVq4ACRL6GDq6PG5kVW2LGXLdhvY2qP0S+9gjlbbE4Nq5Fv4IpA7wYfLq034ZIm8e+k5n3Al7xXEwHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AxZYzZ9Y; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1744802647; c=relaxed/simple;
+	bh=L3xiW7OFASaQrPX7HUHPQmKiHZe0ue+Bk0MFscC/I3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KbJRIl6WMMVCr6ZFbm01s8eD1TzeVTocW/wlJ6EwwTF3qxs9MQ7YHqtjwPxQd5olcmI5ruz6ErzQ+9V5u5X4ClsNmZsAatr+mOeliVeyKVQqCgKpFTqTDvV/Bvr8XgkIG1uJkyNHnj6VEYNjIDSLaBTB1w+E5VSF/sxXhKWaUNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=abgyc2Cv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AxZYzZ9Y"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250416112234euoutp02bf940d36708dfe72b3fe5c23235853ac~2yK3jBcJW1646316463euoutp02Y
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:22:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250416112234euoutp02bf940d36708dfe72b3fe5c23235853ac~2yK3jBcJW1646316463euoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744802554;
-	bh=o/JZlQdMxe3Mo96yx/aJSrBGKnbJT9wWiAHIxzblxxQ=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=AxZYzZ9YXRriyj+u6GV4T3daSjhmA0EkHr+2pGi+tfWsfBsq2pZhGIK/ULw+DhMq6
-	 WelXZ4Yw6GGYMWhiB+3LytLiq05iA/y9IQNJkbmT8/ZuYC+azzKxiU8uE+Ivy5ZqM/
-	 Z50NBO+4FcKoxg26bq8P2y3ZX0/8RqwKEIy7s9Dc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250416112234eucas1p208c7db55a031e7309e207c39b3fd2822~2yK2-DgQC2586025860eucas1p2f;
-	Wed, 16 Apr 2025 11:22:34 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id F4.96.20821.AF29FF76; Wed, 16
-	Apr 2025 12:22:34 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250416112233eucas1p10bb8e43a0c391392501d48c7dace23b6~2yK2YMxp11951519515eucas1p1y;
-	Wed, 16 Apr 2025 11:22:33 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250416112233eusmtrp10af3df9bf1f76b1c37a2f539cc012007~2yK2XMO-p2331123311eusmtrp1F;
-	Wed, 16 Apr 2025 11:22:33 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-43-67ff92fa36dd
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id E0.19.19920.9F29FF76; Wed, 16
-	Apr 2025 12:22:33 +0100 (BST)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250416112232eusmtip2f05b1e8bb84da2e08f38a19a071633bc~2yK1D-LF52910429104eusmtip2i;
-	Wed, 16 Apr 2025 11:22:32 +0000 (GMT)
-Message-ID: <02e21251-5c02-420d-81f2-d6f241e0212d@samsung.com>
-Date: Wed, 16 Apr 2025 13:22:31 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="abgyc2Cv"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mLot020861
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:24:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=3D1a5NjFUGpMMJ2ECwG4uMU1
+	Jk5bwW4EN61RcOaeaTU=; b=abgyc2CvgzfXN6hPsYiocNNvm371tkYwG8j8ydT+
+	qBChJpfG7yrG5moH9tkjAUDBHXmyFK2LA/Mwv9VUfmZxOH3WiS3ZiQ9Mk0zE7cj+
+	lGFvj9qJKVaDjHxw/OJO2GbyW3bKWFxW5hlLLulRSCf0ITTzk0LrMxmNhT8pXnEP
+	sZRWuaDSoQR2iMxVxoq9vBOJkxEfpCnwfZca+H7Zx1hhqOYWt6TJcijMKZdXTvFR
+	LdRTPpciipLyNyixZftMoz0Ye28izdr9+nn337fr8lLGxpgZzb1Y8/eGhQUrVfqr
+	LxxQVG9oOEKG89801XxdM8RwQnox49eEpAW2lBiYa0opLg==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yg8wkajk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:24:04 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f2b4ab462cso1782746d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:24:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744802643; x=1745407443;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3D1a5NjFUGpMMJ2ECwG4uMU1Jk5bwW4EN61RcOaeaTU=;
+        b=Sr5DsguirXjQaKMHdLCahP5GxJ550APWCFSDPGpS2QuTJJ3qz9JDbplF4g4pAbbEmM
+         RSmSvRlywECm9v1Ogaw8Hpq6mOfIJRAozwh3gxzLRyYAafaojhDH70SASav6BrwB929n
+         MDJEJ4ExAFQv+vtNSZUUItB3SI/qltgXLgkTKQuIrl0AeY2CsyApkCGtx9nQOXNeKpVw
+         pHZDywB6HbqSG/SlO73ZiwcrhpvYt3Rdie7equDxL5Voa77uK9NvtKnT5faBunSrqcUR
+         V3yBKE60+WUxsQFvgYdCIs4dy0Rz+38EajsqI7ugiwSlIWtgNABeTcM9v77ozvJaN4p9
+         ZxuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMfHOvv+FwXHHL5l6yi1JhMVjjaFEQBjKqGbUG6nvQjIl4eArGKjfPSQ046w+d29yznZ8uA35FmWXJtIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxF1pIRqHdNF4Gz+9SQq6QJVXmXF8kbWXJ973TtoxwVUk6vrQx/
+	GZWlTU1/X2ou3Nmeslki1DSnwmbSVeVR/HPxFsLS13MMqAWRhBz7nmFSZMTur7iYJteWW3Flpqf
+	JQX7UNMpljVzZtiFxIyD98WRS9Rl/2cwCjz23C18lLMqoviVkE3DZ6T6mV9toK70=
+X-Gm-Gg: ASbGncvUu5PL2uCnncHjul2qdChGJaG/zL434WuetkofIrkMnHeSYEobni9q2bQ6kWg
+	M0uNZeDM7IovR49UIQfP4jNVe/oA2oDwwUdr2lTIyuUYoabJzQJi/FdxwpqTbccQAcWfO054hVg
+	ESb4iOsjWsdmz+e6GpoDtBj5QBb/JiEoqm4upyBTZ0toMePaeEjWBFlOhB/KKuZ9DsGWrSSySo+
+	CEdj7boi/m7QwgFrq3EsIL3/6OdqHDFQ4Y73DT6pxL6YdmtcV8RHRqc4pe3KdRd2RByA4QF3gn1
+	ZLVYcoIImhHxtmso5GyOfSiutpKbyHGaAxMTIfemS8nWHAbv+40l8BtoG/PhVLrmmrVj9xOeTmg
+	=
+X-Received: by 2002:ad4:5b83:0:b0:6e8:9a55:824f with SMTP id 6a1803df08f44-6f2b2efa1ffmr18929046d6.6.1744802643205;
+        Wed, 16 Apr 2025 04:24:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZBV0Xexr1gM35pEN9z1Z6VI4fD2Dum+sBzeR89TNCj5FG5on6G+p5JH1nBP1pGyz6WoWbjg==
+X-Received: by 2002:ad4:5b83:0:b0:6e8:9a55:824f with SMTP id 6a1803df08f44-6f2b2efa1ffmr18928676d6.6.1744802642738;
+        Wed, 16 Apr 2025 04:24:02 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d3d238d5dsm1644275e87.93.2025.04.16.04.24.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 04:24:01 -0700 (PDT)
+Date: Wed, 16 Apr 2025 14:23:59 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 7/7] media: platform: qcom/iris: add sm8650 support
+Message-ID: <opy25iocdw5i2go5male5rzwoxl2hd4jxxjqj77qjiyxz7vens@wmrnrfuakhjs>
+References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
+ <20250415-topic-sm8x50-iris-v10-v6-7-8ad319094055@linaro.org>
+ <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 19/21] riscv: dts: thead: Introduce power domain
- nodes with aon firmware
-To: Drew Fustini <drew@pdp7.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, guoren@kernel.org, wefu@redhat.com,
-	jassisinghbrar@gmail.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, frank.binns@imgtec.com, matt.coster@imgtec.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
-	airlied@gmail.com, simona@ffwll.ch, ulf.hansson@linaro.org,
-	jszhang@kernel.org, p.zabel@pengutronix.de, m.szyprowski@samsung.com,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <Z/6p6MQDS8ZlQv5r@x1>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHOffe3luaFa7F0TOHkVwdiW4DBBNOtsXANrJrTDaIkiUmTBu5
-	KQYKrhVRgwECdODKUB5xa+d4zEnHBgRWKq08HFTKa50C41EeugQXS3jIq51s0tFet/Hf5/s7
-	3/N75RwhLmkjdwnPpJ3jlGmyVIYUEcaeZ7Y3N0rd8nDXHRL1jtVgqOUvLYV+bLdhqNJiE6CZ
-	IQOGRtaXSNTw+D6FnrTnEmhUf4NCeT2NJHJoZ0i0rJkRoGHz1yRaLbYAZFzNJ1G9ZZpC1cst
-	BLrZagZIXXRLgB70x6LpmV4COYY1OFJr/ZG7rZVCm6NNBNItdlLIMH9NgKz1H6P8znIieje7
-	NF5AsfMOB8F2F65RbLuzimBN2mmK1ZgGAdtcV0SyU6NtJPtNXzz78HMrxv50M5vNr+/B2JLn
-	4exSx28k+4WhDrBDeWNUnOSE6J0kLvXMeU4ZdviUKHmu4Hf8bI30woIrOQc0BVwBQiGkD0HL
-	vb1XgEgoofUA6tXrJC/WAJyf68B5sQrgqDpvS/h6b2wOfUfwB7UAfrtupXixAKDLfg/zuMT0
-	Ydi7VEp5mKBfg39OVgn4+A7Y99Us4eGX6T3wof1LryeAlsEJg4n08E46GNr0Q5gnKU7/IICW
-	u6vepDgthfbZSi+TdAR8VFvpTepLM/CXTTfJe/bAvBadt29I94mgursI4/t+H9YuLJA8B8A5
-	q4HiOQgOlGkIntPho5aVF3NmQZPG+oLfhlO2DdKzMZzeDxvNYXw4Bo4NPCb4RfrB8YUdfAt+
-	sNR4HefDYliolvDuEFihKf6vqE1vxK4CRrttK9ptQ2q3DaP9v24VIOqAlMtQKeSc6mAalxmq
-	kilUGWny0NPpimaw9cAHNq0rreDG3HJoF8CEoAtAIc7sFNuiNuUScZLs4iVOmX5SmZHKqbrA
-	q0KCkYprOgvkElouO8elcNxZTvnvKSb03ZWD7dtdduF0QnD0XZFuv2ImMFxbOYjr4sP8EtOY
-	TyNDxvVqc4zoiN45uH75wfNjny0fr451RpX02liyIcZdPet71d2peK980hEi8LmYUozFJdzO
-	ynMpExXR5pSJA1zy1leCU9mZ6r8DmWlpU8do1NGRjhMoN+kD86EPHR8FWqqC/hg2hV5/K9M/
-	y9n/bqBPiU+b72JN+RP7MZ1fd9ea4RpTXTZZsXIprux25J37G8m/Vmh/jjipiMb2EgmvvNEo
-	72WEOcEN3z81jlS5LrsI/2ehT4+IFhW1roSIyET7J68XCir7T0XFjsXPBzXlDkz0NQ/1hMe5
-	fc47bXZ1Rja1cuslhlAlyw4ewJUq2T8MHt+WTwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPKsWRmVeSWpSXmKPExsVy+t/xe7o/J/1PN7iyW9LixPVFTBZbf89i
-	t1iz9xyTxfwj51gt7l3awmRx5et7Not1Ty+wW7zY28hicW3FXHaL5mPr2SxezrrHZvGx5x6r
-	xeVdc9gsPvceYbTY9rmFzWLtkbvsFgs/bmWxWLJjF6NFW+cyVouLp1wt7t47wWLx8nIPs0Xb
-	LH6L/3t2sFv8u7aRxWL2u/3sFlveTGS1OL423KJl/xQWB1mP9zda2T3evHzJ4nG44wu7x95v
-	C1g8ds66y+7Rs/MMo8emVZ1sHneu7WHzmHcy0ON+93Emj81L6j1a1h5j8uj/a+Dxft9VNo++
-	LasYPS41X2cPEIrSsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcks
-	Sy3St0vQy3jV+pC5YJF4xdvvGQ2MG4W7GDk5JARMJP5dWsrSxcjFISSwlFHi4cHr7BAJGYlr
-	3S9ZIGxhiT/Xutggil4zStyc+o0RJMErYCdx4v0ksAYWAVWJH7cXsELEBSVOznwC1iwqIC9x
-	/9YMsBphgUSJaWsgFogIKEicW3GJCWQos8BqVonlX+8yQmz4wSixbMNFJpAqZgFxiVtP5oPZ
-	bAJGEg+WzwfbwCmgJHH233+gkziAatQl1s8TgiiXl2jeOpt5AqPQLCR3zEIyaRZCxywkHQsY
-	WVYxiqSWFuem5xYb6hUn5haX5qXrJefnbmIEpqxtx35u3sE479VHvUOMTByMhxglOJiVRHjP
-	mf9LF+JNSaysSi3Kjy8qzUktPsRoCgyLicxSosn5wKSZVxJvaGZgamhiZmlgamlmrCTO63b5
-	fJqQQHpiSWp2ampBahFMHxMHp1QDU0yFxBpPd1M2P87bZtd0FQ/M7J0y6WHS4T6e8DSV630v
-	98e8v6f+cOWxs79Y7u1tWPBpcmVsXs2lhfIvzBtmbQm+EDLJMS+2+RV31qTLLc8uv2i8rjzH
-	VjQydgrLWqlFb2cf2S0poHlBVuBtlO5PkR/nDzXZJax8vFdt2ZnzlgFaL8p/MGnFaj75z9Zo
-	W/JBtjLk8T+Lk9+eLuP/GuKap1S17HT0G+bO0+1fuw9tKxcwm8JhMtlPR1rwE49uyppiG1nD
-	I9GaAYmnTJsZnNZWf/ix+cR6hi270tbHd6i3/WOeIhq3USb/yJc9rcnSbFXzNykeM9Nme9no
-	b13ZO7t0to7eUqZVbWV7ZK2XSOelKbEUZyQaajEXFScCAHoYScPiAwAA
-X-CMS-MailID: 20250416112233eucas1p10bb8e43a0c391392501d48c7dace23b6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250219140315eucas1p10f08d297580edd114f4c487c1fbffa8d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250219140315eucas1p10f08d297580edd114f4c487c1fbffa8d
-References: <20250219140239.1378758-1-m.wilczynski@samsung.com>
-	<CGME20250219140315eucas1p10f08d297580edd114f4c487c1fbffa8d@eucas1p1.samsung.com>
-	<20250219140239.1378758-20-m.wilczynski@samsung.com> <Z/2+rbhsaBP0DQop@x1>
-	<Z/6p6MQDS8ZlQv5r@x1>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <085acdab-87b0-3a94-72fd-881d517d95cb@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=E9TNpbdl c=1 sm=1 tr=0 ts=67ff9354 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=C-jBNuSA4hYJbswlNoEA:9 a=CjuIK1q_8ugA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: yA0JiHryiWkohuFEbyI4GFP6XxH45_ol
+X-Proofpoint-GUID: yA0JiHryiWkohuFEbyI4GFP6XxH45_ol
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160093
 
-
-
-On 4/15/25 20:48, Drew Fustini wrote:
-> On Mon, Apr 14, 2025 at 07:04:29PM -0700, Drew Fustini wrote:
->> On Wed, Feb 19, 2025 at 03:02:37PM +0100, Michal Wilczynski wrote:
->>> The DRM Imagination GPU requires a power-domain driver. In the T-HEAD
->>> TH1520 SoC implements power management capabilities through the E902
->>> core, which can be communicated with through the mailbox, using firmware
->>> protocol.
->>>
->>> Add AON node, which servers as a power-domain controller.
->>>
->>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->>> ---
->>>  arch/riscv/boot/dts/thead/th1520.dtsi | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
->>> index 197df1f32b25..474f31576a1b 100644
->>> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
->>> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
->>> @@ -6,6 +6,7 @@
->>>  
->>>  #include <dt-bindings/interrupt-controller/irq.h>
->>>  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
->>> +#include <dt-bindings/power/thead,th1520-power.h>
->>>  
->>>  / {
->>>  	compatible = "thead,th1520";
->>> @@ -229,6 +230,13 @@ stmmac_axi_config: stmmac-axi-config {
->>>  		snps,blen = <0 0 64 32 0 0 0>;
->>>  	};
->>>  
->>> +	aon: aon {
->>> +		compatible = "thead,th1520-aon";
->>> +		mboxes = <&mbox_910t 1>;
->>> +		mbox-names = "aon";
->>> +		#power-domain-cells = <1>;
->>> +	};
->>> +
->>>  	soc {
->>>  		compatible = "simple-bus";
->>>  		interrupt-parent = <&plic>;
->>> -- 
->>> 2.34.1
->>>
->>
->> Reviewed-by: Drew Fustini <drew@pdp7.com>
->>
->> I tested this on top of 6.15-rc1 and found no issues.
->>
->> -Drew
+On Wed, Apr 16, 2025 at 03:55:35PM +0530, Dikshita Agarwal wrote:
 > 
-> I've applied to thead-dt-for-next:
-> https://protect2.fireeye.com/v1/url?k=2f3b741b-4eb0613b-2f3aff54-74fe485fb347-beeac007773a982c&q=1&e=eb6b4dda-c02a-4e0a-831a-a28d0489f6c3&u=https%3A%2F%2Fgithub.com%2Fpdp7%2Flinux%2Fcommit%2F2bae46e3de2a64fe3a619d61b16da0c01b8df2a1
 > 
-> Michal - are there any other dts patches that I should consider for 6.16
-> PR?  I would probably send to Arnd around 6.15-rc3 or 6.15-rc4.
+> On 4/15/2025 7:17 PM, Neil Armstrong wrote:
+> > Add support for the SM8650 platform by re-using the SM8550
+> > definitions and using the vpu33 ops.
+> > 
+> > Move the reset tables that diffes in a per-SoC platform
+> > header, that will contain mode SoC specific data when
+> > more codecs are introduced.
+> > 
+> > The SM8650/vpu33 requires more reset lines, but the H.264
+> > decoder capabilities are identical.
+> > 
+> > Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+> > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > ---
+> >  .../platform/qcom/iris/iris_platform_common.h      |  1 +
+> >  .../media/platform/qcom/iris/iris_platform_gen2.c  | 65 +++++++++++++++++++++-
+> >  .../platform/qcom/iris/iris_platform_sm8550.h      | 11 ++++
+> >  .../platform/qcom/iris/iris_platform_sm8650.h      | 13 +++++
+> >  drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
+> >  5 files changed, 92 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> > index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
+> > --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> > +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> > @@ -35,6 +35,7 @@ enum pipe_type {
+> >  
+> >  extern struct iris_platform_data sm8250_data;
+> >  extern struct iris_platform_data sm8550_data;
+> > +extern struct iris_platform_data sm8650_data;
+> >  
+> >  enum platform_clk_type {
+> >  	IRIS_AXI_CLK,
+> > diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> > index 35d278996c430f2856d0fe59586930061a271c3e..6d1771bd68689d96b5b9087b0ad32b934f7295ee 100644
+> > --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> > +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> > @@ -10,6 +10,9 @@
+> >  #include "iris_platform_common.h"
+> >  #include "iris_vpu_common.h"
+> >  
+> > +#include "iris_platform_sm8550.h"
+> > +#include "iris_platform_sm8650.h"
+> > +
+> >  #define VIDEO_ARCH_LX 1
+> >  
+> >  static struct platform_inst_fw_cap inst_fw_cap_sm8550[] = {
+> > @@ -142,8 +145,6 @@ static const struct icc_info sm8550_icc_table[] = {
+> >  	{ "video-mem",  1000, 15000000 },
+> >  };
+> >  
+> > -static const char * const sm8550_clk_reset_table[] = { "bus" };
+> > -
+> >  static const struct bw_info sm8550_bw_table_dec[] = {
+> >  	{ ((4096 * 2160) / 256) * 60, 1608000 },
+> >  	{ ((4096 * 2160) / 256) * 30,  826000 },
+> > @@ -264,3 +265,63 @@ struct iris_platform_data sm8550_data = {
+> >  	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+> >  	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+> >  };
+> > +
+> > +/*
+> > + * Shares most of SM8550 data except:
+> > + * - vpu_ops to iris_vpu33_ops
+> > + * - clk_rst_tbl to sm8650_clk_reset_table
+> > + * - controller_rst_tbl to sm8650_controller_reset_table
+> > + * - fwname to "qcom/vpu/vpu33_p4.mbn"
+> > + */
+> > +struct iris_platform_data sm8650_data = {
+> > +	.get_instance = iris_hfi_gen2_get_instance,
+> > +	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+> > +	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+> > +	.vpu_ops = &iris_vpu33_ops,
+> > +	.set_preset_registers = iris_set_sm8550_preset_registers,
+> > +	.icc_tbl = sm8550_icc_table,
+> > +	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+> > +	.clk_rst_tbl = sm8650_clk_reset_table,
+> > +	.clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
+> > +	.controller_rst_tbl = sm8650_controller_reset_table,
+> > +	.controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
+> > +	.bw_tbl_dec = sm8550_bw_table_dec,
+> > +	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+> > +	.pmdomain_tbl = sm8550_pmdomain_table,
+> > +	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+> > +	.opp_pd_tbl = sm8550_opp_pd_table,
+> > +	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+> > +	.clk_tbl = sm8550_clk_table,
+> > +	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+> > +	/* Upper bound of DMA address range */
+> > +	.dma_mask = 0xe0000000 - 1,
+> > +	.fwname = "qcom/vpu/vpu33_p4.mbn",
+> > +	.pas_id = IRIS_PAS_ID,
+> > +	.inst_caps = &platform_inst_cap_sm8550,
+> > +	.inst_fw_caps = inst_fw_cap_sm8550,
+> > +	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
+> > +	.tz_cp_config_data = &tz_cp_config_sm8550,
+> > +	.core_arch = VIDEO_ARCH_LX,
+> > +	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+> > +	.ubwc_config = &ubwc_config_sm8550,
+> > +	.num_vpp_pipe = 4,
+> > +	.max_session_count = 16,
+> > +	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+> > +	.input_config_params =
+> > +		sm8550_vdec_input_config_params,
+> > +	.input_config_params_size =
+> > +		ARRAY_SIZE(sm8550_vdec_input_config_params),
+> > +	.output_config_params =
+> > +		sm8550_vdec_output_config_params,
+> > +	.output_config_params_size =
+> > +		ARRAY_SIZE(sm8550_vdec_output_config_params),
+> > +	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+> > +	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+> > +	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+> > +	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+> > +
+> > +	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+> > +	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+> > +	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+> > +	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+> > +};
+> > diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.h b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..ac8847edb585e4a9ce6b669a3a5988e7809972af
+> > --- /dev/null
+> > +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.h
+> > @@ -0,0 +1,11 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> > + */
+> > +
+> > +#ifndef __IRIS_PLATFORM_SM8550_H__
+> > +#define __IRIS_PLATFORM_SM8550_H__
+> > +
+> > +static const char * const sm8550_clk_reset_table[] = { "bus" };
+> > +
+> > +#endif
+> There is no need of iris_platform_sm8550.h, you can keep this entry in
+> gen2.c file itself. As we are making that our base.
 
-Thanks for the heads-up.
+That would make it unsymmetrical. I think having a separate header is a
+better option.
 
-I think the reset DT node would be a good candidate for inclusion [1].
-Depending on how the clock series evolves, we might also consider this
-commit without the reset part [2]. Similarly, if the PM series lands in
-time, we may want to update the aon node to include the reset [3].
-
-To avoid any last-minute issues, I can send a separate DT-only series
-that includes all relevant patches targeting the next release. Just give
-me a heads-up a few days before your PR, and I’ll make sure everything
-is ready.
-
-Best regards,
-Michał
-
-[1] - https://lore.kernel.org/all/20250219140239.1378758-21-m.wilczynski@samsung.com/
-[2] - https://lore.kernel.org/all/20250219140239.1378758-19-m.wilczynski@samsung.com/
-[3] - https://lore.kernel.org/all/20250414-apr_14_for_sending-v2-2-70c5af2af96c@samsung.com/
-
+> You can just have iris_platform_sm8650.h which overrides this entry with
+> SOC specific reset requirements for SM8650.
 > 
 > Thanks,
-> Drew
-> 
+> Dikshita
+> > diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8650.h b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..75e9d572e788de043a56cf85a4cb634bd02226b9
+> > --- /dev/null
+> > +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8650.h
+> > @@ -0,0 +1,13 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+> > + */
+> > +
+> > +#ifndef __IRIS_PLATFORM_SM8650_H__
+> > +#define __IRIS_PLATFORM_SM8650_H__
+> > +
+> > +static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
+> > +
+> > +static const char * const sm8650_controller_reset_table[] = { "xo" };
+> > +
+> > +#endif
+> > diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> > index 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
+> > --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> > +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> > @@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
+> >  			.data = &sm8250_data,
+> >  		},
+> >  #endif
+> > +	{
+> > +		.compatible = "qcom,sm8650-iris",
+> > +		.data = &sm8650_data,
+> > +	},
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, iris_dt_match);
+> > 
+
+-- 
+With best wishes
+Dmitry
