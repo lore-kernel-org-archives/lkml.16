@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458C1217657
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DCF21B1BC;
+	Wed, 16 Apr 2025 16:29:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820974; cv=none; b=S+WzAbnla0mJzPsy6s7ZSuu67J97i3t/C6NvT5KS42KomuC/0xU/yNl4kCOaietgfHWocWTO8Usg+GfDNiVO8b+He28pRPx8XdOgzG9ooODlZhCERD716Y3gnVMyLvqq8bBbFjphMFT0u5GmvRKOMwi5Uy+S9oC9HKMxlMFyBAA=
+	t=1744820977; cv=none; b=Fs9jjlytjFeEqbXIasD4Qfa1zuk9MIs/0ICQMKGmOuP92YoEJTLEKe24DahvzHStGMlfwnJzSyH0KC88G71d3497MvpYSSqa8b2vK67KjCF9wc5c4sdd9iDjjOlNoj96zuX+hRvHjxrguKQ/NDSGJp/XjXKVmiOZHLu49e5+45k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820974; c=relaxed/simple;
-	bh=1wEU3kqWniX4oeLgQyszFiXMvT6lV0eU4OnN68ez7Qg=;
+	s=arc-20240116; t=1744820977; c=relaxed/simple;
+	bh=Uf6MF+4cqr2cCfzLE6uv2eShicTCfEarLEKPuph+oKI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q+AxsXK58liiqoC0WJ88TR5s0uWlFiLgUEkuxcKPEfWd9Vr+19L25KUQIy/QtFSs//hzq8QI4yBxkA7bM01kwdVtHWvXHL6qVhcTn1a0fcQP9CWOhhcgk1biGYZDgk3hGcOdBFzbXxgXfR3vssQD0bkq4fX6xC4oJV8pQMLW9mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rpq7mQy+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EQFskdHA; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Az9J9uHIkM4+Ahng62vQ124RUF8w+PMaKHUwYwD5K1vverPK1c/iggsxX9xL/Fpn5ZOo1vy4Yqm8B7uJpjwySdCfz+6RE8N9MQ7qciS3K0UPv7sx5O6dXLBPPd9qjXxrLZShvGEp9hfNQCVr96qlQp8uKLJ5vIOcUo7r/mjmIdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NrV3UKlC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gQ2S8Vq1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rpq7mQy+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EQFskdHA"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NrV3UKlC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gQ2S8Vq1"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744820970;
+	s=2020; t=1744820973;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MHrIMWrBknhDvpUrvZqL2/sWbWTxrgQvEOQEnBSnNUI=;
-	b=rpq7mQy+FNjD250HeJIsiGVEwU6Ppgm6SaiD5cssohBe22fkDVoQaN7Ctf6kQ3hpZxeaVp
-	P0bZZOTbmn1yzB9fESL6iSgCBFjycjWC2Xd/XYCQXVbD9GsKiAy5fD+4WQEQP9C2IYvTVE
-	yNxkEXVAt2a3zT6UweLywPwNQvCWiaHbGihRLX5huSFyDkmF5jIxmqMIhHMgdnbGYKooBp
-	6uC5I5exjgxaUI9+mDIFD6HpVAeePX+d9I6ivNVde/LWlsV5pGU7D8sTj6A1xoHrf4baSr
-	tv7QAI8akRCufofyNzbrolceQnXKnjunOcZBw7l3U00/TW5t4FB5zr8wY5JfKg==
+	bh=uhYrjCjllIT09FWGjatSJnsamFQi/vOB94QRhXHdb6E=;
+	b=NrV3UKlCwR0oT60ieABqQ7IVT8zgqla0ZxAx6XsEEJMr1iZl/QS/dO5eEamVy+ynMe8855
+	Tq9gcsL7eZp1qvtKbUeKNFSve4DW8E9cFqHDIuj+4GL+iwSFv2HR4gqmGYsMEuTtxgOvwa
+	dKdvsbKbX7gMa+Mlb/g1kynmiZwq17/jzlC1XKRxPKUwdLlP+lS3JwTBKwrcVAqTqAiuSU
+	SfsK7ZQH+ESVi70cZJlDP+dYYf8kyrNCSzdv2DSJMYZehJV5CyBqGmjts/VCH859nwTqig
+	8/DgE4JDE2ivJmqKaBpT8Z2lNvoCR43HFnXG93lfqU9l+pKLqN15vphHpaOqHQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744820970;
+	s=2020e; t=1744820973;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MHrIMWrBknhDvpUrvZqL2/sWbWTxrgQvEOQEnBSnNUI=;
-	b=EQFskdHAnM/Mepfx+GilASw8dX/aCyIdUdA7ytOii8lBcXJfZnqO8xtBcRknUssEZiFs3C
-	3tR9x7DL7/k+8GBQ==
+	bh=uhYrjCjllIT09FWGjatSJnsamFQi/vOB94QRhXHdb6E=;
+	b=gQ2S8Vq1DN/XS+/lEnfAk5vIDZuNGVlxxD6SKij+o4NlEWLE92lv9C0UQ1LQm+xkkRBAot
+	aXBf8Y+42wCV/pBQ==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -49,10 +49,19 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v12 10/21] futex: Introduce futex_q_lockptr_lock()
-Date: Wed, 16 Apr 2025 18:29:10 +0200
-Message-ID: <20250416162921.513656-11-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v12 18/21] tools headers: Synchronize prctl.h ABI header
+Date: Wed, 16 Apr 2025 18:29:18 +0200
+Message-ID: <20250416162921.513656-19-bigeasy@linutronix.de>
 In-Reply-To: <20250416162921.513656-1-bigeasy@linutronix.de>
 References: <20250416162921.513656-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,212 +72,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-futex_lock_pi() and __fixup_pi_state_owner() acquire the
-futex_q::lock_ptr without holding a reference assuming the previously
-obtained hash bucket and the assigned lock_ptr are still valid. This
-isn't the case once the private hash can be resized and becomes invalid
-after the reference drop.
+Synchronize prctl.h with current uapi version after adding
+PR_FUTEX_HASH.
 
-Introduce futex_q_lockptr_lock() to lock the hash bucket recorded in
-futex_q::lock_ptr. The lock pointer is read in a RCU section to ensure
-that it does not go away if the hash bucket has been replaced and the
-old pointer has been observed. After locking the pointer needs to be
-compared to check if it changed. If so then the hash bucket has been
-replaced and the user has been moved to the new one and lock_ptr has
-been updated. The lock operation needs to be redone in this case.
-
-The locked hash bucket is not returned.
-
-A special case is an early return in futex_lock_pi() (due to signal or
-timeout) and a successful futex_wait_requeue_pi(). In both cases a valid
-futex_q::lock_ptr is expected (and its matching hash bucket) but since
-the waiter has been removed from the hash this can no longer be
-guaranteed. Therefore before the waiter is removed and a reference is
-acquired which is later dropped by the waiter to avoid a resize.
-
-Add futex_q_lockptr_lock() and use it.
-Acquire an additional reference in requeue_pi_wake_futex() and
-futex_unlock_pi() while the futex_q is removed, denote this extra
-reference in futex_q::drop_hb_ref and let the waiter drop the reference
-in this case.
-
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/futex/core.c    | 25 +++++++++++++++++++++++++
- kernel/futex/futex.h   |  3 ++-
- kernel/futex/pi.c      | 15 +++++++++++++--
- kernel/futex/requeue.c | 16 +++++++++++++---
- 4 files changed, 53 insertions(+), 6 deletions(-)
+ tools/include/uapi/linux/prctl.h | 44 +++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 5e70cb8eb2507..1443a98dfa7fa 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -134,6 +134,13 @@ struct futex_hash_bucket *futex_hash(union futex_key *=
-key)
- 	return &futex_queues[hash & futex_hashmask];
- }
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/pr=
+ctl.h
+index 35791791a879b..21f30b3ded74b 100644
+--- a/tools/include/uapi/linux/prctl.h
++++ b/tools/include/uapi/linux/prctl.h
+@@ -230,7 +230,7 @@ struct prctl_mm_map {
+ # define PR_PAC_APDBKEY			(1UL << 3)
+ # define PR_PAC_APGAKEY			(1UL << 4)
 =20
-+/**
-+ * futex_hash_get - Get an additional reference for the local hash.
-+ * @hb:                    ptr to the private local hash.
-+ *
-+ * Obtain an additional reference for the already obtained hash bucket. The
-+ * caller must already own an reference.
+-/* Tagged user address controls for arm64 */
++/* Tagged user address controls for arm64 and RISC-V */
+ #define PR_SET_TAGGED_ADDR_CTRL		55
+ #define PR_GET_TAGGED_ADDR_CTRL		56
+ # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
+@@ -244,6 +244,9 @@ struct prctl_mm_map {
+ # define PR_MTE_TAG_MASK		(0xffffUL << PR_MTE_TAG_SHIFT)
+ /* Unused; kept only for source compatibility */
+ # define PR_MTE_TCF_SHIFT		1
++/* RISC-V pointer masking tag length */
++# define PR_PMLEN_SHIFT			24
++# define PR_PMLEN_MASK			(0x7fUL << PR_PMLEN_SHIFT)
+=20
+ /* Control reclaim behavior when allocating memory */
+ #define PR_SET_IO_FLUSHER		57
+@@ -328,4 +331,43 @@ struct prctl_mm_map {
+ # define PR_PPC_DEXCR_CTRL_CLEAR_ONEXEC	0x10 /* Clear the aspect on exec */
+ # define PR_PPC_DEXCR_CTRL_MASK		0x1f
+=20
++/*
++ * Get the current shadow stack configuration for the current thread,
++ * this will be the value configured via PR_SET_SHADOW_STACK_STATUS.
 + */
- void futex_hash_get(struct futex_hash_bucket *hb) { }
- void futex_hash_put(struct futex_hash_bucket *hb) { }
-=20
-@@ -615,6 +622,24 @@ int futex_unqueue(struct futex_q *q)
- 	return ret;
- }
-=20
-+void futex_q_lockptr_lock(struct futex_q *q)
-+{
-+	spinlock_t *lock_ptr;
++#define PR_GET_SHADOW_STACK_STATUS      74
 +
-+	/*
-+	 * See futex_unqueue() why lock_ptr can change.
-+	 */
-+	guard(rcu)();
-+retry:
-+	lock_ptr =3D READ_ONCE(q->lock_ptr);
-+	spin_lock(lock_ptr);
++/*
++ * Set the current shadow stack configuration.  Enabling the shadow
++ * stack will cause a shadow stack to be allocated for the thread.
++ */
++#define PR_SET_SHADOW_STACK_STATUS      75
++# define PR_SHADOW_STACK_ENABLE         (1UL << 0)
++# define PR_SHADOW_STACK_WRITE		(1UL << 1)
++# define PR_SHADOW_STACK_PUSH		(1UL << 2)
 +
-+	if (unlikely(lock_ptr !=3D q->lock_ptr)) {
-+		spin_unlock(lock_ptr);
-+		goto retry;
-+	}
-+}
++/*
++ * Prevent further changes to the specified shadow stack
++ * configuration.  All bits may be locked via this call, including
++ * undefined bits.
++ */
++#define PR_LOCK_SHADOW_STACK_STATUS      76
 +
- /*
-  * PI futexes can not be requeued and must remove themselves from the hash
-  * bucket. The hash bucket lock (i.e. lock_ptr) is held.
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index bc76e366f9a77..26e69333cb745 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -183,6 +183,7 @@ struct futex_q {
- 	union futex_key *requeue_pi_key;
- 	u32 bitset;
- 	atomic_t requeue_state;
-+	bool drop_hb_ref;
- #ifdef CONFIG_PREEMPT_RT
- 	struct rcuwait requeue_wait;
- #endif
-@@ -197,7 +198,7 @@ enum futex_access {
-=20
- extern int get_futex_key(u32 __user *uaddr, unsigned int flags, union fute=
-x_key *key,
- 			 enum futex_access rw);
--
-+extern void futex_q_lockptr_lock(struct futex_q *q);
- extern struct hrtimer_sleeper *
- futex_setup_timer(ktime_t *time, struct hrtimer_sleeper *timeout,
- 		  int flags, u64 range_ns);
-diff --git a/kernel/futex/pi.c b/kernel/futex/pi.c
-index e52f540e81b6a..dacb2330f1fbc 100644
---- a/kernel/futex/pi.c
-+++ b/kernel/futex/pi.c
-@@ -806,7 +806,7 @@ static int __fixup_pi_state_owner(u32 __user *uaddr, st=
-ruct futex_q *q,
- 		break;
- 	}
-=20
--	spin_lock(q->lock_ptr);
-+	futex_q_lockptr_lock(q);
- 	raw_spin_lock_irq(&pi_state->pi_mutex.wait_lock);
-=20
- 	/*
-@@ -1072,7 +1072,7 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int fla=
-gs, ktime_t *time, int tryl
- 		 * spinlock/rtlock (which might enqueue its own rt_waiter) and fix up
- 		 * the
- 		 */
--		spin_lock(q.lock_ptr);
-+		futex_q_lockptr_lock(&q);
- 		/*
- 		 * Waiter is unqueued.
- 		 */
-@@ -1092,6 +1092,11 @@ int futex_lock_pi(u32 __user *uaddr, unsigned int fl=
-ags, ktime_t *time, int tryl
-=20
- 		futex_unqueue_pi(&q);
- 		spin_unlock(q.lock_ptr);
-+		if (q.drop_hb_ref) {
-+			CLASS(hb, hb)(&q.key);
-+			/* Additional reference from futex_unlock_pi() */
-+			futex_hash_put(hb);
-+		}
- 		goto out;
-=20
- out_unlock_put_key:
-@@ -1200,6 +1205,12 @@ int futex_unlock_pi(u32 __user *uaddr, unsigned int =
-flags)
- 		 */
- 		rt_waiter =3D rt_mutex_top_waiter(&pi_state->pi_mutex);
- 		if (!rt_waiter) {
-+			/*
-+			 * Acquire a reference for the leaving waiter to ensure
-+			 * valid futex_q::lock_ptr.
-+			 */
-+			futex_hash_get(hb);
-+			top_waiter->drop_hb_ref =3D true;
- 			__futex_unqueue(top_waiter);
- 			raw_spin_unlock_irq(&pi_state->pi_mutex.wait_lock);
- 			goto retry_hb;
-diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
-index 023c028d2fce3..b0e64fd454d96 100644
---- a/kernel/futex/requeue.c
-+++ b/kernel/futex/requeue.c
-@@ -231,7 +231,12 @@ void requeue_pi_wake_futex(struct futex_q *q, union fu=
-tex_key *key,
-=20
- 	WARN_ON(!q->rt_waiter);
- 	q->rt_waiter =3D NULL;
--
-+	/*
-+	 * Acquire a reference for the waiter to ensure valid
-+	 * futex_q::lock_ptr.
-+	 */
-+	futex_hash_get(hb);
-+	q->drop_hb_ref =3D true;
- 	q->lock_ptr =3D &hb->lock;
-=20
- 	/* Signal locked state to the waiter */
-@@ -826,7 +831,7 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned i=
-nt flags,
- 	case Q_REQUEUE_PI_LOCKED:
- 		/* The requeue acquired the lock */
- 		if (q.pi_state && (q.pi_state->owner !=3D current)) {
--			spin_lock(q.lock_ptr);
-+			futex_q_lockptr_lock(&q);
- 			ret =3D fixup_pi_owner(uaddr2, &q, true);
- 			/*
- 			 * Drop the reference to the pi state which the
-@@ -853,7 +858,7 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned i=
-nt flags,
- 		if (ret && !rt_mutex_cleanup_proxy_lock(pi_mutex, &rt_waiter))
- 			ret =3D 0;
-=20
--		spin_lock(q.lock_ptr);
-+		futex_q_lockptr_lock(&q);
- 		debug_rt_mutex_free_waiter(&rt_waiter);
- 		/*
- 		 * Fixup the pi_state owner and possibly acquire the lock if we
-@@ -885,6 +890,11 @@ int futex_wait_requeue_pi(u32 __user *uaddr, unsigned =
-int flags,
- 	default:
- 		BUG();
- 	}
-+	if (q.drop_hb_ref) {
-+		CLASS(hb, hb)(&q.key);
-+		/* Additional reference from requeue_pi_wake_futex() */
-+		futex_hash_put(hb);
-+	}
-=20
- out:
- 	if (to) {
++/*
++ * Controls the mode of timer_create() for CRIU restore operations.
++ * Enabling this allows CRIU to restore timers with explicit IDs.
++ *
++ * Don't use for normal operations as the result might be undefined.
++ */
++#define PR_TIMER_CREATE_RESTORE_IDS		77
++# define PR_TIMER_CREATE_RESTORE_IDS_OFF	0
++# define PR_TIMER_CREATE_RESTORE_IDS_ON		1
++# define PR_TIMER_CREATE_RESTORE_IDS_GET	2
++
++/* FUTEX hash management */
++#define PR_FUTEX_HASH			78
++# define PR_FUTEX_HASH_SET_SLOTS	1
++# define PR_FUTEX_HASH_GET_SLOTS	2
++# define PR_FUTEX_HASH_GET_IMMUTABLE	3
++
+ #endif /* _LINUX_PRCTL_H */
 --=20
 2.49.0
 
