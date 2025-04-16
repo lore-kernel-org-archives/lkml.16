@@ -1,127 +1,141 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49862135B7
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB00178395;
+	Wed, 16 Apr 2025 16:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820995; cv=none; b=M029DOJ8zVSHykcbymX8I4FAY5FilYBlrUd6qOxd9vEuHloreEmAUgbwcJEydPq2VevfCQ8tK3Fu8bHDUL2f0cLWBxT4SeIsASbgP3YmNd85Cn2MPH/dLEnUfeSUfAR+hcTADvEztcK9v0UMBs+X5t8EOvuE3maFK+LquQZbZFM=
+	t=1744821104; cv=none; b=BFZzv/b5kW6J/sfajhNUOxizonVYJVmDsMHgoXvFFL49g5JvdNe0f3mq2FJwQQu6fqC6rtHlDVo18cuAct7js0XFdynaQ/U7UZiCmQSm9dcxiU5VHOIABW7EqtOWjHDBZjSQY95iy0VML/vWo3NOZHVTXcezG0Bl9UPi5MJfCL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820995; c=relaxed/simple;
-	bh=XjDWExc7aCtKdBEsMDk+FwHQrVvKiy//tx9TxHhcszI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XZwpQixJnJGCMBXt9EavaoWI5IytLcsIBNnrvZex4oMEZea4Jb8NGzHvpOzcPP60pu8URPJu8PXU0OkNWo93Tl2CTgO6jM0tdbpbo+dETcX1NEIoL0l7a4YV9lsXkArX/hqLEbWvVV0aTIJcJEyhJIsY/4isSAIfV5+bTLxVfTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=z7Pi2DNg; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744821104; c=relaxed/simple;
+	bh=VOxCjrQ46jmcN2nEj9Qihg84D1Vv/TX3E9KpOjQWLWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bLhNGZVkCX5W1bnRNHaeXsNq6ikN1rA0dspzRSA9mSW+D/VAJPkLRGLa/J77tifKBz8ot8tGORxs3aBKdsyL+7dV+pRS8wgajImCbmKk118KHzqqmPQyZW7ACBpjKTZn2398DmAUw1xoq5nISX9FM1wo7pu3svNL7KWramc95L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fhiLd91y; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="z7Pi2DNg"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72bceb93f2fso511560a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 09:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744820992; x=1745425792; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i/JMFCzdAj9xuXRdhWt8/x0fkEDuPnXUetQjhrJIECU=;
-        b=z7Pi2DNgf02OIrV0jhGaWn+l9mmLuoPugpehNM68BclbOl7qO6VWQ7cXXfIq0UYDOm
-         fh3h0jsBJBel91i//rJn4vyQJXJOUAnpQ9IpPJGNyyHr9PQFsNOTR/zgwU0ZequlEm5H
-         sNZELp/eraZEV3fzfCe1c/ze7Ke8yXK0jGaxZOyzktvMt5GTYHVF9U5A6oUk8KMCWQQw
-         TJJ1/mH6vcUTh2zwW/X/fIRdwTdKpLKKi9A59XOwR+73Yccq2Mzki1HsVhSjjskKBuUx
-         ysJYMBS2wjP1FK6wzPqvBcOhCa0J2XeS3y6khGDspHF7xSEvi9WpQG/IX1xAvAz9xSZn
-         9Wmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744820992; x=1745425792;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/JMFCzdAj9xuXRdhWt8/x0fkEDuPnXUetQjhrJIECU=;
-        b=v9tX5b/0EmaB2iI7TVH3k+8Ujq2W8LV/MLMuWurSrREhz3f6KzTpsHXHthnR34FLV3
-         hKctTu9Dfwg6eDm1uaBWWTsLnBJJAwmKJPCYo3cy2GrUC9BWiPyvOqcoob3djLJpL/Z9
-         QxCcEpmTgPFKmV6ZrDCXh2Jn6/r8vupNKGEcZjVwZeLTDXdJ+nJp9BjHa8pb350ART9p
-         at/LuWdDLRMoaYp063meMHD9cvHA0Egd5QZFcjSSRoEQ/XthLzS3D6EBn7eLYWnaeqOP
-         XpkSU7JOh03G5X4e5gYwnmVgcrbaKQgK3Upf/4+LGbYZyQrb2dS+l/dtHLl3VkRajvrp
-         E5ig==
-X-Forwarded-Encrypted: i=1; AJvYcCXHosUQipBEJAGzJwjOKBrzJQFtmwfRzl85zDuo5rboBJg067BhhAK7N1F8QSGAJ6k0YoZv1Yo7PMuTaLg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlPl5Aip15pz8Nym/dBt4X4C1cVYM0UIl2Eq2/Dsuiehj7dNmv
-	H7YZp0Xvz+kcHw5oL9BdeJO75m74w7KQQS1LC+5sa6+5NHRi40ACbaeElHlshu0=
-X-Gm-Gg: ASbGncuZVbn8TCL/PfIKYKMAAlB1TMajWxxo/7FlzRKui4kPy4I0cQk7qR5Bn3aMd+T
-	IwXAtBOAo0qKhdP7ZHTGoQ/Ml3vbLb7hkFTP8tbMz7iHN1cuTh0xKbDkPkduiItacPaJYdGkYXG
-	6choxv7VzCSZvmUEa8NATeAafoxv1Y4TFtrmDq0OCs3+GNtsNvMuQieXjGJB52RIZ6/07yHndev
-	7kNzyjtuKEvxJ0e/WjqtqOTEQxVd0UPPl9WTDRIcIkdTLeOVzexzx1fPbXP4qousVUB1zzIWoca
-	h4XrZ5Fqobvc6qPmm0A0D4xvJ+pLW6yN49mAtMz3aOrk1LXN3/oJQN+RQy1uWXEUIcCwQEfeA1a
-	3rcceTJfdyfjIm2sOBr11aDRaTtQX
-X-Google-Smtp-Source: AGHT+IG5a3+ymiiWxKzRh04gy0UrhiigEm9Xin7Ki5RT8tk8J+n0rFy4NL9QG5oedDe4BhHkRZmCdw==
-X-Received: by 2002:a05:6808:2217:b0:3f9:28b9:7021 with SMTP id 5614622812f47-400b7efa942mr109910b6e.5.1744820991792;
-        Wed, 16 Apr 2025 09:29:51 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:58f0:670c:6b15:7fd3? ([2600:8803:e7e4:1d00:58f0:670c:6b15:7fd3])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e4db34sm2882860a34.49.2025.04.16.09.29.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 09:29:51 -0700 (PDT)
-Message-ID: <147fa354-e1fe-46ec-9c47-59794f37bfb7@baylibre.com>
-Date: Wed, 16 Apr 2025 11:29:50 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fhiLd91y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744821103; x=1776357103;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VOxCjrQ46jmcN2nEj9Qihg84D1Vv/TX3E9KpOjQWLWc=;
+  b=fhiLd91yiW2V5dFcDmuEOrSjXq3N08fNc/gZf0ltGqca1Rc0JsNrtXGu
+   N1nlYJbL+yjxgBLQ/r0LdI6YcB4G0U6TjQdk5PiSkTK87kgn4Ik7gQTos
+   mvxiUCnbpTV6HYoO9Lm2YFA96zpkF3iI/Xb3NiSnEAOoTPzsH9LxRR9HO
+   +9XyOo7JJdzDJr0k6nOkf63Sj11A+A225IACWIb41IrfWAKsRlmF1cqhe
+   3POzd6wtptWJG9587oj1VBPRLLBGJQHEQYTgZ4fhcDKmd8aJtPd5H+nIY
+   /uFGdgwLJ0s/ZCytzc+VSd/U+9+SxdDVcvGVRIaoVpowLKwR9Hpcmgr95
+   Q==;
+X-CSE-ConnectionGUID: Tl+J1vwhR22UcyL7W2OGfg==
+X-CSE-MsgGUID: at/MKXceRUGk8uYpnPGEzA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46546025"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46546025"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 09:31:41 -0700
+X-CSE-ConnectionGUID: p6VMp7xNS6OXrotq0HaQBg==
+X-CSE-MsgGUID: +wzwyImBS/KpginAdzk7rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="153724291"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.65])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 09:31:39 -0700
+Date: Wed, 16 Apr 2025 18:31:30 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, 
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com, mchehab@kernel.org, hdegoede@redhat.com, 
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <2f73luvvsoxqikskvkxw4yadlhq4vl7ywh5givld7pivj2lyal@ncsyli2uoz74>
+References: <20250321093814.18159-1-mehdi.djait@linux.intel.com>
+ <20250321101124.GB25483@pendragon.ideasonboard.com>
+ <ryzkubgzndeyufi2i4vuwmgaekyapol36oln237ki4m3fh32yl@mpr7g5woiqcf>
+ <Z-EL1Y9Fh_0Z8KBt@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] pwm: Add support for pwmchip devices for faster and
- easier userspace access
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-pwm@vger.kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org
-References: <20250416094316.2494767-2-u.kleine-koenig@baylibre.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250416094316.2494767-2-u.kleine-koenig@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-EL1Y9Fh_0Z8KBt@kekkonen.localdomain>
 
-On 4/16/25 4:43 AM, Uwe Kleine-König wrote:
-> With this change each pwmchip defining the new-style waveform callbacks
-> can be accessed from userspace via a character device. Compared to the
-> sysfs-API this is faster and allows to pass the whole configuration in a
-> single ioctl allowing atomic application and thus reducing glitches.
+Hi Sakari, Laurent,
 
-Didn't do a full review yet, but I have some confusion on when 1 should actually
-be returned from ioctl calls...
-
-> +/*
-> + * Modifies the passed wf according to hardware constraints. All parameters are
-> + * rounded down to the next possible value, unless there is no such value, then
-> + * values are rounded up. Note that zero isn't considered for rounding down
-> + * period_length_ns.
-> + */
-> +#define PWM_IOCTL_ROUNDWF	_IOWR(0x75, 3, struct pwmchip_waveform)
-
-Should this return 1 if exact could not be met to match the other functions?
-
-> +
-> +/* Get the currently implemented waveform */
-> +#define PWM_IOCTL_GETWF		_IOWR(0x75, 4, struct pwmchip_waveform)
-> +
-> +/* Like PWM_IOCTL_ROUNDWF + PWM_IOCTL_SETEXACTWF in one go. */
-> +#define PWM_IOCTL_SETROUNDEDWF	_IOW(0x75, 5, struct pwmchip_waveform)
-> +
-> +/*
-> + * Program the PWM to emit exactly the passed waveform, subject only to rounding
-> + * down each value less than 1 ns. Returns 0 on success, 1 if the waveform
-> + * cannot be implemented exactly, or other negative error codes.
-
-It doesn't make sense to me that PWM_IOCTL_SETEXACTWF could return 1 meaning
-that the exact request could not be met. Isn't that the point of
-PWM_IOCTL_SETEXACTWF? To either do exactly as requested (with 1 ns precision)
-or return negative error code without changing the output state?
-
-It seems like only PWM_IOCTL_SETROUNDEDWF should be able to return 1. My natural
-expectation is that negative error would mean that the hardware output was not
-modified and non-negative value means that hardware output was modified.
-
-> + */
-> +#define PWM_IOCTL_SETEXACTWF	_IOW(0x75, 6, struct pwmchip_waveform)
-> +
-> +#endif /* _UAPI_PWM_H_ */
+On Mon, Mar 24, 2025 at 07:37:57AM +0000, Sakari Ailus wrote:
+> Hi Laurent, Mehdi,
 > 
-> base-commit: bde5547f2e87e6c71db79dc41e56aff3061e39a9
+> On Fri, Mar 21, 2025 at 01:30:43PM +0100, Mehdi Djait wrote:
+> > Hi Laurent,
+> > 
+> > thank you for the review!
+> > 
+> > On Fri, Mar 21, 2025 at 12:11:24PM +0200, Laurent Pinchart wrote:
+> > > Hi Mehdi,
+> > > 
+> > > Thank you for the patch.
+> > > 
+> > > On Fri, Mar 21, 2025 at 10:38:14AM +0100, Mehdi Djait wrote:
+> > 
+> > SNIP
+> > 
+> > > > +
+> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > > > +{
+> > > > +	struct clk_hw *clk_hw;
+> > > > +	struct clk *clk;
+> > > > +	u32 rate;
+> > > > +	int ret;
+> > > > +
+> > > > +	clk = devm_clk_get_optional(dev, id);
+> > > > +	if (clk)
+> > > > +		return clk;
+> > > > +
+> > > > +#ifdef CONFIG_COMMON_CLK
+> > > 
+> > > This patch will cause warnings when CONFIG_COMMON_CLK is disabled. Could
+> > > you use
+> > > 
+> > > 	if (IS_REACHABLE(CONFIG_COMMON_CLK)) {
+> > > 		...
+> > > 	}
+> > > 
+> > > instead ? It will also ensure that all code gets compile-tested, even
+> > > when CONFIG_COMMON_CLK is disabled ?
+> > > 
+> > > If you want to minimize implementation, you could write
+> > > 
+> > > 	if (!IS_REACHABLE(CONFIG_COMMON_CLK))
+> > > 		return ERR_PTR(-ENOENT);
+> > > 
+> > > and keep the code below as-is.
+> > > 
+> > 
+> > this is indeed way better! I will change this in the v3
+> 
+> This would work at the moment if devm_clk_hw_register_fixed_rate() was
+> always available but it evaluates to __clk_hw_register_fixed_rate() that
+> depends on COMMON_CLK.
+> 
+> I think t he best option would be to add a stub for it for !COMMON_CLK
+> case. It may take some time to get that merged and into the media tree. C99
+> also allows declaring variables midst of a basic block so declaring rate
+> and clkhw later should address the warning.
+
+I don't fully understand the concern with the availability of the
+function. It is used by drivers in multiple subsystems and any change to
+it should take care of the API users.
+
+Don't you think that adding a stub for !COMMON_CLK would make the series
+take a much longer time to get merged and complicate the situation ?
+
+--
+Kind Regards
+Mehdi Djait
