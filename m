@@ -1,96 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE3F22B8AD
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363111D6AA;
+	Wed, 16 Apr 2025 05:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744782493; cv=none; b=ZKk/EuxBiRaRr2zSA4UIyin6c5IG8rod2OBCnUxzw6Dq1zphKNscqA6o1sV4Zx0+mk5NMg/yqdHAXN8pcQzLv6qmu4NjTZgkZ3g/E5troebXanifKCJqFcbi2Z0JmzcleGr40tfxE15EI4e5b/9A088V5SVSFgS8992k8TAh8Sc=
+	t=1744782598; cv=none; b=Qe1STMLQm7mxcGcwlva0NKP48qUaFqPoPrPmZoHTU2XH16pV96/7i19OervttT2Gl9T5fkLOFm/X0OsUdzQRhb73glinyY8uN8pqv++W4n12SPio8pX35KqEbCJfwfdANRSHHmqETuNGe/GR8bNxyxs8/AOtDDcfHqT7aBPEyrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744782493; c=relaxed/simple;
-	bh=qdCdlu7tKUGA39tkiG/iDETYPNa4obDh5AWDVouR1fM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pba7XN21sYYZQgSNqMzADile1hbUacFc5V+9Hmgik46ODb+RTxbJ5Y6fSQ/wgH6QHy5oVEhzOx82HUPf2xBER6Z9Fx3AYMm36IA0Ru5EnDt9n7rbv27v1bkSZDJBTCN7S662DlCH8rq/ti8CajnGb2P1WFQeZbNof3yfK3JQmNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8Js1QaI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744782598; c=relaxed/simple;
+	bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuCtJ6aVfjBeGGlJAfghmcbvBmz7qY52L3DvheV3wdiSQnUODWicNjshxvFkAZxevVOxcMP7mwFFjC1EJBKoVjjrrhKdrEqruiwirYIT+9AiStu9Bz+8KQgCzBuLQjDgkOwCBT4UoVa8nTELoTomKQayvDUKxYrZf+q+8bMIQ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=npEBFpet; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8Js1QaI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90054C4CEED;
-	Wed, 16 Apr 2025 05:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744782492;
-	bh=qdCdlu7tKUGA39tkiG/iDETYPNa4obDh5AWDVouR1fM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J8Js1QaI+Y2c7rNdePKqR8YHFRnZEz6F/tGHq4Es+GfyR/Cis/PaQD/8AK3fRD0XH
-	 b/bjZBtD9rM5mB4Yn4H6WUJxi/zaByLYkPTsLwhQM1XwKt0jAe/jbDRGhH7YI9OXH6
-	 QLfKnEIyUR8rKOgxZd3Dl0AAfesUF0tLjiw4/9geXdX3/y8i6WMVDxL/P6nR0ta/kQ
-	 H3Lvtvkwx72Ae2o8PfhKBNmNKTVaAs3zFjZ+xWejLd+2D47qSBwXlKJyysNvhCOF7e
-	 XixC496HXTliP3xnEk611EjQr00c/Uwktnup46zHtkD9fwy/mzQtfZFwLJMVweSxWG
-	 Rv8MHYU4GXO5g==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/2] f2fs: sysfs: export linear_lookup in features directory
-Date: Wed, 16 Apr 2025 13:48:05 +0800
-Message-ID: <20250416054805.1416834-2-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
-In-Reply-To: <20250416054805.1416834-1-chao@kernel.org>
-References: <20250416054805.1416834-1-chao@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="npEBFpet"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744782596; x=1776318596;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Rh3s1NfTtZpHTMOs4BVGQooSMtFNYmXpSVOJsb6wJbo=;
+  b=npEBFpetFL5gHhUwedWPsa6TdH2WUbXwjMACGM3SwLT7tnLEQdbG1OfT
+   13wUi+uv8MYO51wZe6cduQGnv8h78cP32njE8/ezFj4r61O3dEoowYSvd
+   KegG4ukqyk5mKqtQ6L7hAexU6wGBWvj9lH1jA3H+W/TYkAgx6sg+Iz5D4
+   h/6Dv+o3ZB9ho38+kSM57pxS3f4iDR1aSTws3FhbPrxBPKzEQY467cEE5
+   B2ItC0GGOG3KIx8NSlOA4tKh79WXlanZQ2cz3ZzAInf8/5Sh8UhZmHAW+
+   5AgGVoF2Atwrn9nq166nLpxypvXwVnEWgrdTkLwjpptEejeipbfa7nqDt
+   w==;
+X-CSE-ConnectionGUID: eUpU3DdLRHyVjeKAOItFtg==
+X-CSE-MsgGUID: 0gbS0Dl1QdW5R2cf5s0C5A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46195701"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46195701"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:55 -0700
+X-CSE-ConnectionGUID: ooGEVKwBTsCvSgncBiIKSg==
+X-CSE-MsgGUID: C2Tn5zXQQISZ+56tjXk6cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="135323808"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 22:49:51 -0700
+Message-ID: <c439699c-be19-4dc6-be28-e69e21bbacd4@linux.intel.com>
+Date: Wed, 16 Apr 2025 13:49:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 15/22] perf/x86/intel: Support SSP register capturing
+ for arch-PEBS
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+ Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
+ <20250415114428.341182-16-dapeng1.mi@linux.intel.com>
+ <20250415140734.GE4031@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250415140734.GE4031@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-cat /sys/fs/f2fs/features/linear_lookup
-supported
 
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- Documentation/ABI/testing/sysfs-fs-f2fs | 2 +-
- fs/f2fs/sysfs.c                         | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+On 4/15/2025 10:07 PM, Peter Zijlstra wrote:
+> On Tue, Apr 15, 2025 at 11:44:21AM +0000, Dapeng Mi wrote:
+>> Arch-PEBS supports to capture shadow stack pointer (SSP) register in GPR
+>> group. This patch supports to capture and output SSP register at
+>> interrupt or user space, but capturing SSP at user space requires
+>> 'exclude_kernel' attribute must be set. That avoids kernel space SSP
+>> register is captured unintentionally.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  arch/x86/events/core.c                | 15 +++++++++++++++
+>>  arch/x86/events/intel/core.c          |  3 ++-
+>>  arch/x86/events/intel/ds.c            |  9 +++++++--
+>>  arch/x86/events/perf_event.h          |  4 ++++
+>>  arch/x86/include/asm/perf_event.h     |  1 +
+>>  arch/x86/include/uapi/asm/perf_regs.h |  4 +++-
+>>  arch/x86/kernel/perf_regs.c           |  7 +++++++
+>>  7 files changed, 39 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>> index 9c205a8a4fa6..0ccbe8385c7f 100644
+>> --- a/arch/x86/events/core.c
+>> +++ b/arch/x86/events/core.c
+>> @@ -650,6 +650,21 @@ int x86_pmu_hw_config(struct perf_event *event)
+>>  			return -EINVAL;
+>>  	}
+>>  
+>> +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP))) {
+>> +		/* Only arch-PEBS supports to capture SSP register. */
+>> +		if (!x86_pmu.arch_pebs || !event->attr.precise_ip)
+>> +			return -EINVAL;
+>> +		/* Only user space is allowed to capture. */
+>> +		if (!event->attr.exclude_kernel)
+>> +			return -EINVAL;
+>> +	}
+> We should be able to support this for !PEBS samples by reading the MSR
+> just fine, no?
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index 0dbe6813b709..c805a48dd3dc 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -270,7 +270,7 @@ Description:	Shows all enabled kernel features.
- 		inode_checksum, flexible_inline_xattr, quota_ino,
- 		inode_crtime, lost_found, verity, sb_checksum,
- 		casefold, readonly, compression, test_dummy_encryption_v2,
--		atomic_write, pin_file, encrypted_casefold.
-+		atomic_write, pin_file, encrypted_casefold, linear_lookup.
- 
- What:		/sys/fs/f2fs/<disk>/inject_rate
- Date:		May 2016
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index cf98c5cbb98a..75134d69a0bd 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -1207,6 +1207,9 @@ F2FS_FEATURE_RO_ATTR(readonly);
- F2FS_FEATURE_RO_ATTR(compression);
- #endif
- F2FS_FEATURE_RO_ATTR(pin_file);
-+#ifdef CONFIG_UNICODE
-+F2FS_FEATURE_RO_ATTR(linear_lookup);
-+#endif
- 
- #define ATTR_LIST(name) (&f2fs_attr_##name.attr)
- static struct attribute *f2fs_attrs[] = {
-@@ -1356,6 +1359,9 @@ static struct attribute *f2fs_feat_attrs[] = {
- 	BASE_ATTR_LIST(compression),
- #endif
- 	BASE_ATTR_LIST(pin_file),
-+#ifdef CONFIG_UNICODE
-+	BASE_ATTR_LIST(linear_lookup),
-+#endif
- 	NULL,
- };
- ATTRIBUTE_GROUPS(f2fs_feat);
--- 
-2.49.0
+Yes, It can be supported for !PEBS samples. I ever hesitated whether to add
+support to capture SSP for !PEBS. Since there is a latency between counter
+overflowing and SW reading SSP, the captured SSP may be inaccurate for
+!PEBS samples. This makes it not so valuable considering we already support
+it for PEBS sampling.
 
+Anyway, we can support it in next version if it's necessary.
+
+
+>
+> ISTR making a similar comment last time.
