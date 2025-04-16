@@ -1,123 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C12323F40D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA4E207DF8
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803690; cv=none; b=L0fC++4R95WaIxA6vpfMPuvFmrOG0CUq+s9NmZ4H0wEEisD6SgGdjYqu8k78OUaZxij875qK11jJP7Mr+xYqMyW0kWJgBLWPqfbToOUEDRG8ULgMjO6e0B02DN/Rz9Ecso498Cm9jV2bxIY5M1pbAeXB3oW6uKhyEp7NK8B7mPw=
+	t=1744803754; cv=none; b=guZGsizzcfKMndJ8GWAgS6ACyzW7+5A71s/U4pYaoBE9t0e7viwNyo+GN7BHWTWDW27uGQO3ntX0Usyf/WuzLe1D8F4uruLXoqqE+rXRyxehmUQcUDXTwjuPIs/4nOAEoZ3RLNbx0vjaFeqe6CXk0tOOLVTmG6uIV0pxRufaXoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803690; c=relaxed/simple;
-	bh=yjf71iSGw6L9VjdaiBYFnuG6LUNuRBATO1IY7lEs/TQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xp8K98J6nz5vmatoyfscGRF3UoqrNj0p4Ggykxe4Cdr0xPILjvLyiAMpaQ41s6eMoQeKllABEWEgzsSFW+ERDPpGwP0O4bfmzSPdbVsdUPgaiPvzzh/bcpb1ox6+J8+L7HhWxYQU9bgrDmJLH0AElPR654tifaXGuknYgDi3mlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JXJ0bez6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744803754; c=relaxed/simple;
+	bh=fhjBaG3805Bjow0iETFxpVFlxLgrLOz/rjATud4UPgk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JnkBfgkFzuNAkuWi67/ZgwHafvF+3jKNPVSAMWiBk0Bm4B244q9tgL8NNmabuSxPqBSnkRERdFcyIRFyyZmGE9Uq2fgzQZeZHeGOujd6VjrG8KdDH7Op9vIAJ3di3+Ylt2645RpxcAg40TvsurXWT3tAZ76s6/qH37SJ6EaAQv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LpvCq4GB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JXJ0bez6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744803689; x=1776339689;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yjf71iSGw6L9VjdaiBYFnuG6LUNuRBATO1IY7lEs/TQ=;
-  b=JXJ0bez6kRbEsskU6XihJh4PqRTvN0phTP4XoZfcy6SVEvA2eg08Pw2W
-   FypqShvlWI+TfkHig5YBEHa4fcMUgcEMLJwI7mbeslNpNpGVMuJobzqUx
-   UnwXBTPx7QRXS7kcK67q3IsKoQcfgspAofVRPbVq0MHnPefc/HimtEwnm
-   MZi3RfNCXacmVuAdyV477DLygVGmCccsmPwup0r9ywtTz5iDa87l2LryH
-   E8YNXSg6Dg95Nt+ahK24dKu9MlNkKcg0fs6HGwjq+A+Lw7LewvlEbExJf
-   +lGbUvk2I5nGRDOWni4co8xFXd97dYjM17ThDeKYrLUwOsh9QHk1u3TDw
-   w==;
-X-CSE-ConnectionGUID: 3UAnmnt9TO6TFkP/N/nQUg==
-X-CSE-MsgGUID: Ta28shzqRJq00dKRo6ny7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="57713820"
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="57713820"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 04:41:27 -0700
-X-CSE-ConnectionGUID: TO9by9/gQuKK20r9jnF+kQ==
-X-CSE-MsgGUID: od00ZR+BTTuPA+RbxYTTag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="161483450"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 16 Apr 2025 04:41:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5C3BA22A; Wed, 16 Apr 2025 14:41:24 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 2/2] genirq/irqdesc: Balance locking to make sparse happy
-Date: Wed, 16 Apr 2025 14:40:34 +0300
-Message-ID: <20250416114122.2191820-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250416114122.2191820-1-andriy.shevchenko@linux.intel.com>
-References: <20250416114122.2191820-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LpvCq4GB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744803750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5z6fNojRF9NHhV/lCWIoxNXIATTm+tKBZ0meFI94ucc=;
+	b=LpvCq4GB58rT4vTIl/mwZE3L9BlOWg8uNlebMauZA3padTXhVKxZQNP8U+ptuWTguAaxdE
+	Rp3vwmPQ9XnqIX1Zb7b2rlEeVVhp7mnsagsxXJGBcsUFFRlARzKaKFrMIz1dmc+9TBagIz
+	jSPw9dBoY4AfpyYKZH+3Wy5hkzGpt/s=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-636-Vie_iH2lMuq6RkfCyGJk_A-1; Wed, 16 Apr 2025 07:42:29 -0400
+X-MC-Unique: Vie_iH2lMuq6RkfCyGJk_A-1
+X-Mimecast-MFC-AGG-ID: Vie_iH2lMuq6RkfCyGJk_A_1744803748
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39126c3469fso2620528f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:42:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744803748; x=1745408548;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5z6fNojRF9NHhV/lCWIoxNXIATTm+tKBZ0meFI94ucc=;
+        b=P8fzi3J8+A/rTkLXLYlGCztNCR4JIOAfxAk9+VXW8TbyjlNPvV2YlMckZoFvRe/gwc
+         l7+NKi6U9sxd8kF93wr+In2IG4RflJTT79tUW53LGmKLLDCJcsuXmHTPszm5WiKC+xz0
+         UFdqFXR/smlorz2wUtXAb2FjdVUfhLPNSKc211WNaH1/y8vrxP6J/RUtP4ybiD4YrS8E
+         N4rdn6szmdSnqW6AaQnbIEcivgBWB4I6I0GPsnxkJidpIa1UoXcLvHnfElBnYAHSN9t3
+         f8dSbl0rVr3wJlnIiuKdHtA3OiUSDo81005YGMvTKpZHnEbiR6o/JzxoipdbMxg8JM96
+         ebBg==
+X-Gm-Message-State: AOJu0Yx21zYNA2IqWXVdSoji1YB/az1/gXzuyTRz70GR1VfUEfGSmldN
+	VeH6WUS/0Vg/owULA+nWOx5Lsa7yTitp7RN+8taoADfmIBY/k/EmwVvlDFzjLXnWyycZUQolSk8
+	e5Mu1oUvXAOo4dV3zk6rQ8KLe6ydk8DlQuOLgkqVoFQb3QkjhKhJvwQXs3Jjmjw==
+X-Gm-Gg: ASbGncuas1IACEiscOAvHSJ/JSLld+Eh/m2h5TAefalTfv+32HRnlTxOZKRaX4EwpLO
+	gwT9daWSikvHtWGNCom5b66Ijm0itPm+tBtG6A638ybDAXNEmjnJJNJFYCj/Cw2jB9ho+YY2Uts
+	q+B1gsfD0hFrBeEaPIR5jR7qa1C0uzBUqGRXDTjrduCxgbVUV7YJD4F2T0qlYgquuLrJ3H2S6Ir
+	pssFGWq7wTgwuFX2d0zFcfTkzYpDnndaIiJRDja3mnBQf5zF4nkYyjwnlGgT/DHQ/Cjx49N0wpi
+	HJ/IRwz2aUfX2oaAhS/HCqrS16LdHSeONF5n+KU=
+X-Received: by 2002:a05:6000:40dd:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39ee5b1306cmr1578462f8f.5.1744803748218;
+        Wed, 16 Apr 2025 04:42:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6R2KyCnqE4BlOLHRHu9NIuucKIPl2UpGmWdgO/Fo74a/ok/xC5KTJ0F0Bf4hfUIeu2l85dA==
+X-Received: by 2002:a05:6000:40dd:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39ee5b1306cmr1578433f8f.5.1744803747822;
+        Wed, 16 Apr 2025 04:42:27 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4d2ddfsm18656915e9.10.2025.04.16.04.42.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 04:42:27 -0700 (PDT)
+Message-ID: <645b612bb578deb43df6539462d079ab38a2c835.camel@redhat.com>
+Subject: Re: [RFC PATCH 6/9] sched: Treat try_to_block_task with pending
+ signal as wakeup
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Tomas Glozar <tglozar@redhat.com>, Juri
+ Lelli <jlelli@redhat.com>
+Date: Wed, 16 Apr 2025 13:42:25 +0200
+In-Reply-To: <20250416092027.yShf-ReN@linutronix.de>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
+	 <20250404084512.98552-17-gmonaco@redhat.com>
+	 <20250413150540.3ZW7XJVs@linutronix.de>
+	 <fb998d03b4ecc51834bf4383a71932ca877900cd.camel@redhat.com>
+	 <20250415110455.0Qj-4EN2@linutronix.de>
+	 <4e4b9c63-1b86-4d96-bcf3-0cdee8ba7c9e@redhat.com>
+	 <20250416092027.yShf-ReN@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Sparse is not happy right now about conditional locking and
-complains:
 
-  irqdesc.c:899:17: warning: context imbalance in '__irq_get_desc_lock' - wrong count at exit
 
-Refactor the code and use __acquire() to make it happy.
-Annotate the function that it acquires the lock in the
-similar way how __irq_put_desc_unlock() is marked.
+On Wed, 2025-04-16 at 11:20 +0200, Nam Cao wrote:
+> On Fri, Apr 04, 2025 at 10:45:19AM +0200, Gabriele Monaco wrote:
+> > If a task sets itself to interruptible and schedules, the
+> > __schedule
+> > function checks whether there's a pending signal and, if that's the
+> > case, updates the state of the task to runnable instead of
+> > dequeuing.
+> > By looking at the tracepoints, we see the task enters the scheduler
+> > while sleepable but exits as runnable. From a modelling
+> > perspective,
+> > this is equivalent to a wakeup and the tracepoints should reflect
+> > that.
+> >=20
+> > Add the waking/wakeup tracepoints in the try_to_block_task function
+> > and
+> > set the prev_state used by the sched_switch tracepoint to
+> > TASK_RUNNING
+> > if the task had a pending signal and was not blocked.
+> >=20
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > ---
+> > =C2=A0kernel/sched/core.c | 11 +++++++++--
+> > =C2=A01 file changed, 9 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index f2f79236d5811..48cb32abce01a 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -6584,7 +6584,12 @@ static bool try_to_block_task(struct rq *rq,
+> > struct task_struct *p,
+> > =C2=A0	int flags =3D DEQUEUE_NOCLOCK;
+> > =C2=A0
+> > =C2=A0	if (signal_pending_state(task_state, p)) {
+> > -		WRITE_ONCE(p->__state, TASK_RUNNING);
+> > +		/*
+> > +		 * From a modelling perspective, this is
+> > equivalent to a wakeup
+> > +		 * before dequeuing the task: trace accordingly.
+> > +		 */
+> > +		trace_sched_waking(p);
+> > +		ttwu_do_wakeup(p);
+> > =C2=A0		return false;
+> > =C2=A0	}
+> > =C2=A0
+> > @@ -6721,7 +6726,9 @@ static void __sched notrace __schedule(int
+> > sched_mode)
+> > =C2=A0			goto picked;
+> > =C2=A0		}
+> > =C2=A0	} else if (!preempt && prev_state) {
+> > -		try_to_block_task(rq, prev, prev_state);
+> > +		/* Task was not blocked due to a signal and is
+> > again runnable */
+> > +		if (!try_to_block_task(rq, prev, prev_state))
+> > +			prev_state =3D TASK_RUNNING;
+> > =C2=A0		switch_count =3D &prev->nvcsw;
+> > =C2=A0	}
+>=20
+> I couldn't reproduce the problem that this patch is solving. But
+> staring at
+> the srs monitor, I made an educated guess that this is to accomodate
+> the
+> transition "sleepable x wakeup -> running"?
+>=20
+> But for this transition, no real wakeup happens, just the task's
+> state is
+> changed to "sleepable" then back to "running", right? Sleep hasn't
+> actually
+> happened yet?
+>=20
+> If that is the case, would the patch below also solves it? It would
+> turn
+> the transition into "sleepable x set_runnable -> running", which I
+> think
+> describe it more accurately.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- kernel/irq/irqdesc.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Yeah that's pretty much it, there are a few problems though:
+1. set_state should occur in task context and not while scheduling
+2. set_state doesn't expect a task switch to occur
 
-diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
-index 0afc2b0b03be..cecff0cb13eb 100644
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -899,21 +899,22 @@ unsigned int irq_get_next_irq(unsigned int offset)
- struct irq_desc *
- __irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
- 		    unsigned int check)
-+	__acquires(&desc->lock)
- {
- 	struct irq_desc *desc;
- 
- 	desc = irq_to_desc(irq);
- 	if (!desc)
--		return NULL;
-+		goto lock;
- 
- 	if (check & _IRQ_DESC_CHECK) {
- 		if ((check & _IRQ_DESC_PERCPU) &&
- 		    !irq_settings_is_per_cpu_devid(desc))
--			return NULL;
-+			goto lock;
- 
- 		if (!(check & _IRQ_DESC_PERCPU) &&
- 		    irq_settings_is_per_cpu_devid(desc))
--			return NULL;
-+			goto lock;
- 	}
- 
- 	if (bus)
-@@ -921,6 +922,10 @@ __irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
- 	raw_spin_lock_irqsave(&desc->lock, *flags);
- 
- 	return desc;
-+
-+lock:
-+	__acquire(&desc->lock);
-+	return NULL;
- }
- 
- void __irq_put_desc_unlock(struct irq_desc *desc, unsigned long flags, bool bus)
--- 
-2.47.2
+One way to solve this is to do like you said but add a flag to the
+tracepoint to tell the model this set state is a special one happening
+while scheduling, after that one, we may be scheduled out.
+
+I didn't really like adding another state so I dropped that.
+
+However, a task can be woken up before being scheduled out (I'd agree
+with you it's not quite a wakeup as it wasn't yet sleeping, but it
+happens, e.g. p =3D=3D current in try_to_wake_up).
+This case with the signal is, in that sense, a wakeup. We can even see
+the tracepoint at times.
+
+Anyway, that issue was mostly hypothetical, the patch also fixes the
+prev_state (there's a patch by Peter on tip doing the same thing) and I
+need to make sure it's really possible to see the issue after that too.
+
+Thanks for looking into it,
+Gabriele
 
