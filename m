@@ -1,76 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73712557C;
-	Wed, 16 Apr 2025 03:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9332227E87;
+	Wed, 16 Apr 2025 03:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744775552; cv=none; b=h2ubrJqgsKGpLm8acUsMQIptnMvU2ArtqFT0WjRMK4ZgFYOOmQKKJaxcIszMYLMFLEp8rmavITngF15B6be3U14EwC17vwsxwyfSW8KhTesUVhmP/up29AL4lqWPZmIJl+iRYUcD95bIyMgx4u/eUUjoYTLSrxQVytkmob+SRW0=
+	t=1744775707; cv=none; b=av5U/JV+Jz+2vUelh+F6fAELoCcvSQeFO/OO5LxPT3uC8Wnflim4Ol4y63Wj6N/tBnrnrVSP3CLrs0lEHnasuBlx07eJAlvTqlrocUPdVUXytlZAbWnqDYd00zCHcvFmKc0ZIQfJNfdeg8YkYvazuvS5lYjb3lkw1RKXMCyn0P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744775552; c=relaxed/simple;
-	bh=X8GOj8KzoE65AU/0QNunTtYNIU1O+4MiqmW1xDDR3Xw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ojxJOn7MKGG2CstO0rJ0EBaDmgIoJUYNad9+PVSPCR/A3J5/Ije+OlQS/KTdDu0fz43/bKuIZu2zu/qXNxstGozyvuz3i9mFnkHBsatcmbykUJF0heSAQ0dYkstyppKYtJoH8zcIQTtPc0gBYAqxvmXYCmp7wmrtZufeqRlRnCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jny7FgP2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jny7FgP2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E71C4CEE2;
-	Wed, 16 Apr 2025 03:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744775552;
-	bh=X8GOj8KzoE65AU/0QNunTtYNIU1O+4MiqmW1xDDR3Xw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Jny7FgP2iKu/iyC6ShA6j74KOTQlsjxkJthKBvnAjIsqNJPR8UqHSyueDrkDNqAPS
-	 zFcQY8WCYMD1SmrOSTiTW7OAYRrlYNLm7v6ViOte3FZDIDP+rGfH+xyvbwYCerx/4v
-	 qHwDLT/yMehAoNdfORHlYi/c/jR4QhX3ttT09M5R7O1EdCB4kXVYsix+mLf5yZx+A3
-	 /GDi4FElPQc+LbUuxGoT623HJ4i4G6Ejp6vy5IoRznm0RE8fsBvoZM2SnwXLUG9wGS
-	 V41fGBeIEj6LNAkVYs0hNVz9DSokZajoAvGHx5B3cbw6aZkT1ZFmBU6xrSTwMiKzgA
-	 7ScXEf6C4lc5Q==
-Date: Tue, 15 Apr 2025 20:52:30 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Qasim Ijaz <qasdev00@gmail.com>, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com,
- stable@vger.kernel.org
-Subject: Re: [PATCH 5/5] net: ch9200: avoid triggering NWay restart on
- non-zero PHY ID
-Message-ID: <20250415205230.01f56679@kernel.org>
-In-Reply-To: <b49e6c21-8e0a-4e54-86eb-c18f1446c430@lunn.ch>
-References: <20250412183829.41342-1-qasdev00@gmail.com>
-	<20250412183829.41342-6-qasdev00@gmail.com>
-	<b49e6c21-8e0a-4e54-86eb-c18f1446c430@lunn.ch>
+	s=arc-20240116; t=1744775707; c=relaxed/simple;
+	bh=qFjcpY7G4UvAvpezP2J+wXOuhfZlC9khcrCE9vkGDFE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UvC27NkAgzGLs7HCLGUBGhxoCaihVZEhX93GQl2mSGM2p3QYnt97LXHIxJ9FebIYwA2FrG51RKJzPFkCsOgKqYBUi6PoexWJuNDn2jt+I2v1OPv5w2NaTO3pl7aX6LLt42c96goid0JpOJ6V6mXW/kWZTz0FvakyNgynbZn++L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.5.213])
+	by gateway (Coremail) with SMTP id _____8CxaWoUKv9nczG_AA--.56456S3;
+	Wed, 16 Apr 2025 11:55:00 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.5.213])
+	by front1 (Coremail) with SMTP id qMiowMCxLcUQKv9nvh2FAA--.62153S3;
+	Wed, 16 Apr 2025 11:54:59 +0800 (CST)
+From: Bibo Mao <maobibo@loongson.cn>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Sean Christopherson <seanjc@google.com>
+Cc: Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v9 1/5] KVM: selftests: Add VM_MODE_P47V47_16K vm mode
+Date: Wed, 16 Apr 2025 11:54:51 +0800
+Message-Id: <20250416035455.25996-2-maobibo@loongson.cn>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250416035455.25996-1-maobibo@loongson.cn>
+References: <20250416035455.25996-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxLcUQKv9nvh2FAA--.62153S3
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-On Tue, 15 Apr 2025 03:35:07 +0200 Andrew Lunn wrote:
-> > @@ -182,7 +182,7 @@ static int ch9200_mdio_read(struct net_device *netdev, int phy_id, int loc)
-> >  		   __func__, phy_id, loc);
-> >  
-> >  	if (phy_id != 0)
-> > -		return -ENODEV;
-> > +		return 0;  
-> 
-> An actually MDIO bus would return 0xffff is asked to read from a PHY
-> which is not on the bus. But i've no idea how the ancient mii code
-> handles this.
-> 
-> If this code every gets updated to using phylib, many of the changes
-> you are making will need reverting because phylib actually wants to
-> see the errors. So i'm somewhat reluctant to make changes like this.
+On LoongArch system, GVA width is 47 bit and GPA width is 47 bit also,
+here add new vm mode VM_MODE_P47V47_16K.
 
-Right.
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ tools/testing/selftests/kvm/include/kvm_util.h | 1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c     | 3 +++
+ 2 files changed, 4 insertions(+)
 
-I mean most of the patches seem to be adding error checking, unlike
-this one, but since Qasim doesn't have access to this HW they are
-more likely to break stuff than fix. I'm going to apply the first
-patch, Qasim if you'd like to clean up the rest I think it should
-be done separately without the Fixes tags, if at all.
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 373912464fb4..f8faed8c8024 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -177,6 +177,7 @@ enum vm_guest_mode {
+ 	VM_MODE_P36V48_4K,
+ 	VM_MODE_P36V48_16K,
+ 	VM_MODE_P36V48_64K,
++	VM_MODE_P47V47_16K,
+ 	VM_MODE_P36V47_16K,
+ 	NUM_VM_MODES,
+ };
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index 815bc45dd8dc..5649cf2f40e8 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -222,6 +222,7 @@ const char *vm_guest_mode_string(uint32_t i)
+ 		[VM_MODE_P36V48_4K]	= "PA-bits:36,  VA-bits:48,  4K pages",
+ 		[VM_MODE_P36V48_16K]	= "PA-bits:36,  VA-bits:48, 16K pages",
+ 		[VM_MODE_P36V48_64K]	= "PA-bits:36,  VA-bits:48, 64K pages",
++		[VM_MODE_P47V47_16K]	= "PA-bits:47,  VA-bits:47, 16K pages",
+ 		[VM_MODE_P36V47_16K]	= "PA-bits:36,  VA-bits:47, 16K pages",
+ 	};
+ 	_Static_assert(sizeof(strings)/sizeof(char *) == NUM_VM_MODES,
+@@ -248,6 +249,7 @@ const struct vm_guest_mode_params vm_guest_mode_params[] = {
+ 	[VM_MODE_P36V48_4K]	= { 36, 48,  0x1000, 12 },
+ 	[VM_MODE_P36V48_16K]	= { 36, 48,  0x4000, 14 },
+ 	[VM_MODE_P36V48_64K]	= { 36, 48, 0x10000, 16 },
++	[VM_MODE_P47V47_16K]	= { 47, 47,  0x4000, 14 },
+ 	[VM_MODE_P36V47_16K]	= { 36, 47,  0x4000, 14 },
+ };
+ _Static_assert(sizeof(vm_guest_mode_params)/sizeof(struct vm_guest_mode_params) == NUM_VM_MODES,
+@@ -319,6 +321,7 @@ struct kvm_vm *____vm_create(struct vm_shape shape)
+ 	case VM_MODE_P36V48_16K:
+ 		vm->pgtable_levels = 4;
+ 		break;
++	case VM_MODE_P47V47_16K:
+ 	case VM_MODE_P36V47_16K:
+ 		vm->pgtable_levels = 3;
+ 		break;
+-- 
+2.39.3
+
