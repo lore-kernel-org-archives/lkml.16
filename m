@@ -1,137 +1,104 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DEB226D13
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012441A2658;
+	Wed, 16 Apr 2025 01:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744767573; cv=none; b=J5nDudapcSNNZjHWfy1YWT/IzkFNJ5ay2mHZfWbcBcwksrHKfsBHaUyTdfsNZcAOqHsZrNj6eiDWyW8I7atBuaTmAZ6c/tUWsLRmjkWXIE1Ea/iyBmptWZti8gv8y+bMAcrQz8tdm8JyVG+zX+6NJsk7flFeU3IgHxD9QhIDwas=
+	t=1744767682; cv=none; b=ZJe556NaSr8M0Ntc333rvCV1xpom22zEKrBcqKVJGk9ld3Cii/gBf92umkbTRhoe/qORURP5nVyPbWTnL3D6QWCce5NURg3jzpEOkky3j7U6tjfDdl1alNazdTWSii3Os63Gg1YVsu4e6rFPUaJcMUC+HaQ0hWlGCZUa9Q8nq80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744767573; c=relaxed/simple;
-	bh=dTnq697UHqs4Zk+ACZjnV/VcHC+rw4zE0mnepumyuk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AR6WEylruhAVjQBU22cdKPWF9PG0FHYQr17J/vR3tN0Qj8LAP9BK9rH/HxV8Ddp5L19fOSM238GpYM3iCk2dqytgsLq8qQGI8wl5gbdTsjwDIM2e9RHKcAdI19xwXCIuyPHBMbrUB8i6wD89FuD+xbV6cq2VP4SWiSQtvKrQ6rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Rd3j35hj; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Rd3j35hj"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22928d629faso60846665ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 18:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1744767571; x=1745372371; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RJHYVgEVoY4PsMLuoYWXVUdOXZM3Dp29HRy62pgdjTw=;
-        b=Rd3j35hj2xWKtfhMqhHMNAyTmBxwCMjG38v86slF2193sI6XYQ3R7BZzGIkyyrrXvw
-         KjPujaFoaPJTfcIaC3qSvqccdLRhnVOTT42VgJIzOiAsY2n0CX07lkUG4OIOSiDZBPYi
-         kkPXVxdfAOOWh1OCAi9L0DdNGQvztq6IDnciM=
+	s=arc-20240116; t=1744767682; c=relaxed/simple;
+	bh=QZ2Ud1Y/3tEvAgsIgosukIl8HjPWFwS4NpOavajMkUw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sFcTTznsriZRSsJIMdwodmudBAAD9JisPuYQC00oF6AVwpth0Vs5IR6FXjD0v9TcAQxvb7CQoAYOLHmC5J2VUlAuMEJfI6EgOmuqUxBCYu/CmEaSeaWYbOfY0m04py0XGJwv8E6GrYHPUVtyPMIA1ejz8O80kbXFA/TnGLbWy3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so1174723366b.2;
+        Tue, 15 Apr 2025 18:41:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744767571; x=1745372371;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJHYVgEVoY4PsMLuoYWXVUdOXZM3Dp29HRy62pgdjTw=;
-        b=nKRr0BWAa/icbKthEICkLb86JUJEhK9DlpVOt4ikUQsXWPZuNRGty3odLB4kSmAW2m
-         mtoDyLvaaMETn0ukoTDqtGrnnzgsBuP1996CcvjLSbOJ6ChG6Qfbr3eOEiM6y1HCE3pd
-         97O/fUfMaJqLhAevamtKqB0mdSQ/AOX/1QADB72BcKvWORjOsE4BGtmB66+shHn6O2oX
-         jTVHEEI/GFRG5xZ+xWLvR5SCrCeqw0kJbntOszPHlXAzSpFa55PpEXc7oq2LaFUIWW2q
-         98BuaV6IY5/NWac7qPGTfqawppKWnwnP7X6MxrrlPAft0t7gAFSRaCc2Em0tYTbC361F
-         A8fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXYxueZErX4qpXrwwLXA/fbIrgyChq0RZ+6nxUwDXNZzxqkG8ogjrtuq+aTD5+IracL6xmvtPkgx5WAZA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyt/PdD9EgkoGyEOQh0lwMsrSll7+rQOPAForJRm2IC7hRx/Psh
-	ydtkr8lmKOSRm6C/p9clcLhaqymu7p+XXL56lie3v5KXHnsa/xYmr3Nh136tOE0=
-X-Gm-Gg: ASbGncsvp6MGpVXvsws06Xs3BOfdaqrBpCE2b4w4akc2/O77tjWvnzsQWKT/JQA4r/5
-	Opkoj6DxD05oNeGbyZ3I28/llwAwxBWeoIiTGOy8r4sMZC5Go6UGLXtZhKlXS/SZO21VYx5O7PN
-	dd2vUUkymmU/2Ty5cjJ8Co8RJqq2ea1TnLK6VC8nJohNRwZDu1ue7DzZYQzMN9U+k+6YWndRUrY
-	bxkidNGXUBG+BQGXPjw6BGrOryQJCSRXwwzxyLEvJjXVf42UM6Z1TI10tsWGMbhDW9I86TofVot
-	fcw2acHQc1XXwrBMNZ7o0HESinz10a790aFTxFwaRGLztbov2buJcmcPS5x2swh6AsgWWbnS4VV
-	v/WUg1KxgVAU/
-X-Google-Smtp-Source: AGHT+IGal5XUm/5ZjIJym+rt2yFc1Nr3o7jD6J3I/S17PgjABrDnWFW2YF0A1YKdPmsdX90xjsLVeQ==
-X-Received: by 2002:a17:902:db05:b0:224:160d:3f54 with SMTP id d9443c01a7336-22c31a84ec4mr19284785ad.31.1744767570671;
-        Tue, 15 Apr 2025 18:39:30 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33fe4de0sm2097415ad.212.2025.04.15.18.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 18:39:30 -0700 (PDT)
-Date: Tue, 15 Apr 2025 18:39:27 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
-	Eric Dumazet <edumazet@google.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [RFC net 0/1] Fix netdevim to correctly mark NAPI IDs
-Message-ID: <Z_8KT7LYUgyZQhI-@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, David Wei <dw@davidwei.uk>,
-	Eric Dumazet <edumazet@google.com>,
-	open list <linux-kernel@vger.kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-References: <20250329000030.39543-1-jdamato@fastly.com>
- <20250331133615.32bd59b8@kernel.org>
- <Z-sX6cNBb-mFMhBx@LQ3V64L9R2>
- <20250331163917.4204f85d@kernel.org>
- <Z_613wmrKRu4R-IP@LQ3V64L9R2>
- <20250415171154.0382c7f7@kernel.org>
+        d=1e100.net; s=20230601; t=1744767678; x=1745372478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=twB0aG5oSy2aYBf8sj1I4DoY6eJcYgS5UGe7JOXKGEw=;
+        b=kPmKQIxJhyNVcE8fvkyc2EBZfJBodSN9dABiGTvZMijtk66hrCu41GGtna5f2sMEBj
+         2dwUj25cDtptJcpavCxQeiZTD2iS4AzJR/MDG4LyzZlA0qkbd2+X5LPGABLuFeOs86x5
+         diXP10pI436iCzWSXGpYgQW6wDuCeOtNVGW4OH023sYe6+wocsJ8slfgMN04HWXf5gJd
+         f0S+opTG0KQ/Z+FB+pY25RcFDyYGOFyF8yosdXCgRrYgIf8+gwzoADmLrZtkyrj/97wL
+         lbNZU04Kn1cGS1ewyr9Y5mccI8xxxB5XZ47B7d+e5NpovPzJRdwBjnYDiZIXt1R1Qcef
+         9TYw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8TT9s3mMHOKv1HbdOZqjVYQDHhjxj4t42gLpqO5MXzih+fozqPUcl267if0lVa8MyisKU06xekKe32IWl@vger.kernel.org, AJvYcCXZ50pict9zm05gnoSiQXq52cPA6rigHlB/kGBY+YzuXFJ/42Ufi2c8yPvAThz8dayu9YUafCteURV3@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQs6qnnyAQ8a9kLUJd+SHOEjYOC/hbFV6SphPjYDd1J1ZsEpuE
+	l7e91b8t11A0EyEnk8oHPgkXUghonY4dM45EweP/jB9fNgf0DPgpkcZT5tN0poc=
+X-Gm-Gg: ASbGncvnIi4ztC/UCxqSBz22v95l8Dk0cFGsYsB2BSgj7idhREQ9fLqAVDiB+VeDzQi
+	qJPRp/1KZy6mgLZuRdH7BEKMsx6TEL39IMPsaYBSBEtB4j5m+4vV8m25pgwKuWV01O1tqAZtlL2
+	NeA8rRAdonAAXayEETKJanGlCgjDaf6C41GNSps2fTn5jRtX7BxH/Y79KkdI955+XXOi4bjlhsD
+	vXn7RVR1N87zfb9VrlOyTzItaGGd0dsJBwUgQKsNZSTcNqN5yXvNecINxQSE29zE6mXOeZ9sF14
+	Oa9TOJqzYzcfedxzzVoOnmJwT7ylfZFBbyJWhH1lki9VGn5n6q8olFXK5bM+PCKSDLcvz1g=
+X-Google-Smtp-Source: AGHT+IHjeYMz0KgvEb109BlBeZpdK1WpEsAfCmhO2734flnzWi3bgE/AMOEkhjCOQGwd3ueN/hAxlA==
+X-Received: by 2002:a17:907:3e8c:b0:aca:a334:2d21 with SMTP id a640c23a62f3a-acb3849edefmr95950966b.43.1744767678387;
+        Tue, 15 Apr 2025 18:41:18 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cdda65asm29559766b.59.2025.04.15.18.41.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Apr 2025 18:41:17 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acb39c45b4eso42728566b.1;
+        Tue, 15 Apr 2025 18:41:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVA9MmDRcrPtZy/HrUdZJ/cqD99hjHuq+WpEfS10S4VpVArGSaiJmDqtg5uwOcIkYq/ul076abrhBq4@vger.kernel.org, AJvYcCVjPhJviI28hDzONpmo8fB4QyHx15HQhtxOMsJepskDXkomOCLsIFFdZVcbvDTUSBbg5/zIpMTBBVwoqwni@vger.kernel.org
+X-Received: by 2002:a17:907:3d8f:b0:ac3:bd68:24f0 with SMTP id
+ a640c23a62f3a-acb381ab306mr100622966b.7.1744767677634; Tue, 15 Apr 2025
+ 18:41:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415171154.0382c7f7@kernel.org>
+References: <20250415-spmi-nvmem-v1-0-22067be253cf@gmail.com> <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+In-Reply-To: <20250415-spmi-nvmem-v1-2-22067be253cf@gmail.com>
+From: Neal Gompa <neal@gompa.dev>
+Date: Tue, 15 Apr 2025 21:40:41 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je9YWME75EqPYNU6LuhUo0kgcWfOh2qoo3WwQx0K1vObyg@mail.gmail.com>
+X-Gm-Features: ATxdqUFONgVQ32LYCamWZQFAdqw-HYKzsclM2qfgVOPEPhemzTQ_TdOV1fFem4w
+Message-ID: <CAEg-Je9YWME75EqPYNU6LuhUo0kgcWfOh2qoo3WwQx0K1vObyg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] nvmem: Add spmi-nvmem driver
+To: fnkl.kernel@gmail.com
+Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Hector Martin <marcan@marcan.st>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 05:11:54PM -0700, Jakub Kicinski wrote:
-> On Tue, 15 Apr 2025 12:39:11 -0700 Joe Damato wrote:
-> > On Mon, Mar 31, 2025 at 04:39:17PM -0700, Jakub Kicinski wrote:
-> > > Up to you. The patch make me wonder how many other corner cases / bugs
-> > > we may be missing in drivers. And therefore if we shouldn't flesh out
-> > > more device-related tests. But exercising the core code makes sense
-> > > in itself so no strong feelings.  
-> > 
-> > Sorry to revive this old thread, but I have a bit of time to get
-> > this fixed now. I have a patch for netdevsim but am trying to figure
-> > out what the best way to write a test for this is.
-> > 
-> > Locally, I've hacked up a tools/testing/selftests/drivers/net/napi_id.py
-> > 
-> > I'm using NetDrvEpEnv, but am not sure: is there an easy way in
-> > Python to run stuff in a network namespace? Is there an example I
-> > can look at?
-> > 
-> > In my Python code, I was thinking that I'd call fork and have each
-> > python process (client and server) set their network namespace
-> > according to the NetDrvEpEnv cfg... but wasn't sure if there was a
-> > better/easier way ?
-> > 
-> > It looks like tools/testing/selftests/net/rds/test.py uses
-> > LoadLibrary to call setns before creating a socket.
-> > 
-> > Should I go in that direction too?
-> 
-> Why do you need a netns? The NetDrvEpEnv will create one for you
-> automatically and put one side of the netdevsim into it.
-> Do you mean that you need to adjust that other endpoint?
-> It's done the same way as if it was a remote machine:
-> 
-> 	cmd(..., host=cfg.remote)
+On Tue, Apr 15, 2025 at 5:52=E2=80=AFPM Sasha Finkelstein via B4 Relay
+<devnull+fnkl.kernel.gmail.com@kernel.org> wrote:
+>
+> From: Hector Martin <marcan@marcan.st>
+>
+> This driver exposes a SPMI device as an NVMEM device.
+> It is intended to be used with e.g. PMUs/PMICs that are used to
+> hold power management configuration, such as used on Apple Silicon
+> Macs.
+>
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
+> ---
+>  MAINTAINERS                |  1 +
+>  drivers/nvmem/Kconfig      | 14 +++++++++++
+>  drivers/nvmem/Makefile     |  2 ++
+>  drivers/nvmem/spmi-nvmem.c | 62 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 79 insertions(+)
+>
 
-Maybe I'm just thinking about it wrong and/or describing it poorly.
+This driver code looks reasonable to me.
 
-The idea was that napi_id.py test forks. One process does a
-listen()/accept() and the other does a connect(). The accept side
-checks that the napi ID is non-zero. For that to work, both
-processes need their netdevsims to be able to talk to each other.
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
-> If you really need a netnes check out
-> tools/testing/selftests/net/lib/py/netns.py
 
-I'll take a look, but I'm probably just missing something about how
-to properly use NetDrvEpEnv.
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
