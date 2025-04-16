@@ -1,81 +1,183 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FA02045B7
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F422045B7
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 19:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744830626; cv=none; b=hrUGa6jBdu/lXu0wiyNWvnt+VzVyFcCE36aynt6geTDUc8fcWTiRgbSbPT+m/B+eBPyZWk7BNKIZwrn8YtjMPgc3bS0bN9Uh7zRMTac8WQcnaQ77+83WVnlLK2hQBHsjMI6bwv3Tbe3kvYf9mW59q1+d+WclK5k6C+v4G4k21Ls=
+	t=1744830676; cv=none; b=pAPBZjhmwZMTzOhoGfBL5oo+UtryU9lzZ9AVh3erCHVn/kTVBTQ2gNoPZ//SSzDwTO2Q9dCGkxuuIATmBzp+zpVUsMUyarfL4Zy7LVpF50Zq4w1v7BJG4TOi9pCBR3aXIsA+0p/FbiMrLL6qOwY7xQhvOimcBzEGAZEWgXCHIZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744830626; c=relaxed/simple;
-	bh=NYcXxrwtogTaNVEDhGFmHHFJqW4cwC8+ZiQeJ7XxKfc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L9EesJjuPCa34w0tpdjohSec/4YoEbT32qiaYrSZs397miC0AJ+PyGyuCIpbYO4Vfj9IRgNds+OxtfUBZiY6w9GG9mRyHIeF824AmliM4rjZDMgbg4EfirnjCpaRT1yRLXgLj4rCFtXQ1qbUyvP9YVHMUiO23RZKi/O3LUJubg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FTLN0vhH; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744830676; c=relaxed/simple;
+	bh=qxow67/tTid/gvtGXWL5QJlHwTsgWdmACZ/TwaexjAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCSkd9CyMM5T2C3ixPDvC7p7EF1QkDZpDsc6KU1/luMvRBRshEc3YiOLM3alA4YGD77HieEGVhmDGNgOzEJYrpt4els0ajItXAOgU4j21BKHDzxMA/bLFI9QdN8kasMyz3THFB6WaVXBpetmLmXTToe2v9tmcxDal+BIUer1HTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ujoOcuZZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hXSGZJWm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ujoOcuZZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hXSGZJWm; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FTLN0vhH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744830620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ah8gXRejPfDI4sv7sqjLt/LNTQ/T0TzBT0ooaVXKL8c=;
-	b=FTLN0vhHYwuWObPszCflRy8pJJ3dCNL0xSurgNG/cX0OpdICaaiEHVtv/ogsMjk3i76nbu
-	Dx60Gbrwp1fkKy+tlDthZXn4g8/k6XU5EyE4NMEQIH3l5J3pUAUv9HedCosrkFbNNa9NwZ
-	vqoj8iWDBaTPuZHZz5c7Xn6SMGqtumE=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-hardening@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nios2: Replace strcpy() with strscpy() and simplify setup_cpuinfo()
-Date: Wed, 16 Apr 2025 21:09:07 +0200
-Message-ID: <20250416190908.15263-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ujoOcuZZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hXSGZJWm";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ujoOcuZZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hXSGZJWm"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1FE311F745;
+	Wed, 16 Apr 2025 19:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744830673;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xN34V2v/JLw7HZPG3CFCZbnxOx6GOqVTfHppFi0uAHA=;
+	b=ujoOcuZZ8pQik+Y3IjXdldyiFbH5wgvRVhYbqgrQr/4o+1MKjXVf48McnK+xWArRd6kCh3
+	/nPkXsRkpusnFbhScx4pzYW4/HVgehP6gYMg+SP5zlTV3i/3iQ4hVD6vW7JOlOcGnZwPRi
+	dEP1uyBNK0/9MkNMkaJni8iGPRt9Kr4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744830673;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xN34V2v/JLw7HZPG3CFCZbnxOx6GOqVTfHppFi0uAHA=;
+	b=hXSGZJWmqW0q409RjDJY7Tb1KZ8HA6wokoeQzimsP2D7Bb//HuBqSoqbbMQD0ezSPKgdoy
+	cl8Gisg7Le1wCHDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744830673;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xN34V2v/JLw7HZPG3CFCZbnxOx6GOqVTfHppFi0uAHA=;
+	b=ujoOcuZZ8pQik+Y3IjXdldyiFbH5wgvRVhYbqgrQr/4o+1MKjXVf48McnK+xWArRd6kCh3
+	/nPkXsRkpusnFbhScx4pzYW4/HVgehP6gYMg+SP5zlTV3i/3iQ4hVD6vW7JOlOcGnZwPRi
+	dEP1uyBNK0/9MkNMkaJni8iGPRt9Kr4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744830673;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xN34V2v/JLw7HZPG3CFCZbnxOx6GOqVTfHppFi0uAHA=;
+	b=hXSGZJWmqW0q409RjDJY7Tb1KZ8HA6wokoeQzimsP2D7Bb//HuBqSoqbbMQD0ezSPKgdoy
+	cl8Gisg7Le1wCHDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 01E7D13976;
+	Wed, 16 Apr 2025 19:11:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id NaVDANEAAGgvHAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 16 Apr 2025 19:11:13 +0000
+Date: Wed, 16 Apr 2025 21:11:11 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: =?utf-8?B?5p2O5oms6Z+s?= <frank.li@vivo.com>,
+	Sun YangKai <sunk67188@gmail.com>, "clm@fb.com" <clm@fb.com>,
+	"dsterba@suse.com" <dsterba@suse.com>,
+	"josef@toxicpanda.com" <josef@toxicpanda.com>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"neelx@suse.com" <neelx@suse.com>
+Subject: Re: [PATCH 1/3] btrfs: get rid of path allocation in
+ btrfs_del_inode_extref()
+Message-ID: <20250416191111.GC13877@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250415033854.848776-1-frank.li@vivo.com>
+ <3353953.aeNJFYEL58@saltykitkat>
+ <20250415155637.GG16750@suse.cz>
+ <SEZPR06MB5269DCFA737F179B0F552B01E8BD2@SEZPR06MB5269.apcprd06.prod.outlook.com>
+ <CAL3q7H7z_iVmeuRNXQvvZseB9ntSDz9_tUTXB0KvrcsSQVJb9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CAL3q7H7z_iVmeuRNXQvvZseB9ntSDz9_tUTXB0KvrcsSQVJb9w@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vivo.com,gmail.com,fb.com,suse.com,toxicpanda.com,vger.kernel.org];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-strcpy() is deprecated; use strscpy() instead.
+On Wed, Apr 16, 2025 at 02:37:33PM +0100, Filipe Manana wrote:
+> On Wed, Apr 16, 2025 at 2:24 PM 李扬韬 <frank.li@vivo.com> wrote:
+> >
+> >
+> >
+> > > Also a good point, the path should be in a pristine state, as if it were just allocated. Releasing paths in other functions may want to keep the bits but in this case we're crossing a function boundary and the same assumptions may not be the same.
+> >
+> > > Release resets the ->nodes, so what's left is from ->slots until the the end of the structure. And a helper for that would be desirable rather than opencoding that.
+> >
+> > IIUC, use btrfs_reset_path instead of btrfs_release_path?
+> >
+> > noinline void btrfs_reset_path(struct btrfs_path *p)
+> > {
+> >         int i;
+> >
+> >         for (i = 0; i < BTRFS_MAX_LEVEL; i++) {
+> >                 if (!p->nodes[i])
+> >                         continue;
+> >                 if (p->locks[i])
+> >                         btrfs_tree_unlock_rw(p->nodes[i], p->locks[i]);
+> >                 free_extent_buffer(p->nodes[i]);
+> >         }
+> >         memset(p, 0, sizeof(struct btrfs_path));
+> > }
+> >
+> > BTW, I have seen released paths being passed across functions in some other paths.
+> >
+> > Should these also be changed to reset paths, or should these flags be cleared in the release path?
+> 
+> Please don't complicate things unnecessarily.
+> The patch is fine, all that needs to be done is to call
+> btrfs_release_path() before passing the path to
+> btrfs_del_inode_extref(), which resets nodes, slots and locks.
 
-Since the destination buffer has a fixed length, strscpy() automatically
-determines its size using sizeof() when the size argument is omitted.
-This makes the explicit size argument unnecessary - remove it.
+But this leaves the bits set, btrfs_insert_inode_ref() sets
+path->skip_release_on_error, this should be reset. In this case it may
+not be significant but I'd rather make the path reusing pattern correct
+from the beginning.
 
-Now, combine both if-else branches using strscpy() and the same buffer
-into a single statement to simplify the code.
+My idea was to add only
 
-No functional changes intended.
+btrfs_reset_path() {
+        memset(p, 0, sizeof(struct btrfs_path));
+}
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/nios2/kernel/cpuinfo.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/arch/nios2/kernel/cpuinfo.c b/arch/nios2/kernel/cpuinfo.c
-index 7b1e8f9128e9..55882feb6249 100644
---- a/arch/nios2/kernel/cpuinfo.c
-+++ b/arch/nios2/kernel/cpuinfo.c
-@@ -46,10 +46,7 @@ void __init setup_cpuinfo(void)
- 	cpuinfo.cpu_clock_freq = fcpu(cpu, "clock-frequency");
- 
- 	str = of_get_property(cpu, "altr,implementation", &len);
--	if (str)
--		strscpy(cpuinfo.cpu_impl, str, sizeof(cpuinfo.cpu_impl));
--	else
--		strcpy(cpuinfo.cpu_impl, "<unknown>");
-+	strscpy(cpuinfo.cpu_impl, str ?: "<unknown>");
- 
- 	cpuinfo.has_div = of_property_read_bool(cpu, "altr,has-div");
- 	cpuinfo.has_mul = of_property_read_bool(cpu, "altr,has-mul");
--- 
-2.49.0
-
+and use it in conection with btrfs_release_path() only in case it's
+optimizing the allocation.
