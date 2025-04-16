@@ -1,139 +1,125 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0658F209F5D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A2C221272;
+	Wed, 16 Apr 2025 12:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805875; cv=none; b=lKIYNPD4mqgw5sKcRxeTOQ/JeMVYgzUyq3QJmupthXfXW5fXh81o00++2L5PNPnjcCTbrLS+Eh/URapE5xOlSkYUCTkXNJDPO+wxaD44RM8XJOSyFkmskdSoDoahGxV17u8xbkcDP+GxvzdGoX9KlxIia6E6RIX5YRoguBclwu8=
+	t=1744805948; cv=none; b=MRue9sLBI9uPEMYVAdHVAISoIbCfyFjztoqtZM1EQoSGpL2AR1GyumoUAVw07CO0I0zpCGWiQ8VhorTo61iUaV0Y8BZD2zyMrggI9I9WfLOIJVUHvrXWgj3rH1AGdW9GGtJjcf5l7Z/+Z3jzguTkIg6vD10zQ6bzv01cd+IGFys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805875; c=relaxed/simple;
-	bh=MVvx9T54fdEIGYtKwKMpuXHplfYO85cEEUEAKFTkBy0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=W6mxywL8DgOByE/vYuBe+mrH3J7GwYd9MgTGCD+D8q3HDNrO2skV8sXdYWmIS1IFLlw5/9ww/b9W+0yNjmLGXhZshoPf48ZIfU+s8dokIRw1iyweQbQcnKcWIHhdkXQY9ZYfoSm/mPFkRMxLNY4y4OiWt/jRTfAA6q1UBqUxRLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aNHsN8nK; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744805948; c=relaxed/simple;
+	bh=Uwk/C5Fncf0gM3yHMM6IMOis7Lej7BqXPBmzclEOot8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=N5l9EU6whjRnnGDOKL6cgSw9Ce8Xb7hvuKd0CLQktfQZ8j55cjI0qBQG26lYihcxSFQRGCMoYk0xMOzCPpnVpEbo+hdcgBM8CNvxAlRrP1K82OG6d77KElveoeTGbI/er2l67UhiVJv6EH34PRiF/xnRJQ0Q4qy3Ze9uvN4rE1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AdUkq7fa; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNHsN8nK"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e60b75f87aaso4599366276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:17:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744805873; x=1745410673; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wlP+HD1QHGE6iO/Q40BNz/pkmIckE06sYeotHoDiylw=;
-        b=aNHsN8nKLP+v3Uv76mo3YpT8fPucbb3jqeukjduF7wSNmC7Xy8CkGRxmRI9FzUi3yn
-         0Eo7Xld7VS+L87fHRVm9TS6JgL25rHkIdZiTq+poDk8F6+gm8BX1+4lo24BAlVqXe5Ah
-         ZnVk6RfybrQqLVIYSrZVTvi+9ON48AOYQtFI8tpmdoFHqQyKqwINo5mnYWuQV5E0Tcsy
-         KvBjWkrmqMBcA/IgYPD/k32MYsTc7a0vWc5BiY1YttQOxO+DuWZdIzlwnfLnzDhbcGAT
-         07KhL1Tk1FC/Mc0lGJKD9JWDaJzxvkNNVkhisSU+HSNCwRw/ohOeu7qx3pkwgFnW0ezc
-         0wCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744805873; x=1745410673;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlP+HD1QHGE6iO/Q40BNz/pkmIckE06sYeotHoDiylw=;
-        b=Zrq8l+L1Odnobr+suD4PjfQSHRR+uwTryyo1duaRKIHqON2R+PwUoVSvaDG+wQpalq
-         i21BVs0oqwIAGY0Mk3+IpDxgpJEM9oVe0eN9Hl00DosxMNdL8HtZ6ENhB9WdUZ/h8LRh
-         kFsO5kDvviVv/S3U+0un785b86swQ8Pe5ZE2NvxUumxvwBNdW3LaGPmFKLHZmaUzd011
-         TqdfBxA3U2L1SV9+rF5yg+756exgudNnfK7hBpX9PZXumP8cYY15R5Ll5fEDSYuATeX5
-         1rJRq2hSmCjY43Y+5RGBZNoAjaAsLuTJtnkZdWWUqjQmP+/j9fNUspiU14Y9RW1BrHAN
-         fGTA==
-X-Gm-Message-State: AOJu0YwtLaqeh2VTiX7LCBvXbK+ZxWSIxnGQT9Mvh4AQqJNTh14vNE1U
-	3Oi5gHd2vF9Jgm6v7PdnYS+3Xf3mq38FQTOx+dB98Ff5tfs9tAMIr0V1YyChjBxxTlRihYgvjqQ
-	k0hsn+uAIYbpJ2e9yBbCxxXw0lr7FsYo1
-X-Gm-Gg: ASbGnct110oCch6PmzJODu4M67fxRQm2EFV06w4JfeaKQfFfi7Yr2enDFCtSMHHgcol
-	zE+C1+cQPZELsBP3iLeSs+5Cg76IcThN8fc8Rrh14Bq4Umm8BtwzeryQ97ffZ7py8KBKYmFPk5Y
-	m05ZoOtz/wl/LFm+aOX7PMqQ==
-X-Google-Smtp-Source: AGHT+IFf7/9q05WuLCBinmHHyeGqSzOB+G+Hb0UXzu8jeUcFvWiFNYdqGcy/Eywb7M0FxO5atgSkOuOsVuLpd6U1hlU=
-X-Received: by 2002:a05:6902:2e85:b0:e5d:c97b:78a8 with SMTP id
- 3f1490d57ef6-e7275e0091emr1955667276.36.1744805872702; Wed, 16 Apr 2025
- 05:17:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AdUkq7fa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744805947; x=1776341947;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Uwk/C5Fncf0gM3yHMM6IMOis7Lej7BqXPBmzclEOot8=;
+  b=AdUkq7farBOCEkFVOmn2Vzrjfp07JlVc9gxy+egUkA4Q8qClsB26qV8I
+   NJ62xS2PKNJGnMUMPEYlnIxFqkx9eDqGNmSKLIwg1rPP6fhDy0pspjie3
+   CB+hComZvfj24moOnjvZ4L0u4ZIMYqhZfp5c1vvjyfHMmR/7ZdH2tM3Xv
+   ba5oEF0vlnSEnCYuME0gTsfWS+xNuEUlbZdU7/xsOF1YA0DqDpZXUWT84
+   X7joDuTLF0vczmKReW6WYlZ7m1ZtJWo0LyyaxtfAPrORKNhaB+Rpxj3b1
+   vNa4sFNv6iQk4U3rfn+jlTnuy1uAE1L+FpjmWzfjPDEZxZg0XDD1OxLzU
+   Q==;
+X-CSE-ConnectionGUID: Etfr6T6ZQ2GPxLi1TGQQDQ==
+X-CSE-MsgGUID: ffGyuR9RRQaaeldd85Jq8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46271070"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="46271070"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:19:06 -0700
+X-CSE-ConnectionGUID: uiM4xANsQpmKm+YiO3uNLg==
+X-CSE-MsgGUID: BthUMN0UReeTsIzXg0uYdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="135444032"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.243])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 05:19:01 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 16 Apr 2025 15:18:56 +0300 (EEST)
+To: Andy Shevchenko <andy@kernel.org>
+cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+    Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/1] x86: Use resource_set_{range,size}() helpers
+In-Reply-To: <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
+Message-ID: <7f0d376c-2d03-8e09-5d85-e53b0bce0cc5@linux.intel.com>
+References: <20250416101318.7313-1-ilpo.jarvinen@linux.intel.com> <Z_-E3W8i4EfxdBh3@smile.fi.intel.com> <a046f6bb-0b6e-a431-eaa5-ecd279459f86@linux.intel.com> <Z_-cgFJWZTjMl_ud@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: rujra <braker.noob.kernel@gmail.com>
-Date: Wed, 16 Apr 2025 17:47:41 +0530
-X-Gm-Features: ATxdqUHrKwJ4jWPaIt1lbeiS0wqqDkS38kmrf-1Bx-1WG1dvU1m4yJHUelL3ApE
-Message-ID: <CAG+54DbvpWHyX8+ucEQpg2B6rNTJP11CRpYxcYVrKpKehzrK-A@mail.gmail.com>
-Subject: [FIRST-PATCH] staging : greybus : gb-beagleplay.c : fixing the checks
- as first-patch
-To: ayushdevel1325@gmail.com, johan@kernel.org, elder@kernel.org, 
-	gregkh@linuxfoundation.org, greybus-dev@lists.linaro.org, 
-	outreachy@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, rujra <braker.noob.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323328-2113019736-1744805936=:991"
 
-added comments on spinlocks for producer-consumer model, rearranged the
-lines on function calls where it should not end with "(" this bracket,
-also removed white-spaces and aligned the arguments of function calls.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+--8323328-2113019736-1744805936=:991
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
->8------------------------------------------------------8<
+On Wed, 16 Apr 2025, Andy Shevchenko wrote:
 
- drivers/greybus/gb-beagleplay.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> On Wed, Apr 16, 2025 at 02:53:51PM +0300, Ilpo J=E4rvinen wrote:
+> > On Wed, 16 Apr 2025, Andy Shevchenko wrote:
+> > > On Wed, Apr 16, 2025 at 01:13:18PM +0300, Ilpo J=E4rvinen wrote:
+>=20
+> > > > +=09=09=09resource_set_range(res, 0xC0000, SZ_128K);
+> > > >  =09=09=09res->flags =3D IORESOURCE_MEM | IORESOURCE_ROM_SHADOW |
+> > > >  =09=09=09=09     IORESOURCE_PCI_FIXED;
+> > >=20
+> > > I'm wondering why not DEFINE_RES_MEM() in such cases?
+> >=20
+> > I guess you meant DEFINE_RES() as that seems to allow giving custom fla=
+gs.
+> > However, DEFINE_RES*() will overwrite ->name which seems something that=
+=20
+> > ought to not be done here.
+>=20
+> Okay, I haven't checked the initial state of name field here, so then
+> DEFINE_RES_MEM_NAMED()?  Or don't we have one?
 
-diff --git a/drivers/greybus/gb-beagleplay.c b/drivers/greybus/gb-beagleplay.c
-index 473ac3f2d382..fa1c3a40dd0b 100644
---- a/drivers/greybus/gb-beagleplay.c
-+++ b/drivers/greybus/gb-beagleplay.c
-@@ -73,7 +73,9 @@ struct gb_beagleplay {
-        struct gb_host_device *gb_hd;
+There's pre-existing res->name on it and your suggestion would have=20
+resulted in overwriting it with NULL. res->name seems to be filled earlier=
+=20
+by PCI probe code.
 
-        struct work_struct tx_work;
-+       //used to ensure that only one producer can access the shared
-resource at a time.
-        spinlock_t tx_producer_lock;
-+       //used to ensure that only one consumer can access the shared
-resource at a time.
-        spinlock_t tx_consumer_lock;
-        struct circ_buf tx_circ_buf;
-        u16 tx_crc;
-@@ -642,8 +644,8 @@ static int cc1352_bootloader_wait_for_ack(struct
-gb_beagleplay *bg)
- {
-        int ret;
+> In any case I would rather see a one assignment for these cases than some=
+thing
+> hidden behind proposed conversions.
 
--       ret = wait_for_completion_timeout(
--               &bg->fwl_ack_com, msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-+       ret = wait_for_completion_timeout(&bg->fwl_ack_com,
-+
-msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-        if (ret < 0)
-                return dev_err_probe(&bg->sd->dev, ret,
-                                     "Failed to acquire ack semaphore");
-@@ -680,9 +682,8 @@ static int cc1352_bootloader_get_status(struct
-gb_beagleplay *bg)
-        if (ret < 0)
-                return ret;
+TBH, these DEFINE_RES*() helpers are doing hidden things such as=20
+blantantly overwriting ->name which I only realized after I had already=20
+converted to it as per your suggestion.
 
--       ret = wait_for_completion_timeout(
--               &bg->fwl_cmd_response_com,
--               msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-+       ret = wait_for_completion_timeout(&bg->fwl_cmd_response_com,
-+
-msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-        if (ret < 0)
-                return dev_err_probe(&bg->sd->dev, ret,
-                                     "Failed to acquire last status semaphore");
-@@ -765,9 +766,8 @@ static int cc1352_bootloader_crc32(struct
-gb_beagleplay *bg, u32 *crc32)
-        if (ret < 0)
-                return ret;
+And yes, it is possible to pass the pre-existing res->name to=20
+DEFINE_RES_NAMED() if that what you insist, though it seems doing it for=20
+the sake of DEFINE_RES*() interface rather than this code wanting to=20
+really define the resource from scratch.
 
--       ret = wait_for_completion_timeout(
--               &bg->fwl_cmd_response_com,
--               msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-+       ret = wait_for_completion_timeout(&bg->fwl_cmd_response_com,
-+
-msecs_to_jiffies(CC1352_BOOTLOADER_TIMEOUT));
-        if (ret < 0)
-                return dev_err_probe(&bg->sd->dev, ret,
-                                     "Failed to acquire last status semaphore");
---
-2.43.0
+Given the hidden overwriting, please be careful on suggesting=20
+DEFINE_RES*() conversions as it's not as trivial as it seems.
+
+> > I found one other case from the same file though which is truly defines
+> > a resource from scratch.
+>=20
+>=20
+>=20
+
+--=20
+ i.
+
+--8323328-2113019736-1744805936=:991--
