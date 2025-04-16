@@ -1,77 +1,150 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D73422D4DF;
-	Wed, 16 Apr 2025 07:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA8222D4E9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789356; cv=none; b=tuuUbOm59Ezc8baxIWcH63siwK/uUvcty5t4u7t7dVbkvNTNmQwI3zVu0SaJYUVqEIPPnx7EU3sE05rm9tbRy5Ucg+golB4rCt8oGV1vOvWF/m1rPwjwqF9YnBaOeTV7oENLvjU1hRn2mtVu1sKHcjZfmTOLRRWTj9I4bKkzgBY=
+	t=1744789388; cv=none; b=noOYWcdZQK81g0rfEbfsi7DVzghDv4V8v+o5HmreuvJeJqX81HOCvfn6wfr06wsiz3TRuyIywItvGrCRjKiP7DWRFYCwKFlREaz5tSbUK2c4NT4VL6jdaEpfUkhnUn+iYluTJnNVGu1F/I0wvf0GOweAMxtqlI6c3I3rGhHUt9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789356; c=relaxed/simple;
-	bh=Jz6qHTg8Q8zRmoy99ODS+PiAJiETvWfoBcUY75LwSgI=;
+	s=arc-20240116; t=1744789388; c=relaxed/simple;
+	bh=W7RjF650Hww4phW6Jao4G0MIVaVTwIdOqM03zj51tfY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XmvqL+sGEHT9ozbarQ0nU42pGIH1UU7cPt3L1gmdzCaj3NENiQak4zVMNqB3bGBrPSmEU8M1XQRFY/l++aFD7KCzwDk9uZWkaeAmn1hxrHB8TIKhqFj+4h8dsWrtd48dmIlLwzBeq3Ul7EEr/T9Hsl7llfP6UqbSqW1ge0jwK8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dgkw2Eer; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=EWYyUtzrnDTmVf0O55N02gsDUEqfDTHl23wywRuZqBPTPGkHvHLa9HRCro9hwMmys986iAsxCJZDHfuKv0wWZYbaGiAGRmfUk9xQMlD0CR3zuNXXumUG3hcsZW53WQskOhkNBI4V5CpaY/3/WvtlWlWJr2uAE/wIvXVTXxQtme8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=TUakBY6z; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dgkw2Eer"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=KYd5npbJzyzOtmH5HG/Rke9Rgxyj9IA+KROKFQ48knQ=; b=dgkw2EerY+ijHY0llMySBA1oxv
-	xSPZge946AAbseUxLprw1dmHPIe+Ay0niuuilqJ9xf49w160AavLss33BZyxu6U04clsa0Jzbxnw5
-	hLaS8Sc8ObsVLlseuWOJkFq1tOFOzNGEe2RdsyOksxaKexJEf+xvSqS9M1L6eIife4lKDBIYHA+rT
-	nTnZ7YW1EOOh79sltbW7nF7QsF00Qwvy25XgD1rJUq5hESeFhT48NdjJvkuk1IlGCph3jHJlE21XU
-	6mBPMTuCF8G65GKfwJRIVaRAykcU7gXDrGwCDpyB+/WDjSHaVpkeCWZP13NdSeKGlsLXybawFzFcH
-	V16L9j3A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u4xPe-0000000A3y0-1TNG;
-	Wed, 16 Apr 2025 07:42:26 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B917B3003C4; Wed, 16 Apr 2025 09:42:25 +0200 (CEST)
-Date: Wed, 16 Apr 2025 09:42:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v3 00/22] Arch-PEBS and PMU supports for Clearwater
- Forest and Panther Lake
-Message-ID: <20250416074225.GG4031@noisy.programming.kicks-ass.net>
-References: <20250415114428.341182-1-dapeng1.mi@linux.intel.com>
- <71ba0725-04f5-4142-8536-b5c17d2d5e00@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="TUakBY6z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=+IW6
+	5bGR736uruXZFGxU8tn6ykQrJqn+sd1HNhK4aE4=; b=TUakBY6zfxRPRE0UctHq
+	dqNUm33Zz5F8alNlgnW6R/gdOKeKeT7E0/k4nja8GMOzkzwXgjxvveV5H4pmFGOX
+	0xJ3ZF/2D8mpynDRs1abnL1GMk5ahylvhnYyxA4vfVOWPHx5GL7iVTVUuhg9Ycc2
+	VYGfkF5eL65HRjcTJunKDxd55XLUui45KIysH+d4vO6/anzgJZ+fZXxHWADZVES+
+	IZLDpjRfb3SZobdWrmz1jM3XfXB3LUUYT33+7XcoZquZDskZYFagrXPG++RnskHJ
+	lUsYf4kXTQrZUD4hOFHXOR0iZO94p4hJ1wsyuMvps1d7nWLrWlBkYhoxRmNvQUbM
+	2Q==
+Received: (qmail 619537 invoked from network); 16 Apr 2025 09:43:04 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 16 Apr 2025 09:43:04 +0200
+X-UD-Smtp-Session: l3s3148p1@usVtb+AyBO0ujnsq
+Date: Wed, 16 Apr 2025 09:43:03 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v2 9/9] i2c: riic: Implement bus recovery
+Message-ID: <Z_9fh2nfwAaUnhVV@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20241218001618.488946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20241218001618.488946-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <Z2XewglpALJFE1Ay@ninjato>
+ <CA+V-a8vB1c8Zp+zzoHp0zFpW8fjw-xq2=KPr=dyBUUZbOhBxJQ@mail.gmail.com>
+ <Z2gJtlb5Sc9esEba@ninjato>
+ <CA+V-a8s4-g9vxyfYMgnKMK=Oej9kDBwWsWehWLYTkxw-06w-2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="K5vpMRnXuq3n+WSd"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8s4-g9vxyfYMgnKMK=Oej9kDBwWsWehWLYTkxw-06w-2g@mail.gmail.com>
+
+
+--K5vpMRnXuq3n+WSd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <71ba0725-04f5-4142-8536-b5c17d2d5e00@linux.intel.com>
 
-On Tue, Apr 15, 2025 at 11:21:30AM -0400, Liang, Kan wrote:
-> Hi Peter,
-> 
-> On 2025-04-15 7:44 a.m., Dapeng Mi wrote:
-> > Dapeng Mi (21):
-> >   perf/x86/intel: Add PMU support for Clearwater Forest
-> > 
-> > Kan Liang (1):
-> >   perf/x86/intel: Add Panther Lake support
-> 
-> Could you please take a look and pick up the above two patches if they
-> look good to you?
+Hi Prabhakar,
 
-Yes, I've picked up that earlier 2 patch series and will pick up the
-first 6 patches from this series.
+finally some time for this!
 
-Thanks!
+> Based on the feedback from the HW engineer the restriction is valid
+> see attached image (i2c-pullup.png). The SCL and SDA are Schmitt
+> input/open-drain output pins for both master and slave operations.
+> Because the output is open drain, an external pull-up resistor is
+> required.
+
+That confirms what I was saying. It is required. There is no difference
+between setting the bit manually and the IP core doing it internally.
+
+> Assuming there is an external pull-up resistor for all the platforms I
+> implemented the I2C bus recovery using the generic recovery algorithm
+> and I'm seeing issues, as the required number of clock pulses are not
+> being triggered (Note, the i2c clock frequency is 400000Hz where the
+> below tests are run).
+
+So, my take is to check further why this is the case. The code looks
+mostly good, except for bus_free:
+
+> +static int riic_get_bus_free(struct i2c_adapter *adap)
+> +{
+> +       struct riic_dev *riic = i2c_get_adapdata(adap);
+> +
+> +       udelay(5);
+
+I wonder about the udelay here. Both, why this is necessary and where
+the value comes from.
+
+> +
+> +       /* Check if the bus is busy or SDA is not high */
+> +       if ((riic_readb(riic, RIIC_ICCR2) & ICCR2_BBSY) ||
+> +           !(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI))
+
+And maybe if we can't skip reading SDAI here?
+
+> +               return -EBUSY;
+> +
+> +       return 1;
+> +}
+
+Have you already played with these options? If you didn't and don't have
+time to do so, I can also check it. I luckily got a G3S meanwhile.
+
+Happy hacking,
+
+   Wolfram
+
+
+--K5vpMRnXuq3n+WSd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf/X4MACgkQFA3kzBSg
+KbYQog/+MzMB5MNGTKUZRZK6nzVl3KnzBf5pjrz68biiT5lJOt/0OqsQeIWgDo5/
+2GwZ7HCXaisDGd/l6Tw/7uDHsl0MFwU/4xWwEdVsdyn25jwKHibYyCC8495q5N2n
+W4aIYU7DPkDlWZ8txSpefu8W3IKdezFh6Sx331zGnEmILPwIhd4qE1wChe+dK0xe
+A97Jpg3eKZqozLNocoD849LtRcufeRYGT1IioypleoTJpGpep1/eZwkdyKYd3JNb
+3BBAMlkFDbRrEfCeOwqc3Aun6JWelft5/tklQjXFj2ib1n+vgP2ZcIItyTB2jyWE
+Z5aDeDcXN8SBZ6uRloTSHj+OyKI9mcqg0/SqFRnndV9nlEeKcM5lM7oH4AOIsb96
+65oQZL8opbCpyRnzhQANf94I/bZlpjZPfpdo27jItidVJ5LRoCV6dbbBhqPpc+Fd
+BcY7ERnXTiQ6tB9EmE8kVh05twfqvDvjuvxvBda9qBaSVnvWcNpDlp1c5c8ef6/7
+Yms+SYx3ysSVijFZAyFdmyBMEB6WLvdoKw6c5nNW9LamWbLRC/4hZGKZeCxIE0oW
+/h7gRGyW9+GRZPkmrnXSAWgN4qIOlZIxaHIPDoC3xmLE2lc4eF0klARyJ2s4sdHg
+24aXzuHiALoRjyN4fKo7hNzfAOcHhsHiPQDMi8YM43AjMyuPjY4=
+=aviI
+-----END PGP SIGNATURE-----
+
+--K5vpMRnXuq3n+WSd--
