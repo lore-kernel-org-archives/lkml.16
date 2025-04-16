@@ -1,81 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC5214235;
-	Wed, 16 Apr 2025 20:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75581F585A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836765; cv=none; b=s/HJ5qQ8kAJypd7fluMR8AYjFhalboMg4hG18UgdNuwQg6QfFrEZuvGmwqFRwVZ0V3Broex6k+aiNxkXAnlOZYNDqs1JSA21nP/vvbC6SwOE8qPYww/beqApTzzag2D0wnJ+d+NGGnluEG/8+8Df4Tiue3kOyyyw69CS8QX4KYs=
+	t=1744836890; cv=none; b=PnFPqdouZhc3K3u9vskbZiXAYvGsgJ3RVgEIwtL3QfLW9c1Ij5C4GYzcnPwTJEAQuPmc3uP0QLAABjtmzHCYq0nX6VivqjKHUP/5/WSJ9l7bjU97e2Kr0YPYxG8mQ6A18K/o2gVh6728TISyUDtmc2v3jP0qFYSBOHLJ4j/RF6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836765; c=relaxed/simple;
-	bh=f0OYppxEavlfyHTNKLYVKPUYMvnUbW49R6+sWigyn6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ciupaw8Lgsty1bMAz2GH+FhkRjV2P6M9g9yepxT2liO+gOJtHRAN8+nWQYYDD1h64sF490HfiuWWbLzoO0yeYQJi6jORqfkNGa7H1T3DKWvR64nbrjTWi0ICcQoTJux7w//bdsFG1eZmjy9frYBEc0TMENj0p2K1+S3Fs94ImWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A339C4CEE2;
-	Wed, 16 Apr 2025 20:52:43 +0000 (UTC)
-Date: Wed, 16 Apr 2025 16:54:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] ftrace: Comment that ftrace_func_mapper is freed with
- free_ftrace_hash()
-Message-ID: <20250416165420.5c717420@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744836890; c=relaxed/simple;
+	bh=BdCAA4szi1rLY5SwDTelw4P+GCAkgmWINWKCkQGRqDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9uB5u3wwCSfqxXe0bkk3RaSXw89BOIgu57PVT8sczm4ayJn3xUjutgzijV6QKwGWm4zAogVwsGOd9Ivoqu0sZHIzNrdH0zNmF0e9R0hmogjUoFYE6Xgv/Ur/imKePgKdohN12oC81+rR5bAr0qvWNp3vYqAuqidQZPZVLbJ7/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=QjEN8QTy; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="QjEN8QTy"
+Date: Wed, 16 Apr 2025 16:54:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1744836884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BdCAA4szi1rLY5SwDTelw4P+GCAkgmWINWKCkQGRqDk=;
+	b=QjEN8QTyP48jcL4UQEKChxD75utKPwS8ffWRPIGkozSSjm5Zrcm7lrV+ykCPpHxO6v2DA/
+	IKqpong1eLMRy6uaAkfJ7jJkHrr3ZGy+kpGMQui7JPEc9G4PVslib9WijiSuLnnh0ctCyV
+	JCjHNwhmsTB0sdiEbfMqAaTd3+Hv0bBserGu3ABrh3LjKxk/LQ1PZXO24/p3SQVcIORwp0
+	OOuH9RSEt+/JQ9KiErqjVyjXiRAyBPlJFaDnJVxp3RPXWtrGcq4z3FV2/vznHxKOngQ5mj
+	UlSawL3oCg2DrfRrdivrbX5EwWVZu/kDRbiMViBGQB7t491BMwU9csets/Qz6g==
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+To: j@jannau.net
+Cc: Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Neal Gompa <neal@gompa.dev>, Dmitry Baryshkov <lumag@kernel.org>,
+	dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Apple Display Pipe driver fixes
+Message-ID: <aAAZDuuj64iLJevQ@blossom>
+References: <20250416-drm_adp_fixes-v1-0-772699f13293@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416-drm_adp_fixes-v1-0-772699f13293@jannau.net>
+X-Migadu-Flow: FLOW_OUT
 
-From: Steven Rostedt <rostedt@goodmis.org>
+> This is preferable to driver changes since keeps the device powered on
+> if the adpdrm module is not available during boot.
 
-The structure ftrace_func_mapper only contains a single field and that is
-a ftrace_hash. It is used to abstract it out from a normal hash to control
-users of how it gets modified.
+Struggling to parse this sentence, do you mean to say:
 
-The freeing of a ftrace_func_mapper structure is:
-
-  free_ftrace_hash(&mapper->hash);
-
-Without context, this looks like a bug. It should be commented that it is
-not a bug and it is freed this way.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a8a02868b435..19b902b8de2b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5160,8 +5160,12 @@ struct ftrace_func_map {
- 	void				*data;
- };
- 
-+/*
-+ * Note, ftrace_func_mapper is freed by free_ftrace_hash(&mapper->hash).
-+ * The hash field must be the first field.
-+ */
- struct ftrace_func_mapper {
--	struct ftrace_hash		hash;
-+	struct ftrace_hash		hash;	/* Must be first! */
- };
- 
- /**
-@@ -5296,6 +5300,7 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
- 			}
- 		}
- 	}
-+	/* This also frees the mapper itself */
- 	free_ftrace_hash(&mapper->hash);
- }
- 
--- 
-2.47.2
+> Driver changes are preferred, since that patch keeps the device
+> powered on if the adpdrm module is not available during boot.
 
