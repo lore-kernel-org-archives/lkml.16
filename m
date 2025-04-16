@@ -1,100 +1,80 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213B71FCCEB
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3BF1FF1B4;
+	Wed, 16 Apr 2025 00:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765185; cv=none; b=Dsz7X0B+oqKzGVlrvb1z9Rgx+prPJLa2TPf0DON6hNGSt8kVn1idSWlcA/486nVXDDhGaiLBAwfB4izhK6bch6+1UrC5ZxUMsnG64wUhIZ6hzcKvBMiH6bGSUfkX9vEBXNY1yXv3G/lu1tpRpjRan/8rnONB3Mnbr8EvejM53bY=
+	t=1744765197; cv=none; b=YKZ9yvaRIyqJpMXiIDwr9DVcueJyerXPhcW4HMvlh71V0X69K453Ayhk1dhBDS1Kw3ts+I5/AhCepwdbp6UC2QWJdb6eLsDez32LxgvDrygRECopEpYKoudqBVxMj8MKNBs2IQ9WRtiII/ur8xKAH8nhRni+VkDCpXbfeBInrnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765185; c=relaxed/simple;
-	bh=lEGP9mD7MvUcXDYdqhzYIQGHZMKWftllVNmBTxlRu8E=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ahXK0B9Xnvalw7VGkxOLct7o7nc5zHboLsUn9kERsquYunIwzGtzPQdHQxEeTdH2QsrVnJHcQdgHBmpj3BVyJCA1cW7yCSraCqhcnK6zeekGijgdmp8dTBu2mF2uTCKVs/G0pQJk8yQw4xiJGnEBoQmhrrMW0Sz4Woc+Z1vWozQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eAyIsJ8w; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1744765197; c=relaxed/simple;
+	bh=151ygcNcMsIrFJplJv9MnBQOAdO53zCmpNtyrWa+quA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=dQAL67UIcz5MVtWpxnu/BYEFj5tw4SmynUJQxCakZtHxArcWU99/QJA+D1TP612PYxx3oMBGQCiqou8NOpKnRke2DaMGNrsJiP7yp0FzG+G43cN6+YJIs/jL4zru4+yWckGI5Ewce8fgG8FEwzdhdYG9GRNTOnuShKf1bMwy0lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSnC9P3R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eAyIsJ8w"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85d9a87660fso518216439f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 17:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744765182; x=1745369982; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G1FE2zVZmKw/thcJ104wwO6SRP1SEiJsFxUW9ObMIY4=;
-        b=eAyIsJ8wS4vG1hnrsdcSWviidMwQRPYzGPRlQwMaOnJt9p3dxtoRhwiahrseunP0s9
-         G07Gu885lNmyuayxhF8tQ4H5pRGtMdmhB2fF9KXTbwuXB5odpmDI7qUHeGjwf8KsWG3B
-         kIBOOrJxmftEJlPn3dMvxZKs5DHjGzM/eUhqw+VXNVnQMKvtdnJsJFWTB1ic25RSH8b0
-         DiMx0R2xpcKQojzh/tg5vX9bOmTkzYjq7q38A8O7Z9KE5KG11iUdG/eLg3fLNUwRJoNw
-         gryBX0SiLTqhqrr+FpxwDTtxISF0lCJXo7thkXAwHJcnI3KFh2JCf2pmFvMN+WZ+EShb
-         sq6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765182; x=1745369982;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G1FE2zVZmKw/thcJ104wwO6SRP1SEiJsFxUW9ObMIY4=;
-        b=fj5HjVyctqDANvCNshSPHunvxpAc38W4h+OSrbanJt3TXKoUXnwdAlv47Sq8fXUOEJ
-         0Nl1yRrDUopZiamvWTZJ3oSUBJrzI6jzo4y9+zyjTGTKjEQRJaMVPjlzroxcVU7UlLYa
-         9se855pD5BusKRnGSiJ2gTspRofhyrbec9vn/iINNS3QINSaaGIN30c+X7DY6ZwtFbRD
-         MhTvoYXFjnX/TlX/xzoZsWgTKnL/IQctAbmGzFHuQgYznEC382dd2Axe70EiojcFrLpm
-         q2BFFWue74obHNyqjyXTNejd1WtfckrMrt7xsX9XFVMgjPEmVvnEtByj0xQDm7yJbuUL
-         NI9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUU5Pr73d9JQ8M9ztjp0MMyWwGU2fLDRYFkIcIGfjhHfW+uHqjm2xbxO24FoJUTQQgP1jcZM4ECS0vpK30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpnqUMnth/QLAwkFXR0B87aVT28l63Q93el1x+Be1Es0Pxt/JM
-	AcW+e1U5Z53RhDzbCLFLcA13ln6qsGRddsjlexGOxMLWArjRrwCpkOqZzEGvzNQ=
-X-Gm-Gg: ASbGncvkpbH9Q0sQwiAeTLE+rYeR3Gub34j8uCyGjK8yI/V2dddEgZy72RFXs9+ABlS
-	KvpAIclGq5oe5wNNoZCgAYbo/VDhEUay4IQyeVtCIuieR4JBB3bSstjPDmxOsPjETvsvnCr3vPm
-	pfGHTOKzvOIed87cJFoImwp5PmXSSpYxtFUzNXfmUTRpRDmrPUkUL/WO+TPnRzaCfRFfK52mS7x
-	HCOHAwLn8/GiaJDcozvNiBgG9yV2VnpDe1PQJ6SBqG4P4CQv6gjI49eaOJP6XHsA3QWVmENworW
-	1bw0n1/w9tzvoWFhOvBCwhdHvODDVVni
-X-Google-Smtp-Source: AGHT+IENdPZ5RCxBLNEPTCBRVUprVLI/YIgbzhf1//lZ6SnwHZmdl3X+uIAKaxkTXsVSbRXMnJ/w/g==
-X-Received: by 2002:a05:6602:7215:b0:85b:43a3:66ad with SMTP id ca18e2360f4ac-861bfc4be77mr177425539f.8.1744765182314;
-        Tue, 15 Apr 2025 17:59:42 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8616522c958sm275458039f.6.2025.04.15.17.59.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 17:59:41 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Uday Shankar <ushankar@purestorage.com>, Ming Lei <ming.lei@redhat.com>, 
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250416004111.3242817-1-csander@purestorage.com>
-References: <20250416004111.3242817-1-csander@purestorage.com>
-Subject: Re: [PATCH] ublk: don't suggest CONFIG_BLK_DEV_UBLK=Y
-Message-Id: <174476518098.250948.15142433690972812108.b4-ty@kernel.dk>
-Date: Tue, 15 Apr 2025 18:59:40 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSnC9P3R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C61C4CEEB;
+	Wed, 16 Apr 2025 00:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744765197;
+	bh=151ygcNcMsIrFJplJv9MnBQOAdO53zCmpNtyrWa+quA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QSnC9P3Rr+Kfd0txBvFl7NiYvSHdTIhA+belTHNgD0yzB8wKinm0IpPBHyz9SsYye
+	 LywxoCGvyO/B6SFafA1vrkCSGzYLIh8jXEbVYI+ViIX3xVMOWTT3/DBI+8sEzZ2gLu
+	 cgnr546LFuT4L9q6Baq4iL9oiyQKkggHqwfSP1f3rwe6SYADAiETUfJuNNNloyaub9
+	 b6w/V2huI0AhuM+F7ydpNpKa9fRgC40Rh/l7IDt8FUXSqYrtvN5rXbk/bdqks/PbBU
+	 3BedhfjgT1beI+lvuWZUD4jYfP5GAHh3i8/KLtJSFSHlJVPFDTqTS1y4VidH5i9oIl
+	 0u9XdfeoZhqSQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1EE3822D4B;
+	Wed, 16 Apr 2025 01:00:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-7b9b9
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3] net: bridge: locally receive all multicast
+ packets if IFF_ALLMULTI is set
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174476523524.2834710.11784912594036142552.git-patchwork-notify@kernel.org>
+Date: Wed, 16 Apr 2025 01:00:35 +0000
+References: <OSZPR01MB8434308370ACAFA90A22980798B32@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSZPR01MB8434308370ACAFA90A22980798B32@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+To: Shengyu Qu <wiagn233@outlook.com>
+Cc: razor@blackwall.org, idosch@nvidia.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ bridge@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nbd@nbd.name
 
+Hello:
 
-On Tue, 15 Apr 2025 18:41:10 -0600, Caleb Sander Mateos wrote:
-> The CONFIG_BLK_DEV_UBLK help text suggests setting the config option to
-> Y so task_work_add() can be used to dispatch I/O, improving performance.
-> However, this mechanism was removed in commit 29dc5d06613f2 ("ublk: kill
-> queuing request by task_work_add"). So remove this paragraph from the
-> config help text.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 14 Apr 2025 18:56:01 +0800 you wrote:
+> If multicast snooping is enabled, multicast packets may not always end up
+> on the local bridge interface, if the host is not a member of the multicast
+> group. Similar to how IFF_PROMISC allows all packets to be received
+> locally, let IFF_ALLMULTI allow all multicast packets to be received.
 > 
+> OpenWrt uses a user space daemon for DHCPv6/RA/NDP handling, and in relay
+> mode it sets the ALLMULTI flag in order to receive all relevant queries on
+> the network.
 > 
 > [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [net-next,v3] net: bridge: locally receive all multicast packets if IFF_ALLMULTI is set
+    https://git.kernel.org/netdev/net-next/c/a496d2f0fd61
 
-[1/1] ublk: don't suggest CONFIG_BLK_DEV_UBLK=Y
-      commit: 0b7a4817756c7906d0a8112c953ce88d7cd8d4c6
-
-Best regards,
+You are awesome, thank you!
 -- 
-Jens Axboe
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
