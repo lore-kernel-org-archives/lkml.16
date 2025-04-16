@@ -1,145 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2088.outbound.protection.outlook.com [40.107.94.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5581521423F;
-	Wed, 16 Apr 2025 04:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744777751; cv=none; b=ED+E1QGzDkSE/4TsxWeMSoeZt6R7SlwtRhvoOuIEmNPJuEc1im1iQPwS0DxaZcS1aAVKZ30Xxf17z43y1AJd8RAwg2PTtDj3myKnx5Vnx5OUmB2GzGTblJeMBsRFmN88SZMDfKRxCyjr8gKpY3RU7LVYT3VZVlctovp918bWzlY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744777751; c=relaxed/simple;
-	bh=uNXA8zmXLo/ZSnb9UHBWW0N5nK1hKYKj64jUp2HilGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=abTKzp1hA2mrxK+j6GJ0sZVSDH0z8Sn7vuLlant52wNMHi5uxRUu3DkgzgiOy4TQ6l1ahaUn/OmzfXRR0giut6R7DNaWdKnGI+bLGk25EifCucLpkEPJSyUl0BiwVDOg2RxKbh68oHyxgfSkl8KXrr6on2SadU0pjfaMWWTYfeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g71ZL3G6; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5A34A1A
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744777823; cv=fail; b=X8rUYkzA1VUsB26taoq/s8wMUz/dSwydbb53Ryxyt+8DZUszTjOnkAny+LtLafEAhRHjSq3owiLgCc0Pr5nwYoJEVY3Bn/W9ECdXvShvr57tVkMDC/auu2DkjAf/wGrDDhsB5SmA7/B6oKADKpXVn5KxwDN9xAv76YxFmjltInc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744777823; c=relaxed/simple;
+	bh=8xKFIgdBQ6eRsnjha94yeLKIptWlbZfQJf9tOipWwto=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WsvTgkBqCfcUuTj0/exXgQv5bIUbT+f2UVP2Fsp3HZOmivqLU9moXcCAclf5U/lJ2hxlS6i7eyTIhndzFQkmSvT7fAW7g/qHlAvw0lG4tWB+By/6qXAzkwJ69WaNyeuI5OXLqooWj2tygHDdSMz1ps8A5ip+WGv9KWkUWUUaj6M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CIlxygSo; arc=fail smtp.client-ip=40.107.94.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g71ZL3G6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59E7C4CEE2;
-	Wed, 16 Apr 2025 04:29:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744777750;
-	bh=uNXA8zmXLo/ZSnb9UHBWW0N5nK1hKYKj64jUp2HilGg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=g71ZL3G62NXt8HGrGqgcVJ7ZDxK2MnrhRIwA4C4SIqR2CmPCKUWkJ2P0PCINuchO+
-	 WYfL7Py+1FkC4ln1psDru8hMAUlTYqB7fmxb0rqXumQmfZWxYjAxFuNmqh2+R941tL
-	 vRydFIKiWGNAUY3ZmzjbDiSNJXL3n750xB4xtw4lFLFllEK5RWX4SvTgSKqiQqbXry
-	 yNk3BS/CmX1l1zvgy/YsNE3vRgewr+d1FzIAs37gKMUWeBTBb9XhnXx+o3vXev3ZKu
-	 R+zvEW7qwx67jRRhu6YzYknPLZnpbo8DVbT9j/306TkYhQdRtaTGs+9yzJLV8mx2Dj
-	 lek+O6jVGjEiw==
-Message-ID: <f39d8b9b-c160-40a3-80d0-62f880122f2b@kernel.org>
-Date: Wed, 16 Apr 2025 06:29:07 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CIlxygSo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v9BEHaW2ZZlart6xWwvZTTL0r4Oy1ybo1Ek3bNGpG5jkl8K6iJ+7Y3kdrB2rLkQ/9EYOWBpEWSLE1uiVCNtKS1fOQl749xA9vxtHFh+mG9uKmtmrOL44SxA+LHNn1kENC3yqNrZFx+EQ2XkIxLvrGmlfICdXZP1omVhD2fo3FAqAcMFcwq6S4vF3IeA0tkvxiDY8g4Ny9OjzNPZ7EvSEqGTEd9lqDN/3HSUSySEyBmv/sA/y3j/lqGkXs26lPdOsgp9dvMszGPQFwH1+tIEsIVYao/s5V/Ej3YXNtJDbjsBxIsn/icbVSFjKY5yvpcajZZQLbU8ykAoPQdGk7VnlJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9/xznftPiVqzsYDMvBVpymyIoz22LkWqJkV9WeGKRTs=;
+ b=pwUu1Tnk2YP8o9g9ppJ4VLvsxhwFiJc3bHjCt4QxF4MhpAk/eNLkwiOIh/8rql37mWyHpLnGGK3+UimwHmylrb6j4wA0NdSakLX3Eqs3jy7Mn+obSt9Q2AkT4VFy/rzgiPNXgfDn+A705tVuweqacr09uZfjcs85JtTa6TeBnlVHdQ4hH44bxGBqLcWVchUUVBrBKAiEhVLpa0fo4ubSu8j9AKD0o1qs3ufX4oqShPGUoxa4JMWZDHoPbXiieCdBaMA00+XXybK4Csg1Xkm0iZNahYGjsLD9Y++ViInLYW5ueD0beEn6UZNRJjBPGo5l4+jIOk2dVnUwXEJgB4M+HQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9/xznftPiVqzsYDMvBVpymyIoz22LkWqJkV9WeGKRTs=;
+ b=CIlxygSoYPVesVLXOiCGQtHggaYPviIjVjvfZDvGpogP158DQLp0EumG5I70Csjn7vYV6BEp/SOTWgtVKXXCa7Q5lp8ZOElzCpmvu49MtaM1VLpuphc5sg6GlDVxZMhEOvbSPd/eZaOnvA5y52LfnRf8mYaIpa7gf/FF44O1D9c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB9193.namprd12.prod.outlook.com (2603:10b6:610:195::14)
+ by SN7PR12MB6958.namprd12.prod.outlook.com (2603:10b6:806:262::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.27; Wed, 16 Apr
+ 2025 04:30:18 +0000
+Received: from CH3PR12MB9193.namprd12.prod.outlook.com
+ ([fe80::7818:d337:2640:e6c7]) by CH3PR12MB9193.namprd12.prod.outlook.com
+ ([fe80::7818:d337:2640:e6c7%5]) with mapi id 15.20.8632.025; Wed, 16 Apr 2025
+ 04:30:18 +0000
+Message-ID: <51bea79a-31ac-4ee1-e646-2af138017ff4@amd.com>
+Date: Wed, 16 Apr 2025 10:00:12 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] irqdomain: cdx: Switch to of_fwnode_handle()
+Content-Language: en-US
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
+ Nikhil Agarwal <nikhil.agarwal@amd.com>
+References: <20250415104734.106849-1-jirislaby@kernel.org>
+From: "Gupta, Nipun" <nipun.gupta@amd.com>
+In-Reply-To: <20250415104734.106849-1-jirislaby@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0079.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26d::16) To CH3PR12MB9193.namprd12.prod.outlook.com
+ (2603:10b6:610:195::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/13] vt: introduce gen_ucs_recompose_table.py to
- create ucs_recompose_table.h
-To: Nicolas Pitre <nico@fluxnic.net>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250415192212.33949-1-nico@fluxnic.net>
- <20250415192212.33949-8-nico@fluxnic.net>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250415192212.33949-8-nico@fluxnic.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB9193:EE_|SN7PR12MB6958:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4bdc44da-999c-4dbc-e9fa-08dd7c9f643a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dzlVNEJNaXVRT1ExcDVsOG5tRnc1S1dhcUVob1Vrb0xRRzh5REtNSnQ5dVBz?=
+ =?utf-8?B?a1FrR3FzZlA0WlE3bW92cktTVmRWV0s0c3c3L3g0Ry9ldUgvd0Zqb1pNWnl5?=
+ =?utf-8?B?TmtsaDVrWVVoQi93Sk9IUVJnTllpS3c1UDRxOWJnM0pqNm1zMGhxRnR5cDcz?=
+ =?utf-8?B?L0ZjZzJvMjVnYkEyRVZKTFBPelBiS2xvMWY3Z0UwSmkrcy9BMlhFS3pSc0Rx?=
+ =?utf-8?B?d0ZYcDBlZlR4VTB0U0xsRkRUOUN0bDVNWWFEdm9ONWF5azZ6K1FJVGNWWUxi?=
+ =?utf-8?B?RXJudHpWc1BzZ2Ezb3pYZGRJZ2xkY0VBRU5iYkhsZ1dBMGNuejRtVVkyVlpR?=
+ =?utf-8?B?ZnZhck84NUZMVis0eUFXYlVyLzhnS21WUHRiLzRHZXpUU0ViTmF1MDFld1Rl?=
+ =?utf-8?B?a1pZM1MyUEpGZ0FMN3VOOVNoRTZVVFVwWkQ2Ni84OUs2VWNVbUJOUHN4Y29Q?=
+ =?utf-8?B?U3NpY1pQT0dNOUluV1REWGhCbDFtbmhyOU9jTzFtMm5aZmxDdWxpVTVZL3ZO?=
+ =?utf-8?B?TXU1KzRQSFI0c1RVV2R5RFVqTUY3MmFGWm1Id3Y2blFKNTA0ck9SaXZaQmtR?=
+ =?utf-8?B?UkhFQk13OGFLd04vVFExWDhLZG42Z2MwdkUxZUVFOXdjbjJNUllBU0h4UW0w?=
+ =?utf-8?B?NjJ6bnJ6bmdIenlxUDhOdHJYUHREYjFScDlJSkxWWUVQaDlScUdGNnVwNTB1?=
+ =?utf-8?B?dWdsdWtuK0Q3Y083c3hjNTYyWE9WeVVxU0hKa0YvV0YxamdSRGZFSzZMbzVo?=
+ =?utf-8?B?WG03NkcxRG4ySmJNajZlditLcTdiV2g1UVFKWTVXNkRmYWQ3QnFLa1NYcWk3?=
+ =?utf-8?B?cVBWaUpob2k2a1BxSTk4WHZQVkxUVGFtQk45aEpoTzJNVzlJeVdOc3lYWXVC?=
+ =?utf-8?B?b29hc3ViZlVud2ZYODlWZ214MlBiZzc1dFVJMm56U28ydHp1dVFHWjFHSnRV?=
+ =?utf-8?B?aHRNUiszdXU0THhoZHdQakpYN1Y1eHFRY2RIVUxUWDJBbXZzQmxHdlQ1elRi?=
+ =?utf-8?B?Q3BJWDdadTY0OUtQN2psOU94dHNzTXhuQ2JPK0MxMjUvclBMajBuNlZad0Yv?=
+ =?utf-8?B?VDAxWllYbTd5Zms4VElkSFFPQ05JOVphTEo4ZWxkMXZmODZSbTRVSUlYSlBS?=
+ =?utf-8?B?MVNyTE9Ka1JMU0dTUlg0ajJkU2hjeEtSWThmV21ESlNZUkRoYUYzalJCRVR6?=
+ =?utf-8?B?dDdDTlV6bjJ5emdkVWYzZXdLNW0vRmI5U1NsM0ZIaDVYZDVCOS9ibFVkRkkv?=
+ =?utf-8?B?c1JoZkQvM2R2YVZlS2U5NGJWS01nbzhZZWRzN3dBRG40N1crYi9GRjdFNEdS?=
+ =?utf-8?B?OXV3VnB6empaYmYvVFoxYnAvN0x4NGppN2NwYTh3ZmlwVEUxT2ZuQzNWVVlS?=
+ =?utf-8?B?STV1b2xjcGNpNHhFbm5RWklhSEVVaGpsSG56T1Z6Q3lOaEI2MTdlSEpiSjlL?=
+ =?utf-8?B?MncxdTFvWjNiTEN4ZXBZb08xNWptTmswMEhDREFnbzZBVEwxVldJTDc1aFNH?=
+ =?utf-8?B?aThpdU5HdHYrRkIrWC8vMzF2ZEM1ZEdaMmhxWWV5MmRaOU80dWZNTkN6OVlE?=
+ =?utf-8?B?NTRQUHJKbjNUYjNVZXdGWElwRzREQ0RXQXpvWGk4WVFHRndnY3RrZ1FQYms0?=
+ =?utf-8?B?SFZWNG1SZ3JuL1dvOHZybkZPZER5OHBxdVRDSzVSUmdZNkhSSm1FdW1NSStW?=
+ =?utf-8?B?NHZYNXlQTzhQdlFIRjI1QUxxSkkwY3NWTmp0THROMHZaU2doZzZwNFltVjZv?=
+ =?utf-8?B?T0ZEa3lvOThLaUVwVFM4WjBDYzhHd3VqRGI2UEpKbHFPUW5uL0ovMGk5Z3I0?=
+ =?utf-8?B?KzJwbEEyN2lpUUtQcDljUVZ5Vk5YdExoeHBpbk00YkpoQ1NRUWFzY2E4ZnhS?=
+ =?utf-8?B?bnNFc0RvVHdaMFZGK2xzZnpVUG1JelQzWS9HYXFGVlRweUE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9193.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d0hRWVVTcERqWFBnbGROUnNacEF0bk1jZ2NpTHFGQ1RMUlE3UE5DT2pFZ3hz?=
+ =?utf-8?B?d0VtNFM4T0VjZ0VxdGdrUzlwRXFseTg1Q3JQSk5CaU9Ic0hpbUNFcnpPR1l4?=
+ =?utf-8?B?TDBaaVZGTXNTTkp1UzBNVzdsZUtnTHJEdTBQWWRJNHdhR3ZKRGg1TC9Nc1gx?=
+ =?utf-8?B?SE53Zk90VEhodlY5TElsQjFoSk4za0I3S3pjaDBlcTBYZmdVM0c0SGRSZ2Fs?=
+ =?utf-8?B?aTZIYjhXelUyTHVDamd1Q0JySGZ4ZHN2aG92NUhoUjBVeW9CSk5FYjZNNjFX?=
+ =?utf-8?B?eWNqS2NWaGJDQzVTYTJNVUR6WXJVWklqbWRyR29YOHoxZkRDSThqdHpwU1I1?=
+ =?utf-8?B?dE1UVTNXV3Zya2xhMzNVdi92VmtremZMMjF5ZUJTc1kvamNOUDJpS0JicWVt?=
+ =?utf-8?B?MDN3em5uWFBRTDZBVXExSlZKZWxKM1hNMkVlYUJPRXNBMjJ6emxDd3pybGhx?=
+ =?utf-8?B?SmFCQ1pQNlR0alppdmJONWFCc2pyckNoUnVhdHZ4K1hpY3hBbGoyT2lpMHM3?=
+ =?utf-8?B?Qm1ZMEZsZ29HaHoreTB3OEtHVDhCazlMSGNoZ0lWN0xqU1dhTlVNZFArZEFK?=
+ =?utf-8?B?Zk9UZHRnUFRvWE9uSHgyY2Z2aDdxNlpKd1FacDhKcTNSMkxyVmpRaWdMK1Zo?=
+ =?utf-8?B?ZmpoQ3pwajZUN3M1LzU1TklqcU1iaVIzNEQ1WEpCNThyNGNxY1cvZkhUWHFT?=
+ =?utf-8?B?UHlJWlpVL1JEb0dZVWFXRS9tTjVLRFRlTzdwTzNKRGJ2Z1ZFVm5JZWVTWGpx?=
+ =?utf-8?B?WGppamRSVllkZ0JzNitmSWRGVXBHem1hM1hzdjVUblV2WmIzaVluekltenNy?=
+ =?utf-8?B?R3ptYkcyNkZPc1ZvTzkzaGJ2QjZmM0lJZG1xN0tGUHJSY0xZbE5wNmVLQW5G?=
+ =?utf-8?B?ODVQZ1VjUE5SMDNWb2wvRHBwbVREK21EM0lBOC9MQTlEWkR0Zm8yeVo1YjBv?=
+ =?utf-8?B?Nlc1OCsvemYvTzZQbmJwdEo4OWpqVWFDT1JHOG4vWGF6dWUzQXpMMVRrVDNz?=
+ =?utf-8?B?MmVFN3dQNTdtZXBEWlF2aExSS0tFeERpaURSSk9KWm1CWitjTVc4QU96K3ly?=
+ =?utf-8?B?YmpQelZQWnZhNm5KbXk3TnNqdDgwVDlVc0YvTlczT3JBNGhkRmY0Q2xyc0V5?=
+ =?utf-8?B?ZzU4K2orUXlZeC91REhEbHIwM2JSb01WYk93RUd0bXdiNEhnVDJwUUJuR1F4?=
+ =?utf-8?B?N1dTZjQyRDcwdVZLRVpVN1VQRGFic0VMTytLc3VlNEVBaDdrU2czdWJ2QkYv?=
+ =?utf-8?B?bjhCSlByenhUek5IWGZEUGdwKy9VcVVpQmZyZEZWUUJQYWNnTUtRU2pKSEpP?=
+ =?utf-8?B?V2RYbnpQYmhoVWNzMW14TzNSZFFBRGdyOFNLNGxGdGhkZjVhS3NRUkN6aUZ0?=
+ =?utf-8?B?akVvdGx6a21TclYwN3g3dTdJQWlzalVqZGMzZXFQcURwMGhuSFZ6bG51SFQr?=
+ =?utf-8?B?QnZvWWd6ZXFQV2V3b0s0YkJZekM4OFQyelhDT044aDhvVWw0V09LRWFRd1Rv?=
+ =?utf-8?B?bGlqcjhKUFBTd201S25aUWdBS041VjhISXJSZzV5VkZSemdZOGxPdElWcmJQ?=
+ =?utf-8?B?anlEeFZUL2dhRTZMay9ZM1RkVExkSGhZL1RZMEI3K3k0WE1yUlhCQm52V21D?=
+ =?utf-8?B?YitTdHFCWk1CeHAyL291QnRWZUhnRUwrTTlqaVdWb3lmL0twZS9LT2RpWlY0?=
+ =?utf-8?B?TjZsbkYvMXYzWE5VMkpSR09tc05NY0ErOW5zQnVxdEpDeXJlWU1aZFVPTjFm?=
+ =?utf-8?B?UlA0QTlLdXMxNjBSSGdYTWIxaEt4YnVTMHgvajVHRVhFUG1vL0N6SUpjazVD?=
+ =?utf-8?B?ejRKMlduN0dDdXplbnhBM0tjNTJZdmYveUg0Q2hVQlZGbjZTd244YTJDSEdO?=
+ =?utf-8?B?S1hvRXRNYXBad2FOeWFDQ1NZSUlrODJWaC8rMGhFd1dyaXkvYzJNOWMzUDEw?=
+ =?utf-8?B?OFBDb0xlUkQwdlo3dVgxMWZ4SVgxV0dVaUxCL1VQL3E1WU9ZOUZQU1V1OW5M?=
+ =?utf-8?B?bGJMSkZqUkIzaDFBdTlmVExOakEram5LU1gvZ2thOUZPeThpc2lXUC9oZFVW?=
+ =?utf-8?B?MWVEZXgxTm5SWXFQd3NrUlo5czF0blQ5VGhPcVcrMFBwaXZnaVlMWmVVb1pB?=
+ =?utf-8?Q?d1eKXwL+Wv5aTE654DX0N7NPl?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bdc44da-999c-4dbc-e9fa-08dd7c9f643a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9193.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2025 04:30:18.2905
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ev8R4wwGJcsMhB3vb2I3JHZsuGiPuIj4+N/b3+/VrzRNFP0HeC9VDLDfWXzI12OW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6958
 
-On 15. 04. 25, 21:17, Nicolas Pitre wrote:
-> From: Nicolas Pitre <npitre@baylibre.com>
-> 
-> The generated table maps base character + combining mark pairs to their
-> precomposed equivalents using Python's unicodedata module.
-> 
-> The default script behavior is to create a table with most commonly used
-> Latin, Greek, and Cyrillic recomposition pairs only. It is much smaller
-> than the table with all possible recomposition pairs (71 entries vs 1000
-> entries). But if one needs/wants the full table then simply running the
-> script with the --full argument will generate it.
-> 
-> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> ---
->   drivers/tty/vt/gen_ucs_recompose_table.py | 255 ++++++++++++++++++++++
->   1 file changed, 255 insertions(+)
->   create mode 100755 drivers/tty/vt/gen_ucs_recompose_table.py
-> 
-> diff --git a/drivers/tty/vt/gen_ucs_recompose_table.py b/drivers/tty/vt/gen_ucs_recompose_table.py
-> new file mode 100755
-> index 0000000000..91e81fb1c9
-> --- /dev/null
-> +++ b/drivers/tty/vt/gen_ucs_recompose_table.py
-> @@ -0,0 +1,255 @@
-> +#!/usr/bin/env python3
-...
-> +    # Generate implementation file
-> +    with open(out_file, 'w') as f:
-> +        f.write(f"""\
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * {out_file} - Unicode character recomposition
-> + *
-> + * Auto-generated by {this_file}{generation_mode}
-> + *
-> + * Unicode Version: {unicodedata.unidata_version}
-> + *
-> +{textwrap.fill(
-> +    f"This file contains a table with {table_description_detail}. " +
-> +    f"To generate a table with {alt_description_detail} instead, run:",
-> +    width=75, initial_indent=" * ", subsequent_indent=" * ")}
-> + *
-> + *   python {this_file}{alternative_mode}
+This will go via Greg's char-misc tree.
 
-This should be python3. Or no 'python' at all -- I assume the script is 
-executable given "new file mode 100755".
+On 15-04-2025 16:17, Jiri Slaby (SUSE) wrote:
+> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+> defined of_fwnode_handle(). The former is in the process of being
+> removed, so use the latter instead.
+> 
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Nipun Gupta <nipun.gupta@amd.com>
+> Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
 
-Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
-
--- 
-js
-suse labs
+Acked-by: Nipun Gupta <nipun.gupta@amd.com>
