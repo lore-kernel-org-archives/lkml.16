@@ -1,74 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72E122C35D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13D82288F9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744790851; cv=none; b=OYf4lrd2s4L+nsn/oLJBrGlfGF/A11F6REzY5mPmUaOsEulNAyiuGEG/6aNGeu7gfi9AQRL1cD4AtqxXT+G/1T04nbATJUZ3zGz+Acw20J9fi4pkLuVqeg8yVQBba2PTUgZNf3mHHLx3QqeHP7zkihsRo28F8zmJlk++RCwWGp4=
+	t=1744790877; cv=none; b=M0atoF3+e0cYpsn8+HonnrXOV6TNnGbgy80hIlzP6DVw3uIvoxH1ACBbHqUpMrYWUj8/NRPdDZsqVbpc7Aq2ktKPD5+XZfLZgl5A/1uNaSWz5w0M2Kel7lx3xQNHNLzqIs4TXuBZx9a3UVfQ6vqN2QDXCTQWdmO7Wn1COgrviJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744790851; c=relaxed/simple;
-	bh=42uCu0XDhLKbT4XQXQM62JEbPBuR9Lz5iT9BYqDINCo=;
+	s=arc-20240116; t=1744790877; c=relaxed/simple;
+	bh=oqG1OBx7R2eR0ik+wIIHV1bNUkCAQWSDq57lXla6thA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=um8WAoggWinsUDE1XNoKI9dYOS03UT8biQiv+oQjOIgiQhlXWB5bxsyV6hHS38jX/bsv1eBw8er/ufu12emzbj2pj4TvDyDjo8xk+IA/7yn5fjtwFtTbIThj4C6ecjuYfQm/1BVf4MIkUN1d/eAFIo22O/Eo8fpRTthFmuSOruo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cAm7+bAB; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=gg5Oq2oe4VtaDJGEARAWdd4rx7VkDLXd4lQYrAV86IgJy6wtq11l6xl/K5KdFmURpEIBOTgFVeZe4IUlFZTik0uOY3R3whzc8NCesfW8nCz2Bmrzl8yVdG5fVk7TX1BpRG2jTgfeO+0dvk6rKs1TAFosMzDoFLhiQ+jSv95P9MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HNeI6zEu; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cAm7+bAB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNeI6zEu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744790848;
+	s=mimecast20190719; t=1744790874;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Xja4eUGUMsOy6FIyIfvFJza/PLIS2KmDMr0RiGpwd+E=;
-	b=cAm7+bABw2yqEFSbIP0av1XCLpJCgDMrOLEGA52SswSQMBcj4K86k5ioffeureIyFPiW+t
-	R6dycoFIGYxViphk+IRhWwl6j7T0UESnE0ZcRJyKX8PcR/MAves9zld/3JtWzPKtZYw/t/
-	Y+NskFggGLUqE9HLA9G7gHtDVTx4c4Y=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=iDiq0tCxf63picufNGSAyY+6bJszwIsDCdO7QNVWqZ4=;
+	b=HNeI6zEuT3q4W2ttOKMEVS3w7vsaiscpsynrT91sq7lHjC1Qev6sy8pJZA+B5DK0MH+Tl6
+	3o2M1l3wQE/e+wbGFnLLNaGo4e7BY0HL4H7Xdj4DgviArr6cPcFLSCTIQxq03BX+WFmSWI
+	QPZtsPSWoXTRXBy33ygUgoMTG0iK3po=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-155-gzI2r4j8M9iM49ca1Y-hxA-1; Wed, 16 Apr 2025 04:07:25 -0400
-X-MC-Unique: gzI2r4j8M9iM49ca1Y-hxA-1
-X-Mimecast-MFC-AGG-ID: gzI2r4j8M9iM49ca1Y-hxA_1744790844
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac25852291cso676261666b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:07:25 -0700 (PDT)
+ us-mta-150-4xC1liAZMLOoZZGtJnSGIw-1; Wed, 16 Apr 2025 04:07:53 -0400
+X-MC-Unique: 4xC1liAZMLOoZZGtJnSGIw-1
+X-Mimecast-MFC-AGG-ID: 4xC1liAZMLOoZZGtJnSGIw_1744790872
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so39435905e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:07:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744790844; x=1745395644;
+        d=1e100.net; s=20230601; t=1744790872; x=1745395672;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Xja4eUGUMsOy6FIyIfvFJza/PLIS2KmDMr0RiGpwd+E=;
-        b=KevDdVo46gpdtiTPRJ0yol3cTl1dymCqJs/S31yhF8OV9NFw3hlnJc77Q5W6nsbYXC
-         KNrXpDMXHuTIE8g5DHRP90pqnSZqOPwR+z8Q4iua0+cPncXTuymgDnpQYxl7fydFAyWu
-         WUddj8lYO3t79vSYAvzHq+Ss1Db66bvQB0+AmQ9/VVsSTFxr0/NiG+VCxjnzyZS51IoA
-         6WarLG/PvtlPy7+45Pt6k6ocvj0ARMsQjWYfZCo4Utulrho8XZSKw/Hkkjn5RxUjEX28
-         j6RGSQvPVUCPD/tHeFwjdpIvnFsjp9UDHp2ArH5VSnba97NmQ/cwnTKcI50WZIlXjqtu
-         5SKg==
-X-Forwarded-Encrypted: i=1; AJvYcCV9DHKs9gp04/L6APv9VARcndbp8VAGSKCRn0hloiiv8stB16CzFEwi3fAehtnXz1VMgMmsefUUbr3eyXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/ra/unqdIEwIVNhbGVkjvcK+YkVrJ32WuavC3QqhnCHc8iqcU
-	p+14HPuMZQ8BAvE/ntb7FD0hyYE2oyojxP7asepYB7VuqLy1PVsMw3V+ccE3U+ru/JZtGGoOTQ5
-	Kw1G4n83vTMXG2nwvnoHd5KVvn+HOLu3/nH050WaAP1aKypaZMeMP/1+73sz5CbekPKp/ZIM+Ru
-	U=
-X-Gm-Gg: ASbGncswc9MlsFpbKD5r9GlaQ7MtK44tpmGXU9LNuvVNO+DgeUpvrWE2xt8ZNiO7Xk+
-	5eb+Dcvvk/s2wCtbZUiAXBEIqyh74HxVlDsr1o3MXIXDl9NT4Te5q6aah3k4JMFhhNWou9oZIuV
-	UOYvEcaQMwUNwkYrjWDTfsXQJMM3stoQ9xug1VjFVkokhTY6U304xv8bijA7Vklrw3VeP81tIgq
-	6AewwVwwHQrEFdWdeaikbaEgrHkvjcM6rbpXiosA/z4jO5xBppyjHXOWfkZjLv1uVpSkhm1diNs
-	8fNyVQ4nJquW8MWw6RZpbxAYmKsAhNVvaLInwROnOTMlFIUK8tTCRhBcn/+4dnCEXPKeCyIsbMn
-	QTnXqIleAZOlhO9U1YwoIZkzV9uh/0GVIngY5pg==
-X-Received: by 2002:a17:907:1c94:b0:ac7:e80a:7fc9 with SMTP id a640c23a62f3a-acb429c24d6mr75910466b.31.1744790844264;
-        Wed, 16 Apr 2025 01:07:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGgsFYdzP0Tyi5BW34DlQym28nqaCyVo3d/BPIrV2U8iQCm5IhTVJEhAETphY+Slnug+QOrLQ==
-X-Received: by 2002:a17:907:1c94:b0:ac7:e80a:7fc9 with SMTP id a640c23a62f3a-acb429c24d6mr75907266b.31.1744790843848;
-        Wed, 16 Apr 2025 01:07:23 -0700 (PDT)
+        bh=iDiq0tCxf63picufNGSAyY+6bJszwIsDCdO7QNVWqZ4=;
+        b=pkNvbcATw8eeB33ui41E2nRcI8rhnO/dn1AM+jeSfRCbmT/iPhwChrEWpYGVU1bBI+
+         FA1KVDZcnCwWHtqOUFbu/Za7x5HqduhPMszaxpoAaJ79fuBd3PYFPcq9QL8JqLO1Py6M
+         vKSGwgVn9VtlP2EfSy9khVvq353CZp6lV/OQxxJaeR8A+xfiF5Umor3/LShpm0r1LQmg
+         xlQAucLwm9tni5K7QU7YPxHIh370JDfJP2B07gKjOtWqMpIM7t878We9c1av45mV1QqT
+         7vJpZzsmAh/0d0j14A4jMh8JpZqFQed4FIwrmVMG+gjDMC4vhpYipcinNpn0BrwU7tnS
+         EMqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFhO/TMuLzfqx0cLQQ/A6G2y11sXZYKIigJnoH4JXclxfS3sQEmHorcDDW9TQJc6vx6QBVa4He7yVrR8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeeANI5xWTF3Q0d24fVeUA1sYpzqU6g9A2LhOUe0eC0Cytjlxi
+	X8ogUxA1aFnNY7M1LiTf4ZX+5VYcz7hYe45X+JCTXESJ/ODmBsCrfB2JZS7+TyPuFx/wPrGfQYX
+	UIGeTfR+fOS+zd57rimFpwJ2k6gGpY5dOCmjmWlxPPq7/BRuARBWbL3HxziowuA==
+X-Gm-Gg: ASbGncvaMgWEC2A9JrYiMVBPiyarlpvtQ9aVyNKFz+exNVxXTmKsKldITDY7+j2By6H
+	2WjrdXC3X/wZ1u9WbZbZhsGcqiKaadCsfkFMgNv/oZsqb16tFmbW42uWPssqlqstQWt+H2Mwb53
+	oHt4YtLyUf5NN2n8MUJD7tfjaq72Xaf9DWKhGD44xMPtHyWICCvFjhXixaUnx5ZoCeBP3Jq8p7T
+	qoMgnwYlIJZdaUmlwesZArQBq/uM4QAoPvQKp26qsNC2CrmqUW3dnzIswcB4FkXrkl4VJqNqHP0
+	ja9g0qYGkOrRC3X+48zHvhGoh946sUtS48rwUKRuuLxOpgeDRI8+uSowdoJ0DFue9TtSAqFpUnl
+	tXldcNf+a4/nDraz3EMNo0Su483mOn3Oi0cmNqA==
+X-Received: by 2002:a5d:584e:0:b0:39c:1404:42df with SMTP id ffacd0b85a97d-39ee5b37bccmr722726f8f.30.1744790871996;
+        Wed, 16 Apr 2025 01:07:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG6SSIcWUPUyYq1ETvCpPx7FtqGMfIa7gsBrBikiNRMWNHqW0RwqB/lUntVhSdFGNoVRcW5nQ==
+X-Received: by 2002:a5d:584e:0:b0:39c:1404:42df with SMTP id ffacd0b85a97d-39ee5b37bccmr722705f8f.30.1744790871608;
+        Wed, 16 Apr 2025 01:07:51 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f02:2900:f54f:bad7:c5f4:9404? (p200300d82f022900f54fbad7c5f49404.dip0.t-ipconnect.de. [2003:d8:2f02:2900:f54f:bad7:c5f4:9404])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd63f12sm79769566b.32.2025.04.16.01.07.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf445713sm16159632f8f.85.2025.04.16.01.07.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 01:07:23 -0700 (PDT)
-Message-ID: <b7d2f1dd-d181-4821-ac05-b000818daf91@redhat.com>
-Date: Wed, 16 Apr 2025 10:07:20 +0200
+        Wed, 16 Apr 2025 01:07:51 -0700 (PDT)
+Message-ID: <a58050f9-726e-48e8-88ca-8d0d96bafb61@redhat.com>
+Date: Wed, 16 Apr 2025 10:07:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,23 +75,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [linus:master] [mm/rmap] 6af8cb80d3: vm-scalability.throughput
- 7.8% regression
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirks^H^Hski <luto@kernel.org>, Borislav Betkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- Jann Horn <jannh@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jonathan Corbet <corbet@lwn.net>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Lance Yang <ioworker0@gmail.com>, Liam Howlett <liam.howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Matthew Wilcow <willy@infradead.org>, Michal Koutn <mkoutny@suse.com>,
- Muchun Song <muchun.song@linux.dev>, tejun heo <tj@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Vlastimil Babka <vbabka@suse.cz>,
- Zefan Li <lizefan.x@bytedance.com>, linux-mm@kvack.org
-References: <202504152235.188dcce9-lkp@intel.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: add section for locking of mm's and VMAs
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Matthew Wilcox <willy@infradead.org>,
+ "Paul E . McKenney" <paulmck@kernel.org>, SeongJae Park <sj@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <cover.1744720574.git.lorenzo.stoakes@oracle.com>
+ <0722c3fe0cb4c1e54ce01c7689ce4615ecc87e16.1744720574.git.lorenzo.stoakes@oracle.com>
+ <00ab4959-4fc3-4e2a-90aa-25a009b8fea8@redhat.com>
+ <039f7b19-259d-44f0-a96e-618240317f73@lucifer.local>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -140,85 +134,62 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <202504152235.188dcce9-lkp@intel.com>
+In-Reply-To: <039f7b19-259d-44f0-a96e-618240317f73@lucifer.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 16.04.25 09:01, kernel test robot wrote:
+On 16.04.25 09:33, Lorenzo Stoakes wrote:
+> On Tue, Apr 15, 2025 at 03:25:09PM +0200, David Hildenbrand wrote:
+>> On 15.04.25 15:10, Lorenzo Stoakes wrote:
+>>> We place this under memory mapping as related to memory mapping
+>>> abstractions in the form of mm_struct and vm_area_struct (VMA). Now we have
+>>> separated out mmap/vma locking logic into the mmap_lock.c and mmap_lock.h
+>>> files, so this should encapsulate the majority of the mm locking logic in
+>>> the kernel.
+>>>
+>>> Suren is best placed to maintain this logic as the core architect of VMA
+>>> locking as a whole.
+>>>
+>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>> ---
+>>>    MAINTAINERS | 15 +++++++++++++++
+>>>    1 file changed, 15 insertions(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 8d834514a047..ce55676a16a4 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -15595,6 +15595,21 @@ F:	mm/vma_internal.h
+>>>    F:	tools/testing/selftests/mm/merge.c
+>>>    F:	tools/testing/vma/
+>>> +MEMORY MAPPING - LOCKING
+>>> +M:	Andrew Morton <akpm@linux-foundation.org>
+>>> +M:	Suren Baghdasaryan <surenb@google.com>
+>>> +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+>>> +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>> +R:	Vlastimil Babka <vbabka@suse.cz>
+>>> +L:	linux-mm@kvack.org
+>>> +S:	Maintained
+>>> +W:	http://www.linux-mm.org
+>>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>>> +F:	Documentation/mm/process_addrs.rst
+>>> +F:	include/linux/mmap_lock.h
+>>> +F:	include/trace/events/mmap_lock.h
+>>> +F:	mm/mmap_lock.c
+>>> +
+>>>    MEMORY MAPPING - MADVISE (MEMORY ADVICE)
+>>>    M:	Andrew Morton <akpm@linux-foundation.org>
+>>>    M:	Liam R. Howlett <Liam.Howlett@oracle.com>
+>>
+>> Sounds like a good idea to me
+>>
+>> Acked-by: David Hildenbrand <david@redhat.com>
 > 
-> 
-> Hello,
-> 
-> kernel test robot noticed a 7.8% regression of vm-scalability.throughput on:
-> 
-> 
-> commit: 6af8cb80d3a9a6bbd521d8a7c949b4eafb7dba5d ("mm/rmap: basic MM owner tracking for large folios (!hugetlb)")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> 
-> testcase: vm-scalability
-> config: x86_64-rhel-9.4
-> compiler: gcc-12
-> test machine: 256 threads 2 sockets GENUINE INTEL(R) XEON(R) (Sierra Forest) with 128G memory
-> parameters:
-> 
-> 	runtime: 300s
-> 	size: 8T
-> 	test: anon-cow-seq
-> 	cpufreq_governor: performance
-> 
+> Thanks! Am going to change this to make me and Liam M's so we can provide
+> back up to Suren when he's on leave, are you fine with propagating this tag
+> to this also?
 
-This should be the scenario with THP enabled. At first, I thought the 
-problem would be contention on the per-folio spinlock, but what makes me 
-scratch my head is the following:
-
-      13401           -16.5%      11190        proc-vmstat.thp_fault_alloc
-...   3430623           -16.5%    2864565        proc-vmstat.thp_split_pmd
-
-
-If we allocate less THP, performance of the benchmark will obviously be 
-worse with less THPs.
-
-We allocated 2211 less THPs and had 566058 less THP PMD->PTE remappings.
-
-566058 / 2211 =  256, which is exactly the number of threads -> 
-vm-scalability fork'ed child processes.
-
-So it was in fact the benchmark that was effectively using 16.5% less THPs.
-
-I don't see how this patch would affect the allocation of THPs in any 
-way (and I don't think it does).
-
-
-Regarding possible contention on the spinlock, I was already expecting a 
-slight hit once we have that many threads over multiple sockets. From my 
-cover letter:
-
-"
-Similarly, running these benchmarks with 2 MiB THPs enabled on the
-AmpereOne A192-32X with 192 cores, I got < 1% difference with < 1% 
-stdev, which is nice.
-
-So far, I did not get my hands on a similarly large system with multiple
-sockets.
-"
-
-And further:
-
-"
-If it ever becomes a problem we could either investigate improving the
-locking, or simply stopping the MM tracking once there are "too many
-mappings" and simply assume that the folio is "mapped shared" until it
-was freed.
-
-[...] Adding that logic to stop adds more code to the hot path, so I 
-avoided that for now.
-"
-
-So while I am planning on looking into optimizing the locking at some 
-point, it has low priority for me because (a) it adds more complexity 
-(b) has the potential to affect the hot path (not shared) and (c) this 
-benchmark in that scale is not a compelling argument.
+Yes! Thanks
 
 -- 
 Cheers,
