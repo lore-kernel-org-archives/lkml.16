@@ -1,112 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E7723F41D;
-	Wed, 16 Apr 2025 12:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFE72459F8;
+	Wed, 16 Apr 2025 12:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744806331; cv=none; b=T1NjmguaYa6q15qwIbfw82H3ZuyJzBeeLP0Ui0yXimUlGqUgqLUc7EmD7yIkdTd/Aa1+oAyrPWoJE6IhoS8IjJgnV0jHDASmDX6G0eI2Zf4udfA/yP+Koo/gOaPc7zcH0unvHzSA8I+0zox8hDo/QN1sjj19OO3ezESSUGAvMns=
+	t=1744806365; cv=none; b=XqXGqQdzlpXvvZBUZOOYQClcRv75ZCjG/tWQMkVFGg9+093uzfa6X1lY2xiDJN4GSsFQxMXaFiJdRpOTUZuXA/sEhL0rm6bnFDyKaRkNBiSy2rX5WWeLHUCAzwZTPU5ZzchPCE2UKHQYFzIzAsywZVRtoZ45U+ArLQO+Mempxyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744806331; c=relaxed/simple;
-	bh=BV2HPhADEG6mWWoQMZcnYHZ6jfye0CvT+9anrJmNaR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkyfdZ21m/hNcWL98FNfPSGe2+EMWHZx44SKKgDvOSmyGC4gZLa9y/pGsxoO0iA1Tmql4YW6R6p4cBAVaEDpk3cLa3D+TEZbsP03LnHzpucXqldKpDAg6ZBwtYMGys+r53Hqjf18hXry+vnO3X9MEuq5HcUCvvI5qHx7S1kXkDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axsYmxZ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744806365; c=relaxed/simple;
+	bh=AQEEdsM5M0lHUZSu2vTv2NmUJYZpQTkWbrlEvvf8RI0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JKAyRmwkWFy5NPoEr5Wsb/WR6pvkcPQrrMbTNLABAz52tXIlkyIrbK3jaUjyqnIdkT6dV5t9jaTHcHGbvvlb13i40Ho+B3qjgY4P5x3fSEzDDySOJYtbe21rdzBWcsKBovv9+WPRX8vZ/DKC+hUSsQP/V6HPXj4NSGxZxUsvZVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=K+xD5s1K; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axsYmxZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A636C4CEE2;
-	Wed, 16 Apr 2025 12:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744806330;
-	bh=BV2HPhADEG6mWWoQMZcnYHZ6jfye0CvT+9anrJmNaR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=axsYmxZ0s3rcoNJuk1dKe/7DUYWTK6wl0r4NiJhjwnV43VkKMkYQ/0jr1dTxFNPyv
-	 Hnqo4X1xhpvEOzx31dLj4cVDlIxR+vuI4/SCgV849cuwCaGbeOHEiPLipeB6gV5hnL
-	 fLEYgdnDg1bGj6hLfGxchmCTtOZN3k9dOXVXeG0znWQtX8EWvW8SpvabAGr1ivgRCs
-	 cMV2vKDG7KrB/1tmHmgDy3XHxegv3uKOtryNZNGk/IJST0srzyA8yyQnXXH5/YXtzf
-	 IB2w1OfdPTIilc5Bm/EV44tt6Pxn+tWP3vhZf8AFImr56KqOKgxRPcZZqRTi+yGy7s
-	 T8QDRgSsLww6A==
-Date: Wed, 16 Apr 2025 14:25:22 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V10 11/15] rust: cpufreq: Add initial abstractions for
- cpufreq framework
-Message-ID: <Z_-hskVtNFPxUmlC@pollux>
-References: <cover.1744783509.git.viresh.kumar@linaro.org>
- <ac6854885277b23f100c6033fab51a080cdb70eb.1744783509.git.viresh.kumar@linaro.org>
- <Z_904KuBhKbO738_@pollux>
- <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="K+xD5s1K"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mJ12025407;
+	Wed, 16 Apr 2025 12:26:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=IThGiOgxeiB3OaCrPVDbPT
+	MAzwu6dqdv6k/q4Q55dm8=; b=K+xD5s1K4r040rmGyFfGdojKGtOTDn2I2+Iz5o
+	7GA4fW+YXQ18NUPon/YDfCNrtuPZ3o40+D/Fi5DbcD5vl/JhiVBjl0auvsUVOdQJ
+	51O/l6hycRBiVTuY54KbNeh+ScZL2/LxxhCzLb7MHXBxjjJJvRNkk/RLOQsJlO/2
+	GeRQDPIPgBGm1akSm8HEurTJEsb5MVA0rKYYLaLB/BZPDkQmpy/5WtCMwAQZN/IV
+	z1zrjJ9c2G2AxyHxpnBBkJijqW+sbB0n1ZseBEw30i11IcolE43Mrex6fQ4sy4K4
+	is6g7uVXfFbVyKz7nN4w+dgutynfeQZC39hb29yJtUvpi1ZA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ydvjbn1f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 12:26:00 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53GCQ0gR021377
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 12:26:00 GMT
+Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 16 Apr 2025 05:25:56 -0700
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
+Subject: [PATCH v7 0/2] Add PCIe support for IPQ5424
+Date: Wed, 16 Apr 2025 17:55:36 +0530
+Message-ID: <20250416122538.2953658-1-quic_mmanikan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=ZIrXmW7b c=1 sm=1 tr=0 ts=67ffa1d8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=R4e822Z64oTJ8j4ndmEA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: UWYixc8ZiAe_vui1bXvbEopM9NzjvQ_B
+X-Proofpoint-ORIG-GUID: UWYixc8ZiAe_vui1bXvbEopM9NzjvQ_B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=573
+ spamscore=0 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160102
 
-On Wed, Apr 16, 2025 at 03:07:20PM +0530, Viresh Kumar wrote:
-> On 16-04-25, 11:14, Danilo Krummrich wrote:
-> > On Wed, Apr 16, 2025 at 12:09:28PM +0530, Viresh Kumar wrote:
-> 
-> > > +    pub unsafe fn data(&self, index: usize) -> u32 {
-> > > +        // SAFETY: By the type invariant, the pointer stored in `self` is valid and `index` is
-> > > +        // guaranteed to be valid by the safety requirements of the function.
-> > > +        unsafe { (*self.as_raw().add(index)).driver_data }
-> > > +    }
-> > 
-> > Those three functions above look like they're supposed to be used directly by
-> > drivers, but are unsafe. :(
-> > 
-> > It looks like the reason for them being unsafe is that with only the pointer to
-> > the struct cpufreq_frequency_table array we don't know the length of the array.
-> 
-> Yes.
-> 
-> > However, a Table instance seems to come from TableBox, which *does* know the
-> > length of the KVec<bindings::cpufreq_frequency_table>. Why can't we just preserve the
-> > length and provide a safe API?
-> 
-> The Table is also created from a raw pointer, when it is received from
-> the C callbacks. Also the Table can be created from the OPP table,
-> where again we receive a raw pointer from the C code.
-> 
-> I tried to do this differently earlier and finalized on current
-> version after some discussions on the list:
-> 
-> https://lore.kernel.org/all/2025011327-cubbyhole-idealness-d4cc@gregkh/
+This series adds support for enabling the PCIe host devices (PCIe0,
+PCIe1, PCIe2, PCIe3) found on IPQ5424 platform. The PCIe0 & PCIe1
+are 1-lane Gen3 host and PCIe2 & PCIe3 are 2-lane Gen3 host.
 
-I skimmed over your explanation from the link and got stuck at:
+Depends on [1]
 
-> - The cpufreq core then calls cpufreq driver's callbacks and passes an
->   index to the freq-table, which the drivers don't need to verify
->   against table length, since the index came from the core itself.
+[1] https://lore.kernel.org/linux-arm-msm/20250317100029.881286-1-quic_varada@quicinc.com/
 
-This sounds like you could just abstract the index passed through the callback
-in some trusted type (e.g. cpufreq::TableIndex) and let the cpufreq::Table
-methods take this trusted index type, rather than a raw usize, which would also
-make the methods safe.
+Changes in V7:
+	- dtsi
+		- Updated the register size from 0x2000 to 0x1000 in the pcie0_phy and
+		  pcie1_phy nodes.
+	- dts
+		- Incorporated the information about the absence of wake GPIO support
+		  into the commit message.
+	- Fixed the review comments from Dmitry and Konrad.
 
-- Danilo
+V6 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250402102723.219960-1-quic_mmanikan@quicinc.com/
+
+V5 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250306111610.3313495-1-quic_mmanikan@quicinc.com/
+
+V4 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250213071912.2930066-1-quic_mmanikan@quicinc.com/
+
+V3 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250125035920.2651972-1-quic_mmanikan@quicinc.com/
+
+V2 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250115064747.3302912-1-quic_mmanikan@quicinc.com/
+
+V1 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241213134950.234946-1-quic_mmanikan@quicinc.com/
+
+Manikanta Mylavarapu (2):
+  arm64: dts: qcom: ipq5424: Add PCIe PHYs and controller nodes
+  arm64: dts: qcom: ipq5424: Enable PCIe PHYs and controllers
+
+ arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts |  41 +-
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi       | 525 +++++++++++++++++++-
+ 2 files changed, 561 insertions(+), 5 deletions(-)
+
+
+base-commit: f660850bc246fef15ba78c81f686860324396628
+prerequisite-patch-id: 210bd857b2a3ce208c6c66389d2845616dafae60
+prerequisite-patch-id: 27a1070861e75cf1dcb03f1e440618bd77b32043
+prerequisite-patch-id: 4dfad74bedd5e7b3b628ead0b23baed7de8b88f7
+prerequisite-patch-id: 79ded164c537cfe947447c920602570626eddb3d
+-- 
+2.34.1
+
