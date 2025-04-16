@@ -1,283 +1,153 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A740B1898FB;
-	Wed, 16 Apr 2025 15:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3FD1C4A10
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 15:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744815860; cv=none; b=H7G9WbEffARWVSUjWKOsL+OFeV6qu3CXbb516+UQYrzjAx73u9jlDejtASzz0XWdVHTWrVKpmRjNRwx4MrtUDFwoqR3+QeY4DaQNT2NWPksly94/I3sNj1AcyTyasrcYh5ZvT8ulDbUf8b5z627oroJCNmxTwIcAOmmuEQeBaoc=
+	t=1744815870; cv=none; b=lY/n6V2CTogsOV+1NBhRfEb3uOZd2l9TOH0LmA09bnnKlbPyoEvoP7mOQKGqNfab+5LBj4H3rM3cKqeYhc9960nlhdahE6ekW7uDusVK6aJnqknFhgC1mu2+Vg9gcMFJfxX+bSHknq67x8/y6a86dL0MkJewbL3/jBy/dTzn5sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744815860; c=relaxed/simple;
-	bh=52WAkbxhL8lHhm4E40nmTbAH9lRIUn8LXXhYKUxRAkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bRwcq7TswF5a84Hsh86AM1tSyg44RqFOCLEPYoZ0IuaXdE4BRQOehj2GGhf/GP8sUjUq2LOszaV5jO4LXzPJDEAo1P+WDs22suBE1s5jNCh4tYfmc1XlBFs8xWAaOaMAUWVQVWmRSVdpqLf10ZGxgZiLTDedYvoSptHJEGErVQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QSp5MClW; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744815870; c=relaxed/simple;
+	bh=EFuzooIfLCsjOofu0bOd+t/uEt0Xb2K3xAAPKZW9FK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bJEuBIzwUSuCXILsEc20/75vpIRWdP54Md2DOcHcVxDFFM7F0BFBCiw5X9jksF++8wU5HlFzsBcO0Yh7NTOD9FpPTEqx//J/KH32fmxHKooNTaqAEQKHgllpUKYSc6SdolZf4YD8VA43ldEUpaEgwrfiPF72QaumYNoazQHl48E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k1lsu1tj; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSp5MClW"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b07698318ebso305751a12.2;
-        Wed, 16 Apr 2025 08:04:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1lsu1tj"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-7fd35b301bdso7739701a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:04:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744815857; x=1745420657; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MVFtqQNk5rkPP5VSi8xT3sOzTBsKiZnfpOajhh4Y93U=;
-        b=QSp5MClWFGdOK2rZ0EGYM3gtHlExbYz5aaahBkShfH3vsOYDTy9TYSfu4PwflPKq3r
-         cP+4NL/TlmAs38BHsohZvhd6YGmyyG3e9BvNFm72vWwdpfWIra31hUJoMo3P0dSxDpZE
-         r/euG4MGckgbPVq3yTxZkB6vRo32yKklafbLxmOvh3mFgvuGB470+iEwFejpnlOxl25z
-         j0/t1+oeN3USOdfie5WXDiR5ddJZN48/YrOCQswQsGJxnwo5QxnznQjEkO8BZNunv1hm
-         LP3pqpzMS2KVq48yt/0hVJe8dvA7YJtzEDilOYhHdyQX5U+jP8izGBXYzo9jYKWn3IFC
-         diNA==
+        d=linaro.org; s=google; t=1744815868; x=1745420668; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=nfVG8rZrRwVZOKz6TlWppVwoQCGAxCeOOP1j7MIZGRw=;
+        b=k1lsu1tjnRrr6CJQ5miPePeaCRTHTwmtgDx8thwYYoZml2vf78q7fkmohu1cUhNRPo
+         ZuZ6N33mYpallPfps/SvUmc1hZwsDlxJs4DSt7ou3WpZ9cKr2qpzZU0myrZFmj9403cD
+         HtfnqZfCtJxOTbh7heLhMTtugw2P2hIOF5TOb2KZgBb0WQVq54bmCIKIYtmpLc/97Dvd
+         9v46Zoa0UjjnVHq6226NZnucyM5gMTmc9JEyIzNYJVGAj4P9D580NoMe6ET/PqAQdAjS
+         NjAlPa18DPRpoVPkM7olNDuRZ/LHpdDcm6uAawbVnEnT16fC82ASI95q77rnZB/XOJpH
+         YD6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744815857; x=1745420657;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MVFtqQNk5rkPP5VSi8xT3sOzTBsKiZnfpOajhh4Y93U=;
-        b=vSOQPx+EYbbMKwNiMCXeGRxdGj0Cif7W2EVCARNSv0i0jkY6XAiR0Uiza00bW/wcVs
-         TTp9hyHOZYCrg11plOgUpMRPCr0R02iSW61DH+XNviRkD0mltyvZH9WZhyGV85b1BoRg
-         +PQ277SLJJOt39hqbPtVlWwtZbww3NhIdjzSI3FQlDXJyLAIiV8ZYbOw235I9ZTUoW2o
-         yPgsBN/l4mrCbtGu9WxjWFsSaYtTCk7imnKWkbqCZ1PCrTM62TFgiI9ExWnxDB1asEme
-         BpGc+BvbsLrutPRXxupAFM8eye0PCj/WcKWdh/6rFgSUdCzrde8zB2Vz9U9ZD1ASfwpj
-         otQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNRh4T2nk5cAYO+/DopGusxmR4YSDbBd/fgz7+yC4iz8pGZRTXdsSBOlR6d0d1FPbe5IPrOqSrGjV8xJAXMDc=@vger.kernel.org, AJvYcCXVsgN7DNKafiv3C2nABMsGtGEFcpQwej3wR5caHDm7GDNtWLibM1c8T8LRHKNnWU2cGDpMiQ9PNmlw3Wm5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4TZDaw/WkjClDLm2cZ3BNAIagTyNYSueRiR7ftN7qQ/aijRZs
-	IVWUJyf963AARmrk4dwDU7UXrHx2bKuEGDcpjuIYNQvtL1uWi5aXL59wfFLwWxRMyQlXuwQxkfP
-	UvZtwzO9CxR+lCieIvGg3NvZYrMQ=
-X-Gm-Gg: ASbGnct5AKE+Zv6stT/0Aa0EpVgsD+qRiAZEUyG0UVSCinK/iZU8+GzGxT733NNpR0G
-	qSCjX02ucA/CgvIf2QIAPMnSbavLktU26UxgSN5n07UcYJdKFPak15OOD3XKYIrvuw2Ndvr5/Yt
-	xryYI4loTqe0fNO/I1fUwBsUvVyHpTrWxh
-X-Google-Smtp-Source: AGHT+IGyfxnt/aNFxXm8FZac7BhXF4m820MtTk5Qy0SGVUawuMIbjEGblrp/5GK7oCsMVC9lWrRKZepGO5Ypf/O3GMc=
-X-Received: by 2002:a17:90b:384c:b0:306:b6ae:4d7a with SMTP id
- 98e67ed59e1d1-30864165e44mr1146372a91.3.1744815856672; Wed, 16 Apr 2025
- 08:04:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744815868; x=1745420668;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nfVG8rZrRwVZOKz6TlWppVwoQCGAxCeOOP1j7MIZGRw=;
+        b=V4uvfBHnd78gm58IqAxUs2VG/0lJFVYndJAng98YRREvWWhhh4JPFvzndOqiKDu7s9
+         NAKQso0D6D4ioDGndG39fGUva7sdh9GUktgav4LjlShEoGK7EwemOiFgL5htfgwT2+6D
+         B5/zCJuAFUehkvxdfbKlFJfMqGmbBhzKNHClf8xJ7lZXoAeooMez0aHrW1QrD9xDKThp
+         CsLlCuUwTShG4gtAuW7n/UrQEUEnf1XNMewqePv1lZk/Lk381p+ZtifuGZ1UPRQBly0c
+         znhUUbmkg8PFGp1SgZ/QKrQpz95A5oO4xPT0J8tRcaJYF8gLWJJ1WEwJuHrtA55quENM
+         Sb5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUSld9/+8Ek12QrzZbZOmJqyx9G2svf+3hptKQvSNDouWtSYcJhG3TGFdNX8gFyyBYIrRHxXHExGw55HxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbr3I9zyTTFTPpkvJnuofjC3qgmIYUBVXan21OF56d+XeBaWJs
+	DuiJbRvgOWp2DBmFe7MHSiKVWTHuPTruQtXe3hW+1PT18IvqbV8ysqEKtPKEzA==
+X-Gm-Gg: ASbGncvM2ayMh9jpPkOgj1ThdU5zZ0L/nCCHSrVzqKe8ee1Mt66wU8SZ77Ig5lwEwEg
+	broZ6XDHKfpIccJnv8jHfia7/lhZaFQCebmu18IRzdsC4FtqWL15shvnJBHw7ogDKyzH6qvSbOx
+	/aIsiMmqUtXY0+fbQbNMen4A3jNXNgLeFQQ/LM4lBdZ+aSRl1DtvIg762SfKAyMl0YdTF5n1Yfm
+	G2YFmOeT/Z/pJK9RU/poMpCJxr5MsUzxc9YzHZpTcr4Q9UW3JxJ9IXNrdvcC8GDeRWulMEEMRiL
+	+jcMAsYclfSuc3ZOICuSIIpK6oFHYMgVh2YI6YowqUOWHO2x9to=
+X-Google-Smtp-Source: AGHT+IGhtyNmiMmaDXqhLwWa1sShCSn/DUyQsAgpk7UXgCpMw78TMynnnA2HPDDqv4w0w9QstcvPGQ==
+X-Received: by 2002:a05:6a21:8cc1:b0:1f5:7df9:f13c with SMTP id adf61e73a8af0-203b400cfdfmr2815792637.41.1744815867897;
+        Wed, 16 Apr 2025 08:04:27 -0700 (PDT)
+Received: from thinkpad ([120.60.130.16])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0b220a988bsm1391403a12.14.2025.04.16.08.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 08:04:27 -0700 (PDT)
+Date: Wed, 16 Apr 2025 20:34:21 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+	Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof Wilczy??ski <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, dingwei@marvell.com, cassel@kernel.org, 
+	Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/4] PCI/ERR: Add support for resetting the slot in a
+ platforms specific way
+Message-ID: <rrqn7hlefn7klaczi2jkfta72pwmtentj3zp37yvw3brwpnalk@3eapwfeo5y4d>
+References: <20250404-pcie-reset-slot-v1-0-98952918bf90@linaro.org>
+ <20250404-pcie-reset-slot-v1-2-98952918bf90@linaro.org>
+ <Z--cY5Uf6JyTYL9y@wunner.de>
+ <3dokyirkf47lqxgx5k2ybij5b5an6qnceifsub3mcmjvzp3kdb@sm7f2jxxepdc>
+ <Z__AyQeZmXiNwT7c@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z678TNhCbTk363Tw@kspp> <864c7dd5-0deb-4adb-a1cf-c8a809514d7e@embeddedor.com>
- <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
-In-Reply-To: <217b00f5-d03d-4624-9ba9-d838199ef7b9@embeddedor.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 16 Apr 2025 11:04:04 -0400
-X-Gm-Features: ATxdqUGn4UAwWKO9rc3w4V2DzzsBrEKuE_v_1b78ZJI7oY5ijYXBcUz8pBjEKwc
-Message-ID: <CADnq5_M5Jv4A5CXAKY2Qd-dhrfmecnauRtVY_ghSsut7i=KNww@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amd/pm: Avoid multiple -Wflex-array-member-not-at-end
- warnings
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, Kenneth Feng <kenneth.feng@amd.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Xinhui Pan <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z__AyQeZmXiNwT7c@wunner.de>
 
-Can you resend, I can't seem to find the original emails.
-Additionally, all of the NISLANDS structures are unused in amdgpu, so
-those could be removed.
+On Wed, Apr 16, 2025 at 04:38:01PM +0200, Lukas Wunner wrote:
+> On Tue, Apr 15, 2025 at 07:03:17PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Apr 04, 2025 at 10:46:27AM +0200, Lukas Wunner wrote:
+> > > On Fri, Apr 04, 2025 at 01:52:22PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
+> > > > When the PCI error handling requires resetting the slot, reset it
+> > > > using the host bridge specific 'reset_slot' callback if available
+> > > > before calling the 'slot_reset' callback of the PCI drivers.
+> > > > 
+> > > > The 'reset_slot' callback is responsible for resetting the given slot
+> > > > referenced by the 'pci_dev' pointer in a platform specific way and
+> > > > bring it back to the working state if possible. If any error occurs
+> > > > during the slot reset operation, relevant errno should be returned.
+> > > 
+> > > This feels like something that should be plumbed into
+> > > pcibios_reset_secondary_bus(), rather than pcie_do_recovery().
+> > 
+> > I did consider that, but didn't go for it since there was no platform
+> > reset code present in that function. But I will try to use it as I
+> > don't have a strong preference to do reset slot in pcie_do_recovery().
+> 
+> The only platform overriding pcibios_reset_secondary_bus() is powerpc,
+> and it only does that on PowerNV.
+> 
+> I think you could continue to stick with the approach of adding a
+> ->reset_slot() callback to struct pci_host_bridge, but it would
+> be good if at the same time you could convert PowerNV to use the
+> newly introduced callback as well.  And then remove the way to
+> override the reset procedure via pcibios_reset_secondary_bus().
+> 
+> All pci_host_bridge's which do not define a ->reset_slot() could be
+> assigned a default callback which just calls pci_reset_secondary_bus().
+> 
+> Alternatively, pcibios_reset_secondary_bus() could be made to invoke the
+> pci_host_bridge's ->reset_slot() callback if it's not NULL, else
+> pci_reset_secondary_bus(). 
 
-Alex
-On Wed, Apr 16, 2025 at 12:48=E2=80=AFAM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
->
-> Hi all,
->
-> Friendly ping (second one): who can take this patch, please? =F0=9F=99=82
->
-> Thanks!
-> -Gustavo
->
-> On 11/03/25 02:10, Gustavo A. R. Silva wrote:
-> > Hi all,
-> >
-> > Friendly ping: who can take this, please? :)
-> >
-> > Thanks!
-> > --
-> > Gustavo
-> >
-> > On 14/02/25 18:48, Gustavo A. R. Silva wrote:
-> >> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> >> getting ready to enable it, globally.
-> >>
-> >> So, in order to avoid ending up with a flexible-array member in the
-> >> middle of other structs, we use the `struct_group_tagged()` helper
-> >> to create a new tagged `struct NISLANDS_SMC_SWSTATE_HDR` (and `struct
-> >> SISLANDS_SMC_SWSTATE_HDR`). This structures group together all the
-> >> members of the flexible `struct NISLANDS_SMC_SWSTATE` (and `struct
-> >> SISLANDS_SMC_SWSTATE`) except the flexible array.
-> >>
-> >> As a result, the array is effectively separated from the rest of the
-> >> members without modifying the memory layout of the flexible structure.
-> >> We then change the type of the middle struct members currently causing
-> >> trouble from `struct NISLANDS_SMC_SWSTATE` to `struct
-> >> NISLANDS_SMC_SWSTATE_HDR` (and from `struct SISLANDS_SMC_SWSTATE` to
-> >> `struct SISLANDS_SMC_SWSTATE_HDR`).
-> >>
-> >> We also want to ensure that when new members need to be added to the
-> >> flexible structure, they are always included within the newly created
-> >> tagged struct. For this, we use `static_assert()`. This ensures that
-> >> the memory layout for both the flexible structure and the new tagged
-> >> struct is the same after any changes.
-> >>
-> >> This approach avoids having to implement `struct NISLANDS_SMC_SWSTATE_=
-HDR`
-> >> (and `struct SISLANDS_SMC_SWSTATE_HDR`) as a completely separate struc=
-ture,
-> >> thus preventing having to maintain two independent but basically ident=
-ical
-> >> structures, closing the door to potential bugs in the future.
-> >>
-> >> We also use `container_of()` whenever we need to retrieve a pointer to
-> >> the flexible structure, through which we can access the flexible-array
-> >> member, if necessary.
-> >>
-> >> So, with this changes, fix the following warnings:
-> >>
-> >> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/sislands_smc.h:218:49: war=
-ning: structure containing a flexible array member is not at the end of ano=
-ther
-> >> structure [-Wflex-array-member-not-at-end]
-> >> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:819:41: warning: =
-structure containing a flexible array member is not at the end of another s=
-tructure [-
-> >> Wflex-array-member-not-at-end]
-> >> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:818:41: warning: =
-structure containing a flexible array member is not at the end of another s=
-tructure [-
-> >> Wflex-array-member-not-at-end]
-> >> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:817:41: warning: =
-structure containing a flexible array member is not at the end of another s=
-tructure [-
-> >> Wflex-array-member-not-at-end]
-> >> drivers/gpu/drm/amd/amdgpu/../pm/legacy-dpm/si_dpm.h:816:41: warning: =
-structure containing a flexible array member is not at the end of another s=
-tructure [-
-> >> Wflex-array-member-not-at-end]
-> >>
-> >> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >> ---
-> >>   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c    |  7 ++++--
-> >>   drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h    | 23 +++++++++++------=
---
-> >>   .../gpu/drm/amd/pm/legacy-dpm/sislands_smc.h  | 15 ++++++++----
-> >>   3 files changed, 29 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c b/drivers/gpu/=
-drm/amd/pm/legacy-dpm/si_dpm.c
-> >> index a87dcf0974bc..2c9d473d122f 100644
-> >> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> >> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.c
-> >> @@ -5234,7 +5234,8 @@ static int si_init_smc_table(struct amdgpu_devic=
-e *adev)
-> >>       table->driverState.flags =3D table->initialState.flags;
-> >>       table->driverState.levelCount =3D table->initialState.levelCount=
-;
-> >> -    table->driverState.levels[0] =3D table->initialState.level;
-> >> +    container_of(&table->driverState, SISLANDS_SMC_SWSTATE, __hdr)->l=
-evels[0] =3D
-> >> +                                table->initialState.level;
-> >>       ret =3D si_do_program_memory_timing_parameters(adev, amdgpu_boot=
-_state,
-> >>                                SISLANDS_INITIAL_STATE_ARB_INDEX);
-> >> @@ -5755,7 +5756,9 @@ static int si_upload_sw_state(struct amdgpu_devi=
-ce *adev,
-> >>       int ret;
-> >>       u32 address =3D si_pi->state_table_start +
-> >>           offsetof(SISLANDS_SMC_STATETABLE, driverState);
-> >> -    SISLANDS_SMC_SWSTATE *smc_state =3D &si_pi->smc_statetable.driver=
-State;
-> >> +    SISLANDS_SMC_SWSTATE *smc_state =3D
-> >> +        container_of(&si_pi->smc_statetable.driverState,
-> >> +                 SISLANDS_SMC_SWSTATE, __hdr);
-> >>       size_t state_size =3D struct_size(smc_state, levels,
-> >>                       new_state->performance_level_count);
-> >>       memset(smc_state, 0, state_size);
-> >> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h b/drivers/gpu/=
-drm/amd/pm/legacy-dpm/si_dpm.h
-> >> index 11cb7874a6bb..62530f89ebdf 100644
-> >> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> >> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/si_dpm.h
-> >> @@ -784,12 +784,17 @@ typedef struct NISLANDS_SMC_HW_PERFORMANCE_LEVEL=
- NISLANDS_SMC_HW_PERFORMANCE_LEV
-> >>   struct NISLANDS_SMC_SWSTATE
-> >>   {
-> >> -    uint8_t                             flags;
-> >> -    uint8_t                             levelCount;
-> >> -    uint8_t                             padding2;
-> >> -    uint8_t                             padding3;
-> >> -    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
-> >> +    /* New members MUST be added within the struct_group() macro belo=
-w. */
-> >> +    struct_group_tagged(NISLANDS_SMC_SWSTATE_HDR, __hdr,
-> >> +        uint8_t                             flags;
-> >> +        uint8_t                             levelCount;
-> >> +        uint8_t                             padding2;
-> >> +        uint8_t                             padding3;
-> >> +    );
-> >> +    NISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
-> >>   };
-> >> +static_assert(offsetof(struct NISLANDS_SMC_SWSTATE, levels) =3D=3D si=
-zeof(struct NISLANDS_SMC_SWSTATE_HDR),
-> >> +          "struct member likely outside of struct_group_tagged()");
-> >>   typedef struct NISLANDS_SMC_SWSTATE NISLANDS_SMC_SWSTATE;
-> >> @@ -813,10 +818,10 @@ struct NISLANDS_SMC_STATETABLE
-> >>       uint32_t                            lowSMIO[NISLANDS_MAX_NO_VREG=
-_STEPS];
-> >>       NISLANDS_SMC_VOLTAGEMASKTABLE       voltageMaskTable;
-> >>       PP_NIslands_DPM2Parameters          dpm2Params;
-> >> -    NISLANDS_SMC_SWSTATE                initialState;
-> >> -    NISLANDS_SMC_SWSTATE                ACPIState;
-> >> -    NISLANDS_SMC_SWSTATE                ULVState;
-> >> -    NISLANDS_SMC_SWSTATE                driverState;
-> >> +    struct NISLANDS_SMC_SWSTATE_HDR        initialState;
-> >> +    struct NISLANDS_SMC_SWSTATE_HDR        ACPIState;
-> >> +    struct NISLANDS_SMC_SWSTATE_HDR        ULVState;
-> >> +    struct NISLANDS_SMC_SWSTATE_HDR        driverState;
-> >>       NISLANDS_SMC_HW_PERFORMANCE_LEVEL   dpmLevels[NISLANDS_MAX_SMC_P=
-ERFORMANCE_LEVELS_PER_SWSTATE - 1];
-> >>   };
-> >> diff --git a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h b/driver=
-s/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> >> index 90ec411c5029..1711e3e35e80 100644
-> >> --- a/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> >> +++ b/drivers/gpu/drm/amd/pm/legacy-dpm/sislands_smc.h
-> >> @@ -172,12 +172,17 @@ struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL {
-> >>   typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PER=
-FORMANCE_LEVEL;
-> >>   struct SISLANDS_SMC_SWSTATE {
-> >> -    uint8_t                             flags;
-> >> -    uint8_t                             levelCount;
-> >> -    uint8_t                             padding2;
-> >> -    uint8_t                             padding3;
-> >> +    /* New members MUST be added within the struct_group() macro belo=
-w. */
-> >> +    struct_group_tagged(SISLANDS_SMC_SWSTATE_HDR, __hdr,
-> >> +        uint8_t                             flags;
-> >> +        uint8_t                             levelCount;
-> >> +        uint8_t                             padding2;
-> >> +        uint8_t                             padding3;
-> >> +    );
-> >>       SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
-> >>   };
-> >> +static_assert(offsetof(struct SISLANDS_SMC_SWSTATE, levels) =3D=3D si=
-zeof(struct SISLANDS_SMC_SWSTATE_HDR),
-> >> +          "struct member likely outside of struct_group_tagged()");
-> >>   typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
-> >> @@ -215,7 +220,7 @@ struct SISLANDS_SMC_STATETABLE {
-> >>       struct SISLANDS_SMC_SWSTATE_SINGLE    initialState;
-> >>       struct SISLANDS_SMC_SWSTATE_SINGLE    ACPIState;
-> >>       struct SISLANDS_SMC_SWSTATE_SINGLE    ULVState;
-> >> -    SISLANDS_SMC_SWSTATE            driverState;
-> >> +    struct SISLANDS_SMC_SWSTATE_HDR        driverState;
-> >>       SISLANDS_SMC_HW_PERFORMANCE_LEVEL    dpmLevels[SISLANDS_MAX_SMC_=
-PERFORMANCE_LEVELS_PER_SWSTATE];
-> >>   };
-> >
->
+Yes. This is what I now tried locally as well.
+
+> And in that case, the __weak attribute
+> could be removed as well as the powerpc-specific version of
+> pcibios_reset_secondary_bus().
+> 
+
+I don't think it is possible to get rid of the powerpc version. It has its own
+pci_dev::sysdata pointing to 'struct pci_controller' pointer which is internal
+to powerpc arch code. And the generic code would need 'struct pci_host_bridge'
+to access the callback.
+
+> I guess what I'm trying to say is, you don't *have* to plumb this
+> into pcibios_reset_secondary_bus().  In fact, having a host bridge
+> specific callback could be useful if the SoC contains several
+> host bridges which require different callbacks to perform a reset.
+> 
+> I just want to make sure that the code remains maintainable,
+> i.e. we don't have two separate ways to override how a bus reset
+> is performed.
+> 
+
+I think we need to have the override in powerpc anyway. But I will move the
+'reset_slot' callback to it and get it called from pci_bus_error_reset() (for
+both AER and Link Down).
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
