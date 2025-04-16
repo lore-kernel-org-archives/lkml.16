@@ -1,213 +1,71 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC1B22A1D5;
-	Wed, 16 Apr 2025 11:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6D81F3BB4
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744804735; cv=none; b=ols+ZSVZP/AEbXvIMrxt5KZOQK+vZE7l40Lkqt1EFOmY6sarWuK9vMgjio6hHNBSkqRCwGxPXlhDvYhEijmLUkEYS6WSaVGWRhytFpUX+9wEtBf0iV6rk01UZ7mkH7giy0r73yrPsASjj9d7dLYWGcHkjyqhETyEcO2a1gyBm/Y=
+	t=1744804744; cv=none; b=bPTK1sOmK8E1ujcqXWNecLI7XmvKrhp3VEymjB3aeiUDPBuvXH7Y9LGS0QM5F6cupCZ1EMB8q78QdbgV68z1MiWpyUr8bm//ZtWBSZgg95HD8f+Ev5TxDyjIXtJl8B49xHL25avKt/F3zrW4TtDz+pB+9GzUfadrbci1+jXrJUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744804735; c=relaxed/simple;
-	bh=LSLJn4Y3NHxbkC24XiSwtDfDkGTqa8EMqgKQ7ZHDZcE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EnqABNYP0a4w38UC91F/xt4PBcwUUORQ/vAi4E+qG0k3tQfhfKbeDgD22S1hJPEC/JUdcPtPM0Q0+FqLRv7bipv0LHPFG6Ns/spRGTf5zh5zQ5qlejJ9QIA7iT8kG4zgHfQrGUehMrrWJpie+jNoqmzQxLNw0MHwxyDKqAvmfKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=BDsxXtE8; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="BDsxXtE8"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53GBwNZJ13220261, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744804703; bh=LSLJn4Y3NHxbkC24XiSwtDfDkGTqa8EMqgKQ7ZHDZcE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=BDsxXtE8Tb/YcxnHFIy0wjoAhzGlt6spqy6czmIcUh5muYYcqOKUw7yZnOpRJl3gQ
-	 KHLFxVVjvY04m5t8j4L2FaZYDaQj9slzEb/bB83CCjUo2Qxu9RK+r5TMivKj/aiuHE
-	 cUmtHeuc7Nl6Gajrgo9XNC3EApb+aHyrCMu1fB+2LbzIJN4j+JsRrap+MbN53UBzfV
-	 zmK8hUrj8VJC/MYbNUorfm1msz+eOP1wAVmQNf7XjM+X3zUPmiLDgZw23em1LuNwkl
-	 CJoSaKk7LbaUb1q/ehXrZbZGWzBT9kKwEVa3JA2gH3ZkOqNUnAFuWxS+FaSe2XVQqU
-	 o/4Wk192+pnCA==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53GBwNZJ13220261
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 19:58:23 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 16 Apr 2025 19:58:24 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 16 Apr
- 2025 19:58:23 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
-Subject: [PATCH net-next v4] rtase: Add ndo_setup_tc support for CBS offload in traffic control setup
-Date: Wed, 16 Apr 2025 19:57:57 +0800
-Message-ID: <20250416115757.28156-1-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744804744; c=relaxed/simple;
+	bh=7XDaLoq3659yz5WlMtNSwq/9FMDXu4Ya8eRfH6DDNso=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=h+aCHZBTuWQREqnKB0qMXNS8AlMyZGYIfhoHD2CyxBvkjNTXfhce1dw73YIuIw4Rgy09WniM9bqKLSHHh9IdHuZJxoeY3pUcPXFcRiL9yj8k2K+dlpswhYyXlKijGyP7PM3Bj+hcq7ZVcAy4n5VaDx0qD3FliaUBowNcwLEwPvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85e4f920dacso605848839f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:59:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744804742; x=1745409542;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hC1ORCdInRALRcey3WdLjKSlXXi6CnAh7ADTG+W6CIA=;
+        b=eQgKNBEGTSbFy3yGoh0CVmQ3nS2ai8dOEWzAO8YtNkMjHdLIrxATLyELAVPx4MR5GQ
+         pGzOPBiMW5BGj4NJV0uAT7/8Yt1RI/qeeO6YRK8fhztGaReKY/uYj+ThS4BPq2PWIodY
+         gmA6l21yX3Nxrjt2yYLCwQ4FHF/mQN4nwhh14RB48on5GLF5SWtQlgS7i5dp3fcJNwhp
+         XabCxfACMAn4l0xmBrzokBU8cWD0UcfyMSjGrrjUWZnO4SCyzu3TNrUNaLwUMv1Bayi0
+         ya8YO15hlS4wpbCBQJGz4llHdJCyPTJ/5fJIGHGOdaFqHWnvWZW+Z6D+4qH01CJGxjbQ
+         yb+Q==
+X-Gm-Message-State: AOJu0YznG+KB5IlT9X1r7TYsejRqYFp/hi2EujUjwn7h0MxJJJjH3Dwu
+	y93lP6eGUsVaZbIfPpx0E9I9yrKHhwmu8LuTJ81gXgNqS++4Ckcb/VJqnArwUQ3yhnwnb5eVoD+
+	S+pja6gN/uNZSQaLmqO1xV1ZsNOHWR7JmIT2Rp0OJz3qXhMkbjWUZ6Po=
+X-Google-Smtp-Source: AGHT+IGhEq8I5dh3yDQ17ht2ueFiHecyR0VOgyYsekGkKdDu42+b2TX4W+nRRMuegFVDvd7uFERTVQoCk6LgGOyRIax1tz/qZxGD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-Received: by 2002:a05:6e02:3c86:b0:3d3:fa0a:7242 with SMTP id
+ e9e14a558f8ab-3d815b10d23mr14184475ab.9.1744804742259; Wed, 16 Apr 2025
+ 04:59:02 -0700 (PDT)
+Date: Wed, 16 Apr 2025 04:59:02 -0700
+In-Reply-To: <20250416114352.120139-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ff9b86.050a0220.5cdb3.0004.GAE@google.com>
+Subject: Re: [syzbot] [usb?] BUG: corrupted list in usb_hcd_link_urb_to_ep (4)
+From: syzbot <syzbot+a2e67807a84a561c08fb@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add support for ndo_setup_tc to enable CBS offload functionality as
-part of traffic control configuration for network devices, where CBS
-is applied from the CPU to the switch. More specifically, CBS is
-applied at the GMAC in the topmost architecture diagram.
+Hello,
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v1 -> v2:
-- Add a check to ensure that qopt->queue is within the specified range.
-- Add a check for qopt->enable and handle it appropriately.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-v2 -> v3:
-- Nothing has changed, and it is simply being posted again now that
-net-next has reopened.
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-v3 -> v4
-- Modify the commit message to include a description of the location
-where CBS is applied.
----
- drivers/net/ethernet/realtek/rtase/rtase.h    | 15 +++++
- .../net/ethernet/realtek/rtase/rtase_main.c   | 60 +++++++++++++++++++
- 2 files changed, 75 insertions(+)
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase.h b/drivers/net/ethernet/realtek/rtase/rtase.h
-index 2bbfcad613ab..498cfe4d0cac 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase.h
-+++ b/drivers/net/ethernet/realtek/rtase/rtase.h
-@@ -170,6 +170,7 @@ enum rtase_registers {
- #define RTASE_TC_MODE_MASK GENMASK(11, 10)
- 
- 	RTASE_TOKSEL      = 0x2046,
-+	RTASE_TXQCRDT_0   = 0x2500,
- 	RTASE_RFIFONFULL  = 0x4406,
- 	RTASE_INT_MITI_TX = 0x0A00,
- 	RTASE_INT_MITI_RX = 0x0A80,
-@@ -259,6 +260,12 @@ union rtase_rx_desc {
- #define RTASE_VLAN_TAG_MASK     GENMASK(15, 0)
- #define RTASE_RX_PKT_SIZE_MASK  GENMASK(13, 0)
- 
-+/* txqos hardware definitions */
-+#define RTASE_1T_CLOCK            64
-+#define RTASE_1T_POWER            10000000
-+#define RTASE_IDLESLOPE_INT_SHIFT 25
-+#define RTASE_IDLESLOPE_INT_MASK  GENMASK(31, 25)
-+
- #define RTASE_IVEC_NAME_SIZE (IFNAMSIZ + 10)
- 
- struct rtase_int_vector {
-@@ -294,6 +301,13 @@ struct rtase_ring {
- 	u64 alloc_fail;
- };
- 
-+struct rtase_txqos {
-+	int hicredit;
-+	int locredit;
-+	int idleslope;
-+	int sendslope;
-+};
-+
- struct rtase_stats {
- 	u64 tx_dropped;
- 	u64 rx_dropped;
-@@ -313,6 +327,7 @@ struct rtase_private {
- 
- 	struct page_pool *page_pool;
- 	struct rtase_ring tx_ring[RTASE_NUM_TX_QUEUE];
-+	struct rtase_txqos tx_qos[RTASE_NUM_TX_QUEUE];
- 	struct rtase_ring rx_ring[RTASE_NUM_RX_QUEUE];
- 	struct rtase_counters *tally_vaddr;
- 	dma_addr_t tally_paddr;
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 2aacc1996796..6251548d50ff 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1661,6 +1661,65 @@ static void rtase_get_stats64(struct net_device *dev,
- 	stats->rx_length_errors = tp->stats.rx_length_errors;
- }
- 
-+static void rtase_set_hw_cbs(const struct rtase_private *tp, u32 queue)
-+{
-+	u32 idle = tp->tx_qos[queue].idleslope * RTASE_1T_CLOCK;
-+	u32 val, i;
-+
-+	val = u32_encode_bits(idle / RTASE_1T_POWER, RTASE_IDLESLOPE_INT_MASK);
-+	idle %= RTASE_1T_POWER;
-+
-+	for (i = 1; i <= RTASE_IDLESLOPE_INT_SHIFT; i++) {
-+		idle *= 2;
-+		if ((idle / RTASE_1T_POWER) == 1)
-+			val |= BIT(RTASE_IDLESLOPE_INT_SHIFT - i);
-+
-+		idle %= RTASE_1T_POWER;
-+	}
-+
-+	rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, val);
-+}
-+
-+static int rtase_setup_tc_cbs(struct rtase_private *tp,
-+			      const struct tc_cbs_qopt_offload *qopt)
-+{
-+	int queue = qopt->queue;
-+
-+	if (queue < 0 || queue >= tp->func_tx_queue_num)
-+		return -EINVAL;
-+
-+	if (!qopt->enable) {
-+		tp->tx_qos[queue].hicredit = 0;
-+		tp->tx_qos[queue].locredit = 0;
-+		tp->tx_qos[queue].idleslope = 0;
-+		tp->tx_qos[queue].sendslope = 0;
-+
-+		rtase_w32(tp, RTASE_TXQCRDT_0 + queue * 4, 0);
-+	} else {
-+		tp->tx_qos[queue].hicredit = qopt->hicredit;
-+		tp->tx_qos[queue].locredit = qopt->locredit;
-+		tp->tx_qos[queue].idleslope = qopt->idleslope;
-+		tp->tx_qos[queue].sendslope = qopt->sendslope;
-+
-+		rtase_set_hw_cbs(tp, queue);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rtase_setup_tc(struct net_device *dev, enum tc_setup_type type,
-+			  void *type_data)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+
-+	switch (type) {
-+	case TC_SETUP_QDISC_CBS:
-+		return rtase_setup_tc_cbs(tp, type_data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static netdev_features_t rtase_fix_features(struct net_device *dev,
- 					    netdev_features_t features)
- {
-@@ -1696,6 +1755,7 @@ static const struct net_device_ops rtase_netdev_ops = {
- 	.ndo_change_mtu = rtase_change_mtu,
- 	.ndo_tx_timeout = rtase_tx_timeout,
- 	.ndo_get_stats64 = rtase_get_stats64,
-+	.ndo_setup_tc = rtase_setup_tc,
- 	.ndo_fix_features = rtase_fix_features,
- 	.ndo_set_features = rtase_set_features,
- };
--- 
-2.34.1
+Tested on:
 
+commit:         1a1d569a Merge tag 'edac_urgent_for_v6.15_rc3' of git:..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=120fafe4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=371da5cada627d74
+dashboard link: https://syzkaller.appspot.com/bug?extid=a2e67807a84a561c08fb
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
