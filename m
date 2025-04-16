@@ -1,51 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144FC4683
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C98EF9D9
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744807672; cv=none; b=Oqyp2qZVA26mo+G6mS1QDN0koYgqi4kTaKJbTd3bywC4dWCLws8VS44tt3FLk/RiCzkQ5Jha2X2DejbLXe9pImH/0XiCiU4ERZBx1O9gSReM+pkz1zaB1XilgUrsipNBIZLM8TKu3uHomLKcaQbfZ47d4UiWC5m99DGOKAPwOmk=
+	t=1744807744; cv=none; b=M1eTNodY0QtBNaY/5GhNtbnwZLZZw3GnydM8V/GMIyfB4E4cDT0uoscVE7jHi5L2MKVL1hl94biHETBY+4EkwdEfsl9Fmhh7f+C4o2EBZ8XkViyKvOgJGWl9KM0GNl/mZNg0P4YXRywomUa+9wesE8bIv1SwNACKHpRscRTutcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744807672; c=relaxed/simple;
-	bh=MMKg4AQ+6qm3J8umrN0RA1ce1X9q/b3eIAEO/wkwkJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uuCMNVWhvnqNtwewnGnDFxGWF7JQVlogFbydfQMbdbc7fTMRdBNPYomtZkuB9e1Pw+RKArZepoK92U2YwlOEmd0+dWVkPZq87CKHdk1mtXbnI0jbDh2gyG4xMxB1x46X7QYeQmgltmUX54NIXNyedZ4S2uPkihHgdjPOx9fTY/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 378CAC4CEE2;
-	Wed, 16 Apr 2025 12:47:49 +0000 (UTC)
-Date: Wed, 16 Apr 2025 13:47:46 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Xavier <xavier_qy@163.com>
-Cc: ryan.roberts@arm.com, dev.jain@arm.com, ioworker0@gmail.com,
-	21cnbao@gmail.com, akpm@linux-foundation.org, david@redhat.com,
-	gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
-	ziy@nvidia.com
-Subject: Re: [mm/contpte v3 0/1] mm/contpte: Optimize loop to reduce
- redundant operations
-Message-ID: <Z_-m8s5EUrL4DAME@arm.com>
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
- <20250415082205.2249918-1-xavier_qy@163.com>
+	s=arc-20240116; t=1744807744; c=relaxed/simple;
+	bh=vYnoukn4CMoGYgoRR1OAgW+0q0A0Qkc0pxf+G5WqoXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zv+7irn/87a0iSlpEOGG9ogV7Z1u06AtbgE9Ogz7BSb1W/sUbcDVHZ6tDs6CIsQuutLJH41KNoxw01OFUH8IK4IZKC3bhb9w9zw3fh+/wmfrvwiTB8UX1Ks7V6TJfPEqrUfUJfxH9Wvt5z+WU3fDuJLbs8HaamlQWL6MbJ8/aOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35D461595;
+	Wed, 16 Apr 2025 05:48:59 -0700 (PDT)
+Received: from [10.57.90.106] (unknown [10.57.90.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35E0D3F694;
+	Wed, 16 Apr 2025 05:48:59 -0700 (PDT)
+Message-ID: <ad57ec62-00a8-4f7e-aad1-f28cc14d6af4@arm.com>
+Date: Wed, 16 Apr 2025 13:48:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [mm/contpte v3 0/1] mm/contpte: Optimize loop to reduce redundant
+ operations
+Content-Language: en-GB
+To: Xavier <xavier_qy@163.com>, dev.jain@arm.com, ioworker0@gmail.com,
+ 21cnbao@gmail.com
+Cc: akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com,
+ gshan@redhat.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org,
+ ziy@nvidia.com
+References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com>
+ <20250415082205.2249918-1-xavier_qy@163.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
 In-Reply-To: <20250415082205.2249918-1-xavier_qy@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 15, 2025 at 04:22:04PM +0800, Xavier wrote:
+On 15/04/2025 09:22, Xavier wrote:
 > Patch V3 has changed the while loop to a for loop according to the suggestions
-> of Dev.
-
-For some reason, my email (office365) rejected all these patches (not
-even quarantined), I only got the replies. Anyway, I can get them from
-the lore archive.
-
-> Meanwhile, to improve efficiency, the definition of local variables has
+> of Dev. Meanwhile, to improve efficiency, the definition of local variables has
 > been removed. This macro is only used within the current function and there
 > will be no additional risks. In order to verify the optimization performance of
 > Patch V3, a test function has been designed. By repeatedly calling mlock in a
@@ -54,6 +54,17 @@ the lore archive.
 > The function's execution time and instruction statistics have been traced using
 > perf, and the following are the operation results on a certain Qualcomm mobile
 > phone chip:
+
+Xavier, for some reason your emails aren't hitting my inbox - I'm only seeing
+the replies from others. I'll monitor lore but appologies if I'm slow to respond
+- that's the reason.
+
+Please start the first line of the commit with "arm64/mm" instead of "mm/contpte".
+
+Also I noticed that Andrew put this into mm-new last night. I'd prefer that this
+go via the arm64 tree, if we decide we want it.
+
+
 > 
 > Instruction Statistics - Before Optimization
 > #          count  event_name              # count / runtime
@@ -76,21 +87,127 @@ the lore archive.
 >   47,673,923,151  L1-icache-loads         # 1.698 G/sec
 > 
 > Total test time: 28.108048 seconds.
+> 
+> Function Statistics - Before Optimization
+> Arch: arm64
+> Event: cpu-cycles (type 0, config 0)
+> Samples: 1419716
+> Event count: 99618088900
+> 
+> Overhead   Symbol
+> 21.42%     lock_release
+> 21.26%     lock_acquire
+> 20.88%     arch_counter_get_cntvct
+> 14.32%     _raw_spin_unlock_irq
+> 6.79%      contpte_ptep_get
+> 2.20%      test_contpte_perf
+> 1.82%      follow_page_pte
+> 0.97%      lock_acquired
+> 0.97%      rcu_is_watching
+> 0.89%      mlock_pte_range
+> 0.84%      sched_clock_noinstr
+> 0.70%      handle_softirqs.llvm.8218488130471452153
+> 0.58%      test_preempt_disable_long
+> 0.57%      _raw_spin_unlock_irqrestore
+> 0.54%      arch_stack_walk
+> 0.51%      vm_normal_folio
+> 0.48%      check_preemption_disabled
+> 0.47%      stackinfo_get_task
+> 0.36%      try_grab_folio
+> 0.34%      preempt_count
+> 0.32%      trace_preempt_on
+> 0.29%      trace_preempt_off
+> 0.24%      debug_smp_processor_id
+> 
+> Function Statistics - After Optimization
+> Arch: arm64
+> Event: cpu-cycles (type 0, config 0)
+> Samples: 1431006
+> Event count: 118856425042
+> 
+> Overhead   Symbol
+> 22.59%     lock_release
+> 22.13%     arch_counter_get_cntvct
+> 22.08%     lock_acquire
+> 15.32%     _raw_spin_unlock_irq
+> 2.26%      test_contpte_perf
+> 1.50%      follow_page_pte
+> 1.49%      arch_stack_walk
+> 1.30%      rcu_is_watching
+> 1.09%      lock_acquired
+> 1.07%      sched_clock_noinstr
+> 0.88%      handle_softirqs.llvm.12507768597002095717
+> 0.88%      trace_preempt_off
+> 0.76%      _raw_spin_unlock_irqrestore
+> 0.61%      check_preemption_disabled
+> 0.52%      trace_preempt_on
+> 0.50%      mlock_pte_range
+> 0.43%      try_grab_folio
+> 0.41%      folio_mark_accessed
+> 0.40%      vm_normal_folio
+> 0.38%      test_preempt_disable_long
+> 0.28%      contpte_ptep_get
+> 0.27%      __traceiter_android_rvh_preempt_disable
+> 0.26%      debug_smp_processor_id
+> 0.24%      return_address
+> 0.20%      __pte_offset_map_lock
+> 0.19%      unwind_next_frame_record
+> 
+> If there is no problem with my test program, it can be seen that there is a
+> significant performance improvement both in the overall number of instructions
+> and the execution time of contpte_ptep_get.
+> 
+> If any reviewers have time, you can also test it on your machines for comparison.
+> I have enabled THP and hugepages-64kB.
+> 
+> Test Function:
+> ---
+> #define PAGE_SIZE 4096
+> #define CONT_PTES 16
+> #define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
+> 
+> void rwdata(char *buf)
+> {
+> 	for (size_t i = 0; i < TEST_SIZE; i += PAGE_SIZE) {
+> 		buf[i] = 'a';
+> 		volatile char c = buf[i];
+> 	}
+> }
+> void test_contpte_perf()
+> {
+> 	char *buf;
+> 	int ret = posix_memalign((void **)&buf, PAGE_SIZE, TEST_SIZE);
+> 	if (ret != 0) {
+> 		perror("posix_memalign failed");
+> 		exit(EXIT_FAILURE);
+> 	}
+> 
+> 	rwdata(buf);
+> 
+> 	for (int j = 0; j < 500; j++) {
+> 		mlock(buf, TEST_SIZE);
+> 
+> 		rwdata(buf);
+> 
+> 		munlock(buf, TEST_SIZE);
 
-We'd need to reproduce these numbers on other platforms as well and with
-different page sizes. I hope Ryan can do some tests next week.
+This is a microbenchmark in a pathological case and it's showing ~11%
+improvement. But in principle I'm ok with it. I have some comments on the actual
+change though, which I'll send through against email.
 
-Purely looking at the patch, I don't like the complexity. I'd rather go
-with your v1 if the numbers are fairly similar (even if slightly slower).
+Thanks,
+Ryan
 
-However, I don't trust microbenchmarks like calling mlock() in a loop.
-It was hand-crafted to dirty the whole buffer (making ptes young+dirty)
-before mlock() to make the best out of the rewritten contpte_ptep_get().
-Are there any real world workloads that would benefit from such change?
+> 	}
+> 	
+> 	free(buf);
+> }
+> ---
+> 
+> Xavier (1):
+>   mm/contpte: Optimize loop to reduce redundant operations
+> 
+>  arch/arm64/mm/contpte.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
 
-As it stands, I think this patch needs better justification.
-
-Thanks.
-
--- 
-Catalin
