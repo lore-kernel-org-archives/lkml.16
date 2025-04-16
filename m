@@ -1,139 +1,191 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61198188735
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BC7188735
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744827885; cv=none; b=XJQWB0481kdi0HsUBjn02y4UxA2r7kAC0uu6WHTtvcAwzmaUqp4pyjAqcAL3x0VaQ4LpzFS+93A3heE8IY0+Tm8ycQP44XD6DNMEZAaLTc4yfire8EnOQ6wHUrCspi99ykBeUaEscwkuHrmUi82L/V9eLOrVshgpvL8qJcfNx+k=
+	t=1744827959; cv=none; b=knu6WZj9OOEvFsvgdHPtZfujKCQ6lqBFk3G1dYAXKrnPJ/CsGIDBIm8J7Sbso61Se2TPAaoYUvg0rchEChn30D9WcCS2D3a/UwGOGMxNhR3bCvNezZR26TzqN1Nu3P1sPLFbcZO20y1Ou/qCIuPgrYYrurb6Pnq93FRbAHsb5mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744827885; c=relaxed/simple;
-	bh=oWT/F7XNGMua84md0xB7i6qKpkZiaDT6KbfyOZrXN4U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsI42efe4gXSkBiaWhpL13X6It1CcKe273OvQSjb0QyNqwoz1uv3pLasxuZi86En/dSEDmEcJF3V98PvExFfAHCBuJVijXoyCwwImMZMRODJ9kjPq3Ileac352ff34FosreF++TeafFO5CLcSyEgXlm/vvc5cD9HodCHalYPYc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mnh2R253; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744827959; c=relaxed/simple;
+	bh=Xd1yhYRZtSnl04cMfGxOguGhij2E/y6WbAM7M31Ihy4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Rd/gyBUwJq2C7c4+xn7dTY7vtJN/HfxpkrEk1KWMhGvJeC2mkRlw3Hmiti5xtuw0giE05e5OPix868Kbq1jHcZucNkPphnkEg6aT5h70Lko+C6k2PShvhAr+oi2/D7lWFVajZq0zg7gaIqgD7cuAiyUXcHtLwLat8VuHfKmjwzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=XaCE1Fpj; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mnh2R253"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264c9d0295so25315ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:24:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="XaCE1Fpj"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d434c84b7eso46333295ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744827883; x=1745432683; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wOK0Vf+KbobwJmYW/gQ4vGafXzu+jG9W32EG6FGCWPQ=;
-        b=Mnh2R253H9M9WGf3/4vXTN4xAYUfoLXSKuZ43/2JPlLo686tKR0ovZCYp3wEbEiyW/
-         Wy6/YovEwRXvIb5hGDKNlmwhWsb3b0VkZbx41tDYAM6/hmsCrAIS0t2FT6IAExcXZZyq
-         x7zGYJPzfB001XD2ZDXOH+Rg79sSqk1yyDCm4fRfWPV8RBk9zDNaVSX8UQQ3KS8IfVJg
-         TUKj9q272r2VWZEjlMgdF6RC55ir+MnQscZ8FRpT20rpgSZJSxW3v6xrIZdU04E1zTTS
-         gPV/PgtVsk6A328UEwx/0VY6G5mD8e72d9FhWyRMYwsSX7e2f5UCpbNkTIagCz5L1oGl
-         zfng==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1744827955; x=1745432755; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cSV8msU5ydMZIeT/VWFRVjbjIuGrEmQM3VJY/v4kBEU=;
+        b=XaCE1FpjkZ70s45NQ7WlsoIgZxlrJIoBtJKlxgKW+goQGp0onGYTMx/l14GeO/Ht/o
+         CGzMcdc1JG0Akte2dMN+jy3M3Ga1/LfJp1cUtT83VDyD9pHtzReqVbVNV78eNbigMUt0
+         nsr5R2a9Ssk2JMmuXEOLKqh0WHidRK7aeXZ78s2WO37IfSwQHzinqL1eVjT5auh+3qTo
+         6iRjQE/H3wtdRTz6qnZlLukry0JY5PLINhpyoVQv147SqZeOYFr57JSOGnclN9FJDFn5
+         emk9XN+vCMM5DIThbq+RtJiNmTTxhza2RPaxaps0915B+EhUJOQ0r7tLoPAnnYfMjXqk
+         uHxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744827883; x=1745432683;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wOK0Vf+KbobwJmYW/gQ4vGafXzu+jG9W32EG6FGCWPQ=;
-        b=vo3Aq1TcSSkHQQvOJZ5sRnXxL0Glm8uZld6l6lA9ELuCQ4enpGd2Jkm+Kq0YoQMwUi
-         xwl1gwg77e4s638U8UnFwcKeqptpWh8IdWLKij5i7agsV8LaYJdGgMnD73Ji5sIX2kAH
-         JCJPr6ekrpfsDpIgOKb9Utm0j8krJH3Be9lKsGDgQ5isZ9oLQbxZrFguDf0AUq8yfGAW
-         l3WZwPIkthTu9qLajWW4Hk87zTLKrxfe3bXVsHkUNbjtPPHH3UzIx1pCg/Uy2IP2f45v
-         pLKcILTCvvXrkcaHXJUS44CpfxJh4SNtQ2wtmkjQp+qjrOpzp1lcx3kC9q3fNpdtFzWW
-         TNMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWX+Pm7pZHueCwdWIumcltZBx5OE9sG7IkrmTRu9XELc6NCHswiIH4CWiVNTbENgKTq9DZR/hylq91+Vps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzvtHGJUwjG1B/iV+lI+l3Jljg+Z2KB5rKWa+DSH+OPmeM4Czl
-	pNvi0thaDybsiJQpcuH0WBAd7WBEfyV059zsd68p81Hrs2FIuRVYgBB/CHtq6w==
-X-Gm-Gg: ASbGnctJhmlBgTRPv7aXdpLI17IanOD56AMgzsmsy+TmU9+2JjRmmOcaNyGjfpvZG8G
-	zKnjJbsVAUcH8Rgx8ZkQWLIAStQk0BzKp8DKVZqTNJI4WPzxEXF9HXFzR5lzu8DASAZBF9td58o
-	MitOOsmoDVH+GgZ1DLbrDvu4RAQyAUlAjd2iV5hlDts79Yzz82hOslJyqjDZIGRRwaXY/euKgl9
-	bnOz8NGgizfaG8X6nOhQKuwrsC60y9TxpOYVI9JQKKpZc3Nixs/93XQBNXmYBfLgI69ASDnyXTg
-	7b/UYd5ntw2K8ozEg0F4it2iJQubKxX3FOPqHYTTe5qDZ5EfjanD1L7jtcD73nxQdXBxXVh5REh
-	6UQ==
-X-Google-Smtp-Source: AGHT+IEpHyqavKPJ4ronBax5JpMqCt2LPq1gE7nGAr42leNu8PkO8Q/dBpQStv9Xhaw0weJzShRUgQ==
-X-Received: by 2002:a17:902:ef11:b0:215:aca2:dc04 with SMTP id d9443c01a7336-22c412344e8mr232485ad.26.1744827883313;
-        Wed, 16 Apr 2025 11:24:43 -0700 (PDT)
-Received: from google.com (176.13.105.34.bc.googleusercontent.com. [34.105.13.176])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-308612299basm1963232a91.33.2025.04.16.11.24.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 11:24:42 -0700 (PDT)
-Date: Wed, 16 Apr 2025 11:24:37 -0700
-From: Vipin Sharma <vipinsh@google.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] KVM: x86: Allocate kvm_vmx/kvm_svm structures
- using kzalloc()
-Message-ID: <20250416182437.GA963080.vipinsh@google.com>
-References: <20250401155714.838398-1-seanjc@google.com>
- <20250401155714.838398-3-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1744827955; x=1745432755;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cSV8msU5ydMZIeT/VWFRVjbjIuGrEmQM3VJY/v4kBEU=;
+        b=qFxTSEmL7SRW2HjDuxRlz/6eaRVcxdKo5EEsn6Tz5hJg6GbYWwpf1I8nbiSfcq3Ay6
+         6HoZJSDnPJ6zZgSaTGc8fVctbIsfZtoT/QTj3cAmLJn3xgK0NAxq9cqQzKZUDpd0x7Et
+         z8E//0LQOrWxp6QsGSTAu8D90JswRgfCCDnwDd6LDHwCpIkDZtnmAN8psH8uWv/Tyh93
+         98rruOFBUvneVkL3BBrkrw4iOsJY9AJiPsQC70KN5c7ymgvfA4CeUoEyvQYueleZC08e
+         R1DDoFXgpyDfD64SpU5NJeZdoreboYEoL9W6rUp5oh8G1IHihJ7+zWr0OuxjGfXXVKzd
+         oPIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWnXM5QL+uN4mcRHmAlwtAtFa4W0dZ8bqtBuUssLo/O1ftEL+bf5QwUm64QXxWUhijaRdjM2tXEzaymIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTbIS4kijJBFb8K3RGcyopg+6fGCSCjqT1paw4pDVO0OZZfN2v
+	xyXG3ZNO3Jpfofhu1JR4nZrwEKOnebCM6I5RHYPoueyy/ev4X996/1yZY8beLcQ=
+X-Gm-Gg: ASbGncttX14bPPcue8Sg+GuVkNfeIaaWV3H+vLe7oMrW/v2OnUlHnb2dIqX4CFoaTvg
+	/JDAwAigVIxIvsCwTmbBcUHtDAjiGZeLVmJ2J97FrCKPAZIwtOdihKZTCf66Q+buLTMdgZ2jrL/
+	LslijIvMmno85eoEE8KDRKgR4DagpjRbaCSXt0jin1AHlCoHdKaNlb6FZeSxCosr+dBbI+0E/8E
+	V4cn9fxygovvNML9rzHJ07Mq8awprnAQhChxesAG7eQtRSHS/8tKPLeYYC1RJPZjagJRdHI4Lpd
+	jsnIQ2E/u/aPnkcFUNJpyANR6JzK1m0VoKI7
+X-Google-Smtp-Source: AGHT+IF1+5zuKXNJMIaZzyxvorkQrC63hc4slnYn6CHFkd1ncN41QiNzf1vL5MHBnYzdV8iMfvjQgg==
+X-Received: by 2002:a05:6e02:188e:b0:3d3:dcfd:2768 with SMTP id e9e14a558f8ab-3d815af439emr31657045ab.4.1744827950843;
+        Wed, 16 Apr 2025 11:25:50 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc582737sm39156255ab.50.2025.04.16.11.25.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Apr 2025 11:25:50 -0700 (PDT)
+Message-ID: <40a0bbd6-10c7-45bd-9129-51c1ea99a063@kernel.dk>
+Date: Wed, 16 Apr 2025 12:25:49 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401155714.838398-3-seanjc@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring/rsrc: send exact nr_segs for fixed buffer
+From: Jens Axboe <axboe@kernel.dk>
+To: Pavel Begunkov <asml.silence@gmail.com>,
+ Nitesh Shetty <nj.shetty@samsung.com>
+Cc: gost.dev@samsung.com, nitheshshetty@gmail.com, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250416055250epcas5p25fa8223a1bfeea5583ad8ba88c881a05@epcas5p2.samsung.com>
+ <20250416054413.10431-1-nj.shetty@samsung.com>
+ <98f08b07-c8de-4489-9686-241c0aab6acc@gmail.com>
+ <37c982b5-92e1-4253-b8ac-d446a9a7d932@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <37c982b5-92e1-4253-b8ac-d446a9a7d932@kernel.dk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-01 08:57:13, Sean Christopherson wrote:
-> Now that the size of "struct kvm" is less than 2KiB, switch back to using
-> kzalloc() to allocate the VM structures.  Add compile-time assertions in
-> vendor code to ensure the size is an order-0 allocation, i.e. to prevent
-> unknowingly letting the size balloon in the future.
+On 4/16/25 9:07 AM, Jens Axboe wrote:
+> On 4/16/25 9:03 AM, Pavel Begunkov wrote:
+>> On 4/16/25 06:44, Nitesh Shetty wrote:
+>>> Sending exact nr_segs, avoids bio split check and processing in
+>>> block layer, which takes around 5%[1] of overall CPU utilization.
+>>>
+>>> In our setup, we see overall improvement of IOPS from 7.15M to 7.65M [2]
+>>> and 5% less CPU utilization.
+>>>
+>>> [1]
+>>>       3.52%  io_uring         [kernel.kallsyms]     [k] bio_split_rw_at
+>>>       1.42%  io_uring         [kernel.kallsyms]     [k] bio_split_rw
+>>>       0.62%  io_uring         [kernel.kallsyms]     [k] bio_submit_split
+>>>
+>>> [2]
+>>> sudo taskset -c 0,1 ./t/io_uring -b512 -d128 -c32 -s32 -p1 -F1 -B1 -n2
+>>> -r4 /dev/nvme0n1 /dev/nvme1n1
+>>>
+>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>> ---
+>>>   io_uring/rsrc.c | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+>>> index b36c8825550e..6fd3a4a85a9c 100644
+>>> --- a/io_uring/rsrc.c
+>>> +++ b/io_uring/rsrc.c
+>>> @@ -1096,6 +1096,9 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+>>>               iter->iov_offset = offset & ((1UL << imu->folio_shift) - 1);
+>>>           }
+>>>       }
+>>> +    iter->nr_segs = (iter->bvec->bv_offset + iter->iov_offset +
+>>> +        iter->count + ((1UL << imu->folio_shift) - 1)) /
+>>> +        (1UL << imu->folio_shift);
+>>
+>> That's not going to work with ->is_kbuf as the segments are not uniform in
+>> size.
 > 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 2 +-
->  arch/x86/kvm/svm/svm.c          | 1 +
->  arch/x86/kvm/vmx/vmx.c          | 1 +
->  3 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index e523d7d8a107..6c7fd7db6f11 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1940,7 +1940,7 @@ void kvm_x86_vendor_exit(void);
->  #define __KVM_HAVE_ARCH_VM_ALLOC
->  static inline struct kvm *kvm_arch_alloc_vm(void)
->  {
-> -	return __vmalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +	return kzalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT);
->  }
->  
->  #define __KVM_HAVE_ARCH_VM_FREE
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 8abeab91d329..589adc5f92e0 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -5536,6 +5536,7 @@ static int __init svm_init(void)
->  	if (r)
->  		goto err_kvm_init;
->  
-> +	BUILD_BUG_ON(get_order(sizeof(struct kvm_svm) != 0));
+> Oops yes good point.
 
-There is a typo here. It is checking sizeof(struct kvm_svm) != 0, instead
-of checking get_order(...) != 0.
+How about something like this? Trims superflous end segments, if they
+exist. The 'offset' section already trimmed the front parts. For
+!is_kbuf that should be simple math, like in Nitesh's patch. For
+is_kbuf, iterate them.
 
->  	return 0;
->  
->  err_kvm_init:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b70ed72c1783..01264842bf45 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -8755,6 +8755,7 @@ static int __init vmx_init(void)
->  	if (r)
->  		goto err_kvm_init;
->  
-> +	BUILD_BUG_ON(get_order(sizeof(struct kvm_vmx) != 0));
+diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
+index bef66e733a77..e482ea1e22a9 100644
+--- a/io_uring/rsrc.c
++++ b/io_uring/rsrc.c
+@@ -1036,6 +1036,7 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+ 			   struct io_mapped_ubuf *imu,
+ 			   u64 buf_addr, size_t len)
+ {
++	const struct bio_vec *bvec;
+ 	unsigned int folio_shift;
+ 	size_t offset;
+ 	int ret;
+@@ -1052,9 +1053,10 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+ 	 * Might not be a start of buffer, set size appropriately
+ 	 * and advance us to the beginning.
+ 	 */
++	bvec = imu->bvec;
+ 	offset = buf_addr - imu->ubuf;
+ 	folio_shift = imu->folio_shift;
+-	iov_iter_bvec(iter, ddir, imu->bvec, imu->nr_bvecs, offset + len);
++	iov_iter_bvec(iter, ddir, bvec, imu->nr_bvecs, offset + len);
+ 
+ 	if (offset) {
+ 		/*
+@@ -1073,7 +1075,6 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+ 		 * since we can just skip the first segment, which may not
+ 		 * be folio_size aligned.
+ 		 */
+-		const struct bio_vec *bvec = imu->bvec;
+ 
+ 		/*
+ 		 * Kernel buffer bvecs, on the other hand, don't necessarily
+@@ -1099,6 +1100,27 @@ static int io_import_fixed(int ddir, struct iov_iter *iter,
+ 		}
+ 	}
+ 
++	/*
++	 * Offset trimmed front segments too, if any, now trim the tail.
++	 * For is_kbuf we'll iterate them as they may be different sizes,
++	 * otherwise we can just do straight up math.
++	 */
++	if (len + offset < imu->len) {
++		bvec = iter->bvec;
++		if (imu->is_kbuf) {
++			while (len > bvec->bv_len) {
++				len -= bvec->bv_len;
++				bvec++;
++			}
++			iter->nr_segs = bvec - iter->bvec;
++		} else {
++			size_t vec_len;
++
++			vec_len = bvec->bv_offset + iter->iov_offset +
++					iter->count + ((1UL << folio_shift) - 1);
++			iter->nr_segs = vec_len >> folio_shift;
++		}
++	}
+ 	return 0;
+ }
+ 
 
-Same as above.
-
->  	return 0;
->  
->  err_kvm_init:
-> -- 
-> 2.49.0.472.ge94155a9ec-goog
-> 
+-- 
+Jens Axboe
