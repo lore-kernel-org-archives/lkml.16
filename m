@@ -1,198 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA4E207DF8
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C1623D28D;
+	Wed, 16 Apr 2025 11:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744803754; cv=none; b=guZGsizzcfKMndJ8GWAgS6ACyzW7+5A71s/U4pYaoBE9t0e7viwNyo+GN7BHWTWDW27uGQO3ntX0Usyf/WuzLe1D8F4uruLXoqqE+rXRyxehmUQcUDXTwjuPIs/4nOAEoZ3RLNbx0vjaFeqe6CXk0tOOLVTmG6uIV0pxRufaXoQ=
+	t=1744803756; cv=none; b=VXqT3+xm7uT9PIMxirTuhjkJ1e+Q8ilHHZiy/TWs0a5gW6HWypkaUf67pli2smhBurA0stYekB+Dssd9HvaVk6XquhvIAU+DQMOBhAR/neelVdECtegfs+sSDyU3kVQIRU7eFH93EqeyTTyZpmbAce2C11UTBEdUoIp7mxgjM6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744803754; c=relaxed/simple;
-	bh=fhjBaG3805Bjow0iETFxpVFlxLgrLOz/rjATud4UPgk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JnkBfgkFzuNAkuWi67/ZgwHafvF+3jKNPVSAMWiBk0Bm4B244q9tgL8NNmabuSxPqBSnkRERdFcyIRFyyZmGE9Uq2fgzQZeZHeGOujd6VjrG8KdDH7Op9vIAJ3di3+Ylt2645RpxcAg40TvsurXWT3tAZ76s6/qH37SJ6EaAQv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LpvCq4GB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744803756; c=relaxed/simple;
+	bh=HBGvo012+BGFr9nvHjQHT6H9De4JWPSkQ588tDhUUP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AVKtEssLF8/KXC5dK7IX8M0ULcXgPkaiEpR8aiZRxjdcdlDjw/WoCKBMa1wlccIS92Z5dEjM388kj/Vn9aigXE62fbWw8sIkK4Bo0Ts+4gT/C0sUlvOi8QBXKf6FiFEtdPVxQTNSi5ccl6JMK2oJbGGlNZQrlgurexIFruHujH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XOPsyO8j; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LpvCq4GB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744803750;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5z6fNojRF9NHhV/lCWIoxNXIATTm+tKBZ0meFI94ucc=;
-	b=LpvCq4GB58rT4vTIl/mwZE3L9BlOWg8uNlebMauZA3padTXhVKxZQNP8U+ptuWTguAaxdE
-	Rp3vwmPQ9XnqIX1Zb7b2rlEeVVhp7mnsagsxXJGBcsUFFRlARzKaKFrMIz1dmc+9TBagIz
-	jSPw9dBoY4AfpyYKZH+3Wy5hkzGpt/s=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-636-Vie_iH2lMuq6RkfCyGJk_A-1; Wed, 16 Apr 2025 07:42:29 -0400
-X-MC-Unique: Vie_iH2lMuq6RkfCyGJk_A-1
-X-Mimecast-MFC-AGG-ID: Vie_iH2lMuq6RkfCyGJk_A_1744803748
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39126c3469fso2620528f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:42:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744803748; x=1745408548;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5z6fNojRF9NHhV/lCWIoxNXIATTm+tKBZ0meFI94ucc=;
-        b=P8fzi3J8+A/rTkLXLYlGCztNCR4JIOAfxAk9+VXW8TbyjlNPvV2YlMckZoFvRe/gwc
-         l7+NKi6U9sxd8kF93wr+In2IG4RflJTT79tUW53LGmKLLDCJcsuXmHTPszm5WiKC+xz0
-         UFdqFXR/smlorz2wUtXAb2FjdVUfhLPNSKc211WNaH1/y8vrxP6J/RUtP4ybiD4YrS8E
-         N4rdn6szmdSnqW6AaQnbIEcivgBWB4I6I0GPsnxkJidpIa1UoXcLvHnfElBnYAHSN9t3
-         f8dSbl0rVr3wJlnIiuKdHtA3OiUSDo81005YGMvTKpZHnEbiR6o/JzxoipdbMxg8JM96
-         ebBg==
-X-Gm-Message-State: AOJu0Yx21zYNA2IqWXVdSoji1YB/az1/gXzuyTRz70GR1VfUEfGSmldN
-	VeH6WUS/0Vg/owULA+nWOx5Lsa7yTitp7RN+8taoADfmIBY/k/EmwVvlDFzjLXnWyycZUQolSk8
-	e5Mu1oUvXAOo4dV3zk6rQ8KLe6ydk8DlQuOLgkqVoFQb3QkjhKhJvwQXs3Jjmjw==
-X-Gm-Gg: ASbGncuas1IACEiscOAvHSJ/JSLld+Eh/m2h5TAefalTfv+32HRnlTxOZKRaX4EwpLO
-	gwT9daWSikvHtWGNCom5b66Ijm0itPm+tBtG6A638ybDAXNEmjnJJNJFYCj/Cw2jB9ho+YY2Uts
-	q+B1gsfD0hFrBeEaPIR5jR7qa1C0uzBUqGRXDTjrduCxgbVUV7YJD4F2T0qlYgquuLrJ3H2S6Ir
-	pssFGWq7wTgwuFX2d0zFcfTkzYpDnndaIiJRDja3mnBQf5zF4nkYyjwnlGgT/DHQ/Cjx49N0wpi
-	HJ/IRwz2aUfX2oaAhS/HCqrS16LdHSeONF5n+KU=
-X-Received: by 2002:a05:6000:40dd:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39ee5b1306cmr1578462f8f.5.1744803748218;
-        Wed, 16 Apr 2025 04:42:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE6R2KyCnqE4BlOLHRHu9NIuucKIPl2UpGmWdgO/Fo74a/ok/xC5KTJ0F0Bf4hfUIeu2l85dA==
-X-Received: by 2002:a05:6000:40dd:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39ee5b1306cmr1578433f8f.5.1744803747822;
-        Wed, 16 Apr 2025 04:42:27 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4d2ddfsm18656915e9.10.2025.04.16.04.42.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 04:42:27 -0700 (PDT)
-Message-ID: <645b612bb578deb43df6539462d079ab38a2c835.camel@redhat.com>
-Subject: Re: [RFC PATCH 6/9] sched: Treat try_to_block_task with pending
- signal as wakeup
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Tomas Glozar <tglozar@redhat.com>, Juri
- Lelli <jlelli@redhat.com>
-Date: Wed, 16 Apr 2025 13:42:25 +0200
-In-Reply-To: <20250416092027.yShf-ReN@linutronix.de>
-References: <20250404084512.98552-11-gmonaco@redhat.com>
-	 <20250404084512.98552-17-gmonaco@redhat.com>
-	 <20250413150540.3ZW7XJVs@linutronix.de>
-	 <fb998d03b4ecc51834bf4383a71932ca877900cd.camel@redhat.com>
-	 <20250415110455.0Qj-4EN2@linutronix.de>
-	 <4e4b9c63-1b86-4d96-bcf3-0cdee8ba7c9e@redhat.com>
-	 <20250416092027.yShf-ReN@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XOPsyO8j"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B952965;
+	Wed, 16 Apr 2025 13:40:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744803629;
+	bh=HBGvo012+BGFr9nvHjQHT6H9De4JWPSkQ588tDhUUP8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XOPsyO8jF/whvHmxf1uFMzcDt2Nyl3GHZwcfxCy234hIc9zia1bhaUYztQUDlOGw5
+	 H/rvz+42jI5/KEvemd3e0xYHZrmuqH1hhahnTMi/4F4yT8vG4FqZnVdtSsN2pQaXEx
+	 5vgxEw3RG2RVH6hJQ3fvOgaMgtLcCLlUHHtngZSw=
+Message-ID: <5309bf68-fc86-4cd9-91b7-ed367793836d@ideasonboard.com>
+Date: Wed, 16 Apr 2025 14:42:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next 2/2] gpu: drm: xlnx: zynqmp_dp: Use
+ dev_err_probe()
+To: shao.mingyin@zte.com.cn, thierry.reding@gmail.com,
+ laurent.pinchart@ideasonboard.com
+Cc: mperttunen@nvidia.com, airlied@gmail.com, simona@ffwll.ch,
+ jonathanh@nvidia.com, dri-devel@lists.freedesktop.org,
+ linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
+ yang.yang29@zte.com.cn, xu.xin16@zte.com.cn, ye.xingchen@zte.com.cn,
+ zhang.enpei@zte.com.cn, "Sagar, Vishal" <vishal.sagar@amd.com>
+References: <20250402193852834atJ7eho66TlnKOIMSvpfr@zte.com.cn>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
+ wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
+ Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
+ eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
+ LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
+ G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
+ DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
+ 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
+ rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
+ Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
+ aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
+ ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
+ PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
+ VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
+ 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
+ uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
+ R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
+ sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
+ Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
+ PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
+ dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
+ qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
+ hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
+ DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
+ KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
+ 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
+ xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
+ UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
+ /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
+ 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
+ 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
+ mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
+ 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
+ suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
+ xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
+ m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
+ CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
+ CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
+ 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
+ ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
+ yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
+ 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
+In-Reply-To: <20250402193852834atJ7eho66TlnKOIMSvpfr@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
+On 02/04/2025 14:38, shao.mingyin@zte.com.cn wrote:
+> From: Zhang Enpei <zhang.enpei@zte.com.cn>
+> 
+> Replace the open-code with dev_err_probe() to simplify the code.
+> 
+> Signed-off-by: Zhang Enpei <zhang.enpei@zte.com.cn>
+> Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
+> ---
+>   drivers/gpu/drm/xlnx/zynqmp_dp.c | 6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> index a6a4a871f197..28efa4c7ec8e 100644
+> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+> @@ -2466,10 +2466,8 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+> 
+>   	dp->reset = devm_reset_control_get(dp->dev, NULL);
+>   	if (IS_ERR(dp->reset)) {
+> -		if (PTR_ERR(dp->reset) != -EPROBE_DEFER)
+> -			dev_err(dp->dev, "failed to get reset: %ld\n",
+> -				PTR_ERR(dp->reset));
+> -		ret = PTR_ERR(dp->reset);
+> +		ret = dev_err_probe(dp->dev, PTR_ERR(dp->reset),
+> +				    "failed to get reset\n");
+>   		goto err_free;
+>   	}
+> 
 
-On Wed, 2025-04-16 at 11:20 +0200, Nam Cao wrote:
-> On Fri, Apr 04, 2025 at 10:45:19AM +0200, Gabriele Monaco wrote:
-> > If a task sets itself to interruptible and schedules, the
-> > __schedule
-> > function checks whether there's a pending signal and, if that's the
-> > case, updates the state of the task to runnable instead of
-> > dequeuing.
-> > By looking at the tracepoints, we see the task enters the scheduler
-> > while sleepable but exits as runnable. From a modelling
-> > perspective,
-> > this is equivalent to a wakeup and the tracepoints should reflect
-> > that.
-> >=20
-> > Add the waking/wakeup tracepoints in the try_to_block_task function
-> > and
-> > set the prev_state used by the sched_switch tracepoint to
-> > TASK_RUNNING
-> > if the task had a pending signal and was not blocked.
-> >=20
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> > ---
-> > =C2=A0kernel/sched/core.c | 11 +++++++++--
-> > =C2=A01 file changed, 9 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index f2f79236d5811..48cb32abce01a 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -6584,7 +6584,12 @@ static bool try_to_block_task(struct rq *rq,
-> > struct task_struct *p,
-> > =C2=A0	int flags =3D DEQUEUE_NOCLOCK;
-> > =C2=A0
-> > =C2=A0	if (signal_pending_state(task_state, p)) {
-> > -		WRITE_ONCE(p->__state, TASK_RUNNING);
-> > +		/*
-> > +		 * From a modelling perspective, this is
-> > equivalent to a wakeup
-> > +		 * before dequeuing the task: trace accordingly.
-> > +		 */
-> > +		trace_sched_waking(p);
-> > +		ttwu_do_wakeup(p);
-> > =C2=A0		return false;
-> > =C2=A0	}
-> > =C2=A0
-> > @@ -6721,7 +6726,9 @@ static void __sched notrace __schedule(int
-> > sched_mode)
-> > =C2=A0			goto picked;
-> > =C2=A0		}
-> > =C2=A0	} else if (!preempt && prev_state) {
-> > -		try_to_block_task(rq, prev, prev_state);
-> > +		/* Task was not blocked due to a signal and is
-> > again runnable */
-> > +		if (!try_to_block_task(rq, prev, prev_state))
-> > +			prev_state =3D TASK_RUNNING;
-> > =C2=A0		switch_count =3D &prev->nvcsw;
-> > =C2=A0	}
->=20
-> I couldn't reproduce the problem that this patch is solving. But
-> staring at
-> the srs monitor, I made an educated guess that this is to accomodate
-> the
-> transition "sleepable x wakeup -> running"?
->=20
-> But for this transition, no real wakeup happens, just the task's
-> state is
-> changed to "sleepable" then back to "running", right? Sleep hasn't
-> actually
-> happened yet?
->=20
-> If that is the case, would the patch below also solves it? It would
-> turn
-> the transition into "sleepable x set_runnable -> running", which I
-> think
-> describe it more accurately.
+Thanks. I can pick this up via drm-misc.
 
-Yeah that's pretty much it, there are a few problems though:
-1. set_state should occur in task context and not while scheduling
-2. set_state doesn't expect a task switch to occur
-
-One way to solve this is to do like you said but add a flag to the
-tracepoint to tell the model this set state is a special one happening
-while scheduling, after that one, we may be scheduled out.
-
-I didn't really like adding another state so I dropped that.
-
-However, a task can be woken up before being scheduled out (I'd agree
-with you it's not quite a wakeup as it wasn't yet sleeping, but it
-happens, e.g. p =3D=3D current in try_to_wake_up).
-This case with the signal is, in that sense, a wakeup. We can even see
-the tracepoint at times.
-
-Anyway, that issue was mostly hypothetical, the patch also fixes the
-prev_state (there's a patch by Peter on tip doing the same thing) and I
-need to make sure it's really possible to see the issue after that too.
-
-Thanks for looking into it,
-Gabriele
+  Tomi
 
