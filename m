@@ -1,134 +1,142 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3005B189B9D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F6C189B9D;
+	Wed, 16 Apr 2025 07:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789694; cv=none; b=YKb8QxY3Trh2dhWDdYSIx6vkVgO1OULjCUguBp1gRPO0UEmLd0pwH3j3JBEOihaCz3utOzOhhVHaTDRcdVSDZF471vMOb6riJFDaW0+w80jbFq9AfXC1sJBl5Mkcr1fcJC2JiCtO8gUsPPGp7w0WbirraCFQyNgU+8mytyDfsLU=
+	t=1744789707; cv=none; b=WuGDo26QrRglT3tTP7LVS4uyDSPnLBlV185bCd8rkfG+v9Xcqysj2FzKPsXYhuHxWIwAsR/xK5ZIEqUv1n1jvX5CaCuOl0a4IbfI4jI0j6OLf2HZrXby8FT7Ozc4m3nJmZKuKVZJo9kJw2m6j8zG/Hp3u6FBF0Rc1z9tbFCZ9p0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789694; c=relaxed/simple;
-	bh=mlLugVIgUXMn68LUKrSnqKZfI+aiuTTmcGRKFxZQE4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gjdub2KF6hy+6xe07KpSj8Vmwq7oCSkwUYIckj6a5RMYigy/uBgAa8PLWuPP66VB/+86lTfNQRsNjD3ll4Wq0Das3MoGt2jp/Ig+dBJoaB2d0urprGKWe19u2BAaUd37l6NKs0wBzu9ScU6lIqzmVAUYsur8yjc3f7p2Glo3eYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Jt5UjPgz; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744789707; c=relaxed/simple;
+	bh=7ojNLd35IL8BUl4r4U4KZaN3qMYHai0mzwkmUTNzQcY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SrIzFRHwL3ChRSt5c/71rICnirvNe802s5BdOHSJubWlX71Rvik7syA49v1kn1cxaNz8NjqDm1tmhl58Bnc4crbW/7uQ0dSpYJJuca1go2T8401ROsNLQvCHkzvjXmGxYA1VURbT5idOpf3WP/cMcCd07vfMK2XcjhVzhR/u7X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=jtdo3bTQ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Utg1IVm2 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Jt5UjPgz"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d64e6c83eso8122075e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:48:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="jtdo3bTQ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Utg1IVm2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744789690; x=1745394490; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cTvOaDEQG30yWMqYolrBjhpkdSkM8de0KjZNMFJpHHE=;
-        b=Jt5UjPgzrvOaax5/Qeg5J5Xy16YvkCOVc4HtM2AuF51gyQHKFZggelDMuKijMuNg0g
-         RPvDbT0ZhKZL5PxUaTquwS23aOgWNVsD/AHXFMVQ9vnzXchG8EjEXx2nXnafAGBFS8zZ
-         95C5/w1YIiWs/w3/pJXy99B7GKf4YI+cWVoHn3tzoVlFg8T/0zL3i9gzBcWgRJh8lOMh
-         aH8X5PHWN5MnOmT6vB+b8QWSDCt6rgkSMaB4wmvSCxUmGjT41Qi5E6yJaQ+VsKxBuLfr
-         EbCWNEsHI/PjhzlJtPYvp2Z14fyU5uad39e2bo0bH5e4hx/nyPm2OJA2UPinLnaGusR+
-         R0lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744789690; x=1745394490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cTvOaDEQG30yWMqYolrBjhpkdSkM8de0KjZNMFJpHHE=;
-        b=fB7p8HBwQ30NL6dNwVQVpyq3WYSkNlfbkxHOQ9emylZdLjFAxeM1s+KoBz42IEIc+v
-         GIr3XqwRCLX1t6OiMoSVXGliCIFky/QRnLuSe89lckDrjGN+zV3nTcJM5sV6smvX1YIx
-         ifGSaOcwSur0xYzHUfyNbTgv7/AaZssa3eSGkKN1OJ1uqieHU0YcEWRx7LDxfUPJopau
-         YTfoROK6KnsFC3P7Bzj9b4EE7oS6Wryo8JkOpd/PskHbEPv5RRGXPwfu3EbPHKrRFO/T
-         Fp8LkzfenhA1Ps2eILZGrEn7FpJblrmcSMzif8RQ87lyA+LClsbpKkWwnp/kV+Wfuw9Z
-         769Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUyo8eY0dVqyaDNJwKnUV4338gchxNTxvXqeP+klvFzXxhTt1IBGuMSZ1V5EWm/IXk8nZM8Zzq0r6ewdMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZlY4AEj8PCIpJzLwDqeyP8S3ibjFa7FFVp9kAbBbYN8FZGgPk
-	bRExS25egkzA9Koci1OCR6dzz4bw1Am8/Y79sAoQfwSk9yBmNsTbw0AzvUU4KRc=
-X-Gm-Gg: ASbGnctmvrJ2IJLAcm9u95zxejw7MlhvG9bedW6MVmJQMjq6PR0T2sJ+C/gvYLHLpEz
-	ObBSnSR/fMUaeIDnFgffQWEKzp1dogQYvw8hltP1I8OzTkb80ahpKA5gwIYpXBa7c8fFEuG7hpc
-	lkBmRPZn/16PmUg84qIPUaACx8bqeEKpvZB1QBZyUt7QB0GEehDDuDCCOzlJwiFHoK/5nEePP+0
-	veqE4iai7lJzY4PBubYxqO/TC+ipT4l+9I0FlXzNBOYfGOywCi01PDIcfPAeLCouSMBKLeQ4zCA
-	s1Gh7qFejsIJkiFHX9rbfV7dxtzwPvpxJtFgMygW6tBZivlOoiUxqaU//8qygL6678MsCZ96EAe
-	D6uhisLxBtF/6ibDgf0DhK/voyC5Q6w==
-X-Google-Smtp-Source: AGHT+IFOauWmzV5VTo8P00eam5tza1oS3n8d1LwySwXAoWJeZ+FWxgBAT6OBdbDfI53apvgsnPAh3w==
-X-Received: by 2002:a05:6000:4205:b0:39e:dce8:1c01 with SMTP id ffacd0b85a97d-39ee5b99f7emr245421f8f.12.1744789690290;
-        Wed, 16 Apr 2025 00:48:10 -0700 (PDT)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4f3ed7sm12862225e9.24.2025.04.16.00.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 00:48:09 -0700 (PDT)
-Date: Wed, 16 Apr 2025 09:48:07 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Oliver Neukum <oneukum@suse.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
- hcd_buffer_alloc()
-Message-ID: <20250416094807.2545efd8@mordecai>
-In-Reply-To: <522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
-References: <20250320154733.392410-1-ptesarik@suse.com>
-	<20250325134000.575794-1-ptesarik@suse.com>
-	<2025041110-starch-abroad-5311@gregkh>
-	<20250414090216.596ebd11@mordecai>
-	<522b3049-8e7f-41d4-a811-3385992a4d46@suse.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.48; x86_64-suse-linux-gnu)
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744789704; x=1776325704;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=7aW7Z4UKbxktPS4MaepHxqf+DbrSQTTsdz9FCAgfvEQ=;
+  b=jtdo3bTQBowiOkDN60u8K9OjEHn7led25Oh1sxGRZS57JL58crpURSkv
+   RJIQprEe0fvuUFCZoxr63o1G921tEUxqU1YhUoimilwNjwQ+7hSPjYt8N
+   bUgTBnQqfVUmIDRmfZCpqw69ciDMfcw+wCUvssLQdgGRXlEtytcVFatql
+   SHvbJ62NQzkPtY1uO0QBMqqQ2r8dDbU5SnOtp67+TknpddKTwU5XducXw
+   ENFqfySUBPQiZbFdOLudaUZbV0p01mdyHzdjFLMvXaFqc5X5ncvr0loFj
+   AxG/l7mgRCabwyggDiu5X4IITYJEIPCQcMioXPEN56x5bK64bkcijf3ev
+   Q==;
+X-CSE-ConnectionGUID: 40LsbEOEQRiOB0DgIF7Vtw==
+X-CSE-MsgGUID: zhfq6v8tSkSbamkypAuoSA==
+X-IronPort-AV: E=Sophos;i="6.15,215,1739833200"; 
+   d="scan'208";a="43559241"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 16 Apr 2025 09:48:19 +0200
+X-CheckPoint: {67FF60C3-51-2417938-F0170C2B}
+X-MAIL-CPID: C1F86517FBCAB0ED58083B4ED47BF749_2
+X-Control-Analysis: str=0001.0A006396.67FF60C0.0053,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BEFE7167BA8;
+	Wed, 16 Apr 2025 09:48:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744789695;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7aW7Z4UKbxktPS4MaepHxqf+DbrSQTTsdz9FCAgfvEQ=;
+	b=Utg1IVm2aLPjKEu3z8TbqZySUXUoHt++UW7xuELrTvjAmmm9tIhos26SKan/GalSkemTOL
+	Fk9h5nsoD/wH6jMTzwCBPmqzpNExikWK2RnVW9kY6WXcvvZALAu7F+ptEo5JCMJsdiFGUO
+	++Lfssy63Fl7cWgW8vnwmvJZzKjwYdcW9WwigXvLWmVeB+sdZXSdwZgMD4cpBN6L59xJEX
+	ZbJ0ISdTOXsQwmCd4jKnVU1LdVA0qHUePTEHqY2UtJo352NuL7OrOGsnoCKmTtRw2rd7aT
+	S3Jc6lbVm4iQjHSQYdOhg0RhSmEw/DwIsqKXtp2ePRx1Ez47eixZgLikWDKj8Q==
+Message-ID: <800a61d80a2c6cfa4a5a64d904a2127e60eafc29.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Joe Perches <joe@perches.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+ Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>, Vignesh
+ Raghavendra <vigneshr@ti.com>,  Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com, Andrew Lunn
+ <andrew@lunn.ch>
+Date: Wed, 16 Apr 2025 09:48:12 +0200
+In-Reply-To: <f3acd53796a44576408a2a14aa5baaed@perches.com>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <f3acd53796a44576408a2a14aa5baaed@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 15 Apr 2025 09:53:24 +0200
-Oliver Neukum <oneukum@suse.com> wrote:
+On Tue, 2025-04-15 at 09:11 -0700, Joe Perches wrote:
+>=20
+> On 2025-04-15 03:18, Matthias Schiffer wrote:
+> > Historially, the RGMII PHY modes specified in Device Trees have been
+> > used inconsistently, often referring to the usage of delays on the PHY
+> > side rather than describing the board; many drivers still implement=20
+> > this
+> > incorrectly.
+> >=20
+> > Require a comment in Devices Trees using these modes (usually=20
+> > mentioning
+> > that the delay is relalized
+>=20
+> realized
+>=20
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 784912f570e9d..57fcbd4b63ede 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -3735,6 +3735,17 @@ sub process {
+> >  			}
+> >  		}
+> >=20
+> > +# Check for RGMII phy-mode with delay on PCB
+> > +		if ($realfile =3D~ /\.dtsi?$/ && $line =3D~=20
+> > /^\+\s*(phy-mode|phy-connection-type)\s*=3D\s*"/ &&
+> > +		    !ctx_has_comment($first_line, $linenr)) {
+>=20
+> Not sure where $first_line comes from and unsure if this works on=20
+> patches rather than complete files.
+>=20
+> Does it?
 
-> On 14.04.25 09:02, Petr Tesarik wrote:
-> 
-> Hi,
->   
-> > That's the point. AFAICS there are _no_ in-tree callers that would pass
-> > GFP_DMA or GFP_DMA32 to hcd_buffer_alloc(), directly or indirectly. But
-> > nobody should be tempted to add the flag, because I cannot imagine how
-> > that would ever be the right thing to do.  
-> 
-> You do not dream about putting USB onto PCMCIA over Thunderbolt?
+Yes, it works both with patches and full files. I'm using ctx_has_comment()=
+ the
+same way existing checks do - I think $first_line refers to the start of th=
+e
+current context for patch files. I have also verified that it only matches =
+on
+comments directly above the phy-mode line in question.
 
-Oh, I do, and that's precisely why these GFP flags are no good. The
-address (and other) constraints imposed by different buses may not
-(and often do not) match any existing memory zone.
+Best,
+Matthias
 
-However, zone address ranges are determined statically at compile time,
-or latest at boot time (e.g. arm64). It's too late to adjust the limits
-when you hotplug a more constrained bus at run-time. And I haven't even
-mentioned bus bridges which add a non-zero offset to the address...
 
-> > I can change it back to mem_flags &= ~GFP_ZONEMASK to fix it silently;
-> > I simply thought that driver authors may appreciate a warning that
-> > they're trying to do something silly.  
-> 
-> People rarely appreciate warnings. I think we should limit them
-> to cases where something goes wrong or something unexpected happens.
 
-I'm certainly no expert on what is expected to happen if you include
-GFP_DMA in your HCD buffer allocation flags, but the current code will
-*ignore* it, unless the HCD uses PIO.
-
-I thought this was rather unexpected.
-
-> > Whatever works for you, but please keep in mind that there seems to be
-> > agreement among mm people that DMA and DMA32 zones should be removed
-> > from the kernel eventually.  
-> 
-> Well, if somebody finds a legitimate use case for these flags, the mm
-> people should deal with it. They are likelier to find a good solution than
-> all driver writers being forced into finding individual solutions.
-
-My goal is to provide an allocator that is a better match for the
-constraints defined by dma_mask, coherent_dma_mask and bus_dma_limit.
-For now, I'm trying to clean up some users of GFP_DMA and GFP_DMA32
-flags which look obviously incorrect.
-
-Petr T
+--=20
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
