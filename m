@@ -1,84 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1909B156F20;
-	Wed, 16 Apr 2025 15:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9E0156F20;
+	Wed, 16 Apr 2025 15:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744818219; cv=none; b=eYoRWJj04gcCFbA/NlJyug+0/xbnCkbL7gJUHDCbVnE4+L95Y/7P2VJKXJn6vIgsuyOZBHerZeWmgFE8XIScxQP8sWDcNCp3hw/sRjW0jbQR9YCWO1chkmBGvJNbKxVpjIso28IkMM2o1fCnHu4T1AH7VSR3IkssRPK/MNgn4R4=
+	t=1744818261; cv=none; b=cGgeU8/FqUy8+/+RlAq5f0Ah1kUkfDiBSKofOZvy9am56zlH/HF2FaR2VVzCBsvaefo/WWQPKW06Z1w6JE3QmQ278Uq039LzSbzlgGAWvz5R3lUqIJHq0UgtHYiijMn6MlBRbHVhrjaALmFI3sRMMZ+t/c8EN6N7JI0WEac/aAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744818219; c=relaxed/simple;
-	bh=OBcUm5mNN0B1SRivgz1mRLVUwpAL3jSBjzXAD8nZhng=;
+	s=arc-20240116; t=1744818261; c=relaxed/simple;
+	bh=DrlCq7H4f/BhvKoNnp89QVYukAc+8CBamz/LOL0QU24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l9aJovQsw3PogSLrX7wIZP3f7iq4ap9LBi1u5YZyfwLLrE8E4ZAsqe8MlFy900caxRY4oDpPfxcgFHu9pYwhQIg28h4gnSespln6G33dP9q2eRpoXftlcX0ef66HZqPIjD6lQVIKmLTZcn5xZVTa32zAH71Wc/i7I/3e6TuYDbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OcIRED3Q; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMDp+x47qf6TiabTLK6GFwSf+vFAc7njw8lSYkMiz+JHW+KymEZ6ROFAH+EV7T++f6klsrGEkTsQ3JWVq/H+/id7+UwLqpAMwjjtsOJ7uuJxvL1xdvJCgLvCXt6HPYA2j1lE8/WmyG+66pHSkc0iOQnyFTus39X9Y8xANci8m5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cEveKZhC; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OcIRED3Q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cEveKZhC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744818219; x=1776354219;
+  t=1744818260; x=1776354260;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=OBcUm5mNN0B1SRivgz1mRLVUwpAL3jSBjzXAD8nZhng=;
-  b=OcIRED3Q3Q+DOalFcsp5+cpWaYgzFZ9LIoB0LaOPEqfb4SGfEnhEzIRf
-   IIn39CGx1BhXM14cyETebvZ5U/NAQzwbAHOEwtx9D+t1mAsXuwI/1dd4A
-   pJ5u899Rkgk46SxUw/3MKWJ6f5kMdF5Z1GofTVir+HwNyNcYxX4KStOrd
-   Mb/E5OvwVuSO3bbNWEPptsByOwJAxdUZbaEZ8YUsT4duNpXY85QvXcE//
-   4vcnxhVmRl6mESwScnRaRU77KExv/ULpLQPwJtgPTrcSH6Upo/9xs/9X7
-   KJmrwVQomDALZPGPBQ05ans21rTxnecxzq2raLrjjCgxg/FQ/atAu7Znl
-   A==;
-X-CSE-ConnectionGUID: eheQvJT5S62rxaebcU0N/g==
-X-CSE-MsgGUID: qllN6/SvSpen1IcjMmeY5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46387577"
+  bh=DrlCq7H4f/BhvKoNnp89QVYukAc+8CBamz/LOL0QU24=;
+  b=cEveKZhCh5kQ82YguAFQpNw1bVN4TCgGpX/hqpcVNHgx4P3lPg6m6N5E
+   UD353cZhh5vp8wnMKBhac7gyFmHy72aBBVgSp9qQM7qHXIOkghL7wARCj
+   i4D+yqD8nZs/ywLhKvpdwQvwAIpccU01IPOTFRyhTKihhkmVXD64MVm1B
+   hfXEb4SRerH3WwH1fqyMsbVsS/5/HwZik9LdflfnZgHMpjVUXOb2f7Kjc
+   /clp1LzPgidOxFsMe1MGiPVHGTIK0K0cqUZnrXhXKSZKccg197dVh8leD
+   77RaXkqm1JIyKfO7oHOnQNpyO1foBKhO1jiAZk1D0nz3LTzGQFVs0HvvL
+   w==;
+X-CSE-ConnectionGUID: qDQFF9XJSxeY8WyiJWAYjQ==
+X-CSE-MsgGUID: 3Cutb464SiaceBJ7bsz4Zw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46502077"
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="46387577"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:43:38 -0700
-X-CSE-ConnectionGUID: O5DwOgn1Sr6qC2ZH0OWrsg==
-X-CSE-MsgGUID: m/g36ZQZTJGI1z1d2eSJ2Q==
+   d="scan'208";a="46502077"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:44:19 -0700
+X-CSE-ConnectionGUID: vl5eVdnbSVeNKgTS7iiEMg==
+X-CSE-MsgGUID: JEjETB80Q4Od2ZkKQAt2rQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
-   d="scan'208";a="131421708"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 08:43:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u54v9-0000000Ctxs-1s8y;
-	Wed, 16 Apr 2025 18:43:27 +0300
-Date: Wed, 16 Apr 2025 18:43:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Jaya Kumar <jayakumar.alsa@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Mark Brown <broonie@kernel.org>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	David Rhodes <drhodes@opensource.cirrus.com>,
-	liujing <liujing@cmss.chinamobile.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Andres Urian Florez <andres.emb.sys@gmail.com>,
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Amadeusz =?utf-8?B?U8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	sound-open-firmware@alsa-project.org
-Subject: Re: [PATCH 00/31] sound: Phase out hybrid PCI devres API
-Message-ID: <Z__QH4pfOYKhmpvm@smile.fi.intel.com>
-References: <20250416131241.107903-1-phasta@kernel.org>
- <Z__OC5NDkQYIHNmL@smile.fi.intel.com>
+   d="scan'208";a="167693119"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 16 Apr 2025 08:44:16 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u54vs-000JzQ-2v;
+	Wed, 16 Apr 2025 15:44:12 +0000
+Date: Wed, 16 Apr 2025 23:43:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vidya Sagar <vidyas@nvidia.com>, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, cassel@kernel.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, treding@nvidia.com,
+	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
+	vidyas@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
+Message-ID: <202504162332.fwaFxVrL-lkp@intel.com>
+References: <20250410194552.944818-1-vidyas@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,38 +69,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z__OC5NDkQYIHNmL@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250410194552.944818-1-vidyas@nvidia.com>
 
-On Wed, Apr 16, 2025 at 06:34:35PM +0300, Andy Shevchenko wrote:
-> On Wed, Apr 16, 2025 at 03:12:10PM +0200, Philipp Stanner wrote:
+Hi Vidya,
 
-> > a year ago we spent quite some work trying to get PCI into better shape.
-> > Some pci_ functions can be sometimes managed with devres, which is
-> > obviously bad. We want to provide an obvious API, where pci_ functions
-> > are never, and pcim_ functions are always managed.
-> > 
-> > Thus, everyone enabling his device with pcim_enable_device() must be
-> > ported to pcim_ functions. Porting all users will later enable us to
-> > significantly simplify parts of the PCI subsystem. See here [1] for
-> > details.
-> > 
-> > This patch series does that for sound.
-> 
-> AFAIK the ASoC and ALSA maintained by different people and perhaps you would
-> need to split, but I'm not the guy in charge, so wait for them to tell you
-> their preferences.
+kernel test robot noticed the following build warnings:
 
-Seems split is a good to have as I just looked to all of them and ALSA are
-pretty straightforward, while for every patch in ASoC I have a comment.
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.15-rc2 next-20250416]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So, here is a formal tag for all ALSA patches. Feel free to send a v2
-with them and the tag.
+url:    https://github.com/intel-lab-lkp/linux/commits/Vidya-Sagar/PCI-dwc-tegra194-Broaden-architecture-dependency/20250411-035134
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250410194552.944818-1-vidyas%40nvidia.com
+patch subject: [PATCH V2] PCI: dwc: tegra194: Broaden architecture dependency
+config: arm64-kismet-CONFIG_PHY_TEGRA194_P2U-CONFIG_PCIE_TEGRA194_EP-0-0 (https://download.01.org/0day-ci/archive/20250416/202504162332.fwaFxVrL-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250416/202504162332.fwaFxVrL-lkp@intel.com/reproduce)
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504162332.fwaFxVrL-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U when selected by PCIE_TEGRA194_EP
+   WARNING: unmet direct dependencies detected for PHY_TEGRA194_P2U
+     Depends on [n]: ARCH_TEGRA_194_SOC [=n] || ARCH_TEGRA_234_SOC [=n] || COMPILE_TEST [=n]
+     Selected by [y]:
+     - PCIE_TEGRA194_EP [=y] && PCI [=y] && ARCH_TEGRA [=y] && (ARM64 [=y] || COMPILE_TEST [=n]) && PCI_ENDPOINT [=y]
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
