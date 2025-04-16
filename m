@@ -1,180 +1,221 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A10F23FC7D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DDA233713
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744805646; cv=none; b=Kg2gZ4VaVCQEyFHM5Iv+aOyTTJ51BA9+Sz58JbQDCGtzhTRkcZyXQ4FvzYsf77iQtLS2E8PLK1x4Y2d7/5827ae0SGkRMKWo34jFoiBiJFAwxyLHXmgkzVIzN6v0TngZiAky80x2X77vMQazbi/XyYTApRW1/4K52OgaSo7U1uY=
+	t=1744805713; cv=none; b=k4Jqu6NBdIIColHZYGU6xKa+d1THO+53on60LeBB3gp5tr4PNyOuQxAtrYR1E1/ZOvs2qLjezyEF8v8MSEgGd0Tz+d29lCub3IKMHi36OhBGPIzzLPOiCjPO7BJCszFH/LT3/D2obbGLpGPCahZCGasd1Ow7qXrAFAI6vKO+mnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744805646; c=relaxed/simple;
-	bh=8ZR2LD+reQ/Dz1RzU5SYkbXhaZByyYvQbKVpzYuVc1M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qXPsPfQPIsOYFewI+K3O0oa1Cx0pZpRuwJkpmM73UWeaLfCTO2oQZqXQR5PBGoDHP/Q94mWA/PsXA6pdAvl2TPchCx8/W5o0TC2ovQg2lsWyoJ4yP5yuKGi876W4FQq0bi1D7RM0RJo/yqF5okw22ZBeyahW69ek3ryaYRYn6XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XvuYr27O; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744805713; c=relaxed/simple;
+	bh=fUcG73S1rwZIXLkdw9siOhfKPOq0DiFzEXrcLyLFtiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IhYlxNGwrcoEYHbESbGAhKsKNqTXnJPo/Q5ZPOMdxjdraY+TWPlFsBMC56u0AhEZRREsixGbtM8VLmd+rVZR5e3gzzzikvg90ReXncIRxKkDLHVWTNPA7HsWwXXl7ucNnwh7Mf1bDfUTIseV98wL0+EcKfrJEI/VWnUwnErnOO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fbx+fT+2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=B1MygTTN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QCQMg/xs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SKjH0wzh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XvuYr27O"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mcgu000537
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:14:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=hoicvJayGfRbnVNr+kDnUFXz
-	fuMtcH6jdsL2r7v/8DQ=; b=XvuYr27OqXZK4noaP6C9iJspNwv7GtnmKDByE1+k
-	lCem9xCUKbOJPxbBHJMGuQfqUEtCH7cuNUFlGk7PvXertbejzlTdW+cZKNMdZ2HD
-	z0PrUKrB2GFUOqF25conwqWsHMxQpQdLsJkzUBTtlRr0iZVV0V9eNWvOGfcNtcEa
-	EW9yDN+qLyawJjjQcgamwDXjqq28hzpJ6ivWHXk3NyNEkYqfh5EjotxZZ+xHeM0a
-	/LPYDjGRlu/wc6KCmpIC/WYhgnvxVUiyEyUuqxYhQvbgmbrgk5+7Q22Fpfq9Ao14
-	g9g8llaHSbon3/WiW5+L7xhsYDiifiq/Una4P8IuNtaj9Q==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yf4vkj54-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 12:14:04 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-af8e645a1d1so4577677a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:14:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744805643; x=1745410443;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hoicvJayGfRbnVNr+kDnUFXzfuMtcH6jdsL2r7v/8DQ=;
-        b=qEtKbIoiZOovjn79EuTGrCd00nfrGaG8kwaimFkmi0oj4oyYzFyyaECj8ffOYD9jOk
-         9OJcau1CBvrUKgz1DkYSb9SPkDdlTEXXXDSCy2zH9Ud41Q2yX9aMJRpjqEWW0wkowsPm
-         FLN/ecXMhWcMOZS5Joq94sLWtZQ9vmWt/ZFUB1lrA8SDz3YYYBJasmlPPJtKP/tap8ed
-         dCs3FifTFz1BpnuxA0Nhv4dkxFjugsauFJZaE7yCiqmiA1R1YdD6zBu8eO6OBOQavySP
-         2rJwPjPStw014P5levWYYmEkIMj6w9Q3GESkp2ar08O5Ti+fzjgmFcsoMc+CqrsspGiD
-         IDug==
-X-Forwarded-Encrypted: i=1; AJvYcCWQo4FJqOJyE/QqrLoXzoKTOyjJBkIFNto53r0kblX6uNrRxVrBVOaVdC6HV2myzLkLwLGxKTs13Q3tijA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlVVJFNtDypgiPxdUo+YGw3xwJb5LCq8+PDlt2ra21Oeqaj7wv
-	1PJRz6Nuy+5i5NBAepY2TvzdintCTOWITFIv0MNDOYuDCRUvfmGivy+tbhZ9anyXqBqSSbxZILv
-	SDueA8h14qGN9/vmNkqjcyVQwi//56aPe9TOIz+SFhiQuG0LD1mmcAI3/Lv43JsagB6+Nzp5A+d
-	+4z4vtdokiWieecpT5NJXxb2l8aJ1AkThqKAmLEg==
-X-Gm-Gg: ASbGncuuRgvoENWUcH7tBvN1saUiUSA/jl4VgeB/OnJ4/Lp90T5gXrbIZI+KMpl/K5Y
-	Aq/mk7YSm3tUpgwI1jIIJqbkYmuuPb8ijlHzd+FKdXlRSKi3F4hYqytj8n4zjIcrBQu9RSMYXbJ
-	HfZBSMahTR06k0HA8/6N2Pj1Gj
-X-Received: by 2002:a17:90b:498b:b0:2fe:a336:fe63 with SMTP id 98e67ed59e1d1-3086415ea28mr2431955a91.24.1744805643291;
-        Wed, 16 Apr 2025 05:14:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBAO/IXJsIRD6bGBDFHb/vhg2Pt0r5xCrzct5z2vNsXzqxMqL9va5fjULmWQG3bJv/Ec3+IT1w+RLtSRXwQS4=
-X-Received: by 2002:a17:90b:498b:b0:2fe:a336:fe63 with SMTP id
- 98e67ed59e1d1-3086415ea28mr2431917a91.24.1744805642822; Wed, 16 Apr 2025
- 05:14:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fbx+fT+2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="B1MygTTN";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QCQMg/xs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SKjH0wzh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B4763211A6;
+	Wed, 16 Apr 2025 12:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744805709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CUSGZvjin/s/VaKHZ8mATatJ2r57hyBMQ2bLBcaP+pk=;
+	b=fbx+fT+2ht2mJM5Hyie5E86RQ84yRcOT947SBzCLskeBmxwZHXUrCpqKn2ZT8M6MRTjZCa
+	Koc0+pkAhL1as5+OHw22AnEV1LIj/MKGMQcHRw2O+9k0kxwEyEDlAsf2v07w8O8JocXHnH
+	NpH+zSa3AZN3U52PIIliyKT0hXOgheg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744805709;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CUSGZvjin/s/VaKHZ8mATatJ2r57hyBMQ2bLBcaP+pk=;
+	b=B1MygTTN+SKd3yDU9W6cUfh9g+zfXOY1QS19+AY/5O273l5bpiZxI1iqrl7CRtDXLHbhXg
+	ocWd03RwR8KphQCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="QCQMg/xs";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=SKjH0wzh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744805708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CUSGZvjin/s/VaKHZ8mATatJ2r57hyBMQ2bLBcaP+pk=;
+	b=QCQMg/xsQA1Zq9jj5Wxnm6Ox9QCyT5JoTuHCtNpcJZhy4T1L53ZfFm/GCQBSJr9wCRmqDw
+	7cQfMXUzTbXRSx+MTFS2sklGnw8AXau7b6IgGuHf0XxR7mG+UKPQu6m3+BPS8qGE7NzocQ
+	IqIrmZcAvt4hp/3jn8NPEyVVVjRk3Gg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744805708;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CUSGZvjin/s/VaKHZ8mATatJ2r57hyBMQ2bLBcaP+pk=;
+	b=SKjH0wzhK7TWVezIlxsj0bfdzjX4AgRblfX5IXsUHw5NKgPTFS9n9OxtGViFnKCR0ergLr
+	xWTf1kfNbD0dZ7CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4DD28139A1;
+	Wed, 16 Apr 2025 12:15:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id zuIOEUyf/2cgJQAAD6G6ig
+	(envelope-from <jdelvare@suse.de>); Wed, 16 Apr 2025 12:15:08 +0000
+Date: Wed, 16 Apr 2025 14:15:06 +0200
+From: Jean Delvare <jdelvare@suse.de>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: Joel Stanley <joel@jms.id.au>, Henry Martin <bsdhenrymartin@gmail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>, Andrew Geissler
+ <geissonator@yahoo.com>, Ninad Palsule <ninad@linux.ibm.com>, Patrick
+ Venture <venture@google.com>, Robert Lippert <roblip@gmail.com>,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/7] soc: aspeed: lpc-snoop: Don't disable channels that
+ aren't enabled
+Message-ID: <20250416141506.2d910334@endymion>
+In-Reply-To: <20250411-aspeed-lpc-snoop-fixes-v1-2-64f522e3ad6f@codeconstruct.com.au>
+References: <20250411-aspeed-lpc-snoop-fixes-v1-0-64f522e3ad6f@codeconstruct.com.au>
+	<20250411-aspeed-lpc-snoop-fixes-v1-2-64f522e3ad6f@codeconstruct.com.au>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.43; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
- <20250410090102.20781-5-quic_nitirawa@quicinc.com> <pur4y63xhfmqlyymg4pehk37ry4gg22h24zceoqjbsxp3hj4yf@4kptase3c4qp>
- <317faeaa-3130-4e28-8c5d-441a76aa79b4@quicinc.com> <CAO9ioeXnnbNzriVOYPUeBiWdrPfYUcMk+pVWYv0vZpJbFeByoQ@mail.gmail.com>
- <2820908b-4548-4e0a-94b2-6065cb5ff1f3@quicinc.com> <c2ec6b7c-421d-43c3-8c0a-de4f7bdd867c@oss.qualcomm.com>
- <a24ff510-2afd-4aa7-a026-199fb6d87287@quicinc.com>
-In-Reply-To: <a24ff510-2afd-4aa7-a026-199fb6d87287@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Wed, 16 Apr 2025 15:13:51 +0300
-X-Gm-Features: ATxdqUGiC1BHfSn5Eklp7gKFpyWYSjnAPEw8Fg9jZzGqaxHriewAs1J3z4zxcto
-Message-ID: <CAO9ioeUDzYLMvqmsOQ-VfgLQLavHqn=QVYxyHzetjSfmhjKFjw@mail.gmail.com>
-Subject: Re: [PATCH V3 4/9] phy: qcom-qmp-ufs: Refactor UFS PHY reset
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
-        konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Proofpoint-ORIG-GUID: Di3ukkizCLv10pPokexeOgzCUBPLv-Zc
-X-Authority-Analysis: v=2.4 cv=IZ6HWXqa c=1 sm=1 tr=0 ts=67ff9f0c cx=c_pps a=rz3CxIlbcmazkYymdCej/Q==:117 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=E4AxlzQU9QZxWW8QZIgA:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Di3ukkizCLv10pPokexeOgzCUBPLv-Zc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_04,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0 adultscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160100
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B4763211A6
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,yahoo.com];
+	FREEMAIL_CC(0.00)[jms.id.au,gmail.com,9elements.com,yahoo.com,linux.ibm.com,google.com,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,codeconstruct.com.au:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, 16 Apr 2025 at 12:08, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
->
->
->
-> On 4/15/2025 2:59 PM, Dmitry Baryshkov wrote:
-> > On 14/04/2025 23:34, Nitin Rawat wrote:
-> >>
-> >>
-> >> On 4/11/2025 4:38 PM, Dmitry Baryshkov wrote:
-> >>> On Fri, 11 Apr 2025 at 13:50, Nitin Rawat <quic_nitirawa@quicinc.com>
-> >>> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 4/11/2025 1:38 AM, Dmitry Baryshkov wrote:
-> >>>>> On Thu, Apr 10, 2025 at 02:30:57PM +0530, Nitin Rawat wrote:
-> >>>>>> Refactor the UFS PHY reset handling to parse the reset logic only
-> >>>>>> once
-> >>>>>> during probe, instead of every resume.
-> >>>>>>
-> >>>>>> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
-> >>>>>> qmp_ufs_probe to avoid unnecessary parsing during resume.
-> >>>>>
-> >>>>> How did you solve the circular dependency issue being noted below?
-> >>>>
-> >>>> Hi Dmitry,
-> >>>> As part of my patch, I moved the parsing logic from qmp_phy_power_on to
-> >>>> qmp_ufs_probe to avoid unnecessary parsing during resume. I'm uncertain
-> >>>> about the circular dependency issue and whether if it still exists.
-> >>>
-> >>> It surely does. The reset controller is registered in the beginning of
-> >>> ufs_qcom_init() and the PHY is acquired only a few lines below. It
-> >>> creates a very small window for PHY driver to probe.
-> >>> Which means, NAK, this patch doesn't look acceptable.
-> >>
-> >> Hi Dmitry,
-> >>
-> >> Thanks for pointing this out. I agree that it leaves very little time
-> >> for the PHY to probe, which may cause issues with targets where
-> >> no_pcs_sw_reset is set to true.
-> >>
-> >> As an experiment, I kept no_pcs_sw_reset set to true for the SM8750,
-> >> and it caused bootup probe issues in some of the iterations I ran.
-> >>
-> >> To address this, I propose updating the patch to move the
-> >> qmp_ufs_get_phy_reset call to phy_calibrate, just before the
-> >> reset_control_assert call.
-> >
-> > Will it cause an issue if we move it to phy_init() instead of
-> > phy_calibrate()?
->
-> Hi Dmitry,
->
-> Thanks for suggestion.
-> Phy_init is invoked before phy_set_mode_ext and ufs_qcom_phy_power_on,
-> whereas calibrate is called after ufs_qcom_phy_power_on. Keeping the UFS
-> PHY reset in phy_calibrate introduces relatively more delay, providing
-> more buffer time for the PHY driver probe, ensuring the UFS PHY reset is
-> handled correctly the first time.
+On Fri, 11 Apr 2025 10:38:32 +0930, Andrew Jeffery wrote:
+> Mitigate e.g. the following:
+> 
+>     # echo 1e789080.lpc-snoop > /sys/bus/platform/drivers/aspeed-lpc-snoop/unbind
+>     ...
+>     [  120.363594] Unable to handle kernel NULL pointer dereference at virtual address 00000004 when write
+>     [  120.373866] [00000004] *pgd=00000000
+>     [  120.377910] Internal error: Oops: 805 [#1] SMP ARM
+>     [  120.383306] CPU: 1 UID: 0 PID: 315 Comm: sh Not tainted 6.15.0-rc1-00009-g926217bc7d7d-dirty #20 NONE
+>     ...
+>     [  120.679543] Call trace:
+>     [  120.679559]  misc_deregister from aspeed_lpc_snoop_remove+0x84/0xac
+>     [  120.692462]  aspeed_lpc_snoop_remove from platform_remove+0x28/0x38
+>     [  120.700996]  platform_remove from device_release_driver_internal+0x188/0x200
+>     ...
+> 
+> Fixes: 9f4f9ae81d0a ("drivers/misc: add Aspeed LPC snoop driver")
+> Cc: stable@vger.kernel.org
+> Cc: Jean Delvare <jdelvare@suse.de>
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-snoop.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-snoop.c b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> index bfa770ec51a889260d11c26e675f3320bf710a54..e9d9a8e60a6f062c0b53c9c02e5d73768453998d 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-snoop.c
+> @@ -58,6 +58,7 @@ struct aspeed_lpc_snoop_model_data {
+>  };
+>  
+>  struct aspeed_lpc_snoop_channel {
+> +	bool enabled;
+>  	struct kfifo		fifo;
+>  	wait_queue_head_t	wq;
+>  	struct miscdevice	miscdev;
+> @@ -190,6 +191,9 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  	const struct aspeed_lpc_snoop_model_data *model_data =
+>  		of_device_get_match_data(dev);
+>  
+> +	if (lpc_snoop->chan[channel].enabled)
+> +		return -EBUSY;
 
-We are requesting the PHY anyway, so the PHY driver should have probed
-well before phy_init() call. I don't get this comment.
+This isn't supposed to happen, right? WARN_ON() may be appropriate.
 
->
-> Moving the calibration to phy_init shouldn't cause any issues. However,
-> since we currently don't have an initialization operations registered
-> for init, we would need to add a new PHY initialization ops if we decide
-> to move it to phy_init.
+> +
+>  	init_waitqueue_head(&lpc_snoop->chan[channel].wq);
+>  	/* Create FIFO datastructure */
+>  	rc = kfifo_alloc(&lpc_snoop->chan[channel].fifo,
+> @@ -236,6 +240,8 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  		regmap_update_bits(lpc_snoop->regmap, HICRB,
+>  				hicrb_en, hicrb_en);
+>  
+> +	lpc_snoop->chan[channel].enabled = true;
+> +
+>  	return 0;
+>  
+>  err_misc_deregister:
+> @@ -248,6 +254,9 @@ static int aspeed_lpc_enable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  				     int channel)
+>  {
+> +	if (!lpc_snoop->chan[channel].enabled)
+> +		return;
+> +
+>  	switch (channel) {
+>  	case 0:
+>  		regmap_update_bits(lpc_snoop->regmap, HICR5,
+> @@ -263,6 +272,8 @@ static void aspeed_lpc_disable_snoop(struct aspeed_lpc_snoop *lpc_snoop,
+>  		return;
+>  	}
+>  
+> +	lpc_snoop->chan[channel].enabled = false;
+> +	/* Consider improving safety wrt concurrent reader(s) */
+>  	misc_deregister(&lpc_snoop->chan[channel].miscdev);
+>  	kfifo_free(&lpc_snoop->chan[channel].fifo);
+>  }
+> 
 
-Yes. I don't see it as a problem. Is there any kind of an issue there?
-
->
-> Please let me know if this looks fine to you, or if you have any
-> suggestions. I am open to your suggestions.
-
-phy_init() callback
+Acked-by: Jean Delvare <jdelvare@suse.de>
 
 -- 
-With best wishes
-Dmitry
+Jean Delvare
+SUSE L3 Support
