@@ -1,207 +1,160 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C047518C03F;
-	Wed, 16 Apr 2025 07:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FDB22C35E
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789611; cv=none; b=rtSXknhVuslFa98VocHuf0Hj7/F/L+W4WA2F/tE0swAOHx2JL9xOogAjdAQ2Uke2O11hKfAQC+R31Bl+bw3URlkopslvcoCKGIavw7ezat+RkC1zkG5ldwkO4atFwpENIckvX5wawiZM6Wz2yVXrJeWrxRatcnjfi7mjld5lbPI=
+	t=1744789620; cv=none; b=Qhq3/G/rvAUmpPzP841SIO/NHwRc//BygNNf45W9iTY2M4AhjPxs66CR+yDwiW9hhDSDGah7PViAXG5INPzouos4i+f7Zg+9gBmrjyR8Ax5fd4t8XH9mOcWI1AWncXCwPkflQr3wEVuZRw7iQfXFGR7xNnHbVeIKuN6ZSueQIRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789611; c=relaxed/simple;
-	bh=9iuxd23c4Azq3pgqab6ru8KCpyx/Ar+y1vYOjgF74fo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jVyCFE26QiDaaLyGxX8JUYUCgAo6tWQ3l3TlGuGbSu6zoR8mimxePMqV257KhcmWjsRwmcbBXE22tmW35y27V5N3uv7zChwYezlloztxdvue/IJtswGRWhqi23CuFVgEIoGaqQRp1S8tvYHzWdpUleqFPsr4hQ35xvwXflqEmVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n1xHoGKT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744789620; c=relaxed/simple;
+	bh=Woiis248jlZyFcV6c0KJ2XRceoaJiE3r8gMR3OmXAq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pSb2dSet82BAQgpcKWI1IdwIG+stcI8FQWUGowt30Dn55STudsaKclnOITK3lKfCTFphenGVDGtTSzL1FZYOMItB3lZYuyNQC9/993g3+1+yslpfGiKz+TYavR65pGJU3mi2+W4oaASpw9HN/FJzR4MIZrlyVrK9EurWGnZ2GEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GlBnJ4A8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n1xHoGKT"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7JMwQ002562;
-	Wed, 16 Apr 2025 07:46:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LmLSFpd1t81sYP0HOtR0SOPScwxuSgEHxikwpDuOc38=; b=n1xHoGKTnwHqE90k
-	8R1lTDdUyXBJzt/BxDd/N89qIlOcPdoP3OD03ghqosgTtriU/ZLkXvLYxHoYBTsr
-	lQ5h0ikAuhq5VAADhSH1S0Dla7gJ3o1kyRgQ+9jZ4fQ4ssvTQlXFycvUKz4KeUpf
-	2nNhtSqtGxwJ6/6gXizEeqUO0gzBO2lm3iItzvKNFq0lQNOszmUSB8AVF6Sce5qj
-	upFnP0t5BeGocGcmV9LyzzyrXOfHfWsJvgvLcS1dKZgG9H7oeENQKJjfv7dt4Ef2
-	lknvAEcH3GntwScd730dhFWqoRTMUJDcvg7aKvcrDC3QI+B/y5t2Oiru36cIUrjn
-	qGRdJg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygj9aq3v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:46:42 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53G7kek5008991
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:46:40 GMT
-Received: from [10.204.101.50] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
- 2025 00:46:37 -0700
-Message-ID: <35ffb534-fb8d-4023-1ac0-cb1f37d0448a@quicinc.com>
-Date: Wed, 16 Apr 2025 13:16:24 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlBnJ4A8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744789617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3uuzpXIRkdIf9HgwyCsnLAQ1Zty68iXHOJ7gPJ3rwGI=;
+	b=GlBnJ4A82S2FEJ+0jM23oiVDR9vJvrPTaapV2htlUObIhbPTRXyo4wbEFBFsWUBU9rcbWh
+	bwSOWFJaUe0HEGPpiAXiGthuY7J5KuKyG50x0SktoBz/R/qZi/pypa0fQPHtqaArpzNZ14
+	6I86jF9NUk1XhSyyZS5FHnMbfVpmRgo=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-401-vaVfggc-PC6anyfUIexjMg-1; Wed, 16 Apr 2025 03:46:56 -0400
+X-MC-Unique: vaVfggc-PC6anyfUIexjMg-1
+X-Mimecast-MFC-AGG-ID: vaVfggc-PC6anyfUIexjMg_1744789615
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2254bdd4982so85813045ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 00:46:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744789615; x=1745394415;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3uuzpXIRkdIf9HgwyCsnLAQ1Zty68iXHOJ7gPJ3rwGI=;
+        b=SVmZEil6u2yg5AhbTjGl/p4GN+JIlHZVuegS1rALggH9/2GoA7TEnGJ6M1KUt2eP+A
+         RwRzvAj7cZFuG33kXxxst5CkBJq0gO1LAdVRB6OBYCaEpGuaDBU9fmkva+XKDBIPU8y6
+         zBlPMTBHXoUfGbbkJM54s+KcV77wuvEGTj6g/GXBvvVBcAU+oMefCBB0oco7zBFC7DA4
+         9cjKgKsG1ewaDebCfZQQrdf8ZSViHC6kWIuDyjDcMFKvby5gNuabrVti8UI6MeMBVacg
+         OYSTowR2dv3r9IGXtv404oT3CGZPPZsSDtA7tDzOrWU7Iq3XCJrkSE1WRlz9uD4K4KPT
+         fFwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAeaBdI88eEzTpT5nNw126WhfNlayNei9HKHi/WyeLUE5QGrSURmsx6mBTsLkkFglYJ5tN8lH2kD3X1Go=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9ZrWqDPjE9qxykk+2V8ZREcqZRuNa1YwZtwyLCpmHKARTCRdD
+	afQsC4tPM7Bq9lAcPX+sRjMTMW5y9sGRhnclsJPVdpb1dXQ15on+CoR+3o8NyRxR+fTfA7Km151
+	lbcDyL6T2CYDEdiA3jRNVkO8RbfluPqgoJJlX06gmOabjJ5Zmm0yrsZlXur6648PPTWk/CPKE1h
+	2WrRNb8Y94ka+Of6sKpe4PMhyT+ihmDVcTBsco
+X-Gm-Gg: ASbGnct0lUtAkBteFq6IDi0n7NIWRyQ2tQJzHQDRG+uk3LwQ3wpLve3JyZQoMGhCOGv
+	XUoKnnCiP7jGgxwImMeZXHC9zs5K0vhPKRhpmiRYaFrtVOcQcwmtEoI32EQmvbwPyhu0m
+X-Received: by 2002:a17:903:32c9:b0:21f:52e:939e with SMTP id d9443c01a7336-22c35912212mr15797655ad.28.1744789614835;
+        Wed, 16 Apr 2025 00:46:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IErjgPg3L39vqGFFK6Rdj2WvOpVA1dDcQP124r0ZOZ4IRpEvlOKOgz7Fujmr5sSexyffpGWZnI6AM2k2Ni2zcE=
+X-Received: by 2002:a17:903:32c9:b0:21f:52e:939e with SMTP id
+ d9443c01a7336-22c35912212mr15797285ad.28.1744789614412; Wed, 16 Apr 2025
+ 00:46:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v6 3/7] media: platform: qcom/iris: introduce optional
- controller_rst_tbl
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
- <20250415-topic-sm8x50-iris-v10-v6-3-8ad319094055@linaro.org>
-Content-Language: en-US
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <20250415-topic-sm8x50-iris-v10-v6-3-8ad319094055@linaro.org>
+References: <20250415074341.12461-1-minhquangbui99@gmail.com>
+ <20250415074341.12461-4-minhquangbui99@gmail.com> <20250415212709.39eafdb5@kernel.org>
+ <1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
+In-Reply-To: <1603c373-024d-4ec2-b655-b9e7fb942bba@gmail.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 16 Apr 2025 15:46:42 +0800
+X-Gm-Features: ATxdqUHhk7SJXf3iQ5yHeMNHj2FuWUp_PAPo48ZoR1bRo43UlB38GKCpvPtEiUA
+Message-ID: <CACGkMEvceXT+=HJRRe6D3Zk3k40E2ADJiXNb4qqAYm=PZnxNpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selftests: net: add a virtio_net deadlock selftest
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, virtualization@lists.linux.dev, 
+	"Michael S . Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	John Fastabend <john.fastabend@gmail.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	"David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: -feYHIRc5FD7k4q5k1yK9IPvfm94OyJe
-X-Authority-Analysis: v=2.4 cv=PruTbxM3 c=1 sm=1 tr=0 ts=67ff6062 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=1Y22SnrsS0-b5OIS1qAA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: -feYHIRc5FD7k4q5k1yK9IPvfm94OyJe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
- impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160063
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 16, 2025 at 2:54=E2=80=AFPM Bui Quang Minh <minhquangbui99@gmai=
+l.com> wrote:
+>
+> On 4/16/25 11:27, Jakub Kicinski wrote:
+> > On Tue, 15 Apr 2025 14:43:41 +0700 Bui Quang Minh wrote:
+> >> +def setup_xsk(cfg, xdp_queue_id =3D 0) -> bkg:
+> >> +    # Probe for support
+> >> +    xdp =3D cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=3DFalse=
+)
+> >> +    if xdp.ret =3D=3D 255:
+> >> +        raise KsftSkipEx('AF_XDP unsupported')
+> >> +    elif xdp.ret > 0:
+> >> +        raise KsftFailEx('unable to create AF_XDP socket')
+> >> +
+> >> +    return bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} {xdp_=
+queue_id}',
+> >> +               ksft_wait=3D3)
+> >> +
+> >> +def check_xdp_bind(cfg):
+> >> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+> >> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+> >> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+> >> +
+> >> +def check_rx_resize(cfg, queue_size =3D 128):
+> >> +    rx_ring =3D _get_rx_ring_entries(cfg)
+> >> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+> >> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+> > Unfortunately this doesn't work on a basic QEMU setup:
+> >
+> > # ethtool -G eth0 rx 128
+> > [   15.680655][  T287] virtio_net virtio2 eth0: resize rx fail: rx queu=
+e index: 0 err: -2
+> > netlink error: No such file or directory
+> >
+> > Is there a way to enable more capable virtio_net with QEMU?
 
+What's the qemu command line and version?
 
-On 4/15/2025 7:17 PM, Neil Armstrong wrote:
-> Introduce an optional controller_rst_tbl use to store reset lines
-> used to reset part of the controller.
-> 
-> This is necessary for the vpu3 support, when the xo reset line
-> must be asserted separately from the other reset line
-> on power off operation.
-> 
-> Factor the iris_init_resets() logic to allow requesting
-> multiple reset tables.
-> 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/media/platform/qcom/iris/iris_core.h       |  2 ++
->  .../platform/qcom/iris/iris_platform_common.h      |  2 ++
->  drivers/media/platform/qcom/iris/iris_probe.c      | 39 +++++++++++++++-------
->  3 files changed, 31 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
-> index 37fb4919fecc62182784b4dca90fcab47dd38a80..aeeac32a1f6d9a9fa7027e8e3db4d95f021c552e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_core.h
-> +++ b/drivers/media/platform/qcom/iris/iris_core.h
-> @@ -43,6 +43,7 @@ struct icc_info {
->   * @clock_tbl: table of iris clocks
->   * @clk_count: count of iris clocks
->   * @resets: table of iris reset clocks
-> + * @controller_resets: table of controller reset clocks
->   * @iris_platform_data: a structure for platform data
->   * @state: current state of core
->   * @iface_q_table_daddr: device address for interface queue table memory
-> @@ -82,6 +83,7 @@ struct iris_core {
->  	struct clk_bulk_data			*clock_tbl;
->  	u32					clk_count;
->  	struct reset_control_bulk_data		*resets;
-> +	struct reset_control_bulk_data		*controller_resets;
->  	const struct iris_platform_data		*iris_platform_data;
->  	enum iris_core_state			state;
->  	dma_addr_t				iface_q_table_daddr;
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> index f6b15d2805fb2004699709bb12cd7ce9b052180c..fdd40fd80178c4c66b37e392d07a0a62f492f108 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> @@ -156,6 +156,8 @@ struct iris_platform_data {
->  	unsigned int clk_tbl_size;
->  	const char * const *clk_rst_tbl;
->  	unsigned int clk_rst_tbl_size;
-> +	const char * const *controller_rst_tbl;
-> +	unsigned int controller_rst_tbl_size;
->  	u64 dma_mask;
->  	const char *fwname;
->  	u32 pas_id;
-> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-> index aca442dcc153830e6252d1dca87afb38c0b9eb8f..4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_probe.c
-> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
-> @@ -91,25 +91,40 @@ static int iris_init_clocks(struct iris_core *core)
->  	return 0;
->  }
->  
-> -static int iris_init_resets(struct iris_core *core)
-> +static int iris_init_reset_table(struct iris_core *core,
-> +				 struct reset_control_bulk_data **resets,
-> +				 const char * const *rst_tbl, u32 rst_tbl_size)
->  {
-> -	const char * const *rst_tbl;
-> -	u32 rst_tbl_size;
->  	u32 i = 0;
->  
-> -	rst_tbl = core->iris_platform_data->clk_rst_tbl;
-> -	rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
-> -
-> -	core->resets = devm_kzalloc(core->dev,
-> -				    sizeof(*core->resets) * rst_tbl_size,
-> -				    GFP_KERNEL);
-> -	if (!core->resets)
-> +	*resets = devm_kzalloc(core->dev,
-> +			       sizeof(struct reset_control_bulk_data) * rst_tbl_size,
-> +			       GFP_KERNEL);
-> +	if (!*resets)
->  		return -ENOMEM;
->  
->  	for (i = 0; i < rst_tbl_size; i++)
-> -		core->resets[i].id = rst_tbl[i];
-> +		(*resets)[i].id = rst_tbl[i];
-> +
-> +	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, *resets);
-> +}
-> +
-> +static int iris_init_resets(struct iris_core *core)
-> +{
-> +	int ret;
-> +
-> +	ret = iris_init_reset_table(core, &core->resets,
-> +				    core->iris_platform_data->clk_rst_tbl,
-> +				    core->iris_platform_data->clk_rst_tbl_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!core->iris_platform_data->controller_rst_tbl_size)
-> +		return 0;
->  
-> -	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, core->resets);
-> +	return iris_init_reset_table(core, &core->controller_resets,
-> +				     core->iris_platform_data->controller_rst_tbl,
-> +				     core->iris_platform_data->controller_rst_tbl_size);
->  }
->  
->  static int iris_init_resources(struct iris_core *core)
-> 
-Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Resize depends on queue_reset which should be supported from Qemu 7.2
+
+>
+> I guess that virtio-pci-legacy is used in your setup.
+
+Note that modern devices are used by default.
+
+>
+> Here is how I setup virtio-net with Qemu
+>
+>      -netdev tap,id=3Dhostnet1,vhost=3Don,script=3D$NETWORK_SCRIPT,downsc=
+ript=3Dno \
+>      -device
+> virtio-net-pci,netdev=3Dhostnet1,iommu_platform=3Don,disable-legacy=3Don =
+\
+>
+> The iommu_platform=3Don is necessary to make vring use dma API which is a
+> requirement to enable xsk_pool in virtio-net (XDP socket will be in
+> zerocopy mode for this case). Otherwise, the XDP socket will fallback to
+> copy mode, xsk_pool is not enabled in virtio-net that makes the
+> probability to reproduce bug to be very small. Currently, when you don't
+> have iommu_platform=3Don, you can pass the test even before the fix, so I
+> think I will try to harden the selftest to make it return skip in this ca=
+se.
+
+I would like to keep the resize test as it doesn't require iommu_platform.
+
+Thanks
+
+>
+> Thanks,
+> Quang Minh.
+>
+
