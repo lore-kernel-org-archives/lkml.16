@@ -1,50 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA111AF0BC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BBE21ABCC;
 	Wed, 16 Apr 2025 18:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744827050; cv=none; b=dS77RwPeU10r7UAgCK1KZB2bDh0YFIFDbyIyITu/0tIYM8msDOffH1DztHYwQr83VOzgueZMsHaZp7bubZsSWj2fiiS7vjoA4V90OCHdaRbQsF6JFxKJMWgejbj7BhXTFvwpE2hrGIgFydFjAX+gR3/kumjGUhfFIfBzfrYvv4A=
+	t=1744827051; cv=none; b=tcTxWTHd3FvSXvans4FfJrKQvmsiHtA/5geBgnksanvmdRKuI/WFafzYu7H679BgQoxuezI+4L7P5Cx9I4i9BSxR1ZwAtRhjGMVqhdOLXN37wYIeLtdsUKFdyb2f+I+UyBxtLvOXvw4IQEryfhra6Azbu4FnX/nybaGR6AIND5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744827050; c=relaxed/simple;
-	bh=YYfUfDT8x9EiV2jkzCcfTs+tAFw4ZSX0Rx3a3U9Xj1Y=;
+	s=arc-20240116; t=1744827051; c=relaxed/simple;
+	bh=T7+pyAzFefNEIC26tzHPEK5uZz24O8PfTZAHey3DiwQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CfvT6dYXDgdmvxp4cvBUdSAyAc7d+IJRCN5MMnEZtpQ6sTH6H0jAJU8W44DKOw8ob9kL/7aDVdeLDwZmNAkOYdkrObTctvJzKN0+otEs/zua9icPMB0fxbv/E9ywQjbJujqKRR2jerO1KvGqWg/IxaUtzs7/PMNiUbAZ6xjBeLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niwntZGp; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=IXP86BxUyHdHyg4YzyL8nE11a2wkeca1iyIcVrOfGVnXxJIgkDWNL5wY/u5IvTmIC2Tmn2XPbUPyJbAuI6SHGhohdWg0hghC+HG+qP3gbKPWykeB1O+bMsUcRNtkqqOf/wT9AjwrUAagoL23VsQ+JS6iTUoI64mUvoYKl5a/lVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPP/xt3U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niwntZGp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2749C4CEE2;
-	Wed, 16 Apr 2025 18:10:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPP/xt3U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149B7C4CEE9;
+	Wed, 16 Apr 2025 18:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744827049;
-	bh=YYfUfDT8x9EiV2jkzCcfTs+tAFw4ZSX0Rx3a3U9Xj1Y=;
+	s=k20201202; t=1744827050;
+	bh=T7+pyAzFefNEIC26tzHPEK5uZz24O8PfTZAHey3DiwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=niwntZGpeBkJXasXFvnmSbH6p6WaK55YJLsm3s79gnU2zZu0ayefhPMG/8NT2W0EZ
-	 2g7JcXWiZjFpevhzZXjHUFmOY8hK7jRMOpFFcNqJ0NNwZ6Nb7ZzNUbDAH2hxbFwGDe
-	 RJPYVLF2/ARs/JG6E5ucSbhUHa/+a1qcsYMRZ6uDyF5DzDjpaVWgwd0FJkCK63GhIN
-	 RoaTjqWeTRqJivNX5SV6RTlxakU+LyFOuMBasjXSQFqWE/sIqyLgY/Ol1gV9ZECbaI
-	 8vQo87zFh5w7f8yeDLj3adRJ7MTsp9E9OZnGrfafrYgqtp2D5g5D9eviux8GfhDLrW
-	 GnAnq1Pw8rD2Q==
+	b=KPP/xt3UgNJfIF8fnZW5HODG386B5R8mbOKnI4yCYiYPzLAmiPwyk5pG/aWyNqJVM
+	 pNtxvfKMfu9UQnOKFjc6hw19m5mj0Q/6vD1bH4i4Yyq/Tg8WdkDu2W1PLmnVbeslK3
+	 mgSvfR8Wvh6oVE07fXevWSUOd7SWXpPUlOMrrGwUgMY7THe9GHkrnLXcrETg3c9wAT
+	 PrQOW2LfuumDIpwgZWA81BccUcy0ORMODuxrDRH3L0rCg7sITGGy3CQGSZugfxvxVi
+	 BseiRPdm3F1eZlM2dlEaP9EGPnofmOjBFor6ZPnZvZexhUqMjV/gRlIf5J8Xbahg+Z
+	 jyk+7b1/zlCDA==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
+To: cros-qcom-dts-watchers@chromium.org,
+	Konrad Dybcio <konradybcio@kernel.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Alexey Minnekhanov <alexeymin@postmarketos.org>
-Cc: Caleb Connolly <caleb@connolly.tech>,
-	Dang Huynh <danct12@riseup.net>,
-	linux-arm-msm@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	~postmarketos/upstreaming@lists.sr.ht,
-	phone-devel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: sdm660-xiaomi-lavender: Add missing SD card detect GPIO
-Date: Wed, 16 Apr 2025 13:10:40 -0500
-Message-ID: <174482704417.446874.10298682594898685723.b4-ty@kernel.org>
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH 00/20] arm64: dts: qcom: minor display-related fixups
+Date: Wed, 16 Apr 2025 13:10:41 -0500
+Message-ID: <174482704418.446874.3479876614080391885.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250415130101.1429281-1-alexeymin@postmarketos.org>
-References: <20250415130101.1429281-1-alexeymin@postmarketos.org>
+In-Reply-To: <20250415-drm-msm-dts-fixes-v1-0-90cd91bdd138@oss.qualcomm.com>
+References: <20250415-drm-msm-dts-fixes-v1-0-90cd91bdd138@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,20 +53,56 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Tue, 15 Apr 2025 16:01:01 +0300, Alexey Minnekhanov wrote:
-> During initial porting these cd-gpios were missed. Having card detect is
-> beneficial because driver does not need to do polling every second and it
-> can just use IRQ. SD card detection in U-Boot is also fixed by this.
+On Tue, 15 Apr 2025 13:25:58 +0300, Dmitry Baryshkov wrote:
+> Based on the patch review by Konrad:
+> - Change VBIF size to 0x3000 as defined by memory map
+> - Use new DSI clock defines on SC7280
+> - Use TAG_ALWAYS for MDP->EBI memory interface on SA8775P
 > 
-> Fixes: cf85e9aee210 ("arm64: dts: qcom: sdm660-xiaomi-lavender: Add eMMC and SD")
 > 
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm64: dts: qcom: sdm660-xiaomi-lavender: Add missing SD card detect GPIO
-      commit: 2eca6af66709de0d1ba14cdf8b6d200a1337a3a2
+[01/20] arm64: dts: qcom: sc7280: Use the header with DSI phy clock IDs
+        commit: 33e020b942cb4bcf2f3870b573470973e6464bd5
+[02/20] arm64: dts: qcom: sa8775p: mark MDP interconnects as ALWAYS on
+        commit: 8725fb400542a6c88c1cc918d96064eedc8c94c4
+[03/20] arm64: dts: qcom: msm8998: use correct size for VBIF regions
+        commit: 31e18ebef09a596ea87277c24411e1a86eb56470
+[04/20] arm64: dts: qcom: qcm2290: use correct size for VBIF regions
+        commit: bacf203baa1ef896ac2bb4f9bf43b19f15a6ae26
+[05/20] arm64: dts: qcom: sa8775p: use correct size for VBIF regions
+        commit: 180f990ed061cefdac620d02f34b03387210a2b7
+[06/20] arm64: dts: qcom: sc7180: use correct size for VBIF regions
+        commit: 74e18dc4aef0e8e2989815856e48c737820ebca8
+[07/20] arm64: dts: qcom: sc7280: use correct size for VBIF regions
+        commit: 545b26b926ae20640a7d464e1b830ce4ce021fd5
+[08/20] arm64: dts: qcom: sc8180x: use correct size for VBIF regions
+        commit: a24e1cb954a6915983280e757c36d04fd5e6ce34
+[09/20] arm64: dts: qcom: sc8280xp: use correct size for VBIF regions
+        commit: 7b5160ce90a3c6c8e6202f727c3e6cd2c0911cbd
+[10/20] arm64: dts: qcom: sdm670: use correct size for VBIF regions
+        commit: acc206fed3698554a16cf70e5a2fc0e4f1e1a5fc
+[11/20] arm64: dts: qcom: sdm845: use correct size for VBIF regions
+        commit: e50450aae01ea23e17e10f59cdbdc7aa59108250
+[12/20] arm64: dts: qcom: sm6115: use correct size for VBIF regions
+        commit: c7f4216765891939e6d2dfa8809883bae978582f
+[13/20] arm64: dts: qcom: sm6125: use correct size for VBIF regions
+        commit: e24c7cb72b9b1286deee43fecf87d0248fa430cc
+[14/20] arm64: dts: qcom: sm6350: use correct size for VBIF regions
+        commit: 7cfcd1a3c519d0aff10af2db06aa6d2291393bd8
+[15/20] arm64: dts: qcom: sm8150: use correct size for VBIF regions
+        commit: 130e9aacc40176b5fa2954e7861d9b5f28f373ae
+[16/20] arm64: dts: qcom: sm8250: use correct size for VBIF regions
+        commit: 4e851ff6a3a12ce616e3cc902af0ae2efb2e8137
+[17/20] arm64: dts: qcom: sm8350: use correct size for VBIF regions
+        commit: d55fe5da78836835f9a88c29dd2fb3086b4a3720
+[18/20] arm64: dts: qcom: sm8450: use correct size for VBIF regions
+        commit: 62acfd77a5783948ba3593fb169720ab7495c380
+[19/20] arm64: dts: qcom: sm8550: use correct size for VBIF regions
+        commit: 9e9d8349e76252d5b7e060cc0ca4823a3f062052
+[20/20] arm64: dts: qcom: sm8650: use correct size for VBIF regions
+        commit: d8203fff4e6849cc5799fcf51105f7622e13c46d
 
 Best regards,
 -- 
