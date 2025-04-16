@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46F5238D3B;
-	Wed, 16 Apr 2025 09:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3B2235354;
+	Wed, 16 Apr 2025 09:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744797415; cv=none; b=FzMCnU0Ycsm5u6JsJN8GS0MTcVxfv2w1M9WeyJWmb6K+QS2SdiNwqCbvOFAdlWs9kTr7jZYw3Z8CmMfsSXVrJzN/A8JQHT1+pY+5+P4tkTjvWP3qvvTyrrfj4GRtkh+F1SJamS0zkXVS6gGEveKOjZAWeUVFgUCibmCU4h7x+Q8=
+	t=1744797423; cv=none; b=q7R8cFhC/SUNIMRHqcbEh6gsdF0+cRyhkNmxal9H/UpNChUez6UxEot/7UJImjh3o4E1S0u+KgawgJOWDi0phOcy5glqKs1zsTcmtrSQ5BeI9cgYxXV0HrYI/gnKmaAUxhZTKKrn0xwvDtV6OUSZtgQfvVaS0synYqmizWP+Gik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744797415; c=relaxed/simple;
-	bh=gLZPBb6tb6Bvp+DJa0qiKRTWFJZiDmh1mf/1qkujX5k=;
+	s=arc-20240116; t=1744797423; c=relaxed/simple;
+	bh=u2JBPspFen1IaHjZiyH8o5DXJLJnJsjp2yzge8ZUs6w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KCSFs/sw9v60PkP3hjoVewefxC+Y0N2dJiRwGenbaU3XKxbgoJLbaCvN/lQMTRSrDtgca/HZ94xchqSKDeW4zf51RvmjGqGiPiFgb31do2tHS3qu6S5MGupLdQFQ0Z59+KBagObSAL60Pg3y2GnD0EPU8S1g914y17opuc9Lo0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NtrunQMv; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=j4C2EAnkB7vW873n/Melj60HSEe7ZOotTu+nc68QDnURc4EU9G2q4MjiU2a1tlNQcfp/2ChAgSrkNpAdpUGU//3IlD4mLe/tvvxFcgl9ywi6LUca0YuZd0H+fbTH0pSuycSDxT14hXN2sQMU2BIQnA7A+osiQd7+702q6Mi2i18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PG46mDh5; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NtrunQMv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PG46mDh5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744797414; x=1776333414;
+  t=1744797422; x=1776333422;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=gLZPBb6tb6Bvp+DJa0qiKRTWFJZiDmh1mf/1qkujX5k=;
-  b=NtrunQMvOrEfhcnSoFc/MzjkAXXYJAcTy02quE0DASZE/clU1XEiJw0j
-   1a6kLg0+kS+XtD9YouekgUvECsavNn1zCnrkBYMn9mgrZGfk6jI4FTWH9
-   WAqwa79FFAAmM73MbR3KGFmO59wwf0tcc4bhvFsPwSlHWWzY2Qs/s8EAU
-   kGRaqGvfhIEgtf2x4XVXTMv1tECcpbkq0jw4uX7OVollyxyyiIH5ILELH
-   QukAeL8+3gbfsZyhpgeAFBm975GGA10LQg9G/mkTNJE6iPFZjdhKVcNdY
-   kah0Udeo2EJQyDxraPrmFUyKcycg5289EGDvIlaty+U/+NOfyLu+0UJJI
+  bh=u2JBPspFen1IaHjZiyH8o5DXJLJnJsjp2yzge8ZUs6w=;
+  b=PG46mDh5HwNaCR32cC7HTxKGboks4Z4s7R8LDaZI2DK597zhLRPeav3u
+   abgjpuLaKk2fdPyk2DHHvAEsyu/KByBmvKGMaPO4ez6iUuwCmcDiCGSO3
+   pZ/mA2eq09PSwLY9gqm6FPf6rTuc/03CeKD35Ny1nEU5idSSWzww+CEku
+   58BtCWtMjbpEObshcstN/Byr4j8IUh90DkgGzQiA1FcGcZStlBGnz57Hg
+   uIGz2KNjSuhaiMdZU2RrGqyXkMn85u5kskSfMh2tZVdy+obK/89wJP6vl
+   dhFUEMa/ZxxXzRte0s425WeMaLX5TL3h2a6Ka1dkJ3NGwdFRLj4BauR1K
    g==;
-X-CSE-ConnectionGUID: ZKOdaeSyT/SkXIIepuwd2A==
-X-CSE-MsgGUID: riVQAYtsSRWGVM6I8rYbxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="63743647"
+X-CSE-ConnectionGUID: PprFZ6XoRQCgcBVQBIhk7g==
+X-CSE-MsgGUID: hqfX2lzBQ/Cv1ZtkfVSrnQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="50144308"
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="63743647"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:56:52 -0700
-X-CSE-ConnectionGUID: 4xBP6AaZQgqnJZzDvQ1BRA==
-X-CSE-MsgGUID: KX3wyM63RrSyLnk3GOZE1Q==
+   d="scan'208";a="50144308"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 02:56:50 -0700
+X-CSE-ConnectionGUID: zeslD7q0SZiKABViNv4kcA==
+X-CSE-MsgGUID: 6ZWPlObIRaedCurcZB/luQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
-   d="scan'208";a="131323324"
+   d="scan'208";a="135259303"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 16 Apr 2025 02:56:50 -0700
+  by orviesa003.jf.intel.com with ESMTP; 16 Apr 2025 02:56:48 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3FB288D1; Wed, 16 Apr 2025 12:56:47 +0300 (EEST)
+	id 130715D9; Wed, 16 Apr 2025 12:56:47 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org,
@@ -52,9 +52,9 @@ To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 8/8] gpiolib: Remove redundant assignment of return variable
-Date: Wed, 16 Apr 2025 12:55:16 +0300
-Message-ID: <20250416095645.2027695-9-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 4/8] gpiolib: Revert "Don't WARN on gpiod_put() for optional GPIO"
+Date: Wed, 16 Apr 2025 12:55:12 +0300
+Message-ID: <20250416095645.2027695-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
 References: <20250416095645.2027695-1-andriy.shevchenko@linux.intel.com>
@@ -66,62 +66,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In some functions the returned variable is assigned to 0 and then
-reassigned to the actual value. Remove redundant assignments.
+No need to double check the pointer for NULL since gpiod_free()
+is using VALIDATE_DESC_VOID() which simply returns in that case.
 
-In one case make it more clear that the assignment is not needed.
+This reverts commit 1d7765ba15aca68f3bc52f59434c1c34855bbb54.
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpiolib.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/gpio/gpiolib.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 7a669218e42c..c787c9310e85 100644
+index 7f8e8c33207e..4485dc8b1e42 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -1015,7 +1015,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	struct gpio_device *gdev;
- 	unsigned int desc_index;
- 	int base = 0;
--	int ret = 0;
-+	int ret;
- 
- 	/* Only allow one set() and one set_multiple(). */
- 	if ((gc->set && gc->set_rv) ||
-@@ -1040,11 +1040,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 
- 	device_set_node(&gdev->dev, gpiochip_choose_fwnode(gc));
- 
--	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
--	if (gdev->id < 0) {
--		ret = gdev->id;
-+	ret = ida_alloc(&gpio_ida, GFP_KERNEL);
-+	if (ret < 0)
- 		goto err_free_gdev;
--	}
-+	gdev->id = ret;
- 
- 	ret = dev_set_name(&gdev->dev, GPIOCHIP_NAME "%d", gdev->id);
- 	if (ret)
-@@ -3068,7 +3067,7 @@ int gpiod_direction_output_nonotify(struct gpio_desc *desc, int value)
+@@ -5140,8 +5140,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_array_optional);
   */
- int gpiod_enable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
+ void gpiod_put(struct gpio_desc *desc)
  {
--	int ret = 0;
-+	int ret;
- 
- 	VALIDATE_DESC(desc);
- 
-@@ -3101,7 +3100,7 @@ EXPORT_SYMBOL_GPL(gpiod_enable_hw_timestamp_ns);
-  */
- int gpiod_disable_hw_timestamp_ns(struct gpio_desc *desc, unsigned long flags)
- {
--	int ret = 0;
-+	int ret;
- 
- 	VALIDATE_DESC(desc);
+-	if (desc)
+-		gpiod_free(desc);
++	gpiod_free(desc);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_put);
  
 -- 
 2.47.2
