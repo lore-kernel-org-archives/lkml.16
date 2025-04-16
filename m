@@ -1,219 +1,114 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE87A2356DC;
-	Wed, 16 Apr 2025 10:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91C51233718
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:55:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744800924; cv=none; b=LSkKcGt1WmmVYQcxSEi+YBGJ7ceypI8jqVhwDTTXWsbxTUtzcY4Uf2lOl/dGisuI/r9rGixX4qgTLTPJlisfThyWxqQna5ObN7fc9NhygXk5y0DYUNCMUmsOjXWZoTe3HrdVQyTmhlKktHVUxsVkKwUe4mxTCIKI2kb+6HEIKFw=
+	t=1744800957; cv=none; b=hOlQhGwgHk4sX++p+FRocGuAVfiBvafFa/uSJXWsV1VoaSsz9I8nf9BinFVPSdcxlBagotXlNYGh2jDk+ukLzPffa8EiJ8JD2xA+EWHPO342XVGhtSjRouCFFjQHlmZVQW0Vja+Wxy8ZGI4Xbjgsi+LpWzb+78fIG6kYvqNVujw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744800924; c=relaxed/simple;
-	bh=tqJqFIE1T+kTlNY9bfQiUE33Vv4WO3vQtJdDUu1iyY8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ph73kqn+TlqPqG3dz4QiEwJxUXR183HcAf3xjAY87buS+Ys+0eRSZyuSmQuY6ylAY/EeKRL6lW0Pf8Xjf0//JIPZyIsZIaXRWxc6tOF7r/Sa2COhbPcZWFOzAthBf8ZEtTe7RndCseXQIg6DvyWPfes+jpGTja4GMO7NFAUg5e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
-X-QQ-mid: zesmtpsz2t1744800883ta33297fe
-X-QQ-Originating-IP: iTLQjDQAIaI4xnuMOQgJReKtXdpzN9jKj9Ql7mESqS4=
-Received: from [192.168.30.36] ( [116.234.96.50])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 16 Apr 2025 18:54:41 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8155109911631512638
-EX-QQ-RecipientCnt: 10
-From: Xilin Wu <sophon@radxa.com>
-Date: Wed, 16 Apr 2025 18:54:18 +0800
-Subject: [PATCH] arm64: dts: qcom: sc7280: Mark FastRPC context banks as
- dma-coherent
+	s=arc-20240116; t=1744800957; c=relaxed/simple;
+	bh=BX29mFmxNs7GRBvA+Nt3iMZeGvNwbVcTiCJ/uRpP9/E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hiRQP3pmuOa+53zfCth+3sF5M0NKlsmPyca+GKHnzhL2Ou3Sc5GT+PiT38f8TaolT0zgq75vRfoAr+k+Bvgd+dPNXlsumMmgfahjmLUkvWAijR8Z5zdcGIZdhiS6WI/Euv2ivyxCthryD/k00hiSoIGTJDVUN8+SSQKCT4ayyMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB693152B;
+	Wed, 16 Apr 2025 03:55:52 -0700 (PDT)
+Received: from [192.168.178.115] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 053793F66E;
+	Wed, 16 Apr 2025 03:55:51 -0700 (PDT)
+Message-ID: <d71b49d3-78a0-44c6-bac8-2619f8d0c4f0@arm.com>
+Date: Wed, 16 Apr 2025 12:55:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-sc7280-fastrpc-dma-v1-1-60ca91116b1e@radxa.com>
-X-B4-Tracking: v=1; b=H4sIAFmM/2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDE0Mz3eJkcyMLA920xOKSooJk3ZTcRF0LizRjE3PDRBNDQ2MloMaCotS
- 0zAqwodGxtbUAJwkTzGQAAAA=
-X-Change-ID: 20250416-sc7280-fastrpc-dma-88f3471a4113
-To: cros-qcom-dts-watchers@chromium.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Xilin Wu <sophon@radxa.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744800882; l=3697;
- i=sophon@radxa.com; s=20240424; h=from:subject:message-id;
- bh=tqJqFIE1T+kTlNY9bfQiUE33Vv4WO3vQtJdDUu1iyY8=;
- b=kti0l6NZjikO+LCzT7UT8cSInLNABxO0QD+3/1hilVlpmEOHantorIiPkSQI9goXzLpZWPXBN
- V4uAxh2VrIiBcXb72BwWu0goyoK+vCSdYFMeJgu/pItdMPJrBRHalEy
-X-Developer-Key: i=sophon@radxa.com; a=ed25519;
- pk=vPnxeJnlD/PfEbyQPZzaay5ezxI/lMrke7qXy31lSM8=
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OFht7H3FD1FnP+kk9wX05mc9f/VC9/v8eO5pU20rC+OuVnHiptVzvcVj
-	RPmMmZkpe0DDgK0c05B0+yjtjhEV7g5Z7897ux/ffrvbp11ijRc4yubKoPTavmHNIgvtFUg
-	D+fq9vQnyL7/hCnLU3ejQN7Ho2fsxcFWgfYyMbmd+3a/rYM/5rmRths4G+SUzzi7nZ5vsaJ
-	SJGHOpsYvyK2iEl4o9DzafsHYdWOIL7GZWnIMjt3vqRjDmkvv59fwMLI8wOXxilPrwjCfoK
-	gISIV7dfVPLpTmW6cFlO4EdIq5qSWPryTvCtOz9jfk4jm9CxIGRWZ1qOVxs74l4DhC6CLmc
-	db6OmW+yWkrLW7ds4fTUbTAnvTt8ZZWnwRnFuBK/vhF+6o2pw/O6ex+P54V4wq5Tya0uqLa
-	z52JThtgiDfEojKU1kWO2m52ufBViIjQxA7Pgha0EpqN9R7UHYU95/vEDxTZlZln/RX5s2S
-	fGtcuaqr3JSPJestt59tavNUJX6+XT7HY4g2j7CXWq1QQ1yk0k5+XdYdCg4wNFrs6KOtV7u
-	rtmvylGv2D2yvAxENv+zy8JTUrKxHbk1Wr+FUxVeSx700kqLPytyRbB8S3bkh8X6ebSqylz
-	nsb6gTj3R4tmwHGH+Eh3bpUcqASswol354rYpj1zjMAbYh/CaIA3LzCg6w7tZ0X0LeoTbW7
-	4672UHFm151W5nuvCpX3A2FrynZeiEC3R6Qfu4Picep+y5pvhrukG779C3A1ZHfIDped+mO
-	XclQ6fumAqChcp1w4GWdWpNdBF6yURFrXP+qmWUdVCL6H3FZJz5cA6F0+5EPPKDj09CFhth
-	vvNNVWavB87ZPWxLdp7XARkd/x5xU6re7jEBurPlpqaFFS7ttizCPucmG8kk5m+V6bLLuJd
-	PjAaGQZS36QLPomAnL5+hb6dhVSmGwFBXFx4J9dsuec8D3bmmS/jhIk3cmhGGJNXnLFwCdv
-	WcJwhw2I72gt6fZQoSKC4EFAB/3CAJWhig3FxJouTNqjr8LxRBr+0gVTRjm8wGTRkAFMkpa
-	ebnAlpPpzHHNLRpXS8MPEwrAtiJGWUKX5HRBZLrg==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] sched/util_est: Do not sub the delayed-task's
+ util-est
+To: Hongyan Xia <hongyan.xia2@arm.com>, Xuewen Yan <xuewen.yan@unisoc.com>,
+ vincent.guittot@linaro.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com
+Cc: rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.co, linux-kernel@vger.kernel.org, qyousef@layalina.io,
+ ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com
+References: <20250314090909.8404-1-xuewen.yan@unisoc.com>
+ <be0cace9-d173-4de3-959e-861876ad77fc@arm.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <be0cace9-d173-4de3-959e-861876ad77fc@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The FastRPC context banks are DMA-coherent on sc7280 platform. Mark them
-as such.
+On 14/04/2025 15:39, Hongyan Xia wrote:
+> On 14/03/2025 09:09, Xuewen Yan wrote:
+>> In cpu_util_without, When the task is in rq, we should
+>> sub the task's util_est, however, the delayed_task->on_rq
+>> is true, however, the delayed_task's util had been sub
+>> when sleep, so there is no need to sub the delayed task's
+>> util-est. So add the checking of delayed-task.
+>>
+>> On the other hand, as said in [1], the logic of util_est's
+>> enqueue/dequeue could be simplified.
+>> So simplify it by aligning with the conditions of uclamp.
+>>
+>> [1]https://lore.kernel.org/all/CAB8ipk8pEvOtCm-d0o1rsekwxPWUHk9iBGtt9TLTWW-iWTQKiA@mail.gmail.com/
+>>
+>> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+>> ---
+>>   kernel/sched/fair.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index c798d2795243..bebf40a0fa4e 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6930,7 +6930,7 @@ enqueue_task_fair(struct rq *rq, struct
+>> task_struct *p, int flags)
+>>        * Let's add the task's estimated utilization to the cfs_rq's
+>>        * estimated utilization, before we update schedutil.
+>>        */
+>> -    if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
+>> ENQUEUE_RESTORE))))
+>> +    if (!p->se.sched_delayed || (flags & ENQUEUE_DELAYED))
+>>           util_est_enqueue(&rq->cfs, p);
+>>         if (flags & ENQUEUE_DELAYED) {
+>> @@ -7168,7 +7168,7 @@ static int dequeue_entities(struct rq *rq,
+>> struct sched_entity *se, int flags)
+>>    */
+>>   static bool dequeue_task_fair(struct rq *rq, struct task_struct *p,
+>> int flags)
+>>   {
+>> -    if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
+>> DEQUEUE_SAVE))))
+>> +    if (!p->se.sched_delayed)
+>>           util_est_dequeue(&rq->cfs, p);
+>>         util_est_update(&rq->cfs, p, flags & DEQUEUE_SLEEP);
+>> @@ -8037,7 +8037,8 @@ cpu_util(int cpu, struct task_struct *p, int
+>> dst_cpu, int boost)
+>>            */
+>>           if (dst_cpu == cpu)
+>>               util_est += _task_util_est(p);
+>> -        else if (p && unlikely(task_on_rq_queued(p) || current == p))
+>> +        else if (p && unlikely(current == p ||
+>> +             (task_on_rq_queued(p) && !p->se.sched_delayed)))
+>>               lsub_positive(&util_est, _task_util_est(p));
+>>             util = max(util, util_est);
+> 
+> Tested this patch on several workloads and added util_est warnings. No
+> util_est overflow or underflow warnings were seen.
+> 
+> Tested-by: Hongyan Xia <hongyan.xia2@arm.com>
 
-This allows LLM inferencing on the CDSP using Qualcomm AI Engine Direct
-SDK on the qcs6490 platform.
+Just to make sure, does this 'Tested-by' also apply to the current v2
+version of this patch?
 
-Signed-off-by: Xilin Wu <sophon@radxa.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+https://lkml.kernel.org/r/20250325014733.18405-1-xuewen.yan@unisoc.com
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index ec96c917b56b4a077b45ac0186da6aaedb899dbe..bb5092bc2bbe97ece31ad84a22f87738b1289682 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -3869,18 +3869,21 @@ compute-cb@3 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <3>;
- 						iommus = <&apps_smmu 0x1803 0x0>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@4 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <4>;
- 						iommus = <&apps_smmu 0x1804 0x0>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@5 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <5>;
- 						iommus = <&apps_smmu 0x1805 0x0>;
-+						dma-coherent;
- 					};
- 				};
- 			};
-@@ -4108,6 +4111,7 @@ compute-cb@1 {
- 						reg = <1>;
- 						iommus = <&apps_smmu 0x11a1 0x0420>,
- 							 <&apps_smmu 0x1181 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@2 {
-@@ -4115,6 +4119,7 @@ compute-cb@2 {
- 						reg = <2>;
- 						iommus = <&apps_smmu 0x11a2 0x0420>,
- 							 <&apps_smmu 0x1182 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@3 {
-@@ -4122,6 +4127,7 @@ compute-cb@3 {
- 						reg = <3>;
- 						iommus = <&apps_smmu 0x11a3 0x0420>,
- 							 <&apps_smmu 0x1183 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@4 {
-@@ -4129,6 +4135,7 @@ compute-cb@4 {
- 						reg = <4>;
- 						iommus = <&apps_smmu 0x11a4 0x0420>,
- 							 <&apps_smmu 0x1184 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@5 {
-@@ -4136,6 +4143,7 @@ compute-cb@5 {
- 						reg = <5>;
- 						iommus = <&apps_smmu 0x11a5 0x0420>,
- 							 <&apps_smmu 0x1185 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@6 {
-@@ -4143,6 +4151,7 @@ compute-cb@6 {
- 						reg = <6>;
- 						iommus = <&apps_smmu 0x11a6 0x0420>,
- 							 <&apps_smmu 0x1186 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@7 {
-@@ -4150,6 +4159,7 @@ compute-cb@7 {
- 						reg = <7>;
- 						iommus = <&apps_smmu 0x11a7 0x0420>,
- 							 <&apps_smmu 0x1187 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@8 {
-@@ -4157,6 +4167,7 @@ compute-cb@8 {
- 						reg = <8>;
- 						iommus = <&apps_smmu 0x11a8 0x0420>,
- 							 <&apps_smmu 0x1188 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					/* note: secure cb9 in downstream */
-@@ -4166,6 +4177,7 @@ compute-cb@11 {
- 						reg = <11>;
- 						iommus = <&apps_smmu 0x11ab 0x0420>,
- 							 <&apps_smmu 0x118b 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@12 {
-@@ -4173,6 +4185,7 @@ compute-cb@12 {
- 						reg = <12>;
- 						iommus = <&apps_smmu 0x11ac 0x0420>,
- 							 <&apps_smmu 0x118c 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@13 {
-@@ -4180,6 +4193,7 @@ compute-cb@13 {
- 						reg = <13>;
- 						iommus = <&apps_smmu 0x11ad 0x0420>,
- 							 <&apps_smmu 0x118d 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@14 {
-@@ -4187,6 +4201,7 @@ compute-cb@14 {
- 						reg = <14>;
- 						iommus = <&apps_smmu 0x11ae 0x0420>,
- 							 <&apps_smmu 0x118e 0x0420>;
-+						dma-coherent;
- 					};
- 				};
- 			};
+In this case Xuewen should apply it on his next version.
 
----
-base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
-change-id: 20250416-sc7280-fastrpc-dma-88f3471a4113
 
-Best regards,
--- 
-Xilin Wu <sophon@radxa.com>
 
