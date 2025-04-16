@@ -1,32 +1,32 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5428A217730;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7035F22423A;
 	Wed, 16 Apr 2025 18:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828848; cv=none; b=TH09djL1if72jmSH7aWhYw3bsUt0F4vavYxRa15EuQXT6NNjlE1AE6IBqa3adZu3oXZxMj2RG6iLfXTVUXQPTA+3jlpErI/VyMx1OWPOvtM2x2S6dRqOp7xvjCspcayx/SQXr98+sJGzmJNB6xsPJCfUHwpA6POnwKBMvBqjf2E=
+	t=1744828848; cv=none; b=lHtuRt5Y59HbNySAzi8NWldvt28VrDMW+Yyn7+pk4Ebfmkddqa9e947PjFA1bsWqEJYgKW7tfOqGXcWNn5oDwprSYG+IO/7avZGYmo846M3AQblAcqQiWJh7wsg4zEu2FplEkLFfuPYuu7O+5/QALPwjH40vD1qaZivVfaaEnqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744828848; c=relaxed/simple;
-	bh=K8/JOiUEC1Un4wIBEvmCV0tkDDsaFdfktVZkJJkwMeM=;
+	bh=jCc+HBe7/ZchbeIAcJPoVoIp6kCZq4gasvGUQMeonFo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iqmVl7A532dRkQLqLR1qegOs5wwEVQY2qQPOLtPWL5GysVNsbGQJkRlJpc5uheaOUK4p6TO8logQWovMsqgfXKoTzncx7lkimpp8TPHWyszlauNAixQniqIPqekbiwKo/tDta6Q48XNemnIjI4rEJDBgHbdIUZ5FM+vzb0vprek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=rfqPuIb0; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=hE/nzmGfMqD/wktJCFnUUqHcEuRPrw0g2VEwZw11bM1QQz7p3RVjmMJ5qQvlImS5LM2mf8iu7YpoUwBrFgUi9bH+753otHRaA06p5VVyKkD7+iQgMMkTLyeg9zAfukBVjW815Vrryu0PeVFv1AT92z43yywo0/fXxd8zcpniUSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=qLb/MG4x; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="rfqPuIb0"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="qLb/MG4x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1744828842;
-	bh=K8/JOiUEC1Un4wIBEvmCV0tkDDsaFdfktVZkJJkwMeM=;
+	s=mail; t=1744828843;
+	bh=jCc+HBe7/ZchbeIAcJPoVoIp6kCZq4gasvGUQMeonFo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rfqPuIb0D4yU+wUtObsycCZDc9iIX797EolB6/TGWPNIJI1X9uMkDbzO+mu9Sf+7o
-	 2CkfkcBtTxFnIS6TVCJQKG8Rr+6xqTXGZceZ7+H4Xv7p14/mLFb0/DOFYUL4yypSvb
-	 b9Nvkf/jt8/6QAWBP1wcWJ1UJePIZcHSqtoGA+AE=
+	b=qLb/MG4xSlWLpaqStOv5OH1xID7I12d9e2QQ1wBstfkJu9NUd+56WJPpuzk889cSG
+	 cO8gWaaIO/PIDOenTdmWi5DRujl8uG7Zw5x9+Z7UjDaTptu1VaReaF82oubRReEoJW
+	 QP5zrUs9/JHcR6DXPNjg9M2nfaTeaO+q3PofTu4Y=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 16 Apr 2025 20:40:17 +0200
-Subject: [PATCH 2/6] tools/nolibc: disable function sanitizer for
- _start_c()
+Date: Wed, 16 Apr 2025 20:40:19 +0200
+Subject: [PATCH 4/6] tools/nolibc: fix integer overflow in i{64,}toa_r()
+ and
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250416-nolibc-ubsan-v1-2-c4704bb23da7@weissschuh.net>
+Message-Id: <20250416-nolibc-ubsan-v1-4-c4704bb23da7@weissschuh.net>
 References: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
 In-Reply-To: <20250416-nolibc-ubsan-v1-0-c4704bb23da7@weissschuh.net>
 To: Willy Tarreau <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>, 
@@ -43,48 +43,69 @@ To: Willy Tarreau <w@1wt.eu>, "Paul E. McKenney" <paulmck@kernel.org>,
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744828842; l=1091;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744828842; l=1658;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=K8/JOiUEC1Un4wIBEvmCV0tkDDsaFdfktVZkJJkwMeM=;
- b=QQ2N2cTjuYwo64KAWqUYjrhMZS4I5cCA2+yNoDM31oFpHsCL0OJGFdaU5QFFiCCHVG1zoPv6m
- +M3tYhlBO0kDo77cnZ+czLaxufKfkTB+30XbNpVAlXReYzNZdUJrPW0
+ bh=jCc+HBe7/ZchbeIAcJPoVoIp6kCZq4gasvGUQMeonFo=;
+ b=vd5RjBCHBQeCQH/O11mY77OCtqzNfHeAo+Netyu+qcXMeWelNtMNavSp6J9ZEe1X/k36LJHkF
+ udmCZVxDT3fA640MqAYh/Qw3C19TXVTH4TDLCh2P4VkBRm8jLjDmGMW
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-Both constructors and main() may be executed with different function
-signatures than they are actually using.
-This is intentional but trips up UBSAN.
+In twos complement the most negative number can not be negated.
 
-Disable the function sanitizer of UBSAN in _start_c().
-
+Fixes: b1c21e7d99cd ("tools/nolibc/stdlib: add i64toa() and u64toa()")
+Fixes: 66c397c4d2e1 ("tools/nolibc/stdlib: replace the ltoa() function with more efficient ones")
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/include/nolibc/crt.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/include/nolibc/stdlib.h | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/tools/include/nolibc/crt.h b/tools/include/nolibc/crt.h
-index c4b10103bbec50f1a3a0a4562e34fdbd1b43ce6f..961cfe777c3564e705dfdd581de828b374d05b0b 100644
---- a/tools/include/nolibc/crt.h
-+++ b/tools/include/nolibc/crt.h
-@@ -7,6 +7,8 @@
- #ifndef _NOLIBC_CRT_H
- #define _NOLIBC_CRT_H
- 
-+#include "compiler.h"
-+
- char **environ __attribute__((weak));
- const unsigned long *_auxv __attribute__((weak));
- 
-@@ -25,6 +27,9 @@ extern void (*const __fini_array_end[])(void) __attribute__((weak));
- 
- void _start_c(long *sp);
- __attribute__((weak,used))
-+#if __nolibc_has_feature(undefined_behavior_sanitizer)
-+	__attribute__((no_sanitize("function")))
-+#endif
- void _start_c(long *sp)
+diff --git a/tools/include/nolibc/stdlib.h b/tools/include/nolibc/stdlib.h
+index 86ad378ab1ea220559d5ab1adc4bb9972977ba9e..5e4b97810d49ac1b1bd79d6f779f6a748f188a39 100644
+--- a/tools/include/nolibc/stdlib.h
++++ b/tools/include/nolibc/stdlib.h
+@@ -271,16 +271,12 @@ int utoa_r(unsigned long in, char *buffer)
+ static __attribute__((unused))
+ int itoa_r(long in, char *buffer)
  {
- 	long argc;
+-	char *ptr = buffer;
+-	int len = 0;
+-
+ 	if (in < 0) {
+-		in = -in;
+-		*(ptr++) = '-';
+-		len++;
++		*(buffer++) = '-';
++		return 1 + utoa_r(-(unsigned long)in, buffer);
+ 	}
+-	len += utoa_r(in, ptr);
+-	return len;
++
++	return utoa_r(in, buffer);
+ }
+ 
+ /* for historical compatibility, same as above but returns the pointer to the
+@@ -407,16 +403,12 @@ int u64toa_r(uint64_t in, char *buffer)
+ static __attribute__((unused))
+ int i64toa_r(int64_t in, char *buffer)
+ {
+-	char *ptr = buffer;
+-	int len = 0;
+-
+ 	if (in < 0) {
+-		in = -in;
+-		*(ptr++) = '-';
+-		len++;
++		*(buffer++) = '-';
++		return 1 + u64toa_r(-(unsigned long long)in, buffer);
+ 	}
+-	len += u64toa_r(in, ptr);
+-	return len;
++
++	return u64toa_r(in, buffer);
+ }
+ 
+ /* converts int64_t <in> to a string using the static itoa_buffer and returns
 
 -- 
 2.49.0
