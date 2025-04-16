@@ -1,233 +1,84 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E278013A88A
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252C9187553
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744810018; cv=none; b=MvvRVNEkhMB6kybfSLSbJUlanTc3lY/j7P0nQm0APoRcehln2+19RnWNY4umYMLvYPyvof4ZDmGR698fUp3CEWCgxEEgXz+Zr3xPC944jEZMZbjnvvv3XznqMj53Rvwo+CIlwA0s9K3R7S1j1+SPlcz//luCiGj1dhflbITgjAk=
+	t=1744810140; cv=none; b=a5rLpGOj/21Z7BxqdDMZ8nZG2DNnQ8x+aukW6uqLH4aNe/Wg9676hJSEsyAmbczRqmpWkate1J3Mr5sRGe6/qyrpdpkza7c/6DwlhocHoCMwfkhEMyQaMEzJkA74r6mDGRCe/wMalWsgHXPYoyJje/S8k1caMwKm3mv6lzqdjqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744810018; c=relaxed/simple;
-	bh=u7tgQKyBQxDpDlv/eeh5XGW8bH99prkZaYli+k8oNIg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Wm8k/8YaG2tZJ40mb6VWB+NlQaAmfWflh60qv5Ffz+lEqB3o5JX6rHPt5UYoe3F84BKd+LmXAG7jQWZc0qejn4moJA+J4IdfugiHJAZXUb30cjgW/bduw1+XipwWCeAUCh3Fy3Jrf60+41WpRxQu2R0WTcFyUecGIhnFAs09o9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e4nezjGD; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744810140; c=relaxed/simple;
+	bh=ZVJBGbbDNJ4zOnp9Im0juKuDL3UdrCHlHhesvSkdjwA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WY/vz+GRzZ3dcJIRGzvB2UUYdSoDSWuUzNH9/6uvXCJiGEDd+3Hn1/Q04HNojEus/Owu1pGMDTf/e/2XbxdlX4PnYQbJmIVCSYdTQUhzbpT51Mo8iqFOJY7TBjUhHx0+VPpfteuDKsxIC3mUowYGE3m/6KsYc0PwJNtpOdlvgrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DBQOtUYH; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e4nezjGD"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso73166955e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:26:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DBQOtUYH"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39ee54d5a00so391581f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744810015; x=1745414815; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LXUe0iANce6xhwP4QYlP8FMxu/z1y++/7cwAdg0G+Lw=;
-        b=e4nezjGDmWYu/ShAEf+fYUZguqWtnwaNw0FIlPpkvjgSOU/ZC/Qhfw3zKi/vge0HSC
-         5RqJVgGdVNRfvQiSVLuiAT40wwK2NY8TUL69rj+Q0mCCQ7XbTsloL1dwuEJWDJA37rvL
-         nBS+cq90KLbeJKIUliXlf2BEHCGG1uELLoaQnywvKq9epGTInY4OpUy1v3GUmL+oY8p5
-         uMt6t1aXg5sc6zAHZ9QNN5CNhl4/tDr1zwxtkdiRAEpumeK68K5AkmPsr5nbOEdHpkNx
-         DqLV9Bsi5GmSiy0XOGpUC0yKLto6oId3fCUF79Fl+3QUYfbt1pYucr8uLAps9RPlNCCH
-         eJRw==
+        d=google.com; s=20230601; t=1744810137; x=1745414937; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u81oNAdu49vrXOlbtVMx6BBHkvoR1t20Iu3dXwAhN/A=;
+        b=DBQOtUYH5V5yK+TvOL/yhmBeoj3qzyJi6ORz0NuNNB7OK0uvdwU8/BD74p082lTox2
+         tF+KdAnDDuRMF3+I61bUz/vIVRGCKjzZ495HAWLip829NtQ28sFKgdy0oQskPF4ytoPD
+         NyGtGAaaSveIxh1LvMtmwJb3tykdifBDSxfJoI8X3WdKQLERnZeUFWvpiw8k5z4WXqhq
+         hkw2SJ6NE4MzLkLrWvPuc/6qDS/5VOZQPiSBG1t27936xccJW1u1HORldAs98pdB95/I
+         p7MfWpZekPwxle+ZPMeUHFRobcDGdGJ47xyXwAvzzlGiyqmJ2IMlqd4/U36fyCpwk+n4
+         7sDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744810015; x=1745414815;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LXUe0iANce6xhwP4QYlP8FMxu/z1y++/7cwAdg0G+Lw=;
-        b=aBv19cHCsNGyWeuQhHjERCnQBfn5mWWpKpFh1c80SBdQGTz7CEWrRxpTWMf3wl0cJV
-         xMjmwXJFlu3GrFuEhFMPjaFcrMyeDe9emU9Uz3xGpztcu11ULfTCysk/VGWhOcKADmqk
-         CKUY3yTdK8nn0Y7K98087kclko+U+Ie1jqLiIvhbE9PNkNTYbw9lE0FAJ6bFrrpQnQgR
-         YVwZ1+u/IXu3/9q7ucvxEqzq5XXQcV8dq3//Mq2VRckC1IEiCUnsSmmOOrn9k6pvRdp7
-         6aPknLhzCGm1OFhxbndnpOT8A4hjq+EPns95lzV/eID8eJJ3LIk+gxvJR07jK1SXkLjY
-         UCzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTCPdgQ+bTjEw7qSAhIZ3MEsvIwGuU9g3eIDvBH0XEEgz2XSqHkVbqSbGhc0RI/xCC+/jHmzWCuXJBHQs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZnHu0fVZe0sWJNc11W0LpbnhmmSlFAQNa9pJja8O86yC0ajgR
-	h3dGIlj307+OPz9e6bPXsK9hC1VHw2cDgLuJzWp+Qan0eye6QC23pOSOpuHGY0k=
-X-Gm-Gg: ASbGncu1RgBOV2m1eo3ODhXp7cms0Jb3saz2X6rX943azNiLJKfGc/kpvh24BE/wDjl
-	hNaEqhIYdFI/n2KL2aZgmll6rM3CFjCEKDFHHByD6dDbvKzGsMROv3SPmZOojMrQkXaTzFPKf+t
-	mdO4cEQUyiwHLZCZoiBIGGB3FI12+kyeK8mNI+qE4ZaDGn2OAlDen+F4G/GYVwMl5NEGsn5jH/u
-	xtOdrJiUA6F+Xryt83LNlPnNaKPyBBkR9wOkPsHLqneWgDDBFb+jbKlwp3J/X8AF9i8dbWCURwn
-	VMFRYm0F9hG62KI4vIMR5g+QRn7hQB7W+W3knB+RFVU=
-X-Google-Smtp-Source: AGHT+IGw46NqRQ8rr3G65OgHPazkLo5CSU52gngWFd673YvxDsgGuzhMGHsuig9f8x6t5NauOdl0Mg==
-X-Received: by 2002:a05:600c:3b9c:b0:43d:412e:8a81 with SMTP id 5b1f17b1804b1-4405d6cce52mr14393385e9.28.1744810015079;
-        Wed, 16 Apr 2025 06:26:55 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b4c8216sm21577475e9.7.2025.04.16.06.26.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 06:26:54 -0700 (PDT)
-Message-ID: <95c9bd53-ccef-4a34-b6d2-7203df84db01@linaro.org>
-Date: Wed, 16 Apr 2025 14:26:53 +0100
+        d=1e100.net; s=20230601; t=1744810137; x=1745414937;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u81oNAdu49vrXOlbtVMx6BBHkvoR1t20Iu3dXwAhN/A=;
+        b=GF+wUi/K9wrz1b5sjkpgei1vnYLikIEBMQxsmGDf79sQgMPFkGj09Nj0f1Qgf5BfP2
+         HHivzMTK2jEOop9OLWc5PoQaaMwo7lDcrJIXEo3uxCAXdA05tPyJAKCZU0Zpe0Mvrpj2
+         xP2OwNpy+mKz/5Mo5MLJ0xuDoe7lDq4rPJmHt0eGAIdnrcgPvCPFQePpL7HNJa01THXB
+         jVowKXwguYxZnch/sh7hEbcy8h/XC+ItLjfhxNomnnYysvS1lJ/FHmcAcLZatWzk1Cne
+         MXM3NELuXWIPbYPkxsyISeT8APTemJP9aHqPX2rG3+mCZNgl0nrAjpZL14Y/llSDUEe0
+         /SFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVl6kapS0uGFtjA8+WixfffjKq+nitKruNtyL45HuGqWMzhJqEkEGSkUqXMofmHCBtM7kv6JZXGQxElnd4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTfSapf9tI2j95vKjrhzSPWW9pjlQqPenuj9KzoWBV5KZHdg4X
+	ZPAKHJHiH4o35mQEjkIk69lv8Hfnd6h2yKfjnMceKtuuri+Nv780ZvNS6zH9iFGcNwkSP/pt9p5
+	EbocLtgKd0lMWjQ==
+X-Google-Smtp-Source: AGHT+IG9tHRn4kQG7O4PYIe6bQiZU/BwZMZlgMYNzuNvEr4SHrv8sdo9mrdCS3klZTLkNKvguqHeCRRXkHnjB4s=
+X-Received: from wmbfl14.prod.google.com ([2002:a05:600c:b8e:b0:440:602a:960f])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:21c4:b0:39c:1410:6c20 with SMTP id ffacd0b85a97d-39ee5b8bd00mr1589935f8f.45.1744810137500;
+ Wed, 16 Apr 2025 06:28:57 -0700 (PDT)
+Date: Wed, 16 Apr 2025 13:28:55 +0000
+In-Reply-To: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/10] tools headers: Update the syscall table with the
- kernel sources
-From: James Clark <james.clark@linaro.org>
-To: Namhyung Kim <namhyung@kernel.org>, Arnd Bergmann <arnd@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- linux-arch@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20250410001125.391820-1-namhyung@kernel.org>
- <20250410001125.391820-6-namhyung@kernel.org>
- <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
-Content-Language: en-US
-In-Reply-To: <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250407-vec-set-len-v3-0-c5da0d03216e@gmail.com>
+Message-ID: <Z_-wlwaiJNsSZbCC@google.com>
+Subject: Re: [PATCH v3 0/4] rust: alloc: split `Vec::set_len` into `Vec::{inc,dec}_len`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
+On Mon, Apr 07, 2025 at 10:52:30AM -0400, Tamir Duberstein wrote:
+> This series is the product of a discussion[0] on the safety requirements
+> of `set_len`.
+> 
+> Link: https://lore.kernel.org/all/20250315154436.65065-1-dakr@kernel.org/ [0]
+> Link: https://lore.kernel.org/all/20250316111644.154602-2-andrewjballance@gmail.com/ [1]
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
+I'm still wondering if the divergence from upstream alloc is worth it...
+but the code is okay.
 
-On 14/04/2025 5:28 pm, James Clark wrote:
-> 
-> 
-> On 10/04/2025 1:11 am, Namhyung Kim wrote:
->> To pick up the changes in:
->>
->>    c4a16820d9019940 fs: add open_tree_attr()
->>    2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
->>    e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
->>
->> This is basically to support the new open_tree_attr syscall.  But it
->> also needs to update asm-generic unistd.h header to get the new syscall
->> number.  And arm64 unistd.h header was converted to use the generic
->> 64-bit header.
->>
->> Addressing this perf tools build warning:
->>
->>    Warning: Kernel ABI header differences:
->>      diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
->>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/ 
->> x86/entry/syscalls/syscall_32.tbl
->>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/ 
->> x86/entry/syscalls/syscall_64.tbl
->>      diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/ 
->> powerpc/kernel/syscalls/syscall.tbl
->>      diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/ 
->> s390/kernel/syscalls/syscall.tbl
->>      diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/ 
->> mips/kernel/syscalls/syscall_n64.tbl
->>      diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/ 
->> tools/syscall.tbl
->>      diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/ 
->> kernel/syscalls/syscall.tbl
->>      diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/ 
->> sparc/kernel/syscalls/syscall.tbl
->>      diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/ 
->> xtensa/kernel/syscalls/syscall.tbl
->>      diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/ 
->> include/uapi/asm/unistd.h
->>      diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm- 
->> generic/unistd.h
->>
->> Please see tools/include/uapi/README for further details.
->>
->> Cc: linux-arch@vger.kernel.org
->> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->> ---
->>   tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +------------------
->>   tools/include/uapi/asm-generic/unistd.h       |  4 +++-
->>   .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
->>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
->>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
->>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
->>   tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
->>   .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
->>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
->>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
->>   .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
->>   tools/scripts/syscall.tbl                     |  1 +
->>   12 files changed, 15 insertions(+), 25 deletions(-)
->>
->> diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/ 
->> arm64/include/uapi/asm/unistd.h
->> index 9306726337fe005e..df36f23876e863ff 100644
->> --- a/tools/arch/arm64/include/uapi/asm/unistd.h
->> +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
->> @@ -1,24 +1,2 @@
->>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->> -/*
->> - * Copyright (C) 2012 ARM Ltd.
->> - *
->> - * This program is free software; you can redistribute it and/or modify
->> - * it under the terms of the GNU General Public License version 2 as
->> - * published by the Free Software Foundation.
->> - *
->> - * This program is distributed in the hope that it will be useful,
->> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> - * GNU General Public License for more details.
->> - *
->> - * You should have received a copy of the GNU General Public License
->> - * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->> - */
->> -
->> -#define __ARCH_WANT_RENAMEAT
->> -#define __ARCH_WANT_NEW_STAT
->> -#define __ARCH_WANT_SET_GET_RLIMIT
->> -#define __ARCH_WANT_TIME32_SYSCALLS
->> -#define __ARCH_WANT_MEMFD_SECRET
->> -
->> -#include <asm-generic/unistd.h>
->> +#include <asm/unistd_64.h>
-> 
-> Hi Namhyung,
-> 
-> Since we're not including the generic syscalls here anymore we now need 
-> to generate the syscall header file for the Perf build to work (build 
-> error pasted at the end for reference).
-> 
-> I had a go at adding the rule for it, but I saw that we'd need to pull 
-> in quite a bit from the kernel so it was blurring the lines about the 
-> separation of the tools/ folder. For example this file has the arm64 defs:
-> 
->   arch/arm64/kernel/Makefile.syscalls
-> 
-> To make this common part of the makefile work:
-> 
->   scripts/Makefile.asm-headers
-> 
-> Maybe we can just copy or reimplement Makefile.syscalls, but I'm not 
-> even sure if Makefile.asm-headers will work with the tools/ build 
-> structure so maybe that has to be re-implemented too. Adding Arnd to see 
-> what he thinks.
-> 
-> As far as I can tell this is a separate issue to the work that Charlie 
-> and Ian did recently to build all arch's syscall numbers into Perf to 
-> use for reporting, as this is requires a single header for the build.
-> 
-> Thanks
-> James
-> 
-> ---
-> 
-> In file included from /usr/include/aarch64-linux-gnu/sys/syscall.h:24,
->                   from evsel.c:4:
-> /home/jamcla02/workspace/linux/linux/tools/arch/arm64/include/uapi/asm/ 
-> unistd.h:2:10: fatal error: asm/unistd_64.h: No such file or directory
->      2 | #include <asm/unistd_64.h>
->        |          ^~~~~~~~~~~~~~~~~
-> 
-> 
-> 
-
-Hmmm I see this was also mentioned a while ago here [1]. Maybe I can 
-have another go at adding the makerule to generate the file. I'll 
-probably start by including as much as possible from the existing make 
-rules from the kernel side. I think something similar was already done 
-for generating the sysreg defs in commit 02e85f74668e ("tools: arm64: 
-Add a Makefile for generating sysreg-defs.h")
-
-
-[1]: 
-https://lore.kernel.org/lkml/ZrO5HR9x2xyPKttx@google.com/T/#m269c1d3c64e3e0c96f45102d358d9583c69b722f
-
-
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
