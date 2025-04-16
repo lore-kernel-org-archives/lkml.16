@@ -1,157 +1,145 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F6D14B950
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 04:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5581521423F;
+	Wed, 16 Apr 2025 04:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744777730; cv=none; b=oVSkKW4KFRETyK6L3FsF5rIIqYbHa9Fe2e9bWKof34UU0L3mqN6WVlmwcHQuyfjHSLAzEAkjr5V/JvaQr7aytpjNE7ALyyBwenrE1CzlDrxqa481bmSI99Z1EMKT/pQazxUBukvKIpYSENbRnQT9grrq/vR0ytMQGriiw8+mLwU=
+	t=1744777751; cv=none; b=ED+E1QGzDkSE/4TsxWeMSoeZt6R7SlwtRhvoOuIEmNPJuEc1im1iQPwS0DxaZcS1aAVKZ30Xxf17z43y1AJd8RAwg2PTtDj3myKnx5Vnx5OUmB2GzGTblJeMBsRFmN88SZMDfKRxCyjr8gKpY3RU7LVYT3VZVlctovp918bWzlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744777730; c=relaxed/simple;
-	bh=4AJ2IRDS3sRCUOnrqIohAaHmEqjAS+xtpAHzbK07RFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hfv1gybqmYTaW9VrXuXTxzWXy8OS2EOh11JzuD5g5DKkYHZ+KdBC/MfqSowsq7AymXl22iOpyejJz/t6qz5ut1TfOaXFhln4F//2Oc9MEkblonr7d2VURjmhQQql4LIFz3uttq81nJVwB2bIys5WmYamQV/gpPLOFMssRDLeB3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LuKIu+eE; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744777751; c=relaxed/simple;
+	bh=uNXA8zmXLo/ZSnb9UHBWW0N5nK1hKYKj64jUp2HilGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=abTKzp1hA2mrxK+j6GJ0sZVSDH0z8Sn7vuLlant52wNMHi5uxRUu3DkgzgiOy4TQ6l1ahaUn/OmzfXRR0giut6R7DNaWdKnGI+bLGk25EifCucLpkEPJSyUl0BiwVDOg2RxKbh68oHyxgfSkl8KXrr6on2SadU0pjfaMWWTYfeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g71ZL3G6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LuKIu+eE"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-225477548e1so61490365ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 15 Apr 2025 21:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744777728; x=1745382528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=28eKhoko0uR2M75teuQ1e8pqzKdF+6yNeZfykeX93Ik=;
-        b=LuKIu+eECOeJhIiIWyf6nkDDGeMxddwG4NIAPmehpUAHMhrtm8g6YCyUyg44N3ImpN
-         JVKvRb+frku6K+vN2iJuU5PCHciYVByr5DYfjv5L7qxy4KOmRLpai7deza2xHv6fADw4
-         kkq8q2gK+IO08KJzagKg8dfUHNdnyU6b18f9Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744777728; x=1745382528;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=28eKhoko0uR2M75teuQ1e8pqzKdF+6yNeZfykeX93Ik=;
-        b=ZwwuRbWIyH79Gql2aJTzgHPvHzZFHEJtWrmlOrskVE3z3pmFboTrk9tryNUnokiK3r
-         HartLK5ITNbTRo2i9w4/NoKhiLiuMPHZdy3wWVaQVqtAvv4dKDasEH1bFAiVqUKozzOn
-         v3+j4kvQildBB4BDq1zyYv3zhL7hul2N61nZOEFgbvv6ceLkFpblOgeZKEdlGv2Rxr23
-         MMuxg5EEOh+SixNIeENennTGCCB0DYQTF7KMz+Tf2o3LFyuj7kgJm7Ez4buec97UvaX7
-         wnODUzP6mErQqvhuOmXqbbV3X3Vyy8QiaH9gsBuuwZMMNbO6vw3olS10hyjYwfe9ivR+
-         wdcw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2MKcke+P0bMdjJBg3Tjlg6XDjT7dWgsLmv4+/VnFRI46Ixhe7R1mRw4x9HWhFc90SQDo351joVZYLy0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMW8pchUe1fWXPxK9hSdhyHJ0k/Z9XJWf7WDObMHNkQQ+cnmQ7
-	4Ug6eSImmJsGN+0cyEweUQMvA+64wDNuHdrYhq/b2N8TJimc+j6fKZ3Vf7rTig==
-X-Gm-Gg: ASbGncuaQvSxw8nXGZIQN9NECGwY/MLIkbEGU9lZY94xREqYynAgdgDKOn6Qv9Avn6a
-	WlDm22IpsRA2zLsnhvkVl5/JH8I6h2biBG4Xen71yqkQXVuPByHlVbEmSExwf/fW6PLSmw2SHa3
-	JAGJx1eN89F4eJXd+3AKiTsadN6cAF9PrRxFBv4tiDI6nCtyNZNxHh3+BtVOclPZzawegrE5EdO
-	kEmsp3qghM39TZXU2elvoSb05lUnu4BO/6WpzV7OBnBIthNg7Hb/Q6jh4cBhiOdnNo9xh3594Zf
-	1qK7M+kU6X+v3suxtpTqsSyr12lu7QfhNfX4HmEi1VMo5aaB5RgoYPv7aWdPf+tIeac=
-X-Google-Smtp-Source: AGHT+IFNkpm7oHWOoQ09eBUsjMI/rG4FOnzXtR/BKkkzvjs1ACVlrxBF35cBtCNsTLJD3pbzQs790w==
-X-Received: by 2002:a17:903:228a:b0:223:2361:e855 with SMTP id d9443c01a7336-22c3595bc8fmr6134445ad.39.1744777728088;
-        Tue, 15 Apr 2025 21:28:48 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:26d4:1f69:95c5:8f04])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33e63062sm4267265ad.0.2025.04.15.21.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 21:28:47 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Minchan Kim <minchan@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Shin Kawamura <kawasin@google.com>
-Subject: [PATCH] Documentation: zram: update IDLE pages tracking documentation
-Date: Wed, 16 Apr 2025 13:27:59 +0900
-Message-ID: <20250416042833.3858827-1-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g71ZL3G6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59E7C4CEE2;
+	Wed, 16 Apr 2025 04:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744777750;
+	bh=uNXA8zmXLo/ZSnb9UHBWW0N5nK1hKYKj64jUp2HilGg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g71ZL3G62NXt8HGrGqgcVJ7ZDxK2MnrhRIwA4C4SIqR2CmPCKUWkJ2P0PCINuchO+
+	 WYfL7Py+1FkC4ln1psDru8hMAUlTYqB7fmxb0rqXumQmfZWxYjAxFuNmqh2+R941tL
+	 vRydFIKiWGNAUY3ZmzjbDiSNJXL3n750xB4xtw4lFLFllEK5RWX4SvTgSKqiQqbXry
+	 yNk3BS/CmX1l1zvgy/YsNE3vRgewr+d1FzIAs37gKMUWeBTBb9XhnXx+o3vXev3ZKu
+	 R+zvEW7qwx67jRRhu6YzYknPLZnpbo8DVbT9j/306TkYhQdRtaTGs+9yzJLV8mx2Dj
+	 lek+O6jVGjEiw==
+Message-ID: <f39d8b9b-c160-40a3-80d0-62f880122f2b@kernel.org>
+Date: Wed, 16 Apr 2025 06:29:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 07/13] vt: introduce gen_ucs_recompose_table.py to
+ create ucs_recompose_table.h
+To: Nicolas Pitre <nico@fluxnic.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Nicolas Pitre <npitre@baylibre.com>, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250415192212.33949-1-nico@fluxnic.net>
+ <20250415192212.33949-8-nico@fluxnic.net>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250415192212.33949-8-nico@fluxnic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Move IDLE pages tracking into a separate chapter because there
-are multiple features that use (or depend on) it either in
-built-in variant ("mark all") or in extended variant (ac-time
-tracking).
+On 15. 04. 25, 21:17, Nicolas Pitre wrote:
+> From: Nicolas Pitre <npitre@baylibre.com>
+> 
+> The generated table maps base character + combining mark pairs to their
+> precomposed equivalents using Python's unicodedata module.
+> 
+> The default script behavior is to create a table with most commonly used
+> Latin, Greek, and Cyrillic recomposition pairs only. It is much smaller
+> than the table with all possible recomposition pairs (71 entries vs 1000
+> entries). But if one needs/wants the full table then simply running the
+> script with the --full argument will generate it.
+> 
+> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> ---
+>   drivers/tty/vt/gen_ucs_recompose_table.py | 255 ++++++++++++++++++++++
+>   1 file changed, 255 insertions(+)
+>   create mode 100755 drivers/tty/vt/gen_ucs_recompose_table.py
+> 
+> diff --git a/drivers/tty/vt/gen_ucs_recompose_table.py b/drivers/tty/vt/gen_ucs_recompose_table.py
+> new file mode 100755
+> index 0000000000..91e81fb1c9
+> --- /dev/null
+> +++ b/drivers/tty/vt/gen_ucs_recompose_table.py
+> @@ -0,0 +1,255 @@
+> +#!/usr/bin/env python3
+...
+> +    # Generate implementation file
+> +    with open(out_file, 'w') as f:
+> +        f.write(f"""\
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * {out_file} - Unicode character recomposition
+> + *
+> + * Auto-generated by {this_file}{generation_mode}
+> + *
+> + * Unicode Version: {unicodedata.unidata_version}
+> + *
+> +{textwrap.fill(
+> +    f"This file contains a table with {table_description_detail}. " +
+> +    f"To generate a table with {alt_description_detail} instead, run:",
+> +    width=75, initial_indent=" * ", subsequent_indent=" * ")}
+> + *
+> + *   python {this_file}{alternative_mode}
 
-In addition, recompression doesn't require memory tracking
-to be enabled in order to be able to perform idle recompression.
+This should be python3. Or no 'python' at all -- I assume the script is 
+executable given "new file mode 100755".
 
-Reported-by: Shin Kawamura <kawasin@google.com>
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- Documentation/admin-guide/blockdev/zram.rst | 41 +++++++++++----------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index b8d36134a151..3e273c1bb749 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -317,6 +317,26 @@ a single line of text and contains the following stats separated by whitespace:
- Optional Feature
- ================
- 
-+IDLE pages tracking
-+-------------------
-+
-+zram has built-in support for idle pages tracking (that is, allocated but
-+not used pages). This feature is useful for e.g. zram writeback and
-+recompression. In order to mark pages as idle, execute the following command::
-+
-+	echo all > /sys/block/zramX/idle
-+
-+This will mark all allocated zram pages as idle. The idle mark will be
-+removed only when the page (block) is accessed (e.g. overwritten or freed).
-+Additionally, when CONFIG_ZRAM_TRACK_ENTRY_ACTIME is enabled, pages can be
-+marked as idle based on how many seconds have passed since the last access to
-+a particular zram page::
-+
-+	echo 86400 > /sys/block/zramX/idle
-+
-+In this example, all pages which haven't been accessed in more than 86400
-+seconds (one day) will be marked idle.
-+
- writeback
- ---------
- 
-@@ -331,24 +351,7 @@ If admin wants to use incompressible page writeback, they could do it via::
- 
- 	echo huge > /sys/block/zramX/writeback
- 
--To use idle page writeback, first, user need to declare zram pages
--as idle::
--
--	echo all > /sys/block/zramX/idle
--
--From now on, any pages on zram are idle pages. The idle mark
--will be removed until someone requests access of the block.
--IOW, unless there is access request, those pages are still idle pages.
--Additionally, when CONFIG_ZRAM_TRACK_ENTRY_ACTIME is enabled pages can be
--marked as idle based on how long (in seconds) it's been since they were
--last accessed::
--
--        echo 86400 > /sys/block/zramX/idle
--
--In this example all pages which haven't been accessed in more than 86400
--seconds (one day) will be marked idle.
--
--Admin can request writeback of those idle pages at right timing via::
-+Admin can request writeback of idle pages at right timing via::
- 
- 	echo idle > /sys/block/zramX/writeback
- 
-@@ -499,8 +502,6 @@ attempt to recompress:::
- 
- 	echo "type=huge_idle max_pages=42" > /sys/block/zramX/recompress
- 
--Recompression of idle pages requires memory tracking.
--
- During re-compression for every page, that matches re-compression criteria,
- ZRAM iterates the list of registered alternative compression algorithms in
- order of their priorities. ZRAM stops either when re-compression was
 -- 
-2.49.0.604.gff1f9ca942-goog
-
+js
+suse labs
