@@ -1,98 +1,136 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEDC225A3C
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899E822FAF4;
+	Wed, 16 Apr 2025 08:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792522; cv=none; b=vBp6y7kGMjn+3RznSqiYEm+mjdQocPLVfc7cCLAkX28t/GVCEA4Gkw/XFXfmhs8mB1MZgVJAxsZUcnrY1/vxqnFwDvJi9DmpdmP2PFeO4aFhRnanHWfbRf0ML9bRf/poyNVCbzcfrpsxffZ+4/EERio+YFkP/L8S7WmJor6re5M=
+	t=1744792592; cv=none; b=ramriN8vqjzy9u5dtqvJk/ARdzamam39EwugtYWKkJYBkR7Jei9KR87V5Jup5Ek1ZcQ7q+sug/gMN46BlvTcxNoXP6DBZ7MnxJGEg0se5QqQZxL53g7uqUIk+Oo2Rw8vKN6QHqqraL8yHJ1yQplo9qEgkZpsAZD51N+JN7TmUBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792522; c=relaxed/simple;
-	bh=U/aqoPDk4qPcIGtIJdWVdsmpBx0xCpuPY/P1kNqi40U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vnys56VqyjDZXK/7xLshDt9R4Wmh1YO3VkmH496zIa1WPQD0nwIIozoDIFgVjVA3JYF0cplfglbxh6mJgdxCxMCnuSI5aJVEQEEVZ7JVuBW1yWwOvYnCPw55Zy+XMaLHCUjQo/U5sx/W8r9wNrNDEU6gjz4/nH3lYnNcBz58P+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rbi00JcH; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744792592; c=relaxed/simple;
+	bh=1d2N2Qn/JW5QWfjpDUYk7isFPV0A5T0sy4jRKhZximY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jwswb9mAnNrqqr7b3gJbS7Zz4QAATfsGEyuxNNiRDtb7SrwHeNUkdN59vk5yXwY39vkb5iMGnk3K88bSdnU6AkPjcbPJBNQ0Wv0FcOxMUk0/foyCY/cj6ObVIO9/jgS375z70OKJxYllaMKIv+dCdmUijIKnnZKr2uXR+mRRIeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=A1Svrby0; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rbi00JcH"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso5364841fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 01:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744792519; x=1745397319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U/aqoPDk4qPcIGtIJdWVdsmpBx0xCpuPY/P1kNqi40U=;
-        b=Rbi00JcHKOXvw5OCBFZjml4lzlCEk8uL5ZQEgLAypzBrxipnS3TX+WdMXAflSnSiNu
-         Zmd0Bao9/1kLmF+oqBuXv4TMdsT5uOYR3/sQ8ZJ6Q3i8iJap7ix/d/GYcYOmuo0sM7l3
-         Vwhyjn5DjmCXs27Menx+RWYwIYF3D0Oj5LFd6fZ2s9yI3Gfr+OdOmGwKFvOldKcVA6qv
-         IyXJN8+Rv1TCGWQ4QMtnS8HUcWhNnA4SqkmxRWElhKD90lgT/QOnKhD9OzPdITUdBSXD
-         3OSXpe5j2u2zCp5HOwJtNoObbfS6rBAx2uww6SKOGwGZ7QyaXBpTpDJ0Vw9dd6pqOQt8
-         yoYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744792519; x=1745397319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U/aqoPDk4qPcIGtIJdWVdsmpBx0xCpuPY/P1kNqi40U=;
-        b=KoJxJgV8kIuP5dev7Gvb4cIVbW1VXdMV1urkuWPz/zYOrvonnh6KDQI1F0ZeP42rAp
-         FR0bbI5LPId57La8JBYBQT8PypUrOt1HVKxE94yzAiOFTiAPjc+12QzmKdNvqIQu7dNF
-         1Lu9QpR15NVViXROLw1YhsowkRot/dBaW1jRFLGhitbgK7LadsHm2ymSQddwK+/+AZ2C
-         uUO/T+SjPIgQ+1PRainXif4iO8fY0SuN3BIaQmsetgFTouusgXyoWo5XZuvR9akWJQ/o
-         qvds7F3/oIkhePiYC4Oqpse2O97pS8UY85ohveZVdDddrDlAdESVVxclIFT7Vm5fEYrZ
-         6k/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXgnOP8sYpEuGfoA614hENRKVA8clb2VeUr04nI8uduRQ/ojgJtnNkzAjf6cTDFK3a+7FPyTIjhzcDJN4w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAYwX5Yj6gcv/XtEHjc7X83DMuBtCgSrruKn9XCIlp893mC8nc
-	wf4Z7vaa0h9tqKncKsRe/PmU3mwPDenpM9yuFIAqoDtQNChs5/YvvzFPiDkhPb7+YMD24tQRVA/
-	emckdEZyyPUWftfWejJMZQVIIL0xlROrRjS+cbQ==
-X-Gm-Gg: ASbGncv0YeeFpIOf04fymmIVCjmWGbytoCnyC4/8HF9zjgmdlmbLk8h/nRXTABnvujz
-	PrpVWWxIi6e0fIgc+TsipymyqlwlhPX+setNjeLye65HfcCMrlRN29wARqXXkslq6PwYk8jdQkP
-	HzwadbnH3bl1sLjJQ5hGAzbA==
-X-Google-Smtp-Source: AGHT+IEk01/SrahZkX/WwPGiS0BGB/c9p/43YKQ+5wZUlyCgsVLcawfd7xSjA1Eg9Ofa6Sx5qYOZluvwYSJlMTRuqyY=
-X-Received: by 2002:a2e:9e0f:0:b0:30c:799:8418 with SMTP id
- 38308e7fff4ca-3107f69607cmr2192731fa.4.1744792518989; Wed, 16 Apr 2025
- 01:35:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="A1Svrby0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744792588;
+	bh=1d2N2Qn/JW5QWfjpDUYk7isFPV0A5T0sy4jRKhZximY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A1Svrby0uVBqHw5jN3tu1pxER4Q8GYXwnq/a2p/Aa0ic3o8l9+2cLEejsDTplQlUC
+	 khUk2yP43g20pxuwiH2RSN6TwBfhBMKk80Cjo7Oti15szIGgPuH/y+BB6bbickqFDA
+	 IQE4JZDFrklcWSFmEF8T5MT/4rUSjQxvkTJt9scFUmEUlwkv3131viA6d3dWbB2DUT
+	 CmISE3zyQkgLfLa3MHvIH3/EIDo2ovLtG8HPuPcaUCqvmUA9JXMpqHW0JZ0DKymAIE
+	 qcmrnF0gwPdQvllMcZiM26tm9cQWmsD0D2osWJNHLRsAet43omk40PSZvyX1Xk8qQu
+	 8z1DXtLNrwwFg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4212117E1034;
+	Wed, 16 Apr 2025 10:36:27 +0200 (CEST)
+Message-ID: <7f4015b1-9151-4964-88bb-55a6448b96dc@collabora.com>
+Date: Wed, 16 Apr 2025 10:36:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250412193153.49138-1-chenyuan0y@gmail.com> <D9694O0MKV31.3SY6ZCTSKXWI9@bootlin.com>
- <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
-In-Reply-To: <CALGdzurLWayryjUEdSy4iuHAgFO=RA=HN=u+BZY96JqESKvi+A@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 16 Apr 2025 10:35:06 +0200
-X-Gm-Features: ATxdqUHN29Cyzw5aGGyEp2xHZ9Bkh3-8G0lN_prliWzQGyvEc34B3QIRU94x59o
-Message-ID: <CACRpkdZqyTphs0k6k2tOXwYzT_K=Jbt7h1CZX1Rh-2LDjWhxcQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: nomadik: Add check for clk_enable()
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-Cc: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, brgl@bgdev.pl, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 17/23] drm/mediatek: mtk_hdmi: Split driver and add
+ common probe function
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>,
+ "jie.qiu@mediatek.com" <jie.qiu@mediatek.com>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "mripard@kernel.org"
+ <mripard@kernel.org>, =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?=
+ <jitao.shi@mediatek.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "dmitry.baryshkov@linaro.org" <dmitry.baryshkov@linaro.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ =?UTF-8?B?TGV3aXMgTGlhbyAo5buW5p+P6YieKQ==?= <Lewis.Liao@mediatek.com>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ =?UTF-8?B?VG9tbXlZTCBDaGVuICjpmbPlvaXoia8p?= <TommyYL.Chen@mediatek.com>,
+ =?UTF-8?B?SXZlcyBDaGVuamggKOmZs+S/iuW8mCk=?= <Ives.Chenjh@mediatek.com>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+ "junzhi.zhao@mediatek.com" <junzhi.zhao@mediatek.com>
+References: <20250415104321.51149-1-angelogioacchino.delregno@collabora.com>
+ <20250415104321.51149-18-angelogioacchino.delregno@collabora.com>
+ <bc094a07-2a4c-4048-8c15-b096db62f142@collabora.com>
+ <01872a8318e2c87b124631822785d3ea494030f0.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <01872a8318e2c87b124631822785d3ea494030f0.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 14, 2025 at 2:11=E2=80=AFPM Chenyuan Yang <chenyuan0y@gmail.com=
-> wrote:
-> On Mon, Apr 14, 2025 at 4:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@boo=
-tlin.com> wrote:
+Il 16/04/25 08:44, CK Hu (胡俊光) ha scritto:
+> On Tue, 2025-04-15 at 12:48 +0200, AngeloGioacchino Del Regno wrote:
+>> External email : Please do not click links or open attachments until you have verified the sender or the content.
+>>
+>>
+>> Il 15/04/25 12:43, AngeloGioacchino Del Regno ha scritto:
+>>> In preparation for adding a new driver for the HDMI TX v2 IP,
+>>> split out the functions that will be common between the already
+>>> present mtk_hdmi (v1) driver and the new one.
+>>>
+>>> Since the probe flow for both drivers is 90% similar, add a common
+>>> probe function that will be called from each driver's .probe()
+>>> callback, avoiding lots of code duplication.
+>>>
+>>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+>>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>>> ---
+>>>    drivers/gpu/drm/mediatek/Kconfig           |   11 +-
+>>>    drivers/gpu/drm/mediatek/Makefile          |    1 +
+>>>    drivers/gpu/drm/mediatek/mtk_hdmi.c        |  538 +-----
+>>>    drivers/gpu/drm/mediatek/mtk_hdmi.c.orig   | 1769 ++++++++++++++++++++
+>>>    drivers/gpu/drm/mediatek/mtk_hdmi_common.c |  422 +++++
+>>>    drivers/gpu/drm/mediatek/mtk_hdmi_common.h |  188 +++
+>>>    6 files changed, 2398 insertions(+), 531 deletions(-)
+>>>    create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi.c.orig
+>>
+>> CK, I just acknowledged that a .orig file slipped through and got sent out with
+>> this patch....
+>>
+>> Truly sorry for that, can you please fix that up while applying without having me
+>> send another patchbomb?
+> 
+> I would drop mtk_hdmi.c.orig when apply this patch.
+> 
 
-> > Seeing the __irq_startup() code, my proposal would be to turn the retur=
-n
-> > value to a signed int, but I haven't exhaustively checked codepaths.
->
-> Good catch! I agree that using a signed int could be a better option.
->
-> Dear Linus and Bartosz, could you please share your thoughts? If
-> you=E2=80=99re on board with the change, I=E2=80=99ll go ahead and send a=
- new patch.
+Very much appreciated!
 
-Yeah that would be great, thanks!
+Thanks again,
+Angelo
 
-Thanks for noticing this as well Theo, I think your team is the
-most important user of this code right now.
+> Regards,
+> CK
+> 
+>>
+>> Many thanks,
+>> Angelo
+>>
+>>>    create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+>>>    create mode 100644 drivers/gpu/drm/mediatek/mtk_hdmi_common.h
+>>>
+> 
 
-Yours,
-Linus Walleij
+
