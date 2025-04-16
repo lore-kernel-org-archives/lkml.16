@@ -1,327 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37CD230BC2;
-	Wed, 16 Apr 2025 06:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015CF2451F1;
+	Wed, 16 Apr 2025 06:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786326; cv=none; b=Aa+mxQdHdX+o/Mylc5CsFiWfsz4F2jP1fdidWtl0P0T7WPtLgF5Pp77wSvMXcRs5I+ay8BbHK7jcjBYWMEHxRXqnrOkA027P4ioDEZnHsjQ1m9l4GQTDrMgbLB7bkuIwklUnWtVTPkk3vfC5awq+5BY3vzV+SaWM5X2btz2IDg8=
+	t=1744786328; cv=none; b=f0COurrWdNdiIweq9Qc7YhH/tYNFCnJBI8Nq37svtv4mlAY6fphICmj0EFg0kchCaMLh6+JB7bYYsFJdpw1fe3sGJtZ+FfMVB20bQn7anxgz72t22eXZLCvGK91jWeF+7oxgoyXWRaLjGsmCgrSu/KhIMGXEv6Gg7WPSAmSlqrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786326; c=relaxed/simple;
-	bh=BVeL5E+wiIovIP++GsT3Iv4DUmA8kLvmjIjuAfYvGr0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G/CvZat9iPaoP6nWKMDyALz8dkjijlYlsc2V2bhG79UwUjfgNO+gqC1KpWCBPxqF2zBFPfhPqCWhZq0o85WQnZm3uja6q7LjkSVhJTNb1Qd4+Eodrq7RqQXBRqQZ3tHmCNlTo53L+2oAIRmwZm3BYbW80iB++6V9nZ/rWysu6gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dSzqyU7J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d0f3mNt9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744786328; c=relaxed/simple;
+	bh=8D9c+befnHt33zm3mTibHfIF8FewIfXRrEv4gm5R/8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rqXxCC9RkV3e33T9Izsqejdw1ilRysGQdGyBg/f35yVUsnQ6M/aIn3NOF/7AG3S+vi8As+xKx554ReUMxFLf0I/i1GtJOpwfxk0JaMMP67II6OTEcjjJ9Ey7M3mIO3gpwC5y5T5Tw87vzZpJGO+FMJD6NupbVGPMWmAiQT2Mddc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBAmxhYU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dSzqyU7J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d0f3mNt9"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744786321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9Dz+yAyc9fDYnwYVG5q7HPwB6iAFMk5UyaO7whOF1g=;
-	b=dSzqyU7Js/gBtbCjvuUn4yB/S+tk+Lq/kS84dG40owCbBJGtucl7bK3WkQv81rG+eTwt0n
-	Y9Q/2s+3a52LPFRT2ytEu4MiuwGP9v1btTAi3wRBWLFp5TmBCGs92VEnLTTxFiI1Hrfx4G
-	Wf+V/NRGiNeadTUVbQTDfrQqDedZneQ5WR1P5fXuwrP/3j9WVza0wlmh2OtuAwGuibmbrc
-	OBGwQulWkYVWmre08W1V+dr+tspEMYYnPF8QAiQiEaj1g0/223aRZXikTFXAlc5+T+C+eN
-	j4T01GBTWDgbY9oJXJTjUL8PkUPCmoFLy7PH+LHia2UG37dXqX3FJEVb6vqIAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744786321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r9Dz+yAyc9fDYnwYVG5q7HPwB6iAFMk5UyaO7whOF1g=;
-	b=d0f3mNt9IyBaHL1HG9QSlpnAl1Afo9MrWh7uCTBPx1BYjK2AbvPZWpOizlCyQRZmAVBVaD
-	hyHARsNnLvB/rXCA==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 19/22] rv: Add rtapp_pagefault monitor
-Date: Wed, 16 Apr 2025 08:51:25 +0200
-Message-Id: <69b800de1d7ed2640cbec2cf1dd356529801c839.1744785335.git.namcao@linutronix.de>
-In-Reply-To: <cover.1744785335.git.namcao@linutronix.de>
-References: <cover.1744785335.git.namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBAmxhYU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 482A9C4CEE2;
+	Wed, 16 Apr 2025 06:52:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744786327;
+	bh=8D9c+befnHt33zm3mTibHfIF8FewIfXRrEv4gm5R/8Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bBAmxhYUlraviI3yi0IxzVz01ee11wH6ZyQ14I806Z4xGXYV2xFhYMoCW54mr9BsD
+	 Ir9SA8O6dqryZLZwVl4j2KDLOd8ePCnmU3UU55P+VXg7LYeBnKL54K2cjMz85ynz53
+	 AJTp8CumZNCtqkYGoJkiz8L8nBSkU7a8mRMH4ZyYvbNd/5AZTF//OxQvxOjUgjJLZl
+	 o44YQQ7Zp1jedXP+gM+/MDy+4dWSWdOfTFrU6n2YtwLSrZFNW0+p24g4fOj5OdOpwY
+	 x94hJAEe/IUbtLC7MBAjSMLRUNkZflSLFy5kX/OIvIIiix3UF7TVUp6Kt8/gzUeRPN
+	 MxrgEsVvrGdUw==
+Message-ID: <2d3d4240-65ab-4fd1-a86a-503bb40f34a6@kernel.org>
+Date: Wed, 16 Apr 2025 08:52:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: nuvoton: Add USB Hosts
+To: "William A. Kennington III" <william@wkennington.com>,
+ Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>,
+ Tali Perry <tali.perry1@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250416001818.2067486-1-william@wkennington.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250416001818.2067486-1-william@wkennington.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Userspace real-time applications may have design flaws that they raise
-page faults in real-time threads, and thus have unexpected latencies.
+On 16/04/2025 02:18, William A. Kennington III wrote:
+> The npcm 8xx chip has 2 EHCI and 2 OHCI hosts with driver support
+> already existing in the kernel.
+> 
+> Signed-off-by: William A. Kennington III <william@wkennington.com>
+> ---
+>  .../dts/nuvoton/nuvoton-common-npcm8xx.dtsi   | 28 +++++++++++++++++++
 
-Add an linear temporal logic monitor to detect this scenario.
+Please do not send 10 separate patches, but one patchset for given
+subsystem.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- kernel/trace/rv/Kconfig                       |  1 +
- kernel/trace/rv/Makefile                      |  1 +
- kernel/trace/rv/monitors/pagefault/Kconfig    | 11 +++
- .../trace/rv/monitors/pagefault/pagefault.c   | 80 +++++++++++++++++++
- .../trace/rv/monitors/pagefault/pagefault.h   | 57 +++++++++++++
- .../rv/monitors/pagefault/pagefault_trace.h   | 14 ++++
- kernel/trace/rv/rv_trace.h                    |  1 +
- tools/verification/models/rtapp/pagefault.ltl |  1 +
- 8 files changed, 166 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/pagefault/Kconfig
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.c
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.h
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_trace.h
- create mode 100644 tools/verification/models/rtapp/pagefault.ltl
+>  1 file changed, 28 insertions(+)
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 5c407d291661..6f86d8501e87 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -42,6 +42,7 @@ source "kernel/trace/rv/monitors/scpd/Kconfig"
- source "kernel/trace/rv/monitors/snep/Kconfig"
- source "kernel/trace/rv/monitors/sncid/Kconfig"
- source "kernel/trace/rv/monitors/rtapp/Kconfig"
-+source "kernel/trace/rv/monitors/pagefault/Kconfig"
- # Add new monitors here
-=20
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 9b28c2419995..353ecf939d0e 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
- obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
- obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
- obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
-+obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/pagefault/Kconfig b/kernel/trace/rv/m=
-onitors/pagefault/Kconfig
-new file mode 100644
-index 000000000000..b31dee208459
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_PAGEFAULT
-+	depends on RV
-+	select RV_LTL_MONITOR
-+	depends on RV_MON_RTAPP
-+	default y
-+	select LTL_MON_EVENTS_ID
-+	bool "pagefault monitor"
-+	help
-+	  Monitor that real-time tasks do not raise page faults
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/=
-rv/monitors/pagefault/pagefault.c
-new file mode 100644
-index 000000000000..47f1f909e72c
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "pagefault"
-+
-+#include <rv_trace.h>
-+#include <trace/events/exceptions.h>
-+#include <monitors/rtapp/rtapp.h>
-+
-+#include "pagefault.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon)
-+{
-+	ltl_atom_set(mon, LTL_RT, rt_task(task));
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation)
-+{
-+	if (task_creation)
-+		ltl_atom_set(mon, LTL_PAGEFAULT, false);
-+}
-+
-+static void handle_page_fault(void *data, unsigned long address, struct pt=
-_regs *regs,
-+			      unsigned long error_code)
-+{
-+	ltl_atom_pulse(current, LTL_PAGEFAULT, true);
-+}
-+
-+static int enable_pagefault(void)
-+{
-+	int retval;
-+
-+	retval =3D ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("pagefault", page_fault_kernel, handle_page_fault);
-+	rv_attach_trace_probe("pagefault", page_fault_user, handle_page_fault);
-+
-+	return 0;
-+}
-+
-+static void disable_pagefault(void)
-+{
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
-ault);
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
-lt);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+static struct rv_monitor rv_pagefault =3D {
-+	.name =3D "pagefault",
-+	.description =3D "Monitor that RT tasks do not raise page faults",
-+	.enable =3D enable_pagefault,
-+	.disable =3D disable_pagefault,
-+};
-+
-+static int __init register_pagefault(void)
-+{
-+	return rv_register_monitor(&rv_pagefault, &rv_rtapp);
-+}
-+
-+static void __exit unregister_pagefault(void)
-+{
-+	rv_unregister_monitor(&rv_pagefault);
-+}
-+
-+module_init(register_pagefault);
-+module_exit(unregister_pagefault);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page fau=
-lts");
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.h b/kernel/trace/=
-rv/monitors/pagefault/pagefault.h
-new file mode 100644
-index 000000000000..f4535c83f7d1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME pagefault
-+
-+enum ltl_atom {
-+	LTL_PAGEFAULT,
-+	LTL_RT,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] =3D {
-+		"p",
-+		"r",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	if (val4)
-+		__set_bit(S0, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	switch (state) {
-+	case S0:
-+		if (val4)
-+			__set_bit(S0, next);
-+		break;
-+	}
-+}
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_trace.h b/kernel/=
-trace/rv/monitors/pagefault/pagefault_trace.h
-new file mode 100644
-index 000000000000..fe1f82597b1a
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_PAGEFAULT
-+DEFINE_EVENT(event_ltl_monitor_id, event_pagefault,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
-next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_pagefault,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_PAGEFAULT */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index f9fb848bae91..02c906c9745b 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -172,6 +172,7 @@ TRACE_EVENT(error_ltl_monitor_id,
-=20
- 	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
- );
-+#include <monitors/pagefault/pagefault_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
-diff --git a/tools/verification/models/rtapp/pagefault.ltl b/tools/verifica=
-tion/models/rtapp/pagefault.ltl
-new file mode 100644
-index 000000000000..d7ce62102733
---- /dev/null
-+++ b/tools/verification/models/rtapp/pagefault.ltl
-@@ -0,0 +1 @@
-+RULE =3D always (RT imply not PAGEFAULT)
---=20
-2.39.5
 
+
+Best regards,
+Krzysztof
