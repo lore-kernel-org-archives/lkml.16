@@ -1,108 +1,127 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11813F9DA;
-	Wed, 16 Apr 2025 02:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3870DF9DA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 02:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744770655; cv=none; b=lre9hzb/t1qfoPiZ+v7J/dedaK/Bv7Y5MY+uTMZ2yABPqAvK0TsTgBKjy2VFIyAeovGaL1Pw6OyxKBjY1h/pcqgEjbEYF8pxYJYKrpLBSEOkWSgxy9Up4bYnVM6+pRJK/0qzTdGyaPPl1QRVGNQhotEOyRhsqgmnCNC1LfBYF1s=
+	t=1744770662; cv=none; b=mT9NicURC8r3nxpwgsYbDMAX8Mbx0Ye/wlRnoddYPS3+k4JqEyjje8cte1PLXAG1Q6DsBjOuoF+onGacJbFFxkp0JXQo1bJxvMpmmAjiWVtKl+NfE6/HwiPiIUTkOp5gyS6TFWZ5PkOWokCB0B9dVHCsjMks/T+Bo9DIW7LSELI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744770655; c=relaxed/simple;
-	bh=JWhq+XXYyMJEFwa1sLaoVo607RP3LT68poj4yLhNFsg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YLeTTA7EBE1HDkZNgSYMuyL4nN9BiDMCoZe5jff/X6kLE+EjOBQhMMVT5x7VzRZwkRLTz3nJ7dx78N5u0s486gPsCTEvoI6CPWU88ooLcGESFCinu3c1tfcuU4RxoDtfgsldMqF7DbLfuu+Jnb1oM6z7rMHeHZxPfBVEu2K+3jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Bx365NFv9nDhu_AA--.36522S3;
-	Wed, 16 Apr 2025 10:30:37 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMCx7xtHFv9nv_SEAA--.63165S3;
-	Wed, 16 Apr 2025 10:30:36 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] Docs/LoongArch: Add Advanced Extended-Redirect IRQ
- model description
-To: Yanteng Si <si.yanteng@linux.dev>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, tglx@linutronix.de,
- jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
- lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
- gaosong@loongson.cn, yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250331064116.32540-1-zhangtianyang@loongson.cn>
- <20250331064116.32540-2-zhangtianyang@loongson.cn>
- <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <3f31ead7-f342-1d64-edf0-902779613537@loongson.cn>
-Date: Wed, 16 Apr 2025 10:29:55 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1744770662; c=relaxed/simple;
+	bh=uTCUOMW0q3NjhASYgK3ZnALnwpLe6t3kZ+c9c7jcxxY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pVGpjd+1paiy1+6D4mLn/n7ASJF5GBXq3lFx1F+1+CaTV8eIN8MU2vdYCWvvBv2BHYV6vC5mAOsxYXwvvqnC3oO3VzOmAZnQDfSsNYqsf9JAIuj0kBBJHoG7bsYa7/aN1FavCM0MsAkAf4eLRCFGDM4r+7cVs++vr4EKJqjjL8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HY5hHP0u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HY5hHP0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68598C4CEE7;
+	Wed, 16 Apr 2025 02:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744770661;
+	bh=uTCUOMW0q3NjhASYgK3ZnALnwpLe6t3kZ+c9c7jcxxY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HY5hHP0ug6Dv4X5kcZibf5q+3E6ONzFT0Tsti8EEq9Mq4LViLyTA3L9gCcUyK+hDP
+	 2PqAY0VEn0YFHk3Bb51hw4CZiZKmtWFkpZTktWL2LvLTQ/rk4mjRt7gOrPy7pqFAZZ
+	 hv2sfwzhAtFqZHq8drRJD1ZM0/UctMYuwcdUxZwA=
+Date: Tue, 15 Apr 2025 19:31:00 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Luo Gengkun <luogengkun@huaweicloud.com>
+Cc: joel.granados@kernel.org, song@kernel.org, dianders@chromium.org,
+ tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] watchdog: Fix watchdog may detect false positive of
+ softlockup
+Message-Id: <20250415193100.562d55b34851e8c9058c5658@linux-foundation.org>
+In-Reply-To: <20250416013922.2905051-1-luogengkun@huaweicloud.com>
+References: <20250416013922.2905051-1-luogengkun@huaweicloud.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <d9b6f34c-95f2-45f6-b5dc-89098d1f8d22@linux.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCx7xtHFv9nv_SEAA--.63165S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur1xWF18WFWUZw1rCw15Awc_yoW8Xryfpr
-	Z7CFn3JFZ3J34xGF1fu3WUXry3J3WxCa1YqF1fCF18Xwn8ur1vqr18XryvgFy5Ww4vyay0
-	gr4rGF98uF1UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8Dl1DUUUUU==
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi, Yanteng
+On Wed, 16 Apr 2025 01:39:22 +0000 Luo Gengkun <luogengkun@huaweicloud.com> wrote:
 
-在 2025/4/1 上午9:39, Yanteng Si 写道:
->
-> 在 3/31/25 2:41 PM, Tianyang Zhang 写道:
->> Introduce the redirect interrupt controllers.When the redirect interrupt
->> controller is enabled, the routing target of MSI interrupts is no 
->> longer a
->> specific CPU and vector number, but a specific redirect entry. The 
->> actual
->> CPU and vector number used are described by the redirect entry.
->>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> ---
->>   .../arch/loongarch/irq-chip-model.rst         | 38 +++++++++++++++++++
->>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 ++++++++++++++++++
->>   2 files changed, 75 insertions(+)
->>
->> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst 
->> b/Documentation/arch/loongarch/irq-chip-model.rst
->> index a7ecce11e445..84fafb86ec17 100644
->> --- a/Documentation/arch/loongarch/irq-chip-model.rst
->> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
->> @@ -181,6 +181,44 @@ go to PCH-PIC/PCH-LPC and gathered by EIOINTC, 
->> and then go to CPUINTC directly::
->>                | Devices |
->>                +---------+
->
->> +Advanced Extended IRQ model (with redirection)
->> +===============
->
-> Did you do the build test?
-If you're referring to the equal sign alignment issue, this is indeed my 
-oversight. Thank you for pointing it out.
->
->
->
-> Thanks,
->
-> Yanteng
+> The watchdog may dectect false positive of softlockup because of stop
+> softlockup after update watchdog_thresh. The problem can be described as
+> follow:
+> 
+>  # We asuume previous watchdog_thresh is 60, so the timer is coming every
+>  # 24s.
+> echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
+> |
+> +------>+ update watchdog_thresh (We are in kernel now)
+> 	|
+> 	|
+> 	+------>+ watchdog hrtimer (irq context: detect softlockup)
+> 		|
+> 		|
+> 	+-------+
+> 	|
+> 	|
+> 	+ softlockup_stop_all
+> 
+> As showed above, there is a window between update watchdog_thresh and
+> softlockup_stop_all. During this window, if a timer is coming, a false
+> positive of softlockup will happen. To fix this problem, use a shadow
+> variable to store the new value and write back to watchdog_thresh after
+> softlockup_stop_all.
+> 
+
+Changelog is a bit hard to follow.  I asked gemini.google.com to clean
+it up and it produced this:
+
+: The watchdog may detect a false positive softlockup due to stopping the
+: softlockup detection after updating `watchdog_thresh`.  The problem can
+: be described as follows:
+: 
+: ```
+: # Assume the previous watchdog_thresh is 60, so the timer triggers every 24 seconds.
+: echo 10 > /proc/sys/kernel/watchdog_thresh (User space)
+: |
+: +------>+ Update watchdog_thresh (Kernel space)
+: 	|
+: 	|
+: 	+------>+ Watchdog hrtimer (irq context: detect softlockup)
+: 		|
+: 		|
+: 	+-------+
+: 	|
+: 	|
+: 	+ softlockup_stop_all
+: ```
+: 
+: As shown above, there is a window between updating `watchdog_thresh`
+: and `softlockup_stop_all`.  During this window, if a timer triggers, a
+: false positive softlockup can occur.  To fix this problem, a shadow
+: variable should be used to store the new value, and this value should
+: be written back to `watchdog_thresh` only after `softlockup_stop_all`
+: has completed.  
+
+I don't know how accurate this is - please check&fix it and consider
+incorporating the result?
+
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -47,6 +47,7 @@ int __read_mostly watchdog_user_enabled = 1;
+>  static int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
+>  static int __read_mostly watchdog_softlockup_user_enabled = 1;
+>  int __read_mostly watchdog_thresh = 10;
+> +static int __read_mostly watchdog_thresh_shadow;
+>  static int __read_mostly watchdog_hardlockup_available;
+>  
+>  struct cpumask watchdog_cpumask __read_mostly;
+> @@ -876,6 +877,7 @@ static void __lockup_detector_reconfigure(void)
+>  	watchdog_hardlockup_stop();
+>  
+>  	softlockup_stop_all();
+> +	watchdog_thresh = READ_ONCE(watchdog_thresh_shadow);
+
+I expect a reader of this code will wonder "what's all this
+watchdog_thresh_shadow stuff".  Can you please add a few small comments
+to explain why we're doing this?
+
 
