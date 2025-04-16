@@ -1,141 +1,97 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37AE16E863
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55DB2221572;
+	Wed, 16 Apr 2025 07:02:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786845; cv=none; b=syNz4HbZ8I5D5Ocj5lHc3Kri38XyO3n2/s4L/elbikZSnooiXwERz3DUp5qdV0TZXADaM+BokFw4nHhy1q3xAg+H7JJhAVn/VgRqfBl/eF5KkbX4xKpChLrTQKc0OwyteP4yquexCIe/fbH0Lxr1XC/SSQrIAxNLBTQxVfkf+Bs=
+	t=1744786943; cv=none; b=sfq28OmvCA1RjKWrqVDn4pxapKQtxLqdeTWaT1wSLKu6iJkdLQDWc5cZ61CSuqodvTlWLRsYKAiBc37Uo6+Vx++Fj9OkKmPydCeazFKanuq2LTN4B0rQFttYjaQcvxjVzMYjTpYeYLfpvlRtkqIbsys9ULxmYE/+S9T4T5Q/3H0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786845; c=relaxed/simple;
-	bh=MZX0NyL7XhAWv3wI1eNlSgIT6OB5NQWs/WXya+IRPWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=ViUQwjrHzbZD5o5Zrb0eUuXGPeURfp7prpl0npZsfSHlRZvgJcbIjomHnCk0lSo5vRj4i1K/gPXVAxOHK3sVeUpsvC3LbLwzVb5J9l3lTU3dyW5ui5KcQEMoCGaaB+V4hWxVwiQuJbU9MISUlGUSrEWTP+DQCL7hV6RcSDKd61w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NhSVRkOG; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744786943; c=relaxed/simple;
+	bh=vC9qu2x28cbxmK7VJr+Bv79rWkNOEx2eUdan3K30uI0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Var3LST7uVTyyQjNFcUe0N71RLYOHHxCxb1LtJqU6J4XqubYJay0YbfLvWgYmXUnKO2Ci+wNkxAhS/pMUDbN82oTZesdX1nGH1vqwuoJFvZtBnbV3NznvjMggD33Ybj1wMbAtLHBM3zmVDij3pqZHL8whVE/ZRqka1PQVPwmO1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GjfSR7Ka; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NhSVRkOG"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53FKXD5m020476;
-	Wed, 16 Apr 2025 07:00:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=pp1;
-	 bh=D36A7KPoEBhyYjfZYvrPed95J2eo7HltAgjgLq94Xzo=; b=NhSVRkOG7HVe
-	H0GB71Om2YkjIzBzF6LF/CB7QuNtAsaEaUthUI3EM3QTOl6Uu4v9s3/B9hJapKXT
-	MMHAYAhuSBvpykckDDO8HcIlU4XXns091kkQf7WzqMKEFup6uaE8PvcNIAI0Wq3N
-	Ih1CFZOLkoYQNRrgRF4CIg8ZXKgk2PSWHGxFRW794qjXonGEr3MCbyVuEBhrqZoc
-	j61IOtvPpq0q5JhJNc6rMjlThwq4uluoj8YgCyciNBrcn4Qr85JdKdT/X/WySPc1
-	7hZSM77dt/vlnwqE3qDekKUKZcznJ8Kbt2OOHpHbMHwCA41rM6VStlBJAYKK6TXC
-	yBG2hc0/Mg==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461nwq4vsn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:00:13 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53G5SNAE024892;
-	Wed, 16 Apr 2025 07:00:12 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4602gtfa83-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 07:00:12 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53G70Cnj20185620
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 07:00:12 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5F13E5805C;
-	Wed, 16 Apr 2025 07:00:12 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2155658060;
-	Wed, 16 Apr 2025 07:00:10 +0000 (GMT)
-Received: from [9.204.206.228] (unknown [9.204.206.228])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 07:00:09 +0000 (GMT)
-Message-ID: <37d018ac-ddb2-46c8-908e-9924f0f74e0c@linux.ibm.com>
-Date: Wed, 16 Apr 2025 12:30:08 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GjfSR7Ka"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744786941; x=1776322941;
+  h=date:from:to:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=vC9qu2x28cbxmK7VJr+Bv79rWkNOEx2eUdan3K30uI0=;
+  b=GjfSR7KakS9Ni2ufnsU6nokwTrhzSjqcd38j4yeiA4cFVFi0/pMbiyId
+   1Iz38FswTDbs/Jf/6b4QXY26Ugo+emMJxZsJCW4sXHHaMbGsF1vdn89wX
+   AeoRLV2EsImLSsjoPj1zRmlTOJzSRxEEaIIlPpMFKafUSVAsSiYuYigxi
+   H1zyQiVkX671LBAT3ADT/w5wtn/OU9Y4yGZRchCgDf/KkWnf7a1yN/KR7
+   S/TigyFI0iEBJBkqLoS8H8l9epJwpm/YpMij7uprazeQQ3AMnToXSojlH
+   x8AfimAaem79b+yPwQt+JLxqV3dtQAIhZuXywKb+k3c0d5p8ulY43Zele
+   Q==;
+X-CSE-ConnectionGUID: bq3/ZRTOQaKqyOS8c/SHbg==
+X-CSE-MsgGUID: eESMnd4OQnGGWipTVPs47g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="49016428"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="49016428"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:02:20 -0700
+X-CSE-ConnectionGUID: 3xCPRFkrQH+OdM2dLByN/w==
+X-CSE-MsgGUID: +j+Anc7CRfmXx+9z0ZOrzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130370786"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 00:02:18 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4wml-0000000Cm2v-3loF;
+	Wed, 16 Apr 2025 10:02:15 +0300
+Date: Wed, 16 Apr 2025 10:02:15 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v4 5/7] i2c: core: Do not dereference fwnode in struct
+ device
+Message-ID: <Z_9V9x_YBfxiCh1w@smile.fi.intel.com>
+References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
+ <20250414100409.3910312-6-andriy.shevchenko@linux.intel.com>
+ <Z_9UX9xkGjvhnub_@shikoro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] sched/numa: Add ability to override task's
- numa_preferred_nid.
-To: Chris Hyser <chris.hyser@oracle.com>
-References: <20250415013625.3922497-1-chris.hyser@oracle.com>
-Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>, longman@redhat.com,
-        linux-kernel@vger.kernel.org,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Reply-To: 20250415013625.3922497-1-chris.hyser@oracle.com
-In-Reply-To: <20250415013625.3922497-1-chris.hyser@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: XyLol5-JmvzDhOvqfVl5UPMIIujiNb_0
-X-Proofpoint-GUID: XyLol5-JmvzDhOvqfVl5UPMIIujiNb_0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_02,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 clxscore=1011 bulkscore=0 priorityscore=1501 mlxscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504160052
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_9UX9xkGjvhnub_@shikoro>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Chris,
-
-On 15/04/25 07:05, Chris Hyser wrote:
-> From: chris hyser <chris.hyser@oracle.com>
+On Wed, Apr 16, 2025 at 08:55:27AM +0200, Wolfram Sang wrote:
+> On Mon, Apr 14, 2025 at 01:01:55PM +0300, Andy Shevchenko wrote:
+> > In order to make the underneath API easier to change in the future,
+> > prevent users from dereferencing fwnode from struct device.
+> > Instead, use the specific device_set_node() API for that.
+> > 
+> > Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> > Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
+> I'll check this patch later today. Rest of the series looks good to me
+> already.
 
-[..snip..]
+Note, I'm planning to send a v5 shortly with the style fixes and commit
+messages as you suggested.
 
-> The following results were from TPCC runs on an Oracle Database. The system
-> was a 2-node Intel machine with a database running on each node with local
-> memory allocations. No tasks or memory were pinned.
-> 
-> There are four scenarios of interest:
-> 
-> - Auto NUMA Balancing OFF.
->     base value
-> 
-> - Auto NUMA Balancing ON.
->     1.2% - ANB ON better than ANB OFF.
-> 
-> - Use the prctl(), ANB ON, parameters set to prevent faulting.
->     2.4% - prctl() better then ANB OFF.
->     1.2% - prctl() better than ANB ON.
-> 
-> - Use the prctl(), ANB parameters normal.
->     3.1% - prctl() and ANB ON better than ANB OFF.
->     1.9% - prctl() and ANB ON better than just ANB ON.
->     0.7% - prctl() and ANB ON better than prctl() and ANB ON/faulting off
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Are you using prctl() to set the preferred node id for all the tasks of your run?
-If yes, then how `prctl() and ANB ON better than prctl() and ANB ON/faulting off`
-case happens?
 
-IIUC, when setting preferred node in numa_preferred_nid_force, the original
-numa_preferred_nid which is derived from page faults will be a nop which should
-be an overhead.
-
-Let me know if my understanding is correct. Also, can you tell how to set the
-parameters of ANB to prevent faulting.
-
-Thanks,
-Madadi Vineeth Reddy
-
-> In benchmarks pinning large regions of heavily accessed memory, the
-> advantages of the prctl() over Auto NUMA Balancing alone is significantly
-> higher.
-> 
-> Signed-off-by: Chris Hyser <chris.hyser@oracle.com>
-
-[..snip..]
