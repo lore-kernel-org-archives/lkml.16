@@ -1,56 +1,56 @@
 Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD41A212FA6;
-	Wed, 16 Apr 2025 13:54:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD752139C4;
+	Wed, 16 Apr 2025 13:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811672; cv=none; b=iD2M5l2jK5AbtWBMVp5/yMuqMRuWTEjEJshJBAK9KC6r9loIaIyHcYUlxe4EZsGE+olXDDlOnlU16Ddw80FWBcnUb1VNQn87x+r+3Tgmoa4QpBMb2k0LfoLuUgybsCM0UwsxmYv/KAlPGRZmuU5jtxm1zjHjLPJF4+CEflZlvIc=
+	t=1744811683; cv=none; b=Eqix2OJXubiN/ScEt0/1QhBS5B6QPo4IAQDnVogekV3fp9JBn2bc74i+YvhXfNcQKyIUGrbb7q1Wde/yu3RaJVd0lVpbP0Z2It8BWJMOJYEzpajXVlOAnZ8VkExKWSyUc3sJK77RQl6+oXl3KJu9XvXSN0Kb0McQDPN3B4wyRqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811672; c=relaxed/simple;
-	bh=Uk+Yw2b6g3w4R+Xgn735v2jh1sdxTNZvpl+s7jsy9Is=;
+	s=arc-20240116; t=1744811683; c=relaxed/simple;
+	bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f0oPFBQb5CtY/M8lpEhWIBSdQdSY/V3ywQcl63uBWlMaYUL3dPuvBvAvLrLUmn4K7Siyh71dEybQlGqNCyM8ul90ttH+XL2VFq52HdYdiXnfjzNg55WMfL2qj4INJzmbMnwXLpqIaklTvtJn414bmNms36bZYVW02T7E2Uss2BA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=RtIZ7kpL; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=LZT3ZjHB; arc=none smtp.client-ip=155.254.16.17
+	 MIME-Version; b=ZO3gQWuvZ0HdDfA37AsEBGDNM8O/QgeI4M35bPz2FlE9ZE94D4OQBncK34IMFSMy81rbOh655hIidMGemoqBHAbQ37Cs9fHm4wrYfAe/UhsdYiD6eisbsEnJ2tN1W++yB6vfe9kasdepiJ9S8XI+ASjsP/LkBuILUK1uV0iYR+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=y8v12LoF; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=PGDPcXwq; arc=none smtp.client-ip=155.254.16.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="RtIZ7kpL";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="LZT3ZjHB"
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="y8v12LoF";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="PGDPcXwq"
 Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 401DD12FB451;
-	Wed, 16 Apr 2025 06:54:30 -0700 (PDT)
+	by bayard.4d2.org (Postfix) with ESMTP id 4E17D12FB451;
+	Wed, 16 Apr 2025 06:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744811670; bh=Uk+Yw2b6g3w4R+Xgn735v2jh1sdxTNZvpl+s7jsy9Is=;
+	t=1744811681; bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RtIZ7kpLbS2WlM+CiPBThKK2xxFRVyNkH/zvF1dPbgFJNA8U0EUgB9lP6mznMTyK/
-	 NQtrd5mh1ATWTFJVqWesvKBe2T0MfKBxdmkiIB2Ev3fxwZBPjU0b0+mV4kAYoiZmLg
-	 ZG6HfczCwq3t0PYrAxoGMZWfG0SlldvDVCHaHYiAg27qHSUVMB/Hx6htYIJFg48lwh
-	 5xXuStZuVyQD0QUh1rS0aACnh5Kj7nNpH69ZnVhoT0BuMeul1ctiuq+PMva/ML762h
-	 4ItsWNc0O12Jk6Ay4JG6blcD9I35clOMkrKeQDuEjoJv+aLVkzQO0klWgpSy3TSgK8
-	 AOHnt/fUiLUkw==
+	b=y8v12LoFkJ6OWeVxlzD6jlGrpjI0n4dP9xxbFoikVZLY+VK/QP14ZHMyY4eTco3HD
+	 jTeMcqmI9wUjk4bQ6AoJAz+8woLMCDFZOmR1zNX/qQwFvDq0bw78WgfWwE7EIBJ6qE
+	 lG+jq9y5jJ2nh9ujqwKx3zS6D/TO2QL1QcbdKQuA+rs4h+OyRvPaQMbNyWmdT8kyl0
+	 Qzi9D+RhYzUZmWWOYjxxCgaZtRs2vF2t1ptrupzSbg+lOoj+9KDeBcpisYg4Bn5IvE
+	 FA8zS4c6Ug+Z2DsBcTockIz57FKGGqBnz8JhCNYOLBZfqDEZcHwT3IVAueulOwD09+
+	 1aCqyU7VCTwmg==
 X-Virus-Scanned: amavisd-new at 4d2.org
 Authentication-Results: bayard.4d2.org (amavisd-new); dkim=pass (2048-bit key)
  header.d=4d2.org
 Received: from bayard.4d2.org ([127.0.0.1])
  by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id X49Y-H-kEcPZ; Wed, 16 Apr 2025 06:54:28 -0700 (PDT)
+ with ESMTP id P4MgbncuCctj; Wed, 16 Apr 2025 06:54:39 -0700 (PDT)
 Received: from localhost.localdomain (unknown [183.217.80.190])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id A976112FB435;
-	Wed, 16 Apr 2025 06:54:22 -0700 (PDT)
+	by bayard.4d2.org (Postfix) with ESMTPSA id B3AFA12FB435;
+	Wed, 16 Apr 2025 06:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1744811668; bh=Uk+Yw2b6g3w4R+Xgn735v2jh1sdxTNZvpl+s7jsy9Is=;
+	t=1744811679; bh=0TfnuVk3JuNdSQRmPF3HgxD+Ku/B4FyBYJxSffFdeEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LZT3ZjHBgOkF0Y8s/IRhSQHZkKUfge2xgy36/UxICMb/f0KNvepnMkduxDULF9VTK
-	 OKdohOH3K5yPsqnAQVRhpZHe/QPDqMEw0jO28oKC30WzyUK0AT8LWixj2+jmegje3I
-	 JxXGBAE7goqEX2iPWVjQR/zRFcnOpaRccpZekvZcOdsZ2j9x3HO+Tm2AIQIQzEBJ+k
-	 g9rnWfoTplr7XbfompbKCEOpiKFQBVfEMRQTt/oOfgkjU94J7OzxHkqi+6JPVaWpVY
-	 Pcw703GpXs2jwqYPQK/EF938FubMPtuJNE0CWRBotNFNXZ9N8lN6WmLFspIN3FKbxU
-	 598JpCka3cVpA==
+	b=PGDPcXwqBuVtWpWOn/qAj0fyGN8YgXTVL3k8LP7Yi+tIOUdmS2hG+sZItP2mx3BM9
+	 e7Wa/6dThFtMcImxoe/ImX2yWPq4oMBZGUw7O8gk0/LIQdGpHObP22ZqBni9/5U5cZ
+	 hURMAeLW5rGdzveBTv0XOse+4lWWEiDK/unbnIUEPYrY7boFUpNxdbaYFO7emjzeq/
+	 5xSZPXGANeVaUxMMDnqEDmiMjhG9VJ/2jIxfjo0CoT7I7siIhB35Zvzn1IUuFC49fc
+	 q5Rt/AXP8pEuUPnLbEBaHd/D6YErA8myJwTlQmjmtWOIL1DcSlmEh5BXzR0pBx0lmH
+	 +qT0jqo+Sc+tg==
 From: Haylen Chu <heylenay@4d2.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -73,11 +73,10 @@ Cc: linux-riscv@lists.infradead.org,
 	Jisheng Zhang <jszhang@kernel.org>,
 	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
 	Haylen Chu <heylenay@4d2.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Alex Elder <elder@riscstar.com>
-Subject: [PATCH v8 2/6] dt-bindings: clock: spacemit: Add spacemit,k1-pll
-Date: Wed, 16 Apr 2025 13:54:02 +0000
-Message-ID: <20250416135406.16284-3-heylenay@4d2.org>
+Subject: [PATCH v8 4/6] clk: spacemit: k1: Add TWSI8 bus and function clocks
+Date: Wed, 16 Apr 2025 13:54:04 +0000
+Message-ID: <20250416135406.16284-5-heylenay@4d2.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250416135406.16284-1-heylenay@4d2.org>
 References: <20250416135406.16284-1-heylenay@4d2.org>
@@ -89,124 +88,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add definition for the PLL found on SpacemiT K1 SoC, which takes the
-external 24MHz oscillator as input and generates clocks in various
-frequencies for the system.
+The control register for TWSI8 clocks, APBC_TWSI8_CLK_RST, contains mux
+selection bits, reset assertion bit and enable bits for function and bus
+clocks. It has a quirk that reading always results in zero.
+
+As a workaround, let's hardcode the mux value as zero to select
+pll1_d78_31p5 as parent and treat twsi8_clk as a gate, whose enable mask
+is combined from the real bus and function clocks to avoid the
+write-only register being shared between two clk_hws, in which case
+updates of one clk_hw zero the other's bits.
+
+With a 1:1 factor serving as placeholder for the bus clock, the I2C-8
+controller could be brought up, which is essential for boards attaching
+power-management chips to it.
 
 Signed-off-by: Haylen Chu <heylenay@4d2.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Reviewed-by: Alex Elder <elder@riscstar.com>
 Reviewed-by: Yixun Lan <dlan@gentoo.org>
 ---
- .../bindings/clock/spacemit,k1-pll.yaml       | 50 +++++++++++++++++++
- .../dt-bindings/clock/spacemit,k1-syscon.h    | 37 ++++++++++++++
- 2 files changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
+ drivers/clk/spacemit/ccu-k1.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
-new file mode 100644
-index 000000000000..06bafd68c00a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/spacemit,k1-pll.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/spacemit,k1-pll.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SpacemiT K1 PLL
-+
-+maintainers:
-+  - Haylen Chu <heylenay@4d2.org>
-+
-+properties:
-+  compatible:
-+    const: spacemit,k1-pll
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    description: External 24MHz oscillator
-+
-+  spacemit,mpmu:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the "Main PMU (MPMU)" syscon. It is used to check PLL
-+      lock status.
-+
-+  "#clock-cells":
-+    const: 1
-+    description:
-+      See <dt-bindings/clock/spacemit,k1-syscon.h> for valid indices.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - spacemit,mpmu
-+  - "#clock-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    clock-controller@d4090000 {
-+        compatible = "spacemit,k1-pll";
-+        reg = <0xd4090000 0x1000>;
-+        clocks = <&vctcxo_24m>;
-+        spacemit,mpmu = <&sysctl_mpmu>;
-+        #clock-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/clock/spacemit,k1-syscon.h b/include/dt-bindings/clock/spacemit,k1-syscon.h
-index 0c5b9b5f6073..35968ae98246 100644
---- a/include/dt-bindings/clock/spacemit,k1-syscon.h
-+++ b/include/dt-bindings/clock/spacemit,k1-syscon.h
-@@ -6,6 +6,43 @@
- #ifndef _DT_BINDINGS_SPACEMIT_CCU_H_
- #define _DT_BINDINGS_SPACEMIT_CCU_H_
+diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+index 8a0dd8146dbd..cdde37a05235 100644
+--- a/drivers/clk/spacemit/ccu-k1.c
++++ b/drivers/clk/spacemit/ccu-k1.c
+@@ -328,6 +328,12 @@ CCU_MUX_GATE_DEFINE(twsi4_clk, twsi_parents, APBC_TWSI4_CLK_RST, 4, 3, BIT(1), 0
+ CCU_MUX_GATE_DEFINE(twsi5_clk, twsi_parents, APBC_TWSI5_CLK_RST, 4, 3, BIT(1), 0);
+ CCU_MUX_GATE_DEFINE(twsi6_clk, twsi_parents, APBC_TWSI6_CLK_RST, 4, 3, BIT(1), 0);
+ CCU_MUX_GATE_DEFINE(twsi7_clk, twsi_parents, APBC_TWSI7_CLK_RST, 4, 3, BIT(1), 0);
++/*
++ * APBC_TWSI8_CLK_RST has a quirk that reading always results in zero.
++ * Combine functional and bus bits together as a gate to avoid sharing the
++ * write-only register between different clock hardwares.
++ */
++CCU_GATE_DEFINE(twsi8_clk, CCU_PARENT_HW(pll1_d78_31p5), APBC_TWSI8_CLK_RST, BIT(1) | BIT(0), 0);
  
-+/* APBS (PLL) clocks */
-+#define CLK_PLL1		0
-+#define CLK_PLL2		1
-+#define CLK_PLL3		2
-+#define CLK_PLL1_D2		3
-+#define CLK_PLL1_D3		4
-+#define CLK_PLL1_D4		5
-+#define CLK_PLL1_D5		6
-+#define CLK_PLL1_D6		7
-+#define CLK_PLL1_D7		8
-+#define CLK_PLL1_D8		9
-+#define CLK_PLL1_D11		10
-+#define CLK_PLL1_D13		11
-+#define CLK_PLL1_D23		12
-+#define CLK_PLL1_D64		13
-+#define CLK_PLL1_D10_AUD	14
-+#define CLK_PLL1_D100_AUD	15
-+#define CLK_PLL2_D1		16
-+#define CLK_PLL2_D2		17
-+#define CLK_PLL2_D3		18
-+#define CLK_PLL2_D4		19
-+#define CLK_PLL2_D5		20
-+#define CLK_PLL2_D6		21
-+#define CLK_PLL2_D7		22
-+#define CLK_PLL2_D8		23
-+#define CLK_PLL3_D1		24
-+#define CLK_PLL3_D2		25
-+#define CLK_PLL3_D3		26
-+#define CLK_PLL3_D4		27
-+#define CLK_PLL3_D5		28
-+#define CLK_PLL3_D6		29
-+#define CLK_PLL3_D7		30
-+#define CLK_PLL3_D8		31
-+#define CLK_PLL3_80		32
-+#define CLK_PLL3_40		33
-+#define CLK_PLL3_20		34
-+
- /* MPMU clocks */
- #define CLK_PLL1_307P2		0
- #define CLK_PLL1_76P8		1
+ static const struct clk_parent_data timer_parents[] = {
+ 	CCU_PARENT_HW(pll1_d192_12p8),
+@@ -412,6 +418,8 @@ CCU_GATE_DEFINE(twsi4_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI4_CLK_RST, BIT(0
+ CCU_GATE_DEFINE(twsi5_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI5_CLK_RST, BIT(0), 0);
+ CCU_GATE_DEFINE(twsi6_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI6_CLK_RST, BIT(0), 0);
+ CCU_GATE_DEFINE(twsi7_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TWSI7_CLK_RST, BIT(0), 0);
++/* Placeholder to workaround quirk of the register */
++CCU_FACTOR_DEFINE(twsi8_bus_clk, CCU_PARENT_HW(apb_clk), 1, 1);
+ 
+ CCU_GATE_DEFINE(timers1_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TIMERS1_CLK_RST, BIT(0), 0);
+ CCU_GATE_DEFINE(timers2_bus_clk, CCU_PARENT_HW(apb_clk), APBC_TIMERS2_CLK_RST, BIT(0), 0);
+@@ -896,6 +904,7 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
+ 	[CLK_TWSI5]		= &twsi5_clk.common.hw,
+ 	[CLK_TWSI6]		= &twsi6_clk.common.hw,
+ 	[CLK_TWSI7]		= &twsi7_clk.common.hw,
++	[CLK_TWSI8]		= &twsi8_clk.common.hw,
+ 	[CLK_TIMERS1]		= &timers1_clk.common.hw,
+ 	[CLK_TIMERS2]		= &timers2_clk.common.hw,
+ 	[CLK_AIB]		= &aib_clk.common.hw,
+@@ -947,6 +956,7 @@ static struct clk_hw *k1_ccu_apbc_hws[] = {
+ 	[CLK_TWSI5_BUS]		= &twsi5_bus_clk.common.hw,
+ 	[CLK_TWSI6_BUS]		= &twsi6_bus_clk.common.hw,
+ 	[CLK_TWSI7_BUS]		= &twsi7_bus_clk.common.hw,
++	[CLK_TWSI8_BUS]		= &twsi8_bus_clk.common.hw,
+ 	[CLK_TIMERS1_BUS]	= &timers1_bus_clk.common.hw,
+ 	[CLK_TIMERS2_BUS]	= &timers2_bus_clk.common.hw,
+ 	[CLK_AIB_BUS]		= &aib_bus_clk.common.hw,
 -- 
 2.49.0
 
