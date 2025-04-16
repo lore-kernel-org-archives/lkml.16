@@ -1,83 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68F1F8676;
-	Wed, 16 Apr 2025 13:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EF521ABB2
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744811868; cv=none; b=ixGzfkA4N2VV5W45VpUjDYdi8aCvxmeaNfo6bLACPV8Yza4T8wyHg+sbrWCZCAor1Uw3jYNgZsML9f4Kj7uKMnPmBDCwNeR9kG0UgDFO7oBkXqBhEx/6Ug0G4NUEhtZjIi6nCUuWlJ9mxcyc2UiNplqb43TlEibBkMWaDyKnfck=
+	t=1744811947; cv=none; b=OSzcQ4BBXVB1DTd9FLvLOrGNt/PTgLPBsRZ+TjafO/ujm/LUq0G0tr0OEglj6zAci2zCIgT5EV1bGPmc9bXvohvsa02dZyWcNtqJs8hbZVgelgIeikRC2uGNJtsANIp7XfZj0MjU3vzREmxUz8HXz+E3Rfs1ebrvPNfQzchEscY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744811868; c=relaxed/simple;
-	bh=wb1pgTkDhh561dN6uYHfGumqPzKkLa6WfQktifFPInY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M+0+a1QWqUOEAAIXkQvtdpIO4EXL2V+Vw5sChFjSwseCkSwMoVhVp51asx2l9GLp40XFt5v4O2eVWsShAQVecfGoAW0UYBsRJfJrdXkG6EheCvVtV+yIKhP9CW0lPlwQe5Y99L03GS5RVdVWBuToShsUutaS+/Puff1dW4qaqBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NRsSG0aD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744811947; c=relaxed/simple;
+	bh=hn6xwOP93/yhoELlBY8V8Xuv/wDTtTZJFnraUzSgg0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sw7z6ZzP7CCE35MZ6DlFg9Vvc5baLtqaRHJ6lrbl9paCvIF46UwbyzpWOeHUJkHTWuEEt7771HBRy6XIaan7sPydbWn1NK05GEiJINPOR6PhdfUdSoNSRyHeEadCWECvnuF8shuno30I9n18tvWwFwbdBt992TCRiATXSV4xw4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RaPiPvdR; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NRsSG0aD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4764C4CEE2;
-	Wed, 16 Apr 2025 13:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744811868;
-	bh=wb1pgTkDhh561dN6uYHfGumqPzKkLa6WfQktifFPInY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NRsSG0aDffiWafluzFCTEoXtb0DPDlUIgPNFqWB58FyDCOQLDm2O3yq/bVxWpprra
-	 b3yMAzmtDebpx6Huj9ZYqfZub3BgZBNddr5xqnQjDTWhtfAJuUY/58wCSx0iqTMDcl
-	 mfCipBtS5/2i1Gx/2lfpdLeJsCxpo9cjTvhmS3EUlLmznel9QT4KMbRUUMj7mQJuI/
-	 x/yATlmOBgOa63kfNFYaw00L7a2xQSjKrrlWD0RMVzJObBFVD0TEDPhTfygHxjK9lB
-	 ka24ix4GTxJGpkhDsT5aFBqs4tCtEpN/xqqj/tLbQM68kJ8U2wHRe0Zhd6331lp9aE
-	 L0IRSQleUgifg==
-From: Christian Brauner <brauner@kernel.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RaPiPvdR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744811946; x=1776347946;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=hn6xwOP93/yhoELlBY8V8Xuv/wDTtTZJFnraUzSgg0c=;
+  b=RaPiPvdR9+zB7XSUQVH/ynI4nY93SMHDMyXHOTvCiHKENHW4GHL+eoZB
+   tc3TpPbMwxqONW9PM3+W3PODX6y1mC/YylZ50VaDM57h3zqp7g3Nlv1u3
+   VIyvlBanDlFJVdnlY/YR8v8VqvxReJ9yZ77WL8cu/U2q5qjCOGZXFcy+F
+   DwHaJBVnkv5BxsRqDnymcuKDUVDav2KwW9BF3GIiduEkGuMKJhERg4jmn
+   I+sHTDOWHVF8EMtVM6HfCdQciKhzcSrae59V1f1/JXgHBWOpocJpkV3nz
+   tlhOO/Omfej15o1bYNyP6zzxX9ctf6LIGeW1MWSXPQQL4pHilaTk23GUP
+   Q==;
+X-CSE-ConnectionGUID: WHr9XmbsQe61CZUsZdHENw==
+X-CSE-MsgGUID: XAdV1+LqRW2d+kyWTa2/Fg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="50169605"
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="50169605"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 06:59:05 -0700
+X-CSE-ConnectionGUID: og39v+s6Sf277AFQZeP/fQ==
+X-CSE-MsgGUID: h+35UNDxQyCysYGvgIBmow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,216,1739865600"; 
+   d="scan'208";a="135291556"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 16 Apr 2025 06:59:02 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u53I4-000Jpw-0h;
+	Wed, 16 Apr 2025 13:59:00 +0000
+Date: Wed, 16 Apr 2025 21:58:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Song Shuai <songshuaishuai@tinylab.org>,
+	linux-riscv@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, Nick Kossifidis <mick@ics.forth.gr>,
 	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v4] fs/fs_parse: Remove unused and problematic validate_constant_table()
-Date: Wed, 16 Apr 2025 15:57:31 +0200
-Message-ID: <20250416-rotkohl-braut-dfc64e8453af@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250415-fix_fs-v4-1-5d575124a3ff@quicinc.com>
-References: <20250415-fix_fs-v4-1-5d575124a3ff@quicinc.com>
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>
+Subject: Re: [PATCH v3 2/2] riscv: kexec_file: Support loading Image binary
+ file
+Message-ID: <202504162100.DHKsuYS1-lkp@intel.com>
+References: <20250409193004.643839-3-bjorn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1142; i=brauner@kernel.org; h=from:subject:message-id; bh=wb1pgTkDhh561dN6uYHfGumqPzKkLa6WfQktifFPInY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaT/3x6244bq6SouZqY3t9fbvD25JSTr8aQiv4tL3+9+o 1Q8Zfpq445SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJ/BNnZJjvLz3jvqjkk84E b+36Mm5956u7nd70BNuxORlphjs/z2JkaKhgPah+YO8LmY+ZYjIfpggENP/4dfGV2dLFbrecLvz cyQEA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250409193004.643839-3-bjorn@kernel.org>
 
-On Tue, 15 Apr 2025 20:25:00 +0800, Zijun Hu wrote:
-> Remove validate_constant_table() since:
-> 
-> - It has no caller.
-> 
-> - It has below 3 bugs for good constant table array array[] which must
->   end with a empty entry, and take below invocation for explaination:
->   validate_constant_table(array, ARRAY_SIZE(array), ...)
-> 
-> [...]
+Hi Björn,
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+kernel test robot noticed the following build warnings:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+[auto build test WARNING on a24588245776dafc227243a01bfbeb8a59bafba9]
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bj-rn-T-pel/riscv-kexec_file-Split-the-loading-of-kernel-and-others/20250410-033243
+base:   a24588245776dafc227243a01bfbeb8a59bafba9
+patch link:    https://lore.kernel.org/r/20250409193004.643839-3-bjorn%40kernel.org
+patch subject: [PATCH v3 2/2] riscv: kexec_file: Support loading Image binary file
+reproduce: (https://download.01.org/0day-ci/archive/20250416/202504162100.DHKsuYS1-lkp@intel.com/reproduce)
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504162100.DHKsuYS1-lkp@intel.com/
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
+All warnings (new ones prefixed by >>):
 
-[1/1] fs/fs_parse: Remove unused and problematic validate_constant_table()
-      https://git.kernel.org/vfs/vfs/c/02c827b74082
+   Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
+>> Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
+   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
+   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
+   make[1]: *** [Makefile:1804: htmldocs] Error 2
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'htmldocs' not remade because of errors.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
