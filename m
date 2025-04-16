@@ -1,67 +1,41 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C5510E9;
-	Wed, 16 Apr 2025 22:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D9A22AE7F;
+	Wed, 16 Apr 2025 22:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744843163; cv=none; b=PhNRTAQ2/U8asIc+53lOUEoErebbkNgZHze4j/eV0DDwltSIWLWmjcHDi5u96TY5R9TDiHOnQ7Kgc3GIYQk6JQiXuIsjvljTJ/WoKkfybLHj/gDESScbN4HmlSN6mV7fyOIsNJ8ADbl9pjbWYWgSgrfQ7WrgdCwS2ogRdChfiSQ=
+	t=1744843178; cv=none; b=l/FyTASFYv6bZbiP2ZepPhzEKnJsk2b26zgpGmpNjDQmV0K5tGkrI5TZQPOCuBQACIk5ZVKKYipTIH7GHJF10/0/e6DKQT9VPYOTzzwTaMpDhnRh/1uagjL1lhGx8Mcf243Yg5jUh8unfiDy+2pMgyApFtcAjcF7yYrM9Uk5nyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744843163; c=relaxed/simple;
-	bh=0ywOkpmSZy7QtERVDSIovJBSJd0Y/wXSpooai/mQx/8=;
+	s=arc-20240116; t=1744843178; c=relaxed/simple;
+	bh=dfjUkTnkooHdLbSe39GjQQ+oQfKghxIpVIt8JBXsuHI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ei05XMI1Bz5gv3mXi7cFuWbK7dbbHGAcAJqOPtU8PfVKWCOnd0AyZdefPtjLBdEq6kpSV4M55NvBuwV0trYFhXgqagRqvhJyMgZbfNpAbv6RqWHMtPbHNCoZkgu0GLuFb2V0ZvAFjgoTiV+4NEeeR2gXv3Oq0x+FXdn5zFtBmF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lk50EdKr; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=EdHSnwarMF8he3BzfLlnGuZyglZS1j6lGclD2XGdaohuEXDWI40iYqFNtd6l6UlS09KD7xeMpaVWndkcBpNgfjMPvQt6TQCfBqlnzJ3SK+Eru8FF3yptLpm2Fpwg1EucI4hK3CXbytRm871hyhWIs2esOP5EPhOY1fnSOZqw21s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=XQqh+P8+; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lk50EdKr"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7398d65476eso146475b3a.1;
-        Wed, 16 Apr 2025 15:39:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744843160; x=1745447960; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=Di+6RrXPMua2n5HMdjgC2sjgj2KIsJT0GcUG/FHGyWg=;
-        b=lk50EdKrGToCrtm8bcDwKxKrQD7u+8gYw0nz8QFkziBcMoouR7J7tfuRiOESOdx3Rg
-         pan2ep4kZymqD+msb8R26S8Q8Q9bcHbhpcE7duBC7so6WcfesYXaMej7e8J6aNUMw613
-         nI1TvHV9GO3JBs55NdmAWFFdKfF8JVcIYBHz3JB03BJ/3K4eFJD0P6oU8xaol6FLH+V9
-         XM1Xau9rlGzo/fbHataoLp2VVZslP+u4dhVlw7Zp0Rhn3wXtgsVSQb125x8Unw8ymqZu
-         /fkErgjnkirvirHiZ3fOgZggdVVWUJgdbU0+A5dLSUAXO3vKr5MVkvFpH/0YClimnk/S
-         RDAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744843160; x=1745447960;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Di+6RrXPMua2n5HMdjgC2sjgj2KIsJT0GcUG/FHGyWg=;
-        b=W2Ckt1mBUjdib/ztrN8RjMGISSQVTRAoIhwGs+ao1o3wDeSUrfMoIoKSqYEVk4DrQh
-         c/D5LLIwcrFais3hGN2sK3lvOpZgwfzhwIrbVL5n/tE8JjWoec/lHRuP1zldFI2ZZ72M
-         uz0s/rb8I7sOeElzNNMSZ4LghEI+WxRAsYOBAWQy00UFrR3gd3I6ejE6i9rjtwELOtdZ
-         us8ddacYB5u6mB4145NEY17SWhhvtVnZ47V8oA0w/G0WtWDdF6bWu6oOjeQsu/wbwZ5b
-         z0RqkjMYZmYmreYQ2qnmHD1VkPGPzQwJdyU/u/LJot74Ji0Lmu+tbp8SlCKcMcT6/YM4
-         aHRA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1KM0LoU+w6rJ8zJTov6ulu8tTDReOpnyKuhuZcQrBLkrPX37CVAld7aGiXqiXIQHLAZIgwLMHzxv5z4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyac1tZwXDE172kY86WstcjuUkdp2G2Jx69KHCEbN4TxLCrWDXt
-	Ti99RepYM+mnYrkGJmUOu3+aKZnZJq9QeCypKPcA8WfWX2SYAEwbW6pR3g==
-X-Gm-Gg: ASbGncuAGSfCc6dMtmKJKYnl5Bml/nhC9kV9qU6ibU+B/gj/mpJA+wHreWl3lbIrMXf
-	XMm5yD01aVvxKEMVgwx39+Ab/5+QGEabRZ3PjTkFL/LsHl3Hlvn7T1Mj5ftz8qrwUyv7+oM+KX/
-	pF3ZcYNZRKsAxEwN2S/pIs/mPw5+kdsARGeGrboQMNSs9s+N9xHJmtPx8y+LkCRaf3UdWJJqBIL
-	EoPMC3gKCdL7WbPmlKBiZfkl6tFMmKiOmwd5iedhHhxqw0ahlR1vGGPYiuyt3SG57cO1G/mn7xw
-	tXQ3lNqCcHaOSoMd3IqA29/6qimPXNcsremg8udVwqnrdd8ICuwBGGIIfk+JrD9X/L6LXbBeR2F
-	ZAGhK3+1+5S76nw==
-X-Google-Smtp-Source: AGHT+IFuCCSXFvoFhMreSQd0DEHVwTsEvcp0YeLQlNe0ZZsZTT5kLoxK340mBNQHrXjJTwv3gWowZQ==
-X-Received: by 2002:a05:6a20:4322:b0:201:8a06:6e3b with SMTP id adf61e73a8af0-203be006cb1mr884687637.9.1744843159690;
-        Wed, 16 Apr 2025 15:39:19 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd21c6059sm11427957b3a.51.2025.04.16.15.39.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 15:39:19 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <acf31929-5d13-4fc5-b370-ab7fc5062455@roeck-us.net>
-Date: Wed, 16 Apr 2025 15:39:17 -0700
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="XQqh+P8+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744843165; x=1745447965; i=wahrenst@gmx.net;
+	bh=Nlwas3DwFjCfvrdUu+/G6DY1kui3FvZP2pV8o9eVc3Q=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=XQqh+P8+PkSdW9SX48kqfAlucl0K3a6YymgcUaxN1fgYS7QrQZSOyE4pAMmapFNe
+	 byCBEH0rbY/CVi23wW341uJN5hhs5qsuCptNc/X8MFPBZ4nzMI+tOGuennfIZK74T
+	 2edCdekf4DzkylGq/U+Xrad8njWKS4H3djFXHGOw8wadGGazzKIx8TnlZLdh64/M1
+	 Qe2OHKeQ+bTkryF5gol/eb1q9meEHL0U5bN/ttVZeCCzZVLxZ0FiVCfYElChTRF4d
+	 cx4MRwkUYvuNbY+MAkeWwpEclanOmGYmOPQUJiE/obd7X1o9FHoRA2wK8qTfRQg3G
+	 RX70WJ2jxqsCjO+YnA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbzuB-1uielG0VGp-00gVPk; Thu, 17
+ Apr 2025 00:39:25 +0200
+Message-ID: <6511c88d-7876-4f69-81f1-1206056d061a@gmx.net>
+Date: Thu, 17 Apr 2025 00:39:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,225 +43,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] hwmon: (spd5118) restrict writes under SPD write
- protection
-To: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>,
- Jean Delvare <jdelvare@suse.com>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-0-8b3bcafe9dad@canonical.com>
- <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-2-8b3bcafe9dad@canonical.com>
+Subject: Re: [net-next v5 2/6] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2
+ switch description
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Simon Horman <horms@kernel.org>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-3-lukma@denx.de>
+ <06c21281-565a-4a2e-a209-9f811409fbaf@gmx.net>
+ <2c9a5438-40f1-4196-ada9-bfb572052122@lunn.ch>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-2-8b3bcafe9dad@canonical.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <2c9a5438-40f1-4196-ada9-bfb572052122@lunn.ch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:2DQfa/1BzaIm5QWQ4icl0vbZnH/GHqqbwF4kMTdqWgMb/6zSMPK
+ wd1ROmb6SjnV0gMM0So2NhHWW9Phs0qFXRyAGxVGvbAMSl5qeL6gGudlQen0WUK11oGVHie
+ t1UufVoIdntlOLHUWT1UjJnR08FeM6966aVRIJ0DMAH3d7pE8GkoJo8gJwCGvDdN3fBMHco
+ CYA84rTkV0LDV72kNGTog==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dRVddgF5sOg=;TyBy9LdOd4S+gyg60RqverJ7zZh
+ x6rl5J/wvGjFzhxuWNRH8XC3qK4oR6r6+ECmIO7IuTIgGgibrqpeAWP7VLd9ia1H7+27okkb9
+ qC6Iu3GJTKqHxdKEcbURewxsbMr/ZTpxE4KjC61JFy1c1Mus0/Ys/iKHUZJrlknxUlzNYColE
+ 6w3sV3TRKO6bFwuR5dA4XkyPGNHjzQyLacXWJcPgSahOqAX6m3Sc9seWP1AkIHkQ8y5DewoCP
+ 699Vxq4kE2GO3Dp0WoKuDua9QpKxgQvUFGBGGrelS5ZVhcbvUDJaEcmkMQk2DJ0W747MVBVDP
+ HoJ7V4jtV0XxVxfGGq4A/cl4fw6eXWdzu8vnQZLX1qqQQBuLCv7cnYlDLEdNtUBhoxdqWi/C6
+ Ks07jaZ5M/dKyIyz6LvbvjMo0Fo2RTkVyDiHUFCMSVT7//jyNAepAyrXiDLKCBUORQxRslnFE
+ 2nhbBBuj4ncNwbyzgJ5D3oTUxZWoQdntwi0BY6cubreYsN6vzA1htyReJgeZh2fkS6b4vX8JX
+ N9BOHJyjImQh1Ymekz/YDltQTzegcIwFvZ88PoIhBELPAy3XZ8yVvaEUSxc0WwLGCXwE0J0Fx
+ ItLQSnn9+TBOLwrkrYEIfEUp9HF87FBQVc+MfSAYEYPCNTQK0KOEprpZTfblvNz5QSf7+9xx6
+ qDgDrqiTp3OtRycsBdmlzHR9qj0/qljQ61dozve3VdsgKIei2Cbjl3NFY+rjmVqTqTvJCv7Sw
+ 9Uh6mj/XiMjufaHlLUnGjTvMfXUrXtOB0whAXA2zeq/OdiiDDH+N1Vvoi0M/HMYL5LUNRWS/q
+ J5dsyzivhsYsOt+FT1VMWWPkOQgK/0RhhUDikECahMH75j/quMvcobzyiz+8QBmW+1Ogg0fFl
+ edDKqkLOSAhC+xvvFY0+GdKDJldpygAVRwBWnPm4q2+V8zoumY7NKLi57UYjLq+3OVc7oI3nT
+ /ueWSJF8RDqRj8nCA0SFDbUuIphi0PTzg0MVoaEn8hHa3qAlkwC0uoAHsCEEPAC+KiE97oDT3
+ G4RKvxWQPgId4GWqbuzL8LncLXBF4tMcAciRmNzRq3pZDTgkbHrnl3HP7OGU9NevVJKerxHNa
+ pzOs8I8auw7Gy4L8FGWhK5/a/YHjESmrJALT+qy2oyQzDSXyvyhnbv7aU5x7pTkCB3BIiZL3p
+ fhZyx2VyC8wqvJG/bNH3Ps7+dIn42bmJJ97wnJoFz+fqc62I71k03jtN7n8oCuG+9zQBacFQN
+ NZVzYclk9ueyrm03jFo90m0oIVEMexDwCPrUKOBcO/sJXQrwWEt3QVx7UgMLzPERlN/K7YPCj
+ Ta67db86Cm55uMqZJ0lbF5+Yta8m2qA8DHNuOe6PluQ/uCdqMHhtCeN2a4//sTYpj4QElyFoZ
+ L7VxjDhxXmhnRPdl+siAugM1w9SOp/VSCKHh4umKhB2sWx2hEvjifuxwXShOyabpMJhNaZ/V/
+ E9rfVhzUZwGDQ2EFdkZBaKjlOmAY6RDAWxoyy4eJXuYF5ga9mnm8T8t5scpEWaepeuJFqxTsS
+ VkWPwipyEyedhfOW1ND3vqJ2KjNTux/GTuKLpnDsVI9nN/X8i5iic4FZn6tPCOsi4GCXuN+WN
+ jsxNSP/Ns0HHNIHqzXHXFL31F6gK7vPzgmo71/kKwKC4kmNPQFylg67Mf67jqN9AtVMW/ofqw
+ Js+wyPwPhkSYkJSSK8gJm91XNubm07Xyq73MnekRxch5wpndaqmlAwauoQFtmqDyuKJ0j0mVW
+ v5E5onIB8JVJWpZXcmP/pCYSOryUMXBIBZDixVtA0FBqjxzsm72m1eZ2Nv5JvMpVnlXsCcTCh
+ RtJSjx3+jFgNjD4BTGai08I2EcPSow5ZCrRv5Sanniej/IxHRTIFgxNtP415HTYX9pUKGhmnw
+ sYR0iZw1UONwqxMs6XMbIIjOCFsdvNY21N81oS3maOTzol7xiF1w12+hf+S2bB4DMzNmCdzcR
+ uTYQ+PRZzYat/DTRFqOQLFwkrz2/JhDXlVVyOwrbn7yVlPDuU+2wVv8V7jWmTjxEiLnTSOE05
+ voJH4vRiaD3W159hbWh4IZooHa1XnsIQDzE1SVpgsGuawuped+A/EivVNa0tT4u/TIMOt8sNJ
+ 0nUPVtzyGEp1/Ixdi7808Wk1o9VmFOFc9Ac4TyXmjEID8P3c0hhnf8CN3OMW0mLFZbjibHxNM
+ 1DUZvjzsapLqrRUEGAKb/P/od/5feDBJ4jlcCJhyGalQ/DS93Fv95xgeu2f0ECOaf/wx2YRk2
+ ZC1HVAHkTPjE8651Txpt+jeISaQbKIRAFvFSFeg5/ilMxRrRcR5fjewu+iVvbDdBSiX7wNRkl
+ xoO9y1Tcboh93kFV5T7+QP86ReXXeeibmNrdG5kmLvbnjQEKW6FFd80Fnh4JDY2z2t4npV3nd
+ 1WXjsyT9YwCf2GvWS4U5o/ohi0m8g/em+VM7bzM15Nkw0WRdOk6eqyYmuTrAh5+NT0tHPXotI
+ DUY8MFZrKJDpsgGyS2+olcMpcUFxBSJgNsc5LLKAq5tmD6MwIskXd9KSm1VhRDKy1FeDaS7Y/
+ +jzuPhVyqxs1az9/CF1ZnvrBWjmRfyfMXIJG8pdo1QyPioXsPZP4uQhXGQGGoe4DMSyqadcw9
+ xngu1U4xg+N4o8D10mxtShXZBwkRkT+FmPsrCgZuq4caI1XLl80aoH580wLeH963tsBa1IKt7
+ CHMPyjzz2CcvEmzQpC4fYX2nVvALxNT1LVmS+jf8+oancOzp6lsGwdOFLN3SjklWvT47Y3qex
+ Fw9fF+uh5pokzH+P/7vjgJWZxulAE1Er6DJkGIn6AYxFavsVwdaDHRi7HfgWGRN9mT8A60Z8d
+ 5sSVH7nchHh4THS2MyQgNJgF2R76+y5TY9KbERHDUu2p8JSR1djKyDS2mDT5Eb+cUs45j38a9
+ IThlCXwmBWyoBuGXZ2E4+IKyyP7HFL7KpUm6ybPK+ws1lIZzyGS1Zt+EBwBzdQnnWNts/momW
+ LM5rK3AEEYDQVdYMs5dTJtZlwJEZYAbBHKHpv3fgPDfIEQYvHZgagrxKJAT//7vQjrrUCpqOV
+ UJ7soJFLEqFJKhUG0L6EyM=
 
-On 4/15/25 23:46, Yo-Jung (Leo) Lin wrote:
-> On some platforms, SPD Write Protection for the SMBus controller may be
-> enabled. For the i801 family, this will forbid writing data to devices
-> residing on addresses from 0x50 to 0x57. This may lead to the following
-> issues:
-> 
->    1) Writes to the sensor hwmon sysfs attributes will always result in
->       ENXIO.
-> 
->    2) System-wide resume will encounter errors during regcache sync back,
->       resulting in the following messages during resume:
-> 
->       kernel: spd5118 1-0050: Failed to write b = 0: -6
->       kernel: spd5118 1-0050: PM: dpm_run_callback(): spd5118_resume [spd5118] returns -6
->       kernel: spd5118 1-0050: PM: failed to resume async: error -6
-> 
+Hi Andrew,
 
-Missing:
+Am 16.04.25 um 23:58 schrieb Andrew Lunn:
+>>> -		eth_switch: switch@800f8000 {
+>>> -			reg =3D <0x800f8000 0x8000>;
+>>> +		eth_switch: switch@800f0000 {
+>>> +			compatible =3D "nxp,imx28-mtip-switch";
+>>> +			reg =3D <0x800f0000 0x20000>;
+>>> +			interrupts =3D <100>, <101>, <102>;
+>>> +			clocks =3D <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
+>>> +			clock-names =3D "ipg", "ahb", "enet_out", "ptp";
+>>>    			status =3D "disabled";
+>> from my understanding of device tree this file should describe the hard=
+ware,
+>> not the software implementation. After this change the switch memory re=
+gion
+>> overlaps the existing mac0 and mac1 nodes.
+>>
+>> Definition in the i.MX28 reference manual:
+>> ENET MAC0 ENET 0x800F0000 - 0x800F3FFF 16KB
+>> ENET MAC1 ENET 0x800F4000 - 0x800F7FFF 16KB
+>> ENT Switch SWITCH 0x800F8000 - 0x800FFFFF 32KB
+>>
+>> I'm not the expert how to solve this properly. Maybe two node reference=
+s to
+>> mac0 and mac1 under eth_switch in order to allocate the memory regions
+>> separately.
+> I get what you are saying about describing the hardware, but...
+>
+> The hardware can be used in two different ways.
+>
+> 1) Two FEC devices, and the switch it left unused.
+>
+> For this, it makes sense that each FEC has its own memory range, there
+> are two entries, and each has a compatible, since there are two
+> devices.
+>
+> 2) A switch and MAC conglomerate device, which makes use of all three
+>     blocks in a single driver.
+>
+> The three hardware blocks have to be used as one consistent whole, by
+> a single driver. There is one compatible for the whole. Given the
+> ranges are contiguous, it makes little sense to map them individually,
+> it would just make the driver needlessly more complex.
+>
+> It should also be noted that 1) and 2) are mutually exclusive, so i
+> don't think it matters the address ranges overlap. Bad things are
+> going to happen independent of this if you enable both at once.
+>
+>        Andrew
+i wasn't aware how critical possible overlapping memory regions are. I=20
+was just surprised because it wasn't mention in the commit message. As=20
+long as everyone is fine with this approach, please ignore my last comment=
+.
 
-3) NVMEM access will fail
-
-> To address this, check if the sensor can be written to at probe, and bypass
-> write-related functions if writing to the sensor is not possible.
-> 
-> Signed-off-by: Yo-Jung (Leo) Lin <leo.lin@canonical.com>
-> ---
->   drivers/hwmon/spd5118.c | 31 +++++++++++++++++++++++++++++--
->   1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
-> index 3cb2eb2e0227..9dd5342c31dd 100644
-> --- a/drivers/hwmon/spd5118.c
-> +++ b/drivers/hwmon/spd5118.c
-> @@ -75,6 +75,7 @@ static const unsigned short normal_i2c[] = {
->   struct spd5118_data {
->   	struct regmap *regmap;
->   	struct mutex nvmem_lock;
-> +	bool write_protected;
->   };
->   
->   /* hwmon */
-> @@ -284,7 +285,7 @@ static umode_t spd5118_is_visible(const void *_data, enum hwmon_sensor_types typ
->   	case hwmon_temp_lcrit:
->   	case hwmon_temp_crit:
->   	case hwmon_temp_enable:
-> -		return 0644;
-> +		return data->write_protected ? 0444 : 0644;
->   	case hwmon_temp_min_alarm:
->   	case hwmon_temp_max_alarm:
->   	case hwmon_temp_crit_alarm:
-> @@ -499,7 +500,7 @@ static const struct regmap_range_cfg spd5118_regmap_range_cfg[] = {
->   	},
->   };
->   
-> -static const struct regmap_config spd5118_regmap_config = {
-> +static struct regmap_config spd5118_regmap_config = {
->   	.reg_bits = 8,
->   	.val_bits = 8,
->   	.max_register = 0x7ff,
-> @@ -563,6 +564,21 @@ static int spd5118_init(struct i2c_client *client)
->   	return 0;
->   }
->   
-> +static bool spd5118_write_protected(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	int mode = 0;
-> +	int err = 0;
-
-Both initializations are unnecessary.
-
-> +
-> +	mode = i2c_smbus_read_byte_data(client, SPD5118_REG_I2C_LEGACY_MODE);
-> +	if (mode < 0)
-> +		dev_warn(dev, "Failed to read MR11: %d", mode);
-> +
-> +	err = i2c_smbus_write_byte_data(client, SPD5118_REG_I2C_LEGACY_MODE, mode);
-> +
-
-That would try to write the error back if MR11 can not be read, which would be
-a bad idea. If the register is not even readable, being able to write it is of
-secondary concern.
-
-> +	return (err < 0);
-
-I think this requires a better means to determine if the address range is write
-protected. The above is just a wild guess, after all.
-
-Isn't this already handled somehow for DDR4 nvmem (ee1004) ? That has ultimately
-the same problem because ee1004 devices can not be accessed if the i2c address
-range is write protected.
-
-> +}
-> +
->   static int spd5118_probe(struct i2c_client *client)
->   {
->   	struct device *dev = &client->dev;
-> @@ -580,6 +596,11 @@ static int spd5118_probe(struct i2c_client *client)
->   	if (!data)
->   		return -ENOMEM;
->   
-> +	if (spd5118_write_protected(client)) {
-> +		data->write_protected = true;
-> +		spd5118_regmap_config.cache_type = REGCACHE_NONE;
-> +	}
-> +
-
-This is insufficient, and overwriting spd5118_regmap_config is not a good idea.
-It should be a completely separate configuration which does not list any writeable
-registers. I also don't see the value in dropping register caching entirely.
-
-However, even that is insufficient: The driver relies on the register range
-being writeable. It is not immediately visible, but the regmap code writes
-MR11 to select the nvmem page. If this fails, the entire driver is unusable.
-At the very least nvmem access would have to be disabled. However, if the ROM
-monitor left the chip in read-only state and had set the page to a value != 0
-(I have seen that with some motherboards), temperature monitoring would not work
-either at least for memory with spd chips from manufacturers who took the
-specification literally (such as Renesas).
-
-That does not apply if the chip is programmed in 16-bit mode (which is not
-currently supported), making handling the situation even more complicated.
-
-I think that drivers/i2c/busses/i2c-i801.c should detect if the address space
-is write protected, and the driver should not even try to instantiate if that
-is the case.
-
-_If_ the driver is to be instantiated, the write protect flag should be passed
-to the driver from the instantiating code, for example with a device property.
-
->   	regmap = devm_regmap_init_i2c(client, &spd5118_regmap_config);
->   	if (IS_ERR(regmap))
->   		return dev_err_probe(dev, PTR_ERR(regmap), "regmap init failed\n");
-> @@ -638,6 +659,9 @@ static int spd5118_suspend(struct device *dev)
->   	u32 regval;
->   	int err;
->   
-> +	if (data->write_protected)
-> +		return 0;
-> +
->   	/*
->   	 * Make sure the configuration register in the regmap cache is current
->   	 * before bypassing it.
-> @@ -662,6 +686,9 @@ static int spd5118_resume(struct device *dev)
->   	struct spd5118_data *data = dev_get_drvdata(dev);
->   	struct regmap *regmap = data->regmap;
->   
-> +	if (data->write_protected)
-> +		return 0;
-> +
-
-suspend/resume support should be disabled completely in this situation
-since it is very much pointless.
-
-Worse, if the BIOS for some reason decides to select a different (non-zero)
-page on resume, the driver would be completely inoperable after resume.
-That is another argument for not instantiating it in the first place
-if this is the case. The impact is just completely unpredictable.
-
-Guenter
-
->   	regcache_cache_only(regmap, false);
->   	return regcache_sync(regmap);
->   }
-> 
+Regards
 
