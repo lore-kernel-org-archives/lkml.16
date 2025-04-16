@@ -1,224 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091E01A08A0
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1578233719
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 10:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798589; cv=none; b=oB8dAkRpmMVoe1KLY8ZaGgdygo5bjiqW/WjFbze4FU8t6mtGr1HgfNO0hR06VhK9S9lULYy27Wn2o3MajF6hAkfcR31zzSjJoMk5Pq/L3Y2Uwps5Pfn0BVwHatnrq38xvyd4yMqLpEKT19HkCW8VoahABmPcHciq2UY2bIjr2CY=
+	t=1744798617; cv=none; b=R0wVATd9U7TD06A016NaA8AKNRI+rjKcYLdRdGNT75Px8DIQDMfUaBwaQZ+aqEFb60vzszEHNpoZdjJuaeo2tZerjfaa9A9g5CSYDlzUUbEma4wI9iZ5deA0hyVPXcjTWCKpgnqFGzxzX/hr/2+AzPvI+fKGEjQWUzs+xuuBmLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798589; c=relaxed/simple;
-	bh=LR5XHJIsv4KSkncTHnzjZxFzOCeJ57mh3HG+NkOwuJg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WR4/d+juPVQ/uBPIlx66FUgIwbAdrQYn2vRpHNdPbnwK3EOlETgUCDFgqwfbqTaOtofNuo7Wj8iHZS0STDDCYHzX2v7KdjkBcawaPdr6wK5JWaHlMmQb+XZcj8ePIMwvWKTVy4uvp0ffG3aM8PE6SphliUKmzS6rs5COTWPZyc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=btdDQsaM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744798617; c=relaxed/simple;
+	bh=PGm+GU8XfEbUcit4uprZrnkBRFqkEAIdH5XxUJAMH80=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ozy1h/CSsT67s5wtJl6PYZqA3z+H91Bhxqsfw9upt7ZcgNzR2+Bv26JQeucEEip0vPxKHTjH3BGzF76LfdMLeEy56DJkNANMrjF0oqTHHu6HfPKMs7RcMkW666uf2XjrvspYcySMWcPAV047UT2Lp0r0uwqXXX8KdAd1uXqoHug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TPay27wQ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="btdDQsaM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744798586;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DyNtBtrm5YLzS/2qKU4Cviogs091o5wq6s+fDtuLR4s=;
-	b=btdDQsaM47XOm7K32M/toCA9tZQCddngDcst1e5ecPMNjFOWY+ia1Yd1za/hLO+EApINu7
-	+18Qznz1TKXQKvo2vGMsS/Li8D8e+4Mz7OyeqISSVFwWeNXXZ4X8c0FRXebp/6I/jZsOpi
-	eck3LFK/G/e8nvRKMBxuAuKedCRTd8Y=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-154-LKCANsFeMcWy7Lg_NSERcA-1; Wed, 16 Apr 2025 06:16:24 -0400
-X-MC-Unique: LKCANsFeMcWy7Lg_NSERcA-1
-X-Mimecast-MFC-AGG-ID: LKCANsFeMcWy7Lg_NSERcA_1744798584
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so6944235a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 03:16:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744798584; x=1745403384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DyNtBtrm5YLzS/2qKU4Cviogs091o5wq6s+fDtuLR4s=;
-        b=K7nhcT1iYn8dH55B8AJ9HO1tknrElkIwZcgaEVQmA0J6FjMOB8eEIsAlSU2auJ5xPg
-         vY7mzbh/uf96YDBkXjjRde+M+FUNM4mpsgTL7QVpVQGXYpKrAwD+zwh3xx+scLXBkPIw
-         1yDg7vCJFRlS7S7xR6pVQyNQVLI067tnQm080Yba1qdKvE9OKBTT7lKKUdTvGPoNc65E
-         zwxQaVMnAAflxbh6ycGNhBqRiX6/vVPmcTyFPOfL6sCiQp2+A+TSIMEjkjjiU0Lqn2lA
-         j0ZQy1qrB2wJ3Ej7wGDWHFBvPsQ/WbWpUKdJFptdg5vdRPI4fUe/m6YXbHGssc/sapQY
-         tvBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXg1e1oNL/QzQGtaCzGoAChm1W5aekdeKmmGaJuwai1eqdCWWXyLb4USSGmLTkEwRJ1ZhpZS9g47gwAk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeY2kBz6wQcuwqkWTG5aQsf4UfeYr8MCZBw0ZfKsFfbh+I/T9D
-	lBlGMKO32iE06GZFpFk9veumsR+WP05S58VBSyRSYxPbQCS4fXTHtHNkdg04QVgxedE6p0cMkB4
-	Y9mpmklzm9W46pBxf2SCIQHvZLEyyPfXqne47Q0ghDozmfjt2oXcZnCzzxgRgDh4fZREYKQB0YE
-	t88uBL2KTI6bTUhPJwqZlaqUGxdxAXulucDGBA
-X-Gm-Gg: ASbGnctCjZiStaa7EzFnNGUt7ZMoqZmFTEGiuUStKznY6GHmlUWsVMXOQ5pdIutRSaC
-	ZttcbOdtWwXyiY/5zW3AjAsVPyDbfXLRR3RuF0mO1JscpDLfcq6G9MY0h1Hfb13RYO10=
-X-Received: by 2002:a17:90b:548d:b0:2ff:6488:e01c with SMTP id 98e67ed59e1d1-3086416ec3emr2001428a91.29.1744798583591;
-        Wed, 16 Apr 2025 03:16:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG5B8+MIOMuQKL/Q5Vh62fe3WjdrGJl1cNAbpCB38cbA9+YtL9G5ILgxGaQgBlKd18KrUdkzh0QkQQPJug9YUo=
-X-Received: by 2002:a17:90b:548d:b0:2ff:6488:e01c with SMTP id
- 98e67ed59e1d1-3086416ec3emr2001387a91.29.1744798583226; Wed, 16 Apr 2025
- 03:16:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TPay27wQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744798616; x=1776334616;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PGm+GU8XfEbUcit4uprZrnkBRFqkEAIdH5XxUJAMH80=;
+  b=TPay27wQpKebweUBQxUxCef8KhiHsNJFHewGgYRuF01IHGROJ07iBVGR
+   wY6JWmwVp5GLbEsj5ON9Bg0lgV/5aLvQlkW72cxa+RyFyvlSr6fICil1Z
+   8rXt3d0NNVQdsTCoMJX72qACHzPJ8zglLut6huZRD/phBXod/CB5WdzeP
+   XXetkMun5eZnLV7F8Lo7WNbIzM9WTEVVf209ITYhNcVNqaSnvvkE9+4bH
+   smEmTVU+qBlRkTRF6eKQ2BCdShbUHi3jf4cdZetTfNDUWeoZELWxwYUar
+   bVU6736ZQmENPC8Xk2sXDpx3X3dy7CoXRHqOc1M5FeCk/x72lWw6Y/fbF
+   g==;
+X-CSE-ConnectionGUID: D+0M9U4ST6KFG5cLC/Ovlg==
+X-CSE-MsgGUID: dY6wCLgpQ8iWKDczdN+15A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="56517111"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="56517111"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 03:16:55 -0700
+X-CSE-ConnectionGUID: UWq6lwDfQLKp7NuyJZ/qDQ==
+X-CSE-MsgGUID: ruZbGbE2SMekcxEOFSF1Ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="134516004"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 16 Apr 2025 03:16:54 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id A6C2AF4; Wed, 16 Apr 2025 13:16:52 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] genirq/irqdesc: Use sysfs_emit() to instead of s*printf()
+Date: Wed, 16 Apr 2025 13:16:51 +0300
+Message-ID: <20250416101651.2128688-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404145241.1125078-1-jon@nutanix.com> <CACGkMEsFc-URhXBCGZ1=CTMZKcWPf57pYy1TcyKLL=N65u+F0Q@mail.gmail.com>
- <B32E2C5D-25FB-427F-8567-701C152DFDE6@nutanix.com> <CACGkMEucg5mduA-xoyrTRK5nOkdHvUAkG9fH6KpO=HxMVPYONA@mail.gmail.com>
-In-Reply-To: <CACGkMEucg5mduA-xoyrTRK5nOkdHvUAkG9fH6KpO=HxMVPYONA@mail.gmail.com>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Wed, 16 Apr 2025 12:15:46 +0200
-X-Gm-Features: ATxdqUHCH-V7i7CU2wT16iuVXDT1SGacdB6YBRKLTHXg-jyKPzbjSDLkTwgL2pg
-Message-ID: <CAJaqyWdhLCNs_B0gcxXHut7xufw23HMR6PaO11mqAQFoGkdfXQ@mail.gmail.com>
-Subject: Re: [PATCH] vhost/net: remove zerocopy support
-To: Jason Wang <jasowang@redhat.com>
-Cc: Jon Kohler <jon@nutanix.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefano Brivio <sbrivio@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 8, 2025 at 8:28=E2=80=AFAM Jason Wang <jasowang@redhat.com> wro=
-te:
->
-> On Tue, Apr 8, 2025 at 9:18=E2=80=AFAM Jon Kohler <jon@nutanix.com> wrote=
-:
-> >
-> >
-> >
-> > > On Apr 6, 2025, at 7:14=E2=80=AFPM, Jason Wang <jasowang@redhat.com> =
-wrote:
-> > >
-> > > !-------------------------------------------------------------------|
-> > >  CAUTION: External Email
-> > >
-> > > |-------------------------------------------------------------------!
-> > >
-> > > On Fri, Apr 4, 2025 at 10:24=E2=80=AFPM Jon Kohler <jon@nutanix.com> =
-wrote:
-> > >>
-> > >> Commit 098eadce3c62 ("vhost_net: disable zerocopy by default") disab=
-led
-> > >> the module parameter for the handle_tx_zerocopy path back in 2019,
-> > >> nothing that many downstream distributions (e.g., RHEL7 and later) h=
-ad
-> > >> already done the same.
-> > >>
-> > >> Both upstream and downstream disablement suggest this path is rarely
-> > >> used.
-> > >>
-> > >> Testing the module parameter shows that while the path allows packet
-> > >> forwarding, the zerocopy functionality itself is broken. On outbound
-> > >> traffic (guest TX -> external), zerocopy SKBs are orphaned by either
-> > >> skb_orphan_frags_rx() (used with the tun driver via tun_net_xmit())
-> > >
-> > > This is by design to avoid DOS.
-> >
-> > I understand that, but it makes ZC non-functional in general, as ZC fai=
-ls
-> > and immediately increments the error counters.
->
-> The main issue is HOL, but zerocopy may still work in some setups that
-> don't need to care about HOL. One example the macvtap passthrough
-> mode.
->
-> >
-> > >
-> > >> or
-> > >> skb_orphan_frags() elsewhere in the stack,
-> > >
-> > > Basically zerocopy is expected to work for guest -> remote case, so
-> > > could we still hit skb_orphan_frags() in this case?
-> >
-> > Yes, you=E2=80=99d hit that in tun_net_xmit().
->
-> Only for local VM to local VM communication.
->
-> > If you punch a hole in that *and* in the
-> > zc error counter (such that failed ZC doesn=E2=80=99t disable ZC in vho=
-st), you get ZC
-> > from vhost; however, the network interrupt handler under net_tx_action =
-and
-> > eventually incurs the memcpy under dev_queue_xmit_nit().
->
-> Well, yes, we need a copy if there's a packet socket. But if there's
-> no network interface taps, we don't need to do the copy here.
->
+Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+should only use sysfs_emit() or sysfs_emit_at() when formatting the
+value to be returned to user space.
 
-Hi!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ kernel/irq/irqdesc.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-I need more time diving into the issues. As Jon mentioned, vhost ZC is
-so little used I didn't have the chance to experiment with this until
-now :). But yes, I expect to be able to overcome these for pasta, by
-adapting buffer sizes or modifying code etc.
-
-> >
-> > This is no more performant, and in fact is actually worse since the tim=
-e spent
-> > waiting on that memcpy to resolve is longer.
-> >
-> > >
-> > >> as vhost_net does not set
-> > >> SKBFL_DONT_ORPHAN.
->
-> Maybe we can try to set this as vhost-net can hornor ulimit now.
->
-> > >>
-> > >> Orphaning enforces a memcpy and triggers the completion callback, wh=
-ich
-> > >> increments the failed TX counter, effectively disabling zerocopy aga=
-in.
-> > >>
-> > >> Even after addressing these issues to prevent SKB orphaning and erro=
-r
-> > >> counter increments, performance remains poor. By default, only 64
-> > >> messages can be zerocopied, which is immediately exhausted by worklo=
-ads
-> > >> like iperf, resulting in most messages being memcpy'd anyhow.
-> > >>
-> > >> Additionally, memcpy'd messages do not benefit from the XDP batching
-> > >> optimizations present in the handle_tx_copy path.
-> > >>
-> > >> Given these limitations and the lack of any tangible benefits, remov=
-e
-> > >> zerocopy entirely to simplify the code base.
-> > >>
-> > >> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> > >
-> > > Any chance we can fix those issues? Actually, we had a plan to make
-> > > use of vhost-net and its tx zerocopy (or even implement the rx
-> > > zerocopy) in pasta.
-> >
-> > Happy to take direction and ideas here, but I don=E2=80=99t see a clear=
- way to fix these
-> > issues, without dealing with the assertions that skb_orphan_frags_rx ca=
-lls out.
-> >
-> > Said another way, I=E2=80=99d be interested in hearing if there is a co=
-nfig where ZC in
-> > current host-net implementation works, as I was driving myself crazy tr=
-ying to
-> > reverse engineer.
->
-> See above.
->
-> >
-> > Happy to collaborate if there is something we could do here.
->
-> Great, we can start here by seeking a way to fix the known issues of
-> the vhost-net zerocopy code.
->
-
-Happy to help here :).
-
-Jon, could you share more details about the orphan problem so I can
-speed up the help? For example, can you describe the code changes and
-the code path that would lead to that assertion of
-skb_orphan_frags_rx?
-
-Thanks!
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index 4258cd6bd3b4..4bcc6ff81e39 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -257,11 +257,11 @@ static ssize_t per_cpu_count_show(struct kobject *kobj,
+ 	for_each_possible_cpu(cpu) {
+ 		unsigned int c = irq_desc_kstat_cpu(desc, cpu);
+ 
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%u", p, c);
++		ret += sysfs_emit_at(buf, ret, "%s%u", p, c);
+ 		p = ",";
+ 	}
+ 
+-	ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
++	ret += sysfs_emit_at(buf, ret, "\n");
+ 	return ret;
+ }
+ IRQ_ATTR_RO(per_cpu_count);
+@@ -273,10 +273,8 @@ static ssize_t chip_name_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	if (desc->irq_data.chip && desc->irq_data.chip->name) {
+-		ret = scnprintf(buf, PAGE_SIZE, "%s\n",
+-				desc->irq_data.chip->name);
+-	}
++	if (desc->irq_data.chip && desc->irq_data.chip->name)
++		ret = sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -291,7 +289,7 @@ static ssize_t hwirq_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->irq_data.domain)
+-		ret = sprintf(buf, "%lu\n", desc->irq_data.hwirq);
++		ret = sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -305,8 +303,7 @@ static ssize_t type_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	ret = sprintf(buf, "%s\n",
+-		      irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
++	ret = sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -321,7 +318,7 @@ static ssize_t wakeup_show(struct kobject *kobj,
+ 	ssize_t ret = 0;
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+-	ret = sprintf(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
++	ret = sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -337,7 +334,7 @@ static ssize_t name_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->name)
+-		ret = scnprintf(buf, PAGE_SIZE, "%s\n", desc->name);
++		ret = sysfs_emit(buf, "%s\n", desc->name);
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	return ret;
+@@ -354,14 +351,13 @@ static ssize_t actions_show(struct kobject *kobj,
+ 
+ 	raw_spin_lock_irq(&desc->lock);
+ 	for_each_action_of_desc(desc, action) {
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "%s%s",
+-				 p, action->name);
++		ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
+ 		p = ",";
+ 	}
+ 	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	if (ret)
+-		ret += scnprintf(buf + ret, PAGE_SIZE - ret, "\n");
++		ret += sysfs_emit_at(buf, ret, "\n");
+ 
+ 	return ret;
+ }
+-- 
+2.47.2
 
