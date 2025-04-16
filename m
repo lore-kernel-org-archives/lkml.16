@@ -1,80 +1,90 @@
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99403207DF7;
-	Wed, 16 Apr 2025 06:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9691DDC1B;
+	Wed, 16 Apr 2025 06:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786241; cv=none; b=MUsjE9iG3usVFeAUV4mXg6YsdObG0NL6LJhlxaTLkhONNiQUow9gsotR8HCU41Q3jitN1RYUCpfFuBa/teObC/twwOCIYJ2NWkJtR6f1lqmR5kW1Sg1mvSQJizkugZ1+Gm66wdN8Nv0qhWMMiY2POhif/p4rYudiLlsFR5sCIHo=
+	t=1744786291; cv=none; b=Pk5ugtDaCSEBIjopowoBNmE0LJ313FTih42vd1BUEBGnNpdg1G0BrYwjfafPzwgzeJQFaXwW73VqABsGygapcXtR5jbJGVyNNM7TmTKAH+eVmadQn7Dox4frkvD1GCWqT3rvaf6BdIp1zberNy5UF1862F4UnQQRs6LGmjHQeBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786241; c=relaxed/simple;
-	bh=B1KKRwM2trU1CVGyeOoOABBXy1cregEeykhg280smrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BWXTjEvHtbZ/SYWQgvtLDngzY9AGoi6N/m0QPFD8/w9Liw+A0Mt/jPyBqYFBwu1woK06p16t0bopsXwEIdOgcYOt4Fd7qGyPBuBsqlM6nH19CoESqqhK2OoayoAfG5ZJiv9qw5/mp8PsSKR3bcHMZPOm9PsMSQtUIadnhiha8CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W2fGiVfh; arc=none smtp.client-ip=209.85.167.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744786291; c=relaxed/simple;
+	bh=FGgt10fsKaB31v9J8sD2pS75CuOzx1QkbiWqKQvt16E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z4tnjoFfc0CaBwEu91V0AeO4zedClQP4Y41g3BNCb6yGfB1j/6oR3Uia67wYfTx0HCnzPBHk1PWK5ZayXFskovkRjPSNgs34xWfBP3SKPox1AagzF6NOPZcrDRXniapgdLdV3iGEXdVnFc4qNp/oqp2LeObAJ19dB9u5ZB1XJuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l5ynJXuq; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2fGiVfh"
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-5499659e669so7621342e87.3;
-        Tue, 15 Apr 2025 23:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744786237; x=1745391037; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=B1KKRwM2trU1CVGyeOoOABBXy1cregEeykhg280smrw=;
-        b=W2fGiVfhV1B9saQZBJnY1ruSh96jkzc71+FKec+HBZo8nuuaBQ5rJoLYW5pyNEQ1Fj
-         NbsJV7VxwED61U+CZdUb31iN2AGkAwdWN5ii6nDwinRzFMcPF/hSoHCG5M5gbIvm4E9X
-         ArXnCNpWGb94BPsaQAbVwq4Oy1T/h2VRnrU54o8ABA7BIOpWRFbDhetrKT+Ok+d4KBsP
-         VAP1/c35P/nHLJUO6AS+ucf9+mRk2wD3UfNSqoYa8kFkCNhFHPlYYtV1TJpbhiW06Yqx
-         fJCUB/V/fBYpFPy8pbYL0gf+nu/W42kxRW1moHKLPXTvkTxmMbyC1NZelNWvQXX/VRR4
-         ZwOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744786237; x=1745391037;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B1KKRwM2trU1CVGyeOoOABBXy1cregEeykhg280smrw=;
-        b=lvp/oln1JERzKkUeuYH/gBGx1c6OltaJSigMsPlZTSzvHaT+0PZHlxr5XDJjWgrvJ5
-         Jcv3FpxNod8CDqcXihlMR/cZOWKwRaRo0CuWWIo52Y0+Tf8rtmqI7MhvLk+0ERM6FseY
-         HE1vrbGtyvtTmEszVr+AHUyHY93DF1Up+0oxF3OoNG7q72IsXEMtK5JND1TdsLvxHK/8
-         P5Hqp4pk4Ek8mfGKUVBkiEFPSHz9FShH1OfHCCmZLUpsbSJxKSXPpwj3laZwCZOoYI2H
-         g1yAKxAmqEgsNY6JtXzNKEnRxYSa3ygrg9DWG3i7G2wXoXI1cqaBTQpZmP312oyEF+wQ
-         OWPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUrYqw9UPHk8AijW3V2AD5IWiJBYy/YVw9FWtHu9LADQqXfFa7NfPVFRf4kekydCXWkvt1yKCX@vger.kernel.org, AJvYcCX3JE77OLO2xAcLwkNAzHYw992CFXzairI+VCSsaeVFcwmZKFyOvh/zdSoaZZJaPi+pqG8nfu/tZ6JaDus=@vger.kernel.org, AJvYcCX3U5Y8RtqPjDdxwId1qVjoursanSE8ko36vE7kHb7kYYVki4SPgv3zWsjFUGwuR//AUVHYB7PhkEbF2g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPfshGLWmu7KwDPq9wm4OJ/leSomh9LF5/tJj1SexQjRvrsglR
-	unYM8iPz9bfc6vc1RQcw3A11nuwjOdUOAnxAiMgbwBFeGMqO3MLrtc7ZolPNO7YtyEAB/lhyZxB
-	OA1t3W+jj9rq5X1mgDRx8ah1BCCU=
-X-Gm-Gg: ASbGncsgE9pUV0U8hDPl2E7eeTGTP4Yh5qbG8iEaOHaqozhw224BToGucaOBGl8XyrV
-	1DsK6rnmsZqia15A7sd9oTgRkOURyPbIBUuc/zheh38K9DhF+VVukknUctp8hywc2g6dE/qOZe/
-	0tyMz6jQpUjOBENd0EM5JmfQ==
-X-Google-Smtp-Source: AGHT+IFkUl68vPRq3Eoh7lTjnZsGM+ezWLD4qM9I0vkyVblUK6mahjlvr+SHWNSVM8wd+7zn98YgfcXamDumw7iE2ME=
-X-Received: by 2002:a2e:a5c7:0:b0:30b:c980:c589 with SMTP id
- 38308e7fff4ca-3107f6bf415mr1948791fa.14.1744786237122; Tue, 15 Apr 2025
- 23:50:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l5ynJXuq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744786289; x=1776322289;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FGgt10fsKaB31v9J8sD2pS75CuOzx1QkbiWqKQvt16E=;
+  b=l5ynJXuqvAMM/oup95FEqccXRl4gqIDRaxtoFunjICxhYDH6C0Chm4Pj
+   LkLOQi5+Uvdn1WrYdi2CwzeuDae43fCSbkNuf6gHSQw+xGy2+y8XcS6Z7
+   /OqNe3b6aKwx79rhxnOTzX1C6Ayopj33biud7AwIwa6WyEi1heg0jQ6ME
+   wps1kND1BUR7J19ljX9mZDnZ4KIagFDnnNX/pjqfjROwTg7uRbaiwL+1+
+   uLK+QbDBOtqRTuSBvxMAa91tewy2wsw7KJ0OvHjZbTLEhx31Lj9VUh5F9
+   MMFbwvMDFuuqrwYT64x1DpQYM4YZ+Il67nkjFE57t0APsrNQswGOKWtH/
+   Q==;
+X-CSE-ConnectionGUID: yjTEW/roQMetWuUoQSwEUQ==
+X-CSE-MsgGUID: tpEhxyQzT3Su+5eRlivl4g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11404"; a="46035146"
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="46035146"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:51:29 -0700
+X-CSE-ConnectionGUID: kVR8noIGRCis9km2Bq+BGQ==
+X-CSE-MsgGUID: VevFSuRVT06zP80/VHmn3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,215,1739865600"; 
+   d="scan'208";a="130301713"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2025 23:51:27 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u4wcF-0000000Clqu-4Ap9;
+	Wed, 16 Apr 2025 09:51:23 +0300
+Date: Wed, 16 Apr 2025 09:51:23 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jai Luthra <jai.luthra@ideasonboard.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v4 2/7] i2c: core: Unify the firmware node type check
+Message-ID: <Z_9Ta5CpplHUTK_X@smile.fi.intel.com>
+References: <20250414100409.3910312-1-andriy.shevchenko@linux.intel.com>
+ <20250414100409.3910312-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415124128.59198-1-bsdhenrymartin@gmail.com>
- <20250415124128.59198-3-bsdhenrymartin@gmail.com> <c0125e86-79f7-4217-832e-44249cae16dd@nvidia.com>
-In-Reply-To: <c0125e86-79f7-4217-832e-44249cae16dd@nvidia.com>
-From: henry martin <bsdhenrymartin@gmail.com>
-Date: Wed, 16 Apr 2025 14:50:28 +0800
-X-Gm-Features: ATxdqUEYO-wItcyAq0JOiMYlpEM-Jg-HBC1uyFcYUgvgHxfq3Kiv3jhkqgwAjWQ
-Message-ID: <CAEnQdOrvtYPghA1=4t9HfP=jSZE=2pHi9jR1mWyJgCNCPEG5Fw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] net/mlx5: Fix memory leak in error path of ttc creation
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, amirtz@nvidia.com, 
-	ayal@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414100409.3910312-3-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-> What about just moving the ttc allocation after the switch case?
+On Mon, Apr 14, 2025 at 01:01:52PM +0300, Andy Shevchenko wrote:
+> OF and ACPI currently are using asymmetrical APIs to check
+> for the firmware node type. Unify them by using is_*_node()
+> against struct fwnode_handle pointer.
 
-Thanks for the suggestion. Moving the allocation after the switch statement is
-indeed a cleaner approach.
+Note, media CI complains on wrong {} style, but
+1) it was in the original code;
+2) it is gone after the whole series applied.
+
+I suggest to ignore that report based on the above.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
