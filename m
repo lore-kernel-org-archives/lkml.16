@@ -1,134 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7F72DFA4E;
-	Wed, 16 Apr 2025 07:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 328CE2DFA4E;
+	Wed, 16 Apr 2025 07:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788501; cv=none; b=twvmjNHwl76rWXYhYjsko7dA2kT6MSTWIpr2U34/9rFBTORpRhuyO8NeE1gRKdKBswdWnJm735SaySJeksJ45yWMzZmkJoMuU49INPOr8MQnQ1IqVFkWxft9ST+PS1FdoAVi+N5QHSOuGlwHbMJAq+zGbONg2eB8dx2PGeOmgW8=
+	t=1744788516; cv=none; b=hrQX71fehU8UrNxIXJaoIsUpqiv0lQBVvbFjsvvrg83WSdNYgyj+GDd1Qgjc7jPLWl+BF7PUUs/+8fmOZxOKYkojMmxVUUCtSo/vcvrapfYXiNjXgpEFB9xDuCWt3kDi9XYdyy6gtI335c2p81WflVcD86rkpBEI642LcnLTYOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744788501; c=relaxed/simple;
-	bh=HIk3I9wzakt85jAXOpCYym+UKIgHZ9FhR06F2xOAwBs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0HWAxd819LAq6vM85h0IpR+NtVM+81sxgiCdRsDU8qn1+mAqVFE9HCXxQCpDHC6rHwXPsdOkr2bWsvA4V8Z/hiyrxk9Ec1RxeYwt+I3dl3doCMiBDOW6SV/1BpdEkmzQ29G9Sy1Y7bcvlsJg2eoIxstCborA4GlEmy1lwqL/WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jSm0hHpj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744788516; c=relaxed/simple;
+	bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N44dh45z01RARGj9OvlCRc+Tav6XRkQLLzqoqw0xpZMEpXaDjzaBt214QOBkUC/216wYYPSpnOP9gOyZN9Z+wYhlnBLdslK+ps8ygGRUc8o0usYO95zH0SirlcLwd6ePV5jjpvwFOGyL0LnFnDIIXAmgaBcN3R5UJavEsIS418Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BGk9j0m6; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jSm0hHpj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02CC2C4CEE2;
-	Wed, 16 Apr 2025 07:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744788499;
-	bh=HIk3I9wzakt85jAXOpCYym+UKIgHZ9FhR06F2xOAwBs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jSm0hHpjOsvl1cJZdOTBmGEIHkc6ZGCh60vrjEweW/RCtdX44k7jHXbwo4ZQuITMG
-	 cXG92T59+JxPUYlZuoyVYY+drNbVxN+pogsubPy17BFhkodiYpB/gvf/JPAH1evqky
-	 t0OG4Zok3wKW3QVGzgXVv2oixrB2RTkcKOgKE0l2M+lPtgGryzcpiN/Qx2x32ISkUF
-	 R7UCQofA1aM9H9BX5fhvp7SvRbnDki9SV7C7mYIjxUKuLQlZyGBr3+vPNH0oLINKaL
-	 1+eRUcyx8KqmovuDPOLVDepvTp49HqLqnC4ozmRgOaZdPFwiLKyVY+ReCci3mimKk8
-	 b8nVz71nBgvaA==
-Message-ID: <1f813896-0be6-42bd-9e99-2e0a4895fbd9@kernel.org>
-Date: Wed, 16 Apr 2025 09:28:14 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BGk9j0m6"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-301302a328bso6347438a91.2;
+        Wed, 16 Apr 2025 00:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744788514; x=1745393314; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
+        b=BGk9j0m6EdxamlnlmFeiadhCgDJQrwkXz3AXyoyDd1aSGtdiMeWgM5CjTiZrg2Gv8Y
+         NdR0dPXXDpJfJUzqpDqrsBo6ZDCyGEHsidsEE6MveiX2QEwld1REmXisOt7ewSxGMOrq
+         H/W/mVoFWF873UEBzl8BVDbvzxFlLFe8eDnBTlZblQzcMIGh6u5zV/lbNLSw6zgU5RAZ
+         Met/Xm9tTeCOIn+6m9DrHk4IVZsHhF1rbeno4zoSVVBt/IrraPhKBsX75hejy7RU+5KL
+         h168Jnps1T8cy0egZ4v1YV6FwBAdzi0MBy7Y4EJFmHApW0hkhrxLgeufqGa6kXs3HLqO
+         S48A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744788514; x=1745393314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qvlLa3VA9efC7avAUZkCgRlCB4WN+H9bYNViBn32pLg=;
+        b=fMTkrhvCna4zHenj+yoQbjsT1w4CoZyw8JZP1N3p7viiGOqYt5V3WkiCJMuKy5LLcm
+         RrqxLJNRvTC9CMEaiYk51brcBYk2wBeM3cMiWbcqkNtWXMVjtmw9MDUea3sH1tjS6v6C
+         iwDZ1P6VtbDh7AaSXFO4W4diwzvhm/Nkkirv7ugN1854lVuOOukOje/MV4WULecwjSEZ
+         9esmq4p00CSfDBbz3+gBqVGg5Gpdw8LPOo+lNOnow882CdYccmrHGVVpyY2bRVs16XL4
+         ABssVN2j73tg49yJYM4ZkkkFsdZU43FSAxpePWmHAYQPC56BHARjXNa8XlZqInJ/KVFI
+         34Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKER31F5l0UrRVTuR/B8IE8oFGaVAZoI+RFuOzetvD+KPsc8h9PU21wTqJce29MKE+vwWyjh1PpX7dwTs=@vger.kernel.org, AJvYcCXvkee/ULCLw2ojgT2B7ANpswfdVU+Z5k3Xa00jSwtf+VxpA50A6NjO0c5nHyj59EfmTj+CzOGn65LHF7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyeqpeFQTpRtxGq/tSy+gUU2ktIKx1bpa1K8+YvfoR3gkFD5R3
+	gdyrB91MLkjz/uuT08nsJI1CWjI33tnfnlxK9tHftgmlyTVAr5T7KsSor1q/Q43lCndyj7Ifrnl
+	CMZvMBq3KfT6ylXh6MD/sKltrNxM=
+X-Gm-Gg: ASbGnctb/HoI7oTfNO6unl361mHdfZaBUEfJgGc46D0h57cs9YVbxRW9OLcO13o4M4v
+	snunoT9aZhcpsVB2MtH4XXvbZw6BAOHVUJxIyreYJq3KZUOAbnycHwVBrwE8h3oz3pj5oxgcJ5c
+	EQ4MIvAp4OZVoEgXAlxg==
+X-Google-Smtp-Source: AGHT+IGW5zcCmv3b7BVm4A40QK0n9oi/g9NFeFg+vQtedK+zMuIzEBKZNFZcJGBHY+4JsYxPwA1hTYFwiZZ7HXKb0a8=
+X-Received: by 2002:a17:90b:574c:b0:2ee:edae:75e with SMTP id
+ 98e67ed59e1d1-30863f1c831mr1185370a91.13.1744788514329; Wed, 16 Apr 2025
+ 00:28:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] arm64: dts: exynos: add initial support for
- Samsung Galaxy S22+
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>,
- Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
- <20250321145556.1436201-4-ivo.ivanov.ivanov1@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250321145556.1436201-4-ivo.ivanov.ivanov1@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250416041431.546370-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250416041431.546370-1-nichen@iscas.ac.cn>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Wed, 16 Apr 2025 10:30:19 +0300
+X-Gm-Features: ATxdqUEL8u77ss7dHQffyWPdVCGHmFsnGmhGr0uT_PfqkPxcRAmmZB4Ahi-EWlY
+Message-ID: <CAEnQRZBb=E75DPn=siqvhAqFas6Lt-++0Ka9W6gY0fbQgHBcrg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: fsl_rpmsg: Remove useless return variable
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+	nicoleotsuka@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, 
+	perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/03/2025 15:55, Ivaylo Ivanov wrote:
-> +
-> +	/*
-> +	 * RTC clock (XrtcXTI); external, must be 32.768 kHz.
-> +	 *
-> +	 * TODO: Remove this once RTC clock is implemented properly as part of
-> +	 *       PMIC driver.
-> +	 */
-> +	rtcclk: clock-rtcclk {
-> +		compatible = "fixed-clock";
-> +		clock-output-names = "rtcclk";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +	};
-> +
-> +	/*
-> +	 * cpu2 and cpu3 fail to come up consistently, which leads
-> +	 * to a hang later in the boot process.
-> +	 *
-> +	 * Disable them until the issue is figured out.
-> +	 */
-> +	cpus {
-> +		/delete-node/ cpu@200;
-> +		/delete-node/ cpu@300;
+On Wed, Apr 16, 2025 at 7:15=E2=80=AFAM Chen Ni <nichen@iscas.ac.cn> wrote:
+>
+> Remove unnecessary return variable and compress the return logic.
+>
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 
-status = "fail"
-does not work?
-
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				/delete-node/ core2;
-> +				/delete-node/ core3;
-> +			};
-> +		};
-> +	};
-> +
-Best regards,
-Krzysztof
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
