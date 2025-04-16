@@ -1,172 +1,207 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0074220681
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 07:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C047518C03F;
+	Wed, 16 Apr 2025 07:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744789577; cv=none; b=SNYz+bR0M1QjYP5rWVbwh1qzs9LxnKF5AX5K1H0w4nJrRzbiVOEm+rDkqFp4Ylrf9zCUBsVzok7KJZI202/tYcy/ExUqpMmwL0Kig85L2aH3hJXwxVI4EAO1k39OunQ87OpOoDhB/9TDgpTCIkAiB09+OtbVjz65J3D44U+2Dlk=
+	t=1744789611; cv=none; b=rtSXknhVuslFa98VocHuf0Hj7/F/L+W4WA2F/tE0swAOHx2JL9xOogAjdAQ2Uke2O11hKfAQC+R31Bl+bw3URlkopslvcoCKGIavw7ezat+RkC1zkG5ldwkO4atFwpENIckvX5wawiZM6Wz2yVXrJeWrxRatcnjfi7mjld5lbPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744789577; c=relaxed/simple;
-	bh=VOcMqzMdMh9rCFIRtQ9EKg+I7M7b/mTUi/Sqo809uuI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4MoMVCt5OSMDzlxJ88A5QblHi4OGz892bW+/rpG224TnV09SJ89jE8vMkgV74sea9tXSWViIn651C8/ZUDNYJwAcaGFv8uuRm0cmgE4ZBzA8g7yTmwrVr3WFBGG0Or8jAOhpIoljh3k5Dufym7j+vWnQAkqIEQxbFCOKyFcd6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qWyiueii; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vKhkAg2H; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DKWK4vcs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Te7u7FZq; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744789611; c=relaxed/simple;
+	bh=9iuxd23c4Azq3pgqab6ru8KCpyx/Ar+y1vYOjgF74fo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jVyCFE26QiDaaLyGxX8JUYUCgAo6tWQ3l3TlGuGbSu6zoR8mimxePMqV257KhcmWjsRwmcbBXE22tmW35y27V5N3uv7zChwYezlloztxdvue/IJtswGRWhqi23CuFVgEIoGaqQRp1S8tvYHzWdpUleqFPsr4hQ35xvwXflqEmVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n1xHoGKT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qWyiueii";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vKhkAg2H";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DKWK4vcs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Te7u7FZq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E14561F445;
-	Wed, 16 Apr 2025 07:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744789574; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R73xuxwY1VYBD1D6OPjf8S0w7H765xR6uCfIjbAaInk=;
-	b=qWyiueii58M4ZoeYnM6SQnt5xhhYcSXVQ8QsBqRaev4HtSmJ3vx6d04H/BcM1MedQBJoKO
-	ICQW6UdVx8cqjb17/GVVqp9hafsRIB1mLAbUYGSxQ2hIOoUQbbLM1Id4KgJgc/Km5Smafx
-	xLEqOybAqWLfhdSLwke5ktIhKHK05ao=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744789574;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R73xuxwY1VYBD1D6OPjf8S0w7H765xR6uCfIjbAaInk=;
-	b=vKhkAg2H4U3CcJskdYGsZrEAOU4dN7/vqbOAzi9YRmihFFSKpcWi7wjz0lOp9Z4fZaYnUR
-	RLTz4wRMFU9PUoDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744789573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R73xuxwY1VYBD1D6OPjf8S0w7H765xR6uCfIjbAaInk=;
-	b=DKWK4vcsW/AiDoWXMUkn17+m6dbWMR6K2FBZnbHAvKvfQ4OQ/qeBnaOM2uO2/y+d5ek9pe
-	KAPsLrJAfmeNZBQQF2o9OCABb6oueuhzFCg6iUovELHNb0YWVnE2/R6fUucMfjBo2a3rkR
-	Z+gTKzCE0QdQ7iluZ635S+VWUH6BlkI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744789573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R73xuxwY1VYBD1D6OPjf8S0w7H765xR6uCfIjbAaInk=;
-	b=Te7u7FZqDoADWsnaOpNR6cVdm+DTCaYxNjOar/AjzI9VMawP0D0qV8ljaPNXtoVkGnVTtH
-	eAlf1pYDH81bqmDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B9DD139A1;
-	Wed, 16 Apr 2025 07:46:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RwxfG0Vg/2dCUgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 16 Apr 2025 07:46:13 +0000
-Date: Wed, 16 Apr 2025 09:46:03 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1] mm/memory: move sanity checks in do_wp_page() after
- mapcount vs. refcount stabilization
-Message-ID: <Z_9gO5KljRA3Rss8@localhost.localdomain>
-References: <20250415095007.569836-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n1xHoGKT"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G7JMwQ002562;
+	Wed, 16 Apr 2025 07:46:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	LmLSFpd1t81sYP0HOtR0SOPScwxuSgEHxikwpDuOc38=; b=n1xHoGKTnwHqE90k
+	8R1lTDdUyXBJzt/BxDd/N89qIlOcPdoP3OD03ghqosgTtriU/ZLkXvLYxHoYBTsr
+	lQ5h0ikAuhq5VAADhSH1S0Dla7gJ3o1kyRgQ+9jZ4fQ4ssvTQlXFycvUKz4KeUpf
+	2nNhtSqtGxwJ6/6gXizEeqUO0gzBO2lm3iItzvKNFq0lQNOszmUSB8AVF6Sce5qj
+	upFnP0t5BeGocGcmV9LyzzyrXOfHfWsJvgvLcS1dKZgG9H7oeENQKJjfv7dt4Ef2
+	lknvAEcH3GntwScd730dhFWqoRTMUJDcvg7aKvcrDC3QI+B/y5t2Oiru36cIUrjn
+	qGRdJg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45ygj9aq3v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:46:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53G7kek5008991
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 07:46:40 GMT
+Received: from [10.204.101.50] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 16 Apr
+ 2025 00:46:37 -0700
+Message-ID: <35ffb534-fb8d-4023-1ac0-cb1f37d0448a@quicinc.com>
+Date: Wed, 16 Apr 2025 13:16:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415095007.569836-1-david@redhat.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_RCPT(0.00)[5e8feb543ca8e12e0ede];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v6 3/7] media: platform: qcom/iris: introduce optional
+ controller_rst_tbl
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bryan O'Donoghue
+	<bryan.odonoghue@linaro.org>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250415-topic-sm8x50-iris-v10-v6-0-8ad319094055@linaro.org>
+ <20250415-topic-sm8x50-iris-v10-v6-3-8ad319094055@linaro.org>
+Content-Language: en-US
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20250415-topic-sm8x50-iris-v10-v6-3-8ad319094055@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: -feYHIRc5FD7k4q5k1yK9IPvfm94OyJe
+X-Authority-Analysis: v=2.4 cv=PruTbxM3 c=1 sm=1 tr=0 ts=67ff6062 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=1Y22SnrsS0-b5OIS1qAA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: -feYHIRc5FD7k4q5k1yK9IPvfm94OyJe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_03,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504160063
 
-On Tue, Apr 15, 2025 at 11:50:07AM +0200, David Hildenbrand wrote:
-> In __folio_remove_rmap() for RMAP_LEVEL_PMD/RMAP_LEVEL_PUD and with
-> CONFIG_PAGE_MAPCOUNT we first decrement the folio mapcount (and
-> recompute mapped shared vs. mapped exclusively) to then adjust the
-> entire mapcount.
-> 
-> This means that another process might stumble in do_wp_page() over a
-> PTE-mapped PMD folio that is indicated as "exclusively mapped", but still
-> has an entire mapcount (PMD mapping), because it is racing with the process
-> that is unmapping the folio (PMD mapping). Note that do_wp_page() will
-> back off once it detects the remaining folio reference from the process
-> that is in the process of unmapping the folio.
-> 
-> This will trigger the early VM_WARN_ON_ONCE(folio_entire_mapcount(folio))
-> check in do_wp_page(), that can easily be reproduced by looping a couple
-> of times over allocating a PMD THP, forking a child where we immediately
-> unmap it again, and writing in the parent concurrently to the THP.
-> 
-> [  252.738129][T16470] ------------[ cut here ]------------
-> [  252.739267][T16470] WARNING: CPU: 3 PID: 16470 at mm/memory.c:3738 do_wp_page+0x2a75/0x2c00
-> [  252.740968][T16470] Modules linked in:
-> [  252.741958][T16470] CPU: 3 UID: 0 PID: 16470 Comm: ...
-> ...
-> [  252.765841][T16470]  <TASK>
-> [  252.766419][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [  252.767558][T16470]  ? rcu_is_watching+0x12/0x60
-> [  252.768525][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [  252.769645][T16470]  ? srso_alias_return_thunk+0x5/0xfbef5
-> [  252.770778][T16470]  ? lock_acquire+0x33/0x80
-> [  252.771697][T16470]  ? __handle_mm_fault+0x5e8/0x3e40
-> [  252.772735][T16470]  ? __handle_mm_fault+0x5e8/0x3e40
-> [  252.773781][T16470]  __handle_mm_fault+0x1869/0x3e40
-> [  252.774839][T16470]  handle_mm_fault+0x22a/0x640
-> [  252.775808][T16470]  do_user_addr_fault+0x618/0x1000
-> [  252.776847][T16470]  exc_page_fault+0x68/0xd0
-> [  252.777775][T16470]  asm_exc_page_fault+0x26/0x30
-> 
-> While we could adjust the sequence in __folio_remove_rmap(), let's rater
-> move the mapcount sanity checks after the mapcount vs. refcount
-> stabilization phase. With this fix, a simple reproducer is happy.
-> 
-> While at it, convert the two VM_WARN_ON_ONCE() we are moving to
-> VM_WARN_ON_ONCE_FOLIO().
-> 
-> Reported-by: syzbot+5e8feb543ca8e12e0ede@syzkaller.appspotmail.com
-> Closes: https://lkml.kernel.org/r/67fab4fe.050a0220.2c5fcf.0011.GAE@google.com
-> Fixes: 1da190f4d0a6 ("mm: Copy-on-Write (COW) reuse support for PTE-mapped THP")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
- 
-
--- 
-Oscar Salvador
-SUSE Labs
+On 4/15/2025 7:17 PM, Neil Armstrong wrote:
+> Introduce an optional controller_rst_tbl use to store reset lines
+> used to reset part of the controller.
+> 
+> This is necessary for the vpu3 support, when the xo reset line
+> must be asserted separately from the other reset line
+> on power off operation.
+> 
+> Factor the iris_init_resets() logic to allow requesting
+> multiple reset tables.
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/media/platform/qcom/iris/iris_core.h       |  2 ++
+>  .../platform/qcom/iris/iris_platform_common.h      |  2 ++
+>  drivers/media/platform/qcom/iris/iris_probe.c      | 39 +++++++++++++++-------
+>  3 files changed, 31 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
+> index 37fb4919fecc62182784b4dca90fcab47dd38a80..aeeac32a1f6d9a9fa7027e8e3db4d95f021c552e 100644
+> --- a/drivers/media/platform/qcom/iris/iris_core.h
+> +++ b/drivers/media/platform/qcom/iris/iris_core.h
+> @@ -43,6 +43,7 @@ struct icc_info {
+>   * @clock_tbl: table of iris clocks
+>   * @clk_count: count of iris clocks
+>   * @resets: table of iris reset clocks
+> + * @controller_resets: table of controller reset clocks
+>   * @iris_platform_data: a structure for platform data
+>   * @state: current state of core
+>   * @iface_q_table_daddr: device address for interface queue table memory
+> @@ -82,6 +83,7 @@ struct iris_core {
+>  	struct clk_bulk_data			*clock_tbl;
+>  	u32					clk_count;
+>  	struct reset_control_bulk_data		*resets;
+> +	struct reset_control_bulk_data		*controller_resets;
+>  	const struct iris_platform_data		*iris_platform_data;
+>  	enum iris_core_state			state;
+>  	dma_addr_t				iface_q_table_daddr;
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> index f6b15d2805fb2004699709bb12cd7ce9b052180c..fdd40fd80178c4c66b37e392d07a0a62f492f108 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> @@ -156,6 +156,8 @@ struct iris_platform_data {
+>  	unsigned int clk_tbl_size;
+>  	const char * const *clk_rst_tbl;
+>  	unsigned int clk_rst_tbl_size;
+> +	const char * const *controller_rst_tbl;
+> +	unsigned int controller_rst_tbl_size;
+>  	u64 dma_mask;
+>  	const char *fwname;
+>  	u32 pas_id;
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index aca442dcc153830e6252d1dca87afb38c0b9eb8f..4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -91,25 +91,40 @@ static int iris_init_clocks(struct iris_core *core)
+>  	return 0;
+>  }
+>  
+> -static int iris_init_resets(struct iris_core *core)
+> +static int iris_init_reset_table(struct iris_core *core,
+> +				 struct reset_control_bulk_data **resets,
+> +				 const char * const *rst_tbl, u32 rst_tbl_size)
+>  {
+> -	const char * const *rst_tbl;
+> -	u32 rst_tbl_size;
+>  	u32 i = 0;
+>  
+> -	rst_tbl = core->iris_platform_data->clk_rst_tbl;
+> -	rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
+> -
+> -	core->resets = devm_kzalloc(core->dev,
+> -				    sizeof(*core->resets) * rst_tbl_size,
+> -				    GFP_KERNEL);
+> -	if (!core->resets)
+> +	*resets = devm_kzalloc(core->dev,
+> +			       sizeof(struct reset_control_bulk_data) * rst_tbl_size,
+> +			       GFP_KERNEL);
+> +	if (!*resets)
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < rst_tbl_size; i++)
+> -		core->resets[i].id = rst_tbl[i];
+> +		(*resets)[i].id = rst_tbl[i];
+> +
+> +	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, *resets);
+> +}
+> +
+> +static int iris_init_resets(struct iris_core *core)
+> +{
+> +	int ret;
+> +
+> +	ret = iris_init_reset_table(core, &core->resets,
+> +				    core->iris_platform_data->clk_rst_tbl,
+> +				    core->iris_platform_data->clk_rst_tbl_size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!core->iris_platform_data->controller_rst_tbl_size)
+> +		return 0;
+>  
+> -	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, core->resets);
+> +	return iris_init_reset_table(core, &core->controller_resets,
+> +				     core->iris_platform_data->controller_rst_tbl,
+> +				     core->iris_platform_data->controller_rst_tbl_size);
+>  }
+>  
+>  static int iris_init_resources(struct iris_core *core)
+> 
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
