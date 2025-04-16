@@ -1,31 +1,40 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B2622F155
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393EB22B8C1
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792905; cv=none; b=gpYtnjccEYEzihy3wwixVMI/gXDHU6qk/NHBxr/h16BNOJONTz2owJ4GTPmaHCkjujMKWwupMxhOhE0AxCukrLZ0sp2MkhJG79BCS/lw+CY/+6KsvG/zIlThP3R1QPY5FcLyaDO4AU+9pfDK7G/hUHBGxqAbkE0dXu97dpgmLw8=
+	t=1744792942; cv=none; b=HlUCmbTGYzgcbqy1YMu2yzTpQ10UESS3/tvcW9PtZC94BTh5Iwn0PovuIW6kneP79kAbskwuFNufnO6juRIyxQIOUmkHylktXjhaF3P04+gvS64nlWXhj+icXk/Tyt9CFqO1rs8Y/2kGVOaTa9pFLKy4o74tC615lnG5iw9WjPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792905; c=relaxed/simple;
-	bh=l0zhTe9N9zv5B7zVgTkNaD6Vu0btAowjXNlW6nP4EKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H4G8KQlvgCdH+ZU8q11IRhbiogSosUKEapdlSZrtOFt+HmRI4Q+28q4tn0pMOpTwEO3NHmG7e1Ek3bVbXg+tkh606wgxg1u+eLduPX53bQAbL6/pbRVHmMkqkt3FMPBM9O0VnGgiYfq+Lr7LUiLZWZgDO44PzHadaKjD0hgAFrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HI7M51XJ; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1744792942; c=relaxed/simple;
+	bh=lBq+nRsAwNOh1FOg8HmYIAR/otlL7MDWorrjN+gny2k=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AZ4npbLdPxIQ7gEfTaT0KdkC0FwGuQ3hMj5/ofFUd/c9Xf24M4bVReZ+wt3QbdkIQ7RNRXGUtBtQ87uMUAq98l1MbT89WJiFFDWhlT0nhMNMcz05FBBA9qDlGNVvkLlX/s90N1uTTEMQHEtMItemFw+LAHvQWD2THaKezC5HKZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UHAdCRoN; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HI7M51XJ"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744792893; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Z6D/L440zCKz6m87Bedbqv+umyrg/+ozjToXPCehfm4=;
-	b=HI7M51XJtVp/WTbJlyT4+rs4L4eK+4zfYAKImIZmcveRxaQ5b2qjyVm4YTDoPpd4mFSHor7FJ3f45pPNL7UzJ+Xln6ZhU5okduiD5yClxe7mDIdW2c6+dCkZ9HoVOTUwPKVjd81RE9xLobGaiyBfYK+Kc1Eqtw/AQ4wrMPk3Wag=
-Received: from 30.74.144.124(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WX8VQHe_1744792891 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 16 Apr 2025 16:41:31 +0800
-Message-ID: <7392a21b-10bf-4ce9-a6fd-807ed954c138@linux.alibaba.com>
-Date: Wed, 16 Apr 2025 16:41:31 +0800
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UHAdCRoN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744792938;
+	bh=lBq+nRsAwNOh1FOg8HmYIAR/otlL7MDWorrjN+gny2k=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=UHAdCRoNpe6xnsz03yNwkmjsAvBE4UncSzV6MfjTAj0qn0y2GmFKJDOUHh3d3agXY
+	 RjEU99oOURiGS/3eLifOAWqN6i2JtXyzHoxIDP3zGJU2eqGT7ROtfrznm5yrQQy0LW
+	 tlIQBIRV6I+q85o/IQGahvzn5/hHUIpqqBwJjFfkDLLsjPXQ99Tv3GaSyZ7ycISjrm
+	 hZhcwpuctL1o+OggrbQduSuOOS3rccvDtuqL06nF4n6HXdn0Cp/07va4QNtFcKyyw6
+	 mklmsDhT3kcmCM1WPRXK26BPPSea+1C1TgrJ27BOJ6VUbJvF76bpHk2/lwv60VdDnt
+	 uQK+kr1+uhNjg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9354417E0B2D;
+	Wed, 16 Apr 2025 10:42:17 +0200 (CEST)
+Message-ID: <bd60aae8-2df3-45d7-9db6-9d21d15a079c@collabora.com>
+Date: Wed, 16 Apr 2025 10:42:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,163 +42,147 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mempolicy: Optimize queue_folios_pte_range by PTE
- batching
-To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
- akpm@linux-foundation.org
-Cc: ryan.roberts@arm.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, hughd@google.com, vishal.moola@gmail.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250416053048.96479-1-dev.jain@arm.com>
- <7f96283b-11b3-49ee-9d2d-5ad977325cb0@linux.alibaba.com>
- <019d1c4a-ffd0-4602-b2ba-cf07379dab17@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <019d1c4a-ffd0-4602-b2ba-cf07379dab17@redhat.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v3 1/1] drm/mediatek: Adjust bandwidth limit for DP
+To: Liankun Yang <liankun.yang@mediatek.com>, chunkuang.hu@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, simona@ffwll.ch,
+ matthias.bgg@gmail.com, jitao.shi@mediatek.com, mac.shen@mediatek.com,
+ peng.liu@mediatek.com, Project_Global_Chrome_Upstream_Group@mediatek.com
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250318140236.13650-1-liankun.yang@mediatek.com>
+ <20250318140236.13650-2-liankun.yang@mediatek.com>
+Content-Language: en-US
+In-Reply-To: <20250318140236.13650-2-liankun.yang@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
+Il 18/03/25 15:02, Liankun Yang ha scritto:
+> By adjusting the order of link training and relocating it to HPD,
+> link training can identify the usability of each lane in the current link.
+> 
+> It also supports handling signal instability and weakness due to
+> environmental issues, enabling the acquisition of a stable bandwidth
+> for the current link. Subsequently, DP work can proceed based on
+> the actual maximum bandwidth.
+> 
+> It should training in the hpd event thread.
+> Check the mode with lane count and link rate of training.
+> 
+> Signed-off-by: Liankun Yang <liankun.yang@mediatek.com>
+
+This patch still breaks the internal eDP display on MT8195 Tomato,
+but DP is fine.
+
+Please test your patches on that machine before sending again.
+
+Regards,
+Angelo
+
+> ---
+> Change in V3:
+> - Remove 'mtk_dp->enabled = false" in atomic disable.
+> - Remove 'mtk_dp->enabled = true" in atomic enable.
+> Per suggestion from the previous thread:
+> https://patchwork.kernel.org/project/linux-mediatek/patch/20241025083036.8829-4-liankun.yang@mediatek.com/
+> 
+> Change in V2:
+> - Adjust DP training timing.
+> - Adjust parse capabilities timing.
+> - Add power on/off for connect/disconnect.
+> Per suggestion from the previous thread:
+> https://patchwork.kernel.org/project/linux-mediatek/patch/20240315015233.2023-1-liankun.yang@mediatek.com/
+> ---
+>   drivers/gpu/drm/mediatek/mtk_dp.c | 39 ++++++++++++++++---------------
+>   1 file changed, 20 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek/mtk_dp.c
+> index 3d4648d2e15f..fb76fc1bf497 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dp.c
+> @@ -1976,6 +1976,7 @@ static irqreturn_t mtk_dp_hpd_event_thread(int hpd, void *dev)
+>   	struct mtk_dp *mtk_dp = dev;
+>   	unsigned long flags;
+>   	u32 status;
+> +	int ret;
+>   
+>   	if (mtk_dp->need_debounce && mtk_dp->train_info.cable_plugged_in)
+>   		msleep(100);
+> @@ -1994,9 +1995,28 @@ static irqreturn_t mtk_dp_hpd_event_thread(int hpd, void *dev)
+>   			memset(&mtk_dp->info.audio_cur_cfg, 0,
+>   			       sizeof(mtk_dp->info.audio_cur_cfg));
+>   
+> +			mtk_dp->enabled = false;
+> +			/* power off aux */
+> +			mtk_dp_update_bits(mtk_dp, MTK_DP_TOP_PWR_STATE,
+> +			       DP_PWR_STATE_BANDGAP_TPLL,
+> +			       DP_PWR_STATE_MASK);
+> +
+>   			mtk_dp->need_debounce = false;
+>   			mod_timer(&mtk_dp->debounce_timer,
+>   				  jiffies + msecs_to_jiffies(100) - 1);
+> +		} else {
+> +			mtk_dp_aux_panel_poweron(mtk_dp, true);
+> +
+> +			ret = mtk_dp_parse_capabilities(mtk_dp);
+> +			if (ret)
+> +				drm_err(mtk_dp->drm_dev, "Can't parse capabilities\n");
+> +
+> +			/* Training */
+> +			ret = mtk_dp_training(mtk_dp);
+> +			if (ret)
+> +				drm_err(mtk_dp->drm_dev, "Training failed, %d\n", ret);
+> +
+> +			mtk_dp->enabled = true;
+>   		}
+>   	}
+>   
+> @@ -2162,16 +2182,6 @@ static const struct drm_edid *mtk_dp_edid_read(struct drm_bridge *bridge,
+>   
+>   	drm_edid = drm_edid_read_ddc(connector, &mtk_dp->aux.ddc);
+>   
+> -	/*
+> -	 * Parse capability here to let atomic_get_input_bus_fmts and
+> -	 * mode_valid use the capability to calculate sink bitrates.
+> -	 */
+> -	if (mtk_dp_parse_capabilities(mtk_dp)) {
+> -		drm_err(mtk_dp->drm_dev, "Can't parse capabilities\n");
+> -		drm_edid_free(drm_edid);
+> -		drm_edid = NULL;
+> -	}
+> -
+>   	if (drm_edid) {
+>   		/*
+>   		 * FIXME: get rid of drm_edid_raw()
+> @@ -2365,13 +2375,6 @@ static void mtk_dp_bridge_atomic_enable(struct drm_bridge *bridge,
+>   
+>   	mtk_dp_aux_panel_poweron(mtk_dp, true);
+>   
+> -	/* Training */
+> -	ret = mtk_dp_training(mtk_dp);
+> -	if (ret) {
+> -		drm_err(mtk_dp->drm_dev, "Training failed, %d\n", ret);
+> -		goto power_off_aux;
+> -	}
+> -
+>   	ret = mtk_dp_video_config(mtk_dp);
+>   	if (ret)
+>   		goto power_off_aux;
+> @@ -2389,7 +2392,6 @@ static void mtk_dp_bridge_atomic_enable(struct drm_bridge *bridge,
+>   		       sizeof(mtk_dp->info.audio_cur_cfg));
+>   	}
+>   
+> -	mtk_dp->enabled = true;
+>   	mtk_dp_update_plugged_status(mtk_dp);
+>   
+>   	return;
+> @@ -2404,7 +2406,6 @@ static void mtk_dp_bridge_atomic_disable(struct drm_bridge *bridge,
+>   {
+>   	struct mtk_dp *mtk_dp = mtk_dp_from_bridge(bridge);
+>   
+> -	mtk_dp->enabled = false;
+>   	mtk_dp_update_plugged_status(mtk_dp);
+>   	mtk_dp_video_enable(mtk_dp, false);
+>   	mtk_dp_audio_mute(mtk_dp, true);
 
 
-
-On 2025/4/16 16:22, David Hildenbrand wrote:
-> On 16.04.25 08:32, Baolin Wang wrote:
->>
->>
->> On 2025/4/16 13:30, Dev Jain wrote:
->>> After the check for queue_folio_required(), the code only cares about 
->>> the
->>> folio in the for loop, i.e the PTEs are redundant. Therefore, optimize
->>> this loop by skipping over a PTE batch mapping the same folio.
->>>
->>> With a test program migrating pages of the calling process, which 
->>> includes
->>> a mapped VMA of size 4GB with pte-mapped large folios of order-9, and
->>> migrating once back and forth node-0 and node-1, the average execution
->>> time reduces from 7.5 to 4 seconds, giving an approx 47% speedup.
->>>
->>> v2->v3:
->>>    - Don't use assignment in if condition
->>>
->>> v1->v2:
->>>    - Follow reverse xmas tree declarations
->>>    - Don't initialize nr
->>>    - Move folio_pte_batch() immediately after retrieving a normal folio
->>>    - increment nr_failed in one shot
->>>
->>> Acked-by: David Hildenbrand <david@redhat.com>
->>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>> ---
->>>    mm/mempolicy.c | 12 ++++++++++--
->>>    1 file changed, 10 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
->>> index b28a1e6ae096..4d2dc8b63965 100644
->>> --- a/mm/mempolicy.c
->>> +++ b/mm/mempolicy.c
->>> @@ -566,6 +566,7 @@ static void queue_folios_pmd(pmd_t *pmd, struct 
->>> mm_walk *walk)
->>>    static int queue_folios_pte_range(pmd_t *pmd, unsigned long addr,
->>>                unsigned long end, struct mm_walk *walk)
->>>    {
->>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>        struct vm_area_struct *vma = walk->vma;
->>>        struct folio *folio;
->>>        struct queue_pages *qp = walk->private;
->>> @@ -573,6 +574,7 @@ static int queue_folios_pte_range(pmd_t *pmd, 
->>> unsigned long addr,
->>>        pte_t *pte, *mapped_pte;
->>>        pte_t ptent;
->>>        spinlock_t *ptl;
->>> +    int max_nr, nr;
->>>        ptl = pmd_trans_huge_lock(pmd, vma);
->>>        if (ptl) {
->>> @@ -586,7 +588,9 @@ static int queue_folios_pte_range(pmd_t *pmd, 
->>> unsigned long addr,
->>>            walk->action = ACTION_AGAIN;
->>>            return 0;
->>>        }
->>> -    for (; addr != end; pte++, addr += PAGE_SIZE) {
->>> +    for (; addr != end; pte += nr, addr += nr * PAGE_SIZE) {
->>> +        max_nr = (end - addr) >> PAGE_SHIFT;
->>> +        nr = 1;
->>>            ptent = ptep_get(pte);
->>>            if (pte_none(ptent))
->>>                continue;
->>> @@ -598,6 +602,10 @@ static int queue_folios_pte_range(pmd_t *pmd, 
->>> unsigned long addr,
->>>            folio = vm_normal_folio(vma, addr, ptent);
->>>            if (!folio || folio_is_zone_device(folio))
->>>                continue;
->>> +        if (folio_test_large(folio) && max_nr != 1)
->>> +            nr = folio_pte_batch(folio, addr, pte, ptent,
->>> +                         max_nr, fpb_flags,
->>> +                         NULL, NULL, NULL);
->>>            /*
->>>             * vm_normal_folio() filters out zero pages, but there might
->>>             * still be reserved folios to skip, perhaps in a VDSO.
->>> @@ -630,7 +638,7 @@ static int queue_folios_pte_range(pmd_t *pmd, 
->>> unsigned long addr,
->>>            if (!(flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) ||
->>>                !vma_migratable(vma) ||
->>>                !migrate_folio_add(folio, qp->pagelist, flags)) {
->>> -            qp->nr_failed++;
->>> +            qp->nr_failed += nr;
->>
->> Sorry for chiming in late, but I am not convinced that 'qp->nr_failed'
->> should add 'nr' when isolation fails.
-> 
-> This patch does not change the existing behavior. But I stumbled over 
-> that as well ... and scratched my head.
-> 
->>
->>   From the comments of queue_pages_range():
->> "
->> * >0 - this number of misplaced folios could not be queued for moving
->>    *      (a hugetlbfs page or a transparent huge page being counted 
->> as 1).
->> "
->>
->> That means if a large folio is failed to isolate, we should only add '1'
->> for qp->nr_failed instead of the number of pages in this large folio. 
->> Right?
-> 
-> I think what the doc really meant is "PMD-mapped THP". PTE-mapped THPs 
-> always had the same behavior: per PTE of the THP we would increment 
-> nr_failed by 1.
-
-No? For pte-mapped THPs, it only adds 1 for the large folio, since we 
-have below check in queue_folios_pte_range().
-
-if (folio == qp->large)
-	continue;
-
-Or I missed anything else?
-
-> I assume returning "1" for PMD-mapped THPs was wrong from the beginning; 
-> it might only have been right for hugetlb pages.
-> 
-> With COW and similar things (VMA splits), achieving "count each folio 
-> only once" reliably is a very hard thing to achieve.
-> 
-> 
-> Let's explore how "nr_failed" will get used.
-> 
-> 1) do_mbind()
-> 
-> Only cares if "any failed", not the exact number.
-> 
-> 
-> 2) migrate_pages()
-> 
-> Will return the number to user space, where documentation says:
-> 
-> "On success migrate_pages() returns the number of pages that could not 
-> be moved (i.e., a return of zero means that all pages were successfully 
-> moved)."
-> 
-> man-page does not document THP specifics AFAIKs. I would assume most 
-> users care about "all migrated vs. any not migrated".
-> 
-> 
-> I would even feel confident to change the THP PMD-handling to return the 
-> actual *pages*.
-> 
