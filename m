@@ -1,171 +1,131 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A96F221735
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93D3221DBC;
+	Wed, 16 Apr 2025 18:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828043; cv=none; b=Mx2eGdM7XQ4up8DWtq3TaNOW0KqfJW+rAS4NPtN83i0bY9BWZOleq+Gk9g4uxsklbjDk/ds7su4v5oVxuTAIFV4AIK6v72n2swcCymi9m1VeeqaIDqBmYuXTlCoveZ1ZatQ003yTPaqQeFKjvi9uuwEG1BsZgm7PxWDTTM9MGVw=
+	t=1744828047; cv=none; b=UwNx5FRGWI3zje/7imfkgCvEgllia5afn68j0FXh3+Wsz+N62v691xJRxxK4l5SGK0NBN3RzvlUWDhLG7fCLE6DOPEyMh/YJ1Mb5NtUHlaklfM7qdcHy6IkKrJJkq9NhfJMCjYzjAP8rA3UI2Y/8VVM9HA1WUojvMPMlUc/0rUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744828043; c=relaxed/simple;
-	bh=Si3T9g34tLwRu+I/ZcdrJ4sHmlM5Q2ZsPVwjTIbvTkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dX73BNLfiHEY66bZidAOL8wLKnTGRVQ1EuBq8mLFk/CQMhvAxia3l2+dYAjRRylyhxY3nRyfHM5uj23xtDGwLNONE0eCa90JLW0xH3g7W0lcPrkgYCGLM2sVrqRR6tD+9ALj8u/4CQE4Ul5aHUaWDv4niV0FJKNhB+4GMh0rnvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KXgQnTOh; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744828047; c=relaxed/simple;
+	bh=CMk8CUbEewKgTLh12sPS7gILCDnwaVmQSoXTw/lcDug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7vUwPSV2gRxjd6m6O/dryTtRuvfZf2QN7JFQ1aSkD7zT2JbnnmSYuMx8vgv6w7SkB5oD8yGZ/oJlGsYTX5oxWWq2JfXs6p31kRN5ndEyis4hA0zkkezVrM1y+UToisu+YLX+LHwTiVgtxifaWzctN09ggXMjwfgn7woFoQm0MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=BhgY0wgy; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KXgQnTOh"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4769e30af66so50771cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:27:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744828040; x=1745432840; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CVFY0bq/2fKFFwQxdNRxoC/3a3hJaQuA3a878lkmZSE=;
-        b=KXgQnTOh9+g7+plpl0H9CDQjzpvL9J0LG2ZUMBh+n7olK5+WiEVxe/c+kw5Qh4unPF
-         r9zLn7gvnVFMIp+MFjEmDGZId0CzHsjZTLEy6e5S0csD49aJn8blZDl2EgpSAgQkVqX0
-         bCpLijAmUNgQ/qkCyv0i3Cm5nlLa6KydyzdhVUdowxRyjYVmnzYccuT+wRZt6d8DX753
-         IoLuPDXmmOD50BdXuzl8KhoJ9Fe2IO3M/YzCEANS2SSRxeIHEzBKc5KatfmJb73s+ghV
-         eJaF/81n/fLqB/Wq3qXC+HjgX8ikN1RItBsYkOOWefxBOhkSBC55xHokkp/Y6GrkEFg7
-         NZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744828040; x=1745432840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CVFY0bq/2fKFFwQxdNRxoC/3a3hJaQuA3a878lkmZSE=;
-        b=maBz5i4amUMq5YGbA6cZplz7wrF3KLN0RVqYggyaRRHj1U4EV9H5HfgqKYYI41CgrA
-         0N9Ik4cJuMAfV6Ptk2Py1CEdy5rXIzH4J5ZFJ8TCUoz2XsenzhmMG1zaU4MJareX4dFT
-         PxMqsxV+J8awYBcaduS1a7vvZCIPev84fgJTLX8x0bITmwZO0Rw4kaa/PK5pdu1ZRBKO
-         zPToqpFQdsVr8QaLhLgNsf+mAUb1+KUETuCRbVD3krK6BqlfhPGZ062oShMjjJvsCAxr
-         ILELz0HlkYcTB8MBuEpasGpd9RwCz5amGpt5eIaMIkjHxurNjcBaQTMGyapvDIhbVWdr
-         NVsw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0dZitioIdWuzC9//1mOJrmTeX9eL4TLc/C8iIXlPU0KplVHXhSP2GN3jbli86fDv/cy2sOx6tNnw5SiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZ8QT4pv+08xGPzl4Y1JUr24j+oQonIuxPJhNqCNIbsha5NilT
-	GA3aZh0APFl86DaYZrRpEt7cMU2Mp03vnVA6EX6M3w5UvwZ3Py1doh0VIfVZqYYUtnKMNFDZr2q
-	mWgTQouXe+DszBjKhIY6TxSUM39sxMnC2XUR0
-X-Gm-Gg: ASbGnctUAB2SXzbb0e1tIKidmsmF1Qm9g072cwp6hJsVlN8rMf0BNFIpIy0sJh5x+Xb
-	21Of42b8K0Ja4K/axmngAPON6xcVm/6hmlTnb4DmFIUu2oXRJHyAFN+v7BPDUXamLQv1bc4IRMh
-	gS9EuTAXOdhwim3/C2NVCiAFkXQQtzzCJX1Qs47uFOZQyUPaQxdqjx
-X-Google-Smtp-Source: AGHT+IHrvdMkNhbP02odv8o8St3nhbxaosHL7rrK9HEHzG56GYAHJ0bCrsO+VP4YauVKrmN0kZfCH6Vz33K6NOlIXOA=
-X-Received: by 2002:a05:622a:d0:b0:477:637f:a63 with SMTP id
- d75a77b69052e-47ade60c5cbmr275611cf.6.1744828039809; Wed, 16 Apr 2025
- 11:27:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="BhgY0wgy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1744828032; x=1745432832; i=wahrenst@gmx.net;
+	bh=CMk8CUbEewKgTLh12sPS7gILCDnwaVmQSoXTw/lcDug=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=BhgY0wgyI59w8EN9u6HyyJtVR9jRCGm8Q6B39zzBKfo3s1BffoHBdK4qbDIQWUrI
+	 9Z0BlUBxMylWg2Y70g44T/6li73Zx8WFVQ1xTCJqgNdaggxnAx+aeTPsRcDQ7vOzK
+	 YluJ+jGGQOytGGGNd/FYmrhJJJJqOAf7p6u+7bkXPB7R9eI3fH8mUmbxpz3yl+a4U
+	 kctVC3fuFAYCxEMyecKl/Xt4HBkxGDNDKZrb/p7hjWCJ1gg3F6JA3VCil20AsQ4j5
+	 N0xDJJfR0g5NlWQutqlgPzDIcnaHIj6kevfTKHN6wWctloeEzLPUBzHryzUnVNqJB
+	 mxvPyeJk+G4g27onEQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Ycr-1u26Oy3JO7-00EHE1; Wed, 16
+ Apr 2025 20:27:11 +0200
+Message-ID: <3583fd06-6d27-4efe-b6e9-71926abe3b12@gmx.net>
+Date: Wed, 16 Apr 2025 20:27:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415235308.424643-1-tjmercier@google.com> <46892bf4-006b-4be1-b7ce-d03eb38602b3@oracle.com>
- <CABdmKX2zmQT=ZvRAHOjfxg9hgJ_9iCpQj_SDytHVG2UobdsfMw@mail.gmail.com> <146ecd0e-7c4c-4c8c-a11f-029fafb1f2e3@redhat.com>
-In-Reply-To: <146ecd0e-7c4c-4c8c-a11f-029fafb1f2e3@redhat.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Wed, 16 Apr 2025 11:27:06 -0700
-X-Gm-Features: ATxdqUET1zUiRX-oof2Xojcaomp-kJimkCJ-cNW3d-EnaHVS7Nfzsp0x88QDz2o
-Message-ID: <CABdmKX2Basoq0Sk6qemcP3Mne6-nJPNN0Mz9WYjvdKWNagoaZg@mail.gmail.com>
-Subject: Re: [PATCH v2] cgroup/cpuset-v1: Add missing support for cpuset_v2_mode
-To: Waiman Long <llong@redhat.com>
-Cc: Kamalesh Babulal <kamalesh.babulal@oracle.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v5 3/6] ARM: dts: nxp: mxs: Adjust XEA board's DTS to
+ support L2 switch
+To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>
+References: <20250414140128.390400-1-lukma@denx.de>
+ <20250414140128.390400-4-lukma@denx.de>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <20250414140128.390400-4-lukma@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:SC+vctnACKE6B5hrAq69IHYBfukH9rEY0Ji2sBxSNYuJFsqSUEV
+ i1WgPonH8C/uJO+B+3eiaD20fW/24QHvxghvnyDuY4qXE1ApJkigBI+HFfXe824q+fgZopl
+ gcLoz9ppvUr02kiYtkQpdElP3g0pvIeygD8sZDmKliOtxcsD0Pn8QT0Cl0cS1ujszup8NtA
+ qIZqCQ2KwZQ5GsVPagGQA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:A4MnbPh7ByI=;jdM3HS90XUMKqtP2SAXbrQWNm3G
+ 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
+ Q==
 
-On Wed, Apr 16, 2025 at 11:05=E2=80=AFAM Waiman Long <llong@redhat.com> wro=
-te:
+Am 14.04.25 um 16:01 schrieb Lukasz Majewski:
+> The description is similar to the one used with the new CPSW driver.
 >
-> On 4/16/25 1:55 PM, T.J. Mercier wrote:
-> > On Wed, Apr 16, 2025 at 2:19=E2=80=AFAM Kamalesh Babulal
-> > <kamalesh.babulal@oracle.com> wrote:
-> >> Hi,
-> >>
-> >> On 4/16/25 5:23 AM, T.J. Mercier wrote:
-> >>> Android has mounted the v1 cpuset controller using filesystem type
-> >>> "cpuset" (not "cgroup") since 2015 [1], and depends on the resulting
-> >>> behavior where the controller name is not added as a prefix for cgrou=
-pfs
-> >>> files. [2]
-> >>>
-> >>> Later, a problem was discovered where cpu hotplug onlining did not
-> >>> affect the cpuset/cpus files, which Android carried an out-of-tree pa=
-tch
-> >>> to address for a while. An attempt was made to upstream this patch, b=
-ut
-> >>> the recommendation was to use the "cpuset_v2_mode" mount option
-> >>> instead. [3]
-> >>>
-> >>> An effort was made to do so, but this fails with "cgroup: Unknown
-> >>> parameter 'cpuset_v2_mode'" because commit e1cba4b85daa ("cgroup: Add
-> >>> mount flag to enable cpuset to use v2 behavior in v1 cgroup") did not
-> >>> update the special cased cpuset_mount(), and only the cgroup (v1)
-> >>> filesystem type was updated.
-> >>>
-> >>> Add parameter parsing to the cpuset filesystem type so that
-> >>> cpuset_v2_mode works like the cgroup filesystem type:
-> >>>
-> >>> $ mkdir /dev/cpuset
-> >>> $ mount -t cpuset -ocpuset_v2_mode none /dev/cpuset
-> >>> $ mount|grep cpuset
-> >>> none on /dev/cpuset type cgroup (rw,relatime,cpuset,noprefix,cpuset_v=
-2_mode,release_agent=3D/sbin/cpuset_release_agent)
-> >>>
-> >>> [1] https://cs.android.com/android/_/android/platform/system/core/+/b=
-769c8d24fd7be96f8968aa4c80b669525b930d3
-> >>> [2] https://cs.android.com/android/platform/superproject/main/+/main:=
-system/core/libprocessgroup/setup/cgroup_map_write.cpp;drc=3D2dac5d89a0f024=
-a2d0cc46a80ba4ee13472f1681;l=3D192
-> >>> [3] https://lore.kernel.org/lkml/f795f8be-a184-408a-0b5a-553d26061385=
-@redhat.com/T/
-> >>>
-> >>> Fixes: e1cba4b85daa ("cgroup: Add mount flag to enable cpuset to use =
-v2 behavior in v1 cgroup")
-> >>> Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> >> The patch looks good to me, please feel free to add
-> >>
-> >> Reviewed-by: Kamalesh Babulal <kamalesh.babulal@oracle.com>
-> >>
-> >> One nit below:
-> >>
-> >>> ---
-> >>>   kernel/cgroup/cgroup.c | 29 +++++++++++++++++++++++++++++
-> >>>   1 file changed, 29 insertions(+)
-> >>>
-> >>> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> >>> index 27f08aa17b56..cf30ff2e7d60 100644
-> >>> --- a/kernel/cgroup/cgroup.c
-> >>> +++ b/kernel/cgroup/cgroup.c
-> >>> @@ -2353,9 +2353,37 @@ static struct file_system_type cgroup2_fs_type=
- =3D {
-> >>>   };
-> >>>
-> >>>   #ifdef CONFIG_CPUSETS_V1
-> >>> +enum cpuset_param {
-> >>> +     Opt_cpuset_v2_mode,
-> >>> +};
-> >>> +
-> >>> +const struct fs_parameter_spec cpuset_fs_parameters[] =3D {
-> >>> +     fsparam_flag  ("cpuset_v2_mode", Opt_cpuset_v2_mode),
-> >>> +     {}
-> >>> +};
-> >> A minor optimization you may want to convert the cpuset_fs_parameters =
-into
-> >> a static const.
-> > Thanks, I copied from cgroup1_fs_parameters since that's where
-> > cpuset_v2_mode lives, which doesn't have the static currently
-> > (cgroup2_fs_parameters does). Let me update cpuset_fs_parameters in
-> > v3, and add a second patch for cgroup1_fs_parameters.
->
-> Besides not exposing the structure outside the current file or maybe a
-> tiny bit of linker speedup, is there other performance benefit by adding
-> "static"?
->
-> Regards,
-> Longman
->
-
-I thought it might decrease the text size a tiny bit, but it doesn't
-because the symbol isn't exported and I guess the compiler knows to
-just inline.
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
