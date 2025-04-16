@@ -1,232 +1,225 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2083.outbound.protection.outlook.com [40.107.237.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27608494
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793471; cv=fail; b=kG3YkWC4TTtkHZvWKI0YUfjalAPULiaeFoxAKmGKuJ8dkmNovMxE+292Rr34k8hjbIYwiwo8psyNGRSchypmYxyIt5dx4s4vP2kB5ChsIyzQjQ/j5M9+5E3R0YD+eO14zlTsj5exalL1igbx9SmTb7Iy0KPzRo9Mu231fhaZvl4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793471; c=relaxed/simple;
-	bh=07uci2UoD8dBpxN94MVMZYoBhg6rSuhZKCrP9NFZHH0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HABkQ0a2ArigY8eaI3/YxXBKmnB1tedR4Ek71TgHqsDu95qu8UnA7Dp6MYHlC/47mjnMA2wKZDIT8AL+u3OB1wocC3qdGDPAvCAF9LCiVKcaD+MOlc+qrqFc/N3qJ9kR8PCBq6PEa2yqH/30v5MI7e4foeG32/LQLmSS7rHy5Sk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Cu2/snR3; arc=fail smtp.client-ip=40.107.237.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7FD8494
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 08:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744793510; cv=none; b=QWXJBLw513NigQMIdxSCNAbmCaE9lYlUkiUOXh/ZP2bW1UFGYoCQD2JIZKqKVIZyOOyw7ZjBNUgPOTSATCtuXKKg50JnaxmI1I8BhCpTIAi1aQb+nicMBrGiwgHL0ibd3HwvTXHl1dfJmT2YlweIPX8tPEovPn8PIoRAtsh9NJo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744793510; c=relaxed/simple;
+	bh=FheX7qpcmD6GezfKRhXQIqzqf2UiIieVOikX/XJIfdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EMV3Q7M4/uigSo28d/egpCVoi2Q4os1PQylwMcVdgHdSet+a6I4m4QcN9ejXnz7r6xy496Jz0WzXdxMS4Kn8VdSkIEepH6GCcIdnFDoPdQY5D+qfejv3eK2ppahRrqq+XoOcinPe6L1MvQqVrZ0Q2i3H1Oq6vSOgyN0dnWEPUE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e65+senm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vKSdgsB2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=e65+senm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vKSdgsB2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Cu2/snR3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=elm7Cs07ximn/G1ooMzPAkY1tMpEDjO0AkSgRb/UF2h6MGqNywObWkMEHd/XJKDeOuWUsCN8QcgAu3R8V3U4kwIck3LGEQTKnbVtn/D1GcoK1byMQxLUkt/pp2uzBbkYi8qg8APfxZZHxKv07HnLevNl6qP3kK18XYjo08yaopwhWSEuVMjV9ZD3XjpLGvk2TGXa9fNRmA9K3eR9fS6kzdUMJtZq2RKkZpvfzove2KRoxd60DyYAsK41kTDN0g+PjhVYiK96h90zpYklRwZB920bL4UPDbeicarzOrFC1wFQ32lcktlBuiLE/0X5Vswj+nWAe+g+iN5qXpdI0cU4gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=07uci2UoD8dBpxN94MVMZYoBhg6rSuhZKCrP9NFZHH0=;
- b=ghqS1UguBGou4MrF4sSLtMG9zjBdui8LnVA8/YTkPHsU0eUH7SYyQNY0lLD1DBhUBs+WW2p8fFSFZNNmVDQ6IG8xanoQ9xg+e1pdj8GSPg2R/Ilpj9J21R6XOTBX8PjiIEhxB2fW1rTd1R9qjKbtNcmpgb18h9fchE1HNtO552+L6lA67cgpz95zn1nYRvE0Fp4tUu3aH99dLbQbedoxOneKXbw4pST9BS3B5QtzwJNbbsfpW3lXJxP7vfJXr89+sTys6yyc/kkEmgAvPAWkEwDkfQlb8F0KAVuHgRrqJ623zf27VhMtvvhKn1uxKED31rZZGmpuUDNbQl9AgcHxHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=07uci2UoD8dBpxN94MVMZYoBhg6rSuhZKCrP9NFZHH0=;
- b=Cu2/snR3jsMWJJA1mwvNeJZHf3w10oyWPgUCK3TkIXNt/MmmYfoQnjJljv93o/cmyzLt+Qlgn2kb6ajTYsfRHbxA3GiMKE4SOmMXNNr8Il7trk9IVyLvzloKDSHIa93i866aT05+bVgW8hQXXGX5n80ZhvJ8fAmlq6o7Vbht2hde0nSsGRxHBVxZziCA1K2oaqWcqcsaeJeLFTWFS6L2+wPrhL1xABc+dgP/ghYaFc8cdVkL/G0b+gakrpTwSU3Q8wxbiBjMbC9yYrIorcIxHU6JYd1aoPR68twj69SzJLTqj+c+mUMKWKV7Jc2lrc4PTCrfu2B49EweoI+qGUVnXA==
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
- by IA0PR12MB7529.namprd12.prod.outlook.com (2603:10b6:208:431::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 16 Apr
- 2025 08:51:06 +0000
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2%6]) with mapi id 15.20.8655.021; Wed, 16 Apr 2025
- 08:51:05 +0000
-From: Ankit Agrawal <ankita@nvidia.com>
-To: Sean Christopherson <seanjc@google.com>, Jason Gunthorpe <jgg@nvidia.com>
-CC: Marc Zyngier <maz@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>, "joey.gouly@arm.com"
-	<joey.gouly@arm.com>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "will@kernel.org"
-	<will@kernel.org>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "david@redhat.com" <david@redhat.com>, Aniket Agashe
-	<aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, Kirti Wankhede
-	<kwankhede@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Vikram
- Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>, Alistair Popple
-	<apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>, Dan Williams
-	<danw@nvidia.com>, Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, "sebastianene@google.com"
-	<sebastianene@google.com>, "coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>, "yi.l.liu@intel.com"
-	<yi.l.liu@intel.com>, "ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "gshan@redhat.com"
-	<gshan@redhat.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>, "tabba@google.com"
-	<tabba@google.com>, "qperret@google.com" <qperret@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Thread-Topic: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Thread-Index:
- AQHbkaduhEbbxySPq0WwO4LU4q6wXLNsQygAgAD/GeCAAIkeAIAAC14ggAFVjACAATjx0YAGtS0AgACvDoCAAOaHAIAANr+AgABucICAAD0IgIAAg/iAgACoeYCAABKYAIAAFAsAgAAouYCACiALVIAAbFcAgAANkACAAAgBgIAAHy6AgAAGMwCAB6GYgIALBt6AgAAPgwCAAAfeAIANn5WY
-Date: Wed, 16 Apr 2025 08:51:05 +0000
-Message-ID:
- <SA1PR12MB719976799AD7F9FC4407A5A9B0BD2@SA1PR12MB7199.namprd12.prod.outlook.com>
-References: <Z9s7r2JocpoM_t-m@arm.com>
- <SA1PR12MB7199C7BD48EB39F536DD34DBB0A62@SA1PR12MB7199.namprd12.prod.outlook.com>
- <Z-QU7qJOf8sEA5R8@google.com> <86y0wrlrxt.wl-maz@kernel.org>
- <Z-QnBcE1TKPChQay@google.com> <86wmcbllg2.wl-maz@kernel.org>
- <Z-RGYO3QVj5JNjRB@google.com> <20250331145643.GF10839@nvidia.com>
- <Z_PtKWnMPzwPb4sp@google.com> <20250407161540.GG1557073@nvidia.com>
- <Z_QAxiEWEyMpfLgL@google.com>
-In-Reply-To: <Z_QAxiEWEyMpfLgL@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|IA0PR12MB7529:EE_
-x-ms-office365-filtering-correlation-id: 1b779678-3ac4-4dee-d639-08dd7cc3d302
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|1800799024|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?D/ei9qzud9My8U/1mOzCUVuvSIW74zoImA/xPR3VlPOJsivsvLDmfjbajF?=
- =?iso-8859-1?Q?Md8JEQHdvkqiSz2WjpzvWpVag5yDAUVjjeELoBW34XDkglD+dovKgJNr6C?=
- =?iso-8859-1?Q?6QkOTdofbo1VYd9zmD7owrQ2DrihnTQ/it2QAxxONGS0JB6kNEaJMBhmQi?=
- =?iso-8859-1?Q?Qfi/vF4L5Ed3i0JH83zNK15osJ4vHFyo0XqOLd2cV8v1mo03rpe6pYY0Gn?=
- =?iso-8859-1?Q?nxS+o6yXY3DIHHZz2qwVGSiZLrAZRa77BBSpfv0GKN3GES6uj8bmb7lraR?=
- =?iso-8859-1?Q?LTlsSRpijAwU44P/6A5OoIJl7YapuYR2tDUV97cXHB2W/MlLLmf1DMx88k?=
- =?iso-8859-1?Q?yivkb6pmSNFWTgmewHN9jWiW3dKUhOm14AzBj4lGtdql7CwFaYzWdRA8a1?=
- =?iso-8859-1?Q?D5lSAm4VUNOQLZhw/bZo69KCPXakR1myBS0KfGFhzpBIaH5WGFIiu4ZFqd?=
- =?iso-8859-1?Q?CNAd133f5nHzrNfkLL0OY+3jEQr5WXfrTqDUdsr/2p17UkarCvFjPaiOQD?=
- =?iso-8859-1?Q?1onf4dQDvNgc0Lykea/CInnfR4PtsUy2rxwzouqR047Zqh2pV+LAxJrlum?=
- =?iso-8859-1?Q?CnqzKBg6oNi7A7Wnq+GahStXL4osXEOgNQ1Fxp6foi1frqQV3vXNI8UdtO?=
- =?iso-8859-1?Q?fFFB5tCsFy8GzOnG/oDQ7kMX4IyhpjVbPTqAZALlC757Bi4o5yKTSzxcVM?=
- =?iso-8859-1?Q?SyyaNu8S0dgKVIJoKWv2z4q5E80KCzf8aXrkIBWzy8855tdYpuAzYtWUSo?=
- =?iso-8859-1?Q?QLSCohlNRr/blzGkLhGtloyRP8vlgGugDb6iLFIG/ICElDR53fYCr9cFph?=
- =?iso-8859-1?Q?Dp1VJK7DJ/nd1lLewb3PAGfg63z6s+ZArjWi4NkcsWZIpq/4/0wVcbuSPX?=
- =?iso-8859-1?Q?bGTzEUHzzDI+syp0RA64i9pJq+uPdxU66WCmn8HTxB17srQl8/x9eAdxz4?=
- =?iso-8859-1?Q?eO5sU37kovFxLDY0XPDj+fELk2PI+497vunGwoGH5+623fdJQ5qq79QDd3?=
- =?iso-8859-1?Q?C6FHuo73V4f4iYVuYAeLTvhS0MYkZtNOtsBLU0T8tH3+gq9RtxuDdFRg9f?=
- =?iso-8859-1?Q?uFd9KB1F2nQJVc65Tsmx1x/HqJUurcn7cnioCfz8bVx0eYJS6d86nIqEbf?=
- =?iso-8859-1?Q?1DZKd4Moec651EaPTFBmlWHlw2C/K7quYnnMIYW1ivUydlhO2dE9c3H5dt?=
- =?iso-8859-1?Q?z/R59GSuV/vgqq8lYBZ//od9i9bi3f7N8nINzwOp0Hl2CWHcWGB7hxbJJI?=
- =?iso-8859-1?Q?g/ZuByT82rQfNAz5M/HSBo9PhROI813Ms8YlUorrLSr6yVlwt2lBBoqho0?=
- =?iso-8859-1?Q?vYQaERxhApfIFGYndMjaHpYfvlWDXNha32KK5qAIX2WO2TdTzJJbwoU3Zv?=
- =?iso-8859-1?Q?0Pr4Az7ZGYoylgqDWpCgizAe0mZW9DZp0ss3q8WaYC0RkI2gaEBlXPCnWP?=
- =?iso-8859-1?Q?BN8cq2/6G5OWvQoI5C3mJB7zdJldX2azw+9arEqEYGGicfnPwdGvRFbNsa?=
- =?iso-8859-1?Q?ZPOCmzCWhIPe0CMxXYLNNsEjOZ5CyjWCbVYuH6Xegxsg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?IcJk3DhT5hM4TgarFAL85jMMailZcLNo7KyTCvhbKtkshvb16Bk+w48Lzz?=
- =?iso-8859-1?Q?A2An5Lty7Ij6bYAQfdzPwZzar1tn5I5KDhgOJUl2CpjD8z6oTFWuw/Ql9H?=
- =?iso-8859-1?Q?tyTqlt72goPyq1LOc0UAfvLMwroj2kK09UiA07+1jO8kpC9W4Vv5dioB4p?=
- =?iso-8859-1?Q?+OgjzpyPlEWks18KMe3GMEVTWzScx/H0yLnwrNGqR3iR684lIZ1ggmbiCS?=
- =?iso-8859-1?Q?zhHmBeZY5Us8TiZDO1fzV81qPsarfL74DrxUsB1xv/FFUja4GKxz7Lm/u4?=
- =?iso-8859-1?Q?G+y2+FRQzt1S0e/p3PyfNkw40LdLlKOBBweKCo6yBHzO4kzlFUDCf0mRfQ?=
- =?iso-8859-1?Q?e3j7uoGY5PXyuoWOOsqMGihXhjoXcA7BpZiFC26Roa78mJxKEwSRBaR9u9?=
- =?iso-8859-1?Q?aUzxbijF6XrkQZfYbwZmqtzP+GIM0FG9Ge5oTmY8MblmLQ8hVfFdk0XPN0?=
- =?iso-8859-1?Q?Z4fXjhwNkx9/g9paX4uDjZrSe+6J1N8Q0b/CSDMfEACbR1iVVFBn6UA/1W?=
- =?iso-8859-1?Q?Bms8UMujGBzr3pCB1CF3sBdguBvX9ziWDeJCEjvdmI6dCux/SAziJir8d3?=
- =?iso-8859-1?Q?Q8jjQhRLstmbx3Er8nAxW+zybejeGgR13QMHL9r0wpn4lrEP6saDIX2ia2?=
- =?iso-8859-1?Q?H1tTFtwil8dNgGfi0iXV4LxQlISjGVl5Go7yUJjPI/q9/QPmsJ7bsgVWm/?=
- =?iso-8859-1?Q?hYK4OeX8iAKWFstM53cOJHNR1zGchFFBfYB/UXybSCcWyHv5w2QQbOkNxT?=
- =?iso-8859-1?Q?gmko8pfofkVvHXEk4c6gFCzSEB+3IqV1rK3ZTcpqSL6VyUVQ34DgS38P7j?=
- =?iso-8859-1?Q?B6DrYDKegNtWvadndt2ERulLdf2nZrGBkMNzLE9d5e35ZOFM6IFZuzBQzm?=
- =?iso-8859-1?Q?kDPPcT0smrnvSwEn/qP1mbVQj6xvz/wZIb99k1fugYyUfmfvET1T8TFYjK?=
- =?iso-8859-1?Q?FIlzpGMN3j5PPqjaG+cfIhgUpNptRJoI53no3dyI/62peEB3ERg/PXlkvX?=
- =?iso-8859-1?Q?Xl3ZwwdqnmUrNjWPfu1sV4sNTsLlcXC8AtsJmnuE1XptYCgMUu2m8ps5jN?=
- =?iso-8859-1?Q?BDLxxk4w1uqMBUjHMmgUp9i3mgCY/2aIVqscaTM8+FURVYK+mvtzjiYjYU?=
- =?iso-8859-1?Q?sxJBYSBCNPuhEeTQTGZ34zhIk7BuC4SUf82TkrHCXQz92gl/rRJdMWdioE?=
- =?iso-8859-1?Q?gsOXNyPZ4b3x6noif5N1lwmVnJscO7q0qpjGr1hl4wDBzemj3m8LEdsfTw?=
- =?iso-8859-1?Q?HtHJwx6I92beg7d3935i3KkGvqJLL00aRdZ+V7h7E0PB0+b0tyutveixVl?=
- =?iso-8859-1?Q?QyXEcnf8KzcQK+iObreR06NFggO5svM7YM4wE3knegnrzLpC3QqjUS+cEg?=
- =?iso-8859-1?Q?PMoOdN/00fOQFJg/ZCOlz1zCrsAdY3pDJUuzk1TPSDM3ITxZU5CqMCv/+s?=
- =?iso-8859-1?Q?26eGocyF/49V87//dF61v64NqI8m+HH6eG9OXiX+hj0v/5tpOpv2pexO1y?=
- =?iso-8859-1?Q?z85z7iSRrGPXiPqrn1q96w7NDKGyGM8uSFT+1jrwNWY6sRCZyuYqOWIg0g?=
- =?iso-8859-1?Q?llY28EEyyO0ZQs4PSDH6LrmdyKI78KJqaXi1wToDl3o+ci+EeO9qTwpmCs?=
- =?iso-8859-1?Q?hGDo5WcZJEKx8=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e65+senm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vKSdgsB2";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="e65+senm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vKSdgsB2"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D7BF821169;
+	Wed, 16 Apr 2025 08:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744793506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+XSbUfXn5ZdDRkNFT1LgJRmJGayzOgZM0KU9m+rrH8=;
+	b=e65+senm7ojY4sp8ZGE4XD79fqsK6ZnFQj+DKhzWK/W51AEECb6ady49T+dUdWIXhe1uwW
+	CKFK4OLzwau0Y39sq1St0N792zl7Ms2vg7pSxUQG+2DnwN9M+nfKJixO59T4TrKe22m7HM
+	ZCqBmp8M0uOipJlMkMld96HAFsuzCHU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744793506;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+XSbUfXn5ZdDRkNFT1LgJRmJGayzOgZM0KU9m+rrH8=;
+	b=vKSdgsB2QxnL/V+8JltcjqTosdGXdjg7vxYm/nTdJkXCX6Qm1mM18VQNMs2k+1TGAo1f5u
+	rdXyOaMfBC7CilBw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744793506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+XSbUfXn5ZdDRkNFT1LgJRmJGayzOgZM0KU9m+rrH8=;
+	b=e65+senm7ojY4sp8ZGE4XD79fqsK6ZnFQj+DKhzWK/W51AEECb6ady49T+dUdWIXhe1uwW
+	CKFK4OLzwau0Y39sq1St0N792zl7Ms2vg7pSxUQG+2DnwN9M+nfKJixO59T4TrKe22m7HM
+	ZCqBmp8M0uOipJlMkMld96HAFsuzCHU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744793506;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1+XSbUfXn5ZdDRkNFT1LgJRmJGayzOgZM0KU9m+rrH8=;
+	b=vKSdgsB2QxnL/V+8JltcjqTosdGXdjg7vxYm/nTdJkXCX6Qm1mM18VQNMs2k+1TGAo1f5u
+	rdXyOaMfBC7CilBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C54C513976;
+	Wed, 16 Apr 2025 08:51:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0fsvL6Jv/2cEZwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 16 Apr 2025 08:51:46 +0000
+Date: Wed, 16 Apr 2025 10:51:38 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Daniel Wagner <wagi@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Keith Busch <kbusch@kernel.org>, Hannes Reinecke <hare@suse.de>, 
+	John Meneghini <jmeneghi@redhat.com>, randyj@purestorage.com, 
+	Mohamed Khalfella <mkhalfella@purestorage.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Message-ID: <12892dbf-9cdc-48c3-a67d-0c626d54100a@flourine.local>
+References: <20250324-tp4129-v1-0-95a747b4c33b@kernel.org>
+ <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+ <94ec166a-2025-4743-8e36-fd1e96c33d6e@grimberg.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b779678-3ac4-4dee-d639-08dd7cc3d302
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2025 08:51:05.6805
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z0J7CMfd+RxuedKemwXYUacJsHH+DhA777vgCtT8be9JOGNiuFyWLflkKp2vT20UVH7390UhF6Uaa7hTZNYc5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7529
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <94ec166a-2025-4743-8e36-fd1e96c33d6e@grimberg.me>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi, summarizing the discussion so far and outlining the next steps. The key=
- points=0A=
-are as follows:=0A=
-1. KVM cap to expose whether the kernel supports mapping cacheable PFNMAP:=
-=0A=
-If the host doesn't have FWB, then the capability doesn't exist. Jason, Oli=
-ver, Caitlin=0A=
-and Sean points that this may not be required as userspace do not have=0A=
-much choice anyways. KVM has to follow the PTEs and userspace cannot ask=0A=
-for something different. However, Marc points that enumerating FWB support=
-=0A=
-would allow userspace to discover the support and prevent live-migration=0A=
-across FWB and non-FWB hosts. Jason suggested that this may still be fine a=
-s=0A=
-we have already built in VFIO side protection where a live migration can be=
-=0A=
-attempted and then fail because of late-detected HW incompatibilities.=0A=
-=0A=
-2. New memslot flag that VMM passes at memslot registration:=0A=
-Discussion point that this is not necessary and KVM should just follow the=
-=0A=
-VMA pgprot.=0A=
-=0A=
-3. Fallback path handling for PFNMAP when the FWB is not set:=0A=
-Discussion points that there shouldn't be any fallback path and the memslot=
-=0A=
-should just fail. i.e. KVM should not allow degrading cachable to non-cacha=
-ble=0A=
-when it can't do flushing. This is to prevent the potential security issue=
-=0A=
-pointed by Jason (S1 cacheable, S2 noncacheable).=0A=
-=0A=
-=0A=
-So AIU, the next step is to send out the updated series with the following =
-patches:=0A=
-1. Block cacheable PFN map in memslot creation (kvm_arch_prepare_memory_reg=
-ion)=0A=
-and during fault handling (user_mem_abort()).=0A=
-=0A=
-2. Enable support for cacheable PFN maps if S2FWB is enabled by following=
-=0A=
-the vma pgprot (this patch).=0A=
-=0A=
-3. Add and expose the new KVM cap to expose cacheable PFNMAP (set to false=
-=0A=
-for !FWB), pending maintainers' feedback on the necessity of this capabilit=
-y.=0A=
-=0A=
-Please let me know if there are any inaccuracies.=0A=
-=0A=
-Thanks=0A=
-Ankit Agrawal=0A=
-=0A=
+On Mon, Apr 14, 2025 at 01:03:57AM +0300, Sagi Grimberg wrote:
+> > --- a/drivers/nvme/host/core.c
+> > +++ b/drivers/nvme/host/core.c
+> > @@ -239,6 +239,7 @@ static void nvme_do_delete_ctrl(struct nvme_ctrl *ctrl)
+> >   	flush_work(&ctrl->reset_work);
+> >   	nvme_stop_ctrl(ctrl);
+> > +	nvme_flush_failover(ctrl);
+> 
+> This will terminate all pending failvoer commands - this is the intended
+> behavior?
+
+Yes it will, I don't think so. From the feedback I gather so far, it
+seems the correct way (spec) is to handle each command individually.
+
+FWIW, we are shipping
+
+  https://lore.kernel.org/linux-nvme/20230908100049.80809-3-hare@suse.de/
+
+as stop-gap solution for a while and our customer wasn't able to
+reproduce the ghost writes anymore. And as far I can tell it does also
+failover all pending commands.
+
+> 
+> >   	nvme_remove_namespaces(ctrl);
+> >   	ctrl->ops->delete_ctrl(ctrl);
+> >   	nvme_uninit_ctrl(ctrl);
+> > @@ -1310,6 +1311,19 @@ static void nvme_queue_keep_alive_work(struct nvme_ctrl *ctrl)
+> >   	queue_delayed_work(nvme_wq, &ctrl->ka_work, delay);
+> >   }
+> > +void nvme_schedule_failover(struct nvme_ctrl *ctrl)
+> > +{
+> > +	unsigned long delay;
+> > +
+> > +	if (ctrl->cqt)
+> > +		delay = msecs_to_jiffies(ctrl->cqt);
+> > +	else
+> > +		delay = ctrl->kato * HZ;
+> 
+> This delay was there before?
+
+No, this is function returns the additional time the host should wait
+for it starts to failover. So this is the CQT value, after the KATO
+timeout protocol and this timeout is not present in the nvme subsystem.
+
+> >   void nvme_failover_req(struct request *req)
+> >   {
+> >   	struct nvme_ns *ns = req->q->queuedata;
+> > +	struct nvme_ctrl *ctrl = nvme_req(req)->ctrl;
+> >   	u16 status = nvme_req(req)->status & NVME_SCT_SC_MASK;
+> >   	unsigned long flags;
+> >   	struct bio *bio;
+> > +	enum nvme_ctrl_state state = nvme_ctrl_state(ctrl);
+> >   	nvme_mpath_clear_current_path(ns);
+> > @@ -121,9 +123,53 @@ void nvme_failover_req(struct request *req)
+> >   	blk_steal_bios(&ns->head->requeue_list, req);
+> >   	spin_unlock_irqrestore(&ns->head->requeue_lock, flags);
+> > -	nvme_req(req)->status = 0;
+> > -	nvme_end_req(req);
+> > -	kblockd_schedule_work(&ns->head->requeue_work);
+> > +	spin_lock_irqsave(&ctrl->lock, flags);
+> > +	list_add_tail(&req->queuelist, &ctrl->failover_list);
+> > +	spin_unlock_irqrestore(&ctrl->lock, flags);
+> 
+> So these request - which we stripped their bios, are now placed
+> on a failover queue?
+
+Yes, this is the idea.
+
+> > +
+> > +	if (state == NVME_CTRL_DELETING) {
+> > +		/*
+> > +		 * request which fail over in the DELETING state were
+> > +		 * canceled and blk_mq_tagset_wait_completed_request will
+> > +		 * block until they have been proceed. Though
+> > +		 * nvme_failover_work is already stopped. Thus schedule
+> > +		 * a failover; it's still necessary to delay these commands
+> > +		 * by CQT.
+> > +		 */
+> > +		nvme_schedule_failover(ctrl);
+> 
+> This condition is unclear. Isn't any request failing over should do this?
+> Something is unclear here.
+
+Ye, the comment is not very clear. Sorry about that. I observed that
+blk_mq_tagset_wait_completed_request would block when the controller was
+already in DELETING state and request were canceled, IIRC. The commands
+would be queued on the failover queue but never processed
+nvme_failover_work.
+
+> > +	nvme_schedule_failover(&ctrl->ctrl);
+> >   	nvme_rdma_teardown_io_queues(ctrl, shutdown);
+> >   	nvme_quiesce_admin_queue(&ctrl->ctrl);
+> >   	nvme_disable_ctrl(&ctrl->ctrl, shutdown);
+> > diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+> > index d0023bcfd8a79a193adf2807a24481c8c164a174..3a6c1d3febaf233996e4dcf684793327b5d1412f 100644
+> > --- a/drivers/nvme/host/tcp.c
+> > +++ b/drivers/nvme/host/tcp.c
+> > @@ -2345,6 +2345,7 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
+> >   	nvme_stop_keep_alive(ctrl);
+> >   	flush_work(&ctrl->async_event_work);
+> > +	nvme_schedule_failover(ctrl);
+> >   	nvme_tcp_teardown_io_queues(ctrl, false);
+> >   	/* unquiesce to fail fast pending requests */
+> >   	nvme_unquiesce_io_queues(ctrl);
+> > 
+> 
+> What is the reason for rdma and tcp not being identical?
+
+Sorry, can't remember. But I really want to start moving this code into
+one place.
