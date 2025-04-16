@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E824B21129D
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:22:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CC2217F31
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 16:22:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744820552; cv=none; b=u/VAjjMz87lKFaX/BcnJfNnShkqLJuGVuRk/2ofPvxSq1mB4TSHXhIOhUU0bI0ivM3KyFISZqqgyYMlGXWTydAB1FI48+jV3vB64kh+0wXzLh5hvqQLIEqRY+15Be3VbaPUc6PsT+3eN/yuNLNrTVFeJvr7lbsJkcrUcCmn2OQc=
+	t=1744820561; cv=none; b=Yvc/NVei/QTQEnuSPNhaNbcchrjH93z+asDBA7EuKVnSkrkFQXFprdBharStAr5TsptWqhM4JES/6Oav0EOFlgKCJ4WpKQYDKJxwwY+yaDdTPak6nlxVtVzM+Qp2u+glxwjQr2MVVbqlgXnRpQhlqTnaz0/3QZ2HinlQTqOwvus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744820552; c=relaxed/simple;
-	bh=0dqG/BGHObDxpCDroZlU6KQBh5h1H5phftiCDFOZ4Dk=;
+	s=arc-20240116; t=1744820561; c=relaxed/simple;
+	bh=mhroH62gvO9ZeN3ndrEuib78iEtzPLbdjGEAf/xy5vQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mtFSslvXzUeP9kpTuVrZZuJaxBjFLBGkQc5gGrIeQquaG+l8O47ruTTrqTkUra/elEgEgAyqtK7R2ItJLRFYMYqIbHFrA8jnAozQnoS2XMQMWuxtAqD91N7TiHIE4uKky849kDLvw2TMNUftinLiOzbLdzFTUtcrjRWt03ZYads=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=clfROOy5; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=b2iCH7ehp7ZIDKX0PuBz85JCvUPRqX6KEQqvGgtRs1OUrH8Tv/CH+ukKZLmi7gIGYu+t8jYorrZsC9v4fbR6Hdw/aLwVnwi5fWeeBuawTJrFmb5Hv8TdjwxMcsooiMPFuLvrzMVCbYmdhlGfugUA5uHfXXS3ghwZA3D01bz5R1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LMBdQWi/; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clfROOy5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LMBdQWi/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744820550;
+	s=mimecast20190719; t=1744820559;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aiB1aBtR1yuJyWpVsoB3DbcH3jm+uu0Drkre1B2Skjs=;
-	b=clfROOy5qetGxZxxEpfxK3P/hxr9o20CWcfSPVeh8ymwPg1EgxbSNodRQhTMpPS/k5dp1a
-	B+NwbCWPfnOIRUGGRStKmNUhac+C1V0UNJI/GNO0A2kavuZse+zhD2hs5t+cGxiSGWUeFB
-	sIkMmvEqwllysctfbg9o79rvICmfcpw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=c0XIADaqXMLiabHFp8+DtJN4Xp5Pbh8dJJfLV+eNoh8=;
+	b=LMBdQWi/wNvuPMlUseMbruniviIUButUwjFbD14VQfc8CtJRYnCk75D3JOfsEhcNHHzfrS
+	KDTTxzlkAjfoaLSwMFlJ7PQr4KE98WJjI8PF0IDlaDbntwI2dgC8JaTt/70KCM7UhXeSLG
+	D83/KIvuE9sAq62sf2lJGf6wRfyDOzo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-vPUb5T6BOfm-PsqSL67Ulg-1; Wed,
- 16 Apr 2025 12:22:25 -0400
-X-MC-Unique: vPUb5T6BOfm-PsqSL67Ulg-1
-X-Mimecast-MFC-AGG-ID: vPUb5T6BOfm-PsqSL67Ulg_1744820543
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-217-O_wDi8XxMiOsSbKJ6eKitg-1; Wed,
+ 16 Apr 2025 12:22:36 -0400
+X-MC-Unique: O_wDi8XxMiOsSbKJ6eKitg-1
+X-Mimecast-MFC-AGG-ID: O_wDi8XxMiOsSbKJ6eKitg_1744820554
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6C7E6195604F;
-	Wed, 16 Apr 2025 16:22:23 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C04B719560A7;
+	Wed, 16 Apr 2025 16:22:33 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.44.33.32])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BADCC180045B;
-	Wed, 16 Apr 2025 16:22:18 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 09D0E1800965;
+	Wed, 16 Apr 2025 16:22:28 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
 Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
@@ -59,9 +59,9 @@ Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH v3 net-next 6/8] mfd: zl3073x: Add clock_id field
-Date: Wed, 16 Apr 2025 18:21:42 +0200
-Message-ID: <20250416162144.670760-7-ivecera@redhat.com>
+Subject: [PATCH v3 net-next 8/8] mfd: zl3073x: Register DPLL sub-device during init
+Date: Wed, 16 Apr 2025 18:21:44 +0200
+Message-ID: <20250416162144.670760-9-ivecera@redhat.com>
 In-Reply-To: <20250416162144.670760-1-ivecera@redhat.com>
 References: <20250416162144.670760-1-ivecera@redhat.com>
 Precedence: bulk
@@ -73,113 +73,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add .clock_id to zl3073x_dev structure that will be used by later
-commits introducing DPLL driver. The clock ID is necessary for DPLL
-device registration.  To generate such ID use chip ID read during
-device initialization for this. For the case where are multiple
-zl3073x based chips the chip ID is shifted and lower bits are filled
-by an unique value. For I2C case it is I2C device address and for SPI
-case it is chip-select value.
+Register DPLL sub-devices to expose this functionality provided
+by ZL3073x chip family. Each sub-device represents one of the provided
+DPLL channels.
 
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
- drivers/mfd/zl3073x-core.c  | 6 +++++-
- drivers/mfd/zl3073x-i2c.c   | 4 +++-
- drivers/mfd/zl3073x-spi.c   | 4 +++-
- drivers/mfd/zl3073x.h       | 2 +-
- include/linux/mfd/zl3073x.h | 2 ++
- 5 files changed, 14 insertions(+), 4 deletions(-)
+ drivers/mfd/zl3073x-core.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-index 3d18786c769d2..5a0e2bb1a969f 100644
+index 0bd31591245a2..fda77724a8452 100644
 --- a/drivers/mfd/zl3073x-core.c
 +++ b/drivers/mfd/zl3073x-core.c
-@@ -485,13 +485,14 @@ static void zl3073x_devlink_unregister(void *ptr)
-  * zl3073x_dev_probe - initialize zl3073x device
-  * @zldev: pointer to zl3073x device
-  * @chip_info: chip info based on compatible
-+ * @dev_id: device ID to be used as part of clock ID
-  *
-  * Common initialization of zl3073x device structure.
-  *
-  * Returns: 0 on success, <0 on error
-  */
- int zl3073x_dev_probe(struct zl3073x_dev *zldev,
--		      const struct zl3073x_chip_info *chip_info)
-+		      const struct zl3073x_chip_info *chip_info, u8 dev_id)
- {
- 	u16 id, revision, fw_ver;
- 	struct devlink *devlink;
-@@ -533,6 +534,9 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
- 		FIELD_GET(GENMASK(15, 8), cfg_ver),
- 		FIELD_GET(GENMASK(7, 0), cfg_ver));
+@@ -6,6 +6,7 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/math64.h>
++#include <linux/mfd/core.h>
+ #include <linux/mfd/zl3073x.h>
+ #include <linux/mfd/zl3073x_regs.h>
+ #include <linux/module.h>
+@@ -774,6 +775,20 @@ int zl3073x_dev_probe(struct zl3073x_dev *zldev,
+ 	if (rc)
+ 		return rc;
  
-+	/* Use chip ID and given dev ID as clock ID */
-+	zldev->clock_id = ((u64)id << 8) | dev_id;
++	/* Add DPLL sub-device cell for each DPLL channel */
++	for (i = 0; i < chip_info->num_channels; i++) {
++		struct mfd_cell dpll_dev = MFD_CELL_BASIC("zl3073x-dpll", NULL,
++							  NULL, 0, i);
++
++		rc = devm_mfd_add_devices(zldev->dev, PLATFORM_DEVID_AUTO,
++					  &dpll_dev, 1, NULL, 0, NULL);
++		if (rc) {
++			dev_err_probe(zldev->dev, rc,
++				      "Failed to add DPLL sub-device\n");
++			return rc;
++		}
++	}
 +
  	/* Register the device as devlink device */
  	devlink = priv_to_devlink(zldev);
  	devlink_register(devlink);
-diff --git a/drivers/mfd/zl3073x-i2c.c b/drivers/mfd/zl3073x-i2c.c
-index 76bc9a0463180..ae0ad6b7b0129 100644
---- a/drivers/mfd/zl3073x-i2c.c
-+++ b/drivers/mfd/zl3073x-i2c.c
-@@ -29,7 +29,9 @@ static int zl3073x_i2c_probe(struct i2c_client *client)
- 		return PTR_ERR(zldev->regmap);
- 	}
- 
--	return zl3073x_dev_probe(zldev, i2c_get_match_data(client));
-+	/* Initialize device and use I2C address as dev ID */
-+	return zl3073x_dev_probe(zldev, i2c_get_match_data(client),
-+				 client->addr);
- }
- 
- static const struct i2c_device_id zl3073x_i2c_id[] = {
-diff --git a/drivers/mfd/zl3073x-spi.c b/drivers/mfd/zl3073x-spi.c
-index d0fc2d2221c0d..6e6ec88b40d72 100644
---- a/drivers/mfd/zl3073x-spi.c
-+++ b/drivers/mfd/zl3073x-spi.c
-@@ -29,7 +29,9 @@ static int zl3073x_spi_probe(struct spi_device *spi)
- 		return PTR_ERR(zldev->regmap);
- 	}
- 
--	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
-+	/* Initialize device and use SPI chip select value as dev ID */
-+	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi),
-+				 spi_get_chipselect(spi, 0));
- }
- 
- static const struct spi_device_id zl3073x_spi_id[] = {
-diff --git a/drivers/mfd/zl3073x.h b/drivers/mfd/zl3073x.h
-index 3a2fea61cf579..abd1ab9a56ded 100644
---- a/drivers/mfd/zl3073x.h
-+++ b/drivers/mfd/zl3073x.h
-@@ -26,6 +26,6 @@ extern const struct zl3073x_chip_info zl3073x_chip_info[];
- struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev);
- void zl3073x_dev_init_regmap_config(struct regmap_config *regmap_cfg);
- int zl3073x_dev_probe(struct zl3073x_dev *zldev,
--		      const struct zl3073x_chip_info *chip_info);
-+		      const struct zl3073x_chip_info *chip_info, u8 dev_id);
- 
- #endif /* __ZL3073X_CORE_H */
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-index 53813a8c39660..5074f64a70137 100644
---- a/include/linux/mfd/zl3073x.h
-+++ b/include/linux/mfd/zl3073x.h
-@@ -13,11 +13,13 @@ struct regmap;
-  * @dev: pointer to device
-  * @regmap: regmap to access device registers
-  * @mailbox_lock: mutex protecting an access to mailbox registers
-+ * @clock_id: clock id of the device
-  */
- struct zl3073x_dev {
- 	struct device		*dev;
- 	struct regmap		*regmap;
- 	struct mutex		mailbox_lock;
-+	u64			clock_id;
- };
- 
- /**
 -- 
 2.48.1
 
