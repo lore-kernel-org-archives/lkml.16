@@ -1,176 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D9E233152
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DAA230BCF;
+	Wed, 16 Apr 2025 20:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836003; cv=none; b=hCs0Y1CGh2/4wCBerKDdeFqIeviUVh+4VwPN7TdGUYhy8Zl+9oImv6xg1a3E/K2ChyeVk9ir/MQwx5tvqdovCL6hfizQdbockPwEErSNx8bM/zwpKD2//QuzADwxRm8TdSCrU5oGk87JwC857sLc9J4rBNlLdUkt8cQLsyRvKK0=
+	t=1744836015; cv=none; b=XOqn4IGS9OkVRUW304fsRjvTmGZWJqvCx5F0pCVzjJgSHxm5Odl2cQC2Yvv/+TaJHeMpsW8xN9U7w+PGHJbCt6P1T3gYqIM4U/ILssx9fA/BcASPg4jEFyQ/8IbQ+nqqd0JGNPDG7GV9kO8887hy0PZkmQ349jF9lUIKzqkS+uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836003; c=relaxed/simple;
-	bh=kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hH+Wi9kprOn9T/7FVcVt4Qy6KldNoeZ59Q9+4CoECLYxwUxoI/uO3WHldKHXs/DKbLhBV7VX/wMys2a24FHcU2jkggMzDKgWgGgxqQqvO+9UIVxQv0e4wzVRKse9yvzwiadNOC4JNxG6X1MOFir/6WlukEOSliQSmQztcGca7kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DpwLEau3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744836015; c=relaxed/simple;
+	bh=5cGCg9jze7BCSmIxo9og5z3xt+NER9dHesKxa23q78Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dSp0GBMLj9oLkUnsJKOMWd+Be/gZa4p/Xing7U/hM4wR/Yz2T18ODcKKXtbi8L27chP7QNKMQ1ykCnHVhKRzYjPMny8dfyMfnp6OVQB2V3sinYkrx0Na1o68EWvPLgzqApCc01EqGD8taV8mJKSefWUzUCMFs1Z9QX7x6UfAdK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+ObKBqV; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DpwLEau3"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53G9mFi1007029
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=; b=DpwLEau3Y+2DkDDL
-	ps32G63sJlVwJ+6ZIG1FsHA4/Lf9gvmuju9s2ftVVke9aTTJgbxdMGcEqNlRdyrm
-	JuCidCMnz+IxQbVu0b8ol00Bcg+vXY4HBmC5rpBoUtSJmd9eRETmMJsfPug5UTRl
-	DDo5pzRE4mVhbHhfuJLtL5SWfzgi/T0Zy9GLlVSBS9EgFZm1iaceMOTwlY37RjGc
-	RtsBJNsOLdFaF9xhCGMP7a2hv+OtYDB67xR8aSejmYLhnom4kyKRbTsk/OIDy9yx
-	1vuYV8eyNzjmAEW/d+CeDkWn+8DlUF3z+jEZsliRiy69HgGzz2F1ndr6wfqXv5Uk
-	ZDudgw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45yfgjmpn3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 20:40:00 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5530c2e01so476385a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:40:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744835999; x=1745440799;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDu+tIWiiv3RG9q2EWbYK6uCMzCFUTTLqRKVLC0mQKo=;
-        b=AaHmYerqXop+8zokHZaweIQrcDen3KJ27QOBJPngimOhr7HMZj1ZluPj8KFvu6Osh7
-         0kbfGCOYaxEndp/kcygYwMjXjvxxns7zyOSBhFJ/6NTD9UUVV9lHNF4c5ev/0bHQUDuZ
-         oJkGOwH+CXqsZ+IEPrXmUEHpQTzvhEavzGuPbnGq06bnIneSy1Igpvr1kYwnY/NPtiBs
-         9Oj+mrlOUC4BS3ZtQPSWWzRwfqeqn96K5gAn4Ef2Y+7haJ1oNhvKCYZZ9/2SXlf1i3Q4
-         Y/kvBXgvZqg/kQnoN6c4ZttRXdo8pRoRZKNZ8ItPGxut9/W4Wvi3+4i3F5HB31D76awJ
-         I4DQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUS3bkY04QV/dpGf8ANZqlIqV12pXUQA5wVy5oq5tkMD/GbTlSIROVzQ3Fv2dPZRBBJAfF/wI4adUUnLWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4riQcSAMePAJeB11dTyjKFkamsIP2XY8dwFamP35/lLnT9ZYG
-	Vmm+RkQeeD5lEyQGN572GjDWKmXaNiOLOdJJOALYm8G0EC6nmqQXVsSy4R21MgRSitjJjU/Yvcr
-	0XYKJYEJaIVYzQy9EG2yIJTAvSEDjekJnTY53JJg2xW2L/ThK62dKlsvtPJBMn1E=
-X-Gm-Gg: ASbGncsTsASU8Hr93sxxdRujGmXNmeHYe/k6KHWP626+xq02e9o3GnGSfKHr3fx/25w
-	6RQZVFCaJHfoFrA/+DxyZ5l/ot86Nw7M1AYiJXMpOtzKiBwHg3CTfX8jcUlRYEjZbL+aqwMYh4H
-	AtYuteo8OzyOw1pJi7DyRfMOemJ8pnODVVZA3X+nZjW+7yHwqBD234KPeRmtlzUiHhV2K2tKtB5
-	nPBYFR+QJYSUIRWpKPdv19mf8EPXqFzxDlRpF73gxCoEAZCOBkTM4oesLYWTo/F5hINkoJ2l0+m
-	zu3RBc/0HfAkGPCjXMy2DpFuzV+knjNNzntq6acZkrBMXrd/bVaVBApCvi0lhLkDW8U=
-X-Received: by 2002:a05:620a:288d:b0:7c3:dd6d:54e4 with SMTP id af79cd13be357-7c91d0602ebmr62127385a.10.1744835999386;
-        Wed, 16 Apr 2025 13:39:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGzgDHx0UMfpo23gp5XKth2J0840BeS/rB+zsXeevtnGVzubmJ5n0ka+mRD1Wk7yKLA+/G4gQ==
-X-Received: by 2002:a05:620a:288d:b0:7c3:dd6d:54e4 with SMTP id af79cd13be357-7c91d0602ebmr62122985a.10.1744835998836;
-        Wed, 16 Apr 2025 13:39:58 -0700 (PDT)
-Received: from [192.168.65.126] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb3cd618ebsm186163466b.16.2025.04.16.13.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 13:39:58 -0700 (PDT)
-Message-ID: <b9fd463b-5a34-4c3b-a6e8-7432e1a0f2c6@oss.qualcomm.com>
-Date: Wed, 16 Apr 2025 22:39:54 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+ObKBqV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744836014; x=1776372014;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=5cGCg9jze7BCSmIxo9og5z3xt+NER9dHesKxa23q78Y=;
+  b=f+ObKBqVBPgGJHrbD1m6k+m4DCgIEJnWUYpzcqagWPby+d6qSiEl5vHG
+   pFRT9acfV9xqda1zC0cZeI7boqiZxLUBWpagpiwB2jpxgvRhUU5r0R9Su
+   eRmBA33O6Q4uczDjFn3nSRzpZn9h1t+YoTgEh4dWiJNoJFgehll6U2aBG
+   DOzL/wS6//yh47m3zPrmJJskXr5XCtteTbKIZ9zpuoBPqP3LiuCVxTkG1
+   OUZYD8SIr5EFxWbUwlNi4WuJbePidM3vLRFDNBvlDZrw8ZA4PjE0UXPf1
+   sMpH3NHtK6O0tZfDuPEuEAqX0WlDPvwnDxdGQ20p2ACzEmpVWPA2MwiHj
+   A==;
+X-CSE-ConnectionGUID: WFykIn71QPuf/fRQYCWlAQ==
+X-CSE-MsgGUID: B2L8bG0KQYOg6aNtVZarTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11405"; a="46534759"
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="46534759"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 13:40:13 -0700
+X-CSE-ConnectionGUID: TO8T7NIJReGJA1L3xX0wXg==
+X-CSE-MsgGUID: yydc5MUwQGKQLT/WUf1CVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,217,1739865600"; 
+   d="scan'208";a="131571537"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.5])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 13:40:13 -0700
+Message-ID: <da00e02b7ae32331794314b4d877987a6f2b1cf2.camel@linux.intel.com>
+Subject: Re: [PATCH v2] platform/x86/intel-uncore-freq: Fix missing uncore
+ sysfs during CPU hotplug
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: shouyeliu <shouyeliu@gmail.com>, hdegoede@redhat.com, 
+	ilpo.jarvinen@linux.intel.com
+Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Shouye Liu <shouyeliu@tencent.com>
+Date: Wed, 16 Apr 2025 13:40:12 -0700
+In-Reply-To: <20250416033842.67394-1-shouyeliu@gmail.com>
+References: <20250416033842.67394-1-shouyeliu@gmail.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/6] arm64: dts: qcom: Add initial support for MSM8937
-To: barnabas.czeman@mainlining.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>,
-        Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        iommu@lists.linux.dev, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, linux@mainlining.org,
-        Dang Huynh <danct12@riseup.net>
-References: <20250315-msm8937-v4-0-1f132e870a49@mainlining.org>
- <20250315-msm8937-v4-4-1f132e870a49@mainlining.org>
- <f85195a1-f55e-41ea-967d-b758014cba06@oss.qualcomm.com>
- <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <ddf29d5743e25f311cd86711f39f7ad0@mainlining.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 2crNTgKlylQCP672zVcB4Wo46NOuNSSN
-X-Proofpoint-ORIG-GUID: 2crNTgKlylQCP672zVcB4Wo46NOuNSSN
-X-Authority-Analysis: v=2.4 cv=Cve/cm4D c=1 sm=1 tr=0 ts=680015a0 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=OuZLqq7tAAAA:8 a=bBqXziUQAAAA:8 a=KIKYxIlc2-mGyxiTgOQA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=AKGiAy9iJ-JzxKVHQNES:22 a=BjKv_IHbNJvPKzgot4uq:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_08,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- malwarescore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=852 mlxscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504160168
 
-On 4/16/25 10:33 PM, barnabas.czeman@mainlining.org wrote:
-> On 2025-04-14 22:55, Konrad Dybcio wrote:
->> On 3/15/25 3:57 PM, Barnabás Czémán wrote:
->>> From: Dang Huynh <danct12@riseup.net>
->>>
->>> Add initial support for MSM8937 SoC.
->>>
->>> Signed-off-by: Dang Huynh <danct12@riseup.net>
->>> Co-developed-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
->>> ---
+On Wed, 2025-04-16 at 11:38 +0800, shouyeliu wrote:
+> From: Shouye Liu <shouyeliu@tencent.com>
+>=20
+> In certain situations, the sysfs for uncore may not be present when
+> all
+> CPUs in a package are offlined and then brought back online after
+> boot.
+>=20
+> This issue can occur if there is an error in adding the sysfs entry
+> due
+> to a memory allocation failure. Retrying to bring the CPUs online
+> will
+> not resolve the issue, as the uncore_cpu_mask is already set for the
+> package before the failure condition occurs.
+>=20
+> This issue does not occur if the failure happens during module
+> initialization, as the module will fail to load in the event of any
+> error.
+>=20
+> To address this, ensure that the uncore_cpu_mask is not set until the
+> successful return of uncore_freq_add_entry().
+>=20
+Fixes: dbce412a7733 ("platform/x86/intel-uncore-freq: Split common and
+enumeration part")
 
-[...]
+> Signed-off-by: Shouye Liu <shouyeliu@tencent.com>
+Cc: stable@vger.kernel.org
 
->>> +    thermal_zones: thermal-zones {
->>> +        aoss-thermal {
->>> +            polling-delay-passive = <250>;
->>
->> There are no passive trip points> +
-> Should i remove polling-delay-passive?
+Thanks,
+Srinivas
 
-yes, please do
+> ---
+> =C2=A0.../x86/intel/uncore-frequency/uncore-frequency.c=C2=A0=C2=A0 | 13 =
++++++++++--
+> --
+> =C2=A01 file changed, 9 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-
+> frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-
+> frequency.c
+> index 40bbf8e45fa4..bdee5d00f30b 100644
+> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+> @@ -146,15 +146,13 @@ static int uncore_event_cpu_online(unsigned int
+> cpu)
+> =C2=A0{
+> =C2=A0	struct uncore_data *data;
+> =C2=A0	int target;
+> +	int ret;
+> =C2=A0
+> =C2=A0	/* Check if there is an online cpu in the package for uncore
+> MSR */
+> =C2=A0	target =3D cpumask_any_and(&uncore_cpu_mask,
+> topology_die_cpumask(cpu));
+> =C2=A0	if (target < nr_cpu_ids)
+> =C2=A0		return 0;
+> =C2=A0
+> -	/* Use this CPU on this die as a control CPU */
+> -	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> -
+> =C2=A0	data =3D uncore_get_instance(cpu);
+> =C2=A0	if (!data)
+> =C2=A0		return 0;
+> @@ -163,7 +161,14 @@ static int uncore_event_cpu_online(unsigned int
+> cpu)
+> =C2=A0	data->die_id =3D topology_die_id(cpu);
+> =C2=A0	data->domain_id =3D UNCORE_DOMAIN_ID_INVALID;
+> =C2=A0
+> -	return uncore_freq_add_entry(data, cpu);
+> +	ret =3D uncore_freq_add_entry(data, cpu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Use this CPU on this die as a control CPU */
+> +	cpumask_set_cpu(cpu, &uncore_cpu_mask);
+> +
+> +	return 0;
+> =C2=A0}
+> =C2=A0
+> =C2=A0static int uncore_event_cpu_offline(unsigned int cpu)
 
->>> +            thermal-sensors = <&tsens 0>;
->>> +
->>> +            trips {
->>> +                aoss_alert0: trip-point0 {
->>> +                    temperature = <85000>;
->>> +                    hysteresis = <2000>;
->>> +                    type = "hot";
->>> +                };
->>
->> Please convert these to 'critical' instead
->>
->> [...]
->>
->>> +        cpuss1-thermal {
->>> +            polling-delay-passive = <250>;
->>
->> You can drop polling-delay-passive under CPU tzones, as threshold
->> crossing is interrupt-driven
-> Should I remove polling-delay-passive then?
-
-yeah
-
-Konrad
