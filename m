@@ -1,75 +1,59 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA15B1922DD;
-	Wed, 16 Apr 2025 00:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8534C1A08BC;
+	Wed, 16 Apr 2025 00:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744762980; cv=none; b=VgUY9IkyAZpZJ7fMuB7Rkf9xJIqa3p5C0sMUb5WdC7shZJ3IIkd1MIwWQOx/MUnJIY/Q0t27K7lfYhYCH6OgyBQp6vAhzD6ReXD0uT5Petf0meSwQrXHDQ2qjHuWNarul0D1LYH8o3OiQrxbnD3gfg1ie8OO/u+Un8mpN+00vkk=
+	t=1744762985; cv=none; b=bp74TFjSF65zEbFm2zukPqwpvUdPGRcau+3ZJU/k6lEb/FjjUTUY8pbBzkPEhMr/eDfZNU6mygTan4d81P8fhEhT8ywYuyZFZ1foOvEC4hy5Qr+BIpFcoejKWOfTX3SLtAALMhqi+H1ZZwJwkzCS3SLKMGWZPVmkCaFyjgZwqWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744762980; c=relaxed/simple;
-	bh=eqTSVK0fJb93nGmyoukDCWFIAgXFKsNTr2iOnbl6pms=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ce50QFKdRFQwRWfHnwVEQEqLQaCv7UVMdazNec9Rd0VeGg7j9kMH/7xKYtCcOj+b6kjREeUqGzd8DhuvAEPcqQ8RwB8jahha1s2ZkRPO+bDF0WOBS/nRPsj+6JdVKD1C98gceutUl6BkzGYerq7AHl918RfjW+ltoEsc4hlaVAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=AgUT39X6; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1744762985; c=relaxed/simple;
+	bh=CTthpzl61pBQ2VZZi3PvIwU4bwtbRqeibOyOUdBhm9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kli17FCkprqXDjwbtpoT3xETFcqhJwTCpUmL0gifeKppUGa9ZptJKNtRwJrf9CxMimbJ83mfJK9QE07/Y3a1GsMhilV+sJCP7y0gxNnBjXoya6+HGt5W5hrH8T3FVIDqvdpq8eXhstBY7l8oHGA9u2clAWmb6d7yfSpvexNCQhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I22rkLh2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="AgUT39X6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=eFxO4nceIdBdEGm0H6ZsUqRPhFyxoqg5KX+zbJw4bnY=; b=AgUT39X6WbB1yxW7
-	nSg4FDkzSUA8Sgwd0XwG6xkDpgPFJMqtfgbmonH2/ryud2NYHcISMgOXBu7Ja8941GwE8r9bmHtf8
-	mDMgG8Kfi+GLCspIE+5Xxu2mII3YRxyjA6s91ZQpbGTQEPPzygxh+T2PDoP3prH3FxsFc/pSrjZZs
-	WdY07EGTBfC4x22dhyJE9T7hxxzxej7lZvfdFVVmbooReUi9rxl8ARobLwdSaZ7UJhtOiU8a0czec
-	efaJE+yaT7rZGHntAzRe82e3Dbshvn3aKkmqsbOpSRLEkOkgG9z77H8/cLYAscWWrueAgwjM1aOB3
-	XzGdG4aocNxl2fO02Q==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u4qY0-00Bl42-0J;
-	Wed, 16 Apr 2025 00:22:36 +0000
-From: linux@treblig.org
-To: njavali@marvell.com,
-	mrangankar@marvell.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH 0/2] scsi: qedi deadcoding
-Date: Wed, 16 Apr 2025 01:22:33 +0100
-Message-ID: <20250416002235.299347-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I22rkLh2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D655C4CEE7;
+	Wed, 16 Apr 2025 00:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744762985;
+	bh=CTthpzl61pBQ2VZZi3PvIwU4bwtbRqeibOyOUdBhm9c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I22rkLh2DTCKTaKQDmCJJUMh/1rplbgonaVyfAN1U2FT0Cg0MHbnS08/75Q1H8Clh
+	 RHlVbEmDXoEOOgT4inR2Xv7gMIDGlbWcHBJE5iJcBzv8RvD7VySkcKAno5KxS3dEu4
+	 4A26o67/7sjQ4bLv7qmA2ujuhWiKin2qGL6gS1yI0J6Cxhc+vLYrKNtGSI7PvKVsEQ
+	 QMzaS5mi26JyMtVEpqEQqXhSh8JomJftnOlW9STevsPh4rHU4nrNgVl2i9N8kRvP/B
+	 hCK3JI0tSDzrFMHrncPnMbMSS3MNbWNLeP/RkINYi/vsGfzA87UiNe0nyZujILR7Wr
+	 7Hb21w/YGMU5g==
+Date: Tue, 15 Apr 2025 17:23:03 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+ <larry.chiu@realtek.com>
+Subject: Re: [PATCH net-next v3] rtase: Add ndo_setup_tc support for CBS
+ offload in traffic control setup
+Message-ID: <20250415172303.19022025@kernel.org>
+In-Reply-To: <20250414034202.7261-1-justinlai0215@realtek.com>
+References: <20250414034202.7261-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Mon, 14 Apr 2025 11:42:02 +0800 Justin Lai wrote:
+> Add support for ndo_setup_tc to enable CBS offload functionality as
+> part of traffic control configuration for network devices.
 
-Hi,
-  A couple of deadcode patches for the qdi driver.
-
-Build tested only.
-
-Dave
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-
-
-Dr. David Alan Gilbert (2):
-  scsi: qedi: Remove unused sysfs functions
-  scsi: qedi: Remove unused qedi_get_proto_itt
-
- drivers/scsi/qedi/qedi_dbg.c  | 22 ----------------------
- drivers/scsi/qedi/qedi_dbg.h  | 12 ------------
- drivers/scsi/qedi/qedi_gbl.h  |  1 -
- drivers/scsi/qedi/qedi_main.c |  8 --------
- 4 files changed, 43 deletions(-)
-
--- 
-2.49.0
-
+This is some semi-switch-like device right? Or am I misremembering?
+Could you clarify where the limits are applied?
+=46rom CPU into the switch or on the switch ports?
+Should be documented in the commit msg.
+--=20
+pw-bot: cr
