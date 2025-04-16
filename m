@@ -1,97 +1,251 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439BD10E9;
-	Wed, 16 Apr 2025 05:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63340154423
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 05:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744781505; cv=none; b=tgD14hOXYym00YzGUVsBOGjUdQm8deK0JjpM0eBWcXJXYZ6OLqjOF3MV3PeGJEStIrRoIP2pd+IIL2paATybJzd89v+lq3Q+svxZGhpFFLyNv1lkz08hgGrSmOiwaCREV9SKJALGPek6EUBkDPNJW3G5dF0lpWC84XpXoEACl0A=
+	t=1744781548; cv=none; b=LlF8aGTFbZ2sx/2HTX73uS2o77RVWlkzlVIIg3lA0z0TVoXdWmsfQvndwtTtsJJqTthlF/eqDlHBrXdlN7NmsrcIA83SvdrCHLQpoy8Uu/Edlna6rVX5YKyalFv1mjSQVICQsF3uYLUNFbcN/4pfXkyHjeIFEAaKYi54ui/3j7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744781505; c=relaxed/simple;
-	bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K+AkXFDMkntiJe1Et+SlpPVpoZ9rtKtTeHwQRmGNiGgXJaDPA4G9z+cT7ysnrFtLXbB2Tah5DR5CsaY0zyfraeZJsWjZwV/wSvOoNR/dLvb1CbYMwWacAQFEnwsNPA4SWB/GiIpANm+8WU/jADVMALgyL5DlGUnNYPSnQ1UFb4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=MpxdVaqd; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1744781548; c=relaxed/simple;
+	bh=QOu9vI2dumfba/O/jFcBMaqEag+WvaQ7EqmF4C9gQ6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OfCjY4MWKF9ARC5XjvPj6K0U9bcmvfXDRgro0PI6L1uMeXcIW+nswUGlcAloRb/m1+Urayl/HPBsjIccb70+Wz9pKMY2I2O5x4EjOTuMC8tE7H0ADAOM3Gljp6d/tXwSRv9kdqcZV+Jjyi/ySH+sFesw7bqlHsn0cw3hiQ+eE/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LDQpvzqm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="MpxdVaqd"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22c33ac23edso3169065ad.0;
-        Tue, 15 Apr 2025 22:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1744781503; x=1745386303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
-        b=MpxdVaqdXj5g8q0GmbI5fzRBreYWI5YvxZNwLc/ahtuTXyiCJMHYhLr37scBkgfJ2V
-         I2Og8pUR9zB/oTQxxMYKpnv49xkpR6aC/aKEBZJybdHlAYQxTKP47O50zaGf18cOEl/I
-         eB/wnYuGMeH/ozQIj/amPSKzM6d/hL47SuFNQC1M/yNoFItWJcwm7AQKv8VOO6rUjY3K
-         qfnZEc45j6iysVKfsfi4sVKAZz9iMKI/c7n+wvmtcIMuWTCb8Ljdusb+ibOcx7Vqbkfp
-         Jf8JLo+NXKTXajhh0gV5K34sWV+XSXHn2G2d65G62ZwSWa9s3+HwUUuTEMd5b0zFhNgP
-         3pCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744781503; x=1745386303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=scZhou3DcU402HaHrSyIVjrflB8vNzs67vAnYo7pvDo=;
-        b=q3dEh7EyTtmJaCRzdjCqYjjlEnbUJd+f1DnIEmhUHeCXI19WTT33PMzX5zd1xSNqyY
-         Q6E8OPtwYaBJr2n4JcYsphBGSaEWkf150j5/2gfDwS/d03vSi+oOaXNFJuNO+Nu8a9sF
-         x/A49UwDo3OXRXenxaHKq7QRuGOjxYHaDbAPOxY/9MWcbvpabo6wbNJldOUA7imU4d6Y
-         HY/X3W8KaEbsEULnMrpIHaCouDgi1cWk4imC/N9CsEG/epPUdKpRPhwwS3Kq3dRBlrsv
-         gQGPoLGvdWMEEeiNZbYXW8+nVngEudzqJZgoq3dKk2k6d0L/UcEeHw5TYNwTndSmWJgd
-         xaHw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMV/3PmHNZenyC5FBhqOu/zL70XRsPAYPOYBOd9alP21h1bKjg7nq2G9llUW9Mqp2dnk7fd3TMiINmZG4=@vger.kernel.org, AJvYcCUU8PH3q7cncvNDZh9D+IVfvGnYhAqqekyrNWopp8nfoSiLv012StADW4M28+0A3gqE+toqiYu1U0eP2++Ab7A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+ChUoS63fg/LpYk8q1UoDx+oveaQz3WK36sn7TqozcIY9DCcv
-	ycvc3jWFOilVnSVU/7lCs5yay/6d1tfa6yVs9Gy8y2jFD1LNfEupVu80nao5r+gsozeQ8dUk01d
-	l8MQcV2h2HmmXv/QZD3RRaUVyHXM=
-X-Gm-Gg: ASbGncv1N+CrrAveu5+xQTEYwRWLRUnFTYOdHw+xnGw4SMWqUW85kc8QjqGnwhcynHX
-	ZX7NOWdsz0aVr2ND4X1jkCiymymplhwh+E76o3bE2wKudzPn7CjEn74KASnEuwlbaXeA4MMoE7A
-	q1vQ2sWvgL2QRrbC00Bsoyk2yTg92SKQzmtRTEust3tYFiFj1Fijls0A==
-X-Google-Smtp-Source: AGHT+IEPRZ/Kqr+BZHd5ZCJrkWtPZ23MNPQpFqzeh4U2oyRC4w09qvIjZ7iq6t1Ss8As9iAro/tsKHru/2H653Ym2vc=
-X-Received: by 2002:a17:903:98b:b0:223:3630:cd32 with SMTP id
- d9443c01a7336-22c35990bfbmr10472895ad.53.1744781503491; Tue, 15 Apr 2025
- 22:31:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LDQpvzqm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A88C4CEE2;
+	Wed, 16 Apr 2025 05:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744781547;
+	bh=QOu9vI2dumfba/O/jFcBMaqEag+WvaQ7EqmF4C9gQ6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LDQpvzqm3cmpe3T2DtyMRGHjfDJbqD2cvNagRixOHn2K84T1LM1MED28SO4o6choC
+	 KmOw2bIjgBN9roWW4i/SyK9/5k042vXnG/+7r6N1jEEuPekrI918uNrMMwFYoNQ8sP
+	 w0H9MxxG2F74u89R2Rzfp0rN1AJFC8u/4kpIfuOGkGWBwbadGh/2bGzreU5OymwyOl
+	 W8CUIsSPZeRbN5ro5vSEuiDfv5YLm1loYPrhCEODeV4ut3H8Ijbs7GykTAX4rMjA8d
+	 ehAhSigTIZiBSIGTukvi2slslPhNnTGDhQTAJvardom8nTNj87RkneX3AU2os99ZbA
+	 miF27sG3XHXGw==
+Date: Wed, 16 Apr 2025 07:32:22 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+Subject: Re: [PATCH 02/17] scsi: bfa: Rename 'timer_mod' to 'timer_module'
+Message-ID: <Z_9A5tXUjVkHZFQX@gmail.com>
+References: <20250414102301.332225-1-mingo@kernel.org>
+ <20250414102301.332225-3-mingo@kernel.org>
+ <87lds2sjse.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
- <20250410154217.1849977-3-zhen.xin@nokia-sbell.com> <CAFBinCDVd6eVFcDzP1N8ayS6OmVZng5ti2jrHfYkbqFY4BdfLQ@mail.gmail.com>
- <74fe1fe102324d809d7f23b14d335bac@realtek.com>
-In-Reply-To: <74fe1fe102324d809d7f23b14d335bac@realtek.com>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Wed, 16 Apr 2025 07:31:31 +0200
-X-Gm-Features: ATxdqUFleBpb2JKR5GRg5H8JGcWGCVOQSsFCXGaB_UcMWtWF0HnEEzlD34OjM1o
-Message-ID: <CAFBinCBzwiCBzfT9g4XqH-fBkMyh-D6039U_mtxqAipSsh66Yw@mail.gmail.com>
-Subject: Re: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Zhen XIN <zhen.xin@nokia-sbell.com>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87lds2sjse.ffs@tglx>
 
-On Wed, Apr 16, 2025 at 2:33=E2=80=AFAM Ping-Ke Shih <pkshih@realtek.com> w=
-rote:
->
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 5:46=E2=80=AFPM Zhen XIN <zhen.xin@nokia-sbell.=
-com> wrote:
-> > >
-> > > Rtw88-sdio do not work in AP mode due to the lack of tx status report=
- for
-> > Ping-Ke, in case you want to keep the spelling of rtw88 consistent:
-> > can you update it while applying the patch (or do we need a v3)?
-> > Same question for the other patch in this series.
->
-> I can update commit messages while applying patches. But not sure what yo=
-u
-> mentioned. Did you mean to change 'Rtw88-sdio' to 'rtw88-sdio'?
-Indeed, I meant changing Rtw88-sdio to rtw88-sdio
 
-Thank you!
+* Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> >  #ifdef CONFIG_OMAP_DM_TIMER
+> > -	use_idlect1 = omap_dm_timer_modify_idlect_mask(use_idlect1);
+> > +	use_idlect1 = omap_dm_timer_moduleify_idlect_mask(use_idlect1);
+> 
+> I have no idea how this is related to the subject or the change log of
+> this patch.
+
+That was a horrible script fail, but I wrote the changelog for the 
+right patch, which is the reason for the dissonance. I sent the updated 
+-v2 patch 2 days ago already (and it was updated in the Git tree then 
+too):
+
+  https://lore.kernel.org/all/Z_0oWnbcjsekHXJd@gmail.com/
+
+Unfortunately you weren't Cc:-ed for Thomas Weißschuh's reply, so you 
+probably didn't see the fixed patch. :-/
+
+> Has AI gone wild or what?
+
+Simple sed pattern mistake doing s/timer_mod/timer_module instead of 
+the s/\<timer_mod\>/timer_module change I wrote the changelog for.
+
+Thanks,
+
+	Ingo
+
+=============>
+From 48f2aff7501a6dd1154297b7a00e0f2fbea36e24 Mon Sep 17 00:00:00 2001
+From: Ingo Molnar <mingo@kernel.org>
+Date: Mon, 14 Apr 2025 11:23:06 +0200
+Subject: [PATCH] scsi: bfa: Rename 'timer_mod' to 'timer_module'
+
+We'd like to introduce timer_mod() in the kernel, so make
+sure the namespace is clear.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Anil Gurumurthy <anil.gurumurthy@qlogic.com>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>
+---
+ drivers/scsi/bfa/bfa.h         |  2 +-
+ drivers/scsi/bfa/bfa_core.c    |  4 ++--
+ drivers/scsi/bfa/bfa_ioc.c     | 16 ++++++++--------
+ drivers/scsi/bfa/bfa_ioc.h     |  4 ++--
+ drivers/scsi/bfa/bfa_modules.h |  2 +-
+ drivers/scsi/bfa/bfad.c        |  2 +-
+ 6 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/scsi/bfa/bfa.h b/drivers/scsi/bfa/bfa.h
+index a6b8c4ddea19..80b75669fc50 100644
+--- a/drivers/scsi/bfa/bfa.h
++++ b/drivers/scsi/bfa/bfa.h
+@@ -429,7 +429,7 @@ bfa_status_t bfa_iocfc_israttr_set(struct bfa_s *bfa,
+ void bfa_iocfc_enable(struct bfa_s *bfa);
+ void bfa_iocfc_disable(struct bfa_s *bfa);
+ #define bfa_timer_start(_bfa, _timer, _timercb, _arg, _timeout)		\
+-	bfa_timer_begin(&(_bfa)->timer_mod, _timer, _timercb, _arg, _timeout)
++	bfa_timer_begin(&(_bfa)->timer_module, _timer, _timercb, _arg, _timeout)
+ 
+ struct bfa_cb_pending_q_s {
+ 	struct bfa_cb_qe_s	hcb_qe;
+diff --git a/drivers/scsi/bfa/bfa_core.c b/drivers/scsi/bfa/bfa_core.c
+index a99a101b95ef..667a631a2abc 100644
+--- a/drivers/scsi/bfa/bfa_core.c
++++ b/drivers/scsi/bfa/bfa_core.c
+@@ -1526,14 +1526,14 @@ bfa_iocfc_attach(struct bfa_s *bfa, void *bfad, struct bfa_iocfc_cfg_s *cfg,
+ 	bfa_iocfc_cbfn.reset_cbfn = bfa_iocfc_reset_cbfn;
+ 
+ 	ioc->trcmod = bfa->trcmod;
+-	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_mod);
++	bfa_ioc_attach(&bfa->ioc, bfa, &bfa_iocfc_cbfn, &bfa->timer_module);
+ 
+ 	bfa_ioc_pci_init(&bfa->ioc, pcidev, BFI_PCIFN_CLASS_FC);
+ 	bfa_ioc_mbox_register(&bfa->ioc, bfa_mbox_isrs);
+ 
+ 	bfa_iocfc_init_mem(bfa, bfad, cfg, pcidev);
+ 	bfa_iocfc_mem_claim(bfa, cfg);
+-	INIT_LIST_HEAD(&bfa->timer_mod.timer_q);
++	INIT_LIST_HEAD(&bfa->timer_module.timer_q);
+ 
+ 	INIT_LIST_HEAD(&bfa->comp_q);
+ 	for (i = 0; i < BFI_IOC_MAX_CQS; i++)
+diff --git a/drivers/scsi/bfa/bfa_ioc.c b/drivers/scsi/bfa/bfa_ioc.c
+index aa68d61a2d0d..4a9bd084cd5d 100644
+--- a/drivers/scsi/bfa/bfa_ioc.c
++++ b/drivers/scsi/bfa/bfa_ioc.c
+@@ -28,12 +28,12 @@ BFA_TRC_FILE(CNA, IOC);
+ #define BFA_IOC_POLL_TOV	BFA_TIMER_FREQ
+ 
+ #define bfa_ioc_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_ioc_timeout, (__ioc), BFA_IOC_TOV)
+ #define bfa_ioc_timer_stop(__ioc)   bfa_timer_stop(&(__ioc)->ioc_timer)
+ 
+ #define bfa_hb_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->hb_timer,		\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->hb_timer,		\
+ 			bfa_ioc_hb_check, (__ioc), BFA_IOC_HB_TOV)
+ #define bfa_hb_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->hb_timer)
+ 
+@@ -159,16 +159,16 @@ bfa_ioc_sm_to_state(struct bfa_ioc_sm_table *smt, bfa_ioc_sm_t sm)
+  */
+ 
+ #define bfa_iocpf_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_iocpf_timeout, (__ioc), BFA_IOC_TOV)
+ #define bfa_iocpf_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->ioc_timer)
+ 
+ #define bfa_iocpf_poll_timer_start(__ioc)				\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->ioc_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->ioc_timer,	\
+ 			bfa_iocpf_poll_timeout, (__ioc), BFA_IOC_POLL_TOV)
+ 
+ #define bfa_sem_timer_start(__ioc)					\
+-	bfa_timer_begin((__ioc)->timer_mod, &(__ioc)->sem_timer,	\
++	bfa_timer_begin((__ioc)->timer_module, &(__ioc)->sem_timer,	\
+ 			bfa_iocpf_sem_timeout, (__ioc), BFA_IOC_HWSEM_TOV)
+ #define bfa_sem_timer_stop(__ioc)	bfa_timer_stop(&(__ioc)->sem_timer)
+ 
+@@ -2333,11 +2333,11 @@ bfa_ioc_isr(struct bfa_ioc_s *ioc, struct bfi_mbmsg_s *m)
+  */
+ void
+ bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa, struct bfa_ioc_cbfn_s *cbfn,
+-	       struct bfa_timer_mod_s *timer_mod)
++	       struct bfa_timer_mod_s *timer_module)
+ {
+ 	ioc->bfa	= bfa;
+ 	ioc->cbfn	= cbfn;
+-	ioc->timer_mod	= timer_mod;
++	ioc->timer_module	= timer_module;
+ 	ioc->fcmode	= BFA_FALSE;
+ 	ioc->pllinit	= BFA_FALSE;
+ 	ioc->dbg_fwsave_once = BFA_TRUE;
+@@ -5062,7 +5062,7 @@ bfa_diag_memtest(struct bfa_diag_s *diag, struct bfa_diag_memtest_s *memtest,
+ 
+ 	memtest_tov = (bfa_ioc_asic_gen(diag->ioc) == BFI_ASIC_GEN_CT2) ?
+ 		       CT2_BFA_DIAG_MEMTEST_TOV : BFA_DIAG_MEMTEST_TOV;
+-	bfa_timer_begin(diag->ioc->timer_mod, &diag->timer,
++	bfa_timer_begin(diag->ioc->timer_module, &diag->timer,
+ 			bfa_diag_memtest_done, diag, memtest_tov);
+ 	diag->timer_active = 1;
+ 	return BFA_STATUS_OK;
+diff --git a/drivers/scsi/bfa/bfa_ioc.h b/drivers/scsi/bfa/bfa_ioc.h
+index d70332e9ad6d..3fa8a65bf067 100644
+--- a/drivers/scsi/bfa/bfa_ioc.h
++++ b/drivers/scsi/bfa/bfa_ioc.h
+@@ -333,7 +333,7 @@ struct bfa_ioc_s {
+ 	bfa_ioc_sm_t		fsm;
+ 	struct bfa_s		*bfa;
+ 	struct bfa_pcidev_s	pcidev;
+-	struct bfa_timer_mod_s	*timer_mod;
++	struct bfa_timer_mod_s	*timer_module;
+ 	struct bfa_timer_s	ioc_timer;
+ 	struct bfa_timer_s	sem_timer;
+ 	struct bfa_timer_s	hb_timer;
+@@ -918,7 +918,7 @@ void bfa_ioc_set_ct2_hwif(struct bfa_ioc_s *ioc);
+ void bfa_ioc_ct2_poweron(struct bfa_ioc_s *ioc);
+ 
+ void bfa_ioc_attach(struct bfa_ioc_s *ioc, void *bfa,
+-		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_mod);
++		struct bfa_ioc_cbfn_s *cbfn, struct bfa_timer_mod_s *timer_module);
+ void bfa_ioc_detach(struct bfa_ioc_s *ioc);
+ void bfa_ioc_suspend(struct bfa_ioc_s *ioc);
+ void bfa_ioc_pci_init(struct bfa_ioc_s *ioc, struct bfa_pcidev_s *pcidev,
+diff --git a/drivers/scsi/bfa/bfa_modules.h b/drivers/scsi/bfa/bfa_modules.h
+index ed29ebda30da..9911794286cc 100644
+--- a/drivers/scsi/bfa/bfa_modules.h
++++ b/drivers/scsi/bfa/bfa_modules.h
+@@ -61,7 +61,7 @@ struct bfa_s {
+ 	struct bfa_trc_mod_s	*trcmod;	/*  driver tracing	    */
+ 	struct bfa_ioc_s	ioc;		/*  IOC module		    */
+ 	struct bfa_iocfc_s	iocfc;		/*  IOCFC module	    */
+-	struct bfa_timer_mod_s	timer_mod;	/*  timer module	    */
++	struct bfa_timer_mod_s	timer_module;	/*  timer module	    */
+ 	struct bfa_modules_s	modules;	/*  BFA modules	    */
+ 	struct list_head	comp_q;		/*  pending completions     */
+ 	bfa_boolean_t		queue_process;	/*  queue processing enabled */
+diff --git a/drivers/scsi/bfa/bfad.c b/drivers/scsi/bfa/bfad.c
+index 598f2fc93ef2..695c77c5275d 100644
+--- a/drivers/scsi/bfa/bfad.c
++++ b/drivers/scsi/bfa/bfad.c
+@@ -691,7 +691,7 @@ bfad_bfa_tmo(struct timer_list *t)
+ 
+ 	spin_lock_irqsave(&bfad->bfad_lock, flags);
+ 
+-	bfa_timer_beat(&bfad->bfa.timer_mod);
++	bfa_timer_beat(&bfad->bfa.timer_module);
+ 
+ 	bfa_comp_deq(&bfad->bfa, &doneq);
+ 	spin_unlock_irqrestore(&bfad->bfad_lock, flags);
