@@ -1,55 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1235E22FE0E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93919230BC2;
 	Wed, 16 Apr 2025 06:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786695; cv=none; b=fC3CRow1jNmiVzJN+QZlBNAbs4LG9UoO93fYkGw6XYhrd9CZka2orncS3Sm51ITdDmyPdHJbFhw+XMkj2jYWLSbrKYLnIqGn2EO6Pcat0wSxI1rfKT2cUrxeSr4zyv+eJbob9/ivVv+0DspSU/Gstu42uSji+JGEJjZoZNBubmo=
+	t=1744786696; cv=none; b=TbLNiIkLgHZvVySJEffeSnkx76csomS9ftwi3/b/hMD35BZ1BVGAh8DifxUH1GOjKrjCOcSAx6NN6yR1eSaFkSe19xL0dh6A1YAj+9MCLgph4TmbDNsC+yckKU5UfgheBDt4YUcJf379b8IvrytL7AOdrgdGD5prC70mVIocTzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786695; c=relaxed/simple;
-	bh=jpugi8e27Z/kdIEtebaij6yO6Fpa6Eww1j0SfpkAUFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P0TcFhSNbWGpLZVsTXqzSyeiy/UVqrj3l7VlxPebHAik+WiIT/aGsH+3/oFq3+iRjUoMSxPcjBnvfopkiSOsy5gJmZIHJpxojTMuaVZMIHcZDDHjQqCehmfjgvZDqWvcFeZPCNGEavNkMSXNiHqEI32JWTG3SoIqfjwUkExjHMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s15bmqiw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744786696; c=relaxed/simple;
+	bh=TLP2FSFMoyG9Y7Er0eXeMEKJSa/MXE0h9kNS8YrZeK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pXB/AXkY7OyZC3esZ/LtpKkKAxI/QqDdtFc8Nj4s/3y3EcsW0Y4ZWmdoOzbOvBCNFlEEDFhYQdqrG+yme7ozXbJMHg+Jo0jE2wgRMNMz2UbYmco9UI8DuSf4pU6KnMZyPlO2+RAF/UDRHAl7oO+xK/beD+3ibIoCiHv4UpH8a+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXXiB3Xt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s15bmqiw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AABC4CEED;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXXiB3Xt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8F2C4CEEC;
 	Wed, 16 Apr 2025 06:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744786694;
-	bh=jpugi8e27Z/kdIEtebaij6yO6Fpa6Eww1j0SfpkAUFA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s15bmqiwV28PXAkmAdxRYYpOba7jNZNHomcWboPJgJ47Ay0PZHKlY2+BmRa0sidKz
-	 ri9fduJ8afASG5nenH++l2F49AWz5I1yQ5HJswxpDIF5zvXiq/ASMvxgPibJ8O23qa
-	 SlDoK6gqU2cXIMMB6Ghmm2U8gT4M7bnF4872kLNN541tpwPXHS7skFkI/vuPjPjNDq
-	 3ynPezXKX6eYFXQm252rE6UWUpGmr7hvUcBO4QLS64b0VVaZ8pjFWtJdqdvjS8MQrc
-	 Vv4zwFX2rdMaK1Er6QUvq93G3xT30xop33JlM8VkvLhIsmHG71FlBzSKAY5k9w5aMB
-	 oJLGpCKDmECYg==
+	s=k20201202; t=1744786695;
+	bh=TLP2FSFMoyG9Y7Er0eXeMEKJSa/MXE0h9kNS8YrZeK8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CXXiB3XtqKeigtEkdWCmvP6gjJEKB+/EmarowCD4j+95xm7S2QAS1NUSJcTTNMHS5
+	 QCwH+djEyTgeq6oPeKc/tMOMlx1Un/Yewy7qmMjwuaKaYpok3F4rShMOfaI4uS0vCT
+	 LSTD9lCglqM8FNDK5/ch7XnHCVQ6ni0SZFZwY5SLox+pVS1bzCqT+v3xtkAVUczz92
+	 oE7IZPrVwvc+BW/PzTy13/iE36kdG9koNhBoRDEhSLsQiQ4BAiP2/Gwefk+y2jF0Nw
+	 y0cOKzdwG3gRRghQnvwDy1ZCDqyu9IguwACfocwWyzm5iZbPzbGHAkvuPa2IhWG0bX
+	 pET3Ty56IOrHw==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u4wiN-00000002kO3-3smf;
+	id 1u4wiN-00000002kO9-47Wp;
 	Wed, 16 Apr 2025 14:57:43 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org
-Subject: [PATCH v2 0/2] Don't create Python bytecode when building the kernel
-Date: Wed, 16 Apr 2025 14:57:37 +0800
-Message-ID: <cover.1744786420.git.mchehab+huawei@kernel.org>
+	"Andy Shevchenko" <andriy.shevchenko@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Kris Van Hees <kris.van.hees@oracle.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Li Zhijian <lizhijian@fujitsu.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] .gitignore: ignore Python compiled bytecode
+Date: Wed, 16 Apr 2025 14:57:39 +0800
+Message-ID: <eb7c854d1bddab19ec1105b928463bb1845d4d50.1744786420.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1744786420.git.mchehab+huawei@kernel.org>
+References: <cover.1744786420.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,30 +63,30 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
-when W=1. Due to Python's normal behavior, its JIT compiler will create
-a bytecode and store it under scripts/lib/*/__pycache__. 
+While the building system doesn't create any Python JIT bytecode,
+if one manually runs kernel-doc.py or get_abi.py, Python will,
+by default, create a bytecode and store it under scripts/lib/*.
 
-As one may be using O= and even having the sources on a read-only mount
-point, disable its creation during build time.
+This is normal, and not controlled by the Kernel itself. So,
+add *.pyc as an extension to be ignored.
 
-This only solves half of the issue though, as one may be manually running
-the script by hand, without asking Python to not store any bytecode.
-This should be OK, but afterwards, git status will list the __pycache__ as
-not committed. To prevent that, add *.pyc to .gitignore.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-Mauro Carvalho Chehab (2):
-  scripts/kernel-doc.py: don't create *.pyc files
-  .gitignore: ignore Python compiled bytecode
-
- .gitignore                    | 1 +
- drivers/gpu/drm/Makefile      | 2 +-
- drivers/gpu/drm/i915/Makefile | 2 +-
- include/drm/Makefile          | 2 +-
- scripts/find-unused-docs.sh   | 2 +-
- 5 files changed, 5 insertions(+), 4 deletions(-)
-
+diff --git a/.gitignore b/.gitignore
+index f2f63e47fb88..2e01bc0b2d2a 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -39,6 +39,7 @@
+ *.mod.c
+ *.o
+ *.o.*
++*.pyc
+ *.patch
+ *.rmeta
+ *.rpm
 -- 
 2.49.0
-
 
