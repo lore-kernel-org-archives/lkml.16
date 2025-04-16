@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898D922D4D9;
-	Wed, 16 Apr 2025 06:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F076022E40A;
+	Wed, 16 Apr 2025 06:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786322; cv=none; b=kNya+5M+n/iL2n8A9J6yX5KJji31Cor0Q99jVDu/NQFqRBO44cZc8+IH2hKOkecLNzd9WLm5O3TUn4VA42csY6iAY7fjN++QStnZuWQLOiH/Qjm7OMHm6G2LaLCeTh4jbIy1QcUO7sR5Mw9fQ9CoDLIANudKRava1mtTJmwG/p0=
+	t=1744786323; cv=none; b=Z3es3WOVg2UyesUKAda+n/JO9/uBpBf68h5j9pEFMJrF1UzAsy8cPPtpG+d8Z7T5JvxM6a2vCffA4OSDXnlq2HvXuhoXvIVoi7sTqQmfrs1qaBjsDlgT1M+74sYBuhua0OGgyFop1tEQAenY5n6Cwx3Y+74LmC5fGAMm8lo6hME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786322; c=relaxed/simple;
-	bh=H9V8DEOULiOnbQER9jdq86jI9UV0AVKo/mqnQ8wukQU=;
+	s=arc-20240116; t=1744786323; c=relaxed/simple;
+	bh=bOWZsjpGMyuHA/9yMQEnOXQit557utN/lLEtaYfXo6M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QaL2LBH9gNEFo/hYt4nqtZ+yawnGBnR9NQ/tMWTBNX7IN9AqxJ0VCZS6I/fitSuKCu3QYEk4jEY4dUvfWApmGKx5Hf1d0JNoDe5U1vUFCa3K6gOMaGdzmjuV8hXMkuRkzJQk3eP/u+i6A+6/7o3NHaAkV5tGfSdrAEFJxFLjZzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U9z6yc/O; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0lDo9cQv; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=dB95+SL5TOi/ZUzOfV9PQRGanpUvEDrq8T6OyrnN95xnusJzYcX0qPtLo3KoMFYyDz1VfadQQ3yJTOCkeEMW+GhTL/mZJfIoR2N4t4Bie4tWaqrf4s2hk26fzkA8Sa748+xsqxeIXpPkOxsv7pLN2dxwOgwc9z+bBV42VwcuS8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WlG3qQu3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5TuUv3nX; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U9z6yc/O";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0lDo9cQv"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WlG3qQu3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5TuUv3nX"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744786317;
+	s=2020; t=1744786319;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CbJkEpwB3OdGpjoifJXvu2A5D6lki3gos/XOzAV2UjA=;
-	b=U9z6yc/O5uV0Gs51CV4au27gYHgXZOcZ2ZEsY+HB36wMZLYfzljK1Q9aB6MyMouqYeVVS+
-	EAR62rAGYg7055AtQ7fkrXtE6TtcM/aJ/AQ2DLmYJdUHcwnwWa0Jmk92Gip9kNkwUXfdKJ
-	L0ri+TJq0nxNtEYWijlb8riCLLHSWIaWp/kb92ZLgC3QVWb8CJOtokKlaac9sYASeMrOit
-	HAzCjvrImkq1k8I8rGikpEGo0KDm7IjG3z8TKH1UVcZKKxVHzUlxxa6ErHAjnHzjxjpp37
-	jZuVTB/qb9QtHS9XjgdC7NUkLxhDgpi6nanMq1vOx7rmv+WpJKzTI3wBljGpHg==
+	bh=uFtVzpMnpK089v/2fXHCbOI7Lpmai8EW/LOy8Ub/+JY=;
+	b=WlG3qQu33P/aB8umG+UkmkMu84DISZFkz6lkqpeNoQCL2i7IthhK+yX81UOYfIKgBKuqog
+	R2X6+8fTk/ch6RdjW9NE+qMcgIdm5moeWUBDM2YoDf74tgPIspFzHMaPr2rtNa+b+pZS5w
+	c9cCs7hfgFK0I+Tw4GxCXE7/s7bKCAhGke8ktOArVwJgMvsC563CGF1pq21kaE3L+wU2GZ
+	QnLEC4fHwnithE+Oxtfge/xK16HZB75LDDY1qZYaqdvikN+ybZWDZQNYISc6Dd2Xjk31hf
+	1TO8SIDvrRu/4ZPH653/91bVZo+4NB7aHYvJ1OjULewHThwNBYGnCcpCGyd1tg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744786317;
+	s=2020e; t=1744786319;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CbJkEpwB3OdGpjoifJXvu2A5D6lki3gos/XOzAV2UjA=;
-	b=0lDo9cQvyKyTQ3/ixTggGfR/aQlbQci6IPHnPXHpBzFk7QSExed2LzmIbEp4BPqpH7lWkV
-	OvA1UaQawpJQYXCQ==
+	bh=uFtVzpMnpK089v/2fXHCbOI7Lpmai8EW/LOy8Ub/+JY=;
+	b=5TuUv3nXyChshttIFmXIHG8Re7riDqJN23RcNeYoQbu/CjDajcbhjFWoeHEXVWwlS8LwiO
+	bJcge7dCXhoGv4Bw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 07/22] verification/dot2k: Replace is_container() hack with subparsers
-Date: Wed, 16 Apr 2025 08:51:13 +0200
-Message-Id: <6c587d3723a8fc2cf220441d8d7ed1614218c392.1744785335.git.namcao@linutronix.de>
+Subject: [PATCH v3 14/22] rv: Add rtapp container monitor
+Date: Wed, 16 Apr 2025 08:51:20 +0200
+Message-Id: <7d1a7337879b991ed454d1457d44a15dabc4b3f7.1744785335.git.namcao@linutronix.de>
 In-Reply-To: <cover.1744785335.git.namcao@linutronix.de>
 References: <cover.1744785335.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,126 +58,113 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-dot2k is used for both generating deterministic automaton (DA) monitor and
-generating container monitor.
+Add the container "rtapp" which is the monitor collection for detecting
+problems with real-time applications. The monitors will be added in the
+follow-up commits.
 
-Generating DA monitor and generating container requires different
-parameters. This is implemented by peeking at sys.argv and check whether
-"--container" is specified, and use that information to make some
-parameters optional or required.
-
-This works, but is quite hacky and ugly.
-
-Replace this hack with Python's built-in subparsers.
-
-The old commands:
-
-  python3 dot2/dot2k -d wip.dot -t per_cpu
-  python3 dot2/dot2k -n sched --container
-
-are equivalent to the new commands:
-
-  python3 dot2/dot2k monitor -d wip.dot -t per_cpu
-  python3 dot2/dot2k container -n sched
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/dot2/dot2k    | 37 +++++++++++++++++---------------
- tools/verification/dot2/dot2k.py |  2 +-
- 2 files changed, 21 insertions(+), 18 deletions(-)
+ kernel/trace/rv/Kconfig                |  1 +
+ kernel/trace/rv/Makefile               |  1 +
+ kernel/trace/rv/monitors/rtapp/Kconfig |  6 +++++
+ kernel/trace/rv/monitors/rtapp/rtapp.c | 34 ++++++++++++++++++++++++++
+ kernel/trace/rv/monitors/rtapp/rtapp.h |  3 +++
+ 5 files changed, 45 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/rtapp/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.c
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.h
 
-diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
-index 767064f415e7..133fb17d9d47 100644
---- a/tools/verification/dot2/dot2k
-+++ b/tools/verification/dot2/dot2k
-@@ -13,30 +13,33 @@ if __name__ =3D=3D '__main__':
-     import argparse
-     import sys
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 6e157f964991..5c407d291661 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -41,6 +41,7 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
+ source "kernel/trace/rv/monitors/scpd/Kconfig"
+ source "kernel/trace/rv/monitors/snep/Kconfig"
+ source "kernel/trace/rv/monitors/sncid/Kconfig"
++source "kernel/trace/rv/monitors/rtapp/Kconfig"
+ # Add new monitors here
 =20
--    def is_container():
--        """Should work even before parsing the arguments"""
--        return "-c" in sys.argv or "--container" in sys.argv
--
-     parser =3D argparse.ArgumentParser(description=3D'transform .dot file =
-into kernel rv monitor')
--    parser.add_argument('-d', "--dot", dest=3D"dot_file", required=3Dnot i=
-s_container())
--    parser.add_argument('-t', "--monitor_type", dest=3D"monitor_type", req=
-uired=3Dnot is_container(),
--                        help=3Df"Available options: {', '.join(dot2k.monit=
-or_types.keys())}")
--    parser.add_argument('-n', "--model_name", dest=3D"model_name", require=
-d=3Dis_container())
-     parser.add_argument("-D", "--description", dest=3D"description", requi=
-red=3DFalse)
-     parser.add_argument("-a", "--auto_patch", dest=3D"auto_patch",
-                         action=3D"store_true", required=3DFalse,
-                         help=3D"Patch the kernel in place")
--    parser.add_argument("-p", "--parent", dest=3D"parent",
--                        required=3DFalse, help=3D"Create a monitor nested =
-to parent")
--    parser.add_argument("-c", "--container", dest=3D"container",
--                        action=3D"store_true", required=3DFalse,
--                        help=3D"Create an empty monitor to be used as a co=
-ntainer")
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index f9b2cd0483c3..9b28c2419995 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_RV_MON_SNROC) +=3D monitors/snroc/snroc.o
+ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
+ obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
+ obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
++obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
+ors/rtapp/Kconfig
+new file mode 100644
+index 000000000000..94689d66a79c
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+@@ -0,0 +1,6 @@
++config RV_MON_RTAPP
++	depends on RV
++	bool "rtapp monitor"
++	help
++	  Collection of monitors to check for common problems with real-time appl=
+ication that cause
++	  unexpected latency.
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.c b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.c
+new file mode 100644
+index 000000000000..193c9d8dc0af
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
 +
-+    subparsers =3D parser.add_subparsers(dest=3D"subcmd", required=3DTrue)
++#define MODULE_NAME "rtapp"
 +
-+    monitor_parser =3D subparsers.add_parser("monitor")
-+    monitor_parser.add_argument('-n', "--model_name", dest=3D"model_name")
-+    monitor_parser.add_argument("-p", "--parent", dest=3D"parent",
-+                                required=3DFalse, help=3D"Create a monitor=
- nested to parent")
-+    monitor_parser.add_argument('-d', "--dot", dest=3D"dot_file")
-+    monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
-pe",
-+                                help=3Df"Available options: {', '.join(dot=
-2k.monitor_types.keys())}")
++#include "rtapp.h"
 +
-+    container_parser =3D subparsers.add_parser("container")
-+    container_parser.add_argument('-n', "--model_name", dest=3D"model_name=
-", required=3DTrue)
++struct rv_monitor rv_rtapp;
 +
-     params =3D parser.parse_args()
-=20
--    if not is_container():
--        print("Opening and parsing the dot file %s" % params.dot_file)
-     try:
--        monitor=3Ddot2k(params.dot_file, params.monitor_type, vars(params))
-+        if params.subcmd =3D=3D "monitor":
-+            print("Opening and parsing the dot file %s" % params.dot_file)
-+            monitor =3D dot2k(params.dot_file, params.monitor_type, vars(p=
-arams))
-+        else:
-+            monitor =3D dot2k(None, None, vars(params))
-     except Exception as e:
-         print('Error: '+ str(e))
-         print("Sorry : :-(")
-@@ -45,7 +48,7 @@ if __name__ =3D=3D '__main__':
-     print("Writing the monitor into the directory %s" % monitor.name)
-     monitor.print_files()
-     print("Almost done, checklist")
--    if not is_container():
-+    if params.subcmd =3D=3D "monitor":
-         print("  - Edit the %s/%s.c to add the instrumentation" % (monitor=
-.name, monitor.name))
-         print(monitor.fill_tracepoint_tooltip())
-     print(monitor.fill_makefile_tooltip())
-diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot=
-2k.py
-index 0922754454b9..9ec99e297012 100644
---- a/tools/verification/dot2/dot2k.py
-+++ b/tools/verification/dot2/dot2k.py
-@@ -19,7 +19,7 @@ class dot2k(Dot2c):
-     monitor_type =3D "per_cpu"
-=20
-     def __init__(self, file_path, MonitorType, extra_params=3D{}):
--        self.container =3D extra_params.get("container")
-+        self.container =3D extra_params.get("subcmd") =3D=3D "container"
-         self.parent =3D extra_params.get("parent")
-         self.__fill_rv_templates_dir()
-=20
++struct rv_monitor rv_rtapp =3D {
++	.name =3D "rtapp",
++	.description =3D "Collection of monitors for detecting problems with real=
+-time applications",
++};
++
++static int __init register_rtapp(void)
++{
++	rv_register_monitor(&rv_rtapp, NULL);
++	return 0;
++}
++
++static void __exit unregister_rtapp(void)
++{
++	rv_unregister_monitor(&rv_rtapp);
++}
++
++module_init(register_rtapp);
++module_exit(unregister_rtapp);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
++MODULE_DESCRIPTION("Collection of monitors for detecting problems with rea=
+l-time applications");
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.h b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.h
+new file mode 100644
+index 000000000000..4c200d67c7f6
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_rtapp;
 --=20
 2.39.5
 
