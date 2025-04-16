@@ -1,97 +1,112 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75236248875;
-	Wed, 16 Apr 2025 12:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E7723F41D;
+	Wed, 16 Apr 2025 12:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744806303; cv=none; b=StszW01FVyTLvTcvkkY3+pJql1IFQ1qMBnZoJdveoT1kOjTuqYUVsoe28GqJyj+nJE08PXETbW8R76dlr0nGx1aDSryGjEJ6zPvlXF6KgUu0HCiUftw8Dz+r24Qd7Cluy750FcaoZE0lb2VpUDU3MaruW8/PYz+IkyXrd8ff5Yk=
+	t=1744806331; cv=none; b=T1NjmguaYa6q15qwIbfw82H3ZuyJzBeeLP0Ui0yXimUlGqUgqLUc7EmD7yIkdTd/Aa1+oAyrPWoJE6IhoS8IjJgnV0jHDASmDX6G0eI2Zf4udfA/yP+Koo/gOaPc7zcH0unvHzSA8I+0zox8hDo/QN1sjj19OO3ezESSUGAvMns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744806303; c=relaxed/simple;
-	bh=siPTUVsIzTBsd/qDjepG4taN8q1/zJrghO9TL+s207s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b+qz0iYkFwZZ5wj1Un/aGZMqKyX734ENYgWVkPfih1zrb5iCT59qB5U4iwFr4+hDrGfOHFQ1Oc79X3ww48V3VIQsuKbBtNCXMAxRVFIX/kolZ7yI1FtgjNJIgGfoiQJLcurRpJ9Vwgwd9+cc3iBTevPMGqDLgiAla/I2viXGH+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YmrS5rUf; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744806331; c=relaxed/simple;
+	bh=BV2HPhADEG6mWWoQMZcnYHZ6jfye0CvT+9anrJmNaR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RkyfdZ21m/hNcWL98FNfPSGe2+EMWHZx44SKKgDvOSmyGC4gZLa9y/pGsxoO0iA1Tmql4YW6R6p4cBAVaEDpk3cLa3D+TEZbsP03LnHzpucXqldKpDAg6ZBwtYMGys+r53Hqjf18hXry+vnO3X9MEuq5HcUCvvI5qHx7S1kXkDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axsYmxZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmrS5rUf"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-308218fed40so951468a91.0;
-        Wed, 16 Apr 2025 05:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744806302; x=1745411102; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=siPTUVsIzTBsd/qDjepG4taN8q1/zJrghO9TL+s207s=;
-        b=YmrS5rUfVE1weMiSewMVBz2eADGuhbCQNT912OgT8aJFArh2/c2AuYIbQm88T4tl+Z
-         6HLniWkLpdAsiD6EZ32VPtE2kiqFzSeIXVXOhY9YwTymmR4KOz94giyIVp9oWwA3yl24
-         GFZItZn24unHGNb64e6jKMLEGS2S9x9Qy8iDskAFyVH5i46g3f95mIPIWF0e+THm27sF
-         hcP+PVvPTAgSe3iNbOxHyfEQ94LxyZxhfTKUOGoeqt5Nt4VxKZO7zWEAaLQ2EzyKHIWZ
-         kw9kGm6pH+3ZKmylb7WOE4B35NssiK8FgzhI859JnwqWuW7svCUv9DtjPQEoeTLeLASa
-         T+2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744806302; x=1745411102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=siPTUVsIzTBsd/qDjepG4taN8q1/zJrghO9TL+s207s=;
-        b=m5QQDc5l8dTxzSOVERjwt6VPzCaypZ0y7dHHbBJ2Q5KcbIVlbSlQpYhP28LLoiC56u
-         3ka7j+De8o3Cx/UyjmBpadxMMINCNs83NaAsdvgIfRZBDZh3LxKsf4TTZfJP3xgCMxyj
-         CRFpmaEqYoNWodAluVsNe7ujG0ZD2R9MaggpLk60Oyid5uEsEipyUIZjJd2c0FTl6cny
-         gcpz/rFm2DNFGzp1Oc1qR32djyeTKH+R3CFa4JpkXXuzlfubR0noNPUjjJpH9z5YIwfK
-         iE02q3xjsyy1pHkI/Ebk9a75LqcmeS1LbyRh0jNcJPAKE87uOV2q+Pf4Eo6RjWa8vZFo
-         oC/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWl3RhcCvdwGS6DCBWCyP0eCHoKVaUbr9T4dUuiD2P2IDlxidOLyXdpf5PV4NxfY6bEq+rQy9wpbStPJJJFJBI=@vger.kernel.org, AJvYcCWntpTavqH4RndN6wkTACDu+14cY2PXJgEkzfE7KtzmzMoay7x659rJl4RA0Z+eNkEfgFsDTt8SHgO9heA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKXbDhoXGqM7/X8OI8r2rG9wVtGXYHqu4keLejSkmTcM97L9Eg
-	pcWoZ5wGocP94xZt+bW3w1QKnYdDr3cKOvcWJgPWQ0TctuZu2CpS1yY8vhosfN4hqhV5MMwtvQg
-	yBAA+Te0DtyohKGTpH6eBC1ruF3U=
-X-Gm-Gg: ASbGncvoP0szN3cJazfjPrzRj1GsPR2tsbGXsCTH/5Kj8ifX1xSy6BJ5XLdwj7MSspG
-	aJZs2ecKTrze3nTiD4P+U67KD4FZBf2rL4bOLSYLRhcwPoB+5KpbAv05I7f9pIkqX59MTOLr/tp
-	SQJuiA+WbxI2x64T+PT2nVmQ==
-X-Google-Smtp-Source: AGHT+IEtX7+Mzcd7PaVlTQ/xw6YegGp6oJpy5FiA5NPzkNyVsvhcGyv02RO1C1uD2MXjywGXi+E2R+MmA4vLZlpoRfc=
-X-Received: by 2002:a17:90b:3b84:b0:2fe:b972:a2c3 with SMTP id
- 98e67ed59e1d1-30863c503bcmr961540a91.0.1744806301728; Wed, 16 Apr 2025
- 05:25:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axsYmxZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A636C4CEE2;
+	Wed, 16 Apr 2025 12:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744806330;
+	bh=BV2HPhADEG6mWWoQMZcnYHZ6jfye0CvT+9anrJmNaR4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=axsYmxZ0s3rcoNJuk1dKe/7DUYWTK6wl0r4NiJhjwnV43VkKMkYQ/0jr1dTxFNPyv
+	 Hnqo4X1xhpvEOzx31dLj4cVDlIxR+vuI4/SCgV849cuwCaGbeOHEiPLipeB6gV5hnL
+	 fLEYgdnDg1bGj6hLfGxchmCTtOZN3k9dOXVXeG0znWQtX8EWvW8SpvabAGr1ivgRCs
+	 cMV2vKDG7KrB/1tmHmgDy3XHxegv3uKOtryNZNGk/IJST0srzyA8yyQnXXH5/YXtzf
+	 IB2w1OfdPTIilc5Bm/EV44tt6Pxn+tWP3vhZf8AFImr56KqOKgxRPcZZqRTi+yGy7s
+	 T8QDRgSsLww6A==
+Date: Wed, 16 Apr 2025 14:25:22 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V10 11/15] rust: cpufreq: Add initial abstractions for
+ cpufreq framework
+Message-ID: <Z_-hskVtNFPxUmlC@pollux>
+References: <cover.1744783509.git.viresh.kumar@linaro.org>
+ <ac6854885277b23f100c6033fab51a080cdb70eb.1744783509.git.viresh.kumar@linaro.org>
+ <Z_904KuBhKbO738_@pollux>
+ <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416122106.2554208-1-ojeda@kernel.org>
-In-Reply-To: <20250416122106.2554208-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 16 Apr 2025 14:24:47 +0200
-X-Gm-Features: ATxdqUFhmQ4ZxWk7yUIUSPcJ20pL36JoUN822yjRXlrDsVMepY9Ii9ArJvY4sQU
-Message-ID: <CANiq72msZ7FUo0=KXQjMkXjfm3jVaNhhVDCu_BFXRTL_xC0vog@mail.gmail.com>
-Subject: Re: [PATCH] drm/panic: use `///` for private items too
-To: Miguel Ojeda <ojeda@kernel.org>, Jocelyn Falempe <jfalempe@redhat.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, dri-devel@lists.freedesktop.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416093720.5nigxsirbvyiumcv@vireshk-i7>
 
-On Wed, Apr 16, 2025 at 2:21=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> `///` should still be used for private items [1]. Some of the items in
-> this file do so already, so do it for a few other clear candidates in
-> the file.
->
-> Link: https://lore.kernel.org/rust-for-linux/20250416112454.2503872-1-oje=
-da@kernel.org/ [1]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+On Wed, Apr 16, 2025 at 03:07:20PM +0530, Viresh Kumar wrote:
+> On 16-04-25, 11:14, Danilo Krummrich wrote:
+> > On Wed, Apr 16, 2025 at 12:09:28PM +0530, Viresh Kumar wrote:
+> 
+> > > +    pub unsafe fn data(&self, index: usize) -> u32 {
+> > > +        // SAFETY: By the type invariant, the pointer stored in `self` is valid and `index` is
+> > > +        // guaranteed to be valid by the safety requirements of the function.
+> > > +        unsafe { (*self.as_raw().add(index)).driver_data }
+> > > +    }
+> > 
+> > Those three functions above look like they're supposed to be used directly by
+> > drivers, but are unsafe. :(
+> > 
+> > It looks like the reason for them being unsafe is that with only the pointer to
+> > the struct cpufreq_frequency_table array we don't know the length of the array.
+> 
+> Yes.
+> 
+> > However, a Table instance seems to come from TableBox, which *does* know the
+> > length of the KVec<bindings::cpufreq_frequency_table>. Why can't we just preserve the
+> > length and provide a safe API?
+> 
+> The Table is also created from a raw pointer, when it is received from
+> the C callbacks. Also the Table can be created from the OPP table,
+> where again we receive a raw pointer from the C code.
+> 
+> I tried to do this differently earlier and finalized on current
+> version after some discussions on the list:
+> 
+> https://lore.kernel.org/all/2025011327-cubbyhole-idealness-d4cc@gregkh/
 
-Sorry, I forgot the Cc: Jocelyn (it could be nice to have a
-`MAINTAINERS` entry for this one).
+I skimmed over your explanation from the link and got stuck at:
 
-Cheers,
-Miguel
+> - The cpufreq core then calls cpufreq driver's callbacks and passes an
+>   index to the freq-table, which the drivers don't need to verify
+>   against table length, since the index came from the core itself.
+
+This sounds like you could just abstract the index passed through the callback
+in some trusted type (e.g. cpufreq::TableIndex) and let the cpufreq::Table
+methods take this trusted index type, rather than a raw usize, which would also
+make the methods safe.
+
+- Danilo
