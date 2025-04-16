@@ -1,64 +1,92 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE72188733;
-	Wed, 16 Apr 2025 06:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84032220685;
+	Wed, 16 Apr 2025 06:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744783560; cv=none; b=GjCPzfTg5DjrDS4hzPInQBkza5Ahd+pQi0Xk3UdiEhmL4Eqkg/eVy6kK18L9csxGpIz8A3t5cLXBSuY5A+dXCF7RJvq17LpdPtQF0EBlbhdvLMR08THV47rOIUWaC3H7aUhcewT5YvHkP5tB4X9Wbl+mr/3jjOoQ3MfbWlyzteQ=
+	t=1744783685; cv=none; b=ihM6uqCqE6ouA3SrWi665Ik7QfXjDUK//LhdGVu2jQAe9RfvetO6rr50glg81YOrB32Es6bG9ITN8ByW4ISuV8FIcXz4NMz0XVzwG1dCARaqSOlL7axEa/hcLcNpILOoVpjHxUftJHbcpwkN6qZt/3h/GjKahktcmLrkGcR0E7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744783560; c=relaxed/simple;
-	bh=ZjL7xzi4YVzA4foMv63r9G/O6nOTffKm/FFTvOAx66s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ktkJFq/v99bEPfTX41zt5gzKwSlPNZG+hZtU3a33dnsSz/qAprqCeXwpRJEVVAeUclEZKQwsQ/IRJK+67KvbfNdAbg+KBrg1jCEpLee74WzGDVhHtz7wEQ5lW4/p422mNdsjOeSmNs5IZWq+MO+jH5fHfkhOkrHN0K3UMkBHgc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=38hJ3SNi; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1744783685; c=relaxed/simple;
+	bh=689DVZAZIVgk+WY6UuyIP7NgWCzPurdNmOXwm/A8ut8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uA4/HchC697OjUDvYGXRyKqfZAzdD6T2Oai26bdiIi23+g8B9vAUxemdJKyyiac82JYHoDwl+tKNam0oNaDBo6wGBJc9/ppERJFD7kPX/nyoQv0DSf+Pi8QyiuKrdmY9zSz3t9KtyAPIbIfa5W14agoPaZ0xWImxIiagwW0xmtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Bf+n3m6/; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="38hJ3SNi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YNpWj8WW9NCYcWfBH05KWruIw4Nq6vPqEJTEnXmlJw8=; b=38hJ3SNi58dWCXxDLbu782T49z
-	ZOs7xsOXzkm7NmVeC1Zsx/7XAIlxMkN6Eteh32El+J3faxOiCmAo+AW557HBCX6CkYx36ZOp+7KM/
-	BaC0q9VU9FKeRRORDSz0hygO9A1AkynplXqBgdW9cIjGytEruJGaxaWWsffbekT/pSPC/sG/lLygn
-	pepikrJIDgp2ZKRkHsAX0ha7aNkYoFnbiP0mX8g1+2X333Y+tRgdicG7oIadol0Th8Kl3kheNmm33
-	JbcWKgYifdg+vGIPhfO0wumJ3+Kkm5aPpvIej0Qf3XrC6YGj5volol7+qihnQFMSr+UVn/GOY7CW/
-	DbTpbIQA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u4vuG-00000008MNp-0wE0;
-	Wed, 16 Apr 2025 06:05:56 +0000
-Date: Tue, 15 Apr 2025 23:05:56 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: hch@infradead.org, almaz.alexandrovich@paragon-software.com,
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
-	syzbot+e36cc3297bd3afd25e19@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH V2] fs/ntfs3: Add missing direct_IO in ntfs_aops_cmpr
-Message-ID: <Z_9IxOypdO5Ks44N@infradead.org>
-References: <Z_9Bou858C-pJnmd@infradead.org>
- <20250416060351.2971835-1-lizhi.xu@windriver.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bf+n3m6/"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53G67wIU238064
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 01:07:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744783678;
+	bh=Rekte+N3RPXLXmzmpCOaS5XD2YPDyBRYqwD4rqifLzA=;
+	h=From:To:CC:Subject:Date;
+	b=Bf+n3m6/zCwN5QuosMuPbK3KXNNeIsDuvAjo+gbr1l9vPOh8meXpmi6auTsF21rcq
+	 SfGAKu65pxKPtiRU41jWuj0VScpsOIpieOeGweQaLhNPRKM6Ypz7ba80tvKGJMjeJ2
+	 n4C51A99CUV2q0HT8jhhakY5u2lAiLnOIESayUwY=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53G67vsD081089
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 16 Apr 2025 01:07:57 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 16
+ Apr 2025 01:07:57 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 16 Apr 2025 01:07:57 -0500
+Received: from a-dutta.dhcp.ti.com (a-dutta.dhcp.ti.com [172.24.227.92])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53G67tta080937;
+	Wed, 16 Apr 2025 01:07:56 -0500
+From: Anurag Dutta <a-dutta@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] arm64: dts: ti: k3-j721e-som-p0: Add bootph-all to HBMC node
+Date: Wed, 16 Apr 2025 11:37:54 +0530
+Message-ID: <20250416060754.2393701-1-a-dutta@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416060351.2971835-1-lizhi.xu@windriver.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Apr 16, 2025 at 02:03:51PM +0800, Lizhi Xu wrote:
-> In the reproducer, the second file passed in by the system call sendfile()
-> sets the file flag O_DIRECT when opening the file, which bypasses the page
-> cache and accesses the direct io interface of the ntfs3 file system.
-> However, ntfs3 does not set direct_IO for compressed files in ntfs_aops_cmpr.
+Add bootph-all to HBMC controller node for successful hyperflash
+boot on j721e-evm
 
-Not allowing direct I/O is perfectly fine.  If you think you need to
-support direct I/O for this case it is also fine.  But none of this
-has anything to do with 'can use the page cache' and there are also
-plenty of ways to support direct I/O without ->direct_IO.
+Signed-off-by: Anurag Dutta <a-dutta@ti.com>
+---
+Test log : https://gist.github.com/anuragdutta731/103e84e84f013093fa089803719d997d
+
+Changelog : v1:
+1. Added bootph-all to hbmc node in k3-j721e-som-p0.dtsi
+2. Removed bootph-all from v1 patch from flash@0,0 node
+
+Link to v1 : https://lore.kernel.org/all/20250411082637.2271746-1-a-dutta@ti.com/
+
+ arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+index 0722f6361cc8..5665b9490003 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+@@ -440,6 +440,7 @@ &hbmc {
+ 	pinctrl-0 = <&mcu_fss0_hpb0_pins_default>;
+ 	ranges = <0x00 0x00 0x05 0x00000000 0x4000000>, /* 64MB Flash on CS0 */
+ 		 <0x01 0x00 0x05 0x04000000 0x800000>; /* 8MB RAM on CS1 */
++	bootph-all;
+ 
+ 	flash@0,0 {
+ 		compatible = "cypress,hyperflash", "cfi-flash";
+-- 
+2.34.1
+
