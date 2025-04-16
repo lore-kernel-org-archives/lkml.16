@@ -1,131 +1,176 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93D3221DBC;
-	Wed, 16 Apr 2025 18:27:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBEE21ABAA
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744828047; cv=none; b=UwNx5FRGWI3zje/7imfkgCvEgllia5afn68j0FXh3+Wsz+N62v691xJRxxK4l5SGK0NBN3RzvlUWDhLG7fCLE6DOPEyMh/YJ1Mb5NtUHlaklfM7qdcHy6IkKrJJkq9NhfJMCjYzjAP8rA3UI2Y/8VVM9HA1WUojvMPMlUc/0rUU=
+	t=1744828096; cv=none; b=OW1AcYghpqY923hL0+59vL6vcOZ6HIqAmBRvixMkdXK0VeOrWJ3F58PZLrSeJedNnKPyvkrBZWulRByory+s2O7pL2dJYXDRmOit50otpmbuVNNJwu2b4mN79LXP7oPL4rVYGfHFATYzbIOhTU6fItNDNwsLfVslTKTj8Gk13Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744828047; c=relaxed/simple;
-	bh=CMk8CUbEewKgTLh12sPS7gILCDnwaVmQSoXTw/lcDug=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U7vUwPSV2gRxjd6m6O/dryTtRuvfZf2QN7JFQ1aSkD7zT2JbnnmSYuMx8vgv6w7SkB5oD8yGZ/oJlGsYTX5oxWWq2JfXs6p31kRN5ndEyis4hA0zkkezVrM1y+UToisu+YLX+LHwTiVgtxifaWzctN09ggXMjwfgn7woFoQm0MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=BhgY0wgy; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1744828096; c=relaxed/simple;
+	bh=bUBb5mFoJb9G5BgJnxotUeKRdbd+vsxPnYgjdZX4OYs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QLEo8pLswDKz3FOCq6wJY74Xy61nuSsjtSl/vifeBT+dVX3nkj2CEeG5pHuc2a0eQP+lTroeKQg0bpyo6iYBF4d+vWWYUFDJBbI95pvttGBb0sp6FDavIBn95+6qeE0TLtpYRrInP4wloXm23INfKgh74Zzb6x830Doethb0Afw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N/jKgODi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="BhgY0wgy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1744828032; x=1745432832; i=wahrenst@gmx.net;
-	bh=CMk8CUbEewKgTLh12sPS7gILCDnwaVmQSoXTw/lcDug=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=BhgY0wgyI59w8EN9u6HyyJtVR9jRCGm8Q6B39zzBKfo3s1BffoHBdK4qbDIQWUrI
-	 9Z0BlUBxMylWg2Y70g44T/6li73Zx8WFVQ1xTCJqgNdaggxnAx+aeTPsRcDQ7vOzK
-	 YluJ+jGGQOytGGGNd/FYmrhJJJJqOAf7p6u+7bkXPB7R9eI3fH8mUmbxpz3yl+a4U
-	 kctVC3fuFAYCxEMyecKl/Xt4HBkxGDNDKZrb/p7hjWCJ1gg3F6JA3VCil20AsQ4j5
-	 N0xDJJfR0g5NlWQutqlgPzDIcnaHIj6kevfTKHN6wWctloeEzLPUBzHryzUnVNqJB
-	 mxvPyeJk+G4g27onEQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.107] ([37.4.251.153]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1M1Ycr-1u26Oy3JO7-00EHE1; Wed, 16
- Apr 2025 20:27:11 +0200
-Message-ID: <3583fd06-6d27-4efe-b6e9-71926abe3b12@gmx.net>
-Date: Wed, 16 Apr 2025 20:27:10 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N/jKgODi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744828092;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HqpDy6pI/eQq6luBbGPAlrOSVzuf9WMRWlny/FPlhAY=;
+	b=N/jKgODiMfC3vcx8z2fi3OkMZvH6OKmjaXhJ8990sU4cBUhu3QhkhaF+0ymz+aymWfN077
+	2pNGDXKteyA8s5Xs30JTXIM0eBo/e63ffK0zTZ4hUaN8pfjUb3VKqIgL5UKYCzpkvwnvuD
+	9jpR8YySGDuNvRKyql2NC50eP/Cf7XY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-298-Z10BP2QWOny3LjzBcbcRlw-1; Wed, 16 Apr 2025 14:28:11 -0400
+X-MC-Unique: Z10BP2QWOny3LjzBcbcRlw-1
+X-Mimecast-MFC-AGG-ID: Z10BP2QWOny3LjzBcbcRlw_1744828090
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3db5469fbso633394166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:28:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744828090; x=1745432890;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HqpDy6pI/eQq6luBbGPAlrOSVzuf9WMRWlny/FPlhAY=;
+        b=uvCCWyxCdhbPhzKmad8MK5LW6FUXl8AKyZWdToLBE3lzsB35YWC8Y+q0EH7D9ln4+i
+         z7dNbVRnfCr+of4u64OM+Zf8LJtlu4zFGf21vg/ccLKCXds+xSxkJgvnibOV8LnDeeA+
+         nRLq0tkWN1oKJ3bA0sZrtfupEsO8p8ekw546OIsgcrcXpiFT0GunK83RPTYyc3tmwXbS
+         d3z3P9L5pI6WWg+stI31CJ5qlo4cy5em/ksogxWqoJu6DOkwILIRHi4NmSqRwMLh9AVe
+         ojjeqnKzJ9HF56PfcbsAGqdhJmSMOdKD9je9k3cVSoEtzYFaj3K9VoIERfRbw5/XtBNS
+         /KfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWbT4N9gNbH7pDn3KVFHusWriVd2EsRk1NInwMFlYgpoq6yTEPNEDopzUsgh0ieVfTDMLDUGH0VvCPwfzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAWjFY/t9RUZ2dDvCBSpXb2gOKi34lVgXfDASJ2eTJk1pPdUlJ
+	USxlglvcx7xbOBAsOiGQ/gfoyt4nmquQk/WJ0kUiL2aeOOagwXCMwzeoXFDlzNIrxAOCyaKTbxU
+	//pbilIN1KHz41us3SwOPCxEm6DIXq+3WcqfV1CDFFmBtQkFv6pL5Pr65WHbntkkzcV6dK0dBTC
+	8egt+vPzCbo/GIOK3csxgcV7HwcDCHsi0oFHXw
+X-Gm-Gg: ASbGncsOCtjm0nApN8YY8okimOlIg4D2RsfdDiiopAou8xYNPeyKbYLFmCCeaeFy2Kx
+	AhRyjxcYZLuivDeal6JNJ3JH0zeeSIs9/hon46gswF86lzVYbiWA02njnryJM0N3EhEMbZZwj4i
+	zMKFcn3XAEZgnMKI/gWnYjBlg=
+X-Received: by 2002:a17:907:dab:b0:acb:35e6:eacf with SMTP id a640c23a62f3a-acb42870b74mr259875966b.4.1744828090412;
+        Wed, 16 Apr 2025 11:28:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSoF42j4ymXh4k2DWlxZNaW5OkZRSSUqi4pxp1gEEVEvZ1VJluzXf3BKzOlO4E7zUkwC3XtYHE9JkFfyjbrOY=
+X-Received: by 2002:a17:907:dab:b0:acb:35e6:eacf with SMTP id
+ a640c23a62f3a-acb42870b74mr259872766b.4.1744828090052; Wed, 16 Apr 2025
+ 11:28:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v5 3/6] ARM: dts: nxp: mxs: Adjust XEA board's DTS to
- support L2 switch
-To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-References: <20250414140128.390400-1-lukma@denx.de>
- <20250414140128.390400-4-lukma@denx.de>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <20250414140128.390400-4-lukma@denx.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:SC+vctnACKE6B5hrAq69IHYBfukH9rEY0Ji2sBxSNYuJFsqSUEV
- i1WgPonH8C/uJO+B+3eiaD20fW/24QHvxghvnyDuY4qXE1ApJkigBI+HFfXe824q+fgZopl
- gcLoz9ppvUr02kiYtkQpdElP3g0pvIeygD8sZDmKliOtxcsD0Pn8QT0Cl0cS1ujszup8NtA
- qIZqCQ2KwZQ5GsVPagGQA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:A4MnbPh7ByI=;jdM3HS90XUMKqtP2SAXbrQWNm3G
- k6Qf21sQcrsv4XOlTT8GpkohlerFuGF7V0zIUgLNSoxnhh88oQpgh19BrYCQ88qTAlqnQmXkV
- e50RDq/vNJuX6g1t+6MB9cYRHx1vmpW9d6qvyvWkJEDKIrjpnsFrKsqVFSXJG81nPRt6lElpq
- AKM1sMKk/EfIFSBMTWDPYQ3a1ABxBHh+TVj+7MtMpNweeKkbb8D5zuKqcFhpxQIFtuloxY18i
- +lo6Azn+A0G7QlYUQC0Ecfmr6+AYESzUHxLbVNtJ8VvmlkVnLCXgyC8w9YKrDrMPRwOviGfQc
- A8cZe+iWKoCjD30ShkjgdkhV/14SqF0EcekcEWRrbaEr5TgXjlkRRVfjASDHKT4vwfzYR2hWD
- osMn9iIpAwf9unfeflg4mwH+dZi01BmtK+R5vF+zs8nMkLALvxsynWHDZ0bcc18jmBPe/4Rvi
- Xym/bvR6u7GCpL38Oa4EDamGrdzQ1avXq+yh/kQQ7ia1YLsxnBlpsTz0g1syKkbFFRUer0AOW
- AJQ3wfN+cFjTqe1d8AgFk6zxkoGY8wlHiWgyChDhihLNOHvpwtQ3Fup6T6q9JT1b8GdM0FY2s
- CE8+KyF/xr5sTgNFMY6J2qfUpQ0yFCuZsMKjWc7dav4UNv95Mmycp4UQxHf5UUm6Az8PR4z0/
- Y/9gc0uYV4Xy/CkKIvF4IwLL9hDMOuyLIBzaRuGVh5TwzctF5FaEUVPO5wMGKz4oFTHHcZ8Ji
- h0wUi9OGp2WTy6j68RrwmR8DzTpQatr2EEtPSPI2zcZQzqNrJ3zfZHlz7sHyCsnE2/vRO8wNW
- c1Eqy0V1k70tLviHEtm+lqNdzp/hvrgfRVymXwH2dGRkHYmLvSHc19pEQadPP2PMs7E4FGyKT
- uErL5EyEvqeQvdKrV3QCO8p+MAEOFA5LB/MVU6fWpP1x/YGZxz5CWEL4JDfB1WFo5kPppGVxw
- 8SxqjebRqsFugulvaSZ1MrOdVT/OmpTGstPxccCWxBFENARFLuxsVCkN0oXl37uHtjjjhyi7O
- D6nPI2QJoaEujljBD0uYGP1oFf1bZN9m4WMOh822Y+q7CpFuFRdKDYZTi1bZdoZo1sPScpwgu
- eMGmZ27pfIIJlzzIZYQNAlF4Bmb0sdqhx5VCg9npCCPYsvM0RVUXf/Bf1i/esygYLgat3xAqH
- 4NhPQ3fmAbh4VgbqIV/nolhL7GyOR9HBotqGev5yMCQgRCsZnxzc18ht894AaIoia4Wr3KiTX
- jRTd+8hUNF6T9AMkAntu49IIzNJB2fxli0DDrqZfohF7tt92oRmDoiX/qqKPeVawiSvQ0LiUU
- sfxkwOizmqrL6U0ikQTTwG0mTV7pe39YkUotX6DnvsDBMLBvGish3k3QvEJMJpubVTiPC/uXu
- lkWhWDxzcMTMiengLP+m+s03q/eR7dLuGbARy/T3/cN+XFH4Vq3fNAwKD8/qK0g/T6yZo3zuS
- Ql0+0rRHcX3N92AI83o93IY2wpnyRgU61TbiG4kyejWPPUQ9PUmv0rTNXEyOVNuaTdj7vFisp
- GOSXTS9jq/ORd+ZLbY6Vu+kPX/btyf7oXZLMCSZK9q2BlkbnjzcRCbJmYJ0AXgW2mQ0AHRPkL
- Z2VoHOg9YcNnUsiPk3JFYgsD6i1NGmkJPs3zFD/cP73QDLIUj0Y4WhQAbMYNHZgLiKzrg9eMc
- zdOCefSA8h7VdXP/wsW3EQqfjDxwpXigHpxQ/CvgKUryAqQOKYj+ltLUkq9ZFOv8KmG3eNsUR
- xnvy5hx1oWMqrS+sP10bdygwCBBKAh+ouxebmvFrwwcqwv7Td5p1uyYT5Xh4zBmWtS8uwpMn1
- BjtRVwol9sBUEcO4crfOTTXd+l3lq/TSPNDWCauIsE+7IEMeAcDfdcHSORuryaguyjCabEE/T
- HNIH/fSQnq3XujiV0al4T/HU9N3rkEg3alkvt7dQjncW6MP2K3Tt+7lYeev/qHdkYUqcv5Hhk
- N1JGMcANmVYfCZuJU62mUmF+8uPApPgJPt14LYTb5nsmhsyj/vLUVu1IUsShU/mvTsCanAHKc
- 3aBquknwIMI2GiKUTDbgI5sbu79cdrKIjIt1+AIG85pPbd26Js3Ur/V4Fp/aCg1Qb4+jgAMfv
- byQ8YxDOuN2LtKaaDEpe5xon/FtNYqmeAsN/be9A010XjUCz4D1crzpFtUXQKo3hU5vCfCtOQ
- H+H2f7mrX5rNMm3SCcuc1pM7IpGl64NPazmdeBVVm19pAjx7SY3Nkazt0rexIoVY4GanroRZc
- CAS7kr32ZDF3ixLQmj2KspuGoJ8CGB4xZsb5ul+qBl+AlF/Fzw/jpL/5vFo2VN730rR9qZcb+
- RHQ4D19D61XD/3oGsNc/RQnL/iDf7nibCGSRRB8efh7wF3UQEsHB+wvkW55w0n5CiBLbl0okl
- gHsD3rdjN4zrGplXC7Ym6IcOoNow3vnfEjH60dybAxv7RGK6OhcMHlNEm63nWTnkLDnulB6KT
- PR4z6+bTEcEcgAbwKYr7sJPMQT3eCKj+ix7TRRKkmtMZgHh6lXzn4uYLR1ivPmLENrPbiGoy7
- dURukJI2QKtAbNIjwuRz/cz7N2bmePfPdCf3xG6z79vdeDtE85VypeGp890UVUv0u+ow7YX0F
- OD77pGKOTR5LbLoff7oZMw1+1Yj82X43wE9hoSx4vDW5yuJYwhx3wSogTUhjF8ygxneoW9hYo
- efFwOV+zM9hdnSmZAkyQK47gRe+iY1+B54CUnF9YDC7mbtFlOFvZyzHHb8nHM7UUm4PKVOAmV
- VFgyNPLBx8AkbGkvJjF1sAe7u/eG+fHzsTq5GYCSeDFslJZQRBWLeR3sMznUDRtqvoTsPUeg/
- 8OLeu0Neu3bJctrFNLXnS0vRn2a5vTrD8sOC4eLnObvOCboDDs9AZcfynr6hKmt9FSbg1w5hy
- 83Gcnmci1lJ5xLkAizpNSUeiF1FeN6txFMKjhn0+9DSPvDIvCNVuzraXRICWhhE+0le1rUmFr
- T08cifXrQsSzJfGKxXLFlltfwOUeNogpGEPpiJen+8VUdh6OermC6JmGNwL0UFesDgU4ICKJ/
- Q==
+References: <20250416162144.670760-1-ivecera@redhat.com> <20250416162144.670760-6-ivecera@redhat.com>
+ <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+In-Reply-To: <d286dec9-a544-409d-bf62-d2b84ef6ecd4@lunn.ch>
+From: Ivan Vecera <ivecera@redhat.com>
+Date: Wed, 16 Apr 2025 20:27:46 +0200
+X-Gm-Features: ATxdqUE-ky5T4DA1oVeKdaFaD--po_j_TkYXO-lqG89DNt53ozs0tBAdouq5muw
+Message-ID: <CAAVpwAvVO7RGLGMXCBxCD35kKCLmZEkeXuERG0C2GHP54kCGJw@mail.gmail.com>
+Subject: Re: [PATCH v3 net-next 5/8] mfd: zl3073x: Add functions to work with
+ register mailboxes
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 14.04.25 um 16:01 schrieb Lukasz Majewski:
-> The description is similar to the one used with the new CPSW driver.
+On Wed, Apr 16, 2025 at 7:32=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
+> > +/**
+> > + * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
+> > + * @zldev: pointer to device structure
+> > + * @index: DPLL index
+> > + *
+> > + * Reads configuration of given DPLL into DPLL mailbox.
+> > + *
+> > + * Context: Process context. Expects zldev->regmap_lock to be held by =
+caller.
+> > + * Return: 0 on success, <0 on error
+> > + */
+> > +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index)
+> > +{
+> > +     int rc;
+>
+> lockdep_assert_held(zldev->regmap_lock) is stronger than having a
+> comment. When talking about i2c and spi devices, it costs nothing, and
+> catches bugs early.
+
+Makes sense to put the assert here...
+
+Will add.
+
+>
+> > +/*
+> > + * Mailbox operations
+> > + */
+> > +int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index);
+> > +int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index);
+>
+> I assume these are the only valid ways to access a mailbox?
+>
+> If so:
+>
+> > +static inline __maybe_unused int
+> > +zl3073x_mb_read_ref_mb_mask(struct zl3073x_dev *zldev, u16 *value)
+> > +{
+> > +     __be16 temp;
+> > +     int rc;
+> > +
+> > +     lockdep_assert_held(&zldev->mailbox_lock);
+> > +     rc =3D regmap_bulk_read(zldev->regmap, ZL_REG_REF_MB_MASK, &temp,
+> > +                           sizeof(temp));
+> > +     if (rc)
+> > +             return rc;
+> > +
+> > +     *value =3D be16_to_cpu(temp);
+> > +     return rc;
+> > +}
+>
+> These helpers can be made local to the core. You can then drop the
+> lockdep_assert_held() from here, since the only way to access them is
+> via the API you defined above, and add the checks in those API
+> functions.
+
+This cannot be done this way... the above API just simplifies the
+operation of read and write latch registers from/to mailbox.
+
+Whole operation is described in the commit description.
+
+E.g. read something about DPLL1
+1. Call zl3073x_mb_dpll_read(..., 1)
+   This selects DPLL1 in the DPLL mailbox and performs read operation
+and waits for finish
+2. Call zl3073x_mb_read_dpll_mode()
+   This reads dpll_mode latch register
+
+write:
+1. Call zl3073x_mb_write_dpll_mode(...)
+   This writes mode to dpll_mode latch register
+2. Call zl3073x_mb_dpll_read(..., 1)
+   This writes all info from latch registers to DPLL1
+
+The point is that between step 1 and 2 nobody else cannot touch
+latch_registers or mailbox select register and op semaphore.
+
+Thanks,
+Ivan
+
