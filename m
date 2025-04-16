@@ -1,157 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511F4946F;
-	Wed, 16 Apr 2025 22:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A48D946F
+	for <linux-kernel@vger.kernel.org>; Wed, 16 Apr 2025 22:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744841517; cv=none; b=IDgB8WTSn/evN9MtR0MtUqfKaxE0vSiWMdmF3arx2QBOeQORsyWntAsFLhiLvNsx2Rak453S1Qlyy0LFcDFYk80U6Efl6h+g1Pjb3w5FUhEiNHrs1KtMRgtgQq2yg6idoCEZtF48lQcRtDeRLr7aFhQ2RyS0/If7D5fEoZsNQdc=
+	t=1744841562; cv=none; b=s7FiYSioOmelmvXxM4nNxDOBkRnwrjEzo0TLl1RccOA0hp93hF5EtQv9W880dWurgIrtnphsVYLmx89wDdy1OmZOkHjkuU+dqjv7jWWYI2c/llsaTFO0r1bNk8WOVX+kDz33OK6A0+vRKY6NqvPQ7JVIIGlv1Nk6dGNhiOMj5+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744841517; c=relaxed/simple;
-	bh=VnutcvSMqWO9EFZdAJ3Trur5sqIDzJa/xMPbZdhHsbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j8NEyABMWL/D5cprSY2KocQnK/jE98PcRQdTxmHdheF+cSG7uuV2xXd6H7yOqPfGD9o7HH5Pel1ci9UC96MzKSZsmZe4mM2Oky4qILqby/9NNYFTrivqJmLLCwOI3SkN0aylGJkwjlLhky9sRiNtlHB0QR6gQZeVk0FS6uV4UkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9vajFVO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9vajFVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07924C4CEE2;
-	Wed, 16 Apr 2025 22:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744841516;
-	bh=VnutcvSMqWO9EFZdAJ3Trur5sqIDzJa/xMPbZdhHsbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c9vajFVO92xiKWLXkAxHJ3XUc2XoSc38UXxTzZZ18mvfbTvua6A2zuLhv08udSnb8
-	 oW+cHXzanD5XIbTse4VEuEV1ihYsQxsUTKdbgsV4o8lwZmXPwYqCdtQ8eeXRPlyY3f
-	 nAxMvS659GM5/vXh8Piech8RnJm5itn7hZpSMUEhpKNmrqsG8wQE3yHuXwPjzCvuH2
-	 ypaeV9zgmijKJhXUlWbH6I8FEmPf2yrOQ/fIDN3XjWVXFOi93iBVKEFoLfJWl9KiUU
-	 m8ikparjRAE0OScJLzWCX5ZRisDD9ZUIavbVU7uk3PJkJr1UF//r555g9QMe3DUXMi
-	 LAlLQj8kSIYxQ==
-Date: Wed, 16 Apr 2025 23:11:51 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Eric Chanudet <echanude@redhat.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Alexander Larsson <alexl@redhat.com>,
-	Lucas Karpinski <lkarpins@redhat.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <fbbafa84-f86c-4ea4-8f41-e5ebb51173ed@sirena.org.uk>
-References: <20250408210350.749901-12-echanude@redhat.com>
+	s=arc-20240116; t=1744841562; c=relaxed/simple;
+	bh=+djmq/65MXaFk74ZdFkRIEnNr7KrEi62o3NkXvf2dIs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N9biq5wH3Y4XOeIyKNWUDEEVln8qewnIJ5vaDEvKv3gFgxLzU0nuoWCB+6D/R7xQ/fZnpF6V07SLpZimRJ2QcxxP04yZ8JjADTLLlkou0wzbNeUf/p8Uehe7nhVz4lz4Ylu8UHRgNghHiZRTRKjmIZ+3WPcfTiraxRBWhpcm6xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6CCF1595;
+	Wed, 16 Apr 2025 15:12:29 -0700 (PDT)
+Received: from [192.168.178.115] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEF873F66E;
+	Wed, 16 Apr 2025 15:12:28 -0700 (PDT)
+Message-ID: <acef778c-a359-484d-a61d-aeca81bdae1d@arm.com>
+Date: Thu, 17 Apr 2025 00:12:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="QXNPbZDwSBbfcPw6"
-Content-Disposition: inline
-In-Reply-To: <20250408210350.749901-12-echanude@redhat.com>
-X-Cookie: That's no moon...
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] sched/uclamp: Align uclamp and util_est and call
+ before freq update
+To: Vincent Guittot <vincent.guittot@linaro.org>,
+ Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: Xuewen Yan <xuewen.yan@unisoc.com>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ hongyan.xia2@arm.com, qyousef@layalina.io, ke.wang@unisoc.com,
+ di.shen@unisoc.com, linux-kernel@vger.kernel.org
+References: <20250325014733.18405-1-xuewen.yan@unisoc.com>
+ <CAKfTPtA06D1EGg2VdVHt-P0PDE-1XZVJOp3myZPSNknnFT3nNg@mail.gmail.com>
+ <CAB8ipk_uOKn+U0ozZyaQ8J9OjifoZWSh-9NUQ9UD+K-kLV28vw@mail.gmail.com>
+ <CAKfTPtD2T8Qm-6Nq-9qODQASoU9Wn1Ujk4uQbbN1Dvo3+EFZFA@mail.gmail.com>
+ <CAB8ipk-G_Q20Cyx69GRY5pdTj9C4SyVyiuRVFi-i-otQ1zBVFg@mail.gmail.com>
+ <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <CAKfTPtC2XA_DUy5zjPo4Xr1r7W-CFiZEwabEQcZPk0FDLxc3QQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 16/04/2025 14:19, Vincent Guittot wrote:
+> On Wed, 16 Apr 2025 at 13:07, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
+>>
+>> On Wed, Apr 16, 2025 at 5:42 PM Vincent Guittot
+>> <vincent.guittot@linaro.org> wrote:
+>>>
+>>> On Wed, 16 Apr 2025 at 04:55, Xuewen Yan <xuewen.yan94@gmail.com> wrote:
+>>>>
+>>>> On Wed, Apr 16, 2025 at 1:05 AM Vincent Guittot
+>>>> <vincent.guittot@linaro.org> wrote:
+>>>>>
+>>>>> On Tue, 25 Mar 2025 at 02:48, Xuewen Yan <xuewen.yan@unisoc.com> wrote:
 
---QXNPbZDwSBbfcPw6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
-> Defer releasing the detached file-system when calling namespace_unlock()
-> during a lazy umount to return faster.
->=20
-> When requesting MNT_DETACH, the caller does not expect the file-system
-> to be shut down upon returning from the syscall. Calling
-> synchronize_rcu_expedited() has a significant cost on RT kernel that
-> defaults to rcupdate.rcu_normal_after_boot=3D1. Queue the detached struct
-> mount in a separate list and put it on a workqueue to run post RCU
-> grace-period.
+>>> Why is testing sched_delayed enough for migrating/prio_change ?
+>>> With your change, we will remove then add back util_est when changing
+>>> prio of the task which is useless
+>>
+>> I sincerely apologize for any misunderstanding my previous description
+>> may have caused.
+>> When changing prio without changing class, the delayed_task's
+>> sched_delayed flag is not changed,
+>> we would not remove then add back util_est.
+>> If the class was changed：
+>>
+>> if (prev_class != next_class && p->se.sched_delayed)
+>>                  dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAYED |
+>> DEQUEUE_NOCLOCK);
+>>
+>> It will dequeue the delayed-task first, and will not enqueue it.
+>>
+>> As for normal tasks which are not delayed, indeed, the issue you
+>> mentioned can occur, but it seems that this problem has always
+>> existed. Perhaps this is a new issue that has come up.
+> 
+> I have been confused by the patch that added  the condition "if
+> (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags &
+> ENQUEUE_RESTORE))))". I wrongly thought it was for
+> dequeue_save/enqueue_restore
 
-For the past couple of days we've been seeing failures in a bunch of LTP
-filesystem related tests on various arm64 systems.  The failures are
-mostly (I think all) in the form:
+No, this was just for sched_delayed. I convinced myself that the
+logic stays the same with the following tests:
 
-20101 10:12:40.378045  tst_test.c:1833: TINFO: =3D=3D=3D Testing on vfat =
-=3D=3D=3D
-20102 10:12:40.385091  tst_test.c:1170: TINFO: Formatting /dev/loop0 with v=
-fat opts=3D'' extra opts=3D''
-20103 10:12:40.391032  mkfs.vfat: unable to open /dev/loop0: Device or reso=
-urce busy
-20104 10:12:40.395953  tst_test.c:1170: TBROK: mkfs.vfat failed with exit c=
-ode 1
+-->8--
 
-ie, a failure to stand up the test environment on the loopback device
-all happening immediately after some other filesystem related test which
-also used the loop device.  A bisect points to commit a6c7a78f1b6b97
-which is this, which does look rather relevant.  LTP is obviously being
-very much an edge case here.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index eb5a2572b4f8..65692938696f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -6930,6 +6930,19 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+        int rq_h_nr_queued = rq->cfs.h_nr_queued;
+        u64 slice = 0;
+ 
++       bool D = !!p->se.sched_delayed;
++       bool M = task_on_rq_migrating(p);
++       bool Er = !!(flags & ENQUEUE_RESTORE);
++       bool Ed = !!(flags & ENQUEUE_DELAYED);
++
++       /* won't be called */
++       BUG_ON(D && M && Er);                           // [1]
++       BUG_ON(!D && M && Er);                          // [2]
++
++       BUG_ON(D && ((M || Er) == Ed));                 // [3]
++       BUG_ON(!(D && (M || Er)) != (!D || Ed));        // [4]
++       BUG_ON(!(D && (M || Er)) != (!(D && !Ed)));
++
+        /*
+         * The code below (indirectly) updates schedutil which looks at
+         * the cfs_rq utilization to select a frequency.
+@@ -7178,6 +7191,17 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+  */
+ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ {
++       bool D = !!p->se.sched_delayed;
++       bool M = task_on_rq_migrating(p);
++       bool Ds = !!(flags & DEQUEUE_SAVE);
++
++       /* won't be called */
++       BUG_ON(D && M && Ds);                           // [5]
++       BUG_ON(!D && M && Ds);                          // [6]
++       BUG_ON(D && !M && !Ds);                         // [7]
++
++       BUG_ON(!(D && (M || Ds)) != !D);                // [8]
++
+        if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
+                util_est_dequeue(&rq->cfs, p);
 
-Bisect log:
+-->8--
 
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [f660850bc246fef15ba78c81f686860324396628] Add linux-next specific f=
-iles for 20250416
-git bisect bad f660850bc246fef15ba78c81f686860324396628
-# status: waiting for good commit(s), bad commit known
-# good: [a6b9fbe391e8da36d2892590db4db4ff94005807] Merge branch 'for-linux-=
-next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
-git bisect good a6b9fbe391e8da36d2892590db4db4ff94005807
-# bad: [c017ce6f8d2939445ac473ada6a266aca0a0d6eb] Merge branch 'drm-next' o=
-f https://gitlab.freedesktop.org/drm/kernel.git
-git bisect bad c017ce6f8d2939445ac473ada6a266aca0a0d6eb
-# bad: [3efe6d22f422cbba9de75b53890c624a83dbb70a] Merge branch 'next' of gi=
-t://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-git bisect bad 3efe6d22f422cbba9de75b53890c624a83dbb70a
-# good: [ce44f781015a988baf21317f7822567a62a77a5f] Merge branch 'for-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git
-git bisect good ce44f781015a988baf21317f7822567a62a77a5f
-# good: [64a47089f778b6e4bfaaf62d4384eaa2bcaf9b63] Merge branch 'overlayfs-=
-next' of git://git.kernel.org/pub/scm/linux/kernel/git/overlayfs/vfs.git
-git bisect good 64a47089f778b6e4bfaaf62d4384eaa2bcaf9b63
-# good: [cdb4a05e60b2646d25f7227c7dfe5d54c3f3a173] Merge branch 'for-next' =
-of git://github.com/openrisc/linux.git
-git bisect good cdb4a05e60b2646d25f7227c7dfe5d54c3f3a173
-# good: [00b7410736b1d46ab26c3b4e04eaa819e3f7448c] Merge branch 'vfs-6.16.m=
-isc' into vfs.all
-git bisect good 00b7410736b1d46ab26c3b4e04eaa819e3f7448c
-# bad: [a9d6e19f91b6600c02276cd7903f747a5389950c] Merge branch 'for-next' o=
-f git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git
-git bisect bad a9d6e19f91b6600c02276cd7903f747a5389950c
-# bad: [03e1a90f178e3cea3e8864135046e31f4dbe5e2f] Merge branch 'vfs-6.16.mo=
-unt' into vfs.all
-git bisect bad 03e1a90f178e3cea3e8864135046e31f4dbe5e2f
-# good: [a9d7de0f68b79e5e481967fc605698915a37ac13] Merge patch series "pidf=
-s: ensure consistent ENOENT/ESRCH reporting"
-git bisect good a9d7de0f68b79e5e481967fc605698915a37ac13
-# bad: [675e87c588fc7d054c8f626fd59fcad6c534f4c0] selftests/mount_settattr:=
- add missing STATX_MNT_ID_UNIQUE define
-git bisect bad 675e87c588fc7d054c8f626fd59fcad6c534f4c0
-# bad: [449f3214ce15b697277d5991f096140cf773e849] selftests/mount_settattr:=
- don't define sys_open_tree() twice
-git bisect bad 449f3214ce15b697277d5991f096140cf773e849
-# bad: [a6c7a78f1b6b974a10fcf4646769ba8bf2596c58] fs/namespace: defer RCU s=
-ync for MNT_DETACH umount
-git bisect bad a6c7a78f1b6b974a10fcf4646769ba8bf2596c58
-# first bad commit: [a6c7a78f1b6b974a10fcf4646769ba8bf2596c58] fs/namespace=
-: defer RCU sync for MNT_DETACH umount
+In enqueue, when D is true, M or Er is never set with Ed. [3], [4].
+In dequeue, since [7] is never true, [8] is never true as well.
 
---QXNPbZDwSBbfcPw6
-Content-Type: application/pgp-signature; name="signature.asc"
+> Could you please split this in 2 patches :
+> patch 1 updates condition for util_est_dequeue/enqueue  and a
+> description why it's safe
+> patch 2 for aligning uclamp with util_est
 
------BEGIN PGP SIGNATURE-----
++1
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgAKyYACgkQJNaLcl1U
-h9DaZgf/Z6f+BESM3p3WNzVxn3l8LfgDrlJ2lYZCogS9SBQJXCw0lq85tWApAUBl
-N67Y3dM9TOPkAzvdiK34efXk6ddIxhjPO4Kpdxu0ZO8ZQ49HeWZ6bCnHKjhrcMXe
-qXdPgmUQ8nQOZ3c2UJzYuuLYC/ZuTovXRrs9MftoD5i9LfyC3ARE/YQvtYyY5eQj
-1NfplDjjj5gbxvCrR/b+Rk5oU1gexymRr29OhlOB+9WUTqsz+MYJYZHbKm/n9Ook
-GgBxH8teiGQ5ez6/g98Q7ZFwQdNc/aQV4cwTKz3nebdN+dMAP+uuGNXB8KxaHrwk
-glMfqw+1xwyV1P6GEPYAZTE867lH/g==
-=pZyw
------END PGP SIGNATURE-----
-
---QXNPbZDwSBbfcPw6--
+[...]
